@@ -743,15 +743,15 @@ At session end: save progress summary to memory.
 
 When starting an issue:
 ```bash
-gh issue edit {N} --add-label "working:{agent}"
-gh issue comment {N} --body "Starting work on X"
+.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "working:{agent}"
+.venv/bin/python -m scripts.publish issue-comment --number {N} --body "Starting work on X"
 ```
 
 When done:
 ```bash
-gh issue edit {N} --remove-label "working:{agent}"
-gh issue edit {N} --add-label "review:{reviewer}"  # or review:human
-# or: gh issue close {N}
+.venv/bin/python -m scripts.publish issue-edit --number {N} --remove-labels "working:{agent}"
+.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "review:{reviewer}"  # or review:human
+# or: .venv/bin/python -m scripts.publish issue-close --number {N}
 ```
 
 ---

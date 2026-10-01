@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Decision: Atlas lane must not leave green PRs sitting
 
 - **Date:** 2026-07-28
@@ -10,7 +16,7 @@ When a lane-owned pull request has a green CI Gate and is not a draft:
 
 1. In the same session—or the next cycle while CI is settling—dispatch
    cross-family review via
-   `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`
+   `"$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`
    (shielded `review-pr` is RETIRED).
 2. Wait for that review task to reach a terminal state. On packaging failure,
    re-fire or fix that day; do not abandon it. Post the verdict on the PR.

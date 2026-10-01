@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Issue #1794 brief-linter false-positive + hardcoded path
 
 **Agent**: agy
@@ -21,12 +27,12 @@ Every claim in your final PR body MUST be backed by a quoted command + cwd + raw
 
 1. `git worktree add -B fix/issue-1794-brief-linter-fp .worktrees/dispatch/agy/issue-1794 origin/main && cd .worktrees/dispatch/agy/issue-1794`
 2. Fix the two issues stated in the issue body:
-   - **False positive on prose mention**: `PYTHON_RE` at `scripts/audit/lint_dispatch_brief.py:48` matches every occurrence of `.venv/bin/python`, including backtick-inline mentions in prose/tables. Narrow the match: only flag when the match is NOT inside backticks AND is the first token of a line/command (typical invocation context).
+   - **False positive on prose mention**: `PYTHON_RE` at `scripts/audit/lint_dispatch_brief.py:48` matches every occurrence of `"$PROJECT_PYTHON"`, including backtick-inline mentions in prose/tables. Narrow the match: only flag when the match is NOT inside backticks AND is the first token of a line/command (typical invocation context).
    - **Hardcoded `learn-ukrainian` path**: find the hardcoded project name and replace with a relative-to-repo-root resolution (e.g. derive from `git rev-parse --show-toplevel` or accept a `--project-root` flag).
 3. Add a test fixture in `tests/test_lint_dispatch_brief.py` covering both regressions:
    - prose mention in backticks must NOT trigger
    - the linter must work in a directory NOT named `learn-ukrainian`
-4. `.venv/bin/python -m pytest tests/test_lint_dispatch_brief.py -q` → must be all-green
+4. `"$PROJECT_PYTHON" -m pytest tests/test_lint_dispatch_brief.py -q` → must be all-green
 5. `.venv/bin/ruff check scripts tests` → must be "All checks passed!"
 6. Commit (conventional): `fix(audit): brief linter prose-mention false-positive + drop hardcoded learn-ukrainian path (closes #1794)`
 7. `git push -u origin fix/issue-1794-brief-linter-fp`

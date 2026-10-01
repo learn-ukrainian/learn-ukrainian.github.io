@@ -59,7 +59,7 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 - **Do not use Kimi** for this curriculum upgrade work (write, QG, or CF).
 - Claude is available again as a future seat. Do not force it onto an
   already-resolved GPT review.
-- If `gh pr review --approve` / `--request-changes` fails because the GitHub
+- If `.venv/bin/python -m scripts.publish pr-review --number <N> --verdict approve` / `--request-changes` fails because the GitHub
   token is the PR opener, post the CF verdict as a **COMMENT** bound to the
   SHA, with `VERDICT: APPROVE` or `VERDICT: REQUEST_CHANGES` in the body.
   Discussion is not the gate.
@@ -84,7 +84,7 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   CI Gate on heads still in the CF fix loop. Canonical:
   `agents_extensions/shared/rules/workflow.md` § Merge policy.
 - Merge gate: exact-head CF APPROVE **and** CI Gate green on that SHA, then
-  `gh pr merge --squash` (merge queue). Never `--auto`. Never
+  `.venv/bin/python -m scripts.publish pr-merge --number <N>` (merge queue). Never `--auto`. Never
   `--delete-branch` until `gh pr view` shows `MERGED`. Then reap worktrees.
 - **Push to `main` does not publish curriculum.** Auto-deploy
   (`deploy-pages.yml` eligibility) fail-closes on `curriculum/` and
@@ -92,7 +92,7 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   intentional: merge ≠ community rollout.
 - **Continuous deploy (operator 2026-09-18):** after a content merge that
   should be live, the driver runs
-  `gh workflow run deploy-pages.yml --ref main`, proves the learner URL(s)
+  `.venv/bin/python -m scripts.publish workflow-run --workflow deploy-pages.yml --ref main`, proves the learner URL(s)
   **200** (full module paths, not a single lesson), **notifies** the operator,
   and continues — do **not** wait for a per-cutover GO or create a deploy
   bottleneck. Operator checks async.
@@ -171,5 +171,5 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 
 ```sh
 .venv/bin/python scripts/build/v7_build.py a1 <slug> --upgrade --worktree --writer gemini-tools
-gh workflow run deploy-pages.yml --ref main
+.venv/bin/python -m scripts.publish workflow-run --workflow deploy-pages.yml --ref main
 ```

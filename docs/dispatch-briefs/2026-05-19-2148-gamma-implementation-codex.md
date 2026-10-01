@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — #2148 γ: render `implementation_map.json` into the V7 writer prompt
 
 **Agent:** codex
@@ -26,7 +32,7 @@ This dispatch must obey `memory/MEMORY.md` #M-4 (deterministic-over-hallucinatio
 
 | Claim in PR body | Required deterministic tool | Output format |
 |---|---|---|
-| "Tests pass" | `.venv/bin/python -m pytest tests/build/test_implementation_map.py tests/build/test_implementation_map_render.py tests/test_writer_prompt_structured_cot.py -v` from repo root | quote final `N passed in M.MMs` line raw |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/build/test_implementation_map.py tests/build/test_implementation_map_render.py tests/test_writer_prompt_structured_cot.py -v` from repo root | quote final `N passed in M.MMs` line raw |
 | "Lint clean" | `.venv/bin/ruff check scripts/build/ tests/build/` from repo root | quote `All checks passed!` or zero-error final line raw |
 | "Placeholder is fully replaced after render" | the new test `test_placeholder_is_fully_replaced` | quote the assertion line + pass status raw |
 | "Every manifest row appears in rendered prompt" | the new test `test_every_seeded_row_appears_in_prompt` | quote the assertion line + pass status raw |
@@ -241,7 +247,7 @@ Each step has an explicit verification command. Pass MUST be a real tool output,
 2. **Re-read anchor files BEFORE editing each.** Per `code-editing-safety.md` rule 2: read `scripts/build/phases/implementation_map.py`, then `scripts/build/linear_pipeline.py` (sections around lines 1511-1535 and 2497-2535), then `scripts/build/v7_build.py` (sections around 411-425 and 715-750), then both writer prompt files. No edits before reads.
 
 3. **Implement the renderer in `implementation_map.py`** (step 1 above).
-   → verify: `.venv/bin/python -c "from scripts.build.phases.implementation_map import render_for_writer_prompt; print('ok')"` succeeds.
+   → verify: `"$PROJECT_PYTHON" -c "from scripts.build.phases.implementation_map import render_for_writer_prompt; print('ok')"` succeeds.
 
 4. **Wire `writer_context` + `render_writer_prompt`** (step 2 above).
    → verify: `.venv/bin/ruff check scripts/build/linear_pipeline.py` clean.
@@ -256,7 +262,7 @@ Each step has an explicit verification command. Pass MUST be a real tool output,
    → verify (test suite, MANDATORY per #M-7) — the worktree has no `.venv/`; either `cd` to the main repo for `pytest`, or symlink the venv into the worktree first:
    ```
    cd .
-   .venv/bin/python -m pytest tests/build/test_implementation_map.py tests/build/test_implementation_map_render.py tests/test_writer_prompt_structured_cot.py tests/test_writer_prompt_preemit_checklist.py -v
+   "$PROJECT_PYTHON" -m pytest tests/build/test_implementation_map.py tests/build/test_implementation_map_render.py tests/test_writer_prompt_structured_cot.py tests/test_writer_prompt_preemit_checklist.py -v
    cd -
    ```
    All four files must be green. Quote the final `N passed in M.MMs` line in the PR body.

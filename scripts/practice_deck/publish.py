@@ -9,8 +9,6 @@ import hashlib
 import json
 import subprocess
 import sys
-import tempfile
-from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -22,6 +20,8 @@ ROOT = Path(__file__).resolve().parents[2]
 # scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+from scripts.opsec.prepublish import publication_boundary, publication_cli
+from scripts.publish.github import Asset, Request, request_run
 from scripts.storage.paths import REGISTRY_ROOT
 
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
@@ -328,6 +328,7 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
     temp_path.replace(pointer_path)
 
 
+@publication_boundary(PracticeDeckPublishError)
 def ensure_release(
     release_tag: str,
     repo: str,
@@ -336,7 +337,7 @@ def ensure_release(
     notes: str = "Release asset storage for generated Atlas practice deck shards.",
 ) -> None:
     try:
-        existing = subprocess.run(
+        existing = request_run(
             ["gh", "release", "view", release_tag, "--repo", repo],
             check=False,
             stdout=subprocess.DEVNULL,
@@ -348,19 +349,8 @@ def ensure_release(
     if existing.returncode == 0:
         return
     try:
-        subprocess.run(
-            [
-                "gh",
-                "release",
-                "create",
-                release_tag,
-                "--repo",
-                repo,
-                "--title",
-                title,
-                "--notes",
-                notes,
-            ],
+        request_run(
+            Request("release-create", tag=release_tag, repo=repo, title=title, notes=notes),
             check=True,
             timeout=GH_RELEASE_CREATE_TIMEOUT_SECONDS,
         )
@@ -368,6 +358,7 @@ def ensure_release(
         raise _called_process_error_from_timeout(exc) from exc
 
 
+@publication_boundary(PracticeDeckPublishError)
 def upload_release_asset(
     gzip_path: Path,
     *,
@@ -377,27 +368,13 @@ def upload_release_asset(
     clobber: bool = True,
 ) -> None:
     ensure_release(release_tag, repo)
-    upload_path = gzip_path
-    with tempfile.TemporaryDirectory() if gzip_path.name != asset_name else nullcontext(None) as temp_dir:
-        if temp_dir is not None:
-            upload_path = Path(temp_dir) / asset_name
-            upload_path.write_bytes(gzip_path.read_bytes())
-
-        command = [
-            "gh",
-            "release",
-            "upload",
-            release_tag,
-            str(upload_path),
-            "--repo",
-            repo,
-        ]
-        if clobber:
-            command.append("--clobber")
-        try:
-            subprocess.run(command, check=True, timeout=GH_RELEASE_ASSET_TIMEOUT_SECONDS)
-        except subprocess.TimeoutExpired as exc:
-            raise _called_process_error_from_timeout(exc) from exc
+    command = Request(
+        "release-upload", tag=release_tag, assets=[Asset(gzip_path, asset_name)], repo=repo, clobber=clobber
+    )
+    try:
+        request_run(command, check=True, timeout=GH_RELEASE_ASSET_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired as exc:
+        raise _called_process_error_from_timeout(exc) from exc
 
 
 def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
@@ -635,6 +612,7 @@ def publish_practice_deck(
     return pointer
 
 
+@publication_cli(PracticeDeckPublishError)
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(

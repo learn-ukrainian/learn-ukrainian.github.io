@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: route CORE factual_accuracy + register off Gemini-family → deepseek (#3087)
 
 ## Why (bakeoff evidence — all 5 reviewers working, same B1 article, 3 repeats)
@@ -37,7 +43,7 @@ SEMINAR already overrides these to claude via `seminar_reviewer_overrides`. Add 
 ## Numbered steps
 1. `cd . && git fetch origin`. You are in a worktree from `origin/main`.
 2. Implement 1–3.
-3. `.venv/bin/python -m pytest tests/ -k "review or reviewer or compile" -q` → paste summary.
+3. `"$PROJECT_PYTHON" -m pytest tests/ -k "review or reviewer or compile" -q` → paste summary.
 4. `.venv/bin/ruff check scripts/ tests/` → paste `All checks passed!`.
 5. Commit: `feat(wiki): route CORE factual_accuracy+register off Gemini → deepseek (#3087)`.
 6. `git push -u origin <branch>`; `gh pr create` referencing #3087. NO auto-merge.

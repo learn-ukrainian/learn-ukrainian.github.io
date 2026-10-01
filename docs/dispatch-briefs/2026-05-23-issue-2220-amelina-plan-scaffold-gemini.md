@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Gemini dispatch — scaffold missing fields in amelina-women-looking-at-war plan (closes #2220)
 
 ## Mission
@@ -9,9 +15,9 @@ The plan file `curriculum/l2-uk-en/plans/lit-doc/amelina-women-looking-at-war.ya
 | Claim in your output | Tool to ground it |
 |---|---|
 | "Plan field X already present" | `grep` the file before editing |
-| "Validator passes" | `.venv/bin/python scripts/audit/validate_plan.py curriculum/l2-uk-en/plans/lit-doc/amelina-women-looking-at-war.yaml` |
+| "Validator passes" | `"$PROJECT_PYTHON" scripts/audit/validate_plan.py curriculum/l2-uk-en/plans/lit-doc/amelina-women-looking-at-war.yaml` |
 | "Archive material at PATH says Y" | `cat curriculum/l2-uk-en/_archive/lit-doc/discovery/amelina-women-looking-at-war/*` and `cat curriculum/l2-uk-en/_archive/lit-doc/orchestration/amelina-women-looking-at-war/*` and paste the line you derive each field from |
-| "Tests pass" | `.venv/bin/python -m pytest tests/audit/ -q` final summary line raw |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/audit/ -q` final summary line raw |
 
 If a field's source is unclear from the archive material, leave it as a placeholder and flag in the PR body — DO NOT invent.
 
@@ -29,8 +35,8 @@ If a field's source is unclear from the archive material, leave it as a placehol
    - `title:` — the module's display title (the sibling shows English/Ukrainian convention)
    - `objectives:` — list of learning objectives. Pull from the archive's objectives doc. If absent, derive 4-6 objectives from the `content_outline` and `focus` fields, framed as "Students will…" learner-actionable statements.
    - `version: 1.0.0` — fixed value per the plan-immutability hook (it expects this exact field).
-6. Verify: `.venv/bin/python scripts/audit/validate_plan.py curriculum/l2-uk-en/plans/lit-doc/amelina-women-looking-at-war.yaml`. Paste the success line into your PR body.
-7. Run targeted tests: `.venv/bin/python -m pytest tests/audit/test_validate_plan.py tests/audit/test_plan_invariants.py -q`. Paste the final summary line.
+6. Verify: `"$PROJECT_PYTHON" scripts/audit/validate_plan.py curriculum/l2-uk-en/plans/lit-doc/amelina-women-looking-at-war.yaml`. Paste the success line into your PR body.
+7. Run targeted tests: `"$PROJECT_PYTHON" -m pytest tests/audit/test_validate_plan.py tests/audit/test_plan_invariants.py -q`. Paste the final summary line.
 8. `.venv/bin/ruff check .` — should be clean (no python touched here, but the hook may run).
 9. `git add curriculum/l2-uk-en/plans/lit-doc/amelina-women-looking-at-war.yaml`
 10. `git commit -m "fix(plans/lit-doc): scaffold missing required fields in amelina-women-looking-at-war (closes #2220)"` — conventional commit. Body should describe which fields you added and cite the archive source for each.

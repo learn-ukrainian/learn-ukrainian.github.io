@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Path 3 PR1: `implementation_map.json` deterministic seeder
 
 **Agent:** Codex gpt-5.5 xhigh
@@ -230,7 +236,7 @@ If schema validation needs a referenceable JSON file, write it to
 | Tests pass | `.venv/bin/pytest tests/build/test_implementation_map.py -v` final line raw (`N passed in M.MMs`) |
 | Full pytest still green | `.venv/bin/pytest tests/build/ -q` final summary line raw (NO `-x` — must surface every downstream failure, not just the first; per #1942) |
 | Ruff clean | `.venv/bin/ruff check scripts/build/phases/implementation_map.py tests/build/test_implementation_map.py` raw output (must be `All checks passed!`) |
-| m20 real-world seed works | one-shot: `.venv/bin/python -c "from scripts.build.phases.wiki_manifest import extract_manifest; from scripts.build.phases.implementation_map import seed_implementation_map; m = extract_manifest('wiki/pedagogy/a1/my-morning.md'); s = seed_implementation_map(m); print(f'entries={len(s[\"entries\"])} types={sorted({e[\"obligation_type\"] for e in s[\"entries\"]})}')"` raw output |
+| m20 real-world seed works | one-shot: `"$PROJECT_PYTHON" -c "from scripts.build.phases.wiki_manifest import extract_manifest; from scripts.build.phases.implementation_map import seed_implementation_map; m = extract_manifest('wiki/pedagogy/a1/my-morning.md'); s = seed_implementation_map(m); print(f'entries={len(s[\"entries\"])} types={sorted({e[\"obligation_type\"] for e in s[\"entries\"]})}')"` raw output |
 | Pipeline wiring runs | dry-run of the new emit by importing v7_build and confirming `implementation_map_seeded` event appears (quote the new event in JSONL) — OR if dry-run too painful, quote `git diff scripts/build/v7_build.py` to prove the 5-line wiring landed |
 | Commit landed + PR opened | `git log -1 --oneline` raw + `gh pr view --json url` raw URL |
 
@@ -262,7 +268,7 @@ cd .worktrees/path3-pr1-impl-map-seeder
 .venv/bin/pytest tests/build/test_implementation_map.py -v
 .venv/bin/pytest tests/build/ -q
 .venv/bin/ruff check scripts/build/phases/implementation_map.py tests/build/test_implementation_map.py
-.venv/bin/python -m pre_commit run --files scripts/build/phases/implementation_map.py tests/build/test_implementation_map.py scripts/build/v7_build.py
+"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/phases/implementation_map.py tests/build/test_implementation_map.py scripts/build/v7_build.py
 git diff --stat origin/main
 git diff --name-only origin/main
 ```

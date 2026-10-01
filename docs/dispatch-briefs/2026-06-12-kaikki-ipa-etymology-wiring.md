@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — wire kaikki IPA + etymology into the Word Atlas
 
 **Agent:** Codex (gpt-5.5, xhigh) · worktree · commit + push + PR (NOT draft) · no auto-merge.
@@ -29,12 +35,12 @@ ENTIRELY) and **39% net-add for etymology**. Wire both in. Extract is on disk at
    must be present. Add the gate + a test. **Do NOT change existing §8 gates** (heritage/lemma_in_vesum/etc.).
 
 ## Regenerate — DO NOT HANG (the prior atlas dispatch stalled polling a backgrounded build)
-1. `timeout 1800 .venv/bin/python scripts/lexicon/build_kaikki_lookup.py` (FOREGROUND; one-time 252 MB parse, ~1-2 min).
+1. `timeout 1800 "$PROJECT_PYTHON" scripts/lexicon/build_kaikki_lookup.py` (FOREGROUND; one-time 252 MB parse, ~1-2 min).
 2. Regenerate the manifest FOREGROUND with timeout (now fast — reads the compact lookup, not 252 MB).
    **DO NOT** launch a build in a backgrounded interactive shell and poll it with empty stdin.
 3. `cd starlight && npm run build` (skip `npm ci` if `node_modules/` present).
 4. Gates GREEN (real vesum present at `data/vesum.db`):
-   `.venv/bin/python -m pytest tests/test_atlas_conformance.py tests/test_heritage_classifier.py tests/test_lexicon_build_manifest.py tests/test_lexicon_enrich_manifest.py tests/test_build_kaikki_lookup.py -q`
+   `"$PROJECT_PYTHON" -m pytest tests/test_atlas_conformance.py tests/test_heritage_classifier.py tests/test_lexicon_build_manifest.py tests/test_lexicon_enrich_manifest.py tests/test_build_kaikki_lookup.py -q`
    + `.venv/bin/ruff check scripts/ tests/`.
 
 ## §M-4 quality sample (REQUIRED in report — quote raw evidence)

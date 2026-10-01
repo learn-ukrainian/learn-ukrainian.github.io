@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Atlas etymology fill: ЕСУМ root-fallback (#2882)
 
 Close the ~740-word core-vocab **etymology** gap. Strategy: `docs/atlas-data-coverage-strategy.md`
@@ -28,7 +34,7 @@ canonical example). Paste raw output.
 5. Tests in `tests/test_lexicon_enrich_manifest.py` (mirror existing `_conn()` fixtures with an
    in-memory `esum_etymology` table): derived word → root etymology with the honest label;
    unrelated word → None; exact-lemma hit still returns the direct entry (no regression).
-6. `.venv/bin/python -m pytest tests/test_lexicon_enrich_manifest.py -q` green. `ruff check` clean.
+6. `"$PROJECT_PYTHON" -m pytest tests/test_lexicon_enrich_manifest.py -q` green. `ruff check` clean.
 7. **Code-only — do NOT run `make atlas`, do NOT commit `lexicon-manifest.json`/fingerprint.**
 8. Commit `feat(lexicon): ЕСУМ root-fallback for derived-word etymology (#2882)` +
    `X-Agent: grok-build/atlas-esum-root`. `git push -u origin <branch>` + `gh pr create`. NO merge.

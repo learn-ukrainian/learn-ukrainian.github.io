@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — ABBYY FineReader XML parser for ЕСУМ (vols 1, 2, 3, 6)
 
 **Agent**: codex (gpt-5.5, xhigh)
@@ -79,7 +85,7 @@ Use `lxml` (already in repo deps; see `requirements.txt`). `lxml.etree.iterparse
 ### Acceptance gates
 
 - **Entry-count parity** for vol1: parser produces 4,800-5,500 entries (current deployed is 5,146; allow ±10% for boundary-detection differences that may net out as improvements or losses).
-- **Pytest green**: `.venv/bin/python -m pytest tests/ -k 'esum or abbyy' -v`.
+- **Pytest green**: `"$PROJECT_PYTHON" -m pytest tests/ -k 'esum or abbyy' -v`.
 - **Ruff green**: `.venv/bin/ruff check scripts/ingest/ tests/`.
 - **Memory bound**: parser must complete on the largest XML (vol1, 482 MB) without exceeding ~1 GB RSS. Use `/usr/bin/time -l` (macOS) to measure; report peak.
 
@@ -95,9 +101,9 @@ Use `lxml` (already in repo deps; see `requirements.txt`). `lxml.etree.iterparse
 
 ```bash
 cd . && .venv/bin/ruff check scripts/ingest/ tests/
-cd . && .venv/bin/python -m pytest tests/ -k 'esum or abbyy' -v --tb=short
+cd . && "$PROJECT_PYTHON" -m pytest tests/ -k 'esum or abbyy' -v --tb=short
 # Smoke-run on real data:
-cd . && /usr/bin/time -l .venv/bin/python scripts/ingest/esum_abbyy_parser.py --input data/raw/esum/ia-abbyy-xml/vol1-abbyy.xml --output /tmp/esum_vol1_abbyy.jsonl --vol 1
+cd . && /usr/bin/time -l "$PROJECT_PYTHON" scripts/ingest/esum_abbyy_parser.py --input data/raw/esum/ia-abbyy-xml/vol1-abbyy.xml --output /tmp/esum_vol1_abbyy.jsonl --vol 1
 wc -l /tmp/esum_vol1_abbyy.jsonl   # 4800-5500
 # Sample diff vs deployed:
 head -3 /tmp/esum_vol1_abbyy.jsonl

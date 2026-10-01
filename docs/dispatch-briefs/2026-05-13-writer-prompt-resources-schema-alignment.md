@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Writer prompt resources.yaml schema-alignment directive (#1959)
 
 > **Issue:** #1959 — `[writer-prompt] linear-write.md doesn't tell writer that non-textbook resource roles REQUIRE url field`
@@ -12,7 +18,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist. Prefix every command with `cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via `.venv/bin/python`.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist. Prefix every command with `cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -27,7 +33,7 @@ P0 unblock for Phase 2a m20 (`a1/my-morning`) V7 rebuild. Issue #1959 has the fu
 | Claim | Deterministic tool | Output format |
 |---|---|---|
 | "Writer prompt now states the schema rule for non-textbook roles" | `grep -n 'role: textbook\|requires url\|OMIT THE ENTRY\|non-textbook' scripts/build/phases/linear-write.md` | quote grep output |
-| "Existing prompt template still loads without parse error" | `.venv/bin/python -c 'from pathlib import Path; print(len(Path("scripts/build/phases/linear-write.md").read_text()))'` | quote line length count |
+| "Existing prompt template still loads without parse error" | `"$PROJECT_PYTHON" -c 'from pathlib import Path; print(len(Path("scripts/build/phases/linear-write.md").read_text()))'` | quote line length count |
 | "Tests pass" | `.venv/bin/pytest tests/build/test_linear_pipeline.py -v` | quote final summary line |
 | "Lint clean" | `.venv/bin/ruff check scripts/build/` (no .py changes expected, but sanity) | quote final line |
 | "PR opened" | `gh pr view <N> --json url` | quote URL |

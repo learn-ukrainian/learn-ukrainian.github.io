@@ -73,15 +73,17 @@ class FakeGh:
         self.head = head
         self.body = body
         self.file_items = file_items or [{"filename": path} for path in (files or [])]
-        self.changed_files = (
-            len(self.file_items) if changed_files is None else changed_files
-        )
+        self.changed_files = len(self.file_items) if changed_files is None else changed_files
         self.calls: list[list[str]] = []
+        self.bodies: list[str] = []
+        self.statuses: list[dict] = []
 
-    def __call__(
-        self, command: list[str], **_kwargs: object
-    ) -> subprocess.CompletedProcess[str]:
+    def __call__(self, command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
         self.calls.append(list(command))
+        if "--body-file" in command:
+            self.bodies.append(Path(command[command.index("--body-file") + 1]).read_text())
+        if "--input" in command:
+            self.statuses.append(json.loads(Path(command[command.index("--input") + 1]).read_bytes()))
         if len(command) >= 3 and command[1] == "pr" and command[2] == "view":
             json_fields = command[command.index("--json") + 1]
             if json_fields == "headRefOid,body,changedFiles":
@@ -98,12 +100,7 @@ class FakeGh:
                     stderr="",
                 )
             return subprocess.CompletedProcess(command, 0, stdout=f"{self.head}\n", stderr="")
-        if (
-            len(command) >= 5
-            and command[1] == "api"
-            and "/pulls/" in command[-1]
-            and "/files?" in command[-1]
-        ):
+        if len(command) >= 5 and command[1] == "api" and "/pulls/" in command[-1] and "/files?" in command[-1]:
             return subprocess.CompletedProcess(
                 command,
                 0,
@@ -111,10 +108,8 @@ class FakeGh:
                 stderr="",
             )
         if len(command) >= 3 and command[1] == "pr" and command[2] == "comment":
-            return subprocess.CompletedProcess(
-                command, 0, stdout="https://example.test/comment/1\n", stderr=""
-            )
-        if len(command) >= 2 and command[1] == "api" and "statuses" in command[2]:
+            return subprocess.CompletedProcess(command, 0, stdout="https://example.test/comment/1\n", stderr="")
+        if len(command) >= 2 and command[1] == "api" and any("/statuses/" in arg for arg in command):
             return subprocess.CompletedProcess(command, 0, stdout="{}", stderr="")
         return subprocess.CompletedProcess(command, 1, stdout="", stderr="unexpected")
 
@@ -134,9 +129,7 @@ def test_fetch_pr_head_sha_uses_repo_flag() -> None:
         ("BLOCKED", STATUS_ERROR),
     ],
 )
-def test_publish_matrix_posts_comment_and_status(
-    tmp_path: Path, verdict: str, status: str
-) -> None:
+def test_publish_matrix_posts_comment_and_status(tmp_path: Path, verdict: str, status: str) -> None:
     gh = FakeGh(head=_SHA_A)
     payload = _sealed(verdict=verdict)
     if verdict == "APPROVED":
@@ -161,15 +154,15 @@ def test_publish_matrix_posts_comment_and_status(
     assert "api" in kinds
     comment_calls = [c for c in gh.calls if c[1:3] == ["pr", "comment"]]
     assert len(comment_calls) == 1
-    body = comment_calls[0][comment_calls[0].index("--body") + 1]
+    body = gh.bodies[0]
     assert f"VERDICT: {verdict}" in body
     if verdict == "APPROVED":
         assert "The review found no defects that block approval." in body
     else:
         assert "NO EVIDENCE SUPPLIED" in body
     status_calls = [c for c in gh.calls if c[1] == "api"]
-    assert any(f"state={status}" in " ".join(c) for c in status_calls)
-    assert any(DEFAULT_STATUS_CONTEXT in " ".join(c) for c in status_calls)
+    assert any(p["state"] == status for p in gh.statuses)
+    assert any(p["context"] == DEFAULT_STATUS_CONTEXT for p in gh.statuses)
 
 
 def test_stale_head_refuses_without_github_mutation(tmp_path: Path) -> None:
@@ -183,12 +176,8 @@ def test_stale_head_refuses_without_github_mutation(tmp_path: Path) -> None:
             store=store,
         )
         # Stale path must not materialize formal_review_jobs or publications.
-        jobs = store.connection.execute(
-            "SELECT COUNT(*) FROM formal_review_jobs"
-        ).fetchone()[0]
-        pubs = store.connection.execute(
-            "SELECT COUNT(*) FROM github_publications"
-        ).fetchone()[0]
+        jobs = store.connection.execute("SELECT COUNT(*) FROM formal_review_jobs").fetchone()[0]
+        pubs = store.connection.execute("SELECT COUNT(*) FROM github_publications").fetchone()[0]
     assert result.plan.action == "refuse_stale"
     assert result.status_posted is False
     assert result.publication_id is None
@@ -210,9 +199,7 @@ def test_repeat_publish_is_idempotent(tmp_path: Path) -> None:
             require_receipt=True,
         )
         assert first.status_posted is True
-        receipt = lookup_publication_receipt(
-            store.connection, review_id="review_deadbeef"
-        )
+        receipt = lookup_publication_receipt(store.connection, review_id="review_deadbeef")
         assert receipt is not None
 
     gh2 = FakeGh(head=_SHA_A)
@@ -296,9 +283,7 @@ def test_publish_refuses_evidence_free_approved_without_github_mutation(
 ) -> None:
     gh = FakeGh(head=_SHA_A)
     with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(
-            ReviewPublisherError, match="approved_review_evidence_required"
-        ):
+        with pytest.raises(ReviewPublisherError, match="approved_review_evidence_required"):
             publish_sealed_verdict(
                 _sealed(),
                 current_head_sha=_SHA_A,
@@ -344,3 +329,9 @@ def test_publish_from_review_id_via_accept_sealed(tmp_path: Path) -> None:
     assert result.status_posted is True
     assert result.plan.verdict == "APPROVED"
     assert result.publication_id is not None
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

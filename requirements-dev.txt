@@ -30,3 +30,7 @@ ipdb>=0.13.13
 # Secret scanning (gitleaks runs in pre-commit + CI; this is a fallback for
 # ad-hoc local scans of uncommitted state)
 # Install gitleaks separately: brew install gitleaks
+# TruffleHog (local offline scans; CI runs it on every pushed range) is a
+# standalone binary, not a pip package: install it from the upstream release
+# so `trufflehog` is on PATH. Use it only through
+# scripts/audit/secret_scan_local.py (docs/runbooks/secret-scanning.md).

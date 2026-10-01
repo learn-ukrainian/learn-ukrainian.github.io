@@ -16,6 +16,8 @@ from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from typing import Any
 
+from scripts.publish.github import read
+
 QUERY = "query { rateLimit { limit remaining used resetAt } }"
 TIMEOUT_SECONDS = 10.0
 
@@ -99,8 +101,8 @@ def _run(
 ) -> tuple[Any, str, str, int | None, str | None]:
     """Return completed process details or a normalized local failure."""
     try:
-        proc = runner(
-            ["gh", "api", "graphql", "-f", f"query={QUERY}"],
+        proc = read(
+            "budget", runner=runner,
             capture_output=True,
             text=True,
             timeout=TIMEOUT_SECONDS,
@@ -132,7 +134,7 @@ def probe_graphql_budget(
     that every GraphQL API call costs at least one point, including this probe.
     """
     checked_at = _checked_at()
-    _proc, stdout, stderr, returncode, local_error = _run(runner or subprocess.run)
+    _proc, stdout, stderr, returncode, local_error = _run(runner)
     if local_error:
         return _payload(checked_at=checked_at, exhausted=None, error=local_error)
 

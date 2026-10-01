@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch — #1682 test_delegate worktree pollution
 
 ## Context
@@ -26,10 +32,10 @@ cd .worktrees/codex-1682
 2. **Reproduce the failure.**
    ```bash
    mkdir -p .worktrees/codex-1383/data
-   .venv/bin/python -m pytest tests/test_delegate.py::test_dispatch_creates_worktree_and_records_it -x
+   "$PROJECT_PYTHON" -m pytest tests/test_delegate.py::test_dispatch_creates_worktree_and_records_it -x
    # Expected: AssertionError on worktree_reused
    rm -rf .worktrees/codex-1383
-   .venv/bin/python -m pytest tests/test_delegate.py::test_dispatch_creates_worktree_and_records_it -x
+   "$PROJECT_PYTHON" -m pytest tests/test_delegate.py::test_dispatch_creates_worktree_and_records_it -x
    # Expected: pass
    ```
 
@@ -52,12 +58,12 @@ cd .worktrees/codex-1682
 
 5. **Verify.** Run the test 3 times in a row to check for ordering issues:
    ```bash
-   for i in 1 2 3; do .venv/bin/python -m pytest tests/test_delegate.py::test_dispatch_creates_worktree_and_records_it -x || break; done
+   for i in 1 2 3; do "$PROJECT_PYTHON" -m pytest tests/test_delegate.py::test_dispatch_creates_worktree_and_records_it -x || break; done
    ```
 
 6. **Run the full test_delegate suite** to make sure no other test regressed:
    ```bash
-   .venv/bin/python -m pytest tests/test_delegate.py -x -q
+   "$PROJECT_PYTHON" -m pytest tests/test_delegate.py -x -q
    ```
 
 7. **Run ruff.** `.venv/bin/ruff check tests/`

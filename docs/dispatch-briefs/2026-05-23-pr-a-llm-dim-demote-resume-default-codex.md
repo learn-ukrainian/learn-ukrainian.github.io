@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — PR-A + PR-A2: demote 4 LLM dims to warning + --resume default
 
 **Agent:** codex (judgment + cross-file refactor) or claude headless if codex unavailable
@@ -15,7 +21,7 @@ Every verifiable claim in your turn body MUST be tool-backed with the command + 
 
 | Claim | Required evidence |
 |---|---|
-| "Tests pass" | `cd <cwd> && .venv/bin/python -m pytest tests/test_<name>.py -v` + raw final summary line (`N passed in M.MMs`) |
+| "Tests pass" | `cd <cwd> && "$PROJECT_PYTHON" -m pytest tests/test_<name>.py -v` + raw final summary line (`N passed in M.MMs`) |
 | "Lint clean" | `cd <cwd> && .venv/bin/ruff check scripts/build/v7_build.py scripts/build/linear_pipeline.py scripts/common/thresholds.py tests/test_llm_qg_demote.py tests/test_resume_default.py` + final line |
 | "Commit landed" | `cd <cwd> && git log -1 --oneline` raw |
 | "PR opened" | `gh pr view --json url --jq .url` raw URL |
@@ -38,7 +44,7 @@ PR-A2 (bundled): make `--resume` the default in `v7_build.py` so failed phases d
 
 ```bash
 # venv symlinked
-.venv/bin/python scripts/delegate.py is auto-creating your worktree.
+"$PROJECT_PYTHON" scripts/delegate.py is auto-creating your worktree.
 # Your cwd is .worktrees/dispatch/codex/pr-a-llm-demote-resume-default-2026-05-23/
 cd .  # (already there)
 git status --short  # confirm clean branch from origin/main
@@ -327,7 +333,7 @@ def test_v7_build_help_lists_no_resume_not_resume():
     """--resume flag was removed; --no-resume is the new opt-out."""
     out = subprocess.run(
         # venv symlinked
-        [".venv/bin/python", "scripts/build/v7_build.py", "--help"],
+        [""$PROJECT_PYTHON"", "scripts/build/v7_build.py", "--help"],
         capture_output=True,
         text=True,
         check=True,
@@ -343,7 +349,7 @@ def test_v7_build_help_lists_no_resume_not_resume():
 ```bash
 cd .  # in worktree
 # venv symlinked
-.venv/bin/python -m pytest tests/test_llm_qg_demote.py tests/test_resume_default.py -v
+"$PROJECT_PYTHON" -m pytest tests/test_llm_qg_demote.py tests/test_resume_default.py -v
 ```
 
 Capture the raw `N passed in M.MMs` line in your turn body.
@@ -360,7 +366,7 @@ If any errors, fix them. Capture the raw final line.
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/ --timeout=120 -q 2>&1 | tail -30
+"$PROJECT_PYTHON" -m pytest tests/ --timeout=120 -q 2>&1 | tail -30
 ```
 
 If anything else broke from your changes, fix it. Existing tests on `aggregate_review` may need updating to handle the new `terminal_verdict` / `warning_dims` fields — these are non-breaking ADDITIONS to the dataclass, so existing assertions on `verdict` / `failing_dims` / `rejected_dims` should still pass. If a test asserts the exact dataclass shape (e.g. `asdict(v) == {expected}`), update the expected dict to include the new fields.

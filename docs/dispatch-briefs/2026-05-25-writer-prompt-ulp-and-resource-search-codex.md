@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Writer prompt: ULP S1 baseline + resource-search obligation + dialogue-gloss reconciliation
 
 **Agent**: codex
@@ -99,8 +105,8 @@ Every claim in the PR description and commit body MUST be tool-backed. Quote raw
 7. **Run tests + lint**:
    ```bash
    # venv symlinked per #2275 (Phase 2 prerequisite, merged at faeed6dd38)
-   .venv/bin/python -m pytest tests/test_immersion_rule_ulp.py tests/test_writer_prompt_render_size.py tests/test_writer_prompt_no_inline_gloss_8_tokens.py tests/test_writer_prompt_resource_search_obligation.py -q
-   .venv/bin/python -m pytest tests/ -k "immersion or writer_prompt or pipeline" -q
+   "$PROJECT_PYTHON" -m pytest tests/test_immersion_rule_ulp.py tests/test_writer_prompt_render_size.py tests/test_writer_prompt_no_inline_gloss_8_tokens.py tests/test_writer_prompt_resource_search_obligation.py -q
+   "$PROJECT_PYTHON" -m pytest tests/ -k "immersion or writer_prompt or pipeline" -q
    .venv/bin/ruff check scripts tests
    ```
    ALL must be green. Quote raw outputs.
@@ -144,7 +150,7 @@ Every claim in the PR description and commit body MUST be tool-backed. Quote raw
 Codex UI does:
 1. `cd ~/.codex/worktrees/3a9a/learn-ukrainian` (or wherever the m20 Phase 3 worktree lives)
 2. `git pull` (gets the new writer-prompt fix)
-3. Re-run the build: `.venv/bin/python -u scripts/build/v7_build.py a1 my-morning --worktree --no-resume`
+3. Re-run the build: `"$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 my-morning --worktree --no-resume`
 4. The writer will now follow ULP + search resources + use DialogueBox correctly; gates should pass; the §4 ten-check should clear.
 5. Open the m20 anchor PR per the original Phase 3 brief.
 

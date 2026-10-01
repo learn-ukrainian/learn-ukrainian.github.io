@@ -250,6 +250,10 @@ NOT_REPO_WIDE = {
         "Globs only agents_extensions/shared/hooks/*.py to check that shell_shlex "
         "is imported after dont_write_bytecode. It does not scan the repository tree."
     ),
+    "tests/audit/test_secret_scan_local.py::test_tracked_file_beneath_a_symlinked_parent_is_not_scanned": (
+        "Runs `git ls-files` with cwd set to the tmp_path `repo` fixture to confirm a "
+        "staged path exists there; it never lists or reads the live repository tree."
+    ),
 }
 
 # These deploy tests copy only named source paths into isolated temporary

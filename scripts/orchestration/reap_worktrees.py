@@ -35,6 +35,7 @@ from collections.abc import Iterator
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -443,13 +444,7 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
                 "--slurp",
                 "-X",
                 "GET",
-                f"repos/{owner}/{repo}/pulls",
-                "-f",
-                f"head={owner}:{branch}",
-                "-f",
-                "state=all",
-                "-f",
-                "per_page=100",
+                f"repos/{owner}/{repo}/pulls?" + urlencode({"head": f"{owner}:{branch}", "state": "all", "per_page": 100}),
             ],
             cwd=repo_root,
             timeout=30,

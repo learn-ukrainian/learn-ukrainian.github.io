@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Fix `ab discuss` cursor JSONL response parsing
 
 **Agent:** codex (gpt-5.5, xhigh, danger)
@@ -120,7 +126,7 @@ This means future bridge bugs that miss the in-process stream still recover the 
 3. Do all 6 required reads. Quote at least one raw line per read in your final report.
 4. Implement Deliverables 1-4 in `scripts/agent_runtime/adapters/cursor.py` + test file + fixture. Run `pytest tests/agent_runtime/adapters/test_cursor_adapter.py -v` — must pass.
 5. Implement Deliverable 5 in the discuss code path. Run targeted bridge tests if any exist; otherwise add one. Quote raw test output.
-6. Run full agent_runtime suite: `.venv/bin/python -m pytest tests/agent_runtime/ -q --no-header 2>&1 | tail -10`. Quote raw final line.
+6. Run full agent_runtime suite: `"$PROJECT_PYTHON" -m pytest tests/agent_runtime/ -q --no-header 2>&1 | tail -10`. Quote raw final line.
 7. Run ruff: `.venv/bin/ruff check scripts tests`. Quote raw final line.
 8. Commit with conventional message + `X-Agent: codex/bridge-cursor-jsonl-parser-fix-2026-05-28` trailer.
 9. `git push -u origin codex/bridge-cursor-jsonl-parser-fix-2026-05-28`. Quote raw push output.

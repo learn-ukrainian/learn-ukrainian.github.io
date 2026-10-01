@@ -12,12 +12,19 @@ Targets 13 modules with 0% coverage:
 import json
 import os
 import sqlite3
+import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Public writes use synthetic policy, independently of host tooling."""
+    monkeypatch.setenv("GH_REPO", "unit/public")
 
 # ---------------------------------------------------------------------------
 # 1. _config.py
@@ -887,6 +894,16 @@ class TestPrompts:
 class TestGitHub:
     """Tests for scripts/ai_agent_bridge/_github.py."""
 
+    def test_gh_comment_refuses_missing_matcher_before_transport(self, tmp_path, monkeypatch, capsys):
+        from scripts.ai_agent_bridge._github import _gh_comment
+        from scripts.opsec import prepublish
+
+        monkeypatch.setattr(prepublish, "private_tooling", lambda: tmp_path / "missing-tooling")
+        with patch("subprocess.run") as transport:
+            assert _gh_comment(123, "body") is False
+        transport.assert_not_called()
+        assert "private matcher or rules unavailable/incompatible; write refused" in capsys.readouterr().out
+
     def test_format_review_chunk_single(self):
         from scripts.ai_agent_bridge._github import _format_review_chunk
         result = _format_review_chunk("content here", "flash-2.0", 1, 1)
@@ -1390,6 +1407,14 @@ class TestTemplateCompliance:
 
 class TestNaturalnessCheck:
     """Tests for scripts/audit/naturalness_check.py."""
+
+    @pytest.fixture(autouse=True)
+    def _unit_test_interpreter(self, monkeypatch):
+        """These file helpers do not spawn providers or require a checkout venv."""
+        monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+        from common import repo_root
+
+        monkeypatch.setattr(repo_root, "project_interpreter", lambda root=None: Path(sys.executable))
 
     def test_extract_ukrainian_content_basic(self, tmp_path):
         from scripts.audit.naturalness_check import extract_ukrainian_content

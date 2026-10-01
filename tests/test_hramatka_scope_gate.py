@@ -261,7 +261,9 @@ def test_gh_reader_uses_the_repo_qualified_graphql_target(monkeypatch: pytest.Mo
     calls: list[tuple[list[str], dict[str, object]]] = []
 
     def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
-        calls.append((command, kwargs))
+        from pathlib import Path
+        payload = json.loads(Path(command[command.index("--input") + 1]).read_text())
+        calls.append((command, {**kwargs, "query_payload": payload}))
         return subprocess.CompletedProcess(
             command,
             0,
@@ -289,10 +291,8 @@ def test_gh_reader_uses_the_repo_qualified_graphql_target(monkeypatch: pytest.Mo
     assert observation == _observation(labels={"hramatka"}, body="<!-- stream:hramatka -->")
     assert len(calls) == 1
     command, kwargs = calls[0]
-    assert command[:3] == ["gh", "api", "graphql"]
-    assert f"owner={PRIVATE.split('/', 1)[0]}" in command
-    assert f"name={PRIVATE.split('/', 1)[1]}" in command
-    assert "number=349" in command
+    assert command[:5] == ["gh", "api", "--method", "POST", "graphql"]
+    assert kwargs["query_payload"]["variables"] == {"owner": PRIVATE.split("/", 1)[0], "name": PRIVATE.split("/", 1)[1], "number": 349}
     assert kwargs["cwd"] == gate.REPO_ROOT
 
 
@@ -341,3 +341,8 @@ def test_cli_allows_configured_epic_and_returns_zero(capsys: pytest.CaptureFixtu
     payload = json.loads(capsys.readouterr().out)
     assert payload["outcome"] == "ALLOW"
     assert "destination" not in payload
+
+
+@pytest.fixture(autouse=True)
+def _publisher_transport(publisher_transport):
+    """Inject the subprocess spy into typed GitHub read transport."""

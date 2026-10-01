@@ -18,8 +18,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.github_check_rollup import collapse_status_rollup
+from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration import task_identity, task_lifecycle
+from scripts.publish.github import Request, request_run
 
 Runner = Callable[[list[str], str | None], str]
 
@@ -46,9 +51,10 @@ DEFAULT_COMMAND_TIMEOUT_SECONDS = 60.0
 
 
 def _default_runner(repo_root: Path) -> Runner:
+    @publication_boundary(task_lifecycle.LifecycleError)
     def run(args: list[str], stdin: str | None = None) -> str:
         try:
-            completed = subprocess.run(
+            completed = request_run(
                 args,
                 cwd=repo_root,
                 input=stdin,
@@ -59,15 +65,16 @@ def _default_runner(repo_root: Path) -> Runner:
             )
         except subprocess.TimeoutExpired as exc:
             raise task_lifecycle.LifecycleError(
-                f"{' '.join(args[:4])} timed out after {DEFAULT_COMMAND_TIMEOUT_SECONDS}s"
+                f"{args.verb if isinstance(args, Request) else ' '.join(args[:4])} timed out after {DEFAULT_COMMAND_TIMEOUT_SECONDS}s"
             ) from exc
         if completed.returncode != 0:
             detail = (completed.stderr or completed.stdout or "command failed").strip()
-            raise task_lifecycle.LifecycleError(f"{' '.join(args[:4])} failed: {detail[:1000]}")
+            raise task_lifecycle.LifecycleError(
+                f"{args.verb if isinstance(args, Request) else ' '.join(args[:4])} failed: {detail[:1000]}"
+            )
         return completed.stdout
 
     return run
-
 
 
 _TERMINAL_CONCLUSIONS = frozenset(
@@ -139,7 +146,18 @@ class GhGitHubAdapter:
 
     def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
         self.repo_root = repo_root.resolve()
-        self._run = runner or _default_runner(self.repo_root)
+        if runner is None:
+            self._run = _default_runner(self.repo_root)
+        else:
+
+            @publication_boundary(task_lifecycle.LifecycleError)
+            def checked(command, stdin=None):
+                def send(args, **kwargs):
+                    return subprocess.CompletedProcess(args, 0, runner(args, kwargs.get("input")), "")
+
+                return request_run(command, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
+
+            self._run = checked
 
     def _json(self, args: list[str], stdin: str | None = None) -> Any:
         raw = self._run(args, stdin)
@@ -147,7 +165,7 @@ class GhGitHubAdapter:
             return json.loads(raw or "null")
         except json.JSONDecodeError as exc:
             raise task_lifecycle.LifecycleError(
-                f"GitHub command returned invalid JSON: {' '.join(args[:4])}"
+                f"GitHub command returned invalid JSON: {args.verb if isinstance(args, Request) else ' '.join(args[:4])}"
             ) from exc
 
     def registered_stream_epics(self) -> list[int]:
@@ -207,24 +225,7 @@ class GhGitHubAdapter:
                 "number,state,body,url,closedAt",
             ]
         )
-        owner, name = self._owner_name(repository)
-        parent_doc = self._json(
-            [
-                "gh",
-                "api",
-                "graphql",
-                "-F",
-                f"owner={owner}",
-                "-F",
-                f"name={name}",
-                "-F",
-                f"number={issue_number}",
-                "-f",
-                "query=query($owner:String!,$name:String!,$number:Int!){"
-                "repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){"
-                "number state url parent{number url}}}}",
-            ]
-        )
+        parent_doc = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
         repository_doc = ((parent_doc or {}).get("data") or {}).get("repository") or {}
         parent_issue = repository_doc.get("issue") or {}
         parent = parent_issue.get("parent") or {}
@@ -283,22 +284,8 @@ class GhGitHubAdapter:
         }
 
     def _comments(self, repository: str, pr_number: int) -> list[dict[str, Any]]:
-        issue_comments = self._json(
-            [
-                "gh",
-                "api",
-                f"repos/{repository}/issues/{pr_number}/comments",
-                "--paginate",
-            ]
-        )
-        native_reviews = self._json(
-            [
-                "gh",
-                "api",
-                f"repos/{repository}/pulls/{pr_number}/reviews",
-                "--paginate",
-            ]
-        )
+        issue_comments = self._json(Request("read-comments", repo=repository, number=pr_number, paginate=True))
+        native_reviews = self._json(Request("read-reviews", repo=repository, number=pr_number, paginate=True))
         if not isinstance(issue_comments, list) or not isinstance(native_reviews, list):
             raise task_lifecycle.LifecycleError("GitHub PR comments response is not a list")
         comments = [
@@ -330,23 +317,11 @@ class GhGitHubAdapter:
     def _deployments(self, repository: str, sha: str | None) -> list[dict[str, Any]]:
         if not sha:
             return []
-        deployments = self._json(
-            [
-                "gh",
-                "api",
-                "--method",
-                "GET",
-                f"repos/{repository}/deployments",
-                "-f",
-                f"sha={sha}",
-            ]
-        )
+        deployments = self._json(Request("read-deployments", repo=repository, sha=sha))
         result: list[dict[str, Any]] = []
         for deployment in deployments or []:
             deployment_id = deployment.get("id")
-            statuses = self._json(
-                ["gh", "api", f"repos/{repository}/deployments/{deployment_id}/statuses"]
-            )
+            statuses = self._json(Request("read-deployment-statuses", repo=repository, number=deployment_id))
             latest = statuses[0] if statuses else {}
             result.append(
                 {
@@ -488,39 +463,20 @@ class GhGitHubAdapter:
         }
 
     def update_issue_body(self, repository: str, issue_number: int, body: str) -> None:
-        request = json.dumps({"body": body}, ensure_ascii=False)
         self._run(
-            ["gh", "api", "-X", "PATCH", f"repos/{repository}/issues/{issue_number}", "--input", "-"],
-            request,
+            Request("issue-edit", repo=repository, number=issue_number, body=body),
+            None,
         )
 
-    def arm_auto_merge(self, repository: str, pr_number: int) -> None:
+    def enqueue_pr(self, repository: str, pr_number: int) -> None:
         self._run(
-            [
-                "gh",
-                "pr",
-                "merge",
-                str(pr_number),
-                "--repo",
-                repository,
-                "--auto",
-                "--squash",
-            ],
+            Request("pr-merge", number=int(str(pr_number)), repo=repository),
             None,
         )
 
     def close_issue(self, repository: str, issue_number: int) -> None:
         self._run(
-            [
-                "gh",
-                "issue",
-                "close",
-                str(issue_number),
-                "--repo",
-                repository,
-                "--reason",
-                "completed",
-            ],
+            Request("issue-close", number=int(str(issue_number)), repo=repository, reason="completed"),
             None,
         )
 
@@ -803,7 +759,7 @@ def perform_mutation(
                         identity["repository"], identity["github_issue_number"], body
                     )
                 elif action == "arm-auto-merge":
-                    adapter.arm_auto_merge(identity["repository"], ledger["pr"]["number"])
+                    adapter.enqueue_pr(identity["repository"], ledger["pr"]["number"])
                 else:
                     adapter.close_issue(identity["repository"], identity["github_issue_number"])
                 remote_performed = True
@@ -1039,7 +995,11 @@ def cmd_carrier(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/orchestration/task_closeout.py --help\nOutputs and exit codes: Lifecycle observations and explicitly authorized mutations. 0: command succeeded; >=1: refused or failed.\nRelated: #9297",
+    )
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_file())
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -1109,6 +1069,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@publication_cli(task_lifecycle.LifecycleError)
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:

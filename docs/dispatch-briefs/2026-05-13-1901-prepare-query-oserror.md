@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch — #1901 textbook_grounding root cause: `_prepare_query` OSError swallow
 
 **Issue:** [#1901](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1901)
@@ -9,10 +15,10 @@
 
 | Claim | Tool that proves it | Expected output format |
 |---|---|---|
-| Bug reproduced before fix | `PYTHONPATH=scripts .venv/bin/python -c "..."` running the failing query | Raw `OSError: [Errno 63] File name too long` text |
+| Bug reproduced before fix | `PYTHONPATH=scripts "$PROJECT_PYTHON" -c "..."` running the failing query | Raw `OSError: [Errno 63] File name too long` text |
 | Fix applied to `scripts/wiki/sources_db.py:_prepare_query` | `git diff scripts/wiki/sources_db.py` | Diff hunk showing try/except OSError + bounded length check |
-| Test added that exercises the OSError path | `.venv/bin/python -m pytest tests/test_sources_db_prepare_query.py -v` | `1 passed` line in pytest summary |
-| All existing tests still pass | `.venv/bin/python -m pytest tests/test_sources_db*.py tests/test_textbook_grounding*.py -v` | Pytest summary line raw |
+| Test added that exercises the OSError path | `"$PROJECT_PYTHON" -m pytest tests/test_sources_db_prepare_query.py -v` | `1 passed` line in pytest summary |
+| All existing tests still pass | `"$PROJECT_PYTHON" -m pytest tests/test_sources_db*.py tests/test_textbook_grounding*.py -v` | Pytest summary line raw |
 | Ruff clean | `.venv/bin/ruff check scripts/wiki/sources_db.py tests/test_sources_db_prepare_query.py` | `All checks passed!` raw |
 | PR opened | `gh pr view <N> --json url` | Raw URL line |
 
@@ -23,7 +29,7 @@ Quote raw command output for each. "I checked X" without raw output is treated a
 **Empirical repro (run from repo root):**
 
 ```bash
-PYTHONPATH=scripts .venv/bin/python -c "
+PYTHONPATH=scripts "$PROJECT_PYTHON" -c "
 from wiki.sources_db import _prepare_query
 plan_title = 'Караман Grade 10, p.176'
 plan_topic = 'Мій ранок Прокидаюся, вмиваюся — зворотні дієслова та ранкова рутина Діалоги Діалог 1 — Ранкова рутина: — Коли ти прокидаєшся? — Я прокидаюся о сьомій. — Що ти робиш потім? — Вмиваюся, одягаюся і снідаю. ' * 3
@@ -224,8 +230,8 @@ Closes #1901 (the original textbook_grounding HARD blocker).
    - Edit `scripts/build/pilot_uk_lesson.py` line 39-44 stale comment.
 3. **Test suite (mandatory, per #M-7):**
    ```bash
-   .venv/bin/python -m pytest tests/test_sources_db_prepare_query.py -v
-   .venv/bin/python -m pytest tests/test_sources_db*.py tests/test_textbook_grounding*.py -v 2>&1 | tail -20
+   "$PROJECT_PYTHON" -m pytest tests/test_sources_db_prepare_query.py -v
+   "$PROJECT_PYTHON" -m pytest tests/test_sources_db*.py tests/test_textbook_grounding*.py -v 2>&1 | tail -20
    ```
    Quote raw output of both in the PR description.
 4. **Ruff:**

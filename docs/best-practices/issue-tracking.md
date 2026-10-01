@@ -124,19 +124,19 @@ gh issue list --label area:content --state open
 
 1. User assigns → agent claims:
    ```bash
-   gh issue edit {N} --add-label "working:{agent}"
-   gh issue comment {N} --body "Starting: [brief plan]"
+   .venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "working:{agent}"
+   .venv/bin/python -m scripts.publish issue-comment --number {N} --body "Starting: [brief plan]"
    ```
 
 2. Agent completes → removes working label:
    ```bash
-   gh issue edit {N} --remove-label "working:{agent}"
-   gh issue edit {N} --add-label "review:human"  # or review:{agent}
+   .venv/bin/python -m scripts.publish issue-edit --number {N} --remove-labels "working:{agent}"
+   .venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "review:human"  # or review:{agent}
    ```
 
 3. Work done, no review needed:
    ```bash
-   gh issue close {N} --comment "Done: [what was done]"
+   .venv/bin/python -m scripts.publish issue-close --number {N} --comment "Done: [what was done]"
    ```
 
 ---
@@ -165,7 +165,7 @@ When handing off to another agent:
 
 ```bash
 # Post content on the issue
-gh issue comment {N} --body "[full review/spec/request]"
+.venv/bin/python -m scripts.publish issue-comment --number {N} --body "[full review/spec/request]"
 
 # Ping AGY
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
@@ -193,7 +193,7 @@ Never put the substantive request in the broker message. The issue is the source
 
 ## GitHub API Rate Limiting
 
-The `gh` CLI shares the GitHub REST API budget (5000 req/hr authenticated). Heavy issue-hygiene loops — bulk `gh issue list` / `gh issue view` / `gh issue comment` across many issues — can drain it.
+The `gh` CLI shares the GitHub REST API budget (5000 req/hr authenticated). Heavy issue-hygiene loops — bulk `gh issue list` / `gh issue view` / `.venv/bin/python -m scripts.publish issue-comment --number <N>` across many issues — can drain it.
 
 **Claude Code 2.1.116+** surfaces a rate-limit hint from the Bash tool when `gh` hits the limit. When you see it:
 

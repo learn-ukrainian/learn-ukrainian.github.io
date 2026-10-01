@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — backfill `references[].title` across all seminar plans
 
 **Agent:** gemini
@@ -67,7 +73,7 @@ For wiki refs with Ukrainian content in the `note:` field, prefer the path-deriv
 |---|---|
 | "Files modified count" | `git -C .worktrees/gemini/seminar-refs-title-backfill diff --name-only origin/main | wc -l` |
 | "Refs backfilled count" | A small Python one-liner that compares before/after across all seminar plans, counting refs that gained a title |
-| "All seminar plans now pass validate_plan" | `.venv/bin/python -c "from pathlib import Path; from scripts.build.linear_pipeline import plan_check; [plan_check(p) for p in Path('curriculum/l2-uk-en/plans').glob('**/*.yaml') if p.parent.name in {'hist','bio','istorio','lit','lit-essay','lit-hist-fic','lit-fantastika','lit-war','lit-humor','lit-youth','lit-doc','lit-drama','lit-crimea','oes','ruth','folk'}]; print('OK')"` |
+| "All seminar plans now pass validate_plan" | `"$PROJECT_PYTHON" -c "from pathlib import Path; from scripts.build.linear_pipeline import plan_check; [plan_check(p) for p in Path('curriculum/l2-uk-en/plans').glob('**/*.yaml') if p.parent.name in {'hist','bio','istorio','lit','lit-essay','lit-hist-fic','lit-fantastika','lit-war','lit-humor','lit-youth','lit-doc','lit-drama','lit-crimea','oes','ruth','folk'}]; print('OK')"` |
 | "ruff clean on new test file" | `.venv/bin/ruff check tests/curriculum/test_seminar_plan_refs_titles.py` |
 | "pytest passes" | `.venv/bin/pytest tests/curriculum/test_seminar_plan_refs_titles.py -v` |
 

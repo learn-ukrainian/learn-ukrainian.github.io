@@ -680,7 +680,7 @@ Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/
 
 ### GitHub GraphQL budget
 
-`GET /api/state/github-budget` returns one `gh api graphql` observation of
+`GET /api/state/github-budget` returns one `python -m scripts.publish read budget` observation of
 `rateLimit { limit remaining used resetAt }`. It is cached in-process for 60
 seconds, with concurrent cache misses coalesced into one probe. A successful
 zero remaining balance and GitHub's explicit `RATE_LIMIT` /

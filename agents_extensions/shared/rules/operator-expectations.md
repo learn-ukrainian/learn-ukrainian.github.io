@@ -34,7 +34,7 @@ tie-breakers.
    direct commits to main. **Orchestrator merge duty:** workers neither merge nor arm
    auto-merge, but the accountable orchestrator must ensure approved PRs land in `main` —
    once required CI and independent cross-family exact-head review both pass, the orchestrator
-   merges (or enqueues via `gh pr merge <N> --squash`). Never leave an approved, green PR unmerged.
+   merges (or enqueues via `.venv/bin/python -m scripts.publish pr-merge --number <N>`). Never leave an approved, green PR unmerged.
    **After merge, cleanup is mandatory before the next large
    dispatch** (operator 2026-08-07; ENOSPC is the known failure): (1) confirm MERGED,
    (2) `git worktree remove --force` for that PR's dispatch worktree **before**

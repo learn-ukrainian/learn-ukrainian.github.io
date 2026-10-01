@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1819 GeminiAdapter.parse_response misses tool_calls in JSONL
 
 **Why this matters now:** PR #1818 (cwd fix) makes Gemini load `.gemini/settings.json` and start invoking `mcp__sources__*` tools. But if `GeminiAdapter.parse_response()` doesn't extract those calls from the session JSONL, `writer_tool_calls.json` stays `[]`, the runtime gate (`MCP_TOOLS_NEVER_INVOKED`) fires falsely, and **the bakeoff signal stays masked** — even though tools are actually being called.
@@ -37,7 +43,7 @@ a. **Find one in the audit's evidence files** — section E1/E4 of `REPORT.html`
 
 b. **Run a fresh smoke** — from the worktree root:
    ```
-   .venv/bin/python -c "
+   "$PROJECT_PYTHON" -c "
    from scripts.build.linear_pipeline import _runtime_tool_config
    cfg = _runtime_tool_config('gemini-tools')
    print(cfg)

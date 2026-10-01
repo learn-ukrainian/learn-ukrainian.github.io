@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — recover Latin transliterations in ESUM cognate forms (closes #2186)
 
 **Agent**: codex (gpt-5.5, xhigh)
@@ -75,7 +81,7 @@ Update `scripts/etymology/build_data_manifest.py` to include `cognate_forms_reco
 3. **Sanitizer doesn't damage clean cases**: e.g., `5cgemenetz` (already mostly Latin) → unchanged or improved, never worse.
 4. **No false positives on Cyrillic-script markers**: a Russian cognate `р.: сердце` stays `сердце`, not converted to Latin.
 5. **Coverage**: recovered Latin should appear in ≥50% of entries with non-Cyrillic-script markers (best-effort target).
-6. **Pytest green**: `.venv/bin/python -m pytest tests/etymology/ -v`.
+6. **Pytest green**: `"$PROJECT_PYTHON" -m pytest tests/etymology/ -v`.
 7. **Ruff green**.
 
 DO NOT regenerate `data/sources.db` or the manifest as part of this dispatch unless the investigation finds we should switch to ABBYY for some vols (in which case follow the full reload path documented in commit `7d3ab9d898`'s message). Otherwise, leave the corpus reload to a Claude follow-up commit.
@@ -91,9 +97,9 @@ DO NOT regenerate `data/sources.db` or the manifest as part of this dispatch unl
 
 ```bash
 cd . && .venv/bin/ruff check scripts/etymology/ tests/
-cd . && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
+cd . && "$PROJECT_PYTHON" -m pytest tests/etymology/ -v --tb=short
 # Smoke-run the sanitizer:
-cd . && .venv/bin/python -c "
+cd . && "$PROJECT_PYTHON" -c "
 from scripts.etymology.recover_latin_cognates import recover_latin
 cases = [
     ('зіегдгізку', 'sierdzisty'),

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: H2c — typed Russianism calibration set (Stage 1: authoring)
 
 **Agent:** Gemini headless (`gemini-3.1-pro-preview`)
@@ -25,7 +31,7 @@ Per user analysis (2026-05-17): "the calibration set itself is the bottleneck �
 |---|---|
 | "40 cases authored in correct schema" | `wc -l eval/russianism/calibration-cases-h2c.jsonl` returns 40 (one JSON per line) |
 # venv symlinked into worktree by delegate.py
-| "Schema validation passes" | `.venv/bin/python -c "import json; [json.loads(l) for l in open('eval/russianism/calibration-cases-h2c.jsonl')]; print('OK')"` prints OK |
+| "Schema validation passes" | `"$PROJECT_PYTHON" -c "import json; [json.loads(l) for l in open('eval/russianism/calibration-cases-h2c.jsonl')]; print('OK')"` prints OK |
 | "10 cases per russianism type" | `jq -r '.gold.expected_flags[].type' eval/russianism/calibration-cases-h2c.jsonl \| sort \| uniq -c` shows ≥10 per type bucket |
 | "Each flag has cited source" | `jq -r 'select(.gold.expected_clean==false) \| .gold.source' eval/russianism/calibration-cases-h2c.jsonl \| sort -u` lists ≥5 distinct sources, all containing "Antonenko" or "Pravopys" or "Karavansky" or "ESUM" |
 | "Tests pass" | raw `pytest tests/audit/` summary line |
@@ -173,7 +179,7 @@ After writing, validate:
 ```
 wc -l eval/russianism/calibration-cases-h2c.jsonl   # expect 40
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -c "import json; lines = open('eval/russianism/calibration-cases-h2c.jsonl').readlines(); assert len(lines) == 40; [json.loads(l) for l in lines]; print('40 lines, valid JSON each')"
+"$PROJECT_PYTHON" -c "import json; lines = open('eval/russianism/calibration-cases-h2c.jsonl').readlines(); assert len(lines) == 40; [json.loads(l) for l in lines]; print('40 lines, valid JSON each')"
 jq -r '.gold.expected_flags[]?.type' eval/russianism/calibration-cases-h2c.jsonl | sort | uniq -c
 # expect approximately:
 #  ≥8 morphological
@@ -210,7 +216,7 @@ which evidence channel each russianism type actually needs.
 After this lands, run baseline + H1 prompts against this set:
 
     # venv symlinked into worktree by delegate.py
-    .venv/bin/python scripts/audit/judge_calibration_matrix.py \\
+    "$PROJECT_PYTHON" scripts/audit/judge_calibration_matrix.py \\
       --out-dir audit/2026-05-17-judge-calibration-h2c-baseline \\
       --families anthropic,openai,google,xai \\
       --models claude-opus-4-7,gpt-5.5,gemini-3.1-pro-preview,grok-4.3 \\
@@ -227,7 +233,7 @@ goes in the PR body.)
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -m pytest tests/audit/ -q
+"$PROJECT_PYTHON" -m pytest tests/audit/ -q
 .venv/bin/ruff check
 ```
 
