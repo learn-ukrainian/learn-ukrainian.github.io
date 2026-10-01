@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: agents_extensions/shared/skills/content-review/SKILL.md
+---
+
 # Review Content Quality
+
+> **Superseded by:** [agents_extensions/shared/skills/content-review/SKILL.md](../../agents_extensions/shared/skills/content-review/SKILL.md)
 
 Evaluate module content for educational quality, coherence, and pedagogical soundness.
 

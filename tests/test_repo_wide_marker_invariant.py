@@ -63,6 +63,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
         "tests/test_docs_catalogue.py",
+        "tests/test_docs_catalogue_coverage.py",
         "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
@@ -111,6 +112,12 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
 # actually repo-wide. Each entry needs a concrete reason; the registry is kept
 # fresh by ``test_not_repo_wide_entries_are_justified``.
 NOT_REPO_WIDE = {
+    "tests/review/test_prompts.py::test_isolated_prompt_bytes_equal_main_before_9464": (
+        "Globs only tests/review/fixtures/isolated-main-prompts/*.md.j2, not a repository "
+        "tree. Fixture files are not test modules, so changes force the full tier; "
+        "changes to the test module select it directly, and prompt renderer changes "
+        "select it through its imports."
+    ),
     "tests/test_ci_split.py::test_planned_shard_collects_build_tests_through_directory": (
         "Runs `git ls-files -- tests` to plan the CI shards and a pytest --collect-only "
         "over one shard's allowlist; it checks the split and the conftest allowlist hook, "

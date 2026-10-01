@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md
+---
+
 # Guide: Fine-Tuning Gemma 4 31B on HuggingFace
+
+> **Superseded by:** [docs/research/hramatka_literary_poltava_candidate_audit.md](../research/hramatka_literary_poltava_candidate_audit.md)
 
 > **Current authority — retired guide:**
 > [Issue #6058](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6058)

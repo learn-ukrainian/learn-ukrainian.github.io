@@ -658,7 +658,9 @@ def _receipt_proof(root: Path, manifest: dict, manifest_sha: str, live_plan: byt
         return False, "no promotion receipt"
     if receipt.get("manifest_sha256") != manifest_sha:
         return False, "the promotion receipt belongs to another manifest"
-    if set(receipt) != set(_RECEIPT_KEYS) or not all(isinstance(receipt[key], str) for key in _RECEIPT_KEYS):
+    full_keys = {"review_access", "reviewer_model", "reviewer_family", "harness"}
+    expected_keys = set(_RECEIPT_KEYS) | (full_keys if receipt.get("review_access") == "full" else set())
+    if set(receipt) != expected_keys or not all(isinstance(receipt[key], str) for key in expected_keys):
         return False, "the promotion receipt is malformed"
     reviewed_sha = manifest["inputs"]["plan"]["sha256"]
     if receipt["reviewed_plan_sha256"] != reviewed_sha:
@@ -831,4 +833,7 @@ def plan_review_status(level: str, slug: str, *, repo_root: Path) -> dict[str, A
     if freshness.state == "stale":
         return {"state": "stale", "manifest_sha256": digest, "stale": dict(sorted(freshness.stale.items()))}
     state = "reviewed_promoted" if freshness.state == "promoted" else "reviewed_pending_promotion"
-    return {"state": state, "manifest_sha256": digest, "attempt_id": review["attempt_id"], "stale": {}}
+    status = {"state": state, "manifest_sha256": digest, "attempt_id": review["attempt_id"], "stale": {}}
+    if review.get("access") == "full":
+        status["review_access"] = "full"
+    return status

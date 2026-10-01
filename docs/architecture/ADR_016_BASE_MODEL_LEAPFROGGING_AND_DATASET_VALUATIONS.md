@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md
+---
+
 # ADR 016: Base Model Leapfrogging & Data/Harness Value Preservation
+
+> **Superseded by:** [docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md](../strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md)
 
 > **Superseded for current strategy:** Only the general asset-category insight
 > is retained: data, evidence, and evaluation tooling can outlast one model

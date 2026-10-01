@@ -8,7 +8,16 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-from scripts.curriculum.evidence import codes, lock, pack, sources, verify
+from scripts.curriculum.evidence import codes, lock, pack, publication, sources, verify
+
+
+@pytest.fixture(autouse=True)
+def resolved_plan(tmp_path, monkeypatch):
+    """Pack verification always has a real plan, even for grounding-only fixtures."""
+    monkeypatch.setattr(verify, "REPO_ROOT", tmp_path)
+    plan_dir = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1"
+    plan_dir.mkdir(parents=True)
+    (plan_dir / "test-mod.yaml").write_text("steps: []\n")
 
 
 @pytest.fixture
@@ -237,6 +246,99 @@ def _verify(synthetic_sources, synthetic_standard, evidence_dir, *, strict):
         return verify.verify_pack(
             "a1", "test-mod", evidence_dir=evidence_dir, sources_instance=src, offline=not strict, strict=strict
         )
+
+
+@pytest.mark.parametrize(
+    "file,quote_need,over_limit,code",
+    [
+        ("1-klas-bukvar-zaharijchuk-2025-1", True, False, None),
+        ("1-klas-bukvar-zaharijchuk-2025-1", True, True, "publication_limit"),
+        ("ulp-1-00-lesson-notes", True, False, "publication_right"),
+        ("unregistered", True, False, "publication_right"),
+        ("ulp-1-00-lesson-notes", False, False, None),
+    ],
+)
+def test_pack_verify_publication_policy(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, file, quote_need, over_limit, code
+):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file=? WHERE chunk_id='chunk-1'", (file,))
+        if over_limit:
+            conn.execute(
+                "UPDATE textbooks SET text=? WHERE chunk_id='chunk-1'",
+                ("synthetic-first " + "x" * 800 + " synthetic-last",),
+            )
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    plan = {
+        "lessons": [{"steps": [{"id": "s1", "needs": ["quote"] if quote_need else ["culture"], "explains": ["T-001"]}]}]
+    }
+    (plan_dir / "test-mod.yaml").write_text(yaml.safe_dump(plan))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plan_dir, sources_instance=src, offline=True
+        )
+    assert result["status"] == ("failed" if code else "ok"), result
+    if code:
+        assert any(error.startswith(code + ":") for error in result["errors"])
+
+
+def test_pack_verify_publication_cannot_borrow_allowed_source_identity(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file='ulp-1-00-lesson-notes' WHERE chunk_id='chunk-1'")
+    result = _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    document = result["pack"]
+    document["texts"][0]["source"]["file"] = "1-klas-bukvar-zaharijchuk-2025-1"
+    lock.write(synthetic_word_store / "test-mod.yaml", lock.yaml_bytes(document))
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    (plan_dir / "test-mod.yaml").write_text(yaml.safe_dump({"steps": [{"needs": ["quote"], "ref": "T-001"}]}))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plan_dir, sources_instance=src, offline=True
+        )
+    assert result["status"] == "failed"
+    assert any(
+        error.startswith("publication_right:") and "differs from its cited row" in error for error in result["errors"]
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation,code",
+    [
+        ("page", "publication_attribution"),
+        ("missing_ref", "publication_right"),
+        ("malformed_plan", "publication_plan_unresolved"),
+        ("missing_plan", "publication_plan_unresolved"),
+        ("empty_plan", "publication_plan_unresolved"),
+    ],
+)
+def test_pack_verify_publication_refuses_incomplete_proof(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, mutation, code
+):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file='1-klas-bukvar-zaharijchuk-2025-1' WHERE chunk_id='chunk-1'")
+    built = _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    if mutation == "page":
+        built["pack"]["texts"][0]["source"]["page"] = 43
+        lock.write(synthetic_word_store / "test-mod.yaml", lock.yaml_bytes(built["pack"]))
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    plan_path = plan_dir / "test-mod.yaml"
+    plan = {"steps": [{"needs": ["quote"], "ref": "T-999" if mutation == "missing_ref" else "T-001"}]}
+    if mutation != "missing_plan":
+        plan_path.write_text(
+            "steps: [" if mutation == "malformed_plan" else "" if mutation == "empty_plan" else yaml.safe_dump(plan)
+        )
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plan_dir, sources_instance=src, offline=True
+        )
+    assert result["status"] == "failed"
+    assert any(error.startswith(code + ":") for error in result["errors"])
 
 
 def test_moved_chunk_id_with_same_text_is_drift_and_still_reports_chunk_id_moved(
@@ -977,6 +1079,20 @@ def test_build_with_vesum_records_its_content_hash(
     assert len(built_with["russian_patterns"]) == 64
 
 
+@pytest.mark.parametrize("content", [None, "sources: [", "sources: []"])
+def test_pack_verify_reports_registry_unreadable(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, monkeypatch, content
+):
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    registry_path = tmp_path / "registry.yaml"
+    if content is not None:
+        registry_path.write_text(content)
+    monkeypatch.setattr(publication, "REGISTRY_PATH", registry_path)
+    result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert result["status"] == "failed"
+    assert any(error.startswith("publication_registry_unreadable:") for error in result["errors"])
+
+
 @pytest.mark.parametrize("segment", [None, "00:05–00:12"])
 def test_video_models_round_trip_from_request_and_verify(
     synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, segment
@@ -1068,3 +1184,115 @@ def test_pack_request_models_reject_invalid_letters(synthetic_word_store, tmp_pa
     req_path.write_text(yaml.safe_dump(req, allow_unicode=True))
     with pytest.raises(ValueError, match="request schema validation failed"):
         pack.build_pack("a1", "test-mod", req_path, evidence_dir=synthetic_word_store, offline=True)
+
+
+def test_publication_quote_and_listening_models_verify_and_assemble_together(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    """A single built pack retains listening models and renders an admitted quote."""
+    from scripts.build.fresh.assemble import _render_urok_markdown, assemble_expanded_document
+    from scripts.build.fresh.listening import model_target
+
+    book = "1-klas-bukvar-zaharijchuk-2025-1"
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file=? WHERE chunk_id='chunk-1'", (book,))
+    request_path = _text_request(tmp_path)
+    request = yaml.safe_load(request_path.read_text())
+    models = {"letters": ["А"], "words": ["W-001"], "segment": "00:05–00:12"}
+    request["videos"] = [
+        {
+            "id": "V-001",
+            "url": "https://example.com/video",
+            "channel": "corpus-channel",
+            "use": "Listen before choosing.",
+            "models": models,
+        }
+    ]
+    request_path.write_text(yaml.safe_dump(request, allow_unicode=True))
+    built = _build(synthetic_sources, synthetic_standard, synthetic_word_store, request_path)
+    pack_doc = built["pack"]
+    words = yaml.safe_load((synthetic_word_store / "_words.yaml").read_text())
+    plan = {
+        "lessons": [
+            {
+                "n": 1,
+                "steps": [{"id": "s1", "needs": ["quote"], "evidence": ["T-001", "V-001"]}],
+                "videos": [{"evidence": "V-001", "use": "Listen before choosing."}],
+            }
+        ]
+    }
+    plan_path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/test-mod.yaml"
+    plan_path.write_text(yaml.safe_dump(plan))
+    verified = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert verified["status"] == "ok", verified
+    assert pack_doc["videos"][0]["models"] == models
+    assert model_target("А", "V-001", pack_doc, words) == ("А", None)
+    draft = {
+        "status": "ok",
+        "steps": [{"id": "s1", "blocks": [{"kind": "quote", "ref": "T-001"}, {"kind": "video", "ref": "V-001"}]}],
+    }
+    expanded, provenance = assemble_expanded_document(draft, plan, pack_doc, words, "a1", "test-mod", 1)
+    markdown, _units = _render_urok_markdown(draft, expanded, pack_doc, words)
+    quote = pack_doc["texts"][0]
+    assert f"> {quote['quote']}" in markdown
+    assert publication.quote_attribution(quote) in markdown
+    assert pack_doc["videos"][0]["url"] in markdown
+    assert {"T-001", "V-001"} <= {span["ref"] for span in provenance["spans"]}
+
+
+@pytest.mark.parametrize(
+    "statuses,outcome,expected",
+    [
+        ([200], "ok", "ok"),
+        ([403], "bot_blocked", "failed"),
+        ([401], "bot_blocked", "failed"),
+        ([429, 200], "ok", "ok"),
+        ([503], "unverifiable", "failed"),
+        ([429], "unverifiable", "failed"),
+        ([404], "dead_link", "failed"),
+        ([410], "dead_link", "failed"),
+        ([204], "unverifiable", "failed"),
+    ],
+)
+def test_strict_url_checks_report_distinct_outcome(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, monkeypatch, statuses, outcome, expected
+):
+    from tests.curriculum.evidence.test_linkcheck import link_server
+
+    monkeypatch.setattr(sources.time, "sleep", lambda delay: None)
+    with link_server(statuses, reject_old_agent=True) as (url, _):
+        req = {
+            "request_schema": 1,
+            "module": "a1/test-mod",
+            "videos": [{"id": "V-001", "url": url, "channel": "test", "use": "Local test"}],
+        }
+        request = tmp_path / "request.yaml"
+        request.write_text(yaml.safe_dump(req))
+        assert _build(synthetic_sources, synthetic_standard, synthetic_word_store, request)["status"] == "ok"
+        result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert result["status"] == expected, result
+    assert result["url_checks"][0]["outcome"] == outcome
+    if expected == "failed":
+        assert any(error.startswith(outcome + ":") for error in result["errors"]), result
+
+
+def test_strict_timeout_is_unverifiable(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, monkeypatch
+):
+    req = {
+        "request_schema": 1,
+        "module": "a1/test-mod",
+        "videos": [{"id": "V-001", "url": "https://example.com/video", "channel": "test", "use": "Test"}],
+    }
+    request = tmp_path / "request.yaml"
+    request.write_text(yaml.safe_dump(req))
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, request)
+
+    def timeout(*args, **kwargs):
+        raise ConnectionError("synthetic timeout after retries")
+
+    monkeypatch.setattr(sources, "check_url", timeout)
+    result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert result["status"] == "failed"
+    assert result["url_checks"] == [{"id": "V-001", "outcome": "unverifiable"}]
+    assert any(error.startswith("unverifiable:") for error in result["errors"])

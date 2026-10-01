@@ -415,7 +415,7 @@ not permanent routing weights and do not override current CodexBar headroom.
   `text-plan-sandbox-v1` (AGY), and `native-acp-pure-v1` (OpenCode).
   The historical `text-oneshot-isolated-v1` Hermes contract is retired;
   it is not a live DeepSeek route. This does not forbid the separately authorized
-  Grok/Codex launcher `--harness hermes` path (private #667 / public #6943).
+  Grok/Codex launcher `--harness hermes` path (authorized under public #6943).
   ACPX built-ins are checked through their `<seat> exec --file` surface rather
   than by duplicating pins for the hidden provider executables. The project
   text ACP server remains digest-checked before use.

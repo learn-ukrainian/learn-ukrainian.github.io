@@ -27,7 +27,6 @@ from scripts.pipeline.stress_annotator import (
     annotate_file,
     annotate_stress,
 )
-from tests.helpers.python import project_python
 
 
 class TestOraclePedagogy:
@@ -36,13 +35,12 @@ class TestOraclePedagogy:
     These lookups hit the offline ULIF trie (no Stanza).
     """
 
-    def test_collapses_packed_double_acute(self):
+    def test_retains_dual_accents_without_source_choice(self):
         result, count = annotate_stress("Це розбір і корисний приклад.")
-        assert f"ро{STRESS_MARK}збі{STRESS_MARK}р" not in result
-        assert f"ко{STRESS_MARK}ри{STRESS_MARK}сний" not in result
-        assert f"розбі{STRESS_MARK}р" in result
-        assert f"кори{STRESS_MARK}сний" in result
+        assert f"ро{STRESS_MARK}збі{STRESS_MARK}р" in result
+        assert f"ко{STRESS_MARK}ри{STRESS_MARK}сний" in result
         assert count >= 2
+        assert annotate_stress(result) == (result, 0)
 
     def test_repairs_wrong_single_acute(self):
         result, count = annotate_stress(f"Це се{STRESS_MARK}стра. Вона говори{STRESS_MARK}ть.")
@@ -59,16 +57,34 @@ class TestOraclePedagogy:
         assert f"Ро{STRESS_MARK}збі{STRESS_MARK}р" not in result
         assert count == 0
 
-    def test_title_case_mene_uses_lowercase_oracle(self):
+    def test_title_case_mene_uses_lowercase_oracle(self, ulif_stress_db, monkeypatch):
+        from scripts.pipeline import stress_annotator as sa
+        from scripts.verification.stress import verify_stress
+
+        assert verify_stress("мене")["stress_source"] == "ulif"
+        # Freeze the parser's pronoun analysis: the captured store also has a
+        # distinct proper-name Мене reading. No host Stanza model is required.
+        token = types.SimpleNamespace(
+            start_char=0,
+            end_char=4,
+            to_dict=lambda: [{"lemma": "я", "upos": "PRON", "feats": "Case=Acc|Number=Sing|Person=1"}],
+        )
+
+        def parser(text):
+            return types.SimpleNamespace(iter_tokens=lambda: iter([token]))
+
+        monkeypatch.setattr(sa, "_get_stressifier", lambda: types.SimpleNamespace(nlp=parser))
         result, _count = annotate_stress("Мене звати Олег.")
         assert f"Ме{STRESS_MARK}не" not in result
         assert f"Мене{STRESS_MARK}" in result
 
-    def test_ambiguous_metalanguage_gets_first_reading(self):
+    def test_ambiguous_metalanguage_stays_bare_without_context(self, monkeypatch):
+        from scripts.pipeline import stress_annotator as sa
+
+        monkeypatch.setattr(sa, "_get_stressifier", lambda: object())
         result, count = annotate_stress("Правила. Підсумок.")
-        assert f"Пра{STRESS_MARK}вила" in result
-        assert f"Пі{STRESS_MARK}дсумок" in result
-        assert count >= 2
+        assert result == "Правила. Підсумок."
+        assert count == 0
 
     def test_zavzhdy_override_not_last_vowel(self):
         result, _count = annotate_stress("Я завжди тут.")
@@ -80,6 +96,7 @@ class TestOraclePedagogy:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _stress_positions(word: str) -> list[int]:
     """Return indices of stress marks in *word*."""
@@ -124,6 +141,7 @@ def _stressed_form(text: str, target: str) -> str | None:
 # Unit tests for internal helpers
 # ---------------------------------------------------------------------------
 
+
 class TestCountSyllables:
     def test_monosyllabic(self):
         assert _count_syllables("так") == 1
@@ -149,10 +167,11 @@ class TestBuildSkipMask:
 
     def test_url_detected(self):
         from urllib.parse import urlparse
+
         text = "see https://example.com/path for info"
         ranges = _build_skip_mask(text)
         assert len(ranges) >= 1
-        covered = text[ranges[0][0]:ranges[0][1]]
+        covered = text[ranges[0][0] : ranges[0][1]]
         assert urlparse(covered).netloc == "example.com"
 
     def test_inline_code_detected(self):
@@ -180,6 +199,7 @@ class TestInSkipRange:
 # Integration tests for annotate_stress
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.slow
 class TestApostropheWords:
     """AC: apostrophe words (сім'я, м'ясо) stressed correctly."""
@@ -195,9 +215,7 @@ class TestApostropheWords:
             form = _stressed_form(result, word)
             assert form is not None, f"{word} should be found in result"
             positions = _stress_positions(form)
-            assert len(positions) == 1, (
-                f"{word} should have exactly 1 stress mark, got {len(positions)} in '{form}'"
-            )
+            assert len(positions) == 1, f"{word} should have exactly 1 stress mark, got {len(positions)} in '{form}'"
 
         # п'ять is monosyllabic — should NOT be stressed
         pyat_form = _stressed_form(result, "п'ять")
@@ -268,9 +286,7 @@ class TestProperNouns:
         form = _stressed_form(result, "Київ")
         if form is not None:
             positions = _stress_positions(form)
-            assert len(positions) <= 1, (
-                f"Київ should have at most 1 stress mark, got {len(positions)} in '{form}'"
-            )
+            assert len(positions) <= 1, f"Київ should have at most 1 stress mark, got {len(positions)} in '{form}'"
 
     def test_shevchenko_single_stress(self):
         text = "Тарас Шевченко — великий поет."
@@ -278,9 +294,7 @@ class TestProperNouns:
         form = _stressed_form(result, "Шевченко")
         if form is not None:
             positions = _stress_positions(form)
-            assert len(positions) <= 1, (
-                f"Шевченко should have at most 1 stress mark, got {len(positions)} in '{form}'"
-            )
+            assert len(positions) <= 1, f"Шевченко should have at most 1 stress mark, got {len(positions)} in '{form}'"
 
     def test_kyiv_not_stressed_monosyllabic(self):
         """Київ has 2 vowels (и, і) so 2 syllables — it CAN be stressed.
@@ -305,9 +319,7 @@ class TestCodeBlocksUntouched:
         code_end = result.index("```", code_start + 3) + 3
         code_block = result[code_start:code_end]
         # No stress marks inside code block
-        assert STRESS_MARK not in code_block, (
-            f"Code block should not contain stress marks: '{code_block}'"
-        )
+        assert STRESS_MARK not in code_block, f"Code block should not contain stress marks: '{code_block}'"
 
     def test_inline_code(self):
         text = "Використовуй `мама` тут."
@@ -315,10 +327,8 @@ class TestCodeBlocksUntouched:
         # Find inline code span
         tick1 = result.index("`")
         tick2 = result.index("`", tick1 + 1)
-        inline = result[tick1:tick2 + 1]
-        assert STRESS_MARK not in inline, (
-            f"Inline code should not contain stress marks: '{inline}'"
-        )
+        inline = result[tick1 : tick2 + 1]
+        assert STRESS_MARK not in inline, f"Inline code should not contain stress marks: '{inline}'"
 
 
 @pytest.mark.slow
@@ -335,9 +345,7 @@ class TestURLsUntouched:
         if url_end == -1:
             url_end = len(result)
         url = result[url_start:url_end]
-        assert STRESS_MARK not in url, (
-            f"URL should not contain stress marks: '{url}'"
-        )
+        assert STRESS_MARK not in url, f"URL should not contain stress marks: '{url}'"
 
     def test_html_tags_not_annotated(self):
         text = '<div class="dialogue">мама тато</div>'
@@ -364,9 +372,7 @@ class TestNoDuplicateStress:
         result1, _count1 = annotate_stress(text)
         result2, count2 = annotate_stress(result1)
         # Second pass should add zero new marks
-        assert count2 == 0, (
-            f"Second annotation pass should add 0 marks, added {count2}"
-        )
+        assert count2 == 0, f"Second annotation pass should add 0 marks, added {count2}"
         # Text should be identical
         assert result1 == result2, "Double annotation changed the text"
 
@@ -428,9 +434,7 @@ class TestPerformance:
         # via Dagger comfortably fit in the prior 15s; the budget bump
         # absorbs runner-image variance without weakening the perf intent.
         budget_s = 20.0
-        assert elapsed < budget_s, (
-            f"Annotation took {elapsed:.2f}s — must be <{budget_s:.0f}s for {word_count} words"
-        )
+        assert elapsed < budget_s, f"Annotation took {elapsed:.2f}s — must be <{budget_s:.0f}s for {word_count} words"
         assert count > 0, "Should have stressed at least some words"
 
 
@@ -454,9 +458,7 @@ class TestHeteronyms:
         if form is not None:
             positions = _stress_positions(form)
             # Must have 0 (library declined) or 1 stress mark — never 2+
-            assert len(positions) <= 1, (
-                f"замок should have at most 1 stress, got {len(positions)} in '{form}'"
-            )
+            assert len(positions) <= 1, f"замок should have at most 1 stress, got {len(positions)} in '{form}'"
 
     def test_does_not_crash_on_ambiguous(self):
         """Annotator should not crash on ambiguous words."""
@@ -498,6 +500,7 @@ class TestRealModuleContent:
 # annotate_file — safety check fix (#1052)
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.slow
 class TestAnnotateFileSafetyCheck:
     """The 2% safety check should only count stress marks in the body,
@@ -510,7 +513,7 @@ class TestAnnotateFileSafetyCheck:
         # Simulate a module with pre-stressed vocabulary section but unstressed body
         body = "Моя мама працює в школі. Українська мова дуже гарна.\n" * 20
         # Add lots of stressed words in Словник (simulating vocab_gen.py output)
-        stressed_vocab = (f"ма{STRESS_MARK}ма | mother\n" * 50)
+        stressed_vocab = f"ма{STRESS_MARK}ма | mother\n" * 50
         content = (
             f"<!-- TAB:Урок -->\n\n{body}\n\n"
             f"<!-- TAB:Словник -->\n\n{stressed_vocab}\n\n"
@@ -558,7 +561,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 def _venv_python() -> str:
     """The interpreter running pytest, for subprocess tests."""
-    return project_python()
+    return sys.executable
 
 
 # Each worker increments a shared counter via a non-atomic read-modify-write
@@ -610,6 +613,7 @@ class TestModelDownloadLock:
         )
         monkeypatch.setitem(sys.modules, "ukrainian_word_stress", fake_module)
         monkeypatch.setattr(sa, "_model_download_lock", fake_lock)
+        monkeypatch.setattr(sa, "_load_context_parser", lambda: None)
         monkeypatch.setattr(sa, "_stressifier", None)
 
         sa._get_stressifier()
@@ -699,8 +703,7 @@ class TestActivitiesYaml:
     def test_error_word_outside_its_item_is_not_protected(self, tmp_path: Path):
         path = tmp_path / "activities.yaml"
         path.write_text(
-            "inline:\n- items:\n  - sentence: Це мама.\n    error: мама\n"
-            "  - sentence: Це мама.\n    answer: мама\n",
+            "inline:\n- items:\n  - sentence: Це мама.\n    error: мама\n  - sentence: Це мама.\n    answer: мама\n",
             encoding="utf-8",
         )
         annotate_file(path)

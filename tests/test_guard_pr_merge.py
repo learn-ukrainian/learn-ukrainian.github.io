@@ -52,6 +52,33 @@ def _load_hook():
 guard = _load_hook()
 
 
+@pytest.mark.parametrize("dependency", ["scripts.publish.merge_guard", "shell_shlex"])
+@pytest.mark.parametrize(
+    "command,expected", [("echo fixture", 0), ("", 0), ("gh pr checks 5", 0), ("gh pr merge 5", 2)]
+)
+def test_missing_dependency_only_blocks_merge_commands(dependency, command, expected):
+    bootstrap = """
+import builtins, runpy, sys
+original_import = builtins.__import__
+def missing_dependency(name, *args, **kwargs):
+    if name == sys.argv[2]:
+        raise ImportError("fixture dependency unavailable")
+    return original_import(name, *args, **kwargs)
+builtins.__import__ = missing_dependency
+runpy.run_path(sys.argv[1], run_name="__main__")
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", bootstrap, str(HOOK_PATH), dependency],
+        input=json.dumps({"tool_input": {"command": command}}),
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == expected, result.stderr
+    if expected == 2:
+        assert "guard dependency unavailable" in result.stderr
+
+
 @pytest.mark.parametrize(
     "shape",
     [

@@ -177,7 +177,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.path_guard import checked_existing_path
-from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
@@ -1508,36 +1508,10 @@ def assemble_expanded_document(
             add_unit("slovnyk", None, None, None, f"inc_{wid}", "record_print", lemma, source="record", ref=wid)
 
     # 4. Tab: resursy (Resources) - CITED ids only
-    cited_text_ids: list[str] = []
-    cited_video_ids: list[str] = []
-    for st in lesson_entry.get("steps", []):
-        if isinstance(st, dict):
-            for ev in st.get("evidence", []):
-                if isinstance(ev, str):
-                    if ev.startswith("T-") and ev not in cited_text_ids:
-                        cited_text_ids.append(ev)
-                    elif ev.startswith("V-") and ev not in cited_video_ids:
-                        cited_video_ids.append(ev)
-    for v_entry in lesson_entry.get("videos", []):
-        if isinstance(v_entry, dict):
-            ev = v_entry.get("evidence")
-            if isinstance(ev, str) and ev not in cited_video_ids:
-                cited_video_ids.append(ev)
-
-    for cid in cited_text_ids:
-        t_rec = texts_by_id.get(cid)
-        if t_rec is None:
-            raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
-        src = t_rec.get("source", {})
-        title = str(src.get("work") or src.get("file") or src.get("author") or cid)
-        add_unit("resursy", None, None, None, f"res_{cid}", "record_print", title, source="record", ref=cid)
-
-    for vid in cited_video_ids:
-        v_rec = videos_by_id.get(vid)
-        if v_rec is None:
-            raise AssemblerError(VIDEO_NOT_FOUND, f"cited video record {vid} not found in pack")
-        chan = str(v_rec.get("channel") or vid)
-        add_unit("resursy", None, None, None, f"res_{vid}", "record_print", chan, source="record", ref=vid)
+    for cid, section, resource in build_resursy_entries(lesson_entry, pack):
+        # Resource metadata is exempt from vocabulary checks; quote prose is not.
+        role = "vesum_exempt" if section == "books" else "record_print"
+        add_unit("resursy", None, None, None, f"res_{cid}", role, resource["title"], source="record", ref=cid)
 
     expanded_doc = {
         "expanded_schema": 1,
@@ -1906,6 +1880,8 @@ def build_slovnyk_tab(
 def build_resursy_entries(
     lesson_plan: dict[str, Any],
     pack: dict[str, Any],
+    *,
+    warnings: list[dict[str, str]] | None = None,
 ) -> list[tuple[str, str, dict[str, Any]]]:
     """Build Resursy entries from cited pack records only, as (record id, section, entry)."""
     entries: list[tuple[str, str, dict[str, Any]]] = []
@@ -1922,14 +1898,26 @@ def build_resursy_entries(
 
     cited_text_ids: list[str] = []
     cited_video_ids: list[str] = []
+    cited_standard_ids: list[str] = []
     for st in lesson_plan.get("steps", []):
         if isinstance(st, dict):
-            for ev in st.get("evidence", []):
+            for ev in [*st.get("evidence", []), *st.get("explains", []), *([st["ref"]] if st.get("ref") else [])]:
                 if isinstance(ev, str):
                     if ev.startswith("T-") and ev not in cited_text_ids:
                         cited_text_ids.append(ev)
                     elif ev.startswith("V-") and ev not in cited_video_ids:
                         cited_video_ids.append(ev)
+                    elif ev.startswith("S-") and ev not in cited_standard_ids:
+                        cited_standard_ids.append(ev)
+    # Standard records carry line locators and a file digest, but no citable
+    # bibliographic metadata (evidence-pack-v1). Apply contract §1a's explicit
+    # omission warning rather than silently dropping the citation or inventing it.
+    standard_ids = {record["id"] for record in pack.get("standard", [])}
+    for cid in cited_standard_ids:
+        if cid not in standard_ids:
+            raise AssemblerError("standard_not_found", f"cited standard record {cid} not found in pack")
+        if warnings is not None:
+            warnings.append({"code": "resource_citation_omitted", "record": cid, "reason": "citable_metadata_missing"})
     for v_entry in lesson_plan.get("videos", []):
         if isinstance(v_entry, dict):
             ev = v_entry.get("evidence")
@@ -1938,25 +1926,19 @@ def build_resursy_entries(
 
     for cid in cited_text_ids:
         t_rec = texts_by_id.get(cid)
-        if t_rec:
-            src = t_rec.get("source", {})
-            title = str(src.get("work") or src.get("file") or src.get("author") or cid)
-            author = str(src.get("author") or "")
-            page = str(src.get("page") or "")
-            entries.append(
-                (
-                    cid,
-                    "books",
-                    {
-                        "title": title,
-                        "author": author,
-                        "pages": page,
-                        "url": "",
-                        "source": cid,
-                        "description": str(t_rec.get("supports") or ""),
-                    },
+        if t_rec is None:
+            raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
+        try:
+            citation = publication.resource_citation(t_rec)
+        except ValueError as exc:
+            raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+        if citation is None:
+            if warnings is not None:
+                warnings.append(
+                    {"code": "resource_citation_omitted", "record": cid, "reason": "citable_metadata_missing"}
                 )
-            )
+            continue
+        entries.append((cid, "books", {**citation, "author": "", "pages": "", "source": cid}))
 
     plan_video_uses: dict[str, str] = {}
     for v_entry in lesson_plan.get("videos", []):
@@ -1967,6 +1949,8 @@ def build_resursy_entries(
 
     for vid_id in cited_video_ids:
         vid = videos_by_id.get(vid_id)
+        if vid is None:
+            raise AssemblerError(VIDEO_NOT_FOUND, f"cited video record {vid_id} not found in pack")
         if vid:
             chan = str(vid.get("channel") or vid_id)
             entries.append(
@@ -2140,13 +2124,10 @@ def _render_urok_markdown(
                 ref_id = block.get("ref", "")
                 t_rec = texts_by_id.get(ref_id)
                 if t_rec:
-                    src = t_rec.get("source", {})
-                    author = str(src.get("author") or "")
-                    work = str(src.get("work") or "")
-                    year = src.get("year")
-                    page = src.get("page")
-                    attr_parts = [p for p in [author, work, str(year) if year else "", str(page) if page else ""] if p]
-                    attr = ", ".join(attr_parts) if attr_parts else str(src.get("file", ""))
+                    try:
+                        attr = publication.quote_attribution(t_rec)
+                    except ValueError as exc:
+                        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
                     w.line("> ", *block_fragments(step_id, block_idx, str(t_rec.get("quote", ""))))
                     if attr:
                         w.line(">")
@@ -2482,7 +2463,8 @@ def check_9_stress_and_render(
 
     slovnyk_entries = build_slovnyk_entries(lesson_entry, words_store, stream)
     vocab_items = [item for _wid, item in slovnyk_entries]
-    resursy_entries = build_resursy_entries(lesson_entry, pack)
+    resource_warnings: list[dict[str, str]] = []
+    resursy_entries = build_resursy_entries(lesson_entry, pack, warnings=resource_warnings)
     external_resources: dict[str, list[dict[str, Any]]] = {}
     for _rid, section, entry in resursy_entries:
         external_resources.setdefault(section, []).append(entry)
@@ -2659,7 +2641,7 @@ def check_9_stress_and_render(
         # The parser already preserves host metadata in each quiz question. Resolve
         # media here from the locked pack rather than accepting a writer-supplied URL.
         for item in act_payload.get("items") or []:
-            if item.get("kind") == "listening":
+            if isinstance(item, dict) and item.get("kind") == "listening":
                 host = item.get("host") or {}
                 video = next((v for v in pack.get("videos", []) if v.get("id") == host.get("ref")), None)
                 if host.get("kind") != "video" or video is None:
@@ -2774,6 +2756,7 @@ def check_9_stress_and_render(
         "stressed_doc": stressed_doc,
         "vocab_items": vocab_items,
         "external_resources": external_resources,
+        "warnings": resource_warnings,
         "mdx": mdx_content,
         "meta_data": meta_data,
     }
@@ -2954,4 +2937,5 @@ def assemble_lesson(
         "check_11": c11.to_dict(),
         "mdx": c9.artifacts.get("mdx"),
         "frontmatter": c9.artifacts.get("meta_data"),
+        "warnings": c9.artifacts.get("warnings", []),
     }

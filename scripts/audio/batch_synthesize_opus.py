@@ -27,6 +27,8 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.verification.stress import spoken_stressed_form
+
 
 def _find_default_manifest() -> Path | None:
     for p in [_REPO_ROOT, *_REPO_ROOT.parents]:
@@ -148,12 +150,17 @@ def resolve_stress(lemma: str, pos: str | None, oracle: Callable[..., dict[str, 
         return p_lemma, None
 
     # Query oracle
-    result = oracle(p_lemma, pos=pos)
+    result = oracle(p_lemma, pos=pos, lemma=p_lemma)
     status = result.get("status")
     if status == "ok":
         matches = result.get("matches", [])
         if len(matches) == 1 and plain(matches[0].get("stressed_form", "")) == p_lemma:
-            return matches[0]["stressed_form"], None
+            text = spoken_stressed_form(matches[0])
+            if text is None:
+                return None, "unresolved_dual_stress"
+            if plain(text) != p_lemma:
+                return None, "lemma_mismatch"
+            return text, None
         return None, "multiple_matches"
     return None, status or "oracle_rejected"
 

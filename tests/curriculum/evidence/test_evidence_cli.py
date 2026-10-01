@@ -258,6 +258,13 @@ def test_cli_build_and_verify_pack_subprocess(synthetic_sources, synthetic_stand
     assert (ev_dir / "alphabet.yaml").exists()
     assert (ev_dir / "alphabet.yaml.lock").exists()
 
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    (plan_dir / "alphabet.yaml").write_text(
+        yaml.safe_dump({"steps": [{"id": "s1", "needs": ["culture"], "explains": ["T-001"]}]}),
+        encoding="utf-8",
+    )
+
     cmd_verify = [
         PYTHON,
         "-m",
@@ -267,6 +274,8 @@ def test_cli_build_and_verify_pack_subprocess(synthetic_sources, synthetic_stand
         "alphabet",
         "--evidence-dir",
         str(ev_dir),
+        "--plans-dir",
+        str(plan_dir),
         "--sources-db",
         str(synthetic_sources),
         "--standard-path",
@@ -284,6 +293,12 @@ def test_cli_build_and_verify_pack_subprocess(synthetic_sources, synthetic_stand
     assert proc_verify.returncode == 0, f"pack-verify failed: {proc_verify.stderr}\n{proc_verify.stdout}"
     data_verify = json.loads(proc_verify.stdout)
     assert data_verify["status"] == "ok"
+
+    missing_plan_cmd = cmd_verify.copy()
+    missing_plan_cmd[missing_plan_cmd.index("--plans-dir") + 1] = str(tmp_path / "missing-plans")
+    missing_plan = subprocess.run(missing_plan_cmd, capture_output=True, text=True, cwd=REPO_ROOT, timeout=30)
+    assert missing_plan.returncode == 1
+    assert any(error.startswith("publication_plan_unresolved:") for error in json.loads(missing_plan.stdout)["errors"])
 
 
 def test_cli_pack_dry_run_does_not_write_files(synthetic_sources, synthetic_standard, tmp_path):

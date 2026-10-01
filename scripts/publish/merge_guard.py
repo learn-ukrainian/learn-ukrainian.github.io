@@ -1,10 +1,11 @@
 """Shared, fail-closed PR merge readiness for the hook and publisher."""
+
 from __future__ import annotations
 
 import json
 import re
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from scripts.opsec.prepublish import PublishBlocked
 
@@ -16,15 +17,19 @@ _ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "ERROR",
 _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "REQUESTED", "STALE"}
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
+
 def _is_advisory(name: str) -> bool:
     low = name.lower()
     return any(m in low for m in ADVISORY_NAME_MARKERS)
+
 
 def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:
     """Recognize gh 2.46.0's unsupported ``pr checks --json`` response only."""
     if out.returncode != 1 or (out.stdout or "").strip():
         return False
-    lines = [line.strip() for line in re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", out.stderr or "").splitlines() if line.strip()]
+    lines = [
+        line.strip() for line in re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", out.stderr or "").splitlines() if line.strip()
+    ]
     return (
         len(lines) >= 4
         and lines[0] == "unknown flag: --json"
@@ -34,8 +39,10 @@ def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:
         and all(line.startswith("-") for line in lines[3:])
     )
 
+
 def _rollup_value(value: object) -> str:
     return value.strip().upper() if isinstance(value, str) else ""
+
 
 def _rollup_name(row: dict) -> str | None:
     for field in ("name", "context"):
@@ -43,6 +50,7 @@ def _rollup_name(row: dict) -> str | None:
         if isinstance(value, str) and value.strip():
             return value.strip()
     return None
+
 
 def _rollup_timestamp(row: dict) -> datetime | None:
     for field in ("startedAt", "createdAt", "updatedAt", "completedAt"):
@@ -54,10 +62,11 @@ def _rollup_timestamp(row: dict) -> datetime | None:
         except ValueError:
             continue
         if parsed.tzinfo is None:
-            # ``datetime.UTC`` is Python 3.11+; this standalone hook supports 3.10.
-            parsed = parsed.replace(tzinfo=timezone.utc)  # noqa: UP017
+            # Treat timestamps without an offset as UTC.
+            parsed = parsed.replace(tzinfo=UTC)
         return parsed
     return None
+
 
 def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
     latest: dict[tuple[str, ...], tuple[datetime | None, dict]] = {}
@@ -86,6 +95,7 @@ def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
                 return None
         latest[key] = (timestamp, row)
     return [row for _timestamp, row in latest.values()]
+
 
 def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
     if not rows:
@@ -135,6 +145,7 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
             return None
     return failing, pending
 
+
 def parse_checks(rows):
     """Parse gh check buckets with the hook's advisory and unknown-state policy."""
     if not isinstance(rows, list):
@@ -178,27 +189,51 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
         raise PublishBlocked("OPSEC: AGENT_NO_MERGE forbids merging.")
     env = {k: v for k, v in environment.items() if k not in {"CLICOLOR_FORCE", "FORCE_COLOR"}}
     env.update(NO_COLOR="1", CLICOLOR="0")
+
     def get(args):
-        return runner(["gh", "pr", *args, "--repo", repo], cwd=cwd, env=env,
-                      capture_output=True, text=True, check=False, timeout=15)
+        return runner(
+            ["gh", "pr", *args, "--repo", repo],
+            cwd=cwd,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+
     try:
         meta_result = get(["view", str(number), "--json", "number,isDraft,headRefOid"])
         meta = json.loads(meta_result.stdout) if meta_result.returncode == 0 else None
-        if (not isinstance(meta, dict) or type(meta.get("number")) is not int or meta.get("number") != number
-                or not isinstance(meta.get("headRefOid"), str)
-                or not re.fullmatch(r"[0-9a-fA-F]{40}", meta["headRefOid"])):
+        if (
+            not isinstance(meta, dict)
+            or type(meta.get("number")) is not int
+            or meta.get("number") != number
+            or not isinstance(meta.get("headRefOid"), str)
+            or not re.fullmatch(r"[0-9a-fA-F]{40}", meta["headRefOid"])
+        ):
             raise ValueError("invalid metadata")
         checks = get(["checks", str(number), "--json", "name,bucket,state"])
         if _checks_json_unsupported(checks):
             rollup = get(["view", str(number), "--json", "statusCheckRollup"])
-            states = _parse_status_rollup_rows(json.loads(rollup.stdout)["statusCheckRollup"]) if rollup.returncode == 0 else None
+            states = (
+                _parse_status_rollup_rows(json.loads(rollup.stdout)["statusCheckRollup"])
+                if rollup.returncode == 0
+                else None
+            )
         else:
-            states = parse_checks(json.loads(checks.stdout)) if checks.stdout.strip() else (([], []) if checks.returncode == 0 else None)
+            try:
+                states = parse_checks(json.loads(checks.stdout))
+            except (json.JSONDecodeError, TypeError):
+                states = None
             if checks.returncode not in {0, 1, 8}:
                 states = None
+        if states is None:
+            raise PublishBlocked("OPSEC: merge refused: cannot establish check state.")
         reason = readiness_reason(meta, states)
         if match_head is not None and meta["headRefOid"].lower() != match_head.lower():
             reason = "reviewed head changed"
+    except PublishBlocked:
+        raise
     except Exception:
         raise PublishBlocked("OPSEC: merge readiness unverifiable.") from None
     if reason:

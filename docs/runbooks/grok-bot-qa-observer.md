@@ -76,6 +76,6 @@ curl -s -X POST http://127.0.0.1:8765/api/observer/presence \
 ## Evidence (works today)
 
 - Sweep 403 → [#6717](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6717)
-- 2026-08-13 review batch: public LU [#6760](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6760)–[#6768](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6768) (`app/cursor`); private hramatka #451–#458 after code review
+- 2026-08-13 review batch: public LU [#6760](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6760)–[#6768](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6768) (`app/cursor`); paired private tracking issues after code review
 
 Parent: #6742.

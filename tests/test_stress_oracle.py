@@ -124,14 +124,14 @@ class TestHeteronymEnumeration:
 class TestPedagogicalForm:
     """Learner-facing single acute: collapse packed duals; honor overrides."""
 
-    def test_rozbir_collapses_to_last_vowel(self):
+    def test_rozbir_preserves_both_without_source_choice(self):
         match = verify_stress("розбір")["matches"][0]
         assert match["vowel_indices"] == [1, 4]
-        assert pedagogical_stressed_form(match) == f"розбі{STRESS}р"
+        assert pedagogical_stressed_form(match) == f"ро{STRESS}збі{STRESS}р"
 
-    def test_korysnyi_collapses_to_last_vowel(self):
+    def test_korysnyi_preserves_both_without_source_choice(self):
         match = verify_stress("корисний")["matches"][0]
-        assert pedagogical_stressed_form(match) == f"кори{STRESS}сний"
+        assert pedagogical_stressed_form(match) == match["stressed_form"]
 
     def test_zavzhdy_override_keeps_first_vowel(self):
         result = verify_stress("завжди")
@@ -153,7 +153,7 @@ class TestNotFound:
         # Valid Ukrainian-alphabet nonsense word, ≥2 vowels, not in the
         # dictionary.
         result = verify_stress("квазюрап")
-        assert result["status"] == "not_found"
+        assert result["status"] == "pending"
         assert result["matches"] == []
 
 
@@ -310,8 +310,8 @@ class TestVerifyStresses:
         assert all(row["status"] == "invalid_input" for row in batch["words"])
         assert all(row["readings"] == [] for row in batch["words"])
 
-    def test_source_envelope_is_not_repeated_per_word(self):
+    def test_source_envelope_is_not_repeated_per_word(self, ulif_stress_db):
         batch = verify_stresses(["село", "замок"])
-        assert "source" not in batch["words"][0]
-        assert "source" not in batch["words"][1]
+        assert batch["words"][0]["source"] == "ulif"
+        assert batch["words"][1]["source"] == "ulif"
         assert str(batch).count(batch["source"]["digest"]) == 1

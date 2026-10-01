@@ -14,7 +14,7 @@ import sqlite3
 import sys
 import threading
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -111,9 +111,7 @@ def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
     return VESUM_DB_PATH
 
 
-def _get_or_create_conn_locked(
-    resolved_path: Path, current_stat: tuple[int, int] | None
-) -> sqlite3.Connection:
+def _get_or_create_conn_locked(resolved_path: Path, current_stat: tuple[int, int] | None) -> sqlite3.Connection:
     """Internal helper: return or create the cached SQLite connection under _CONN_LOCK."""
     global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
     if (
@@ -123,9 +121,7 @@ def _get_or_create_conn_locked(
         or _vesum_conn_stat != current_stat
     ):
         # VESUM is a reference dictionary: every reader opens it read-only.
-        new_conn = sqlite3.connect(
-            f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False
-        )
+        new_conn = sqlite3.connect(f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
         new_conn.row_factory = sqlite3.Row
 
         old_conn = _vesum_conn
@@ -221,6 +217,11 @@ def close_vesum_conn(conn: sqlite3.Connection | None = None) -> None:
                 target.close()
 
 
+def _normalize_apostrophes(word: str) -> str:
+    """Dictionary identity treats the three Ukrainian apostrophe spellings alike."""
+    return word.translate(str.maketrans("’ʼ", "''"))
+
+
 def verify_word(
     word: str,
     pos_filter: str | None = None,
@@ -230,6 +231,7 @@ def verify_word(
 
     Returns list of {lemma, pos, tags} matches. Empty list = not found.
     """
+    word = _normalize_apostrophes(word)
     with get_vesum_connection(db_path) as conn:
         if pos_filter:
             rows = conn.execute(
@@ -256,22 +258,19 @@ def verify_words(
     """
     if not words:
         return {}
+    normalized = {_normalize_apostrophes(word) for word in words}
     with get_vesum_connection(db_path) as conn:
-        placeholders = ",".join("?" * len(words))
+        placeholders = ",".join("?" * len(normalized))
+        sql = f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders})"
+        params = list(normalized)
         if pos_filter:
-            rows = conn.execute(
-                f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders}) AND pos = ?",
-                (*words, pos_filter),
-            ).fetchall()
-        else:
-            rows = conn.execute(
-                f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders})",
-                words,
-            ).fetchall()
-        result: dict[str, list[dict]] = {w: [] for w in words}
-        for r in rows:
-            result[r["word_form"]].append({"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]})
-        return result
+            sql += " AND pos = ?"
+            params.append(pos_filter)
+        rows = conn.execute(sql, params).fetchall()
+        found: dict[str, list[dict]] = {word: [] for word in normalized}
+        for row in rows:
+            found[row["word_form"]].append({"lemma": row["lemma"], "pos": row["pos"], "tags": row["tags"]})
+        return {word: [dict(match) for match in found[_normalize_apostrophes(word)]] for word in words}
 
 
 def verify_lemma(lemma: str, db_path: str | Path | None = None) -> list[dict]:
@@ -279,6 +278,7 @@ def verify_lemma(lemma: str, db_path: str | Path | None = None) -> list[dict]:
 
     Returns list of {word_form, pos, tags} for every form.
     """
+    lemma = _normalize_apostrophes(lemma)
     with get_vesum_connection(db_path) as conn:
         rows = conn.execute(
             "SELECT word_form, pos, tags FROM forms WHERE lemma = ? ORDER BY pos, tags",
@@ -324,8 +324,7 @@ def _get_metadata_and_version(conn: sqlite3.Connection) -> tuple[str, dict[str, 
         if not has_meta:
             return "v6.8.0", {}
         meta = {
-            str(row[0]): str(row[1])
-            for row in conn.execute("SELECT key, value FROM vesum_build_metadata").fetchall()
+            str(row[0]): str(row[1]) for row in conn.execute("SELECT key, value FROM vesum_build_metadata").fetchall()
         }
         version = meta.get("canonical_jsonl_sha256") or meta.get("schema_version") or "v6.8.0"
         return version, meta
@@ -348,11 +347,7 @@ def _resolve_inspection_status(
         return InspectionStatus.MIXED
 
     # Only marked analyses exist.
-    all_markers = {
-        m["marker"]
-        for a in marked_analyses
-        for m in a.get("markers", [])
-    }
+    all_markers = {m["marker"] for a in marked_analyses for m in a.get("markers", [])}
     if not all_markers:
         return InspectionStatus.CLEAN
 
@@ -384,6 +379,10 @@ def inspect_word(
     Returns structured WordInspection with clean/marked separation and closed status.
     Fails closed with status=UNAVAILABLE if schema or database is unavailable.
     """
+    normalized = _normalize_apostrophes(word)
+    if normalized != word:
+        return replace(inspect_word(normalized, pos_filter=pos_filter, db_path=db_path), word=word)
+
     try:
         with get_vesum_connection(db_path) as conn:
             if not _has_inspection_schema(conn):
@@ -502,6 +501,11 @@ def inspect_words(
     """
     if not words:
         return {}
+
+    normalized = [_normalize_apostrophes(word) for word in words]
+    if normalized != words:
+        found = inspect_words(normalized, pos_filter=pos_filter, db_path=db_path)
+        return {word: replace(found[key], word=word) for word, key in zip(words, normalized, strict=True)}
 
     try:
         with get_vesum_connection(db_path) as conn:
@@ -630,6 +634,10 @@ def inspect_lemma(
 
     Returns LemmaInspection with paradigm forms, clean/marked breakdown, and status.
     """
+    normalized = _normalize_apostrophes(lemma)
+    if normalized != lemma:
+        return replace(inspect_lemma(normalized, db_path=db_path), lemma=lemma)
+
     try:
         with get_vesum_connection(db_path) as conn:
             if not _has_inspection_schema(conn):
@@ -746,26 +754,32 @@ def main() -> None:
     word_parser.add_argument("query", help="Word form to check")
     word_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     word_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    word_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
+    word_parser.add_argument(
+        "--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database"
+    )
 
     words_parser = subparsers.add_parser("words", help="Batch-verify Ukrainian word forms (compatibility view)")
     words_parser.add_argument("query", nargs="+", help="Word forms to check")
     words_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     words_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    words_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
+    words_parser.add_argument(
+        "--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database"
+    )
 
     lemma_parser = subparsers.add_parser("lemma", help="Get all forms of a lemma (compatibility view)")
     lemma_parser.add_argument("query", help="Lemma to look up")
     lemma_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    lemma_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
-
-    inspect_word_parser = subparsers.add_parser(
-        "inspect-word", help="Inspect a word form with full marker awareness"
+    lemma_parser.add_argument(
+        "--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database"
     )
+
+    inspect_word_parser = subparsers.add_parser("inspect-word", help="Inspect a word form with full marker awareness")
     inspect_word_parser.add_argument("query", help="Word form to inspect")
     inspect_word_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     inspect_word_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    inspect_word_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
+    inspect_word_parser.add_argument(
+        "--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database"
+    )
 
     inspect_words_parser = subparsers.add_parser(
         "inspect-words", help="Batch inspect word forms with full marker awareness"
@@ -773,14 +787,18 @@ def main() -> None:
     inspect_words_parser.add_argument("query", nargs="+", help="Word forms to inspect")
     inspect_words_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     inspect_words_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    inspect_words_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
+    inspect_words_parser.add_argument(
+        "--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database"
+    )
 
     inspect_lemma_parser = subparsers.add_parser(
         "inspect-lemma", help="Inspect a lemma paradigm with full marker awareness"
     )
     inspect_lemma_parser.add_argument("query", help="Lemma to inspect")
     inspect_lemma_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    inspect_lemma_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
+    inspect_lemma_parser.add_argument(
+        "--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database"
+    )
 
     args = parser.parse_args()
     db_path = getattr(args, "db", None)
@@ -837,7 +855,9 @@ def main() -> None:
         else:
             for word, res in batch_res.items():
                 markers_str = f" [{', '.join(res.effective_markers)}]" if res.effective_markers else ""
-                print(f"- {word}: {res.status.value}{markers_str} (clean={len(res.clean_analyses)}, marked={len(res.marked_analyses)})")
+                print(
+                    f"- {word}: {res.status.value}{markers_str} (clean={len(res.clean_analyses)}, marked={len(res.marked_analyses)})"
+                )
     elif args.command == "inspect-lemma":
         lemma_res = inspect_lemma(args.query, db_path=db_path)
         if args.json:
@@ -845,7 +865,9 @@ def main() -> None:
         else:
             print(f"Lemma '{lemma_res.lemma}' - Status: {lemma_res.status.value}")
             print(f"  Total forms in paradigm: {len(lemma_res.forms)}")
-            print(f"  Clean analyses: {len(lemma_res.clean_analyses)}, Marked analyses: {len(lemma_res.marked_analyses)}")
+            print(
+                f"  Clean analyses: {len(lemma_res.clean_analyses)}, Marked analyses: {len(lemma_res.marked_analyses)}"
+            )
             print(f"  Effective markers: {', '.join(lemma_res.effective_markers) or 'none'}")
 
 

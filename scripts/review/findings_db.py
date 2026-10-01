@@ -8,15 +8,16 @@ validator's rejection codes and the dispatch's task id, a finding keeps every
 receipt it cites and the whole finding as the reviewer returned it.
 
 ``schema_version`` is checked on every open. A file at ``SCHEMA_VERSION`` opens as is. A file at
-a version listed in ``MIGRATIONS`` (today: 2 or 3) is upgraded, in one transaction, step by step to
-``SCHEMA_VERSION``; each step only adds tables (``CREATE TABLE IF NOT EXISTS``), so every existing
+a version listed in ``MIGRATIONS`` (2, 3 or 4) is upgraded, in one transaction, step by step to
+``SCHEMA_VERSION``; each step only adds tables or columns, so every existing
 row is kept. A file at any other version, or with tables and no version, is refused, never guessed at.
 
 Version history: 2 predates R3 (and, on ``main``, gained ``budget_decisions`` in place without a
 version bump — see #8774/#8905); 3 (this branch, before it merged ``main``) added the R3
 measurement tables without ``budget_decisions``; 4 folds ``budget_decisions`` into every earlier
 state, so a version-2 database (with or without it) and a version-3 database (without it) all
-reach the same version-4 shape.
+reach the same version-4 shape. Version 5 adds ``attempts.access``; existing attempts
+retain ``isolated``, and new full-access attempts record ``full`` from the task record.
 
 Unrelated to ``scripts/review/findings.py`` (the closeout code-review ledger).
 
@@ -51,7 +52,7 @@ from scripts.common.repo_root import main_checkout_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PARAMETERS_PATH = REPO_ROOT / "scripts" / "config" / "review_parameters.yaml"
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 DB_DIRECTORY = ("batch_state", "review-findings")
 LEVEL_RE = re.compile(r"[a-z0-9][a-z0-9-]{0,31}\Z")
 
@@ -292,8 +293,19 @@ def _migrate_3_to_4(conn: sqlite3.Connection, tables: set[str]) -> None:
         conn.execute(statement)
 
 
+def _migrate_4_to_5(conn: sqlite3.Connection, tables: set[str]) -> None:
+    """Keep every older attempt and mark its historical access as isolated."""
+    conn.execute(
+        "ALTER TABLE attempts ADD COLUMN access TEXT NOT NULL DEFAULT 'isolated' CHECK (access IN ('full', 'isolated'))"
+    )
+
+
 # from schema_version -> the function that upgrades a file at that version to the next one
-MIGRATIONS: dict[int, Callable[[sqlite3.Connection, set[str]], None]] = {2: _migrate_2_to_3, 3: _migrate_3_to_4}
+MIGRATIONS: dict[int, Callable[[sqlite3.Connection, set[str]], None]] = {
+    2: _migrate_2_to_3,
+    3: _migrate_3_to_4,
+    4: _migrate_4_to_5,
+}
 
 
 def _ensure_schema(conn: sqlite3.Connection, path: Path) -> None:
@@ -309,6 +321,7 @@ def _ensure_schema(conn: sqlite3.Connection, path: Path) -> None:
                 raise VersionMismatch(f"{path}: tables exist without a schema_version; refusing to open it")
             for statement in (*_statements(_TABLES), *_statements(_TABLES_V3)):
                 conn.execute(statement)
+            _migrate_4_to_5(conn, tables)
             conn.execute("INSERT INTO schema_version (version) VALUES (?)", (SCHEMA_VERSION,))
             return
         versions = [row[0] for row in conn.execute("SELECT version FROM schema_version")]
@@ -353,6 +366,7 @@ _ATTEMPT_COLUMNS = (
     "reviewer_model",
     "reviewer_family",
     "harness",
+    "access",
     "prompt_sha256",
     "verdict",
     "validated_at",
@@ -375,6 +389,7 @@ def get_attempt(conn: sqlite3.Connection, review_id: str, attempt_id: str) -> sq
 def insert_attempt(conn: sqlite3.Connection, row: dict[str, Any]) -> None:
     values = {column: row.get(column) for column in _ATTEMPT_COLUMNS}
     values["role"] = values["role"] or "first"
+    values["access"] = values["access"] or "isolated"
     conn.execute(
         f"INSERT INTO attempts ({', '.join(_ATTEMPT_COLUMNS)}) VALUES ({', '.join('?' for _ in _ATTEMPT_COLUMNS)})",
         tuple(values[column] for column in _ATTEMPT_COLUMNS),

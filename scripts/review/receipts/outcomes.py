@@ -306,6 +306,9 @@ def _classify_tool_hits(tool: str, text: str, parsed: Any | None) -> int:
             return 1
         return 0 if "No UA-GEC" in text else (1 if text.strip() else 0)
 
+    if tool == "search_resources":
+        return 0 if text.strip() == "No catalogue resources found." else (1 if text.strip() else 0)
+
     if tool == "search_text":
         if text.strip() == "No results found." or text.strip().startswith("No results found"):
             return 0
@@ -343,6 +346,9 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     text = result if isinstance(result, str) else ""
     stripped = text.strip()
     parsed = _extract_json(text)
+
+    if tool == "search_resources" and "Resource catalogue ingestion is required before searching resources." in text:
+        return {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}
 
     # check_text embeds source_unavailable in a successful tool return. That is
     # not a clean (no problems) result, and the generic hit fallback must not

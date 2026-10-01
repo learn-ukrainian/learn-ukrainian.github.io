@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md
+---
+
 # Gap Analysis: Public Ukrainian Datasets vs. Our Unique Literary Alignment Asset
+
+> **Superseded by:** [docs/research/hramatka_literary_poltava_candidate_audit.md](hramatka_literary_poltava_candidate_audit.md)
 
 > **Current authority — superseded research claims:**
 > [Issue #6058](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6058)
