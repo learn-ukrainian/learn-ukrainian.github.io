@@ -67,17 +67,16 @@ ids for suite results.
 PRs only — never commit or merge to `main` directly.
 
 **Binding public landing order (operator 2026-08-30 / #7450; CF-attest retired
-2026-09-03; CF-before-CI clarified 2026-09-18):** GitHub
-`required_approving_review_count` is 0 and the sole required check is CI Gate.
-Auto-merge / enqueue is **not** review. That is how PRs #7447–#7449 hit `main`
-with empty reviews. Drivers follow this order:
+2026-09-03; CF-before-CI clarified 2026-09-18):** The
+forge does not enforce independent review, so the driver verifies both gates
+itself. Auto-merge / enqueue is **not** review; PRs have reached `main` that
+way with empty reviews. Drivers follow this order:
 
 0. **CF review-fix before CI (binding).** Push the branch. Run exact-head CF
    via `ask-<lane> --branch <name>` (or equivalent). Fix → re-CF until
    `VERDICT: APPROVE` on the tip. **Do not open any PR** (draft or ready)
-   while CF is open or while iterating findings — CI runs on draft
-   `opened`/`synchronize` with no draft guard in this repo, so a draft still
-   burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
+   while CF is open or while iterating findings — CI also runs on
+   draft PRs, so a draft still burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
    runs once on that tip.
 1. **Independent cross-family exact-head CF** — attested `resolved_model`,
    different family from the author, APPROVE on the tip (post on the PR once
