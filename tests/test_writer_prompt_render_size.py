@@ -251,6 +251,7 @@ def test_a1_letter_prompt_keeps_six_distinct_corpus_excerpts_whole_under_ceiling
         assert prompt.count(quote) == 1
     size = len(prompt.encode("utf-8"))
     assert size <= WRITER_PROMPT_CEILING_BYTES, f"Fixture-corpus prompt: {size} bytes"
+    print(f"Fixture corpus: 6/6 whole distinct excerpts; {size}/{WRITER_PROMPT_CEILING_BYTES} bytes.")
 
 
 def _render_pinned_a1_letter_prompt(monkeypatch: pytest.MonkeyPatch, root: Path) -> str:
@@ -384,7 +385,17 @@ def test_a1_letter_prompt_size_ignores_ambient_curriculum(
     assert _a1_letter_prompt_size() != pinned
 
 
-def test_a1_m20_writer_prompt_stays_under_ceiling() -> None:
+def test_a1_m20_writer_prompt_stays_under_ceiling(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    # Like the letter fixture, read only staged HEAD inputs and no ambient DB.
+    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
+    plan_path = _stage_checkout_file(tmp_path, "curriculum/l2-uk-en/plans/a1/my-morning.yaml")
+    article_path = _stage_checkout_file(tmp_path, "wiki/pedagogy/a1/my-morning.md")
+    _stage_checkout_file(tmp_path, "wiki/pedagogy/a1/my-morning.sources.yaml")
+    curriculum_root = _stage_learner_state_inputs(tmp_path, plan_path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(linear_pipeline, "plan_path_for", lambda *_args: plan_path)
+    monkeypatch.setattr(linear_pipeline, "_wiki_article_paths", lambda *_args: [article_path])
+    monkeypatch.setattr(learner_state, "CURRICULUM_ROOT", curriculum_root)
+    _pin_base_level_manifest(monkeypatch, curriculum_root / "curriculum.yaml")
     prompt = render_fixture_writer_prompt("a1", "my-morning")
 
     assert len(prompt.encode("utf-8")) <= WRITER_PROMPT_CEILING_BYTES

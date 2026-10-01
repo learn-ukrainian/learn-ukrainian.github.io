@@ -3770,27 +3770,66 @@ def _render_section_word_budgets(plan: Mapping[str, Any]) -> str:
 
 WRITER_PLAN_OMIT_KEYS = frozenset({
     "plan_fixes", "changelog", "review_notes", "reviewed_by", "reviewed_at",
-    "lifecycle", "version", "references",
+    "lifecycle", "version",
 })
 
 
+def _omit_writer_plan_blocks(plan_content: str) -> str:
+    """Subtract editorial top-level blocks without rewriting any retained line.
+
+    YAML tokens identify real column-zero keys (including quoted keys), rather
+    than key-like lines inside multiline strings. Comments directly above a key
+    belong to that key; document markers stay outside every removed block.
+    """
+    lines = plan_content.splitlines(keepends=True)
+    boundaries: list[tuple[int, str | None]] = []
+    scalar_lines: set[int] = set()
+    key_line: int | None = None
+    for token in yaml.scan(plan_content):
+        if isinstance(token, yaml.tokens.KeyToken):
+            key_line = token.start_mark.line if token.start_mark.column == 0 else None
+        elif isinstance(token, yaml.tokens.ScalarToken):
+            scalar_lines.update(range(token.start_mark.line, token.end_mark.line + bool(token.end_mark.column)))
+            if key_line is not None:
+                boundaries.append((key_line, token.value))
+                key_line = None
+        elif isinstance(token, (yaml.tokens.DocumentStartToken, yaml.tokens.DocumentEndToken)):
+            boundaries.append((token.start_mark.line, None))
+
+    for index, (start, key) in enumerate(boundaries):
+        if key is not None:
+            while start and lines[start - 1].startswith("#") and start - 1 not in scalar_lines:
+                start -= 1
+            boundaries[index] = (start, key)
+    boundaries.append((len(lines), None))
+
+    kept: list[str] = []
+    cursor = 0
+    for index, (start, key) in enumerate(boundaries[:-1]):
+        end = boundaries[index + 1][0]
+        if key in WRITER_PLAN_OMIT_KEYS:
+            kept.extend(lines[cursor:start])
+            cursor = end
+    kept.extend(lines[cursor:])
+    return "".join(kept)
+
+
 def _writer_plan_content_for_prompt(
-    plan: Mapping[str, Any], *, references_rendered: bool = False,
+    plan: Mapping[str, Any], plan_content: str,
 ) -> str:
     """Omit editorial history only from the writer's embedded plan (#9343).
 
-    Unknown keys stay by default. References stay unless the knowledge packet
-    already renders them separately; reviewers and the plan file keep all keys.
-    Preserve the existing alphabet-module filtering and title normalization.
+    Ordinary plans retain raw comments, formatting and reference fields, without
+    leaking in-memory normalization or corpus annotations. Alphabet modules keep
+    their existing filtering, title normalization and YAML dump path.
     """
+    if not is_alphabet_slug(plan.get("slug")):
+        return _omit_writer_plan_blocks(plan_content)
     projected = {
         key: value for key, value in plan.items()
         if key not in WRITER_PLAN_OMIT_KEYS
-        or (key == "references" and not references_rendered)
     }
-    return _plan_content_for_prompt(
-        projected, yaml.safe_dump(projected, allow_unicode=True, sort_keys=False),
-    )
+    return _plan_content_for_prompt(projected, plan_content)
 
 
 def writer_context(
@@ -3805,9 +3844,7 @@ def writer_context(
     use_generator: bool = False,
     obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
-    plan_content = _writer_plan_content_for_prompt(
-        plan, references_rendered="## Plan References" in knowledge_packet.splitlines(),
-    )
+    plan_content = _writer_plan_content_for_prompt(plan, plan_content)
     plan = filter_line_break_plan(plan)
     level = str(plan["level"])
     sequence = int(plan["sequence"])
