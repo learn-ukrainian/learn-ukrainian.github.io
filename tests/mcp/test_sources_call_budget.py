@@ -76,7 +76,9 @@ def test_replaced_db_changes_source_version(server_module, tmp_path, monkeypatch
     ) != immutable_evidence_identifier(namespace="vesum", source_version=second, typed_result=typed)
 
 
-def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources_db(server_module, tmp_path, monkeypatch):
+def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources_db(
+    server_module, tmp_path, monkeypatch
+):
     from scripts.curriculum.evidence.sources import Sources
 
     data = tmp_path / "data"
@@ -293,3 +295,38 @@ def test_verify_stresses_tool_documents_the_cap(server_module):
     assert tool.input_schema["required"] == ["words"]
     assert "pos" in tool.input_schema["properties"]
     assert "500" in tool.description
+
+
+def test_stress_context_schema_and_handler_keep_source(server_module, tmp_path, monkeypatch):
+    # The oracle is mocked below, but evidence identifiers still require a
+    # proved backend version. Hash fixture bytes instead of the host VESUM DB.
+    version_db = tmp_path / "vesum.db"
+    version_db.write_bytes(b"stress-context-version-fixture")
+    monkeypatch.setattr("scripts.rag.config.VESUM_DB_PATH", version_db)
+    tools = _run(server_module.list_tools())
+    single = next(tool for tool in tools if tool.name == "verify_stress")
+    batch = next(tool for tool in tools if tool.name == "verify_stresses")
+    assert "lemma" in single.input_schema["properties"]
+    assert {"lemma", "tags"} <= set(batch.input_schema["properties"])
+    payload = {
+        "status": "ok",
+        "input": "замок",
+        "stress_source": "ulif",
+        "matches": [{"stressed_form": "за́мок", "source": "ulif", "vowel_indices": [1]}],
+        "source": {"digest": "a" * 64},
+    }
+    with patch("scripts.verification.stress.verify_stress", return_value=payload) as lookup:
+        content, outcome = _run(server_module.handle_verify_stress({"word": "замок", "lemma": "за́мок"}))
+    assert outcome["result"] == payload and outcome["success"]
+    assert outcome["evidence_identifiers"]
+    from learn_ukrainian_v4_runtime.v4_canonical_authority_store import immutable_evidence_identifier
+
+    assert outcome["evidence_identifiers"] == [
+        immutable_evidence_identifier(
+            namespace="sources",
+            source_version=hashlib.sha256(version_db.read_bytes()).hexdigest(),
+            typed_result=payload,
+        )
+    ]
+    assert lookup.call_args.args == ("замок", None, None, "за́мок")
+    assert len(content) == 1

@@ -3106,7 +3106,7 @@ def _imperative_display(form: str, number: str, *, mood: str = "Imp") -> str | N
         pos="VERB",
         tags=[f"Number={'Sing' if number == 's' else 'Plur'}", f"Mood={mood}"],
     )
-    if result["status"] == "not_found":
+    if result["status"] in ("not_found", "pending") and not result["matches"]:
         return form
     readings = {match["stressed_form"] for match in result["matches"]}
     if len(readings) != 1:
@@ -4286,9 +4286,7 @@ class SynonymAccounting:
     finalized: bool = False
 
 
-def reconcile_synonym_accounting(
-    shards: dict[str, dict[str, dict[str, Any]]], accounting: SynonymAccounting
-) -> None:
+def reconcile_synonym_accounting(shards: dict[str, dict[str, dict[str, Any]]], accounting: SynonymAccounting) -> None:
     """Account for every direction after all shard trimming, before writing."""
     if accounting.finalized:
         raise RuntimeError("synonym accounting was already finalized")
@@ -6445,8 +6443,10 @@ def build_practice_shards(
     else:
         synonym_verdicts_loaded = True
     approved_set, rejected_set, a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
-    if SYNONYM_MODE_ENABLED and ulif_synonym_groups is None and any(
-        polarity == "synonym" for _a, _b, polarity in approved_set
+    if (
+        SYNONYM_MODE_ENABLED
+        and ulif_synonym_groups is None
+        and any(polarity == "synonym" for _a, _b, polarity in approved_set)
     ):
         raise UlifSynonymDataUnavailable("approved synonym verdicts need checked ULIF synonym groups; none were loaded")
 

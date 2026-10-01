@@ -29,7 +29,7 @@ scanned. Transport paths are never published or scanned as public text.
 | `pr-merge` | Subject and body, defaults included; squash is fixed |
 | `pr-update-branch`, `pr-ready`, `pr-close`, `issue-reopen`, `run-rerun` | No text; rerun always selects failed jobs |
 | `workflow-run` | Only `ci.yml` and `deploy-pages.yml`, explicit validated ref; both have no inputs |
-| `pr-disarm`, `pr-dequeue`, `issue-link` | No text; identifiers have closed validation |
+| `pr-disarm`, `pr-dequeue`, `issue-link` | No text; identifiers have closed validation. `issue-link --replace-parent` moves an issue from its current parent through GitHub's typed `replaceParent` variable |
 | `release-create`, `release-edit` | Tag, title, notes, target, artifact names and UTF-8 content |
 | `release-upload` | Tag, artifact names and UTF-8 content |
 | `gist-create` | Description, filenames, UTF-8 file content; never repository-exempt |

@@ -113,12 +113,13 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-118 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+119 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
 | Family | Kind | Status | Paths | Purpose |
 | --- | --- | --- | --- | --- |
+| `ulif-first-stress-contract` | doc_family | current | `docs/verification/ulif-first-stress.md` | ULIF-first stress oracle contract, source identity joins, labelled trie fallback and consumer verification. |
 | `docs-entry-map` | doc_family | current | `docs/README.md` | Cold-start documentation map for humans and agents. It names the one search entry point (python -m scripts.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era. |
 | `docs-knowledge-system` | doc_family | current | `docs/knowledge/**`, `docs/architecture/docs-authority-lifecycle.md`, `docs/plans/2026-09-17-docs-knowledge-rollout.md` | Repository knowledge system - this catalogue and its schema, the deterministic docs inventory contract, the authority and lifecycle contract, and the docs-knowledge rollout plan. |
 | `corpus-inventory` | doc_family | current | `docs/corpus-inventory.md` | Prose inventory of data/sources.db tables and the local versus bulk-root storage layout; table counts were last refreshed 2026-07-31 and are stale against the live store. |
@@ -206,7 +207,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `folk-epic-specs` | doc_family | current | `docs/folk-epic/**`, `docs/reference/**` | FOLK seminar standards, review rubric, dossier and text-layer specs, quality-gate designs and queue, plus a folk micro-genre reference list. |
 | `bio-epic-queues` | doc_family | current | `docs/bio-epic/**` | BIO phase-2 sequence allocation and the phase-4 wiki rewrite queue with its rubric (epic |
 | `resources-external-links` | resource_catalogue | current | `docs/resources/external_resources*`, `docs/resources/EXTERNAL_RESOURCES_SCHEMA.md` | Per-module external resource links (articles, videos) read by the audit gate and wiki enrichment, with its schema and two stray copies. |
-| `resources-curated-link-maps` | resource_catalogue | current | `docs/resources/trusted_sources.yaml`, `docs/resources/ulp-resources.yaml`, `docs/resources/ulp-articles-index.yaml`, `docs/resources/ulp-article-mappings.yaml`, `docs/resources/miyklas-resources.yaml`, `docs/resources/miyklas-url-index.yaml`, `docs/resources/podcasts/ulp_mapping.yaml` | Curated trusted-source registry and ULP and Miyklas resource-to-module maps (including the recommended ULP podcast episodes per module) used by build enrichment and the resource-catalogue ingest; ULP is link-only (commercial). |
+| `resources-curated-link-maps` | resource_catalogue | current | `docs/resources/trusted_sources.yaml`, `docs/resources/ulp-resources.yaml`, `docs/resources/ulp-alphabet.yaml`, `docs/resources/ulp-articles-index.yaml`, `docs/resources/ulp-article-mappings.yaml`, `docs/resources/miyklas-resources.yaml`, `docs/resources/miyklas-url-index.yaml`, `docs/resources/podcasts/ulp_mapping.yaml` | Curated trusted-source registry and ULP and Miyklas resource-to-module maps (including the recommended ULP podcast episodes per module) used by build enrichment and the resource-catalogue ingest; ULP is link-only (commercial). |
 | `resources-scraped-catalogs` | resource_catalogue | current | `docs/resources/dobraforma/**`, `docs/resources/talkukrainian/**`, `docs/resources/verba/**`, `docs/resources/podcasts/*.json`, `docs/resources/podcasts/raw_lists/**`, `docs/resources/ukrainianlessons/*.json` | Scraped catalogs of learning resources - Ukrainian Lessons Podcast episode lists and database, ULP blog, Dobra Forma, TalkUkrainian and Verba - with module relevance scores. |
 | `resources-mapping-reports` | evidence | historical | `docs/resources/podcasts/*.md`, `docs/resources/ukrainianlessons/*.md` | January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic |
 | `atlas-word-cards` | doc_family | current | `docs/atlas/word-cards/**` | Word Atlas word-card schema, identity rules, migration, ULIF source-record notes and worked example cards. |

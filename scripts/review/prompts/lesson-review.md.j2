@@ -99,6 +99,37 @@ Optional checks:
 
 ## 3. Review Tools and Receipts
 
+{% if review_access == "full" %}
+### Full access and evidence duty
+
+You have read access to the repository checkout, its git history, the textbook
+corpus and the resource catalogue (`docs/resources/` and `search_resources`).
+Use them as context to check the plan or lesson.
+
+Verify every Ukrainian word, form, stress, gloss and factual claim you rely on,
+including approval-critical checks: use `verify_words` (VESUM) for forms,
+`verify_stress` for stress, `query_sum20` for meaning, `search_text` for textbook
+and corpus support, and `search_resources` for catalogue checks. For Russianism
+checks query both `search_style_guide` and `search_text` with
+`source_file='antonenko-davydovych-yak-my-hovorymo'`; check heritage before
+rejecting an unfamiliar word. `check_russian_shadow` is suspicion only.
+
+Only ledgered sources receipts are citable evidence. Repository, corpus,
+catalogue and git reads provide context; confirm anything relied on through a
+ledgered tool call. Cite the tool and resolvable locator in each finding's claim
+and its receipt in the existing evidence branch. For approval-critical clean
+checks, give the tool, locator and receipt in YAML comments beside the existing
+check; do not add a field or verdict dimension. Missing support is an evidence
+gap, never permission to judge Ukrainian from memory.
+
+Do not read other attempts' returns, `*.verdict.yaml`, `plan-review*.yaml` or the
+findings database for this artifact. Prior receipts for this artifact are not
+inputs. The manifest and pinned context documents supplied in this prompt are
+permitted despite their filenames. A lesson re-review may read only the previous
+attempt and ledger explicitly pinned by its manifest, and cite those receipts
+only under the existing resolved/persisting finding rule.
+
+{% endif %}
 The reviewer has tools from REVIEW_TOOLS:
 {% for tool in review_tools %}
 - `{{ tool }}`

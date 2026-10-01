@@ -140,20 +140,35 @@ REVIEWER_PERMISSION_PROFILE = {
     "allow": ("Read", "Grep", "Glob", "LS", "Bash", "WebFetch", "WebSearch"),
     "mcp_allow": ("mcp__sources__*",),
     "deny": (
-        "Edit", "Write", "NotebookEdit",
-        "Bash(git push *)", "Bash(git commit *)", "Bash(git merge *)",
-        "Bash(git rebase *)", "Bash(git reset *)", "Bash(git tag *)",
-        "Bash(git branch -D *)", "Bash(gh pr merge *)",
-        "Bash(gh pr create *)", "Bash(gh pr comment *)",
-        "Bash(gh pr review *)", "Bash(gh pr edit *)",
-        "Bash(gh pr close *)", "Bash(gh pr reopen *)",
+        "Edit",
+        "Write",
+        "NotebookEdit",
+        "Bash(git push *)",
+        "Bash(git commit *)",
+        "Bash(git merge *)",
+        "Bash(git rebase *)",
+        "Bash(git reset *)",
+        "Bash(git tag *)",
+        "Bash(git branch -D *)",
+        "Bash(gh pr merge *)",
+        "Bash(gh pr create *)",
+        "Bash(gh pr comment *)",
+        "Bash(gh pr review *)",
+        "Bash(gh pr edit *)",
+        "Bash(gh pr close *)",
+        "Bash(gh pr reopen *)",
         "Bash(gh issue create *)",
-        "Bash(gh issue comment *)", "Bash(gh issue edit *)",
-        "Bash(gh issue close *)", "Bash(gh issue reopen *)",
+        "Bash(gh issue comment *)",
+        "Bash(gh issue edit *)",
+        "Bash(gh issue close *)",
+        "Bash(gh issue reopen *)",
         "Bash(gh api -X *)",
-        "Bash(gh api --method *)", "Bash(gh release *)",
-        "Bash(gh api -f *)", "Bash(gh api -F *)",
-        "Bash(gh api --field *)", "Bash(gh api --raw-field *)",
+        "Bash(gh api --method *)",
+        "Bash(gh release *)",
+        "Bash(gh api -f *)",
+        "Bash(gh api -F *)",
+        "Bash(gh api --field *)",
+        "Bash(gh api --raw-field *)",
         "Bash(gh api --input *)",
         "Bash(gh workflow run *)",
     ),
@@ -197,15 +212,11 @@ def _mcp_server_names(path: Path) -> tuple[str, ...]:
         raise ValueError(f"ClaudeAdapter: MCP config {path} is invalid JSON: {exc}") from exc
     servers = data.get("mcpServers") if isinstance(data, dict) else None
     if not isinstance(servers, dict):
-        raise ValueError(
-            f"ClaudeAdapter: MCP config {path} must be a JSON object with an mcpServers object"
-        )
+        raise ValueError(f"ClaudeAdapter: MCP config {path} must be a JSON object with an mcpServers object")
     names: list[str] = []
     for name in servers:
         if not isinstance(name, str) or not _MCP_SERVER_NAME_RE.fullmatch(name):
-            raise ValueError(
-                f"ClaudeAdapter: MCP server name {name!r} in {path} cannot be expressed in --allowedTools"
-            )
+            raise ValueError(f"ClaudeAdapter: MCP server name {name!r} in {path} cannot be expressed in --allowedTools")
         names.append(name)
     return tuple(names)
 
@@ -254,9 +265,7 @@ def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
     )
 
     changed_paths = tool_config.get("review_changed_paths")
-    if not isinstance(changed_paths, list) or not all(
-        isinstance(path, str) and path for path in changed_paths
-    ):
+    if not isinstance(changed_paths, list) or not all(isinstance(path, str) and path for path in changed_paths):
         raise ValueError("ClaudeAdapter: isolated review changed paths required")
     try:
         schema = transport_isolated_review_schema()
@@ -376,10 +385,7 @@ class ClaudeAdapter:
         discussion_readonly = _discussion_readonly_requested(tool_config)
         review_isolation = bool(tc.get("review_isolation"))
         explicit_allowed_tools = tc.get("allowed_tools") is not None
-        reviewer_guard = (
-            mode == "read-only" and not explicit_allowed_tools
-            and tc.get("reviewer_tools") is True
-        )
+        reviewer_guard = mode == "read-only" and not explicit_allowed_tools and tc.get("reviewer_tools") is True
         # Caller tool restrictions take precedence. Reviewer-only protections
         # are scoped to the default profile so an explicit Bash grant is not
         # silently narrowed by the publish hook or push rewrite.
@@ -436,7 +442,11 @@ class ClaudeAdapter:
 
         probe_prefix = tuple(cmd)
         # Review binaries are probed later, inside the verified OS sandbox.
-        cli_version = None if review_isolation else _ensure_supported_claude_cli_version(probe_prefix)
+        cli_version = (
+            None
+            if (review_isolation or tc.get("review_attempt_boundary"))
+            else _ensure_supported_claude_cli_version(probe_prefix)
+        )
 
         cmd.append("-p")
         # NB: the actual prompt positional is appended at the END below, after a
@@ -504,7 +514,9 @@ class ClaudeAdapter:
         # Effort (reasoning level) — version-gated. See #1396. Omitted effort
         # defaults to the headless lane default (high, operator 2026-08-13).
         effective_effort = effort if effort is not None else self.default_effort
-        if not review_isolation:
+        if tc.get("review_attempt_boundary") and tc.get("review_access") == "full":
+            cmd.extend(["--effort", effective_effort])
+        elif not review_isolation:
             # ``supports_effort`` is the single patchable decision point for
             # --effort: tests patch it to simulate an unsupported CLI, and the
             # default-high lane default must ALSO omit the flag when the CLI
@@ -669,11 +681,19 @@ class ClaudeAdapter:
             intact = bool(strict_events) and all(isinstance(event, dict) for event in strict_events)
             terminal = strict_events[-1] if intact else {}
             return structured_result(
-                terminal.get("structured_output"), output_schema, returncode=returncode,
-                terminal_ok=(intact and "structured_output" in terminal and terminal.get("type") == "result"
-                             and terminal.get("subtype") == "success" and terminal.get("is_error") is False
-                             and sum(event.get("type") == "result" for event in strict_events) == 1),
-                session_id=session_id, tool_calls=tool_calls,
+                terminal.get("structured_output"),
+                output_schema,
+                returncode=returncode,
+                terminal_ok=(
+                    intact
+                    and "structured_output" in terminal
+                    and terminal.get("type") == "result"
+                    and terminal.get("subtype") == "success"
+                    and terminal.get("is_error") is False
+                    and sum(event.get("type") == "result" for event in strict_events) == 1
+                ),
+                session_id=session_id,
+                tool_calls=tool_calls,
             )
 
         # Claude Code 2.1.117 does not document a dedicated rate-limit exit

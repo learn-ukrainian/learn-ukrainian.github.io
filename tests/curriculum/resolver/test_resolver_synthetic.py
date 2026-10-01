@@ -235,7 +235,7 @@ def test_trie_cross_check_reports_source_changed(sources):
     stream = resolve(document(unit("кветур")), allowlist([invented]), sources)
     assert stream.tokens[0]["class"] == codes.RESOLVED
     assert [r["code"] for r in stream.reports] == [codes.SOURCE_CHANGED]
-    assert stream.reports[0]["oracle_status"] == "not_found"
+    assert stream.reports[0]["oracle_status"] == "pending"
 
 
 # --- questions, answers, receipts ------------------------------------------------

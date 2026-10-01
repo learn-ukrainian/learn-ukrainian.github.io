@@ -394,6 +394,62 @@ def test_publisher_cli_closed_schema_and_stdin(synthetic_opsec, monkeypatch):
     assert len(calls) == 1
 
 
+LINK_QUERY = "mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,subIssueId:$c}){issue{number}}}"
+LINK_PAYLOAD = json.dumps({"query": LINK_QUERY, "variables": {"p": "PARENT", "c": "CHILD"}}).encode()
+LINK_ARGV = ["issue-link", "--repo", "unit/public", "--parent-id", "PARENT", "--child-id", "CHILD"]
+
+
+def test_issue_link_replace_parent_sends_typed_boolean_variable(synthetic_opsec):
+    calls = []
+    assert pub.main([*LINK_ARGV, "--replace-parent"], runner=spy(calls)) == 0
+    payload = json.loads(calls[0]["--input"])
+    assert payload["query"] == (
+        "mutation($p:ID!,$c:ID!,$r:Boolean!)"
+        "{addSubIssue(input:{issueId:$p,subIssueId:$c,replaceParent:$r}){issue{number}}}"
+    )
+    assert payload["variables"] == {"p": "PARENT", "c": "CHILD", "r": True}
+
+
+@pytest.mark.parametrize("flags", [[], ["--no-replace-parent"]])
+def test_issue_link_without_replace_parent_is_byte_identical(synthetic_opsec, flags):
+    calls = []
+    assert pub.main([*LINK_ARGV, *flags], runner=spy(calls)) == 0
+    pub.publish("issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD", replace_parent=False,
+                runner=spy(calls))
+    assert [call["--input"] for call in calls] == [LINK_PAYLOAD, LINK_PAYLOAD]
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"parent_id": "PARENT,replaceParent:true", "child_id": "CHILD"},
+        {"parent_id": "PARENT", "child_id": "CHILD}"},
+        {"parent_id": "", "child_id": "CHILD"},
+    ],
+)
+def test_issue_link_replace_parent_keeps_node_validation(fields):
+    with pytest.raises(gate.PublishBlocked, match=r"invalid publisher field (parent|child)_id"):
+        pub.publish("issue-link", repo="unit/public", replace_parent=True,
+                    runner=lambda *a, **k: pytest.fail("send"), **fields)
+
+
+@pytest.mark.parametrize("value", ["true", 1, None, "replaceParent:true"])
+def test_issue_link_replace_parent_refuses_non_boolean_values(value):
+    with pytest.raises(gate.PublishBlocked, match="invalid publisher field replace_parent"):
+        pub.publish("issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD", replace_parent=value,
+                    runner=lambda *a, **k: pytest.fail("send"))
+
+
+@pytest.mark.parametrize(
+    "extra", [["--replace-parent=true"], ["--replace-parent", "--reparent"], ["--replace-parent", "--query", "x"]]
+)
+def test_issue_link_cli_refuses_valued_or_unknown_options(synthetic_opsec, extra):
+    assert pub.main([*LINK_ARGV, "--replace-parent"], runner=spy([])) == 0
+    with pytest.raises(SystemExit) as exc:
+        pub.main([*LINK_ARGV, *extra], runner=lambda *a, **k: pytest.fail("send"))
+    assert exc.value.code == 2
+
+
 def test_real_matcher_absolute_body_binary_assets_and_overhead(tmp_path, monkeypatch):
     from tests.test_opsec_prepublish import real_tooling
 

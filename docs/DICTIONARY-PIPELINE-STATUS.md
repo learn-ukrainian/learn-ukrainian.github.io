@@ -24,7 +24,10 @@
 The Sources MCP tool `search_resources` searches `resource_catalogue` and its
 FTS5 index. Incremental ingestion reads all podcast/raw-list/module-mapping,
 external-resource, ULP article, trusted-source, Dobra Forma, Talk Ukrainian and
-Verba catalogues; no media or premium content is downloaded. Existing
+Verba catalogues, including `docs/resources/ulp-alphabet.yaml`; no media or
+premium content is downloaded. The `letters` and `letter_evidence` columns
+preserve publisher-evidenced letter/video pairings; `access_evidence` records
+the evidence required for `access: free`. Existing
 `external_articles` text is linked by URL or ULP/FMU episode identity and indexed
 for Ukrainian-word discovery, with chunk provenance and a `linked_resources` count.
 
@@ -37,9 +40,14 @@ for Ukrainian-word discovery, with chunk provenance and a `linked_resources` cou
 and preserves prior link checks. Every file is reconciled by source-entry locator
 and normalized URL. Unspecified access remains `unknown`; `free_only` needs a
 recorded free resource or audio fact. ULP/FMU top-level access is `mixed`, with
-free audio and premium notes recorded separately. Responses cap hits and
+free audio and premium notes recorded separately. `mode: text` is the default:
+even one-letter words use full-text search. Only explicit `mode: letter` queries
+use the evidenced letter index; curriculum curation selects it only for letter
+requirements. Responses cap hits and
 provenance without truncating stored catalogue entries; before ingest the tool
 returns a typed `resource_catalogue_missing` error.
+Databases missing the new columns also require re-ingestion before any resource
+search; the driver backs up and re-ingests the live database immediately after merge.
 HTTP status and UTC date track link availability. The full-corpus rebuild does
 not create these rows: rerun this incremental ingest afterward. Rehearsal on a
 local backup precedes independent review and merge; the accountable

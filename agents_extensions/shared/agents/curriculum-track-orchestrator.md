@@ -82,8 +82,8 @@ initialPrompt: |
   - You work ONLY in dispatch worktrees on your own branches: you OPEN PRs (for anything — content,
     infra, tooling, docs, agents) and **LAND your own** once an independent CROSS-FAMILY exact-head
     review passes + blocking CI is green on that same head (lane model — there is NO promoting
-    orchestrator; a ready PR must not sit — once both gates are green, label it `automerge-ok` and
-    the auto-arm pipeline (#7539) arms auto-merge; never arm ahead of either gate, #7450/#M-12/#0H).
+    orchestrator; a ready PR must not sit — once both gates are green, enqueue or land the PR;
+    never arm or merge ahead of either gate, #7450/#M-12/#0H).
     Never merge — or arm auto-merge on — a DRAFT, and never merge ahead of the review
     verdict (incident 2026-07-16). Never self-review your own PR (the review must be cross-family). Never commit/push/
     `reset` directly onto `main` — route via PR; blocking-CI red → do NOT merge (#M-0.5). `git fetch` is fine.

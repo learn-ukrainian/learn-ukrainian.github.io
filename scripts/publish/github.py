@@ -95,7 +95,10 @@ SCHEMAS = {
         {"sha", "state", "context", "description"},
         {**COMMON, "sha": "sha", "state": "status", "context": "text", "description": "text"},
     ),
-    "issue-link": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
+    "issue-link": (
+        {"parent_id", "child_id"},
+        {**COMMON, "parent_id": "node", "child_id": "node", "replace_parent": "bool"},
+    ),
 }
 WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}}
 
@@ -478,7 +481,13 @@ def publish(
                 method = "PATCH" if verb.endswith("edit") else "POST"
             else:
                 endpoint, method = "graphql", "POST"
-                if verb == "issue-link":
+                if verb == "issue-link" and fields.get("replace_parent"):
+                    # Moving an issue between epics needs GitHub's explicit replaceParent.
+                    payload = {
+                        "query": "mutation($p:ID!,$c:ID!,$r:Boolean!){addSubIssue(input:{issueId:$p,subIssueId:$c,replaceParent:$r}){issue{number}}}",
+                        "variables": {"p": fields["parent_id"], "c": fields["child_id"], "r": True},
+                    }
+                elif verb == "issue-link":
                     payload = {
                         "query": "mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,subIssueId:$c}){issue{number}}}",
                         "variables": {"p": fields["parent_id"], "c": fields["child_id"]},

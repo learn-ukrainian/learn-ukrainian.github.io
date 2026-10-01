@@ -117,6 +117,11 @@ from .work_router import drain_context_background_work, refresh_projection_cache
 from .work_router import router as work_router
 from .worktrees_router import router as worktrees_router
 
+# Read-only Git children (status refreshing the index) must never take
+# index.lock: a request killed mid-call would leave it behind (#8874). Every
+# child inherits this; an explicit operator value wins.
+os.environ.setdefault("GIT_OPTIONAL_LOCKS", "0")
+
 core_router = APIRouter()
 
 
@@ -441,11 +446,11 @@ def _run_command(
 
 def _collect_git_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved_ctx = resolve_context(ctx)
-    branch_proc = _run_command(["git", "branch", "--show-current"], ctx=ctx)
-    head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"], ctx=ctx)
-    full_head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx)
-    ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"], ctx=ctx)
-    log_proc = _run_command(["git", "log", "--oneline", "-5"], ctx=ctx)
+    branch_proc = _run_command(["git", "--no-optional-locks", "branch", "--show-current"], ctx=ctx)
+    head_proc = _run_command(["git", "--no-optional-locks", "rev-parse", "--short=9", "HEAD"], ctx=ctx)
+    full_head_proc = _run_command(["git", "--no-optional-locks", "rev-parse", "HEAD"], ctx=ctx)
+    ahead_proc = _run_command(["git", "--no-optional-locks", "rev-list", "--count", "origin/main..HEAD"], ctx=ctx)
+    log_proc = _run_command(["git", "--no-optional-locks", "log", "--oneline", "-5"], ctx=ctx)
 
     if branch_proc.returncode != 0:
         raise RuntimeError(branch_proc.stderr.strip() or "git branch failed")
@@ -1405,7 +1410,7 @@ def _health_instance_identity(ctx: MonitorContext | None = None) -> dict[str, st
     """Return loopback-safe opaque host id and serving vs checkout SHAs for /api/health."""
     resolved_ctx = resolve_context(ctx)
     host_label = resolve_launcher_host_id()
-    head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx)
+    head_proc = _run_command(["git", "--no-optional-locks", "rev-parse", "HEAD"], ctx=ctx)
     checkout_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
     project_root = resolved_ctx.roots.project_root.resolve()
     if is_release_root(project_root):

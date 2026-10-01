@@ -2,7 +2,7 @@
 
 `scripts/backup-data.sh` creates encrypted, versioned restic snapshots of the
 project's recovery-critical local state through an rclone remote. It does not
-write through the Google Drive Desktop mount, overwrite the previous backup,
+write through the cloud provider's desktop sync mount, overwrite the previous backup,
 or restore directly over live project data. Snapshot pruning exists only as
 the operator-approved weekly `retention` command described below.
 
@@ -88,22 +88,20 @@ SQLite documents why its [online backup API produces a consistent snapshot][sqli
 [restic-check]: https://restic.readthedocs.io/en/stable/045_working_with_repos.html#checking-integrity-and-consistency
 [sqlite-backup]: https://www.sqlite.org/backup.html
 
-## Open dependency: Google Drive OAuth client ID (2026)
+## Open dependency: Cloud backup provider OAuth configuration
 
 **Tracked:** [#6093](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6093) — *do not close until proven fixed.*
 
-The scheduled job (`com.learn-ukrainian.backup` → `~/.local/bin/learn-ukrainian-backup`) still
-succeeds, but rclone logs a **NOTICE** that the **shared** Google Drive `client_id` is being
-**retired during 2026**. When Google cuts it off, **new restic snapshots stop** until the
-`lu-gdrive` remote uses an **operator-owned** OAuth client and is re-authorized.
+The scheduled backup job (`learn-ukrainian-backup` → `~/.local/bin/learn-ukrainian-backup`) requires
+an operator-configured OAuth client and periodic authorization refresh:
 
-- Config lives outside git (`~/.secrets/learn-ukrainian-backup.env`, dedicated rclone config).
+- Config lives outside git (`~/.secrets/learn-ukrainian-backup.env` via `LU_BACKUP_ENV_FILE`, dedicated rclone config).
 - Do **not** put client secrets, tokens, or password files in the repo, issues, or receipts.
-- Procedure: [rclone — making your own client_id](https://rclone.org/drive/#making-your-own-client-id),
+- Procedure: configure dedicated OAuth credentials,
   then re-auth the remote and prove `backup-data.sh doctor`, one `backup --execute`,
   `snapshots`, `verify`, and a green scheduled run (acceptance on #6093).
 
-Until #6093 is closed, treat this as a **time-bounded production risk**, not noise.
+Until #6093 is closed, treat this as a **time-bounded operational prerequisite**, not noise.
 
 ---
 
@@ -117,12 +115,12 @@ restic version
 rclone version
 ```
 
-Configure a dedicated rclone remote. The examples use `lu-gdrive`; another
+Configure a dedicated rclone remote. The examples use `<backup-remote>`; another
 name is fine as long as the environment below matches it.
 
 ```bash
 rclone config
-rclone lsd lu-gdrive:
+rclone lsd <backup-remote>:
 ```
 
 Create a unique restic password file:
@@ -141,7 +139,7 @@ not keep the only copy in the same cloud account as the repository.
 Set the repository and password-file locations in the shell environment:
 
 ```bash
-export LU_BACKUP_REPOSITORY='rclone:lu-gdrive:Projects/learn-ukrainian-restic'
+export LU_BACKUP_REPOSITORY='rclone:<backup-remote>:<path/to/backup-repo>'
 export RESTIC_PASSWORD_FILE="$HOME/.config/restic/learn-ukrainian.password"
 ```
 
@@ -322,7 +320,7 @@ checkout (preview by default; writes only with `--apply`):
 .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply --enable
 ```
 
-The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`.
+The units configure `LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env` (as defined in `packaging/systemd/learn-ukrainian-backup.service`), which the wrapper validates (regular file, mode 0600, safe permissions) and sources.
 Validation errors name the variable and condition without its value. The
 scheduled wrapper replaces either configured repository value, its remote
 path, and the password-file path in backup and retention output

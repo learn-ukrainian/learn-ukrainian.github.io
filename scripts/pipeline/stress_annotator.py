@@ -72,9 +72,7 @@ def _stanza_download_lock_path() -> Path:
     directory contends on the same lock. Falls back to the system temp dir if
     the resources directory cannot be created.
     """
-    base = os.environ.get("STANZA_RESOURCES_DIR") or os.path.join(
-        os.path.expanduser("~"), "stanza_resources"
-    )
+    base = os.environ.get("STANZA_RESOURCES_DIR") or os.path.join(os.path.expanduser("~"), "stanza_resources")
     if not base.startswith("~"):
         try:
             Path(base).mkdir(parents=True, exist_ok=True)
@@ -125,8 +123,24 @@ def _get_stressifier():
         from ukrainian_word_stress import Stressifier, StressSymbol
 
         with _model_download_lock():
-            _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent)
+            _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent, disambiguation="dictionary")
+            _stressifier.nlp = _load_context_parser()
     return _stressifier
+
+
+def _load_context_parser():
+    """Load installed context models offline; morphology works without a lemma model."""
+    try:
+        import stanza
+    except ImportError:
+        return None
+    for processors in ("tokenize,pos,mwt,lemma", "tokenize,pos,mwt"):
+        try:
+            return stanza.Pipeline("uk", processors=processors, download_method=None, logging_level="ERROR")
+        except (OSError, RuntimeError, ValueError):
+            continue
+    logger.warning("stress_annotator: local context models unavailable; ambiguity stays bare")
+    return None
 
 
 def _count_syllables(word: str) -> int:
@@ -149,28 +163,10 @@ def _restore_apostrophes(stressed: str, original: str) -> str:
     return re.sub("'", lambda _: next(surface, "'"), stressed)
 
 
-def _collapse_non_hyphen_multi_acute(word: str) -> str:
-    """Keep one acute on non-hyphenated forms; hyphenated compounds keep all."""
-    from scripts.verification.stress import _stress_positions_in_marked_string
-
-    if "-" in _strip_surface_stress(word) or word.count(STRESS_MARK) <= 1:
-        return word
-    bare, indices = _stress_positions_in_marked_string(word)
-    if len(indices) <= 1:
-        return word
-    keep = indices[-1]
-    return bare[: keep + 1] + STRESS_MARK + bare[keep + 1 :]
-
-
-def _oracle_choice(word: str) -> str | None:
-    """Pedagogical surface form from verify_stress, or None if unresolved.
-
-    Lookup is casefolded so title-case ``Мене`` does not hit a different
-    trie key than ``мене``. A single acute already on an allowed vowel is
-    kept (подвійний наголос: either listed position is acceptable).
-    Ambiguous dictionary readings (Правила, Підсумок) take the first
-    pedagogical form when the surface is unstressed.
-    """
+def _oracle_choice(
+    word: str, *, lemma: str | None = None, pos: str | None = None, tags: str | None = None
+) -> str | None:
+    """Use only a resolved oracle reading; dual stress keeps a valid existing mark."""
     from scripts.verification.stress import (
         _stress_positions_in_marked_string,
         pedagogical_stressed_form,
@@ -181,9 +177,16 @@ def _oracle_choice(word: str) -> str | None:
     clean = _strip_surface_stress(word)
     if _count_syllables(clean) < 2:
         return None
-    result = verify_stress(clean.lower())
+    lookup = clean if pos == "PROPN" else clean.lower()
+    result = verify_stress(lookup, lemma=lemma, pos=pos, tags=tags)
+    if clean != clean.lower() and not (lemma or pos or tags):
+        cased = verify_stress(clean)
+        if {tuple(m["vowel_indices"]) for m in cased.get("matches", [])} != {
+            tuple(m["vowel_indices"]) for m in result.get("matches", [])
+        }:
+            return None
     matches = result.get("matches") or []
-    if result["status"] not in {"ok", "ambiguous"} or not matches:
+    if result["status"] != "ok" or not matches:
         return None
     allowed: set[int] = set()
     for match in matches:
@@ -191,11 +194,14 @@ def _oracle_choice(word: str) -> str | None:
     _, current = _stress_positions_in_marked_string(word)
     if len(current) == 1 and current[0] in allowed:
         return word
+    if matches[0].get("pedagogical_conflict"):
+        return None
     return transfer_stress_marks(pedagogical_stressed_form(matches[0]), clean)
 
 
 def _build_skip_mask(
-    text: str, extra_ranges: list[tuple[int, int]] | None = None,
+    text: str,
+    extra_ranges: list[tuple[int, int]] | None = None,
 ) -> list[tuple[int, int]]:
     """Build list of (start, end) ranges to skip (comments, code, URLs)."""
     ranges = list(extra_ranges or [])
@@ -229,64 +235,46 @@ def _in_skip_range(pos: int, skip_ranges: list[tuple[int, int]]) -> bool:
 
 
 def _build_sentence_stress_map(
-    text: str, orig_words: list[re.Match],
+    text: str,
+    orig_words: list[re.Match],
 ) -> dict[int, str]:
-    """Build a map of word positions to their stressed forms using sentence context.
+    """Use Stanza's lemma/POS/features as context, then query the same oracle.
 
-    Feeds the full text to the Stressifier in one call so that Stanza can use
-    sentence context for heteronym disambiguation. This is both faster (one
-    Stanza pass) and more accurate (full context available).
-
-    Args:
-        text: Full document text.
-        orig_words: Pre-computed Cyrillic word matches from the text.
-
-    Returns dict mapping match-start-position -> stressed word form.
+    Stanza supplies morphology, never an accent or a first-reading choice.
+    An absent parser, offset mismatch or unresolved meaning leaves the word bare.
     """
-    stressifier = _get_stressifier()
-    stress_map: dict[int, str] = {}
-
     try:
-        stressed_text = stressifier(text)
+        parser = getattr(_get_stressifier(), "nlp", None)
+    except (ImportError, OSError, RuntimeError, ValueError):
+        logger.warning("stress_annotator: context unavailable; ambiguity stays bare")
+        return {}
+    if parser is None:
+        return {}
+    # Parse bare text and map token offsets back, so already-accented input
+    # receives the same morphology and the second pass remains idempotent.
+    bare_chars: list[str] = []
+    bare_offsets = [0]
+    for char in text:
+        if char != STRESS_MARK:
+            bare_chars.append(char)
+        bare_offsets.append(len(bare_chars))
+    by_start = {bare_offsets[m.start(1)]: m for m in orig_words}
+    stress_map: dict[int, str] = {}
+    try:
+        parsed = parser("".join(bare_chars))
+        for token in parsed.iter_tokens():
+            match = by_start.get(token.start_char)
+            if match is None or token.end_char != bare_offsets[match.end(1)]:
+                continue
+            analysis = token.to_dict()[0]
+            word = _APOSTROPHE_RE.sub("'", match.group(1))
+            chosen = _oracle_choice(
+                word, lemma=analysis.get("lemma"), pos=analysis.get("upos"), tags=analysis.get("feats")
+            )
+            if chosen is not None:
+                stress_map[match.start(1)] = chosen
     except Exception:
-        logger.debug("stress_annotator: stressifier failed on full text")
-        return stress_map
-
-    stressed_words = list(_CYRILLIC_WORD_RE.finditer(stressed_text))
-
-    if len(orig_words) != len(stressed_words):
-        logger.warning(
-            "stress_annotator: word count mismatch (%d vs %d), "
-            "falling back to per-word stress",
-            len(orig_words),
-            len(stressed_words),
-        )
-        for m in orig_words:
-            word = m.group(1)
-            if _count_syllables(word) < 2 or _already_stressed(word):
-                continue
-            try:
-                stressed = stressifier(word)
-            except Exception:
-                continue
-            if STRESS_MARK in stressed and stressed.replace(STRESS_MARK, "") == word.replace(STRESS_MARK, ""):
-                stress_map[m.start(1)] = stressed
-        return stress_map
-
-    for orig_m, stress_m in zip(orig_words, stressed_words, strict=False):
-        orig_word = orig_m.group(1)
-        stressed_word = stress_m.group(1)
-
-        # Strip stress marks from BOTH sides before comparing — the original
-        # text may already contain some stress marks from vocab_gen or manual
-        # annotation. Without this, pre-stressed words like "Зву́ки" fail the
-        # comparison because stressed_clean="Звуки" != orig="Зву́ки".
-        if stressed_word.replace(STRESS_MARK, "") != orig_word.replace(STRESS_MARK, ""):
-            continue
-
-        if STRESS_MARK in stressed_word:
-            stress_map[orig_m.start(1)] = stressed_word
-
+        logger.debug("stress_annotator: context parser failed", exc_info=True)
     return stress_map
 
 
@@ -311,7 +299,9 @@ def _annotate_dialoguebox_uk_attrs(text: str) -> tuple[str, int]:
 
 
 def annotate_stress(
-    text: str, *, protected_ranges: list[tuple[int, int]] | None = None,
+    text: str,
+    *,
+    protected_ranges: list[tuple[int, int]] | None = None,
 ) -> tuple[str, int]:
     """Add and repair stress marks on Ukrainian words in text.
 
@@ -323,10 +313,10 @@ def annotate_stress(
     - Skip words inside HTML comments, code blocks, URLs, JSX tags
     - Unique ``verify_stress`` hits: repair wrong/double marks; keep a
       single acute on an allowed vowel; fill unstressed words
-    - Heteronyms / not-found: sentence Stressifier, then collapse duals
+    - Heteronyms: Stanza morphology joined to the oracle; unresolved forms stay bare
     - Add a focused second pass for DialogueBox uk="..." values
     """
-    from scripts.verification.stress import pending_stress_reason, transfer_stress_marks
+    from scripts.verification.stress import pending_stress_reason
 
     skip_ranges = _build_skip_mask(text, protected_ranges)
     matches = list(_CYRILLIC_WORD_RE.finditer(text))
@@ -355,28 +345,13 @@ def annotate_stress(
 
     if unresolved:
         stress_map = _build_sentence_stress_map(text, matches)
-        stressifier = _get_stressifier()
         for match in unresolved:
-            pos = match.start(1)
             word = _APOSTROPHE_RE.sub("'", match.group(1))
             clean = _strip_surface_stress(word)
-            stressed = stress_map.get(pos)
-            if stressed is not None:
-                stressed = _APOSTROPHE_RE.sub("'", stressed)
-            if stressed is None:
-                try:
-                    stressed = stressifier(clean)
-                except Exception:
-                    continue
-                if STRESS_MARK not in stressed or _strip_surface_stress(stressed) != clean:
-                    continue
-            collapsed = transfer_stress_marks(
-                _collapse_non_hyphen_multi_acute(stressed), clean,
-            )
-            if _already_stressed(word) and word.count(STRESS_MARK) == 1:
-                continue
-            if collapsed != word:
-                replacements[pos] = _restore_apostrophes(collapsed, match.group(1))
+            # No resolved context means no learner accent, including stale marks.
+            chosen = stress_map.get(match.start(1), clean)
+            if chosen != word:
+                replacements[match.start(1)] = _restore_apostrophes(chosen, match.group(1))
 
     result = list(text)
     count = 0
@@ -441,7 +416,7 @@ def activity_error_ranges(text: str) -> list[tuple[int, int]]:
                         rf"(?<![{_CYRILLIC_LETTER_CLASS}ʼ']){re.escape(form)}(?![{_CYRILLIC_LETTER_CLASS}ʼ'])"
                     )
                     start = node.start_mark.index
-                    for m in copy_re.finditer(text[start:node.end_mark.index]):
+                    for m in copy_re.finditer(text[start : node.end_mark.index]):
                         ranges.append((start + m.start(), start + m.end()))
             else:
                 walk(value)

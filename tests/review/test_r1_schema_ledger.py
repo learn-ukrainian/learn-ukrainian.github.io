@@ -1620,3 +1620,29 @@ def test_refused_call_prints_a_bare_receipt_line(
     assert stored["status"] == "refused"
     assert refused[-1].text.splitlines()[-1] == f"receipt: {stored['receipt_id']}"
     assert search_outcome("refused", stored["outcome_facts"]) is None
+
+
+@pytest.mark.parametrize(
+    "text,outcome",
+    [
+        ("No catalogue resources found.", "no_hits"),
+        ("Found 1 catalogue resources: resource-example", "hits_but_no_support"),
+        ("Resource catalogue ingestion is required before searching resources.", "unavailable"),
+    ],
+)
+def test_resource_catalogue_checks_are_ledgered_review_evidence(tmp_path, text, outcome):
+    from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, review_tools
+
+    assert "search_resources" not in REVIEW_TOOLS
+    assert "search_resources" in FULL_REVIEW_TOOLS
+    assert review_tools() == REVIEW_TOOLS and review_tools("full") == FULL_REVIEW_TOOLS
+    with pytest.raises(ValueError, match="review_access_invalid"):
+        review_tools("unknown")
+    ledger = tmp_path / "review" / "attempt.jsonl"
+    create_empty_ledger(ledger)
+    receipt = _record(
+        ledger, manifest="a" * 64, tool="search_resources", result=text, review_id="review", attempt_id="attempt"
+    )
+    [entry] = records(ledger)
+    assert entry["receipt_id"] == receipt and entry["tool"] == "search_resources"
+    assert search_outcome(entry["status"], entry["outcome_facts"]) == outcome

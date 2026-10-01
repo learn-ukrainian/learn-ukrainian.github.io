@@ -180,13 +180,35 @@ def test_ulp_lesson_10_replay(real, store):
     assert by_class[codes.LEMMA_OUTSIDE_STATE] == ["Огойко"]
     outside = next(t for t in cyrillic if t["class"] == codes.LEMMA_OUTSIDE_STATE)
     assert outside["surface"] == codes.PROPER_NOUN
-    # The two Його tokens cannot print stress without an approved source.
-    assert by_class[codes.PENDING_STRESS] == ["Його", "Його"]
+    # Uncovered analyses now use compatible trie evidence instead of a foreign
+    # ULIF lemma. Existing pending overrides and unresolved names remain bare.
+    assert by_class[codes.PENDING_STRESS] == ["Його", "Його", "Галина"]
+    newly_resolved = {
+        "Моя": "моя́",
+        "Вона": "вона́",
+        "Мої": "мої́",
+        "Хмельницькій": "Хмельни́цькій",
+        "бабусі": "бабу́сі",
+        "Вони": "вони́",
+        "пенсіонерки": "пенсіоне́рки",
+        "ваші": "ва́ші",
+        "родичі": "ро́дичі",
+    }
+    recovered = [t for t in cyrillic if t["token"] in newly_resolved]
+    assert len(recovered) == len(newly_resolved) == 9
+    for token in recovered:
+        assert token["class"] == codes.RESOLVED
+        assert token["selected"]["stressed"] == newly_resolved[token["token"]]
     for token in (t for t in cyrillic if t["class"] == codes.PENDING_STRESS):
         assert token["selected"] is None
-        assert token["readings"] and all(
+        assert token["readings"] and any(
             r["stressed"] is None and r["stress_source"] == "pending" for r in token["readings"]
         )
+        assert all((r["stressed"] is None) == (r["stress_source"] == "pending") for r in token["readings"])
+        # Preserve the original complete-withholding check for the two Його
+        # tokens; newly pending tokens can also have an attested syncretic form.
+        if token["token"] == "Його":
+            assert all(r["stressed"] is None and r["stress_source"] == "pending" for r in token["readings"])
         assert "pending" in token["message"]
     # Zero-vowel prepositions remain resolved as stress-free by the word builder.
     assert sorted(t["token"] for t in cyrillic if t["token"] in {"в", "з"} and t["class"] == codes.RESOLVED) == [
@@ -211,6 +233,8 @@ def test_ulp_lesson_10_replay(real, store):
     _assert_zaraz_contract(zaraz, allowed, noun_checked=noun_checked)
     vona = next(t for t in cyrillic if t["token"] == "Вона")
     assert vona["class"] == codes.RESOLVED and vona["surface"] == codes.SENTENCE_TOKEN
+    assert vona["selected"]["stressed"] == "вона́"
+    assert vona["readings"][0]["stress_source"] == "trie"
     assert stream.reports == []
 
     assert stream.to_bytes() == resolve(story, allowed, src).to_bytes()
@@ -293,7 +317,13 @@ def test_named_real_cases(real, store):
     vona = _records(store, real, "вона")
     token = resolve(_doc("Вона працює."), Allowlist.from_records(vona), src).tokens[0]
     assert token["class"] == codes.RESOLVED and token["surface"] == codes.SENTENCE_TOKEN
-    assert not store_lemma(store, token["selected"]["record"])[:1].isupper()
+    assert token["selected"]["stressed"] == "вона́"
+    assert token["readings"][0]["stress_source"] == "trie"
+    assert all(not store_lemma(store, r["record"])[:1].isupper() for r in token["readings"])
+    oracle = src.stress_for_form("вона", "noun:unanim:f:v_naz:pron:pers:3", lemma="вона").raw
+    assert oracle["status"] == "ok" and oracle["stress_source"] == "trie"
+    assert {m["stressed_form"] for m in oracle["matches"]} == {"вона́"}
+    assert all(not m.get("evidence") for m in oracle["matches"])
 
     adj = resolve(_doc("Це український."), Allowlist.from_records(_records(store, real, "український", pos="adj")), src)
     assert _classes(adj, "український") == [codes.RESOLVED]
