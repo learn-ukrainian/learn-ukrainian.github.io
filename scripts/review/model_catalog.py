@@ -20,6 +20,8 @@ VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
 EXPECTED_SELECTION_ORDER = [
     "independence_and_hard_gates",
+    "primary_before_last_resort",
+    "profile_risk_suitability",
     "review_quality_tier",
     "health_and_quota_within_tier",
     "cost_within_equivalent_fit",
@@ -671,6 +673,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 f"review_candidates.{name}.review_profiles contains unsupported code-closeout "
                 f"profiles {unsupported_profiles}; expected only {sorted(VALID_REVIEW_PROFILES)}"
             )
+        if not isinstance(candidate.get("last_resort", False), bool):
+            raise ModelCatalogError(f"review_candidates.{name}.last_resort must be a boolean")
         health_keys = candidate.get("health_keys", [])
         if not isinstance(health_keys, list) or not all(isinstance(item, str) and item.strip() for item in health_keys):
             raise ModelCatalogError(f"review_candidates.{name}.health_keys must be a list of strings")
@@ -700,12 +704,12 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         if not isinstance(rungs, list) or not rungs:
             raise ModelCatalogError(f"review_ladders.{risk} must be a non-empty list")
         seen: set[str] = set()
-        previous_rank = 0
+        previous_rank = (False, 0)
         floor_rank = tiers[risk_floor[risk]]
         for rung in rungs:
             if not isinstance(rung, list) or not rung:
                 raise ModelCatalogError(f"review_ladders.{risk} rungs must be non-empty lists")
-            rung_ranks: set[int] = set()
+            rung_ranks: set[tuple[bool, int]] = set()
             for candidate_name in rung:
                 if candidate_name not in candidates:
                     raise ModelCatalogError(f"review_ladders.{risk} references unknown candidate {candidate_name!r}")
@@ -713,6 +717,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(f"review_ladders.{risk} repeats candidate {candidate_name!r}")
                 seen.add(candidate_name)
                 model_id = candidates[candidate_name]["model_id"]
+                if models[model_id]["family"] == "xai":
+                    raise ModelCatalogError(f"review_ladders.{risk}: Grok never judges code or infra")
                 if risk == "critical" and model_id.startswith("claude-sonnet-"):
                     raise ModelCatalogError(
                         f"review_ladders.{risk}: Sonnet is excluded from security review by core.md P2"
@@ -721,13 +727,13 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(
                         f"review_ladders.{risk} candidate {candidate_name!r} must reference an active model"
                     )
-                rung_ranks.add(tiers[models[model_id]["tier"]])
+                rung_ranks.add((candidates[candidate_name].get("last_resort", False), tiers[models[model_id]["tier"]]))
             if len(rung_ranks) != 1:
                 raise ModelCatalogError(f"review_ladders.{risk} mixes quality tiers in one rung")
             rung_rank = next(iter(rung_ranks))
             if rung_rank < previous_rank:
                 raise ModelCatalogError(f"review_ladders.{risk} improves quality in a later rung")
-            if rung_rank > floor_rank:
+            if rung_rank[1] > floor_rank:
                 raise ModelCatalogError(f"review_ladders.{risk} falls below its {risk_floor[risk]!r} quality floor")
             previous_rank = rung_rank
     _validate_budget_substitution_models(catalog.get("budget_substitution_models"), catalog)

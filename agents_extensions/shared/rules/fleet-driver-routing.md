@@ -2,7 +2,7 @@
 
 **Failure prevented:** Epic drivers (especially Grok) fixate on a small subset of
 seats (e.g. Claude Sonnet only), under-use heap/economical workers, and rarely
-use **advisor → cheap implement** even when an Astra/Fable brief would unlock Luna
+use **advisor → cheap implement** even when a Sol advisory envelope would unlock Luna
 or weaker models. Measured incident: atlas night drive 2026-08-06 used 2/9
 catalog seats with 33% dispatch `done` rate while free lanes sat idle.
 
@@ -29,20 +29,22 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5-1** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ high; advisory turns only), Opus-class when roster says so |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high) first; Fable / Astra last resort; bounded envelopes use Sol only (§2) |
 | **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (review/CF, not judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
-review seat and, since operator 2026-09-29 (#9230), also the Astra advisory seat at `high`
-for hard, consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
-`gpt-6-sol` and `gpt-6-astra` are not routable. "Astra" below names that advisory seat; do
-not spend advisory turns on ordinary implementation or review.
+review seat and, since operator 2026-09-29 (#9230), also holds the named Astra advisory seat at `high`.
+Ordinary advice uses Opus 5.5 / Sol 6.1 first; the named Astra seat is last resort (#9394).
+Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
+`gpt-6-sol` and `gpt-6-astra` are not routable. Designated approval remains separate
+from ordinary advice; do not spend advisory turns on ordinary implementation or review.
 
-**Standing operator preference (2026-08-06):** Fable remains the Anthropic
-authority seat even if the operator shrinks the Claude subscription. Reach Fable via:
+**Standing routing preference (#9394):** Opus 5.5 / Sol 6.1 first; Fable / Astra
+last resort. Designated approval by Fable, Astra or the operator remains unchanged.
+When last-resort Fable is required, use this transport order:
 
-1. Native Claude seat with model pin **claude-fable-5-1** (preferred when available), or
+1. Native Claude seat with model pin **claude-fable-5-1** (first transport for last-resort Fable), or
 2. **Cursor** multi-model pin to Fable (use composite identity for CF author/review
    bookkeeping, e.g. `cursor:claude-fable-5-1` per `resolve_author_family` rules).
 
@@ -102,7 +104,7 @@ stampede one hot lane.
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
 | **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
 | **Z.AI GLM-5.3** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
-| **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority; ~1 Claude driver |
+| **Claude Sonnet** | routine judgment/CF | Opus 5.5 / Sol 6.1 first for hard judgment; Fable / Astra last resort; ~1 Claude driver |
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
@@ -110,8 +112,8 @@ stampede one hot lane.
 k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
-Luna handles bounded work under a Sol advisory envelope (§2); Astra is summoned for hard advice, not
-implementation or review.
+Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1
+first, Fable / Astra last resort.
 
 The operator records a shared assertion at `batch_state/routing_budget/operator_reset_reserve.json`
 in the primary checkout. Its exact JSON fields are `schema_version` (`operator-reset-reserve.v1`),
@@ -159,7 +161,7 @@ architecture decision):
 ```text
 0) Driver fixes the worker dispatch arguments and prints their binding digest:
    delegate.py dispatch <worker args> --print-advisory-binding
-1) ADVISOR envelope from the catalog advisor route (gpt-6.1-sol @ high, the Astra seat):
+1) ADVISOR envelope from the catalog advisor route (the Sol advisor (`gpt-6.1-sol` @ high)):
    delegate.py dispatch --agent codex --model gpt-6.1-sol --mode read-only \
      --advisory-role bounded_advisory_envelope --advisory-binding <digest> ...
    → task_contract, owned_paths, max_changed_files, max_non_test_loc, constraints,
@@ -247,7 +249,7 @@ Trivial one-shot (typo, single-file comment) is exempt if labeled
 | VPS launcher scripts, health probes, rsync gates | practical |
 | Residual lemma EN strategy, morphology policy | **authority brief** → heap fill |
 | Routine formal CF | practical cross-family |
-| Contested CF / architecture / process | authority (Fable or Astra) |
+| Contested CF / architecture / process | Opus 5.5 / Sol 6.1 first; Fable / Astra last resort; operator escalation unchanged; formal CF remains independent and task-qualified |
 | UK content authoring | language-lane only (existing model-assignment) |
 
 ---

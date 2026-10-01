@@ -12597,6 +12597,9 @@ def _dispatch_route(
                 origin_agent=original_agent,
                 fallbacks=request.fallbacks,
                 review_select=request.review_select,
+                review_trusted_inputs=bool(
+                    getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
+                ),
             )
         else:
             dispatch_agent = requested_agent
@@ -12950,6 +12953,7 @@ def _resolve_agent_with_budget_guard(
     origin_agent: str | None = None,
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
+    review_trusted_inputs: bool = False,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -13092,11 +13096,18 @@ def _resolve_agent_with_budget_guard(
     if review_select is not None:
         sub, chosen = review_select(payload, requested)
         if sub == requested and chosen == requested_model:
-            print(
-                "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer; "
-                "budget substitution requires --review-author-model and --review-risk (code profile only)",
-                file=sys.stderr,
+            note = (
+                "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer "
+                "on pace-only deficit."
+                if status in {"cool", "warm"} and "deficit" in reason
+                else "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer;"
             )
+            if not review_trusted_inputs:
+                note += (
+                    " Legacy calls without trusted author/risk inputs prove only intrinsic eligibility. "
+                    "budget substitution requires --review-author-model and --review-risk (code profile only)"
+                )
+            print(note, file=sys.stderr)
             return requested
         sub_info = agents.get(sub, {}) or {}
         sub_dict = sub_info if isinstance(sub_info, dict) else {}
@@ -14306,7 +14317,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
-            "when the requested lane is near_cap/hot/deficit; prepaid DeepSeek/OpenRouter "
+            "when the requested lane is near_cap/hot/deficit. Code review admits a sole "
+            "eligible cross-family lane with a NOTE on pace-only deficit; hard capacity "
+            "and health gates still bind. Prepaid DeepSeek/OpenRouter "
             "also refuse unknown, stale or empty funding. Also enabled when "
             "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
         ),

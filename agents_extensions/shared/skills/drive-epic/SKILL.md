@@ -129,7 +129,9 @@ Seat-specific adjustments for your model and for the seats you route to:
 
 ## Escalate — do NOT decide these solo
 
-Route to the **operator and advisors (Fable, Astra)**; never resolve them from the loop:
+Seek **Opus 5.5 / Sol 6.1 first** for review, critique and design input; **Fable / Astra
+last resort**. Route the decisions below to the **operator and designated advisors
+(Fable, Astra)** for approval; never resolve them from the loop:
 
 1. Any **architecture, layout, or process** change.
 2. A **contested CF verdict** (reviewer and author disagree, or two reviewers split).
