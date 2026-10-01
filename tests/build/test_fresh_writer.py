@@ -13,6 +13,7 @@ import yaml
 
 from scripts.build.fresh.draft_schema import DraftValidationError, validate_draft
 from scripts.build.fresh.preflight import PreflightResult
+from scripts.build.fresh.regeneration import writer_task_id
 from scripts.build.fresh.writer import (
     WriterCallError,
     dispatch_writer,
@@ -161,7 +162,11 @@ def test_dispatch_refuses_without_passing_preflight(tmp_path):
         )
 
 
-def test_writer_call_with_fake_seat(tmp_path, a1_valid_fixture, passing_preflight):
+@pytest.mark.parametrize(
+    "requested,resolved",
+    [(None, "high"), ("medium", "medium"), ("high", "medium"), ("xhigh", None), ("medium", ""), ("high", 12)],
+)
+def test_writer_call_with_fake_seat(tmp_path, a1_valid_fixture, passing_preflight, requested, resolved):
     """The writer call tested with a fake seat script that returns a fixture draft."""
     draft, types = a1_valid_fixture
     raw_yaml = yaml.safe_dump(draft, allow_unicode=True)
@@ -170,19 +175,23 @@ def test_writer_call_with_fake_seat(tmp_path, a1_valid_fixture, passing_prefligh
     fake_seat_script.write_text(
         f"""
 import argparse
+import json
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--task-id", required=True)
 parser.add_argument("--prompt-file", required=True)
 parser.add_argument("--result-file", required=True)
+parser.add_argument("--effort", default=None)
 args = parser.parse_args()
+assert args.effort == {requested!r}
 
 result_path = Path(args.result_file)
 result_path.parent.mkdir(parents=True, exist_ok=True)
 result_path.write_text('''```yaml
 {raw_yaml}
 ```''', encoding="utf-8")
+result_path.with_suffix(".json").write_text(json.dumps({{"model": "fake-model", "effort": {resolved!r}}}), encoding="utf-8")
 """,
         encoding="utf-8",
     )
@@ -204,12 +213,17 @@ result_path.write_text('''```yaml
         plan_activity_types=types,
         fake_seat=fake_seat_script,
         repo_root=tmp_path,
+        effort=requested,
     )
 
     assert res["writer"] == "agy"
-    assert res["task_id"] == "write-a1-test-slug-2-1"
+    assert res["task_id"] == "write-a1-test-slug-2-1" + (f"-{requested}" if requested else "")
     assert res["prompt_sha256"] == "a" * 64
-    assert res["model"] == "unknown"
+    assert res["model"] == "fake-model"
+    expected = resolved if isinstance(resolved, str) and resolved else "unknown"
+    assert res["effort"] == expected
+    meta = yaml.safe_load(res["writer_meta_file"].read_text(encoding="utf-8"))
+    assert meta["effort"] == expected
 
     # Verify state files exist and file permissions are 0o644
     draft_file = output_dir / "lesson-2.draft.yaml"
@@ -224,8 +238,8 @@ result_path.write_text('''```yaml
 
     meta = yaml.safe_load(meta_file.read_text(encoding="utf-8"))
     assert meta["writer"] == "agy"
-    assert meta["model"] == "unknown"
-    assert meta["task_id"] == "write-a1-test-slug-2-1"
+    assert meta["model"] == "fake-model"
+    assert meta["task_id"] == res["task_id"]
     assert meta["attempt"] == 1
 
 
@@ -276,9 +290,63 @@ Path(args.result_file).write_text("invalid_draft: true\\nstatus: ok\\n", encodin
     meta = yaml.safe_load(meta_file.read_text(encoding="utf-8"))
     assert meta["writer"] == "claude"
     assert meta["model"] == "unknown"
+    assert meta["effort"] == "unknown"
 
 
-def test_real_dispatch_path_with_fake_delegate(tmp_path, a1_valid_fixture, passing_preflight):
+def test_invalid_writer_effort_refused(tmp_path, passing_preflight):
+    with pytest.raises(ValueError, match="Invalid writer effort"):
+        dispatch_writer(
+            writer="codex",
+            effort="max",
+            level="a1",
+            slug="test",
+            lesson_n=1,
+            prompt_file=tmp_path / "prompt.md",
+            prompt_sha256="a" * 64,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+        )
+
+
+def test_writer_effort_task_ledger_keying(tmp_path, a1_valid_fixture, passing_preflight):
+    """Equal lesson/attempt numbers with different efforts keep separate task records."""
+    draft, types = a1_valid_fixture
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("fixture prompt", encoding="utf-8")
+
+    def fake(task_id, prompt_file, result_file):
+        effort = task_id.rsplit("-", 1)[1]
+        result_file.write_text(yaml.safe_dump(draft, allow_unicode=True), encoding="utf-8")
+        result_file.with_suffix(".json").write_text(json.dumps({"model": "gpt-6.1-sol", "effort": effort}))
+
+    ids = []
+    for effort in ("medium", "high"):
+        result = dispatch_writer(
+            writer="codex",
+            model="gpt-6.1-sol",
+            effort=effort,
+            level="a1",
+            slug="sample",
+            lesson_n=1,
+            prompt_file=prompt,
+            prompt_sha256="a" * 64,
+            output_dir=tmp_path / effort,
+            preflight_result=passing_preflight,
+            fake_seat=fake,
+            repo_root=tmp_path,
+            plan_activity_types=types,
+        )
+        ids.append(result["task_id"])
+        record = json.loads((tmp_path / "batch_state/tasks" / f"{result['task_id']}.json").read_text())
+        metadata = yaml.safe_load(result["writer_meta_file"].read_text())
+        assert record["effort"] == metadata["effort"] == effort
+        assert metadata["attempt"] == 1
+    assert len(set(ids)) == 2
+    assert writer_task_id("a1", "sample", 1, 1) == "write-a1-sample-1-1"
+
+
+@pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
+def test_real_dispatch_path_with_fake_delegate(tmp_path, a1_valid_fixture, passing_preflight, effort):
     """Finding 7 & MAJOR D: Test real dispatch path through fake delegate.py writing to a different root, verifying wait JSON parsing."""
     draft, types = a1_valid_fixture
     raw_yaml = yaml.safe_dump(draft, allow_unicode=True)
@@ -324,6 +392,7 @@ elif cmd == "wait":
         "status": "done",
         "result_file": str(result_file),
         "resolved_model": "gpt-6.1-sol",
+        "effort": "high",
     }}
     print(json.dumps(state, indent=2))
     sys.exit(0)
@@ -351,10 +420,13 @@ sys.exit(1)
         delegate_script=fake_delegate_script,
         repo_root=caller_root,
         model="gpt-6.1-sol",
+        effort=effort,
     )
 
     assert res["writer"] == "codex"
     assert res["model"] == "gpt-6.1-sol"
+    assert res["effort"] == "high"
+    assert yaml.safe_load(res["writer_meta_file"].read_text())["effort"] == "high"
 
     # MAJOR D: Verify that caller_root was NOT used for reading results
     caller_result = caller_root / "batch_state/tasks/write-a1-delegate-test-3-1.result"
@@ -367,15 +439,18 @@ sys.exit(1)
     assert len(lines) == 2, f"Expected 2 delegate calls (dispatch and wait), got {len(lines)}"
 
     dispatch_argv = lines[0]["argv"]
+    if effort is None:
+        assert "--effort" not in dispatch_argv
+    else:
+        assert dispatch_argv[dispatch_argv.index("--effort") + 1] == effort
     assert dispatch_argv[0] == "dispatch"
     assert "--agent" in dispatch_argv and dispatch_argv[dispatch_argv.index("--agent") + 1] == "codex"
     assert "--model" in dispatch_argv and dispatch_argv[dispatch_argv.index("--model") + 1] == "gpt-6.1-sol"
     assert "--mode" in dispatch_argv and dispatch_argv[dispatch_argv.index("--mode") + 1] == "read-only"
     assert "--worktree" in dispatch_argv
-    assert (
-        "--task-id" in dispatch_argv
-        and dispatch_argv[dispatch_argv.index("--task-id") + 1] == "write-a1-delegate-test-3-1"
-    )
+    assert "--task-id" in dispatch_argv and dispatch_argv[
+        dispatch_argv.index("--task-id") + 1
+    ] == "write-a1-delegate-test-3-1" + (f"-{effort}" if effort else "")
     assert "--prompt-file" in dispatch_argv and dispatch_argv[dispatch_argv.index("--prompt-file") + 1] == str(
         prompt_file
     )
@@ -383,7 +458,7 @@ sys.exit(1)
 
     wait_argv = lines[1]["argv"]
     assert wait_argv[0] == "wait"
-    assert wait_argv[1] == "write-a1-delegate-test-3-1"
+    assert wait_argv[1] == "write-a1-delegate-test-3-1" + (f"-{effort}" if effort else "")
     assert "--timeout" in wait_argv
 
 
