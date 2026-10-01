@@ -182,14 +182,15 @@ def test_invalid_asset_cli_name_is_masked_exit_two(capsys):
 
 
 @pytest.mark.parametrize("body,verdict", [("trivial: yes\nFixture maintenance", "PASS"), ("## Overview\nIncomplete fixture", "WARN")])
-def test_delegate_dor_issue_reaches_real_shim_and_checker(body, verdict, tmp_path, monkeypatch):
+def test_delegate_dor_issue_reaches_real_shim_and_checker(body, verdict, tmp_path, monkeypatch, gh_shim_sandbox):
     from scripts import delegate
     spy = tmp_path / "real-gh"
     log = tmp_path / "calls.jsonl"
     payload = {"number": 1, "title": "Fixture", "body": body, "labels": []}
     spy.write_text(f'#!{sys.executable}\nimport json,sys\nfrom pathlib import Path\nwith Path({str(log)!r}).open("a") as out: out.write(json.dumps(sys.argv[1:])+"\\n")\nprint({json.dumps(payload)!r})\n')
     spy.chmod(0o755)
-    monkeypatch.setenv("PATH", str(ROOT / "scripts/agent_runtime/shims") + os.pathsep + os.environ["PATH"])
+    _root, shim, _tooling = gh_shim_sandbox
+    monkeypatch.setenv("PATH", str(shim.parent) + os.pathsep + os.environ["PATH"])
     monkeypatch.setenv("AGENT_REAL_GH", str(spy))
     monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
     error, record = delegate._run_dor_preflight("Issue: #1", None, dispatch_repo="unit/public")
@@ -206,7 +207,7 @@ def test_hook_recognises_typed_merge(monkeypatch):
     spec = importlib.util.spec_from_file_location("r5_guard", ROOT / "agents_extensions/shared/hooks/guard-pr-merge.py")
     guard = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(guard)
-    for prefix in (".venv/bin/python", "/fixture/bin/python"):
+    for prefix in (sys.executable, "/fixture/bin/python"):
         args = guard._merge_args([prefix, "-m", "scripts.publish", "pr-merge", "--repo", "unit/private", "--number", "1"])
         assert guard._pr_selector(args) == "1" and guard._repo_option(args) == "unit/private"
 

@@ -4598,10 +4598,28 @@ def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sand
     assert proc.stdout.startswith("real-gh pr comment 1234 --repo unit/public --body-file ")
 
 
-def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox):
+@pytest.mark.parametrize("readiness", ["ready", "draft", "failing", "unverifiable"])
+def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, readiness):
     root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
-    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
+    calls = tmp_path / "calls.jsonl"
+    head = "a" * 40
+    metadata = {"number": 1234, "isDraft": readiness == "draft", "headRefOid": head}
+    checks = [{"name": "CI Gate", "bucket": "fail" if readiness == "failing" else "pass"}]
+    fake_gh.write_text(
+        f"#!{sys.executable}\n"
+        "import json, sys\n"
+        "from pathlib import Path\n"
+        "args = sys.argv[1:]\n"
+        f"with Path({str(calls)!r}).open('a') as out: out.write(json.dumps(args) + '\\n')\n"
+        "if args[:2] == ['pr', 'view']:\n"
+        f"    print(json.dumps({metadata!r}))\n"
+        "elif args[:2] == ['pr', 'checks']:\n"
+        f"    print('invalid-json' if {readiness == 'unverifiable'!r} else "
+        f"json.dumps({checks!r}))\n"
+        "else:\n"
+        "    print('real-gh ' + ' '.join(args))\n"
+    )
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
@@ -4618,8 +4636,16 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox):
         timeout=15,
     )
 
-    assert proc.returncode == 0
-    assert proc.stdout.strip() == "real-gh pr merge 1234 --repo unit/public --squash"
+    sent = [json.loads(line) for line in calls.read_text().splitlines()]
+    assert [args[:2] for args in sent[:2]] == [["pr", "view"], ["pr", "checks"]]
+    if readiness == "ready":
+        assert proc.returncode == 0
+        assert proc.stdout.strip() == f"real-gh pr merge 1234 --repo unit/public --squash --match-head-commit={head}"
+        assert len(sent) == 3 and sent[-1][:2] == ["pr", "merge"]
+    else:
+        assert proc.returncode != 0
+        assert "OPSEC: merge" in proc.stderr
+        assert len(sent) == 2
 
 
 def test_typed_publisher_retries_mocked_secondary_rate_limit_replays_scanned_stdin(tmp_path, gh_shim_sandbox):
