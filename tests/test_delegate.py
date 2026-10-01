@@ -42,6 +42,7 @@ from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
+from tests import _worktree_artifact_links as worktree_artifact_links
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 
@@ -6988,6 +6989,9 @@ def _make_run_stub(
             return subprocess.CompletedProcess(cmd, 0, rev_parse_head_sha, "")
         if cmd[:2] == ["git", "status"]:
             return subprocess.CompletedProcess(cmd, 0, status_porcelain, "")
+        if cmd[:2] == ["git", "ls-files"]:
+            # The removal guard inventories bytes with NUL delimiters.
+            return subprocess.CompletedProcess(cmd, 0, b"", b"")
         if cmd[:2] == ["git", "rev-list"]:
             return subprocess.CompletedProcess(cmd, 0, rev_list_count, "")
         if cmd[:3] == ["git", "worktree", "add"]:
@@ -11869,6 +11873,7 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
 
 def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_tasks_dir, monkeypatch):
     """A step that raises inside the shared chokepoint is an ``error`` record, never an exception."""
+    _init_git_repo_for_test(tmp_path, monkeypatch)
 
     def raising_remove(_repo_root, _worktree, *, force):
         raise RuntimeError("simulated removal crash")
@@ -12271,6 +12276,74 @@ def test_read_only_clean_settle_removes_worktree_and_keeps_branch(tmp_tasks_dir,
     assert state["worktree_reap"]["branch"] == branch
     assert not worktree.exists()
     assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize("copy_fails", [False, True])
+def test_settle_preserves_ignored_artifacts_before_removal(tmp_tasks_dir, tmp_path, monkeypatch, copy_fails):
+    from scripts.orchestration import worktree_artifacts
+
+    task_id = "reap-preserve-artifacts"
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    with (primary / ".git" / "info" / "exclude").open("a") as exclude:
+        exclude.write("batch_state/\n")
+    artifact = worktree / "batch_state" / "reports" / "result.patch"
+    artifact.parent.mkdir(parents=True)
+    payload = b"unapplied patch\x00\xff\n"
+    artifact.write_bytes(payload)
+    record = {"task_id": task_id, "status": "done", "response": f"Capture `{artifact}`."}
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+    if copy_fails:
+
+        def fail_copy(_source, _destination):
+            raise OSError("injected copy failure")
+
+        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+
+    out = delegate._settle_worktree_reap(
+        worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
+    )
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    if copy_fails:
+        assert out["action"] == "skipped"
+        assert "injected copy failure" in out["reason"]
+        assert "injected copy failure" in state["artifact_preservation_error"]
+        assert artifact.read_bytes() == payload
+    else:
+        assert out["action"] == "removed", out
+        assert not worktree.exists()
+        location = primary / "batch_state" / "preserved" / task_id
+        assert (location / "batch_state/reports/result.patch").read_bytes() == payload
+        assert state["preserved_artifacts"] == record["preserved_artifacts"] == {"count": 1, "location": str(location)}
+    assert _branch_ref_present(primary, branch)
+
+
+def test_settle_final_state_keeps_preservation_receipt(tmp_tasks_dir, tmp_path, monkeypatch):
+    # Seed evidence before the worker starts so the read-only snapshot is stable.
+    original_checkout = _settle_reap_checkout
+
+    def checkout_with_evidence(*args, **kwargs):
+        primary, worktree, branch = original_checkout(*args, **kwargs)
+        with (primary / ".git" / "info" / "exclude").open("a") as exclude:
+            exclude.write("batch_state/\n")
+        artifact = worktree / "batch_state/report.txt"
+        artifact.parent.mkdir()
+        artifact.write_bytes(b"evidence")
+        return primary, worktree, branch
+
+    monkeypatch.setattr(sys.modules[__name__], "_settle_reap_checkout", checkout_with_evidence)
+    primary, worktree, _branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-receipt",
+        mode="read-only",
+        response="Capture `batch_state/report.txt`.",
+    )
+    assert state["worktree_reap"]["action"] == "removed", state["worktree_reap"]
+    assert state["preserved_artifacts"]["count"] == 1
+    assert Path(state["preserved_artifacts"]["location"]) == primary / "batch_state/preserved/reap-receipt"
+    assert not worktree.exists()
 
 
 def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -13235,6 +13308,7 @@ def test_stale_branch_holder_release_goes_through_the_guarded_chokepoint(
     """#8610 r4: a stale holder is kept while its lock is held or another task still claims it."""
     holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
     holder.mkdir(parents=True)
+    _init_git_repo_for_test(holder, monkeypatch)
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
     proofs: list[bool] = []
 
@@ -13277,6 +13351,7 @@ def test_stale_branch_holder_release_removes_under_the_lock(tmp_tasks_dir, tmp_p
     """#8610 r4: a releasable holder with no live claim is removed without force while its lock is held."""
     holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
     holder.mkdir(parents=True)
+    _init_git_repo_for_test(holder, monkeypatch)
     monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda _path, _branch: (True, "clean+synced"))
     removals: list[tuple[list[str], bool]] = []
     real_run = subprocess.run
@@ -17482,6 +17557,65 @@ def test_dispatch_refuses_an_owned_path_that_could_never_own_a_file(tmp_tasks_di
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+@pytest.mark.parametrize("reference", ["root", "./", "ignored", ".pytest_cache/cache.txt", "ignored/report.txt"])
+def test_settle_result_named_file_scope(tmp_tasks_dir, tmp_path, monkeypatch, reference):
+    task_id = "named-file-scope"
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.pytest_cache/\n")
+    for name in ["ignored/report.txt", ".pytest_cache/cache.txt"]:
+        source = worktree / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(b"named evidence")
+    named = str(worktree) if reference == "root" else reference
+    record = {"task_id": task_id, "status": "done", "response": f"Result: `{named}`."}
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+    result = delegate._settle_worktree_reap(
+        worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
+    )
+    assert result["action"] == "removed", result
+    assert not worktree.exists()
+    location = primary / "batch_state/preserved" / task_id
+    if reference == "ignored/report.txt":
+        assert (location / reference).read_bytes() == b"named evidence"
+        assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
+    else:
+        assert not location.exists()
+
+
+@pytest.mark.parametrize("scenario", worktree_artifact_links.SCENARIOS)
+def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monkeypatch, scenario):
+    links = worktree_artifact_links
+    task_id = "named-link"
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n")
+    named, preserved, target = links.build_named_link(worktree, primary, tmp_path / "outside", scenario)
+    record = {"task_id": task_id, "status": "done", "response": links.worker_response(named)}
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+    result = delegate._settle_worktree_reap(
+        worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
+    )
+    links.restore_access(worktree)
+    state = delegate._read_state(delegate._state_path(task_id))
+    if preserved is None and target is not None:  # Outbound targets outlive the checkout.
+        assert target.read_bytes() == links.PAYLOAD
+    location = primary / "batch_state/preserved" / task_id
+    if scenario in links.REFUSALS:
+        assert result["action"] == "skipped" and links.REFUSALS[scenario] in result["reason"], result
+        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
+        assert worktree.exists()
+        return
+    assert result["action"] == "removed", result
+    assert not worktree.exists()
+    assert "artifact_preservation_error" not in state
+    if preserved is None:
+        assert not location.exists()
+    else:
+        assert (location / preserved).read_bytes() == links.PAYLOAD
+        assert state["preserved_artifacts"]["count"] == 1
 
 
 def test_full_review_default_requires_full_checkout_before_provisioning(tmp_tasks_dir, tmp_path, capsys):

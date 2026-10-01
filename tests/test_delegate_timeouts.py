@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 import pytest
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.delegate import (
     DEFAULT_GH_CLI_TIMEOUT_S,
     DEFAULT_GIT_TIMEOUT_S,
@@ -163,25 +164,65 @@ def test_worktree_is_clean_timeouts(tmp_path: Path) -> None:
         assert _worktree_is_clean(tmp_path) is False
 
 
-def test_release_stale_branch_holders_timeouts(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def _timeout_only(match: list[str], timeout_s: float):
+    """Raise TimeoutExpired for git calls starting with ``match``; run every other call for real."""
+    real_run = subprocess.run
+    timed_out: list[list[str]] = []
+
+    def run(cmd, *args, **kwargs):
+        if list(cmd[: len(match)]) == match:
+            timed_out.append(list(cmd))
+            raise subprocess.TimeoutExpired(cmd, timeout_s)
+        return real_run(cmd, *args, **kwargs)
+
+    return run, timed_out
+
+
+def _release_holder(holder: Path, tmp_path: Path, match: list[str], timeout_s: float) -> tuple[list[Path], list]:
+    subprocess.run(["git", "init", "-q", str(holder)], check=True, env=sanitized_git_env(), timeout=30)
+    side_effect, timed_out = _timeout_only(match, timeout_s)
     with (
         patch("scripts.delegate._WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks"),
         patch.dict("os.environ", {"LU_TASKS_DIR": str(tmp_path / "tasks")}),
         patch("scripts.delegate._stale_branch_holder_releasable", return_value=(True, "clean")),
-        patch(
-            "subprocess.run",
-            side_effect=subprocess.TimeoutExpired(["git", "worktree", "remove"], DEFAULT_GIT_TIMEOUT_S),
-        ) as run_mock,
+        patch("subprocess.run", side_effect=side_effect),
     ):
-        released = _release_stale_branch_holders(branch="feature", holders=[tmp_path], dry_run=False)
-        assert released == []
+        released = _release_stale_branch_holders(branch="feature", holders=[holder], dry_run=False)
+    return released, timed_out
+
+
+def test_release_stale_branch_holders_timeouts(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    holder = tmp_path / "holder"
+    released, timed_out = _release_holder(
+        holder, tmp_path, ["git", "worktree", "remove"], GIT_WORKTREE_REMOVE_TIMEOUT_S
+    )
+    assert released == []
+    assert timed_out == [["git", "worktree", "remove", str(holder)]]
 
     err = capsys.readouterr().err
     assert (
-        f"failed to release stale branch holder {tmp_path}: git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s"
+        f"failed to release stale branch holder {holder}: git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s"
         in err
     )
     assert "🌲 released stale branch holder" not in err
+    assert holder.is_dir()
+
+
+def test_release_stale_branch_holders_guard_timeout_refuses_removal(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    holder = tmp_path / "holder"
+    released, timed_out = _release_holder(holder, tmp_path, ["git", "ls-files"], 30)
+    assert released == []
+    # The artifact guard's inventory timed out; removal was never attempted.
+    assert [cmd[:2] for cmd in timed_out] == [["git", "ls-files"]]
+
+    err = capsys.readouterr().err
+    assert f"ℹ️  branch 'feature' held by {holder} not auto-releasable (artifact preservation failed: " in err
+    assert "timed out after 30 seconds; refusing worktree removal)" in err
+    assert "failed to release stale branch holder" not in err
+    assert "🌲 released stale branch holder" not in err
+    assert (holder / ".git").is_dir()
 
 
 def test_resolve_sha_timeouts(tmp_path: Path) -> None:
