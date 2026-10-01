@@ -2626,6 +2626,20 @@ def check_9_stress_and_render(
         act_payload["placement"] = plan_act.get("placement")
         if not act_payload.get("title") and plan_act.get("focus"):
             act_payload["title"] = plan_act.get("focus")
+        # The parser already preserves host metadata in each quiz question. Resolve
+        # media here from the locked pack rather than accepting a writer-supplied URL.
+        for item in act_payload.get("items") or []:
+            if item.get("kind") == "listening":
+                host = item.get("host") or {}
+                video = next((v for v in pack.get("videos", []) if v.get("id") == host.get("ref")), None)
+                if host.get("kind") != "video" or video is None:
+                    return CheckResult(check=9, passed=False, reason="listening_video_missing", layer="pack")
+                item["host"] = {
+                    "kind": "video",
+                    "ref": video["id"],
+                    "url": video["url"],
+                    "label": video.get("channel") or video["id"],
+                }
 
         try:
             act_obj = activity_parser._parse_activity(act_payload)

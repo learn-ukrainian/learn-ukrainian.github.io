@@ -864,6 +864,23 @@ def verify_pack(
                 )
 
         # 10. Videos
+        modeled_words = {
+            ref
+            for video in pack_doc.get("videos", [])
+            if isinstance(video.get("models"), dict) and isinstance(video["models"].get("words"), list)
+            for ref in video["models"].get("words", [])
+            if isinstance(ref, str)
+        }
+        if modeled_words:
+            store_path = evidence_base / "_words.yaml"
+            try:
+                word_store = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+                known_words = {word["id"] for word in word_store["words"]}
+            except (OSError, ValueError, TypeError, KeyError, yaml.YAMLError):
+                errors.append(f"{codes.SOURCE_UNAVAILABLE}: level word store unavailable for video models")
+                known_words = set()
+            for ref in sorted(modeled_words - known_words):
+                errors.append(f"{codes.FORM_MISMATCH}: video model word {ref} not in level word store")
         for vid_rec in pack_doc.get("videos", []):
             if offline:
                 not_checked.append(vid_rec["id"])

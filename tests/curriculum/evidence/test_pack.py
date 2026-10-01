@@ -1091,3 +1091,150 @@ def test_pack_verify_reports_registry_unreadable(
     result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
     assert result["status"] == "failed"
     assert any(error.startswith("publication_registry_unreadable:") for error in result["errors"])
+
+
+@pytest.mark.parametrize("segment", [None, "00:05–00:12"])
+def test_video_models_round_trip_from_request_and_verify(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, segment
+):
+    models = {"letters": ["А", "ґ", "ї", "дж", "дз"], "words": ["W-001"], "segment": segment}
+    req = {
+        "request_schema": 1,
+        "module": "a1/test-mod",
+        "videos": [
+            {
+                "id": "V-001",
+                "url": "https://example.com/video",
+                "channel": "corpus-channel",
+                "use": "Free text does not attest a model.",
+                "models": models,
+            }
+        ],
+    }
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(yaml.safe_dump(req, allow_unicode=True))
+    built = _build(synthetic_sources, synthetic_standard, synthetic_word_store, req_path)
+    assert built["pack"]["videos"][0]["models"] == models
+    assert _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)["status"] == "ok"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["unknown_word", "missing_store", "latin", "russian", "phrase", "apostrophe", "malformed", "bad_segment"],
+)
+def test_verify_video_models_rejects_unknown_words_and_invalid_letters(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, mutation
+):
+    req = {
+        "request_schema": 1,
+        "module": "a1/test-mod",
+        "videos": [
+            {
+                "id": "V-001",
+                "url": "https://example.com/video",
+                "channel": "corpus-channel",
+                "use": "Free text",
+                "models": {"letters": ["А"], "words": ["W-001"], "segment": None},
+            }
+        ],
+    }
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(yaml.safe_dump(req, allow_unicode=True))
+    built = _build(synthetic_sources, synthetic_standard, synthetic_word_store, req_path)
+    doc = built["pack"]
+    models = doc["videos"][0]["models"]
+    if mutation == "unknown_word":
+        models["words"] = ["W-999"]
+    elif mutation == "missing_store":
+        # A missing store is simulated without deleting the fixture file.
+        (synthetic_word_store / "_words.yaml").write_text("null")
+    elif mutation == "malformed":
+        models["letters"] = [None]
+    elif mutation == "bad_segment":
+        models["segment"] = "00:05-00:12"
+    else:
+        models["letters"] = [{"latin": "A", "russian": "ы", "phrase": "А а", "apostrophe": "’"}[mutation]]
+    lock.write(synthetic_word_store / "test-mod.yaml", lock.yaml_bytes(doc))
+    result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert result["status"] == "failed", result
+    if mutation == "unknown_word":
+        assert any("W-999" in error and "word store" in error for error in result["errors"])
+    elif mutation == "missing_store":
+        assert any(codes.SOURCE_UNAVAILABLE in error and "video models" in error for error in result["errors"])
+    else:
+        assert any("schema error" in error for error in result["errors"])
+
+
+@pytest.mark.parametrize("letter", ["A", "ы", "А а", "’"])
+def test_pack_request_models_reject_invalid_letters(synthetic_word_store, tmp_path, letter):
+    req = {
+        "request_schema": 1,
+        "module": "a1/test-mod",
+        "videos": [
+            {
+                "id": "V-001",
+                "url": "https://example.com/video",
+                "channel": "corpus-channel",
+                "use": "Free text",
+                "models": {"letters": [letter], "words": [], "segment": None},
+            }
+        ],
+    }
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(yaml.safe_dump(req, allow_unicode=True))
+    with pytest.raises(ValueError, match="request schema validation failed"):
+        pack.build_pack("a1", "test-mod", req_path, evidence_dir=synthetic_word_store, offline=True)
+
+
+def test_publication_quote_and_listening_models_verify_and_assemble_together(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    """A single built pack retains listening models and renders an admitted quote."""
+    from scripts.build.fresh.assemble import _render_urok_markdown, assemble_expanded_document
+    from scripts.build.fresh.listening import model_target
+
+    book = "1-klas-bukvar-zaharijchuk-2025-1"
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file=? WHERE chunk_id='chunk-1'", (book,))
+    request_path = _text_request(tmp_path)
+    request = yaml.safe_load(request_path.read_text())
+    models = {"letters": ["А"], "words": ["W-001"], "segment": "00:05–00:12"}
+    request["videos"] = [
+        {
+            "id": "V-001",
+            "url": "https://example.com/video",
+            "channel": "corpus-channel",
+            "use": "Listen before choosing.",
+            "models": models,
+        }
+    ]
+    request_path.write_text(yaml.safe_dump(request, allow_unicode=True))
+    built = _build(synthetic_sources, synthetic_standard, synthetic_word_store, request_path)
+    pack_doc = built["pack"]
+    words = yaml.safe_load((synthetic_word_store / "_words.yaml").read_text())
+    plan = {
+        "lessons": [
+            {
+                "n": 1,
+                "steps": [{"id": "s1", "needs": ["quote"], "evidence": ["T-001", "V-001"]}],
+                "videos": [{"evidence": "V-001", "use": "Listen before choosing."}],
+            }
+        ]
+    }
+    plan_path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/test-mod.yaml"
+    plan_path.write_text(yaml.safe_dump(plan))
+    verified = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert verified["status"] == "ok", verified
+    assert pack_doc["videos"][0]["models"] == models
+    assert model_target("А", "V-001", pack_doc, words) == ("А", None)
+    draft = {
+        "status": "ok",
+        "steps": [{"id": "s1", "blocks": [{"kind": "quote", "ref": "T-001"}, {"kind": "video", "ref": "V-001"}]}],
+    }
+    expanded, provenance = assemble_expanded_document(draft, plan, pack_doc, words, "a1", "test-mod", 1)
+    markdown, _units = _render_urok_markdown(draft, expanded, pack_doc, words)
+    quote = pack_doc["texts"][0]
+    assert f"> {quote['quote']}" in markdown
+    assert publication.quote_attribution(quote) in markdown
+    assert pack_doc["videos"][0]["url"] in markdown
+    assert {"T-001", "V-001"} <= {span["ref"] for span in provenance["spans"]}

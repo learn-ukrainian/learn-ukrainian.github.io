@@ -436,6 +436,8 @@ def build_pack(
                     "checked": checked,
                 }
             )
+            if "models" in v:
+                videos_out[-1]["models"] = v["models"]
             if report:
                 report(f"videos: {idx}/{len(raw_videos)}")
 

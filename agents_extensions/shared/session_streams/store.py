@@ -48,16 +48,99 @@ SECRET_PATTERNS = (
         re.compile(r"(?i)(?:api[_-]?key|access[_-]?token|secret|password)\s*[:=]\s*[^\s]{8,}"),
     ),
 )
-EMAIL_RE = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
+EMAIL_RE = re.compile(r"(?i)(?<![A-Z0-9._%+-])[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
 PHONE_RE = re.compile(r"(?<!\w)\+[0-9][0-9 ()-]{7,}[0-9](?!\w)")
 IPV4_RE = re.compile(r"(?<![A-Za-z0-9])(?:\d{1,3}\.){3}\d{1,3}(?![A-Za-z0-9])")
 IPV6_RE = re.compile(r"(?i)(?<![A-Za-z0-9])(?:[0-9a-f]{0,4}:){2,}[0-9a-f:]{0,4}(?![A-Za-z0-9])")
-HOSTNAME_RE = re.compile(
-    r"(?i)(?<![A-Za-z0-9_-])(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}(?![A-Za-z0-9_-])"
+# Consume maximal tokens once, then classify bounded labels. A domain regex
+# retried at every dot (or a scheme retried at every letter) can be quadratic.
+_HOST_TOKEN_RE = re.compile(r"[A-Za-z0-9_.-]+")
+_HOST_LABEL_RE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?")
+_HOST_SUFFIX_RE = re.compile(r"(?i)(?:[A-Za-z]{2,63}|xn--[A-Za-z0-9-]{1,59})")
+# Normalize namespace roots once before scanning names. UNC (including its
+# GLOBALROOT spelling) and NT network-device roots carry the same host context
+# as a plain double separator. The left boundary avoids rescanning slash runs.
+_WINDOWS_NAMESPACE_RE = re.compile(
+    r"(?i)(?<![/\\])(?:[/\\]{2,}[?.][/\\]+|[/\\]+\?\?[/\\]+)"
+    r"(?P<network>(?:GLOBALROOT[/\\]+)?UNC[/\\]+|"
+    r"GLOBALROOT[/\\]+(?:Device[/\\]+(?:Mup|LanmanRedirector)[/\\]+)?)?"
 )
+_FILE_EXTENSIONS = frozenset(
+    [
+        "py",
+        "md",
+        "db",
+        "yaml",
+        "yml",
+        "json",
+        "sh",
+        "txt",
+        "toml",
+        "js",
+        "ts",
+        "tsx",
+        "css",
+        "html",
+        "csv",
+        "jsonl",
+        "lock",
+        "cfg",
+        "ini",
+        "rs",
+        "go",
+        "mjs",
+        "cjs",
+        "svg",
+        "png",
+        "jpg",
+        "gif",
+        "pdf",
+        "log",
+    ]
+)
+# Intersection of the closed extension list with IANA's root-zone TLD list.
+_TLD_FILE_EXTENSIONS = frozenset({"md", "py", "sh", "rs"})
+# Closed host-suffix labels checked immediately before a file extension. This
+# protects host-named files without treating repository labels such as schema,
+# sources, review or test as host suffixes. The repo-wide basename guard checks
+# this list; uk is exempt only for Markdown localization filenames, except co.uk.
+# Other country labels (S2) remain outside the closed list by driver decision;
+# broader coverage belongs to the existing follow-up issue.
+_EMBEDDED_HOST_SUFFIXES = frozenset(
+    {
+        "com",
+        "net",
+        "org",
+        "io",
+        "dev",
+        "app",
+        "cloud",
+        "local",
+        "internal",
+        "lan",
+        "corp",
+        "home",
+        "arpa",
+        "intranet",
+        "private",
+        "edu",
+        "gov",
+        "ru",
+        "ua",
+        "de",
+        "nl",
+        "fr",
+        "us",
+        "uk",
+    }
+)
+# Explicit repository basenames, never a runtime filesystem/Git lookup. Unknown
+# collision names need a directory prefix; multi-label collision names remain
+# hosts. Even these exceptions cannot exempt URL, port or trailing-dot context.
+_REPOSITORY_FILENAMES = frozenset({"core.md", "README.md", "store.py"})
 HOME_PATH_RE = re.compile(r"(?<![A-Za-z0-9])(?:~|/home|/Users|/private/var|[A-Za-z]:\\Users)(?:[/\\]|$)")
 SSH_ALIAS_RE = re.compile(
-    r"(?i)(?:\b(?:ssh|scp|rsync)\s+[^\s]+|\b(?:git|[A-Za-z0-9._-]+)@[^\s:/]+:|"
+    r"(?i)(?:\b(?:ssh|scp|rsync)\s+[^\s]+|(?<![A-Za-z0-9._-])(?:git|[A-Za-z0-9._-]+)@[^\s:/]+:|"
     r"(?<![A-Za-z0-9])(atlas-runner|hramatka|vps)(?![A-Za-z0-9]))"
 )
 
@@ -93,6 +176,65 @@ def process_exists(process_id: int) -> bool:
     return True
 
 
+def _filename_contains_hostname(filename: str) -> bool:
+    """Check the final stem label against the closed embedded-host suffix list."""
+    labels = filename.strip(".").rsplit(".", 3)
+    if len(labels) < 3 or labels[-1].lower() not in _FILE_EXTENSIONS:
+        return False
+    suffix = labels[-2].lower()
+    if suffix == "uk" and labels[-1].lower() == "md":
+        return labels[-3].lower() == "co"
+    return suffix in _EMBEDDED_HOST_SUFFIXES
+
+
+def _contains_hostname(body: str) -> bool:
+    """Reject host-shaped tokens without rescanning overlapping dotted suffixes."""
+    # Preserve an ordinary directory separator for non-network namespaces so
+    # drive/device filenames retain their existing exemption. Network roots
+    # become a double separator regardless of case or slash spelling.
+    body = _WINDOWS_NAMESPACE_RE.sub(lambda match: "\\\\" if match["network"] else "\\", body)
+    for match in _HOST_TOKEN_RE.finditer(body):
+        token = match.group()
+        if "." not in token:
+            continue
+        labels = token.strip(".").split(".")
+        if len(labels) < 2:
+            continue
+        following = body[match.end() : match.end() + 2]
+        preceding = body[max(0, match.start() - 2) : match.start()]
+        # A following separator marks a directory or host, never a final file.
+        # Conservatively reject host-shaped local directories in either spelling.
+        host_context = (
+            token.endswith(".")
+            or preceding.endswith(("//", "\\\\", "/\\", "\\/", ":/", ":\\", "@"))
+            or following.startswith(("/", "\\", "?", "#"))
+            or (following.startswith(":") and following[1:].isdigit())
+        )
+        extension = labels[-1].lower()
+        if _filename_contains_hostname(token):
+            return True
+        directory_prefix = preceding.endswith(("/", "\\")) and not host_context
+        collision_file = len(labels) == 2 and (token in _REPOSITORY_FILENAMES or directory_prefix)
+        if (
+            not host_context
+            and extension in _FILE_EXTENSIONS
+            and (extension not in _TLD_FILE_EXTENSIONS or collision_file)
+        ):
+            continue
+        previous_valid = False
+        for label in labels:
+            valid = _HOST_LABEL_RE.fullmatch(label) is not None
+            # Preserve conservative rejection of extension lookalikes (py-x)
+            # while numeric versions, single-letter endings and modules pass.
+            suffix = _HOST_SUFFIX_RE.fullmatch(label) is not None or (
+                label.partition("-")[0].lower() in _FILE_EXTENSIONS and "-" in label
+            )
+            if previous_valid and valid and suffix:
+                return True
+            previous_valid = valid
+    return False
+
+
 def validate_entry_body(body: str) -> None:
     if not isinstance(body, str):
         raise ContentRejectedError("entry body rejected by text-type rule")
@@ -113,10 +255,12 @@ def validate_entry_body(body: str) -> None:
     for rule, pattern in (
         ("ipv4-address", IPV4_RE),
         ("ipv6-address", IPV6_RE),
-        ("hostname", HOSTNAME_RE),
-        ("home-path", HOME_PATH_RE),
-        ("ssh-alias", SSH_ALIAS_RE),
     ):
+        if pattern.search(body):
+            raise ContentRejectedError(f"entry body rejected by {rule} rule")
+    if _contains_hostname(body):
+        raise ContentRejectedError("entry body rejected by hostname rule")
+    for rule, pattern in (("home-path", HOME_PATH_RE), ("ssh-alias", SSH_ALIAS_RE)):
         if pattern.search(body):
             raise ContentRejectedError(f"entry body rejected by {rule} rule")
 
@@ -1650,9 +1794,7 @@ class SessionStreamStore:
                     ),
                 ).fetchone()
                 if existing_by_rollover is not None:
-                    raise LeaseConflictError(
-                        "rollover tuple already binds different immutable bundle content"
-                    )
+                    raise LeaseConflictError("rollover tuple already binds different immutable bundle content")
                 cursor = connection.execute(
                     "INSERT INTO rollover_bundles("
                     "stream_id, agent, lineage_id, generation, rollover_id, status, prepared_at, "
@@ -1740,8 +1882,7 @@ class SessionStreamStore:
                 values.append(lineage_id)
             values.append(limit)
             rows = connection.execute(
-                "SELECT * FROM rollover_bundles WHERE " + " AND ".join(clauses) + " "
-                "ORDER BY bundle_id DESC LIMIT ?",
+                "SELECT * FROM rollover_bundles WHERE " + " AND ".join(clauses) + " ORDER BY bundle_id DESC LIMIT ?",
                 tuple(values),
             ).fetchall()
             return [self._rollover_bundle_payload(row, include_blob=False) for row in rows]
@@ -1962,8 +2103,7 @@ class SessionStreamStore:
         """Return the source hash from the newest append-only inventory receipt."""
         with self._read_snapshot() as connection:
             row = connection.execute(
-                "SELECT source_sha256 FROM stream_inventory_receipts "
-                "ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1"
+                "SELECT source_sha256 FROM stream_inventory_receipts ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1"
             ).fetchone()
             return None if row is None else str(row["source_sha256"])
 
