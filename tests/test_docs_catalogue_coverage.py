@@ -47,6 +47,11 @@ pytestmark = pytest.mark.repo_wide
 
 REPO = Path(__file__).resolve().parents[1]
 
+# Every search whose answer or completeness is asserted passes this budget, never the 10 s default:
+# a loaded CI runner reaches the default and reports an incomplete result (#9535). It matches the
+# budget of tests/helpers/docs_find_lookups.py.
+SEARCH_BUDGET_SECONDS = 60
+
 
 @pytest.fixture(scope='module')
 def checked():
@@ -139,7 +144,7 @@ def test_the_sweep_parts_rank_every_lookup_once_in_both_protocols():
 
 
 def test_the_motivating_lookup_ranks_the_live_list_above_its_backup():
-    result = find('ULP 1-02', repo=REPO)
+    result = find('ULP 1-02', repo=REPO, budget_seconds=SEARCH_BUDGET_SECONDS)
     # The one-character word is matched in names, the catalogue and the phrase only: complete.
     assert result['coverage']['incomplete'] is False and result['coverage']['name_only_terms'] == ['1']
     top = result['hits'][:3]
@@ -154,11 +159,23 @@ def test_the_motivating_lookup_ranks_the_live_list_above_its_backup():
 
 
 def test_the_route_serves_the_real_tree_ungated(monkeypatch):
+    # The router calls find() with the library's default budget; this test measures the answer, not
+    # latency, so the real search (not a stub) runs here under the same explicit budget as the rest.
+    searched = []
+
+    def budgeted(*args, **kwargs):
+        searched.append(find(*args, **kwargs, budget_seconds=SEARCH_BUDGET_SECONDS))
+        return searched[-1]
+
+    monkeypatch.setattr(find_module, 'find', budgeted)
     monkeypatch.setattr(api_main.app.state, 'ctx', api_main.app.state.ctx.with_roots(live_repo_root=REPO))
     client = TestClient(api_main.app, raise_server_exceptions=False)
     response = client.get('/api/knowledge/find', params={'q': 'trusted sources', 'limit': 5})
     assert response.status_code == 200
-    assert 'docs/resources/trusted_sources.yaml' in [h['path'] for h in response.json()['hits']]
+    body = response.json()
+    assert len(searched) == 1  # the route reached the real search through the wrapper
+    assert body['coverage']['incomplete'] is False, body['coverage']
+    assert 'docs/resources/trusted_sources.yaml' in [h['path'] for h in body['hits']]
 
 
 # A document that says in its own opening lines that it is superseded, and links the document that
@@ -192,7 +209,7 @@ def test_a_banner_naming_its_replacement_has_a_supersession_record(checked):
 
 
 def test_a_stale_plan_named_by_path_is_followed_by_what_replaced_it():
-    result = find('Is docs/MASTER-PLAN.md still the current plan?', repo=REPO)
+    result = find('Is docs/MASTER-PLAN.md still the current plan?', repo=REPO, budget_seconds=SEARCH_BUDGET_SECONDS)
     paths = [hit['path'] for hit in result['hits']]
     at = paths.index('docs/MASTER-PLAN.md')
     assert at < 5 and result['hits'][at]['status'] == 'superseded'
@@ -202,7 +219,8 @@ def test_a_stale_plan_named_by_path_is_followed_by_what_replaced_it():
 
 def test_a_question_naming_a_session_router_is_answered_by_the_directory_readme(checked):
     report, _ = checked
-    result = find('Is docs/session-state/current.claude.md still the live state?', repo=REPO)
+    result = find('Is docs/session-state/current.claude.md still the live state?', repo=REPO,
+                  budget_seconds=SEARCH_BUDGET_SECONDS)
     paths = [hit['path'] for hit in result['hits']]
     assert 'docs/session-state/README.md' in paths[:3]
     bodies = [p for p in report.resolved if p.startswith('docs/session-state/') and cat.is_excluded(p)]
@@ -265,7 +283,7 @@ def test_multi_answer_lookup_keeps_an_answer_at_the_default_limit(field, lookup)
 # family hit, and its sibling runbooks, which name no word of the question, are not listed.
 @pytest.mark.parametrize('query', ['where do databases live', 'where data lives', 'data layout', 'storage layout'])
 def test_a_short_storage_layout_question_is_answered_by_the_storage_topology_runbook(query):
-    hits = find(query, repo=REPO, budget_seconds=60)['hits']
+    hits = find(query, repo=REPO, budget_seconds=SEARCH_BUDGET_SECONDS)['hits']
     assert hits[0]['path'] == 'docs/runbooks/storage-topology.md'
     assert [hit['path'] for hit in hits if hit['match'] == 'entrypoint'] == ['docs/runbooks/storage-topology.md']
 
@@ -281,7 +299,7 @@ def test_a_short_storage_layout_question_is_answered_by_the_storage_topology_run
     'how is the data folder organised on the server',
 ])
 def test_a_storage_layout_question_in_a_few_words_ranks_the_runbook_above_inventories(query):
-    paths = [hit['path'] for hit in find(query, repo=REPO, budget_seconds=60)['hits']]
+    paths = [hit['path'] for hit in find(query, repo=REPO, budget_seconds=SEARCH_BUDGET_SECONDS)['hits']]
     at = paths.index('docs/runbooks/storage-topology.md')
     inventories = [i for i, p in enumerate(paths) if p == 'docs/corpus-inventory.md' or p.startswith('docs/knowledge/inventory/')]
     assert at < 5 and all(at < i for i in inventories), paths[:8]
@@ -305,7 +323,7 @@ def test_answers_come_from_the_committed_tree_never_the_working_tree(tmp_path):
     git(clone, 'read-tree', git(REPO, 'rev-parse', 'HEAD^{tree}'))
     find_module._STATE_CACHE.clear()
     staged = subprocess.run(['git', '-C', str(REPO), 'diff-index', '--cached', '--quiet', 'HEAD'], timeout=60)
-    reference = find(query, 50, repo=clone if staged.returncode else REPO, budget_seconds=60)
+    reference = find(query, 50, repo=clone if staged.returncode else REPO, budget_seconds=SEARCH_BUDGET_SECONDS)
     noise = {
         'docs/knowledge/catalogue.yaml': 'entries: [1]\n',
         answer: '',
@@ -320,7 +338,7 @@ def test_answers_come_from_the_committed_tree_never_the_working_tree(tmp_path):
     noted = git(clone, 'status', '--porcelain', '--ignored', '--', *noise).splitlines()
     assert sorted(line[:2] for line in noted) == ['!!', '??', 'AM', 'AM'], noted  # the noise is really there
     find_module._STATE_CACHE.clear()
-    noisy = find(query, 50, repo=clone, budget_seconds=60)
+    noisy = find(query, 50, repo=clone, budget_seconds=SEARCH_BUDGET_SECONDS)
     reference.pop('timings_ms'), noisy.pop('timings_ms')
     assert not reference['coverage']['incomplete'] and answer in [hit['path'] for hit in reference['hits']]
     assert noisy == reference
