@@ -410,3 +410,238 @@ def test_default_branch_fallback_fails_closed_when_the_merge_cannot_be_computed(
 
     assert state["status"] == "no_deliverable"
     assert state["no_deliverable_reason"] == "commit_count_unknown"
+
+
+# --- #9489: base-relative checks (ceiling, exempt change, Kimi diff) ---
+
+ENVELOPE = {
+    "max_changed_files": 5,
+    "max_non_test_loc": 50,
+}
+
+
+@pytest.fixture
+def isolated_repo(tmp_path) -> Path:
+    repo_dir = tmp_path / "isolated"
+    subprocess.run(["git", "init", "-q", "-b", "task", str(repo_dir)], check=True, timeout=30)
+    _git(repo_dir, "config", "user.email", "test@example.com")
+    _git(repo_dir, "config", "user.name", "Test")
+    _commit(repo_dir, "file.txt", "initial")
+    return repo_dir
+
+
+def test_resolve_merge_base_four_states(repo, isolated_repo):
+    """Denominator: _resolve_merge_base across the four states."""
+    repo.deliver()
+
+    # 1. Base present
+    mb_present = delegate._resolve_merge_base(repo.worktree, BASE_BRANCH, base_sha=repo.base_sha)
+    assert mb_present == repo.base_sha
+
+    # 2. Base deleted, recorded commit reachable
+    repo.delete_base_branch(merged_into_main=False)
+    mb_recorded = delegate._resolve_merge_base(repo.worktree, BASE_BRANCH, base_sha=repo.base_sha)
+    assert mb_recorded == repo.base_sha
+
+    # 3. Base deleted, recorded commit unreachable -> falls back to default branch
+    _git(repo.primary, "push", "-q", "origin", f"{repo.base_sha}:refs/heads/main")
+    _git(repo.primary, "fetch", "-q", "origin")
+    mb_default = delegate._resolve_merge_base(repo.worktree, BASE_BRANCH, base_sha=UNREACHABLE_SHA)
+    assert mb_default == repo.base_sha
+
+    # 4. Nothing resolvable -> fails closed
+    assert delegate._resolve_merge_base(isolated_repo, "origin/deleted-base", base_sha=UNREACHABLE_SHA) is None
+
+
+@pytest.mark.parametrize(
+    "state_name",
+    ["base_present", "base_deleted_recorded_reachable", "base_deleted_default_fallback"],
+)
+def test_advisory_ceiling_check_resolves_when_base_present_or_fallback_available(repo, state_name):
+    repo.deliver()
+    if state_name == "base_present":
+        base_sha = repo.base_sha
+    elif state_name == "base_deleted_recorded_reachable":
+        repo.delete_base_branch(merged_into_main=False)
+        base_sha = repo.base_sha
+    else:
+        repo.delete_base_branch(merged_into_main=True)
+        base_sha = UNREACHABLE_SHA
+
+    verdict = delegate._advisory_ceiling_check(repo.worktree, BASE_BRANCH, ENVELOPE, base_sha=base_sha)
+    assert verdict["measured"] is True
+    assert verdict["changed_files"] == 1
+    assert verdict["exceeded"] == []
+
+
+def test_advisory_ceiling_check_fails_closed_when_nothing_resolves(isolated_repo):
+    verdict = delegate._advisory_ceiling_check(
+        isolated_repo, "origin/deleted-base", ENVELOPE, base_sha=UNREACHABLE_SHA
+    )
+    assert verdict["measured"] is False
+    assert verdict["error"] == "merge-base with the base branch is unknown"
+
+
+@pytest.mark.parametrize(
+    "state_name",
+    ["base_present", "base_deleted_recorded_reachable", "base_deleted_default_fallback"],
+)
+def test_exempt_change_check_resolves_when_base_present_or_fallback_available(repo, state_name):
+    repo.deliver()
+    if state_name == "base_present":
+        base_sha = repo.base_sha
+    elif state_name == "base_deleted_recorded_reachable":
+        repo.delete_base_branch(merged_into_main=False)
+        base_sha = repo.base_sha
+    else:
+        repo.delete_base_branch(merged_into_main=True)
+        base_sha = UNREACHABLE_SHA
+
+    check = delegate._exempt_change_check(repo.worktree, BASE_BRANCH, base_sha=base_sha)
+    assert check["measured"] is True
+    assert "fix.py" in check["changed_paths"]
+
+
+def test_exempt_change_check_fails_closed_when_nothing_resolves(isolated_repo):
+    check = delegate._exempt_change_check(isolated_repo, "origin/deleted-base", base_sha=UNREACHABLE_SHA)
+    assert check["measured"] is False
+    assert check["error"] == "merge-base with the base branch is unknown"
+
+
+@pytest.mark.parametrize(
+    "state_name",
+    ["base_present", "base_deleted_recorded_reachable", "base_deleted_default_fallback"],
+)
+def test_kimi_diff_refusal_resolves_clean_diff_when_fallback_available(repo, state_name):
+    repo.deliver()
+    if state_name == "base_present":
+        base_sha = repo.base_sha
+    elif state_name == "base_deleted_recorded_reachable":
+        repo.delete_base_branch(merged_into_main=False)
+        base_sha = repo.base_sha
+    else:
+        repo.delete_base_branch(merged_into_main=True)
+        base_sha = UNREACHABLE_SHA
+
+    # Clean diff without Cyrillic content -> None
+    assert delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=base_sha) is None
+
+
+def test_kimi_diff_refusal_fails_closed_when_nothing_resolves(isolated_repo):
+    refusal = delegate._kimi_diff_refusal(isolated_repo, "origin/deleted-base", "kimi", base_sha=UNREACHABLE_SHA)
+    assert refusal is not None
+    assert "could not be read" in refusal
+
+
+def test_kimi_diff_refusal_with_deleted_base_refuses_cyrillic(repo):
+    """Kimi diff refusal catches Cyrillic additions even when the base branch was deleted."""
+    repo.deliver()
+    (repo.worktree / "site").mkdir(exist_ok=True)
+    (repo.worktree / "site" / "ua.txt").write_text("Привіт світ\n", encoding="utf-8")
+    _git(repo.worktree, "add", "site/ua.txt")
+    _git(repo.worktree, "commit", "-q", "-m", "cyrillic commit")
+    repo.delete_base_branch(merged_into_main=False)
+
+    refusal = delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)
+    assert refusal is not None
+    assert "site/ua.txt" in refusal
+
+
+def test_squash_merge_overcount_recorded_commit_vs_default_fallback(tmp_path):
+    """When a base branch was squash-merged into main, the recorded commit avoids overcounting.
+
+    The default-branch fallback overcounts because origin/main's merge-base
+    predates the base branch, so the diff includes the base branch's own commits.
+    Testing the recorded base commit first measures only the worker's changes.
+    """
+    origin = tmp_path / "origin.git"
+    primary = tmp_path / "primary"
+    subprocess.run(["git", "init", "--bare", "-q", "-b", "main", str(origin)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(primary)], check=True, timeout=30)
+    _git(primary, "config", "user.email", "test@example.com")
+    _git(primary, "config", "user.name", "Test")
+    _git(primary, "remote", "add", "origin", str(origin))
+    _commit(primary, "root.txt", "root")
+    _git(primary, "push", "-q", "-u", "origin", "main")
+
+    # Base branch has 2 files added in its own work
+    _git(primary, "checkout", "-q", "-b", "feat/base")
+    _commit(primary, "base_a.txt", "base change a")
+    _commit(primary, "base_b.txt", "base change b")
+    _git(primary, "push", "-q", "-u", "origin", "feat/base")
+    base_sha = _git(primary, "rev-parse", "HEAD")
+
+    # Worker branches from feat/base at base_sha
+    worktree = primary / ".worktrees" / "dispatch" / "claude" / "task"
+    _git(primary, "worktree", "add", "-q", "-b", "claude/task", str(worktree), "origin/feat/base")
+    _git(worktree, "config", "user.email", "test@example.com")
+    _git(worktree, "config", "user.name", "Test")
+    # Worker commits 1 file
+    _commit(worktree, "worker.txt", "worker only")
+
+    # Now squash-merge feat/base into main on origin
+    _git(primary, "checkout", "-q", "main")
+    _git(primary, "merge", "--squash", "feat/base")
+    _git(primary, "commit", "-q", "-m", "squash feat/base")
+    _git(primary, "push", "-q", "origin", "main")
+    # Delete feat/base branch everywhere
+    _git(primary, "push", "-q", "origin", "--delete", "feat/base")
+    _git(primary, "fetch", "-q", "--prune", "origin")
+    _git(primary, "branch", "-D", "feat/base")
+
+    envelope = {"max_changed_files": 2, "max_non_test_loc": 20}
+
+    # With recorded base commit: exact measurement (1 file changed, worker.txt only)
+    verdict_exact = delegate._advisory_ceiling_check(worktree, "feat/base", envelope, base_sha=base_sha)
+    assert verdict_exact["measured"] is True
+    assert verdict_exact["changed_files"] == 1
+    assert verdict_exact["exceeded"] == []
+
+    check_exact = delegate._exempt_change_check(worktree, "feat/base", base_sha=base_sha)
+    assert check_exact["measured"] is True
+    assert check_exact["changed_paths"] == ["worker.txt"]
+
+    # With default branch fallback (base_sha is None):
+    # Merge base with origin/main is the root commit, so base_a.txt, base_b.txt and worker.txt are all in the diff.
+    # Total changed files is 3, exceeding the ceiling of 2!
+    verdict_overcount = delegate._advisory_ceiling_check(worktree, "feat/base", envelope, base_sha=None)
+    assert verdict_overcount["measured"] is True
+    assert verdict_overcount["changed_files"] == 3
+    assert len(verdict_overcount["exceeded"]) > 0  # Exceeded because base commits were included!
+
+    check_overcount = delegate._exempt_change_check(worktree, "feat/base", base_sha=None)
+    assert check_overcount["measured"] is True
+    assert check_overcount["changed_paths"] == ["base_a.txt", "base_b.txt", "worker.txt"]
+
+
+def test_advisory_completion_gate_with_deleted_base(tmp_tasks_dir, repo):
+    """The #9275 completion gate passes when the base was deleted and base_sha is recorded."""
+    repo.deliver()
+    repo.delete_base_branch(merged_into_main=False)
+
+    record = {
+        "task_id": "test-gate",
+        "worktree_base": BASE_BRANCH,
+        "worktree_base_sha": repo.base_sha,
+        "advisory_envelope": ENVELOPE,
+    }
+    gate = delegate._advisory_completion_gate(record, repo.worktree)
+    assert gate is not None
+    key, check, failure, _detail = gate
+    assert key == "advisory_ceiling_check"
+    assert check["measured"] is True
+    assert failure is None
+
+    exemption_record = {
+        "task_id": "test-exempt-gate",
+        "worktree_base": BASE_BRANCH,
+        "worktree_base_sha": repo.base_sha,
+        "advisory_exemption": {"reason": "test"},
+    }
+    gate_exempt = delegate._advisory_completion_gate(exemption_record, repo.worktree)
+    assert gate_exempt is not None
+    key, check, failure, _detail = gate_exempt
+    assert key == "advisory_exempt_change_check"
+    assert check["measured"] is True
+    assert check["changed_paths"] == ["fix.py"]
+    assert failure == "advisory_exempt_code_change"
