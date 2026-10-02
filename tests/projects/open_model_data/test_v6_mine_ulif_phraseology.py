@@ -1549,7 +1549,6 @@ def test_ulif_phraseology_split_quotations_and_editorial_brackets(tmp_path: Path
     assert u_bade.author == "Т. Шевченко"
 
 
-@requires_sources
 def test_verify_receipt_invariants_grounding_rejects_codex_r2_probes():
     """Codex R2/R3 Findings: Grounding invariant must strictly validate displayed definition, quotation, and attribution.
 
