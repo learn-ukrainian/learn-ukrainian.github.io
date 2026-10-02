@@ -244,6 +244,18 @@ def test_nested_heredoc_tabs_and_multiple_bodies():
     assert not command_repository_unknown(command)
 
 
+@pytest.mark.parametrize("opener", ["<<EOF", "<<'EOF'", '<<"EOF"', "<<-EOF", "<<-'EOF'", r"<<\EOF"])
+@pytest.mark.parametrize("tail", ["", "git switch -c fixture", "cat <<'TWO'\nsecond\nTWO\ngit switch -c fixture"])
+def test_nested_heredoc_preserves_statement_boundary(opener, tail):
+    closer = "\tEOF" if opener.startswith("<<-") else "EOF"
+    command = f'echo "$(cat {opener}\nfirst\n{closer}\n{tail}\n)"'
+    visible = preprocess_branch_command(command)
+    assert "cat </dev/null  ; " in visible
+    kwargs = dict(mark_redirect_unreadable=True, unreadable_marker="?", unparsed=["?"], may_match=lambda _: False)
+    segments = [argv for kind, argv in scope_events(visible, **kwargs) if kind == "segment"]
+    assert (["git", "switch", "-c", "fixture"] in segments) == bool(tail)
+
+
 def test_nested_heredoc_depth_limit_is_fail_closed():
     command = "cat <<'EOF'\ntext\nEOF"
     for _ in range(17):

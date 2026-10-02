@@ -403,9 +403,12 @@ def preprocess_branch_command(command: str) -> str:
                     else:
                         raise ShellPreprocessLimit("unterminated heredoc body")
                 pending.clear()
-                # A nested body's newline is syntax whitespace within that
-                # substitution, not a separator in the outer quoted word.
-                out.append((" " if closer else "\n") + " ".join(expansions) + (" " if closer else "\n"))
+                # The introducing newline ends a statement even inside a
+                # substitution. Keep its boundary after the removed bodies
+                # and their executable expansions; otherwise a later command
+                # becomes an argument of the heredoc reader. A semicolon keeps
+                # the nested scope together for the downstream line reader.
+                out.append((" " if closer else "\n") + " ".join(expansions) + (" ; " if closer else "\n"))
                 word_start = True
                 continue
             else:

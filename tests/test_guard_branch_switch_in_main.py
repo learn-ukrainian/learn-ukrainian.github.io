@@ -1314,6 +1314,65 @@ R8_SHAPES = [
 ]
 
 
+R9_WRAPPERS = [
+    ('git commit -m "$(', ')"'),
+    ('echo "$(', ')"'),
+    ('gh pr create --body "$(', ')"'),
+    ("echo `", "`"),
+    ("(", ")"),
+    ("cat <(", ")"),
+    ("x=$(", ")"),
+]
+R9_OPERATIONS = ["git checkout -b fixture", "git switch -c fixture", "git branch -D main", "gh pr checkout 12"]
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("operation", [*R9_OPERATIONS, "git status"])
+@pytest.mark.parametrize("same_line_closer", [False, True])
+@pytest.mark.parametrize("opener", ["<<EOF", "<<'EOF'", '<<"EOF"', "<<-EOF", "<<-'EOF'", r"<<\EOF"])
+@pytest.mark.parametrize("prefix,suffix", R9_WRAPPERS)
+def test_issue_9479_r9_later_line_after_heredoc_bash(
+    repos, tmp_path, monkeypatch, start, operation, same_line_closer, opener, prefix, suffix
+):
+    # The assignment reproduces the reviewer's true-with-a-heredoc shape.
+    reader = "true" if prefix == "x=$(" else "cat"
+    closer = "\tEOF" if opener.startswith("<<-") else "EOF"
+    command = f"{prefix}{reader} {opener}\nfix: x\n{closer}\n{operation}"
+    command += ("" if same_line_closer else "\n") + suffix
+    records = _r7_bash_records(tmp_path, command, repos[start])
+    executable, *argv = operation.split()
+    assert records[0] == [executable, str(repos[start]), *argv]
+    assert len(records) == (2 if prefix.startswith(("git commit", "gh pr create")) else 1)
+    # Heredoc removal must preserve precisely the decision for the executed
+    # operation, including worktree admission and benign later commands.
+    expected = guard._command_danger_reason(operation, repos[start]) is not None
+    assert (guard._command_danger_reason(command, repos[start]) is not None) == expected
+    monkeypatch.chdir(repos[start])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == (2 if expected else 0)
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("queued", [False, True])
+@pytest.mark.parametrize("operation", [*R9_OPERATIONS, "git status", ""])
+@pytest.mark.parametrize("prefix,suffix", R9_WRAPPERS)
+def test_issue_9479_r9_multiple_heredocs_bash(repos, tmp_path, start, queued, operation, prefix, suffix):
+    bodies = (
+        "cat <<'ONE' <<-TWO\nfirst\nONE\n\tsecond\n\tTWO\n"
+        if queued
+        else "cat <<'ONE'\nfirst\nONE\ncat <<-TWO\n\tsecond\n\tTWO\n"
+    )
+    command = prefix + bodies + operation + ("\n" if operation else "") + suffix
+    records = _r7_bash_records(tmp_path, command, repos[start])
+    if operation:
+        executable, *argv = operation.split()
+        assert records[0] == [executable, str(repos[start]), *argv]
+    else:
+        assert len(records) == (1 if prefix.startswith(("git commit", "gh pr create")) else 0)
+    expected = guard._command_danger_reason(operation, repos[start]) is not None
+    assert (guard._command_danger_reason(command, repos[start]) is not None) == expected
+
+
 @pytest.mark.parametrize("start", ["public", "public_worktree"])
 @pytest.mark.parametrize("prefix", ["", "git switch -c fixture && "])
 @pytest.mark.parametrize("opener", ["<<'EOF'", '<<"EOF"', r"<<\EOF", "<<-'EOF'"])
