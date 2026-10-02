@@ -1064,8 +1064,10 @@ def test_codex_parse_response_missing_output_file():
     assert result.response == ""
 
 
-def test_codex_parse_response_rate_limit_in_file(tmp_path):
-    """Rate-limit pattern in the output file should be detected, not just stderr."""
+def test_codex_parse_response_rate_limit_in_file_is_agent_text(tmp_path):
+    """codex exec skips ``-o`` on a failed turn, so output-file text is the
+    agent's own message (which can quote tool output), never a provider
+    error (#9532). Codex's own stderr error line still counts."""
     adapter = CodexAdapter()
     output_file = tmp_path / "output.txt"
     output_file.write_text("Error: quota exceeded")
@@ -1073,6 +1075,15 @@ def test_codex_parse_response_rate_limit_in_file(tmp_path):
     result = adapter.parse_response(
         stdout="",
         stderr="",
+        returncode=1,
+        output_file=output_file,
+    )
+    assert result.rate_limited is False
+
+    output_file.write_text("")
+    result = adapter.parse_response(
+        stdout="",
+        stderr="Error: quota exceeded\n",
         returncode=1,
         output_file=output_file,
     )

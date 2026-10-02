@@ -21,10 +21,12 @@ Key design points:
   agent message to a file; we read it in ``parse_response``. The file path
   goes into ``liveness_signal_paths`` so the runner's mtime poller catches
   Codex writing progress even when stdout is quiet.
-- **Session ID bound to the invocation.** Older CLIs printed
-  ``session id: <uuid>`` on stdout. Current CLIs persist it in the matched
-  rollout's ``session_meta`` event. We accept either source so bridge callers
-  can feed the exact session into later rounds.
+- **Session ID bound to the invocation.** Current CLIs print
+  ``session id: <uuid>`` in their own stderr banner; that id binds the
+  rollout uniquely, so a provider terminal error is only ever this call's
+  (#9532). Older CLIs printed it on stdout; otherwise the prompt-matched
+  rollout's ``session_meta`` event supplies it, so bridge callers can feed the
+  exact session into later rounds.
 
 Issue: #1184
 """
@@ -39,7 +41,7 @@ import re
 import shutil
 import tempfile
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -87,32 +89,41 @@ _RATE_LIMIT_PATTERNS = (
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
-# Matches a dashes-only line (at least 3 dashes, nothing else on the
-# line). Used to split Codex's stderr into segments so we can isolate
-# the post-prompt portion for rate-limit pattern matching. MULTILINE
-# so ^/$ match at each line boundary.
-_CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 
-# Codex exec prints its own failures as ``ERROR: <message>`` (exec event
-# processor) or ``Error: <message>`` (top-level exit). It echoes tool output
-# verbatim in the same stream, so only these lines may carry a provider error
-# when the rollout has no structured one (#9532).
+# ``codex exec`` writes its human output to stderr (codex-rs exec
+# ``event_processor_with_human_output``): a banner whose config block names the
+# session id, the echoed prompt (``user`` then the prompt verbatim), then one
+# block per turn item. Tool output is printed verbatim and unprefixed inside
+# its item, so an ``ERROR:`` line there can be a tool's own line (#9532). Only
+# Codex's own notices before the first item are provider-owned; failures later
+# in the turn are read from the session-bound rollout's terminal error.
+_CODEX_BANNER_RE = re.compile(
+    r"^OpenAI Codex v[^\n]*\n-{3,}[ \t]*\n(?P<config>(?:[^\n]*\n)*?)-{3,}[ \t]*\n",
+    re.MULTILINE,
+)
+_CODEX_BANNER_SESSION_RE = re.compile(r"^session id:[ \t]*(\S+)[ \t]*$", re.MULTILINE | re.IGNORECASE)
+_CODEX_PROMPT_ECHO_HEADER = "user\n"
+# Codex's own notice lines (errors, warnings, deprecations, reroutes, hooks).
+# Anything else after the prompt echo is a turn item: agent or reasoning text,
+# a command with its output, an MCP call, a patch, a web search.
+_CODEX_NOTICE_LINE_RE = re.compile(
+    r"^(?:\[[^\]\n]*\]\s*)?(?:ERROR:|Error:|warning:|deprecated:|model rerouted:|hook:)(?:\s|$)"
+)
 _CODEX_ERROR_LINE_RE = re.compile(r"^(?:\[[^\]\n]*\]\s*)?(?:ERROR|Error):\s")
 _ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
 
-# The bound rollout's terminal ``task_complete.error.codex_error_info`` is the
-# provider's own failure class and decides the outcome over any stderr text
-# (#9532). Class names are the CLI's closed enum (codex-cli 0.159).
+# The session-bound rollout's terminal ``task_complete.error.codex_error_info``
+# is the provider's own failure class and decides the outcome over any stderr
+# text (#9532). Class names are the CLI's closed enum (codex-cli 0.159).
 _CODEX_RATE_LIMIT_ERROR_CLASSES = frozenset({"usage_limit_exceeded", "rate_limit_exceeded"})
 _CODEX_POLICY_ERROR_CLASSES = frozenset({"cyber_policy", "bio_policy", "misalignment_policy_violation"})
 # A class the CLI adds later that names a policy or safety refusal.
 _CODEX_POLICY_ERROR_CLASS_RE = re.compile(r"polic|safety|refus|moderation", re.IGNORECASE)
 _CODEX_ERROR_FAILURE_CODES = {"server_overloaded": "provider_overloaded", "unauthorized": "provider_auth"}
+# Classes that say nothing about the cause: the provider's own message decides.
+_CODEX_UNTYPED_ERROR_CLASSES = frozenset({"unknown", "other"})
 _CODEX_ERROR_MESSAGE_CHARS = 300
-# Rollout records whose string content is tool output, never a provider error.
-_ROLLOUT_TOOL_OUTPUT_ITEMS = frozenset({"function_call_output", "custom_tool_call_output"})
-_ROLLOUT_TOOL_OUTPUT_EVENTS = frozenset({"exec_command_end", "mcp_tool_call_end", "patch_apply_end"})
 
 
 @dataclass(frozen=True)
@@ -129,6 +140,10 @@ class CodexTerminalError:
             return "rate_limited"
         if self.error_class in _CODEX_POLICY_ERROR_CLASSES or _CODEX_POLICY_ERROR_CLASS_RE.search(self.error_class):
             return "provider_policy_refusal"
+        if self.error_class in _CODEX_UNTYPED_ERROR_CLASSES and _RATE_LIMIT_RE.search(self.message):
+            # The provider's own message is quota evidence when its class is
+            # absent, e.g. "usage limit reached. Try again later."
+            return "rate_limited"
         return _CODEX_ERROR_FAILURE_CODES.get(self.error_class, "provider_error")
 
     def excerpt(self) -> str:
@@ -163,42 +178,54 @@ def codex_terminal_error(events: list[dict[str, Any]]) -> CodexTerminalError | N
     return CodexTerminalError(error_class[:80], message[:_CODEX_ERROR_MESSAGE_CHARS], http_status)
 
 
-def _string_leaves(value: Any) -> list[str]:
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, dict):
-        return [leaf for item in value.values() for leaf in _string_leaves(item)]
-    if isinstance(value, list):
-        return [leaf for item in value for leaf in _string_leaves(item)]
-    return []
+@dataclass(frozen=True)
+class CodexStderr:
+    """What ``codex exec`` itself said on stderr, apart from echoed text."""
+
+    # Session id from Codex's own banner: unique evidence of this invocation.
+    session_id: str | None
+    # Codex's own ``ERROR:``/``Error:`` lines, never echoed prompt or tool output.
+    error_lines: tuple[str, ...]
 
 
-def _rollout_tool_output_text(events: list[dict[str, Any]]) -> str:
-    """Return every tool output the bound rollout recorded, joined."""
-    chunks: list[str] = []
-    for event in events:
-        payload = event.get("payload")
-        if not isinstance(payload, dict):
+def _codex_error_lines(region: str, *, leading_only: bool) -> tuple[str, ...]:
+    lines: list[str] = []
+    for raw_line in region.splitlines():
+        line = raw_line.rstrip()
+        if not line:
             continue
-        if event.get("type") == "response_item" and payload.get("type") in _ROLLOUT_TOOL_OUTPUT_ITEMS:
-            chunks.extend(_string_leaves(payload.get("output")))
-        elif event.get("type") == "event_msg" and payload.get("type") in _ROLLOUT_TOOL_OUTPUT_EVENTS:
-            chunks.extend(_string_leaves(payload))
-    return "\n".join(chunks)
+        if leading_only and not _CODEX_NOTICE_LINE_RE.match(line):
+            break  # The first turn item; its text may be tool output.
+        if _CODEX_ERROR_LINE_RE.match(line):
+            lines.append(line)
+    return tuple(lines)
 
 
-def _codex_error_lines(stderr: str, *, tool_output: str = "") -> str:
-    """Return Codex's own error lines from the post-prompt stderr region.
+def parse_codex_stderr(stderr: str, prompt: str | None) -> CodexStderr:
+    """Split ``codex exec`` stderr into Codex's own evidence.
 
-    Lines the bound rollout recorded as tool output are excluded even when
-    they look like Codex error lines.
+    Without a banner Codex failed before the session started: no turn ran, so
+    every error line is its own. With a banner, only notices between the exact
+    prompt echo and the first turn item count; when the echo cannot be matched
+    to ``prompt`` the post-banner text is unattributable and ignored.
     """
-    region = _strip_codex_prompt_echo(_ANSI_ESCAPE_RE.sub("", stderr or ""))
-    return "\n".join(
-        line
-        for line in region.splitlines()
-        if _CODEX_ERROR_LINE_RE.match(line) and not (tool_output and line.strip() in tool_output)
-    )
+    text = _ANSI_ESCAPE_RE.sub("", stderr or "").replace("\r\n", "\n").replace("\r", "\n")
+    banner = _CODEX_BANNER_RE.search(text)
+    if banner is None:
+        return CodexStderr(None, _codex_error_lines(text, leading_only=False))
+    session_match = _CODEX_BANNER_SESSION_RE.search(banner.group("config"))
+    session_id = session_match.group(1) if session_match else None
+    if session_id is not None and not _SESSION_ID_VALUE_RE.fullmatch(session_id):
+        session_id = None
+    error_lines = _codex_error_lines(text[: banner.start()], leading_only=False)
+    rest = text[banner.end() :]
+    if prompt is None or not rest.startswith(_CODEX_PROMPT_ECHO_HEADER):
+        return CodexStderr(session_id, error_lines)
+    echoed = unicodedata.normalize("NFC", rest[len(_CODEX_PROMPT_ECHO_HEADER) :])
+    expected = _normalize_payload_for_rollout_match(prompt)
+    if not echoed.startswith(expected):
+        return CodexStderr(session_id, error_lines)
+    return CodexStderr(session_id, error_lines + _codex_error_lines(echoed[len(expected) :], leading_only=True))
 
 
 # Exposure filtering remains effective even under parent-sandboxed bypass.
@@ -268,57 +295,6 @@ def _discussion_readonly_requested(tool_config: dict | None) -> bool:
     return bool(
         os.environ.get("AB_DISCUSS_READONLY") == "1" or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
     )
-
-
-def _strip_codex_prompt_echo(stderr: str) -> str:
-    """Return only the portion of Codex stderr that is safe to
-    pattern-match for rate-limit errors.
-
-    Codex CLI (with -o <file>) lays out stderr as a sequence of
-    sections separated by dashes-only lines::
-
-        OpenAI Codex v0.118.0 ...       ← banner
-        --------
-        workdir: ...
-        model: ...
-        --------
-        user                            ← echoed prompt starts
-        <entire user prompt>
-        --------
-        codex                           ← Codex's own output
-        <reasoning + final message>
-        tokens used
-        <n>
-
-    On a rate-limit error, Codex exits non-zero and writes the error
-    message AFTER the last divider — in the "codex" or equivalent
-    section. The echoed user prompt can contain ANY text, including
-    legitimate inline dashes-only lines (a code block showing a
-    divider, a Markdown horizontal rule, a consultation prompt
-    literally discussing rate limits). Any regex that tries to
-    identify "the prompt block" by matching between two dividers can
-    be defeated by a prompt containing its own dividers.
-
-    Fix: don't try to strip the prompt at all. Instead, take the
-    stderr body AFTER the LAST divider line — that region is
-    guaranteed to be Codex's own output, never echoed prompt, because
-    the prompt echo always appears before Codex's response section.
-    If there are no dividers at all (degenerate cases: truncated
-    output, early crash before banner), fall back to the whole
-    stderr.
-
-    See #1184 Gemini 2026-04-10 review for the incident that led here.
-    """
-    if not stderr:
-        return stderr
-    # Find the position right after the LAST divider line.
-    last_divider = None
-    for m in _CODEX_DIVIDER_LINE_RE.finditer(stderr):
-        last_divider = m
-    if last_divider is None:
-        # No dividers — return as-is. Likely a very early crash.
-        return stderr
-    return stderr[last_divider.end() :]
 
 
 # Operator 2026-09-29 (#9230). GPT-6.1 Sol is the only Sol: it orchestrates and
@@ -732,11 +708,18 @@ class CodexAdapter:
                     .strip()
                 )
             except AttemptReadError as exc:
-                return ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+                return ParseResult(
+                    ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc), provider_error_text=str(exc)
+                )
             except FileNotFoundError:
                 pass
 
         output_schema = plan_output_schema(plan)
+        codex_stderr = parse_codex_stderr(stderr, plan.stdin_payload if plan is not None else None)
+        # Codex's own banner names this invocation's session. It binds the
+        # rollout uniquely; a prompt match cannot tell two identical concurrent
+        # prompts apart (#9532).
+        invocation_session_id = codex_stderr.session_id
 
         # Empty output and nonzero exits require invocation-bound completion
         # evidence, even when the output file already contains partial text.
@@ -746,6 +729,7 @@ class CodexAdapter:
             rollout_response = self._read_latest_rollout_task_complete(
                 plan,
                 call_start_time=call_start_time,
+                session_id=invocation_session_id,
             ).strip()
             if rollout_response:
                 reason = "rc=0 but -o empty" if returncode == 0 else f"rc={returncode}, terminal completion verified"
@@ -758,19 +742,19 @@ class CodexAdapter:
         # prove successful completion after a nonzero exit.
         durable_output = (file_output or rollout_response) if returncode == 0 else rollout_response
 
-        # Older Codex CLIs printed the session id on stdout. Current CLIs keep
-        # stdout quiet and persist it in the invocation-matched rollout's
-        # session_meta record.
-        session_id: str | None = None
-        session_match = _SESSION_RE.search(stdout or "")
+        # Current CLIs name the session in their stderr banner. Older CLIs
+        # printed it on stdout; without either, read the invocation-matched
+        # rollout's session_meta record.
+        session_id: str | None = invocation_session_id
+        session_match = _SESSION_RE.search(stdout or "") if session_id is None else None
         if session_match:
             session_id = session_match.group(1)
-        elif plan is not None:
+        elif session_id is None and plan is not None:
             session_id = self._read_session_id_from_rollout(plan)
 
         rollout_trace = ""
         if plan is not None:
-            rollout_trace = self._read_latest_rollout_trace(plan)
+            rollout_trace = self._read_latest_rollout_trace(plan, session_id=invocation_session_id)
         trace_events = parse_json_events(
             rollout_trace,
             source="codex",
@@ -778,9 +762,10 @@ class CodexAdapter:
         )
         tool_calls = normalize_tool_calls(trace_events)
 
-        # The provider's structured terminal error decides the outcome. A
+        # The provider's structured terminal error decides the outcome, but
+        # only from a rollout bound by this invocation's own session id. A
         # policy refusal is never a rate limit, whatever stderr says (#9532).
-        terminal_error = codex_terminal_error(trace_events)
+        terminal_error = codex_terminal_error(trace_events) if invocation_session_id and rollout_trace else None
         if terminal_error is not None:
             failure_code = terminal_error.failure_code
             return ParseResult(
@@ -792,67 +777,46 @@ class CodexAdapter:
                 tokens=None,
                 tool_calls=tool_calls,
                 failure_code=failure_code,
+                provider_error_text=terminal_error.message,
             )
 
-        # Rate-limit detection without a structured error — with FOUR
-        # critical caveats.
+        # Rate-limit detection without a structured error.
         #
-        # Codex CLI (with -o <file>) writes everything to stderr: the
-        # startup banner, the echoed user prompt, the reasoning trace,
-        # the agent's tool-call output AND real error messages.
-        # Pattern-matching stderr naively is broken because user prompts
-        # and tool output can contain ANY text, including "rate limit"
-        # and "HTTP 429" (our own bridge standing rules and tests do).
+        # Codex CLI (with -o <file>) writes everything to stderr: the startup
+        # banner, the echoed user prompt, agent and reasoning text, every
+        # tool's output verbatim, AND its own error notices. The prompt,
+        # model text and tool output can contain ANY text, including
+        # "rate limit" and "ERROR: HTTP 429" (our own bridge standing rules
+        # and tests do). So only Codex's own error lines count: those before
+        # the banner, and the notices between the exact prompt echo and the
+        # first turn item. See parse_codex_stderr (#1184, #9532).
         #
-        # Fix 1 (prompt echo sanitization): take the stderr body AFTER
-        # the last "--------" divider line. The closing prompt divider
-        # always has Codex's own output after it, so anything past the
-        # last divider is guaranteed to be Codex's actual response,
-        # never echoed user prompt. See _strip_codex_prompt_echo.
+        # Success guard: rate_limited is only TRUE when the call actually
+        # failed (returncode != 0 OR no durable output). A successful Codex
+        # exec with a final message CANNOT be rate-limited.
         #
-        # Fix 1b (tool output, #9532): within that region only Codex's own
-        # ``ERROR:``/``Error:`` lines count, minus any line the bound
-        # rollout recorded as tool output. See _codex_error_lines.
-        #
-        # Fix 2 (success guard): even after sanitization, rate_limited
-        # is only TRUE when the call actually failed (returncode != 0
-        # OR empty output file). A successful Codex exec with a
-        # non-empty final message in the -o file CANNOT be rate-limited,
-        # period. This mirrors the same guard we have on GeminiAdapter.
-        #
-        # Fix 3 (signal-killed processes, Codex 2026-04-10 review):
-        # a negative returncode means the process was killed by a
-        # signal (SIGTERM, SIGKILL, SIGINT — Python/POSIX convention
-        # reports -SIGNUM for signaled exits). If we killed the process
-        # ourselves (hard_timeout, cancel, exception mid-poll), its
-        # stderr may contain ONLY a partial prompt echo — no closing
-        # divider, no Codex response section — and my "take stderr
-        # after last divider" heuristic will return the prompt body
-        # itself. To prevent that class of false positive, skip
-        # pattern matching entirely on signaled exits. A signaled
-        # exit is classified as "failed", never as "rate_limited",
-        # because we KNOW why the process died: we killed it.
+        # Signal-killed processes (Codex 2026-04-10 review): a negative
+        # returncode means we killed the process (hard_timeout, cancel,
+        # exception mid-poll). We KNOW why it died, so it is classified as
+        # "failed", never as "rate_limited".
+        provider_error_text = "\n".join(codex_stderr.error_lines)
         if returncode is not None and returncode < 0:
-            # Signaled exit — don't even look at stderr for rate limits.
             rate_limited = False
         else:
-            stderr_for_check = _codex_error_lines(stderr, tool_output=_rollout_tool_output_text(trace_events))
-            combined_for_rl_check = "\n".join(part for part in (stdout, stderr_for_check, file_output, rollout_response) if part)
-            pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
-            # Call failed if neither -o nor rollout gave us content.
             call_failed = returncode != 0 or not durable_output
-            rate_limited = pattern_hit and call_failed
+            rate_limited = call_failed and bool(_RATE_LIMIT_RE.search(provider_error_text))
 
         if output_schema is not None:
             # Only this invocation's -o result is schema-constrained. Preserve
             # tool telemetry, but never recover unconstrained rollout prose.
-            return structured_result(
+            schema_result = structured_result(
                 json_value(file_output),
                 output_schema,
                 returncode=returncode,
                 session_id=session_id,
                 tool_calls=tool_calls,
             )
+            return schema_result if schema_result.ok else replace(schema_result, provider_error_text=provider_error_text)
 
         # Nonzero exit content is admitted only through the bound terminal
         # recovery above. Provider quota failures still veto that recovery.
@@ -881,6 +845,7 @@ class CodexAdapter:
             session_id=session_id,
             tokens=None,  # codex exec does not expose token counts.
             tool_calls=tool_calls,
+            provider_error_text=None if ok else provider_error_text,
         )
 
     # ---------------------------------------------------------------------
@@ -1082,6 +1047,7 @@ class CodexAdapter:
         plan: InvocationPlan,
         *,
         call_start_time: float | None = None,
+        session_id: str | None = None,
     ) -> str:
         """Extract the ``last_agent_message`` from THIS invocation's
         rollout JSONL.
@@ -1098,6 +1064,8 @@ class CodexAdapter:
         3. Once bound, later scans keep the same file and the same byte
            boundary, so prior turns cannot satisfy task completion or pollute
            current-turn tool telemetry.
+        4. With ``session_id`` (from Codex's own stderr banner), only the
+           rollout whose ``session_meta`` names that session is eligible.
 
         Also checks yesterday's sessions dir for UTC-midnight rollover.
 
@@ -1106,7 +1074,7 @@ class CodexAdapter:
         _ = call_start_time  # reserved; currently using snapshot-based binding
         _ = plan  # plan.task_id could be used for tighter matching in future
         try:
-            rollout_to_scan = self._select_rollout_for_plan(plan)
+            rollout_to_scan = self._select_rollout_for_plan(plan, session_id=session_id)
             if rollout_to_scan is None:
                 return ""
 
@@ -1138,14 +1106,23 @@ class CodexAdapter:
             # fall back to the primary code path.
             return ""
 
-    def _select_rollout_for_plan(self, plan: InvocationPlan) -> Path | None:
-        """Return the rollout JSONL scoped to this invocation, if available."""
+    def _select_rollout_for_plan(self, plan: InvocationPlan, *, session_id: str | None = None) -> Path | None:
+        """Return the rollout JSONL scoped to this invocation, if available.
+
+        ``session_id`` is the id Codex printed in this invocation's own banner.
+        When given, a candidate must also carry it in ``session_meta``: two
+        concurrent calls with identical prompts differ only there (#9532).
+        """
         # The snapshot is taken at build_invocation time. If an adapter is used
         # directly in a unit test, fall back to newest-wins among matching files.
         snapshot: set[Path] = getattr(self, "_rollout_snapshot", None) or set()
+        read_root = getattr(self, "_rollout_read_root", Path("/"))
+
+        def owned(candidate: Path) -> bool:
+            return session_id is None or self._read_rollout_session_id(candidate, trusted_root=read_root) == session_id
 
         bound: Path | None = getattr(self, "_bound_rollout", None)
-        if bound is not None and bound.exists() and self._rollout_matches_plan(bound, plan):
+        if bound is not None and bound.exists() and owned(bound) and self._rollout_matches_plan(bound, plan):
             return bound
 
         all_candidates: list[Path] = []
@@ -1168,10 +1145,12 @@ class CodexAdapter:
         # applying the fresh-call snapshot exclusion below.
         resume_session_id = getattr(self, "_resume_session_id", None)
         if resume_session_id:
+            if session_id is not None and session_id != resume_session_id:
+                return None  # Codex reports a session other than the one resumed.
             for candidate in sorted(all_candidates, key=mtime, reverse=True):
                 try:
                     matches = self._read_rollout_session_id(
-                        candidate, trusted_root=getattr(self, "_rollout_read_root", Path("/"))
+                        candidate, trusted_root=read_root
                     ) == resume_session_id and self._rollout_matches_plan(candidate, plan)
                 except AttemptReadError:
                     continue  # Unbound candidates have supplied no eligible bytes.
@@ -1185,7 +1164,7 @@ class CodexAdapter:
 
         for candidate in sorted(new_candidates, key=mtime, reverse=True):
             try:
-                matches = self._rollout_matches_plan(candidate, plan)
+                matches = owned(candidate) and self._rollout_matches_plan(candidate, plan)
             except AttemptReadError:
                 continue
             if matches:
@@ -1193,9 +1172,9 @@ class CodexAdapter:
                 return candidate
         return None
 
-    def _read_latest_rollout_trace(self, plan: InvocationPlan) -> str:
+    def _read_latest_rollout_trace(self, plan: InvocationPlan, *, session_id: str | None = None) -> str:
         """Read this invocation's Codex rollout JSONL for tool-call telemetry."""
-        rollout = self._select_rollout_for_plan(plan)
+        rollout = self._select_rollout_for_plan(plan, session_id=session_id)
         if rollout is None:
             return ""
         return self._read_rollout_segment(rollout)

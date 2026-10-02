@@ -182,9 +182,20 @@ def test_zero_exit_requires_content(tmp_path, content, expected):
     assert result.ok is expected
 
 
-def test_nonzero_output_quota_error_remains_rate_limited(tmp_path):
+def test_nonzero_quota_error_remains_rate_limited(tmp_path):
+    output = tmp_path / "last-message.txt"
+    output.write_text("")
+    result = CodexAdapter().parse_response(
+        stdout="", stderr="ERROR: usage limit reached\n", returncode=1, output_file=output
+    )
+    assert not result.ok
+    assert result.rate_limited
+
+
+def test_nonzero_output_file_quota_text_is_agent_text(tmp_path):
+    """codex exec never writes a failed turn's error to ``-o`` (#9532)."""
     output = tmp_path / "last-message.txt"
     output.write_text("usage limit reached")
     result = CodexAdapter().parse_response(stdout="", stderr="", returncode=1, output_file=output)
     assert not result.ok
-    assert result.rate_limited
+    assert not result.rate_limited

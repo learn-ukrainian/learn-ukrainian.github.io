@@ -337,7 +337,7 @@ def test_codex_prompt_match_and_completion_do_not_swallow_refusal(files, monkeyp
     plan = InvocationPlan(cmd=[], cwd=target.parent, stdin_payload="prompt")
     with pytest.raises(AttemptReadError):
         adapter._rollout_matches_plan(target, plan)
-    monkeypatch.setattr(adapter, "_select_rollout_for_plan", lambda plan: target)
+    monkeypatch.setattr(adapter, "_select_rollout_for_plan", lambda plan, **_: target)
     with pytest.raises(AttemptReadError):
         adapter._read_latest_rollout_task_complete(plan)
 

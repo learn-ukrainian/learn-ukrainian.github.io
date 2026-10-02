@@ -94,6 +94,7 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
+from .failure_codes import RUNTIME_FAILURE_CODES
 from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
@@ -155,36 +156,7 @@ _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
 # bounded diagnostic prefix of those ignored events, then keep draining (rather
 # than killing) so the final answer and terminal receipt can still arrive.
 _ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES = 256 * 1024
-_SAFE_ACP_FAILURE_CODES = frozenset(
-    {
-        "acp_adapter_incompatible",
-        "acp_adapter_missing",
-        "acp_agent_disconnected",
-        "acp_agent_startup",
-        "acp_auth_required",
-        "acp_permission_denied",
-        "acp_permission_unavailable",
-        "acp_review_evidence_invalid",
-        "acp_review_evidence_too_large",
-        "acp_session_create_timeout",
-        "acp_turn_limit",
-        "github_secondary_rate_limited",
-        "adapter_refused",
-        "cwd_unpinned",
-        "primary_tree_write",
-        "protocol_output_limit",
-        "provider_auth",
-        "provider_overloaded",
-        "provider_policy_refusal",
-        "provider_unavailable",
-        "provider_error",
-        "rate_limited",
-        "result_invalid",
-        "timeout",
-        "transport_error",
-        "unknown",
-    }
-)
+_SAFE_ACP_FAILURE_CODES = RUNTIME_FAILURE_CODES
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.

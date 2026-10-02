@@ -214,3 +214,41 @@ def test_unrecognized_attribution_source_falls_back_to_unknown(
     assert len(records) == 1
     assert records[0]["source"] == "codex"
     assert records[0]["source_provenance"] == "unknown"
+
+
+def _runtime_emittable_failure_codes() -> list[str]:
+    from scripts.agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
+
+    return sorted(_SAFE_ACP_FAILURE_CODES)
+
+
+@pytest.mark.parametrize("failure_code", _runtime_emittable_failure_codes())
+def test_runtime_api_reports_every_failure_code_the_runtime_emits(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure_code: str
+) -> None:
+    """#9532: codes such as Codex's ``provider_error`` must not collapse to 'unknown'."""
+    usage_dir = tmp_path / "api_usage"
+    now = datetime.now(UTC)
+    ctx = _ctx_with_batch_state_dir(tmp_path)
+    monkeypatch.setattr(app.state, "ctx", ctx)
+
+    _write_usage_file(
+        usage_dir / f"usage_codex-delegate_{now:%Y-%m-%d}.jsonl",
+        [
+            {
+                "ts": _iso(now),
+                "agent": "codex",
+                "entrypoint": "delegate",
+                "initiator": "codex",
+                "model": "gpt-6.1-sol",
+                "outcome": "error",
+                "failure_code": failure_code,
+            }
+        ],
+    )
+
+    records = runtime_router.recent_runtime_records(limit=1, ctx=ctx)["records"]
+    assert records[0]["failure_code"] == failure_code
+    response = client.get("/api/runtime/recent?limit=1")
+    assert response.status_code == 200
+    assert response.json()["records"][0]["failure_code"] == failure_code

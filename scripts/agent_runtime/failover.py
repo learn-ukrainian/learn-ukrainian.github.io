@@ -89,9 +89,6 @@ _STRUCTURED_PROVIDER_TRIGGERS: dict[str, str | None] = {
     "provider_auth": "auth",
     "rate_limited": "rate_limited",
 }
-# A structured provider error the adapter could not type further: classify on
-# the adapter's excerpt (the provider's own message), never the raw streams.
-_UNTYPED_PROVIDER_ERROR_CODE = "provider_error"
 _REQUEST_FORMAT_RE = re.compile(
     r"\b400\b|bad request|invalid[_ -]?request|request format|"
     r"unsupported parameter|unknown parameter|schema validation|"
@@ -354,12 +351,16 @@ def classify_failover_trigger(
     stderr_text: str,
 ) -> str | None:
     """Map one failed attempt to an eligible failover trigger, if any."""
-    # An adapter's classification of a structured provider error outranks any
-    # text match: the raw output can carry the agent's tool output (#9532).
-    if parse.failure_code in _STRUCTURED_PROVIDER_TRIGGERS:
-        return _STRUCTURED_PROVIDER_TRIGGERS[parse.failure_code]
-    raw_streams = () if parse.failure_code == _UNTYPED_PROVIDER_ERROR_CODE else (stderr_text, stdout_text)
-    text = "\n".join(part for part in (parse.stderr_excerpt, *raw_streams) if part)
+    raw_text = "\n".join(part for part in (parse.stderr_excerpt, stderr_text, stdout_text) if part)
+    if parse.provider_error_text is None:
+        text = raw_text
+    else:
+        # The adapter isolated the provider's own failure text: its raw
+        # streams carry echoed prompt and tool output, which must never pick
+        # a trigger (#9532). Its typed classification outranks any text.
+        if parse.failure_code in _STRUCTURED_PROVIDER_TRIGGERS:
+            return _STRUCTURED_PROVIDER_TRIGGERS[parse.failure_code]
+        text = parse.provider_error_text
 
     if GH_AUTH_FAILURE_RE.search(text):
         return "auth"
@@ -391,7 +392,7 @@ def classify_failover_trigger(
         not parse.ok
         and returncode == 0
         and not (parse.response or "").strip()
-        and not text.strip()
+        and not raw_text.strip()
     ):
         return "empty_response"
     return None

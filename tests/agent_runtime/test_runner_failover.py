@@ -733,6 +733,7 @@ def test_classifier_honors_structured_provider_failure_code_over_raw_text(failur
             stderr_excerpt=f"{failure_code} (codex_error_info=x): provider message",
             rate_limited=rate_limited,
             failure_code=failure_code,
+            provider_error_text="provider message",
         ),
         returncode=1,
         kill_reason=None,
@@ -744,19 +745,26 @@ def test_classifier_honors_structured_provider_failure_code_over_raw_text(failur
 
 
 @pytest.mark.parametrize(
-    ("excerpt", "expected"),
+    ("provider_error_text", "expected"),
     [
-        ("provider_error (codex_error_info=other): stream closed early", None),
-        ("provider_error (codex_error_info=other): unexpected status 401 Unauthorized", "auth"),
+        ("", None),
+        ("stream closed early", None),
+        ("unexpected status 401 Unauthorized", "auth"),
+        ("ERROR: unexpected status 429 Too Many Requests: quota exceeded", "rate_limited"),
     ],
 )
-def test_classifier_reads_only_the_excerpt_for_untyped_provider_error(excerpt, expected):
-    """#9532: an untyped structured provider error is classified on the provider's
-    own message, never on tool output in the raw streams."""
+def test_classifier_reads_only_provider_error_text_when_the_adapter_isolates_it(provider_error_text, expected):
+    """#9532: when the adapter vouches for the provider's own failure text, the
+    raw streams (echoed prompt, tool output) never pick a trigger."""
     from agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
-        parse=ParseResult(ok=False, response="", stderr_excerpt=excerpt, failure_code="provider_error"),
+        parse=ParseResult(
+            ok=False,
+            response="",
+            stderr_excerpt="OpenAI Codex v0.159.3\n--------\nuser\nwhy does the API rate limit?",
+            provider_error_text=provider_error_text,
+        ),
         returncode=1,
         kill_reason=None,
         stdout_text=_TOOL_OUTPUT_RATE_LIMIT_TEXT,
@@ -764,6 +772,21 @@ def test_classifier_reads_only_the_excerpt_for_untyped_provider_error(excerpt, e
     )
 
     assert trigger == expected
+
+
+def test_classifier_without_isolated_provider_text_keeps_reading_raw_streams():
+    """Adapters that make no provenance claim keep the raw-stream classification."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt="noise", failure_code="provider_error"),
+        returncode=1,
+        kill_reason=None,
+        stdout_text="",
+        stderr_text="diagnostic noise\nunexpected status 401 Unauthorized",
+    )
+
+    assert trigger == "auth"
 
 
 def test_runner_failover_never_rotates_or_cools_on_policy_refusal(tmp_path, monkeypatch, capsys):
@@ -777,7 +800,11 @@ def test_runner_failover_never_rotates_or_cools_on_policy_refusal(tmp_path, monk
         {
             "primary-model": {
                 "parse": ParseResult(
-                    ok=False, response="", stderr_excerpt=excerpt, failure_code="provider_policy_refusal"
+                    ok=False,
+                    response="",
+                    stderr_excerpt=excerpt,
+                    failure_code="provider_policy_refusal",
+                    provider_error_text="This content was flagged.",
                 ),
                 "returncode": 1,
                 "stderr_text": _TOOL_OUTPUT_RATE_LIMIT_TEXT,

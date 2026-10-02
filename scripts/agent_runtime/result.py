@@ -61,6 +61,12 @@ class ParseResult:
             (``provider_policy_refusal``, ``provider_overloaded``,
             ``provider_auth``, ``provider_error``, ``rate_limited``); the
             failover classifier and delegate task records honor it.
+        provider_error_text: Failure text the adapter attributes to the
+            provider itself, isolated from its raw streams. None means the
+            adapter makes no such claim and the failover classifier reads the
+            excerpt and raw stdout/stderr. When set (even empty), the
+            classifier reads only this text and the typed fields: Codex sets it
+            because its streams carry echoed prompt and tool output (#9532).
     """
     ok: bool
     response: str
@@ -72,6 +78,7 @@ class ParseResult:
     substitution: dict[str, Any] | None = None
     response_envelope: ResponseEnvelope | None = None
     failure_code: str | None = None
+    provider_error_text: str | None = None
 
 
 @dataclass(frozen=True)
