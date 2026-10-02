@@ -502,7 +502,8 @@ def freeze(args):
         connections = {n: readonly(stack, p) for n, p in databases.items()}
         for record in selection["source_records"]:
             actual = rows(connections[record.get("database", "sources")], record["table"], record["row_key"])
-            require(actual == [record["raw_row"]], "Selected literal row mismatch; stop and re-admit source version")
+            require(actual == [record["raw_row"]] and [digest(row) for row in actual] == [record["content_sha256"]],
+                    "Selected literal row mismatch; stop and re-admit source version")
         for slug in sorted({u["atlas_slug"] for u in selection["units"] if u["atlas_slug"]}):
             articles = rows(connections["atlas"], "articles", {"slug": slug})
             require(len(articles) == 1, "Missing or duplicate legacy article; no invented mappings")
@@ -520,7 +521,7 @@ def freeze(args):
     isolation([manifest, receipt, register], args.heldout_manifest, ("receipt", "register"))
     with locked(args.output):
         if args.output.exists():
-            require(load(args.output) == manifest, "Immutable manifest exists with different content")
+            require(digest(load(args.output)) == digest(manifest), "Immutable manifest exists with different content")
         else:
             write(args.output, manifest)
     return manifest

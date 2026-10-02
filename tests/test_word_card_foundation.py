@@ -990,3 +990,43 @@ def test_b04_overlapping_owner_views_all_contribute(pilot, shape, case, capsys):
     out, err = capsys.readouterr()
     assert pilot["registry"].read_bytes() == before and out.count('"heldout_isolation": "checked"') == 4 * (not refused)
     assert err.count("REFUSED: ") == err.count(reason or "REFUSED: ") == 4 * refused
+
+
+def db_bytes(pilot):
+    return {k: [Path(str(p) + s).read_bytes() for s in ("", "-wal") if Path(str(p) + s).exists()]
+            for k, p in pilot["paths"].items()}
+
+
+@pytest.mark.parametrize("stored,captured,accepted", [(2, 2.0, False), (2, 2, True), (1, True, False), (1, 1, True),
+                                                      (b"\x02", 2, False), (float("inf"), 2, False)])
+def test_live_row_literal_gate_is_type_exact(pilot, stored, captured, accepted, capsys):  # Non-parent row 1.
+    with sqlite3.connect(pilot["paths"]["sources"]) as db:
+        db.execute("UPDATE ulif_dictua_entries SET homonym_index=? WHERE id=1", (stored,))
+    records = pilot["candidate"]["source_records"]
+    records[1] = capture("ulif", "ulif_dictua_entries", dict(records[1]["raw_row"], homonym_index=captured))
+    pilot["admit"]()
+    before = db_bytes(pilot)
+    assert pilot["operation"]("freeze") == int(not accepted)
+    assert pilot["manifest"].exists() is accepted and db_bytes(pilot) == before
+    refusal = "REFUSED: Selected literal row mismatch; stop and re-admit source version\n"
+    assert capsys.readouterr().err == ("" if accepted else refusal)  # Unencodable live values keep this text.
+
+
+@pytest.mark.parametrize("change", [None, "reformat", "count_float", "row_float", "row_bool", "count_value"])
+def test_freeze_replay_compares_type_exact_manifest(pilot, change, capsys):
+    assert pilot["operation"]("freeze") == 0
+    manifest = json.loads(pilot["manifest"].read_bytes())
+    row = manifest["selection"]["source_records"][1]["raw_row"]
+    edits = dict(count_float=(manifest["counts"], "units", 150.0), row_float=(row, "homonym_index", 2.0),
+                 row_bool=(row, "homonym_checked", True), count_value=(manifest["counts"], "units", 149))
+    if change in edits:
+        target, key, value = edits[change]
+        target[key] = value
+    if change:
+        save(pilot["manifest"], manifest)  # Stale self-hash kept: only the existing-output comparison is reached.
+    before, sources = pilot["manifest"].read_bytes(), db_bytes(pilot)
+    capsys.readouterr()
+    assert pilot["operation"]("freeze") == int(change in edits)
+    assert pilot["manifest"].read_bytes() == before and db_bytes(pilot) == sources
+    refusal = "REFUSED: Immutable manifest exists with different content\n"
+    assert capsys.readouterr().err == (refusal if change in edits else "")

@@ -46,6 +46,7 @@ Legacy full literal-row hashes label omitted-row integrity; metadata hashes prot
 metadata preserves reviewed anchor/VESUM provenance without promoting identity.
 The 22 source-only card mappings and supplementary correspondence stay unresolved.
 Main-file and WAL digests are separate file provenance; selected-row digests identify literal captures, not logical whole-DB snapshots. DBs open read-only.
+Live-row and freeze-replay checks also compare canonical digests: `2.0` or `true` never equals a captured `2` or `1`.
 The whole permissions-register pin remains binding: a register change requires re-admission and re-freeze; reuse then refuses pending approved correspondence.
 Locators contain local row IDs only. ULIF aliases use `ulif:register:`, actual
 `ulif:content:` digests, and `ulif:record:<query>#<headword>#<label>`; PULS uses
