@@ -593,6 +593,47 @@ def test_the_memo_follows_the_index_and_the_catalogue(fresh_repo):
     assert find('freshkeyword', repo=fresh_repo)['hits'][0]['match'] == 'entrypoint'
 
 
+def test_an_unstaged_or_untracked_file_never_changes_an_answer(fresh_repo):
+    before = find('handbook freshword', repo=fresh_repo, limit=50)
+    (fresh_repo / 'docs/knowledge/catalogue.yaml').write_text('entries: [1]\n', encoding='utf-8')  # unstaged
+    (fresh_repo / 'docs/guide/untracked.md').write_text('handbook freshword\n', encoding='utf-8')
+    (fresh_repo / 'docs/guide/index.md').write_text('# Guide\nhandbook freshword\n', encoding='utf-8')
+    find_module._STATE_CACHE.clear()
+    after = find('handbook freshword', repo=fresh_repo, limit=50)
+    before.pop('timings_ms'), after.pop('timings_ms')
+    assert after == before and not after['coverage']['incomplete']
+
+
+def test_a_record_series_is_named_by_its_family_and_blanked_name(fresh_repo):
+    names = ['docs/guide/plan-review.att-3.yaml', 'docs/guide/x/plan-review.att-12.yaml',
+             'docs/guide/y/plan-review.att-1.yaml', 'docs/guide/plan-reviewed.' + 'ab12' * 16 + '.yaml',
+             'docs/guide/2026-09-11-audit.md', 'docs/old/plan-review.att-3.yaml', 'scripts/run_7.py',
+             'docs/guide/a1.md', 'docs/guide/v2/x.md']
+    for rel in names:
+        (fresh_repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        (fresh_repo / rel).write_text('x\n', encoding='utf-8')
+    git(fresh_repo, 'add', '.')
+    key = functools.partial(find_module.series_key, find_module.load_state(fresh_repo))
+    assert key('docs/guide/plan-review.att-3.yaml') == ('guide', 'plan-review.att-#.yaml')
+    assert key('docs/guide/x/plan-review.att-12.yaml') == key('docs/guide/y/plan-review.att-1.yaml')
+    assert key('docs/guide/plan-reviewed.' + 'ab12' * 16 + '.yaml') == ('guide', 'plan-reviewed.#.yaml')
+    assert key('docs/guide/2026-09-11-audit.md') == ('guide', '#-#-#-audit.md')
+    assert key('docs/old/plan-review.att-3.yaml') != key('docs/guide/plan-review.att-3.yaml')
+    assert key('scripts/run_7.py') == ('scripts', 'run_#.py')  # outside the catalogue: its directory
+    assert key('docs/guide/a1.md') is None and key('docs/guide/index.md') is None and key('docs/guide/v2/x.md') is None
+
+
+def test_a_record_series_takes_one_place_among_the_answers(fresh_repo):
+    records = {f'docs/guide/m{m}/review.att-{n}.md': 'crowdword ladderword\n' for m in (1, 2) for n in (1, 2, 3)}
+    for rel, text in {**records, 'docs/guide/answer.md': 'crowdword\n'}.items():
+        (fresh_repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        (fresh_repo / rel).write_text(text, encoding='utf-8')
+    git(fresh_repo, 'add', '.')
+    paths = paths_of(find('crowdword ladderword', repo=fresh_repo, limit=50))
+    assert paths[0] in records and paths[1] == 'docs/guide/answer.md'
+    assert sorted(paths[2:7]) == sorted(set(records) - {paths[0]})  # demoted in order, never dropped
+
+
 # ------------------------------------------------------------------ CLI
 
 def test_cli_text_output_and_exit_codes(repo, capsys):

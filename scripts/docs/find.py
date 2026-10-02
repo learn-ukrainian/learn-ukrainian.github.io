@@ -460,33 +460,38 @@ _STATE_LOCK = threading.Lock()
 def load_state(repo: Path) -> State:
     """Validate the catalogue against the index; memoised in memory by the exact inputs.
 
-    The memo key hashes every index record, the catalogue, the schema and the two owner
-    registries, so any change to them is a fresh validation. Nothing is written to disk.
+    Every input is read from the index, as every search is: the catalogue and schema like the
+    owner registries, so two checkouts of one commit answer alike whatever their working trees
+    hold (unstaged edits, untracked or ignored files, mtimes). The memo key hashes every index
+    record, so any change to an input is a fresh validation. Nothing is written to disk.
     """
     files = cat.index_entries(repo)
     digest = hashlib.sha256()
     for path, entry in files.items():
         digest.update(f'{entry.mode} {entry.oid}\t'.encode() + path.encode('utf-8') + b'\0')
-    raw: dict[str, bytes] = {}
-    for rel in (cat.CATALOGUE_PATH, cat.SCHEMA_PATH):
-        try:
-            raw[rel] = (repo / rel).read_bytes()[:cat.MAX_CATALOGUE_BYTES + 1]
-        except OSError:
-            raw[rel] = b''
-        digest.update(rel.encode() + b'\0' + hashlib.sha256(raw[rel]).digest())
-    for rel, _ in cat.OWNER_SOURCES:
-        digest.update(rel.encode() + b'\0' + files[rel].oid.encode() if rel in files else b'-')
     key = f'{repo}\0{digest.hexdigest()}'
     with _STATE_LOCK:
         if key in _STATE_CACHE:
             _STATE_CACHE.move_to_end(key)
             return _STATE_CACHE[key]
+    raw = {rel: _index_blob(repo, files.get(rel)) for rel in (cat.CATALOGUE_PATH, cat.SCHEMA_PATH)}
     state = _build_state(repo, files, raw)
     with _STATE_LOCK:
         _STATE_CACHE[key] = state
         while len(_STATE_CACHE) > _STATE_CACHE_SIZE:
             _STATE_CACHE.popitem(last=False)
     return state
+
+
+def _index_blob(repo: Path, entry: cat.IndexEntry | None) -> bytes:
+    """An index entry's content, cut at MAX_CATALOGUE_BYTES + 1 (``cat.parse`` refuses more);
+    empty when the path is not in the index or Git cannot read it (the load then fails)."""
+    if entry is None:
+        return b''
+    try:
+        return cat.git(repo, 'cat-file', 'blob', entry.oid)[:cat.MAX_CATALOGUE_BYTES + 1]
+    except (OSError, subprocess.SubprocessError):
+        return b''
 
 
 def _build_state(repo: Path, files: dict[str, cat.IndexEntry], raw: dict[str, bytes]) -> State:
@@ -850,7 +855,7 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
     tick = time.monotonic()
     excerpts_complete = _read_lines(state, [c for c in pool if c.in_content], terms, text, phrase, deadline)
     timings['excerpts_ms'] = round((time.monotonic() - tick) * 1000)
-    pool.sort(key=rank_key)
+    pool = crowd_series(state, sorted(pool, key=rank_key))
     content_hits = [_candidate_hit(state, c, terms, phrase) for c in pool[:limit]]
     hits = _with_replacements(state, family_hits + content_hits, terms)[:limit]
     if status_question:
@@ -886,6 +891,39 @@ def rerank_pool(ranked: list[Candidate], size: int, speakers: set[str], status_q
     text = [c for c in ranked if c.in_content]
     pool = text[:size] + [c for c in ranked if not c.in_content][:size]
     return pool + [c for c in text[size:] if c.path in speakers or (status_question and c.authority)]
+
+
+SERIES_HASH = re.compile(r'[0-9a-f]{16,}')
+SERIES_COUNTER = re.compile(r'(?<![^._-])[0-9]+(?![^._-])')  # a number standing alone between separators
+
+
+def series_key(state: State, path: str) -> tuple[str, str] | None:
+    """The record series a path belongs to: its family (else its directory) and its file name with
+    every hash and every number standing between separators blanked (``plan-review.att-#.yaml``,
+    ``#.yaml`` for a content-addressed manifest); None for a file name that holds neither."""
+    directory, _, name = path.rpartition('/')
+    pattern = SERIES_COUNTER.sub('#', SERIES_HASH.sub('#', name))
+    if pattern == name:
+        return None
+    family, _ = state.lifecycle_of(path)
+    return family or directory, pattern
+
+
+def crowd_series(state: State, ranked: list[Candidate]) -> list[Candidate]:
+    """``ranked`` with every record of a series after its best-ranked one moved below the rest.
+
+    A tool that writes one record per attempt or per hash (review attempts, manifests, dated runs)
+    makes files that hold the same words; however many it writes, they take one place among the
+    answers, and the others follow every other candidate, in rank order. Nothing is dropped.
+    """
+    seen: set[tuple[str, str]] = set()
+    first, later = [], []
+    for c in ranked:
+        key = series_key(state, c.path)
+        (later if key in seen else first).append(c)
+        if key is not None:
+            seen.add(key)
+    return first + later
 
 
 def _coverage(state: State, family: str | None, readable: set[str], incomplete: bool, reasons: list[str],

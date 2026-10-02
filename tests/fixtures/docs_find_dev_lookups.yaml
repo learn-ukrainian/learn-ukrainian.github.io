@@ -152,8 +152,8 @@ lookups:
      expect: [data/sources.db, docs/corpus-inventory.md],
      verify: [{path: docs/corpus-inventory.md, contains: sources.db}]}
   - {id: D02, question: 'Where is the ULIF dump SQLite database?', kind: data_store, query: ULIF dump sqlite,
-     expect: [data/ulif_dump_all.db, scripts/lexicon/tools/dump_ulif.py],
-     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/ulif_dump_all.db'}]}
+     expect: [data/ulif_dump.db, scripts/lexicon/tools/dump_ulif.py],
+     verify: [{path: scripts/lexicon/tools/dump_ulif.py, contains: '--db data/ulif_dump.db'}]}
   - {id: D03, question: 'Where is the embedding manifest store?', kind: data_store, query: embedding manifest store,
      expect: [data/embeddings/, scripts/wiki/embedding_manifest.py],
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/embeddings/'}]}

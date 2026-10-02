@@ -14,6 +14,7 @@
 Failure messages name the exact path and print a ready-to-paste stub
 (``python -m scripts.docs.catalogue check --suggest``).
 """
+import os
 import posixpath
 import re
 import subprocess
@@ -284,3 +285,42 @@ def test_a_storage_layout_question_in_a_few_words_ranks_the_runbook_above_invent
     at = paths.index('docs/runbooks/storage-topology.md')
     inventories = [i for i, p in enumerate(paths) if p == 'docs/corpus-inventory.md' or p.startswith('docs/knowledge/inventory/')]
     assert at < 5 and all(at < i for i in inventories), paths[:8]
+
+
+# Every answer comes from the index, so two checkouts of one commit answer alike: a repository
+# holding this commit's tree in its index and no checked-out file at all, beside an untracked and
+# an ignored file that name the question, unstaged edits to the catalogue and to the answer, all
+# with an old mtime, ranks exactly as this checkout does (with whatever local stores, scratch or
+# ignored files it holds), or as itself before the noise when this checkout has staged changes.
+def test_answers_come_from_the_committed_tree_never_the_working_tree(tmp_path):
+    def git(repo, *args):
+        return subprocess.run(['git', '-C', str(repo), *args], capture_output=True, check=True,
+                              timeout=60).stdout.decode().strip()
+
+    query, answer = 'preflight evidence record check before writer call', 'scripts/build/fresh/preflight.py'
+    clone = tmp_path / 'clone'
+    git(tmp_path, 'init', '-q', str(clone))
+    common = Path(git(REPO, 'rev-parse', '--path-format=absolute', '--git-common-dir'))
+    (clone / '.git/objects/info/alternates').write_text(f'{common / "objects"}\n', encoding='utf-8')
+    git(clone, 'read-tree', git(REPO, 'rev-parse', 'HEAD^{tree}'))
+    find_module._STATE_CACHE.clear()
+    staged = subprocess.run(['git', '-C', str(REPO), 'diff-index', '--cached', '--quiet', 'HEAD'], timeout=60)
+    reference = find(query, 50, repo=clone if staged.returncode else REPO, budget_seconds=60)
+    noise = {
+        'docs/knowledge/catalogue.yaml': 'entries: [1]\n',
+        answer: '',
+        'docs/preflight-evidence-record-check.md': f'# {query}\n{query}\n',
+        'scratch/preflight_record_check.py': f'def preflight_evidence_record_check():\n    """{query}."""\n',
+    }
+    for rel, text in noise.items():
+        (clone / rel).parent.mkdir(parents=True, exist_ok=True)
+        (clone / rel).write_text(text, encoding='utf-8')
+        os.utime(clone / rel, (1_000_000_000, 1_000_000_000))
+    (clone / '.git/info/exclude').write_text('scratch/\n', encoding='utf-8')
+    noted = git(clone, 'status', '--porcelain', '--ignored', '--', *noise).splitlines()
+    assert sorted(line[:2] for line in noted) == ['!!', '??', 'AM', 'AM'], noted  # the noise is really there
+    find_module._STATE_CACHE.clear()
+    noisy = find(query, 50, repo=clone, budget_seconds=60)
+    reference.pop('timings_ms'), noisy.pop('timings_ms')
+    assert not reference['coverage']['incomplete'] and answer in [hit['path'] for hit in reference['hits']]
+    assert noisy == reference
