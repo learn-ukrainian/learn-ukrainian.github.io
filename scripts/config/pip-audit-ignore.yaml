@@ -22,9 +22,3 @@ vulnerabilities:
     version: 0.19.2
     status: accepted-risk
     reason: "Minerva timing attack on P-256 curve; upstream considers side-channel attacks out of scope with no planned fix. ECDSA signature verification is unaffected."
-
-  - id: CVE-2026-101918
-    package: pyjwt
-    version: 2.14.0
-    status: upstream-fix-pending
-    reason: "RecursionError on deeply nested JSON payloads during unverified decoding; no untrusted JWTs are decoded."
