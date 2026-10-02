@@ -52,7 +52,7 @@ NORMALIZED = {
 TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\Z")
 MAX_COMMENT_BYTES = 65_000
 # Keep Markdown delimiters and line/column suffixes outside the path token.
-ABSOLUTE_PATH = re.compile(r"(?<![\w/\\:.-])/[^\s`'\"<>()\[\]{},;:]+")
+ABSOLUTE_PATH = re.compile(r"(?<![\w/\\:.-])/[^\s`'\"<>()\[\]{},;:|=\\*&]+")
 # Kimi CLI task records can identify the harness without naming its model;
 # this harness is single-family and always runs Moonshot models.
 SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
@@ -216,7 +216,7 @@ def build_comment(*, sha: str, task_id: str, started: str, verdict: str, model: 
 
 def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root: Path) -> str:
     """Rewrite checkout citations only; the publisher still scans the final text."""
-    checkout = task.get("worktree_path") or task.get("cwd")
+    checkout = task.get("worktree_path")
     roots = [primary_root]
     if isinstance(checkout, str) and Path(checkout).is_absolute():
         roots.insert(0, Path(checkout))
@@ -230,7 +230,13 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
             if not path.is_relative_to(root):
                 continue
             try:
-                if not path.resolve().is_relative_to(root.resolve()):
+                resolved_root = root.resolve()
+                resolved_primary = primary_root.resolve()
+                if resolved_root == Path(resolved_root.anchor) or (
+                    resolved_root != resolved_primary and resolved_primary.is_relative_to(resolved_root)
+                ):
+                    continue
+                if not path.resolve().is_relative_to(resolved_root):
                     return match.group()
             except (OSError, RuntimeError):
                 return match.group()

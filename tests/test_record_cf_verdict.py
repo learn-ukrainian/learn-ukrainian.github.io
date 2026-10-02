@@ -381,11 +381,52 @@ def test_repository_relative_reply_preserves_citations_and_outside_text(text, ex
     assert recorder.repository_relative_reply(text, task=review, primary_root=Path("/checkout")) == expected
 
 
-@pytest.mark.parametrize("checkout", [{"cwd": "/review"}, {"worktree_path": "/review", "cwd": "/review/scripts"}])
+@pytest.mark.parametrize("checkout", [
+    {"worktree_path": "/review"}, {"worktree_path": "/review", "cwd": "/review/scripts"},
+    {"worktree_path": "/review", "cwd": "/"},
+])
 def test_repository_relative_reply_uses_recorded_checkout(checkout):
     assert recorder.repository_relative_reply(
         "/review/scripts/unit.py:12", task=checkout, primary_root=Path("/checkout")
     ) == "scripts/unit.py:12"
+
+
+@pytest.mark.parametrize("checkout", [{"cwd": "/"}, {"cwd": "/review"}, {"worktree_path": "/"}, {"worktree_path": "/repo"}])
+def test_repository_relative_reply_refuses_cwd_and_ancestor_roots(checkout):
+    text = "/review/unit.py /repo/outside/unit.py /repo/checkout/scripts/unit.py"
+    assert recorder.repository_relative_reply(text, task=checkout, primary_root=Path("/repo/checkout")) == (
+        "/review/unit.py /repo/outside/unit.py scripts/unit.py"
+    )
+
+
+def test_repository_relative_reply_refuses_filesystem_root_as_primary():
+    text = "/outside/unit.py"
+    assert recorder.repository_relative_reply(text, task={}, primary_root=Path("/")) == text
+
+
+def test_repository_relative_reply_refuses_resolved_ancestor_root(tmp_path):
+    root = tmp_path / "checkout"
+    root.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(tmp_path, target_is_directory=True)
+    text = f"{alias}/outside/unit.py {root}/scripts/unit.py"
+    assert recorder.repository_relative_reply(text, task={"worktree_path": str(alias)}, primary_root=root) == (
+        f"{alias}/outside/unit.py scripts/unit.py"
+    )
+
+
+@pytest.mark.parametrize("separator", list("|=\\*;&<>\"'()[]{}"))
+def test_repository_relative_reply_ends_path_at_shell_and_markup_separators(separator):
+    worktree = "/checkout/.worktrees/dispatch/cursor/review"
+    text = f"{worktree}/a{separator}/outside/x"
+    assert recorder.repository_relative_reply(text, task={"worktree_path": worktree}, primary_root=Path("/checkout")) == (
+        f"a{separator}/outside/x"
+    )
+    # A traversal in the outside path must not prevent rewriting the first
+    # citation: the separator makes them independent path tokens.
+    assert recorder.repository_relative_reply(
+        f"{worktree}/a{separator}/outside/../x", task={"worktree_path": worktree}, primary_root=Path("/checkout")
+    ) == f"a{separator}/outside/../x"
 
 
 @pytest.mark.parametrize("checkout", [None, "relative", 123])
@@ -421,6 +462,8 @@ def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path):
         ("VERDICT: APPROVE\n/checkout-other/private.py", True),
         ("VERDICT: APPROVE\n/checkout/../private.py", True),
         ("VERDICT: APPROVE\n/checkout/scripts/unit.py\nSENTINEL-HOST-TOKEN", True),
+        *[(f"VERDICT: APPROVE\n/checkout/scripts/unit.py{separator}/outside/x", True)
+          for separator in "|=\\*;&<>\"'()[]{}"],
     ],
 )
 def test_record_fixture_dry_run_through_publication_scanner(monkeypatch, tmp_path, synthetic_opsec, capsys, reply, refused):
@@ -430,6 +473,9 @@ def test_record_fixture_dry_run_through_publication_scanner(monkeypatch, tmp_pat
 
     rules = synthetic_rules()
     rules["1"]["patterns"].append({"id": "synthetic-host-path", "regex": r"(?<![<\w:])/[A-Za-z][^\s`]*"})
+    # Cover an outside path after '<' without mistaking the comment's HTML
+    # closing tags for filesystem paths.
+    rules["1"]["patterns"].append({"id": "synthetic-markup-path", "regex": r"(?<=<)/outside/[^\s`]*"})
     (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
     real_json = recorder._run_json
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
