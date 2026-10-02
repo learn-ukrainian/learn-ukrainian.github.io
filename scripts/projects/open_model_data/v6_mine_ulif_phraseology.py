@@ -1180,7 +1180,10 @@ def verify_phrase_in_vesum(phrase: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if not content_tokens:
         return True
     for t in content_tokens:
-        cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1", (t, t))
+        cur_ves.execute(
+            "SELECT 1 FROM forms_all WHERE word_form IN (?, ?) OR lemma IN (?, ?) LIMIT 1",
+            (t, t.capitalize(), t, t.capitalize()),
+        )
         if not cur_ves.fetchone():
             return False
     return True
@@ -1555,6 +1558,60 @@ def is_label_fragment(s: str) -> bool:
     return bool(len(s_clean) < 15 and any(t in LABEL_TOKENS for t in re.findall(r"[а-яіїєґ]+", s_clean.lower())))
 
 
+def extract_clean_definition_and_labels(text: str) -> tuple[str, str]:
+    """Extract stylistic register and cleaned definition gloss, stripping metadata, valency formulas, and dialogue markers."""
+    reg = "загальновживаний літературний"
+    lowered = text.lower()
+    if re.search(r"\bкнижн\b", lowered):
+        reg = "книжний"
+    elif re.search(r"\b(?:нар\.-поет|поет)\b", lowered):
+        reg = "народнопоетичний"
+    elif re.search(r"\bрозм\b", lowered):
+        reg = "розмовний"
+    elif re.search(r"\bірон\b", lowered):
+        reg = "іронічний"
+    elif re.search(r"\bжарт\b", lowered):
+        reg = "жартівливий"
+    elif re.search(r"\bфольк\b", lowered):
+        reg = "фольклорний"
+    elif re.search(r"\b(?:вульг|груб|лайл|зневажл)\b", lowered):
+        reg = "просторічно-знижений"
+
+    s = text.strip()
+    s = re.sub(r"^\d+\.\s*", "", s).strip()
+    s = re.sub(r"\[.*?\]", "", s).strip()
+
+    # Locating gloss boundary at first capitalized word following leading label/valency sequences
+    m_cap = re.search(r"(?<!\w)([А-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ\'-]+.*)$", s)
+    if m_cap:
+        s = m_cap.group(1).strip()
+
+    prev = ""
+    while s != prev:
+        prev = s
+        s = re.sub(r"^\[.*?\]\s*", "", s).strip()
+        s = re.sub(r"^зі\s+сл\.[^.]*?\.\s*", "", s).strip()
+        s = re.sub(
+            r"^(?:кому|чому|кого|чого|у\s+кого|в\s+кого|з\s+ким|ким|чим|чиє|чию|на\s+кого|на\s+що|про\s+кого|про\s+що|за\s+що|до\s+кого|до\s+чого)[^.]*?\.\s*",
+            "",
+            s,
+        ).strip()
+        s = re.sub(r"^(?:перев\.|також|переважно|переважн\.|власне|рідше)\.?\s*", "", s).strip()
+        s = re.sub(
+            r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл|грубо|грубе|несхв|схв|рідко|перен|церк|заст|спец|фам|мед|спорт|публ)\.?\s*",
+            "",
+            s,
+        ).strip()
+        s = re.sub(r"^(?:і\s+без\s+додатка|без\s+додатка)\.?\s*", "", s).strip()
+        s = re.sub(r"^[,\s:;—–-]+", "", s).strip()
+
+    # Strip speech / colon introductory clause at end before quote (e.g. 'Пояснив [Лаврін Тесля]:')
+    s = re.sub(r"\s*[^.!?:]*:\s*$", "", s).strip()
+    s = re.sub(r"\[.*?\]", "", s).strip()
+    s = re.sub(r"\s+", " ", s).strip()
+    return s, reg
+
+
 def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit | None:
     """Parse a raw frazeolohichnyi entry with strict definition cleaning and quote attestation."""
     word = clean_raw_html_and_tags(clean_stress_marks(word_raw))
@@ -1923,7 +1980,6 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
 
                 raw_html = payload.get("raw_html", "")
                 if raw_html:
-                    clean_entry = clean_raw_html_and_tags(clean_stress_marks(raw_html))
                     m_bold = re.search(r"<b>(.*?)</b>", raw_html, re.DOTALL)
                     if m_bold:
                         raw_b = clean_raw_html_and_tags(clean_stress_marks(m_bold.group(1))).rstrip(".,;: ")
@@ -1934,76 +1990,45 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
                         raw_b = headword
                         idiom_str = headword
 
-                    quotes: list[str] = []
-                    for m_i in re.finditer(r"<i>(.*?)</i>", raw_html, re.DOTALL):
-                        q = clean_raw_html_and_tags(clean_stress_marks(m_i.group(1)))
-                        if len(q) >= 15:
-                            quotes.append(q)
+                    # Parse quote-author pairs directly bound in HTML (Finding 1)
+                    valid_quotes: list[tuple[str, str, int]] = []
+                    for m in re.finditer(r"<i>((?:(?!</i>).)*?)</i>\s*\(([^()]+)\)", raw_html, re.DOTALL):
+                        q_text = clean_raw_html_and_tags(clean_stress_marks(m.group(1))).strip()
+                        auth_text = clean_raw_html_and_tags(clean_stress_marks(m.group(2))).replace("\xa0", " ").strip()
+                        if len(q_text) >= 15:
+                            valid_quotes.append((q_text, auth_text, m.start()))
 
-                    is_held = is_record_held_out(clean_entry)
-                    author = "Класична література"
-                    cits = payload.get("citations", [])
-                    if is_held:
-                        for hoa in HELD_OUT_AUTHORS_DISPLAY:
-                            if HELD_OUT_AUTHORS_RE.search(clean_entry):
-                                author = hoa
-                                break
-                    elif cits:
-                        for c in cits:
-                            c_clean = clean_raw_html_and_tags(clean_stress_marks(c)).strip()
-                            if re.match(r"^(?:[А-ЯІЇЄҐ]\.\s*){1,2}[А-ЯІЇЄҐ][а-яіїєґ\'-]+$", c_clean) or c_clean in (
-                                "Леся Українка",
-                                "Панас Мирний",
-                                "Остап Вишня",
-                                "Олесь Гончар",
-                                "Іван Ле",
-                                "Марко Вовчок",
-                                "Ольга Кобилянська",
-                            ):
-                                author = c_clean
-                                break
+                    if not valid_quotes:
+                        continue
 
-                    def_part = clean_entry
-                    if def_part.startswith(raw_b):
-                        def_part = def_part[len(raw_b) :].lstrip(".,;: ")
-                    elif def_part.startswith(idiom_str):
-                        def_part = def_part[len(idiom_str) :].lstrip(".,;: ")
-                    if quotes and quotes[0] in def_part:
-                        definition = def_part.split(quotes[0])[0].strip().rstrip(".,;: ")
-                    else:
-                        definition = def_part.split("(")[0].strip().rstrip(".,;: ") if "(" in def_part else def_part
-
-                    citation = quotes[0] if quotes else ""
-
-                    # Clean leading labels, valency formulas, and register tags from definition
-                    definition = re.sub(r"^зі сл\.[^.]*?\.\s*", "", definition).strip()
-                    definition = re.sub(
-                        r"^(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим|чиє|чию)[^.]*?\.\s*", "", definition
-                    ).strip()
-                    definition = re.sub(r"^(?:перев\.|також|переважно)[^.]*?\.\s*", "", definition).strip()
-                    reg = "загальновживаний літературний"
-                    m_reg = re.match(
-                        r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл|грубо|грубе|несхв|схв|рідко|перен)\.?\s*",
-                        definition,
+                    # Definition is strictly between m_bold.end() and the start of the first bound quote (Finding 2)
+                    first_q_start = valid_quotes[0][2]
+                    def_end = first_q_start if m_bold and first_q_start > m_bold.end() else len(raw_html)
+                    def_start = m_bold.end() if m_bold else 0
+                    def_raw = raw_html[def_start:def_end]
+                    definition, reg = extract_clean_definition_and_labels(
+                        clean_raw_html_and_tags(clean_stress_marks(def_raw))
                     )
-                    if m_reg:
-                        lab = m_reg.group(0).rstrip(". ").lower()
-                        if "книжн" in lab:
-                            reg = "книжний"
-                        elif "поет" in lab:
-                            reg = "народнопоетичний"
-                        elif "розм" in lab:
-                            reg = "розмовний"
-                        elif "ірон" in lab:
-                            reg = "іронічний"
-                        elif "жарт" in lab:
-                            reg = "жартівливий"
-                        elif "фольк" in lab:
-                            reg = "фольклорний"
-                        elif any(x in lab for x in ("вульг", "груб", "лайл", "зневажл")):
-                            reg = "просторічно-знижений"
-                        definition = definition[m_reg.end() :].strip()
-                    definition = re.sub(r"^[,\s:;—–-]+", "", definition).strip()
+
+                    # Select quote and author: prioritize held-out quote if any exists to enforce strict partitioning
+                    held_q = None
+                    for q_text, auth_text, _st in valid_quotes:
+                        if HELD_OUT_AUTHORS_RE.search(auth_text):
+                            disp = auth_text
+                            for hoa in HELD_OUT_AUTHORS_DISPLAY:
+                                if hoa in auth_text or re.search(r"\b" + re.escape(hoa) + r"\b", auth_text):
+                                    disp = hoa
+                                    break
+                            held_q = (q_text, disp)
+                            break
+
+                    if held_q:
+                        citation, author = held_q
+                        is_held = True
+                    else:
+                        citation = valid_quotes[0][0]
+                        author = valid_quotes[0][1] or "Класична література"
+                        is_held = False
 
                     # Drop criteria per Issue #8140 Rule 1 (clean authentic extraction only)
                     if len(idiom_str) < 3 or len(definition) < 4 or len(citation) < 15:
@@ -3472,74 +3497,46 @@ def verify_receipt_invariants(
 
         for t in sorted(unique_tokens):
             total_eval_tokens += 1
-            cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1", (t, t))
+            cur_ves.execute(
+                "SELECT 1 FROM forms_all WHERE word_form IN (?, ?) OR lemma IN (?, ?) LIMIT 1",
+                (t, t.capitalize(), t, t.capitalize()),
+            )
             if cur_ves.fetchone():
                 vesum_attested_tokens += 1
         if vesum_attested_tokens == 0:
             raise AssertionError("VESUM attestation check found 0 attested tokens in dataset targets!")
 
-    # 2. Verify grounded idioms in sources.db: frazeolohichnyi
+    # 2. Verify grounded idioms in sources.db: frazeolohichnyi and ulif_dictua_sections (Findings 1, 3)
     if not sources_db.exists() or sources_db.stat().st_size == 0:
         raise FileNotFoundError(f"sources.db missing or empty: {sources_db}")
 
+    fraz_units = load_frazeolohichnyi_dictionary(sources_db)
+    ulif_units, _ = load_ulif_phraseology_and_synonyms(sources_db)
+    known_fraz_idioms: set[str] = set()
+    attested_tuples: dict[str, list[dict[str, Any]]] = defaultdict(list)
+
+    for u in fraz_units + ulif_units:
+        k = u.idiom.strip().lower()
+        base_k = re.split(r"[\(/,]", k)[0].strip()
+        cand_info = {
+            "def_stems": set(get_content_stems(u.definition)),
+            "cit_stems": set(get_content_stems(u.citation_text)),
+            "author": u.author.strip().lower(),
+            "idiom": k,
+        }
+        attested_tuples[k].append(cand_info)
+        known_fraz_idioms.add(k)
+        if len(base_k) >= 4 and base_k != k:
+            attested_tuples[base_k].append(cand_info)
+            known_fraz_idioms.add(base_k)
+
     conn_src = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
     cur_src = conn_src.cursor()
-    cur_src.execute("SELECT word, definition FROM frazeolohichnyi;")
-    known_fraz_idioms: set[str] = set()
-    for w_raw, d_raw in cur_src.fetchall():
-        u = parse_frazeolohichnyi_entry(w_raw, d_raw)
-        if u is not None:
-            known_fraz_idioms.add(u.idiom.strip().lower())
+    cur_src.execute("SELECT word FROM frazeolohichnyi;")
+    for (w_raw,) in cur_src.fetchall():
         w_clean = clean_raw_html_and_tags(clean_stress_marks(w_raw)).strip().lower()
         if w_clean:
             known_fraz_idioms.add(w_clean)
-    has_ulif_sections = cur_src.execute(
-        "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_sections'"
-    ).fetchone() is not None
-    if has_ulif_sections:
-        cur_src.execute(
-            """
-            SELECT s.payload_json
-            FROM ulif_dictua_sections s
-            JOIN ulif_dictua_entries e ON s.entry_id = e.id
-            WHERE s.kind = 'phraseology' AND e.status = 'ok'
-            """
-        )
-        for (payload_raw,) in cur_src.fetchall():
-            if not payload_raw:
-                continue
-            try:
-                payload = json.loads(payload_raw)
-            except Exception:
-                continue
-            if isinstance(payload, dict):
-                raw_html = payload.get("raw_html", "")
-                if raw_html:
-                    m_b = re.search(r"<b>(.*?)</b>", raw_html, re.DOTALL)
-                    raw_b = clean_raw_html_and_tags(clean_stress_marks(m_b.group(1))).strip().lower() if m_b else ""
-                    idiom_str = re.sub(r"^\d+\.\s*", "", raw_b).strip()
-                    idiom_str = idiom_str.split(";")[0].strip()
-                    idiom_str = re.sub(r"\s*[.\s]\s*\d+\.?\s*$", "", idiom_str).strip().rstrip(".,;: ")
-                else:
-                    raw_text = clean_stress_marks(payload.get("text", ""))
-                    raw_terms = payload.get("terms", [])
-                    terms: list[str] = []
-                    for t in raw_terms:
-                        if isinstance(t, dict):
-                            terms.append(clean_stress_marks(t.get("text", "")))
-                        elif isinstance(t, str):
-                            terms.append(clean_stress_marks(t))
-                    idiom_str = clean_raw_html_and_tags(terms[0] if terms else raw_text.split(".")[0]).strip().lower()
-                    idiom_str = re.sub(r"^\d+\.\s*", "", idiom_str).strip()
-                    idiom_str = idiom_str.split(";")[0].strip()
-                    idiom_str = re.sub(r"\s*[.\s]\s*\d+\.?\s*$", "", idiom_str).strip().rstrip(".,;: ")
-            else:
-                continue
-            if len(idiom_str) >= 4:
-                known_fraz_idioms.add(idiom_str)
-                base = re.split(r"[\(/,]", idiom_str)[0].strip()
-                if len(base) >= 4:
-                    known_fraz_idioms.add(base)
     conn_src.close()
 
     # Build comprehensive set of calques to check (Finding 3)
@@ -3617,20 +3614,44 @@ def verify_receipt_invariants(
                     )
                 thought_tags_count += 1
 
-                # Grounding check: verify literary idioms against frazeolohichnyi (Finding 1)
+                # Grounding check: verify literary idioms against frazeolohichnyi and ULIF (Findings 1, 3)
                 if row.get("task_type") == "idiom_interpretation_literary":
                     total_literary_tasks += 1
                     target_p = row.get("target_phrase", "").strip().lower()
                     target_base = re.split(r"[\(/,]", target_p)[0].strip()
-                    if (
-                        target_p in known_fraz_idioms
-                        or (len(target_base) >= 4 and target_base in known_fraz_idioms)
-                        or any(target_p.startswith(ki + " ") for ki in known_fraz_idioms if len(ki) >= 4)
-                        or any(ki.startswith(target_p + " ") for ki in known_fraz_idioms if len(target_p) >= 4)
-                    ):
-                        literary_grounded_count += 1
-                    else:
+
+                    cands = attested_tuples.get(target_p) or attested_tuples.get(target_base)
+                    if not cands:
+                        for ki in attested_tuples:
+                            if (len(ki) >= 4 and target_p.startswith(ki + " ")) or (
+                                len(target_p) >= 4 and ki.startswith(target_p + " ")
+                            ):
+                                cands = attested_tuples[ki]
+                                break
+
+                    if not cands:
                         unattested_literary.append(f"{shard_path.name}:{line_no} '{target_p}'")
+                    else:
+                        resp_lower = resp.lower()
+                        resp_stems = set(get_content_stems(resp))
+                        matched_grounding = False
+                        for cand in cands:
+                            c_auth = cand["author"]
+                            auth_match = c_auth in resp_lower or any(
+                                w in resp_lower for w in c_auth.split() if len(w) > 3
+                            )
+                            cit_overlap = len(cand["cit_stems"] & resp_stems) >= min(1, len(cand["cit_stems"]))
+                            def_overlap = len(cand["def_stems"] & resp_stems) >= min(1, len(cand["def_stems"]))
+                            if auth_match and cit_overlap and def_overlap:
+                                matched_grounding = True
+                                break
+
+                        if matched_grounding:
+                            literary_grounded_count += 1
+                        else:
+                            unattested_literary.append(
+                                f"{shard_path.name}:{line_no} '{target_p}' (author/quote/def grounding mismatch)"
+                            )
 
                     # Corpus-wide quote invariants (Findings 1, 2, 5)
                     quotes = re.findall(r"«([^»]+)»", resp)

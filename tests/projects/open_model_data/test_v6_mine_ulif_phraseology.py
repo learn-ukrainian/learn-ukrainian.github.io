@@ -44,6 +44,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     audit_zero_train_eval_leakage,
     clean_raw_html_and_tags,
     clean_stress_marks,
+    extract_clean_definition_and_labels,
     extract_quote_for_author,
     generate_dpo_dataset,
     generate_evaluation_benchmark,
@@ -571,12 +572,21 @@ def test_verify_receipt_invariants_real_checks():
         sft_dir.mkdir()
         dpo_dir.mkdir()
 
-        # Valid SFT shard
+        # Valid SFT shard with authentic literary grounding (Finding 3)
         sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
         valid_row = {
             "task_type": "idiom_interpretation_literary",
-            "target_phrase": "брати гору",
-            "final_response": "<thought>Аналізую фразеологізм «брати гору» за академічним фразеологічним словником.</thought>\n\nНормативний вираз: **«брати гору»**.",
+            "target_phrase": "байдики бити",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту «байдики бити».\n"
+                "Метафоричне значення базується на переносному вживанні: Не працювати; ледарювати.\n"
+                "Стилістичний регістр висловлювання: розмовний.\n"
+                "Контекст ілюструється класичним слововживанням (А. Головко).\n</thought>\n\n"
+                "Український фразеологізм **«байдики бити»** позначає: Не працювати; ледарювати.\n\n"
+                "**Стилістичний регістр:** розмовний.\n\n"
+                "**Зразок уживання в художній літературі (А. Головко):**\n"
+                "«Сам батько пильно стежив за Артемовою наукою.. Щоправда, влітку байдики бити синові не давав, і був Артем за підпасича у громадського чабана діда Мокія»"
+            ),
         }
         sft_shard.write_text(json.dumps(valid_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -588,7 +598,7 @@ def test_verify_receipt_invariants_real_checks():
         }
         dpo_shard.write_text(json.dumps(dpo_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
-        eval_records = [{"target_idiom": "брати гору"}]
+        eval_records = [{"target_idiom": "яблуко розбрату"}]
         res = verify_receipt_invariants(
             eval_records=eval_records,
             sft_dir=sft_dir,
@@ -1326,3 +1336,150 @@ def test_load_ulif_phraseology_excludes_non_ok_entries(tmp_path: Path) -> None:
     assert any(s.headword in ("яблуко", "я́блуко") for s in synonyms)
     assert not any(s.headword in ("помилка", "поми́лка") for s in synonyms)
     assert not any(p.idiom == "груба помилка" for p in phraseology)
+
+
+def test_ulif_phraseology_bound_author_quote_matching(tmp_path: Path) -> None:
+    """Codex R1 Finding 1: Ensure each quote receives its own bound author attribution."""
+    db_path = tmp_path / "test_ulif_authors.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Entry with two quotes: First from non-held-out author (Є. Гребінка), second from held-out author (М. Стельмах)
+    raw_html = (
+        "<p><b>хай йому аби́що. </b>Уживається для вираження байдужості. "
+        "<i>От то було б...— але нехай йому абищо, аби хліб був</i> (Є. Гребінка). "
+        "<i>Та хай йому абищо! Добре, що не в одній хаті живемо з ним</i> (М. Стельмах).</p>"
+    )
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'абищо', 'аби́що', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_html, "citations": ["Є. Гребінка", "М. Стельмах"]}),),
+    )
+    conn.commit()
+    conn.close()
+
+    phraseology, _ = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(phraseology) == 1
+    unit = phraseology[0]
+    # Unit prioritizes the held-out quote and binds the exact author
+    assert unit.is_held_out is True
+    assert unit.author == "Михайло Стельмах" or unit.author == "М. Стельмах"
+    assert "Та хай йому абищо!" in unit.citation_text
+    assert "Є. Гребінка" not in unit.author
+
+
+def test_ulif_phraseology_clean_definition_no_quotation_text(tmp_path: Path) -> None:
+    """Codex R1 Finding 2: HTML extraction must not contaminate definitions with quotation text or dialogue markers."""
+    db_path = tmp_path / "test_ulif_def.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Entry with introductory clause 'Пояснив [Лаврін Тесля]:' before quotation
+    raw_html = (
+        "<p><b>абсолю́тний нуль. </b>Нікчемна і непотрібна людина. "
+        "<i>Пояснив </i>[Лаврін Тесля]<i>:</i> "
+        "<i>— Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе</i> (Л. Дмитерко).</p>"
+    )
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'нуль', 'нуль', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_html, "citations": ["Л. Дмитерко"]}),),
+    )
+    conn.commit()
+    conn.close()
+
+    phraseology, _ = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(phraseology) == 1
+    unit = phraseology[0]
+    assert unit.definition == "Нікчемна і непотрібна людина."
+    assert "Пояснив" not in unit.definition
+    assert "Тесля" not in unit.definition
+    assert unit.citation_text == "— Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе"
+    assert unit.author == "Л. Дмитерко"
+
+
+@requires_sources
+def test_verify_receipt_invariants_grounding_rejects_fabricated_content():
+    """Codex R1 Finding 3: Grounding invariant must reject attested idioms paired with fabricated quotes or authors."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        # Attested idiom 'байдики бити', but with fabricated definition, quote, and author
+        sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
+        fake_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "байдики бити",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту «байдики бити».\n"
+                "Метафоричне значення: вигаданий синтетичний коментар.\n"
+                "Контекст ілюструється класичним слововживанням (Штучний Письменник).\n</thought>\n\n"
+                "Український фразеологізм **«байдики бити»** позначає: вигадане значення робота.\n\n"
+                "**Стилістичний регістр:** розмовний.\n\n"
+                "**Зразок уживання в художній літературі (Штучний Письменник):**\n"
+                "«Це вигадана цитата, яка ніколи не існувала в класичній літературі про байдики бити.»"
+            ),
+        }
+        sft_shard.write_text(json.dumps(fake_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_shard.write_text(json.dumps({
+            "chosen": "<thought>Обґрунтування норми.</thought>\n\nПравильно казати: **«брати участь»**.",
+            "rejected": "<thought>Помилкова думка.</thought>\n\nНеправильно.",
+        }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=DEFAULT_SOURCES_DB,
+            )
+
+
+def test_extract_clean_definition_and_labels_iterative_cleanup():
+    """Codex R1 Finding 4: Iterative label and valency cleanup leaves no metadata in gloss."""
+    # Case 1: агнець Божий
+    raw_1 = "несхв. Безвольна, покірлива, розумово обмежена людина."
+    def_1, _reg_1 = extract_clean_definition_and_labels(raw_1)
+    assert def_1 == "Безвольна, покірлива, розумово обмежена людина."
+    assert "несхв" not in def_1
+
+    # Case 2: не за адресою
+    raw_2 = "перев. зі сл. звертатися. Не до того, до кого треба; не туди, куди слід."
+    def_2, _reg_2 = extract_clean_definition_and_labels(raw_2)
+    assert def_2 == "Не до того, до кого треба; не туди, куди слід."
+    assert "звертатися" not in def_2
+    assert "зі сл" not in def_2
