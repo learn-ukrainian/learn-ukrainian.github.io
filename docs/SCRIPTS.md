@@ -924,6 +924,11 @@ thresholds.
 is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
 arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
 is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
+A dispatcher started without `XDG_RUNTIME_DIR` (a headless shell, or a worker's sanitized
+environment) still reaches the user manager: `systemd-run` and the probe get
+`XDG_RUNTIME_DIR=/run/user/<uid>` and its `bus` socket when that directory is the
+caller's own and the socket exists. The worker never receives them. `launch_user_bus`
+records `caller`, `derived` (with the variable names), or `unavailable` (with the reason).
 Fallback is the supported path when no user manager is reachable, linger is off, cgroup
 v2 memory is not delegated, or the slice is missing or does not have those limits:
 dispatch prints one warning and uses plain `Popen`. The same fallback is used when

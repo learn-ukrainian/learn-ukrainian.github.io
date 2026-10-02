@@ -28,7 +28,9 @@ import json
 import logging
 import os
 import re
+import socket
 import subprocess
+import time
 import urllib.error
 import urllib.request
 from collections.abc import Mapping
@@ -105,6 +107,25 @@ _MODEL_ID_KEYS = ("id", "modelId", "model_id", "name")
 # tool_config key delegate sets only after admitting a Cursor Auto dispatch as a
 # well-defined coding task (operator decision 2026-09-30, #9274).
 CURSOR_AUTO_ADMITTED_KEY = "cursor_auto_admitted"
+
+# The ``--workspace`` value, kept on the plan for ``cleanup_invocation``.
+_META_WORKSPACE = "cursor_workspace"
+
+# cursor-agent (checked in 2026.09.26, 2026.09.28 and 2026.10.01) starts
+# ``<node> <index.js> worker-server`` for codebase indexing and the TypeScript
+# language server. It spawns it per workspace with ``cwd`` set to the
+# ``--workspace`` path, ``detached: false`` (so inside the CLI's own process
+# group) and ``AGENT_CLI_SOCKET_PATH`` set to a socket derived from that
+# path. It is not shared across workspaces, and it is not stopped when the
+# CLI exits: it exits on its own 300 s after its last request, or when it is
+# sent ``POST /kill`` on that socket. A run shorter than that leaves it alive
+# for the dispatch's exit scan, which rightly counts it as a leftover of the
+# run (#9534). A dispatch worktree belongs to one task, so the server whose
+# ``cwd`` is this run's workspace is this run's.
+_WORKER_SERVER_ARG = "worker-server"
+_WORKER_SOCKET_ENV = b"AGENT_CLI_SOCKET_PATH"
+_WORKER_STOP_TIMEOUT_S = 3.0
+_WORKER_STOP_POLL_S = 0.05
 
 
 def _effective_cursor_mode(mode: str, config: dict) -> str | None:
@@ -315,10 +336,17 @@ class CursorAdapter:
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model_known": "false",
-                }
+                },
+                _META_WORKSPACE: workspace,
             },
             host_harness="cursor-headless",
         )
+
+    def cleanup_invocation(self, plan: InvocationPlan) -> None:
+        """Stop the worker server this invocation's CLI left for its workspace (#9534)."""
+        workspace = plan.metadata.get(_META_WORKSPACE)
+        if isinstance(workspace, str) and workspace:
+            stop_cursor_worker_servers(Path(workspace))
 
     def _should_approve_mcps(self, config: dict, *, default: bool) -> bool:
         if config.get("approve_mcps") is False:
@@ -587,6 +615,109 @@ class CursorAdapter:
         """Cursor writes to stdout; no separate liveness files."""
         _ = plan
         return ()
+
+
+class _UnixHTTPConnection(http.client.HTTPConnection):
+    """HTTP over the Unix socket the worker server listens on."""
+
+    def __init__(self, socket_path: str, *, timeout: float) -> None:
+        super().__init__("localhost", timeout=timeout)
+        self._socket_path = socket_path
+
+    def connect(self) -> None:
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(self.timeout)
+        try:
+            sock.connect(self._socket_path)
+        except OSError:
+            sock.close()
+            raise
+        self.sock = sock
+
+
+def _proc_start(entry: Path) -> tuple[str, int] | None:
+    """``(state, start ticks)`` from ``/proc/<pid>/stat``; ``None`` when it is gone."""
+    try:
+        text = (entry / "stat").read_text(encoding="ascii", errors="replace")
+    except OSError:
+        return None
+    fields = text[text.rfind(")") + 2 :].split()
+    try:
+        return fields[0], int(fields[19])
+    except (IndexError, ValueError):
+        return None
+
+
+def find_cursor_worker_servers(workspace: Path, *, proc_root: Path = Path("/proc")) -> list[tuple[int, int, str]]:
+    """``(pid, start ticks, socket path)`` of this uid's Cursor worker servers for ``workspace``.
+
+    A worker server is a process whose last argument is ``worker-server``,
+    whose environment has ``AGENT_CLI_SOCKET_PATH`` and whose ``cwd`` is the
+    workspace. Processes that cannot be read are skipped.
+    """
+    try:
+        target = workspace.resolve()
+        entries = [entry for entry in proc_root.iterdir() if entry.name.isdigit()]
+    except OSError:
+        return []
+    uid = os.getuid()
+    found: list[tuple[int, int, str]] = []
+    for entry in entries:
+        try:
+            if entry.stat().st_uid != uid:
+                continue
+            argv = (entry / "cmdline").read_bytes().rstrip(b"\0").split(b"\0")
+            if argv[-1] != _WORKER_SERVER_ARG.encode():
+                continue
+            if Path(os.readlink(entry / "cwd")) != target:
+                continue
+            environ = (entry / "environ").read_bytes().split(b"\0")
+        except OSError:
+            continue
+        prefix = _WORKER_SOCKET_ENV + b"="
+        socket_path = next((item[len(prefix) :] for item in environ if item.startswith(prefix)), b"")
+        start = _proc_start(entry)
+        if socket_path and start is not None and start[0] != "Z":
+            found.append((int(entry.name), start[1], os.fsdecode(socket_path)))
+    return found
+
+
+def stop_cursor_worker_servers(
+    workspace: Path,
+    *,
+    proc_root: Path = Path("/proc"),
+    timeout_s: float = _WORKER_STOP_TIMEOUT_S,
+) -> dict[int, bool]:
+    """Ask each worker server of ``workspace`` to exit through its own ``POST /kill``.
+
+    Returns whether each one found has exited within ``timeout_s``. Nothing
+    is signalled: a server that does not answer is left running, and the
+    dispatch exit scan still reports it.
+    """
+    results: dict[int, bool] = {}
+    for pid, start_ticks, socket_path in find_cursor_worker_servers(workspace, proc_root=proc_root):
+        conn = _UnixHTTPConnection(socket_path, timeout=timeout_s)
+        try:
+            conn.request("POST", "/kill", headers={"Connection": "close", "Content-Length": "0"})
+            conn.getresponse().read()
+        except (OSError, http.client.HTTPException) as exc:
+            _logger.warning("cursor worker server pid=%s did not accept /kill: %s", pid, exc)
+            results[pid] = False
+            continue
+        finally:
+            conn.close()
+        entry = proc_root / str(pid)
+        deadline = time.monotonic() + timeout_s
+        while True:
+            current = _proc_start(entry)
+            exited = current is None or current[0] == "Z" or current[1] != start_ticks
+            if exited or time.monotonic() >= deadline:
+                break
+            time.sleep(_WORKER_STOP_POLL_S)
+        if not exited:
+            _logger.warning("cursor worker server pid=%s still running %.1fs after /kill", pid, timeout_s)
+        results[pid] = exited
+    return results
 
 
 def _extract_response_from_events(events: list[dict]) -> str:
