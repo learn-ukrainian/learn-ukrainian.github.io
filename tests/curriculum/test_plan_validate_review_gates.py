@@ -959,15 +959,46 @@ CASES = [
         says=f"{NONA} 'нона', which no host (T-002) prints in spelling",
     ),
     Case(
-        "c26_targets_the_host_prints_pass_and_another_activity_is_skipped",
+        "c26_targets_the_host_prints_pass_also_in_a_sentence_about_another_activity",
+        _comprehension_on_quote("он м а м а", f"Answer about {MAMA}. Inline b2 uses {MAMA}."),
+    ),
+    # A sentence naming another activity does not say whose items it is about, so an unhosted id there notes.
+    Case(
+        "c26_unhosted_id_in_a_sentence_about_another_activity_is_a_note",
         _comprehension_on_quote("он м а м а", f"Answer about {MAMA}. Inline b2 uses {MANA}."),
+        notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
+        says=f"names {MANA} 'мана' in «Inline b2 uses {MANA}» (the sentence names activity b2), which no host",
     ),
     # Exclusion wording in prose does not say which id it excludes, so an unhosted id there notes, never vanishes.
     Case(
         "c26_unhosted_target_in_an_excluding_sentence_is_a_note",
         _comprehension_on_quote("он мама", f"Asks about {NONA} and do not give hints."),
         notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
-        says=f"names {NONA} 'нона' in «Asks about {NONA} and do not give hints», which no host (T-002) prints",
+        says=(
+            f"names {NONA} 'нона' in «Asks about {NONA} and do not give hints» (the sentence says something is "
+            "excluded), which no host (T-002) prints"
+        ),
+    ),
+    # round 10 of the cross-family review (#9487): the reviewer's fixtures, which passed silently.
+    Case(
+        "c26_excluding_sentence_naming_another_activity_is_a_note",
+        _comprehension_on_quote("он мама", f"This b4 asks about {NONA} and do not give hints as in b2."),
+        notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
+        says=(
+            f"in «This b4 asks about {NONA} and do not give hints as in b2» (the sentence says something is "
+            "excluded and names activity b2)"
+        ),
+    ),
+    Case(
+        "c26_plain_sentence_naming_another_activity_is_a_note",
+        _comprehension_on_quote("он мама", f"This b4 asks about {NONA} as in b2."),
+        notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
+        says=f"names {NONA} 'нона' in «This b4 asks about {NONA} as in b2» (the sentence names activity b2)",
+    ),
+    Case(
+        "c26_target_also_in_a_plain_sentence_fails_over_a_sentence_about_another_activity",
+        _comprehension_on_quote("он мама", f"This b4 asks about {NONA} as in b2. Answer about {NONA}."),
+        failures=frozenset({codes.COMPREHENSION_TARGET_NOT_IN_HOST}),
     ),
     Case(
         "c26_same_target_in_a_plain_sentence_fails",
@@ -1344,8 +1375,65 @@ def test_prose_targets_and_options_are_notes_with_their_span(
 
 def test_evidence_span_is_the_sentence_holding_the_token() -> None:
     text = f"Score {MAMA}.  Do not   score {NONA} here; it is introduced in s2."
-    assert review_gates._span(text, NONA) == f"«Do not score {NONA} here;»"
-    assert review_gates._span(text, MAMA) == f"«Score {MAMA}.»"
+    assert review_gates._span(text, NONA, review_gates._WORD_ID) == f"«Do not score {NONA} here;»"
+    assert review_gates._span(text, MAMA, review_gates._WORD_ID) == f"«Score {MAMA}.»"
+
+
+# round 10 of the cross-family review (#9487): a span is the sentence where the id or word occurs whole.
+@pytest.mark.parametrize(
+    ("token", "span"),
+    [("W-20", "«Then W-20.»"), ("W-201", "«Checks W-201.»"), ("W-2010", "«Do not score W-2010 here.»")],
+)
+def test_evidence_span_matches_whole_ids(token: str, span: str) -> None:
+    text = "Do not score W-2010 here. Checks W-201. Then W-20."
+    assert review_gates._span(text, token, review_gates._WORD_ID) == span
+
+
+def test_evidence_span_matches_whole_words() -> None:
+    text = "The options are мама and мана. Then ма."
+    assert review_gates._span(text, "ма", review_gates._ROW_TOKEN) == "«Then ма.»"
+
+
+def test_c1_note_quotes_the_sentence_of_its_own_id(tmp_path: Path) -> None:
+    longer = "W-2010"
+    report = run(tmp_path, _all(_word(longer, "нон"), _focus(1, "a1", f"Do not score {longer} here. Checks {MAMA}.")))
+    later = [o.message for o in report.notes if o.code == codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED]
+    assert any(f"{MAMA} (introduced by step s2) in «Checks {MAMA}.»" in message for message in later), (
+        report.render_text()
+    )
+    assert not any(f"{MAMA} (introduced by step s2) in «Do not" in message for message in later), report.render_text()
+
+
+def test_c15_display_directive_reads_each_id_whole() -> None:
+    step = {"teach": "Recall T-0010, then show T-001."}
+    shown, _recalled = review_gates._displays(step, {"T-001", "T-0010"}, {})
+    assert shown == {"T-001"}
+
+
+# Every W-id of a comprehension focus on an exact host ends in exactly one outcome: hosted or modelled -> nothing;
+# named in a plain sentence and unhosted -> comprehension_target_not_in_host; named only in an ambiguous sentence
+# (excluding, or naming another activity) and unhosted -> comprehension_target_unverified.
+C26_SENTENCES = {
+    "plain": "Answer about {id}.",
+    "excluding": "Asks about {id} and do not give hints.",
+    "sibling": "This b4 asks about {id} as in b2.",
+    "both": "This b4 asks about {id} and do not give hints as in b2.",
+}
+
+
+@pytest.mark.parametrize("hosted", [True, False], ids=["hosted", "unhosted"])
+@pytest.mark.parametrize(
+    "kinds", [*([kind] for kind in C26_SENTENCES), ["plain", "sibling"], ["excluding", "sibling"]], ids="+".join
+)
+def test_c26_every_focus_id_ends_in_exactly_one_outcome(tmp_path: Path, hosted: bool, kinds: list[str]) -> None:
+    item = MAMA if hosted else NONA
+    focus = " ".join(C26_SENTENCES[kind].format(id=item) for kind in kinds)
+    report = run(tmp_path, _comprehension_on_quote("он мама", focus))
+    failed = [o for o in report.failures if o.code == codes.COMPREHENSION_TARGET_NOT_IN_HOST and item in o.message]
+    noted = [o for o in report.notes if o.code == codes.COMPREHENSION_TARGET_UNVERIFIED and item in o.message]
+    outcome = {(0, 0): "nothing", (1, 0): "failure", (0, 1): "note"}.get((len(failed), len(noted)), "several")
+    expected = "nothing" if hosted else "failure" if "plain" in kinds else "note"
+    assert outcome == expected, report.render_text()
 
 
 @pytest.mark.parametrize(

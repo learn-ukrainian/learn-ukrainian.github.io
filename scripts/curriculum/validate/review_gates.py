@@ -374,9 +374,12 @@ def _initial_sound(word: str) -> str | None:
     return None
 
 
-def _span(text: str, token: str) -> str:
-    """The evidence span of a prose-read finding: the sentence of text holding token, quoted («…»)."""
-    sentence = next((part for part in _SPAN_BREAK.split(text) if token in part), text)
+def _span(text: str, token: str, pattern: re.Pattern[str]) -> str:
+    """The evidence span of a prose-read finding: the sentence of text holding token, quoted («…»).
+
+    The sentence is the one where pattern (the pattern that found token) matches token whole, never as a substring:
+    W-201 is not found inside W-2010, nor ма inside мама."""
+    sentence = next((part for part in _SPAN_BREAK.split(text) if token in pattern.findall(part)), text)
     return f"«{_normalized(sentence)}»"
 
 
@@ -487,7 +490,10 @@ def _displays(step: dict, displayable: set[str], printed: dict[str, set[str]]) -
         refs = [ref for ref in _ids(_DISPLAYABLE_ID, sentence) if ref in displayable]
         directive = _DISPLAY.search(sentence)
         if directive and not _NOT_DISPLAY.search(sentence):
-            shown |= {ref for ref in refs if sentence.index(ref) > directive.start()}
+            first: dict[str, int] = {}  # each id's first whole occurrence (T-01 is not found inside T-010)
+            for match in _DISPLAYABLE_ID.finditer(sentence):
+                first.setdefault(match.group(0), match.start())
+            shown |= {ref for ref in refs if first[ref] > directive.start()}
         if _RECALL.search(sentence):
             recalled |= set(refs)
     for need in step.get("needs") or []:
@@ -570,7 +576,8 @@ class ReviewGates(Gates):
                     if item in introduced_at:
                         if introduced_at[item] > position:
                             later.append(
-                                f"{item} (introduced by step {steps[introduced_at[item]]['id']}) in {_span(text, item)}"
+                                f"{item} (introduced by step {steps[introduced_at[item]]['id']}) in "
+                                f"{_span(text, item, _WORD_ID)}"
                             )
                         continue
                     if allowed is None:
@@ -578,7 +585,7 @@ class ReviewGates(Gates):
                         if allowed is None:
                             return
                     if item not in allowed:
-                        unknown.append(f"{item} in {_span(text, item)}")
+                        unknown.append(f"{item} in {_span(text, item, _WORD_ID)}")
                 step_id = steps[position]["id"]
                 if later:
                     self.note(
@@ -1272,7 +1279,7 @@ class ReviewGates(Gates):
                     self.note(
                         codes.CHOICE_OPTION_UNVERIFIED,
                         f"{activity['type']} activity {activity['id']} focus names "
-                        f"{'; '.join(f'{self._needs([word], taught)} in {_span(focus, word)}' for word in words)}: "
+                        f"{'; '.join(f'{self._needs([word], taught)} in {_span(focus, word, _ROW_TOKEN)}' for word in words)}: "
                         f"letters not taught through lesson {lesson['n']}, and no recording the lesson cites models "
                         "the word; the plan has no option field and the focus is prose, so whether the learner sees "
                         "the word as an option or key is not read from it, and the plan review confirms no printed "
@@ -1642,39 +1649,44 @@ class ReviewGates(Gates):
                 }
                 others = {item["id"] for item in lesson.get("activities") or []} - {activity["id"]}
                 modelled = self._modelled([ref for kind, ref in hosts if kind == "video"])
-                # A sentence about another activity is skipped. Exclusion language in prose does not say which
-                # of its ids it excludes ("Asks about W-201 and do not give hints."), so those ids only note.
+                # Every id of the focus is a target, a note or hosted; none vanishes. Prose does not say which of
+                # its ids an excluding sentence excludes ("Asks about W-201 and do not give hints.") or whose items a
+                # sentence naming another activity is about ("This b4 asks about W-203 as in b2."), so the ids of
+                # such an ambiguous sentence only note.
                 targets: list[str] = []
-                excluded: dict[str, str] = {}
+                ambiguous: dict[str, tuple[str, str]] = {}  # id -> (its first ambiguous sentence, why ambiguous)
                 for sentence in _SENTENCE_BREAK.split(focus):
-                    if others & set(_ids(_ACTIVITY_REF, sentence)):
-                        continue
+                    why = []
+                    if _EXCLUDING.search(sentence):
+                        why.append("says something is excluded")
+                    if named := [ref for ref in _ids(_ACTIVITY_REF, sentence) if ref in others]:
+                        why.append(f"names activity {', '.join(named)}")
                     for item in _ids(_WORD_ID, sentence):
-                        if _EXCLUDING.search(sentence):
-                            excluded.setdefault(item, sentence)
+                        if why:
+                            ambiguous.setdefault(item, (sentence, " and ".join(why)))
                         else:
                             targets.append(item)
 
                 unhosted = {
                     item: f"{item} {record.lemma!r}"
-                    for item in dict.fromkeys([*targets, *excluded])
+                    for item in dict.fromkeys([*targets, *ambiguous])
                     if (record := self.store.records.get(item)) is not None
                     and item not in modelled
                     and not {_spelling(text) for text in (record.lemma, *record.form_texts)} & printed
                 }
                 where = ", ".join(ref for _kind, ref in hosts)
                 unverified = [
-                    f"{unhosted[item]} in {_span(sentence, item)}"
-                    for item, sentence in excluded.items()
+                    f"{unhosted[item]} in {_span(sentence, item, _WORD_ID)} (the sentence {why})"
+                    for item, (sentence, why) in ambiguous.items()
                     if item not in targets and item in unhosted
                 ]
                 if unverified:
                     self.note(
                         codes.COMPREHENSION_TARGET_UNVERIFIED,
                         f"comprehension activity {activity['id']} names {'; '.join(unverified)}, which no host "
-                        f"({where}) prints or models; the sentence says something is excluded and is prose, so whether "
-                        "it excludes the word is not read from it, and the plan review confirms every word the items "
-                        "ask about is in the host (#9487 C26)",
+                        f"({where}) prints or models; the sentence is prose, so whether this activity's items ask "
+                        "about the word is not read from it, and the plan review confirms every word the items ask "
+                        "about is in the host (#9487 C26)",
                         lesson["n"],
                     )
                 missing = [unhosted[item] for item in dict.fromkeys(targets) if item in unhosted]
