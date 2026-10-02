@@ -773,11 +773,10 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
                                  process=process)
     ranked = sorted((c for c in candidates.values() if c.path not in seen), key=rank_key)
     pool = ranked[:max(RERANK_POOL, 3 * limit)]
-    if status_question:
-        # The record of a lifecycle lives in the files that speak for a family or directory (a
-        # decision index, an ADR index, a README): their lines are always read for a status
-        # question, so a registry row naming the thing is found however weak its word evidence.
-        pool += [c for c in ranked[len(pool):] if c.authority and c.in_content]
+    # The files that speak for a family or directory (an entry point, a decision or ADR index, a
+    # README) are always read: what they say about their subject (a registry row, a status line, a
+    # passage) is found however weak its word evidence, whatever the ``limit``.
+    pool += [c for c in ranked[len(pool):] if c.authority and c.in_content]
     tick = time.monotonic()
     excerpts_complete = _read_lines(state, [c for c in pool if c.in_content], terms, text, phrase, deadline)
     timings['excerpts_ms'] = round((time.monotonic() - tick) * 1000)

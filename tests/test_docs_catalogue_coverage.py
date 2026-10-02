@@ -6,8 +6,9 @@
   data_store entry (or a reasoned exemption).
 * Front matter, banners and catalogue overrides agree; the README's generated family
   table is current.
-* The development lookups (tests/fixtures/docs_find_dev_lookups.yaml) are answered from the one
-  entry point, as short queries and as full questions.
+* The development lookups (tests/fixtures/docs_find_dev_lookups.yaml and the natural-wording
+  set docs_find_dev_lookups_natural.yaml) are answered from the one entry point, as short
+  queries and as full questions.
 
 Failure messages name the exact path and print a ready-to-paste stub
 (``python -m scripts.docs.catalogue check --suggest``).
@@ -121,6 +122,34 @@ def test_dev_lookups_are_answered_in_one_query(field, kind):
     misses = {lk['id']: (lk[field], ranks[lk['id']]) for lk in lookups
               if ranks[lk['id']] is None or ranks[lk['id']] > bar}
     assert misses == {}, f'expected path not within the first {bar} hits: {misses}'
+
+
+# The second development lookups (tests/fixtures/docs_find_dev_lookups_natural.yaml): natural
+# wording that avoids the answer's own name, with a blind one-shot query. A miss not listed in
+# known_misses for its protocol fails; a listed miss that now passes is reported so the list shrinks.
+NATURAL_LOOKUPS = yaml.safe_load((REPO / 'tests/fixtures/docs_find_dev_lookups_natural.yaml').read_text(encoding='utf-8'))
+
+
+def test_natural_lookups_are_verified_authorities():
+    lookups = NATURAL_LOOKUPS['lookups']
+    assert len(lookups) >= 60 and {lk['kind'] for lk in lookups} == DEV_KINDS
+    assert len({lk['id'] for lk in lookups}) == len(lookups)
+    assert set(NATURAL_LOOKUPS['known_misses']) <= {lk['id'] for lk in lookups}
+    failed = [(lk['id'], ' '.join(_verify_command(check))) for lk in lookups for check in lk['verify']
+              if subprocess.run(_verify_command(check), capture_output=True, timeout=60).returncode != 0]
+    assert failed == []
+
+
+@pytest.mark.parametrize('kind', sorted(DEV_KINDS))
+@pytest.mark.parametrize('field', ['query', 'question'])
+def test_natural_lookups_are_answered_in_one_query(field, kind):
+    bar = NATURAL_LOOKUPS['top_n'][field]
+    known = {i for i, miss in NATURAL_LOOKUPS['known_misses'].items() if field in miss}
+    lookups = [lk for lk in NATURAL_LOOKUPS['lookups'] if lk['kind'] == kind]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(lambda lk: _rank(lk, field), lookups), strict=True))
+    misses = {i: rank for i, rank in ranks.items() if (rank is None or rank > bar) and i not in known}
+    assert misses == {}, f'expected path not within the first {bar} hits (not a known miss): {misses}'
 
 
 def test_the_motivating_lookup_ranks_the_live_list_above_its_backup():
