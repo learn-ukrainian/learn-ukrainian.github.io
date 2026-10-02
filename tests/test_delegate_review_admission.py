@@ -15,7 +15,7 @@ from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resol
 from scripts.review import reviewer_resolver
 
 
-def _args(*extra):
+def _args(*extra, verdict=True):
     return delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -27,7 +27,7 @@ def _args(*extra):
             "review-9272",
             "--mode",
             "read-only",
-            "--require-review-verdict",
+            *(("--require-review-verdict",) if verdict else ()),
             "--prompt",
             "Review the branch.",
             *extra,
@@ -335,9 +335,23 @@ HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol,
 @pytest.mark.parametrize(
     "flags", [(), ("--check-budget",), ("--force-agent",), ("--check-budget", "--force-agent")]
 )
-def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(monkeypatch, capsys, seat, model, author, expected, flags):
-    """#9538: delegate admission, including --force-agent, applies the high-risk reviewer rule."""
-    args = _args("--agent", seat, "--model", model, "--review-author-model", author, "--review-risk", "high", *flags)
+@pytest.mark.parametrize(
+    "typing",
+    [
+        pytest.param(("--require-review-verdict",), id="verdict"),
+        pytest.param(("--review-profile", "code"), id="profile-only"),
+        pytest.param((), id="author-and-risk-only"),
+    ],
+)
+def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(
+    monkeypatch, capsys, seat, model, author, expected, flags, typing
+):
+    """#9538: every review-typed dispatch, not only a verdict-gated one, applies the high-risk reviewer rule."""
+    args = _args(
+        "--agent", seat, "--model", model, "--review-author-model", author, "--review-risk", "high",
+        *typing, *flags, verdict=False,
+    )
+    assert delegate._dispatch_is_review_typed(args)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None
     assert (target.recipient, target.model) == expected
@@ -357,8 +371,11 @@ def test_medium_risk_review_keeps_the_requested_sonnet_seat(monkeypatch, capsys,
     assert routing.substitution is None
 
 
-def test_high_risk_review_without_an_author_refuses_with_the_rule(monkeypatch):
-    args = _args("--agent", "claude", "--model", "claude-sonnet-5-5", "--review-risk", "high", "--force-agent")
+@pytest.mark.parametrize("verdict", [True, False])
+def test_high_risk_review_without_an_author_refuses_with_the_rule(monkeypatch, verdict):
+    args = _args(
+        "--agent", "claude", "--model", "claude-sonnet-5-5", "--review-risk", "high", "--force-agent", verdict=verdict
+    )
     (refusal, target), _ = _admit(args, monkeypatch)
     assert target is None
     assert refusal and "REVIEW_ROUTE_REFUSED: requested reviewer is ineligible" in refusal
@@ -767,3 +784,38 @@ def test_review_substitution_disabled_with_trusted_inputs_via_admit(monkeypatch,
     assert routing.substitution is None
     err = capsys.readouterr().err.strip()
     assert err == "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer."
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        pytest.param(("--review-profile", "code"), id="profile"),
+        pytest.param(("--review-author-model", "gpt-6.1-sol"), id="author"),
+        pytest.param(("--review-risk", "medium"), id="risk"),
+    ],
+)
+def test_review_flags_type_a_dispatch_without_the_verdict_flag(extra):
+    """#9538: review typing never depends on --require-review-verdict."""
+    assert not delegate._dispatch_is_review_typed(_args(verdict=False))
+    assert delegate._dispatch_is_review_typed(_args(*extra, verdict=False))
+
+
+@pytest.mark.parametrize("seat,model", [("kimi", None), ("agy", "gemini-3.8-flash-high")])
+def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_code(monkeypatch, seat, model):
+    """#9538: a code-review dispatch without trusted inputs still passes reviewer admission."""
+    pin = ("--model", model) if model else ()
+    args = _args("--agent", seat, *pin, "--review-profile", "code", "--force-agent", verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert target is None
+    assert refusal
+
+
+def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_seat(monkeypatch):
+    """Medium risk is unchanged: the practical ladder still admits Sonnet without the verdict flag."""
+    args = _args(
+        "--agent", "claude", "--model", "claude-sonnet-5-5", "--review-profile", "code",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", "medium", "--force-agent", verdict=False,
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert refusal is None and (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
+    assert routing.substitution is None

@@ -38,6 +38,11 @@ def test_model_assignment_routing_table_excludes_deepseek_and_retired_pro_pins()
     assert coding[3].strip() == "grok"
     assert coding[4].strip().endswith("retired Pro pins are historical only")
     assert review[2].strip().endswith("GLM-5.3 · pool **`laguna-s-2.1`**")
+    # #9538: high risk names only Sol and Opus and defers to the single admission rule.
+    high, practical = review[2].split("**medium/low formal CF defaults:**")
+    assert high.strip().startswith("**high:** only `gpt-6.1-sol` or `claude-opus-5-5`")
+    assert "#9538" in high and "sonnet" not in high.lower() and "laguna" not in high.lower()
+    assert "high/medium/low" not in review[2] and "claude-sonnet-5-5" in practical
     assert review[3].strip() == "**second dissent / volume:** Pool S 2.1"
     assert review[4].strip().endswith(
         "DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired"
