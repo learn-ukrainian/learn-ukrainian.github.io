@@ -14,7 +14,13 @@ from collections.abc import Callable
 
 # The sibling module is also imported from deployed, read-only hook trees.
 sys.dont_write_bytecode = True
-from shell_shlex import preprocess_shell_command
+from shell_shlex import (
+    _quote_after,
+    collapse_line_continuations,
+    preprocess_shell_command,
+    skippable_heredoc_delimiters,
+    strip_shell_comments,
+)
 
 # Longest redirect spellings come first; `>&` is one operator, not `>` then `&`.
 _REDIRECT_OPERATOR = re.compile(r"&>>?|<<<|<<-?|[<>]&|<>|>\||>>?|<")
@@ -132,8 +138,8 @@ def unmodeled_shell_offset(line: str) -> int | None:
 
     This is a lexical tripwire, not a case/parameter grammar: an unquoted
     command-word `case`, or any parenthesis in an active ${...}, refuses the
-    remaining logical line. Call after shared preprocessing (including heredocs).
-    Return the word's start so quoted parameter words remain intact when split.
+    entire command. Call after shared preprocessing (including heredocs).
+    The offset is diagnostic only: never split the command at this position.
     """
     command_word = True
     redirect_operand = False
@@ -165,7 +171,13 @@ def unmodeled_shell_offset(line: str) -> int | None:
         ch = line[i]
         if not word:
             word_start = i
+        if ch == "`" and quote != "'":
+            # Complete backticks were exposed by preprocessing; any active
+            # one remaining is unterminated and cannot establish a repository.
+            return word_start
         if ch == "\\" and quote != "'":
+            if i + 1 == len(line):
+                return word_start
             word += line[i : i + 2]
             literal = False
             i += 2
@@ -195,6 +207,8 @@ def unmodeled_shell_offset(line: str) -> int | None:
                 elif char == "}" and not inner_quote:
                     inner_quote = parameter_quotes.pop()
                 j += 1
+            if parameter_quotes:
+                return word_start
             word += line[i:j]
             literal = False
             i = j
@@ -217,7 +231,9 @@ def unmodeled_shell_offset(line: str) -> int | None:
             word += ch
             literal = False
         elif ch == "#" and not word:
-            break
+            end = line.find("\n", i)
+            i = len(line) if end < 0 else end
+            continue
         elif ch.isspace() or ch in "();|&<>":
             # A glued descriptor belongs to the redirect, not the command.
             redirect = _REDIRECT_OPERATOR.match(line, i)
@@ -229,7 +245,7 @@ def unmodeled_shell_offset(line: str) -> int | None:
                 redirect_operand = True
                 i = redirect.end()
                 continue
-            if ch in "();|&":
+            if ch == "\n" or ch in "();|&":
                 command_word = True
                 redirect_operand = False
                 if ch == "(":
@@ -239,7 +255,171 @@ def unmodeled_shell_offset(line: str) -> int | None:
         else:
             word += ch
         i += 1
-    return word_start if finish_word() else None
+    return word_start if finish_word() or quote or contexts else None
+
+
+def command_repository_unknown(command: str) -> bool:
+    """Classify the entire command independently of the cwd/scope reader.
+
+    Closed heredoc data is inert. An ambiguous or unterminated heredoc, quote,
+    expansion, or detector failure cannot establish a repository. The caller
+    must refuse branch operations throughout such a command, in any worktree.
+    """
+    try:
+        if unmodeled_shell_offset(preprocess_shell_command(command)) is not None:
+            return True
+        if "<<" not in command:
+            return False
+        lines = collapse_line_continuations(command).split("\n")
+        index = 0
+        quote = ""
+        while index < len(lines):
+            line = lines[index]
+            index += 1
+            opener = strip_shell_comments(line)
+            pending = skippable_heredoc_delimiters(opener, initial_quote=quote)
+            quote = _quote_after(opener, quote)
+            if pending is None:
+                return True
+            for delimiter, strip_tabs, _ in pending:
+                while index < len(lines):
+                    candidate = lines[index].lstrip("\t") if strip_tabs else lines[index]
+                    index += 1
+                    if candidate == delimiter:
+                        break
+                else:
+                    return True
+        return False
+    except Exception:
+        return True
+
+
+def unknown_repository_segments(command: str) -> list[list[str]]:
+    """Read branch-operation candidates without inferring any cwd or scope.
+
+    Quotes still distinguish data from commands. Executable substitutions get
+    their own argv stream, including inside double quotes; case arm parentheses
+    cannot end a substitution. These lexical contexts never establish a repo.
+    Only the branch guard uses this conservative whole-command path.
+    """
+    command = preprocess_shell_command(command)
+    # Preserve the established per-line visibility on malformed quotes and
+    # ambiguous heredocs as well. Both readers only collect operations here;
+    # neither reader's scope events can establish or restore repository trust.
+    segments = [
+        argv
+        for kind, argv in scope_events(
+            command,
+            mark_redirect_unreadable=True,
+            unreadable_marker="--__guard_unreadable__",
+            unparsed=["--__guard_unreadable__"],
+            may_match=lambda _: False,
+        )
+        if kind == "segment"
+    ]
+    argv: list[str] = []
+    word = ""
+    quote = ""
+    case_depth = 0
+    case_parens: list[int] = []
+    paren_depth = 0
+    contexts: list[tuple[str, str, list[str], int, int]] = []
+    i = 0
+
+    def finish_word() -> None:
+        nonlocal word, case_depth
+        if not word:
+            return
+        tokens = _tokenize(word)
+        command_prefix = all(
+            token in {"if", "elif", "while", "until", "then", "do", "else", "{", "!", "time", "-p"}
+            or re.match(r"[A-Za-z_][A-Za-z0-9_]*=", token)
+            for token in argv
+        )
+        if word == "case" and command_prefix:
+            case_depth += 1
+            case_parens.append(paren_depth)
+        elif word == "esac" and not argv and case_depth:
+            case_depth -= 1
+            case_parens.pop()
+        if word in {"if", "elif", "while", "until", "then", "do", "else"} and not argv:
+            word = ""
+            return
+        argv.extend(tokens if tokens is not None else ["--__guard_unreadable__"])
+        word = ""
+
+    def finish_segment() -> None:
+        nonlocal argv
+        finish_word()
+        if argv:
+            segments.append(argv)
+        argv = []
+
+    while i < len(command):
+        ch = command[i]
+        if ch == "\\" and quote != "'":
+            word += command[i : i + 2]
+            i += 2
+            continue
+        if quote != "'" and command.startswith("${", i):
+            # Parameter punctuation is opaque argument data, never a scope close.
+            end = i + 2
+            depth = 1
+            parameter_quote = ""
+            substitutions: list[int] = []
+            while end < len(command) and depth:
+                char = command[end]
+                if char == "\\":
+                    end += 2
+                    continue
+                if parameter_quote != "'" and command.startswith("$(", end):
+                    substitutions.append(end)
+                if char in "\"'" and (not parameter_quote or parameter_quote == char):
+                    parameter_quote = "" if parameter_quote else char
+                elif not parameter_quote:
+                    if command.startswith("${", end):
+                        depth += 1
+                        end += 2
+                        continue
+                    if char == "}":
+                        depth -= 1
+                end += 1
+            for start in substitutions:
+                segments.extend(unknown_repository_segments(command[start:end]))
+            word += command[i:end]
+            i = end
+            continue
+        if quote != "'" and command.startswith("$(", i):
+            contexts.append((quote, word + "$()", argv, case_depth, paren_depth))
+            quote, word, argv = "", "", []
+            i += 2
+            continue
+        if quote:
+            word += ch
+            if ch == quote:
+                quote = ""
+        elif ch in "\"'":
+            quote = ch
+            word += ch
+        elif ch in "();|&<>\n":
+            finish_segment()
+            if ch == "(":
+                paren_depth += 1
+            elif ch == ")":
+                if contexts and case_depth == contexts[-1][3] and paren_depth == contexts[-1][4]:
+                    quote, word, argv, case_depth, paren_depth = contexts.pop()
+                elif paren_depth and (not case_parens or paren_depth > case_parens[-1]):
+                    paren_depth -= 1
+        elif ch.isspace():
+            finish_word()
+        else:
+            word += ch
+        i += 1
+    finish_segment()
+    # An unterminated substitution must not conceal an outer branch command.
+    for _, outer_word, outer_argv, _, _ in contexts:
+        segments.append([*outer_argv, *(_tokenize(outer_word) or ["--__guard_unreadable__"])])
+    return segments
 
 
 def scope_events(
@@ -250,7 +430,6 @@ def scope_events(
     unparsed: list[str],
     may_match: Callable[[str], bool],
     keep_separators: bool = False,
-    unmodeled_offset: Callable[[str], int | None] | None = None,
 ) -> list[tuple[str, list[str]]]:
     """The command as an ordered event stream: argv segments AND subshell boundaries.
 
@@ -283,9 +462,6 @@ def scope_events(
     `close` RESTORES a readable cwd, laundering an unreadable line into a clean one.
     Only a `segment` event carries argv; the rest carry [].
 
-    Consumers may opt into unmodeled_offset's lexical tripwire. Its
-    syntax_unreadable event precedes the containing segment, and line_end
-    bounds the sticky refusal. Other consumers receive their original events.
     """
     events: list[tuple[str, list[str]]] = []
     # Each consumer selects when redirect uncertainty must refuse its target.
@@ -295,14 +471,8 @@ def scope_events(
         cur: list[str] = []
         redirect_pending = False
         segment_unreadable = False
-        offset = unmodeled_offset(line) if unmodeled_offset else None
         pieces = _split_scopes(line)
-        if offset is not None:
-            pieces = [*_split_scopes(line[:offset]), ("syntax_unreadable", ""), *_split_scopes(line[offset:])]
         for kind, raw in pieces:
-            if kind == "syntax_unreadable":
-                line_events.append((kind, []))
-                continue
             if kind == "redirect":
                 segment_unreadable |= redirect_pending
                 redirect_pending = True
@@ -345,8 +515,6 @@ def scope_events(
             events.append(("unreadable", []))
             if may_match(line):
                 events.append(("segment", list(unparsed)))
-        if unmodeled_offset:
-            events.append(("line_end", []))
     return events
 
 

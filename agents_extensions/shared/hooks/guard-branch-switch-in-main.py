@@ -49,7 +49,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
-        ShellPreprocessLimit,
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
     )
@@ -58,7 +57,12 @@ except Exception as exc:
     raise SystemExit(2) from exc
 
 try:
-    from shell_redirects import scope_events, segments_with_following_operator, unmodeled_shell_offset
+    from shell_redirects import (
+        command_repository_unknown,
+        scope_events,
+        segments_with_following_operator,
+        unknown_repository_segments,
+    )
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -528,7 +532,7 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
     return f"git {verb} {target} switches branch in the main worktree"
 
 
-def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path) -> str | None:
+def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path | None) -> str | None:
     """Block ``gh pr checkout`` in the protected primary (#4857).
 
     That command moves the primary HEAD onto a PR branch (often ``pr-N``),
@@ -548,6 +552,8 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path) -> str | None:
         else:
             j += 1
     if j + 1 < len(rest) and rest[j] == "pr" and rest[j + 1] == "checkout":
+        if effective_cwd is None:
+            return "branch-switch target could not be parsed safely"
         repo_root = _git_repo_root(effective_cwd)
         if repo_root is None:
             return None
@@ -564,6 +570,14 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
     """Return a block reason only for a command targeting a protected root."""
     effective_cwd = (session_cwd or Path.cwd()).resolve()
     protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
+    # Deliberate rare over-block: case or parameter-expansion parentheses make
+    # EVERY branch operation in this command unknown, even in a worktree, before
+    # the syntax or across newlines. No scope close or absolute -C restores trust.
+    if command_repository_unknown(command):
+        for segment in unknown_repository_segments(command):
+            if _segment_is_dangerous(segment) or _gh_pr_checkout_reason(segment, None):
+                return "branch-switch target could not be parsed safely"
+        return None
     events = scope_events(
         command,
         mark_redirect_unreadable=True,
@@ -571,10 +585,8 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         unparsed=[_UNREADABLE_MARKER],
         may_match=lambda line: False,
         keep_separators=True,
-        unmodeled_offset=unmodeled_shell_offset,
     )
     cwd_unreadable = False
-    syntax_unreadable = False
     pending_cd: Path | None = None
     # Same save/restore algorithm as guard-pr-merge._judged_segments (#5333):
     # every open inherits cwd; every close restores it; an unmatched close
@@ -582,17 +594,6 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
     # substitutions execute BEFORE cd, and must not inherit its new cwd.
     stack: list[tuple[Path, bool, Path | None]] = []
     for kind, segment in events:
-        if kind == "line_end":
-            syntax_unreadable = False
-            continue
-        if kind == "syntax_unreadable":
-            # Deliberate rare over-block: even case arms without cd in a
-            # worktree refuse later branch switches. Our reader cannot model
-            # case patterns or parameter parens; no close may restore trust
-            # on this logical line, even if a real scope was already open.
-            syntax_unreadable = cwd_unreadable = True
-            pending_cd = None
-            continue
         if kind == "open":
             stack.append((effective_cwd, cwd_unreadable, pending_cd))
             pending_cd = None
@@ -600,7 +601,6 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         if kind == "close":
             if stack:
                 effective_cwd, cwd_unreadable, pending_cd = stack.pop()
-                cwd_unreadable |= syntax_unreadable
             else:
                 cwd_unreadable = True
                 pending_cd = None
@@ -639,8 +639,6 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         if invocation is None:
             continue
         _, _, git_cwd = invocation
-        if syntax_unreadable and _segment_is_dangerous(segment):
-            return "branch-switch target could not be parsed safely"
         if git_cwd is None:
             if _segment_is_dangerous(segment):
                 return "branch-switch target could not be parsed safely"
@@ -667,7 +665,7 @@ def main() -> int:
 
     try:
         reason = _command_danger_reason(command)
-    except ShellPreprocessLimit:
+    except Exception:
         reason = "nested shell command could not be parsed safely"
     if reason:
         sys.stderr.write(

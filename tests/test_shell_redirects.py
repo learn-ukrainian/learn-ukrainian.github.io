@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "agents_extensions/shared/hooks"))
-from shell_redirects import scope_events, unmodeled_shell_offset
+from shell_redirects import command_repository_unknown, scope_events, unmodeled_shell_offset
 from shell_shlex import preprocess_shell_command
 
 
@@ -106,14 +106,96 @@ def test_heredoc_body_does_not_trigger_refusal():
     assert all(unmodeled_shell_offset(line) is None for line in preprocess_shell_command(command).splitlines())
 
 
-def test_scope_refusal_is_opt_in_and_precedes_current_command():
+def test_whole_command_detector_does_not_split_scope_events():
+    kwargs = dict(mark_redirect_unreadable=True, unreadable_marker="?", unparsed=["?"], may_match=lambda _: False)
+    command = 'git switch -c fixture; echo "$(case x in x) true;; esac)"'
+    assert command_repository_unknown(command)
+    events = scope_events(command, **kwargs)
+    assert events[0] == ("segment", ["git", "switch", "-c", "fixture"])
+    assert not any(kind in {"syntax_unreadable", "line_end", "unreadable"} for kind, _ in events)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'echo "unterminated',
+        "echo '${x:-word}",
+        "cat <<EOF\nnever closed",
+        "cat <<'EOF'\nnever closed",
+        "echo ${x:-word",
+        "echo $(true",
+        "echo `unterminated",
+        "echo \\",
+    ],
+)
+def test_undecidable_detector_fails_closed(command):
+    assert command_repository_unknown(command)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo case\ngit switch -c fixture",
+        "echo ${#arr[@]}",
+        "cat <<'EOF'\ncase x in x) ${x:-(}\nEOF\ngit switch -c fixture",
+        'echo "two\nlines"',
+    ],
+)
+def test_whole_command_detector_controls(command):
+    assert not command_repository_unknown(command)
+
+
+def test_detector_internal_failure_fails_closed(monkeypatch):
+    import shell_redirects
+
+    def broken(command):
+        raise RuntimeError("synthetic detector failure")
+
+    monkeypatch.setattr(shell_redirects, "unmodeled_shell_offset", broken)
+    assert command_repository_unknown("git switch -c fixture")
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'echo "$(case x in x) git switch -c fixture;; esac)"',
+        'echo "$(case x in\nx) git switch -c fixture;;\nesac)"',
+        'echo "$(case x in x) (true);; esac)" && git switch -c fixture',
+        'echo "$(case x in x) (git switch -c fixture);; esac)"',
+        'echo "$(if true; then case x in x) git switch -c fixture;; esac; fi)"',
+        "echo ${x:-$(git switch -c fixture)}",
+        "echo ${x:-'('}; git switch -c fixture",
+        'git switch -c fixture; echo "unterminated',
+        'echo "$(echo $(case x in x) git switch -c fixture;; esac))"',
+    ],
+)
+def test_unknown_repository_reader_keeps_branch_commands_visible(command):
+    from shell_redirects import unknown_repository_segments
+
+    assert ["git", "switch", "-c", "fixture"] in unknown_repository_segments(command)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'case x in x) echo "git switch -c literal";; esac',
+        "echo '${x:-$(git switch -c literal)}'",
+        "echo ${x:-'$(git switch -c literal)'}",
+        "echo \"$(case x in x) echo 'git switch -c literal';; esac)\"",
+    ],
+)
+def test_unknown_repository_reader_keeps_quoted_branch_prose_inert(command):
+    from shell_redirects import unknown_repository_segments
+
+    assert not any(argv[:2] == ["git", "switch"] for argv in unknown_repository_segments(command))
+
+
+def test_original_argv_order_survives_whole_command_refusal():
     kwargs = dict(mark_redirect_unreadable=True, unreadable_marker="?", unparsed=["?"], may_match=lambda _: False)
     command = "git status; git switch -c ${x:-(}"
-    original = scope_events(command, **kwargs)
-    assert not any(kind in {"syntax_unreadable", "line_end"} for kind, _ in original)
-    events = scope_events(command, unmodeled_offset=unmodeled_shell_offset, **kwargs)
+    assert command_repository_unknown(command)
+    events = scope_events(command, **kwargs)
     assert events[0] == ("segment", ["git", "status"])
-    refused = next(i for i, (kind, _) in enumerate(events) if kind == "syntax_unreadable")
     switch = next(i for i, (kind, argv) in enumerate(events) if kind == "segment" and argv[:2] == ["git", "switch"])
-    assert refused < switch
-    assert events[-1] == ("line_end", [])
+    assert switch > 0
+    assert not any(kind in {"syntax_unreadable", "line_end"} for kind, _ in events)
