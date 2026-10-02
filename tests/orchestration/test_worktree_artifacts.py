@@ -339,3 +339,135 @@ def test_success_clears_a_stale_preservation_error(checkout):
     assert guard(checkout, record=record)[0]
     assert "artifact_preservation_error" not in json.loads(path.read_text())
     assert "artifact_preservation_error" not in record
+
+
+_GIT_ENV = {
+    **{k: v for k, v in os.environ.items() if not k.startswith("GIT_")},
+    "GIT_AUTHOR_NAME": "Test Worker",
+    "GIT_AUTHOR_EMAIL": "worker@example.com",
+    "GIT_COMMITTER_NAME": "Test Worker",
+    "GIT_COMMITTER_EMAIL": "worker@example.com",
+}
+
+
+def test_ignored_artifact_directory_of_regular_files(checkout):
+    """Denominator row 2: a directory of regular files has its files discovered and preserved."""
+    (checkout[2] / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    f1 = artifact(checkout, "batch_state/reports/probe/report1.json", payload=b'{"metric": 1}')
+    f2 = artifact(checkout, "batch_state/reports/probe/report2.json", payload=b'{"metric": 2}')
+    (checkout[0] / "batch_state/reports/probe/__pycache__").mkdir(parents=True, exist_ok=True)
+    (checkout[0] / "batch_state/reports/probe/__pycache__/cached.pyc").write_bytes(b"disposable")
+
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason
+    assert metadata["count"] == 2
+    location = Path(metadata["location"])
+    assert (location / "batch_state/reports/probe/report1.json").read_bytes() == f1.read_bytes()
+    assert (location / "batch_state/reports/probe/report2.json").read_bytes() == f2.read_bytes()
+    assert not (location / "batch_state/reports/probe/__pycache__").exists()
+
+
+def test_ignored_artifact_nested_repo_no_unpushed_commits(checkout, tmp_path):
+    """Denominator row 3 & AC-01: nested repo with no unpushed commits refuses removal with actionable command."""
+    # Create upstream remote
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Clone upstream into batch_state
+    scratch_dir = checkout[0] / "batch_state/reports/scratch_repo"
+    subprocess.run(["git", "clone", str(upstream), str(scratch_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    # Add and push a commit so there are zero unpushed commits
+    (scratch_dir / "probe.txt").write_text("probe output\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init probe"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with no unpushed commits" in reason
+    assert "files" in reason and "bytes" in reason
+    assert "batch_state/reports/scratch_repo" in reason
+    assert "clear with: rm -rf 'batch_state/reports/scratch_repo'" in reason
+
+    # AC-01: Actionable single command removes the scratch repo and allows worktree release
+    import shutil
+    shutil.rmtree(scratch_dir)
+    ok_after, reason_after, _ = guard(checkout)
+    assert ok_after and not reason_after
+
+
+def test_ignored_artifact_nested_repo_with_unpushed_commits_never_discarded(checkout):
+    """Denominator row 4 & AC-02: nested repo with unpushed commits refuses and is never discarded."""
+    unpushed_dir = checkout[0] / "batch_state/reports/unpushed_repo"
+    unpushed_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", str(unpushed_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (unpushed_dir / "unpushed_work.txt").write_text("valuable local probe data\n")
+    subprocess.run(["git", "add", "unpushed_work.txt"], cwd=unpushed_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "valuable unpushed probe"], cwd=unpushed_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    rev_proc = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=unpushed_dir, check=True, capture_output=True, env=_GIT_ENV, text=True, timeout=30
+    )
+    commit_sha = rev_proc.stdout.strip()
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert commit_sha[:7] in reason or commit_sha in reason
+    assert "files" in reason and "bytes" in reason
+
+    # AC-02: The unpushed repo and its commits are preserved intact on disk
+    assert unpushed_dir.exists()
+    assert (unpushed_dir / "unpushed_work.txt").read_text() == "valuable local probe data\n"
+    log_proc = subprocess.run(["git", "log", "-1", "--oneline"], cwd=unpushed_dir, check=True, capture_output=True, text=True, env=_GIT_ENV, timeout=30)
+    assert "valuable unpushed probe" in log_proc.stdout
+
+
+def test_ignored_artifact_nested_linked_worktree_pointing_at_another_artifact(checkout):
+    """Denominator row 5: nested linked worktree pointing at another artifact refuses removal."""
+    primary_repo = checkout[0] / "batch_state/reports/primary_repo"
+    primary_repo.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", str(primary_repo)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (primary_repo / "initial.txt").write_text("seed\n")
+    subprocess.run(["git", "add", "initial.txt"], cwd=primary_repo, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "seed"], cwd=primary_repo, check=True, env=_GIT_ENV, timeout=30)
+
+    linked_wt = checkout[0] / "batch_state/reports/linked_wt"
+    subprocess.run(
+        ["git", "worktree", "add", str(linked_wt), "-b", "wt-branch"],
+        cwd=primary_repo,
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested linked worktree whose gitdir pointer points at another artifact" in reason
+    assert "batch_state/reports/primary_repo" in reason
+
+
+def test_ignored_artifact_nested_repo_symlink_dot_git(checkout, tmp_path):
+    """A directory whose .git is a symlink fails closed."""
+    real_git_repo = tmp_path / "real_git_repo"
+    subprocess.run(["git", "init", str(real_git_repo)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    bad_repo = checkout[0] / "batch_state/reports/bad_repo"
+    bad_repo.mkdir(parents=True, exist_ok=True)
+    (bad_repo / ".git").symlink_to(real_git_repo / ".git")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact has a symlinked .git entry" in reason
+
+
+def test_ignored_artifact_nested_repo_corrupt_fails_closed(checkout):
+    """A nested repo with corrupted git internals fails closed."""
+    corrupt_dir = checkout[0] / "batch_state/reports/corrupt_repo"
+    subprocess.run(["git", "init", str(corrupt_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (corrupt_dir / ".git/config").write_text("bad config syntax [[[")
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is an invalid nested git repository" in reason

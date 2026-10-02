@@ -186,6 +186,101 @@ def _update_existing_task_record(path: Path, updates: Mapping[str, Any], *, clea
         return True
 
 
+def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> list[str]:
+    """Inspect a directory entry in the ignored inventory.
+
+    If it contains a nested git repository or linked worktree, verifies commit
+    and pointer safety, failing closed with actionable diagnostics or refusing
+    discard of unpushed commits. If it is a directory of ordinary files, yields
+    the non-empty regular files inside it. Symlinks and escapes fail closed.
+    """
+    clean_name = name.rstrip("/")
+    dot_git = source / ".git"
+
+    if dot_git.is_symlink():
+        raise ValueError(f"artifact has a symlinked .git entry: {name}")
+
+    if dot_git.exists():
+        # Check linked worktree gitdir pointer
+        if dot_git.is_file():
+            try:
+                content = dot_git.read_text(encoding="utf-8").strip()
+            except (OSError, UnicodeDecodeError) as exc:
+                raise ValueError(f"artifact has an unreadable .git file ({exc}): {name}") from exc
+            if content.startswith("gitdir:"):
+                target_str = content.removeprefix("gitdir:").strip()
+                target_path = Path(target_str)
+                if not target_path.is_absolute():
+                    target_path = (source / target_path).resolve()
+                else:
+                    target_path = target_path.resolve()
+                if target_path.is_relative_to(worktree.resolve()):
+                    target_rel = target_path.relative_to(worktree.resolve()).as_posix()
+                    raise ValueError(
+                        f"artifact is a nested linked worktree whose gitdir pointer "
+                        f"points at another artifact ({target_rel}): {name}"
+                    )
+
+        # Count regular files and compute total size in bytes
+        file_count = 0
+        total_size = 0
+        for root_dir, _dirs, filenames in os.walk(source):
+            for fname in filenames:
+                fpath = Path(root_dir) / fname
+                try:
+                    st = fpath.lstat()
+                    file_count += 1
+                    total_size += st.st_size
+                except OSError:
+                    pass
+
+        env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        try:
+            res = subprocess.run(
+                ["git", "rev-list", "--branches", "--not", "--remotes"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+        except (subprocess.SubprocessError, OSError) as exc:
+            raise ValueError(f"failed to check git status in nested repository {name}: {exc}") from exc
+
+        if res.returncode != 0:
+            err = res.stderr.decode("utf-8", "replace").strip()
+            raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+        unpushed = [line.strip() for line in res.stdout.decode("ascii", "replace").split() if line.strip()]
+        if unpushed:
+            commits_summary = ", ".join(unpushed[:3]) + ("..." if len(unpushed) > 3 else "")
+            raise ValueError(
+                f"artifact is a nested git repository with unpushed commits "
+                f"({file_count} files, {total_size} bytes; unpushed: {commits_summary}): {name}; "
+                f"unpushed work must not be discarded"
+            )
+
+        raise ValueError(
+            f"artifact is a nested git repository with no unpushed commits "
+            f"({file_count} files, {total_size} bytes): {name}; "
+            f"clear with: rm -rf '{clean_name}'"
+        )
+
+    # Directory of ordinary regular files (no .git)
+    collected: list[str] = []
+    for root_dir, dirs, filenames in os.walk(source):
+        dirs[:] = [d for d in dirs if d not in _DISPOSABLE_DIRECTORIES]
+        for fname in filenames:
+            fpath = Path(root_dir) / fname
+            f_resolved = fpath.resolve()
+            if f_resolved != fpath.absolute() or not stat.S_ISREG(fpath.lstat().st_mode):
+                rel_path = fpath.relative_to(worktree).as_posix()
+                raise ValueError(f"artifact is not a local regular file: {rel_path}")
+            if fpath.stat().st_size:
+                collected.append(fpath.relative_to(worktree).as_posix())
+    return collected
+
+
 def preserve_worktree_artifacts(
     worktree: Path,
     *,
@@ -234,7 +329,13 @@ def preserve_worktree_artifacts(
             # Shared primary task records/sidecars are not destroyed with the link.
             if resolved.is_relative_to(tasks_dir.resolve()) and resolved.is_relative_to(primary):
                 continue
-            if resolved != source.absolute() or not stat.S_ISREG(source.lstat().st_mode):
+            if resolved != source.absolute():
+                raise ValueError(f"artifact is not a local regular file: {name}")
+            if stat.S_ISDIR(source.lstat().st_mode):
+                for regular_file in _inspect_directory_artifact(source, name, worktree=worktree):
+                    files.append(regular_file)
+                continue
+            if not stat.S_ISREG(source.lstat().st_mode):
                 raise ValueError(f"artifact is not a local regular file: {name}")
             if source.stat().st_size:
                 files.append(name)
