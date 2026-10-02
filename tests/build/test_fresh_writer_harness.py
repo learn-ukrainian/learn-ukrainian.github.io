@@ -13,6 +13,7 @@ import yaml
 from scripts.build.fresh import regeneration, writer
 from scripts.build.fresh.preflight import PreflightResult
 from scripts.curriculum.evidence import lock
+from tests.build.test_fresh_draft_schema import load_fixture
 
 INPUTS = {key: "a" * 64 for key in regeneration.INPUT_KEYS}
 SEAT = {"agent": "codex", "model": "gpt-6.1-sol", "effort": "high"}
@@ -134,13 +135,73 @@ def test_fresh_direct_writer_stops_after_three_harness_failures(tmp_path, monkey
     assert lock.check(tmp_path / "lesson-1.writer-harness.yaml")
 
 
-def test_fresh_content_failure_never_spends_harness_budget(tmp_path):
+@pytest.mark.parametrize("reply", ["not a draft", "a: 1"])
+def test_fresh_content_failure_never_spends_harness_budget(tmp_path, reply):
     def invalid(task_id, prompt, result):
-        result.write_text("not a draft")
+        result.write_text(reply)
 
     for _ in range(4):
-        with pytest.raises(writer.WriterCallError, match="not a YAML dictionary"):
+        error = writer.DraftValidationError if reply == "a: 1" else writer.WriterCallError
+        with pytest.raises(error, match="required property" if reply == "a: 1" else "not a YAML dictionary"):
             writer.dispatch_writer(**_dispatch_options(tmp_path), fake_seat=invalid)
+    assert not (tmp_path / "lesson-1.writer-harness.yaml").exists()
+
+
+@pytest.mark.parametrize("invalid", [{"writer": "codeex"}, {"effort": "hihg"}])
+def test_fresh_caller_errors_leave_corrected_dispatch_available(tmp_path, invalid):
+    calls = []
+    draft, types = load_fixture("a1")
+
+    def valid(task_id, prompt, result):
+        calls.append(task_id)
+        result.write_bytes(lock.yaml_bytes(draft))
+
+    for _ in range(3):
+        with pytest.raises(ValueError, match="Invalid writer") as error:
+            writer.dispatch_writer(**{**_dispatch_options(tmp_path), **invalid}, fake_seat=valid)
+        assert error.value.harness_chargeable is False
+    assert calls == []
+    assert not (tmp_path / "lesson-1.writer-harness.yaml").exists()
+    result = writer.dispatch_writer(**_dispatch_options(tmp_path), fake_seat=valid, plan_activity_types=types)
+    assert len(calls) == 1 and result["draft"] == draft
+    assert not (tmp_path / "lesson-1.writer-harness.yaml").exists()
+
+
+@pytest.mark.parametrize("status", ["rate_limited", "timeout"])
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_fresh_capacity_status_does_not_spend_sticky_cap(tmp_path, monkeypatch, status, returncode):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    calls = []
+
+    def harness(cmd, **kwargs):
+        calls.append(cmd[2])
+        output = json.dumps({"status": status}) if cmd[2] == "wait" else ""
+        return subprocess.CompletedProcess(cmd, returncode if cmd[2] == "wait" else 0, output, "")
+
+    monkeypatch.setattr(subprocess, "run", harness)
+    for _ in range(4):
+        with pytest.raises(writer.WriterHarnessError) as error:
+            writer.dispatch_writer(**_dispatch_options(tmp_path))
+        assert error.value.harness_chargeable is False
+        assert str(error.value) != regeneration.HARNESS_EXHAUSTED
+    assert calls == ["dispatch", "wait"] * 4
+    assert not (tmp_path / "lesson-1.writer-harness.yaml").exists()
+
+
+def test_fresh_subprocess_timeouts_do_not_spend_sticky_cap(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    calls = []
+
+    def timeout(cmd, **kwargs):
+        calls.append(cmd)
+        raise subprocess.TimeoutExpired(cmd, 60)
+
+    monkeypatch.setattr(subprocess, "run", timeout)
+    for _ in range(4):
+        with pytest.raises(writer.WriterHarnessError, match="harness execution failed") as error:
+            writer.dispatch_writer(**_dispatch_options(tmp_path))
+        assert error.value.harness_chargeable is False
+    assert len(calls) == 4
     assert not (tmp_path / "lesson-1.writer-harness.yaml").exists()
 
 

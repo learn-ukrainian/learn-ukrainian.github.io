@@ -277,7 +277,7 @@ def build_module(
                                 ledger_path, slug, n, {"check": 1, "layer": "writer", "reason": str(err)}, current
                             )
                         else:
-                            if not getattr(err, "harness_recorded", False):
+                            if not getattr(err, "harness_recorded", False) and getattr(err, "harness_chargeable", True):
                                 ledger = record_harness_failure(ledger_path, slug, n, str(err), current)
                             if load_harness(ledger_path, slug, n)["terminal_state"] is not None:
                                 ledger["terminal_layer"] = "driver"
@@ -331,7 +331,7 @@ def build_module(
                 bad = next((row for row in report.get("checks", []) if row["status"] == "failed"), None)
                 check = report.get("stopping_check") or (bad["check"] if bad else report.get("passed_through", 0))
                 reason = report.get("reason") or (bad["reason"] if bad else "build_failed")
-                layer = bad["layer"] if bad else report.get("layer", "engine")
+                layer = bad["layer"] if bad else (report.get("layer") or "engine")
                 if layer != "writer" and ledger["terminal_layer"] is None:
                     # The real runner records failures itself. Injected runners and
                     # check-12 reports without a failed gate row must stop as well.

@@ -113,15 +113,90 @@ def test_fresh_non_writer_check_stops_without_regeneration(context, layer, runne
     assert ledger_path.read_bytes() == before
 
 
-def test_fresh_check_12_without_failed_gate_stops_as_engine(context):
+@pytest.mark.parametrize("layer_field", [{}, {"layer": None}])
+def test_fresh_check_12_without_failed_gate_stops_as_engine(context, layer_field):
     report = context.build(
-        lambda *a, **kw: {"passed": False, "checks": [], "stopping_check": 12, "reason": "manifest_error"}
+        lambda *a, **kw: {
+            "passed": False,
+            "checks": [],
+            "stopping_check": 12,
+            "reason": "manifest_error",
+            **layer_field,
+        }
     )
     lesson = report["lessons"][0]
     assert lesson["terminal_layer"] == lesson["layer"] == "engine"
     assert lesson["regenerations"] == 0
     assert lesson["stopping_check"] == 12
     assert context.dispatches == [1]
+    ledger = regeneration.load_ledger(context.state / "lesson-1.regeneration.yaml", context.slug, 1)
+    assert ledger["terminal_layer"] == "engine"
+    assert ledger["attempts"][0]["failed_check"] == 12
+
+
+def test_fresh_schema_invalid_reply_charges_content_ledger_only(context):
+    calls = []
+
+    def invalid(task_id, prompt, result):
+        calls.append(task_id)
+        result.write_text("a: 1")
+
+    real_writer = partial(writer.dispatch_writer, fake_seat=invalid)
+    for index in range(2):
+        report = context.build(_success, real_writer)
+        lesson = report["lessons"][0]
+        assert not report["complete"]
+        assert lesson["layer"] == "writer"
+        assert regeneration.HARNESS_EXHAUSTED not in lesson["reason"]
+        ledger = regeneration.load_ledger(context.state / "lesson-1.regeneration.yaml", context.slug, 1)
+        assert len(ledger["attempts"]) == index + 1
+        assert {row["failed_check"] for row in ledger["attempts"]} == {1}
+        assert not (context.state / "lesson-1.writer-harness.yaml").exists()
+    assert len(calls) == 2
+    assert ledger["terminal_layer"] == "plan"
+    resumed = context.build(_success, real_writer)
+    assert resumed["lessons"][0]["terminal_layer"] == "plan"
+    assert regeneration.HARNESS_EXHAUSTED not in resumed["lessons"][0]["reason"]
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize("status", ["rate_limited", "timeout"])
+def test_fresh_module_capacity_failure_is_not_recharged(context, status):
+    calls = []
+
+    def unavailable(task_id, prompt, result):
+        calls.append(task_id)
+        result.with_suffix(".json").write_text(json.dumps({"status": status}))
+
+    for _ in range(4):
+        report = context.build(_success, partial(writer.dispatch_writer, fake_seat=unavailable))
+        lesson = report["lessons"][0]
+        assert not report["complete"] and status in lesson["reason"]
+        assert lesson["layer"] == "engine" and lesson["terminal_layer"] is None
+        assert lesson["regenerations"] == 0
+        assert not (context.state / "lesson-1.writer-harness.yaml").exists()
+    assert len(calls) == 4
+
+
+def test_fresh_module_caller_failure_is_not_recharged(context):
+    def mistyped(**kwargs):
+        return writer.dispatch_writer(**{**kwargs, "writer": "codeex"})
+
+    for _ in range(3):
+        report = context.build(_success, mistyped)
+        lesson = report["lessons"][0]
+        assert "Invalid writer" in lesson["reason"]
+        assert lesson["terminal_layer"] is None and lesson["regenerations"] == 0
+        assert not (context.state / "lesson-1.writer-harness.yaml").exists()
+    calls = []
+
+    def corrected(task_id, prompt, result):
+        calls.append(task_id)
+        result.write_bytes(lock.yaml_bytes(context.draft))
+
+    assert context.build(_success, partial(writer.dispatch_writer, fake_seat=corrected))["complete"]
+    assert len(calls) == 1
+    assert not (context.state / "lesson-1.writer-harness.yaml").exists()
 
 
 @pytest.mark.parametrize("layer", ["engine", "plan", "pack", "word_store", "driver"])
