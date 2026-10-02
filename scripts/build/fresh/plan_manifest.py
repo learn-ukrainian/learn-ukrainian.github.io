@@ -9,7 +9,10 @@ This module also owns the shared freshness check that decides whether a review o
 record still describes the tree — before promotion (every input unchanged) and
 after promotion (every input unchanged except the plan, whose only allowed
 difference is the ``evidence_ref.sha256`` transition proven by the promotion
-receipt). The helpers of ``manifest.py`` are reused, including its private
+receipt). Promotion runs in position order, so an earlier plan the plan-validate
+report pinned may likewise differ only by its own promotion, proven against that
+plan's own review of record and the pack its manifest of record pinned (#8425).
+The helpers of ``manifest.py`` are reused, including its private
 ``_input``.
 
 The manifest names every file the reviewer receives. Besides the plan, the pack
@@ -50,6 +53,7 @@ import re
 import sqlite3
 import subprocess
 from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -291,7 +295,9 @@ def validate_report_problems(
 
     Every recorded input hash must equal the file now. ``plan_transition`` is
     ``(plan path, reviewed sha)``: after a proven promotion the report's plan
-    entry legitimately still holds the reviewed hash.
+    entry legitimately still holds the reviewed hash. An earlier module's plan the
+    report pinned may differ only by that module's own receipt-proven promotion
+    (``_other_plan``), so promoting positions in order keeps later reviews current.
     """
     report_rel = _relative(root, report_path)
     report = _read_json(report_path)
@@ -327,9 +333,39 @@ def validate_report_problems(
             if recorded != plan_transition[1]:
                 problems[path] = "the plan-validate report recorded a plan other than the reviewed one"
             continue
-        if current_sha(root, path) != recorded:
+        if current_sha(root, path) == recorded:
+            continue
+        other = _other_plan(path, plan_rel)
+        if other is None:
             problems[path] = "changed since the plan-validate report read it"
+            continue
+        live = (root / path).read_bytes() if (root / path).is_file() else None
+        proved, why = _earlier_plan_proof(root, *other, recorded, live)
+        if not proved:
+            problems[path] = f"changed since the plan-validate report read it ({why})"
     return problems
+
+
+_PLAN_PATH = re.compile(rf"{re.escape(TREE)}/lesson-plans/([^/]+)/([^/_][^/]*)\.yaml")
+
+
+def _other_plan(path: str, own_plan_rel: str) -> tuple[str, str] | None:
+    """(level, slug) when a recorded input is another module's plan, else None.
+
+    A plan-validate report pins every plan at an earlier arc position (rule 4);
+    such a plan's own proven promotion (its ``evidence_ref.sha256`` set to the
+    pack its review of record pinned, see ``_earlier_plan_proof``) is the one change that does not stale the
+    later report. The module's own plan is never excused here: its transition is
+    ``plan_transition``, decided against its own manifest of record.
+    """
+    match = _PLAN_PATH.fullmatch(path)
+    if match is None or path == own_plan_rel:
+        return None
+    try:
+        validate_module(match[1], match[2])
+    except ValueError:
+        return None
+    return match[1], match[2]
 
 
 # --- manifest ----------------------------------------------------------------------------
@@ -649,9 +685,16 @@ def _read_receipt(directory: Path) -> dict | None:
     return data if isinstance(data, dict) else {}
 
 
-def _receipt_proof(root: Path, manifest: dict, manifest_sha: str, live_plan: bytes | None) -> tuple[bool, str]:
-    """(proved, why not): the promotion receipt proves the live plan is the reviewed plan plus the pack hash."""
-    level, slug = manifest["level"], manifest["slug"]
+def _receipt_proof(
+    root: Path, level: str, slug: str, reviewed_sha: str, live_plan: bytes | None, manifest_sha: str
+) -> tuple[bool, str]:
+    """(proved, why not): the promotion receipt of (level, slug) proves the live plan is the
+    plan whose hash is ``reviewed_sha`` plus the pack hash, and nothing else.
+
+    ``manifest_sha`` binds the receipt to the module's own manifest of record, whose
+    pinned pack ``plan_review_freshness`` checks against the tree. An earlier plan a
+    later plan-validate report pinned is proven by ``_earlier_plan_proof`` instead.
+    """
     directory = state_dir(root, level, slug)
     receipt = _read_receipt(directory)
     if receipt is None:
@@ -662,7 +705,6 @@ def _receipt_proof(root: Path, manifest: dict, manifest_sha: str, live_plan: byt
     expected_keys = set(_RECEIPT_KEYS) | (full_keys if receipt.get("review_access") == "full" else set())
     if set(receipt) != expected_keys or not all(isinstance(receipt[key], str) for key in expected_keys):
         return False, "the promotion receipt is malformed"
-    reviewed_sha = manifest["inputs"]["plan"]["sha256"]
     if receipt["reviewed_plan_sha256"] != reviewed_sha:
         return False, "the promotion receipt does not map the reviewed plan hash"
     if live_plan is None or receipt["promoted_plan_sha256"] != sha256_bytes(live_plan):
@@ -670,16 +712,107 @@ def _receipt_proof(root: Path, manifest: dict, manifest_sha: str, live_plan: byt
     pack_path = root / TREE / "evidence" / level / f"{slug}.yaml"
     if not pack_path.is_file() or receipt["pack_sha256"] != file_sha256(pack_path):
         return False, "the pack is not the pack the promotion receipt recorded"
+    why = _reviewed_copy_problem(directory, reviewed_sha, receipt["pack_sha256"], live_plan)
+    return not why, why
+
+
+def _reviewed_copy_problem(directory: Path, reviewed_sha: str, pack_sha: str, live_plan: bytes) -> str:
+    """Why the live plan is not the stored reviewed copy promoted to ``pack_sha`` ('' when it is)."""
     reviewed_copy = directory / f"plan-reviewed.{reviewed_sha}.yaml"
     if not reviewed_copy.is_file() or sha256_bytes(reviewed_copy.read_bytes()) != reviewed_sha:
-        return False, "the reviewed plan copy is missing or altered"
+        return "the reviewed plan copy is missing or altered"
     try:
-        expected = promoted_plan_bytes(reviewed_copy.read_bytes(), receipt["pack_sha256"])
+        expected = promoted_plan_bytes(reviewed_copy.read_bytes(), pack_sha)
     except PlanReviewError:
-        return False, "the reviewed plan copy cannot be promoted"
+        return "the reviewed plan copy cannot be promoted"
     if expected != live_plan:
-        return False, "the plan differs from the reviewed plan in more than evidence_ref.sha256"
-    return True, ""
+        return "the plan differs from the reviewed plan in more than evidence_ref.sha256"
+    return ""
+
+
+def receipt_identity(review: dict) -> dict[str, str]:
+    """The reviewer identity a promotion receipt carries, taken from the review of record."""
+    if review.get("access") != "full":
+        return {}
+    return {
+        "review_access": "full",
+        "reviewer_model": review["reviewer_model"],
+        "reviewer_family": review["reviewer_family"],
+        "harness": review["harness"],
+    }
+
+
+def _instant(value: Any) -> datetime | None:
+    """A UTC instant in the canonical form plan-promote writes (``YYYY-MM-DDTHH:MM:SS+00:00``), else None."""
+    try:
+        moment = datetime.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
+    if moment.utcoffset() != timedelta(0) or moment.isoformat(timespec="seconds") != value:
+        return None
+    return moment
+
+
+def _earlier_plan_proof(root: Path, level: str, slug: str, recorded: str, live_plan: bytes | None) -> tuple[bool, str]:
+    """(proved, why not): an earlier plan a later plan-validate report pinned at ``recorded`` was
+    promoted exactly as its own review of record allows, and nothing else changed.
+
+    The proof is the earlier module's review of record (APPROVE, ``manifest_sha256``,
+    ``attempt_id``) and the stored manifest of record that hash names. The reviewed
+    plan hash and the pack hash come from that manifest, never from the receipt: the
+    report's recorded plan must be the reviewed plan, the current pack and lock must be
+    the pinned ones, and the live plan must be the reviewed copy with only
+    ``evidence_ref.sha256`` set to the pinned pack hash. The receipt must say exactly
+    that — the manifest hash, attempt id and reviewer identity of the review of record,
+    the reviewed, promoted and pinned pack hashes — with a canonical ``promoted_at``
+    no earlier than the review's ``validated_at`` (when recorded) and not in the future.
+    A receipt is evidence only of what the manifest of record already pins.
+    """
+    try:
+        review = read_review(root, level, slug)
+        manifest_sha = review["manifest_sha256"]
+        manifest = load_manifest_of_record(root, level, slug, manifest_sha)
+    except PlanReviewError as error:
+        return False, f"no approved review of record for the promotion ({error.message})"
+    plan_rel = f"{TREE}/lesson-plans/{level}/{slug}.yaml"
+    pack_rel = f"{TREE}/evidence/{level}/{slug}.yaml"
+    pinned = manifest["inputs"]
+    if (manifest["level"], manifest["slug"]) != (level, slug) or pinned["plan"]["path"] != plan_rel:
+        return False, "the manifest of record belongs to another module"
+    if pinned["plan"]["sha256"] != recorded:
+        return False, "the review of record approved another plan than the one the plan-validate report read"
+    pack_sha = pinned["pack"]["sha256"]
+    for key, rel in (("pack", pack_rel), ("pack_lock", f"{pack_rel}.lock")):
+        if pinned[key]["path"] != rel or current_sha(root, rel) != pinned[key]["sha256"]:
+            return False, f"the {key} is not the {key} the review of record pinned"
+    if not lock.check(root / pack_rel):
+        return False, "the pack bytes disagree with their lock"
+    if live_plan is None:
+        return False, "the plan is missing"
+
+    directory = state_dir(root, level, slug)
+    receipt = _read_receipt(directory)
+    if receipt is None:
+        return False, "no promotion receipt"
+    expected = {
+        "manifest_sha256": manifest_sha,
+        "reviewed_plan_sha256": recorded,
+        "promoted_plan_sha256": sha256_bytes(live_plan),
+        "pack_sha256": pack_sha,
+        "attempt_id": review["attempt_id"],
+        **receipt_identity(review),
+    }
+    if set(receipt) != {*expected, "promoted_at"}:
+        return False, "the promotion receipt is malformed"
+    differing = sorted(key for key, value in expected.items() if receipt[key] != value)
+    if differing:
+        return False, "the promotion receipt disagrees with the review of record on " + ", ".join(differing)
+    promoted_at = _instant(receipt["promoted_at"])
+    floor = _instant(review["validated_at"]) if "validated_at" in review else datetime.min.replace(tzinfo=UTC)
+    if promoted_at is None or floor is None or not floor <= promoted_at <= datetime.now(UTC):
+        return False, "the promotion receipt's promoted_at is not a time between the review of record and now"
+    why = _reviewed_copy_problem(directory, recorded, pack_sha, live_plan)
+    return not why, why
 
 
 def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Freshness:
@@ -710,7 +843,7 @@ def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Fres
     plan_entry = inputs["plan"]
     plan_file = root / plan_entry["path"]
     live_plan = plan_file.read_bytes() if plan_file.is_file() else None
-    proved, why = _receipt_proof(root, manifest, manifest_sha, live_plan)
+    proved, why = _receipt_proof(root, level, slug, plan_entry["sha256"], live_plan, manifest_sha)
     promoted = proved
     if live_plan is None:
         stale.setdefault(plan_entry["path"], "missing")
