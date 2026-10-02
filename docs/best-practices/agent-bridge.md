@@ -355,6 +355,92 @@ Adapters should put per-call environment values in
 then applies explicit `InvocationPlan.env_unsets`. The merge guard runs
 after sanitization so its `gh`/`git` shims still receive the final `PATH`
 and can stamp `AGENT_NO_MERGE`, `AGENT_REAL_GH`, and `AGENT_REAL_GIT`.
+The same directory holds the `npm`/`npx` shim (#9460), active in every shell
+that has it on `PATH`. It decides from the filesystem, not from npm's
+arguments or from git: it walks every ancestor of the working directory (the
+physical path, and `$PWD` when it names the same directory through a symlink)
+up to the filesystem root, and when `node_modules` or `site/node_modules` of
+any ancestor resolves outside that ancestor (the symlinks into the primary
+checkout that dispatch worktrees receive), only clearly read-only calls run — `--version`
+or `--help`, and an allowlisted subcommand such as `run`, `test`, `ls`,
+`view` or `config get` with no install-like word (`ci`, `install`, `update`,
+`prune`, …) anywhere in the arguments. `npx`, `npm exec` and `npm x` run
+only a closed allowlist of programs this repository uses that way
+(`EXEC_PROGRAMS` in the guard: `vitest`, `tsc`, `playwright`,
+`markdownlint-cli2` and the Claude adapter's `@anthropic-ai/claude-code`
+fallback), as in `npm --prefix site exec -- vitest run` or
+`npx @anthropic-ai/claude-code@latest`; they launch an existing binary or
+fetch one into npm's own cache, not into the project's `node_modules`. The
+guard never reads shell text: the program is the first word after the options
+(or after `--`), and only `-y`/`--yes`, `--no`, `--no-install`, `--no-fund`,
+`--no-audit`, `--prefix`/`-C` and `--` may appear where npm parses options.
+`-c`/`--call`, `-p`/`--package`, `--shell`, `--node-options` and any other
+option are refused whatever their value, and so is a call with no program
+(npm would run a shell or the configured `call`). A shell, interpreter or
+package manager (`sh`, `bash`, `env`, `node`, `npm`, `pnpm`, `yarn`, …) is
+simply not on the list; a version spec (`vitest@3`) or path whose last part
+is an allowlisted name is accepted, an `npm:` alias, URL, `git` spec or
+foreign scope is not. An argument of the program that names a package manager
+or is an install word still refuses the call. Known false positives:
+`npx playwright install`, any tool not on the list (such as `eslint`), and
+`npx --no vitest` (write `npx --no -- vitest`). Everything else is refused,
+including global installs (`npm i -g`), and so are read-only calls the guard
+cannot classify, such as `npm view ci` or options with a separate value
+before the subcommand (write `--key=value`; `--prefix` and `--workspace` are
+understood). So a worktree whose `node_modules` links outward now runs only
+these allowlisted `exec`/`npx` programs. To
+install, `unlink` the link inside the worktree first so npm creates a
+worktree-local folder, or run the command outside the worktree. Without such
+a link every call passes through untouched. Because git is never asked
+where the worktree is, a nested repository, `core.worktree`, `GIT_DIR` or
+`GIT_WORK_TREE` cannot hide a link. A working directory that cannot be read
+(deleted, for example) is treated as protected: npm cannot run there either,
+so only clearly read-only calls are let through. The decision lives in
+`scripts/agent_runtime/npm_guard.py`. The shim runs it with the interpreter
+the `git` shim uses, looked up in the same order: `AGENT_GIT_SHIM_PYTHON`
+(the runner stamps it), else the main checkout's `.venv` found through the git
+common dir (so a linked worktree needs no `.venv` of its own), else the shim
+checkout's; with none of them it refuses to run npm. `AGENT_REAL_NPM`/
+`AGENT_REAL_NPX` optionally pin the real tool; the guard runs before the pin
+is read, so a pin chooses the binary but never skips the guard. Shim
+directories on `PATH` are recognised by physical path, so a spelling such as
+`shims/.`, `shims//` or a symlink to the directory cannot make the shim find
+itself. `npx` is a regular file that runs the sibling `npm` shim by its
+physical path with `AGENT_SHIM_TOOL=npx`; the npm shim accepts only `npm` or
+`npx` from that variable (anything else means npm), tells the guard which,
+and unsets it before the real tool runs. The wrapper runs its sibling only
+when that sibling is a regular file (not a symlink), executable, carries the
+npm shim's fixed marker line `# agent-runtime guarded npm shim (#9460)`, and
+`npm_guard.py` sits beside the shim directory; otherwise it prints an error
+and exits 127 without running anything, so a copy of `npx` placed next to the
+real npm (or a symlink to it) fails closed.
+
+Not covered (owner `claude-infra`, each tracked under the #9460 follow-up):
+
+- calling npm by absolute path or through `node`, or a `node_modules/.bin/npm`;
+- a stripped `PATH` without the shim directory, and pnpm, yarn or bun called
+  directly;
+- an allowlisted program that starts a package manager itself (an inner `npm`
+  on `PATH` still reaches the shim; pnpm, yarn or an npm by path do not), or a
+  local file with an allowlisted name (`./x/vitest`) that is something else;
+- npm config from the environment or an `.npmrc`, such as `script-shell`,
+  replacing the shell npm runs the program with (a configured `call` no longer
+  applies: the guard requires a program and npm refuses `call` together with
+  one);
+- running from a checkout with a real `node_modules`, such as the primary,
+  with `--prefix`/`-C` pointing into a dispatch worktree (that call passes
+  through; workers do not run from there);
+- a working directory physically inside the shared folder (reached through the
+  link) while `$PWD` is missing, stale or forged, so it does not name the same
+  directory through the worktree: only the physical path is visible and every
+  call passes through;
+- `AGENT_GIT_SHIM_PYTHON` naming a program that is not a Python interpreter
+  (for example one that always exits 0), which replaces the guard's verdict.
+- a sibling `npm` that forges the marker line (a regular file copied beside
+  `npx` that carries the marker but is not the guarded shim), or an
+  `npm_guard.py` beside it that is not the guard: the same class as a
+  hostile interpreter, since whoever can write the shim directory can
+  replace the shims themselves.
 
 ## Context file conventions
 

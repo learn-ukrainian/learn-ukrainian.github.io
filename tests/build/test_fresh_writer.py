@@ -6,6 +6,7 @@ import copy
 import json
 import re
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -13,9 +14,18 @@ import yaml
 
 from scripts.build.fresh.draft_schema import DraftValidationError, validate_draft
 from scripts.build.fresh.preflight import PreflightResult
-from scripts.build.fresh.regeneration import writer_task_id
+from scripts.build.fresh.regeneration import (
+    INPUT_KEYS,
+    inputs_digest,
+    load_ledger,
+    record_failure,
+    record_writer_call,
+    writer_task_id,
+)
 from scripts.build.fresh.writer import (
     WriterCallError,
+    WriterHarnessError,
+    _available_task_id,
     dispatch_writer,
     parse_and_validate_reply,
     strip_markdown_fence,
@@ -27,6 +37,29 @@ pytestmark = pytest.mark.reads_content
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
+INPUTS = {key: str(i) * 64 for i, key in enumerate(INPUT_KEYS, start=1)}
+
+
+@pytest.mark.parametrize("prior_failures", [1, 2])
+def test_reharvested_done_retry_does_not_spend_budget_twice(tmp_path, prior_failures):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    for check in range(1, prior_failures + 1):
+        record_failure(path, "sample", 1, {"check": check, "layer": "writer", "reason": "failed"}, INPUTS)
+    first = record_writer_call(path, "sample", 1, INPUTS)
+    before = path.read_bytes()
+    # The paid writer task is done, but the process checking it was interrupted.
+    second = record_writer_call(path, "sample", 1, INPUTS)
+    assert first == second
+    assert second["regenerations"] == prior_failures
+    assert second["terminal_layer"] is None
+    assert path.read_bytes() == before
+
+
+def _inputs(prompt_sha256: str) -> dict[str, str]:
+    """A complete ledger snapshot for ``prompt_sha256``, as every writer entry point passes (#8425)."""
+    return {**INPUTS, "prompt_sha256": prompt_sha256}
+
+
 @pytest.fixture
 def a1_valid_fixture():
     return load_fixture("a1")
@@ -35,6 +68,109 @@ def a1_valid_fixture():
 @pytest.fixture
 def passing_preflight():
     return PreflightResult(passed=True, status="ok", gaps=[], homographs=[], homograph_count=0)
+
+
+@pytest.mark.parametrize(
+    "status",
+    ["failed", "timeout", "rate_limited", "cancelled", "crashed", "dry_run", "needs_finalize", "no_deliverable"],
+)
+@pytest.mark.parametrize("archived", [False, True])
+def test_terminal_writer_collision_retries_then_reuses_done(
+    tmp_path, monkeypatch, a1_valid_fixture, passing_preflight, status, archived
+):
+    """The same paid success is reused even when it followed failed terminal records."""
+    from scripts.orchestration.task_record_store import task_record_path
+
+    store = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(store))
+    store.mkdir()
+    base_id = writer_task_id("a1", "collision", 1, 1, None, INPUTS)
+    prior_dir = store / "archive" if archived else store
+    prior_dir.mkdir(exist_ok=True)
+    prior = task_record_path(prior_dir, base_id)
+    prior.write_text(json.dumps({"status": status}))
+    prior_result = prior.with_suffix(".result")
+    prior_result.write_text("old unchecked output")
+    draft, types = a1_valid_fixture
+    commands = []
+
+    def delegate(cmd, **kwargs):
+        commands.append(cmd)
+        action = cmd[2]
+        task_id = cmd[cmd.index("--task-id") + 1] if action == "dispatch" else cmd[3]
+        record_path = task_record_path(store, task_id)
+        result_path = record_path.with_suffix(".result")
+        if action == "dispatch":
+            assert not record_path.exists(), "a duplicate would pay again"
+            result_path.write_text(yaml.safe_dump(draft, allow_unicode=True))
+            record_path.write_text(json.dumps({"status": "done", "result_file": str(result_path)}))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return subprocess.CompletedProcess(cmd, 0, record_path.read_text(), "")
+
+    monkeypatch.setattr(subprocess, "run", delegate)
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("fixture prompt")
+    kwargs = dict(
+        writer="codex",
+        level="a1",
+        slug="collision",
+        lesson_n=1,
+        prompt_file=prompt,
+        prompt_sha256=INPUTS["prompt_sha256"],
+        inputs=INPUTS,
+        output_dir=tmp_path / "out",
+        preflight_result=passing_preflight,
+        plan_activity_types=types,
+        repo_root=tmp_path,
+    )
+    first = dispatch_writer(**kwargs)
+    second = dispatch_writer(**kwargs)
+    assert first["task_id"] == second["task_id"] == f"{base_id}-retry-1"
+    assert [cmd[2] for cmd in commands] == ["dispatch", "wait", "wait"]
+    assert prior_result.read_text() == "old unchecked output"
+    assert json.loads(prior.read_text())["status"] == status
+
+    # Reuse still validates the output; a done status cannot admit an unchecked draft.
+    task_record_path(store, first["task_id"]).with_suffix(".result").write_text("not a draft")
+    with pytest.raises(WriterCallError, match="not a YAML dictionary"):
+        dispatch_writer(**kwargs)
+    assert [cmd[2] for cmd in commands].count("dispatch") == 1
+
+
+@pytest.mark.parametrize("status", ["done", "running", "spawning"])
+def test_writer_done_and_live_records_are_never_redispatched(tmp_path, monkeypatch, status):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "stable.json").write_text(json.dumps({"status": status}))
+    assert _available_task_id("stable") == ("stable", True)
+
+
+@pytest.mark.parametrize("record", ["invalid JSON", "[]", '{"status": ["done"]}', '{"status": "unknown"}'])
+def test_unreadable_or_unknown_writer_record_fails_closed(tmp_path, monkeypatch, record):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "stable.json").write_text(record)
+    with pytest.raises(WriterHarnessError):
+        _available_task_id("stable")
+
+
+@pytest.mark.parametrize("failure", [OSError("cannot launch"), subprocess.TimeoutExpired("delegate", 60)])
+def test_writer_subprocess_failures_are_harness_errors(tmp_path, monkeypatch, passing_preflight, failure):
+    def fail(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(subprocess, "run", fail)
+    with pytest.raises(WriterHarnessError, match="harness execution failed"):
+        dispatch_writer(
+            writer="codex",
+            level="a1",
+            slug="launch",
+            lesson_n=1,
+            prompt_file=tmp_path / "prompt.md",
+            prompt_sha256=INPUTS["prompt_sha256"],
+            inputs=INPUTS,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            repo_root=tmp_path,
+        )
 
 
 def test_strip_markdown_fence(a1_valid_fixture):
@@ -126,6 +262,7 @@ def test_writer_seat_validation(tmp_path, passing_preflight):
                 lesson_n=1,
                 prompt_file=prompt_file,
                 prompt_sha256="0" * 64,
+                inputs=_inputs("0" * 64),
                 output_dir=tmp_path / "out",
                 preflight_result=passing_preflight,
             )
@@ -145,6 +282,7 @@ def test_dispatch_refuses_without_passing_preflight(tmp_path):
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="0" * 64,
+            inputs=_inputs("0" * 64),
             output_dir=tmp_path / "out",
             preflight_result=failed_pre,
         )
@@ -157,6 +295,7 @@ def test_dispatch_refuses_without_passing_preflight(tmp_path):
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="0" * 64,
+            inputs=_inputs("0" * 64),
             output_dir=tmp_path / "out",
             preflight_result=None,
         )
@@ -207,6 +346,7 @@ result_path.with_suffix(".json").write_text(json.dumps({{"model": "fake-model", 
         lesson_n=2,
         prompt_file=prompt_file,
         prompt_sha256="a" * 64,
+        inputs=_inputs("a" * 64),
         output_dir=output_dir,
         preflight_result=passing_preflight,
         attempt=1,
@@ -217,7 +357,7 @@ result_path.with_suffix(".json").write_text(json.dumps({{"model": "fake-model", 
     )
 
     assert res["writer"] == "agy"
-    assert res["task_id"] == "write-a1-test-slug-2-1" + (f"-{requested}" if requested else "")
+    assert res["task_id"] == writer_task_id("a1", "test-slug", 2, 1, requested, _inputs("a" * 64))
     assert res["prompt_sha256"] == "a" * 64
     assert res["model"] == "fake-model"
     expected = resolved if isinstance(resolved, str) and resolved else "unknown"
@@ -272,6 +412,7 @@ Path(args.result_file).write_text("invalid_draft: true\\nstatus: ok\\n", encodin
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="b" * 64,
+            inputs=_inputs("b" * 64),
             output_dir=output_dir,
             preflight_result=passing_preflight,
             attempt=1,
@@ -303,6 +444,7 @@ def test_invalid_writer_effort_refused(tmp_path, passing_preflight):
             lesson_n=1,
             prompt_file=tmp_path / "prompt.md",
             prompt_sha256="a" * 64,
+            inputs=_inputs("a" * 64),
             output_dir=tmp_path / "out",
             preflight_result=passing_preflight,
         )
@@ -330,6 +472,7 @@ def test_writer_effort_task_ledger_keying(tmp_path, a1_valid_fixture, passing_pr
             lesson_n=1,
             prompt_file=prompt,
             prompt_sha256="a" * 64,
+            inputs=_inputs("a" * 64),
             output_dir=tmp_path / effort,
             preflight_result=passing_preflight,
             fake_seat=fake,
@@ -342,7 +485,102 @@ def test_writer_effort_task_ledger_keying(tmp_path, a1_valid_fixture, passing_pr
         assert record["effort"] == metadata["effort"] == effort
         assert metadata["attempt"] == 1
     assert len(set(ids)) == 2
-    assert writer_task_id("a1", "sample", 1, 1) == "write-a1-sample-1-1"
+    # Without an explicit effort the seat keeps its own default and the ID carries no effort suffix.
+    assert writer_task_id("a1", "sample", 1, 1, None, INPUTS) == f"write-a1-sample-1-1-{inputs_digest(INPUTS)}"
+
+
+def test_writer_task_id_keys_on_inputs_attempt_and_effort():
+    """Same inputs keep the ID (no double spend); any changed input, attempt or effort changes it (#8425)."""
+    base = writer_task_id("a1", "sample", 1, 1, "high", INPUTS)
+    assert base == writer_task_id("a1", "sample", 1, 1, "high", dict(INPUTS))
+    assert re.fullmatch(r"write-a1-sample-1-1-[0-9a-f]{10}-high", base)
+    for key in INPUT_KEYS:
+        assert writer_task_id("a1", "sample", 1, 1, "high", {**INPUTS, key: "f" * 64}) != base
+    assert writer_task_id("a1", "sample", 1, 2, "high", INPUTS) != base
+    assert writer_task_id("a1", "sample", 1, 1, "medium", INPUTS) != base
+    # A missing key counts as zeros, as the regeneration ledger records it.
+    partial = {key: value for key, value in INPUTS.items() if key != "card_sha256"}
+    assert writer_task_id("a1", "sample", 1, 1, None, partial) == writer_task_id(
+        "a1", "sample", 1, 1, None, {**partial, "card_sha256": "0" * 64}
+    )
+
+
+def test_new_inputs_after_done_attempt_get_fresh_task_id(tmp_path, a1_valid_fixture, passing_preflight):
+    """Old-plan attempt 1 is done; a new plan restarts at attempt 1 and must not reuse its task ID (#8425)."""
+    draft, types = a1_valid_fixture
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("fixture prompt", encoding="utf-8")
+    ledger = tmp_path / "lesson-1.regeneration.yaml"
+
+    def refusing_seat(task_id, prompt_file, result_file):
+        # Mirror delegate.py: a task ID that already has a result is never reused.
+        if result_file.exists():
+            raise WriterCallError(f"task_id {task_id!r} is already done")
+        result_file.write_text(yaml.safe_dump(draft, allow_unicode=True), encoding="utf-8")
+
+    def dispatch(inputs):
+        attempt = record_writer_call(ledger, "sample", 1, inputs)["regenerations"] + 1
+        return dispatch_writer(
+            writer="codex",
+            model="gpt-6.1-sol",
+            effort="high",
+            level="a1",
+            slug="sample",
+            lesson_n=1,
+            prompt_file=prompt,
+            prompt_sha256=inputs["prompt_sha256"],
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            attempt=attempt,
+            fake_seat=refusing_seat,
+            repo_root=tmp_path,
+            plan_activity_types=types,
+            inputs=inputs,
+        )
+
+    old = dict(INPUTS)
+    new = {**INPUTS, "plan_sha256": "e" * 64, "prompt_sha256": "d" * 64}
+    first = dispatch(old)
+    assert load_ledger(ledger, "sample", 1, new)["attempts"] == []
+    second = dispatch(new)
+    assert yaml.safe_load(second["writer_meta_file"].read_text(encoding="utf-8"))["attempt"] == 1
+    assert first["task_id"] != second["task_id"]
+    # Identical inputs still map to the done task, so a re-run is refused rather than paid twice.
+    with pytest.raises(WriterCallError, match="already done"):
+        dispatch(new)
+
+
+def test_writer_inputs_must_match_prompt_hash(tmp_path, passing_preflight):
+    with pytest.raises(ValueError, match="does not match prompt_sha256"):
+        dispatch_writer(
+            writer="codex",
+            level="a1",
+            slug="test",
+            lesson_n=1,
+            prompt_file=tmp_path / "prompt.md",
+            prompt_sha256="a" * 64,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            inputs=INPUTS,
+        )
+
+
+@pytest.mark.parametrize("key", INPUT_KEYS[:-1])
+def test_writer_inputs_must_be_complete(tmp_path, passing_preflight, key):
+    """No entry point may key a dispatch on a partial snapshot: that gave identical work a second ID (#8425)."""
+    with pytest.raises(ValueError, match=f"missing \\['{key}'\\]"):
+        dispatch_writer(
+            writer="codex",
+            level="a1",
+            slug="test",
+            lesson_n=1,
+            prompt_file=tmp_path / "prompt.md",
+            prompt_sha256="a" * 64,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            inputs={k: v for k, v in _inputs("a" * 64).items() if k != key},
+        )
+    assert not (tmp_path / "batch_state").exists()
 
 
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
@@ -413,6 +651,7 @@ sys.exit(1)
         lesson_n=3,
         prompt_file=prompt_file,
         prompt_sha256="c" * 64,
+        inputs=_inputs("c" * 64),
         output_dir=output_dir,
         preflight_result=passing_preflight,
         attempt=1,
@@ -428,8 +667,11 @@ sys.exit(1)
     assert res["effort"] == "high"
     assert yaml.safe_load(res["writer_meta_file"].read_text())["effort"] == "high"
 
+    task_id = writer_task_id("a1", "delegate-test", 3, 1, effort, _inputs("c" * 64))
+    assert res["task_id"] == task_id
+
     # MAJOR D: Verify that caller_root was NOT used for reading results
-    caller_result = caller_root / "batch_state/tasks/write-a1-delegate-test-3-1.result"
+    caller_result = caller_root / f"batch_state/tasks/{task_id}.result"
     assert not caller_result.exists(), (
         "Caller root must not have received result file; result must be read from delegate wait JSON"
     )
@@ -448,9 +690,7 @@ sys.exit(1)
     assert "--model" in dispatch_argv and dispatch_argv[dispatch_argv.index("--model") + 1] == "gpt-6.1-sol"
     assert "--mode" in dispatch_argv and dispatch_argv[dispatch_argv.index("--mode") + 1] == "read-only"
     assert "--worktree" in dispatch_argv
-    assert "--task-id" in dispatch_argv and dispatch_argv[
-        dispatch_argv.index("--task-id") + 1
-    ] == "write-a1-delegate-test-3-1" + (f"-{effort}" if effort else "")
+    assert "--task-id" in dispatch_argv and dispatch_argv[dispatch_argv.index("--task-id") + 1] == task_id
     assert "--prompt-file" in dispatch_argv and dispatch_argv[dispatch_argv.index("--prompt-file") + 1] == str(
         prompt_file
     )
@@ -458,7 +698,7 @@ sys.exit(1)
 
     wait_argv = lines[1]["argv"]
     assert wait_argv[0] == "wait"
-    assert wait_argv[1] == "write-a1-delegate-test-3-1" + (f"-{effort}" if effort else "")
+    assert wait_argv[1] == task_id
     assert "--timeout" in wait_argv
 
 
@@ -489,6 +729,7 @@ sys.exit(1)
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="d" * 64,
+            inputs=_inputs("d" * 64),
             output_dir=tmp_path / "out",
             preflight_result=passing_preflight,
             delegate_script=fake_delegate_script,
@@ -533,6 +774,7 @@ sys.exit(1)
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="e" * 64,
+            inputs=_inputs("e" * 64),
             output_dir=tmp_path / "out",
             preflight_result=passing_preflight,
             delegate_script=fake_delegate,

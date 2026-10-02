@@ -5091,7 +5091,7 @@ Related:
         epilog="""
 Examples:
   .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms build-suspects \\
-      --dump data/ulif_dump_all.db --vesum data/vesum.db \\
+      --dump data/ulif_dump.db --vesum data/vesum.db \\
       --out batch_state/ulif-homonyms/suspects.txt
 
 Outputs:
@@ -5111,7 +5111,7 @@ Related:
         "--dump",
         type=Path,
         required=True,
-        help="Path to legacy ULIF database (e.g. data/ulif_dump_all.db)",
+        help="Path to legacy ULIF database (e.g. data/ulif_dump.db)",
     )
     suspects.add_argument(
         "--vesum",

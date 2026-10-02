@@ -80,7 +80,7 @@ DEFAULT_UAGEC_MINED = resolve_data_path("data/projects/open_model_data/decoloniz
 DEFAULT_CORPUS_CONTRAST = resolve_data_path(
     "data/projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
 )
-DEFAULT_ULIF_DB = resolve_data_path("data/ulif_dump_all.db")
+DEFAULT_ULIF_DB = resolve_data_path("data/sources.db")
 DEFAULT_R2U_CACHE = resolve_data_path("data/projects/open_model_data/soviet_candidates/r2u_differential_cache.json")
 
 TOTAL_SFT_QUOTA = 6000

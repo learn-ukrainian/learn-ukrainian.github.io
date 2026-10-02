@@ -16,6 +16,14 @@ cannot show which image it is, or the start marker arrives only as the process
 is stopped, the dispatch fails instead of starting a second worker. Isolation
 is never required for a dispatch to start.
 
+A worker that dispatches workers of its own (a builder that starts writers)
+runs under the sanitized agent environment, which has neither
+``XDG_RUNTIME_DIR`` nor ``DBUS_SESSION_BUS_ADDRESS``. Every user-manager call
+here gets those two from :func:`user_manager_env` when the caller lacks them
+(#9514). The worker never receives them through this path: the start wrapper
+removes exactly the variables that were added for ``systemd-run`` before it
+execs the worker, so the worker's environment is the one the caller passed.
+
 The byte values below match ``MemoryMax=20G`` and ``MemorySwapMax=1G`` in
 ``packaging/systemd/lu-dispatch.slice``. systemd parses the ``G`` suffix in
 base 1024 (``systemd.resource-control(5)``).
@@ -30,6 +38,7 @@ import re
 import secrets
 import select
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -70,14 +79,22 @@ _Popen = subprocess.Popen
 _UNIT_UNSAFE = re.compile(r"[^A-Za-z0-9:_.-]+")
 _GIB = 1024**3
 
-# Writes one byte on the inherited fd, then replaces this process with the
-# worker. The byte is the signal that systemd-run already exec'd: a failure
-# before exec never writes it, and a worker that then dies is not relaunched.
+# logind's per-uid runtime directory, which holds the user bus socket.
+_USER_RUNTIME_ROOT = Path("/run/user")
+
+# Writes one byte on the inherited fd, removes the comma-separated variables
+# in argv 2 (the ones added only so systemd-run reaches the user manager),
+# then replaces this process with the worker. The byte is the signal that
+# systemd-run already exec'd: a failure before exec never writes it, and a
+# worker that then dies is not relaunched.
+_MARKER_EXEC = "os.execve(sys.argv[3], sys.argv[3:], env)"
 _MARKER_CODE = (
     "import os, sys\n"
     "os.write(int(sys.argv[1]), b'1')\n"
     "os.close(int(sys.argv[1]))\n"
-    "os.execv(sys.argv[2], sys.argv[2:])\n"
+    "drop = {os.fsencode(name) for name in sys.argv[2].split(',') if name}\n"
+    "env = {key: value for key, value in os.environb.items() if key not in drop}\n"
+    f"{_MARKER_EXEC}\n"
 )
 
 
@@ -197,6 +214,34 @@ def build_scope_argv(
     ]
 
 
+def user_manager_env(env: Mapping[str, str], *, uid: int | None = None) -> dict[str, str]:
+    """``env`` plus the user-bus variables it lacks, for user-manager calls only (#9514).
+
+    sd-bus finds the user manager through ``DBUS_SESSION_BUS_ADDRESS`` or
+    ``XDG_RUNTIME_DIR``. When ``XDG_RUNTIME_DIR`` is absent, it is derived as
+    logind's ``/run/user/<uid>``, and ``DBUS_SESSION_BUS_ADDRESS`` (if also
+    absent) as that directory's ``bus`` socket, only when the directory exists,
+    is a real directory and is owned by ``uid``. A variable the caller has is
+    kept as is, even when empty. A caller with ``XDG_RUNTIME_DIR`` but no bus
+    address is left alone: sd-bus derives ``$XDG_RUNTIME_DIR/bus`` itself.
+    The result is never a worker's environment.
+    """
+    derived = dict(env)
+    if "XDG_RUNTIME_DIR" in derived:
+        return derived
+    uid = os.getuid() if uid is None else uid
+    runtime = _USER_RUNTIME_ROOT / str(uid)
+    try:
+        info = runtime.lstat()
+    except OSError:
+        return derived
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid != uid:
+        return derived
+    derived["XDG_RUNTIME_DIR"] = str(runtime)
+    derived.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path={runtime}/bus")
+    return derived
+
+
 def probe_isolation(
     env: Mapping[str, str] | None = None,
     *,
@@ -207,13 +252,19 @@ def probe_isolation(
     """Return whether ``lu-dispatch.slice`` can contain a worker right now.
 
     The first failed check wins. ``LU_DISPATCH_ISOLATION=fallback`` forces a
-    not-ready result without probing.
+    not-ready result without probing. The probe commands run with
+    :func:`user_manager_env` of ``env``.
     """
     source = os.environ if env is None else env
     forced = _forced_fallback(source)
     if forced is not None:
         return forced
-    return _probe_uncached(source, timeout_s=timeout_s, cgroup_mount=cgroup_mount, subtree_path=subtree_path)
+    return _probe_uncached(
+        user_manager_env(source),
+        timeout_s=timeout_s,
+        cgroup_mount=cgroup_mount,
+        subtree_path=subtree_path,
+    )
 
 
 def spawn_detached_worker(
@@ -305,7 +356,7 @@ def slice_usage_clause(*, timeout_s: float = PROBE_TIMEOUT_S) -> str | None:
     try:
         completed = _run(
             ["systemctl", "--user", "show", "-p", "ActiveState,MemoryCurrent,MemoryMax", SLICE_UNIT],
-            os.environ,
+            user_manager_env(os.environ),
             timeout_s,
         )
     except (OSError, subprocess.TimeoutExpired):
@@ -364,14 +415,18 @@ def _try_scope(
     read_fd, write_fd = os.pipe()
     try:
         os.set_inheritable(write_fd, True)
-        wrapped = [cmd[0], "-c", _MARKER_CODE, str(write_fd), *cmd]
+        # systemd-run passes its own environment on to the worker, so the
+        # wrapper removes what was added only for systemd-run (#9514).
+        scope_env = user_manager_env(env)
+        added = sorted(scope_env.keys() - env.keys())
+        wrapped = [cmd[0], "-c", _MARKER_CODE, str(write_fd), ",".join(added), *cmd]
         argv = build_scope_argv(wrapped, unit=unit, slice_unit=slice_unit)
         start = _file_size(stderr_log)
         try:
             proc = popen(
                 argv,
                 pass_fds=(write_fd,),
-                **_popen_kwargs(env=env, stdin=stdin, stdout=stdout, stderr=stderr),
+                **_popen_kwargs(env=scope_env, stdin=stdin, stdout=stdout, stderr=stderr),
             )
         except (OSError, ValueError) as exc:
             return None, f"systemd-run: {type(exc).__name__}: {exc}"
@@ -545,7 +600,7 @@ def _launch_image(pid: int) -> str:
         names.append(Path(args[1]).name)
     if "systemd-run" in names:
         return "systemd-run"
-    if len(args) > 2 and args[1] == "-c" and "os.execv(sys.argv[2]" in args[2]:
+    if len(args) > 2 and args[1] == "-c" and _MARKER_EXEC in args[2]:
         return "marker"
     return "worker"
 

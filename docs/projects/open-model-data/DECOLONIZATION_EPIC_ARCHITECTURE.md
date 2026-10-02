@@ -100,7 +100,7 @@ To prevent high-volume error categories from overwhelming the dataset:
 | **Antonenko-Davydovych *«Як ми говоримо»*** | `sources.db` $\rightarrow$ `style_guide` | **342 chapters** | Etymological, derivational, and register analysis (Train-only) | Train-only research partition |
 | **Pre-Soviet Academy Dictionaries** | `scripts.rag.source_query.r2u_translate` | **Full endpoints** | Historical discovery candidate lookup (Krymskyi-Yefremov, Pidmohylnyi-Pluzhnyk) | Public Domain (Public redistribution) |
 | **Soviet СУМ-11 (Differential Mirror)** | `sources.db` $\rightarrow$ `sum11` | **127,069 entries** | Negative mirror: identifying ideological elevation (7,152 `sovietization_risk` flags) | Academic research mirror |
-| **ULIF Academic Dictionary** | `data/ulif_dump_all.db` | **13,392 entries** | Register qualifiers (`діал.`, `розм.`, `книжн.`, `заст.`) to bound hyper-purism | Lexicographical reference |
+| **ULIF Academic Dictionary** | `data/sources.db` (`ulif_dictua_*`) | **269K entries, 336K sections** | Register qualifiers (`діал.`, `розм.`, `книжн.`, `заст.`) to bound hyper-purism | Lexicographical reference |
 | **VESUM Morphological Database** | `data/vesum.db` | **409K lemmas, 6.7M forms** | Inflectional validation and non-standard tag verification | Open source (GPL/CC) |
 
 ---

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Import crawled ULIF DictUA dump into sources.db (ulif_dictua_* tables).
 
-Reads entries from the standalone crawler SQLite database (e.g. data/ulif_dump_all.db)
+Reads entries from the standalone crawler SQLite database (e.g. data/ulif_dump.db)
 and transactionally streams parsed rows into the canonical sources.db tables
 (ulif_dictua_entries and ulif_dictua_sections). Raw bodies commit first to
 the separate cache database.
@@ -275,8 +275,8 @@ def main(argv: list[str] | None = None) -> int:
         description="Stream parsed ULIF dump entries into sources.db and exact HTML into the raw cache.\nUse for an existing crawler dump; do not use during a sources.db migration window.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  .venv/bin/python scripts/lexicon/tools/import_ulif_dump.py --dump-db data/ulif_dump_all.db --sources-db data/sources.db
-  .venv/bin/python scripts/lexicon/tools/import_ulif_dump.py --dump-db data/ulif_dump_all.db --dry-run
+  .venv/bin/python scripts/lexicon/tools/import_ulif_dump.py --dump-db data/ulif_dump.db --sources-db data/sources.db
+  .venv/bin/python scripts/lexicon/tools/import_ulif_dump.py --dump-db data/ulif_dump.db --dry-run
 Outputs: parsed entries and sections in sources.db; raw responses in data/lexicon/cache/ulif_raw.sqlite.
 Exit codes: 0 success; 1 missing dump or incompatible target schema.
 Related: issue #8800 Plan v3; scripts/lexicon/tools/dump_ulif.py.""",
@@ -284,8 +284,8 @@ Related: issue #8800 Plan v3; scripts/lexicon/tools/dump_ulif.py.""",
     parser.add_argument(
         "--dump-db",
         type=Path,
-        default=Path("data/ulif_dump_all.db"),
-        help="Crawler SQLite input (default: data/ulif_dump_all.db)",
+        default=Path("data/ulif_dump.db"),
+        help="Crawler SQLite input (default: data/ulif_dump.db)",
     )
     parser.add_argument(
         "--sources-db",

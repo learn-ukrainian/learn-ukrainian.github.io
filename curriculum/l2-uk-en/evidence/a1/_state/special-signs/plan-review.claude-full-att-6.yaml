@@ -1,0 +1,89 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-special-signs"
+  attempt_id: "claude-full-att-6"
+  manifest_sha256: "ab238071911c12e78b0d7b9973be76482d762837de8f8a5381acf64d3f71f02e"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "68bcec5612a485893c7c1b98d0b616b28fffc637f27456cdaa96c9ce8562a88e"
+checks:
+  # Seven teaching lessons plus a separate D4 recap lesson 8: a first-person bilingual story, Ukrainian-only questions on that story and one notebook production task. The module's size justifies a separate lesson.
+  closing_shape: clean
+  # Every prose field is in one language. The Ukrainian forms inside English sentences are the items being taught.
+  title_describes_job: clean
+  # "eight remaining letters" equals scope sidecar letters.count 8 (ь Ї Я Ю Є Ц Щ Ф); the two digraphs are дж/дз as planned.
+  title_quantities: clean
+  # verify_words rr-775de8107e16db23ebf0: all 21 quoted forms (titles, синє, моє, кує, квітує, радію, їжа, юрта, люпин, дзиґа, дзюрчить, джміль, джем, пюре, п'ю, пір'я, м'яч, пір'їна, Марія) are found with unmarked analyses in the sense each lesson uses.
+  quoted_forms: clean
+  sequencing: [F-1]
+  sizing: clean
+  # Core їжа is A1 (query_cefr_level rr-6137e04c40d195abb452); core дощ is A1 (rr-28f2798774c20c4ea4aa).
+  inventory: [F-4]
+  # The v1 module had 12 activities (5 inline, 7 workbook). The fresh plan has 56 (34 inline, 22 workbook), so activity count does not drop. v1 error-correction and group-sort map to the find-and-repair quizzes (L2 a6, L3 a5, L5 a6) and the L4 a10 sort. Response-opportunity totals are not available at plan stage; that comparison is an open evidence gap. The count-syllables repeats in L2–L5 follow a stated progression: each checks that the new letter or digraph adds no vowel nucleus.
+  activities: [F-2, F-3]
+  evidence_fit: [F-5, F-6]
+  # Lesson 7 covers standard lines 571-572 (S-001); handwriting is deferred to position 4 as the arc says. Pravopys §49.1 (rr-dfc291cdfd4b27956475) and §50.1/§50.6 (rr-a7935bac455aff2958a1) cited in L7 s3 are verified. The T-012 page context is confirmed in rr-f8784f5758ee0f4f6e7f.
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 2, activity: "a6", quote: "Select the complete correct T-042 or T-040 transcription among answer options" }
+    dimension: learner_fit
+    severity: MINOR
+    claim: "Lesson 2 a6 makes the complete T-042 transcription [м’іл′йард] an answer option, and its distractors differ only in [й], so every option shows the transcription mark ’. That mark means a partly softened consonant (search_text, Zabolotnyi p.76, chunk 5-klas-ukrmova-zabolotnyi-2023_s0057). By lesson 2 the learner has only met the soft mark ′ (T-019, T-048). Partial softening is first mentioned in lesson 5 and its symbol is never explained. The mark also looks like the spelling apostrophe that lesson 6 teaches with the opposite value (hard consonant plus [й]). Fix: add one English-supported line in lesson 2 explaining ’ in transcriptions, or keep untaught notation out of the options. This also touches the sequencing check."
+    evidence: { receipt: "rr-5b384848a1fd3ca1569d" }
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 2, activity: "a7", quote: "Reconstruct W-121, W-081 and W-101 from taught letters" }
+    dimension: activity
+    severity: MINOR
+    claim: "Lesson 2 workbook a7 asks for anagrams of W-121 їжа, W-081 мама and W-101 тато. мама and тато contain no letter from this lesson and are built from only two different letters each, so their anagrams are near-trivial and do not practise Ї or Я. The cited X-004 model (search_text, primer p.44, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0043) scrambles words that contain that page's new letter. Fix: replace мама and тато with this lesson's decoding words, e.g. W-122 яма or W-123 маля (both found in VESUM, verify_words rr-b0d11a75c9044d148cd8)."
+    evidence: { receipt: "rr-23ec47ed3064f11091c3" }
+    could_be_a_gate: "no"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 5, field: "job", quote: "hear the hard/soft contrast for дз" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "Lesson 5's job promises that the learner hears the hard/soft дз contrast, but nothing recorded supports it. The pack has no recording for дж or дз, the resource catalogue has no дж/дз video (search_resources query 'дж дз', kind video: no hits), and a4 scores only the printed T-010 symbols [дз]/[дз′]. The hearing part of the job depends entirely on an offline teacher. This is a pack-builder gap: either source a recorded hard/soft дз model, or reword the job to the print reading with teacher modelling that the lesson actually delivers."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-c88a9d3ee3012a956828", outcome: no_hits }
+    could_be_a_gate: "no"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 8, quote: "сім'я" }
+      - { lesson: 8, quote: "хто" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Lesson 8 inventory.vocabulary.incidental lists W-138 сім'я twice. It also files W-162 хто as incidental, although the prior learner state holds W-162 as core (position 2, lesson 5) and lesson 6 lists it under recycled. As a result, the recap's recycling and practice-deck accounting is inconsistent. Fix: remove the duplicate and move W-162 to recycled. Both forms are found unmarked in VESUM (verify_words)."
+    evidence: { receipt: "rr-b0d11a75c9044d148cd8" }
+    could_be_a_gate: "yes — a script can flag a repeated id within one lesson inventory list and a prior-core id filed under incidental"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 6, step: "s4", quote: "T-024" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "Lesson 6 s4 teaches the who/what reading-question chunks but lists T-024 as evidence. T-024 is the apostrophe poem (search_text, primer p.69, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0068) and contains no хто/що question or reading chunk. Because R-28 coverage requires every listed id to be cited, the writer would have to cite it in a step it does not support. T-024 is already used correctly in s2; drop it from s4."
+    evidence: { receipt: "rr-320b8c16792640ea3c0e" }
+    could_be_a_gate: "no"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 1, activity: "a1", quote: "Watch V-001 and V-007 for general softness support" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "Lesson 1 a1 and the lesson's video list send the learner to V-007, the whole ULP 1-15 episode. Its catalogue entry (search_resources, resource id 262) is titled 'ULP 1-15 Days of the Week, Months, Seasons + Pronunciation Trainer (soft)'. Only the soft-consonant trainer supports the hard/soft point, and the V-007 pack record has no segment, unlike V-006. So a position-3 learner is sent to a full episode mostly about days and months, which the arc schedules as chunks at position 23. Fix: the pack builder adds the trainer segment, or the plan relies on V-001 (the dedicated ULP alphabet Ь video, receipt rr-551317b89650c9862143) alone."
+    evidence: { receipt: "rr-91066e86def922ea0148" }
+    could_be_a_gate: "no"

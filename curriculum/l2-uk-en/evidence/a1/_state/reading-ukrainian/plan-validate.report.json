@@ -14,17 +14,17 @@
           },
           "workbook": {
             "by_type": {
+              "fill-in": 1,
               "match-up": 1,
-              "pick-syllables": 1,
               "quiz": 1
             },
             "total": 3
           }
         },
         "distinct_types": [
+          "fill-in",
           "letter-grid",
           "match-up",
-          "pick-syllables",
           "quiz",
           "watch-and-repeat"
         ],
@@ -45,14 +45,12 @@
           },
           "workbook": {
             "by_type": {
-              "divide-words": 1,
-              "quiz": 1
+              "quiz": 3
             },
-            "total": 2
+            "total": 3
           }
         },
         "distinct_types": [
-          "divide-words",
           "letter-grid",
           "observe",
           "quiz"
@@ -74,15 +72,15 @@
           },
           "workbook": {
             "by_type": {
-              "odd-one-out": 1,
+              "fill-in": 1,
               "quiz": 1
             },
             "total": 2
           }
         },
         "distinct_types": [
+          "fill-in",
           "letter-grid",
-          "odd-one-out",
           "quiz",
           "watch-and-repeat"
         ],
@@ -96,14 +94,15 @@
           "inline": {
             "by_type": {
               "letter-grid": 3,
+              "observe": 1,
               "quiz": 3,
               "watch-and-repeat": 1
             },
-            "total": 7
+            "total": 8
           },
           "workbook": {
             "by_type": {
-              "anagram": 1,
+              "fill-in": 1,
               "match-up": 1,
               "quiz": 1
             },
@@ -111,9 +110,10 @@
           }
         },
         "distinct_types": [
-          "anagram",
+          "fill-in",
           "letter-grid",
           "match-up",
+          "observe",
           "quiz",
           "watch-and-repeat"
         ],
@@ -181,30 +181,26 @@
     ],
     "module": {
       "all_distinct_types": [
-        "anagram",
-        "divide-words",
+        "fill-in",
         "letter-grid",
         "match-up",
         "observe",
-        "odd-one-out",
         "pick-syllables",
         "quiz",
         "unjumble",
         "watch-and-repeat"
       ],
-      "inline_activities": 35,
+      "inline_activities": 36,
       "largest_workbook_type": "quiz",
-      "largest_workbook_type_share": 0.38461538461538464,
-      "longest_same_type_workbook_run": 1,
-      "longest_same_type_workbook_run_type": "pick-syllables",
+      "largest_workbook_type_share": 0.5,
+      "longest_same_type_workbook_run": 4,
+      "longest_same_type_workbook_run_type": "quiz",
       "non_recap_lessons": 5,
       "non_recap_lessons_with_workbook": 5,
-      "workbook_activities": 13,
+      "workbook_activities": 14,
       "workbook_distinct_types": [
-        "anagram",
-        "divide-words",
+        "fill-in",
         "match-up",
-        "odd-one-out",
         "pick-syllables",
         "quiz",
         "unjumble"
@@ -218,17 +214,17 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b2cd953f5f30cdce30837ab77438f684314767475be40032bc95ea24e65fbb4",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "10975fc25ad82672f06be1007ed82c9821895234c44f054ba0aa8eea777d1dd1",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "434724cb67dbfbc88d12945fc165ff7bd9eaba1563085c963173f0d5cf249234",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "11b18ef741f924fdb7b4380972b9c418b8bdb490817464eacbf66c4a20cdb4b9",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "9b754018b20e06f598343811eacf29a53cf1ef2cafcbaa7e3d1b31d8ee6d3498",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "de1ec6f9fb924f672105346505bed78f2e6b6fc09aa8c3cf308f5df987b26e44",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "ecdee196660cea92a45863dc3f5d0030f5e6b9dd960f3de5342405ff53c972cc",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "65b049044f034d4b48d3d8496203c3180be7f4af13b2ebbb000acf4b8a1e9fba",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
-    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "7e20aba1fd0352eecbfd39624d6749b63d8f025ba339ab203800e156f1c8d2a2",
-    "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "b23bdc16fd922893bab5e9415061234d1c658385f0f0610ec73282ebdfafaa02",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "e85078ff74306ad85e42d2a0db191513a9b8883e13b2a0c9dc1568bf4662efe7",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "1b46ecf105e05dbbdac324abb563529420f5daeddb6e061bfdad6b0e0a73d5c7",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "3b12728c103f6fe941ead28f3b00c6514d5c3424d0e504f8669b918863b1565e",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "2edb695b8b8c5978f34d35b0ab71f1773cfaccf711a60a30e750a796a9fdf9c1",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
-    "schemas/activities-a1.schema.json": "cc185c5286a7dbe6a4c65d1e0668fd9f2d53ed9d5032182edb4e2db7d98fc8aa",
+    "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
     "schemas/module-plan-v2.schema.json": "587b90fe0f15bffd9187e9987cb44a5a94aea9196ca4cc71154386dc99d96fed",
     "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
@@ -269,11 +265,36 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 83cb54cbcc140bd06e3d70865e9d6b7fadfdc78e601ffbe6d3bd8b8c3f27af35 and the provisional pack's sha256 is 434724cb67dbfbc88d12945fc165ff7bd9eaba1563085c963173f0d5cf249234; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 78b9f00f27272cf12770d8987a704b62df8cffcd2210c0b2a4fe00ecf5a35c24 and the provisional pack's sha256 is ecdee196660cea92a45863dc3f5d0030f5e6b9dd960f3de5342405ff53c972cc; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],
-  "notes": [],
+  "notes": [
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 1,
+      "message": "core lemma 'літера' (W-078) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 2,
+      "message": "core lemma 'звук' (W-077) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'голосний' (W-079) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'приголосний' (W-080) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    }
+  ],
   "slug": "reading-ukrainian",
   "status": "pass",
   "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",

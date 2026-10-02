@@ -1781,17 +1781,17 @@ entries:
 
   - id: data-ulif-dumps
     kind: data_store
-    store: [data/ulif_dump_all.db, data/ulif_dump.db, data/ulif_scrape.log]
+    store: [data/ulif_dump.db, data/ulif_scrape.log]
     producer: [scripts/lexicon/tools/dump_ulif.py]
-    producer_note: dump_ulif.py writes ulif_dump.db; no script in scripts/ writes ulif_dump_all.db or ulif_scrape.log (legacy crawl output), and fetch_ulif_homonyms.py only reads ulif_dump_all.db.
+    producer_note: dump_ulif.py writes ulif_dump.db; legacy ulif_dump_all.db is retired (#8798); canonical entries reside in sources.db.
     local_only: true
-    purpose: Local ULIF dictionary dumps (the all-entries dump is the working copy; the other is a one-row stub) and an empty scrape log.
+    purpose: Local ULIF dictionary crawler dumps and scrape log; canonical entries reside in sources.db.
     keywords: [ULIF dump, ULIF dictionary]
     lifecycle: active
     owner: atlas-practice
     query:
       - {surface: mcp, how: "sources MCP query_ulif / query_ulif_records (reads the sources.db copy)"}
-      - {surface: sqlite, how: "read-only SQL on data/ulif_dump_all.db"}
+      - {surface: sqlite, how: "read-only SQL on data/sources.db (ulif_dictua_* tables)"}
     content_searchable: false
 
   - id: data-wiki-cache

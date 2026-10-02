@@ -375,7 +375,7 @@
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",
-        "sha256": "089ff24b829211679d963016a531fc76ebcd056b71cd015b34908b02612647d8"
+        "sha256": "b4395d333d14b1fc9da6aa809c2da146b48b179f2687b33ecb71ca2858365908"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",

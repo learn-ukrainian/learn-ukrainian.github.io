@@ -1,10 +1,9 @@
 """Homonym-safe ULIF entry table for the runner's own SQLite store.
 
-The legacy crawler keeps writing ``ulif_entries`` (one row per spelling) in
-``data/ulif_dump_all.db``. This module never touches that table. A runner work
-database gets ``ulif_dictua_entries`` keyed by ``(normalized_query, homonym_index)``.
-``sources.db`` uses the same column set; its migration lives in
-``scripts.wiki.sources_db``.
+The legacy crawler previously wrote ``ulif_entries`` (one row per spelling) in
+standalone crawl databases (e.g. ``data/ulif_dump.db``). Legacy standalone
+dumps are retired. Canonical entries live in ``sources.db``
+under ``ulif_dictua_entries`` keyed by ``(normalized_query, homonym_index)``.
 """
 
 from __future__ import annotations

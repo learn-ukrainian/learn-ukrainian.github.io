@@ -20,6 +20,7 @@ from scripts.projects.open_model_data.v4_verify_trajectory_claims import (
     RECEIPT_SCHEMA_PATH,
     REPO_ROOT,
     TRAJECTORY_SCHEMA_PATH,
+    CoTClaimVerifier,
     run_claim_verifier,
 )
 
@@ -1700,3 +1701,58 @@ def test_pure_stem_zero_dictionary_batch_passes_verify_only(mock_dbs: tuple[Path
         verify_only=True,
     )
     assert verify_receipt["invariants"]["zero_unverified_dictionary_claims"] is True
+
+
+def test_check_ulif_attestation_mixed_status_homonyms(tmp_path: Path) -> None:
+    """A failed homonym (parse_error) must not mask an accepted homonym (ok) (#8798)."""
+    s_db = tmp_path / "sources_mixed.db"
+    v_db = tmp_path / "vesum_dummy.db"
+    s_conn = sqlite3.connect(s_db)
+    s_conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT,
+            homonym_index INTEGER
+        );
+        """
+    )
+    # Homonym 1 is parse_error, Homonym 2 is ok (e.g. підмет)
+    s_conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'підмет', '', 'parse_error', 1)")
+    s_conn.execute("INSERT INTO ulif_dictua_entries VALUES (2, 'підмет', 'пі́дмет', 'ok', 2)")
+    s_conn.commit()
+
+    v_conn = sqlite3.connect(v_db)
+    verifier = CoTClaimVerifier(vesum_conn=v_conn, sources_conn=s_conn)
+    assert verifier.check_ulif_attestation("підмет") is True
+    assert verifier.check_ulif_attestation("неіснуюче") is False
+
+
+def test_check_ulif_attestation_separately_supplied_canonical_db(tmp_path: Path) -> None:
+    """Separately supplied ulif_conn with canonical ulif_dictua_entries must be recognized (#8798)."""
+    s_db = tmp_path / "empty_sources.db"
+    u_db = tmp_path / "separate_ulif.db"
+    v_db = tmp_path / "vesum_dummy.db"
+
+    s_conn = sqlite3.connect(s_db)
+    v_conn = sqlite3.connect(v_db)
+
+    u_conn = sqlite3.connect(u_db)
+    u_conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        """
+    )
+    u_conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'словник', 'словни́к', 'ok')")
+    u_conn.commit()
+
+    verifier = CoTClaimVerifier(vesum_conn=v_conn, sources_conn=s_conn, ulif_conn=u_conn)
+    assert verifier.check_ulif_attestation("словник") is True
+    assert verifier.check_ulif_attestation("неіснуюче") is False

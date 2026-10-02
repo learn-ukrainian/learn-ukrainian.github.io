@@ -171,6 +171,9 @@ def module_build(tmp_path, monkeypatch):
 
         def writer(**kw):
             calls.append(kw["attempt"])
+            # The task ID is keyed by the ledger's full input snapshot (#8425).
+            assert set(kw["inputs"]) == set(INPUT_KEYS)
+            assert kw["inputs"]["prompt_sha256"] == kw["prompt_sha256"]
             if not successful:
                 assert len(calls) <= 2, "a repeated evidence gap must stop before a third writer call"
             raw = _raw(1 if successful else len(calls))

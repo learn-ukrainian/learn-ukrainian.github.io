@@ -30,12 +30,12 @@
         "М, І, Н",
         "В, Л, С",
         "К, П, Р",
-        "повторення"
+        "ми писали"
       ],
       "scope": {
         "letters": 13,
         "grammar_points": 3,
-        "core_lemmas": 15
+        "core_lemmas": 9
       },
       "state": "plan_reviewed",
       "previous_edition_href": "/a1-v1/sounds-letters-and-hello/"
@@ -74,7 +74,7 @@
       "scope": {
         "letters": 12,
         "grammar_points": 1,
-        "core_lemmas": 5
+        "core_lemmas": 14
       },
       "state": "plan_reviewed",
       "previous_edition_href": "/a1-v1/reading-ukrainian/"
@@ -111,7 +111,7 @@
         "Ц, Щ, Ф",
         "дж, дз",
         "’",
-        "літери",
+        "алфавіт",
         "повторення"
       ],
       "scope": {

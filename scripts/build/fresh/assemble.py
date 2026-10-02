@@ -408,7 +408,7 @@ def component_props_from_jsx(jsx: str) -> dict[str, Any]:
 
 # Where each unit block lives in the component props, per activity type: the prop holding the
 # item list, then the item field per block role. `opt` names the list field of learner choices
-# and, for dict choices, the text key. Types absent here produce no vpravy units.
+# and, for dict choices, the text key. Activity-level units use the handling below.
 _PAGE_ITEM_LIST: dict[str, str] = {
     "quiz": "questions",
     "multiple-choice": "questions",
@@ -422,6 +422,8 @@ _PAGE_ITEM_LIST: dict[str, str] = {
     "unjumble": "items",
     "anagram": "items",
     "divide-words": "items",
+    "watch-and-repeat": "items",
+    "count-syllables": "items",
 }
 # An answer block whose text the page carries only as the single option it flags correct.
 _KEY_OPTION = "__key_option__"
@@ -442,9 +444,11 @@ _PAGE_ITEM_FIELDS: dict[str, dict[str, Any]] = {
     },
     "image-to-letter": {"explanation": "explanation", "opt": ("options", None)},
     "odd-one-out": {"prompt": "prompt", "explanation": "explanation", "opt": ("words", None)},
-    "unjumble": {"prompt": "jumbled", "answer": "answer"},
-    "anagram": {"answer": "answer"},
-    "divide-words": {"answer": "answer"},
+    "unjumble": {"prompt": "jumbled", "answer": "answer", "explanation": "explanation"},
+    "anagram": {"answer": "answer", "explanation": "explanation"},
+    "divide-words": {"answer": "answer", "explanation": "explanation"},
+    "watch-and-repeat": {"explanation": "explanation"},
+    "count-syllables": {"explanation": "explanation"},
 }
 # Activity-level blocks (item is None): the prop of the same name; pick-syllables choices.
 _PAGE_ACTIVITY_FIELDS: dict[str, dict[str, Any]] = {

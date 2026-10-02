@@ -2,7 +2,7 @@
 """Phase 6.2: NASU ULIF Phraseology & Idiomatic Decolonization Miner.
 
 Extracts authentic Ukrainian phraseology, idioms, and synonymic series from NASU ULIF
-(data/ulif_dump_all.db) and classical lexicographical sources (data/sources.db: frazeolohichnyi,
+(data/sources.db:ulif_dictua_*) and classical lexicographical sources (data/sources.db: frazeolohichnyi,
 ua_gec_errors, style_guide), and validates morphological attestation against VESUM (data/vesum.db).
 
 Produces:
@@ -59,7 +59,7 @@ def resolve_data_path(rel_path: str) -> Path:
     return local_p
 
 
-DEFAULT_ULIF_DB = resolve_data_path("data/ulif_dump_all.db")
+DEFAULT_ULIF_DB = resolve_data_path("data/sources.db")
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v06_ulif_phraseology"
@@ -1130,6 +1130,18 @@ def clean_raw_html_and_tags(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def normalize_grounding_text(s: str) -> str:
+    """Normalize whitespace, quotes, dashes, and punctuation for strict grounding verification."""
+    if not s:
+        return ""
+    s = s.replace("\xa0", " ").strip()
+    s = re.sub(r"[\s\n]+", " ", s)
+    s = re.sub(r"[—–-]", "-", s)
+    s = s.replace("…", "...").replace("«", "").replace("»", "").replace('"', "")
+    s = s.strip(" \t\r\n.,;:!?")
+    return s.lower()
+
+
 def extract_quote_for_author(text: str, author_name: str) -> str | None:
     """Extract clean sentence quotation preceding an author citation in parentheses."""
     clean_t = clean_stress_marks(text)
@@ -1180,7 +1192,10 @@ def verify_phrase_in_vesum(phrase: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if not content_tokens:
         return True
     for t in content_tokens:
-        cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1", (t, t))
+        cur_ves.execute(
+            "SELECT 1 FROM forms_all WHERE word_form IN (?, ?) OR lemma IN (?, ?) LIMIT 1",
+            (t, t.capitalize(), t, t.capitalize()),
+        )
         if not cur_ves.fetchone():
             return False
     return True
@@ -1555,6 +1570,60 @@ def is_label_fragment(s: str) -> bool:
     return bool(len(s_clean) < 15 and any(t in LABEL_TOKENS for t in re.findall(r"[а-яіїєґ]+", s_clean.lower())))
 
 
+def extract_clean_definition_and_labels(text: str) -> tuple[str, str]:
+    """Extract stylistic register and cleaned definition gloss, stripping metadata, valency formulas, and dialogue markers."""
+    reg = "загальновживаний літературний"
+    lowered = text.lower()
+    if re.search(r"\bкнижн\b", lowered):
+        reg = "книжний"
+    elif re.search(r"\b(?:нар\.-поет|поет)\b", lowered):
+        reg = "народнопоетичний"
+    elif re.search(r"\bрозм\b", lowered):
+        reg = "розмовний"
+    elif re.search(r"\bірон\b", lowered):
+        reg = "іронічний"
+    elif re.search(r"\bжарт\b", lowered):
+        reg = "жартівливий"
+    elif re.search(r"\bфольк\b", lowered):
+        reg = "фольклорний"
+    elif re.search(r"\b(?:вульг|груб|лайл|зневажл)\b", lowered):
+        reg = "просторічно-знижений"
+
+    s = text.strip()
+    s = re.sub(r"^\d+\.\s*", "", s).strip()
+    s = re.sub(r"\[.*?\]", "", s).strip()
+
+    # Locating gloss boundary at first capitalized word following leading label/valency sequences
+    m_cap = re.search(r"(?<!\w)([А-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ\'-]+.*)$", s)
+    if m_cap:
+        s = m_cap.group(1).strip()
+
+    prev = ""
+    while s != prev:
+        prev = s
+        s = re.sub(r"^\[.*?\]\s*", "", s).strip()
+        s = re.sub(r"^зі\s+сл\.[^.]*?\.\s*", "", s).strip()
+        s = re.sub(
+            r"^(?:кому|чому|кого|чого|у\s+кого|в\s+кого|з\s+ким|ким|чим|чиє|чию|на\s+кого|на\s+що|про\s+кого|про\s+що|за\s+що|до\s+кого|до\s+чого)[^.]*?\.\s*",
+            "",
+            s,
+        ).strip()
+        s = re.sub(r"^(?:перев\.|також|переважно|переважн\.|власне|рідше)\.?\s*", "", s).strip()
+        s = re.sub(
+            r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл|грубо|грубе|несхв|схв|рідко|перен|церк|заст|спец|фам|мед|спорт|публ)\.?\s*",
+            "",
+            s,
+        ).strip()
+        s = re.sub(r"^(?:і\s+без\s+додатка|без\s+додатка)\.?\s*", "", s).strip()
+        s = re.sub(r"^[,\s:;—–-]+", "", s).strip()
+
+    # Strip speech / colon introductory clause at end before quote (e.g. 'Пояснив [Лаврін Тесля]:')
+    s = re.sub(r"\s*[^.!?:]*:\s*$", "", s).strip()
+    s = re.sub(r"\[.*?\]", "", s).strip()
+    s = re.sub(r"\s+", " ", s).strip()
+    return s, reg
+
+
 def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit | None:
     """Parse a raw frazeolohichnyi entry with strict definition cleaning and quote attestation."""
     word = clean_raw_html_and_tags(clean_stress_marks(word_raw))
@@ -1882,8 +1951,24 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
     return pairs
 
 
+def is_valid_author_attribution(a: str, cits: list[str]) -> bool:
+    """Validate whether parenthesized string is an authentic author/source attribution."""
+    if not a or len(a) < 3:
+        return False
+    low = a.lower()
+    if any(kw in low for kw in ("і т.", "і под.", "рідше", "перев", "також", "пор.", "див.", "напр.")):
+        return False
+    if cits and any(c.lower() in low or low in c.lower() for c in cits):
+        return True
+    if a.startswith("З ") or a.startswith("з "):
+        return True
+    if re.match(r"^(?:[А-ЯІЇЄҐ]\.\s*){1,2}[А-ЯІЇЄҐ][а-яіїєґ\'-]+", a):
+        return True
+    return bool(re.match(r"^[А-ЯІЇЄҐ][а-яіїєґ\'-]+\s+[А-ЯІЇЄҐ][а-яіїєґ\'-]+", a))
+
+
 def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyUnit], list[SynonymGroup]]:
-    """Extract phraseology and synonym records from NASU ULIF database."""
+    """Extract phraseology and synonym records from NASU ULIF database (sources.db:ulif_dictua_*)."""
     phraseology_units: list[PhraseologyUnit] = []
     synonym_groups: list[SynonymGroup] = []
 
@@ -1894,38 +1979,197 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
     conn = sqlite3.connect(f"file:{ulif_db}?mode=ro", uri=True)
     cur = conn.cursor()
 
-    cur.execute(
-        "SELECT lemma, canonical_headword, phraseology_json, synonyms_json "
-        "FROM ulif_entries "
-        "WHERE (phraseology_json IS NOT NULL AND phraseology_json != '' AND phraseology_json != '[]') "
-        "   OR (synonyms_json IS NOT NULL AND synonyms_json != '' AND synonyms_json != '[]');"
-    )
+    has_dictua = cur.execute(
+        "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_sections'"
+    ).fetchone() is not None
 
-    for lemma, canonical_hw, phr_raw, syn_raw in cur.fetchall():
-        headword = canonical_hw or lemma
-        if phr_raw and phr_raw not in ("", "[]"):
+    if has_dictua:
+        cur.execute(
+            """
+            SELECT e.normalized_query, e.canonical_headword, s.kind, s.payload_json
+            FROM ulif_dictua_sections s
+            JOIN ulif_dictua_entries e ON s.entry_id = e.id
+            WHERE s.kind IN ('phraseology', 'synonyms')
+              AND e.status = 'ok'
+            """
+        )
+        for norm_query, canonical_hw, kind, payload_raw in cur.fetchall():
+            headword = canonical_hw or norm_query
+            if not payload_raw:
+                continue
             try:
-                items = json.loads(phr_raw)
-                for it in items:
-                    raw_text = clean_stress_marks(it.get("text", ""))
-                    terms = [clean_stress_marks(t) for t in it.get("terms", [])]
-                    cits = it.get("citations", [])
-                    idiom_str = clean_raw_html_and_tags(terms[0] if terms else raw_text.split(".")[0])
-                    full_context = f"{idiom_str} {raw_text} {' '.join(cits)}"
-                    is_held = is_record_held_out(full_context)
+                payload = json.loads(payload_raw)
+            except Exception:
+                continue
 
-                    author = "Класична література"
-                    if is_held:
-                        for cit in cits:
+            if kind == "phraseology":
+                if not isinstance(payload, dict):
+                    continue
+
+                raw_html = payload.get("raw_html", "")
+                if raw_html:
+                    m_bold = re.search(r"<b>(.*?)</b>", raw_html, re.DOTALL)
+                    if m_bold:
+                        raw_b = clean_raw_html_and_tags(clean_stress_marks(m_bold.group(1))).rstrip(".,;: ")
+                        idiom_str = re.sub(r"^\d+\.\s*", "", raw_b).strip()
+                        idiom_str = idiom_str.split(";")[0].strip()
+                        idiom_str = re.sub(r"\s*[.\s]\s*\d+\.?\s*$", "", idiom_str).strip().rstrip(".,;: ")
+                    else:
+                        raw_b = headword
+                        idiom_str = headword
+
+                    after_b = raw_html[m_bold.end() :] if m_bold else raw_html
+                    cits = payload.get("citations", [])
+                    valid_auth_matches: list[tuple[re.Match, str]] = []
+                    for am in re.finditer(r"\(([^()]+)\)(?:\s*[;.]|\s*</p>|\s*$)", after_b):
+                        a_cand = (
+                            clean_raw_html_and_tags(clean_stress_marks(am.group(1))).replace("\xa0", " ").strip()
+                        )
+                        if is_valid_author_attribution(a_cand, cits):
+                            valid_auth_matches.append((am, a_cand))
+
+                    if not valid_auth_matches:
+                        continue
+
+                    # Step 1: Definition ends where the first quotation begins
+                    first_auth_span = after_b[: valid_auth_matches[0][0].start()]
+                    m_def_end = re.search(r"\.\s*(?:<i>|<i\s+[^>]*>)", first_auth_span)
+                    if m_def_end:
+                        def_raw = first_auth_span[: m_def_end.start() + 1]
+                        quote_0_raw = first_auth_span[m_def_end.start() + 1 :]
+                    else:
+                        m_def_semi = re.search(r";\s*(?:<i>|<i\s+[^>]*>)", first_auth_span)
+                        if m_def_semi:
+                            def_raw = first_auth_span[: m_def_semi.start() + 1]
+                            quote_0_raw = first_auth_span[m_def_semi.start() + 1 :]
+                        else:
+                            m_first_i = re.search(r"<i>|<i\s+[^>]*>", first_auth_span)
+                            if m_first_i:
+                                def_raw = first_auth_span[: m_first_i.start()]
+                                quote_0_raw = first_auth_span[m_first_i.start() :]
+                            else:
+                                def_raw = first_auth_span
+                                quote_0_raw = ""
+
+                    definition, reg = extract_clean_definition_and_labels(
+                        clean_raw_html_and_tags(clean_stress_marks(def_raw))
+                    )
+
+                    # Step 2: Extract complete bound quotations (preserving brackets and full clauses)
+                    extracted_quotes: list[tuple[str, str]] = []
+                    q0_clean = clean_raw_html_and_tags(clean_stress_marks(quote_0_raw)).strip().lstrip(";,—–- ")
+                    q0_clean = re.sub(r"^\[.*?\]\s*", "", q0_clean).strip()
+                    a0_clean = valid_auth_matches[0][1]
+                    if len(q0_clean) >= 15:
+                        extracted_quotes.append((q0_clean, a0_clean))
+
+                    for i in range(1, len(valid_auth_matches)):
+                        span_i = after_b[valid_auth_matches[i - 1][0].end() : valid_auth_matches[i][0].start()]
+                        qi_clean = (
+                            clean_raw_html_and_tags(clean_stress_marks(span_i)).strip().lstrip(";,—–- ")
+                        )
+                        qi_clean = re.sub(r"^\[.*?\]\s*", "", qi_clean).strip()
+                        ai_clean = valid_auth_matches[i][1]
+                        if len(qi_clean) >= 15:
+                            extracted_quotes.append((qi_clean, ai_clean))
+
+                    if not extracted_quotes:
+                        continue
+
+                    # Select quote and author: prioritize held-out quote if any exists
+                    held_q = None
+                    for q_text, auth_text in extracted_quotes:
+                        if HELD_OUT_AUTHORS_RE.search(auth_text):
+                            disp = auth_text
                             for hoa in HELD_OUT_AUTHORS_DISPLAY:
-                                if HELD_OUT_AUTHORS_RE.search(cit):
-                                    author = hoa
+                                if hoa in auth_text or re.search(r"\b" + re.escape(hoa) + r"\b", auth_text):
+                                    disp = hoa
                                     break
+                            held_q = (q_text, disp)
+                            break
+
+                    if held_q:
+                        citation, author = held_q
+                        is_held = True
+                    else:
+                        citation = extracted_quotes[0][0]
+                        author = extracted_quotes[0][1] or "Класична література"
+                        is_held = False
+
+                    # Drop criteria per Issue #8140 Rule 1 (clean authentic extraction only)
+                    if len(idiom_str) < 3 or len(definition) < 4 or len(citation) < 15:
+                        continue
+                    if idiom_str.count("(") != idiom_str.count(")"):
+                        continue
+                    if definition.count("(") != definition.count(")"):
+                        continue
+                    if re.search(r"^\s*і\s+т\.\s*ін\.\)", definition) or definition.startswith(")"):
+                        continue
+                    if is_label_fragment(definition):
+                        continue
+                    if definition.startswith(",") or definition.startswith(":") or ": , " in definition:
+                        continue
+                    if (
+                        SPACE_BEFORE_PUNCT_RE.search(idiom_str)
+                        or SPACE_BEFORE_PUNCT_RE.search(definition)
+                        or SPACE_BEFORE_PUNCT_RE.search(citation)
+                    ):
+                        continue
+                    if (
+                        SPLICE_PUNCTUATION_RE.search(idiom_str)
+                        or SPLICE_PUNCTUATION_RE.search(definition)
+                        or SPLICE_PUNCTUATION_RE.search(citation)
+                    ):
+                        continue
+                    if SPEECH_VERB_RE.search(citation):
+                        continue
+
+                    # Stem attestation check: citation must contain at least one content stem of the idiom
+                    stems = get_content_stems(idiom_str)
+                    if stems and not any(st in citation.lower() for st in stems):
+                        continue
+
                     phraseology_units.append(
                         PhraseologyUnit(
                             headword=headword,
                             idiom=idiom_str,
-                            definition=clean_raw_html_and_tags(raw_text),
+                            definition=definition,
+                            citation_text=citation,
+                            author=author,
+                            source_dict="ulif_nasu",
+                            register=reg,
+                            is_held_out=is_held,
+                        )
+                    )
+                else:
+                    raw_text = clean_stress_marks(payload.get("text", ""))
+                    raw_terms = payload.get("terms", [])
+                    cits = payload.get("citations", [])
+                    terms: list[str] = []
+                    for t in raw_terms:
+                        if isinstance(t, dict):
+                            terms.append(clean_stress_marks(t.get("text", "")))
+                        elif isinstance(t, str):
+                            terms.append(clean_stress_marks(t))
+                    idiom_str = clean_raw_html_and_tags(terms[0] if terms else raw_text.split(".")[0]).strip()
+                    full_context = f"{idiom_str} {raw_text} {' '.join(cits)}"
+                    is_held = is_record_held_out(full_context)
+                    author = "Класична література"
+                    if is_held:
+                        for hoa in HELD_OUT_AUTHORS_DISPLAY:
+                            if HELD_OUT_AUTHORS_RE.search(full_context):
+                                author = hoa
+                                break
+                    elif cits:
+                        author = clean_raw_html_and_tags(clean_stress_marks(cits[0]))
+                    def_str = clean_raw_html_and_tags(raw_text)
+                    if def_str.startswith(idiom_str):
+                        def_str = def_str[len(idiom_str) :].lstrip(".,;: ")
+                    phraseology_units.append(
+                        PhraseologyUnit(
+                            headword=headword,
+                            idiom=idiom_str,
+                            definition=def_str or raw_text,
                             citation_text=" ".join(cits) if cits else raw_text,
                             author=author,
                             source_dict="ulif_nasu",
@@ -1933,16 +2177,21 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
                             is_held_out=is_held,
                         )
                     )
-            except Exception as e:
-                logger.debug("Failed parsing phraseology for %s: %s", lemma, e)
+            elif kind == "synonyms":
+                if isinstance(payload, dict):
+                    raw_terms = payload.get("terms", [])
+                elif isinstance(payload, list):
+                    raw_terms = payload
+                else:
+                    continue
 
-        if syn_raw and syn_raw not in ("", "[]"):
-            try:
-                s_items = json.loads(syn_raw)
                 syns: list[str] = []
-                for s in s_items:
+                for s in raw_terms:
                     if isinstance(s, dict):
-                        syns.extend(clean_stress_marks(t) for t in s.get("terms", []))
+                        if "text" in s:
+                            syns.append(clean_stress_marks(s.get("text", "")))
+                        for w in s.get("words", []):
+                            syns.append(clean_stress_marks(str(w)))
                     elif isinstance(s, str):
                         syns.append(clean_stress_marks(s))
                 clean_syns = [clean_raw_html_and_tags(s) for s in syns if len(clean_raw_html_and_tags(s)) > 2]
@@ -1955,8 +2204,74 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
                             source_dict="ulif_nasu",
                         )
                     )
-            except Exception as e:
-                logger.debug("Failed parsing synonyms for %s: %s", lemma, e)
+    else:
+        # Legacy fallback if an old crawl dump is explicitly provided
+        has_legacy = cur.execute(
+            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_entries'"
+        ).fetchone() is not None
+        if has_legacy:
+            cur.execute(
+                "SELECT lemma, canonical_headword, phraseology_json, synonyms_json "
+                "FROM ulif_entries "
+                "WHERE (phraseology_json IS NOT NULL AND phraseology_json != '' AND phraseology_json != '[]') "
+                "   OR (synonyms_json IS NOT NULL AND synonyms_json != '' AND synonyms_json != '[]');"
+            )
+            for lemma, canonical_hw, phr_raw, syn_raw in cur.fetchall():
+                headword = canonical_hw or lemma
+                if phr_raw and phr_raw not in ("", "[]"):
+                    try:
+                        items = json.loads(phr_raw)
+                        for it in items:
+                            raw_text = clean_stress_marks(it.get("text", ""))
+                            terms = [clean_stress_marks(t) for t in it.get("terms", [])]
+                            cits = it.get("citations", [])
+                            idiom_str = clean_raw_html_and_tags(terms[0] if terms else raw_text.split(".")[0])
+                            full_context = f"{idiom_str} {raw_text} {' '.join(cits)}"
+                            is_held = is_record_held_out(full_context)
+
+                            author = "Класична література"
+                            if is_held:
+                                for cit in cits:
+                                    for hoa in HELD_OUT_AUTHORS_DISPLAY:
+                                        if HELD_OUT_AUTHORS_RE.search(cit):
+                                            author = hoa
+                                            break
+                            phraseology_units.append(
+                                PhraseologyUnit(
+                                    headword=headword,
+                                    idiom=idiom_str,
+                                    definition=clean_raw_html_and_tags(raw_text),
+                                    citation_text=" ".join(cits) if cits else raw_text,
+                                    author=author,
+                                    source_dict="ulif_nasu",
+                                    register="загальновживаний літературний",
+                                    is_held_out=is_held,
+                                )
+                            )
+                    except Exception as e:
+                        logger.debug("Failed parsing phraseology for %s: %s", lemma, e)
+
+                if syn_raw and syn_raw not in ("", "[]"):
+                    try:
+                        s_items = json.loads(syn_raw)
+                        syns = []
+                        for s in s_items:
+                            if isinstance(s, dict):
+                                syns.extend(clean_stress_marks(t) for t in s.get("terms", []))
+                            elif isinstance(s, str):
+                                syns.append(clean_stress_marks(s))
+                        clean_syns = [clean_raw_html_and_tags(s) for s in syns if len(clean_raw_html_and_tags(s)) > 2]
+                        full_syn_text = f"{headword} {' '.join(clean_syns)}"
+                        if clean_syns and not is_record_held_out(full_syn_text):
+                            synonym_groups.append(
+                                SynonymGroup(
+                                    headword=headword,
+                                    synonyms=clean_syns[:8],
+                                    source_dict="ulif_nasu",
+                                )
+                            )
+                    except Exception as e:
+                        logger.debug("Failed parsing synonyms for %s: %s", lemma, e)
 
     conn.close()
     logger.info("Loaded %d ULIF phraseological units, %d synonym groups", len(phraseology_units), len(synonym_groups))
@@ -2457,7 +2772,7 @@ def synthesize_sft_trajectory(
                     f"Досліджую стилістичну диференціацію фразеологізму «{unit.idiom}».\n"
                     f"Оцінюю належність до сфери: {unit.register}.\n"
                     f"Семантичне ядро вислову передає: {unit.definition}\n"
-                    f"Спираюся на художню фіксацію у творі майстра слова {unit.author}.\n"
+                    f"Спираюся на художню фіксацію у творі письменника ({unit.author}).\n"
                     f"</thought>"
                 ),
                 (
@@ -2471,9 +2786,9 @@ def synthesize_sft_trajectory(
                 (
                     f"<thought>\n"
                     f"Аналізую культурно-мовну образність українського фразеологізму «{unit.idiom}».\n"
-                    f"Семантика одиниці розкриває таке значення: {unit.definition}\n"
+                    f"Семантичний зміст одиниці передає таке значення: {unit.definition}\n"
                     f"Стилістичний діапазон: {unit.register}.\n"
-                    f"Приклад автора ({unit.author}) підтверджує питому традицію вживання.\n"
+                    f"Зразок із доробку автора ({unit.author}) засвідчує питому традицію вживання.\n"
                     f"</thought>"
                 ),
                 (
@@ -2544,7 +2859,7 @@ def synthesize_sft_trajectory(
                     f"<thought>\n"
                     f"Досліджую фразеологічне значення звороту «{unit.idiom}».\n"
                     f"Семантичне ядро вислову передає: {unit.definition}\n"
-                    f"Спираюся на художню фіксацію у творі майстра слова {unit.author}.\n"
+                    f"Спираюся на художню фіксацію у творі письменника ({unit.author}).\n"
                     f"</thought>"
                 ),
                 (
@@ -2557,8 +2872,8 @@ def synthesize_sft_trajectory(
                 (
                     f"<thought>\n"
                     f"Аналізую культурно-мовну образність українського фразеологізму «{unit.idiom}».\n"
-                    f"Семантика одиниці розкриває таке значення: {unit.definition}\n"
-                    f"Приклад автора ({unit.author}) підтверджує питому традицію вживання.\n"
+                    f"Семантичний зміст одиниці передає таке значення: {unit.definition}\n"
+                    f"Зразок із доробку автора ({unit.author}) засвідчує питому традицію вживання.\n"
                     f"</thought>"
                 ),
                 (
@@ -2693,6 +3008,7 @@ def generate_sft_dataset(
     shards_count: int | None = None,
     trajectories_per_shard: int = 500,
     cur_ves: sqlite3.Cursor | None = None,
+    candidate_leak_checker: Any | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, int]]:
     """Generate multi-turn SFT trajectories across strictly-sharded files."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2708,6 +3024,8 @@ def generate_sft_dataset(
             traj = synthesize_sft_trajectory(
                 u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves
             )
+            if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                continue
             trajectories.append(traj)
             task_counts["idiom_interpretation_literary"] += 1
 
@@ -2715,6 +3033,8 @@ def generate_sft_dataset(
             traj = synthesize_sft_trajectory(
                 None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves
             )
+            if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                continue
             trajectories.append(traj)
             task_counts["anti_calque_decolonization"] += 1
 
@@ -2722,6 +3042,8 @@ def generate_sft_dataset(
             traj = synthesize_sft_trajectory(
                 None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves
             )
+            if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                continue
             trajectories.append(traj)
             task_counts["synonymic_nuance_and_register"] += 1
 
@@ -2730,19 +3052,31 @@ def generate_sft_dataset(
                 traj = synthesize_sft_trajectory(
                     du, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves
                 )
+                if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                    continue
                 trajectories.append(traj)
                 task_counts["contextual_dialogue_usage"] += 1
     else:
-        target_literary = int(target_count * 20 / 45)
-        target_synonyms = int(target_count * 15 / 45)
-        target_dialogue = int(target_count * 5 / 45)
-        target_anti_calque = target_count - (target_literary + target_synonyms + target_dialogue)
+        target_synonyms = int(target_count * 15 / 45) if synonyms else 0
+        target_dialogue = int(target_count * 5 / 45) if dialogue_units else 0
+        rem = target_count - (target_synonyms + target_dialogue)
+        if units and calques:
+            target_literary = int(rem * 20 / 25)
+            target_anti_calque = rem - target_literary
+        elif units:
+            target_literary = rem
+            target_anti_calque = 0
+        else:
+            target_literary = 0
+            target_anti_calque = rem
 
         for i in range(target_literary):
             u = units[i % len(units)]
             traj = synthesize_sft_trajectory(
                 u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves
             )
+            if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                continue
             trajectories.append(traj)
             task_counts["idiom_interpretation_literary"] += 1
 
@@ -2751,6 +3085,8 @@ def generate_sft_dataset(
             traj = synthesize_sft_trajectory(
                 None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves
             )
+            if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                continue
             trajectories.append(traj)
             task_counts["synonymic_nuance_and_register"] += 1
 
@@ -2759,6 +3095,8 @@ def generate_sft_dataset(
             traj = synthesize_sft_trajectory(
                 u, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves
             )
+            if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                continue
             trajectories.append(traj)
             task_counts["contextual_dialogue_usage"] += 1
 
@@ -2767,6 +3105,8 @@ def generate_sft_dataset(
             traj = synthesize_sft_trajectory(
                 None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves
             )
+            if candidate_leak_checker and candidate_leak_checker(traj["final_response"]):
+                continue
             trajectories.append(traj)
             task_counts["anti_calque_decolonization"] += 1
 
@@ -2834,6 +3174,7 @@ def generate_dpo_dataset(
     shards_count: int | None = None,
     pairs_per_shard: int = 500,
     cur_ves: sqlite3.Cursor | None = None,
+    candidate_leak_checker: Any | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, int]]:
     """Generate multi-domain DPO preference pairs across strictly-sharded files."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2952,6 +3293,9 @@ def generate_dpo_dataset(
                 f"І зворот **«{cp.calque}»**, і форму **«{cp.authentic}»** варто вважати недосконалими. "
                 f"Сучасний розвиток мови вимагає відмовитися від обох варіантів на користь нових авторських слів або описових конструкцій."
             )
+
+        if candidate_leak_checker and (candidate_leak_checker(chosen) or candidate_leak_checker(rejected)):
+            continue
 
         pair = {
             "schema_version": "v1_ulif_phraseology_dpo_pair",
@@ -3219,30 +3563,46 @@ def verify_receipt_invariants(
 
         for t in sorted(unique_tokens):
             total_eval_tokens += 1
-            cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1", (t, t))
+            cur_ves.execute(
+                "SELECT 1 FROM forms_all WHERE word_form IN (?, ?) OR lemma IN (?, ?) LIMIT 1",
+                (t, t.capitalize(), t, t.capitalize()),
+            )
             if cur_ves.fetchone():
                 vesum_attested_tokens += 1
         if vesum_attested_tokens == 0:
             raise AssertionError("VESUM attestation check found 0 attested tokens in dataset targets!")
 
-    # 2. Verify grounded idioms in sources.db: frazeolohichnyi
+    # 2. Verify grounded idioms in sources.db: frazeolohichnyi and ulif_dictua_sections (Findings 1, 3)
     if not sources_db.exists() or sources_db.stat().st_size == 0:
         raise FileNotFoundError(f"sources.db missing or empty: {sources_db}")
 
+    fraz_units = load_frazeolohichnyi_dictionary(sources_db)
+    ulif_units, _ = load_ulif_phraseology_and_synonyms(sources_db)
+    known_fraz_idioms: set[str] = set()
+    attested_tuples: dict[str, list[dict[str, Any]]] = defaultdict(list)
+
+    for u in fraz_units + ulif_units:
+        k = u.idiom.strip().lower()
+        base_k = re.split(r"[\(/,]", k)[0].strip()
+        cand_info = {
+            "definition": normalize_grounding_text(u.definition),
+            "citation": normalize_grounding_text(u.citation_text),
+            "author": normalize_grounding_text(u.author),
+            "idiom": k,
+        }
+        attested_tuples[k].append(cand_info)
+        known_fraz_idioms.add(k)
+        if len(base_k) >= 4 and base_k != k:
+            attested_tuples[base_k].append(cand_info)
+            known_fraz_idioms.add(base_k)
+
     conn_src = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
     cur_src = conn_src.cursor()
-    cur_src.execute("SELECT word, definition FROM frazeolohichnyi;")
-    known_fraz_idioms: set[str] = set()
-    for w_raw, d_raw in cur_src.fetchall():
-        u = parse_frazeolohichnyi_entry(w_raw, d_raw)
-        if u is not None:
-            known_fraz_idioms.add(u.idiom.strip().lower())
+    cur_src.execute("SELECT word FROM frazeolohichnyi;")
+    for (w_raw,) in cur_src.fetchall():
         w_clean = clean_raw_html_and_tags(clean_stress_marks(w_raw)).strip().lower()
         if w_clean:
             known_fraz_idioms.add(w_clean)
-            base = re.split(r"[\(/,]", w_clean)[0].strip()
-            if base:
-                known_fraz_idioms.add(base)
     conn_src.close()
 
     # Build comprehensive set of calques to check (Finding 3)
@@ -3320,18 +3680,62 @@ def verify_receipt_invariants(
                     )
                 thought_tags_count += 1
 
-                # Grounding check: verify literary idioms against frazeolohichnyi (Finding 1)
+                # Grounding check: verify literary idioms against frazeolohichnyi and ULIF (Findings 1, 3)
                 if row.get("task_type") == "idiom_interpretation_literary":
                     total_literary_tasks += 1
                     target_p = row.get("target_phrase", "").strip().lower()
-                    if (
-                        target_p in known_fraz_idioms
-                        or any(target_p.startswith(ki) for ki in known_fraz_idioms)
-                        or any(ki.startswith(target_p) for ki in known_fraz_idioms)
-                    ):
-                        literary_grounded_count += 1
-                    else:
+                    target_base = re.split(r"[\(/,]", target_p)[0].strip()
+
+                    cands = attested_tuples.get(target_p) or attested_tuples.get(target_base)
+                    if not cands:
+                        for ki in attested_tuples:
+                            if (len(ki) >= 4 and target_p.startswith(ki + " ")) or (
+                                len(target_p) >= 4 and ki.startswith(target_p + " ")
+                            ):
+                                cands = attested_tuples[ki]
+                                break
+
+                    if not cands:
                         unattested_literary.append(f"{shard_path.name}:{line_no} '{target_p}'")
+                    else:
+                        # Strip thought block so displayed definition cannot be masked by thought text (Finding 2)
+                        disp_text = re.sub(r"<thought>.*?</thought>", "", resp, flags=re.DOTALL).strip()
+
+                        # Extract displayed definition, quotation, and attribution exclusively from displayed text
+                        m_def = re.search(
+                            r"(?:позначає|на позначення|має значення|полягає у такому|виражає|тлумачиться як):\s*([^\n]+)",
+                            disp_text,
+                            re.IGNORECASE,
+                        )
+                        disp_def = normalize_grounding_text(m_def.group(1)) if m_def else ""
+
+                        m_auth_quote = re.search(r"\(([^()]+)\)[*:]*\s*\n+«([^»]+)»", disp_text)
+                        if m_auth_quote:
+                            disp_auth = normalize_grounding_text(m_auth_quote.group(1))
+                            disp_quote = normalize_grounding_text(m_auth_quote.group(2))
+                        else:
+                            quotes = re.findall(r"«([^»]+)»", disp_text)
+                            disp_quote = normalize_grounding_text(quotes[-1]) if quotes else ""
+                            m_auth = re.search(r"\(([^()]+)\)[*:]*\s*\n+«", disp_text)
+                            disp_auth = normalize_grounding_text(m_auth.group(1)) if m_auth else ""
+
+                        matched_grounding = False
+                        if disp_def and disp_quote and disp_auth:
+                            for cand in cands:
+                                if (
+                                    cand["author"] == disp_auth
+                                    and cand["citation"] == disp_quote
+                                    and cand["definition"] == disp_def
+                                ):
+                                    matched_grounding = True
+                                    break
+
+                        if matched_grounding:
+                            literary_grounded_count += 1
+                        else:
+                            unattested_literary.append(
+                                f"{shard_path.name}:{line_no} '{target_p}' (author/quote/def grounding mismatch)"
+                            )
 
                     # Corpus-wide quote invariants (Findings 1, 2, 5)
                     quotes = re.findall(r"«([^»]+)»", resp)
@@ -3632,7 +4036,7 @@ def run_pipeline(
         logger.info("Connected to VESUM database at %s", vesum_db)
 
     # 2. Load data from diverse sources
-    _ulif_units, synonym_groups = load_ulif_phraseology_and_synonyms(ulif_db)
+    ulif_units, synonym_groups = load_ulif_phraseology_and_synonyms(ulif_db)
     fraz_units = load_frazeolohichnyi_dictionary(sources_db)
     uagec_calques = load_ua_gec_calques(sources_db)
 
@@ -3645,7 +4049,14 @@ def run_pipeline(
     eval_calques = HELD_OUT_CURATED_CALQUE_PAIRS
     train_calques = [c for c in all_calques if not c.is_held_out]
 
-    eval_units = [u for u in fraz_units if u.is_held_out and u.idiom.strip().lower() not in canonical_terms]
+    # Combine held-out units from both ULIF and frazeolohichnyi (deduplicated by idiom)
+    seen_eval_idioms: set[str] = set()
+    eval_units: list[PhraseologyUnit] = []
+    for u in ulif_units + fraz_units:
+        k = u.idiom.strip().lower()
+        if u.is_held_out and k not in canonical_terms and k not in seen_eval_idioms:
+            seen_eval_idioms.add(k)
+            eval_units.append(u)
 
     # Partition synonyms: reserve 500 for eval, rest for training
     random.Random(8140).shuffle(synonym_groups)
@@ -3710,6 +4121,8 @@ def run_pipeline(
     def has_candidate_leak(text: str) -> bool:
         if not text:
             return False
+        if HELD_OUT_AUTHORS_RE.search(text):
+            return True
         words = [
             w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", text) if len(w) >= 3 and w.lower() not in STOP_WORDS
         ]
@@ -3748,6 +4161,21 @@ def run_pipeline(
         and not has_candidate_leak(c.mechanism)
     ]
 
+    # Clean ULIF phraseology pool (grounded in canonical ULIF SSOT)
+    clean_ulif_pool = [
+        u
+        for u in ulif_units
+        if not u.is_held_out
+        and u.idiom.strip().lower() not in disallowed_in_train
+        and u.idiom.strip().lower() not in canonical_terms
+        and len(u.definition) >= 4
+        and len(u.citation_text) >= 6
+        and not has_candidate_leak(u.idiom)
+        and not has_candidate_leak(u.definition)
+        and not has_candidate_leak(u.citation_text)
+        and not has_candidate_leak(u.author)
+    ]
+
     # Clean frazeolohichnyi pool for literary interpretation (100% grounded against frazeolohichnyi)
     clean_fraz_pool = [
         u
@@ -3761,21 +4189,29 @@ def run_pipeline(
         and not has_candidate_leak(u.idiom)
         and not has_candidate_leak(u.definition)
         and not has_candidate_leak(u.citation_text)
+        and not has_candidate_leak(u.author)
     ]
-    random.Random(8140).shuffle(clean_fraz_pool)
 
-    # Strictly deduplicate by idiom string to ensure zero repeated items
-    seen_fraz_idioms: set[str] = set()
-    dedup_fraz_pool: list[PhraseologyUnit] = []
+    # Strictly deduplicate by idiom string to ensure zero repeated items.
+    # ULIF (Single Source of Truth) entries take precedence over frazeolohichnyi on overlapping idioms.
+    seen_train_idioms: set[str] = set()
+    dedup_pool: list[PhraseologyUnit] = []
+    for u in clean_ulif_pool:
+        k = u.idiom.strip().lower()
+        if k not in seen_train_idioms:
+            seen_train_idioms.add(k)
+            dedup_pool.append(u)
     for u in clean_fraz_pool:
         k = u.idiom.strip().lower()
-        if k not in seen_fraz_idioms:
-            seen_fraz_idioms.add(k)
-            dedup_fraz_pool.append(u)
+        if k not in seen_train_idioms:
+            seen_train_idioms.add(k)
+            dedup_pool.append(u)
+
+    random.Random(8140).shuffle(dedup_pool)
 
     # Dedup pool: SFT takes authentic literary phraseology units; DPO is strictly anti-calque decolonization
-    sft_idiom_limit = 10000 if len(dedup_fraz_pool) >= 10000 else len(dedup_fraz_pool)
-    train_units = dedup_fraz_pool[:sft_idiom_limit]
+    # Per Issue #8140: Distinct idioms count IS the set size; no artificial count truncation or synthetic padding.
+    train_units = dedup_pool
     dpo_units: list[PhraseologyUnit] = []
 
     # Per Issue #8140 and Roadmap Rule 1 (authentic idiom focus, no synthetic boilerplate):
@@ -3795,6 +4231,7 @@ def run_pipeline(
         shards_count=sft_shards,
         trajectories_per_shard=sft_per_shard,
         cur_ves=cur_ves,
+        candidate_leak_checker=has_candidate_leak,
     )
 
     # 6. Generate DPO Dataset
@@ -3807,6 +4244,7 @@ def run_pipeline(
         shards_count=dpo_shards,
         pairs_per_shard=dpo_per_shard,
         cur_ves=cur_ves,
+        candidate_leak_checker=has_candidate_leak,
     )
 
     # 7. Audit Zero Leakage & Zero Target Overlap on disk
@@ -3846,7 +4284,7 @@ def run_pipeline(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Mine ULIF phraseology, idioms, and anti-calque pairs.")
-    parser.add_argument("--ulif-db", type=Path, default=DEFAULT_ULIF_DB, help="Path to ulif_dump_all.db")
+    parser.add_argument("--ulif-db", type=Path, default=DEFAULT_ULIF_DB, help="Path to sources.db or legacy ULIF database")
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Release directory")

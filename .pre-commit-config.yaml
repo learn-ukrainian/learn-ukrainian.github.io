@@ -283,6 +283,31 @@ repos:
         files: ^tests/.*\.py$
         stages: [pre-commit]
 
+      # --- Cheap repo-wide guards shifted left (B19, #9064) ---
+      - id: repo-wide-marker-invariant
+        name: repo-wide pytest marker invariant
+        entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_repo_wide_marker_invariant.py --override-ini addopts=-q
+        language: system
+        pass_filenames: false
+        files: ^tests/.*\.py$
+        stages: [pre-push]
+
+      - id: task-store-resolver-guard
+        name: task-store call-time resolver guard
+        entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_conftest_task_store_guard.py --override-ini addopts=-q
+        language: system
+        pass_filenames: false
+        files: ^(scripts|tests)/.*\.py$
+        stages: [pre-push]
+
+      - id: sparse-collection-guard
+        name: sparse tree collection guard
+        entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent --override-ini addopts=-q
+        language: system
+        pass_filenames: false
+        files: ^tests/.*\.py$
+        stages: [pre-push]
+
       # Dagger pre-push pytest hook REMOVED 2026-05-17 per user direction.
       # Cause: Dagger's cache_volume design accumulates pip wheels every
       # cold run (was 30 GB/run pre-#2088, ~6 GB/run post-#2088 with .venv

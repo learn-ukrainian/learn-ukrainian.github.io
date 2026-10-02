@@ -124,7 +124,6 @@ _SKIP_PATH_SUBSTRINGS = [
     "wiki/.state/",
     "docs/references/external/",
     "requirements-lock.txt",
-    "requirements.lock",
     "audit/",
     "_archive/",
 ]

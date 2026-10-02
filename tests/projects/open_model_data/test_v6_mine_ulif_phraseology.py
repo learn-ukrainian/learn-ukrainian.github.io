@@ -8,7 +8,7 @@ Verifies:
 5. Draft 2020-12 JSON Schema validation for held-out evaluation records and release receipts.
 6. Shard formatting, manifest consistency, and size ceiling (< 2,000 KB per shard).
 7. Zero leakage audit scanning actual generated shards on disk (author leakage & target phrase overlap).
-8. Live extraction from ULIF (data/ulif_dump_all.db), sources (frazeolohichnyi, ua_gec_errors), and VESUM.
+8. Live extraction from ULIF (data/sources.db:ulif_dictua_*), sources (frazeolohichnyi, ua_gec_errors), and VESUM.
 """
 
 from __future__ import annotations
@@ -44,6 +44,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     audit_zero_train_eval_leakage,
     clean_raw_html_and_tags,
     clean_stress_marks,
+    extract_clean_definition_and_labels,
     extract_quote_for_author,
     generate_dpo_dataset,
     generate_evaluation_benchmark,
@@ -70,7 +71,9 @@ def _has_ulif() -> bool:
         return False
     try:
         with sqlite3.connect(f"file:{DEFAULT_ULIF_DB}?mode=ro", uri=True) as conn:
-            r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_entries'").fetchone()
+            r = conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ('ulif_dictua_sections', 'ulif_entries')"
+            ).fetchone()
             return r is not None
     except Exception:
         return False
@@ -98,7 +101,7 @@ def _has_vesum() -> bool:
         return False
 
 
-requires_ulif = pytest.mark.skipif(not _has_ulif(), reason="data/ulif_dump_all.db missing or empty")
+requires_ulif = pytest.mark.skipif(not _has_ulif(), reason="ULIF database or tables missing or empty")
 requires_sources = pytest.mark.skipif(not _has_sources(), reason="data/sources.db missing or empty")
 requires_vesum = pytest.mark.skipif(not _has_vesum(), reason="data/vesum.db missing or empty")
 
@@ -569,12 +572,21 @@ def test_verify_receipt_invariants_real_checks():
         sft_dir.mkdir()
         dpo_dir.mkdir()
 
-        # Valid SFT shard
+        # Valid SFT shard with authentic literary grounding (Finding 3)
         sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
         valid_row = {
             "task_type": "idiom_interpretation_literary",
-            "target_phrase": "брати гору",
-            "final_response": "<thought>Аналізую фразеологізм «брати гору» за академічним фразеологічним словником.</thought>\n\nНормативний вираз: **«брати гору»**.",
+            "target_phrase": "байдики бити",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту «байдики бити».\n"
+                "Метафоричне значення базується на переносному вживанні: Не працювати; ледарювати.\n"
+                "Стилістичний регістр висловлювання: розмовний.\n"
+                "Контекст ілюструється класичним слововживанням (А. Головко).\n</thought>\n\n"
+                "Український фразеологізм **«байдики бити»** позначає: Не працювати; ледарювати.\n\n"
+                "**Стилістичний регістр:** розмовний.\n\n"
+                "**Зразок уживання в художній літературі (А. Головко):**\n"
+                "«Сам батько пильно стежив за Артемовою наукою.. Щоправда, влітку байдики бити синові не давав, і був Артем за підпасича у громадського чабана діда Мокія»"
+            ),
         }
         sft_shard.write_text(json.dumps(valid_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -586,7 +598,7 @@ def test_verify_receipt_invariants_real_checks():
         }
         dpo_shard.write_text(json.dumps(dpo_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
-        eval_records = [{"target_idiom": "брати гору"}]
+        eval_records = [{"target_idiom": "яблуко розбрату"}]
         res = verify_receipt_invariants(
             eval_records=eval_records,
             sft_dir=sft_dir,
@@ -1273,3 +1285,435 @@ def test_clean_raw_html_collapses_whitespace_before_punctuation():
     assert clean_raw_html_and_tags("параграф 5 .") == "параграф 5."
     assert SPACE_BEFORE_PUNCT_RE.search("параграф 5 .") is not None
     assert SPACE_BEFORE_PUNCT_RE.search("параграф 5.") is None
+
+
+def test_load_ulif_phraseology_excludes_non_ok_entries(tmp_path: Path) -> None:
+    """Canonical phraseology extraction must strictly exclude parse_error and non-ok entries (#8798)."""
+    db_path = tmp_path / "test_ulif_status.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Entry 1: status='ok' (valid phraseology and synonym)
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'яблуко', 'я́блуко', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+        (json.dumps({"terms": ["яблуко розбрату"], "text": "яблуко розбрату. Причина незгоди."}),),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (11, 1, 'synonyms', ?)",
+        (json.dumps([{"words": ["яблучко"]}]),),
+    )
+
+    # Entry 2: status='parse_error' (must be excluded despite having phraseology/synonyms)
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (2, 'помилка', 'поми́лка', 'parse_error')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (20, 2, 'phraseology', ?)",
+        (json.dumps({"terms": ["груба помилка"], "text": "груба помилка. Неприпустима вада."}),),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (21, 2, 'synonyms', ?)",
+        (json.dumps([{"words": ["огріх"]}]),),
+    )
+    conn.commit()
+    conn.close()
+
+    phraseology, synonyms = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(phraseology) == 1
+    assert any(s.headword in ("яблуко", "я́блуко") for s in synonyms)
+    assert not any(s.headword in ("помилка", "поми́лка") for s in synonyms)
+    assert not any(p.idiom == "груба помилка" for p in phraseology)
+
+
+def test_ulif_phraseology_bound_author_quote_matching(tmp_path: Path) -> None:
+    """Codex R1 Finding 1: Ensure each quote receives its own bound author attribution."""
+    db_path = tmp_path / "test_ulif_authors.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Entry with two quotes: First from non-held-out author (Є. Гребінка), second from held-out author (М. Стельмах)
+    raw_html = (
+        "<p><b>хай йому аби́що. </b>Уживається для вираження байдужості. "
+        "<i>От то було б...— але нехай йому абищо, аби хліб був</i> (Є. Гребінка). "
+        "<i>Та хай йому абищо! Добре, що не в одній хаті живемо з ним</i> (М. Стельмах).</p>"
+    )
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'абищо', 'аби́що', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_html, "citations": ["Є. Гребінка", "М. Стельмах"]}),),
+    )
+    conn.commit()
+    conn.close()
+
+    phraseology, _ = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(phraseology) == 1
+    unit = phraseology[0]
+    # Unit prioritizes the held-out quote and binds the exact author
+    assert unit.is_held_out is True
+    assert unit.author == "Михайло Стельмах" or unit.author == "М. Стельмах"
+    assert "Та хай йому абищо!" in unit.citation_text
+    assert "Є. Гребінка" not in unit.author
+
+
+def test_ulif_phraseology_clean_definition_no_quotation_text(tmp_path: Path) -> None:
+    """Codex R1 Finding 2: HTML extraction must not contaminate definitions with quotation text or dialogue markers."""
+    db_path = tmp_path / "test_ulif_def.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Entry with introductory clause 'Пояснив [Лаврін Тесля]:' before quotation
+    raw_html = (
+        "<p><b>абсолю́тний нуль. </b>Нікчемна і непотрібна людина. "
+        "<i>Пояснив </i>[Лаврін Тесля]<i>:</i> "
+        "<i>— Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе</i> (Л. Дмитерко).</p>"
+    )
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'нуль', 'нуль', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_html, "citations": ["Л. Дмитерко"]}),),
+    )
+    conn.commit()
+    conn.close()
+
+    phraseology, _ = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(phraseology) == 1
+    unit = phraseology[0]
+    assert unit.definition == "Нікчемна і непотрібна людина."
+    assert "Пояснив" not in unit.definition
+    assert "Тесля" not in unit.definition
+    assert unit.citation_text == "Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе"
+    assert unit.author == "Л. Дмитерко"
+
+
+@requires_sources
+def test_verify_receipt_invariants_grounding_rejects_fabricated_content():
+    """Codex R1 Finding 3: Grounding invariant must reject attested idioms paired with fabricated quotes or authors."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        # Attested idiom 'байдики бити', but with fabricated definition, quote, and author
+        sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
+        fake_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "байдики бити",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту «байдики бити».\n"
+                "Метафоричне значення: вигаданий синтетичний коментар.\n"
+                "Контекст ілюструється класичним слововживанням (Штучний Письменник).\n</thought>\n\n"
+                "Український фразеологізм **«байдики бити»** позначає: вигадане значення робота.\n\n"
+                "**Стилістичний регістр:** розмовний.\n\n"
+                "**Зразок уживання в художній літературі (Штучний Письменник):**\n"
+                "«Це вигадана цитата, яка ніколи не існувала в класичній літературі про байдики бити.»"
+            ),
+        }
+        sft_shard.write_text(json.dumps(fake_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_shard.write_text(json.dumps({
+            "chosen": "<thought>Обґрунтування норми.</thought>\n\nПравильно казати: **«брати участь»**.",
+            "rejected": "<thought>Помилкова думка.</thought>\n\nНеправильно.",
+        }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=DEFAULT_SOURCES_DB,
+            )
+
+
+def test_extract_clean_definition_and_labels_iterative_cleanup():
+    """Codex R1 Finding 4: Iterative label and valency cleanup leaves no metadata in gloss."""
+    # Case 1: агнець Божий
+    raw_1 = "несхв. Безвольна, покірлива, розумово обмежена людина."
+    def_1, _reg_1 = extract_clean_definition_and_labels(raw_1)
+    assert def_1 == "Безвольна, покірлива, розумово обмежена людина."
+    assert "несхв" not in def_1
+
+    # Case 2: не за адресою
+    raw_2 = "перев. зі сл. звертатися. Не до того, до кого треба; не туди, куди слід."
+    def_2, _reg_2 = extract_clean_definition_and_labels(raw_2)
+    assert def_2 == "Не до того, до кого треба; не туди, куди слід."
+    assert "звертатися" not in def_2
+    assert "зі сл" not in def_2
+
+
+def test_ulif_phraseology_split_quotations_and_editorial_brackets(tmp_path: Path):
+    """Codex R2 Finding 1: Split <i> tags around editorial brackets [...] must not truncate quotes or leak into definitions."""
+    db_path = tmp_path / "test_split.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Section 22711 pattern: волам (бикам) хвости крутити
+    raw_volam = (
+        "<p><b>вола́м (бика́м) хво́сти крути́ти. </b>Виконувати примітивну, часто брудну, непрестижну роботу. "
+        "<i>Думав хоч тебе вивести в люди. Ну, раз не хочеш </i>[вчитися]<i> — іди волам хвости крутити</i> (П. Панч).</p>"
+    )
+    # Section 15886 pattern: ба де то!
+    raw_ba_de_to = (
+        "<p><b>ба́ де то́! </b>Уживається для вираження повного заперечення; ні. "
+        "<i>Котилися і наші козачі Дурні голови, за правду.. А получшали </i>[покращали]<i>? ба де то! Ще гіршими стали</i> (Т. Шевченко).</p>"
+    )
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'хвіст', 'хвіст', 'ok')")
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (2, 'ба', 'ба', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (22711, 1, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_volam, "citations": ["П. Панч"]}),),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (15886, 2, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_ba_de_to, "citations": ["Т. Шевченко"]}),),
+    )
+    conn.commit()
+    conn.close()
+
+    units, _ = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(units) == 2
+
+    u_volam = next(u for u in units if "хвости крутити" in u.idiom)
+    assert u_volam.definition == "Виконувати примітивну, часто брудну, непрестижну роботу."
+    assert "Думав" not in u_volam.definition
+    assert "люди" not in u_volam.definition
+    assert u_volam.citation_text == "Думав хоч тебе вивести в люди. Ну, раз не хочеш вчитися — іди волам хвости крутити"
+    assert u_volam.author == "П. Панч"
+
+    u_bade = next(u for u in units if "ба де то" in u.idiom)
+    assert u_bade.definition == "Уживається для вираження повного заперечення; ні."
+    assert "Котилися" not in u_bade.definition
+    assert u_bade.citation_text == "Котилися і наші козачі Дурні голови, за правду.. А получшали покращали? ба де то! Ще гіршими стали"
+    assert u_bade.author == "Т. Шевченко"
+
+
+def test_verify_receipt_invariants_grounding_rejects_codex_r2_probes():
+    """Codex R2/R3 Findings: Grounding invariant must strictly validate displayed definition, quotation, and attribution.
+
+    Rejects changed initials, altered quotations, negated definitions, and thought-only matches.
+    """
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        db_path = td / "sources.db"
+        with sqlite3.connect(str(db_path)) as conn:
+            conn.executescript(
+                """
+                CREATE TABLE frazeolohichnyi (word TEXT, definition TEXT, entry_json TEXT);
+                CREATE TABLE ulif_dictua_entries (
+                    id INTEGER PRIMARY KEY,
+                    normalized_query TEXT,
+                    canonical_headword TEXT,
+                    status TEXT
+                );
+                CREATE TABLE ulif_dictua_sections (
+                    id INTEGER PRIMARY KEY,
+                    entry_id INTEGER,
+                    kind TEXT,
+                    payload_json TEXT
+                );
+                """
+            )
+            raw_html = (
+                "<p><b>абсолю́тний нуль. </b>Нікчемна і непотрібна людина. "
+                "<i>Пояснив </i>[Лаврін Тесля]<i>:</i> "
+                "<i>— Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе</i> (Л. Дмитерко).</p>"
+            )
+            conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'нуль', 'нуль', 'ok')")
+            conn.execute(
+                "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+                (json.dumps({"raw_html": raw_html, "citations": ["Л. Дмитерко"]}),),
+            )
+
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_shard.write_text(json.dumps({
+            "chosen": "<thought>Обґрунтування норми.</thought>\n\nПравильно казати: **«брати участь»**.",
+            "rejected": "<thought>Помилкова думка.</thought>\n\nНеправильно.",
+        }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        sft_shard_1 = sft_dir / "sft_shard_001_of_001.jsonl"
+
+        # Probe 1: Negated definition (prefixing with 'Не')
+        probe_1_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту абсолютний нуль.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Не нікчемна і непотрібна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_1_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=db_path,
+            )
+
+        # Probe 2: Changed initial ('А. Дмитерко' vs 'Л. Дмитерко')
+        probe_2_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту абсолютний нуль.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (А. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_2_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=db_path,
+            )
+
+        # Probe 3: Altered quotation snippet ('Я — король' vs 'Я — ніщо')
+        probe_3_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту абсолютний нуль.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — король. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_3_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=db_path,
+            )
+
+        # Probe 4: Thought mask (definition inside thought, false definition displayed)
+        probe_4_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту абсолютний нуль. позначає: Нікчемна і непотрібна людина. Л. Дмитерко.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Дуже добра і чуйна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_4_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=db_path,
+            )
+
+        # Control: Authentic valid record passes
+        valid_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту «абсолютний нуль».\n"
+                "Метафоричне значення базується на переносному вживанні: Нікчемна і непотрібна людина.\n"
+                "Стилістичний регістр висловлювання: загальновживаний літературний.\n"
+                "Контекст ілюструється класичним слововживанням (Л. Дмитерко).\n</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(valid_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        res = verify_receipt_invariants(
+            eval_records=[{"target_idiom": "абсолютний нуль"}],
+            sft_dir=sft_dir,
+            dpo_dir=dpo_dir,
+            cur_ves=None,
+            sources_db=db_path,
+        )
+        assert res["classical_literary_citations_grounded"] is True
+        assert res["literary_citations_grounded_count"] == 1

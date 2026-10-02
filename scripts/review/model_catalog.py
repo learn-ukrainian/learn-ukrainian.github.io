@@ -86,6 +86,10 @@ _CURSOR_SELECTOR_MODELS = frozenset({"auto", "default"})
 CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
 CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
 CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
+# Families never pinned as formal reviewers on the Cursor endpoint (#9488):
+# Composer shares the Kimi lineage (never a reviewer), Gemini never reviews
+# code, DeepSeek is excluded, and the decision admits non-Anthropic models only.
+CURSOR_FORMAL_REVIEW_EXCLUDED_FAMILIES = frozenset({"moonshot", "google", "deepseek", "anthropic"})
 
 
 
@@ -375,8 +379,54 @@ def _validate_review_scheduler(raw: Any, models: dict[str, Any]) -> None:
                 )
             _require_routable_model(models, m, f"review_scheduler.endpoints.{name}.models")
         if name == "cursor" and ep.get("formal_review_eligible") is True:
+            # Operator decision 2026-10-02 (#9488): the multi-model harness is a
+            # formal reviewer only for the concrete models it pins.
+            if not ep_models:
+                raise ModelCatalogError(
+                    "review_scheduler.endpoints.cursor needs an explicit models pin to be formal_review_eligible"
+                )
+            for m in ep_models:
+                family = models[resolve_catalog_model_id(m, {"models": models})]["family"]
+                if family in CURSOR_FORMAL_REVIEW_EXCLUDED_FAMILIES:
+                    raise ModelCatalogError(
+                        f"review_scheduler.endpoints.cursor.models cannot pin {m!r}: "
+                        f"{family} models are not formal reviewers through Cursor"
+                    )
+
+
+def invocation_model(invocation: str) -> str | None:
+    """The value of the first ``--model`` flag in ``invocation``, or None."""
+    parts = shell_split(invocation)
+    for index, part in enumerate(parts):
+        flag, separator, value = part.partition("=")
+        if flag == "--model":
+            return value if separator else (parts[index + 1] if index + 1 < len(parts) else None)
+    return None
+
+
+def _validate_cursor_review_seats(catalog: dict[str, Any]) -> None:
+    """A Cursor seat on a formal pin is a last resort dispatched at its high-effort slug (#9488).
+
+    Cursor reports the model the run actually used; ``record_cf_verdict`` maps
+    only that high-effort report back to the catalog id, so the seat must
+    dispatch ``<model>-high`` (a bare id runs a different variant). Sol stays
+    the first seat, so the Cursor seat ranks after every eligible primary.
+    """
+    endpoint = (catalog.get("review_scheduler") or {}).get("endpoints", {}).get("cursor") or {}
+    if endpoint.get("formal_review_eligible") is not True:
+        return
+    pinned = set(endpoint.get("models", []))
+    for name, candidate in catalog["review_candidates"].items():
+        if candidate.get("route") != "cursor" or candidate["model_id"] not in pinned:
+            continue
+        if candidate.get("last_resort") is not True:
             raise ModelCatalogError(
-                "review_scheduler.endpoints.cursor must remain formal_review_eligible: false"
+                f"review_candidates.{name} is a formal Cursor seat and must set last_resort: true (Sol stays first)"
+            )
+        slug = f"{candidate['model_id']}-high"
+        if invocation_model(candidate["invocation"]) != slug:
+            raise ModelCatalogError(
+                f"review_candidates.{name}.invocation must dispatch the runtime-attestable Cursor slug {slug!r}"
             )
 
 
@@ -695,7 +745,12 @@ def validate_catalog(data: Any) -> dict[str, Any]:
 
     _validate_orchestrator_seats(catalog.get("orchestrator_seats"), models)
     _validate_review_scheduler(catalog.get("review_scheduler"), models)
+    _validate_cursor_review_seats(catalog)
     _validate_formal_cf_defaults(catalog.get("formal_cf_defaults"), models)
+    cursor_endpoint = (catalog.get("review_scheduler") or {}).get("endpoints", {}).get("cursor") or {}
+    cursor_review_pins = (
+        set(cursor_endpoint.get("models", [])) if cursor_endpoint.get("formal_review_eligible") is True else set()
+    )
 
     ladders = _require_mapping(catalog.get("review_ladders"), "review_ladders")
     if set(ladders) != VALID_RISKS:
@@ -717,8 +772,13 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(f"review_ladders.{risk} repeats candidate {candidate_name!r}")
                 seen.add(candidate_name)
                 model_id = candidates[candidate_name]["model_id"]
-                if models[model_id]["family"] == "xai":
-                    raise ModelCatalogError(f"review_ladders.{risk}: Grok never judges code or infra")
+                if models[model_id]["family"] == "xai" and not (
+                    candidates[candidate_name]["route"] == "cursor" and model_id in cursor_review_pins
+                ):
+                    raise ModelCatalogError(
+                        f"review_ladders.{risk}: native Grok never judges code or infra; "
+                        "Grok reviews only through the attested Cursor seat (#9488)"
+                    )
                 if risk == "critical" and model_id.startswith("claude-sonnet-"):
                     raise ModelCatalogError(
                         f"review_ladders.{risk}: Sonnet is excluded from security review by core.md P2"

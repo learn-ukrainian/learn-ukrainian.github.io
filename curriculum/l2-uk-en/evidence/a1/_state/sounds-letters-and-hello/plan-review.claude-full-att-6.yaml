@@ -1,0 +1,86 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-sounds-letters-and-hello"
+  attempt_id: "claude-full-att-6"
+  manifest_sha256: "c14b18e42a2b0895b519461d4a0afab278a29554ef7bd8b941446fa45691a553"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "33999be1b61ccca41736e015979d1f84d967c2730c95ae71c81ca586f02f3bb3"
+checks:
+  # Closing shape (b): a separate recap lesson (L6) after five teach lessons; it follows the D4 shape: first-person story, Ukrainian-only questions on that story, one copying task.
+  closing_shape: clean
+  title_describes_job: clean
+  # Subtitle "first 13 letters" and objective "the 13 letters" equal scope sidecar letters.count 13.
+  title_quantities: clean
+  # inspect_words (VESUM) rr-88eb7a244ec8c7567eb8: звук, літера, привіт, і, добрий, день, мама, малина, слива, рука, ріка, коса,
+  #   писали, писала, писав, ми, коло, Іван, Вова, Павлик, Поліна, Панас, Ніна, Нонна all CLEAN, no markers.
+  # Minimal pair рука/ріка: verify_stress rr-1ad68674943079f3c153 (рука́, ulif) and rr-224c6ef66371048a7f0f (ріка́, ulif); both stressed on the final syllable.
+  quoted_forms: clean
+  # Every listening key binds the right recording, checked with search_resources (mode=letter, docs/resources/ulp-alphabet.yaml):
+  #   А→V-004 rr-b793d6b8fe70ecea2ccf; О→V-005 rr-fa057bc92f749391686a; У→V-006 rr-5fa1b8c3d36fcd665097; И→V-007 rr-5f85e7a792613e4453e2;
+  #   М→V-008 rr-7235710e36e30fc9c7b8; І→V-009 rr-a3bb6ad4fb73f86b583a; Н→V-010 rr-6ac5109e6ddcb8afe5bb; В→V-011 rr-5a9f40b6e0a3494873f7;
+  #   Л→V-012 rr-f215f560066a69d2c06a; С→V-013 rr-5c768688ecd3427b6cfc; К→V-014 rr-7dc2536f92c65cd1ae4d; П→V-015 rr-7d6a25070a0c685d5c67; Р→V-016 rr-23a3dc5e8480c46703a2.
+  # Source keys match their texts. T-036 segmentations Пав-лик, По-лі-на, Ко-ло, ма-ма: search_text rr-744f6d5c8decdfafe96b (chunk ..._s0072).
+  #   X-004 rows ма-__-на (-ли-) and __-ва (сли-): search_text rr-83878d9f15b02a572f22 (chunk ..._s0077).
+  sequencing: clean
+  sizing: clean
+  # малина / слива are A2 (query_cefr_level rr-81422796ee0e9c9516ad, rr-c6e5269d7296c74f1e32), one band above the module.
+  #   I accept them as core: the only sourced pick-syllable model (X-004, rr-83878d9f15b02a572f22) and the T-036 reading (rr-744f6d5c8decdfafe96b)
+  #   are built on these words, and L5 a7 and the L6 recap recycle them.
+  inventory: clean
+  # v1 comparison: v1 had 10 activities and 62 response opportunities, all inline. The fresh plan has 36 activities (26 inline, 10 workbook), so the activity count is not reduced.
+  #   Response-opportunity totals are "not_available_at_this_stage" in the plan-validate report. That comparison is an evidence gap; no totals are invented here.
+  activities: [F-1, F-2, F-3]
+  evidence_fit: [F-4]
+  # S-001 own name, S-002 copying and S-003 greeting formulas are each served (L5 s2/a5, L6 a3, L1). V-001 is the ULP 1-01 free-audio episode (search_resources rr-32c96bd11482d1c3d216).
+  #   D5 и trainer: L3 uses T-004.
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 5, activity: "a6", quote: "its complete T-036 target-word model before the blank" }
+    dimension: activity
+    severity: MAJOR
+    claim: "Lesson 5 workbook a6 prints each complete T-036 target-word model (ма-ма, Ко-ло) in the stem before the blank. The missing final syllable (ма, ло) is therefore visible, and the learner can answer by copying the printed half instead of decoding. For ма-ма the key also repeats the stem's own first syllable. The X-004 model that a6 cites cues each target with a picture, not with the printed word (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077: 'Відшукай «загублений» склад у словах — назвах намальованих предметів'). Lesson 4 a4 uses the bound English gloss, which does not reveal the key. As planned, a6 does not test the 'active syllable assembly' the lesson rationale promises. Each stem needs a cue that does not contain the key. Incidental коло has no gloss and no meaning drill, so its item needs a different target."
+    evidence: { receipt: "rr-83878d9f15b02a572f22" }
+    expected: "звах намальованих предметів."
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 3, activity: "a4", quote: "Aligned video/print-evidence pairs: V-007/T-025, V-009/T-027." }
+      - { lesson: 3, activity: "a8", quote: "Bind V-007/T-025 and V-009/T-027" }
+    dimension: activity
+    severity: MINOR
+    claim: "Lesson 3 workbook a8 repeats inline a4 exactly. Both are listening quizzes over the same two whole single-letter recordings: V-007 for И (the only dedicated И recording in the catalogue, search_resources mode=letter) and V-009 for І. They have the same two keys and the same hear-then-choose-glyph operation. The workbook therefore adds no new item and no new operation, which raises the activity count without a stated progression. The plan's changelog says a8 was changed to odd-one-out 'to ensure distinct discriminating tasks', but the plan does not contain that change. Consolidating the И/І contrast (the D5 и strand) should change the operation, not replay the inline items."
+    evidence: { receipt: "rr-5f85e7a792613e4453e2" }
+    could_be_a_gate: "yes — a script can flag two activities in one lesson with the same type, item kind and identical video/target bindings"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 2, activity: "a5", quote: "Latin-shape, sound-class and hard/soft explanations remain separate offline teaching" }
+      - { lesson: 5, activity: "a4", quote: "Latin-shape, sound-class and hard/soft explanations remain separate offline teaching" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Six listening-quiz focuses (L2 a5, L3 a4/a6, L4 a2/a5, L5 a4) say that Latin-shape explanations 'remain separate offline teaching'. Named steps do teach sound classes and soft sounds, but no step teaches any Latin-shape comparison. The changelog also records that the Latin-claim sweep removed visual-trap claims. Neither a textbook-corpus search nor a resource-catalogue search returned a source for Latin look-alike letters. This leftover clause points to teaching that does not exist and invites a writer to add unsourced Latin-shape claims. The clause should be removed unless a sourced step is added."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-45967234940b39f5ae84", outcome: "hits_but_no_support" }
+        - { receipt: "rr-54899213797c3eb0ab8c", outcome: "hits_but_no_support" }
+    could_be_a_gate: "yes — a script can flag Latin-shape references in a plan whose pack carries no record supporting a Latin correspondence"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 1, step: "s4", quote: "the already displayed polite-greeting spelling model" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "Lesson 1 sets the informal peer dialogue against 'the polite-greeting spelling model' (T-040 'Добрий день!'). The dialogue situation and both video use lines repeat this framing. The T-040 source page, however, lists Привіт! in the same 'Слова вітання' list of polite words (search_text, chunk 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0020). Calling only Добрий день 'the polite greeting' and contrasting it with Привіт misrepresents the source, and learners may infer that Привіт is impolite. The contrast the plan actually grounds (T-002, T-041) is informal versus formal register. T-040 should be described neutrally, as the printed spelling of Добрий день."
+    evidence: { receipt: "rr-4d19975edc9001023d1b" }
+    expected: "Слова ввічливості є на всі випадки життя."
+    could_be_a_gate: "no"

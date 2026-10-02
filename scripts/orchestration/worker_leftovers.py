@@ -20,9 +20,13 @@ names them and stops them, and never looks outside the worker's own boundary:
   Processes started before the worker cannot be its jobs and are not read.
   The marker decides whatever the process's real uid: a job may have changed
   it through a privileged helper. Such a job is reported but never signalled.
-  When another uid's environment is closed to us, the process still counts
-  as unknown if it shares the cgroup the worker ran in (``fallback_cgroup``),
-  since a uid change never moves a process out of its cgroup.
+  A process whose environment is closed to us (another uid, or a
+  non-dumpable process of our own uid, whose ``/proc`` files the kernel
+  gives to root) is outside the boundary only when the cgroup the worker
+  ran in (``fallback_cgroup``) is recorded and the process's cgroup is
+  readable and differs from it, since a uid change never moves a process
+  out of its cgroup. Inside that cgroup, with its cgroup unreadable, or
+  with no ``fallback_cgroup``, it counts as unknown (#9514).
 
 A scan that cannot read something it needs raises :class:`ScanUnknown`: an
 unreadable ``cgroup.procs`` or process environment is not proof that no job is
@@ -40,7 +44,10 @@ after the uid scan and before the scope unit stop (``own_cgroup()`` /
 ``systemctl --user stop``) or the pidfd signal is delivered. A unit stop cannot
 be made atomic with a membership scan; closing that window needs a privileged
 helper running inside the worker's own scope, which an unprivileged reaper
-outside it cannot provide.
+outside it cannot provide. Also not guaranteed (accepted residual, #9514): in
+``popen-fallback``, a job of our own uid that both hides its environment
+(non-dumpable) and moves itself out of the worker's cgroup is taken for an
+unrelated process.
 The caller and its ancestors are never reported or signalled, and zombies are
 not processes that can still do work.
 """
@@ -545,17 +552,13 @@ def _in_boundary(scope: WorkerScope, reader: ProcessReader, pid: int, info: Proc
     try:
         return reader.dispatch_task_id(pid) == scope.task_id
     except ScanUnknown:
-        uid = reader.real_uid(pid)
-        if uid is None:
+        if reader.real_uid(pid) is None:
             return False
-        # Our own uid's environment should be readable: not reading it is unknown.
-        # Another uid's is closed to us; a job that changed its uid still sits
-        # in the worker's cgroup, so only a process outside it is provably not one.
-        if (
-            uid == os.getuid()
-            or scope.fallback_cgroup is None
-            or reader.proc_cgroup(pid) in (None, scope.fallback_cgroup)
-        ):
+        # A closed environment (another uid, or a non-dumpable process of our
+        # own uid) hides the marker. A job keeps the worker's cgroup whatever
+        # uid it runs as, so only a process readably outside it is provably
+        # not one (#9514). An unreadable cgroup raises ScanUnknown itself.
+        if scope.fallback_cgroup is None or reader.proc_cgroup(pid) in (None, scope.fallback_cgroup):
             raise
         return False
 
@@ -634,6 +637,7 @@ def _systemctl_stop(unit: str) -> bool:
     try:
         proc = subprocess.run(
             ["systemctl", "--user", "stop", f"{unit}.scope"],
+            env=dispatch_isolation.user_manager_env(os.environ),
             capture_output=True,
             text=True,
             check=False,

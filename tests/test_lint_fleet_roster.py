@@ -112,7 +112,9 @@ def test_committed_projections_match_machine_authorities():
     assert eligible["codex"] is True
     assert eligible["claude"] is True
     assert eligible["grok"] is True
-    for name in ("agy", "kimi", "cursor"):
+    # #9488: Cursor is formal only for its catalog-pinned, runtime-attested model.
+    assert eligible["cursor"] is True
+    for name in ("agy", "kimi"):
         assert eligible[name] is False
 
 
