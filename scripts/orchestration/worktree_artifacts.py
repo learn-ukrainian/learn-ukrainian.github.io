@@ -237,6 +237,27 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
 
         env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
         try:
+            status_proc = subprocess.run(
+                ["git", "status", "--porcelain"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if status_proc.returncode != 0:
+                err = status_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            dirty_lines = [line.strip() for line in status_proc.stdout.decode("utf-8", "replace").splitlines() if line.strip()]
+            if dirty_lines:
+                dirty_summary = ", ".join(dirty_lines[:3]) + ("..." if len(dirty_lines) > 3 else "")
+                raise ValueError(
+                    f"artifact is a nested git repository with uncommitted changes "
+                    f"({file_count} files, {total_size} bytes; uncommitted: {dirty_summary}): {name}; "
+                    f"uncommitted work must not be discarded"
+                )
+
             head_proc = subprocess.run(
                 ["git", "rev-parse", "--verify", "HEAD"],
                 cwd=source,
@@ -245,7 +266,7 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 timeout=15,
                 check=False,
             )
-            rev_list_args = ["git", "rev-list", "--branches"]
+            rev_list_args = ["git", "rev-list", "--all"]
             if head_proc.returncode == 0:
                 rev_list_args.append("HEAD")
             rev_list_args.extend(["--not", "--remotes"])
@@ -258,21 +279,20 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 timeout=15,
                 check=False,
             )
+            if res.returncode != 0:
+                err = res.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            unpushed = [line.strip() for line in res.stdout.decode("ascii", "replace").split() if line.strip()]
+            if unpushed:
+                commits_summary = ", ".join(unpushed[:3]) + ("..." if len(unpushed) > 3 else "")
+                raise ValueError(
+                    f"artifact is a nested git repository with unpushed commits "
+                    f"({file_count} files, {total_size} bytes; unpushed: {commits_summary}): {name}; "
+                    f"unpushed work must not be discarded"
+                )
         except (subprocess.SubprocessError, OSError) as exc:
             raise ValueError(f"failed to check git status in nested repository {name}: {exc}") from exc
-
-        if res.returncode != 0:
-            err = res.stderr.decode("utf-8", "replace").strip()
-            raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
-
-        unpushed = [line.strip() for line in res.stdout.decode("ascii", "replace").split() if line.strip()]
-        if unpushed:
-            commits_summary = ", ".join(unpushed[:3]) + ("..." if len(unpushed) > 3 else "")
-            raise ValueError(
-                f"artifact is a nested git repository with unpushed commits "
-                f"({file_count} files, {total_size} bytes; unpushed: {commits_summary}): {name}; "
-                f"unpushed work must not be discarded"
-            )
 
         quoted_clean_name = shlex.quote(clean_name)
         raise ValueError(

@@ -519,3 +519,77 @@ def test_ignored_artifact_nested_repo_shell_quoting_in_cleanup_recommendation(ch
     assert tokens[:2] == ["rm", "-rf"]
     assert len(tokens) == 3, f"Expected exactly 1 target path, got: {tokens[2:]}"
     assert tokens[2] == "batch_state/reports/probe' 'valuable"
+
+
+def test_ignored_artifact_nested_repo_unpushed_tag_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by a local tag refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/tag_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add commit on tag only, then move branch back to base
+    (repo_dir / "tagged.txt").write_text("tagged commit\n")
+    subprocess.run(["git", "add", "tagged.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "tagged commit"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "tag", "v0.9.0"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_unpushed_stash_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by refs/stash refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/stash_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Modify file and stash changes
+    (repo_dir / "base.txt").write_text("stashed modification\n")
+    subprocess.run(["git", "stash"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_dirty_working_tree_never_discarded(checkout, tmp_path):
+    """P1: repositories with uncommitted working-tree or index changes refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/dirty_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Modify file without committing
+    (repo_dir / "base.txt").write_text("uncommitted dirty changes\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with uncommitted changes" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
