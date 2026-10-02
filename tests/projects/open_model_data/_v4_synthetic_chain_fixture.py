@@ -166,6 +166,8 @@ def _get_session_chain_base() -> Path:
             for binding in receipt["bindings"].values():
                 if binding["path"].startswith("scripts/"):
                     p = base / binding["path"]
+                    if p.exists():
+                        p.chmod(0o600)
                     p.write_bytes(resources.read_bytes("provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"))
                     p.chmod(0o600)
 
