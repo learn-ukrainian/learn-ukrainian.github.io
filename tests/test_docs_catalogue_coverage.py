@@ -106,7 +106,10 @@ def test_dev_lookups_are_verified_authorities():
 
 
 def _rank(lookup: dict, field: str) -> int | None:
-    paths = [hit['path'] for hit in find(lookup[field], 50, repo=REPO)['hits']]
+    # Ranking, not latency, is measured here: a loaded CI runner must not cut the search short.
+    result = find(lookup[field], 50, repo=REPO, budget_seconds=60)
+    assert not result['coverage']['incomplete'], (lookup['id'], result['coverage']['incomplete_reasons'])
+    paths = [hit['path'] for hit in result['hits']]
     found = [paths.index(p) + 1 for p in lookup['expect'] if p in paths]
     return min(found) if found else None
 
