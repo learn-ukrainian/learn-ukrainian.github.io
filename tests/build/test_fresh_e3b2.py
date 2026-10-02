@@ -1240,6 +1240,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         shutil.copy2(state_dir / "module.build.yaml", saved / "rebuilt-module.build.yaml")
         shutil.copy2(state_dir / "module.closure.yaml", saved / "rebuilt-module.closure.yaml")
     (tmp_path / "docs/style-cards/a1.sha256").write_text("0" * 64 + "\n", encoding="ascii")
+    calls_before_mismatch = calls.copy()
     mismatch = module.build_module(
         level,
         slug,
@@ -1251,7 +1252,9 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         runner=run_actual,
     )
     assert not mismatch["complete"] and mismatch["lessons"][0]["stopping_check"] == 12
-    assert mismatch["lessons"][0]["terminal_layer"] == "driver"
+    assert mismatch["lessons"][0]["terminal_layer"] == "engine"
+    assert mismatch["lessons"][0]["regenerations"] == 0
+    assert calls == calls_before_mismatch
     error = yaml.safe_load((state_dir / "lesson-1.manifest-error.yaml").read_text(encoding="utf-8"))
     assert error["check"] == 12 and "sidecar mismatch" in error["reason"]
     assert error["path"] == "docs/style-cards/a1.sha256"
@@ -1262,7 +1265,8 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     terminal = module.build_module(
         level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:gpt-6.1-sol", runner=run_actual
     )
-    assert terminal["lessons"][0]["terminal_layer"] == "driver"
+    assert terminal["lessons"][0]["terminal_layer"] == "engine"
+    assert calls == calls_before_mismatch
     if evidence_path:
         shutil.copy2(state_dir / "module.build.yaml", saved / "terminal-module.build.yaml")
     card = tmp_path / "docs/style-cards/a1.md"

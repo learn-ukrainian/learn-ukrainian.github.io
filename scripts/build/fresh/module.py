@@ -1,4 +1,12 @@
-"""Ordered fresh module build, prompt freshness, and bounded regeneration."""
+"""Ordered fresh module build, prompt freshness, and bounded regeneration.
+
+Only writer-layer check failures can trigger another writer attempt. Cross-run paid
+calls are bounded by stable input/seat/effort/attempt IDs in the durable task store:
+with identical inputs and a readable result, dispatch reuses a ``done`` attempt.
+A fresh per-run state directory therefore needs no persisted regeneration ledger
+to avoid paying again for those completed attempts. Harness recovery has its own
+bounded sidecar; unreadable results and terminal non-done tasks can require retries.
+"""
 
 from __future__ import annotations
 
@@ -323,8 +331,15 @@ def build_module(
                 bad = next((row for row in report.get("checks", []) if row["status"] == "failed"), None)
                 check = report.get("stopping_check") or (bad["check"] if bad else report.get("passed_through", 0))
                 reason = report.get("reason") or (bad["reason"] if bad else "build_failed")
+                layer = bad["layer"] if bad else report.get("layer", "engine")
+                if layer != "writer" and ledger["terminal_layer"] is None:
+                    # The real runner records failures itself. Injected runners and
+                    # check-12 reports without a failed gate row must stop as well.
+                    ledger = record_failure(
+                        ledger_path, slug, n, {"check": check, "layer": layer, "reason": reason}, current
+                    )
                 if ledger["terminal_layer"] is not None:
-                    stopped = _stop(n, reason, check=check, layer=bad["layer"] if bad else "engine")
+                    stopped = _stop(n, reason, check=check, layer=layer)
                     stopped["regenerations"] = ledger["regenerations"]
                     stopped["terminal_layer"] = ledger["terminal_layer"]
                     results.append(stopped)

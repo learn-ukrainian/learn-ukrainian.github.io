@@ -190,7 +190,7 @@ def load_harness(path: Path, slug: str, n: int) -> dict[str, Any]:
 def record_failure(
     path: Path, slug: str, n: int, failure: dict[str, Any], inputs: dict[str, str], *, at: str | None = None
 ) -> dict[str, Any]:
-    """Record a failed attempt; repeated checks and the third failure are terminal."""
+    """Stop non-writer failures immediately; bound retries of writer failures."""
     doc = _load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc
@@ -202,8 +202,10 @@ def record_failure(
     if layer not in {"writer", "plan", "pack", "word_store", "engine", "driver"}:
         raise ValueError(f"unknown failure layer {layer!r}")
     previous_same = any(row["failed_check"] == failure["check"] for row in previous)
-    # Both delivered writer replies and direct runner failures use the completed-attempt count.
-    doc["regenerations"] = max(doc["regenerations"], min(2, len(previous)))
+    # Only writer failures can infer a content retry from prior failed attempts.
+    # A non-writer check never spends regeneration budget on its own.
+    if layer == "writer":
+        doc["regenerations"] = max(doc["regenerations"], min(2, len(previous)))
     previous.append(
         {
             "attempt": len(previous) + 1,
@@ -214,15 +216,10 @@ def record_failure(
             "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
         }
     )
-    if previous_same:
-        doc["terminal_layer"] = {
-            "writer": "plan",
-            "plan": "plan",
-            "pack": "pack",
-            "word_store": "pack",
-            "engine": "driver",
-            "driver": "driver",
-        }[layer]
+    if layer != "writer":
+        doc["terminal_layer"] = layer
+    elif previous_same:
+        doc["terminal_layer"] = "plan"
     elif doc["regenerations"] >= 2:
         doc["terminal_layer"] = "driver"
     _validate(doc)
