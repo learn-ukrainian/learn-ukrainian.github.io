@@ -83,7 +83,7 @@ The dual-repo reaper and scheduler categorize all worktrees into strict canonica
 | `open_pr` | Worktree branch has an OPEN pull request | Preserved |
 | `dirty` | Uncommitted modifications or untracked changes | Preserved as exception |
 | `detached_unknown` | Detached HEAD or unverifiable branch state, and not `detached_clean_contained` | Preserved |
-| `detached_clean_contained` | Clean, unlocked, detached `.worktrees/dispatch/<agent>/<task>/` checkout whose HEAD is already on origin (see below) | **Reaped** by `--safe-only` |
+| `detached_clean_contained` | Clean, unlocked, detached `.worktrees/dispatch/<agent>/<task>/` checkout whose HEAD is already on origin, with only ignored caches or verified provisioned links (see below) | **Reaped** by `--safe-only` |
 | `permission_error` | Filesystem permission denied during inspection or removal | Retained as exception |
 | `foreign` | Outside repository `.worktrees/` subtree | Preserved |
 | `unmerged` | Unpushed commits or lacking exact merged-PR / origin-main ancestry proof | Preserved |
@@ -207,12 +207,18 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
 - it is exactly `.worktrees/dispatch/<agent>/<task>/` with a detached HEAD,
   and is not an ACP runtime worktree;
 - `git status --porcelain=v1 -z --ignored --untracked-files=all` succeeds and
-  every entry is an **ignored** (`!!`) regenerable cache: a path with a
+  every entry is an **ignored** (`!!`) regenerable cache or verified
+  provisioned link. A cache is a path with a
   `__pycache__/` directory segment, or one under a top-level `.pytest_cache/`,
   `.ruff_cache/` or `.mypy_cache/`. Any staged, modified, renamed or untracked
-  entry preserves the checkout, as does any path with a `.venv` or
-  `node_modules` segment (even inside a `__pycache__/`) and a loose `*.pyc`
-  outside `__pycache__/`. The allowlist is fixed and never consults
+  entry preserves the checkout. The only provisioned link paths are
+  `data/sources.db`, `data/vesum.db`, `node_modules` and `site/node_modules`;
+  each must be a symlink resolving to the same relative path in the primary
+  checkout. Regular files, directories, links elsewhere, broken or looping
+  links, and any additional non-disposable residue preserve the checkout.
+  Removal unlinks these symlinks without removing their targets. Cache paths
+  with a `.venv` or `node_modules` segment (even inside a `__pycache__/`) and
+  loose `*.pyc` files outside `__pycache__/` preserve it. The allowlists are fixed and never consult
   `.gitignore` or `info/exclude`; a git failure preserves. Documented residual:
   a hand-made file placed inside an ignored `__pycache__/` or top-level cache
   directory is treated as disposable;
