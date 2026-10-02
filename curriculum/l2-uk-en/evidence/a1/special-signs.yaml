@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 70878aaaffab574a9c6caf32f8521d436e151136
+  mcp_commit: 8bdd147429e47af7ca92ad6f79e7fe81fc8ce8fa
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 451a783ca0d7b0004b0c6f963abe3adf4f39940d8b49ead6e8e7bbbc7127bef5
+  sources_db: 32b4aae3c8572cce46c69a02aaa4787b8ae83fb68ac29fe24b8433d44ae45d12
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -767,49 +767,29 @@ texts:
   supports: 'Primer part 2, printed p. 68 (catalog heading p. 70): the apostrophe follows дз, with word contrasts and apostrophe-bearing
     reading models.'
 - id: T-012
-  quote: 'Буква А а Б б В в Г г Ґ ґ Д д Е е Є є Ж ж З з И и АЛФАВІТ Назва
+  quote: 'Аа Бб Вв Гг Ґґ Дд Ее Єє Жж Зз Ии Іі Її
 
-    букви Буква Назва
+    (а) (бе) (ве) (ге) (ґе) (де) (е) (є) (же) (зе) (и) (і) (ї)
 
-    букви Буква Назва
+    Йй Кк Лл Мм Нн Оо Пп Рр Сс Тт Уу Фф
 
-    букви
+    (йот) (ка) (ел) (ем) (ен) (о) (пе) (ер) (ес) (те) (у) (еф)
 
-    а І і і Т т те
+    Хх Цц Чч Шш Щщ Ьь Юю Яя
 
-    бе Ї ї ї У у у
-
-    ве Й й йот Ф ф еф
-
-    ге К к ка Х х ха
-
-    ґе Л л ел Ц ц це
-
-    де М м ем Ч ч че
-
-    е Н н ен Ш ш ша
-
-    є О о о Щ щ ща
-
-    же П п пе Ь ь знак
-
-    м’якшення
-
-    зе Р р ер Ю ю ю
-
-    и С с ес Я я я'
-  sha256: f24c757bc8b9317381fb07c32654c34e90d75f162aa2a854ba8ca958d77a6f88
+    (ха) (це) (че) (ша) (ща) (м’який знак) (ю) (я)'
+  sha256: 66c848b1deef973473960baa1428940793598f40df3c47f9c7beba2ff3e8d41b
   source:
-    author: zabolotnyi
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
-    file: 5-klas-ukrmova-zabolotnyi-2023
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0081
+    file: 5-klas-ukrmova-avramenko-2022
     grade: '5'
     kind: textbook
-    page: 2
-    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
-    section_id: 38931
-  supports: 'Zabolotnyi grade-5 textbook, catalog p. 2: the full 33-letter alphabet table, uppercase and lowercase glyphs,
-    dictionary order and letter names.'
+    page: 80
+    row_sha256: 0302d10ff5cfd49faa3167bca68f94bd0f0c2f41cc7f9c521c42741749e738d8
+    section_id: 26258
+  supports: 'Avramenko grade-5 textbook, printed p. 80: three alphabet glyph rows in dictionary order, each immediately followed
+    by its aligned parenthesized letter-name row. Preserve row order and alignment; no interleaved OCR columns.'
 - id: T-013
   quote: 'Букви та звуки
 
@@ -1820,12 +1800,20 @@ unsupported:
   status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=cJlal8XKBxo
+    http_status: 200
   id: V-001
   url: https://www.youtube.com/watch?v=cJlal8XKBxo
   use: Listen to the soft-sign pronunciation examples and repeat with your teacher.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-002
   models:
     letters:
@@ -1837,7 +1825,11 @@ videos:
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Listen to the familiar letter sounds and repeat them aloud.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    http_status: 200
   id: V-003
   models:
     letters:
@@ -1847,7 +1839,11 @@ videos:
   url: https://www.youtube.com/watch?v=9JdIBYCTWGw
   use: Listen to the sound of Ю and repeat it aloud.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    http_status: 200
   id: V-004
   models:
     letters:
@@ -1857,7 +1853,11 @@ videos:
   url: https://www.youtube.com/watch?v=u44eCjR2Oz8
   use: Listen to the sound of Ц and repeat it aloud.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=haHRsFFZRQI
+    http_status: 200
   id: V-005
   models:
     letters:
@@ -1867,7 +1867,11 @@ videos:
   url: https://www.youtube.com/watch?v=haHRsFFZRQI
   use: Listen to the sound of Ф and repeat it aloud.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode2/
+    http_status: 200
   id: V-006
   models:
     letters: []
@@ -1878,42 +1882,82 @@ videos:
   url: https://www.ukrainianlessons.com/episode2/
   use: Listen to the formal greeting excerpt and repeat the whole greeting.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode15/
+    http_status: 200
   id: V-007
   url: https://www.ukrainianlessons.com/episode15/
   use: Listen to the hard and soft consonant examples with your teacher.
-- channel: Ukrainian Lessons Podcast
-  checked: null
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+    http_status: 200
   id: V-008
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  use: Pronunciation model for Ї. Full-alphabet video, publisher-labelled Ї sound demonstration only; not its letter name
-    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
+  models:
+    letters:
+    - Ї
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  use: Dedicated Ї sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-009
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Pronunciation model for Я. Full-alphabet video, publisher-labelled Я sound demonstration only; not its letter name
     or a complete primer word. Driver must confirm segment playback and exact timecode independently.
-- channel: Ukrainian Lessons Podcast
-  checked: null
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    http_status: 200
   id: V-010
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  use: Pronunciation model for Є. Full-alphabet video, publisher-labelled Є sound demonstration only; not its letter name
-    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
-- channel: Ukrainian Lessons Podcast
-  checked: null
+  models:
+    letters:
+    - Є
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=O0bwRyyBQSc
+  use: Dedicated Є sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    http_status: 200
   id: V-011
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  use: Pronunciation model for Щ. Full-alphabet video, publisher-labelled Щ sound demonstration only; not its letter name
-    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
+  models:
+    letters:
+    - Щ
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=QmBLieIuf6Q
+  use: Dedicated Щ sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-012
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Pronunciation model for Ш. Full-alphabet video, publisher-labelled Ш sound demonstration only; not its letter name
     or a complete primer word. Driver must confirm segment playback and exact timecode independently.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    http_status: 200
   id: V-013
   models:
     letters:
@@ -1922,3 +1966,17 @@ videos:
     words: []
   url: https://www.youtube.com/watch?v=UsJkbdsY2RA
   use: Listen to the sound of Ч and repeat it aloud.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    http_status: 200
+  id: V-014
+  models:
+    letters:
+    - Ш
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+  use: Dedicated Ш sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.

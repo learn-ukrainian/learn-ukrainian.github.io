@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: f2db1156b9ba6bd3272e21e44409fcd301bbe53b
+  mcp_commit: 8bdd147429e47af7ca92ad6f79e7fe81fc8ce8fa
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 39d1ea1da76e7da2e68b2f70d262661069f57cc3549aa4c1345fbe53570a3729
@@ -1735,7 +1735,11 @@ unsupported:
   status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    http_status: 200
   id: V-001
   models:
     letters:
@@ -1746,7 +1750,11 @@ videos:
   use: Pronunciation model for Т. Pronunciation model for Т before CV and VC reading. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    http_status: 200
   id: V-002
   models:
     letters:
@@ -1757,7 +1765,11 @@ videos:
   use: Pronunciation model for Ґ. Pronunciation model for Ґ after hearing Г from the primer. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=aq0cjB90s3w
+    http_status: 200
   id: V-003
   models:
     letters:
@@ -1768,13 +1780,21 @@ videos:
   use: Pronunciation model for Й. Pronunciation model for Й in short final-letter reading. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode10/
+    http_status: 200
   id: V-004
   url: https://www.ukrainianlessons.com/episode10/
   use: 'ULP 1-10 public episode: the by-ear first-person review story and its first three questions and spoken answers, modeled
     in public transcript ext-ulp_youtube-294. T-016/T-017 premium notes are grounding only, never learner-facing source text.'
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=KFlsroBW0dk
+    http_status: 200
   id: V-005
   models:
     letters:
@@ -1785,7 +1805,11 @@ videos:
   use: Pronunciation model for Е. Pronunciation model for Е before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    http_status: 200
   id: V-006
   models:
     letters:
@@ -1796,7 +1820,11 @@ videos:
   use: Pronunciation model for Д. Pronunciation model for Д before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
+    http_status: 200
   id: V-007
   models:
     letters:
@@ -1807,7 +1835,11 @@ videos:
   use: Pronunciation model for З. Pronunciation model for З before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    http_status: 200
   id: V-008
   models:
     letters:
@@ -1818,7 +1850,11 @@ videos:
   use: Pronunciation model for Б. Pronunciation model for Б before its word row. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
+    http_status: 200
   id: V-009
   models:
     letters:
@@ -1829,7 +1865,11 @@ videos:
   use: Pronunciation model for Г. Pronunciation model for Г before the Г/Ґ contrast. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    http_status: 200
   id: V-010
   models:
     letters:
@@ -1840,7 +1880,11 @@ videos:
   use: Pronunciation model for Ч. Pronunciation model for Ч before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
+    http_status: 200
   id: V-011
   models:
     letters:
@@ -1851,7 +1895,11 @@ videos:
   use: Pronunciation model for Х. Pronunciation model for Х before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    http_status: 200
   id: V-012
   models:
     letters:
@@ -1862,7 +1910,11 @@ videos:
   use: Pronunciation model for Ж. Pronunciation model for Ж before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    http_status: 200
   id: V-013
   models:
     letters:
@@ -1873,7 +1925,11 @@ videos:
   use: Pronunciation model for Ш. Pronunciation model for Ш before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode2/
+    http_status: 200
   id: V-014
   models:
     letters: []
@@ -1886,14 +1942,22 @@ videos:
     establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt,
     never the whole episode as the greeting model.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-015
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: 'Full alphabet pronunciation video, identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304:
     whole-word models for W-118, W-109 and W-110. Restrict each excerpt to letters already taught; this is not evidence for
     the other primer word lists or whole sentences.'
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    http_status: 200
   id: V-016
   models:
     letters:

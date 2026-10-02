@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: f2db1156b9ba6bd3272e21e44409fcd301bbe53b
+  mcp_commit: 8bdd147429e47af7ca92ad6f79e7fe81fc8ce8fa
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 0ff01184650749c1553aa7cfd993a6ff8c1de2485a2968ef8a314953bdf59d0b
@@ -886,7 +886,11 @@ unsupported:
   status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode1/
+    http_status: 200
   id: V-001
   models:
     letters: []
@@ -898,7 +902,11 @@ videos:
     establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt,
     never the whole episode as the greeting model.
 - channel: Ukrainian Lessons Podcast
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode2/
+    http_status: 200
   id: V-002
   models:
     letters: []
@@ -911,7 +919,11 @@ videos:
     establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt,
     never the whole episode as the greeting model.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    http_status: 200
   id: V-004
   models:
     letters:
@@ -922,7 +934,11 @@ videos:
   use: Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    http_status: 200
   id: V-005
   models:
     letters:
@@ -933,7 +949,11 @@ videos:
   use: Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    http_status: 200
   id: V-006
   models:
     letters:
@@ -944,7 +964,11 @@ videos:
   use: Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=W-1rCu0indE
+    http_status: 200
   id: V-007
   models:
     letters:
@@ -955,7 +979,11 @@ videos:
   use: Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    http_status: 200
   id: V-008
   models:
     letters:
@@ -966,7 +994,11 @@ videos:
   use: Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    http_status: 200
   id: V-009
   models:
     letters:
@@ -977,7 +1009,11 @@ videos:
   use: Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    http_status: 200
   id: V-010
   models:
     letters:
@@ -988,7 +1024,11 @@ videos:
   use: Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    http_status: 200
   id: V-011
   models:
     letters:
@@ -999,7 +1039,11 @@ videos:
   use: Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    http_status: 200
   id: V-012
   models:
     letters:
@@ -1010,7 +1054,11 @@ videos:
   use: Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
+    http_status: 200
   id: V-013
   models:
     letters:
@@ -1021,7 +1069,11 @@ videos:
   use: Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    http_status: 200
   id: V-014
   models:
     letters:
@@ -1032,7 +1084,11 @@ videos:
   use: Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    http_status: 200
   id: V-015
   models:
     letters:
@@ -1043,7 +1099,11 @@ videos:
   use: Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked: null
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    http_status: 200
   id: V-016
   models:
     letters:

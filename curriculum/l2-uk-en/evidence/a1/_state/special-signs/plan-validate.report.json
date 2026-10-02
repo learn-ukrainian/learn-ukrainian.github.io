@@ -282,14 +282,14 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "23a3d462356b78c780856fd0989fd44d31db014ae76573cb3e19486a55f259aa",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "a8ade455ce252146562d999bff744998aaf71ceed90f751f153fc313881cbb34",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "ef2258a8c9766420367bc4ac19358a0057bf7e44da2c296a4f3ab4009961dea1",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "1f7b63cbfa843fc1952103314afd7ca60f5d31395a558c99600396fefcda865a",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "a42b09c3ab84ceb3476b22d3b763b7becd7ef2108794488bf27eeb9914149b60",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "dea6afa88a942e568b38b8818ce2795fa365b9ad4dc667286757be671c3e334f",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "ef836b4437f494cde1bcdb0dd03503dfaf2742e458ef746a19ca328826a5e94a",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "89f68d938e0a13dc318a0a30086be60bbfce4e876cb47f44e89d99c4c5171260",
-    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "1fb821fa132d422b3376fdbf72203b0e4cea684a22b725e72d613197c7425e54",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "bfd77c0d6560cbc9c85d8b4218fe21ac69ecfa53a5da337e20d7b37bc77f5b26",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "d894a32d877e09f13fc3f01aa9fcfc85a46c2d2a1c38c02c922690b05820b9ff",
+    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "199be7eb2674b91e2787b96e4e006989b5b08a91ba388eb522dc9c4bf8b62534",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
     "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
@@ -327,6 +327,12 @@
       "code": "title_quantities_not_parsed",
       "lesson": null,
       "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is ef2258a8c9766420367bc4ac19358a0057bf7e44da2c296a4f3ab4009961dea1 and the provisional pack's sha256 is a42b09c3ab84ceb3476b22d3b763b7becd7ef2108794488bf27eeb9914149b60; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

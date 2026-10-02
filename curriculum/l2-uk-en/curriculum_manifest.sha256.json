@@ -5714,7 +5714,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml",
-      "sha256": "ee500d67619deb0f35055f06c86bbde7be3b051ea2da81e5fb4967d9f9ba9e4a"
+      "sha256": "1b46ecf105e05dbbdac324abb563529420f5daeddb6e061bfdad6b0e0a73d5c7"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml",
@@ -5726,15 +5726,15 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml",
-      "sha256": "ef836b4437f494cde1bcdb0dd03503dfaf2742e458ef746a19ca328826a5e94a"
+      "sha256": "bfd77c0d6560cbc9c85d8b4218fe21ac69ecfa53a5da337e20d7b37bc77f5b26"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml",
-      "sha256": "89f68d938e0a13dc318a0a30086be60bbfce4e876cb47f44e89d99c4c5171260"
+      "sha256": "d894a32d877e09f13fc3f01aa9fcfc85a46c2d2a1c38c02c922690b05820b9ff"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml",
-      "sha256": "1fb821fa132d422b3376fdbf72203b0e4cea684a22b725e72d613197c7425e54"
+      "sha256": "199be7eb2674b91e2787b96e4e006989b5b08a91ba388eb522dc9c4bf8b62534"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml",

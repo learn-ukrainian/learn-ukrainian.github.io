@@ -3,7 +3,7 @@ module: reading-ukrainian
 level: a1
 sequence: 2
 slug: reading-ukrainian
-version: '6'
+version: '7'
 title: читати
 subtitle: Twelve more letters, then whole words and short sourced sentences read aloud
 focus: 'Continue the primer sequence after position 1: hear each new sound, read its syllable or word row and a decodable word, then read whole sourced short sentences
@@ -154,9 +154,8 @@ lessons:
     - video
   - id: s3
     kind: practice
-    teach: 'Read only already-decodable W-101/W-081/W-082 and W-078 models from print, then copy them. The earlier W-077, W-086, W-088 and W-089 action/sound labels
-      remain English scaffolding here: no claim that their spellings are decoded. Print reading of W-077 follows З in lesson 2; W-086/W-088 follow Ч in lesson 4,
-      and W-089 follows Т.'
+    teach: 'Read only already-decodable W-101/W-081/W-082, W-078 and W-089 models from print, then copy them. The earlier W-077, W-086 and W-088 action/sound labels
+      remain English scaffolding here: no claim that their spellings are decoded. Print reading of W-077 follows З in lesson 2; W-086/W-088 follow Ч in lesson 4.'
     uses:
       grammar:
       - G-a1-002
@@ -439,14 +438,17 @@ lessons:
     - example
   - id: s5
     kind: practice
-    teach: Before consolidation display only the attributed public-textbook hosts T-040. Other evidence remains explains-only; these quotes support the separate
-      workbook decisions. Display T-018 before the counting repair a8, alongside the already modeled W-104/W-081 word records.
+    teach: 'Before consolidation display only the attributed public-textbook hosts T-040. Other evidence remains explains-only; these quotes support the separate
+          workbook decisions. Display T-018 before the counting repair a8, alongside the already modeled W-104/W-101 word records. Display T-041/T-042 once
+          for their two-syllable a8 items.'
     uses:
       grammar: []
       vocabulary: []
     evidence:
     - T-040
     - T-018
+    - "T-041"
+    - "T-042"
     practice: []
     needs:
     - quote
@@ -509,8 +511,7 @@ lessons:
   - id: a8
     type: quiz
     placement: workbook
-    focus: 'Find and repair a wrong syllable count after s3 explicitly teaches counting on T-018. kind: comprehension; host: {kind: quote, ref: T-018}. Count the
-      visible vowel nuclei in the displayed source W-118 form (1) and the previously modeled W-104/W-081 forms (2). The correction keys 1 and 2 both occur. T-039/X-006
+    focus: 'Find and repair a wrong syllable count after s3 explicitly teaches counting on T-018. kind: comprehension; host: {kind: quote, ref: T-018} for W-118 (1), or {kind: quote, ref: T-042} for W-104 and {kind: quote, ref: T-041} for W-101 (2), displayed before each dependent item. Count their visible vowel nuclei. The correction keys 1 and 2 both occur. T-039/X-006
       establish find-and-repair methodology only.'
     model: X-006
   - id: a9
@@ -772,9 +773,7 @@ lessons:
       Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original teaching job retained
       as print decoding plus teacher-supported pronunciation: Read aloud from print a taught decodable word (W-106, W-107, W-081, W-101 or W-104) and choose the letter it begins
       with among Г, Ґ and earlier consonants; the answer changes from item to item, progressing from the lesson-2 sound-to-letter quiz to the new Г/Ґ contrast. Required distinct-key
-      witness: W-106 гарб___з has key у and W-107 ґ___ва has key а. Both source-bound whole words are read explicitly before their word-local blanks; ask for the already modeled
-      printed letter, without introducing later vowel-letter rules. The only witness distractors are the already taught glyphs о and о, producing гарбоз and ґова, both VESUM-unattested. Keys
-      у and а are taught; never display an untaught glyph or sign. Both keys must occur; other valid blanks may supplement them. Before
+      witnesses: W-106 ___арбуз has key г with distractor ґ; W-107 ___ава has key ґ with distractor г. VESUM finds neither wrong whole-word completion. Read both source-bound words before their initial-letter blanks; keys and positions vary, using only taught glyphs. Before
       this print reading, the teacher models the exact cited T-007, T-008, X-001, X-004, T-027, T-026, T-009, X-002, T-020, EX-004, T-035, T-028 forms and the named bound W-record
       forms.'
   practice:
@@ -1089,7 +1088,8 @@ lessons:
   slug: zh-sh-and-sentences
   title: Ж, Ш
   kind: teach
-  job: Read and copy Ж and Ш words, then read two whole sourced short sentences aloud.
+  job: 'Read and copy Ж and Ш words, then read two whole sourced short sentences aloud. Model whole reading/writing chunks and the who-question frame for
+        recap.'
   rationale: EX-001 has been readable and read aloud since lesson 2 after Д; EX-002 becomes readable after Ж in this lesson, also requiring Ч from lesson 4. Neither
     sentence requires Ш. The final two letters consolidate the whole-sentence job; sentence reading is a separate job after word decoding. A 320-word target allows guided
     source reading, English support for incidental meanings and offline speech.
@@ -1102,7 +1102,7 @@ lessons:
       sounds: []
     grammar: []
     vocabulary:
-      core: []
+      core: [{"lemma": "хто", "evidence": "W-162", "forms": ["noun:anim:m:v_naz:pron:int:rel"]}]
       incidental:
       - lemma: жито
         evidence: W-111
@@ -1118,8 +1118,6 @@ lessons:
         evidence: W-007
       - lemma: не
         evidence: W-061
-      - lemma: хто
-        evidence: W-162
       - lemma: Іван
         evidence: W-093
       recycled:
@@ -1225,17 +1223,17 @@ lessons:
     needs:
     - quote
   - id: s3
-    kind: practice
+    kind: teach
     teach: 'After the Ж and Ш word rows, read the unchanged whole EX-001/EX-002 sentences from the single T-036/T-037 display in the preceding s4 quote step, with English support.
       The learner reads each aloud from print, then picks out each sentence and its words by ear; the past forms are incidental and never analysed. Exact primer syllables,
       whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic
       letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Before recap, model the already-decodable W-006 plus
       W-088 past plural/masculine/feminine and W-089 past plural chunks in a first-person group notebook scene with W-093/W-081/W-101 actors. Model the W-162 хто question chunk
       with English support now; whole forms are memorized, not a past-tense or interrogative grammar lesson. T-016/T-017 explain the bilingual review shape and questioning
-      methodology only. Model the complete Хто читав «чай»? question and answers naming people, with English support. Use the same question frame for the quoted кава and хліб
-      labels; model читав and читала as whole W-088 chunks, not a conjugation system. Modeling source: the teacher demonstrates the exact print in T-015, EX-001, EX-002, X-003,
+      methodology only. Model the who-plus-reading question on the W-104 label with a W-101 answer and English support; leave the W-109/W-151/W-110 actor-label pairings for the new recap story; model читав and читала as whole W-088 chunks, not a conjugation system. Modeling source: the teacher demonstrates the exact print in T-015, EX-001, EX-002, X-003,
       T-016, T-017, T-042 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs. The whole EX-001/EX-002
       models use incidental W-113/W-114/W-115/W-007/W-061; these are source-sentence forms, not core introductions or drills.'
+    introduces: {letters: [], grammar: [], vocabulary: [W-162]}
     uses:
       grammar:
       - G-a1-002
@@ -1404,8 +1402,6 @@ lessons:
         evidence: W-160
       - lemma: птах
         evidence: W-161
-      - lemma: хто
-        evidence: W-162
       - lemma: Поліна
         evidence: W-099
       recycled:
@@ -1428,6 +1424,7 @@ lessons:
       - W-079
       - W-080
       - W-006
+      - "W-162"
   steps:
   - id: s1
     kind: recap
@@ -1438,15 +1435,7 @@ lessons:
       story and precedes a2. The W-099 narrator participates through ми читали; all three individually queried readers are other actors, not third-person self-reference.
     uses:
       grammar: []
-      vocabulary:
-      - W-006
-      - W-081
-      - W-101
-      - W-109
-      - W-110
-      - W-151
-      - W-088
-      - W-089
+      vocabulary: [W-006, W-081, W-101, W-109, W-110, W-151, W-088, W-089, W-162]
     evidence:
     - T-016
     - T-017

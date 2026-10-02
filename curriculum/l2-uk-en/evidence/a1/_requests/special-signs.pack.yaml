@@ -104,12 +104,11 @@ texts:
 - id: T-012
   source:
     table: textbooks
-    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    chunk_id: "5-klas-ukrmova-avramenko-2022_s0081"
   span:
-    first_words: Буква А а
-    last_words: и С с ес Я я я
-  supports: 'Zabolotnyi grade-5 textbook, catalog p. 2: the full 33-letter alphabet table, uppercase and lowercase glyphs, dictionary order
-    and letter names.'
+    first_words: "Аа Бб Вв Гг Ґґ"
+    last_words: "(ха) (це) (че) (ша) (ща) (м’який знак) (ю) (я)"
+  supports: "Avramenko grade-5 textbook, printed p. 80: three alphabet glyph rows in dictionary order, each immediately followed by its aligned parenthesized letter-name row. Preserve row order and alignment; no interleaved OCR columns."
 - id: T-013
   source:
     table: textbooks
@@ -744,25 +743,37 @@ videos:
   channel: Ukrainian Lessons Podcast
   use: 'Listen to the hard and soft consonant examples with your teacher.'
 - id: V-008
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Ї. Full-alphabet video, publisher-labelled Ї sound demonstration only; not its letter name or a complete
-    primer word. Driver must confirm segment playback and exact timecode independently.
+  url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  channel: Ukrainian Lessons
+  use: Dedicated Ї sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
+  models:
+    letters:
+    - Ї
+    words: []
+    segment: null
 - id: V-009
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   channel: Ukrainian Lessons Podcast
   use: Pronunciation model for Я. Full-alphabet video, publisher-labelled Я sound demonstration only; not its letter name or a complete
     primer word. Driver must confirm segment playback and exact timecode independently.
 - id: V-010
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Є. Full-alphabet video, publisher-labelled Є sound demonstration only; not its letter name or a complete
-    primer word. Driver must confirm segment playback and exact timecode independently.
+  url: https://www.youtube.com/watch?v=O0bwRyyBQSc
+  channel: Ukrainian Lessons
+  use: Dedicated Є sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
+  models:
+    letters:
+    - Є
+    words: []
+    segment: null
 - id: V-011
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Щ. Full-alphabet video, publisher-labelled Щ sound demonstration only; not its letter name or a complete
-    primer word. Driver must confirm segment playback and exact timecode independently.
+  url: https://www.youtube.com/watch?v=QmBLieIuf6Q
+  channel: Ukrainian Lessons
+  use: Dedicated Щ sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
+  models:
+    letters:
+    - Щ
+    words: []
+    segment: null
 - id: V-012
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   channel: Ukrainian Lessons Podcast
@@ -777,3 +788,12 @@ videos:
     - Ч
     words: []
     segment:
+- id: V-014
+  url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+  channel: Ukrainian Lessons
+  use: Dedicated Ш sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
+  models:
+    letters:
+    - Ш
+    words: []
+    segment: null

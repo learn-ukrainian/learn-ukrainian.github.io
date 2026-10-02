@@ -137,7 +137,10 @@ learner_state:
     W-151:
       lesson: 3
       position: 2
-  cumulative_core_count: 21
+    W-162:
+      lesson: 5
+      position: 2
+  cumulative_core_count: 22
   grammar_ids:
     G-a1-001:
       lesson: 2
