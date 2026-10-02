@@ -287,6 +287,18 @@ def test_a_storage_layout_question_in_a_few_words_ranks_the_runbook_above_invent
     assert at < 5 and all(at < i for i in inventories), paths[:8]
 
 
+# A store asked for by its common name and format is answered by its own record (#9531): the
+# storage-topology topic (bulk raw sources, active SQLite databases) also holds every word of the
+# question, but the store's record names it the sources database and its purpose says SQLite
+# database, so the store is held among the first three, ahead of code that only opens it.
+@pytest.mark.parametrize('query', ['where is the sources sqlite database', 'sources database',
+                                   'where is the sources db'])
+def test_a_store_asked_by_its_name_and_format_ranks_its_own_record(query):
+    hits = find(query, repo=REPO, budget_seconds=60)['hits']
+    stores = [i for i, hit in enumerate(hits) if (hit['path'], hit['match']) == ('data/sources.db', 'data_store')]
+    assert stores and stores[0] < 3, [hit['path'] for hit in hits[:5]]
+
+
 # Every answer comes from the index, so two checkouts of one commit answer alike: a repository
 # holding this commit's tree in its index and no checked-out file at all, beside an untracked and
 # an ignored file that name the question, unstaged edits to the catalogue and to the answer, all

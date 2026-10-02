@@ -287,6 +287,16 @@ MORPH_ENDINGS = ('ations', 'ation', 'ments', 'ment', 'ings', 'ions', 'ion', 'ing
 MIN_STEM = 4
 UNDOUBLED = re.compile(r'([b-df-hj-km-np-rtv-xz])\1$')  # a doubled final consonant other than l, s, z
 VERB_NOUN_AL = re.compile(r'(?<=[svw])als?$')  # approval(s), removal, proposal, renewal: a verb's -al noun
+# The endings after a term whose last letter the ending changes (``changed_ending``), as in Porter's
+# steps 1b and 1c: a silent e drops before -ing (close, closing), a y after a consonant becomes ie or
+# e (entry, entries; expiry, expires; flaky, flake). Never -er or -ing for the y: ready is no reader.
+E_DROP_ENDINGS = ('ings', 'ing')
+Y_ENDINGS = ('iers', 'ies', 'ied', 'ier', 'es', 'ed', 'e')
+VOWELS = frozenset('aeiouy')
+# An agent noun meets the word it is made from where both are read (reviewer, review; checkers, check);
+# the searches never widen to that word, so "interpreter" never selects every "interpret".
+AGENT_NOUN = re.compile(r'([a-z]{4,})ers?')  # at least MIN_STEM letters before the -er
+AGENT_BASE_ENDINGS = ('es', 'ed', 's', 'e', '')  # never -ing: header is no heading
 
 
 @functools.lru_cache(maxsize=4096)
@@ -309,6 +319,31 @@ def stem(term: str) -> str:
             base = term[:-len(suffix)]
             return base[:-1] if suffix in ('ing', 'ed') and UNDOUBLED.search(base) else base
     return term
+
+
+@functools.lru_cache(maxsize=4096)
+def changed_ending(term: str) -> tuple[str, tuple[str, ...]] | None:
+    """(the term without its last letter, the endings that replace it) when an ending changes the
+    term's last letter: a silent e after a consonant (close: clos + ing; at least MIN_PREFIX letters
+    remain), a y after a consonant (entry: entr + ies; at least MIN_STEM letters remain). None otherwise."""
+    if len(term) > MIN_PREFIX and term.endswith('e') and term[-2] not in VOWELS:
+        return term[:-1], E_DROP_ENDINGS
+    if len(term) > MIN_STEM and term.endswith('y') and term[-2] not in VOWELS:
+        return term[:-1], Y_ENDINGS
+    return None
+
+
+@functools.lru_cache(maxsize=4096)
+def term_prefixes(term: str) -> tuple[str, ...]:
+    """The fixed strings that begin every word ``term`` meets (``_term_body``): its ``stem`` (which
+    begins the term itself) and, for a changed last letter, the base with each shortest ending (clos-ing,
+    entr-ies, flak-e). Searches look for these, so a file holding only "closing" or "flake" is found."""
+    changed = changed_ending(term)
+    if changed is None:
+        return (stem(term),)
+    base, endings = changed
+    shortest = [e for e in endings if not any(o != e and e.startswith(o) for o in endings)]
+    return (stem(term), *(base + e for e in shortest))
 
 
 def escape_excerpt(text: str) -> str:
@@ -353,10 +388,13 @@ def _term_body(term: str) -> str:
     The word is the term as typed and then at most MAX_PREFIX_EXTRA more characters or (a term of
     MIN_STEM letters) one of WORD_ENDINGS; or the term's ``stem``, as much of the rest of the term
     as the word shares, and one of MORPH_ENDINGS; or either with a doubled final consonant and a
-    DOUBLING_ENDINGS ending. So two inflections of one word meet however far each runs past their
-    shared part: translated, translations; mapped, mapping; decolonizing, decolonization;
-    assessing, assessment; and parse, parser; deletion, deleted; pack, packed, never packages,
-    nor reading, readiness, nor invented, inventory, nor com, command. A term shorter than
+    DOUBLING_ENDINGS ending; or, when an ending changes its last letter (``changed_ending``), the
+    term without that letter and such an ending; or, for an agent noun (AGENT_NOUN), the word it is
+    made from with AGENT_BASE_ENDINGS. So two inflections of one word meet however far each runs
+    past their shared part: translated, translations; mapped, mapping; decolonizing,
+    decolonization; assessing, assessment; and parse, parser, parsing; deletion, deleted; entry,
+    entries; reviewer, review; pack, packed, never packages, nor reading, readiness, nor ready,
+    reader, nor invented, inventory, nor com, command. A term shorter than
     MIN_PREFIX ("pr", "ci") meets only itself and its SHORT_ENDINGS inflections.
     """
     if len(term) < MIN_PREFIX:
@@ -372,6 +410,10 @@ def _term_body(term: str) -> str:
             alternatives.append(re.escape(base) + _either(shared) + _either(MORPH_ENDINGS))
         alternatives += [re.escape(word + word[-1]) + _either(DOUBLING_ENDINGS)
                          for word in dict.fromkeys((term, base)) if UNDOUBLED.match(word[-1] * 2)]
+        if changed := changed_ending(term):  # close, closing; entry, entries; flaky, flake
+            alternatives.append(re.escape(changed[0]) + _either(changed[1]))
+        if agent := AGENT_NOUN.fullmatch(term):  # reviewer, review; checkers, check
+            alternatives.append(re.escape(agent.group(1)) + _either(AGENT_BASE_ENDINGS))
         body = '(?:' + '|'.join(alternatives) + ')'
     return body
 
@@ -608,14 +650,17 @@ def _variants(pattern: str) -> list[str]:
     return sorted(forms)
 
 
-def _files_args(pattern: str, pathspecs: list[str]) -> list[str]:
-    """Files holding ``pattern`` as a fixed string: ``-i`` for ASCII, explicit forms otherwise."""
+def _files_args(patterns: str | Sequence[str], pathspecs: list[str]) -> list[str]:
+    """Files holding any of ``patterns`` as a fixed string: ``-i`` for ASCII, explicit forms otherwise."""
+    patterns = [patterns] if isinstance(patterns, str) else list(patterns)
     args = ['--no-color', '-I', '-F', '--null', '-l']
-    if pattern.isascii():
-        args += ['-i', '-e', pattern]
+    if all(p.isascii() for p in patterns):
+        args.append('-i')
+        forms = patterns
     else:
-        for form in _variants(pattern):
-            args += ['-e', form]
+        forms = [form for p in patterns for form in _variants(p)]
+    for form in dict.fromkeys(forms):
+        args += ['-e', form]
     return [*args, '--', *pathspecs]
 
 
@@ -1317,7 +1362,8 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
     The catalogue is curated metadata about a family, so it is read before body text: query words
     in a family's keywords or id (and, for one entry point, its topic) count at CATALOGUE_WEIGHT for
     each of its ``authority_files``; words in its purpose or notes count as text. A data store has
-    no tracked file, so its store becomes a candidate of its own (rendered as a data_store hit).
+    no tracked file, so its store becomes a candidate of its own (rendered as a data_store hit), and
+    its purpose and notes, the one description of what it holds, count like its keywords.
     A keyword that names one entry point's topic (its words are among that topic's or path's
     words) speaks for that entry point only, so a family's runbook keyword "storage topology"
     is not credited to its CI-gate runbook. Every entry point, README or index that speaks for
@@ -1347,8 +1393,8 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
             if strong or weak:
                 store = entry['store'][0]
                 candidate = candidates.setdefault(store, Candidate(store))
-                candidate.catalogue_terms |= strong
-                candidate.purpose_terms |= weak
+                # A store has no text: its purpose is the one description of what it holds.
+                candidate.catalogue_terms |= strong | weak
                 candidate.name_terms |= _prefix_hits(terms, words(store))
                 candidate.defined |= {u for u in units if _contains_words(words(store), words(u))}
                 candidate.store, candidate.authority = entry, True
@@ -1437,7 +1483,7 @@ def _name_candidates(state: State, terms: list[str], phrase: list[str], family: 
     spoken: dict[str, Candidate] = {}  # note path -> its best-matching private file
     for path in state.files:
         folded = normalise(path)
-        if not any(stem(t) in folded for t in terms):
+        if not any(p in folded for t in terms for p in term_prefixes(t)):
             continue  # cheap screen: a prefix of a path word is a substring of the path
         if cat.CONTROL_CHARS.search(path):
             continue
@@ -1472,10 +1518,11 @@ def _name_strength(c: Candidate) -> tuple:
 
 # ---------------------------------------------------------------- step 3: tracked text
 
-def _text_pattern(term: str) -> str:
-    """What the text search looks for: the term's ``stem`` as a fixed string, so "regenerated" meets
-    "regeneration" and "deletion" meets "deleted" (the stem keeps at least MIN_STEM letters)."""
-    return stem(term)
+def _text_patterns(term: str) -> tuple[str, ...]:
+    """What the text search looks for: the term's ``term_prefixes`` as fixed strings, so "regenerated"
+    meets "regeneration", "deletion" meets "deleted" (the stem keeps at least MIN_STEM letters) and
+    "close" meets "closing"."""
+    return term_prefixes(term)
 
 
 def _name_only_terms(terms: list[str]) -> list[str]:
@@ -1496,7 +1543,7 @@ def _content_candidates(state: State, terms: list[str], text: str, phrase: list[
     # phrase only (``_name_only_terms``, reported in the coverage): in text it occurs in almost
     # every file, so it carries no evidence and the lowest rarity weight. The search is complete.
     name_only = _name_only_terms(terms)
-    patterns = [(t, _text_pattern(t)) for t in terms if t not in name_only]
+    patterns = [(t, _text_patterns(t)) for t in terms if t not in name_only]
     if len(phrase) > 1:
         patterns.append(('\0phrase', text))  # the cleaned query as typed: separators and all
     patterns += [(f'\0compound {unit}', unit) for unit in units]
@@ -1541,7 +1588,7 @@ def _read_lines(state: State, pool: list[Candidate], terms: list[str], text: str
         return True
     # One-character words match almost every line, so they pick lines only when nothing longer exists.
     words_only = [t for t in terms if len(t) > 1] or terms
-    stems = list(dict.fromkeys(_text_pattern(t) for t in words_only))
+    stems = list(dict.fromkeys(p for t in words_only for p in _text_patterns(t)))
     jobs = []
     for phrase_files, patterns, cap in ((True, [text], EXCERPT_LINES_PER_FILE), (False, stems, PASSAGE_LINES_PER_FILE)):
         paths = sorted(p for p, c in by_path.items() if c.phrase_in_content == phrase_files)
@@ -2022,12 +2069,15 @@ def enclosing_span(spans: list[tuple[int, int, str]], line_no: int) -> tuple[int
 
 
 def _summary_hits(summaries: CodeSummaries, terms: list[str]) -> dict[str, set[str]]:
-    """Per code file, the terms its summary holds as a word prefix (as typed or as their stem)."""
+    """Per code file, the terms its summary holds as a word prefix (as typed or as their stem), or as
+    a word whose ending changes the term's last letter (``changed_ending``: closing, flake)."""
     hits: dict[str, set[str]] = {}
     for term in terms:
         prefixes = (term, stem(term))
+        changed = term_prefixes(term)[1:]
         for word, paths in summaries.index.items():
-            if word.startswith(prefixes):
+            # A changed last letter is checked against the whole word: entry meets entries, never entrepreneur.
+            if word.startswith(prefixes) or (word.startswith(changed) and _term_pattern(term).search(f' {word} ')):
                 for path in paths:
                     hits.setdefault(path, set()).add(term)
     return hits
@@ -2067,7 +2117,8 @@ def _symbol_scan(state: State, terms: list[str], deadline: float, units: Sequenc
         table, failure = abbreviations(state, deadline)
         # Words shorter than MIN_CODE_PATTERN occur on most code lines: they never select lines, but
         # still count on a line another query word selected (a query of short words only uses them).
-        patterns = list(dict.fromkeys(stem(t) for t in terms if len(t) >= MIN_CODE_PATTERN)) or terms
+        patterns = list(dict.fromkeys(
+            p for t in terms if len(t) >= MIN_CODE_PATTERN for p in term_prefixes(t))) or terms
         fixed, whole = table.query_patterns(list(phrase), terms)
         run = _total_grep(state.repo, _line_args([*patterns, *fixed], pathspecs, None, whole), deadline,
                           CODE_OUTPUT_CAP)
