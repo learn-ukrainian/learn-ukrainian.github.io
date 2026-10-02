@@ -773,10 +773,12 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
                                  process=process)
     ranked = sorted((c for c in candidates.values() if c.path not in seen), key=rank_key)
     pool = ranked[:max(RERANK_POOL, 3 * limit)]
-    # The files that speak for a family or directory (an entry point, a decision or ADR index, a
-    # README) are always read: what they say about their subject (a registry row, a status line, a
-    # passage) is found however weak its word evidence, whatever the ``limit``.
-    pool += [c for c in ranked[len(pool):] if c.authority and c.in_content]
+    # The files that speak for a catalogue family (its entry points, else its shallowest README or
+    # index) are always read, whatever the ``limit``: what they say about their family is found
+    # however weak its word evidence. For a status question every README or index is read too: the
+    # record of a lifecycle (a decision index row, a directory README's status line) lives there.
+    speakers = {p for paths in authority_files(state).values() for p in paths}
+    pool += [c for c in ranked[len(pool):] if c.in_content and (c.path in speakers or (status_question and c.authority))]
     tick = time.monotonic()
     excerpts_complete = _read_lines(state, [c for c in pool if c.in_content], terms, text, phrase, deadline)
     timings['excerpts_ms'] = round((time.monotonic() - tick) * 1000)
