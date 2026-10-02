@@ -1541,8 +1541,8 @@ def test_check_9_a1_item_explanations_reach_the_page(tmp_path, monkeypatch, acti
 
 
 # This is the A1 renderer inventory, including types with only activity-level units.
-# Observe has no item blocks: examples/prompt are not currently expanded as units, and
-# its optional instruction is a heading rather than a component prop.
+# Observe has no item blocks: examples/prompt are not currently expanded as units.
+# Its instruction uses the generic component-prop lookup, like the other types.
 _A1_PAGE_PAYLOADS = {
     "anagram": {"items": [{"letters": list("word"), "answer": "word", "explanation": "Feedback"}]},
     "classify": {"categories": [{"label": "First", "items": ["A"]}, {"label": "Second", "items": ["B"]}]},
@@ -1592,8 +1592,7 @@ def test_every_a1_inventory_type_locates_its_emitted_unit_blocks(activity_type):
     inventory = {row["$ref"].rsplit("/", 1)[-1].removesuffix("-a1") for row in schema["items"]["oneOf"]}
     assert set(_A1_PAGE_PAYLOADS) == inventory  # Inventory drift needs an explicit audit.
     payload = {"id": "a1", "type": activity_type, **copy.deepcopy(_A1_PAGE_PAYLOADS[activity_type])}
-    if activity_type != "observe":
-        payload["instruction"] = "Instruction"
+    payload["instruction"] = "Instruction"
     Draft7Validator(schema).validate([payload])
     draft, plan, pack, words = _fixture()
     plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
@@ -1611,24 +1610,60 @@ def test_every_a1_inventory_type_locates_its_emitted_unit_blocks(activity_type):
     )
     expected = {i for i, unit in enumerate(expanded["units"]) if unit["tab"] == "vpravy"}
     assert set(located) == expected
-    assert bool(expected) == (activity_type != "observe")
+    assert expected
 
 
-def test_a1_observe_instruction_missing_from_component_props_fails_closed():
-    """Audit residual: Observe receives examples/prompt, not the generic instruction field."""
+@pytest.mark.parametrize("activity_type", ["observe", "classify", "letter-grid", "phrase-table"])
+def test_a1_instruction_reaches_component_props(activity_type):
+    """These activity-level instructions use the assembler's normal lookup."""
     from scripts.yaml_activities import ActivityParser
 
-    payload = {"id": "a1", "type": "observe", "instruction": "Instruction", **_A1_PAGE_PAYLOADS["observe"]}
+    payload = {"id": "a1", "type": activity_type, "instruction": "Instruction", **_A1_PAGE_PAYLOADS[activity_type]}
     parser = ActivityParser()
     parsed = parser._parse_activity(payload)
     props = assemble.component_props_from_jsx(parser._activity_to_mdx(parsed))
-    assert "instruction" not in props
-    assert assemble.page_field_text("observe", props, None, "instruction") is None
+    assert props["instruction"] == "Instruction"
+    assert assemble.page_field_text(activity_type, props, None, "instruction") == "Instruction"
     unit = {"tab": "vpravy", "activity": "a1", "item": None, "block": "instruction", "text": "Instruction"}
-    with pytest.raises(assemble.AssemblerError, match="receives no 'instruction' field"):
-        assemble.locate_units_in_component_props(
-            {"units": [unit]}, {0: "Instruction"}, {"a1": parsed}, {"a1": [parser._activity_to_mdx(parsed)]}
-        )
+    located = assemble.locate_units_in_component_props(
+        {"units": [unit]}, {0: "Instruction"}, {"a1": parsed}, {"a1": [parser._activity_to_mdx(parsed)]}
+    )
+    assert set(located) == {0}
+
+
+@pytest.mark.parametrize("activity_type", ["observe", "classify", "letter-grid", "phrase-table"])
+def test_check_9_activity_instruction_reaches_the_page(tmp_path, monkeypatch, activity_type):
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": activity_type, "placement": "inline", "focus": "Practice"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Compare the examples.", **_A1_PAGE_PAYLOADS[activity_type]}]
+    schema = json.loads((Path(__file__).resolve().parents[2] / "schemas/activities-a1.schema.json").read_text())
+    Draft7Validator(schema).validate([{**draft["activities"][0], "type": activity_type}])
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+
+    # Restore the Observe renderer omission to prove this fixture catches the bug.
+    if activity_type == "observe":
+        from scripts.generate_mdx.core import ActivityParser
+
+        original = ActivityParser._observe_to_mdx
+
+        def omit_instruction(parser, activity, is_ukrainian_forced=False):
+            old_activity = copy.copy(activity)
+            old_activity.instruction = ""
+            return original(parser, old_activity, is_ukrainian_forced)
+
+        with monkeypatch.context() as old:
+            old.setattr(ActivityParser, "_observe_to_mdx", omit_instruction)
+            before = _check_9_direct(tmp_path, monkeypatch, expanded, prov, draft, plan, pack, words)
+            assert not before.passed
+            assert "span_location_unrendered" in before.reason
+            assert "instruction" in before.reason
+
+    after = _check_9_direct(tmp_path, monkeypatch, expanded, prov, draft, plan, pack, words)
+    assert after.passed, after.reason
+    mdx = (tmp_path / "site" / "1.mdx").read_text()
+    assert assemble.component_props_from_jsx(mdx)["instruction"] == "Compare the examples."
 
 
 def _check_9_direct(
