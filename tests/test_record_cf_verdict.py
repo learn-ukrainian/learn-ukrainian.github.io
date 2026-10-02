@@ -393,7 +393,7 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
 
 
 def cursor_receipt(tasks, **updates):
-    write_task(tasks, agent="cursor", model="auto", resolved_model_source="cursor-stream-json", **updates)
+    write_task(tasks, agent="cursor", model="auto", **{"resolved_model_source": "cursor-stream-json", **updates})
 
 
 def test_cursor_display_name_receipt_records_the_concrete_slug_and_family(monkeypatch, tmp_path):
@@ -425,5 +425,53 @@ def test_cursor_receipts_without_an_attested_concrete_model_are_still_refused(mo
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
     cursor_receipt(tasks, **updates)
     with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize("model", ["Composer 2.5", "composer-2.5"])
+@pytest.mark.parametrize(
+    "source",
+    [
+        {"resolved_model_source": "unattested-harness"},
+        {"resolved_model_source": ""},
+        {"resolved_model_source": None},
+        {"resolved_model_source": "pending"},
+        {"resolved_model_source": "unknown"},
+        {"resolved_model_source": "other"},
+        {"resolved_model_source": ["cursor-stream-json"]},
+        {"__drop_source__": True},
+    ],
+)
+def test_cursor_receipt_without_a_runtime_reported_source_is_refused(monkeypatch, tmp_path, model, source):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    updates = {"resolved_model": model, "resolved_model_known": True, **source}
+    drop = updates.pop("__drop_source__", False)
+    cursor_receipt(tasks, **updates)
+    if drop:  # an absent source, not just a null one
+        path = tasks / "review-one.json"
+        data = json.loads(path.read_text())
+        del data["resolved_model_source"]
+        path.write_text(json.dumps(data))
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer model unattested"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize("source", sorted(recorder.RUNTIME_REPORTED_MODEL_SOURCES))
+def test_cursor_display_name_receipt_accepts_each_runtime_reported_source(monkeypatch, tmp_path, source):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    cursor_receipt(tasks, resolved_model="Composer 2.5", resolved_model_known=True, resolved_model_source=source)
+    assert (
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["comment"]
+        == "posted"
+    )
+    assert "model=composer-2.5 family=moonshot" in comments[0]["body"]
+
+
+def test_cursor_receipt_with_a_non_ascii_look_alike_name_is_refused(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    cursor_receipt(tasks, resolved_model="Compo\u017fer 2.5", resolved_model_known=True)
+    with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []

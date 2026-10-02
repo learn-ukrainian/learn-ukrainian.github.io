@@ -113,25 +113,33 @@ _CURSOR_PATTERN = re.compile(r"(?:^|[^a-z0-9])(?:cursor|composer|auto)(?:$|[^a-z
 _CONCRETE_CURSOR_MODEL_PATTERN = re.compile(r"(?:^|[^a-z0-9])composer-2\.5(?:$|[^a-z0-9])")
 
 # Cursor's runtime reports the display name of a model, not its slug (a real
-# dispatch records ``resolved_model: "Composer 2.5"``). Only the exact display
+# dispatch records ``resolved_model: "Composer 2.5"``). Only the exact ASCII
 # spelling of a concrete model Cursor is known to report maps to its slug;
-# every other display name keeps resolving exactly as before.
-_CURSOR_DISPLAY_NAME_SLUGS: dict[str, str] = {"composer 2.5": "composer-2.5"}
+# every other display name keeps resolving exactly as before. ``re.ASCII``
+# keeps ``IGNORECASE`` from folding non-ASCII look-alikes (U+017F, U+212A) onto
+# ASCII letters, and the separator is ASCII space or tab only.
+_CURSOR_DISPLAY_NAME_SLUGS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"[ \t]*composer[ \t]+2\.5[ \t]*", re.ASCII | re.IGNORECASE), "composer-2.5"),
+)
 
 
 def canonical_cursor_model(value: Any) -> str:
     """Return the concrete slug for a Cursor display name, else ``value`` as text.
 
-    ``"Composer 2.5"`` (any case, any whitespace run between the words) becomes
-    ``"composer-2.5"``. Nothing else is rewritten: ``"Composer 2"``,
-    ``"Composer 2.5 Fast"``, ``"auto"``, other display names and empty values
-    are returned unchanged (``None`` becomes ``""``).
+    ``"Composer 2.5"`` (ASCII letters in any case, a run of ASCII spaces or
+    tabs between the words) becomes ``"composer-2.5"``. Nothing else is
+    rewritten: ``"Composer 2"``, ``"Composer 2.5 Fast"``, ``"auto"``, other
+    display names, any non-ASCII look-alike and empty values are returned
+    unchanged (``None`` becomes ``""``).
     """
 
     if value is None:
         return ""
     text = str(value)
-    return _CURSOR_DISPLAY_NAME_SLUGS.get(" ".join(text.casefold().split()), text)
+    for pattern, slug in _CURSOR_DISPLAY_NAME_SLUGS:
+        if pattern.fullmatch(text):
+            return slug
+    return text
 
 
 def normalize_family(value: Any) -> Family:

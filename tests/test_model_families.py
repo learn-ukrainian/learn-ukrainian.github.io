@@ -216,3 +216,36 @@ def test_cursor_display_name_normaliser_handles_none() -> None:
 def test_other_cursor_display_names_resolve_as_before(display: str, expected: model_families.Family) -> None:
     assert model_families.canonical_cursor_model(display) == display
     assert model_families.normalize_family(display) is expected
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "Compo\u017fer 2.5",  # LATIN SMALL LETTER LONG S folds to "s" under Unicode IGNORECASE
+        "Composer 2.5".replace("o", "\u043e", 1),  # Cyrillic o
+        "Composer 2.5".replace("o", "\u03bf", 1),  # Greek omicron
+        "Composer 2.5".replace("C", "\u0421", 1),  # Cyrillic Es
+        "\uff23omposer 2.5",  # full-width C
+        "Composer \uff12.\uff15",  # full-width digits
+        "\uff43\uff4f\uff4d\uff50\uff4f\uff53\uff45\uff52 2.5",  # full-width word
+        "Composer\u00a02.5",  # no-break space
+        "Composer\u20032.5",  # em space
+        "Composer\u200b 2.5",  # zero-width space
+        "Composer \u200b2.5",
+        "Composer\n2.5",
+        "Composer 2.5\n",
+        "\nComposer 2.5",
+        "Composer 2.5\x00",
+        "Composer\x002.5",
+        "Composer 2.5\u212a",  # KELVIN SIGN
+        "Composer\r2.5",
+    ],
+)
+def test_cursor_display_name_match_is_ascii_only(value: str) -> None:
+    assert model_families.canonical_cursor_model(value) == value
+    assert model_families.normalize_family(value) is model_families.Family.UNKNOWN
+
+
+@pytest.mark.parametrize("display", ["Composer\t2.5", "composer \t 2.5", "\tComposer 2.5 ", "cOmPoSeR     2.5"])
+def test_cursor_display_name_accepts_ascii_space_and_tab_runs(display: str) -> None:
+    assert model_families.canonical_cursor_model(display) == "composer-2.5"
