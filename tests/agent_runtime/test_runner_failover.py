@@ -1,4 +1,5 @@
 """Runner-level failover tests for agent_runtime."""
+
 from __future__ import annotations
 
 import sys
@@ -142,9 +143,7 @@ def _install_fake_runtime(
     records: list[dict[str, Any]] = []
     emitted_events: list[tuple[str, dict[str, Any]]] = []
     fake_emit = types.ModuleType("telemetry.emit")
-    fake_emit.emit_event = (
-        lambda event_name, payload: emitted_events.append((event_name, payload))
-    )
+    fake_emit.emit_event = lambda event_name, payload: emitted_events.append((event_name, payload))
     monkeypatch.setitem(sys.modules, "telemetry.emit", fake_emit)
     monkeypatch.setattr(runner_mod, "write_record", records.append)
     monkeypatch.setattr(runner_mod, "has_headroom", lambda _agent, _model: (True, ""))
@@ -597,10 +596,7 @@ def test_classifier_gh_auth_prompt_wins_over_rate_limit_text():
     text; the gh auth prompt must still classify as auth."""
     from agent_runtime.failover import classify_failover_trigger
 
-    stderr = (
-        "To get started with GitHub CLI, please run:  gh auth login\n"
-        "HTTP 429: rate limit exceeded"
-    )
+    stderr = "To get started with GitHub CLI, please run:  gh auth login\nHTTP 429: rate limit exceeded"
     trigger = classify_failover_trigger(
         parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),
         returncode=1,
@@ -660,9 +656,7 @@ def test_classifier_refuses_to_rotate_on_streaming_silence_timeout():
     assert trigger is None
 
 
-def test_chain_route_missing_model_after_index_zero_warns_and_drops(
-    tmp_path, caplog
-):
+def test_chain_route_missing_model_after_index_zero_warns_and_drops(tmp_path, caplog):
     """Review D4 (PR #4580): fail-safe stays (no raise), but loudly."""
     import logging
 
@@ -678,9 +672,7 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(
         encoding="utf-8",
     )
     with caplog.at_level(logging.WARNING):
-        chain = load_failover_chain(
-            "deepseek", effective_model="deepseek-v4-pro", path=config
-        )
+        chain = load_failover_chain("deepseek", effective_model="deepseek-v4-pro", path=config)
 
     assert chain is None  # single usable route -> feature disabled
     assert any("deepseek[1] dropped" in rec.getMessage() for rec in caplog.records)
@@ -710,7 +702,9 @@ def test_shipped_config_declares_no_grok_chain():
         )
 
 
-_TOOL_OUTPUT_RATE_LIMIT_TEXT = "API rate limit exceeded\nHTTP 429 secondary rate limit\nTo get started with GitHub CLI, please run: gh auth login"
+_TOOL_OUTPUT_RATE_LIMIT_TEXT = (
+    "API rate limit exceeded\nHTTP 429 secondary rate limit\nTo get started with GitHub CLI, please run: gh auth login"
+)
 
 
 @pytest.mark.parametrize(
@@ -745,29 +739,42 @@ def test_classifier_honors_structured_provider_failure_code_over_raw_text(failur
 
 
 @pytest.mark.parametrize(
-    ("provider_error_text", "expected"),
+    ("failure_code", "provider_error_text", "kill_reason", "stdout_text", "expected"),
     [
-        ("", None),
-        ("stream closed early", None),
-        ("unexpected status 401 Unauthorized", "auth"),
-        ("ERROR: unexpected status 429 Too Many Requests: quota exceeded", "rate_limited"),
+        ("provider_stream_incomplete", "", None, _TOOL_OUTPUT_RATE_LIMIT_TEXT, None),
+        ("provider_error", "stream closed early", None, _TOOL_OUTPUT_RATE_LIMIT_TEXT, None),
+        # The provider's own words never re-classify an outcome the adapter typed.
+        ("provider_error", "unexpected status 401 Unauthorized", None, _TOOL_OUTPUT_RATE_LIMIT_TEXT, None),
+        ("provider_error", "ERROR: unexpected status 429 Too Many Requests", None, _TOOL_OUTPUT_RATE_LIMIT_TEXT, None),
+        (None, "", None, _TOOL_OUTPUT_RATE_LIMIT_TEXT, None),
+        # The runner's own startup observations still mean transport.
+        ("provider_stream_incomplete", "", "initial_response_timeout", "", "transport"),
+        ("provider_stream_incomplete", "", "stdout_silence_timeout", "", "transport"),
+        ("provider_stream_incomplete", "", "stdout_silence_timeout", _TOOL_OUTPUT_RATE_LIMIT_TEXT, None),
+        ("provider_stream_incomplete", "", "hard_timeout", _TOOL_OUTPUT_RATE_LIMIT_TEXT, None),
     ],
 )
-def test_classifier_reads_only_provider_error_text_when_the_adapter_isolates_it(provider_error_text, expected):
-    """#9532: when the adapter vouches for the provider's own failure text, the
-    raw streams (echoed prompt, tool output) never pick a trigger."""
+def test_classifier_reads_no_text_when_the_adapter_types_the_outcome(
+    failure_code, provider_error_text, kill_reason, stdout_text, expected
+):
+    """#9532: an adapter that types its outcome is the whole classification.
+
+    Unknown or incomplete outcomes never fall back to raw stdout/stderr (agent
+    and tool text) or to regexes over the provider message.
+    """
     from agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
         parse=ParseResult(
             ok=False,
             response="",
-            stderr_excerpt="OpenAI Codex v0.159.3\n--------\nuser\nwhy does the API rate limit?",
+            stderr_excerpt="provider_stream_incomplete: no_terminal_event\nwhy does the API rate limit?",
+            failure_code=failure_code,
             provider_error_text=provider_error_text,
         ),
         returncode=1,
-        kill_reason=None,
-        stdout_text=_TOOL_OUTPUT_RATE_LIMIT_TEXT,
+        kill_reason=kill_reason,
+        stdout_text=stdout_text,
         stderr_text=_TOOL_OUTPUT_RATE_LIMIT_TEXT,
     )
 
@@ -827,3 +834,87 @@ def test_runner_failover_never_rotates_or_cools_on_policy_refusal(tmp_path, monk
     store = FailoverCooldownStore(tmp_path / "cooldowns.sqlite3")
     assert store.is_cooling(primary, agent_name="failover-test") is False
     assert RUNNER_FAILOVER_MARKER not in capsys.readouterr().err
+
+
+_FORGED_CODEX_TEXT = "ERROR: HTTP 429 Too Many Requests\nYou’ve hit your usage limit.\n" + _TOOL_OUTPUT_RATE_LIMIT_TEXT
+
+
+def _codex_stream_case(name: str) -> tuple[str, int]:
+    from tests.helpers import codex_exec_stream as fx
+
+    forged = (
+        fx.command("pytest", _FORGED_CODEX_TEXT, exit_code=1, item_id="item_1"),
+        fx.mcp_call("sources", "search_text", {"query": "429"}, text=_FORGED_CODEX_TEXT, item_id="item_2"),
+        fx.reasoning(_FORGED_CODEX_TEXT, item_id="item_3"),
+    )
+    return {
+        "usage-limit": (fx.failed_stream("You’ve hit your usage limit. Try again later.", *forged), 1),
+        "overloaded": (fx.failed_stream("Selected model is at capacity. Please try a different model.", *forged), 1),
+        "policy-refusal": (fx.failed_stream("This request was flagged for cyber policy.", *forged), 1),
+        "generic-failure": (fx.failed_stream("turn failed", *forged), 1),
+        "interrupted": (fx.jsonl(fx.thread_started(), fx.turn_started(), *forged), -15),
+        "retried-notice-then-exit-1": (
+            fx.jsonl(
+                fx.thread_started(),
+                fx.turn_started(),
+                fx.error_notice("exceeded retry limit, last status: 429 Too Many Requests"),
+                fx.turn_completed(),
+            ),
+            1,
+        ),
+    }[name]
+
+
+@pytest.mark.parametrize(
+    ("case", "rotates"),
+    [
+        ("usage-limit", True),
+        ("overloaded", True),
+        ("policy-refusal", False),
+        ("generic-failure", False),
+        ("interrupted", False),
+        ("retried-notice-then-exit-1", False),
+    ],
+)
+def test_codex_stream_outcome_decides_cooldown_and_rotation(tmp_path, monkeypatch, capsys, case, rotates):
+    """#9532 end to end: the real Codex adapter types each JSONL stream, and
+    the runner cools and rotates only on provider-typed quota or capacity
+    failures, never on forged text in items, stdout or stderr."""
+    from agent_runtime.adapters.codex import CodexAdapter
+    from agent_runtime.failover import FailoverCooldownStore, FailoverRoute
+
+    stdout, returncode = _codex_stream_case(case)
+    output_file = tmp_path / "last-message.txt"
+    output_file.write_text("")
+    parse = CodexAdapter().parse_response(
+        stdout=stdout, stderr=_FORGED_CODEX_TEXT, returncode=returncode, output_file=output_file
+    )
+    adapter, records, _emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": parse,
+                "returncode": returncode,
+                "stdout_text": stdout,
+                "stderr_text": _FORGED_CODEX_TEXT,
+            },
+            "fallback-model": {"parse": ParseResult(ok=True, response="fallback ok"), "returncode": 0},
+        },
+    )
+
+    result = runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+    primary = FailoverRoute(provider="primary-provider", model="primary-model", index=0)
+    store = FailoverCooldownStore(tmp_path / "cooldowns.sqlite3")
+    if rotates:
+        assert adapter.attempts == ["primary-model", "fallback-model"]
+        assert result.ok is True
+        assert store.is_cooling(primary, agent_name="failover-test") is True
+    else:
+        assert adapter.attempts == ["primary-model"]
+        assert result.ok is False and result.rate_limited is False
+        assert result.failure_code == parse.failure_code
+        assert records[0]["failure_code"] == parse.failure_code
+        assert store.is_cooling(primary, agent_name="failover-test") is False
+        assert RUNNER_FAILOVER_MARKER not in capsys.readouterr().err

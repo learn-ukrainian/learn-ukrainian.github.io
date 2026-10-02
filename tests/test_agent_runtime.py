@@ -34,6 +34,16 @@ from unittest.mock import patch
 import pytest
 
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
+from tests.helpers.codex_exec_stream import (
+    OTHER_THREAD_ID,
+    THREAD_ID,
+    agent_message,
+    completed_stream,
+    failed_stream,
+    jsonl,
+    thread_started,
+    turn_started,
+)
 from tests.helpers.python import project_python
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
@@ -1006,7 +1016,7 @@ def test_codex_parse_response_success(tmp_path):
     output_file.write_text("Hello from Codex")
 
     result = adapter.parse_response(
-        stdout="session id: abc12345\nsome progress output",
+        stdout=completed_stream(agent_message("Hello from Codex")),
         stderr="",
         returncode=0,
         output_file=output_file,
@@ -1014,7 +1024,7 @@ def test_codex_parse_response_success(tmp_path):
     assert result.ok is True
     assert result.response == "Hello from Codex"
     assert result.rate_limited is False
-    assert result.session_id == "abc12345"
+    assert result.session_id == THREAD_ID
     assert result.stderr_excerpt is None
 
 
@@ -1024,8 +1034,8 @@ def test_codex_parse_response_rate_limited(tmp_path):
     output_file.write_text("partial output")
 
     result = adapter.parse_response(
-        stdout="",
-        stderr="Error: usage limit reached. Try again later.",
+        stdout=failed_stream("You\u2019ve hit your usage limit. Try again later."),
+        stderr="",
         returncode=1,
         output_file=output_file,
     )
@@ -1067,7 +1077,8 @@ def test_codex_parse_response_missing_output_file():
 def test_codex_parse_response_rate_limit_in_file_is_agent_text(tmp_path):
     """codex exec skips ``-o`` on a failed turn, so output-file text is the
     agent's own message (which can quote tool output), never a provider
-    error (#9532). Codex's own stderr error line still counts."""
+    error; stderr never classifies either. Only a typed ``turn.failed``
+    counts (#9532)."""
     adapter = CodexAdapter()
     output_file = tmp_path / "output.txt"
     output_file.write_text("Error: quota exceeded")
@@ -1087,6 +1098,14 @@ def test_codex_parse_response_rate_limit_in_file_is_agent_text(tmp_path):
         returncode=1,
         output_file=output_file,
     )
+    assert result.rate_limited is False
+
+    result = adapter.parse_response(
+        stdout=failed_stream("Quota exceeded. Check your plan and billing details."),
+        stderr="",
+        returncode=1,
+        output_file=output_file,
+    )
     assert result.rate_limited is True
 
 
@@ -1097,7 +1116,7 @@ def test_codex_parse_response_rate_limit_url_no_false_positive(tmp_path):
     output_file.write_text("see github.com/issues/4290 for details")
 
     result = adapter.parse_response(
-        stdout="",
+        stdout=completed_stream(),
         stderr="",
         returncode=0,
         output_file=output_file,
@@ -1237,130 +1256,137 @@ def test_codex_parse_response_signaled_exit_is_never_rate_limit(tmp_path):
     assert result.ok is False
 
 
-def test_codex_check_early_reap_fires_when_task_complete_present(tmp_path, monkeypatch):
-    """Regression pin (2026-04-10): check_early_reap must return True
-    as soon as a task_complete event appears in a NEW rollout file
-    (one created after build_invocation). Without this, the runner
-    waits the full hard_timeout on every Codex post-completion hang.
-
-    Production flow: build_invocation → Codex spawns → Codex creates a
-    new rollout file → check_early_reap finds it. The test simulates
-    this by building an empty snapshot (no pre-existing rollouts),
-    then planting the new rollout AFTER build_invocation.
-    """
-    import json as _json
-    import time as _time
-    from datetime import UTC, datetime
-
-    adapter = CodexAdapter()
-
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
-
-    # build_invocation takes the snapshot of pre-existing rollouts.
-    # At this point the dir is empty.
-    plan = adapter.build_invocation(
-        prompt="x",
+def _codex_reap_plan(adapter, tmp_path, *, session_id=None):
+    return adapter.build_invocation(
+        prompt="do the audit",
         mode="read-only",
         cwd=tmp_path,
         model=None,
-        task_id="reap-test",
-        session_id=None,
+        task_id="reap",
+        session_id=session_id,
         tool_config=None,
     )
 
-    # NOW plant the new rollout — this simulates Codex creating its
-    # rollout file AFTER the subprocess started. It must appear in
-    # check_early_reap as a non-snapshotted candidate.
-    rollout = sessions_today / "rollout-new-after-build.jsonl"
-    rollout.write_text(
-        "\n".join(
-            [
-                _json.dumps(
-                    {
-                        "type": "event_msg",
-                        "payload": {
-                            "type": "user_message",
-                            "message": "x",
-                        },
-                    }
-                ),
-                _json.dumps(
-                    {
-                        "type": "event_msg",
-                        "payload": {
-                            "type": "task_complete",
-                            "last_agent_message": "Here is the full audit...",
-                        },
-                    }
-                ),
-            ]
+
+def _reap_checks(adapter, plan, stdout, monkeypatch, *, times):
+    """Run check_early_reap at the given monotonic times (call started at 0)."""
+    results = []
+    for now in times:
+        monkeypatch.setattr(time, "monotonic", lambda now=now: now)
+        results.append(
+            adapter.check_early_reap(plan, call_start_time=0.0, stdout_lines=stdout.splitlines(keepends=True))
         )
-        + "\n"
-    )
-
-    # call_start_time 10s in the past so the "has been running long
-    # enough" guard doesn't short-circuit.
-    call_start = _time.monotonic() - 10.0
-    assert adapter.check_early_reap(plan, call_start_time=call_start) is True
+    return results
 
 
-def test_codex_check_early_reap_ignores_preexisting_rollouts(tmp_path, monkeypatch):
-    """Regression pin for the cross-contamination fix (Codex 2026-04-10
-    audit): a rollout file that existed BEFORE our build_invocation must
-    NOT trigger early-reap, because it belongs to a previous or
-    concurrent call.
-    """
-    import json as _json
-    import time as _time
-    from datetime import UTC, datetime
-
+def test_codex_check_early_reap_fires_once_the_final_file_is_stable(tmp_path, monkeypatch):
+    """#9532: completion plus the same non-empty -o bytes on two checks two
+    seconds apart authorizes the reap, and parse accepts exactly those bytes."""
     adapter = CodexAdapter()
+    plan = _codex_reap_plan(adapter, tmp_path)
+    try:
+        plan.output_file.write_text("The complete audit response.")
+        stream = completed_stream()
 
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
+        assert _reap_checks(adapter, plan, stream, monkeypatch, times=[10.0, 11.0, 12.0]) == [False, False, True]
 
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
-
-    # Plant a stale rollout BEFORE build_invocation — it belongs to
-    # a previous call. The snapshot should capture it as pre-existing.
-    stale = sessions_today / "rollout-stale-from-other-run.jsonl"
-    stale.write_text(
-        _json.dumps(
-            {
-                "type": "event_msg",
-                "payload": {
-                    "type": "task_complete",
-                    "last_agent_message": "OTHER TASK'S ANSWER",
-                },
-            }
+        result = adapter.parse_response(
+            stdout=stream, stderr="", returncode=-9, output_file=plan.output_file, plan=plan
         )
-        + "\n"
-    )
+        assert result.ok is True
+        assert result.response == "The complete audit response."
+    finally:
+        plan.output_file.unlink(missing_ok=True)
 
-    # build_invocation snapshots all pre-existing rollouts.
+
+def test_codex_check_early_reap_never_fires_before_the_final_file_is_written(tmp_path, monkeypatch):
+    """``turn.completed`` precedes exec's -o write: completion alone never reaps."""
+    adapter = CodexAdapter()
+    plan = _codex_reap_plan(adapter, tmp_path)
+    try:
+        stream = completed_stream(agent_message("The complete audit response."))
+        assert not any(_reap_checks(adapter, plan, stream, monkeypatch, times=[10.0, 12.0, 14.0, 16.0]))
+
+        # The write lands; it must still be seen unchanged twice.
+        plan.output_file.write_text("The complete")
+        assert _reap_checks(adapter, plan, stream, monkeypatch, times=[18.0]) == [False]
+        plan.output_file.write_text("The complete audit response.")
+        assert _reap_checks(adapter, plan, stream, monkeypatch, times=[20.0, 22.0]) == [False, True]
+    finally:
+        plan.output_file.unlink(missing_ok=True)
+
+
+def test_codex_reaped_call_with_changed_final_file_is_incomplete(tmp_path, monkeypatch):
+    adapter = CodexAdapter()
+    plan = _codex_reap_plan(adapter, tmp_path)
+    try:
+        plan.output_file.write_text("The complete audit response.")
+        stream = completed_stream()
+        assert _reap_checks(adapter, plan, stream, monkeypatch, times=[10.0, 12.0]) == [False, True]
+        plan.output_file.write_text("Different bytes after the reap decision.")
+
+        result = adapter.parse_response(
+            stdout=stream, stderr="", returncode=-9, output_file=plan.output_file, plan=plan
+        )
+        assert result.ok is False and result.response == ""
+        assert result.failure_code == "provider_stream_incomplete"
+    finally:
+        plan.output_file.unlink(missing_ok=True)
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        "",
+        jsonl(thread_started(), turn_started()),
+        failed_stream("Selected model is at capacity. Please try a different model."),
+        completed_stream()[:-20],
+        completed_stream(thread_id=OTHER_THREAD_ID),
+    ],
+    ids=["no-events", "no-terminal", "failed", "truncated-terminal", "other-thread-on-resume"],
+)
+def test_codex_check_early_reap_requires_this_invocations_completion(tmp_path, monkeypatch, stdout):
+    adapter = CodexAdapter()
+    plan = _codex_reap_plan(adapter, tmp_path, session_id=THREAD_ID)
+    try:
+        plan.output_file.write_text("bytes on disk")
+        assert not any(_reap_checks(adapter, plan, stdout, monkeypatch, times=[10.0, 12.0, 14.0]))
+    finally:
+        plan.output_file.unlink(missing_ok=True)
+
+
+def test_codex_check_early_reap_skips_within_warmup_window(tmp_path, monkeypatch):
+    """Early reap must NOT fire within the first 5 seconds of a call."""
+    adapter = CodexAdapter()
+    plan = _codex_reap_plan(adapter, tmp_path)
+    try:
+        plan.output_file.write_text("answer")
+        assert not any(_reap_checks(adapter, plan, completed_stream(), monkeypatch, times=[1.0, 3.0, 4.9]))
+    finally:
+        plan.output_file.unlink(missing_ok=True)
+
+
+def test_codex_check_early_reap_never_fires_for_schema_calls(tmp_path, monkeypatch):
+    schema = tmp_path / "schema.json"
+    schema.write_text('{"type": "object"}')
+    adapter = CodexAdapter()
     plan = adapter.build_invocation(
-        prompt="x",
+        prompt="review",
         mode="read-only",
         cwd=tmp_path,
         model=None,
-        task_id="contamination-test",
+        task_id=None,
         session_id=None,
-        tool_config=None,
+        tool_config={
+            "output_schema_path": str(schema),
+            "output_schema_sha256": hashlib.sha256(schema.read_bytes()).hexdigest(),
+        },
     )
-
-    # No new rollout has been created. check_early_reap should NOT
-    # return True — the stale file is in the snapshot.
-    call_start = _time.monotonic() - 10.0
-    assert adapter.check_early_reap(plan, call_start_time=call_start) is False
+    try:
+        plan.output_file.write_text("{}")
+        assert not any(_reap_checks(adapter, plan, completed_stream(), monkeypatch, times=[10.0, 12.0, 14.0]))
+    finally:
+        plan.output_file.unlink(missing_ok=True)
 
 
 def test_codex_candidate_rollout_dirs_honors_codex_home_override(tmp_path, monkeypatch):
@@ -1408,377 +1434,21 @@ def test_codex_candidate_rollout_dirs_honors_codex_home_override(tmp_path, monke
     assert user_sessions not in dirs_scoped
 
 
-def test_codex_check_early_reap_skips_within_warmup_window(tmp_path, monkeypatch):
-    """Early reap must NOT fire within the first 5 seconds of a call,
-    even if a stale rollout from a previous run has a task_complete.
-    Otherwise we'd instantly reap legitimate new calls based on old
-    file state.
-    """
-    import json as _json
-    import time as _time
-    from datetime import UTC, datetime
-
+def test_codex_parse_response_takes_the_answer_from_the_final_file_only(tmp_path):
+    """The streamed agent message is never the answer, even when -o is empty."""
     adapter = CodexAdapter()
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
-    (sessions_today / "rollout-old.jsonl").write_text(
-        _json.dumps(
-            {
-                "type": "event_msg",
-                "payload": {"type": "task_complete", "last_agent_message": "old"},
-            }
-        )
-        + "\n"
-    )
-
-    plan = adapter.build_invocation(
-        prompt="x",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="warmup",
-        session_id=None,
-        tool_config=None,
-    )
-
-    # call_start_time = now (0s elapsed) — within warmup window
-    assert adapter.check_early_reap(plan, call_start_time=_time.monotonic()) is False
-
-
-def test_codex_check_early_reap_returns_false_when_no_task_complete(tmp_path, monkeypatch):
-    """If there's NO task_complete event yet in the rollout, return False
-    so the runner keeps polling normally.
-    """
-    import json as _json
-    import time as _time
-    from datetime import UTC, datetime
-
-    adapter = CodexAdapter()
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
-    # A rollout file with only reasoning deltas, no task_complete
-    (sessions_today / "rollout-inprogress.jsonl").write_text(
-        _json.dumps({"type": "response_item", "payload": {"type": "reasoning_delta"}}) + "\n"
-    )
-
-    plan = adapter.build_invocation(
-        prompt="x",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-
-    call_start = _time.monotonic() - 10.0
-    assert adapter.check_early_reap(plan, call_start_time=call_start) is False
-
-
-def test_codex_parse_response_recovers_from_rollout_task_complete(tmp_path, monkeypatch):
-    """Regression (2026-04-10 production incident): codex-cli 0.118
-    has a post-completion hang bug where the CLI writes task_complete
-    to rollout-*.jsonl, then hangs at 0% CPU without flushing -o <file>
-    or exiting. The adapter must recover by reading the rollout file.
-
-    Simulation: empty -o file (as if Codex never flushed), populated
-    rollout file with a task_complete event, planted AFTER
-    build_invocation (so it's not in the snapshot of pre-existing
-    rollouts — the cross-contamination fix excludes those).
-    Adapter should return ok=True with the rollout message.
-    """
-    import json as _json
-    from datetime import UTC, datetime
-
-    adapter = CodexAdapter()
-
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-
-    # Build today's sessions dir EMPTY — no pre-existing rollouts
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
-
-    # Empty -o file (the hang: Codex never flushed it)
-    output_file = tmp_path / "codex-out.txt"
-    output_file.write_text("")
-
-    # build_invocation snapshots pre-existing rollouts (currently empty).
-    plan = adapter.build_invocation(
-        prompt="Write a BST",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="bst-test",
-        session_id=None,
-        tool_config=None,
-    )
-
-    # Plant the rollout AFTER build_invocation — simulates Codex
-    # creating its own rollout during the call.
-    rollout = sessions_today / "rollout-2026-04-10T21-35-20-test.jsonl"
-    events = [
-        {"timestamp": "2026-04-10T21:35:21Z", "type": "event_msg", "payload": {"type": "session_start"}},
-        {
-            "timestamp": "2026-04-10T21:35:22Z",
-            "type": "event_msg",
-            "payload": {"type": "user_message", "message": "Write a BST"},
-        },
-        {"timestamp": "2026-04-10T21:36:00Z", "type": "response_item", "payload": {"type": "reasoning_delta"}},
-        {
-            "timestamp": "2026-04-10T21:40:02Z",
-            "type": "event_msg",
-            "payload": {
-                "type": "task_complete",
-                "turn_id": "abc-123",
-                "last_agent_message": "Here is the binary search tree implementation...",
-            },
-        },
-    ]
-    rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
-
-    # returncode=-9 simulates "we killed the hung process after early-reap"
-    result = adapter.parse_response(
-        stdout="",
-        stderr="",
-        returncode=-9,
-        output_file=output_file,
-        plan=plan,
-    )
-
-    assert result.ok is True, f"expected rollout recovery to succeed, got stderr_excerpt={result.stderr_excerpt!r}"
-    assert "binary search tree implementation" in result.response
-    assert "recovered" in (result.stderr_excerpt or "")
-    assert "rollout" in (result.stderr_excerpt or "")
-    assert result.rate_limited is False
-
-
-def test_codex_parse_response_rollout_recovery_skipped_on_happy_path(tmp_path, monkeypatch):
-    """When -o <file> has content, skip the rollout scan entirely.
-    Happy path must stay fast (no JSON parsing on every success)."""
-    import json as _json
-    from datetime import UTC, datetime
-
-    adapter = CodexAdapter()
-
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
-
-    # Plant a rollout with DIFFERENT content so we'd notice if the
-    # adapter accidentally read from it on the happy path.
-    rollout = sessions_today / "rollout-test.jsonl"
-    rollout.write_text(
-        _json.dumps(
-            {
-                "type": "event_msg",
-                "payload": {"type": "task_complete", "last_agent_message": "STALE rollout content"},
-            }
-        )
-        + "\n"
-    )
-
-    output_file = tmp_path / "codex-out.txt"
+    output_file = tmp_path / "output.txt"
     output_file.write_text("Fresh -o file response")
+    stream = completed_stream(agent_message("STALE streamed message"))
 
-    plan = adapter.build_invocation(
-        prompt="x",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-    result = adapter.parse_response(
-        stdout="session id: abc123",
-        stderr="",
-        returncode=0,
-        output_file=output_file,
-        plan=plan,
-    )
-
+    result = adapter.parse_response(stdout=stream, stderr="", returncode=0, output_file=output_file)
     assert result.ok is True
     assert result.response == "Fresh -o file response"
-    assert "STALE" not in result.response
 
-
-def test_codex_parse_response_ignores_unrelated_new_rollout(tmp_path, monkeypatch):
-    """Do not recover durable output from a new rollout whose prompt does not
-    match this invocation.
-
-    Regression for #1267: snapshot-based "newest rollout wins" binding is not
-    sufficient when another Codex exec run starts after ours and writes a newer
-    rollout in the same day directory. Recovery must validate that the rollout
-    belongs to the current stdin payload before accepting task_complete output.
-    """
-    import json as _json
-    from datetime import UTC, datetime
-
-    adapter = CodexAdapter()
-
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
-
-    output_file = tmp_path / "codex-out.txt"
     output_file.write_text("")
-
-    plan = adapter.build_invocation(
-        prompt="Review style issues for i-want-i-can",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="style-review",
-        session_id=None,
-        tool_config=None,
-    )
-
-    unrelated_rollout = sessions_today / "rollout-unrelated.jsonl"
-    unrelated_rollout.write_text(
-        "\n".join(
-            [
-                _json.dumps(
-                    {
-                        "type": "event_msg",
-                        "payload": {
-                            "type": "user_message",
-                            "message": "Completely different task in another repo",
-                        },
-                    }
-                ),
-                _json.dumps(
-                    {
-                        "type": "event_msg",
-                        "payload": {
-                            "type": "task_complete",
-                            "last_agent_message": "UNRELATED durable output",
-                        },
-                    }
-                ),
-            ]
-        )
-        + "\n",
-        "utf-8",
-    )
-
-    result = adapter.parse_response(
-        stdout="",
-        stderr="",
-        returncode=-9,
-        output_file=output_file,
-        plan=plan,
-    )
-
-    assert result.ok is False
-    assert result.response == ""
-    assert "UNRELATED durable output" not in (result.stderr_excerpt or "")
-
-
-def _rollout_match_plan(tmp_path: Path, prompt: str) -> InvocationPlan:
-    return InvocationPlan(
-        cmd=["codex", "exec"],
-        cwd=tmp_path,
-        stdin_payload=prompt,
-    )
-
-
-def test_codex_rollout_matches_response_item_prompt_after_envelope(tmp_path):
-    """Codex 0.130 emits an AGENTS/env user envelope before the real prompt."""
-    import json as _json
-
-    adapter = CodexAdapter()
-    rollout = tmp_path / "rollout-envelope-then-prompt.jsonl"
-    prompt = "Run the actual task\nwith the requested context."
-    envelope = "# AGENTS.md instructions\n\n<environment_context><cwd>/repo</cwd></environment_context>"
-    events = [
-        {
-            "type": "response_item",
-            "payload": {
-                "type": "message",
-                "role": "user",
-                "content": [{"type": "input_text", "text": envelope}],
-            },
-        },
-        {
-            "type": "response_item",
-            "payload": {
-                "type": "message",
-                "role": "user",
-                "content": [{"type": "input_text", "text": prompt}],
-            },
-        },
-    ]
-    rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
-
-    assert (
-        adapter._rollout_matches_plan(
-            rollout,
-            _rollout_match_plan(tmp_path, prompt),
-        )
-        is True
-    )
-
-
-def test_codex_rollout_does_not_match_envelope_without_prompt(tmp_path):
-    import json as _json
-
-    adapter = CodexAdapter()
-    rollout = tmp_path / "rollout-envelope-only.jsonl"
-    prompt = "Run the actual task"
-    events = [
-        {
-            "type": "response_item",
-            "payload": {
-                "type": "message",
-                "role": "user",
-                "content": [
-                    {
-                        "type": "input_text",
-                        "text": (
-                            "# AGENTS.md instructions\n\n<environment_context><cwd>/repo</cwd></environment_context>"
-                        ),
-                    },
-                ],
-            },
-        },
-        {
-            "type": "event_msg",
-            "payload": {
-                "type": "user_message",
-                "message": "A different prompt",
-            },
-        },
-    ]
-    rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
-
-    assert (
-        adapter._rollout_matches_plan(
-            rollout,
-            _rollout_match_plan(tmp_path, prompt),
-        )
-        is False
-    )
+    empty = adapter.parse_response(stdout=stream, stderr="", returncode=0, output_file=output_file)
+    assert empty.ok is False and empty.response == ""
+    assert "STALE" not in (empty.stderr_excerpt or "")
 
 
 def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
@@ -1915,7 +1585,7 @@ def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
     )
 
     result = adapter.parse_response(
-        stdout="session id: abc12345",
+        stdout=completed_stream(),
         stderr=stderr,
         returncode=0,
         output_file=output_file,
@@ -2228,89 +1898,26 @@ def _agent_only_popen(agent_popen):
 
 
 def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
-    """Regression pin (2026-04-10): when an adapter's check_early_reap
-    returns True, the runner must kill the subprocess and call
-    parse_response, which is expected to recover the response from
-    whatever on-disk state the adapter uses.
+    """Regression pin (2026-04-10, reworked for #9532): when Codex hangs after
+    finishing its turn, the runner hands check_early_reap the captured
+    ``--json`` stream; once the turn completed and its ``-o`` bytes are stable
+    the runner kills the process and parse_response returns those bytes.
 
-    This test pins the whole Codex post-completion-hang recovery path:
-    runner polls early_reap → returns True → runner kills proc →
-    parse_response reads rollout file → returns successful Result.
-
-    We plant the rollout file from inside the mock's proc.poll()
-    side_effect — this simulates Codex creating its rollout AFTER
-    build_invocation took its empty snapshot. The snapshot-based
-    cross-contamination fix would otherwise exclude any file that
-    existed before build_invocation ran.
+    The mock process emits the completed stream on stdout (pipe mode) and
+    writes -o on its first poll, then never exits on its own.
     """
-    import json as _json
-    from datetime import UTC, datetime
     from unittest.mock import MagicMock
 
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-    today = datetime.now(UTC)
-    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    sessions_today.mkdir(parents=True)
+    monkeypatch.setenv("DELEGATE_DISABLE_PTY", "1")
+    stream_lines = iter(completed_stream().splitlines(keepends=True))
+    captured: dict[str, Path] = {}
 
-    rollout = sessions_today / "rollout-reap-test.jsonl"
-    # Rollout must contain BOTH a user_message event (so
-    # _rollout_matches_plan can match on plan.stdin_payload) AND a
-    # task_complete event (so the early-reap detector finds a result).
-    rollout_payload = (
-        _json.dumps(
-            {
-                "type": "response_item",
-                "payload": {
-                    "type": "message",
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "input_text",
-                            "text": (
-                                "# AGENTS.md instructions\n\n"
-                                "<environment_context><cwd>/repo</cwd>"
-                                "</environment_context>"
-                            ),
-                        },
-                    ],
-                },
-            }
-        )
-        + "\n"
-        + _json.dumps(
-            {
-                "type": "event_msg",
-                "payload": {
-                    "type": "user_message",
-                    "message": "do the audit",
-                },
-            }
-        )
-        + "\n"
-        + _json.dumps(
-            {
-                "type": "event_msg",
-                "payload": {
-                    "type": "task_complete",
-                    "last_agent_message": "The complete audit response is here.",
-                },
-            }
-        )
-        + "\n"
-    )
-
-    # Mock Popen: poll() returns None (running) before kill, -9 after.
-    # On the FIRST poll, plant the rollout file. This simulates Codex
-    # creating its rollout file between startup and the first runner
-    # poll iteration, which is what happens in production.
     mock_proc = MagicMock()
     state = {"killed": False, "planted": False}
 
     def fake_poll():
-        if not state["planted"]:
-            rollout.write_text(rollout_payload)
+        if not state["planted"] and "output" in captured:
+            captured["output"].write_text("The complete audit response is here.")
             state["planted"] = True
         return -9 if state["killed"] else None
 
@@ -2327,27 +1934,29 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     mock_proc.stderr.readline = MagicMock(return_value="")
     mock_proc.stderr.close = MagicMock()
     mock_proc.stdout = MagicMock()
-    mock_proc.stdout.readline = MagicMock(return_value="")
+    mock_proc.stdout.readline = MagicMock(side_effect=lambda: next(stream_lines, ""))
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 99999
     _popen_proc_for_subprocess_run(mock_proc)
+
+    def agent_popen(cmd, *args, **kwargs):
+        captured["output"] = Path(cmd[cmd.index("-o") + 1])
+        return mock_proc
 
     # _kill_process_tree replaces bare proc.kill() in the runner.
     # We mock it so it still flips state["killed"] (via fake_kill)
     # without actually sending signals.
     mock_kill_tree = MagicMock(side_effect=lambda p: fake_kill())
 
-    # Make the warmup guard pass by pretending the call is 10s old.
-    # We do that by patching time.monotonic inside the runner to return
-    # a value >5s after start_time. Easier: just patch the adapter's
-    # own warmup guard by patching monotonic globally.
+    # Pass the 5s warmup and the 2s stability gap: the call is 10s old on
+    # the first check, and time then advances to a constant 20s.
     import time as _time
 
     base_time = _time.monotonic()
     monotonic_values = iter(
         [
             base_time,  # start_time capture in runner
-            base_time + 10,  # poll loop first check_early_reap
+            base_time + 10,
             base_time + 11,
             base_time + 12,
             base_time + 13,
@@ -2371,7 +1980,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            _agent_only_popen(MagicMock(return_value=mock_proc)),
+            _agent_only_popen(MagicMock(side_effect=agent_popen)),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",
@@ -2402,8 +2011,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     assert result.ok is True, (
         f"early-reap recovery should produce ok=True, got stderr_excerpt={result.stderr_excerpt!r}"
     )
-    assert "complete audit response" in result.response
-    assert "rollout" in (result.stderr_excerpt or "")
+    assert result.response == "The complete audit response is here."
 
 
 def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):

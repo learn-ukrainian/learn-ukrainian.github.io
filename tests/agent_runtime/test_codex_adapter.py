@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -8,6 +7,7 @@ import pytest
 
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.codex import CodexAdapter
+from tests.helpers.codex_exec_stream import completed_stream, failed_stream, jsonl, thread_started, turn_started
 
 
 def test_codex_build_invocation_sends_prompt_via_stdin(tmp_path: Path, monkeypatch) -> None:
@@ -49,71 +49,30 @@ def test_codex_build_invocation_honors_scoped_home(tmp_path: Path, monkeypatch) 
     assert plan.env_overrides["CODEX_HOME"] == str(scoped_home)
 
 
-def test_codex_rollout_capture_includes_local_date_midnight_straddle(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
+def test_codex_liveness_dirs_include_local_date_midnight_straddle(tmp_path: Path, monkeypatch) -> None:
     adapter = CodexAdapter()
     scoped_home = tmp_path / "codex-home"
     local_rollout_dir = scoped_home / "sessions" / "2026" / "05" / "29"
     local_rollout_dir.mkdir(parents=True)
-    rollout = local_rollout_dir / "rollout-2026-05-29T00-12-26-test.jsonl"
-    prompt = "write the lesson"
-    rollout.write_text(
-        "\n".join(
-            [
-                json.dumps(
-                    {
-                        "type": "event_msg",
-                        "payload": {"type": "user_message", "message": prompt},
-                    }
-                ),
-                json.dumps(
-                    {
-                        "type": "response_item",
-                        "payload": {
-                            "type": "function_call",
-                            "namespace": "mcp__sources__",
-                            "name": "verify_words",
-                            "arguments": json.dumps({"words": ["ранок"]}),
-                        },
-                    }
-                ),
-            ]
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    output_file = tmp_path / "codex-output.txt"
-    output_file.write_text("done", encoding="utf-8")
     utc_now = datetime(2026, 5, 28, 22, 12, tzinfo=UTC)
     local_now = datetime(2026, 5, 29, 0, 12, tzinfo=timezone(timedelta(hours=2)))
 
     adapter._codex_home_scope = str(scoped_home)
     monkeypatch.setattr(adapter, "_rollout_discovery_times", lambda: (utc_now, local_now))
-    adapter._rollout_snapshot = set()
 
     assert local_rollout_dir in adapter._candidate_rollout_dirs()
-
-    result = adapter.parse_response(
-        stdout="",
-        stderr="",
-        returncode=0,
-        output_file=output_file,
-        plan=InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt),
-    )
-
-    assert [call["name"] for call in result.tool_calls] == ["mcp__sources__verify_words"]
+    plan = InvocationPlan(cmd=["codex"], cwd=tmp_path, output_file=tmp_path / "out.txt")
+    assert local_rollout_dir in adapter.liveness_signal_paths(plan)
 
 
 @pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "gpt-6-sol", "gpt-6-astra", "", "auto"])
-def test_codex_rejects_unapproved_model_before_state_reset(tmp_path, monkeypatch, model):
+def test_codex_rejects_unapproved_model_before_invocation_preparation(tmp_path, monkeypatch, model):
     adapter = CodexAdapter()
 
-    def unexpected_reset():
+    def unexpected_preparation(*_args, **_kwargs):
         pytest.fail("unapproved model reached invocation preparation")
 
-    monkeypatch.setattr(adapter, "_reset_per_invocation_state", unexpected_reset)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.validate_read_only_tmp_root", unexpected_preparation)
     with pytest.raises(ValueError, match=r"model=.*rejected"):
         adapter.build_invocation(
             prompt="test", mode="read-only", cwd=tmp_path, model=model, task_id=None, session_id=None, tool_config=None
@@ -139,57 +98,61 @@ def test_codex_pins_gpt6_and_preserves_effort(tmp_path, monkeypatch, model, expe
 
 
 @pytest.mark.parametrize("returncode", [1, -9])
-@pytest.mark.parametrize("evidence", ["none", "no-terminal", "stale", "foreign", "complete"])
-def test_nonzero_exit_requires_matching_terminal_completion(tmp_path, monkeypatch, returncode, evidence):
-    adapter = CodexAdapter()
-    rollout_dir = tmp_path / "sessions"
-    rollout_dir.mkdir()
-    monkeypatch.setattr(adapter, "_candidate_rollout_dirs", lambda: [rollout_dir])
-    prompt = "current invocation"
-    rollout = rollout_dir / "rollout-test.jsonl"
-    events = [
-        {
-            "type": "event_msg",
-            "payload": {"type": "user_message", "message": "another invocation" if evidence == "foreign" else prompt},
-        },
-    ]
-    if evidence != "no-terminal":
-        events.append(
-            {"type": "event_msg", "payload": {"type": "task_complete", "last_agent_message": "Verified final answer"}}
-        )
-    content = "\n".join(json.dumps(event) for event in events) + "\n"
-    if evidence == "stale":
-        rollout.write_text(content)
-    adapter._reset_per_invocation_state()
-    if evidence not in {"none", "stale"}:
-        rollout.write_text(content)
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        "",
+        jsonl(thread_started(), turn_started()),
+        completed_stream(),
+    ],
+    ids=["no-events", "no-terminal", "completed-then-nonzero-exit"],
+)
+def test_nonzero_exit_never_returns_partial_output(tmp_path, returncode, stdout):
+    """#9532: ``-o`` is written after ``turn.completed``; a nonzero exit that
+    was not a verified early reap cannot prove those bytes are complete."""
     output = tmp_path / "last-message.txt"
     output.write_text("arbitrary partial bytes")
-    plan = InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt)
-    result = adapter.parse_response(stdout="", stderr="", returncode=returncode, output_file=output, plan=plan)
-    assert result.ok is (evidence == "complete")
-    assert result.response == ("Verified final answer" if evidence == "complete" else "")
+    result = CodexAdapter().parse_response(stdout=stdout, stderr="", returncode=returncode, output_file=output)
+    assert not result.ok
+    assert result.response == ""
     assert not result.rate_limited
-    if evidence != "complete":
-        assert "arbitrary partial bytes" in result.stderr_excerpt
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.provider_error_text == ""
 
 
 @pytest.mark.parametrize("content,expected", [("", False), ("final answer", True)])
 def test_zero_exit_requires_content(tmp_path, content, expected):
     output = tmp_path / "last-message.txt"
     output.write_text(content)
-    result = CodexAdapter().parse_response(stdout="", stderr="", returncode=0, output_file=output)
+    result = CodexAdapter().parse_response(stdout=completed_stream(), stderr="", returncode=0, output_file=output)
     assert result.ok is expected
 
 
-def test_nonzero_quota_error_remains_rate_limited(tmp_path):
+def test_nonzero_quota_failure_is_rate_limited_from_the_stream(tmp_path):
+    output = tmp_path / "last-message.txt"
+    output.write_text("")
+    result = CodexAdapter().parse_response(
+        stdout=failed_stream("You\u2019ve hit your usage limit. Try again later."),
+        stderr="",
+        returncode=1,
+        output_file=output,
+    )
+    assert not result.ok
+    assert result.rate_limited
+    assert result.failure_code == "rate_limited"
+
+
+def test_stderr_quota_text_never_classifies(tmp_path):
+    """Without typed events the outcome is incomplete, whatever stderr says."""
     output = tmp_path / "last-message.txt"
     output.write_text("")
     result = CodexAdapter().parse_response(
         stdout="", stderr="ERROR: usage limit reached\n", returncode=1, output_file=output
     )
     assert not result.ok
-    assert result.rate_limited
+    assert not result.rate_limited
+    assert result.failure_code == "provider_stream_incomplete"
+    assert "usage limit reached" in result.stderr_excerpt
 
 
 def test_nonzero_output_file_quota_text_is_agent_text(tmp_path):

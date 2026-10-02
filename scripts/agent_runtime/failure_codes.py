@@ -27,6 +27,7 @@ RUNTIME_FAILURE_CODES = frozenset(
         "provider_auth",
         "provider_overloaded",
         "provider_policy_refusal",
+        "provider_stream_incomplete",
         "provider_unavailable",
         "provider_error",
         "rate_limited",

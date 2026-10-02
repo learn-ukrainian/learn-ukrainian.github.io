@@ -13,6 +13,7 @@ Both are frozen dataclasses. Frozen = hashable, immutable, mypy-strict clean.
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -57,17 +58,20 @@ class ParseResult:
         failure_code: Optional closed, body-free failure classification. ACP
             adapters use this to preserve diagnostics while privacy-limited
             usage records discard raw stderr and provider text. Codex sets it
-            from the provider's structured terminal error
+            from its ``--json`` event stream: the classified terminal failure
             (``provider_policy_refusal``, ``provider_overloaded``,
-            ``provider_auth``, ``provider_error``, ``rate_limited``); the
-            failover classifier and delegate task records honor it.
+            ``provider_auth``, ``provider_error``, ``rate_limited``) or
+            ``provider_stream_incomplete`` when the stream proves no outcome.
+            The failover classifier and delegate task records honor it.
         provider_error_text: Failure text the adapter attributes to the
             provider itself, isolated from its raw streams. None means the
             adapter makes no such claim and the failover classifier reads the
-            excerpt and raw stdout/stderr. When set (even empty), the
-            classifier reads only this text and the typed fields: Codex sets it
-            because its streams carry echoed prompt and tool output (#9532).
+            excerpt and raw stdout/stderr. When set (even empty), the adapter's
+            typed ``failure_code`` is the whole classification: the failover
+            classifier reads no text at all. Codex sets it on every failure
+            because its streams carry agent and tool text (#9532).
     """
+
     ok: bool
     response: str
     stderr_excerpt: str | None = None
@@ -124,6 +128,7 @@ class Result:
             provider/model. When ``substituted`` is true, callers must treat
             the run as a different review/cost/egress lane.
     """
+
     ok: bool
     agent: str
     model: str

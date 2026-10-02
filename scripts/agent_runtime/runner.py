@@ -73,6 +73,7 @@ from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
+from .adapters.codex_events import mcp_tool_event
 from .attribution import InvocationAttribution, resolve_invocation_attribution
 from .binary_resolve import augment_path_for_login_bins, resolve_agent_binary
 from .env_sanitize import build_agent_env
@@ -128,10 +129,6 @@ _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
 # checkout's own file tree can be its protected primary checkout.
 _RUNNER_REPO_TREE = Path(__file__).resolve().parents[2]
 _MCP_RUNTIME_INIT_TIMEOUT_S = 30.0
-_MCP_TOOL_EVENT_RE = re.compile(
-    r"\bmcp:\s+(?P<server>[A-Za-z0-9_.-]+)/(?P<tool>[A-Za-z0-9_.-]+)\s+"
-    r"(?:started|\(completed\))"
-)
 _MCP_TRANSPORT_FAILURE_RE = re.compile(r"ERROR\s+rmcp::transport::worker:")
 _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
@@ -1235,16 +1232,12 @@ class _McpRuntimeObserver:
         return len(lines)
 
     def observe_line(self, line: str, *, stream: str) -> None:
-        tool_match = _MCP_TOOL_EVENT_RE.search(line)
-        if tool_match:
-            server = tool_match.group("server")
-            if server in self.configured_servers:
-                self._emit_ready(
-                    server,
-                    tool=tool_match.group("tool"),
-                    stream=stream,
-                    line=line,
-                )
+        if stream == "stdout":
+            # ``codex exec --json`` stdout: only a typed MCP call item shows
+            # the server initialized; text inside items never does (#9532).
+            tool_event = mcp_tool_event(line)
+            if tool_event is not None and tool_event[0] in self.configured_servers:
+                self._emit_ready(tool_event[0], tool=tool_event[1], stream=stream, line=line)
             return
 
         failure_match = _MCP_TRANSPORT_FAILURE_RE.search(line)
@@ -1708,7 +1701,7 @@ def _execute_invocation_plan(
 
             if early_reap_check is not None:
                 try:
-                    if early_reap_check(plan, call_start_time=start_time):
+                    if early_reap_check(plan, call_start_time=start_time, stdout_lines=watchdog_state.stdout_lines):
                         returncode = proc.poll()
                         if returncode is not None:
                             kill_reason = None
@@ -1826,19 +1819,15 @@ def _execute_invocation_plan(
             and not stdout_text.strip()
             and not stderr_text.strip()
         ):
-            parse = ParseResult(
-                ok=False,
-                response="",
+            # Only the excerpt is runner-authored; the adapter's typed failure
+            # fields stay authoritative for failover and usage (#9532).
+            parse = replace(
+                parse,
                 stderr_excerpt=(
                     f"{agent_name} subprocess exited rc={final_returncode} in "
                     f"{duration_s:.2f}s with no captured stdout/stderr "
                     f"(stdin_bytes={len(plan.stdin_payload or '')})"
                 )[:500],
-                rate_limited=parse.rate_limited,
-                session_id=parse.session_id,
-                tokens=parse.tokens,
-                tool_calls=parse.tool_calls,
-                substitution=parse.substitution,
             )
         if fleet_capture is not None:
             actual_model, route_metadata = resolved_route(
