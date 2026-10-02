@@ -101,6 +101,66 @@ def test_another_uids_closed_environment_in_the_workers_cgroup_is_unknown(fallba
     assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_UNKNOWN
 
 
+@pytest.mark.parametrize("uid_offset", [0, 1])
+def test_closed_environment_outside_the_workers_cgroup_is_not_a_leftover(uid_offset: int) -> None:
+    """A non-dumpable process of any uid started anywhere else on the host does not void the scan (#9514)."""
+    fake = FakeProcs(
+        procs={
+            JOB: FakeProc(task=TASK_ID, start=500),
+            OTHER: FakeProc(uid=os.getuid() + uid_offset, start=600, env_unreadable=True),
+        }
+    )
+    scope = scope_of(worker_start_ticks=400, fallback_cgroup=WORKER_CGROUP)
+
+    assert _pids(wl.find_leftovers(scope, reader=fake)) == [JOB]
+    del fake.procs[JOB]
+    assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_CLEAR
+
+
+@pytest.mark.parametrize("fallback_cgroup", [WORKER_CGROUP, None])
+def test_our_uids_closed_environment_in_the_workers_cgroup_or_without_one_is_unknown(
+    fallback_cgroup: str | None,
+) -> None:
+    fake = FakeProcs(procs={JOB: FakeProc(start=500, env_unreadable=True)}, cgroups={WORKER_CGROUP: [JOB]})
+    scope = scope_of(worker_start_ticks=400, fallback_cgroup=fallback_cgroup)
+
+    with pytest.raises(wl.ScanUnknown, match="environ"):
+        wl.find_leftovers(scope, reader=fake)
+    assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_UNKNOWN
+
+
+@pytest.mark.parametrize("uid_offset", [0, 1])
+def test_closed_environment_with_an_unreadable_cgroup_is_unknown(uid_offset: int) -> None:
+    fake = FakeProcs(
+        procs={JOB: FakeProc(uid=os.getuid() + uid_offset, start=500, env_unreadable=True, cgroup_unreadable=True)}
+    )
+    scope = scope_of(worker_start_ticks=400, fallback_cgroup=WORKER_CGROUP)
+
+    with pytest.raises(wl.ScanUnknown, match="cgroup"):
+        wl.find_leftovers(scope, reader=fake)
+    assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_UNKNOWN
+
+
+def test_scope_unit_stop_reaches_the_user_manager_without_the_callers_bus_variables(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[dict[str, str]] = []
+
+    def run(argv: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        seen.append(dict(kwargs["env"]))  # type: ignore[call-overload]
+        return subprocess.CompletedProcess(argv, 0, "", "")
+
+    derived = {"XDG_RUNTIME_DIR": "/run/user/derived", "DBUS_SESSION_BUS_ADDRESS": "unix:path=/run/user/derived/bus"}
+    monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("DBUS_SESSION_BUS_ADDRESS", raising=False)
+    monkeypatch.setattr(dispatch_isolation, "user_manager_env", lambda env: {**env, **derived})
+    monkeypatch.setattr(wl.subprocess, "run", run)
+
+    assert wl._systemctl_stop(UNIT) is True
+    assert {key: seen[0][key] for key in derived} == derived
+    assert "XDG_RUNTIME_DIR" not in os.environ
+
+
 def test_unreadable_environment_of_a_possible_job_is_unknown_not_clear() -> None:
     fake = FakeProcs(procs={JOB: FakeProc(start=500, env_unreadable=True)})
 

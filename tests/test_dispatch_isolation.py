@@ -7,6 +7,8 @@ manager is reachable. It does not load or modify ``lu-dispatch.slice``.
 
 from __future__ import annotations
 
+import ast
+import json
 import os
 import signal
 import subprocess
@@ -20,6 +22,9 @@ from pathlib import Path
 import pytest
 
 from scripts.orchestration import dispatch_isolation as iso
+
+# These tests exercise the real probe; tests/conftest.py stubs it everywhere else.
+pytestmark = pytest.mark.host_dispatch_probe
 
 _PY = sys.executable
 _MEMORY_MAX = str(iso.MEMORY_MAX_BYTES)
@@ -39,6 +44,12 @@ def _install_fakes(tmp_path: Path) -> Path:
         """
         import os, sys, time
         mode = os.environ.get("FAKE_SYSTEMCTL", "ok")
+        if os.environ.get("FAKE_REQUIRE_BUS") and not (
+            os.environ.get("XDG_RUNTIME_DIR") or os.environ.get("DBUS_SESSION_BUS_ADDRESS")
+        ):
+            sys.stderr.write("Failed to connect to user scope bus via local transport: "
+                             "$DBUS_SESSION_BUS_ADDRESS and $XDG_RUNTIME_DIR not defined\\n")
+            sys.exit(1)
         if mode == "timeout":
             time.sleep(30)
         if mode == "hold-pipes":
@@ -103,6 +114,16 @@ def _install_fakes(tmp_path: Path) -> Path:
         if log:
             open(log, "w", encoding="utf-8").write("\\n".join(sys.argv))
         mode = os.environ.get("FAKE_SYSTEMD_RUN", "exec")
+        env_log = os.environ.get("FAKE_ENV_LOG")
+        if env_log:
+            names = ("XDG_RUNTIME_DIR", "DBUS_SESSION_BUS_ADDRESS")
+            open(env_log, "w", encoding="utf-8").write(repr({name: os.environ.get(name) for name in names}))
+        if os.environ.get("FAKE_REQUIRE_BUS") and not (
+            os.environ.get("XDG_RUNTIME_DIR") or os.environ.get("DBUS_SESSION_BUS_ADDRESS")
+        ):
+            sys.stderr.write("Failed to connect to user scope bus via local transport: "
+                             "$DBUS_SESSION_BUS_ADDRESS and $XDG_RUNTIME_DIR not defined\\n")
+            sys.exit(1)
         if mode == "fail":
             sys.stderr.write("Failed to start transient scope unit: Unit name already exists\\n")
             sys.exit(1)
@@ -1044,3 +1065,175 @@ def test_real_scope_puts_the_popen_pid_in_a_throwaway_slice(monkeypatch: pytest.
     )
     assert active.stdout.strip() != "active"
     assert _show_dispatch_slice() == before
+
+
+# --- #9514: a worker without the user-bus variables dispatches its own workers ---
+
+_BUS_VARS = ("XDG_RUNTIME_DIR", "DBUS_SESSION_BUS_ADDRESS")
+
+
+def _runtime_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, create: bool = True) -> Path:
+    """Point the derivation at a temporary ``/run/user`` and return ``<root>/<uid>``."""
+    root = tmp_path / "run-user"
+    root.mkdir()
+    monkeypatch.setattr(iso, "_USER_RUNTIME_ROOT", root)
+    runtime = root / str(os.getuid())
+    if create:
+        runtime.mkdir(mode=0o700)
+    return runtime
+
+
+def _without_bus(env: dict[str, str]) -> dict[str, str]:
+    return {key: value for key, value in env.items() if key not in _BUS_VARS}
+
+
+def test_user_manager_env_derives_the_missing_bus_variables(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    runtime = _runtime_root(tmp_path, monkeypatch)
+    source = {"PATH": "/usr/bin"}
+
+    assert iso.user_manager_env(source) == {
+        "PATH": "/usr/bin",
+        "XDG_RUNTIME_DIR": str(runtime),
+        "DBUS_SESSION_BUS_ADDRESS": f"unix:path={runtime}/bus",
+    }
+    assert source == {"PATH": "/usr/bin"}
+
+
+def test_user_manager_env_keeps_the_callers_values(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    runtime = _runtime_root(tmp_path, monkeypatch)
+    both = {"XDG_RUNTIME_DIR": "/caller/run", "DBUS_SESSION_BUS_ADDRESS": "unix:path=/caller/bus"}
+    # sd-bus derives $XDG_RUNTIME_DIR/bus itself, so a caller runtime dir is enough.
+    runtime_only = {"XDG_RUNTIME_DIR": "/caller/run"}
+    empty = {"XDG_RUNTIME_DIR": ""}
+    bus_only = {"DBUS_SESSION_BUS_ADDRESS": "unix:path=/caller/bus"}
+
+    assert iso.user_manager_env(both) == both
+    assert iso.user_manager_env(runtime_only) == runtime_only
+    assert iso.user_manager_env(empty) == empty
+    assert iso.user_manager_env(bus_only) == {**bus_only, "XDG_RUNTIME_DIR": str(runtime)}
+
+
+def test_user_manager_env_derives_nothing_without_an_owned_runtime_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    runtime = _runtime_root(tmp_path, monkeypatch, create=False)
+    assert iso.user_manager_env({}) == {}
+
+    # Another uid's directory as seen by us: ours, not that uid's.
+    other = os.getuid() + 1
+    (runtime.parent / str(other)).mkdir()
+    assert iso.user_manager_env({}, uid=other) == {}
+
+    target = tmp_path / "elsewhere"
+    target.mkdir()
+    runtime.symlink_to(target)
+    assert iso.user_manager_env({}) == {}
+
+    runtime.unlink()
+    runtime.write_text("", encoding="ascii")
+    assert iso.user_manager_env({}) == {}
+
+
+def test_probe_reaches_the_user_manager_without_the_callers_bus_variables(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    runtime = _runtime_root(tmp_path, monkeypatch)
+    bindir = _install_fakes(tmp_path)
+    env = _without_bus(_env(bindir, FAKE_REQUIRE_BUS="1"))
+    subtree = _subtree(tmp_path)
+
+    assert _probe(env, subtree).ready
+    assert not set(_BUS_VARS) & env.keys()
+
+    runtime.rmdir()
+    missing = _probe(env, subtree)
+    assert not missing.ready
+    assert missing.reason is not None
+    assert missing.reason.startswith("user-manager:")
+    assert "not defined" in missing.reason
+
+
+@pytest.mark.parametrize("caller_has_bus", [False, True])
+def test_scope_launch_reaches_the_user_manager_and_keeps_the_worker_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caller_has_bus: bool
+):
+    """systemd-run gets the derived bus variables; the worker gets exactly the caller's env."""
+    runtime = _runtime_root(tmp_path, monkeypatch)
+    bindir = _install_fakes(tmp_path)
+    env_log = tmp_path / "systemd-run-env.txt"
+    env = _without_bus(_env(bindir, FAKE_REQUIRE_BUS="1", FAKE_ENV_LOG=str(env_log)))
+    if caller_has_bus:
+        env.update(XDG_RUNTIME_DIR="/caller/run", DBUS_SESSION_BUS_ADDRESS="unix:path=/caller/bus")
+    dump = "import json, os, sys; sys.stdout.write(json.dumps(dict(os.environ), sort_keys=True))"
+
+    proc, launch = iso.spawn_detached_worker(
+        [_PY, "-c", dump],
+        task_id="nested-writer",
+        run_nonce="nonce9514",
+        env=env,
+        probe_env=env,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        subtree_path=_subtree(tmp_path),
+    )
+    out, _err = proc.communicate(timeout=10)
+
+    assert launch.mode == iso.LAUNCH_SCOPE, launch.fallback_reason
+    expected_bus = (
+        {"XDG_RUNTIME_DIR": "/caller/run", "DBUS_SESSION_BUS_ADDRESS": "unix:path=/caller/bus"}
+        if caller_has_bus
+        else {"XDG_RUNTIME_DIR": str(runtime), "DBUS_SESSION_BUS_ADDRESS": f"unix:path={runtime}/bus"}
+    )
+    assert ast.literal_eval(env_log.read_text(encoding="utf-8")) == expected_bus
+    baseline = subprocess.run([_PY, "-c", dump], env=env, capture_output=True, check=True, timeout=10)
+    assert json.loads(out) == json.loads(baseline.stdout)
+
+
+def test_real_nested_scope_without_bus_variables(monkeypatch: pytest.MonkeyPatch):
+    """A caller with no user-bus variables still gets a scope, and the worker still has none.
+
+    Skipped when this host has no reachable user manager. Uses a throwaway
+    slice; does not load or modify lu-dispatch.slice.
+    """
+    _require_user_manager(monkeypatch)
+    nonce = uuid.uuid4().hex[:12]
+    slice_unit = f"probe9514n{nonce}.slice"
+    code = (
+        "import os, sys\n"
+        "from pathlib import Path\n"
+        "names = ('XDG_RUNTIME_DIR', 'DBUS_SESSION_BUS_ADDRESS')\n"
+        "sys.stdout.write(repr([name for name in names if name in os.environ]) + '\\n')\n"
+        "sys.stdout.write(Path('/proc/self/cgroup').read_text().strip() + '\\n')\n"
+    )
+    env = _without_bus(os.environ.copy())
+    proc: subprocess.Popen[bytes] | None = None
+    try:
+        proc, launch = iso.spawn_detached_worker(
+            [_PY, "-c", code],
+            task_id=f"probe9514n{nonce}",
+            run_nonce=nonce,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            slice_unit=slice_unit,
+            check_probe=False,
+            allow_fallback=False,
+        )
+        out, _err = proc.communicate(timeout=10)
+        lines = out.decode().splitlines()
+        assert launch.mode == iso.LAUNCH_SCOPE
+        assert lines[0] == "[]"
+        assert slice_unit.removesuffix(".slice") in lines[1]
+    finally:
+        if proc is not None and proc.poll() is None:
+            with suppress(ProcessLookupError):
+                os.kill(proc.pid, signal.SIGKILL)
+            proc.wait(timeout=5)
+        for verb in ("stop", "reset-failed"):
+            subprocess.run(
+                ["systemctl", "--user", verb, slice_unit],
+                capture_output=True,
+                text=True,
+                timeout=iso.PROBE_TIMEOUT_S,
+                check=False,
+            )
