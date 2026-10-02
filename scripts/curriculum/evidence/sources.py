@@ -167,6 +167,25 @@ def normalize_spelling(word: str) -> str:
     return word.translate(APOSTROPHES)
 
 
+def standard_file_lines(content: str) -> list[str]:
+    """The Standard's lines as ``grep -n`` and editors number them: split at LF only, 1-based by index + 1.
+
+    ``str.splitlines`` also splits at form feeds (and CR, VT, U+2028 and other separators); the
+    Standard holds 139 page-break form feeds, so its line N was not the line N an arc, an editor or
+    ``grep -n`` cites (#9487: the Standard's 4.1.1 is at 571, ``splitlines`` put it at 585). Form
+    feeds and CRs stay inside the line text; only the LF terminators are dropped.
+    """
+    lines = content.split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
+def read_standard_lines(path: Path) -> list[str]:
+    """The Standard file's LF lines, decoded without newline translation (a CR stays text, as in ``grep``)."""
+    return standard_file_lines(path.read_bytes().decode("utf-8"))
+
+
 def _file_hash(path: Path) -> str:
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
@@ -1039,8 +1058,7 @@ class Sources:
         if not self.standard_path.is_file():
             raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: Standard file not found at {self.standard_path}")
         file_hash = _file_hash(self.standard_path)
-        content = self.standard_path.read_text(encoding="utf-8")
-        lines = content.splitlines()
+        lines = read_standard_lines(self.standard_path)
         total_lines = len(lines)
         if start_line < 1 or end_line < start_line or end_line > total_lines:
             raise ValueError(

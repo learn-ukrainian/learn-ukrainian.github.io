@@ -601,6 +601,19 @@ def main(argv: list[str] | None = None) -> int:
     return 1 if result["status"] == "failed" else 0
 
 
+def _standard_text_location(sources_instance: sources.Sources, text: str) -> str | None:
+    """The 'start-end' file lines holding text exactly, or None (pack-verify's standard check, #9487)."""
+    wanted = text.split("\n")
+    try:
+        lines = sources.read_standard_lines(sources_instance.standard_path)
+    except (OSError, UnicodeDecodeError):
+        return None
+    for start in range(len(lines) - len(wanted) + 1):
+        if lines[start : start + len(wanted)] == wanted:
+            return f"{start + 1}-{start + len(wanted)}"
+    return None
+
+
 def verify_pack(
     level: str,
     slug: str,
@@ -877,9 +890,15 @@ def verify_pack(
                     f"expected {std_rec['file_sha256'][:12]}..., got {cur_sha[:12]}..."
                 )
             if cur_text != std_rec["text"]:
+                found = _standard_text_location(sources_instance, std_rec["text"])
                 errors.append(
-                    f"{codes.STANDARD_MISMATCH}: standard {std_rec['id']} text for lines {lines_str} changed: "
-                    f"expected {std_rec['text'][:40]!r}, got {cur_text[:40]!r}"
+                    f"{codes.STANDARD_MISMATCH}: standard {std_rec['id']} text differs from the Standard's lines "
+                    f"{lines_str}: expected {std_rec['text'][:40]!r}, got {cur_text[:40]!r}"
+                    + (
+                        f"; the recorded text is at lines {found} (rebuild the pack if it predates LF numbering)"
+                        if found
+                        else "; the recorded text is not in the file"
+                    )
                 )
 
         # 10. Videos
