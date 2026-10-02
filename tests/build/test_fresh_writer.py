@@ -13,7 +13,13 @@ import yaml
 
 from scripts.build.fresh.draft_schema import DraftValidationError, validate_draft
 from scripts.build.fresh.preflight import PreflightResult
-from scripts.build.fresh.regeneration import INPUT_KEYS, load_ledger, record_writer_call, writer_task_id
+from scripts.build.fresh.regeneration import (
+    INPUT_KEYS,
+    inputs_digest,
+    load_ledger,
+    record_writer_call,
+    writer_task_id,
+)
 from scripts.build.fresh.writer import (
     WriterCallError,
     dispatch_writer,
@@ -25,6 +31,14 @@ from tests.build.test_fresh_draft_schema import load_fixture
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+INPUTS = {key: str(i) * 64 for i, key in enumerate(INPUT_KEYS, start=1)}
+
+
+def _inputs(prompt_sha256: str) -> dict[str, str]:
+    """A complete ledger snapshot for ``prompt_sha256``, as every writer entry point passes (#8425)."""
+    return {**INPUTS, "prompt_sha256": prompt_sha256}
 
 
 @pytest.fixture
@@ -126,6 +140,7 @@ def test_writer_seat_validation(tmp_path, passing_preflight):
                 lesson_n=1,
                 prompt_file=prompt_file,
                 prompt_sha256="0" * 64,
+                inputs=_inputs("0" * 64),
                 output_dir=tmp_path / "out",
                 preflight_result=passing_preflight,
             )
@@ -145,6 +160,7 @@ def test_dispatch_refuses_without_passing_preflight(tmp_path):
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="0" * 64,
+            inputs=_inputs("0" * 64),
             output_dir=tmp_path / "out",
             preflight_result=failed_pre,
         )
@@ -157,6 +173,7 @@ def test_dispatch_refuses_without_passing_preflight(tmp_path):
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="0" * 64,
+            inputs=_inputs("0" * 64),
             output_dir=tmp_path / "out",
             preflight_result=None,
         )
@@ -207,6 +224,7 @@ result_path.with_suffix(".json").write_text(json.dumps({{"model": "fake-model", 
         lesson_n=2,
         prompt_file=prompt_file,
         prompt_sha256="a" * 64,
+        inputs=_inputs("a" * 64),
         output_dir=output_dir,
         preflight_result=passing_preflight,
         attempt=1,
@@ -217,8 +235,7 @@ result_path.with_suffix(".json").write_text(json.dumps({{"model": "fake-model", 
     )
 
     assert res["writer"] == "agy"
-    # Without a ledger snapshot the prompt hash alone keys the task ID.
-    assert res["task_id"] == writer_task_id("a1", "test-slug", 2, 1, requested, {"prompt_sha256": "a" * 64})
+    assert res["task_id"] == writer_task_id("a1", "test-slug", 2, 1, requested, _inputs("a" * 64))
     assert res["prompt_sha256"] == "a" * 64
     assert res["model"] == "fake-model"
     expected = resolved if isinstance(resolved, str) and resolved else "unknown"
@@ -273,6 +290,7 @@ Path(args.result_file).write_text("invalid_draft: true\\nstatus: ok\\n", encodin
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="b" * 64,
+            inputs=_inputs("b" * 64),
             output_dir=output_dir,
             preflight_result=passing_preflight,
             attempt=1,
@@ -304,6 +322,7 @@ def test_invalid_writer_effort_refused(tmp_path, passing_preflight):
             lesson_n=1,
             prompt_file=tmp_path / "prompt.md",
             prompt_sha256="a" * 64,
+            inputs=_inputs("a" * 64),
             output_dir=tmp_path / "out",
             preflight_result=passing_preflight,
         )
@@ -331,6 +350,7 @@ def test_writer_effort_task_ledger_keying(tmp_path, a1_valid_fixture, passing_pr
             lesson_n=1,
             prompt_file=prompt,
             prompt_sha256="a" * 64,
+            inputs=_inputs("a" * 64),
             output_dir=tmp_path / effort,
             preflight_result=passing_preflight,
             fake_seat=fake,
@@ -343,10 +363,8 @@ def test_writer_effort_task_ledger_keying(tmp_path, a1_valid_fixture, passing_pr
         assert record["effort"] == metadata["effort"] == effort
         assert metadata["attempt"] == 1
     assert len(set(ids)) == 2
-    assert writer_task_id("a1", "sample", 1, 1) == "write-a1-sample-1-1"
-
-
-INPUTS = {key: str(i) * 64 for i, key in enumerate(INPUT_KEYS, start=1)}
+    # Without an explicit effort the seat keeps its own default and the ID carries no effort suffix.
+    assert writer_task_id("a1", "sample", 1, 1, None, INPUTS) == f"write-a1-sample-1-1-{inputs_digest(INPUTS)}"
 
 
 def test_writer_task_id_keys_on_inputs_attempt_and_effort():
@@ -363,8 +381,6 @@ def test_writer_task_id_keys_on_inputs_attempt_and_effort():
     assert writer_task_id("a1", "sample", 1, 1, None, partial) == writer_task_id(
         "a1", "sample", 1, 1, None, {**partial, "card_sha256": "0" * 64}
     )
-    # Callers without a snapshot keep the historical ID.
-    assert writer_task_id("a1", "sample", 1, 1, "high") == "write-a1-sample-1-1-high"
 
 
 def test_new_inputs_after_done_attempt_get_fresh_task_id(tmp_path, a1_valid_fixture, passing_preflight):
@@ -425,6 +441,24 @@ def test_writer_inputs_must_match_prompt_hash(tmp_path, passing_preflight):
             preflight_result=passing_preflight,
             inputs=INPUTS,
         )
+
+
+@pytest.mark.parametrize("key", INPUT_KEYS[:-1])
+def test_writer_inputs_must_be_complete(tmp_path, passing_preflight, key):
+    """No entry point may key a dispatch on a partial snapshot: that gave identical work a second ID (#8425)."""
+    with pytest.raises(ValueError, match=f"missing \\['{key}'\\]"):
+        dispatch_writer(
+            writer="codex",
+            level="a1",
+            slug="test",
+            lesson_n=1,
+            prompt_file=tmp_path / "prompt.md",
+            prompt_sha256="a" * 64,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            inputs={k: v for k, v in _inputs("a" * 64).items() if k != key},
+        )
+    assert not (tmp_path / "batch_state").exists()
 
 
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
@@ -495,6 +529,7 @@ sys.exit(1)
         lesson_n=3,
         prompt_file=prompt_file,
         prompt_sha256="c" * 64,
+        inputs=_inputs("c" * 64),
         output_dir=output_dir,
         preflight_result=passing_preflight,
         attempt=1,
@@ -510,7 +545,7 @@ sys.exit(1)
     assert res["effort"] == "high"
     assert yaml.safe_load(res["writer_meta_file"].read_text())["effort"] == "high"
 
-    task_id = writer_task_id("a1", "delegate-test", 3, 1, effort, {"prompt_sha256": "c" * 64})
+    task_id = writer_task_id("a1", "delegate-test", 3, 1, effort, _inputs("c" * 64))
     assert res["task_id"] == task_id
 
     # MAJOR D: Verify that caller_root was NOT used for reading results
@@ -572,6 +607,7 @@ sys.exit(1)
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="d" * 64,
+            inputs=_inputs("d" * 64),
             output_dir=tmp_path / "out",
             preflight_result=passing_preflight,
             delegate_script=fake_delegate_script,
@@ -616,6 +652,7 @@ sys.exit(1)
             lesson_n=1,
             prompt_file=prompt_file,
             prompt_sha256="e" * 64,
+            inputs=_inputs("e" * 64),
             output_dir=tmp_path / "out",
             preflight_result=passing_preflight,
             delegate_script=fake_delegate,

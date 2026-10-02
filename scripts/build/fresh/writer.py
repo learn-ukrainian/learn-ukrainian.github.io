@@ -34,7 +34,7 @@ from scripts.build.fresh.draft_schema import (
     validate_draft,
 )
 from scripts.build.fresh.preflight import PreflightResult
-from scripts.build.fresh.regeneration import writer_task_id
+from scripts.build.fresh.regeneration import INPUT_KEYS, writer_task_id
 from scripts.curriculum.evidence import lock
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -112,7 +112,7 @@ def dispatch_writer(
     schemas_dir: Path | None = None,
     model: str | None = None,
     effort: str | None = None,
-    inputs: Mapping[str, str] | None = None,
+    inputs: Mapping[str, str],
 ) -> dict[str, Any]:
     """Execute the writer call, wait for completion, parse and validate the draft.
 
@@ -120,8 +120,8 @@ def dispatch_writer(
     Saves raw reply and seat metadata before schema validation so provenance is preserved
     even on schema failure (#8431 §1, Finding 11).
     Fake seats may write <task-id>.json beside their result to supply resolved model/effort.
-    ``inputs`` is the regeneration ledger's input snapshot; its digest keys the task ID (#8425). Without it
-    the prompt hash alone keys it.
+    ``inputs`` is the complete regeneration-ledger snapshot (``regeneration.writer_inputs``); its digest keys
+    the task ID, so every entry point gives identical work one ID and delegate.py refuses a repeat (#8425).
     """
     # 0. Structural preflight gate (#8431 §7 row 0, Finding 4)
     if preflight_result is None or not preflight_result.passed:
@@ -133,9 +133,10 @@ def dispatch_writer(
         raise ValueError(f"Invalid writer effort {effort!r}. Expected one of {WRITER_EFFORTS}.")
 
     root = repo_root or REPO_ROOT
-    if inputs is None:
-        inputs = {"prompt_sha256": prompt_sha256}
-    elif inputs.get("prompt_sha256") != prompt_sha256:
+    missing = [key for key in INPUT_KEYS if key not in inputs]
+    if missing:
+        raise ValueError(f"Writer inputs snapshot is missing {missing}.")
+    if inputs["prompt_sha256"] != prompt_sha256:
         raise ValueError("Writer inputs snapshot does not match prompt_sha256.")
     task_id = writer_task_id(level, slug, lesson_n, attempt, effort, inputs)
     del_script = delegate_script or (root / "scripts/delegate.py")
