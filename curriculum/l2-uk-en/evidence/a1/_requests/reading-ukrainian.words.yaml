@@ -88,12 +88,122 @@ words:
   entry:
     source: vesum
     entry_id: 167620
-  want: new
+  want: W-117
   note: Decodable common noun for Е on primer part 1 printed page 90 (key-word letter strip and the syllabified text).
 - lemma: зуб
   pos: noun
   entry:
     source: vesum
     entry_id: 150592
-  want: new
+  want: W-118
   note: Decodable Б-page word in the read list on primer part 1 printed page 107.
+- lemma: бак
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 16017
+  want: W-145
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+- lemma: біб
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 23245
+  want: W-146
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+- lemma: лід
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 187686
+  want: W-147
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+- lemma: бук
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 31628
+  want: W-148
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+- lemma: грати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 83141
+  want: W-149
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+- lemma: ґрати
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 86858
+  want: W-150
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+- lemma: кава
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 157965
+  want: W-151
+  note: 'Core A1 coffee word: modeled with its gloss in reading-ukrainian lesson 3 and recycled in lesson 4; X-002 also supplies its Г/Ґ print contrast. No grammar system.'
+- lemma: грім
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 84094
+  want: W-152
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+- lemma: ґрунт
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 86930
+  want: W-153
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+- lemma: настати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 224219
+  want: W-159
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.
+- lemma: весна
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 39769
+  want: W-160
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.
+- lemma: птах
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 327218
+  want: W-161
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.
+- lemma: хто
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 415172
+  want: W-162
+  note: 'Memorized who-question chunk under D3 to support D4 recap questions; ULP 1-07 is the nearest vocabulary placement. No position-19 question-word system.'
+- lemma: де
+  pos: adv
+  entry:
+    source: vesum
+    entry_id: 89327
+  want: W-163
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.

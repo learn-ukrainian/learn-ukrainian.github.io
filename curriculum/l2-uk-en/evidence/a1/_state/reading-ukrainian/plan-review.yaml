@@ -1,4 +1,8 @@
-attempt_id: agy-att-7
-manifest_sha256: 217c19ca26cde45cf340e624d8b422df5b92d029d29ffbc706e6f5f9a2da94d9
-validated_at: '2026-09-30T20:55:14+00:00'
+access: full
+attempt_id: claude-full-att-6
+harness: claude
+manifest_sha256: ad4d7af6852c5cfd453eb663d37c078a5ece41fa8f78d5b5413e246c63a38055
+reviewer_family: anthropic
+reviewer_model: claude-opus-5-5
+validated_at: '2026-10-02T04:49:33+00:00'
 verdict: APPROVE

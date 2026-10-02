@@ -1,0 +1,88 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-sounds-letters-and-hello"
+  attempt_id: "claude-full-att-3"
+  manifest_sha256: "1f04ea3a45a34201ff475c1c0f9461b31eccd2384b45ecb2a3a980cc21e8de3a"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "808aa2aedc931146965f0a73182cb5195b849c3eb66a30c4b6cff560ff6e0a0a"
+checks:
+  # Shape (a) is used: lesson 6 has kind recap, so shape (b) is not invoked. The recap's content is judged in F-2 under standard_and_ulp.
+  closing_shape: clean
+  # Module title 'звук, літера, привіт' and subtitle match lessons 1-5. No prose sentence mixes languages; the Ukrainian forms quoted in English sentences are the items taught (for example L4 s2 and L5 rationale).
+  title_describes_job: clean
+  # Subtitle 'first 13 letters' equals scope sidecar letters.count 13 (А О У И М І Н В Л С К П Р). No lesson title states a quantity.
+  title_quantities: clean
+  # inspect_words receipt rr-8cb914642e21b8a48742: звук, літера, привіт, мама, малина, слива, рука, ріка, коса, Іван, Вова, Павлик, Поліна, Панас and повторення are all CLEAN (marked=0) in the taught sense.
+  # verify_words receipt rr-69758b2ddefa587a9722: 18/18 found, including Ніна, Нонна and сливка.
+  quoted_forms: clean
+  # Letter order matches primer part 1. Decodable words and names are used only after their letters are taught: L5 a2 precedes Р; рука and ріка come after Р.
+  # The recap source line in search_text receipt rr-ae4ad3a88abe43a12c96 (chunk _s0072) uses only the 13 letters up to the mother's reply, and the plan excludes the later blank.
+  # Verb labels (чути, бачити, читати, писати) and the greeting chunks are heard lexical items, not decoding targets, as D3 allows.
+  sequencing: clean
+  # L3 is the densest lesson (3 letters, G-a1-002/003, first syllable rows), but it follows the primer's page-per-letter grain. No lesson's job could fold into a neighbour.
+  sizing: clean
+  # Core words звук, літера, голосний and приголосний are A2 in PULS (validator notes). They are the metalanguage the arc job and primer p.13/30 require. малина and слива (A2) are primer-decodable words.
+  # ріка (B1), коса and the names are correctly incidental; L4-L6 recycling brings back W-079..W-089.
+  inventory: clean
+  # v1 comparison: v1 had 10 activities and 62 response opportunities, all inline; fresh has 36 activities (26 inline, 10 workbook). Activity count does not fall.
+  # Fresh response opportunities are not available at plan stage, an evidence gap; no totals are inferred.
+  # Workbook operations rotate across recognise (listening to glyph), sort (L3 a1, L5 a8), find-and-fix (L4 a6), odd-one-out, syllable assembly and match-up. Repeated listening quizzes serve the cumulative letter progression.
+  activities: [F-1, F-3, F-5]
+  evidence_fit: [F-4]
+  # S-001 (own name) is served by L5 a5 and L6 a3. S-003 (greeting formulas) is served by L1, with ULP grounding in search_text receipt rr-c3975680c17757cc4227 (ulp-1-00-lesson-notes_l0002_w002) and rr-5397759318afb95b5b04 (_l0001_w001). The И/І trainer has ULP V-003/T-004.
+  standard_and_ulp: [F-2]
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 2, activity: a2, quote: "Choose whether a presented unit is heard or seen, from the primer model." }
+    dimension: activity
+    severity: MAJOR
+    claim: "Lesson 2 a2 is the only scored check of the lesson's sound-versus-letter job, and it cannot discriminate. Its only host is T-022 'А а', a grade-5 Zabolotnyi alphabet heading (5-klas-ukrmova-zabolotnyi-2023_s0001), not the primer that the focus names. The displayed unit is always print, so the heard-or-seen question has one possible key; step s3 concedes that the sound is supplied offline by a teacher. The primer model pairs a seen letter with a bracketed heard sound on every vowel page. search_text over 1-klas-bukvar-zaharijchuk-2025-1 returns 'Бачу У, у. Чую [у].' (chunk _s0036, the T-008 pattern), and T-006 is the same pattern for А. Hosting a2 on T-006 to T-009 would make both 'seen' and 'heard' real keys. Workbook a6 has the same narrowing: every item is anchored to the single T-022 pair, even though T-023 to T-025 are aligned. Fix in the plan; regeneration alone cannot repair it."
+    evidence: { receipt: "rr-ae4ad3a88abe43a12c96" }
+    expected: "Бачу У, у. Чую [у]."
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 6, field: job, quote: "any bilingual story is unscored support" }
+    dimension: recap
+    severity: MAJOR
+    claim: "The closing recap (shape (a); the closing_shape check is also touched) scores its Ukrainian-only questions on a planned two-speaker dialogue and makes the first-person bilingual story optional, unscored support. Operator-accepted D4 and plan schema §2b (R-03) require one short first-person story side by side in Ukrainian and English, with the Ukrainian-only questions about that story. The ULP S1 lesson 10 review that this shape follows is exactly such a story: search_text chunk ulp-1-00-lesson-notes_l0010_w001, 'Я і моя сім'я'. The lesson's own rationale still cites 'the first-person side-by-side review shape' and 'the story', so job and rationale contradict each other. The changelog's 'authorized authentic-text/planned-dialogue recap hosts' has no operator decision among the accepted decisions. Its source, revise-a1-p1-p3.md, is a worker package still pending driver acceptance. Settle needs one of two outcomes: an operator amendment to D4 for position 1, if a decodable first-person host is shown to be infeasible with 13 letters, or a mandatory side-by-side first-person story that hosts the decodable questions. The reviewer may not change D4."
+    evidence: { receipt: "rr-4f188c1fc18d5996af55" }
+    could_be_a_gate: "yes — a validator could require that a recap lesson's scored comprehension host is its first-person bilingual story block"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 3, activity: a7, quote: "Select the missing taught syllables in the T-036 source-segmented W-081 model" }
+    dimension: activity
+    severity: MAJOR
+    claim: "Lesson 3 workbook a7 limits pick-syllables to W-081 мама taken from T-036. That leaves one word whose two syllables are identical, so the key is always 'ма' and the required variation is impossible. T-036 is in no lesson 3 step evidence, so under R-26 the writer never receives it. Its source line also carries К, П, Л, С and В, none taught by lesson 3: search_text chunk 1-klas-bukvar-zaharijchuk-2025-1_s0072 reads 'Ко-ло сли-ви ма-ма, Пав-лик і По-лі-на.'. X-004's missing-syllable rows, cited in s5, need Л. As planned, a7 is not a fair second workbook operation. It needs a taught-letter host in the lesson's evidence, or a different operation."
+    evidence: { receipt: "rr-ae4ad3a88abe43a12c96" }
+    expected: "Ко-ло сли-ви ма-ма, Пав-лик і По-лі-на."
+    could_be_a_gate: "yes — a script could check that every evidence id named in an activity focus appears in that lesson's step evidence"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 4, activity: a4, quote: "Select the missing syllable in the exact source W-082/W-083 models from X-004" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "Lesson 4 a4 requires the exact W-082 and W-083 missing-syllable rows from X-004, using its complete rows. The locked X-004 quote contains only the 'ма- __ -на' and 'со- __' rows, and the second row's target word is not in the lesson inventory. The слива row does exist on the source page (search_text chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077) but is cut from the pack excerpt. A writer working only from pack evidence (R-26) therefore cannot build the W-083 item from X-004. Pack-builder task: extend X-004 to the complete row set."
+    evidence: { receipt: "rr-04ba8fd774ee542b5c71" }
+    expected: "__ -ва -ни, ва-, сли-"
+    could_be_a_gate: "no"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 1, field: dialogue.register, quote: "formal" }
+    dimension: engine_or_gate
+    severity: MINOR
+    claim: "Lesson 1's dialogue first has two peers exchange Привіт, the informal greeting that ULP S1 L1 reserves for friends, family and non-hierarchical colleagues (search_text chunk ulp-1-00-lesson-notes_l0001_w001). It then has the formal greeting to the teacher. The plan schema's dialogue.register enum allows only informal or formal, so the whole dialogue is labelled formal. A writer following that label may formalise the peer turns and erase the register contrast that a2, a4 and a5 score. The schema or writer contract cannot represent a dialogue that contrasts registers on purpose. The situation field only partly signals this."
+    evidence: { receipt: "rr-5397759318afb95b5b04" }
+    could_be_a_gate: "no"

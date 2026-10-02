@@ -1,0 +1,98 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-reading-ukrainian"
+  attempt_id: "claude-full-att-6"
+  manifest_sha256: "ad4d7af6852c5cfd453eb663d37c078a5ece41fa8f78d5b5413e246c63a38055"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "c90f1f34489a44d2937b799c49cd80bf0ead8acd841d2b74b4546f364a4ef094"
+checks:
+  # Shape (a) is used: lesson 6 is kind recap. Shape (b) is not used, and five teach lessons would not allow it.
+  closing_shape: clean
+  # Every prose field is one language. English sentences quote Ukrainian only for the item they discuss (хто, читав, ___арбуз, Lе → ле).
+  title_describes_job: clean
+  # Subtitle "Twelve more letters" equals scope letters.count 12.
+  title_quantities: clean
+  # verify_words rr-e2d2ff9de06b2765f81c: грати, ґрати, грім, ґрунт, гарбуз, ґава found; ґарбуз and гава NOT FOUND, so the L3 a7 nonword witnesses hold.
+  # inspect_words rr-3709eb459dcc2ddc17f3: хто, читав, читала, читали, писали, повторення CLEAN.
+  # query_pravopys rr-3c640b5924310bb443da: Pravopys 2019 § 6 «Буква Ґ» lists ґа́ва, ґра́ти (іменник), ґрунт, so the L3 s2 §6 citation holds.
+  quoted_forms: clean
+  sequencing: [F-2, F-3]
+  # L4 carries 7 of 14 core lemmas, but 5 are Ukrainian labels for concepts already practised in English at position 1, and every one needs Ч or Й. No lesson drags.
+  sizing: clean
+  inventory: [F-4]
+  # v1 has 10 activities (4 inline, 6 workbook; 46 response opportunities). Fresh has 50 (36 inline, 14 workbook), so there is no reduction in activity count.
+  # Response opportunities are not available at plan stage. That is an evidence gap, and no totals are invented.
+  # Workbook quizzes vary the operation (find-and-repair, listening retrieval, sorting, comprehension), and listening widens from 2 to 3 to 4 targets.
+  # search_text rr-bf9d340f5b1961c714e7 confirms the primer prints «Зи-ма в лі-сі.» pre-divided (context for F-1).
+  activities: [F-1]
+  evidence_fit: [F-5]
+  # Position 2 has no standard_line_refs. Li is served by listening quizzes; W by letter-grid copying and the L6 a4 own-name task.
+  # search_text rr-682bb5edc8957e2c3747: ULP Key Vocabulary 1-07 (chunk ulp-1-00-lesson-notes_l0007_w008) lists хто. That is the earliest ULP hit, so T-044 is accurately the nearest placement; the early admission rests on D3 chunk status.
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - lesson: 2
+        activity: a8
+        quote: "{kind: quote, ref: T-042} for W-104 and {kind: quote, ref: T-041} for W-101 (2)"
+    dimension: activity
+    severity: MINOR
+    claim: "Lesson 2 a8 should test the vowel-nucleus counting taught in s3, but its two two-syllable items are hosted on the pre-divided primer quotes T-042 (Зи-ма) and T-041 (Та-то). The learner can read the count off the hyphen without counting vowels, so only the зуб item (T-018) tests the step. The source of the counting rule (search_text, chunk 2-klas-ukrmova-vashulenko-2019-1_s0017, p.19) sets the task as counting syllables without dividing the word. Fix: host the two-syllable items on the unsegmented W-104/W-101 forms that s5 already displays, and show the segmented quotes only in feedback."
+    evidence: { receipt: "rr-f5c2cb38db4f00348b14" }
+    expected: "Визначте кількість складів у словах, не поділяючи їх на"
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "T-043 explicitly grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with English support before the count activity"
+      - lesson: 2
+        step: s3
+        quote: "explicitly teach that each vowel nucleus contributes one syllable on T-018"
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Lesson 2 teaches a new literacy rule: a word has as many syllables as vowel sounds (T-043). L2 a8 and L4 a9 score it. No step declares it under introduces, and the lesson's grammar inventory is empty. The prior planned learner state holds only G-a1-001 to G-a1-003, so there is nothing for 'teach/recall' to recall. As a result the planned learner state after position 2 leaves out a rule this module scores and later positions may build on. The source presents it as an explicit rule box (search_text, chunk 2-klas-ukrmova-vashulenko-2019-1_s0017). The comparable sound-class point is registered as G-a1-002. Append a registry record for position 2, lesson 2, and declare it in s1 or s3. This also touches inventory."
+    evidence: { receipt: "rr-f5c2cb38db4f00348b14" }
+    could_be_a_gate: "no"
+  - id: F-3
+    status: active
+    locations:
+      - lesson: 6
+        field: title
+        quote: "повторення"
+    dimension: learner_fit
+    severity: MINOR
+    claim: "The recap lesson title повторення is learner-facing Ukrainian that contains Я, which the arc teaches at position 3 (special-signs). Every other Ukrainian title in this plan (читати, Т, Е through Ж, Ш) uses only taught letters, and position 1 titled its recap with the decodable modeled chunk ми писали. The word itself is valid (inspect_words: CLEAN), so the problem is decodability, not form. The modeled chunk ми читали (W-006 plus W-088, also CLEAN in the same receipt) would keep the title readable and name what the recap story does."
+    evidence: { receipt: "rr-3709eb459dcc2ddc17f3" }
+    could_be_a_gate: "yes — a script can check that each learner-facing Ukrainian title uses only letters taught by the end of that lesson"
+  - id: F-4
+    status: active
+    locations:
+      - lesson: 4
+        activity: a8
+        quote: "new W-109/W-110 core forms to their sourced English glosses; coffee W-151 returns beside tea"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "W-109 чай carries only the gloss 'dried leaves of tea plant' (dmklinger). Lesson 4 a8 matches it to its sourced English gloss beside coffee W-151, whose gloss is 'coffee (beverage)'. PULS gives the A1 sense of чай as the drink (query_cefr_level, guideword напій). СУМ-20 has no entry to settle it, because volumes С–Я are not ingested (query_sum20 rr-8a176e154080f378f7e8, no_hits). As things stand, the generated Словник and the a8 pairs would teach the leaf sense. This is a pack-builder task: add a drink-sense gloss to the W-109 word record. The plan's tea-beside-coffee pairing is correct."
+    evidence: { receipt: "rr-37609e90f2797ba4f559" }
+    expected: "чай (A1, іменник): напій"
+    could_be_a_gate: "no"
+  - id: F-5
+    status: active
+    locations:
+      - lesson: 4
+        step: s4
+        quote: "X-005"
+    dimension: evidence_use
+    severity: MINOR
+    claim: "Lesson 4 s4 introduces the action labels чути, бачити and читати (W-086 to W-088) and cites X-005. X-005 is the Ш-page task to assemble scrambled letters into picture names and then divide the word with two ш into syllables (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0027, printed p.28). It supports neither the action labels nor the step's practice a7 (watch-and-repeat), and no lesson-4 activity uses it as a model. Its source words also need Ш, which lesson 5 teaches. R-28 coverage would still force the writer to use it in this step. Drop X-005 from s4: T-010's own Бачу … Чую … routine already grounds бачити and чути."
+    evidence: { receipt: "rr-287b2254ace48798b9ba" }
+    could_be_a_gate: "no"
