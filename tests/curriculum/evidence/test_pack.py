@@ -1328,3 +1328,45 @@ def test_strict_timeout_is_unverifiable(
     assert result["status"] == "failed"
     assert result["url_checks"] == [{"id": "V-001", "outcome": "unverifiable"}]
     assert any(error.startswith("unverifiable:") for error in result["errors"])
+
+
+@pytest.mark.parametrize("bad_store", ["null", "words: [", "unavailable"])
+def test_gloss_gate_word_store_load_failure_is_one_infrastructure_error(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, bad_store, monkeypatch
+):
+    plan_path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/test-mod.yaml"
+    plan_path.write_text(yaml.safe_dump({"core": ["W-001", "W-002"]}))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as api:
+        pack.build_pack(
+            "a1",
+            "test-mod",
+            _texts_only_request(tmp_path),
+            evidence_dir=synthetic_word_store,
+            sources_instance=api,
+            offline=True,
+        )
+        store_path = synthetic_word_store / "_words.yaml"
+        if bad_store == "unavailable":
+            original_read = Path.read_text
+
+            def unreadable(path, *args, **kwargs):
+                if path == store_path:
+                    raise OSError("synthetic unreadable store")
+                return original_read(path, *args, **kwargs)
+
+            monkeypatch.setattr(Path, "read_text", unreadable)
+        else:
+            store_path.write_text(bad_store)
+        result = verify.verify_pack(
+            "a1",
+            "test-mod",
+            evidence_dir=synthetic_word_store,
+            plans_dir=plan_path.parent,
+            sources_instance=api,
+            offline=True,
+        )
+    assert result["status"] == "failed"
+    assert len(result["errors"]) == 1
+    assert result["errors"][0].startswith(codes.SOURCE_UNAVAILABLE + ":")
+    assert "word-store gloss gate" in result["errors"][0]
+    assert not any(codes.GLOSS_MISSING in error for error in result["errors"])

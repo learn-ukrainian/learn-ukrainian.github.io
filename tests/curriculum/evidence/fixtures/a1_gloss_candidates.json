@@ -34,7 +34,15 @@
           "character",
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 247362,
+          "canonical_headword": "я",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-002": {
       "lemma": "ти",
@@ -56,7 +64,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 234330,
+          "canonical_headword": "ти",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-003": {
       "lemma": "він",
@@ -78,7 +94,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 43617,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-004": {
       "lemma": "вона",
@@ -101,7 +125,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 46527,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-005": {
       "lemma": "воно",
@@ -123,7 +155,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 46532,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-006": {
       "lemma": "ми",
@@ -145,7 +185,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 118283,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-007": {
       "lemma": "ви",
@@ -169,7 +217,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 34024,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-008": {
       "lemma": "вони",
@@ -191,7 +247,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 46529,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-009": {
       "lemma": "себе",
@@ -226,7 +290,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 212855,
+          "canonical_headword": "себе́",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-010": {
       "lemma": "мій",
@@ -256,7 +328,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 119340,
+          "canonical_headword": "мій",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-011": {
       "lemma": "твій",
@@ -286,7 +366,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 232109,
+          "canonical_headword": "твій",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-012": {
       "lemma": "свій",
@@ -316,7 +404,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 212305,
+          "canonical_headword": "свій",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-013": {
       "lemma": "наш",
@@ -347,7 +443,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 131070,
+          "canonical_headword": "наш",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-014": {
       "lemma": "ваш",
@@ -377,7 +481,21 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 31666,
+          "canonical_headword": "Ваш",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 31667,
+          "canonical_headword": "ваш",
+          "grammatical_label": "займенник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-015": {
       "lemma": "їхній",
@@ -407,7 +525,15 @@
         "pos": [
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 91424,
+          "canonical_headword": "ї́хній",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-016": {
       "lemma": "цей",
@@ -437,7 +563,15 @@
         "pos": [
           "det"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 247357,
+          "canonical_headword": "цей",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-017": {
       "lemma": "той",
@@ -459,7 +593,15 @@
         "pos": [
           "det"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 235593,
+          "canonical_headword": "той",
+          "grammatical_label": "займенник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-018": {
       "lemma": "у",
@@ -485,7 +627,21 @@
           "character",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 240176,
+          "canonical_headword": "у",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 240177,
+          "canonical_headword": "у",
+          "grammatical_label": "вигук",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-019": {
       "lemma": "в",
@@ -510,7 +666,15 @@
           "character",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 30592,
+          "canonical_headword": "в",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-020": {
       "lemma": "уві",
@@ -530,7 +694,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 240541,
+          "canonical_headword": "уві́",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-021": {
       "lemma": "з",
@@ -557,7 +729,15 @@
           "character",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 71535,
+          "canonical_headword": "з",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-022": {
       "lemma": "із",
@@ -577,7 +757,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 89269,
+          "canonical_headword": "із",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-023": {
       "lemma": "зі",
@@ -597,7 +785,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 85307,
+          "canonical_headword": "зі",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-024": {
       "lemma": "зо",
@@ -620,7 +816,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 87266,
+          "canonical_headword": "зо",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-025": {
       "lemma": "на",
@@ -647,7 +851,33 @@
           "intj",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 123168,
+          "canonical_headword": "на",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 123169,
+          "canonical_headword": "на",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        },
+        {
+          "id": 123170,
+          "canonical_headword": "на",
+          "grammatical_label": "вигук",
+          "homonym_index": 3
+        },
+        {
+          "id": 123171,
+          "canonical_headword": "на",
+          "grammatical_label": "вигук",
+          "homonym_index": 4
+        }
+      ]
     },
     "W-026": {
       "lemma": "до",
@@ -674,7 +904,21 @@
           "noun",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 62047,
+          "canonical_headword": "до",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 62048,
+          "canonical_headword": "до",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-027": {
       "lemma": "від",
@@ -700,7 +944,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 39643,
+          "canonical_headword": "від",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-028": {
       "lemma": "од",
@@ -721,7 +973,21 @@
           "noun",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 144038,
+          "canonical_headword": "Од",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 144039,
+          "canonical_headword": "од",
+          "grammatical_label": "прийменник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-029": {
       "lemma": "для",
@@ -743,7 +1009,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 61925,
+          "canonical_headword": "для",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-030": {
       "lemma": "без",
@@ -765,7 +1039,21 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 22991,
+          "canonical_headword": "без",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 22992,
+          "canonical_headword": "без",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-031": {
       "lemma": "за",
@@ -794,7 +1082,27 @@
           "particle",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 71536,
+          "canonical_headword": "за",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 71537,
+          "canonical_headword": "за",
+          "grammatical_label": "прислівник",
+          "homonym_index": 2
+        },
+        {
+          "id": 71538,
+          "canonical_headword": "за",
+          "grammatical_label": "частка",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-032": {
       "lemma": "під",
@@ -821,7 +1129,21 @@
           "noun",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 162852,
+          "canonical_headword": "під",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 162853,
+          "canonical_headword": "під",
+          "grammatical_label": "прийменник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-033": {
       "lemma": "піді",
@@ -834,7 +1156,8 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": []
     },
     "W-034": {
       "lemma": "підо",
@@ -845,7 +1168,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 164626,
+          "canonical_headword": "пі́до",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-035": {
       "lemma": "над",
@@ -869,7 +1200,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 124501,
+          "canonical_headword": "над",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-036": {
       "lemma": "наді",
@@ -882,7 +1221,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 124840,
+          "canonical_headword": "на́ді",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-037": {
       "lemma": "надо",
@@ -893,7 +1240,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 125065,
+          "canonical_headword": "на́до",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-038": {
       "lemma": "перед",
@@ -919,7 +1274,21 @@
           "noun",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 156826,
+          "canonical_headword": "пе́ре́д",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 156827,
+          "canonical_headword": "пе́ред",
+          "grammatical_label": "прийменник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-039": {
       "lemma": "переді",
@@ -932,7 +1301,8 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": []
     },
     "W-040": {
       "lemma": "передо",
@@ -943,7 +1313,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 157076,
+          "canonical_headword": "пе́редо",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-041": {
       "lemma": "після",
@@ -967,7 +1345,21 @@
           "adv",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 166813,
+          "canonical_headword": "пі́сля",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 166814,
+          "canonical_headword": "пі́сля",
+          "grammatical_label": "прислівник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-042": {
       "lemma": "між",
@@ -990,7 +1382,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 119116,
+          "canonical_headword": "між",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-043": {
       "lemma": "межи",
@@ -1001,7 +1401,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 117088,
+          "canonical_headword": "ме́жи́",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-044": {
       "lemma": "біля",
@@ -1031,7 +1439,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 26027,
+          "canonical_headword": "бі́ля",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-045": {
       "lemma": "через",
@@ -1058,7 +1474,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 247272,
+          "canonical_headword": "че́рез",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-046": {
       "lemma": "про",
@@ -1081,7 +1505,15 @@
         "pos": [
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 189435,
+          "canonical_headword": "про",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-047": {
       "lemma": "при",
@@ -1109,7 +1541,15 @@
           "prep",
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 185218,
+          "canonical_headword": "при",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-048": {
       "lemma": "о",
@@ -1136,7 +1576,21 @@
           "noun",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 139709,
+          "canonical_headword": "о",
+          "grammatical_label": "прийменник",
+          "homonym_index": 1
+        },
+        {
+          "id": 139710,
+          "canonical_headword": "о",
+          "grammatical_label": "вигук",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-049": {
       "lemma": "об",
@@ -1160,7 +1614,21 @@
           "name",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 139723,
+          "canonical_headword": "Об",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 139724,
+          "canonical_headword": "об",
+          "grammatical_label": "прийменник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-050": {
       "lemma": "і",
@@ -1189,7 +1657,27 @@
           "intj",
           "particle"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 88937,
+          "canonical_headword": "і",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        },
+        {
+          "id": 88938,
+          "canonical_headword": "і",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        },
+        {
+          "id": 88939,
+          "canonical_headword": "і",
+          "grammatical_label": "вигук",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-051": {
       "lemma": "й",
@@ -1214,7 +1702,21 @@
           "character",
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 91425,
+          "canonical_headword": "й",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        },
+        {
+          "id": 91426,
+          "canonical_headword": "й",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-052": {
       "lemma": "та",
@@ -1240,7 +1742,15 @@
           "det",
           "intj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 230600,
+          "canonical_headword": "та",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-053": {
       "lemma": "а",
@@ -1268,7 +1778,27 @@
           "intj",
           "particle"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 13612,
+          "canonical_headword": "а",
+          "grammatical_label": "вигук",
+          "homonym_index": 1
+        },
+        {
+          "id": 13613,
+          "canonical_headword": "а",
+          "grammatical_label": "сполучник",
+          "homonym_index": 2
+        },
+        {
+          "id": 13614,
+          "canonical_headword": "а",
+          "grammatical_label": "частка",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-054": {
       "lemma": "але",
@@ -1290,7 +1820,27 @@
         "pos": [
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 16215,
+          "canonical_headword": "але́",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        },
+        {
+          "id": 16216,
+          "canonical_headword": "але́",
+          "grammatical_label": "вигук",
+          "homonym_index": 2
+        },
+        {
+          "id": 16217,
+          "canonical_headword": "але́",
+          "grammatical_label": "частка",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-055": {
       "lemma": "бо",
@@ -1312,7 +1862,21 @@
         "pos": [
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 27135,
+          "canonical_headword": "бо",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        },
+        {
+          "id": 27136,
+          "canonical_headword": "бо",
+          "grammatical_label": "сполучник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-056": {
       "lemma": "або",
@@ -1334,7 +1898,33 @@
         "pos": [
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 13739,
+          "canonical_headword": "А́бо",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 13740,
+          "canonical_headword": "або́",
+          "grammatical_label": "сполучник",
+          "homonym_index": 2
+        },
+        {
+          "id": 13741,
+          "canonical_headword": "або́",
+          "grammatical_label": "частка",
+          "homonym_index": 3
+        },
+        {
+          "id": 13742,
+          "canonical_headword": "або́",
+          "grammatical_label": "частка",
+          "homonym_index": 4
+        }
+      ]
     },
     "W-057": {
       "lemma": "якщо",
@@ -1356,7 +1946,15 @@
         "pos": [
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 268316,
+          "canonical_headword": "якщо́",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-058": {
       "lemma": "щоб",
@@ -1379,7 +1977,21 @@
         "pos": [
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 266053,
+          "canonical_headword": "щоб",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        },
+        {
+          "id": 266054,
+          "canonical_headword": "щоб",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-059": {
       "lemma": "щоби",
@@ -1402,7 +2014,21 @@
         "pos": [
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 266055,
+          "canonical_headword": "що́би",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        },
+        {
+          "id": 266056,
+          "canonical_headword": "що́би",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-060": {
       "lemma": "поки",
@@ -1427,7 +2053,15 @@
           "adv",
           "conj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 173887,
+          "canonical_headword": "по́ки",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-061": {
       "lemma": "не",
@@ -1449,7 +2083,15 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 131284,
+          "canonical_headword": "не",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-062": {
       "lemma": "ні",
@@ -1464,13 +2106,35 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 137723,
+          "canonical_headword": "ні",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-063": {
       "lemma": "же",
       "pos": "part",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 70330,
+          "canonical_headword": "же",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        },
+        {
+          "id": 70331,
+          "canonical_headword": "же",
+          "grammatical_label": "сполучник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-064": {
       "lemma": "ж",
@@ -1485,7 +2149,15 @@
           "character",
           "particle"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 69912,
+          "canonical_headword": "ж",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-065": {
       "lemma": "ось",
@@ -1507,7 +2179,15 @@
         "pos": [
           "particle"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 150797,
+          "canonical_headword": "ось",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-066": {
       "lemma": "ще",
@@ -1531,7 +2211,15 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 265566,
+          "canonical_headword": "ще",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-067": {
       "lemma": "іще",
@@ -1551,7 +2239,15 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 91349,
+          "canonical_headword": "іще́",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-068": {
       "lemma": "вже",
@@ -1571,7 +2267,15 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 33767,
+          "canonical_headword": "вже",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-069": {
       "lemma": "уже",
@@ -1593,7 +2297,15 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 241371,
+          "canonical_headword": "уже́",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-070": {
       "lemma": "лише",
@@ -1615,13 +2327,41 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 110174,
+          "canonical_headword": "лише́",
+          "grammatical_label": "сполучник",
+          "homonym_index": 1
+        },
+        {
+          "id": 110175,
+          "canonical_headword": "лише́",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-071": {
       "lemma": "лиш",
       "pos": "part",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 110161,
+          "canonical_headword": "лиш",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        },
+        {
+          "id": 110162,
+          "canonical_headword": "лиш",
+          "grammatical_label": "сполучник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-072": {
       "lemma": "тільки",
@@ -1634,7 +2374,27 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 235046,
+          "canonical_headword": "ті́льки",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        },
+        {
+          "id": 235047,
+          "canonical_headword": "ті́льки",
+          "grammatical_label": "сполучник",
+          "homonym_index": 2
+        },
+        {
+          "id": 235048,
+          "canonical_headword": "ті́льки",
+          "grammatical_label": "частка",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-073": {
       "lemma": "саме",
@@ -1661,7 +2421,21 @@
           "particle",
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 210196,
+          "canonical_headword": "са́ме",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        },
+        {
+          "id": 210197,
+          "canonical_headword": "са́ме",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-074": {
       "lemma": "привіт",
@@ -1685,7 +2459,15 @@
           "intj",
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 185548,
+          "canonical_headword": "приві́т",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-075": {
       "lemma": "добрий",
@@ -1709,7 +2491,15 @@
         "pos": [
           "adj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 10,
+          "canonical_headword": "до́брий",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-076": {
       "lemma": "день",
@@ -1731,7 +2521,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 13600,
+          "canonical_headword": "день",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-077": {
       "lemma": "звук",
@@ -1755,7 +2553,27 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 83386,
+          "canonical_headword": "звук",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 83387,
+          "canonical_headword": "звук",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 83388,
+          "canonical_headword": "звук",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-078": {
       "lemma": "літера",
@@ -1777,7 +2595,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 111059,
+          "canonical_headword": "лі́тера",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-079": {
       "lemma": "голосний",
@@ -1804,7 +2630,15 @@
           "adj",
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 53841,
+          "canonical_headword": "голосни́й",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-080": {
       "lemma": "приголосний",
@@ -1817,7 +2651,15 @@
         "pos": [
           "adj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 185873,
+          "canonical_headword": "при́голосний",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-081": {
       "lemma": "мама",
@@ -1839,7 +2681,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 17,
+          "canonical_headword": "Ма́ма",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 114963,
+          "canonical_headword": "ма́ма",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-082": {
       "lemma": "малина",
@@ -1862,7 +2718,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 114469,
+          "canonical_headword": "мали́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-083": {
       "lemma": "слива",
@@ -1884,7 +2748,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 219139,
+          "canonical_headword": "сли́ва",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-084": {
       "lemma": "рука",
@@ -1909,7 +2781,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 208806,
+          "canonical_headword": "рука́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-085": {
       "lemma": "ріка",
@@ -1931,7 +2811,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 200760,
+          "canonical_headword": "ріка́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-086": {
       "lemma": "чути",
@@ -1955,7 +2843,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 260184,
+          "canonical_headword": "чу́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-087": {
       "lemma": "бачити",
@@ -1978,7 +2874,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 22798,
+          "canonical_headword": "ба́чити",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-088": {
       "lemma": "читати",
@@ -2000,7 +2904,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 258655,
+          "canonical_headword": "чита́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-089": {
       "lemma": "писати",
@@ -2027,7 +2939,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 162252,
+          "canonical_headword": "писа́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-090": {
       "lemma": "повторення",
@@ -2050,7 +2970,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 170469,
+          "canonical_headword": "повто́рення",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-091": {
       "lemma": "Ніна",
@@ -2065,13 +2993,29 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 137993,
+          "canonical_headword": "Ні́на",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-092": {
       "lemma": "Нонна",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 139103,
+          "canonical_headword": "Но́нна",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-093": {
       "lemma": "Іван",
@@ -2086,19 +3030,43 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 633,
+          "canonical_headword": "Іва́н",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-094": {
       "lemma": "Вова",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 9041,
+          "canonical_headword": "во́ва",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-095": {
       "lemma": "Ава",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 1731,
+          "canonical_headword": "А́ва",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-096": {
       "lemma": "так",
@@ -2122,7 +3090,27 @@
           "adv",
           "intj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 230946,
+          "canonical_headword": "так",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        },
+        {
+          "id": 230947,
+          "canonical_headword": "так",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        },
+        {
+          "id": 230948,
+          "canonical_headword": "так",
+          "grammatical_label": "сполучник",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-097": {
       "lemma": "коса",
@@ -2149,13 +3137,71 @@
           "adj",
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 102612,
+          "canonical_headword": "Коса́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 102613,
+          "canonical_headword": "Коса́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 102614,
+          "canonical_headword": "ко́са",
+          "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+          "homonym_index": 3
+        },
+        {
+          "id": 102615,
+          "canonical_headword": "коса́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 4
+        },
+        {
+          "id": 102616,
+          "canonical_headword": "коса́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 5
+        },
+        {
+          "id": 102617,
+          "canonical_headword": "коса́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 6
+        },
+        {
+          "id": 102618,
+          "canonical_headword": "коса́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 7
+        }
+      ]
     },
     "W-098": {
       "lemma": "Павлик",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 152175,
+          "canonical_headword": "Па́влик",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 152176,
+          "canonical_headword": "Па́влик",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-099": {
       "lemma": "Поліна",
@@ -2170,7 +3216,15 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 175047,
+          "canonical_headword": "Полі́на",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-100": {
       "lemma": "Панас",
@@ -2185,7 +3239,27 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 153182,
+          "canonical_headword": "Пана́с",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 153183,
+          "canonical_headword": "Пана́с",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 2
+        },
+        {
+          "id": 153184,
+          "canonical_headword": "пана́с",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-101": {
       "lemma": "тато",
@@ -2207,13 +3281,29 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 231843,
+          "canonical_headword": "та́то",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-102": {
       "lemma": "Евеліна",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 66757,
+          "canonical_headword": "Евелі́на",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-103": {
       "lemma": "дах",
@@ -2235,7 +3325,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 57498,
+          "canonical_headword": "дах",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-104": {
       "lemma": "зима",
@@ -2257,7 +3355,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 85224,
+          "canonical_headword": "Зима́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 85225,
+          "canonical_headword": "зима́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-105": {
       "lemma": "білка",
@@ -2279,7 +3391,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 7281,
+          "canonical_headword": "Бі́лка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 25755,
+          "canonical_headword": "бі́лка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-106": {
       "lemma": "гарбуз",
@@ -2301,7 +3427,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 10799,
+          "canonical_headword": "Гарбу́з",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        },
+        {
+          "id": 50309,
+          "canonical_headword": "гарбу́з",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-107": {
       "lemma": "ґава",
@@ -2325,7 +3465,15 @@
           "name",
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 56742,
+          "canonical_headword": "ґа́ва",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-108": {
       "lemma": "чобіт",
@@ -2347,7 +3495,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 258857,
+          "canonical_headword": "чо́біт",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-109": {
       "lemma": "чай",
@@ -2370,7 +3526,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 256473,
+          "canonical_headword": "чай",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-110": {
       "lemma": "хліб",
@@ -2396,7 +3560,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 251897,
+          "canonical_headword": "хліб",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 251898,
+          "canonical_headword": "хліб",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-111": {
       "lemma": "жито",
@@ -2418,7 +3596,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 70921,
+          "canonical_headword": "жи́то",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-112": {
       "lemma": "комиш",
@@ -2433,7 +3619,21 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 100066,
+          "canonical_headword": "Коми́ш",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 100067,
+          "canonical_headword": "коми́ш",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-113": {
       "lemma": "прилетіти",
@@ -2456,7 +3656,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 186663,
+          "canonical_headword": "прилеті́ти",
+          "grammatical_label": "дієслово доконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-114": {
       "lemma": "додому",
@@ -2478,13 +3686,35 @@
         "pos": [
           "adv"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 62979,
+          "canonical_headword": "додо́му",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-115": {
       "lemma": "жабка",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 69930,
+          "canonical_headword": "Жа́бка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 69931,
+          "canonical_headword": "жа́бка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-116": {
       "lemma": "дрова",
@@ -2506,7 +3736,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 65722,
+          "canonical_headword": "дро́ва",
+          "grammatical_label": "множинний іменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-117": {
       "lemma": "клен",
@@ -2528,7 +3766,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 97506,
+          "canonical_headword": "Клен",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 97507,
+          "canonical_headword": "клен",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-118": {
       "lemma": "зуб",
@@ -2551,7 +3803,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 88426,
+          "canonical_headword": "зуб",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-119": {
       "lemma": "тин",
@@ -2574,7 +3834,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 234512,
+          "canonical_headword": "тин",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-120": {
       "lemma": "тінь",
@@ -2596,7 +3864,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 235087,
+          "canonical_headword": "тінь",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-121": {
       "lemma": "їжа",
@@ -2619,7 +3895,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 91380,
+          "canonical_headword": "ї́жа",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-122": {
       "lemma": "яма",
@@ -2641,7 +3925,27 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 268398,
+          "canonical_headword": "Я́ма",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 268399,
+          "canonical_headword": "Я́ма",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 268400,
+          "canonical_headword": "я́ма",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-123": {
       "lemma": "маля",
@@ -2664,7 +3968,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 114943,
+          "canonical_headword": "маля́",
+          "grammatical_label": "іменник середнього роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-124": {
       "lemma": "юрта",
@@ -2686,7 +3998,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 267182,
+          "canonical_headword": "ю́рта",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-125": {
       "lemma": "люпин",
@@ -2701,7 +4021,15 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 113181,
+          "canonical_headword": "люпи́н",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-126": {
       "lemma": "синій",
@@ -2723,7 +4051,15 @@
         "pos": [
           "adj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 215298,
+          "canonical_headword": "си́ній",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-127": {
       "lemma": "єнот",
@@ -2748,7 +4084,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 69800,
+          "canonical_headword": "єно́т",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-128": {
       "lemma": "цимбали",
@@ -2770,7 +4114,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 255353,
+          "canonical_headword": "цимба́ли",
+          "grammatical_label": "множинний іменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-129": {
       "lemma": "щука",
@@ -2792,7 +4144,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 266784,
+          "canonical_headword": "щу́ка",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-130": {
       "lemma": "дощ",
@@ -2814,7 +4174,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 65172,
+          "canonical_headword": "дощ",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-131": {
       "lemma": "ферма",
@@ -2836,7 +4204,27 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 247305,
+          "canonical_headword": "Ферма́",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 247306,
+          "canonical_headword": "фе́рма",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 247307,
+          "canonical_headword": "фе́рма",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-132": {
       "lemma": "джміль",
@@ -2859,7 +4247,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 60217,
+          "canonical_headword": "джміль",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-133": {
       "lemma": "джем",
@@ -2881,7 +4277,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 60109,
+          "canonical_headword": "джем",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-134": {
       "lemma": "дзиґа",
@@ -2903,7 +4307,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 60425,
+          "canonical_headword": "дзи́ґа",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-135": {
       "lemma": "дзюрчати",
@@ -2918,7 +4330,15 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 60499,
+          "canonical_headword": "дзюрча́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-136": {
       "lemma": "пір'я",
@@ -2931,7 +4351,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 166750,
+          "canonical_headword": "пі́р'я",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-137": {
       "lemma": "пити",
@@ -2953,7 +4381,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 162341,
+          "canonical_headword": "пи́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-138": {
       "lemma": "сім'я",
@@ -2986,7 +4422,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 13609,
+          "canonical_headword": "сі́м'я",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 216277,
+          "canonical_headword": "сім'я́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-139": {
       "lemma": "м'яч",
@@ -3008,7 +4458,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 123166,
+          "canonical_headword": "м'яч",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-140": {
       "lemma": "радіти",
@@ -3030,7 +4488,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 196911,
+          "canonical_headword": "раді́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-141": {
       "lemma": "Марія",
@@ -3045,7 +4511,15 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 115573,
+          "canonical_headword": "Марі́я",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-142": {
       "lemma": "мільярд",
@@ -3067,7 +4541,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 119740,
+          "canonical_headword": "мілья́рд",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-143": {
       "lemma": "пюре",
@@ -3089,13 +4571,29 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 195939,
+          "canonical_headword": "пюре́",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-144": {
       "lemma": "пір'їна",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 166648,
+          "canonical_headword": "пір'ї́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-145": {
       "lemma": "бак",
@@ -3118,7 +4616,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 3892,
+          "canonical_headword": "бак",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 21375,
+          "canonical_headword": "бак",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-146": {
       "lemma": "біб",
@@ -3141,7 +4653,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 25392,
+          "canonical_headword": "біб",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-147": {
       "lemma": "лід",
@@ -3163,7 +4683,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 110340,
+          "canonical_headword": "лід",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-148": {
       "lemma": "бук",
@@ -3186,7 +4714,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 6685,
+          "canonical_headword": "Бук",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 29619,
+          "canonical_headword": "бук",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-149": {
       "lemma": "грати",
@@ -3214,7 +4756,15 @@
           "noun",
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 55219,
+          "canonical_headword": "гра́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-150": {
       "lemma": "ґрати",
@@ -3236,7 +4786,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 56865,
+          "canonical_headword": "ґра́ти",
+          "grammatical_label": "множинний іменник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-151": {
       "lemma": "кава",
@@ -3258,7 +4816,27 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 91699,
+          "canonical_headword": "ка́ва",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 91700,
+          "canonical_headword": "ка́ва",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 2
+        },
+        {
+          "id": 91701,
+          "canonical_headword": "ка́ва",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-152": {
       "lemma": "грім",
@@ -3281,7 +4859,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 55646,
+          "canonical_headword": "грім",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-153": {
       "lemma": "ґрунт",
@@ -3305,7 +4891,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 56884,
+          "canonical_headword": "ґрунт",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-154": {
       "lemma": "коло",
@@ -3333,13 +4927,35 @@
           "noun",
           "prep"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 99455,
+          "canonical_headword": "ко́ло",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 99456,
+          "canonical_headword": "ко́ло",
+          "grammatical_label": "прийменник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-155": {
       "lemma": "он",
       "pos": "part",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 147723,
+          "canonical_headword": "он",
+          "grammatical_label": "частка",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-156": {
       "lemma": "сливка",
@@ -3361,7 +4977,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 219146,
+          "canonical_headword": "Сли́вка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 219147,
+          "canonical_headword": "сли́вка",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-157": {
       "lemma": "кислий",
@@ -3383,7 +5013,27 @@
         "pos": [
           "adj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 96299,
+          "canonical_headword": "Ки́слий",
+          "grammatical_label": "прізвище",
+          "homonym_index": 1
+        },
+        {
+          "id": 96300,
+          "canonical_headword": "Ки́слий",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 96301,
+          "canonical_headword": "ки́слий",
+          "grammatical_label": "прикметник",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-158": {
       "lemma": "син",
@@ -3405,7 +5055,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 215137,
+          "canonical_headword": "син",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-159": {
       "lemma": "настати",
@@ -3428,7 +5086,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 129731,
+          "canonical_headword": "наста́ти",
+          "grammatical_label": "дієслово доконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-160": {
       "lemma": "весна",
@@ -3450,7 +5116,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 33625,
+          "canonical_headword": "весна́",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-161": {
       "lemma": "птах",
@@ -3472,7 +5146,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 195017,
+          "canonical_headword": "птах",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-162": {
       "lemma": "хто",
@@ -3497,7 +5179,15 @@
           "conj",
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 13597,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-163": {
       "lemma": "де",
@@ -3522,7 +5212,27 @@
           "adv",
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 58096,
+          "canonical_headword": "де",
+          "grammatical_label": "прислівник",
+          "homonym_index": 1
+        },
+        {
+          "id": 58097,
+          "canonical_headword": "де",
+          "grammatical_label": "частка",
+          "homonym_index": 2
+        },
+        {
+          "id": 58098,
+          "canonical_headword": "де",
+          "grammatical_label": "частка",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-164": {
       "lemma": "що",
@@ -3547,7 +5257,27 @@
           "conj",
           "pron"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 266050,
+          "canonical_headword": "",
+          "grammatical_label": "",
+          "homonym_index": 1
+        },
+        {
+          "id": 266051,
+          "canonical_headword": "що",
+          "grammatical_label": "сполучник",
+          "homonym_index": 2
+        },
+        {
+          "id": 266052,
+          "canonical_headword": "що",
+          "grammatical_label": "частка",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-165": {
       "lemma": "любити",
@@ -3569,7 +5299,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 112894,
+          "canonical_headword": "люби́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-166": {
       "lemma": "равлик",
@@ -3592,7 +5330,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 44721,
+          "canonical_headword": "ра́влик",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-167": {
       "lemma": "один",
@@ -3615,13 +5361,35 @@
         "pos": [
           "num"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 144448,
+          "canonical_headword": "оди́н",
+          "grammatical_label": "числівник",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-168": {
       "lemma": "старенький",
       "pos": "adj",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 225013,
+          "canonical_headword": "старе́нький",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        },
+        {
+          "id": 225014,
+          "canonical_headword": "старе́нький",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-169": {
       "lemma": "мандрувати",
@@ -3643,7 +5411,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 115111,
+          "canonical_headword": "мандрува́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-170": {
       "lemma": "час",
@@ -3666,7 +5442,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 14,
+          "canonical_headword": "час",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-171": {
       "lemma": "буква",
@@ -3688,7 +5472,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 29629,
+          "canonical_headword": "бу́ква",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-172": {
       "lemma": "назва",
@@ -3712,7 +5504,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 125667,
+          "canonical_headword": "на́зва",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-173": {
       "lemma": "алфавіт",
@@ -3734,7 +5534,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 16504,
+          "canonical_headword": "алфа́ві́т",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-174": {
       "lemma": "знак",
@@ -3758,19 +5566,49 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 86719,
+          "canonical_headword": "знак",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 86720,
+          "canonical_headword": "знак",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-175": {
       "lemma": "м'якшення",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 123101,
+          "canonical_headword": "м'я́кшення",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-176": {
       "lemma": "синь",
       "pos": "noun",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 215456,
+          "canonical_headword": "синь",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-177": {
       "lemma": "рис",
@@ -3793,7 +5631,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 200010,
+          "canonical_headword": "рис",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-178": {
       "lemma": "рись",
@@ -3815,7 +5661,21 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 200075,
+          "canonical_headword": "рись",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "homonym_index": 1
+        },
+        {
+          "id": 200076,
+          "canonical_headword": "рись",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-179": {
       "lemma": "бюро",
@@ -3837,7 +5697,15 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 30570,
+          "canonical_headword": "бюро́",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-180": {
       "lemma": "бити",
@@ -3859,7 +5727,15 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 25329,
+          "canonical_headword": "би́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-181": {
       "lemma": "свято",
@@ -3883,7 +5759,21 @@
           "adv",
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 13599,
+          "canonical_headword": "свя́то",
+          "grammatical_label": "іменник середнього роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 212765,
+          "canonical_headword": "свя́то",
+          "grammatical_label": "прислівник",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-182": {
       "lemma": "зв'язок",
@@ -3918,7 +5808,27 @@
         "pos": [
           "noun"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 83552,
+          "canonical_headword": "зв'я́зок",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 83553,
+          "canonical_headword": "зв'язо́к",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 2
+        },
+        {
+          "id": 83554,
+          "canonical_headword": "зв'язо́к",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 3
+        }
+      ]
     },
     "W-183": {
       "lemma": "Україна",
@@ -3933,7 +5843,21 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 241958,
+          "canonical_headword": "Украї́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 1
+        },
+        {
+          "id": 241959,
+          "canonical_headword": "украї́на",
+          "grammatical_label": "іменник жіночого роду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-184": {
       "lemma": "Київ",
@@ -3948,7 +5872,15 @@
           "source": "dmklinger UK→EN"
         }
       ],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 13603,
+          "canonical_headword": "Ки́їв",
+          "grammatical_label": "іменник чоловічого роду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-185": {
       "lemma": "кувати",
@@ -3972,13 +5904,35 @@
         "pos": [
           "verb"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 105703,
+          "canonical_headword": "кува́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        },
+        {
+          "id": 105704,
+          "canonical_headword": "кува́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 2
+        }
+      ]
     },
     "W-186": {
       "lemma": "квітувати",
       "pos": "verb",
       "rows": [],
-      "kaikki": null
+      "kaikki": null,
+      "ulif_entries": [
+        {
+          "id": 95474,
+          "canonical_headword": "квітува́ти",
+          "grammatical_label": "дієслово недоконаного виду",
+          "homonym_index": 1
+        }
+      ]
     },
     "W-187": {
       "lemma": "м'який",
@@ -4003,7 +5957,15 @@
         "pos": [
           "adj"
         ]
-      }
+      },
+      "ulif_entries": [
+        {
+          "id": 123065,
+          "canonical_headword": "м'яки́й",
+          "grammatical_label": "прикметник",
+          "homonym_index": 1
+        }
+      ]
     }
   }
 }

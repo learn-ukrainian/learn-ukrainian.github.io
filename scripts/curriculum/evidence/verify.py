@@ -255,7 +255,11 @@ def verify_words_store(
             gloss_rows = sources_instance.gloss_rows([(lemma, pos)]).raw.get((lemma, pos), [])
             pronoun_entry = any("pron" in str(form.get("tags", "")).split(":") for form in word.get("forms", []))
             selection = sources.select_gloss(
-                word, gloss_rows, kaikki_result.raw.get(lemma), pronoun_entry=pronoun_entry
+                word,
+                gloss_rows,
+                kaikki_result.raw.get(lemma),
+                pronoun_entry=pronoun_entry,
+                ulif_entries=sources_instance.ulif_entries([lemma]).raw.get(lemma, []),
             )
             expected_gloss = selection.gloss
             expected_gloss_source = selection.source
@@ -640,6 +644,7 @@ def verify_plan_glosses(plan: dict, store: dict, module: str, api: sources.Sourc
     ]
     rows = api.gloss_rows((word["lemma"], word["pos"]) for word in common).raw if common else {}
     payloads = api.kaikki_rows(word["lemma"] for word in common).raw if common else {}
+    ulif = api.ulif_entries(word["lemma"] for word in common).raw if common else {}
     for wid in sorted(cited):
         word = by_id.get(wid)
         if word is None:
@@ -651,11 +656,16 @@ def verify_plan_glosses(plan: dict, store: dict, module: str, api: sources.Sourc
             errors.append(f"{codes.GLOSS_NOT_LEARNER_SENSE}: {label}: {stored!r}")
         if word not in common:
             continue
-        selection = sources.select_gloss(word, rows.get((word["lemma"], word["pos"]), []), payloads.get(word["lemma"]))
-        if not stored or not isinstance(stored, str) or not stored.strip():
-            errors.append(f"{codes.GLOSS_MISSING}: {label}: builder reason={selection.reason or 'gloss_not_stored'}")
+        selection = sources.select_gloss(
+            word,
+            rows.get((word["lemma"], word["pos"]), []),
+            payloads.get(word["lemma"]),
+            ulif_entries=ulif.get(word["lemma"], []),
+        )
         if selection.reason == codes.GLOSS_SENSE_UNRESOLVED:
             errors.append(f"{codes.GLOSS_SENSE_UNRESOLVED}: {label}: candidates={list(selection.candidates)!r}")
+        elif not stored or not isinstance(stored, str) or not stored.strip():
+            errors.append(f"{codes.GLOSS_MISSING}: {label}: builder reason={selection.reason or 'gloss_not_stored'}")
     return errors
 
 
@@ -874,10 +884,9 @@ def verify_pack(
                         raise ValueError("word store must be a mapping")
                     errors.extend(verify_plan_glosses(plan_doc, store, f"{level}/{slug}", sources_instance))
                 except (OSError, ValueError, yaml.YAMLError, KeyError, TypeError) as exc:
-                    for wid in sorted(cited_gloss_ids(plan_doc)):
-                        errors.append(
-                            f"{codes.GLOSS_MISSING}: {level}/{slug} {wid} (lemma unavailable): {type(exc).__name__}"
-                        )
+                    errors.append(
+                        f"{codes.SOURCE_UNAVAILABLE}: {level}/{slug}: word-store gloss gate: {type(exc).__name__}"
+                    )
         except (OSError, ValueError, yaml.YAMLError, AttributeError, TypeError) as exc:
             errors.append(
                 f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {type(exc).__name__}"

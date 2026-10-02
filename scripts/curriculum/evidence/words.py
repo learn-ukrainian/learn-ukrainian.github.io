@@ -504,7 +504,11 @@ def build_words(
                 word_doc["cefr"] = cefr_field(exact_cefr)
 
             selection = sources.select_gloss(
-                word_doc, gloss_batch.get((lemma, pos), []), kaikki_batch.get(lemma), pronoun_entry=pronoun_entry
+                word_doc,
+                gloss_batch.get((lemma, pos), []),
+                kaikki_batch.get(lemma),
+                pronoun_entry=pronoun_entry,
+                ulif_entries=ulif_batch.get(lemma, []),
             )
             if selection.gloss is not None:
                 word_doc["gloss_en"] = selection.gloss

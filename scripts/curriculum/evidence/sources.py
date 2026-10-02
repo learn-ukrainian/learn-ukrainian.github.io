@@ -29,6 +29,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
@@ -301,13 +302,50 @@ class GlossSelection:
     candidates: tuple[dict, ...] = ()
 
 
-def _sense_spans(sense: str) -> list[str]:
-    """Comma-separated source alternatives, never commas inside qualifiers.
+def _gloss_head(span: str) -> str:
+    """Remove balanced edge annotations; never shorten the lexical head."""
+    span = span.strip()
+    while span.startswith(("(", "[")):
+        depth = 0
+        for index, char in enumerate(span):
+            if char in "([":
+                depth += 1
+            elif char in ")]":
+                depth -= 1
+            if depth == 0:
+                span = span[index + 1 :].strip()
+                break
+        else:
+            return span
+    while span.endswith((")", "]")):
+        depth = 0
+        for index in range(len(span) - 1, -1, -1):
+            char = span[index]
+            if char in ")]":
+                depth += 1
+            elif char in "([":
+                depth -= 1
+            if depth == 0:
+                # Numeric scale changes the quantity, not just its annotation.
+                if span[index:].casefold() in {"(short scale)", "(long scale)"}:
+                    return span
+                span = span[:index].strip()
+                break
+        else:
+            return span
+    return span
 
-    No paraphrasing or length truncation. A source's comma list attests its
-    alternatives together; separate list entries remain separate senses.
-    """
+
+def _sense_spans(sense: str) -> list[str]:
+    """Split short alternatives only; keep commas in definition sentences."""
     if not _well_formed_kaikki_gloss(sense):
+        return []
+    head = _gloss_head(sense)
+    if ";" in head or re.match(
+        r"(?:verbal noun of|alternative form|alternative spelling|a |an |the |augmentative particle|expressing )",
+        head,
+        re.I,
+    ):
         return []
     spans, start, depth = [], 0, 0
     for index, char in enumerate(sense):
@@ -319,52 +357,125 @@ def _sense_spans(sense: str) -> list[str]:
             spans.append(sense[start:index].strip())
             start = index + 1
     spans.append(sense[start:].strip())
+    definition = re.search(r"\b(?:used to|which|whose|covering|extending|typically|often|etc|et cetera)\b", head, re.I)
+    if definition or not all(is_learner_gloss(_gloss_head(span)) for span in spans):
+        spans = [sense.strip()]
     return [
         span
         for span in spans
-        if span and not re.match(r"(?:verbal noun of|alternative form|alternative spelling|a |an |the )", span, re.I)
+        if span
+        and not re.match(
+            r"(?:verbal noun of|alternative form|alternative spelling|a |an |the |augmentative particle|expressing )",
+            _gloss_head(span),
+            re.I,
+        )
     ]
 
 
-def select_gloss(
-    word: dict, rows: list[dict], payload: dict | None, *, pronoun_entry: bool | None = None
-) -> GlossSelection:
-    """One attested learner span, or a typed gap; shared by build and verification.
+def _gloss_homonyms(word: dict, entries: Iterable[dict], pronoun_entry: bool) -> list[dict]:
+    """Match spelling and coarse POS only; gender never binds a learner sense."""
+    matched = []
+    extra_labels = {
+        "займенник": {"noun", "adj"} if pronoun_entry else set(),
+        "сполучник": {"conj"},
+        "частка": {"part"},
+        "вигук": {"intj"},
+        "прийменник": {"prep"},
+        "числівник": {"numr"},
+        "множинний іменник": {"noun"},
+    }
+    for entry in entries:
+        if unstressed_headword(entry.get("canonical_headword", "")) != unstressed_headword(word["lemma"]):
+            continue
+        label = entry.get("grammatical_label", "").split(",", 1)[0].strip()
+        grammar = lookup_ulif_label(label)
+        positions = set(grammar.tags) if grammar else extra_labels.get(label, {label})
+        # Mixed-gender ULIF noun labels still establish noun POS. The gender
+        # itself must never select one homonym over another.
+        if label.startswith("іменник "):
+            positions.add("noun")
+        if word["pos"] in positions:
+            matched.append(entry)
+    return matched
 
-    A unique cross-source agreement group may settle competing senses. Tied
-    meaning groups are never ordered by length or row id. Without agreement,
-    only a single source-attested group is selectable. Qualifiers stay unless
-    grammatical, or another source explicitly attests the unqualified span.
+
+def select_gloss(
+    word: dict,
+    rows: list[dict],
+    payload: dict | None,
+    *,
+    pronoun_entry: bool | None = None,
+    ulif_entries: Iterable[dict] = (),
+) -> GlossSelection:
+    """Select the first agreed learner head; withhold unbound homonyms.
+
+    Register-marked spans are fallback only. Without cross-source agreement,
+    multiple unconnected heads remain unresolved, even if only one fits D2.
+    Returned text is a source span with edge annotations removed, never a
+    paraphrase. Every source row and its digest retain their original bytes.
     """
     lemma, pos = word["lemma"], word["pos"]
     if pronoun_entry is None:
         pronoun_entry = any("pron" in form.get("tags", "").split(":") for form in word.get("forms", []))
-    headwords = {row["word"] for row in rows}
-    collision = len(headwords) > 1
+    rows = filter_pronominal_gloss_rows(rows, lemma, pos, pronoun_entry)
+    homonyms = _gloss_homonyms(word, ulif_entries, pronoun_entry)
+    collision = len(homonyms) > 1 or len({row["word"] for row in rows}) > 1
     if collision:
         ulif = word.get("ulif")
         key = ulif.get("key", []) if isinstance(ulif, dict) else []
-        selected = [row for row in rows if key and normalize_spelling(row["word"]) == normalize_spelling(key[0])]
-        if not selected:
+        bound = [e for e in homonyms if key == [e["canonical_headword"], e["homonym_index"]]]
+        unique_head = (
+            bool(bound)
+            and sum(normalize_spelling(e["canonical_headword"]) == normalize_spelling(key[0]) for e in homonyms) == 1
+        )
+        selected = [r for r in rows if key and normalize_spelling(r["word"]) == normalize_spelling(key[0])]
+        if not selected or (len(homonyms) > 1 and not unique_head):
             return GlossSelection(
                 reason=codes.GLOSS_SENSE_UNRESOLVED,
                 candidates=tuple(
                     {
-                        "source": "dmklinger_uk_en",
-                        "id": row["id"],
-                        "headword": row["word"],
-                        "translations": row["translations"],
+                        "source": "ulif",
+                        "id": e["id"],
+                        "headword": e["canonical_headword"],
+                        "homonym_index": e["homonym_index"],
                     }
-                    for row in rows
+                    for e in homonyms
+                )
+                or tuple(
+                    {
+                        "source": "dmklinger_uk_en",
+                        "id": r["id"],
+                        "headword": r["word"],
+                        "translations": r["translations"],
+                    }
+                    for r in rows
                 ),
             )
         rows = selected
-    rows = filter_pronominal_gloss_rows(rows, lemma, pos, pronoun_entry)
     senses, reason = aligned_kaikki_senses(payload, pos, pronoun_entry)
-    # Kaikki's flat list cannot bind to the selected stressed homonym.
     if collision:
+        # A flat Kaikki list cannot bind to the selected ULIF homonym.
         senses = []
     groups: list[list[dict]] = []
+    restricted = re.compile(
+        r"\b(?:obsolete|archaic|dated|dialectal|colloquial|figurative|technical|slang|"
+        r"psychology|chemistry|anatomy|linguistics)\b",
+        re.I,
+    )
+
+    def add_sense(sense: str, source: str, row: dict | None) -> None:
+        annotations = re.findall(r"\([^()]*\)|\[[^\[\]]*\]", sense)
+        marked = any(restricted.search(label) for label in annotations)
+        group = []
+        for span in _sense_spans(sense):
+            head = _gloss_head(span)
+            if not head or ";" in head:
+                continue
+            compare = head[3:] if pos == "verb" and head.startswith("to ") else head
+            group.append({"span": head, "head": compare, "source": source, "row": row, "restricted": marked})
+        if group:
+            groups.append(group)
+
     for row in rows:
         raw = row.get("translations") or []
         try:
@@ -374,26 +485,13 @@ def select_gloss(
         if isinstance(translations, list):
             for sense in translations:
                 if isinstance(sense, str):
-                    groups.append(
-                        [{"span": span, "source": "dmklinger_uk_en", "row": row} for span in _sense_spans(sense)]
-                    )
+                    add_sense(sense, "dmklinger_uk_en", row)
     for sense in senses:
-        groups.append([{"span": span, "source": "kaikki_wiktionary", "row": None} for span in _sense_spans(sense)])
-    original = [(candidate["span"], candidate["source"]) for group in groups for candidate in group]
-    for group in groups:
-        for candidate in group:
-            span = candidate["span"]
-            # Only grammatical labels are intrinsically dispensable.
-            span = re.sub(
-                r"\s+\((?:noun|verb|adjective|adverb|pronoun|personal pronoun|particle|preposition|conjunction|interjection)\)$",
-                "",
-                span,
-            )
-            base = re.sub(r"(?:\s+\([^()]*\))+$", "", span)
-            if any(source != candidate["source"] and other == base for other, source in original):
-                span = base
-            candidate["span"] = span
+        add_sense(sense, "kaikki_wiktionary", None)
     candidates = [c for group in groups for c in group]
+    if any(not c["restricted"] for c in candidates):
+        groups = [[c for c in group if not c["restricted"]] for group in groups]
+        candidates = [c for group in groups for c in group]
     diagnostic = tuple(
         {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
     )
@@ -401,23 +499,34 @@ def select_gloss(
         return GlossSelection(reason=reason or codes.GLOSS_MISSING, candidates=diagnostic)
     support: dict[str, set[str]] = {}
     for candidate in candidates:
-        support.setdefault(candidate["span"], set()).add(candidate["source"])
-    agreed = {span for span, providers in support.items() if len(providers) > 1}
+        support.setdefault(candidate["head"], set()).add(candidate["source"])
+    agreed = {head for head, providers in support.items() if len(providers) > 1}
     eligible = agreed or set(support)
-    # Connect only alternatives explicitly grouped by a source, and only
-    # through eligible spans: an unsupported bridge cannot settle ambiguity.
-    components = [{span} for span in eligible]
-    for group in groups:
-        alternatives = {c["span"] for c in group} & eligible
-        overlapping = [component for component in components if component & alternatives]
-        if overlapping:
-            components = [component for component in components if not component & alternatives]
-            components.append(set.union(*overlapping))
-    if len(components) != 1:
-        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
-    chosen = next((c for c in candidates if c["span"] in eligible and is_learner_gloss(c["span"])), None)
+    if not agreed:
+        components = [{head} for head in eligible]
+        for group in groups:
+            alternatives = {c["head"] for c in group} & eligible
+            overlapping = [component for component in components if component & alternatives]
+            if overlapping:
+                components = [component for component in components if not component & alternatives]
+                components.append(set.union(*overlapping))
+        if len(components) != 1:
+            return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
+    chosen = next((c for c in candidates if c["head"] in eligible and is_learner_gloss(c["span"])), None)
     if chosen is None:
         return GlossSelection(reason=codes.GLOSS_MISSING, candidates=diagnostic)
+    if pos == "verb":
+        chosen = next(
+            (
+                c
+                for c in candidates
+                if c["head"] == chosen["head"]
+                and c["source"] == chosen["source"]
+                and c["span"].startswith("to ")
+                and is_learner_gloss(c["span"])
+            ),
+            chosen,
+        )
     row = chosen["row"]
     ref = {"table": "dmklinger_uk_en", "id": row["id"], "row_sha256": row_digest(row)} if row else None
     return GlossSelection(chosen["span"], chosen["source"], ref, candidates=diagnostic)

@@ -163,7 +163,7 @@ def test_pronominal_adjective_prefers_attributive_gloss(synthetic_vesum, synthet
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
     word = result["store"]["words"][0]
-    assert word["gloss_en"] == "my (determiner)"
+    assert word["gloss_en"] == "my"
     assert word["gloss_source"] == "dmklinger_uk_en"
     assert word["gloss_ref"]["id"] == 11
 
