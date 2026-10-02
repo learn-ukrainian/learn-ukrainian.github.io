@@ -585,3 +585,33 @@ def test_preflight_unreadable_vesum_is_a_gap_not_a_pass(clean_word_store, clean_
     assert not result.passed
     assert result.gaps[0].need == "quote_bytes"
     assert result.gaps[0].detail.startswith("vesum_unavailable: no database")
+
+
+def _activity_hosted_quote(pack: dict, quote: str) -> dict:
+    """T-002 is printed only as an activity's quote host: no step needs a quote (#9487 C12, review round 8)."""
+    pack["texts"][1]["quote"] = quote
+    return {
+        "steps": [{"id": "s1", "practice": []}, {"id": "s2", "practice": ["a1"]}],
+        "activities": [{"id": "a1", "focus": "kind: comprehension; host: {kind: quote, ref: T-002}."}],
+    }
+
+
+def test_preflight_unreadable_vesum_for_an_activity_hosted_quote_is_a_gap(clean_word_store, clean_pack):
+    from scripts.curriculum.validate import quote_bytes
+
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    lesson = _activity_hosted_quote(clean_pack, "слово мамою")
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=unavailable)
+    assert not result.passed
+    assert [(gap.step, gap.need) for gap in result.gaps] == [("s2", "quote_bytes")]
+    assert result.gaps[0].detail.startswith("vesum_unavailable: no database")
+
+
+def test_preflight_checks_the_bytes_of_an_activity_hosted_quote(clean_word_store, clean_pack):
+    lesson = _activity_hosted_quote(clean_pack, "слово ")
+    result = preflight_lesson(
+        lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=lambda words: set()
+    )
+    assert [(gap.step, gap.detail) for gap in result.gaps] == [("s2", "private_use: quote T-002 U+F0FC")]

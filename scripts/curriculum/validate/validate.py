@@ -1174,6 +1174,7 @@ def _validate_plan_run(
             arc=arc,
             level_plans=level_plans,
             words_path=words_path,
+            strict=strict,
         )
     registry_path = registry_path_for(plan_path)
     registry_failures: list[Outcome] = []

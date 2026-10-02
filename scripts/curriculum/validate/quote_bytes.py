@@ -20,9 +20,16 @@ capital Ukrainian letter (or the digraph ``Дж``/``Дз``) followed by its own 
 any other letter run (``ЄИ``, ``єє``, ``Аб``) is still looked up. A hyphenated token whose parts each hold at most
 one vowel is a word printed with its syllables divided (``ма-ма``); it passes when the joined
 spelling is a word. A word hyphenated at a line end is joined first: that is the page's typesetting. Stress marks (U+0301, U+0300) are removed before the lookup; apostrophes are
-normalised to one spelling, as the word store and VESUM do. The lookup is the existing
+normalised to one spelling, as the word store and VESUM do. A word is read with its combining marks, so a
+decomposed (NFD) quote tokenises as its composed (NFC) twin: the reported word keeps the quote's own bytes, and
+its lookup spelling is the NFC form, which is how the word store and VESUM spell. The lookup is the existing
 verification path (``scripts.verification.vesum.verify_words``) after the word store; when VESUM
-is unavailable the class is not decided and the caller reports that.
+is unavailable the class is not decided and the caller reports that as an unchecked outcome, which strict
+plan validation and the fresh preflight treat as not passing.
+
+The quote hosts are the records an activity focus declares as its host, in the writer contract's syntax
+(``host: {kind: quote, ref: T-…}`` or "quote host refs T-…"), and the quote records a step needing ``quote``
+cites; plan-validate (gate C12) and the fresh preflight read the same hosts.
 """
 
 from __future__ import annotations
@@ -43,9 +50,15 @@ NOT_IN_VESUM = "not_in_vesum"
 
 _BRACKET = re.compile(r"\[([^\[\]]*)\]")
 _CYRILLIC = re.compile(f"[{CYRILLIC_LETTER_CLASS}]")
-_TOKEN = re.compile(f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*")
+#: Combining marks a decomposed (NFD) letter carries: й is и + U+0306, ї is і + U+0308, stress is U+0301.
+_MARKS = "\u0300-\u036f"
+_LETTER_WITH_MARKS = f"[{CYRILLIC_LETTER_CLASS}][{_MARKS}]*"
+_TOKEN = re.compile(f"(?:{_LETTER_WITH_MARKS})+(?:['’ʼ-](?:{_LETTER_WITH_MARKS})+)*")
 #: A word the page hyphenated at a line end (``предме-\nтів``): one word, as printed.
-_LINE_BREAK_HYPHEN = re.compile(f"([{CYRILLIC_LETTER_CLASS}])-[ \t]*\n[ \t]*([{CYRILLIC_LETTER_CLASS}])")
+_LINE_BREAK_HYPHEN = re.compile(f"([{CYRILLIC_LETTER_CLASS}][{_MARKS}]*)-[ \t]*\n[ \t]*([{CYRILLIC_LETTER_CLASS}])")
+#: An activity focus declaring its host, and the prose form "quote host refs T-…" (writer contract syntax).
+HOST = re.compile(r"\{\s*kind:\s*(dialogue|quote|video)\s*(?:,\s*ref:\s*([A-Z][A-Z0-9]*-\d+)\s*)?\}")
+QUOTE_HOST_REFS = re.compile(r"\bquote host refs?\s+(T-\d+(?:\s*(?:,|/|and)\s*T-\d+)*)")
 _WEB_ADDRESS = re.compile(
     r"(?i)\bhttps?://\S+|\bwww\.\S+|\b[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.(?:com|net|org|info|edu|gov|biz|ua|ru|io)\b"
 )
@@ -113,24 +126,35 @@ def _vowels(text: str) -> int:
 
 
 def _spelling(text: str) -> str:
-    return text.translate(_STRESS).translate(_APOSTROPHES)
+    """The lookup spelling: stress marks removed, composed (NFC), one apostrophe."""
+    return unicodedata.normalize("NFC", text.translate(_STRESS)).translate(_APOSTROPHES)
+
+
+def quote_host_refs(focus: str) -> list[str]:
+    """Every quote record an activity focus declares as its host, in order, once each."""
+    refs = [match.group(2) for match in HOST.finditer(focus) if match.group(1) == "quote" and match.group(2)]
+    for match in QUOTE_HOST_REFS.finditer(focus):
+        refs += re.findall(r"T-\d+", match.group(1))
+    return list(dict.fromkeys(refs))
 
 
 def word_tokens(text: str) -> list[WordToken]:
-    """The words of a quote outside brackets that need a lookup, in order, once each."""
+    """The words of a quote outside brackets that need a lookup, in order, once each.
+
+    The surface keeps the quote's bytes (stress marks removed); the spellings are composed (NFC)."""
     outside = _LINE_BREAK_HYPHEN.sub(r"\1\2", _BRACKET.sub(" ", text.translate(_STRESS)))
     tokens: dict[str, WordToken] = {}
     for match in _TOKEN.finditer(outside):
         surface = match.group(0)
-        if surface in _LETTER_PAIRS:
+        if _spelling(surface) in _LETTER_PAIRS:
             continue  # an alphabet-table cell: a capital letter and its own small letter
-        parts = re.split(r"-", surface)
+        parts = re.split(r"-", _spelling(surface))
         if "-" in surface and all(_vowels(part) <= 1 for part in parts):
             joined = "".join(parts)
             if _vowels(joined) <= 1:
                 continue
-            spellings = (_spelling(joined), _spelling(surface))
-        elif _vowels(surface) <= 1:
+            spellings = (joined, _spelling(surface))
+        elif _vowels(_spelling(surface)) <= 1:
             continue  # a letter or a syllable, as a primer prints them
         else:
             spellings = (_spelling(surface),)

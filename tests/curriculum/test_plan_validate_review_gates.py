@@ -13,6 +13,7 @@ Ukrainian.
 
 from __future__ import annotations
 
+import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -86,12 +87,17 @@ REVIEW_GATE_CODES = {
     codes.LETTER_WITHOUT_RECORDING,
     codes.LETTER_TEACHER_MODELED_ONLY,
     codes.TEACH_WORD_NOT_IN_INVENTORY,
+    codes.CHOICE_FOCUS_WORD_NOT_TAUGHT,
+    codes.MODELED_PRINT_TEACHER_FRAME,
+    codes.VESUM_UNAVAILABLE,
 }
 
 # extra word ids for these fixtures
 PRIOR_ONE, PRIOR_TWO, MANOK, NOMA = "W-209", "W-210", "W-211", "W-212"
-#: The word VESUM is stubbed to list in this module (the real lookup is never used by these tests).
-VESUM_FORMS = {"мамою"}
+#: The words VESUM is stubbed to list in this module (the real lookup is never used by these tests). ятір, юнак,
+#: рік, яма, кран, мої and крайній are VESUM forms (sources verify_words, 2026-10-02); the C11 and C12 rows print
+#: them.
+VESUM_FORMS = {"мамою", "ятір", "юнак", "рік", "яма", "кран", "мої", "крайній"}
 
 
 @pytest.fixture(autouse=True)
@@ -378,6 +384,15 @@ def _letter_video(letters: list[str]) -> Mutate:
 
 def _pick(focus: str) -> Mutate:
     return _focus(2, "b3", focus)
+
+
+def _exercise_print(text: str) -> Mutate:
+    """Pack exercise X-001 prints text (C21)."""
+
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        pack["exercises"][0].update(quote=text, items_sample=[text])
+
+    return mutate
 
 
 def _comprehension_on_quote(quote: str, focus: str) -> Mutate:
@@ -771,7 +786,7 @@ CASES = [
         "c18_quiz_option_with_an_untaught_letter_fails",
         _focus(1, "a1", "Checks the letter М; the options are мама and нона."),
         failures=frozenset({codes.CHOICE_OPTION_LETTER_NOT_TAUGHT}),
-        says="quiz activity a1 prints 'нона' (needs н, о)",
+        says="quiz activity a1 declares the options or keys 'нона' (needs н, о)",
     ),
     Case(
         "c18_option_a_cited_recording_models_passes",
@@ -970,10 +985,103 @@ CASES = [
         says=f"step s1 teach text names {NONA} нона, outside the lesson's inventory",
     ),
     Case("c28_teach_text_naming_a_recycled_word_passes", _teach(2, "s1", f"The letter Н; recall {MAMA}.")),
+    # round 8 of the cross-family review (#9487): the reviewer's fixtures
+    Case(
+        "c1_a_word_the_focus_keeps_out_is_not_a_scored_target",
+        _focus(1, "a1", f"Checks the letter М. Do not score {MAMA} here; it is introduced in s2."),
+    ),
+    Case(
+        "c11_initial_sound_of_word_initial_ya_yu_is_y",
+        _quote(
+            "ятір юнак рік",
+            _odd_one_out("Pick the member whose initial sound differs. host: {kind: quote, ref: T-002}."),
+        ),
+    ),
+    Case(
+        "c11_initial_sound_shared_by_every_member_fails",
+        _quote(
+            "ятір юнак яма",
+            _odd_one_out("Pick the member whose initial sound differs. host: {kind: quote, ref: T-002}."),
+        ),
+        failures=frozenset({codes.ODD_ONE_OUT_ROW_INVALID}),
+        says="differing in initial sound: ятір (й), юнак (й), яма (й)",
+    ),
+    Case(
+        "c11_initial_letters_of_the_same_row_still_differ",
+        _quote(
+            "ятір юнак рік",
+            _odd_one_out("Pick the member whose initial letter differs. host: {kind: quote, ref: T-002}."),
+        ),
+        failures=frozenset({codes.ODD_ONE_OUT_ROW_INVALID}),
+        says="differing in initial letter: ятір (я), юнак (ю), рік (р)",
+    ),
+    Case(
+        "c11_initial_sound_the_gate_does_not_compute_is_a_note",
+        _quote(
+            "кран ятір юнак\nятір юнак рік",
+            _odd_one_out("Pick the member whose first sound differs. host: {kind: quote, ref: T-002}."),
+        ),
+        notes=frozenset({codes.ODD_ONE_OUT_FEATURE_NOT_COMPUTED}),
+        says="row 'кран ятір юнак' of T-002: the gate does not compute the initial sound of кран",
+    ),
+    Case("c12_decomposed_quote_is_read_as_its_composed_words", _quote(unicodedata.normalize("NFD", "мої крайній"))),
+    Case(
+        "c18_ukrainian_word_in_focus_prose_is_a_note_not_an_option",
+        _focus(
+            1,
+            "a1",
+            "Checks the letter М; the options are М and А. The teacher translates прочитай aloud and never displays it.",
+        ),
+        notes=frozenset({codes.CHOICE_FOCUS_WORD_NOT_TAUGHT}),
+        says="quiz activity a1 focus names 'прочитай' (needs и, й, о, п, р, т, ч)",
+    ),
+    Case(
+        "c21_teacher_read_instruction_with_a_bounded_learner_reading_passes",
+        _all(
+            _exercise_print("Прочитай: мама."),
+            _teach(
+                1,
+                "s2",
+                "The letter А. The teacher demonstrates the exact print in X-001. The teacher reads the "
+                "instruction while the learner reads only мама.",
+            ),
+        ),
+    ),
+    Case(
+        "c21_teacher_read_word_named_in_the_plan_is_not_learner_print",
+        _all(
+            _exercise_print("Прочитай: мама."),
+            _teach(
+                1, "s2", "The letter А. The teacher demonstrates the exact print in X-001; the teacher reads Прочитай."
+            ),
+        ),
+    ),
+    Case(
+        "c21_teacher_read_instruction_without_its_words_is_a_note",
+        _all(
+            _exercise_print("Прочитай: мама."),
+            _teach(
+                1,
+                "s2",
+                "The letter А. The teacher demonstrates the exact print in X-001; the teacher reads the instruction.",
+            ),
+        ),
+        notes=frozenset({codes.MODELED_PRINT_TEACHER_FRAME}),
+        says="X-001 (Прочитай; needs",
+    ),
+    Case(
+        "c21_unbounded_exact_print_with_an_untaught_frame_word_fails",
+        _all(
+            _exercise_print("Прочитай: мама."),
+            _teach(1, "s2", "The letter А. The teacher demonstrates the exact print in X-001."),
+        ),
+        failures=frozenset({codes.MODELED_PRINT_NOT_DECODABLE}),
+        says="X-001 (Прочитай; needs",
+    ),
 ]
 
 
-def run(root: Path, mutate: Mutate | None) -> Report:
+def run(root: Path, mutate: Mutate | None, strict: bool = False) -> Report:
     plan, pack, words, prior = mechanical_plan(), mechanical_pack(), mechanical_words(), prior_plan()
     if mutate is not None:
         mutate(plan, pack, words, prior)
@@ -985,7 +1093,7 @@ def run(root: Path, mutate: Mutate | None) -> Report:
     (world.words_path.parent / "_base.request.yaml").write_text(
         yaml.safe_dump(request, allow_unicode=True), encoding="utf-8"
     )
-    return validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    return validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=strict)
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda case: case.name)
@@ -1029,6 +1137,13 @@ def produced_review_gate_codes(root: Path) -> set[str]:
     produced: set[str] = set()
     for index, case in enumerate(CASES):
         produced |= run(root / f"case-{index}", case.mutate).codes()
+
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    with pytest.MonkeyPatch.context() as patch:  # VESUM unreadable: the C12 lookup is undecided
+        patch.setattr(quote_bytes, "vesum_lookup", unavailable)
+        produced |= run(root / "vesum-unavailable", _quote("мама мамою")).codes()
     return produced
 
 
@@ -1043,8 +1158,21 @@ def test_c12_unavailable_vesum_is_not_checked_not_passed(tmp_path: Path, monkeyp
     monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
     report = run(tmp_path, _quote("мама номана мана \uf0fc"))
     assert {o.code for o in report.failures} == {codes.QUOTE_HOST_PRIVATE_USE}, report.render_text()
-    gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
-    assert "C12" in gates, report.render_text()
+    undecided = [o.message for o in report.not_checked if o.code == codes.VESUM_UNAVAILABLE]
+    assert undecided and undecided[0].startswith("gate C12 is undecided"), report.render_text()
+    assert report.status == "fail"
+
+
+def test_c12_unavailable_vesum_never_passes_strict(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The reviewer's case: a clean quote host whose words need a lookup no longer passes strict with no failures."""
+
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
+    report = run(tmp_path, _quote("мама мамою"), strict=True)
+    assert codes.VESUM_UNAVAILABLE in {o.code for o in report.failures}, report.render_text()
+    assert report.status == "fail"
 
 
 def test_c8_outcome_names_the_comprehension_step(tmp_path: Path) -> None:
@@ -1091,8 +1219,62 @@ def test_c23_unavailable_vesum_is_not_checked_not_passed(tmp_path: Path, monkeyp
     monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
     report = run(tmp_path, _pick("Complete но-на from its syllables; select the missing first syllable."))
     assert codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD not in report.codes(), report.render_text()
-    gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
-    assert "C23" in gates, report.render_text()
+    undecided = [o.message for o in report.not_checked if o.code == codes.VESUM_UNAVAILABLE]
+    assert undecided and undecided[0].startswith("gate C23 is undecided"), report.render_text()
+
+
+@pytest.mark.parametrize("strict", [False, True])
+def test_c23_word_store_completions_survive_unavailable_vesum(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, strict: bool
+) -> None:
+    """The reviewer's case: a completion the word store attests (ма-на → мана) is proven without VESUM."""
+
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
+    case = next(c for c in CASES if c.name == "c23_syllable_swap_forming_a_store_word_fails")
+    report = run(tmp_path, case.mutate, strict=strict)
+    assert codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD in {o.code for o in report.failures}, report.render_text()
+    undecided = report.failures if strict else report.not_checked
+    assert codes.VESUM_UNAVAILABLE in {o.code for o in undecided}, report.render_text()
+    assert report.status == "fail"
+
+
+@pytest.mark.parametrize(
+    ("word", "sound"),
+    [
+        ("ятір", "й"),
+        ("Юнак", "й"),
+        ("єнот", "й"),
+        ("їжак", "й"),
+        ("йод", "й"),
+        ("рік", "р′"),
+        ("ліс", "л′"),
+        ("люк", "л′"),
+        ("лак", "л"),
+        ("мама", "м"),
+        ("м’ясо", "м"),
+        ("щука", "ш"),
+        ("джерело", "дж"),
+        ("дзиґа", "дз"),
+        ("ім’я", "і"),
+        ("око", "о"),
+        ("бюро", None),
+        ("кран", None),
+        ("вчитель", None),
+        ("дзвін", None),
+        ("пісня", None),
+    ],
+)
+def test_c11_initial_sound(word: str, sound: str | None) -> None:
+    assert review_gates._initial_sound(word) == sound
+    assert review_gates._initial_sound(unicodedata.normalize("NFD", word)) == sound
+
+
+def test_c1_named_ids_skip_only_the_negated_clause() -> None:
+    focus = f"Score {MAMA}. Do not score {NONA} here; it is introduced in s2, but score {MAN}."
+    assert review_gates._named_ids(focus) == [MAMA, MAN]
 
 
 @pytest.mark.parametrize(
@@ -1146,3 +1328,17 @@ def test_c23_reads_blanked_rows_named_slots_and_the_activity_syllables() -> None
     )
     assert {("ма-ло", "мало", "мама"), ("Ко-ма", "кома", "коло")} <= set(final)
     assert all(made[:2] == key[:2] for _shown, made, key in final)  # only the named final slot is swapped
+
+
+def test_c21_reading_bounds() -> None:
+    learner, teacher, frame = review_gates._reading_bounds(
+        "The teacher demonstrates the exact print in X-001. The teacher reads the instruction while the learner reads "
+        "only мама."
+    )
+    assert (learner, teacher, frame) == ({"мама"}, set(), True)
+    assert review_gates._reading_bounds("The teacher reads Прочитай; learners read мама and ман.") == (
+        {"мама", "ман"},
+        {"прочитай"},
+        False,
+    )
+    assert review_gates._reading_bounds("The teacher demonstrates the exact print in X-001.") == (None, set(), False)

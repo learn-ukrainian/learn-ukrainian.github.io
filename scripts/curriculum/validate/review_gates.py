@@ -40,13 +40,14 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
   C16 an incidental record named by no step, activity or dialogue of its lesson (note)
   C17 a lesson video whose printed Ресурси description carries pipeline wording, or names a step that does not
       cite the video (failure)
-  C18 in a letter-stage module, a fill-in or quiz focus that prints a word with a letter not taught through its
-      lesson and modelled by no recording the lesson cites (failure)
+  C18 in a letter-stage module, a fill-in or quiz focus that declares an option or key with a letter not taught
+      through its lesson and modelled by no recording the lesson cites (failure); such a word in focus prose (note)
   C19 in a letter-stage module, an example sentence cited in a lesson that cannot read it (failure); one first
       cited later than the lesson that could read it (note)
   C20 a cited video that models words but binds no segment (failure)
   C21 in a letter-stage module, a step (or an activity focus) that sends the learner to the exact print of a record
-      holding words with letters not taught by that step (failure)
+      holding words with letters not taught by that step (failure); the same when the text says the teacher reads
+      the instruction without naming its words (note)
   C22 three or more choice activities of one lesson on the same two-member key set (failure); two (note)
   C23 a pick-syllables row that another syllable of the activity in a blanked slot turns into an attested word
       (failure; a note when the focus says the stems carry a cue); an anagram whose letters spell another attested
@@ -64,7 +65,8 @@ second round is in pack-verify (scripts/curriculum/evidence/sources.py, Standard
 
 How exact each gate is:
 
-- C1 reads word ids (``W-<digits>``), never prose. The step a dialogue is presented in is
+- C1 reads word ids (``W-<digits>``), never prose; an id in a clause that keeps it out ("Do not score W-201 here")
+  is a sequencing constraint, not a target. The step a dialogue is presented in is
   ``dialogue.step``; the activities a step scores are its ``practice`` list. An id that a
   later step of the same lesson introduces fails; so does an id that no step up to this one
   introduces and that is outside the lesson's allowed set (earlier lessons and positions,
@@ -107,15 +109,21 @@ How exact each gate is:
   in ``videos`` or in a step's evidence.
 - C11 applies to an ``odd-one-out`` activity, or one whose focus asks for the member that "differs"
   or is "odd", hosted on a quote. A row is a quote line of three or more words and nothing else.
-  The feature is read from the focus: initial/first letter or glyph, final/last letter, syllables
-  (or vowel nuclei), letter count. Letters are compared case-folded.
+  The feature is read from the focus: initial/first sound, initial/first letter or glyph, final/last letter,
+  syllables (or vowel nuclei), letter count. Letters are compared case-folded. A sound is never read from a letter:
+  word-initial я ю є ї are [й] and a vowel, щ is [шч], and a consonant's softness comes from the next letter
+  (``_initial_sound``); a row with a word whose first sound the spelling does not decide (a cluster, a
+  semi-softened consonant) is a note.
 - C13 computes the key of every type whose key is a function of the target form alone: at A1 that is
   ``count-syllables`` (the number of vowel letters). Its targets are the word ids its focus names. A
   target's form is the one a cited quote host prints, else the forms its core entry teaches, else
   any form of the record, which makes the outcome a note.
 - C12's quote hosts are the records an activity focus declares as its quote host and the quote
   records cited by a step whose ``needs`` holds ``quote`` (the records the preflight treats as
-  printable quotes); the preflight runs the same checks (scripts/build/fresh/preflight.py).
+  printable quotes); the preflight runs the same checks on the same hosts (scripts/build/fresh/preflight.py). A
+  quote is tokenised composed (NFC), so decomposed bytes are read as the words they spell. When VESUM cannot be
+  read, the byte defects are still reported and the lookup is ``vesum_unavailable``: not_checked, and a failure
+  under --strict.
 - C14 compares a YouTube video by its id, any other URL without its fragment and trailing slash,
   together with ``models.segment``: two segments of one video are two recordings.
 - C15 reads a step's displays two ways. A teach-text sentence (split at . ; ! ?) directs a display when
@@ -135,10 +143,11 @@ How exact each gate is:
   cite). The pipeline wording is the wording the A1 plans and packs actually put there: ``segment:``, ``null``,
   ``driver-owned``, ``timecode``, ``timed (…) segment``, ``acoustic proof`` and record ids (R-27, W-081, T-040,
   G-a1-002). A step reference (``s3``) must name a step of the lesson that cites the video in its evidence.
-- C18 reads the Ukrainian words a fill-in or quiz focus prints (two or more letters), from the first lesson
-  that has a taught letter (before it nothing is read). A word a recording the lesson cites models (a store
-  record in its models.words) is heard, so it passes. It is a failure although it reads focus prose: a word
-  the focus prints is what the writer puts on screen.
+- C18 reads the Ukrainian words (two or more letters) of a fill-in or quiz focus, from the first lesson that has a
+  taught letter (before it nothing is read). A word a recording the lesson cites models (a store record in its
+  models.words) is heard, so it passes. A word of a declared option or key set ("the options are мама and нона",
+  "keys Привіт and Добрий день") is learner-visible option text, so it fails; any other word is authoring prose,
+  which does not say whether the learner sees it (a translation said aloud is not printed), so it is a note.
 - C19 applies to example records (EX-) a step cites: the host is the first lesson citing one. The letters
   taught through a lesson are the arc's earlier positions plus this plan's introductions so far (as C4).
 - C20 reads the pack: a video whose models.words is not empty and whose models.segment is null. A letter
@@ -148,7 +157,11 @@ How exact each gate is:
   names words of the record, not its print, so it is not read. The print is the record's printable text in the pack
   (quote, text, items_sample); every Cyrillic word of it must be readable with the letters taught by the step (as
   C10; an activity is taken at the step whose practice links it, else the lesson's last step). A recording does not
-  help: the directive is about print. Each record is reported once per step.
+  help: the directive is about print. Each record is reported once per step. The plan bounds the learner-read print
+  in the same text: a clause saying the learner reads named words ("the learner reads only мама") limits the scan
+  to them, and words a clause says the teacher reads ("the teacher reads Прочитай") are not learner print. A
+  teacher clause reading the instruction or rubric without naming its words leaves the untaught words possibly the
+  teacher's frame, so that is a note.
 - C22 reads a declared key set, "keys Привіт and Добрий день", "keys О, У, И, А", "keys 1 and 2", in a quiz, fill-in,
   true-false, odd-one-out or pick-syllables focus. Two activities on one binary key set can be a recognition and a
   transfer (the plan reviews accepted repeated types with different operations), so two is a note; a third scores
@@ -160,7 +173,8 @@ How exact each gate is:
   "syllable"/"blank" (first, initial, second, middle, final, last), else every slot. A completion is a word-store
   spelling or a VESUM form, looked up in lower case, and capitalised too only when the row's word is a name. An
   anagram's other arrangements (targets of at most seven letters) are mostly rare inflected or archaic forms, so a
-  hit is a note.
+  hit is a note. Completions the word store attests are decided without VESUM; when VESUM cannot be read the rest
+  are ``vesum_unavailable`` (not_checked, a failure under --strict).
 - C24 reads a rationale or job sentence saying the lesson recycles word records "including" (or "such as") a list.
   Each English word of the list names a category when it equals the head word of store records' gloss_en ("sound",
   "letter"); function words and words describing records do not. A quoted Ukrainian word names its records. The
@@ -180,6 +194,7 @@ How exact each gate is:
 from __future__ import annotations
 
 import re
+import unicodedata
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -205,8 +220,8 @@ _CLAUSE_BREAK = re.compile(r"[.;:,!?()]|\b(?:then|before|after)\b", re.IGNORECAS
 _HEARING = re.compile(r"\b(?:hear|hears|heard|hearing|listen|listens|listened|listening)\b", re.IGNORECASE)
 _PACK_ID = re.compile(r"\b[A-Z][A-Z0-9]*-\d+\b")
 _COMPREHENSION_KIND = re.compile(r"\bkind:\s*comprehension\b")
-_HOST = re.compile(r"\{\s*kind:\s*(dialogue|quote|video)\s*(?:,\s*ref:\s*([A-Z][A-Z0-9]*-\d+)\s*)?\}")
-_QUOTE_HOST_REFS = re.compile(r"\bquote host refs?\s+(T-\d+(?:\s*(?:,|/|and)\s*T-\d+)*)")
+_HOST = quote_bytes.HOST
+_QUOTE_HOST_REFS = quote_bytes.QUOTE_HOST_REFS
 _ODD_ONE_OUT = re.compile(r"\bodd\b|\bdiffers?\s+from\b", re.IGNORECASE)
 _ROW_WORD = f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*"
 _ROW = re.compile(rf"\s*{_ROW_WORD}(?:[\s,;]+{_ROW_WORD}){{2,}}[\s,;.]*")
@@ -295,6 +310,88 @@ _TEACHER_MODEL = re.compile(
     r"|\b(?:models?|pronounc\w*|demonstrat\w*)\b[^.;]*\bteacher\b",
     re.IGNORECASE,
 )
+#: C1: a clause that refers to a word id only to keep it out ("Do not score W-201 here").
+_NEGATED_CLAUSE = re.compile(r"\b(?:do not|don't|never|must not|not yet|exclude[sd]?|excluding)\b", re.IGNORECASE)
+_CLAUSE = re.compile(r"[.;:,!?]|\bbut\b", re.IGNORECASE)
+#: C18: a declared option or key set, "the options are мама and нона", "keys Привіт and Добрий день".
+_OPTION_SET = re.compile(
+    rf"\b(?:keys|options?|choices?)\s+(?:are\s+)?({_KEY_ITEM}(?:(?:{_KEY_SEPARATOR}){_KEY_ITEM})*)"
+    rf"(?![{CYRILLIC_LETTER_CLASS}\w])"
+)
+#: C21: a clause bounding what the learner reads ("the learner reads only мама") and one saying the teacher reads
+#: (or says) words of the print; a teacher clause naming the instruction or rubric without its words is a frame.
+_READING_CLAUSE = re.compile(r"[.;,!?]|\b(?:while|whereas|but|and then)\b", re.IGNORECASE)
+_LEARNER_READS = re.compile(r"\b(?:learners?|students?|pupils?|children)\b.*?\bread(?:s|ing)?\b", re.IGNORECASE)
+_TEACHER_READS = re.compile(r"\bteacher\b.*?\b(?:reads?|reading|says?|voices?)\b", re.IGNORECASE)
+_FRAME_WORDING = re.compile(
+    r"\b(?:instructions?|rubrics?|headings?|prompts?|task wording|frame words?)\b", re.IGNORECASE
+)
+#: C11: letters whose consonant has a soft pair (Ukrainian д т з с ц л н р дз); before я ю є ь і it is soft.
+_SOFT_PAIRED = frozenset({"д", "т", "з", "с", "ц", "л", "н", "р", "дз"})
+_HARD_VOWEL_LETTERS = frozenset("аоуеи")
+_SOFTENING_LETTERS = frozenset("яюєьі")
+_IOTATED = frozenset("яюєї")
+_APOSTROPHE_CHARACTERS = frozenset("'’ʼ")
+
+
+def _nfc(text: str) -> str:
+    """Pack text as the gates tokenise it: composed, so a decomposed й or ї stays one letter."""
+    return unicodedata.normalize("NFC", text)
+
+
+def _initial_sound(word: str) -> str | None:
+    """The first sound of a word where its spelling decides it, else None (C11).
+
+    Word-initial я ю є ї spell two sounds, [й] and a vowel, and щ spells [шч] (5th-grade textbooks
+    5-klas-ukrmova-zabolotnyi-2023_s0063, 5-klas-ukrmova-golub-2022_s0077); дж and дз at the start of a word are
+    one sound. A consonant before а о у е и or an apostrophe is hard; a consonant with a soft pair before я ю є ь і
+    is soft ([р′] in рік). The other cases (a cluster, whose first consonant may assimilate, and a consonant
+    without a soft pair before я ю є ь і, which is semi-softened) are not computed."""
+    text = _nfc(word).casefold()
+    if not text or not _LETTER.match(text):
+        return None
+    first = text[0]
+    if first in _IOTATED or first == "й":
+        return "й"
+    if first in VOWEL_LETTERS:
+        return first
+    if first == "щ":
+        return "ш"
+    unit = text[:2] if text[:2] in ("дж", "дз") else first
+    following = text[len(unit) : len(unit) + 1]
+    if following in _HARD_VOWEL_LETTERS or following in _APOSTROPHE_CHARACTERS:
+        return unit
+    if following in _SOFTENING_LETTERS and unit in _SOFT_PAIRED:
+        return f"{unit}′"
+    return None
+
+
+def _named_ids(text: str) -> list[str]:
+    """The word ids a text names as targets: ids in a clause that keeps them out ("do not score W-201") are not."""
+    return list(
+        dict.fromkeys(
+            item
+            for clause in _CLAUSE.split(text or "")
+            if not _NEGATED_CLAUSE.search(clause)
+            for item in _WORD_ID.findall(clause)
+        )
+    )
+
+
+def _reading_bounds(text: str) -> tuple[set[str] | None, set[str], bool]:
+    """(the words a clause bounds the learner's reading to, or None; the words a clause says the teacher reads;
+    whether a teacher clause reads the instruction or rubric without naming its words) for C21."""
+    learner: set[str] | None = None
+    teacher: set[str] = set()
+    frame = False
+    for clause in _READING_CLAUSE.split(text or ""):
+        words = {token.casefold() for token in _ROW_TOKEN.findall(clause)}
+        if _LEARNER_READS.search(clause) and words:
+            learner = (learner or set()) | words
+        elif _TEACHER_READS.search(clause):
+            teacher |= words
+            frame = frame or (not words and bool(_FRAME_WORDING.search(clause)))
+    return learner, teacher, frame
 
 
 def _vowel_count(text: str) -> int:
@@ -305,10 +402,12 @@ def _word_letters(text: str) -> list[str]:
     return [letter.casefold() for letter in _LETTER.findall(text)]
 
 
-#: Odd-one-out features a focus can state and the gate can compute (C11): pattern, name, value of a word.
+#: Odd-one-out features a focus can state and the gate can compute (C11): pattern, name, value of a word (None: the
+#: gate does not compute it for that word).
 _FEATURES: tuple[tuple[re.Pattern[str], str, Callable[[str], object]], ...] = (
+    (re.compile(r"\b(?:initial|first)\s+sounds?\b", re.IGNORECASE), "initial sound", _initial_sound),
     (
-        re.compile(r"\b(?:initial|first)\s+(?:glyph|letter|sound)s?\b", re.IGNORECASE),
+        re.compile(r"\b(?:initial|first)\s+(?:glyph|letter)s?\b", re.IGNORECASE),
         "initial letter",
         lambda word: _word_letters(word)[0],
     ),
@@ -349,12 +448,7 @@ def _host(focus: str) -> tuple[str, str | None] | None:
     return None
 
 
-def _quote_host_refs(focus: str) -> list[str]:
-    """Every quote record an activity focus declares as its host."""
-    refs = [match.group(2) for match in _HOST.finditer(focus) if match.group(1) == "quote" and match.group(2)]
-    for match in _QUOTE_HOST_REFS.finditer(focus):
-        refs += re.findall(r"T-\d+", match.group(1))
-    return list(dict.fromkeys(refs))
+_quote_host_refs = quote_bytes.quote_host_refs
 
 
 def _linked(lesson: dict) -> list[tuple[int, int, str]]:
@@ -417,9 +511,19 @@ def _spelling(text: str) -> str:
 @dataclass
 class ReviewGates(Gates):
     pack: Pack = field(kw_only=True)
+    #: --strict: a lookup the run could not make fails the run instead of being reported as not_checked.
+    strict: bool = field(default=False, kw_only=True)
 
     def fail(self, code: str, message: str, lesson: int | None, step: str | None = None) -> None:
         self.report.failures.append(Outcome(code, message, lesson, step))
+
+    def lookup_unavailable(self, rule: str, detail: str) -> None:
+        """VESUM could not be read: the gate's lookup outcome is unknown, never a pass.
+
+        Outside --strict it is a not_checked line; --strict (CI, plan-promote) needs every gate decided, so there it
+        fails the run. Findings the gate decided from local evidence are reported before this."""
+        outcome = Outcome(codes.VESUM_UNAVAILABLE, f"gate {rule} is undecided because VESUM is unavailable: {detail}")
+        (self.report.failures if self.strict else self.report.not_checked).append(outcome)
 
     # -- C1 -------------------------------------------------------------------
 
@@ -459,7 +563,7 @@ class ReviewGates(Gates):
             allowed: set[str] | None = None
             for where, position, text in sources:
                 later, unknown = [], []
-                for item in _ids(_WORD_ID, text):
+                for item in _named_ids(text):
                     if item in introduced_at:
                         if introduced_at[item] > position:
                             later.append(f"{item} (introduced by step {steps[introduced_at[item]]['id']})")
@@ -838,7 +942,7 @@ class ReviewGates(Gates):
                 rows = [
                     (ref, _ROW_TOKEN.findall(line))
                     for ref in refs
-                    for line in self.pack.quotes[ref].splitlines()
+                    for line in _nfc(self.pack.quotes[ref]).splitlines()
                     if _ROW.fullmatch(line)
                 ]
                 if not rows:
@@ -857,6 +961,16 @@ class ReviewGates(Gates):
                 _pattern, name, value = feature
                 for ref, words in rows:
                     values = [value(word) for word in words]
+                    if None in values:
+                        unknown = ", ".join(word for word, val in zip(words, values, strict=True) if val is None)
+                        self.note(
+                            codes.ODD_ONE_OUT_FEATURE_NOT_COMPUTED,
+                            f"activity {activity['id']} row {' '.join(words)!r} of {ref}: the gate does not compute "
+                            f"the {name} of {unknown} (a consonant cluster, or a semi-softened consonant), so the plan "
+                            "review confirms the row has exactly one odd member (#9487 C11)",
+                            lesson["n"],
+                        )
+                        continue
                     counts = Counter(values)
                     if len(counts) == 2 and min(counts.values()) == 1:
                         continue
@@ -905,7 +1019,9 @@ class ReviewGates(Gates):
                 )
             )
         except quote_bytes.VesumUnavailable as error:
-            self.skip("C12", f"VESUM is unavailable ({error}), so quote-host words are not looked up")
+            self.lookup_unavailable(
+                "C12", f"quote-host words outside the word store are not looked up ({', '.join(hosts)}): {error}"
+            )
             return
         for ref, ref_tokens in tokens.items():
             words = [token.surface for token in ref_tokens if token.surface in unknown]
@@ -949,7 +1065,7 @@ class ReviewGates(Gates):
                     token.casefold()
                     for ref in _ids(re.compile(r"\bT-\d+\b"), activity["focus"])
                     if ref in self.pack.quotes
-                    for token in _ROW_TOKEN.findall(self.pack.quotes[ref])
+                    for token in _ROW_TOKEN.findall(_nfc(self.pack.quotes[ref]))
                 }
                 bound, unbound = {}, {}
                 for item in targets:
@@ -1048,7 +1164,7 @@ class ReviewGates(Gates):
                 shown |= {activity.get("model"), *_quote_host_refs(activity["focus"])}
             for item in shown:
                 if item in self.pack.record_texts:
-                    named.append(self.pack.record_texts[item])
+                    named.append(_nfc(self.pack.record_texts[item]))
                 named += self.pack.examples.get(item, ("", ()))[1]
             videos = [entry["evidence"] for entry in lesson.get("videos") or []]
             videos += [item for step in lesson["steps"] for item in step.get("evidence") or [] if item.startswith("V-")]
@@ -1143,17 +1259,34 @@ class ReviewGates(Gates):
                     and not self._readable(token, taught)
                     and not self.index.get(token.translate(_APOSTROPHES).casefold(), set()) & modelled
                 ]
-                if words:
-                    shown = ", ".join(
-                        f"{word!r} (needs {', '.join(sorted(self._letters(word) - taught))})" for word in words
-                    )
+                declared = {
+                    token
+                    for match in _OPTION_SET.finditer(activity["focus"])
+                    for token in _ROW_TOKEN.findall(match.group(1))
+                }
+                options = [word for word in words if word in declared]
+                prose = [word for word in words if word not in declared]
+                if options:
                     self.fail(
                         codes.CHOICE_OPTION_LETTER_NOT_TAUGHT,
-                        f"{activity['type']} activity {activity['id']} prints {shown}: letters not taught through "
-                        f"lesson {lesson['n']}, and no recording the lesson cites models the word; a learner can "
-                        "answer by rejecting the unknown glyph (#9487 C18)",
+                        f"{activity['type']} activity {activity['id']} declares the options or keys "
+                        f"{self._needs(options, taught)}: letters not taught through lesson {lesson['n']}, and no "
+                        "recording the lesson cites models the word; a learner can answer by rejecting the unknown "
+                        "glyph (#9487 C18)",
                         lesson["n"],
                     )
+                if prose:
+                    self.note(
+                        codes.CHOICE_FOCUS_WORD_NOT_TAUGHT,
+                        f"{activity['type']} activity {activity['id']} focus names {self._needs(prose, taught)}: "
+                        f"letters not taught through lesson {lesson['n']}, and no recording the lesson cites models "
+                        "the word; the focus is authoring prose, so whether the learner sees the word is not read "
+                        "from it, and the plan review confirms no option prints it (#9487 C18)",
+                        lesson["n"],
+                    )
+
+    def _needs(self, words: list[str], taught: set[str]) -> str:
+        return ", ".join(f"{word!r} (needs {', '.join(sorted(self._letters(word) - taught))})" for word in words)
 
     # -- C19 ------------------------------------------------------------------
 
@@ -1263,18 +1396,31 @@ class ReviewGates(Gates):
                 ]
                 reported |= {(step_id, ref) for ref in refs}
                 taught = taught_at[step_id]
+                learner, teacher, frame = _reading_bounds(text)
                 found = []
                 for ref in dict.fromkeys(refs):
                     words = [
                         token
-                        for token in dict.fromkeys(_ROW_TOKEN.findall(self.pack.record_texts[ref]))
+                        for token in dict.fromkeys(_ROW_TOKEN.findall(_nfc(self.pack.record_texts[ref])))
                         if not self._readable(token, taught)
+                        and (learner is None or token.casefold() in learner)
+                        and token.casefold() not in teacher
                     ]
                     if words:
                         needs = sorted(set().union(*(self._letters(word) for word in words)) - taught)
                         shown = ", ".join(words[:5]) + (f", … {len(words) - 5} more" if len(words) > 5 else "")
                         found.append(f"{ref} ({shown}; needs {', '.join(needs)})")
-                if found:
+                if found and frame and learner is None:
+                    self.note(
+                        codes.MODELED_PRINT_TEACHER_FRAME,
+                        f"{where} directs modelling or reading the exact print of {'; '.join(found)}: letters not "
+                        f"taught by step {step_id}; the text says the teacher reads the instruction without naming "
+                        "its words or bounding what the learner reads, so the plan review confirms the untaught "
+                        "words are the teacher-read frame (#9487 C21)",
+                        lesson["n"],
+                        step_id,
+                    )
+                elif found:
                     self.fail(
                         codes.MODELED_PRINT_NOT_DECODABLE,
                         f"{where} directs modelling or reading the exact print of {'; '.join(found)}: letters not "
@@ -1346,11 +1492,13 @@ class ReviewGates(Gates):
             if made not in known
             for variant in ((made, made.capitalize()) if key in names else (made,))
         }
+        # Completions the word store attests are decided from local evidence; an unreadable VESUM leaves only the
+        # others undecided, which is reported after them.
+        unavailable: quote_bytes.VesumUnavailable | None = None
         try:
             attested = (lookup or quote_bytes.vesum_lookup)(sorted(variants)) if variants else set()
         except quote_bytes.VesumUnavailable as error:
-            self.skip("C23", f"VESUM is unavailable ({error}), so constructed completions are not looked up")
-            return
+            attested, unavailable = set(), error
         attested = {word.casefold() for word in attested} | known
         for lesson, activity, swaps in candidates:
             hits = list(dict.fromkeys(f"{shown} → {made}" for shown, made, key in swaps if made in attested))
@@ -1382,6 +1530,12 @@ class ReviewGates(Gates):
                 "marked wrong; cue each stem's target (gloss, picture) or use syllables that form no attested word "
                 "(#9487 C23)",
                 lesson["n"],
+            )
+        if unavailable is not None:
+            self.lookup_unavailable(
+                "C23",
+                f"constructed completions outside the word store are not looked up ({len(variants)} spellings); "
+                f"completions the word store attests are decided: {unavailable}",
             )
 
     def _anagram_swaps(self, focus: str) -> list[tuple[str, str, str]]:
@@ -1483,7 +1637,7 @@ class ReviewGates(Gates):
                 )
                 if not exact:
                     continue  # a dialogue host is drafted by the writer; an unresolved host is reported elsewhere
-                quotes = [_STRESS_MARKS.sub("", self.pack.quotes[ref]) for kind, ref in hosts if kind == "quote"]
+                quotes = [_STRESS_MARKS.sub("", _nfc(self.pack.quotes[ref])) for kind, ref in hosts if kind == "quote"]
                 # A letter-spaced word ("л ю п и н") is read with its spaces removed as well.
                 printed = {
                     _spelling(token)
@@ -1673,9 +1827,10 @@ def check_review_gates(
     arc: list[ArcPosition] | None,
     level_plans: LevelPlans,
     words_path: Path,
+    strict: bool = False,
 ) -> None:
     """Run gates C1–C28 on a plan that already passed the schema, with its pack and word store loaded."""
-    gates = ReviewGates(report, plan, level, store, arc, level_plans, words_path, pack=pack)
+    gates = ReviewGates(report, plan, level, store, arc, level_plans, words_path, pack=pack, strict=strict)
     gates.check_named_before_introduction()
     gates.check_duplicate_focus()
     gates.check_listening_single_key()

@@ -94,3 +94,26 @@ def test_vesum_lookup_returns_the_words_with_matches(monkeypatch: pytest.MonkeyP
 
     monkeypatch.setattr(vesum, "verify_words", lambda words: {"слово": [{"lemma": "слово"}], "кукуру": []})
     assert quote_bytes.vesum_lookup(["слово", "кукуру"]) == {"слово"}
+
+
+def test_a_decomposed_quote_is_looked_up_as_its_composed_words() -> None:
+    """The reviewer's case: NFD «мої крайній» once split into моі / краи / ніи; the lookup now sees мої, крайній."""
+    import unicodedata
+
+    decomposed = unicodedata.normalize("NFD", "мої крайній")
+    tokens = quote_bytes.word_tokens(decomposed)
+    assert [token.spellings for token in tokens] == [("мої",), ("крайній",)]
+    assert "".join(token.surface for token in tokens) == decomposed.replace(" ", "")  # the quote's own bytes
+    seen: list[list[str]] = []
+
+    def lookup(words: list[str]) -> set[str]:
+        seen.append(words)
+        return {"мої", "крайній"}
+
+    assert quote_bytes.unknown_words(tokens, set(), lookup) == []
+    assert seen == [["крайній", "мої"]]
+
+
+def test_quote_host_refs_read_both_host_syntaxes() -> None:
+    focus = "Questions. host: {kind: quote, ref: T-002}; also quote host refs T-003 and T-002. host: {kind: dialogue}"
+    assert quote_bytes.quote_host_refs(focus) == ["T-002", "T-003"]

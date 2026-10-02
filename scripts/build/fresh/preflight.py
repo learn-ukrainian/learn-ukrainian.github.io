@@ -4,7 +4,8 @@ Before any paid writer call, verifies availability of evidence records:
 - for each step's needs:
   * example: EX- record exists with right kind ('example') and locked bytes
   * quote: T- record exists and the source registry permits this excerpt
-    with its required attribution; its bytes carry no private-use code point,
+    with its required attribution; its bytes, and those of a quote an activity
+    focus declares as its host, carry no private-use code point,
     no non-Cyrillic symbol in a transcription bracket, no web-address watermark
     and no word that is neither a word-store spelling nor a VESUM form
     (#9487 C12, scripts/curriculum/validate/quote_bytes.py)
@@ -337,7 +338,13 @@ def preflight_lesson(
                                     )
                                 )
 
-    # 4b. Quote bytes the engine would print verbatim (#9487 C12)
+    # 4b. Quote bytes the engine would print verbatim (#9487 C12): the quotes steps need and the quotes an activity
+    # focus declares as its host (plan-validate C12 reads the same hosts), at the step whose practice links it.
+    linked_at = {item: step.get("id", "") for step in steps for item in step.get("practice") or []}
+    for activity in plan_entry.get("activities") or []:
+        for rid in quote_bytes.quote_host_refs(activity.get("focus") or ""):
+            if record_list_map.get(rid) == "texts":
+                quote_records.setdefault(rid, linked_at.get(activity.get("id"), first_step_id))
     gaps += _quote_byte_gaps(quote_records, pack_records, store_records, quote_word_lookup)
 
     # 5. Check all cited forms in lesson for non-pending stress (R-23)

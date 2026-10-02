@@ -191,6 +191,8 @@ CONSTRUCTION_DISTRACTOR_CUED = "construction_distractor_cued"
 ANAGRAM_LETTERS_FORM_OTHER_WORD = "anagram_letters_form_other_word"
 COMPREHENSION_TARGET_ONLY_TRANSCRIBED = "comprehension_target_only_transcribed"
 LETTER_TEACHER_MODELED_ONLY = "letter_teacher_modeled_only"
+CHOICE_FOCUS_WORD_NOT_TAUGHT = "choice_focus_word_not_taught"
+MODELED_PRINT_TEACHER_FRAME = "modeled_print_teacher_frame"
 
 # --- not_checked (never fail the run, always reported) ----------------------
 MINUTES_CONSTANTS_UNDEFINED = "minutes_constants_undefined"
@@ -203,6 +205,8 @@ PENDING_PROMOTION = "pending_promotion"
 PLACEMENT_LEVEL_NOT_COVERED = "placement_level_not_covered"
 TOKEN_UNRESOLVED = "token_unresolved"
 MECHANICAL_RULE_NOT_CHECKED = "mechanical_rule_not_checked"
+# not_checked outside --strict, a failure under --strict (C12, C23, #9487)
+VESUM_UNAVAILABLE = "vesum_unavailable"
 
 DESCRIPTIONS = {
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
@@ -354,7 +358,10 @@ DESCRIPTIONS = {
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
     TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
-    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, C10, C12, C18, C19, C21, C23, C27, C28, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level, VESUM); the message names the gate and the reason",
+    VESUM_UNAVAILABLE: "not_checked, and a failure under --strict (gates C12, C23, #9487): VESUM could not be read, so the gate's lookup is undecided; findings the gate decided from the word store and the pack are still reported, and strict validation (CI, plan-promote) never passes an undecided gate",
+    CHOICE_FOCUS_WORD_NOT_TAUGHT: "note (gate C18, #9487): a fill-in or quiz focus names, outside a declared option or key set, a word with letters not taught through its lesson; focus prose does not establish what the learner sees, so the plan review confirms",
+    MODELED_PRINT_TEACHER_FRAME: "note (gate C21, #9487): a directive to model a record's exact print whose untaught words may be the frame the plan says the teacher reads; the plan review confirms",
+    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, C10, C18, C19, C21, C27, C28, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); VESUM is vesum_unavailable; the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 
@@ -378,6 +385,8 @@ NOTE_CODES = frozenset(
         ANAGRAM_LETTERS_FORM_OTHER_WORD,
         COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
         LETTER_TEACHER_MODELED_ONLY,
+        CHOICE_FOCUS_WORD_NOT_TAUGHT,
+        MODELED_PRINT_TEACHER_FRAME,
     }
 )
 NOT_CHECKED_CODES = frozenset(
@@ -392,6 +401,7 @@ NOT_CHECKED_CODES = frozenset(
         PLACEMENT_LEVEL_NOT_COVERED,
         TOKEN_UNRESOLVED,
         MECHANICAL_RULE_NOT_CHECKED,
+        VESUM_UNAVAILABLE,
     }
 )
 
