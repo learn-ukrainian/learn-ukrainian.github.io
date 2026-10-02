@@ -136,8 +136,9 @@ def under_roots(path: str, roots=TRACKED_ROOTS) -> bool:
 
 
 # A directory's README or index note (prose) states what the directory holds and whether it is
-# still used: public lifecycle text, not one of the private bodies the exclusion protects.
-DIRECTORY_NOTE = re.compile(r'(?:readme|index)(?:\.[a-z]{2})?(?:\.(?:md|markdown|txt|rst))?', re.IGNORECASE)
+# still used: public lifecycle text, not one of the private bodies the exclusion protects. A
+# language tag counts only before a prose extension (README.uk.md), so index.js is no note.
+DIRECTORY_NOTE = re.compile(r'(?:readme|index)(?:(?:\.[a-z]{2})?\.(?:md|markdown|txt|rst))?', re.IGNORECASE)
 
 
 def is_directory_note(path: str) -> bool:

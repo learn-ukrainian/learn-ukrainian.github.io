@@ -406,11 +406,11 @@ entries:
     kind: doc_family
     paths: [docs/runbooks/*]
     purpose: Operating procedures for driver seats, harnesses, review isolation, sessions, handoffs, CI, storage, backup, worktree cleanup, module gates and builds.
-    keywords: [runbook, procedure, driver seat, formal review isolation, worktree cleanup, storage topology, CI gate, session supervisor, recovery]
+    keywords: [runbook, procedure, driver seat, formal review isolation, worktree cleanup, storage topology, storage layout, data layout, where data lives, CI gate, session supervisor, recovery]
     lifecycle: active
     owner: infra-harness
     entrypoints:
-      - {topic: 'storage topology: layout of bulk raw sources, active SQLite, the local working set, the Linux data volume and mirrors', path: docs/runbooks/storage-topology.md}
+      - {topic: 'storage topology: where data is stored and lives on disk - the layout of bulk raw sources, active SQLite databases, the local working set, the Linux data volume and mirrors', path: docs/runbooks/storage-topology.md}
       - {topic: worktree cleanup, path: docs/runbooks/worktree-cleanup.md}
       - {topic: CI gate, path: docs/runbooks/ci-gate.md}
       - {topic: agent seat onboarding, path: docs/runbooks/agent-seat-onboarding.md}

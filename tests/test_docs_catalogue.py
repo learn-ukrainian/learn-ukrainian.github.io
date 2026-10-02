@@ -750,6 +750,9 @@ def test_body_gate_fails_closed():
     ('docs/session-state/codex-orchestrator-handoff.md', True),
     ('docs/x/private/secret.md', True),
     ('docs/x/private/README.yaml', True),  # a data file named README is no prose note
+    ('docs/x/private/index.js', True),  # a two-letter extension is no language tag: code, not a note
+    ('docs/x/secrets/README.db', True),
+    ('docs/x/cache/index.uk', True),  # a language tag stands only before a prose extension
     ('docs/session-state/README.md', False),
     ('docs/session-state/README', False),
     ('docs/x/private/index.uk.md', False),

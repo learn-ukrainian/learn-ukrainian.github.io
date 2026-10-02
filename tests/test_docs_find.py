@@ -1356,6 +1356,55 @@ def test_a_family_keyword_naming_one_entry_point_credits_that_entry_point_only(t
     assert candidates['docs/guide/ci-gate.md'].catalogue_terms == {'runbook'}  # a family-wide keyword only
 
 
+def test_a_family_hit_lists_only_the_entry_points_the_query_names(tmp_path):
+    root = make_repo(tmp_path / 'repo')
+    for rel in ('docs/guide/storage-layout.md', 'docs/guide/ci-gate.md', 'docs/guide/cleanup.md'):
+        (root / rel).write_text('# Runbook\nSteps.\n', encoding='utf-8')
+    data = fixture_catalogue()
+    guide = next(e for e in data['entries'] if e['id'] == 'guide')
+    guide['keywords'] = ['runbook']
+    guide['entrypoints'] = [{'topic': 'CI gate', 'path': 'docs/guide/ci-gate.md'},
+                            {'topic': 'storage layout: bulk sources and disks', 'path': 'docs/guide/storage-layout.md'},
+                            {'topic': 'worktree cleanup', 'path': 'docs/guide/cleanup.md'}]
+    write_catalogue(root, data)
+    git(root, 'add', '.')
+
+    def entrypoints(query):
+        return [hit['path'] for hit in find(query, repo=root)['hits'] if hit['match'] == 'entrypoint']
+    # Every word is in the storage entry point's topic: its siblings name no word of the query.
+    assert entrypoints('bulk sources disks') == ['docs/guide/storage-layout.md']
+    # A family-wide keyword names no entry point: all of them answer it, in catalogue order.
+    assert entrypoints('runbook') == ['docs/guide/ci-gate.md', 'docs/guide/storage-layout.md', 'docs/guide/cleanup.md']
+
+
+def test_named_entrypoints_ranks_the_named_and_drops_the_unnamed():
+    points = [{'topic': 'CI gate', 'path': 'docs/a.md'}, {'topic': 'storage layout', 'path': 'docs/b.md'},
+              {'topic': 'storage of disks', 'path': 'docs/c.md'}]
+    assert [p['path'] for p in find_module.named_entrypoints(points, ['storage', 'layout'])] == ['docs/b.md', 'docs/c.md']
+    assert find_module.named_entrypoints(points, ['runbook']) == points
+
+
+def _candidate(path, text):
+    return find_module.Candidate(path, content_terms={'word'} if text else set(),
+                                 symbol_terms=set() if text else {'word'})
+
+
+def test_code_candidates_never_crowd_text_candidates_out_of_the_read_pool():
+    # Code evidence is complete before any line is read; a text file's best passage is not yet known.
+    ranked = [_candidate(f'scripts/c{i}.py', False) for i in range(5)] + [_candidate(f'docs/t{i}.md', True)
+                                                                          for i in range(3)]
+    pool = find_module.rerank_pool(ranked, 2, set(), False)
+    assert [c.path for c in pool if c.in_content] == ['docs/t0.md', 'docs/t1.md']  # the bound counts reads only
+    assert [c.path for c in pool if not c.in_content] == ['scripts/c0.py', 'scripts/c1.py']
+
+
+def test_the_read_pool_adds_speakers_and_status_records_beyond_its_bound():
+    ranked = [_candidate(f'docs/t{i}.md', True) for i in range(4)]
+    ranked[3].authority = True
+    assert [c.path for c in find_module.rerank_pool(ranked, 1, {'docs/t2.md'}, False)] == ['docs/t0.md', 'docs/t2.md']
+    assert [c.path for c in find_module.rerank_pool(ranked, 1, set(), True)] == ['docs/t0.md', 'docs/t3.md']
+
+
 def test_a_span_holds_only_the_lead_of_a_long_docstring():
     text = 'def long():\n    """Summary.\n\n    Second.\n    Third.\n    Fourth is detail.\n    """\n'
     lines = [(no, line) for no, line in enumerate(text.splitlines(), 1)

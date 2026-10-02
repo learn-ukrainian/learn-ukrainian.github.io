@@ -232,3 +232,38 @@ def test_a_question_naming_a_session_router_is_answered_by_the_directory_readme(
     assert 'docs/session-state/README.md' in paths[:3]
     bodies = [p for p in report.resolved if p.startswith('docs/session-state/') and cat.is_excluded(p)]
     assert bodies and not set(bodies) & set(paths)
+
+
+# Resource questions expect several catalogue files, the answers most easily crowded out by new
+# evidence elsewhere (round 4 of #9412 lost one held-out resource lookup whole). Every resource
+# lookup of both development sets is held within 20 under the CLI's own default limit, whose
+# read pool is the one a reader gets, in both protocols.
+RESOURCE_LOOKUPS = [(name, lk) for name, data in (('dev', DEV_LOOKUPS), ('natural', NATURAL_LOOKUPS))
+                    for lk in data['lookups'] if lk['kind'] == 'resource']
+
+
+@pytest.mark.parametrize('field', ['query', 'question'])
+@pytest.mark.parametrize('name', ['dev', 'natural'])
+def test_resource_lookups_keep_their_answers_at_the_default_limit(name, field):
+    known = {i for i, miss in NATURAL_LOOKUPS['known_misses'].items() if field in miss} if name == 'natural' else set()
+    lookups = [lk for n, lk in RESOURCE_LOOKUPS if n == name and lk['id'] not in known]
+    assert len(lookups) >= 6
+
+    def rank(lk):
+        result = find(lk[field], repo=REPO, budget_seconds=60)
+        assert not result['coverage']['incomplete'], (lk['id'], result['coverage']['incomplete_reasons'])
+        paths = [hit['path'] for hit in result['hits']]
+        return min((paths.index(p) + 1 for p in lk['expect'] if p in paths), default=None)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(rank, lookups), strict=True))
+    assert {i: r for i, r in ranks.items() if r is None} == {}
+
+
+# A storage-layout question asked shortly is carried by the catalogue: the storage-topology entry
+# point's topic and its family's keywords hold the words of the question, so the runbook is the
+# family hit, and its sibling runbooks, which name no word of the question, are not listed.
+@pytest.mark.parametrize('query', ['where do databases live', 'where data lives', 'data layout', 'storage layout'])
+def test_a_short_storage_layout_question_is_answered_by_the_storage_topology_runbook(query):
+    hits = find(query, repo=REPO, budget_seconds=60)['hits']
+    assert hits[0]['path'] == 'docs/runbooks/storage-topology.md'
+    assert [hit['path'] for hit in hits if hit['match'] == 'entrypoint'] == ['docs/runbooks/storage-topology.md']

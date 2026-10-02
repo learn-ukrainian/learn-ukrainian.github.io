@@ -782,13 +782,8 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
     rank_key = functools.partial(_rank_key, state, terms=terms, weights=weights, status_question=status_question,
                                  process=process)
     ranked = sorted((c for c in candidates.values() if c.path not in seen), key=rank_key)
-    pool = ranked[:max(RERANK_POOL, 3 * limit)]
-    # The files that speak for a catalogue family (its entry points, else its shallowest README or
-    # index) are always read, whatever the ``limit``: what they say about their family is found
-    # however weak its word evidence. For a status question every README or index is read too: the
-    # record of a lifecycle (a decision index row, a directory README's status line) lives there.
     speakers = {p for paths in authority_files(state).values() for p in paths}
-    pool += [c for c in ranked[len(pool):] if c.in_content and (c.path in speakers or (status_question and c.authority))]
+    pool = rerank_pool(ranked, max(RERANK_POOL, 3 * limit), speakers, status_question)
     tick = time.monotonic()
     excerpts_complete = _read_lines(state, [c for c in pool if c.in_content], terms, text, phrase, deadline)
     timings['excerpts_ms'] = round((time.monotonic() - tick) * 1000)
@@ -810,6 +805,24 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
                      'code_files_searched': scan.files, 'name_only_terms': _name_only_terms(terms)},
         'timings_ms': timings,
     }
+
+
+def rerank_pool(ranked: list[Candidate], size: int, speakers: set[str], status_question: bool) -> list[Candidate]:
+    """The candidates ranked again once matching lines are read: the first ``size`` text candidates
+    (those whose lines are read) and the first ``size`` others, from ``ranked``.
+
+    The bound is on the lines read, so it counts text candidates only. A code file's evidence is
+    complete before any line is read while a text file's best passage is not yet known, so a
+    bound shared between them lets a crowd of code files keep text files from ever being read.
+    The files that speak for a catalogue family (``speakers``: its entry points, else its
+    shallowest README or index) are always read, whatever the ``size``: what they say about
+    their family is found however weak its word evidence. For a status question every README or
+    index is read too: the record of a lifecycle (a decision index row, a directory README's
+    status line) lives there.
+    """
+    text = [c for c in ranked if c.in_content]
+    pool = text[:size] + [c for c in ranked if not c.in_content][:size]
+    return pool + [c for c in text[size:] if c.path in speakers or (status_question and c.authority)]
 
 
 def _coverage(state: State, family: str | None, readable: set[str], incomplete: bool, reasons: list[str],
@@ -1174,11 +1187,23 @@ def _entry_hits(state: State, entry: dict, terms: list[str]) -> list[dict]:
         return [{'path': None, 'line': None, 'excerpt': None, 'match': 'family', 'lifecycle': entry['lifecycle'],
                  'status': _status(entry['lifecycle']), 'superseded_by': entry.get('superseded_by'),
                  'paths': list(entry['paths']), 'purpose': entry['purpose'], **base}]
-    ranked = sorted(enumerate(points), key=lambda item: (-len(_prefix_hits(terms, words(item[1]['topic'])
-                                                                           + words(item[1]['path']))), item[0]))
     return [_path_hit(state, cat.strip_fragment(point['path']), 'entrypoint', topic=point['topic'],
                       purpose=entry['purpose'])
-            for _, point in ranked[:MAX_ENTRYPOINTS_PER_FAMILY]]
+            for point in named_entrypoints(points, terms)[:MAX_ENTRYPOINTS_PER_FAMILY]]
+
+
+def named_entrypoints(points: list[dict], terms: list[str]) -> list[dict]:
+    """A family's entry points for a family hit, most query words in topic or path first.
+
+    When the query names some of them (a word of their topic or path), only those answer it: as a
+    keyword naming one entry point's topic speaks for that entry point alone (``_catalogue_evidence``),
+    a question about the storage-topology runbook is not answered by its sibling CI-gate runbook,
+    which would take a top place for no word of the query. A query naming none (the family matched
+    by its keywords, id or purpose) lists them in catalogue order.
+    """
+    named = [len(_prefix_hits(terms, words(p['topic']) + words(p['path']))) for p in points]
+    ranked = sorted(range(len(points)), key=lambda i: (-named[i], i))
+    return [points[i] for i in ranked if named[i] or not any(named)]
 
 
 def _catalogue_evidence(state: State, terms: list[str], family: str | None,

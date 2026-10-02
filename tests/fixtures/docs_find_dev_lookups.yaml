@@ -21,7 +21,9 @@
 # before #9412 PR 3, short queries 52 / 48 / 26 and questions 48 / 42 / 24;
 # after it, short queries 68 / 62 / 38 and questions 68 / 62 / 38; after round 3
 # (lifecycle records), short queries 68 / 63 / 35 and questions 68 / 64 / 35; after round 4
-# (directory notes, abbreviations, function spans), 68 / 63 / 34 and 68 / 64 / 34.
+# (directory notes, abbreviations, function spans), 68 / 63 / 34 and 68 / 64 / 34; after round 5
+# (the read pool counts text candidates, a family hit lists only the entry points the query
+# names), 68 / 64 / 34 and 68 / 65 / 34, at the gate's limit of 50 (read pool 150).
 version: 1
 top_n: {query: 10, question: 20}
 known_misses: {}

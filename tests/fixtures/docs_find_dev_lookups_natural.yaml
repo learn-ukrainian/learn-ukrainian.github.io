@@ -23,6 +23,9 @@
 # before this set existed (#9412 PR 3 round 1, b67381806e) 40 / 29;
 # after round 2 (92f6330f30), 61 / 51; after round 3 (lifecycle records), 63 / 54;
 # after round 4 (directory notes, supersession records, abbreviations, function spans), 64 / 56.
+# At the gate's limit of 50 (read pool 150) the round-4 head scores 64 / 58, and after round 5
+# (the read pool counts text candidates, a family hit lists only the entry points the query
+# names, the storage-topology topic carries a short layout question) 64 / 58.
 version: 1
 top_n: {query: 20, question: 20}
 known_misses:
@@ -31,7 +34,6 @@ known_misses:
   N30: {query: 59, question: null, reason: 'Not diagnosed in round 3.'}
   N35: {question: null, reason: 'Not diagnosed in round 3.'}
   N38: {query: 51, reason: 'Not diagnosed in round 3.'}
-  N39: {question: 26, reason: 'Not diagnosed in round 3.'}
   N40: {query: 84, question: 36, reason: 'Vocabulary gap: the step says it sets the evidence digest, the question says updates.'}
   N43: {question: 175, reason: 'Not diagnosed in round 3.'}
   N50: {question: 45, reason: 'The store holds the words in its purpose only; long-question words held by prose outrank it.'}
