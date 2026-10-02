@@ -6440,6 +6440,41 @@ _REVIEW_KINDS = ["superseded", "unrecorded", "foreign"]
 
 
 @pytest.mark.parametrize("kind", _REVIEW_KINDS)
+@pytest.mark.parametrize("relative", _PROVISIONED_LINKS)
+def test_review_checkout_classes_reap_provisioned_links_without_following_them(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+    relative: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".git" / "info" / "exclude").write_text(f"/{relative}\n", encoding="utf-8")
+    target = repo / relative
+    payload = target / "package" / "index.js" if relative.endswith("node_modules") else target
+    payload.parent.mkdir(parents=True, exist_ok=True)
+    payload.write_bytes(b"primary content\n")
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    link = worktree / relative
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(target)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "removed", result.reason
+    if kind == "superseded":
+        assert result.reason.startswith(f"superseded PR #{_OLD_PR} head ")
+    else:
+        assert result.reason == {
+            "unrecorded": "unrecorded detached checkout",
+            "foreign": "foreign registered checkout",
+        }[kind]
+    assert not worktree.exists()
+    assert target.exists()
+    assert payload.read_bytes() == b"primary content\n"
+    assert_main_checkout_unchanged(repo)
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
 @pytest.mark.parametrize("residue", ["venv_only_copy", "tracked_node_modules_change", "ignored_non_cache"])
 def test_review_checkout_classes_preserve_residue_the_detached_guard_preserves(
     tmp_path: Path,
