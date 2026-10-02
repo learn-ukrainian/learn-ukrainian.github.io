@@ -15,7 +15,9 @@ carry OCR damage reaches the learner as "the textbook". Four classes are decided
                         word-store record nor a VESUM word form
 
 How exact ``not_in_vesum`` is: a primer prints letters and syllables, which are not words, so a token
-with at most one vowel letter is not looked up. A hyphenated token whose parts each hold at most
+with at most one vowel letter is not looked up, nor is an alphabet-table cell: a token that is exactly a
+capital Ukrainian letter (or the digraph ``Дж``/``Дз``) followed by its own small form (``Єє``);
+any other letter run (``ЄИ``, ``єє``, ``Аб``) is still looked up. A hyphenated token whose parts each hold at most
 one vowel is a word printed with its syllables divided (``ма-ма``); it passes when the joined
 spelling is a word. A word hyphenated at a line end is joined first: that is the page's typesetting. Stress marks (U+0301, U+0300) are removed before the lookup; apostrophes are
 normalised to one spelling, as the word store and VESUM do. The lookup is the existing
@@ -51,6 +53,12 @@ _WEB_ADDRESS = re.compile(
 _TRANSCRIPTION_MARKS = frozenset("′ʹ'’ʼ|-:ː")
 _APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'"})
 _STRESS = str.maketrans({"́": None, "̀": None})
+#: The 33 letters of the Ukrainian alphabet, capitals; an alphabet table prints each with its small letter.
+_ALPHABET = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
+#: The two-letter units the alphabet table may also print as a capital-and-small pair.
+_DIGRAPHS = ("Дж", "Дз")
+#: Tokens that are a capital letter (or digraph) immediately followed by its own small form (``Єє``, ``Дждж``).
+_LETTER_PAIRS = frozenset(unit + unit.lower() for unit in (*_ALPHABET, *_DIGRAPHS))
 
 
 class VesumUnavailable(Exception):
@@ -114,6 +122,8 @@ def word_tokens(text: str) -> list[WordToken]:
     tokens: dict[str, WordToken] = {}
     for match in _TOKEN.finditer(outside):
         surface = match.group(0)
+        if surface in _LETTER_PAIRS:
+            continue  # an alphabet-table cell: a capital letter and its own small letter
         parts = re.split(r"-", surface)
         if "-" in surface and all(_vowels(part) <= 1 for part in parts):
             joined = "".join(parts)

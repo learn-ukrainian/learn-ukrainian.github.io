@@ -657,6 +657,16 @@ CASES = [
         says="prints 'номана', which are neither word-store spellings nor VESUM forms",
     ),
     Case(
+        "c12_alphabet_table_letter_pairs_pass",
+        _quote("Аа Бб Ґґ Єє Ии Іі Її Оо Юю Яя Дждж\nмама"),
+    ),
+    Case(
+        "c12_letter_runs_that_are_not_a_capital_and_its_own_small_letter_fail",
+        _quote("Єє ЄИ єє Оа"),
+        failures=frozenset({codes.QUOTE_HOST_TOKEN_NOT_IN_VESUM}),
+        says="prints 'ЄИ', 'єє', 'Оа', which are neither word-store spellings nor VESUM forms",
+    ),
+    Case(
         "c12_clean_quote_with_schemes_syllables_and_hyphenation_passes",
         _quote("Ма-ма, мана [ = • – ] [ма′на]\nма мо му нона ма-\nна мамою"),
     ),
