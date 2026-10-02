@@ -95,10 +95,11 @@
           "inline": {
             "by_type": {
               "letter-grid": 3,
+              "observe": 1,
               "quiz": 3,
               "watch-and-repeat": 1
             },
-            "total": 7
+            "total": 8
           },
           "workbook": {
             "by_type": {
@@ -114,6 +115,7 @@
           "fill-in",
           "letter-grid",
           "match-up",
+          "observe",
           "quiz",
           "watch-and-repeat"
         ],
@@ -191,7 +193,7 @@
         "unjumble",
         "watch-and-repeat"
       ],
-      "inline_activities": 35,
+      "inline_activities": 36,
       "largest_workbook_type": "quiz",
       "largest_workbook_type_share": 0.35714285714285715,
       "longest_same_type_workbook_run": 4,
@@ -218,13 +220,13 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "e0ab4dbbd5963e0ff83ce0f9f38e1d8ef54bd5d3b05b875a6c8e431cc71b53bb",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "154abc20d6ebbbfd7bc77ab31ea6b81cbc6372668d9a460dd49a13eaf890d4d4",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "b1b1c9b4c6f8b9ff6f704bec874f3cc33f13e4b724d2c3dc93496cffba8a63d1",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "e2e63d1b5c02895fe8d797855df5e4e82f0e6440f944cb5c7e7ba0f8bcaa190b",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "78b9f00f27272cf12770d8987a704b62df8cffcd2210c0b2a4fe00ecf5a35c24",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "6bad80a5b16c3ec622455bc7f9056fd37822f914420d00c7ad97939dae1f0f22",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "ee500d67619deb0f35055f06c86bbde7be3b051ea2da81e5fb4967d9f9ba9e4a",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "45d424e46d73efdc1eb748ce476e0fc090558e527c6bd89e6b2bdca7461b4f33",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "1ac1c4a9fe0ba4bb373ea68120503360cc3d4ca54eb1e77c51ee496eec077c82",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "ef836b4437f494cde1bcdb0dd03503dfaf2742e458ef746a19ca328826a5e94a",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "89f68d938e0a13dc318a0a30086be60bbfce4e876cb47f44e89d99c4c5171260",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
     "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
@@ -262,12 +264,6 @@
       "code": "title_quantities_not_parsed",
       "lesson": null,
       "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
-      "step": null
-    },
-    {
-      "code": "pending_promotion",
-      "lesson": null,
-      "message": "evidence_ref.sha256 is 746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845 and the provisional pack's sha256 is b1b1c9b4c6f8b9ff6f704bec874f3cc33f13e4b724d2c3dc93496cffba8a63d1; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

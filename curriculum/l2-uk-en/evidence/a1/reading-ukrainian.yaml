@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: d8e41c36769a34fa930a6d1be305c1b3186eaa75
+  mcp_commit: f2db1156b9ba6bd3272e21e44409fcd301bbe53b
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 39d1ea1da76e7da2e68b2f70d262661069f57cc3549aa4c1345fbe53570a3729
@@ -1877,15 +1877,14 @@ videos:
   id: V-014
   models:
     letters: []
-    segment: null
+    segment: 04:35–04:39
     words:
     - W-075
     - W-076
   url: https://www.ukrainianlessons.com/episode2/
-  use: 'Lessons 1 s1 and 6 s1: W-075+W-076 intact formal opening greeting, from the greeting practice and shop example in
-    public transcript ext-ulp_youtube-302. Replay the whole chunk; the single-letter videos do not establish this greeting.
-    Structured targets are attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode
-    confirmation remains driver-owned.'
+  use: Intact formal greeting in ULP 1-02, publisher repeat-after-me excerpt 04:35–04:39. Source transcript ext-ulp_youtube-302
+    establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt,
+    never the whole episode as the greeting model.
 - channel: Ukrainian Lessons Podcast
   checked: null
   id: V-015

@@ -400,9 +400,9 @@ videos:
     - Й
     words: []
     segment:
-- {id: V-004, url: 'https://www.ukrainianlessons.com/episode10/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-10 public episode: the
-    by-ear first-person review story and its first three questions and spoken answers, modeled in public transcript ext-ulp_youtube-294.
-    T-016/T-017 premium notes are grounding only, never learner-facing source text.'}
+- {id: V-004, url: 'https://www.ukrainianlessons.com/episode10/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-10 public episode: the by-ear first-person review story and
+    its first three questions and spoken answers, modeled in public transcript ext-ulp_youtube-294. T-016/T-017 premium notes are grounding only, never learner-facing source
+    text.'}
 - id: V-005
   url: https://www.youtube.com/watch?v=KFlsroBW0dk
   channel: Ukrainian Lessons Podcast
@@ -496,18 +496,17 @@ videos:
 - id: V-014
   url: https://www.ukrainianlessons.com/episode2/
   channel: Ukrainian Lessons Podcast
-  use: 'Lessons 1 s1 and 6 s1: W-075+W-076 intact formal opening greeting, from the greeting practice and shop example in public transcript
-    ext-ulp_youtube-302. Replay the whole chunk; the single-letter videos do not establish this greeting. Structured targets are attested
-    by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
+  use: 'Intact formal greeting in ULP 1-02, publisher repeat-after-me excerpt 04:35–04:39. Source transcript ext-ulp_youtube-302 establishes the target; the free publisher
+    podcast recording establishes the bounded playback clock. Play only this excerpt, never the whole episode as the greeting model.'
   models:
     letters: []
     words:
     - W-075
     - W-076
-    segment:
-- {id: V-015, url: 'https://www.youtube.com/watch?v=ksXIXj7CXwc', channel: Ukrainian Lessons Podcast, use: 'Full alphabet pronunciation video,
-    identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304: whole-word models for W-118, W-109 and
-    W-110. Restrict each excerpt to letters already taught; this is not evidence for the other primer word lists or whole sentences.'}
+    segment: 04:35–04:39
+- {id: V-015, url: 'https://www.youtube.com/watch?v=ksXIXj7CXwc', channel: Ukrainian Lessons Podcast, use: 'Full alphabet pronunciation video, identified by the publisher’s
+    public alphabet guide and public transcript ext-ulp_youtube-304: whole-word models for W-118, W-109 and W-110. Restrict each excerpt to letters already taught; this is
+    not evidence for the other primer word lists or whole sentences.'}
 - id: V-016
   url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
   channel: Ukrainian Lessons

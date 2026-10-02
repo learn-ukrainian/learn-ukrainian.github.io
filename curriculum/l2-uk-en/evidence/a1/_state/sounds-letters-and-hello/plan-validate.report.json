@@ -209,12 +209,12 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "e0ab4dbbd5963e0ff83ce0f9f38e1d8ef54bd5d3b05b875a6c8e431cc71b53bb",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "154abc20d6ebbbfd7bc77ab31ea6b81cbc6372668d9a460dd49a13eaf890d4d4",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "cd729fecdb25bbaba4649e0a4d2452393d6dccedd7f0ab4eeb03672a8920e5ba",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "c1fdc495816327e5a50977bbda7ccab5776c168127a5932529acac319cad1a51",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "890232e455fc4a91489ade2018665277deb394ef52fbca633fab0248727266e5",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "76e1caa6dec288ecccc6ca33f420150bf5f7f27620dfeb56fe198df7a33be6c1",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "84e7dcdc47f03ceea16a51811d2c327b1b84a57e0df6d88f57a751e1efeb8455",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "1ac1c4a9fe0ba4bb373ea68120503360cc3d4ca54eb1e77c51ee496eec077c82",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "89f68d938e0a13dc318a0a30086be60bbfce4e876cb47f44e89d99c4c5171260",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
     "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
@@ -252,12 +252,6 @@
       "code": "title_quantities_not_parsed",
       "lesson": null,
       "message": "subtitle digits: 1, 3; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
-      "step": null
-    },
-    {
-      "code": "pending_promotion",
-      "lesson": null,
-      "message": "evidence_ref.sha256 is 805a24cd4a0ef7c9a2910c7c6c9df3eeb72e0cba82cd03d0879d9b44eb60e767 and the provisional pack's sha256 is cd729fecdb25bbaba4649e0a4d2452393d6dccedd7f0ab4eeb03672a8920e5ba; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     },
     {

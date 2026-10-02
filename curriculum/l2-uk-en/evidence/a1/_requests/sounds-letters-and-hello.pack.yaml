@@ -13,7 +13,7 @@ texts:
 - id: T-003
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
   span: {first_words: 'The most typical greeting that you can use at any', last_words: 'time of the day is: До́брий день!'}
-  supports: 'Adult L2 formal greeting chunk for any time of day, not adjective or case analysis; ULP Season 1 lesson 2.'
+  supports: 'Time-of-day suitability of the intact greeting; formal register is established separately by T-041.'
 - id: T-004
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0005_w003}
   span: {first_words: 'Here are the three piece of advice I gave during', last_words: 'the sound between і and у. Say iii and try to'}
@@ -254,8 +254,16 @@ texts:
   span:
     first_words: Добрий день!
     last_words: Добрий день!
-  supports: A clean public grade-1 greeting utterance for the separate formal model. T-003/T-021 establish the register through explains only; V-002 supplies
-    the intact recorded chunk.
+  supports: Public grade-1 polite-greeting spelling model, not a teacher speaker or a formal/informal contrast. T-041 explains register; T-021 supports the teacher
+    addressee only.
+- id: T-041
+  source:
+    table: textbooks
+    chunk_id: ulp-1-00-lesson-notes_l0002_w001
+  span:
+    first_words: This time formal ways to say “Hello”.
+    last_words: the day.
+  supports: Explicit formal-register description of the greeting lesson; explains only, premium notes never quoted.
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
@@ -289,37 +297,24 @@ videos:
 - id: V-001
   url: https://www.ukrainianlessons.com/episode1/
   channel: Ukrainian Lessons Podcast
-  use: 'ULP 1-01 public episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section. Public transcript locator
-    ext-ulp_youtube-303; premium notes are grounding only. Structured targets are attested by public transcript ext-ulp_youtube-303; no passage
-    timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
+  use: 'Intact informal greeting in ULP 1-01, publisher repeat-after-me excerpt 05:23–05:26. Source transcript ext-ulp_youtube-303 establishes the target; the free publisher
+    podcast recording establishes the bounded playback clock. Play only this excerpt, never the whole episode as the greeting model.'
   models:
     letters: []
     words:
     - W-074
-    segment:
+    segment: 05:23–05:26
 - id: V-002
   url: https://www.ukrainianlessons.com/episode2/
   channel: Ukrainian Lessons Podcast
-  use: 'ULP 1-02 public episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting section and shop
-    example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk. Structured targets are attested by public transcript
-    ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
+  use: 'Intact formal greeting in ULP 1-02, publisher repeat-after-me excerpt 04:35–04:39. Source transcript ext-ulp_youtube-302 establishes the target; the free publisher
+    podcast recording establishes the bounded playback clock. Play only this excerpt, never the whole episode as the greeting model.'
   models:
     letters: []
     words:
     - W-075
     - W-076
-    segment:
-- id: V-003
-  url: https://www.ukrainianlessons.com/episode5/
-  channel: Ukrainian Lessons Podcast
-  use: 'ULP 1-05 public episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator ext-ulp_youtube-299; compare
-    with the native І model V-009, not English spelling. Scored segment is the publisher-labelled native letter-sound demonstration; exact
-    playback/timecode confirmation remains driver-owned.'
-  models:
-    letters:
-    - И
-    words: []
-    segment:
+    segment: 04:35–04:39
 - id: V-004
   url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
   channel: Ukrainian Lessons
