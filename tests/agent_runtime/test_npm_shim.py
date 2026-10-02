@@ -1470,6 +1470,7 @@ def test_real_tool_never_inherits_the_shim_tool_variable(layout, tool, extra_env
 # --- wiring: dispatched shells resolve npm/npx to the shim ---------------------
 
 
+@pytest.mark.repo_wide
 def test_shim_files_are_regular_executables():
     """Both shims are regular files (the docs catalogue refuses tracked symlinks)."""
     for shim in (SHIM_SOURCE, NPX_SOURCE):
