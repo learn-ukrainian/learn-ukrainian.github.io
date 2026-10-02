@@ -42,7 +42,7 @@ from tests.curriculum.test_plan_validate_mechanical import (
 pytestmark = pytest.mark.reads_content
 
 REVIEW_GATE_CODES = {
-    codes.NAMED_BEFORE_INTRODUCTION,
+    codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
     codes.DUPLICATE_ACTIVITY_FOCUS,
     codes.LISTENING_QUIZ_SINGLE_KEY,
     codes.INCIDENTAL_NOT_DECODABLE,
@@ -70,7 +70,7 @@ REVIEW_GATE_CODES = {
     codes.INCIDENTAL_NOT_USED,
     codes.VIDEO_USE_PIPELINE_TOKEN,
     codes.VIDEO_USE_STEP_MISMATCH,
-    codes.CHOICE_OPTION_LETTER_NOT_TAUGHT,
+    codes.CHOICE_OPTION_UNVERIFIED,
     codes.SENTENCE_NOT_DECODABLE_AT_HOST,
     codes.SENTENCE_DECODABLE_EARLIER,
     codes.WORD_MODEL_WITHOUT_SEGMENT,
@@ -87,7 +87,6 @@ REVIEW_GATE_CODES = {
     codes.LETTER_WITHOUT_RECORDING,
     codes.LETTER_TEACHER_MODELED_ONLY,
     codes.TEACH_WORD_NOT_IN_INVENTORY,
-    codes.CHOICE_FOCUS_WORD_NOT_TAUGHT,
     codes.MODELED_PRINT_TEACHER_FRAME,
     codes.VESUM_UNAVAILABLE,
 }
@@ -421,25 +420,25 @@ LISTENING = "Required item kind: listening; each item binds host {kind: video, r
 
 CASES = [
     Case("baseline_passes"),
-    # C1 -- a word named before its step introduces it
+    # C1 -- a word named before its step introduces it (a note: prose does not say the word is scored)
     Case(
         "c1_dialogue_target_grammar_names_a_word_a_later_step_introduces",
         _dialogue("s1", f"Whole {MAMA} chunk only."),
-        failures=frozenset({codes.NAMED_BEFORE_INTRODUCTION}),
-        says=f"names {MAMA} (introduced by step s2), which a later step of this lesson introduces",
+        notes=frozenset({codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED}),
+        says=f"names {MAMA} (introduced by step s2) in «Whole {MAMA} chunk only.», which a later step",
     ),
     Case("c1_dialogue_at_the_introducing_step_passes", _dialogue("s2", f"Whole {MAMA} chunk only.")),
     Case(
         "c1_practice_focus_scores_a_word_a_later_step_introduces",
         _focus(1, "a1", f"Checks the letter М and the word {MAMA}."),
-        failures=frozenset({codes.NAMED_BEFORE_INTRODUCTION}),
+        notes=frozenset({codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED}),
         says="activity a1 focus (practice of step s1) names W-201 (introduced by step s2)",
     ),
     Case(
         "c1_practice_focus_scores_a_word_no_lesson_introduced_yet",
         _focus(1, "a1", f"Checks the letter М and the word {NONA}."),
-        failures=frozenset({codes.NAMED_BEFORE_INTRODUCTION}),
-        says=f"names {NONA}, which no step up to s1 introduces",
+        notes=frozenset({codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED}),
+        says=f"names {NONA} in «Checks the letter М and the word {NONA}.», which no step up to s1 introduces",
     ),
     Case(
         "c1_practice_focus_scoring_an_introduced_or_earlier_word_passes",
@@ -781,12 +780,12 @@ CASES = [
         says="the Ресурси description of V-900 (videos[].use) names step s1, which does not cite V-900",
     ),
     Case("c17_plain_where_and_why_use_passes", _video_use("Step s2: hear the whole words before reading them.")),
-    # C18 -- a choice option with a letter the lesson has not taught
+    # C18 -- a choice focus word with a letter the lesson has not taught (a note: the plan has no option field)
     Case(
-        "c18_quiz_option_with_an_untaught_letter_fails",
+        "c18_quiz_option_with_an_untaught_letter_is_a_note",
         _focus(1, "a1", "Checks the letter М; the options are мама and нона."),
-        failures=frozenset({codes.CHOICE_OPTION_LETTER_NOT_TAUGHT}),
-        says="quiz activity a1 declares the options or keys 'нона' (needs н, о)",
+        notes=frozenset({codes.CHOICE_OPTION_UNVERIFIED}),
+        says="quiz activity a1 focus names 'нона' (needs н, о) in «the options are мама and нона.»",
     ),
     Case(
         "c18_option_a_cited_recording_models_passes",
@@ -987,8 +986,10 @@ CASES = [
     Case("c28_teach_text_naming_a_recycled_word_passes", _teach(2, "s1", f"The letter Н; recall {MAMA}.")),
     # round 8 of the cross-family review (#9487): the reviewer's fixtures
     Case(
-        "c1_a_word_the_focus_keeps_out_is_not_a_scored_target",
+        "c1_a_word_the_focus_keeps_out_is_still_a_note_not_read_from_prose",
         _focus(1, "a1", f"Checks the letter М. Do not score {MAMA} here; it is introduced in s2."),
+        notes=frozenset({codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED}),
+        says=f"in «Do not score {MAMA} here;»",
     ),
     Case(
         "c11_initial_sound_of_word_initial_ya_yu_is_y",
@@ -1032,8 +1033,8 @@ CASES = [
             "a1",
             "Checks the letter М; the options are М and А. The teacher translates прочитай aloud and never displays it.",
         ),
-        notes=frozenset({codes.CHOICE_FOCUS_WORD_NOT_TAUGHT}),
-        says="quiz activity a1 focus names 'прочитай' (needs и, й, о, п, р, т, ч)",
+        notes=frozenset({codes.CHOICE_OPTION_UNVERIFIED}),
+        says="quiz activity a1 focus names 'прочитай' (needs и, й, о, п, р, т, ч) in «The teacher translates",
     ),
     Case(
         "c21_teacher_read_instruction_with_a_bounded_learner_reading_passes",
@@ -1068,6 +1069,20 @@ CASES = [
         ),
         notes=frozenset({codes.MODELED_PRINT_TEACHER_FRAME}),
         says="X-001 (Прочитай; needs",
+    ),
+    Case(
+        "c21_a_word_both_teacher_and_learner_read_is_learner_print",
+        _all(
+            _exercise_print("мало"),
+            _teach(
+                1,
+                "s2",
+                "The letter А. The teacher demonstrates the exact print in X-001. The teacher reads мало. The "
+                "learner reads only мало.",
+            ),
+        ),
+        failures=frozenset({codes.MODELED_PRINT_NOT_DECODABLE}),
+        says="X-001 (мало; needs л, о)",
     ),
     Case(
         "c21_unbounded_exact_print_with_an_untaught_frame_word_fails",
@@ -1109,8 +1124,8 @@ def test_case(tmp_path: Path, case: Case) -> None:
 
 def test_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
     report = run(tmp_path, next(c for c in CASES if c.name.startswith("c1_dialogue_target")).mutate)
-    outcome = report.failures[0]
-    assert (outcome.code, outcome.lesson, outcome.step) == (codes.NAMED_BEFORE_INTRODUCTION, 1, "s1")
+    outcome = report.notes[0]
+    assert (outcome.code, outcome.lesson, outcome.step) == (codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED, 1, "s1")
 
 
 def test_unavailable_base_layer_skips_c1_instead_of_guessing(tmp_path: Path) -> None:
@@ -1118,7 +1133,7 @@ def test_unavailable_base_layer_skips_c1_instead_of_guessing(tmp_path: Path) -> 
     _focus(1, "a1", f"Checks the letter М and the word {NONA}.")(plan, pack, words, prior)
     world = write_world(tmp_path, plan, pack, words)  # no _base.request.yaml: the base layer is unknown
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
-    assert codes.NAMED_BEFORE_INTRODUCTION not in {o.code for o in report.failures}, report.render_text()
+    assert codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED not in report.codes(), report.render_text()
     gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
     assert "C1" in gates, report.render_text()
 
@@ -1189,7 +1204,7 @@ def test_c18_skips_a_lesson_before_the_first_taught_letter() -> None:
     gates = ReviewGates(Report(LEVEL, SLUG), plan, LEVEL, store, None, None, Path("unused"), pack=pack)  # type: ignore[arg-type]
     gates.__dict__["taught_through"] = {1: set(), 2: {"м", "а", "н", "о"}, 3: {"м", "а", "н", "о"}}
     gates.check_choice_options_taught()
-    assert gates.report.failures == []
+    assert gates.report.failures == gates.report.notes == []
 
 
 def test_c17_and_c15_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
@@ -1207,7 +1222,7 @@ def test_c18_unavailable_arc_is_not_checked_not_passed(tmp_path: Path) -> None:
     world = write_world(tmp_path, plan, pack, words)
     (world.plan_path.parent / "_arc.yaml").unlink()
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
-    assert codes.CHOICE_OPTION_LETTER_NOT_TAUGHT not in {o.code for o in report.failures}, report.render_text()
+    assert codes.CHOICE_OPTION_UNVERIFIED not in report.codes(), report.render_text()
     gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
     assert "C18" in gates, report.render_text()
 
@@ -1272,9 +1287,43 @@ def test_c11_initial_sound(word: str, sound: str | None) -> None:
     assert review_gates._initial_sound(unicodedata.normalize("NFD", word)) == sound
 
 
-def test_c1_named_ids_skip_only_the_negated_clause() -> None:
-    focus = f"Score {MAMA}. Do not score {NONA} here; it is introduced in s2, but score {MAN}."
-    assert review_gates._named_ids(focus) == [MAMA, MAN]
+# The reviewer's fixtures (#9487 round 8): each phrasing a prose parser misread. Targets and options are read from
+# focus prose, so every one is a note quoting its sentence, never a failure and never a silent pass.
+@pytest.mark.parametrize(
+    ("focus", "code", "span"),
+    [
+        (f"Checks {MAMA}.", codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED, f"«Checks {MAMA}.»"),
+        (
+            f"Checks {MAMA} and do not give hints.",
+            codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
+            f"«Checks {MAMA} and do not give hints.»",
+        ),
+        ("The printed options are мама and мало.", codes.CHOICE_OPTION_UNVERIFIED, "«The printed options are"),
+        ("The printed options: мама, мало.", codes.CHOICE_OPTION_UNVERIFIED, "«The printed options: мама, мало.»"),
+        (
+            "The teacher never prints the options мама and мало.",
+            codes.CHOICE_OPTION_UNVERIFIED,
+            "«The teacher never prints the options мама and мало.»",
+        ),
+    ],
+)
+@pytest.mark.parametrize("strict", [False, True])
+def test_prose_targets_and_options_are_notes_with_their_span(
+    tmp_path: Path, focus: str, code: str, span: str, strict: bool
+) -> None:
+    report = run(tmp_path, _focus(1, "a1", focus), strict=strict)
+    assert report.failures == [], report.render_text()
+    noted = [o.message for o in report.notes if o.code == code]
+    assert len(noted) == 1 and span in noted[0], report.render_text()
+    if code == codes.CHOICE_OPTION_UNVERIFIED:
+        assert "'мало' (needs л, о)" in noted[0] and "'мама'" not in noted[0], report.render_text()
+    assert report.status != "fail"
+
+
+def test_evidence_span_is_the_sentence_holding_the_token() -> None:
+    text = f"Score {MAMA}.  Do not   score {NONA} here; it is introduced in s2."
+    assert review_gates._span(text, NONA) == f"«Do not score {NONA} here;»"
+    assert review_gates._span(text, MAMA) == f"«Score {MAMA}.»"
 
 
 @pytest.mark.parametrize(
@@ -1342,3 +1391,8 @@ def test_c21_reading_bounds() -> None:
         False,
     )
     assert review_gates._reading_bounds("The teacher demonstrates the exact print in X-001.") == (None, set(), False)
+    assert review_gates._reading_bounds("The teacher reads мало. The learner reads only мало.") == (
+        {"мало"},
+        set(),
+        False,
+    )

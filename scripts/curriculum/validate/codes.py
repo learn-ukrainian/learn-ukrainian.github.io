@@ -135,7 +135,6 @@ SCOPE_SIDECAR_STALE = "scope_sidecar_stale"
 TITLE_LETTER_ENUMERATION_MISMATCH = "title_letter_enumeration_mismatch"
 
 # --- review-checkable plan defects (issue #9487, review_gates.py) -----------
-NAMED_BEFORE_INTRODUCTION = "named_before_introduction"
 DUPLICATE_ACTIVITY_FOCUS = "duplicate_activity_focus"
 LISTENING_QUIZ_SINGLE_KEY = "listening_quiz_single_key"
 INCIDENTAL_NOT_DECODABLE = "incidental_not_decodable"
@@ -157,7 +156,6 @@ DUPLICATE_LESSON_VIDEO = "duplicate_lesson_video"
 ADJACENT_STEP_SAME_DISPLAY = "adjacent_step_same_display"
 VIDEO_USE_PIPELINE_TOKEN = "video_use_pipeline_token"
 VIDEO_USE_STEP_MISMATCH = "video_use_step_mismatch"
-CHOICE_OPTION_LETTER_NOT_TAUGHT = "choice_option_letter_not_taught"
 SENTENCE_NOT_DECODABLE_AT_HOST = "sentence_not_decodable_at_host"
 WORD_MODEL_WITHOUT_SEGMENT = "word_model_without_segment"
 # fourth-round review gates C21–C28 (issue #9487)
@@ -191,7 +189,9 @@ CONSTRUCTION_DISTRACTOR_CUED = "construction_distractor_cued"
 ANAGRAM_LETTERS_FORM_OTHER_WORD = "anagram_letters_form_other_word"
 COMPREHENSION_TARGET_ONLY_TRANSCRIBED = "comprehension_target_only_transcribed"
 LETTER_TEACHER_MODELED_ONLY = "letter_teacher_modeled_only"
-CHOICE_FOCUS_WORD_NOT_TAUGHT = "choice_focus_word_not_taught"
+# C1 and C18 read targets and options from prose (review_gates.py docstring), so they only note
+NAMED_BEFORE_INTRODUCTION_UNVERIFIED = "named_before_introduction_unverified"
+CHOICE_OPTION_UNVERIFIED = "choice_option_unverified"
 MODELED_PRINT_TEACHER_FRAME = "modeled_print_teacher_frame"
 
 # --- not_checked (never fail the run, always reported) ----------------------
@@ -274,7 +274,6 @@ DESCRIPTIONS = {
     PLACEMENT_TABLE_UNAVAILABLE: "failure (issue #8889 r5 §B2): scripts/curriculum/validate/placement_table.yaml is missing or malformed",
     ACTIVITY_PLACEMENT_FORBIDDEN: "failure (issue #8889 r5 §B2): an activity's type is forbidden at this level by the generated placement table",
     ACTIVITY_PLACEMENT_NOT_ALLOWED: "failure (issue #8889 r5 §B2): an activity's placement (inline/workbook) is not the one the placement table allows for its type at this level",
-    NAMED_BEFORE_INTRODUCTION: "failure (gate C1, #9487): a word id named in a dialogue's target_grammar, or in the focus of an activity in a step's practice, is introduced by a later step of the lesson, or by no step up to that one and is outside the lesson's allowed set",
     DUPLICATE_ACTIVITY_FOCUS: "failure (gate C2, #9487): two or more activities of one lesson carry the same focus text (whitespace collapsed)",
     LISTENING_QUIZ_SINGLE_KEY: "failure (gate C3, #9487): an activity declaring kind: listening cites videos whose models (letters and words) hold exactly one target, so every item has the same key",
     INCIDENTAL_NOT_DECODABLE: "failure (gate C4, #9487): in a letter-stage module, an incidental word none of whose word-store spellings can be read with the letters taught through its lesson",
@@ -297,7 +296,6 @@ DESCRIPTIONS = {
     ADJACENT_STEP_SAME_DISPLAY: "failure (gate C15, #9487): two adjacent steps of one lesson both display the same text, exercise or example record (a display directive in the teach text, or a needs: quote step's text evidence), and the second does not call it a recall; steps are binding (plan schema §7 decision 1), so the writer prints it twice",
     VIDEO_USE_PIPELINE_TOKEN: "failure (gate C17, #9487): the description the assembler prints for a lesson video in Ресурси (the plan's videos[].use, else the pack record's use) holds pipeline wording: segment:, null, driver-owned, timecode, timed segment, acoustic proof or a record id",
     VIDEO_USE_STEP_MISMATCH: "failure (gate C17, #9487): a lesson video's printed description names a step that does not exist in the lesson or does not cite that video in its evidence",
-    CHOICE_OPTION_LETTER_NOT_TAUGHT: "failure (gate C18, #9487): in a letter-stage module, a fill-in or quiz focus prints a Ukrainian word with a letter not taught through its lesson, and no recording the lesson cites models it",
     SENTENCE_NOT_DECODABLE_AT_HOST: "failure (gate C19, #9487): in a letter-stage module, an example sentence a step cites needs a letter not taught through that lesson",
     WORD_MODEL_WITHOUT_SEGMENT: "failure (gate C20, #9487): a video the lesson cites models words or phrases (models.words) but binds no segment, so the learner is sent to the whole recording for them",
     MODELED_PRINT_NOT_DECODABLE: "failure (gate C21, #9487): in a letter-stage module, a step's teach text (or an activity focus) sends the teacher and learner to the exact print of a pack record that holds words needing letters not taught by that step",
@@ -359,7 +357,8 @@ DESCRIPTIONS = {
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
     TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
     VESUM_UNAVAILABLE: "not_checked, and a failure under --strict (gates C12, C23, #9487): VESUM could not be read, so the gate's lookup is undecided; findings the gate decided from the word store and the pack are still reported, and strict validation (CI, plan-promote) never passes an undecided gate",
-    CHOICE_FOCUS_WORD_NOT_TAUGHT: "note (gate C18, #9487): a fill-in or quiz focus names, outside a declared option or key set, a word with letters not taught through its lesson; focus prose does not establish what the learner sees, so the plan review confirms",
+    NAMED_BEFORE_INTRODUCTION_UNVERIFIED: "note (gate C1, #9487): a word id named in a dialogue's target_grammar, or in the focus of an activity in a step's practice, is introduced by a later step of the lesson, or by no step up to that one and is outside the lesson's allowed set; the text is prose, so whether it presents or scores the word is not read from it; the message quotes the sentence and the plan review confirms",
+    CHOICE_OPTION_UNVERIFIED: "note (gate C18, #9487): in a letter-stage module, a fill-in or quiz focus names a word with a letter not taught through its lesson that no recording the lesson cites models; the plan has no option field, so whether the learner sees it as an option is not read from the prose; the message quotes the sentence and the plan review confirms",
     MODELED_PRINT_TEACHER_FRAME: "note (gate C21, #9487): a directive to model a record's exact print whose untaught words may be the frame the plan says the teacher reads; the plan review confirms",
     MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, C10, C18, C19, C21, C27, C28, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); VESUM is vesum_unavailable; the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
@@ -385,7 +384,8 @@ NOTE_CODES = frozenset(
         ANAGRAM_LETTERS_FORM_OTHER_WORD,
         COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
         LETTER_TEACHER_MODELED_ONLY,
-        CHOICE_FOCUS_WORD_NOT_TAUGHT,
+        NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
+        CHOICE_OPTION_UNVERIFIED,
         MODELED_PRINT_TEACHER_FRAME,
     }
 )

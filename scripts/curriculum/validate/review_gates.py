@@ -8,7 +8,7 @@ plan with the defect fails before a reviewer is spent. C1–C6 come from the
 first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 from the fourth.
 
   C1  a word id named in a dialogue's target_grammar, or in the focus of an activity in a
-      step's practice, is introduced at or before that step (failure)
+      step's practice, that is introduced after that step or is outside the lesson's allowed set (note)
   C2  two or more activities of one lesson carry the same focus text (failure)
   C3  a listening activity whose cited videos model exactly one target, so every item has
       the same key (failure)
@@ -40,14 +40,14 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
   C16 an incidental record named by no step, activity or dialogue of its lesson (note)
   C17 a lesson video whose printed Ресурси description carries pipeline wording, or names a step that does not
       cite the video (failure)
-  C18 in a letter-stage module, a fill-in or quiz focus that declares an option or key with a letter not taught
-      through its lesson and modelled by no recording the lesson cites (failure); such a word in focus prose (note)
+  C18 in a letter-stage module, a word in a fill-in or quiz focus with a letter not taught through its lesson and
+      modelled by no recording the lesson cites (note)
   C19 in a letter-stage module, an example sentence cited in a lesson that cannot read it (failure); one first
       cited later than the lesson that could read it (note)
   C20 a cited video that models words but binds no segment (failure)
   C21 in a letter-stage module, a step (or an activity focus) that sends the learner to the exact print of a record
       holding words with letters not taught by that step (failure); the same when the text says the teacher reads
-      the instruction without naming its words (note)
+      the instruction without naming its words and does not bound what the learner reads (note)
   C22 three or more choice activities of one lesson on the same two-member key set (failure); two (note)
   C23 a pick-syllables row that another syllable of the activity in a blanked slot turns into an attested word
       (failure; a note when the focus says the stems carry a cue); an anagram whose letters spell another attested
@@ -65,12 +65,20 @@ second round is in pack-verify (scripts/curriculum/evidence/sources.py, Standard
 
 How exact each gate is:
 
-- C1 reads word ids (``W-<digits>``), never prose; an id in a clause that keeps it out ("Do not score W-201 here")
-  is a sequencing constraint, not a target. The step a dialogue is presented in is
-  ``dialogue.step``; the activities a step scores are its ``practice`` list. An id that a
-  later step of the same lesson introduces fails; so does an id that no step up to this one
-  introduces and that is outside the lesson's allowed set (earlier lessons and positions,
-  the base layer, the lesson's incidental, recycled and dialogue-name records).
+A gate fails only on input the plan states structurally. A plan activity is ``id``, ``type``, ``placement``,
+``model`` (the pack exercise whose shape it follows, not its items) and free-text ``focus``; a dialogue's
+``target_grammar`` is free text too. So which word an activity scores (C1) and which words it prints as options
+(C18) are stated only in English prose, and reading them from it failed review after review: each phrasing the
+parser learned ("do not score W-201", "the options are …") had a neighbour it misread ("Checks W-201 and do not
+give hints", "The printed options: …", "The teacher never prints the options …"). These two gates therefore report
+every candidate as a note carrying its evidence span (the sentence, quoted «…»), and the plan review decides it;
+making them failures needs structured target and option fields, which is a plan-schema change.
+
+- C1 reads word ids (``W-<digits>``) in the text; it does not read what the prose does with them. The step a
+  dialogue is presented in is ``dialogue.step``; the activities a step scores are its ``practice`` list. An id that
+  a later step of the same lesson introduces is noted; so is an id that no step up to this one introduces and that
+  is outside the lesson's allowed set (earlier lessons and positions, the base layer, the lesson's incidental,
+  recycled and dialogue-name records). No C1 input is structurally a target, so C1 has no failure.
 - C2 compares focus text after collapsing whitespace.
 - C3 applies to an activity whose focus declares its item kind as ``kind: listening``.
   The keys such an activity can have are the targets its cited videos model
@@ -145,9 +153,9 @@ How exact each gate is:
   G-a1-002). A step reference (``s3``) must name a step of the lesson that cites the video in its evidence.
 - C18 reads the Ukrainian words (two or more letters) of a fill-in or quiz focus, from the first lesson that has a
   taught letter (before it nothing is read). A word a recording the lesson cites models (a store record in its
-  models.words) is heard, so it passes. A word of a declared option or key set ("the options are мама and нона",
-  "keys Привіт and Добрий день") is learner-visible option text, so it fails; any other word is authoring prose,
-  which does not say whether the learner sees it (a translation said aloud is not printed), so it is a note.
+  models.words) is heard, so it passes. Any other word with an untaught letter is a note: the plan has no option
+  field, so whether the word is printed option text, a key, a teacher's spoken translation or a word the focus says
+  is never printed is not read from the prose. No C18 input is structurally an option, so C18 has no failure.
 - C19 applies to example records (EX-) a step cites: the host is the first lesson citing one. The letters
   taught through a lesson are the arc's earlier positions plus this plan's introductions so far (as C4).
 - C20 reads the pack: a video whose models.words is not empty and whose models.segment is null. A letter
@@ -159,9 +167,11 @@ How exact each gate is:
   C10; an activity is taken at the step whose practice links it, else the lesson's last step). A recording does not
   help: the directive is about print. Each record is reported once per step. The plan bounds the learner-read print
   in the same text: a clause saying the learner reads named words ("the learner reads only мама") limits the scan
-  to them, and words a clause says the teacher reads ("the teacher reads Прочитай") are not learner print. A
-  teacher clause reading the instruction or rubric without naming its words leaves the untaught words possibly the
-  teacher's frame, so that is a note.
+  to them, and words a clause says the teacher reads ("the teacher reads Прочитай") are not learner print unless a
+  clause also says the learner reads them (teacher modelling does not remove the learner's decoding). A teacher
+  clause reading the instruction or rubric without naming its words, with no learner bound, leaves the untaught
+  words possibly the teacher's frame, so that is a note. The failure stands on the record's print, which the pack
+  states; the prose only narrows it, and only where it names the words.
 - C22 reads a declared key set, "keys Привіт and Добрий день", "keys О, У, И, А", "keys 1 and 2", in a quiz, fill-in,
   true-false, odd-one-out or pick-syllables focus. Two activities on one binary key set can be a recognition and a
   transfer (the plan reviews accepted repeated types with different operations), so two is a note; a third scores
@@ -227,6 +237,8 @@ _ROW_WORD = f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*
 _ROW = re.compile(rf"\s*{_ROW_WORD}(?:[\s,;]+{_ROW_WORD}){{2,}}[\s,;.]*")
 _ROW_TOKEN = re.compile(_ROW_WORD)
 _SENTENCE_BREAK = re.compile(r"[.;!?](?=\s|$)")
+#: The evidence span of a prose-read finding is its sentence, kept with its closing punctuation.
+_SPAN_BREAK = re.compile(r"(?<=[.;!?])\s+")
 #: A display directive: the imperative or participle of display/show (never "X shows Y", where X is the subject).
 _DISPLAY = re.compile(r"\b(?:re-?)?(?:display|displayed|displaying|show|shown|showing)\b", re.IGNORECASE)
 _NOT_DISPLAY = re.compile(r"\b(?:not|never)\s+(?:\w+\s+){0,2}?(?:re-?)?(?:display|show)", re.IGNORECASE)
@@ -310,14 +322,6 @@ _TEACHER_MODEL = re.compile(
     r"|\b(?:models?|pronounc\w*|demonstrat\w*)\b[^.;]*\bteacher\b",
     re.IGNORECASE,
 )
-#: C1: a clause that refers to a word id only to keep it out ("Do not score W-201 here").
-_NEGATED_CLAUSE = re.compile(r"\b(?:do not|don't|never|must not|not yet|exclude[sd]?|excluding)\b", re.IGNORECASE)
-_CLAUSE = re.compile(r"[.;:,!?]|\bbut\b", re.IGNORECASE)
-#: C18: a declared option or key set, "the options are мама and нона", "keys Привіт and Добрий день".
-_OPTION_SET = re.compile(
-    rf"\b(?:keys|options?|choices?)\s+(?:are\s+)?({_KEY_ITEM}(?:(?:{_KEY_SEPARATOR}){_KEY_ITEM})*)"
-    rf"(?![{CYRILLIC_LETTER_CLASS}\w])"
-)
 #: C21: a clause bounding what the learner reads ("the learner reads only мама") and one saying the teacher reads
 #: (or says) words of the print; a teacher clause naming the instruction or rubric without its words is a frame.
 _READING_CLAUSE = re.compile(r"[.;,!?]|\b(?:while|whereas|but|and then)\b", re.IGNORECASE)
@@ -366,21 +370,16 @@ def _initial_sound(word: str) -> str | None:
     return None
 
 
-def _named_ids(text: str) -> list[str]:
-    """The word ids a text names as targets: ids in a clause that keeps them out ("do not score W-201") are not."""
-    return list(
-        dict.fromkeys(
-            item
-            for clause in _CLAUSE.split(text or "")
-            if not _NEGATED_CLAUSE.search(clause)
-            for item in _WORD_ID.findall(clause)
-        )
-    )
+def _span(text: str, token: str) -> str:
+    """The evidence span of a prose-read finding: the sentence of text holding token, quoted («…»)."""
+    sentence = next((part for part in _SPAN_BREAK.split(text) if token in part), text)
+    return f"«{_normalized(sentence)}»"
 
 
 def _reading_bounds(text: str) -> tuple[set[str] | None, set[str], bool]:
-    """(the words a clause bounds the learner's reading to, or None; the words a clause says the teacher reads;
-    whether a teacher clause reads the instruction or rubric without naming its words) for C21."""
+    """(the words a clause bounds the learner's reading to, or None; the words a clause says the teacher reads and
+    no clause says the learner reads; whether a teacher clause reads the instruction or rubric without naming its
+    words) for C21. Teacher modelling does not remove the learner's decoding: a word both read stays learner print."""
     learner: set[str] | None = None
     teacher: set[str] = set()
     frame = False
@@ -391,7 +390,7 @@ def _reading_bounds(text: str) -> tuple[set[str] | None, set[str], bool]:
         elif _TEACHER_READS.search(clause):
             teacher |= words
             frame = frame or (not words and bool(_FRAME_WORDING.search(clause)))
-    return learner, teacher, frame
+    return learner, teacher - (learner or set()), frame
 
 
 def _vowel_count(text: str) -> int:
@@ -563,32 +562,37 @@ class ReviewGates(Gates):
             allowed: set[str] | None = None
             for where, position, text in sources:
                 later, unknown = [], []
-                for item in _named_ids(text):
+                for item in _ids(_WORD_ID, text):
                     if item in introduced_at:
                         if introduced_at[item] > position:
-                            later.append(f"{item} (introduced by step {steps[introduced_at[item]]['id']})")
+                            later.append(
+                                f"{item} (introduced by step {steps[introduced_at[item]]['id']}) in {_span(text, item)}"
+                            )
                         continue
                     if allowed is None:
                         allowed = self.allowed_ids(index, "C1")
                         if allowed is None:
                             return
                     if item not in allowed:
-                        unknown.append(item)
+                        unknown.append(f"{item} in {_span(text, item)}")
                 step_id = steps[position]["id"]
                 if later:
-                    self.fail(
-                        codes.NAMED_BEFORE_INTRODUCTION,
-                        f"{where} names {', '.join(later)}, which a later step of this lesson introduces; "
-                        "a word is introduced at or before the step that presents or scores it (#9487 C1)",
+                    self.note(
+                        codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
+                        f"{where} names {'; '.join(later)}, which a later step of this lesson introduces; the text is "
+                        "prose, so whether it presents or scores the word or keeps it out is not read from it, and the "
+                        "plan review confirms a word is introduced at or before the step that presents or scores it "
+                        "(#9487 C1)",
                         lesson["n"],
                         step_id,
                     )
                 if unknown:
-                    self.fail(
-                        codes.NAMED_BEFORE_INTRODUCTION,
-                        f"{where} names {', '.join(unknown)}, which no step up to {step_id} introduces and "
-                        "which is outside the lesson's allowed set (earlier lessons and positions, base layer, "
-                        "incidental, recycled, dialogue names) (#9487 C1)",
+                    self.note(
+                        codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
+                        f"{where} names {'; '.join(unknown)}, which no step up to {step_id} introduces and which is "
+                        "outside the lesson's allowed set (earlier lessons and positions, base layer, incidental, "
+                        "recycled, dialogue names); the text is prose, so whether it presents or scores the word is not "
+                        "read from it, and the plan review confirms (#9487 C1)",
                         lesson["n"],
                         step_id,
                     )
@@ -1252,36 +1256,23 @@ class ReviewGates(Gates):
             for activity in lesson.get("activities") or []:
                 if activity["type"] not in _CHOICE_TYPES:
                     continue
+                focus = _nfc(activity["focus"])
                 words = [
                     token
-                    for token in dict.fromkeys(_ROW_TOKEN.findall(activity["focus"]))
+                    for token in dict.fromkeys(_ROW_TOKEN.findall(focus))
                     if len(_word_letters(token)) >= 2
                     and not self._readable(token, taught)
                     and not self.index.get(token.translate(_APOSTROPHES).casefold(), set()) & modelled
                 ]
-                declared = {
-                    token
-                    for match in _OPTION_SET.finditer(activity["focus"])
-                    for token in _ROW_TOKEN.findall(match.group(1))
-                }
-                options = [word for word in words if word in declared]
-                prose = [word for word in words if word not in declared]
-                if options:
-                    self.fail(
-                        codes.CHOICE_OPTION_LETTER_NOT_TAUGHT,
-                        f"{activity['type']} activity {activity['id']} declares the options or keys "
-                        f"{self._needs(options, taught)}: letters not taught through lesson {lesson['n']}, and no "
-                        "recording the lesson cites models the word; a learner can answer by rejecting the unknown "
-                        "glyph (#9487 C18)",
-                        lesson["n"],
-                    )
-                if prose:
+                if words:
                     self.note(
-                        codes.CHOICE_FOCUS_WORD_NOT_TAUGHT,
-                        f"{activity['type']} activity {activity['id']} focus names {self._needs(prose, taught)}: "
+                        codes.CHOICE_OPTION_UNVERIFIED,
+                        f"{activity['type']} activity {activity['id']} focus names "
+                        f"{'; '.join(f'{self._needs([word], taught)} in {_span(focus, word)}' for word in words)}: "
                         f"letters not taught through lesson {lesson['n']}, and no recording the lesson cites models "
-                        "the word; the focus is authoring prose, so whether the learner sees the word is not read "
-                        "from it, and the plan review confirms no option prints it (#9487 C18)",
+                        "the word; the plan has no option field and the focus is prose, so whether the learner sees "
+                        "the word as an option or key is not read from it, and the plan review confirms no printed "
+                        "option needs an untaught letter (#9487 C18)",
                         lesson["n"],
                     )
 
