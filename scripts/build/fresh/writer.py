@@ -19,22 +19,32 @@ The writer call:
 from __future__ import annotations
 
 import datetime
+import hashlib
 import json
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
+from functools import wraps
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+from scripts.agent_runtime.registry import AGENTS
 from scripts.build.fresh.draft_schema import (
     DraftError,
     DraftValidationError,
     validate_draft,
 )
 from scripts.build.fresh.preflight import PreflightResult
-from scripts.build.fresh.regeneration import INPUT_KEYS, writer_task_id
+from scripts.build.fresh.regeneration import (
+    HARNESS_EXHAUSTED,
+    INPUT_KEYS,
+    lesson_mutex,
+    load_harness,
+    record_harness_failure,
+    writer_task_id,
+)
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.orchestration.task_record_store import locate_task_record
@@ -57,11 +67,12 @@ class WriterHarnessError(WriterCallError):
     """Dispatch, execution, or harvesting failed before a writer reply was available."""
 
 
-def _available_task_id(base_id: str) -> tuple[str, bool]:
+def _available_task_id(base_id: str, *, writer: str, model: str | None, effort: str | None) -> tuple[str, bool]:
     """Reuse done/live tasks; advance only past terminal failures, preserving their records.
 
-    Stable retry IDs also make a done retry reusable across builds. Never give a live or
-    unreadable record a new ID: that could dispatch the same paid work twice.
+    Preserve legacy IDs for the same verified seat/model. Other seats use a stable
+    namespace; only terminal failures or unreadable done results advance retries.
+    Unreadable task records and live tasks never advance.
     """
     terminal_failures = {
         "failed",
@@ -74,6 +85,8 @@ def _available_task_id(base_id: str) -> tuple[str, bool]:
         "no_deliverable",
     }
     retry = 0
+    original_base = base_id
+    model = model or AGENTS.get(writer, {}).get("default_model")
     while True:
         task_id = base_id if retry == 0 else f"{base_id}-retry-{retry}"
         record_path = locate_task_record(tasks_dir(), task_id)
@@ -89,6 +102,32 @@ def _available_task_id(base_id: str) -> tuple[str, bool]:
         if status in terminal_failures:
             retry += 1
         elif status in {"done", "spawning", "running"}:
+            recorded_model = record.get("resolved_model") or record.get("model")
+            if not record.get("agent") or not recorded_model or recorded_model == "unknown" or model is None:
+                raise WriterHarnessError(
+                    f"Writer task {task_id} has unverified writer identity; explicit model required"
+                )
+            if record["agent"] != writer or recorded_model != model:
+                if base_id != original_base:
+                    raise WriterHarnessError(f"Writer task {task_id} has conflicting seat identity")
+                identity = json.dumps([writer, model], separators=(",", ":")).encode("utf-8")
+                base_id = f"{original_base}-seat-{hashlib.sha256(identity).hexdigest()[:10]}"
+                retry = 0
+                continue
+            if effort is not None and (record.get("resolved_effort") or record.get("effort")) != effort:
+                raise WriterHarnessError(f"Writer task {task_id} has unverified or conflicting effort")
+            if status == "done":
+                result = record.get("result_file")
+                try:
+                    if not isinstance(result, str) or not result:
+                        raise OSError("missing result_file")
+                    if not Path(result).is_file():
+                        raise OSError("result is not a regular file")
+                    Path(result).read_text(encoding="utf-8")
+                except (OSError, UnicodeError):
+                    # Preserve the done record, but never reuse unharvestable output.
+                    retry += 1
+                    continue
             return task_id, True
         else:
             raise WriterHarnessError(f"Writer task {task_id} has unknown status: {status!r}")
@@ -144,6 +183,39 @@ def parse_and_validate_reply(
     return draft
 
 
+def _track_harness_failures(function):
+    @wraps(function)
+    def tracked(**kwargs):
+        # Invalid input snapshots are caller errors, not paid harness attempts.
+        inputs = kwargs["inputs"]
+        if any(key not in inputs for key in INPUT_KEYS) or inputs["prompt_sha256"] != kwargs["prompt_sha256"]:
+            return function(**kwargs)
+        output_dir = Path(kwargs["output_dir"])
+        n, slug = kwargs["lesson_n"], kwargs["slug"]
+        ledger_path = output_dir / f"lesson-{n}.regeneration.yaml"
+        # Serialize paid calls as well as accounting: concurrent builds cannot pass
+        # the last remaining slot together. Other lessons keep independent mutexes.
+        with lesson_mutex(output_dir / f"lesson-{n}.writer-dispatch"):
+            evidence = load_harness(ledger_path, slug, n)
+            if evidence["terminal_state"] is not None:
+                error = WriterHarnessError(HARNESS_EXHAUSTED)
+                error.harness_recorded = True
+                raise error
+            try:
+                return function(**kwargs)
+            except (OSError, ValueError, KeyError, TypeError, WriterHarnessError) as err:
+                record_harness_failure(ledger_path, slug, n, str(err), dict(kwargs["inputs"]))
+                if load_harness(ledger_path, slug, n)["terminal_state"] is not None:
+                    error = WriterHarnessError(HARNESS_EXHAUSTED)
+                    error.harness_recorded = True
+                    raise error from err
+                err.harness_recorded = True
+                raise
+
+    return tracked
+
+
+@_track_harness_failures
 def dispatch_writer(
     *,
     writer: str,
@@ -241,7 +313,7 @@ def dispatch_writer(
                 if "status" in record and record["status"] != "done":
                     raise WriterHarnessError(f"Fake seat completed with non-done status: {record['status']!r}")
     else:
-        task_id, reuse = _available_task_id(task_id)
+        task_id, reuse = _available_task_id(task_id, writer=writer, model=model, effort=effort)
         # Real delegate dispatch (#8431 §1, Finding 7)
         dispatch_cmd = [
             sys.executable,

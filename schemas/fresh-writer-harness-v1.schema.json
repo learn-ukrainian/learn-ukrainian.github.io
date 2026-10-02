@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fresh lesson writer harness failures",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slug",
+    "n",
+    "layer",
+    "failures"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "minLength": 1
+    },
+    "n": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "layer": {
+      "const": "harness"
+    },
+    "terminal_state": {
+      "enum": [
+        null,
+        "writer_harness_exhausted"
+      ]
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reason",
+          "inputs",
+          "at"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "plan_sha256",
+              "pack_lock",
+              "words_lock",
+              "card_sha256",
+              "prompt_sha256"
+            ],
+            "properties": {
+              "plan_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "pack_lock": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "words_lock": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "card_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "prompt_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

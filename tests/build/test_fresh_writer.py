@@ -72,7 +72,17 @@ def passing_preflight():
 
 @pytest.mark.parametrize(
     "status",
-    ["failed", "timeout", "rate_limited", "cancelled", "crashed", "dry_run", "needs_finalize", "no_deliverable"],
+    [
+        "failed",
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "crashed",
+        "dry_run",
+        "needs_finalize",
+        "no_deliverable",
+        "done",
+    ],
 )
 @pytest.mark.parametrize("archived", [False, True])
 def test_terminal_writer_collision_retries_then_reuses_done(
@@ -88,9 +98,12 @@ def test_terminal_writer_collision_retries_then_reuses_done(
     prior_dir = store / "archive" if archived else store
     prior_dir.mkdir(exist_ok=True)
     prior = task_record_path(prior_dir, base_id)
-    prior.write_text(json.dumps({"status": status}))
     prior_result = prior.with_suffix(".result")
-    prior_result.write_text("old unchecked output")
+    prior.write_text(
+        json.dumps({"status": status, "agent": "codex", "model": "gpt-6.1-sol", "result_file": str(prior_result)})
+    )
+    if status != "done":
+        prior_result.write_text("old unchecked output")
     draft, types = a1_valid_fixture
     commands = []
 
@@ -103,7 +116,17 @@ def test_terminal_writer_collision_retries_then_reuses_done(
         if action == "dispatch":
             assert not record_path.exists(), "a duplicate would pay again"
             result_path.write_text(yaml.safe_dump(draft, allow_unicode=True))
-            record_path.write_text(json.dumps({"status": "done", "result_file": str(result_path)}))
+            record_path.write_text(
+                json.dumps(
+                    {
+                        "status": "done",
+                        "result_file": str(result_path),
+                        "agent": "codex",
+                        "model": "gpt-6.1-sol",
+                        "effort": "high",
+                    }
+                )
+            )
             return subprocess.CompletedProcess(cmd, 0, "", "")
         return subprocess.CompletedProcess(cmd, 0, record_path.read_text(), "")
 
@@ -114,6 +137,7 @@ def test_terminal_writer_collision_retries_then_reuses_done(
         writer="codex",
         level="a1",
         slug="collision",
+        model="gpt-6.1-sol",
         lesson_n=1,
         prompt_file=prompt,
         prompt_sha256=INPUTS["prompt_sha256"],
@@ -127,7 +151,10 @@ def test_terminal_writer_collision_retries_then_reuses_done(
     second = dispatch_writer(**kwargs)
     assert first["task_id"] == second["task_id"] == f"{base_id}-retry-1"
     assert [cmd[2] for cmd in commands] == ["dispatch", "wait", "wait"]
-    assert prior_result.read_text() == "old unchecked output"
+    if status == "done":
+        assert not prior_result.exists()
+    else:
+        assert prior_result.read_text() == "old unchecked output"
     assert json.loads(prior.read_text())["status"] == status
 
     # Reuse still validates the output; a done status cannot admit an unchecked draft.
@@ -140,8 +167,14 @@ def test_terminal_writer_collision_retries_then_reuses_done(
 @pytest.mark.parametrize("status", ["done", "running", "spawning"])
 def test_writer_done_and_live_records_are_never_redispatched(tmp_path, monkeypatch, status):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
-    (tmp_path / "stable.json").write_text(json.dumps({"status": status}))
-    assert _available_task_id("stable") == ("stable", True)
+    result = tmp_path / "stable.result"
+    result.write_text("readable reply")
+    (tmp_path / "stable.json").write_text(
+        json.dumps(
+            {"status": status, "agent": "codex", "model": "gpt-6.1-sol", "effort": "high", "result_file": str(result)}
+        )
+    )
+    assert _available_task_id("stable", writer="codex", model="gpt-6.1-sol", effort="high") == ("stable", True)
 
 
 @pytest.mark.parametrize("record", ["invalid JSON", "[]", '{"status": ["done"]}', '{"status": "unknown"}'])
@@ -149,7 +182,7 @@ def test_unreadable_or_unknown_writer_record_fails_closed(tmp_path, monkeypatch,
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
     (tmp_path / "stable.json").write_text(record)
     with pytest.raises(WriterHarnessError):
-        _available_task_id("stable")
+        _available_task_id("stable", writer="codex", model="gpt-6.1-sol", effort="high")
 
 
 @pytest.mark.parametrize("failure", [OSError("cannot launch"), subprocess.TimeoutExpired("delegate", 60)])

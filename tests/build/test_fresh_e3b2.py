@@ -865,8 +865,13 @@ def test_success_snapshot_controls_draft_reuse(tmp_path):
 
 
 @pytest.mark.parametrize("prior_failures", [0, 2])
-@pytest.mark.parametrize("failure_kind", ["refusal", "timeout", "harvest", "configuration", "invalid_reply"])
-def test_module_writer_budget_counts_only_delivered_content(tmp_path, monkeypatch, prior_failures, failure_kind):
+@pytest.mark.parametrize(
+    "failure_kind", ["refusal", "real_refusal", "timeout", "harvest", "configuration", "invalid_reply"]
+)
+@pytest.mark.parametrize("exhaust_harness", [False, True])
+def test_module_writer_budget_counts_only_delivered_content(
+    tmp_path, monkeypatch, prior_failures, failure_kind, exhaust_harness
+):
     from scripts.build.fresh import cli, module
     from scripts.build.fresh.preflight import PreflightResult
     from scripts.build.fresh.regeneration import writer_inputs
@@ -918,9 +923,18 @@ def test_module_writer_budget_counts_only_delivered_content(tmp_path, monkeypatc
 
     def failing_writer(**kw):
         attempts.append(kw["attempt"])
+        if failure_kind == "real_refusal":
+            from scripts.build.fresh.writer import dispatch_writer
+
+            def fail_launch(*a, **kw):
+                raise OSError("transport failed")
+
+            monkeypatch.setattr("scripts.build.fresh.writer.subprocess.run", fail_launch)
+            return dispatch_writer(**kw)
         raise errors[failure_kind]
 
-    for _ in range(2 if failure_kind != "invalid_reply" else 1):
+    rounds = 5 if exhaust_harness else 2
+    for index in range(rounds if failure_kind != "invalid_reply" else 1):
         report = module.build_module(
             level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:fixture", writer_dispatch=failing_writer
         )
@@ -931,14 +945,20 @@ def test_module_writer_budget_counts_only_delivered_content(tmp_path, monkeypatc
             assert not (state / "lesson-1.writer-harness.yaml").exists()
             return
         assert lesson["layer"] == "engine"
-        assert lesson["terminal_layer"] is None
+        if index >= 2:
+            assert lesson["terminal_layer"] == "driver"
+            assert lesson["reason"] == "writer_harness_exhausted"
+        else:
+            assert lesson["terminal_layer"] is None
         assert lesson["regenerations"] == max(0, prior_failures - 1)
         assert (ledger_path.read_bytes() if ledger_path.exists() else None) == before
-    assert attempts == [prior_failures + 1] * 2
+    assert attempts == [prior_failures + 1] * (3 if exhaust_harness else 2)
     harness = yaml.safe_load((state / "lesson-1.writer-harness.yaml").read_text())
     assert harness["layer"] == "harness"
-    assert len(harness["failures"]) == 2
+    assert len(harness["failures"]) == (3 if exhaust_harness else 2)
     assert lock.check(state / "lesson-1.writer-harness.yaml")
+    if exhaust_harness:
+        return
 
     def delivered_writer(**kw):
         attempts.append(kw["attempt"])
@@ -1060,6 +1080,10 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         if n == 1 and version[0] == 2:
             draft["steps"][0]["blocks"][0]["text"] += " слово"
         lock.atomic_write(state_dir / f"lesson-{n}.draft.yaml", lock.yaml_bytes(draft))
+        lock.atomic_write(
+            state_dir / f"lesson-{n}.writer.yaml",
+            lock.yaml_bytes({"writer": kw["writer"], "model": kw["model"], "effort": kw.get("effort", "high")}),
+        )
 
     def question_call(batch, seat):
         return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
