@@ -849,6 +849,48 @@ spawn. If neither the mapped model nor that default is valid for the
 substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
 
+**Credit-balance lanes (#9518):** `scripts/config/credit_lanes.yaml` lists the lanes that can show a
+prepaid credit balance once their plan allowance is used (the router does not verify the provider
+drawing it), and the models each may receive then (Codex: `gpt-6.1-sol`, `gpt-6-luna`). The router sees a credit balance, not the provider
+drawing it, so `scripts/fleet/credit_lane.py` claims no more than that: a lane reads
+`credit_balance_present` (credit balance present; draw not verified by the router) only when its
+tightest plan window has at most `near_cap_remaining_pct` (10%) remaining, the routing-budget record
+carries a positive numeric credit balance from a probe younger than `credit_max_age_s` (900 s; both
+`age_s` and an explicit-UTC `fetched_at`), and the runtime usage records
+(`batch_state/api_usage/usage_<lane>-*.jsonl`, plus the snapshot's own runtime summary) show no
+`rate_limited` outcome for the lane within `rate_limit_window_s` (3600 s). One or more rate limits
+in that window read `credit_use_unconfirmed`. Evidence that cannot be read also reads
+`credits_unverified` (reason names the cause): an unreadable lane file, an unparseable line in one,
+or a `rate_limited` record without an explicit-UTC timestamp; `summarize_lane_runtime` exposes these
+as `unreadable` (`files`, `lines`, `records`, `total`). A missing file is the empty case. The
+recent-rate-limit state reads ("recent rate limit while the plan window is exhausted:
+credit use not confirmed"). These states, a missing, stale, non-numeric or non-positive balance, a
+naive or non-UTC timestamp (parsed by the reset reserve's `utc_datetime`), unreadable usage records
+or a stale snapshot all leave the lane in its plan state (near_cap/AVOID). `capacity_pick` shows
+status `credit_balance_present`, ranks the lane after plan-backed seats, and adds a `credit` object
+to every JSON row (`state`, `reason`, `plan_remaining_pct`, `credit_balance`, `allowed_models`,
+`evidence` with the rate-limit count, window and newest time and the balance with its fetch time,
+`coverage`, `reset_advice`). Lanes without a policy entry carry `{"state": "not_configured"}` and
+are otherwise unchanged. Coverage is reported as unknown because runtime usage records carry no
+per-task credit consumption. `reset_advice.advice` is `use_reset_now`, `hold_reset` or
+`not_applicable`. A free full reset is held while the natural reset is within `reset_hold_hours`
+(48 h) or its time is unknown, because no provider record or repository document says whether a
+full reset re-anchors the window. `delegate.py dispatch` checks the admitted route (after aliases,
+substitution and review selection; no `--model` means the lane default). Admission is a separate
+question from the router recommendation: the allowlist applies whenever the plan window is at or
+below `near_cap_remaining_pct` and a fresh positive balance exists (`credit_balance_present`,
+`credit_use_unconfirmed`, or `credits_unverified` caused by unreadable usage records; the credit
+object carries `allowlist_applies`), so a recent rate limit stops the router recommending the lane
+but never widens the models it may receive. An off-allowlist model then exits 2 with
+`CREDIT_PERIOD_MODEL_REFUSED`. Nothing is gated with a healthy plan window, with a missing, stale
+or non-positive balance (near cap without credits: unchanged), or on other lanes. `--check-budget`
+no longer substitutes away from a lane in `credit_balance_present`. If the policy file is missing, malformed or has an empty
+allowlist, only the built-in default lanes (`credit_lane.DEFAULT_ALLOWED_MODELS`: Codex with the same
+two models, pinned to the shipped yaml by a test) are affected: `capacity_pick` still prints every
+lane, marks Codex `credit.state: policy_error` in its plan state and adds a warning line, and
+admission refuses only off-allowlist Codex dispatches (`allowlist_applies` true), with a stderr warning; every other lane is
+admitted as before. Nothing consumes credits or resets.
+
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
