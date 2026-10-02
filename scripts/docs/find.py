@@ -133,6 +133,18 @@ PROCESS_VERBS = frozenset({'check', 'enforce', 'refuse', 'reject', 'prevent', 's
                            'clean', 'catch', 'detect', 'decide', 'schedule', 'validate', 'verify', 'measure',
                            'generate', 'parse', 'compute', 'guard', 'lint', 'reap', 'pick', 'select', 'launch',
                            'resolve', 'retry', 'kill', 'refresh'})
+# Words that record a lifecycle state on a line: a registry row ("| dec-003 | ... | superseded | Cap
+# review fix rounds at 4 |"), a banner ("REFERENCE ONLY", "Status: Deferred") or a configuration
+# comment ("the subscription backing the glm lane is retired"). For a status question, such a line
+# holding query words is the record that answers it (``lifecycle_record``).
+LIFECYCLE_MARKER = re.compile(
+    r'\b(?:supersed\w*|retire[ds]?|retirement|deprecat\w*|archived|obsolete|legacy|historical|parked|shelved'
+    r'|deferred|abandoned|killed|rejected|proposed|accepted|frozen|discontinued|unsupported|stopped'
+    r'|no longer|reference only|do not use|replaced by|moved to)\b')
+# Numerals a reader writes as words ("four rounds") and a record as digits ("4 rounds"), both ways.
+NUMERALS = dict(zip(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+                     'eleven', 'twelve'], map(str, range(13)), strict=True))
+NUMERALS.update({digits: word for word, digits in NUMERALS.items()})
 # Separators between words. Apostrophes stay inside words (Ukrainian п'ять, пʼять).
 SEPARATORS = re.compile(r"[\s_\-./\\:,;()\[\]{}<>\"`|+*?!@#=&%^~$]+")
 
@@ -296,8 +308,11 @@ def escape_excerpt(text: str) -> str:
 
 
 def _prefix_hits(terms: Sequence[str], field_words: Sequence[str]) -> set[str]:
-    """The terms that are a prefix of a field word, as typed or as their ``stem``."""
+    """The terms that are a prefix of a field word, as typed or as their ``stem``; a numeral meets its
+    word form and back ("4" and "four", ``NUMERALS``)."""
     joined = ' ' + ' '.join(field_words) + ' '
+    if any(w in NUMERALS for w in field_words):
+        joined += ' '.join(NUMERALS[w] for w in field_words if w in NUMERALS) + ' '
     return {t for t in terms if _term_pattern(t).search(joined)}
 
 
@@ -679,6 +694,7 @@ class Candidate:
     summary_terms: set[str] = field(default_factory=set)  # query words in a code file's summary (docstring, header)
     code_terms: set[str] = field(default_factory=set)  # query words over all of a code file's identifier units
     passage_terms: set[str] = field(default_factory=set)  # query words together in one short passage of text
+    record_terms: set[str] = field(default_factory=set)  # query words on one line that records a lifecycle state
     catalogue_terms: set[str] = field(default_factory=set)  # in its family's keywords, id or its entry-point topic
     purpose_terms: set[str] = field(default_factory=set)  # in its family's purpose or notes
     authority: bool = False  # an entry point, README or index that speaks for its family or directory
@@ -752,6 +768,11 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
                                  process=process)
     ranked = sorted((c for c in candidates.values() if c.path not in seen), key=rank_key)
     pool = ranked[:max(RERANK_POOL, 3 * limit)]
+    if status_question:
+        # The record of a lifecycle lives in the files that speak for a family or directory (a
+        # decision index, an ADR index, a README): their lines are always read for a status
+        # question, so a registry row naming the thing is found however weak its word evidence.
+        pool += [c for c in ranked[len(pool):] if c.authority and c.in_content]
     tick = time.monotonic()
     excerpts_complete = _read_lines(state, [c for c in pool if c.in_content], terms, text, phrase, deadline)
     timings['excerpts_ms'] = round((time.monotonic() - tick) * 1000)
@@ -824,7 +845,7 @@ def _lifecycle_rank(state: State, path: str, status_question: bool = False) -> i
     return LIFECYCLE_RANK.get(state.lifecycle_of(path)[1], 1)
 
 
-def field_weight(c: Candidate, term: str, process: bool = False) -> float:
+def field_weight(c: Candidate, term: str, process: bool = False, status: bool = False) -> float:
     """How strongly ``c`` holds ``term``: its best field.
 
     1 in the path name; CATALOGUE_WEIGHT in its family's keywords, id or entry-point topic;
@@ -833,10 +854,13 @@ def field_weight(c: Candidate, term: str, process: bool = False) -> float:
     short passage of text (PASSAGE_SPAN lines) or in its family's purpose; TEXT_WEIGHT times the
     BM25 length factor anywhere in its text, CODE_BAG_WEIGHT times it over all its code
     identifier units. For a process question (``is_process_question``) the three code fields
-    count PROCESS_CODE_BOOST times as much (at most 1): the implementation is the answer.
+    count PROCESS_CODE_BOOST times as much (at most 1): the implementation is the answer. For a
+    status question, a word on a line that records a lifecycle state (``lifecycle_record``: a
+    registry row, a banner, a configuration comment) counts like the catalogue: that line is the
+    record that answers it.
     """
     boost = PROCESS_CODE_BOOST if process else 1.0
-    if term in c.name_terms:
+    if term in c.name_terms or (status and term in c.record_terms):
         return 1.0
     if term in c.catalogue_terms:
         return CATALOGUE_WEIGHT
@@ -871,7 +895,8 @@ def rarity(searched: int, holding: int) -> float:
     return max(MIN_RARITY, math.log((searched - holding + 0.5) / (holding + 0.5)))
 
 
-def relevance(c: Candidate, terms: list[str], weights: dict[str, float], process: bool = False) -> float:
+def relevance(c: Candidate, terms: list[str], weights: dict[str, float], process: bool = False,
+              status: bool = False) -> float:
     """Field-weighted relevance in [0, 2.25]: each query word's rarity weight (idf over the searched
     documents and code files) times its ``field_weight``, divided by the total weight.
 
@@ -880,7 +905,7 @@ def relevance(c: Candidate, terms: list[str], weights: dict[str, float], process
     "old") adds INTENT_NAME_BONUS.
     """
     total = sum(weights[t] for t in terms)
-    score = sum(weights[t] * field_weight(c, t, process) for t in terms) / total
+    score = sum(weights[t] * field_weight(c, t, process, status) for t in terms) / total
     if len(terms) > 1:
         if c.phrase_in_name:
             score += 1.0
@@ -910,7 +935,7 @@ def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, f
     README, index, data store), then words in the path name, then query words together on one short line; the exact
     relevance and the path break the remaining ties.
     """
-    score = relevance(c, terms, weights, process)
+    score = relevance(c, terms, weights, process, status_question)
     long_line = c.line_text is not None and len(c.line_text) > LONG_LINE
     if c.phrase_in_name or (c.name_terms | c.symbol_terms | c.catalogue_terms) == set(terms):
         tier = 0
@@ -921,13 +946,15 @@ def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, f
     name_weight = sum(weights[t] for t in c.name_terms)
     lifecycle = _lifecycle_rank(state, c.path, status_question)
     banded = score - LIFECYCLE_PENALTY * lifecycle
-    return (tier, -round(banded * 4), -len(c.defined), -len(c.compounds | c.defined), lifecycle,
+    # For a status question, a line recording the lifecycle of what is asked about is the answer.
+    record = round(sum(weights[t] for t in c.record_terms) / sum(weights[t] for t in terms), 6) if status_question else 0
+    return (tier, -round(banded * 4), -len(c.defined), -len(c.compounds | c.defined), -record, lifecycle,
             not c.authority, -round(name_weight, 6), -c.line_terms, -round(score, 6), c.path)
 
 
 def _candidate_hit(state: State, c: Candidate, terms: list[str], phrase: list[str]) -> dict:
     matched = sorted(c.name_terms | c.content_terms | c.symbol_terms | c.summary_terms | c.code_terms
-                     | c.catalogue_terms | c.purpose_terms | c.passage_terms)
+                     | c.catalogue_terms | c.purpose_terms | c.passage_terms | c.record_terms)
     if c.store is not None:
         return {**_entry_hits(state, c.store, terms)[0], 'matched': matched}
     match = ('content' if c.in_content else 'symbol' if c.symbol_terms or c.summary_terms
@@ -1236,7 +1263,21 @@ def _read_lines(state: State, pool: list[Candidate], terms: list[str], text: str
         folded = normalise(candidate.line_text)
         candidate.line_terms = (sum(t in folded for t in terms) if len(candidate.line_text) <= LONG_LINE else 0)
         candidate.passage_terms = best_passage(lines, terms)
+        candidate.record_terms = lifecycle_record(lines, terms)
     return complete
+
+
+def lifecycle_record(lines: list[tuple[int, str]], terms: list[str]) -> set[str]:
+    """The most query words on one line that also records a lifecycle state (LIFECYCLE_MARKER): a
+    registry row, a status banner or a configuration comment. At least two words (one word beside
+    "superseded" is any sentence); lines longer than LONG_LINE (one-line data dumps) are no record."""
+    best: set[str] = set()
+    for _, text in lines:
+        if len(text) <= LONG_LINE and LIFECYCLE_MARKER.search(normalise(text)):
+            hits = _prefix_hits(terms, words(text))
+            if len(hits) > len(best):
+                best = hits
+    return best if len(best) > 1 else set()
 
 
 def best_passage(lines: list[tuple[int, str]], terms: list[str]) -> set[str]:
@@ -1487,6 +1528,7 @@ class SymbolScan:
     compounds: dict[str, set[str]] = field(default_factory=dict)  # path -> typed identifiers in an identifier line
     union: dict[str, set[str]] = field(default_factory=dict)  # path -> terms over all its identifier units
     summary: dict[str, tuple[set[str], int, str]] = field(default_factory=dict)  # path -> its summary's terms
+    records: dict[str, set[str]] = field(default_factory=dict)  # path -> terms on a lifecycle line of its summary
     files: int = 0
     failure: str | None = None
 
@@ -1548,6 +1590,8 @@ def _symbol_scan(state: State, terms: list[str], deadline: float, units: Sequenc
         line_no, line = max(summaries.lines[path], key=lambda item: (
             len(_prefix_hits(terms, words(CAMEL.sub(' ', item[1])))), -item[0]))
         scan.summary[path] = (hits, line_no, line)
+        if record := lifecycle_record(summaries.lines[path], terms):
+            scan.records[path] = record
     scan.df = {term: len(paths) for term, paths in seen.items()}
     return scan
 
@@ -1568,6 +1612,8 @@ def _merge_symbols(scan: SymbolScan, candidates: dict[str, Candidate], reasons: 
             candidate.line, candidate.line_text = line_no, line
     for path, hits in scan.union.items():
         candidates[path].code_terms = hits
+    for path, hits in scan.records.items():
+        candidates[path].record_terms = hits
 
 
 # Failures that mean "the repository or Git could not be read" (callers map them to a typed error).
