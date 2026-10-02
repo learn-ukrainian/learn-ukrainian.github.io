@@ -81,6 +81,7 @@ TEXT_WEIGHT = 0.4  # a word anywhere in a document's text (a bag), before its BM
 CODE_BAG_WEIGHT = 0.3  # a word anywhere among a code file's identifier units (a bag, weakest code evidence)
 NAME_COVER_BONUS = 0.25  # every word of the file name (without its extension) is a query word
 MIN_RARITY = 0.1  # the rarity weight floor: a word in most files still counts a little
+PROCESS_CODE_BOOST = 1.3  # code evidence for a process question ("what stops ...", "where do we check ...")
 UNIT_WEIGHT = 0.6  # a word in a code file's summary, or beside another query word in one short passage of text
 INTENT_NAME_BONUS = 0.25  # an intent word ("deprecated", "old") in a path name: the folder says what is asked
 LONG_LINE = 1000  # a matching line longer than this (a one-line data dump) is no evidence of proximity
@@ -91,6 +92,7 @@ EXCERPT_OUTPUT_CAP = 32 * 1024 * 1024
 CODE_OUTPUT_CAP = 32 * 1024 * 1024
 LIFECYCLE_RANK = {'active': 0, None: 0, 'draft': 1, 'residual': 1, 'archive': 2, 'superseded': 3}
 BACKUP_RANK = 4
+LIFECYCLE_PENALTY = 0.03  # relevance a file gives up per lifecycle step (historical: 0.06, backup: 0.12)
 STATUS_WORDS = {'active': 'current', 'archive': 'historical', 'superseded': 'superseded', 'draft': 'draft',
                 'residual': 'unclassified', None: 'uncatalogued'}
 BACKUP_SUFFIXES = ('.backup', '.bak', '.orig', '.truncated', '.old', '.tmp', '~')
@@ -109,7 +111,7 @@ STOPWORDS = frozenset({
     'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than',
     'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', 'd', 'll', 'm', 'o', 're', 've',
     'y', 'would', 'could', 'may', 'might', 'must', 'shall',
-    'still', 'per', 'instead', 'get', 'find', 'look', 'use', 'used', 'using', 'ever', 'also', 'anything',
+    'per', 'instead', 'get', 'find', 'look', 'use', 'used', 'using', 'ever', 'also', 'anything',
     'something', 'someone', 'anyone', 'actually', 'like', 'thing', 'things', 'happen', 'happens', 'way',
     'every', 'whether',
     'і', 'й', 'та', 'в', 'у', 'на', 'з', 'із', 'до', 'що', 'як', 'де', 'чи', 'це', 'для', 'про',
@@ -120,9 +122,17 @@ STOPWORDS = frozenset({
 # turns off the lifecycle demotion, because the superseded or historical thing is its subject.
 STATUS_INTENT = frozenset({'current', 'currently', 'replaced', 'replace', 'replaces', 'replacement',
                            'retired', 'retire', 'deprecated', 'superseded', 'supersedes', 'obsolete',
-                           'outdated', 'old', 'anymore', 'abandoned'})
+                           'outdated', 'old', 'anymore', 'abandoned', 'still'})
 PROCESS_INTENT = frozenset({'implemented', 'implement', 'implements', 'implementation', 'computed',
                             'handled'})
+# A question word with one of these verbs asks where something is done ("what stops ...", "where do
+# we check ..."); the verbs stay search terms. Matched in any inflection (stops, checked, deleting).
+# Verbs that are also common nouns (record, store, build, limit) are left out.
+QUESTION_WORDS = frozenset({'what', 'which', 'where', 'how'})
+PROCESS_VERBS = frozenset({'check', 'enforce', 'refuse', 'reject', 'prevent', 'stop', 'block', 'delete', 'remove',
+                           'clean', 'catch', 'detect', 'decide', 'schedule', 'validate', 'verify', 'measure',
+                           'generate', 'parse', 'compute', 'guard', 'lint', 'reap', 'pick', 'select', 'launch',
+                           'resolve', 'retry', 'kill', 'refresh'})
 # Separators between words. Apostrophes stay inside words (Ukrainian п'ять, пʼять).
 SEPARATORS = re.compile(r"[\s_\-./\\:,;()\[\]{}<>\"`|+*?!@#=&%^~$]+")
 
@@ -416,8 +426,17 @@ class GitRun:
 def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
     """Run one ``git grep --cached`` with a wall-clock deadline and an output cap.
 
-    ``args`` are options, ``-e`` patterns and pathspecs built by ``_search_args``;
-    the subprocess gets no shell and no stdin. Exit status 1 is "no match".
+    ``args`` are options, ``-e`` patterns and pathspecs built by ``_search_args``.
+    Exit status 1 is "no match".
+    """
+    return _run_git(repo, ['grep', '--cached', *args], deadline, cap)
+
+
+def _run_git(repo: Path, argv: list[str], deadline: float, cap: int) -> GitRun:
+    """The one process starter: ``git <argv>`` with a wall-clock deadline and an output cap.
+
+    The subprocess gets no shell and no stdin; it is killed at the deadline or when its
+    output passes ``cap`` bytes, and always reaped. Exit status 1 is "no match".
     """
     remaining = deadline - time.monotonic()
     if remaining <= 0:
@@ -435,7 +454,7 @@ def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
     timer = threading.Timer(remaining, kill)
     chunks, size, over = [], 0, False
     try:
-        proc = subprocess.Popen(['git', '-C', str(repo), '--no-pager', 'grep', '--cached', *args],
+        proc = subprocess.Popen(['git', '-C', str(repo), '--no-pager', *argv],
                                 stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=env)
         timer.start()
         while chunk := proc.stdout.read1(1 << 16):
@@ -463,6 +482,14 @@ def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
     if status == 1:
         return GitRun(b'', 'no_match')
     return GitRun(b''.join(chunks), 'ok' if status == 0 else 'error')
+
+
+def _total_run(repo: Path, argv: list[str], deadline: float, cap: int) -> GitRun:
+    """``_run_git`` that never raises: any exception becomes an ``error`` run."""
+    try:
+        return _run_git(repo, argv, deadline, cap)
+    except Exception as exc:  # deliberate: a failure is a typed outcome, never a traceback
+        return GitRun(b'', 'error', type(exc).__name__)
 
 
 def _total_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
@@ -574,22 +601,28 @@ def _derived(state: State, key: str, build):
         return state.derived[key]
 
 
-def blob_sizes(state: State) -> dict[str, int]:
-    """The size in bytes of every tracked blob that is text- or code-readable, from one ``git cat-file``.
+def blob_sizes(state: State, deadline: float) -> dict[str, int]:
+    """The size in bytes of every tracked blob that is text- or code-readable, from one bounded
+    ``git ls-files --format`` (names and sizes only, no body is read).
 
-    A path whose size cannot be read is absent (its text then counts at full weight).
+    Kept with the state once read; a read that does not finish is not kept, and a path whose
+    size is unknown counts at full weight (``length_factor`` 1).
     """
-    def build() -> dict[str, int]:
-        paths = [p for p in state.files if code_readable(p) or text_readable(state, p)]
-        oids = ''.join(state.files[p].oid + '\n' for p in paths).encode()
-        try:
-            out = subprocess.run(['git', '-C', str(state.repo), 'cat-file', '--batch-check=%(objectsize)'],
-                                 input=oids, capture_output=True, timeout=30,
-                                 env={**os.environ, 'LC_ALL': 'C', 'GIT_TERMINAL_PROMPT': '0'}).stdout.split()
-        except (OSError, subprocess.SubprocessError):
-            return {}
-        return {p: int(s) for p, s in zip(paths, out, strict=False) if s.isdigit()}
-    return _derived(state, 'sizes', build)
+    with state.derived_lock:
+        if 'sizes' in state.derived:
+            return state.derived['sizes']
+    run = _total_run(state.repo, ['ls-files', '-z', '--format=%(objectsize) %(path)'], deadline, CODE_OUTPUT_CAP)
+    if run.outcome != 'ok':
+        return {}
+    sizes = {}
+    for record in run.stdout.split(b'\0'):
+        size, _, raw = record.partition(b' ')
+        path = raw.decode('utf-8', 'replace')
+        if size.isdigit() and path in state.files and (code_readable(path) or text_readable(state, path)):
+            sizes[path] = int(size)
+    with state.derived_lock:
+        state.derived['sizes'] = sizes
+    return sizes
 
 
 # Binary presence of a word means more in a short file than in a long one (a long file holds most
@@ -705,16 +738,18 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
                                                              deadline, reasons, units)
         scan = code.result() if code is not None else SymbolScan()
     _merge_symbols(scan, candidates, reasons)
-    _catalogue_evidence(state, terms, family, candidates)
-    _mark_candidates(state, candidates, intent_words)
+    _catalogue_evidence(state, terms, family, candidates, units)
+    _mark_candidates(state, candidates, intent_words, deadline)
     timings['content_ms'] = round((time.monotonic() - tick) * 1000)
 
     status_question = any(w in STATUS_INTENT for w in intent_words)
+    process = is_process_question(text, intent_words)
     # Rarity over everything searched: a word common in code identifiers is not rare because prose lacks it.
     searched = len(readable) + scan.files
     weights = {t: rarity(searched, df.get(t, 0) + scan.df.get(t, 0)) for t in terms}
     seen = {hit['path'] for hit in family_hits if hit.get('path')}
-    rank_key = functools.partial(_rank_key, state, terms=terms, weights=weights, status_question=status_question)
+    rank_key = functools.partial(_rank_key, state, terms=terms, weights=weights, status_question=status_question,
+                                 process=process)
     ranked = sorted((c for c in candidates.values() if c.path not in seen), key=rank_key)
     pool = ranked[:max(RERANK_POOL, 3 * limit)]
     tick = time.monotonic()
@@ -789,30 +824,43 @@ def _lifecycle_rank(state: State, path: str, status_question: bool = False) -> i
     return LIFECYCLE_RANK.get(state.lifecycle_of(path)[1], 1)
 
 
-def field_weight(c: Candidate, term: str) -> float:
+def field_weight(c: Candidate, term: str, process: bool = False) -> float:
     """How strongly ``c`` holds ``term``: its best field.
 
     1 in the path name; CATALOGUE_WEIGHT in its family's keywords, id or entry-point topic;
     SYMBOL_WEIGHT in one code identifier unit (a definition with its docstring); UNIT_WEIGHT in
-    the file's summary (module docstring, header comments) or with another query word in one
-    short passage of text (PASSAGE_SPAN lines); 1/2 in the family's purpose; 1/2 times the BM25
-    length factor anywhere in its text or over all its code identifier units.
+    the file's summary (module docstring, header comments), with another query word in one
+    short passage of text (PASSAGE_SPAN lines) or in its family's purpose; TEXT_WEIGHT times the
+    BM25 length factor anywhere in its text, CODE_BAG_WEIGHT times it over all its code
+    identifier units. For a process question (``is_process_question``) the three code fields
+    count PROCESS_CODE_BOOST times as much (at most 1): the implementation is the answer.
     """
+    boost = PROCESS_CODE_BOOST if process else 1.0
     if term in c.name_terms:
         return 1.0
     if term in c.catalogue_terms:
         return CATALOGUE_WEIGHT
     if term in c.symbol_terms:
-        return SYMBOL_WEIGHT
-    if term in c.summary_terms or term in c.passage_terms:
-        return UNIT_WEIGHT
-    if term in c.purpose_terms:
+        return min(1.0, SYMBOL_WEIGHT * boost)
+    if term in c.summary_terms:
+        return min(1.0, UNIT_WEIGHT * boost)
+    if term in c.passage_terms or term in c.purpose_terms:
         return UNIT_WEIGHT
     if term in c.content_terms:
         return TEXT_WEIGHT * c.length
     if term in c.code_terms:
-        return CODE_BAG_WEIGHT * c.length
+        return min(1.0, CODE_BAG_WEIGHT * boost) * c.length
     return 0.0
+
+
+def is_process_question(text: str, intent_words: Sequence[str]) -> bool:
+    """A question about where something is done ("what stops ...", "where do we check ...",
+    "where is X implemented?"): a process intent word, or a question word (what, which, where,
+    how) with a PROCESS_VERBS verb in any inflection."""
+    if any(w in PROCESS_INTENT for w in intent_words):
+        return True
+    found = words(text)
+    return bool(found) and found[0] in QUESTION_WORDS and bool(_prefix_hits(sorted(PROCESS_VERBS), found))
 
 
 def rarity(searched: int, holding: int) -> float:
@@ -823,7 +871,7 @@ def rarity(searched: int, holding: int) -> float:
     return max(MIN_RARITY, math.log((searched - holding + 0.5) / (holding + 0.5)))
 
 
-def relevance(c: Candidate, terms: list[str], weights: dict[str, float]) -> float:
+def relevance(c: Candidate, terms: list[str], weights: dict[str, float], process: bool = False) -> float:
     """Field-weighted relevance in [0, 2.25]: each query word's rarity weight (idf over the searched
     documents and code files) times its ``field_weight``, divided by the total weight.
 
@@ -832,7 +880,7 @@ def relevance(c: Candidate, terms: list[str], weights: dict[str, float]) -> floa
     "old") adds INTENT_NAME_BONUS.
     """
     total = sum(weights[t] for t in terms)
-    score = sum(weights[t] * field_weight(c, t) for t in terms) / total
+    score = sum(weights[t] * field_weight(c, t, process) for t in terms) / total
     if len(terms) > 1:
         if c.phrase_in_name:
             score += 1.0
@@ -846,21 +894,23 @@ def relevance(c: Candidate, terms: list[str], weights: dict[str, float]) -> floa
 
 
 def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, float],
-              status_question: bool = False) -> tuple:
+              status_question: bool = False, process: bool = False) -> tuple:
     """(tier, relevance band, typed identifiers held, lifecycle, name evidence, line evidence, relevance, path).
 
     Tier 0: the whole query in the path name (every word of it, or the phrase), or every word
     in the path name and one code identifier line together. Tier 1:
     the whole phrase in the text on a line that is not a one-line data dump (a one-word
-    query: the word in the text). Tier 2: everything else, banded by ``relevance`` in
-    quarter steps. Within a tier and band, a file holding more of the query's typed
-    identifiers (``compounds``) as a unit comes first: in its name or a code identifier
-    (where it is defined), then anywhere (its text). Then lifecycle (current ahead of draft
-    or unclassified, historical, superseded and, last, backup-like copies), then words in
-    the path name, then query words together on one short line; the exact relevance and
-    the path break the remaining ties.
+    query: the word in the text). Tier 2: everything else. Within a tier, files are banded
+    in quarter steps of ``relevance`` less LIFECYCLE_PENALTY per lifecycle step (current,
+    draft or unclassified, historical, superseded, backup-like), so an older file with
+    clearly better evidence still ranks first. Within a band, a file holding more of the
+    query's typed identifiers (``compounds``) as a unit comes first: in its name or a code
+    identifier (where it is defined), then anywhere (its text). Then lifecycle (alike for a
+    status question), then a file that speaks for its family or directory (entry point,
+    README, index, data store), then words in the path name, then query words together on one short line; the exact
+    relevance and the path break the remaining ties.
     """
-    score = relevance(c, terms, weights)
+    score = relevance(c, terms, weights, process)
     long_line = c.line_text is not None and len(c.line_text) > LONG_LINE
     if c.phrase_in_name or (c.name_terms | c.symbol_terms | c.catalogue_terms) == set(terms):
         tier = 0
@@ -869,9 +919,10 @@ def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, f
     else:
         tier = 2
     name_weight = sum(weights[t] for t in c.name_terms)
-    return (tier, -round(score * 4), -len(c.defined), -len(c.compounds | c.defined), not c.authority,
-            _lifecycle_rank(state, c.path, status_question), -round(name_weight, 6), -c.line_terms,
-            -round(score, 6), c.path)
+    lifecycle = _lifecycle_rank(state, c.path, status_question)
+    banded = score - LIFECYCLE_PENALTY * lifecycle
+    return (tier, -round(banded * 4), -len(c.defined), -len(c.compounds | c.defined), lifecycle,
+            not c.authority, -round(name_weight, 6), -c.line_terms, -round(score, 6), c.path)
 
 
 def _candidate_hit(state: State, c: Candidate, terms: list[str], phrase: list[str]) -> dict:
@@ -984,7 +1035,7 @@ def _entry_hits(state: State, entry: dict, terms: list[str]) -> list[dict]:
 
 
 def _catalogue_evidence(state: State, terms: list[str], family: str | None,
-                        candidates: dict[str, Candidate]) -> None:
+                        candidates: dict[str, Candidate], units: Sequence[str] = ()) -> None:
     """Credit each family's catalogue words to the files that speak for it, and data stores to their store.
 
     The catalogue is curated metadata about a family, so it is read before body text: query words
@@ -1010,6 +1061,7 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
                 candidate.catalogue_terms |= strong
                 candidate.purpose_terms |= weak
                 candidate.name_terms |= _prefix_hits(terms, words(store))
+                candidate.defined |= {u for u in units if _contains_words(words(store), words(u))}
                 candidate.store, candidate.authority = entry, True
             continue
         topics = {cat.strip_fragment(e['path']): words(e['topic']) for e in entry.get('entrypoints', [])}
@@ -1031,10 +1083,11 @@ def _average_sizes(state: State, sizes: dict[str, int]) -> tuple[float, float]:
     return (sum(text) / len(text) if text else 0.0, sum(code) / len(code) if code else 0.0)
 
 
-def _mark_candidates(state: State, candidates: dict[str, Candidate], intent_words: list[str]) -> None:
+def _mark_candidates(state: State, candidates: dict[str, Candidate], intent_words: list[str],
+                     deadline: float) -> None:
     """Length factors, README authority and intent words in names, for every candidate."""
-    sizes = blob_sizes(state)
-    averages = _derived(state, 'average_sizes', lambda: _average_sizes(state, sizes))
+    sizes = blob_sizes(state, deadline)
+    averages = _average_sizes(state, sizes)
     for path, c in candidates.items():
         c.length = length_factor(sizes.get(path), averages[not text_readable(state, path)])
         if README_NAME.fullmatch(PurePosixPath(path).name):
@@ -1045,10 +1098,21 @@ def _mark_candidates(state: State, candidates: dict[str, Candidate], intent_word
 
 # ---------------------------------------------------------------- step 2: names
 
+def name_words(path: str) -> list[str]:
+    """The words of a path that can say what it is about: every word except a README or index file
+    name, which only says that the file describes its directory ("read" never meets README)."""
+    name = PurePosixPath(path).name
+    found = words(path)
+    return found[:-len(words(name))] if INDEX_NAME.fullmatch(name) else found
+
+
 def name_covered(path: str, terms: list[str]) -> bool:
     """Every word of the file name without its extension is a query word (as typed or stemmed):
-    the query names the file itself (``.python-version`` for "python version pin")."""
+    the query names the file itself (``.python-version`` for "python version pin"). Never a README
+    or index file, whose name is not its subject."""
     name = PurePosixPath(path).name
+    if INDEX_NAME.fullmatch(name):
+        return False
     base = name.rsplit('.', 1)[0] if '.' in name[1:] else name
     base_words = words(base)
     return bool(base_words) and all(_prefix_hits(terms, [w]) for w in base_words)
@@ -1065,7 +1129,7 @@ def _name_candidates(state: State, terms: list[str], phrase: list[str], family: 
             continue
         if family is not None and state.report.resolved.get(path, (None,))[0] != family:
             continue
-        path_words = words(path)
+        path_words = name_words(path)
         hits = _prefix_hits(terms, path_words)
         if hits:
             found[path] = Candidate(path, name_terms=hits,
@@ -1217,6 +1281,7 @@ def _excerpt(text: str, terms: list[str], phrase: list[str]) -> str:
 # among the first HEADER_LINES).
 CODE_ROOTS = ('scripts', 'agents_extensions', '.githooks', '.github', '.mcp', 'packages', 'schemas', 'packaging')
 INI_SUFFIXES = frozenset({'.service', '.timer', '.slice', '.socket', '.path', '.target', '.ini', '.cfg', '.conf'})
+CONFIG_SUFFIXES = frozenset({'.yaml', '.yml', '.toml'}) | INI_SUFFIXES
 CODE_SUFFIXES = frozenset({'.py', '.sh', '.bash', '.js', '.mjs', '.cjs', '.ts', '.tsx', '.yaml', '.yml', '.toml',
                            '.md', ''}) | INI_SUFFIXES
 HEADER_LINES = 20
@@ -1233,6 +1298,7 @@ _TOML = re.compile(r'^\s*\[+([^\]]+)\]|^\s*([\w.-]+)\s*=')
 _MD = re.compile(r'^#{1,6}\s+(.+)')
 # INI-style configuration (systemd units, setup.cfg): a Description is the unit's own summary.
 _INI = re.compile(r'^\s*Description\s*=\s*(.+)|^\s*\[([^\]]+)\]|^\s*([\w.-]+)\s*=')
+INI_DESCRIPTION = re.compile(r'\s*Description\s*=')
 SYMBOL_SHAPES = {'.py': _PY, '.sh': _SH, '.bash': _SH, '': _SH, '.js': _JS, '.mjs': _JS, '.cjs': _JS, '.ts': _JS,
                  '.tsx': _JS, '.yaml': _YAML, '.yml': _YAML, '.toml': _TOML, '.md': _MD,
                  **dict.fromkeys(INI_SUFFIXES, _INI)}
@@ -1302,32 +1368,34 @@ def _code_pathspecs(state: State) -> tuple[list[str], set[str]]:
 def summary_lines(path: str, lines: list[tuple[int, str]]) -> list[tuple[int, str]]:
     """The lines of a code file's head (``lines``: its first SUMMARY_LINES) that say what the file is.
 
-    Python: comment lines and the first docstring (the module's; opening, body and closing).
-    Markdown: a front-matter ``description``, the first heading and the first paragraph after it.
-    Everything else: comment lines (never a ``#!`` interpreter line) and an INI ``Description=``.
+    Program files (Python, shell, JavaScript, TypeScript, hooks): the header block before the
+    first line of code - comment lines and, in Python, the module docstring (opening, body and
+    closing); a comment further down is not the file's summary. Configuration (YAML, TOML, INI):
+    comment lines anywhere in the head and an INI ``Description=``. Markdown: a front-matter
+    ``description``, the first heading and the first paragraph after it. Never a ``#!`` line.
     """
     suffix = _suffix(path)
     if suffix == '.md':
         return _markdown_summary(lines)
+    program = suffix not in CONFIG_SUFFIXES
     out: list[tuple[int, str]] = []
-    closing = None  # the quote that closes an open Python docstring
-    docstrings = 0
+    closing = None  # the quote that closes the open module docstring
     for no, line in lines:
         if closing:
             out.append((no, line))
             if closing in line:
                 closing = None
-        elif suffix == '.py' and DOCSTRING.match(line):
-            docstrings += 1
-            if docstrings > 1:
-                continue  # a later docstring belongs to a definition, read as an identifier unit
+        elif suffix == '.py' and DOCSTRING.match(line) and not any(DOCSTRING.match(text) for _, text in out):
             quote = '"""' if '"""' in line else "'''"
             out.append((no, line))
             if quote not in line.split(quote, 1)[1]:
                 closing = quote
-        elif (HEADER_LINE.match(line) and not line.startswith('#!')) or (suffix in INI_SUFFIXES and _INI.match(line)
-                                                                          and line.lstrip().startswith('Description')):
+        elif line.startswith('#!') or not line.strip():
+            continue
+        elif HEADER_LINE.match(line) or (suffix in INI_SUFFIXES and INI_DESCRIPTION.match(line)):
             out.append((no, line))
+        elif program:
+            break  # the first line of code ends the header
     return out
 
 

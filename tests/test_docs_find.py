@@ -505,13 +505,13 @@ def test_results_are_gated_again_whatever_git_returns(repo, monkeypatch):
     assert PRIVATE not in paths_of(result)
 
 
-def test_only_the_bounded_runner_starts_git_grep():
+def test_only_the_bounded_runner_starts_git():
     tree = ast.parse(Path(find_module.__file__).read_text(encoding='utf-8'))
     starters = sorted({fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)
                        for node in ast.walk(fn) if isinstance(node, ast.Attribute)
                        and node.attr in ('Popen', 'run', 'check_output', 'call')
                        and getattr(node.value, 'id', None) == 'subprocess'})
-    assert starters == ['_git_grep']
+    assert starters == ['_run_git']  # every git read (grep, ls-files) goes through the one bounded runner
 
 
 # ------------------------------------------------------------------ cut-offs are never "no source"
@@ -822,7 +822,7 @@ def code_repo(tmp_path_factory):
 
 
 @pytest.mark.parametrize('query, plan', [
-    ('Is the legacy deck still current, and what replaced it?', (['legacy', 'deck'], ['current', 'replaced'])),
+    ('Is the legacy deck still current, and what replaced it?', (['legacy', 'deck'], ['still', 'current', 'replaced'])),
     ('where is resolve-reviewer implemented', (['resolve', 'reviewer'], ['implemented'])),
     ('current', (['current'], [])),  # an intent word alone is the query
     ('is retired-model-9 current', (['retired', 'model', '9'], ['current'])),  # a typed name keeps its words
@@ -837,7 +837,7 @@ def test_a_long_question_keeps_its_content_words_within_the_term_cap():
     terms, intent = find_module.query_plan('Is the alpha beta gamma delta epsilon zeta eta theta still current, '
                                            'and what replaced it?')
     assert terms == ['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta']
-    assert intent == ['current', 'replaced']
+    assert intent == ['still', 'current', 'replaced']
 
 
 @pytest.mark.parametrize('term, stemmed', [('parsing', 'pars'), ('detected', 'detect'), ('reaps', 'reap'),
@@ -944,7 +944,7 @@ def test_a_typed_identifier_ranks_its_definition_first(code_repo):
 
 def test_a_configuration_key_answers_a_status_question(code_repo):
     result = find('is retired-model-9 still current', repo=code_repo)
-    assert result['intent_words'] == ['current'] and result['terms'] == ['retired', 'model', '9']
+    assert result['intent_words'] == ['still', 'current'] and result['terms'] == ['retired', 'model', '9']
     hit = hit_for(result, 'scripts/config/models.yaml')
     assert (hit['match'], hit['line'], hit['excerpt']) == ('symbol', 2, 'retired-model-9:')
 
