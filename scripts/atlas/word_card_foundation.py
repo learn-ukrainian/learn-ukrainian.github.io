@@ -30,6 +30,14 @@ ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
 ROW_BASIS = "sha256 canonical UTF-8 JSON of entire literal selected row, not whole database"
 HEX = r"[0-9a-f]{64}"
 PROSE = ("note", "matched_by", "hold", "match_note")  # Provenance prose; attributes and scope labels never link.
+# Input role: (native paths whose whole field set a validator fixes, None meaning every object; excluded inventory
+# arrays). List items are None in paths. Role-less inputs read no native key and exclude nothing.
+ROLES = {None: (None, set()), "register": (None, set()), "receipt": ({("denominator",)}, set()),
+         "registry": (None, {("entries",), ("source_records",), ("events",)}),
+         "manifest": ({(), ("admission",), ("admission", "denominator"), ("counts",), ("database_file_sha256",),
+                       ("database_wal_sha256",), ("selection", "denominator"), ("selection", "source_records", None,
+                       "row_key"), ("legacy_articles", None), ("legacy_articles", None, "metadata")},
+                      {("selection", "units"), ("selection", "source_records"), ("legacy_articles",)})}
 ADMISSION_FIELDS = {
     "admission", "candidate_sha256", "review_report_sha256", "review_family",
     "author_seat_distinct", "denominator", "checked_at", "review_task_id",
@@ -144,28 +152,35 @@ def rows(connection, table, key):
     return [dict(row) for row in connection.execute(f'SELECT * FROM "{table}" WHERE {where}', tuple(key.values()))]
 
 
-def walk(value, decoded=False, trail=()):  # Trail: enclosing objects, native or decoded, outermost first.
-    yield value, decoded, trail
+def walk(value, decoded=False, trail=(), at=(None, ()), scan=False):
+    # Trail: enclosing objects, native or decoded, outermost first, each with its decoding and (role, native path).
+    yield value, decoded, trail, at
     if isinstance(value, str) and value.lstrip()[:1] in {"[", "{", '"'}:
         try:
             parsed = parse(value)
         except json.JSONDecodeError:
             return
-        yield from walk(parsed, True, trail)
-    if isinstance(value, dict):  # Object keys count only inside a decoded string, never as native field names.
-        for item in [*value, *value.values()] if decoded else value.values():
-            yield from walk(item, decoded, (*trail, value))
-    elif isinstance(value, list):
+        yield from walk(parsed, True, trail, scan=scan)
+    (role, path), (closed, excluded) = at, ROLES[at[0]]
+    if isinstance(value, dict):  # Decoded keys count; only a context scan reads open native objects' keys.
+        for key in value if decoded or (scan and closed is not None and path not in closed) else ():
+            yield from walk(key, decoded, (*trail, (value, decoded, at)), scan=scan)
+        for key, item in value.items():
+            yield from walk(item, decoded, (*trail, (value, decoded, at)), (role, (*path, key)), scan)
+    elif isinstance(value, list) and not (scan and path in excluded):
         for item in value:
-            yield from walk(item, decoded, trail)
+            yield from walk(item, decoded, trail, (role, (*path, None)), scan)
 
 
 def source_keys(entry):
     return {k["key"] for k in entry.get("key_at_creation", {}).get("source_keys", [])}
 
 
-def isolation(inputs, heldout):
-    objects = list(walk(inputs))
+def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the first, which has the manifest role.
+    first = inputs[0]  # A first input without a selection object is itself read as the selection.
+    places = [("manifest", () if isinstance(first, dict) and isinstance(first.get("selection"), dict) else
+               ("selection",)), *((role, ()) for role in roles)] + [(None, ())] * len(inputs)
+    objects = [node for item, at in zip(inputs, places, strict=False) for node in walk(item, at=at)]
     for value, *_ in objects:
         if isinstance(value, dict):
             require(not any(k.startswith(("expected", "adjudicated")) for k in value),
@@ -181,13 +196,13 @@ def isolation(inputs, heldout):
     groups, owners = [], {}
     records = [r for v, *_ in objects if isinstance(v, dict) and isinstance(v.get("source_records"), list)
                for r in v["source_records"] if "raw_row" in r]
-    def cited(value, keys, decoded=False):  # Shared recogniser: every known key, overlapping or nested ones too.
-        texts = [t for t, *_ in walk(value, decoded) if isinstance(t, str)]
+    def cited(value, keys, decoded=False, at=(None, ()), scan=False):  # Shared recogniser: every known key, nested too.
+        texts = [t for t, *_ in walk(value, decoded, (), at, scan) if isinstance(t, str)]
         return {k for t in texts for k in keys if k in t and re.search(rf"(?<![\w:/#-]){re.escape(k)}(?![\w:/#-])", t)}
     # Closure inventory: identities (card/sense/source-record ids, mint cards/to) and structured keys (aliases, locators,
     # candidates, creation/unit keys, legacy slugs/aliases, mint endpoints, POS-review anchors) link; PROSE and mint
     # evidence only via cited known keys. Every object that forms a group is an owner.
-    for value, decoded, _ in objects:
+    for value, decoded, *_ in objects:
         if not isinstance(value, dict):
             continue
         group, notes = set(), []
@@ -224,7 +239,7 @@ def isolation(inputs, heldout):
             break
         boundary = expanded
     require(not boundary & replay, "Heldout/replay overlap after conservative alias closure")
-    for value, decoded, trail in objects:  # Adjudication markers are scanned with the same recogniser, never linked.
+    for value, decoded, trail, at in objects:  # Adjudication markers are scanned with the same recogniser, never linked.
         if not isinstance(value, dict):
             continue
         adjudication = value.get("kind") in {"identity", "split", "merge", "resolve", "variant", "sense_map"}
@@ -234,9 +249,12 @@ def isolation(inputs, heldout):
             require(not cited(value, boundary, decoded),
                     "Held-out adjudicated mapping touches a membership key or indirect alias")
             # A marker also marks every enclosing owner (itself included): refuse a closure-held or citing owner.
-            for index, owner, owned in [owners[id(o)] for o in (*trail, value) if id(o) in owners]:
+            for index, owner, owned in [owners[id(o)] for o, *_ in (*trail, (value,)) if id(o) in owners]:
                 require(not groups[index] & boundary and not cited(owner, boundary, owned),
                         "Held-out adjudicated mapping touches a marked owner's closure or text")
+            # Then its context: every enclosing object to the input root, its own included, minus inventory arrays.
+            require(not any(cited(o, boundary, d, place, True) for o, d, place in (*trail, (value, decoded, at))),
+                    "Held-out adjudicated mapping touches its enclosing context")
     return "checked"
 
 
@@ -465,7 +483,7 @@ def freeze(args):
     counts = selection_check(selection, {s["id"] for s in register["sources"]})
     admission = {k: receipt[k] for k in sorted(ADMISSION_FIELDS) if k in receipt}
     admission_check(admission, counts, file_digest(args.selection))
-    isolation([selection, receipt, register], None)
+    isolation([selection, receipt, register], None, ("receipt", "register"))
     databases = {n: getattr(args, n + "_db") for n in ("sources", "atlas", "vesum")}
     sidecars = [Path(str(p) + suffix) for p in databases.values() for suffix in ("-wal", "-shm")]
     output_check(args.output, [*databases.values(), *sidecars, args.selection, args.source_register, receipts[0],
@@ -491,7 +509,7 @@ def freeze(args):
                 "legacy_articles": inventory}
     manifest["manifest_sha256"] = digest(manifest)
     manifest_check(manifest)
-    isolation([manifest, receipt, register], args.heldout_manifest)
+    isolation([manifest, receipt, register], args.heldout_manifest, ("receipt", "register"))
     with locked(args.output):
         if args.output.exists():
             require(load(args.output) == manifest, "Immutable manifest exists with different content")
@@ -610,7 +628,7 @@ def allocate(args, manifest):
     with locked(args.registry):
         registry = load(args.registry) if args.registry.exists() else {
             "schema_version": "1", "registry_version": 1, "entries": [], "source_records": [], "events": []}
-        isolation([manifest, registry], args.heldout_manifest)
+        isolation([manifest, registry], args.heldout_manifest, ("registry",))
         cards, sources = allocation_check(manifest, registry, False)
         build = "pilot@sha256:" + manifest["manifest_sha256"]
         occupied = {e["card_id"] for e in registry["entries"]} | {r["source_record_id"] for r in registry["source_records"]}
@@ -639,7 +657,7 @@ def allocate(args, manifest):
                 event("source_record_mint", identity, record["locator"])
             registry["registry_version"] += int(args.registry.exists())
             allocation_check(manifest, registry)
-            isolation([manifest, registry], args.heldout_manifest)
+            isolation([manifest, registry], args.heldout_manifest, ("registry",))
             write(args.registry, registry)
         return registry
 
@@ -682,7 +700,7 @@ def main(argv=None):
             allocation_check(manifest, registry)
             require(not args.for_evaluation, "Evaluation refused: authenticated operator authority/signature and "
                     "acceptance thresholds are not established; Gate 2 remains open")
-        checked = isolation([manifest, registry], args.heldout_manifest)
+        checked = isolation([manifest, registry], args.heldout_manifest, ("registry",))
         unresolved = [u["unit_key"] for u in manifest["selection"]["units"] if not u["atlas_slug"]]
         # Only this build's identities are verified; other builds' events are retained, unverified history.
         foreign = None if registry is None else sum(

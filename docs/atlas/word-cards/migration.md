@@ -78,9 +78,15 @@ links or resolves membership. Mid-prose escaped JSON and case/normalisation vari
 Every non-mint registry event counts as adjudication, with or without `overlay_id`.
 Mint `from` endpoints and legacy `pos_review` anchors also link. Every object forming a closure group is an owner;
 a recognised marker at any depth, native or decoded, marks every enclosing owner (itself included), which refuses
-when its closure touches held-out keys or it cites one anywhere. Designated residuals, not universal protection:
-an unowned wrapper is never tainted by a sibling marker or reference; lifecycle `state` alone is no marker; raw-row
-columns never become keys and rows link only through admitted units, so a paradigm moved off its parent's unit stays unlinked.
+when its closure touches held-out keys or it cites one anywhere. Then every object enclosing the marker up to its
+input root, its own included, must cite no held-out key, skipping only the six inventory arrays at exact paths (manifest
+`selection.units`, `selection.source_records`, `legacy_articles`; registry `entries`, `source_records`, `events`).
+Keys there are text unless an admitting validator fixes the object's whole field set at that position: the manifest
+root, `admission` and its `denominator`, `counts`, both DB fingerprint maps, `selection.denominator`, each `row_key`,
+each legacy article and its `metadata`; every registry or register object; the receipt `denominator`. CLI operations
+name every input's role; a first input without `selection` is the selection; a role-less input reads no native key and
+skips nothing. A weak held alias equal to an open object's field name fails closed. Designated residuals, not universal
+protection: lifecycle `state` alone is no marker; raw-row columns never become keys and rows link only through admitted units, so a paradigm moved off its parent's unit stays unlinked.
 Expected/adjudicated answers are excluded from all inputs even without membership.
 Absent real membership, isolation remains unverified. `--for-evaluation` refuses
 until authenticated operator authority and thresholds have an approved contract.

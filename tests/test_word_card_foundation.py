@@ -718,7 +718,7 @@ POSITIONS = dict(  # family: (native nested marker, decoded marker); decoded one
     unit=(lambda o: o.update(REVIEW), lambda o: o.update(cefr_basis=MARK)),
     record=(lambda o: o["raw_row"].update(mapping="ov_1"), lambda o: o["raw_row"].update(definition=MARK)),
     legacy=(lambda o: o["metadata"].update(split_into=["wc_x"]), lambda o: o["metadata"].update(pos=MARK)))
-EXTRA = ("split_fields", "embedded", "from_join", "pos_join", "unowned", "wrapper")  # Last two: unowned, accepted.
+EXTRA = ("split_fields", "embedded", "from_join", "pos_join", "unowned", "wrapper")  # Last two: unowned markers.
 
 
 def owner_chain(s):  # Only the unit cites loc:<s>; the zero-alias legacy owner never cites any closure key.
@@ -757,10 +757,11 @@ def test_function_level_marked_owner_isolation(tmp_path, case, side):
             else dict(metadata=dict(slug="n"), aliases=[], pos_review=dict(anchor_locator=f"loc:{side}"))
         inputs += [join, dict(card_id="wc_n", senses=[dict(sense_id="ws_n")],
                               key_at_creation=dict(source_keys=[dict(key="atlas0:slug:n")], **REVIEW))]
-    if case in {"unowned", "wrapper"}:  # D3 (i): no container-level taint.
+    if case in {"unowned", "wrapper"}:  # A bare marker stays accepted; a wrapper's context cites its sibling reference.
         inputs.append(dict(settled_by="ov_1") if case == "unowned" else dict(decision=REVIEW, reference=f"loc:{side}"))
     reason = "a membership key" if case == "mint:native" else "a marked owner"  # A flat mint marks itself.
-    held = side == "h" and case not in {"unowned", "wrapper"}
+    reason = "its enclosing context" if case == "wrapper" else reason
+    held = side == "h" and case != "unowned"
     with pytest.raises(foundation.Refusal, match="adjudicated mapping touches " + reason) if held else nullcontext():
         assert foundation.isolation(inputs, member) == "checked"
 
@@ -796,3 +797,84 @@ def test_cli_marked_owner_refused_before_write(pilot, case, held, capsys):
     assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == int(held)
     assert pilot["registry"].read_bytes() == before
     assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches a marked owner") == 2 * held
+
+
+HELD, OTHER = "ulif:ulif_dictua_entries:id:140", "ulif:ulif_dictua_entries:id:0"  # Isolated held row; replay row.
+CONTEXTS = {  # case: (marker beside subject s in candidate c or receipt fields r, outcome when s is held).
+    "admission_wrapper": (lambda c, r, s: r.update(review_model=json.dumps(dict(d=dict(kind="identity"), ref=s))), True),
+    "selection_wrapper": (lambda c, r, s: c.update(decision=dict(review=dict(settled_by="ov_1"), reference=s)), True),
+    "deep": (lambda c, r, s: c.update(envelope=dict(reference=s, a=dict(b=dict(c=dict(kind="merge"))))), True),
+    "double_encoded": (lambda c, r, s: c.update(envelope=dict(reference=s, a=json.dumps(MARK))), True),
+    "siblings": (lambda c, r, s: c.update(one=dict(kind="variant"), two=dict(reference=s)), True),
+    "admission_marker": (lambda c, r, s: (r.update(review_model=MARK), c.update(reference=s)), True),
+    "decoy_array": (lambda c, r, s: c.update(legacy_articles=[dict(settled_by="ov_1"), dict(reference=s)]), True),
+    "decoy_owner": (lambda c, r, s: c.update(decoy=[dict(settled_by="ov_1"), dict(source_record_id=s)]), True),
+    "receipt_decoy": (lambda c, r, s: r.update(source_records=[dict(kind="merge"), dict(reference=s)]), True),
+    "own_key": (lambda c, r, s: c.update(decision={"settled_by": "ov_1", s: 1}), True),
+    "named_closed": (lambda c, r, s: c.update(admission={"kind": "merge", s: 1}), True),
+    "unit_metadata": (lambda c, r, s: c["units"][0].update(metadata={"settled_by": "ov_1", s: 1}), True),
+    "root_key": (lambda c, r, s: c.update({s: dict(kind="merge")}), True),
+    "receipt_own_key": (lambda c, r, s: r.update(decision={"settled_by": "ov_1", s: 1}), True),
+    "closed_values": (lambda c, r, s: r.update(review_model=MARK, review_harness=s), True),
+    "pos_review": (lambda c, r, s: None, True),  # Set after freeze: an untyped value under a closed legacy item.
+    "plain": (lambda c, r, s: c.update(reference=s), False), "key_only": (lambda c, r, s: c.update(decision={s: 1}), False),
+    "marker_only": (lambda c, r, s: c.update(decision=dict(settled_by="ov_1")), False),
+    "unit_marker": (lambda c, r, s: c["units"][0].update(review=dict(settled_by="ov_1")), False),
+    "row_marker": (lambda c, r, s: c["source_records"][0].update(review=dict(kind="merge")), False),
+    "receipt_marker": (lambda c, r, s: r.update(settled_by="ov_1"), False),
+    "root_marker": (lambda c, r, s: c.update(settled_by="ov_1"), "a membership key")}  # Own arrays: earlier check.
+
+
+@pytest.mark.parametrize("case,subject", [(c, s) for c, (_, held) in CONTEXTS.items()
+                                          for s in ((HELD, OTHER, "loc:unbound") if held is True else (HELD,))])
+def test_cli_marker_context_refused_before_write(pilot, case, subject, capsys):
+    records, member, fields = pilot["candidate"]["source_records"], pilot["root"] / "membership.json", {}
+    records[140] = capture("ulif", "ulif_dictua_entries", dict(records[140]["raw_row"], normalized_query="Other",
+                                                                content_sha256="c" * 64))  # Own aliases: unshared.
+    with sqlite3.connect(pilot["paths"]["sources"]) as db:
+        db.execute("UPDATE ulif_dictua_entries SET normalized_query='Other', content_sha256=? WHERE id=140", ("c" * 64,))
+    CONTEXTS[case][0](pilot["candidate"], fields, subject)
+    pilot["admit"]()
+    save(pilot["receipt"], json.loads(pilot["receipt"].read_bytes()) | fields)
+    save(member, dict(heldout=[HELD], replay=[OTHER]))
+    held = CONTEXTS[case][1] if subject == HELD else False
+    frozen, later = bool(held) and case != "pos_review", bool(held) and not case.startswith("receipt")
+    assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == frozen
+    assert pilot["manifest"].exists() is not frozen and pilot["operation"]("freeze") == 0  # Unverified freeze.
+    if case == "pos_review":
+        manifest = json.loads(pilot["manifest"].read_bytes())
+        manifest["legacy_articles"][0]["pos_review"] = {"kind": "merge", subject: 1}
+        rehash(manifest, selection=False)
+        save(pilot["manifest"], manifest)
+    assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == later  # Fresh; receipt: freeze only.
+    assert pilot["registry"].exists() is not later and pilot["operation"]("allocate") == 0
+    before = pilot["registry"].read_bytes()
+    assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == later
+    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == later
+    reason = held if isinstance(held, str) else "its enclosing context"
+    assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches " + reason) == frozen + 3 * later
+    assert pilot["registry"].read_bytes() == before
+
+
+@pytest.mark.parametrize("case,held", [("admission", False), ("registry_event", False), ("author_field", True),
+                                       ("event_shaped", True)])  # Held weak aliases equal field names.
+def test_cli_only_validator_fixed_field_sets_mask_keys(pilot, case, held, capsys):
+    member = pilot["root"] / "membership.json"
+    with sqlite3.connect(pilot["paths"]["atlas"]) as db:
+        db.executemany("INSERT INTO aliases VALUES (?,'canonical','fixture','first','public')", [("counts",), ("evidence",)])
+    pilot["candidate"].update({"author_field": dict(decision=dict(settled_by="ov_1", counts=1)),
+                               "event_shaped": dict(decoy=dict(event_id="ie_1", kind="merge", build_id="x", evidence=NOTE))
+                               }.get(case, {}))
+    pilot["admit"]()
+    save(pilot["receipt"], json.loads(pilot["receipt"].read_bytes()) | ({"review_model": MARK} if case == "admission" else {}))
+    save(member, dict(heldout=["evidence"], replay=[]))
+    assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == held
+    assert pilot["manifest"].exists() is not held and pilot["operation"]("freeze") == pilot["operation"]("allocate") == 0
+    registry = json.loads(pilot["registry"].read_bytes())
+    if case == "registry_event":
+        registry["events"].append(dict(event_id="ie_9999", kind="merge", build_id="fixture-review", evidence=NOTE, cards=[]))
+    save(pilot["registry"], registry)
+    before = pilot["registry"].read_bytes()
+    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == held
+    assert capsys.readouterr().err.count("its enclosing context") == 2 * held
+    assert pilot["registry"].read_bytes() == before
