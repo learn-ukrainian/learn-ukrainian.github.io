@@ -732,3 +732,74 @@ def test_git_computation_failure_fails_closed_across_all_checks(repo, monkeypatc
     # 5. Kimi diff refusal fails closed
     refusal = delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)
     assert refusal is not None
+
+
+@pytest.mark.parametrize(
+    "failure_mode",
+    ["verification_timeout", "verification_os_error", "verification_operational_exit"],
+)
+def test_ref_verification_failures_permit_no_fallback_across_all_checks(tmp_path, failure_mode, monkeypatch):
+    """When ref verification times out, raises OSError, or exits with operational error != 1,
+
+    it must return (None, False) and fail closed rather than falling back to origin/main.
+    """
+    origin = tmp_path / "origin.git"
+    primary = tmp_path / "primary"
+    subprocess.run(["git", "init", "--bare", "-q", "-b", "main", str(origin)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(primary)], check=True, timeout=30)
+    _git(primary, "config", "user.email", "test@example.com")
+    _git(primary, "config", "user.name", "Test")
+    _git(primary, "remote", "add", "origin", str(origin))
+    _commit(primary, "root.txt", "root")
+    _git(primary, "push", "-q", "-u", "origin", "main")
+
+    # Worker branches from main (origin/main is at HEAD)
+    worktree = primary / ".worktrees" / "dispatch" / "worker"
+    _git(primary, "worktree", "add", "-q", "-b", "worker", str(worktree), "origin/main")
+    _git(worktree, "config", "user.email", "test@example.com")
+    _git(worktree, "config", "user.name", "Test")
+
+    original_run = subprocess.run
+
+    def mock_run(args, **kwargs):
+        # When git rev-parse is called during ref verification:
+        if len(args) >= 2 and args[0] == "git" and args[1] == "rev-parse":
+            if failure_mode == "verification_timeout":
+                raise subprocess.TimeoutExpired(cmd=args, timeout=30)
+            elif failure_mode == "verification_os_error":
+                raise OSError("simulated git execution failure")
+            elif failure_mode == "verification_operational_exit":
+                return subprocess.CompletedProcess(args, returncode=128, stdout="", stderr="fatal: corrupted repo")
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", mock_run)
+
+    # 1. _run_count_ahead returns (None, False) - NOT (None, True)
+    count, count_missing = delegate._run_count_ahead(worktree, "some-base")
+    assert count is None
+    assert count_missing is False
+
+    # 2. _run_merge_base returns (None, False) - NOT (None, True)
+    sha, mb_missing = delegate._run_merge_base(worktree, "some-base")
+    assert sha is None
+    assert mb_missing is False
+
+    # 3. _resolve_merge_base fails closed (None), does NOT fall back to origin/main at HEAD
+    mb = delegate._resolve_merge_base(worktree, "some-base", base_sha=None)
+    assert mb is None
+
+    # 4. Ceiling check fails closed
+    envelope = {"max_changed_files": 2, "max_non_test_loc": 20}
+    verdict = delegate._advisory_ceiling_check(worktree, "some-base", envelope, base_sha=None)
+    assert verdict["measured"] is False
+    assert verdict["error"] == "merge-base with the base branch is unknown"
+
+    # 5. Exemption check fails closed
+    check = delegate._exempt_change_check(worktree, "some-base", base_sha=None)
+    assert check["measured"] is False
+    assert check["error"] == "merge-base with the base branch is unknown"
+
+    # 6. Kimi diff refusal fails closed
+    refusal = delegate._kimi_diff_refusal(worktree, "some-base", "kimi", base_sha=None)
+    assert refusal is not None
+    assert "could not be read" in refusal

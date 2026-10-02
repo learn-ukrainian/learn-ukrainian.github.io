@@ -4787,10 +4787,12 @@ def _run_count_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
     except (OSError, subprocess.TimeoutExpired):
         return None, False
     if proc.returncode != 0:
+        # Permit fallback only on confirmed absence (exit 1 from rev-parse).
+        # Unavailable verification (None), operational error (!= 1), or ref present (0) fails closed.
         ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
-        if ref_check is not None and ref_check[0] == 0:
-            return None, False
-        return None, True
+        if ref_check is not None and ref_check[0] == 1:
+            return None, True
+        return None, False
     try:
         return int((proc.stdout or "").strip()), False
     except ValueError:
@@ -4944,9 +4946,12 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
         sha = (proc.stdout or "").strip()
         return (sha or None), False
     ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
-    if ref_check is not None and ref_check[0] == 0:
-        return None, False
-    return None, True
+    if ref_check is not None and ref_check[0] == 1:
+        # Confirmed absence: git rev-parse ran and confirmed the ref does not exist (exit 1).
+        return None, True
+    # Either ref exists (0), verification was unavailable (None), or failed operationally (!= 1).
+    # Fail closed in all these cases: do NOT treat as missing and do NOT fall back.
+    return None, False
 
 
 def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = None) -> str | None:
