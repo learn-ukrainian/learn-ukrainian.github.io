@@ -41,6 +41,8 @@ from scripts.fleet_comms.review_publication import (
     publication_idempotency_key,
     validate_review_gate_input,
 )
+from scripts.opsec.prepublish import publication_boundary
+from scripts.publish.github import Request, request_run
 
 Runner = Callable[..., subprocess.CompletedProcess[str]]
 
@@ -101,13 +103,13 @@ def fetch_pr_head_sha(
     *,
     repository: str,
     pr_number: int,
-    runner: Runner = subprocess.run,
+    runner: Runner | None = None,
 ) -> str:
     """Return the live PR head OID via ``gh`` (injectable for tests)."""
     if pr_number <= 0:
         raise ReviewPublisherError(f"invalid_pr: {pr_number}")
     owner, repo = split_repository(repository)
-    completed = runner(
+    completed = (runner or subprocess.run)(
         [
             "gh",
             "pr",
@@ -137,29 +139,22 @@ def fetch_pr_head_sha(
     return head.lower() if len(head) == 40 else head
 
 
+@publication_boundary(ReviewPublisherError)
 def post_pr_comment(
     *,
     repository: str,
     pr_number: int,
     body: str,
-    runner: Runner = subprocess.run,
+    runner: Runner | None = None,
 ) -> str:
     """Post one PR comment; return the comment URL when gh prints it."""
     owner, repo = split_repository(repository)
-    completed = runner(
-        [
-            "gh",
-            "pr",
-            "comment",
-            str(pr_number),
-            "--repo",
-            f"{owner}/{repo}",
-            "--body",
-            body,
-        ],
+    completed = request_run(
+        Request("pr-comment", number=int(str(pr_number)), repo=f"{owner}/{repo}", body=body),
         capture_output=True,
         text=True,
         check=False,
+        runner=runner,
     )
     if completed.returncode != 0:
         stderr = (completed.stderr or "").strip()
@@ -170,6 +165,7 @@ def post_pr_comment(
     return _single_line(completed.stdout or "(posted)", label="comment_url")
 
 
+@publication_boundary(ReviewPublisherError)
 def post_commit_status(
     *,
     repository: str,
@@ -177,27 +173,25 @@ def post_commit_status(
     state: str,
     context: str,
     description: str,
-    runner: Runner = subprocess.run,
+    runner: Runner | None = None,
 ) -> None:
     """Create a commit status on the exact reviewed SHA."""
     owner, repo = split_repository(repository)
     if state not in {"success", "failure", "error", "pending"}:
         raise ReviewPublisherError(f"invalid_status_state: {state!r}")
-    completed = runner(
-        [
-            "gh",
-            "api",
-            f"repos/{owner}/{repo}/statuses/{head_sha}",
-            "-f",
-            f"state={state}",
-            "-f",
-            f"context={context}",
-            "-f",
-            f"description={description[:140]}",
-        ],
+    completed = request_run(
+        Request(
+            "commit-status",
+            repo=f"{owner}/{repo}",
+            sha=head_sha,
+            state=state,
+            context=context,
+            description=description[:140],
+        ),
         capture_output=True,
         text=True,
         check=False,
+        runner=runner,
     )
     if completed.returncode != 0:
         stderr = (completed.stderr or "").strip()
@@ -312,7 +306,7 @@ def _summary_for(
 def execute_publication(
     plan: PublicationPlan,
     *,
-    runner: Runner = subprocess.run,
+    runner: Runner | None = None,
     conn: sqlite3.Connection | None = None,
     require_receipt: bool = False,
 ) -> PublicationResult:
@@ -456,7 +450,7 @@ def publish_sealed_verdict(
     *,
     current_head_sha: str | None = None,
     mutate: bool = False,
-    runner: Runner = subprocess.run,
+    runner: Runner | None = None,
     store: ArtifactStore | None = None,
     require_receipt: bool = False,
     status_context: str = DEFAULT_STATUS_CONTEXT,

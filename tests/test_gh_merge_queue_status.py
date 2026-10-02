@@ -603,3 +603,8 @@ def test_cli_main_null_data_diagnostics(tmp_path: Path, capsys: pytest.CaptureFi
     assert data["pr_number"] == 7814
     assert "GraphQL error: GraphQL syntax error near token" in data["error"]
     assert len(data["errors"]) == 1
+
+
+@pytest.fixture(autouse=True)
+def _publisher_transport(publisher_transport):
+    """Inject the subprocess spy into typed GitHub read transport."""

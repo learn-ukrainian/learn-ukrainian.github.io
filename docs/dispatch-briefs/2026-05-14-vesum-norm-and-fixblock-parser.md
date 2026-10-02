@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — VESUM gate normalization + ADR-008 fix-block parser markdown handling
 
 > **Issues:** #1921 (VESUM gate normalization), #1922 (ADR-008 parser)
@@ -14,7 +20,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/vesum-norm-fixblock-2026-05-14 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -146,7 +152,7 @@ If the parser must remain regex (preserves existing test surface), use non-greed
 - [ ] `.python-version` unchanged (must be `3.12.8`)
 - [ ] `.yamllint` and `.markdownlint.json` unchanged
 - [ ] No `status/*.json`, `audit/*-review.md`, or `review/*-review.md` files in diff
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertions weakened (`is True` → `isinstance(..., bool)`)
 - [ ] Every changed file directly related to the two bug fixes

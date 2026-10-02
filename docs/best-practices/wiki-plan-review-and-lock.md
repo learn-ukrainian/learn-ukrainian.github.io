@@ -186,7 +186,7 @@ Address findings. If non-trivial, a second round is expected — don't short-cir
 
 - PR title: `feat(quality): review-and-lock <slug> wiki + plan (#<N>)`
 - Do NOT merge the PR yourself. The user merges.
-- Do NOT use `gh pr merge --admin`.
+- Do NOT use `.venv/bin/python -m scripts.publish pr-merge --admin`.
 
 ---
 

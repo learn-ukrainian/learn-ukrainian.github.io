@@ -173,3 +173,9 @@ def test_download_with_gh_success_returns_stdout(monkeypatch: pytest.MonkeyPatch
     pointer = {"release_tag": "atlas-open-dataset"}
     assert hydrate_module._download_with_gh(pointer, repo="owner/repo") == b"gzip bytes"
     assert calls[0]["timeout"] == hydrate_module.GH_RELEASE_DOWNLOAD_TIMEOUT_SECONDS
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

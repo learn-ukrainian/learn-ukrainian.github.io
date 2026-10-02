@@ -1,11 +1,11 @@
 built_with:
-  mcp_commit: 61ab0f55318ceb6d7f696f000a20320da9967936
-  overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
+  mcp_commit: 269b57bbc9ba4061fd4d6197470fee33e20d4aa5
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 5cc86cdb59fee1f79f70f29698bf397aa151c37677d8d7f1ee0fe6d942c66ac5
+  sources_db: 76b68c77864350c354827dba3cfda51dad30b3a9893cd4ef568962b665633804
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
+  trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
   ulif_forms: pending
   vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
 evidence_schema: 1
@@ -45,6 +45,58 @@ examples:
     row_sha256: 0a83910fbbda649d136e35d3d4afa001ba1bdd6fbd24afb658a6ec79b451bd5e
     section_id: 13091
   text: Ви не бачили жабок?
+- id: EX-003
+  sentence_ref:
+    words:
+    - W-118
+    - W-145
+    - W-146
+    - W-147
+    - W-148
+    - W-035
+  sha256: 0eb98765e8bdfe5915c028fc5eb5c9fba470d3b963c33fbe4156916dc5162804
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0105
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 109
+    row_sha256: bd828b32ba22aa0fbefdd1b34677bb019dec8af511b21837a5cb14f27d359542
+    section_id: 13056
+  text: 'зуб
+
+    бак
+
+    біб
+
+    лід
+
+    бук
+
+    над'
+- id: EX-004
+  sentence_ref:
+    words:
+    - W-149
+    - W-151
+    - W-152
+    - W-150
+    - W-107
+    - W-153
+  sha256: 38bcf1f3e6cdf06dc874c24b8368fef21ffa3d6038452903059ef833e299ce49
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 10
+    row_sha256: 5362b6349fe72bfa9782b30474bb8ea1a5f6d7da9ee503b0d67659b4dd9dfb28
+    section_id: 13069
+  text: 'грати кава грім
+
+    ґрати ґава ґрунт'
 exercises:
 - id: X-001
   items_sample:
@@ -221,6 +273,48 @@ exercises:
     page: 30
     row_sha256: 81e0613e8e332ba2f5b5462777cea61318125cb19dc5d1dac368387a24fd0a90
     section_id: 13089
+- id: X-006
+  items_sample:
+  - 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  pattern: Find an incorrect language-mechanics analysis, then select its correction against the taught source model.
+  quote: 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 17
+    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
+    section_id: 12965
+- id: X-007
+  items_sample:
+  - 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].
+
+    [ • ] [ • ]'
+  pattern: Classify the taught sound represented by a letter using the primer vowel and consonant symbols.
+  quote: 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].
+
+    [ • ] [ • ]'
+  sha256: eb41607e1ed8bf2677d02df65a5a962e114349c67746fdccd856c0c16ea9f21f
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 15
+    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
+    section_id: 12963
 module: a1/reading-ukrainian
 texts:
 - id: T-001
@@ -1120,21 +1214,19 @@ texts:
     section_id: 13083
   supports: 'Primer part 2 printed page 22: Х syllables and a read list of decodable Х words after the Х key-word page.'
 - id: T-020
-  quote: 'В українській мові є два різні звуки. подібні до латинських h і g. Раніш вони
-
-    позначались на письмі й друковано літерами г (h) і ґ (g).'
-  sha256: cae99bed838fbeab235abab06867c32da3e7451ac92db949f3a64441b9055e60
+  quote: Бачу Ґ, ґ (ґе). Чую [ґ].
+  sha256: 32ae76ab4d326e887f0d6ea70e16480e78d6df42cb311ffdbd2414be6588863a
   source:
-    author: Borys Antonenko-Davydovych
-    chunk_id: antonenko-davydovych-yak-my-hovorymo_p147
-    file: antonenko-davydovych-yak-my-hovorymo
-    grade: ''
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
     kind: textbook
-    page: null
-    row_sha256: 4a547be86afdc67ac4436e60be9e855e9e32e236fed4269a12b6382eb69091fc
-    section_id: 7191
-  supports: 'Antonenko-Davydovych, Як ми говоримо, p. 147: Ukrainian has two different sounds, similar to Latin h and g, written
-    г and ґ; the reader must not give г the g reading.'
+    page: 10
+    row_sha256: 5362b6349fe72bfa9782b30474bb8ea1a5f6d7da9ee503b0d67659b4dd9dfb28
+    section_id: 13069
+  supports: 'Current primer printed p.8: Ґ has the explicit [ґ] sound model. Contrast with the Г model T-007 and recordings
+    V-009/V-002. Modern Pravopys 2019 §6 independently corroborates the norm; Antonenko-Davydovych is not a phonetics authority.'
 - id: T-021
   quote: 'Сполучення Lе передається через ле: білéт, елéктрика, желé, Галілéй,
 
@@ -1168,6 +1260,356 @@ texts:
   supports: 'Strokal, orthography manual p. 233, § 21: Latin e is written е, Latin t (th) is written т, Latin g and h are
     written г (ґ for an imitated g), and English h is written х in some words; the Latin-shaped Е, Т and Х are checked against
     these correspondences.'
+- id: T-022
+  quote: Т т
+  sha256: 8ed76dc17a515d9548fe3da7ea34c4f92b3d690c1af9cbe237b847193966164a
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 88
+    row_sha256: 3d99901d08c101c5efaea24ceaebc0d231698cbc5b20df24af6e5265fed04da9
+    section_id: 13035
+  supports: Exact capital/small heading for taught letter Т; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-023
+  quote: Е е
+  sha256: 35b23a80f0dd91f18e3e0ef4c5413aec55278d0f66c504d8ac65bf44fd648e0b
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0088
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 92
+    row_sha256: 22cadc130ea0ef47ef85a8d9bad2352f2a92516b79138ee87f50982b818253c8
+    section_id: 13039
+  supports: Exact capital/small heading for taught letter Е; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-024
+  quote: Д д
+  sha256: 05f6213a887e5fa716ca8663ade2277fbb095e58a856d2bb13ec21ecf1f4eb3b
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0092
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 96
+    row_sha256: be5bda8b4d3dd7fe50240ee1a92b5ae7571b7350338e93b99a3199619bce6771
+    section_id: 13043
+  supports: Exact capital/small heading for taught letter Д; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-025
+  quote: З з
+  sha256: 1f880a6dca57b6073458e91d9647e368aa8aaa29898479c046242744aaf5c340
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0096
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 100
+    row_sha256: 2b1b8286bc46f4e3a53deddd47968362297f38dca1026157888f2e54a76ab0a3
+    section_id: 13047
+  supports: Exact capital/small heading for taught letter З; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-026
+  quote: Б б
+  sha256: 79e486f2f7a1e98100b9330475b1b136f1e4de683a2f3da74f8bd81152742913
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0104
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 108
+    row_sha256: f7bb5df24c374f55691328d9de1058b9fffa880942576ce94554d9eab6f48c1b
+    section_id: 13055
+  supports: Exact capital/small heading for taught letter Б; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-027
+  quote: Г г
+  sha256: e03bea27e1a0c0ba4fcf22508120308dba7607354f6e9b33152076d937f8581a
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0003
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 6
+    row_sha256: 4ff096be956bfaee4f7dd1180664cf8b0e0cef36c644ff34c7f8b18b4984bb2c
+    section_id: 13065
+  supports: Exact capital/small heading for taught letter Г; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-028
+  quote: Ґ ґ
+  sha256: c5824da153f71753369ef34a270ea8c82d0a173753e2903a3293aa9e6baef512
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact capital/small heading for taught letter Ґ; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-029
+  quote: Ч ч
+  sha256: 4dc0935b80f59b6a1ee2c655db9c3fa3ccf71bfdb163e528a9e8eeeee1060de1
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0011
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 14
+    row_sha256: 7bc713956e456d8d52b93139aa826fda9deb7f3f980226517581d39f033bfe4d
+    section_id: 13073
+  supports: Exact capital/small heading for taught letter Ч; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-030
+  quote: Й й
+  sha256: 3da49574c6aa4410b4a088b0b1476280e0f3d811269711d20dbdf2ca0504dfaa
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0015
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 18
+    row_sha256: ec6d44c52725ef51f3bf8b96a1a654b7c33483090da5473fcb0d9cf711e8d4f1
+    section_id: 13077
+  supports: Exact capital/small heading for taught letter Й; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-031
+  quote: Х х
+  sha256: 266c1d1d428759a8c805b0e0f9c8738e7853dbd4079191d87102f8bd00d456f9
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0019
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 22
+    row_sha256: a1a4cfc1542761089169d3f159c532bf558b6110a9363c74914a5141059817f2
+    section_id: 13081
+  supports: Exact capital/small heading for taught letter Х; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-032
+  quote: Ж ж
+  sha256: 59478ae7f8eb6d6fd7df7acd827d5197d0f476a231583fdaba16901329de10d6
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0023
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 26
+    row_sha256: c8a41620e8f7e791665ff1bef118c25ce5a8ff71f15fe05226c5cb4d500511da
+    section_id: 13085
+  supports: Exact capital/small heading for taught letter Ж; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-033
+  quote: Ш ш
+  sha256: 2a760541ae55f84e48a45fd2486ddeb7b59b5ab89242ac74e5c0ffaa8a80b5e5
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0027
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 30
+    row_sha256: 81e0613e8e332ba2f5b5462777cea61318125cb19dc5d1dac368387a24fd0a90
+    section_id: 13089
+  supports: Exact capital/small heading for taught letter Ш; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-034
+  quote: Настала весна. Прилетіли птахи.
+  sha256: 4641b693e38b77d19ac064b09ded65e5534cf869d4114b4493ddbeba2fedc471
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0110
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 113
+    row_sha256: ee62eb5e2beb8d74eec6debb1e93a022eb168f1d8bc9860c0652f56585757d38
+    section_id: 13172
+  supports: 'Primer printed p.111 (chunk title p.113): two complete connected sentences, fully decodable with 25 letters;
+    excludes the next sentence whose shore form has unresolved stress.'
+- id: T-035
+  quote: 'грати кава грім
+
+    ґрати ґава ґрунт'
+  sha256: 38bcf1f3e6cdf06dc874c24b8368fef21ffa3d6038452903059ef833e299ce49
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 10
+    row_sha256: 5362b6349fe72bfa9782b30474bb8ea1a5f6d7da9ee503b0d67659b4dd9dfb28
+    section_id: 13069
+  supports: Complete six-word Г/Ґ comparison row, matching EX-004; print discrimination and offline read-aloud, never a recording
+    of this row.
+- id: T-036
+  quote: Ми прилетіли додому!
+  sha256: 7f728f8525ef99590624fa53fd3f74e857bbe331e00653cfa1c0b29376ee6946
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0029
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 32
+    row_sha256: 0a83910fbbda649d136e35d3d4afa001ba1bdd6fbd24afb658a6ec79b451bd5e
+    section_id: 13091
+  supports: Whole sourced decodable sentence, unchanged; scored printed comprehension and offline read-aloud, not a listening
+    target.
+- id: T-037
+  quote: Ви не бачили жабок?
+  sha256: 59c804555c3b9cfcba384132d02cfb5f1721a71f6abe2449288606306835c635
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0029
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 32
+    row_sha256: 0a83910fbbda649d136e35d3d4afa001ba1bdd6fbd24afb658a6ec79b451bd5e
+    section_id: 13091
+  supports: Whole sourced decodable sentence, unchanged; scored printed comprehension and offline read-aloud, not a listening
+    target.
+- id: T-039
+  quote: 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 17
+    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
+    section_id: 12965
+  supports: 'Primer printed p.15: find the incorrect analysis and repair it. Model methodology only; the fresh tasks correct
+    source-symbol assignments or vowel counts, never invent misspelled Ukrainian words or untaught cluster boundaries.'
+- id: T-040
+  quote: 'Мовні звуки: голосні та приголосні
+
+    Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].
+
+    [ • ] [ • ]
+
+    Вимов перший звук у словах — назвах предме-
+
+    тів. Який це звук? Приголосний звук позначає-
+
+    мо так: [–].
+
+    [ – ] [ – ] [ – ]
+
+    [ – ]
+
+    Вимов голосні звуки в словах — назвах предме-
+
+    тів.
+
+    Вимов приголосні звуки в словах — назвах
+
+    предметів.'
+  sha256: ae3300211245b3d109c38fdd1a04874e4c5ff004376623b5c11ad8bd9b6e877b
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 15
+    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
+    section_id: 12963
+  supports: 'Primer printed p.13: vowel [•] and consonant [–] categories; classify already taught single-sound letters, not
+    silent signs or two-sound vowel letters.'
+- id: T-038
+  quote: А а
+  sha256: 1cde4efb0b1f662356daba1769544cb8f096ae13eac7396b41a0fcf6fe24a0a1
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact capital/small heading for taught letter А; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-041
+  quote: Та-то
+  sha256: 2cdb1268a00262aa83e6b269b7965c817f55ffcc16d3cd3efce847c85b6a3799
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 88
+    row_sha256: 3d99901d08c101c5efaea24ceaebc0d231698cbc5b20df24af6e5265fed04da9
+    section_id: 13035
+  supports: The exact two distinct syllables of core W-101; no full-page OCR host or guessed split.
+- id: T-042
+  quote: Зи-ма
+  sha256: d057d23f83859d3b2d8aaa28e3dc2b94504c3a4a8589f09abf21795fd5570b8f
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0096
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 100
+    row_sha256: 2b1b8286bc46f4e3a53deddd47968362297f38dca1026157888f2e54a76ab0a3
+    section_id: 13047
+  supports: Exact source segmentation of the recycled winter word; two different source syllables for assembly.
+- id: T-043
+  quote: 'У слові стільки складів, скільки в ньому голосних
+
+    звуків.'
+  sha256: 96a62c2950c3ea1f17089e43c40cd2fb9a693645425ce28b060baef393ba9958
+  source:
+    author: vashulenko
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0017
+    file: 2-klas-ukrmova-vashulenko-2019-1
+    grade: '2'
+    kind: textbook
+    page: 19
+    row_sha256: 65a0648c5e87f716f7553c9476a6b4cc87f79d00903d1acbe42804e697f45783
+    section_id: 22017
+  supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains
+    only; English scaffolding teaches the rule before scoring.
+- id: T-044
+  quote: хто
+  sha256: 9ec809ec598ea7ac980d8aee413b2d2e06b3f4c60b7ff4dd8972fc6bb41c2e47
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0007_w008
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 193e31ac6bc8b132220e0dc53bf6ff30b08404fa5debf9dfdfff7185504af6c7
+    section_id: null
+  supports: ULP 1-07 nearest vocabulary placement for the D3 memorized who-question chunk serving D4; premium notes are explains-only,
+    never displayed.
 unsupported:
 - claim: An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or a typical English-reader
     difficulty for each). The sources give each Ukrainian sound (primer "Чую [ж]" lines, T-010 to T-014) and a native pronunciation
@@ -1200,121 +1642,342 @@ unsupported:
       question words; none covers Ж, Ш, Ч, Х or Й)
     tool: sqlite textbooks (source_file ulp-1..6-00-lesson-notes)
   status: resolved
+- claim: No confirmed free recording covers all exact whole-word choices required by lessons 1 s3/a8, 3 s3/a7 and 4 a10. Public
+    letter videos use different example words. V-014 supports W-074, V-004 supports W-081/W-101, and V-015 supports W-118/W-109/W-110;
+    these do not establish the remaining word sets. Lesson 3 a4 also needs exact primer Г/Ґ syllable recordings. Each remaining
+    required word or syllable needs an exact-form recording before a by-ear item can be written.
+  id: U-002
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [1, 3, 4]
+
+    records: [''T-001'', ''T-002'', ''T-007'', ''T-009'', ''T-019'', ''T-035'', ''EX-004'']
+
+    words: [''W-074'', ''W-081'', ''W-082'', ''W-101'', ''W-102'', ''W-103'', ''W-106'', ''W-107'', ''W-108'', ''W-109'',
+    ''W-110'', ''W-117'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
+      and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
+      partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
+- claim: No confirmed free recording says either whole primer sentence EX-001 or EX-002 required by lesson 5 s3/a7. Printed
+    T-015 and X-003 establish reading material, not recorded speech. V-004 supplies the recap story and questions only.
+  id: U-003
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [5]
+
+    records: [''T-036'', ''T-037'', ''EX-001'', ''EX-002'']
+
+    words: [''W-006'', ''W-007'', ''W-061'', ''W-087'', ''W-113'', ''W-114'', ''W-115'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
+      and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
+      partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
+- claim: The complete T-018 and X-002 rows are bound to word records by EX-003 and EX-004. Lesson 2 s3/a5 still lacks W-145/W-146/W-147/W-148
+    in its core/incidental/recycled allowlist, and lesson 3 s2 lacks W-149/W-150/W-151/W-152/W-153. W-035 is the existing
+    base preposition. The pack and word store cannot change the frozen plan allowlists; the plan author must admit all nine
+    new incidental decoding records before the complete rows can pass inventory checks.
+  id: U-004
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: complete-row word admission
+
+    lessons: [2, 3]
+
+    records: [''T-018'', ''X-002'', ''EX-003'', ''EX-004'']
+
+    words: [''W-145'', ''W-146'', ''W-147'', ''W-148'', ''W-149'', ''W-150'', ''W-151'', ''W-152'', ''W-153'', ''W-035'',
+    ''W-107'', ''W-118'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
+      and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
+      partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=m-jcLR_gK0k
     http_status: 200
   id: V-001
+  models:
+    letters:
+    - Т
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=m-jcLR_gK0k
-  use: Pronunciation model for Т before CV and VC reading.
+  use: Pronunciation model for Т. Pronunciation model for Т before CV and VC reading. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
     http_status: 200
   id: V-002
+  models:
+    letters:
+    - Ґ
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-  use: Pronunciation model for Ґ after hearing Г from the primer.
+  use: Pronunciation model for Ґ. Pronunciation model for Ґ after hearing Г from the primer. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=aq0cjB90s3w
     http_status: 200
   id: V-003
+  models:
+    letters:
+    - Й
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=aq0cjB90s3w
-  use: Pronunciation model for Й in short final-letter reading.
+  use: Pronunciation model for Й. Pronunciation model for Й in short final-letter reading. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=z8NucPzHLhE
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode10/
     http_status: 200
   id: V-004
-  url: https://www.youtube.com/watch?v=z8NucPzHLhE
-  use: Source audio for the Season 1 lesson 10 first-person recap story, heard by ear.
+  url: https://www.ukrainianlessons.com/episode10/
+  use: 'ULP 1-10 public episode: the by-ear first-person review story and its first three questions and spoken answers, modeled
+    in public transcript ext-ulp_youtube-294. T-016/T-017 premium notes are grounding only, never learner-facing source text.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=KFlsroBW0dk
     http_status: 200
   id: V-005
+  models:
+    letters:
+    - Е
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=KFlsroBW0dk
-  use: Pronunciation model for Е before its sound rows.
+  use: Pronunciation model for Е. Pronunciation model for Е before its sound rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
     http_status: 200
   id: V-006
+  models:
+    letters:
+    - Д
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=g4Bh-lqzd48
-  use: Pronunciation model for Д before its sound rows.
+  use: Pronunciation model for Д. Pronunciation model for Д before its sound rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=BhASNxitC1A
     http_status: 200
   id: V-007
+  models:
+    letters:
+    - З
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=BhASNxitC1A
-  use: Pronunciation model for З before its sound rows.
+  use: Pronunciation model for З. Pronunciation model for З before its sound rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=V1hxBE_JbGg
     http_status: 200
   id: V-008
+  models:
+    letters:
+    - Б
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=V1hxBE_JbGg
-  use: Pronunciation model for Б before its word row.
+  use: Pronunciation model for Б. Pronunciation model for Б before its word row. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
     http_status: 200
   id: V-009
+  models:
+    letters:
+    - Г
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=gVnclpSI0DU
-  use: Pronunciation model for Г before the Г/Ґ contrast.
+  use: Pronunciation model for Г. Pronunciation model for Г before the Г/Ґ contrast. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=UsJkbdsY2RA
     http_status: 200
   id: V-010
+  models:
+    letters:
+    - Ч
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=UsJkbdsY2RA
-  use: Pronunciation model for Ч before its sound rows.
+  use: Pronunciation model for Ч. Pronunciation model for Ч before its sound rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
     http_status: 200
   id: V-011
+  models:
+    letters:
+    - Х
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=vpr58zJSJKc
-  use: Pronunciation model for Х before its sound rows.
+  use: Pronunciation model for Х. Pronunciation model for Х before its sound rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=dIrGVcqPwqM
     http_status: 200
   id: V-012
+  models:
+    letters:
+    - Ж
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=dIrGVcqPwqM
-  use: Pronunciation model for Ж before its sound rows.
+  use: Pronunciation model for Ж. Pronunciation model for Ж before its sound rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-02'
     final_url: https://www.youtube.com/watch?v=1D-6MIw3OXY
     http_status: 200
   id: V-013
+  models:
+    letters:
+    - Ш
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=1D-6MIw3OXY
-  use: Pronunciation model for Ш before its sound rows.
+  use: Pronunciation model for Ш. Pronunciation model for Ш before its sound rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.ukrainianlessons.com/episode2/
+    http_status: 200
+  id: V-014
+  models:
+    letters: []
+    segment: 04:35–04:39
+    words:
+    - W-075
+    - W-076
+  url: https://www.ukrainianlessons.com/episode2/
+  use: Intact formal greeting in ULP 1-02, publisher repeat-after-me excerpt 04:35–04:39. Source transcript ext-ulp_youtube-302
+    establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt,
+    never the whole episode as the greeting model.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
+  id: V-015
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: 'Full alphabet pronunciation video, identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304:
+    whole-word models for W-118, W-109 and W-110. Restrict each excerpt to letters already taught; this is not evidence for
+    the other primer word lists or whole sentences.'
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    http_status: 200
+  id: V-016
+  models:
+    letters:
+    - А
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  use: Previously taught А native sound, publisher-paired to the А heading; contrasts with new Т without reading an untaught
+    letter.

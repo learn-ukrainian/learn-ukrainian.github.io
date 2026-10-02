@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: fix codex-tools rollout-capture timezone bug (unblocks codex as the V7 scale writer)
 
 **Agent:** codex · **Mode:** danger + worktree · **No auto-merge.**
@@ -32,10 +38,10 @@ codex-tools must be the V7 SCALE writer (own weekly quota; claude-tools is unaff
 6. (OPTIONAL defense-in-depth — only if cheap) Part 3-minimal: a writer gate that fails `verify_words_missing` if a `*-tools` writer captured zero `mcp__sources__verify_words` calls. Codex already calls it, so this is a safety net, not the fix. Skip if it risks the time budget.
 7. `.venv/bin/ruff check scripts tests` → clean.
 8. `.venv/bin/pytest` on the affected adapter + any touched test modules → green.
-9. Commit (conventional: `fix(codex-adapter): scan local-date rollout dirs so writer tool calls are captured`), trailer `X-Agent: codex/codex-rollout-capture-fix-20260529`, run `.venv/bin/python scripts/audit/lint_agent_trailer.py`.
+9. Commit (conventional: `fix(codex-adapter): scan local-date rollout dirs so writer tool calls are captured`), trailer `X-Agent: codex/codex-rollout-capture-fix-20260529`, run `"$PROJECT_PYTHON" scripts/audit/lint_agent_trailer.py`.
 10. `git push -u origin`, `gh pr create` (body: root cause = UTC-vs-local-date rollout discovery; the smoking-gun rollout path + the 14 captured calls; sibling sweep results; the one-line confirmation below). **Do NOT auto-merge.**
 
 ## One-line end-to-end confirmation (for the PR body)
 ```bash
-cd . && .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer codex-tools --use-generator --worktree; wt=$(ls -td .worktrees/builds/a1-my-morning-* | head -1); jq -e '[.[] | select((.namespace?=="mcp__sources__") or ((.name? // "")|startswith("mcp__sources__")))] | length > 0' "$wt/curriculum/l2-uk-en/a1/my-morning/writer_tool_calls.json"
+cd . && "$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 my-morning --writer codex-tools --use-generator --worktree; wt=$(ls -td .worktrees/builds/a1-my-morning-* | head -1); jq -e '[.[] | select((.namespace?=="mcp__sources__") or ((.name? // "")|startswith("mcp__sources__")))] | length > 0' "$wt/curriculum/l2-uk-en/a1/my-morning/writer_tool_calls.json"
 ```

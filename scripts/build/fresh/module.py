@@ -23,7 +23,7 @@ from scripts.build.fresh.prompt import (
     render_lesson_prompt,
     render_recap_prompt,
 )
-from scripts.build.fresh.regeneration import load_ledger, record_failure, record_writer_call
+from scripts.build.fresh.regeneration import load_ledger, record_failure, record_writer_call, writer_inputs
 from scripts.build.fresh.runner import run_lesson
 from scripts.build.fresh.writer import WriterCallError, dispatch_writer
 from scripts.curriculum.evidence import lock
@@ -113,9 +113,7 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                                                "curriculum/l2-uk-en/evidence")
             ledger_path = checked_existing_path(repo_root, state_dir / f"lesson-{n}.regeneration.yaml",
                                                 "curriculum/l2-uk-en/evidence")
-            current = {"plan_sha256": expected["plan_sha256"], "pack_lock": expected["pack_lock"],
-                       "words_lock": expected["words_lock"], "card_sha256": card_sha,
-                       "prompt_sha256": prompt_sha}
+            current = writer_inputs(expected, card_sha, prompt_sha)
             ledger = load_ledger(ledger_path, slug, n, current)
             fresh = draft_is_current(ledger, draft_path, current)
             if ledger["terminal_layer"] is not None:
@@ -152,7 +150,7 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                     try:
                         writer_dispatch(writer=agent, model=model, level=level, slug=slug, lesson_n=n,
                                     prompt_file=prompt_path, prompt_sha256=prompt_sha, output_dir=state_dir,
-                                    preflight_result=preflight, attempt=ledger["regenerations"] + 1,
+                                    preflight_result=preflight, attempt=ledger["regenerations"] + 1, inputs=current,
                                     plan_activity_types={a["id"]: a["type"] for a in entry.get("activities") or []},
                                     repo_root=repo_root)
                     except (OSError, ValueError, KeyError, TypeError, WriterCallError) as err:

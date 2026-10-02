@@ -251,6 +251,7 @@ def server_module():
 def _quiet_env(monkeypatch: pytest.MonkeyPatch) -> None:
     for key in ENV_KEYS:
         monkeypatch.delenv(key, raising=False)
+    monkeypatch.delenv("LU_REVIEW_ACCESS", raising=False)
 
 
 def _arm(monkeypatch: pytest.MonkeyPatch, ledger: Path, *, manifest: str = "ab" * 32) -> None:
@@ -258,6 +259,7 @@ def _arm(monkeypatch: pytest.MonkeyPatch, ledger: Path, *, manifest: str = "ab" 
     monkeypatch.setenv("LU_REVIEW_ATTEMPT_ID", "attempt-1")
     monkeypatch.setenv("LU_REVIEW_MANIFEST_SHA256", manifest)
     monkeypatch.setenv("LU_REVIEW_LEDGER_PATH", str(ledger))
+    monkeypatch.setenv("LU_REVIEW_ACCESS", "isolated")
     monkeypatch.setattr(
         "scripts.review.receipts.ledger.collect_snapshots",
         lambda **_kwargs: SNAPSHOTS,
@@ -476,6 +478,109 @@ def test_session_from_environ_off_and_incomplete(tmp_path: Path, monkeypatch: py
     assert armed is not None and armed.mode == "on"
     assert armed.review_id == "review-1"
     assert armed.attempt_id == "attempt-1"
+
+
+@pytest.mark.parametrize("access", [None, "isolated", "full", "", "wildcard"])
+def test_review_session_uses_attempt_access_and_refuses_invalid_mode(tmp_path, monkeypatch, access):
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    monkeypatch.delenv("LU_REVIEW_ACCESS", raising=False)
+    if access is not None:
+        monkeypatch.setenv("LU_REVIEW_ACCESS", access)
+    session = session_from_environ()
+    if access in {"isolated", "full"}:
+        assert session.mode == "on"
+        assert session.review_access == access
+    else:
+        assert session.mode == "incomplete" and session.error == "review_access_invalid"
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_review_server_advertises_and_accepts_exact_attempt_tools(server_module, tmp_path, monkeypatch, access):
+    from scripts.review.receipts.ledger import review_tools
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    monkeypatch.setenv("LU_REVIEW_ACCESS", access)
+    recorder = session_from_environ()
+    allowed = review_tools(access)
+    catalog = _run(server_module._on_list_tools(None, None))
+    assert {tool.name for tool in catalog.tools} == allowed
+    for name in allowed:
+        assert server_module._review_before_handler(recorder, name, {}) is None
+    for name in {"search_sources", "mcp_server_identity", "not_a_tool", "search_resources"} - allowed:
+        refused = server_module._review_before_handler(recorder, name, {})
+        assert refused and refused[1] is True
+        assert records(ledger)[-1]["tool"] == name and records(ledger)[-1]["status"] == "refused"
+
+
+def test_full_review_server_calls_search_resources_and_ledgers_result(server_module, tmp_path, monkeypatch):
+    from mcp.types import CallToolRequestParams, TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    monkeypatch.setenv("LU_REVIEW_ACCESS", "full")
+    calls = []
+
+    async def catalogue(arguments):
+        calls.append(arguments)
+        return [TextContent(type="text", text="Found 1 catalogue resources (returned ranking order):")]
+
+    monkeypatch.setattr(server_module, "handle_search_resources", catalogue)
+    result = _run(
+        server_module._on_call_tool(
+            None, CallToolRequestParams(name="search_resources", arguments={"query": "alphabet"})
+        )
+    )
+    assert result.is_error is False and calls == [{"query": "alphabet"}]
+    [receipt] = records(ledger)
+    assert receipt["tool"] == "search_resources" and receipt["status"] == "ok"
+    assert receipt["receipt_id"] in result.content[-1].text
+
+
+@pytest.mark.parametrize("access", [None, "", "wildcard"])
+def test_review_server_invalid_access_cannot_advertise_or_call_tools(server_module, tmp_path, monkeypatch, access):
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    monkeypatch.delenv("LU_REVIEW_ACCESS", raising=False)
+    if access is not None:
+        monkeypatch.setenv("LU_REVIEW_ACCESS", access)
+    assert _run(server_module._on_list_tools(None, None)).tools == []
+    recorder = session_from_environ()
+    refused = server_module._review_before_handler(recorder, "verify_words", {})
+    assert refused and refused[1] is True and "misconfigured" in refused[0][0].text
+    assert not ledger.exists()
+
+
+def test_review_access_without_recording_identity_refuses_tools(server_module, monkeypatch):
+    _quiet_env(monkeypatch)
+    monkeypatch.setenv("LU_REVIEW_ACCESS", "full")
+    assert _run(server_module._on_list_tools(None, None)).tools == []
+    result = _run(server_module.call_tool("verify_words", {"words": ["fixture"]}))
+    assert "misconfigured" in result[0].text
+
+
+def test_ordinary_sources_catalogue_and_calls_unchanged(server_module, monkeypatch):
+    from mcp.types import CallToolRequestParams, TextContent
+
+    _quiet_env(monkeypatch)
+    catalog = _run(server_module._on_list_tools(None, None))
+    assert {tool.name for tool in catalog.tools} == {tool.name for tool in _run(server_module.list_tools())}
+    assert "search_sources" in {tool.name for tool in catalog.tools}
+    calls = []
+
+    async def catalogue(arguments):
+        calls.append(arguments)
+        return [TextContent(type="text", text="ordinary catalogue result")]
+
+    monkeypatch.setattr(server_module, "handle_search_resources", catalogue)
+    result = _run(
+        server_module._on_call_tool(
+            None, CallToolRequestParams(name="search_resources", arguments={"query": "alphabet"})
+        )
+    )
+    assert not result.is_error and calls == [{"query": "alphabet"}]
+    assert result.content == [TextContent(type="text", text="ordinary catalogue result")]
 
 
 def test_valid_plan_and_lesson_reviews(tmp_path: Path) -> None:
@@ -1620,3 +1725,29 @@ def test_refused_call_prints_a_bare_receipt_line(
     assert stored["status"] == "refused"
     assert refused[-1].text.splitlines()[-1] == f"receipt: {stored['receipt_id']}"
     assert search_outcome("refused", stored["outcome_facts"]) is None
+
+
+@pytest.mark.parametrize(
+    "text,outcome",
+    [
+        ("No catalogue resources found.", "no_hits"),
+        ("Found 1 catalogue resources: resource-example", "hits_but_no_support"),
+        ("Resource catalogue ingestion is required before searching resources.", "unavailable"),
+    ],
+)
+def test_resource_catalogue_checks_are_ledgered_review_evidence(tmp_path, text, outcome):
+    from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, review_tools
+
+    assert "search_resources" not in REVIEW_TOOLS
+    assert "search_resources" in FULL_REVIEW_TOOLS
+    assert review_tools() == REVIEW_TOOLS and review_tools("full") == FULL_REVIEW_TOOLS
+    with pytest.raises(ValueError, match="review_access_invalid"):
+        review_tools("unknown")
+    ledger = tmp_path / "review" / "attempt.jsonl"
+    create_empty_ledger(ledger)
+    receipt = _record(
+        ledger, manifest="a" * 64, tool="search_resources", result=text, review_id="review", attempt_id="attempt"
+    )
+    [entry] = records(ledger)
+    assert entry["receipt_id"] == receipt and entry["tool"] == "search_resources"
+    assert search_outcome(entry["status"], entry["outcome_facts"]) == outcome

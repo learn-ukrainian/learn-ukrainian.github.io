@@ -16,12 +16,20 @@ PENDING_ULIF = "pending_ulif"
 UNRESOLVED_ENTRY = "unresolved_entry"
 OVERRIDE_PRESENT = "override_present"
 NOT_CHECKED = "not_checked"
+BOT_BLOCKED = "bot_blocked"
+DEAD_LINK = "dead_link"
+UNVERIFIABLE = "unverifiable"
 GLOSS_MISMATCH = "gloss_mismatch"
 CEFR_MISMATCH = "cefr_mismatch"
 SPAN_MISMATCH = "span_mismatch"
 UNSUPPORTED_DROPPED = "unsupported_dropped"
 CHUNK_ID_MOVED = "chunk_id_moved"
 QUOTE_MISMATCH = "quote_mismatch"
+PUBLICATION_RIGHT = "publication_right"
+PUBLICATION_LIMIT = "publication_limit"
+PUBLICATION_ATTRIBUTION = "publication_attribution"
+PUBLICATION_PLAN_UNRESOLVED = "publication_plan_unresolved"
+PUBLICATION_REGISTRY_UNREADABLE = "publication_registry_unreadable"
 ERROR_MISMATCH = "error_mismatch"
 STANDARD_MISMATCH = "standard_mismatch"
 WORDS_FIELD_FORBIDDEN = "words_field_forbidden"
@@ -46,12 +54,20 @@ DESCRIPTIONS = {
     UNRESOLVED_ENTRY: "open: an entry requires an explicit source choice",
     OVERRIDE_PRESENT: "report: the oracle applied an exact-form override",
     NOT_CHECKED: "report: a fact could not be checked",
+    BOT_BLOCKED: "failure: the identifying link checker received HTTP 401/403",
+    DEAD_LINK: "failure: the link returned HTTP 404/410",
+    UNVERIFIABLE: "failure: link liveness could not be verified after bounded retries",
     GLOSS_MISMATCH: "failure: stored gloss differs from the source",
     CEFR_MISMATCH: "failure: stored CEFR level differs from the source",
     SPAN_MISMATCH: "failure: span does not match source chunk exactly once",
     UNSUPPORTED_DROPPED: "failure: unsupported id from previous build dropped",
     CHUNK_ID_MOVED: "report: quote text found in source file but chunk id moved",
     QUOTE_MISMATCH: "failure: quote text no longer found in source file",
+    PUBLICATION_RIGHT: "gap: source has no explicit publication right",
+    PUBLICATION_LIMIT: "gap: quote exceeds the per-excerpt publication limit",
+    PUBLICATION_ATTRIBUTION: "gap: quote lacks the required source attribution",
+    PUBLICATION_PLAN_UNRESOLVED: "failure: cannot resolve the plan for publication checks",
+    PUBLICATION_REGISTRY_UNREADABLE: "failure: cannot read or parse the publication registry",
     ERROR_MISMATCH: "failure: error row differs from source",
     STANDARD_MISMATCH: "failure: standard text or file hash differs from source",
     WORDS_FIELD_FORBIDDEN: "failure: pack contains forbidden words field",

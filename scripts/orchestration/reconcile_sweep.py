@@ -19,6 +19,7 @@ import json
 import os
 import sqlite3
 import sys
+from collections.abc import Iterator
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -108,12 +109,42 @@ def _probe_stale_claims(ledger: OwnershipLedger) -> list[str]:
     return sorted(set(would_release))
 
 
+@contextlib.contextmanager
+def _git_optional_locks_disabled() -> Iterator[None]:
+    """Run git children with ``GIT_OPTIONAL_LOCKS=0`` for the sweep (#8874).
+
+    The sweep reaches git only through settle and the delegate status heal
+    path. Read-only commands there (``git status`` refreshing the index) must
+    not take ``index.lock``: a sweep killed mid-call would leave it behind.
+    An explicit operator value wins and is left untouched.
+    """
+    if "GIT_OPTIONAL_LOCKS" in os.environ:
+        yield
+        return
+    os.environ["GIT_OPTIONAL_LOCKS"] = "0"
+    try:
+        yield
+    finally:
+        os.environ.pop("GIT_OPTIONAL_LOCKS", None)
+
+
 def run_reconcile_sweep(
     *,
     apply: bool = False,
     repo_root: Path | None = None,
     task_dir: Path | None = None,
     ledger: OwnershipLedger | None = None,
+) -> ReconcileSweepReport:
+    with _git_optional_locks_disabled():
+        return _run_reconcile_sweep(apply=apply, repo_root=repo_root, task_dir=task_dir, ledger=ledger)
+
+
+def _run_reconcile_sweep(
+    *,
+    apply: bool,
+    repo_root: Path | None,
+    task_dir: Path | None,
+    ledger: OwnershipLedger | None,
 ) -> ReconcileSweepReport:
     root = repo_root or PROJECT_ROOT
     tdir = task_dir or default_task_dir(root)

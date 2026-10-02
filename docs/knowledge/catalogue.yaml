@@ -36,6 +36,17 @@
 #   (scripts/config/area_assignments.yaml).
 # - data_store entries name logical stores and tracked producer scripts only,
 #   never a host path or mount.
+# - Every data/<name>.db|.sqlite|.sqlite3 store that scripts/ code names is
+#   claimed by a data_store entry or listed, with a reason, in
+#   store_literal_exemptions.
+# - A Markdown file that an override marks superseded carries front matter
+#   (lifecycle: superseded, superseded_by: <target>) and the visible line
+#   '> **Superseded by:** [target](link)'; `... catalogue mark --apply` writes
+#   both. Front-matter lifecycle or superseded_by anywhere must agree with what
+#   the catalogue resolves for that file.
+# - docs/README.md's family table is generated from this file:
+#   `.venv/bin/python -m scripts.docs.catalogue readme`.
+# Search it (and tracked names and text) with `.venv/bin/python -m scripts.docs.find "<query>"`.
 # Census and evidence: docs/knowledge/inventory/catalogue-census-2026-10-01.md.
 schema_version: 1
 denominator:
@@ -47,20 +58,34 @@ status_mapping:
   superseded: superseded
 
 entries:
+  - id: ulif-first-stress-contract
+    kind: doc_family
+    paths: [docs/verification/ulif-first-stress.md]
+    purpose: ULIF-first stress oracle contract, source identity joins, labelled trie fallback and consumer verification.
+    keywords: [ULIF, stress, oracle, pronunciation, source identity, trie fallback]
+    lifecycle: active
+    owner: atlas-practice
+    entrypoints:
+      - {topic: ULIF-first stress oracle, path: docs/verification/ulif-first-stress.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/verification/ulif-first-stress.md"}
+    content_searchable: true
+
   # ================================================================ entry points
   - id: docs-entry-map
     kind: doc_family
     paths: [docs/README.md]
-    purpose: Cold-start documentation map for humans and agents; still describes the V7 era and lists only part of docs/ (see the census gaps).
-    keywords: [documentation map, entry point, where to start, docs index, navigation hazards]
+    purpose: Cold-start documentation map for humans and agents. It names the one search entry point (python -m scripts.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era.
+    keywords: [documentation map, entry point, where to start, docs index, navigation hazards, find a document]
     lifecycle: active
     owner: docs-knowledge
     entrypoints:
       - {topic: documentation map, path: docs/README.md}
       - {topic: document and data catalogue, path: docs/knowledge/catalogue.yaml}
     query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.docs.find '<query>' (catalogue, tracked names and tracked text in one query)"}
+      - {surface: api, how: "GET /api/knowledge/find?q=<query>"}
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/README.md"}
-      - {surface: api, how: "GET /artifacts/ lists the served docs roots (docs/archive and docs/resources/podcasts/raw are excluded)"}
     content_searchable: true
 
   - id: docs-knowledge-system
@@ -1289,11 +1314,13 @@ entries:
     paths:
       - docs/resources/trusted_sources.yaml
       - docs/resources/ulp-resources.yaml
+      - docs/resources/ulp-alphabet.yaml
       - docs/resources/ulp-articles-index.yaml
       - docs/resources/ulp-article-mappings.yaml
       - docs/resources/miyklas-resources.yaml
       - docs/resources/miyklas-url-index.yaml
-    purpose: Curated trusted-source registry and ULP and Miyklas resource-to-module maps used by build enrichment; ULP is link-only (commercial).
+      - docs/resources/podcasts/ulp_mapping.yaml
+    purpose: Curated trusted-source registry and ULP and Miyklas resource-to-module maps (including the recommended ULP podcast episodes per module) used by build enrichment and the resource-catalogue ingest; ULP is link-only (commercial).
     keywords: [trusted sources, ULP resources, ULP articles, Miyklas, Ukrainian Lessons Podcast links]
     lifecycle: active
     owner: curriculum-upgrade
@@ -1324,7 +1351,7 @@ entries:
 
   - id: resources-mapping-reports
     kind: evidence
-    paths: [docs/resources/podcasts/*.md, docs/resources/podcasts/ulp_mapping.yaml, docs/resources/ukrainianlessons/*.md]
+    paths: [docs/resources/podcasts/*.md, docs/resources/ukrainianlessons/*.md]
     purpose: January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic #334).
     keywords: [podcast mapping, ULP mapping report, blog mapping methodology]
     lifecycle: archive
@@ -1735,6 +1762,19 @@ entries:
       - {surface: sqlite, how: "Python API in scripts/atlas/atlas_db.py or read-only SQL on data/atlas.db"}
     content_searchable: false
 
+  - id: data-atlas-synthetic
+    kind: data_store
+    store: [data/atlas-synthetic.db]
+    producer: [scripts/benchmarks/generate_synthetic_atlas.py]
+    local_only: true
+    purpose: Synthetic Atlas database for read-path benchmarks, generated on demand from atlas.db; absent unless a benchmark run created it.
+    keywords: [synthetic atlas, atlas benchmark]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/benchmarks/generate_synthetic_atlas.py --help"}
+    content_searchable: false
+
   - id: data-ulif-dumps
     kind: data_store
     store: [data/ulif_dump_all.db, data/ulif_dump.db, data/ulif_scrape.log]
@@ -1861,6 +1901,20 @@ entries:
     owner: open-model-data
     query:
       - {surface: cli, how: ".venv/bin/python -m scripts.projects.ua_open_weight_eval.suite_cli --help"}
+    content_searchable: false
+
+  - id: data-embeddings
+    kind: data_store
+    store: [data/embeddings/]
+    producer: [scripts/wiki/embedding_manifest.py]
+    producer_note: embedding_manifest.py owns the SQLite manifest (manifest.db) of embedding shards; build_sources_db.py and dense_rerank.py read it. Absent until an embedding build runs.
+    local_only: true
+    purpose: Dense-retrieval embedding shards and their SQLite manifest, used to rerank sources.db search results.
+    keywords: [embeddings, embedding manifest, dense rerank, vector shards]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read-only SQL on data/embeddings/manifest.db"}
     content_searchable: false
 
   - id: data-textbook-chunks
@@ -2051,6 +2105,12 @@ entries:
     query:
       - {surface: api, how: "GET /api/telemetry/tool-timings; GET /api/telemetry/legacy-comms-routes"}
     content_searchable: false
+
+# Store names that scripts/ code mentions but that are not stores of this
+# repository. Every other data/<name>.db|.sqlite literal in scripts/ must be
+# claimed by a data_store entry (checked by the catalogue check and CI).
+store_literal_exemptions:
+  - {literal: data/sources-copy.db, reason: "Example value in the resource-catalogue ingest help for its required --db argument (a hand-made copy of sources.db); the tool has no default store and never creates one."}
 
 residual:
   - {path: docs/research/INVESTIGATION_9_VS_10_SCORE_REQUIREMENTS.md, owner: core-quality, reason: "Dated 2026-07-23, no banner; whether the review gate it discusses still applies is unverified."}

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Gemini dispatch — strip unreferenced `ext-article-N` stubs from wiki source registries (Option A of #1960, scoped-safe)
 
 ## Mission
@@ -12,7 +18,7 @@ Issue #1960 reports placeholder `ext-article-N` source entries (no `title`, no `
 | "ID Sn IS referenced in wiki body" | `grep -F '[Sn]' wiki/pedagogy/<module>.md` and `grep -F 'Sn' wiki/pedagogy/<module>.md` |
 | "Stub is SAFE to strip" | Both: (a) `title: ext-article-N` with no real title, (b) zero references in body |
 | "Validator passes" | run the wiki manifest validator if one exists (look for `scripts/wiki/validate_*.py`) |
-| "Tests pass" | `.venv/bin/python -m pytest tests/wiki tests/audit -q -k 'wiki or pedagogy or source'` final summary raw |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/wiki tests/audit -q -k 'wiki or pedagogy or source'` final summary raw |
 
 ## Steps
 
@@ -43,7 +49,7 @@ Issue #1960 reports placeholder `ext-article-N` source entries (no `title`, no `
    grep -rln 'ext-article-' wiki/pedagogy/
    ```
    Paste before/after counts into the PR body.
-8. Run targeted tests: `.venv/bin/python -m pytest tests/wiki/ tests/audit/ -q -k 'wiki or pedagogy or source' --timeout 60`. Paste the final summary line.
+8. Run targeted tests: `"$PROJECT_PYTHON" -m pytest tests/wiki/ tests/audit/ -q -k 'wiki or pedagogy or source' --timeout 60`. Paste the final summary line.
 9. `.venv/bin/ruff check .` — should be clean (no python touched, hook may run).
 10. `git add wiki/pedagogy/` (specific files, not -A)
 11. `git commit -m "fix(wiki/pedagogy): strip unreferenced ext-article-N stubs (Option A of #1960)"`

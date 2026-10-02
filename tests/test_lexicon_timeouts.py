@@ -93,9 +93,13 @@ def test_extract_book_headword_inventory_run_timeout() -> None:
             ebhi._run(["pdfinfo", "book.pdf"])
 
 
-def test_publish_manifest_gh_subprocess_timeouts() -> None:
+def test_publish_manifest_gh_subprocess_timeouts(tmp_path, synthetic_opsec, publisher_transport, monkeypatch) -> None:
     from scripts.lexicon import publish_manifest as pm
+    from scripts.opsec import prepublish
 
+    monkeypatch.setattr(prepublish, "catalog", lambda: {"public": {"github": "unit/public"}})
+    asset = tmp_path / "lexicon-manifest.json.gz"
+    asset.write_bytes(b"\x1f\x8b\xff")
     upload_calls: list[dict] = []
 
     def fake_run(cmd, **kwargs):
@@ -105,7 +109,7 @@ def test_publish_manifest_gh_subprocess_timeouts() -> None:
     with patch("subprocess.run", side_effect=fake_run):
         pm._release_asset_names()
         pm._download_release_asset("lexicon-manifest.json.gz")
-        pm.upload_release_asset(Path("lexicon-manifest.json.gz"))
+        pm.upload_release_asset(asset, repo="unit/public")
 
     assert len(upload_calls) == 3
     assert all(call["timeout"] == pm.DEFAULT_GH_TIMEOUT_SECONDS for call in upload_calls)
@@ -194,9 +198,7 @@ def test_atlas_job_primary_checkout_root_git_timeout() -> None:
         assert atlas_job.primary_checkout_root() == atlas_job.repo_root()
 
 
-def test_atlas_job_submit_launcher_timeout(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_atlas_job_submit_launcher_timeout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.lexicon.runner import atlas_job
 
     fake = atlas_job.FakeHostAdapter()
@@ -228,9 +230,7 @@ def test_atlas_job_submit_launcher_timeout(
     assert calls[0]["timeout"] == atlas_job.DEFAULT_LAUNCHER_SUBPROCESS_TIMEOUT_SECONDS
 
 
-def test_atlas_job_submit_launcher_timeout_rejects(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_atlas_job_submit_launcher_timeout_rejects(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.lexicon.runner import atlas_job
 
     fake = atlas_job.FakeHostAdapter()
@@ -293,8 +293,9 @@ def test_durable_mirror_snapshot_ssh_probe_timeout() -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=255, stderr=b"ssh failed")
 
-    with patch("subprocess.run", side_effect=fake_run), patch(
-        "scripts.lexicon.runner.durable_mirror.sync_source_to_mirror"
+    with (
+        patch("subprocess.run", side_effect=fake_run),
+        patch("scripts.lexicon.runner.durable_mirror.sync_source_to_mirror"),
     ):
         with pytest.raises(dm.DurableMirrorError, match="could not probe remote runner liveness"):
             dm.snapshot("host:/remote/work", Path("/tmp/mirror"), allow_live=False)
@@ -306,10 +307,13 @@ def test_durable_mirror_snapshot_ssh_probe_timeout() -> None:
 def test_durable_mirror_snapshot_ssh_probe_timeout_expired() -> None:
     from scripts.lexicon.runner import durable_mirror as dm
 
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["ssh"], dm.DEFAULT_SSH_PROBE_TIMEOUT_SECONDS),
-    ), patch("scripts.lexicon.runner.durable_mirror.sync_source_to_mirror"):
+    with (
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["ssh"], dm.DEFAULT_SSH_PROBE_TIMEOUT_SECONDS),
+        ),
+        patch("scripts.lexicon.runner.durable_mirror.sync_source_to_mirror"),
+    ):
         with pytest.raises(dm.DurableMirrorError, match="ssh timed out"):
             dm.snapshot("host:/remote/work", Path("/tmp/mirror"), allow_live=False)
 
@@ -330,9 +334,12 @@ def test_transport_zstd_subprocess_timeouts() -> None:
     assert len(calls) == 2
     assert all(call["timeout"] == transport.DEFAULT_ZSTD_TIMEOUT_SECONDS for call in calls)
 
-    with patch("shutil.which", return_value="/usr/bin/zstd"), patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["zstd"], transport.DEFAULT_ZSTD_TIMEOUT_SECONDS),
+    with (
+        patch("shutil.which", return_value="/usr/bin/zstd"),
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["zstd"], transport.DEFAULT_ZSTD_TIMEOUT_SECONDS),
+        ),
     ):
         with pytest.raises(transport.TransportError, match="zstd compress timed out"):
             transport.zstd_compress(b"payload")

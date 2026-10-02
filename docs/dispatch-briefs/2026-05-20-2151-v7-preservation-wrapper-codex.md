@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — #2151 V7 preservation wrapper
 
 **Issue:** #2151 — [impl] V7 preservation wrapper not yet shipped — spec landed but copy-on-phase-boundary missing.
@@ -46,7 +52,7 @@ This complements (does NOT replace) the artifact-preservation auto-commit that l
 
 ## Dispatch-brief checklist (MANDATORY per MEMORY)
 
-1. **`git worktree add` setup** — `.venv/bin/python scripts/delegate.py dispatch --worktree` already handles this. Confirm via the agent_runtime guide.
+1. **`git worktree add` setup** — `"$PROJECT_PYTHON" scripts/delegate.py dispatch --worktree` already handles this. Confirm via the agent_runtime guide.
 2. **File-level work** — primary new module `scripts/build/run_archive.py` (~150-200 LOC est) + wire-up in `scripts/build/v7_build.py` (~30 LOC new + finally hook).
 3. **Test suite** — new `tests/test_run_archive.py` with a contract test: assert run dir contents match §"Run Directory Contract" after a successful build, and again after a forced failure. Use mocks/fakes for the build itself.
 4. **Ruff** — `.venv/bin/ruff check scripts/build/ tests/test_run_archive.py`.

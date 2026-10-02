@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # 2026-05-26 — Reclassify `шо` from surzhyk to register-consistency warning (Gemini)
 
 > Dispatch target: `gemini-3.1-pro-preview`, `--mode danger`, `--worktree` (auto-derived path).
@@ -65,7 +71,7 @@ Verifiable claims in your work + the tools that produce evidence:
 
 | Claim | Tool / command (capture raw output, quote in PR body) |
 |---|---|
-| "Tests pass" | `.venv/bin/python -m pytest tests/test_<x>.py -v` final summary line (`N passed in M.MMs`) |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/test_<x>.py -v` final summary line (`N passed in M.MMs`) |
 | "Ruff clean" | `.venv/bin/ruff check scripts/build/linear_pipeline.py tests/...` (`All checks passed!` or zero-error count) |
 | "шо is not in Antonenko-Davydovych" | `mcp__sources__search_style_guide(query="шо")` returning zero hits, AND `mcp__sources__search_text(query="шо", source_file="antonenko-davydovych-yak-my-hovorymo")` returning zero hits. Quote both raw. |
 | "VESUM accepts both forms" | `mcp__sources__verify_words(words=["що", "шо"])` both `is_valid: True`. Quote raw. |
@@ -84,7 +90,7 @@ Do NOT claim "I verified X" without a tool-output line in the PR body for that e
      - Wire the new gate into the gate-registration list (find the spot where other gates are listed in the gate-recording loop; look for `record("surzhyk_clean", ...)` and add `record("register_consistency", ...)` near it).
    - Edit `scripts/build/phases/linear-write.md` with the one-line writer guidance.
    - Update existing tests + add new tests per §4 above.
-3. **Tests**: `.venv/bin/python -m pytest tests/test_register_consistency_gate.py tests/test_<other_touched_test_files>.py -v` until all green. Then a broader sweep: `.venv/bin/python -m pytest tests/ -q --timeout=180` to catch unintended breakage. Quote the final summary line in the PR body.
+3. **Tests**: `"$PROJECT_PYTHON" -m pytest tests/test_register_consistency_gate.py tests/test_<other_touched_test_files>.py -v` until all green. Then a broader sweep: `"$PROJECT_PYTHON" -m pytest tests/ -q --timeout=180` to catch unintended breakage. Quote the final summary line in the PR body.
 4. **Ruff**: `.venv/bin/ruff check scripts/build/linear_pipeline.py tests/test_register_consistency_gate.py` etc. Quote raw.
 5. **Commit** with conventional-commits message: `feat(register-consistency): reclassify шо from surzhyk hard-fail to WARN-only linter (#2294)`. Include a body that explains the user's two-pass linguistic correction and references this brief + the Pt 3 handoff.
 6. **Push** via `git push -u origin <branch>` — the conventional branch name auto-derived by the runtime is `dispatch/gemini/surzhyk-reclassify-sho-2026-05-26`.

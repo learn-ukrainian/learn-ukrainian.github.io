@@ -31,7 +31,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.curriculum.resolver.codes import TABS
-from scripts.review.receipts.ledger import REVIEW_TOOLS, LedgerError, LedgerHashStaleLastLine, records
+from scripts.review.receipts.ledger import LedgerError, LedgerHashStaleLastLine, records, review_tools
 
 from . import codes
 
@@ -245,8 +245,9 @@ def index_ledger(path: Path) -> dict[str, dict[str, Any]]:
 
 
 class _Check:
-    def __init__(self) -> None:
+    def __init__(self, review_access: str = "isolated") -> None:
         self.rejections: list[Rejection] = []
+        self.review_tools = review_tools(review_access)
 
     def add(self, code: str, message: str) -> None:
         self.rejections.append(Rejection(code, message))
@@ -534,12 +535,18 @@ def _resolve(
     if record is not None and _accept_record(
         record, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
     ):
+        if record.get("tool") == "search_resources" and record["tool"] not in check.review_tools:
+            check.add(codes.EVIDENCE_RECEIPT_INVALID, "catalogue evidence requires full review access")
+            return None
         return record
     if allow_previous and previous is not None and previous_attempt_id:
         earlier = previous.get(receipt_id)
         if earlier is not None and _accept_record(
             earlier, review_id=review_id, attempt_id=previous_attempt_id, manifest_sha256=None
         ):
+            if earlier.get("tool") == "search_resources" and earlier["tool"] not in check.review_tools:
+                check.add(codes.EVIDENCE_RECEIPT_INVALID, "catalogue evidence requires full review access")
+                return None
             return earlier
     check.add(codes.RECEIPT_NOT_IN_LEDGER, f"receipt {receipt_id} is not in the attempt ledger")
     return None
@@ -614,7 +621,7 @@ def _check_finding_evidence(
                 manifest_sha256=manifest_sha256,
                 previous_attempt_id=previous_attempt_id,
             )
-            if record is not None and (record.get("status") != "ok" or record.get("tool") not in REVIEW_TOOLS):
+            if record is not None and (record.get("status") != "ok" or record.get("tool") not in check.review_tools):
                 check.add(
                     codes.EVIDENCE_RECEIPT_INVALID,
                     f"{finding.get('id')}: positive evidence receipt {receipt_id} requires status: ok and review tool",
@@ -632,7 +639,7 @@ def _check_finding_evidence(
                 manifest_sha256=manifest_sha256,
                 previous_attempt_id=previous_attempt_id,
             )
-            if record is not None and (record.get("status") != "ok" or record.get("tool") not in REVIEW_TOOLS):
+            if record is not None and (record.get("status") != "ok" or record.get("tool") not in check.review_tools):
                 check.add(
                     codes.EVIDENCE_RECEIPT_INVALID,
                     f"{finding.get('id')}: source conflict receipt {receipt_id} requires status: ok and review tool",
@@ -756,6 +763,7 @@ def validate_review(
     previous_ledger_path: Path | None = None,
     document_path: Path | None = None,
     repo_root: Path | None = None,
+    review_access: str = "isolated",
 ) -> ValidationResult:
     """Validate one review file against its manifest, document, and receipt ledger.
 
@@ -764,7 +772,7 @@ def validate_review(
     manifest it is the plan the manifest pins: ``document_path`` if given, else
     the plan at the manifest's ``inputs.plan.path`` under ``repo_root``.
     """
-    check = _Check()
+    check = _Check(review_access)
     review_path = Path(review_path)
     manifest_path = Path(manifest_path)
     document = document_path if document_path is not None else lesson_path
@@ -969,6 +977,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="previous attempt ledger; default is the sibling <previous_attempt_id>.jsonl next to --ledger",
     )
     parser.add_argument(
+        "--review-access",
+        choices=("isolated", "full"),
+        default="isolated",
+        help="receipt tool contract (default: isolated); full admits catalogue evidence, e.g. --review-access full",
+    )
+    parser.add_argument(
         "--json",
         action="store_true",
         help="print the verdict and rejections as one JSON object (default: human text)",
@@ -988,6 +1002,7 @@ def main(argv: list[str] | None = None) -> int:
         ledger_path=args.ledger,
         previous_ledger_path=args.previous_ledger,
         repo_root=args.repo_root,
+        review_access=args.review_access,
     )
     _emit(result, as_json=args.json)
     return 0 if result.ok else 1

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1722 vesum_verified tokenizer fix (postfix-aware)
 
 > **Worktree:** `.worktrees/dispatch/codex/1722-vesum-postfix`
@@ -39,7 +45,7 @@ git fetch origin main
 git worktree add -b codex/1722-vesum-postfix .worktrees/dispatch/codex/1722-vesum-postfix origin/main
 cd .worktrees/dispatch/codex/1722-vesum-postfix
 git log --oneline HEAD..origin/main           # MUST be empty
-.venv/bin/python -c "import scripts.build.python_qg" || echo "module path may differ — locate the gate runner"
+"$PROJECT_PYTHON" -c "import scripts.build.python_qg" || echo "module path may differ — locate the gate runner"
 ```
 
 ---
@@ -61,7 +67,7 @@ Make the `vesum_verified` gate stop splitting reflexive verbs and stop blocking 
 3. **Find VESUM access.** The gate calls into `mcp__sources__verify_words` or directly into `data/vesum.db`. Confirm which.
 4. **Run the failing case locally** to reproduce:
    ```bash
-   .venv/bin/python -c "
+   "$PROJECT_PYTHON" -c "
    from scripts.build.python_qg import run_python_qg  # or whatever the entry point is
    # Re-run the gate against audit/bakeoff-2026-05-05/claude/module.md
    # Confirm you reproduce the 8 missing-words list
@@ -83,7 +89,7 @@ The tokenizer must treat `-ся` / `-сь` as INSIDE the verb token, not as a se
 
 Verify by querying VESUM directly:
 ```bash
-.venv/bin/python -c "
+"$PROJECT_PYTHON" -c "
 from mcp_server.tools.sources.verify import verify_words
 print(verify_words(['вмиваюся', 'прокидаєшся', 'вмивається', 'вмиваємося', 'вмиваєтеся', 'вмиваються']))
 "
@@ -100,7 +106,7 @@ All 6 should resolve. If not, the VESUM table is missing something — diagnose;
 
 Verify with:
 ```bash
-.venv/bin/python -c "
+"$PROJECT_PYTHON" -c "
 import pymorphy3
 m = pymorphy3.MorphAnalyzer(lang='uk')
 for word in ['Білоуса', 'Дмитра', 'Білоус', 'Дмитро']:
@@ -139,7 +145,7 @@ Add a new test file `tests/test_vesum_verified_postfix.py` (or extend an existin
 
 ```bash
 cd .worktrees/dispatch/codex/1722-vesum-postfix
-.venv/bin/python -m pytest tests/test_vesum_verified_postfix.py -v
+"$PROJECT_PYTHON" -m pytest tests/test_vesum_verified_postfix.py -v
 .venv/bin/ruff check scripts/build/python_qg.py scripts/build/linear_pipeline.py
 git diff --check
 ```
@@ -147,11 +153,11 @@ git diff --check
 Then re-run python_qg against the bakeoff output to verify:
 
 ```bash
-.venv/bin/python scripts/build/python_qg.py \
+"$PROJECT_PYTHON" scripts/build/python_qg.py \
   --module audit/bakeoff-2026-05-05/claude/module.md \
   --plan curriculum/l2-uk-en/plans/a1/my-morning.yaml \
   --out /tmp/python_qg_post_fix.json
-.venv/bin/python -c "
+"$PROJECT_PYTHON" -c "
 import json
 data = json.load(open('/tmp/python_qg_post_fix.json'))
 g = data['gates']['vesum_verified']
@@ -172,7 +178,7 @@ git -C .worktrees/dispatch/codex/1722-vesum-postfix \
   diff origin/main..HEAD > /tmp/1722-diff.txt
 
 cd .
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
+"$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-claude \
   "Adversarial review for #1722. Read /tmp/1722-diff.txt. Focus: (A) is the tokenizer change correct for Ukrainian — what about the cases NOT covered (the verbs in -ться, -чся, -ться with consonant clusters)? (B) does the proper-noun fix add false positives — what if a writer cites a fictional name not in pymorphy3 / VESUM? (C) does the change touch any other gate or break existing tests? (D) coverage of the new tests — do they actually exercise the fix, or just assert the absence of the old bug?" \
   --task-id 1722-review \
   --model claude-opus-4-7

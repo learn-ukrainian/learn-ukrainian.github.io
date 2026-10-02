@@ -145,8 +145,8 @@ class Outcome:
 # --- identity ---------------------------------------------------------------------------
 
 
-def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
-    """The reviewer's ``model``, ``harness`` and ``family`` from the dispatch record; RecordError when unknown."""
+def _read_dispatch_record(task_id: str, tasks_dir: Path) -> Any:
+    """Read one safe dispatch identity record; callers derive metadata from the same bytes."""
     if not TOKEN_RE.fullmatch(task_id):
         raise RecordError(f"task id {task_id!r} is not a task token")
     path = Path(tasks_dir) / f"{task_id}.json"
@@ -156,7 +156,14 @@ def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
         raise RecordError(
             f"the dispatch record {path} is unreadable ({error}); the reviewer's identity is unknown"
         ) from error
-    return identity_from_record(task, task_id, record_path=path)
+    return task
+
+
+def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
+    """The reviewer's model, harness and family from the dispatch record; unknown identities refuse."""
+    return identity_from_record(
+        _read_dispatch_record(task_id, tasks_dir), task_id, record_path=Path(tasks_dir) / f"{task_id}.json"
+    )
 
 
 #: The return templates print ``prompt_sha256: "<prompt_sha256>"`` for the seat, but a prompt cannot contain its own
@@ -191,20 +198,26 @@ def dispatch_prompt_sha256(
     return value if isinstance(value, str) and HEX64.fullmatch(value) else None
 
 
-def _render_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> tuple[str | None, str]:
+def _render_prompt_sha256(
+    manifest_path: Path, root: Path, review_id: str, attempt_id: str, review_access: str = "isolated"
+) -> tuple[str | None, str]:
     """``(sha256, "")`` of this manifest's review prompt rendered with these ids, or ``(None, why it cannot be)``."""
     from scripts.review.prompts.render import RenderError, render
 
     try:
-        rendered = render(Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id)
+        rendered = render(
+            Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id, review_access=review_access
+        )
     except (RenderError, OSError, ValueError) as error:
         return None, str(error)
     return rendered.prompt_sha256, ""
 
 
-def rendered_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> str | None:
+def rendered_prompt_sha256(
+    manifest_path: Path, root: Path, review_id: str, attempt_id: str, review_access: str = "isolated"
+) -> str | None:
     """The sha256 of this manifest's review prompt rendered with these ids, or ``None`` when it cannot be rendered."""
-    return _render_prompt_sha256(manifest_path, root, review_id, attempt_id)[0]
+    return _render_prompt_sha256(manifest_path, root, review_id, attempt_id, review_access)[0]
 
 
 def attest_prompt_sha256(data: bytes, attested: str | None) -> bytes:
@@ -329,7 +342,10 @@ def attested_return(
     _verify_task_return(
         data, task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
     )
-    rendered, why = _render_prompt_sha256(manifest_path, root, review_id, attempt_id)
+    task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
+    rendered, why = _render_prompt_sha256(
+        manifest_path, root, review_id, attempt_id, task.get("review_access", "isolated")
+    )
     if rendered is None:
         raise refuse(f"the prompt cannot be rendered from {manifest_path} ({why})")
     if rendered != sent:
@@ -360,7 +376,11 @@ def identity_from_record(task: Any, task_id: str, *, record_path: Path | str | N
         model = task.get("resolved_model") if task.get("resolved_model_known") is True else None
         identifier = f"cursor:{model}" if model else None
     else:
-        model = task.get("model")
+        model = (
+            task.get("resolved_model")
+            if task.get("review_access") == "full" and task.get("resolved_model_known") is True
+            else task.get("model")
+        )
         identifier = model
     if not isinstance(model, str) or not model.strip() or identifier is None:
         raise RecordError(f"the dispatch record {task_id} names no attested model")
@@ -368,6 +388,13 @@ def identity_from_record(task: Any, task_id: str, *, record_path: Path | str | N
         family = second_seat.concrete_family(identifier, what=f"dispatch record {task_id}")
     except second_seat.IdentityError as error:
         raise RecordError(str(error)) from error
+    access = task.get("review_access", "isolated")  # older task records predate full mode
+    if access not in ("full", "isolated"):
+        raise RecordError("dispatch record has an unknown review access mode", "review_access_invalid")
+    if access == "full" and {"claude": "anthropic", "codex": "openai", "agy": "google"}.get(harness) != family:
+        raise RecordError("full review requires a supported Ukrainian seat", "full_review_harness_unsupported")
+    if access == "full" and not isinstance(task.get("review_attempt"), dict):
+        raise RecordError("full access requires a bound dispatch record", REVIEW_RETURN_TASK_MISMATCH)
     return {"model": model.strip(), "harness": harness.strip(), "family": family}
 
 
@@ -552,7 +579,9 @@ def record_return(
     review_id, attempt_id = ids["review_id"], ids["attempt_id"]
 
     tasks_root = Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
-    identity = resolve_reviewer_identity(task_id, tasks_root)
+    task_record = _read_dispatch_record(task_id, tasks_root)
+    identity = identity_from_record(task_record, task_id)
+    identity["access"] = task_record.get("review_access", "isolated")
     if failure is None:
         data = attested_return(
             data,
@@ -660,6 +689,7 @@ def record_return(
                         previous_ledger_path,
                         echoed,
                         ids,
+                        identity["access"],
                     ),
                 ]
             )
@@ -677,6 +707,7 @@ def record_return(
             "reviewer_model": identity["model"],
             "reviewer_family": identity["family"],
             "harness": identity["harness"],
+            "access": identity["access"],
             "prompt_sha256": (review.get("reviewer") or {}).get("prompt_sha256")
             if isinstance(review, dict) and not codes
             else None,
@@ -808,6 +839,7 @@ def _rejection_codes(
     previous_ledger_path: Path | None,
     echoed: dict[str, Any],
     ids: dict[str, Any],
+    review_access: str = "isolated",
 ) -> list[str]:
     codes: list[str] = []
     for name in ("review_id", "attempt_id"):
@@ -823,6 +855,7 @@ def _rejection_codes(
         ledger_path=Path(ledger_path),
         previous_ledger_path=previous_ledger_path,
         repo_root=root,
+        review_access=review_access,
     )
     codes += [item.code for item in result.rejections]
     return list(dict.fromkeys(codes))
@@ -1027,6 +1060,7 @@ def _record_failure(
                     "reviewer_model": identity["model"],
                     "reviewer_family": identity["family"],
                     "harness": identity["harness"],
+                    "access": identity["access"],
                     "verdict": "FAILED",
                     "validated_at": moment,
                     "task_id": task_id,

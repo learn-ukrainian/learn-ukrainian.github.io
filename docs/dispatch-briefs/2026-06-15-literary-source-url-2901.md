@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: literary corpus ingest drops source_url — add column + propagate + backfill (#2901)
 
 The literary RAG scrapers record `source_url` per chunk in the JSONL, but `ingest_literary.py` → the
@@ -24,7 +30,7 @@ students to readable originals. Read it: `gh issue view 2901`. (External-article
 ## Numbered steps
 1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Implement schema migration + ingest propagation + backfill script + tests (temp-db fixture).
-3. `cd . && .venv/bin/python -m pytest -k "literary or ingest or source_url" -q` → paste summary.
+3. `cd . && "$PROJECT_PYTHON" -m pytest -k "literary or ingest or source_url" -q` → paste summary.
 4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no DB staged: `git status --short` shows NO `*.db`.
 6. Commit `fix(corpus): propagate source_url into literary_texts (column + ingest + backfill) (#2901)`.

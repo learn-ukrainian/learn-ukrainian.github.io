@@ -21,7 +21,19 @@ _ERROR_HINT = re.compile(r"(?i)(?:traceback|exception|error[:\s]|stderr)")
 _PORT_HINT = re.compile(r"(?i)(?:^|[^0-9])(?:port|:[0-9]{2,5})(?:[^0-9]|$)")
 
 
-def _worker_string_forbidden(text: str, *, allow_epic: bool = False) -> bool:
+# A ``:port`` value, without the bare "port" keyword that _PORT_HINT also matches.
+_PORT_VALUE = re.compile(r"(?:^|[^0-9]):[0-9]{2,5}(?:[^0-9]|$)")
+
+# Fields whose WorkerRow validator admits only a closed identifier grammar (no
+# spaces, "=", "/" or "\\"). Inside that grammar the branch, error and bare
+# "port" keyword hints can only match a word of a task name ("report",
+# "exporter", "stderr", "branch"), so they are not applied there. The PID and
+# nonce hints and a ``:port`` value can still carry a value ("pid-1234",
+# "run-nonce-<hex>"), so they apply to every field.
+_IDENTIFIER_FIELDS = frozenset({"id", "agent", "harness", "run_id"})
+
+
+def _worker_string_forbidden(text: str, *, allow_epic: bool = False, identifier: bool = False) -> bool:
     if not text:
         return True
     if "/" in text or "\\" in text:
@@ -30,16 +42,20 @@ def _worker_string_forbidden(text: str, *, allow_epic: bool = False) -> bool:
         return True
     if _ALIAS_TOKEN.search(text):
         return True
-    if not allow_epic and _PORT_HINT.search(text):
-        return True
-    if _BRANCH_HINT.search(text):
-        return True
     if _PID_HINT.search(text):
         return True
     if _NONCE_HINT.search(text):
         return True
-    if _ERROR_HINT.search(text):
-        return True
+    if identifier:
+        if _PORT_VALUE.search(text):
+            return True
+    else:
+        if not allow_epic and _PORT_HINT.search(text):
+            return True
+        if _BRANCH_HINT.search(text):
+            return True
+        if _ERROR_HINT.search(text):
+            return True
     return bool(_IPV4.search(text) or _FQDN.search(text))
 
 
@@ -50,7 +66,7 @@ def _scan_worker_row(row: dict[str, Any]) -> bool:
         if isinstance(value, str):
             if key == "epic" and _EPIC_RE.fullmatch(value):
                 continue
-            if _worker_string_forbidden(value, allow_epic=key == "epic"):
+            if _worker_string_forbidden(value, allow_epic=key == "epic", identifier=key in _IDENTIFIER_FIELDS):
                 return True
         elif isinstance(value, (int, bool)):
             continue

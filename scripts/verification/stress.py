@@ -1,63 +1,21 @@
-"""Stress oracle: stressed form + stressed-vowel index for a Ukrainian word.
+"""ULIF-first per-form stress oracle (#8398 / #8400).
 
-Implements the design pinned on issue #6515 (design note + K3 cross-family
-review + round-2 revision — see the issue for the full rationale). Summary
-of the contract this module implements:
+Exact-form overrides remain authoritative. Only homonym-checked ULIF rows
+from a complete forms build are evidence. All agreeing readings collapse
+with their row/entry ids; distinct stress choices remain ambiguous unless
+caller lemma or morphology resolves them. Dual stress retains both variants
+and a teaching choice only when a pronunciation dictionary attests it. The packed ukrainian-word-stress trie
+is a labelled fallback. No dictionary reading means pending, never a guess.
 
-- Source of truth: the offline `ukrainian_word_stress` trie (ULIF-derived,
-  ``ukrainian_word_stress/data/stress.trie``), looked up on-demand via
-  ``Disambiguation.Dictionary`` (no Stanza — sentence context doesn't apply
-  to isolated single-word oracle calls).
-- ``vowel_index`` uses the same convention as
-  ``scripts/audit/generate_practice_deck.py::_stress_position``: the 0-based
-  codepoint index of the stressed vowel in the NFC-normalized unstressed
-  form. That convention is what ``site/src/components/PracticeStress.tsx``
-  already consumes.
-- U+0301/U+0300 handling follows the #5375/#6832 convention: strip combining
-  stress marks for the lookup key, keep the caller's original bytes in
-  ``input``.
-- ``scripts/data/stress_overrides.yaml`` is applied as a pre-lookup patch,
-  keyed by *exact* lemma string match only (never extended to inflected
-  forms) — consumers are ``scripts/generate_mdx/generate_ipa.py`` and
-  ``scripts/pipeline/stress_annotator.py``.
-- The trie packs ambiguous readings into a private byte layout
-  (``compile_dict.py``'s ``POS_SEP``/``REC_SEP``/``accent_pos`` scheme) that
-  the package's public API (``Stressifier``, ``find_accent_positions``)
-  collapses into a single resolved answer. Enumerating separate readings —
-  required for ``status="ambiguous"`` — needs that packed layout directly.
-  Round-2 design note §3c sanctions this, gated by the version pin
-  (``requirements-lock.txt``) + the trie digest below: a package bump
-  changes the digest, which forces revalidation, and
-  ``TestStressGolden::test_zamok_golden_entry`` (tests/test_stress_oracle.py)
-  fails loudly if the packing format itself changes.
-- Some ambiguous entries have byte-identical required_tags across distinct
-  stress positions (true meaning-dependent homographs, e.g. за́мок "castle"
-  vs замо́к "lock" — both ``Number=Sing|Case=Nom|Gender=Masc|upos=NOUN``).
-  No tag combination the dictionary offers can disambiguate those further;
-  see ``unresolvable_by_tags`` in the return payload.
-- VESUM (``data/vesum.db``) and the stress dictionary are two disjoint
-  dictionaries with no shared key beyond the ``word_form`` string itself —
-  VESUM carries zero stress information. The VESUM join here is
-  intentionally conservative: it only attaches a VESUM record to a reading
-  when exactly one VESUM row is left after filtering by the reading's own
-  ``upos`` tag (when it has one); anything more ambiguous is left ``null``
-  rather than guessed.
-- Not implemented (explicitly out of scope for this PR, per the design
-  note's own framing as an optional "keep the door open" cross-check, not a
-  pinned deliverable): the ``query_ulif`` live cross-check and the mphdict
-  headword cross-check. Both are hydration/network-dependent and orthogonal
-  to correctness — the trie stays the sole source of truth.
-
-Extension beyond the pinned schema, needed for correctness: hyphenated
-compound entries (e.g. "попереково-крижовими") can carry *more than one*
-stress mark in a single trie value. The pinned schema's ``vowel_index`` stays
-a single int (the primary/lowest-index mark, for schema compatibility);
-``vowel_indices`` (plural, always present) carries the full list.
+The legacy source envelope is preserved; its digest now covers both source
+identities. Per-reading ``source`` and per-result ``stress_source`` name the
+selected authority. Vowel indices remain 0-based NFC codepoint offsets.
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import unicodedata
 from functools import lru_cache
@@ -136,13 +94,42 @@ def _load_override_data() -> dict[str, Any]:
 
 @lru_cache(maxsize=1)
 def _load_overrides() -> dict[str, str]:
-    return {key: value for key, value in _load_override_data().items() if key != "stress_pending"}
+    return {key: value for key, value in _load_override_data().items() if isinstance(value, str)}
+
+
+def _scoped_override_readings(form: str, analyses: list[dict]) -> list[dict[str, Any]]:
+    """Override only positively attested lemma/POS/case analyses, retaining other readings."""
+    from scripts.verification.ulif_stress import analysis_features
+
+    normalized = form.casefold().translate(str.maketrans("’ʼ", "''"))
+    grouped: dict[tuple[int, ...], dict[str, Any]] = {}
+    for entry in _load_override_data().get("scoped_overrides", []):
+        if entry["form"] != normalized:
+            continue
+        required = set(entry["required_tags"])
+        witnesses = [v for v in analyses if v.get("lemma") == entry["lemma"] and required <= analysis_features(v)]
+        if not witnesses:
+            continue
+        _, indices = _stress_positions_in_marked_string(entry["stressed_form"])
+        key = tuple(indices)
+        if key not in grouped:
+            match = _build_match(form, [i + 1 for i in indices], [], override_applied=True)
+            match.update(source="override", evidence=[], vesum_analyses=[])
+            grouped[key] = match
+        match = grouped[key]
+        match["required_tags"] = sorted(set(match["required_tags"]) | required)
+        for source in entry["sources"]:
+            if source not in match["evidence"]:
+                match["evidence"].append(source)
+        match["vesum_analyses"] += [v for v in witnesses if v not in match["vesum_analyses"]]
+        _attach_vesum(match, match["vesum_analyses"])
+    return list(grouped.values())
 
 
 def pending_stress_reason(word: str) -> str | None:
     """Why an exact surface form must not use an unconfirmed trie reading."""
     pending = _load_override_data().get("stress_pending", {})
-    return pending.get(word) if isinstance(pending, dict) else None
+    return pending.get(word.translate(str.maketrans("’ʼ", "''"))) if isinstance(pending, dict) else None
 
 
 @lru_cache(maxsize=1)
@@ -152,22 +139,37 @@ def _trie_path() -> Path:
     return Path(ukrainian_word_stress.__file__).resolve().parent / "data" / "stress.trie"
 
 
+def _trie_signature() -> tuple[Path, int, int, int]:
+    path = _trie_path()
+    stat = path.stat()
+    return path, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
+
+
 @lru_cache(maxsize=1)
-def _load_trie():
+def _load_trie_at(signature: tuple[Path, int, int, int]):
     import marisa_trie
 
     trie = marisa_trie.BytesTrie()
-    trie.load(str(_trie_path()))
+    trie.load(str(signature[0]))
     return trie
 
 
+def _load_trie():
+    """Reload the fallback if its on-disk snapshot changes in a long-lived MCP."""
+    return _load_trie_at(_trie_signature())
+
+
 @lru_cache(maxsize=1)
-def _trie_digest() -> str:
+def _trie_digest_at(signature: tuple[Path, int, int, int]) -> str:
     digest = hashlib.sha256()
-    with open(_trie_path(), "rb") as fh:
+    with open(signature[0], "rb") as fh:
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _trie_digest() -> str:
+    return _trie_digest_at(_trie_signature())
 
 
 @lru_cache(maxsize=1)
@@ -178,13 +180,27 @@ def _package_version() -> str:
 
 
 def source_info() -> dict[str, Any]:
-    """Reproducibility envelope: package version + trie entry count + digest."""
-    trie = _load_trie()
+    """Both authority digests; the combined digest invalidates all stress caches."""
+    from scripts.verification.teaching_stress import source_info as teaching_source_info
+    from scripts.wiki.sources_db import ulif_stress_build
+
+    build = ulif_stress_build()
+    teaching = teaching_source_info()
+    ulif_digest = hashlib.sha256(json.dumps(build, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    trie_digest = _trie_digest()
+    overrides_digest = hashlib.sha256(
+        json.dumps(_load_override_data(), ensure_ascii=False, sort_keys=True).encode()
+    ).hexdigest()
+    digest = hashlib.sha256(f"{ulif_digest}:{trie_digest}:{teaching['digest']}:{overrides_digest}".encode()).hexdigest()
     return {
         "dictionary": "ukrainian-word-stress (ULIF-derived)",
         "package_version": _package_version(),
-        "trie_entries": len(trie),
-        "digest": _trie_digest(),
+        "trie_entries": len(_load_trie()),
+        "trie_digest": trie_digest,
+        "teaching": teaching,
+        "overrides_digest": overrides_digest,
+        "ulif": {"dictionary": "ULIF ulif_forms (homonym_checked=1)", "build": build, "digest": ulif_digest},
+        "digest": digest,
     }
 
 
@@ -263,18 +279,24 @@ def _normalize_supplied_tags(pos: str | None, tags: str | list[str] | None) -> s
         if pos_clean:
             supplied.add(pos_clean if pos_clean.startswith("upos=") else f"upos={pos_clean.upper()}")
     if isinstance(tags, str):
-        tags = re.split(r"[,\s]+", tags.strip())
+        tags = re.split(r"[:|,\s]+", tags.strip())
     if tags:
-        supplied.update(tag.strip() for tag in tags if tag and tag.strip())
+        from scripts.curriculum.evidence.tags import TagMapper
+
+        atoms = [tag for tag in tags if "=" not in tag]
+        supplied.update(TagMapper()(":".join(atoms)) if atoms else [])
+        if "noun" in atoms and "numr" in atoms:
+            supplied.discard("upos=NUM")
+        supplied.update(tag.strip() for tag in tags if tag and "=" in tag and tag.strip())
     return supplied
 
 
 def _vesum_lookup(word_form: str) -> list[dict]:
-    """Best-effort VESUM lookup; never raises (VESUM join is supplementary)."""
+    """Read VESUM analyses; unavailable identity proof never admits ULIF rows."""
     try:
         from scripts.verification.vesum import verify_word
 
-        return verify_word(word_form)
+        return verify_word(word_form.translate(str.maketrans("’ʼ", "''")))
     except Exception:
         return []
 
@@ -295,10 +317,15 @@ def _apply_input_mismatch(matches: list[dict[str, Any]], word: str) -> None:
     _, caller_positions = _stress_positions_in_marked_string(word)
     caller_set = set(caller_positions)
     for match in matches:
-        match["input_mismatch"] = caller_set != set(match["vowel_indices"])
+        allowed = set(match["vowel_indices"])
+        match["input_mismatch"] = not (
+            caller_set == allowed or (match.get("dual_stress") and len(caller_set) == 1 and caller_set <= allowed)
+        )
 
 
-def _build_match(unstressed_form: str, positions: list[int], required_tags: list[str], *, override_applied: bool) -> dict[str, Any]:
+def _build_match(
+    unstressed_form: str, positions: list[int], required_tags: list[str], *, override_applied: bool
+) -> dict[str, Any]:
     vowel_indices = sorted(p - 1 for p in positions)
     return {
         "stressed_form": _apply_accents(unstressed_form, positions),
@@ -332,26 +359,30 @@ def transfer_stress_marks(marked_src: str, dest_unstressed: str) -> str:
 
 
 def pedagogical_stressed_form(match: dict[str, Any]) -> str:
-    """Single-acute learner form for one ``verify_stress`` match.
+    """Preserve source accents; a single dual-stress choice needs source evidence."""
+    if match.get("pedagogical_source") and not match.get("pedagogical_conflict"):
+        choice = spoken_stressed_form(match)
+        if choice:
+            return choice
+    return match["stressed_form"]
 
-    The ULIF trie packs dual-acceptable positions (подвійний наголос) and
-    occasional primary+secondary into one ``stressed_form`` with two acutes
-    (``ро́збі́р``, ``за́вжди́``). A1/A2 pedagogy marks one vowel. Hyphenated
-    compounds keep every mark. Overrides already encode the intended form.
 
-    For non-hyphenated packed readings the last marked vowel is the
-    primary (``розбі́р``, ``кори́сний``). First-syllable duals such as
-    ``завжди`` / ``також`` belong in ``stress_overrides.yaml``.
-    """
+def spoken_stressed_form(match: dict[str, Any]) -> str | None:
+    """One attested audio choice; unresolved dual accents are never spoken together."""
+    if match.get("pedagogical_conflict"):
+        return None
     form = match["stressed_form"]
-    unstressed = match["unstressed_form"]
-    if match.get("override_applied") or "-" in unstressed:
-        return form
-    indices = list(match.get("vowel_indices") or [])
-    if len(indices) <= 1:
-        return form
-    keep = indices[-1]
-    return unstressed[: keep + 1] + "\u0301" + unstressed[keep + 1 :]
+    bare = match.get("unstressed_form", _strip_stress(form))
+    packed = len(match.get("vowel_indices") or []) > 1 or form.count("\u0301") > 1
+    if packed and "-" not in bare and not match.get("override_applied"):
+        if not match.get("pedagogical_source") or not match.get("pedagogical_stressed_form"):
+            return None
+        choice_bare, indices = _stress_positions_in_marked_string(match["pedagogical_stressed_form"])
+        _, allowed = _stress_positions_in_marked_string(form)
+        if choice_bare.casefold() != bare.casefold() or len(indices) != 1 or indices[0] not in allowed:
+            return None
+        form = transfer_stress_marks(match["pedagogical_stressed_form"], bare)
+    return form
 
 
 def _readings_unresolvable_by_tags(candidates: list[dict[str, Any]]) -> bool:
@@ -365,85 +396,120 @@ def _readings_unresolvable_by_tags(candidates: list[dict[str, Any]]) -> bool:
     return any(len(positions) > 1 for positions in seen.values())
 
 
-def verify_stress(word: str, pos: str | None = None, tags: str | list[str] | None = None) -> dict[str, Any]:
-    """Look up the stress position of a Ukrainian word.
+def verify_stress(
+    word: str, pos: str | None = None, tags: str | list[str] | None = None, lemma: str | None = None
+) -> dict[str, Any]:
+    """Return source-attested stress; optional lemma, POS and UD/VESUM tags narrow readings.
 
-    Args:
-        word: bare lemma, inflected form, or U+0301/U+0300-marked form.
-        pos: optional POS to help disambiguate a heteronym (e.g. "NOUN" or
-            "upos=NOUN").
-        tags: optional additional dictionary-native tags to help
-            disambiguate (e.g. "Case=Nom,Gender=Masc" or
-            ["Case=Nom", "Gender=Masc"]) — same vocabulary as each match's
-            own ``required_tags``.
-
-    Returns:
-        The JSON-shaped envelope documented in the module docstring / issue
-        #6515.
+    A stressed lemma can distinguish same-spelling lexical homographs. Bare
+    lemmas, POS and tags never choose between indistinguishable meanings.
+    The source envelope is retained for existing receipts; selected authority
+    is in ``stress_source`` and each match's ``source``.
     """
+    from scripts.verification.ulif_stress import analysis_features, compatible, select_analyses
+    from scripts.verification.ulif_stress import readings as ulif_readings
+
     lookup_key = _strip_stress(word).strip()
-    invalid_reason = _classify_invalid(lookup_key)
     source = source_info()
-
-    if invalid_reason is not None:
-        return {
-            "input": word,
-            "lookup_key": lookup_key,
-            "status": "invalid_input",
-            "matches": [],
-            "unresolvable_by_tags": False,
-            "source": source,
-            "error": invalid_reason,
-        }
-
-    override = _load_overrides().get(lookup_key)
-    if override:
-        unstressed_override, positions = _stress_positions_in_marked_string(override)
-        matches = [_build_match(unstressed_override, [p + 1 for p in positions], [], override_applied=True)]
-        status = "ok"
-    else:
-        trie = _load_trie()
-        value = _trie_value(trie, lookup_key)
-        if value is None:
-            return {
-                "input": word,
-                "lookup_key": lookup_key,
-                "status": "not_found",
-                "matches": [],
-                "unresolvable_by_tags": False,
-                "source": source,
-            }
-
-        readings = _parse_dictionary_value(value)
-        all_matches = [
-            _build_match(lookup_key, positions, required_tags, override_applied=False)
-            for required_tags, positions in readings
-        ]
-
-        if len(all_matches) == 1:
-            matches = all_matches
-            status = "ok"
-        else:
-            supplied = _normalize_supplied_tags(pos, tags)
-            filtered = [m for m in all_matches if supplied and set(m["required_tags"]) <= supplied]
-            candidates = filtered if filtered else all_matches
-            matches = candidates
-            status = "ok" if len(candidates) == 1 else "ambiguous"
-
-    _apply_input_mismatch(matches, word)
-
-    vesum_matches = _vesum_lookup(matches[0]["unstressed_form"]) if matches else []
-    for match in matches:
-        _attach_vesum(match, vesum_matches)
-
-    return {
+    result = {
         "input": word,
         "lookup_key": lookup_key,
-        "status": status,
-        "matches": matches,
-        "unresolvable_by_tags": status == "ambiguous" and _readings_unresolvable_by_tags(matches),
+        "status": "pending",
+        "matches": [],
+        "unresolvable_by_tags": False,
         "source": source,
+        "stress_source": "pending",
     }
+    invalid = _classify_invalid(lookup_key)
+    if invalid is not None:
+        result.update(status="invalid_input", error=invalid, stress_source=None)
+        return result
+    override = _load_overrides().get(lookup_key.translate(str.maketrans("’ʼ", "''")))
+    if override:
+        base, indices = _stress_positions_in_marked_string(override)
+        if "’" in lookup_key or "ʼ" in lookup_key:
+            base = lookup_key
+        matches = [_build_match(base, [i + 1 for i in indices], [], override_applied=True)]
+        matches[0]["source"] = "override"
+        result.update(stress_source="override", status="ok")
+    elif reason := pending_stress_reason(lookup_key):
+        result["reason"] = reason
+        return result
+    else:
+        supplied = _normalize_supplied_tags(pos, tags)
+        vesum = _vesum_lookup(lookup_key)
+        if lemma or lookup_key != lookup_key.lower():
+            # Sentence-initial capitals also need their lowercase analyses.
+            for spelling in (lookup_key.lower(), lookup_key.title()):
+                for analysis in _vesum_lookup(spelling):
+                    if analysis not in vesum:
+                        vesum.append(analysis)
+        selected = select_analyses(vesum, supplied, lemma)
+        if vesum and not selected:
+            result["reason"] = "no VESUM analysis matches supplied context"
+            return result
+        matches = _scoped_override_readings(lookup_key, selected)
+        remaining = [v for v in selected if not any(v in m["vesum_analyses"] for m in matches)]
+        for match in ulif_readings(lookup_key, supplied=supplied, lemma=lemma, vesum=remaining):
+            agreeing = next((m for m in matches if m["vowel_indices"] == match["vowel_indices"]), None)
+            if agreeing is not None:
+                # One stress choice can cover separate dictionary and scoped
+                # override identities. Keep the original witnesses separate.
+                match["supporting_readings"] = [agreeing, dict(match)]
+                match["vesum_analyses"] = list(agreeing["vesum_analyses"])
+                match["vesum_analyses"] += [
+                    v for v in match["supporting_readings"][1]["vesum_analyses"] if v not in match["vesum_analyses"]
+                ]
+                match["required_tags"] = sorted(set(agreeing["required_tags"]) | set(match["required_tags"]))
+                _attach_vesum(match, match["vesum_analyses"])
+                matches.remove(agreeing)
+            matches.append(match)
+        uncovered = [v for v in selected if not any(v in m["vesum_analyses"] for m in matches)]
+        if uncovered or not selected:
+            value = _trie_value(_load_trie(), lookup_key)
+            for required, positions in _parse_dictionary_value(value) if value is not None else []:
+                if not positions or not compatible(set(required), supplied):
+                    continue
+                witnesses = [v for v in uncovered if compatible(set(required), analysis_features(v))]
+                if selected and not witnesses:
+                    continue
+                match = _build_match(lookup_key, positions, required, override_applied=False)
+                match.update(source="trie", vesum_analyses=witnesses)
+                # Agreement is one choice even when ULIF covers only one lemma.
+                # Trie remains the label because its fallback evidence is needed.
+                agreeing = next((m for m in matches if m["vowel_indices"] == match["vowel_indices"]), None)
+                if agreeing is not None:
+                    match["supporting_readings"] = [agreeing, dict(match)]
+                    match["vesum_analyses"] = list(agreeing["vesum_analyses"])
+                    match["vesum_analyses"] += [v for v in witnesses if v not in match["vesum_analyses"]]
+                    # A teaching choice for a covered lemma cannot settle an
+                    # uncovered lemma's unlabelled packed trie positions.
+                    if len(match["vowel_indices"]) > 1 and "-" not in lookup_key:
+                        match["pedagogical_conflict"] = True
+                    matches.remove(agreeing)
+                _attach_vesum(match, witnesses)
+                matches.append(match)
+            # A covered reading cannot stand in for an analysis lacking both sources.
+            missing = [v for v in uncovered if not any(v in m["vesum_analyses"] for m in matches)]
+            if missing:
+                result["reason"] = "uncovered VESUM analysis has no compatible trie reading"
+                result["uncovered_vesum_analyses"] = missing
+        if not matches:
+            result["reason"] = "no trusted dictionary reading matches supplied context"
+            return result
+        sources = {m["source"] for m in matches}
+        result["stress_source"] = next(iter(sources)) if len(sources) == 1 else "mixed"
+        choices = {tuple(m["vowel_indices"]) for m in matches}
+        result["status"] = "ok" if len(choices) == 1 and not result.get("uncovered_vesum_analyses") else "ambiguous"
+    _apply_input_mismatch(matches, word)
+    if override:
+        for match in matches:
+            _attach_vesum(match, _vesum_lookup(match["unstressed_form"]))
+    result.update(
+        matches=matches,
+        unresolvable_by_tags=result["status"] == "ambiguous" and _readings_unresolvable_by_tags(matches),
+    )
+    return result
 
 
 def stress_call_summary(payload: dict[str, Any] | None, *, word: str | None = None) -> str:
@@ -490,13 +556,29 @@ def _compact_stress_reading(match: dict[str, Any]) -> dict[str, Any]:
         "required_tags": list(match.get("required_tags") or []),
         "override_applied": bool(match.get("override_applied")),
     }
+    for key in (
+        "source",
+        "evidence",
+        "grammatical_tags",
+        "vesum_analyses",
+        "dual_stress",
+        "variants",
+        "pedagogical_stressed_form",
+        "pedagogical_source",
+        "pedagogical_conflict",
+        "supporting_readings",
+    ):
+        if key in match:
+            reading[key] = match[key]
     vesum = match.get("vesum")
     if vesum is not None:
         reading["vesum"] = vesum
     return reading
 
 
-def verify_stresses(words: list[str], pos: str | None = None) -> dict[str, Any]:
+def verify_stresses(
+    words: list[str], pos: str | None = None, tags: str | list[str] | None = None, lemma: str | None = None
+) -> dict[str, Any]:
     """Batch stress lookup. One compact record per word; source envelope once.
 
     Processes at most ``STRESS_BATCH_CAP`` words. A longer list is truncated
@@ -511,7 +593,7 @@ def verify_stresses(words: list[str], pos: str | None = None) -> dict[str, Any]:
     records: list[dict[str, Any]] = []
     source: dict[str, Any] | None = None
     for word in batch:
-        result = verify_stress(word, pos=pos)
+        result = verify_stress(word, pos=pos, tags=tags, lemma=lemma)
         if source is None:
             source = result.get("source")
         matches = result.get("matches") if isinstance(result.get("matches"), list) else []
@@ -519,16 +601,13 @@ def verify_stresses(words: list[str], pos: str | None = None) -> dict[str, Any]:
             {
                 "input": result.get("input", word),
                 "status": result.get("status"),
-                "readings": [
-                    _compact_stress_reading(match) for match in matches if isinstance(match, dict)
-                ],
+                "source": result.get("stress_source"),
+                "readings": [_compact_stress_reading(match) for match in matches if isinstance(match, dict)],
             }
         )
     if source is None:
         source = source_info()
     payload: dict[str, Any] = {"words": records, "source": source}
     if submitted > STRESS_BATCH_CAP:
-        payload["note"] = (
-            f"Note: received {submitted} words; processed the first {STRESS_BATCH_CAP} (hard cap)."
-        )
+        payload["note"] = f"Note: received {submitted} words; processed the first {STRESS_BATCH_CAP} (hard cap)."
     return payload

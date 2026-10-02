@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: #1770 plan-references triage — 32 plans citing missing textbooks
 
 > **Issue:** #1770. Single triage report — paper work, no code.
@@ -8,7 +14,7 @@
 ## Worktree instructions (mandatory)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent gemini --mode danger --worktree --base origin/main \
     --task-id gemini-1770-plan-references \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/1770-plan-references-triage-gemini.md

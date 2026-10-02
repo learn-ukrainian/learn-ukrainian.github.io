@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: resolve 8 lit slug-mismatch errors blocking validate_plan_ordering.py promotion (#2526)
 
 `validate_plan_ordering.py` reports 8 `lit`-track errors where YAML `slug` ≠ filename-derived expected
@@ -24,8 +30,8 @@ For each, determine which is canonical/live:
 ## Numbered steps
 1. `cd . && git fetch origin` (you are in a `--worktree` from origin/main).
 2. Investigate the 8; apply the minimal correct fix per the rule above.
-3. `cd . && .venv/bin/python scripts/audit/validate_plan_ordering.py` (find exact path with `git grep -l validate_plan_ordering`) → **0 lit errors**.
-4. If you changed the validator: `cd . && .venv/bin/python -m pytest -k "plan_ordering or validate_plan" -q` → paste summary.
+3. `cd . && "$PROJECT_PYTHON" scripts/audit/validate_plan_ordering.py` (find exact path with `git grep -l validate_plan_ordering`) → **0 lit errors**.
+4. If you changed the validator: `cd . && "$PROJECT_PYTHON" -m pytest -k "plan_ordering or validate_plan" -q` → paste summary.
 5. `cd . && .venv/bin/ruff check .` → paste final line.
 6. Commit `fix(lit): resolve 8 slug-mismatch errors for validate_plan_ordering promotion (#2526)`.
 7. `git push -u origin <branch>`; `gh pr create` referencing #2526. NO auto-merge.

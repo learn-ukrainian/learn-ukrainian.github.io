@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Brief: Migrate bulk_ocr_gemini.py to gemini-cli Policy Engine
 
 > **Agent**: Codex (mechanical-with-design-judgment — novel script modification + needs to read external docs + small test cycle)
@@ -78,7 +84,7 @@ Run a one-page invocation against an already-OCRed page (or a small known page) 
 Suggested test command (from worktree root):
 ```bash
 ln -s ../../../.venv .venv  # symlink main project venv into worktree
-.venv/bin/python -c "
+"$PROJECT_PYTHON" -c "
 import asyncio, sys
 sys.path.insert(0, 'scripts/etymology')
 from bulk_ocr_gemini import Page, run_gemini_once, prepare_gemini_image
@@ -104,7 +110,7 @@ If the smoke test is non-trivial to author standalone, the alternative is to run
 
 ```bash
 ln -s ../../../.venv .venv  # symlink main project venv into worktree (if not done in Step 5)
-.venv/bin/python -m pytest tests/test_bulk_ocr_gemini.py 2>&1 | tail -20
+"$PROJECT_PYTHON" -m pytest tests/test_bulk_ocr_gemini.py 2>&1 | tail -20
 .venv/bin/ruff check scripts/etymology/bulk_ocr_gemini.py
 ```
 

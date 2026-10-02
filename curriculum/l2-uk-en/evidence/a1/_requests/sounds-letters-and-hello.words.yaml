@@ -1,30 +1,86 @@
 request_schema: 1
 level: a1
 words:
-  - {lemma: привіт, pos: noun, want: W-074, note: 'Greeting formula learned by ear, informal; ULP S1 lesson 1.'}
-  - {lemma: добрий, pos: adj, want: W-075, note: 'Part of the fixed formal greeting chunk, not adjective grammar; ULP S1 lesson 2.'}
-  - {lemma: день, pos: noun, want: W-076, note: 'Part of the fixed formal greeting chunk, not noun grammar; ULP S1 lesson 2.'}
-  - {lemma: звук, pos: noun, entry: {source: vesum, entry_id: 142144}, want: W-077, note: 'Linguistic sound sense, VESUM comment у музиці, лінгвістиці; primer part 1 p. 13.'}
-  - {lemma: літера, pos: noun, want: W-078, note: 'Written letter, contrasted with heard sound; primer part 1 pp. 30–82.'}
-  - {lemma: голосний, pos: noun, entry: {source: vesum, entry_id: 80479}, want: W-079, note: 'Vowel as a sound category, not the adjective; primer part 1 p. 13.'}
-  - {lemma: приголосний, pos: noun, entry: {source: vesum, entry_id: 311385}, want: W-080, note: 'Consonant as a sound category, not the adjective; primer part 1 p. 13.'}
-  - {lemma: мама, pos: noun, want: W-081, note: 'First decodable CVCV word on primer letter pages.'}
-  - {lemma: малина, pos: noun, want: W-082, note: 'Decodable word from primer reading practice.'}
-  - {lemma: слива, pos: noun, want: W-083, note: 'Decodable word from primer reading practice.'}
-  - {lemma: рука, pos: noun, want: W-084, note: 'Decodable word using the final letter group.'}
-  - {lemma: ріка, pos: noun, want: W-085, note: 'Decodable word using the final letter group.'}
-  - {lemma: чути, pos: verb, want: W-086, note: 'Hear: primer sound-first teacher verb; lexical action only, no conjugation system.'}
-  - {lemma: бачити, pos: verb, want: W-087, note: 'See: primer contrasts seeing a letter and hearing a sound; lexical action only.'}
-  - {lemma: читати, pos: verb, want: W-088, note: 'Read: primer reading instruction; lexical action only.'}
-  - {lemma: писати, pos: verb, want: W-089, note: 'Write and copy: primer workbook action; lexical action only.'}
-  - {lemma: повторення, pos: noun, want: W-090, note: 'Recap title and task label, from ULP S1 lesson 10 review pattern.'}
-  - {lemma: Ніна, pos: noun, entry: {source: vesum, entry_id: 239577}, want: W-091, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
-  - {lemma: Нонна, pos: noun, entry: {source: vesum, entry_id: 241021}, want: W-092, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
-  - {lemma: Іван, pos: noun, entry: {source: vesum, entry_id: 151545}, want: W-093, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
-  - {lemma: Вова, pos: noun, entry: {source: vesum, entry_id: 63779}, want: W-094, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
-  - {lemma: Ава, pos: noun, entry: {source: vesum, entry_id: 617}, want: W-095, note: 'Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
-  - {lemma: так, pos: part, entry: {source: vesum, entry_id: 381084}, want: W-096, note: 'Affirmative particle for polar questions in recap, paired with W-062 ні; PULS A1.'}
-  - {lemma: коса, pos: noun, entry: {source: vesum, entry_id: 176043}, want: W-097, note: 'Decodable noun with letter K from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.'}
-  - {lemma: Павлик, pos: noun, entry: {source: vesum, entry_id: 259619}, want: W-098, note: 'Decodable personal name with letters P and K from primer page 76 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0072); taught letters only.'}
-  - {lemma: Поліна, pos: noun, entry: {source: vesum, entry_id: 294525}, want: W-099, note: 'Decodable personal name with letter P from primer pages 76 and 81 (chunks 1-klas-bukvar-zaharijchuk-2025-1_s0072 and s0077); taught letters only.'}
-  - {lemma: Панас, pos: noun, entry: {source: vesum, entry_id: 260777}, want: W-100, note: 'Decodable personal name with letter P from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.'}
+- {lemma: привіт, pos: noun, want: W-074, note: 'Greeting formula learned by ear, informal; ULP S1 lesson 1.'}
+- {lemma: добрий, pos: adj, want: W-075, note: 'Part of the fixed formal greeting chunk, not adjective grammar; ULP S1 lesson
+    2.'}
+- {lemma: день, pos: noun, want: W-076, note: 'Part of the fixed formal greeting chunk, not noun grammar; ULP S1 lesson 2.'}
+- {lemma: звук, pos: noun, entry: {source: vesum, entry_id: 142144}, want: W-077, note: 'Linguistic sound sense, VESUM comment
+    у музиці, лінгвістиці; primer part 1 p. 13.'}
+- {lemma: літера, pos: noun, want: W-078, note: 'Written letter, contrasted with heard sound; primer part 1 pp. 30–82.'}
+- {lemma: голосний, pos: noun, entry: {source: vesum, entry_id: 80479}, want: W-079, note: 'Vowel as a sound category, not
+    the adjective; primer part 1 p. 13.'}
+- {lemma: приголосний, pos: noun, entry: {source: vesum, entry_id: 311385}, want: W-080, note: 'Consonant as a sound category,
+    not the adjective; primer part 1 p. 13.'}
+- {lemma: мама, pos: noun, want: W-081, note: 'First decodable CVCV word on primer letter pages.'}
+- {lemma: малина, pos: noun, want: W-082, note: 'Decodable word from primer reading practice.'}
+- {lemma: слива, pos: noun, want: W-083, note: 'Decodable word from primer reading practice.'}
+- {lemma: рука, pos: noun, want: W-084, note: 'Decodable word using the final letter group.'}
+- {lemma: ріка, pos: noun, want: W-085, note: 'Decodable word using the final letter group.'}
+- {lemma: чути, pos: verb, want: W-086, note: 'Hear: primer sound-first teacher verb; lexical action only, no conjugation
+    system.'}
+- {lemma: бачити, pos: verb, want: W-087, note: 'See: primer contrasts seeing a letter and hearing a sound; lexical action
+    only.'}
+- {lemma: читати, pos: verb, want: W-088, note: 'Read: primer reading instruction; lexical action only.'}
+- {lemma: писати, pos: verb, want: W-089, note: 'Write and copy: primer workbook action; lexical action only.'}
+- {lemma: повторення, pos: noun, want: W-090, note: 'Recap title and task label, from ULP S1 lesson 10 review pattern.'}
+- {lemma: Ніна, pos: noun, entry: {source: vesum, entry_id: 239577}, want: W-091, note: 'Decodable personal name from primer
+    reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+- {lemma: Нонна, pos: noun, entry: {source: vesum, entry_id: 241021}, want: W-092, note: 'Decodable personal name from primer
+    reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+- {lemma: Іван, pos: noun, entry: {source: vesum, entry_id: 151545}, want: W-093, note: 'Decodable personal name from primer
+    reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+- {lemma: Вова, pos: noun, entry: {source: vesum, entry_id: 63779}, want: W-094, note: 'Decodable personal name from primer
+    reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+- {lemma: Ава, pos: noun, entry: {source: vesum, entry_id: 617}, want: W-095, note: 'Decodable personal name from primer reading
+    page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.'}
+- {lemma: так, pos: part, entry: {source: vesum, entry_id: 381084}, want: W-096, note: 'Affirmative particle for polar questions
+    in recap, paired with W-062 ні; PULS A1.'}
+- {lemma: коса, pos: noun, entry: {source: vesum, entry_id: 176043}, want: W-097, note: 'Decodable noun with letter K from
+    primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.'}
+- {lemma: Павлик, pos: noun, entry: {source: vesum, entry_id: 259619}, want: W-098, note: 'Decodable personal name with letters
+    P and K from primer page 76 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0072); taught letters only.'}
+- {lemma: Поліна, pos: noun, entry: {source: vesum, entry_id: 294525}, want: W-099, note: 'Decodable personal name with letter
+    P from primer pages 76 and 81 (chunks 1-klas-bukvar-zaharijchuk-2025-1_s0072 and s0077); taught letters only.'}
+- {lemma: Панас, pos: noun, entry: {source: vesum, entry_id: 260777}, want: W-100, note: 'Decodable personal name with letter
+    P from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.'}
+- lemma: коло
+  pos: prep
+  entry:
+    source: vesum
+    entry_id: 170588
+  want: W-154
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.
+- lemma: он
+  pos: part
+  entry:
+    source: vesum
+    entry_id: 253567
+  want: W-155
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.
+- lemma: сливка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 363144
+  want: W-156
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.
+- lemma: кислий
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 164946
+  want: W-157
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.
+- lemma: син
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 357755
+  want: W-158
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
+    exact forms in revise-a1-p1-p3.md.

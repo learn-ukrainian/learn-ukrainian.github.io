@@ -40,5 +40,8 @@ def synthetic_vesum(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def sources(synthetic_vesum: Path, tmp_path: Path):
-    with Sources(sources_db=tmp_path / "synthetic-sources-unused.db", vesum_db=synthetic_vesum) as api:
+    path = tmp_path / "synthetic-sources-empty.db"
+    with sqlite3.connect(path) as conn:
+        conn.execute("CREATE TABLE synthetic_no_stress_evidence (id INTEGER)")
+    with Sources(sources_db=path, vesum_db=synthetic_vesum) as api:
         yield api

@@ -1,6 +1,6 @@
 """Append-only local ledger of one review attempt's sources calls.
 
-Activated by the three environment variables below, which the dispatch sets
+Activated by the recording environment variables below, which the dispatch sets
 on the sources MCP process. The file layout is
 ``batch_state/review-receipts/<review_id>/<attempt_id>.jsonl`` plus a
 ``<attempt_id>.jsonl.sha256`` sidecar. ``LU_REVIEW_LEDGER_PATH`` is that
@@ -37,6 +37,7 @@ from scripts.curriculum.evidence.lock import atomic_write
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
 ENV_LEDGER_PATH = "LU_REVIEW_LEDGER_PATH"
+ENV_REVIEW_ACCESS = "LU_REVIEW_ACCESS"
 ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
 # Principle 4a of the review contract. A call to any other tool is refused.
@@ -61,6 +62,15 @@ REVIEW_TOOLS = frozenset(
         "verify_quote",
     }
 )
+FULL_REVIEW_TOOLS = REVIEW_TOOLS | {"search_resources"}
+
+
+def review_tools(review_access: str = "isolated") -> frozenset[str]:
+    """Keep the original isolated tool contract; catalogue evidence is full-only."""
+    if review_access not in {"isolated", "full"}:
+        raise ValueError("review_access_invalid")
+    return FULL_REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS
+
 
 _TOKEN = r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
 _LOCK = threading.Lock()
@@ -323,6 +333,7 @@ class ReviewSession:
     manifest_sha256: str
     ledger_path: Path
     error: str = ""
+    review_access: str = "isolated"
 
     def record(
         self,
@@ -363,13 +374,16 @@ def session_from_environ(environ: Any = None) -> ReviewSession | None:
     """
     env = os.environ if environ is None else environ
     values = {key: str(env.get(key, "") or "").strip() for key in ENV_KEYS}
-    if not any(values.values()):
+    if not any(values.values()) and ENV_REVIEW_ACCESS not in env:
         return None
     missing = [key for key, value in values.items() if not value]
     attempt_id = values[ENV_ATTEMPT_ID]
     manifest = values[ENV_MANIFEST_SHA256]
     raw_path = values[ENV_LEDGER_PATH]
     problems: list[str] = []
+    access = env.get(ENV_REVIEW_ACCESS)
+    if access not in {"isolated", "full"}:
+        problems.append("review_access_invalid")
     if missing:
         problems.append("missing " + ", ".join(missing))
     if attempt_id and not _token(attempt_id):
@@ -393,4 +407,4 @@ def session_from_environ(environ: Any = None) -> ReviewSession | None:
             ledger_path,
             "; ".join(problems),
         )
-    return ReviewSession("on", review_id, attempt_id, manifest, ledger_path)
+    return ReviewSession("on", review_id, attempt_id, manifest, ledger_path, review_access=access)

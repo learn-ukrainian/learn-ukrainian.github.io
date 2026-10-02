@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: D4 decision-lineage backlink scanner (#1785)
 
 > **Issue:** #1785. Single PR closes the issue.
@@ -8,7 +14,7 @@
 ## Worktree instructions (mandatory)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent codex --mode danger --worktree --base origin/main \
     --task-id codex-1785-d4-decision-lineage \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/1785-d4-decision-lineage.md
@@ -31,7 +37,7 @@ Copied from issue #1785 (these are the exact AC; do not silently relax):
    - PR references that touch the file path
 3. Output JSON: `{decision_id, file_path, aliases[], commits[], prs[], first_cited_at, last_cited_at}`
 4. Expose via Monitor API endpoint `/api/decisions/lineage` (read-only)
-5. CLI: `.venv/bin/python scripts/audit/decision_lineage.py [--decision-id X]`
+5. CLI: `"$PROJECT_PYTHON" scripts/audit/decision_lineage.py [--decision-id X]`
 6. Add a test fixture with 2 decision files + 3 fake commits referencing them in different alias forms; assert the scanner finds all 3
 7. Update `docs/SCRIPTS.md` with the new script
 8. Conform to `cli-help-standard.md` (description, epilog with examples, arg help, exit codes, related)

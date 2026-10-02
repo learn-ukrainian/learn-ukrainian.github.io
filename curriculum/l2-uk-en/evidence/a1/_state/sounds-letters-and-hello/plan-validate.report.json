@@ -71,7 +71,7 @@
           "workbook": {
             "by_type": {
               "odd-one-out": 1,
-              "pick-syllables": 1
+              "quiz": 1
             },
             "total": 2
           }
@@ -79,7 +79,6 @@
         "distinct_types": [
           "letter-grid",
           "odd-one-out",
-          "pick-syllables",
           "quiz",
           "watch-and-repeat"
         ],
@@ -101,14 +100,12 @@
           },
           "workbook": {
             "by_type": {
-              "divide-words": 1,
-              "quiz": 1
+              "quiz": 2
             },
             "total": 2
           }
         },
         "distinct_types": [
-          "divide-words",
           "letter-grid",
           "pick-syllables",
           "quiz",
@@ -132,13 +129,15 @@
           },
           "workbook": {
             "by_type": {
+              "group-sort": 1,
               "match-up": 1,
               "pick-syllables": 1
             },
-            "total": 2
+            "total": 3
           }
         },
         "distinct_types": [
+          "group-sort",
           "letter-grid",
           "match-up",
           "pick-syllables",
@@ -178,7 +177,7 @@
     ],
     "module": {
       "all_distinct_types": [
-        "divide-words",
+        "group-sort",
         "letter-grid",
         "match-up",
         "observe",
@@ -189,14 +188,14 @@
       ],
       "inline_activities": 26,
       "largest_workbook_type": "quiz",
-      "largest_workbook_type_share": 0.3333333333333333,
+      "largest_workbook_type_share": 0.5,
       "longest_same_type_workbook_run": 2,
       "longest_same_type_workbook_run_type": "quiz",
       "non_recap_lessons": 5,
       "non_recap_lessons_with_workbook": 5,
-      "workbook_activities": 9,
+      "workbook_activities": 10,
       "workbook_distinct_types": [
-        "divide-words",
+        "group-sort",
         "match-up",
         "odd-one-out",
         "pick-syllables",
@@ -211,16 +210,16 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "a1fc185346cb212c89114a18e2e8c7f1c40b43bc98f4d14cdfdf7e886f408373",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2383b4a9044e1ef418db1e98ce93a8a4fb0768a674365314be9e601a63ebbb5b",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "96b696344c3bb5ba94463718cafc55df5aecf13955f1e1d8c16d9a34709c5515",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "160e4aa600e8fd2f091ffd7d07aa5ab31a1daded4de56c162d286908b29c492c",
-    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "13b67ca757968e8037b112f54fddc96275414f1fbcebcf04653f24d763ad6004",
-    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "812f5cfb2dae62b9feea54ab7ed96e7a24680dc37854637da4bd31ceec7f79f7",
-    "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "b33075d716373139104577b6318bb700064de97a1bbf180801e9775360bae3e4",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832",
-    "docs/epics/fresh-build-a1-arc.md": "5a1e7190500683fb9134642f993288f4a79dc2c6348440f1d94dec31f4f109b7",
-    "schemas/activities-a1.schema.json": "cc185c5286a7dbe6a4c65d1e0668fd9f2d53ed9d5032182edb4e2db7d98fc8aa",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "9b754018b20e06f598343811eacf29a53cf1ef2cafcbaa7e3d1b31d8ee6d3498",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "de1ec6f9fb924f672105346505bed78f2e6b6fc09aa8c3cf308f5df987b26e44",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "2619fa1332e060aca6f1fae85a290ca0bd287954698fdfd03b818f9f3f8424c4",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "84e7dcdc47f03ceea16a51811d2c327b1b84a57e0df6d88f57a751e1efeb8455",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "2edb695b8b8c5978f34d35b0ab71f1773cfaccf711a60a30e750a796a9fdf9c1",
+    "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
+    "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
     "schemas/module-plan-v2.schema.json": "587b90fe0f15bffd9187e9987cb44a5a94aea9196ca4cc71154386dc99d96fed",
     "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
@@ -257,9 +256,34 @@
       "lesson": null,
       "message": "subtitle digits: 1, 3; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
       "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is 890232e455fc4a91489ade2018665277deb394ef52fbca633fab0248727266e5 and the provisional pack's sha256 is 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "step": null
+    },
+    {
+      "code": "mechanical_rule_not_checked",
+      "lesson": null,
+      "message": "gate M5 was not checked: core word records carry no CEFR level: W-074",
+      "step": null
     }
   ],
-  "notes": [],
+  "notes": [
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'малина' (W-082) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'слива' (W-083) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    }
+  ],
   "slug": "sounds-letters-and-hello",
   "status": "pass",
   "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",

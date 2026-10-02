@@ -149,7 +149,7 @@ this doc narrows the issue's literal wording and should be confirmed, not assume
 
 ### 4.3 Refresh / caching — mirror the existing `GET /api/issues/streams` endpoint exactly
 
-`fetch_epic_membership()` calls `gh api graphql` per epic (18 epic slots) — expensive to run
+`fetch_epic_membership()` calls the named subissues read per epic (18 epic slots) — expensive to run
 per-request. `issue_stream_audit.py` already has a **file-locked background refresh worker**
 (`schedule_refresh(force=False)`, `_spawn_worker`) built for exactly this shape of problem, and a
 **live consumer already implements the exact pattern this endpoint needs**:

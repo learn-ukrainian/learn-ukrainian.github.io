@@ -9,13 +9,10 @@ Division of labor with guard-admin-merge.py: that hook checks whether `--admin`
 would bypass a blocking failure (#M-0.5). This hook applies the ordinary PR
 readiness checks to every merge, including `--admin`.
 
-Why a hook: branch protection is a paid feature for private repos, so on the free-plan
-private repo the protection API answers 403 and NOTHING is a "required" check. Two
-consequences bit us in one day: a draft PR was squash-merged before review (#189 class),
-and two merges landed with the boundary-and-tests job RED because `--auto` only ever
-waits for *required* checks — of which that repo has none. The fleet works across repos
-with and without protection (this public repo's `main` does have it), so the guard
-decides per-repo rather than assuming either.
+Why a hook: GitHub branch protection stops only what is configured as required.
+Without local enforcement, an uncoordinated or draft PR could be merged before
+review or while checks are red. The fleet works across repositories with varied
+protection settings, so the guard enforces invariants deterministically.
 
 FAIL-CLOSED: if the PR, its draft flag, its check states, or the base branch's
 protection can't be determined (gh error/timeout, no PR number), BLOCK. A merge gate
@@ -43,11 +40,47 @@ import concurrent.futures
 import json
 import os
 import re
-import shlex
 import subprocess
 import sys
-from datetime import datetime, timezone
+from pathlib import Path
 from typing import NamedTuple
+
+
+def _read_payload() -> dict | None:
+    try:
+        payload = json.loads(sys.stdin.read() or "{}")
+    except (ValueError, RecursionError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _command(payload: dict) -> str:
+    return ((payload.get("tool_input") or {}).get("command") or "").strip()
+
+
+def _may_merge(command: str) -> bool:
+    # The shell drops quotes and backslashes before executing a command.
+    probe = command.replace("\\", "").replace("'", "").replace('"', "")
+    return ("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe
+
+
+# Ordinary Bash commands must remain usable even if guard dependencies are absent.
+# Preserve the payload for main(), since stdin can only be consumed once.
+if __name__ == "__main__":
+    _CLI_PAYLOAD = _read_payload()
+    if (
+        _CLI_PAYLOAD is not None
+        and isinstance(_CLI_PAYLOAD.get("tool_input", {}), dict)
+        and isinstance(_CLI_PAYLOAD.get("tool_input", {}).get("command", ""), str)
+        and not _may_merge(_command(_CLI_PAYLOAD))
+    ):
+        sys.exit(0)
+
+
+for parent in Path(__file__).resolve().parents:
+    if (parent / "scripts/publish").is_dir():
+        sys.path.insert(0, str(parent))
+        break
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
@@ -55,13 +88,45 @@ sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
         ShellPreprocessLimit,
-        preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
     )
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
+
+try:
+    from shell_redirects import scope_events
+except Exception as exc:
+    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
+
+try:
+    from scripts.publish.merge_guard import (
+        _checks_json_unsupported,
+        _parse_status_rollup_rows,
+        parse_checks,
+        readiness_reason,
+    )
+    from scripts.publish.merge_guard import (
+        _is_advisory as _is_advisory,
+    )
+    from scripts.publish.merge_guard import (
+        _latest_rollup_rows as _latest_rollup_rows,
+    )
+    from scripts.publish.merge_guard import (
+        _rollup_name as _rollup_name,
+    )
+    from scripts.publish.merge_guard import (
+        _rollup_timestamp as _rollup_timestamp,
+    )
+    from scripts.publish.merge_guard import (
+        _rollup_value as _rollup_value,
+    )
+except ImportError:
+    print("guard dependency unavailable: merge readiness", file=sys.stderr)
+    raise SystemExit(2) from None
+
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
 # `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> every merge
@@ -120,42 +185,7 @@ def _flag_enabled(args: list[str], name: str) -> bool:
     return enabled
 
 
-def _is_advisory(name: str) -> bool:
-    low = name.lower()
-    return any(m in low for m in ADVISORY_NAME_MARKERS)
-
-
-def _read_payload() -> dict | None:
-    try:
-        payload = json.loads(sys.stdin.read() or "{}")
-    except (ValueError, RecursionError):
-        return None
-    return payload if isinstance(payload, dict) else None
-
-
-def _command(payload: dict) -> str:
-    return ((payload.get("tool_input") or {}).get("command") or "").strip()
-
-
-# --- Command segmentation hardened against glued shell operators (#4876). ---
-# Pattern lifted from guard-secret-print.py. Hooks are standalone by design,
-# so the helpers are copied, not imported. Keep the three active copies in
-# guard-branch-switch-in-main.py, guard-admin-merge.py, and guard-pr-merge.py
-# in sync.
-#
-# This copy alone splits the tokenizer into _scope_events() with _segments() derived from
-# it: only this hook cares WHERE a subshell begins and ends, because only this hook tracks
-# `cd` (#5333). The sync target is tokenizing semantics, not line count
-# (guard-branch-switch-in-main.py likewise grew _segments_with_following_operator for what it
-# needed). Do NOT collapse the events back into a flat list to "re-sync": that flattening
-# WAS the bug.
-#
-# One deliberate semantic divergence (#5333 r2): the siblings read a QUOTED lone paren
-# (`echo ')'`) as an operator, because shlex strips the quotes before they see it. Here that
-# splits a subshell scope and judges a merge in the wrong repo, so this copy scans the raw
-# line for its parens (_split_scopes) and keeps quoted ones as argv. In the siblings the same
-# quirk only ever splits a segment that neither `git checkout` nor `gh pr merge` matches, so
-# it is harmless there and they are left alone rather than churned.
+# Redirect tokenization is shared with the two sibling target guards.
 
 
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
@@ -181,130 +211,15 @@ def _join_line_continuations(text: str) -> str:
     return text.replace("\\\n", "")
 
 
-_PUNCTUATION = ";|&()<>"
-# The parens are split out of the raw line by _split_scopes BEFORE a chunk is tokenized,
-# so any paren still inside a chunk is quoted or escaped text, never an operator (#5333 r2).
-_ARGV_PUNCTUATION = ";|&<>"
-
-
-def _is_operator(tok: str, punctuation: str = _PUNCTUATION) -> bool:
-    """A token that is nothing but shell punctuation — a separator, not argv."""
-    return bool(tok) and all(c in punctuation for c in tok)
-
-
-def _tokenize(line: str) -> list[str] | None:
-    """Quote-aware tokens of one logical line, or None when it does not lex."""
-    try:
-        lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
-        lexer.whitespace_split = True
-        return list(lexer)
-    except ValueError:
-        return None
-
-
-def _split_scopes(line: str) -> list[tuple[str, str]]:
-    """One raw line as ("text"|"open"|"close", raw) pieces, split at its REAL parens.
-
-    A real paren is one the shell would act on: unquoted and unescaped. This scan runs on
-    the RAW line because that is the only place quote context still exists — shlex strips
-    quotes, so `echo ')'` and a bare `)` reach the token stream as the identical token `)`,
-    and the scope scanner read the quoted one as a real subshell close (#5333 r2). That was
-    not merely an over-block: in `(cd /a && echo ')' && gh pr merge 9)` the fake close
-    popped the REAL subshell and judged PR 9 in the session's repo instead of /a — a
-    wrong-repo judgment, the same false-ALLOW class the scope fix set out to close.
-
-    Pairing shlex's posix and non-posix token streams would be the obvious alternative, and
-    it is wrong: they diverge on backslashes (`cd /a\\ b` -> 2 posix tokens, 3 raw ones), so
-    the two streams cannot be zipped, and a misalignment silently mis-classifies a REAL
-    paren — reopening the leak. Splitting the raw text first needs no alignment at all.
-
-    Quote/escape state tracks posix shlex's own rules, so the pieces re-lex as shlex reads
-    them: `\\` escapes outside quotes and inside `"..."`, but is literal inside `'...'`.
-    """
-    pieces: list[tuple[str, str]] = []
-    buf: list[str] = []
-    quote: str | None = None
-    escaped = False
-    for ch in line:
-        if escaped:
-            buf.append(ch)
-            escaped = False
-        elif ch == "\\" and quote != "'":
-            buf.append(ch)
-            escaped = True
-        elif quote:
-            buf.append(ch)
-            if ch == quote:
-                quote = None
-        elif ch in "'\"":
-            buf.append(ch)
-            quote = ch
-        elif ch in "()":
-            pieces.append(("text", "".join(buf)))
-            pieces.append(("open" if ch == "(" else "close", ch))
-            buf = []
-        else:
-            buf.append(ch)
-    pieces.append(("text", "".join(buf)))
-    return pieces
-
-
 def _scope_events(command: str) -> list[tuple[str, list[str]]]:
-    """The command as an ordered event stream: argv segments AND subshell boundaries.
-
-    Quote-aware and robust to glued shell operators (#4876). A `gh pr merge` inside a
-    quoted commit body (`git commit -m "... gh pr merge ..."`) stays one argv element —
-    no false block. A `; gh pr merge 5` glued to a preceding token becomes its own
-    segment and is inspected — no evasion. Heredoc bodies are stripped (document text is
-    not commands); `\\`-continuations are folded; each logical line lexes separately.
-
-    Events, rather than a flat segment list, because `(` and `)` are the only record of a
-    SUBSHELL — and a subshell's `cd` dies at its `)` (#5333). Flattening them away made
-    `(cd /inner && true) && gh pr merge 5` read as if the merge ran in /inner: a
-    false-ALLOW off whatever PR #5 is there.
-
-    Boundaries come from _split_scopes' scan of the RAW line, which is the only reader that
-    still has quote context; the pieces between them are then tokenized. Glue (`&&(`, `)&&`)
-    needs no special handling — the raw split cuts at the paren, leaving `&&` in the
-    neighbouring chunk, so boundaries stay in sequence with the segments. A paren surviving
-    INSIDE a chunk is quoted or escaped text, so `_ARGV_PUNCTUATION` (parens excluded) is
-    what separates segments there: `echo ')'` keeps its `)` as the argument it is (#5333 r2).
-
-    `(` also opens a command substitution (`cd $(cat f)`), which reads here as a subshell
-    scope. That is not a coincidence to paper over: `$(...)` really does run in a
-    subshell, so its `cd` really does die at the `)`. Same event, same truth.
-
-    An `("unreadable", [])` event marks a line that does not lex (unbalanced quote —
-    which the real shell rejects too). It cannot be scanned for `cd`, so it must not be
-    passed off as scope-neutral. It replaces the whole line's events rather than just the
-    offending chunk's: a half-scanned line could otherwise leave an `open` whose later
-    `close` RESTORES a readable cwd, laundering an unreadable line into a clean one.
-    Only a `segment` event carries argv; the rest carry [].
-    """
-    events: list[tuple[str, list[str]]] = []
-    for line in preprocess_shell_command(command).splitlines():
-        line_events: list[tuple[str, list[str]]] = []
-        readable = True
-        for kind, raw in _split_scopes(line):
-            if kind != "text":
-                line_events.append((kind, []))
-                continue
-            tokens = _tokenize(raw)
-            if tokens is None:
-                readable = False
-                break
-            cur: list[str] = []
-            for tok in tokens:
-                if not _is_operator(tok, _ARGV_PUNCTUATION):
-                    cur.append(tok)
-                    continue
-                if cur:
-                    line_events.append(("segment", cur))
-                    cur = []
-            if cur:
-                line_events.append(("segment", cur))
-        events.extend(line_events if readable else [("unreadable", [])])
-    return events
+    """Preserve the PR guard's existing event and unreadability policy."""
+    return scope_events(
+        command,
+        mark_redirect_unreadable="merge" in command.lower(),
+        unreadable_marker=_UNREADABLE_MARKER,
+        unparsed=_UNPARSED,
+        may_match=_may_merge,
+    )
 
 
 def _segments(command: str) -> list[list[str]]:
@@ -524,6 +439,8 @@ def _cd_target(seg: list[str]):
     i = _skip_command_prefix(seg, 0)
     if i >= len(seg) or seg[i] != "cd":
         return None
+    if _UNREADABLE_MARKER in seg:
+        return _CD_UNREADABLE
     rest: list[str] = []
     options_done = False
     for tok in seg[i + 1 :]:
@@ -620,7 +537,31 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     ordinary PR checks still apply when a command contains ``--admin``.
     """
     i, via_xargs = _invoked_start(seg)
-    if seg[i : i + 3] == ["gh", "pr", "merge"]:
+    if (
+        i + 3 < len(seg)
+        and re.fullmatch(r"python(?:3(?:\.\d+)?)?", Path(seg[i]).name)
+        and seg[i + 1 : i + 4] == ["-m", "scripts.publish", "pr-merge"]
+    ):
+        if "--help" in seg[i + 4 :]:
+            return None
+        args = []
+        rest = seg[i + 4 :]
+        j = 0
+        while j < len(rest):
+            key, sep, value = rest[j].partition("=")
+            if key not in {"--number", "--repo", "--subject", "--body", "--body-file", "--match-head"}:
+                return [_UNREADABLE_MARKER]
+            if not sep:
+                j += 1
+                if j >= len(rest):
+                    return [_UNREADABLE_MARKER]
+                value = rest[j]
+            if key == "--number":
+                args.append(value)
+            else:
+                args.append(("--match-head-commit" if key == "--match-head" else key) + "=" + value)
+            j += 1
+    elif seg[i : i + 3] == ["gh", "pr", "merge"]:
         args = seg[i + 3 :]
     elif i > 0 and not via_xargs:
         # A known wrapper brought its own options/operands (`sudo -u bot gh pr merge`,
@@ -846,127 +787,6 @@ _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "R
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
 
-def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:
-    """Recognize gh 2.46.0's unsupported ``pr checks --json`` response only."""
-    if out.returncode != 1 or (out.stdout or "").strip():
-        return False
-    lines = [line.strip() for line in _decolorize(out.stderr or "").splitlines() if line.strip()]
-    return (
-        len(lines) >= 4
-        and lines[0] == "unknown flag: --json"
-        and re.fullmatch(r"Usage:\s+gh pr checks \[<number> \| <url> \| <branch>\] \[flags\]", lines[1])
-        and lines[2] == "Flags:"
-        and not any("--json" in line for line in lines[2:])
-        and all(line.startswith("-") for line in lines[3:])
-    )
-
-
-def _rollup_value(value: object) -> str:
-    return value.strip().upper() if isinstance(value, str) else ""
-
-
-def _rollup_name(row: dict) -> str | None:
-    for field in ("name", "context"):
-        value = row.get(field)
-        if isinstance(value, str) and value.strip():
-            return value.strip()
-    return None
-
-
-def _rollup_timestamp(row: dict) -> datetime | None:
-    for field in ("startedAt", "createdAt", "updatedAt", "completedAt"):
-        value = row.get(field)
-        if not isinstance(value, str) or not value.strip():
-            continue
-        try:
-            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-        except ValueError:
-            continue
-        if parsed.tzinfo is None:
-            # ``datetime.UTC`` is Python 3.11+; this standalone hook supports 3.10.
-            parsed = parsed.replace(tzinfo=timezone.utc)  # noqa: UP017
-        return parsed
-    return None
-
-
-def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
-    latest: dict[tuple[str, ...], tuple[datetime | None, dict]] = {}
-    for row in rows:
-        name = _rollup_name(row)
-        if name is None:
-            return None
-        context = row.get("context")
-        workflow = row.get("workflowName") or row.get("workflow")
-        if isinstance(context, str) and context.strip():
-            key = ("context", context.strip())
-        elif isinstance(workflow, str) and workflow.strip():
-            key = ("check", name, workflow.strip())
-        else:
-            key = ("unresolved", name)
-            if key in latest:
-                return None
-        timestamp = _rollup_timestamp(row)
-        previous = latest.get(key)
-        if previous is not None:
-            if timestamp is None or previous[0] is None:
-                return None
-            if timestamp < previous[0]:
-                continue
-            if timestamp == previous[0]:
-                return None
-        latest[key] = (timestamp, row)
-    return [row for _timestamp, row in latest.values()]
-
-
-def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
-    if not rows:
-        return [], []
-    named = []
-    for row in rows:
-        if not isinstance(row, dict):
-            return None
-        name = _rollup_name(row)
-        if name is None:
-            return None
-        # Cancelled runs can retain an unexpanded matrix parent. It is not an
-        # executed job and cannot be superseded by the differently named shards.
-        if "${{" not in name and not _is_advisory(name):
-            named.append(row)
-    latest = _latest_rollup_rows(named)
-    if latest is None:
-        return None
-    failing: list[str] = []
-    pending: list[str] = []
-    for row in latest:
-        name = _rollup_name(row)
-        assert name is not None
-        state = _rollup_value(row.get("state"))
-        if state:
-            if row.get("status") not in (None, "") or row.get("conclusion") not in (None, ""):
-                return None
-            result = state
-        else:
-            status = _rollup_value(row.get("status"))
-            conclusion = _rollup_value(row.get("conclusion"))
-            if conclusion in _ROLLUP_FAIL or status in _ROLLUP_FAIL:
-                result = "FAILURE"
-            elif status in _ROLLUP_PENDING:
-                if conclusion:
-                    return None
-                result = "PENDING"
-            elif status == "COMPLETED" and conclusion in _ROLLUP_PASS:
-                result = "SUCCESS"
-            else:
-                return None
-        if result in _ROLLUP_FAIL:
-            failing.append(name)
-        elif result in _ROLLUP_PENDING:
-            pending.append(name)
-        elif result not in _ROLLUP_PASS:
-            return None
-    return failing, pending
-
-
 def _check_states_from_status_rollup(
     pr: str, repo: str | None = None, cwd: str | None = None
 ) -> tuple[list[str], list[str]] | None:
@@ -1020,25 +840,7 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
         return None
     if not isinstance(rows, list):
         return None
-    failing: list[str] = []
-    pending: list[str] = []
-    for r in rows:
-        if not isinstance(r, dict):
-            return None
-        name = str(r.get("name") or "")
-        if "${{" in name or _is_advisory(name):
-            continue
-        bucket = str(r.get("bucket") or r.get("state") or "").lower()
-        if bucket in _FAIL_BUCKETS:
-            failing.append(name)
-        elif bucket in _PENDING_BUCKETS:
-            pending.append(name)
-        elif bucket not in _PASS_BUCKETS:
-            # Schema drift or a partial row on a non-advisory check. "I don't recognize
-            # this state" must never fall through to green — that is the fail-open bug
-            # this hook exists to prevent, arriving by a different door.
-            return None
-    return failing, pending
+    return parse_checks(rows)
 
 
 def _base_protected(owner_repo: str, base: str) -> bool | None:
@@ -1094,8 +896,7 @@ def _pr_snapshot(
 
 _FOOTER = (
     "GitHub will merge a draft or a red PR without complaint — branch protection stops only\n"
-    "what it was configured to require, and on a free-plan private repo it cannot be configured\n"
-    "at all. That is the gap this hook covers. If the merge is genuinely intended, a human can\n"
+    "what it was configured to require. That is the gap this hook covers. If the merge is genuinely intended, a human can\n"
     "run it directly, outside the agent harness.\n\n"
     "Hook source: .claude/hooks/guard-pr-merge.py\n"
 )
@@ -1129,21 +930,22 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "An unverifiable merge is refused, not assumed safe. Re-check the PR with\n"
             "`gh pr view` and retry once gh answers.",
         )
-    if meta.get("isDraft"):
+    reason = readiness_reason(meta, states)
+    if reason == "PR is a DRAFT":
         return _block_msg(
             f"PR {pr} is a DRAFT",
             "Draft PRs are never merged or armed — a draft is by definition not review-ready\n"
             "(the #189 incident: a draft was squash-merged before anyone reviewed it). Mark it\n"
-            "ready (`gh pr ready`) and get the review gate first.",
+            "ready (`python -m scripts.publish pr-ready --number <N>`) and get the review gate first.",
         )
-    if states is None:
+    if reason == "check states unverifiable":
         return _block_msg(
             f"could not verify PR {pr} check states (gh error, timeout, or an unrecognized check state)",
             "An unverifiable merge is refused, not assumed safe. Re-read the checks with\n"
             "`gh pr checks` and retry once gh answers.",
         )
     failing, pending = states
-    if failing:
+    if reason == "FAILING checks":
         return _block_msg(
             f"PR {pr} has FAILING checks: {', '.join(failing)}",
             "Every non-advisory check counts, whether or not GitHub marks it required —\n"
@@ -1180,7 +982,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
         # Protected base with required checks: --auto is what it claims to be, so
         # still-running checks are exactly what it will wait for.
         return None
-    if pending:
+    if reason == "checks still running":
         return _block_msg(
             f"PR {pr} has checks still running: {', '.join(pending)}",
             "Wait for them to finish and read the result, or re-run with --auto — which this\n"
@@ -1191,7 +993,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
 
 
 def main() -> int:
-    payload = _read_payload()
+    payload = _CLI_PAYLOAD if __name__ == "__main__" else _read_payload()
     if payload is None or not isinstance(payload.get("tool_input", {}), dict):
         sys.stderr.write(_block_msg("malformed hook payload", "Provide a Bash command object for review."))
         return 2
@@ -1205,10 +1007,7 @@ def main() -> int:
     # `bash -c 'g\h --version'` prints gh's version). Testing the raw source would let a
     # merge past this early return before the real parser ever sees it. Normalizing only
     # ever sends MORE commands to the full parse — never fewer.
-    if not command:
-        return 0
-    probe = command.replace("\\", "").replace("'", "").replace('"', "")
-    if "gh" not in probe or "pr" not in probe or "merge" not in probe:
+    if not _may_merge(command):
         return 0
     # Each segment arrives carrying the cwd it runs in, so a PR number is judged in the
     # repo the MERGE runs in, not the session's repo — `cd private-repo && gh pr merge 203`

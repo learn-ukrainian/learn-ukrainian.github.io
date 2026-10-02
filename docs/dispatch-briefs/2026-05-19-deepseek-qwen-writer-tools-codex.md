@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Add deepseek-tools + qwen-tools as V7 writer choices
 
 **Agent:** codex
@@ -23,11 +29,11 @@ This dispatch must obey `memory/MEMORY.md` #M-4 (deterministic-over-hallucinatio
 
 | Claim in PR body | Required deterministic tool | Output format |
 |---|---|---|
-| "Tests pass" | `.venv/bin/python -m pytest tests/test_v7_writer_dispatch.py tests/test_mcp_init_observability.py tests/agent_runtime/ -v` from repo root | quote final `N passed in M.MMs` line raw |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/test_v7_writer_dispatch.py tests/test_mcp_init_observability.py tests/agent_runtime/ -v` from repo root | quote final `N passed in M.MMs` line raw |
 | "Lint clean" | `.venv/bin/ruff check scripts/build/ scripts/agent_runtime/ tests/` from repo root | quote `All checks passed!` or zero-error final line raw |
-| "WRITER_CHOICES updated" | `.venv/bin/python -c "from scripts.build.linear_pipeline import WRITER_CHOICES; print(WRITER_CHOICES)"` from repo root | quote the printed tuple raw — must include both `deepseek-tools` and `qwen-tools` |
-| "v7_build.py argparse accepts deepseek-tools + qwen-tools" | `.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --dry-run 2>&1 \| tail -5` AND `.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer qwen-tools --dry-run 2>&1 \| tail -5` from repo root | quote tail lines — `--dry-run` should reach the writer-prep phase without an argparse error |
-| "MCP tool_config builds for both new writers" | `.venv/bin/python -c "from scripts.build import linear_pipeline; print(linear_pipeline._runtime_tool_config('deepseek-tools', event_sink=lambda *a, **k: None).get('hermes_mcp_servers'))"` AND same for `qwen-tools` from repo root | quote each printed value — expected: `['sources']` for both |
+| "WRITER_CHOICES updated" | `"$PROJECT_PYTHON" -c "from scripts.build.linear_pipeline import WRITER_CHOICES; print(WRITER_CHOICES)"` from repo root | quote the printed tuple raw — must include both `deepseek-tools` and `qwen-tools` |
+| "v7_build.py argparse accepts deepseek-tools + qwen-tools" | `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --dry-run 2>&1 \| tail -5` AND `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer qwen-tools --dry-run 2>&1 \| tail -5` from repo root | quote tail lines — `--dry-run` should reach the writer-prep phase without an argparse error |
+| "MCP tool_config builds for both new writers" | `"$PROJECT_PYTHON" -c "from scripts.build import linear_pipeline; print(linear_pipeline._runtime_tool_config('deepseek-tools', event_sink=lambda *a, **k: None).get('hermes_mcp_servers'))"` AND same for `qwen-tools` from repo root | quote each printed value — expected: `['sources']` for both |
 | "Commit landed" | `git log -1 --oneline` from worktree | quote line raw |
 | "PR opened" | `gh pr view --json url -q .url` | quote URL raw |
 
@@ -188,8 +194,8 @@ cd .
 
 ```bash
 cd .
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --dry-run 2>&1 | tail -10
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer qwen-tools --dry-run 2>&1 | tail -10
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --dry-run 2>&1 | tail -10
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer qwen-tools --dry-run 2>&1 | tail -10
 ```
 
 Both should reach the writer-prep phase without an argparse error. `--dry-run` stops before writer invocation, so no actual API calls. Confirm:

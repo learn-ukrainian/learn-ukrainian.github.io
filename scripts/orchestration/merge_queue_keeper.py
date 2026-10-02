@@ -8,14 +8,20 @@ import json
 import os
 import re
 import subprocess
+import sys
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.gh_merge_queue_status import extract_pr_number
+from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
+from scripts.publish.github import Request, request_run
 
 FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
@@ -37,10 +43,16 @@ class GitHub:
     def __init__(self, root: Path, repository: str) -> None:
         self.root, self.repository = root, repository
 
+    @publication_boundary(KeeperError)
     def call(self, *args: str) -> str:
         try:
-            result = subprocess.run(
-                ["gh", *args], cwd=self.root, text=True, capture_output=True, timeout=60, check=False
+            result = request_run(
+                args[0] if len(args) == 1 and isinstance(args[0], Request) else ["gh", *args],
+                cwd=self.root,
+                text=True,
+                capture_output=True,
+                timeout=60,
+                check=False,
             )
         except subprocess.TimeoutExpired as exc:
             raise KeeperError("GitHub request timed out") from exc
@@ -54,17 +66,18 @@ class GitHub:
         except ValueError as exc:
             raise KeeperError("invalid GitHub JSON") from exc
 
-    def paged(self, path: str) -> list[dict[str, Any]]:
-        pages = self.json("api", path, "--paginate", "--slurp")
+    def paged(self, request: Request) -> list[dict[str, Any]]:
+        request.fields.update(paginate=True, slurp=True)
+        pages = self.json(request)
         if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
-            raise KeeperError(f"partial pagination: {path}")
+            raise KeeperError(f"partial pagination: {request.verb}")
         rows = [row for page in pages for row in page]
         if not all(isinstance(row, dict) for row in rows):
-            raise KeeperError(f"malformed pagination: {path}")
+            raise KeeperError(f"malformed pagination: {request.verb}")
         return rows
 
     def identity(self) -> str:
-        value = self.call("api", "user", "--jq", ".login").strip()
+        value = self.json(Request("read-identity")).get("login", "").strip()
         if not value:
             raise KeeperError("authenticated identity unknown")
         return value
@@ -82,20 +95,7 @@ class GitHub:
         return {row["baseRefName"] for row in rows}
 
     def snapshot(self, branches: set[str]) -> dict[str, Any]:
-        owner, name = self.repository.split("/", 1)
-        aliases = "\n".join(
-            f"q{i}: mergeQueue(branch: {json.dumps(branch)}) {{ url }}" for i, branch in enumerate(sorted(branches))
-        )
-        query = (
-            """query($owner:String!,$name:String!){ rateLimit { remaining cost }
-        repository(owner:$owner,name:$name){ pullRequests(first:100,states:OPEN){ totalCount pageInfo{hasNextPage}
-        nodes{ id number title isDraft headRefOid baseRefName isInMergeQueue mergeStateStatus
-        autoMergeRequest{ enabledAt } labels(first:100){totalCount pageInfo{hasNextPage} nodes{name}} } }
-        """
-            + aliases
-            + "\n}}"
-        )
-        data = self.json("api", "graphql", "-f", f"query={query}", "-f", f"owner={owner}", "-f", f"name={name}")
+        data = self.json(Request("read-queue-snapshot", repo=self.repository, branches=branches))
         if not isinstance(data, dict) or data.get("errors"):
             raise KeeperError("partial GraphQL snapshot")
         payload = data.get("data")
@@ -118,10 +118,10 @@ class GitHub:
         return {"prs": prs["nodes"], "queues": queues, "remaining": rate["remaining"], "cost": rate["cost"]}
 
     def comments(self, number: int) -> list[dict[str, Any]]:
-        return self.paged(f"repos/{self.repository}/issues/{number}/comments?per_page=100")
+        return self.paged(Request("read-comments", repo=self.repository, number=number))
 
     def checks(self, head: str) -> list[dict[str, Any]]:
-        data = self.json("api", f"repos/{self.repository}/commits/{head}/check-runs?per_page=100")
+        data = self.json(Request("read-checks", repo=self.repository, sha=head))
         if (
             not isinstance(data, dict)
             or not isinstance(data.get("total_count"), int)
@@ -143,24 +143,11 @@ class GitHub:
         )
         if not isinstance(row, dict):
             raise KeeperError("current PR lookup incomplete")
-        row["labels"] = self.paged(f"repos/{self.repository}/issues/{number}/labels?per_page=100")
+        row["labels"] = self.paged(Request("read-labels", repo=self.repository, number=number))
         return row
 
     def membership(self, number: int) -> bool:
-        owner, name = self.repository.split("/", 1)
-        query = "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}"
-        data = self.json(
-            "api",
-            "graphql",
-            "-f",
-            f"query={query}",
-            "-f",
-            f"owner={owner}",
-            "-f",
-            f"name={name}",
-            "-F",
-            f"number={number}",
-        )
+        data = self.json(Request("read-membership", repo=self.repository, number=number))
         if not isinstance(data, dict) or data.get("errors"):
             raise KeeperError("queue membership lookup failed")
         node = ((data.get("data") or {}).get("repository") or {}).get("pullRequest")
@@ -169,22 +156,21 @@ class GitHub:
         return node["isInMergeQueue"]
 
     def enqueue(self, number: int, head: str) -> None:
-        self.call("pr", "merge", str(number), "-R", self.repository, "--squash", "--match-head-commit", head)
+        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
 
     def dequeue(self, node_id: str) -> None:
-        query = "mutation($id:ID!){dequeuePullRequest(input:{id:$id}){clientMutationId}}"
-        data = self.json("api", "graphql", "-f", f"query={query}", "-f", f"id={node_id}")
+        data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
         if not isinstance(data, dict) or data.get("errors") or not (data.get("data") or {}).get("dequeuePullRequest"):
             raise KeeperError("dequeue failed")
 
     def disarm(self, number: int) -> None:
-        self.call("pr", "merge", str(number), "-R", self.repository, "--disable-auto")
+        self.call(Request("pr-disarm", repo=self.repository, number=number))
 
     def comment(self, number: int, body: str) -> None:
-        self.call("pr", "comment", str(number), "-R", self.repository, "--body", body)
+        self.call(Request("pr-comment", repo=self.repository, number=number, body=body))
 
     def timeline(self, number: int) -> list[dict[str, Any]]:
-        return self.paged(f"repos/{self.repository}/issues/{number}/timeline?per_page=100")
+        return self.paged(Request("read-timeline", repo=self.repository, number=number))
 
     def runs(self, since: str) -> list[dict[str, Any]]:
         start = (
@@ -193,12 +179,7 @@ class GitHub:
             else (datetime.now(UTC) - timedelta(days=1)).date().isoformat()
         )
         end = datetime.now(UTC).date().isoformat()
-        pages = self.json(
-            "api",
-            f"repos/{self.repository}/actions/runs?event=merge_group&created={start}..{end}&per_page=100",
-            "--paginate",
-            "--slurp",
-        )
+        pages = self.json(Request("read-runs", repo=self.repository, start=start, end=end, paginate=True, slurp=True))
         if not isinstance(pages, list) or not all(
             isinstance(page, dict) and isinstance(page.get("workflow_runs"), list) for page in pages
         ):
@@ -209,16 +190,16 @@ class GitHub:
         return runs
 
     def jobs(self, run_id: int) -> list[dict[str, Any]]:
-        data = self.json("api", f"repos/{self.repository}/actions/runs/{run_id}/jobs?per_page=100")
+        data = self.json(Request("read-jobs", repo=self.repository, number=run_id))
         if not isinstance(data, dict) or not isinstance(data.get("jobs"), list) or data.get("total_count", 0) > 100:
             raise KeeperError("merge_group job page incomplete")
         return data["jobs"]
 
     def issues(self, title: str) -> list[dict[str, Any]]:
-        return self.paged(f"repos/{self.repository}/issues?state=open&labels=infra&per_page=100")
+        return self.paged(Request("read-issues", repo=self.repository))
 
     def create_issue(self, title: str, body: str) -> None:
-        self.call("issue", "create", "-R", self.repository, "--title", title, "--body", body, "--label", "infra")
+        self.call(Request("issue-create", repo=self.repository, title=title, body=body, labels=["infra"]))
 
 
 def _hold(row: Mapping[str, Any]) -> bool | None:
@@ -618,6 +599,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@publication_cli(KeeperError)
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = args.repo_root.resolve()

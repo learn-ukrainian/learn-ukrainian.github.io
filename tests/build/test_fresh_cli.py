@@ -9,6 +9,7 @@ import re
 import stat
 import subprocess
 import sys
+from functools import partial
 from pathlib import Path
 from unittest.mock import patch
 
@@ -17,7 +18,11 @@ import yaml
 
 from scripts.build.fresh.cli import _build_parser, main
 from scripts.build.fresh.manifest import learner_state_document, learner_state_sha256, materialize_learner_state
+from scripts.build.fresh.module import build_module
 from scripts.build.fresh.path_guard import checked_path
+from scripts.build.fresh.prompt import style_card_info
+from scripts.build.fresh.regeneration import writer_inputs, writer_task_id
+from scripts.build.fresh.writer import WriterCallError, dispatch_writer
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.learner_state.planned import planned_state
 from scripts.review.prompts.render import ManifestReader, _learner_state_context
@@ -442,12 +447,9 @@ def test_cli_preflight_passes_on_synthetic_tree(tmp_path, capsys):
     assert "Homographs detected: 0" in captured.out
 
 
-@pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
-def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys, effort):
-    """MAJOR C: CLI write reaches the fake seat on a synthetic tree where preflight passes."""
-    paths = _build_synthetic_tree(tmp_path)
-    valid_draft_template, _ = load_fixture("a1")
-    my_draft = copy.deepcopy(valid_draft_template)
+def _synthetic_draft_yaml() -> str:
+    """A valid writer reply for synthetic-mod lesson 1."""
+    my_draft = copy.deepcopy(load_fixture("a1")[0])
     my_draft["lesson"]["module"] = "a1/synthetic-mod"
     my_draft["lesson"]["n"] = 1
     my_draft["activities"] = [a for a in my_draft["activities"] if a["id"] == "a1"]
@@ -455,7 +457,17 @@ def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys, effort):
         b for b in my_draft["steps"][0]["blocks"] if not (b.get("kind") == "activity" and b.get("ref") != "a1")
     ]
     my_draft["consolidation"] = {"lead_in": "The larger practice block.", "activities": []}
-    draft_yaml = yaml.safe_dump(my_draft, allow_unicode=True)
+    return yaml.safe_dump(my_draft, allow_unicode=True)
+
+
+_INPUT_FILES = {"plan_sha256": "plan", "pack_lock": "pack", "words_lock": "words"}
+
+
+@pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
+def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys, effort):
+    """MAJOR C: CLI write reaches the fake seat on a synthetic tree where preflight passes."""
+    paths = _build_synthetic_tree(tmp_path)
+    draft_yaml = _synthetic_draft_yaml()
 
     fake_seat = tmp_path / "fake_seat.py"
     fake_seat.write_text(
@@ -504,7 +516,78 @@ result_path.write_text('''```yaml
     assert draft_file.is_file()
     meta = yaml.safe_load(draft_file.with_name("lesson-1.writer.yaml").read_text())
     assert meta["effort"] == "unknown"
-    assert meta["task_id"] == "write-a1-synthetic-mod-1-1" + (f"-{effort}" if effort else "")
+    # The CLI keys the task ID on the same complete input snapshot as the module build (#8425).
+    inputs = writer_inputs(
+        {key: hashlib.sha256(paths[name].read_bytes()).hexdigest() for key, name in _INPUT_FILES.items()},
+        style_card_info("a1")[2],
+        meta["prompt_sha256"],
+    )
+    assert meta["task_id"] == writer_task_id("a1", "synthetic-mod", 1, 1, effort, inputs)
+
+
+@pytest.mark.parametrize("module_first", [True, False])
+def test_module_build_and_cli_write_share_one_task_id(tmp_path, module_first):
+    """Identical work dispatched through build_module and CLI write is one task: the second is refused (#8425)."""
+    _build_synthetic_tree(tmp_path)
+    cards = tmp_path / "docs/style-cards"
+    cards.mkdir(parents=True)
+    for name in ("a1.md", "a1.sha256"):
+        (cards / name).write_bytes((REPO_ROOT / "docs/style-cards" / name).read_bytes())
+    executions = tmp_path / "executions.log"
+    reply = f"```yaml\n{_synthetic_draft_yaml()}```"
+    fake_seat = tmp_path / "fake_seat.py"
+    fake_seat.write_text(
+        f"""
+import argparse
+import sys
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--task-id", required=True)
+parser.add_argument("--prompt-file", required=True)
+parser.add_argument("--result-file", required=True)
+parser.add_argument("--effort", default=None)
+args = parser.parse_args()
+result = Path(args.result_file)
+# Mirror delegate.py: a task ID that already has a result is never run again.
+if result.exists():
+    sys.exit(f"task_id {{args.task_id!r}} is already done")
+with Path({str(executions)!r}).open("a", encoding="utf-8") as log:
+    log.write(args.task_id + "\\n")
+result.write_text({reply!r}, encoding="utf-8")
+""",
+        encoding="utf-8",
+    )
+
+    def module_build():
+        return build_module(
+            "a1",
+            "synthetic-mod",
+            repo_root=tmp_path,
+            lesson_n=1,
+            writer_seat="agy:fake-model",
+            writer_dispatch=partial(dispatch_writer, effort="high", fake_seat=fake_seat),
+            runner=lambda *a, **kw: {"passed": True, "manifest_sha256": "a" * 64},
+        )
+
+    def cli_write():
+        args = ["write", "a1", "synthetic-mod", "--lesson", "1", "--writer", "agy", "--writer-effort", "high"]
+        return main([*args, "--fake-seat", str(fake_seat), "--repo-root", str(tmp_path)])
+
+    if module_first:
+        assert module_build()["lessons"][0]["passed"]
+        with pytest.raises(WriterCallError, match="already done") as refused:
+            cli_write()
+        refusal = str(refused.value)
+    else:
+        assert cli_write() == 0
+        stopped = module_build()["lessons"][0]
+        assert (stopped["passed"], stopped["layer"]) == (False, "writer")
+        refusal = stopped["reason"]
+    # Exactly one paid writer execution, and the refused dispatch named that same task ID.
+    (task_id,) = executions.read_text(encoding="utf-8").split()
+    assert re.fullmatch(r"write-a1-synthetic-mod-1-1-[0-9a-f]{10}-high", task_id)
+    assert repr(task_id) in refusal
 
 
 def test_cli_recap_render_prompt_and_write(tmp_path, capsys):

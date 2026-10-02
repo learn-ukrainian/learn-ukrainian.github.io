@@ -20,6 +20,12 @@ _REPO = "learn-ukrainian/learn-ukrainian.github.io"
 _MODEL = "glm-5.3"
 
 
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use the same synthetic policy for local and CI publication tests."""
+    monkeypatch.setenv("GH_REPO", "unit/public")
+
+
 class FakeGh:
     def __init__(
         self,
@@ -30,6 +36,7 @@ class FakeGh:
         self.head = head
         self.files = files
         self.calls: list[list[str]] = []
+        self.comment_bodies: list[str] = []
 
     def __call__(
         self, command: list[str], **_kwargs: object
@@ -53,6 +60,8 @@ class FakeGh:
                 command, 0, stdout=f"{self.head}\n", stderr=""
             )
         if len(command) >= 3 and command[1] == "pr" and command[2] == "comment":
+            assert "--body" not in command
+            self.comment_bodies.append(Path(command[command.index("--body-file") + 1]).read_text(encoding="utf-8"))
             return subprocess.CompletedProcess(
                 command, 0, stdout="https://example.test/c\n", stderr=""
             )
@@ -190,6 +199,19 @@ def test_finalize_publish_dry_run_and_live(tmp_path: Path) -> None:
     assert any(c[1:3] == ["pr", "comment"] for c in gh2.calls)
 
 
+def test_finalize_publish_refuses_missing_matcher_before_write(tmp_path: Path, monkeypatch) -> None:
+    from scripts.opsec import prepublish
+
+    monkeypatch.setattr(prepublish, "private_tooling", lambda: tmp_path / "missing-tooling")
+    gh = FakeGh()
+    with pytest.raises(FormalReviewFinalizeError, match="private matcher or rules unavailable/incompatible"):
+        finalize_formal_review_verdict(
+            pr_number=202, model=_MODEL, family="zhipu", harness="opencode", verdict="BLOCKED",
+            plane_root=tmp_path / "plane", runner=gh, publish=True,
+        )
+    assert not any(c[1:3] == ["pr", "comment"] or c[1:2] == ["api"] for c in gh.calls)
+
+
 def test_finalize_preserves_canonical_evidence_for_publication(tmp_path: Path) -> None:
     root = tmp_path / "plane"
     findings_path = tmp_path / "review-findings.json"
@@ -245,7 +267,8 @@ def test_finalize_preserves_canonical_evidence_for_publication(tmp_path: Path) -
     assert sealed.review_evidence is not None
     assert sealed.review_evidence.explanation == "The shared cache is retained between requests."
     comment = next(call for call in gh.calls if call[1:3] == ["pr", "comment"])
-    body = comment[comment.index("--body") + 1]
+    assert "--body-file" in comment
+    body = gh.comment_bodies[0]
     assert "scripts/cache.py:19" in body
     assert "The mutable cache is reused by the next request." in body
 

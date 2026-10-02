@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch Brief — PR1: Wire `scripts/pipeline/learner_state.py` into V7
 
 > **Status:** PENDING DISPATCH. Authority: `docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md` (ACCEPTED). Scope is PR1 of the 2-PR split (PR2 is a separate dispatch).
@@ -226,7 +232,7 @@ Verify EVERY item before pushing. Missing one = PR rejected.
 - [ ] `.python-version` unchanged (must be `3.12.8`)
 - [ ] `.yamllint` and `.markdownlint.json` unchanged (zero modifications)
 - [ ] No `status/*.json`, `audit/*-review.md`, or `review/*-review.md` files in the diff
-- [ ] No `sys.executable` anywhere in code — use `.venv/bin/python`
+- [ ] No `sys.executable` anywhere in code — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertions weakened (e.g. `is True` → `isinstance(..., bool)`)
 - [ ] Every changed file directly related to this PR

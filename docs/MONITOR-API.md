@@ -680,7 +680,7 @@ Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/
 
 ### GitHub GraphQL budget
 
-`GET /api/state/github-budget` returns one `gh api graphql` observation of
+`GET /api/state/github-budget` returns one `python -m scripts.publish read budget` observation of
 `rateLimit { limit remaining used resetAt }`. It is cached in-process for 60
 seconds, with concurrent cache misses coalesced into one probe. A successful
 zero remaining balance and GitHub's explicit `RATE_LIMIT` /
@@ -2432,6 +2432,50 @@ Modules with recent dispatch activity and unfinished publish state.
     {"level": "a2", "slug": "a2-bridge", "current_phase": "write", "started_at": "2026-04-10T21:50:27Z", "age_s": 240}
   ]
 }
+```
+
+## Document and data catalogue locator — `GET /api/knowledge/find` (#9412)
+
+One query that says where a document, data store or resource lives and whether it is
+current. It is the HTTP mirror of `.venv/bin/python -m scripts.docs.find` (the entry point
+named in `docs/README.md`); both call `scripts/docs/find.py`. It shares only the
+`/api/knowledge` prefix with the research registry below: **it is never behind the
+`research_registry` kill switch** and does not use the registry schema.
+
+`GET /api/knowledge/find?q=<query>&limit=<1..200, default 20>&family=<catalogue id>`
+
+- `q` (required, 1–200 characters): words or a phrase. Non-printable characters become
+  spaces; matching is Unicode case-folded and NFC-normalised, with no stemming, so
+  Ukrainian queries work.
+- Search, at request time, with no index: (1) catalogue entries in
+  `docs/knowledge/catalogue.yaml` (keywords, id, entry-point topics and paths, store
+  names, producers, purpose); (2) tracked path names outside the docs inventory's privacy
+  exclusions; (3) `git grep --cached` over the text of content-searchable families only
+  (the catalogue's `body_readable` gate).
+- Ranking: strong catalogue matches first (entry points, or a data store with its query
+  hint and producers); then the whole query in a path name, the whole phrase in the text,
+  and the rest by field-weighted relevance; within each band current before draft or
+  unclassified, historical, superseded and backup-like copies; then path order.
+- Each hit: `path`, `line`, `excerpt` (at most 200 characters, non-printable characters
+  escaped), `match` (`entrypoint`, `data_store`, `producer`, `family`, `name`, `content`),
+  `family`, `kind`, `lifecycle`, `status` (current, historical, draft, superseded,
+  unclassified, uncatalogued), `superseded_by` and `query` (the family's query hints).
+- `coverage`: `families_searched`, `families_skipped` (not content-searchable),
+  `files_searched`, `uncovered_unsearched`, `catalogue_errors`, `incomplete`,
+  `incomplete_reasons`, `excerpts_complete`. `outcome` is `found`, `no_match` (a complete
+  search found nothing) or `incomplete` (nothing found and a budget, a failed search
+  worker or an invalid catalogue cut the search short; absence is then not proven). A
+  one-character word beside longer words is not searched alone in text and is reported
+  as the reason `content_search_skipped`; a query of one-character words only is searched.
+- Errors: an empty query, a `limit` outside 1..200 or not written as ASCII digits only
+  (`0-9`; a sign, a space, a decimal point or an exponent is rejected), a bad `family`,
+  or an unknown family is a 422 with
+  `{"code", "message"}`; an unreadable repository is a 503. Read-only; nothing persisted
+  (an in-process memo of the validated catalogue is keyed by the exact index and
+  catalogue inputs).
+
+```bash
+curl -s 'http://localhost:8765/api/knowledge/find?q=ULP%201-02&limit=5' | jq '.hits[] | {path, line, status}'
 ```
 
 ## Research registry — `/api/knowledge` (ADR-011)

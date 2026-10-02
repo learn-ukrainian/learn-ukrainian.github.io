@@ -635,28 +635,6 @@ def _store_merge_facts(path: Path, facts: dict[str, str]) -> None:
             return
 
 
-def _gql_string(value: str) -> str:
-    return value.replace("\\", "\\\\").replace('"', '\\"')
-
-
-def _merge_fact_query(batch: list[tuple[str, int]]) -> str:
-    """One GraphQL document: repository aliases, each with ≤ the batch's PR aliases."""
-    grouped: dict[str, list[int]] = {}
-    for repo, number in batch:
-        grouped.setdefault(repo, []).append(number)
-    selections: list[str] = []
-    for index, (repo, numbers) in enumerate(grouped.items()):
-        owner, name = repo.split("/", 1)
-        fields = " ".join(
-            f"p{number}: pullRequest(number: {number}) {{ mergedAt }}" for number in numbers
-        )
-        selections.append(
-            f'r{index}: repository(owner: "{_gql_string(owner)}", name: "{_gql_string(name)}") '
-            f"{{ {fields} }}"
-        )
-    return "query { " + " ".join(selections) + " }"
-
-
 def _run_gh(
     args: list[str], *, timeout: float = _GH_TIMEOUT_S,
 ) -> subprocess.CompletedProcess[str]:
@@ -767,9 +745,12 @@ def _fetch_merge_facts(
 
     for start in range(0, len(valid), _GRAPHQL_BATCH_SIZE):
         batch = valid[start : start + _GRAPHQL_BATCH_SIZE]
-        query = _merge_fact_query(batch)
         try:
-            proc = gh_runner([gh_bin, "api", "graphql", "-f", f"query={query}"], timeout=_GH_TIMEOUT_S)
+            from scripts.publish.github import read
+            def transport(args, **kwargs):
+                return gh_runner([gh_bin, *args[1:]], timeout=kwargs["timeout"])
+            proc = read("merge-facts", batch=batch, runner=transport if gh_runner is not _run_gh else None,
+                        timeout=_GH_TIMEOUT_S, capture_output=True, text=True)
             stdout = proc.stdout or ""
             if isinstance(stdout, bytes):
                 stdout = stdout.decode("utf-8", errors="replace")

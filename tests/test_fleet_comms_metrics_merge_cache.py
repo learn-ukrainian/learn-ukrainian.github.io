@@ -50,41 +50,49 @@ def _plane(path: Path, numbers: list[int], *, repo: str = REPO) -> None:
     conn.close()
 
 
+class CapturedArgs(list):
+    """Snapshot the query while the transport's temporary file exists."""
+    def __init__(self, args):
+        super().__init__(args)
+        self.query = _query_from(args)
+
+
 def _query_from(args: list[str]) -> str:
-    for arg in args:
-        if arg.startswith("query="):
-            return arg.removeprefix("query=")
-    raise AssertionError(f"graphql query missing from {args}")
+    if isinstance(args, CapturedArgs):
+        return args.query
+    payload = json.loads(Path(args[args.index("--input") + 1]).read_text())
+    assert payload["variables"] == {}
+    return payload["query"]
 
 
 def _pull_aliases(query: str) -> list[tuple[str, int]]:
     found: list[tuple[str, int]] = []
     marks = list(
-        re.finditer(r'r\d+: repository\(owner: "([^"]+)", name: "([^"]+)"\) \{', query)
+        re.finditer(r'r\d+:\s*repository\(owner:\s*"([^"]+)",\s*name:\s*"([^"]+)"\)\s*\{', query)
     )
     for index, mark in enumerate(marks):
         end = marks[index + 1].start() if index + 1 < len(marks) else len(query)
         body = query[mark.end() : end]
         repo = f"{mark.group(1)}/{mark.group(2)}"
-        for number in re.findall(r"pullRequest\(number: (\d+)\)", body):
+        for number in re.findall(r"pullRequest\(number:\s*(\d+)\)", body):
             found.append((repo, int(number)))
     return found
 
 
 def _runner(calls: list[list[str]], answers: dict[tuple[str, int], str | None]):
     def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(list(args))
+        calls.append(CapturedArgs(args))
         query = _query_from(args)
         data: dict[str, dict[str, dict[str, str | None]]] = {}
         marks = list(
-            re.finditer(r'r(\d+): repository\(owner: "([^"]+)", name: "([^"]+)"\) \{', query)
+            re.finditer(r'r(\d+):\s*repository\(owner:\s*"([^"]+)",\s*name:\s*"([^"]+)"\)\s*\{', query)
         )
         for index, mark in enumerate(marks):
             end = marks[index + 1].start() if index + 1 < len(marks) else len(query)
             body = query[mark.end() : end]
             repo = f"{mark.group(2)}/{mark.group(3)}"
             node: dict[str, dict[str, str | None]] = {}
-            for number_s in re.findall(r"p(\d+): pullRequest", body):
+            for number_s in re.findall(r"p(\d+):\s*pullRequest", body):
                 raw = answers[(repo, int(number_s))]
                 node[f"p{number_s}"] = {"mergedAt": raw}
             data[f"r{mark.group(1)}"] = node
@@ -117,7 +125,7 @@ def test_warm_cache_issues_zero_gh_calls(tmp_path: Path) -> None:
 
     first, cache = _collect(tmp_path, [10, 11, 12], runner)
     assert len(calls) == 1
-    assert calls[0][:3] == ["gh", "api", "graphql"]
+    assert calls[0][:5] == ["gh", "api", "--method", "POST", "graphql"]
     assert len(_pull_aliases(_query_from(calls[0]))) == 3
     assert first["by_stream_epic"]["4707"]["gate_to_merge"]["n"] == 3
     stored = json.loads(cache.read_text(encoding="utf-8"))
@@ -235,7 +243,7 @@ def test_failed_fetch_is_fail_open(tmp_path: Path) -> None:
     calls: list[list[str]] = []
 
     def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(list(args))
+        calls.append(CapturedArgs(args))
         raise subprocess.TimeoutExpired(args, timeout)
 
     tasks = tmp_path / "tasks"
@@ -267,7 +275,7 @@ def test_partial_graphql_data_caches_successful_aliases(tmp_path: Path) -> None:
     calls: list[list[str]] = []
 
     def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(list(args))
+        calls.append(CapturedArgs(args))
         query = _query_from(args)
         aliases = _pull_aliases(query)
         data: dict[str, dict[str, dict[str, str | None] | None]] = {"r0": {}}
@@ -318,7 +326,7 @@ def test_unparseable_graphql_stdout_fails_the_whole_batch(tmp_path: Path) -> Non
     calls: list[list[str]] = []
 
     def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(list(args))
+        calls.append(CapturedArgs(args))
         return subprocess.CompletedProcess(args, 1, stdout="not-json", stderr="gh failed")
 
     tasks = tmp_path / "tasks"
@@ -345,7 +353,7 @@ def test_graphql_payload_without_data_fails_the_whole_batch(tmp_path: Path) -> N
     calls: list[list[str]] = []
 
     def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
-        calls.append(list(args))
+        calls.append(CapturedArgs(args))
         stdout = json.dumps({"errors": [{"message": "Something went wrong"}]})
         return subprocess.CompletedProcess(args, 1, stdout=stdout, stderr="Something went wrong")
 

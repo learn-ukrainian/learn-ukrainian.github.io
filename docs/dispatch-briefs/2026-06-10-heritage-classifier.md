@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Heritage Attestation Engine: shared classifier module (Task 6 of #2882)
 
 **Authority (now on `main` — READ IT, it is the spec):**
@@ -38,7 +44,7 @@ attestation) → Антоненко-Давидович + UA-GEC (calque/russiani
 
 ## #M-4 verification (final report = command + cwd + raw output)
 - `classify_surface_form` raw output for the 5 evidence forms above (proving the verdicts).
-- `.venv/bin/python -m pytest tests/test_heritage_classifier.py` final line raw.
+- `"$PROJECT_PYTHON" -m pytest tests/test_heritage_classifier.py` final line raw.
 - regenerate `lexicon-manifest.json`; show 2 lemmas' new `heritage_status` raw.
 - `.venv/bin/ruff check scripts/lexicon/heritage_classifier.py scripts/lexicon/enrich_manifest.py`.
 

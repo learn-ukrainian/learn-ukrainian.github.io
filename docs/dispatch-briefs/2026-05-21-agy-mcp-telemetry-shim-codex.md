@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — agy MCP telemetry shim (run_command-curl → named-tool entries)
 
 **Agent**: codex (gpt-5.5, xhigh)
@@ -88,7 +94,7 @@ If the prompt template doesn't currently support per-writer conditional sections
 
 ```
 cd . && .venv/bin/ruff check scripts/agent_runtime/ scripts/build/
-cd . && .venv/bin/python -m pytest tests/ -k 'agy or agent_runtime or linear_pipeline' -v --tb=short
+cd . && "$PROJECT_PYTHON" -m pytest tests/ -k 'agy or agent_runtime or linear_pipeline' -v --tb=short
 ```
 
 All green required before commit.

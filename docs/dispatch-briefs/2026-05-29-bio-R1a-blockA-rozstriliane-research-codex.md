@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Bio epic #2309 / R1a: Block A research dossiers (Розстріляне Відродження)
 
 **Agent:** codex `gpt-5.5`, `--effort high` (deep-research), `--mode danger`, `--worktree`.

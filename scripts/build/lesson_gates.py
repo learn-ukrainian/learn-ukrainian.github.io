@@ -407,7 +407,7 @@ _TOKEN_RE = re.compile(rf"[{CYR}'’{ACUTE}_-]+")
 
 def _stress_tokens(text: str) -> list[str]:
     """Learner tokens. Hyphenated transfer models (дере-в'яний) stay one token."""
-    return _TOKEN_RE.findall(nfc(text).replace("''", "'").replace("’", "'"))
+    return _TOKEN_RE.findall(nfc(text).replace("''", "'").translate(str.maketrans("’ʼ", "''")))
 
 
 def _skip_stress_token(tok: str) -> bool:
@@ -1251,14 +1251,17 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset(),
         if bare.lower() in allow:
             continue
         forms: list[str] = []
+        readings: list[dict] = []
         # proper names (declared in lessons.yaml: proper_names, or capitalised vocabulary lemmas) are looked
         # up with their case first (Марко́); everything else lowercase first, so sentence-initial common words
         # (Стіна́, Мене́) never inherit a homograph's reading (Сті́на, Ме́не).
-        order = [bare, bare.lower()] if (bare in proper and bare[:1].isupper()) else [bare.lower(), bare]
+        is_proper = bare in proper and bare[:1].isupper()
+        order = [bare, bare.lower()] if is_proper else [bare.lower(), bare]
         for q in order:
-            r = verify_stress(q)
+            r = verify_stress(q, pos="PROPN") if is_proper else verify_stress(q)
             if r.get("status") in ("ok", "ambiguous") and r.get("matches"):
-                forms = [nfc(m["stressed_form"]) for m in r["matches"]]
+                readings = r["matches"]
+                forms = [nfc(m["stressed_form"]) for m in readings]
                 break
         if not forms:
             out.append(f"{tok}{_UNDECLARED_SUFFIX}")
@@ -1267,7 +1270,8 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset(),
         for f in forms:
             allowed.update(_acute_positions(f))
         mine = _acute_positions(tok)
-        if len(mine) != 1 or mine[0] not in allowed:
+        packed_dual = any(m.get("dual_stress") and mine == _acute_positions(m["stressed_form"]) for m in readings)
+        if not packed_dual and (len(mine) != 1 or mine[0] not in allowed):
             out.append(f"{tok}→{'/'.join(forms)}")
     return sorted(out)
 

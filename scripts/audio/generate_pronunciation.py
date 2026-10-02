@@ -15,6 +15,8 @@ import wave
 from pathlib import Path
 from urllib.request import urlopen
 
+from scripts.verification.stress import spoken_stressed_form
+
 REVISION = "1162a9173d0ce503555aed757976b7a9912eae4c"
 VOICE = "uk_UA-ukrainian_tts-medium"
 MODEL_FILES = {
@@ -54,7 +56,7 @@ def select_slice(deck: dict, limit: int, oracle) -> tuple[list[dict], list[dict]
         lemmas.setdefault(plain(lemma), row.get("pos"))
     selected, excluded = [], []
     for lemma, pos in lemmas.items():
-        result = oracle(lemma, pos=pos)
+        result = oracle(lemma, pos=pos, lemma=lemma)
         # The stress oracle deliberately rejects monosyllables: there is no
         # stress-position choice. Keep only a single Ukrainian word with one vowel.
         monosyllable = (
@@ -68,7 +70,12 @@ def select_slice(deck: dict, limit: int, oracle) -> tuple[list[dict], list[dict]
             matches = result["matches"]
             if len(matches) != 1 or plain(matches[0]["stressed_form"]) != lemma:
                 raise ValueError("stress oracle changed lemma or returned multiple readings")
-            text = matches[0]["stressed_form"]
+            text = spoken_stressed_form(matches[0])
+            if text is None:
+                excluded.append({"lemma": lemma, "reason": "unresolved_dual_stress"})
+                continue
+            if plain(text) != lemma:
+                raise ValueError("stress oracle changed lemma or returned multiple readings")
         else:
             excluded.append({"lemma": lemma, "reason": result["status"]})
             continue

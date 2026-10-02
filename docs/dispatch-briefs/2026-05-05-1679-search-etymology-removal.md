@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch — #1679 Remove search_etymology deprecation alias
 
 ## Context
@@ -31,9 +37,9 @@ If the worktree already exists from a previous attempt, reuse it (`cd .worktrees
 
 4. **Update prompts.** Grep `claude_extensions/rules/`, `scripts/build/phases/*.md`, `.agents/skills/*/SKILL.md` for `search_etymology` references. Replace with `search_grinchenko_1907`.
 
-5. **Run the MCP server smoke test.** `.venv/bin/python -m pytest tests/test_sources_mcp* -x -q` (or whichever tests cover the MCP server). Verify nothing regresses.
+5. **Run the MCP server smoke test.** `"$PROJECT_PYTHON" -m pytest tests/test_sources_mcp* -x -q` (or whichever tests cover the MCP server). Verify nothing regresses.
 
-6. **Run full test suite.** `.venv/bin/python -m pytest tests/ -x -q` (timing — should be ~5 min).
+6. **Run full test suite.** `"$PROJECT_PYTHON" -m pytest tests/ -x -q` (timing — should be ~5 min).
 
 7. **Run ruff.** `.venv/bin/ruff check scripts/`
 

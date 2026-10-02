@@ -1,9 +1,10 @@
-"""Formal attempts: copied manifest evidence, fresh homes, external receipt runtime.
+"""Review access: full matching checkout or isolated copied manifest evidence.
 
-The runner owns this boundary before adapter planning and until response parsing
-finishes. Sources runs outside the seat sandbox; only a byte-stream socket is
-exposed inside. The original repository, Git objects, receipt store and home
-are never mounted. This is separate from code-review isolation (#9251).
+Both modes use the isolated launcher, private network and attempt-scoped sources
+ledger. Full mode widens only the read set to the verified checkout, Git objects
+and corpus. Sources runs outside the sandbox, connected by a byte-stream socket;
+the receipt store, host services and real home remain unmounted.
+This is separate from code-review isolation (#9251).
 """
 
 from __future__ import annotations
@@ -52,9 +53,15 @@ def linux_claude_auth() -> dict[str, str]:
     """
     from scripts.review.isolation import ReviewIsolationError
 
-    if platform.system() != "Linux" or any(os.environ.get(k) for k in (
-        "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN",
-    )):
+    for key in (
+        "ANTHROPIC_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+        "CLAUDE_API_KEY",
+        "CLAUDE_CODE_OAUTH_TOKEN",
+    ):
+        if value := os.environ.get(key):
+            return {key: value}
+    if platform.system() != "Linux":
         return {}
     path = Path.home() / ".claude" / ".credentials.json"
     try:
@@ -105,9 +112,7 @@ def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]
         if hashlib.sha256(data).hexdigest() != entry["sha256"]:
             raise ReviewIsolationError("attempt_input_hash_mismatch")
         # Previous receipts are projected, never exposed as a browsable store.
-        destination = (
-            "authorized/previous-ledger.jsonl" if location == "previous_attempt.ledger" else entry["path"]
-        )
+        destination = "authorized/previous-ledger.jsonl" if location == "previous_attempt.ledger" else entry["path"]
         if destination.startswith("batch_state/"):
             raise ReviewIsolationError("attempt_shared_state_input")
         copied[destination] = data
@@ -247,13 +252,18 @@ class AttemptBoundary:
 
         # Claude's adapter must land with its own eligible cross-family review
         # before formal attempts can stage credentials or launch any process.
-        if agent == "claude":
+        self.full = tool_config.get("review_access") == "full"
+        if agent == "claude" and not self.full:
             raise ReviewIsolationError("attempt_boundary_claude_adapter_pending")
         if agent not in SUPPORTED_HARNESSES:
             raise ReviewIsolationError("attempt_harness_unsupported")
         config = Path(tool_config["mcp_config_path"])
         verify_review_attempt_paths(config)
+        self.config_path = config
         server = json.loads(config.read_bytes())["mcpServers"]["sources"]
+        access = "full" if self.full else "isolated"
+        if server["env"].get("LU_REVIEW_ACCESS") != access:
+            raise ReviewIsolationError("attempt_review_access_mismatch")
         manifest_path = Path(tool_config["review_manifest"])
         data = manifest_path.read_bytes()
         if hashlib.sha256(data).hexdigest() != server["env"]["LU_REVIEW_MANIFEST_SHA256"]:
@@ -261,7 +271,7 @@ class AttemptBoundary:
         if server["env"]["LU_REVIEW_ATTEMPT_ID"] != tool_config["attempt_id"]:
             raise ReviewIsolationError("attempt_identity_mismatch")
         root = Path(tool_config["review_input_root"]).resolve(strict=True)
-        closure = authorized_closure(yaml.safe_load(data), root)
+        closure = {} if self.full else authorized_closure(yaml.safe_load(data), root)
         temporary_parent = tool_config.get("read_only_tmp_root")
         self.temp = tempfile.TemporaryDirectory(prefix="attempt-", dir=temporary_parent)
         self.connection = None
@@ -269,11 +279,14 @@ class AttemptBoundary:
         self.agent = agent
         try:
             if platform.system() != "Linux":
-                raise ReviewIsolationError("attempt_network_namespace_unavailable")
+                raise ReviewIsolationError(
+                    "full_review_bwrap_unavailable" if self.full else "attempt_network_namespace_unavailable"
+                )
             base = Path(self.temp.name).resolve()
-            self.workspace = base / "inputs"
+            self.workspace = Path(tool_config["review_cwd"]).resolve(strict=True) if self.full else base / "inputs"
             self.write_root = base / "runtime"
-            self.workspace.mkdir(mode=0o700)
+            if not self.full:
+                self.workspace.mkdir(mode=0o700)
             self.write_root.mkdir(mode=0o700)
             for name, content in closure.items():
                 destination = self.workspace / name
@@ -288,6 +301,13 @@ class AttemptBoundary:
             if agent == "claude":
                 self.env.update(linux_claude_auth())
             self.env.update(HOME=str(home), TMPDIR=str(self.write_root / "tmp"))
+            # Native CLI shell discovery calls getpwuid. Supply only this
+            # namespace's account, never the host's passwd/group databases.
+            self.passwd = self.write_root / "passwd"
+            self.group = self.write_root / "group"
+            self.passwd.write_text(f"review:x:{os.getuid()}:{os.getgid()}:Review seat:{home}:/bin/bash\n")
+            self.group.write_text(f"review:x:{os.getgid()}:\n")
+            self.env.update(USER="review", LOGNAME="review", SHELL="/bin/bash")
             self.env.pop("GIT_DIR", None)
             self.env.pop("GIT_WORK_TREE", None)
             proxy = self.write_root / "stdio.py"
@@ -317,13 +337,14 @@ class AttemptBoundary:
 
                 codex_home = home / ".codex"
                 (codex_home / "config.toml").write_text(
-                    _render_codex_review_config(Path(proxy_server["command"]), proxy, {})
-                    .replace(f'args = ["{proxy}"]', f'args = ["{proxy}", "{endpoint}"]')
+                    _render_codex_review_config(Path(proxy_server["command"]), proxy, {}).replace(
+                        f'args = ["{proxy}"]', f'args = ["{proxy}", "{endpoint}"]'
+                    )
                 )
                 self.tool_config["codex_home_override"] = str(codex_home)
                 self.tool_config["attempt_os_sandbox"] = True
             elif agent == "agy":
-                from .review_mcp import _real_agy_token, agy_review_mcp_config_path
+                from .review_mcp import _real_agy_token, agy_full_review_settings, agy_review_mcp_config_path
 
                 target = home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -332,10 +353,15 @@ class AttemptBoundary:
                 mcp = agy_review_mcp_config_path(home)
                 mcp.parent.mkdir(parents=True, exist_ok=True)
                 mcp.write_bytes(proxy_config.read_bytes())
+                if self.full:
+                    # AGY's native sandbox prompts for MCP separately from its
+                    # catalog. Headless full reviews grant only this server.
+                    (target.parent / "settings.json").write_text(json.dumps(agy_full_review_settings()))
                 self.tool_config["agy_home_override"] = str(home)
                 self.env["AGY_APP_DATA_DIR"] = str(target.parent)
             else:
-                self.tool_config["allowed_tools"] = "Read,Glob,Grep," + str(tool_config.get("allowed_tools", ""))
+                if not self.full:
+                    self.tool_config["allowed_tools"] = "Read,Glob,Grep," + str(tool_config.get("allowed_tools", ""))
         except BaseException:
             self.cleanup()
             raise
@@ -346,20 +372,26 @@ class AttemptBoundary:
         binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
         runtime = runtime_files(binary)
         reject = Path(self.tool_config["review_input_root"]).resolve()
-        if any(p.is_relative_to(reject) or reject.is_relative_to(p) for p in runtime):
+        if not self.full and any(p.is_relative_to(reject) or reject.is_relative_to(p) for p in runtime):
             raise ReviewIsolationError("attempt_runtime_overlaps_repository")
+        full_reads, hidden = full_review_reads(self.workspace) if self.full else ([], [])
         self.sandbox = prepare_host_sandbox(
             engine=self.agent,
             snapshot_root=self.workspace,
             write_root=self.write_root,
             reject_root=Path(self.tool_config["review_input_root"]),
-            runtime_reads=[*runtime, self.endpoint],
+            runtime_reads=[*runtime, *full_reads, self.endpoint],
             network_allowed=False,
         )
         if self.egress is None or not self.egress.thread.is_alive():
             raise ReviewIsolationError("attempt_egress_unavailable")
-        argv = [str(project_interpreter().resolve(strict=True)), str(self.forwarder), str(self.egress_endpoint),
-                str(binary), *cmd[1:]]
+        argv = [
+            str(project_interpreter().resolve(strict=True)),
+            str(self.forwarder),
+            str(self.egress_endpoint),
+            str(binary),
+            *cmd[1:],
+        ]
         env = {**self.env, **env_overrides}
         env["HOME"] = self.env["HOME"]
         env["TMPDIR"] = self.env["TMPDIR"]
@@ -371,8 +403,63 @@ class AttemptBoundary:
         if self.sandbox.mechanism == "linux-bwrap":
             # A private procfs supports native executable discovery without
             # exposing host processes, descriptors, cwd or environment.
-            wrapped[-len(argv):-len(argv)] = ["--proc", "/proc", "--chdir", str(self.workspace)]
+            masks = [argument for path in hidden for argument in ("--tmpfs", str(path), "--remount-ro", str(path))]
+            wrapped[-len(argv) : -len(argv)] = [
+                *masks,
+                "--ro-bind",
+                str(self.passwd),
+                "/etc/passwd",
+                "--ro-bind",
+                str(self.group),
+                "/etc/group",
+                "--cap-drop",
+                "ALL",
+                "--proc",
+                "/proc",
+                "--chdir",
+                str(self.workspace),
+            ]
         return wrapped, env
+
+    def verify_seat(self, cmd: list[str], env_overrides: dict[str, str]) -> None:
+        """Probe CLI compatibility and effective MCP inside the full OS boundary."""
+        if not self.full:
+            return
+        from scripts.review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION, ReviewIsolationError
+
+        from .review_mcp import _config_flags, verify_agy_review_effective_mcp, verify_codex_review_effective_mcp
+
+        if self.agent == "codex":
+            verify_codex_review_effective_mcp(
+                config_path=self.config_path,
+                cwd=self.workspace,
+                codex_bin=cmd[0],
+                config_flags=_config_flags(cmd),
+                boundary=self,
+            )
+            return
+        version_cmd, env = self.wrap([cmd[0], "--version"], env_overrides)
+        version = subprocess.run(version_cmd, env=env, capture_output=True, text=True, timeout=5, check=False)
+        if self.agent == "claude":
+            from scripts.utils.claude_version import _parse_claude_semver
+
+            parsed = _parse_claude_semver(version.stdout + version.stderr)
+            if version.returncode != 0 or parsed is None or parsed < CLAUDE_MIN_SUPPORTED_CLI_VERSION:
+                raise ReviewIsolationError("full_review_claude_version_unverified")
+        else:
+            from .adapters.agy import _AGY_MIN_BACKGROUND_WAIT_VERSION, _AGY_VERSION_RE
+
+            match = _AGY_VERSION_RE.search(version.stdout)
+            parsed = tuple(int(match.group(name)) for name in ("major", "minor", "patch")) if match else None
+            if version.returncode != 0 or parsed is None or parsed < _AGY_MIN_BACKGROUND_WAIT_VERSION:
+                raise ReviewIsolationError("full_review_agy_version_unverified")
+            verify_agy_review_effective_mcp(
+                config_path=self.config_path,
+                cwd=self.workspace,
+                env=env,
+                agy_bin=cmd[0],
+                boundary=self,
+            )
 
     def cleanup(self) -> None:
         try:
@@ -386,8 +473,99 @@ class AttemptBoundary:
                 self.temp.cleanup()
 
 
+def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
+    """Verify the actual full checkout against every manifest pin before launch.
+
+    A separate review tree is allowed only when its pinned bytes match. Other
+    repository files are context, never evidence without a sources receipt.
+    """
+    from scripts.build.fresh.manifest import pinned_entries
+    from scripts.review.isolation import ReviewIsolationError
+    from scripts.review.prompts.eligibility import pin_refusals
+
+    try:
+        manifest = yaml.safe_load(manifest_path.read_bytes())
+        for _, entry in pinned_entries(manifest):
+            data = safe_read_attempt_file(cwd / entry["path"], trusted_root=cwd)
+            if hashlib.sha256(data).hexdigest() != entry["sha256"]:
+                raise ReviewIsolationError("full_review_tree_mismatch")
+        if pin_refusals(manifest, cwd):
+            raise ReviewIsolationError("full_review_manifest_ineligible")
+        checkout = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"], cwd=cwd, capture_output=True, text=True, timeout=30, check=False
+        )
+        if checkout.returncode or Path(checkout.stdout.strip()).resolve() != cwd.resolve():
+            raise ReviewIsolationError("full_review_checkout_missing")
+        sparse = subprocess.run(
+            ["git", "config", "--bool", "core.sparseCheckout"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if sparse.returncode not in (0, 1) or sparse.stdout.strip() == "true":
+            raise ReviewIsolationError("full_review_requires_full_checkout")
+    except (OSError, ValueError, AttemptReadError, subprocess.SubprocessError) as exc:
+        raise ReviewIsolationError("full_review_tree_mismatch") from exc
+
+
+def full_review_reads(workspace: Path) -> tuple[list[Path], list[Path]]:
+    """Exact linked-worktree Git context and corpus, never the owning checkout.
+
+    Git follows the checkout's .git file to its own metadata and the shared
+    objects/refs. Do not grant the shared metadata's other worktrees or its
+    checkout. Host task/receipt stores and nested checkouts are masked even
+    when present in the reviewed tree. External object alternates are refused.
+    """
+    from scripts.review.isolation import ReviewIsolationError
+
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-dir", "--git-common-dir"],
+            cwd=workspace,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if result.returncode:
+            raise ReviewIsolationError("full_review_git_context_unavailable")
+        git_dir, common = (Path(p).resolve(strict=True) for p in result.stdout.splitlines())
+        alternates = common / "objects/info/alternates"
+        if alternates.exists() and alternates.read_bytes().strip():
+            raise ReviewIsolationError("full_review_git_alternates_unsupported")
+        reads = []
+        if not git_dir.is_relative_to(workspace):
+            reads.append(git_dir)
+        if not common.is_relative_to(workspace):
+            reads.extend(
+                path
+                for name in ("objects", "refs", "packed-refs", "config", "shallow")
+                if (path := common / name).exists()
+            )
+        # Corpus can be absent in a fixture; linked checkouts normally share it.
+        corpus = common.parent / "data"
+        if common.name == ".git" and corpus.is_dir() and not corpus.is_relative_to(workspace):
+            reads.append(corpus.resolve(strict=True))
+        hidden = [
+            p for p in (workspace / "batch_state", workspace / ".worktrees", workspace / ".git/worktrees") if p.is_dir()
+        ]
+        for root in (workspace, *reads):
+            if root.is_dir():
+                for directory, subdirs, files in os.walk(root, followlinks=False):
+                    subdirs[:] = [name for name in subdirs if Path(directory) / name not in hidden]
+                    for name in (*subdirs, *files):
+                        mode = (Path(directory) / name).lstat().st_mode
+                        if not (stat.S_ISREG(mode) or stat.S_ISDIR(mode) or stat.S_ISLNK(mode)):
+                            raise ReviewIsolationError("full_review_special_file_refused")
+        return reads, hidden
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        raise ReviewIsolationError("full_review_git_context_unavailable") from exc
+
+
 def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool_config: dict | None):
-    """Every formal-attempt identity requires the parent-owned launch boundary."""
+    """Use the isolated boundary with only a wider read set for full attempts."""
     tc = tool_config or {}
     if not (tc.get("review_id") or tc.get("attempt_id")):
         return None
@@ -398,4 +576,30 @@ def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool
         raise ReviewIsolationError("attempt_requires_fresh_read_only_sources")
     if any(not tc.get(key) for key in required):
         raise ReviewIsolationError("attempt_boundary_inputs_missing")
+    access = tc.get("review_access", "isolated")  # legacy runtime callers remain isolated
+    if access == "isolated":
+        return AttemptBoundary(agent=agent, tool_config=tc)
+    if access != "full":
+        raise ReviewIsolationError("review_access_invalid")
+    from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
+
+    if agent not in SUPPORTED_HARNESSES:
+        raise ReviewIsolationError("full_review_harness_unsupported")
+    if any(tc.get(key) for key in ("review_isolation", "attempt_os_sandbox", "review_attempt_boundary")):
+        raise ReviewIsolationError("full_review_write_denial_conflict")
+    config = Path(tc["mcp_config_path"])
+    verify_review_attempt_paths(config)
+    server = json.loads(config.read_bytes())["mcpServers"]["sources"]
+    if (
+        hashlib.sha256(Path(tc["review_manifest"]).read_bytes()).hexdigest()
+        != server["env"]["LU_REVIEW_MANIFEST_SHA256"]
+    ):
+        raise ReviewIsolationError("attempt_manifest_hash_mismatch")
+    if server["env"]["LU_REVIEW_ATTEMPT_ID"] != tc["attempt_id"]:
+        raise ReviewIsolationError("attempt_identity_mismatch")
+    if not tc.get("review_cwd"):
+        raise ReviewIsolationError("full_review_cwd_missing")
+    if agent == "claude" and (not tc.get("reviewer_tools") or tc.get("allowed_tools")):
+        raise ReviewIsolationError("full_review_write_denial_missing")
+    verify_full_review_tree(Path(tc["review_manifest"]), Path(tc["review_cwd"]))
     return AttemptBoundary(agent=agent, tool_config=tc)

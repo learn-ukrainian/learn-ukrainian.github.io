@@ -24,6 +24,7 @@ from collections.abc import Callable, Iterable, Mapping
 from contextlib import closing, suppress
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,7 @@ from typing import Any
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
+from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connection
 
 from . import codes, config, db_identity, tags
 
@@ -163,6 +165,25 @@ class ParadigmResult(SourceResult[dict]):
 
 def normalize_spelling(word: str) -> str:
     return word.translate(APOSTROPHES)
+
+
+def standard_file_lines(content: str) -> list[str]:
+    """The Standard's lines as ``grep -n`` and editors number them: split at LF only, 1-based by index + 1.
+
+    ``str.splitlines`` also splits at form feeds (and CR, VT, U+2028 and other separators); the
+    Standard holds 139 page-break form feeds, so its line N was not the line N an arc, an editor or
+    ``grep -n`` cites (#9487: the Standard's 4.1.1 is at 571, ``splitlines`` put it at 585). Form
+    feeds and CRs stay inside the line text; only the LF terminators are dropped.
+    """
+    lines = content.split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
+def read_standard_lines(path: Path) -> list[str]:
+    """The Standard file's LF lines, decoded without newline translation (a CR stays text, as in ``grep``)."""
+    return standard_file_lines(path.read_bytes().decode("utf-8"))
 
 
 def _file_hash(path: Path) -> str:
@@ -583,7 +604,8 @@ class Sources:
                                 # Derived lookup keys are not source evidence.
                                 # Preserve cited-row digests across store versions.
                                 source_row = {
-                                    key: value for key, value in dict(row).items()
+                                    key: value
+                                    for key, value in dict(row).items()
                                     if key not in {"word_form_folded", "lemma_folded"}
                                 }
                                 for eid in matches:
@@ -608,7 +630,8 @@ class Sources:
                     raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
                 self._receipt_evidence[eid] = [section] if section else []
                 self._receipt_identities["pravopys"] = {
-                    "scheme": "pravopys-live-section-v1", "origin": PRAVOPYS_BASE,
+                    "scheme": "pravopys-live-section-v1",
+                    "origin": PRAVOPYS_BASE,
                 }
                 continue
             if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
@@ -627,7 +650,8 @@ class Sources:
             self._receipt_identities["sources_db"] = {"scheme": SOURCES_DB_SCHEME}
         raw = {eid: self._receipt_evidence[eid] for eid in requested}
         identities = {
-            kind: value for kind, value in self._receipt_identities.items()
+            kind: value
+            for kind, value in self._receipt_identities.items()
             if (kind == "vesum" and any(eid.startswith("vesum:") for eid in requested))
             or (kind == "pravopys" and any(eid.startswith("pravopys:") for eid in requested))
             or (kind == "sources_db" and any(eid.partition(":")[0] not in {"vesum", "pravopys"} for eid in requested))
@@ -635,7 +659,10 @@ class Sources:
         return SourceResult(raw, batch_digest(raw), identities)
 
     def _receipt_vesum_rows(
-        self, values: Iterable[str], *, paradigm: bool = False,
+        self,
+        values: Iterable[str],
+        *,
+        paradigm: bool = False,
     ) -> SourceResult[dict[str, list[dict]]]:
         """Read attested analyses or paradigms using Unicode word identity.
 
@@ -656,22 +683,35 @@ class Sources:
                 has_folded = folded_column in {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
                 for start in range(0, len(pending), BATCH_SIZE):
                     batch = pending[start : start + BATCH_SIZE]
-                    candidates = batch if has_folded else sorted({
-                        candidate for value in batch
-                        for candidate in (
-                            value, value.casefold(), value.upper(), value.title(), value.capitalize(),
-                            "-".join(part.capitalize() for part in value.split("-")),
+                    candidates = (
+                        batch
+                        if has_folded
+                        else sorted(
+                            {
+                                candidate
+                                for value in batch
+                                for candidate in (
+                                    value,
+                                    value.casefold(),
+                                    value.upper(),
+                                    value.title(),
+                                    value.capitalize(),
+                                    "-".join(part.capitalize() for part in value.split("-")),
+                                )
+                            }
                         )
-                    })
-                    slots = ','.join('?' for _ in candidates)
+                    )
+                    slots = ",".join("?" for _ in candidates)
                     condition = (
                         f"{column} IN (SELECT {column} FROM forms_all WHERE {folded_column} IN ({slots}))"
-                        if has_folded else f"{column} IN ({slots})"
+                        if has_folded
+                        else f"{column} IN ({slots})"
                     )
                     rows = conn.execute(
                         f"SELECT word_form, lemma, pos, tags FROM forms "
                         f"WHERE {condition} "
-                        "ORDER BY word_form, lemma, pos, tags", candidates,
+                        "ORDER BY word_form, lemma, pos, tags",
+                        candidates,
                     )
                     found = {value: [] for value in batch}
                     for row in rows:
@@ -683,7 +723,9 @@ class Sources:
         return SourceResult({value: cache[value] for value in requested}, digest, metadata)
 
     def bind_evidence_forms(
-        self, resolved: SourceResult[dict[str, list[dict]]], citations: Iterable[tuple[str, str]],
+        self,
+        resolved: SourceResult[dict[str, list[dict]]],
+        citations: Iterable[tuple[str, str]],
     ) -> SourceResult[dict[tuple[str, str], bool]]:
         """Bind citations to the option's word, for valid and invalid judgements.
 
@@ -724,8 +766,7 @@ class Sources:
                 if isinstance(row.get(field), str)
             ]
             supported = any(
-                _contains_evidence_form(value, form) if is_text else bool(form and value == form)
-                for value in witnesses
+                _contains_evidence_form(value, form) if is_text else bool(form and value == form) for value in witnesses
             )
             raw[eid, text] = supported
             if not supported and (
@@ -735,16 +776,19 @@ class Sources:
         analyses = self._receipt_vesum_rows(form for form, _, _ in pending.values()) if pending else None
         text_lemmas = {
             normalize_evidence_form(row["lemma"])
-            for form, _, is_text in pending.values() if is_text for row in analyses.raw[form]
+            for form, _, is_text in pending.values()
+            if is_text
+            for row in analyses.raw[form]
         }
         paradigms = self._receipt_vesum_rows(text_lemmas, paradigm=True) if text_lemmas else None
         for citation, (form, witnesses, is_text) in pending.items():
             lemmas = {normalize_evidence_form(row["lemma"]) for row in analyses.raw[form]}
             if is_text:
-                forms = {
-                    normalize_evidence_form(row["word_form"])
-                    for lemma in lemmas for row in paradigms.raw[lemma]
-                } if paradigms is not None else set()
+                forms = (
+                    {normalize_evidence_form(row["word_form"]) for lemma in lemmas for row in paradigms.raw[lemma]}
+                    if paradigms is not None
+                    else set()
+                )
                 raw[citation] = any(_contains_evidence_form(value, variant) for value in witnesses for variant in forms)
             else:
                 raw[citation] = any(value in lemmas for value in witnesses)
@@ -756,10 +800,14 @@ class Sources:
             metadata["paradigms_sha256"] = batch_digest(paradigms.raw)
         return SourceResult(raw, batch_digest(raw), metadata)
 
-    def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
+    def stress_for_form(self, form: str, vesum_tags: str, *, lemma: str | None = None) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""
         mapped_tags = self.mapper(vesum_tags)
-        raw = stress.verify_stress(normalize_spelling(form), tags=mapped_tags)
+        selectors = {"tags": mapped_tags}
+        if lemma is not None:
+            selectors["lemma"] = lemma
+        with using_connection(self._db()):
+            raw = stress.verify_stress(normalize_spelling(form), **selectors)
         # The trie alone does not identify exact-form override changes.
         override_digest = _file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
         return SourceResult(raw, raw["source"]["digest"], {"overrides_sha256": override_digest})
@@ -774,12 +822,19 @@ class Sources:
         return result
 
     def ulif_entries(self, lemmas: Iterable[str]) -> SourceResult[dict[str, list[dict]]]:
-        """Raw entry rows + ordered raw sections. No unchecked group can be eligible."""
+        """Raw DictUA groups keyed by caller spelling, looked up by the oracle's key.
+
+        Case folding identifies the cache group only. Stress readings still
+        require the oracle's positive lemma and POS join to VESUM; a checked
+        common-word group cannot establish a proper-name stress reading.
+        """
         conn = self._db()
         requested = list(dict.fromkeys(map(normalize_spelling, lemmas)))
+        queries = list(dict.fromkeys(map(normalize_ulif_dictua_query, requested)))
+        groups: dict[str, list[dict]] = {query: [] for query in queries}
         result: dict[str, list[dict]] = {lemma: [] for lemma in requested}
-        for start in range(0, len(requested), BATCH_SIZE):
-            batch = requested[start : start + BATCH_SIZE]
+        for start in range(0, len(queries), BATCH_SIZE):
+            batch = queries[start : start + BATCH_SIZE]
             slots = ",".join("?" for _ in batch)
             rows = conn.execute(
                 f"SELECT * FROM ulif_dictua_entries WHERE normalized_query IN ({slots}) ORDER BY normalized_query, homonym_index, id",
@@ -788,7 +843,7 @@ class Sources:
             entries = {row["id"]: dict(row) for row in rows}
             for row in entries.values():
                 row["sections"] = []
-                result[row["normalized_query"]].append(row)
+                groups[row["normalized_query"]].append(row)
             if entries:
                 # Join on requested spellings to stay within SQLite's variable cap.
                 sections = conn.execute(
@@ -797,7 +852,9 @@ class Sources:
                 )
                 for section in sections:
                     entries[section["entry_id"]]["sections"].append(dict(section))
-            self._progress("ulif", min(start + BATCH_SIZE, len(requested)), len(requested))
+            self._progress("ulif", min(start + BATCH_SIZE, len(queries)), len(queries))
+        for lemma in requested:
+            result[lemma] = groups[normalize_ulif_dictua_query(lemma)]
         return self._db_result(result)
 
     @staticmethod
@@ -922,6 +979,14 @@ class Sources:
             markers = [row[0] for row in conn.execute("SELECT DISTINCT marker FROM form_markers ORDER BY marker")]
         return SourceResult({"atoms": atoms, "markers": markers}, digest, metadata)
 
+    def search_resources(
+        self, query: str, *, mode: str = "text", free_only: bool = True, limit: int = 20
+    ) -> list[dict]:
+        """Search catalogue suggestions within this read-only sources snapshot."""
+        from scripts.ingest.resource_catalogue_ingest import search_resources
+
+        return search_resources(self._db(), query, mode=mode, free_only=free_only, limit=limit)
+
     def get_textbook_chunk(self, chunk_id: str | int) -> dict | None:
         conn = self._db()
         sql = """
@@ -993,8 +1058,7 @@ class Sources:
         if not self.standard_path.is_file():
             raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: Standard file not found at {self.standard_path}")
         file_hash = _file_hash(self.standard_path)
-        content = self.standard_path.read_text(encoding="utf-8")
-        lines = content.splitlines()
+        lines = read_standard_lines(self.standard_path)
         total_lines = len(lines)
         if start_line < 1 or end_line < start_line or end_line > total_lines:
             raise ValueError(
@@ -1020,36 +1084,72 @@ def heritage_hit_digest(hit: Mapping[str, Any]) -> str:
     return row_digest({key: value for key, value in hit.items() if key != "row_sha256"})
 
 
+# Same honest identifying form used by LinkChecker (its FAQ). This is a robot,
+# not a claim to be a particular browser. RFC 9110 §10.2.3 defines Retry-After.
+LINKCHECK_USER_AGENT = (
+    "Mozilla/5.0 (compatible; learn-ukrainian-linkcheck/1.0; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io)"
+)
+URL_CHECK_ATTEMPTS = 3
+URL_RETRY_CAP = 5.0
+
+
+def _url_retry_delay(retry_after: str | None, attempt: int) -> float:
+    """Bound backoff and either Retry-After representation to five seconds."""
+    delay = 0.5 * 2**attempt
+    if retry_after:
+        try:
+            if retry_after.isascii() and retry_after.isdecimal():
+                requested = float(retry_after)
+            else:
+                requested = (parsedate_to_datetime(retry_after) - datetime.now(UTC)).total_seconds()
+            delay = max(delay, requested)
+        except (ValueError, TypeError, OverflowError):
+            pass
+    return min(delay, URL_RETRY_CAP)
+
+
 def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
-    """Check a video URL with a hard timeout and one retry; follows redirects."""
+    """GET with robot identification, redirects and bounded transient retries.
+
+    Return only the existing pack ``checked`` fields. Verification classifies
+    final statuses; only 200 passes. Exhausted connection failures raise.
+    """
     if timeout is None or timeout <= 0:
         raise ValueError("check_url requires a positive timeout")
-    headers = {"User-Agent": "learn-ukrainian-evidence-pack/1.0"}
-    req = urllib.request.Request(url, headers=headers)
-    last_exc = None
-    for attempt in range(2):
+    req = urllib.request.Request(url, headers={"User-Agent": LINKCHECK_USER_AGENT})
+    for attempt in range(URL_CHECK_ATTEMPTS):
+        retry_after = None
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
-                date_str = datetime.now(UTC).strftime("%Y-%m-%d")
-                return {
+                result = {
                     "http_status": resp.status,
                     "final_url": resp.geturl(),
                     "content_type": resp.headers.get_content_type() if resp.headers else None,
-                    "date": date_str,
+                    "date": datetime.now(UTC).strftime("%Y-%m-%d"),
                 }
+                retry_after = resp.headers.get("Retry-After") if resp.headers else None
         except urllib.error.HTTPError as exc:
-            date_str = datetime.now(UTC).strftime("%Y-%m-%d")
-            return {
-                "http_status": exc.code,
-                "final_url": exc.geturl(),
-                "content_type": exc.headers.get_content_type() if exc.headers else None,
-                "date": date_str,
-            }
+            try:
+                result = {
+                    "http_status": exc.code,
+                    "final_url": exc.geturl(),
+                    "content_type": exc.headers.get_content_type() if exc.headers else None,
+                    "date": datetime.now(UTC).strftime("%Y-%m-%d"),
+                }
+                retry_after = exc.headers.get("Retry-After") if exc.headers else None
+            finally:
+                exc.close()
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            last_exc = exc
-            if attempt == 0:
-                time.sleep(0.5)
-    raise ConnectionError(f"Failed to check URL {url} after retry: {last_exc}")
+            if attempt == URL_CHECK_ATTEMPTS - 1:
+                raise ConnectionError(f"Failed to check URL {url} after {URL_CHECK_ATTEMPTS} attempts: {exc}") from exc
+            time.sleep(_url_retry_delay(None, attempt))
+            continue
+        if result["http_status"] != 429 and not 500 <= result["http_status"] <= 599:
+            return result
+        if attempt == URL_CHECK_ATTEMPTS - 1:
+            return result
+        time.sleep(_url_retry_delay(retry_after, attempt))
 
 
 @lru_cache(maxsize=1)

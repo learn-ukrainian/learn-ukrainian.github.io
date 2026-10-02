@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — `learner_state.py` planned-vocab fallback
 
 **Agent**: Codex (gpt-5.5, xhigh)
@@ -17,7 +23,7 @@ User decision (interview, 2026-05-23): fix this **before** the writer-prompt and
 
 Reproducer (run from repo root):
 ```bash
-cd . && .venv/bin/python -c "
+cd . && "$PROJECT_PYTHON" -c "
 from scripts.pipeline.learner_state import build_learner_state
 from scripts.config import compute_immersion_band
 ls = build_learner_state('a1', 20)

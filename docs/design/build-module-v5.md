@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/architecture/v7-pipeline.md
+---
+
 # Design: build_module_v5.py — Clean Pipeline Rewrite
+
+> **Superseded by:** [docs/architecture/v7-pipeline.md](../architecture/v7-pipeline.md)
 
 **Issue:** #750
 **Status:** Draft v2 (post-Gemini adversarial review)

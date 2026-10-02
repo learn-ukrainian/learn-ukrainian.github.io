@@ -896,53 +896,73 @@ class TestGenerateIpa:
 
     def test_stress_override(self):
         f = self._import()
+        match = {"stressed_form": "те́ст", "source": "override"}
+        mock_ipa_uk = MagicMock()
+        mock_ipa_uk.ipa.return_value = "tɛst"
         with (
             patch("generate_ipa._get_ipa_overrides", return_value={}),
-            patch("generate_ipa._get_stress_overrides", return_value={"тест": "те\u0301ст"}),
+            patch(
+                "scripts.verification.stress.verify_stress", return_value={"status": "ok", "matches": [match]}
+            ) as oracle,
+            patch("scripts.verification.stress.spoken_stressed_form", return_value="те́ст") as spoken,
+            patch.dict("sys.modules", {"ipa_uk": mock_ipa_uk}),
         ):
-            mock_ipa_uk = MagicMock()
-            mock_ipa_uk.ipa.return_value = "tɛst"
-            with patch.dict("sys.modules", {"ipa_uk": mock_ipa_uk}):
-                result = f("тест")
-                assert result is not None
-                assert result.startswith("[")
-                assert result.endswith("]")
+            assert f("тест") == "[tɛst]"
+        oracle.assert_called_once_with("тест")
+        spoken.assert_called_once_with(match)
+        mock_ipa_uk.ipa.assert_called_once_with("те́ст")
 
-    def test_stressifier_failure(self):
+    def test_stress_oracle_failure(self):
         f = self._import()
         with (
             patch("generate_ipa._get_ipa_overrides", return_value={}),
-            patch("generate_ipa._get_stress_overrides", return_value={}),
-            patch("generate_ipa._get_stressifier") as mock_stress,
+            patch("scripts.verification.stress.verify_stress", side_effect=RuntimeError("source failure")),
         ):
-            mock_stress.return_value = MagicMock(side_effect=Exception("fail"))
             assert f("тест") is None
 
-    def test_ipa_uk_failure(self):
+    @pytest.mark.parametrize("status", ["pending", "ambiguous", "not_found"])
+    def test_unresolved_stress_withholds_ipa(self, status):
         f = self._import()
         with (
             patch("generate_ipa._get_ipa_overrides", return_value={}),
-            patch("generate_ipa._get_stress_overrides", return_value={}),
-            patch("generate_ipa._get_stressifier") as mock_stress,
+            patch("scripts.verification.stress.verify_stress", return_value={"status": status, "matches": []}),
+            patch.dict("sys.modules", {"ipa_uk": MagicMock()}) as modules,
         ):
-            mock_stress.return_value = MagicMock(return_value="тест")
-            mock_ipa_uk = MagicMock()
-            mock_ipa_uk.ipa.side_effect = Exception("fail")
-            with patch.dict("sys.modules", {"ipa_uk": mock_ipa_uk}):
-                assert f("тест") is None
+            assert f("тест") is None
+            modules["ipa_uk"].ipa.assert_not_called()
 
-    def test_ipa_uk_empty_result(self):
+    @pytest.mark.parametrize("raw", ["", "   "])
+    def test_ipa_uk_empty_result(self, raw):
+        self._assert_ipa_result(raw=raw)
+
+    def test_ipa_uk_failure(self):
+        self._assert_ipa_result(error=RuntimeError("IPA failure"))
+
+    def _assert_ipa_result(self, *, raw=None, error=None):
         f = self._import()
+        mock_ipa_uk = MagicMock()
+        mock_ipa_uk.ipa.return_value = raw
+        mock_ipa_uk.ipa.side_effect = error
         with (
             patch("generate_ipa._get_ipa_overrides", return_value={}),
-            patch("generate_ipa._get_stress_overrides", return_value={}),
-            patch("generate_ipa._get_stressifier") as mock_stress,
+            patch("scripts.verification.stress.verify_stress", return_value={"status": "ok", "matches": [{}]}),
+            patch("scripts.verification.stress.spoken_stressed_form", return_value="те́ст"),
+            patch.dict("sys.modules", {"ipa_uk": mock_ipa_uk}),
         ):
-            mock_stress.return_value = MagicMock(return_value="тест")
-            mock_ipa_uk = MagicMock()
-            mock_ipa_uk.ipa.return_value = ""
-            with patch.dict("sys.modules", {"ipa_uk": mock_ipa_uk}):
-                assert f("тест") is None
+            assert f("тест") is None
+        mock_ipa_uk.ipa.assert_called_once_with("те́ст")
+
+    def test_single_letter(self):
+        f = self._import()
+        mock_ipa_uk = MagicMock()
+        mock_ipa_uk.ipa.return_value = "ɑ"
+        with (
+            patch("generate_ipa._get_ipa_overrides", return_value={}),
+            patch("scripts.verification.stress.verify_stress", return_value={"status": "invalid_input", "matches": []}),
+            patch.dict("sys.modules", {"ipa_uk": mock_ipa_uk}),
+        ):
+            assert f("а") == "[ɑ]"
+        mock_ipa_uk.ipa.assert_called_once_with("а")
 
 
 class TestLoadOverrides:
@@ -1002,14 +1022,14 @@ class TestStressifyWord:
 
     def test_single_letter(self):
         f = self._import()
-        with patch("generate_ipa._get_stressifier"):
+        with patch("scripts.pipeline.stress_annotator._oracle_choice", return_value=None):
             assert f("а") == "а"
 
     def test_stressifier_error(self):
         f = self._import()
         mock_stress = MagicMock(side_effect=Exception("fail"))
-        with patch("generate_ipa._get_stressifier", return_value=mock_stress):
-            assert f("слово") == "слово"
+        with patch("scripts.pipeline.stress_annotator._oracle_choice", side_effect=mock_stress):
+            assert f("сло́во") == "слово"
 
 
 class TestStressifyPhrase:
@@ -1021,10 +1041,11 @@ class TestStressifyPhrase:
     def test_multi_word(self):
         f = self._import()
         mock_stress = MagicMock(side_effect=lambda w: w + "\u0301")
-        with patch("generate_ipa._get_stressifier", return_value=mock_stress):
+        with patch("scripts.pipeline.stress_annotator._oracle_choice", side_effect=mock_stress):
             result = f("моє місто")
             words = result.split()
-            assert len(words) == 2
+            assert words == ["моє́", "місто́"]
+        assert mock_stress.call_args_list == [(("моє",),), (("місто",),)]
 
 
 class TestCheckEntryLine:
@@ -1136,7 +1157,7 @@ class TestReplaceProseIpa:
         f = self._import()
         md = tmp_path / "test.md"
         md.write_text("Normal text without IPA.\n")
-        with patch("generate_ipa._get_stressifier"):
+        with patch("scripts.pipeline.stress_annotator._oracle_choice", return_value=None):
             result = f(md)
         assert result == 0
 
@@ -1145,11 +1166,11 @@ class TestReplaceProseIpa:
         md = tmp_path / "test.md"
         md.write_text("**місто** [ˈmʲistɔ]\n")
         mock_stress = MagicMock(return_value="мі\u0301сто")
-        with patch("generate_ipa._get_stressifier", return_value=mock_stress):
+        with patch("scripts.pipeline.stress_annotator._oracle_choice", side_effect=mock_stress):
             result = f(md)
         assert result == 1
         content = md.read_text()
-        assert "[ˈmʲistɔ]" not in content
+        assert content == "**мі́сто**\n"
 
     def test_dry_run(self, tmp_path):
         f = self._import()
@@ -1157,7 +1178,7 @@ class TestReplaceProseIpa:
         original = "**місто** [ˈmʲistɔ]\n"
         md.write_text(original)
         mock_stress = MagicMock(return_value="мі\u0301сто")
-        with patch("generate_ipa._get_stressifier", return_value=mock_stress):
+        with patch("scripts.pipeline.stress_annotator._oracle_choice", side_effect=mock_stress):
             result = f(md, dry_run=True)
         assert result == 1
         assert md.read_text() == original

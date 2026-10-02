@@ -51,23 +51,27 @@ def manifest_world(root: Path, kind: str) -> dict:
     lesson = kind != "plan"
     paths["learner_state"] = f"{state}/{'lesson-1' if lesson else 'plan-review'}.learner-state.yaml"
     if lesson:
-        paths.update({
-            "lessons_lock": f"{state}/lessons.lock.yaml",
-            "lesson": "site/src/content/docs/a1/sample/1.mdx",
-            "provenance": f"{state}/lesson-1.provenance.yaml",
-            "gate_report": f"{state}/lesson-1.gates.yaml",
-            "style_card": "docs/style-cards/a1.md",
-        })
+        paths.update(
+            {
+                "lessons_lock": f"{state}/lessons.lock.yaml",
+                "lesson": "site/src/content/docs/a1/sample/1.mdx",
+                "provenance": f"{state}/lesson-1.provenance.yaml",
+                "gate_report": f"{state}/lesson-1.gates.yaml",
+                "style_card": "docs/style-cards/a1.md",
+            }
+        )
     else:
-        paths.update({
-            "requirements": "docs/epics/fresh-build-requirements.md",
-            "arc": f"{plans}/_arc.yaml",
-            "arc_source": "docs/epics/fresh-build-a1-arc.md",
-            "scope": f"{plans}/_scope/sample.yaml",
-            "grammar": f"{plans}/_grammar.yaml",
-            "validate_report": f"{state}/plan-validate.report.json",
-            "pack_verify_report": f"{state}/pack-verify.report.json",
-        })
+        paths.update(
+            {
+                "requirements": "docs/epics/fresh-build-requirements.md",
+                "arc": f"{plans}/_arc.yaml",
+                "arc_source": "docs/epics/fresh-build-a1-arc.md",
+                "scope": f"{plans}/_scope/sample.yaml",
+                "grammar": f"{plans}/_grammar.yaml",
+                "validate_report": f"{state}/plan-validate.report.json",
+                "pack_verify_report": f"{state}/pack-verify.report.json",
+            }
+        )
 
     def pin(name: str) -> dict:
         path = root / name
@@ -76,21 +80,34 @@ def manifest_world(root: Path, kind: str) -> dict:
         return {"path": name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
     doc = {
-        "manifest_schema": 1, "kind": "lesson" if lesson else "plan", "level": "a1", "slug": "sample",
+        "manifest_schema": 1,
+        "kind": "lesson" if lesson else "plan",
+        "level": "a1",
+        "slug": "sample",
         "inputs": {name: pin(path) for name, path in paths.items()},
         "learner_state": {"sha256": "a" * 64, "source": "planned_state"},
     }
     if lesson:
-        doc.update({
-            "lesson": 1, "lesson_kind": "lesson", "recap": False, "review_eligible": True, "blocked_by": [],
-            "lesson_lock_entry": {"path": paths["lesson"], "lesson": 1, "entry_sha256": "a" * 64},
-            "module_digest": pin(f"{state}/digest-upto-1.yaml"), "digest_generator_version": "1",
-            "upstream_lessons": [], "previous_attempt": None, "diff": None,
-        })
+        doc.update(
+            {
+                "lesson": 1,
+                "lesson_kind": "lesson",
+                "recap": False,
+                "review_eligible": True,
+                "blocked_by": [],
+                "lesson_lock_entry": {"path": paths["lesson"], "lesson": 1, "entry_sha256": "a" * 64},
+                "module_digest": pin(f"{state}/digest-upto-1.yaml"),
+                "digest_generator_version": "1",
+                "upstream_lessons": [],
+                "previous_attempt": None,
+                "diff": None,
+            }
+        )
         doc["inputs"]["activity_data"] = []
         if kind == "rereview":
             doc["previous_attempt"] = {
-                "attempt_id": "previous", "review": pin(f"{state}/lesson-1.review.previous.yaml"),
+                "attempt_id": "previous",
+                "review": pin(f"{state}/lesson-1.review.previous.yaml"),
                 "ledger": pin("batch_state/review-receipts/review/previous.jsonl"),
             }
             doc["diff"] = pin(f"{state}/lesson-1.diff.previous.{'a' * 16}.patch")
@@ -116,13 +133,19 @@ def world(tmp_path, monkeypatch):
     return root, home
 
 
-def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str) -> dict:
+def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str, *, review_access: str = "isolated") -> dict:
     path = root / "attempt.yaml"
     path.write_text(yaml.safe_dump(manifest))
-    plan = prepare_review_attempt("review", "current", path, agent, receipts_root=tmp_path / "receipts")
+    plan = prepare_review_attempt(
+        "review", "current", path, agent, receipts_root=tmp_path / "receipts", review_access=review_access
+    )
     return {
-        **plan.adapter_options, "review_id": "review", "attempt_id": "current", "review_manifest": str(path),
+        **plan.adapter_options,
+        "review_id": "review",
+        "attempt_id": "current",
+        "review_manifest": str(path),
         "review_input_root": str(root),
+        "review_access": review_access,
     }
 
 
@@ -132,9 +155,13 @@ def test_subprocess_forbidden_read_matrix(world, tmp_path, agent, kind):
     root, old_home = world
     manifest = manifest_world(root, kind)
     forbidden_names = [
-        "batch_state/review-receipts/review/other.jsonl", "batch_state/returns/other.yaml",
-        "batch_state/task.json", "scripts/review/record.py", "scripts/review/receipts/ledger.py",
-        "scripts/delegate.py", "earlier-edition.yaml",
+        "batch_state/review-receipts/review/other.jsonl",
+        "batch_state/returns/other.yaml",
+        "batch_state/task.json",
+        "scripts/review/record.py",
+        "scripts/review/receipts/ledger.py",
+        "scripts/delegate.py",
+        "earlier-edition.yaml",
     ]
     for name in forbidden_names:
         target = root / name
@@ -145,10 +172,22 @@ def test_subprocess_forbidden_read_matrix(world, tmp_path, agent, kind):
     prior.write_text("Prior session\n")
     subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
     subprocess.run(["git", "-C", str(root), "add", "."], check=True, timeout=30)
-    subprocess.run([
-        "git", "-C", str(root), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
-        "commit", "-qm", "Fixture",
-    ], check=True, timeout=30)
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "commit",
+            "-qm",
+            "Fixture",
+        ],
+        check=True,
+        timeout=30,
+    )
     tc = attempt_config(root, tmp_path, manifest, agent)
     boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
     try:
@@ -186,7 +225,9 @@ def test_subprocess_forbidden_read_matrix(world, tmp_path, agent, kind):
         assert json.loads(proc.stdout)["denied"] == 23
         assert (boundary.write_root / "return.yaml").read_text() == "own return"
         # A manifest projection is immutable even when the seat has a shell.
-        cmd, env = boundary.wrap(["/bin/sh", "-c", "echo corrupt > curriculum/l2-uk-en/lesson-plans/a1/sample.yaml"], {})
+        cmd, env = boundary.wrap(
+            ["/bin/sh", "-c", "echo corrupt > curriculum/l2-uk-en/lesson-plans/a1/sample.yaml"], {}
+        )
         assert subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30).returncode != 0
     finally:
         boundary.cleanup()
@@ -216,11 +257,16 @@ def test_runtime_files_does_not_grant_native_binary_parent():
     assert binary.parent not in runtime_files(binary)
 
 
-@pytest.mark.parametrize("agent", ["agy", "codex"])
-def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent):
+@pytest.mark.parametrize(
+    "agent,access", [("agy", "isolated"), ("codex", "isolated"), ("agy", "full"), ("codex", "full"), ("claude", "full")]
+)
+def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent, access):
     root, _ = world
     doc = manifest_world(root, "plan")
-    tc = attempt_config(root, tmp_path, doc, agent)
+    tc = attempt_config(root, tmp_path, doc, agent, review_access=access)
+    tc.update(review_access=access, review_cwd=str(root))
+    if access == "full":
+        subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
     try:
         if agent == "codex":
@@ -228,11 +274,23 @@ def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent):
             assert len(parsed["mcp_servers"]["sources"]["args"]) == 2
         proxy = json.loads(Path(boundary.tool_config["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]
         requests = [
-            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {
-                "protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "boundary-probe", "version": "1"},
-            }},
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {},
+                    "clientInfo": {"name": "boundary-probe", "version": "1"},
+                },
+            },
             {"jsonrpc": "2.0", "method": "notifications/initialized"},
-            {"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "verify_words", "arguments": {"words": []}}},
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {"name": "verify_words", "arguments": {"words": []}},
+            },
         ]
         cmd, env = boundary.wrap([proxy["command"], *proxy["args"]], {})
         # Use a real MCP handshake and keep stdin open until the tool result:
@@ -253,10 +311,17 @@ def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent):
         assert proc.returncode == 0, proc.stderr
         responses = [json.loads(line) for line in proc.stdout.splitlines()]
         assert any(r.get("id") == 2 and "result" in r for r in responses), proc.stdout
-        ledger = Path(json.loads(Path(tc["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]["env"]["LU_REVIEW_LEDGER_PATH"])
+        ledger = Path(
+            json.loads(Path(tc["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]["env"][
+                "LU_REVIEW_LEDGER_PATH"
+            ]
+        )
         assert ledger.read_bytes(), proc.stdout
         # The same boundary cannot read even its own runtime ledger.
         cmd, env = boundary.wrap(["/bin/cat", str(ledger)], {})
+        read_result = subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30)
+        assert read_result.returncode != 0
+        cmd, env = boundary.wrap(["/bin/sh", "-c", 'printf forged >> "$1"', "probe", str(ledger)], {})
         assert subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30).returncode != 0
     finally:
         processes = boundary.connection.processes
@@ -277,15 +342,18 @@ def test_runner_requires_boundary_and_preserves_nonattempt_behavior(monkeypatch)
 
 
 @pytest.mark.parametrize("site", ["prepare", "wrap"])
-@pytest.mark.parametrize(("error", "detail"), [
-    (ReviewIsolationError("attempt_egress_unavailable"), "attempt_egress_unavailable"),
-    (ReviewIsolationError("sandbox_probe_allow_failed:private diagnostic"), "sandbox_probe_allow_failed"),
-    (ReviewIsolationError("attempt_boundary_claude_adapter_pending"), "attempt_boundary_claude_adapter_pending"),
-    (ReviewIsolationError("invalid private diagnostic"), "ReviewIsolationError"),
-    (OSError("private diagnostic"), "OSError"),
-    (ValueError("private diagnostic"), "ValueError"),
-    (RuntimeError("attempt_boundary_claude_adapter_pending"), "RuntimeError"),
-])
+@pytest.mark.parametrize(
+    ("error", "detail"),
+    [
+        (ReviewIsolationError("attempt_egress_unavailable"), "attempt_egress_unavailable"),
+        (ReviewIsolationError("sandbox_probe_allow_failed:private diagnostic"), "sandbox_probe_allow_failed"),
+        (ReviewIsolationError("attempt_boundary_claude_adapter_pending"), "attempt_boundary_claude_adapter_pending"),
+        (ReviewIsolationError("invalid private diagnostic"), "ReviewIsolationError"),
+        (OSError("private diagnostic"), "OSError"),
+        (ValueError("private diagnostic"), "ValueError"),
+        (RuntimeError("attempt_boundary_claude_adapter_pending"), "RuntimeError"),
+    ],
+)
 def test_runner_boundary_refusal_reports_only_code_or_exception_class(tmp_path, monkeypatch, site, error, detail):
     def refuse(*args, **kwargs):
         raise error
@@ -300,24 +368,36 @@ def test_runner_boundary_refusal_reports_only_code_or_exception_class(tmp_path, 
             monkeypatch.setattr(runner, "_load_adapter", unexpected)
             runner.invoke("agy", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
         else:
-            boundary = SimpleNamespace(workspace=tmp_path, wrap=refuse)
+            boundary = SimpleNamespace(workspace=tmp_path, verify_seat=lambda *a: None, wrap=refuse)
             runner._execute_invocation_plan(
-                agent_name="agy", adapter=None, plan=InvocationPlan(cmd=["agy", "--version"], cwd=tmp_path),
-                prompt="probe", mode="read-only", cwd=tmp_path, model="fixture-model", task_id="probe",
-                session_id=None, entrypoint="runtime", hard_timeout=30, stall_timeout=30,
+                agent_name="agy",
+                adapter=None,
+                plan=InvocationPlan(cmd=["agy", "--version"], cwd=tmp_path),
+                prompt="probe",
+                mode="read-only",
+                cwd=tmp_path,
+                model="fixture-model",
+                task_id="probe",
+                session_id=None,
+                entrypoint="runtime",
+                hard_timeout=30,
+                stall_timeout=30,
                 tool_config={"review_attempt_boundary": boundary},
             )
     assert str(caught.value) == f"formal attempt filesystem boundary refused: {site}: {detail}"
     assert caught.value.__cause__ is error
 
 
-@pytest.mark.parametrize(("prefix", "diagnostic", "expected_identifier"), [
-    ("sandbox_probe_allow_failed", "seat_controlled_identifier", "sandbox_probe_allow_failed"),
-    ("sandbox_probe_allow_failed", "secret/path", "sandbox_probe_allow_failed"),
-    ("sandbox_probe_allow_failed", "wrap: spoofed", "sandbox_probe_allow_failed"),
-    ("sandbox_probe_allow_failed", "\nspoofed", "sandbox_probe_allow_failed"),
-    ("Seat Text", "x", "ReviewIsolationError"),
-])
+@pytest.mark.parametrize(
+    ("prefix", "diagnostic", "expected_identifier"),
+    [
+        ("sandbox_probe_allow_failed", "seat_controlled_identifier", "sandbox_probe_allow_failed"),
+        ("sandbox_probe_allow_failed", "secret/path", "sandbox_probe_allow_failed"),
+        ("sandbox_probe_allow_failed", "wrap: spoofed", "sandbox_probe_allow_failed"),
+        ("sandbox_probe_allow_failed", "\nspoofed", "sandbox_probe_allow_failed"),
+        ("Seat Text", "x", "ReviewIsolationError"),
+    ],
+)
 def test_runner_boundary_refusal_pins_identifier_before_colon(prefix, diagnostic, expected_identifier):
     error = ReviewIsolationError(f"{prefix}:{diagnostic}")
     refusal = runner._attempt_boundary_refusal(error, stage="prepare")
@@ -490,12 +570,21 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             # CI has no authenticated provider CLIs. Keep the real adapter
             # planning and sandbox seam, using a native executable fixture.
             monkeypatch.setattr(shutil, "which", lambda name: "/bin/true")
-            monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None)
+            monkeypatch.setattr(
+                "scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
+            )
         if agent == "agy":
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
-        plan = adapter.build_invocation(prompt="probe", mode="read-only", cwd=boundary.workspace,
-                                        model=None, task_id="boundary-probe", session_id=None,
-                                        tool_config=boundary.tool_config, effort="high")
+        plan = adapter.build_invocation(
+            prompt="probe",
+            mode="read-only",
+            cwd=boundary.workspace,
+            model=None,
+            task_id="boundary-probe",
+            session_id=None,
+            tool_config=boundary.tool_config,
+            effort="high",
+        )
         assert plan.cwd == boundary.workspace
         if agent == "agy":
             assert Path(plan.env_overrides["HOME"]).is_relative_to(boundary.write_root)
@@ -521,7 +610,9 @@ def test_namespace_escape_matrix_with_positive_controls(world, tmp_path, proxy_m
     from scripts.agent_runtime.attempt_network import host_addresses
 
     root, _ = world
-    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
+    boundary = AttemptBoundary(
+        agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
+    )
     listeners, peers, descriptors, threads = [], [], [], []
     socket_directory = tempfile.TemporaryDirectory(prefix="attempt-fixture-", dir="/tmp")
     sentinel = b"FORBIDDEN_SOCKET_SENTINEL"
@@ -648,7 +739,9 @@ def test_namespace_escape_matrix_with_positive_controls(world, tmp_path, proxy_m
 
 def test_proxy_crash_refuses_launch_and_never_shares_network(world, tmp_path):
     root, _ = world
-    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
+    boundary = AttemptBoundary(
+        agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
+    )
     try:
         cmd, env = boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
         boundary.egress.cleanup()
@@ -662,16 +755,21 @@ def test_proxy_crash_refuses_launch_and_never_shares_network(world, tmp_path):
         boundary.cleanup()
 
 
-@pytest.mark.parametrize("denial", ["hostname", "loopback", "mixed", "non_connect", "redirect"])
-def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch, denial):
+@pytest.mark.parametrize("agent,access", [("agy", "isolated"), ("agy", "full"), ("codex", "full"), ("claude", "full")])
+@pytest.mark.parametrize("denial", ["hostname", "loopback", "mixed", "non_connect", "redirect", "allowed"])
+def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch, denial, agent, access):
     import asyncio
     import ssl
 
     from scripts.agent_runtime.attempt_network import load_allowlist
 
     root, _ = world
-    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
-    allowed = sorted(load_allowlist("agy"))[0]
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent, review_access=access)
+    tc.update(review_access=access, review_cwd=str(root))
+    if access == "full":
+        subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    boundary = AttemptBoundary(agent=agent, tool_config=tc)
+    allowed = sorted(load_allowlist(agent))[0]
 
     class Forbidden(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
@@ -697,16 +795,36 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
 
         monkeypatch.setattr(boundary.egress, "_resolve", resolve)
         url = "https://not-allowed.example/" if denial == "hostname" else f"https://{allowed}/"
-        if denial == "redirect":
+        if denial in {"redirect", "allowed"}:
             # A provider-shaped TLS fixture redirects the native HTTP client
             # toward a forbidden host service; the redirect never reaches it.
             cert, key = tmp_path / "cert.pem", tmp_path / "key.pem"
-            subprocess.run(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1",
-                            "-subj", "/CN=provider.example", "-keyout", str(key), "-out", str(cert)],
-                           capture_output=True, check=True, timeout=10)
+            subprocess.run(
+                [
+                    "openssl",
+                    "req",
+                    "-x509",
+                    "-newkey",
+                    "rsa:2048",
+                    "-nodes",
+                    "-days",
+                    "1",
+                    "-subj",
+                    "/CN=provider.example",
+                    "-keyout",
+                    str(key),
+                    "-out",
+                    str(cert),
+                ],
+                capture_output=True,
+                check=True,
+                timeout=10,
+            )
 
             class Redirect(Forbidden):
                 def do_GET(self):
+                    if denial == "allowed":
+                        return super().do_GET()
                     self.send_response(302)
                     self.send_header("Location", f"https://127.0.0.1:{server.server_port}/forbidden")
                     self.end_headers()
@@ -736,6 +854,12 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
                 " assert client.recv(1024).startswith(b'HTTP/1.1 403')\n"
                 "print('DENIED:proxy_method')\n"
             )
+        elif denial == "allowed":
+            script = (
+                "import urllib.request,ssl\n"
+                f"assert urllib.request.urlopen({url!r},context=ssl._create_unverified_context(),timeout=3).read() == b'FORBIDDEN_HTTP_SENTINEL'\n"
+                "print('ALLOWED:provider')\n"
+            )
         else:
             script = (
                 "import urllib.request,urllib.error,ssl\n"
@@ -751,8 +875,8 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
         cmd, env = boundary.wrap([sys.executable, "-c", script], {})
         proc = subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, text=True, timeout=15)
         assert proc.returncode == 0, proc.stderr
-        assert proc.stdout.strip().startswith("DENIED:")
-        if denial == "redirect":
+        assert proc.stdout.strip().startswith("ALLOWED:" if denial == "allowed" else "DENIED:")
+        if denial in {"redirect", "allowed"}:
             assert any(record["bytes"] > 0 for record in boundary.egress.records)
     finally:
         if tls_server is not None:
@@ -767,7 +891,9 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
 
 def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monkeypatch):
     root, _ = world
-    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
+    boundary = AttemptBoundary(
+        agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
+    )
     try:
         cmd, env = boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
         boundary.forwarder.write_text("raise SystemExit(125)\n")
@@ -794,8 +920,9 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     credential.parent.mkdir()
     access = "fixture-access-" + "x" * 30
     refresh = "fixture-refresh-" + "y" * 30
-    credential.write_text(json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": refresh,
-                                                      "expiresAt": 4_102_444_800_000}}))
+    credential.write_text(
+        json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": refresh, "expiresAt": 4_102_444_800_000}})
+    )
     credential.chmod(0o600)
     assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}
     credential.chmod(0o644)
@@ -809,7 +936,7 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     with pytest.raises(ReviewIsolationError, match="invalid"):
         linux_claude_auth()
     monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", access)
-    assert linux_claude_auth() == {}  # existing selected env wins
+    assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}  # selected token reaches the private seat
 
 
 @pytest.mark.parametrize("agent", ["codex", "agy"])

@@ -541,7 +541,17 @@ _OTHER_TREE_COMMIT = {"d" * 40: {"sha": "d" * 40, "tree": "2" * 40, "parents": [
             "0 jobs named 'pytest (2)'",
         ),
         (_candidate(jobs=_jobs(_set("pytest (2)", conclusion="cancelled"))), "'pytest (2)' is 'completed'/'cancelled'"),
-        (_candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[5], id=7)])), "2 jobs named 'pytest (1)'"),
+        (
+            _candidate(
+                jobs=_jobs(
+                    lambda jobs: [
+                        *jobs,
+                        dict(next(j for j in jobs if j["name"] == "pytest (1)"), id=7),
+                    ]
+                )
+            ),
+            "2 jobs named 'pytest (1)'",
+        ),
         (_candidate(jobs=_jobs(_set("Checks", conclusion="failure"))), "'Checks' is 'completed'/'failure'"),
         (_candidate(jobs=_jobs(_set("Secret scan", conclusion="skipped"))), "'Secret scan' is 'completed'/'skipped'"),
         (_candidate(jobs=_jobs(lambda jobs: [j for j in jobs if j["name"] != "Frontend"])), "0 jobs named 'Frontend'"),

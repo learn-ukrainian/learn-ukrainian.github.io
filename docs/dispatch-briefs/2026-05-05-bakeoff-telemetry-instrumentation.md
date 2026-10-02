@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch — bakeoff telemetry instrumentation for V7 linear pipeline
 
 ## Context
@@ -17,7 +23,7 @@ Add JSONL event emission at writer-side and reviewer-side hook points in the V7 
 ```bash
 cd .
 git fetch origin main
-.venv/bin/python scripts/delegate.py dispatch ...  # invoked by parent
+"$PROJECT_PYTHON" scripts/delegate.py dispatch ...  # invoked by parent
 ```
 
 Worktree auto-derived at `.worktrees/dispatch/codex/bakeoff-telemetry/` via bare `--worktree`.
@@ -127,9 +133,9 @@ Emit once per review phase as a roll-up summary.
 
 9. **Backwards compatibility.** Existing v6_build.py JSONL events MUST keep their current shape. New events ADD to the stream; do NOT modify existing `module_start` / `phase_done` / `review_score` shapes. Bakeoff aggregator + Monitor API reading state both depend on the existing shapes.
 
-10. **Run tests.** `.venv/bin/python -m pytest tests/test_linear_pipeline_telemetry.py -x -v`.
+10. **Run tests.** `"$PROJECT_PYTHON" -m pytest tests/test_linear_pipeline_telemetry.py -x -v`.
 
-11. **Run full pipeline tests** to verify nothing else broke. `.venv/bin/python -m pytest tests/test_linear_pipeline.py tests/test_v6_build_events.py -x -q` (whichever exists).
+11. **Run full pipeline tests** to verify nothing else broke. `"$PROJECT_PYTHON" -m pytest tests/test_linear_pipeline.py tests/test_v6_build_events.py -x -q` (whichever exists).
 
 12. **Run ruff.** `.venv/bin/ruff check scripts/ tests/`
 

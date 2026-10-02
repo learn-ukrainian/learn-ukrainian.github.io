@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Claude-headless dispatch brief — writer-prompt tune (budget + citation + immersion discipline)
 
 > **Issue:** none yet — file 1 follow-up issue tracking the tune work + before/after gate evidence.
@@ -15,7 +21,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Always prefix with `cd .worktrees/dispatch/claude/writer-prompt-tune-2026-05-13 && ...` or use absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 

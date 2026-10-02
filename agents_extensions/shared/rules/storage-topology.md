@@ -7,10 +7,10 @@
 
 | Kind | Location | Rule |
 | --- | --- | --- |
-| Active `sources.db` / VESUM / hot DBs | Repository `data/` on the Mac | **Local only.** Never open SQLite from SMB or another network filesystem. |
-| Bulk raw sources (primary) | Windows NTFS share **UkrainianData** → `raw-sources/learn-ukrainian-data` | Prefer when mounted and **marker-valid**. |
-| Bulk raw sources (fallback) | Google Drive `My Drive/Projects/learn-ukrainian-data` | Use when SMB is absent; on-demand File Provider retrieval. |
-| Sources MCP | Local `data/sources.db` | An SMB outage must **not** break MCP, tests, or ordinary repo work. |
+| Active `sources.db` / VESUM / hot DBs | Repository `data/` on the local host | **Local only.** Never open SQLite from SMB or another network filesystem. |
+| Bulk raw sources (primary) | Primary bulk storage mirror → `raw-sources/learn-ukrainian-data` | Prefer when mounted and **marker-valid**. |
+| Bulk raw sources (fallback) | Cloud storage fallback | Use when primary bulk mirror is absent; on-demand retrieval. |
+| Sources MCP | Local `data/sources.db` | An outage of bulk mirrors must **not** break MCP, tests, or ordinary repo work. |
 
 **Marker-valid bulk root:** both `literary_texts/` and `textbook_chunks/` exist
 as directories. If roots are missing or ambiguous, treat bulk as **unavailable**
@@ -26,16 +26,16 @@ as directories. If roots are missing or ambiguous, treat bulk as **unavailable**
 2. **Rebuild / raw JSONL consumers** go through
    `scripts/wiki/config.py` (`GDRIVE_DATA` is the bulk root alias) or
    `scripts.storage.topology.resolve_bulk_root` — not a second Drive-only path.
-3. **Never** set active DB tooling to a path under `/Volumes/UkrainianData` or
-   a UNC share.
+3. **Never** set active DB tooling to a path under an external mount or
+   a network share.
 4. **Never** delete, move, or auto-evict bulk corpus, Drive objects, or SMB
    payloads unless a separate operator-authorized task says so.
-5. **Mac cache:** report-only. Supported reclaim is Finder **Remove Download**.
+5. **Local cache:** report-only. Use standard operating system or cloud provider tools to free space.
    Do not invent eviction commands.
-6. **Windows mirror maintenance:** only
+6. **Bulk mirror maintenance:** only
    `scripts/storage/windows/Copy-BulkSourcesFromDrive.ps1` (`rclone copy`, never
    sync) and `Verify-BulkSources.ps1` (receipt only after successful verify), on
-   **local NTFS** via `Get-SmbShare`.
+   a verified mirror path via `Get-SmbShare`.
 
 ## Env overrides (optional)
 
@@ -51,5 +51,5 @@ Precedence: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unava
 ## Privacy
 
 Do not commit absolute operator home paths, account emails, hostnames, raw IPs,
-credentials, or private corpus bodies. Share **name** `UkrainianData` and the
-relative folder `learn-ukrainian-data` are the public topology labels.
+credentials, or private corpus bodies. The relative folder `learn-ukrainian-data`
+is the public topology label.

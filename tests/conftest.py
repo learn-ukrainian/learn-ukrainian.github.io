@@ -34,7 +34,10 @@ from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
 pytest_plugins = [
-    "tests.helpers.checkout_write_guard", "tests.helpers.checkout_write_defaults", "tests.cursor_process_guard",
+    "tests.helpers.checkout_write_guard",
+    "tests.helpers.checkout_write_defaults",
+    "tests.cursor_process_guard",
+    "tests.helpers.stress_fixtures",
 ]
 
 
@@ -2768,3 +2771,6 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
     real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
     monkeypatch.setenv("LU_TEST_ACP_PRIMARY_ROOT", str(real_checkout))
     monkeypatch.setenv("LU_TEST_ACP_SCRATCH_ROOT", str(tmp_path_factory.getbasetemp()))
+
+# Opt-in synthetic private tooling for tests of public publishing consumers.
+from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401

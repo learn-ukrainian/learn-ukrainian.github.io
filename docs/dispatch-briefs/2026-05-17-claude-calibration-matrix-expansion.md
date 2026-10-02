@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: Claude calibration matrix expansion (12 cells)
 
 **Agent:** Claude headless (claude-opus-4-7)
@@ -87,7 +93,7 @@ left off (cells with valid JSON are skipped).
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python scripts/audit/judge_calibration_matrix.py \
+"$PROJECT_PYTHON" scripts/audit/judge_calibration_matrix.py \
   --families anthropic \
   --models claude-opus-4-7,claude-sonnet-4-6,claude-haiku-4-5-20251001 \
   --harnesses native_cli \
@@ -118,7 +124,7 @@ grep -c "claude-" audit/2026-05-17-judge-calibration-matrix/REPORT.html
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -m pytest tests/audit/test_judge_calibration_matrix.py -q
+"$PROJECT_PYTHON" -m pytest tests/audit/test_judge_calibration_matrix.py -q
 .venv/bin/ruff check scripts/audit/judge_calibration_matrix.py
 ```
 

@@ -190,7 +190,8 @@ def _write_practice_deck(practice_dir: Path, *, deck_version: str = "atlas-pract
 
 @pytest.mark.parametrize("stale_kind", ["synonym", "index"])
 def test_publish_rejects_withdrawn_synonym_inventory_before_writing(
-    tmp_path: Path, stale_kind: str,
+    tmp_path: Path,
+    stale_kind: str,
 ) -> None:
     from scripts.practice_deck.publish import expected_deck_version
 
@@ -217,7 +218,8 @@ def test_publish_rejects_withdrawn_synonym_inventory_before_writing(
 
 
 def test_withdrawal_repackages_only_pinned_source_and_removes_cards(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     from scripts.audit import generate_practice_deck as generator
     from scripts.practice_deck.publish import (
@@ -280,6 +282,7 @@ def test_publish_practice_deck_dry_run_builds_hash_pinned_package(tmp_path: Path
     input_paths = _write_publish_inputs(tmp_path / "inputs")
 
     from scripts.practice_deck.publish import expected_deck_version, versioned_asset_name
+
     expected_version = expected_deck_version(**input_paths)
     _write_practice_deck(practice_dir, deck_version=expected_version)
 
@@ -326,6 +329,7 @@ def test_publish_practice_deck_uploads_versioned_and_canonical_assets(
     input_paths = _write_publish_inputs(tmp_path / "inputs")
 
     from scripts.practice_deck.publish import expected_deck_version, versioned_asset_name
+
     expected_version = expected_deck_version(**input_paths)
     _write_practice_deck(practice_dir, deck_version=expected_version)
     expected_versioned_name = versioned_asset_name(expected_version)
@@ -336,7 +340,7 @@ def test_publish_practice_deck_uploads_versioned_and_canonical_assets(
         if args[:3] == ["gh", "release", "view"]:
             return subprocess.CompletedProcess(args, 0, stdout='{"assets":[]}', stderr="")
         if args[:3] == ["gh", "release", "upload"]:
-            assert Path(args[4]).exists()
+            assert Path(args[-1]).exists()
             upload_calls.append(args)
             return subprocess.CompletedProcess(args, 0)
         raise AssertionError(f"unexpected command: {args}")
@@ -353,7 +357,7 @@ def test_publish_practice_deck_uploads_versioned_and_canonical_assets(
 
     assert pointer["asset_url"].endswith(f"/{expected_versioned_name}")
     assert json.loads(pointer_path.read_text(encoding="utf-8")) == pointer
-    assert [Path(call[4]).name for call in upload_calls] == [expected_versioned_name, ASSET_NAME]
+    assert [Path(call[-1]).name for call in upload_calls] == [expected_versioned_name, ASSET_NAME]
     assert "--clobber" not in upload_calls[0]
     assert "--clobber" in upload_calls[1]
 
@@ -368,6 +372,7 @@ def test_publish_practice_deck_skips_existing_verified_versioned_asset(
     input_paths = _write_publish_inputs(tmp_path / "inputs")
 
     from scripts.practice_deck.publish import expected_deck_version, versioned_asset_name
+
     expected_version = expected_deck_version(**input_paths)
     _write_practice_deck(practice_dir, deck_version=expected_version)
     expected_versioned_name = versioned_asset_name(expected_version)
@@ -408,7 +413,7 @@ def test_publish_practice_deck_skips_existing_verified_versioned_asset(
     )
 
     assert download_calls == [expected_versioned_name]
-    assert [Path(call[4]).name for call in upload_calls] == [ASSET_NAME]
+    assert [Path(call[-1]).name for call in upload_calls] == [ASSET_NAME]
     assert "--clobber" in upload_calls[0]
 
 
@@ -418,6 +423,7 @@ def test_publish_refuses_synonym_verdicts_without_ulif_data(tmp_path: Path, monk
     # same fingerprint and accepted the empty synonym mode.
     from scripts.audit import generate_practice_deck as generator
     from scripts.practice_deck.publish import expected_deck_version
+
     monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
 
     practice_dir = tmp_path / "lexicon"
@@ -440,11 +446,10 @@ def test_publish_refuses_synonym_verdicts_without_ulif_data(tmp_path: Path, monk
         )
 
 
-def test_publish_rejects_stale_deck_after_ulif_register_change(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_publish_rejects_stale_deck_after_ulif_register_change(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.audit import generate_practice_deck as generator
     from scripts.practice_deck.publish import expected_deck_version
+
     monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
 
     group = group_from_payload(payload_from_row_html("<b>TEST</b>, <b>OTHER</b>."))
@@ -487,7 +492,15 @@ def test_expected_deck_version_uses_public_atlas_db_projection(tmp_path: Path) -
 
 @pytest.mark.parametrize(
     "stale_input",
-    ["entries", "heritage_pairs", "paronym_pairs", "antonym_pairs", "synonym_verdicts", "cloze_sources", "sentence_inventory"],
+    [
+        "entries",
+        "heritage_pairs",
+        "paronym_pairs",
+        "antonym_pairs",
+        "synonym_verdicts",
+        "cloze_sources",
+        "sentence_inventory",
+    ],
 )
 def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
     tmp_path: Path,
@@ -532,9 +545,7 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         **input_paths,
     )
     assert pointer["deck_version"] == next(
-        payload["deckVersion"]
-        for level_shards in shards.values()
-        for payload in level_shards.values()
+        payload["deckVersion"] for level_shards in shards.values() for payload in level_shards.values()
     )
 
     if stale_input == "entries":
@@ -657,3 +668,9 @@ def test_publish_refuses_missing_vesum_before_gzip(tmp_path: Path, monkeypatch: 
             **input_paths,
         )
     assert not gzip_path.exists()
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")
