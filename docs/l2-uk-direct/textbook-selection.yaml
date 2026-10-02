@@ -1448,6 +1448,9 @@ sources:
       allowed: true
       limit_chars: 800
       attribution: ukrainian-short
+    authors:
+    - Захарійчук М. Д.
+    publisher: Грамота
     part: 1
     title_provenance:
       url: https://pidruchnyk.com.ua/3028-bukvar-1-klas-zakhariichuk.html
@@ -1472,6 +1475,9 @@ sources:
       allowed: true
       limit_chars: 800
       attribution: ukrainian-short
+    authors:
+    - Захарійчук М. Д.
+    publisher: Грамота
     part: 2
     title_provenance:
       url: https://pidruchnyk.com.ua/3028-bukvar-1-klas-zakhariichuk.html

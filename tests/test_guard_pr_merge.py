@@ -1862,3 +1862,10 @@ def test_bare_unmatched_paren_still_fails_closed(monkeypatch):
     payload = json.dumps({"tool_input": {"command": "case x in y) true;; esac; gh pr merge 9"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
     assert guard.main() == 2
+
+
+@pytest.mark.parametrize("command", ["cd /tmp &&>file gh pr merge 5 --admin", "{fd}>file gh pr merge 5 --admin"])
+@pytest.mark.parametrize("checks,expected", [(([], []), 0), ((["CI Gate"], []), 2)])
+def test_issue_9479_r2_redirect_merge_decision(monkeypatch, command, checks, expected):
+    assert _run(monkeypatch, command, checks=checks) == expected
+    assert ["gh", "pr", "merge", "5", "--admin"] in guard._segments(command)

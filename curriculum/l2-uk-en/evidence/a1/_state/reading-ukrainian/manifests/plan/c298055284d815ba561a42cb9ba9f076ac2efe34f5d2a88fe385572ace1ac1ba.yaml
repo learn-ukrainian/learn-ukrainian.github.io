@@ -1,0 +1,54 @@
+inputs:
+  arc:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml
+    sha256: add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2
+  arc_source:
+    path: docs/epics/fresh-build-a1-arc.md
+    sha256: 57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: ae2f4cbe876dccb1f91722b9215b8672026765c15a59223ea9fd51dc4a6c3152
+  grammar:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml
+    sha256: 20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.learner-state.yaml
+    sha256: 6bfcaf585064f0bb081b933489fc892c3659b0925164733290655a507c4403b4
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml
+    sha256: 97ce19219f3727d02b4cb57b6f5321ec0448bd6b156f9cf0930c411a90e63bf5
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock
+    sha256: eae15e90e2e42682dc584c89e3da174946803a395c8f7d110c3eb988f5dcdf28
+  pack_verify_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/pack-verify.report.json
+    sha256: 6a79cd628ae63b5f0749ceb794149925bf9859f79170cedaa78c69c46e700409
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml
+    sha256: bfd77c0d6560cbc9c85d8b4218fe21ac69ecfa53a5da337e20d7b37bc77f5b26
+  requirements:
+    path: docs/epics/fresh-build-requirements.md
+    sha256: 4d31bafe477fe18d31d7cde068f8df46980fb89de792efda326c73dde30089ca
+  scope:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml
+    sha256: 1b46ecf105e05dbbdac324abb563529420f5daeddb6e061bfdad6b0e0a73d5c7
+  v1_totals:
+    path: curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-review.v1-totals.yaml
+    sha256: 1d302580ee29f3c02ce1457740d1edd0e1f8514790658a7eadb12aac77e9ec2f
+  validate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/reading-ukrainian/plan-validate.report.json
+    sha256: b6cca78c2e75415dd8977a1f569b774abfae1afe26cb8954261e797b88267316
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 23a3d462356b78c780856fd0989fd44d31db014ae76573cb3e19486a55f259aa
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: a8ade455ce252146562d999bff744998aaf71ceed90f751f153fc313881cbb34
+kind: plan
+learner_state:
+  sha256: 5585d89ec49c49234cf82d7eda44ebcf915eee45770b1592c39d6204560a0a71
+  source: planned_state
+level: a1
+manifest_schema: 1
+position: 2
+slug: reading-ukrainian
