@@ -590,6 +590,70 @@ def test_ignored_artifact_nested_repo_dirty_working_tree_never_discarded(checkou
 
     ok, reason, metadata = guard(checkout)
     assert not ok and metadata is None
-    assert "artifact is a nested git repository with uncommitted changes" in reason
+    assert "artifact is a nested git repository with uncommitted" in reason
     assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_fsmonitor_hook_disabled(checkout):
+    """P1: nested repository core.fsmonitor hooks must never execute during inspection."""
+    repo_dir = checkout[0] / "batch_state/reports/fsmonitor_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "hook_executed.marker"
+    hook_script = repo_dir / "fsmonitor_hook.sh"
+    hook_script.write_text(f"#!/bin/sh\ntouch '{marker}'\nexit 0\n")
+    hook_script.chmod(0o755)
+    subprocess.run(["git", "config", "core.fsmonitor", str(hook_script)], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    guard(checkout)
+    assert not marker.exists(), "core.fsmonitor hook script in nested repository was executed!"
+
+
+def test_ignored_artifact_nested_repo_ignored_evidence_never_discarded(checkout, tmp_path):
+    """P1: non-disposable ignored files in a nested repository must never be recommended for deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/ignored_evidence_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".gitignore").write_text("*.json\n")
+    subprocess.run(["git", "add", ".gitignore"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "ignore json"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add ignored evidence file
+    (repo_dir / "valuable.json").write_text('{"evidence": "important probe"}')
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with uncommitted or ignored changes" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_reflog_only_commits_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by reflogs must refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/reflog_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add unpushed commit then reset --hard back to base
+    (repo_dir / "reflog_work.txt").write_text("unpushed reflog work\n")
+    subprocess.run(["git", "add", "reflog_work.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "unpushed reflog commit"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
