@@ -69,17 +69,25 @@ def test_cursor_attested_composer_author_refuses_same_family_review():
 
 
 def test_cursor_attested_grok_author_refuses_same_family_review():
-    """Attested Cursor Grok is xAI; the Grok judge ban precedes family refusal.
+    """Attested Cursor Grok is xAI; native Grok never judges, and the attested
+    Cursor Grok seat (#9488) is refused as the same family as a Grok author.
 
     Composer above separately proves the non-Grok same-family refusal.
     """
     inputs = ResolverInputs(author_model="cursor:grok-4.7", risk="medium")
     assert resolve_author_family(inputs.author_model) == "xai"
 
-    for name in ("grok-4.7", "grok-4.7-cursor-fallback"):
+    for name, reason in (
+        (
+            "grok-4.7",
+            "native Grok never judges: Grok reviews code and infra only through the "
+            "runtime-attested Cursor seat (core.md P2, #9488)",
+        ),
+        ("grok-4.7-cursor-fallback", "same family as author (xai) — cross-family review requires a different family"),
+    ):
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
         assert result.status == "excluded", (name, result.status)
-        assert result.reason == "Grok never judges: excluded from code and infra review by core.md P2"
+        assert result.reason == reason
 
     resolution = resolve_reviewer(inputs)
     assert resolution.fail_closed_reason is None

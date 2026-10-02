@@ -15,7 +15,9 @@ The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
 ``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
-Fable is last resort, routine ladders keep practical seats, and Grok never judges.
+Fable is last resort, routine ladders keep practical seats, native Grok never
+judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
+below critical (#9488).
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
@@ -39,6 +41,7 @@ from scripts.audit import model_families
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     VALID_RISKS,
+    invocation_model,
     load_model_catalog,
     resolve_catalog_model_id,
     retired_model_refusal,
@@ -224,6 +227,17 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
 REVIEW_CANDIDATES: dict[str, ReviewerCandidate] = {
     name: _catalog_candidate(name) for name in _MODEL_CATALOG["review_candidates"]
 }
+
+
+def candidate_dispatch_model(candidate: ReviewerCandidate) -> str:
+    """The ``--model`` a review dispatch to ``candidate`` must send.
+
+    A Cursor seat runs its exact Cursor slug (``grok-4.7-high``), because that
+    slug is what the runtime then attests; other routes use the catalog id.
+    """
+    if candidate.transport == "cursor":
+        return invocation_model(candidate.invocation) or candidate.concrete_model
+    return candidate.concrete_model
 
 
 def _catalog_ladder(risk: str) -> tuple[tuple[ReviewerCandidate, ...], ...]:
@@ -671,13 +685,22 @@ def evaluate_candidate(
                 health=health,
             )
 
-    if candidate.family == "xai" or model_family == "xai":
+    # Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
+    # through the Cursor seat whose runtime attests the concrete model. Every
+    # other gate below (independence, suitability, health) still applies to it.
+    if (candidate.family == "xai" or model_family == "xai") and not (
+        candidate.transport == "cursor" and candidate.route == "cursor"
+    ):
         return CandidateResult(
             name=candidate.name, concrete_model=candidate.concrete_model,
             family=candidate.family, route=candidate.route, transport=candidate.transport,
             invocation=candidate.invocation, quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded", reason="Grok never judges: excluded from code and infra review by core.md P2",
+            status="excluded",
+            reason=(
+                "native Grok never judges: Grok reviews code and infra only through the "
+                "runtime-attested Cursor seat (core.md P2, #9488)"
+            ),
             health=health,
         )
 

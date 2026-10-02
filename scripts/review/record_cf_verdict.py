@@ -280,7 +280,7 @@ def record(
     if task.get("agent") == "cursor" and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
         raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
     if isinstance(model, str):
-        model = canonical_cursor_model(model)  # the runtime reports "Composer 2.5"; record the slug
+        model = canonical_cursor_model(model)  # the runtime reports a display name; record the catalog id
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)

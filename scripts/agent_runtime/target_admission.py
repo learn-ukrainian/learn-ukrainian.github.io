@@ -344,6 +344,7 @@ def _resolve_review_target(
         UNKNOWN_AUTHOR_FAMILY,
         UNRESOLVED_AUTHOR_FAMILIES,
         ResolverInputs,
+        candidate_dispatch_model,
         evaluate_candidate,
         resolve_author_family,
         resolve_family,
@@ -355,7 +356,9 @@ def _resolve_review_target(
 
     concrete = (model or _default_model_for(seat) or "").split("[", 1)[0]
     family = resolve_family(concrete or "")
-    forbidden = {"xai", "moonshot"}
+    # Composer/Kimi never review. Grok is admitted only as the resolver's
+    # runtime-attested Cursor seat (#9488); native Grok is excluded there.
+    forbidden = {"moonshot"}
     if profile != "ukrainian":
         forbidden.add("google")
     trusted = bool(author_model and risk)
@@ -397,7 +400,7 @@ def _resolve_review_target(
     else:
         eligible = family not in forbidden and any(
             candidate.route == seat
-            and candidate.concrete_model == concrete
+            and candidate_dispatch_model(candidate) == concrete
             and evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
             for candidate in REVIEW_CANDIDATES.values()
         )
@@ -459,12 +462,12 @@ def _resolve_review_target(
         # Recover that reviewer with the same snapshot and all hard gates intact.
         retained = resolve_reviewer(inputs, ladder=ladder).selected
         if retained is not None and retained.route == budget_seat:
-            return retained.route, retained.concrete_model
+            return retained.route, candidate_dispatch_model(REVIEW_CANDIDATES[retained.name])
     if selected is None or selected.family in forbidden:
         raise ReviewAdmissionRefused(
             f"REVIEW_ROUTE_REFUSED: no resolver-selected eligible substitute for --review-profile {profile}"
         )
-    return selected.route, selected.concrete_model
+    return selected.route, candidate_dispatch_model(REVIEW_CANDIDATES[selected.name])
 
 
 def stored_kimi_row(agent: object, model: object = None) -> bool:

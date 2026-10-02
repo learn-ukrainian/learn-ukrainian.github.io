@@ -85,7 +85,9 @@ endpoints:
     retry_class: standard
     concurrency_limit: 1
     # Native Grok uses the hash-pinned sealed-review profile only when the
-    # parent supplies a validated exact-head MCP config.
+    # parent supplies a validated exact-head MCP config. Policy still refuses
+    # native Grok as a code/infra reviewer; Grok reviews only through the
+    # runtime-attested Cursor seat (#9488).
     formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver
   - name: kimi
@@ -111,9 +113,11 @@ endpoints:
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
-    # Harness multi-model seat; not a sealed formal CF identity. Cursor auto is
-    # never a model identity for formal review (model_catalog policy).
-    formal_review_eligible: false
+    # Multi-model harness: formal only for the concrete models the catalog pins
+    # on review_scheduler.endpoints.cursor (grok-4.7 dispatched as grok-4.7-high,
+    # its verdict accepted only from the runtime-reported model; #9488). Cursor
+    # auto, Composer and Cursor-routed Claude are never formal review identities.
+    formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver
   - name: gemini
     aliases: [gemini]

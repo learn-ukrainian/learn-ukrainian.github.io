@@ -3,7 +3,11 @@
 <critical>
 
 **Review admission:** `claude-fable-5` and `grok-4.6` are retired; use
-`claude-fable-5-1` only as last resort. Grok never judges code or infra. DeepSeek is excluded from every dispatch and
+`claude-fable-5-1` only as last resort. Native Grok never judges code or infra. Operator decision
+2026-10-02 (#9488): Grok reviews code and infra only as the Cursor seat `grok-4.7-cursor-fallback`
+(`--agent cursor --model grok-4.7-high`), the Sol-spared last resort below critical risk (it has no
+`critical_review` role), never on a Grok-authored change, and its verdict counts only when the Cursor
+runtime reports the model itself. DeepSeek is excluded from every dispatch and
 review, and Sonnet is excluded from critical security review. Historical
 capability and transport descriptions below confer no routing permission.
 
@@ -48,7 +52,9 @@ The named Astra advisory seat is held by GPT-6.1 Sol. Token prices under
 272K are Sol $2/$10 and Luna $0.10/$0.50 per million input/output tokens.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
-Composer is eligible only with its concrete `composer-2.5` model identity.
+Composer is eligible only with its concrete `composer-2.5` model identity. The Cursor review endpoint is
+formal only for the models it pins (`grok-4.7` today); other third-party non-Anthropic models Cursor
+exposes may be added under the same runtime attestation rules (#9488).
 
 Review-typed dispatches judge an explicitly requested reviewer by the resolver's
 per-candidate eligibility gates; ladder membership is not an allowlist. For the
@@ -179,7 +185,7 @@ or count as a formal review.
 
 **Lane updates (user-reported 2026-07-18):**
 * **grok**: the lane now offers **grok-4.7** (4.6 is retired and refused, including explicit pins), with selectable reasoning effort
-  (`low`/`mid`/`high`) — set effort explicitly per dispatch; code/infra authoring runs `high`; Grok never judges code or infra.
+  (`low`/`mid`/`high`) — set effort explicitly per dispatch; code/infra authoring runs `high`; native Grok never judges code or infra (the Cursor review seat is under *Review admission*).
 * **cursor** (operator 2026-09-22; Auto scope operator decision 2026-09-30, #9274): pass an
   explicit `--model`. `auto` is allowed only for a well-defined coding task — a write-capable
   implementation dispatch with `--owned-path` and a PASS DoR issue card; `delegate.py` refuses it
@@ -439,7 +445,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | agy | false |
   | claude | true |
   | codex | true |
-  | cursor | false |
+  | cursor | true |
   | gemini | false |
   | glm-local | true |
   | grok | true |
@@ -509,7 +515,8 @@ Do not pass Fast, `grok-4.6` or `grok-4.5`; `auto` only for a well-defined codin
 for infra/code implement when the work is not language-lane and not advisor/authority.
 **First pick when fit allows** for mechanical + ordinary infra/code implement; spread still
 required. A review of a Grok author uses an Other Models slug. `cursor:auto` is never
-review-of-record.
+review-of-record. The same `grok-4.7-high` pin is the formal code/infra review seat when the
+resolver selects it (#9488); a bare `grok-4.7` runs the Fast variant, whose verdict is refused.
 DeepSeek is excluded from dispatch and review; retained catalog identities are not routing permission.
 
 **Failure mode this prevents:** concurrent drivers default everything to Codex/Claude while
@@ -553,7 +560,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 
 | Prefer when free / behind | Typical fit | Never / caveats |
 | --- | --- | --- |
-| **cursor** (`--model grok-4.7-high`) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment; first pick for mechanical + ordinary infra/code implement when fit allows. `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card) | not formal CF identity; not language seats; not advisor/authority; `concurrency_limit: 1` |
+| **cursor** (`--model grok-4.7-high`) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment; first pick for mechanical + ordinary infra/code implement when fit allows. `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card) | formal CF identity only as the resolver's `grok-4.7-high` code/infra seat (#9488); not language seats; not advisor/authority; `concurrency_limit: 1` |
 | **deepseek** | No dispatch or review route | Catalog identity retained for historical evidence only |
 | **claude** (Sonnet for well-scoped non-security routine work and polished English deliverables; Opus for security-sensitive code; Opus first, Fable last resort, for Ukrainian curriculum) | hard judgment, CF, architecture briefs | don't burn Fable on queue grind |
 | **agy** (Gemini 3.8 Flash default) | Ukrainian review and well-defined implementation tasks; **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
@@ -683,7 +690,7 @@ sign-off on this section approves them):**
    debugging, long-context), the anchor joins as the outside-pool overlay seat per above.
 
 **Standing constraints (unchanged, restated because they bound the pools):** no Kimi/GLM on
-language judgment (#M-13a) · grok is NEVER a judge seat · GLM-5.3 is LOCAL-ONLY (China
+language judgment (#M-13a) · grok is NEVER a language or content judge seat (code/infra review only via the attested Cursor seat, #9488) · GLM-5.3 is LOCAL-ONLY (China
 egress — no CI, no secrets, no sensitive data).
 
 *Operational notes (not #5933 rulings; separate authority cited):* Gemma is not an advisor
@@ -719,7 +726,7 @@ several models are reachable through more than one. Know both axes before routin
 | --- | --- | --- | --- |
 | **hermes** — REMOVED from this host (operator order 2026-08-16); row kept for history only | (was: SOUL.md persona · `sources` MCP · 16 toolsets · session store) | (was: deepseek · zai/GLM · OpenRouter catalog) | DeepSeek is excluded from dispatch and review. `ab ask-deepseek` is consult-only for non-language work (opencode ACP seat, #6805); Pro is retired |
 | **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside **laguna-s-2.1**, free; m.1 prior-gen fallback) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek (first-party `deepseek/` provider; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` / `ask-deepseek` (consult-only for non-language work; DeepSeek is excluded from dispatch and review; named seats only; generic `ask-opencode` is retired) |
-| **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes, never opencode — the native CLI is the ONLY sanctioned grok route for every seat (interactive, orchestrator, ask, dispatch; never review/judge) as of operator order 2026-08-16 (#6865, retires the 2026-07-27 opencode-for-orchestrator-seats ruling, see Consequences below). `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native `kimi` CLI subscription seat only (models `k3` · `k3-256k` · `k2.7-coding` · `k2.7-coding-highspeed`) — **never OpenRouter** as a Kimi worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` (Kimi: web, UI and backend coding only — `--agent kimi --mode workspace-write --worktree`; no `ask-kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
+| **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes, never opencode — the native CLI is the ONLY sanctioned grok route for every seat (interactive, orchestrator, ask, dispatch; native Grok never reviews or judges, and Grok code/infra review runs only through the attested Cursor seat, #9488) as of operator order 2026-08-16 (#6865, retires the 2026-07-27 opencode-for-orchestrator-seats ruling, see Consequences below). `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native `kimi` CLI subscription seat only (models `k3` · `k3-256k` · `k2.7-coding` · `k2.7-coding-highspeed`) — **never OpenRouter** as a Kimi worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` (Kimi: web, UI and backend coding only — `--agent kimi --mode workspace-write --worktree`; no `ask-kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
@@ -748,7 +755,7 @@ Consequences:
   ruling below):** never Hermes (`grok-hermes`/`grok-tools` stay banned) and **opencode is no
   longer sanctioned for any grok seat, including orchestrator** — "we have grok cli"
   (operator, verbatim). The native `grok` CLI is the ONLY sanctioned route for every grok
-  seat (interactive, orchestrator, ask, dispatch; never review/judge) at `grok-4.7`; Cursor
+  seat (interactive, orchestrator, ask, dispatch; native Grok never reviews or judges) at `grok-4.7`; Cursor
   explicit `grok-4.7` stays the availability fallback only when native is dark. Never
   route grok via OpenRouter model ids (`openrouter/x-ai/*`) — only the first-party `xai/*`
   provider is sub-backed, and as of this order that first-party access is native-CLI-only,
