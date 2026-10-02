@@ -71,7 +71,7 @@ counted in `foreign_build_events`. Admission pins the reviewing family used for 
 Per-output lock files stay in the ignored lock directory and are never unlinked.
 Immutable output conflicts and source/WAL mutation refuse before writing.
 Optional membership is `{"heldout":["source:key"],"replay":[]}`. Keys must resolve;
-conservative unit/locator/card/alias closure must remain disjoint from replay.
+conservative unit/locator/card/alias/paradigm-parent closure must remain disjoint from replay.
 Provenance prose (mint evidence, alias/source-key notes, `matched_by`, `hold`) links only through known
 keys it cites literally, delimited, or inside wholly JSON strings (object keys too); plain prose never
 links or resolves membership. Mid-prose escaped JSON and case/normalisation variants are not recognised.
@@ -86,7 +86,9 @@ root, `admission` and its `denominator`, `counts`, both DB fingerprint maps, `se
 each legacy article and its `metadata`; every registry or register object; the receipt `denominator`. CLI operations
 name every input's role; a first input without `selection` is the selection; a role-less input reads no native key and
 skips nothing. A weak held alias equal to an open object's field name fails closed. Designated residuals, not universal
-protection: lifecycle `state` alone is no marker; raw-row columns never become keys and rows link only through admitted units, so a paradigm moved off its parent's unit stays unlinked.
+protection: lifecycle `state` alone is no marker; raw-row columns never become keys. The one cross-record relation, a
+paradigm's validated `raw_row.entry_id` parent, is a typed source dependency in the closure only, never an alias or
+identity: holding either row holds the other whatever their units, and a held/replay split of the pair is overlap.
 Expected/adjudicated answers are excluded from all inputs even without membership.
 Absent real membership, isolation remains unverified. `--for-evaluation` refuses
 until authenticated operator authority and thresholds have an approved contract.

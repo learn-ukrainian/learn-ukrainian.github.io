@@ -200,8 +200,8 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
         texts = [t for t, *_ in walk(value, decoded, (), at, scan) if isinstance(t, str)]
         return {k for t in texts for k in keys if k in t and re.search(rf"(?<![\w:/#-]){re.escape(k)}(?![\w:/#-])", t)}
     # Closure inventory: identities (card/sense/source-record ids, mint cards/to) and structured keys (aliases, locators,
-    # candidates, creation/unit keys, legacy slugs/aliases, mint endpoints, POS-review anchors) link; PROSE and mint
-    # evidence only via cited known keys. Every object that forms a group is an owner.
+    # candidates, creation/unit keys, legacy slugs/aliases, mint endpoints, POS-review anchors, a paradigm's admitted
+    # parent) link; PROSE and mint evidence only via cited known keys. Every object that forms a group is an owner.
     for value, decoded, *_ in objects:
         if not isinstance(value, dict):
             continue
@@ -224,6 +224,7 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
                 group.add("atlas0:slug:" + value["atlas_slug"])
         if "locator" in value and "raw_row" in value:
             group = {value["locator"]} | {a["key"] for a in aliases(value, records)}
+            group.add(paradigm_parent(value, records).get("locator"))  # Typed dependency: closure only, never an alias.
         if "metadata" in value and "aliases" in value:
             group = {"atlas0:slug:" + value["metadata"]["slug"], (value.get("pos_review") or {}).get("anchor_locator")}
             group |= {a["alias"] for a in value["aliases"]}
@@ -258,6 +259,16 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
     return "checked"
 
 
+def paradigm_parent(record, records):  # The one cross-record relation: a ULIF paradigm's single admitted parent row.
+    if (record["source_id"], record["table"]) != ("ulif", "ulif_dictua_sections"):
+        return {}
+    require(type(record["raw_row"]["entry_id"]) is int, "Invalid paradigm parent locator")
+    parents = [r for r in records if r["source_id"] == "ulif" and
+               r["table"] == "ulif_dictua_entries" and r["raw_row"]["id"] == record["raw_row"]["entry_id"]]
+    require(len(parents) == 1, "Paradigm requires exactly one admitted parent")
+    return parents[0]
+
+
 def intrinsic(record, records):
     raw, source, table = record["raw_row"], record["source_id"], record["table"]
     if (source, table) == ("ulif", "ulif_dictua_entries"):
@@ -289,11 +300,8 @@ def intrinsic(record, records):
             type(payload["source_order"]) is int and payload["source_order"] >= 0 and
             type(raw["source_order"]) is int and raw["source_order"] == payload["source_order"] and
             raw["sense_or_group_id"] == payload["sense_or_group_id"], "Invalid paradigm discriminator")
-    require(type(raw["entry_id"]) is int, "Invalid paradigm parent locator")
-    parents = [r["raw_row"] for r in records if r["source_id"] == "ulif" and
-               r["table"] == "ulif_dictua_entries" and r["raw_row"]["id"] == raw["entry_id"]]
-    require(len(parents) == 1, "Paradigm requires exactly one admitted parent")
-    parent = {k: parents[0][k] for k in ("content_sha256", "normalized_query", "canonical_headword",
+    parent_row = paradigm_parent(record, records)["raw_row"]
+    parent = {k: parent_row[k] for k in ("content_sha256", "normalized_query", "canonical_headword",
                                       "grammatical_label", "homonym_index")}
     require(hex_digest(parent["content_sha256"]) and nonempty(parent["normalized_query"]) and
             all(isinstance(parent[k], str) for k in ("canonical_headword", "grammatical_label")) and

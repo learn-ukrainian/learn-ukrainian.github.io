@@ -878,3 +878,78 @@ def test_cli_only_validator_fixed_field_sets_mask_keys(pilot, case, held, capsys
     assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == held
     assert capsys.readouterr().err.count("its enclosing context") == 2 * held
     assert pilot["registry"].read_bytes() == before
+
+
+PARENT, CHILD = "ulif:ulif_dictua_entries:id:76793", "ulif:ulif_dictua_sections:id:96933"  # The one real admitted pair.
+OWNER, OVERLAP = "a marked owner's closure or text", "Heldout/replay overlap after conservative alias closure"
+B03 = {  # case: (child moved from unit 141 to source-only unit 35, marked row, marker cites parent, held, replay,
+         # refusal reason or None)
+    "baseline": (False, None, False, PARENT, None, None), "original_unit": (False, CHILD, False, PARENT, None, OWNER),
+    "moved": (True, CHILD, False, PARENT, None, OWNER), "moved_plain": (True, None, False, PARENT, None, None),
+    "moved_direct": (True, CHILD, True, PARENT, None, OWNER), "reverse": (True, PARENT, False, CHILD, None, OWNER),
+    "split_parent": (True, None, False, PARENT, CHILD, OVERLAP),
+    "split_child": (True, None, False, CHILD, PARENT, OVERLAP)}
+
+
+@pytest.mark.parametrize("case", B03)
+def test_b03_real_paradigm_parent_is_a_closure_dependency(tmp_path, case, capsys):
+    """Regression only: real rows conserved; admission fingerprints and build ids are rebound, never re-admitted."""
+    moved, marked, direct, held, replay, reason = B03[case]
+    committed = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json"]
+    before = [p.read_bytes() for p in committed]
+    manifest = json.loads(before[0])
+    units = manifest["selection"]["units"]
+    assert units[141]["anchor_locator"] == PARENT and CHILD in units[141]["source_record_keys"]
+    assert units[35]["atlas_slug"] is None and CHILD not in units[35]["source_record_keys"]
+    if moved:
+        units[141]["source_record_keys"].remove(CHILD)
+        units[35]["source_record_keys"].append(CHILD)
+    for record in manifest["selection"]["source_records"]:
+        if record["locator"] == marked:
+            record["review"] = dict(decision=dict(kind="merge"), **({"reference": PARENT} if direct else {}))
+    build = "pilot@sha256:" + manifest["manifest_sha256"]
+    rehash(manifest)
+    paths = [tmp_path / name for name in ("pilot.json", "registry.json", "membership.json")]
+    paths[0].write_text(json.dumps(manifest, ensure_ascii=False))  # Insertion order keeps the admitted selection bytes.
+    paths[1].write_text(before[1].decode().replace(build, "pilot@sha256:" + manifest["manifest_sha256"]))
+    save(paths[2], dict(heldout=[held], replay=[replay] if replay else []))
+    assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
+                            "--heldout-manifest", str(paths[2])]) == (reason is not None)
+    output = capsys.readouterr()
+    assert reason in output.err if reason else '"heldout_isolation": "checked"' in output.out
+    assert before == [p.read_bytes() for p in committed]
+
+
+@pytest.mark.parametrize("op", ["freeze", "fresh", "replay", "verify"])
+@pytest.mark.parametrize("marked", [150, -1])  # The moved paradigm child; a non-paradigm row with an equal entry_id.
+def test_moved_paradigm_child_refused_in_every_operation(pilot, op, marked, capsys):
+    records, units, member = pilot["candidate"]["source_records"], pilot["candidate"]["units"], pilot["root"] / "m.json"
+    with sqlite3.connect(pilot["paths"]["sources"]) as db:
+        for number, query in ((140, "Other"), (141, "Third")):  # Own aliases: parent and destination unit unshared.
+            records[number] = capture("ulif", "ulif_dictua_entries", dict(records[number]["raw_row"],
+                                      normalized_query=query, content_sha256=sha(query)))
+            db.execute("UPDATE ulif_dictua_entries SET normalized_query=?, content_sha256=? WHERE id=?",
+                       (query, sha(query), number))
+        db.execute("UPDATE ulif_dictua_sections SET entry_id=140 WHERE id=1000")
+        db.execute("CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, entry_id INTEGER)")
+        db.execute("INSERT INTO frazeolohichnyi VALUES (7, 'English phrase', 140)")
+    records[150] = capture("ulif", "ulif_dictua_sections", dict(records[150]["raw_row"], entry_id=140))
+    records.append(capture("frazeolohichnyi", "frazeolohichnyi", dict(id=7, word="English phrase", entry_id=140)))
+    units[0]["source_record_keys"].remove(records[150]["locator"])
+    units[141]["source_record_keys"].append(records[150]["locator"])  # Moved off its parent's unit 140.
+    units[142]["source_record_keys"].append(records[-1]["locator"])
+    pilot["candidate"]["denominator"]["source_records"] += 1
+    records[marked]["review"] = dict(decision=dict(kind="merge"))
+    pilot["admit"]()
+    save(member, dict(heldout=["ulif:ulif_dictua_entries:id:140"], replay=[]))
+    held = marked == 150
+    if op == "freeze":
+        assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == held
+        assert pilot["manifest"].exists() is not held
+    else:
+        assert pilot["operation"]("freeze") == 0 and (op == "fresh" or pilot["operation"]("allocate") == 0)
+        before = pilot["registry"].read_bytes() if op != "fresh" else None
+        assert pilot["operation"]("verify" if op == "verify" else "allocate", "--heldout-manifest", str(member)) == held
+        assert pilot["registry"].exists() is not (held and op == "fresh")
+        assert op == "fresh" or pilot["registry"].read_bytes() == before
+    assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches a marked owner") == held
