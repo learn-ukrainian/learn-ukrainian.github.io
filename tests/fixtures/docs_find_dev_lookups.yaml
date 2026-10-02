@@ -54,6 +54,35 @@ lookups:
      expect: [docs/resources/ukrainianlessons/blog_db.json, docs/resources/ulp-article-mappings.yaml,
               docs/resources/ukrainianlessons/MAPPING_REPORT.md],
      verify: [{path: docs/resources/ulp-article-mappings.yaml, contains: ukrainianlessons}]}
+  # Several sibling files of one pattern under one directory, named in the question by a word that the
+  # path holds in another inflection or derivation (translated / translations, mapped / MAPPING,
+  # decolonizing / decolonization, hallucinated / hallucinations). The path is often their only
+  # evidence (data files outside the readable text), so a word that no longer meets its path loses
+  # them whole. Round d of #9412 lost all six (none within 200) where round 1 held them.
+  - {id: R05, question: 'Where are the batches of translated words?', kind: resource, query: translated word batches,
+     expect: [registry/translations/batch-aa-translations.json, registry/translations/batch-ab-translations.json,
+              registry/translations/gemini-batch-1-translations.json],
+     verify: [{path: registry/translations/batch-aa-translations.json, contains: '"ава": "Ava"'}]}
+  - {id: R06, question: 'Where are the reports on how the Ukrainian Lessons articles were mapped?', kind: resource, query: ukrainian lessons articles mapped reports,
+     expect: [docs/resources/ukrainianlessons/MAPPING_REPORT.md, docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md,
+              docs/resources/ukrainianlessons/MAPPING_METHODOLOGY.md],
+     verify: [{path: docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, contains: 'mapping of Ukrainian Lessons content'}]}
+  - {id: R07, question: 'Where are the word batches waiting to be translated?', kind: resource, query: word batches to be translated,
+     expect: [registry/translations/input/batch-aa, registry/translations/input/batch-ab, registry/translations/input/batch-ac],
+     verify: [{path: registry/translations/input/batch-aa, contains: айвазовське}]}
+  - {id: R08, question: 'Where are the reviews of the decolonizing lexicon cases?', kind: resource, query: decolonizing lexicon case reviews,
+     expect: [registry/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json,
+              registry/projects/open_model_data/components/decolonization/reviews/decol_lex_002.review.json,
+              registry/projects/open_model_data/components/decolonization/reviews/decol_lex_003.review.json],
+     verify: [{path: registry/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json, contains: '"case_id": "decol_lex_001"'}]}
+  - {id: R09, question: 'Where are the summaries of how Ukrainian Lessons articles were mapped automatically?', kind: resource, query: ukrainian lessons automated mapping summary,
+     expect: [docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, docs/resources/ukrainianlessons/MAPPING_REPORT.md,
+              docs/resources/ukrainianlessons/MAPPING_METHODOLOGY.md],
+     verify: [{path: docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, contains: 'Automated Mapping - Final Summary'}]}
+  - {id: R10, question: 'Where are the dictionary pages Gemini hallucinated during OCR, kept as samples?', kind: resource, query: gemini ocr hallucinated pages,
+     expect: [tests/fixtures/etymology/gemini-hallucinations/vol3_p0233.md, tests/fixtures/etymology/gemini-hallucinations/vol3_p0379.md,
+              tests/fixtures/etymology/gemini-hallucinations/vol4_p0530.md],
+     verify: [{path: tests/fixtures/etymology/gemini-hallucinations/README.md, contains: 'quarantine samples containing various hallucination patterns'}]}
 
   # ---------------------------------------------------------------- documents
   - {id: L18, question: 'How do I rebuild the teacher deck?', kind: doc, query: teacher deck rebuild,
