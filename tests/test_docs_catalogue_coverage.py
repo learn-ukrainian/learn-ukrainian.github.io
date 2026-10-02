@@ -159,11 +159,23 @@ def test_the_motivating_lookup_ranks_the_live_list_above_its_backup():
 
 
 def test_the_route_serves_the_real_tree_ungated(monkeypatch):
+    # The router calls find() with the library's default budget; this test measures the answer, not
+    # latency, so the real search (not a stub) runs here under the same explicit budget as the rest.
+    searched = []
+
+    def budgeted(*args, **kwargs):
+        searched.append(find(*args, **kwargs, budget_seconds=SEARCH_BUDGET_SECONDS))
+        return searched[-1]
+
+    monkeypatch.setattr(find_module, 'find', budgeted)
     monkeypatch.setattr(api_main.app.state, 'ctx', api_main.app.state.ctx.with_roots(live_repo_root=REPO))
     client = TestClient(api_main.app, raise_server_exceptions=False)
     response = client.get('/api/knowledge/find', params={'q': 'trusted sources', 'limit': 5})
     assert response.status_code == 200
-    assert 'docs/resources/trusted_sources.yaml' in [h['path'] for h in response.json()['hits']]
+    body = response.json()
+    assert len(searched) == 1  # the route reached the real search through the wrapper
+    assert body['coverage']['incomplete'] is False, body['coverage']
+    assert 'docs/resources/trusted_sources.yaml' in [h['path'] for h in body['hits']]
 
 
 # A document that says in its own opening lines that it is superseded, and links the document that
