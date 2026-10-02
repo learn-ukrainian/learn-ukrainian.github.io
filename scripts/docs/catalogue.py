@@ -400,6 +400,7 @@ class Report:
     data_stores: int = 0
     schema_ok: bool = False
     searchable_entries: set[str] = field(default_factory=set)  # families whose bodies may be read
+    private_entries: set[str] = field(default_factory=set)  # families that own privacy-excluded bodies
     store_literals: dict[str, list[str]] | None = None  # set by repository_check
     store_files_scanned: int = 0  # text files under scripts/ the store scan read
     markers_unverifiable: int = 0  # superseded Markdown overrides the privacy gate kept unread
@@ -586,6 +587,7 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
     for path, eid in owner_of.items():
         if is_excluded(path):
             excluded_owned[eid].append(path)
+    report.private_entries = set(excluded_owned)
     for eid, paths in sorted(excluded_owned.items()):
         if by_id[eid]['content_searchable']:
             report.errors.append(f'{shown(eid)}: owns {len(paths)} inventory-excluded path(s) such as {paths[0]!r}, '
@@ -741,14 +743,16 @@ def body_readable(report: Report, path: str) -> bool:
 
     True only for a path that resolves to a family, is not privacy-excluded (``is_excluded``)
     and has no control character, and that either belongs to a content-searchable family or
-    is a directory note (``is_directory_note``): a family that is not content-searchable
-    because it owns private bodies still has its README read, the record of what those
-    bodies are. Everything else, including unresolved paths, stays unread.
+    is the directory note (``is_directory_note``) of a family that owns private bodies: the
+    privacy exclusion keeps those bodies unread, while the README that says what they are
+    is read. A family made unsearchable for any other reason stays wholly unread, as does
+    every unresolved path.
     ``read_heads`` is the only body reader and applies this gate itself, so a
     scanner cannot bypass it.
     """
     owner = report.resolved.get(path)
-    return (owner is not None and (owner[0] in report.searchable_entries or is_directory_note(path))
+    return (owner is not None and (owner[0] in report.searchable_entries
+                                   or (owner[0] in report.private_entries and is_directory_note(path)))
             and not is_excluded(path) and not CONTROL_CHARS.search(path))
 
 

@@ -924,7 +924,9 @@ def test_the_code_search_never_reads_a_private_path(code_repo, monkeypatch):
 
 def test_a_definition_and_its_docstring_are_one_unit(code_repo):
     hit = hit_for(find('dispatch anchor', repo=code_repo), 'scripts/checks/verdict.py')
-    assert hit['matched'] == ['anchor', 'dispatch'] and hit['line'] == 10
+    # The unit is the definition's span; its excerpt is the definition line.
+    assert hit['matched'] == ['anchor', 'dispatch'] and (hit['line'], hit['excerpt']) == (
+        9, 'def _containment_anchor(agent):')
 
 
 def test_a_quoted_typed_code_is_an_identifier(code_repo):
@@ -1184,3 +1186,171 @@ def test_the_catalogue_and_its_generated_map_are_no_second_record(history_repo):
     echoes = find_module.catalogue_echoes(state)
     assert {'docs/knowledge/catalogue.yaml', 'docs/README.md'} <= echoes
     assert 'docs/decisions/INDEX.md' not in echoes
+
+
+# ------------------------------------------------------------------ private directories, abbreviations, function spans
+
+PRIVATE_NOTE = 'docs/guide/sub/private/README.md'
+
+
+@pytest.fixture(scope='module')
+def note_repo(tmp_path_factory):
+    root = make_repo(tmp_path_factory.mktemp('find-note') / 'repo')
+    (root / PRIVATE_NOTE).write_text('# Private notes\nThese files are compatibility routes, no longer live state.\n',
+                                     encoding='utf-8')
+    git(root, 'add', '.')
+    return root
+
+
+def test_a_private_directory_note_is_searched_and_its_bodies_never_are(note_repo, monkeypatch):
+    find_module._STATE_CACHE.clear()
+    calls = recorded_greps(monkeypatch)
+    note = find('compatibility routes live state', repo=note_repo)
+    assert paths_of(note)[0] == PRIVATE_NOTE and note['hits'][0]['match'] == 'content'
+    body = find('private sentinel hostilename', repo=note_repo, limit=50)
+    assert PRIVATE not in paths_of(body)
+    assert all('sentinel' not in (hit['excerpt'] or '') for hit in body['hits'])
+    text_calls = [c for c in calls if ':(literal)docs' in c]
+    assert text_calls and all(f':(exclude,literal){PRIVATE}' in c for c in text_calls)
+    assert not any(f':(literal){PRIVATE}' in c for c in calls)
+
+
+def test_a_question_naming_a_private_file_is_answered_by_its_directory_note(note_repo):
+    result = find(f'Is {PRIVATE} still live?', repo=note_repo)
+    # The catalogue's family hits come first ("guide" is the fixture family's keyword); then the note.
+    found = [hit['path'] for hit in result['hits'] if hit['match'] not in ('entrypoint', 'family')]
+    assert found[0] == PRIVATE_NOTE and PRIVATE not in paths_of(result)
+    state = find_module.load_state(note_repo)
+    assert find_module.private_note(state, PRIVATE) == PRIVATE_NOTE
+    assert find_module.private_note(state, 'docs/guide/index.md') is None  # not a private path
+
+
+def test_a_private_file_is_never_spoken_for_by_a_note_above_its_directory(repo):
+    # docs/guide/index.md sits above the private directory and does not know its files.
+    state = find_module.load_state(repo)
+    assert find_module.private_note(state, PRIVATE) is None
+    assert 'docs/guide/index.md' not in paths_of(find('secret', repo=repo))
+
+
+@pytest.mark.parametrize('line, pairs', [
+    ('**Definition of Ready (DoR):** may start only when', [('dor', ('definition', 'of', 'ready'))]),
+    ('Do not confuse it with the Definition of Done (DoD).', [('dod', ('definition', 'of', 'done'))]),
+    ('Independent cross-family (CF) formal review', [('cf', ('cross', 'family'))]),
+    ('CF (cross-family) review is mandatory', [('cf', ('cross', 'family'))]),
+    ('Formal Code Review (CF) snapshots', []),  # the initials do not spell CF
+    ('see the issue (TBD) later', []),
+    ('the Model Context Protocol (MCP) server', [('mcp', ('model', 'context', 'protocol'))]),
+])
+def test_abbreviations_are_the_pairs_whose_initials_spell_them(line, pairs):
+    assert find_module.defined_pairs(line) == pairs
+
+
+def test_abbreviations_meet_their_defined_words_both_ways():
+    table = find_module.Abbreviations({'dor': ('definition', 'of', 'ready')})
+    assert table.expand(['run', 'dor', 'preflight']) == ['run', 'dor', 'preflight', 'definition', 'ready']
+    assert table.expand(['definition', 'of', 'ready', 'report']) == ['definition', 'of', 'ready', 'report', 'dor']
+    assert table.expand(['ready', 'definition']) == ['ready', 'definition']  # not the defined run
+    assert table.query_patterns(['where', 'is', 'the', 'definition', 'of', 'ready'], ['definition', 'ready']) == (
+        [], ['dor'])
+    assert table.query_patterns(['dor', 'gate'], ['dor', 'gate']) == (['definit', 'ready'], [])  # stems
+
+
+def test_a_whole_word_pattern_never_selects_a_longer_word():
+    args = find_module._line_args(['gate'], ['x'], None, ['dor'])
+    pattern = args[args.index('-e') + 1]
+    import re
+    assert re.search(pattern, '_run_dor_preflight(', re.IGNORECASE)
+    assert re.search(pattern, 'DoR gate', re.IGNORECASE)
+    assert not re.search(pattern, 'vendor door', re.IGNORECASE)
+
+
+SPAN_FILE = (
+    'def first():\n'
+    '    """One line."""\n'
+    'TEMPLATE = """\n'
+    'def quoted_inside_a_string():\n'
+    '"""\n'
+    'class Holder:\n'
+    '    """Holds things.\n'
+    '\n'
+    '    More about holding.\n'
+    '    """\n'
+    'def bare():\n'
+    '    return 1\n'
+)
+
+
+def test_python_spans_run_from_a_definition_to_the_end_of_its_docstring():
+    lines = [(no, text) for no, text in enumerate(SPAN_FILE.splitlines(), 1)
+             if find_module.DEF_LINE.match(text) or '"""' in text]
+    spans = find_module.python_spans(lines)
+    assert spans == [(1, 2, 'def first():'), (6, 10, 'class Holder:'), (11, 11, 'def bare():')]
+    assert find_module.enclosing_span(spans, 9) == (6, 10, 'class Holder:')
+    assert find_module.enclosing_span(spans, 4) is None  # inside a string constant
+    assert find_module.enclosing_span(spans, 12) is None  # the body after the docstring
+
+
+FILLER = ''.join(f'def helper_{i}(value):\n    """Return value {i} unchanged."""\n    return value\n\n'
+                 for i in range(400))
+TERM_FILES = {
+    'agents_extensions/shared/rules/terms.md': (
+        '# Terms\n\n**Definition of Ready (DoR):** a task may start only when its card is green.\n'),
+    'scripts/gate.py': (
+        '"""Fixture launcher with many helpers."""\n\n\n' + FILLER
+        + 'def _run_dor_preflight(prompt):\n'
+          '    """Look at each issue a brief names.\n\n'
+          '    Refuse before any dispatch side effect.\n'
+          '    """\n'
+          '    return prompt\n'),
+    'scripts/report.py': 'def definition_of_ready_report():\n    return 1\n',
+    'scripts/noise.py': 'def door_vendor():\n    """Open the vendor door before dispatch."""\n',
+}
+
+
+@pytest.fixture(scope='module')
+def term_repo(tmp_path_factory):
+    root = make_repo(tmp_path_factory.mktemp('find-terms') / 'repo')
+    for rel, text in TERM_FILES.items():
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_text(text, encoding='utf-8')
+    git(root, 'add', '.')
+    return root
+
+
+def test_the_abbreviation_table_is_derived_from_the_governing_documents(term_repo):
+    state = find_module.load_state(term_repo)
+    table, failure = find_module.abbreviations(state, time.monotonic() + 30)
+    assert failure is None and table.defined == {'dor': ('definition', 'of', 'ready')}
+
+
+def test_a_defined_term_finds_the_function_that_uses_its_abbreviation_in_a_large_file(term_repo):
+    result = find('Where is the definition of ready checked before a dispatch?', repo=term_repo)
+    first = result['hits'][0]
+    assert (first['path'], first['match'], first['excerpt']) == (
+        'scripts/gate.py', 'symbol', 'def _run_dor_preflight(prompt):')
+    assert {'definition', 'ready', 'dispatch'} <= set(first['matched'])
+    assert 'scripts/noise.py' not in paths_of(result)[:1]
+
+
+def test_a_typed_abbreviation_finds_an_identifier_spelled_out(term_repo):
+    result = find('DoR report', repo=term_repo)
+    first = result['hits'][0]
+    assert first['path'] == 'scripts/report.py' and first['matched'] == ['dor', 'report']
+
+
+def test_a_family_keyword_naming_one_entry_point_credits_that_entry_point_only(tmp_path):
+    root = make_repo(tmp_path / 'repo')
+    for rel in ('docs/guide/storage-layout.md', 'docs/guide/ci-gate.md'):
+        (root / rel).write_text('# Runbook\nSteps.\n', encoding='utf-8')
+    data = fixture_catalogue()
+    guide = next(e for e in data['entries'] if e['id'] == 'guide')
+    guide['keywords'] = ['runbook', 'storage layout', 'ci gate']
+    guide['entrypoints'] = [{'topic': 'storage layout: bulk sources and disks', 'path': 'docs/guide/storage-layout.md'},
+                            {'topic': 'CI gate', 'path': 'docs/guide/ci-gate.md'}]
+    write_catalogue(root, data)
+    git(root, 'add', '.')
+    state = find_module.load_state(root)
+    candidates: dict = {}
+    find_module._catalogue_evidence(state, ['storage', 'runbook'], None, candidates)
+    assert candidates['docs/guide/storage-layout.md'].catalogue_terms == {'storage', 'runbook'}
+    assert candidates['docs/guide/ci-gate.md'].catalogue_terms == {'runbook'}  # a family-wide keyword only

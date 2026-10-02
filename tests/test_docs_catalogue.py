@@ -745,6 +745,45 @@ def test_body_gate_fails_closed():
     assert body_readable(check(base()), 'docs/guide/a.md')
 
 
+@pytest.mark.parametrize('path, excluded', [
+    ('docs/session-state/current.claude.md', True),
+    ('docs/session-state/codex-orchestrator-handoff.md', True),
+    ('docs/x/private/secret.md', True),
+    ('docs/x/private/README.yaml', True),  # a data file named README is no prose note
+    ('docs/session-state/README.md', False),
+    ('docs/session-state/README', False),
+    ('docs/x/private/index.uk.md', False),
+    ('docs/guide/a.md', False),
+])
+def test_the_privacy_exclusion_covers_bodies_not_the_directory_note(path, excluded):
+    assert catalogue_module.is_excluded(path) is excluded
+
+
+def test_a_private_familys_directory_note_is_read_and_its_bodies_never_are():
+    files = [*FILES, 'docs/session-state/README.md', 'docs/session-state/current.claude.md',
+             'docs/guide/notes/README.md', 'docs/guide/notes/n.md']
+    data = base()
+    data['entries'] += [family('session-routers', ['docs/session-state/**'], content_searchable=False),
+                        family('guide-notes', ['docs/guide/notes/**'], content_searchable=False)]
+    report = check(data, files)
+    assert report.ok, report.errors
+    assert report.private_entries == {'session-routers'}
+    assert body_readable(report, 'docs/session-state/README.md')
+    assert not body_readable(report, 'docs/session-state/current.claude.md')
+    # A family made unsearchable for another reason (it owns no private body) stays wholly unread.
+    assert not body_readable(report, 'docs/guide/notes/README.md')
+    assert not body_readable(report, 'docs/guide/notes/n.md')
+
+
+def test_a_family_owning_only_a_directory_note_may_be_searchable():
+    files = [*FILES, 'docs/session-state/README.md']
+    data = base()
+    data['entries'].append(family('session-note', ['docs/session-state/README.md']))
+    report = check(data, files)
+    assert report.ok, report.errors
+    assert report.private_entries == set() and body_readable(report, 'docs/session-state/README.md')
+
+
 def test_only_the_gated_reader_reads_blob_bodies():
     tree = ast.parse(Path(catalogue_module.__file__).read_text(encoding='utf-8'))
     callers = [fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)

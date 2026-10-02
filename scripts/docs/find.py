@@ -1185,7 +1185,10 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
     in a family's keywords or id (and, for one entry point, its topic) count at CATALOGUE_WEIGHT for
     each of its ``authority_files``; words in its purpose or notes count as text. A data store has
     no tracked file, so its store becomes a candidate of its own (rendered as a data_store hit).
-    Every entry point, README or index that speaks for a family is marked ``authority``.
+    A keyword that names one entry point's topic (its words are among that topic's or path's
+    words) speaks for that entry point only, so a family's runbook keyword "storage topology"
+    is not credited to its CI-gate runbook. Every entry point, README or index that speaks for
+    a family is marked ``authority``.
     """
     if state.catalogue is None:
         return
@@ -1193,10 +1196,20 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
     for entry in state.catalogue['entries']:
         if family is not None and entry['id'] != family:
             continue
-        keys = [words(k) for k in entry.get('keywords', [])] + [words(entry['id'])]
-        keys += [words(s) for s in entry.get('store', [])]
+        topics = {cat.strip_fragment(e['path']): words(e['topic']) for e in entry.get('entrypoints', [])}
+        owned: dict[str, set[str]] = {}  # entry point -> query words of the keywords that name its topic
+        keys = [words(entry['id'])] + [words(s) for s in entry.get('store', [])]
+        for keyword in map(words, entry.get('keywords', [])):
+            # A data store speaks through its store: every keyword is its own.
+            named = [p for p, topic in topics.items() if entry['kind'] != 'data_store'
+                     and keyword and set(keyword) <= set(topic) | set(words(p))]
+            for path in named:
+                owned.setdefault(path, set()).update(_prefix_hits(terms, keyword))
+            if not named:
+                keys.append(keyword)
         strong = set().union(*(_prefix_hits(terms, k) for k in keys))
-        weak = _prefix_hits(terms, words(entry.get('purpose', '')) + words(entry.get('notes', ''))) - strong
+        weak = (_prefix_hits(terms, words(entry.get('purpose', '')) + words(entry.get('notes', '')))
+                - strong - set().union(*owned.values()))
         if entry['kind'] == 'data_store':
             if strong or weak:
                 store = entry['store'][0]
@@ -1207,11 +1220,10 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
                 candidate.defined |= {u for u in units if _contains_words(words(store), words(u))}
                 candidate.store, candidate.authority = entry, True
             continue
-        topics = {cat.strip_fragment(e['path']): words(e['topic']) for e in entry.get('entrypoints', [])}
         for path in authorities.get(entry['id'], []):
             if path not in state.files or cat.is_excluded(path) or cat.CONTROL_CHARS.search(path):
                 continue
-            own = strong | _prefix_hits(terms, topics.get(path, []))
+            own = strong | owned.get(path, set()) | _prefix_hits(terms, topics.get(path, []))
             if own or weak or path in candidates:
                 candidate = candidates.setdefault(path, Candidate(path))
                 candidate.catalogue_terms |= own

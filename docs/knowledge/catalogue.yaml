@@ -410,7 +410,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     entrypoints:
-      - {topic: storage topology, path: docs/runbooks/storage-topology.md}
+      - {topic: 'storage topology: layout of bulk raw sources, active SQLite, the local working set, the Linux data volume and mirrors', path: docs/runbooks/storage-topology.md}
       - {topic: worktree cleanup, path: docs/runbooks/worktree-cleanup.md}
       - {topic: CI gate, path: docs/runbooks/ci-gate.md}
       - {topic: agent seat onboarding, path: docs/runbooks/agent-seat-onboarding.md}

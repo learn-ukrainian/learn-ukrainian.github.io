@@ -13,6 +13,8 @@
 Failure messages name the exact path and print a ready-to-paste stub
 (``python -m scripts.docs.catalogue check --suggest``).
 """
+import posixpath
+import re
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -23,6 +25,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 from scripts.docs import catalogue as cat
+from scripts.docs import find as find_module
 from scripts.docs.find import find
 
 # Reads the whole tracked denominator and scripts/ code, so the module is registered in
@@ -181,3 +184,51 @@ def test_the_route_serves_the_real_tree_ungated(monkeypatch):
     response = client.get('/api/knowledge/find', params={'q': 'trusted sources', 'limit': 5})
     assert response.status_code == 200
     assert 'docs/resources/trusted_sources.yaml' in [h['path'] for h in response.json()['hits']]
+
+
+# A document that says in its own opening lines that it is superseded, and links the document that
+# superseded it, carries that record in the catalogue, so every hit for it is followed by the replacement.
+BANNER = re.compile(r'superseded by', re.IGNORECASE)
+LINK = re.compile(r'\]\(([^)\s#]+)')
+
+
+def test_a_banner_naming_its_replacement_has_a_supersession_record(checked):
+    report, _ = checked
+    state = find_module.load_state(REPO)
+    docs = sorted(p for p in report.resolved if p.endswith('.md') and cat.body_readable(report, p))
+    heads, _ = cat.read_heads(REPO, report, docs, lines=15)
+    missing, named = [], 0
+    for path in docs:
+        for line in heads.get(path, '').splitlines():
+            if not (found := BANNER.search(line)):
+                continue
+            targets = [posixpath.normpath(posixpath.join(posixpath.dirname(path), link))
+                       for link in LINK.findall(line[found.start():])]
+            target = next((t for t in targets if t in report.resolved or t in state.files), None)
+            if target:
+                named += 1
+                family, lifecycle = state.lifecycle_of(path)
+                recorded = state.superseded_by(path, family, lifecycle)
+                if recorded is None or cat.strip_fragment(recorded) != target:
+                    missing.append(f'{path}: its banner names {target}; the catalogue records {recorded!r}')
+                break
+    assert named >= 10, 'the banner scan found almost nothing; it is broken'  # 15 on 2026-10-02
+    assert missing == [], '\n'.join(missing)
+
+
+def test_a_stale_plan_named_by_path_is_followed_by_what_replaced_it():
+    result = find('Is docs/MASTER-PLAN.md still the current plan?', repo=REPO)
+    paths = [hit['path'] for hit in result['hits']]
+    at = paths.index('docs/MASTER-PLAN.md')
+    assert at < 5 and result['hits'][at]['status'] == 'superseded'
+    replacement = result['hits'][at + 1]
+    assert (replacement['path'], replacement['match']) == ('docs/WORKSTREAMS.md', 'replacement')
+
+
+def test_a_question_naming_a_session_router_is_answered_by_the_directory_readme(checked):
+    report, _ = checked
+    result = find('Is docs/session-state/current.claude.md still the live state?', repo=REPO)
+    paths = [hit['path'] for hit in result['hits']]
+    assert 'docs/session-state/README.md' in paths[:3]
+    bodies = [p for p in report.resolved if p.startswith('docs/session-state/') and cat.is_excluded(p)]
+    assert bodies and not set(bodies) & set(paths)
