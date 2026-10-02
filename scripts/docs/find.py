@@ -1,7 +1,7 @@
 """One query surface for documents, data stores and resources (#9412).
 
-``find(query)`` answers "where is X and is it current?" in one call, from three
-sources read at request time, with no persisted index:
+``find(query)`` answers "where is X, is it current and what replaced it, where is it
+implemented?" in one call, from four sources read at request time, with no persisted index:
 
 1. **Catalogue** (``docs/knowledge/catalogue.yaml``): query words against each
    entry's keywords, id, entry-point topics and paths, store names and purpose.
@@ -14,15 +14,30 @@ sources read at request time, with no persisted index:
    are never protocol or shell text: the search names roots with ``:(literal)``
    pathspecs and drops every unreadable path with ``:(exclude,literal)``; every
    result is checked against the gate again before it is used.
+4. **Code identifiers**: one ``git grep --cached`` over tracked code and configuration
+   files (``code_readable``: CODE_ROOTS and root files, never a privacy-excluded path)
+   whose lines are used only as identifiers - definitions, CLI subcommands and flags,
+   configuration keys and ids, headings, quoted UPPER_SNAKE codes - and file summaries
+   (comment and docstring lines among the first HEADER_LINES), never as prose. It is
+   skipped with ``family`` and when the catalogue is invalid.
+
+Query words: stopwords are dropped; intent words ("current", "replaced", "retired",
+"implemented", ...) are not search terms beside other words, and a status question
+ranks every lifecycle alike. A one-character word beside longer words is matched in
+names, the catalogue and the phrase only (``coverage.name_only_terms``), which is a
+complete search. A token typed as an identifier (``check_russian_shadow``, ``1-02``)
+is also matched as a unit (``compounds``).
 
 Ranking: catalogue matches first; then, by match band (whole phrase in a name,
 whole phrase in text, every word, then the share of the query's rarity-weighted
-words), lifecycle (current, then draft or unclassified, historical, superseded;
-backup-like copies last), and path order. Every hit carries its family, status,
-replacement and the family's query hint. The result states its coverage and
-says ``incomplete`` with a reason when a budget, a failed search worker or a
-one-character word not searched alone cut the search short, so a cutoff is never
-reported as "no source". ``limit`` and ``budget_seconds`` are validated before any
+words), typed identifiers held, lifecycle (current, then draft or unclassified, historical,
+superseded; backup-like copies last), and path order. A word in a path name counts 1,
+in one code identifier unit SYMBOL_WEIGHT, in text 1/2, each times its rarity over
+documents and code together. Every hit carries its family, status, replacement and
+the family's query hint, and every superseded hit is followed by its replacement
+(match ``replacement``). The result states its coverage and says ``incomplete``
+with a reason when a budget or a failed search worker cut the search short, so a
+cutoff is never reported as "no source". ``limit`` and ``budget_seconds`` are validated before any
 search starts (``FindError``, a ValueError).
 
 The CLI is ``python -m scripts.docs.find``; the Monitor API mirrors it at
@@ -31,6 +46,7 @@ The CLI is ``python -m scripts.docs.find``; the Monitor API mirrors it at
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import math
@@ -41,9 +57,10 @@ import threading
 import time
 import unicodedata
 from collections import OrderedDict
+from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from scripts.docs import catalogue as cat
 
@@ -62,6 +79,7 @@ DEFAULT_BUDGET_SECONDS = 10.0
 MAX_BUDGET_SECONDS = 120.0
 GREP_OUTPUT_CAP = 16 * 1024 * 1024
 EXCERPT_OUTPUT_CAP = 32 * 1024 * 1024
+CODE_OUTPUT_CAP = 32 * 1024 * 1024
 LIFECYCLE_RANK = {'active': 0, None: 0, 'draft': 1, 'residual': 1, 'archive': 2, 'superseded': 3}
 BACKUP_RANK = 4
 STATUS_WORDS = {'active': 'current', 'archive': 'historical', 'superseded': 'superseded', 'draft': 'draft',
@@ -73,9 +91,18 @@ STOPWORDS = frozenset({
     'is', 'it', 'its', 'me', 'my', 'of', 'on', 'or', 'our', 'the', 'this', 'that', 'to', 'what', 'when',
     'where', 'which', 'who', 'why', 'with', 'we', 'you', 'still', 'per', 'about', 'has', 'have', 'into',
     'there', 'their', 'they', 'these', 'those', 'was', 'were', 'will', 'would', 'should', 'could', 'not',
-    'no', 'if', 'so', 'than', 'then', 'any', 'all', 'get', 'find', 'look',
+    'no', 'if', 'so', 'than', 'then', 'any', 'all', 'get', 'find', 'look', 'use', 'used', 'using', 'instead',
     'і', 'й', 'та', 'в', 'у', 'на', 'з', 'із', 'до', 'що', 'як', 'де', 'чи', 'це', 'для', 'про',
 })
+# Words that state what a question asks, not what it is about: "is X still current, what replaced
+# it?" (status) and "where is X implemented?" (process). Beside other words they are not search
+# terms (every second document says "replaced" or "implemented"); a status question instead
+# turns off the lifecycle demotion, because the superseded or historical thing is its subject.
+STATUS_INTENT = frozenset({'current', 'currently', 'replaced', 'replace', 'replaces', 'replacement',
+                           'retired', 'retire', 'deprecated', 'superseded', 'supersedes', 'obsolete',
+                           'outdated'})
+PROCESS_INTENT = frozenset({'implemented', 'implement', 'implements', 'implementation', 'computed',
+                            'handled'})
 # Separators between words. Apostrophes stay inside words (Ukrainian п'ять, пʼять).
 SEPARATORS = re.compile(r"[\s_\-./\\:,;()\[\]{}<>\"`|+*?!@#=&%^~$]+")
 
@@ -148,11 +175,60 @@ def clean_query(raw: str) -> str:
     return ' '.join(text.split())[:MAX_QUERY_CHARS].strip()
 
 
-def query_terms(query: str) -> list[str]:
-    """Distinct query words without stopwords (all words when only stopwords remain), at most MAX_TERMS."""
+def query_plan(query: str) -> tuple[list[str], list[str]]:
+    """(search terms, intent words) of a query.
+
+    Terms are the distinct query words without stopwords and, when other words remain, without
+    intent words (STATUS_INTENT, PROCESS_INTENT) outside typed identifiers; at most MAX_TERMS, taken after both filters so
+    a long question keeps its content words. When only stopwords or intent words remain, they
+    are the terms (a query is never emptied).
+    """
     found = list(dict.fromkeys(words(query)))
-    kept = [w for w in found if w not in STOPWORDS]
-    return (kept or found)[:MAX_TERMS]
+    kept = [w for w in found if w not in STOPWORDS] or found
+    # A word inside a typed identifier (retired-model-9) is part of a name, never intent.
+    named = {w for unit in compounds(query) for w in words(unit)}
+    asks = (STATUS_INTENT | PROCESS_INTENT) - named
+    content = [w for w in kept if w not in asks]
+    intent = [w for w in kept if w in asks] if content else []
+    return (content or kept)[:MAX_TERMS], intent
+
+
+def query_terms(query: str) -> list[str]:
+    """The search terms of ``query_plan``."""
+    return query_plan(query)[0]
+
+
+def compounds(text: str) -> list[str]:
+    """The identifier-like tokens of a cleaned query: whitespace-separated tokens that join two or more
+    words with ``_``, ``-``, ``.``, ``/`` or ``:`` (``check_russian_shadow``, ``gpt-6-astra``, ``1-02``,
+    ``atlas.db``), folded, without surrounding punctuation; at most MAX_TERMS, never the whole query.
+
+    A typed identifier is the most specific thing a query can say, so a file holding it as a unit
+    (in its name, a code identifier or its text) ranks ahead of one holding its words apart.
+    """
+    found = []
+    for token in text.split():
+        token = normalise(token.strip('?!,;:\'"`()[]{}<>'))
+        if len(words(token)) > 1 and token != normalise(text) and token not in found:
+            found.append(token)
+    return found[:MAX_TERMS]
+
+
+STEM_SUFFIXES = ('ing', 'ed', 'es', 's')
+MIN_STEM = 4
+
+
+def stem(term: str) -> str:
+    """``term`` without one inflectional suffix (ing, ed, es, s), when at least MIN_STEM letters remain.
+
+    Used only to compare a term with whole words (names, identifiers, catalogue fields), as a
+    prefix: "parsing" meets "parse", "detected" meets "detection", "reaps" meets "reaper".
+    A double ``ss`` keeps its ``s`` (process, class).
+    """
+    for suffix in STEM_SUFFIXES:
+        if term.endswith(suffix) and len(term) - len(suffix) >= MIN_STEM and not term.endswith('ss'):
+            return term[:-len(suffix)]
+    return term
 
 
 def escape_excerpt(text: str) -> str:
@@ -171,7 +247,8 @@ def escape_excerpt(text: str) -> str:
 
 
 def _prefix_hits(terms: list[str], field_words: list[str]) -> set[str]:
-    return {t for t in terms if any(w.startswith(t) for w in field_words)}
+    """The terms that are a prefix of a field word, as typed or as their ``stem``."""
+    return {t for t in terms if any(w.startswith(t) or w.startswith(stem(t)) for w in field_words)}
 
 
 def _contains_words(haystack: list[str], needle: list[str], *, prefix_last: bool = True) -> bool:
@@ -370,17 +447,19 @@ def ere_escape(text: str) -> str:
     return ''.join('\\' + c if c in ERE_SPECIAL else c for c in text)
 
 
-def _line_args(patterns: list[str], pathspecs: list[str], per_file: int) -> list[str]:
+def _line_args(patterns: list[str], pathspecs: list[str], per_file: int | None) -> list[str]:
     """Matching lines for any of ``patterns``, as ONE escaped ERE alternation.
 
     Several ``-e`` patterns with ``-n`` take tens of seconds on a large file (measured:
     31.8 s for two fixed strings on a 20 MB YAML, 0.45 s as one alternation), so line
     reads always use a single pattern. ``-i`` folds ASCII; non-ASCII patterns contribute
-    their explicit case and normalisation forms; byte matching under LC_ALL=C.
+    their explicit case and normalisation forms; byte matching under LC_ALL=C. ``per_file`` caps
+    the lines read per file (None: every matching line).
     """
     forms = [form for pattern in patterns for form in ([pattern] if pattern.isascii() else _variants(pattern))]
     alternation = '|'.join(ere_escape(form) for form in dict.fromkeys(forms))
-    return ['--no-color', '-I', '-E', '-i', '--null', '-n', '-m', str(per_file), '-e', alternation, '--', *pathspecs]
+    cap = [] if per_file is None else ['-m', str(per_file)]
+    return ['--no-color', '-I', '-E', '-i', '--null', '-n', *cap, '-e', alternation, '--', *pathspecs]
 
 
 def _pathspecs(state: State, family: str | None) -> tuple[list[str], set[str]]:
@@ -406,6 +485,9 @@ class Candidate:
     line: int | None = None
     line_text: str | None = None
     line_terms: int = 0  # distinct query words on the best matching line (0 for a one-line dump)
+    symbol_terms: set[str] = field(default_factory=set)  # query words in ONE code identifier or header line
+    compounds: set[str] = field(default_factory=set)  # typed identifiers held as a unit (name, code or text)
+    defined: set[str] = field(default_factory=set)  # those held in the path name or a code identifier
 
     @property
     def in_content(self) -> bool:
@@ -429,7 +511,7 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
     started = time.monotonic()
     deadline = started + budget_seconds
     text = clean_query(query)
-    terms = query_terms(text)
+    terms, intent_words = query_plan(text)
     if not terms:
         raise FindError('empty_query', 'the query has no searchable word')
     repo = cat.toplevel(repo or Path('.'))
@@ -443,26 +525,37 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
     phrase = words(text)
 
     tick = time.monotonic()
+    units = compounds(text)
     family_hits, matched_families = _catalogue_hits(state, terms, phrase, family)
-    candidates = _name_candidates(state, terms, phrase, family)
+    candidates = _name_candidates(state, terms, phrase, family, units)
     timings['names_ms'] = round((time.monotonic() - tick) * 1000)
 
     tick = time.monotonic()
-    df, readable, content_complete = _content_candidates(state, terms, text, phrase, family, candidates, deadline,
-                                                         reasons)
+    with ThreadPoolExecutor(max_workers=1) as code_runner:
+        # Code identifiers are searched beside the text search; never with a --family filter or an
+        # invalid catalogue (which reads no text at all).
+        code = (code_runner.submit(_symbol_scan, state, terms, deadline, units)
+                if family is None and state.catalogue is not None else None)
+        df, readable, content_complete = _content_candidates(state, terms, text, phrase, family, candidates,
+                                                             deadline, reasons, units)
+        scan = code.result() if code is not None else SymbolScan()
+    _merge_symbols(scan, candidates, reasons)
     timings['content_ms'] = round((time.monotonic() - tick) * 1000)
 
-    weights = {t: math.log((len(readable) + 1) / (df.get(t, 0) + 1)) + 1 for t in terms}
+    status_question = any(w in STATUS_INTENT for w in intent_words)
+    # Rarity over everything searched: a word common in code identifiers is not rare because prose lacks it.
+    searched = len(readable) + scan.files
+    weights = {t: math.log((searched + 1) / (df.get(t, 0) + scan.df.get(t, 0) + 1)) + 1 for t in terms}
     seen = {hit['path'] for hit in family_hits if hit.get('path')}
-    ranked = sorted((c for c in candidates.values() if c.path not in seen),
-                    key=lambda c: _rank_key(state, c, terms, weights))
+    rank_key = functools.partial(_rank_key, state, terms=terms, weights=weights, status_question=status_question)
+    ranked = sorted((c for c in candidates.values() if c.path not in seen), key=rank_key)
     pool = ranked[:max(RERANK_POOL, 3 * limit)]
     tick = time.monotonic()
     excerpts_complete = _read_lines(state, [c for c in pool if c.in_content], terms, text, phrase, deadline)
     timings['excerpts_ms'] = round((time.monotonic() - tick) * 1000)
-    pool.sort(key=lambda c: _rank_key(state, c, terms, weights))
-    content_hits = [_candidate_hit(state, c, terms, phrase) for c in pool[:max(0, limit - len(family_hits))]]
-    hits = (family_hits + content_hits)[:limit]
+    pool.sort(key=rank_key)
+    content_hits = [_candidate_hit(state, c, terms, phrase) for c in pool[:limit]]
+    hits = _with_replacements(state, family_hits + content_hits, terms)[:limit]
     timings['total_ms'] = round((time.monotonic() - started) * 1000)
     for rank, hit in enumerate(hits, 1):
         hit['rank'] = rank
@@ -470,9 +563,10 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
     incomplete = bool(reasons) or not content_complete
     outcome = 'found' if hits else ('incomplete' if incomplete else 'no_match')
     return {
-        'query': text, 'terms': terms, 'outcome': outcome, 'hits': hits,
+        'query': text, 'terms': terms, 'intent_words': intent_words, 'outcome': outcome, 'hits': hits,
         'candidates': len(candidates) + len(family_hits), 'families_matched': matched_families,
-        'coverage': _coverage(state, family, readable, incomplete, reasons, excerpts_complete),
+        'coverage': {**_coverage(state, family, readable, incomplete, reasons, excerpts_complete),
+                     'code_files_searched': scan.files, 'name_only_terms': _name_only_terms(terms)},
         'timings_ms': timings,
     }
 
@@ -515,22 +609,30 @@ def _path_hit(state: State, path: str, match: str, **extra) -> dict:
     return hit
 
 
-def _lifecycle_rank(state: State, path: str) -> int:
+def _lifecycle_rank(state: State, path: str, status_question: bool = False) -> int:
+    """Current first, then draft or unclassified, historical, superseded; backup-like copies last.
+
+    For a status question every lifecycle ranks alike (the superseded or historical thing is
+    what is asked about, and its replacement follows it); backup-like copies stay last.
+    """
     if is_backup_like(path):
         return BACKUP_RANK
+    if status_question:
+        return 0
     return LIFECYCLE_RANK.get(state.lifecycle_of(path)[1], 1)
 
 
 def relevance(c: Candidate, terms: list[str], weights: dict[str, float]) -> float:
     """Field-weighted relevance in [0, 2]: a word in the path name counts twice a word in the text.
 
-    Each query word contributes its rarity weight (idf over the searched files) times 1
-    in the name or 1/2 in the text; the sum is divided by the total weight. The whole
-    phrase adds 1 in the name or 1/2 in the text (1/4 when its only line is a one-line
-    data dump longer than LONG_LINE characters).
+    Each query word contributes its rarity weight (idf over the searched documents and code
+    files) times 1 in the name, SYMBOL_WEIGHT in one code identifier line, or 1/2 in the text;
+    the sum is divided by the total weight. The whole phrase adds 1 in the name or 1/2 in the
+    text (1/4 when its only line is a one-line data dump longer than LONG_LINE characters).
     """
     total = sum(weights[t] for t in terms)
-    score = sum(weights[t] * (1.0 if t in c.name_terms else 0.5 if t in c.content_terms else 0.0) for t in terms)
+    score = sum(weights[t] * (1.0 if t in c.name_terms else SYMBOL_WEIGHT if t in c.symbol_terms
+                              else 0.5 if t in c.content_terms else 0.0) for t in terms)
     score /= total
     if len(terms) > 1:
         if c.phrase_in_name:
@@ -540,37 +642,72 @@ def relevance(c: Candidate, terms: list[str], weights: dict[str, float]) -> floa
     return score
 
 
-def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, float]) -> tuple:
-    """(tier, relevance band, lifecycle, name evidence, line evidence, relevance, path).
+def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, float],
+              status_question: bool = False) -> tuple:
+    """(tier, relevance band, typed identifiers held, lifecycle, name evidence, line evidence, relevance, path).
 
-    Tier 0: the whole query in the path name (every word of it, or the phrase). Tier 1:
+    Tier 0: the whole query in the path name (every word of it, or the phrase), or every word
+    in the path name and one code identifier line together. Tier 1:
     the whole phrase in the text on a line that is not a one-line data dump (a one-word
     query: the word in the text). Tier 2: everything else, banded by ``relevance`` in
-    quarter steps. Within a tier and band, lifecycle comes first (current ahead of draft
+    quarter steps. Within a tier and band, a file holding more of the query's typed
+    identifiers (``compounds``) as a unit comes first: in its name or a code identifier
+    (where it is defined), then anywhere (its text). Then lifecycle (current ahead of draft
     or unclassified, historical, superseded and, last, backup-like copies), then words in
     the path name, then query words together on one short line; the exact relevance and
     the path break the remaining ties.
     """
     score = relevance(c, terms, weights)
     long_line = c.line_text is not None and len(c.line_text) > LONG_LINE
-    if c.phrase_in_name or c.name_terms == set(terms):
+    if c.phrase_in_name or (c.name_terms | c.symbol_terms) == set(terms):
         tier = 0
     elif (c.phrase_in_content or (len(terms) == 1 and c.content_terms)) and not long_line:
         tier = 1
     else:
         tier = 2
     name_weight = sum(weights[t] for t in c.name_terms)
-    return (tier, -round(score * 4), _lifecycle_rank(state, c.path), -round(name_weight, 6), -c.line_terms,
+    return (tier, -round(score * 4), -len(c.defined), -len(c.compounds | c.defined),
+            _lifecycle_rank(state, c.path, status_question), -round(name_weight, 6), -c.line_terms,
             -round(score, 6), c.path)
 
 
 def _candidate_hit(state: State, c: Candidate, terms: list[str], phrase: list[str]) -> dict:
-    hit = _path_hit(state, c.path, 'content' if c.in_content else 'name',
-                    matched=sorted(c.name_terms | c.content_terms))
+    match = 'content' if c.in_content else 'symbol' if c.symbol_terms else 'name'
+    hit = _path_hit(state, c.path, match, matched=sorted(c.name_terms | c.content_terms | c.symbol_terms))
     if c.line is not None:
         hit['line'] = c.line
         hit['excerpt'] = _excerpt(c.line_text, terms, phrase)
     return hit
+
+
+def _with_replacements(state: State, hits: list[dict], terms: list[str]) -> list[dict]:
+    """``hits`` with each superseded hit followed by its replacement, and no path twice.
+
+    "Is X current, and what replaced it?" is answered by X's lifecycle record: the hit for X
+    says superseded, and the next hit is the replacement itself (match ``replacement``,
+    ``replaces`` naming X), unless the replacement already ranks above X.
+    """
+    out: list[dict] = []
+    emitted: set[str] = set()
+
+    def add(hit: dict) -> None:
+        if hit.get('path') is None or hit['path'] not in emitted:
+            out.append(hit)
+            if hit.get('path'):
+                emitted.add(hit['path'])
+    for hit in hits:
+        add(hit)
+        target = hit.get('superseded_by')
+        if not target:
+            continue
+        replaces = hit.get('path') or hit.get('family')
+        if target.startswith('id:'):
+            entry = state.by_id.get(target[3:])
+            for replacement in (_entry_hits(state, entry, terms)[:1] if entry else []):
+                add({**replacement, 'match': 'replacement', 'replaces': replaces})
+        else:
+            add(_path_hit(state, cat.strip_fragment(target), 'replacement', replaces=replaces))
+    return out
 
 
 # ---------------------------------------------------------------- step 1: catalogue
@@ -640,11 +777,12 @@ def _entry_hits(state: State, entry: dict, terms: list[str]) -> list[dict]:
 
 # ---------------------------------------------------------------- step 2: names
 
-def _name_candidates(state: State, terms: list[str], phrase: list[str], family: str | None) -> dict[str, Candidate]:
+def _name_candidates(state: State, terms: list[str], phrase: list[str], family: str | None,
+                     units: list[str]) -> dict[str, Candidate]:
     found: dict[str, Candidate] = {}
     for path in state.files:
         folded = normalise(path)
-        if not any(t in folded for t in terms):
+        if not any(stem(t) in folded for t in terms):
             continue  # cheap screen: a prefix of a path word is a substring of the path
         if cat.CONTROL_CHARS.search(path) or cat.is_excluded(path):
             continue
@@ -654,39 +792,42 @@ def _name_candidates(state: State, terms: list[str], phrase: list[str], family: 
         hits = _prefix_hits(terms, path_words)
         if hits:
             found[path] = Candidate(path, name_terms=hits,
-                                    phrase_in_name=len(phrase) > 1 and _contains_words(path_words, phrase))
+                                    phrase_in_name=len(phrase) > 1 and _contains_words(path_words, phrase),
+                                    defined={u for u in units if _contains_words(path_words, words(u))})
     return found
 
 
 # ---------------------------------------------------------------- step 3: tracked text
 
+def _name_only_terms(terms: list[str]) -> list[str]:
+    """One-character terms beside longer terms: matched in names, the catalogue and the phrase, not in text."""
+    return [t for t in terms if len(t) == 1] if any(len(t) > 1 for t in terms) else []
+
+
 def _content_candidates(state: State, terms: list[str], text: str, phrase: list[str], family: str | None,
-                        candidates: dict[str, Candidate], deadline: float,
-                        reasons: list[str]) -> tuple[dict[str, int], set[str], bool]:
-    """Per-term (and whole-phrase) file lists from git grep; returns (document frequency, readable, complete)."""
+                        candidates: dict[str, Candidate], deadline: float, reasons: list[str],
+                        units: Sequence[str] = ()) -> tuple[dict[str, int], set[str], bool]:
+    """Per-term (whole-phrase, compound) file lists from git grep; returns (document frequency, readable, complete)."""
     if state.catalogue is None:
         return {}, set(), False
     pathspecs, readable = _pathspecs(state, family)
     if not readable:
         return {}, readable, True
-    # A one-character word matches almost every file, so beside longer words it is not searched
-    # alone (names, the catalogue and the whole phrase still are). That is reported, never
-    # silent: the result is incomplete. A query of one-character words only is searched.
-    searched = [t for t in terms if len(t) > 1] or terms
-    skipped = [t for t in terms if t not in searched]
-    if skipped:
-        reasons.append(f"content_search_skipped: one-character word(s) {', '.join(map(repr, skipped))} not "
-                       'searched alone in text')
-    patterns = [(t, t) for t in searched]
+    # A one-character word beside longer words is matched in names, the catalogue and the whole
+    # phrase only (``_name_only_terms``, reported in the coverage): in text it occurs in almost
+    # every file, so it carries no evidence and the lowest rarity weight. The search is complete.
+    name_only = _name_only_terms(terms)
+    patterns = [(t, t) for t in terms if t not in name_only]
     if len(phrase) > 1:
         patterns.append(('\0phrase', text))  # the cleaned query as typed: separators and all
+    patterns += [(f'\0compound {unit}', unit) for unit in units]
     jobs = {key: _files_args(pattern, pathspecs) for key, pattern in patterns}
     with ThreadPoolExecutor(max_workers=min(4, len(jobs)) or 1) as pool:
         futures = {key: pool.submit(_total_grep, state.repo, args, deadline, GREP_OUTPUT_CAP)
                    for key, args in jobs.items()}
         runs = {key: future.result() for key, future in futures.items()}
     complete = True
-    df: dict[str, int] = {}
+    df: dict[str, int] = dict.fromkeys(name_only, len(readable))
     for key, run in runs.items():
         if run.outcome in ('timeout', 'output_budget', 'error'):
             complete = False
@@ -695,12 +836,14 @@ def _content_candidates(state: State, terms: list[str], text: str, phrase: list[
             continue
         paths = [p.decode('utf-8', 'replace') for p in run.stdout.split(b'\0') if p]
         paths = [p for p in paths if p in readable]  # the gate again, whatever git returned
-        if key != '\0phrase':
+        if not key.startswith('\0'):
             df[key] = len(paths)
         for path in paths:
             candidate = candidates.setdefault(path, Candidate(path))
             if key == '\0phrase':
                 candidate.phrase_in_content = True
+            elif key.startswith('\0compound '):
+                candidate.compounds.add(key.removeprefix('\0compound '))
             else:
                 candidate.content_terms.add(key)
     return df, readable, complete
@@ -767,6 +910,152 @@ def _excerpt(text: str, terms: list[str], phrase: list[str]) -> str:
     return escape_excerpt(('…' if start else '') + piece + ('…' if start + EXCERPT_CHARS < len(text) else ''))
 
 
+# ---------------------------------------------------------------- step 4: code identifiers
+
+# "Where is X implemented / checked / configured?" is answered by the code or configuration file
+# that defines X, not by prose that mentions it. Code text is never searched as prose: only its
+# identifiers count (definitions, CLI subcommands and flags, configuration keys and ids, Markdown
+# headings, quoted UPPER_SNAKE codes) and its own summary (comment and docstring-opening lines
+# among the first HEADER_LINES).
+CODE_ROOTS = ('scripts', 'agents_extensions', '.githooks', '.github', '.mcp', 'packages', 'schemas')
+CODE_SUFFIXES = frozenset({'.py', '.sh', '.bash', '.js', '.mjs', '.cjs', '.ts', '.tsx', '.yaml', '.yml', '.toml',
+                           '.md', ''})
+HEADER_LINES = 20
+MIN_CODE_PATTERN = 3
+_PY = re.compile(r'''^\s*(?:async\s+)?(?:def|class)\s+(\w+)|^([A-Za-z_]\w*)\s*(?::[^=]*)?=(?!=)'''
+                 r'''|\badd_parser\(\s*['"]([^'"]+)|\badd_argument\(\s*['"](-[^'"]+)'''
+                 r'''|^\s*(?:[rRbBuU]{1,2})?(?:"""|\'\'\')(.+)''')
+_SH = re.compile(r'^\s*(?:function\s+)?([A-Za-z_][\w:.-]*)\s*\(\)|^([A-Za-z_]\w*)=')
+_JS = re.compile(r'^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?'
+                 r'(?:function\*?|class|const|let|var|interface|type|enum)\s+([A-Za-z_$][\w$]*)')
+_YAML = re.compile(r'''^\s*(?:-\s+)?['"]?([^'"#:\s{\[-][^'"#:]*?)['"]?\s*:(?:\s|$)'''
+                   r'''|(?:^|[{,]|-)\s*(?:id|name)\s*:\s*['"]?([^'"#,}\s]+)''')
+_TOML = re.compile(r'^\s*\[+([^\]]+)\]|^\s*([\w.-]+)\s*=')
+_MD = re.compile(r'^#{1,6}\s+(.+)')
+SYMBOL_SHAPES = {'.py': _PY, '.sh': _SH, '.bash': _SH, '': _SH, '.js': _JS, '.mjs': _JS, '.cjs': _JS, '.ts': _JS,
+                 '.tsx': _JS, '.yaml': _YAML, '.yml': _YAML, '.toml': _TOML, '.md': _MD}
+CAMEL = re.compile(r'(?<=[a-z0-9])(?=[A-Z])')
+HEADER_LINE = re.compile(r'''\s*(?:#|//|/\*|\*|--|<!--|[rRbBuU]{0,2}(?:"""|\'\'\'))''')
+# A quoted UPPER_SNAKE literal names a typed code (an error, finding or event type) wherever it sits.
+CODE_LITERAL = re.compile(r'''['"]([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)['"]''')
+DEFINITION = re.compile(r'\s*(?:export\s+)?(?:async\s+)?(?:def|class|function)\s')
+DOCSTRING = re.compile(r'''\s*[rRbBuU]{0,2}(?:"""|\'\'\')''')
+DOCSTRING_WINDOW = 12  # lines from a definition to its docstring (a long signature in between)
+SYMBOL_WEIGHT = 0.75  # a word in one code identifier line: between the path name (1) and the text (1/2)
+
+
+def code_readable(path: str) -> bool:
+    """The privacy boundary for code reads: a code or configuration file whose identifiers may be read.
+
+    True for a path under CODE_ROOTS or at the repository root, with a CODE_SUFFIXES suffix
+    (none for hooks and dotfiles), outside the catalogued document roots (searched as text
+    instead), with no inventory-excluded component and no control character.
+    """
+    if cat.CONTROL_CHARS.search(path) or cat.is_excluded(path) or cat.under_roots(path):
+        return False
+    top, slash, _ = path.partition('/')
+    return (not slash or top in CODE_ROOTS) and PurePosixPath(path).suffix in CODE_SUFFIXES
+
+
+def symbol_text(path: str, line_no: int, line: str) -> str | None:
+    """The identifier text a code line contributes, or None when the line is only a use.
+
+    A definition, subcommand, flag, configuration key, id, heading or quoted UPPER_SNAKE code
+    contributes its name; a comment or docstring-opening line among the first HEADER_LINES
+    (the file's own summary) contributes all of its text. camelCase is split.
+    """
+    shape = SYMBOL_SHAPES.get(PurePosixPath(path).suffix)
+    found = shape.search(line) if shape else None
+    names = [g for g in found.groups() if g] if found else []
+    names += CODE_LITERAL.findall(line)
+    if names:
+        text = ' '.join(names)
+    elif line_no <= HEADER_LINES and HEADER_LINE.match(line):
+        text = line
+    else:
+        return None
+    return CAMEL.sub(' ', text)
+
+
+def _code_pathspecs(state: State) -> tuple[list[str], set[str]]:
+    """Pathspecs that reach exactly the code-readable paths, and that readable set."""
+    readable = {p for p in state.files if code_readable(p)}
+    roots = [r for r in CODE_ROOTS if any(p.startswith(r + '/') for p in readable)]
+    top_files = sorted(p for p in readable if '/' not in p)
+    excluded = [p for p in state.files if p not in readable and any(p.startswith(r + '/') for r in roots)]
+    return ([f':(literal){r}' for r in roots] + [f':(literal){p}' for p in top_files]
+            + [f':(exclude,literal){p}' for p in excluded]), readable
+
+
+@dataclass
+class SymbolScan:
+    """What ``_symbol_scan`` found: per path its best identifier unit, and how the search went."""
+    lines: dict[str, tuple[set[str], int, str]] = field(default_factory=dict)  # path -> (terms, line no, line)
+    df: dict[str, int] = field(default_factory=dict)  # term -> code files holding it in an identifier line
+    compounds: dict[str, set[str]] = field(default_factory=dict)  # path -> typed identifiers in an identifier line
+    files: int = 0
+    failure: str | None = None
+
+
+def _symbol_scan(state: State, terms: list[str], deadline: float, units: Sequence[str] = ()) -> SymbolScan:
+    """Code files whose identifiers or header hold query words.
+
+    One ``git grep`` reads every code line holding a query word (or its stem); a line counts
+    only when ``symbol_text`` finds an identifier in it, and a file's evidence is its ONE unit
+    with the most query words (a line, or a definition with the docstring that opens within
+    DOCSTRING_WINDOW lines of it), so words scattered over a large file's definitions never
+    add up. Runs beside the text search (no shared state); ``_merge_symbols`` applies the result.
+    """
+    pathspecs, readable = _code_pathspecs(state)
+    scan = SymbolScan(files=len(readable))
+    if not readable:
+        return scan
+    # Words shorter than MIN_CODE_PATTERN occur on most code lines: they never select lines, but
+    # still count on a line another query word selected (a query of short words only uses them).
+    patterns = list(dict.fromkeys(stem(t) for t in terms if len(t) >= MIN_CODE_PATTERN)) or terms
+    run = _total_grep(state.repo, _line_args(patterns, pathspecs, None), deadline, CODE_OUTPUT_CAP)
+    if run.outcome in ('timeout', 'output_budget', 'error'):
+        detail = f' ({run.detail})' if run.detail else ''
+        scan.failure = f'{run.outcome}: the code identifier search did not finish{detail}'
+    seen: dict[str, set[str]] = {}
+    last_definition: dict[str, tuple[int, set[str]]] = {}  # git grep reports a file's lines in order
+    for record in run.stdout.split(b'\n'):
+        parts = record.split(b'\0', 2)
+        if len(parts) != 3 or not parts[1].isdigit():
+            continue
+        path, line_no, line = parts[0].decode('utf-8', 'replace'), int(parts[1]), parts[2].decode('utf-8', 'replace')
+        if path not in readable or len(line) > LONG_LINE:
+            continue
+        text = symbol_text(path, line_no, line)
+        text_words = words(text) if text else []
+        hits = _prefix_hits(terms, text_words)
+        if held := {u for u in units if _contains_words(text_words, words(u))}:
+            scan.compounds.setdefault(path, set()).update(held)
+        for term in hits:
+            seen.setdefault(term, set()).add(path)
+        if hits and DEFINITION.match(line):
+            last_definition[path] = (line_no, hits)
+        elif hits and DOCSTRING.match(line) and path in last_definition:
+            defined_at, defined = last_definition[path]
+            if line_no - defined_at <= DOCSTRING_WINDOW:
+                hits = hits | defined
+        if hits and (path not in scan.lines or len(hits) > len(scan.lines[path][0])):
+            scan.lines[path] = (hits, line_no, line)
+    scan.df = {term: len(paths) for term, paths in seen.items()}
+    return scan
+
+
+def _merge_symbols(scan: SymbolScan, candidates: dict[str, Candidate], reasons: list[str]) -> None:
+    if scan.failure:
+        reasons.append(scan.failure)
+    for path, held in scan.compounds.items():
+        candidates.setdefault(path, Candidate(path)).defined |= held
+    for path, (hits, line_no, line) in scan.lines.items():
+        candidate = candidates.setdefault(path, Candidate(path))
+        candidate.symbol_terms = hits
+        candidate.line, candidate.line_text = line_no, line
+
+
 # Failures that mean "the repository or Git could not be read" (callers map them to a typed error).
 UNREADABLE = (OSError, subprocess.SubprocessError, UnicodeDecodeError)
 
@@ -789,6 +1078,8 @@ def format_text(result: dict) -> str:
         status = hit['status'] + (f" -> {hit['superseded_by']}" if hit.get('superseded_by') else '')
         if hit.get('backup_like'):
             status += ', backup copy'
+        if hit.get('replaces'):
+            status += f", replaces {cat.shown(hit['replaces'])}"
         lines.append(f"{hit['rank']:>3}. {where}  [{hit['match']}; {hit.get('family') or 'no family'}; {status}]")
         detail = hit.get('topic') or hit.get('excerpt')
         if detail:
@@ -802,14 +1093,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog='python -m scripts.docs.find',
         description='Find where a document, data store or resource lives and whether it is current, in one query.\n'
-                    'Use it before reporting "no source" or asking where something is; it searches the catalogue, '
-                    'tracked file names and tracked text. Not a Ukrainian dictionary or corpus search: use the '
+                    'Use it before reporting "no source" or asking where something is, whether it is still current '
+                    'and what replaced it, or where a check or step is implemented; it searches the catalogue, '
+                    'tracked file names, tracked text and the identifiers of tracked code and configuration. Not a Ukrainian dictionary or corpus search: use the '
                     'sources MCP tools for language facts.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='Examples:\n'
                '  .venv/bin/python -m scripts.docs.find "ULP 1-02"\n'
                '  .venv/bin/python -m scripts.docs.find "vesum database" --json\n'
                '  .venv/bin/python -m scripts.docs.find "teacher deck" --family practice-specs --limit 5\n'
+               '  .venv/bin/python -m scripts.docs.find "is gpt-6-astra still current"\n'
+               '  .venv/bin/python -m scripts.docs.find "where is resolve-reviewer implemented"\n'
                'Outputs: ranked hits on stdout (path, line, excerpt, family, status, replacement, query hint) and '
                'the search coverage; writes nothing and keeps no index.\n'
                'Exit codes: 0 at least one hit; 1 no hit in a complete search; 2 invalid arguments (a limit or budget '

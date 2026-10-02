@@ -170,9 +170,8 @@ def test_phrase_ranks_current_then_historical_then_backup_and_never_the_private_
     assert backup['backup_like'] is True
     assert PRIVATE not in paths_of(result)
     assert result['outcome'] == 'found'
-    # the one-character word '1' is reported as not searched alone; nothing else cut the search
-    assert result['coverage']['incomplete_reasons'] == [
-        "content_search_skipped: one-character word(s) '1' not searched alone in text"]
+    # the one-character word '1' is matched in names, the catalogue and the phrase only: complete
+    assert result['coverage']['incomplete_reasons'] == [] and result['coverage']['name_only_terms'] == ['1']
 
 
 def test_lifecycle_rank_is_what_orders_equal_matches(repo, monkeypatch):
@@ -346,7 +345,9 @@ def test_a_failing_search_worker_is_incomplete_never_a_traceback(fresh_repo, mon
     monkeypatch.setattr(find_module.subprocess, 'Popen', popen)
     result = find('zzqq', repo=fresh_repo)
     assert result['outcome'] == 'incomplete' and result['coverage']['incomplete']
-    assert result['coverage']['incomplete_reasons'] == ["error: the search for 'zzqq' did not finish (OverflowError)"]
+    assert result['coverage']['incomplete_reasons'] == [
+        "error: the search for 'zzqq' did not finish (OverflowError)",
+        'error: the code identifier search did not finish (OverflowError)']
     assert started and all(proc.poll() is not None for proc in started)  # no search left running
     assert main(['zzqq', '--repo', str(fresh_repo)]) == 5
     captured = capsys.readouterr()
@@ -407,7 +408,9 @@ def test_a_timer_that_cannot_be_built_leaves_no_search_process(fresh_repo, monke
     monkeypatch.setattr(find_module.threading, 'Timer', no_memory)
     result = find('zzqq', repo=fresh_repo)
     assert result['outcome'] == 'incomplete'
-    assert result['coverage']['incomplete_reasons'] == ["error: the search for 'zzqq' did not finish (MemoryError)"]
+    assert result['coverage']['incomplete_reasons'] == [
+        "error: the search for 'zzqq' did not finish (MemoryError)",
+        'error: the code identifier search did not finish (MemoryError)']
     assert all(proc.returncode is not None and not _alive(proc.pid) for proc in started)
 
 
@@ -450,13 +453,16 @@ def test_a_one_character_word_is_searched_not_skipped(fresh_repo):
     assert (missing['outcome'], missing['coverage']['incomplete']) == ('no_match', False)
 
 
-def test_a_one_character_word_beside_longer_words_is_reported_not_silent(fresh_repo):
+def test_a_one_character_word_beside_longer_words_is_matched_in_names_and_reported(fresh_repo):
+    # Beside longer words a one-character word is matched in names, the catalogue and the
+    # phrase only; it is reported, never silent, and the search it belongs to is complete.
     result = find('zzqq Ω', repo=fresh_repo)  # Ω is in no file here; 'zzqq' and the phrase are searched
-    assert result['outcome'] == 'incomplete' and result['coverage']['incomplete']  # never no_match
-    assert result['coverage']['incomplete_reasons'] == [
-        "content_search_skipped: one-character word(s) 'ω' not searched alone in text"]
+    assert (result['outcome'], result['coverage']['incomplete']) == ('no_match', False)
+    assert result['coverage']['name_only_terms'] == ['ω'] and result['coverage']['incomplete_reasons'] == []
     found = find('ULP 1-02', repo=fresh_repo)
-    assert found['outcome'] == 'found' and found['coverage']['incomplete']
+    assert found['outcome'] == 'found' and not found['coverage']['incomplete']
+    assert found['coverage']['name_only_terms'] == ['1']
+    assert find('zzqq', repo=fresh_repo)['coverage']['name_only_terms'] == []
 
 
 def test_unknown_family_is_rejected(repo):
@@ -541,8 +547,8 @@ def test_a_cut_excerpt_read_keeps_the_hits_and_says_so(repo, monkeypatch):
     monkeypatch.setattr(find_module, 'EXCERPT_OUTPUT_CAP', 1)
     result = find('ULP 1-02', repo=repo)
     assert result['outcome'] == 'found' and not result['coverage']['excerpts_complete']
-    # a cut excerpt read adds no incompleteness; only the reported one-character word does
-    assert [r.split(':')[0] for r in result['coverage']['incomplete_reasons']] == ['content_search_skipped']
+    # a cut excerpt read adds no incompleteness
+    assert result['coverage']['incomplete_reasons'] == [] and not result['coverage']['incomplete']
 
 
 def test_an_invalid_catalogue_reads_no_text_and_says_why(fresh_repo, monkeypatch):
@@ -765,3 +771,230 @@ def test_line_reads_send_git_exactly_one_pattern():
     for form in ['ulp', '02', 'весум', 'ВЕСУМ', 'Весум', 'a.b(c)']:
         assert re.search(alternation, f'x {form} y')
     assert not re.search(alternation, 'axb(c)')
+
+
+# ------------------------------------------------------------------ status and implementation questions
+
+CODE_FILES = {
+    'scripts/checks/verdict.py': (
+        '"""Review verdict checks for the fixture."""\n'
+        '\n'
+        '\n'
+        'def parse_review_verdict(text):\n'
+        '    """Return the verdict line of a review."""\n'
+        '    return text\n'
+        '\n'
+        '\n'
+        'def _containment_anchor(agent):\n'
+        '    """Return the dispatch directory when each level is real."""\n'
+        '    return agent\n'
+        '\n'
+        '\n'
+        "ERROR = {'type': 'SELF_REVIEW_DETECTED'}\n"
+        + '\n' * 20 + '# zebra quokka: a comment past the header is prose, not a definition\n'),
+    'scripts/config/models.yaml': 'models:\n  retired-model-9:\n    lifecycle: retired\n    replaced_by: new-model-10\n',
+    'scripts/private/secret_tool.py': 'def parse_review_verdict_secret():\n    pass\n',
+    'scripts/verdict_dump.json': '{"parse_review_verdict": 1}\n',
+    'tests/test_verdict_parsing.py': 'def test_parse_review_verdict():\n    pass\n',
+    'docs/guide/verdicts.md': 'Reviewers write a verdict; parse_review_verdict parses the review verdict in code.\n',
+    'docs/guide/legacy-deck.txt': 'Legacy deck notes.\n',
+    'docs/guide/deck-v2.txt': 'Deck version two.\n',
+}
+
+
+@pytest.fixture(scope='module')
+def code_repo(tmp_path_factory):
+    root = make_repo(tmp_path_factory.mktemp('find-code') / 'repo')
+    for rel, text in CODE_FILES.items():
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_text(text, encoding='utf-8')
+    data = fixture_catalogue()
+    guide = next(e for e in data['entries'] if e['id'] == 'guide')
+    guide['overrides'] = [{'path': 'docs/guide/legacy-deck.txt', 'lifecycle': 'superseded',
+                           'superseded_by': 'docs/guide/deck-v2.txt', 'evidence': 'Replaced by version two.'}]
+    data['entries'].append(entry('retired-guide', ['docs/retired/**'], keywords=['retired guide'],
+                                 lifecycle='superseded', superseded_by='id:guide'))
+    (root / 'docs/retired').mkdir()
+    (root / 'docs/retired/old.md').write_text('# Old guide\n', encoding='utf-8')
+    write_catalogue(root, data)
+    git(root, 'add', '.')
+    return root
+
+
+@pytest.mark.parametrize('query, plan', [
+    ('Is the legacy deck still current, and what replaced it?', (['legacy', 'deck'], ['current', 'replaced'])),
+    ('where is resolve-reviewer implemented', (['resolve', 'reviewer'], ['implemented'])),
+    ('current', (['current'], [])),  # an intent word alone is the query
+    ('is retired-model-9 current', (['retired', 'model', '9'], ['current'])),  # a typed name keeps its words
+    ('task lifecycle closeout', (['task', 'lifecycle', 'closeout'], [])),  # lifecycle is a content word
+])
+def test_intent_words_are_not_search_terms_beside_other_words(query, plan):
+    assert find_module.query_plan(query) == plan
+    assert query_terms(query) == plan[0]
+
+
+def test_a_long_question_keeps_its_content_words_within_the_term_cap():
+    terms, intent = find_module.query_plan('Is the alpha beta gamma delta epsilon zeta eta theta still current, '
+                                           'and what replaced it?')
+    assert terms == ['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta']
+    assert intent == ['current', 'replaced']
+
+
+@pytest.mark.parametrize('term, stemmed', [('parsing', 'pars'), ('detected', 'detect'), ('reaps', 'reap'),
+                                           ('branches', 'branch'), ('lines', 'line'), ('process', 'process'),
+                                           ('uses', 'uses'), ('deck', 'deck')])
+def test_stem_strips_one_inflection_and_keeps_four_letters(term, stemmed):
+    assert find_module.stem(term) == stemmed
+
+
+def test_terms_meet_inflected_words_as_prefixes():
+    assert find_module._prefix_hits(['parsing', 'verdicts'], ['parse', 'review', 'verdict']) == {'parsing', 'verdicts'}
+    assert find_module._prefix_hits(['parsing'], ['sparse']) == set()
+
+
+@pytest.mark.parametrize('query, units', [
+    ('Where is the check_russian_shadow tool handled?', ['check_russian_shadow']),
+    ('ULP 1-02', ['1-02']),
+    ('resolve-reviewer', []),  # the whole query is the phrase, not a separate unit
+    ('"atlas.db" and gpt-6-astra?', ['atlas.db', 'gpt-6-astra']),
+    ('teacher deck rebuild', []),
+])
+def test_compounds_are_the_typed_identifiers(query, units):
+    assert find_module.compounds(clean_query(query)) == units
+
+
+@pytest.mark.parametrize('path, readable', [
+    ('scripts/review/closeout_cli.py', True), ('.githooks/pre-push', True), ('AGENTS.md', True),
+    ('scripts/config/model_catalog.yaml', True), ('agents_extensions/shared/rules/core.md', True),
+    ('scripts/private/tool.py', False), ('scripts/cache/x.py', False), ('docs/guide/x.py', False),
+    ('tests/test_x.py', False), ('scripts/data.json', False), ('curriculum/a1/x.yaml', False),
+    ('scripts/bad\nname.py', False),
+])
+def test_code_readable_is_the_privacy_gate_for_code(path, readable):
+    assert find_module.code_readable(path) is readable
+
+
+@pytest.mark.parametrize('path, line_no, line, text', [
+    ('a.py', 40, 'def parse_review_verdict(text):', 'parse_review_verdict'),
+    ('a.py', 40, 'class CfPreflightResult:', 'Cf Preflight Result'),
+    ('a.py', 40, "    sub.add_parser('resolve-reviewer', help='x')", 'resolve-reviewer'),
+    ('a.py', 40, "    parser.add_argument('--allow-no-cf-preflight')", '--allow-no-cf-preflight'),
+    ('a.py', 40, "ERROR = {'type': 'SELF_REVIEW_DETECTED'}", 'ERROR SELF_REVIEW_DETECTED'),
+    ('a.py', 40, "        raise Fail('SELF_REVIEW_DETECTED')", 'SELF_REVIEW_DETECTED'),
+    ('a.py', 2, '"""Safe post-task reaper for dispatch worktrees.', 'Safe post-task reaper for dispatch worktrees.'),
+    ('a.py', 2, '# Wrapper for the nightly backup', '# Wrapper for the nightly backup'),
+    ('a.py', 40, '# a comment past the header', None),
+    ('a.py', 3, '    x = parse(text)', None),
+    ('a.yaml', 40, '  gpt-6-astra:', 'gpt-6-astra'),
+    ('a.yaml', 40, '  - {id: data-vesum-db, kind: data_store}', 'data-vesum-db'),
+    ('a.sh', 40, 'linux_backup_database() {', 'linux_backup_database'),
+    ('a.ts', 40, 'export const routeTable = {', 'route Table'),
+    ('a.md', 40, '## Review routing', 'Review routing'),
+    ('a.md', 40, 'Plain prose about review routing.', None),
+    ('a.toml', 40, '[tool.pytest.ini_options]', 'tool.pytest.ini_options'),
+])
+def test_symbol_text_reads_identifiers_and_file_summaries_only(path, line_no, line, text):
+    assert find_module.symbol_text(path, line_no, line) == text
+
+
+def test_a_code_definition_outranks_prose_that_mentions_it(code_repo):
+    result = find('review verdict parsing', repo=code_repo)
+    first = result['hits'][0]
+    assert (first['path'], first['match'], first['line'], first['excerpt']) == (
+        'scripts/checks/verdict.py', 'symbol', 4, 'def parse_review_verdict(text):')
+    assert first['matched'] == ['parsing', 'review', 'verdict']
+    paths = paths_of(result)
+    assert 'docs/guide/verdicts.md' in paths  # prose still answers, below the definition
+    assert 'scripts/private/secret_tool.py' not in paths  # privacy-excluded code is never read
+    assert hit_for(result, 'tests/test_verdict_parsing.py')['match'] == 'name'  # tests are not implementations
+    assert 'scripts/verdict_dump.json' not in paths or hit_for(result, 'scripts/verdict_dump.json')['match'] == 'name'
+    assert result['coverage']['code_files_searched'] > 0
+
+
+def test_the_code_search_never_reads_a_private_path(code_repo, monkeypatch):
+    find_module._STATE_CACHE.clear()
+    calls = recorded_greps(monkeypatch)
+    find('review verdict parsing', repo=code_repo)
+    code_call = next(c for c in calls if ':(literal)scripts' in c)
+    assert ':(exclude,literal)scripts/private/secret_tool.py' in code_call
+    assert ':(exclude,literal)scripts/verdict_dump.json' in code_call
+    assert not any(arg.startswith(':(literal)docs') or arg.startswith(':(literal)tests') for arg in code_call)
+
+
+def test_a_definition_and_its_docstring_are_one_unit(code_repo):
+    hit = hit_for(find('dispatch anchor', repo=code_repo), 'scripts/checks/verdict.py')
+    assert hit['matched'] == ['anchor', 'dispatch'] and hit['line'] == 10
+
+
+def test_a_quoted_typed_code_is_an_identifier(code_repo):
+    hit = hit_for(find('where is self review detected', repo=code_repo), 'scripts/checks/verdict.py')
+    assert hit['match'] == 'symbol' and hit['matched'] == ['detected', 'review', 'self']
+
+
+def test_a_comment_past_the_header_is_not_an_identifier(code_repo):
+    result = find('zebra quokka', repo=code_repo)
+    assert 'scripts/checks/verdict.py' not in paths_of(result)
+
+
+def test_a_typed_identifier_ranks_its_definition_first(code_repo):
+    result = find('where is parse_review_verdict', repo=code_repo)
+    assert paths_of(result)[0] == 'scripts/checks/verdict.py'
+    assert 'docs/guide/verdicts.md' in paths_of(result)
+
+
+def test_a_configuration_key_answers_a_status_question(code_repo):
+    result = find('is retired-model-9 still current', repo=code_repo)
+    assert result['intent_words'] == ['current'] and result['terms'] == ['retired', 'model', '9']
+    hit = hit_for(result, 'scripts/config/models.yaml')
+    assert (hit['match'], hit['line'], hit['excerpt']) == ('symbol', 2, 'retired-model-9:')
+
+
+def test_a_superseded_hit_is_followed_by_its_replacement(code_repo):
+    result = find('legacy deck still current', repo=code_repo)
+    paths = paths_of(result)
+    old = paths.index('docs/guide/legacy-deck.txt')
+    assert result['hits'][old]['status'] == 'superseded'
+    replacement = result['hits'][old + 1]
+    assert (replacement['path'], replacement['match'], replacement['replaces'], replacement['status']) == (
+        'docs/guide/deck-v2.txt', 'replacement', 'docs/guide/legacy-deck.txt', 'current')
+    assert paths.count('docs/guide/deck-v2.txt') == 1  # never twice
+    text = find_module.format_text(result)
+    assert 'docs/guide/legacy-deck.txt:1  [content; guide; superseded -> docs/guide/deck-v2.txt]' in text
+    assert 'docs/guide/deck-v2.txt  [replacement; guide; current, replaces docs/guide/legacy-deck.txt]' in text
+
+
+def test_a_family_superseded_by_an_entry_is_followed_by_that_entry(code_repo):
+    result = find('retired guide', repo=code_repo)
+    hits = result['hits']
+    family = next(i for i, h in enumerate(hits) if h.get('family') == 'retired-guide')
+    assert hits[family]['superseded_by'] == 'id:guide'
+    assert (hits[family + 1]['path'], hits[family + 1]['match'], hits[family + 1]['replaces']) == (
+        'docs/guide/index.md', 'replacement', 'retired-guide')
+
+
+def test_a_status_question_ranks_every_lifecycle_alike_except_backups(repo):
+    state = find_module.load_state(repo)
+    assert find_module._lifecycle_rank(state, 'docs/old/notes.md') == 2
+    assert find_module._lifecycle_rank(state, 'docs/old/notes.md', status_question=True) == 0
+    assert find_module._lifecycle_rank(state, 'docs/resources/list.txt.backup', status_question=True) == (
+        find_module.BACKUP_RANK)
+
+
+def test_code_rarity_counts_identifier_files(code_repo):
+    state = find_module.load_state(code_repo)
+    scan = find_module._symbol_scan(state, ['verdict', 'zzqq'], time.monotonic() + 30)
+    assert scan.df == {'verdict': 1} and scan.failure is None
+    assert scan.lines['scripts/checks/verdict.py'][1] == 1  # the first line with the most words: the summary
+
+
+def test_a_code_search_failure_is_reported_incomplete(code_repo, monkeypatch):
+    monkeypatch.setattr(find_module, 'CODE_OUTPUT_CAP', 1)
+    result = find('review verdict parsing', repo=code_repo)
+    assert result['coverage']['incomplete']
+    assert 'output_budget: the code identifier search did not finish' in result['coverage']['incomplete_reasons']
+
+
+def test_the_code_search_is_skipped_with_a_family(code_repo):
+    result = find('verdict', family='guide', repo=code_repo)
+    assert result['coverage']['code_files_searched'] == 0
+    assert 'scripts/checks/verdict.py' not in paths_of(result)

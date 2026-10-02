@@ -6,14 +6,18 @@
   data_store entry (or a reasoned exemption).
 * Front matter, banners and catalogue overrides agree; the README's generated family
   table is current.
-* The visible dev set of real lookups is answered from the one entry point.
+* The development lookups (tests/fixtures/docs_find_dev_lookups.yaml) are answered from the one
+  entry point, as short queries and as full questions.
 
 Failure messages name the exact path and print a ready-to-paste stub
 (``python -m scripts.docs.catalogue check --suggest``).
 """
+import subprocess
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
+import yaml
 from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
@@ -78,72 +82,54 @@ def test_the_readme_block_is_generated_from_the_catalogue(checked):
 
 # ------------------------------------------------------------------ the entry point answers real lookups
 
-# The visible dev set (23 real lookups, expected paths verified by the issue driver). The
-# held-out acceptance lookups are separate and not used here. Each lookup is one query an
-# agent would type; it passes when an expected path is among the first DEV_N hits.
-DEV_N = 10
-DEV_SET = {
-    'L02': ('podcast episode list season 4', ['docs/resources/podcasts/raw_lists/seasons_4_5.txt']),
-    'L03': ('ULP podcast episodes per module', ['docs/resources/podcasts/ulp_mapping.yaml']),
-    'L04': ('external resources youtube links per module schema',
-            ['docs/resources/external_resources.yaml', 'docs/resources/EXTERNAL_RESOURCES_SCHEMA.md']),
-    'L07': ('trusted sources', ['docs/resources/trusted_sources.yaml']),
-    'L09': ('VESUM database', ['agents_extensions/shared/rules/mcp-sources-and-dictionaries.md',
-                               'scripts/rag/import_vesum.py', 'docs/DICTIONARY-PIPELINE-STATUS.md']),
-    'L11': ('atlas.db', ['scripts/atlas/atlas_db.py', 'docs/architecture/adr/adr-017-atlas-schema-and-lifecycle.md']),
-    'L18': ('teacher deck rebuild', ['docs/practice/teacher-deck-artifacts.md',
-                                     'docs/runbooks/teacher-curated-seed-rebuild.md',
-                                     'registry/practice/function_words_deck.json']),
-    'L20': ('wiki research input core rebuild', ['docs/decisions/2026-09-30-core-rebuild-pack-replaces-wiki.md']),
-    'L22': ('fleet-comms dual_write default', ['docs/runbooks/fleet-comms-open-gaps.md']),
-    'L27': ('immersion band', ['scripts/config.py']),
-    'L29': ('python version pin', ['.python-version']),
-    'L30': ('model routing table model catalog', ['agents_extensions/shared/rules/model-assignment.md',
-                                                  'scripts/config/model_catalog.yaml']),
-    'L32': ('resolve-reviewer', ['scripts/review/closeout_cli.py']),
-    'L33': ('stale git index.lock', ['docs/runbooks/clear-stale-git-lock.md']),
-    'L34': ('worktree cleanup branch sweep', ['docs/runbooks/worktree-cleanup.md', 'scripts/hygiene/branch_sweep.py']),
-    'L35': ('backup data wrapper', ['scripts/backup-data.sh']),
-    'L36': ('git hooks pre-push commit-msg', ['.githooks/pre-push', '.githooks/commit-msg']),
-    'L37': ('heal-core-bare', ['agents_extensions/shared/hooks/heal-core-bare.py']),
-    'L38': ('CI speed program', ['docs/epics/ci-speed-program.md']),
-    'L39': ('task lifecycle closeout', ['agents_extensions/shared/contracts/task-lifecycle-closeout.md']),
-    'L40': ('fresh build plan schema', ['docs/epics/fresh-build-plan-schema.md', 'docs/epics/fresh-build-build-program.md']),
-    'L42': ('driver breadth report', ['scripts/fleet/driver_breadth_report.py']),
-    'L43': ('sources MCP server', ['.mcp/servers/sources/server.py']),
-}
-# Known misses at DEV_N, with the reason (reported, not hidden):
-# L09 - the first hits are the catalogue's data/vesum.db entry and its current producers
-#       (build_vesum_shadow.py, activate_vesum_db.py); import_vesum.py is a retired shim and
-#       the two documents rank below many files that name VESUM.
-# L27 - the answer is code (scripts/config.py), whose text is outside the searched families.
-# L32 - the answer is code (scripts/review/closeout_cli.py), named only in its text.
-DEV_KNOWN_MISSES = {'L09', 'L27', 'L32'}
+# The development lookups (tests/fixtures/docs_find_dev_lookups.yaml): resources, documents, data
+# stores, status ("is X current, what replaced it?") and process ("where is X implemented?")
+# questions, each with its authority path and the evidence that it is that authority. The
+# held-out acceptance lookups are separate and never used here.
+DEV_LOOKUPS = yaml.safe_load((REPO / 'tests/fixtures/docs_find_dev_lookups.yaml').read_text(encoding='utf-8'))
+DEV_KINDS = {'resource', 'doc', 'data_store', 'status', 'process'}
 
 
-def _dev_results():
-    passed, ranks = set(), {}
-    for key, (query, expected) in DEV_SET.items():
-        paths = [hit['path'] for hit in find(query, 50, repo=REPO)['hits']]
-        found = [paths.index(p) + 1 for p in expected if p in paths]
-        ranks[key] = min(found) if found else None
-        if ranks[key] is not None and ranks[key] <= DEV_N:
-            passed.add(key)
-    return passed, ranks
+def _verify_command(check: dict) -> list[str]:
+    return ['git', '-C', str(REPO), 'grep', '--cached', '-n', '-F', '-i', '-e', check['contains'], '--', check['path']]
 
 
-def test_dev_set_lookups_are_answered_in_one_query():
-    passed, ranks = _dev_results()
-    regressions = sorted(set(DEV_SET) - DEV_KNOWN_MISSES - passed)
-    assert regressions == [], {key: (DEV_SET[key][0], ranks[key]) for key in regressions}
-    assert len(passed) >= len(DEV_SET) - len(DEV_KNOWN_MISSES)
+def test_dev_lookups_are_verified_authorities():
+    lookups = DEV_LOOKUPS['lookups']
+    assert len(lookups) >= 30 and {lk['kind'] for lk in lookups} == DEV_KINDS
+    assert len({lk['id'] for lk in lookups}) == len(lookups)
+    assert all(1 <= len(lk['query'].split()) <= 8 for lk in lookups)
+    failed = [(lk['id'], ' '.join(_verify_command(check))) for lk in lookups for check in lk['verify']
+              if subprocess.run(_verify_command(check), capture_output=True, timeout=60).returncode != 0]
+    assert failed == []
+
+
+def _rank(lookup: dict, field: str) -> int | None:
+    paths = [hit['path'] for hit in find(lookup[field], 50, repo=REPO)['hits']]
+    found = [paths.index(p) + 1 for p in lookup['expect'] if p in paths]
+    return min(found) if found else None
+
+
+# One test per kind and protocol keeps each well inside the per-test timeout (a lookup takes ~1-2 s).
+@pytest.mark.parametrize('kind', sorted(DEV_KINDS))
+@pytest.mark.parametrize('field', ['query', 'question'])
+def test_dev_lookups_are_answered_in_one_query(field, kind):
+    bar = DEV_LOOKUPS['top_n'][field]
+    lookups = [lk for lk in DEV_LOOKUPS['lookups'] if lk['kind'] == kind and lk['id'] not in DEV_LOOKUPS['known_misses']]
+    with ThreadPoolExecutor(max_workers=2) as pool:  # each lookup mostly waits on git grep subprocesses
+        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(lambda lk: _rank(lk, field), lookups), strict=True))
+    misses = {lk['id']: (lk[field], ranks[lk['id']]) for lk in lookups
+              if ranks[lk['id']] is None or ranks[lk['id']] > bar}
+    assert misses == {}, f'expected path not within the first {bar} hits: {misses}'
 
 
 def test_the_motivating_lookup_ranks_the_live_list_above_its_backup():
     result = find('ULP 1-02', repo=REPO)
-    first = result['hits'][0]
-    assert (first['path'], first['line'], first['status']) == (
-        'docs/resources/podcasts/raw_lists/seasons_1_3.txt', 2, 'current')
+    # The one-character word is matched in names, the catalogue and the phrase only: complete.
+    assert result['coverage']['incomplete'] is False and result['coverage']['name_only_terms'] == ['1']
+    top = result['hits'][:3]
+    assert all(hit['status'] == 'current' and 'ULP 1-02' in hit['excerpt'] for hit in top)
+    assert ('docs/resources/podcasts/raw_lists/seasons_1_3.txt', 2) in [(hit['path'], hit['line']) for hit in top]
     paths = [hit['path'] for hit in result['hits']]
     backup = 'docs/resources/external_resources.yaml.backup'
     if backup in paths:

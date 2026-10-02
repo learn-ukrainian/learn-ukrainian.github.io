@@ -209,10 +209,12 @@ def knowledge_find(
     """Locate a document, data store or resource in one query (#9412).
 
     The same search as ``python -m scripts.docs.find``: catalogue entries
-    (``docs/knowledge/catalogue.yaml``), tracked path names and the text of
-    content-searchable families in Git's index of the live repository root. Each
-    hit carries its path, line, excerpt, family, status, replacement and the
-    family's query hint; ``coverage`` lists the families searched and skipped and
+    (``docs/knowledge/catalogue.yaml``), tracked path names, the text of
+    content-searchable families and the identifiers of tracked code and
+    configuration files in Git's index of the live repository root. Each hit
+    carries its path, line, excerpt, family, status, replacement, the family's
+    query hint and why it matched (``match``, ``matched``); a superseded hit is
+    followed by its replacement; ``coverage`` lists the families searched and skipped and
     says ``incomplete`` (with reasons) when a budget cut the search short, so a
     cut-off search is never reported as "no source".
 

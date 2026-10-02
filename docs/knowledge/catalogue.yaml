@@ -472,7 +472,7 @@ entries:
     kind: doc_family
     paths: [docs/guardrails/**, docs/ops/**, docs/entire/**, docs/examples/**, docs/specs/**, docs/third-party/**, docs/playbooks/**]
     purpose: Fleet tooling guardrail, fleet session-awareness charter, Entire recall receipts, launchd example, task-family manager spec and vendored third-party licence text.
-    keywords: [agent fleet guardrail, Entire, launchd example, task family manager, third-party licence, fleet agent eyes]
+    keywords: [agent fleet guardrail, Gemini CLI, AGY route, supported agent routes, Entire, launchd example, task family manager, third-party licence, fleet agent eyes]
     lifecycle: active
     owner: infra-harness
     entrypoints:
