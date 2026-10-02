@@ -46,6 +46,7 @@ The CLI is ``python -m scripts.docs.find``; the Monitor API mirrors it at
 from __future__ import annotations
 
 import argparse
+import bisect
 import functools
 import hashlib
 import json
@@ -554,8 +555,10 @@ def ere_escape(text: str) -> str:
     return ''.join('\\' + c if c in ERE_SPECIAL else c for c in text)
 
 
-def _line_args(patterns: list[str], pathspecs: list[str], per_file: int | None) -> list[str]:
-    """Matching lines for any of ``patterns``, as ONE escaped ERE alternation.
+def _line_args(patterns: list[str], pathspecs: list[str], per_file: int | None,
+               whole_words: Sequence[str] = ()) -> list[str]:
+    """Matching lines for any of ``patterns`` (or any of ``whole_words`` as a whole ASCII word), as
+    ONE escaped ERE alternation.
 
     Several ``-e`` patterns with ``-n`` take tens of seconds on a large file (measured:
     31.8 s for two fixed strings on a 20 MB YAML, 0.45 s as one alternation), so line
@@ -564,7 +567,10 @@ def _line_args(patterns: list[str], pathspecs: list[str], per_file: int | None) 
     the lines read per file (None: every matching line).
     """
     forms = [form for pattern in patterns for form in ([pattern] if pattern.isascii() else _variants(pattern))]
-    alternation = '|'.join(ere_escape(form) for form in dict.fromkeys(forms))
+    alternatives = [ere_escape(form) for form in dict.fromkeys(forms)]
+    alternatives += [f'(^|[^A-Za-z0-9]){ere_escape(w)}([^A-Za-z0-9]|$)' for w in dict.fromkeys(whole_words)
+                     if w.isascii()]
+    alternation = '|'.join(alternatives)
     cap = [] if per_file is None else ['-m', str(per_file)]
     return ['--no-color', '-I', '-E', '-i', '--null', '-n', *cap, '-e', alternation, '--', *pathspecs]
 
@@ -753,7 +759,7 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
     with ThreadPoolExecutor(max_workers=1) as code_runner:
         # Code identifiers are searched beside the text search; never with a --family filter or an
         # invalid catalogue (which reads no text at all).
-        code = (code_runner.submit(_symbol_scan, state, terms, deadline, units)
+        code = (code_runner.submit(_symbol_scan, state, terms, deadline, units, phrase)
                 if family is None and state.catalogue is not None else None)
         df, readable, content_complete = _content_candidates(state, terms, text, phrase, family, candidates,
                                                              deadline, reasons, units)
@@ -1262,25 +1268,61 @@ def name_covered(path: str, terms: list[str]) -> bool:
     return bool(base_words) and all(_prefix_hits(terms, [w]) for w in base_words)
 
 
+def private_note(state: State, path: str) -> str | None:
+    """The text-readable README or index note that speaks for a privacy-excluded ``path``: the
+    nearest one from its own directory up to the excluded directory itself, never above it (a
+    note further up does not know the private files)."""
+    parts = PurePosixPath(path).parent.parts
+    private = next((i for i, part in enumerate(parts) if part in cat.EXCLUDED_PARTS), None)
+    if private is None:
+        return None
+    indexes = directory_indexes(state)
+    for depth in range(len(parts), private, -1):
+        if found := indexes.get('/'.join(parts[:depth])):
+            return found[0]
+    return None
+
+
 def _name_candidates(state: State, terms: list[str], phrase: list[str], family: str | None,
                      units: list[str]) -> dict[str, Candidate]:
+    """Files whose path words hold query words. A privacy-excluded file is never a hit: the note of
+    its directory (``private_note``) carries the name evidence of its best-matching file instead,
+    so "is <a file in that directory> still live?" is answered by the record of what it is."""
     found: dict[str, Candidate] = {}
+    spoken: dict[str, Candidate] = {}  # note path -> its best-matching private file
     for path in state.files:
         folded = normalise(path)
         if not any(stem(t) in folded for t in terms):
             continue  # cheap screen: a prefix of a path word is a substring of the path
-        if cat.CONTROL_CHARS.search(path) or cat.is_excluded(path):
+        if cat.CONTROL_CHARS.search(path):
             continue
         if family is not None and state.report.resolved.get(path, (None,))[0] != family:
             continue
         path_words = name_words(path)
         hits = _prefix_hits(terms, path_words)
-        if hits:
-            found[path] = Candidate(path, name_terms=hits,
-                                    phrase_in_name=len(phrase) > 1 and _contains_words(path_words, phrase),
-                                    defined={u for u in units if _contains_words(path_words, words(u))},
-                                    name_covered=name_covered(path, terms))
+        if not hits:
+            continue
+        candidate = Candidate(path, name_terms=hits,
+                              phrase_in_name=len(phrase) > 1 and _contains_words(path_words, phrase),
+                              defined={u for u in units if _contains_words(path_words, words(u))},
+                              name_covered=name_covered(path, terms))
+        if not cat.is_excluded(path):
+            found[path] = candidate
+        elif note := private_note(state, path):
+            best = spoken.get(note)
+            if best is None or _name_strength(candidate) > _name_strength(best):
+                spoken[note] = candidate
+    for note, private in spoken.items():
+        target = found.setdefault(note, Candidate(note))
+        target.name_terms |= private.name_terms
+        target.phrase_in_name |= private.phrase_in_name
+        target.defined |= private.defined
+        target.name_covered |= private.name_covered
     return found
+
+
+def _name_strength(c: Candidate) -> tuple:
+    return (len(c.defined), c.phrase_in_name, len(c.name_terms), c.name_covered)
 
 
 # ---------------------------------------------------------------- step 3: tracked text
@@ -1615,7 +1657,8 @@ class CodeSummaries:
 def code_summaries(state: State, deadline: float) -> tuple[CodeSummaries, str | None]:
     """The summaries of every code-readable file: one ``git grep -m SUMMARY_LINES`` reads each file's head.
 
-    Built once per state; a search that does not finish is returned with its reason and not kept.
+    The word index holds each summary's words with their ``abbreviations`` expanded. Built once
+    per state; a search that does not finish is returned with its reason and not kept.
     """
     with state.derived_lock:
         if 'summaries' in state.derived:
@@ -1635,15 +1678,199 @@ def code_summaries(state: State, deadline: float) -> tuple[CodeSummaries, str | 
             path = parts[0].decode('utf-8', 'replace')
             if path in readable:
                 heads.setdefault(path, []).append((int(parts[1]), parts[2].decode('utf-8', 'replace')[:LONG_LINE]))
+    table, failure = abbreviations(state, deadline)
+    if failure:
+        return CodeSummaries(), failure
     found = CodeSummaries()
     for path, head in heads.items():
         if kept := summary_lines(path, head):
             found.lines[path] = kept
-            for word in words(CAMEL.sub(' ', ' '.join(text for _, text in kept))):
+            for word in table.expand(words(CAMEL.sub(' ', ' '.join(text for _, text in kept)))):
                 found.index.setdefault(word, set()).add(path)
     with state.derived_lock:
         state.derived['summaries'] = found
     return found, None
+
+
+# ---------------------------------------------------------------- abbreviations
+
+# The repository's governing documents define its abbreviations ("Definition of Ready (DoR)", "CF
+# (cross-family)"), and code then uses the abbreviation inside identifiers (``_run_dor_preflight``)
+# while a reader asks in the defined words. The table is derived from those documents at request
+# time (once per state, like every other derived fact), never hand-written: a pair counts only when
+# the initials of the defined words spell the abbreviation.
+ABBREVIATION_SOURCES = ('AGENTS.md', 'CLAUDE.md', 'GEMINI.md', 'agents_extensions/shared/rules',
+                        'agents_extensions/shared/memory', 'docs/best-practices', 'docs/runbooks')
+GLOSSARY = re.compile(r'glossary', re.IGNORECASE)  # a tracked glossary anywhere is a source too
+# One ERE for both idioms: "Words (ABBR)" and "ABBR (words)". Case-sensitive: an abbreviation is capitalised.
+ABBREVIATION_LINE = r'\([A-Z][A-Za-z]{1,6}\)|(^|[^A-Za-z])[A-Z][A-Za-z]{0,5}[A-Z]\**[[:space:]]*\([a-z]'
+DEFINED_BEFORE = re.compile(r"((?:[\w'-]+[ \t]+){0,8}[\w'-]+)[ \t]*\(([A-Z][A-Za-z]{1,6})\)")
+DEFINED_AFTER = re.compile(r"\b([A-Z][A-Za-z]{0,5}[A-Z])\**[ \t]*\(([a-z][\w' -]{2,80}?)\)")
+
+
+def initials_spell(letters: str, found: Sequence[str]) -> bool:
+    """The initials of ``found`` spell ``letters`` in order; a stopword may be skipped or may give
+    its initial ("Definition of Ready" spells both DoR and DR)."""
+    if not letters:
+        return all(w in STOPWORDS for w in found)
+    if not found:
+        return False
+    head, rest = found[0], found[1:]
+    return (head[0] == letters[0] and initials_spell(letters[1:], rest)) or (
+        head in STOPWORDS and initials_spell(letters, rest))
+
+
+def defined_pairs(line: str) -> list[tuple[str, tuple[str, ...]]]:
+    """The (abbreviation, defined words) pairs a line states: the shortest run of words before
+    "(ABBR)" whose initials spell it, or the longest run inside "ABBR (...)" that does. A pair
+    needs at least two words that do not open or close on a stopword."""
+    pairs = []
+    for before, abbreviation in DEFINED_BEFORE.findall(line):
+        found = words(before)
+        for size in range(2, len(found) + 1):
+            run = found[-size:]
+            if run[0] not in STOPWORDS and initials_spell(abbreviation.lower(), run):
+                pairs.append((abbreviation.lower(), tuple(run)))
+                break
+    for abbreviation, after in DEFINED_AFTER.findall(line):
+        found = words(after)
+        for size in range(len(found), 1, -1):
+            run = found[:size]
+            if run[-1] not in STOPWORDS and initials_spell(abbreviation.lower(), run):
+                pairs.append((abbreviation.lower(), tuple(run)))
+                break
+    return pairs
+
+
+@dataclass
+class Abbreviations:
+    """Each abbreviation the governing documents define, with its most often stated defined words."""
+    defined: dict[str, tuple[str, ...]] = field(default_factory=dict)
+
+    def expand(self, found: list[str]) -> list[str]:
+        """``found`` and, for each abbreviation in it, its defined words (without stopwords), and for
+        each run of defined words in it, the abbreviation: both forms meet either form."""
+        extra = [w for a in found if a in self.defined for w in self.defined[a] if w not in STOPWORDS]
+        present = set(found)
+        extra += [a for a, run in self.defined.items()
+                  if run[0] in present and _contains_words(found, list(run), prefix_last=False)]
+        return found + extra if extra else found
+
+    def query_patterns(self, phrase: list[str], terms: list[str]) -> tuple[list[str], list[str]]:
+        """(fixed patterns, whole-word abbreviations) the code search must also look for: the
+        defined words of an abbreviation the query types, and an abbreviation whose defined words the
+        query says (matched as a whole word: "dor" never selects "vendor")."""
+        fixed = [stem(w) for t in terms for w in self.defined.get(t, ()) if w not in STOPWORDS]
+        whole = [a for a, run in self.defined.items() if _contains_words(phrase, list(run), prefix_last=False)]
+        return fixed, whole
+
+
+def abbreviations(state: State, deadline: float) -> tuple[Abbreviations, str | None]:
+    """The abbreviation table of the governing documents (ABBREVIATION_SOURCES and any tracked
+    glossary), from one bounded ``git grep`` over their text-readable files; built once per state.
+    A read that does not finish is returned empty with its reason and not kept."""
+    with state.derived_lock:
+        if 'abbreviations' in state.derived:
+            return state.derived['abbreviations'], None
+    sources = sorted(p for p in state.files if text_readable(state, p) and (
+        any(p == s or p.startswith(s + '/') for s in ABBREVIATION_SOURCES) or GLOSSARY.search(PurePosixPath(p).name)))
+    counts: dict[tuple[str, tuple[str, ...]], int] = {}
+    if sources:
+        args = ['--no-color', '-I', '-E', '--null', '-n', '-e', ABBREVIATION_LINE, '--',
+                *(f':(literal){p}' for p in sources)]
+        run = _total_grep(state.repo, args, deadline, EXCERPT_OUTPUT_CAP)
+        if run.outcome not in ('ok', 'no_match'):
+            detail = f' ({run.detail})' if run.detail else ''
+            return Abbreviations(), f'{run.outcome}: the abbreviation read did not finish{detail}'
+        for record in run.stdout.split(b'\n'):
+            parts = record.split(b'\0', 2)
+            if len(parts) == 3 and parts[0].decode('utf-8', 'replace') in sources:
+                for pair in defined_pairs(parts[2].decode('utf-8', 'replace')[:LONG_LINE]):
+                    counts[pair] = counts.get(pair, 0) + 1
+    table = Abbreviations()
+    for (abbreviation, run), _ in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
+        if abbreviation not in STOPWORDS:
+            table.defined.setdefault(abbreviation, run)
+    with state.derived_lock:
+        state.derived['abbreviations'] = table
+    return table, None
+
+
+# ---------------------------------------------------------------- function spans
+
+# A definition's signature and docstring say what the function does: the function-level unit a
+# process question is scored by in a large file, where the file's words as a bag say little.
+SPAN_LINE = r'^[[:space:]]*(async[[:space:]]+)?(def|class)[[:space:]]|"""' + "|'''"
+DEF_LINE = re.compile(r'\s*(?:async\s+)?(?:def|class)\s')
+
+
+def python_spans(lines: list[tuple[int, str]]) -> list[tuple[int, int, str]]:
+    """The (first line, last line, definition line) of each definition among a Python file's
+    definition and triple-quote ``lines`` (in order): from ``def``/``class`` to the end of the
+    docstring that opens within DOCSTRING_WINDOW lines, else the definition line alone. Triple
+    quotes are tracked, so a definition quoted inside a string is no definition."""
+    spans: list[tuple[int, int, str]] = []
+    pending: tuple[int, str] | None = None  # a definition whose docstring has not opened yet
+    owner: tuple[int, str] | None = None  # the definition whose docstring is open
+    in_string = False
+    for no, text in lines:
+        odd = (text.count('"""') + text.count("'''")) % 2 == 1
+        if in_string:
+            if odd:
+                in_string = False
+                if owner:
+                    spans.append((owner[0], no, owner[1]))
+                    owner = None
+            continue
+        if DEF_LINE.match(text):
+            if pending:
+                spans.append((pending[0], pending[0], pending[1]))
+            pending = (no, text)
+            continue
+        if pending and no - pending[0] <= DOCSTRING_WINDOW and DOCSTRING.match(text):
+            if odd:
+                owner, in_string = pending, True
+            else:
+                spans.append((pending[0], no, pending[1]))
+            pending = None
+        elif odd:
+            in_string = True
+    if pending:
+        spans.append((pending[0], pending[0], pending[1]))
+    return spans
+
+
+def function_spans(state: State, deadline: float) -> tuple[dict[str, list[tuple[int, int, str]]], str | None]:
+    """``python_spans`` of every code-readable Python file, from one bounded ``git grep`` of their
+    definition and triple-quote lines; built once per state (a read that does not finish is not kept)."""
+    with state.derived_lock:
+        if 'spans' in state.derived:
+            return state.derived['spans'], None
+    pathspecs, readable = _code_pathspecs(state)
+    if not readable:
+        return {}, None
+    args = ['--no-color', '-I', '-E', '--null', '-n', '-e', SPAN_LINE, '--', *pathspecs]
+    run = _total_grep(state.repo, args, deadline, CODE_OUTPUT_CAP)
+    if run.outcome not in ('ok', 'no_match'):
+        detail = f' ({run.detail})' if run.detail else ''
+        return {}, f'{run.outcome}: the function span read did not finish{detail}'
+    found: dict[str, list[tuple[int, str]]] = {}
+    for record in run.stdout.split(b'\n'):
+        parts = record.split(b'\0', 2)
+        if len(parts) == 3 and parts[1].isdigit():
+            path = parts[0].decode('utf-8', 'replace')
+            if path in readable and _suffix(path) == '.py':
+                found.setdefault(path, []).append((int(parts[1]), parts[2].decode('utf-8', 'replace')[:LONG_LINE]))
+    spans = {path: kept for path, lines in found.items() if (kept := python_spans(lines))}
+    with state.derived_lock:
+        state.derived['spans'] = spans
+    return spans, None
+
+
+def enclosing_span(spans: list[tuple[int, int, str]], line_no: int) -> tuple[int, int, str] | None:
+    """The span (signature and docstring) of ``spans`` that holds ``line_no``, if any."""
+    at = bisect.bisect_right(spans, (line_no, math.inf)) - 1
+    return spans[at] if at >= 0 and spans[at][0] <= line_no <= spans[at][1] else None
 
 
 def _summary_hits(summaries: CodeSummaries, terms: list[str]) -> dict[str, set[str]]:
@@ -1671,28 +1898,38 @@ class SymbolScan:
     failure: str | None = None
 
 
-def _symbol_scan(state: State, terms: list[str], deadline: float, units: Sequence[str] = ()) -> SymbolScan:
+def _symbol_scan(state: State, terms: list[str], deadline: float, units: Sequence[str] = (),
+                 phrase: Sequence[str] = ()) -> SymbolScan:
     """Code files whose identifiers or header hold query words.
 
-    One ``git grep`` reads every code line holding a query word (or its stem); a line counts
-    only when ``symbol_text`` finds an identifier in it, and a file's evidence is its ONE unit
-    with the most query words (a line, or a definition with the docstring that opens within
-    DOCSTRING_WINDOW lines of it), so words scattered over a large file's definitions never
-    add up. Runs beside the text search (no shared state); ``_merge_symbols`` applies the result.
+    One ``git grep`` reads every code line holding a query word (or its stem, or an
+    ``abbreviations`` form of it); a line counts only when ``symbol_text`` finds an identifier in
+    it, and a file's evidence is its ONE unit with the most query words: a line, or in Python a
+    definition's span (``function_spans``: its signature and docstring, whose prose counts), so
+    words scattered over a large file's definitions never add up. Identifier and summary words
+    meet a query in either abbreviated or defined form. Runs beside the text search (no shared
+    state); ``_merge_symbols`` applies the result.
     """
     pathspecs, readable = _code_pathspecs(state)
     scan = SymbolScan(files=len(readable))
     if not readable:
         return scan
-    # Words shorter than MIN_CODE_PATTERN occur on most code lines: they never select lines, but
-    # still count on a line another query word selected (a query of short words only uses them).
-    patterns = list(dict.fromkeys(stem(t) for t in terms if len(t) >= MIN_CODE_PATTERN)) or terms
-    run = _total_grep(state.repo, _line_args(patterns, pathspecs, None), deadline, CODE_OUTPUT_CAP)
+    with ThreadPoolExecutor(max_workers=1) as side:  # the span read is query-independent: read it alongside
+        spans_read = side.submit(function_spans, state, deadline)
+        table, failure = abbreviations(state, deadline)
+        # Words shorter than MIN_CODE_PATTERN occur on most code lines: they never select lines, but
+        # still count on a line another query word selected (a query of short words only uses them).
+        patterns = list(dict.fromkeys(stem(t) for t in terms if len(t) >= MIN_CODE_PATTERN)) or terms
+        fixed, whole = table.query_patterns(list(phrase), terms)
+        run = _total_grep(state.repo, _line_args([*patterns, *fixed], pathspecs, None, whole), deadline,
+                          CODE_OUTPUT_CAP)
+        spans, span_failure = spans_read.result()
     if run.outcome in ('timeout', 'output_budget', 'error'):
         detail = f' ({run.detail})' if run.detail else ''
         scan.failure = f'{run.outcome}: the code identifier search did not finish{detail}'
+    scan.failure = scan.failure or failure or span_failure
     seen: dict[str, set[str]] = {}
-    last_definition: dict[str, tuple[int, set[str]]] = {}  # git grep reports a file's lines in order
+    in_spans: dict[tuple[str, int, str], set[str]] = {}  # (path, definition line no, line) -> query words in its span
     for record in run.stdout.split(b'\n'):
         parts = record.split(b'\0', 2)
         if len(parts) != 3 or not parts[1].isdigit():
@@ -1702,19 +1939,26 @@ def _symbol_scan(state: State, terms: list[str], deadline: float, units: Sequenc
             continue
         text = symbol_text(path, line_no, line)
         text_words = words(text) if text else []
-        hits = _prefix_hits(terms, text_words)
         if held := {u for u in units if _contains_words(text_words, words(u))}:
             scan.compounds.setdefault(path, set()).update(held)
+        if span := enclosing_span(spans.get(path, []), line_no):
+            # A definition's signature and docstring are one unit; its docstring is the function's own prose.
+            own = text_words if line_no == span[0] else words(CAMEL.sub(' ', line))
+            in_spans.setdefault((path, span[0], span[2]), set()).update(_prefix_hits(terms, table.expand(own)))
+            continue
+        hits = _prefix_hits(terms, table.expand(text_words))
         for term in hits:
             seen.setdefault(term, set()).add(path)
-        if hits and DEFINITION.match(line):
-            last_definition[path] = (line_no, hits)
-        elif hits and DOCSTRING.match(line) and path in last_definition:
-            defined_at, defined = last_definition[path]
-            if line_no - defined_at <= DOCSTRING_WINDOW:
-                hits = hits | defined
         if hits and (path not in scan.lines or len(hits) > len(scan.lines[path][0])):
             scan.lines[path] = (hits, line_no, line)
+        if hits:
+            scan.union.setdefault(path, set()).update(hits)
+    for (path, start, head), hits in sorted(in_spans.items()):
+        hits |= _prefix_hits(terms, table.expand(words(symbol_text(path, start, head) or '')))
+        for term in hits:
+            seen.setdefault(term, set()).add(path)
+        if hits and (path not in scan.lines or len(hits) > len(scan.lines[path][0])):
+            scan.lines[path] = (hits, start, head)
         if hits:
             scan.union.setdefault(path, set()).update(hits)
     # The file's summary (its docstring or header comments) is one more unit: "what this file does",

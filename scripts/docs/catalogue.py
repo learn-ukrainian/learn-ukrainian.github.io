@@ -135,9 +135,24 @@ def under_roots(path: str, roots=TRACKED_ROOTS) -> bool:
     return any(path == root or path.startswith(root + '/') for root in roots)
 
 
+# A directory's README or index note (prose) states what the directory holds and whether it is
+# still used: public lifecycle text, not one of the private bodies the exclusion protects.
+DIRECTORY_NOTE = re.compile(r'(?:readme|index)(?:\.[a-z]{2})?(?:\.(?:md|markdown|txt|rst))?', re.IGNORECASE)
+
+
+def is_directory_note(path: str) -> bool:
+    """True for a README or index note in prose (README, README.md, index.uk.md, ...)."""
+    return bool(DIRECTORY_NOTE.fullmatch(PurePosixPath(path).name))
+
+
 def is_excluded(path: str) -> bool:
-    """True when the docs inventory's privacy exclusion covers ``path`` (one shared list)."""
-    return bool(EXCLUDED_PARTS.intersection(PurePosixPath(path).parts))
+    """True when the docs inventory's privacy exclusion (one shared list) covers the body of ``path``.
+
+    The exclusion keeps private bodies (handoffs, secrets, caches) out of every read and result;
+    the README or index note of an excluded directory (``is_directory_note``) is exempt, because
+    it is the public record of that directory's lifecycle.
+    """
+    return bool(EXCLUDED_PARTS.intersection(PurePosixPath(path).parts)) and not is_directory_note(path)
 
 
 def root_of(pattern: str, roots=TRACKED_ROOTS) -> str | None:
@@ -724,15 +739,17 @@ DRAFT_MARKERS = (
 def body_readable(report: Report, path: str) -> bool:
     """The privacy boundary for content reads: may this path's body be read at all?
 
-    True only for a path that resolves to a content-searchable family and has no
-    inventory-excluded component (docs_inventory.EXCLUDED_PARTS) and no control
-    character. Everything else, including unresolved paths, stays unread.
+    True only for a path that resolves to a family, is not privacy-excluded (``is_excluded``)
+    and has no control character, and that either belongs to a content-searchable family or
+    is a directory note (``is_directory_note``): a family that is not content-searchable
+    because it owns private bodies still has its README read, the record of what those
+    bodies are. Everything else, including unresolved paths, stays unread.
     ``read_heads`` is the only body reader and applies this gate itself, so a
     scanner cannot bypass it.
     """
     owner = report.resolved.get(path)
-    return (owner is not None and owner[0] in report.searchable_entries and not is_excluded(path)
-            and not CONTROL_CHARS.search(path))
+    return (owner is not None and (owner[0] in report.searchable_entries or is_directory_note(path))
+            and not is_excluded(path) and not CONTROL_CHARS.search(path))
 
 
 def _index_blobs(repo: Path, objects: dict[str, str]) -> dict[str, bytes]:

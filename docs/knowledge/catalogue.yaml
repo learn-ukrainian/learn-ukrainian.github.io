@@ -24,6 +24,9 @@
 # - A family that owns any path under a component the docs inventory excludes
 #   for privacy (session-state, private, secrets, credentials, cache, ...) must
 #   set content_searchable: false. Ownership is what decides, not glob text.
+#   The exclusion covers bodies: a directory's README or index note (prose) is
+#   never excluded and is read even in such a family, because it is the public
+#   record of what the directory holds and whether it is still live.
 # - lifecycle uses the contract vocabulary: draft | active | superseded | archive.
 #   superseded needs superseded_by: a tracked path (optionally #section) or
 #   id:<entry>. Chains must end at an active or archive node, with no cycles;
@@ -229,6 +232,7 @@ entries:
     content_searchable: true
     overrides:
       - {path: docs/rules-core-draft-notes.md, lifecycle: draft, evidence: "Draft notes for the rules core (2026-09-30); no consumer found."}
+      - {path: docs/MASTER-PLAN.md, lifecycle: superseded, superseded_by: docs/WORKSTREAMS.md, evidence: "The census records it as a March 2026 snapshot (catalogue-census-2026-10-01.md, Misleading names); CLAUDE.md names docs/WORKSTREAMS.md the workstreams and priorities document, which calls itself the living once-per-session orientation layer."}
 
   # ================================================================ architecture, decisions, design
   - id: architecture-adr
@@ -527,7 +531,7 @@ entries:
     query:
       - {surface: api, how: "GET /api/session/current?agent=<agent>&format=json"}
     content_searchable: false
-    notes: Bodies are excluded from content search, matching the docs inventory's session-state exclusion.
+    notes: Bodies are excluded from content search, matching the docs inventory's session-state exclusion; the directory README, which states that these files are compatibility routes and not live state, is read.
 
   - id: handoffs-march-2026
     kind: doc_family
@@ -1459,7 +1463,7 @@ entries:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/open-model-data"}
     content_searchable: true
     overrides:
-      - {path: docs/projects/open-model-data/PHASE_3_6_PILOT_CANARY.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25, pilot data failed acceptance."}
+      - {path: docs/projects/open-model-data/PHASE_3_6_PILOT_CANARY.md, lifecycle: superseded, superseded_by: docs/projects/open-model-data/REAL_TRAINING_RUN_SCORECARD_8338.md, evidence: "Own banner: withdrawn 2026-09-25, pilot data failed acceptance; superseded by Issue #8338, whose scorecard is REAL_TRAINING_RUN_SCORECARD_8338.md."}
       - {path: docs/projects/open-model-data/PILOT_VERIFICATION_AND_DELIBERATION.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25."}
       - {path: docs/projects/open-model-data/PRODUCTION_RELEASE_PLAN.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25."}
       - {path: docs/projects/open-model-data/PHASE_3_7_PRODUCTION_SHARDS.md, lifecycle: archive, evidence: "Own banner: ARCHIVED / SUPERSEDED 2026-09-22."}

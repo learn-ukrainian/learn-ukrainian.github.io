@@ -85,8 +85,8 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 
 ### State of the project
 
-- `docs/session-state/` — chronological session handoffs. `ls -t` for newest. Read top-1 to top-3 for context.
-- `docs/MASTER-PLAN.md` — priority sequencing
+- `docs/WORKSTREAMS.md` — living workstreams and priorities (replaces `docs/MASTER-PLAN.md`, a March 2026 snapshot)
+- `docs/session-state/` — compatibility handoff routers only, not live state (see its README); handoffs go through Fleet Comms and the thread-handoff flow
 - `audit/` (top-level, NOT `docs/audits/`) — build-produced reports + recurring audits
 
 ### Operational
