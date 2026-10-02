@@ -10399,9 +10399,10 @@ def _dispatch(
             print(f"❌ review attempt refused: {exc}", file=sys.stderr)
             return 2
 
-    # #9518: while a lane runs on prepaid credits only its credit-period models are
-    # admitted. Checked on the admitted route (aliases, substitution and review
-    # selection applied; no --model means the lane default) before any side effect.
+    # #9518: while a lane is past its plan cap with a credit balance present, only
+    # its credit-period models are admitted. Checked on the admitted route (aliases,
+    # substitution and review selection applied; no --model means the lane default)
+    # before any side effect.
     credit_refusal = _credit_period_refusal(dispatch_agent, launch_target.model)
     if credit_refusal:
         print(f"❌ dispatch refused: {credit_refusal}", file=sys.stderr)
@@ -13104,19 +13105,17 @@ def _lane_default_model(agent: str) -> str | None:
 
 
 def _credit_period_refusal(dispatch_agent: str, launch_model: str | None) -> str | None:
-    """Typed refusal when ``dispatch_agent`` is credit-backed and the launch model is off its allowlist (#9518).
+    """Typed refusal when ``dispatch_agent`` shows a credit balance and the launch model is off its allowlist (#9518).
 
     A dispatch without ``--model`` is judged by the lane's default model. The
     policy (``scripts/config/credit_lanes.yaml``) and the lane state come from
-    ``scripts.fleet.credit_lane``, the same reader ``capacity_pick`` uses; a
-    malformed policy refuses. Reads snapshots only: never consumes credits or resets.
+    ``scripts.fleet.credit_lane``, the same reader ``capacity_pick`` uses; an
+    unreadable policy restricts only the built-in credit lanes and warns on
+    stderr. Reads snapshots only: never consumes credits or resets.
     """
     from scripts.fleet import credit_lane
 
-    try:
-        return credit_lane.dispatch_refusal(dispatch_agent, launch_model or _lane_default_model(dispatch_agent))
-    except ValueError as exc:
-        return f"{credit_lane.REFUSAL_CODE}: credit-lane policy unreadable: {exc}"
+    return credit_lane.dispatch_refusal(dispatch_agent, launch_model or _lane_default_model(dispatch_agent))
 
 
 def _load_budget_substitution_table() -> dict[str, dict[str, str]]:
@@ -13262,7 +13261,7 @@ def _resolve_agent_with_budget_guard(
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path.
-    A credit-backed lane (``scripts.fleet.credit_lane``) is not substituted.
+    A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
     """
     requested = (agent or "").strip().lower()
     if language_lane and requested not in _LANGUAGE_LANES:
@@ -13372,8 +13371,9 @@ def _resolve_agent_with_budget_guard(
         )
     credit_relaxes = False
     if not reserve_relaxes:
-        # #9518: a credit-backed lane stays usable (the credit-period model check
-        # runs on the admitted route); unknown or stale credit data keeps today's guard.
+        # #9518: a lane with a credit balance present and no recent rate limit stays
+        # usable (the credit-period model check runs on the admitted route); unknown,
+        # stale or contradicted credit data, or an unreadable policy, keeps today's guard.
         from scripts.fleet import credit_lane
 
         try:
@@ -13382,10 +13382,10 @@ def _resolve_agent_with_budget_guard(
             )
         except ValueError:
             credit = {"state": None}
-        credit_relaxes = credit["state"] == credit_lane.CREDIT_BACKED
+        credit_relaxes = credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
         if credit_relaxes:
             print(
-                f"⚠ lane {requested} is credit-backed ({credit['reason']}); "
+                f"⚠ lane {requested} has a {credit_lane.DRAW_NOT_VERIFIED} ({credit['reason']}); "
                 f"credit-period models only: {', '.join(credit['allowed_models'])}.",
                 file=sys.stderr,
             )

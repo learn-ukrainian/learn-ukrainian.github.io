@@ -799,15 +799,21 @@ def _hermetic_dispatch_admission_host(monkeypatch):
 
 @pytest.fixture(autouse=True)
 def _hermetic_credit_lane_snapshot(monkeypatch):
-    """Credit-period admission sees no live Monitor snapshot (#9518).
+    """Credit-period state sees no live Monitor snapshot or runtime usage records (#9518).
 
-    The live Monitor on a developer box can report a credit-backed lane and
-    refuse the off-allowlist dispatches other tests make. Credit-lane tests
-    monkeypatch ``read_routing_budget`` themselves.
+    The live Monitor on a developer box can report a credit balance and refuse
+    the off-allowlist dispatches other tests make, and the live runtime usage
+    records hold real rate limits. Credit-lane tests monkeypatch both readers
+    themselves.
     """
     from scripts.fleet import credit_lane
 
     monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+    monkeypatch.setattr(
+        credit_lane,
+        "read_recent_rate_limits",
+        lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
+    )
 
 
 # One numbered directory per process. ``mktemp`` lists the base to pick the

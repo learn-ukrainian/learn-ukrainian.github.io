@@ -2,14 +2,20 @@
 # Read by scripts/fleet/credit_lane.py for scripts/fleet/capacity_pick.py (router)
 # and delegate.py dispatch admission. Neither consumes credits or resets.
 #
-# A configured lane is `credit_backed` only while its plan allowance is at or
-# below `near_cap_remaining_pct` AND the routing-budget record carries a
-# positive numeric credit balance from a fresh probe (younger than
-# `credit_max_age_s`). Missing, stale or non-numeric credit data keeps the
-# lane in its plan state (today's near_cap/AVOID behaviour).
-# While a lane is credit_backed, dispatch admission refuses any model outside
-# its `allowed_models` (a dispatch without --model is judged by the lane's
-# default model). With a healthy plan allowance nothing is restricted.
+# A configured lane reads `credit_balance_present` only while its plan allowance
+# is at or below `near_cap_remaining_pct`, the routing-budget record carries a
+# positive numeric credit balance from a fresh probe (age and explicit-UTC
+# fetch time younger than `credit_max_age_s`), AND the runtime usage records
+# show no `rate_limited` outcome for the lane within `rate_limit_window_s`.
+# The router sees a balance, not the provider drawing it: a recent rate limit
+# while the plan window is exhausted reads `credit_use_unconfirmed`. Every
+# other case keeps the lane in its plan state (today's near_cap/AVOID).
+# While a lane reads credit_balance_present, dispatch admission refuses any
+# model outside its `allowed_models` (a dispatch without --model is judged by
+# the lane's default model). With a healthy plan allowance nothing is restricted.
+# If this file cannot be read or validated, only the lanes in
+# credit_lane.DEFAULT_ALLOWED_MODELS stay restricted (plan state, built-in
+# allowlist); every other lane is unaffected.
 schema_version: credit-lanes.v1
 
 # Plan remaining-% at or below which credits may back the lane. 10.0 matches the
@@ -19,6 +25,11 @@ near_cap_remaining_pct: 10.0
 # Credit freshness bound; matches the plan-window freshness bound the router
 # already uses (routing-budget stale_threshold_s and the reset reserve's 15 min).
 credit_max_age_s: 900
+
+# Evidence window: one or more `rate_limited` runtime outcomes for the lane in
+# this many seconds, while the plan window is exhausted, means the credits are
+# not confirmed to back calls. Must be positive.
+rate_limit_window_s: 3600
 
 # Reset advice: hold a free full reset while the natural plan reset is within
 # this many hours. Whether a full reset re-anchors the weekly window is not

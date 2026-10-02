@@ -24,8 +24,11 @@ MAX_PROVIDER_AGE_SECONDS = 15 * 60
 RESERVE_RELATIVE_PATH = Path("batch_state/routing_budget/operator_reset_reserve.json")
 
 
-def _utc_datetime(value: object) -> datetime | None:
-    """Parse explicit UTC timestamps; non-UTC offsets are rejected by design."""
+def utc_datetime(value: object) -> datetime | None:
+    """Parse explicit UTC timestamps; naive and non-UTC offsets are rejected by design.
+
+    The one timestamp rule for provider snapshots: ``credit_lane`` uses it too (#9518).
+    """
     if not isinstance(value, str):
         return None
     try:
@@ -60,8 +63,8 @@ def effective_reset_reserve(
     if not isinstance(reserve, dict) or reserve.get("available") is not True:
         return unavailable_reserve()
     remaining = reserve.get("remaining_resets")
-    confirmed_at = _utc_datetime(reserve.get("confirmed_at"))
-    expires_at = _utc_datetime(reserve.get("expires_at"))
+    confirmed_at = utc_datetime(reserve.get("confirmed_at"))
+    expires_at = utc_datetime(reserve.get("expires_at"))
     if (
         isinstance(remaining, bool)
         or not isinstance(remaining, int)
@@ -91,7 +94,7 @@ def effective_reset_reserve(
         return unavailable_reserve()
     count = inventory.get("available_count")
     expirations = inventory.get("expires_at")
-    fetched_at = _utc_datetime(inventory.get("fetched_at"))
+    fetched_at = utc_datetime(inventory.get("fetched_at"))
     if (
         isinstance(count, bool)
         or not isinstance(count, int)
@@ -103,7 +106,7 @@ def effective_reset_reserve(
         return unavailable_reserve()
     live_expirations: list[datetime | None] = []
     for value in expirations:
-        expiry = _utc_datetime(value)
+        expiry = utc_datetime(value)
         if value is not None and expiry is None:
             return unavailable_reserve()
         if expiry is None or expiry > current:

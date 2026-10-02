@@ -114,14 +114,19 @@ stampede one hot lane.
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
 
-**Credit-backed lanes (#9518):** a lane in `scripts/config/credit_lanes.yaml` whose plan allowance
+**Credit-balance lanes (#9518):** a lane in `scripts/config/credit_lanes.yaml` whose plan allowance
 is at or below the near-cap threshold and whose fresh probe carries a positive credit balance shows
-as `credit_backed` in `capacity_pick`: usable, ranked after plan-backed seats, with its balance,
-coverage and reset advice. Missing, stale or non-numeric credit data, or runtime rate limits, keep
-it near_cap/AVOID. While a lane is credit-backed, `delegate.py dispatch` refuses any model outside
-its allowlist (Codex: `gpt-6.1-sol`, `gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`; a dispatch
-without `--model` is judged by the lane default. The reset advice is text only: spending a free
-full reset stays an operator decision, and no tool consumes credits or resets.
+as `credit_balance_present` in `capacity_pick`: credit balance present; draw not verified by the
+router. It is usable only while there is no evidence against it, ranked after plan-backed seats,
+with its balance, evidence, coverage and reset advice. The router follows one rule: one or more
+`rate_limited` runtime outcomes for the lane within `rate_limit_window_s` (60 minutes) while the
+plan window is exhausted read `credit_use_unconfirmed` and keep near_cap/AVOID. Missing, stale,
+naive-timestamp or non-numeric credit data also keep near_cap/AVOID. While a lane shows a credit
+balance, `delegate.py dispatch` refuses any model outside its allowlist (Codex: `gpt-6.1-sol`,
+`gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`; a dispatch without `--model` is judged by the lane
+default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
+lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
+decision, and no tool consumes credits or resets.
 Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1
 first, Fable / Astra last resort.
 

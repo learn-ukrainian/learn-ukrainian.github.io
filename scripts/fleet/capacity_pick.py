@@ -228,6 +228,17 @@ def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int]:
     return counts
 
 
+# Credit states that keep the lane in its plan state; the row notes say why.
+_CREDIT_NOTE_STATES = frozenset(
+    {
+        credit_lane.CREDITS_EXHAUSTED,
+        credit_lane.CREDITS_UNVERIFIED,
+        credit_lane.CREDIT_USE_UNCONFIRMED,
+        credit_lane.POLICY_ERROR,
+    }
+)
+
+
 def build_lane_rows(
     budget: dict[str, Any],
     *,
@@ -239,11 +250,19 @@ def build_lane_rows(
 ) -> list[dict[str, Any]]:
     """Pure formatter input: one row per lane from a routing-budget payload.
 
-    A lane the credit policy marks ``credit_backed`` is usable (status
-    ``credit_backed``) instead of near_cap/AVOID; retirement, ineligibility,
-    ill health and NEED_LOGIN still avoid it. Each row carries ``credit``.
+    A lane the credit policy marks ``credit_balance_present`` is usable (that
+    status) instead of near_cap/AVOID; retirement, ineligibility, ill health
+    and NEED_LOGIN still avoid it. Each row carries ``credit``. An unreadable
+    policy marks the built-in credit lanes ``policy_error`` (plan state
+    applies) and leaves every other lane unchanged.
     """
-    policy = credit_policy if credit_policy is not None else credit_lane.load_policy()
+    policy = credit_policy
+    policy_error: str | None = None
+    if policy is None:
+        try:
+            policy = credit_lane.load_policy()
+        except ValueError as exc:
+            policy_error = str(exc)
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     budget_flight = budget.get("in_flight") if isinstance(budget.get("in_flight"), dict) else {}
     active = active_in_flight or {}
@@ -285,9 +304,13 @@ def build_lane_rows(
             and codex_is_threatened(info)
             and codex_reset_reserve_eligible(reserve, info, snapshot_stale=snapshot_stale)
         )
-        credit = credit_lane.lane_credit_report(lane, info, policy, now=now, snapshot_stale=snapshot_stale)
-        credit_relaxes = credit["state"] == credit_lane.CREDIT_BACKED and not _is_hard_avoid(info, lane=lane)
-        status = credit_lane.CREDIT_BACKED if credit_relaxes else lane_status(info)
+        credit = (
+            credit_lane.lane_credit_report(lane, info, policy, now=now, snapshot_stale=snapshot_stale)
+            if policy is not None
+            else credit_lane.policy_error_state(lane, policy_error or "unknown error")
+        )
+        credit_relaxes = credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT and not _is_hard_avoid(info, lane=lane)
+        status = credit_lane.CREDIT_BALANCE_PRESENT if credit_relaxes else lane_status(info)
         will_last = will_last_to_reset(info)
         cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
         pace_deficit = pace_is_deficit(cb) is True
@@ -299,10 +322,10 @@ def build_lane_rows(
             notes.append(f"quota:{quota_source}")
         if credit_relaxes:
             notes.append(
-                f"credit-backed (balance {credit['credit_balance']:g}; models "
-                f"{', '.join(credit['allowed_models'])} only)"
+                f"credit balance present ({credit['credit_balance']:g}; draw not verified by the router; "
+                f"models {', '.join(credit['allowed_models'])} only)"
             )
-        elif credit["state"] in {credit_lane.CREDITS_EXHAUSTED, credit_lane.CREDITS_UNVERIFIED}:
+        elif credit["state"] in _CREDIT_NOTE_STATES:
             notes.append(f"{credit['state']}: {credit['reason']}")
         # Inventory is informational: only the separately asserted operator
         # reserve above can relax admission. Never derive that assertion here.
@@ -380,8 +403,8 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "warm": 1,
             "unknown": 2,
             "pre_launch": 3,
-            # Usable on prepaid credits: after every plan-backed seat.
-            credit_lane.CREDIT_BACKED: 7,
+            # Credit balance present (draw not verified by the router): after every plan-backed seat.
+            credit_lane.CREDIT_BALANCE_PRESENT: 7,
             "hot": 8,
             "near_cap": 9,
         }.get(status, 5)
@@ -454,7 +477,7 @@ def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
         and (
             row.get("status") in _COOL_STATUSES
             or row.get("reset_reserve_eligible")
-            or row.get("status") == credit_lane.CREDIT_BACKED
+            or row.get("status") == credit_lane.CREDIT_BALANCE_PRESENT
         )
     ]
 
@@ -507,11 +530,22 @@ def build_report(
         warnings.append(f"recommendation {primary!r} suppressed: lane is AVOID")
         primary = None
     for row in rows:
-        if row["lane"] == primary and row["status"] == credit_lane.CREDIT_BACKED:
+        if row["lane"] == primary and row["status"] == credit_lane.CREDIT_BALANCE_PRESENT:
             warnings.append(
-                f"recommendation {primary!r} runs on prepaid credits: dispatch only "
-                f"{', '.join(row['credit']['allowed_models'])} (credit-period allowlist)"
+                f"recommendation {primary!r} is past its plan cap with a {credit_lane.DRAW_NOT_VERIFIED}: "
+                f"dispatch only {', '.join(row['credit']['allowed_models'])} (credit-period allowlist)"
             )
+    policy_errors = [row for row in rows if (row.get("credit") or {}).get("state") == credit_lane.POLICY_ERROR]
+    if policy_errors:
+        warnings.append(
+            f"{policy_errors[0]['credit']['reason']}: "
+            + "; ".join(
+                f"{row['lane']} keeps its plan state and dispatch admits only "
+                f"{', '.join(row['credit']['allowed_models'])}"
+                for row in policy_errors
+            )
+            + "; other lanes unaffected"
+        )
     return {
         "transport": budget.get("transport", "dispatch"),
         "generated_at": budget.get("generated_at"),
@@ -540,17 +574,28 @@ def format_credit_lines(rows: list[dict[str, Any]]) -> list[str]:
             continue
         lane = row.get("lane")
         models = ", ".join(credit.get("allowed_models") or [])
-        if state == credit_lane.CREDIT_BACKED:
+        evidence = credit.get("evidence") or {}
+        count = evidence.get("rate_limited_count")
+        evidence_text = (
+            f" | evidence: rate limits {'unknown' if count is None else count} in last "
+            f"{evidence.get('rate_limit_window_s'):g}s; balance {evidence.get('credit_balance')} "
+            f"fetched {evidence.get('credit_fetched_at') or 'unknown'}"
+            if evidence
+            else ""
+        )
+        if state == credit_lane.CREDIT_BALANCE_PRESENT:
             coverage = credit.get("coverage") or {}
             dispatches = coverage.get("dispatches")
             lines.append(
-                f"credit lane {lane}: {state} ({credit.get('reason')}) | coverage: "
+                f"credit lane {lane}: {state} ({credit.get('reason')}){evidence_text} | coverage: "
                 f"{dispatches if dispatches is not None else coverage.get('basis')} | models: {models} only"
             )
+        elif state == credit_lane.POLICY_ERROR:
+            lines.append(f"credit lane {lane}: {state} ({credit.get('reason')}) | dispatch admits only {models}")
         else:
             lines.append(
-                f"credit lane {lane}: {state} ({credit.get('reason')}) | models restricted to {models} "
-                "only while credit_backed"
+                f"credit lane {lane}: {state} ({credit.get('reason')}){evidence_text} | models restricted to "
+                f"{models} only while {credit_lane.CREDIT_BALANCE_PRESENT}"
             )
         advice = credit.get("reset_advice") or {}
         if advice:
@@ -604,9 +649,12 @@ def main(argv: list[str] | None = None) -> int:
             "load per CPU vs limit (thresholds: DISPATCH_* in scripts/config.py, env-overridable). When\n"
             "lu-dispatch.slice is active the same line adds its memory use against MemoryMax.\n"
             "Credit lanes (scripts/config/credit_lanes.yaml): a lane near its plan cap with a fresh positive\n"
-            "credit balance is `credit_backed` (usable; dispatch admits only its allowlisted models); missing\n"
-            "or stale credit data keeps near_cap/AVOID. JSON rows carry `credit` with state, balance, coverage\n"
-            "and `reset_advice` (use_reset_now | hold_reset | not_applicable). Nothing consumes credits or resets.\n"
+            "credit balance and no rate limit in the evidence window reads `credit_balance_present` (usable;\n"
+            "the router does not verify the provider draws credits; dispatch admits only allowlisted models).\n"
+            "A recent rate limit reads `credit_use_unconfirmed`; missing or stale credit data, or an unreadable\n"
+            "policy (`policy_error`), keeps near_cap/AVOID. JSON rows carry `credit` with state, evidence,\n"
+            "coverage and `reset_advice` (use_reset_now | hold_reset | not_applicable). Nothing consumes\n"
+            "credits or resets.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
             "issues #7812, #8645, #9518."
@@ -627,7 +675,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="Exit 2 when no cool/warm lane, admissible Codex reset reserve or credit-backed lane is available.",
+        help="Exit 2 when no cool/warm lane, admissible Codex reset reserve or credit-balance lane is available.",
     )
     args = parser.parse_args(argv)
 
@@ -645,7 +693,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.strict and not report.get("cooler_lanes"):
         if not args.json:
             print(
-                "❌ --strict: no cool/warm lane, admissible reset reserve or credit-backed lane available",
+                "❌ --strict: no cool/warm lane, admissible reset reserve or credit-balance lane available",
                 file=sys.stderr,
             )
         return 2
