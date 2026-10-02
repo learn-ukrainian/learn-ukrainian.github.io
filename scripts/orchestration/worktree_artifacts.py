@@ -25,6 +25,19 @@ _DISPOSABLE_DIRECTORIES = frozenset(
     {".pytest_cache", ".ruff_cache", ".mypy_cache", "__pycache__", "node_modules", ".venv", ".git"}
 )
 
+_CONFIG_INDIRECTION_RE = re.compile(
+    r"^\s*(\[\s*include(if)?\b|include(if)?\b)",
+    re.IGNORECASE | re.MULTILINE,
+)
+_REDIRECTED_WORKTREE_RE = re.compile(
+    r"\bworktree\s*=",
+    re.IGNORECASE,
+)
+_DANGEROUS_CONFIG_RE = re.compile(
+    r"\b(clean|smudge|process|command|textconv|fsmonitor|hookspath|sshcommand|askpass|editor|pager|helper|driver|cmd)\s*=",
+    re.IGNORECASE,
+)
+
 
 def _git_paths(worktree: Path, *args: str) -> list[str]:
     """Read NUL-delimited paths, refusing an unavailable inventory."""
@@ -222,10 +235,17 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                         f"points at another artifact ({target_rel}): {name}"
                     )
 
-        # Check for executable or filter configuration in .git/config
+        # Check for executable, filter, redirection, or indirection configuration in git configs
         config_files: list[Path] = []
         if dot_git.is_dir():
-            config_files.append(dot_git / "config")
+            for p in dot_git.glob("config*"):
+                if p.is_file():
+                    config_files.append(p)
+            wt_dir = dot_git / "worktrees"
+            if wt_dir.is_dir():
+                for p in wt_dir.rglob("config*"):
+                    if p.is_file():
+                        config_files.append(p)
         elif dot_git.is_file():
             with contextlib.suppress(OSError):
                 gitdir_text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
@@ -233,31 +253,61 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     gitdir_path = Path(gitdir_text[7:].strip())
                     if not gitdir_path.is_absolute():
                         gitdir_path = (source / gitdir_path).resolve()
-                    config_files.append(gitdir_path / "config")
-                    config_files.append(gitdir_path / "config.worktree")
+                    for p in gitdir_path.glob("config*"):
+                        if p.is_file():
+                            config_files.append(p)
                     commondir_file = gitdir_path / "commondir"
                     if commondir_file.is_file():
                         commondir_text = commondir_file.read_text(encoding="utf-8", errors="replace").strip()
                         commondir_path = Path(commondir_text)
                         if not commondir_path.is_absolute():
                             commondir_path = (gitdir_path / commondir_path).resolve()
-                        config_files.append(commondir_path / "config")
+                        for p in commondir_path.glob("config*"):
+                            if p.is_file():
+                                config_files.append(p)
+                        cwt_dir = commondir_path / "worktrees"
+                        if cwt_dir.is_dir():
+                            for p in cwt_dir.rglob("config*"):
+                                if p.is_file():
+                                    config_files.append(p)
 
-        dangerous_config_re = re.compile(
-            r"\b(clean|smudge|process|command|textconv|fsmonitor|hookspath)\s*=",
-            re.IGNORECASE,
-        )
+        seen_configs: set[Path] = set()
         for cfg_path in config_files:
-            if cfg_path.is_file():
-                try:
-                    cfg_text = cfg_path.read_text(encoding="utf-8", errors="replace")
-                except OSError as exc:
-                    raise ValueError(f"failed to read git config in nested repository {name}: {exc}") from exc
-                if dangerous_config_re.search(cfg_text):
-                    raise ValueError(
-                        f"artifact is a nested git repository with executable or filter configuration: {name}; "
-                        f"refusing removal to prevent code execution"
-                    )
+            if cfg_path in seen_configs:
+                continue
+            seen_configs.add(cfg_path)
+            if not cfg_path.is_file():
+                continue
+            try:
+                cfg_text = cfg_path.read_text(encoding="utf-8", errors="replace")
+            except OSError as exc:
+                raise ValueError(f"failed to read git config in nested repository {name}: {exc}") from exc
+
+            cleaned_lines: list[str] = []
+            for line in cfg_text.splitlines():
+                stripped = line.strip()
+                if stripped.startswith(("#", ";")):
+                    continue
+                cleaned_lines.append(line)
+            cleaned_text = "\n".join(cleaned_lines)
+
+            if _CONFIG_INDIRECTION_RE.search(cleaned_text):
+                raise ValueError(
+                    f"artifact is a nested git repository with configuration indirection (include/includeIf): {name}; "
+                    f"refusing removal to prevent code execution"
+                )
+
+            if _REDIRECTED_WORKTREE_RE.search(cleaned_text):
+                raise ValueError(
+                    f"artifact is a nested git repository with redirected worktree (core.worktree): {name}; "
+                    f"refusing removal"
+                )
+
+            if _DANGEROUS_CONFIG_RE.search(cleaned_text):
+                raise ValueError(
+                    f"artifact is a nested git repository with executable or filter configuration: {name}; "
+                    f"refusing removal to prevent code execution"
+                )
 
         # Count regular files and compute total size in bytes
         file_count = 0
@@ -275,6 +325,28 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
         env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
         git_cmd = ["git", "-c", "core.fsmonitor=", "-c", "core.hooksPath=/dev/null"]
         try:
+            toplevel_proc = subprocess.run(
+                [*git_cmd, "rev-parse", "--show-toplevel"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if toplevel_proc.returncode != 0:
+                err = toplevel_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            toplevel_str = toplevel_proc.stdout.decode("utf-8", "replace").strip()
+            if not toplevel_str:
+                raise ValueError(f"artifact is an invalid nested git repository (no toplevel): {name}")
+            toplevel_path = Path(toplevel_str).resolve()
+            if toplevel_path != source.resolve():
+                raise ValueError(
+                    f"artifact git repository worktree ({toplevel_path}) does not match "
+                    f"expected directory ({source.resolve()}): {name}; refusing removal"
+                )
+
             status_proc = subprocess.run(
                 [*git_cmd, "status", "--porcelain", "-uall", "--ignored"],
                 cwd=source,

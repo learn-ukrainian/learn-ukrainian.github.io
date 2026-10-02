@@ -724,3 +724,105 @@ def test_ignored_artifact_nested_repo_skip_worktree_never_discarded(checkout, tm
     assert "concealed tracked changes" in reason
     assert "uncommitted work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_include_indirection_rejected_without_execution(checkout):
+    """P1: nested repository include indirection is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/include_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    extra_cfg = repo_dir / "extra.config"
+    extra_cfg.write_text(f'[filter "probe"]\n  clean = "{script}"\n')
+    cfg = repo_dir / ".git" / "config"
+    with open(cfg, "a", encoding="utf-8") as fp:
+        fp.write(f"\n[include]\n  path = {extra_cfg}\n")
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "configuration indirection (include/includeIf)" in reason
+    assert not marker.exists(), "clean filter was executed via include indirection!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_includeif_indirection_rejected_without_execution(checkout):
+    """P1: nested repository includeIf indirection is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/includeif_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    extra_cfg = repo_dir / "extra.config"
+    extra_cfg.write_text(f'[filter "probe"]\n  clean = "{script}"\n')
+    cfg = repo_dir / ".git" / "config"
+    with open(cfg, "a", encoding="utf-8") as fp:
+        fp.write(f'\n[includeIf "gitdir:*"]\n  path = {extra_cfg}\n')
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "configuration indirection (include/includeIf)" in reason
+    assert not marker.exists(), "clean filter was executed via includeIf indirection!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_config_worktree_filter_rejected_without_execution(checkout):
+    """P1: nested repository config.worktree filter is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/config_worktree_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "extensions.worktreeConfig", "true"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    cfg_wt = repo_dir / ".git" / "config.worktree"
+    cfg_wt.write_text(f'[filter "probe"]\n  clean = "{script}"\n')
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with executable or filter configuration" in reason
+    assert not marker.exists(), "clean filter was executed via config.worktree!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_core_worktree_redirection_never_discarded(checkout, tmp_path):
+    """P1: nested repo with core.worktree pointing to clean dir never discards dirty artifact."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    clean_external = tmp_path / "clean_external"
+    clean_external.mkdir()
+
+    repo_dir = checkout[0] / "batch_state/reports/redirected_worktree_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Modify the actual artifact file so it has uncommitted bytes
+    (repo_dir / "probe.txt").write_text("modified dirty content in artifact\n")
+
+    # Mirror base file to external clean dir and point core.worktree there
+    (clean_external / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "config", "core.worktree", str(clean_external)], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert (
+        "redirected worktree (core.worktree)" in reason
+        or "does not match expected directory" in reason
+    )
+    assert "clear with: rm -rf" not in reason
