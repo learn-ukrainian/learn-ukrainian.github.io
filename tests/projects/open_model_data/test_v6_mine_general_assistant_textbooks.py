@@ -396,7 +396,7 @@ def test_synthetic_pipeline_hermetic_run():
             output_dir=tmp_path,
         )
         assert receipt["schema_version"] == "v1_general_assistant_release_receipt"
-        assert receipt["issue"] == 8139
+        assert receipt["issue"] in (8139, 8341)
         assert receipt["parent_epic"] == 6321
         assert receipt["invariants_verified"]["zero_train_eval_leakage"] is True
 
@@ -1323,3 +1323,111 @@ def test_round_16_failing_examples_and_mechanisms():
 
     for snip, concept in valid_cases:
         assert is_definitional_for_concept(snip, concept, cur) is True, f"Improperly rejected valid definition for concept '{concept}': {snip}"
+
+
+def test_issue_8341_textbook_rights_records_coverage_and_invariants():
+    """Verify that textbook rights records cover all 195 textbooks and enforce legal basis (#8341)."""
+    import yaml
+
+    from scripts.projects.open_model_data.paths import REGISTRY_TEXTBOOKS_DIR
+    records_yaml = REGISTRY_TEXTBOOKS_DIR / "textbook_rights_records.yaml"
+    records_json = REGISTRY_TEXTBOOKS_DIR / "textbook_rights_records.json"
+
+    assert records_yaml.is_file(), f"Missing rights registry YAML: {records_yaml}"
+    assert records_json.is_file(), f"Missing rights registry JSON: {records_json}"
+
+    with records_yaml.open(encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    assert data["schema_version"] == "textbook_rights_records_v1"
+    assert data["governing_issue"] == 8341
+    assert data["parent_epic"] == 6321
+    assert "legal_framework" in data
+    textbooks = data.get("textbooks", [])
+    assert len(textbooks) >= 190, f"Expected >= 190 textbooks registered, got {len(textbooks)}"
+    assert data["total_textbooks"] == len(textbooks)
+
+    for tb in textbooks:
+        assert tb.get("source_file")
+        assert tb.get("author")
+        assert "grade" in tb
+        assert tb.get("subject")
+        assert tb.get("legal_basis")
+        assert tb.get("verbatim_reproduction_allowed") is False
+        assert tb.get("explanation_synthesis_allowed") is True
+        assert "pedagogical_mandate" in tb
+
+
+def test_issue_8341_paths_cutover_to_components_textbooks():
+    """Verify that canonical deliverables point to components/textbooks per paths.py (#8341)."""
+    from scripts.projects.open_model_data.paths import ARTIFACT_TEXTBOOKS_DIR, REGISTRY_TEXTBOOKS_DIR
+    from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
+        DEFAULT_OUTPUT_DIR,
+        DEFAULT_REGISTRY_DIR,
+    )
+    assert DEFAULT_OUTPUT_DIR == ARTIFACT_TEXTBOOKS_DIR
+    assert DEFAULT_REGISTRY_DIR == REGISTRY_TEXTBOOKS_DIR
+    assert "components/textbooks" in str(DEFAULT_OUTPUT_DIR)
+    assert "components/textbooks" in str(DEFAULT_REGISTRY_DIR)
+
+
+def test_issue_8341_old_release_withdrawn_marker():
+    """Verify that the flawed 75k release uldr_v06_general_assistant is marked permanently withdrawn (#8341)."""
+    from scripts.projects.open_model_data.paths import REGISTRY_RELEASE_DIR
+    old_release_dir = REGISTRY_RELEASE_DIR / "uldr_v06_general_assistant"
+    withdrawn_marker = old_release_dir / "WITHDRAWN_SUPERSEDED_BY_8341.md"
+    readme_marker = old_release_dir / "README.md"
+
+    assert withdrawn_marker.is_file(), f"Missing withdrawal notice: {withdrawn_marker}"
+    assert readme_marker.is_file(), f"Missing README notice: {readme_marker}"
+
+    withdrawn_text = withdrawn_marker.read_text(encoding="utf-8")
+    assert "WITHDRAWN AND SUPERSEDED" in withdrawn_text
+    assert "8341" in withdrawn_text
+    assert "4,220" in withdrawn_text or "4220" in withdrawn_text or "duplication" in withdrawn_text.lower()
+
+
+def test_issue_8341_sft_dataset_zero_duplicate_queries():
+    """Verify that generate_sft_dataset guarantees zero duplicate queries and unique concept chunks (#8341)."""
+    cur_ves = get_vesum_cursor(DEFAULT_VESUM_DB)
+    test_chunks = [
+        TextbookChunk(
+            chunk_id=f"clean_chunk_{i}",
+            title=f"Тема {i}",
+            subject="fizyka" if i % 2 == 0 else "istoriya",
+            grade="8",
+            author="Тестовий Автор",
+            source_file=f"test_book_{i}.pdf",
+            text=f"Поняття {i} — це важливе наукове положення, яке вивчається у курсі {i}.",
+            char_count=100,
+            concept=f"Поняття {i}",
+            snippet=f"Поняття {i} — це важливе наукове положення.",
+            terms=["положення", "наука"],
+        )
+        for i in range(1, 6)
+    ]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        sft_dir = Path(tmpdir) / "sft"
+        manifest_data, _sha, _subj, _dom, _books = generate_sft_dataset(
+            test_chunks,
+            sft_dir,
+            target_count=5,
+            shards_count=1,
+            vesum_cur=cur_ves,
+        )
+
+        assert manifest_data["duplicate_pairs_count"] == 0
+        assert manifest_data["total_trajectories"] == 5
+        assert manifest_data["unique_queries_count"] == 5
+
+        shard_path = sft_dir / "sft_shard_001_of_001.jsonl"
+        lines = [json.loads(line) for line in shard_path.read_text(encoding="utf-8").strip().split("\n")]
+        assert len(lines) == 5
+
+        queries = [l["query"] for l in lines]
+        assert len(queries) == len(set(queries)), "Duplicate queries emitted!"
+        for l in lines:
+            assert l["source_metadata"]["rights"]["verbatim_reproduction_allowed"] is False
+            assert l["source_metadata"]["rights"]["explanation_synthesis_allowed"] is True
+            assert "Law of Ukraine" in l["source_metadata"]["rights"]["legal_basis"]

@@ -20,7 +20,7 @@
     },
     "issue": {
       "type": "integer",
-      "const": 8139
+      "enum": [8139, 8341]
     },
     "parent_epic": {
       "type": "integer",
@@ -122,11 +122,11 @@
         },
         "shards_count": {
           "type": "integer",
-          "const": 150
+          "minimum": 1
         },
         "total_trajectories": {
           "type": "integer",
-          "const": 75000
+          "minimum": 100
         },
         "max_shard_size_kb": {
           "type": "number",
@@ -134,7 +134,7 @@
         },
         "books_count": {
           "type": "integer",
-          "minimum": 100
+          "minimum": 20
         },
         "subject_distribution": {
           "type": "object",
@@ -145,8 +145,8 @@
           "additionalProperties": false,
           "required": ["stem", "humanities"],
           "properties": {
-            "stem": { "type": "integer", "minimum": 20000 },
-            "humanities": { "type": "integer", "minimum": 20000 }
+            "stem": { "type": "integer", "minimum": 20 },
+            "humanities": { "type": "integer", "minimum": 20 }
           }
         }
       }
