@@ -1300,3 +1300,10 @@
   id: W-186
   lemma: квітувати
   pos: verb
+- allocated_at_build: 3941bf963e74821eb4cf9a3508b0fe459afebabe5dadce47c1ead03f1f9459ce
+  entry:
+    entry_id: 209992
+    source: vesum
+  id: W-187
+  lemma: м'який
+  pos: adj

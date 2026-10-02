@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 8bdd147429e47af7ca92ad6f79e7fe81fc8ce8fa
+  mcp_commit: 269b57bbc9ba4061fd4d6197470fee33e20d4aa5
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 39d1ea1da76e7da2e68b2f70d262661069f57cc3549aa4c1345fbe53570a3729
+  sources_db: 76b68c77864350c354827dba3cfda51dad30b3a9893cd4ef568962b665633804
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -1596,6 +1596,20 @@ texts:
     section_id: 22017
   supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains
     only; English scaffolding teaches the rule before scoring.
+- id: T-044
+  quote: хто
+  sha256: 9ec809ec598ea7ac980d8aee413b2d2e06b3f4c60b7ff4dd8972fc6bb41c2e47
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0007_w008
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 193e31ac6bc8b132220e0dc53bf6ff30b08404fa5debf9dfdfff7185504af6c7
+    section_id: null
+  supports: ULP 1-07 nearest vocabulary placement for the D3 memorized who-question chunk serving D4; premium notes are explains-only,
+    never displayed.
 unsupported:
 - claim: An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or a typical English-reader
     difficulty for each). The sources give each Ukrainian sound (primer "Чую [ж]" lines, T-010 to T-014) and a native pronunciation

@@ -286,6 +286,14 @@ texts:
     last_words: звуків.
   supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains only; English scaffolding teaches
     the rule before scoring.
+- id: T-044
+  source:
+    table: textbooks
+    chunk_id: ulp-1-00-lesson-notes_l0007_w008
+  span:
+    first_words: хто
+    last_words: хто
+  supports: ULP 1-07 nearest vocabulary placement for the D3 memorized who-question chunk serving D4; premium notes are explains-only, never displayed.
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084}

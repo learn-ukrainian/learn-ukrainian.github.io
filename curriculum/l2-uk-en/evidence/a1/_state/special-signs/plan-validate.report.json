@@ -280,16 +280,16 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "23a3d462356b78c780856fd0989fd44d31db014ae76573cb3e19486a55f259aa",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "a8ade455ce252146562d999bff744998aaf71ceed90f751f153fc313881cbb34",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "a42b09c3ab84ceb3476b22d3b763b7becd7ef2108794488bf27eeb9914149b60",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "dea6afa88a942e568b38b8818ce2795fa365b9ad4dc667286757be671c3e334f",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "9b754018b20e06f598343811eacf29a53cf1ef2cafcbaa7e3d1b31d8ee6d3498",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "de1ec6f9fb924f672105346505bed78f2e6b6fc09aa8c3cf308f5df987b26e44",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "bd896925b2a8f4f09fb0d9f6206be87f2b326ce321dde08bd9638ffea83e7f54",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "efdd2306a9322d997927e65c7e1510fabfca0e109c979e4caa63ad6be2ccabfa",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "bfd77c0d6560cbc9c85d8b4218fe21ac69ecfa53a5da337e20d7b37bc77f5b26",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "d894a32d877e09f13fc3f01aa9fcfc85a46c2d2a1c38c02c922690b05820b9ff",
-    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "199be7eb2674b91e2787b96e4e006989b5b08a91ba388eb522dc9c4bf8b62534",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "3b12728c103f6fe941ead28f3b00c6514d5c3424d0e504f8669b918863b1565e",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "2edb695b8b8c5978f34d35b0ab71f1773cfaccf711a60a30e750a796a9fdf9c1",
+    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "d681cdf794325c92c75da01bcf1fc102df6011d0c1d21110eb7201a6f2067898",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
     "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
@@ -332,7 +332,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is ef2258a8c9766420367bc4ac19358a0057bf7e44da2c296a4f3ab4009961dea1 and the provisional pack's sha256 is a42b09c3ab84ceb3476b22d3b763b7becd7ef2108794488bf27eeb9914149b60; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is ef2258a8c9766420367bc4ac19358a0057bf7e44da2c296a4f3ab4009961dea1 and the provisional pack's sha256 is bd896925b2a8f4f09fb0d9f6206be87f2b326ce321dde08bd9638ffea83e7f54; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

@@ -151,8 +151,7 @@ words:
     source: vesum
     entry_id: 157965
   want: W-151
-  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
-    decoding only, not a grammar or meaning drill.'
+  note: 'Core A1 coffee word: modeled with its gloss in reading-ukrainian lesson 3 and recycled in lesson 4; X-002 also supplies its Г/Ґ print contrast. No grammar system.'
 - lemma: грім
   pos: noun
   entry:
@@ -199,8 +198,7 @@ words:
     source: vesum
     entry_id: 415172
   want: W-162
-  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
-    exact forms in revise-a1-p1-p3.md.
+  note: 'Memorized who-question chunk under D3 to support D4 recap questions; ULP 1-07 is the nearest vocabulary placement. No position-19 question-word system.'
 - lemma: де
   pos: adv
   entry:

@@ -448,6 +448,118 @@ texts:
     first_words: Назви країн, міст, сіл, вулиць,
     last_words: річок, гір пиши з великої букви.
   supports: Geographic proper names begin with a capital; corroborated by modern Pravopys 2019 section 50.1 and 50.6. Apply only to the two named word-record models.
+- id: T-053
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0087
+  span:
+    first_words: син
+    last_words: син
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-054
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+  span:
+    first_words: синь
+    last_words: синь
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-055
+  source:
+    table: textbooks
+    chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0043
+  span:
+    first_words: рис
+    last_words: рис
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-056
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+  span:
+    first_words: рись
+    last_words: рись
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-057
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+  span:
+    first_words: тин
+    last_words: тин
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-058
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: день
+    last_words: день
+  supports: Word-only print stimulus from T-048; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-059
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: яма
+    last_words: яма
+  supports: Word-only print stimulus from T-041; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-060
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: маля
+    last_words: маля
+  supports: Word-only print stimulus from T-040; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-061
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: мільярд
+    last_words: мільярд
+  supports: Word-only print stimulus from T-042; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-062
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+  span:
+    first_words: ю р т а
+    last_words: ю р т а
+  supports: Word-only print stimulus from T-044; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-063
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+  span:
+    first_words: л ю п и н
+    last_words: л ю п и н
+  supports: Word-only print stimulus from T-044; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-064
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: моє
+    last_words: моє
+  supports: Word-only print stimulus from T-043; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-065
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0047
+  span:
+    first_words: кує квітує
+    last_words: синє
+  supports: Word-only print stimulus from T-045; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-066
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0048
+  span:
+    first_words: І і
+    last_words: І і
+  supports: Word-only print stimulus from T-050; its sound scheme or transcription is withheld until answer options or feedback.
 exercises:
 - id: X-001
   source:
@@ -795,5 +907,14 @@ videos:
   models:
     letters:
     - Ш
+    words: []
+    segment: null
+- id: V-015
+  url: https://www.youtube.com/watch?v=yhSAf41LX8I
+  channel: Ukrainian Lessons
+  use: Dedicated Я sound model; publisher letter binding in docs/resources/ulp-alphabet.yaml.
+  models:
+    letters:
+    - Я
     words: []
     segment: null

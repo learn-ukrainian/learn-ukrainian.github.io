@@ -3,7 +3,7 @@ module: reading-ukrainian
 level: a1
 sequence: 2
 slug: reading-ukrainian
-version: '7'
+version: '8'
 title: читати
 subtitle: Twelve more letters, then whole words and short sourced sentences read aloud
 focus: 'Continue the primer sequence after position 1: hear each new sound, read its syllable or word row and a decodable word, then read whole sourced short sentences
@@ -19,25 +19,7 @@ prerequisites:
 - sounds-letters-and-hello
 register: English scaffolding at A1; Ukrainian models first with English support after the model. Pronunciation is heard before the letter is read.
 changelog:
-- First position-2 plan package. The primer part-1 sequence passes over the soft sign for position 3, and all sentence-reading models are whole sourced sentences.
-- 'Completion pass (co-author Claude Opus 5.5): every letter now has a native pronunciation video and a sourced read row (T-018 for the lesson-2 labial, T-019 for the lesson-4
-  velar); the fifth letter gains the common noun W-117 and the lesson-2 labial the core noun W-118; the two-g contrast and the Latin-shape points are grounded in T-020 and
-  T-021; the English-speaker description of the lesson-4 and lesson-5 consonants is recorded as open U-001 and not taught; W-074 is recycled in every teach lesson; each teach
-  workbook has a quiz; the lesson-5 quiz and the recap questions no longer present non-decodable text as reading items.'
-- 'Round 2, #8425: earlier authentic-text/planned-dialogue hosts (superseded by the mandatory D4 story in version 5); ULP notes grounding only; complete word-row admission;
-  explicit native single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored print discrimination. Letters,
-  grammar, lesson count, core vocabulary and word targets unchanged. Integrated-engine acceptance remains driver-owned.'
-- 'Integration, #8425: version 3 declares source glyph engine targets with attested whole single-letter video models; unsupported composite-video bindings use attributed print
-  discrimination plus offline teacher practice. Source ledger: evidence/a1/_requests/integrate-a1-p1-p3-listening.md.'
-- 'Full-access plan review repair round 1, #8425: introductions precede scoring; coherent varied-key listening, source-hosted sound classification and find-and-repair; accurate
-  source roles and model declarations; earlier core recycling restored. P3 recap follows D4 with one mandatory first-person story and questions on that same host. Word targets
-  and module objectives unchanged; learner-state generator repair remains separately owned by #9487.'
-- 'Round-2 full-access review repair, #8425: mandatory first-person bilingual recap hosts before comprehension and production; source-computed varied keys, evidence-complete
-  activity packets, explicit counting, clean public quote spans, one video per URL and source-qualified Latin claims. Word targets unchanged.'
-- The position-1 English-scaffolded sound/letter/category/action labels become explicit Ukrainian lexical models only after their final required letters here. Objective 3
-  drops the unsupported Latin-t correspondence; all word targets are unchanged.
-- 'Round-3 full-access review repair, #8425: single quote displays, used incidental inventories, required greeting recall, explicit print modeling, source-bound recap keys
-  and taught-letter distractors. Word targets and objectives unchanged.'
+  ['First position-2 plan package. The primer part-1 sequence passes over the soft sign for position 3, and all sentence-reading models are whole sourced sentences.', 'Completion pass (co-author Claude Opus 5.5): every letter now has a native pronunciation video and a sourced read row (T-018 for the lesson-2 labial, T-019 for the lesson-4 velar); the fifth letter gains the common noun W-117 and the lesson-2 labial the core noun W-118; the two-g contrast and the Latin-shape points are grounded in T-020 and T-021; the English-speaker description of the lesson-4 and lesson-5 consonants is recorded as open U-001 and not taught; W-074 is recycled in every teach lesson; each teach workbook has a quiz; the lesson-5 quiz and the recap questions no longer present non-decodable text as reading items.', 'Round 2, #8425: earlier authentic-text/planned-dialogue hosts (superseded by the mandatory D4 story in version 5); ULP notes grounding only; complete word-row admission; explicit native single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored print discrimination. Letters, grammar, lesson count, core vocabulary and word targets unchanged. Integrated-engine acceptance remains driver-owned.', 'Integration, #8425: version 3 declares source glyph engine targets with attested whole single-letter video models; unsupported composite-video bindings use attributed print discrimination plus offline teacher practice. Source ledger: evidence/a1/_requests/integrate-a1-p1-p3-listening.md.', 'Full-access plan review repair round 1, #8425: introductions precede scoring; coherent varied-key listening, source-hosted sound classification and find-and-repair; accurate source roles and model declarations; earlier core recycling restored. P3 recap follows D4 with one mandatory first-person story and questions on that same host. Word targets and module objectives unchanged; learner-state generator repair remains separately owned by #9487.', 'Round-2 full-access review repair, #8425: mandatory first-person bilingual recap hosts before comprehension and production; source-computed varied keys, evidence-complete activity packets, explicit counting, clean public quote spans, one video per URL and source-qualified Latin claims. Word targets unchanged.', The position-1 English-scaffolded sound/letter/category/action labels become explicit Ukrainian lexical models only after their final required letters here. Objective 3 drops the unsupported Latin-t correspondence; all word targets are unchanged., 'Round-3 full-access review repair, #8425: single quote displays, used incidental inventories, required greeting recall, explicit print modeling, source-bound recap keys and taught-letter distractors. Word targets and objectives unchanged.', 'Round 5: resolve recorded review findings and deterministic gate hits with scoped cues, source bindings and sequencing; objectives and word targets unchanged.']
 arc_ref:
   level: a1
   position: 2
@@ -83,13 +65,12 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Open the lesson by hearing W-075 and W-076 as one intact greeting chunk, never read or split. Hear Т from V-001 and the primer, see its glyph, read its CV and VC
-      row, then read W-101 as a whole decodable word and classify Т as a consonant. Read Т only from its native V-001 and T-001 model; the th transliteration in T-021 does
-      not establish a Latin t sound comparison. Once Т is known, W-074 is decodable; read it and copy it as a whole word. Replay the lesson-listed V/T single-letter target
-      pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences
-      in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions
-      are declared in the activity focus and coverage ledger. Modeling source: the teacher demonstrates the exact print in T-001, X-001, X-004, T-022, T-038 and any explicitly
-      named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs.'
+    teach: 'Open the lesson by hearing W-075 and W-076 as one intact greeting chunk, never read or split. Hear Т from V-001 and the primer, see its glyph, read its CV and
+        VC row, then read W-101 as a whole decodable word and classify Т as a consonant. Read Т only from its native V-001 and T-001 model; the th transliteration
+        in T-021 does not establish a Latin t sound comparison. Once Т is known, W-074 is decodable; read it and copy it as a whole word. Replay the lesson-listed
+        V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs,
+        positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is
+        their recording. Scored print substitutions are declared in the activity focus and coverage ledger.'
     introduces:
       letters:
       - Т
@@ -120,13 +101,12 @@ lessons:
   - id: s2
     kind: teach
     teach: 'Hear Е from V-005 and the primer, see its glyph, read its CV and VC rows, then read W-117 and the name W-102 as whole decodable words and classify Е as a vowel.
-      Е has the shape of Latin E, and T-021 states only the borrowed-word spelling sequence Lе → ле; it supplies no general English E sound identity; the learner reads it by
-      the primer sound [е], not by an English letter name. W-102 is a name for decoding, not core vocabulary. Replay the lesson-listed V/T single-letter target pairs before
-      the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step
-      are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared
-      in the activity focus and coverage ledger. After Е, introduce the W-078 lexical model with English support; Л/І/Т/Е/Р/А are all now taught. Modeling source: the teacher
-      demonstrates the exact print in T-002, T-003, X-001, X-004, T-021, T-023, T-022 and any explicitly named bound W-record forms before the learner repeats; letter recordings
-      model only their declared single glyphs.'
+        Е has the shape of Latin E, and T-021 states only the borrowed-word spelling sequence Lе → ле; it supplies no general English E sound identity; the learner
+        reads it by the primer sound [е], not by an English letter name. W-102 is a name for decoding, not core vocabulary. Replay the lesson-listed V/T single-letter
+        target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values
+        and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording.
+        Scored print substitutions are declared in the activity focus and coverage ledger. After Е, introduce the W-078 lexical model with English support; Л/І/Т/Е/Р/А
+        are all now taught.'
     introduces:
       letters:
       - Е
@@ -154,8 +134,7 @@ lessons:
     - video
   - id: s3
     kind: practice
-    teach: 'Read only already-decodable W-101/W-081/W-082, W-078 and W-089 models from print, then copy them. The earlier W-077, W-086 and W-088 action/sound labels
-      remain English scaffolding here: no claim that their spellings are decoded. Print reading of W-077 follows З in lesson 2; W-086/W-088 follow Ч in lesson 4.'
+    teach: 'Read only already-decodable W-101/W-081/W-082, W-078 and W-089 models from print, then copy them.'
     uses:
       grammar:
       - G-a1-002
@@ -166,9 +145,7 @@ lessons:
       - W-078
       - W-089
     evidence:
-    - T-001
-    - T-002
-    - T-041
+      [T-001, T-002, T-041, X-006]
     practice:
     - a5
   consolidation:
@@ -179,8 +156,7 @@ lessons:
   - id: a1
     type: letter-grid
     placement: inline
-    focus: Read the Т CV and VC row from T-001 aloud, then copy the letter and the decodable W-101 and W-074 by hand; practised offline — not machine-verified. Before
-      this print reading, the teacher models the exact cited T-001, X-001, X-004, T-022, T-038 forms and the named bound W-record forms.
+    focus: 'Read the Т CV and VC row from T-001 aloud, then copy the letter and the decodable W-101 and W-074 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a2
     type: quiz
@@ -194,8 +170,7 @@ lessons:
   - id: a3
     type: letter-grid
     placement: inline
-    focus: Read the Е CV and VC rows from T-002 aloud, then copy the letter and the decodable W-117 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-002, T-003, X-001, X-004, T-021, T-023, T-022 forms and the named bound W-record forms.
+    focus: 'Read the Е CV and VC rows from T-002 aloud, then copy the letter and the decodable W-117 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a4
     type: quiz
@@ -209,14 +184,14 @@ lessons:
   - id: a5
     type: watch-and-repeat
     placement: inline
-    focus: Hear the Т and Е models in V-001 and V-005, then read W-074, W-101, W-117 and W-102 whole aloud from print; practised offline — not machine-verified. Before
-      this print reading, the teacher models the exact cited T-001, T-002, T-041 forms and the named bound W-record forms.
+    focus: 'Hear the Т and Е models in V-001 and V-005, then read W-074, W-101, W-117 and W-102 whole aloud from print; practised offline — not machine-verified.'
   - id: a6
-    type: pick-syllables
+    type: 'quiz'
     placement: workbook
-    focus: On T-041, select the missing first or second syllable of W-101. The source Та-то gives two different keys та and то. Both omissions occur; use the
-      whole W record to canonicalize the printed target. X-001 supplies assembly methodology, not the source segmentation.
-    model: X-001
+    focus: 'Find and repair a mistaken first- or second-syllable choice for W-101 using the source Та-то segmentation in T-041. Both correction keys та and то occur; the
+        stem gives the bound English gloss as its target cue and withholds the whole word. Choose the correct syllable rather than type; vary positions. X-006 grounds
+        find-and-repair; X-001 grounds syllable assembly.'
+    model: 'X-006'
   - id: a7
     type: match-up
     placement: workbook
@@ -224,12 +199,9 @@ lessons:
   - id: a8
     type: fill-in
     placement: workbook
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records: W-074,
-      W-081, W-082, W-101, W-117. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword.
-      Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original teaching job retained
-      as print decoding plus teacher-supported pronunciation: Read aloud from print a whole word and choose its printed form among the decodable W-074, W-081, W-082, W-101
-      and W-117; the correct answer differs from item to item, and the check is word decoding, not meaning. Before this print reading, the teacher models the exact cited T-001,
-      X-001, X-004, T-022, T-038, T-002, T-003, T-021, T-023, T-041 forms and the named bound W-record forms.'
+    focus: 'Complete a word-local printed blank in mode: orthography (kind: orthography). Target records: W-074, W-081, W-082, W-101, W-117. Contrast Т/Е against already
+        taught glyphs only where the selected word contains that letter. Each item binds its W record; the marker-free key completes the sourced spelling, and every
+        wrong completion must be verified as a nonword. Vary words and key positions; no whole-word selection or untaught sign/digraph contrast.'
   practice:
     vocabulary: core
     stress: []
@@ -302,10 +274,9 @@ lessons:
   - id: s1
     kind: teach
     teach: 'Open by reading W-074 aloud as a whole word. Hear Д from V-006 and the primer, see its glyph, read its CV and VC row, then read W-116 as a whole decodable word
-      and classify Д as a consonant. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. T-043
-      explicitly grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with English support before the count activity, without a cluster-division
-      rule. Modeling source: the teacher demonstrates the exact print in T-004, X-001, X-004, T-024, T-022, T-043 and any explicitly named bound W-record forms before the learner
-      repeats; letter recordings model only their declared single glyphs.'
+        and classify Д as a consonant. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred.
+        T-043 explicitly grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with English support before the count activity, without a
+        cluster-division rule.'
     introduces:
       letters:
       - Д
@@ -364,13 +335,11 @@ lessons:
     - video
   - id: s3
     kind: teach
-    teach: 'Hear Б from V-008 and the primer, see its glyph, then read the primer’s Б word list in T-018 on the X-001 row pattern, including W-118, and read W-105 as a whole
-      decodable word; classify Б as a consonant. Display and read/copy EX-003 whole: W-118, W-145, W-146, W-147, W-148, W-035; never shorten the six-word row. This is print
-      plus teacher-modeled read-aloud, not a recording of the row. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable
-      or word audio is inferred. Before a8, explicitly teach that each vowel nucleus contributes one syllable on T-018. Compare the T-018 W-118 one-vowel form with already-known
-      W-104 and W-081 two-vowel forms. This is counting, not a guessed cluster boundary; use English scaffolding. Modeling source: the teacher demonstrates the exact print
-      in T-006, T-018, X-001, X-004, EX-003, T-026, T-025 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared
-      single glyphs.'
+    teach: 'Hear Б from V-008 and the primer, see its glyph, then read the primer’s Б word list in T-018 on the X-001 row pattern, including W-118, and read W-105 as a
+        whole decodable word; classify Б as a consonant. Display and read/copy EX-003 whole: W-118, W-145, W-146, W-147, W-148, W-035; never shorten the six-word row.
+        This is print plus teacher-modeled read-aloud, not a recording of the row. Replay the lesson-listed V/T single-letter target pairs before the scored items;
+        no exact primer syllable or word audio is inferred. Before a8, explicitly teach that each vowel nucleus contributes one syllable on T-018. Compare the T-018
+        W-118 one-vowel form with already-known W-104 and W-081 two-vowel forms. This is counting, not a guessed cluster boundary; use English scaffolding.'
     introduces:
       letters:
       - Б
@@ -400,12 +369,10 @@ lessons:
   - id: s4
     kind: practice
     teach: 'Read the new decodable words aloud from the printed primer models. Incidental decoding words are not drilled for meaning. Replay the lesson-listed V/T single-letter
-      target pairs before the scored items; no exact primer syllable or word audio is inferred. The following quote step displays T-040 once before workbook decisions, with
-      paired English support. With З now taught, read the earlier core W-077 from print; also recycle the decodable W-078/W-089 forms. Now read EX-001 whole aloud after the
-      teacher models its exact printed source, with English support: all its letters are already taught after Д. W-113/W-114 are incidental whole-sentence forms, not vocabulary
-      drills or tense teaching. The З page also has a decodable sentence, but it is not silently admitted as a new inventory. Modeling source: the teacher demonstrates the
-      exact print in T-004, T-005, T-018, T-024, T-025, T-026, T-039, X-006, T-040, X-007, EX-001, T-015 and any explicitly named bound W-record forms before the learner repeats;
-      letter recordings model only their declared single glyphs.'
+        target pairs before the scored items; no exact primer syllable or word audio is inferred. The following quote step displays T-040 once before workbook decisions,
+        with paired English support. With З now taught, read the earlier core W-077 from print; also recycle the decodable W-078/W-089 forms. Now read EX-001 whole
+        aloud after the teacher models its exact printed source, with English support: all its letters are already taught after Д. W-113/W-114 are incidental whole-sentence
+        forms, not vocabulary drills or tense teaching. The З page also has a decodable sentence, but it is not silently admitted as a new inventory.'
     uses:
       grammar:
       - G-a1-002
@@ -460,8 +427,7 @@ lessons:
   - id: a1
     type: letter-grid
     placement: inline
-    focus: Read the Д CV and VC row from T-004 aloud, then copy the letter and decodable W-116 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-004, X-001, X-004, T-024, T-022, T-043 forms and the named bound W-record forms.
+    focus: 'Read the Д CV and VC row from T-004 aloud, then copy the letter and decodable W-116 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a2
     type: quiz
@@ -475,8 +441,7 @@ lessons:
   - id: a3
     type: letter-grid
     placement: inline
-    focus: Read the З CV and VC row from T-005 aloud, then copy the letter and decodable W-104 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-005, X-001, X-004, T-025, T-024 forms and the named bound W-record forms.
+    focus: 'Read the З CV and VC row from T-005 aloud, then copy the letter and decodable W-104 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a4
     type: quiz
@@ -490,8 +455,7 @@ lessons:
   - id: a5
     type: letter-grid
     placement: inline
-    focus: Read the Б word list from T-018 aloud, then copy the letter and decodable W-118 and W-105 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-006, T-018, X-001, X-004, EX-003, T-026, T-025 forms and the named bound W-record forms.
+    focus: 'Read the Б word list from T-018 aloud, then copy the letter and decodable W-118 and W-105 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a6
     type: quiz
@@ -505,9 +469,8 @@ lessons:
   - id: a7
     type: observe
     placement: inline
-    focus: Read the new decodable words W-116, W-104, W-118 and W-105 aloud from print after sound-row practice; practised offline — not machine-verified. Then read the
-      complete EX-001 source sentence aloud after the teacher model; this is unscored sentence reading, not single-letter audio. Before this print reading, the teacher
-      models the exact cited T-004, T-005, T-018, T-024, T-025, T-026, T-039, X-006, T-040, X-007, EX-001, T-015 forms and the named bound W-record forms.
+    focus: 'Read the new decodable words W-116, W-104, W-118 and W-105 aloud from print after sound-row practice; practised offline — not machine-verified. Then read the
+        complete EX-001 source sentence aloud after the teacher model; this is unscored sentence reading, not single-letter audio.'
   - id: a8
     type: quiz
     placement: workbook
@@ -596,12 +559,11 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Open by reading the decodable W-074 as a whole word; do not play an uncited formal greeting recording. Hear Г from V-009 and the primer, see its glyph, read its
-      CV and VC row, then read W-106 as a whole decodable word and classify Г as a consonant. Replay the lesson-listed V/T single-letter target pairs before the scored items;
-      no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from
-      print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus
-      and coverage ledger. Modeling source: the teacher demonstrates the exact print in T-007, T-008, X-001, X-004, T-027, T-026 and any explicitly named bound W-record forms
-      before the learner repeats; letter recordings model only their declared single glyphs.'
+    teach: 'Open by reading the decodable W-074 as a whole word; do not play an uncited formal greeting recording. Hear Г from V-009 and the primer, see its glyph, read
+        its CV and VC row, then read W-106 as a whole decodable word and classify Г as a consonant. Replay the lesson-listed V/T single-letter target pairs before
+        the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in
+        this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions
+        are declared in the activity focus and coverage ledger.'
     introduces:
       letters:
       - Г
@@ -628,14 +590,13 @@ lessons:
     - video
   - id: s2
     kind: teach
-    teach: 'Hear Ґ from V-002 and the primer, see its glyph, read its CV and VC row, then read W-107 as a whole decodable word. Compare the primer sounds [г] and [ґ] on the
-      X-002 word pairs; T-007 and the current primer T-020 explicitly give [г] and [ґ]; contemporary Pravopys §6 corroborates ґ. The style guide is not used to establish phonetics.
-      W-107 is a decodable word only, never a gloss test. Display and read/copy EX-004 whole: W-149, W-151, W-152, W-150, W-107, W-153, preserving both complete three-word
-      rows. Keep V-009/V-002 for individual letter sounds; a teacher models the exact pair offline. No complete-row recording is claimed. Exact primer syllables, whole words,
-      minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video
-      is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Teach W-151 as the core coffee word from the complete EX-004 row,
-      with its sourced drink sense and English gloss; other row words remain incidental decoding. Modeling source: the teacher demonstrates the exact print in T-009, T-007,
-      X-001, X-002, X-004, T-020, EX-004 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs.'
+    teach: 'Hear Ґ from V-002 and the primer, see its glyph, read its CV and VC row, then read W-107 as a whole decodable word. Compare the primer sounds [г] and [ґ] on
+        the X-002 word pairs; T-007 and the current primer T-020 explicitly give [г] and [ґ]; contemporary Pravopys §6 corroborates ґ. The style guide is not used
+        to establish phonetics. W-107 is a decodable word only, never a gloss test. Display and read/copy EX-004 whole: W-149, W-151, W-152, W-150, W-107, W-153, preserving
+        both complete three-word rows. Keep V-009/V-002 for individual letter sounds; a teacher models the exact pair offline. No complete-row recording is claimed.
+        Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither
+        a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Teach W-151
+        as the core coffee word from the complete EX-004 row, with its sourced drink sense and English gloss; other row words remain incidental decoding.'
     introduces:
       letters:
       - Ґ
@@ -664,12 +625,11 @@ lessons:
   - id: "s3"
     kind: practice
     teach: 'Display the attributed public-textbook T-035 quote once before a4, with paired English. Keep all other T/X records as explains-only grounding. Read the declared
-      taught-letter stimuli aloud and copy their models offline with teacher support; the scored decisions are about visible letters/syllables/words, never a claimed recording
-      of an exact primer row. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling
-      offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Before
-      workbook a7, explicitly display and read the bound W-106/W-107 whole forms; the blank recalls their already read letter, without teaching the later Я/Ю sound systems.
-      Modeling source: the teacher demonstrates the exact print in T-035, T-027, T-028 and any explicitly named bound W-record forms before the learner repeats; letter recordings
-      model only their declared single glyphs.'
+        taught-letter stimuli aloud and copy their models offline with teacher support; the scored decisions are about visible letters/syllables/words, never a claimed
+        recording of an exact primer row. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print
+        with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity
+        focus and coverage ledger. Before workbook a7, explicitly display and read the bound W-106/W-107 whole forms; the blank recalls their already read letter,
+        without teaching the later Я/Ю sound systems.'
     uses:
       grammar: []
       vocabulary: []
@@ -686,12 +646,11 @@ lessons:
     - quote
   - id: "s4"
     kind: practice
-    teach: 'Move from the separate sound rows to the sourced decodable words. The learner reads each printed word aloud after hearing it; incidental decoding words are never
-      drilled for meaning. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling
-      offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Re-expose
-      the listed recycled bound W-record forms in the same reading/copying recall, restricted to current readable forms or the intact greeting recordings explicitly cited here.
-      Modeling source: the teacher demonstrates the exact print in T-007, T-009, X-002 and any explicitly named bound W-record forms before the learner repeats; letter recordings
-      model only their declared single glyphs.'
+    teach: 'Move from the separate sound rows to the sourced decodable words. The learner reads each printed word aloud after hearing it; incidental decoding words are
+        never drilled for meaning. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with
+        teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus
+        and coverage ledger. Re-expose the listed recycled bound W-record forms in the same reading/copying recall, restricted to current readable forms or the intact
+        greeting recordings explicitly cited here.'
     uses:
       grammar:
       - G-a1-002
@@ -708,17 +667,6 @@ lessons:
     - X-002
     practice:
     - a5
-  - id: s5
-    kind: practice
-    teach: Before consolidation, refer to the T-035 quote already displayed once in s3; do not repeat its display. Only the named taught forms are reading targets; retain
-      paired English support.
-    uses:
-      grammar: []
-      vocabulary: []
-    evidence:
-    - T-035
-    practice: []
-    needs: []
   consolidation:
   - a6
   - a7
@@ -726,8 +674,7 @@ lessons:
   - id: a1
     type: letter-grid
     placement: inline
-    focus: Read the Г CV and VC row from T-007 aloud, then copy the letter and decodable W-106 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-007, T-008, X-001, X-004, T-027, T-026 forms and the named bound W-record forms.
+    focus: 'Read the Г CV and VC row from T-007 aloud, then copy the letter and decodable W-106 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a2
     type: quiz
@@ -741,8 +688,7 @@ lessons:
   - id: a3
     type: letter-grid
     placement: inline
-    focus: Read the Ґ CV and VC row from T-009 aloud, then copy the letter and decodable W-107 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-009, T-007, X-001, X-002, X-004, T-020, EX-004 forms and the named bound W-record forms.
+    focus: 'Read the Ґ CV and VC row from T-009 aloud, then copy the letter and decodable W-107 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a4
     type: quiz
@@ -757,8 +703,7 @@ lessons:
   - id: a5
     type: watch-and-repeat
     placement: inline
-    focus: Hear the Г and Ґ models in V-009 and V-002, then read W-106 and W-107 whole aloud from print; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-007, T-009, X-002 forms and the named bound W-record forms.
+    focus: 'Hear the Г and Ґ models in V-009 and V-002, then read W-106 and W-107 whole aloud from print; practised offline — not machine-verified.'
   - id: a6
     type: quiz
     placement: workbook
@@ -768,14 +713,13 @@ lessons:
   - id: a7
     type: fill-in
     placement: workbook
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records: W-106,
-      W-107, W-081, W-101, W-104. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword.
-      Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original teaching job retained
-      as print decoding plus teacher-supported pronunciation: Read aloud from print a taught decodable word (W-106, W-107, W-081, W-101 or W-104) and choose the letter it begins
-      with among Г, Ґ and earlier consonants; the answer changes from item to item, progressing from the lesson-2 sound-to-letter quiz to the new Г/Ґ contrast. Required distinct-key
-      witnesses: W-106 ___арбуз has key г with distractor ґ; W-107 ___ава has key ґ with distractor г. VESUM finds neither wrong whole-word completion. Read both source-bound words before their initial-letter blanks; keys and positions vary, using only taught glyphs. Before
-      this print reading, the teacher models the exact cited T-007, T-008, X-001, X-004, T-027, T-026, T-009, X-002, T-020, EX-004, T-035, T-028 forms and the named bound W-record
-      forms.'
+    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records:
+        W-106, W-107, W-081, W-101, W-104. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified
+        as a nonword. Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original
+        teaching job retained as print decoding plus teacher-supported pronunciation: Read aloud from print a taught decodable word (W-106, W-107, W-081, W-101 or
+        W-104) and choose the letter it begins with among Г, Ґ and earlier consonants; the answer changes from item to item, progressing from the lesson-2 sound-to-letter
+        quiz to the new Г/Ґ contrast. Required distinct-key witnesses: W-106 ___арбуз has key г with distractor ґ; W-107 ___ава has key ґ with distractor г. VESUM
+        finds neither wrong whole-word completion. Read both source-bound words before their initial-letter blanks; keys and positions vary, using only taught glyphs.'
   practice:
     vocabulary: core
     stress: []
@@ -841,11 +785,10 @@ lessons:
   - id: s1
     kind: teach
     teach: 'Open by reading W-074 aloud as a whole word. Hear Ч from V-010 and the primer before reading, see its glyph, read its CV and VC row, then read W-108 as a whole
-      decodable word and classify Ч as a consonant. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio
-      is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline;
-      neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Modeling source:
-      the teacher demonstrates the exact print in T-010, X-001, X-004, T-029, T-027 and any explicitly named bound W-record forms before the learner repeats; letter recordings
-      model only their declared single glyphs.'
+        decodable word and classify Ч as a consonant. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or
+        word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher
+        modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and
+        coverage ledger.'
     introduces:
       letters:
       - Ч
@@ -872,10 +815,9 @@ lessons:
   - id: s2
     kind: teach
     teach: 'Hear Й from V-003 and the primer before reading, see its glyph, read its vowel-plus-Й row, then read W-109 as a whole decodable word and classify Й as a consonant.
-      Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words,
-      minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video
-      is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Modeling source: the teacher demonstrates the exact print in T-011,
-      X-001, X-004, T-030, T-029 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs.'
+        Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables,
+        whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source
+        nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger.'
     introduces:
       letters:
       - Й
@@ -901,12 +843,11 @@ lessons:
     - video
   - id: s3
     kind: teach
-    teach: 'Hear Х from V-011 and the primer before reading, see its glyph, read the Х syllables and word list in T-019, then read W-110 and the now-decodable incidental W-103
-      as whole words. Х has the shape of Latin X, but T-021 shows English h written with Х in some words, so Х is never read like Latin x. Replay the lesson-listed V/T single-letter
-      target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences
-      in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions
-      are declared in the activity focus and coverage ledger. Modeling source: the teacher demonstrates the exact print in T-012, T-019, T-004, T-021, X-001, X-004, T-031,
-      T-030, T-029 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs.'
+    teach: 'Hear Х from V-011 and the primer before reading, see its glyph, read the Х syllables and word list in T-019, then read W-110 and the now-decodable incidental
+        W-103 as whole words. Х has the shape of Latin X, but T-021 shows English h written with Х in some words, so Х is never read like Latin x. Replay the lesson-listed
+        V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs,
+        positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is
+        their recording. Scored print substitutions are declared in the activity focus and coverage ledger.'
     introduces:
       letters:
       - Х
@@ -937,10 +878,9 @@ lessons:
     - video
   - id: s4
     kind: teach
-    teach: 'After all three letter introductions, name the already practiced hearing, seeing and reading actions with the now-decodable W-086/W-087/W-088 forms and paired English.
-      The teacher models each bound W-record form before the learner reads it aloud. Read the familiar W-083/W-084 models in this routine; incidental decoding words are not
-      meaning drills. This short lexical step follows the sound rows and precedes a7; no verb system or new sound concept. Modeling source: the teacher demonstrates the exact
-      print in T-010, T-011, T-019, X-005 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs.'
+    teach: 'After all three letter introductions, name the already practiced hearing, seeing and reading actions with the now-decodable W-086/W-087/W-088 forms and paired
+        English. The teacher models each bound W-record form before the learner reads it aloud. Read the familiar W-083/W-084 models in this routine; incidental decoding
+        words are not meaning drills. This short lexical step follows the sound rows and precedes a7; no verb system or new sound concept.'
     uses:
       grammar:
       - G-a1-002
@@ -971,10 +911,9 @@ lessons:
       - W-088
   - id: s5
     kind: teach
-    teach: 'In a separate short closing lexical step, label the already learned vowel and consonant classes with W-079/W-080, using the class models of T-040 and paired English.
-      The teacher models the exact bound W-record forms, then the learner reads them; no new classification rule or meaning drill. Full recycling of these labels belongs to
-      lesson 5. Modeling source: the teacher demonstrates the exact print in T-040 and any explicitly named bound W-record forms before the learner repeats; letter recordings
-      model only their declared single glyphs.'
+    teach: 'In a separate short closing lexical step, label the already learned vowel and consonant classes with W-079/W-080, using the class models of T-040 and paired
+        English. The teacher models the exact bound W-record forms, then the learner reads them; no new classification rule or meaning drill. Full recycling of these
+        labels belongs to lesson 5.'
     introduces:
       letters: []
       grammar: []
@@ -985,7 +924,7 @@ lessons:
       grammar: []
       vocabulary: []
     evidence:
-    - T-040
+      [T-040, T-043, X-006]
     practice:
     - a11
   consolidation:
@@ -996,8 +935,7 @@ lessons:
   - id: a1
     type: letter-grid
     placement: inline
-    focus: Read the Ч CV and VC row from T-010 aloud, then copy the letter and decodable W-108 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-010, X-001, X-004, T-029, T-027 forms and the named bound W-record forms.
+    focus: 'Read the Ч CV and VC row from T-010 aloud, then copy the letter and decodable W-108 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a2
     type: quiz
@@ -1011,8 +949,7 @@ lessons:
   - id: a3
     type: letter-grid
     placement: inline
-    focus: Read the vowel-plus-Й row from T-011 aloud, then copy the letter and decodable W-109 by hand; practised offline — not machine-verified. Before this print
-      reading, the teacher models the exact cited T-011, X-001, X-004, T-030, T-029 forms and the named bound W-record forms.
+    focus: 'Read the vowel-plus-Й row from T-011 aloud, then copy the letter and decodable W-109 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a4
     type: quiz
@@ -1026,8 +963,7 @@ lessons:
   - id: a5
     type: letter-grid
     placement: inline
-    focus: Read the Х syllables and word list from T-019 aloud, then copy the letter and decodable W-110 by hand; practised offline — not machine-verified. Before this
-      print reading, the teacher models the exact cited T-012, T-019, T-004, T-021, X-001, X-004, T-031, T-030, T-029 forms and the named bound W-record forms.
+    focus: 'Read the Х syllables and word list from T-019 aloud, then copy the letter and decodable W-110 by hand; practised offline — not machine-verified.'
     model: X-001
   - id: a6
     type: quiz
@@ -1041,28 +977,24 @@ lessons:
   - id: a7
     type: watch-and-repeat
     placement: inline
-    focus: Hear the Ч, Й and Х models in V-010, V-003 and V-011, then read W-108, W-109, W-110 and W-103 whole aloud from print; practised offline — not machine-verified.
-      Before this print reading, the teacher models the exact cited T-010, T-011, T-019, X-005 forms and the named bound W-record forms.
+    focus: 'Hear the Ч, Й and Х models in V-010, V-003 and V-011, then read W-108, W-109, W-110 and W-103 whole aloud from print; practised offline — not machine-verified.'
   - id: a8
     type: match-up
     placement: workbook
     focus: Match the earlier W-083/W-084 and new W-109/W-110 core forms to their sourced English glosses; coffee W-151 returns beside tea, progressing from the
       lesson-1 family/fruit set. Bind every form to its record and give each pair a separate explanation.
   - id: a9
-    type: anagram
+    type: 'quiz'
     placement: workbook
-    focus: Assemble the letters of three taught core decodable words W-101, W-104 and W-109; a whole-word construction decision after the previous lesson’s
-      sound selection.
-    model: X-005
+    focus: 'Find and repair a mistaken vowel-nucleus count in W-101, W-104 or W-109. Choose one or two syllables using the T-043 counting rule; both correction keys occur.
+        English scaffolding accompanies the printed word and choices. This transfers lesson 2 counting to fresh workbook decisions, without an invented syllable boundary.'
+    model: 'X-006'
   - id: a10
     type: fill-in
     placement: workbook
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records: W-101,
-      W-103, W-108, W-109, W-110. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword.
-      Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original teaching job retained
-      as print decoding plus teacher-supported pronunciation: Read aloud from print a whole word and choose its printed form among the decodable W-101, W-103, W-108, W-109
-      and W-110; distractors differ in one of the new letters, and the answer changes from item to item. Before this print reading, the teacher models the exact cited T-010,
-      X-001, X-004, T-029, T-027, T-011, T-030, T-012, T-019, T-004, T-021, T-031, X-005, T-040 forms and the named bound W-record forms.'
+    focus: 'Complete a word-local printed blank in mode: orthography (kind: orthography). Target records: W-101, W-103, W-108, W-109, W-110. Contrast Й/Ч/Х against already
+        taught glyphs only where the selected word contains that letter. Each item binds its W record; the marker-free key completes the sourced spelling, and every
+        wrong completion must be verified as a nonword. Vary words and key positions; no whole-word selection or untaught sign/digraph contrast.'
   - id: a11
     type: observe
     placement: inline
@@ -1140,11 +1072,10 @@ lessons:
   - id: s1
     kind: teach
     teach: 'Open by reading W-074 aloud as a whole word. Hear Ж from V-012 and the primer before reading, see its glyph, read its CV and VC row, then read W-111 as a whole
-      decodable word and classify Ж as a consonant. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio
-      is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline;
-      neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Modeling source:
-      the teacher demonstrates the exact print in T-013, X-001, X-004, T-032, T-031 and any explicitly named bound W-record forms before the learner repeats; letter recordings
-      model only their declared single glyphs.'
+        decodable word and classify Ж as a consonant. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or
+        word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher
+        modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and
+        coverage ledger.'
     introduces:
       letters:
       - Ж
@@ -1173,10 +1104,9 @@ lessons:
   - id: s2
     kind: teach
     teach: 'Hear Ш from V-013 and the primer before reading, see its glyph, read its CV and VC row, then read W-112 as a whole decodable word and classify Ш as a consonant.
-      Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words,
-      minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video
-      is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Modeling source: the teacher demonstrates the exact print in T-014,
-      X-001, X-004, T-033, T-032 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs.'
+        Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables,
+        whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source
+        nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger.'
     introduces:
       letters:
       - Ш
@@ -1224,15 +1154,16 @@ lessons:
     - quote
   - id: s3
     kind: teach
-    teach: 'After the Ж and Ш word rows, read the unchanged whole EX-001/EX-002 sentences from the single T-036/T-037 display in the preceding s4 quote step, with English support.
-      The learner reads each aloud from print, then picks out each sentence and its words by ear; the past forms are incidental and never analysed. Exact primer syllables,
-      whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic
-      letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Before recap, model the already-decodable W-006 plus
-      W-088 past plural/masculine/feminine and W-089 past plural chunks in a first-person group notebook scene with W-093/W-081/W-101 actors. Model the W-162 хто question chunk
-      with English support now; whole forms are memorized, not a past-tense or interrogative grammar lesson. T-016/T-017 explain the bilingual review shape and questioning
-      methodology only. Model the who-plus-reading question on the W-104 label with a W-101 answer and English support; leave the W-109/W-151/W-110 actor-label pairings for the new recap story; model читав and читала as whole W-088 chunks, not a conjugation system. Modeling source: the teacher demonstrates the exact print in T-015, EX-001, EX-002, X-003,
-      T-016, T-017, T-042 and any explicitly named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs. The whole EX-001/EX-002
-      models use incidental W-113/W-114/W-115/W-007/W-061; these are source-sentence forms, not core introductions or drills.'
+    teach: 'After the Ж and Ш word rows, read the unchanged whole EX-001/EX-002 sentences from the single T-036/T-037 display in the preceding s4 quote step, with English
+        support. The learner reads each aloud from print, then picks out each sentence and its words by ear; the past forms are incidental and never analysed. Exact
+        primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither
+        a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Before recap,
+        model the already-decodable W-006 plus W-088 past plural/masculine/feminine and W-089 past plural chunks in a first-person group notebook scene with W-093/W-081/W-101
+        actors. Model the W-162 хто question chunk with English support now; whole forms are memorized, not a past-tense or interrogative grammar lesson. T-016/T-017
+        explain the bilingual review shape and questioning methodology only. Model the who-plus-reading question on the W-104 label with a W-101 answer and English
+        support; leave the W-109/W-151/W-110 actor-label pairings for the new recap story; model читав and читала as whole W-088 chunks, not a conjugation system.
+        D3 admits W-162 as a memorized who-question chunk to serve the D4 recap, without advancing the position-19 question-word system. T-044 records the nearest
+        ULP vocabulary placement, lesson 1-07; its premium notes remain explains-only.'
     introduces: {letters: [], grammar: [], vocabulary: [W-162]}
     uses:
       grammar:
@@ -1244,23 +1175,7 @@ lessons:
       - W-101
       - W-088
     evidence:
-    - T-015
-    - EX-001
-    - EX-002
-    - X-003
-    - T-016
-    - T-017
-    - T-042
-    - T-036
-    - T-037
-    - V-012
-    - V-013
-    - V-010
-    - V-011
-    - T-032
-    - T-033
-    - T-029
-    - T-031
+      [T-015, EX-001, EX-002, X-003, T-016, T-017, T-042, T-036, T-037, V-012, V-013, V-010, V-011, T-032, T-033, T-029, T-031, T-044]
     practice:
     - a5
     - a6
@@ -1288,8 +1203,7 @@ lessons:
     type: letter-grid
     placement: inline
     focus: 'Read the Ж CV and VC row from T-013 aloud, then copy the letter and decodable W-111 by hand; practised offline — not machine-verified. W-111 remains incidental:
-      decode its letters without testing its meaning. Before this print reading, the teacher models the exact cited T-013, X-001, X-004, T-032, T-031 forms and the named bound
-      W-record forms.'
+        decode its letters without testing its meaning.'
     model: X-001
   - id: a2
     type: quiz
@@ -1304,8 +1218,7 @@ lessons:
     type: letter-grid
     placement: inline
     focus: 'Read the Ш CV and VC row from T-014 aloud, then copy the letter and decodable W-112 by hand; practised offline — not machine-verified. W-112 remains incidental:
-      decode its letters without testing its meaning. Before this print reading, the teacher models the exact cited T-014, X-001, X-004, T-033, T-032 forms and the named bound
-      W-record forms.'
+        decode its letters without testing its meaning.'
     model: X-001
   - id: a4
     type: quiz
@@ -1319,14 +1232,12 @@ lessons:
   - id: a5
     type: observe
     placement: inline
-    focus: Display EX-001 and EX-002 whole with their source context and English support; unscored preparation for reading aloud. Before this print reading, the teacher
-      models the exact cited T-015, EX-001, EX-002, X-003, T-016, T-017, T-042 forms and the named bound W-record forms.
+    focus: 'Display EX-001 and EX-002 whole with their source context and English support; unscored preparation for reading aloud.'
     model: X-003
   - id: a6
     type: observe
     placement: inline
-    focus: Read EX-001 and EX-002 whole aloud from print, preserving every word and punctuation; practised offline — not machine-verified. Before this print reading, the
-      teacher models the exact cited T-015, EX-001, EX-002, X-003, T-016, T-017, T-042 forms and the named bound W-record forms.
+    focus: 'Read EX-001 and EX-002 whole aloud from print, preserving every word and punctuation; practised offline — not machine-verified.'
     model: X-003
   - id: a7
     type: quiz
@@ -1351,8 +1262,9 @@ lessons:
   - id: a10
     type: pick-syllables
     placement: workbook
-    focus: From T-042, select the missing first or second syllable of recycled W-104. The source Зи-ма gives keys зи and ма, both required. This workbook
-      returns from whole-sentence reading to spelling assembly using only an explicitly source-segmented word; never infer splits in W-111 or W-112.
+    focus: 'From T-042, select the missing first or second syllable of recycled W-104. The source Зи-ма gives keys зи and ма, both required. This workbook returns from
+        whole-sentence reading to spelling assembly using only an explicitly source-segmented word; never infer splits in W-111 or W-112. Each stem carries its bound
+        English gloss as the target cue; whole-word models are withheld until feedback.'
     model: X-001
   practice:
     vocabulary: core
@@ -1445,12 +1357,10 @@ lessons:
     - a2
   - id: s2
     kind: recap
-    teach: 'After story comprehension, read EX-001/EX-002 whole aloud with attribution and English support, then perform the single notebook production task. The spring T-034
-      passage is optional unscored reading only. No new inventory, past-tense analysis or second question block. Re-expose the listed recycled bound W-record forms in the same
-      reading/copying recall, restricted to current readable forms or the intact greeting recordings explicitly cited here. Replay V-014 only for the intact W-075/W-076 greeting
-      chunk; never decode its untaught soft-sign spelling. Modeling source: the teacher demonstrates the exact print in EX-001, EX-002, X-003, X-004, T-034 and any explicitly
-      named bound W-record forms before the learner repeats; letter recordings model only their declared single glyphs. The whole EX-001/EX-002 models use incidental W-113/W-114/W-115/W-007/W-061;
-      these are source-sentence forms, not core introductions or drills. The optional T-034 reading uses W-159/W-160/W-161 explicitly; these stay incidental.'
+    teach: 'After story comprehension, read EX-001/EX-002 whole aloud with attribution and English support, then perform the single notebook production task. The spring
+        T-034 passage is optional unscored reading only. No new inventory, past-tense analysis or second question block. Re-expose the listed recycled bound W-record
+        forms in the same reading/copying recall, restricted to current readable forms or the intact greeting recordings explicitly cited here. Replay V-014 only for
+        the intact W-075/W-076 greeting chunk; never decode its untaught soft-sign spelling.'
     uses:
       grammar:
       - G-a1-002
@@ -1498,8 +1408,7 @@ lessons:
   - id: a3
     type: observe
     placement: inline
-    focus: Read EX-001 and EX-002 whole aloud from print; practised offline — not machine-verified. Before this print reading, the teacher models the exact cited EX-001,
-      EX-002, X-003, X-004, T-034 forms and the named bound W-record forms.
+    focus: 'Read EX-001 and EX-002 whole aloud from print; practised offline — not machine-verified.'
     model: X-003
   - id: a4
     type: letter-grid

@@ -267,7 +267,7 @@ words:
     source: vesum
     entry_id: 210040
   want: W-175
-  note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
+  note: 'Retained unused lexical record; not the T-012 soft-sign name. Lesson 7 uses the sourced adjective plus знак instead.'
 - lemma: синь
   pos: noun
   entry:
@@ -344,3 +344,10 @@ words:
   entry: {source: vesum, entry_id: 163732}
   want: W-186
   note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation drill.'
+- lemma: м'який
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 209992
+  want: new
+  note: Sourced T-012 soft-sign name adjective; incidental letter-name reading only, no adjective grammar or gloss drill.

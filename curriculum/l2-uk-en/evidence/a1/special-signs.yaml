@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 8bdd147429e47af7ca92ad6f79e7fe81fc8ce8fa
+  mcp_commit: 269b57bbc9ba4061fd4d6197470fee33e20d4aa5
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 32b4aae3c8572cce46c69a02aaa4787b8ae83fb68ac29fe24b8433d44ae45d12
+  sources_db: 910db728dccaa0fca119a0c0151ab9926eee833396eb371db8464ab3e40576e4
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -1580,6 +1580,190 @@ texts:
     section_id: 22058
   supports: Geographic proper names begin with a capital; corroborated by modern Pravopys 2019 section 50.1 and 50.6. Apply
     only to the two named word-record models.
+- id: T-053
+  quote: син
+  sha256: 2e4d189f2ee190d8f5a5ec02a10a0e2f79fd0dc441c3e9d2f4bc5cd7ba5657d7
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0087
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 91
+    row_sha256: b9171718821e8a39f455814597fdc73acf8debda097b57cd32264ad188d7c461
+    section_id: 13038
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-054
+  quote: синь
+  sha256: 9d3b7fb151cb8b05a04d75244970727cd592a7b115ac095a96f5e65ead350fe2
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 104
+    row_sha256: da3dce9c12bc826b835fd0312ca0a4cc9c8f6a1e60574034e1d1bae065ae942f
+    section_id: 13051
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-055
+  quote: рис
+  sha256: 47335d405c9ace5983323ceda29c67c1a2f951ff4b4e6dbc43d2ab1d24430290
+  source:
+    author: bolshakova
+    chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0043
+    file: 2-klas-ukrmova-bolshakova-2019-1
+    grade: '2'
+    kind: textbook
+    page: 43
+    row_sha256: c9a2fa0bc6f71cd0420f1a1d7a2bd5effb2ba8a9b65988b6a77256345503405b
+    section_id: 50575
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-056
+  quote: рись
+  sha256: c73b6e207ab194c868e050f3b989b97a775d0514c58ab762496f0c6ec2c498dc
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 104
+    row_sha256: da3dce9c12bc826b835fd0312ca0a4cc9c8f6a1e60574034e1d1bae065ae942f
+    section_id: 13051
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-057
+  quote: тин
+  sha256: e94d61e89b9bcd431b53f41d61a22d70300b80347a1e853504f58b30381c4356
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 104
+    row_sha256: da3dce9c12bc826b835fd0312ca0a4cc9c8f6a1e60574034e1d1bae065ae942f
+    section_id: 13051
+  supports: Word-only print stimulus from T-001; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-058
+  quote: день
+  sha256: 8eae90e5e96cb43c8dea5e3a572ec4e380624c51f7a7d1ed2266c7d003efec8a
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 87
+    row_sha256: d9720d45c51439ad17a1553fb1a4543a1b221f5c3e6293ea01e43e7319bd6a39
+    section_id: 38993
+  supports: Word-only print stimulus from T-048; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-059
+  quote: яма
+  sha256: ca0126715ed46e8a52d882f9ae274708d605e5ecb3347b3346e74c9afae8d0f6
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 87
+    row_sha256: d9720d45c51439ad17a1553fb1a4543a1b221f5c3e6293ea01e43e7319bd6a39
+    section_id: 38993
+  supports: Word-only print stimulus from T-041; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-060
+  quote: маля
+  sha256: 846b6e569433d36af870ad01bad36a39743286e63215c1fd9fa67cc6f3d26bea
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 87
+    row_sha256: d9720d45c51439ad17a1553fb1a4543a1b221f5c3e6293ea01e43e7319bd6a39
+    section_id: 38993
+  supports: Word-only print stimulus from T-040; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-061
+  quote: мільярд
+  sha256: 991fb08ccf133eaff2842afbb221875b81cbe2795b658653b69752a97e8735ce
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 87
+    row_sha256: d9720d45c51439ad17a1553fb1a4543a1b221f5c3e6293ea01e43e7319bd6a39
+    section_id: 38993
+  supports: Word-only print stimulus from T-042; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-062
+  quote: ю р т а
+  sha256: d4bc07435fe47c02b283e9721fa01b9d69353692d5938246cd82c339c7b5611c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+  supports: Word-only print stimulus from T-044; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-063
+  quote: л ю п и н
+  sha256: 8ac7a4f2904afa44075920cabbf67395aea9e689df620af13bab407c8ce0ef6e
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+  supports: Word-only print stimulus from T-044; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-064
+  quote: моє
+  sha256: 7a24d89b99d95803b5391b74c395b5cf78675f5a60df433b1278ec339268ee59
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 87
+    row_sha256: d9720d45c51439ad17a1553fb1a4543a1b221f5c3e6293ea01e43e7319bd6a39
+    section_id: 38993
+  supports: Word-only print stimulus from T-043; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-065
+  quote: 'кує квітує
+
+    синє'
+  sha256: e226067277d674955ede09927dac941142d4b3221ff2941166af6b95ba600890
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0047
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 50
+    row_sha256: 2752514386dfd25119d07b7099f614373475f848aaa326e6142ecc0567467a3a
+    section_id: 13109
+  supports: Word-only print stimulus from T-045; its sound scheme or transcription is withheld until answer options or feedback.
+- id: T-066
+  quote: І і
+  sha256: 41aec2c0d0887738618c58c0779ed7e7dab17400144bf0a4b405c8e495b43195
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0048
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 52
+    row_sha256: 4467f04dd445110aef7abe8d80d9851f2c6ced95d9a5e0b55eaf291bbd85c679
+    section_id: 12999
+  supports: Word-only print stimulus from T-050; its sound scheme or transcription is withheld until answer options or feedback.
 unsupported:
 - claim: The required named English-speaker teaching point classifying Ф as a visual look-alike has no identified supporting
     T- or X- source. T-008 establishes the native glyph and sound, T-012 establishes the alphabet table, and T-018 establishes
@@ -1980,3 +2164,17 @@ videos:
     words: []
   url: https://www.youtube.com/watch?v=1D-6MIw3OXY
   use: Dedicated Ш sound model; publisher catalogue evidence in docs/resources/ulp-alphabet.yaml. No word or letter-name claim.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-02'
+    final_url: https://www.youtube.com/watch?v=yhSAf41LX8I
+    http_status: 200
+  id: V-015
+  models:
+    letters:
+    - Я
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=yhSAf41LX8I
+  use: Dedicated Я sound model; publisher letter binding in docs/resources/ulp-alphabet.yaml.

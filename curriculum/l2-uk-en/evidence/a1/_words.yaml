@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 70878aaaffab574a9c6caf32f8521d436e151136
+  mcp_commit: 269b57bbc9ba4061fd4d6197470fee33e20d4aa5
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: a56b9f8dc58c6706e7393fd6dacd72201b82933a17a4ac30a3fc058b41bdcc6d
+  sources_db: 86d1e0d2dfab74d61b9683a0abe5ef7232cf001ba4eadce711e0fc8b201693cd
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -13924,8 +13924,8 @@ words:
   gloss_source: kaikki_wiktionary
   id: W-151
   lemma: кава
-  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
-    decoding only, not a grammar or meaning drill.'
+  note: 'Core A1 coffee word: modeled with its gloss in reading-ukrainian lesson 3 and recycled in lesson 4; X-002 also supplies
+    its Г/Ґ print contrast. No grammar system.'
   pos: noun
   shadow:
     russian_shadow: false
@@ -15122,8 +15122,8 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-162
   lemma: хто
-  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact
-    forms in revise-a1-p1-p3.md.
+  note: Memorized who-question chunk under D3 to support D4 recap questions; ULP 1-07 is the nearest vocabulary placement.
+    No position-19 question-word system.
   pos: noun
   shadow:
     russian_shadow: false
@@ -17420,7 +17420,7 @@ words:
     tags: noun:inanim:n:v_zna
   id: W-175
   lemma: м'якшення
-  note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
+  note: Retained unused lexical record; not the T-012 soft-sign name. Lesson 7 uses the sourced adjective plus знак instead.
   pos: noun
   shadow:
     russian_shadow: false
@@ -19257,4 +19257,215 @@ words:
     - квітува́ти
     - 1
     row_sha256: fe9bcb3d411dabeab94b2b7ae4b6797c0276bbfc7284686b5d2b39a799a83dae
+    source: ulif
+- entry:
+    entry_id: 209992
+    source: vesum
+  forms:
+  - form: м'якій
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'які́й
+    tags: adj:f:v_dav:compb
+  - form: м'яка
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: м'яка́
+    tags: adj:f:v_kly:compb
+  - form: м'якій
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'які́й
+    tags: adj:f:v_mis:compb
+  - form: м'яка
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яка́
+    tags: adj:f:v_naz:compb
+  - form: м'якою
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́ю
+    tags: adj:f:v_oru:compb
+  - form: м'якої
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́ї
+    tags: adj:f:v_rod:compb
+  - form: м'яку
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яку́
+    tags: adj:f:v_zna:compb
+  - form: м'якому
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́му
+    tags: adj:m:v_dav:compb
+  - form: м'який
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́й
+    tags: adj:m:v_kly:compb
+  - form: м'якому
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́му
+    tags: adj:m:v_mis:compb
+  - form: м'якім
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'які́м
+    tags: adj:m:v_mis:compb
+  - form: м'який
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́й
+    tags: adj:m:v_naz:compb
+  - form: м'яким
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́м
+    tags: adj:m:v_oru:compb
+  - form: м'якого
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́го
+    tags: adj:m:v_rod:compb
+  - form: м'якого
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́го
+    tags: adj:m:v_zna:ranim:compb
+  - form: м'який
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́й
+    tags: adj:m:v_zna:rinanim:compb
+  - form: м'якому
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́му
+    tags: adj:n:v_dav:compb
+  - form: м'яке
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: м'яке́
+    tags: adj:n:v_kly:compb
+  - form: м'якому
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́му
+    tags: adj:n:v_mis:compb
+  - form: м'якім
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'які́м
+    tags: adj:n:v_mis:compb
+  - form: м'яке
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яке́
+    tags: adj:n:v_naz:compb
+  - form: м'яким
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́м
+    tags: adj:n:v_oru:compb
+  - form: м'якого
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яко́го
+    tags: adj:n:v_rod:compb
+  - form: м'яке
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яке́
+    tags: adj:n:v_zna:compb
+  - form: м'яким
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́м
+    tags: adj:p:v_dav:compb
+  - form: м'які
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: м'які́
+    tags: adj:p:v_kly:compb
+  - form: м'яких
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́х
+    tags: adj:p:v_mis:compb
+  - form: м'які
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'які́
+    tags: adj:p:v_naz:compb
+  - form: м'якими
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́ми
+    tags: adj:p:v_oru:compb
+  - form: м'яких
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́х
+    tags: adj:p:v_rod:compb
+  - form: м'яких
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'яки́х
+    tags: adj:p:v_zna:ranim:compb
+  - form: м'які
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: м'які́
+    tags: adj:p:v_zna:rinanim:compb
+  gloss_en: soft; gentle; mild; soft, palatalized
+  gloss_source: kaikki_wiktionary
+  id: W-187
+  lemma: м'який
+  note: Sourced T-012 soft-sign name adjective; incidental letter-name reading only, no adjective grammar or gloss drill.
+  pos: adj
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - м'яки́й
+    - 1
+    row_sha256: 10cda0962b01a6c8cb5e9335e4b56f14b7be8c6449cc32f514437ffc7fe911a6
     source: ulif
