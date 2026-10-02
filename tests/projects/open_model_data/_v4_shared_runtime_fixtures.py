@@ -129,7 +129,8 @@ def pg_cluster(tmp_path_factory):
             capture_output=True,
             timeout=60,
         )
-        shutil.rmtree(sock)
+        shutil.rmtree(sock, ignore_errors=True)
+        shutil.rmtree(root, ignore_errors=True)
 
 
 @pytest.fixture
