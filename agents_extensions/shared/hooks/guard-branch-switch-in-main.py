@@ -58,7 +58,7 @@ except Exception as exc:
     raise SystemExit(2) from exc
 
 try:
-    from shell_redirects import scope_events, segments_with_following_operator
+    from shell_redirects import scope_events, segments_with_following_operator, unmodeled_shell_offset
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -571,8 +571,10 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         unparsed=[_UNREADABLE_MARKER],
         may_match=lambda line: False,
         keep_separators=True,
+        unmodeled_offset=unmodeled_shell_offset,
     )
     cwd_unreadable = False
+    syntax_unreadable = False
     pending_cd: Path | None = None
     # Same save/restore algorithm as guard-pr-merge._judged_segments (#5333):
     # every open inherits cwd; every close restores it; an unmatched close
@@ -580,6 +582,17 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
     # substitutions execute BEFORE cd, and must not inherit its new cwd.
     stack: list[tuple[Path, bool, Path | None]] = []
     for kind, segment in events:
+        if kind == "line_end":
+            syntax_unreadable = False
+            continue
+        if kind == "syntax_unreadable":
+            # Deliberate rare over-block: even case arms without cd in a
+            # worktree refuse later branch switches. Our reader cannot model
+            # case patterns or parameter parens; no close may restore trust
+            # on this logical line, even if a real scope was already open.
+            syntax_unreadable = cwd_unreadable = True
+            pending_cd = None
+            continue
         if kind == "open":
             stack.append((effective_cwd, cwd_unreadable, pending_cd))
             pending_cd = None
@@ -587,6 +600,7 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         if kind == "close":
             if stack:
                 effective_cwd, cwd_unreadable, pending_cd = stack.pop()
+                cwd_unreadable |= syntax_unreadable
             else:
                 cwd_unreadable = True
                 pending_cd = None
@@ -613,7 +627,7 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
             continue
 
         # Expansion alone does not make a known dispatch cwd protected. Only
-        # an unreadable cd makes the repository of a later operation unknown.
+        # an unreadable cd or unmodeled syntax makes a later repo unknown.
         if cwd_unreadable and segment[i : i + 3] == ["gh", "pr", "checkout"]:
             return "branch-switch target could not be parsed safely"
 
@@ -625,6 +639,8 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         if invocation is None:
             continue
         _, _, git_cwd = invocation
+        if syntax_unreadable and _segment_is_dangerous(segment):
+            return "branch-switch target could not be parsed safely"
         if git_cwd is None:
             if _segment_is_dangerous(segment):
                 return "branch-switch target could not be parsed safely"

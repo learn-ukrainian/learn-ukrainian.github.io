@@ -934,3 +934,103 @@ def test_issue_9479_r2_absolute_git_cwd_resolves_unreadable_cd(repos, option, ta
     directory = "relative" if target == "relative" else str(repos[target])
     command = f'cd "$ROOT" && git {option}{directory} switch -c fixture'
     assert (guard._command_danger_reason(command, repos["other"]) is not None) == (target != "public_worktree")
+
+
+def _assert_r5_bash_record(tmp_path, command, cwd, expected_cwd):
+    recorder = tmp_path / "git"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=cwd,
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert record.read_text().splitlines() == [str(expected_cwd), "checkout", "-b", "fixture"]
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize(
+    "shape",
+    [
+        "(cd {target} && case x in x) git checkout -b fixture;; esac)",
+        "x=$(cd {target} && case y in y) git checkout -b fixture;; esac)",
+        "echo ${{x:-(}} && cd {target} && echo ${{x:-)}} && git checkout -b fixture",
+        "echo ${{x//[(]/}} && cd {target} && echo ${{x//[)]/}} && git checkout -b fixture",
+    ],
+)
+def test_issue_9479_r5_reviewer_reproductions_real_bash(repos, tmp_path, start, shape):
+    target = "../.." if start == "public_worktree" else "."
+    command = shape.format(target=target)
+    _assert_r5_bash_record(tmp_path, command, repos[start], repos["public"])
+    assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+def test_issue_9479_r5_branch_before_case_keeps_original_decision(repos, tmp_path, start):
+    command = "git checkout -b fixture; case x in x) true;; esac"
+    _assert_r5_bash_record(tmp_path, command, repos[start], repos[start])
+    assert (guard._command_danger_reason(command, repos[start]) is not None) == (start == "public")
+
+
+@pytest.mark.parametrize(
+    "shape", ["case x in x) true;; esac", "(case x in x) true;; esac)", "x=$(case x in x) true;; esac)"]
+)
+def test_issue_9479_r5_case_without_cd_deliberately_overblocks_worktree(repos, tmp_path, shape):
+    command = shape + "; git checkout -b fixture"
+    _assert_r5_bash_record(tmp_path, command, repos["public_worktree"], repos["public_worktree"])
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is not None
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "echo case",
+        "echo ${x:-word}",
+        "echo '${x:-(}'",
+        'git commit -m "case x"',
+        "case=1",
+        "cat <<'EOF'\ncase x in x) ${x:-(}\nEOF\ntrue",
+    ],
+)
+def test_issue_9479_r5_literal_case_and_parameter_controls_allowed(repos, body):
+    assert guard._command_danger_reason(body + " && git switch -c fixture", repos["public_worktree"]) is None
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "echo ${x:-(}",
+        'echo "${x:-(}"',
+        "echo ${x:-${y:-(}}",
+        "(echo ${x:-(})",
+        "true; then case x in x) true;; esac",
+        "true; do case x in x) true;; esac",
+        "else case x in x) true;; esac",
+        "! case x in x) true;; esac",
+        "time case x in x) true;; esac",
+    ],
+)
+def test_issue_9479_r5_unmodeled_syntax_is_sticky(repos, body):
+    assert guard._command_danger_reason(body + "; git switch -c fixture", repos["public_worktree"]) is not None
+    assert guard._command_danger_reason(body + "; git status", repos["public_worktree"]) is None
+
+
+def test_issue_9479_r5_parentheses_in_branch_argument_refuse_current_command(repos):
+    assert guard._command_danger_reason("git switch -c ${x:-(}", repos["public_worktree"]) is not None
+
+
+def test_issue_9479_r5_safe_nested_parameter_preserves_branch_before_case(repos, tmp_path):
+    command = 'echo ${x:-"${y:-word}"} && git checkout -b fixture; case x in x) true;; esac'
+    _assert_r5_bash_record(tmp_path, command, repos["public_worktree"], repos["public_worktree"])
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is None
+
+
+def test_issue_9479_r5_nested_close_restores_nearest_not_outermost_frame(repos, tmp_path):
+    command = "(cd ../.. && (true) && git checkout -b fixture)"
+    _assert_r5_bash_record(tmp_path, command, repos["public_worktree"], repos["public"])
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is not None

@@ -127,6 +127,121 @@ def _redirect_target_dynamic(raw: str) -> bool:
     return False
 
 
+def unmodeled_shell_offset(line: str) -> int | None:
+    """First word containing syntax our scope reader cannot safely model.
+
+    This is a lexical tripwire, not a case/parameter grammar: an unquoted
+    command-word `case`, or any parenthesis in an active ${...}, refuses the
+    remaining logical line. Call after shared preprocessing (including heredocs).
+    Return the word's start so quoted parameter words remain intact when split.
+    """
+    command_word = True
+    redirect_operand = False
+    quote = ""
+    word_start = 0
+    word = ""
+    literal = True
+    contexts: list[tuple[str, bool, bool, str, int, bool]] = []
+    i = 0
+
+    def finish_word() -> bool:
+        nonlocal command_word, redirect_operand, word, literal
+        unsafe = False
+        if word:
+            if redirect_operand:
+                redirect_operand = False
+            elif command_word:
+                unsafe = literal and word == "case"
+                assignment = re.match(r"[A-Za-z_][A-Za-z0-9_]*=", word)
+                if not assignment and not (
+                    literal and word in {"if", "elif", "while", "until", "then", "do", "else", "{", "!", "time", "-p"}
+                ):
+                    command_word = False
+        word = ""
+        literal = True
+        return unsafe
+
+    while i < len(line):
+        ch = line[i]
+        if not word:
+            word_start = i
+        if ch == "\\" and quote != "'":
+            word += line[i : i + 2]
+            literal = False
+            i += 2
+            continue
+        if quote != "'" and line.startswith("${", i):
+            # Opaque parameter text: quotes and nested expansions cannot hide
+            # parens. Quoted braces do not terminate an expansion.
+            parameter_quotes = [""]
+            inner_quote = ""
+            j = i + 2
+            while j < len(line) and parameter_quotes:
+                char = line[j]
+                if char in "()":
+                    return word_start
+                if char == "\\":
+                    if j + 1 < len(line) and line[j + 1] in "()":
+                        return word_start
+                    j += 2
+                    continue
+                if inner_quote != "'" and line.startswith("${", j):
+                    parameter_quotes.append(inner_quote)
+                    inner_quote = ""
+                    j += 2
+                    continue
+                if char in "\"'" and (not inner_quote or inner_quote == char):
+                    inner_quote = "" if inner_quote else char
+                elif char == "}" and not inner_quote:
+                    inner_quote = parameter_quotes.pop()
+                j += 1
+            word += line[i:j]
+            literal = False
+            i = j
+            continue
+        if quote != "'" and line.startswith("$(", i):
+            contexts.append((quote, command_word, redirect_operand, word + "$()", word_start, False))
+            quote = ""
+            command_word = True
+            redirect_operand = False
+            word = ""
+            literal = True
+            i += 2
+            continue
+        if quote:
+            word += ch
+            if ch == quote:
+                quote = ""
+        elif ch in "\"'":
+            quote = ch
+            word += ch
+            literal = False
+        elif ch == "#" and not word:
+            break
+        elif ch.isspace() or ch in "();|&<>":
+            # A glued descriptor belongs to the redirect, not the command.
+            redirect = _REDIRECT_OPERATOR.match(line, i)
+            if redirect and (word.isdecimal() or re.fullmatch(r"\{[A-Za-z_][A-Za-z0-9_]*\}", word)):
+                word = ""
+            if finish_word():
+                return word_start
+            if redirect:
+                redirect_operand = True
+                i = redirect.end()
+                continue
+            if ch in "();|&":
+                command_word = True
+                redirect_operand = False
+                if ch == "(":
+                    contexts.append((quote, True, False, "", i, True))
+                elif ch == ")" and contexts:
+                    quote, command_word, redirect_operand, word, word_start, literal = contexts.pop()
+        else:
+            word += ch
+        i += 1
+    return word_start if finish_word() else None
+
+
 def scope_events(
     command: str,
     *,
@@ -135,6 +250,7 @@ def scope_events(
     unparsed: list[str],
     may_match: Callable[[str], bool],
     keep_separators: bool = False,
+    unmodeled_offset: Callable[[str], int | None] | None = None,
 ) -> list[tuple[str, list[str]]]:
     """The command as an ordered event stream: argv segments AND subshell boundaries.
 
@@ -166,6 +282,10 @@ def scope_events(
     offending chunk's: a half-scanned line could otherwise leave an `open` whose later
     `close` RESTORES a readable cwd, laundering an unreadable line into a clean one.
     Only a `segment` event carries argv; the rest carry [].
+
+    Consumers may opt into unmodeled_offset's lexical tripwire. Its
+    syntax_unreadable event precedes the containing segment, and line_end
+    bounds the sticky refusal. Other consumers receive their original events.
     """
     events: list[tuple[str, list[str]]] = []
     # Each consumer selects when redirect uncertainty must refuse its target.
@@ -175,7 +295,14 @@ def scope_events(
         cur: list[str] = []
         redirect_pending = False
         segment_unreadable = False
-        for kind, raw in _split_scopes(line):
+        offset = unmodeled_offset(line) if unmodeled_offset else None
+        pieces = _split_scopes(line)
+        if offset is not None:
+            pieces = [*_split_scopes(line[:offset]), ("syntax_unreadable", ""), *_split_scopes(line[offset:])]
+        for kind, raw in pieces:
+            if kind == "syntax_unreadable":
+                line_events.append((kind, []))
+                continue
             if kind == "redirect":
                 segment_unreadable |= redirect_pending
                 redirect_pending = True
@@ -218,6 +345,8 @@ def scope_events(
             events.append(("unreadable", []))
             if may_match(line):
                 events.append(("segment", list(unparsed)))
+        if unmodeled_offset:
+            events.append(("line_end", []))
     return events
 
 
