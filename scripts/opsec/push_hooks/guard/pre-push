@@ -1,0 +1,12 @@
+#!/bin/sh
+# Hooks path of the push scripts/opsec/git_push.py runs (#9339). git calls this
+# after resolving the destination and before sending anything: refuse unless
+# it is the URL the scan inspected, then run the caller's own pre-push hook.
+if [ "x$2" != "x$LU_OPSEC_PUSH_URL" ]; then
+	echo "OPSEC: the push destination is not the one the scan inspected; push refused." >&2
+	exit 1
+fi
+if [ -n "$LU_OPSEC_PUSH_HOOK" ]; then
+	exec "$LU_OPSEC_PUSH_HOOK" "$LU_OPSEC_PUSH_REMOTE" "$2"
+fi
+exit 0

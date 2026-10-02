@@ -14,10 +14,17 @@ Enumeration ignores replacement objects, grafts and commit-graph files, a
 grafted repository is refused, a shallow one is refused when a boundary commit
 is inside the scan set, an alternate shallow file is refused, and the scan's
 own git calls run without tracing or prompts. File contents are not scanned.
-Private remotes are exempt exactly as is_private decides. After a clean scan
-of a public destination the real push sends exactly the scanned objects to
-the scanned ref names (explicit <id>:<ref> refspecs), without the
-command-scoped override. Git text from these steps is never replayed.
+Private remotes are exempt from the scan exactly as is_private decides.
+
+A pre-push hook in the preview records the exact URL git pushes to. Every
+destination, scanned public or exempt private, then receives its own push to
+that URL with exactly the previewed objects and ref names (explicit <id>:<ref>
+refspecs), without the command-scoped override, and a guard pre-push hook
+refuses it unless git still resolves that URL, so no configuration change
+after the preview (url, pushurl, insteadOf, mirror, push refspecs) can change
+where or what is sent. The remote-tracking refs, upstreams and leases git
+would derive from the remote name are applied explicitly. Git text from these
+steps is never replayed.
 """
 
 from __future__ import annotations
@@ -26,9 +33,11 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import stat
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -83,8 +92,25 @@ PUSH_LONG = {
 }
 PUSH_SHORT = set("vqdnfu46o")
 # Options that choose refs or the repository: the preview already expanded them
-# into the frozen refspecs. The upstream (-u) is recorded after the push.
-FROZEN_AWAY = {"repo", "all", "branches", "mirror", "delete", "tags", "follow-tags", "prune", "set-upstream"}
+# into the frozen refspecs. The upstream (-u) is recorded after the push, leases
+# are frozen per ref, and the guard hook always runs (it chains the caller's).
+FROZEN_AWAY = {
+    "repo",
+    "all",
+    "branches",
+    "mirror",
+    "delete",
+    "tags",
+    "follow-tags",
+    "prune",
+    "set-upstream",
+    "force-with-lease",
+    "verify",
+}
+# Hooks paths of the preview (records the push URL) and of the delivered push (refuses any other URL).
+HOOKS = Path(__file__).resolve().parent / "push_hooks"
+# git's ref_rev_parse_rules: how a short name matches a full ref name.
+REV_PARSE_RULES = ("{}", "refs/{}", "refs/tags/{}", "refs/heads/{}", "refs/remotes/{}", "refs/remotes/{}/HEAD")
 # Fast-forward, forced update, new ref, up to date, rejected, deleted. Only a
 # deletion publishes nothing: the others are the destination's verdict, which
 # is not evidence of what the real push will send.
@@ -123,13 +149,17 @@ def _consumes_next(arg: str) -> bool:
 
 
 def preview_arguments(rest: list[str]) -> list[str]:
-    """Dry-run the same push; a trailing --verbose overrides any caller --quiet."""
+    """Dry-run the same push; a trailing --verbose overrides any caller --quiet.
+
+    A trailing --verify overrides any caller --no-verify, so the capture hook
+    records every URL.
+    """
     index = 0
     while index < len(rest):
         if rest[index] == "--":
-            return ["--dry-run", "--porcelain", "--no-verify", *rest[:index], "--verbose", *rest[index:]]
+            return ["--dry-run", "--porcelain", *rest[:index], "--verify", "--verbose", *rest[index:]]
         index += 2 if _consumes_next(rest[index]) else 1
-    return ["--dry-run", "--porcelain", "--no-verify", *rest, "--verbose"]
+    return ["--dry-run", "--porcelain", *rest, "--verify", "--verbose"]
 
 
 @dataclass
@@ -137,10 +167,13 @@ class PushArguments:
     """git push arguments split for the frozen push."""
 
     kept: list[str] = field(default_factory=list)  # Options the frozen push keeps, values included.
-    repository: str | None = None
     dry_run: bool = False
     quiet: bool = False
     force_if_includes: bool = False
+    verify: bool = True
+    receive_pack: bool = False  # --receive-pack or --exec given.
+    # --force-with-lease values in order: None for the bare form, else <ref>[:<expect>].
+    leases: list[str | None] = field(default_factory=list)
 
 
 def _refuse_option() -> gate.PublishBlocked:
@@ -150,20 +183,18 @@ def _refuse_option() -> gate.PublishBlocked:
 
 
 def push_arguments(rest: list[str]) -> PushArguments:
-    """Split git push arguments into kept options, the repository and the flag states that matter.
+    """Split git push arguments into kept options and the flag states that matter.
 
-    Refspecs are dropped (the frozen push names its own), and so are the
-    options in FROZEN_AWAY. Unknown or abbreviated options are refused.
+    The repository and refspecs are dropped (the frozen push names its own
+    URL and refspecs), and so are the options in FROZEN_AWAY. Unknown or
+    abbreviated options are refused.
     """
     parsed = PushArguments()
-    positionals: list[str] = []
-    repo_option = None
     index = 0
     while index < len(rest):
         arg = rest[index]
         index += 1
         if arg == "--":
-            positionals += rest[index:]
             break
         if arg.startswith("--"):
             name, equals, _ = arg[2:].partition("=")
@@ -177,9 +208,15 @@ def push_arguments(rest: list[str]) -> PushArguments:
                     raise _refuse_option()
                 words.append(rest[index])
                 index += 1
-            value = words[-1] if len(words) == 2 else arg.partition("=")[2]
-            if base == "repo" and not negated:
-                repo_option = value
+            if base == "force-with-lease":
+                if negated:
+                    parsed.leases.clear()
+                else:
+                    parsed.leases.append(arg.partition("=")[2] if equals else None)
+            elif base in {"receive-pack", "exec"}:
+                parsed.receive_pack = not negated
+            elif base == "verify":
+                parsed.verify = not negated
             elif base == "dry-run":
                 parsed.dry_run = not negated
             elif base == "quiet":
@@ -212,9 +249,6 @@ def push_arguments(rest: list[str]) -> PushArguments:
                     keep += letter
             if keep:
                 parsed.kept += ["-" + keep, *separate]
-        else:
-            positionals.append(arg)
-    parsed.repository = positionals[0] if positionals else repo_option
     return parsed
 
 
@@ -392,6 +426,20 @@ class Repository:
         if result.returncode:
             return None
         return result.stdout.decode().strip() or None
+
+    def ref(self, name: str) -> str | None:
+        """The id the full ref name stores, without rev-parse's name expansion; None when absent."""
+        result = self.run("show-ref", "--verify", "--hash", name)
+        return (result.stdout.decode().strip() or None) if result.returncode == 0 else None
+
+    def config(self) -> list[tuple[str, str | None]]:
+        """Every configuration entry in reading order; a valueless entry has value None."""
+        entries = []
+        for entry in self.text("config", "--list", "-z").split("\0"):
+            if entry:
+                key, newline, value = entry.partition("\n")
+                entries.append((key, value if newline else None))
+        return entries
 
     def layout(self) -> tuple[bool, set[str], str]:
         """Whether grafts alter commit parents, the shallow boundary commits and the object format.
@@ -661,35 +709,99 @@ def public_history(repository: Repository, client, object_format: str) -> tuple[
 
 
 @dataclass
+class Push:
+    """One inspected destination: its URL, the frozen push to it and the tracking refs a success updates."""
+
+    url: str
+    argv: list[str]
+    tracking: list[tuple[str, str | None]] = field(default_factory=list)  # (tracking ref, id; None deletes).
+
+
+@dataclass
 class Delivery:
-    """The push that runs after a clean scan of a public destination: exactly the scanned objects and names."""
+    """What runs after the scan: one frozen push per inspected destination, then the local bookkeeping."""
 
     git: list[str]  # The real git and the caller's global options.
-    argv: list[str]  # The frozen push; empty when the push names no refs.
+    pushes: list[Push]  # Destinations the push names no refs for are left out.
     status: int = 0  # The preview's exit status, returned when nothing is sent.
-    remote: str = ""
+    remote: str = ""  # The remote name git reported, as git push -u records it.
+    hook: str = ""  # The caller's pre-push hook the guard runs; empty for none or --no-verify.
+    ssh: str = "ssh"  # The ssh command git chose at the preview, pinned as GIT_SSH_COMMAND.
     upstreams: list[tuple[str, str]] = field(default_factory=list)  # (local branch, destination ref).
     rebase: bool = False
     quiet: bool = False
+    dry_run: bool = False
 
 
-def merged_updates(sections: list[dict]) -> list[tuple]:
-    """The one ref list every destination of the push receives.
+def read_captures(path: str) -> list[tuple[str, str]]:
+    """(remote name, URL) for each destination, in push order, as the capture hook recorded them."""
+    with open(path, "rb") as handle:
+        fields = handle.read().decode("utf-8", "surrogateescape").split("\0")
+    if fields.pop() != "" or len(fields) % 2:
+        raise gate.PublishBlocked("OPSEC: push destinations not recorded; push refused.")
+    return list(zip(fields[::2], fields[1::2], strict=True))
 
-    The frozen push names the remote once, so every push URL must receive the
-    same refs (a matching push can differ per URL). An update forced for any
-    URL stays forced.
+
+def refname_match(short: str, full: str) -> bool:
+    """git's refname_match: whether short names full under the rev-parse rules."""
+    return any(rule.format(short) == full for rule in REV_PARSE_RULES)
+
+
+def _glob(pattern: str, name: str) -> str | None:
+    """The part of name the single * of a refspec pattern matches; name itself for an exact match."""
+    if "*" not in pattern:
+        return name if pattern == name else None
+    prefix, _, suffix = pattern.partition("*")
+    if len(name) < len(prefix) + len(suffix) or not (name.startswith(prefix) and name.endswith(suffix)):
+        return None
+    return name[len(prefix) : len(name) - len(suffix)]
+
+
+def tracking_ref(fetch: list[str], name: str) -> str | None:
+    """The remote-tracking ref for remote ref name under the remote's fetch refspecs (remote_find_tracking).
+
+    A negative refspec (^<pattern>) matching name omits it; otherwise the
+    first refspec with a destination whose source matches decides.
     """
-    pairs = [sorted((source, target) for _, source, target in section["updates"]) for section in sections]
-    if any(pair != pairs[0] for pair in pairs):
-        raise gate.PublishBlocked(
-            "OPSEC: the push's destinations would receive different refs; push each destination with "
-            "explicit refspecs; push refused."
+    specs = [spec.removeprefix("+") for spec in fetch]
+    if any(spec.startswith("^") and _glob(spec[1:], name) is not None for spec in specs):
+        return None
+    for spec in specs:
+        source, colon, target = spec.partition(":")
+        if spec.startswith("^") or not colon or not target:
+            continue
+        middle = _glob(source, name)
+        if middle is not None:
+            return target.replace("*", middle, 1) if "*" in source else target
+    return None
+
+
+def leased(repository: Repository, leases: list[str | None], updates: list[tuple], fetch: list[str]) -> dict[str, str]:
+    """The expected id of each updated ref a caller's lease covers, as git applies --force-with-lease.
+
+    git's apply_cas: the first <ref>[:<expect>] entry whose ref names the
+    destination ref decides, and a bare --force-with-lease covers the rest. An
+    entry without <expect> expects the remote-tracking ref. Both are read now,
+    so the frozen push to a URL (which has no tracking refs) enforces the same
+    lease; an empty expected id means the ref must not exist.
+    """
+    expected_ids = {}
+    for _, _, target in updates:
+        entry = next(
+            (lease for lease in leases if lease is not None and refname_match(lease.split(":")[0], target)), ""
         )
-    forced = {(source, target) for section in sections for flag, source, target in section["updates"] if flag == "+"}
-    return [
-        ("+" if (source, target) in forced else flag, source, target) for flag, source, target in sections[0]["updates"]
-    ]
+        if not entry and None not in leases:
+            continue
+        _, colon, expect = entry.partition(":")
+        if colon:
+            expected = repository.object(expect) if expect else ""
+            if expected is None:
+                raise gate.PublishBlocked("OPSEC: --force-with-lease expected value unresolved; push refused.")
+        else:
+            tracking = tracking_ref(fetch, target)
+            expected = (repository.ref(tracking) if tracking else None) or ""
+        expected_ids[target] = expected
+    return expected_ids
 
 
 def upstream_branches(repository: Repository, updates: list[tuple]) -> list[tuple[str, str]]:
@@ -710,72 +822,127 @@ def upstream_branches(repository: Repository, updates: list[tuple]) -> list[tupl
 
 
 def freeze(
-    repository: Repository, global_options: list[str], rest: list[str], sections: list[dict], status: int
-) -> tuple[list[tuple], dict[str, str], Delivery]:
-    """The updates, the object each pushed source resolves to, and the frozen push.
+    repository: Repository, global_options: list[str], rest: list[str], sections: list[dict], remote: str, status: int
+) -> tuple[dict[str, str], Delivery]:
+    """The object each pushed source resolves to, and one frozen push per inspected destination.
 
-    The real push names every update as an explicit <id>:<ref> refspec (with +
-    when the preview reported a forced update, :<ref> for a deletion), so a
-    ref moved by another process, or a destination that gains a matching
-    branch, after the preview cannot change what is sent. Ref-selecting
-    options are dropped (the refspecs replace them) and --no-follow-tags
-    stops push.followTags adding tags. git records no upstream for an id
-    source, so the upstreams git reported are recorded after the push. Forms
-    that cannot be frozen are refused: no named remote, --force-if-includes
-    (it needs the local branch as the source) and abbreviated options.
+    Each push goes to the URL the preview's hook recorded (section["push_url"])
+    and names every update as an explicit <id>:<ref> refspec (with + when the
+    preview reported a forced update, :<ref> for a deletion), so a ref moved by
+    another process, a destination that gains a matching branch, or a remote
+    reconfigured after the preview cannot change what is sent or where; the
+    guard hook refuses the push if git resolves that URL to another one.
+    Ref-selecting options are dropped (the refspecs replace them),
+    --no-follow-tags stops push.followTags adding tags, and leases are frozen
+    per ref (leased; a leased ref is never sent with +, which would defeat the
+    lease, so a caller's own +refspec under a lease keeps the lease). What git
+    derives from the remote name is applied explicitly: the remote's
+    receivepack, the ssh command, the remote-tracking refs a success updates,
+    and the upstreams git reported (recorded after the push; git records none
+    for an id source). Forms that cannot be carried to a URL are refused:
+    --force-if-includes (it needs the local branch as the source), a remote
+    with a vcs helper or proxy, and abbreviated options.
     """
-    updates = merged_updates(sections)
     arguments = push_arguments(rest)
-    if arguments.repository is None:
-        raise gate.PublishBlocked(
-            "OPSEC: a scanned push names its remote (git push <remote> [<refspec>...]); push refused."
-        )
     if arguments.force_if_includes:
         raise gate.PublishBlocked(
             "OPSEC: --force-if-includes cannot apply to the frozen push; use "
             "--force-with-lease=<ref>:<expected id>; push refused."
         )
+    entries = repository.config()
+
+    def setting(key: str) -> list[str | None]:
+        return [value for name, value in entries if name == key]
+
+    if setting(f"remote.{remote}.vcs") or setting(f"remote.{remote}.proxy"):
+        raise gate.PublishBlocked(
+            "OPSEC: the remote's vcs or proxy setting cannot be carried to the inspected URL; push refused."
+        )
+    fetch = [value for value in setting(f"remote.{remote}.fetch") if value]
+    receive = setting(f"remote.{remote}.receivepack")
+    options = list(arguments.kept)
+    if receive and receive[-1] and not arguments.receive_pack:
+        options.append(f"--receive-pack={receive[-1]}")
     objects: dict[str, str] = {}
-    for flag, source, _ in updates:
-        if flag != "-" and source and source not in objects:
-            resolved = repository.object(source)
-            if resolved is None:
-                raise gate.PublishBlocked("OPSEC: pushed object unresolved; push refused.")
-            objects[source] = resolved
-    upstreams: list[tuple[str, str]] = []
+    for section in sections:
+        for flag, source, _ in section["updates"]:
+            if flag != "-" and source and source not in objects:
+                resolved = repository.object(source)
+                if resolved is None:
+                    raise gate.PublishBlocked("OPSEC: pushed object unresolved; push refused.")
+                objects[source] = resolved
+    upstreams: dict[str, str] = {}
     if any(section["upstreams"] for section in sections):
         for section in sections:
-            if len(upstream_branches(repository, section["updates"])) != section["upstreams"]:
+            found = upstream_branches(repository, section["updates"])
+            if len(found) != section["upstreams"]:
                 raise gate.PublishBlocked(
                     "OPSEC: the upstream git would set cannot be reproduced for the frozen push; push without "
                     "-u and set it with git branch --set-upstream-to; push refused."
                 )
-        upstreams = [] if arguments.dry_run else upstream_branches(repository, updates)
-    rebase = ""
-    if upstreams:
-        rebase = repository.run("config", "--get", "branch.autoSetupRebase").stdout.decode().strip().lower()
-    refspecs = [
-        f":{target}" if flag == "-" or not source else f"{'+' if flag == '+' else ''}{objects[source]}:{target}"
-        for flag, source, target in updates
-    ]
+            upstreams.update(found)
     git = [repository.base[0], *global_options]
-    argv = [*git, "push", *arguments.kept, "--no-follow-tags", arguments.repository, "--", *refspecs]
+    pushes = []
+    for section in sections:
+        updates = section["updates"]
+        if not updates:
+            continue  # A push without refspecs would fall back to the default selection.
+        leases = leased(repository, arguments.leases, updates, fetch)
+        # A + refspec overrides a lease in git, and a held lease allows the forced update itself.
+        refspecs = [
+            f":{target}"
+            if flag == "-" or not source
+            else f"{'+' if flag == '+' and target not in leases else ''}{objects[source]}:{target}"
+            for flag, source, target in updates
+        ]
+        argv = [
+            *git,
+            "-c",
+            f"core.hooksPath={HOOKS / 'guard'}",
+            "push",
+            *options,
+            *(f"--force-with-lease={target}:{expected}" for target, expected in leases.items()),
+            "--verify",
+            "--no-follow-tags",
+            "--",  # Before the URL too: a URL starting with - is never read as an option.
+            section["push_url"],
+            *refspecs,
+        ]
+        tracking = [
+            (ref, None if flag == "-" or not source else objects[source])
+            for flag, source, target in updates
+            if (ref := tracking_ref(fetch, target))
+        ]
+        pushes.append(Push(url=section["push_url"], argv=argv, tracking=[] if arguments.dry_run else tracking))
+    hook = ""
+    if arguments.verify:
+        path = repository.text("rev-parse", "--path-format=absolute", "--git-path", "hooks/pre-push").strip()
+        hook = path if os.path.isfile(path) and os.access(path, os.X_OK) else ""
+    rebase = (setting("branch.autosetuprebase") or [""])[-1] or ""
+    # git's order (connect.c): GIT_SSH_COMMAND, core.sshCommand, GIT_SSH, ssh. Pinned so a
+    # core.sshCommand written after the preview cannot route an unchanged ssh URL elsewhere.
+    caller = repository.caller
+    configured = (setting("core.sshcommand") or [None])[-1]
+    ssh = caller.get("GIT_SSH_COMMAND") or configured or shlex.quote(caller.get("GIT_SSH") or "ssh")
     delivery = Delivery(
         git=git,
-        argv=argv if refspecs else [],
+        pushes=pushes,
         status=status,
-        remote=arguments.repository,
-        upstreams=upstreams,
-        rebase=rebase in {"always", "remote"},
+        remote=remote,
+        hook=hook,
+        ssh=ssh,
+        upstreams=[] if arguments.dry_run else list(upstreams.items()),
+        rebase=rebase.lower() in {"always", "remote"},
         quiet=arguments.quiet,
+        dry_run=arguments.dry_run,
     )
-    return updates, objects, delivery
+    return objects, delivery
 
 
 def scan_push(
     real_git: str, argv: list[str], environment: dict[str, str], *, public_repository=None
 ) -> Delivery | None:
-    """The frozen push to run, or None to run the caller's push unchanged (no public destination).
+    """The frozen pushes to run, or None when the command is not a push.
 
     Raises PublishBlocked unless every public text of this push is clean,
     already public or overridden. public_repository reports the canonical
@@ -795,21 +962,49 @@ def scan_push(
         # git walks the file this names, while git rev-parse --git-path still names the repository's own.
         raise gate.PublishBlocked("OPSEC: GIT_SHALLOW_FILE is not supported for a scanned push; push refused.")
     repository = Repository(real_git, global_options, environment)
-    preview = repository.run("push", *preview_arguments(rest), timeout=300)
+    if not all(os.access(HOOKS / name / "pre-push", os.X_OK) for name in ("capture", "guard")):
+        raise gate.PublishBlocked("OPSEC: push hooks not executable; push refused.")
+    descriptor, capture = tempfile.mkstemp(prefix="lu-opsec-push-")
+    os.close(descriptor)
+    try:
+        # The capture hook records the remote name and the exact URL of every destination, in push order.
+        preview = repository.run(
+            "-c",
+            f"core.hooksPath={HOOKS / 'capture'}",
+            "push",
+            *preview_arguments(rest),
+            timeout=300,
+            environment={**repository.environment, "LU_OPSEC_PUSH_CAPTURE": capture},
+        )
+        captures = read_captures(capture)
+    finally:
+        os.unlink(capture)
     sections = parse_porcelain(preview.stdout.decode("utf-8", "replace"))
     if not sections:
         # git's own error text can quote the refspec; name only the phase.
         raise gate.PublishBlocked(f"OPSEC: push preview failed (exit {preview.returncode}); push refused.")
+    # git prints each destination's To line (its URL without userinfo) in the order it ran the hook.
+    if (
+        len(captures) != len(sections)
+        or len({remote for remote, _ in captures}) != 1
+        or any(
+            destination(url) != destination(section["url"])
+            for (_, url), section in zip(captures, sections, strict=True)
+        )
+    ):
+        raise gate.PublishBlocked("OPSEC: push destinations disagree with the preview; push refused.")
     public: list[str] = []
     private: list[str] = []
-    for section in sections:
-        # git prints its own push URL (after insteadOf and pushInsteadOf) without userinfo.
-        dest = destination(section["url"])
-        (private if gate.is_private(dest) else public).append(dest)
+    for section, (_, url) in zip(sections, captures, strict=True):
+        section["push_url"] = url
+        dest = destination(url)
+        section["public"] = not gate.is_private(dest)
+        (public if section["public"] else private).append(dest)
+    objects, delivery = freeze(repository, global_options, rest, sections, captures[0][0], preview.returncode)
     if not public:
         gate.check_texts(private[0], [], environment=environment)  # Records a supplied override.
-        return None
-    updates, objects, delivery = freeze(repository, global_options, rest, sections, preview.returncode)
+        return delivery
+    updates = [update for section in sections if section["public"] for update in section["updates"]]
     texts, names, tips = published_refs(repository, updates, objects)
     owners: list[str] = []  # The commit each commit text belongs to, from texts[first] on.
     head, state = None, "unavailable"
@@ -881,6 +1076,36 @@ def record_upstreams(delivery: Delivery, environment: dict[str, str], run) -> No
             print(f"branch '{local}' set up to track '{delivery.remote}/{short}'{suffix}.")
 
 
+def deliver(delivery: Delivery, environment: dict[str, str], run) -> int:
+    """Run each frozen push with its guard, then update tracking refs and record upstreams as git push does.
+
+    git updates a destination's remote-tracking refs when its push succeeds;
+    the upstreams are recorded once every push succeeded. The first failing
+    push's status is returned.
+    """
+    status = 0
+    for push in delivery.pushes:
+        guarded = {
+            **environment,
+            "LU_OPSEC_PUSH_URL": push.url,
+            "LU_OPSEC_PUSH_REMOTE": delivery.remote,
+            "LU_OPSEC_PUSH_HOOK": delivery.hook,
+            "GIT_SSH_COMMAND": delivery.ssh,
+        }
+        guarded.pop("LU_OPSEC_PUSH_CAPTURE", None)
+        result = run(push.argv, env=guarded, check=False).returncode
+        if result:
+            status = status or result
+            continue
+        for ref, sha in push.tracking:
+            update = ["update-ref", "-d", ref] if sha is None else ["update-ref", "-m", "update by push", ref, sha]
+            if run([*delivery.git, *update], env=environment, check=False).returncode:
+                print("OPSEC: pushed; a remote-tracking ref was not updated.", file=sys.stderr)
+    if status == 0:
+        record_upstreams(delivery, environment, run)
+    return status
+
+
 def main(argv: list[str] | None = None, *, execute=os.execve, run=subprocess.run, public_repository=None) -> int:
     real_git, *args = sys.argv[1:] if argv is None else argv
     environment = dict(os.environ)
@@ -896,16 +1121,10 @@ def main(argv: list[str] | None = None, *, execute=os.execve, run=subprocess.run
     if delivery is None:
         execute(real_git, [real_git, *args], environment)
         return 0
-    if not delivery.argv:
+    if not delivery.pushes:
         print("OPSEC: the push names no refs; nothing sent.", file=sys.stderr)
         return delivery.status
-    if not delivery.upstreams:
-        execute(real_git, delivery.argv, environment)
-        return 0
-    status = run(delivery.argv, env=environment, check=False).returncode
-    if status == 0:
-        record_upstreams(delivery, environment, run)
-    return status
+    return deliver(delivery, environment, run)
 
 
 if __name__ == "__main__":

@@ -171,10 +171,12 @@ and are not affected.
 
 The git shim sends every `push` (after global options such as `-C` and `-c`)
 to `scripts/opsec/git_push.py` before the real git runs. A dry run
-(`--dry-run --porcelain --no-verify --verbose`) reports which refs the push
-names and the push URL git resolved (after `insteadOf` and `pushInsteadOf`),
-printed without userinfo. For each destination that `is_private` does not
-exempt, these are scanned through `check_texts`:
+(`--dry-run --porcelain --verify --verbose`, with `core.hooksPath` set to
+`scripts/opsec/push_hooks/capture`) reports which refs the push names for each
+destination, and its pre-push hook records the remote name and the exact URL
+git pushes to (after `url`, `pushurl`, `insteadOf` and `pushInsteadOf`). For
+each destination that `is_private` does not exempt, these are scanned through
+`check_texts`:
 
 - every named branch, tag or other ref name, except deletions;
 - the name inside every annotated tag object on the way from a pushed ref to
@@ -281,11 +283,13 @@ refuses the push, and so do git's `--shallow-file` option and the
 `GIT_CURL_VERBOSE`, set `GIT_TRACE2`, `GIT_TRACE2_EVENT` and `GIT_TRACE2_PERF`
 to `0` (which outranks `trace2.*` targets in configuration) and set
 `GIT_TERMINAL_PROMPT=0` and `GIT_NO_LAZY_FETCH=1` (no partial-clone object
-fetches). The scan never passes a URL to git and never reads
-one with userinfo. Caller tracing still applies to the real push the caller
-asked for.
+fetches). The recorded URLs, which can carry userinfo, live only in a private
+temporary file deleted after the preview and in the delivered push's
+command line and environment; they are never printed. Caller tracing still
+applies to the real push.
 
-Classification uses the URL the preview prints. Scp-like, `ssh://`, `git://`
+Classification uses the URL the preview's hook records, which must agree with
+the destination of the URL the preview prints, in the same order. Scp-like, `ssh://`, `git://`
 and `https://` forms name a hosted destination; local paths, file URLs, remote
 helpers and unparseable text are scanned (never private by default). A hit, a
 missing or incompatible matcher, or an unreadable or failed preview refuses
@@ -294,25 +298,45 @@ line, or only the failing phase and exit code; git's own output from these
 steps is never replayed. The same single-use, logged `LU_OPSEC_OVERRIDE`
 applies; the real git does not receive it. File contents are not scanned.
 
-**What the real push sends.** For a public destination the real push is not
-the caller's command line re-run: git would resolve the refs again, so a
-branch moved by another process after the scan, or a destination that gained
-a matching branch, would publish unscanned text. Instead every update the
-preview reported is resolved once, scanned, and sent as an explicit refspec:
-`<id>:<ref>` (`+<id>:<ref>` where the preview reported a forced update,
-`:<ref>` for a deletion), after the caller's remaining options,
-`--no-follow-tags` (so `push.followTags` adds nothing) and the named remote.
-Ref-selecting options (`--all`, `--branches`, `--mirror`, `--tags`,
+**What the real push sends.** The real push is never the caller's command
+line re-run: git would resolve the refs and the destination again, so a branch
+moved by another process after the scan, a destination that gained a matching
+branch, or a remote reconfigured after the preview (a new `url` or `pushurl`,
+an `insteadOf` rule, `mirror`, push refspecs) would publish unscanned text or
+send to an unclassified destination. Instead every destination, scanned public
+and exempt private alike, gets its own push to the URL its hook recorded, with
+every update the preview reported for it resolved once and sent as an explicit
+refspec: `<id>:<ref>` (`+<id>:<ref>` where the preview reported a forced update
+not covered by a lease, `:<ref>` for a deletion), after the caller's remaining
+options, `--verify` and `--no-follow-tags` (so `push.followTags` adds
+nothing). Ref-selecting options (`--all`, `--branches`, `--mirror`, `--tags`,
 `--follow-tags`, `--prune`, `--delete`, `--repo`) are replaced by those
-refspecs. git records no upstream for an id source, so when the preview
-reports upstreams (`-u`, `--set-upstream` or `push.autoSetupRemote`) the
-scanner records the same `branch.<name>.remote`, `.merge` and, under
-`branch.autoSetupRebase`, `.rebase` settings after the whole push succeeds; a
-partly failed push records none. Forms that cannot be frozen are refused: a
-push that does not name its remote, `--force-if-includes` (it needs the local
-branch as the source; `--force-with-lease=<ref>:<expected id>` works),
-abbreviated or unknown options, and a remote whose push URLs would receive
-different refs. A private destination runs the caller's push unchanged.
+refspecs. git still rewrites even an explicit URL through `insteadOf`, so the
+push runs with `core.hooksPath` set to `scripts/opsec/push_hooks/guard`,
+whose pre-push hook (which git runs after resolving the destination and before
+sending anything) refuses the push unless git is pushing to exactly the
+recorded URL, and then runs the caller's own pre-push hook with the remote name
+and URL unless the caller passed `--no-verify`; `--no-verify` does not disable
+the guard.
+
+What git derives from the remote name is applied explicitly. Leases become
+`--force-with-lease=<ref>:<id>` per ref, with the expected id read once from
+the caller's value or the remote-tracking ref (a leased ref is never sent with
+`+`, which would defeat the lease, so a caller's own `+refspec` under a lease
+keeps the lease). The remote's `receivepack` becomes `--receive-pack`, and the
+ssh command git chose at the preview (`GIT_SSH_COMMAND`, `core.sshCommand`,
+`GIT_SSH`, then `ssh`) is pinned as `GIT_SSH_COMMAND`. After a
+destination's push succeeds, the remote-tracking refs its fetch refspecs map
+the pushed refs to are updated as git push updates them. git records no
+upstream for an id source, so when the preview reports upstreams (`-u`,
+`--set-upstream` or `push.autoSetupRemote`) the scanner records the same
+`branch.<name>.remote`, `.merge` and, under `branch.autoSetupRebase`,
+`.rebase` settings after every push succeeds; a partly failed push records
+none and updates no tracking ref for the failed destination. Forms that cannot
+be carried to a URL are refused: `--force-if-includes` (it needs the local
+branch as the source; `--force-with-lease=<ref>:<expected id>` works), a remote
+with a `vcs` helper or a `proxy`, and abbreviated or unknown options. A push
+that names no remote goes where git sends it, as recorded by the hook.
 
 Cost on this repository (9,522 commits on the public default branch; real
 `default-head` read, dry-run preview to the real remote, nothing pushed): an
@@ -330,9 +354,9 @@ Known gaps: git aliases that expand to push, absolute git paths, `git-push`
 called from the exec path, submodule pushes from `--recurse-submodules`,
 and note blobs under `refs/notes/` are not scanned.
 An ssh host alias that does not name the hosted domain is scanned as public.
-The frozen push names the remote, so its push URLs are resolved again from
-configuration when it runs; a remote reconfigured between the preview and the
-push is not rescanned. History is excluded only while GitHub
+The guard compares URLs, so what decides where an unchanged URL connects
+outside git's configuration (ssh client configuration, name resolution) is the
+host's, as for any push. History is excluded only while GitHub
 answers; otherwise the scan is full. The answer is as trustworthy as the `gh`
 executable and its configuration, which every publisher already relies on. For the guarded non-push commands (`checkout` and `switch`
 under `AGENT_NO_MERGE=1`) the shim fails closed when its guard interpreter

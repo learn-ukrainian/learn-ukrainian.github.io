@@ -1,0 +1,4 @@
+#!/bin/sh
+# Hooks path of the dry-run preview scripts/opsec/git_push.py runs (#9339):
+# record the remote name and the exact URL git pushes to, NUL-terminated.
+printf '%s\000%s\000' "$1" "$2" >>"$LU_OPSEC_PUSH_CAPTURE"

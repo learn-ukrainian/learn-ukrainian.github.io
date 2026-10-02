@@ -333,26 +333,25 @@ def test_override_is_logged_and_single_use(push_sandbox):
     assert again.returncode == 2 and "override already consumed" in again.stderr
 
 
-def test_private_remote_is_not_scanned(push_sandbox, monkeypatch):
-    """A destination the catalogue marks private skips scanning (and needs no matcher)."""
+def _private(monkeypatch, *paths):
+    """Classify the given local remotes as the catalogue's private repository; a scan would fail."""
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
     monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("private push must not load the matcher"))
     real_destination = git_push.destination
-    remote = str(push_sandbox.remote)
+    private = {str(path) for path in paths}
     monkeypatch.setattr(
-        git_push, "destination", lambda url: "github.com/unit/private" if url == remote else real_destination(url)
+        git_push, "destination", lambda url: "github.com/unit/private" if url in private else real_destination(url)
     )
+
+
+def test_private_remote_is_not_scanned_and_gets_the_frozen_push(push_sandbox, monkeypatch, capfd):
+    """A destination the catalogue marks private skips scanning (and needs no matcher), not the frozen delivery."""
+    _private(monkeypatch, push_sandbox.remote)
     sha = push_sandbox.commit("subject " + TOKEN)
-    monkeypatch.chdir(push_sandbox.work)
-    monkeypatch.setattr(os, "environ", _env())
-    executed = []
-    status = git_push.main(
-        [REAL_GIT, "push", "origin", "HEAD:refs/heads/feature"],
-        execute=lambda path, argv, env: executed.append(argv),
-        public_repository=FakePublic(None, fail=True),
-    )
-    assert status == 0 and executed == [[REAL_GIT, "push", "origin", "HEAD:refs/heads/feature"]]
-    assert "refs/heads/feature" not in push_sandbox.remote_refs() and sha
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None, fail=True), deliver=True, scan=False)
+    assert status == 0, capfd.readouterr().err
+    assert executed[0][-3:] == ["--", str(push_sandbox.remote), f"{sha}:refs/heads/feature"]
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
 
 
 @pytest.mark.parametrize(
@@ -397,14 +396,14 @@ def test_split_command(argv, expected):
 @pytest.mark.parametrize(
     "rest,expected_tail",
     [
-        (["-q", "origin"], ["-q", "origin", "--verbose"]),
-        (["-o", "--", "origin"], ["-o", "--", "origin", "--verbose"]),
-        (["-fo", "x", "origin", "--", "ref"], ["-fo", "x", "origin", "--verbose", "--", "ref"]),
-        (["-ofoo", "--", "ref"], ["-ofoo", "--verbose", "--", "ref"]),
+        (["-q", "--no-verify", "origin"], ["-q", "--no-verify", "origin", "--verify", "--verbose"]),
+        (["-o", "--", "origin"], ["-o", "--", "origin", "--verify", "--verbose"]),
+        (["-fo", "x", "origin", "--", "ref"], ["-fo", "x", "origin", "--verify", "--verbose", "--", "ref"]),
+        (["-ofoo", "--", "ref"], ["-ofoo", "--verify", "--verbose", "--", "ref"]),
     ],
 )
 def test_preview_overrides_quiet_before_the_refspec_separator(rest, expected_tail):
-    assert git_push.preview_arguments(rest) == ["--dry-run", "--porcelain", "--no-verify", *expected_tail]
+    assert git_push.preview_arguments(rest) == ["--dry-run", "--porcelain", *expected_tail]
 
 
 @pytest.mark.parametrize("output", ["To x\nunexpected line\nDone\n", "To x\n*\tnocolon\t[new branch]\n"])
@@ -775,26 +774,32 @@ class FakePublic:
         return self.head
 
 
-def run_main(sandbox, monkeypatch, client, *args, deliver=False, **extra):
+def run_main(sandbox, monkeypatch, client, *args, deliver=False, scan=True, **extra):
     """git_push.main in process with the synthetic matcher and the given public-repository client.
 
-    The executed argv is recorded; deliver=True also runs it with the real git.
+    Every push main runs is recorded; deliver=True also runs it, and the local
+    bookkeeping after it, with the real git. scan=False keeps the caller's
+    catalogue and matcher seams.
     """
-    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
-    monkeypatch.setattr(gate, "private_tooling", lambda: sandbox.tooling)
+    if scan:
+        monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+        monkeypatch.setattr(gate, "private_tooling", lambda: sandbox.tooling)
     monkeypatch.setattr(gate, "primary_root", lambda cwd=None: sandbox.root)
     monkeypatch.chdir(sandbox.work)
     monkeypatch.setattr(os, "environ", _env(**extra))
     executed = []
 
-    def execute(path, argv, env):
-        executed.append(argv)
+    def run(argv, **kwargs):
+        if "push" in argv:
+            executed.append(argv)
         if deliver:
-            subprocess.run(argv, env=env, check=True, capture_output=True, timeout=30)
+            return subprocess.run(argv, timeout=30, **kwargs)
+        return subprocess.CompletedProcess(argv, 0)
 
     status = git_push.main(
         [REAL_GIT, *(args or ("push", "origin", "HEAD:refs/heads/feature"))],
-        execute=execute,
+        execute=lambda *_: pytest.fail("a push is never run unchanged"),
+        run=run,
         public_repository=client,
     )
     return status, executed
@@ -1426,7 +1431,7 @@ def test_branch_moved_after_the_scan_is_not_published(push_sandbox, monkeypatch,
     # Positive control: the caller's HEAD now names the hit, so re-resolving it would have sent it.
     assert _git(push_sandbox.work, "rev-parse", "HEAD") == hit
     assert push_sandbox.remote_refs()["refs/heads/feature"] == scanned and not _remote_has(push_sandbox, hit)
-    assert executed[0][-2:] == ["--", f"{scanned}:refs/heads/feature"]
+    assert executed[0][-3:] == ["--", str(push_sandbox.remote), f"{scanned}:refs/heads/feature"]
 
 
 def test_matching_push_does_not_publish_a_branch_matched_after_the_scan(push_sandbox, monkeypatch, capfd):
@@ -1472,12 +1477,15 @@ def test_frozen_push_replaces_ref_selection_with_the_scanned_mapping(push_sandbo
             REAL_GIT,
             "-c",
             "push.followTags=true",
+            "-c",
+            f"core.hooksPath={git_push.HOOKS / 'guard'}",
             "push",
             "-qf",
             "--atomic",
+            "--verify",
             "--no-follow-tags",
-            "origin",
             "--",
+            str(push_sandbox.remote),
             ":refs/heads/gone",
             f"{sha}:refs/heads/feature",
             f"{tag}:refs/tags/v1",
@@ -1513,6 +1521,7 @@ def test_set_upstream_is_recorded_after_the_frozen_push(push_sandbox, args, bran
     assert _git(push_sandbox.work, "config", "branch.trunk.merge") == f"refs/heads/{branch}"
     assert f"branch 'trunk' set up to track 'origin/{branch}'." in result.stdout
     assert _git(push_sandbox.work, "rev-parse", "--abbrev-ref", "@{upstream}") == f"origin/{branch}"
+    assert _git(push_sandbox.work, "rev-parse", f"refs/remotes/origin/{branch}") == sha
 
 
 def test_set_upstream_honours_auto_setup_rebase_and_dry_run(push_sandbox):
@@ -1531,7 +1540,6 @@ def test_set_upstream_honours_auto_setup_rebase_and_dry_run(push_sandbox):
 @pytest.mark.parametrize(
     "args,refusal",
     [
-        (("push",), "a scanned push names its remote"),
         (("push", "--follow", "origin", "HEAD:refs/heads/feature"), "push option not recognised"),
         (
             ("push", "--force-with-lease", "--force-if-includes", "origin", "HEAD:refs/heads/feature"),
@@ -1548,43 +1556,55 @@ def test_forms_that_cannot_be_frozen_are_refused(push_sandbox, args, refusal):
     assert push_sandbox.remote_refs() == before
 
 
-def test_destinations_receiving_different_refs_are_refused(push_sandbox, tmp_path, monkeypatch, capfd):
+def test_each_push_url_receives_its_own_previewed_refs(push_sandbox, tmp_path, monkeypatch, capfd):
+    """A matching push can send different refs to each push URL; each gets exactly its own."""
     second = tmp_path / "second.git"
     _git(tmp_path, "init", "-q", "--bare", str(second))
     _git(push_sandbox.work, "branch", "other")
     _git(push_sandbox.work, "push", "-q", str(second), "trunk", "other")
     for url in (push_sandbox.remote, second):
         _git(push_sandbox.work, "remote", "set-url", "--add", "--push", "origin", str(url))
-    push_sandbox.commit("clean subject")
-    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None), "push", "origin", ":")
-    err = capfd.readouterr().err
-    assert status == 2 and not executed and "destinations would receive different refs" in err, err
+    sha = push_sandbox.commit("clean subject")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None), "push", "origin", ":", deliver=True)
+    assert status == 0, capfd.readouterr().err
+    other = _git(push_sandbox.work, "rev-parse", "other")
+    assert [argv[argv.index("--") + 1 :] for argv in executed] == [
+        [str(push_sandbox.remote), f"{sha}:refs/heads/trunk"],
+        [str(second), f"{other}:refs/heads/other", f"{sha}:refs/heads/trunk"],
+    ]
+    assert push_sandbox.remote_refs() == {"refs/heads/trunk": sha}
+    assert _git(second, "for-each-ref", "--format=%(refname) %(objectname)").splitlines() == [
+        f"refs/heads/other {other}",
+        f"refs/heads/trunk {sha}",
+    ]
 
 
 @pytest.mark.parametrize(
-    "rest,kept,repository,flags",
+    "rest,kept,flags",
     [
-        (["-fuo", "x", "origin", "main"], ["-fo", "x"], "origin", {}),
-        (["--repo", "origin", "-d", "--tags", "-qn"], ["-qn"], "origin", {"dry_run": True, "quiet": True}),
-        (["--push-option=a", "--no-verify", "--", "url", "main"], ["--push-option=a", "--no-verify"], "url", {}),
+        (["-fuo", "x", "origin", "main"], ["-fo", "x"], {}),
+        (["--repo", "origin", "-d", "--tags", "-qn"], ["-qn"], {"dry_run": True, "quiet": True}),
+        (["--push-option=a", "--no-verify", "--", "url", "main"], ["--push-option=a"], {"verify": False}),
         (
             ["--force-if-includes", "--no-force-if-includes", "-v", "o"],
             ["--force-if-includes", "--no-force-if-includes", "-v"],
-            "o",
             {},
         ),
-        (["-ofoo", "origin"], ["-ofoo"], "origin", {}),
+        (["-ofoo", "origin"], ["-ofoo"], {}),
+        (["--receive-pack", "rp", "origin"], ["--receive-pack", "rp"], {"receive_pack": True}),
+        (
+            ["--force-with-lease", "--no-force-with-lease", "--force-with-lease=a", "--force-with-lease", "o"],
+            [],
+            {"leases": ["a", None]},
+        ),
     ],
 )
-def test_push_arguments(rest, kept, repository, flags):
+def test_push_arguments(rest, kept, flags):
     parsed = git_push.push_arguments(rest)
-    assert parsed.kept == kept and parsed.repository == repository
-    assert {"dry_run": parsed.dry_run, "quiet": parsed.quiet, "force_if_includes": parsed.force_if_includes} == {
-        "dry_run": False,
-        "quiet": False,
-        "force_if_includes": False,
-        **flags,
-    }
+    assert parsed.kept == kept
+    names = ("dry_run", "quiet", "force_if_includes", "verify", "receive_pack", "leases")
+    defaults = {"dry_run": False, "quiet": False, "force_if_includes": False, "verify": True, "receive_pack": False}
+    assert {name: getattr(parsed, name) for name in names} == {**defaults, "leases": [], **flags}
 
 
 @pytest.mark.parametrize("rest", [["--mir"], ["-x"], ["--repo"], ["-o"], ["--unknown", "origin"]])
@@ -1649,3 +1669,289 @@ def test_history_verification_reads_every_public_commit(push_sandbox, monkeypatc
     assert git_push.history_verified(repository, public_head, "sha1")
     _loose(push_sandbox.work / ".git/objects", root).unlink()
     assert not git_push.history_verified(repository, public_head, "sha1")
+
+
+# --- Delivery goes to the inspected destination; configuration read later cannot redirect it ---
+
+
+def _bare(tmp_path, name):
+    path = tmp_path / name
+    _git(tmp_path, "init", "-q", "--bare", str(path))
+    return path
+
+
+def test_private_remote_reconfigured_public_after_the_preview_publishes_nothing(
+    push_sandbox, tmp_path, monkeypatch, capfd
+):
+    public = _bare(tmp_path, "public.git")
+    _private(monkeypatch, push_sandbox.remote)
+    sha = push_sandbox.commit("subject " + TOKEN)
+    _move_after_the_scan(monkeypatch, lambda: _git(push_sandbox.work, "remote", "set-url", "origin", str(public)))
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None, fail=True), deliver=True, scan=False)
+    assert status == 0, capfd.readouterr().err
+    # Positive control: the remote name now resolves to the public destination.
+    assert _git(push_sandbox.work, "remote", "get-url", "--push", "origin") == str(public)
+    assert executed[0][-2] == str(push_sandbox.remote)
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+    assert _git(public, "for-each-ref") == "" and _git(public, "count-objects") == "0 objects, 0 kilobytes"
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda work, public: _git(work, "remote", "set-url", "--push", "origin", str(public)),
+        lambda work, public: _git(work, "config", "remote.origin.pushurl", str(public)),
+    ],
+    ids=["set-url", "pushurl"],
+)
+def test_push_url_changed_after_the_preview_still_goes_to_the_inspected_url(
+    push_sandbox, tmp_path, monkeypatch, capfd, change
+):
+    other = _bare(tmp_path, "other.git")
+    sha = push_sandbox.commit("clean subject")
+    _move_after_the_scan(monkeypatch, lambda: change(push_sandbox.work, other))
+    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(None), deliver=True)
+    assert status == 0, capfd.readouterr().err
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+    assert _git(other, "for-each-ref") == ""
+
+
+@pytest.mark.parametrize("kind", ["insteadOf", "pushInsteadOf"])
+def test_url_rewrite_added_after_the_preview_is_refused_by_the_guard(push_sandbox, tmp_path, monkeypatch, capfd, kind):
+    other = _bare(tmp_path, "other.git")
+    before = push_sandbox.remote_refs()
+    push_sandbox.commit("clean subject")
+    rewrite = ("config", f"url.{other}.{kind}", str(push_sandbox.remote))
+    _move_after_the_scan(monkeypatch, lambda: _git(push_sandbox.work, *rewrite))
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None), deliver=True)
+    err = capfd.readouterr().err
+    assert executed and status == 1, err
+    assert "OPSEC: the push destination is not the one the scan inspected; push refused." in err
+    assert push_sandbox.remote_refs() == before and _git(other, "for-each-ref") == ""
+    # Positive control: git now rewrites the inspected URL to the other repository.
+    preview = _git(push_sandbox.work, "push", "--dry-run", "--porcelain", str(push_sandbox.remote), "HEAD:refs/heads/x")
+    assert f"To {other}" in preview
+
+
+def test_guard_refuses_any_other_url_and_runs_the_caller_hook_on_a_match(tmp_path):
+    guard = git_push.HOOKS / "guard/pre-push"
+    record = tmp_path / "record"
+    caller = tmp_path / "caller-hook"
+    caller.write_text(f'#!/bin/sh\nprintf "%s %s " "$1" "$2" > {record}\ncat >> {record}\n')
+    caller.chmod(0o755)
+
+    def run(url, **env):
+        return subprocess.run(
+            [str(guard), "url-name", url],
+            input="refs line\n",
+            env={"PATH": os.defpath, **env},
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+    unset = run("https://example.invalid/x")
+    assert unset.returncode == 1 and "push refused" in unset.stderr
+    other = run("https://example.invalid/y", LU_OPSEC_PUSH_URL="https://example.invalid/x")
+    assert other.returncode == 1 and not record.exists()
+    match = run(
+        "https://example.invalid/x",
+        LU_OPSEC_PUSH_URL="https://example.invalid/x",
+        LU_OPSEC_PUSH_REMOTE="origin",
+        LU_OPSEC_PUSH_HOOK=str(caller),
+    )
+    assert match.returncode == 0 and record.read_text() == "origin https://example.invalid/x refs line\n"
+    assert run("-n", LU_OPSEC_PUSH_URL="-n").returncode == 0
+
+
+def test_configured_mirror_remote_delivers_the_previewed_refs(push_sandbox):
+    _git(push_sandbox.work, "config", "remote.origin.mirror", "true")
+    sha = push_sandbox.commit("clean subject")
+    result = push_sandbox.push("push", "origin")
+    assert result.returncode == 0, result.stderr
+    assert "can't be combined with refspecs" not in result.stderr
+    assert push_sandbox.remote_refs()["refs/heads/trunk"] == sha
+
+
+def test_ordinary_push_to_the_upstream_updates_the_tracking_ref(push_sandbox):
+    _git(push_sandbox.work, "branch", "--set-upstream-to=origin/trunk")
+    sha = push_sandbox.commit("clean subject")
+    result = push_sandbox.push("push")
+    assert result.returncode == 0, result.stderr
+    assert push_sandbox.remote_refs()["refs/heads/trunk"] == sha
+    assert _git(push_sandbox.work, "rev-parse", "refs/remotes/origin/trunk") == sha
+    assert _git(push_sandbox.work, "status", "-sb").splitlines()[0] == "## trunk...origin/trunk"
+
+
+def test_auto_setup_remote_push_records_the_upstream(push_sandbox):
+    _git(push_sandbox.work, "switch", "-q", "-c", "topic")
+    sha = push_sandbox.commit("clean subject")
+    result = push_sandbox.push("-c", "push.autoSetupRemote=true", "push")
+    assert result.returncode == 0, result.stderr
+    assert push_sandbox.remote_refs()["refs/heads/topic"] == sha
+    assert _git(push_sandbox.work, "rev-parse", "--abbrev-ref", "@{upstream}") == "origin/topic"
+
+
+def test_push_to_a_url_updates_no_tracking_ref(push_sandbox):
+    sha = push_sandbox.commit("clean subject")
+    result = push_sandbox.push("push", str(push_sandbox.remote), "HEAD:refs/heads/feature")
+    assert result.returncode == 0, result.stderr
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+    assert "refs/remotes/origin/feature" not in _git(push_sandbox.work, "for-each-ref")
+
+
+@pytest.mark.parametrize("via", ["hooks", "hooksPath"])
+@pytest.mark.parametrize("verify", [True, False])
+def test_the_callers_pre_push_hook_still_runs(push_sandbox, tmp_path, via, verify):
+    hooks = push_sandbox.work / ".git/hooks" if via == "hooks" else tmp_path / "caller-hooks"
+    hooks.mkdir(exist_ok=True)
+    record = tmp_path / "record"
+    (hooks / "pre-push").write_text(f'#!/bin/sh\nprintf "%s %s\\n" "$1" "$2" >> {record}\ncat >> {record}\n')
+    (hooks / "pre-push").chmod(0o755)
+    sha = push_sandbox.commit("clean subject")
+    options = ("-c", f"core.hooksPath={hooks}") if via == "hooksPath" else ()
+    flags = () if verify else ("--no-verify",)
+    result = push_sandbox.push(*options, "push", *flags, "origin", "HEAD:refs/heads/feature")
+    assert result.returncode == 0, result.stderr
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+    if verify:
+        zero = "0" * 40
+        assert record.read_text() == f"origin {push_sandbox.remote}\n{sha} {sha} refs/heads/feature {zero}\n"
+    else:
+        assert not record.exists()
+
+
+def test_caller_no_verify_does_not_disable_the_guard(push_sandbox, tmp_path, monkeypatch, capfd):
+    other = _bare(tmp_path, "other.git")
+    before = push_sandbox.remote_refs()
+    push_sandbox.commit("clean subject")
+    rewrite = ("config", f"url.{other}.insteadOf", str(push_sandbox.remote))
+    _move_after_the_scan(monkeypatch, lambda: _git(push_sandbox.work, *rewrite))
+    status, executed = run_main(
+        push_sandbox, monkeypatch, FakePublic(None), "push", "--no-verify", "origin", "HEAD:refs/heads/f", deliver=True
+    )
+    assert status == 1 and "--verify" in executed[0], capfd.readouterr().err
+    assert push_sandbox.remote_refs() == before and _git(other, "for-each-ref") == ""
+
+
+def test_lease_is_frozen_from_the_tracking_ref_and_enforced(push_sandbox, monkeypatch, capfd):
+    first = push_sandbox.commit("clean one")
+    _git(push_sandbox.work, "push", "-q", "origin", "HEAD:refs/heads/feature")
+    _git(push_sandbox.work, "fetch", "-q", "origin")
+    _git(push_sandbox.work, "reset", "-q", "--hard", "HEAD~1")
+    rewritten = push_sandbox.commit("clean rewritten")
+    args = ("push", "--force-with-lease", "origin", "HEAD:refs/heads/feature")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None), *args, deliver=True)
+    assert status == 0, capfd.readouterr().err
+    assert f"--force-with-lease=refs/heads/feature:{first}" in executed[0]
+    assert executed[0][-1] == f"{rewritten}:refs/heads/feature"  # A + would defeat the lease.
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == rewritten
+    assert _git(push_sandbox.work, "rev-parse", "refs/remotes/origin/feature") == rewritten
+
+
+def test_lease_broken_after_the_preview_rejects_the_push(push_sandbox, monkeypatch, capfd):
+    push_sandbox.commit("clean one")
+    _git(push_sandbox.work, "push", "-q", "origin", "HEAD:refs/heads/feature")
+    _git(push_sandbox.work, "fetch", "-q", "origin")
+    base = _git(push_sandbox.work, "rev-parse", "HEAD~1")
+    _git(push_sandbox.work, "reset", "-q", "--hard", "HEAD~1")
+    push_sandbox.commit("clean rewritten")
+    # Another pusher moves the remote ref after the scan; the lease must still protect it.
+    _move_after_the_scan(monkeypatch, lambda: _git(push_sandbox.remote, "update-ref", "refs/heads/feature", base))
+    args = ("push", "--force-with-lease=feature", "origin", "HEAD:refs/heads/feature")
+    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(None), *args, deliver=True)
+    assert status == 1 and "stale info" in capfd.readouterr().err
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == base
+
+
+def test_remote_receive_pack_is_carried_to_the_url(push_sandbox, monkeypatch, capfd):
+    _git(push_sandbox.work, "config", "remote.origin.receivepack", "git-receive-pack")
+    push_sandbox.commit("clean subject")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None), deliver=True)
+    assert status == 0 and "--receive-pack=git-receive-pack" in executed[0], capfd.readouterr().err
+
+
+def test_remote_proxy_that_cannot_follow_the_url_is_refused(push_sandbox):
+    _git(push_sandbox.work, "config", "remote.origin.proxy", "http://proxy.invalid")
+    before = push_sandbox.remote_refs()
+    push_sandbox.commit("clean subject")
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert result.returncode == 2 and "vcs or proxy setting cannot be carried" in result.stderr, result.stderr
+    assert push_sandbox.remote_refs() == before
+
+
+def test_unexecutable_push_hooks_refuse(push_sandbox, monkeypatch, tmp_path, capfd):
+    hooks = tmp_path / "hooks"
+    shutil.copytree(git_push.HOOKS, hooks)
+    (hooks / "guard/pre-push").chmod(0o644)
+    monkeypatch.setattr(git_push, "HOOKS", hooks)
+    push_sandbox.commit("clean subject")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None))
+    assert status == 2 and not executed and "push hooks not executable" in capfd.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "fetch,name,expected",
+    [
+        (["+refs/heads/*:refs/remotes/origin/*"], "refs/heads/a/b", "refs/remotes/origin/a/b"),
+        (["+refs/heads/*:refs/remotes/origin/*"], "refs/tags/v1", None),
+        (["refs/heads/main:refs/remotes/o/main"], "refs/heads/main", "refs/remotes/o/main"),
+        (["refs/heads/main"], "refs/heads/main", None),
+        (["+refs/heads/*:refs/remotes/o/*", "^refs/heads/wip*"], "refs/heads/wip1", None),
+        (["refs/heads/x*y:refs/r/*"], "refs/heads/xy", "refs/r/"),
+        (["refs/heads/a:refs/r/first", "refs/heads/*:refs/r/*"], "refs/heads/a", "refs/r/first"),
+    ],
+)
+def test_tracking_ref(fetch, name, expected):
+    assert git_push.tracking_ref(fetch, name) == expected
+
+
+@pytest.mark.parametrize(
+    "short,full,expected",
+    [("main", "refs/heads/main", True), ("heads/main", "refs/heads/main", True), ("ain", "refs/heads/main", False)],
+)
+def test_refname_match(short, full, expected):
+    assert git_push.refname_match(short, full) is expected
+
+
+def test_explicit_leases_are_resolved_once(push_sandbox, monkeypatch, capfd):
+    first = push_sandbox.commit("clean one")
+    _git(push_sandbox.work, "push", "-q", "origin", "HEAD:refs/heads/feature")
+    _git(push_sandbox.work, "reset", "-q", "--hard", "HEAD~1")
+    rewritten = push_sandbox.commit("clean rewritten")
+    args = (
+        "push",
+        f"--force-with-lease=feature:{first}",
+        "--force-with-lease=refs/heads/new:",
+        "origin",
+        "HEAD:refs/heads/feature",
+        "HEAD:refs/heads/new",
+    )
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None), *args, deliver=True)
+    assert status == 0, capfd.readouterr().err
+    assert f"--force-with-lease=refs/heads/feature:{first}" in executed[0]
+    assert "--force-with-lease=refs/heads/new:" in executed[0]
+    refs = push_sandbox.remote_refs()
+    assert refs["refs/heads/feature"] == rewritten and refs["refs/heads/new"] == rewritten
+
+
+def test_ssh_command_configured_after_the_preview_is_not_used(ssh_sandbox, tmp_path, monkeypatch, capfd):
+    """core.sshCommand decides where an unchanged ssh URL connects; the preview's choice is pinned."""
+    url = "git@github.com:unit/public.git"
+    decoy = tmp_path / "decoy-root"
+    _git(tmp_path, "init", "-q", "--bare", str(decoy / "unit/public.git"))
+    env = dict(ssh_sandbox.ssh_env)
+    ssh = env.pop("GIT_SSH_COMMAND")
+    _git(ssh_sandbox.work, "config", "core.sshCommand", ssh)
+    sha = ssh_sandbox.commit("clean subject")
+    redirect = ("config", "core.sshCommand", f"FAKE_SSH_ROOT={decoy} {ssh}")
+    _move_after_the_scan(monkeypatch, lambda: _git(ssh_sandbox.work, *redirect))
+    status, _ = run_main(
+        ssh_sandbox, monkeypatch, FakePublic(None), "push", url, "HEAD:refs/heads/feature", deliver=True, **env
+    )
+    assert status == 0, capfd.readouterr().err
+    assert _git(ssh_sandbox.served / "unit/public.git", "rev-parse", "refs/heads/feature") == sha
+    assert _git(decoy / "unit/public.git", "for-each-ref") == ""
+    # Positive control: a push resolving the ssh command now reaches the decoy.
+    _git(ssh_sandbox.work, "push", "-q", url, "HEAD:refs/heads/control")
+    assert _git(decoy / "unit/public.git", "rev-parse", "refs/heads/control") == sha
