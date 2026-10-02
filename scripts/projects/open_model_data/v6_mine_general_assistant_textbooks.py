@@ -2813,14 +2813,33 @@ def extract_scientific_terminology(
 
 def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | None = None) -> dict[str, Any]:
     """Synthesize a structured held-out evaluation task tailored to subject discipline."""
+    rights = dict(DEFAULT_RIGHTS_POLICY)
+    if chunk.rights:
+        rights.update(chunk.rights)
+
+    if not rights.get("explanation_synthesis_allowed", True):
+        raise ValueError(
+            f"Explanation synthesis denied for eval chunk {chunk.chunk_id} ({chunk.source_file}) "
+            f"per rights record: explanation_synthesis_allowed is False"
+        )
+    verbatim_allowed = rights.get("verbatim_reproduction_allowed", False)
+
     concept = chunk.concept or extract_key_concept(chunk)
     snippet = chunk.snippet or extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
     snippet = apply_calque_sanitation(snippet)
+    if not snippet or len(snippet.strip()) < 15:
+        raise ValueError(f"Insufficient factual snippet content for eval chunk {chunk.chunk_id} ({concept})")
+
     terms = chunk.terms or extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject)
     subj_gen = chunk.subject_genitive
     subj_nom = chunk.subject_nominative
     grade = chunk.grade
     author = chunk.author
+
+    if not verbatim_allowed:
+        prop1, _ = synthesize_non_verbatim_factual_propositions(snippet, concept, author=author, grade=grade)
+    else:
+        prop1 = snippet
 
     terms_str = ", ".join(terms) if terms else concept
     q_var = q_var_override if q_var_override is not None else ((idx - 1) % 24)
@@ -2854,12 +2873,17 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         ]
         query = templates[q_var % len(templates)]
         step1 = f"1. Понятійний аналіз: Досліджуємо теоретичний зміст поняття «{concept}» у курсі {subj_gen} ({grade} клас)."
-        step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+        if verbatim_allowed:
+            step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+            source_body = f"У підручнику ({author}) його сутність розкрито так:\n«{snippet}»\n\n"
+        else:
+            step2 = f"2. Науково-педагогічна основа: Спираємося на концептуальні положення курсу ({author}) щодо поняття «{concept}»: {prop1}"
+            source_body = f"У підручнику ({author}) сутність теми розкрито через положення:\n• {prop1}\n\n"
         step3 = f"3. Термінологічна основа: Виділяємо ключові наукові терміни теми: {terms_str}."
         step4 = "4. Педагогічний підсумок: Сформульовано теоретичні відомості та їх термінологічні ознаки для навчального використання."
         solution = (
             f"Поняття «{concept}» є базовим у курсі {subj_gen} ({grade} клас).\n\n"
-            f"У підручнику ({author}) його сутність розкрито так:\n«{snippet}»\n\n"
+            f"{source_body}"
             f"Ключові наукові терміни теми: {terms_str}.\n\n"
             f"Розуміння сутності поняття «{concept}» є необхідною теоретичною основою для успішного опанування навчального матеріалу."
         )
@@ -2892,12 +2916,17 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         ]
         query = templates[q_var % len(templates)]
         step1 = f"1. Науковий аналіз: Розглядаємо сутність поняття «{concept}» у структурі курсу {subj_gen} ({grade} клас)."
-        step2 = f"2. Джерельна основа: Спираємося на виклад матеріалу в підручнику ({author}): «{snippet}»"
+        if verbatim_allowed:
+            step2 = f"2. Джерельна основа: Спираємося на виклад матеріалу в підручнику ({author}): «{snippet}»"
+            source_body = f"Згідно з підручником ({author}):\n«{snippet}»\n\n"
+        else:
+            step2 = f"2. Науково-педагогічна основа: Спираємося на концептуальні засади підручника ({author}) щодо теми «{concept}»: {prop1}"
+            source_body = f"Згідно з викладом підручника ({author}), наукове положення теми:\n• {prop1}\n\n"
         step3 = f"3. Термінологічний аналіз: Виділяємо ключові природничо-наукові терміни теми: {terms_str}."
         step4 = "4. Науково-педагогічний висновок: Сформульовано сутнісну характеристику природничого поняття та закономірностей на основі шкільного курсу."
         solution = (
             f"Тема «{concept}» розкриває важливі природні закономірності у курсі {subj_gen} ({grade} клас).\n\n"
-            f"Згідно з підручником ({author}):\n«{snippet}»\n\n"
+            f"{source_body}"
             f"Ключові наукові терміни теми: {terms_str}.\n\n"
             f"Засвоєння цих наукових фактів є основою для формування цілісного природничо-наукового світогляду учнів."
         )
@@ -2929,12 +2958,17 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         ]
         query = templates[q_var % len(templates)]
         step1 = f"1. Географічний аналіз: Розглядаємо сутність теми «{concept}» у структурі курсу {subj_gen} ({grade} клас)."
-        step2 = f"2. Джерельна основа: Спираємося на виклад матеріалу в підручнику ({author}): «{snippet}»"
+        if verbatim_allowed:
+            step2 = f"2. Джерельна основа: Спираємося на виклад матеріалу в підручнику ({author}): «{snippet}»"
+            source_body = f"Згідно з підручником ({author}):\n«{snippet}»\n\n"
+        else:
+            step2 = f"2. Науково-педагогічна основа: Спираємося на просторові закономірності за підручником ({author}) щодо теми «{concept}»: {prop1}"
+            source_body = f"Згідно з підручником ({author}), географічні особливості теми окреслено так:\n• {prop1}\n\n"
         step3 = f"3. Термінологічний аналіз: Виділяємо ключові географічні терміни теми: {terms_str}."
         step4 = "4. Науково-педагогічний висновок: Сформульовано сутнісну характеристику навчальної теми на основі шкільного курсу географії."
         solution = (
             f"Тема «{concept}» розкриває важливі географічні та просторові закономірності у курсі {subj_gen} ({grade} клас).\n\n"
-            f"Згідно з підручником ({author}):\n«{snippet}»\n\n"
+            f"{source_body}"
             f"Ключові наукові терміни теми: {terms_str}.\n\n"
             f"Засвоєння цих знань є основою для формування географічної грамотності та просторового мислення учнів."
         )
@@ -2967,12 +3001,17 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         ]
         query = templates[q_var % len(templates)]
         step1 = f"1. Суспільствознавчий аналіз: Досліджуємо тему «{concept}» у курсі {subj_nom} ({grade} клас)."
-        step2 = f"2. Джерельна база: Наводимо базові положення з підручника ({author}): «{snippet}»"
+        if verbatim_allowed:
+            step2 = f"2. Джерельна база: Наводимо базові положення з підручника ({author}): «{snippet}»"
+            source_body = f"У підручнику ({author}) зазначено:\n«{snippet}»\n\n"
+        else:
+            step2 = f"2. Науково-педагогічна основа: Спираємося на правові та суспільствознавчі засади підручника ({author}) щодо теми «{concept}»: {prop1}"
+            source_body = f"У підручнику ({author}) суспільне значення теми розкрито через положення:\n• {prop1}\n\n"
         step3 = f"3. Термінологічний аналіз: Виокремлюємо ключові суспільствознавчі терміни теми: {terms_str}."
         step4 = "4. Педагогічний підсумок: Сформульовано коректну характеристику суспільного явища на основі навчального курсу."
         solution = (
             f"Тема «{concept}» має важливе світоглядне значення у курсі {subj_nom} ({grade} клас).\n\n"
-            f"У підручнику ({author}) зазначено:\n«{snippet}»\n\n"
+            f"{source_body}"
             f"Ключові поняття теми: {terms_str}.\n\n"
             f"Вивчення цього матеріалу сприяє формуванню правової культури та активної громадянської позиції учнів."
         )
@@ -3005,12 +3044,17 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         ]
         query = templates[q_var % len(templates)]
         step1 = f"1. Змістовий аналіз: Розглядаємо навчальні аспекти теми «{concept}» у курсі {subj_nom} ({grade} клас)."
-        step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+        if verbatim_allowed:
+            step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+            source_body = f"У підручнику ({author}) подано такий виклад:\n«{snippet}»\n\n"
+        else:
+            step2 = f"2. Науково-педагогічна основа: Спираємося на змістовий виклад підручника ({author}) щодо теми «{concept}»: {prop1}"
+            source_body = f"У підручнику ({author}) матеріал теми викладено через положення:\n• {prop1}\n\n"
         step3 = f"3. Термінологічний аналіз: Виділяємо ключові поняття теми: {terms_str}."
         step4 = "4. Педагогічний підсумок: Подано структурований зміст навчального матеріалу з дотриманням фахових норм."
         solution = (
             f"Матеріал теми «{concept}» посідає важливе місце в курсі {subj_nom} ({grade} клас).\n\n"
-            f"У підручнику ({author}) подано такий виклад:\n«{snippet}»\n\n"
+            f"{source_body}"
             f"Ключові терміни теми: {terms_str}.\n\n"
             f"Опанування цієї теми формує високу культуру мовлення та грамотність учнів."
         )
@@ -3043,12 +3087,17 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         ]
         query = templates[q_var % len(templates)]
         step1 = f"1. Змістовий аналіз: Розглядаємо навчальні аспекти теми «{concept}» у курсі {subj_nom} ({grade} клас)."
-        step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+        if verbatim_allowed:
+            step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+            source_body = f"У підручнику ({author}) подано такий виклад:\n«{snippet}»\n\n"
+        else:
+            step2 = f"2. Науково-педагогічна основа: Спираємося на виклад навчального матеріалу підручника ({author}) щодо теми «{concept}»: {prop1}"
+            source_body = f"У підручнику ({author}) зміст теми окреслено через положення:\n• {prop1}\n\n"
         step3 = f"3. Термінологічний аналіз: Виділяємо ключові поняття теми: {terms_str}."
         step4 = "4. Педагогічний підсумок: Подано структурований зміст навчального матеріалу з дотриманням фахових норм."
         solution = (
             f"Матеріал теми «{concept}» посідає важливе місце в курсі {subj_nom} ({grade} клас).\n\n"
-            f"У підручнику ({author}) подано такий виклад:\n«{snippet}»\n\n"
+            f"{source_body}"
             f"Ключові терміни теми: {terms_str}.\n\n"
             f"Опанування цієї теми сприяє всебічному розвитку та формуванню естетичної і практичної культури учнів."
         )
@@ -3087,6 +3136,16 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         raise ValueError(f"Protected entity check failed for eval task {idx}: volume or ratio corrupted")
     if re.search(r"«[^»]*«", all_text):
         raise ValueError(f"Nested guillemets invariant failed for eval task {idx}")
+
+    # Strict enforcement that raw textbook snippet does not leak verbatim when verbatim_reproduction_allowed is False
+    if not verbatim_allowed and len(snippet.strip()) >= 20:
+        norm_snip = re.sub(r"\s+", " ", snippet.strip().lower())
+        assert norm_snip not in query.lower(), "Snippet leak in eval query under non-verbatim rights"
+        assert norm_snip not in step1.lower(), "Snippet leak in eval step1 under non-verbatim rights"
+        assert norm_snip not in step2.lower(), "Snippet leak in eval step2 under non-verbatim rights"
+        assert norm_snip not in step3.lower(), "Snippet leak in eval step3 under non-verbatim rights"
+        assert norm_snip not in step4.lower(), "Snippet leak in eval step4 under non-verbatim rights"
+        assert norm_snip not in solution.lower(), "Snippet leak in eval solution under non-verbatim rights"
 
     eval_record = {
         "eval_id": f"eval_textbook_asst_{idx:08x}",
@@ -3177,15 +3236,62 @@ NON_VERBATIM_SYNONYM_REPLACEMENTS: list[tuple[str, str]] = [
     (r"\bмає\s+назву\b", "позначається терміном"),
     (r"\bпритягуватися\s+одне\s+до\s+одного\b", "взаємного притягання"),
     (r"\bвластивістю\b", "ознакою"),
+    (r"\bбуло\s+створено\b", "засновано"),
+    (r"\bбуло\s+засновано\b", "утворено"),
+    (r"\bбуло\s+прийнято\b", "ухвалено"),
+    (r"\bбуло\s+ухвалено\b", "затверджено"),
+    (r"\bбуло\s+відкрито\b", "започатковано"),
+    (r"\bроку\s+було\b", "році відбулося"),
+    (r"\bвважається\b", "визначається як"),
+    (r"\bозначає\b", "вказує на сутність"),
+    (r"\bдозволяє\b", "дає змогу"),
+    (r"\bдає\s+можливість\b", "забезпечує змогу"),
+    (r"\bпояснює\b", "розкриває зміст"),
+    (r"\bзабезпечують\b", "зумовлюють перебіг"),
+    (r"\bвідіграють\b", "мають вагоме значення для"),
+    (r"\bвключає\b", "містить у своїй структурі"),
+    (r"\bрозрізняють\b", "виділяють різновиди"),
+    (r"\bподіляють\s+на\b", "класифікують на"),
+    (r"\bскладаються\s+з\b", "утворені з"),
+    (r"\bпроголосила\b", "оприлюднила та затвердила"),
+    (r"\bпроголошено\b", "офіційно ухвалено"),
 ]
+
+
+def has_consecutive_word_leak(
+    orig: str,
+    candidate: str,
+    concept: str = "",
+    max_consecutive: int = 5,
+) -> bool:
+    """Check if candidate text retains a consecutive verbatim sequence of words from the source text."""
+    orig_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9]+", orig)]
+    cand_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9]+", candidate)]
+    concept_words = set(w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9]+", concept))
+
+    if len(orig_words) < max_consecutive or len(cand_words) < max_consecutive:
+        return False
+
+    cand_ngrams = set()
+    for i in range(len(cand_words) - max_consecutive + 1):
+        cand_ngrams.add(tuple(cand_words[i : i + max_consecutive]))
+
+    for i in range(len(orig_words) - max_consecutive + 1):
+        ngram = tuple(orig_words[i : i + max_consecutive])
+        if all(w in concept_words for w in ngram):
+            continue
+        if ngram in cand_ngrams:
+            return True
+    return False
 
 
 def reformulate_factual_sentence(s: str, concept: str, author: str = "", grade: str = "") -> str:
     """Reformulate a single factual textbook sentence into non-verbatim pedagogical prose."""
     cleaned = s.strip()
-    cleaned = re.sub(r"^[•\-\—\–\*\d\.\)\s]+", "", cleaned)
+    cleaned = re.sub(r"^[•\-\—\–\*]\s*", "", cleaned)
+    cleaned = re.sub(r"^\d{1,2}[\.\)]\s+", "", cleaned)
     cleaned = re.sub(
-        r"^(?:Зверніть увагу,\s*що|Як ми вже знаємо,\s*|Нагадаємо,\s*що|Розглянемо|Зауважимо,\s*що)\s*",
+        r"^(?:Зверніть увагу,\s*що|Як ми вже знаємо,\s*|Нагадаємо,\s*що|Розглянемо|Зауважимо,\s*що|Відомо,\s*що)\s*",
         "",
         cleaned,
         flags=re.IGNORECASE,
@@ -3194,6 +3300,9 @@ def reformulate_factual_sentence(s: str, concept: str, author: str = "", grade: 
     m_copula = re.match(r"^" + re.escape(concept) + r"\s*[-—–]\s*(?:це\s+)?(.*)", cleaned, re.IGNORECASE)
     m_is = re.match(r"^" + re.escape(concept) + r"\s+(?:є|називається|визначається як)\s+(.*)", cleaned, re.IGNORECASE)
     m_under = re.match(r"^Під\s+(?:поняттям\s+)?" + re.escape(concept) + r"[^\s]*\s+розуміють\s+(.*)", cleaned, re.IGNORECASE)
+    m_yr_act = re.match(r"^(\d{4})\s+року\s+було\s+(створено|засновано|утворено|відкрито)\s+(.*)", cleaned, re.IGNORECASE)
+    m_yr_app = re.match(r"^(\d{4})\s+року\s+було\s+(прийнято|ухвалено|затверджено)\s+(.*)", cleaned, re.IGNORECASE)
+    m_yr_gen = re.match(r"^(\d{4})\s+року\s+(.*)", cleaned, re.IGNORECASE)
 
     if m_copula:
         core = m_copula.group(1).strip()
@@ -3207,19 +3316,28 @@ def reformulate_factual_sentence(s: str, concept: str, author: str = "", grade: 
         core = m_under.group(1).strip()
         core = core[0].lower() + core[1:] if len(core) > 1 else core
         res = f"у предметному курсі під цим поняттям розглядають {core}"
+    elif m_yr_act:
+        yr = m_yr_act.group(1)
+        core = m_yr_act.group(3).strip()
+        res = f"у {yr} році започатковано діяльність та інституційні основи: {core}"
+    elif m_yr_app:
+        yr = m_yr_app.group(1)
+        core = m_yr_app.group(3).strip()
+        res = f"у {yr} році ухвалено відповідне нормативно-правове рішення щодо {core}"
+    elif m_yr_gen:
+        yr = m_yr_gen.group(1)
+        core = m_yr_gen.group(2).strip()
+        res = f"у {yr} році зафіксовано історично вагомий перебіг подій: {core}"
     else:
-        res = f"навчальний виклад підручника фіксує наукове положення: {cleaned[0].lower() + cleaned[1:] if len(cleaned) > 1 else cleaned}"
+        first_lower = cleaned[0].lower() + cleaned[1:] if len(cleaned) > 1 else cleaned
+        res = f"навчальний виклад теми окреслює сутнісне положення: {first_lower}"
 
     for pat, rep in NON_VERBATIM_SYNONYM_REPLACEMENTS:
         res = re.sub(pat, rep, res, flags=re.IGNORECASE)
 
     norm_orig = re.sub(r"\s+", " ", cleaned.strip().lower())
-    if norm_orig in res.lower():
-        c_words = cleaned.split()
-        if len(c_words) >= 3:
-            mid = max(1, len(c_words) // 2)
-            c_transformed = f"{' '.join(c_words[:mid])} (як засвідчено в матеріалі курсу) {' '.join(c_words[mid:])}"
-            res = f"навчальний виклад підручника фіксує наукове положення: {c_transformed}"
+    if norm_orig in res.lower() or "(як засвідчено" in res.lower():
+        raise ValueError(f"Cannot substantively reformulate sentence without verbatim leak: {cleaned}")
 
     res = re.sub(r"\s+", " ", res).strip()
     if not res.endswith((".", "!", "?")):
@@ -3243,12 +3361,21 @@ def synthesize_non_verbatim_factual_propositions(
     if not raw_sents:
         raise ValueError(f"Insufficient factual content in snippet for concept '{concept}'")
 
-    prop1 = reformulate_factual_sentence(raw_sents[0], concept, author=author, grade=grade)
-    prop2 = (
-        reformulate_factual_sentence(raw_sents[1], concept, author=author, grade=grade)
-        if len(raw_sents) > 1
-        else None
-    )
+    valid_props: list[str] = []
+    for s in raw_sents:
+        try:
+            prop = reformulate_factual_sentence(s, concept, author=author, grade=grade)
+            valid_props.append(prop)
+        except ValueError:
+            continue
+        if len(valid_props) >= 2:
+            break
+
+    if not valid_props:
+        raise ValueError(f"Cannot substantively reformulate any sentence without verbatim leak for concept '{concept}'")
+
+    prop1 = valid_props[0]
+    prop2 = valid_props[1] if len(valid_props) > 1 else None
     return prop1, prop2
 
 
@@ -3537,7 +3664,19 @@ def generate_evaluation_benchmark(
         key = (concept.lower(), chunk.chunk_id)
         if key in seen_concept_chunks:
             continue
-        rec = synthesize_eval_task(chunk, idx)
+
+        rights = dict(DEFAULT_RIGHTS_POLICY)
+        if chunk.rights:
+            rights.update(chunk.rights)
+        if not rights.get("explanation_synthesis_allowed", True):
+            continue
+
+        try:
+            rec = synthesize_eval_task(chunk, idx)
+        except ValueError as err:
+            logger.debug("Skipping eval task for chunk %s: %s", chunk.chunk_id, err)
+            continue
+
         validator.validate(rec)
         records.append(rec)
         seen_concept_chunks.add(key)
@@ -3884,6 +4023,7 @@ def extract_raw_snippet_from_step2(step2: str) -> str:
 
 def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
     """Verify that 100% of eval and SFT records have snippets grounded in the target concept."""
+    rights_map = load_textbook_rights_map()
     for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
         with p.open("r", encoding="utf-8") as f:
             for line in f:
@@ -3891,18 +4031,24 @@ def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
                 concept = d.get("concept") or d.get("target_concept") or ""
                 steps = d.get("reference_reasoning") or d.get("reasoning_steps") or []
                 meta = d.get("source_metadata", {})
+                source_book = meta.get("source_book", "")
+                book_rights = rights_map.get(source_book, {}) if source_book else {}
                 is_non_verbatim = (
                     meta.get("verbatim_reproduction") is False
                     or not meta.get("rights", {}).get("verbatim_reproduction_allowed", True)
+                    or not book_rights.get("verbatim_reproduction_allowed", True)
+                    or (len(steps) > 1 and "«" not in steps[1])
+                    or (d.get("reference_solution") and "«" not in d.get("reference_solution", ""))
                 )
                 if is_non_verbatim:
-                    step2_text = steps[1] if len(steps) > 1 else (d.get("final_response") or "")
+                    step2_text = steps[1] if len(steps) > 1 else (d.get("final_response") or d.get("reference_solution") or "")
                     if not concept:
                         return False
                     if check_concept_contradiction(step2_text, concept):
                         return False
                     conc_words = [w for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", concept.lower()) if len(w) >= 3]
-                    if conc_words and not any(w in step2_text.lower() for w in conc_words):
+                    full_record_text = " ".join(steps) + " " + (d.get("final_response") or d.get("reference_solution") or "")
+                    if conc_words and not any(w in full_record_text.lower() for w in conc_words):
                         return False
                     continue
 
@@ -3920,6 +4066,7 @@ def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
 def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
     """Verify that 100% of scientific terms are valid non-pronoun lemmas present in the snippet and non-circular."""
     cur = get_vesum_cursor()
+    rights_map = load_textbook_rights_map()
     for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
         with p.open("r", encoding="utf-8") as f:
             for line in f:
@@ -3928,12 +4075,17 @@ def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
                 terms = d.get("scientific_terminology", [])
                 steps = d.get("reference_reasoning") or d.get("reasoning_steps") or []
                 meta = d.get("source_metadata", {})
+                source_book = meta.get("source_book", "")
+                book_rights = rights_map.get(source_book, {}) if source_book else {}
                 is_non_verbatim = (
                     meta.get("verbatim_reproduction") is False
                     or not meta.get("rights", {}).get("verbatim_reproduction_allowed", True)
+                    or not book_rights.get("verbatim_reproduction_allowed", True)
+                    or (len(steps) > 1 and "«" not in steps[1])
+                    or (d.get("reference_solution") and "«" not in d.get("reference_solution", ""))
                 )
                 if is_non_verbatim:
-                    full_text = " ".join(steps) + " " + (d.get("final_response") or "")
+                    full_text = " ".join(steps) + " " + (d.get("final_response") or d.get("reference_solution") or "")
                     snip = full_text.lower()
                 elif len(steps) > 1:
                     snip = extract_raw_snippet_from_step2(steps[1]).lower()

@@ -1561,3 +1561,132 @@ def test_issue_8341_different_source_facts_produce_different_responses():
     # Factual content check: chloroplasts/light in A, oxidation/energy in B
     assert "хлоропласт" in traj_a["final_response"].lower()
     assert "окиснен" in traj_b["final_response"].lower() or "енергі" in traj_b["final_response"].lower()
+
+
+def test_issue_8341_numeric_facts_preserved_and_differentiated():
+    """Verify that numbers/dates like 1918 vs 1921 are preserved in non-verbatim explanations (#8341)."""
+    fact_1918 = "1918 року було створено Українську академію наук."
+    fact_1921 = "1921 року було створено Українську академію наук."
+
+    chunk_1918 = TextbookChunk(
+        chunk_id="hist_1918",
+        title="Історія України",
+        subject="istoriya",
+        grade="10",
+        author="Власов",
+        source_file="10-klas-istoriya-vlasov-2018.pdf",
+        text=fact_1918,
+        char_count=100,
+        concept="Українська академія наук",
+        snippet=fact_1918,
+        terms=["академія", "наука"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": True,
+        },
+    )
+    chunk_1921 = TextbookChunk(
+        chunk_id="hist_1921",
+        title="Історія України",
+        subject="istoriya",
+        grade="10",
+        author="Власов",
+        source_file="10-klas-istoriya-vlasov-2018.pdf",
+        text=fact_1921,
+        char_count=100,
+        concept="Українська академія наук",
+        snippet=fact_1921,
+        terms=["академія", "наука"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": True,
+        },
+    )
+
+    traj_1918 = synthesize_trajectory(chunk_1918, 1, "conceptual_explanation")
+    traj_1921 = synthesize_trajectory(chunk_1921, 1, "conceptual_explanation")
+
+    assert "1918" in traj_1918["final_response"], "Year 1918 was stripped from final response"
+    assert "1918" in traj_1918["reasoning_steps"][1], "Year 1918 was stripped from reasoning step 2"
+    assert "1921" in traj_1921["final_response"], "Year 1921 was stripped from final response"
+    assert "1921" in traj_1921["reasoning_steps"][1], "Year 1921 was stripped from reasoning step 2"
+    assert traj_1918["final_response"] != traj_1921["final_response"]
+    assert traj_1918["reasoning_steps"][1] != traj_1921["reasoning_steps"][1]
+
+
+def test_issue_8341_evaluation_rights_enforced():
+    """Verify that held-out evaluation generation strictly enforces rights (#8341)."""
+    raw_snippet = "Квадратні рівняння є основою шкільного курсу алгебри та розв'язуються за формулою дискримінанта."
+    chunk_denied = TextbookChunk(
+        chunk_id="eval_denied_chunk",
+        title="Алгебра",
+        subject="alhebra",
+        grade="8",
+        author="Істер",
+        source_file="alhebra_8_ister.pdf",
+        text=raw_snippet,
+        char_count=120,
+        concept="Квадратні рівняння",
+        snippet=raw_snippet,
+        terms=["дискримінант", "рівняння"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": False,
+        },
+    )
+    with pytest.raises(ValueError, match="Explanation synthesis denied"):
+        synthesize_eval_task(chunk_denied, 1)
+
+    chunk_non_verbatim = TextbookChunk(
+        chunk_id="eval_non_verbatim_chunk",
+        title="Алгебра",
+        subject="alhebra",
+        grade="8",
+        author="Істер",
+        source_file="alhebra_8_ister.pdf",
+        text=raw_snippet,
+        char_count=120,
+        concept="Квадратні рівняння",
+        snippet=raw_snippet,
+        terms=["дискримінант", "рівняння"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": True,
+        },
+    )
+    task = synthesize_eval_task(chunk_non_verbatim, 1)
+    norm_snippet = re.sub(r"\s+", " ", raw_snippet.strip().lower())
+    assert norm_snippet not in task["reference_solution"].lower(), "Verbatim snippet leaked into reference_solution"
+    assert norm_snippet not in task["reference_reasoning"][1].lower(), "Verbatim snippet leaked into reference_reasoning[1]"
+    assert "«" + raw_snippet + "»" not in task["reference_solution"]
+    assert "«" + raw_snippet + "»" not in task["reference_reasoning"][1]
+
+
+def test_issue_8341_no_parenthetical_word_copying_fallback():
+    """Verify that non-verbatim reformulation does NOT insert parentheticals into unreformulated text (#8341)."""
+    probe_sent = "Українська Центральна Рада проголосила чотири Універсали впродовж 1917–1918 років."
+    chunk = TextbookChunk(
+        chunk_id="probe_chunk",
+        title="Історія України",
+        subject="istoriya",
+        grade="10",
+        author="Власов",
+        source_file="10-klas-istoriya-vlasov-2018.pdf",
+        text=probe_sent,
+        char_count=120,
+        concept="Українська Центральна Рада",
+        snippet=probe_sent,
+        terms=["універсал", "рада"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": True,
+        },
+    )
+    traj = synthesize_trajectory(chunk, 1, "conceptual_explanation")
+    assert "(як засвідчено в матеріалі курсу)" not in traj["final_response"]
+    assert "(як засвідчено в матеріалі курсу)" not in traj["reasoning_steps"][1]
