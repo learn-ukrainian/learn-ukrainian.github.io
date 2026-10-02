@@ -359,6 +359,124 @@ def test_missing_task_record_fails_closed_for_multifamily_harnesses(monkeypatch,
         recorder.author_families(REPOSITORY, 42, tmp_path)
 
 
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py", "scripts/unit.py"),
+        ("/checkout/scripts/unit.py:12:3", "scripts/unit.py:12:3"),
+        ("`/checkout/scripts/unit.py:12`", "`scripts/unit.py:12`"),
+        ("```\n/checkout/scripts/unit.py:12\n```", "```\nscripts/unit.py:12\n```"),
+        ("[source](/checkout/scripts/unit.py:12)", "[source](scripts/unit.py:12)"),
+        ("/checkout, then /checkout/scripts/unit.py.", "., then scripts/unit.py."),
+        ("No paths; scripts/unit.py:12", "No paths; scripts/unit.py:12"),
+        ("/outside/private.py:12", "/outside/private.py:12"),
+        ("/checkout-other/private.py", "/checkout-other/private.py"),
+        ("/else/checkout/scripts/unit.py", "/else/checkout/scripts/unit.py"),
+        ("/checkout/../private.py", "/checkout/../private.py"),
+        ("https://example.test/checkout/scripts/unit.py", "https://example.test/checkout/scripts/unit.py"),
+    ],
+)
+def test_repository_relative_reply_preserves_citations_and_outside_text(text, expected):
+    review = {"worktree_path": "/checkout/.worktrees/dispatch/cursor/review"}
+    assert recorder.repository_relative_reply(text, task=review, primary_root=Path("/checkout")) == expected
+
+
+@pytest.mark.parametrize("checkout", [{"cwd": "/review"}, {"worktree_path": "/review", "cwd": "/review/scripts"}])
+def test_repository_relative_reply_uses_recorded_checkout(checkout):
+    assert recorder.repository_relative_reply(
+        "/review/scripts/unit.py:12", task=checkout, primary_root=Path("/checkout")
+    ) == "scripts/unit.py:12"
+
+
+@pytest.mark.parametrize("checkout", [None, "relative", 123])
+def test_repository_relative_reply_ignores_invalid_checkout(checkout):
+    assert recorder.repository_relative_reply(
+        "/outside/unit.py /checkout/scripts/unit.py", task={"worktree_path": checkout}, primary_root=Path("/checkout")
+    ) == "/outside/unit.py scripts/unit.py"
+
+
+def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path):
+    root = tmp_path / "checkout"
+    root.mkdir()
+    (root / "escape").symlink_to(tmp_path / "private")
+    text = f"`{root}/escape/unit.py:12`"
+    assert recorder.repository_relative_reply(text, task={}, primary_root=root) == text
+    (root / "inside").symlink_to(root / "scripts")
+    assert recorder.repository_relative_reply(f"{root}/inside/unit.py", task={}, primary_root=root) == "inside/unit.py"
+
+    def unavailable(*args, **kwargs):
+        raise OSError("private diagnostic")
+
+    monkeypatch.setattr(Path, "resolve", unavailable)
+    assert recorder.repository_relative_reply(text, task={}, primary_root=root) == text
+
+
+@pytest.mark.parametrize(
+    "reply,refused",
+    [
+        ("VERDICT: APPROVE\n`/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py:12`\n"
+         "```\n/checkout/tests/test_unit.py:3\n```", False),
+        ("VERDICT: APPROVE", False),
+        ("VERDICT: APPROVE\n/checkout/scripts/unit.py /outside/private.py:12", True),
+        ("VERDICT: APPROVE\n/checkout-other/private.py", True),
+        ("VERDICT: APPROVE\n/checkout/../private.py", True),
+        ("VERDICT: APPROVE\n/checkout/scripts/unit.py\nSENTINEL-HOST-TOKEN", True),
+    ],
+)
+def test_record_fixture_dry_run_through_publication_scanner(monkeypatch, tmp_path, synthetic_opsec, capsys, reply, refused):
+    """Run the recorder and typed publisher with only the GitHub transport faked."""
+    from scripts.publish import github
+    from tests.opsec_fixtures import synthetic_rules
+
+    rules = synthetic_rules()
+    rules["1"]["patterns"].append({"id": "synthetic-host-path", "regex": r"(?<![<\w:])/[A-Za-z][^\s`]*"})
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    real_json = recorder._run_json
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    fake_json = recorder._run_json
+    write_task(tasks, reply=reply, worktree_path="/checkout/.worktrees/dispatch/cursor/review")
+    monkeypatch.setattr(recorder, "_repo_root", lambda: Path("/checkout"))
+
+    def route(args, **kwargs):
+        if isinstance(args, github.Request) and args.verb == "issue-comment-json":
+            return real_json(args, **kwargs)
+        return fake_json(args, **kwargs)
+
+    def transport(argv, **kwargs):
+        payload = json.loads(Path(argv[argv.index("--input") + 1]).read_text())
+        posted = fake_json(github.Request("issue-comment-json", repo=REPOSITORY, number=42, body=payload["body"]))
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(posted), stderr="")
+
+    monkeypatch.setattr(recorder, "_run_json", route)
+    monkeypatch.setattr(github, "_send", transport)
+    if refused:
+        with pytest.raises(recorder.RecordError) as error:
+            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        diagnostic = str(error.value)
+        assert "publish_blocked" in diagnostic and "class=1" in diagnostic
+        assert reply not in diagnostic
+        assert "/outside" not in diagnostic and "/checkout" not in diagnostic and "SENTINEL-HOST-TOKEN" not in diagnostic
+        assert calls == {"posts": 0, "statuses": 0}
+        record = recorder.record
+        monkeypatch.setattr(
+            recorder, "record", lambda task_id, **kwargs: record(task_id, task_root=tasks, lock_root=tmp_path / "locks", **kwargs)
+        )
+        assert recorder.main(["--task-id", "review-one", "--pr", "42"]) == 1
+        output = capsys.readouterr()
+        assert "class=1" in output.out
+        assert "/checkout" not in output.out + output.err
+        assert "/outside" not in output.out + output.err and "SENTINEL-HOST-TOKEN" not in output.out + output.err
+        assert calls == {"posts": 0, "statuses": 0}
+    else:
+        receipt = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert receipt["comment"] == "posted" and receipt["status"] == "posted"
+        assert calls == {"posts": 1, "statuses": 1}
+        body = comments[0]["body"]
+        assert "/checkout" not in body
+        if "unit.py" in reply:
+            assert "`scripts/unit.py:12`" in body and "```\ntests/test_unit.py:3\n```" in body
+
+
 def test_task_record_agent_conflict_is_checked_for_agy(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
     write_task(tasks, task_id="author-task", model="claude-opus-5", agent="claude")

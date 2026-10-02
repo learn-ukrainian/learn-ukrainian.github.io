@@ -51,6 +51,8 @@ NORMALIZED = {
 }
 TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\Z")
 MAX_COMMENT_BYTES = 65_000
+# Keep Markdown delimiters and line/column suffixes outside the path token.
+ABSOLUTE_PATH = re.compile(r"(?<![\w/\\:.-])/[^\s`'\"<>()\[\]{},;:]+")
 # Kimi CLI task records can identify the harness without naming its model;
 # this harness is single-family and always runs Moonshot models.
 SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
@@ -212,6 +214,32 @@ def build_comment(*, sha: str, task_id: str, started: str, verdict: str, model: 
     return prefix + reply + suffix
 
 
+def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root: Path) -> str:
+    """Rewrite checkout citations only; the publisher still scans the final text."""
+    checkout = task.get("worktree_path") or task.get("cwd")
+    roots = [primary_root]
+    if isinstance(checkout, str) and Path(checkout).is_absolute():
+        roots.insert(0, Path(checkout))
+
+    def replace(match: re.Match[str]) -> str:
+        path = Path(match.group())
+        # Do not hide an escape or change the meaning of a symlink/.. walk.
+        if ".." in path.parts:
+            return match.group()
+        for root in roots:
+            if not path.is_relative_to(root):
+                continue
+            try:
+                if not path.resolve().is_relative_to(root.resolve()):
+                    return match.group()
+            except (OSError, RuntimeError):
+                return match.group()
+            return path.relative_to(root).as_posix()
+        return match.group()
+
+    return ABSOLUTE_PATH.sub(replace, reply)
+
+
 def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:
     if not TASK_ID.fullmatch(task_id):
         raise RecordError("invalid task id")
@@ -327,6 +355,7 @@ def record(
         raise RecordError("reviewer family equals an author family")
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
+    reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
     comment = build_comment(
         sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply
     )
