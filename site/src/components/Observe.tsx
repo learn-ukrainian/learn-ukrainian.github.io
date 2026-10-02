@@ -5,6 +5,11 @@ import { parseMarkdown } from './utils';
 
 interface ObserveProps {
   /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
+  instruction?: string;
+  /**
    * @schemaDescription Examples value consumed by this component.
    * @ukrainianText true
    */
@@ -21,11 +26,16 @@ interface ObserveProps {
   children?: React.ReactNode;
 }
 
-export function ObserveActivity({ examples, prompt = "What pattern do you notice?" }: ObserveProps) {
+export function ObserveActivity({ examples, prompt = "What pattern do you notice?", instruction }: ObserveProps) {
   const [revealed, setRevealed] = useState(false);
 
   return (
     <div className={styles.observeContainer}>
+      {instruction && (
+        <p className={styles.instruction}>
+          <strong>{instruction}</strong>
+        </p>
+      )}
       <div className={styles.observeExamples}>
         {examples.map((example, idx) => (
           <div key={idx} className={styles.observeExample}>
@@ -54,6 +64,11 @@ export function ObserveActivity({ examples, prompt = "What pattern do you notice
 
 interface ObserveBlockProps {
   /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
+  instruction?: string;
+  /**
    * @schemaDescription Examples value consumed by this component.
    * @ukrainianText true
    */
@@ -75,7 +90,7 @@ interface ObserveBlockProps {
   isUkrainian?: boolean;
 }
 
-export default function Observe({ examples, prompt, children, isUkrainian }: ObserveBlockProps) {
+export default function Observe({ examples, prompt, instruction, children, isUkrainian }: ObserveBlockProps) {
   const headerLabel = isUkrainian ? 'Спостережіть' : 'Observe First';
 
   return (
@@ -87,8 +102,17 @@ export default function Observe({ examples, prompt, children, isUkrainian }: Obs
       </div>
       <div className={styles.activityContent}>
         {examples ? (
-          <ObserveActivity examples={examples} prompt={prompt || (isUkrainian ? 'Який шаблон ви помітили?' : 'What pattern do you notice?')} />
-        ) : children}
+          <ObserveActivity examples={examples} instruction={instruction} prompt={prompt || (isUkrainian ? 'Який шаблон ви помітили?' : 'What pattern do you notice?')} />
+        ) : (
+          <>
+            {instruction && (
+              <p className={styles.instruction}>
+                <strong>{instruction}</strong>
+              </p>
+            )}
+            {children}
+          </>
+        )}
       </div>
     </div>
   );

@@ -2775,6 +2775,7 @@ class ActivityParser:
             f"prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}} "
             f"isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}"
         )
+        props += self._instruction_prop(activity.instruction)
         return f"### {self._escape_jsx(heading)}\n\n<Observe client:only='react' {props} />"
 
     def _order_to_mdx(self, activity: OrderActivity, is_ukrainian_forced: bool = False) -> str:

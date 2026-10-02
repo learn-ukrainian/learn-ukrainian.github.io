@@ -171,16 +171,18 @@ class TestErrorCorrection:
     def test_derives_word_and_sentence_shaped_options(self):
         act = {
             "type": "error-correction",
-            "items": [{
-                "sentence": "Вона вчителька.",
-                "error": "вчителька",
-                "correction": "Вона вчитель.",
-                "options": [
-                    "Вона вчитель.",
-                    "Вона вчителька.",
-                    "вчитель",
-                ],
-            }],
+            "items": [
+                {
+                    "sentence": "Вона вчителька.",
+                    "error": "вчителька",
+                    "correction": "Вона вчитель.",
+                    "options": [
+                        "Вона вчитель.",
+                        "Вона вчителька.",
+                        "вчитель",
+                    ],
+                }
+            ],
         }
 
         parsed = _extract_prop(render_activity_to_jsx(act), "items")
@@ -191,11 +193,13 @@ class TestErrorCorrection:
     def test_derives_phrase_replacement(self):
         act = {
             "type": "error-correction",
-            "items": [{
-                "sentence": "Моє ім'я є Олена.",
-                "error": "Моє ім'я є",
-                "correction": "Мене звати Олена.",
-            }],
+            "items": [
+                {
+                    "sentence": "Моє ім'я є Олена.",
+                    "error": "Моє ім'я є",
+                    "correction": "Мене звати Олена.",
+                }
+            ],
         }
 
         parsed = _extract_prop(render_activity_to_jsx(act), "items")
@@ -204,11 +208,13 @@ class TestErrorCorrection:
     def test_preserves_shared_error_boundary_words(self):
         act = {
             "type": "error-correction",
-            "items": [{
-                "sentence": "Я бачу гарна дівчину.",
-                "error": "гарна дівчину",
-                "correction": "Я бачу гарну дівчину.",
-            }],
+            "items": [
+                {
+                    "sentence": "Я бачу гарна дівчину.",
+                    "error": "гарна дівчину",
+                    "correction": "Я бачу гарну дівчину.",
+                }
+            ],
         }
 
         parsed = _extract_prop(render_activity_to_jsx(act), "items")
@@ -401,6 +407,24 @@ class TestObserve:
         assert "<Observe" in jsx
         assert "What pattern?" in jsx
 
+    def test_instruction_prop(self):
+        from scripts.build.fresh.assemble import component_props_from_jsx
+
+        instruction = 'Compare "first" and second.'
+        jsx = render_activity_to_jsx(
+            {
+                "type": "observe",
+                "examples": ["first", "second"],
+                "prompt": "What pattern?",
+                "instruction": instruction,
+            }
+        )
+        assert component_props_from_jsx(jsx)["instruction"] == instruction
+
+    def test_missing_instruction_is_optional(self):
+        jsx = render_activity_to_jsx({"type": "observe", "examples": ["first"]})
+        assert "instruction=" not in jsx
+
 
 class TestClassify:
     def test_symbol_hint(self):
@@ -576,7 +600,7 @@ def _extract_prop(jsx: str, prop_name: str):
     """Extract a JSON prop value from JSX string."""
     # Find prop_name={...} and parse the JSON
 
-    pattern = rf'{prop_name}=\{{(.*)\}}'
+    pattern = rf"{prop_name}=\{{(.*)\}}"
     # Try to find the prop — greedy but we need to handle nested braces
     # Simple approach: find start of prop, then balance braces
     start_marker = f"{prop_name}={{"
@@ -589,10 +613,10 @@ def _extract_prop(jsx: str, prop_name: str):
     depth = 1
     i = json_start
     while i < len(jsx) and depth > 0:
-        if jsx[i] == '{':
+        if jsx[i] == "{":
             depth += 1
-        elif jsx[i] == '}':
+        elif jsx[i] == "}":
             depth -= 1
         i += 1
-    json_str = jsx[json_start:i - 1]
+    json_str = jsx[json_start : i - 1]
     return json.loads(json_str)
