@@ -18,7 +18,7 @@ This component implements the automated factual claim-verification engine for Ch
      - **VESUM (`data/vesum.db`)**: Lemma attestation, exact inflected forms count verification (zero-tolerance exact count matching, eliminating hallucinated paradigm sizes), grammatical tags, and living standard attestation.
      - **СУМ-11 (`data/sources.db`)**: Headword presence (including pipe-delimited variants), volume alphabetical spans (Tom 1–11) and publication years (1970–1980), stylistic labels (`заст.`, `розм.`, `рідко`, `діал.`), and Soviet ideological codification risk context.
      - **R2U Pre-Soviet Academy Dictionaries**: Attestation in 1920s lexicographical works (Krymskyi, Yefremov, Holoskevych) via local differential cache (`r2u_differential_cache.json`) with syntax-aware polarity verification (distinguishing asserted presence vs asserted absence and rejecting polarity mismatches).
-     - **ULIF (`data/ulif_dump_all.db` & `data/sources.db`)**: Official orthographic register and vocabulary attestation.
+     - **ULIF (`data/sources.db` `ulif_dictua_*`)**: Official orthographic register and vocabulary attestation.
      - **Non-Living Register Tiers**: Factual verification of `classical_regional`, `technical_compound`, and `purist_neologism` entries, requiring valid external evidentiary citations (`evidence_source`) and attestation checks.
      - **PRESERVE Negative Controls**: Rejection of false suppression claims for standard vocabulary.
    - Enforces **hard rejection**: Any trajectory containing ungrounded, fabricated, or miscounted claims is immediately routed to `rejected_trajectories.jsonl`.

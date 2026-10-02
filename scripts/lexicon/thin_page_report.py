@@ -5,8 +5,8 @@ For every public Atlas entry the report computes a thinness tier, the list of
 missing enrichment layers (all 18 ``ENRICHMENT_SECTIONS``), and how many of
 those gaps each already-local source could fill today.  It never writes to any
 database or manifest: every SQLite connection is opened with ``mode=ro``, so
-the report is safe to run while ``dump_ulif.py`` holds the writer on
-``data/ulif_dump_all.db``.
+the report is safe to run while writers touch crawler databases or
+``data/sources.db``.
 
 Definitions (the documented rule — AC-01 of #8313):
 
@@ -34,8 +34,8 @@ Fillability probes are heuristic on purpose: a probe says "this local source
 has material for this lemma", not "the payload is publish-ready".
 ``sum11`` is excluded (rendered pages drop SUM-11 definition cards) and
 ``balla_en_uk`` is excluded (keyed by the English side, not by Ukrainian
-lemma).  ULIF material inside ``sources.db`` (``ulif_dictua_*``) is skipped in
-favour of the fresher, larger ``data/ulif_dump_all.db``.
+lemma).  ULIF material inside ``sources.db`` (``ulif_dictua_*``) is queried directly
+as the canonical store.
 """
 
 from __future__ import annotations
@@ -65,7 +65,7 @@ from scripts.lexicon.enrich_manifest import (
 
 DEFAULT_ATLAS_DB = PROJECT_ROOT / "data" / "atlas.db"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
-DEFAULT_ULIF_DB = PROJECT_ROOT / "data" / "ulif_dump_all.db"
+DEFAULT_ULIF_DB = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_SLOVNYK_CACHE = PROJECT_ROOT / "data" / "lexicon" / "slovnyk_cache"
 
 # SQL-comparable payloads that mean "row exists but carries nothing".
@@ -257,9 +257,60 @@ def slovnyk_capabilities(cache_dir: Path) -> dict[str, set[str]]:
 
 
 def ulif_capabilities(ulif_db: Path) -> dict[str, set[str]]:
-    """Map normalized lemma -> sections the ULIF dump has material for."""
+    """Map normalized lemma -> sections the ULIF store has material for."""
     capabilities: dict[str, set[str]] = {}
     with _connect_ro(ulif_db) as conn:
+        has_dictua_entries = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_entries'"
+        ).fetchone() is not None
+
+        if has_dictua_entries:
+            # 1. Derive headword stress for all valid entries independently of section presence
+            for norm_q, headword in conn.execute(
+                "SELECT normalized_query, canonical_headword FROM ulif_dictua_entries WHERE status = 'ok'"
+            ):
+                headword_text = str(headword or "")
+                if headword_text and unstressed(headword_text) != unicodedata.normalize("NFC", headword_text):
+                    for raw_key in (norm_q, headword):
+                        key = normalize_key(str(raw_key or ""))
+                        if key:
+                            capabilities.setdefault(key, set()).add("stress")
+
+            # 2. Map enrichment sections if sections table is present
+            has_dictua_sections = conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_sections'"
+            ).fetchone() is not None
+            if has_dictua_sections:
+                rows = conn.execute(
+                    """SELECT e.normalized_query, e.canonical_headword, s.kind
+                       FROM ulif_dictua_sections s
+                       JOIN ulif_dictua_entries e ON s.entry_id = e.id
+                       WHERE e.status = 'ok'"""
+                )
+                for norm_q, headword, kind in rows:
+                    section = None
+                    if kind == "paradigm":
+                        section = "morphology"
+                    elif kind == "synonyms":
+                        section = "synonyms"
+                    elif kind == "antonyms":
+                        section = "antonyms"
+                    elif kind == "phraseology":
+                        section = "idioms"
+                    if section:
+                        for raw_key in (norm_q, headword):
+                            key = normalize_key(str(raw_key or ""))
+                            if key:
+                                capabilities.setdefault(key, set()).add(section)
+            return capabilities
+
+        # Legacy fallback if an old crawl database is passed
+        has_legacy = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_entries'"
+        ).fetchone() is not None
+        if not has_legacy:
+            return capabilities
+
         rows = conn.execute(
             """SELECT lemma, canonical_headword,
                       paradigm_json IS NOT NULL AND paradigm_json != '',

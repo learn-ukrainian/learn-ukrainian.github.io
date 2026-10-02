@@ -23,6 +23,7 @@ from scripts.lexicon.thin_page_report import (
     main,
     normalize_key,
     slovnyk_capabilities,
+    ulif_capabilities,
 )
 
 STRESSED_APPLE = "я\u0301блуко"  # combining acute on 'я'
@@ -446,3 +447,40 @@ def test_slovnyk_cache_schema_version_2_contributes_no_meaning_or_definition(
     fillable = report["fillable"]
     assert "slovnyk_cache" not in fillable.get("meaning", {})
     assert "slovnyk_cache" not in fillable.get("definition_cards", {})
+
+
+def test_ulif_capabilities_stressed_entry_without_sections(tmp_path: Path) -> None:
+    db_path = tmp_path / "dictua_test.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            data_json TEXT
+        );
+        """
+    )
+    # Entry with sections (яблуко)
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'яблуко', 'я́блуко', 'ok')")
+    conn.execute("INSERT INTO ulif_dictua_sections VALUES (10, 1, 'paradigm', '{}')")
+    # Entry with stress but NO sections (підмет) - regression for #8798
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (2, 'підмет', 'пі́дмет', 'ok')")
+    # Entry with parse_error status (should not grant capabilities)
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (3, 'помилка', 'поми́лка', 'parse_error')")
+    conn.commit()
+    conn.close()
+
+    caps = ulif_capabilities(db_path)
+    assert "яблуко" in caps
+    assert caps["яблуко"] == {"stress", "morphology"}
+    assert "підмет" in caps
+    assert caps["підмет"] == {"stress"}  # Stressed entry without sections must retain stress
+    assert "помилка" not in caps

@@ -247,7 +247,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `data-vesum-db` | `data/vesum.db`, `data/vesum.db.bak`, `data/vesum.db.bak.*`, `data/vesum_shadow_v680.db` | current | mcp: sources MCP verify_word / verify_words / verify_lemma / inspect_word |
 | `data-atlas-db` | `data/atlas.db` | current | sqlite: Python API in scripts/atlas/atlas_db.py or read-only SQL on data/atlas.db |
 | `data-atlas-synthetic` | `data/atlas-synthetic.db` | current | cli: .venv/bin/python scripts/benchmarks/generate_synthetic_atlas.py --help |
-| `data-ulif-dumps` | `data/ulif_dump_all.db`, `data/ulif_dump.db`, `data/ulif_scrape.log` | current | mcp: sources MCP query_ulif / query_ulif_records (reads the sources.db copy); sqlite: read-only SQL on data/ulif_dump_all.db |
+| `data-ulif-dumps` | `data/ulif_dump.db`, `data/ulif_scrape.log` | current | mcp: sources MCP query_ulif / query_ulif_records (reads the sources.db copy); sqlite: read-only SQL on data/sources.db (ulif_dictua_* tables) |
 | `data-wiki-cache` | `data/wiki_cache.db`, `data/wiki_sources.db` | current | sqlite: read-only SQL on data/wiki_cache.db |
 | `data-empty-comms-placeholders` | `data/comms_plane.db`, `data/fleet_comms.db` | historical | api: GET /api/comms/v1/plane-status (the real comms plane) |
 | `data-lexicon-ulif-cache` | `data/lexicon/cache/` | current | mcp: sources MCP query_ulif_records (sources.db copy) |

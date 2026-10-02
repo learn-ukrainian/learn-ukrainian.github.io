@@ -2,7 +2,7 @@
 """Phase 6.2: NASU ULIF Phraseology & Idiomatic Decolonization Miner.
 
 Extracts authentic Ukrainian phraseology, idioms, and synonymic series from NASU ULIF
-(data/ulif_dump_all.db) and classical lexicographical sources (data/sources.db: frazeolohichnyi,
+(data/sources.db:ulif_dictua_*) and classical lexicographical sources (data/sources.db: frazeolohichnyi,
 ua_gec_errors, style_guide), and validates morphological attestation against VESUM (data/vesum.db).
 
 Produces:
@@ -59,7 +59,7 @@ def resolve_data_path(rel_path: str) -> Path:
     return local_p
 
 
-DEFAULT_ULIF_DB = resolve_data_path("data/ulif_dump_all.db")
+DEFAULT_ULIF_DB = resolve_data_path("data/sources.db")
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v06_ulif_phraseology"
@@ -1883,7 +1883,7 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
 
 
 def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyUnit], list[SynonymGroup]]:
-    """Extract phraseology and synonym records from NASU ULIF database."""
+    """Extract phraseology and synonym records from NASU ULIF database (sources.db:ulif_dictua_*)."""
     phraseology_units: list[PhraseologyUnit] = []
     synonym_groups: list[SynonymGroup] = []
 
@@ -1894,55 +1894,85 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
     conn = sqlite3.connect(f"file:{ulif_db}?mode=ro", uri=True)
     cur = conn.cursor()
 
-    cur.execute(
-        "SELECT lemma, canonical_headword, phraseology_json, synonyms_json "
-        "FROM ulif_entries "
-        "WHERE (phraseology_json IS NOT NULL AND phraseology_json != '' AND phraseology_json != '[]') "
-        "   OR (synonyms_json IS NOT NULL AND synonyms_json != '' AND synonyms_json != '[]');"
-    )
+    has_dictua = cur.execute(
+        "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_sections'"
+    ).fetchone() is not None
 
-    for lemma, canonical_hw, phr_raw, syn_raw in cur.fetchall():
-        headword = canonical_hw or lemma
-        if phr_raw and phr_raw not in ("", "[]"):
+    if has_dictua:
+        cur.execute(
+            """
+            SELECT e.normalized_query, e.canonical_headword, s.kind, s.payload_json
+            FROM ulif_dictua_sections s
+            JOIN ulif_dictua_entries e ON s.entry_id = e.id
+            WHERE s.kind IN ('phraseology', 'synonyms')
+              AND e.status = 'ok'
+            """
+        )
+        for norm_query, canonical_hw, kind, payload_raw in cur.fetchall():
+            headword = canonical_hw or norm_query
+            if not payload_raw:
+                continue
             try:
-                items = json.loads(phr_raw)
-                for it in items:
-                    raw_text = clean_stress_marks(it.get("text", ""))
-                    terms = [clean_stress_marks(t) for t in it.get("terms", [])]
-                    cits = it.get("citations", [])
-                    idiom_str = clean_raw_html_and_tags(terms[0] if terms else raw_text.split(".")[0])
-                    full_context = f"{idiom_str} {raw_text} {' '.join(cits)}"
-                    is_held = is_record_held_out(full_context)
+                payload = json.loads(payload_raw)
+            except Exception:
+                continue
 
-                    author = "Класична література"
-                    if is_held:
-                        for cit in cits:
-                            for hoa in HELD_OUT_AUTHORS_DISPLAY:
-                                if HELD_OUT_AUTHORS_RE.search(cit):
-                                    author = hoa
-                                    break
-                    phraseology_units.append(
-                        PhraseologyUnit(
-                            headword=headword,
-                            idiom=idiom_str,
-                            definition=clean_raw_html_and_tags(raw_text),
-                            citation_text=" ".join(cits) if cits else raw_text,
-                            author=author,
-                            source_dict="ulif_nasu",
-                            register="загальновживаний літературний",
-                            is_held_out=is_held,
-                        )
+            if kind == "phraseology":
+                if isinstance(payload, dict):
+                    raw_text = clean_stress_marks(payload.get("text", ""))
+                    raw_terms = payload.get("terms", [])
+                    cits = payload.get("citations", [])
+                elif isinstance(payload, list):
+                    raw_text = ""
+                    raw_terms = payload
+                    cits = []
+                else:
+                    continue
+
+                terms: list[str] = []
+                for t in raw_terms:
+                    if isinstance(t, dict):
+                        terms.append(clean_stress_marks(t.get("text", "")))
+                    elif isinstance(t, str):
+                        terms.append(clean_stress_marks(t))
+                idiom_str = clean_raw_html_and_tags(terms[0] if terms else raw_text.split(".")[0])
+                full_context = f"{idiom_str} {raw_text} {' '.join(cits)}"
+                is_held = is_record_held_out(full_context)
+
+                author = "Класична література"
+                if is_held:
+                    for cit in cits:
+                        for hoa in HELD_OUT_AUTHORS_DISPLAY:
+                            if HELD_OUT_AUTHORS_RE.search(cit):
+                                author = hoa
+                                break
+                phraseology_units.append(
+                    PhraseologyUnit(
+                        headword=headword,
+                        idiom=idiom_str,
+                        definition=clean_raw_html_and_tags(raw_text),
+                        citation_text=" ".join(cits) if cits else raw_text,
+                        author=author,
+                        source_dict="ulif_nasu",
+                        register="загальновживаний літературний",
+                        is_held_out=is_held,
                     )
-            except Exception as e:
-                logger.debug("Failed parsing phraseology for %s: %s", lemma, e)
+                )
+            elif kind == "synonyms":
+                if isinstance(payload, dict):
+                    raw_terms = payload.get("terms", [])
+                elif isinstance(payload, list):
+                    raw_terms = payload
+                else:
+                    continue
 
-        if syn_raw and syn_raw not in ("", "[]"):
-            try:
-                s_items = json.loads(syn_raw)
                 syns: list[str] = []
-                for s in s_items:
+                for s in raw_terms:
                     if isinstance(s, dict):
-                        syns.extend(clean_stress_marks(t) for t in s.get("terms", []))
+                        if "text" in s:
+                            syns.append(clean_stress_marks(s.get("text", "")))
+                        for w in s.get("words", []):
+                            syns.append(clean_stress_marks(str(w)))
                     elif isinstance(s, str):
                         syns.append(clean_stress_marks(s))
                 clean_syns = [clean_raw_html_and_tags(s) for s in syns if len(clean_raw_html_and_tags(s)) > 2]
@@ -1955,8 +1985,74 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
                             source_dict="ulif_nasu",
                         )
                     )
-            except Exception as e:
-                logger.debug("Failed parsing synonyms for %s: %s", lemma, e)
+    else:
+        # Legacy fallback if an old crawl dump is explicitly provided
+        has_legacy = cur.execute(
+            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_entries'"
+        ).fetchone() is not None
+        if has_legacy:
+            cur.execute(
+                "SELECT lemma, canonical_headword, phraseology_json, synonyms_json "
+                "FROM ulif_entries "
+                "WHERE (phraseology_json IS NOT NULL AND phraseology_json != '' AND phraseology_json != '[]') "
+                "   OR (synonyms_json IS NOT NULL AND synonyms_json != '' AND synonyms_json != '[]');"
+            )
+            for lemma, canonical_hw, phr_raw, syn_raw in cur.fetchall():
+                headword = canonical_hw or lemma
+                if phr_raw and phr_raw not in ("", "[]"):
+                    try:
+                        items = json.loads(phr_raw)
+                        for it in items:
+                            raw_text = clean_stress_marks(it.get("text", ""))
+                            terms = [clean_stress_marks(t) for t in it.get("terms", [])]
+                            cits = it.get("citations", [])
+                            idiom_str = clean_raw_html_and_tags(terms[0] if terms else raw_text.split(".")[0])
+                            full_context = f"{idiom_str} {raw_text} {' '.join(cits)}"
+                            is_held = is_record_held_out(full_context)
+
+                            author = "Класична література"
+                            if is_held:
+                                for cit in cits:
+                                    for hoa in HELD_OUT_AUTHORS_DISPLAY:
+                                        if HELD_OUT_AUTHORS_RE.search(cit):
+                                            author = hoa
+                                            break
+                            phraseology_units.append(
+                                PhraseologyUnit(
+                                    headword=headword,
+                                    idiom=idiom_str,
+                                    definition=clean_raw_html_and_tags(raw_text),
+                                    citation_text=" ".join(cits) if cits else raw_text,
+                                    author=author,
+                                    source_dict="ulif_nasu",
+                                    register="загальновживаний літературний",
+                                    is_held_out=is_held,
+                                )
+                            )
+                    except Exception as e:
+                        logger.debug("Failed parsing phraseology for %s: %s", lemma, e)
+
+                if syn_raw and syn_raw not in ("", "[]"):
+                    try:
+                        s_items = json.loads(syn_raw)
+                        syns = []
+                        for s in s_items:
+                            if isinstance(s, dict):
+                                syns.extend(clean_stress_marks(t) for t in s.get("terms", []))
+                            elif isinstance(s, str):
+                                syns.append(clean_stress_marks(s))
+                        clean_syns = [clean_raw_html_and_tags(s) for s in syns if len(clean_raw_html_and_tags(s)) > 2]
+                        full_syn_text = f"{headword} {' '.join(clean_syns)}"
+                        if clean_syns and not is_record_held_out(full_syn_text):
+                            synonym_groups.append(
+                                SynonymGroup(
+                                    headword=headword,
+                                    synonyms=clean_syns[:8],
+                                    source_dict="ulif_nasu",
+                                )
+                            )
+                    except Exception as e:
+                        logger.debug("Failed parsing synonyms for %s: %s", lemma, e)
 
     conn.close()
     logger.info("Loaded %d ULIF phraseological units, %d synonym groups", len(phraseology_units), len(synonym_groups))
@@ -3846,7 +3942,7 @@ def run_pipeline(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Mine ULIF phraseology, idioms, and anti-calque pairs.")
-    parser.add_argument("--ulif-db", type=Path, default=DEFAULT_ULIF_DB, help="Path to ulif_dump_all.db")
+    parser.add_argument("--ulif-db", type=Path, default=DEFAULT_ULIF_DB, help="Path to sources.db or legacy ULIF database")
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Release directory")
