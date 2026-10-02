@@ -1939,6 +1939,22 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
     return pairs
 
 
+def is_valid_author_attribution(a: str, cits: list[str]) -> bool:
+    """Validate whether parenthesized string is an authentic author/source attribution."""
+    if not a or len(a) < 3:
+        return False
+    low = a.lower()
+    if any(kw in low for kw in ("і т.", "і под.", "рідше", "перев", "також", "пор.", "див.", "напр.")):
+        return False
+    if cits and any(c.lower() in low or low in c.lower() for c in cits):
+        return True
+    if a.startswith("З ") or a.startswith("з "):
+        return True
+    if re.match(r"^(?:[А-ЯІЇЄҐ]\.\s*){1,2}[А-ЯІЇЄҐ][а-яіїєґ\'-]+", a):
+        return True
+    return bool(re.match(r"^[А-ЯІЇЄҐ][а-яіїєґ\'-]+\s+[А-ЯІЇЄҐ][а-яіїєґ\'-]+", a))
+
+
 def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyUnit], list[SynonymGroup]]:
     """Extract phraseology and synonym records from NASU ULIF database (sources.db:ulif_dictua_*)."""
     phraseology_units: list[PhraseologyUnit] = []
@@ -1990,29 +2006,67 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
                         raw_b = headword
                         idiom_str = headword
 
-                    # Parse quote-author pairs directly bound in HTML (Finding 1)
-                    valid_quotes: list[tuple[str, str, int]] = []
-                    for m in re.finditer(r"<i>((?:(?!</i>).)*?)</i>\s*\(([^()]+)\)", raw_html, re.DOTALL):
-                        q_text = clean_raw_html_and_tags(clean_stress_marks(m.group(1))).strip()
-                        auth_text = clean_raw_html_and_tags(clean_stress_marks(m.group(2))).replace("\xa0", " ").strip()
-                        if len(q_text) >= 15:
-                            valid_quotes.append((q_text, auth_text, m.start()))
+                    after_b = raw_html[m_bold.end() :] if m_bold else raw_html
+                    cits = payload.get("citations", [])
+                    valid_auth_matches: list[tuple[re.Match, str]] = []
+                    for am in re.finditer(r"\(([^()]+)\)(?:\s*[;.]|\s*</p>|\s*$)", after_b):
+                        a_cand = (
+                            clean_raw_html_and_tags(clean_stress_marks(am.group(1))).replace("\xa0", " ").strip()
+                        )
+                        if is_valid_author_attribution(a_cand, cits):
+                            valid_auth_matches.append((am, a_cand))
 
-                    if not valid_quotes:
+                    if not valid_auth_matches:
                         continue
 
-                    # Definition is strictly between m_bold.end() and the start of the first bound quote (Finding 2)
-                    first_q_start = valid_quotes[0][2]
-                    def_end = first_q_start if m_bold and first_q_start > m_bold.end() else len(raw_html)
-                    def_start = m_bold.end() if m_bold else 0
-                    def_raw = raw_html[def_start:def_end]
+                    # Step 1: Definition ends where the first quotation begins
+                    first_auth_span = after_b[: valid_auth_matches[0][0].start()]
+                    m_def_end = re.search(r"\.\s*(?:<i>|<i\s+[^>]*>)", first_auth_span)
+                    if m_def_end:
+                        def_raw = first_auth_span[: m_def_end.start() + 1]
+                        quote_0_raw = first_auth_span[m_def_end.start() + 1 :]
+                    else:
+                        m_def_semi = re.search(r";\s*(?:<i>|<i\s+[^>]*>)", first_auth_span)
+                        if m_def_semi:
+                            def_raw = first_auth_span[: m_def_semi.start() + 1]
+                            quote_0_raw = first_auth_span[m_def_semi.start() + 1 :]
+                        else:
+                            m_first_i = re.search(r"<i>|<i\s+[^>]*>", first_auth_span)
+                            if m_first_i:
+                                def_raw = first_auth_span[: m_first_i.start()]
+                                quote_0_raw = first_auth_span[m_first_i.start() :]
+                            else:
+                                def_raw = first_auth_span
+                                quote_0_raw = ""
+
                     definition, reg = extract_clean_definition_and_labels(
                         clean_raw_html_and_tags(clean_stress_marks(def_raw))
                     )
 
-                    # Select quote and author: prioritize held-out quote if any exists to enforce strict partitioning
+                    # Step 2: Extract complete bound quotations (preserving brackets and full clauses)
+                    extracted_quotes: list[tuple[str, str]] = []
+                    q0_clean = clean_raw_html_and_tags(clean_stress_marks(quote_0_raw)).strip().lstrip(";,—–- ")
+                    q0_clean = re.sub(r"^\[.*?\]\s*", "", q0_clean).strip()
+                    a0_clean = valid_auth_matches[0][1]
+                    if len(q0_clean) >= 15:
+                        extracted_quotes.append((q0_clean, a0_clean))
+
+                    for i in range(1, len(valid_auth_matches)):
+                        span_i = after_b[valid_auth_matches[i - 1][0].end() : valid_auth_matches[i][0].start()]
+                        qi_clean = (
+                            clean_raw_html_and_tags(clean_stress_marks(span_i)).strip().lstrip(";,—–- ")
+                        )
+                        qi_clean = re.sub(r"^\[.*?\]\s*", "", qi_clean).strip()
+                        ai_clean = valid_auth_matches[i][1]
+                        if len(qi_clean) >= 15:
+                            extracted_quotes.append((qi_clean, ai_clean))
+
+                    if not extracted_quotes:
+                        continue
+
+                    # Select quote and author: prioritize held-out quote if any exists
                     held_q = None
-                    for q_text, auth_text, _st in valid_quotes:
+                    for q_text, auth_text in extracted_quotes:
                         if HELD_OUT_AUTHORS_RE.search(auth_text):
                             disp = auth_text
                             for hoa in HELD_OUT_AUTHORS_DISPLAY:
@@ -2026,8 +2080,8 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
                         citation, author = held_q
                         is_held = True
                     else:
-                        citation = valid_quotes[0][0]
-                        author = valid_quotes[0][1] or "Класична література"
+                        citation = extracted_quotes[0][0]
+                        author = extracted_quotes[0][1] or "Класична література"
                         is_held = False
 
                     # Drop criteria per Issue #8140 Rule 1 (clean authentic extraction only)
@@ -3519,6 +3573,8 @@ def verify_receipt_invariants(
         k = u.idiom.strip().lower()
         base_k = re.split(r"[\(/,]", k)[0].strip()
         cand_info = {
+            "definition": u.definition.strip(),
+            "citation": u.citation_text.strip(),
             "def_stems": set(get_content_stems(u.definition)),
             "cit_stems": set(get_content_stems(u.citation_text)),
             "author": u.author.strip().lower(),
@@ -3632,17 +3688,61 @@ def verify_receipt_invariants(
                     if not cands:
                         unattested_literary.append(f"{shard_path.name}:{line_no} '{target_p}'")
                     else:
-                        resp_lower = resp.lower()
-                        resp_stems = set(get_content_stems(resp))
+                        # Extract displayed definition, quotation, and attribution separately (Finding 2)
+                        m_def = re.search(
+                            r"(?:позначає|на позначення|має значення|полягає у такому|виражає|тлумачиться як):\s*([^\n]+)",
+                            resp,
+                            re.IGNORECASE,
+                        )
+                        disp_def = m_def.group(1).strip() if m_def else ""
+
+                        m_auth_quote = re.search(r"\(([^()]+)\)[*:]*\s*\n+«([^»]+)»", resp)
+                        if m_auth_quote:
+                            disp_auth = m_auth_quote.group(1).strip()
+                            disp_quote = m_auth_quote.group(2).strip()
+                        else:
+                            quotes = re.findall(r"«([^»]+)»", resp)
+                            disp_quote = quotes[-1].strip() if quotes else ""
+                            m_auth = re.search(r"\(([^()]+)\)[*:]*\s*\n+«", resp)
+                            disp_auth = m_auth.group(1).strip() if m_auth else ""
+
+                        disp_q_stems = set(get_content_stems(disp_quote))
+                        disp_def_stems = set(get_content_stems(disp_def))
+
                         matched_grounding = False
-                        for cand in cands:
-                            c_auth = cand["author"]
-                            auth_match = c_auth in resp_lower or any(
-                                w in resp_lower for w in c_auth.split() if len(w) > 3
-                            )
-                            cit_overlap = len(cand["cit_stems"] & resp_stems) >= min(1, len(cand["cit_stems"]))
-                            def_overlap = len(cand["def_stems"] & resp_stems) >= min(1, len(cand["def_stems"]))
-                            if auth_match and cit_overlap and def_overlap:
+                        if disp_def and disp_quote and disp_auth:
+                            d_auth_low = disp_auth.lower()
+                            disp_q_low = disp_quote.lower()
+                            disp_def_low = disp_def.lower().rstrip(".")
+
+                            for cand in cands:
+                                c_auth = cand["author"]
+                                auth_match = (
+                                    c_auth in d_auth_low
+                                    or d_auth_low in c_auth
+                                    or any(w in d_auth_low for w in c_auth.split() if len(w) > 3)
+                                )
+                                if not auth_match:
+                                    continue
+
+                                c_q_stems = cand["cit_stems"]
+                                q_overlap = len(disp_q_stems & c_q_stems)
+                                min_required_q = min(len(c_q_stems), max(2, int(len(c_q_stems) * 0.7)))
+                                c_cit_low = cand["citation"].lower()
+                                q_contained = c_cit_low in disp_q_low or disp_q_low in c_cit_low
+                                cit_match = q_contained or (q_overlap >= min_required_q and q_overlap >= min(2, len(c_q_stems)))
+                                if not cit_match:
+                                    continue
+
+                                c_def_stems = cand["def_stems"]
+                                def_overlap = len(disp_def_stems & c_def_stems)
+                                min_required_def = min(len(c_def_stems), max(2, int(len(c_def_stems) * 0.7)))
+                                c_def_low = cand["definition"].lower().rstrip(".")
+                                def_contained = c_def_low in disp_def_low or disp_def_low in c_def_low
+                                def_match = def_contained or (def_overlap >= min_required_def and def_overlap >= min(2, len(c_def_stems)))
+                                if not def_match:
+                                    continue
+
                                 matched_grounding = True
                                 break
 

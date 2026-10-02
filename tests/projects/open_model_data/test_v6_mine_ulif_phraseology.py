@@ -1422,7 +1422,7 @@ def test_ulif_phraseology_clean_definition_no_quotation_text(tmp_path: Path) -> 
     assert unit.definition == "Нікчемна і непотрібна людина."
     assert "Пояснив" not in unit.definition
     assert "Тесля" not in unit.definition
-    assert unit.citation_text == "— Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе"
+    assert unit.citation_text == "Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе"
     assert unit.author == "Л. Дмитерко"
 
 
@@ -1483,3 +1483,154 @@ def test_extract_clean_definition_and_labels_iterative_cleanup():
     assert def_2 == "Не до того, до кого треба; не туди, куди слід."
     assert "звертатися" not in def_2
     assert "зі сл" not in def_2
+
+
+def test_ulif_phraseology_split_quotations_and_editorial_brackets(tmp_path: Path):
+    """Codex R2 Finding 1: Split <i> tags around editorial brackets [...] must not truncate quotes or leak into definitions."""
+    db_path = tmp_path / "test_split.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Section 22711 pattern: волам (бикам) хвости крутити
+    raw_volam = (
+        "<p><b>вола́м (бика́м) хво́сти крути́ти. </b>Виконувати примітивну, часто брудну, непрестижну роботу. "
+        "<i>Думав хоч тебе вивести в люди. Ну, раз не хочеш </i>[вчитися]<i> — іди волам хвости крутити</i> (П. Панч).</p>"
+    )
+    # Section 15886 pattern: ба де то!
+    raw_ba_de_to = (
+        "<p><b>ба́ де то́! </b>Уживається для вираження повного заперечення; ні. "
+        "<i>Котилися і наші козачі Дурні голови, за правду.. А получшали </i>[покращали]<i>? ба де то! Ще гіршими стали</i> (Т. Шевченко).</p>"
+    )
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'хвіст', 'хвіст', 'ok')")
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (2, 'ба', 'ба', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (22711, 1, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_volam, "citations": ["П. Панч"]}),),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (15886, 2, 'phraseology', ?)",
+        (json.dumps({"raw_html": raw_ba_de_to, "citations": ["Т. Шевченко"]}),),
+    )
+    conn.commit()
+    conn.close()
+
+    units, _ = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(units) == 2
+
+    u_volam = next(u for u in units if "хвости крутити" in u.idiom)
+    assert u_volam.definition == "Виконувати примітивну, часто брудну, непрестижну роботу."
+    assert "Думав" not in u_volam.definition
+    assert "люди" not in u_volam.definition
+    assert u_volam.citation_text == "Думав хоч тебе вивести в люди. Ну, раз не хочеш вчитися — іди волам хвости крутити"
+    assert u_volam.author == "П. Панч"
+
+    u_bade = next(u for u in units if "ба де то" in u.idiom)
+    assert u_bade.definition == "Уживається для вираження повного заперечення; ні."
+    assert "Котилися" not in u_bade.definition
+    assert u_bade.citation_text == "Котилися і наші козачі Дурні голови, за правду.. А получшали покращали? ба де то! Ще гіршими стали"
+    assert u_bade.author == "Т. Шевченко"
+
+
+@requires_sources
+def test_verify_receipt_invariants_grounding_rejects_codex_r2_probes():
+    """Codex R2 Finding 2: Grounding invariant must validate displayed definition, quotation, and attribution separately."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_shard.write_text(json.dumps({
+            "chosen": "<thought>Обґрунтування норми.</thought>\n\nПравильно казати: **«брати участь»**.",
+            "rejected": "<thought>Помилкова думка.</thought>\n\nНеправильно.",
+        }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        # Probe 1: Altered quote (Codex R2 probe 1)
+        sft_shard_1 = sft_dir / "sft_shard_001_of_001.jsonl"
+        probe_1_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую абсолютний нуль. Нікчемна і непотрібна людина. Л. Дмитерко.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Це зовсім інша цитата про абсолютний нуль і щось інше.»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_1_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=DEFAULT_SOURCES_DB,
+            )
+
+        # Probe 2: Wrong author and fake quote (Codex R2 probe 2)
+        probe_2_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую абсолютний нуль. Нікчемна і непотрібна людина. Дмитерко.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Іван Франко):**\n"
+                "«Фальшива цитата зовсім іншого автора про нуль.»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_2_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=DEFAULT_SOURCES_DB,
+            )
+
+        # Probe 3: Altered definition with single shared token (Codex R2 probe 3)
+        probe_3_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую абсолютний нуль. Нікчемна і непотрібна людина. Л. Дмитерко.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Дуже добра і чуйна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_3_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=DEFAULT_SOURCES_DB,
+            )
