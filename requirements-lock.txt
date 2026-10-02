@@ -178,7 +178,7 @@ pytest-rerunfailures==16.7
 pytest-timeout==2.4.0
 pytest-xdist==3.8.0
 python-dateutil==2.9.0.post0
-python-discovery==1.4.4
+python-discovery==1.6.1
 python-docx==1.2.0
 python-dotenv==1.2.3
 python-jose==3.5.0
@@ -234,9 +234,9 @@ udapi==0.5.2
 udtools==0.2.8
 ukrainian_word_stress==2.1.0
 unlzw3==0.2.3
-urllib3==2.7.0
+urllib3==2.8.0
 uvicorn==0.48.0
-virtualenv==21.7.3
+virtualenv==21.7.12
 vulture==2.16
 warc3-wet==0.2.5
 warc3-wet-clueweb09==0.2.5
