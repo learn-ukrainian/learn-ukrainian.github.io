@@ -21,12 +21,11 @@
 #
 # Scores within 20 (68 lookups, 2026-10-02), blind queries / full questions:
 # before this set existed (#9412 PR 3 round 1, b67381806e) 40 / 29;
-# after round 2 (92f6330f30), 61 / 51; after round 3 (lifecycle records), 63 / 54.
+# after round 2 (92f6330f30), 61 / 51; after round 3 (lifecycle records), 63 / 54;
+# after round 4 (directory notes, supersession records, abbreviations, function spans), 64 / 56.
 version: 1
 top_n: {query: 20, question: 20}
 known_misses:
-  N13: {query: null, question: 43, reason: 'The answer README sits under docs/session-state, which the privacy exclusion never shows; the archived March family is the catalogue hit.'}
-  N19: {question: 21, reason: 'One place outside: agent and channel are common words; the retired-bridge line holds only them.'}
   N22: {query: null, question: null, reason: 'Vocabulary gap: the guard says accidental disclosure, the question says leak and infrastructure details.'}
   N28: {question: null, reason: 'Not diagnosed in round 3.'}
   N30: {query: 59, question: null, reason: 'Not diagnosed in round 3.'}

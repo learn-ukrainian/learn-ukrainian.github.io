@@ -1354,3 +1354,10 @@ def test_a_family_keyword_naming_one_entry_point_credits_that_entry_point_only(t
     find_module._catalogue_evidence(state, ['storage', 'runbook'], None, candidates)
     assert candidates['docs/guide/storage-layout.md'].catalogue_terms == {'storage', 'runbook'}
     assert candidates['docs/guide/ci-gate.md'].catalogue_terms == {'runbook'}  # a family-wide keyword only
+
+
+def test_a_span_holds_only_the_lead_of_a_long_docstring():
+    text = 'def long():\n    """Summary.\n\n    Second.\n    Third.\n    Fourth is detail.\n    """\n'
+    lines = [(no, line) for no, line in enumerate(text.splitlines(), 1)
+             if find_module.DEF_LINE.match(line) or '"""' in line]
+    assert find_module.python_spans(lines) == [(1, 2 + find_module.DOCSTRING_LEAD - 1, 'def long():')]

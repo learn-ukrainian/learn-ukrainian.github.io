@@ -20,7 +20,8 @@
 # Scores on this set (68 lookups, 2026-10-02), within 20 / within 5 / first:
 # before #9412 PR 3, short queries 52 / 48 / 26 and questions 48 / 42 / 24;
 # after it, short queries 68 / 62 / 38 and questions 68 / 62 / 38; after round 3
-# (lifecycle records), short queries 68 / 63 / 35 and questions 68 / 64 / 35.
+# (lifecycle records), short queries 68 / 63 / 35 and questions 68 / 64 / 35; after round 4
+# (directory notes, abbreviations, function spans), 68 / 63 / 34 and 68 / 64 / 34.
 version: 1
 top_n: {query: 10, question: 20}
 known_misses: {}

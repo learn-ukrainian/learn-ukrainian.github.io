@@ -7,8 +7,10 @@ implemented?" in one call, from four sources read at request time, with no persi
    entry's keywords, id, entry-point topics and paths, store names and purpose.
    A strong match returns the family's entry points, or a data store with its
    query hint and producers (stores cannot be grepped).
-2. **Tracked names**: query words against every path in Git's index outside the
-   docs inventory's privacy exclusions (names only; no body is read).
+2. **Tracked names**: query words against every path in Git's index (names only; no
+   body is read). A path under the docs inventory's privacy exclusion is never a hit: the
+   README of its directory (``private_note``), which says what those files are, carries
+   its name evidence. The exclusion covers bodies, never that README.
 3. **Tracked text**: ``git grep --cached`` over the paths that PR 1's
    ``body_readable`` gate admits (content-searchable families only). Pathnames
    are never protocol or shell text: the search names roots with ``:(literal)``
@@ -18,8 +20,10 @@ implemented?" in one call, from four sources read at request time, with no persi
    files (``code_readable``: CODE_ROOTS and root files, never a privacy-excluded path)
    whose lines are used only as identifiers - definitions, CLI subcommands and flags,
    configuration keys and ids, headings, quoted UPPER_SNAKE codes - and file summaries
-   (comment and docstring lines among the first HEADER_LINES), never as prose. It is
-   skipped with ``family`` and when the catalogue is invalid.
+   (comment and docstring lines among the first HEADER_LINES), never as prose. In Python a
+   definition's span (its signature and the lead of its docstring) is one unit. An
+   abbreviation the governing documents define ("Definition of Ready (DoR)") meets its
+   defined words both ways. It is skipped with ``family`` and when the catalogue is invalid.
 
 Query words: stopwords are dropped; intent words ("current", "replaced", "retired",
 "implemented", ...) are not search terms beside other words, and a status question
@@ -1814,16 +1818,19 @@ def abbreviations(state: State, deadline: float) -> tuple[Abbreviations, str | N
 # process question is scored by in a large file, where the file's words as a bag say little.
 SPAN_LINE = r'^[[:space:]]*(async[[:space:]]+)?(def|class)[[:space:]]|"""' + "|'''"
 DEF_LINE = re.compile(r'\s*(?:async\s+)?(?:def|class)\s')
+DOCSTRING_LEAD = 4  # docstring lines a span holds: the summary line and the start of the description (PEP 257)
 
 
 def python_spans(lines: list[tuple[int, str]]) -> list[tuple[int, int, str]]:
     """The (first line, last line, definition line) of each definition among a Python file's
-    definition and triple-quote ``lines`` (in order): from ``def``/``class`` to the end of the
-    docstring that opens within DOCSTRING_WINDOW lines, else the definition line alone. Triple
-    quotes are tracked, so a definition quoted inside a string is no definition."""
+    definition and triple-quote ``lines`` (in order): from ``def``/``class`` through the lead of
+    the docstring that opens within DOCSTRING_WINDOW lines (its first DOCSTRING_LEAD lines, or
+    fewer when it closes sooner), else the definition line alone. A long docstring's later
+    lines are detail, not what the function is. Triple quotes are tracked, so a definition
+    quoted inside a string is no definition."""
     spans: list[tuple[int, int, str]] = []
     pending: tuple[int, str] | None = None  # a definition whose docstring has not opened yet
-    owner: tuple[int, str] | None = None  # the definition whose docstring is open
+    owner: tuple[int, str, int] | None = None  # the definition whose docstring is open, and where it opened
     in_string = False
     for no, text in lines:
         odd = (text.count('"""') + text.count("'''")) % 2 == 1
@@ -1831,7 +1838,7 @@ def python_spans(lines: list[tuple[int, str]]) -> list[tuple[int, int, str]]:
             if odd:
                 in_string = False
                 if owner:
-                    spans.append((owner[0], no, owner[1]))
+                    spans.append((owner[0], min(no, owner[2] + DOCSTRING_LEAD - 1), owner[1]))
                     owner = None
             continue
         if DEF_LINE.match(text):
@@ -1841,7 +1848,7 @@ def python_spans(lines: list[tuple[int, str]]) -> list[tuple[int, int, str]]:
             continue
         if pending and no - pending[0] <= DOCSTRING_WINDOW and DOCSTRING.match(text):
             if odd:
-                owner, in_string = pending, True
+                owner, in_string = (*pending, no), True
             else:
                 spans.append((pending[0], no, pending[1]))
             pending = None
