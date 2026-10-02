@@ -18,6 +18,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
+
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import publication_boundary, publication_cli
@@ -51,6 +53,12 @@ MAX_COMMENT_BYTES = 65_000
 # Kimi CLI task records can identify the harness without naming its model;
 # this harness is single-family and always runs Moonshot models.
 SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
+# ``resolved_model_source`` values the Cursor adapter writes only when the model
+# came out of the runtime's own output (``scripts/agent_runtime/adapters/cursor.py``
+# ``parse``: stream-json stdout, this invocation's transcript, stderr JSON events).
+# The ``unattested-harness`` / ``pending`` / ``unknown`` fallbacks and any other
+# value are not runtime reports, so a receipt carrying them proves no model.
+RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 
 
 class RecordError(RuntimeError):
@@ -268,6 +276,11 @@ def record(
     model = task.get("resolved_model") if task.get("agent") == "cursor" else task.get("model")
     if task.get("agent") == "cursor" and task.get("resolved_model_known") is not True:
         raise RecordError("Cursor reviewer model unknown")
+    source = task.get("resolved_model_source")
+    if task.get("agent") == "cursor" and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
+        raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
+    if isinstance(model, str):
+        model = canonical_cursor_model(model)  # the runtime reports "Composer 2.5"; record the slug
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)
