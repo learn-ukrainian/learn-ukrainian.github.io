@@ -1,7 +1,7 @@
 """Credit-period lane state, model allowlist and reset advice (#9518).
 
-A lane whose plan allowance is nearly used may still work on prepaid credits.
-The router cannot see the provider draw them: it sees a balance and our own
+A lane whose plan allowance is nearly used can show a prepaid credit balance.
+The router cannot see the provider draw it: it sees a balance and our own
 runtime outcomes. :func:`lane_credit_state` therefore says only what is known:
 ``credit_balance_present`` (plan at or below the threshold, fresh positive
 balance, and no recent rate limit against it) or a fail-closed state that
@@ -224,17 +224,30 @@ def _fresh_probe(info: dict[str, Any], policy: CreditPolicy, *, snapshot_stale: 
 
 
 def read_recent_rate_limits(lane: str, window_s: float, *, now: datetime | None = None) -> dict[str, Any]:
-    """``rate_limited`` outcomes for ``lane`` in the runtime usage records within ``window_s``."""
+    """``rate_limited`` outcomes for ``lane`` in the runtime usage records within ``window_s``.
+
+    ``unreadable`` counts relevant records that could not be read (see
+    ``summarize_lane_runtime``); a count of 0 with ``unreadable["total"] > 0``
+    is not "no rate limits".
+    """
     from scripts.agent_runtime.usage import summarize_lane_runtime
 
     summary = summarize_lane_runtime(lane, window_s=window_s, now=now.timestamp() if now is not None else None)
-    return {"count": int(summary["rate_limited"]), "last_rate_limited_at": summary["last_rate_limited_at"]}
+    return {
+        "count": int(summary["rate_limited"]),
+        "last_rate_limited_at": summary["last_rate_limited_at"],
+        "unreadable": dict(summary["unreadable"]),
+    }
 
 
 def _rate_limit_evidence(
     lane: str, record: dict[str, Any], policy: CreditPolicy, now: datetime
-) -> tuple[int | None, str | None]:
-    """Recent rate-limit count and newest time; ``(None, None)`` when the records cannot be read.
+) -> tuple[int | None, str | None, dict[str, int] | None]:
+    """Recent rate-limit count, newest time and unreadable-record counts.
+
+    ``(None, None, None)`` when the reader fails; the third item is the
+    unreadable-record tally when part of the lane's records could not be read
+    (the count is then not trusted: ``None``), else ``None``.
 
     The snapshot's own runtime summary counts as well when its window fits
     inside the policy window (it can come from another usage directory).
@@ -243,10 +256,17 @@ def _rate_limit_evidence(
         local = read_recent_rate_limits(lane, policy.rate_limit_window_s, now=now)
         count = local["count"]
         last = local["last_rate_limited_at"]
+        unreadable = local.get("unreadable")
     except Exception:  # unreadable evidence is not "no evidence": fail closed
-        return None, None
+        return None, None, None
     if isinstance(count, bool) or not isinstance(count, int) or count < 0:
-        return None, None
+        return None, None, None
+    if unreadable is not None:
+        total = unreadable.get("total") if isinstance(unreadable, dict) else None
+        if isinstance(total, bool) or not isinstance(total, int) or total < 0:
+            return None, None, None
+        if total > 0:
+            return None, last, {k: v for k, v in unreadable.items() if k != "total" and v}
     runtime = record.get("runtime") if isinstance(record.get("runtime"), dict) else {}
     window = _number(runtime.get("window_s"))
     snapshot_count = runtime.get("rate_limited")
@@ -263,7 +283,7 @@ def _rate_limit_evidence(
         # The 5-minute headroom block is itself rate-limit evidence.
         count = max(count, 1)
         last = last or runtime.get("last_rate_limited_at")
-    return count, last
+    return count, last, None
 
 
 def lane_credit_state(
@@ -323,12 +343,21 @@ def lane_credit_state(
     result["credit_balance"] = balance
     if balance <= 0:
         return {**result, "state": CREDITS_EXHAUSTED, "reason": f"credit balance {balance:g}"}
-    count, last = _rate_limit_evidence(lane, record, policy, current)
+    count, last, unreadable = _rate_limit_evidence(lane, record, policy, current)
     evidence["rate_limited_count"] = count
     evidence["last_rate_limited_at"] = last
+    if unreadable is not None:
+        evidence["unreadable_records"] = unreadable
     # A fresh positive balance exists from here on: the admission allowlist applies
     # whatever the router's recommendation state says about the rate-limit evidence.
     result["allowlist_applies"] = True
+    if unreadable is not None:
+        parts = ", ".join(f"{n} {kind}" for kind, n in unreadable.items())
+        return {
+            **result,
+            "state": CREDITS_UNVERIFIED,
+            "reason": f"runtime usage records unreadable ({parts}): rate limits cannot be ruled out",
+        }
     if count is None:
         return {**result, "state": CREDITS_UNVERIFIED, "reason": "runtime usage records unreadable"}
     if count > 0:

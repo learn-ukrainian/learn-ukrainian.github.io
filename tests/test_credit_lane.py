@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -382,11 +383,139 @@ def test_real_reader_counts_rate_limits_inside_the_window_only(monkeypatch, tmp_
     assert REAL_RATE_LIMIT_READER("codex", 3600.0, now=NOW) == {
         "count": 1,
         "last_rate_limited_at": "2026-10-02T16:30:00Z",
+        "unreadable": {"files": 0, "lines": 0, "records": 0, "total": 0},
     }
     monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
     state = credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW)
     assert state["state"] == credit_lane.CREDIT_USE_UNCONFIRMED
     assert state["evidence"]["rate_limited_count"] == 1
+
+
+# --- unreadable rate-limit evidence fails closed (real reader, nothing stubbed) --------
+
+
+def _real_reader_state(monkeypatch, tmp_path, files: dict[str, bytes | None]) -> dict:
+    """Credit state of the fresh near-cap Codex record with the real usage reader over ``files``."""
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
+    for name, content in files.items():
+        if content is not None:
+            (tmp_path / name).write_bytes(content)
+    return credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW)
+
+
+def _line(**record) -> bytes:
+    return (json.dumps({"outcome": "rate_limited", "model": "gpt-6.1-sol", **record}) + "\n").encode()
+
+
+_LANE_FILE = "usage_codex-delegate_2026-10-02.jsonl"
+_PRESENT = credit_lane.CREDIT_BALANCE_PRESENT
+_UNVERIFIED = credit_lane.CREDITS_UNVERIFIED
+_UNCONFIRMED = credit_lane.CREDIT_USE_UNCONFIRMED
+_EDGE = NOW - timedelta(seconds=POLICY.rate_limit_window_s)
+
+UNREADABLE_EVIDENCE = {
+    "record-without-timestamp": (_line(), _UNVERIFIED, {"records": 1}),
+    "record-with-null-timestamp": (_line(ts=None), _UNVERIFIED, {"records": 1}),
+    "record-with-naive-timestamp": (_line(ts="2026-10-02T16:30:00"), _UNVERIFIED, {"records": 1}),
+    "record-with-malformed-timestamp": (_line(ts="yesterday"), _UNVERIFIED, {"records": 1}),
+    "record-with-epoch-timestamp": (_line(ts=1790958600), _UNVERIFIED, {"records": 1}),
+    "record-with-non-utc-offset": (_line(ts="2026-10-02T18:30:00+02:00"), _UNVERIFIED, {"records": 1}),
+    "record-with-utc-offset": (_line(ts="2026-10-02T16:30:00+00:00"), _UNCONFIRMED, None),
+    "record-with-z": (_line(ts="2026-10-02T16:30:00Z"), _UNCONFIRMED, None),
+    "truncated-line": (b'{"ts": "2026-10-02T16:30:00Z", "outcome": "rate_li', _UNVERIFIED, {"lines": 1}),
+    "non-object-line": (b"[1, 2, 3]\n", _UNVERIFIED, {"lines": 1}),
+    "binary-garbage": (bytes(b for b in range(256) if b != 10) * 4, _UNVERIFIED, {"lines": 1}),
+    "empty-file": (b"", _PRESENT, None),
+    "blank-lines-only": (b"\n\n", _PRESENT, None),
+    "readable-ok-record": (_line(ts="2026-10-02T16:30:00Z", outcome="ok"), _PRESENT, None),
+    "stale-utc-rate-limit": (_line(ts="2026-10-02T15:30:00Z"), _PRESENT, None),
+    "exactly-at-window-edge": (_line(ts=_EDGE.isoformat()), _UNCONFIRMED, None),
+    "one-millisecond-older": (_line(ts=(_EDGE - timedelta(milliseconds=1)).isoformat()), _PRESENT, None),
+}
+
+
+@pytest.mark.parametrize("scenario", list(UNREADABLE_EVIDENCE))
+def test_real_reader_evidence_states(monkeypatch, tmp_path, scenario):
+    content, expected, unreadable = UNREADABLE_EVIDENCE[scenario]
+    state = _real_reader_state(monkeypatch, tmp_path, {_LANE_FILE: content})
+    assert state["state"] == expected, (scenario, state["reason"])
+    assert state["allowlist_applies"] is True
+    assert state["evidence"].get("unreadable_records") == unreadable
+    if expected == _UNVERIFIED:
+        assert state["reason"].startswith("runtime usage records unreadable (")
+        assert "rate limits cannot be ruled out" in state["reason"]
+        assert state["evidence"]["rate_limited_count"] is None
+
+
+def test_missing_file_and_missing_directory_are_the_empty_case(monkeypatch, tmp_path):
+    assert _real_reader_state(monkeypatch, tmp_path, {})["state"] == _PRESENT
+    monkeypatch.setattr("scripts.agent_runtime.usage._usage_dir", lambda: tmp_path / "absent")
+    assert credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW)["state"] == _PRESENT
+
+
+def test_another_lanes_garbage_file_is_ignored(monkeypatch, tmp_path):
+    files = {
+        "usage_claude-delegate_2026-10-02.jsonl": b"\xff\xfe garbage {{{ rate_limited",
+        "usage_cursor-delegate_2026-10-02.jsonl": b'{"outcome": "rate_limited"}\n',
+    }
+    state = _real_reader_state(monkeypatch, tmp_path, files)
+    assert state["state"] == _PRESENT
+    assert "unreadable_records" not in state["evidence"]
+
+
+def test_unlistable_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
+    # A symlink loop makes stat() fail with ELOOP (an OSError that is not "missing"); it works as root too.
+    (tmp_path / _LANE_FILE).symlink_to(tmp_path / _LANE_FILE)
+    state = _real_reader_state(monkeypatch, tmp_path, {})
+    assert state["state"] == _UNVERIFIED
+    assert state["evidence"]["unreadable_records"] == {"files": 1}
+
+
+def test_directory_in_place_of_a_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
+    (tmp_path / _LANE_FILE).mkdir()
+    assert _real_reader_state(monkeypatch, tmp_path, {})["state"] == _UNVERIFIED
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads mode-000 files")
+def test_mode_000_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
+    path = tmp_path / _LANE_FILE
+    path.write_bytes(_line(ts="2026-10-02T16:30:00Z"))
+    path.chmod(0)
+    try:
+        state = _real_reader_state(monkeypatch, tmp_path, {})
+    finally:
+        path.chmod(0o600)
+    assert state["state"] == _UNVERIFIED
+    assert state["evidence"]["unreadable_records"] == {"files": 1}
+
+
+def test_unreadable_evidence_keeps_the_allowlist_and_the_near_cap_router_row(monkeypatch, tmp_path):
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
+    (tmp_path / _LANE_FILE).write_bytes(_line())
+    row = _row(_budget())
+    assert row["credit"]["state"] == _UNVERIFIED
+    assert row["status"] == "near_cap"
+    assert credit_lane.allowlist_applies(row["credit"]) is True
+
+
+def test_summary_unreadable_is_zero_for_other_callers_with_healthy_records(tmp_path):
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    (tmp_path / _LANE_FILE).write_bytes(
+        _line(ts="2026-10-02T16:30:00Z") + _line(ts="2026-10-02T16:31:00Z", outcome="ok")
+    )
+    summary = usage.summarize_lane_runtime("codex", window_s=3600, usage_dir=tmp_path, now=NOW.timestamp())
+    assert summary["unreadable"] == {"files": 0, "lines": 0, "records": 0, "total": 0}
+    assert (summary["rate_limited"], summary["ok"]) == (1, 1)
 
 
 # --- UTC-only timestamps (parity with the reset reserve) ---------------------

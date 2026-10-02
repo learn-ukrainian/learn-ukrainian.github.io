@@ -849,9 +849,9 @@ spawn. If neither the mapped model nor that default is valid for the
 substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
 
-**Credit-balance lanes (#9518):** `scripts/config/credit_lanes.yaml` lists the lanes that may
-keep working on prepaid credits once their plan allowance is used, and the models each may receive
-then (Codex: `gpt-6.1-sol`, `gpt-6-luna`). The router sees a credit balance, not the provider
+**Credit-balance lanes (#9518):** `scripts/config/credit_lanes.yaml` lists the lanes that can show a
+prepaid credit balance once their plan allowance is used (the router does not verify the provider
+drawing it), and the models each may receive then (Codex: `gpt-6.1-sol`, `gpt-6-luna`). The router sees a credit balance, not the provider
 drawing it, so `scripts/fleet/credit_lane.py` claims no more than that: a lane reads
 `credit_balance_present` (credit balance present; draw not verified by the router) only when its
 tightest plan window has at most `near_cap_remaining_pct` (10%) remaining, the routing-budget record
@@ -859,8 +859,12 @@ carries a positive numeric credit balance from a probe younger than `credit_max_
 `age_s` and an explicit-UTC `fetched_at`), and the runtime usage records
 (`batch_state/api_usage/usage_<lane>-*.jsonl`, plus the snapshot's own runtime summary) show no
 `rate_limited` outcome for the lane within `rate_limit_window_s` (3600 s). One or more rate limits
-in that window read `credit_use_unconfirmed` ("recent rate limit while the plan window is exhausted:
-credit use not confirmed"). That state, a missing, stale, non-numeric or non-positive balance, a
+in that window read `credit_use_unconfirmed`. Evidence that cannot be read also reads
+`credits_unverified` (reason names the cause): an unreadable lane file, an unparseable line in one,
+or a `rate_limited` record without an explicit-UTC timestamp; `summarize_lane_runtime` exposes these
+as `unreadable` (`files`, `lines`, `records`, `total`). A missing file is the empty case. The
+recent-rate-limit state reads ("recent rate limit while the plan window is exhausted:
+credit use not confirmed"). These states, a missing, stale, non-numeric or non-positive balance, a
 naive or non-UTC timestamp (parsed by the reset reserve's `utc_datetime`), unreadable usage records
 or a stale snapshot all leave the lane in its plan state (near_cap/AVOID). `capacity_pick` shows
 status `credit_balance_present`, ranks the lane after plan-backed seats, and adds a `credit` object

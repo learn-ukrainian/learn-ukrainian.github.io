@@ -22,7 +22,7 @@
 # allowlist); every other lane is unaffected.
 schema_version: credit-lanes.v1
 
-# Plan remaining-% at or below which credits may back the lane. 10.0 matches the
+# Plan remaining-% at or below which a credit balance is considered. 10.0 matches the
 # router's near_cap line (>= 90% of the plan window used).
 near_cap_remaining_pct: 10.0
 

@@ -168,6 +168,15 @@ def write_record(record: dict[str, Any]) -> None:
         )
 
 
+def _utc_timestamp(value: Any) -> datetime | None:
+    """Explicit-UTC reading of a record timestamp (the one UTC-only rule of the fleet); None otherwise."""
+    try:
+        from scripts.fleet.reset_reserve import utc_datetime
+    except ImportError:  # pragma: no cover - scripts/ on sys.path
+        from fleet.reset_reserve import utc_datetime
+    return utc_datetime(value)
+
+
 # Window used by routing-budget hybrid overlay (CodexBar allotment + agent burn).
 # Matches has_headroom's operational window so dashboards and dispatch agree.
 LANE_RUNTIME_WINDOW_S = _RATE_LIMIT_WINDOW_S
@@ -186,6 +195,12 @@ def summarize_lane_runtime(
     reactive burn/rate-limit signal from our own runtime records so routing
     can demote a lane that is actively 429-ing even if the dashboard still
     shows free window %.
+
+    ``unreadable`` counts evidence that could hold a rate limit for this lane
+    but could not be read (``files``: unreadable or unlistable lane files;
+    ``lines``: unparseable lines in a lane file; ``records``: ``rate_limited``
+    records without an explicit-UTC timestamp), so "none found" stays distinct
+    from "could not read". A missing file or directory is the empty case.
     """
     now_ts = time.time() if now is None else now
     cutoff = now_ts - float(window_s)
@@ -195,20 +210,36 @@ def summarize_lane_runtime(
     last_outcome_at: float | None = None
     models_limited: set[str] = set()
 
+    # Evidence that could hold a rate limit for this lane but could not be read.
+    # "No rate limits found" and "could not read part of the records" are
+    # different answers; callers that must fail closed read ``unreadable``.
+    unreadable = {"files": 0, "lines": 0, "records": 0}
+
     if root.is_dir():
+        if not os.access(root, os.R_OK | os.X_OK):
+            unreadable["files"] += 1
         for file_path in root.glob(f"usage_{agent}-*.jsonl"):
             try:
                 if file_path.stat().st_mtime < cutoff:
                     continue
-                with open(file_path, encoding="utf-8") as handle:
+                with open(file_path, "rb") as handle:
                     for raw in handle:
-                        raw = raw.strip()
-                        if not raw:
+                        text = raw.decode("utf-8", errors="replace").strip()
+                        if not text:
                             continue
                         try:
-                            rec = json.loads(raw)
-                        except json.JSONDecodeError:
+                            rec = json.loads(text)
+                        except ValueError:
+                            unreadable["lines"] += 1
                             continue
+                        if not isinstance(rec, dict):
+                            unreadable["lines"] += 1
+                            continue
+                        outcome = str(rec.get("outcome") or "other")
+                        if outcome == "rate_limited" and _utc_timestamp(rec.get("ts")) is None:
+                            # Counted below only when the lenient parse reads it (legacy
+                            # behaviour for other callers); flagged either way.
+                            unreadable["records"] += 1
                         ts_str = rec.get("ts")
                         if not ts_str:
                             continue
@@ -220,7 +251,6 @@ def summarize_lane_runtime(
                             continue
                         if ts < cutoff:
                             continue
-                        outcome = str(rec.get("outcome") or "other")
                         if outcome in counts:
                             counts[outcome] += 1
                         else:
@@ -232,8 +262,10 @@ def summarize_lane_runtime(
                             model = rec.get("model")
                             if isinstance(model, str) and model:
                                 models_limited.add(model)
+            except FileNotFoundError:
+                continue  # a file removed after the listing holds no records
             except OSError:
-                continue
+                unreadable["files"] += 1
 
     # Merge in-process cache (may be ahead of disk).
     for (cached_agent, cached_model), cached_ts in list(_RATE_LIMIT_CACHE.items()):
@@ -280,6 +312,7 @@ def summarize_lane_runtime(
         "models_rate_limited": sorted(models_limited),
         "headroom_blocked": headroom_blocked,
         "headroom_reason": headroom_reason,
+        "unreadable": {**unreadable, "total": sum(unreadable.values())},
     }
 
 
