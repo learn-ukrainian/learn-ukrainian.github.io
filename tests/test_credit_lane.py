@@ -557,7 +557,17 @@ def test_human_output_for_unverified_credits():
     )
     human = capacity_pick.format_human(report)
     assert "credit lane codex: credits_unverified (credit balance missing or non-numeric)" in human
-    assert "only while credit_balance_present" in human
+    assert "only while a fresh credit balance exists past the plan cap" in human
+
+
+def test_human_output_states_the_gate_for_a_recent_rate_limit(monkeypatch):
+    monkeypatch.setattr(
+        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 1, "last_rate_limited_at": None}
+    )
+    report = capacity_pick.build_report(_budget(), reset_reserve=unavailable_reserve(), now=NOW)
+    human = capacity_pick.format_human(report)
+    assert "credit lane codex: credit_use_unconfirmed" in human
+    assert "dispatch admits only gpt-6.1-sol, gpt-6-luna (fresh credit balance with the plan window exhausted)" in human
 
 
 def test_main_json_carries_credit_fields(monkeypatch, capsys):
@@ -850,9 +860,6 @@ def test_admission_judges_a_missing_model_by_the_lane_default(snapshot, monkeypa
         lambda box: box.update(budget=_budget(_codex(age_s=5000.0))),
         lambda box: box["budget"]["diagnostics"].update(stale=True),
         lambda box: box.update(budget=None),
-        lambda box: box["budget"]["agents"]["codex"].update(
-            runtime={"window_s": 300, "rate_limited": 1, "headroom_blocked": False}
-        ),
         lambda box: box["budget"]["agents"]["codex"]["codexbar"].update(fetched_at="2026-10-02T17:00:00"),
     ],
     ids=[
@@ -861,13 +868,131 @@ def test_admission_judges_a_missing_model_by_the_lane_default(snapshot, monkeypa
         "credits-stale",
         "snapshot-stale",
         "monitor-unreachable",
-        "recent-rate-limit",
         "naive-fetch-time",
     ],
 )
-def test_admission_keeps_todays_behaviour_unless_credit_balance_present(snapshot, mutate):
+def test_admission_keeps_todays_behaviour_without_a_fresh_positive_balance(snapshot, mutate):
     mutate(snapshot)
     assert delegate._credit_period_refusal("codex", "gpt-6-astra") is None
+
+
+# The admission gate is separate from the router recommendation: the allowlist
+# holds whenever the plan window is exhausted AND a fresh positive balance exists,
+# whatever the rate-limit evidence says (a recent rate limit only stops the router
+# recommending the lane). Each scenario: (setup, router status, router credit state,
+# allowlist applies).
+def _no_rate_limit(monkeypatch):
+    monkeypatch.setattr(
+        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 0, "last_rate_limited_at": None}
+    )
+
+
+def _recent_rate_limit(monkeypatch):
+    monkeypatch.setattr(
+        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 2, "last_rate_limited_at": None}
+    )
+
+
+def _unreadable_usage(monkeypatch):
+    def broken(*_a, **_k):
+        raise OSError("usage records unreadable")
+
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", broken)
+
+
+def _codex_edit(**edits):
+    def apply(box):
+        box["budget"]["agents"]["codex"].update(edits)
+
+    return apply
+
+
+def _live_row(budget: dict) -> dict:
+    """Codex router row on the real clock (the snapshot fixture stamps its probe time live)."""
+    rows = capacity_pick.build_lane_rows(budget, reset_reserve=unavailable_reserve())
+    return next(row for row in rows if row["lane"] == "codex")
+
+
+def _policy_missing(monkeypatch, tmp_path):
+    monkeypatch.setattr(credit_lane, "POLICY_PATH", tmp_path / "absent.yaml")
+
+
+GATE_SCENARIOS = {
+    "plan-healthy": (
+        _codex_edit(
+            status="cool", remaining_pct=60.0, codexbar={**_live(_codex())["codexbar"], "weekly_remaining_pct": 60.0}
+        ),
+        _no_rate_limit,
+        ("cool", credit_lane.PLAN_HEALTHY, False),
+    ),
+    "exhausted-fresh-balance": (None, _no_rate_limit, (credit_lane.CREDIT_BALANCE_PRESENT,) * 2 + (True,)),
+    "exhausted-fresh-balance-recent-rate-limit": (
+        None,
+        _recent_rate_limit,
+        ("near_cap", credit_lane.CREDIT_USE_UNCONFIRMED, True),
+    ),
+    "exhausted-fresh-balance-unreadable-usage": (
+        None,
+        _unreadable_usage,
+        ("near_cap", credit_lane.CREDITS_UNVERIFIED, True),
+    ),
+    "exhausted-no-balance": (
+        _codex_edit(credit_balance=None),
+        _no_rate_limit,
+        ("near_cap", credit_lane.CREDITS_UNVERIFIED, False),
+    ),
+    "exhausted-stale-balance": (
+        _codex_edit(age_s=5000.0),
+        _no_rate_limit,
+        ("near_cap", credit_lane.CREDITS_UNVERIFIED, False),
+    ),
+    "exhausted-stale-balance-recent-rate-limit": (
+        _codex_edit(age_s=5000.0),
+        _recent_rate_limit,
+        ("near_cap", credit_lane.CREDITS_UNVERIFIED, False),
+    ),
+    "exhausted-balance-zero": (
+        _codex_edit(credit_balance=0.0),
+        _no_rate_limit,
+        ("near_cap", credit_lane.CREDITS_EXHAUSTED, False),
+    ),
+    "policy-error": ("policy", _no_rate_limit, ("near_cap", credit_lane.POLICY_ERROR, True)),
+}
+_ALLOWLISTED = "gpt-6.1-sol"
+_OFF_ALLOWLIST = "gpt-5-codex"
+
+
+@pytest.mark.parametrize("scenario", list(GATE_SCENARIOS))
+@pytest.mark.parametrize("lane", ["codex", "cursor"])
+@pytest.mark.parametrize(
+    "model", [_ALLOWLISTED, _OFF_ALLOWLIST, None], ids=["allowlisted", "off-allowlist", "no-model"]
+)
+def test_allowlist_gate_table(snapshot, monkeypatch, tmp_path, scenario, lane, model):
+    edit, reader, (status, state, gated) = GATE_SCENARIOS[scenario]
+    reader(monkeypatch)
+    if edit == "policy":
+        _policy_missing(monkeypatch, tmp_path)
+    elif edit is not None:
+        edit(snapshot)
+    refusal = credit_lane.dispatch_refusal(lane, model)
+    # A model-less call is judged as no allowlisted model; the real caller resolves the lane default first.
+    expect_refusal = lane == "codex" and gated and model != _ALLOWLISTED
+    assert (refusal is not None) == expect_refusal, (scenario, lane, model, refusal)
+    if expect_refusal:
+        assert refusal.startswith(f"CREDIT_PERIOD_MODEL_REFUSED: lane codex is {state}")
+    if lane == "codex" and model == _OFF_ALLOWLIST:
+        # The router recommendation state is what round 2 specified, independent of the gate.
+        row = _live_row(snapshot["budget"])
+        assert (row["status"], row["credit"]["state"]) == (status, state), scenario
+        assert credit_lane.allowlist_applies(row["credit"]) is gated, scenario
+
+
+def test_dispatch_refusal_does_not_depend_on_the_router_recommending_the_lane(snapshot, monkeypatch):
+    _recent_rate_limit(monkeypatch)
+    row = _live_row(snapshot["budget"])
+    assert row["avoid"] is True and row["credit"]["state"] == credit_lane.CREDIT_USE_UNCONFIRMED
+    refusal = delegate._credit_period_refusal("codex", "gpt-5-codex")
+    assert refusal is not None and "lane codex is credit_use_unconfirmed" in refusal
 
 
 def test_admission_ignores_unconfigured_lanes(snapshot):

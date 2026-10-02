@@ -593,10 +593,12 @@ def format_credit_lines(rows: list[dict[str, Any]]) -> list[str]:
         elif state == credit_lane.POLICY_ERROR:
             lines.append(f"credit lane {lane}: {state} ({credit.get('reason')}) | dispatch admits only {models}")
         else:
-            lines.append(
-                f"credit lane {lane}: {state} ({credit.get('reason')}){evidence_text} | models restricted to "
-                f"{models} only while {credit_lane.CREDIT_BALANCE_PRESENT}"
+            gate = (
+                f"dispatch admits only {models} (fresh credit balance with the plan window exhausted)"
+                if credit_lane.allowlist_applies(credit)
+                else f"models restricted to {models} only while a fresh credit balance exists past the plan cap"
             )
+            lines.append(f"credit lane {lane}: {state} ({credit.get('reason')}){evidence_text} | {gate}")
         advice = credit.get("reset_advice") or {}
         if advice:
             free = advice.get("free_resets_available")

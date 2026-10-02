@@ -121,10 +121,14 @@ router. It is usable only while there is no evidence against it, ranked after pl
 with its balance, evidence, coverage and reset advice. The router follows one rule: one or more
 `rate_limited` runtime outcomes for the lane within `rate_limit_window_s` (60 minutes) while the
 plan window is exhausted read `credit_use_unconfirmed` and keep near_cap/AVOID. Missing, stale,
-naive-timestamp or non-numeric credit data also keep near_cap/AVOID. While a lane shows a credit
-balance, `delegate.py dispatch` refuses any model outside its allowlist (Codex: `gpt-6.1-sol`,
-`gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`; a dispatch without `--model` is judged by the lane
-default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
+naive-timestamp or non-numeric credit data also keep near_cap/AVOID. Admission is a separate question
+from the recommendation: whenever the plan window is at or below the threshold and a fresh positive
+balance exists (states `credit_balance_present`, `credit_use_unconfirmed` and `credits_unverified`
+from unreadable usage records), `delegate.py dispatch` refuses any model outside the lane allowlist
+(Codex: `gpt-6.1-sol`, `gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`, even when the router no
+longer recommends the lane. Nothing is gated with a healthy plan window, with no fresh positive
+balance (near cap without credits: unchanged), or on other lanes. A dispatch without `--model` is
+judged by the lane default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
 lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
 decision, and no tool consumes credits or resets.
 Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1

@@ -26,7 +26,10 @@ near_cap, or in-flight-saturated lane when a cooler eligible seat exists. A
 `credit_balance_present` lane (#9518; credit balance present, draw not verified by the router) is
 usable after the plan-backed seats, only with the models in its `credit` row, and only while no
 `rate_limited` outcome in the last 60 minutes contradicts it (that reads `credit_use_unconfirmed`,
-near_cap/AVOID); dispatch admission refuses other models while the balance shows. A **deficit**
+near_cap/AVOID). Dispatch admission is a separate gate: it refuses other models whenever the plan
+window is at or below the threshold and a fresh positive balance exists (`credit_balance_present`,
+`credit_use_unconfirmed`, or `credits_unverified` from unreadable usage records), even when the
+router no longer recommends the lane. A **deficit**
 lane is visible pace, projected to run out before reset, and more than 2 points ahead of
 pace (near_cap ≥ 90% unchanged); it is not a dispatch target while a cool lane has
 reserve. CodexBar is an **input to the API**, not a separate driver app workflow — if

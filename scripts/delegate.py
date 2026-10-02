@@ -10399,8 +10399,8 @@ def _dispatch(
             print(f"❌ review attempt refused: {exc}", file=sys.stderr)
             return 2
 
-    # #9518: while a lane is past its plan cap with a credit balance present, only
-    # its credit-period models are admitted. Checked on the admitted route (aliases,
+    # #9518: while a lane is past its plan cap with a fresh positive credit balance
+    # (router state irrelevant), only its credit-period models are admitted. Checked on the admitted route (aliases,
     # substitution and review selection applied; no --model means the lane default)
     # before any side effect.
     credit_refusal = _credit_period_refusal(dispatch_agent, launch_target.model)
@@ -13105,9 +13105,11 @@ def _lane_default_model(agent: str) -> str | None:
 
 
 def _credit_period_refusal(dispatch_agent: str, launch_model: str | None) -> str | None:
-    """Typed refusal when ``dispatch_agent`` shows a credit balance and the launch model is off its allowlist (#9518).
+    """Typed refusal when the credit-period allowlist applies to ``dispatch_agent`` and the launch model is off it (#9518).
 
-    A dispatch without ``--model`` is judged by the lane's default model. The
+    The allowlist applies whenever the plan window is at or below the threshold
+    and a fresh positive credit balance exists, whether or not the router
+    currently recommends the lane. A dispatch without ``--model`` is judged by the lane's default model. The
     policy (``scripts/config/credit_lanes.yaml``) and the lane state come from
     ``scripts.fleet.credit_lane``, the same reader ``capacity_pick`` uses; an
     unreadable policy restricts only the built-in credit lanes and warns on

@@ -872,13 +872,19 @@ per-task credit consumption. `reset_advice.advice` is `use_reset_now`, `hold_res
 `not_applicable`. A free full reset is held while the natural reset is within `reset_hold_hours`
 (48 h) or its time is unknown, because no provider record or repository document says whether a
 full reset re-anchors the window. `delegate.py dispatch` checks the admitted route (after aliases,
-substitution and review selection; no `--model` means the lane default). An off-allowlist model on
-a lane in `credit_balance_present` exits 2 with `CREDIT_PERIOD_MODEL_REFUSED`, and `--check-budget`
-no longer substitutes away from such a lane. If the policy file is missing, malformed or has an empty
+substitution and review selection; no `--model` means the lane default). Admission is a separate
+question from the router recommendation: the allowlist applies whenever the plan window is at or
+below `near_cap_remaining_pct` and a fresh positive balance exists (`credit_balance_present`,
+`credit_use_unconfirmed`, or `credits_unverified` caused by unreadable usage records; the credit
+object carries `allowlist_applies`), so a recent rate limit stops the router recommending the lane
+but never widens the models it may receive. An off-allowlist model then exits 2 with
+`CREDIT_PERIOD_MODEL_REFUSED`. Nothing is gated with a healthy plan window, with a missing, stale
+or non-positive balance (near cap without credits: unchanged), or on other lanes. `--check-budget`
+no longer substitutes away from a lane in `credit_balance_present`. If the policy file is missing, malformed or has an empty
 allowlist, only the built-in default lanes (`credit_lane.DEFAULT_ALLOWED_MODELS`: Codex with the same
 two models, pinned to the shipped yaml by a test) are affected: `capacity_pick` still prints every
 lane, marks Codex `credit.state: policy_error` in its plan state and adds a warning line, and
-admission refuses only off-allowlist Codex dispatches, with a stderr warning; every other lane is
+admission refuses only off-allowlist Codex dispatches (`allowlist_applies` true), with a stderr warning; every other lane is
 admitted as before. Nothing consumes credits or resets.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.

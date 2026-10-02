@@ -10,9 +10,13 @@
 # The router sees a balance, not the provider drawing it: a recent rate limit
 # while the plan window is exhausted reads `credit_use_unconfirmed`. Every
 # other case keeps the lane in its plan state (today's near_cap/AVOID).
-# While a lane reads credit_balance_present, dispatch admission refuses any
-# model outside its `allowed_models` (a dispatch without --model is judged by
-# the lane's default model). With a healthy plan allowance nothing is restricted.
+# Dispatch admission is a separate question from that router state: whenever the
+# plan allowance is at or below the threshold AND a fresh positive credit balance
+# exists (credit_balance_present, credit_use_unconfirmed, or credits_unverified
+# from unreadable usage records), admission refuses any model outside the lane's
+# `allowed_models`, even while the router does not recommend the lane (a
+# dispatch without --model is judged by the lane's default model). With a
+# healthy plan allowance, or no fresh positive balance, nothing is restricted.
 # If this file cannot be read or validated, only the lanes in
 # credit_lane.DEFAULT_ALLOWED_MODELS stay restricted (plan state, built-in
 # allowlist); every other lane is unaffected.

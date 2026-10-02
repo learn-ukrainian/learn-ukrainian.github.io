@@ -5,10 +5,15 @@ The router cannot see the provider draw them: it sees a balance and our own
 runtime outcomes. :func:`lane_credit_state` therefore says only what is known:
 ``credit_balance_present`` (plan at or below the threshold, fresh positive
 balance, and no recent rate limit against it) or a fail-closed state that
-keeps the lane in its plan state (near_cap/AVOID as before).
-:func:`dispatch_refusal` refuses a model outside the lane's credit-period
-allowlist while the lane shows a credit balance; :func:`reset_advice` says
-whether a free full reset is worth using now. The policy lives in
+keeps the lane in its plan state (near_cap/AVOID as before). That state is the
+router's recommendation question only.
+:func:`dispatch_refusal` answers a separate admission question: it refuses a
+model outside the lane's credit-period allowlist whenever the plan window is at
+or below the threshold AND a fresh positive credit balance exists
+(:func:`allowlist_applies`: ``credit_balance_present``, ``credit_use_unconfirmed``
+and ``credits_unverified`` for unreadable usage records all qualify), and under
+``policy_error``, whether or not the router currently recommends the lane;
+:func:`reset_advice` says whether a free full reset is worth using now. The policy lives in
 ``scripts/config/credit_lanes.yaml``. Everything here reads snapshots only:
 nothing consumes credits or resets.
 
@@ -136,6 +141,7 @@ def policy_error_state(lane: str, error: str) -> dict[str, Any]:
         "state": POLICY_ERROR,
         "reason": f"credit-lane policy unreadable ({error}); plan state applies",
         "allowed_models": list(models),
+        "allowlist_applies": True,
     }
 
 
@@ -287,6 +293,7 @@ def lane_credit_state(
         "near_cap_remaining_pct": policy.near_cap_remaining_pct,
         "credit_balance": None,
         "allowed_models": list(models),
+        "allowlist_applies": False,
         "evidence": evidence,
     }
     if remaining is None:
@@ -319,6 +326,9 @@ def lane_credit_state(
     count, last = _rate_limit_evidence(lane, record, policy, current)
     evidence["rate_limited_count"] = count
     evidence["last_rate_limited_at"] = last
+    # A fresh positive balance exists from here on: the admission allowlist applies
+    # whatever the router's recommendation state says about the rate-limit evidence.
+    result["allowlist_applies"] = True
     if count is None:
         return {**result, "state": CREDITS_UNVERIFIED, "reason": "runtime usage records unreadable"}
     if count > 0:
@@ -331,6 +341,19 @@ def lane_credit_state(
         "draw not verified by the router",
         "coverage": {"dispatches": None, "basis": COVERAGE_BASIS},
     }
+
+
+def allowlist_applies(state: dict[str, Any]) -> bool:
+    """True when the credit-period allowlist gates admission for this lane state.
+
+    The admission question, separate from the router recommendation: the plan
+    window is at or below the threshold and a fresh positive balance exists
+    (any of ``credit_balance_present``, ``credit_use_unconfirmed`` and the
+    unreadable-usage ``credits_unverified``), or the policy is unreadable for a
+    default lane. A healthy plan, a missing, stale or zero balance, and lanes
+    outside the policy are not gated.
+    """
+    return state.get("allowlist_applies") is True
 
 
 def _natural_reset(info: dict[str, Any]) -> datetime | None:
@@ -455,7 +478,8 @@ def model_allowed(policy: CreditPolicy, lane: str, model: str | None) -> bool:
 
 def refusal_text(lane: str, model: str | None, state: dict[str, Any], policy: CreditPolicy) -> str:
     return (
-        f"{REFUSAL_CODE}: lane {lane} is {state['state']} ({state.get('reason')}); model {model or '(none)'} "
+        f"{REFUSAL_CODE}: lane {lane} is {state['state']} ({state.get('reason')}); a fresh credit balance "
+        f"exists while the plan window is exhausted, so model {model or '(none)'} "
         f"is outside the credit-period allowlist [{', '.join(policy.lane_models(lane) or ())}] "
         f"({policy.path.name}). Dispatch an allowlisted model or another lane."
     )
@@ -490,12 +514,13 @@ def _policy_error_refusal(lane: str, model: str | None, error: str) -> str | Non
 
 
 def dispatch_refusal(lane: str, model: str | None, *, policy: CreditPolicy | None = None) -> str | None:
-    """Refusal text when ``lane`` shows a credit balance and ``model`` is off its allowlist, else None.
+    """Refusal text when the credit-period allowlist applies to ``lane`` and ``model`` is off it, else None.
 
     ``model`` is the model the dispatch launches (the caller resolves the
     lane default first). The snapshot is read only for an off-allowlist model
-    on a configured lane; an unreadable snapshot leaves the lane in its plan
-    state, so admission is unchanged from before the credit policy. An
+    on a configured lane; an unreadable snapshot gives no evidence of a credit
+    balance, so admission is unchanged from before the credit policy. The
+    allowlist does not depend on the router recommending the lane. An
     unreadable policy restricts only :data:`DEFAULT_ALLOWED_MODELS` lanes.
     """
     lane_key = lane.strip().lower()
@@ -512,6 +537,6 @@ def dispatch_refusal(lane: str, model: str | None, *, policy: CreditPolicy | Non
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     diagnostics = budget.get("diagnostics") if isinstance(budget.get("diagnostics"), dict) else {}
     state = lane_credit_state(lane_key, agents.get(lane_key), policy, snapshot_stale=bool(diagnostics.get("stale")))
-    if state["state"] != CREDIT_BALANCE_PRESENT:
+    if not allowlist_applies(state):
         return None
     return refusal_text(lane_key, model, state, policy)
