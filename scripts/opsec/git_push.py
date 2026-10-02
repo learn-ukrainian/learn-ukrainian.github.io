@@ -6,26 +6,30 @@ destination the ref names, annotated tag names and messages and the whole raw
 messages of every commit reachable from the pushed tips, with the tag names
 and messages embedded in their mergetag headers, are scanned through
 check_texts, except commits reachable from the head of the default branch of
-the catalogue's canonical public repository (already public). That head comes
+the catalogue's canonical public repository (already public), and only when
+every commit object reachable from it hashes to its id. That head comes
 from one GitHub API read per push; nothing is cached between pushes, and
 nothing the destination reports is evidence of what it already has.
 Enumeration ignores replacement objects, grafts and commit-graph files, a
 grafted repository is refused, a shallow one is refused when a boundary commit
-is inside the scan set, and the scan's own git calls run without tracing or
-prompts. File contents are not scanned. Private remotes are
-exempt exactly as is_private decides. The real push runs only after a clean
-scan, without the command-scoped override. Git text from these steps is never
-replayed.
+is inside the scan set, an alternate shallow file is refused, and the scan's
+own git calls run without tracing or prompts. File contents are not scanned.
+Private remotes are exempt exactly as is_private decides. After a clean scan
+of a public destination the real push sends exactly the scanned objects to
+the scanned ref names (explicit <id>:<ref> refspecs), without the
+command-scoped override. Git text from these steps is never replayed.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
 import stat
 import subprocess
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
 
 # Executed by the shim as a file, so imports do not depend on caller cwd.
@@ -45,6 +49,42 @@ GLOBAL_WITH_VALUE = {
 }
 # Push options whose value may be the next argument.
 PUSH_WITH_VALUE = {"-o", "--push-option", "--repo", "--receive-pack", "--exec", "--recurse-submodules"}
+# Every long option of git push (git push -h) and whether it takes a separate
+# value. git also accepts unique abbreviations; the frozen push refuses them so
+# the repository argument is found exactly.
+PUSH_LONG = {
+    "verbose": False,
+    "quiet": False,
+    "repo": True,
+    "all": False,
+    "branches": False,
+    "mirror": False,
+    "delete": False,
+    "tags": False,
+    "dry-run": False,
+    "porcelain": False,
+    "force": False,
+    "force-with-lease": False,
+    "force-if-includes": False,
+    "recurse-submodules": True,
+    "thin": False,
+    "receive-pack": True,
+    "exec": True,
+    "set-upstream": False,
+    "progress": False,
+    "prune": False,
+    "verify": False,
+    "follow-tags": False,
+    "signed": False,
+    "atomic": False,
+    "push-option": True,
+    "ipv4": False,
+    "ipv6": False,
+}
+PUSH_SHORT = set("vqdnfu46o")
+# Options that choose refs or the repository: the preview already expanded them
+# into the frozen refspecs. The upstream (-u) is recorded after the push.
+FROZEN_AWAY = {"repo", "all", "branches", "mirror", "delete", "tags", "follow-tags", "prune", "set-upstream"}
 # Fast-forward, forced update, new ref, up to date, rejected, deleted. Only a
 # deletion publishes nothing: the others are the destination's verdict, which
 # is not evidence of what the real push will send.
@@ -92,14 +132,107 @@ def preview_arguments(rest: list[str]) -> list[str]:
     return ["--dry-run", "--porcelain", "--no-verify", *rest, "--verbose"]
 
 
+@dataclass
+class PushArguments:
+    """git push arguments split for the frozen push."""
+
+    kept: list[str] = field(default_factory=list)  # Options the frozen push keeps, values included.
+    repository: str | None = None
+    dry_run: bool = False
+    quiet: bool = False
+    force_if_includes: bool = False
+
+
+def _refuse_option() -> gate.PublishBlocked:
+    return gate.PublishBlocked(
+        "OPSEC: push option not recognised (abbreviated or unknown); spell git push options in full; push refused."
+    )
+
+
+def push_arguments(rest: list[str]) -> PushArguments:
+    """Split git push arguments into kept options, the repository and the flag states that matter.
+
+    Refspecs are dropped (the frozen push names its own), and so are the
+    options in FROZEN_AWAY. Unknown or abbreviated options are refused.
+    """
+    parsed = PushArguments()
+    positionals: list[str] = []
+    repo_option = None
+    index = 0
+    while index < len(rest):
+        arg = rest[index]
+        index += 1
+        if arg == "--":
+            positionals += rest[index:]
+            break
+        if arg.startswith("--"):
+            name, equals, _ = arg[2:].partition("=")
+            negated = name.startswith("no-") and name[3:] in PUSH_LONG
+            base = name[3:] if negated else name
+            if base not in PUSH_LONG:
+                raise _refuse_option()
+            words = [arg]
+            if PUSH_LONG[base] and not negated and not equals:
+                if index >= len(rest):
+                    raise _refuse_option()
+                words.append(rest[index])
+                index += 1
+            value = words[-1] if len(words) == 2 else arg.partition("=")[2]
+            if base == "repo" and not negated:
+                repo_option = value
+            elif base == "dry-run":
+                parsed.dry_run = not negated
+            elif base == "quiet":
+                parsed.quiet = not negated
+            elif base == "verbose" and not negated:
+                parsed.quiet = False
+            elif base == "force-if-includes":
+                parsed.force_if_includes = not negated
+            if base not in FROZEN_AWAY:
+                parsed.kept += words
+        elif arg.startswith("-") and arg != "-":
+            keep = ""
+            separate: list[str] = []
+            for position, letter in enumerate(arg[1:], start=1):
+                if letter not in PUSH_SHORT:
+                    raise _refuse_option()
+                if letter == "o":
+                    keep += arg[position:]
+                    if position == len(arg) - 1:
+                        if index >= len(rest):
+                            raise _refuse_option()
+                        separate = [rest[index]]
+                        index += 1
+                    break
+                if letter == "n":
+                    parsed.dry_run = True
+                elif letter in "qv":
+                    parsed.quiet = letter == "q"
+                if letter not in "du":
+                    keep += letter
+            if keep:
+                parsed.kept += ["-" + keep, *separate]
+        else:
+            positionals.append(arg)
+    parsed.repository = positionals[0] if positionals else repo_option
+    return parsed
+
+
 def parse_porcelain(output: str) -> list[dict]:
-    """Return one section per destination URL; unknown shapes refuse the push."""
+    """Return one section per destination URL; unknown shapes refuse the push.
+
+    upstreams counts the upstream settings git reports it would make (-u or
+    push.autoSetupRemote), which the frozen push reproduces.
+    """
     sections: list[dict] = []
     for line in output.splitlines():
         if line.startswith("To "):
-            sections.append({"url": line[3:], "updates": []})
-        elif line == "Done" or not line or line.startswith("Would set upstream of "):
-            continue  # --set-upstream reports local configuration, not published text.
+            sections.append({"url": line[3:], "updates": [], "upstreams": 0})
+        elif line.startswith("Would set upstream of "):
+            if sections:
+                sections[-1]["upstreams"] += 1
+        elif line == "Done" or not line:
+            continue
         elif sections and line.count("\t") >= 1 and line[:1] in KNOWN_FLAGS and line[1:2] == "\t":
             flag, refs, *_ = line.split("\t", 2)
             source, separator, target = refs.rpartition(":")
@@ -143,7 +276,8 @@ def scan_environment(environment: dict[str, str]) -> dict[str, str]:
 
     No override, tracing, credential prompts or partial-clone object fetches;
     replacement objects and grafts disabled. A trace2 target of "0" in the environment outranks one set in
-    system or global configuration.
+    system or global configuration. Messages are untranslated, so the preview
+    parses in any locale.
     """
     scrubbed = {
         key: value
@@ -158,6 +292,7 @@ def scan_environment(environment: dict[str, str]) -> dict[str, str]:
         GIT_NO_LAZY_FETCH="1",
         GIT_NO_REPLACE_OBJECTS="1",
         GIT_GRAFT_FILE=os.devnull,
+        LC_ALL="C",
     )
     return scrubbed
 
@@ -258,8 +393,8 @@ class Repository:
             return None
         return result.stdout.decode().strip() or None
 
-    def layout(self) -> tuple[bool, set[str]]:
-        """Whether grafts alter commit parents, and the shallow boundary commits.
+    def layout(self) -> tuple[bool, set[str], str]:
+        """Whether grafts alter commit parents, the shallow boundary commits and the object format.
 
         git's own path resolution names both files, so a linked worktree reads
         the shallow file of the shared repository.
@@ -281,7 +416,7 @@ class Repository:
         grafts, shallow, object_format = output.splitlines()
         if object_format not in ID_LENGTH:
             raise gate.PublishBlocked("OPSEC: repository object format unknown; push refused.")
-        return _grafts_present(grafts), shallow_boundaries(shallow, ID_LENGTH[object_format])
+        return _grafts_present(grafts), shallow_boundaries(shallow, ID_LENGTH[object_format]), object_format
 
 
 class CanonicalPublicRepository:
@@ -406,8 +541,23 @@ def commit_texts(repository: Repository, shas: list[str]) -> list[tuple[str, lis
     message are published with the commit and scanned as its fields.
     Identity lines and signatures are not.
     """
-    output = repository.raw("cat-file", "--batch", stdin="".join(f"{sha}\n" for sha in shas))
     found: list[tuple[str, list[tuple[str, str]]]] = []
+    for sha, raw in zip(shas, read_commits(repository, shas), strict=True):
+        fields, message = split_object(raw, f"commit[{sha[:12]}]")
+        parts = [("message", message)]
+        embedded = [value for key, value in fields if key == b"mergetag"]
+        for number, value in enumerate(embedded, start=1):
+            name = f"mergetag[{number}]"
+            tag_fields, tag_message = split_object(value, f"commit[{sha[:12]}].{name}")
+            parts += [(f"{name}.tagname", tag_name(tag_fields)), (f"{name}.message", tag_message)]
+        found.append((sha, parts))
+    return found
+
+
+def read_commits(repository: Repository, shas: list[str]) -> list[bytes]:
+    """The raw bytes of each commit, in order, from one cat-file batch; anything else refuses."""
+    output = repository.raw("cat-file", "--batch", stdin="".join(f"{sha}\n" for sha in shas))
+    found: list[bytes] = []
     position = 0
     try:
         for sha in shas:
@@ -417,14 +567,7 @@ def commit_texts(repository: Repository, shas: list[str]) -> list[tuple[str, lis
             stop = start + int(size)
             if name != sha or kind != "commit" or output[stop : stop + 1] != b"\n":
                 raise ValueError
-            fields, message = split_object(output[start:stop], f"commit[{sha[:12]}]")
-            parts = [("message", message)]
-            embedded = [value for key, value in fields if key == b"mergetag"]
-            for number, value in enumerate(embedded, start=1):
-                field = f"mergetag[{number}]"
-                tag_fields, tag_message = split_object(value, f"commit[{sha[:12]}].{field}")
-                parts += [(f"{field}.tagname", tag_name(tag_fields)), (f"{field}.message", tag_message)]
-            found.append((sha, parts))
+            found.append(output[start:stop])
             position = stop + 1
     except (ValueError, UnicodeError):
         raise gate.PublishBlocked("OPSEC: push scan commit read malformed; push refused.") from None
@@ -433,13 +576,37 @@ def commit_texts(repository: Repository, shas: list[str]) -> list[tuple[str, lis
     return found
 
 
-def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[str], list[str], list[str]]:
-    """Ref names and annotated tag names and messages one destination receives, and the commits its refs name.
+def history_verified(repository: Repository, head: str, object_format: str) -> bool:
+    """Whether every commit the walk from head reaches has bytes that hash to its id.
 
-    The name inside a tag object (its tag header) is published with it and can
-    differ from the ref it is pushed to, so every tag object on the way from
-    a pushed ref to its target, nested tags included, has its name scanned.
-    Only commits are ever excluded as already public; these texts are always scanned.
+    git trusts stored bytes without rehashing them, and a local or alternate
+    object store can hold altered bytes under a genuine id. A commit whose bytes
+    match its id records its parents' true ids, so when every commit reached
+    from the authoritative head verifies, the walk is the true public history.
+    A missing or unreadable commit counts as unverified.
+    """
+    try:
+        shas = repository.text("rev-list", head).split()
+        objects = read_commits(repository, shas)
+    except gate.PublishBlocked:
+        return False
+    return bool(shas) and all(
+        hashlib.new(object_format, b"commit %d\0" % len(raw) + raw).hexdigest() == sha
+        for sha, raw in zip(shas, objects, strict=True)
+    )
+
+
+def published_refs(
+    repository: Repository, updates: list[tuple], objects: dict[str, str]
+) -> tuple[list[str], list[str], list[str]]:
+    """Ref names and annotated tag names and messages the push publishes, and the commits its refs name.
+
+    objects maps each pushed source to the object it resolved to, once; the
+    frozen push sends exactly those objects. The name inside a tag object (its
+    tag header) is published with it and can differ from the ref it is pushed
+    to, so every tag object on the way from a pushed ref to its target, nested
+    tags included, has its name scanned. Only commits are ever excluded as
+    already public; these texts are always scanned.
     """
     texts: list[str] = []
     names: list[str] = []
@@ -451,9 +618,7 @@ def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[s
         kind, short = _short_ref(target)
         texts.append(short)
         names.append(f"{kind}[{number}].name")
-        current = repository.object(source)
-        if current is None:
-            raise gate.PublishBlocked("OPSEC: pushed object unresolved; push refused.")
+        current = objects[source]
         while repository.text("cat-file", "-t", current).strip() == "tag":
             fields, message = split_object(repository.raw("cat-file", "tag", current), f"tag[{current[:12]}]")
             if current not in seen_tags:
@@ -471,39 +636,164 @@ def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[s
     return texts, names, tips
 
 
-def public_history(repository: Repository, client) -> tuple[str | None, bool]:
-    """(head, present): the canonical public default-branch head, and whether its commit is here.
+def public_history(repository: Repository, client, object_format: str) -> tuple[str | None, str]:
+    """(head, state): the canonical public default-branch head, and whether it may exclude history.
 
-    Object ids are content addressed and a commit id covers its parents' ids,
-    so every commit reachable from the authoritative public head is public, and
-    no local ref, URL rewrite or object can make a commit look reachable from
-    it without a hash collision (replacement objects, grafts and commit-graph
-    files are off). A shallow boundary only removes parents, so it can only
-    make the excluded history smaller and the scan set larger (see
-    scan_push). No answer, or a head
-    that is not here (never fetched, as GIT_NO_LAZY_FETCH holds), excludes
-    nothing.
+    Only "present" excludes: the head's commit is here and every commit
+    reachable from it hashes to its id (history_verified). Object ids are
+    content addressed and a commit id covers its parents' ids, so that walk is
+    the public history, and no local ref, URL rewrite, altered object or
+    alternate object store can put a commit inside it without a hash collision
+    (replacement objects, grafts and commit-graph files are off). A shallow
+    boundary only removes parents, so it can only make the excluded history
+    smaller and the scan set larger (see scan_push). No answer ("unavailable"),
+    a head that is not here ("absent here"; never fetched, as GIT_NO_LAZY_FETCH
+    holds) or history whose bytes do not match their ids ("unverified here")
+    excludes nothing.
     """
     head = client.default_head() if client is not None else None
-    present = head is not None and repository.object(f"{head}^{{commit}}") == head
-    return head, present
+    if head is None:
+        return None, "unavailable"
+    # cat-file -t reads the stored type without rehashing, so altered bytes report unverified, not absent.
+    if repository.run("cat-file", "-t", head).stdout.strip() != b"commit":
+        return head, "absent here"
+    return head, "present" if history_verified(repository, head, object_format) else "unverified here"
 
 
-def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, public_repository=None) -> None:
-    """Raise PublishBlocked unless every public text of this push is clean, already public or overridden.
+@dataclass
+class Delivery:
+    """The push that runs after a clean scan of a public destination: exactly the scanned objects and names."""
 
-    public_repository reports the canonical public default-branch head; by
-    default it is built from the catalogue, and only when the push sends commits.
+    git: list[str]  # The real git and the caller's global options.
+    argv: list[str]  # The frozen push; empty when the push names no refs.
+    status: int = 0  # The preview's exit status, returned when nothing is sent.
+    remote: str = ""
+    upstreams: list[tuple[str, str]] = field(default_factory=list)  # (local branch, destination ref).
+    rebase: bool = False
+    quiet: bool = False
+
+
+def merged_updates(sections: list[dict]) -> list[tuple]:
+    """The one ref list every destination of the push receives.
+
+    The frozen push names the remote once, so every push URL must receive the
+    same refs (a matching push can differ per URL). An update forced for any
+    URL stays forced.
+    """
+    pairs = [sorted((source, target) for _, source, target in section["updates"]) for section in sections]
+    if any(pair != pairs[0] for pair in pairs):
+        raise gate.PublishBlocked(
+            "OPSEC: the push's destinations would receive different refs; push each destination with "
+            "explicit refspecs; push refused."
+        )
+    forced = {(source, target) for section in sections for flag, source, target in section["updates"] if flag == "+"}
+    return [
+        ("+" if (source, target) in forced else flag, source, target) for flag, source, target in sections[0]["updates"]
+    ]
+
+
+def upstream_branches(repository: Repository, updates: list[tuple]) -> list[tuple[str, str]]:
+    """(local branch, destination ref) pairs git push -u would record, by git's set_upstreams rule.
+
+    Both sides must be branches, a symbolic source (HEAD) counts as the branch
+    it names, and deletions and rejected updates record nothing.
+    """
+    found = []
+    for flag, source, target in updates:
+        if flag in {"-", "!"} or not source or not target.startswith("refs/heads/"):
+            continue
+        symbolic = repository.run("symbolic-ref", "-q", source)
+        local = symbolic.stdout.decode("utf-8", "replace").strip() if symbolic.returncode == 0 else source
+        if local.startswith("refs/heads/"):
+            found.append((local[len("refs/heads/") :], target))
+    return found
+
+
+def freeze(
+    repository: Repository, global_options: list[str], rest: list[str], sections: list[dict], status: int
+) -> tuple[list[tuple], dict[str, str], Delivery]:
+    """The updates, the object each pushed source resolves to, and the frozen push.
+
+    The real push names every update as an explicit <id>:<ref> refspec (with +
+    when the preview reported a forced update, :<ref> for a deletion), so a
+    ref moved by another process, or a destination that gains a matching
+    branch, after the preview cannot change what is sent. Ref-selecting
+    options are dropped (the refspecs replace them) and --no-follow-tags
+    stops push.followTags adding tags. git records no upstream for an id
+    source, so the upstreams git reported are recorded after the push. Forms
+    that cannot be frozen are refused: no named remote, --force-if-includes
+    (it needs the local branch as the source) and abbreviated options.
+    """
+    updates = merged_updates(sections)
+    arguments = push_arguments(rest)
+    if arguments.repository is None:
+        raise gate.PublishBlocked(
+            "OPSEC: a scanned push names its remote (git push <remote> [<refspec>...]); push refused."
+        )
+    if arguments.force_if_includes:
+        raise gate.PublishBlocked(
+            "OPSEC: --force-if-includes cannot apply to the frozen push; use "
+            "--force-with-lease=<ref>:<expected id>; push refused."
+        )
+    objects: dict[str, str] = {}
+    for flag, source, _ in updates:
+        if flag != "-" and source and source not in objects:
+            resolved = repository.object(source)
+            if resolved is None:
+                raise gate.PublishBlocked("OPSEC: pushed object unresolved; push refused.")
+            objects[source] = resolved
+    upstreams: list[tuple[str, str]] = []
+    if any(section["upstreams"] for section in sections):
+        for section in sections:
+            if len(upstream_branches(repository, section["updates"])) != section["upstreams"]:
+                raise gate.PublishBlocked(
+                    "OPSEC: the upstream git would set cannot be reproduced for the frozen push; push without "
+                    "-u and set it with git branch --set-upstream-to; push refused."
+                )
+        upstreams = [] if arguments.dry_run else upstream_branches(repository, updates)
+    rebase = ""
+    if upstreams:
+        rebase = repository.run("config", "--get", "branch.autoSetupRebase").stdout.decode().strip().lower()
+    refspecs = [
+        f":{target}" if flag == "-" or not source else f"{'+' if flag == '+' else ''}{objects[source]}:{target}"
+        for flag, source, target in updates
+    ]
+    git = [repository.base[0], *global_options]
+    argv = [*git, "push", *arguments.kept, "--no-follow-tags", arguments.repository, "--", *refspecs]
+    delivery = Delivery(
+        git=git,
+        argv=argv if refspecs else [],
+        status=status,
+        remote=arguments.repository,
+        upstreams=upstreams,
+        rebase=rebase in {"always", "remote"},
+        quiet=arguments.quiet,
+    )
+    return updates, objects, delivery
+
+
+def scan_push(
+    real_git: str, argv: list[str], environment: dict[str, str], *, public_repository=None
+) -> Delivery | None:
+    """The frozen push to run, or None to run the caller's push unchanged (no public destination).
+
+    Raises PublishBlocked unless every public text of this push is clean,
+    already public or overridden. public_repository reports the canonical
+    public default-branch head; by default it is built from the catalogue, and
+    only when the push sends commits.
     """
     global_options, command, rest = split_command(argv)
     if command != "push":
-        return
+        return None
     index = 0
     while index < len(global_options):
         if global_options[index] == "--shallow-file":
             # The scan reads the repository's own shallow file; another one would go unchecked.
             raise gate.PublishBlocked("OPSEC: --shallow-file is not supported for a scanned push; push refused.")
         index += 2 if global_options[index] in GLOBAL_WITH_VALUE else 1
+    if "GIT_SHALLOW_FILE" in environment:
+        # git walks the file this names, while git rev-parse --git-path still names the repository's own.
+        raise gate.PublishBlocked("OPSEC: GIT_SHALLOW_FILE is not supported for a scanned push; push refused.")
     repository = Repository(real_git, global_options, environment)
     preview = repository.run("push", *preview_arguments(rest), timeout=300)
     sections = parse_porcelain(preview.stdout.decode("utf-8", "replace"))
@@ -512,30 +802,25 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
         raise gate.PublishBlocked(f"OPSEC: push preview failed (exit {preview.returncode}); push refused.")
     public: list[str] = []
     private: list[str] = []
-    texts: list[str] = []
-    names: list[str] = []
-    tips: list[str] = []
     for section in sections:
         # git prints its own push URL (after insteadOf and pushInsteadOf) without userinfo.
         dest = destination(section["url"])
-        if gate.is_private(dest):
-            private.append(dest)
-            continue
-        public.append(dest)
-        found, labels, pushed = published_refs(repository, section["updates"])
-        texts += found
-        names += labels
-        tips += pushed
+        (private if gate.is_private(dest) else public).append(dest)
+    if not public:
+        gate.check_texts(private[0], [], environment=environment)  # Records a supplied override.
+        return None
+    updates, objects, delivery = freeze(repository, global_options, rest, sections, preview.returncode)
+    texts, names, tips = published_refs(repository, updates, objects)
     owners: list[str] = []  # The commit each commit text belongs to, from texts[first] on.
-    head, present = None, False
+    head, state = None, "unavailable"
     if tips:
-        grafted, boundaries = repository.layout()
+        grafted, boundaries, object_format = repository.layout()
         if grafted:
             raise gate.PublishBlocked("OPSEC: grafted history present; push refused.")
         if public_repository is None:
             public_repository = CanonicalPublicRepository.from_catalog(environment)
-        head, present = public_history(repository, public_repository)
-        exclusion = f"^{head}\n" if present else ""
+        head, state = public_history(repository, public_repository, object_format)
+        exclusion = f"^{head}\n" if state == "present" else ""
         stdin = "".join(f"{sha}\n" for sha in tips) + exclusion
         pending = repository.text("rev-list", "--stdin", stdin=stdin).split()
         # git walks a shallow boundary commit as parentless. That truncates the
@@ -555,36 +840,52 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
                 "(git fetch --unshallow); push refused."
             )
         for sha, parts in commit_texts(repository, pending):
-            for field, text in parts:
+            for part, text in parts:
                 texts.append(text)
-                names.append(f"commit[{sha[:12]}].{field}")
+                names.append(f"commit[{sha[:12]}].{part}")
                 owners.append(sha)
-        state = "present" if present else "absent here" if head else "unavailable"
         print(
             f"OPSEC: push scan: {len(pending)} commit(s) scanned; public default-branch head {state} "
             f"({getattr(public_repository, 'calls', 0)} public repository call(s)).",
             file=sys.stderr,
         )
     first = len(texts) - len(owners)
-    label = ",".join(dict.fromkeys(public)) if public else private[0]
     try:
-        gate.check_texts(label, texts, environment=environment, field_names=names)
+        gate.check_texts(",".join(dict.fromkeys(public)), texts, environment=environment, field_names=names)
     except gate.PublishBlocked as error:
         older = {owners[index - first] for index in error.indices if index >= first} - set(tips)
-        if head is not None and not present and older:
+        if state == "absent here" and older:
             raise gate.PublishBlocked(
                 f"{error} Hits are in history older than the pushed tips and the public default-branch "
                 "head is not in this repository: fetching the public default branch lets the scan skip "
                 "history that is already public."
             ) from None
         raise
+    return delivery
 
 
-def main(argv: list[str] | None = None, *, execute=os.execve, public_repository=None) -> int:
+def record_upstreams(delivery: Delivery, environment: dict[str, str], run) -> None:
+    """Record each upstream as git push -u does (install_branch_config), once the whole push succeeded."""
+    for local, merge in delivery.upstreams:
+        settings = [(f"branch.{local}.remote", delivery.remote), (f"branch.{local}.merge", merge)]
+        if delivery.rebase:
+            settings.append((f"branch.{local}.rebase", "true"))
+        if any(
+            run([*delivery.git, "config", "--replace-all", key, value], env=environment, check=False).returncode
+            for key, value in settings
+        ):
+            print("OPSEC: pushed; an upstream branch configuration was not written.", file=sys.stderr)
+        elif not delivery.quiet:
+            short = merge[len("refs/heads/") :]
+            suffix = " by rebasing" if delivery.rebase else ""
+            print(f"branch '{local}' set up to track '{delivery.remote}/{short}'{suffix}.")
+
+
+def main(argv: list[str] | None = None, *, execute=os.execve, run=subprocess.run, public_repository=None) -> int:
     real_git, *args = sys.argv[1:] if argv is None else argv
     environment = dict(os.environ)
     try:
-        scan_push(real_git, args, environment, public_repository=public_repository)
+        delivery = scan_push(real_git, args, environment, public_repository=public_repository)
     except gate.PublishBlocked as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -592,8 +893,19 @@ def main(argv: list[str] | None = None, *, execute=os.execve, public_repository=
         print("OPSEC: push scan unavailable; push refused.", file=sys.stderr)
         return 2
     environment.pop("LU_OPSEC_OVERRIDE", None)
-    execute(real_git, [real_git, *args], environment)
-    return 0
+    if delivery is None:
+        execute(real_git, [real_git, *args], environment)
+        return 0
+    if not delivery.argv:
+        print("OPSEC: the push names no refs; nothing sent.", file=sys.stderr)
+        return delivery.status
+    if not delivery.upstreams:
+        execute(real_git, delivery.argv, environment)
+        return 0
+    status = run(delivery.argv, env=environment, check=False).returncode
+    if status == 0:
+        record_upstreams(delivery, environment, run)
+    return status
 
 
 if __name__ == "__main__":

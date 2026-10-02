@@ -93,7 +93,7 @@ labels, timeline, reviews, commits, comment, checks, jobs, issues, runs,
 deployments and deployment-statuses. GraphQL helpers build their own read-only
 documents for issue-parent, membership, subissues, subissues-next,
 subissue-batch, membership-head, queue-snapshot, queue-status, budget,
-issue-scope, issue-states, merge-facts, pr-bases and default-head. Caller values are variables or JSON-escaped
+issue-scope, issue-states, merge-facts, pr-bases, default-head and squash-text. Caller values are variables or JSON-escaped
 selectors, never documents or endpoints.
 
 A raw write is admitted only under a known write grammar to an allowlisted
@@ -148,10 +148,24 @@ composes the default itself, so for queued repositories the defaults are
 scanned as `default_subject` and `default_body` as well. A changed head or an
 unreadable default refuses the merge.
 
-Known race: the head pin freezes commits, not metadata. A PR title or body
-edited after the default squash text is read, but before GitHub composes a
-queued merge, is published unscanned. Explicit (non-queued) merges send the
-scanned text and are not affected.
+Queued text after enqueue. The head pin freezes commits, not metadata, and
+GitHub's `enqueuePullRequest` mutation takes no commit text (its inputs are
+the pull request, `expectedHeadOid` and `jump`): the queue composes the squash
+from the PR's title and body when it builds the merge group. Three layers
+cover a title or body that changes after enqueue. Every agent edit of them goes
+through the publisher (`pr-edit`), which scans it, and raw `gh` writes are
+refused. The merge queue keeper (`scripts/orchestration/merge_queue_keeper.py`,
+every five minutes) re-reads each queued PR's default squash subject and body,
+and the message of the queue entry's head commit once GitHub reports one,
+through the `squash-text` read, and dequeues the PR on a blocking finding
+(`revoked: squash-text-blocked`, no text quoted). A read or matcher failure is
+reported as `squash text unverified` and does not dequeue. Residual, controlled
+only by GitHub (owner: the operator, for any repository-setting or GitHub-side
+change): an edit made outside agent tooling (the web interface or another app)
+after the last scan reaches the temporary `gh-readonly-queue/*` branch when
+GitHub composes the merge group, and lands on `main` if the queue merges it
+before the next keeper run. Explicit (non-queued) merges send the scanned text
+and are not affected.
 
 ## git push
 
@@ -203,11 +217,19 @@ characters, and the reply has no GraphQL `errors`. A failure, timeout (10
 seconds), 404, 403 or rate limit, a truncated or malformed body, or any
 mismatch excludes nothing, and the scan covers all reachable history.
 
-When the head commit is present locally, the scan set is
-`git rev-list <pushed tips> ^<public head>`. Object ids are content addressed
-and a commit id covers its parents' ids, so every commit reachable from the
-authoritative public head is public; no local ref, URL rewrite or object can
-put a commit inside that history without a hash collision. Ancestry is read
+When the head commit is present locally and its history verifies, the scan
+set is `git rev-list <pushed tips> ^<public head>`. Object ids are content
+addressed and a commit id covers its parents' ids, so every commit reachable
+from the authoritative public head is public, provided the bytes git reads
+under each id are the bytes that id names. git does not rehash stored objects
+when it walks history, and the local store or an alternate object store
+(`objects/info/alternates`, `GIT_ALTERNATE_OBJECT_DIRECTORIES`) could hold
+altered bytes under a genuine id. So before excluding anything the scan reads
+every commit reachable from the public head and checks that its bytes hash to
+its id (SHA-1 or SHA-256, per the repository's object format). If any commit
+fails or is missing, the head is reported `unverified here` and nothing is
+excluded. With verified history, no local ref, URL rewrite, altered object or
+alternate store can put a commit inside that history without a hash collision. Ancestry is read
 from the commit objects themselves: replacement objects, grafts and
 commit-graph files (a local cache of parents that git does not rehash) are
 off, a grafted repository is refused, a shallow one is refused only when a
@@ -224,7 +246,7 @@ tips, the refusal adds that fetching the public default branch lets the scan
 skip history that is already public. Refusals are unchanged otherwise: rule,
 class, field and line of each hit, never the matched text, with the same
 single-use logged override. Every push that sends commits prints one line with
-the number of commits scanned, whether the public head was present, absent or
+the number of commits scanned, whether the public head was present, unverified, absent or
 unavailable, and the number of public-repository calls (one).
 
 **What the scan reads.** Every enumeration runs with replacement objects
@@ -251,8 +273,9 @@ history it truncates is never larger than the true public history, and any
 commit the push sends but the walk misses lies behind a boundary that is itself
 in the scan set. An unreadable, non-regular or malformed shallow file (any line
 that is not exactly one lowercase commit id of the repository's object format)
-refuses the push, and so does git's `--shallow-file` option, which would swap
-the file the push reads.
+refuses the push, and so do git's `--shallow-file` option and the
+`GIT_SHALLOW_FILE` environment variable, which swap the file git walks while
+`git rev-parse --git-path shallow` still names the repository's own.
 
 **What the scan writes.** The scan's own git calls drop `GIT_TRACE*` and
 `GIT_CURL_VERBOSE`, set `GIT_TRACE2`, `GIT_TRACE2_EVENT` and `GIT_TRACE2_PERF`
@@ -271,12 +294,33 @@ line, or only the failing phase and exit code; git's own output from these
 steps is never replayed. The same single-use, logged `LU_OPSEC_OVERRIDE`
 applies; the real git does not receive it. File contents are not scanned.
 
-Cost on this repository (9,502 commits reachable from the measured branch
-tip; real `default-head` read, dry-run preview to the real remote, nothing
-pushed): an agent branch with 10 new commits on the public base took 1.05 to
-1.21 seconds end to end, of which git's own dry-run preview was 0.62 seconds,
-the one API read 0.45 seconds, and enumeration, reading and matching 0.05
-seconds. With the public head absent locally the push scanned all 9,502
+**What the real push sends.** For a public destination the real push is not
+the caller's command line re-run: git would resolve the refs again, so a
+branch moved by another process after the scan, or a destination that gained
+a matching branch, would publish unscanned text. Instead every update the
+preview reported is resolved once, scanned, and sent as an explicit refspec:
+`<id>:<ref>` (`+<id>:<ref>` where the preview reported a forced update,
+`:<ref>` for a deletion), after the caller's remaining options,
+`--no-follow-tags` (so `push.followTags` adds nothing) and the named remote.
+Ref-selecting options (`--all`, `--branches`, `--mirror`, `--tags`,
+`--follow-tags`, `--prune`, `--delete`, `--repo`) are replaced by those
+refspecs. git records no upstream for an id source, so when the preview
+reports upstreams (`-u`, `--set-upstream` or `push.autoSetupRemote`) the
+scanner records the same `branch.<name>.remote`, `.merge` and, under
+`branch.autoSetupRebase`, `.rebase` settings after the whole push succeeds; a
+partly failed push records none. Forms that cannot be frozen are refused: a
+push that does not name its remote, `--force-if-includes` (it needs the local
+branch as the source; `--force-with-lease=<ref>:<expected id>` works),
+abbreviated or unknown options, and a remote whose push URLs would receive
+different refs. A private destination runs the caller's push unchanged.
+
+Cost on this repository (9,522 commits on the public default branch; real
+`default-head` read, dry-run preview to the real remote, nothing pushed): an
+agent branch with 12 new commits on the public base took 1.60 seconds end to
+end, of which verifying the public history took 0.38 to 0.49 seconds; the same
+push without that verification took 1.07 to 1.15 seconds. Verification grows
+linearly with the public history (about 0.04 to 0.05 seconds per thousand commits
+here) and is paid only when the public head is present. With the public head absent locally the push scanned all 9,502
 commits in 12.4 to 12.6 seconds with one API call and was refused on hits in
 already-public history, with the fetch hint. That case is bounded by matching
 every message in the history; it grows with the history and is paid only by a
@@ -286,12 +330,9 @@ Known gaps: git aliases that expand to push, absolute git paths, `git-push`
 called from the exec path, submodule pushes from `--recurse-submodules`,
 and note blobs under `refs/notes/` are not scanned.
 An ssh host alias that does not name the hosted domain is scanned as public.
-A local ref moved by another process between the scan and the push is not
-rescanned. For matching refspecs (`:` or `push.default=matching`) the set of
-refs comes from the preview's negotiation with the destination, so a
-destination that gains a matching branch between the preview and the push can
-receive that branch unscanned; explicit refspecs, `--all`, `--tags` and
-`--mirror` name their refs locally. History is excluded only while GitHub
+The frozen push names the remote, so its push URLs are resolved again from
+configuration when it runs; a remote reconfigured between the preview and the
+push is not rescanned. History is excluded only while GitHub
 answers; otherwise the scan is full. The answer is as trustworthy as the `gh`
 executable and its configuration, which every publisher already relies on. For the guarded non-push commands (`checkout` and `switch`
 under `AGENT_NO_MERGE=1`) the shim fails closed when its guard interpreter
