@@ -959,6 +959,21 @@ treated as clear. Both set `incomplete_run_reason` (`background_jobs_alive_at_ex
 `needs_finalize`, never `done`, in every mode, read-only included. Such a run is never
 auto-finalized. Detection does not kill anything.
 
+A Cursor dispatch usually leaves one such process: cursor-agent (checked in 2026.09.26 to
+2026.10.01) starts a `worker-server` for the workspace's Git root, inside the CLI's process
+group and with the CLI's environment, and does not stop it when the CLI exits. The server
+exits on its own 300 s after its last request. It is a shared daemon: a later cursor-agent
+for the same root, from any session, reuses its socket, and that can happen after any check
+the adapter could make, so no stop request can be proven safe. The adapter therefore never
+stops it (#9534). A run shorter than that idle window ends with the server in the worker's
+scope (scope mode) or carrying the worker's task marker in its session (`popen-fallback`),
+so the exit scan reports it as `live` and the run is `needs_finalize`. The derived user bus
+above lets headless dispatches use scope mode. A dispatch that still falls back to
+`popen-fallback` because no user manager is reachable keeps that fail-closed report for the
+Cursor server too: the fallback scan cannot tell a shared server from any other leftover,
+and reporting is the safe answer. Stopping it is the reaper's job at worktree removal, under
+the checks below, not the adapter's.
+
 When that worktree is later removed (settle, `reap_worktrees.py`,
 `fleet/post_task_reap.py`), those processes are stopped first, and only inside the worker's
 own scope. The recorded scope must match the task's launch record (task id, `run_nonce`,

@@ -28,15 +28,10 @@ import json
 import logging
 import os
 import re
-import secrets
-import socket
-import struct
 import subprocess
-import time
 import urllib.error
 import urllib.request
 from collections.abc import Mapping
-from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -110,38 +105,6 @@ _MODEL_ID_KEYS = ("id", "modelId", "model_id", "name")
 # tool_config key delegate sets only after admitting a Cursor Auto dispatch as a
 # well-defined coding task (operator decision 2026-09-30, #9274).
 CURSOR_AUTO_ADMITTED_KEY = "cursor_auto_admitted"
-
-# The ``--workspace`` value, this invocation's marker and its start (boot
-# clock ticks), kept on the plan for ``cleanup_invocation``.
-_META_WORKSPACE = "cursor_workspace"
-_META_INVOCATION_ID = "cursor_invocation_id"
-_META_STARTED_TICKS = "cursor_invocation_started_ticks"
-
-# cursor-agent (checked in 2026.09.26, 2026.09.28 and 2026.10.01) starts
-# ``<node> <index.js> worker-server`` for codebase indexing and the TypeScript
-# language server. Its ``cwd`` is the enclosing Git root of the
-# ``--workspace`` path (the nearest directory, below the filesystem root,
-# holding a ``.git`` entry; the workspace itself when there is none), it is
-# ``detached: false`` (so inside the CLI's own process group), its
-# environment is the CLI's own plus ``AGENT_CLI_SOCKET_PATH``, a socket
-# derived from that root. A later CLI for the same root reuses that socket
-# instead of starting another server. The server is not stopped when the CLI
-# exits: it exits on its own 300 s after its last request, or when it is sent
-# ``POST /kill`` on that socket. A run shorter than that leaves it alive for
-# the dispatch's exit scan, which rightly counts it as a leftover of the run
-# (#9534).
-#
-# Cleanup contacts only a server proven to be this invocation's: its
-# environment carries this invocation's ``LU_CURSOR_INVOCATION_ID`` (set for
-# the CLI and inherited by the server) and it started after the invocation
-# was planned. While another live Cursor CLI without that marker works on
-# the same root it may be using the server, so the server is left alone.
-# Anything unproven is left running for the exit scan to report.
-_WORKER_SERVER_ARG = "worker-server"
-_WORKER_SOCKET_ENV = b"AGENT_CLI_SOCKET_PATH"
-_INVOCATION_ENV = "LU_CURSOR_INVOCATION_ID"
-_WORKER_STOP_TIMEOUT_S = 3.0
-_WORKER_STOP_POLL_S = 0.05
 
 
 def _effective_cursor_mode(mode: str, config: dict) -> str | None:
@@ -335,8 +298,7 @@ class CursorAdapter:
                 cmd.append("--approve-mcps")
             cmd.extend(["--force", "--sandbox", "disabled"])
 
-        invocation_id = secrets.token_hex(16)
-        env_overrides: dict[str, str] = {"LU_ENTIRE_CAPTURE_OWNER": "fleet", _INVOCATION_ENV: invocation_id}
+        env_overrides: dict[str, str] = {"LU_ENTIRE_CAPTURE_OWNER": "fleet"}
         if "CURSOR_API_KEY" not in os.environ:
             file_key = _load_cursor_api_key_from_env_file()
             if file_key:
@@ -353,31 +315,10 @@ class CursorAdapter:
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model_known": "false",
-                },
-                _META_WORKSPACE: workspace,
-                _META_INVOCATION_ID: invocation_id,
-                _META_STARTED_TICKS: _boot_ticks(),
+                }
             },
             host_harness="cursor-headless",
         )
-
-    def cleanup_invocation(self, plan: InvocationPlan) -> None:
-        """Stop the worker server this invocation's CLI left for its workspace (#9534).
-
-        Without the workspace, the marker and the start of this invocation
-        ownership cannot be proven, so nothing is contacted.
-        """
-        workspace = plan.metadata.get(_META_WORKSPACE)
-        invocation_id = plan.metadata.get(_META_INVOCATION_ID)
-        started_ticks = plan.metadata.get(_META_STARTED_TICKS)
-        if (
-            isinstance(workspace, str)
-            and workspace
-            and isinstance(invocation_id, str)
-            and invocation_id
-            and type(started_ticks) is int
-        ):
-            stop_cursor_worker_servers(Path(workspace), invocation_id=invocation_id, started_ticks=started_ticks)
 
     def _should_approve_mcps(self, config: dict, *, default: bool) -> bool:
         if config.get("approve_mcps") is False:
@@ -646,260 +587,6 @@ class CursorAdapter:
         """Cursor writes to stdout; no separate liveness files."""
         _ = plan
         return ()
-
-
-@dataclass(frozen=True)
-class WorkerServer:
-    """One Cursor worker server: its process identity and the socket it serves."""
-
-    pid: int
-    start_ticks: int
-    socket_path: str
-
-
-class _NotOurServer(Exception):
-    """The socket's peer is not the worker server that was found."""
-
-
-def _boot_ticks() -> int | None:
-    """Clock ticks since boot, on the clock ``/proc/<pid>/stat`` start times use."""
-    try:
-        return time.clock_gettime_ns(time.CLOCK_BOOTTIME) * os.sysconf("SC_CLK_TCK") // 1_000_000_000
-    except (AttributeError, OSError, ValueError):
-        return None
-
-
-def _proc_start(entry: Path) -> tuple[str, int] | None:
-    """``(state, start ticks)`` from ``/proc/<pid>/stat``; ``None`` when it is gone."""
-    try:
-        text = (entry / "stat").read_text(encoding="ascii", errors="replace")
-    except OSError:
-        return None
-    fields = text[text.rfind(")") + 2 :].split()
-    try:
-        return fields[0], int(fields[19])
-    except (IndexError, ValueError):
-        return None
-
-
-def _same_process(entry: Path, start_ticks: int) -> bool:
-    """Whether ``entry`` is still the live process that started at ``start_ticks``."""
-    current = _proc_start(entry)
-    return current is not None and current[0] != "Z" and current[1] == start_ticks
-
-
-def cursor_workspace_root(workspace: Path) -> Path:
-    """The directory cursor-agent runs the worker server of ``workspace`` in.
-
-    Mirrors the CLI: the nearest directory, from ``workspace`` up to but not
-    including the filesystem root, that holds a ``.git`` entry; ``workspace``
-    itself when there is none.
-    """
-    workspace = Path(os.path.abspath(workspace))
-    current = workspace
-    while True:
-        if os.path.exists(current / ".git"):
-            return current
-        parent = current.parent
-        if parent == current or parent == Path(current.anchor):
-            return workspace
-        current = parent
-
-
-def _env_value(environ: list[bytes], name: bytes) -> bytes | None:
-    prefix = name + b"="
-    return next((item[len(prefix) :] for item in environ if item.startswith(prefix)), None)
-
-
-def find_cursor_worker_servers(
-    workspace: Path,
-    *,
-    invocation_id: str,
-    started_ticks: int,
-    proc_root: Path = Path("/proc"),
-) -> list[WorkerServer]:
-    """This invocation's live Cursor worker servers for ``workspace``.
-
-    A worker server is a process of this uid whose last argument is
-    ``worker-server``, whose ``cwd`` is the workspace's Git root and whose
-    environment has ``AGENT_CLI_SOCKET_PATH``. It is this invocation's only
-    when its environment also carries ``invocation_id`` and it started at or
-    after ``started_ticks``. Processes that cannot be read are skipped.
-    """
-    if not invocation_id:
-        return []
-    marker = invocation_id.encode()
-    try:
-        target = cursor_workspace_root(workspace).resolve()
-        entries = [entry for entry in proc_root.iterdir() if entry.name.isdigit()]
-    except OSError:
-        return []
-    uid = os.getuid()
-    found: list[WorkerServer] = []
-    for entry in entries:
-        try:
-            if entry.stat().st_uid != uid:
-                continue
-            argv = (entry / "cmdline").read_bytes().rstrip(b"\0").split(b"\0")
-            if argv[-1] != _WORKER_SERVER_ARG.encode():
-                continue
-            if Path(os.readlink(entry / "cwd")) != target:
-                continue
-            environ = (entry / "environ").read_bytes().split(b"\0")
-        except OSError:
-            continue
-        socket_path = _env_value(environ, _WORKER_SOCKET_ENV)
-        if not socket_path or _env_value(environ, _INVOCATION_ENV.encode()) != marker:
-            continue
-        start = _proc_start(entry)
-        if start is None or start[0] == "Z" or start[1] < started_ticks:
-            continue
-        found.append(WorkerServer(int(entry.name), start[1], os.fsdecode(socket_path)))
-    return found
-
-
-def _is_cursor_cli(argv: list[bytes]) -> bool:
-    """Whether ``argv`` runs the cursor-agent CLI bundle (``<install>/index.js``)."""
-    for arg in argv:
-        path = Path(os.fsdecode(arg))
-        if path.name == "index.js" and path.is_absolute() and (path.parent / "cursor-agent").is_file():
-            return True
-    return False
-
-
-def _cli_workspace(argv: list[bytes], cwd: Path) -> Path:
-    """The workspace a cursor-agent CLI runs on: ``--workspace``, else its ``cwd``."""
-    for index, arg in enumerate(argv):
-        if arg == b"--workspace" and index + 1 < len(argv):
-            return cwd / os.fsdecode(argv[index + 1])
-        if arg.startswith(b"--workspace="):
-            return cwd / os.fsdecode(arg[len(b"--workspace=") :])
-    return cwd
-
-
-def other_cursor_clients(workspace: Path, *, invocation_id: str, proc_root: Path = Path("/proc")) -> list[int]:
-    """Pids of live cursor-agent CLIs of this uid, not from this invocation, on the same Git root.
-
-    Such a CLI reaches the same worker server socket, so it may be using a
-    server this invocation started.
-    """
-    marker = invocation_id.encode()
-    try:
-        target = cursor_workspace_root(workspace).resolve()
-        entries = [entry for entry in proc_root.iterdir() if entry.name.isdigit()]
-    except OSError:
-        return []
-    uid = os.getuid()
-    clients: list[int] = []
-    for entry in entries:
-        try:
-            if entry.stat().st_uid != uid:
-                continue
-            argv = (entry / "cmdline").read_bytes().rstrip(b"\0").split(b"\0")
-            if argv[-1] == _WORKER_SERVER_ARG.encode() or not _is_cursor_cli(argv):
-                continue
-            cwd = Path(os.readlink(entry / "cwd"))
-            environ = (entry / "environ").read_bytes().split(b"\0")
-            root = cursor_workspace_root(_cli_workspace(argv, cwd)).resolve()
-        except OSError:
-            continue
-        start = _proc_start(entry)
-        if start is None or start[0] == "Z":
-            continue
-        if root == target and _env_value(environ, _INVOCATION_ENV.encode()) != marker:
-            clients.append(int(entry.name))
-    return clients
-
-
-def _connect_to_server(server: WorkerServer, *, proc_root: Path, timeout_s: float) -> socket.socket:
-    """A socket connected to ``server`` itself, proven by the kernel's peer credentials.
-
-    Raises ``_NotOurServer`` when the listener is another process (a replaced
-    socket) or the pid now belongs to another process (pid reuse).
-    """
-    sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    try:
-        sock.settimeout(timeout_s)
-        sock.connect(server.socket_path)
-        creds = sock.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i"))
-        peer_pid, peer_uid, _peer_gid = struct.unpack("3i", creds)
-        if peer_uid != os.getuid() or peer_pid != server.pid:
-            raise _NotOurServer(f"socket peer is pid={peer_pid} uid={peer_uid}")
-        # The listener is ``server.pid``; the start time proves that pid is
-        # still the process that was found, not a reused one.
-        if not _same_process(proc_root / str(server.pid), server.start_ticks):
-            raise _NotOurServer("pid no longer has the start time it was found with")
-    except BaseException:
-        sock.close()
-        raise
-    return sock
-
-
-def stop_cursor_worker_servers(
-    workspace: Path,
-    *,
-    invocation_id: str,
-    started_ticks: int,
-    proc_root: Path = Path("/proc"),
-    timeout_s: float = _WORKER_STOP_TIMEOUT_S,
-) -> dict[int, bool]:
-    """Ask this invocation's worker servers of ``workspace`` to exit through their own ``POST /kill``.
-
-    Returns whether each one found has exited within ``timeout_s``. Nothing
-    is signalled, and a server that may be in use by another Cursor CLI, or
-    whose identity cannot be proven, is not contacted: it is left running
-    and the dispatch exit scan still reports it.
-    """
-    results: dict[int, bool] = {}
-    servers = find_cursor_worker_servers(
-        workspace, invocation_id=invocation_id, started_ticks=started_ticks, proc_root=proc_root
-    )
-    if not servers:
-        return results
-    clients = other_cursor_clients(workspace, invocation_id=invocation_id, proc_root=proc_root)
-    for server in servers:
-        if clients:
-            _logger.warning(
-                "cursor worker server pid=%s left running: cursor-agent pid(s) %s share its workspace",
-                server.pid,
-                clients,
-            )
-            results[server.pid] = False
-            continue
-        results[server.pid] = _stop_worker_server(server, proc_root=proc_root, timeout_s=timeout_s)
-    return results
-
-
-def _stop_worker_server(server: WorkerServer, *, proc_root: Path, timeout_s: float) -> bool:
-    """Send ``POST /kill`` to ``server`` once its identity is proven; whether it has exited."""
-    entry = proc_root / str(server.pid)
-    if not _same_process(entry, server.start_ticks):
-        return True
-    try:
-        sock = _connect_to_server(server, proc_root=proc_root, timeout_s=timeout_s)
-    except _NotOurServer as exc:
-        _logger.warning("cursor worker server pid=%s not contacted: %s", server.pid, exc)
-        return False
-    except OSError as exc:
-        _logger.warning("cursor worker server pid=%s did not accept a connection: %s", server.pid, exc)
-        return False
-    conn = http.client.HTTPConnection("localhost", timeout=timeout_s)
-    conn.sock = sock
-    try:
-        conn.request("POST", "/kill", headers={"Connection": "close", "Content-Length": "0"})
-        conn.getresponse().read()
-    except (OSError, http.client.HTTPException) as exc:
-        _logger.warning("cursor worker server pid=%s did not accept /kill: %s", server.pid, exc)
-        return False
-    finally:
-        conn.close()
-    deadline = time.monotonic() + timeout_s
-    while _same_process(entry, server.start_ticks):
-        if time.monotonic() >= deadline:
-            _logger.warning("cursor worker server pid=%s still running %.1fs after /kill", server.pid, timeout_s)
-            return False
-        time.sleep(_WORKER_STOP_POLL_S)
-    return True
 
 
 def _extract_response_from_events(events: list[dict]) -> str:
