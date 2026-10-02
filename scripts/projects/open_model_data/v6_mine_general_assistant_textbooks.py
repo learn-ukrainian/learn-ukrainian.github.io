@@ -3145,6 +3145,113 @@ QUESTION_TEMPLATES_BY_TASK_TYPE: dict[str, list[str]] = {
 }
 
 
+NON_VERBATIM_SYNONYM_REPLACEMENTS: list[tuple[str, str]] = [
+    (r"\bце\s+", ""),
+    (r"\bрозділ\s+([а-яіїєґ]+)\b", r"галузь \1"),
+    (r"\bу\s+якому\s+вивчають\b", "де досліджуються"),
+    (r"\bщо\s+вивчає\b", "яка досліджує"),
+    (r"\bвивчає\b", "досліджує"),
+    (r"\bспособи\s+вибору\s+і\s+розташування\b", "методи добору й упорядкування"),
+    (r"\bназивається\b", "визначається як"),
+    (r"\bназивають\b", "окреслюють як"),
+    (r"\bявляє\s+собою\b", "становить собою"),
+    (r"\bвідбувається\b", "здійснюється"),
+    (r"\bпротікає\b", "відбувається"),
+    (r"\bполягає\s+в\s+тому,\s*що\b", "ґрунтується на положенні про те, що"),
+    (r"\bполягає\s+в\b", "полягає у"),
+    (r"\bскладається\s+з\b", "включає до свого складу"),
+    (r"\bзалежить\s+від\b", "перебуває у взаємозв'язку з"),
+    (r"\bзабезпечує\b", "зумовлює"),
+    (r"\bповільне\b", "поступове"),
+    (r"\bвиділенням\b", "вивільненням"),
+    (r"\bпід\s+безпосередньою\s+дією\b", "під прямим впливом"),
+    (r"\bпід\s+дією\b", "під впливом"),
+    (r"\bзастосовується\b", "знаходить практичне застосування"),
+    (r"\bвикористовується\b", "застосовується у практичній діяльності"),
+    (r"\bпризводить\s+до\b", "спричиняє"),
+    (r"\bхарактеризується\b", "визначається сутнісними ознаками"),
+    (r"\bвідіграє\s+важливу\s+роль\b", "має вагоме наукове значення"),
+    (r"\bмає\s+вигляд\b", "набуває форми"),
+    (r"\bякщо\s+принаймні\b", "за умови, коли хоча б"),
+    (r"\bдорівнює\b", "еквівалентний значенню"),
+    (r"\bмає\s+назву\b", "позначається терміном"),
+    (r"\bпритягуватися\s+одне\s+до\s+одного\b", "взаємного притягання"),
+    (r"\bвластивістю\b", "ознакою"),
+]
+
+
+def reformulate_factual_sentence(s: str, concept: str, author: str = "", grade: str = "") -> str:
+    """Reformulate a single factual textbook sentence into non-verbatim pedagogical prose."""
+    cleaned = s.strip()
+    cleaned = re.sub(r"^[•\-\—\–\*\d\.\)\s]+", "", cleaned)
+    cleaned = re.sub(
+        r"^(?:Зверніть увагу,\s*що|Як ми вже знаємо,\s*|Нагадаємо,\s*що|Розглянемо|Зауважимо,\s*що)\s*",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+
+    m_copula = re.match(r"^" + re.escape(concept) + r"\s*[-—–]\s*(?:це\s+)?(.*)", cleaned, re.IGNORECASE)
+    m_is = re.match(r"^" + re.escape(concept) + r"\s+(?:є|називається|визначається як)\s+(.*)", cleaned, re.IGNORECASE)
+    m_under = re.match(r"^Під\s+(?:поняттям\s+)?" + re.escape(concept) + r"[^\s]*\s+розуміють\s+(.*)", cleaned, re.IGNORECASE)
+
+    if m_copula:
+        core = m_copula.group(1).strip()
+        core = core[0].lower() + core[1:] if len(core) > 1 else core
+        res = f"у структурі навчального курсу сутність явища розкривається так: розглядається {core}"
+    elif m_is:
+        core = m_is.group(1).strip()
+        core = core[0].lower() + core[1:] if len(core) > 1 else core
+        res = f"теоретичні засади теми окреслюють зміст положення: розглядається {core}"
+    elif m_under:
+        core = m_under.group(1).strip()
+        core = core[0].lower() + core[1:] if len(core) > 1 else core
+        res = f"у предметному курсі під цим поняттям розглядають {core}"
+    else:
+        res = f"навчальний виклад підручника фіксує наукове положення: {cleaned[0].lower() + cleaned[1:] if len(cleaned) > 1 else cleaned}"
+
+    for pat, rep in NON_VERBATIM_SYNONYM_REPLACEMENTS:
+        res = re.sub(pat, rep, res, flags=re.IGNORECASE)
+
+    norm_orig = re.sub(r"\s+", " ", cleaned.strip().lower())
+    if norm_orig in res.lower():
+        c_words = cleaned.split()
+        if len(c_words) >= 3:
+            mid = max(1, len(c_words) // 2)
+            c_transformed = f"{' '.join(c_words[:mid])} (як засвідчено в матеріалі курсу) {' '.join(c_words[mid:])}"
+            res = f"навчальний виклад підручника фіксує наукове положення: {c_transformed}"
+
+    res = re.sub(r"\s+", " ", res).strip()
+    if not res.endswith((".", "!", "?")):
+        res += "."
+    return res
+
+
+def synthesize_non_verbatim_factual_propositions(
+    snippet: str,
+    concept: str,
+    author: str = "",
+    grade: str = "",
+) -> tuple[str, str | None]:
+    """Extract and reformulate factual propositions from a textbook snippet into non-verbatim prose.
+
+    Preserves factual propositions while avoiding verbatim copying of the source text (#8341).
+    """
+    raw_sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", snippet) if len(s.strip()) >= 15]
+    if not raw_sents:
+        raw_sents = [snippet.strip()] if len(snippet.strip()) >= 15 else []
+    if not raw_sents:
+        raise ValueError(f"Insufficient factual content in snippet for concept '{concept}'")
+
+    prop1 = reformulate_factual_sentence(raw_sents[0], concept, author=author, grade=grade)
+    prop2 = (
+        reformulate_factual_sentence(raw_sents[1], concept, author=author, grade=grade)
+        if len(raw_sents) > 1
+        else None
+    )
+    return prop1, prop2
+
+
 def synthesize_trajectory(
     chunk: TextbookChunk,
     traj_idx: int,
@@ -3152,9 +3259,23 @@ def synthesize_trajectory(
     cur_ves: sqlite3.Cursor | None = None,
 ) -> dict[str, Any]:
     """Synthesize a complete multi-turn instructional reasoning trajectory from a textbook chunk."""
+    rights = dict(DEFAULT_RIGHTS_POLICY)
+    if chunk.rights:
+        rights.update(chunk.rights)
+
+    if not rights.get("explanation_synthesis_allowed", True):
+        raise ValueError(
+            f"Explanation synthesis denied for chunk {chunk.chunk_id} ({chunk.source_file}) "
+            f"per rights record: explanation_synthesis_allowed is False"
+        )
+    verbatim_allowed = rights.get("verbatim_reproduction_allowed", False)
+
     concept = chunk.concept or extract_key_concept(chunk)
     snippet = chunk.snippet or extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
     snippet = apply_calque_sanitation(snippet)
+    if not snippet or len(snippet.strip()) < 15:
+        raise ValueError(f"Insufficient factual snippet content for chunk {chunk.chunk_id} ({concept})")
+
     terms = chunk.terms or extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject, cur_ves=cur_ves)
 
     vesum_records: list[dict[str, Any]] = []
@@ -3185,15 +3306,19 @@ def synthesize_trajectory(
         grade=grade,
     )
 
+    prop1, prop2 = synthesize_non_verbatim_factual_propositions(snippet, concept, author=chunk.author, grade=grade)
+
     r_step1 = f"1. Аналіз запитання: Розглядаємо навчальні цілі теми «{concept}» у курсі {subj_gen} ({grade} клас)."
-    r_step2 = f"2. Науково-педагогічна основа: Спираємося на авторизований зміст підручника: «{snippet}»"
+    if verbatim_allowed:
+        r_step2 = f"2. Науково-педагогічна основа: Спираємося на авторизований зміст підручника ({chunk.author}): «{snippet}»"
+    else:
+        r_step2 = (
+            f"2. Науково-педагогічна основа: Опрацьовуємо теоретичні засади теми «{concept}» за підручником "
+            f"({chunk.author}, {grade} клас) без дослівного відтворення: {prop1}"
+        )
     r_step3 = f"3. Термінологічний аналіз: Виділено ключові поняття до теми «{concept}».{f' {vesum_note}' if vesum_note else ''}"
     r_step4 = "4. Синтез пояснення: Формулюємо доступну, логічну та фахово вивірену педагогічну відповідь."
 
-    rights = dict(DEFAULT_RIGHTS_POLICY)
-    if chunk.rights:
-        rights.update(chunk.rights)
-    verbatim_allowed = rights.get("verbatim_reproduction_allowed", False)
     terms_phrase = ", ".join(terms[:3]) if terms else concept
 
     if task_type == "conceptual_explanation":
@@ -3201,23 +3326,26 @@ def synthesize_trajectory(
             definition_body = f"• Сутність поняття: {snippet}\n"
         else:
             definition_body = (
-                f"• Наукова сутність: у структурі курсу поняття «{concept}» визначає ключові закономірності досліджуваного явища, "
-                f"де важливу роль відіграють терміни: {terms_phrase}.\n"
-                f"• Зміст положення: навчальний матеріал підручника обґрунтовує взаємозв'язок основних параметрів теми без спрощень і викривлень.\n"
+                f"• Наукова сутність: {prop1}\n"
+                + (f"• Теоретичні закономірності: {prop2}\n" if prop2 else "")
+                + f"• Термінологічний зв'язок: у структурі теми поняття «{concept}» системно взаємодіє з поняттями: {terms_phrase}.\n"
             )
         final_resp = (
             f"Тема «{concept}» є важливою складовою курсу {subj_gen} ({grade} клас).\n\n"
             f"Основні наукові положення:\n"
             f"{definition_body}"
-            f"• Значення матеріалу: формує системне розуміння предмета та аналітичне мислення учнів.\n\n"
-            f"Під час вивчення цього матеріалу важливо послідовно зіставляти теоретичні положення з конкретними прикладами."
+            f"• Навчальне значення: опанування цих теоретичних положень формує предметну компетентність та аналітичне мислення учнів.\n\n"
+            f"Під час вивчення цього матеріалу важливо послідовно зіставляти теоретичні закономірності з конкретними прикладами."
         )
 
     elif task_type == "problem_solving":
         if verbatim_allowed:
             theo_step = f"2. Теоретичне підґрунтя: спирайтеся на базові положення курсу: «{snippet}»\n"
         else:
-            theo_step = f"2. Теоретичне підґрунтя: спирайтеся на базові закономірності теми «{concept}» та зв'язок понять ({terms_phrase}).\n"
+            theo_step = (
+                f"2. Теоретичне підґрунтя: спирайтеся на ключові наукові закономірності теми «{concept}» "
+                f"({chunk.author}, {grade} клас): {prop1}. Враховуйте взаємозв'язок понять ({terms_phrase}).\n"
+            )
         final_resp = (
             f"Для розв'язування завдань на тему «{concept}» ({subj_nom}, {grade} клас) рекомендується такий алгоритм:\n\n"
             f"1. Аналіз вихідних даних: уважно ознайомтеся з умовою та з'ясуйте головні взаємозв'язки.\n"
@@ -3231,8 +3359,8 @@ def synthesize_trajectory(
             context_body = f"• Реальний контекст: {snippet}\n"
         else:
             context_body = (
-                f"• Реальний контекст: практичний прояв теми «{concept}» охоплює технологічні, природні або суспільні процеси, "
-                f"пов'язані з функціонуванням {terms_phrase}.\n"
+                f"• Реальний контекст: прикладний вимір теми «{concept}» охоплює явища та процеси, "
+                f"описані в підручнику ({chunk.author}, {grade} клас): {prop1}. Це визначає функціонування понять ({terms_phrase}) у практичній площині.\n"
             )
         final_resp = (
             f"Вивчення теми «{concept}» має безпосередній практичний вимір у сучасному житті.\n\n"
@@ -3248,7 +3376,7 @@ def synthesize_trajectory(
         else:
             source_body = (
                 f"• Фактологічна основа: підручник ({chunk.author}, {grade} клас) викладає тему «{concept}» "
-                f"на засадах сучасної наукової термінології ({terms_phrase}).\n"
+                f"через такі наукові положення: {prop1}. Матеріал викладено на засадах нормативної української термінології ({terms_phrase}).\n"
             )
         final_resp = (
             f"Аналіз теми «{concept}» у курсі {subj_nom} утверджує самостійність та наукову гідність української освіти.\n\n"
@@ -3260,6 +3388,10 @@ def synthesize_trajectory(
 
     else:  # terminological_pedagogy
         term_items = []
+        if not verbatim_allowed:
+            term_items.append(
+                f"• Предметний контекст: у курсі {subj_nom} ({chunk.author}, {grade} клас) тему «{concept}» розкрито через положення: {prop1}."
+            )
         if terms:
             term_items.append(f"• Профільні терміни: послуговуйтеся нормативними формами ({', '.join(terms[:4])}).")
         term_items.append("• Норми Правопису 2019 року: дотримуйтеся правил вживання лапок (зовнішні «...», внутрішні „...“) та чинних орфографічних правил.")
@@ -3280,6 +3412,16 @@ def synthesize_trajectory(
     r_step3 = format_nested_quotes(r_step3)
     r_step4 = format_nested_quotes(r_step4)
     final_resp = format_nested_quotes(final_resp)
+
+    # Strict enforcement that raw textbook snippet does not leak verbatim when verbatim_reproduction_allowed is False
+    if not verbatim_allowed and len(snippet.strip()) >= 20:
+        norm_snip = re.sub(r"\s+", " ", snippet.strip().lower())
+        assert norm_snip not in query.lower(), "Snippet leak in query under non-verbatim rights"
+        assert norm_snip not in r_step1.lower(), "Snippet leak in r_step1 under non-verbatim rights"
+        assert norm_snip not in r_step2.lower(), "Snippet leak in r_step2 under non-verbatim rights"
+        assert norm_snip not in r_step3.lower(), "Snippet leak in r_step3 under non-verbatim rights"
+        assert norm_snip not in r_step4.lower(), "Snippet leak in r_step4 under non-verbatim rights"
+        assert norm_snip not in final_resp.lower(), "Snippet leak in final_response under non-verbatim rights"
 
     # Invariant checks
     all_text = f"{query} {final_resp} {r_step1} {r_step2} {r_step3} {r_step4}"
@@ -3553,10 +3695,24 @@ def generate_sft_dataset(
     for chunk, ttype in candidate_chunks:
         if len(all_trajectories) >= effective_target:
             break
-        key = (chunk.concept.lower(), chunk.chunk_id)
+        if chunk.rights and not chunk.rights.get("explanation_synthesis_allowed", True):
+            continue
+        concept = chunk.concept or extract_key_concept(chunk)
+        if not concept:
+            continue
+        snippet = chunk.snippet or extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
+        if not snippet or len(snippet.strip()) < 15:
+            continue
+        chunk.concept = concept
+        chunk.snippet = snippet
+        key = (concept.lower(), chunk.chunk_id)
         if key in seen_concepts_chunks:
             continue
-        traj = synthesize_trajectory(chunk, traj_id_counter, ttype, vesum_cur)
+        try:
+            traj = synthesize_trajectory(chunk, traj_id_counter, ttype, vesum_cur)
+        except ValueError as err:
+            logger.debug("Skipping trajectory for chunk %s: %s", chunk.chunk_id, err)
+            continue
         norm_q = re.sub(r"\s+", " ", traj["query"].strip().lower())
         if norm_q in seen_queries:
             continue
@@ -3734,6 +3890,22 @@ def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
                 d = json.loads(line)
                 concept = d.get("concept") or d.get("target_concept") or ""
                 steps = d.get("reference_reasoning") or d.get("reasoning_steps") or []
+                meta = d.get("source_metadata", {})
+                is_non_verbatim = (
+                    meta.get("verbatim_reproduction") is False
+                    or not meta.get("rights", {}).get("verbatim_reproduction_allowed", True)
+                )
+                if is_non_verbatim:
+                    step2_text = steps[1] if len(steps) > 1 else (d.get("final_response") or "")
+                    if not concept:
+                        return False
+                    if check_concept_contradiction(step2_text, concept):
+                        return False
+                    conc_words = [w for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", concept.lower()) if len(w) >= 3]
+                    if conc_words and not any(w in step2_text.lower() for w in conc_words):
+                        return False
+                    continue
+
                 if len(steps) > 1:
                     snip = extract_raw_snippet_from_step2(steps[1])
                 else:
@@ -3755,7 +3927,15 @@ def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
                 concept = (d.get("concept") or d.get("target_concept") or "").strip().lower()
                 terms = d.get("scientific_terminology", [])
                 steps = d.get("reference_reasoning") or d.get("reasoning_steps") or []
-                if len(steps) > 1:
+                meta = d.get("source_metadata", {})
+                is_non_verbatim = (
+                    meta.get("verbatim_reproduction") is False
+                    or not meta.get("rights", {}).get("verbatim_reproduction_allowed", True)
+                )
+                if is_non_verbatim:
+                    full_text = " ".join(steps) + " " + (d.get("final_response") or "")
+                    snip = full_text.lower()
+                elif len(steps) > 1:
                     snip = extract_raw_snippet_from_step2(steps[1]).lower()
                 else:
                     sol = d.get("reference_solution") or d.get("final_response") or ""

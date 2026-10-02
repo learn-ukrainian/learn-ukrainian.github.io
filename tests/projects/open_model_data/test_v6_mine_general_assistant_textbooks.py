@@ -1431,3 +1431,133 @@ def test_issue_8341_sft_dataset_zero_duplicate_queries():
             assert l["source_metadata"]["rights"]["verbatim_reproduction_allowed"] is False
             assert l["source_metadata"]["rights"]["explanation_synthesis_allowed"] is True
             assert "Law of Ukraine" in l["source_metadata"]["rights"]["legal_basis"]
+
+
+def test_issue_8341_explanation_synthesis_denial_rejected():
+    """Verify that a chunk with explanation_synthesis_allowed: False is rejected/excluded (#8341)."""
+    denied_chunk = TextbookChunk(
+        chunk_id="denied_chunk_01",
+        title="Заборонена тема",
+        subject="fizyka",
+        grade="8",
+        author="Автор",
+        source_file="denied_book.pdf",
+        text="Деякий текст підручника, для якого синтез пояснень заборонено правовласником.",
+        char_count=100,
+        concept="Електричний струм",
+        snippet="Електричний струм — це впорядкований рух заряджених частинок.",
+        terms=["частинки", "рух"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": False,
+            "attribution_required": True,
+        },
+    )
+
+    with pytest.raises(ValueError, match="Explanation synthesis denied"):
+        synthesize_trajectory(denied_chunk, 1, "conceptual_explanation")
+
+    # In SFT dataset generation, denied chunks must be excluded
+    with tempfile.TemporaryDirectory() as tmpdir:
+        sft_dir = Path(tmpdir) / "sft"
+        manifest_data, _sha, _subj, _dom, _books = generate_sft_dataset(
+            [denied_chunk],
+            sft_dir,
+            target_count=1,
+            shards_count=1,
+        )
+        assert manifest_data["total_trajectories"] == 0
+
+
+def test_issue_8341_verbatim_reproduction_denial_enforced_across_all_fields():
+    """Verify that verbatim snippet does not appear in reasoning, final_response, or query when rights disallow (#8341)."""
+    raw_snippet = "Гравітаційна взаємодія є універсальною властивістю матеріальних тіл притягуватися одне до одного."
+    chunk = TextbookChunk(
+        chunk_id="grav_chunk_01",
+        title="Гравітація",
+        subject="fizyka",
+        grade="9",
+        author="Бар'яхтар",
+        source_file="9-klas-fizyka-bar-2017.pdf",
+        text=raw_snippet + " Вона визначає рух планет навколо Сонця.",
+        char_count=150,
+        concept="Гравітаційна взаємодія",
+        snippet=raw_snippet,
+        terms=["тіла", "властивість"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": True,
+            "attribution_required": True,
+        },
+    )
+
+    traj = synthesize_trajectory(chunk, 1, "conceptual_explanation")
+    norm_snippet = re.sub(r"\s+", " ", raw_snippet.strip().lower())
+
+    assert norm_snippet not in traj["query"].lower(), "Snippet leaked into query"
+    assert norm_snippet not in traj["final_response"].lower(), "Snippet leaked into final_response"
+    for idx, step in enumerate(traj["reasoning_steps"], 1):
+        assert norm_snippet not in step.lower(), f"Snippet leaked into reasoning step {idx}: {step}"
+    # Explicit check on r_step2
+    assert "«" + raw_snippet + "»" not in traj["reasoning_steps"][1]
+
+
+def test_issue_8341_different_source_facts_produce_different_responses():
+    """Verify that non-verbatim explanations preserve source facts rather than discarding them (#8341)."""
+    # Two chunks with identical concept and terms, but contrasting source facts
+    fact_a = "Фотосинтез протікає в хлоропластах під безпосередньою дією сонячної радіації."
+    fact_b = "Дихання рослин забезпечує повільне окиснення органічних сполук з виділенням енергії."
+
+    chunk_a = TextbookChunk(
+        chunk_id="bio_chunk_a",
+        title="Біоенергетика А",
+        subject="biolohiya",
+        grade="10",
+        author="Соболь",
+        source_file="10-klas-biolohiya-sobol-2018.pdf",
+        text=fact_a,
+        char_count=120,
+        concept="Енергетичний обмін",
+        snippet=fact_a,
+        terms=["обмін", "процес"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": True,
+        },
+    )
+
+    chunk_b = TextbookChunk(
+        chunk_id="bio_chunk_b",
+        title="Біоенергетика Б",
+        subject="biolohiya",
+        grade="10",
+        author="Соболь",
+        source_file="10-klas-biolohiya-sobol-2018.pdf",
+        text=fact_b,
+        char_count=120,
+        concept="Енергетичний обмін",
+        snippet=fact_b,
+        terms=["обмін", "процес"],
+        rights={
+            "copyright_status": "in_copyright",
+            "verbatim_reproduction_allowed": False,
+            "explanation_synthesis_allowed": True,
+        },
+    )
+
+    traj_a = synthesize_trajectory(chunk_a, 1, "conceptual_explanation")
+    traj_b = synthesize_trajectory(chunk_b, 1, "conceptual_explanation")
+
+    # Responses must NOT be identical (different_source_fact_same_final_response must be False)
+    assert traj_a["final_response"] != traj_b["final_response"], (
+        "Non-verbatim responses discarded source facts: responses are identical despite different facts!"
+    )
+    # Reasoning step 2 must also reflect different facts
+    assert traj_a["reasoning_steps"][1] != traj_b["reasoning_steps"][1]
+
+    # Factual content check: chloroplasts/light in A, oxidation/energy in B
+    assert "хлоропласт" in traj_a["final_response"].lower()
+    assert "окиснен" in traj_b["final_response"].lower() or "енергі" in traj_b["final_response"].lower()
