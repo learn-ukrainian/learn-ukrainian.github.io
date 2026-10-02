@@ -4829,30 +4829,34 @@ def _run_git_stdout(worktree: Path, *args: str) -> tuple[int, str] | None:
 
 
 def _count_real_changes_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
-    """``(count, base_missing)`` of the commits ``HEAD`` adds to ``base`` that change something.
+    """``(count, base_missing)`` of ``<base>..HEAD``, or 0 when merging ``HEAD`` into ``base`` changes nothing.
 
-    ``<default>..HEAD`` overcounts as delivery proof: a merge of the default
-    branch, or a cherry-pick of a change it already has, is ahead of a stale or
-    squash-merged base yet adds nothing (#9451). A commit counts only when it is
-    not a merge, not patch-equivalent to a commit already on ``base`` (the ``+``
-    lines of ``git cherry``), and the tree differs from the merge base at all.
-    ``(None, False)`` when any of those cannot be computed, so the caller fails closed.
+    ``<default>..HEAD`` overcounts as delivery proof: an empty commit, a merge of
+    the default branch, a cherry-pick of a change it already has, or a squash of
+    work it already holds is ahead of a stale or squash-merged base yet adds
+    nothing (#9451). Rather than approximate that per commit shape, ask git the
+    exact question: ``git merge-tree --write-tree <base> HEAD`` is the tree a
+    merge would produce, so when it equals ``base``'s own tree nothing new is
+    delivered. A different tree, or a conflict (exit status 1, which a real
+    change colliding with ``base`` produces), is a delivery. Any other failure,
+    including a git without ``--write-tree`` or history too shallow to merge, is
+    ``(None, False)`` so the caller fails closed.
     """
     ahead, base_missing = _run_count_ahead(worktree, base)
     if ahead is None or ahead == 0:
         return ahead, base_missing
-    merge_base = _run_git_stdout(worktree, "merge-base", base, "HEAD")
-    if merge_base is None or merge_base[0] != 0 or not merge_base[1].strip():
+    base_tree = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{tree}}")
+    if base_tree is None or base_tree[0] != 0 or not base_tree[1].strip():
         return None, False
-    tree_diff = _run_git_stdout(worktree, "diff", "--quiet", merge_base[1].strip(), "HEAD")
-    if tree_diff is None or tree_diff[0] not in (0, 1):
+    merged = _run_git_stdout(worktree, "merge-tree", "--write-tree", "--no-messages", base, "HEAD")
+    if merged is None or merged[0] not in (0, 1):
         return None, False
-    if tree_diff[0] == 0:
-        return 0, False
-    cherry = _run_git_stdout(worktree, "cherry", base, "HEAD")
-    if cherry is None or cherry[0] != 0:
+    if merged[0] == 1:
+        return ahead, False
+    merged_tree = merged[1].strip().splitlines()[0] if merged[1].strip() else ""
+    if not merged_tree:
         return None, False
-    return sum(1 for line in cherry[1].splitlines() if line.startswith("+ ")), False
+    return (0 if merged_tree == base_tree[1].strip() else ahead), False
 
 
 def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_sha: str | None) -> int | None:
@@ -4872,8 +4876,8 @@ def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_
 
     The recorded commit is the exact point the worktree started from, so its
     plain ``<sha>..HEAD`` count is exact. The default branch is only a proxy
-    for the lost base and may already hold the work, so its count is reduced to
-    commits that add real changes (``_count_real_changes_ahead``).
+    for the lost base and may already hold the work, so its commits count only
+    when merging ``HEAD`` into it would change it (``_count_real_changes_ahead``).
     """
     candidates: list[tuple[str, bool]] = []
     if base_sha and _is_ancestor_of_head(worktree, base_sha):

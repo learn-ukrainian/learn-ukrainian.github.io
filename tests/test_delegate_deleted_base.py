@@ -245,8 +245,10 @@ def test_recorded_commit_that_is_not_an_ancestor_is_not_trusted(repo):
 # --- the default-branch fallback counts only real new changes (#9451) -------------
 #
 # ``origin/main..HEAD`` is a proxy for the lost base, and it overcounts: a merge of
-# main, or a cherry-pick of a change main already has, is "ahead" yet delivers
-# nothing. Each shape below is a real worker end-state settled through ``_run_worker``.
+# main, a cherry-pick of a change main already has, or a squash of work main already
+# holds is "ahead" yet delivers nothing. The fallback asks git whether merging HEAD
+# into main would change main's tree. Each shape below is a real worker end-state
+# settled through ``_run_worker``.
 
 
 def _cherry_pick_landed(repo: _Repo, landed: str) -> None:
@@ -281,6 +283,38 @@ def _empty_commit(repo: _Repo, landed: str) -> None:
     _git(repo.worktree, "commit", "-q", "--allow-empty", "-m", "nothing changed")
 
 
+def _cherry_pick_all_of_main(repo: _Repo, landed: str) -> None:
+    _git(repo.worktree, "cherry-pick", "--keep-redundant-commits", f"{repo.base_sha}..{landed}")
+
+
+def _empty_commit_then_cherry_pick_all_of_main(repo: _Repo, landed: str) -> None:
+    _empty_commit(repo, landed)
+    _cherry_pick_all_of_main(repo, landed)
+
+
+def _two_commits_squashing_main(repo: _Repo, landed: str) -> None:
+    """Both patches differ from main's, yet together they rebuild exactly main's tree."""
+    (repo.worktree / "landed-first.txt").write_text("an earlier change on main\n", encoding="utf-8")
+    (repo.worktree / "landed.txt").write_text("a first draft\n", encoding="utf-8")
+    _git(repo.worktree, "add", "landed-first.txt", "landed.txt")
+    _git(repo.worktree, "commit", "-q", "-m", "most of main's change")
+    _commit(repo.worktree, "landed.txt", "a change already on main")
+
+
+def _three_commits_squashing_main(repo: _Repo, landed: str) -> None:
+    _commit(repo.worktree, "landed-first.txt", "a first attempt")
+    _commit(repo.worktree, "landed-first.txt", "an earlier change on main")
+    _commit(repo.worktree, "landed.txt", "a change already on main")
+
+
+def _new_commit(repo: _Repo, landed: str) -> None:
+    _commit(repo.worktree, "fix.py", "the fix")
+
+
+def _new_commit_that_conflicts_with_main(repo: _Repo, landed: str) -> None:
+    _commit(repo.worktree, "landed.txt", "the worker's own take on the same file")
+
+
 def _settle_after(repo: _Repo, task_id: str, work, *, base_sha: str | None) -> dict:
     repo.delete_base_branch(merged_into_main=True)
     landed = repo.advance_main()
@@ -291,8 +325,22 @@ def _settle_after(repo: _Repo, task_id: str, work, *, base_sha: str | None) -> d
 
 @pytest.mark.parametrize(
     "work",
-    [_cherry_pick_landed, _merge_main, _empty_commit],
-    ids=["cherry-pick-of-a-change-on-main", "merge-of-current-main", "empty-commit"],
+    [
+        _cherry_pick_landed,
+        _merge_main,
+        _empty_commit,
+        _empty_commit_then_cherry_pick_all_of_main,
+        _two_commits_squashing_main,
+        _three_commits_squashing_main,
+    ],
+    ids=[
+        "cherry-pick-of-a-change-on-main",
+        "merge-of-current-main",
+        "empty-commit",
+        "empty-commit-then-cherry-pick-of-main",
+        "two-commits-squashing-main",
+        "three-commits-squashing-main",
+    ],
 )
 def test_default_branch_fallback_does_not_count_no_op_work_as_a_delivery(tmp_tasks_dir, repo, work):
     state = _settle_after(repo, f"noop-{work.__name__}", work, base_sha=None)
@@ -305,12 +353,21 @@ def test_default_branch_fallback_does_not_count_no_op_work_as_a_delivery(tmp_tas
 @pytest.mark.parametrize(
     ("work", "real_commits"),
     [
-        (_merge_main_then_fix, 1),
-        (_fix_then_merge_main, 1),
-        (_cherry_pick_then_fix, 1),
-        (_merge_main_then_revert, 1),
+        (_new_commit, 1),
+        (_new_commit_that_conflicts_with_main, 1),
+        (_merge_main_then_fix, 2),
+        (_fix_then_merge_main, 2),
+        (_cherry_pick_then_fix, 2),
+        (_merge_main_then_revert, 2),
     ],
-    ids=["new-commit-on-top-of-merged-main", "new-commit-plus-merge-of-main", "cherry-pick-plus-new-commit", "revert-of-a-commit-on-main"],
+    ids=[
+        "new-commit",
+        "new-commit-that-conflicts-with-main",
+        "new-commit-on-top-of-merged-main",
+        "new-commit-plus-merge-of-main",
+        "cherry-pick-plus-new-commit",
+        "revert-of-a-commit-on-main",
+    ],
 )
 def test_default_branch_fallback_counts_real_commits_next_to_no_op_ones(tmp_tasks_dir, repo, work, real_commits):
     state = _settle_after(repo, f"real-{work.__name__}", work, base_sha=None)
@@ -339,17 +396,17 @@ def test_recorded_commit_count_stays_exact_for_the_same_shapes(
     assert state["commits_ahead"] == expected_ahead
 
 
-def test_default_branch_fallback_fails_closed_when_the_filters_cannot_be_computed(tmp_tasks_dir, repo):
+def test_default_branch_fallback_fails_closed_when_the_merge_cannot_be_computed(tmp_tasks_dir, repo):
     repo.deliver()
     repo.delete_base_branch(merged_into_main=True)
 
     real_run = delegate._run_git_stdout
 
-    def broken_cherry(worktree, *args):
-        return (128, "") if args and args[0] == "cherry" else real_run(worktree, *args)
+    def broken_merge_tree(worktree, *args):
+        return (129, "") if args and args[0] == "merge-tree" else real_run(worktree, *args)
 
-    with patch.object(delegate, "_run_git_stdout", broken_cherry):
-        state = _settle(repo, "filters-unknown", base_sha=None)
+    with patch.object(delegate, "_run_git_stdout", broken_merge_tree):
+        state = _settle(repo, "merge-unknown", base_sha=None)
 
     assert state["status"] == "no_deliverable"
     assert state["no_deliverable_reason"] == "commit_count_unknown"
