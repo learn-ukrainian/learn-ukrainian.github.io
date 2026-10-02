@@ -199,3 +199,53 @@ def test_original_argv_order_survives_whole_command_refusal():
     switch = next(i for i, (kind, argv) in enumerate(events) if kind == "segment" and argv[:2] == ["git", "switch"])
     assert switch > 0
     assert not any(kind in {"syntax_unreadable", "line_end"} for kind, _ in events)
+
+
+@pytest.mark.parametrize("opener", ["<<'EOF'", '<<"EOF"', r"<<\EOF", "<<-'EOF'"])
+@pytest.mark.parametrize(
+    "wrapper", ['git commit -m "$({body})"', "echo `{body}`", "cat <({body})", 'echo "$(printf %s "$({body})")"']
+)
+def test_nested_quoted_heredocs_are_inert(opener, wrapper):
+    body = f"cat {opener}\ncase study: don't lex ${{y:-(z)}} `case` (text)\nEOF\n"
+    command = "git switch -c fixture && " + wrapper.format(body=body)
+    assert not command_repository_unknown(command)
+
+
+@pytest.mark.parametrize(
+    "body,unknown",
+    [
+        ("case study: don't lex (text)", False),
+        ("'$(case x in x) true;; esac)'", True),
+        ('"`case x in x) true;; esac`"', True),
+        ("${y:-(z)}", True),
+        (r"\${y:-(z)}", False),
+        (r"\$(case x in x) true;; esac)", False),
+        (r"\`case x in x) true;; esac\`", False),
+        (r"\\${y:-(z)}", True),
+        (r"\q${y:-(z)}", True),
+        (r"${y:-\(}", True),
+        ('${y:-"}"}${z:-(}', True),
+        ("${y:-'$(case x in x) true;; esac)'}", True),
+        ("$(cat <<'INNER'\ncase study: don't lex ${y:-(z)}\nINNER\n)", False),
+    ],
+)
+def test_unquoted_heredoc_scans_expansions_only(body, unknown):
+    command = 'git switch -c fixture && git commit -m "$(cat <<EOF\n' + body + '\nEOF\n)"'
+    assert command_repository_unknown(command) is unknown
+
+
+@pytest.mark.parametrize("tail", ["", "EOF trailing\n)", "\tEOF\n)"])
+def test_nested_heredoc_requires_exact_terminator(tail):
+    assert command_repository_unknown("echo \"$(cat <<'EOF'\ncase study\n" + tail)
+
+
+def test_nested_heredoc_tabs_and_multiple_bodies():
+    command = 'echo "$(cat <<-ONE <<\\TWO\n\tcase study\n\tONE\nIt\'s fixed\nTWO\n)"'
+    assert not command_repository_unknown(command)
+
+
+def test_nested_heredoc_depth_limit_is_fail_closed():
+    command = "cat <<'EOF'\ntext\nEOF"
+    for _ in range(17):
+        command = "$(" + command + "\n)"
+    assert command_repository_unknown(command)

@@ -1176,3 +1176,127 @@ def test_issue_9479_r6_parameter_anywhere_deliberately_overblocks_worktree(
         command = f"{branch}{separator}{body}" if position == "before" else f"{body}{separator}{branch}"
     _r6_bash_record(tmp_path, command, repos[start], repos[start])
     assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+R7_BODIES = [
+    "fix: don't drop the cache",
+    "case study of fixture",
+    "${y:-(z)}",
+    "a single quote: ' and a double quote: \"",
+    "`printf fixture` and (parentheses)",
+    "EOF trailing text\nIt's fixed",
+]
+R7_SHAPES = [
+    'git commit -m "$(cat {opener}\n{body}\n{closer}\n)"',
+    'git add -A && git commit -m "$(cat {opener}\n{body}\n{closer}\n)"',
+    'git push -u origin fixture && gh pr create --body "$(cat {opener}\n{body}\n{closer}\n)"',
+    'git commit -m "$(printf %s "$(cat {opener}\n{body}\n{closer}\n)")"',
+]
+
+
+def _r7_bash_records(tmp_path, command, cwd):
+    """Execute real Bash; record every synthetic git/gh invocation and argv."""
+    recorder = (
+        '#!/bin/bash\nprintf "%s\\0" "${0##*/}" "$PWD" "$@" >> "$GUARD_RECORD"\nprintf "\\n" >> "$GUARD_RECORD"\n'
+    )
+    for name in ("git", "gh"):
+        path = tmp_path / name
+        path.write_text(recorder)
+        path.chmod(0o755)
+    record = tmp_path / "record-r7"
+    record.write_bytes(b"")
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=cwd,
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    return [row.rstrip(b"\0").decode().split("\0") for row in record.read_bytes().split(b"\0\n") if row]
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("separator", [" && ", "\n"])
+@pytest.mark.parametrize("opener", ["<<'EOF'", '<<"EOF"', r"<<\EOF", "<<-'EOF'", "<<EOF", "<<-EOF"])
+@pytest.mark.parametrize("body", R7_BODIES)
+@pytest.mark.parametrize("shape", R7_SHAPES)
+def test_issue_9479_r7_commit_and_pr_heredoc_bash(repos, tmp_path, start, separator, opener, body, shape):
+    closer = "\tEOF" if opener.startswith("<<-") else "EOF"
+    command = "git switch -c fixture" + separator + shape.format(opener=opener, body=body, closer=closer)
+    records = _r7_bash_records(tmp_path, command, repos[start])
+    assert records[0] == ["git", str(repos[start]), "switch", "-c", "fixture"]
+    assert records[-1][0] == ("gh" if "gh pr create" in shape else "git")
+    assert records[-1][2:4] == (["pr", "create"] if "gh pr create" in shape else ["commit", "-m"])
+    quoted = "'" in opener or '"' in opener or "\\" in opener
+    if quoted:
+        assert records[-1][-1] == body
+    # Parameter parentheses in an unquoted body remain active expansions.
+    expansion_tripwire = not quoted and body == "${y:-(z)}"
+    # Preserve #9484's explicitly excluded primary plain-body scope gap.
+    from shell_redirects import unmodeled_shell_offset
+    from shell_shlex import preprocess_shell_command
+
+    old_tripwire = unmodeled_shell_offset(preprocess_shell_command(command)) is not None
+    expected = expansion_tripwire or (
+        start == "public" and (separator == "\n" or old_tripwire or shape == R7_SHAPES[-1])
+    )
+    assert (guard._command_danger_reason(command, repos[start]) is not None) == expected
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize(
+    "tail",
+    [
+        "cat <<'ONE' <<\\TWO\nIt's fixed\nONE\ncase study ${y:-(z)}\nTWO",
+        'cat <(cat <<"EOF"\nIt\'s fixed\nEOF\n)',
+        "echo `cat <<'EOF'\nIt's fixed\nEOF\n`",
+        "cat <<EOF\n'case study' and \"quotes\"\nEOF",
+        "cat <<EOF\n'$(printf fixture)'\nEOF",
+        "echo '<<EOF'",
+        'cat <<<"It\'s fixed"',
+    ],
+)
+def test_issue_9479_r7_other_heredoc_contexts_bash(repos, tmp_path, start, tail):
+    command = "git checkout -b fixture\n" + tail
+    assert _r7_bash_records(tmp_path, command, repos[start])[0] == [
+        "git",
+        str(repos[start]),
+        "checkout",
+        "-b",
+        "fixture",
+    ]
+    assert (guard._command_danger_reason(command, repos[start]) is not None) == (start == "public")
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize(
+    "tail",
+    [
+        "git commit -m \"$(cat <<EOF\n'$(case x in x) printf fixture;; esac)'\nEOF\n)\"",
+        'git commit -m "$(cat <<EOF\n`case x in x) printf fixture;; esac`\nEOF\n)"',
+        "cat <<'EOF'\nIt's fixed\nEOF\ncase x in x) true;; esac",
+        'git commit -m "$(cat <<EOF\n${y:-(z)}\nEOF\n)"',
+    ],
+)
+def test_issue_9479_r7_real_expansions_and_later_case_stay_blocked(repos, tmp_path, start, tail):
+    command = "git switch -c fixture && " + tail
+    assert _r7_bash_records(tmp_path, command, repos[start])[0][2:] == ["switch", "-c", "fixture"]
+    assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("opener", ["<<EOF", "<<'EOF'", r"<<\EOF", "<<-EOF"])
+def test_issue_9479_r7_missing_terminator_fails_closed(repos, start, opener):
+    command = f'git switch -c fixture && git commit -m "$(cat {opener}\nIt\'s fixed\nEOF trailing\n)"'
+    assert guard.command_repository_unknown(command)
+    assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+def test_issue_9479_r7_primary_apostrophe_is_still_blocked(repos, tmp_path):
+    command = "git switch -c fixture && git commit -m \"$(cat <<'EOF\n"  # replace with a closed delimiter below
+    command = "git switch -c fixture && git commit -m \"$(cat <<'EOF'\nfix: don't drop the cache\nEOF\n)\""
+    assert _r7_bash_records(tmp_path, command, repos["public"])[0][2:] == ["switch", "-c", "fixture"]
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is None
