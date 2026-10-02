@@ -953,3 +953,40 @@ def test_moved_paradigm_child_refused_in_every_operation(pilot, op, marked, caps
         assert pilot["registry"].exists() is not (held and op == "fresh")
         assert op == "fresh" or pilot["registry"].read_bytes() == before
     assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches a marked owner") == held
+
+
+B04 = dict(parent=(150, 140, 0), child=(140, 1000, 0), unrelated=(150, 142, 0), plain=(0, 140, 0),  # (marked record,
+           split_parent=(0, 140, 1000), split_child=(0, 1000, 140), unit_held=(0, 141, 1000),  # held, replay); 0: none,
+           unit_replay=(0, 1000, 141))  # 1000: the paradigm child of row 140; 141: the forged existing unit's anchor.
+
+
+@pytest.mark.parametrize("shape,case", [(s, c) for s in ("legacy", "unit", "legacy+unit") for c in B04
+                                        if s != "legacy" or not c.startswith("unit")])
+def test_b04_overlapping_owner_views_all_contribute(pilot, shape, case, capsys):  # A later view never erases one.
+    records, units = pilot["candidate"]["source_records"], pilot["candidate"]["units"]
+    views = dict(legacy=dict(metadata=dict(slug="second"), aliases=[]), unit=copy.deepcopy(units[141]))  # Existing.
+    with sqlite3.connect(pilot["paths"]["sources"]) as db:
+        for number, query in ((140, "Other"), (141, "Third"), (142, "Fourth")):  # Own aliases: unshared rows.
+            raw = dict(records[number]["raw_row"], normalized_query=query, content_sha256=sha(query))
+            records[number] = capture("ulif", "ulif_dictua_entries", raw)
+            db.execute("REPLACE INTO ulif_dictua_entries VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", tuple(raw.values()))
+        db.execute("UPDATE ulif_dictua_sections SET entry_id=140 WHERE id=1000")  # The child stays in unit 0.
+    records[150] = capture("ulif", "ulif_dictua_sections", dict(records[150]["raw_row"], entry_id=140))
+    records[150].update({k: v for view in shape.split("+") for k, v in views[view].items()})  # Literal row kept.
+    marked, held, replay = B04[case]
+    if marked:
+        records[marked]["review"] = dict(decision=dict(kind="merge"))
+    pilot["admit"]()
+    keys = [records[150]["locator"] if n == 1000 else f"ulif:ulif_dictua_entries:id:{n}" for n in (held, replay) if n]
+    save(pilot["root"] / "m.json", dict(heldout=keys[:1], replay=keys[1:]))
+    reason = OVERLAP if replay else None if case in {"unrelated", "plain"} else "Held-out adjudicated mapping touches"
+    member, refused = ["--heldout-manifest", str(pilot["root"] / "m.json")], bool(reason)
+    assert pilot["operation"]("freeze", *member) == refused
+    assert pilot["manifest"].exists() is not refused and pilot["operation"]("freeze") == 0  # Unverified freeze.
+    assert pilot["operation"]("allocate", *member) == refused  # Fresh allocation.
+    assert pilot["registry"].exists() is not refused and pilot["operation"]("allocate") == 0
+    before = pilot["registry"].read_bytes()
+    assert pilot["operation"]("allocate", *member) == pilot["operation"]("verify", *member) == refused  # Replay/verify.
+    out, err = capsys.readouterr()
+    assert pilot["registry"].read_bytes() == before and out.count('"heldout_isolation": "checked"') == 4 * (not refused)
+    assert err.count("REFUSED: ") == err.count(reason or "REFUSED: ") == 4 * refused

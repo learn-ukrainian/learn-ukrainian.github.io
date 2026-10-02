@@ -207,26 +207,26 @@ def isolation(inputs, heldout, roles=()):  # Roles name the inputs after the fir
             continue
         group, notes = set(), []
         if "source_record_id" in value:
-            group = {value["source_record_id"]} | {a["key"] for a in value.get("aliases", [])}
+            group |= {value["source_record_id"]} | {a["key"] for a in value.get("aliases", [])}
             group |= {k for c in value.get("correspondence", []) for k in [c.get("locator"), *c.get("candidates", [])]}
-            notes = [[d.get(f) for f in PROSE] for d in value.get("aliases", []) + value.get("correspondence", [])]
+            notes += [[d.get(f) for f in PROSE] for d in value.get("aliases", []) + value.get("correspondence", [])]
         if "card_id" in value:  # Owned senses and every creation source key; mwe_key is <source_locator>|<normalised form>.
             creation = value.get("key_at_creation", {})
-            group = {value["card_id"], *source_keys(value), *(s["sense_id"] for s in value.get("senses", [])),
+            group |= {value["card_id"], *source_keys(value), *(s["sense_id"] for s in value.get("senses", [])),
                      creation.get("paradigm_key"), creation.get("mwe_key", "").rpartition("|")[0]}
-            notes = [[d.get(f) for f in PROSE] for d in creation.get("source_keys", [])]
+            notes += [[d.get(f) for f in PROSE] for d in creation.get("source_keys", [])]
         if value.get("kind") in {"mint", "sense_mint", "source_record_mint"}:  # Evidence is provenance, never a key.
-            group = {*value.get("cards", []), *value.get("from", []), *value.get("to", [])}
-            notes = [value.get("evidence")]
+            group |= {*value.get("cards", []), *value.get("from", []), *value.get("to", [])}
+            notes += [value.get("evidence")]
         if "unit_key" in value:
-            group = {value["unit_key"], value["anchor_locator"], *value["source_record_keys"]}
+            group |= {value["unit_key"], value["anchor_locator"], *value["source_record_keys"]}
             if value["atlas_slug"]:
                 group.add("atlas0:slug:" + value["atlas_slug"])
         if "locator" in value and "raw_row" in value:
-            group = {value["locator"]} | {a["key"] for a in aliases(value, records)}
+            group |= {value["locator"]} | {a["key"] for a in aliases(value, records)}
             group.add(paradigm_parent(value, records).get("locator"))  # Typed dependency: closure only, never an alias.
         if "metadata" in value and "aliases" in value:
-            group = {"atlas0:slug:" + value["metadata"]["slug"], (value.get("pos_review") or {}).get("anchor_locator")}
+            group |= {"atlas0:slug:" + value["metadata"]["slug"], (value.get("pos_review") or {}).get("anchor_locator")}
             group |= {a["alias"] for a in value["aliases"]}
         if group:
             owners[id(value)] = len(groups), value, decoded

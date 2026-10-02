@@ -89,6 +89,7 @@ skips nothing. A weak held alias equal to an open object's field name fails clos
 protection: lifecycle `state` alone is no marker; raw-row columns never become keys. The one cross-record relation, a
 paradigm's validated `raw_row.entry_id` parent, is a typed source dependency in the closure only, never an alias or
 identity: holding either row holds the other whatever their units, and a held/replay split of the pair is overlap.
+An object matching several owner shapes contributes all their keys and notes; no later shape erases an earlier one.
 Expected/adjudicated answers are excluded from all inputs even without membership.
 Absent real membership, isolation remains unverified. `--for-evaluation` refuses
 until authenticated operator authority and thresholds have an approved contract.
