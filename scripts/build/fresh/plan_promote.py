@@ -96,16 +96,8 @@ def promote_plan(level: str, slug: str, *, repo_root: Path, now: datetime | None
         "pack_sha256": pack_sha,
         "attempt_id": review["attempt_id"],
         "promoted_at": moment,
+        **pm.receipt_identity(review),
     }
-    if review.get("access") == "full":
-        receipt.update(
-            {
-                "review_access": "full",
-                "reviewer_model": review["reviewer_model"],
-                "reviewer_family": review["reviewer_family"],
-                "harness": review["harness"],
-            }
-        )
     reviewed_copy = checked_path(
         root, (directory / f"plan-reviewed.{reviewed_sha}.yaml").relative_to(root), f"{pm.TREE}/evidence"
     )
