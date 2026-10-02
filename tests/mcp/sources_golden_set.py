@@ -81,12 +81,15 @@ STYLE_GUIDE_PROBES: tuple[str, ...] = (
 )
 
 _DICTIONARY_FINGERPRINT_KEYS = ("headword", "hit_count", "text_length", "text_sha256")
-_DROP_KEYS = frozenset({
-    "entry_id",
-    "source_version",
-    "canonical_jsonl_sha256",
-    "evidence_identifiers",
-})
+_DROP_KEYS = frozenset(
+    {
+        "entry_id",
+        "source_version",
+        "canonical_jsonl_sha256",
+        "evidence_identifiers",
+        "schema_version",
+    }
+)
 
 
 def load_server():
@@ -145,7 +148,7 @@ def _strip_embedded_payload(text: str) -> str:
     if index == -1:
         return text
     prefix = text[: index + len(marker)]
-    rest = text[index + len(marker):]
+    rest = text[index + len(marker) :]
     stripped_lead = rest.lstrip()
     if not stripped_lead.startswith(("{", "[")):
         return text
@@ -183,9 +186,7 @@ def _require_style_guide_headword(probe: str, fingerprint: dict[str, Any]) -> No
     if fingerprint.get("hit_count", 0) < 1:
         raise RuntimeError(f"style-guide probe {probe!r} returned no entry")
     if _fold_dict_key(headword) != _fold_dict_key(probe):
-        raise RuntimeError(
-            f"style-guide probe {probe!r} hit {headword!r}, which is not that headword"
-        )
+        raise RuntimeError(f"style-guide probe {probe!r} hit {headword!r}, which is not that headword")
 
 
 async def _capture(server: Any) -> dict[str, Any]:
@@ -214,9 +215,7 @@ async def _capture(server: Any) -> dict[str, Any]:
                         await server.handle_dict_search({"query": word, "limit": 1}, "puls_cefr", "PULS CEFR")
                     ),
                     "search_definitions": fingerprint_dictionary_result(
-                        _present(
-                            await server.handle_dict_search({"query": word, "limit": 1}, "sum11", "СУМ-11")
-                        )
+                        _present(await server.handle_dict_search({"query": word, "limit": 1}, "sum11", "СУМ-11"))
                     ),
                 }
             style_guide: dict[str, dict[str, Any]] = {}
@@ -238,17 +237,19 @@ async def _capture(server: Any) -> dict[str, Any]:
             }
     finally:
         conn.close()
-    return strip_unstable_ids({
-        "words": words,
-        "style_guide_probes": probes,
-        "query_pravopys": (
-            "omitted: pravopys_lookup fetches live pravopys.online HTML; "
-            "search_style_guide is the nearest offline dictionary handler"
-        ),
-        "per_word": per_word,
-        "style_guide": style_guide,
-        "batch": batch,
-    })
+    return strip_unstable_ids(
+        {
+            "words": words,
+            "style_guide_probes": probes,
+            "query_pravopys": (
+                "omitted: pravopys_lookup fetches live pravopys.online HTML; "
+                "search_style_guide is the nearest offline dictionary handler"
+            ),
+            "per_word": per_word,
+            "style_guide": style_guide,
+            "batch": batch,
+        }
+    )
 
 
 def capture() -> dict[str, Any]:
