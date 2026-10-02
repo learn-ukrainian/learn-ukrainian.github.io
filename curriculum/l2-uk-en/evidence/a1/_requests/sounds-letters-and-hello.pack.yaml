@@ -453,7 +453,7 @@ videos:
 standard:
 - {id: S-001, lines: '342-344'}
 - {id: S-002, lines: '348-350'}
-- {id: S-003, lines: '419-421'}
+- {id: S-003, lines: '420-421'}
 unsupported:
 - id: U-001
   claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and lesson 5

@@ -6,7 +6,7 @@
     "exercises_count": 7,
     "notes_count": 0,
     "standard_count": 0,
-    "texts_count": 40,
+    "texts_count": 43,
     "unsupported_open_count": 0,
     "unsupported_resolved_count": 4,
     "videos_count": 16
@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml",
-    "sha256": "3a0865140aedc87b384a7bc884d590837d5d553571e7274cedb784d1482d642c"
+    "sha256": "b1b1c9b4c6f8b9ff6f704bec874f3cc33f13e4b724d2c3dc93496cffba8a63d1"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock",
-    "sha256": "e1c169fb2ca1bc9f6347b0bb26773b851cc7f503cb04a8aea36513fa0dbe1d42"
+    "sha256": "e2e63d1b5c02895fe8d797855df5e4e82f0e6440f944cb5c7e7ba0f8bcaa190b"
   },
   "report_schema": 1,
   "reports": [],

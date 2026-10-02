@@ -83,16 +83,7 @@ learner_state:
     W-076:
       lesson: 1
       position: 1
-    W-077:
-      lesson: 2
-      position: 1
-    W-078:
-      lesson: 2
-      position: 1
-    W-079:
-      lesson: 3
-      position: 1
-    W-080:
+    W-081:
       lesson: 3
       position: 1
     W-082:
@@ -104,19 +95,10 @@ learner_state:
     W-084:
       lesson: 5
       position: 1
-    W-086:
-      lesson: 2
-      position: 1
-    W-087:
-      lesson: 2
-      position: 1
-    W-088:
-      lesson: 3
-      position: 1
     W-089:
-      lesson: 4
+      lesson: 5
       position: 1
-  cumulative_core_count: 14
+  cumulative_core_count: 8
   grammar_ids:
     G-a1-001:
       lesson: 2
@@ -170,19 +152,13 @@ learner_state:
       position: 1
   level: a1
   name_ids:
-    W-081:
-      lesson: 6
-      position: 1
     W-091:
       lesson: 1
       position: 1
     W-093:
       lesson: 1
       position: 1
-    W-098:
-      lesson: 6
-      position: 1
     W-099:
-      lesson: 1
+      lesson: 6
       position: 1
   position: 2
