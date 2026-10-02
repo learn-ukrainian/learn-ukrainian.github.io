@@ -1063,7 +1063,8 @@ def _with_lifecycle_records(state: State, hits: list[dict], terms: list[str], de
     plans: list[tuple[dict, list[str], list[str]]] = []
     for hit in hits:
         path = hit.get('path')
-        if path and hit.get('match') != 'data_store' and is_historical(hit) \
+        # A superseded hit is already followed by its replacement, the record the catalogue keeps.
+        if path and hit.get('match') != 'data_store' and is_historical(hit) and not hit.get('superseded_by') \
                 and not INDEX_NAME.fullmatch(PurePosixPath(path).name):
             plans.append((hit, *lifecycle_authorities(state, path)))
     names = {PurePosixPath(hit['path']).name for hit, registries, _ in plans if registries}
@@ -1482,6 +1483,8 @@ HEADER_LINE = re.compile(r'''\s*(?:#|//|/\*|\*|--|<!--|[rRbBuU]{0,2}(?:"""|\'\'\
 CODE_LITERAL = re.compile(r'''['"]([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)['"]''')
 # CLI help and description text says in words what a command or flag does.
 HELP_TEXT = re.compile(r'''\b(?:help|description)\s*=\s*[rRfFuU]{0,2}(?:'([^'\n]{3,})|"([^"\n]{3,}))''')
+QUOTED = re.compile(r'"[^"]*"')
+QUOTED_SINGLE = re.compile(r"'[^']*'")
 SUMMARY_LINES = 40  # the head of a code file read for its summary (docstring and comment lines)
 DEFINITION = re.compile(r'\s*(?:export\s+)?(?:async\s+)?(?:def|class|function)\s')
 DOCSTRING = re.compile(r'''\s*[rRbBuU]{0,2}(?:"""|\'\'\')''')
@@ -1519,7 +1522,9 @@ def symbol_text(path: str, line_no: int, line: str) -> str | None:
     found = shape.search(line) if shape else None
     names = [g for g in found.groups() if g] if found else []
     names += CODE_LITERAL.findall(line)
-    names += [single or double for single, double in HELP_TEXT.findall(line)]
+    # Help text says what a command does; an example quoted inside it ("ULP 1-02") is input, not that.
+    names += [QUOTED.sub(' ', single) if single else QUOTED_SINGLE.sub(' ', double)
+              for single, double in HELP_TEXT.findall(line)]
     if names:
         text = ' '.join(names)
     elif line_no <= HEADER_LINES and HEADER_LINE.match(line):

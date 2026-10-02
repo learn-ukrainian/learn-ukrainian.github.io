@@ -879,6 +879,7 @@ def test_code_readable_is_the_privacy_gate_for_code(path, readable):
     ('a.py', 40, 'class CfPreflightResult:', 'Cf Preflight Result'),
     ('a.py', 40, "    sub.add_parser('resolve-reviewer', help='x')", 'resolve-reviewer'),
     ('a.py', 40, "    parser.add_argument('--allow-no-cf-preflight')", '--allow-no-cf-preflight'),
+    ('a.py', 40, """    p.add_argument('q', help='Words to look for, e.g. "ULP 1-02"')""", 'Words to look for, e.g.  '),
     ('a.py', 40, "ERROR = {'type': 'SELF_REVIEW_DETECTED'}", 'ERROR SELF_REVIEW_DETECTED'),
     ('a.py', 40, "        raise Fail('SELF_REVIEW_DETECTED')", 'SELF_REVIEW_DETECTED'),
     ('a.py', 2, '"""Safe post-task reaper for dispatch worktrees.', 'Safe post-task reaper for dispatch worktrees.'),
