@@ -7,18 +7,20 @@
 2026-10-02 (#9488): Grok reviews code and infra only as the Cursor seat `grok-4.7-cursor-fallback`
 (`--agent cursor --model grok-4.7-high`), the Sol-spared last resort below critical risk (it has no
 `critical_review` role), never on a Grok-authored change, and its verdict counts only when the Cursor
-runtime reports the model itself. DeepSeek is excluded from every dispatch and
+runtime reports the model itself. Operator decision 2026-10-02 (#9538): a formal code or infra review at
+`high` risk resolves only to `claude-opus-5-5` (native or Cursor transport) or `gpt-6.1-sol` (Codex); when
+neither is eligible the resolver returns no reviewer and the trace states why, never another model. DeepSeek is excluded from every dispatch and
 review, and Sonnet is excluded from critical security review. Historical
 capability and transport descriptions below confer no routing permission.
 
 **Resolver preference:** after hard gates, `review_scheduler.profile_risk_role_order`
 prefers primary seats before last resort, then ranks semantic suitability before quality tier; health and quota break ties
 within that suitability and tier. YAML rung order is a fallback inventory.
-For `code/high`, Opus 5.5 currently matches `critical_review` at rank 3;
-Sonnet 5.5 matches `strong_review` at rank 0. Thus an eligible Opus seat can
-lose to Sonnet on this profile. When both match the requested role equally,
-Opus's authority tier wins. Inspect the returned suitability and selection
-trace rather than inferring eligibility or priority from rung position.
+At `medium` and `low`, an eligible Opus seat can lose to Sonnet 5.5 on
+`code` (Opus matches `critical_review` at rank 3, Sonnet `strong_review` at
+rank 0); when both match the requested role equally, Opus's authority tier wins.
+The `high` ladder holds only Sol and Opus. Inspect the returned suitability and
+selection trace rather than inferring eligibility or priority from rung position.
 
 Match the EXACT command — not a principle. Memory does not enforce; the dispatch tool does. Established 2026-05-06 after repeated drift on cost discipline.
 

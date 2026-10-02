@@ -113,7 +113,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     assert models["claude-sonnet-5"]["lifecycle"] == "retired"
     for risk, ladder in load_model_catalog()["review_ladders"].items():
         names = {candidate for rung in ladder for candidate in rung}
-        assert ("claude-sonnet-5-5" in names) == (risk != "critical")
+        assert ("claude-sonnet-5-5" in names) == (risk in {"medium", "low"})
         assert "claude-sonnet-5" not in names
     assert models["poolside/laguna-s-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
@@ -377,8 +377,8 @@ def test_poolside_laguna_family_exact_ids_and_roles():
         "poolside/laguna-xs-2.1",
         "poolside/laguna-m.1",
     ]
-    # Ladder includes both gen-2 seats.
-    for risk in ("high", "medium", "low", "critical"):
+    # Ladder includes both gen-2 seats (high holds only Sol and Opus, #9538).
+    for risk in ("medium", "low", "critical"):
         names = {n for rung in catalog["review_ladders"][risk] for n in rung}
         assert "pool" in names
         assert "pool-xs" in names
@@ -503,9 +503,22 @@ def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     assert fc["claude"]["escalate_model_id"] == "claude-opus-5-5"
 
 
+def test_high_ladder_is_sol_and_opus_only():
+    """#9538: high-risk review resolves only to Sol or Opus; medium and low stay practical."""
+    ladders = load_model_catalog()["review_ladders"]
+    assert ladders["high"] == [
+        ["openai_frontier"],
+        ["claude-opus-5-5"],
+        ["claude-opus-5-5-cursor-fallback"],
+    ]
+    assert ladders["medium"] == ladders["low"]
+    assert ladders["medium"][:3] == ladders["high"]
+    assert len(ladders["medium"]) > len(ladders["high"])
+
+
 def test_practical_ladders_exclude_advisory_roles():
     ladders = load_model_catalog()["review_ladders"]
-    for risk in ("high", "medium", "low"):
+    for risk in ("medium", "low"):
         names = {name for rung in ladders[risk] for name in rung}
         assert "openai_frontier" in names
         assert "claude-fable-5-1" not in names

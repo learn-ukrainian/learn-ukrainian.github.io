@@ -41,12 +41,13 @@ def _expected(author: str, risk: str, sol: str) -> str | None:
         if sol == "healthy":
             return "openai_frontier"
         # Sol unavailable: every Anthropic seat is same family. Grok has no
-        # critical_review role, so critical stays Sol/Opus-only and waits.
-        return None if risk == "critical" else GROK_SEAT
+        # critical_review role and #9538 keeps it off the high ladder, so
+        # critical and high stay Sol/Opus-only and wait.
+        return None if risk in {"critical", "high"} else GROK_SEAT
     if author == "gpt-6.1-sol":
         # Sol is advisory-only for an OpenAI author; the Anthropic primaries
         # keep the seat and the Cursor Grok seat stays a last resort.
-        return "claude-opus-5-5" if risk == "critical" else "claude-sonnet-5-5"
+        return "claude-opus-5-5" if risk in {"critical", "high"} else "claude-sonnet-5-5"
     return "grok-author"
 
 
@@ -63,6 +64,9 @@ def test_denominator_selects_an_attested_seat_or_states_the_policy_reason(author
         assert selected is not None
         assert selected.family in {"openai", "anthropic"}
         assert selected.transport in {"native_codex", "native_claude"}
+        if risk == "high":
+            assert GROK_SEAT not in trace
+            return
         assert trace[GROK_SEAT].status == "excluded"
         assert (
             trace[GROK_SEAT].reason == "same family as author (xai) — cross-family review requires a different family"
@@ -70,8 +74,13 @@ def test_denominator_selects_an_attested_seat_or_states_the_policy_reason(author
         return
     if expected is None:
         assert selected is None
-        assert trace[GROK_SEAT].status == "excluded"
-        assert trace[GROK_SEAT].reason == "missing required review role suitability: code/critical catalog suitability"
+        if risk == "high":
+            assert GROK_SEAT not in trace
+        else:
+            assert trace[GROK_SEAT].status == "excluded"
+            assert (
+                trace[GROK_SEAT].reason == "missing required review role suitability: code/critical catalog suitability"
+            )
         assert trace["openai_frontier"].reason == "lane health is unhealthy — route is operationally unavailable"
         return
     assert selected is not None and selected.name == expected
@@ -85,21 +94,24 @@ def test_denominator_selects_an_attested_seat_or_states_the_policy_reason(author
         assert trace["openai_frontier"].reason == "lane health is unhealthy — route is operationally unavailable"
         assert "last resort selected grok-4.7-cursor-fallback" in (resolution.substitution_note or "")
     else:
-        assert trace[GROK_SEAT].status != "selected"
+        assert (risk == "high" and GROK_SEAT not in trace) or trace[GROK_SEAT].status != "selected"
 
 
 def test_sol_healthy_stays_first_even_where_grok_has_the_closer_role_fit():
-    """At high risk Grok's strong_review outranks Sol's standard_review on fit alone."""
-    resolution = resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="high"))
-    trace = {entry.name: entry for entry in resolution.trace}
-    assert trace[GROK_SEAT].status == "eligible"
-    assert trace[GROK_SEAT].suitability_rank < trace["openai_frontier"].suitability_rank
-    assert resolution.selected.name == "openai_frontier"
+    """Grok's strong_review fit never outranks Sol: it is off the high ladder (#9538)."""
+    high = resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="high"))
+    assert GROK_SEAT not in {entry.name for entry in high.trace}
+    assert high.selected.name == "openai_frontier"
+    # The seat is still eligible on its own at high, so the ladder alone keeps it out.
+    direct = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], ResolverInputs(author_model="claude-opus-5-5", risk="high"))
+    assert direct.status == "eligible"
+    medium = resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="medium"))
+    assert medium.selected.name == "openai_frontier"
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("risk", ["high", "medium", "low"])
-def test_cursor_grok_seat_reviews_code_and_infra_for_an_anthropic_author(profile, risk):
+def test_cursor_grok_seat_stays_qualified_for_an_anthropic_author(profile, risk):
     inputs = ResolverInputs(author_model="claude-opus-5-5", review_profile=profile, domain=profile, risk=risk)
     result = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], inputs)
     assert result.status == "eligible"
@@ -140,7 +152,7 @@ def test_grok_seat_never_reviews_its_own_adapter():
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="claude-opus-5-5",
-            risk="high",
+            risk="medium",
             routing_snapshot=SOL_UNAVAILABLE,
             owned_paths=("scripts/agent_runtime/adapters/grok_build.py",),
         )
@@ -164,7 +176,7 @@ def test_closeout_cli_selects_the_attested_cursor_grok_seat_when_sol_is_unavaila
             "--review-profile",
             "code",
             "--risk",
-            "high",
+            "medium",
             "--routing-snapshot-file",
             str(snapshot),
         ]
@@ -229,8 +241,12 @@ def test_catalog_requires_the_cursor_grok_seat_to_pin_a_high_effort_cursor_slug(
         validate_catalog(catalog)
 
 
-def test_every_ladder_lists_the_cursor_grok_seat_last():
+def test_every_ladder_but_high_lists_the_cursor_grok_seat_last():
     for risk in RISKS:
+        if risk == "high":
+            # #9538: high is Opus 5.5 or Sol only, so the Sol-spared seat is absent.
+            assert GROK_SEAT not in {c.name for rung in REVIEW_LADDERS[risk] for c in rung}
+            continue
         assert REVIEW_LADDERS[risk][-1] == (REVIEW_CANDIDATES[GROK_SEAT],)
 
 

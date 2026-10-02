@@ -1263,7 +1263,13 @@ review_ladders:
     - [claude-fable-5-1]
     - [claude-fable-5-1-cursor-fallback]
     - [grok-4.7-cursor-fallback]
-  high: &practical_first_code_review
+  # High is Opus 5.5 or Sol only (operator decision 2026-10-02, #9538): when
+  # neither is eligible the resolver returns no reviewer with a stated reason.
+  high:
+    - [openai_frontier]
+    - [claude-opus-5-5]
+    - [claude-opus-5-5-cursor-fallback]
+  medium: &practical_first_code_review
     - [openai_frontier]
     - [claude-opus-5-5]
     - [claude-opus-5-5-cursor-fallback]
@@ -1272,7 +1278,6 @@ review_ladders:
     - [pool]
     - [pool-xs]
     - [grok-4.7-cursor-fallback]
-  medium: *practical_first_code_review
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).

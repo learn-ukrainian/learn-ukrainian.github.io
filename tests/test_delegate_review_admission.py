@@ -195,9 +195,10 @@ def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatc
     args = _args("--check-budget", "--review-author-model", "claude-opus-5-5", "--review-risk", risk)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
     assert calls and all(inputs.author_model == "claude-opus-5-5" and inputs.risk == risk for inputs, _ in calls)
-    if risk == "critical":
-        # Author family is excluded, both native seats are exhausted, and the
-        # Cursor Grok seat has no critical_review role (#9488).
+    if risk in {"critical", "high"}:
+        # Author family is excluded and both native seats are exhausted. The
+        # Cursor Grok seat has no critical_review role (#9488) and is off the
+        # high ladder (#9538), so nothing may substitute.
         assert refusal and target is None
         assert routing.substitution is None
         assert calls[-1][1].selected is None
