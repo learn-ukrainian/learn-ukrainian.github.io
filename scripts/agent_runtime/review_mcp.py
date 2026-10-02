@@ -546,6 +546,11 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
     return Path(agy_home) / ".gemini" / "antigravity-cli"
 
 
+def agy_full_review_settings() -> dict[str, Any]:
+    """Grant exact sources review tool targets, with no wildcard or bypass."""
+    return {"permissions": {"allow": [f"mcp(sources/{name})" for name in sorted(review_tools("full"))]}}
+
+
 def agy_review_mcp_config_path(agy_home: Path | str) -> Path:
     """Return the one MCP config file ``agy -p`` loads from a home (#8617 spike)."""
     return Path(agy_home) / ".gemini" / "config" / "mcp_config.json"
@@ -683,6 +688,7 @@ def prepare_review_attempt(
     *,
     receipts_root: Path | None = None,
     review_contract: Mapping[str, Any] | None = None,
+    review_access: str = "isolated",
 ) -> ReviewMcpPlan:
     """Prepare the per-attempt stdio sources MCP config, empty ledger, and sidecar.
 
@@ -692,6 +698,7 @@ def prepare_review_attempt(
         manifest_path: Path to the review manifest YAML.
         harness: Agent harness name (e.g. 'claude', 'cursor').
         receipts_root: Optional override for the receipts base directory (used in tests).
+        review_access: Tool contract for this attempt; defaults to the original isolated set.
         review_contract: What admission checked (``check_review_contract``). When given, the sources server is
             digested again from the checkout and interpreter this config launches, and a difference refuses
             before any file is written (#9163).
@@ -710,6 +717,7 @@ def prepare_review_attempt(
     if not isinstance(attempt_id, str) or not _TOKEN_RE.match(attempt_id):
         raise ValueError(f"invalid attempt_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(attempt_id)})")
 
+    review_tools(review_access)  # Validate before reserving files or an attempt id.
     canonical_harness = (harness or "").lower().strip()
     if canonical_harness in UNSUPPORTED_HARNESS_REASONS:
         raise ValueError(
@@ -770,6 +778,7 @@ def prepare_review_attempt(
                     ENV_ATTEMPT_ID: attempt_id,
                     ENV_MANIFEST_SHA256: manifest_sha256,
                     ENV_LEDGER_PATH: str(ledger_path),
+                    "LU_REVIEW_ACCESS": review_access,
                 },
             }
         }
@@ -846,8 +855,10 @@ def prepare_review_attempt(
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
     }
-    allowed_tools = review_tools_allowed_csv(canonical_harness)
-    if allowed_tools is not None:
+    allowed_tools = review_tools_allowed_csv(canonical_harness, review_access)
+    if canonical_harness == "claude" and review_access == "full":
+        adapter_options["reviewer_tools"] = True
+    elif allowed_tools is not None:
         adapter_options["allowed_tools"] = allowed_tools
     if codex_home is not None:
         adapter_options["codex_home_override"] = str(codex_home)
@@ -1107,14 +1118,30 @@ def verify_agy_review_effective_mcp(
     if boundary:
         expected = json.loads(Path(boundary.tool_config["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]
         command, args = expected["command"], list(expected["args"])
-    elif not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
-        raise refuse("the attempt MCP config does not carry exactly the three LU_REVIEW_* variables")
+    else:
+        recording_env = expected.get("env")
+        if not isinstance(recording_env, dict) or set(recording_env) != {*ENV_KEYS, "LU_REVIEW_ACCESS"}:
+            raise refuse("the attempt MCP config does not carry exactly the review recording variables")
+        try:
+            review_tools(recording_env["LU_REVIEW_ACCESS"])
+        except ValueError:
+            raise refuse("the attempt MCP config has invalid review access") from None
 
     agy_home = (boundary.write_root / "home") if boundary else agy_review_home_path(config)
     app_data = agy_review_app_data_dir(agy_home)
     if env.get("HOME") != str(agy_home) or env.get("AGY_APP_DATA_DIR") != str(app_data):
         # Name the variables, never their values: the launch environment is not log-safe.
         raise refuse("the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR")
+    if boundary and boundary.full:
+        settings = app_data / "settings.json"
+        try:
+            permissions = _strict_json_object(
+                _read_attempt_file(agy_home.parent, *settings.relative_to(agy_home.parent).parts)
+            )
+        except (OSError, ValueError):
+            raise refuse("full AGY review requires the sources-only permission rule") from None
+        if permissions != agy_full_review_settings():
+            raise refuse("full AGY review requires exactly the sources review tool permission rules")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
         raise refuse("the scoped AGY_APP_DATA_DIR holds an unexpected mcp_config.json")
 

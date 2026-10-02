@@ -11201,6 +11201,7 @@ def _dispatch(
                 attempt_id=attempt_id,
                 manifest_path=Path(review_attempt),
                 harness=effective_harness,
+                review_access=review_access,
                 # Launch-time check (#9163): the primary may have changed since admission.
                 review_contract=review_contract,
             )
@@ -11419,6 +11420,7 @@ def _dispatch(
                 attempt_id=attempt_id,
                 manifest_path=Path(review_attempt),
                 harness=requested_harness or dispatch_agent,
+                review_access=review_access,
                 review_contract=review_contract,
             )
         except (ReviewIsolationError, ValueError, FileExistsError) as exc:

@@ -580,7 +580,12 @@ class ClaudeAdapter:
             cmd.extend(["--permission-mode", profile["mode"]])
             granted = [*profile["allow"]]
             if tc.get("mcp_config_path"):
-                granted.extend(profile["mcp_allow"])
+                if tc.get("review_access") == "full":
+                    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+                    granted.extend(review_tools_allowed_csv("claude", "full").split(","))
+                else:
+                    granted.extend(profile["mcp_allow"])
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(profile["deny"])])
         elif mode == "workspace-write" and not review_isolation:
