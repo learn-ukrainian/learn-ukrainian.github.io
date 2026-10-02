@@ -236,7 +236,7 @@ ukrainian_word_stress==2.1.0
 unlzw3==0.2.3
 urllib3==2.8.0
 uvicorn==0.48.0
-virtualenv==21.7.12
+virtualenv==21.7.13
 vulture==2.16
 warc3-wet==0.2.5
 warc3-wet-clueweb09==0.2.5
