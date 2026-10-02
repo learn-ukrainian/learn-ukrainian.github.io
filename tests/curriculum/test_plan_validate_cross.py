@@ -118,7 +118,7 @@ def teach_lesson(
             "teach": "The teach step.",
             "introduces": {"letters": list(letters), "grammar": list(grammar), "vocabulary": list(core)},
             "uses": {"grammar": [], "vocabulary": []},
-            "evidence": ["T-001"],
+            "evidence": ["T-001", *(["V-001"] if letters else [])],  # the letters' recording (#9487 C27)
             "practice": ["a1"],
         }
     ]
@@ -326,7 +326,16 @@ def write_level(
     paths: dict[str, Path] = {}
     for raw_plan in plans:
         plan = copy.deepcopy(raw_plan)
-        pack_bytes = _dump(base_pack(plan["slug"]))
+        pack = base_pack(plan["slug"])
+        letters = [
+            letter
+            for lesson in plan.get("lessons") or []
+            for step in lesson.get("steps") or []
+            for letter in (step.get("introduces") or {}).get("letters") or []
+        ]
+        if letters:  # V-001 models every letter the plan introduces (#9487 C27)
+            pack["videos"][0]["models"] = {"letters": letters, "words": [], "segment": None}
+        pack_bytes = _dump(pack)
         pack_path = evidence_dir / f"{plan['slug']}.yaml"
         pack_path.write_bytes(pack_bytes)
         pack_digest = hashlib.sha256(pack_bytes).hexdigest()

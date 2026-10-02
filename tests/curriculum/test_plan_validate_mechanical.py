@@ -139,6 +139,7 @@ def mechanical_plan() -> dict:
         _activity("b3", "pick-syllables", "workbook", "Complete «мама», «мана» and «нона» from syllables."),
     ]
     two["practice"] = {"vocabulary": "core", "stress": [], "patterns": ["b2"]}
+    two["videos"] = [{"evidence": "V-899", "use": "Letter models for Н and О."}]  # #9487 C27
 
     recap = _lesson(3, "recap", [], [], [MAMA, MANA, MAN, NONA])
     recap["steps"] = [_step("s1", "practice", "Review.", {}, {"vocabulary": [MAMA, MANA, MAN, NONA]}, ["c1"])]
@@ -169,7 +170,11 @@ def mechanical_pack() -> dict:
         "examples": [],
         "errors": [],
         # A word model binds its timed segment (#9487 C20).
-        "videos": [{"id": "V-900", "models": {"letters": [], "words": [MANA, MAN], "segment": "0:00–0:05"}}],
+        "videos": [
+            {"id": "V-900", "models": {"letters": ["М", "А"], "words": [MANA, MAN], "segment": "0:00–0:05"}},
+            # Each lesson's recordings model the letters it introduces (#9487 C27).
+            {"id": "V-899", "models": {"letters": ["Н", "О"], "words": [], "segment": None}},
+        ],
         "standard": [],
     }
 
@@ -381,8 +386,8 @@ def test_missing_base_layer_reports_not_checked_instead_of_guessing(tmp_path: Pa
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert report.ok, report.render_text()
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M3"}
-    assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M3"})
+    assert {gate.message.split()[1] for gate in gates} == {"M3", "C28"}
+    assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M3", "C28"})
 
 
 def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) -> None:
@@ -392,7 +397,7 @@ def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) ->
     assert codes.ARC_UNAVAILABLE in {o.code for o in report.failures}
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
     # M1 and the readability gates C4 and C10 (#9487) need the taught-letter state
-    assert {gate.message.split()[1] for gate in gates} == {"M1", "C4", "C10"}
+    assert {gate.message.split()[1] for gate in gates} == {"M1", "C4", "C10", "C27"}
 
 
 def produced_mechanical_codes(root: Path) -> set[str]:

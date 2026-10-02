@@ -9,7 +9,7 @@ establish models (evidence-pack-v1 schema). A text record's `quote` bytes and a
 video record's `url`, `models.segment` and `use` are kept for the review gates (#9487), as are
 the printable text of text, exercise and example records and an example's `sentence_ref.words`.
 The word store
-(evidence/<level>/_words.yaml) holds `words[] {id, lemma, forms[] {tags}}`.
+(evidence/<level>/_words.yaml) holds `words[] {id, lemma, forms[] {tags}}`; a record's `gloss_en` is kept too.
 A `<file>.lock` sidecar sits beside each file; its first whitespace-delimited
 token is the lowercase hex sha256 of the file's bytes. Duplicate ids fail.
 """
@@ -93,6 +93,8 @@ class WordRecord:
     cefr_level: str | None = None
     #: (tags, surface text) of every form that carries a text, in store order.
     tagged_forms: tuple[tuple[str, str], ...] = ()
+    #: The record's English gloss (gloss_en); None when it carries none.
+    gloss_en: str | None = None
 
 
 @dataclass(frozen=True)
@@ -211,5 +213,6 @@ def load_words(words_path: Path) -> WordStore:
             form_texts=tuple(form_texts),
             cefr_level=cefr_level,
             tagged_forms=tuple(tagged_forms),
+            gloss_en=entry["gloss_en"] if isinstance(entry.get("gloss_en"), str) else None,
         )
     return WordStore(path=words_path, records=records)

@@ -5,7 +5,7 @@ script can decide; each cost a review round. These gates decide them from data
 the validator already reads — the plan, the module pack (video models and
 URLs, quote bytes), the level word store, the arc and the earlier plans — so a
 plan with the defect fails before a reviewer is spent. C1–C6 come from the
-first reviews, C7–C14 from the second, C15–C20 from the third.
+first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 from the fourth.
 
   C1  a word id named in a dialogue's target_grammar, or in the focus of an activity in a
       step's practice, is introduced at or before that step (failure)
@@ -45,6 +45,19 @@ first reviews, C7–C14 from the second, C15–C20 from the third.
   C19 in a letter-stage module, an example sentence cited in a lesson that cannot read it (failure); one first
       cited later than the lesson that could read it (note)
   C20 a cited video that models words but binds no segment (failure)
+  C21 in a letter-stage module, a step (or an activity focus) that sends the learner to the exact print of a record
+      holding words with letters not taught by that step (failure)
+  C22 three or more choice activities of one lesson on the same two-member key set (failure); two (note)
+  C23 a pick-syllables row that another syllable of the activity in a blanked slot turns into an attested word
+      (failure; a note when the focus says the stems carry a cue); an anagram whose letters spell another attested
+      word (note)
+  C24 a rationale or job that says the lesson recycles a category of word records none of which it recycles (failure)
+  C25 a practice step with no practice, need, dialogue or paradigm (failure)
+  C26 a comprehension activity hosted only on quotes or recordings that names a word no host holds (failure); the
+      same when a host holds a transcription that may show it (note)
+  C27 in a letter-stage module, a letter a step introduces that no recording the lesson cites models (failure); the
+      same when the step records the teacher modelling that letter (note)
+  C28 a word id a step's teach text names outside the lesson's inventory and the prior learner state (failure)
 
 Check 7 of #9487 is a learner-state fix (scripts/curriculum/learner_state/planned.py). Check 9 of the
 second round is in pack-verify (scripts/curriculum/evidence/sources.py, Standard line numbering).
@@ -130,6 +143,38 @@ How exact each gate is:
   taught through a lesson are the arc's earlier positions plus this plan's introductions so far (as C4).
 - C20 reads the pack: a video whose models.words is not empty and whose models.segment is null. A letter
   video may be a whole resource; a word or phrase model inside a whole episode needs the timed segment.
+- C21 reads the sentences that direct modelling or reading a record's exact print ("demonstrates the exact print
+  in T-…", "models its exact printed source", "models the exact cited T-… forms"); "read the exact T-036 Ко-ло"
+  names words of the record, not its print, so it is not read. The print is the record's printable text in the pack
+  (quote, text, items_sample); every Cyrillic word of it must be readable with the letters taught by the step (as
+  C10; an activity is taken at the step whose practice links it, else the lesson's last step). A recording does not
+  help: the directive is about print. Each record is reported once per step.
+- C22 reads a declared key set, "keys Привіт and Добрий день", "keys О, У, И, А", "keys 1 and 2", in a quiz, fill-in,
+  true-false, odd-one-out or pick-syllables focus. Two activities on one binary key set can be a recognition and a
+  transfer (the plan reviews accepted repeated types with different operations), so two is a note; a third scores
+  the same choice again, which is the defect the review found.
+- C23 builds the completions of a pick-syllables focus: its rows are the source segmentations it prints (ма-ма,
+  По-лі-на) and its blanked rows with a stated key (ма- __ -на has key ли); its syllables are every segment and every
+  one-vowel token the focus prints, which is what the activity's one syllable list (writer contract: syllables and
+  correctIndices) draws from. The slots are the blanked one, else the positions the focus names before
+  "syllable"/"blank" (first, initial, second, middle, final, last), else every slot. A completion is a word-store
+  spelling or a VESUM form, looked up in lower case, and capitalised too only when the row's word is a name. An
+  anagram's other arrangements (targets of at most seven letters) are mostly rare inflected or archaic forms, so a
+  hit is a note.
+- C24 reads a rationale or job sentence saying the lesson recycles word records "including" (or "such as") a list.
+  Each English word of the list names a category when it equals the head word of store records' gloss_en ("sound",
+  "letter"); function words and words describing records do not. A quoted Ukrainian word names its records. The
+  claim fails when no record of the category is in the lesson's recycled list, inventory or step vocabulary.
+- C25: a ``practice`` step whose practice list is empty and which has no needs, hosts no dialogue and carries no
+  paradigm leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
+- C26 applies to a comprehension activity whose every host is a pack quote or a video with models (a dialogue host
+  is drafted by the writer, so it is not decided). Its words are the W- ids of its focus outside sentences that
+  exclude them or speak of another activity. A word is held when a spelling of its record is a token of a host quote
+  (also read with spaces removed, for letter-spaced print) or a host video models it.
+- C27 compares each letter a step introduces with the models.letters of every recording the lesson cites
+  (case-folded); a teach-text sentence naming the teacher's model or pronunciation and the letter itself is a note.
+- C28 compares the W- ids of each teach text with C1's allowed set (the lesson's inventory, its steps' vocabulary,
+  earlier lessons and positions' introductions and the base layer); earlier incidentals are not in it.
 """
 
 from __future__ import annotations
@@ -139,6 +184,7 @@ from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import cached_property
+from itertools import permutations
 from pathlib import Path
 
 from scripts.practice.euphony_stem_engine import VOWELS as VOWEL_LETTERS
@@ -146,7 +192,7 @@ from scripts.practice.euphony_stem_engine import VOWELS as VOWEL_LETTERS
 from ..arc.loader import ArcPosition
 from . import codes, quote_bytes
 from .cross import LevelPlans
-from .mechanical import Gates
+from .mechanical import Gates, _names_letter, tokens_of
 from .pack import Pack, WordStore
 from .report import Outcome, Report
 from .scope import CYRILLIC_LETTER_CLASS
@@ -189,6 +235,65 @@ _CHOICE_TYPES = frozenset({"fill-in", "quiz"})
 _APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'"})
 _YOUTUBE = re.compile(
     r"(?:youtube(?:-nocookie)?\.com/(?:watch\?(?:[^#]*&)?v=|embed/|shorts/|live/|v/)|youtu\.be/)([A-Za-z0-9_-]{11})"
+)
+#: C21: a directive to model or read a record's exact print ("demonstrates the exact print in T-…",
+#: "models its exact printed source", "models the exact cited T-… forms"); "read the exact T-036 Ко-ло" names words.
+_MODELED_PRINT = re.compile(r"\bexact\s+(?:print(?:ed)?|cited)\b", re.IGNORECASE)
+#: C22: a declared key set, "keys Привіт and Добрий день", "keys О, У, И, А", "keys 1 and 2", "keys CV and VC".
+_KEY_ITEM = rf"(?:[{CYRILLIC_LETTER_CLASS}]+(?:\s[{CYRILLIC_LETTER_CLASS}]+)?|\d+|[A-Z]{{1,3}})"
+_KEY_SEPARATOR = r"\s*,\s*(?:and\s+)?|\s+and\s+|\s*/\s*"
+_KEY_SET = re.compile(rf"\bkeys\s+({_KEY_ITEM}(?:(?:{_KEY_SEPARATOR}){_KEY_ITEM})+)(?![{CYRILLIC_LETTER_CLASS}\w])")
+_KEY_SPLIT = re.compile(_KEY_SEPARATOR)
+_KEYED_CHOICE_TYPES = frozenset({"quiz", "fill-in", "true-false", "odd-one-out", "pick-syllables"})
+#: C23: a source segmentation or blanked row (ма-ма, По-лі-на, ма- __ -на, __ -ва) and the key a blanked row states.
+_SYLLABLE_OR_BLANK = rf"(?:[{CYRILLIC_LETTER_CLASS}]+|_{{2,}})"
+_SEGMENTED = re.compile(
+    rf"(?<![{CYRILLIC_LETTER_CLASS}_]){_SYLLABLE_OR_BLANK}(?:[ \t]*-[ \t]*{_SYLLABLE_OR_BLANK})+(?![{CYRILLIC_LETTER_CLASS}_])"
+)
+_BLANK = re.compile(r"_{2,}")
+_BLANK_KEY = re.compile(rf"\s+has\s+key\s+([{CYRILLIC_LETTER_CLASS}]+)")
+_SLOT = r"(?:first|initial|second|middle|final|last)"
+_SLOT_WORDS: tuple[tuple[re.Pattern[str], int | str], ...] = tuple(
+    (
+        re.compile(
+            rf"\b(?:{word})\b(?:\s+(?:or|and)\s+{_SLOT})*\s+(?:missing\s+)?(?:syllables?|blanks?|slots?)\b"
+            rf"|\b{_SLOT}\s+(?:or|and)\s+(?:{word})\s+(?:missing\s+)?(?:syllables?|blanks?|slots?)\b",
+            re.IGNORECASE,
+        ),
+        index,
+    )
+    for word, index in (("first|initial", 0), ("second", 1), ("middle", "middle"), ("final|last", -1))
+)
+_CUE = re.compile(r"\b(?:gloss(?:es|ed)?|pictures?|pictured|images?|illustrations?|target cue)\b", re.IGNORECASE)
+_LETTER_RUN = re.compile(f"[{CYRILLIC_LETTER_CLASS}]+")
+#: An anagram of more letters has too many arrangements to look up; A1 anagram targets are short.
+_ANAGRAM_MAX_LETTERS = 7
+#: C24: a rationale or job sentence saying the lesson recycles word records "including" (or "such as") a list.
+_RECYCLE_LIST = re.compile(
+    r"\brecycl\w*\b[^.;]*?\b(?:words?|records?|vocabulary|lemmas?)\b[^.;]*?\b(?:including|such as)\s+(.+)",
+    re.IGNORECASE,
+)
+_ENGLISH_WORD = re.compile(r"[A-Za-z]+")
+_GLOSS_HEAD = re.compile(r"[(,;]")
+#: Words of a recycle claim that name no category of records: words describing records, and function words
+#: (the store glosses conjunctions and pronouns, so "and" would match і, та, а).
+_META_TERMS = frozenset(
+    {"word", "record", "form", "item", "term", "category", "lemma", "vocabulary", "label"}
+    | {"and", "or", "the", "a", "an", "of", "for", "with", "to", "in", "on", "by", "as", "its", "their", "all"}
+    | {"both", "other", "some", "such", "this", "that", "these", "those", "previously", "taught", "earlier"}
+)
+#: C26: a focus sentence that names word ids it excludes ("do not reuse those four words here").
+_EXCLUDING = re.compile(r"\b(?:do not|don't|never|exclude[sd]?|excluding|must not|instead of)\b", re.IGNORECASE)
+_STRESS_MARKS = re.compile("[̀́]")
+_ACTIVITY_REF = re.compile(r"\b[a-z]\d+\b")
+_LETTER_SPACED = re.compile(
+    rf"(?<![{CYRILLIC_LETTER_CLASS}])[{CYRILLIC_LETTER_CLASS}](?: [{CYRILLIC_LETTER_CLASS}])+(?![{CYRILLIC_LETTER_CLASS}])"
+)
+#: C27: a teach-text sentence recording the teacher's model of a letter (the letter must stand in the sentence).
+_TEACHER_MODEL = re.compile(
+    r"\bteacher\b[^.;]*\b(?:models?|modell?ing|pronounc\w*|demonstrat\w*)\b"
+    r"|\b(?:models?|pronounc\w*|demonstrat\w*)\b[^.;]*\bteacher\b",
+    re.IGNORECASE,
 )
 
 
@@ -1108,6 +1213,448 @@ class ReviewGates(Gates):
                         lesson["n"],
                     )
 
+    # -- fourth round: C21–C28 -----------------------------------------------------------
+
+    def _taught_at_steps(self, lesson: dict) -> dict[str, set[str]]:
+        """Letters taught at each step of a letter-stage lesson: earlier lessons plus this lesson's steps so far."""
+        taught = set((self.taught_before or {}).get(lesson["n"], set()))
+        at: dict[str, set[str]] = {}
+        for step in lesson["steps"]:
+            taught |= {letter.casefold() for letter in (step.get("introduces") or {}).get("letters") or []}
+            at[step["id"]] = set(taught)
+        return at
+
+    def _lesson_videos(self, lesson: dict) -> list[str]:
+        videos = [entry["evidence"] for entry in lesson.get("videos") or []]
+        videos += [item for step in lesson["steps"] for item in step.get("evidence") or [] if item.startswith("V-")]
+        return list(dict.fromkeys(videos))
+
+    # -- C21 ------------------------------------------------------------------
+
+    def check_modeled_print_decodable(self) -> None:
+        directed = any(
+            _MODELED_PRINT.search(text)
+            for lesson in self.plan["lessons"]
+            for text in [*(step.get("teach") or "" for step in lesson["steps"]), *_focuses(lesson)]
+        )
+        if not directed or self.letter_state_or_skip("C21", True) is None or self.taught_before is None:
+            return
+        for lesson in self.plan["lessons"]:
+            taught_at = self._taught_at_steps(lesson)
+            linked_at = {item: step["id"] for step in lesson["steps"] for item in step.get("practice") or []}
+            last = lesson["steps"][-1]["id"] if lesson["steps"] else None
+            sources = [
+                (f"step {step['id']} teach text", step["id"], step.get("teach") or "") for step in lesson["steps"]
+            ]
+            sources += [
+                (f"activity {activity['id']} focus", linked_at.get(activity["id"], last), activity["focus"])
+                for activity in lesson.get("activities") or []
+            ]
+            reported: set[tuple[str, str]] = set()  # (step, record): an activity repeating its step's list adds nothing
+            for where, step_id, text in sources:
+                if step_id is None:
+                    continue
+                refs = [
+                    ref
+                    for sentence in _SENTENCE_BREAK.split(text)
+                    if _MODELED_PRINT.search(sentence)
+                    for ref in _ids(_DISPLAYABLE_ID, sentence)
+                    if ref in self.pack.record_texts and (step_id, ref) not in reported
+                ]
+                reported |= {(step_id, ref) for ref in refs}
+                taught = taught_at[step_id]
+                found = []
+                for ref in dict.fromkeys(refs):
+                    words = [
+                        token
+                        for token in dict.fromkeys(_ROW_TOKEN.findall(self.pack.record_texts[ref]))
+                        if not self._readable(token, taught)
+                    ]
+                    if words:
+                        needs = sorted(set().union(*(self._letters(word) for word in words)) - taught)
+                        shown = ", ".join(words[:5]) + (f", … {len(words) - 5} more" if len(words) > 5 else "")
+                        found.append(f"{ref} ({shown}; needs {', '.join(needs)})")
+                if found:
+                    self.fail(
+                        codes.MODELED_PRINT_NOT_DECODABLE,
+                        f"{where} directs modelling or reading the exact print of {'; '.join(found)}: letters not "
+                        f"taught by step {step_id}, so the learner reads untaught letters from print; limit the "
+                        "modelled print to taught forms or keep the record explains-only (#9487 C21)",
+                        lesson["n"],
+                        step_id,
+                    )
+
+    # -- C22 ------------------------------------------------------------------
+
+    def check_choice_key_sets(self) -> None:
+        for lesson in self.plan["lessons"]:
+            groups: dict[frozenset[str], list[str]] = {}
+            for activity in lesson.get("activities") or []:
+                if activity["type"] not in _KEYED_CHOICE_TYPES:
+                    continue
+                for match in _KEY_SET.finditer(activity["focus"]):
+                    keys = frozenset(_normalized(item).casefold() for item in _KEY_SPLIT.split(match.group(1)))
+                    if len(keys) == 2:
+                        groups.setdefault(keys, [])
+                        if activity["id"] not in groups[keys]:
+                            groups[keys].append(activity["id"])
+            for keys, activity_ids in groups.items():
+                if len(activity_ids) < 2:
+                    continue
+                shown = " / ".join(sorted(keys))
+                if len(activity_ids) >= 3:
+                    self.fail(
+                        codes.CHOICE_BINARY_KEYS_REPEATED,
+                        f"choice activities {', '.join(activity_ids)} all declare the two keys {shown}: the lesson "
+                        "scores one binary choice three or more times; give the repeats a different operation or "
+                        "key set (#9487 C22)",
+                        lesson["n"],
+                    )
+                else:
+                    self.note(
+                        codes.CHOICE_BINARY_KEYS_SHARED,
+                        f"choice activities {', '.join(activity_ids)} both declare the two keys {shown}; the plan "
+                        "review confirms their operations differ (#9487 C22)",
+                        lesson["n"],
+                    )
+
+    # -- C23 ------------------------------------------------------------------
+
+    def check_construction_distractors(self, lookup: Callable[[list[str]], set[str]] | None = None) -> None:
+        candidates: list[tuple[dict, dict, list[tuple[str, str, str]]]] = []  # lesson, activity, (shown, made, key)
+        for lesson in self.plan["lessons"]:
+            for activity in lesson.get("activities") or []:
+                if activity["type"] == "pick-syllables":
+                    made = _syllable_swaps(activity["focus"])
+                elif activity["type"] == "anagram":
+                    made = self._anagram_swaps(activity["focus"])
+                else:
+                    continue
+                if made:
+                    candidates.append((lesson, activity, made))
+        if not candidates:
+            return
+        records = self.store.records.values()
+        known = {_spelling(text) for record in records for text in (record.lemma, *record.form_texts)}
+        # A completion is looked up as a common word; as a name too only when its target is a name (Павлик, Поліна),
+        # so a surname or first name VESUM lists (Зиза, Коко) does not count against a common-word row.
+        names = {_spelling(record.lemma) for record in records if record.lemma[:1].isupper()}
+        variants = {
+            variant
+            for _l, _a, swaps in candidates
+            for _s, made, key in swaps
+            if made not in known
+            for variant in ((made, made.capitalize()) if key in names else (made,))
+        }
+        try:
+            attested = (lookup or quote_bytes.vesum_lookup)(sorted(variants)) if variants else set()
+        except quote_bytes.VesumUnavailable as error:
+            self.skip("C23", f"VESUM is unavailable ({error}), so constructed completions are not looked up")
+            return
+        attested = {word.casefold() for word in attested} | known
+        for lesson, activity, swaps in candidates:
+            hits = list(dict.fromkeys(f"{shown} → {made}" for shown, made, key in swaps if made in attested))
+            if not hits:
+                continue
+            what = "row" if activity["type"] == "pick-syllables" else "letter set"
+            if activity["type"] == "anagram":
+                self.note(
+                    codes.ANAGRAM_LETTERS_FORM_OTHER_WORD,
+                    f"anagram activity {activity['id']}: the letters also spell {'; '.join(hits)}, VESUM or word-store "
+                    "forms; most such arrangements are rare inflected or archaic forms no learner builds, so the plan "
+                    "review confirms none is a word an A1 learner could build in its place (#9487 C23)",
+                    lesson["n"],
+                )
+                continue
+            if _CUE.search(activity["focus"]):
+                self.note(
+                    codes.CONSTRUCTION_DISTRACTOR_CUED,
+                    f"{activity['type']} activity {activity['id']}: another completion of a {what} forms an attested "
+                    f"word ({'; '.join(hits)}); the focus says the stems carry a cue, so the plan review confirms it "
+                    "selects the key (#9487 C23)",
+                    lesson["n"],
+                )
+                continue
+            self.fail(
+                codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD,
+                f"pick-syllables activity {activity['id']}: another syllable of the activity in a blanked slot forms a "
+                f"word-store spelling or VESUM form ({'; '.join(hits)}), so a learner who builds that real word is "
+                "marked wrong; cue each stem's target (gloss, picture) or use syllables that form no attested word "
+                "(#9487 C23)",
+                lesson["n"],
+            )
+
+    def _anagram_swaps(self, focus: str) -> list[tuple[str, str, str]]:
+        """(target, another arrangement of its letters, target) for each anagram target of the focus."""
+        swaps = []
+        for item in _ids(_WORD_ID, focus):
+            record = self.store.records.get(item)
+            if record is None:
+                continue
+            word = _spelling(record.lemma)
+            if not _LETTER_RUN.fullmatch(word) or len(word) > _ANAGRAM_MAX_LETTERS:
+                continue
+            swaps += [
+                (f"{item} {record.lemma}", "".join(order), word)
+                for order in sorted(set(permutations(word)))
+                if "".join(order) != word
+            ]
+        return swaps
+
+    # -- C24 ------------------------------------------------------------------
+
+    @cached_property
+    def _gloss_heads(self) -> dict[str, set[str]]:
+        """English gloss head word (case-folded) -> ids of the store records whose gloss_en starts with it."""
+        heads: dict[str, set[str]] = {}
+        for record in self.store.records.values():
+            if record.gloss_en:
+                head = _GLOSS_HEAD.split(record.gloss_en, 1)[0].strip(" ?!.").casefold()
+                head = head.removeprefix("to ").removeprefix("a ").removeprefix("the ")
+                heads.setdefault(head, set()).add(record.id)
+        return heads
+
+    def check_recycled_categories(self) -> None:
+        for lesson in self.plan["lessons"]:
+            vocabulary = lesson["inventory"]["vocabulary"]
+            held = {entry["evidence"] for entry in vocabulary["core"] + vocabulary["incidental"]}
+            held |= set(vocabulary["recycled"])
+            for step in lesson["steps"]:
+                for key in ("introduces", "uses"):
+                    held |= set((step.get(key) or {}).get("vocabulary") or [])
+            for field_name in ("rationale", "job"):
+                for sentence in _SENTENCE_BREAK.split(lesson.get(field_name) or ""):
+                    match = _RECYCLE_LIST.search(sentence)
+                    if not match:
+                        continue
+                    claimed = match.group(1)
+                    missing = []
+                    for term in dict.fromkeys(_singular(word) for word in _ENGLISH_WORD.findall(claimed)):
+                        records = self._gloss_heads.get(term, set())
+                        if term in _META_TERMS or not records or records & held:
+                            continue
+                        missing.append(f"{term!r} ({', '.join(self._shown_records(records))})")
+                    for token in tokens_of(claimed):
+                        records = self.index.get(token, set())
+                        if records and not records & held:
+                            missing.append(f"«{token}» ({', '.join(self._shown_records(records))})")
+                    if missing:
+                        self.fail(
+                            codes.RECYCLED_CATEGORY_NOT_IN_LIST,
+                            f"the lesson {field_name} says it recycles {', '.join(missing)}, but none of those word "
+                            "records is in the lesson's recycled list or inventory; correct the claim or recycle the "
+                            "records (#9487 C24)",
+                            lesson["n"],
+                        )
+
+    def _shown_records(self, ids: set[str]) -> list[str]:
+        return [f"{item} {self.store.records[item].lemma}" for item in sorted(ids) if item in self.store.records]
+
+    # -- C25 ------------------------------------------------------------------
+
+    def check_practice_steps_have_content(self) -> None:
+        for lesson in self.plan["lessons"]:
+            dialogue_step = (lesson.get("dialogue") or {}).get("step")
+            for step in lesson["steps"]:
+                if step.get("kind") != "practice" or step.get("practice") or step.get("needs"):
+                    continue
+                if step.get("paradigm") or step["id"] == dialogue_step:
+                    continue
+                self.fail(
+                    codes.PRACTICE_STEP_EMPTY,
+                    f"practice step {step['id']} links no activity, needs no block (quote, example, video …), hosts "
+                    "no dialogue and carries no paradigm; steps are fixed structure (plan schema §7 decision 1), so "
+                    "the writer must produce an empty section; merge it into the step it prepares (#9487 C25)",
+                    lesson["n"],
+                    step["id"],
+                )
+
+    # -- C26 ------------------------------------------------------------------
+
+    def check_comprehension_targets_in_host(self) -> None:
+        for lesson in self.plan["lessons"]:
+            for activity in self._comprehension(lesson):
+                focus = activity["focus"]
+                hosts = [(match.group(1), match.group(2)) for match in _HOST.finditer(focus)]
+                hosts += [("quote", ref) for ref in _quote_host_refs(focus) if ("quote", ref) not in hosts]
+                exact = hosts and all(
+                    (kind == "quote" and ref in self.pack.quotes) or (kind == "video" and ref in self.pack.video_models)
+                    for kind, ref in hosts
+                )
+                if not exact:
+                    continue  # a dialogue host is drafted by the writer; an unresolved host is reported elsewhere
+                quotes = [_STRESS_MARKS.sub("", self.pack.quotes[ref]) for kind, ref in hosts if kind == "quote"]
+                # A letter-spaced word ("л ю п и н") is read with its spaces removed as well.
+                printed = {
+                    _spelling(token)
+                    for text in quotes
+                    for variant in (text, _LETTER_SPACED.sub(lambda match: match.group(0).replace(" ", ""), text))
+                    for token in _ROW_TOKEN.findall(variant)
+                }
+                others = {item["id"] for item in lesson.get("activities") or []} - {activity["id"]}
+                modelled = self._modelled([ref for kind, ref in hosts if kind == "video"])
+                targets = [
+                    item
+                    for sentence in _SENTENCE_BREAK.split(focus)
+                    if not _EXCLUDING.search(sentence)
+                    and not others & set(_ids(_ACTIVITY_REF, sentence))  # a sentence about another activity
+                    for item in _ids(_WORD_ID, sentence)
+                ]
+                missing = []
+                for item in dict.fromkeys(targets):
+                    record = self.store.records.get(item)
+                    if record is None or item in modelled:
+                        continue
+                    if not {_spelling(text) for text in (record.lemma, *record.form_texts)} & printed:
+                        missing.append(f"{item} {record.lemma!r}")
+                if not missing:
+                    continue
+                where = ", ".join(ref for _kind, ref in hosts)
+                if any("[" in text for text in quotes):
+                    self.note(
+                        codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
+                        f"comprehension activity {activity['id']} names {', '.join(missing)}, which no host ({where}) "
+                        "prints in spelling; a host holds a transcription, so the plan review confirms the host "
+                        "shows each word the items ask about (#9487 C26)",
+                        lesson["n"],
+                    )
+                    continue
+                self.fail(
+                    codes.COMPREHENSION_TARGET_NOT_IN_HOST,
+                    f"comprehension activity {activity['id']} names {', '.join(missing)}, which no host ({where}) "
+                    "prints or models; a comprehension item is answered from its host, so host it on a record that "
+                    "holds the word (#9487 C26)",
+                    lesson["n"],
+                )
+
+    # -- C27 ------------------------------------------------------------------
+
+    def check_letter_recordings(self) -> None:
+        introduced = [
+            (lesson, step, letter)
+            for lesson in self.plan["lessons"]
+            for step in lesson["steps"]
+            for letter in (step.get("introduces") or {}).get("letters") or []
+        ]
+        if not introduced or self.letter_state_or_skip("C27", True) is None:
+            return
+        for lesson, step, letter in introduced:
+            videos = self._lesson_videos(lesson)
+            modelled = {
+                item.casefold()
+                for video in videos
+                if video in self.pack.video_models
+                for item in self.pack.video_models[video].letters
+            }
+            if letter.casefold() in modelled:
+                continue
+            without = [video for video in videos if video not in self.pack.video_models]
+            cited = ", ".join(videos) or "none"
+            if without:
+                cited += f"; {', '.join(without)} declare{'s' if len(without) == 1 else ''} no models"
+            if any(
+                _TEACHER_MODEL.search(sentence) and _names_letter(sentence, letter)
+                for sentence in _SENTENCE_BREAK.split(step.get("teach") or "")
+            ):
+                self.note(
+                    codes.LETTER_TEACHER_MODELED_ONLY,
+                    f"step {step['id']} introduces {letter}, which no recording the lesson cites models ({cited}); "
+                    "the teach text records the teacher modelling it, so the plan review confirms no recording is "
+                    "available (#9487 C27)",
+                    lesson["n"],
+                    step["id"],
+                )
+                continue
+            self.fail(
+                codes.LETTER_WITHOUT_RECORDING,
+                f"step {step['id']} introduces {letter}, but no recording the lesson cites declares it in "
+                f"models.letters ({cited}); bind a recording that models it, or record the teacher's model of "
+                f"{letter} in the step (#9487 C27)",
+                lesson["n"],
+                step["id"],
+            )
+
+    # -- C28 ------------------------------------------------------------------
+
+    def check_teach_words_in_inventory(self) -> None:
+        for index, lesson in enumerate(self.plan["lessons"]):
+            named = [(step, _ids(_WORD_ID, step.get("teach") or "")) for step in lesson["steps"]]
+            if not any(items for _step, items in named):
+                continue
+            allowed = self.allowed_ids(index, "C28")
+            if allowed is None:
+                return
+            for step, items in named:
+                outside = [item for item in items if item not in allowed]
+                if outside:
+                    self.fail(
+                        codes.TEACH_WORD_NOT_IN_INVENTORY,
+                        f"step {step['id']} teach text names {', '.join(self._shown_records(set(outside)) or outside)}, "
+                        "outside the lesson's inventory and the planned prior learner state, so the writer's word "
+                        "packet lacks the record; add it to the lesson's inventory (#9487 C28)",
+                        lesson["n"],
+                        step["id"],
+                    )
+
+
+def _focuses(lesson: dict) -> list[str]:
+    return [activity["focus"] for activity in lesson.get("activities") or []]
+
+
+def _singular(word: str) -> str:
+    word = word.casefold()
+    if word.endswith("ies") and len(word) > 4:
+        return word[:-3] + "y"
+    if word.endswith("s") and not word.endswith("ss") and len(word) > 3:
+        return word[:-1]
+    return word
+
+
+def _syllable_swaps(focus: str) -> list[tuple[str, str, str]]:
+    """(row as shown, the row with another syllable of the activity in a blanked slot, key) for a pick-syllables focus.
+
+    A row is a source segmentation the focus prints (``ма-ма``, ``По-лі-на``) or a blanked row whose key the focus
+    states (``ма- __ -на has key ли``). The slots are the blanked one, else the positions the focus names (first,
+    initial, second, middle, final, last), else every slot. The other syllables are every segment and every
+    one-vowel token the focus prints: the options a writer draws from the activity."""
+    rows: list[tuple[list[str], int | None]] = []  # (syllables, the blanked slot or None)
+    for match in _SEGMENTED.finditer(focus):
+        parts = [part.strip() for part in match.group(0).split("-")]
+        blanks = [index for index, part in enumerate(parts) if _BLANK.fullmatch(part)]
+        if not blanks:
+            rows.append((parts, None))
+            continue
+        key = _BLANK_KEY.match(focus, match.end())
+        if key is not None and len(blanks) == 1:
+            rows.append(([key.group(1) if index == blanks[0] else part for index, part in enumerate(parts)], blanks[0]))
+    if not rows:
+        return []
+    pool = {part.casefold() for parts, _blank in rows for part in parts}
+    pool |= {
+        token.casefold()
+        for token in _ROW_TOKEN.findall(_SEGMENTED.sub(" ", focus))
+        if "-" not in token and len(token) >= 2 and _vowel_count(token) == 1
+    }
+    named = {index for pattern, index in _SLOT_WORDS if pattern.search(focus)}
+    swaps = []
+    for parts, blank in rows:
+        word = "".join(parts).casefold()
+        if blank is not None:
+            slots = {blank}
+        elif named:
+            last, middle = len(parts) - 1, len(parts) // 2
+            slots = {last if index == -1 else middle if index == "middle" else index for index in named}
+            slots = {slot for slot in slots if 0 <= slot < len(parts)}
+        else:
+            slots = set(range(len(parts)))
+        for slot in sorted(slots):
+            for other in sorted(pool - {parts[slot].casefold()}):
+                made = "".join(other if index == slot else part.casefold() for index, part in enumerate(parts))
+                if made != word:
+                    shown = "-".join(other if index == slot else part for index, part in enumerate(parts))
+                    swaps.append((shown, made, word))
+    return swaps
+
 
 _QUOTE_CODES = {
     quote_bytes.PRIVATE_USE: codes.QUOTE_HOST_PRIVATE_USE,
@@ -1127,7 +1674,7 @@ def check_review_gates(
     level_plans: LevelPlans,
     words_path: Path,
 ) -> None:
-    """Run gates C1–C20 on a plan that already passed the schema, with its pack and word store loaded."""
+    """Run gates C1–C28 on a plan that already passed the schema, with its pack and word store loaded."""
     gates = ReviewGates(report, plan, level, store, arc, level_plans, words_path, pack=pack)
     gates.check_named_before_introduction()
     gates.check_duplicate_focus()
@@ -1149,3 +1696,11 @@ def check_review_gates(
     gates.check_choice_options_taught()
     gates.check_sentence_decodability()
     gates.check_word_model_segments()
+    gates.check_modeled_print_decodable()
+    gates.check_choice_key_sets()
+    gates.check_construction_distractors()
+    gates.check_recycled_categories()
+    gates.check_practice_steps_have_content()
+    gates.check_comprehension_targets_in_host()
+    gates.check_letter_recordings()
+    gates.check_teach_words_in_inventory()

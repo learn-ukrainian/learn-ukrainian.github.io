@@ -205,7 +205,8 @@ def base_pack() -> dict:
         "exercises": [{"id": "X-001"}],
         "examples": [{"id": "EX-001"}],
         "errors": [{"id": "E-001"}],
-        "videos": [{"id": "V-001"}],
+        # The lesson's letter recording models the letters it introduces (#9487 C27).
+        "videos": [{"id": "V-001", "models": {"letters": [LETTER_A, LETTER_O], "words": [], "segment": None}}],
         "standard": [{"id": "S-001"}],
     }
 
@@ -398,7 +399,12 @@ def build_cyrillic_lemma() -> tuple[dict, dict, dict]:
     words["words"][0]["lemma"] = LEMMA_MAMA
     # М is not among the lesson's letters, so the lesson's recording models the word (#9487 C10).
     # A word model binds its timed segment (#9487 C20).
-    pack["videos"][0]["models"] = {"letters": [], "words": [words["words"][0]["id"]], "segment": "0:00–0:05"}
+    # The same recording keeps modelling the letters the lesson introduces (#9487 C27).
+    pack["videos"][0]["models"] = {
+        "letters": [LETTER_A, LETTER_O],
+        "words": [words["words"][0]["id"]],
+        "segment": "0:00–0:05",
+    }
     plan["lessons"][1]["videos"] = [{"evidence": "V-001", "use": "Recap whole-word model."}]
     plan["lessons"][1]["steps"][0]["evidence"].append("V-001")
     return plan, pack, words

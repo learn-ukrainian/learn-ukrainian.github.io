@@ -1,4 +1,4 @@
-"""Tests for the review-checkable plan gates C1–C20 (issue #9487).
+"""Tests for the review-checkable plan gates C1–C28 (issue #9487).
 
 Each gate has a failing (or noted) fixture and a passing one, each built by a
 single mutation of the mechanical gates' passing baseline: a letter-stage
@@ -20,7 +20,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.curriculum.validate import codes, quote_bytes
+from scripts.curriculum.validate import codes, quote_bytes, review_gates
 from scripts.curriculum.validate.report import Report
 from scripts.curriculum.validate.review_gates import ReviewGates
 from scripts.curriculum.validate.validate import validate_plan
@@ -29,6 +29,7 @@ from tests.curriculum.test_plan_validate_mechanical import (
     MAMA,
     MAN,
     MANA,
+    MONA,
     NONA,
     ON,
     _drop_letters,
@@ -72,10 +73,23 @@ REVIEW_GATE_CODES = {
     codes.SENTENCE_NOT_DECODABLE_AT_HOST,
     codes.SENTENCE_DECODABLE_EARLIER,
     codes.WORD_MODEL_WITHOUT_SEGMENT,
+    codes.MODELED_PRINT_NOT_DECODABLE,
+    codes.CHOICE_BINARY_KEYS_REPEATED,
+    codes.CHOICE_BINARY_KEYS_SHARED,
+    codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD,
+    codes.CONSTRUCTION_DISTRACTOR_CUED,
+    codes.ANAGRAM_LETTERS_FORM_OTHER_WORD,
+    codes.RECYCLED_CATEGORY_NOT_IN_LIST,
+    codes.PRACTICE_STEP_EMPTY,
+    codes.COMPREHENSION_TARGET_NOT_IN_HOST,
+    codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
+    codes.LETTER_WITHOUT_RECORDING,
+    codes.LETTER_TEACHER_MODELED_ONLY,
+    codes.TEACH_WORD_NOT_IN_INVENTORY,
 }
 
 # extra word ids for these fixtures
-PRIOR_ONE, PRIOR_TWO, MANOK = "W-209", "W-210", "W-211"
+PRIOR_ONE, PRIOR_TWO, MANOK, NOMA = "W-209", "W-210", "W-211", "W-212"
 #: The word VESUM is stubbed to list in this module (the real lookup is never used by these tests).
 VESUM_FORMS = {"мамою"}
 
@@ -259,7 +273,7 @@ def _recycle_prior_at_lesson_two_s1(step_cites_video: bool) -> Mutate:
         pack["videos"].append(
             {"id": "V-902", "models": {"letters": [], "words": [PRIOR_ONE, PRIOR_TWO], "segment": "0:00–0:05"}}
         )
-        two["videos"] = [{"evidence": "V-902", "use": "Whole-word model."}]
+        two["videos"].append({"evidence": "V-902", "use": "Whole-word model."})
         if step_cites_video:
             _step(plan, 2, "s1")["evidence"].append("V-902")
 
@@ -313,6 +327,69 @@ def _example(text: str, word_ids: list[str], lesson: int) -> Mutate:
         _step(plan, lesson, "s2")["evidence"].append("EX-901")
 
     return mutate
+
+
+def _extra_activity(n: int, activity: dict) -> Mutate:
+    """Add an activity to lesson n's consolidation."""
+
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        _lesson(plan, n)["activities"].append(activity)
+        _lesson(plan, n)["consolidation"].append(activity["id"])
+
+    return mutate
+
+
+def _gloss(word_id: str, gloss: str) -> Mutate:
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        next(word for word in words["words"] if word["id"] == word_id)["gloss_en"] = gloss
+
+    return mutate
+
+
+def _rationale(n: int, text: str) -> Mutate:
+    return lambda plan, pack, words, prior: _lesson(plan, n).__setitem__("rationale", text)
+
+
+def _practice_step(**extra: object) -> Mutate:
+    """Lesson 1 gains a third, practice step s3 with no practice."""
+
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        _lesson(plan, 1)["steps"].append(
+            {
+                "id": "s3",
+                "kind": "practice",
+                "teach": "Prepare the workbook decisions.",
+                "uses": {"grammar": [], "vocabulary": []},
+                "evidence": ["T-001"],
+                "practice": [],
+                **extra,
+            }
+        )
+
+    return mutate
+
+
+def _letter_video(letters: list[str]) -> Mutate:
+    """Lesson 2's letter recording V-899 models these letters."""
+    return lambda plan, pack, words, prior: next(v for v in pack["videos"] if v["id"] == "V-899")["models"].__setitem__(
+        "letters", letters
+    )
+
+
+def _pick(focus: str) -> Mutate:
+    return _focus(2, "b3", focus)
+
+
+def _comprehension_on_quote(quote: str, focus: str) -> Mutate:
+    return _quote(
+        quote,
+        {
+            "id": "b4",
+            "type": "quiz",
+            "placement": "workbook",
+            "focus": f"{focus} kind: comprehension; host: {{kind: quote, ref: T-002}}.",
+        },
+    )
 
 
 @dataclass(frozen=True)
@@ -504,10 +581,8 @@ CASES = [
     # C10 -- a step's words are decodable so far, or recorded
     Case(
         "c10_step_word_with_an_untaught_letter_and_no_recording_fails",
-        _all(
-            lambda plan, pack, words, prior: _lesson(plan, 1).__setitem__("videos", []),
-            lambda plan, pack, words, prior: _step(plan, 1, "s2")["evidence"].remove("V-900"),
-        ),
+        # The lesson's recording keeps modelling its letters (C27) but no longer models the words.
+        lambda plan, pack, words, prior: pack["videos"][0]["models"].__setitem__("words", []),
         failures=frozenset({codes.STEP_WORD_NOT_DECODABLE}),
         says=f"step s2 introduces or uses {MANA} 'мана' (needs н), {MAN} 'ман' (needs н)",
     ),
@@ -713,6 +788,178 @@ CASES = [
         failures=frozenset({codes.WORD_MODEL_WITHOUT_SEGMENT}),
         says=f"V-900 models {MANA}, {MAN} (words or phrases, not a whole-resource letter) but binds no models.segment",
     ),
+    # C21 -- a step that sends the learner to the exact print of a record it cannot read
+    Case(
+        "c21_exact_print_before_its_letters_are_taught_fails",
+        _teach(1, "s1", "The letter М. Modeling source: the teacher demonstrates the exact print in X-001."),
+        failures=frozenset({codes.MODELED_PRINT_NOT_DECODABLE}),
+        says="step s1 teach text directs modelling or reading the exact print of X-001 (мама; needs а)",
+    ),
+    Case(
+        "c21_activity_focus_modelling_the_exact_print_fails_at_its_step",
+        _all(
+            _focus(
+                1,
+                "a1",
+                "Checks the letter М. Before this print reading, the teacher models the exact cited X-001 forms.",
+            ),
+            lambda plan, pack, words, prior: _step(plan, 1, "s1")["evidence"].append("X-001"),  # cited (C9)
+        ),
+        failures=frozenset({codes.MODELED_PRINT_NOT_DECODABLE}),
+        says="activity a1 focus directs modelling or reading the exact print of X-001",
+    ),
+    Case(
+        "c21_exact_print_at_the_step_that_teaches_its_letters_passes",
+        _teach(1, "s2", "The letter А. Modeling source: the teacher demonstrates the exact print in X-001."),
+    ),
+    Case(
+        "c21_reading_named_words_of_a_record_is_not_its_print",
+        _teach(1, "s1", "The letter М. Also read the exact X-001 ма syllable after teacher demonstration."),
+    ),
+    # C22 -- one binary key set scored by several choice activities
+    Case(
+        "c22_three_choice_activities_on_one_binary_key_set_fail",
+        _all(
+            _focus(1, "a1", "Checks the letter М; keys мама and ман vary."),
+            _focus(1, "a2", "Complete «мама» and «ман» with А. Both keys Мама and ман occur."),
+            _extra_activity(
+                1, {"id": "a5", "type": "quiz", "placement": "workbook", "focus": "Transfer: keys мама/ман."}
+            ),
+        ),
+        failures=frozenset({codes.CHOICE_BINARY_KEYS_REPEATED}),
+        says="choice activities a1, a2, a5 all declare the two keys мама / ман",
+    ),
+    Case(
+        "c22_two_choice_activities_on_one_binary_key_set_are_a_note",
+        _all(
+            _focus(1, "a1", "Checks the letter М; keys мама and ман vary."),
+            _focus(1, "a2", "Complete «мама» and «ман» with А. Both keys мама and ман occur."),
+        ),
+        notes=frozenset({codes.CHOICE_BINARY_KEYS_SHARED}),
+        says="choice activities a1, a2 both declare the two keys мама / ман",
+    ),
+    Case(
+        "c22_different_key_sets_pass",
+        _all(
+            _focus(1, "a1", "Checks the letter М; keys мама and ман vary."),
+            _focus(1, "a2", "Complete «мама» and «ман» with А. Keys 1, 2 and 3 occur."),
+        ),
+    ),
+    # C23 -- a construction item whose other completion is a real word
+    Case(
+        "c23_syllable_swap_forming_a_store_word_fails",
+        _pick("Complete the source segmentations ма-ма and мо-на; select the missing final syllables."),
+        failures=frozenset({codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD}),
+        says="pick-syllables activity b3: another syllable of the activity in a blanked slot forms a word-store "
+        "spelling or VESUM form (ма-на → мана)",
+    ),
+    Case(
+        "c23_blanked_row_with_its_key_fails",
+        _pick("The final blank in ма- __ has key на; the other row is но-на."),
+        failures=frozenset({codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD}),
+        says="ма-ма → мама",
+    ),
+    Case(
+        "c23_swap_forming_a_vesum_form_fails",
+        _pick("Complete ма-мою from its syllables; select the missing final syllable among мою and ма."),
+        failures=frozenset({codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD}),
+        says="ма-ма → мама",
+    ),
+    Case(
+        "c23_stems_carrying_a_cue_are_a_note",
+        _pick("Complete ма-ма and мо-на; select the missing final syllables. Each stem carries its English gloss."),
+        notes=frozenset({codes.CONSTRUCTION_DISTRACTOR_CUED}),
+        says="the focus says the stems carry a cue",
+    ),
+    # ма-на (a store word) would come only from the final slot, which the focus does not blank.
+    Case("c23_only_the_named_slot_is_swapped", _pick("Complete ма-ма; select the missing first syllable among на.")),
+    Case(
+        "c23_swaps_forming_no_word_pass", _pick("Complete но-на from its syllables; select the missing first syllable.")
+    ),
+    Case(
+        "c23_anagram_spelling_another_store_word_is_a_note",
+        _all(
+            _word(NOMA, "нома"),
+            _extra_activity(2, {"id": "b4", "type": "anagram", "placement": "workbook", "focus": f"Assemble {MONA}."}),
+        ),
+        notes=frozenset({codes.ANAGRAM_LETTERS_FORM_OTHER_WORD}),
+        says=f"the letters also spell {MONA} мона → нома",
+    ),
+    Case(
+        "c23_anagram_with_one_arrangement_passes",
+        _extra_activity(2, {"id": "b4", "type": "anagram", "placement": "workbook", "focus": f"Assemble {MONA}."}),
+    ),
+    # C24 -- a recycle claim the recycled list does not back
+    Case(
+        "c24_recycled_category_with_no_record_in_the_lesson_fails",
+        _all(_gloss(NONA, "nun (a woman)"), _rationale(1, "This lesson recycles word records including nuns.")),
+        failures=frozenset({codes.RECYCLED_CATEGORY_NOT_IN_LIST}),
+        says=f"the lesson rationale says it recycles 'nun' ({NONA} нона)",
+    ),
+    Case(
+        "c24_quoted_word_not_recycled_fails",
+        _rationale(1, "This lesson recycles word records such as «нона»."),
+        failures=frozenset({codes.RECYCLED_CATEGORY_NOT_IN_LIST}),
+        says=f"«нона» ({NONA} нона)",
+    ),
+    Case(
+        "c24_category_held_by_the_lesson_and_function_words_pass",
+        _all(
+            _gloss(NONA, "nun (a woman)"),
+            _gloss(ON, "and"),
+            _rationale(2, "This lesson recycles word records including nuns and earlier forms."),
+        ),
+    ),
+    # C25 -- a practice step with nothing in it
+    Case(
+        "c25_practice_step_with_no_content_fails",
+        _practice_step(),
+        failures=frozenset({codes.PRACTICE_STEP_EMPTY}),
+        says="practice step s3 links no activity, needs no block",
+    ),
+    Case(
+        "c25_practice_step_that_shows_a_video_passes",
+        _practice_step(needs=["video"], evidence=["V-900"]),
+    ),
+    # C26 -- a comprehension item about a word its host does not hold
+    Case(
+        "c26_comprehension_target_absent_from_the_quote_fails",
+        _comprehension_on_quote("он мама", f"Answer about {NONA}."),
+        failures=frozenset({codes.COMPREHENSION_TARGET_NOT_IN_HOST}),
+        says=f"comprehension activity b4 names {NONA} 'нона', which no host (T-002) prints or models",
+    ),
+    Case(
+        "c26_target_only_in_a_transcription_is_a_note",
+        _comprehension_on_quote("мама [нон′а]", f"Answer about {NONA}."),
+        notes=frozenset({codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED}),
+        says=f"{NONA} 'нона', which no host (T-002) prints in spelling",
+    ),
+    Case(
+        "c26_targets_the_host_prints_or_excludes_pass",
+        _comprehension_on_quote("он м а м а", f"Answer about {MAMA}. Do not reuse {NONA} here; inline b2 uses {MANA}."),
+    ),
+    # C27 -- a new letter with no recording that models it
+    Case(
+        "c27_letters_no_recording_models_fail",
+        _letter_video([]),
+        failures=frozenset({codes.LETTER_WITHOUT_RECORDING}),
+        says="step s1 introduces Н, but no recording the lesson cites declares it in models.letters (V-899)",
+    ),
+    Case(
+        "c27_teacher_model_recorded_for_the_letter_is_a_note",
+        _all(_letter_video(["О"]), _teach(2, "s1", "The letter Н; the teacher models Н aloud before reading.")),
+        notes=frozenset({codes.LETTER_TEACHER_MODELED_ONLY}),
+        says="step s1 introduces Н, which no recording the lesson cites models (V-899)",
+    ),
+    Case("c27_letters_compared_case_folded_pass", _letter_video(["н", "о"])),
+    # C28 -- a teach text naming a word the lesson's packet lacks
+    Case(
+        "c28_teach_text_naming_a_later_word_fails",
+        _teach(1, "s1", f"The letter М; {NONA} comes later."),
+        failures=frozenset({codes.TEACH_WORD_NOT_IN_INVENTORY}),
+        says=f"step s1 teach text names {NONA} нона, outside the lesson's inventory",
+    ),
+    Case("c28_teach_text_naming_a_recycled_word_passes", _teach(2, "s1", f"The letter Н; recall {MAMA}.")),
 ]
 
 
@@ -825,3 +1072,67 @@ def test_c18_unavailable_arc_is_not_checked_not_passed(tmp_path: Path) -> None:
     assert codes.CHOICE_OPTION_LETTER_NOT_TAUGHT not in {o.code for o in report.failures}, report.render_text()
     gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
     assert "C18" in gates, report.render_text()
+
+
+def test_c23_unavailable_vesum_is_not_checked_not_passed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
+    report = run(tmp_path, _pick("Complete но-на from its syllables; select the missing first syllable."))
+    assert codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD not in report.codes(), report.render_text()
+    gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
+    assert "C23" in gates, report.render_text()
+
+
+@pytest.mark.parametrize(
+    ("name", "expected"),
+    [
+        ("c21_exact_print_before_its_letters_are_taught_fails", (codes.MODELED_PRINT_NOT_DECODABLE, 1, "s1")),
+        ("c25_practice_step_with_no_content_fails", (codes.PRACTICE_STEP_EMPTY, 1, "s3")),
+        ("c27_letters_no_recording_models_fail", (codes.LETTER_WITHOUT_RECORDING, 2, "s1")),
+        ("c28_teach_text_naming_a_later_word_fails", (codes.TEACH_WORD_NOT_IN_INVENTORY, 1, "s1")),
+        ("c22_three_choice_activities_on_one_binary_key_set_fail", (codes.CHOICE_BINARY_KEYS_REPEATED, 1, None)),
+    ],
+)
+def test_fourth_round_outcomes_name_lesson_and_step(
+    tmp_path: Path, name: str, expected: tuple[str, int, str | None]
+) -> None:
+    outcome = run(tmp_path, next(c for c in CASES if c.name == name).mutate).failures[0]
+    assert (outcome.code, outcome.lesson, outcome.step) == expected
+
+
+# The wording below is copied from the A1 position 1 plan the fourth review returned (#9487); the syllables are
+# the plan's own rows, and the tests check how the gate reads them, not which completions VESUM lists.
+def test_c22_reads_the_key_sets_the_plans_declare() -> None:
+    def keys(focus: str) -> list[frozenset[str]]:
+        return [
+            frozenset(" ".join(item.split()).casefold() for item in review_gates._KEY_SPLIT.split(match.group(1)))
+            for match in review_gates._KEY_SET.finditer(focus)
+        ]
+
+    assert keys("Both greeting keys Привіт and Добрий день occur; vary substantive keys and option positions.") == [
+        frozenset({"привіт", "добрий день"})
+    ]
+    assert keys("Exactly one member differs in letter identity; keys О, У, И, А vary.") == [
+        frozenset({"о", "у", "и", "а"})
+    ]
+    assert keys("The correction keys 1 and 2 both occur.") == [frozenset({"1", "2"})]
+    assert keys("Both class keys occur, progressing from lesson 4 repair.") == []
+
+
+def test_c23_reads_blanked_rows_named_slots_and_the_activity_syllables() -> None:
+    blanked = review_gates._syllable_swaps(
+        "From the complete X-004 missing-syllable rows, use only core W-082 and W-083: the middle blank in "
+        "ма- __ -на has key ли, and the initial blank in __ -ва has key сли."
+    )
+    assert ("ма-сли-на", "маслина", "малина") in blanked
+    assert ("ва-ва", "вава", "слива") in blanked
+    assert all(made[:2] == "ма" and made[-2:] == "на" for _shown, made, key in blanked if key == "малина")
+
+    final = review_gates._syllable_swaps(
+        "On the exact T-036 source segmentations ма-ма (W-081) and Ко-ло (incidental W-154), select the missing "
+        "final syllables ма and ло. The teacher first models these exact T-036 print forms."
+    )
+    assert {("ма-ло", "мало", "мама"), ("Ко-ма", "кома", "коло")} <= set(final)
+    assert all(made[:2] == key[:2] for _shown, made, key in final)  # only the named final slot is swapped
