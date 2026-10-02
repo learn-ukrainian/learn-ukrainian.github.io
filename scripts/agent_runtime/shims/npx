@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# scripts/agent_runtime/shims/npx — agent shim for npx (#9460).
+#
+# Runs the sibling `npm` shim as npx: that shim asks
+# scripts/agent_runtime/npm_guard.py about the npx call before the real npx
+# runs. The sibling is found by this file's physical directory, never through
+# PATH; arguments, stdin, stdout, stderr and the exit code pass through.
+#
+# A copy of this file next to some other `npm` (a symlink to the real binary,
+# or any file that is not the guarded shim) would run npx unguarded, so the
+# sibling must be a regular file, not a symlink, carrying the npm shim's marker
+# line, with npm_guard.py beside the shim directory; otherwise nothing runs.
+
+set -euo pipefail
+
+shim_dir_physical="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+sibling="$shim_dir_physical/npm"
+marker="# agent-runtime guarded npm shim (#9460)"
+
+_is_guarded_shim() {
+  local line
+  [[ -f "$sibling" && ! -L "$sibling" && -x "$sibling" ]] || return 1
+  [[ -f "$shim_dir_physical/../npm_guard.py" ]] || return 1
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    [[ "$line" == "$marker" ]] && return 0
+  done < "$sibling"
+  return 1
+}
+
+if ! _is_guarded_shim; then
+  echo "error: agent npx shim: $sibling is not the guarded npm shim (or ../npm_guard.py is missing); refusing to run npx unguarded." >&2
+  exit 127
+fi
+
+export AGENT_SHIM_TOOL=npx
+exec "$sibling" "$@"
