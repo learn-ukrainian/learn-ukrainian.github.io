@@ -6,7 +6,7 @@ Chain-of-Thought (CoT) trajectories against local authoritative databases:
   1. VESUM (data/vesum.db): Lemma attestation, inflected forms count, tags, living standard validity.
   2. СУМ-11 (data/sources.db): Headword presence, definitions, and sovietization risk flags.
   3. R2U (1920s dictionaries / cache): Historical contrast and pre-Soviet attestation.
-  4. ULIF (data/ulif_dump_all.db, sources.db): Register qualifiers and canonical headwords.
+  4. ULIF (data/sources.db:ulif_dictua_*): Register qualifiers and canonical headwords.
   5. Negative controls (PRESERVE): Verified standard Ukrainian, zero fabricated suppression notes.
 
 Hard rejection policy: Any trajectory containing an ungrounded or unverifiable claim is rejected.
@@ -63,7 +63,7 @@ RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_cot_claim_verification_receipt.schema.
 
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
-DEFAULT_ULIF_DB = resolve_data_path("data/ulif_dump_all.db")
+DEFAULT_ULIF_DB = resolve_data_path("data/sources.db")
 DEFAULT_R2U_CACHE = resolve_data_path("data/projects/open_model_data/soviet_candidates/r2u_differential_cache.json")
 DEFAULT_INPUT_TRAJECTORIES = resolve_data_path(
     "data/projects/open_model_data/decolonization/seeds/seed_decolonization_trajectories.jsonl"
@@ -422,30 +422,44 @@ class CoTClaimVerifier:
             return self._ulif_cache[norm]
 
         found = False
-        # Check ulif_dump_all.db if available
-        if self.ulif_conn:
-            cur = self.ulif_conn.cursor()
+        # Primary check in sources.db table ulif_dictua_entries
+        try:
+            cur = self.sources_conn.cursor()
             cur.execute(
-                "SELECT status FROM ulif_entries WHERE lemma = ? COLLATE NOCASE OR canonical_headword = ? COLLATE NOCASE",
+                "SELECT 1 FROM ulif_dictua_entries WHERE (normalized_query = ? OR canonical_headword = ? COLLATE NOCASE) AND status = 'ok' LIMIT 1",
                 (norm, norm),
             )
-            row = cur.fetchone()
-            if row and row[0] == "ok":
+            if cur.fetchone() is not None:
                 found = True
+        except sqlite3.OperationalError:
+            pass
 
-        # Fallback check in sources.db table ulif_dictua_entries if table exists
-        if not found:
+        # Fallback check in ulif_conn if separate database was passed (supports both canonical and legacy schemas)
+        if not found and self.ulif_conn:
+            # 1. Canonical schema on ulif_conn
             try:
-                cur = self.sources_conn.cursor()
+                cur = self.ulif_conn.cursor()
                 cur.execute(
-                    "SELECT status FROM ulif_dictua_entries WHERE normalized_query = ? OR canonical_headword = ? COLLATE NOCASE",
+                    "SELECT 1 FROM ulif_dictua_entries WHERE (normalized_query = ? OR canonical_headword = ? COLLATE NOCASE) AND status = 'ok' LIMIT 1",
                     (norm, norm),
                 )
-                row = cur.fetchone()
-                if row and row[0] == "ok":
+                if cur.fetchone() is not None:
                     found = True
             except sqlite3.OperationalError:
                 pass
+
+            # 2. Legacy schema fallback on ulif_conn
+            if not found:
+                try:
+                    cur = self.ulif_conn.cursor()
+                    cur.execute(
+                        "SELECT 1 FROM ulif_entries WHERE (lemma = ? COLLATE NOCASE OR canonical_headword = ? COLLATE NOCASE) AND status = 'ok' LIMIT 1",
+                        (norm, norm),
+                    )
+                    if cur.fetchone() is not None:
+                        found = True
+                except sqlite3.OperationalError:
+                    pass
 
         self._ulif_cache[norm] = found
         return found
@@ -1424,7 +1438,7 @@ def main() -> None:
     parser.add_argument("--receipt", type=Path, default=DEFAULT_RECEIPT_OUTPUT, help="Path to output receipt JSON")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
-    parser.add_argument("--ulif-db", type=Path, default=DEFAULT_ULIF_DB, help="Path to ulif_dump_all.db")
+    parser.add_argument("--ulif-db", type=Path, default=DEFAULT_ULIF_DB, help="Path to sources.db or legacy ULIF database")
     parser.add_argument("--r2u-cache", type=Path, default=DEFAULT_R2U_CACHE, help="Path to r2u cache JSON")
     parser.add_argument("--allow-network", action="store_true", help="Allow online R2U lookup for uncached terms")
     parser.add_argument(

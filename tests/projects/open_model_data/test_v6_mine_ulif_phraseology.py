@@ -8,7 +8,7 @@ Verifies:
 5. Draft 2020-12 JSON Schema validation for held-out evaluation records and release receipts.
 6. Shard formatting, manifest consistency, and size ceiling (< 2,000 KB per shard).
 7. Zero leakage audit scanning actual generated shards on disk (author leakage & target phrase overlap).
-8. Live extraction from ULIF (data/ulif_dump_all.db), sources (frazeolohichnyi, ua_gec_errors), and VESUM.
+8. Live extraction from ULIF (data/sources.db:ulif_dictua_*), sources (frazeolohichnyi, ua_gec_errors), and VESUM.
 """
 
 from __future__ import annotations
@@ -70,7 +70,9 @@ def _has_ulif() -> bool:
         return False
     try:
         with sqlite3.connect(f"file:{DEFAULT_ULIF_DB}?mode=ro", uri=True) as conn:
-            r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_entries'").fetchone()
+            r = conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ('ulif_dictua_sections', 'ulif_entries')"
+            ).fetchone()
             return r is not None
     except Exception:
         return False
@@ -98,7 +100,7 @@ def _has_vesum() -> bool:
         return False
 
 
-requires_ulif = pytest.mark.skipif(not _has_ulif(), reason="data/ulif_dump_all.db missing or empty")
+requires_ulif = pytest.mark.skipif(not _has_ulif(), reason="ULIF database or tables missing or empty")
 requires_sources = pytest.mark.skipif(not _has_sources(), reason="data/sources.db missing or empty")
 requires_vesum = pytest.mark.skipif(not _has_vesum(), reason="data/vesum.db missing or empty")
 
@@ -1273,3 +1275,54 @@ def test_clean_raw_html_collapses_whitespace_before_punctuation():
     assert clean_raw_html_and_tags("параграф 5 .") == "параграф 5."
     assert SPACE_BEFORE_PUNCT_RE.search("параграф 5 .") is not None
     assert SPACE_BEFORE_PUNCT_RE.search("параграф 5.") is None
+
+
+def test_load_ulif_phraseology_excludes_non_ok_entries(tmp_path: Path) -> None:
+    """Canonical phraseology extraction must strictly exclude parse_error and non-ok entries (#8798)."""
+    db_path = tmp_path / "test_ulif_status.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            canonical_headword TEXT,
+            status TEXT
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER,
+            kind TEXT,
+            payload_json TEXT
+        );
+        """
+    )
+    # Entry 1: status='ok' (valid phraseology and synonym)
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'яблуко', 'я́блуко', 'ok')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+        (json.dumps({"terms": ["яблуко розбрату"], "text": "яблуко розбрату. Причина незгоди."}),),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (11, 1, 'synonyms', ?)",
+        (json.dumps([{"words": ["яблучко"]}]),),
+    )
+
+    # Entry 2: status='parse_error' (must be excluded despite having phraseology/synonyms)
+    conn.execute("INSERT INTO ulif_dictua_entries VALUES (2, 'помилка', 'поми́лка', 'parse_error')")
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (20, 2, 'phraseology', ?)",
+        (json.dumps({"terms": ["груба помилка"], "text": "груба помилка. Неприпустима вада."}),),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections VALUES (21, 2, 'synonyms', ?)",
+        (json.dumps([{"words": ["огріх"]}]),),
+    )
+    conn.commit()
+    conn.close()
+
+    phraseology, synonyms = load_ulif_phraseology_and_synonyms(db_path)
+    assert len(phraseology) == 1
+    assert any(s.headword in ("яблуко", "я́блуко") for s in synonyms)
+    assert not any(s.headword in ("помилка", "поми́лка") for s in synonyms)
+    assert not any(p.idiom == "груба помилка" for p in phraseology)

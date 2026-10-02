@@ -95,16 +95,13 @@ def require_local_databases():
 
 @pytest.fixture
 def require_all_databases():
-    """Skip test if uncommitted sources.db, vesum.db, or ulif_dump_all.db is missing in CI."""
+    """Skip test if uncommitted sources.db or vesum.db is missing in CI."""
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    ulif_db = _resolve_db_path("ulif_dump_all.db", REPO_ROOT)
     if not vesum_db.is_file() or vesum_db.stat().st_size == 0:
         pytest.skip(f"requires {vesum_db} (not provisioned in CI)")
     if not sources_db.is_file() or sources_db.stat().st_size == 0:
         pytest.skip(f"requires {sources_db} (not provisioned in CI)")
-    if not ulif_db.is_file() or ulif_db.stat().st_size == 0:
-        pytest.skip(f"requires {ulif_db} (not provisioned in CI)")
     return sources_db
 
 
@@ -1521,11 +1518,9 @@ def test_cf_r14_dictionary_binding_regression(require_all_databases) -> None:
             return []
 
     s_path = _resolve_db_path("sources.db", PROJECT_ROOT)
-    u_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
     v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
     real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
     ensure_reproducible_sum20_table(real_s_conn)
-    real_s_conn.execute(f"ATTACH DATABASE 'file:{u_path}?mode=ro' AS ulif_all")
     real_s_cur = real_s_conn.cursor()
 
     real_v_conn = sqlite3.connect(f"file:{v_path}?mode=ro", uri=True)
@@ -1648,11 +1643,9 @@ def test_cf_r15_phrase_attestation_regression(require_all_databases) -> None:
             return []
 
     s_path = _resolve_db_path("sources.db", PROJECT_ROOT)
-    u_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
     v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
     real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
     ensure_reproducible_sum20_table(real_s_conn)
-    real_s_conn.execute(f"ATTACH DATABASE 'file:{u_path}?mode=ro' AS ulif_all")
     real_s_cur = real_s_conn.cursor()
 
     real_v_conn = sqlite3.connect(f"file:{v_path}?mode=ro", uri=True)
