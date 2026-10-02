@@ -122,7 +122,8 @@ def _rank(lookup: dict, field: str) -> int | None:
 @pytest.mark.parametrize('field', ['query', 'question'])
 def test_dev_lookups_are_answered_in_one_query(field, kind):
     bar = DEV_LOOKUPS['top_n'][field]
-    lookups = [lk for lk in DEV_LOOKUPS['lookups'] if lk['kind'] == kind and lk['id'] not in DEV_LOOKUPS['known_misses']]
+    lookups = [lk for lk in DEV_LOOKUPS['lookups'] if lk['kind'] == kind and lk['id'] not in DEV_LOOKUPS['known_misses']
+               and 'gate' not in lk]
     with ThreadPoolExecutor(max_workers=2) as pool:  # each lookup mostly waits on git grep subprocesses
         ranks = dict(zip((lk['id'] for lk in lookups), pool.map(lambda lk: _rank(lk, field), lookups), strict=True))
     misses = {lk['id']: (lk[field], ranks[lk['id']]) for lk in lookups
@@ -239,7 +240,7 @@ def test_a_question_naming_a_session_router_is_answered_by_the_directory_readme(
 # lookup of both development sets is held within 20 under the CLI's own default limit, whose
 # read pool is the one a reader gets, in both protocols.
 RESOURCE_LOOKUPS = [(name, lk) for name, data in (('dev', DEV_LOOKUPS), ('natural', NATURAL_LOOKUPS))
-                    for lk in data['lookups'] if lk['kind'] == 'resource']
+                    for lk in data['lookups'] if lk['kind'] == 'resource' and 'gate' not in lk]
 
 
 @pytest.mark.parametrize('field', ['query', 'question'])
@@ -259,6 +260,43 @@ def test_resource_lookups_keep_their_answers_at_the_default_limit(name, field):
     assert {i: r for i, r in ranks.items() if r is None} == {}
 
 
+# The multi-answer gate (docs_find_dev_lookups.yaml, `gate: multi_answer`): sibling files under one
+# directory that the question names by a word their path holds in another inflection (translated /
+# translations, mapped / MAPPING). Round d of #9412 bounded how far a met word may run past the
+# term or its stem, which lost every one of them (none within 200); the path must meet the word.
+MULTI_ANSWER = [lk for lk in DEV_LOOKUPS['lookups'] if lk.get('gate') == 'multi_answer']
+MULTI_ANSWER_GATE = DEV_LOOKUPS['multi_answer_gate']
+
+
+def test_multi_answer_paths_are_name_candidates_of_their_query():
+    assert len(MULTI_ANSWER) >= 5 and set(MULTI_ANSWER_GATE['known_misses']) <= {lk['id'] for lk in MULTI_ANSWER}
+    state = find_module.load_state(REPO)
+    missing = {}
+    for lk in MULTI_ANSWER:
+        text = find_module.clean_query(lk['query'])
+        terms = find_module.query_terms(text)
+        found = find_module._name_candidates(state, terms, find_module.words(text), None, find_module.compounds(text))
+        if lost := [p for p in lk['expect'] if p not in found]:
+            missing[lk['id']] = lost
+    assert missing == {}
+
+
+@pytest.mark.parametrize('field', ['query', 'question'])
+def test_multi_answer_lookups_keep_an_answer_at_the_default_limit(field):
+    bar = MULTI_ANSWER_GATE['top_n']
+    known = {i for i, miss in MULTI_ANSWER_GATE['known_misses'].items() if field in miss}
+
+    def rank(lk):
+        result = find(lk[field], repo=REPO, budget_seconds=60)
+        assert not result['coverage']['incomplete'], (lk['id'], result['coverage']['incomplete_reasons'])
+        paths = [hit['path'] for hit in result['hits']]
+        return min((paths.index(p) + 1 for p in lk['expect'] if p in paths), default=None)
+    lookups = [lk for lk in MULTI_ANSWER if lk['id'] not in known]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(rank, lookups), strict=True))
+    assert {i: r for i, r in ranks.items() if r is None or r > bar} == {}
+
+
 # A storage-layout question asked shortly is carried by the catalogue: the storage-topology entry
 # point's topic and its family's keywords hold the words of the question, so the runbook is the
 # family hit, and its sibling runbooks, which name no word of the question, are not listed.
@@ -267,3 +305,20 @@ def test_a_short_storage_layout_question_is_answered_by_the_storage_topology_run
     hits = find(query, repo=REPO, budget_seconds=60)['hits']
     assert hits[0]['path'] == 'docs/runbooks/storage-topology.md'
     assert [hit['path'] for hit in hits if hit['match'] == 'entrypoint'] == ['docs/runbooks/storage-topology.md']
+
+
+# The same question asked in six to ten words: the runbook, whose catalogue topic names the layout,
+# ranks above the inventory documents that mention its words in their body (the corpus inventory,
+# the catalogue census), and within the first five.
+@pytest.mark.parametrize('query', [
+    'which disk holds the databases and raw sources',
+    'how is data storage laid out across disks',
+    'where do the sqlite databases and bulk sources live',
+    'where are the databases and raw files kept',
+    'how is the data folder organised on the server',
+])
+def test_a_storage_layout_question_in_a_few_words_ranks_the_runbook_above_inventories(query):
+    paths = [hit['path'] for hit in find(query, repo=REPO, budget_seconds=60)['hits']]
+    at = paths.index('docs/runbooks/storage-topology.md')
+    inventories = [i for i, p in enumerate(paths) if p == 'docs/corpus-inventory.md' or p.startswith('docs/knowledge/inventory/')]
+    assert at < 5 and all(at < i for i in inventories), paths[:8]

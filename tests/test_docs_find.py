@@ -5,6 +5,8 @@ real-tree checks, including the dev-set lookups, live in
 ``tests/test_docs_catalogue_coverage.py``).
 """
 import ast
+import dataclasses
+import functools
 import json
 import os
 import subprocess
@@ -852,6 +854,44 @@ def test_terms_meet_inflected_words_as_prefixes():
     assert find_module._prefix_hits(['parsing'], ['sparse']) == set()
 
 
+# Two inflections of one word meet however far each runs past their shared part; a word that only
+# begins with the term's stem and runs on by unrelated letters does not.
+@pytest.mark.parametrize('term, word', [
+    ('translated', 'translations'), ('mapped', 'mapping'), ('decolonizing', 'decolonization'),
+    ('assessing', 'assessment'), ('evaluations', 'evaluation'), ('hallucinated', 'hallucinations'),
+    ('recorded', 'recordings'), ('evaluating', 'evaluations'), ('map', 'mapping'), ('set', 'settings'),
+    ('parsing', 'parser'), ('reaps', 'reaper'), ('detection', 'detector'), ('pack', 'packed'),
+    ('migration', 'migrate'), ('entries', 'entry'), ('invented', 'invention'),
+])
+def test_a_term_meets_another_inflection_of_its_word(term, word):
+    assert find_module._prefix_hits([term], [word]) == {term}
+
+
+@pytest.mark.parametrize('term, word', [
+    ('pack', 'packages'), ('reading', 'readiness'), ('worked', 'worktree'), ('pro', 'projects'),
+    ('state', 'status'), ('generated', 'general'), ('com', 'command'), ('invented', 'inventory'),
+    ('ci', 'city'),
+])
+def test_a_term_never_meets_a_word_that_only_begins_like_it(term, word):
+    assert find_module._prefix_hits([term], [word]) == set()
+
+
+def test_two_query_words_meet_a_closed_compound_path_word():
+    path = find_module.name_words('docs/resources/ukrainianlessons/MAPPING_REPORT.md')
+    assert find_module.compound_hits(['ukrainian', 'lessons', 'mapped'], path) == {'ukrainian', 'lessons'}
+    assert find_module.compound_hits(['talk', 'ukrainian'], ['talkukrainian', 'db']) == {'talk', 'ukrainian'}
+    assert find_module.compound_hits(['layer', 'b', 'gate'], ['tests', 'layerb']) == {'layer', 'b'}
+    assert find_module.compound_hits(['ukrainian'], ['ukrainianlessons']) == set()  # one word is no compound
+    assert find_module.compound_hits(['lessons', 'ukrainian'], ['ukrainian', 'lessons']) == set()
+
+
+def test_a_closed_compound_directory_names_its_files(repo):
+    path = 'docs/resources/talkukrainian/talkukrainian_db.json'
+    state = dataclasses.replace(_state(repo, fixture_catalogue()), files={path: None})
+    terms = ['talk', 'ukrainian', 'database']
+    assert find_module._name_candidates(state, terms, terms, None, [])[path].name_terms == {'talk', 'ukrainian'}
+
+
 @pytest.mark.parametrize('query, units', [
     ('Where is the check_russian_shadow tool handled?', ['check_russian_shadow']),
     ('ULP 1-02', ['1-02']),
@@ -1410,3 +1450,22 @@ def test_a_span_holds_only_the_lead_of_a_long_docstring():
     lines = [(no, line) for no, line in enumerate(text.splitlines(), 1)
              if find_module.DEF_LINE.match(line) or '"""' in line]
     assert find_module.python_spans(lines) == [(1, 2 + find_module.DOCSTRING_LEAD - 1, 'def long():')]
+
+
+def test_within_a_band_exact_relevance_ranks_before_line_evidence_except_for_a_status_question(repo):
+    state = _state(repo, fixture_catalogue())
+    terms, weights = ['alpha', 'beta'], {'alpha': 1.0, 'beta': 1.0}
+    passage = find_module.Candidate('docs/a.md', content_terms={'alpha', 'beta'}, passage_terms={'alpha', 'beta'},
+                                    line_terms=1)  # relevance 0.6: the words together in one passage
+    line = find_module.Candidate('docs/b.md', content_terms={'alpha', 'beta'}, line_terms=2)  # 0.4, on one line
+
+    def order(status):
+        key = functools.partial(find_module._rank_key, state, terms=terms, weights=weights, status_question=status)
+        return [c.path for c in sorted([line, passage], key=key)]
+    assert key_band(state, passage, terms, weights) == key_band(state, line, terms, weights)
+    assert order(False) == ['docs/a.md', 'docs/b.md']
+    assert order(True) == ['docs/b.md', 'docs/a.md']  # a status question's record is the line holding its words
+
+
+def key_band(state, c, terms, weights):
+    return find_module._rank_key(state, c, terms=terms, weights=weights)[:2]

@@ -8,8 +8,9 @@ implemented?" in one call, from four sources read at request time, with no persi
    A strong match returns the family's entry points, or a data store with its
    query hint and producers (stores cannot be grepped).
 2. **Tracked names**: query words against every path in Git's index (names only; no
-   body is read). A path under the docs inventory's privacy exclusion is never a hit: the
-   README of its directory (``private_note``), which says what those files are, carries
+   body is read), in any inflection (translated meets translations), and two query words
+   against one path word that writes them together (``ukrainianlessons``). A path under
+   the docs inventory's privacy exclusion is never a hit: the README of its directory (``private_note``), which says what those files are, carries
    its name evidence. The exclusion covers bodies, never that README.
 3. **Tracked text**: ``git grep --cached`` over the paths that PR 1's
    ``body_readable`` gate admits (content-searchable families only). Pathnames
@@ -272,9 +273,17 @@ def compounds(text: str) -> list[str]:
 
 
 MIN_PREFIX = 3  # a term this long or longer also meets the words it begins
-MAX_PREFIX_EXTRA = 3  # how many characters a met word may add to the term or its stem
+MAX_PREFIX_EXTRA = 3  # how many characters a met word may add to the term as typed
 SHORT_ENDINGS = ('', 's', 'es', 'ed', 'ing', 'er', 'ers')
 STEM_SUFFIXES = ('ations', 'ation', 'ments', 'ment', 'ions', 'ion', 'ing', 'ies', 'ed', 'es', 's')
+# The endings longer than MAX_PREFIX_EXTRA a met word may have after the term as typed (assess-ment).
+WORD_ENDINGS = ('ations', 'ation', 'ments', 'ment', 'ions', 'ings')
+# The endings after a doubled final consonant (map, mapping; set, settings; run, running).
+DOUBLING_ENDINGS = ('ings', 'ing', 'ers', 'er', 'ed')
+# The endings a met word may have after the term's stem and part of the rest of the term (evalu-ation
+# for "evaluations", mapp-ing for "mapped"): inflections and derivations only, never any short tail.
+MORPH_ENDINGS = ('ations', 'ation', 'ments', 'ment', 'ings', 'ions', 'ion', 'ing', 'ies', 'ers', 'er', 'ors', 'or',
+                 'ed', 'es', 's', 'y', 'e', '')
 MIN_STEM = 4
 UNDOUBLED = re.compile(r'([b-df-hj-km-np-rtv-xz])\1$')  # a doubled final consonant other than l, s, z
 VERB_NOUN_AL = re.compile(r'(?<=[svw])als?$')  # approval(s), removal, proposal, renewal: a verb's -al noun
@@ -326,20 +335,74 @@ def _prefix_hits(terms: Sequence[str], field_words: Sequence[str]) -> set[str]:
     return {t for t in terms if _term_pattern(t).search(joined)}
 
 
+def _either(texts: Sequence[str]) -> str:
+    """A regex group matching any one of ``texts`` literally."""
+    return '(?:' + '|'.join(re.escape(t) for t in texts) + ')'
+
+
 @functools.lru_cache(maxsize=4096)
 def _term_pattern(term: str) -> re.Pattern:
-    """A whole field word that ``term`` meets, in a space-joined word list.
+    """A whole field word that ``term`` meets (``_term_body``), in a space-joined word list."""
+    return re.compile(f'(?<= ){_term_body(term)}(?= )')
 
-    The word is the term or its ``stem`` followed by at most MAX_PREFIX_EXTRA more characters
-    (parse, parser; deletion, deleted; pack, packed, never packages). A term shorter than
+
+@functools.lru_cache(maxsize=4096)
+def _term_body(term: str) -> str:
+    """The regex of a field word that ``term`` meets.
+
+    The word is the term as typed and then at most MAX_PREFIX_EXTRA more characters or (a term of
+    MIN_STEM letters) one of WORD_ENDINGS; or the term's ``stem``, as much of the rest of the term
+    as the word shares, and one of MORPH_ENDINGS; or either with a doubled final consonant and a
+    DOUBLING_ENDINGS ending. So two inflections of one word meet however far each runs past their
+    shared part: translated, translations; mapped, mapping; decolonizing, decolonization;
+    assessing, assessment; and parse, parser; deletion, deleted; pack, packed, never packages,
+    nor reading, readiness, nor invented, inventory, nor com, command. A term shorter than
     MIN_PREFIX ("pr", "ci") meets only itself and its SHORT_ENDINGS inflections.
     """
     if len(term) < MIN_PREFIX:
         body = re.escape(term) + '(?:' + '|'.join(re.escape(e) for e in SHORT_ENDINGS) + ')'
     else:
-        body = '(?:' + '|'.join(sorted({re.escape(term), re.escape(stem(term))}, key=len, reverse=True)) + ')'
-        body += f'[^ ]{{0,{MAX_PREFIX_EXTRA}}}'
-    return re.compile(f'(?<= ){body}(?= )')
+        base = stem(term)  # always a prefix of the term
+        free = f'[^ ]{{0,{MAX_PREFIX_EXTRA}}}'
+        # The term as typed may run on by any few characters (pack, packed); its stem only by an
+        # inflection or derivation (invented meets invention, never inventory).
+        alternatives = [re.escape(term) + (f'(?:{_either(WORD_ENDINGS)}|{free})' if len(term) >= MIN_STEM else free)]
+        if base != term:
+            shared = [term[len(base):k] for k in range(len(term) - 1, len(base) - 1, -1)]  # longest first
+            alternatives.append(re.escape(base) + _either(shared) + _either(MORPH_ENDINGS))
+        alternatives += [re.escape(word + word[-1]) + _either(DOUBLING_ENDINGS)
+                         for word in dict.fromkeys((term, base)) if UNDOUBLED.match(word[-1] * 2)]
+        body = '(?:' + '|'.join(alternatives) + ')'
+    return body
+
+
+def compound_hits(terms: Sequence[str], field_words: Sequence[str]) -> set[str]:
+    """The terms that two query words written together make up in one field word: a directory or
+    file named in closed compound form (``ukrainianlessons`` for "Ukrainian Lessons",
+    ``talkukrainian``, ``layerb``). The first word is a term as typed (at least MIN_PREFIX
+    letters), the second any term in any inflection it meets (``_term_body``)."""
+    if len(terms) < 2:
+        return set()
+    pattern, seconds = _compound_pattern(tuple(terms))
+    if pattern is None:
+        return set()
+    hits = set()
+    for found in pattern.finditer(' ' + ' '.join(field_words) + ' '):
+        hits.add(found.group('first'))
+        hits.add(seconds[found.lastindex - 2])
+    return hits
+
+
+@functools.lru_cache(maxsize=1024)
+def _compound_pattern(terms: tuple[str, ...]) -> tuple[re.Pattern | None, list[str]]:
+    """One regex for every closed compound of two ``terms`` (group ``first``, then one group per
+    second term), and the terms in their group order."""
+    firsts = sorted((t for t in terms if len(t) >= MIN_PREFIX), key=len, reverse=True)
+    if not firsts:
+        return None, []
+    seconds = list(terms)
+    rest = '|'.join(f'({_term_body(t)})' for t in seconds)
+    return re.compile(f'(?<= )(?P<first>{"|".join(map(re.escape, firsts))})(?:{rest})(?= )'), seconds
 
 
 def _contains_words(haystack: list[str], needle: list[str], *, prefix_last: bool = True) -> bool:
@@ -973,8 +1036,10 @@ def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, f
     query's typed identifiers (``compounds``) as a unit comes first: in its name or a code
     identifier (where it is defined), then anywhere (its text). Then lifecycle (alike for a
     status question), then a file that speaks for its family or directory (entry point,
-    README, index, data store), then words in the path name, then query words together on one short line; the exact
-    relevance and the path break the remaining ties.
+    README, index, data store), then words in the path name, then the exact relevance (a catalogue
+    topic naming the question is surer evidence than its words scattered through a long inventory)
+    and query words together on one short line; for a status question the line comes first, as the
+    record that answers it. The path breaks the remaining ties.
     """
     score = relevance(c, terms, weights, process, status_question)
     long_line = c.line_text is not None and len(c.line_text) > LONG_LINE
@@ -988,8 +1053,9 @@ def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, f
     lifecycle = _lifecycle_rank(state, c.path, status_question)
     banded = score - LIFECYCLE_PENALTY * lifecycle
     record = round(record_share(c, terms, weights), 6) if status_question else 0
+    evidence = (-c.line_terms, -round(score, 6)) if status_question else (-round(score, 6), -c.line_terms)
     return (tier, -round(banded * 4), -len(c.defined), -len(c.compounds | c.defined), -record, lifecycle,
-            not c.authority, -round(name_weight, 6), -c.line_terms, -round(score, 6), c.path)
+            not c.authority, -round(name_weight, 6), *evidence, c.path)
 
 
 def _candidate_hit(state: State, c: Candidate, terms: list[str], phrase: list[str]) -> dict:
@@ -1340,7 +1406,7 @@ def _name_candidates(state: State, terms: list[str], phrase: list[str], family: 
         if family is not None and state.report.resolved.get(path, (None,))[0] != family:
             continue
         path_words = name_words(path)
-        hits = _prefix_hits(terms, path_words)
+        hits = _prefix_hits(terms, path_words) | compound_hits(terms, path_words)
         if not hits:
             continue
         candidate = Candidate(path, name_terms=hits,

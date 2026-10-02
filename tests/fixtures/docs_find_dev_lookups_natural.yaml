@@ -25,7 +25,8 @@
 # after round 4 (directory notes, supersession records, abbreviations, function spans), 64 / 56.
 # At the gate's limit of 50 (read pool 150) the round-4 head scores 64 / 58, and after round 5
 # (the read pool counts text candidates, a family hit lists only the entry points the query
-# names, the storage-topology topic carries a short layout question) 64 / 58.
+# names, the storage-topology topic carries a short layout question) 64 / 58; after round 6 (inflections
+# and closed compounds in path names, exact relevance before line evidence) 64 / 59.
 version: 1
 top_n: {query: 20, question: 20}
 known_misses:
@@ -36,7 +37,6 @@ known_misses:
   N38: {query: 51, reason: 'Not diagnosed in round 3.'}
   N40: {query: 84, question: 36, reason: 'Vocabulary gap: the step says it sets the evidence digest, the question says updates.'}
   N43: {question: 175, reason: 'Not diagnosed in round 3.'}
-  N50: {question: 45, reason: 'The store holds the words in its purpose only; long-question words held by prose outrank it.'}
   N54: {question: 24, reason: 'Four places outside: the store record names few of the question''s words about messages.'}
   N59: {question: 71, reason: 'The common words of the long question are held by prose; the short query ranks .gitattributes first.'}
   N64: {question: 28, reason: 'Not diagnosed in round 3.'}

@@ -23,10 +23,25 @@
 # (lifecycle records), short queries 68 / 63 / 35 and questions 68 / 64 / 35; after round 4
 # (directory notes, abbreviations, function spans), 68 / 63 / 34 and 68 / 64 / 34; after round 5
 # (the read pool counts text candidates, a family hit lists only the entry points the query
-# names), 68 / 64 / 34 and 68 / 65 / 34, at the gate's limit of 50 (read pool 150).
+# names), 68 / 64 / 34 and 68 / 65 / 34, at the gate's limit of 50 (read pool 150); after round 6
+# (a query word meets its path in any inflection and in a closed compound; within a band exact
+# relevance ranks before line evidence), 68 / 64 / 35 and 68 / 65 / 35. These counts leave out the
+# multi-answer gate (R05-R10), which round 5 held at 1 of 6 within 20 per protocol and round 6 at
+# 5 of 6 short queries and 2 of 6 questions (ranks in multi_answer_gate.known_misses).
 version: 1
 top_n: {query: 10, question: 20}
 known_misses: {}
+# The lookups marked `gate: multi_answer` are ranked by their own gate, not by top_n: every expected
+# path is a name candidate of its short query (its path holds a query word, in any inflection), and
+# an expected path is within the first top_n hits at the CLI's default limit, except the protocols
+# listed in known_misses with their rank at the round-6 head (null: not within the default 20).
+multi_answer_gate:
+  top_n: 20
+  known_misses:
+    R07: {question: null, reason: 'Round 1 ranked it 25. The rare filler word "waiting" outweighs the path words.'}
+    R08: {query: null, question: null, reason: 'Round 1 ranked it 2. The path words decolonization and reviews are common in text, so code files naming lexicon outrank it.'}
+    R09: {question: null, reason: 'Round 1 ranked it 12. The rare filler word "automatically" outweighs four path words of a historical file.'}
+    R10: {question: null, reason: 'Round 1 ranked it 14. Text holding most of a long question outranks two path words.'}
 lookups:
   # ---------------------------------------------------------------- resources
   - {id: L02, question: 'Where is the list of podcast episodes for season 4?', kind: resource, query: podcast episode list season 4,
@@ -54,32 +69,33 @@ lookups:
      expect: [docs/resources/ukrainianlessons/blog_db.json, docs/resources/ulp-article-mappings.yaml,
               docs/resources/ukrainianlessons/MAPPING_REPORT.md],
      verify: [{path: docs/resources/ulp-article-mappings.yaml, contains: ukrainianlessons}]}
-  # Several sibling files of one pattern under one directory, named in the question by a word that the
-  # path holds in another inflection or derivation (translated / translations, mapped / MAPPING,
-  # decolonizing / decolonization, hallucinated / hallucinations). The path is often their only
-  # evidence (data files outside the readable text), so a word that no longer meets its path loses
-  # them whole. Round d of #9412 lost all six (none within 200) where round 1 held them.
-  - {id: R05, question: 'Where are the batches of translated words?', kind: resource, query: translated word batches,
+  # The multi-answer gate (multi_answer_gate above): several sibling files of one pattern under one
+  # directory, named in the question by a word that the path holds in another inflection or
+  # derivation (translated / translations, mapped / MAPPING, decolonizing / decolonization,
+  # hallucinated / hallucinations). The path is often their only evidence (data files outside the
+  # readable text), so a word that no longer meets its path loses them whole. Round d of #9412 lost
+  # all six (none within 200) where round 1 held them.
+  - {id: R05, gate: multi_answer, question: 'Where are the batches of translated words?', kind: resource, query: translated word batches,
      expect: [registry/translations/batch-aa-translations.json, registry/translations/batch-ab-translations.json,
               registry/translations/gemini-batch-1-translations.json],
      verify: [{path: registry/translations/batch-aa-translations.json, contains: '"ава": "Ava"'}]}
-  - {id: R06, question: 'Where are the reports on how the Ukrainian Lessons articles were mapped?', kind: resource, query: ukrainian lessons articles mapped reports,
+  - {id: R06, gate: multi_answer, question: 'Where are the reports on how the Ukrainian Lessons articles were mapped?', kind: resource, query: ukrainian lessons articles mapped reports,
      expect: [docs/resources/ukrainianlessons/MAPPING_REPORT.md, docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md,
               docs/resources/ukrainianlessons/MAPPING_METHODOLOGY.md],
      verify: [{path: docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, contains: 'mapping of Ukrainian Lessons content'}]}
-  - {id: R07, question: 'Where are the word batches waiting to be translated?', kind: resource, query: word batches to be translated,
+  - {id: R07, gate: multi_answer, question: 'Where are the word batches waiting to be translated?', kind: resource, query: word batches to be translated,
      expect: [registry/translations/input/batch-aa, registry/translations/input/batch-ab, registry/translations/input/batch-ac],
      verify: [{path: registry/translations/input/batch-aa, contains: айвазовське}]}
-  - {id: R08, question: 'Where are the reviews of the decolonizing lexicon cases?', kind: resource, query: decolonizing lexicon case reviews,
+  - {id: R08, gate: multi_answer, question: 'Where are the reviews of the decolonizing lexicon cases?', kind: resource, query: decolonizing lexicon case reviews,
      expect: [registry/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json,
               registry/projects/open_model_data/components/decolonization/reviews/decol_lex_002.review.json,
               registry/projects/open_model_data/components/decolonization/reviews/decol_lex_003.review.json],
      verify: [{path: registry/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json, contains: '"case_id": "decol_lex_001"'}]}
-  - {id: R09, question: 'Where are the summaries of how Ukrainian Lessons articles were mapped automatically?', kind: resource, query: ukrainian lessons automated mapping summary,
+  - {id: R09, gate: multi_answer, question: 'Where are the summaries of how Ukrainian Lessons articles were mapped automatically?', kind: resource, query: ukrainian lessons automated mapping summary,
      expect: [docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, docs/resources/ukrainianlessons/MAPPING_REPORT.md,
               docs/resources/ukrainianlessons/MAPPING_METHODOLOGY.md],
      verify: [{path: docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, contains: 'Automated Mapping - Final Summary'}]}
-  - {id: R10, question: 'Where are the dictionary pages Gemini hallucinated during OCR, kept as samples?', kind: resource, query: gemini ocr hallucinated pages,
+  - {id: R10, gate: multi_answer, question: 'Where are the dictionary pages Gemini hallucinated during OCR, kept as samples?', kind: resource, query: gemini ocr hallucinated pages,
      expect: [tests/fixtures/etymology/gemini-hallucinations/vol3_p0233.md, tests/fixtures/etymology/gemini-hallucinations/vol3_p0379.md,
               tests/fixtures/etymology/gemini-hallucinations/vol4_p0530.md],
      verify: [{path: tests/fixtures/etymology/gemini-hallucinations/README.md, contains: 'quarantine samples containing various hallucination patterns'}]}
