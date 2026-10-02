@@ -780,6 +780,8 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
     pool.sort(key=rank_key)
     content_hits = [_candidate_hit(state, c, terms, phrase) for c in pool[:limit]]
     hits = _with_replacements(state, family_hits + content_hits, terms)[:limit]
+    if status_question:
+        hits = _with_lifecycle_records(state, hits, terms, deadline)[:limit]
     timings['total_ms'] = round((time.monotonic() - started) * 1000)
     for rank, hit in enumerate(hits, 1):
         hit['rank'] = rank
@@ -1003,6 +1005,98 @@ def _with_replacements(state: State, hits: list[dict], terms: list[str]) -> list
                 add({**replacement, 'match': 'replacement', 'replaces': replaces})
         else:
             add(_path_hit(state, cat.strip_fragment(target), 'replacement', replaces=replaces))
+    return out
+
+
+# A path word that says the thing is historical (scripts/legacy/..., scripts-deprecated/, docs/archive/).
+HISTORICAL_PATH_WORDS = frozenset({'legacy', 'deprecated', 'archive', 'archived', 'old', 'obsolete', 'historical',
+                                   'retired', 'superseded'})
+MIN_RECORD_NAME = 6  # a file name shorter than this ("a.md") names nothing in an index
+
+
+def is_historical(hit: dict) -> bool:
+    """A hit for a historical thing: catalogued historical or superseded, a backup-like copy, or a
+    path whose words say so (``HISTORICAL_PATH_WORDS``)."""
+    return (hit.get('lifecycle') in ('archive', 'superseded') or bool(hit.get('backup_like'))
+            or bool(HISTORICAL_PATH_WORDS.intersection(words(hit['path']))))
+
+
+def directory_indexes(state: State) -> dict[str, list[str]]:
+    """Per directory, its text-readable README or index files (``INDEX_NAME``)."""
+    def build() -> dict[str, list[str]]:
+        out: dict[str, list[str]] = {}
+        for path in state.files:
+            if INDEX_NAME.fullmatch(PurePosixPath(path).name) and text_readable(state, path):
+                out.setdefault(str(PurePosixPath(path).parent), []).append(path)
+        return {d: sorted(paths) for d, paths in out.items()}
+    return _derived(state, 'directory_indexes', build)
+
+
+def lifecycle_authorities(state: State, path: str) -> tuple[list[str], list[str]]:
+    """Where the lifecycle of ``path`` is recorded, besides the catalogue: (its family's authority
+    files, which record it only when they name it; the README or index of its nearest owning
+    directory below the top level, which governs everything in it). Never ``path`` itself and
+    never an unreadable file."""
+    family = state.lifecycle_of(path)[0]
+    registries = [a for a in authority_files(state).get(family, []) if a != path and text_readable(state, a)]
+    parents = PurePosixPath(path).parent.parts
+    indexes = directory_indexes(state)
+    for depth in range(len(parents), 1, -1):
+        found = [i for i in indexes.get('/'.join(parents[:depth]), []) if i != path]
+        if found:
+            return registries, found[:1]
+    return registries, []
+
+
+def _with_lifecycle_records(state: State, hits: list[dict], terms: list[str], deadline: float) -> list[dict]:
+    """``hits`` with each historical hit (``is_historical``) of a status question followed by the record
+    of its lifecycle: the family authority that names it (a decision index, an ADR index, a ledger;
+    one bounded ``git grep`` for the file names), else the README of its owning directory (match
+    ``lifecycle_record``, ``records`` naming the hit, the naming line as excerpt). "Is X still used,
+    what happened to it?" is answered by that record, not by X; no path appears twice.
+    """
+    plans: list[tuple[dict, list[str], list[str]]] = []
+    for hit in hits:
+        path = hit.get('path')
+        if path and hit.get('match') != 'data_store' and is_historical(hit) \
+                and not INDEX_NAME.fullmatch(PurePosixPath(path).name):
+            plans.append((hit, *lifecycle_authorities(state, path)))
+    names = {PurePosixPath(hit['path']).name for hit, registries, _ in plans if registries}
+    names = sorted(n for n in names if len(n) >= MIN_RECORD_NAME)
+    registries = sorted({r for _, rs, _ in plans for r in rs})
+    naming: dict[tuple[str, str], tuple[int, str]] = {}
+    if names and registries:
+        run = _total_grep(state.repo, _line_args(names, [f':(literal){r}' for r in registries], None),
+                          deadline, EXCERPT_OUTPUT_CAP)
+        for record in run.stdout.split(b'\n'):
+            parts = record.split(b'\0', 2)
+            if len(parts) == 3 and parts[1].isdigit():
+                where, line = parts[0].decode('utf-8', 'replace'), parts[2].decode('utf-8', 'replace')
+                for name in names:
+                    if name.casefold() in line.casefold():
+                        naming.setdefault((where, name), (int(parts[1]), line))
+    records: dict[str, tuple[str, int | None, str | None]] = {}
+    for hit, rs, directory in plans:
+        name = PurePosixPath(hit['path']).name
+        named = [(r, naming[(r, name)]) for r in rs if (r, name) in naming]
+        if named:
+            records[hit['path']] = (named[0][0], *named[0][1])
+        elif directory:
+            records[hit['path']] = (directory[0], None, None)
+    out: list[dict] = []
+    emitted: set[str] = set()
+    for hit in hits:
+        if hit.get('path') in emitted:
+            continue
+        out.append(hit)
+        if hit.get('path'):
+            emitted.add(hit['path'])
+        if hit.get('path') in records:
+            where, line, text = records[hit['path']]
+            if where not in emitted:
+                extra = {'line': line, 'excerpt': _excerpt(text, terms, [])} if text is not None else {}
+                out.append(_path_hit(state, where, 'lifecycle_record', records=hit['path'], **extra))
+                emitted.add(where)
     return out
 
 
@@ -1663,6 +1757,8 @@ def format_text(result: dict) -> str:
             status += ', backup copy'
         if hit.get('replaces'):
             status += f", replaces {cat.shown(hit['replaces'])}"
+        if hit.get('records'):
+            status += f", records the lifecycle of {cat.shown(hit['records'])}"
         lines.append(f"{hit['rank']:>3}. {where}  [{hit['match']}; {hit.get('family') or 'no family'}; {status}]")
         detail = hit.get('topic') or hit.get('excerpt')
         if detail:
