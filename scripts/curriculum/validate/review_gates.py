@@ -54,9 +54,9 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
       word (note)
   C24 a rationale or job that says the lesson recycles a category of word records none of which it recycles (failure)
   C25 a practice step with no practice, need, dialogue or paradigm (failure)
-  C26 a comprehension activity hosted only on quotes or recordings that names a word no host holds (failure); the
-      same when a host holds a transcription that may show it, or when the word is named only in a sentence with
-      exclusion wording (note)
+  C26 a comprehension activity naming a W- id the word store lacks (failure), or a word its quote and recording
+      hosts do not hold (failure); the same when a host holds a transcription that may show it, or when the plan
+      does not decide it: an ambiguous sentence, an unresolvable or sibling's host (note)
   C27 in a letter-stage module, a letter a step introduces that no recording the lesson cites models (failure); the
       same when the step records the teacher modelling that letter (note)
   C28 a word id a step's teach text names outside the lesson's inventory and the prior learner state (failure)
@@ -192,13 +192,17 @@ making them failures needs structured target and option fields, which is a plan-
   claim fails when no record of the category is in the lesson's recycled list, inventory or step vocabulary.
 - C25: a ``practice`` step whose practice list is empty and which has no needs, hosts no dialogue and carries no
   paradigm leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
-- C26 applies to a comprehension activity whose every host is a pack quote or a video with models (a dialogue host
-  is drafted by the writer, so it is not decided). Its words are the W- ids of its focus outside sentences that
-  speak of another activity. A word is held when a spelling of its record is a token of a host quote (also read with
-  spaces removed, for letter-spaced print) or a host video models it. The host side is structural, so an unheld word
-  fails. A word named only in a sentence with exclusion wording ("do not", "instead of" …) is a note quoting that
-  sentence: the wording may exclude the word ("do not reuse W-201") or something else ("asks about W-201 and do not
-  give hints"), prose cannot tell which, and skipping it would let an unhosted target pass unseen.
+- C26 gives every W- id of a comprehension focus exactly one outcome; the outcomes are a total mapping over the
+  ids, so no id can pass unseen. An id the word store lacks fails. A word is held when a spelling of its record is a
+  token of a resolvable host quote of the activity (also read with spaces removed, for letter-spaced print) or a
+  resolvable host video models it; a held word has no finding. The activity's hosts are those declared outside
+  sentences naming another activity: a sentence naming one ("as in b2 (host: {kind: dialogue})") declares that
+  activity's host. An unheld word fails when it is named in a plain sentence and every host of the activity is a pack
+  quote or a video with models (a note when a host holds a transcription that may show it). Otherwise the plan does
+  not decide it, and it is a note quoting the sentence and the reason: the word is named only in a sentence with
+  exclusion wording ("do not", "instead of" …, which may exclude it or something else) or naming another activity
+  (whose items it may be about), or a host is a dialogue (drafted by the writer) or another unresolvable record, or
+  the activity declares no host of its own, or a host is declared in a sentence naming another activity.
 - C27 compares each letter a step introduces with the models.letters of every recording the lesson cites
   (case-folded); a teach-text sentence naming the teacher's model or pronunciation and the letter itself is a note.
 - C28 compares the W- ids of each teach text with C1's allowed set (the lesson's inventory, its steps' vocabulary,
@@ -455,6 +459,58 @@ def _host(focus: str) -> tuple[str, str | None] | None:
 
 
 _quote_host_refs = quote_bytes.quote_host_refs
+
+
+def _host_label(host: tuple[str, str | None]) -> str:
+    """A declared host as a C26 message names it: its record id, or its kind when it names none ({kind: dialogue})."""
+    kind, ref = host
+    return ref or kind
+
+
+@dataclass(frozen=True)
+class _C26Context:
+    """What C26 reads from one comprehension focus, shared by the outcome of each of its W- ids."""
+
+    focus: str
+    #: (sentence, why it is ambiguous: "" for a plain sentence) for each sentence of the focus.
+    sentences: list[tuple[str, str]]
+    #: The activity's own declared hosts, as a message names them.
+    where: str
+    #: Spellings the activity's resolvable quote hosts print, and words its resolvable recordings model.
+    printed: set[str]
+    modelled: set[str]
+    #: The text of the activity's resolvable quote hosts.
+    quotes: list[str]
+    #: Why the activity's host set does not decide a word it does not hold ([] when it does).
+    host_gaps: list[str]
+
+
+#: C26 outcome codes in report order, each with the ending of its message ({where}: the activity's own hosts; {gaps}:
+#: why they do not decide a word they do not hold); the first two fail the run.
+_C26_REPORTS: tuple[tuple[str, str], ...] = (
+    (
+        codes.COMPREHENSION_TARGET_UNKNOWN,
+        ", which the level word store does not hold; a comprehension item asks about a word record, so name one the "
+        "store holds",
+    ),
+    (
+        codes.COMPREHENSION_TARGET_NOT_IN_HOST,
+        ", which no host ({where}) prints or models; a comprehension item is answered from its host, so host it on a "
+        "record that holds the word",
+    ),
+    (
+        codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
+        ", which no host ({where}) prints in spelling; a host holds a transcription, so the plan review confirms the "
+        "host shows each word the items ask about",
+    ),
+    (
+        codes.COMPREHENSION_TARGET_UNVERIFIED,
+        ", which no host ({where}) prints or models{gaps}; whether this activity's items ask about the word, or what "
+        "its host holds, is not read from the plan, so the plan review confirms every word the items ask about is in "
+        "the host",
+    ),
+)
+_C26_FAILURES = frozenset({codes.COMPREHENSION_TARGET_UNKNOWN, codes.COMPREHENSION_TARGET_NOT_IN_HOST})
 
 
 def _linked(lesson: dict) -> list[tuple[int, int, str]]:
@@ -1630,84 +1686,102 @@ class ReviewGates(Gates):
     def check_comprehension_targets_in_host(self) -> None:
         for lesson in self.plan["lessons"]:
             for activity in self._comprehension(lesson):
-                focus = activity["focus"]
-                hosts = [(match.group(1), match.group(2)) for match in _HOST.finditer(focus)]
-                hosts += [("quote", ref) for ref in _quote_host_refs(focus) if ("quote", ref) not in hosts]
-                exact = hosts and all(
-                    (kind == "quote" and ref in self.pack.quotes) or (kind == "video" and ref in self.pack.video_models)
-                    for kind, ref in hosts
-                )
-                if not exact:
-                    continue  # a dialogue host is drafted by the writer; an unresolved host is reported elsewhere
-                quotes = [_STRESS_MARKS.sub("", _nfc(self.pack.quotes[ref])) for kind, ref in hosts if kind == "quote"]
-                # A letter-spaced word ("л ю п и н") is read with its spaces removed as well.
-                printed = {
-                    _spelling(token)
-                    for text in quotes
-                    for variant in (text, _LETTER_SPACED.sub(lambda match: match.group(0).replace(" ", ""), text))
-                    for token in _ROW_TOKEN.findall(variant)
-                }
-                others = {item["id"] for item in lesson.get("activities") or []} - {activity["id"]}
-                modelled = self._modelled([ref for kind, ref in hosts if kind == "video"])
-                # Every id of the focus is a target, a note or hosted; none vanishes. Prose does not say which of
-                # its ids an excluding sentence excludes ("Asks about W-201 and do not give hints.") or whose items a
-                # sentence naming another activity is about ("This b4 asks about W-203 as in b2."), so the ids of
-                # such an ambiguous sentence only note.
-                targets: list[str] = []
-                ambiguous: dict[str, tuple[str, str]] = {}  # id -> (its first ambiguous sentence, why ambiguous)
-                for sentence in _SENTENCE_BREAK.split(focus):
-                    why = []
-                    if _EXCLUDING.search(sentence):
-                        why.append("says something is excluded")
-                    if named := [ref for ref in _ids(_ACTIVITY_REF, sentence) if ref in others]:
-                        why.append(f"names activity {', '.join(named)}")
-                    for item in _ids(_WORD_ID, sentence):
-                        if why:
-                            ambiguous.setdefault(item, (sentence, " and ".join(why)))
-                        else:
-                            targets.append(item)
+                context = self._comprehension_context(lesson, activity)
+                outcomes = self._comprehension_target_outcomes(context)
+                gaps = "".join(f"; {gap}" for gap in context.host_gaps)
+                for code, ending in _C26_REPORTS:
+                    entries = [entry for item_code, entry in outcomes.values() if item_code == code]
+                    if not entries:
+                        continue
+                    message = (
+                        f"comprehension activity {activity['id']} names {'; '.join(entries)}"
+                        f"{ending.format(where=context.where, gaps=gaps)} (#9487 C26)"
+                    )
+                    if code in _C26_FAILURES:
+                        self.fail(code, message, lesson["n"])
+                    else:
+                        self.note(code, message, lesson["n"])
 
-                unhosted = {
-                    item: f"{item} {record.lemma!r}"
-                    for item in dict.fromkeys([*targets, *ambiguous])
-                    if (record := self.store.records.get(item)) is not None
-                    and item not in modelled
-                    and not {_spelling(text) for text in (record.lemma, *record.form_texts)} & printed
-                }
-                where = ", ".join(ref for _kind, ref in hosts)
-                unverified = [
-                    f"{unhosted[item]} in {_span(sentence, item, _WORD_ID)} (the sentence {why})"
-                    for item, (sentence, why) in ambiguous.items()
-                    if item not in targets and item in unhosted
-                ]
-                if unverified:
-                    self.note(
-                        codes.COMPREHENSION_TARGET_UNVERIFIED,
-                        f"comprehension activity {activity['id']} names {'; '.join(unverified)}, which no host "
-                        f"({where}) prints or models; the sentence is prose, so whether this activity's items ask "
-                        "about the word is not read from it, and the plan review confirms every word the items ask "
-                        "about is in the host (#9487 C26)",
-                        lesson["n"],
-                    )
-                missing = [unhosted[item] for item in dict.fromkeys(targets) if item in unhosted]
-                if not missing:
-                    continue
-                if any("[" in text for text in quotes):
-                    self.note(
-                        codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
-                        f"comprehension activity {activity['id']} names {', '.join(missing)}, which no host ({where}) "
-                        "prints in spelling; a host holds a transcription, so the plan review confirms the host "
-                        "shows each word the items ask about (#9487 C26)",
-                        lesson["n"],
-                    )
-                    continue
-                self.fail(
-                    codes.COMPREHENSION_TARGET_NOT_IN_HOST,
-                    f"comprehension activity {activity['id']} names {', '.join(missing)}, which no host ({where}) "
-                    "prints or models; a comprehension item is answered from its host, so host it on a record that "
-                    "holds the word (#9487 C26)",
-                    lesson["n"],
-                )
+    def _comprehension_context(self, lesson: dict, activity: dict) -> _C26Context:
+        """What C26 reads from a comprehension activity's focus: its sentences, its own hosts and what they hold."""
+        focus = activity["focus"]
+        others = {item["id"] for item in lesson.get("activities") or []} - {activity["id"]}
+        # Hosts a sentence naming another activity declares are that activity's ("as in b2 (host: {kind: dialogue})"),
+        # never this one's; whether they are this activity's too is not read from prose, so they keep ids from failing.
+        sentences: list[tuple[str, str]] = []  # (sentence, why it is ambiguous, "" when plain)
+        own: list[tuple[str, str | None]] = []
+        sibling: list[tuple[str, str | None]] = []
+        for sentence in _SENTENCE_BREAK.split(focus):
+            named = [ref for ref in _ids(_ACTIVITY_REF, sentence) if ref in others]
+            why = [f"names activity {', '.join(named)}"] if named else []
+            if _EXCLUDING.search(sentence):
+                why.insert(0, "says something is excluded")
+            sentences.append((sentence, " and ".join(why)))
+            declared = [(match.group(1), match.group(2)) for match in _HOST.finditer(sentence)]
+            declared += [("quote", ref) for ref in _quote_host_refs(sentence)]
+            hosts = sibling if named else own
+            hosts += [host for host in dict.fromkeys(declared) if host not in hosts]
+        resolvable = [
+            (kind, ref)
+            for kind, ref in own
+            if (kind == "quote" and ref in self.pack.quotes) or (kind == "video" and ref in self.pack.video_models)
+        ]
+        quotes = [_STRESS_MARKS.sub("", _nfc(self.pack.quotes[ref])) for kind, ref in resolvable if kind == "quote"]
+        # A letter-spaced word ("л ю п и н") is read with its spaces removed as well.
+        printed = {
+            _spelling(token)
+            for text in quotes
+            for variant in (text, _LETTER_SPACED.sub(lambda match: match.group(0).replace(" ", ""), text))
+            for token in _ROW_TOKEN.findall(variant)
+        }
+        modelled = self._modelled([ref for kind, ref in resolvable if kind == "video"])
+        host_gaps = []
+        if unresolved := [host for host in own if host not in resolvable]:
+            host_gaps.append(
+                f"host {', '.join(_host_label(host) for host in unresolved)} is not a pack quote or a recording with "
+                "models, so what it holds is not decided here (a dialogue is drafted by the writer)"
+            )
+        if not own:
+            host_gaps.append("the activity declares no host outside sentences naming another activity")
+        if sibling:
+            host_gaps.append(
+                f"host {', '.join(_host_label(host) for host in sibling)} is declared in a sentence naming another "
+                "activity, so whether it is this activity's host is not read from prose"
+            )
+        where = ", ".join(_host_label(host) for host in own) or "none"
+        return _C26Context(focus, sentences, where, printed, modelled, quotes, host_gaps)
+
+    def _comprehension_target_outcomes(self, context: _C26Context) -> dict[str, tuple[str | None, str]]:
+        """W- id -> (its C26 outcome code, None when a host holds the word; its entry in the message) for every W- id
+        of the focus.
+
+        The mapping is total over the focus's ids by construction: each id is classified by _comprehension_target,
+        which returns an outcome on every path, so no id can end without one."""
+        return {item: self._comprehension_target(item, context) for item in _ids(_WORD_ID, context.focus)}
+
+    def _comprehension_target(self, item: str, context: _C26Context) -> tuple[str | None, str]:
+        """The C26 outcome of one W- id of a comprehension focus: never absent."""
+        holding = [(sentence, why) for sentence, why in context.sentences if item in _WORD_ID.findall(sentence)]
+        plain = [sentence for sentence, why in holding if not why]
+        # Splitting at sentence ends never splits an id, so holding is never empty; were it, the id would only note.
+        sentence, why = (plain[0], "") if plain else holding[0] if holding else ("", "is not one sentence")
+        span = _span(sentence, item, _WORD_ID)
+        record = self.store.records.get(item)
+        if record is None:
+            return codes.COMPREHENSION_TARGET_UNKNOWN, f"{item} in {span}"
+        named = f"{item} {record.lemma!r}"
+        if (
+            item in context.modelled
+            or {_spelling(text) for text in (record.lemma, *record.form_texts)} & context.printed
+        ):
+            return None, named
+        if why or context.host_gaps:
+            return codes.COMPREHENSION_TARGET_UNVERIFIED, f"{named} in {span}" + (
+                f" (the sentence {why})" if why else ""
+            )
+        if any("[" in text for text in context.quotes):
+            return codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED, named
+        return codes.COMPREHENSION_TARGET_NOT_IN_HOST, named
 
     # -- C27 ------------------------------------------------------------------
 

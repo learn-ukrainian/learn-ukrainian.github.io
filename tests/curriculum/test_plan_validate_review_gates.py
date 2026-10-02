@@ -84,6 +84,8 @@ REVIEW_GATE_CODES = {
     codes.PRACTICE_STEP_EMPTY,
     codes.COMPREHENSION_TARGET_NOT_IN_HOST,
     codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
+    codes.COMPREHENSION_TARGET_UNKNOWN,
+    codes.COMPREHENSION_TARGET_UNVERIFIED,
     codes.LETTER_WITHOUT_RECORDING,
     codes.LETTER_TEACHER_MODELED_ONLY,
     codes.TEACH_WORD_NOT_IN_INVENTORY,
@@ -1015,6 +1017,36 @@ CASES = [
         "c26_hosted_target_in_an_excluding_sentence_passes",
         _comprehension_on_quote("он м а м а", f"Asks about {MAMA} and do not give hints."),
     ),
+    # round 11 of the cross-family review (#9487): the reviewer's fixtures, which passed silently.
+    Case(
+        "c26_focus_id_the_store_lacks_fails",
+        _comprehension_on_quote("он мама", "Answer about W-999."),
+        failures=frozenset({codes.COMPREHENSION_TARGET_UNKNOWN}),
+        says="comprehension activity b4 names W-999 in «Answer about W-999», which the level word store does not hold",
+    ),
+    Case(
+        "c26_sibling_dialogue_host_does_not_skip_the_check",
+        _comprehension_on_quote("он мама", f"This b4 asks about {NONA} as in b2 (host: {{kind: dialogue}})."),
+        notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
+        says=f"names {NONA} 'нона' in «This b4 asks about {NONA} as in b2 (host: {{kind: dialogue}})» (the sentence",
+    ),
+    Case(
+        "c26_own_dialogue_host_notes_a_word_no_resolvable_host_holds",
+        _quote(
+            "он мама",
+            {
+                "id": "b4",
+                "type": "quiz",
+                "placement": "workbook",
+                "focus": f"Answer about {NONA}. kind: comprehension; host: {{kind: dialogue}}.",
+            },
+        ),
+        notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
+        says=(
+            f"names {NONA} 'нона' in «Answer about {NONA}», which no host (dialogue) prints or models; host dialogue "
+            "is not a pack quote or a recording with models"
+        ),
+    ),
     # C27 -- a new letter with no recording that models it
     Case(
         "c27_letters_no_recording_models_fail",
@@ -1410,30 +1442,130 @@ def test_c15_display_directive_reads_each_id_whole() -> None:
     assert shown == {"T-001"}
 
 
-# Every W-id of a comprehension focus on an exact host ends in exactly one outcome: hosted or modelled -> nothing;
-# named in a plain sentence and unhosted -> comprehension_target_not_in_host; named only in an ambiguous sentence
-# (excluding, or naming another activity) and unhosted -> comprehension_target_unverified.
+# Every W-id of a comprehension focus ends in exactly one C26 outcome (#9487 C26, round 12): an id the store lacks ->
+# comprehension_target_unknown; held by a resolvable host of the activity -> nothing; unheld, named in a plain sentence,
+# with every host of the activity resolvable and none declared in a sentence naming another activity ->
+# comprehension_target_not_in_host (comprehension_target_only_transcribed when a host holds a transcription); any
+# other unheld id -> comprehension_target_unverified.
 C26_SENTENCES = {
     "plain": "Answer about {id}.",
     "excluding": "Asks about {id} and do not give hints.",
     "sibling": "This b4 asks about {id} as in b2.",
     "both": "This b4 asks about {id} and do not give hints as in b2.",
 }
+C26_UNKNOWN = "W-999"
 
 
-@pytest.mark.parametrize("hosted", [True, False], ids=["hosted", "unhosted"])
+@dataclass(frozen=True)
+class C26Hosts:
+    """A host configuration of activity b4: its host sentences, the T-002 quote, the ids it holds, whether it decides."""
+
+    sentences: str
+    held: frozenset[str]
+    decides: bool
+    quote: str = "он м а м а"
+    transcribed: bool = False
+
+
+C26_HOSTS = {
+    "quote": C26Hosts("kind: comprehension; host: {kind: quote, ref: T-002}.", frozenset({MAMA}), True),
+    "transcribed_quote": C26Hosts(
+        "kind: comprehension; host: {kind: quote, ref: T-002}.",
+        frozenset({MAMA}),
+        True,
+        quote="он м а м а [нон′а]",
+        transcribed=True,
+    ),
+    "quote+video": C26Hosts(
+        "kind: comprehension; host {kind: quote, ref: T-002} or {kind: video, ref: V-900}.",
+        frozenset({MAMA, MANA}),
+        True,
+    ),
+    "quote+sibling_dialogue": C26Hosts(
+        "kind: comprehension; host: {kind: quote, ref: T-002}. Drafted as in b2 (host: {kind: dialogue}).",
+        frozenset({MAMA}),
+        False,
+    ),
+    # T-003 prints нона, but the sentence declaring it names b2, so it never holds b4's words.
+    "quote+sibling_quote": C26Hosts(
+        "kind: comprehension; host: {kind: quote, ref: T-002}. As in b2, host: {kind: quote, ref: T-003}.",
+        frozenset({MAMA}),
+        False,
+    ),
+    "quote+sibling_video": C26Hosts(
+        "kind: comprehension; host: {kind: quote, ref: T-002}. As in b2, host: {kind: video, ref: V-900}.",
+        frozenset({MAMA}),
+        False,
+    ),
+    "quote+own_dialogue": C26Hosts(
+        "kind: comprehension; host {kind: quote, ref: T-002} or {kind: dialogue}.", frozenset({MAMA}), False
+    ),
+    "quote+own_unresolved": C26Hosts(
+        "kind: comprehension; host {kind: quote, ref: T-002} or {kind: quote, ref: T-998}.", frozenset({MAMA}), False
+    ),
+    "dialogue": C26Hosts("kind: comprehension; host: {kind: dialogue}.", frozenset(), False),
+    "sibling_only": C26Hosts("kind: comprehension. As in b2, host: {kind: quote, ref: T-002}.", frozenset(), False),
+}
+C26_LABELS = {
+    codes.COMPREHENSION_TARGET_UNKNOWN: "unknown",
+    codes.COMPREHENSION_TARGET_NOT_IN_HOST: "failure",
+    codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED: "transcribed",
+    codes.COMPREHENSION_TARGET_UNVERIFIED: "note",
+}
+
+
+def _c26_expected(item: str, kinds: list[str], hosts: C26Hosts) -> str:
+    if item == C26_UNKNOWN:
+        return "unknown"
+    if item in hosts.held:
+        return "nothing"
+    if "plain" in kinds and hosts.decides:
+        return "transcribed" if hosts.transcribed else "failure"
+    return "note"
+
+
+@pytest.mark.parametrize("hosts", C26_HOSTS, ids=str)
 @pytest.mark.parametrize(
     "kinds", [*([kind] for kind in C26_SENTENCES), ["plain", "sibling"], ["excluding", "sibling"]], ids="+".join
 )
-def test_c26_every_focus_id_ends_in_exactly_one_outcome(tmp_path: Path, hosted: bool, kinds: list[str]) -> None:
-    item = MAMA if hosted else NONA
-    focus = " ".join(C26_SENTENCES[kind].format(id=item) for kind in kinds)
-    report = run(tmp_path, _comprehension_on_quote("он мама", focus))
-    failed = [o for o in report.failures if o.code == codes.COMPREHENSION_TARGET_NOT_IN_HOST and item in o.message]
-    noted = [o for o in report.notes if o.code == codes.COMPREHENSION_TARGET_UNVERIFIED and item in o.message]
-    outcome = {(0, 0): "nothing", (1, 0): "failure", (0, 1): "note"}.get((len(failed), len(noted)), "several")
-    expected = "nothing" if hosted else "failure" if "plain" in kinds else "note"
-    assert outcome == expected, report.render_text()
+def test_c26_every_focus_id_ends_in_exactly_one_outcome(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, hosts: str, kinds: list[str]
+) -> None:
+    config = C26_HOSTS[hosts]
+    items = [MAMA, MANA, NONA, C26_UNKNOWN]
+    focus = " ".join(C26_SENTENCES[kind].format(id=item) for item in items for kind in kinds)
+    focus = f"{focus} {config.sentences}"
+
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        pack["texts"].append({"id": "T-003", "quote": "нона"})
+        _quote(config.quote, {"id": "b4", "type": "quiz", "placement": "workbook", "focus": focus})(
+            plan, pack, words, prior
+        )
+
+    # The invariant itself: the outcome mapping is total over the focus's W- ids, each with a C26 code or None.
+    mappings: list[tuple[str, dict]] = []
+    outcomes = ReviewGates._comprehension_target_outcomes
+
+    def spy(self: ReviewGates, context: review_gates._C26Context) -> dict:
+        mapping = outcomes(self, context)
+        mappings.append((context.focus, mapping))
+        return mapping
+
+    monkeypatch.setattr(ReviewGates, "_comprehension_target_outcomes", spy)
+    report = run(tmp_path, mutate)
+    assert [list(mapping) for text, mapping in mappings if text == focus] == [items], "C26 skipped b4's ids"
+    for text, mapping in mappings:
+        assert list(mapping) == review_gates._ids(review_gates._WORD_ID, text)
+        assert all(code is None or code in C26_LABELS for code, _entry in mapping.values())
+    # Each id ends in exactly the outcome the rule gives it, reported once.
+    for item in items:
+        found = [
+            C26_LABELS[o.code]
+            for o in report.failures + report.notes
+            if o.code in C26_LABELS and item in review_gates._WORD_ID.findall(o.message)
+        ]
+        outcome = found[0] if len(found) == 1 else "nothing" if not found else f"several {found}"
+        assert outcome == _c26_expected(item, kinds, config), (item, report.render_text())
 
 
 @pytest.mark.parametrize(

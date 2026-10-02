@@ -165,6 +165,7 @@ CONSTRUCTION_DISTRACTOR_FORMS_WORD = "construction_distractor_forms_word"
 RECYCLED_CATEGORY_NOT_IN_LIST = "recycled_category_not_in_list"
 PRACTICE_STEP_EMPTY = "practice_step_empty"
 COMPREHENSION_TARGET_NOT_IN_HOST = "comprehension_target_not_in_host"
+COMPREHENSION_TARGET_UNKNOWN = "comprehension_target_unknown"
 LETTER_WITHOUT_RECORDING = "letter_without_recording"
 TEACH_WORD_NOT_IN_INVENTORY = "teach_word_not_in_inventory"
 
@@ -193,7 +194,7 @@ LETTER_TEACHER_MODELED_ONLY = "letter_teacher_modeled_only"
 NAMED_BEFORE_INTRODUCTION_UNVERIFIED = "named_before_introduction_unverified"
 CHOICE_OPTION_UNVERIFIED = "choice_option_unverified"
 MODELED_PRINT_TEACHER_FRAME = "modeled_print_teacher_frame"
-# C26 reads exclusion wording from prose, so a word named only in such a sentence only notes
+# C26 does not decide a word named in an ambiguous sentence or whose host set it cannot resolve, so it only notes
 COMPREHENSION_TARGET_UNVERIFIED = "comprehension_target_unverified"
 
 # --- not_checked (never fail the run, always reported) ----------------------
@@ -306,6 +307,7 @@ DESCRIPTIONS = {
     RECYCLED_CATEGORY_NOT_IN_LIST: "failure (gate C24, #9487): a lesson's rationale or job says it recycles a category (or quoted word) whose word records are not in the lesson's recycled list or inventory",
     PRACTICE_STEP_EMPTY: "failure (gate C25, #9487): a practice step links no activity, needs no block, hosts no dialogue and carries no paradigm, so the writer must produce an empty section",
     COMPREHENSION_TARGET_NOT_IN_HOST: "failure (gate C26, #9487): a comprehension activity hosted only on quotes or recordings names a word record that no host quote prints and no host recording models",
+    COMPREHENSION_TARGET_UNKNOWN: "failure (gate C26, #9487): a comprehension activity focus names a W-… id the level word store does not hold",
     LETTER_WITHOUT_RECORDING: "failure (gate C27, #9487): a step introduces a letter that no recording the lesson cites declares in models.letters, and the step records no teacher model for it",
     TEACH_WORD_NOT_IN_INVENTORY: "failure (gate C28, #9487): a step's teach text names a word id outside the lesson's inventory and the planned prior learner state, so the writer's word packet lacks it",
     STEP_WORD_LEMMA_NOT_DECODABLE: "note (gate C10, #9487): a word a step introduces or uses has a lemma needing letters not taught so far and no recording the lesson cites, while another form of its record is readable; the plan does not bind the form, so the plan review confirms it",
@@ -318,7 +320,7 @@ DESCRIPTIONS = {
     CONSTRUCTION_DISTRACTOR_CUED: "note (gate C23, #9487): a construction item's other completion forms an attested word, and the focus says its stems carry a cue (gloss, picture) that selects the key; the plan review confirms the cue",
     ANAGRAM_LETTERS_FORM_OTHER_WORD: "note (gate C23, #9487): an anagram target's letters also spell another VESUM or word-store form; most are rare inflected or archaic forms, so the plan review confirms none is a word an A1 learner could build instead",
     COMPREHENSION_TARGET_ONLY_TRANSCRIBED: "note (gate C26, #9487): a quote-hosted comprehension activity names a word record no host prints in spelling, and a host holds a transcription that may show it; the plan review confirms the host shows each word the items ask about",
-    COMPREHENSION_TARGET_UNVERIFIED: "note (gate C26, #9487): a quote- or recording-hosted comprehension activity names a word record no host holds, only in focus sentences with exclusion wording or naming another activity; the prose does not say whether the word is the one excluded or whose items the sentence is about, so the plan review confirms every word the items ask about is in the host",
+    COMPREHENSION_TARGET_UNVERIFIED: "note (gate C26, #9487): a comprehension activity names a word record no resolvable host of its own holds, and the plan does not decide whether that is an error: the word is named only in focus sentences with exclusion wording or naming another activity, or a host is a dialogue (drafted by the writer) or another unresolvable record, or no host is declared outside sentences naming another activity, or a host is declared in a sentence naming another activity; the plan review confirms every word the items ask about is in the host",
     LETTER_TEACHER_MODELED_ONLY: "note (gate C27, #9487): a step introduces a letter that no cited recording models, and its teach text records the teacher modelling that letter instead; the plan review confirms no recording is available",
     STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
     TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
@@ -390,6 +392,7 @@ NOTE_CODES = frozenset(
         NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
         CHOICE_OPTION_UNVERIFIED,
         MODELED_PRINT_TEACHER_FRAME,
+        COMPREHENSION_TARGET_UNVERIFIED,
     }
 )
 NOT_CHECKED_CODES = frozenset(
