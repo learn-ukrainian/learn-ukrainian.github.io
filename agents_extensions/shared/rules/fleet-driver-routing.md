@@ -113,6 +113,15 @@ stampede one hot lane.
 `resolve-reviewer` pick, which may be the attested Cursor Grok seat below critical (#9488). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
+
+**Credit-backed lanes (#9518):** a lane in `scripts/config/credit_lanes.yaml` whose plan allowance
+is at or below the near-cap threshold and whose fresh probe carries a positive credit balance shows
+as `credit_backed` in `capacity_pick`: usable, ranked after plan-backed seats, with its balance,
+coverage and reset advice. Missing, stale or non-numeric credit data, or runtime rate limits, keep
+it near_cap/AVOID. While a lane is credit-backed, `delegate.py dispatch` refuses any model outside
+its allowlist (Codex: `gpt-6.1-sol`, `gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`; a dispatch
+without `--model` is judged by the lane default. The reset advice is text only: spending a free
+full reset stays an operator decision, and no tool consumes credits or resets.
 Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1
 first, Fable / Astra last resort.
 

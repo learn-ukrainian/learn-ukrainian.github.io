@@ -849,6 +849,26 @@ spawn. If neither the mapped model nor that default is valid for the
 substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
 
+**Credit-backed lanes (#9518):** `scripts/config/credit_lanes.yaml` lists the lanes that can run
+on prepaid credits and the models each may receive while it does (Codex: `gpt-6.1-sol`,
+`gpt-6-luna`). `scripts/fleet/credit_lane.py` marks such a lane `credit_backed` only when its
+tightest plan window has at most `near_cap_remaining_pct` (10%) remaining and the routing-budget
+record carries a positive numeric credit balance from a probe younger than `credit_max_age_s`
+(900 s). A missing, stale or non-numeric balance, a stale snapshot, or runtime headroom blocked
+by rate limits leaves the lane in its plan state (near_cap/AVOID). `capacity_pick` then shows
+status `credit_backed`, ranks the lane after plan-backed seats, and adds a `credit` object to
+every JSON row (`state`, `reason`, `plan_remaining_pct`, `credit_balance`, `allowed_models`,
+`coverage`, `reset_advice`). Lanes without a policy entry carry `{"state": "not_configured"}`
+and are otherwise unchanged. Coverage is reported as unknown because runtime usage records carry
+no per-task credit consumption. `reset_advice.advice` is `use_reset_now`, `hold_reset` or
+`not_applicable`. A free full reset is held while the natural reset is within `reset_hold_hours`
+(48 h) or its time is unknown, because no provider record or repository document says whether a
+full reset re-anchors the window. `delegate.py dispatch` checks the admitted route (after
+aliases, substitution and review selection; no `--model` means the lane default). An
+off-allowlist model on a credit-backed lane exits 2 with `CREDIT_PERIOD_MODEL_REFUSED`, and
+`--check-budget` no longer substitutes away from a credit-backed lane. Nothing consumes credits
+or resets.
+
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or

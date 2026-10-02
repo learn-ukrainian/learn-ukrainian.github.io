@@ -22,7 +22,9 @@ curl -sS --max-time 3 "http://127.0.0.1:8765/api/state/routing-budget"
 ```
 
 Prefer cooler / higher-headroom seats from that data. Do **not** habit-route to a hot,
-near_cap, or in-flight-saturated lane when a cooler eligible seat exists. A **deficit**
+near_cap, or in-flight-saturated lane when a cooler eligible seat exists. A `credit_backed`
+lane (#9518) is usable on prepaid credits after the plan-backed seats, and only with the models in
+its `credit` row; dispatch admission refuses other models while the lane runs on credits. A **deficit**
 lane is visible pace, projected to run out before reset, and more than 2 points ahead of
 pace (near_cap ≥ 90% unchanged); it is not a dispatch target while a cool lane has
 reserve. CodexBar is an **input to the API**, not a separate driver app workflow — if
