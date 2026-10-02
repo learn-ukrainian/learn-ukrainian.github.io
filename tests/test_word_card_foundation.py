@@ -509,7 +509,7 @@ def test_wal_capture_and_mutation_refusal(pilot, monkeypatch, capsys):
     db.close()
 
 
-def test_committed_inputs_readonly_cli_guard():
+def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     paths = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json"]
     before = [p.read_bytes() for p in paths]
     result = subprocess.run([sys.executable, "-m", "scripts.atlas.word_card_foundation", "verify",
@@ -522,6 +522,10 @@ def test_committed_inputs_readonly_cli_guard():
     assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [114, 272, 386]
     assert len(output["unresolved_card_mappings"]) == 22 and output["heldout_isolation"] == "unverified"
     assert output["foreign_build_events"] == 0
+    member, held = tmp_path / "membership.json", json.loads(paths[0].read_bytes())["selection"]["source_records"][0]
+    save(member, dict(heldout=[held["locator"]], replay=[]))  # No committed owner carries an adjudication marker.
+    assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
+                            "--heldout-manifest", str(member)]) == 0 and '"heldout_isolation": "checked"' in capsys.readouterr().out
     assert before == [p.read_bytes() for p in paths]
 
 
@@ -703,3 +707,92 @@ def test_provenance_links_only_through_cited_known_keys(tmp_path, field, encodin
     inputs.append(event if field != "embedded" else dict(spelling=json.dumps(event)))  # Its decoded keys do count.
     with pytest.raises(foundation.Refusal, match="adjudicated mapping touches") if cited or field == "embedded" else nullcontext():
         assert foundation.isolation(inputs, member) == "checked"
+
+
+MARK = json.dumps({"kind": "identity"})  # Decoded marker; may sit in any string field of an owner.
+REVIEW = dict(review=dict(settled_by="loc:u"))  # Nested native marker citing only the unrelated chain's key.
+POSITIONS = dict(  # family: (native nested marker, decoded marker); decoded ones sit in non-prose strings too.
+    source=(lambda o: o["correspondence"][0].update(REVIEW["review"]), lambda o: o["aliases"][0].update(note=MARK)),
+    card=(lambda o: o["key_at_creation"].update(REVIEW), lambda o: o["key_at_creation"].update(spelling=MARK)),
+    mint=(lambda o: o.update(overlay_id="ov_1"), lambda o: o.update(evidence=MARK)),
+    unit=(lambda o: o.update(REVIEW), lambda o: o.update(cefr_basis=MARK)),
+    record=(lambda o: o["raw_row"].update(mapping="ov_1"), lambda o: o["raw_row"].update(definition=MARK)),
+    legacy=(lambda o: o["metadata"].update(split_into=["wc_x"]), lambda o: o["metadata"].update(pos=MARK)))
+EXTRA = ("split_fields", "embedded", "from_join", "pos_join", "unowned", "wrapper")  # Last two: unowned, accepted.
+
+
+def owner_chain(s):  # Only the unit cites loc:<s>; the zero-alias legacy owner never cites any closure key.
+    return dict(record=dict(source_id="frazeolohichnyi", table="frazeolohichnyi", locator=f"loc:{s}2", snapshot_id="s",
+                            source_content_sha256=None, raw_row=dict(word=f"word {s}", definition="English")),
+                unit=dict(unit_key=f"unit:{s}", anchor_locator=f"loc:{s}", source_record_keys=[f"loc:{s}", f"loc:{s}2"],
+                          atlas_slug=s, counting_basis=json.dumps({"see": f"loc:{s}"})),  # Plain decoded reference.
+                legacy=dict(metadata=dict(slug=s, lemma="English", pos="noun"), aliases=[], pos_review=None),
+                source=dict(source_record_id=f"sr_{s}", aliases=[dict(key=f"frazeolohichnyi:record:word {s}", note=NOTE)],
+                            correspondence=[dict(snapshot_id="old", status="missing")]),
+                card=dict(card_id=f"wc_{s}", state="suppressed", senses=[dict(sense_id=f"ws_{s}", state="unsplit")],
+                          key_at_creation=dict(spelling="English", source_keys=[dict(key=f"atlas0:slug:{s}")])),
+                mint=dict(kind="sense_mint", to=[f"ws_{s}"], evidence=NOTE))
+
+
+@pytest.mark.parametrize("case,side", [(c, s) for c in [*(f"{f}:{m}" for f in POSITIONS for m in ("native", "decoded")),
+                                                        *EXTRA] for s in "hu"])
+def test_function_level_marked_owner_isolation(tmp_path, case, side):
+    """Function-level isolation() diagnostic only: never CLI admission or source certification."""
+    assert json.loads(MARK) == {"kind": "identity"} and "loc:" not in MARK  # Genuinely decodes; cites nothing.
+    chains, member = {s: owner_chain(s) for s in "hu"}, tmp_path / "membership.json"
+    inputs = [dict(source_records=[c["record"] for c in chains.values()], units=[c["unit"] for c in chains.values()]),
+              *(o for c in chains.values() for k, o in c.items() if k not in {"record", "unit"})]
+    save(member, dict(heldout=["loc:h"], replay=["loc:u"]))  # The unrelated chain stays outside the closure.
+    assert foundation.isolation(inputs, member) == "checked"  # Plain notes, decoded plain reference, lifecycle states.
+    family, _, form = case.partition(":")
+    if form:
+        POSITIONS[family][form == "decoded"](chains[side][family])
+    if case == "split_fields":  # Marker and literal reference in different fields of one otherwise unrelated owner.
+        chains["u"]["card"].update(card_kind=f"loc:{side}", key_at_creation=dict(source_keys=[], **REVIEW))
+    if case == "embedded":  # An unlinked decoded owner in a non-prose card string; its marker marks the card too.
+        chains[side]["card"]["key_at_creation"]["spelling"] = json.dumps(dict(source_record_id="sr_e", aliases=[dict(
+            key="k:e")], correspondence=[dict(settled_by="ov_1")]))
+    if case in {"from_join", "pos_join"}:  # Only the D2 join links this marked card into a chain.
+        join = dict(kind="sense_mint", to=["ws_n"], evidence=NOTE, **{"from": [f"ws_{side}"]}) if case == "from_join" \
+            else dict(metadata=dict(slug="n"), aliases=[], pos_review=dict(anchor_locator=f"loc:{side}"))
+        inputs += [join, dict(card_id="wc_n", senses=[dict(sense_id="ws_n")],
+                              key_at_creation=dict(source_keys=[dict(key="atlas0:slug:n")], **REVIEW))]
+    if case in {"unowned", "wrapper"}:  # D3 (i): no container-level taint.
+        inputs.append(dict(settled_by="ov_1") if case == "unowned" else dict(decision=REVIEW, reference=f"loc:{side}"))
+    reason = "a membership key" if case == "mint:native" else "a marked owner"  # A flat mint marks itself.
+    held = side == "h" and case not in {"unowned", "wrapper"}
+    with pytest.raises(foundation.Refusal, match="adjudicated mapping touches " + reason) if held else nullcontext():
+        assert foundation.isolation(inputs, member) == "checked"
+
+
+@pytest.mark.parametrize("case,held", [(c, h) for c in ("settled_by", "note", "raw_row") for h in (True, False)])
+def test_cli_marked_owner_refused_before_write(pilot, case, held, capsys):
+    member, index = pilot["root"] / "membership.json", 2 if held else 140  # Unit 2 shares the held legacy closure.
+    save(member, dict(heldout=[pilot["candidate"]["source_records"][0]["locator"]], replay=[]))
+    if case == "raw_row":  # A literal column named like a marker marks its own row; captured and admitted unchanged.
+        records, row = pilot["candidate"]["source_records"], dict(normalized_query="Other", content_sha256="c" * 64)
+        records[index] = capture("ulif", "ulif_dictua_entries", dict(records[index]["raw_row"], **row))  # Own aliases.
+        records.append(capture("frazeolohichnyi", "frazeolohichnyi", dict(id=7, word="English phrase", mapping="ov_1")))
+        with sqlite3.connect(pilot["paths"]["sources"]) as db:
+            db.execute("UPDATE ulif_dictua_entries SET normalized_query=?, content_sha256=? WHERE id=?", (*row.values(), index))
+            db.execute("CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, mapping TEXT)")
+            db.execute("INSERT INTO frazeolohichnyi VALUES (7, 'English phrase', 'ov_1')")
+        pilot["candidate"]["units"][index]["source_record_keys"].append("frazeolohichnyi:frazeolohichnyi:id:7")
+        pilot["candidate"]["denominator"]["source_records"] += 1
+        pilot["admit"]()
+        assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == int(held)
+        assert pilot["manifest"].exists() is not held and capsys.readouterr().err.count("a marked owner") == int(held)
+        return
+    _manifest, registry = prepared(pilot)
+    retained(registry, pilot["candidate"]["source_records"][0]["locator"], None)  # Adds one unrelated foreign row.
+    marker = dict(settled_by="ov_1") if case == "settled_by" else {}  # Historical correspondence or decoded note.
+    record = registry["source_records"][index if held else -1]
+    record["aliases"].append(dict(kind="content", key="ulif:content:old", snapshot_id="old",
+                                  **({"note": json.dumps({"kind": "merge"})} if case == "note" else {})))
+    record["correspondence"].append(dict(snapshot_id="old", status="missing", **marker))
+    save(pilot["registry"], registry)
+    before = pilot["registry"].read_bytes()
+    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == int(held)
+    assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == int(held)
+    assert pilot["registry"].read_bytes() == before
+    assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches a marked owner") == 2 * held

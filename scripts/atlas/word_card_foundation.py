@@ -144,20 +144,20 @@ def rows(connection, table, key):
     return [dict(row) for row in connection.execute(f'SELECT * FROM "{table}" WHERE {where}', tuple(key.values()))]
 
 
-def walk(value, decoded=False):
-    yield value, decoded
+def walk(value, decoded=False, trail=()):  # Trail: enclosing objects, native or decoded, outermost first.
+    yield value, decoded, trail
     if isinstance(value, str) and value.lstrip()[:1] in {"[", "{", '"'}:
         try:
             parsed = parse(value)
         except json.JSONDecodeError:
             return
-        yield from walk(parsed, True)
+        yield from walk(parsed, True, trail)
     if isinstance(value, dict):  # Object keys count only inside a decoded string, never as native field names.
         for item in [*value, *value.values()] if decoded else value.values():
-            yield from walk(item, decoded)
+            yield from walk(item, decoded, (*trail, value))
     elif isinstance(value, list):
         for item in value:
-            yield from walk(item, decoded)
+            yield from walk(item, decoded, trail)
 
 
 def source_keys(entry):
@@ -166,7 +166,7 @@ def source_keys(entry):
 
 def isolation(inputs, heldout):
     objects = list(walk(inputs))
-    for value, _ in objects:
+    for value, *_ in objects:
         if isinstance(value, dict):
             require(not any(k.startswith(("expected", "adjudicated")) for k in value),
                     "Held-out expected answers are forbidden in admitted inputs")
@@ -178,15 +178,16 @@ def isolation(inputs, heldout):
                 for v in membership.values()), "Membership keys must be unique nonempty strings")
     boundary, replay = set(membership["heldout"]), set(membership["replay"])
     require(boundary and not boundary & replay, "Heldout and replay must be disjoint")
-    groups = []
-    records = [r for v, _ in objects if isinstance(v, dict) and isinstance(v.get("source_records"), list)
+    groups, owners = [], {}
+    records = [r for v, *_ in objects if isinstance(v, dict) and isinstance(v.get("source_records"), list)
                for r in v["source_records"] if "raw_row" in r]
     def cited(value, keys, decoded=False):  # Shared recogniser: every known key, overlapping or nested ones too.
-        texts = [t for t, _ in walk(value, decoded) if isinstance(t, str)]
+        texts = [t for t, *_ in walk(value, decoded) if isinstance(t, str)]
         return {k for t in texts for k in keys if k in t and re.search(rf"(?<![\w:/#-]){re.escape(k)}(?![\w:/#-])", t)}
     # Closure inventory: identities (card/sense/source-record ids, mint cards/to) and structured keys (aliases, locators,
-    # candidates, creation/unit keys, legacy slugs/aliases) link; PROSE and mint evidence only via cited known keys.
-    for value, decoded in objects:
+    # candidates, creation/unit keys, legacy slugs/aliases, mint endpoints, POS-review anchors) link; PROSE and mint
+    # evidence only via cited known keys. Every object that forms a group is an owner.
+    for value, decoded, _ in objects:
         if not isinstance(value, dict):
             continue
         group, notes = set(), []
@@ -200,7 +201,8 @@ def isolation(inputs, heldout):
                      creation.get("paradigm_key"), creation.get("mwe_key", "").rpartition("|")[0]}
             notes = [[d.get(f) for f in PROSE] for d in creation.get("source_keys", [])]
         if value.get("kind") in {"mint", "sense_mint", "source_record_mint"}:  # Evidence is provenance, never a key.
-            group, notes = {*value.get("cards", []), *value.get("to", [])}, [value.get("evidence")]
+            group = {*value.get("cards", []), *value.get("from", []), *value.get("to", [])}
+            notes = [value.get("evidence")]
         if "unit_key" in value:
             group = {value["unit_key"], value["anchor_locator"], *value["source_record_keys"]}
             if value["atlas_slug"]:
@@ -208,9 +210,10 @@ def isolation(inputs, heldout):
         if "locator" in value and "raw_row" in value:
             group = {value["locator"]} | {a["key"] for a in aliases(value, records)}
         if "metadata" in value and "aliases" in value:
-            group = {"atlas0:slug:" + value["metadata"]["slug"]}
+            group = {"atlas0:slug:" + value["metadata"]["slug"], (value.get("pos_review") or {}).get("anchor_locator")}
             group |= {a["alias"] for a in value["aliases"]}
         if group:
+            owners[id(value)] = len(groups), value, decoded
             groups.append((group - {None, ""}, notes, decoded))
     known = set().union(*(g for g, *_ in groups))
     groups = [group | cited(notes, known, decoded) for group, notes, decoded in groups]
@@ -221,7 +224,7 @@ def isolation(inputs, heldout):
             break
         boundary = expanded
     require(not boundary & replay, "Heldout/replay overlap after conservative alias closure")
-    for value, decoded in objects:  # Adjudication markers are scanned with the same recogniser, never linked.
+    for value, decoded, trail in objects:  # Adjudication markers are scanned with the same recogniser, never linked.
         if not isinstance(value, dict):
             continue
         adjudication = value.get("kind") in {"identity", "split", "merge", "resolve", "variant", "sense_map"}
@@ -230,6 +233,10 @@ def isolation(inputs, heldout):
         if adjudication:
             require(not cited(value, boundary, decoded),
                     "Held-out adjudicated mapping touches a membership key or indirect alias")
+            # A marker also marks every enclosing owner (itself included): refuse a closure-held or citing owner.
+            for index, owner, owned in [owners[id(o)] for o in (*trail, value) if id(o) in owners]:
+                require(not groups[index] & boundary and not cited(owner, boundary, owned),
+                        "Held-out adjudicated mapping touches a marked owner's closure or text")
     return "checked"
 
 

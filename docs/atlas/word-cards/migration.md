@@ -76,6 +76,11 @@ Provenance prose (mint evidence, alias/source-key notes, `matched_by`, `hold`) l
 keys it cites literally, delimited, or inside wholly JSON strings (object keys too); plain prose never
 links or resolves membership. Mid-prose escaped JSON and case/normalisation variants are not recognised.
 Every non-mint registry event counts as adjudication, with or without `overlay_id`.
+Mint `from` endpoints and legacy `pos_review` anchors also link. Every object forming a closure group is an owner;
+a recognised marker at any depth, native or decoded, marks every enclosing owner (itself included), which refuses
+when its closure touches held-out keys or it cites one anywhere. Designated residuals, not universal protection:
+an unowned wrapper is never tainted by a sibling marker or reference; lifecycle `state` alone is no marker; raw-row
+columns never become keys and rows link only through admitted units, so a paradigm moved off its parent's unit stays unlinked.
 Expected/adjudicated answers are excluded from all inputs even without membership.
 Absent real membership, isolation remains unverified. `--for-evaluation` refuses
 until authenticated operator authority and thresholds have an approved contract.
