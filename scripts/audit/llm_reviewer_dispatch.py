@@ -48,7 +48,7 @@ FRONTIER_MODEL_ID = "gemini-3.1-pro-high"
 # so the seminar/factual opencode route pins the step-1-validated gemma-4-31b-it
 # endpoint until the bakeoff selects the frontier model.
 FRONTIER_OPENCODE_MODEL_ID = "openrouter/google/gemma-4-31b-it"
-CLAUDE_SPOT_AUDIT_MODEL_ID = "claude-opus-4.6"
+CLAUDE_SPOT_AUDIT_MODEL_ID = "claude-opus-5-5"
 # The sources MCP endpoint opencode reviewer routes ground against (mirrors the
 # `sources` entry in ~/.config/opencode/opencode.jsonc).
 SOURCES_MCP_URL = "http://127.0.0.1:8766/mcp"

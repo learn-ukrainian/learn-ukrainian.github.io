@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — agent GitHub identity + secretless default shell (A+J)
 
 Advisor packet: Fable + Sol [AGREE] 2026-08-18. Operator: implement, keep fleet fluid.
@@ -76,8 +82,8 @@ work without a new per-command ritual.
 ## Verify
 
 ```bash
-.venv/bin/python -m pytest tests/test_agent_runtime_env_sanitize.py tests/test_env_sanitize.py tests/test_agent_github_identity.py -q
-.venv/bin/python -m ruff check scripts/agent_runtime/env_sanitize.py scripts/agent_runtime/agent_github_identity.py scripts/delegate.py
+"$PROJECT_PYTHON" -m pytest tests/test_agent_runtime_env_sanitize.py tests/test_env_sanitize.py tests/test_agent_github_identity.py -q
+"$PROJECT_PYTHON" -m ruff check scripts/agent_runtime/env_sanitize.py scripts/agent_runtime/agent_github_identity.py scripts/delegate.py
 ```
 
 Quote raw pytest/ruff output. Do not weaken tests.

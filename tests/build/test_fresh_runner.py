@@ -308,7 +308,6 @@ def test_regeneration_repeated_check_uses_second_layer_and_invalidates_only_less
     first = {"check": 4, "code": "4", "reason": "bad", "layer": "writer"}
     one = record_failure(path, "sample-slug", 1, first, inputs, at="2026-01-01T00:00:00Z")
     assert one["regenerations"] == 0 and one["terminal_layer"] is None
-    inputs["plan_sha256"] = "b" * 64
     two = record_failure(path, "sample-slug", 1, first, inputs, at="2026-01-02T00:00:00Z")
     assert two["regenerations"] == 1 and two["terminal_layer"] == "plan"
     assert load_ledger(path, "sample-slug", 1) == two
@@ -411,6 +410,14 @@ class _FixtureSources:
             return self.evidence_sources.resolve_evidence_ids(evidence_ids)
         with Sources() as sources:
             return sources.resolve_evidence_ids(evidence_ids)
+
+    def bind_evidence_forms(self, resolved, citations):
+        from scripts.curriculum.evidence.sources import Sources
+
+        if self.evidence_sources is not None:
+            return self.evidence_sources.bind_evidence_forms(resolved, citations)
+        with Sources() as sources:
+            return sources.bind_evidence_forms(resolved, citations)
 
     def _vesum_identity(self):
         return "f" * 64, {}
@@ -518,6 +525,8 @@ def _run_contract(
     level=None,
     observed_writer=None,
     gloss_ids=frozenset(),
+    question_dispatch=None,
+    n=1,
 ):
     lvl = level or plan.get("level") or "a1"
     if lvl == "a1":
@@ -528,7 +537,9 @@ def _run_contract(
     )
     monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
     monkeypatch.setattr(
-        assemble.lesson_lock, "compute_lesson_lock", lambda *a, **kw: {"lessons": [{"n": 1, "entry_sha256": "0" * 64}]}
+        assemble.lesson_lock,
+        "compute_lesson_lock",
+        lambda *a, **kw: {"lessons": [{"n": lesson["n"], "entry_sha256": "0" * 64} for lesson in plan["lessons"]]},
     )
     monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": lvl})())
     questions_seen = []
@@ -544,13 +555,13 @@ def _run_contract(
 
     state = tmp_path / "state"
     state.mkdir(exist_ok=True)
-    (state / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
-    (state / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes(draft))
+    (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
+    (state / f"lesson-{n}.draft.yaml").write_bytes(lock.yaml_bytes(draft))
     monkeypatch.setattr(runner, "write_manifest", manifest_writer or (lambda *a, **kw: ({"recap": False}, "a" * 64)))
     report = runner.run_lesson(
         lvl,
         "sample-slug",
-        1,
+        n,
         draft=draft,
         plan=plan,
         pack=pack,
@@ -560,7 +571,7 @@ def _run_contract(
         plans_dir=tmp_path,
         evidence_dir=tmp_path,
         question_seat=seat,
-        question_dispatch=answer,
+        question_dispatch=question_dispatch or answer,
         sources=_FixtureSources(),
         allowlist=allowlist,
         site_dir=tmp_path / "site",
@@ -705,6 +716,12 @@ def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatc
     second, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
     assert first["checks"][2]["status"] == second["checks"][2]["status"] == "failed"
+    assert ledger["regenerations"] == 0 and ledger["terminal_layer"] is None
+    assert not receipt.exists()
+    lock.write(receipt, b"old")
+    third, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
+    assert third["checks"][2]["status"] == "failed"
     assert ledger["regenerations"] == 1 and ledger["terminal_layer"] == "plan"
     assert not receipt.exists()
 
@@ -908,7 +925,9 @@ def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkey
     draft, plan, pack, words = _fixture()
     # Exercise the owned-session path rather than the injected source double.
     monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
-    monkeypatch.setattr(Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64))
+    monkeypatch.setattr(
+        Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64)
+    )
     resolve = runner.resolve
     choices = runner.check_7_a1_choices
     captured = []
@@ -946,3 +965,107 @@ def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatc
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is False and report["passed_through"] == 7
     assert len(captured) == 1 and isinstance(captured[0], Sources) and captured[0]._conn is None
+
+
+@pytest.mark.parametrize("dispatch_fails", [False, True])
+def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, monkeypatch, dispatch_fails):
+    import sqlite3
+
+    from scripts.curriculum.evidence.sources import SourceResult, Sources
+
+    draft, plan, pack, words = _fixture(two_senses=True)
+    monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
+    monkeypatch.setattr(
+        Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64)
+    )
+    captured = []
+    original_resolve = runner.resolve
+    original_choices = runner.check_7_a1_choices
+
+    def resolve(expanded, allowlist, sources):
+        old = sources._db()
+        captured.append((sources, old))
+        return original_resolve(expanded, allowlist, sources)
+
+    def dispatch(batch, seat):
+        sources, old = captured[0]
+        assert sources._conn is None
+        with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+            old.execute("SELECT 1")
+        if dispatch_fails:
+            raise RuntimeError("fixture provider failure")
+        with sqlite3.connect(sources.sources_db) as writer:
+            writer.execute("INSERT INTO grinchenko (id, definition) VALUES (99, 'post-dispatch row')")
+        return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
+
+    def choices(*args, **kwargs):
+        sources, old = captured[0]
+        assert kwargs["sources"] is sources and sources._conn is None
+        assert sources._db() is not old
+        assert (
+            sources._db().execute("SELECT definition FROM grinchenko WHERE id=99").fetchone()[0] == "post-dispatch row"
+        )
+        return original_choices(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "resolve", resolve)
+    monkeypatch.setattr(runner, "check_7_a1_choices", choices)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, question_dispatch=dispatch)
+    assert report["passed"] is not dispatch_fails, report
+    assert captured[0][0]._conn is None
+
+
+@pytest.mark.parametrize("kind", ["prose", "table"])
+def test_standard_citation_is_required_and_plan_bound(kind):
+    draft, plan, _, _ = _fixture()
+    lesson = plan["lessons"][0]
+    lesson["steps"][0]["evidence"].append("S-001")
+    block = draft["steps"][0]["blocks"][0]
+    block["explains"].append("S-001")
+    if kind == "table":
+        block.update(kind="table", rows=[[block.pop("text")]])
+    assert runner.check_3_structure(draft, lesson)["status"] == "passed"
+    block["explains"].remove("S-001")
+    assert runner.check_3_structure(draft, lesson)["status"] == "failed"
+    block["explains"].append("S-999")
+    assert runner.check_3_structure(draft, lesson)["status"] == "failed"
+
+
+def test_check_11_two_lesson_build_scopes_each_number_and_keeps_module_gate_strict(tmp_path, monkeypatch):
+    from scripts.build import linear_pipeline, verify_shippable
+
+    draft, plan, pack, words = _fixture()
+    # A gap ensures the runner forwards the actual n, rather than a position.
+    second = copy.deepcopy(plan["lessons"][0])
+    second.update(n=3, slug="second-lesson", title="Second lesson")
+    plan["lessons"].append(second)
+    (tmp_path / "sample-slug.yaml").write_bytes(lock.yaml_bytes(plan))
+    monkeypatch.setattr(verify_shippable, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(verify_shippable, "_astro_build", lambda p: True)
+    monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda t: {"passed": True})
+    scopes = []
+
+    def check(*args, **kwargs):
+        scopes.append(kwargs["through_lesson"])
+        return assemble.check_11_render(*args, **kwargs)
+
+    first, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, render_check=check)
+    assert first["passed"] is True, first
+    assert next(row for row in first["checks"] if row["check"] == 11)["status"] == "passed"
+    assert (tmp_path / "site/1.mdx").is_file()
+    assert not (tmp_path / "site/3.mdx").exists()
+    full = assemble.check_11_render(
+        "a1", "sample-slug", module_dir=tmp_path / "site", plan_path=tmp_path / "sample-slug.yaml"
+    )
+    assert full.passed is False
+    assert full.artifacts["verify_shippable"]["steps"][0]["missing_lesson_ids"] == [3]
+    draft = copy.deepcopy(draft)
+    draft["lesson"]["n"] = 3
+    second_report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, n=3, render_check=check)
+    assert second_report["passed"] is True, second_report
+    assert scopes == [1, 3]
+    assert (
+        assemble.check_11_render(
+            "a1", "sample-slug", module_dir=tmp_path / "site", plan_path=tmp_path / "sample-slug.yaml"
+        ).passed
+        is True
+    )

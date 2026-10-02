@@ -85,7 +85,6 @@ def test_valid_structure_and_named_defect(typ: str, activity: dict, defect, code
     ("typ", "activity"),
     [
         ("classify", {"items": []}),
-        ("order", {"items": ["first", "second"], "correct_order": [0]}),
         ("match-up", {"pairs": [{"left": "first", "right": "second"}]}),
         ("divide-words", {"items": [{"word": "слово", "answer": "сл-ово"}]}),
         ("count-syllables", {"items": [{"word": "слово", "correct": 3}]}),

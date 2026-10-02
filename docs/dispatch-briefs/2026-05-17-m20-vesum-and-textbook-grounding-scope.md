@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — m20: VESUM quiz `correctAnswer` + textbook_grounding punctuation tolerance (#2103)
 
 ## Two related gate-scope bugs surfaced by m20 build #18
@@ -69,7 +75,7 @@ cd .worktrees/m20-gate-scope-fixes
 .venv/bin/pytest tests/build/test_linear_pipeline.py -k "vesum or textbook" -v
 git diff --stat main
 git diff --name-only main
-.venv/bin/python -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
+"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
 ```
 
 Quote raw outputs in PR body.

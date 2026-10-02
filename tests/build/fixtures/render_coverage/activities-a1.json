@@ -1,0 +1,446 @@
+{
+  "anagram": {
+    "id": "a1",
+    "instruction": "Instruction for anagram.",
+    "items": [
+      {
+        "letters": [
+          "anagram items 0 letters 0",
+          "anagram items 0 letters 1"
+        ],
+        "answer": "anagram items 0 answer",
+        "hint": "anagram items 0 hint",
+        "explanation": "anagram items 0 explanation"
+      }
+    ]
+  },
+  "classify": {
+    "id": "a2",
+    "instruction": "Instruction for classify.",
+    "categories": [
+      {
+        "label": "classify categories 0 label",
+        "symbol_hint": "classify categories 0 symbol_hint",
+        "items": [
+          "classify categories 0 items 0"
+        ]
+      },
+      {
+        "label": "classify categories 1 label",
+        "symbol_hint": "classify categories 1 symbol_hint",
+        "items": [
+          "classify categories 1 items 0"
+        ]
+      }
+    ]
+  },
+  "count-syllables": {
+    "id": "a3",
+    "instruction": "Instruction for count-syllables.",
+    "maxCount": 3,
+    "max_count": 3,
+    "items": [
+      {
+        "word": "count syllables items 0 word",
+        "correct": 1,
+        "translation": "count syllables items 0 translation",
+        "explanation": "count syllables items 0 explanation"
+      }
+    ]
+  },
+  "divide-words": {
+    "id": "a4",
+    "instruction": "Instruction for divide-words.",
+    "items": [
+      {
+        "word": "divide words items 0 word",
+        "answer": "divide words items 0 answer",
+        "hint": "divide words items 0 hint",
+        "explanation": "divide words items 0 explanation"
+      }
+    ]
+  },
+  "error-correction": {
+    "id": "a5",
+    "instruction": "Instruction for error-correction.",
+    "items": [
+      {
+        "sentence": "Find error correction items 0 error here.",
+        "error": "error correction items 0 error",
+        "correction": "error correction items 0 options 0",
+        "answer": "error correction items 0 options 0",
+        "options": [
+          "error correction items 0 options 0",
+          "error correction items 0 options 1"
+        ],
+        "explanation": "error correction items 0 explanation",
+        "error_ref": "E-001",
+        "option_why": [
+          "error-correction feedback 0",
+          "error-correction feedback 1"
+        ]
+      },
+      {
+        "sentence": "Find error correction items 0 error here.",
+        "error": "error correction items 0 error",
+        "answer": "error correction items 0 options 0",
+        "options": [
+          "error correction items 0 options 0",
+          "error correction items 0 options 1"
+        ],
+        "explanation": "error correction items 0 explanation",
+        "error_ref": "E-001",
+        "option_why": [
+          "error-correction feedback 0",
+          "error-correction feedback 1"
+        ]
+      }
+    ]
+  },
+  "fill-in": {
+    "id": "a6",
+    "instruction": "Instruction for fill-in.",
+    "items": [
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 0 options 0",
+        "options": [
+          "fill in items 0 options 0",
+          "fill in items 0 options 1"
+        ],
+        "explanation": "fill in items 0 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 0 answer_tags",
+        "option_why": [
+          "fill-in feedback 0",
+          "fill-in feedback 1"
+        ]
+      }
+    ]
+  },
+  "group-sort": {
+    "id": "a7",
+    "instruction": "Instruction for group-sort.",
+    "groups": [
+      {
+        "label": "group sort groups 0 label",
+        "name": "group sort groups 0 label",
+        "items": [
+          {
+            "text": "group sort groups 0 items 0 text",
+            "record": "W-1",
+            "why": "group sort groups 0 items 0 why"
+          }
+        ],
+        "value": "group sort groups 0 value"
+      },
+      {
+        "label": "group sort groups 1 label",
+        "name": "group sort groups 1 label",
+        "items": [
+          {
+            "text": "group sort groups 1 items 0 text",
+            "record": "W-1",
+            "why": "group sort groups 1 items 0 why"
+          }
+        ],
+        "value": "group sort groups 1 value"
+      }
+    ],
+    "grouping_feature": "Gender"
+  },
+  "image-to-letter": {
+    "id": "a8",
+    "instruction": "Instruction for image-to-letter.",
+    "items": [
+      {
+        "image": "letters/a.svg",
+        "letter": "image to letter items 0 options 0",
+        "options": [
+          "image to letter items 0 options 0",
+          "image to letter items 0 options 1"
+        ],
+        "note": "image to letter items 0 note",
+        "explanation": "image to letter items 0 explanation",
+        "option_why": [
+          "image-to-letter feedback 0",
+          "image-to-letter feedback 1"
+        ]
+      }
+    ]
+  },
+  "letter-grid": {
+    "id": "a9",
+    "instruction": "Instruction for letter-grid.",
+    "letters": [
+      {
+        "upper": "letter grid letters 0 upper",
+        "lower": "letter grid letters 0 lower",
+        "name": "letter grid letters 0 name",
+        "emoji": "letter grid letters 0 emoji",
+        "key_word": "letter grid letters 0 key_word",
+        "note": "letter grid letters 0 note",
+        "sound_type": "letter grid letters 0 sound_type"
+      }
+    ]
+  },
+  "match-up": {
+    "id": "a10",
+    "instruction": "Instruction for match-up.",
+    "pairs": [
+      {
+        "left": "match up pairs 0 left",
+        "right": "match up pairs 0 right",
+        "left_record": "W-1",
+        "right_record": "W-1",
+        "why": "match up pairs 0 why"
+      },
+      {
+        "left": "match up pairs 1 left",
+        "right": "match up pairs 1 right",
+        "left_record": "W-1",
+        "right_record": "W-1",
+        "why": "match up pairs 1 why"
+      }
+    ],
+    "left_role": "form",
+    "right_role": "form"
+  },
+  "observe": {
+    "id": "a11",
+    "instruction": "Instruction for observe.",
+    "examples": [
+      "observe examples 0",
+      "observe examples 1"
+    ],
+    "prompt": "observe prompt"
+  },
+  "odd-one-out": {
+    "id": "a12",
+    "instruction": "Instruction for odd-one-out.",
+    "items": [
+      {
+        "words": [
+          "odd one out items 0 words 0",
+          "odd one out items 0 words 1",
+          "odd one out items 0 words 2"
+        ],
+        "correct": 0,
+        "answer": "odd one out items 0 words 0",
+        "prompt": "odd one out items 0 prompt",
+        "explanation": "odd one out items 0 explanation",
+        "option_why": [
+          "Odd feedback 0",
+          "Odd feedback 1",
+          "Odd feedback 2"
+        ]
+      }
+    ]
+  },
+  "order": {
+    "id": "a13",
+    "instruction": "Instruction for order.",
+    "is_ukrainian": true,
+    "items": [
+      "order items 0",
+      "order items 1"
+    ],
+    "correct_order": [
+      0,
+      1
+    ],
+    "explanation": "order explanation"
+  },
+  "phrase-table": {
+    "id": "a14",
+    "instruction": "Instruction for phrase-table.",
+    "groups": [
+      {
+        "label": "phrase table groups 0 label",
+        "phrases": [
+          {
+            "phrase": "phrase table groups 0 phrases 0 phrase",
+            "context": "phrase table groups 0 phrases 0 context",
+            "emoji": "phrase table groups 0 phrases 0 emoji"
+          }
+        ]
+      }
+    ]
+  },
+  "pick-syllables": {
+    "id": "a15",
+    "instruction": "Instruction for pick-syllables.",
+    "category": "pick syllables category",
+    "explanation": "pick syllables explanation",
+    "syllables": [
+      "pick syllables syllables 0",
+      "pick syllables syllables 1"
+    ],
+    "correctIndices": [
+      0
+    ]
+  },
+  "quiz": {
+    "id": "a16",
+    "instruction": "Instruction for quiz.",
+    "items": [
+      {
+        "question": "quiz items 0 question",
+        "prompt": "quiz items 0 prompt",
+        "options": [
+          {
+            "text": "quiz items 0 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 0 options 1 text",
+            "correct": false
+          }
+        ],
+        "correct": 0,
+        "answer": "quiz items 0 options 0 text",
+        "explanation": "quiz items 0 explanation",
+        "option_why": [
+          "quiz feedback 0",
+          "quiz feedback 1"
+        ]
+      },
+      {
+        "question": "quiz items 0 question",
+        "options": [
+          {
+            "text": "quiz items 0 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 0 options 1 text",
+            "correct": false
+          }
+        ],
+        "correct": 0,
+        "answer": "quiz items 0 options 0 text",
+        "explanation": "quiz items 0 explanation",
+        "option_why": [
+          "quiz feedback 0",
+          "quiz feedback 1"
+        ]
+      },
+      {
+        "question": "quiz items 0 question",
+        "prompt": "quiz items 0 prompt",
+        "options": [
+          "quiz items 0 options 0 text",
+          "quiz items 0 options 1 text"
+        ],
+        "correct": 0,
+        "answer": "quiz items 0 options 0 text",
+        "explanation": "quiz items 0 explanation",
+        "option_why": [
+          "quiz feedback 0",
+          "quiz feedback 1"
+        ]
+      }
+    ]
+  },
+  "translate": {
+    "id": "a17",
+    "instruction": "Instruction for translate.",
+    "items": [
+      {
+        "source": "translate items 0 source",
+        "answer": "translate items 0 options 0 text",
+        "alternatives": [
+          "translate items 0 alternatives 0"
+        ],
+        "options": [
+          {
+            "text": "translate items 0 options 0 text",
+            "correct": true
+          }
+        ],
+        "explanation": "translate items 0 explanation",
+        "option_why": [
+          "translate feedback 0"
+        ]
+      }
+    ]
+  },
+  "true-false": {
+    "id": "a18",
+    "instruction": "Instruction for true-false.",
+    "items": [
+      {
+        "statement": "true false items 0 statement",
+        "correct": true,
+        "answer": true,
+        "explanation": "true false items 0 explanation",
+        "option_why": [
+          "True reason",
+          "False reason"
+        ]
+      }
+    ]
+  },
+  "unjumble": {
+    "id": "a19",
+    "instruction": "Instruction for unjumble.",
+    "items": [
+      {
+        "words": [
+          "unjumble items 0 words 0"
+        ],
+        "jumbled": [
+          "unjumble items 0 jumbled 0"
+        ],
+        "prompt": [
+          "unjumble items 0 prompt 0"
+        ],
+        "scrambled": [
+          "unjumble items 0 scrambled 0"
+        ],
+        "answer": "unjumble items 0 answer",
+        "hint": "unjumble items 0 hint",
+        "explanation": "unjumble items 0 explanation"
+      },
+      {
+        "answer": "unjumble items 0 answer",
+        "hint": "unjumble items 0 hint",
+        "explanation": "unjumble items 0 explanation",
+        "words": "first / second"
+      },
+      {
+        "answer": "unjumble items 0 answer",
+        "hint": "unjumble items 0 hint",
+        "explanation": "unjumble items 0 explanation",
+        "jumbled": "first / second"
+      },
+      {
+        "answer": "unjumble items 0 answer",
+        "hint": "unjumble items 0 hint",
+        "explanation": "unjumble items 0 explanation",
+        "prompt": "first / second"
+      },
+      {
+        "answer": "unjumble items 0 answer",
+        "hint": "unjumble items 0 hint",
+        "explanation": "unjumble items 0 explanation",
+        "scrambled": "first / second"
+      }
+    ]
+  },
+  "watch-and-repeat": {
+    "id": "a20",
+    "instruction": "Instruction for watch-and-repeat.",
+    "items": [
+      {
+        "video": "https://www.youtube.com/watch?v=fixture9526",
+        "letter": "watch and repeat items 0 letter",
+        "word": "watch and repeat items 0 word",
+        "sound": "watch and repeat items 0 sound",
+        "note": "watch and repeat items 0 note",
+        "explanation": "watch and repeat items 0 explanation"
+      }
+    ]
+  }
+}

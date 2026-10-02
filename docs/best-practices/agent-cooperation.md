@@ -1,6 +1,6 @@
 # Agent Cooperation Best Practices
 
-> **Scope:** How Claude, Codex, Cursor, DeepSeek, and track orchestrators work
+> **Scope:** How Claude, Codex, Cursor, and track orchestrators work
 > together without degrading each other's output quality.
 > Historical protocol archive: `docs/archive/CLAUDE-GEMINI-COOPERATION.md`
 > Review evidence contract: [`docs/review-protocol.md`](../review-protocol.md)
@@ -57,7 +57,7 @@ the independent review gate.
 | 💙 **Синя команда** (Blue) | Claude | Architect, reviewer, quality gate |
 | 💛 **Жовта команда** (Gold) | Cursor / track writers | Content builder, implementer |
 | 🟢 **Зелена команда** (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
-| ⚙️ **Review lane** | DeepSeek | Cheap code/content review and deterministic triage |
+| ⚙️ **Code review lane** | Qualified outside-family reviewer from `closeout_cli resolve-reviewer` | DeepSeek is excluded from dispatch and review; `ask-deepseek` is consult-only for non-language work |
 
 Gemini/AGY handles Ukrainian-language work and review under the LANGUAGE-LANES
 rule. Code review follows `model-assignment.md` Code review row. Historical
@@ -743,15 +743,15 @@ At session end: save progress summary to memory.
 
 When starting an issue:
 ```bash
-gh issue edit {N} --add-label "working:{agent}"
-gh issue comment {N} --body "Starting work on X"
+.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "working:{agent}"
+.venv/bin/python -m scripts.publish issue-comment --number {N} --body "Starting work on X"
 ```
 
 When done:
 ```bash
-gh issue edit {N} --remove-label "working:{agent}"
-gh issue edit {N} --add-label "review:{reviewer}"  # or review:human
-# or: gh issue close {N}
+.venv/bin/python -m scripts.publish issue-edit --number {N} --remove-labels "working:{agent}"
+.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "review:{reviewer}"  # or review:human
+# or: .venv/bin/python -m scripts.publish issue-close --number {N}
 ```
 
 ---
@@ -881,7 +881,9 @@ Post on the relevant GH issue explaining what was stuck and why.
 ## Dispatch handoff: GPT-6 Luna workers + fleet settle
 
 **Luna (`gpt-6-luna` @ high)** is a high-volume **bounded coding worker**, not a solo epic driver.
-Orchestrators keep acceptance (CF, merge, residual truth).
+Orchestrators keep acceptance (CF, merge, residual truth). Every Luna dispatch needs a complete
+GPT-6.1 Sol advisory envelope bound to it (`--advisory-task`; operator decision 2026-09-30, #9275);
+see `agents_extensions/shared/rules/fleet-driver-routing.md` §2.
 
 ### Briefing Luna
 Append [`docs/dispatch-briefs/luna-max-closeout-contract.md`](../dispatch-briefs/luna-max-closeout-contract.md)
@@ -900,8 +902,10 @@ When a worker leaves commits without a PR, or dies with `status=running` and a d
 Formal CF and auto-merge stay with the orchestrator.
 
 ### Formal CF budget rotation (Codex-authored PRs)
-Current sealed reviewer routes are `codex|claude|glm|grok`; the canonical
-`review_scheduler.endpoints` catalog remains authoritative. `agy` is a
+Current formal reviewer endpoints are `codex|claude|glm|grok|cursor`; the canonical
+`review_scheduler.endpoints` catalog remains authoritative. Native `grok` is
+transport-eligible but policy-refused (native Grok never judges); `cursor` is
+formal only for its pinned, runtime-attested `grok-4.7-high` seat (#9488). `agy` is a
 recognized request identity that is not formally eligible. Kimi is not a
 reviewer: Kimi seats take web, UI and backend coding only.
 For **Codex/Luna-authored** PRs, use the deterministic routing budget rather

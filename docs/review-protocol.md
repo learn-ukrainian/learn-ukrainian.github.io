@@ -54,8 +54,8 @@ and non-JSON chatter **fail closed**.
 {
   "schema_version": "code-review-findings.v1",
   "overall": {
-    "correctness": "correct",
-    "explanation": "No defects found on the frozen target.",
+    "correctness": "incorrect",
+    "explanation": "A blocking defect was found on the frozen target.",
     "confidence": 0.9
   },
   "findings": [
@@ -83,6 +83,10 @@ and non-JSON chatter **fail closed**.
 
 Categories: `bug`, `security`, `correctness`, `regression`, `api`, `tests`,
 `docs`, `performance`, `style`, `other`.
+
+`overall.correctness: "correct"` with findings means the reviewer judges no
+finding blocking under `critical-rules.md` section 8.4. Findings remain in the
+receipt, and the runner still returns `actionable` / exit 1.
 
 ### Compatibility / removal decision
 
@@ -221,9 +225,9 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
   --expected-input-sha256 "$TARGET_SHA" \
   --issue-ref '#5284' \
   --scope-json '{"owner_boundary":"scripts/verify_review.py"}' \
-  --author-model 'gpt-5.6-sol' --author-family openai --author-harness codex \
+  --author-model 'gpt-6.1-sol' --author-family openai --author-harness codex \
   --author-selection-reason 'accountable-author' \
-  --reviewer-model 'grok-4.6' --reviewer-family xai --reviewer-harness grok-build \
+  --reviewer-model 'grok-4.7' --reviewer-family xai --reviewer-harness grok-build \
   --reviewer-selection-reason 'cross-family-gate' \
   --tests-json '{"commands":["pytest tests/test_verify_review.py"],"passed":true}' \
   --behavior-proof-state-file "$STATE_FILE" \
@@ -253,6 +257,21 @@ and is never the only durable proof path. Prefer stdout or `--receipt-path`.
 | 3 | `incomplete` | Empty input, overall `uncertain` with no findings, or incomplete envelope / missing expected fingerprint |
 | 4 | `stale` | Head SHA or target-input fingerprint mismatch |
 | 5 | `unverifiable` | `quote_missing`, `line_mismatch`, or `out_of_scope` on any finding |
+
+For typed lifecycle behavior evidence, `error` must be null. The receipt must
+be either `clean` / exit 0, or `actionable` / exit 1 with all of:
+
+- `reviewer_payload.overall.correctness` is `correct`;
+- receipt finding IDs equal `reviewer_payload.finding_ids`;
+- every finding outcome is `verified`;
+- every finding has a disposition and a non-empty rationale;
+- no finding has disposition `stop_and_escalate`.
+
+This accepts the reviewer's non-blocking judgment without removing findings or
+changing the receipt. An `in_scope_blocker` disposition is not itself a refusal:
+the reviewer's `correct` verdict carries the blocking judgment. All other
+lifecycle checks, including receipt digest, exact head, target-input fingerprint,
+reviewer independence, and passing behavior surfaces, still apply.
 
 ## Deterministic receipt (runner-built)
 
@@ -299,3 +318,22 @@ Multi-finding validation order is deterministic: sort by
    - `invalid` / `incomplete` / `stale` / `unverifiable` → reject the review
      output; re-run after correcting structure, freshness, or evidence — do not
      treat bad evidence or incomplete provenance as a green closeout.
+
+## Reviewer selection trace
+
+`closeout_cli resolve-reviewer` applies hard exclusions before ranking. Its
+`review_scheduler.profile_risk_role_order` then ranks semantic suitability,
+followed by quality tier and deterministic resource-pressure scoring within
+that fit and tier. An earlier YAML rung does not override a better role match.
+
+For a `gpt-6.1-sol` author with profile `code` and risk `high`, native
+`claude-opus-5-5` is eligible but matches `critical_review` at suitability
+rank 3; `claude-sonnet-5-5` matches `strong_review` at rank 0. Sonnet therefore
+wins before `selection_score` breaks ties. This is the configured suitability
+rule, rather than an Opus health or quota exclusion. Both may report unknown
+health when no routing snapshot is supplied. When an explicit requested role
+fits both equally, Opus's authority tier wins. Critical security review
+excludes every Sonnet model and uses the Fable 5.1 authority route.
+
+Read `status`, `reason`, `suitability_rank`, and `selection_score` for every
+candidate; do not infer provider health or review eligibility from selection.

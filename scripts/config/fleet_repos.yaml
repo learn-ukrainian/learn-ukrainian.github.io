@@ -14,13 +14,16 @@ repos:
   public:
     github: learn-ukrainian/learn-ukrainian.github.io
     local_name: learn-ukrainian
+    transport: ssh
     role: public-monorepo
     default: true
   infra-private:
     github: learn-ukrainian/learn-ukrainian-infra-private
     local_name: learn-ukrainian-infra-private
+    transport: https
     role: private-infra
   hramatka:
     github: learn-ukrainian/hramatka
     local_name: hramatka
+    transport: ssh
     role: private-product

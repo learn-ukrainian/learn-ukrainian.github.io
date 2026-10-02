@@ -22,6 +22,10 @@ Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 checks: TypeSafe triage (#8232), Atlas POC richness (#3930) and the diff-scoped
 Atlas vocabulary coverage report.
 
+For an offline local TruffleHog scan of the work tree or the whole public history
+(before a credential, identity, transport or hook change, or after a suspected leak),
+see [`secret-scanning.md`](secret-scanning.md).
+
 ## Gate inventory
 
 Every gate of the previous `ci.yml` and where it lives now. Only the machinery
@@ -202,13 +206,28 @@ jobs, two reserved).
 ## Shard setup
 
 Per shard: checkout (shallow; full history on the history shard), Python
-3.12.8, then `scripts/ci/test_env.sh start` runs `npm ci` and
+3.12.14, then `scripts/ci/test_env.sh start` runs `npm ci` and
 `scripts/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked
 environment from main's exact-key uv cache; `test_env.sh wait` fails the job if
 either background task failed. A container image was not adopted: the checkout
 cannot be inside an image, and pulling a prebuilt environment of this size
 costs about what the cache restore does (see the measurements in the ci-v3 PR).
+
+All Python workflow jobs read the repository's `.python-version` with
+`setup-python`'s `python-version-file`. The shared composite reads the same
+file for setup-uv's explicit `python-version`, so local environments, the
+cache reader and the cache writer agree. Keep `check-latest` disabled (the
+default). A pin update changes the uv key; until main warms that key, the
+composite's online install fallback handles the miss. The #9062 measurement
+on hosted image `20260920.314` found 3.12.14 already cached, while 3.12.8
+required a download on every shard.
+
+The history shard keeps full Git history: five pinned test files read history
+and two more fetch `main` (listed in `scripts/ci/history-tests.txt`, consumed
+by `scripts/ci/split_tests.py`).
+Other shards are shallow. #9211 rejected blobless checkout because those
+history readers need the committed blobs as well as the commit graph.
 
 ## Cloud advisory runner dependency parity (#6977 slice A)
 

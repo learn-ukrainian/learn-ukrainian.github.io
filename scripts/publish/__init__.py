@@ -1,0 +1,1 @@
+"""Typed public GitHub publishing."""

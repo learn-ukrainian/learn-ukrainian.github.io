@@ -541,7 +541,17 @@ _OTHER_TREE_COMMIT = {"d" * 40: {"sha": "d" * 40, "tree": "2" * 40, "parents": [
             "0 jobs named 'pytest (2)'",
         ),
         (_candidate(jobs=_jobs(_set("pytest (2)", conclusion="cancelled"))), "'pytest (2)' is 'completed'/'cancelled'"),
-        (_candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[5], id=7)])), "2 jobs named 'pytest (1)'"),
+        (
+            _candidate(
+                jobs=_jobs(
+                    lambda jobs: [
+                        *jobs,
+                        dict(next(j for j in jobs if j["name"] == "pytest (1)"), id=7),
+                    ]
+                )
+            ),
+            "2 jobs named 'pytest (1)'",
+        ),
         (_candidate(jobs=_jobs(_set("Checks", conclusion="failure"))), "'Checks' is 'completed'/'failure'"),
         (_candidate(jobs=_jobs(_set("Secret scan", conclusion="skipped"))), "'Secret scan' is 'completed'/'skipped'"),
         (_candidate(jobs=_jobs(lambda jobs: [j for j in jobs if j["name"] != "Frontend"])), "0 jobs named 'Frontend'"),
@@ -815,7 +825,15 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
     job = _jobs_of_ci()["queue-metadata-scan"]
     # Not gated on the reuse decision: the reused secret scan covered files, not this commit's metadata.
     assert job["if"] == "github.event_name == 'merge_group'" and "needs" not in job
-    checkout, metadata, scan = job["steps"]
+    steps = job["steps"]
+    checkout, setup, metadata, scan = (
+        next(step for step in steps if str(step.get("uses", "")).startswith("actions/checkout@")),
+        next(step for step in steps if str(step.get("uses", "")).startswith("actions/setup-python@")),
+        next(step for step in steps if step.get("id") == "metadata"),
+        next(step for step in steps if "trufflehog" in step.get("uses", "")),
+    )
+    assert steps.index(checkout) < steps.index(setup) < steps.index(metadata) < steps.index(scan)
+    assert setup["with"] == {"python-version-file": ".python-version"}
     assert checkout["with"] == {"persist-credentials": False, "fetch-depth": 2}
     assert metadata["id"] == "metadata"
     assert "python3 -m scripts.ci.metadata_commit --commit HEAD" in metadata["run"]

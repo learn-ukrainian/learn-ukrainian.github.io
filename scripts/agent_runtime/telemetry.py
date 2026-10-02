@@ -90,17 +90,14 @@ def _metadata_text(plan: InvocationPlan | None, *keys: str) -> str | None:
     return None
 
 
-def _is_acp_shadow_identity(
-    agent_name: str, plan: InvocationPlan | None = None
-) -> bool:
+def _is_acp_shadow_identity(agent_name: str, plan: InvocationPlan | None = None) -> bool:
     name = str(agent_name).strip().lower()
     if name.startswith("acpx-") and name.endswith("-shadow"):
         return True
     if plan is None:
         return False
     return any(
-        plan.metadata.get(flag) is True
-        for flag in ("acpx_discussion", "acpx_transport", "acpx_shadow")
+        plan.metadata.get(flag) is True for flag in ("acpx_discussion", "acpx_transport", "acpx_shadow")
     ) or isinstance(plan.metadata.get("acpx_cli_version"), str)
 
 
@@ -214,24 +211,31 @@ def _hermes_configured_effort() -> str | None:
     return top_level_agent_effort(read_hermes_config(home / "config.yaml"))
 
 
+def _deepseek_catalog_identity(model: str | None) -> str | None:
+    """Resolve recorded routes without using dispatch eligibility as identity.
+
+    Moving aliases use the adapter's current pin; versioned historical routes
+    retain their catalog identity even after retirement (#9301).
+    """
+    from scripts.review.model_catalog import resolve_catalog_model_id
+
+    from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
+
+    pinned = next(
+        (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == model),
+        None,
+    )
+    return pinned or resolve_catalog_model_id(model) or model
+
+
 def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
     if _is_acp_shadow_identity(agent_name, plan):
-        return (
-            _metadata_text(plan, "model")
-            or _arg_after(plan.cmd, "-m", "--model")
-            or _NOT_EXPOSED
-        )
+        return _metadata_text(plan, "model") or _arg_after(plan.cmd, "-m", "--model") or _NOT_EXPOSED
     if agent_name == "kimi" and plan.metadata.get("harness") == "kimicc":
         alias = plan.metadata.get("kimicc_alias")
         return str(alias).strip() if isinstance(alias, str) and alias.strip() else None
     if agent_name == "deepseek":
-        from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
-
-        invocation_model = _arg_after(plan.cmd, "--model")
-        return next(
-            (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == invocation_model),
-            invocation_model,
-        )
+        return _deepseek_catalog_identity(_arg_after(plan.cmd, "--model"))
     return _arg_after(plan.cmd, "-m", "--model")
 
 
@@ -301,12 +305,7 @@ def _resolve_model_from_defaults(
         # after-spawn labels agree for an omitted model.
         return _kimicc_alias(requested_model)
     if agent_name == "deepseek" and requested_model:
-        from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
-
-        return next(
-            (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == requested_model),
-            requested_model,
-        )
+        return _deepseek_catalog_identity(requested_model)
     if requested_model:
         return requested_model
     if _is_acp_shadow_identity(agent_name):
@@ -425,9 +424,7 @@ def _hermes_version_prefix(cmd: list[str]) -> tuple[str, ...]:
     return ("hermes",)
 
 
-_VERSION_PROBE_CWD: ContextVar[str | None] = ContextVar(
-    "agent_runtime_version_probe_cwd", default=None
-)
+_VERSION_PROBE_CWD: ContextVar[str | None] = ContextVar("agent_runtime_version_probe_cwd", default=None)
 
 
 def _probe_version(prefix: tuple[str, ...]) -> str | None:
@@ -492,9 +489,40 @@ def agy_cli_version(prefix: tuple[str, ...] = ("agy",), cwd: str | None = None) 
     return _probe_version_at(prefix, cwd)
 
 
+def _cursor_version_probe_prefix(prefix: tuple[str, ...]) -> tuple[str, ...] | None:
+    """Resolve the Cursor version probe through ``resolve_cursor_agent_binary``.
+
+    Returns None when ``cursor-agent`` is missing or the prefix names another
+    executable, so the caller does not spawn. An invocation that already
+    carries an executable ``cursor-agent`` path keeps that path.
+    """
+    from .adapters.cursor import CursorAgentMissingError, resolve_cursor_agent_binary
+
+    head = prefix[0] if prefix else "cursor-agent"
+    if Path(head).name != "cursor-agent":
+        return None
+    try:
+        resolved = resolve_cursor_agent_binary()
+    except CursorAgentMissingError:
+        return None
+    if os.sep in head or (os.altsep and os.altsep in head):
+        candidate = Path(head)
+        if not (candidate.is_file() and os.access(candidate, os.X_OK)):
+            return None
+        return prefix
+    return (resolved, *prefix[1:])
+
+
 @lru_cache(maxsize=8)
 def cursor_cli_version(prefix: tuple[str, ...] = ("cursor-agent",), cwd: str | None = None) -> str | None:
-    return _probe_version_at(prefix, cwd)
+    """Probe ``cursor-agent --version`` only after the shared resolver accepts it.
+
+    A missing binary returns None and does not spawn.
+    """
+    resolved_prefix = _cursor_version_probe_prefix(prefix)
+    if resolved_prefix is None:
+        return None
+    return _probe_version_at(resolved_prefix, cwd)
 
 
 @lru_cache(maxsize=8)
@@ -533,17 +561,14 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if agent_name == "kimi":
         if plan is not None and plan.metadata.get("harness") == "kimicc":
             claude_bin = plan.metadata.get("claude_bin")
-            prefix = (
-                (str(claude_bin),)
-                if isinstance(claude_bin, str) and claude_bin
-                else ("claude",)
-            )
+            prefix = (str(claude_bin),) if isinstance(claude_bin, str) and claude_bin else ("claude",)
             return claude_cli_version(prefix, probe_cwd)
         if plan is not None and plan.cmd:
             bin_path = plan.cmd[0]
         else:
             try:
                 from .adapters.kimi import _resolve_kimi_binary
+
                 bin_path = _resolve_kimi_binary()
             except Exception:
                 bin_path = "kimi"
@@ -570,6 +595,7 @@ def resolve_dispatch_start_telemetry(
     requested_model: str | None,
     requested_effort: str | None,
     harness: str | None = None,
+    probe_cli_version: bool = True,
 ) -> InvocationTelemetry:
     """Best-effort telemetry for task-state initialization before spawn."""
     model = _resolve_model_from_defaults(agent_name, requested_model, harness=harness)
@@ -587,7 +613,7 @@ def resolve_dispatch_start_telemetry(
         _warn_unknown("effort", agent_name, "no explicit override or readable default")
         effort = _UNKNOWN
 
-    cli_version = _resolve_cli_version(agent_name)
+    cli_version = _resolve_cli_version(agent_name) if probe_cli_version else _UNKNOWN
     if not cli_version:
         _warn_unknown("cli_version", agent_name, "version probe failed")
         cli_version = _UNKNOWN

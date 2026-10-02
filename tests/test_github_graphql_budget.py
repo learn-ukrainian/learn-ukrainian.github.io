@@ -17,7 +17,9 @@ from scripts import github_graphql_budget as probe
 def _runner(stdout: str, *, stderr: str = "", returncode: int = 0, record: list | None = None):
     def run(args, **kwargs):
         if record is not None:
-            record.append((args, kwargs))
+            from pathlib import Path
+            payload = json.loads(Path(args[args.index("--input") + 1]).read_text())
+            record.append((args, {**kwargs, "query_payload": payload}))
         return SimpleNamespace(stdout=stdout, stderr=stderr, returncode=returncode)
 
     return run
@@ -42,8 +44,8 @@ def test_healthy_probe_uses_one_graphql_rate_limit_query() -> None:
         "checked_at": result["checked_at"],
     }
     assert len(calls) == 1
-    assert calls[0][0][:3] == ["gh", "api", "graphql"]
-    assert "rateLimit { limit remaining used resetAt }" in calls[0][0][4]
+    assert calls[0][0][:5] == ["gh", "api", "--method", "POST", "graphql"]
+    assert calls[0][1]["query_payload"] == {"query": probe.QUERY, "variables": {}}
     assert calls[0][1]["timeout"] == probe.TIMEOUT_SECONDS
 
 

@@ -1385,7 +1385,7 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
         )
     try:
         completed = subprocess.run(
-            [agy_bin, "--prompt", "/usage", "--output-format", "json"],
+            [agy_bin, "--prompt", "/usage", "--output-format", "json"],  # lock-lint: ok resolved AGY CLI path
             capture_output=True,
             text=True,
             timeout=max(float(timeout_s), 30.0),

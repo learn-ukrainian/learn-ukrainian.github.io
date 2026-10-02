@@ -37,6 +37,8 @@ import time
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 HERMES_CFG = Path.home() / ".hermes" / "config.yaml"
 HERMES_CFG_BAK = Path.home() / ".hermes" / "config.yaml.stage-runner-backup"
 
@@ -217,6 +219,9 @@ def restore_effort(prev: str) -> None:
 
 
 def run_hermes(prompt: str, model: str) -> dict:
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model(model, transport="hermes")
     t0 = time.time()
     try:
         proc = subprocess.run(
@@ -270,6 +275,10 @@ def main() -> int:
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--model", default=GROK_MODEL)
     args = parser.parse_args()
+
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model(args.model, transport="hermes")
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     out_path = args.out_dir / f"stage{args.stage}-{args.effort}.json"

@@ -1,0 +1,144 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-special-signs"
+  attempt_id: "claude-full-att-2"
+  manifest_sha256: "e04db3a17780342fd401a248d23885c10bd98c38d0d3251030274616f182fd3a"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-agent-sdk"
+  family: "claude"
+  prompt_sha256: "435fcc08c3cc0cd20e560fae1167674ec01c5127304fb64fe8ee12fd36045607"
+checks:
+  # D4 shape is present: L8 a1 first-person story, then a2 Ukrainian-only questions on the same host, then the a4 notebook task with own name (the arc's P3 skill is "copying, own name"). Narrator and family questions can use хто/де, which the position-2 recap introduced. ULP family-introduction model: search_text ulp-1-00-lesson-notes_l0007_w005, receipt rr-d9a7d56d0d8e64dfcfca. The food-question gap is F-6.
+  closing_shape: clean
+  title_describes_job: [F-5]
+  # "eight remaining letters" equals the sidecar count of 8. The prior state has 25 letters, which makes 33 per the T-012 table: search_text 5-klas-ukrmova-zabolotnyi-2023_s0001, receipt rr-a2ed2dca0640ce3053c0.
+  title_quantities: clean
+  # VESUM: літери, повторення, Марія and алфавіт are all found with marker-free analyses (verify_words, receipt rr-2a5361f122214b8c7e22).
+  quoted_forms: clean
+  sequencing: [F-6]
+  sizing: [F-11]
+  # Core words: їжа is A1 (query_cefr_level, rr-675ef761fb62113b5d97) and дощ is A1 (rr-0e588b9cc36f4d022663). All 20 prior core ids are recycled at least once across L1–L8. The B1/B2 primer words (маля, щука, рись, тінь) stay incidental decoding models.
+  inventory: clean
+  # v1 has 12 activities and 59 response opportunities. The fresh plan has 55 activities (33 inline, 22 workbook), so activity volume is not reduced. Fresh response opportunities are not_available_at_this_stage, which is an evidence gap with no reduction claimed. The R-19 find-and-fix model is in L3 a5. Fill-in recurs in the L2–L6 workbooks with the same blank-completion operation and progresses only by letter; this is acceptable but monotone.
+  activities: [F-2, F-3, F-7, F-8]
+  evidence_fit: [F-1, F-4, F-9]
+  # Pravopys §49.1 confirms the L7 s4 personal-name capital rule (query_pravopys 49, rr-40d0c80ced3bd82c5bca). Standard 4.1.1–4.1.4 (alphabet, apostrophe, ь, hard/soft, [дж]/[дз]) is served by L1–L7.
+  standard_and_ulp: [F-10]
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 5, step: "s3", quote: "Display only the attributed public-textbook quote hosts T-010, T-016, T-017 before their dependent print decisions." }
+      - { lesson: 1, step: "s2", quote: "Display only the attributed public-textbook quote hosts T-001 before their dependent print decisions." }
+      - { lesson: 3, step: "s2", quote: "Display only the attributed public-textbook quote hosts T-025, T-004 before their dependent print decisions." }
+      - { lesson: 7, step: "s5", quote: "Before consolidation display only the attributed public-textbook hosts T-003, T-039." }
+    dimension: evidence_use
+    severity: MAJOR
+    claim: "Several quote hosts are whole OCR'd page chunks. Under the writer contract the engine prints the quote bytes exactly. T-017 (L5 a4 host) carries a corrupted transcription, 'гілка [г’¾лка]', plus private-use bullet glyphs, inside grade-5 theory prose far beyond the position-3 vocabulary. T-010 has letter-stripped fragments ('еркало ґу ики кукуру а'). T-004 and T-005 have spaced picture-word grids ('в е р б л', 'к є а є *'). T-001 shows 'т * л ь п а н'. T-003 (L7 a7 host) contains the watermark 'Pidruchnyk.com.ua' and the split 'Марі / я'. Learners would see corrupt text presented as the textbook, or the lesson vocabulary gate blocks assembly. The pack builder should mint trimmed host records for the clean lines only, as T-040–T-043 already do for Я: the T-001 pair rows, the юрта/люпин transcriptions, and 'Чую [дз], [дз′]' with the word row. T-016 and T-017 should stay explains-only. This also affects the activities check (L1 a3/a5, L3 a2, L5 a4, L7 a7)."
+    evidence: { receipt: "rr-19f6fc281afd42c80e86" }
+    could_be_a_gate: "yes — preflight rejects quote-host bytes containing private-use code points, non-Cyrillic symbols inside transcription brackets, publisher watermarks or VESUM-failing tokens"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 3, activity: "a7", quote: "Count vowel nuclei in the taught W-121 and the source forms of W-124/W-125" }
+    dimension: activity
+    severity: MAJOR
+    claim: "Every target has the same answer. The primer schemes give їжа [ =•|–• ], юрта [ =• –|–•] and люпин [ =•|–•– ], each with exactly one syllable boundary, so every key is '2'. The learner scores full marks without counting, and the item cannot show that a two-sound letter adds no syllable. This breaks the plan's own varied-key rule (L2 a5 'No single-puzzle repetition'; L5 a7 'rather than repeating a single two-syllable puzzle'). Fix: add a taught L3 form with a different count, such as the T-022 plural of W-127 or the T-025 form of W-140. Both have three syllables, and in each the two-sound letter forms its own syllable."
+    evidence: { receipt: "rr-99eff59e0e6601b191c0" }
+    could_be_a_gate: "yes — count-syllables preflight requires at least two distinct vowel-count keys among an activity's target forms"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 5, activity: "a7", quote: "three syllables give different keys, extending the previous lesson" }
+    dimension: activity
+    severity: MINOR
+    claim: "The focus promises one-, two- and three-syllable keys, but the targets are джміль (1), джем (1), дзиґа (2) and дзюрчить (2). Zabolotnyi transcribes 'джміль [джм’іл′]' with a single vowel. No three-syllable target exists, so the stated progression over L4 a7 is not delivered. Either drop the claim or add a taught three-syllable form."
+    evidence: { receipt: "rr-bcb35c49360712a2b2b4" }
+    could_be_a_gate: "no"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 3, step: "s5", quote: "Before consolidation display only the attributed public-textbook hosts T-041." }
+      - { lesson: 3, activity: "a5", quote: "each item has host {kind: quote, ref: T-041}" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "L3 a5 is a Ю/Є find-and-repair. Its first host, and the only quote s5 displays before consolidation, is T-041, 'яма [йама]', a Я model from Zabolotnyi already used in L2. It cannot host a Ю/Є item. The post-vowel Є host T-043 ('моє [мойе]', the same source chunk) or the word-start T-022 fits the task."
+    evidence: { receipt: "rr-bcb35c49360712a2b2b4" }
+    could_be_a_gate: "no"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 7, field: "title", quote: "літери" }
+    dimension: job
+    severity: MINOR
+    claim: "Lesson 7 has the same title as the module, 'літери', but its job is dictionary order, letter names and capital/small matching. Every lesson in this module is about letters, so the title does not say what L7 does (R-07), and the landing would show two units with the same name. The established textbook term for this job is алфавіт: Vashulenko grade 2 p.26 heads the same skill 'АЛФАВІТ' ('НАВЧАЮСЯ РОЗТАШОВУВАТИ СЛОВА ЗА АЛФАВІТОМ') and defines it as letters 'розміщені в певній послідовності'. W-173 алфавіт is already in L7's incidental inventory."
+    evidence: { receipt: "rr-d21a2e7cb8daf20c8312" }
+    could_be_a_gate: "no"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 8, activity: "a2", quote: "Ask Ukrainian-only questions about its narrator," }
+      - { lesson: 8, step: "s2", quote: "Do not ask when a snail travelled or introduce a new question word." }
+    dimension: learner_fit
+    severity: MINOR
+    claim: "L8 a2 needs a Ukrainian-only question about the story's named food, and that question needs що. No earlier plan introduces що: the position-2 recap introduced only хто and де. W-164 що first appears in this recap's own inventory, which contradicts s2's ban on new question words and the rationale's 'without new inventory'. The learner meets an unglossed question word in a Ukrainian-only item. Fix: model що with English support before the recap (for example beside the L6 narration model), or make the food item answerable with хто/де. This is a plan-internal finding; the CEFR record only shows що is A1."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-708b1bb1fea2e74e7545", outcome: "hits_but_no_support" }
+    could_be_a_gate: "no"
+  - id: F-7
+    status: active
+    locations:
+      - { lesson: 6, activity: "a7", quote: "choose the printed member with the apostrophe" }
+    dimension: activity
+    severity: MINOR
+    claim: "a7 asks the learner to pick the member of each T-036 pair that has, or lacks, an apostrophe. The answer is visible from the ’ glyph, so the item tests glyph spotting, not the separate pronunciation that G-a1-010 teaches (Avramenko: 'Апостроф позначає роздільну вимову твердих приголосних'). Key the decision on sound instead, for example which member has a hard consonant plus [йу]/[йе], using the source transcriptions."
+    evidence: { receipt: "rr-4c1324640ccc88cbc788" }
+    could_be_a_gate: "no"
+  - id: F-8
+    status: active
+    locations:
+      - { lesson: 2, activity: "a2", quote: "Scored print discrimination of the displayed capital/small glyph models in T-030." }
+    dimension: activity
+    severity: MINOR
+    claim: "The a2 host T-030 holds only the pair 'Ї ї'. A print discrimination on it can only ask which shape is capital or small: that is answerable from shape alone, yields at most two items, and duplicates L7's capital/small job. It does not test the lesson's point that Ї always represents two sounds (Zabolotnyi: 'ї Два звуки [йі]'). A useful contrast is Ї against the already-taught І, both on the T-012 table, in the same way L4 a4 contrasts Щ and Ш."
+    evidence: { receipt: "rr-bcb35c49360712a2b2b4" }
+    could_be_a_gate: "no"
+  - id: F-9
+    status: active
+    locations:
+      - { lesson: 4, step: "s2", quote: "V-011" }
+      - { lesson: 2, step: "s1", quote: "V-008" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "The pack records V-002, V-008, V-011 and V-012 all carry the same URL (YouTube ksXIXj7CXwc, the full-alphabet video). L4's videos list V-002, V-011 and V-012 as three separate videos, and L2 lists V-002 and V-008. The learner page would embed one video three times in L4 and twice in L2, each labelled as a different model. Keep one entry per lesson and name the letters in its use line. The corpus has no record of this locator; the finding rests on the fenced pack data."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-8e7d3d73e91230395bb6", outcome: "no_hits" }
+    could_be_a_gate: "yes — plan-validate rejects two video entries in one lesson whose pack records resolve to the same URL"
+  - id: F-10
+    status: active
+    locations:
+      - { lesson: 7, step: "s1", quote: "S-001" }
+    dimension: engine_or_gate
+    severity: MINOR
+    claim: "S-001 pins file sha256 29d24350…, the hash of docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt, but its locator 'lines: 585-586' points at a blank line and '4.1.5. Наголос.'. The quoted 4.1.1 text is at lines 571-572, which is what the arc cites. pack-verify passed with standard_count 1, so the locator was never checked, and the Resources/coverage citation would point at the stress heading. L7's coverage of 4.1.1 is otherwise sound. This was found by a repository read; the review tools do not index the Standard."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-d21a2e7cb8daf20c8312", outcome: "hits_but_no_support" }
+    could_be_a_gate: "yes — pack-verify compares each S-record text with the cited lines of the hashed Standard file"
+  - id: F-11
+    status: active
+    locations:
+      - { lesson: 6, step: "s1", quote: "Before the recap, model a first-person identity/family/food narration" }
+    dimension: job
+    severity: MINOR
+    claim: "L6 s1 is one teach step that covers the apostrophe introduction, the T-015 contrast, four vowel-letter contexts, a W-142 return and three T-036 contrasts. It then ends with a first-person identity/family/food narration that neither L6's job nor its title mentions. That overloads the apostrophe theory step (R-27 calls for small steps) and hides recap preparation inside an unrelated step. Put the narration model in its own practice step, or in L7/L8 s1. This is a plan-internal finding; the ULP family-introduction notes give no support for placing it here."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-d9a7d56d0d8e64dfcfca", outcome: "hits_but_no_support" }
+    could_be_a_gate: "no"

@@ -403,6 +403,7 @@ data/native-reviewer-lessons/
 # `*.db.bak-YYYYMMDD-HHMMSS`. These are local recovery artifacts only —
 # always 100MB+, well over GitHub's hard limit, never belong in version control.
 data/*.db.bak-*
+data/*.db.bak.*
 data/*.db.bak
 
 # Stray top-level diff/patch artifacts left over from ad-hoc work.

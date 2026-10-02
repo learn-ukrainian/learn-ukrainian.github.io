@@ -104,7 +104,7 @@ cold-prompts; silent plane flips; “for now” cutovers.
 
 # Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
 # ONE round. Ask a cross-family lane for verdict + findings at the current head,
-# then post on the PR (gh pr comment / gh pr review). Merge when CI is green.
+# then post on the PR (.venv/bin/python -m scripts.publish pr-comment / .venv/bin/python -m scripts.publish pr-review). Merge when CI is green.
 # Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
 # `--type review` routes to a headless native CLI WITH tools (delegate.py
 # dispatch --agent <lane> --worktree; gh/pytest available), never tool-less
@@ -179,7 +179,7 @@ Every epic driver session (any harness) MUST:
 
 - Driver entrypoints: `./start-grok-driver.sh --epic <epic>`,
   `./start-gemini-driver.sh --epic <epic>`,
-  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5|claude-sonnet-5-5]`,
+  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5-1|claude-sonnet-5-5]`,
   and `./start-codex-driver.sh --epic <epic>`. Interactive launchers reject `--epic`.
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Gemini→harness/corpus,
   Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it

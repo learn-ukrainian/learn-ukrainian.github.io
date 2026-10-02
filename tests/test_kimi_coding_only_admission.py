@@ -595,7 +595,8 @@ def test_refusal_states_the_policy_and_names_the_alternative_seats():
     message = _refusal(mode="read-only", review=True, paths=("docs/x.md",))
     assert message.startswith(f"ROUTING REFUSED: {_TOKEN}")
     assert kimi_admission.POLICY_LINE in message
-    assert "claude, codex, or grok" in message
+    # The Cursor seat's concrete xAI pin makes it a consult alternative (#9274).
+    assert "consults and discussions → claude, codex, cursor, or grok" in message
     assert "--mode read-only" in message and "review dispatches" in message and "docs/x.md" in message
 
 
@@ -623,6 +624,37 @@ def test_kimi_refusal_stays_typed_when_catalog_import_is_unavailable(monkeypatch
     message = str(refusal.value)
     assert "reviews → claude, codex (per the reviewer resolver)" in message
     assert "consults and discussions → claude, codex, or grok" in message
+
+
+def test_9312_kimi_refusal_surfaces_malformed_catalog(monkeypatch):
+    from scripts.review import model_catalog
+
+    def malformed():
+        raise model_catalog.ModelCatalogError("invalid model catalog")
+
+    monkeypatch.setattr(model_catalog, "load_model_catalog", malformed)
+    with pytest.raises(kimi_admission.KimiAdmissionRefused, match="MODEL_CATALOG_INVALID"):
+        kimi_admission.refuse_kimi_if_disallowed(("kimi",), mode="read-only", review=True)
+
+
+@pytest.mark.parametrize("catalog", [{}, {"models": [], "review_candidates": {"bad": None}}])
+def test_kimi_refusal_surfaces_invalid_alternative_seat_data(monkeypatch, catalog):
+    from scripts.review import model_catalog
+
+    monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: catalog)
+    with pytest.raises(kimi_admission.KimiAdmissionRefused, match="MODEL_CATALOG_INVALID"):
+        kimi_admission.format_refusal("kimi", ["review dispatches"])
+
+
+def test_kimi_alternative_seats_does_not_hide_unexpected_catalog_errors(monkeypatch):
+    from scripts.review import model_catalog
+
+    def unexpected():
+        raise RuntimeError("unexpected catalog bug")
+
+    monkeypatch.setattr(model_catalog, "load_model_catalog", unexpected)
+    with pytest.raises(RuntimeError, match="unexpected catalog bug"):
+        kimi_admission.format_refusal("kimi", ["review dispatches"])
 
 
 # --- delegate dispatch admission --------------------------------------------------

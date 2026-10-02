@@ -17,7 +17,7 @@ The default spawned agent is Luna high. Use Luna medium explicitly for routine
 scouting and high for ambiguous investigations or bounded coding. Sol high
 handles broader coding and adversarial review. `astra_advisor_high` keeps its
 name but runs GPT-6.1 Sol, which took the GPT-6 Astra advisor seat (#9230); it
-is the on-demand advisor for consequential design and difficult linguistic judgment. Sol high
+runs at high as the on-demand advisor for consequential design and difficult linguistic judgment. Sol high
 is the Ukrainian content authoring default, subject to VESUM, sources, and
 track immersion checks. This is a routing decision, not a comparative
 Ukrainian-quality benchmark.

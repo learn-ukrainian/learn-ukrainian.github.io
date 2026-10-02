@@ -6,11 +6,11 @@ Approved layout for bulk sources, active SQLite, and agent-safe fallbacks.
 
 | Role | Location | Notes |
 | --- | --- | --- |
-| Active SQLite | Repository `data/sources.db` | **Always on a local filesystem.** On the Linux service host, repository `data/` moves to the attached volume at the same path; never open from SMB/network FS. Sources MCP reads this file only. |
-| Bulk raw sources (primary) | Windows NTFS share **UkrainianData** → `raw-sources/learn-ukrainian-data` | Full materialized mirror. Mac mounts as `/Volumes/UkrainianData/…` when available. |
-| Bulk raw sources (fallback) | Google Drive File Provider `My Drive/Projects/learn-ukrainian-data` | On-demand retrieval when SMB is absent. |
-| Mac working set | Git repo + active DBs + small shards | Keep hot runtime artifacts local. |
-| Offsite backup | Google Drive (and restic runbook) | Drive is source/backup, not live SQLite. |
+| Active SQLite | Repository `data/sources.db` | **Always on a local filesystem.** On service hosts, repository `data/` resides on an attached local volume at the same path; never open from network filesystems. Sources MCP reads this file only. |
+| Bulk raw sources (primary) | Primary bulk storage mirror → `raw-sources/learn-ukrainian-data` | Full materialized mirror when mounted and marker-valid. |
+| Bulk raw sources (fallback) | Cloud storage fallback | On-demand retrieval when primary bulk mirror is absent. |
+| Local working set | Git repo + active DBs + small shards | Keep hot runtime artifacts local. |
+| Offsite backup | Secondary backup store | Source/backup archive, not live SQLite. |
 
 **Marker-valid bulk root:** top-level directories `literary_texts/` and
 `textbook_chunks/` must both exist. Ambiguous multi-match roots are treated as
@@ -19,15 +19,15 @@ unavailable (no guessing).
 ## Linux repository data volume (#8804)
 
 The migration window moves the entire repository `data/` tree to a 40 GB
-Hetzner Cloud Volume and bind-mounts it back at `<repo>/data`. Application paths
-stay the same, and SQLite remains on a local filesystem. The Mac and hosts
+attached cloud volume and bind-mounts it back at `<repo>/data`. Application paths
+stay the same, and SQLite remains on a local filesystem. Hosts
 before migration have no `/etc/learn-ukrainian/data-volume.uuid` file.
 
 Before writing the UUID marker, make `/etc/learn-ukrainian` searchable by the
 service user (for example, mode 0755 or membership in its access group) and
 make the marker readable by that user. An unreadable marker or parent refuses
 service starts with exit 78. After the volume and bind mount are verified, the
-driver restarts the four listener services; a guard refusal does not retry
+driver restarts the listener services; a guard refusal does not retry
 automatically. Restart any timer service that failed before the mount as well.
 
 Once the UUID file exists, `scripts/storage/data_volume_guard.sh` checks the
@@ -36,10 +36,10 @@ mount is absent, unreadable, or from a different volume. `services.sh`
 checks before `start`, `restart`, and `fix` on both systemd and direct-process
 paths; `status` prints the observed `data: volume <uuid>` or
 `data: root disk` (and `data: unknown` if mount identity cannot be read).
-The twelve systemd user-service drop-ins in `packaging/systemd/dropins/` wrap
+The systemd user-service drop-ins in `packaging/systemd/dropins/` wrap
 each original `ExecStart` with the same guard and set
-`RestartPreventExitStatus=78`. This covers four loopback listeners and all
-eight timer-triggered services, including backup, OpenCode retention, and data-tier tests, without changing
+`RestartPreventExitStatus=78`. This covers loopback listeners and
+timer-triggered services, including backup, OpenCode retention, and data-tier tests, without changing
 the timer files. Preview
 the rendered `/etc/systemd/user/` files with
 `<primary-checkout>/.venv/bin/python scripts/storage/install_data_volume_dropins.py`;
@@ -75,28 +75,28 @@ Rebuild consumers (`scripts/wiki/config.py` → `GDRIVE_DATA`) use the same
 resolver: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unavailable.
 The legacy name `GDRIVE_DATA` is retained for call-site compatibility.
 
-## Windows maintenance
+## Mirror maintenance
 
 Tracked scripts (manual, non-destructive):
 
 1. `scripts/storage/windows/Copy-BulkSourcesFromDrive.ps1` — `rclone copy` only
-   (never `sync` / purge / delete) into the share’s **local NTFS** path from
-   `Get-SmbShare -Name UkrainianData`.
+   (never `sync` / purge / delete) into the mirror's local path via
+   `Get-SmbShare`.
 2. `scripts/storage/windows/Verify-BulkSources.ps1` — marker check and optional
    exact-file JSONL manifest; writes a success receipt **only** on pass.
 
 See `scripts/storage/windows/README.md`. Scheduled Task install is optional and
 opt-in; default is a manual run.
 
-## Mac cache (report-only)
+## Local cache (report-only)
 
-When the bulk root is the Drive File Provider path, `status` samples dataless
-flags without opening file bodies. To free SSD space after SMB is verified:
+When the bulk root is a cloud provider path, `status` samples dataless
+flags without opening file bodies. To free local disk space after mirrors are verified:
 
-1. In **Finder**, select cloud-only items under the Drive project folder.
-2. **File → Remove Download**.
+1. Select cloud-only items under the provider project folder.
+2. Free local storage via provider interface or file manager.
 
-Do not invent eviction CLIs, delete cloud objects, or delete the SMB mirror as
+Do not invent eviction CLIs, delete cloud objects, or delete bulk mirrors as
 part of routine cache reclaim.
 
 ## Journal mode (WAL) — declared by writers, relied on by readers

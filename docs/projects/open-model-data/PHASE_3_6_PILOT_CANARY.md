@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/projects/open-model-data/REAL_TRAINING_RUN_SCORECARD_8338.md
+---
+
 # Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B
+
+> **Superseded by:** [docs/projects/open-model-data/REAL_TRAINING_RUN_SCORECARD_8338.md](REAL_TRAINING_RUN_SCORECARD_8338.md)
 
 > [!WARNING]
 > **Withdrawn 2026-09-25: this Hugging Face model repository is private. The pilot data failed the dataset acceptance check and must not be used (epic #6321).**

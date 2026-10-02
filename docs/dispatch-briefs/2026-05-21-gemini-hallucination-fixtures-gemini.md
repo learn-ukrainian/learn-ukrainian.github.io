@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — preserve 17 Gemini OCR hallucination samples as detection fixtures
 
 **Agent**: gemini (default model)
@@ -63,7 +69,7 @@ Promote the 17 samples to committed test fixtures and ship a detection function 
 
 - **17/17 positive flags**: every quarantined fixture trips the detector (16 by automated checks; 1 marked `xfail` / `skip` for the semantic case).
 - **0/10 negative flags**: 10 random clean ESUM entries pass.
-- **Pytest green**: `.venv/bin/python -m pytest tests/etymology/ -v`.
+- **Pytest green**: `"$PROJECT_PYTHON" -m pytest tests/etymology/ -v`.
 - **Ruff green**: `.venv/bin/ruff check scripts/etymology/ tests/etymology/`.
 - **Autopsy + INDEX entry committed.**
 
@@ -79,7 +85,7 @@ Promote the 17 samples to committed test fixtures and ship a detection function 
 ```bash
 cd . && ls tests/fixtures/etymology/gemini-hallucinations/ | wc -l   # expect 17 + 1 README = 18
 cd . && .venv/bin/ruff check scripts/etymology/ tests/etymology/
-cd . && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
+cd . && "$PROJECT_PYTHON" -m pytest tests/etymology/ -v --tb=short
 ```
 
 All green required before commit.

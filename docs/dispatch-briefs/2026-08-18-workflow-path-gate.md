@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — workflow-path gate (B+D)
 
 Advisor packet: Fable + Sol [AGREE] 2026-08-18. Operator: implement, keep fleet fluid.
@@ -57,8 +63,8 @@ Do not edit `scripts/agent_runtime/**`, `scripts/delegate.py`, or `agents_extens
 
 ```bash
 scripts/audit/check_workflows.sh
-.venv/bin/python -m pytest tests/test_untrusted_workflow_interpolation.py -q
-.venv/bin/python -m ruff check scripts/audit/check_untrusted_workflow_interpolation.py
+"$PROJECT_PYTHON" -m pytest tests/test_untrusted_workflow_interpolation.py -q
+"$PROJECT_PYTHON" -m ruff check scripts/audit/check_untrusted_workflow_interpolation.py
 ```
 
 Quote raw output. Current repo workflows must stay green.

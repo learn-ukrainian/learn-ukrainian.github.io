@@ -93,9 +93,9 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
 
     fake_python = project_dir / ".venv" / "bin" / "python"
     fake_python.parent.mkdir(parents=True)
-    fake_python.write_text("#!/bin/sh\nprintf 'Python 3.12.8\\n'\n", encoding="utf-8")
+    fake_python.write_text("#!/bin/sh\nprintf 'Python 3.12.14\\n'\n", encoding="utf-8")
     fake_python.chmod(0o755)
-    (project_dir / ".python-version").write_text("3.12.8\n", encoding="utf-8")
+    (project_dir / ".python-version").write_text("3.12.14\n", encoding="utf-8")
 
     remote_payload = {
         "schema": "remote-epic-lifecycle.v1",
@@ -321,9 +321,12 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     canonical_dir.mkdir()
     venv_bin = canonical_dir / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
-    (venv_bin / "python").write_text("#!/bin/sh\necho 'Python 3.12.8'", encoding="utf-8")
+    # The gate runs through the real bounded-runner interpreter below. Give
+    # this fixture its exact version instead of coupling it to the local pin.
+    version = subprocess.check_output([_canonical_python(), "--version"], text=True, timeout=30).strip().removeprefix("Python ")
+    (venv_bin / "python").write_text(f"#!/bin/sh\necho 'Python {version}'", encoding="utf-8")
     (venv_bin / "python").chmod(0o755)
-    (canonical_dir / ".python-version").write_text("3.12.8\n", encoding="utf-8")
+    (canonical_dir / ".python-version").write_text(f"{version}\n", encoding="utf-8")
 
     db_dir = project_dir / ".mcp" / "servers" / "message-broker"
     db_dir.mkdir(parents=True)

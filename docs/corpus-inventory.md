@@ -167,6 +167,68 @@ to `unified_dense` → `rerank_candidates` → `data/embeddings/manifest.db` + s
 | `external_articles` / `external_fts` | 1,205 | `search_external` | Curated external articles + YouTube/blog transcripts (register/decolonization tagged). |
 | `wikipedia` / `_fts` | 1,029 | `query_wikipedia` | Cached Ukrainian Wikipedia articles (+ a separate negative cache). |
 
+### Curated listening and reading catalogues (#9409)
+
+`resource_catalogue` / `resource_catalogue_fts` indexes metadata from every entry
+in these files under `docs/resources/`: `podcasts/podcast_db.json`, all three
+`podcasts/raw_lists/*.txt` lists, `podcasts/ulp_mapping.yaml`,
+`external_resources.yaml`, `ulp-resources.yaml`, `ulp-alphabet.yaml`, `ulp-articles-index.yaml`,
+`ulp-article-mappings.yaml`, `trusted_sources.yaml`, and the `dobraforma`,
+`talkukrainian` and `verba` article catalogues. Internal trusted-source collections
+use `sources://collection/...` locators; they have no HTTP link check.
+
+Run the incremental metadata ingestion with an explicit **local** database:
+
+```bash
+<shared-project-python> -m scripts.ingest.resource_catalogue_ingest \
+  --ingest --db data/sources-copy.db
+```
+
+For rehearsals, first create a consistent SQLite backup of the active database;
+do not copy a running WAL database's main file alone. `--no-network` skips new
+HTTP requests and retains previous checks. The script creates the table and FTS
+idempotently, replaces only catalogue rows in one transaction, and reports each
+file's input entries and distinct output URLs. Every original locator, title and
+module mapping survives URL deduplication. `rows_out` per file overlaps other
+files; only the global count represents distinct resources. After a full corpus
+rebuild, rerun this incremental ingest as for the separately ingested ZNO tables.
+Activation of the live database remains a separate driver operation after merge.
+
+Use **`mcp__sources__search_resources`** with `query`, `kind`, `level`, `module`,
+`free_only` and optionally `live_only` and `mode`. The default `mode: text`
+searches full text even for one-letter words; empty text queries browse using filters.
+Only explicit `mode: letter` uses the evidenced letter index, accepting a single
+letter. Curriculum curation selects letter mode only for letter requirements.
+The `letters` and `letter_evidence` columns preserve publisher-evidenced pairings
+from `ulp-alphabet.yaml`; `access_evidence` records the evidence required for
+`access: free`. Databases missing these columns require re-ingestion before any
+resource search; the driver backs up and re-ingests the live database immediately
+after merge.
+Levels reflect explicit catalogue levels and module prefixes; absence stays
+unknown. Module IDs preserve existing catalogue mappings rather than claiming
+they match a current lesson plan. Results use `sources.tool-result.v1` and carry
+source-entry provenance, HTTP status and UTC check date. `free_only` requires
+an explicit free resource or free audio fact; missing access stays `unknown`.
+It does not prove present availability or include premium notes. `live_only`
+requires a recorded successful HTTP check, whose date remains visible.
+
+ULP/FMU rows have `access: mixed`, `audio_access: free` and `notes_access: premium`.
+Podcast page aliases (`/lesson/2/`, `/episode2/`) share a canonical URL.
+Existing `external_articles` text is linked by normalized URL (including
+catalogue-related URLs) or ULP/FMU series and episode identity. Its text joins the
+FTS index; `discovery_evidence` records the chunk, source file, URL and relation.
+Ukrainian queries therefore match stored source text rather than keyword aliases.
+The ingest reports `linked_resources`; it downloads no media, article bodies or
+premium material. Linked text is discovery evidence, not independent audio or
+word-level timestamp verification.
+
+Responses return at most 20 hits with a short prose summary and structured hits.
+Each row is bounded to 24 KiB; provenance list budgets total 3,584 UTF-8 JSON bytes.
+Other metadata lists have 512-byte budgets and scalar strings have 256-byte
+budgets. Lists retain complete-record prefixes with total counts and truncation
+flags; full provenance remains in the database. Before catalogue ingestion the
+tool returns `status: error`, `error_code: resource_catalogue_missing`.
+
 ### Dictionaries & lexical resources
 
 | Table | Rows | MCP tool | What it is |

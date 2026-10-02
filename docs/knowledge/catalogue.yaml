@@ -1,0 +1,2150 @@
+# Document and data catalogue (#9412).
+#
+# One entry per document FAMILY (a directory or glob sharing purpose, owner,
+# default lifecycle and retrieval method) or per logical DATA STORE under
+# data/. Never one hand-written entry per file. It extends the ADR-013
+# inventory (docs/knowledge/inventory/, scripts/docs/docs_inventory.py) and the
+# lifecycle contract in docs/architecture/docs-authority-lifecycle.md; it does
+# not replace them and it is separate from the ADR-011 research registry.
+#
+# Rules (checked by `.venv/bin/python -m scripts.docs.catalogue check`):
+# - Every path Git tracks under the tracked roots resolves to exactly one
+#   family. The most specific glob wins (exact path, then more literal path
+#   segments, then more literal characters). Equal-specificity matches from two
+#   families are errors.
+# - A tracked path containing a control character (newline, tab, CR or any
+#   other C0/C1 control) is an error and is never catalogued or read.
+# - Glob dialect (paths and store names alike): literal characters, '*' within
+#   one path segment (never across '/'), '?' for one character within a segment,
+#   and '**' as a whole segment spanning segments. Character classes ([...]),
+#   braces ({a,b}), empty, '.' and '..' segments are errors: list each path.
+# - Catch-all rule: the first segment below a glob's tracked root must be
+#   literal, so docs/**, docs/*/**, docs/a*/** and docs/*.md are errors.
+# - Every glob matches at least one tracked file.
+# - A family that owns any path under a component the docs inventory excludes
+#   for privacy (session-state, private, secrets, credentials, cache, ...) must
+#   set content_searchable: false. Ownership is what decides, not glob text.
+#   The exclusion covers bodies: a directory's README or index note (prose) is
+#   never excluded and is read even in such a family, because it is the public
+#   record of what the directory holds and whether it is still live.
+# - lifecycle uses the contract vocabulary: draft | active | superseded | archive.
+#   superseded needs superseded_by: a tracked path (optionally #section) or
+#   id:<entry>. Chains must end at an active or archive node, with no cycles;
+#   this holds for every entry kind, data stores included.
+# - overrides set the lifecycle of one exact path inside the family (for files
+#   that cannot carry front-matter, or that differ from the family default).
+# - residual lists paths whose lifecycle is not yet classified; the family
+#   default does not apply to them. Unknown is never a lifecycle value.
+# - owner is a stream key (scripts/config/issue_streams.yaml) or an area key
+#   (scripts/config/area_assignments.yaml).
+# - data_store entries name logical stores and tracked producer scripts only,
+#   never a host path or mount.
+# - Every data/<name>.db|.sqlite|.sqlite3 store that scripts/ code names is
+#   claimed by a data_store entry or listed, with a reason, in
+#   store_literal_exemptions.
+# - A Markdown file that an override marks superseded carries front matter
+#   (lifecycle: superseded, superseded_by: <target>) and the visible line
+#   '> **Superseded by:** [target](link)'; `... catalogue mark --apply` writes
+#   both. Front-matter lifecycle or superseded_by anywhere must agree with what
+#   the catalogue resolves for that file.
+# - docs/README.md's family table is generated from this file:
+#   `.venv/bin/python -m scripts.docs.catalogue readme`.
+# Search it (and tracked names and text) with `.venv/bin/python -m scripts.docs.find "<query>"`.
+# Census and evidence: docs/knowledge/inventory/catalogue-census-2026-10-01.md.
+schema_version: 1
+denominator:
+  tracked_roots: [docs, registry, curriculum/l2-uk-en/evidence]
+  local_store_root: data
+status_mapping:
+  current: active
+  historical: archive
+  superseded: superseded
+
+entries:
+  - id: ulif-first-stress-contract
+    kind: doc_family
+    paths: [docs/verification/ulif-first-stress.md]
+    purpose: ULIF-first stress oracle contract, source identity joins, labelled trie fallback and consumer verification.
+    keywords: [ULIF, stress, oracle, pronunciation, source identity, trie fallback]
+    lifecycle: active
+    owner: atlas-practice
+    entrypoints:
+      - {topic: ULIF-first stress oracle, path: docs/verification/ulif-first-stress.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/verification/ulif-first-stress.md"}
+    content_searchable: true
+
+  # ================================================================ entry points
+  - id: docs-entry-map
+    kind: doc_family
+    paths: [docs/README.md]
+    purpose: Cold-start documentation map for humans and agents. It names the one search entry point (python -m scripts.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era.
+    keywords: [documentation map, entry point, where to start, docs index, navigation hazards, find a document]
+    lifecycle: active
+    owner: docs-knowledge
+    entrypoints:
+      - {topic: documentation map, path: docs/README.md}
+      - {topic: document and data catalogue, path: docs/knowledge/catalogue.yaml}
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.docs.find '<query>' (catalogue, tracked names and tracked text in one query)"}
+      - {surface: api, how: "GET /api/knowledge/find?q=<query>"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/README.md"}
+    content_searchable: true
+
+  - id: docs-knowledge-system
+    kind: doc_family
+    paths:
+      - docs/knowledge/**
+      - docs/architecture/docs-authority-lifecycle.md
+      - docs/plans/2026-09-17-docs-knowledge-rollout.md
+    purpose: Repository knowledge system - this catalogue and its schema, the deterministic docs inventory contract, the authority and lifecycle contract, and the docs-knowledge rollout plan.
+    keywords: [catalogue, docs inventory, lifecycle, authority contract, docs-knowledge, superseded, ADR-013]
+    lifecycle: active
+    owner: docs-knowledge
+    entrypoints:
+      - {topic: document and data catalogue, path: docs/knowledge/catalogue.yaml}
+      - {topic: catalogue census report, path: docs/knowledge/inventory/catalogue-census-2026-10-01.md}
+      - {topic: documentation lifecycle vocabulary, path: docs/architecture/docs-authority-lifecycle.md}
+      - {topic: docs inventory tool contract, path: docs/knowledge/inventory/README.md}
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.docs.catalogue check --json"}
+      - {surface: cli, how: ".venv/bin/python scripts/docs/docs_inventory.py (writes audit/docs-inventory/)"}
+    content_searchable: true
+
+  - id: corpus-inventory
+    kind: doc_family
+    paths: [docs/corpus-inventory.md]
+    purpose: Prose inventory of data/sources.db tables and the local versus bulk-root storage layout; table counts were last refreshed 2026-07-31 and are stale against the live store.
+    keywords: [corpus inventory, sources.db tables, bulk root, what source material we have, corpus size]
+    lifecycle: active
+    owner: corpus-channels
+    entrypoints:
+      - {topic: what is in sources.db, path: docs/corpus-inventory.md}
+    query:
+      - {surface: mcp, how: "sources MCP collection_stats (live table counts)"}
+      - {surface: api, how: "GET /api/sources/stats"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/corpus-inventory.md"}
+    content_searchable: true
+
+  - id: top-level-references
+    kind: doc_family
+    paths:
+      - docs/ACTIVITY-YAML-REFERENCE.md
+      - docs/CLAUDE-CODE-FEATURES.md
+      - docs/DICTIONARY-PIPELINE-STATUS.md
+      - docs/RUNBOOK-BUILD.md
+      - docs/SCRIPTS.md
+      - docs/WORKSTREAMS.md
+      - docs/agent-bridge-setup-guide.md
+      - docs/agent-runtime-guide.md
+      - docs/review-protocol.md
+    purpose: Maintained top-level references for scripts and commands, workstreams, the agent runtime, the review protocol, activity YAML and the dictionary pipeline status.
+    keywords: [scripts reference, commands, workstreams, agent runtime, review protocol, activity yaml, dictionary pipeline, build runbook]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: commands and scripts, path: docs/SCRIPTS.md}
+      - {topic: workstreams and priorities, path: docs/WORKSTREAMS.md}
+      - {topic: agent runtime adapter layer, path: docs/agent-runtime-guide.md}
+      - {topic: dictionary tables and pipeline status, path: docs/DICTIONARY-PIPELINE-STATUS.md}
+      - {topic: activity YAML format, path: docs/ACTIVITY-YAML-REFERENCE.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/SCRIPTS.md docs/WORKSTREAMS.md docs/agent-runtime-guide.md docs/review-protocol.md"}
+    content_searchable: true
+
+  - id: monitor-api-docs
+    kind: doc_family
+    paths: [docs/MONITOR-API.md, docs/monitor-api/**]
+    purpose: Monitor (Ops) API reference, the read-only work-projection API spec and the agent cold-start measurement log.
+    keywords: [Monitor API, Ops API, endpoints, work projection, cold start, routes]
+    lifecycle: active
+    owner: monitor
+    entrypoints:
+      - {topic: Monitor API endpoints, path: docs/MONITOR-API.md}
+      - {topic: work projection API, path: docs/monitor-api/work.md}
+    query:
+      - {surface: api, how: "GET /openapi.json (route list of the running Monitor API)"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/MONITOR-API.md docs/monitor-api"}
+    content_searchable: true
+
+  - id: core-lesson-contracts
+    kind: doc_family
+    paths:
+      - docs/north-star.md
+      - docs/lesson-contract.md
+      - docs/lesson-schema-design.md
+      - docs/style-guide.md
+      - docs/lesson-schema.yaml
+    purpose: Curriculum north star, lesson contract v4, lesson schema design and the generated lesson schema, plus the human-editor style guide.
+    keywords: [north star, lesson contract, lesson schema, style guide, immersion model]
+    lifecycle: active
+    owner: curriculum-upgrade
+    entrypoints:
+      - {topic: lesson contract, path: docs/lesson-contract.md}
+      - {topic: lesson schema (generated), path: docs/lesson-schema.yaml}
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/build/generate_lesson_schema.py (regenerates docs/lesson-schema.yaml)"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/lesson-contract.md docs/north-star.md docs/lesson-schema-design.md"}
+    content_searchable: true
+    overrides:
+      - {path: docs/north-star.md, lifecycle: draft, evidence: "Own header: Status DRAFT v3.1 (2026-05-18)."}
+      - {path: docs/lesson-schema-design.md, lifecycle: draft, evidence: "Own header: DESIGN DRAFT v2."}
+
+  - id: top-level-point-in-time-audits
+    kind: evidence
+    paths:
+      - docs/api-endpoint-consumer-map-2026-05-06.md
+      - docs/api-stability-audit-2026-05-06.md
+      - docs/monitor-api-ui-audit-2026-06-07.md
+      - docs/corpus-gap-audit.md
+      - docs/personal-name-audit.md
+      - docs/phase-2-config-audit-report.md
+      - docs/phase-4-exemplar-report.md
+      - docs/rag-gap-1026.md
+      - docs/atlas-data-coverage-strategy.md
+    purpose: One-time audit evidence at the docs root - Monitor API consumer and stability audits, corpus and RAG gap audits, config and exemplar reports, personal-name and Atlas coverage audits.
+    keywords: [audit, API stability, endpoint consumers, corpus gap, RAG gap, exemplar report, Atlas coverage]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/*audit*.md' docs/corpus-gap-audit.md docs/rag-gap-1026.md"}
+    content_searchable: true
+
+  - id: top-level-historical-notes
+    kind: doc_family
+    paths:
+      - docs/MASTER-PLAN.md
+      - docs/cleanup-plan-2026-q2.md
+      - docs/orchestrator-frictions.md
+      - docs/prompt-budgets.md
+      - docs/rules-core-draft-notes.md
+      - docs/salvage-manifest.md
+      - docs/session-state-2026-04-04.md
+      - docs/state-reconciliation.md
+      - docs/v5-v3-to-v6-phase-mapping.md
+      - docs/wiki-rebuild-plan.md
+    purpose: Old plans, V6-era budgets and reconciliation notes, the reboot salvage manifest, a dated session snapshot and draft rule notes kept for history.
+    keywords: [master plan, cleanup plan, salvage manifest, prompt budgets, V6, wiki rebuild plan]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/MASTER-PLAN.md docs/cleanup-plan-2026-q2.md docs/salvage-manifest.md"}
+    content_searchable: true
+    overrides:
+      - {path: docs/rules-core-draft-notes.md, lifecycle: draft, evidence: "Draft notes for the rules core (2026-09-30); no consumer found."}
+      - {path: docs/MASTER-PLAN.md, lifecycle: superseded, superseded_by: docs/WORKSTREAMS.md, evidence: "The census records it as a March 2026 snapshot (catalogue-census-2026-10-01.md, Misleading names); CLAUDE.md names docs/WORKSTREAMS.md the workstreams and priorities document, which calls itself the living once-per-session orientation layer."}
+
+  # ================================================================ architecture, decisions, design
+  - id: architecture-adr
+    kind: doc_family
+    paths: [docs/architecture/adr/**]
+    purpose: Numbered architecture decision records with template and generated index; permanent, superseded only by a later ADR.
+    keywords: [ADR, architecture decision record, adr index, accepted, deferred]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: ADR index, path: docs/architecture/adr/README.md}
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/audit/check_adrs.py --help"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/architecture/adr"}
+    content_searchable: true
+    overrides:
+      - {path: docs/architecture/adr/adr-012-code-driven-curriculum-lifecycle.md, lifecycle: draft, evidence: "Own status: Proposed (2026-07-14); the ADR index (docs/architecture/adr/README.md) also lists it as Proposed."}
+
+  - id: architecture-research
+    kind: evidence
+    paths: [docs/architecture/research/**]
+    purpose: April 2026 embedder survey and chunk-policy bake-off results.
+    keywords: [embedder survey, chunk policy, bake-off, retrieval]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/architecture/research"}
+    content_searchable: true
+
+  - id: architecture-specs
+    kind: doc_family
+    paths: [docs/architecture/*]
+    purpose: Architecture specs, plans, RFCs and audits - V7 pipeline, system topology, data-foundry architecture, ADR-style notes outside adr/, UI template specs and Astro evaluations.
+    keywords: [architecture, V7 pipeline, system topology, RFC, data foundry architecture, UI template, Astro]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: current V7 pipeline architecture, path: docs/architecture/v7-pipeline.md}
+      - {topic: system topology, path: docs/architecture/system-topology.md}
+    query:
+      - {surface: api, how: "GET /artifacts/architecture/<file>"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/architecture"}
+    content_searchable: true
+    overrides:
+      - {path: docs/architecture/ARCHITECTURE.md, lifecycle: superseded, superseded_by: docs/architecture/v7-pipeline.md, evidence: "Own banner: read only for V5/V6 historical context; v7-pipeline.md names it the legacy file."}
+      - {path: docs/architecture/ADR_013_LITERARY_POLTAVA_ALIGNMENT.md, lifecycle: superseded, superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md, evidence: "Own banner: superseded and non-operational; the candidate audit is the current authority."}
+      - {path: docs/architecture/ADR_016_BASE_MODEL_LEAPFROGGING_AND_DATASET_VALUATIONS.md, lifecycle: superseded, superseded_by: docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md, evidence: "Own banner: superseded for current strategy; use the open-model data north star."}
+      - {path: docs/architecture/v6-pipeline-review.md, lifecycle: archive, evidence: "V6 pipeline review; V6 retired (v7-pipeline.md)."}
+      - {path: docs/architecture/v6-pipeline-review.html, lifecycle: archive, evidence: "HTML twin of the V6 review (report-status migrated)."}
+      - {path: docs/architecture/2026-04-22-execution-plan-corpus-bootstrap.md, lifecycle: draft, evidence: "Own status: DRAFT - review and approve before executing."}
+      - {path: docs/architecture/a8-canary-protocol.md, lifecycle: draft, evidence: "Own status: DRAFT (2026-04-22)."}
+      - {path: docs/architecture/learner-runtime-and-build-split.md, lifecycle: draft, evidence: "Front-matter status: DRAFT."}
+      - {path: docs/architecture/module-archetype-contract.md, lifecycle: draft, evidence: "Front-matter status: DRAFT."}
+      - {path: docs/architecture/ARCHITECTURE-OPTIMIZATION-PLAN.md, lifecycle: draft, evidence: "Own status: Proposed."}
+      - {path: docs/architecture/curriculum-lifecycle-prompt-responsibility-parity.md, lifecycle: draft, evidence: "Own status: Proposed migration inventory."}
+
+  - id: decisions-journal
+    kind: registry
+    paths: [docs/decisions/*]
+    purpose: Dated, expiring decision records plus INDEX.md and decisions.yaml as the structured ledger; not an ADR substitute.
+    keywords: [decision journal, decision record, expiry, decisions.yaml, dec-]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: decision index, path: docs/decisions/INDEX.md}
+      - {topic: structured decision ledger, path: docs/decisions/decisions.yaml}
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/check_decisions.py --quiet"}
+      - {surface: api, how: "GET /artifacts/decisions/INDEX.md"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/decisions"}
+    content_searchable: true
+    notes: Superseded ledger rows (dec-001, dec-002, dec-003, dec-005, dec-011) are recorded inside decisions.yaml and INDEX.md, not as separate files.
+    overrides:
+      - {path: docs/decisions/2026-06-14-autonomous-codex-dispatch-narrow-class.md, lifecycle: superseded, superseded_by: AGENTS.md, evidence: "Own status: SUPERSEDED by the AGENTS.md delegation policy."}
+      - {path: docs/decisions/2026-07-22-pytest-four-shard-matrix.md, lifecycle: superseded, superseded_by: docs/runbooks/ci-gate.md, evidence: "Own status: superseded 2026-09-30 by the ci-v3 workflow (docs/runbooks/ci-gate.md)."}
+      - {path: docs/decisions/2026-06-14-a1-m15-24-shape-contract.md, lifecycle: archive, evidence: "Own status: SUPERSEDED - resolved after A1/A2 builds shipped; no replacement document named."}
+      - {path: docs/decisions/2026-06-14-v7-1-wiki-driven-writer.md, lifecycle: archive, evidence: "Own status: SUPERSEDED - resolved after A1/A2 builds shipped; no replacement document named."}
+      - {path: docs/decisions/2026-06-14-wiki-driven-prompt-generator.md, lifecycle: archive, evidence: "Own status: SUPERSEDED - resolved after A1/A2 builds shipped; no replacement document named."}
+
+  - id: decisions-pending-and-drafts
+    kind: doc_family
+    paths: [docs/decisions/pending/**, docs/decisions/drafts/**]
+    purpose: The AFK decision-card queue (README only, no open cards) and draft design notes awaiting a decision.
+    keywords: [pending decision, decision card, AFK queue, draft design]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/decisions/pending docs/decisions/drafts"}
+    content_searchable: true
+    overrides:
+      - {path: docs/decisions/drafts/cf-temp-lifecycle.md, lifecycle: draft, evidence: "Own status: Draft / Proposed Design (#6412)."}
+
+  - id: design-docs
+    kind: doc_family
+    paths: [docs/design/*]
+    purpose: Subsystem design docs - agent runtime, Monitor API app factory and router inventory, epics graph, control-plane storage seam, cloud-agent pytest advisory, dimensional review.
+    keywords: [design doc, agent runtime design, Monitor API app factory, router inventory, control plane storage]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/design"}
+    content_searchable: true
+    overrides:
+      - {path: docs/design/build-module-v5.md, lifecycle: superseded, superseded_by: docs/architecture/v7-pipeline.md, evidence: "V5 build design (Draft v2, 2026-03-06); V5 retired, V7 is the current pipeline."}
+      - {path: docs/design/dimensional-review.md, lifecycle: draft, evidence: "Draft design (2026-04-18)."}
+
+  - id: proposals
+    kind: doc_family
+    paths: [docs/proposals/*]
+    purpose: Early proposals and RFCs - literature expansion syllabi, Gemini review prompts, RFC-001 nine-phase workflow, RFC 4801 module size policy, dialogue-situation fixes.
+    keywords: [proposal, RFC, literature syllabus, module size policy, nine-phase workflow]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/proposals"}
+    content_searchable: true
+    overrides:
+      - {path: docs/proposals/module-size-policy-rfc-4801.md, lifecycle: active, evidence: "Own status: Partially implemented (2026-07-12)."}
+
+  - id: strategy
+    kind: doc_family
+    paths: [docs/strategy/*]
+    purpose: Strategic direction for the Ukrainian open-model data infrastructure.
+    keywords: [strategy, north star, open-model data, data foundry]
+    lifecycle: active
+    owner: open-model-data
+    entrypoints:
+      - {topic: open-model data strategy, path: docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/strategy"}
+    content_searchable: true
+    overrides:
+      - {path: docs/strategy/STRATEGY_MAKING_GOOGLE_NOTICE_OUR_BENCHMARKS.md, lifecycle: superseded, superseded_by: docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md, evidence: "Own banner: Superseded, not the current north star."}
+
+  - id: gemma-finetuning-guides
+    kind: doc_family
+    paths: [docs/guides/**]
+    purpose: July 2026 Gemma fine-tuning, Hugging Face plan and trial budget guides tied to the retired fine-tuning plan.
+    keywords: [Gemma fine-tuning, Hugging Face, GPU cost, training budget]
+    lifecycle: archive
+    owner: open-model-data
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/guides"}
+    content_searchable: true
+    overrides:
+      - {path: docs/guides/HUGGINGFACE_GEMMA_FINETUNING_GUIDE.md, lifecycle: superseded, superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md, evidence: "Own banner: retired guide; the candidate audit is the current authority."}
+
+  # ================================================================ best practices, runbooks, templates
+  - id: best-practices
+    kind: doc_family
+    paths: [docs/best-practices/**]
+    purpose: Engineering and content standards that CLAUDE.md and the rules point to - code, git, review, prompts, activities, audit, fleet doctrine, module quality, V7 and ULP presentation.
+    keywords: [best practices, code quality, git hygiene, gitflow, prompt engineering, activity pedagogy, fleet doctrine, module content quality, ULP presentation pattern]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: V7 design and corpus, path: docs/best-practices/v7-design-and-corpus.md}
+      - {topic: ULP presentation pattern for A1/A2, path: docs/best-practices/ulp-presentation-pattern.md}
+      - {topic: fleet roster and routing matrix, path: docs/best-practices/agent-activity-matrix.md}
+      - {topic: git hygiene, path: docs/best-practices/git-hygiene.md}
+    query:
+      - {surface: api, how: "GET /artifacts/best-practices/<file>"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/best-practices"}
+    content_searchable: true
+    overrides:
+      - {path: docs/best-practices/heritage-attestation-engine.md, lifecycle: draft, evidence: "Own front-matter status: DRAFT (2026-06-10), needs orchestrator and operator sign-off."}
+      - {path: docs/best-practices/word-atlas-design.md, lifecycle: draft, evidence: "Own front-matter status: DRAFT (2026-05-23), owner line asks for operator sign-off."}
+      - {path: docs/best-practices/api-ui-improvements-proposal.md, lifecycle: draft, evidence: "Own status line: v1 proposal (2026-05-18); no acceptance recorded."}
+
+  - id: runbooks
+    kind: doc_family
+    paths: [docs/runbooks/*]
+    purpose: Operating procedures for driver seats, harnesses, review isolation, sessions, handoffs, CI, storage, backup, worktree cleanup, module gates and builds.
+    keywords: [runbook, procedure, driver seat, formal review isolation, worktree cleanup, storage topology, storage layout, data layout, where data lives, CI gate, session supervisor, recovery]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: 'storage topology: where data is stored and lives on disk - the layout of bulk raw sources, active SQLite databases, the local working set, the Linux data volume and mirrors', path: docs/runbooks/storage-topology.md}
+      - {topic: worktree cleanup, path: docs/runbooks/worktree-cleanup.md}
+      - {topic: CI gate, path: docs/runbooks/ci-gate.md}
+      - {topic: agent seat onboarding, path: docs/runbooks/agent-seat-onboarding.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/runbooks"}
+    content_searchable: true
+
+  - id: runbooks-atlas
+    kind: doc_family
+    paths:
+      - docs/runbooks/atlas-*.md
+      - docs/runbooks/word-atlas-*.md
+      - docs/runbooks/teacher-curated-*.md
+      - docs/runbooks/stem-textbook-*.md
+    purpose: Word Atlas runbooks - entry model, source census and scope, static API, 20k runner durability, re-enrich campaign, teacher seed rebuild and textbook ingest.
+    keywords: [Word Atlas, entry model, source census, static API, re-enrich, Ohoiko, ULP source scope, textbook source scope]
+    lifecycle: active
+    owner: atlas-practice
+    entrypoints:
+      - {topic: Word Atlas entry model, path: docs/runbooks/word-atlas-entry-model.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/runbooks/word-atlas-*' 'docs/runbooks/atlas-*'"}
+    content_searchable: true
+
+  - id: runbooks-data-foundry
+    kind: doc_family
+    paths: [docs/runbooks/ukrainian-data-foundry-*.md]
+    purpose: Ukrainian Data Foundry build, admission, treatment, correction and model-view recipes.
+    keywords: [data foundry, corpus admission, reference build, correction factory, language contact detector, model views]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/runbooks/ukrainian-data-foundry-*'"}
+    content_searchable: true
+    overrides:
+      - {path: docs/runbooks/ukrainian-data-foundry-treatment.md, lifecycle: archive, evidence: "Own status: Archived historical preregistration (#6170 closed)."}
+
+  - id: templates
+    kind: doc_family
+    paths: [docs/templates/**]
+    purpose: Task handoff templates (issue, infrastructure, batch review, module correction, plan review, bug investigation) and the bio research dossier template.
+    keywords: [template, handoff template, dossier template, bug investigation]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/templates"}
+    content_searchable: true
+
+  - id: bug-autopsies
+    kind: doc_family
+    paths: [docs/bug-autopsies/**]
+    purpose: Root-cause write-ups of past incidents with a one-line-per-bug INDEX.md (date, issue, category, summary).
+    keywords: [bug autopsy, incident, root cause, postmortem, regression]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: incident index, path: docs/bug-autopsies/INDEX.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<symptom>' -- docs/bug-autopsies/INDEX.md"}
+    content_searchable: true
+
+  - id: small-harness-docs
+    kind: doc_family
+    paths: [docs/guardrails/**, docs/ops/**, docs/entire/**, docs/examples/**, docs/specs/**, docs/third-party/**, docs/playbooks/**]
+    purpose: Fleet tooling guardrail, fleet session-awareness charter, Entire recall receipts, launchd example, task-family manager spec and vendored third-party licence text.
+    keywords: [agent fleet guardrail, Gemini CLI, AGY route, supported agent routes, Entire, launchd example, task family manager, third-party licence, fleet agent eyes]
+    lifecycle: active
+    owner: infra-harness
+    entrypoints:
+      - {topic: supported agent fleet entry points, path: docs/guardrails/agent-fleet-tooling.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/guardrails docs/ops docs/entire docs/specs"}
+    content_searchable: true
+
+  - id: legacy-agent-docs
+    kind: doc_family
+    paths: [docs/agents/**, docs/ai_team/**, docs/dispatch-queue/**, docs/evidence/**, docs/workflows/**]
+    purpose: Legacy agent-team docs - the May 2026 capability snapshot, Blue/Yellow team personas, a fired May dispatch queue, a Gemini CLI dry-run receipt and the old /review-content command.
+    keywords: [agent capability matrix, team personas, dispatch queue, review-content command]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/agents docs/ai_team docs/dispatch-queue docs/workflows"}
+    content_searchable: true
+    overrides:
+      - {path: docs/agents/AGENT-CAPABILITY-MATRIX.md, lifecycle: superseded, superseded_by: docs/best-practices/agent-activity-matrix.md, evidence: "Own banner: historical capability snapshot; routing lives in the activity matrix and model catalog."}
+      - {path: docs/workflows/review-content.md, lifecycle: superseded, superseded_by: agents_extensions/shared/skills/content-review/SKILL.md, evidence: "Old slash command; the content-review skill is the current route."}
+
+  - id: ocr-setup-note
+    kind: doc_family
+    paths: [docs/ocr/**]
+    purpose: OCR provider note and credential-loading pattern (May 2026).
+    keywords: [OCR, OCR provider]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/ocr"}
+    content_searchable: true
+
+  - id: agent-channels
+    kind: registry
+    paths: [docs/agent-channels/**]
+    purpose: Per-channel context files the legacy agent bridge still auto-includes in posts; Fleet Comms now owns durable messages.
+    keywords: [agent bridge, channel context, legacy bridge]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/agent-channels"}
+    content_searchable: true
+
+  - id: session-state-routers
+    kind: doc_family
+    paths: [docs/session-state/**]
+    purpose: Compatibility handoff routers per agent served by the session API; body-light pointers only, no new handoffs here.
+    keywords: [session state, handoff router, current handoff]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: api, how: "GET /api/session/current?agent=<agent>&format=json"}
+    content_searchable: false
+    notes: Bodies are excluded from content search, matching the docs inventory's session-state exclusion; the directory README, which states that these files are compatibility routes and not live state, is read.
+
+  - id: handoffs-march-2026
+    kind: doc_family
+    paths: [docs/handoffs/**]
+    purpose: End-of-session handoff notes from March 2026; handoffs now go through Fleet Comms and the thread-handoff flow.
+    keywords: [handoff, session notes, March 2026]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/handoffs"}
+    content_searchable: true
+
+  - id: token-usage-reports
+    kind: generated
+    paths: [docs/token-usage/**]
+    purpose: A generated April 2026 Claude token report and a hand-written token waste report; not current usage.
+    keywords: [token usage, token report, token waste]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/token_usage.py --help (regenerates the report; writes files)"}
+    content_searchable: true
+
+  # ================================================================ dispatch briefs, plans, epics
+  - id: dispatch-briefs
+    kind: doc_family
+    paths: [docs/dispatch-briefs/**]
+    purpose: One-shot worker dispatch briefs (April to September 2026) and two batch folders; each describes finished task scope.
+    keywords: [dispatch brief, worker prompt, task brief, prompt file]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<issue number or term>' -- docs/dispatch-briefs"}
+    content_searchable: true
+
+  - id: dispatch-briefs-reusable
+    kind: doc_family
+    paths: [docs/dispatch-briefs/luna-max-closeout-contract.md, docs/dispatch-briefs/qg-bakeoff-*-1x17-sweep.md]
+    purpose: Reusable brief fragments - the GPT-6 Luna closeout contract and three QG bake-off 1x17 sweep instructions.
+    keywords: [closeout contract, Luna, QG bake-off sweep]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/dispatch-briefs/luna-max-closeout-contract.md 'docs/dispatch-briefs/qg-bakeoff-*'"}
+    content_searchable: true
+
+  - id: dispatch-briefs-upgrade-pilot
+    kind: doc_family
+    paths: [docs/dispatch-briefs/2026-09-12-cu-p0-pilot-*.md]
+    purpose: Writer, repair and review briefs for the abandoned --upgrade phase-0 pilot.
+    keywords: [upgrade pilot, cu-p0, things-have-gender]
+    lifecycle: superseded
+    superseded_by: docs/epics/fresh-build-build-program.md
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/dispatch-briefs/2026-09-12-cu-p0-pilot-*'"}
+    content_searchable: true
+
+  - id: plans
+    kind: doc_family
+    paths: [docs/plans/*]
+    purpose: Named plans of record and roadmaps; GitHub issue state wins over stale plan text.
+    keywords: [plan of record, roadmap, rollout plan, entire ACP context layer, primary text hosting]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/plans"}
+    content_searchable: true
+    overrides:
+      - {path: docs/plans/2026-06-15-claude-dispatch-sunset.md, lifecycle: archive, evidence: "Cutover planned for 2026-06-15; the related agent-SDK decision records the construct as cancelled."}
+
+  - id: plans-plan-mode-files
+    kind: doc_family
+    paths:
+      - docs/plans/abstract-pondering-hopper.md
+      - docs/plans/agile-baking-harp.md
+      - docs/plans/composed-sleeping-spring.md
+      - docs/plans/cryptic-tickling-meteor.md
+      - docs/plans/encapsulated-honking-abelson.md
+      - docs/plans/euphony-engine.md
+      - docs/plans/floating-herding-sonnet.md
+      - docs/plans/fluttering-painting-crayon.md
+      - docs/plans/giggly-exploring-crescent.md
+      - docs/plans/glowing-petting-aho.md
+      - docs/plans/greedy-bouncing-gizmo.md
+      - docs/plans/jiggly-soaring-forest.md
+      - docs/plans/lovely-soaring-iverson.md
+      - docs/plans/mellow-munching-biscuit.md
+      - docs/plans/moonlit-finding-popcorn.md
+      - docs/plans/partitioned-plotting-bachman.md
+      - docs/plans/partitioned-stirring-ullman.md
+      - docs/plans/peaceful-coalescing-glacier.md
+      - docs/plans/peaceful-coalescing-glacier-agent-a6cf894859709c20c.md
+      - docs/plans/robust-dancing-candle.md
+      - docs/plans/soft-wiggling-rabin.md
+      - docs/plans/sprightly-brewing-nest.md
+      - docs/plans/tranquil-cooking-muffin.md
+      - docs/plans/witty-hopping-puddle.md
+      - docs/plans/wondrous-toasting-pumpkin.md
+      - docs/plans/zippy-watching-moore.md
+    purpose: Auto-named Claude plan-mode files and the Euphony plan from the V4 to V6 era (February to April 2026).
+    keywords: [plan mode, V4 pipeline, V6 pipeline, euphony engine, B1 redesign]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/plans (file names carry no topic)"}
+    content_searchable: true
+
+  - id: plans-state-standard-gap-analyses
+    kind: evidence
+    paths:
+      - docs/plans/a2-state-standard-gap-analysis.md
+      - docs/plans/b1-state-standard-gap-analysis.md
+      - docs/plans/c1-state-standard-gap-analysis.md
+      - docs/plans/cross-level-reconciliation.md
+    purpose: March/April 2026 analyses of the old curriculum plans against the State Standard 2024.
+    keywords: [State Standard gap analysis, cross-level reconciliation]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/plans/*-state-standard-gap-analysis.md'"}
+    content_searchable: true
+
+  - id: plans-atlas-practice
+    kind: doc_family
+    paths: [docs/plans/atlas-*.md, docs/plans/2026-07-25-atlas-*.md, docs/plans/2026-07-27-atlas-practice-gradual-ramp.md, docs/plans/2026-09-21-practice-scouting-synthesis.md]
+    purpose: Atlas and Practice hub plans - open lexical layer, lexical inventory matrix, entry model, gradual ramp and practice scouting.
+    keywords: [Atlas plan, open lexical layer, entry model, practice ramp, practice scouting]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/plans/*atlas*' 'docs/plans/*practice*'"}
+    content_searchable: true
+    overrides:
+      - {path: docs/plans/2026-07-25-atlas-open-lexical-layer-ADVISORY-SYNTHESIS.md, lifecycle: archive, evidence: "Own status: Historical record of strategy consult."}
+
+  - id: ci-program
+    kind: doc_family
+    paths: [docs/plans/2026-09-02-ci-sweet-spot.md, docs/epics/ci-speed-program.md]
+    purpose: CI plan of record and the CI speed program (epic #8875 holds the live task list).
+    keywords: [CI, CI speed, sweet spot, test shards, CI plan]
+    lifecycle: active
+    owner: devops
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/plans/2026-09-02-ci-sweet-spot.md docs/epics/ci-speed-program.md"}
+    content_searchable: true
+
+  - id: hramatka-docs
+    kind: doc_family
+    paths: [docs/projects/hramatka/**, docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md]
+    purpose: Hramatka teacher lesson service - lesson document contract draft and the product roadmap.
+    keywords: [Hramatka, teacher lesson service, lesson document, product roadmap]
+    lifecycle: draft
+    owner: hramatka
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/hramatka docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md"}
+    content_searchable: true
+    notes: The draft default rests on lesson-document-v1.md's own status line (DRAFT for cross-family review). The roadmap carries no draft or accepted status and is residual.
+
+  - id: epics-fresh-build
+    kind: doc_family
+    paths: [docs/epics/fresh-build-*.md]
+    purpose: Core fresh lesson-based build program for A1 to B2 - requirements, build program, plan schema, writer and review contracts and the level arc plans.
+    keywords: [fresh build, core rebuild, build program, writer contract, review contracts, plan schema, A1 arc, A2 arc, B1 arc, B2 arc]
+    lifecycle: active
+    owner: curriculum-upgrade
+    entrypoints:
+      - {topic: core fresh build program, path: docs/epics/fresh-build-build-program.md}
+      - {topic: core build requirements, path: docs/epics/fresh-build-requirements.md}
+      - {topic: writer contract, path: docs/epics/fresh-build-writer-contract.md}
+      - {topic: review contracts, path: docs/epics/fresh-build-review-contracts.md}
+      - {topic: A1 arc plan, path: docs/epics/fresh-build-a1-arc.md}
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.build.fresh.cli --help"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/epics/fresh-build-*'"}
+    content_searchable: true
+    overrides:
+      - {path: docs/epics/fresh-build-a1-arc.md, lifecycle: draft, evidence: "Own header: Status draft r3."}
+
+  - id: epics-upgrade-abandoned
+    kind: doc_family
+    paths: [docs/epics/a1-upgrade-*.md, docs/epics/curriculum-upgrade-phase1-spec.md, docs/epics/upgrade-combined-qg-prompt*.md]
+    purpose: Landing contract, inventory, operating rules, phase-1 spec and combined QG prompt of the abandoned in-place --upgrade approach.
+    keywords: [upgrade approach, landing contract, operating rules, phase-1 spec, combined QG prompt]
+    lifecycle: superseded
+    superseded_by: docs/epics/fresh-build-build-program.md
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -F 'Superseded (2026-09-21)' -- docs/epics"}
+    content_searchable: true
+    overrides:
+      - {path: docs/epics/upgrade-combined-qg-prompt.md, lifecycle: archive, evidence: "Upgrade-era review prompt without a banner; the approach was abandoned."}
+      - {path: docs/epics/upgrade-combined-qg-prompt.sample.md, lifecycle: archive, evidence: "Sample of the upgrade-era review prompt; the approach was abandoned."}
+
+  - id: epics-other
+    kind: doc_family
+    paths: [docs/epics/*]
+    purpose: Other epic documents that are not part of the fresh-build or abandoned upgrade sets.
+    keywords: [epic, alignment pipeline]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/epics"}
+    content_searchable: true
+
+  # ================================================================ research and references
+  - id: research-bio-dossiers
+    kind: doc_family
+    paths: [docs/research/bio/**]
+    purpose: One research dossier per BIO module slug (sources, tiers, cross-track plan paths) feeding bio planning and builds.
+    keywords: [bio dossier, biography research, BIO track, figure dossier]
+    lifecycle: active
+    owner: seminars-bio
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/<slug>.md"}
+      - {surface: git_grep, how: "git grep -n -i -F '<name>' -- docs/research/bio"}
+    content_searchable: true
+
+  - id: research-folk-dossiers
+    kind: doc_family
+    paths: [docs/research/folk/**]
+    purpose: One research dossier or reading catalog per FOLK genre or topic, with supporting chunk ids.
+    keywords: [folk dossier, folk genre, reading catalog, FOLK track]
+    lifecycle: active
+    owner: seminars-folk
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/research/folk"}
+    content_searchable: true
+
+  - id: research-dataset-notes
+    kind: doc_family
+    paths: [docs/research/*]
+    purpose: Research notes, evidence records and decisions behind the Ukrainian dataset and open-model-data work, including the Literary Poltava candidate audit.
+    keywords: [dataset research, UNLP, corpus usability, diglossia, Literary Poltava, dialect dictionaries]
+    lifecycle: active
+    owner: open-model-data
+    entrypoints:
+      - {topic: Literary Poltava candidate authority, path: docs/research/hramatka_literary_poltava_candidate_audit.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/research/*.md'"}
+    content_searchable: true
+    overrides:
+      - {path: docs/research/UNLP_DATASET_SURVEY_AND_EVALUATION.md, lifecycle: superseded, superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md, evidence: "Own banner: superseded and non-operational."}
+      - {path: docs/research/DATASET_UNIQUENESS_AND_UNLP_GAP_ANALYSIS.md, lifecycle: superseded, superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md, evidence: "Own banner: superseded research claims."}
+
+  - id: research-atlas-session-reports
+    kind: evidence
+    paths: [docs/research/2026-06-12-*.md, docs/research/atlas/**, docs/research/lexicon/**]
+    purpose: Dated June 2026 Atlas and lexicon run reports and a calque candidate list.
+    keywords: [Atlas report, slovnyk wiring, synonym fix, calque candidates, kaikki fillability]
+    lifecycle: archive
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/research/atlas docs/research/lexicon 'docs/research/2026-06-12-*'"}
+    content_searchable: true
+
+  - id: research-retrieval-bakeoff
+    kind: evidence
+    paths: [docs/research/retrieval-bakeoff-9233/**]
+    purpose: Query sets, judging rubric and phase-1 results of the #9233 retrieval bake-off (exact FTS versus lemma-aware FTS versus embedder and reranker).
+    keywords: [retrieval bake-off, FTS, lemma-aware search, reranker, hit@20]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/research/retrieval-bakeoff-9233"}
+    content_searchable: true
+
+  - id: references-reading-notes
+    kind: doc_family
+    paths: [docs/references/*]
+    purpose: Reading notes and research surveys - UNLP 2025-2026 findings and a March 2026 lexical resource survey.
+    keywords: [UNLP findings, reading notes, lexical resources]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/references"}
+    content_searchable: true
+    overrides:
+      - {path: docs/references/gemini-lexical-research-2026-03-24.md, lifecycle: archive, evidence: "March 2026 survey; the lexical stack has since moved to the sources MCP and Atlas."}
+      - {path: "docs/references/Ukrainian Lexical Resource Gaps.docx", lifecycle: archive, evidence: "Binary copy of the March 2026 survey."}
+
+  - id: research-registry
+    kind: registry
+    paths: [docs/references/research-registry.yaml, docs/references/research-registry-pilot.md, docs/references/research-digests/**]
+    purpose: ADR-011 Project Research Registry of actionable findings with hashed digests, plus its pilot decision; separate from this catalogue.
+    keywords: [research registry, research digest, ADR-011, research pointer]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/audit/check_research_registry.py --check --json"}
+      - {surface: api, how: "GET /api/knowledge/manifest (disabled unless the research registry is switched on)"}
+    content_searchable: true
+
+  - id: references-dobra-forma
+    kind: resource_catalogue
+    paths: [docs/references/dobra-forma/**]
+    purpose: Local Markdown copy of the CC-licensed Dobra Forma grammar textbook chapters (University of Kansas).
+    keywords: [Dobra Forma, grammar textbook, University of Kansas, textbook chapters]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/references/dobra-forma"}
+    content_searchable: true
+
+  - id: references-textbook-urls
+    kind: registry
+    paths: [docs/references/textbook-urls.yaml]
+    purpose: Maps textbook ids to source URLs for stamping textbook links.
+    keywords: [textbook URL, textbook id, source URL]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<textbook-id>' -- docs/references/textbook-urls.yaml"}
+    content_searchable: true
+
+  - id: references-external
+    kind: resource_catalogue
+    paths: [docs/references/external/**]
+    purpose: A saved external HTML article.
+    keywords: [saved article, external reference]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: api, how: "GET /artifacts/references/<file>"}
+    content_searchable: true
+
+  - id: experiments-and-reboot-references
+    kind: evidence
+    paths: [docs/experiments/**, docs/reboot/**]
+    purpose: The April 2026 five-writer bake-off (plan, results, prompts) and hand-crafted reboot Phase 8 reference material.
+    keywords: [writer bake-off, reboot phase 8, reference modules]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/experiments docs/reboot"}
+    content_searchable: true
+
+  - id: archive
+    kind: doc_family
+    paths: [docs/archive/**]
+    purpose: Frozen archive of retired V5/V6-era guides, analyses, plans, root scratch files and old eval docs.
+    keywords: [archive, retired guide, V5, V6, damage report]
+    lifecycle: archive
+    owner: docs-knowledge
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/archive (not served by the docs API)"}
+    content_searchable: true
+
+  # ================================================================ audits and reports
+  - id: audits-core
+    kind: evidence
+    paths: [docs/audits/*]
+    purpose: Dated June/July 2026 score ledgers, readiness and quality audits of the old core modules (A1, A2, B1, B2).
+    keywords: [LLM scores, B2 audit, preflight readiness, quality audit, score normalization]
+    lifecycle: archive
+    owner: core-quality
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/audits"}
+    content_searchable: true
+
+  - id: audits-bio
+    kind: evidence
+    paths: [docs/audits/bio-*]
+    purpose: BIO track audits - gap audit and its frozen tally, readiness matrix, Bilash gate reviews, expansion research and the decolonization checklist.
+    keywords: [bio audit, bio readiness, Bilash gate, bio expansion, decolonization checklist]
+    lifecycle: archive
+    owner: seminars-bio
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/audits/bio-*'"}
+    content_searchable: true
+    overrides:
+      - {path: docs/audits/bio-decolonization-checklist.md, lifecycle: active, evidence: "Standing checklist, not a dated snapshot."}
+      - {path: docs/audits/bio-track-gap-audit-2026-05-26.lock.md, lifecycle: active, evidence: "Own text: frozen tally for epic #2309."}
+
+  - id: audits-bio-lit-cross-reference
+    kind: generated
+    paths: [docs/audits/bio-lit-cross-reference-*.md]
+    purpose: Regenerated list of bio modules lacking LIT counterparts, plus exclusions.
+    keywords: [bio lit cross reference, LIT counterpart]
+    lifecycle: active
+    owner: seminars-bio
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/audit/bio_lit_cross_reference.py --help (regenerates the gaps file)"}
+    content_searchable: true
+
+  - id: audits-folk
+    kind: evidence
+    paths: [docs/audits/folk-*]
+    purpose: June 2026 FOLK preflight readiness and reading coverage audits.
+    keywords: [folk readiness, reading coverage]
+    lifecycle: archive
+    owner: seminars-folk
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/audits/folk-*'"}
+    content_searchable: true
+
+  - id: audits-tooling
+    kind: evidence
+    paths: [docs/audits/codeql-*, docs/audits/prompt-audit-fable-5-1-2026-09-01.md, docs/audits/slovnyk-me-ingestion-feasibility.md]
+    purpose: CodeQL triage and its cleanup diff, a September prompt-size audit and the slovnyk.me ingestion feasibility study.
+    keywords: [CodeQL, prompt audit, slovnyk.me feasibility]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/audits/codeql-*' docs/audits/prompt-audit-fable-5-1-2026-09-01.md"}
+    content_searchable: true
+
+  - id: audits-open-model-data
+    kind: evidence
+    paths: [docs/audits/2026-09-11-uldr-program-audit.md]
+    purpose: September 2026 ULDR program audit; earlier verdicts inside apply only to their named heads.
+    keywords: [ULDR audit, open-model-data audit]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/audits/2026-09-11-uldr-program-audit.md"}
+    content_searchable: true
+
+  - id: reports-analyses
+    kind: evidence
+    paths: [docs/reports/*]
+    purpose: Dated analysis reports - vocabulary audits, A1 macro review, April diagnoses, dashboard endpoint audit and the July model qualification benchmark.
+    keywords: [model qualification benchmark, dashboard endpoint audit, vocabulary audit, A1 macro review]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/reports"}
+    content_searchable: true
+
+  - id: reports-oneshot-scripts-and-drafts
+    kind: generated
+    paths: [docs/reports/*.py, docs/reports/gh_comment_*.md, docs/reports/gh_issue_chunking.md]
+    purpose: April 2026 one-off migration scripts and drafted GitHub comments; not wired into any tool.
+    keywords: [one-off script, GitHub comment draft, plan migration]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<issue number>' -- docs/reports"}
+    content_searchable: true
+
+  - id: reports-a1-reviews
+    kind: evidence
+    paths: [docs/reports/a1_reviews/**]
+    purpose: January 2026 per-module AI review scorecards of the old A1 modules.
+    keywords: [A1 review, module scorecard, old A1]
+    lifecycle: archive
+    owner: core-quality
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<module title>' -- docs/reports/a1_reviews"}
+    content_searchable: true
+
+  - id: issues-reports
+    kind: evidence
+    paths: [docs/issues/**]
+    purpose: January/February 2026 B1/B2/C1 rebuild audit reports, completion notes and OES/C1-BIO research artefacts; not GitHub issues.
+    keywords: [B1 audit, B2 audit, C1 audit, rebuild audit, OES research, Claude Code 2.1]
+    lifecycle: archive
+    owner: core-quality
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/issues (for live issue state use gh)"}
+    content_searchable: true
+
+  - id: dev-notes
+    kind: doc_family
+    paths: [docs/dev/**]
+    purpose: January to March 2026 developer notes, migration contexts, vocabulary workflow notes and naturalness scans of the old modules.
+    keywords: [developer notes, migration context, vocabulary workflow, naturalness scan, narrative engine]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/dev"}
+    content_searchable: true
+
+  - id: status-snapshots
+    kind: generated
+    paths: [docs/status/**]
+    purpose: February 2026 per-level STATUS.md snapshots; live status is the per-module status JSON and the Monitor API.
+    keywords: [level status, module status snapshot, STATUS.md]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: api, how: "GET /api/state/manifest (live module status)"}
+    content_searchable: true
+
+  # ================================================================ curriculum docs
+  - id: prompts-legacy-orchestrators
+    kind: doc_family
+    paths: [docs/prompts/orchestrators/**]
+    purpose: Legacy per-track orchestrator prompt suite kept as hash-checked evaluation and historical reference; not lifecycle authority.
+    keywords: [orchestrator prompt, track prompt suite, legacy prompts]
+    lifecycle: superseded
+    superseded_by: agents_extensions/shared/skills/curriculum-lifecycle/SKILL.md
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/prompts/orchestrators"}
+    content_searchable: true
+
+  - id: prompts-templates
+    kind: doc_family
+    paths: [docs/prompts/*]
+    purpose: Curriculum prompt templates - A2 certification and plan writing, B1 batch build template, tutor prompt reference.
+    keywords: [prompt template, A2 certification, plan writing prompt, tutor prompt]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/prompts"}
+    content_searchable: true
+    overrides:
+      - {path: docs/prompts/tutor-prompt-reference.md, lifecycle: archive, evidence: "Own header: reference for the V6 writer prompt (#995)."}
+
+  - id: l2en-templates
+    kind: doc_family
+    paths: [docs/l2-uk-en/templates/**]
+    purpose: Per-level and per-type module section templates and the detailed meta schema read by the audit template-compliance check.
+    keywords: [module template, section template, template compliance]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<section>' -- docs/l2-uk-en/templates"}
+    content_searchable: true
+
+  - id: l2en-archive
+    kind: doc_family
+    paths: [docs/l2-uk-en/_archive/**]
+    purpose: Retired per-level curriculum plans (RFC #409 era); live plans are under curriculum/l2-uk-en/plans.
+    keywords: [archived curriculum plan, RFC 409]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/l2-uk-en/_archive"}
+    content_searchable: true
+
+  - id: l2en-live-config
+    kind: registry
+    paths:
+      - docs/l2-uk-en/level-status.yaml
+      - docs/l2-uk-en/state-standard-2024-mapping.yaml
+      - docs/l2-uk-en/template_mappings.yaml
+      - docs/l2-uk-en/v4-seminar-section-templates.yaml
+    purpose: Machine-read YAML - planned module counts per level, State Standard line mapping, level-to-template rules and seminar section templates.
+    keywords: [level status, State Standard mapping, template mapping, seminar section templates]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<key>' -- docs/l2-uk-en/level-status.yaml docs/l2-uk-en/state-standard-2024-mapping.yaml"}
+    content_searchable: true
+
+  - id: state-standard-2024
+    kind: resource_catalogue
+    paths: [docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt, docs/l2-uk-en/UKRAINIAN-STANDARD-INDEX.md]
+    purpose: Full text of the Ukrainian State Standard 2024 and an index mapping topics to line ranges.
+    keywords: [State Standard 2024, Державний стандарт, CEFR standard text, standard line index]
+    lifecycle: active
+    owner: curriculum-upgrade
+    entrypoints:
+      - {topic: State Standard 2024 full text, path: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<topic>' -- docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt"}
+    content_searchable: true
+
+  - id: l2en-generated-plan-snapshots
+    kind: generated
+    paths: [docs/l2-uk-en/*-PLAN-GENERATED.md]
+    purpose: Markdown snapshots generated from the January/February 2026 YAML plans; stale against the live plans.
+    keywords: [generated plan, plan snapshot, track plan]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/l2-uk-en/*-PLAN-GENERATED.md'"}
+    content_searchable: true
+
+  - id: l2en-authoring-guidelines
+    kind: doc_family
+    paths:
+      - docs/l2-uk-en/ACTIVITY-GUIDELINES.md
+      - docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md
+      - docs/l2-uk-en/RICHNESS-BY-MODULE-TYPE.md
+      - docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md
+      - docs/l2-uk-en/LINGUISTIC-PURITY-GUIDE.md
+      - docs/l2-uk-en/MODULE-SKELETON.md
+      - docs/l2-uk-en/LEVEL-REVIEW-WORKFLOW.md
+      - docs/l2-uk-en/VOCABULARY-HANDLING-SYSTEM.md
+      - docs/l2-uk-en/YAML-ACTIVITY-MIGRATION-PLAN.md
+      - docs/l2-uk-en/UKRAINIAN-CEFR-RESEARCH.md
+      - docs/l2-uk-en/SPECIALIZATION-TRACKS.md
+      - docs/l2-uk-en/TRACKS-MASTER-SCORECARD.md
+    purpose: V5/V6-era module authoring guidelines (richness, activities, checkpoints, purity, review workflow); valid only where current standards are silent.
+    keywords: [richness guidelines, activity guidelines, checkpoint design, linguistic purity, module skeleton]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/l2-uk-en"}
+    content_searchable: true
+    overrides:
+      - {path: docs/l2-uk-en/ACTIVITY-GUIDELINES.md, lifecycle: superseded, superseded_by: docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md, evidence: "Own banner: DEPRECATED, consolidated into MODULE-RICHNESS-GUIDELINES-v2.md."}
+
+  - id: l2en-dobra-forma-and-media
+    kind: doc_family
+    paths:
+      - docs/l2-uk-en/DOBRA-FORMA-*.md
+      - docs/l2-uk-en/OPUS-PROMPT-DOBRA-FORMA-VERB-STUDY.md
+      - docs/l2-uk-en/READING-MANIFEST.md
+      - docs/l2-uk-en/MEDIA-SOURCES.md
+      - docs/l2-uk-en/resources.md
+    purpose: December 2025/January 2026 mapping of Dobra Forma, reading lists and media sources to modules.
+    keywords: [Dobra Forma mapping, reading manifest, media sources]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/l2-uk-en/DOBRA-FORMA-*' docs/l2-uk-en/MEDIA-SOURCES.md"}
+    content_searchable: true
+
+  - id: l2en-level-plans-and-proposals
+    kind: doc_family
+    paths:
+      - docs/l2-uk-en/*-IMPROVEMENT-PLAN.md
+      - docs/l2-uk-en/*-RESTRUCTURE-*.md
+      - docs/l2-uk-en/*-MEDIA-ASSIGNMENT.md
+      - docs/l2-uk-en/*-CURRICULUM-V?.md
+      - docs/l2-uk-en/B1-GAP-ANALYSIS*.md
+      - docs/l2-uk-en/B2-COUNTER-PROPOSAL.md
+      - docs/l2-uk-en/B2-GEMINI-EXPANSION-PROPOSAL.md
+      - docs/l2-uk-en/C1-REVIEW-PROPOSAL.md
+      - docs/l2-uk-en/STEM-TRACK-PROPOSAL.md
+      - docs/l2-uk-en/A1_COMPLETION_REPORT.md
+      - docs/l2-uk-en/ANTIGRAVITY-BRIEF-A1-M28-34.md
+      - docs/l2-uk-en/B1-CEFR-MAPPING.md
+      - docs/l2-uk-en/MODULE-WRITING-SUBTICKETS.md
+      - docs/l2-uk-en/REORGANIZATION-PLAN.md
+      - docs/l2-uk-en/RFC-409-PLAN-VERIFICATION.md
+      - docs/l2-uk-en/STATE-STANDARD-COMPLIANCE-ANALYSIS.md
+      - docs/l2-uk-en/curriculum-redesign-v5.md
+    purpose: January to May 2026 level improvement and restructure plans, media assignments, curriculum drafts, gap analyses and proposals for the old curriculum.
+    keywords: [improvement plan, restructure plan, media assignment, curriculum draft, gap analysis, RFC 409]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/l2-uk-en"}
+    content_searchable: true
+
+  - id: l2-uk-direct-plans
+    kind: doc_family
+    paths: [docs/l2-uk-direct/*]
+    purpose: Planning documents for the L1-agnostic l2-uk-direct track (A1 to B2); the track has had no commits since 2026-03-06.
+    keywords: [l2-uk-direct, direct track, L1-agnostic]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/l2-uk-direct"}
+    content_searchable: true
+
+  - id: textbook-catalog
+    kind: registry
+    paths:
+      - docs/l2-uk-direct/textbook-selection.yaml
+      - docs/l2-uk-direct/textbook-map.yaml
+      - docs/l2-uk-direct/pidruchnyk-catalog.yaml
+    purpose: Registries of selected school textbooks, their curriculum mapping and the pidruchnyk catalog, used by the textbook download and Atlas source inventory.
+    keywords: [textbook selection, textbook map, pidruchnyk catalog, school textbooks]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<slug>' -- docs/l2-uk-direct/textbook-selection.yaml docs/l2-uk-direct/textbook-map.yaml"}
+    content_searchable: true
+
+  - id: textbook-reading-notes
+    kind: evidence
+    paths: [docs/l2-uk-direct/textbook-reading-notes/**]
+    purpose: Notes on grade 3 to 6 textbooks and the State Standard; cited as provenance by the Atlas source inventory.
+    keywords: [textbook reading notes, Bolshakova, Vashulenko, Avramenko, Kravtsova]
+    lifecycle: archive
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/l2-uk-direct/textbook-reading-notes"}
+    content_searchable: true
+
+  - id: style-cards
+    kind: registry
+    paths: [docs/style-cards/**]
+    purpose: Writer style cards for the a1, a2 and b1plus bands with pinned SHA-256 digests, injected into core fresh-build writer prompts.
+    keywords: [style card, writer band, writer contract, digest pin]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.build.fresh.cli render-prompt --help"}
+    content_searchable: true
+
+  - id: build-rule-data
+    kind: registry
+    paths: [docs/rules/**]
+    purpose: Build-tooling data, not binding rules - the VESUM false-positive whitelist, the pedagogy pattern library and the global friction log, read by the pipeline and VESUM checks.
+    keywords: [VESUM whitelist, false positive, pedagogy patterns, friction log]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<word>' -- docs/rules/vesum-whitelist.yaml"}
+    content_searchable: true
+    notes: Binding agent rules live in agents_extensions/shared/rules/ and are served at /api/rules.
+
+  - id: pedagogy
+    kind: doc_family
+    paths: [docs/pedagogy/**]
+    purpose: A1/A2 lesson construction standard, retrofit audit protocol, template and report, and the commercial-source use policy.
+    keywords: [lesson construction, retrofit audit, commercial source policy]
+    lifecycle: active
+    owner: curriculum-upgrade
+    entrypoints:
+      - {topic: commercial learning material policy, path: docs/pedagogy/commercial-source-policy.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/pedagogy"}
+    content_searchable: true
+    overrides:
+      - {path: docs/pedagogy/a1-m1-m7-retrofit-audit.md, lifecycle: archive, evidence: "Audit of the old A1 modules 1-7 (2026-06-05)."}
+
+  - id: human-and-exam-eval
+    kind: doc_family
+    paths: [docs/eval/**, docs/evaluations/**]
+    purpose: Native-speaker module evaluation rubric and template, and the ZNO/NMT exam evaluation harness guide.
+    keywords: [human evaluation, rubric, ZNO, NMT, exam evaluation]
+    lifecycle: active
+    owner: core-quality
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/eval/human_eval_tracker.py --help"}
+      - {surface: cli, how: ".venv/bin/python -m scripts.eval.zno_nmt --help"}
+    content_searchable: true
+
+  - id: content-review-reports
+    kind: evidence
+    paths: [docs/reviews/**]
+    purpose: February/April 2026 dialogue-situations review and hallucinated-proverbs audit of pre-rebuild modules.
+    keywords: [dialogue review, proverb audit, hallucination audit]
+    lifecycle: archive
+    owner: core-quality
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/reviews"}
+    content_searchable: true
+
+  - id: folk-epic-specs
+    kind: doc_family
+    paths: [docs/folk-epic/**, docs/reference/**]
+    purpose: FOLK seminar standards, review rubric, dossier and text-layer specs, quality-gate designs and queue, plus a folk micro-genre reference list.
+    keywords: [folk framing standard, exemplar standard, folk review rubric, folk dossier schema, folk queue, riddles, proverbs]
+    lifecycle: active
+    owner: seminars-folk
+    entrypoints:
+      - {topic: FOLK framing standard, path: docs/folk-epic/FOLK-FRAMING-STANDARD.md}
+      - {topic: FOLK review rubric, path: docs/folk-epic/folk-review-rubric.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/folk-epic"}
+    content_searchable: true
+
+  - id: bio-epic-queues
+    kind: doc_family
+    paths: [docs/bio-epic/**]
+    purpose: BIO phase-2 sequence allocation and the phase-4 wiki rewrite queue with its rubric (epic #2309).
+    keywords: [bio wiki queue, phase-4 rubric, bio allocation]
+    lifecycle: active
+    owner: seminars-bio
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<slug>' -- docs/bio-epic"}
+    content_searchable: true
+
+  # ================================================================ resources (external learning material)
+  - id: resources-external-links
+    kind: resource_catalogue
+    paths: [docs/resources/external_resources*, docs/resources/EXTERNAL_RESOURCES_SCHEMA.md]
+    purpose: Per-module external resource links (articles, videos) read by the audit gate and wiki enrichment, with its schema and two stray copies.
+    keywords: [external resources, module links, ukrainianlessons articles, videos per module]
+    lifecycle: active
+    owner: curriculum-upgrade
+    entrypoints:
+      - {topic: per-module external resource links, path: docs/resources/external_resources.yaml}
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<module-slug>' -- docs/resources/external_resources.yaml"}
+      - {surface: cli, how: ".venv/bin/python scripts/audit/audit_external_resources.py --help"}
+    content_searchable: true
+    overrides:
+      - {path: docs/resources/external_resources.yaml.backup, lifecycle: superseded, superseded_by: docs/resources/external_resources.yaml, evidence: "Stray backup copy; no consumer."}
+      - {path: docs/resources/external_resources.yaml.truncated, lifecycle: superseded, superseded_by: docs/resources/external_resources.yaml, evidence: "Stray truncated copy; no consumer."}
+      - {path: docs/resources/EXTERNAL_RESOURCES_SCHEMA.md, lifecycle: draft, evidence: "Own status: Draft (v1.1, 2026-03-10; issues #353 and #816)."}
+
+  - id: resources-curated-link-maps
+    kind: resource_catalogue
+    paths:
+      - docs/resources/trusted_sources.yaml
+      - docs/resources/ulp-resources.yaml
+      - docs/resources/ulp-alphabet.yaml
+      - docs/resources/ulp-articles-index.yaml
+      - docs/resources/ulp-article-mappings.yaml
+      - docs/resources/miyklas-resources.yaml
+      - docs/resources/miyklas-url-index.yaml
+      - docs/resources/podcasts/ulp_mapping.yaml
+    purpose: Curated trusted-source registry and ULP and Miyklas resource-to-module maps (including the recommended ULP podcast episodes per module) used by build enrichment and the resource-catalogue ingest; ULP is link-only (commercial).
+    keywords: [trusted sources, ULP resources, ULP articles, Miyklas, Ukrainian Lessons Podcast links]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/resources/*.yaml'"}
+    content_searchable: true
+
+  - id: resources-scraped-catalogs
+    kind: resource_catalogue
+    paths:
+      - docs/resources/dobraforma/**
+      - docs/resources/talkukrainian/**
+      - docs/resources/verba/**
+      - docs/resources/podcasts/*.json
+      - docs/resources/podcasts/raw_lists/**
+      - docs/resources/ukrainianlessons/*.json
+    purpose: Scraped catalogs of learning resources - Ukrainian Lessons Podcast episode lists and database, ULP blog, Dobra Forma, TalkUkrainian and Verba - with module relevance scores.
+    keywords: [podcast episodes, Ukrainian Lessons Podcast, ULP episode list, season, blog catalog, TalkUkrainian, Verba, Dobra Forma]
+    lifecycle: active
+    owner: curriculum-upgrade
+    entrypoints:
+      - {topic: ULP podcast episode lists by season, path: docs/resources/podcasts/raw_lists/seasons_1_3.txt}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<episode or title>' -- docs/resources/podcasts docs/resources/ukrainianlessons"}
+      - {surface: cli, how: ".venv/bin/python scripts/content/video_discovery.py --help"}
+    content_searchable: true
+    notes: Not in sources.db, so no sources MCP tool reaches these catalogs (#9409 covers resource catalogue intake).
+
+  - id: resources-mapping-reports
+    kind: evidence
+    paths: [docs/resources/podcasts/*.md, docs/resources/ukrainianlessons/*.md]
+    purpose: January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic #334).
+    keywords: [podcast mapping, ULP mapping report, blog mapping methodology]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/resources/podcasts/*.md' 'docs/resources/ukrainianlessons/*.md'"}
+    content_searchable: true
+
+  # ================================================================ Atlas, practice, lexicon
+  - id: atlas-word-cards
+    kind: doc_family
+    paths: [docs/atlas/word-cards/**]
+    purpose: Word Atlas word-card schema, identity rules, migration, ULIF source-record notes and worked example cards.
+    keywords: [word card, word card schema, identity registry, ULIF source records, worked examples]
+    lifecycle: active
+    owner: atlas-practice
+    entrypoints:
+      - {topic: word card schema, path: docs/atlas/word-cards/schema.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<field>' -- docs/atlas/word-cards"}
+    content_searchable: true
+
+  - id: atlas-evidence
+    kind: evidence
+    paths: [docs/atlas/*]
+    purpose: Atlas point-in-time reports - Tatoeba cloze yield, lesson-link removals and curated-membership reconciliation.
+    keywords: [Tatoeba cloze, curated membership, lesson link removals]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/atlas"}
+    content_searchable: true
+
+  - id: practice-specs
+    kind: doc_family
+    paths: [docs/practice/*]
+    purpose: Practice hub specifications and operator policy - imperative practice, K3 build, curated membership, teacher deck, layout UX and difficulty calibration.
+    keywords: [practice hub, imperative practice, K3 build, teacher deck, curated membership, layout UX]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/practice"}
+    content_searchable: true
+
+  - id: practice-residual-evidence
+    kind: evidence
+    paths: [docs/practice/*-residual*.md, docs/practice/IMPERATIVE-HELD-OUT-AUDIT-200.md, docs/practice/synonym-withdrawal-8714.md]
+    purpose: Tool-backed practice residual taxonomies (cloze, paronym, relation, calque), the synonym withdrawal record and an imperative held-out audit.
+    keywords: [residual taxonomy, cloze residual, paronym residual, synonym withdrawal, held-out audit]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'docs/practice/*residual*'"}
+    content_searchable: true
+
+  - id: lexicon-sum11-audit
+    kind: evidence
+    paths: [docs/lexicon/**]
+    purpose: Audit of SUM-11 references in lexicon scripts plus held and confirmed relation and source TSVs for the Soviet-era dictionary guard.
+    keywords: [SUM-11 audit, СУМ-11, relation guard, Soviet dictionary]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<term>' -- docs/lexicon"}
+    content_searchable: true
+
+  - id: poc-designs
+    kind: doc_family
+    paths: [docs/poc/**]
+    purpose: HTML proof-of-concept page designs (lesson, folk, lit, site) and the Word Atlas per-page designs, route map and hub specs.
+    keywords: [POC design, mockup, Word Atlas design, practice hub spec, slovnyk hub]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: api, how: "GET /artifacts/poc/<file>"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/poc"}
+    content_searchable: true
+    overrides:
+      - {path: docs/poc/word-atlas/SLOVNYK-HUB-LAYERS.md, lifecycle: draft, evidence: "Own status: proposed implementation standard (2026-08-08)."}
+
+  - id: sources-permissions-register
+    kind: registry
+    paths: [docs/sources/**]
+    purpose: Source citation and provenance register (rights holder, terms, citation, removal route) for word cards, the Atlas and the open dataset; the YAML is authoritative.
+    keywords: [permissions register, source rights, citation, provenance, licence]
+    lifecycle: active
+    owner: atlas-practice
+    entrypoints:
+      - {topic: source rights and citation register, path: docs/sources/permissions-register.yaml}
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<source id>' -- docs/sources/permissions-register.yaml"}
+    content_searchable: true
+
+  # ================================================================ projects
+  - id: projects-open-model-data
+    kind: doc_family
+    paths: [docs/projects/open-model-data/**]
+    purpose: ULDR decolonization and reasoning dataset specs, phase plans, runbooks and the paper outline (epics #6321, #7423); the HF pilot is withdrawn.
+    keywords: [ULDR, decolonization dataset, grammar dataset spec, dataset acceptance check, source record contract]
+    lifecycle: active
+    owner: open-model-data
+    entrypoints:
+      - {topic: open-model-data project entry, path: docs/projects/open-model-data/README.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/open-model-data"}
+    content_searchable: true
+    overrides:
+      - {path: docs/projects/open-model-data/PHASE_3_6_PILOT_CANARY.md, lifecycle: superseded, superseded_by: docs/projects/open-model-data/REAL_TRAINING_RUN_SCORECARD_8338.md, evidence: "Own banner: withdrawn 2026-09-25, pilot data failed acceptance; superseded by Issue #8338, whose scorecard is REAL_TRAINING_RUN_SCORECARD_8338.md."}
+      - {path: docs/projects/open-model-data/PILOT_VERIFICATION_AND_DELIBERATION.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25."}
+      - {path: docs/projects/open-model-data/PRODUCTION_RELEASE_PLAN.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25."}
+      - {path: docs/projects/open-model-data/PHASE_3_7_PRODUCTION_SHARDS.md, lifecycle: archive, evidence: "Own banner: ARCHIVED / SUPERSEDED 2026-09-22."}
+      - {path: docs/projects/open-model-data/cycle007-evidence-compile-throughput.md, lifecycle: archive, evidence: "Own banner: historical record, not an active execution contract."}
+      - {path: docs/projects/open-model-data/cycle007-labeling-runtime.md, lifecycle: archive, evidence: "Own banner: historical record, not an active execution contract."}
+      - {path: docs/projects/open-model-data/cycle007-storage-custody.md, lifecycle: archive, evidence: "Own banner: historical record, not an active execution contract."}
+      - {path: docs/projects/open-model-data/cyrillic-slavic-dataset-delivery-plan.md, lifecycle: archive, evidence: "Own banner: historical V4 mechanism; original-row generation stopped."}
+      - {path: docs/projects/open-model-data/v4-real-slot-mechanism-runbook.md, lifecycle: archive, evidence: "Own banner: historical V4 mechanism; original-row generation stopped."}
+
+  - id: projects-foundry-evidence
+    kind: evidence
+    paths: [docs/projects/ukrainian-data-foundry-evidence/**, docs/projects/ukrainian-data-foundry-adoption/**]
+    purpose: Text-free Data Foundry evidence reports on the human-authored source inventory (provenance, custody, extraction, phase 2-3 contracts) and the community adoption kit.
+    keywords: [data foundry evidence, document signals, custody, extraction, human source dataset]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/ukrainian-data-foundry-evidence"}
+    content_searchable: true
+
+  - id: projects-eval-packages
+    kind: doc_family
+    paths: [docs/projects/ua-eval-harness/**, docs/projects/ua-open-weight-eval/**]
+    purpose: Public docs of the frozen UA Eval 0.1.1 correction benchmark and the UA open-weight evaluation 0.1.0 suite.
+    keywords: [UA Eval, benchmark, open-weight evaluation, data card, contamination policy]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.projects.ua_open_weight_eval.suite_cli --help"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/ua-eval-harness docs/projects/ua-open-weight-eval"}
+    content_searchable: true
+
+  - id: projects-qg-quality-gate
+    kind: doc_family
+    paths: [docs/projects/qg-quality-gate/**]
+    purpose: Calque and grammar quality-gate evidence schema, gate designs, annotation guides, fixture rights and scoring docs.
+    keywords: [quality gate, calque gate, annotation guide, fixture rights, Layer B]
+    lifecycle: active
+    owner: core-quality
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/qg-quality-gate"}
+    content_searchable: true
+    overrides:
+      - {path: docs/projects/qg-quality-gate/layerb-entailment-gate-design.md, lifecycle: archive, evidence: "Own banner: shelved 2026-10-01 with no cutover; preserved for reference (decision 2026-10-01)."}
+
+  - id: projects-fleet-design-memos
+    kind: doc_family
+    paths:
+      - docs/projects/arc-layer/**
+      - docs/projects/fleet-taxonomy/**
+      - docs/projects/fleet-trails/**
+      - docs/projects/launcher-consolidation/**
+      - docs/projects/vesum/**
+    purpose: Single-file advisor design memos - arc layer, fleet taxonomy alias audit, fleet trails, launcher consolidation and the VESUM re-ingest design.
+    keywords: [arc layer, launcher consolidation, fleet trails, fleet taxonomy, VESUM re-ingest]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/arc-layer docs/projects/fleet-trails docs/projects/launcher-consolidation docs/projects/vesum"}
+    content_searchable: true
+
+  - id: projects-folk-remediation
+    kind: doc_family
+    paths: [docs/projects/folk-reading-coverage-remediation.md]
+    purpose: FOLK reading coverage remediation tracker.
+    keywords: [folk reading coverage, remediation]
+    lifecycle: active
+    owner: seminars-folk
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/folk-reading-coverage-remediation.md"}
+    content_searchable: true
+
+  # ================================================================ registry/
+  - id: registry-reference-inputs
+    kind: registry
+    paths:
+      - registry/authors_rights.yaml
+      - registry/canonical_anchors.yaml
+      - registry/folk_heritage_attestations.yaml
+      - registry/folk_micro_genres.yaml
+      - registry/foreign_proper_noun_attestations.yaml
+      - registry/historical_language_corpus_denominator.yaml
+      - registry/pidruchnyk_urls.yaml
+      - registry/primary_text_sources.yaml
+      - registry/textbook_curriculum_denominator.yaml
+      - registry/university_corpus_denominator.yaml
+      - registry/lexicon-dataset.pointer.json
+      - registry/lt_replacements.json
+      - registry/russianism-patterns-ua-gec.csv
+    purpose: Frozen reference inputs and denominators - authors' rights, canonical anchors, folk and proper-noun attestations, primary text sources, textbook, university and historical corpus denominators, Russianism patterns and replacement table.
+    keywords: [authors rights, canonical anchors, attestations, primary text sources, corpus denominator, Russianism patterns]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<name>' -- 'registry/*.yaml' 'registry/*.json' 'registry/*.csv'"}
+    content_searchable: true
+
+  - id: registry-artifacts
+    kind: registry
+    paths: [registry/artifacts/**]
+    purpose: Group manifests that bind content-addressed payloads in the local artifact store, the frozen storage classification table, consumer lists, test baselines and the tracked-data allowlist.
+    keywords: [artifact manifest, artifact store, classification table, tracked-data allowlist, test baseline]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status"}
+      - {surface: git_grep, how: "git grep -n -F '<group>' -- registry/artifacts"}
+    content_searchable: true
+
+  - id: registry-storage-migration-notes
+    kind: evidence
+    paths: [registry/artifacts/notes-P*.md, registry/artifacts/host-run-p*.junit.xml]
+    purpose: Storage-migration phase notes and host-run JUnit receipts.
+    keywords: [storage migration notes, host run junit]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'registry/artifacts/notes-P*.md'"}
+    content_searchable: true
+
+  - id: registry-corpus-audit
+    kind: evidence
+    paths: [registry/corpus_audit/**]
+    purpose: Corpus gap taxonomy, ingestion roadmap and NAVSI-200 catalog.
+    keywords: [corpus gap, ingestion roadmap, NAVSI-200]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- registry/corpus_audit"}
+    content_searchable: true
+
+  - id: registry-corpus-audit-draft-tickets
+    kind: doc_family
+    paths: [registry/corpus_audit/draft_tickets/**]
+    purpose: Draft ingestion tickets for grammar-source blocker cases, one per source and topic, awaiting human approval before filing.
+    keywords: [draft tickets, ingestion ticket, blocker case, grammar source]
+    lifecycle: draft
+    owner: corpus-channels
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- registry/corpus_audit/draft_tickets"}
+    content_searchable: true
+    notes: Every file opens with a '# Draft — Ingest …' heading; the draft-marker scan finds all twelve.
+
+  - id: registry-corpus-channels
+    kind: registry
+    paths: [registry/external_articles/**, registry/youtube_discovery/**]
+    purpose: External-article channel list and YouTube discovery search patterns for corpus acquisition.
+    keywords: [external articles channels, YouTube discovery patterns]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: mcp, how: "sources MCP search_external (channel filter)"}
+      - {surface: git_grep, how: "git grep -n -i -F '<channel>' -- registry/external_articles registry/youtube_discovery"}
+    content_searchable: true
+
+  - id: registry-lexicon-curation
+    kind: registry
+    paths: [registry/lexicon/**]
+    purpose: Curated lexicon pairs (heritage, paronym, homonym, synonym, antonym), aliases, anchor worksheets, cohort lists, grow-triage ledgers and intake decisions.
+    keywords: [heritage pairs, paronyms, synonyms, antonyms, curated aliases, triage ledger]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<lemma>' -- registry/lexicon"}
+    content_searchable: true
+
+  - id: registry-lexicon-source-inventory
+    kind: registry
+    paths: [registry/lexicon/source-inventory/**, registry/lexicon/source-inventory-review-decisions/**]
+    purpose: Tracked per-grade textbook source inventories and review decisions for textbook-derived lexicon admission.
+    keywords: [source inventory, textbook words per grade, review decisions, lexicon admission]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<word>' -- registry/lexicon/source-inventory registry/lexicon/source-inventory-review-decisions"}
+    content_searchable: true
+
+  - id: registry-practice
+    kind: registry
+    paths: [registry/practice/**]
+    purpose: Part-of-speech mechanics decks, error-correction evidence and withheld lists, textbook error corrections and ZNO markup overlay.
+    keywords: [practice deck, error correction, ZNO markup]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<term>' -- registry/practice"}
+    content_searchable: true
+
+  - id: registry-miyklas
+    kind: registry
+    paths: [registry/miyklas/**]
+    purpose: Miyklas grammar topic index read by build enrichment.
+    keywords: [Miyklas, grammar index]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<topic>' -- registry/miyklas"}
+    content_searchable: true
+
+  - id: registry-open-model-data
+    kind: registry
+    paths: [registry/projects/open_model_data/**]
+    purpose: Open-model-data contracts, decolonization components and reviews, admission, evidence, release and other program records.
+    keywords: [open-model-data contracts, decolonization components, admission, release records]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- registry/projects/open_model_data"}
+    content_searchable: true
+
+  - id: registry-open-model-data-archive
+    kind: registry
+    paths: [registry/projects/open_model_data/archive/**]
+    purpose: Quarantined historical and v1-production archive records of the open-model-data program.
+    keywords: [quarantined historical, uldr v1 production archive]
+    lifecycle: archive
+    owner: open-model-data
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- registry/projects/open_model_data/archive"}
+    content_searchable: true
+
+  - id: registry-translations
+    kind: registry
+    paths: [registry/translations/**]
+    purpose: Legacy vocabulary translation batches and outputs (issue #462 era); the README lists files that are not present.
+    keywords: [vocabulary translations, translation batch]
+    lifecycle: archive
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<word>' -- registry/translations"}
+    content_searchable: true
+
+  - id: registry-ua-gec-gold
+    kind: registry
+    paths: [registry/ua-gec-gold/**]
+    purpose: UA-GEC gold set and contested-calque list used for surzhyk and calque scoring.
+    keywords: [UA-GEC gold, contested calques, surzhyk scoring]
+    lifecycle: active
+    owner: core-quality
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<term>' -- registry/ua-gec-gold"}
+    content_searchable: true
+
+  # ================================================================ curriculum evidence
+  - id: curriculum-evidence-a1
+    kind: evidence
+    paths: [curriculum/l2-uk-en/evidence/a1/**]
+    purpose: Core fresh-build A1 evidence - per-module word records, evidence packs, plan-review manifests, promotion records and verify reports, plus the shared base request and word registry.
+    keywords: [evidence pack, word records, plan review manifest, promotion record, A1 evidence]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.build.fresh.cli --help"}
+      - {surface: api, how: "GET /api/state/module/{track}/slug/{slug}"}
+      - {surface: git_grep, how: "git grep -n -F '<word>' -- curriculum/l2-uk-en/evidence/a1"}
+    content_searchable: true
+
+  # ================================================================ local data stores (data/, untracked)
+  - id: data-sources-db
+    kind: data_store
+    store: [data/sources.db]
+    producer: [scripts/wiki/build_sources_db.py, scripts/lexicon/runner/fetch_ulif_homonyms.py]
+    local_only: true
+    purpose: Main SQLite and FTS5 corpus behind the sources MCP - literary texts, textbooks, dictionaries (SUM-20, SUM-11, Hrinchenko, ESUM, ULIF, slovnyk.me), Ukrainian Wikipedia, external articles and UA-GEC errors.
+    keywords: [sources.db, RAG corpus, textbooks, literary texts, dictionaries, FTS5, sources MCP]
+    lifecycle: active
+    owner: corpus-channels
+    entrypoints:
+      - {topic: what is in sources.db, path: docs/corpus-inventory.md}
+    query:
+      - {surface: mcp, how: "sources MCP search_sources / search_text / search_literary / search_definitions / query_sum20 / search_esum"}
+      - {surface: api, how: "GET /api/sources/search_text?q=<term>; GET /api/sources/stats"}
+      - {surface: sqlite, how: "read-only SQL on data/sources.db (table list via sources MCP collection_stats)"}
+    content_searchable: true
+
+  - id: data-vesum-db
+    kind: data_store
+    store: [data/vesum.db, data/vesum.db.bak, data/vesum.db.bak.*, data/vesum_shadow_v680.db]
+    producer: [scripts/rag/activate_vesum_db.py, scripts/rag/build_vesum_shadow.py]
+    producer_note: activate_vesum_db.py swaps a shadow into vesum.db and writes the .bak copies; build_vesum_shadow.py writes the shadow database to the path it is given.
+    local_only: true
+    purpose: VESUM morphology store (forms and lemmas) behind the verify tools, with a dated backup and a v680 shadow copy.
+    keywords: [VESUM, morphology, word forms, lemma, verify_word]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: mcp, how: "sources MCP verify_word / verify_words / verify_lemma / inspect_word"}
+    content_searchable: true
+
+  - id: data-atlas-db
+    kind: data_store
+    store: [data/atlas.db]
+    producer: [scripts/atlas/atlas_db.py]
+    local_only: true
+    purpose: Word Atlas article payloads, provenance, aliases, FTS and enrichment rows (governed by ADR-017).
+    keywords: [atlas.db, Word Atlas articles, enrichment, aliases]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: sqlite, how: "Python API in scripts/atlas/atlas_db.py or read-only SQL on data/atlas.db"}
+    content_searchable: false
+
+  - id: data-atlas-synthetic
+    kind: data_store
+    store: [data/atlas-synthetic.db]
+    producer: [scripts/benchmarks/generate_synthetic_atlas.py]
+    local_only: true
+    purpose: Synthetic Atlas database for read-path benchmarks, generated on demand from atlas.db; absent unless a benchmark run created it.
+    keywords: [synthetic atlas, atlas benchmark]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: cli, how: ".venv/bin/python scripts/benchmarks/generate_synthetic_atlas.py --help"}
+    content_searchable: false
+
+  - id: data-ulif-dumps
+    kind: data_store
+    store: [data/ulif_dump.db, data/ulif_scrape.log]
+    producer: [scripts/lexicon/tools/dump_ulif.py]
+    producer_note: dump_ulif.py writes ulif_dump.db; legacy ulif_dump_all.db is retired (#8798); canonical entries reside in sources.db.
+    local_only: true
+    purpose: Local ULIF dictionary crawler dumps and scrape log; canonical entries reside in sources.db.
+    keywords: [ULIF dump, ULIF dictionary]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: mcp, how: "sources MCP query_ulif / query_ulif_records (reads the sources.db copy)"}
+      - {surface: sqlite, how: "read-only SQL on data/sources.db (ulif_dictua_* tables)"}
+    content_searchable: false
+
+  - id: data-wiki-cache
+    kind: data_store
+    store: [data/wiki_cache.db, data/wiki_sources.db]
+    producer: [scripts/rag/wiki_cache.py]
+    producer_note: wiki_cache.py writes wiki_cache.db; no script in scripts/ names wiki_sources.db.
+    local_only: true
+    purpose: Small wiki retrieval cache and an empty wiki-sources file.
+    keywords: [wiki cache]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read-only SQL on data/wiki_cache.db"}
+    content_searchable: false
+
+  - id: data-empty-comms-placeholders
+    kind: data_store
+    store: [data/comms_plane.db, data/fleet_comms.db]
+    producer: []
+    producer_note: Zero-byte files with no writer in scripts/; the Fleet Comms plane keeps its durable store elsewhere.
+    local_only: true
+    purpose: Zero-byte files named after the Fleet Comms plane; not the comms store.
+    keywords: [comms placeholder]
+    lifecycle: archive
+    owner: infra-harness
+    query:
+      - {surface: api, how: "GET /api/comms/v1/plane-status (the real comms plane)"}
+    content_searchable: false
+
+  - id: data-lexicon-ulif-cache
+    kind: data_store
+    store: [data/lexicon/cache/]
+    producer: [scripts/lexicon/runner/fetch_ulif_homonyms.py, scripts/lexicon/ulif_raw_cache.py, scripts/lexicon/enrich_manifest.py]
+    producer_note: fetch_ulif_homonyms.py stores raw ULIF bodies through ulif_raw_cache.py (cache/ulif_raw.sqlite); enrich_manifest.py writes the wiki_reference and grac_frequency JSON caches.
+    local_only: true
+    purpose: Raw ULIF responses (SQLite) and a wiki reference JSON; an offline Atlas and enrichment dependency.
+    keywords: [ULIF raw responses, lexicon cache]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: mcp, how: "sources MCP query_ulif_records (sources.db copy)"}
+    content_searchable: false
+
+  - id: data-lexicon-slovnyk-cache
+    kind: data_store
+    store: [data/lexicon/slovnyk_cache/]
+    producer: [scripts/lexicon/enrich_manifest.py, scripts/lexicon/migrate_slovnyk_cache_v3.py, scripts/lexicon/migrate_slovnyk_cache_v4.py]
+    producer_note: enrich_manifest.py fetches into the cache and the two migrations rewrite entries in place; heritage_classifier.py only reads it.
+    local_only: true
+    purpose: Per-word cached slovnyk.me responses (JSON) for Atlas fill and heritage classification.
+    keywords: [slovnyk.me cache, per-word JSON]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: mcp, how: "sources MCP search_slovnyk_me / query_slovnyk_me (sources.db table, not this cache)"}
+    content_searchable: false
+
+  - id: data-lexicon-source-inventory
+    kind: data_store
+    store: [data/lexicon/source-inventory/, data/lexicon/textbook-end-dictionaries/]
+    producer: [scripts/practice_deck/end_dictionaries.py]
+    producer_note: end_dictionaries.py writes textbook-end-dictionaries/; no script in scripts/ writes data/lexicon/source-inventory/, which apply_source_inventory_promotion.py reads before writing the site lexicon manifest.
+    local_only: true
+    purpose: Untracked per-grade textbook word inventories and end-dictionary JSON, paired with the tracked review decisions in registry/lexicon.
+    keywords: [textbook word inventory, end dictionaries, grade inventory]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<word>' -- registry/lexicon/source-inventory (tracked counterpart)"}
+    content_searchable: false
+
+  - id: data-lexicon-working
+    kind: data_store
+    store: [data/lexicon/intake/, data/lexicon/parked/, data/lexicon/recovery-audit/, data/lexicon/runner_work/, data/lexicon/side/, data/lexicon/*.json]
+    producer: [scripts/lexicon/reconcile_calque_clusters.py, scripts/lexicon/enrich_manifest.py, scripts/lexicon/park_thin_entries.py, scripts/lexicon/promote_teacher_lesson_intake.py, scripts/lexicon/ohoiko_paired_headword_split.py]
+    producer_note: calque_inflow_queue.json (reconcile_calque_clusters.py), side/ and runner_work/ (enrich_manifest.py), parked/ (park_thin_entries.py), the intake journal (promote_teacher_lesson_intake.py) and recovery-audit/ (ohoiko_paired_headword_split.py).
+    local_only: true
+    purpose: Lexicon candidate lists, intake candidates, parked entries, recovery censuses, runner staging and side SQLite stores.
+    keywords: [lexicon candidates, intake, parked entries, kaikki]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: sqlite, how: "read the JSON or side SQLite files directly; no search tool"}
+    content_searchable: false
+
+  - id: data-open-model-data-payloads
+    kind: data_store
+    store: [data/projects/open_model_data/]
+    producer: [scripts/projects/open_model_data/build_decolonization_cases.py]
+    producer_note: build_decolonization_cases.py writes components/decolonization by default; model_view_exporter.py writes only an explicit --output path and reads the eval payloads.
+    local_only: true
+    purpose: Untracked open-model-data payloads (JSONL, JSON, adapters) mirroring the tracked registry/projects/open_model_data layout.
+    keywords: [ULDR payloads, open-model-data shards, dataset release payload]
+    lifecycle: active
+    owner: open-model-data
+    entrypoints:
+      - {topic: open-model-data project entry, path: docs/projects/open-model-data/README.md}
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status (published groups)"}
+    content_searchable: false
+
+  - id: data-eval-payloads
+    kind: data_store
+    store: [data/projects/ua_eval_harness/, data/projects/ua_open_weight_eval/]
+    producer: [scripts/projects/ua_eval_harness/build_heldout_manifest.py, scripts/projects/ua_open_weight_eval/suite_cli.py]
+    local_only: false
+    purpose: Evaluation sets, held-out manifests, baselines and runs for the UA eval harness and the open-weight evaluation.
+    keywords: [UA eval set, held-out manifest, baselines]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.projects.ua_open_weight_eval.suite_cli --help"}
+    content_searchable: false
+
+  - id: data-embeddings
+    kind: data_store
+    store: [data/embeddings/]
+    producer: [scripts/wiki/embedding_manifest.py]
+    producer_note: embedding_manifest.py owns the SQLite manifest (manifest.db) of embedding shards; build_sources_db.py and dense_rerank.py read it. Absent until an embedding build runs.
+    local_only: true
+    purpose: Dense-retrieval embedding shards and their SQLite manifest, used to rerank sources.db search results.
+    keywords: [embeddings, embedding manifest, dense rerank, vector shards]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read-only SQL on data/embeddings/manifest.db"}
+    content_searchable: false
+
+  - id: data-textbook-chunks
+    kind: data_store
+    store: [data/textbook_chunks/]
+    producer: [scripts/rag/extract_text.py]
+    producer_note: extract_text.py writes one JSONL per textbook under grade-NN/; incremental_textbook_ingest.py reads the chunks into sources.db.
+    local_only: true
+    purpose: Per-textbook OCR chunks (JSONL) and receipts for grades 1 to 11 that feed the sources.db textbooks table.
+    keywords: [textbook chunks, school textbooks, OCR, grades 1-11]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: mcp, how: "sources MCP search_text (sources.db copy)"}
+    content_searchable: true
+
+  - id: data-ua-gec
+    kind: data_store
+    store: [data/ua-gec/]
+    producer: []
+    producer_note: Clone of the upstream UA-GEC project; scripts/audit/ingest_ua_gec_gold.py reads it.
+    local_only: true
+    purpose: Local clone of the UA-GEC grammatical-error corpus, the source for the sources.db error table and the gold sets.
+    keywords: [UA-GEC, grammatical errors, error corpus]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: mcp, how: "sources MCP search_ua_gec_errors (sources.db copy)"}
+    content_searchable: false
+
+  - id: data-artifact-store
+    kind: data_store
+    store: [data/.artifact-store/]
+    producer: [scripts/storage/artifacts.py]
+    local_only: true
+    purpose: Content-addressed objects for artifact groups whose manifests are tracked in registry/artifacts.
+    keywords: [artifact store, content addressed, published artifacts]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status"}
+    content_searchable: false
+
+  - id: data-backups
+    kind: data_store
+    store: [data/backups/]
+    producer: []
+    producer_note: No script in scripts/ writes it; it holds hand-made pre-migration copies of sources.db and leftover rehearsal sidecars. The Monitor admin router (scripts/api/admin_router.py, BACKUP_DIR) lists and deletes them.
+    local_only: true
+    purpose: Pre-migration safety copies of local SQLite stores, plus leftover migration-rehearsal sidecar files.
+    keywords: [backups, pre-migration copy, migration rehearsal]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: api, how: "GET /api/admin/backup/list"}
+    content_searchable: false
+
+  - id: data-backups-staging
+    kind: data_store
+    store: [data/.backup-staging/]
+    producer: [scripts/backup-data.sh]
+    producer_note: backup-data.sh stages SQLite online-backup copies here when LU_BACKUP_TMPDIR points at it (Linux only); empty between runs.
+    local_only: true
+    purpose: Transient staging directory for the scheduled data backup.
+    keywords: [backup staging, LU_BACKUP_TMPDIR]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.storage status"}
+    content_searchable: false
+
+  - id: data-corpus-audit
+    kind: data_store
+    store: [data/corpus_audit/]
+    producer: [scripts/navsi200_asr_bakeoff.py, scripts/navsi200_captions.py]
+    local_only: true
+    purpose: Corpus coverage map, NAVSI-200 ASR bake-off and captions ledgers and a Ukrainian wiki ingest report (regenerable snapshots).
+    keywords: [coverage map, NAVSI-200, captions ledger]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read the JSON files directly (jq)"}
+    content_searchable: false
+
+  - id: data-datasets
+    kind: data_store
+    store: [data/datasets/]
+    producer: [scripts/dataset/export_ukrainian_pedagogy_dataset.py, scripts/dataset/audit_literary_poltava_candidate.py]
+    local_only: false
+    purpose: Exported Hramatka datasets - the Ukrainian pedagogy set and the Literary Poltava candidate with evidence.
+    keywords: [Hramatka dataset, pedagogy dataset, Literary Poltava]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: sqlite, how: "read README.md in each dataset directory"}
+    content_searchable: false
+
+  - id: data-processed-esum
+    kind: data_store
+    store: [data/processed/]
+    producer: [scripts/ingest/esum_abbyy_parser.py]
+    local_only: false
+    purpose: Parsed etymological dictionary (ESUM) volumes 1 to 6 as JSONL, feeding the sources.db etymology table.
+    keywords: [ESUM, etymology, ЕСУМ volumes]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: mcp, how: "sources MCP search_esum (sources.db copy)"}
+    content_searchable: false
+
+  - id: data-raw-sources
+    kind: data_store
+    store: [data/raw/]
+    producer: [scripts/etymology/bulk_ocr_gemini.py]
+    producer_note: Raw Pravopys 2019 HTML is published as an artifact group (raw_source manifest) and read by scripts/build/module_memory.py. bulk_ocr_gemini.py writes ESUM page staging and OCR text under raw/esum/, which esum_ingest.py and esum_abbyy_parser.py read.
+    local_only: true
+    purpose: Raw source payloads - the Pravopys 2019 orthography HTML and, when the ESUM OCR runs, its raw inputs and OCR text.
+    keywords: [Pravopys 2019, Правопис, orthography source]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: mcp, how: "sources MCP query_pravopys"}
+    content_searchable: false
+
+  - id: data-references
+    kind: data_store
+    store: [data/references/]
+    producer: []
+    producer_note: Classified as A-class data by scripts/storage/build_classification_table.py; no writer or reader found in scripts/.
+    local_only: true
+    purpose: Untracked reference data, currently an interference-patterns JSON.
+    keywords: [interference patterns]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read the JSON file directly"}
+    content_searchable: false
+
+  - id: data-ubertext-freq
+    kind: data_store
+    store: [data/ubertext-freq/]
+    producer: [scripts/rag/convert_phase2.py]
+    local_only: true
+    purpose: UberText frequency database location; only a .gitignore is present locally (the database lives on the bulk root per docs/corpus-inventory.md).
+    keywords: [UberText, word frequency]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read-only SQL on data/ubertext-freq/frequency.db when present"}
+    content_searchable: false
+
+  - id: data-youtube-discovery
+    kind: data_store
+    store: [data/youtube_discovery/]
+    producer: [scripts/crawl/discover_yt_by_pattern.py]
+    local_only: true
+    purpose: YouTube discovery backfill list feeding external-article fetches.
+    keywords: [YouTube discovery, backfill list]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read the JSONL file directly"}
+    content_searchable: false
+
+  - id: data-native-reviewer-lessons
+    kind: data_store
+    store: [data/native-reviewer-lessons/]
+    producer: [scripts/navsi200_captions.py]
+    producer_note: The lesson documents are human-supplied; navsi200_captions.py writes raw NAVSI-200 captions into navsi200-captions/ by default.
+    local_only: true
+    purpose: Private native-speaker lesson documents used as read-only reference, plus raw NAVSI-200 captions.
+    keywords: [native reviewer lessons, private reference]
+    lifecycle: active
+    owner: atlas-practice
+    query:
+      - {surface: sqlite, how: "no search tool; private files"}
+    content_searchable: false
+
+  - id: data-telemetry
+    kind: data_store
+    store: [data/telemetry/]
+    producer: [scripts/api/telemetry_router.py, scripts/audit/check_primary_integrity.py]
+    local_only: true
+    purpose: Runtime telemetry - tool timings, legacy comms route usage and integrity-watch events.
+    keywords: [telemetry, tool timings, integrity watch]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: api, how: "GET /api/telemetry/tool-timings; GET /api/telemetry/legacy-comms-routes"}
+    content_searchable: false
+
+# Store names that scripts/ code mentions but that are not stores of this
+# repository. Every other data/<name>.db|.sqlite literal in scripts/ must be
+# claimed by a data_store entry (checked by the catalogue check and CI).
+store_literal_exemptions:
+  - {literal: data/sources-copy.db, reason: "Example value in the resource-catalogue ingest help for its required --db argument (a hand-made copy of sources.db); the tool has no default store and never creates one."}
+
+residual:
+  - {path: docs/research/INVESTIGATION_9_VS_10_SCORE_REQUIREMENTS.md, owner: core-quality, reason: "Dated 2026-07-23, no banner; whether the review gate it discusses still applies is unverified."}
+  - {path: docs/dispatch-briefs/luna-max-closeout-contract.md, owner: infra-harness, reason: "Reusable brief fragment; whether the Luna closeout contract still matches current routing is unverified."}
+  - {path: docs/dispatch-briefs/qg-bakeoff-claude-1x17-sweep.md, owner: core-quality, reason: "Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified."}
+  - {path: docs/dispatch-briefs/qg-bakeoff-gemini-1x17-sweep.md, owner: core-quality, reason: "Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified."}
+  - {path: docs/dispatch-briefs/qg-bakeoff-gpt-1x17-sweep.md, owner: core-quality, reason: "Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified."}
+  - {path: docs/plans/MASTER_ENGINEERING_ROADMAP.md, owner: infra-harness, reason: "July 2026 roadmap with no confirmed status or tracking issue."}
+  - {path: docs/plans/GEMMA_FINETUNING_9_PLUS_MASTER_SPECIFICATION.md, owner: open-model-data, reason: "July 2026 spec; its relation to the retired fine-tuning guides is unconfirmed."}
+  - {path: docs/plans/primary-text-acquisition-hosting-system.md, owner: corpus-channels, reason: "No status line; whether it is the plan of record for primary-text hosting is unverified."}
+  - {path: docs/epics/2026-04-23-alignment-pipeline-runtime-contracts.md, owner: curriculum-upgrade, reason: "Own status 'open', tracking issue '#TBD' (April 2026); never confirmed filed."}
+  - {path: docs/architecture/ROADMAP-two-track-build-plan.md, owner: infra-harness, reason: "Status 'design agreed, tri-agent confirmation pending' (April 2026); outcome unrecorded."}
+  - {path: docs/wiki-rebuild-plan.md, owner: corpus-channels, reason: "Says 'active plan as of 2026-04-18' and scripts/wiki/rebuild.py still reads it; currency unverified."}
+  - {path: docs/agent-channels/architecture/context.md, owner: infra-harness, reason: "Bridge code still reads channel contexts while Fleet Comms owns messages; disposition waits on bridge retirement."}
+  - {path: docs/agent-channels/content/context.md, owner: infra-harness, reason: "Bridge code still reads channel contexts while Fleet Comms owns messages; disposition waits on bridge retirement."}
+  - {path: docs/agent-channels/pipeline/context.md, owner: infra-harness, reason: "Bridge code still reads channel contexts while Fleet Comms owns messages; disposition waits on bridge retirement."}
+  - {path: docs/agent-channels/reviews/context.md, owner: infra-harness, reason: "Bridge code still reads channel contexts while Fleet Comms owns messages; disposition waits on bridge retirement."}
+  - {path: docs/agent-channels/shared/context.md, owner: infra-harness, reason: "Bridge code still reads channel contexts while Fleet Comms owns messages; disposition waits on bridge retirement."}
+  - {path: docs/pedagogy/a1-a2-lesson-construction.md, owner: curriculum-upgrade, reason: "June 2026 standard; overlap with the fresh-build ULP presentation pattern not compared."}
+  - {path: docs/pedagogy/a1-a2-core-retrofit-audit.md, owner: curriculum-upgrade, reason: "Retrofit protocol for the old core; relevance to the fresh build not compared."}
+  - {path: docs/pedagogy/a1-a2-retrofit-template.md, owner: curriculum-upgrade, reason: "Retrofit template for the old core; relevance to the fresh build not compared."}
+  - {path: docs/bio-epic/phase-4-wiki-queue.md, owner: seminars-bio, reason: "Queue says to update status per merged wiki but last changed 2026-06-04; not checked against wiki state."}
+  - {path: docs/bio-epic/phase-2-sequence-allocation.yaml, owner: seminars-bio, reason: "No consumer found; whether the allocation is still driven is unverified."}
+  - {path: docs/playbooks/anti-hallucination-review-protocol.md, owner: infra-harness, reason: "April 2026 portable protocol; relation to current exact-head review rules unstated."}
+  - {path: docs/reference/folk-micro-genres.md, owner: seminars-folk, reason: "Harvested proverbs and riddles are unverified against sources (a sibling audit found fabricated proverbs)."}
+  - {path: docs/folk-epic/folk-wiki-compile-grounding-register-gap.md, owner: seminars-folk, reason: "Own status 'OPEN finding' (2026-06-12); closure unverified."}
+  - {path: docs/folk-epic/phase-folk-queue.md, owner: seminars-folk, reason: "Stage-0 queue (2026-06-06); whether still driven is unverified."}
+  - {path: docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md, owner: hramatka, reason: "Header calls it the master roadmap (2026-07-24, #5699) but states no draft or accepted status, and no tracked file links to it; currency against epic #4542 unverified."}
+  - {path: docs/decisions/2026-05-17-clawpatch-adoption.md, owner: infra-harness, reason: "Own status 'PROPOSED, awaiting user sign-off', but commit 25b69074ec moved it out of pending/ as signed off; the status line was never updated."}
+  - {path: docs/decisions/2026-05-17-path3-per-obligation-review-loop.md, owner: infra-harness, reason: "Own status 'PROPOSED, awaiting user sign-off', but commit 25b69074ec records its sign-off; the status line was never updated."}
+  - {path: docs/decisions/2026-05-17-unified-evidence-layer-for-judges-ORIGINAL.md, owner: infra-harness, reason: "Own status 'PROPOSED'; commit 25b69074ec moved it out of pending/ as signed off together with its DECISION synthesis."}
+  - {path: docs/decisions/2026-05-17-unified-evidence-layer-for-judges-DECISION.md, owner: infra-harness, reason: "Own status 'DRAFT awaiting user sign-off'; commit 25b69074ec added it as the signed-off synthesis. Conflicting evidence."}
+  - {path: docs/decisions/2026-04-26-llm-qg-per-dim-thresholds.md, owner: core-quality, reason: "Own status 'DRAFT, pending 3-agent review', yet the same PR (#1593) shipped the thresholds in code; review outcome unrecorded."}

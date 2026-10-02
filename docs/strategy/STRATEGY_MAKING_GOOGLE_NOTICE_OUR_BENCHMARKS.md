@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md
+---
+
 # Architectural Strategy: How to Make Google DeepMind & Gemma Teams Notice Our Work
+
+> **Superseded by:** [docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md](UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md)
 
 > **Superseded:** This visibility-first strategy is not the project's current
 > north star. Use

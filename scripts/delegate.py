@@ -79,7 +79,22 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
-        "kimi_content_refusal": str | absent        # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "advisory_envelope": {requirement, advisory_args, advisory_args_sha256, prompt_sha256,
+                              admitted_execution, research_block, repo_root, advisor_task_id, advisor_model,
+                              advisor_run_nonce, result_path, result_sha256, envelope_sha256,
+                              dispatch_args_sha256, owned_paths, max_changed_files, max_non_test_loc}
+                             | absent,  # bounded-worker admission; the worker re-verifies it (#9275)
+        "advisory_prompt_sha256": str | absent,  # the bounded worker's prompt as checked and submitted
+        "advisory_exemption": {model_id, task_family, review_profile, mode, classified_paths} | absent,
+                              # a Gemini Flash launch classified Ukrainian; the worker re-classifies it
+        "advisory_ceiling_check": {measured, changed_files, non_test_loc, max_*, exceeded | error} | absent,
+        "advisory_exempt_change_check": {measured, changed_paths, ignored_residue, problems | error} | absent,
+        "advisory_role": "bounded_advisory_envelope" | absent,  # the advisor run that issues an envelope (#9275)
+        "advisory_route": str | absent,
+        "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
+        "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
+                              # advisor runs: a consistency checksum of the result as its worker wrote it
     }
 
 Design notes:
@@ -161,6 +176,7 @@ _local_repo_root = Path(__file__).resolve().parents[1]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.agent_runtime import bounded_advisory
 from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
@@ -181,6 +197,7 @@ from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threate
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.lib import rules_core
+from scripts.opsec.prepublish import publication_boundary
 from scripts.orchestration import (
     dispatch_admission,
     dispatch_isolation,
@@ -197,6 +214,7 @@ from scripts.orchestration.dead_worker_state import (
     task_state_lock,
     write_state_unlocked,
 )
+from scripts.publish.github import Request, request_run
 
 if TYPE_CHECKING:
     from scripts.agent_runtime.target_admission import AdmittedTarget, Route, RouteRequest
@@ -308,6 +326,62 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+# Fields excluded from the advisory binding digest on top of the record hash's
+# exclusions (#9275): the envelope reference itself, which the advisor cannot
+# know when it issues the envelope, and the flag that prints the digest.
+ADVISORY_BINDING_EXCLUDED_FIELDS = frozenset({"advisory_task", "print_advisory_binding"})
+
+
+def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
+    """The arguments ``advisory_args_sha256`` hashes: ``dispatch_args_sha256``'s, without the envelope reference."""
+    return {
+        key: value
+        for key, value in vars(args).items()
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
+        and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+        and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
+    }
+
+
+def advisory_args_sha256(args: argparse.Namespace) -> str:
+    """``dispatch_args_sha256`` without the envelope reference: the argument half of the advisory binding."""
+    return bounded_advisory.canonical_sha256(advisory_args_payload(args))
+
+
+def advisory_binding(args_sha256: str, prompt_sha256: str | None) -> str:
+    """The digest an advisory envelope binds to: the dispatch arguments and the prompt text they carry.
+
+    Every parsed ``dispatch`` argument except the envelope reference — task id,
+    prompt, owned paths, mode, model, research flags — and the SHA-256 of the
+    prompt text (a ``--prompt-file`` is bound by content, not only by path), so
+    an envelope issued for one dispatch admits no other.
+    """
+    return bounded_advisory.binding_digest(args_sha256, prompt_sha256)
+
+
+def _binding_prompt_sha256(args: argparse.Namespace, *, read_stdin: bool) -> str | None:
+    """SHA-256 of the dispatch's prompt text for the advisory binding; None for an unread stdin prompt.
+
+    Raises ``OSError`` when a ``--prompt-file`` cannot be read.
+    """
+    if getattr(args, "prompt_file", None):
+        text = Path(args.prompt_file).read_text(encoding="utf-8")
+    elif getattr(args, "prompt", None) == "-":
+        if not read_stdin:
+            return None
+        text = sys.stdin.read()
+    elif getattr(args, "prompt", None) is not None:
+        text = str(args.prompt)
+    else:
+        return None
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def advisory_binding_sha256(args: argparse.Namespace, *, read_stdin: bool = False) -> str:
+    """The advisory binding of a parsed dispatch (what ``--print-advisory-binding`` prints)."""
+    return advisory_binding(advisory_args_sha256(args), _binding_prompt_sha256(args, read_stdin=read_stdin))
 
 
 def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
@@ -707,6 +781,7 @@ def _core_terminal_fields(
         "duration_s": round(duration_s, 3),
         "response_chars": len(response),
         "result_file": result_file,
+        "result_sha256": hashlib.sha256(response.encode("utf-8")).hexdigest() if result_file else None,
         "stderr_excerpt": stderr_excerpt,
         "returncode": returncode,
         "returncode_reason": returncode_reason,
@@ -819,6 +894,9 @@ def _review_task_failure_reason(state: dict[str, Any]) -> str:
     """Give every failed verdict-required review a stable, queryable cause."""
     if state.get("review_verdict_failure"):
         return state["review_verdict_failure"]
+    # A typed cause another gate already set (#9275) is kept, never renamed.
+    if isinstance(state.get("failure_reason"), str) and state["failure_reason"]:
+        return state["failure_reason"]
     if state.get("read_only_mutation_paths"):
         return "read_only_checkout_mutation"
     if state.get("read_only_checkout_snapshot_error"):
@@ -4258,23 +4336,39 @@ def _superseded_review_release_proof(path: Path) -> tuple[bool, str]:
     return True, reason
 
 
-def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list[Path]:
+def _release_superseded_review_worktrees(
+    task_id: str,
+    *,
+    dry_run: bool,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
+) -> list[Path]:
     """Remove earlier rounds of this review series before the new checkout is made.
 
     Each removal goes through :func:`_remove_dispatch_worktree`, which runs the
     release proof while holding the earlier round's worktree lock (#8610).
+    Earlier rounds holding attempt dependencies are kept without release (#9417).
     """
     series = _review_series(task_id)
     if series is None:
         return []
     stem, current_round = series
-    released: list[Path] = []
+    candidates: list[tuple[Path, str]] = []
     for path, component in _dispatch_worktree_components():
         earlier = _review_series(component)
         if earlier is None:
             continue
         earlier_stem, earlier_round = earlier
         if earlier_stem != stem or earlier_round >= current_round:
+            continue
+        candidates.append((path, component))
+    released: list[Path] = []
+    for path, component in candidates:
+        dependencies = _review_attempt_dependency_names(path, review_dependencies)
+        if dependencies:
+            print(
+                f"ℹ️  earlier review {path} kept: review dependency ({', '.join(dependencies)})",
+                file=sys.stderr,
+            )
             continue
         if dry_run:
             ok, reason = _superseded_review_release_proof(path)
@@ -4367,11 +4461,66 @@ def _checked_out_branch_names() -> list[str]:
     return names
 
 
+def _review_attempt_worktree_dependencies(args: argparse.Namespace) -> tuple[tuple[str, Path], ...]:
+    """Locate attempt dependencies for retention only; prompt admission still validates the record."""
+    from scripts.review.render_contract import RENDER_RECORD_KEY, render_record_path
+
+    manifest = getattr(args, "review_attempt", None)
+    if not manifest:
+        return ()
+    paths = [("manifest", Path(manifest))]
+    prompt_file = getattr(args, "prompt_file", None)
+    if prompt_file:
+        try:
+            reads = json.loads(render_record_path(Path(prompt_file)).read_bytes())
+            record = reads.get(RENDER_RECORD_KEY)
+        except (OSError, ValueError, AttributeError):
+            record = None  # Existing admission refuses unreadable or malformed render records.
+        if isinstance(record, dict):
+            for name in ("input_root", "render_checkout"):
+                value = record.get(name)
+                if isinstance(value, str) and value:
+                    paths.append((name, Path(value)))
+    # Retain the supplied location as well as its target: removing a checkout
+    # containing a symlink would still break subsequent reads via that name.
+    return tuple(
+        dict.fromkeys((name, location) for name, path in paths for location in (path.absolute(), path.resolve()))
+    )
+
+
+def _review_attempt_dependency_names(path: Path, dependencies: Sequence[tuple[str, Path]]) -> list[str]:
+    """Name dependencies whose supplied or resolved locations lie in this checkout."""
+    if not dependencies:
+        return []
+    roots = (path.absolute(), path.resolve())
+    return sorted({name for name, location in dependencies if any(location.is_relative_to(root) for root in roots)})
+
+
+def _refuse_review_attempt_branch_holders(
+    branch: str | None,
+    holders: Sequence[Path],
+    dependencies: Sequence[tuple[str, Path]],
+) -> None:
+    """Refuse cleanup that can delete this attempt's dependencies (#9388, #9417)."""
+    if not dependencies:
+        return
+    for holder in holders:
+        conflicts = _review_attempt_dependency_names(holder, dependencies)
+        if conflicts:
+            context = f"branch {branch!r} holder" if branch is not None else "superseded review worktree"
+            raise ValueError(
+                "review_attempt_branch_holder_conflict: "
+                f"{context} {holder} contains this attempt's {', '.join(conflicts)}; "
+                "refusing to release it; render from a separate retained worktree at the exact commit and retry (#9388)"
+            )
+
+
 def _release_stale_branch_holders(
     *,
     branch: str,
     holders: list[Path],
     dry_run: bool,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> list[Path]:
     """Remove releasable holders of ``branch`` so a new worktree can attach.
 
@@ -4380,7 +4529,9 @@ def _release_stale_branch_holders(
     removal goes through :func:`_remove_dispatch_worktree`, which runs
     :func:`_stale_branch_holder_releasable` while holding the holder's
     worktree lock (#8610).
+    Attempt dependencies are checked across all holders before any removal (#9388).
     """
+    _refuse_review_attempt_branch_holders(branch, holders, review_dependencies)
     released: list[Path] = []
     for path in holders:
         if dry_run:
@@ -4610,7 +4761,147 @@ def _commit_count_refs(worktree: Path, base_ref: str) -> tuple[str, ...]:
     return tuple(dict.fromkeys(candidate for candidate in candidates if candidate))
 
 
-def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
+def _recorded_base_sha(record: Mapping[str, Any]) -> str | None:
+    """The commit the task's worktree was branched from, as its record stored it, or None."""
+    sha = record.get("worktree_base_sha")
+    return sha.strip() if isinstance(sha, str) and sha.strip() else None
+
+
+def _run_count_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
+    """``(count, base_missing)`` for ``git rev-list --count <base>..HEAD``.
+
+    ``base_missing`` is True only when git ran and rejected ``base`` (the ref
+    does not resolve): the one case where trying another base is sound. A git
+    that cannot run, or output that is not a number, is unknown outright.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", "--count", f"{base}..HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None, False
+    if proc.returncode != 0:
+        return None, True
+    try:
+        return int((proc.stdout or "").strip()), False
+    except ValueError:
+        return None, False
+
+
+def _is_ancestor_of_head(worktree: Path, sha: str) -> bool:
+    """Whether ``sha`` names a commit in the repository that is an ancestor of ``HEAD``."""
+    try:
+        proc = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", f"{sha}^{{commit}}", "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def _run_git_stdout(worktree: Path, *args: str) -> tuple[int, str] | None:
+    """``(returncode, stdout)`` of a git command, or None when git could not run."""
+    try:
+        proc = subprocess.run(
+            ["git", *args],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return proc.returncode, proc.stdout or ""
+
+
+def _count_real_changes_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
+    """``(count, base_missing)`` of ``<base>..HEAD``, or 0 when merging ``HEAD`` into ``base`` changes nothing.
+
+    ``<default>..HEAD`` overcounts as delivery proof: an empty commit, a merge of
+    the default branch, a cherry-pick of a change it already has, or a squash of
+    work it already holds is ahead of a stale or squash-merged base yet adds
+    nothing (#9451). Rather than approximate that per commit shape, ask git the
+    exact question: ``git merge-tree --write-tree <base> HEAD`` is the tree a
+    merge would produce, so when it equals ``base``'s own tree nothing new is
+    delivered. A different tree, or a conflict (exit status 1, which a real
+    change colliding with ``base`` produces), is a delivery. Any other failure,
+    including a git without ``--write-tree`` or history too shallow to merge, is
+    ``(None, False)`` so the caller fails closed.
+    """
+    ahead, base_missing = _run_count_ahead(worktree, base)
+    if ahead is None or ahead == 0:
+        return ahead, base_missing
+    base_tree = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{tree}}")
+    if base_tree is None or base_tree[0] != 0 or not base_tree[1].strip():
+        return None, False
+    merged = _run_git_stdout(worktree, "merge-tree", "--write-tree", "--no-messages", base, "HEAD")
+    if merged is None or merged[0] not in (0, 1):
+        return None, False
+    if merged[0] == 1:
+        return ahead, False
+    merged_tree = merged[1].strip().splitlines()[0] if merged[1].strip() else ""
+    if not merged_tree:
+        return None, False
+    return (0 if merged_tree == base_tree[1].strip() else ahead), False
+
+
+def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_sha: str | None) -> int | None:
+    """Count the branch's commits when the named base ref is gone everywhere (#9451).
+
+    A base branch deleted after it merged leaves nothing to count against, which
+    recorded a pushed fix as ``commit_count_unknown``. Fall back, in order, to:
+
+    1. the commit the worktree was branched from (``base_sha``, as the dispatch
+       recorded it), when it is an ancestor of ``HEAD``;
+    2. the merge base of ``HEAD`` with the default branch (``origin/main``, then
+       the upstream remote's ``main``), which is what ``<default>..HEAD`` counts.
+
+    A SHA that does not resolve, or is not an ancestor of ``HEAD`` (the branch
+    was rebased off it), is skipped rather than trusted. None when no base
+    resolves, so the caller still fails closed.
+
+    The recorded commit is the exact point the worktree started from, so its
+    plain ``<sha>..HEAD`` count is exact. The default branch is only a proxy
+    for the lost base and may already hold the work, so its commits count only
+    when merging ``HEAD`` into it would change it (``_count_real_changes_ahead``).
+    """
+    candidates: list[tuple[str, bool]] = []
+    if base_sha and _is_ancestor_of_head(worktree, base_sha):
+        candidates.append((base_sha, True))
+    default_refs = ["origin/main"]
+    tracking_remote = _tracking_remote_for_current_branch(worktree)
+    if tracking_remote:
+        default_refs.append(f"{tracking_remote}/main")
+    candidates.extend((ref, False) for ref in dict.fromkeys(default_refs))
+    for candidate, exact in candidates:
+        count_ahead = _run_count_ahead if exact else _count_real_changes_ahead
+        count, base_missing = count_ahead(worktree, candidate)
+        if count is not None:
+            print(
+                f"⚠️  base {base_ref!r} is gone; counted commits ahead against {candidate!r} instead",
+                file=sys.stderr,
+            )
+            return count
+        if not base_missing:
+            return None
+    return None
+
+
+def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = None) -> int | None:
     """Return commits on HEAD not reachable from an eligible base ref, or None.
 
     ``None`` means "cannot count", and a vanished worktree is exactly that: on
@@ -4620,27 +4911,19 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
     dead pid — invisible to every settle-loop watching it. The sibling
     ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
     contract, and callers already fail closed on ``None``.
+
+    When every named candidate is gone (the base branch was deleted after it
+    merged, #9451), the count falls back to the recorded ``base_sha`` and then
+    the default-branch merge base; a present base is always measured first,
+    unchanged.
     """
     for candidate in _commit_count_refs(worktree, base_ref):
-        try:
-            proc = subprocess.run(
-                ["git", "rev-list", "--count", f"{candidate}..HEAD"],
-                cwd=worktree,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
-        except (OSError, subprocess.TimeoutExpired):
+        count, base_missing = _run_count_ahead(worktree, candidate)
+        if count is not None:
+            return count
+        if not base_missing:
             return None
-        if proc.returncode != 0:
-            continue
-        try:
-            return int((proc.stdout or "").strip())
-        except ValueError:
-            return None
-    return None
+    return _count_commits_ahead_without_named_base(worktree, base_ref, base_sha)
 
 
 def _unpushed_commit_refs(worktree: Path, branch: str) -> tuple[str, ...]:
@@ -4727,12 +5010,14 @@ _GIT_ENV_DENYLIST = {
 
 
 def _sanitized_git_env() -> dict[str, str]:
-    """Drop repo-redirecting Git env so ``cwd=worktree`` resolves that repo."""
-    return {
+    """Select the explicit repository and refuse interactive credential prompts."""
+    env = {
         key: value
         for key, value in os.environ.items()
         if key not in _GIT_ENV_DENYLIST and not key.startswith("PRE_COMMIT")
     }
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return env
 
 
 def _is_virtualenv_bin_path(entry: str) -> bool:
@@ -4762,7 +5047,10 @@ def _pinned_worker_venv_env(source: dict[str, str]) -> dict[str, str]:
         for entry in inherited_path.split(os.pathsep)
         if entry and not _is_virtualenv_bin_path(entry) and os.path.normpath(entry) != inherited_venv_bin
     ]
+    from scripts.opsec.prepublish import publish_environment
+
     pinned["PATH"] = os.pathsep.join((str(venv_bin), *path_entries))
+    pinned = publish_environment(pinned, root=_REPO_ROOT)
     pinned["VIRTUAL_ENV"] = str(venv_root)
     # PYTHONHOME can override the interpreter's calculated prefix and make a
     # correctly pinned venv behave like an unrelated Python installation.
@@ -5489,6 +5777,333 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
     return None
 
 
+def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: Mapping[str, Any]) -> dict[str, Any]:
+    """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
+
+    Changes run from the merge base with the base branch to the working tree:
+    the worker's commits plus its uncommitted and untracked files.
+    """
+    try:
+        max_files = int(envelope["max_changed_files"])
+        max_loc = int(envelope["max_non_test_loc"])
+    except (KeyError, TypeError, ValueError):
+        return {"measured": False, "error": "the task record's envelope has no ceilings"}
+    numstat, error = _advisory_worker_diff(worktree, base_branch, ["--numstat", "-z", "--no-renames"])
+    if numstat is None:
+        return {"measured": False, "error": error}
+    try:
+        entries = bounded_advisory.parse_numstat_z(numstat)
+    except ValueError as exc:
+        return {"measured": False, "error": str(exc)}
+    return bounded_advisory.ceiling_verdict(entries, max_changed_files=max_files, max_non_test_loc=max_loc)
+
+
+def _advisory_worker_diff(
+    worktree: Path | None, base_branch: str, diff_args: Sequence[str], *, committed_only: bool = False
+) -> tuple[str | None, str | None]:
+    """``(git diff <diff_args> <merge-base>, None)`` over the worker's changes, or ``(None, why)`` when unreadable.
+
+    Changes run from the merge base with the base branch to the working tree:
+    the worker's commits plus its uncommitted and untracked files; with
+    ``committed_only``, to ``HEAD``: its commits alone.
+    """
+    if worktree is None or not worktree.is_dir():
+        return None, "no worktree to measure"
+    try:
+        base_proc = subprocess.run(
+            ["git", "merge-base", _commit_count_base_ref(worktree, base_branch), "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return None, f"merge-base: {exc}"
+    merge_base = (base_proc.stdout or "").strip()
+    if base_proc.returncode != 0 or not merge_base:
+        return None, "merge-base with the base branch is unknown"
+    if committed_only:
+        try:
+            proc = subprocess.run(
+                ["git", "diff", *diff_args, merge_base, "HEAD", "--"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return None, f"the worker's committed diff could not be read: {exc}"
+        return (proc.stdout, None) if proc.returncode == 0 else (None, "the worker's committed diff could not be read")
+    output = _worktree_diff_output(worktree, [*diff_args, merge_base, "--"])
+    if output is None:
+        return None, "the worker's diff could not be read"
+    return output, None
+
+
+# #9275: the record keys the completion gates write their measurement to.
+_ADVISORY_GATE_KEYS = ("advisory_ceiling_check", "advisory_exempt_change_check")
+_INTERRUPTED_BEFORE_COMPLETION_GATES = "interrupted before the completion gates ran"
+
+
+def _advisory_completion_gate(
+    record: Mapping[str, Any], worktree: Path | None
+) -> tuple[str, dict[str, Any], str | None, str] | None:
+    """The #9275 completion gate a write task's record calls for, run on its changes; None when neither applies.
+
+    ``(record key, check, failure code or None, detail)``: the envelope
+    ceilings of a bounded worker, or the changed-path classification of a
+    Ukrainian content exemption. Unmeasurable changes fail.
+    """
+    base_branch = str(record.get("worktree_base") or "main")
+    envelope = record.get("advisory_envelope")
+    if isinstance(envelope, dict):
+        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope)
+        failure = (
+            bounded_advisory.CEILING_UNMEASURED
+            if not ceiling.get("measured")
+            else (bounded_advisory.CEILING_EXCEEDED if ceiling.get("exceeded") else None)
+        )
+        detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
+        return "advisory_ceiling_check", ceiling, failure, detail
+    if isinstance(record.get("advisory_exemption"), dict):
+        check = _exempt_change_check(worktree, base_branch)
+        failure = (
+            bounded_advisory.EXEMPT_CHANGES_UNMEASURED
+            if not check.get("measured")
+            else (bounded_advisory.EXEMPT_CODE_CHANGE if check.get("problems") else None)
+        )
+        detail = "; ".join(check.get("problems") or []) or str(check.get("error") or "unmeasured")
+        return "advisory_exempt_change_check", check, failure, detail
+    return None
+
+
+# #9275: the single definition of the completion gates a task record calls for.
+# The worker's terminal settle runs them, and so does the ask-* review wrapper;
+# success needs every applicable gate to pass. Recovery paths (stale-record
+# settlement, rate-limit reclassification) apply :func:`recovery_requires_rerun`.
+COMPLETION_GATE_BACKGROUND_LEFTOVERS = "background_leftovers"
+COMPLETION_GATE_DELIVERY = "delivery"
+COMPLETION_GATE_REVIEW_VERDICT = "review_verdict"
+COMPLETION_GATE_ADVISORY_CEILING = "advisory_ceiling"
+COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE = "advisory_exempt_change"
+# Recovery's pseudo-gate: a failure the record already carries is never overwritten.
+COMPLETION_GATE_RECORDED_FAILURE = "recorded_failure"
+# The delivery gate reads a zero-commit run's response; it cannot run when the saved response is gone or replaced.
+COMPLETION_GATE_RESPONSE_UNAVAILABLE = "completion_gate_response_unavailable"
+# Operator decision 2026-09-30 (option A): recovery never settles a record with a
+# completion gate beyond delivery ``done``; it settles it ``failed`` with this cause.
+RECOVERY_REQUIRES_RERUN = "recovery_requires_rerun"
+# Record fields that hold a failure the worker already found.
+_RECORDED_FAILURE_FIELDS = (
+    "failure_reason",
+    "review_verdict_failure",
+    "no_deliverable_reason",
+    "kimi_content_refusal",
+    "agy_oauth_link_error",
+    "read_only_mutation_paths",
+)
+
+
+@dataclass(frozen=True)
+class CompletionGateResult:
+    """One completion gate's verdict on a task record.
+
+    ``failure`` is the typed cause (None when the gate passed), ``status`` the
+    terminal status a failure settles, and ``record_key``/``check`` the
+    measurement the gate writes to the record, when it has one.
+    """
+
+    gate: str
+    failure: str | None
+    detail: str = ""
+    status: str = "failed"
+    record_key: str | None = None
+    check: dict[str, Any] | None = None
+
+
+def applicable_completion_gates(record: Mapping[str, Any]) -> tuple[str, ...]:
+    """Every completion gate the record calls for, in the order the worker runs them.
+
+    An exit scan that did not rule out live background jobs (``leftovers_scan``
+    other than clear) leaves the run unconfirmed; delivery binds every
+    write-capable dispatch; the review verdict binds an opted-in review
+    (``require_review_verdict``); a write-capable bounded worker has its envelope
+    ceilings checked, else a content exemption its changed paths.
+    """
+    write = record.get("mode") in _WRITE_CAPABLE_MODES
+    gates: list[str] = []
+    if record.get("leftovers_scan") not in (None, worker_leftovers.SCAN_CLEAR) or record.get("incomplete_run_reason"):
+        gates.append(COMPLETION_GATE_BACKGROUND_LEFTOVERS)
+    if write:
+        gates.append(COMPLETION_GATE_DELIVERY)
+    if record.get("require_review_verdict"):
+        gates.append(COMPLETION_GATE_REVIEW_VERDICT)
+    if write and isinstance(record.get("advisory_envelope"), dict):
+        gates.append(COMPLETION_GATE_ADVISORY_CEILING)
+    elif write and isinstance(record.get("advisory_exemption"), dict):
+        gates.append(COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE)
+    return tuple(gates)
+
+
+def run_completion_gate(
+    gate: str,
+    record: Mapping[str, Any],
+    *,
+    response: str | None,
+    commits_ahead: int | None,
+    worktree: Path | None,
+) -> CompletionGateResult:
+    """Run one completion gate on the worker's response, commit count and tree.
+
+    ``response`` None means the saved response is unavailable and ``worktree``
+    None that the worker's tree is gone: a gate that needs either fails typed,
+    never passes.
+    """
+    if gate == COMPLETION_GATE_BACKGROUND_LEFTOVERS:
+        reason = record.get("incomplete_run_reason") or worker_leftovers.SCAN_UNKNOWN_REASON
+        return CompletionGateResult(gate, str(reason), str(reason), status="needs_finalize")
+    if gate == COMPLETION_GATE_DELIVERY:
+        if response is None and commits_ahead == 0:
+            # Only a zero-commit run reads the response (its no_change declaration).
+            return CompletionGateResult(gate, COMPLETION_GATE_RESPONSE_UNAVAILABLE, "saved response unavailable")
+        reason = _delivery_failure_reason(
+            response or "", _parse_delivery_declaration(response or ""), commits_ahead=commits_ahead
+        )
+        return CompletionGateResult(gate, reason, reason or "", status=_NO_DELIVERABLE_STATUS)
+    if gate == COMPLETION_GATE_REVIEW_VERDICT:
+        reason = _review_verdict_failure_reason(response or "")
+        return CompletionGateResult(gate, reason, reason or "")
+    if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
+        advisory = _advisory_completion_gate(record, worktree)
+        if advisory is None:
+            raise ValueError(f"record does not call for completion gate {gate!r}")
+        record_key, check, failure, detail = advisory
+        return CompletionGateResult(gate, failure, detail if failure else "", record_key=record_key, check=check)
+    raise ValueError(f"unknown completion gate {gate!r}")
+
+
+def recorded_completion_failure(record: Mapping[str, Any]) -> CompletionGateResult | None:
+    """A failure the record already carries, as a result with its typed cause; None when it carries none."""
+    for field in _RECORDED_FAILURE_FIELDS:
+        value = record.get(field)
+        if not value:
+            continue
+        cause = value if isinstance(value, str) else field
+        status = _NO_DELIVERABLE_STATUS if field == "no_deliverable_reason" else "failed"
+        return CompletionGateResult(COMPLETION_GATE_RECORDED_FAILURE, cause, f"{field}: {cause}", status=status)
+    return None
+
+
+def saved_task_response(record: Mapping[str, Any], record_path: Path | None = None) -> str | None:
+    """The worker's response as the record saved it, or None when it is gone or was replaced.
+
+    Recovery's delivery gate reads it for a zero-commit run. The ``.result`` sidecar next to the record is read first (it moves with the
+    record into the archive), then ``result_file``. A text whose length is not
+    the recorded ``response_chars`` was replaced after the worker finished. A
+    record with an empty response wrote no result file: that response is ``""``.
+    """
+    chars = record.get("response_chars")
+    known_chars = isinstance(chars, int) and not isinstance(chars, bool)
+    candidates: list[Path] = []
+    if record_path is not None:
+        candidates.append(record_path.with_suffix(".result"))
+    result_file = record.get("result_file")
+    if isinstance(result_file, str) and result_file:
+        candidates.append(Path(result_file))
+    for path in candidates:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        return text if not known_chars or len(text) == chars else None
+    if known_chars and chars == 0 and not result_file:
+        return ""
+    return None
+
+
+def recovery_requires_rerun(record: Mapping[str, Any]) -> CompletionGateResult | None:
+    """Recovery's refusal for a record with any completion gate beyond delivery; None for a delivery-only record.
+
+    Operator decision 2026-09-30 (option A): recovery runs after the worker is
+    gone, so it never re-measures a tree or reconstructs a response to settle
+    such a record ``done``. It settles it ``failed`` with :data:`RECOVERY_REQUIRES_RERUN`,
+    or with the failure the record already carries, for the driver to re-run
+    or finalize by hand.
+    """
+    gated = [gate for gate in applicable_completion_gates(record) if gate != COMPLETION_GATE_DELIVERY]
+    if not gated:
+        return None
+    recorded = recorded_completion_failure(record)
+    cause = recorded.failure if recorded is not None else RECOVERY_REQUIRES_RERUN
+    detail = f"completion gates {', '.join(gated)} run only in the worker; re-run the task or finalize it by hand"
+    return CompletionGateResult(gated[0], cause, detail)
+
+
+def completion_gate_recovery_failure(
+    record: Mapping[str, Any], *, response: str | None, commits_ahead: int | None
+) -> CompletionGateResult | None:
+    """The reason recovery may not report this record ``done``; None when it may.
+
+    A gated record is refused by :func:`recovery_requires_rerun`; a delivery-only
+    record keeps a failure it already carries, else its delivery gate runs on the
+    saved ``response`` and the ``commits_ahead`` evidence the caller holds now.
+    """
+    refusal = recovery_requires_rerun(record)
+    if refusal is not None:
+        return refusal
+    recorded = recorded_completion_failure(record)
+    if recorded is not None:
+        return recorded
+    return first_completion_gate_failure(record, response=response, commits_ahead=commits_ahead, worktree=None)
+
+
+def first_completion_gate_failure(
+    record: Mapping[str, Any], *, response: str | None, commits_ahead: int | None, worktree: Path | None
+) -> CompletionGateResult | None:
+    """Run every gate in :func:`applicable_completion_gates` in order; the first failure, or None when all pass."""
+    for gate in applicable_completion_gates(record):
+        result = run_completion_gate(gate, record, response=response, commits_ahead=commits_ahead, worktree=worktree)
+        if result.failure is not None:
+            return result
+    return None
+
+
+def _advisory_completion_gate_fails(record: Mapping[str, Any], worktree: Path) -> bool:
+    """True when the record's #9275 completion gate already fails, so auto-finalize must not commit or open a PR."""
+    gate = _advisory_completion_gate(record, worktree)
+    return gate is not None and gate[2] is not None
+
+
+def _exempt_change_check(worktree: Path | None, base_branch: str) -> dict[str, Any]:
+    """Classify every path a content-exempt worker changed (#9275); unmeasurable is reported as such.
+
+    Every committed path is classified, and every uncommitted one except the
+    scratch residue auto-finalize never publishes (``_is_disposable_auto_finalize_path``),
+    which is listed as ``ignored_residue``.
+    """
+    name_args = ["--name-only", "-z", "--no-renames"]
+    names, error = _advisory_worker_diff(worktree, base_branch, name_args)
+    committed, committed_error = _advisory_worker_diff(worktree, base_branch, name_args, committed_only=True)
+    if names is None or committed is None:
+        return {"measured": False, "error": error or committed_error}
+    assert worktree is not None
+    committed_paths = {name for name in committed.split("\0") if name}
+    all_paths = {name for name in names.split("\0") if name} | committed_paths
+    residue = sorted(
+        path for path in all_paths if path not in committed_paths and _is_disposable_auto_finalize_path(path)
+    )
+    changed = sorted(all_paths - set(residue))
+    try:
+        problems = bounded_advisory.exempt_change_problems(changed, worktree)
+    except RuntimeError as exc:
+        return {"measured": False, "error": str(exc)}
+    return {"measured": True, "changed_paths": changed, "ignored_residue": residue, "problems": problems}
+
+
 def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
     """Additions and deletions that could be one move across the owned-path boundary.
 
@@ -5618,6 +6233,7 @@ def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
         raise RuntimeError(f"git push failed: {_format_process_failure(proc)}")
 
 
+@publication_boundary(RuntimeError)
 def _create_auto_finalize_pr(
     worktree: Path,
     *,
@@ -5627,21 +6243,8 @@ def _create_auto_finalize_pr(
     body: str,
 ) -> str | None:
     try:
-        proc = subprocess.run(
-            [
-                "gh",
-                "pr",
-                "create",
-                "--draft",
-                "--base",
-                base_branch,
-                "--head",
-                branch,
-                "--title",
-                title,
-                "--body",
-                body,
-            ],
+        proc = request_run(
+            Request("pr-create", draft=True, base=base_branch, head=branch, title=title, body=body),
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -6005,7 +6608,9 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 return row
             if not dirty:
                 ahead = _count_commits_ahead(
-                    worktree, _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main"))
+                    worktree,
+                    _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main")),
+                    base_sha=_recorded_base_sha(state),
                 )
                 if ahead is None:
                     row["reason"] = "ahead count unavailable"
@@ -6197,6 +6802,7 @@ def _remove_dispatch_worktree(
     releasable: Callable[[], tuple[bool, str]],
     force: bool = False,
     lock_timeout_s: float | None = None,
+    task_record: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Remove one dispatch worktree. Every removal in this module comes here (#8610).
 
@@ -6211,6 +6817,24 @@ def _remove_dispatch_worktree(
     Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
     ``skipped``, or ``error``; this never raises.
     """
+    from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
+
+    preserved_artifacts = None
+
+    def preserve_before_remove() -> tuple[bool, str]:
+        nonlocal preserved_artifacts
+        ok, detail = releasable()
+        if not ok:
+            return ok, detail
+        ok, refusal, preserved_artifacts = preserve_worktree_artifacts(
+            worktree,
+            primary=_REPO_ROOT,
+            task_id=owner_task_id,
+            tasks_dir=tasks_dir(),
+            task_record=task_record,
+        )
+        return (True, detail) if ok else (False, refusal)
+
     removal = worktree_claims.remove_unclaimed_worktree(
         worktree,
         # A ``--repo`` sibling worktree is git-operated in its own repository,
@@ -6219,13 +6843,16 @@ def _remove_dispatch_worktree(
         control_root=_REPO_ROOT,
         reason=reason,
         owner_task_id=owner_task_id,
-        releasable=releasable,
+        releasable=preserve_before_remove,
         force=force,
         tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
-    return {**removal.as_record(), "pr": None}
+    record = {**removal.as_record(), "pr": None}
+    if preserved_artifacts is not None:
+        record["preserved_artifacts"] = preserved_artifacts
+    return record
 
 
 def _stop_worker_background_jobs(task_record: Mapping[str, Any], *, task_id: str) -> tuple[bool, str]:
@@ -6289,6 +6916,7 @@ def _settle_worktree_reap(
         releasable=releasable,
         force=True,
         lock_timeout_s=lock_timeout_s,
+        task_record=task_record,
     )
     branch = removal["branch"]
     if removal["action"] == "removed" and branch is not None and not _branch_ref_exists(owning_repo, branch):
@@ -7002,8 +7630,7 @@ def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> 
     """Refuse when a fetched or reused head differs from the required pinned SHA."""
     if pinned_head_sha is not None and origin_sha != pinned_head_sha:
         raise RuntimeError(
-            "refusing dispatch: fetched branch head "
-            f"{origin_sha} differs from the pinned head SHA {pinned_head_sha}"
+            f"refusing dispatch: fetched branch head {origin_sha} differs from the pinned head SHA {pinned_head_sha}"
         )
 
 
@@ -7018,6 +7645,7 @@ def _resolve_worktree_base_sha(
     pinned_head_sha: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -7046,7 +7674,9 @@ def _resolve_worktree_base_sha(
             # rewrite the PR's history. In particular, rebasing an attached
             # branch can flatten or replay merge commits. A stale attachment
             # must be synchronized deliberately by its owner.
-            allow_rebase=allow_rebase and requested_branch is None,
+            # Review admission already read these dependencies. A stale target
+            # must refuse rather than advance to different admitted bytes.
+            allow_rebase=allow_rebase and requested_branch is None and not review_dependencies,
         )
         if requested_branch:
             # Existing paths used to return before this check, allowing local
@@ -7142,6 +7772,7 @@ def _ensure_worktree(
     run_nonce: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
@@ -7149,6 +7780,8 @@ def _ensure_worktree(
     is recorded under (see :func:`_add_reserved_worktree`). ``validated_path``,
     when given, is used as is and never resolved again (#8775,
     :func:`_helper_worktree_path`).
+    ``review_dependencies`` retains attempt inputs before superseded-review or
+    stale-holder cleanup can run, including detached earlier review rounds (#9388, #9417).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -7174,7 +7807,13 @@ def _ensure_worktree(
         "sparse": None,
         "local_venv": None,
     }
-    _release_superseded_review_worktrees(task_id, dry_run=dry_run)
+    if requested_branch and review_dependencies:
+        _refuse_review_attempt_branch_holders(
+            requested_branch,
+            [path for path in _branch_worktree_paths(requested_branch) if path != worktree_path],
+            review_dependencies,
+        )
+    _release_superseded_review_worktrees(task_id, dry_run=dry_run, review_dependencies=review_dependencies)
 
     if requested_branch:
         if resolved_base_sha is None:
@@ -7189,6 +7828,7 @@ def _ensure_worktree(
                 branch=requested_branch,
                 holders=elsewhere,
                 dry_run=dry_run,
+                review_dependencies=review_dependencies,
             )
             occupied_paths = _branch_worktree_paths(requested_branch)
             elsewhere = [path for path in occupied_paths if path != worktree_path]
@@ -7227,7 +7867,7 @@ def _ensure_worktree(
                 # `--branch` is an explicit attach request. Never rewrite its
                 # history during provisioning; a stale worktree must be
                 # synchronized deliberately by its owner.
-                allow_rebase=not dry_run and requested_branch is None,
+                allow_rebase=not dry_run and requested_branch is None and not review_dependencies,
             )
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -7243,12 +7883,21 @@ def _ensure_worktree(
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
         _provision_data_symlinks(worktree_path, _REPO_ROOT)
-        # Re-apply sparse profile so pre-existing full trees shrink on reuse.
-        telemetry["sparse"] = _apply_dispatch_sparse_checkout(
-            worktree_path,
-            full_checkout=full_checkout,
-            sparse_include=sparse_include,
-        )
+        # Admission has already read these inputs. Preserve the current checkout
+        # when it holds any dependency; reapplying sparse mode can hide those bytes.
+        dependencies = _review_attempt_dependency_names(worktree_path, review_dependencies)
+        if dependencies:
+            print(
+                f"ℹ️  reused worktree {worktree_path} kept current checkout: review dependency "
+                f"({', '.join(dependencies)})",
+                file=sys.stderr,
+            )
+        else:
+            telemetry["sparse"] = _apply_dispatch_sparse_checkout(
+                worktree_path,
+                full_checkout=full_checkout,
+                sparse_include=sparse_include,
+            )
         _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
@@ -7541,6 +8190,76 @@ def _render_research_prompt_block(pointers: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+_RESEARCH_POINTER_LINE = re.compile(r"- ([a-z0-9]+(?:-[a-z0-9]+)*) \[([a-z_-]+)\] content_hash=([A-Za-z0-9:]+)")
+
+
+def _recorded_research_block(block: object) -> str:
+    """A recorded research block, when it is exactly a rendering of research pointers (#9275).
+
+    The bounded worker rebuilds its expected prompt with the research block the
+    dispatcher recorded; only a block that re-renders from its own pointer
+    lines is a permitted dispatcher block. Raises ``AdvisoryRefused`` otherwise.
+    """
+    if block in (None, ""):
+        return ""
+    text = str(block)
+    pointers = [
+        {"id": match.group(1), "state": match.group(2), "content_hash": match.group(3)}
+        for line in text.splitlines()
+        if (match := _RESEARCH_POINTER_LINE.fullmatch(line))
+    ]
+    if not pointers or _render_research_prompt_block(pointers) != text:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.ADMISSION_INVALID, "the recorded research block is not a rendering of research pointers"
+        )
+    return text
+
+
+def _compose_dispatch_prompt(
+    base: str,
+    *,
+    worktree_path: Path | None,
+    mode: str,
+    sparse_telemetry: dict[str, Any] | None,
+    delegate_commits: bool,
+    research_block: str,
+    advisory_block: str,
+    advisory_block_kind: str | None,
+    rules_seat: str | None,
+    blocks: list[str] | None = None,
+) -> str:
+    """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
+
+    In prompt order: the rules core, the worktree block, ``base``, the research
+    pointers and the advisory block. ``blocks``, when given, gets the kinds
+    added, in prompt order. The bounded worker rebuilds its expected prompt
+    with this function (#9275), so the two cannot drift apart.
+    """
+    prompt = _augment_prompt_with_worktree(
+        base,
+        worktree_path,
+        mode=mode,
+        sparse_telemetry=sparse_telemetry,
+        delegate_commits=delegate_commits,
+    )
+    if worktree_path is not None and blocks is not None:
+        blocks.insert(0, "worktree")
+    if research_block and blocks is not None:
+        blocks.append("research")
+    prompt = prompt + research_block
+    if advisory_block_kind is not None:
+        if blocks is not None:
+            blocks.append(advisory_block_kind)
+        prompt = prompt + advisory_block
+    # Every worker and review seat starts with the rules core, read from this checkout.
+    cored_prompt = rules_core.with_core(prompt, rules_seat)
+    if cored_prompt != prompt:
+        if blocks is not None:
+            blocks.insert(0, "rules_core")
+        prompt = cored_prompt
+    return prompt
+
+
 def _with_optional_research_state(state: dict[str, Any], research_state: dict[str, Any] | None) -> dict[str, Any]:
     """Add ``"research"`` to ``state`` only when ``research_state`` is non-``None``.
 
@@ -7830,6 +8549,9 @@ def _run_worker(
     attempt_id: str | None = None,
     mcp_config_path: str | None = None,
     strict_mcp_config: bool = False,
+    review_manifest: str | None = None,
+    review_input_root: str | None = None,
+    review_access: str = "isolated",
     finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
@@ -7858,6 +8580,34 @@ def _run_worker(
         return 1
     # The worker runs the admitted seat and model; nothing resolves them again.
     agent, model = worker_target.recipient, worker_target.model
+    # #9275: a bounded model runs only with the parent's advisory admission in
+    # the task record, re-verified here on the launch values it runs; nothing
+    # reaches the provider without it.
+    advisory_execution = {
+        "effort": effort,
+        "hard_timeout": hard_timeout,
+        "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
+        "max_budget_usd": max_budget_usd,
+        "provider": provider,
+        "harness": harness,
+        "finalize_open_pr": finalize_open_pr,
+    }
+    advisory_refusal = _advisory_worker_refusal(
+        task_id,
+        agent=agent,
+        model=model,
+        mode=mode,
+        cwd=Path(cwd_str),
+        execution=advisory_execution,
+        prompt=prompt,
+        runtime_tmp_root=runtime_tmp_root,
+        runtime_tmp_namespace_root=runtime_tmp_namespace_root,
+    )
+    if advisory_refusal:
+        print(f"❌ {advisory_refusal}", file=sys.stderr)
+        return 1
+    from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
@@ -7894,6 +8644,7 @@ def _run_worker(
             requested_model=model,
             requested_effort=effort,
             harness=harness,
+            probe_cli_version=not (review_manifest and review_access == "full"),
         )
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
@@ -7971,11 +8722,20 @@ def _run_worker(
     no_deliverable = False
     no_deliverable_reason: str | None = None
     pre_spawn_failure = False
+    # #9275: the digest of the prompt checked and submitted at the provider
+    # handoff, or the typed code that refused it there.
+    advisory_prompt_sha256: str | None = None
+    advisory_handoff_refusal: str | None = None
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     leftovers_scan: worker_leftovers.ExitScan | None = None
     leftovers_unconfirmed = False
     telemetry_settled = False
+    # #9275: set only once every applicable completion gate (delivery, review
+    # verdict, advisory ceiling or exemption) has run on the current tree and
+    # the outcome is final. Before that the interrupt fallback never persists
+    # ``done``: an interrupted gate is not a passed gate.
+    completion_gates_settled = False
     rescue_status: str | None = None
     kimi_worker = is_kimi_seat(agent, model=model)
     kimi_content_refusal: str | None = None
@@ -8008,7 +8768,19 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
-            if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
+            if review_manifest is not None:
+                tool_config["review_manifest"] = review_manifest
+                tool_config["review_input_root"] = review_input_root
+            if review_manifest is not None:
+                tool_config["review_access"] = review_access
+                tool_config["review_cwd"] = str(cwd)
+            if (
+                strict_mcp_config
+                and review_id is not None
+                and attempt_id is not None
+                and agent == "claude"
+                and review_access == "isolated"
+            ):
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
@@ -8020,6 +8792,7 @@ def _run_worker(
                 and attempt_id is not None
                 and mcp_config_path is not None
                 and agent == "codex"
+                and review_access != "full"
             ):
                 # Codex has no --mcp-config: -c mcp_servers.* MERGES with global config, so
                 # the attempt runs under its scoped CODEX_HOME (sibling of the .mcp.json)
@@ -8045,6 +8818,7 @@ def _run_worker(
                 and attempt_id is not None
                 and mcp_config_path is not None
                 and agent == "agy"
+                and review_access != "full"
             ):
                 # agy has no per-invocation MCP flag and reads its servers from
                 # $HOME/.gemini/config, so the attempt runs under its scoped home (sibling
@@ -8080,9 +8854,18 @@ def _run_worker(
 
                 verify_review_attempt_paths(mcp_config_path)
 
+            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[
+                CURSOR_AUTO_ADMISSION_STATE_KEY
+            ].get("admitted"):
+                tool_config[CURSOR_AUTO_ADMITTED_KEY] = True
             if is_kimi_seat(agent, model=model):
                 # The runner and the adapters run the same gate on these paths and this tree.
                 tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
+            # #9275: the provider handoff. The admission is re-verified on the
+            # exact prompt object submitted below, after every transformation.
+            advisory_prompt_sha256 = _verify_bounded_worker(
+                task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=advisory_execution, prompt=prompt
+            )
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -8146,6 +8929,13 @@ def _run_worker(
         except AgentRuntimeError as exc:
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except bounded_advisory.AdvisoryRefused as exc:
+            pre_spawn_failure = True
+            advisory_handoff_refusal = exc.code
+            stderr_excerpt = f"worker refused at the provider handoff: {exc}"[:500]
+            returncode_reason = (
+                "bounded model failed its advisory admission at the provider handoff; provider not started"
+            )
         except ValueError as exc:
             pre_spawn_failure = True
             stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
@@ -8212,8 +9002,15 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        # #9275: gate evidence is this run's measurement, never an earlier record's.
+        for gate_key in _ADVISORY_GATE_KEYS:
+            final_state.pop(gate_key, None)
         final_state["require_review_verdict"] = require_review_verdict
         final_state["review_verdict_failure"] = None
+        if advisory_prompt_sha256 is not None:
+            final_state["advisory_prompt_sha256"] = advisory_prompt_sha256
+        if advisory_handoff_refusal is not None:
+            final_state["failure_reason"] = advisory_handoff_refusal
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
 
@@ -8299,10 +9096,16 @@ def _run_worker(
         if response:
             result_path = state_path.with_suffix(".result")
             try:
-                result_path.write_text(response)
+                result_path.write_text(response, encoding="utf-8")
                 result_file = str(result_path)
             except OSError:
                 result_file = None
+            # #9275: an advisor's result is sealed as written, with the model this
+            # worker ran, so admission refuses a result replaced after finish.
+            if result_file is not None and final_state.get("advisory_role") is not None:
+                final_state[bounded_advisory.SEAL_FIELD] = bounded_advisory.seal_advisor_result(
+                    response, model=model, run_nonce=final_state.get("run_nonce")
+                )
 
         # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
         # worktree exited dirty so follow-up reviewers can see at a glance
@@ -8348,6 +9151,7 @@ def _run_worker(
                 commits_ahead = _count_commits_ahead(
                     Path(worktree_path),
                     base_ref,
+                    base_sha=_recorded_base_sha(final_state),
                 )
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
@@ -8408,6 +9212,7 @@ def _run_worker(
                     and (mode == "danger" or kimi_worker)
                     and kimi_content_refusal is None
                     and not run_incomplete
+                    and not _advisory_completion_gate_fails(final_state, Path(worktree_path))
                 ):
                     if kimi_worker:
                         # The content check passed and the worker has exited: take the
@@ -8425,7 +9230,9 @@ def _run_worker(
                         owned_paths=final_state.get("owned_paths"),
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
-                    commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
+                    commits_ahead = _count_commits_ahead(
+                        Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state)
+                    )
                     if auto_finalize.ok and not auto_finalize.skipped_paths:
                         needs_finalize = False
                         ok_outcome = True
@@ -8469,21 +9276,7 @@ def _run_worker(
         # ``DELIVERABLE:`` line is honoured as an optional positive signal.
         # Read-only tasks are excluded: their deliverable may be analysis or
         # an external side effect such as a posted review comment.
-        if (
-            mode in _WRITE_CAPABLE_MODES
-            and final_status == "done"
-            and returncode == 0
-            and not needs_finalize
-            and no_deliverable_reason is None
-        ):
-            delivery_declaration = _parse_delivery_declaration(response)
-            no_deliverable_reason = _delivery_failure_reason(
-                response,
-                delivery_declaration,
-                commits_ahead=commits_ahead,
-            )
-            no_deliverable = no_deliverable_reason is not None
-
+        #
         # A review-typed dispatch (#8421) that settled ``done`` must actually
         # state a verdict. A reviewer that backgrounds its work and replies
         # with a promise to keep waiting exits 0 with an intent-only body; the
@@ -8491,19 +9284,50 @@ def _run_worker(
         # without this gate the false ``done`` reported success to ask-* review
         # drivers. Opt-in via ``--require-review-verdict`` (the ask-* review
         # wrapper only) — ordinary asks and implement dispatches are unchanged.
-        if (
-            require_review_verdict
-            and final_status == "done"
-            and returncode == 0
-            and not needs_finalize
-            and no_deliverable_reason is None
-        ):
-            review_verdict_failure = _review_verdict_failure_reason(response)
-            if review_verdict_failure is not None:
-                final_state["review_verdict_failure"] = review_verdict_failure
+        #
+        # #9275: a bounded worker's envelope ceilings, and a Ukrainian content
+        # exemption's changed paths, are checked on what it changed; a breach, or
+        # changes that cannot be measured, is a typed failure, never done.
+        #
+        # Which gates apply is one definition (``applicable_completion_gates``),
+        # shared with every recovery path that can report ``done``.
+        gate_record = {**final_state, "mode": mode, "require_review_verdict": require_review_verdict}
+        for gate in applicable_completion_gates(gate_record):
+            if final_status != "done":
+                break
+            if gate == COMPLETION_GATE_BACKGROUND_LEFTOVERS:
+                continue  # the exit scan above already left this run needs_finalize
+            if gate in (COMPLETION_GATE_DELIVERY, COMPLETION_GATE_REVIEW_VERDICT) and (
+                returncode != 0 or needs_finalize or no_deliverable_reason is not None
+            ):
+                continue
+            gate_result = run_completion_gate(
+                gate,
+                gate_record,
+                response=response,
+                commits_ahead=commits_ahead,
+                worktree=Path(worktree_path) if worktree_path else None,
+            )
+            if gate_result.record_key is not None:
+                final_state[gate_result.record_key] = gate_result.check
+            if gate == COMPLETION_GATE_DELIVERY:
+                delivery_declaration = _parse_delivery_declaration(response)
+                no_deliverable_reason = gate_result.failure
+                no_deliverable = no_deliverable_reason is not None
+            elif gate_result.failure is None:
+                continue
+            elif gate == COMPLETION_GATE_REVIEW_VERDICT:
+                final_state["review_verdict_failure"] = gate_result.failure
                 final_status = "failed"
                 ok_outcome = False
-                stderr_excerpt = review_verdict_failure
+                stderr_excerpt = gate_result.failure
+            else:
+                final_state["failure_reason"] = gate_result.failure
+                final_status = "failed"
+                ok_outcome = False
+                needs_finalize = False
+                message = f"{gate_result.failure}: {gate_result.detail}"
+                stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
 
         if pre_spawn_failure:
             needs_finalize = False
@@ -8521,6 +9345,9 @@ def _run_worker(
         elif no_deliverable:
             final_status = _NO_DELIVERABLE_STATUS
             ok_outcome = False
+        # Every completion gate has run and the outcome is final: from here an
+        # interrupt persists it with its gate evidence, as the checkpoint would.
+        completion_gates_settled = True
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
         if leftovers_scan is not None and leftovers_scan.reason and final_status == "needs_finalize":
@@ -8603,6 +9430,16 @@ def _run_worker(
                 ),
                 returncode,
             )
+            interrupted_gate_error: str | None = None
+            if interrupted_status == "done" and not completion_gates_settled:
+                # #9275: success needs every applicable completion gate run on the
+                # current tree. A write dispatch interrupted before that boundary is
+                # left for finalization; a read-only one is a typed failure.
+                interrupted_gate_error = _INTERRUPTED_BEFORE_COMPLETION_GATES
+                if mode in _WRITE_CAPABLE_MODES:
+                    interrupted_needs_finalize = True
+                else:
+                    interrupted_status = "failed"
             if interrupted_needs_finalize:
                 interrupted_status = "needs_finalize"
             _write_state_atomic(
@@ -8630,6 +9467,7 @@ def _run_worker(
                         finalize_error=(f"interrupted during finalize: {type(interrupt_exc).__name__}"),
                         last_error=(
                             no_deliverable_reason
+                            or interrupted_gate_error
                             or (_first_error_line(stderr_excerpt) if interrupted_status != "done" else None)
                         ),
                     ),
@@ -9226,21 +10064,44 @@ def _review_attempt_prompt_admission(
     Runs before any side effect. The prompt's own attempt block (#8996) must name this dispatch's ids, and the
     prompt must come from a ``--prompt-file`` whose render record matches the code the seat would run (#9163).
     """
+    import yaml
+
     from scripts.agent_runtime.review_mcp import check_review_contract
-    from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
+    from scripts.review.prompts.check import AttemptIdsUnreadableError, check_prompt, parse_attempt_ids
     from scripts.review.render_contract import ReviewContractError
 
     prompt_file = Path(args.prompt_file) if getattr(args, "prompt_file", None) else None
     prompt = early_prompt or ""
     try:
+        manifest = yaml.safe_load(Path(args.review_attempt).read_bytes())
+        if isinstance(manifest, dict) and any(key in manifest for key in ("manifest_schema", "kind", "inputs")):
+            contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
+            checked = check_prompt(
+                prompt,
+                Path(args.review_attempt),
+                repo_root=Path(contract["input_root"]),
+                prompts_dir=Path(contract["server_checkout"]) / "scripts/review/prompts",
+                recorded_prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
+                files_read=contract["recorded_files_read"],
+                template_sha256=contract["recorded_template_sha256"],
+                recorded_templates=contract["recorded_templates"],
+                review_id=review_id,
+                attempt_id=attempt_id,
+                review_access=getattr(args, "review_access", "full"),
+            )
+            if not checked.passed:
+                return "❌ review attempt refused: prompt_render_invalid: " + "; ".join(checked.errors), None
+            return None, contract
         if prompt_file is None and getattr(args, "prompt", None) == "-":
             # stdin is read only later, and a stdin prompt has no render record: refused as review_render_record_missing
             return None, check_review_contract(None, "")
-        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt, custom=True)
     except AttemptIdsUnreadableError as err:
         return f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", None
     except ReviewContractError as err:
         return f"❌ {err}", None
+    except (OSError, ValueError, yaml.YAMLError) as err:
+        return f"❌ review attempt refused: prompt_render_invalid: {type(err).__name__}", None
     if prompt_review_id is None or prompt_attempt_id is None:
         # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
         # ledger this dispatch prepares — the failure #8996 was filed for.
@@ -9263,9 +10124,11 @@ def _review_attempt_prompt_admission(
         ), None
     # The seat's sources server launches from the primary checkout; the prompt may have been rendered anywhere.
     try:
-        return None, check_review_contract(prompt_file, prompt)
+        return None, check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
     except ReviewContractError as err:
         return f"❌ {err}", None
+    except (OSError, ValueError) as err:
+        return f"❌ review attempt refused: prompt_render_invalid: {type(err).__name__}", None
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -9306,6 +10169,20 @@ def _dispatch(
     # args.branch, a rejected --model cleared to None): the hash binds what was
     # literally parsed, not what dispatch later resolved it to (#8430 R3-A r8).
     dispatch_args_hash = dispatch_args_sha256(args)
+    # The advisory binding's argument half, as parsed: dispatch mutates ``args`` below (#9275).
+    advisory_args = json.loads(json.dumps(advisory_args_payload(args)))
+    advisory_args_hash = bounded_advisory.canonical_sha256(advisory_args)
+    if getattr(args, "print_advisory_binding", False):
+        try:
+            print(advisory_binding(advisory_args_hash, _binding_prompt_sha256(args, read_stdin=True)))
+        except OSError as exc:
+            print(f"❌ cannot read --prompt-file for the advisory binding: {exc}", file=sys.stderr)
+            return 2
+        return 0
+    advisory_flag_refusal = _advisory_flag_refusal(args)
+    if advisory_flag_refusal:
+        print(f"❌ dispatch refused: {advisory_flag_refusal}", file=sys.stderr)
+        return 2
 
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
@@ -9373,7 +10250,7 @@ def _dispatch(
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
-    from scripts.review.model_catalog import retired_model_refusal
+    from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
 
     # A catalog-retired model is refused before any check can run a command.
     retired_refusal = retired_model_refusal(getattr(args, "model", None))
@@ -9393,6 +10270,13 @@ def _dispatch(
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
     # the original request before the route probes anything and the resolved route after it.
     review_attempt = getattr(args, "review_attempt", None)
+    if review_attempt and getattr(args, "output_schema", None):
+        print(
+            "❌ review attempt refused: attempt_output_schema_unsupported: "
+            "--review-attempt cannot be combined with --output-schema (#9251)",
+            file=sys.stderr,
+        )
+        return 2
     from scripts.agent_runtime.target_admission import launch_seat
 
     if str(_REPO_ROOT) not in sys.path:
@@ -9453,6 +10337,23 @@ def _dispatch(
             return 2
         args.cwd = str(validated_cwd)
 
+    # Explicit-target retention precedes route/prompt admission and all cleanup.
+    # Auto targets depend on the admitted route and are checked just after routing.
+    # The sidecar's paths grant no authority; they only prevent destructive release.
+    try:
+        review_dependencies = _review_attempt_worktree_dependencies(args)
+        if review_dependencies and getattr(args, "branch", None) and worktree_arg != "auto":
+            # A validated target already registered on this branch is reused,
+            # never released. Later worktree validation still checks reuse safety.
+            _refuse_review_attempt_branch_holders(
+                args.branch,
+                [path for path in _branch_worktree_paths(args.branch) if path != validated_worktree],
+                review_dependencies,
+            )
+    except (OSError, ValueError, RuntimeError) as exc:
+        print(f"❌ review attempt refused: {exc}", file=sys.stderr)
+        return 2
+
     # The single Kimi gate runs on the original request (--agent, --model and their aliases)
     # before the launch route probes the budget or a model, and on the route it resolves —
     # the retired-CLI alias and any budget substitution — on the validated paths, before any
@@ -9483,6 +10384,46 @@ def _dispatch(
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
 
+    if review_dependencies and getattr(args, "branch", None) and worktree_arg == "auto":
+        try:
+            reuse_target = _normalize_worktree_path(
+                str(_auto_worktree_path(dispatch_agent, args.task_id, repo_root=target_repo_root)),
+                repo_root=target_repo_root,
+            )
+            _refuse_review_attempt_branch_holders(
+                args.branch,
+                [path for path in _branch_worktree_paths(args.branch) if path != reuse_target],
+                review_dependencies,
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            print(f"❌ review attempt refused: {exc}", file=sys.stderr)
+            return 2
+
+    # #9518: while a lane is past its plan cap with a fresh positive credit balance
+    # (router state irrelevant), only its credit-period models are admitted. Checked on the admitted route (aliases,
+    # substitution and review selection applied; no --model means the lane default)
+    # before any side effect.
+    credit_refusal = _credit_period_refusal(dispatch_agent, launch_target.model)
+    if credit_refusal:
+        print(f"❌ dispatch refused: {credit_refusal}", file=sys.stderr)
+        return 2
+
+    # #9275 (operator decision 2026-09-30): a bounded worker is admitted only with a
+    # complete advisory envelope bound to this dispatch. Checked on the admitted
+    # route — after aliases, --force-agent and any substitution — before any task
+    # record, worktree or other side effect.
+    try:
+        advisory_admission = _admit_advisory(
+            args,
+            dispatch_agent=dispatch_agent,
+            launch_model=launch_target.model,
+            bound_args=advisory_args,
+            repo_root=target_repo_root,
+        )
+    except bounded_advisory.AdvisoryRefused as exc:
+        print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+        return 2
+
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
     early_prompt: str | None = None
@@ -9506,6 +10447,15 @@ def _dispatch(
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
 
     task_id = args.task_id
     try:
@@ -9583,6 +10533,7 @@ def _dispatch(
     review_id = getattr(args, "review_id", None)
     attempt_id = getattr(args, "attempt_id", None)
     review_plan = None
+    review_access = getattr(args, "review_access", "full")
     review_contract: dict[str, Any] | None = None
     if review_attempt or review_id or attempt_id:
         if not (review_attempt and review_id and attempt_id):
@@ -9590,6 +10541,12 @@ def _dispatch(
                 "❌ --review-attempt, --review-id, and --attempt-id must be used together",
                 file=sys.stderr,
             )
+            return 2
+        if review_access == "full" and not getattr(args, "full_checkout", False):
+            print("❌ full_review_requires_full_checkout: use --full-checkout", file=sys.stderr)
+            return 2
+        if review_access == "full" and args.mode != "read-only":
+            print("❌ attempt_requires_fresh_read_only_sources: use --mode read-only", file=sys.stderr)
             return 2
         manifest_path = Path(review_attempt)
         if not manifest_path.is_file():
@@ -9839,6 +10796,15 @@ def _dispatch(
         print(
             "❌ review attempt refused: review_prompt_changed: the prompt file changed after its admission "
             f"(admitted {review_contract['prompt_sha256']}, now {source_prompt_sha256}) (#9163)",
+            file=sys.stderr,
+        )
+        return 2
+
+    if advisory_admission.prompt_sha256 is not None and source_prompt_sha256 != advisory_admission.prompt_sha256:
+        # The envelope was admitted for the prompt read at admission; the prompt run must be that text (#9275).
+        print(
+            f"❌ dispatch refused: {bounded_advisory.BINDING_MISMATCH}: the prompt changed after advisory admission "
+            f"(admitted {advisory_admission.prompt_sha256}, now {source_prompt_sha256})",
             file=sys.stderr,
         )
         return 2
@@ -10102,6 +11068,7 @@ def _dispatch(
                     detached=detached_read_only,
                     # A Kimi worktree is never rebased: it must stay at the commit the gate read.
                     allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
+                    review_dependencies=review_dependencies,
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
@@ -10238,6 +11205,7 @@ def _dispatch(
                     dry_run=True,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
+                    review_dependencies=review_dependencies,
                 )
             except (ValueError, RuntimeError) as exc:
                 print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
@@ -10262,6 +11230,7 @@ def _dispatch(
                 requested_model=args.model,
                 requested_effort=getattr(args, "effort", None),
                 harness=requested_harness,
+                probe_cli_version=not (review_attempt and review_access == "full"),
             )
             dry_run_state = {
                 "pinned_head": pinned_head,
@@ -10313,6 +11282,7 @@ def _dispatch(
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
+            dry_run_state.update(advisory_admission.state_fields())
             dry_run_reap = _reap_runtime_tmp_lease(
                 runtime_tmp_root,
                 runtime_tmp_namespace_root,
@@ -10367,7 +11337,7 @@ def _dispatch(
             print(f"❌ {admission_refusal}", file=sys.stderr)
             return _ADMISSION_REFUSED_EXIT
 
-    if review_attempt:
+    if review_attempt and review_access != "full":
         from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
         effective_harness = requested_harness or dispatch_agent
@@ -10377,6 +11347,7 @@ def _dispatch(
                 attempt_id=attempt_id,
                 manifest_path=Path(review_attempt),
                 harness=effective_harness,
+                review_access=review_access,
                 # Launch-time check (#9163): the primary may have changed since admission.
                 review_contract=review_contract,
             )
@@ -10434,6 +11405,7 @@ def _dispatch(
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
                     run_nonce=run_nonce,
+                    review_dependencies=review_dependencies,
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
@@ -10581,6 +11553,31 @@ def _dispatch(
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
 
+    if review_attempt and review_access == "full":
+        from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
+        from scripts.agent_runtime.review_mcp import prepare_review_attempt
+        from scripts.review.isolation import ReviewIsolationError
+
+        try:
+            # A refused tree must not reserve the attempt id or create its ledger.
+            verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
+            review_plan = prepare_review_attempt(
+                review_id=review_id,
+                attempt_id=attempt_id,
+                manifest_path=Path(review_attempt),
+                harness=requested_harness or dispatch_agent,
+                review_access=review_access,
+                review_contract=review_contract,
+            )
+        except (ReviewIsolationError, ValueError, FileExistsError) as exc:
+            stdout_fd.close()
+            stderr_fd.close()
+            if worktree_path is not None and worktree_telemetry.get("reused") is False:
+                cleanup = _settle_worktree_reap(worktree_path, created_by_this_dispatch=True, settling_task_id=task_id)
+                print(f"   review refusal cleanup: {cleanup}", file=sys.stderr)
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+
     if review_plan is not None and worktree_path is not None:
         try:
             _mark_review_attempt_worktree(worktree_path, task_id)
@@ -10628,35 +11625,33 @@ def _dispatch(
     spawned = False
     try:
         cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
-        prompt = _augment_prompt_with_worktree(
-            prompt,
-            worktree_path,
-            mode=args.mode,
-            sparse_telemetry=worktree_telemetry.get("sparse")
-            if isinstance(worktree_telemetry.get("sparse"), dict)
-            else None,
-            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
-        )
-        if worktree_path is not None:
-            prompt_blocks.insert(0, "worktree")
-
         # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
         # instruction (never digest bodies) when an explicit context was supplied and
         # the registry is enabled. Fail-open — a disabled/malformed registry leaves the
         # prompt and state untouched.
         research_state: dict[str, Any] | None = None
+        research_block = ""
         if research_ctx is not None:
             research_block, research_state = _resolve_research_injection(research_ctx, task_id)
-            if research_block:
-                prompt_blocks.append("research")
-            prompt = prompt + research_block
 
-        # Every worker and review seat starts with the rules core, read from this
-        # checkout (its presence was required at the top of the dispatch).
-        cored_prompt = rules_core.with_core(prompt, getattr(args, "rules_seat", None))
-        if cored_prompt != prompt:
-            prompt_blocks.insert(0, "rules_core")
-            prompt = cored_prompt
+        # #9275: the bounded worker reads its envelope (ceilings included); the
+        # advisor reads the envelope output contract bound to the worker dispatch.
+        advisory_block, advisory_block_kind = advisory_admission.prompt_block()
+        # The rules core's presence was required at the top of the dispatch.
+        prompt = _compose_dispatch_prompt(
+            prompt,
+            worktree_path=worktree_path,
+            mode=args.mode,
+            sparse_telemetry=worktree_telemetry.get("sparse")
+            if isinstance(worktree_telemetry.get("sparse"), dict)
+            else None,
+            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
+            research_block=research_block,
+            advisory_block=advisory_block,
+            advisory_block_kind=advisory_block_kind,
+            rules_seat=getattr(args, "rules_seat", None),
+            blocks=prompt_blocks,
+        )
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
@@ -10664,6 +11659,7 @@ def _dispatch(
             requested_model=args.model,
             requested_effort=getattr(args, "effort", None),
             harness=requested_harness,
+            probe_cli_version=not (review_attempt and review_access == "full"),
         )
 
         # Write initial state BEFORE forking so a fast caller can see it.
@@ -10732,6 +11728,9 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if cursor_auto_admission is not None:
+            # The Cursor adapter runs Auto only with this admission (#9274).
+            initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -10743,10 +11742,11 @@ def _dispatch(
             initial_state["review_attempt"] = {
                 "review_id": review_id,
                 "attempt_id": attempt_id,
-                "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
+                "manifest_sha256": review_plan.manifest_sha256,
             }
             # The render-time and dispatch-time digests compared (#9163): what the review of record ran against.
             initial_state["review_contract"] = review_contract
+            initial_state["review_access"] = review_access
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -10766,6 +11766,40 @@ def _dispatch(
         # the admitted slot stays held until the worker writes its pid (#8717).
         if admission_record is not None:
             initial_state["admission"] = admission_record
+        # #9275: the launch handed to the worker below, recorded for its admission check.
+        worker_execution = _worker_execution(
+            args,
+            cwd=cwd,
+            silence_timeout=silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+            max_budget_usd=max_budget_usd,
+            harness=requested_harness,
+        )
+        initial_state.update(advisory_admission.state_fields(research_block=research_block, execution=worker_execution))
+        # #9275: the envelope admitted at route resolution must still be the
+        # advisor's canonical result now, just before the worker is spawned.
+        try:
+            _recheck_advisory(advisory_admission, repo_root=target_repo_root)
+        except bounded_advisory.AdvisoryRefused as exc:
+            refusal = f"dispatch refused before spawn: {exc}"
+            initial_state.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "stderr_excerpt": refusal[:500],
+                    "returncode": None,
+                    "returncode_reason": "advisory envelope changed before spawn; worker not started",
+                    "last_error": exc.code,
+                    "failure_reason": exc.code,
+                    "exit_code": None,
+                }
+            )
+            initial_state.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _record_final_branch_head(initial_state)
+            _write_state_atomic(state_path, initial_state)
+            worktree_locks.close()
+            print(f"❌ {refusal}", file=sys.stderr)
+            return 2
         _write_state_atomic(state_path, initial_state)
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
@@ -10819,27 +11853,27 @@ def _dispatch(
             task_id,
             *_worker_route_argv(launch_target),
             "--mode",
-            args.mode,
+            worker_execution["mode"],
             "--cwd",
-            cwd,
+            worker_execution["cwd"],
             "--hard-timeout",
-            str(args.hard_timeout),
+            str(worker_execution["hard_timeout"]),
             "--silence-timeout",
-            str(silence_timeout),
+            str(worker_execution["silence_timeout"]),
             "--initial-response-timeout",
-            str(initial_response_timeout),
+            str(worker_execution["initial_response_timeout"]),
             "--runtime-tmp-root",
             str(runtime_tmp_root),
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
+        cmd.extend(_dispatch_worker_identity_flags(args, worker_execution["harness"]))
         if keep_worktree:
             cmd.append("--keep-worktree")
-        if bool(getattr(args, "finalize_open_pr", False)):
+        if worker_execution["finalize_open_pr"]:
             cmd.append("--finalize-open-pr")
-        if max_budget_usd is not None:
-            cmd.extend(["--max-budget-usd", str(max_budget_usd)])
+        if worker_execution["max_budget_usd"] is not None:
+            cmd.extend(["--max-budget-usd", str(worker_execution["max_budget_usd"])])
         if output_schema_path is not None:
             cmd.extend(
                 [
@@ -10849,16 +11883,17 @@ def _dispatch(
                     str(output_schema_sha256),
                 ]
             )
-        if getattr(args, "provider", None):
-            cmd.extend(["--provider", args.provider])
-        effort = getattr(args, "effort", None)
-        if effort:
-            cmd.extend(["--effort", effort])
+        if worker_execution["provider"]:
+            cmd.extend(["--provider", worker_execution["provider"]])
+        if worker_execution["effort"]:
+            cmd.extend(["--effort", worker_execution["effort"]])
         if run_nonce:
             cmd.extend(["--run-nonce", run_nonce])
         if review_plan is not None:
             cmd.extend(
                 [
+                    "--review-access",
+                    review_access,
                     "--review-id",
                     str(review_id),
                     "--attempt-id",
@@ -10866,6 +11901,10 @@ def _dispatch(
                     "--mcp-config-path",
                     str(review_plan.config_path),
                     "--strict-mcp-config",
+                    "--review-manifest",
+                    str(Path(review_attempt).resolve()),
+                    "--review-input-root",
+                    str(review_contract["input_root"]),
                 ]
             )
 
@@ -11212,6 +12251,345 @@ def _budget_needs_hard_capacity_action(
 
 
 _LANGUAGE_LANES = frozenset({"claude", "codex", "agy"})
+_SHA256_HEX_RE = re.compile(r"[0-9a-f]{64}")
+
+
+def _advisory_flag_refusal(args: argparse.Namespace) -> str | None:
+    """A typed refusal when the #9275 advisory flags are combined inconsistently; None otherwise."""
+    advisory_task = getattr(args, "advisory_task", None)
+    role = getattr(args, "advisory_role", None)
+    binding = getattr(args, "advisory_binding", None)
+    conflict = bounded_advisory.FLAG_CONFLICT
+    if advisory_task is not None and not str(advisory_task).strip():
+        return f"{conflict}: --advisory-task must name a task"
+    if advisory_task is not None and role is not None:
+        return f"{conflict}: --advisory-task (bounded worker) and --advisory-role (advisor) are exclusive"
+    if advisory_task is not None and str(advisory_task).strip() == str(args.task_id):
+        return f"{conflict}: --advisory-task must name another task, not this one"
+    if (role is None) != (binding is None):
+        return f"{conflict}: --advisory-role and --advisory-binding are required together"
+    if binding is not None and not _SHA256_HEX_RE.fullmatch(str(binding)):
+        return f"{conflict}: --advisory-binding must be a lowercase sha256 hex digest"
+    if role is not None and getattr(args, "mode", "read-only") != "read-only":
+        return f"{bounded_advisory.ADVISOR_ROUTE_REFUSED}: the advisor runs read-only, not {args.mode}"
+    return None
+
+
+@dataclass(frozen=True)
+class _AdvisoryAdmission:
+    """What #9275 admission decided for a dispatch: an advisor run, a bounded worker with its envelope, or neither."""
+
+    requirement: str | None = None
+    envelope: bounded_advisory.ValidatedEnvelope | None = None
+    advisor_binding: str | None = None
+    prompt_sha256: str | None = None  # the bounded worker's prompt text as bound at admission
+    args: dict[str, Any] | None = None  # the argument half of the bounded worker's binding
+    repo_root: Path | None = None  # where the envelope's owned paths were validated
+    agent: str | None = None  # the admitted launch the bounded worker must run
+    model_id: str | None = None
+    exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
+
+    def state_fields(self, *, research_block: str = "", execution: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt.
+
+        ``execution`` is the launch handed to the worker (``_worker_execution``),
+        recorded with the admitted agent and model as ``admitted_execution``;
+        None for a dry run, which starts no worker.
+        """
+        if self.envelope is not None and self.requirement is not None:
+            assert self.args is not None and self.prompt_sha256 is not None and self.repo_root is not None
+            assert self.agent is not None and self.model_id is not None
+            return {
+                "advisory_envelope": self.envelope.state_record(
+                    self.requirement,
+                    args=self.args,
+                    prompt_sha256=self.prompt_sha256,
+                    repo_root=self.repo_root,
+                    execution=(
+                        None if execution is None else {"agent": self.agent, "model_id": self.model_id, **execution}
+                    ),
+                    research_block=research_block,
+                )
+            }
+        if self.exemption is not None:
+            return {"advisory_exemption": dict(self.exemption)}
+        if self.advisor_binding is not None:
+            return {
+                "advisory_role": bounded_advisory.bounded_execution_policy().advisor_role,
+                "advisory_route": bounded_advisory.ADVISOR_ROUTE,
+                "advisory_binding_sha256": self.advisor_binding,
+            }
+        return {}
+
+    def prompt_block(self) -> tuple[str, str | None]:
+        """``(text, block kind)`` appended to the worker prompt; empty when neither role applies."""
+        if self.envelope is not None:
+            return bounded_advisory.worker_prompt_block(self.envelope), "advisory_envelope"
+        if self.advisor_binding is not None:
+            return bounded_advisory.advisor_prompt_block(self.advisor_binding), "advisory_contract"
+        return "", None
+
+
+def _worker_execution(
+    args: argparse.Namespace,
+    *,
+    cwd: str,
+    silence_timeout: int,
+    initial_response_timeout: int,
+    max_budget_usd: float | None,
+    harness: str | None,
+) -> dict[str, Any]:
+    """The launch values ``cmd_dispatch`` hands the ``_worker`` argv, beside the admitted agent and model (#9275).
+
+    A bounded worker compares each with what it runs (``EXECUTION_FIELDS``).
+    """
+    return {
+        "mode": args.mode,
+        "cwd": cwd,
+        "effort": getattr(args, "effort", None) or None,
+        "hard_timeout": args.hard_timeout,
+        "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
+        "max_budget_usd": max_budget_usd,
+        "provider": getattr(args, "provider", None) or None,
+        "harness": harness,
+        "finalize_open_pr": bool(getattr(args, "finalize_open_pr", False)),
+    }
+
+
+def _admit_advisory(
+    args: argparse.Namespace,
+    *,
+    dispatch_agent: str,
+    launch_model: str | None,
+    bound_args: dict[str, Any],
+    repo_root: Path,
+) -> _AdvisoryAdmission:
+    """Admit the admitted route under #9275 or raise ``AdvisoryRefused``.
+
+    ``dispatch_agent`` and ``launch_model`` are the admitted launch target, so
+    aliases, ``--force-agent`` and budget substitution are already applied: a
+    substitution into a bounded worker needs an envelope like a direct request.
+    ``bound_args`` is the argument half of the binding, captured as parsed.
+    """
+    from scripts.agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import canonical_model_id
+
+    policy = bounded_advisory.bounded_execution_policy()
+    model_id = canonical_model_id(launch_model or _default_model_for(dispatch_agent))
+    if getattr(args, "advisory_role", None) is not None:
+        if model_id != policy.advisor_model_id:
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.ADVISOR_ROUTE_REFUSED,
+                f"--advisory-role runs on the advisor {policy.advisor_model_id}; the admitted route launches "
+                f"{dispatch_agent} {launch_model or model_id!r}",
+            )
+        return _AdvisoryAdmission(advisor_binding=str(args.advisory_binding))
+    declared = _declared_owned_paths(getattr(args, "owned_path", None)) or []
+    research_paths = getattr(args, "research_owned_path", None) or []
+    classified_paths = [*declared, *research_paths]
+    mode = str(getattr(args, "mode", "") or "")
+    task_family = getattr(args, "research_task_family", None)
+    review_profile = getattr(args, "review_profile", None)
+    requirement = bounded_advisory.bounded_requirement(
+        model_id,
+        mode=mode,
+        task_family=task_family,
+        review_profile=review_profile,
+        owned_paths=classified_paths,
+        repo_root=repo_root,
+        policy=policy,
+    )
+    advisory_task = getattr(args, "advisory_task", None)
+    if requirement is None:
+        if advisory_task is not None:
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.FLAG_CONFLICT,
+                f"--advisory-task applies only to a bounded-worker dispatch; the admitted route launches "
+                f"{dispatch_agent} {launch_model or model_id!r}",
+            )
+        if model_id == policy.bounded_fallback_model_id:
+            # The worker re-classifies from this record before it starts the model.
+            return _AdvisoryAdmission(
+                exemption={
+                    "model_id": model_id,
+                    "task_family": task_family,
+                    "review_profile": review_profile,
+                    "mode": mode,
+                    "classified_paths": [str(path) for path in classified_paths],
+                }
+            )
+        return _AdvisoryAdmission()
+    if advisory_task is None:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.ENVELOPE_REQUIRED,
+            f"{requirement}; dispatch it with --advisory-task <task-id> naming a finished "
+            f"{policy.advisor_model_id} advisory task (operator decision 2026-09-30, #9275)",
+        )
+    advisory_task = str(advisory_task).strip()
+    try:
+        prompt_sha256 = _binding_prompt_sha256(args, read_stdin=False)
+    except OSError as exc:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.BINDING_MISMATCH, f"--prompt-file cannot be read for the advisory binding: {exc}"
+        ) from None
+    if prompt_sha256 is None:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.FLAG_CONFLICT,
+            "a bounded dispatch binds its prompt text; pass --prompt or --prompt-file, not stdin",
+        )
+    envelope = bounded_advisory.load_envelope(
+        advisory_task,
+        state_path=_state_path_no_create(advisory_task),
+        binding_sha256=advisory_binding(bounded_advisory.canonical_sha256(bound_args), prompt_sha256),
+        repo_root=repo_root,
+        policy=policy,
+    )
+    bounded_advisory.require_owned_paths_match(envelope.owned_paths, declared)
+    return _AdvisoryAdmission(
+        requirement=requirement,
+        envelope=envelope,
+        prompt_sha256=prompt_sha256,
+        args=bound_args,
+        repo_root=repo_root,
+        agent=dispatch_agent,
+        model_id=model_id,
+    )
+
+
+def _bounded_prompt_composer(
+    record: Mapping[str, Any], *, agent: str, model: str | None, mode: str
+) -> bounded_advisory.PromptComposer:
+    """How ``_dispatch`` built this worker's prompt around a brief, rebuilt from the task record (#9275).
+
+    The permitted dispatcher blocks are re-derived, never copied from the
+    prompt: the rules core from this checkout and the bound ``--rules-seat``,
+    the worktree block from the recorded worktree, the lifecycle block from
+    the recorded carrier, the research block only when it re-renders from its
+    own pointers, and the advisory block from the advisor's sealed envelope.
+    """
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+
+    def compose(brief: str, validated: bounded_advisory.ValidatedEnvelope, args: Mapping[str, Any]) -> str:
+        carrier = record.get("task_lifecycle")
+        lifecycle = ""
+        if isinstance(carrier, dict):
+            from scripts.orchestration import task_lifecycle
+
+            lifecycle = task_lifecycle.render_carrier_prompt(carrier)
+        worktree = record.get("worktree_path")
+        sparse = record.get("worktree_sparse")
+        admitted = record.get("advisory_envelope") or {}
+        return _compose_dispatch_prompt(
+            brief + lifecycle,
+            worktree_path=Path(str(worktree)) if worktree else None,
+            mode=mode,
+            sparse_telemetry=sparse if isinstance(sparse, dict) else None,
+            delegate_commits=is_kimi_seat(agent, model=model),
+            research_block=_recorded_research_block(admitted.get("research_block")),
+            advisory_block=bounded_advisory.worker_prompt_block(validated),
+            advisory_block_kind="advisory_envelope",
+            rules_seat=args.get("rules_seat"),
+        )
+
+    return compose
+
+
+def _verify_bounded_worker(
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    cwd: Path,
+    execution: Mapping[str, Any],
+    prompt: str,
+) -> str | None:
+    """Re-verify this worker's #9275 admission against ``prompt``, the exact text it hands the provider.
+
+    ``execution`` holds the other launch values the worker runs (effort,
+    timeouts, budget, provider, harness, PR opening); each must be the admitted
+    one. Reads the worker's own task record (never creating it). Returns the
+    SHA-256 of the checked prompt for an envelope admission, None when the
+    model is not bounded or runs under a Ukrainian exemption; raises
+    ``AdvisoryRefused`` otherwise.
+    """
+    from scripts.agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import canonical_model_id
+
+    record = _read_state_json(_state_path_no_create(task_id))
+    return bounded_advisory.verify_worker_admission(
+        record,
+        agent=agent,
+        model_id=canonical_model_id(model or _default_model_for(agent)),
+        mode=mode,
+        cwd=cwd,
+        execution=execution,
+        prompt=prompt,
+        compose_prompt=_bounded_prompt_composer(record or {}, agent=agent, model=model, mode=mode),
+        state_path_for=_state_path_no_create,
+        default_repo_root=_REPO_ROOT,
+    )
+
+
+def _advisory_worker_refusal(
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    cwd: Path,
+    execution: Mapping[str, Any],
+    prompt: str,
+    runtime_tmp_root: str | None,
+    runtime_tmp_namespace_root: str | None,
+) -> str | None:
+    """The worker-side #9275 backstop at start: a refusal when a bounded model lacks a valid parent admission.
+
+    Runs ``_verify_bounded_worker`` before the worker marks itself running;
+    the provider handoff runs it again on the exact prompt submitted. A
+    refused worker with a task record marks it failed with the typed code; a
+    hand-built worker argv with no record gets the refusal only.
+    """
+    try:
+        _verify_bounded_worker(
+            task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=execution, prompt=prompt
+        )
+    except bounded_advisory.AdvisoryRefused as exc:
+        refusal = f"worker refused before start: {exc}"
+        state_path = _state_path_no_create(task_id)
+        record = _read_state_json(state_path)
+        if record:
+            record.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "stderr_excerpt": refusal[:500],
+                    "returncode": None,
+                    "returncode_reason": "bounded model without a valid advisory admission; provider not started",
+                    "last_error": exc.code,
+                    "failure_reason": exc.code,
+                    "exit_code": None,
+                }
+            )
+            record.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _write_state_atomic(state_path, record)
+        return refusal
+    return None
+
+
+def _recheck_advisory(admission: _AdvisoryAdmission, *, repo_root: Path) -> None:
+    """Refuse when the admitted envelope's advisor record or result changed before spawn (#9275)."""
+    validated = admission.envelope
+    if validated is None:
+        return
+    current = bounded_advisory.load_envelope(
+        validated.advisor_task_id,
+        state_path=_state_path_no_create(validated.advisor_task_id),
+        binding_sha256=validated.binding_sha256,
+        repo_root=repo_root,
+    )
+    bounded_advisory.require_unchanged(validated, current)
 
 
 def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
@@ -11236,6 +12614,69 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
         if text.startswith("curriculum/") or text.startswith("scripts/curriculum/"):
             return True
     return False
+
+
+# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding task,
+# typed by the dispatch's declared functional role (``--research-role``). Any other role,
+# or none, pins a concrete model.
+CURSOR_AUTO_IMPLEMENTATION_ROLE = "implementation"
+CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
+
+
+def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
+    """True when any review flag types this dispatch as a review."""
+    return (
+        bool(getattr(args, "review", False))
+        or bool(getattr(args, "review_attempt", None))
+        or bool(getattr(args, "require_review_verdict", False))
+        or bool(getattr(args, "review_profile", None))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+    )
+
+
+def _cursor_auto_refusal(
+    args: argparse.Namespace, *, agent: str, model: str | None, dor_record: dict[str, Any] | None
+) -> str | None:
+    """Refusal when the admitted launch asks Cursor for Auto outside a well-defined coding task.
+
+    Auto needs positive evidence of that task: ``--research-role implementation``
+    (the declared functional role; a missing or any other role is unclassified for
+    Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
+    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    """
+    from scripts.review.model_catalog import (
+        CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+        cursor_pinned_models,
+        is_cursor_auto_selector,
+    )
+
+    if agent != "cursor" or not is_cursor_auto_selector(model):
+        return None
+    reasons: list[str] = []
+    role = str(getattr(args, "research_role", None) or "").strip()
+    if not role:
+        reasons.append(f"the task is unclassified (no --research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE})")
+    elif role != CURSOR_AUTO_IMPLEMENTATION_ROLE:
+        reasons.append(f"--research-role {role[:64]!r} is not {CURSOR_AUTO_IMPLEMENTATION_ROLE}")
+    if args.mode not in _WRITE_CAPABLE_MODES:
+        reasons.append(f"mode {args.mode} is not write-capable")
+    if _dispatch_is_review_typed(args):
+        reasons.append("the dispatch is review-typed")
+    if not _declared_owned_paths(getattr(args, "owned_path", None)):
+        reasons.append("no --owned-path")
+    if not dor_record or not dor_record.get("issues"):
+        reasons.append("no DoR issue card was checked")
+    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+        reasons.append("the DoR issue card is not PASS")
+    if not reasons:
+        return None
+    pins = " or ".join(f"--model {pin}" for pin in cursor_pinned_models())
+    return (
+        f"❌ dispatch refused: {CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}: --agent cursor --model {model} runs only a "
+        f"--research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE} write dispatch with owned paths and a PASS DoR issue card ({'; '.join(reasons)}); "
+        f"pin a concrete model: {pins} (operator decision 2026-09-30, #9274)"
+    )
 
 
 def _kimi_worktree_trees(worktree: Path) -> list[Any]:
@@ -11382,7 +12823,9 @@ def _dispatch_route(
                     f"review attempt refused: agent substitution from {original_agent} to {retired_target} "
                     "(retired CLI) is not allowed (#8517)"
                 )
-            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
+            retired_model, retired_how = request.retired_model_resolution or _resolve_substitution_model(
+                retired_target, original_model
+            )
             _remember_agent_substitution(
                 model_resolution,
                 source="retired-cli",
@@ -11400,6 +12843,8 @@ def _dispatch_route(
                 file=sys.stderr,
             )
             requested_agent = retired_target
+            if request.review_select is not None:
+                original_model = retired_model
         routing.requested_agent = requested_agent
 
         if request.review_select is not None:
@@ -11432,6 +12877,9 @@ def _dispatch_route(
                 origin_agent=original_agent,
                 fallbacks=request.fallbacks,
                 review_select=request.review_select,
+                review_trusted_inputs=bool(
+                    getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
+                ),
             )
         else:
             dispatch_agent = requested_agent
@@ -11558,19 +13006,21 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
-            review_dispatch=bool(getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)),
+            review_dispatch=bool(
+                getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)
+            ),
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
             review_attempt=bool(getattr(args, "review_attempt", None)),
+            review_alias_model_resolver=_resolve_substitution_model,
+            review_owned_paths=tuple(declared),
+            review_subject_seats=frozenset(flag_paths("subject_seat")),
+            review_subject_families=frozenset(flag_paths("subject_family")),
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
-            review=bool(getattr(args, "review", False))
-            or bool(getattr(args, "review_attempt", None))
-            or bool(getattr(args, "require_review_verdict", False))
-            or bool(getattr(args, "review_profile", None))
-            or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+            review=_dispatch_is_review_typed(args),
             language_lane=_dispatch_is_language_lane(args),
             research_track=getattr(args, "research_track", None),
             prompt_file=getattr(args, "prompt_file", None),
@@ -11652,6 +13102,22 @@ def _lane_default_model(agent: str) -> str | None:
     from agent_runtime.telemetry import _default_model_for
 
     return _default_model_for(agent)
+
+
+def _credit_period_refusal(dispatch_agent: str, launch_model: str | None) -> str | None:
+    """Typed refusal when the credit-period allowlist applies to ``dispatch_agent`` and the launch model is off it (#9518).
+
+    The allowlist applies whenever the plan window is at or below the threshold
+    and a fresh positive credit balance exists, whether or not the router
+    currently recommends the lane. A dispatch without ``--model`` is judged by the lane's default model. The
+    policy (``scripts/config/credit_lanes.yaml``) and the lane state come from
+    ``scripts.fleet.credit_lane``, the same reader ``capacity_pick`` uses; an
+    unreadable policy restricts only the built-in credit lanes and warns on
+    stderr. Reads snapshots only: never consumes credits or resets.
+    """
+    from scripts.fleet import credit_lane
+
+    return credit_lane.dispatch_refusal(dispatch_agent, launch_model or _lane_default_model(dispatch_agent))
 
 
 def _load_budget_substitution_table() -> dict[str, dict[str, str]]:
@@ -11785,6 +13251,7 @@ def _resolve_agent_with_budget_guard(
     origin_agent: str | None = None,
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
+    review_trusted_inputs: bool = False,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -11796,6 +13263,7 @@ def _resolve_agent_with_budget_guard(
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path.
+    A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
     """
     requested = (agent or "").strip().lower()
     if language_lane and requested not in _LANGUAGE_LANES:
@@ -11903,6 +13371,26 @@ def _resolve_agent_with_budget_guard(
             "provider and runtime headroom checks passed.",
             file=sys.stderr,
         )
+    credit_relaxes = False
+    if not reserve_relaxes:
+        # #9518: a lane with a credit balance present and no recent rate limit stays
+        # usable (the credit-period model check runs on the admitted route); unknown,
+        # stale or contradicted credit data, or an unreadable policy, keeps today's guard.
+        from scripts.fleet import credit_lane
+
+        try:
+            credit = credit_lane.lane_credit_state(
+                requested, agent_dict, credit_lane.load_policy(), snapshot_stale=is_stale
+            )
+        except ValueError:
+            credit = {"state": None}
+        credit_relaxes = credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+        if credit_relaxes:
+            print(
+                f"⚠ lane {requested} has a {credit_lane.DRAW_NOT_VERIFIED} ({credit['reason']}); "
+                f"credit-period models only: {', '.join(credit['allowed_models'])}.",
+                file=sys.stderr,
+            )
     burn = (
         agent_info.get("burn_pct_7d")
         if requested != "claude"
@@ -11911,7 +13399,7 @@ def _resolve_agent_with_budget_guard(
 
     needs_action, reason = (
         (False, "")
-        if reserve_relaxes
+        if reserve_relaxes or credit_relaxes
         else _budget_needs_hard_capacity_action(
             status=status,
             will_last=will_last,
@@ -11927,12 +13415,36 @@ def _resolve_agent_with_budget_guard(
     if review_select is not None:
         sub, chosen = review_select(payload, requested)
         if sub == requested and chosen == requested_model:
-            print(
-                "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer; "
-                "budget substitution requires --review-author-model and --review-risk (code profile only)",
-                file=sys.stderr,
-            )
+            if status in {"cool", "warm"} and "deficit" in reason:
+                note = (
+                    "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer "
+                    "on pace-only deficit."
+                )
+            else:
+                note = "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer" + (
+                    ";" if not review_trusted_inputs else "."
+                )
+            if not review_trusted_inputs:
+                note += (
+                    " Legacy calls without trusted author/risk inputs prove only intrinsic eligibility. "
+                    "budget substitution requires --review-author-model and --review-risk (code profile only)"
+                )
+            print(note, file=sys.stderr)
             return requested
+        sub_info = agents.get(sub, {}) or {}
+        sub_dict = sub_info if isinstance(sub_info, dict) else {}
+        sub_blocked, sub_reason = _budget_needs_hard_capacity_action(
+            status=_budget_lane_status(sub, sub_dict),
+            will_last=_budget_will_last_to_reset(sub_dict),
+            is_stale=is_stale,
+            records_loaded=records_loaded,
+            pace=_budget_pace(sub_dict),
+            headroom_blocked=_budget_headroom_blocked(sub_dict),
+        )
+        if sub_blocked:
+            raise BudgetGuardRefuseError(
+                f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
+            )
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
             f"({reason}; reviewer resolver).",
@@ -12668,6 +14180,9 @@ def cmd_worker(args: argparse.Namespace) -> int:
         attempt_id=getattr(args, "attempt_id", None),
         mcp_config_path=getattr(args, "mcp_config_path", None),
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
+        review_manifest=getattr(args, "review_manifest", None),
+        review_input_root=getattr(args, "review_input_root", None),
+        review_access=getattr(args, "review_access", "isolated"),
         finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
@@ -13022,6 +14537,26 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--subject-seat",
+        action="append",
+        default=None,
+        metavar="SEAT",
+        help=(
+            "Seat governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
+            "Default: none. Example: --subject-seat codex for a shared adapter change."
+        ),
+    )
+    d.add_argument(
+        "--subject-family",
+        action="append",
+        default=None,
+        metavar="FAMILY",
+        help=(
+            "Family governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
+            "Unknown families fail closed. Default: none. Example: --subject-family openai."
+        ),
+    )
+    d.add_argument(
         "--review-attempt",
         default=None,
         metavar="MANIFEST",
@@ -13031,6 +14566,12 @@ def build_parser() -> argparse.ArgumentParser:
             "stdio sources MCP server with ledger receipts. Default: None. "
             "Example: --review-attempt batch_state/manifests/rev-1.yaml"
         ),
+    )
+    d.add_argument(
+        "--review-access",
+        choices=("full", "isolated"),
+        default="full",
+        help="Review access mode: full checkout (requires --full-checkout), or manifest isolation. Default: full.",
     )
     d.add_argument(
         "--review-id",
@@ -13105,7 +14646,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
-            "when the requested lane is near_cap/hot/deficit; prepaid DeepSeek/OpenRouter "
+            "when the requested lane is near_cap/hot/deficit. Code review admits a sole "
+            "eligible cross-family lane with a NOTE on pace-only deficit; hard capacity "
+            "and health gates still bind. Prepaid DeepSeek/OpenRouter "
             "also refuse unknown, stale or empty funding. Also enabled when "
             "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
         ),
@@ -13180,7 +14723,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Bind a JSON Schema to the final response of an effective Codex "
             "dispatch. The file is parsed before spawn, resolved to an "
             "absolute path, hashed into task state, and revalidated by the "
-            "Codex adapter before it emits --output-schema."
+            "Codex adapter before it emits --output-schema. "
+            "Cannot be combined with --review-attempt; default: omitted."
         ),
     )
     d.add_argument(
@@ -13191,7 +14735,8 @@ def build_parser() -> argparse.ArgumentParser:
             "ADR-011 P3 research context: the task's single role (e.g. quality). "
             "Explicit only — never inferred from the prompt, agent, provider, or "
             "branch. Combined with the other --research-* flags, injects bounded, "
-            "pointer-only research pointers (bodies fetched on demand)."
+            "pointer-only research pointers (bodies fetched on demand). "
+            "`implementation` types a coding dispatch; --agent cursor --model auto requires it (#9274)."
         ),
     )
     d.add_argument(
@@ -13237,6 +14782,43 @@ def build_parser() -> argparse.ArgumentParser:
             "dirty danger-mode worktree commits only changes under these paths; without "
             "any it commits nothing and the task ends needs_finalize. Independent of "
             "--research-owned-path."
+        ),
+    )
+    d.add_argument(
+        "--advisory-task",
+        default=None,
+        metavar="TASK_ID",
+        help=(
+            "#9275: the finished advisor task whose envelope admits this bounded-worker dispatch. "
+            "Required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
+            "Gemini Flash bounded fallback without a Ukrainian authoring/review classification; "
+            "refused on any other dispatch. Its owned_paths must equal --owned-path. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--advisory-role",
+        default=None,
+        choices=("bounded_advisory_envelope",),
+        help=(
+            "#9275: run this read-only dispatch as the catalog advisor that issues a bounded-worker "
+            "envelope; the admitted model must be the advisor model. Requires --advisory-binding. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--advisory-binding",
+        default=None,
+        metavar="SHA256",
+        help=(
+            "#9275: with --advisory-role, the worker dispatch's binding digest, printed by the worker "
+            "dispatch command with --print-advisory-binding. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--print-advisory-binding",
+        action="store_true",
+        help=(
+            "#9275: print this dispatch's advisory binding digest (every parsed argument except "
+            "--advisory-task and this flag) and exit without any other effect."
         ),
     )
     d.add_argument(
@@ -13412,10 +14994,15 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.add_argument("--run-nonce", default=None)
+    wk.add_argument("--review-access", choices=("full", "isolated"), default="isolated")
     wk.add_argument("--review-id", default=None)
     wk.add_argument("--attempt-id", default=None)
     wk.add_argument("--mcp-config-path", default=None)
     wk.add_argument("--strict-mcp-config", action="store_true")
+    wk.add_argument("--review-manifest", default=None, help="Formal attempt manifest path (default: none)")
+    wk.add_argument(
+        "--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)"
+    )
     wk.set_defaults(func=cmd_worker)
 
     return p

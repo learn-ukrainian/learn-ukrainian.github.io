@@ -807,7 +807,8 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
     monkeypatch.setattr(_hermes, "_run_hermes_subprocess", _spawn)
     for module in (_cursor, _opencode):
         monkeypatch.setattr(module.subprocess, "run", _spawn)
-    monkeypatch.setattr(_cursor.shutil, "which", lambda name: f"/stub/{name}")
+    # Binary lookup is the shared resolver on the bridge module.
+    monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
     monkeypatch.setattr(_opencode.shutil, "which", lambda name: f"/stub/{name}")
     with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
         _cursor._invoke_cursor("hello", "composer-2.5")

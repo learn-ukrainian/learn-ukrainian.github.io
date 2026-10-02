@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Gemini dispatch — `ab ask-cursor` bridge subcommand (cursor-agent integration Phase 1 of 3)
 
 ## Mission
@@ -44,8 +50,8 @@ Verified smoke test: `agent -p 'Reply with exactly the single word: OK' --model 
 | "Existing bridge file at PATH does X" | `cat scripts/ai_agent_bridge/_opencode.py` and quote the section |
 | "Test file at PATH covers Y" | `ls tests/bridge/ && grep -l ...` |
 | "CLI register entry point at line N of `_cli.py`" | `grep -n 'ask-opencode\|ask-hermes' scripts/ai_agent_bridge/_cli.py` |
-| "Smoke works locally" | run `.venv/bin/python -m scripts.ai_agent_bridge ask-cursor --task-id smoke-test 'Reply: OK'` and paste raw output |
-| "Tests pass" | `.venv/bin/python -m pytest tests/bridge/ -q` final summary raw |
+| "Smoke works locally" | run `"$PROJECT_PYTHON" -m scripts.ai_agent_bridge ask-cursor --task-id smoke-test 'Reply: OK'` and paste raw output |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/bridge/ -q` final summary raw |
 
 ## Steps
 
@@ -71,11 +77,11 @@ Verified smoke test: `agent -p 'Reply with exactly the single word: OK' --model 
    - Mock the `subprocess.run` call so tests don't hit the real cursor-agent
    - Cover: default-model invocation, custom `--model` override, `FileNotFoundError` path, timeout path, stdin content via `content='-'`
    - Aim for ~8 test cases matching the opencode test file's coverage
-7. Run targeted tests: `.venv/bin/python -m pytest tests/bridge/ -q --timeout 30`. Paste raw final summary.
+7. Run targeted tests: `"$PROJECT_PYTHON" -m pytest tests/bridge/ -q --timeout 30`. Paste raw final summary.
 8. Run smoke (NETWORK CALL — ~5s, no cost since you have subscription):
    ```
    # venv symlinked from main checkout
-   .venv/bin/python -m scripts.ai_agent_bridge ask-cursor --task-id smoke-test 'Reply with exactly the single word: OK'
+   "$PROJECT_PYTHON" -m scripts.ai_agent_bridge ask-cursor --task-id smoke-test 'Reply with exactly the single word: OK'
    ```
    Paste raw output. Expect to see `OK` in the response.
 9. `.venv/bin/ruff check scripts/ai_agent_bridge/_cursor.py tests/bridge/test_ask_cursor.py scripts/ai_agent_bridge/_cli.py` — expect clean.
@@ -100,7 +106,7 @@ If `_cli.py` registration also requires a touch to `__init__.py` or `__main__.py
 ## Acceptance criteria
 
 - `ab ask-cursor` is a working CLI subcommand parallel to `ab ask-opencode`.
-- `.venv/bin/python -m scripts.ai_agent_bridge ask-cursor --help` shows the new subcommand.
+- `"$PROJECT_PYTHON" -m scripts.ai_agent_bridge ask-cursor --help` shows the new subcommand.
 - Smoke output (the literal `OK` reply from composer-2.5) is quoted in the PR body.
 - Tests pass.
 - PR opens cleanly with no out-of-scope file changes.

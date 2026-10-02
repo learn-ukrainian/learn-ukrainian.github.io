@@ -13,6 +13,11 @@ parse Markdown prose. Schema id: `sources.tool-result.v1` (issue #7954 / epic #7
 `summary_prose` inside the envelope mirrors the text content so a consumer that
 only sees structured payloads still has the human summary.
 
+For `search_sources`, both summaries contain only the result count, top source
+ids/titles in returned order, and ranking methods. Source bodies appear only in
+structured `hits`: `text` is preserved, and `full_text` is omitted when it equals
+`text`, retained when it differs or has no paired `text`.
+
 ## Envelope shape
 
 ```json

@@ -22,7 +22,14 @@ curl -sS --max-time 3 "http://127.0.0.1:8765/api/state/routing-budget"
 ```
 
 Prefer cooler / higher-headroom seats from that data. Do **not** habit-route to a hot,
-near_cap, or in-flight-saturated lane when a cooler eligible seat exists. A **deficit**
+near_cap, or in-flight-saturated lane when a cooler eligible seat exists. A
+`credit_balance_present` lane (#9518; credit balance present, draw not verified by the router) is
+usable after the plan-backed seats, only with the models in its `credit` row, and only while no
+`rate_limited` outcome in the last 60 minutes contradicts it (that reads `credit_use_unconfirmed`,
+near_cap/AVOID). Dispatch admission is a separate gate: it refuses other models whenever the plan
+window is at or below the threshold and a fresh positive balance exists (`credit_balance_present`,
+`credit_use_unconfirmed`, or `credits_unverified` from unreadable usage records), even when the
+router no longer recommends the lane. A **deficit**
 lane is visible pace, projected to run out before reset, and more than 2 points ahead of
 pace (near_cap ≥ 90% unchanged); it is not a dispatch target while a cool lane has
 reserve. CodexBar is an **input to the API**, not a separate driver app workflow — if
@@ -50,9 +57,14 @@ Before **every** implement `delegate.py dispatch`:
    also refuse dispatch unless that override is supplied. PR references are
    skipped after API resolution. Briefs without issue references are not gated.
    Opening or editing an issue updates one advisory checker comment.
-3. **Default bounded work:** Fable or Astra **brief** → heap/practical **worker(s)** —
-   not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
-4. **Fable path:** native `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
+3. **Default bounded work:** a `gpt-6.1-sol` advisory **envelope** (the Sol advisor @ high,
+   `--advisory-role bounded_advisory_envelope`) → bounded **worker(s)** dispatched with
+   `--advisory-task` — not a Sonnet/Terra fixation solo. There is no direct bounded dispatch
+   (operator decision 2026-09-30, #9275): `delegate.py` refuses Luna, and Flash not classified
+   Ukrainian authoring/review, without a complete envelope bound to that dispatch. See
+   `fleet-driver-routing.md` §2.
+4. **Last-resort Fable path:** Opus 5.5 / Sol 6.1 first; when Fable is required, use native
+   `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
    lockfiles / pointer / smoke jobs.
 5. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a
    written `NOTE: fleet_breadth` with tool-backed blockers.
@@ -117,7 +129,7 @@ including tests of code that imports a changed shared helper; never
 collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
 or `-n` above 2, and run those tests in the foreground and wait. The full suite
 runs in the PR's CI (and again in the merge queue on the merged tree) — that is
-the proof; do not trigger extra full runs. Use `gh workflow run ci.yml --ref <branch>`
+the proof; do not trigger extra full runs. Use `.venv/bin/python -m scripts.publish workflow-run --workflow ci.yml --ref <branch>`
 only when the brief explicitly asks for it (a branch with no PR yet, a baseline
 capture, or diagnosis).
 

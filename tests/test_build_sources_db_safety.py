@@ -43,6 +43,41 @@ sys.modules["build_sources_db"] = bs
 _SPEC.loader.exec_module(bs)
 
 
+@pytest.fixture(autouse=True)
+def _isolate_literary_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Successful rebuilds must not leave validation reports in checkout logs."""
+    monkeypatch.setattr(bs, "LOG_DIR", tmp_path / "logs")
+
+
+@pytest.mark.parametrize("relative", [False, True], ids=["redirected-default", "relative-override"])
+def test_rebuild_reserves_embeddings_outside_checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, relative: bool) -> None:
+    manifest = tmp_path / "embeddings/manifest.db"
+    assert manifest == bs.DEFAULT_MANIFEST_DB
+    if relative:
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(bs, "DEFAULT_MANIFEST_DB", Path("relative-embeddings/manifest.db"))
+        manifest = tmp_path / bs.DEFAULT_MANIFEST_DB
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    with patch.object(bs, "_ingest_jsonl", return_value=0):
+        result = bs.build(
+            db_path=tmp_path / "sources.db", external_dir=empty,
+            textbook_dir=empty, gdrive_dir=empty,
+        )
+    assert result.is_file()
+    assert manifest.is_file()
+    with sqlite3.connect(manifest) as conn:
+        rows = conn.execute("SELECT corpus, path, rows, dims, dtype FROM embedding_shards").fetchall()
+    assert rows == [("ukrainian_wiki", "ukrainian_wiki/shard-000001.npy", 0, 1024, "float16")]
+    # Exercise the real writer: an empty reservation still produces a NumPy shard.
+    import numpy as np
+
+    vectors = np.load(manifest.parent / rows[0][1], allow_pickle=False)
+    assert vectors.shape == (0, 1024)
+    assert vectors.dtype == np.float16
+    assert not (ROOT / "data/embeddings").exists()
+
+
 def _make_populated_db(path: Path, *, with_wiki: bool = False) -> None:
     """Create a minimal valid sources.db with rows in the main tables."""
     conn = sqlite3.connect(str(path))

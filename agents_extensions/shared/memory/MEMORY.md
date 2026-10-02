@@ -37,7 +37,7 @@ When user gives a direct order, especially in caps or after expressed frustratio
 - Lesson: When user is frustrated, brief actions only. NO explanations, NO menus, NO "two options," NO apologetic preambles. Take the action or say "cannot, please [paste / log in / give X]."
 
 ## #M-0.5 — DON'T ADMIN-BYPASS BLOCKING CI
-`gh pr merge --admin` bypasses ALL branch protection, including pytest. Only use it for explicitly-advisory failures listed in handoffs (Gemini-Dispatch, etc.). Pytest, ruff, frontend, schema-drift, gitleaks, radon, prompt-lint = ALL blocking, no exceptions, even if I think the failure is a flaky perf test. If a blocking check fails: STOP, report, ask for direction. Do NOT decide on the user's behalf. Failure encoded: 2026-05-09 PR #1813 — admin-merged while `Test (pytest):fail` showed (turned out to be flaky perf assertion `test_playground_primary_endpoints_keep_health_fast`, unrelated to MCP fix; that doesn't excuse the bypass).
+The publisher never accepts `--admin` or bypasses branch protection. Merge with `.venv/bin/python -m scripts.publish pr-merge --number <N>` only after the review and CI gates. Pytest, ruff, frontend, schema-drift, gitleaks, radon, prompt-lint = ALL blocking, no exceptions, even if I think the failure is a flaky perf test. If a blocking check fails: STOP, report, ask for direction. Do NOT decide on the user's behalf. Failure encoded: 2026-05-09 PR #1813 — admin-merged while `Test (pytest):fail` showed (turned out to be flaky perf assertion `test_playground_primary_endpoints_keep_health_fast`, unrelated to MCP fix; that doesn't excuse the bypass).
 
 ## #M0 — PER-TASK MODEL ASSIGNMENT
 Don't pattern-match on principles ("orchestrate when possible") — match the EXACT command. The dispatch determines the model.
@@ -64,9 +64,9 @@ Compound decisions = ONE table + ONE recommendation, NEVER N parallel sign-off q
 
 ## #0H — CF REVIEW MANDATORY ON EVERY PR; THEN MERGE (2026-07-27)
 **Independent cross-family (CF) formal review is ALWAYS mandatory before merge.** No exceptions for “small,” docs-only, launcher, or infra PRs. Discussion / self-review / same-family review ≠ the gate.
-- Request immediately after `gh pr create` — **lightweight direct path (sealed `review-pr` RETIRED 2026-08-07):** `printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`, then post the verdict on the PR. Resolve the reviewer lane with `scripts.review.closeout_cli ... resolve-reviewer` (must be outside the author's model family; eligibility pins are retired with the sealed path). `--type review` routes to headless `delegate.py dispatch` WITH tools (`gh`/pytest), never tool-less ACP (2026-08-23, #7155) — a reviewer needs `gh` to ground a verdict.
+- Request immediately after `.venv/bin/python -m scripts.publish pr-create` — **lightweight direct path (sealed `review-pr` RETIRED 2026-08-07):** `printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`, then post the verdict on the PR. Resolve the reviewer lane with `scripts.review.closeout_cli ... resolve-reviewer` (must be outside the author's model family; eligibility pins are retired with the sealed path). `--type review` routes to headless `delegate.py dispatch` WITH tools (`gh`/pytest), never tool-less ACP (2026-08-23, #7155) — a reviewer needs `gh` to ground a verdict.
 - Closeout incomplete until CF is requested (and settled). Failure encoded: 2026-07-27 Grok shipped #5875 without CF review; operator had to ask.
-- After CF pass + green blocking CI: `gh pr merge N --auto --squash` (action bias — don’t leave PRs limbo). Hold only for CF fail or blocking CI.
+- After CF pass + green blocking CI: `.venv/bin/python -m scripts.publish pr-merge --number N` (action bias — don’t leave PRs limbo). Hold only for CF fail or blocking CI.
 
 ## #0G — NEVER REPORT ASYNC-TASK STATE FROM MEMORY (2026-05-08)
 Before saying "task X is running / X just finished / X is at step Y", ALWAYS query `delegate.py status-or-fail X` or Monitor API `/api/delegate/active`. Memory of state from 2 minutes ago is wrong by default. Established 2026-05-08 after orchestrator reported bakeoff "Gemini mid-write" when it had finished.
@@ -100,7 +100,7 @@ No heuristics when proper algorithm exists. No lowering thresholds. No "for now.
 `Bash(command="gh pr checks N --watch --interval 10", run_in_background=True)`, then wait for notification. NEVER `for i in seq; do sleep` polling — `--watch` waits for pending.
 
 ## DISPATCH-BRIEF CHECKLIST
-Codex/Claude brief MUST have these as EXPLICIT NUMBERED STEPS: (1) `git worktree add` setup, (2) file-level work, (3) test suite, (4) ruff, (5) commit conventional msg, (6) `git push -u origin`, (7) `gh pr create`, (8) NO auto-merge. Plus #M-4 preamble: brief MUST list the verifiable claims the work will produce + the deterministic tool for each + the output format that captures tool evidence (quote raw output, never "I checked X"). See `docs/best-practices/deterministic-over-hallucination.md`.
+Codex/Claude brief MUST have these as EXPLICIT NUMBERED STEPS: (1) `git worktree add` setup, (2) file-level work, (3) test suite, (4) ruff, (5) commit conventional msg, (6) `git push -u origin`, (7) `.venv/bin/python -m scripts.publish pr-create`, (8) NO auto-merge. Plus #M-4 preamble: brief MUST list the verifiable claims the work will produce + the deterministic tool for each + the output format that captures tool evidence (quote raw output, never "I checked X"). See `docs/best-practices/deterministic-over-hallucination.md`.
 
 ## PROMPT-ABLATION DISCIPLINE
 Pipeline-prompt changes pilot on ≥3 seeded modules before bulk. Gradual: 0→1→3→10→full. Never direct-jump `--range 1 194`.
@@ -146,7 +146,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
 
 ## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
-**Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, DeepSeek, Cursor, pool, glm — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven (CodexBar pace + disk bound), not fixed caps. Use the full fleet for parallel work.
+**Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, Cursor, pool, glm — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven (CodexBar pace + disk bound), not fixed caps. Use the full fleet for parallel work.
 
 **Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
 - One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build (native alias), ask-hermes, ask-opencode, ask-pool, ask-cursor, ask-glm...)

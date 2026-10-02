@@ -26,6 +26,46 @@ from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
+
+def copy_interactive_launcher_checkout(root: Path) -> None:
+    """Copy real launcher/deploy sources so production's root lookup stays in tmp.
+
+    Copy tracked files, rather than symlinking source directories: shell and
+    Python helpers resolve their own physical location to choose deploy roots.
+    Runtime mirrors and caches must never link back into the tested checkout.
+    """
+    root.mkdir(parents=True, exist_ok=True)
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "--", "start-*.sh", "package.json", "scripts",
+         "agents_extensions", "gemini_extensions", ".gemini/config.yaml",
+         "docs/l2-uk-en", "docs/prompts/orchestrators", "curriculum/l2-uk-en/curriculum.yaml"],
+        cwd=_REPO_ROOT, capture_output=True, text=True, check=True, timeout=30,
+    )
+    for raw in tracked.stdout.split("\0"):
+        if not raw:
+            continue
+        relative = Path(raw)
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        source = _REPO_ROOT / relative
+        if source.is_file():
+            shutil.copy2(source, destination)
+        else:
+            # The real curriculum manifest may be sparse; use its tracked bytes.
+            blob = subprocess.run(
+                ["git", "show", f"HEAD:{relative.as_posix()}"], cwd=_REPO_ROOT,
+                capture_output=True, check=True, timeout=30,
+            )
+            destination.write_bytes(blob.stdout)
+    # This is a temporary standalone fixture, not a dispatch worktree.
+    (root / ".venv").symlink_to(Path(sys.prefix))
+    subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, timeout=30)
+    subprocess.run(
+        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
+         "commit", "--allow-empty", "-q", "-m", "Initial launcher fixture"],
+        cwd=root, capture_output=True, check=True, timeout=30,
+    )
+
 # Runs the gate's own calls (a registered slot, an unregistered slot and the
 # per-provider listing used in the refusal message) and prints the repo files
 # they needed: imported modules plus any data file opened (the roster, catalogs).

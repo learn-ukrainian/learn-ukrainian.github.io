@@ -1,0 +1,140 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-sounds-letters-and-hello"
+  attempt_id: "claude-full-att-5"
+  manifest_sha256: "ea374d74991a27029ae5500a101e9afada2ae94f468f219c024a75f597787418"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "anthropic"
+  prompt_sha256: "9d80ce8a1c56578a617ce4ed1e7872a25f2cdcf5f34dee6e84e0bb124f24608d"
+checks:
+  # The plan uses closing shape (a): lesson 6 has kind recap. Shape (b) is not invoked, so there is nothing to justify.
+  closing_shape: clean
+  # The title is all Ukrainian and the subtitle all English. Together they name greetings, sound/letter and the 13 letters.
+  # Lesson titles match their jobs. English prose quotes Ukrainian only when talking about the item itself.
+  title_describes_job: clean
+  # "the first 13 letters" in the subtitle matches the scope sidecar (letters.count: 13).
+  title_quantities: clean
+  # inspect_words rr-554ffdcd252ccf36c804: all 24 quoted word forms are CLEAN with no markers.
+  # The forms are привіт, добрий, день, мама, малина, слива, рука, ріка, коса, Павлик, Поліна, Панас, Іван, Вова,
+  # Ніна, Нонна, ми, писали, писала, писав, коло, і, звук and літера. Quoted syllables are not word forms.
+  quoted_forms: clean
+  sequencing: [F-1, F-2, F-9]
+  # Lessons 3 and 5 are the heaviest (three letters each, plus two grammar points, or three core lemmas and six incidental).
+  # Both stay within an hour for an adult at 290 words. Lesson 1 is light but matches ULP S1 L1-L2 scope.
+  sizing: clean
+  # малина and слива are A2 (query_cefr_level rr-61288c8aeab79f6f5ec0, rr-f46db5476e8e93f75bab).
+  # Accepted: they are decodable primer words (X-004, T-036).
+  # The A1 alternative молоко (rr-b16f12ed8255f39a1f2e) has no primer hit (search_text rr-3efe6d988839d03c1779).
+  inventory: [F-8]
+  # Mapped v1: 10 activities and 62 response opportunities, all inline.
+  # Fresh: 36 activities (26 inline, 10 workbook), so there is no reduction in activity count.
+  # Fresh response opportunities are not_available_at_this_stage. This is an evidence gap; no totals are invented.
+  # The v1 group-sort (14 entries), translate, fill-in and true-false types are absent; lesson 4 a6 keeps a find-and-fix role.
+  activities: [F-3, F-4, F-5]
+  evidence_fit: [F-6, F-7]
+  # The arc has no standard_line_refs for position 1.
+  # S-003 greeting formulas are served by lesson 1; S-001/S-002 copying by lesson 5 a5 and lesson 6 a3.
+  # The ULP chunk-first and recap shapes are grounded by T-002, T-003 and T-005.
+  # The past-tense chunks fall within the A1 Standard and are used unanalysed (D3).
+  standard_and_ulp: clean
+findings:
+- id: F-1
+  status: active
+  locations:
+  - {lesson: 3, step: "s4", quote: "the teacher demonstrates the exact print in T-004, T-009, T-011, T-025"}
+  - {lesson: 3, activity: "a8", quote: "T-004, T-009, T-011, T-025, T-027"}
+  dimension: learner_fit
+  severity: MAJOR
+  claim: "Lesson 3 s4 tells the teacher to model 'the exact print in T-004'. The same step says its minimal pairs are read aloud from print, and a8 repeats T-004 in its modeling list. T-004 is ULP's И trainer (search_text, chunk ulp-1-00-lesson-notes_l0005_w003, rr-9e67d8d7aec59007dbcf). Its pairs 'вій – вий', 'рив – рів', 'він – він', 'дим – дім', 'мій – мий' and the line 'оди́н три ми' need Й, Д, Т (position 2), Р (lesson 5) and В (lesson 4). Only 'Ми́на – мі́на' is readable at s4. The learner would therefore read untaught letters from print, which breaks the arc's letter order and the plan's own decodability rule. T-004 is also a ULP lesson-notes record. The catalogue marks ULP Season 1 notes as premium (search_resources rr-8e21290b8682dd25e8e2, notes_access: premium), and lesson 1 of this plan rules that premium notes are never quoted. Fix: keep T-004 explains-only and model the И/І contrast with taught-letter syllables (ми/мі, ни/ні) and the V-007/V-009 recordings."
+  evidence: {receipt: "rr-9e67d8d7aec59007dbcf"}
+  expected: "Try to read and feel the difference between"
+  could_be_a_gate: "yes — a script could check that every Cyrillic token in the evidence records a step names for exact-print modeling uses only letters introduced by that step"
+- id: F-2
+  status: active
+  locations:
+  - {lesson: 4, step: "s2", quote: "X-005, T-029, T-030, T-031, T-001, T-038, X-006"}
+  - {lesson: 2, step: "s1", quote: "the teacher demonstrates the exact print in T-001, T-006"}
+  dimension: learner_fit
+  severity: MAJOR
+  claim: "The repeated clause 'Modeling source: the teacher demonstrates the exact print in …' names records whose print the learner cannot yet read. In lesson 4 s2 it lists X-005, the copy model that the same step tells the learner to copy into a notebook. X-005 (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077, rr-62085d51017cfcfff600) prints 'Поліна помила коси. Панас ловив лини.', which uses П and К one lesson before they are taught. It sits under 'Перепиши в зошит', which needs Р, Е, Ш, З and Т. The same list includes T-019 and T-038/X-006, whose Ukrainian instruction sentences are also undecodable. In lesson 2 s1 the clause names T-001 (the primer heading 'Мовні звуки: голосні та приголосні …') before any letter has been taught. Each of these steps also says that untaught spellings must not become print-reading stimuli, so the writer receives contradictory instructions. Fix: limit the modeling clause to the named taught forms (syllable rows and W-record forms), keep instruction prose explains-only, and move the X-005 copy lines to lesson 5."
+  evidence: {receipt: "rr-62085d51017cfcfff600"}
+  expected: "Поліна помила коси."
+  could_be_a_gate: "yes — a script could check that the exact print of each evidence record in a step's modeling list uses only letters introduced up to that step"
+- id: F-3
+  status: active
+  locations:
+  - {lesson: 1, activity: "a4", quote: "Choose the matching whole reply to each informal peer or formal greeting addressed to the stated role."}
+  - {lesson: 1, activity: "a5", quote: "Transfer the modeled informal/formal contrast to the source-supported friend, boss/cashier, receptionist and teacher roles."}
+  dimension: activity
+  severity: MAJOR
+  claim: "Lesson 1 has three quizzes on one binary key set (Привіт / Добрий день). a4 asks for 'the matching whole reply' to a greeting. In the ULP model the reply to a greeting is the same greeting (search_text ulp-1-00-lesson-notes_l0001_w002 and _w005, rr-41fcb9ced92bc9afd796: 'Анна: Приві́т! Катя: Приві́т!', and the spoken drill 'What do you say if I say to you: 1 Приві́т!'). The plan excludes spoken binding, so every a4 key is identical to its printed stimulus. A learner who cannot yet read can answer by matching shapes, without using the register knowledge from s2. a2 and a5 repeat the same situation-to-greeting choice; a5 only changes the role list. The module's first workbook therefore has no R-19 find-and-fix, although the pack's T-002 ('You do not usually say Привіт! to your boss or a cashier') supports one. Fix: give a4 a distinct operation. Options include a find-and-fix in which Привіт addressed to a boss or cashier is repaired, or an offline spoken response to the recorded prompt, as in X-001."
+  evidence: {receipt: "rr-41fcb9ced92bc9afd796"}
+  expected: "What do you say if I say to you:"
+  could_be_a_gate: "yes — a script could flag a choice item whose key string equals its displayed stimulus string"
+- id: F-4
+  status: active
+  locations:
+  - {lesson: 5, activity: "a6", quote: "select the missing final"}
+  - {lesson: 4, activity: "a4", quote: "the middle blank in ма- __ -на has"}
+  dimension: activity
+  severity: MAJOR
+  claim: "Two pick-syllables tasks offer distractors that form real words, and the plan does not require the target word to be cued. In lesson 5 a6 the keys ма and ло serve as each other's distractors. 'ма-ло' gives мало and 'Ко-ма' gives кома, and both are VESUM-attested (verify_words rr-6942a08e3aa210ba64fe: мало as adverb, кома as noun). W-154 коло is incidental with 'no meaning drill', so no gloss can point to коло rather than кома. In lesson 4 a4 the X-004 source options make 'ма-ми-на' (мамина), 'ни-ва' (нива) and 'ва-ва' (вава), all VESUM-attested (verify_words rr-2141ebe926c196875096). In the primer, a picture of the named object removes the ambiguity ('назвах намальованих предметів'). The plan has no picture and does not require a gloss in the stem, so a learner who chooses a real word would be marked wrong. Fix: require each stem to carry its target cue (the W-082/W-083/W-081 gloss, or the T-036 context line for коло), or choose distractors that form no attested word."
+  evidence: {receipt: "rr-6942a08e3aa210ba64fe"}
+  could_be_a_gate: "yes — a script could check every non-key option completion of a pick-syllables item against VESUM and flag attested words when the stem carries no target cue"
+- id: F-5
+  status: active
+  locations:
+  - {lesson: 3, activity: "a7", quote: "Classify the source syllables ма, мо, му, ми versus ам, ом, ум,"}
+  - {lesson: 3, activity: "a8", quote: "Odd-one-out in syllable order"}
+  dimension: activity
+  severity: MAJOR
+  claim: "Lesson 3's workbook (a7, a8) drills one feature twice. a7 sorts the eight T-037 М syllables by CV/VC order, and a8 asks for the odd one out by that same order, in rows built from the same eight syllables. The lesson's other teaching points get no workbook consolidation: the И/І contrast (G-a1-003) and Н. И/І is practised only inline: a3 is unscored and a4 has two listening targets. No later workbook returns to it, since lesson 4 a5 uses V-011–V-013 and lesson 5 a8 only sorts by class. The И recording is already in the pack as a free, publisher-evidenced resource (search_resources letter mode, rr-73ae5459402318c9c8c6: V-007 'ULP alphabet — И и', access free). A workbook И/І listening contrast (V-007/T-025 against V-009/T-027) can therefore be built from existing sources. Plan schema §2b requires workbook practice that serves the lesson's teaching points. Fix: replace a8 with such a contrast, or add one, so that G-a1-003 is consolidated."
+  evidence: {receipt: "rr-73ae5459402318c9c8c6"}
+  could_be_a_gate: "no"
+- id: F-6
+  status: active
+  locations:
+  - {lesson: 4, activity: "a6", quote: "Find a wrong assignment of one taught А/І/В/Л/С glyph to the T-001 vowel [•] or consonant [–] class"}
+  - {lesson: 5, activity: "a8", quote: "Sort mixed taught vowel and consonant glyphs including І, К, П and Р by T-001 [•]/[–]"}
+  dimension: evidence_use
+  severity: MAJOR
+  claim: "Lesson 4 a6 and lesson 5 a8 score taught consonant glyphs, including Л, С and Р, against the primer symbol [–] as 'the consonant class'. The plan cites T-001/T-039 (primer printed p.13). The same primer's legend defines '[–] — твердий приголосний звук; [=] — м’який приголосний звук' (search_text chunk 1-klas-bukvar-zaharijchuk-2025-1_s0002, rr-f6409d75b8142b052b54). Its printed p.15 introduces [=] for soft sounds before any letter page (search_text chunk _s0014, rr-0e350dfc91330e0f88d6: 'М’які звуки позначай так: [ =]'). In the same lessons the plan teaches the soft sounds of Н, Л, С and Р from T-012, T-014, T-015 and T-018. A repaired key such as 'Л → [–]' therefore gives the symbol a meaning its own source reserves for hard sounds. The arc defers the hard/soft system to position 3, so [=] cannot be added here. Fix: in these items, sort vowel letters from consonant letters with English labels (group-sort is the supported sorting type), or limit [–]-keyed items to М, В, К and П, whose primer readings are a single hard sound."
+  evidence: {receipt: "rr-f6409d75b8142b052b54"}
+  expected: "твердий приголосний звук"
+  could_be_a_gate: "no"
+- id: F-7
+  status: active
+  locations:
+  - {lesson: 1, activity: "a2", quote: "or host: {kind: quote, ref: T-040} for the"}
+  - {lesson: 1, activity: "a4", quote: "or host: {kind: quote, ref: T-040} for the"}
+  dimension: evidence_use
+  severity: MINOR
+  claim: "Lesson 1 a2, a4 and a5 bind T-040 as the host 'for the separate formal example'. T-040's own supports line says it is 'not a teacher speaker or a formal/informal contrast'. Its source page lists Привіт! in the same 'Слова вітання' list of polite words as Добрий день! (search_text chunk 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0020, rr-62f8a2a3e7dfd7bc4025). The quote supports only the spelling of Добрий день, not its formality, which comes from T-041, T-002 and T-020. Fix: name the host 'the polite-greeting spelling model', as s3 does, and attribute the formal role to T-041/T-002 in the stems. Otherwise the writer may present T-040 as a source for formal register."
+  evidence: {receipt: "rr-62f8a2a3e7dfd7bc4025"}
+  expected: "Слова вітання:"
+  could_be_a_gate: "no"
+- id: F-8
+  status: active
+  locations:
+  - {lesson: 6, field: "rationale", quote: "sound-letter terms, and vowel/consonant categories"}
+  dimension: plan_defect
+  severity: MINOR
+  claim: "Lesson 6's rationale says the recap recycles word records for 'sound-letter terms, and vowel/consonant categories'. No such record is introduced at position 1: the changelog moved those seven metalanguage records to position 2, and the lesson's recycled list contains none of them. Their spellings also use letters outside the 13 taught here; for example звук and літера (inspect_words rr-554ffdcd252ccf36c804, VESUM entries 142144 and 188840) contain З, Т and Е. A writer following the rationale could put undecodable metalanguage into the story, against s1's 'All story print uses the thirteen taught letters'. Fix: correct the rationale to list the records actually recycled: the greetings by ear, мама, малина, слива, рука, ми, and писали/писала/писав."
+  evidence: {receipt: "rr-554ffdcd252ccf36c804"}
+  could_be_a_gate: "yes — a script could compare word lemmas named in a lesson rationale with that lesson's inventory and recycled ids"
+- id: F-9
+  status: active
+  locations:
+  - {lesson: 3, step: "s2", quote: "No quote display in this preparation step."}
+  - {lesson: 3, step: "s6", quote: "Prepare workbook decisions on the taught CV/VC rows, using English instructions."}
+  dimension: plan_defect
+  severity: MINOR
+  claim: "Lesson 3 s2 and s6 are practice steps with an empty practice list and no display or media need. Each one only announces the next step. Steps are fixed structure, so the writer must produce two sections with no content. The primer presents a symbol and its practice prompt together on one page (search_text chunk 1-klas-bukvar-zaharijchuk-2025-1_s0012, rr-0e350dfc91330e0f88d6: 'Голосний звук позначаємо так: [•]' followed by 'Вимов голосні звуки в словах'), which is the small-theory-then-practice shape R-27 asks for. The lesson 3 rationale still describes 'three focused steps' for what are now seven. Fix: merge s2 into s3 and s6 into s7."
+  evidence: {receipt: "rr-0e350dfc91330e0f88d6"}
+  expected: "Вимов голосні звуки в словах"
+  could_be_a_gate: "yes — a script could flag a practice step with an empty practice list and no quote, video or other need"

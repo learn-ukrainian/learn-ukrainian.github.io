@@ -110,6 +110,37 @@ Optional checks:
 
 ## 4. Review Tools and Receipts
 
+{% if review_access == "full" %}
+### Full access and evidence duty
+
+You have read access to the repository checkout, its git history, the textbook
+corpus and the resource catalogue (`docs/resources/` and `search_resources`).
+Use them as context to check the plan or lesson.
+
+Verify every Ukrainian word, form, stress, gloss and factual claim you rely on,
+including approval-critical checks: use `verify_words` (VESUM) for forms,
+`verify_stress` for stress, `query_sum20` for meaning, `search_text` for textbook
+and corpus support, and `search_resources` for catalogue checks. For Russianism
+checks query both `search_style_guide` and `search_text` with
+`source_file='antonenko-davydovych-yak-my-hovorymo'`; check heritage before
+rejecting an unfamiliar word. `check_russian_shadow` is suspicion only.
+
+Only ledgered sources receipts are citable evidence. Repository, corpus,
+catalogue and git reads provide context; confirm anything relied on through a
+ledgered tool call. Cite the tool and resolvable locator in each finding's claim
+and its receipt in the existing evidence branch. For approval-critical clean
+checks, give the tool, locator and receipt in YAML comments beside the existing
+check; do not add a field or verdict dimension. Missing support is an evidence
+gap, never permission to judge Ukrainian from memory.
+
+Do not read other attempts' returns, `*.verdict.yaml`, `plan-review*.yaml` or the
+findings database for this artifact. Prior receipts for this artifact are not
+inputs. The manifest and pinned context documents supplied in this prompt are
+permitted despite their filenames. A lesson re-review may read only the previous
+attempt and ledger explicitly pinned by its manifest, and cite those receipts
+only under the existing resolved/persisting finding rule.
+
+{% endif %}
 The reviewer has tools from REVIEW_TOOLS:
 {% for tool in review_tools %}
 - `{{ tool }}`
@@ -145,9 +176,12 @@ Either `"no"` or `"yes — <what a script would check>"` (matching `^yes .+$`).
 
 ### Rules the validator enforces on the return
 
-A return that breaks any of these is recorded as REJECTED and the attempt is spent, however good the review is. Check the finished return against every line before answering:
+A return that breaks these rules is refused before recording or recorded as REJECTED; a recorded rejection spends the attempt, however good the review is. Check the finished return against every line before answering:
 
-- The return is one YAML mapping.
+- The return is one YAML mapping, either bare or inside exactly one fenced `yaml` block (`yml` is also accepted). Prose outside the block is ignored and never recorded.
+- A return that is not a bare mapping must contain a fenced YAML block whose info string is exactly `yaml` or `yml`; no such block is refused.
+- More than one fenced YAML block is refused, including another block in the prose after the first.
+- The fenced YAML block must be closed and parse as one mapping; empty, scalar, sequence, malformed or multiple-document content is refused.
 - The return conforms to `schemas/review-v1.schema.json`: every required field is present, no field the schema does not define is added, and each finding `id` has the form `F-<number>`. Each finding has `id`, `status` (`active`, `resolved` or `persisting`), `locations`, `dimension` (`job`, `language`, `learner_fit`, `activity`, `evidence_use`, `english`, `fact`, `recap`, `evidence_gap`, `plan_defect` or `engine_or_gate`), `severity` (`BLOCKER`, `MAJOR` or `MINOR`) and `claim`. The one field you do not fill is `reviewer.prompt_sha256`: keep the return template's line `prompt_sha256: "<prompt_sha256>"` exactly as printed (the placeholder, in quotes); the recorder replaces it with the attested prompt hash before validation.
 - `kind` is `lesson`, the kind of the manifest this prompt was rendered from.
 - `attempt.manifest_sha256` is exactly the Manifest SHA256 printed at the top of this prompt.

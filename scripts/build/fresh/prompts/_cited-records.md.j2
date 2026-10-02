@@ -61,6 +61,11 @@
 - Channel: {{ r.record.channel }}
 - URL: {{ r.record.url }}
 - Use: {{ r.record.use }}
+{%- if r.record.models is defined %}
+- Models (structured): {{ r.record.models | tojson }}
+{%- else %}
+- Models: undeclared (listening_model_undeclared)
+{%- endif %}
 - Link check: {% if r.record.checked %}HTTP {{ r.record.checked.http_status }} on {{ r.record.checked.date }}{% if r.record.checked.final_url != r.record.url %}, final URL {{ r.record.checked.final_url }}{% endif %}{% else %}not checked{% endif %}
 {%- elif r.kind == "standard" %}
 - Source: State Standard, lines {{ r.record.lines }}

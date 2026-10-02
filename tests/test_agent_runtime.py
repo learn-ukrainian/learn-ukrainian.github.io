@@ -797,7 +797,9 @@ def test_codex_adapter_disables_apps_connector_across_all_invocations(tmp_path, 
     assert disable_flags.count("apps") == 1
     if "--enable" in plan.cmd:
         enable_indices = [i for i, token in enumerate(plan.cmd) if token == "--enable"]
-        apps_indices = [i for i, token in enumerate(plan.cmd[:-1]) if token == "--disable" and plan.cmd[i + 1] == "apps"]
+        apps_indices = [
+            i for i, token in enumerate(plan.cmd[:-1]) if token == "--disable" and plan.cmd[i + 1] == "apps"
+        ]
         assert apps_indices[0] > max(enable_indices)
 
 
@@ -1111,13 +1113,7 @@ def test_codex_parse_response_version_banner_is_not_rate_limited(tmp_path):
     output_file = tmp_path / "output.txt"
     output_file.write_text("")
 
-    header_only = (
-        "OpenAI Codex v0.152.0\n"
-        "--------\n"
-        "workdir: /tmp/work\n"
-        "model: gpt-5.6-luna\n"
-        "--------\n"
-    )
+    header_only = "OpenAI Codex v0.152.0\n--------\nworkdir: /tmp/work\nmodel: gpt-5.6-luna\n--------\n"
     result = adapter.parse_response(
         stdout="",
         stderr=header_only,
@@ -2016,7 +2012,9 @@ def _git_wt(repo, *args):
             "GIT_COMMON_DIR",
         }
     }
-    return subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True, text=True, env=env, timeout=30)
+    return subprocess.run(
+        ["git", "-C", str(repo), *args], check=True, capture_output=True, text=True, env=env, timeout=30
+    )
 
 
 @pytest.fixture
@@ -2607,80 +2605,49 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
     assert "GEMINI_API_KEY" not in second_env
 
 
-def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
-    """If Gemini succeeds on a later model rung, Result.model must reflect that model."""
-    from unittest.mock import MagicMock
+def test_invoke_gemini_runtime_reports_actual_agy_fallback_model(tmp_path, monkeypatch):
+    """After Pro exhaustion, result and usage attribute Flash to AGY."""
+    from agent_runtime import runner
+    from ai_llm.fallback import AGY_GEMINI_MODEL, PRIMARY_GEMINI_MODEL
 
-    primary_proc = MagicMock()
-    primary_proc.poll = MagicMock(return_value=1)
-    primary_proc.returncode = 1
-    primary_proc.stdin = MagicMock()
-    primary_proc.stderr = MagicMock()
-    primary_proc.stderr.readline = MagicMock(side_effect=["429 RESOURCE_EXHAUSTED\n", ""])
-    primary_proc.stderr.close = MagicMock()
-    primary_proc.stdout = MagicMock()
-    primary_proc.stdout.readline = MagicMock(return_value="")
-    primary_proc.stdout.close = MagicMock()
-    primary_proc.pid = 30303
+    attempts = []
+    adapter = SimpleNamespace(build_invocation=lambda **kwargs: InvocationPlan(
+        cmd=["fixture", "--model", kwargs["model"]], cwd=tmp_path,
+    ))
 
-    flash_proc = MagicMock()
-    flash_proc.poll = MagicMock(return_value=0)
-    flash_proc.returncode = 0
-    flash_proc.stdin = MagicMock()
-    flash_proc.stderr = MagicMock()
-    flash_proc.stderr.readline = MagicMock(return_value="")
-    flash_proc.stderr.close = MagicMock()
-    flash_proc.stdout = MagicMock()
-    flash_proc.stdout.readline = MagicMock(side_effect=["Flash model answer\n", ""])
-    flash_proc.stdout.close = MagicMock()
-    flash_proc.pid = 40404
-    _popen_proc_for_subprocess_run(primary_proc)
-    _popen_proc_for_subprocess_run(flash_proc)
+    def execute(**kwargs):
+        attempts.append((kwargs["agent_name"], kwargs["model"]))
+        is_agy = kwargs["agent_name"] == "agy"
+        return SimpleNamespace(
+            parse=ParseResult(
+                ok=is_agy, response="AGY model answer" if is_agy else "",
+                rate_limited=not is_agy, stderr_excerpt=None if is_agy else "429 quota",
+            ),
+            duration_s=0.1, returncode=0 if is_agy else 1,
+            kill_reason=None, stderr_text="", liveness_paths=[],
+        )
 
-    mock_popen = MagicMock(side_effect=[primary_proc, flash_proc])
-
-    with (
-        patch.dict(
-            "os.environ",
-            {
-                "GEMINI_AUTH_MODE": "api",
-                "GEMINI_API_KEY": "secret-key",
-                "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
-                # Pipe-mode mocks (see ladder-fallback test above). #2071.
-                "DELEGATE_DISABLE_PTY": "1",
-            },
-            clear=False,
-        ),
-        patch(
-            "agent_runtime.runner.has_headroom",
-            return_value=(True, ""),
-        ),
-        patch(
-            "agent_runtime.runner.write_record",
-        ),
-        patch(
-            "agent_runtime.runner.subprocess.Popen",
-            _agent_only_popen(mock_popen),
-        ),
-        patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
-            0.01,
-        ),
-    ):
-        result = invoke(
-            "gemini",
-            "hello",
-            mode="workspace-write",
-            cwd=tmp_path,
-            task_id="gemini-model-fallback",
-            entrypoint="runtime",
+    monkeypatch.setattr(runner, "_load_adapter", lambda name: adapter)
+    monkeypatch.setattr(runner, "has_headroom", lambda *args: (True, ""))
+    monkeypatch.setattr(runner, "_execute_invocation_plan", execute)
+    monkeypatch.setattr(runner, "_resolve_plan_telemetry", lambda **kwargs: SimpleNamespace(
+        model=kwargs["requested_model"], effort="high", cli_version="fixture",
+    ))
+    monkeypatch.setattr(runner, "_resolve_gemini_ladder_auth_modes", lambda config: ("oauth",))
+    with patch("agent_runtime.runner.write_record") as write_record:
+        result = runner._invoke_gemini_with_fallback(
+            agent_name="gemini", adapter=adapter, prompt="hello", mode="workspace-write",
+            cwd=tmp_path, model=PRIMARY_GEMINI_MODEL, task_id="gemini-model-fallback",
+            session_id=None, tool_config=None, entrypoint="runtime",
+            hard_timeout=300, stall_timeout=60,
         )
 
     assert result.ok is True
-    assert result.model == "gemini-3-flash-preview"
-    assert result.usage_record["model"] == "gemini-3-flash-preview"
-    attempted_models = [call.args[0][2] for call in mock_popen.call_args_list]
-    assert attempted_models == ["gemini-3.1-pro-high", "gemini-3-flash-preview"]
+    assert result.response == "AGY model answer"
+    assert result.model == AGY_GEMINI_MODEL
+    assert result.usage_record["model"] == AGY_GEMINI_MODEL
+    assert write_record.call_args.args[0]["model"] == AGY_GEMINI_MODEL
+    assert attempts == [("gemini", PRIMARY_GEMINI_MODEL), ("agy", AGY_GEMINI_MODEL)]
 
 
 def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
@@ -2704,8 +2671,6 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
     mock_popen = MagicMock(
         side_effect=[
             make_rate_limited_proc(50001),
-            make_rate_limited_proc(50002),
-            make_rate_limited_proc(50003),
         ]
     )
 
@@ -2744,13 +2709,14 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
             mode="workspace-write",
             cwd=tmp_path,
             task_id="gemini-rate-limited",
+            model="gemini-3.1-pro-preview",
             entrypoint="runtime",
         )
 
-    assert mock_popen.call_count == 3
+    assert mock_popen.call_count == 1
     written = mock_write.call_args.args[0]
     assert written["outcome"] == "rate_limited"
-    assert written["model"] == "gemini-2.5-pro"
+    assert written["model"] == "gemini-3.1-pro-preview"
 
 
 def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
@@ -4551,17 +4517,18 @@ def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
 
     env = mock_popen.call_args.kwargs["env"]
     assert env.get("AGENT_NO_MERGE") != "1"
-    assert env.get("PATH", "").split(":")[0] != str(runner_mod._SHIMS_DIR)
+    assert env.get("PATH", "").split(":")[0] == str(runner_mod._SHIMS_DIR)
 
 
-def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path, gh_shim_sandbox):
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
         [str(shim), "pr", "merge", "1234"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4578,15 +4545,16 @@ def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path):
     assert "#1403" in proc.stderr
 
 
-def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path):
+def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path, gh_shim_sandbox):
     """#7472: AGENT_NO_MERGE still blocks native --approve; CF is via comment."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
         [str(shim), "pr", "review", "1234", "--approve"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4600,20 +4568,21 @@ def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path):
 
     assert proc.returncode != 0
     assert "cannot merge or approve PRs" in proc.stderr
-    assert "gh pr comment" in proc.stderr
+    assert "scripts.publish pr-comment" in proc.stderr
     assert "resolved_model" in proc.stderr
     assert "real-gh" not in proc.stdout
 
 
-def test_gh_shim_allows_pr_comment_under_no_merge(tmp_path):
+def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sandbox):
     """#7472: CF of record posts as a comment while merge/--approve stay blocked."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "comment", "1234", "--body", "VERDICT: APPROVE"],
+        [sys.executable, "-m", "scripts.publish", "pr-comment", "--number", "1234", "--body", "VERDICT: APPROVE"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4626,17 +4595,36 @@ def test_gh_shim_allows_pr_comment_under_no_merge(tmp_path):
     )
 
     assert proc.returncode == 0
-    assert proc.stdout.strip() == "real-gh pr comment 1234 --body VERDICT: APPROVE"
+    assert proc.stdout.startswith("real-gh pr comment 1234 --repo unit/public --body-file ")
 
 
-def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+@pytest.mark.parametrize("readiness", ["ready", "draft", "failing", "unverifiable"])
+def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, readiness):
+    root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
-    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
+    calls = tmp_path / "calls.jsonl"
+    head = "a" * 40
+    metadata = {"number": 1234, "isDraft": readiness == "draft", "headRefOid": head}
+    checks = [{"name": "CI Gate", "bucket": "fail" if readiness == "failing" else "pass"}]
+    fake_gh.write_text(
+        f"#!{sys.executable}\n"
+        "import json, sys\n"
+        "from pathlib import Path\n"
+        "args = sys.argv[1:]\n"
+        f"with Path({str(calls)!r}).open('a') as out: out.write(json.dumps(args) + '\\n')\n"
+        "if args[:2] == ['pr', 'view']:\n"
+        f"    print(json.dumps({metadata!r}))\n"
+        "elif args[:2] == ['pr', 'checks']:\n"
+        f"    print('invalid-json' if {readiness == 'unverifiable'!r} else "
+        f"json.dumps({checks!r}))\n"
+        "else:\n"
+        "    print('real-gh ' + ' '.join(args))\n"
+    )
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "merge", "1234"],
+        [sys.executable, "-m", "scripts.publish", "pr-merge", "--number", "1234"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4648,13 +4636,21 @@ def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
         timeout=15,
     )
 
-    assert proc.returncode == 0
-    assert proc.stdout.strip() == "real-gh pr merge 1234"
+    sent = [json.loads(line) for line in calls.read_text().splitlines()]
+    assert [args[:2] for args in sent[:2]] == [["pr", "view"], ["pr", "checks"]]
+    if readiness == "ready":
+        assert proc.returncode == 0
+        assert proc.stdout.strip() == f"real-gh pr merge 1234 --repo unit/public --squash --match-head-commit={head}"
+        assert len(sent) == 3 and sent[-1][:2] == ["pr", "merge"]
+    else:
+        assert proc.returncode != 0
+        assert "OPSEC: merge" in proc.stderr
+        assert len(sent) == 2
 
 
-def test_gh_shim_retries_mocked_secondary_rate_limit_warns_on_consumed_piped_stdin(tmp_path):
-    """Piped stdin consumed on attempt 1 cannot be replayed on retry; emits warning (#6869)."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_typed_publisher_retries_mocked_secondary_rate_limit_replays_scanned_stdin(tmp_path, gh_shim_sandbox):
+    """Every retry delivers the original scanned stdin snapshot."""
+    root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4662,23 +4658,25 @@ def test_gh_shim_retries_mocked_secondary_rate_limit_warns_on_consumed_piped_std
         "set -euo pipefail\n"
         f"attempts={attempts!s}\n"
         "count=0\n"
-        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
+        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
         "count=$((count + 1))\n"
-        "printf '%s' \"$count\" >\"$attempts\"\n"
-        "stdin_body=\"$(cat)\"\n"
-        "if [[ \"$count\" == 1 ]]; then\n"
+        'printf \'%s\' "$count" >"$attempts"\n'
+        'body_file="${@: -1}"\n'
+        'stdin_body="$(cat "${body_file#--body-file=}")"\n'
+        'if [[ "$count" == 1 ]]; then\n'
         "  printf 'retry-output-should-not-leak\\n'\n"
         "  printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\n"
         "  exit 1\n"
         "fi\n"
-        "printf 'real-gh %s stdin=%s\\n' \"$*\" \"$stdin_body\"\n",
+        'printf \'real-gh %s stdin=%s\\n\' "$*" "$stdin_body"\n',
         encoding="utf-8",
     )
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "issue", "comment", "5146", "-F", "-"],
+        [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body-file", "-"],
         input="preserved comment body\n",
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4694,20 +4692,17 @@ def test_gh_shim_retries_mocked_secondary_rate_limit_warns_on_consumed_piped_std
 
     assert proc.returncode == 0
     assert attempts.read_text(encoding="utf-8") == "2"
-    assert proc.stdout.strip() == "real-gh issue comment 5146 -F - stdin="
+    assert "stdin=preserved comment body" in proc.stdout
     assert "retry-output-should-not-leak" not in proc.stdout
     assert "You have exceeded a secondary rate limit" not in proc.stderr
     assert "GitHub HTTP 403 throttled; retrying gh in 0s (attempt 1/2)." in proc.stderr
-    assert (
-        "agent-gh-shim: warning: piped stdin was consumed on attempt 1 and cannot be replayed for retried command: gh issue comment 5146 -F -"
-        in proc.stderr
-    )
+    assert "piped stdin was consumed" not in proc.stderr
     assert "github_secondary_rate_limited" not in proc.stderr
 
 
-def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path):
+def test_typed_publisher_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path, gh_shim_sandbox):
     """Intermediate secondary-limit output stays private until retries exhaust."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4715,9 +4710,9 @@ def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path)
         "set -euo pipefail\n"
         f"attempts={attempts!s}\n"
         "count=0\n"
-        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
+        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
         "count=$((count + 1))\n"
-        "printf '%s' \"$count\" >\"$attempts\"\n"
+        'printf \'%s\' "$count" >"$attempts"\n'
         "printf 'attempt-%s-stdout\\n' \"$count\"\n"
         "printf 'HTTP 403: secondary rate limit on attempt %s\\n' \"$count\" >&2\n"
         "exit 1\n",
@@ -4726,7 +4721,8 @@ def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path)
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "issue", "comment", "5146"],
+        [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body", "clean"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4750,8 +4746,8 @@ def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path)
     assert proc.stderr.count("github_secondary_rate_limited") == 1
 
 
-def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_typed_publisher_cleans_retry_tempfiles_on_sigterm(tmp_path, gh_shim_sandbox):
+    root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     ready = tmp_path / "ready"
     temp_dir = tmp_path / "shim-temp"
@@ -4768,7 +4764,8 @@ def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
     fake_gh.chmod(0o755)
 
     proc = subprocess.Popen(
-        [str(shim), "issue", "comment", "5146"],
+        [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body", "clean"],
+        cwd=root,
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -4801,8 +4798,8 @@ def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
     assert list(temp_dir.iterdir()) == []
 
 
-def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_typed_publisher_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_path, gh_shim_sandbox):
+    root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4810,8 +4807,8 @@ def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_
         "set -euo pipefail\n"
         f"attempts={attempts!s}\n"
         "count=0\n"
-        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
-        "printf '%s' \"$((count + 1))\" >\"$attempts\"\n"
+        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
+        'printf \'%s\' "$((count + 1))" >"$attempts"\n'
         "printf 'secondary rate limit incident #403\\n' >&2\n"
         "exit 1\n",
         encoding="utf-8",
@@ -4819,7 +4816,21 @@ def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "create"],
+        [
+            sys.executable,
+            "-m",
+            "scripts.publish",
+            "pr-create",
+            "--head",
+            "unit-branch",
+            "--base",
+            "main",
+            "--title",
+            "clean",
+            "--body",
+            "clean",
+        ],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4838,9 +4849,9 @@ def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_
     assert "throttled; retrying" not in proc.stderr
 
 
-def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path):
+def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path, gh_shim_sandbox):
     """Secondary rate-limit retries must complete bounded when stdin is closed (#6869)."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4848,10 +4859,10 @@ def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path):
         "set -euo pipefail\n"
         f"attempts={attempts!s}\n"
         "count=0\n"
-        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
+        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
         "count=$((count + 1))\n"
-        "printf '%s' \"$count\" >\"$attempts\"\n"
-        "if [[ \"$count\" == 1 ]]; then\n"
+        'printf \'%s\' "$count" >"$attempts"\n'
+        'if [[ "$count" == 1 ]]; then\n'
         "  printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\n"
         "  exit 1\n"
         "fi\n"
@@ -4862,6 +4873,7 @@ def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path):
 
     proc = subprocess.run(
         ["bash", "-c", f'exec 0<&-; "{shim}" issue list'],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4905,9 +4917,33 @@ def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):
     assert "#1403" in proc.stderr
 
 
-def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(
-    tmp_path, monkeypatch
-):
+@pytest.mark.parametrize("verb", ["checkout", "switch"])
+def test_git_shim_refuses_when_guard_interpreter_is_absent(tmp_path, verb):
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "git"
+    fake_git = tmp_path / "real-git"
+    fake_git.write_text("#!/usr/bin/env bash\nprintf 'real-git %s\\n' \"$*\"\n")
+    fake_git.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), verb, "feature-1"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GIT": str(fake_git),
+            "AGENT_GIT_SHIM_PYTHON": str(tmp_path / "nonexistent-python"),
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode != 0
+    assert "error: git shim guard interpreter unavailable" in proc.stderr
+    assert "Cannot verify branch containment; failing closed." in proc.stderr
+
+
+def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(tmp_path, monkeypatch):
     from agent_runtime import runner as runtime_runner
 
     class AcpxFixtureAdapter:
@@ -4966,9 +5002,7 @@ def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(
     assert error.value.observed_bytes > error.value.limit_bytes
 
 
-def test_acpx_over_cap_progress_is_dropped_while_answer_and_terminal_survive(
-    tmp_path, monkeypatch
-):
+def test_acpx_over_cap_progress_is_dropped_while_answer_and_terminal_survive(tmp_path, monkeypatch):
     from agent_runtime import runner as runtime_runner
     from agent_runtime.adapters.acpx import AcpxAdapter
 
@@ -5074,9 +5108,7 @@ def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
             return ()
 
     monkeypatch.setattr(runtime_runner, "_ACPX_DIRECT_OUTPUT_LIMIT_BYTES", 4 * 1024)
-    assert runtime_runner._streamed_output_limit(
-        agent_name="codex", entrypoint="runtime"
-    ) is None
+    assert runtime_runner._streamed_output_limit(agent_name="codex", entrypoint="runtime") is None
     execution = _execute_invocation_plan(
         agent_name="codex",
         adapter=FixtureAdapter(),
@@ -5115,10 +5147,13 @@ def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
 def test_acp_routes_share_a_bounded_protocol_envelope(agent_name):
     from agent_runtime import runner as runtime_runner
 
-    assert runtime_runner._streamed_output_limit(
-        agent_name=agent_name,
-        entrypoint="acpx-discuss",
-    ) == 16 * 1024 * 1024
+    assert (
+        runtime_runner._streamed_output_limit(
+            agent_name=agent_name,
+            entrypoint="acpx-discuss",
+        )
+        == 16 * 1024 * 1024
+    )
 
 
 @pytest.mark.parametrize(
@@ -5150,10 +5185,13 @@ def test_privacy_safe_acp_failure_code_is_closed_and_body_free(
 ):
     from agent_runtime import runner as runtime_runner
 
-    assert runtime_runner._privacy_safe_failure_code(
-        outcome=outcome,
-        rate_limited=rate_limited,
-        stalled=stalled,
-        returncode=returncode,
-        explicit_code=explicit,
-    ) == expected
+    assert (
+        runtime_runner._privacy_safe_failure_code(
+            outcome=outcome,
+            rate_limited=rate_limited,
+            stalled=stalled,
+            returncode=returncode,
+            explicit_code=explicit,
+        )
+        == expected
+    )

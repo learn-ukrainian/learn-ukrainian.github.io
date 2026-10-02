@@ -29,6 +29,34 @@ def test_shell_shlex_importers_do_not_write_bytecode() -> None:
     assert found
 
 
+@pytest.mark.parametrize("hook_name", ["guard-admin-merge.py", "guard-branch-switch-in-main.py", "guard-pr-merge.py"])
+@pytest.mark.parametrize("helper", ["shell_redirects", "shell_shlex"])
+@pytest.mark.parametrize("failure", ["missing", "syntax", "raises"])
+def test_issue_9479_broken_helper_fails_closed(tmp_path, hook_name, helper, failure):
+    hooks = tmp_path / ".claude" / "hooks"
+    hooks.mkdir(parents=True)
+    for name in (hook_name, "shell_redirects.py", "shell_shlex.py"):
+        if name == helper + ".py" and failure == "missing":
+            continue
+        shutil.copy2(HOOKS_ROOT / name, hooks / name)
+    if failure != "missing":
+        (hooks / (helper + ".py")).write_text(
+            "def broken(:\n" if failure == "syntax" else "raise RuntimeError('fixture failure')\n"
+        )
+    result = subprocess.run(
+        [sys.executable, str(hooks / hook_name)],
+        input=json.dumps({"tool_input": {"command": "git switch -c fixture && gh pr merge 5 --admin"}}),
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 2, result.stderr
+    assert f"guard dependency unavailable: {helper}" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert not (hooks / "__pycache__").exists()
+
+
 def _bash_python_hooks() -> tuple[str, ...]:
     settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
     names = {
@@ -45,19 +73,13 @@ def _bash_python_hooks() -> tuple[str, ...]:
 
 @pytest.mark.parametrize("hook_name", _bash_python_hooks())
 @pytest.mark.parametrize("layout", ["source", "deployed"])
-def test_shared_bash_python_hook_runs_at_both_depths(
-    tmp_path: Path, hook_name: str, layout: str
-) -> None:
+def test_shared_bash_python_hook_runs_at_both_depths(tmp_path: Path, hook_name: str, layout: str) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
     subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=30)
     (repo / "scripts").symlink_to(REPO_ROOT / "scripts", target_is_directory=True)
 
-    relative_hooks = (
-        Path("agents_extensions/shared/hooks")
-        if layout == "source"
-        else Path(".claude/hooks")
-    )
+    relative_hooks = Path("agents_extensions/shared/hooks") if layout == "source" else Path(".claude/hooks")
     hooks_dir = repo / relative_hooks
     hooks_dir.parent.mkdir(parents=True)
     shutil.copytree(HOOKS_ROOT, hooks_dir)
@@ -81,9 +103,7 @@ def test_shared_bash_python_hook_runs_at_both_depths(
     run_hook("true")
 
     if hook_name == "heal-core-bare.py":
-        subprocess.run(
-            ["git", "config", "core.bare", "true"], cwd=repo, check=True, timeout=30
-        )
+        subprocess.run(["git", "config", "core.bare", "true"], cwd=repo, check=True, timeout=30)
         run_hook("git status")
         bare = subprocess.run(
             ["git", "config", "core.bare"],

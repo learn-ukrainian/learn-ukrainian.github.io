@@ -119,6 +119,7 @@ class SyntheticResources:
         for name, value in raw.items():
             candidate = fixture_root / name
             if name.startswith("data/projects/open_model_data/") and candidate.is_file():
+                candidate.chmod(0o600)
                 candidate.write_bytes(value)
         return sealed
 

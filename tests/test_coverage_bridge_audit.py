@@ -12,12 +12,19 @@ Targets 13 modules with 0% coverage:
 import json
 import os
 import sqlite3
+import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Public writes use synthetic policy, independently of host tooling."""
+    monkeypatch.setenv("GH_REPO", "unit/public")
 
 # ---------------------------------------------------------------------------
 # 1. _config.py
@@ -691,6 +698,11 @@ class TestMessaging:
 class TestModel:
     """Tests for scripts/ai_agent_bridge/_model.py."""
 
+    @pytest.fixture(autouse=True)
+    def supported_agy_version(self, monkeypatch):
+        # Probe-result mocks must not also replace the adapter's version check.
+        monkeypatch.setattr("agent_runtime.adapters.agy._agy_version", lambda _binary: (1, 2, 9))
+
     def test_handle_model_check_failure_not_found(self, capsys):
         import time
 
@@ -750,35 +762,35 @@ class TestModel:
 
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE["gemini-3.5-flash-high"] = (True, time.time() - 7200)  # 2 hours old
+        _MODEL_CACHE["gemini-3.8-flash-high"] = (True, time.time() - 7200)  # 2 hours old
         try:
             with patch("subprocess.run", side_effect=FileNotFoundError):
-                result = check_model("gemini-3.5-flash-high")
+                result = check_model("gemini-3.8-flash-high")
             assert result is False
         finally:
-            _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+            _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_timeout(self, capsys):
         import subprocess
 
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 90)):
-            result = check_model("gemini-3.5-flash-high")
+            result = check_model("gemini-3.8-flash-high")
         assert result is False
         assert "timed out" in capsys.readouterr().out
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_file_not_found(self, capsys):
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         with patch("subprocess.run", side_effect=FileNotFoundError):
-            result = check_model("gemini-3.5-flash-high")
+            result = check_model("gemini-3.8-flash-high")
         assert result is False
         assert "AGY CLI not found" in capsys.readouterr().out
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_unknown_slug(self, capsys):
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
@@ -792,16 +804,16 @@ class TestModel:
     def test_check_model_success(self):
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         mock_result = MagicMock(returncode=0, stdout="MODEL_OK", stderr="")
         with patch("subprocess.run", return_value=mock_result) as run:
-            assert check_model("gemini-3.5-flash-high") is True
+            assert check_model("gemini-3.8-flash-high") is True
         cmd = run.call_args.args[0]
         assert "agy" in cmd[0] or cmd[0].endswith("/agy")
         assert "--model" in cmd
-        # Retired 3.5 aliases remap to live 3.8 slugs before argv is built.
+        # Active 3.8 slug is preserved in the probe invocation.
         assert "gemini-3.8-flash-high" in cmd or "Gemini 3.8 Flash (High)" in cmd
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
 
 # ---------------------------------------------------------------------------
@@ -881,6 +893,16 @@ class TestPrompts:
 
 class TestGitHub:
     """Tests for scripts/ai_agent_bridge/_github.py."""
+
+    def test_gh_comment_refuses_missing_matcher_before_transport(self, tmp_path, monkeypatch, capsys):
+        from scripts.ai_agent_bridge._github import _gh_comment
+        from scripts.opsec import prepublish
+
+        monkeypatch.setattr(prepublish, "private_tooling", lambda: tmp_path / "missing-tooling")
+        with patch("subprocess.run") as transport:
+            assert _gh_comment(123, "body") is False
+        transport.assert_not_called()
+        assert "private matcher or rules unavailable/incompatible; write refused" in capsys.readouterr().out
 
     def test_format_review_chunk_single(self):
         from scripts.ai_agent_bridge._github import _format_review_chunk
@@ -1385,6 +1407,14 @@ class TestTemplateCompliance:
 
 class TestNaturalnessCheck:
     """Tests for scripts/audit/naturalness_check.py."""
+
+    @pytest.fixture(autouse=True)
+    def _unit_test_interpreter(self, monkeypatch):
+        """These file helpers do not spawn providers or require a checkout venv."""
+        monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+        from common import repo_root
+
+        monkeypatch.setattr(repo_root, "project_interpreter", lambda root=None: Path(sys.executable))
 
     def test_extract_ukrainian_content_basic(self, tmp_path):
         from scripts.audit.naturalness_check import extract_ukrainian_content

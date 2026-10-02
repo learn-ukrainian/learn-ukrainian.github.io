@@ -12,6 +12,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import sqlite3
+from functools import cache
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -28,12 +29,21 @@ from scripts.curriculum.resolver.inputs import ResolverError
 from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: F401
 
 ROOT = Path(__file__).resolve().parents[2]
-A1_STORE = ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml"
-STORE_WORDS = yaml.safe_load(A1_STORE.read_text(encoding="utf-8"))["words"]
-NEGATION = next(record for record in STORE_WORDS if record["id"] == NEGATION_PARTICLE_RECORD)
-W075 = next(record for record in STORE_WORDS if record["id"] == "W-075")
-W031 = next(record for record in STORE_WORDS if record["id"] == "W-031")
-W047 = next(record for record in STORE_WORDS if record["id"] == "W-047")
+A1_STORE_RELATIVE = "curriculum/l2-uk-en/evidence/a1/_words.yaml"
+A1_STORE = ROOT / A1_STORE_RELATIVE
+_DEFAULT_PARTICLE = object()
+
+
+@cache
+def _store_words() -> list[dict]:
+    """Read the real store only for tests that need it; malformed data fails."""
+    if not A1_STORE.is_file():
+        pytest.skip(f"Missing repository-relative prerequisite: {A1_STORE_RELATIVE}")
+    return yaml.safe_load(A1_STORE.read_text(encoding="utf-8"))["words"]
+
+
+def _store_record(record_id: str) -> dict:
+    return next(record for record in _store_words() if record["id"] == record_id)
 
 
 def _record(number: int, lemma: str, forms: list[tuple[str, str]]) -> dict:
@@ -213,7 +223,6 @@ def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm"
     (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     options = item["options"]
     key = item.get("correct", 0)
-    evidence_id = "vesum:" + VESUM_LOCATIONS[item["option_records"][0]]
     doc = {
         "requirements_schema": 2,
         "lesson": {"level": "a1", "slug": "sample", "n": 1},
@@ -230,7 +239,8 @@ def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm"
                 "reason": "source-backed unique reading" if decision == "confirm" else "alternative reading",
                 "requires_forced": decision == "confirm",
                 "options": [
-                    {"text": text, "judgement": "valid" if i == key else "invalid", "evidence": [evidence_id]}
+                    {"text": text, "judgement": "valid" if i == key else "invalid",
+                     "evidence": ["vesum:" + VESUM_LOCATIONS[item["option_records"][i]]]}
                     for i, text in enumerate(options)
                 ],
                 "writer": {"seat": "codex@sol", "family": "openai"},
@@ -313,8 +323,10 @@ def _case_offer(
     level: str = "a1",
     extra_records: list[dict] | None = None,
     sentence_field: str = "sentence",
-    particle: dict | None = NEGATION,
+    particle: dict | None | object = _DEFAULT_PARTICLE,
 ) -> dict:
+    if particle is _DEFAULT_PARTICLE:
+        particle = _store_record(NEGATION_PARTICLE_RECORD)
     rec = target_record or GIFT
     opts = options or ["подарунка", "подарунок", "подарунком"]
     req = demand or {"Case": "Gen"}
@@ -512,7 +524,9 @@ def test_shared_accusative_case_does_not_trigger_negation_rule() -> None:
     }
     lesson = {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]}
     draft = {"activities": [{"id": "a1", "items": [item]}]}
-    row = check_4_activities(draft, lesson, {"words": [coffee, tea, water, NEGATION]}, {}, level="a1")[0]
+    row = check_4_activities(
+        draft, lesson, {"words": [coffee, tea, water, _store_record(NEGATION_PARTICLE_RECORD)]}, {}, level="a1"
+    )[0]
     assert row.get("code") != "a1_case_contrast_under_negated_verb"
 
 
@@ -529,7 +543,7 @@ def test_check_4_default_vesum_outage_is_named(
     row = check_4_activities(
         {"activities": [{"id": "a1", "items": [item]}]},
         {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
-        {"words": [GIFT, NEGATION]},
+        {"words": [GIFT, _store_record(NEGATION_PARTICLE_RECORD)]},
         {},
         level="a1",
     )[0]
@@ -546,7 +560,7 @@ def test_non_negated_case_contrast_passes_check_4_without_vesum(
     row = check_4_activities(
         {"activities": [{"id": "a1", "items": [item]}]},
         {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
-        {"words": [GIFT, NEGATION]},
+        {"words": [GIFT, _store_record(NEGATION_PARTICLE_RECORD)]},
         {},
         level="a1",
     )[0]
@@ -554,28 +568,31 @@ def test_non_negated_case_contrast_passes_check_4_without_vesum(
 
 
 def test_negation_particle_record_is_bound_in_the_a1_store() -> None:
-    assert (NEGATION["pos"], NEGATION["entry"]) == ("part", {"entry_id": 226767, "source": "vesum"})
+    negation = _store_record(NEGATION_PARTICLE_RECORD)
+    assert (negation["pos"], negation["entry"]) == ("part", {"entry_id": 226767, "source": "vesum"})
 
 
 @pytest.mark.parametrize(
     "particle",
     [
         None,
-        {**NEGATION, "pos": "noun"},
-        {**NEGATION, "lemma": ""},
-        {**NEGATION, "entry": None},
-        {**NEGATION, "entry": {"source": "manual", "entry_id": 226767}},
+        {"pos": "noun"},
+        {"lemma": ""},
+        {"entry": None},
+        {"entry": {"source": "manual", "entry_id": 226767}},
     ],
 )
 def test_store_without_negation_particle_record_is_named(particle: dict | None) -> None:
+    if particle is not None:
+        particle = {**_store_record(NEGATION_PARTICLE_RECORD), **particle}
     row = _case_offer("Я не знаю ___.", particle=particle)
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
 
 
 def test_negation_record_rebound_to_another_particle_is_refused() -> None:
     # W-061 carrying another store particle's lemma and VESUM binding (the real W-062 record).
-    another = next(record for record in STORE_WORDS if record["id"] == "W-062")
-    other = {**NEGATION, "lemma": another["lemma"], "entry": another["entry"]}
+    another = _store_record("W-062")
+    other = {**_store_record(NEGATION_PARTICLE_RECORD), "lemma": another["lemma"], "entry": another["entry"]}
     row = _case_offer("Я не знаю ___.", particle=other)
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
 
@@ -695,7 +712,7 @@ def test_sentence_without_negated_verb_is_unaffected() -> None:
             "Я не роблю добре ___.",
             ["діло", "діла"],
             DEED,
-            [W075],
+            ["W-075"],
             0,
             {"Case": "Nom"},
         ),
@@ -703,7 +720,7 @@ def test_sentence_without_negated_verb_is_unaffected() -> None:
             "Я ніколи не працюю за ___.",
             ["подарунка", "подарунок"],
             GIFT,
-            [W031],
+            ["W-031"],
             0,
             {"Case": "Gen"},
         ),
@@ -711,7 +728,7 @@ def test_sentence_without_negated_verb_is_unaffected() -> None:
             "Я не при ___.",
             ["подарунка", "подарунок"],
             GIFT,
-            [W047],
+            ["W-047"],
             0,
             {"Case": "Gen"},
         ),
@@ -721,7 +738,7 @@ def test_store_records_narrower_than_vesum_cannot_earn_exemption(
     sentence: str,
     opts: list[str],
     rec: dict,
-    extra: list[dict],
+    extra: list[str],
     key: int,
     req: dict[str, str],
 ) -> None:
@@ -731,7 +748,7 @@ def test_store_records_narrower_than_vesum_cannot_earn_exemption(
         sentence,
         options=opts,
         target_record=rec,
-        extra_records=extra,
+        extra_records=[_store_record(record_id) for record_id in extra],
         key=key,
         demand=req,
     )
@@ -802,7 +819,7 @@ def test_choice_checks_vesum_lookup_error_fails_closed_when_store_records_presen
     row = check_4_activities(
         {"activities": [{"id": "a1", "items": [item]}]},
         {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
-        {"words": [DEED, NEGATION, W075]},
+        {"words": [DEED, _store_record(NEGATION_PARTICLE_RECORD), _store_record("W-075")]},
         {},
         level="a1",
         vesum_lookup=failing_lookup,
@@ -879,7 +896,7 @@ def test_excluded_distractors_are_offered_and_pass_check_7(
     draft = {"activities": [{"id": "a1", "items": [item]}]}
     lesson = {"activities": [{"id": "a1", "type": "quiz"}]}
     assert (
-        check_4_activities(draft, lesson, {"words": [record, NEGATION, *other_records]}, {}, level="a1")[0]["status"]
+        check_4_activities(draft, lesson, {"words": [record, _store_record(NEGATION_PARTICLE_RECORD), *other_records]}, {}, level="a1")[0]["status"]
         == "passed"
     )
     assert _check(tmp_path, item, record, extra_records=other_records)["status"] == "passed"
@@ -1403,6 +1420,8 @@ def test_choice_gate_records_resolved_evidence_identity(tmp_path):
     _write_form_receipt(tmp_path, item)
     result = _check(tmp_path, item, BROTHER)
     with Sources() as api:
-        evidence = api.resolve_evidence_ids(["vesum:487702-487719"])
+        evidence = receipts.resolve_requirement_evidence(
+            receipts.read_requirement_receipts(receipts.requirement_receipt_path(tmp_path, 1), sources=api), sources=api,
+        )
     assert result["status"] == "passed"
     assert result["details"]["requirement_evidence"] == {"sha256": evidence.content_hash, "sources": evidence.metadata}

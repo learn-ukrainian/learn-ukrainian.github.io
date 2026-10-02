@@ -1,0 +1,54 @@
+inputs:
+  arc:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml
+    sha256: add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2
+  arc_source:
+    path: docs/epics/fresh-build-a1-arc.md
+    sha256: 57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: ae2f4cbe876dccb1f91722b9215b8672026765c15a59223ea9fd51dc4a6c3152
+  grammar:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml
+    sha256: 20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/special-signs/plan-review.learner-state.yaml
+    sha256: 726e7f061408192292efca40de0f19ebc4e4b14d4ba1f12970a6b7217b016e45
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/special-signs.yaml
+    sha256: 942eb869706049cd978e34e5dde93c2d40e6f9678f33032792a08c0b5abf118d
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock
+    sha256: 323fbb9af5c56d0d42ec0a10df04fec64b6777a17d4571c96c91aa388c2d95ea
+  pack_verify_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/special-signs/pack-verify.report.json
+    sha256: cc9fe3ed201e52d567303c821538f4c456ded3757ef0b47e5d2fe33b9d707615
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml
+    sha256: f82d302663330a2b73dc35002dbd9a663133f85e7c34cc526ce433e3f6c12ef0
+  requirements:
+    path: docs/epics/fresh-build-requirements.md
+    sha256: 4d31bafe477fe18d31d7cde068f8df46980fb89de792efda326c73dde30089ca
+  scope:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml
+    sha256: 5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a
+  v1_totals:
+    path: curriculum/l2-uk-en/evidence/a1/_state/special-signs/plan-review.v1-totals.yaml
+    sha256: ff5578ef71a7bd248cd73a017053301b2148b26ef5d6c456ad9c0986b2ee317b
+  validate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/special-signs/plan-validate.report.json
+    sha256: 168956632742552154be61ab1b59fe4f07930fcf6f04416a9feefe66372ec60a
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 6b9b2da5302a7322d42b6ed103e171bf3ac6365daae1d69499eb2541dbcf6b74
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: 2ad317deeb586e88cf478bd20da8a71a70adf91b067819f8d7bd7c207c70b57e
+kind: plan
+learner_state:
+  sha256: 175fd3994932b049791365cedf1a0a85119e801714b4ca267845742e1a92ce07
+  source: planned_state
+level: a1
+manifest_schema: 1
+position: 3
+slug: special-signs

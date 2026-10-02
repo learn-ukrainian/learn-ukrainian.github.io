@@ -6,11 +6,13 @@ import dataclasses
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
 import yaml
 
+from scripts.build.fresh import runner
 from scripts.build.fresh.immersion import compute_immersion_payload
 from scripts.build.fresh.manifest import learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.prompt import (
@@ -32,8 +34,10 @@ from scripts.build.fresh.prompt import (
     render_lesson_prompt,
     render_recap_prompt,
 )
+from scripts.build.fresh.requires_confirm import questions_from_draft, write_questions
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedState
+from scripts.delegate import _read_only_write_intent_error
 from scripts.review.prompts.render import ManifestReader, _learner_state_context
 
 pytestmark = pytest.mark.reads_content
@@ -634,6 +638,116 @@ def _state_block(prompt: str) -> str:
     return prompt.split(LEARNER_STATE_BEGIN, 1)[1].split(LEARNER_STATE_END, 1)[0]
 
 
+@pytest.mark.parametrize("recap", [False, True], ids=["lesson-writer", "recap-writer"])
+@pytest.mark.parametrize("state_fixture", ["sample_learner_state", "full_learner_state"], ids=["letters", "later"])
+def test_read_only_writer_prompt_contract(request, sample_plan_entry, sample_cited_records, state_fixture, recap):
+    """Both writer templates must pass the dispatch guard in both learner stages (#9375)."""
+    state = request.getfixturevalue(state_fixture)
+    plan = dict(sample_plan_entry)
+    n = state.lesson_n + int(recap)
+    plan["lesson"] = {**plan["lesson"], "n": n}
+    kwargs = dict(
+        plan_entry=plan,
+        cited_records=sample_cited_records,
+        learner_state=state,
+        immersion=compute_immersion_payload(
+            "a1", arc_position=state.position, lesson_n=n, cumulative_core_count=state.cumulative_core_count
+        ),
+        level="a1",
+        slug=plan["slug"],
+        lesson_n=n,
+        style_card_path=CARDS_DIR / "a1.md",
+        word_store=SAMPLE_WORD_STORE if state_fixture == "sample_learner_state" else STATE_WORD_STORE,
+        grammar_registry=STATE_GRAMMAR,
+    )
+    if recap:
+        content = "# Built lesson MDX"
+        kwargs["built_lessons"] = [
+            {
+                "n": n - 1,
+                "title": "Earlier lesson",
+                "content": content,
+                "sha256": hashlib.sha256(content.encode()).hexdigest(),
+            }
+        ]
+    rendered = (render_recap_prompt if recap else render_lesson_prompt)(**kwargs)
+
+    assert _read_only_write_intent_error(mode="read-only", prompt=rendered) is None
+    assert (
+        "Examples and activity items must use only this lesson's own plan entry (its letters, grammar and words) "
+        "and the material taught before this lesson listed in this section."
+    ) in rendered
+
+
+def test_read_only_requires_confirm_prompt_contract(tmp_path, sample_plan_entry, sample_cited_records):
+    """Exercise question and option loops through the production confirmation renderer."""
+    record = sample_cited_records["W-001"]
+    draft = {
+        "activities": [
+            {
+                "id": "a1",
+                "items": [
+                    {
+                        "kind": "form",
+                        "sentence": "___",
+                        "options": [record["forms"][0]["form"], record["lemma"]],
+                        "correct": 0,
+                        "requires": {"Case": "Nom"},
+                    }
+                ],
+            }
+        ]
+    }
+    lesson = {**sample_plan_entry, "lesson": {"level": "a1", "slug": sample_plan_entry["slug"], "n": 1}}
+    batch = questions_from_draft(draft, lesson, {"draft_sha256": SHA})
+    write_questions(tmp_path, 1, batch)
+    rendered = (tmp_path / "lesson-1.requires-confirm.prompt.md").read_text(encoding="utf-8")
+
+    assert "## a1/0" in rendered
+    assert f"- 0: {record['lemma']} [key]" in rendered
+    assert f"- 1: {record['lemma']}" in rendered
+    assert _read_only_write_intent_error(mode="read-only", prompt=rendered) is None
+
+
+def test_read_only_constrained_resolution_prompt_contract(
+    tmp_path, monkeypatch, sample_plan_entry, sample_cited_records
+):
+    """Capture the runner's actual inline prompt without invoking a provider."""
+    batch = {
+        "lesson": {"level": "a1", "slug": sample_plan_entry["slug"], "n": 1},
+        "questions": [
+            {
+                "id": "Q-001",
+                "sentence": "___",
+                "candidates": [
+                    {"record": record_id, **record}
+                    for record_id, record in sample_cited_records.items()
+                    if record_id.startswith("W-")
+                ],
+            }
+        ],
+    }
+    answer_file = tmp_path / "answers.yaml"
+    answer_file.write_text("answers: []\n", encoding="utf-8")
+    prompts = []
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            assert cmd[cmd.index("--mode") + 1] == "read-only"
+            prompts.append(Path(cmd[cmd.index("--prompt-file") + 1]).read_text(encoding="utf-8"))
+            output = ""
+        else:
+            assert "wait" in cmd
+            output = json.dumps({"status": "done", "result_file": str(answer_file)})
+        return subprocess.CompletedProcess(cmd, 0, stdout=output, stderr="")
+
+    monkeypatch.setattr(runner.subprocess, "run", fake_run)
+    assert runner.dispatch_questions(batch, "codex:fixture", repo_root=tmp_path) == {"answers": []}
+    assert len(prompts) == 1
+    assert yaml.safe_load(prompts[0].split("\n\n", 1)[1]) == batch
+    assert _read_only_write_intent_error(mode="read-only", prompt=prompts[0]) is None
+
+
 @pytest.mark.parametrize("recap", [False, True])
 def test_prompt_lists_every_letter_grammar_point_and_word(
     sample_plan_entry, full_learner_state, sample_cited_records, recap
@@ -916,7 +1030,8 @@ def test_every_pack_record_kind_renders_from_its_schema_fields(sample_plan_entry
         "- Text:\n```text\nВибачте — ввічливе прохання.\n```\n\n",
         "### Record `V-004`\n- Kind: video\n- Channel: Ukrainian Lessons\n"
         "- URL: https://www.youtube.com/watch?v=W-1rCu0indE\n"
-        "- Use: Listening model for the informal greeting in lesson 1.\n- Link check: HTTP 200 on 2026-09-29\n",
+        "- Use: Listening model for the informal greeting in lesson 1.\n"
+        "- Models: undeclared (listening_model_undeclared)\n- Link check: HTTP 200 on 2026-09-29\n",
         "### Record `S-001`\n- Kind: standard\n- Source: State Standard, lines 351-353\n- Text (verbatim):\n"
         "```text\n      1.3.1.1. Особа вміє:\n      написати власне прізвище та ім’я;\n```",
         "### Record `U-001`\n- Kind: unsupported\n- Claim: A1 learners confuse И and І by ear.\n- Status: open\n"
@@ -1007,6 +1122,20 @@ def test_record_kinds_cover_every_record_kind_of_the_pack_schema():
         if name.endswith("_record")
     }
     assert schema_kinds == {prefix: kind for prefix, kind in RECORD_KINDS.items() if prefix != "W"}
+
+
+def test_video_models_are_rendered_as_structured_data(sample_plan_entry, sample_learner_state):
+    models = {"letters": ["А"], "words": ["W-001"], "segment": "00:05–00:12"}
+    record = {**VIDEO_RECORD, "models": models}
+    prompt = _render(_citing(sample_plan_entry, ["V-004"]), sample_learner_state, {"V-004": record})
+    line = next(line for line in _cited_block(prompt).splitlines() if line.startswith("- Models (structured): "))
+    assert json.loads(line.removeprefix("- Models (structured): ")) == models
+    assert "Never infer a model from `use` or a primer quotation" in prompt
+
+
+def test_video_without_models_is_an_explicit_prompt_gap(sample_plan_entry, sample_learner_state):
+    prompt = _render(_citing(sample_plan_entry, ["V-004"]), sample_learner_state, {"V-004": VIDEO_RECORD})
+    assert "- Models: undeclared (listening_model_undeclared)" in _cited_block(prompt)
 
 
 def test_lesson_numbers_in_cited_source_prose_are_not_curriculum_references(sample_plan_entry, sample_learner_state):

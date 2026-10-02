@@ -52,7 +52,7 @@ def test_plan_diff_timeout_exits_nonzero(
     archive = base_path / "docs" / "l2-uk-en" / "_archive" / "HIST-CURRICULUM-PLAN.md"
     archive.parent.mkdir(parents=True)
     archive.write_text("old\n", encoding="utf-8")
-    fake_file = base_path / "scripts" / "generate_plan_markdown.py"
+    fake_file = base_path / "scripts" / "generate_mdx" / "generate_plan_markdown.py"
     monkeypatch.setattr(generate_plan_markdown, "__file__", str(fake_file))
     monkeypatch.setattr(generate_plan_markdown, "generate_plan_markdown", lambda *_args: "new\n")
     calls: list[dict[str, Any]] = []

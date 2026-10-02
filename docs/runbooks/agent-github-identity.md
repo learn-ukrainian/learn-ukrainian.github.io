@@ -1,7 +1,7 @@
 # Agent GitHub identity
 
 Dispatches use a repository-scoped GitHub App installation token before any
-other GitHub credential. This lets ordinary `git push` and `gh pr create` work
+other GitHub credential. This lets ordinary `git push` and `.venv/bin/python -m scripts.publish pr-create` work
 without giving an agent shell the operator's GitHub keychain identity.
 
 ## One-time App setup
@@ -19,7 +19,7 @@ service as:
 
 ```bash
 export LU_AGENT_GITHUB_APP_ID='…'
-export LU_AGENT_GITHUB_APP_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----\n…'
+export LU_AGENT_GITHUB_APP_PRIVATE_KEY='<PKCS#8 PEM-encoded private key>'
 export LU_AGENT_GITHUB_APP_INSTALLATION_ID='…'
 ```
 

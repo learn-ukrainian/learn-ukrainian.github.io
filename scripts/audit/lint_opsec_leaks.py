@@ -42,6 +42,7 @@ _SECTION_LINE_RE = re.compile(r"^\s*(?:[§#\*|-]|\d+\.)\s*(?:\d+\.){3}\d+|\|\s*(
 # Safe allowlist of four-octet IPs (loopback, public DNS, standard testing)
 _SAFE_IP_ALLOWLIST = {
     "127.0.0.1",
+    "127.0.1.1",
     "0.0.0.0",
     "1.1.1.1",
     "1.0.0.1",
@@ -89,6 +90,23 @@ _PUBLIC_PERSONAL_IDENTIFIER_ROOTS = (
     Path("docs"),
 )
 
+# Category D: Private tracker citations in public documentation and agent rules
+_PRIVATE_TRACKER_PATTERN = re.compile(
+    r"\b(?:private|infra[-_]private)(?:[_\s]+(?:operational|infrastructure|infra|dataset|task|qa|tracking|coordination|hramatka))*(?:[_\s]+(?:issue|issues|tracker|repo|repository|ticket|tickets|board|hramatka)){0,2}[_\s:=(\[]*#[0-9]+\b",
+    re.IGNORECASE,
+)
+
+_PUBLIC_AGENT_DOC_ROOTS = (
+    Path("agents_extensions"),
+    Path("docs/runbooks"),
+    Path("docs/best-practices"),
+    Path("docs/audits"),
+    Path(".claude"),
+    Path(".agent"),
+    Path(".gemini"),
+    Path(".codex"),
+)
+
 # File extensions to skip (strictly binary / generated / virtual environment files)
 _SKIP_EXTENSIONS = {
     ".db", ".db-journal", ".sqlite", ".sqlite3", ".pyc", ".png", ".jpg", ".jpeg",
@@ -106,7 +124,6 @@ _SKIP_PATH_SUBSTRINGS = [
     "wiki/.state/",
     "docs/references/external/",
     "requirements-lock.txt",
-    "requirements.lock",
     "audit/",
     "_archive/",
 ]
@@ -167,6 +184,26 @@ def check_personal_identifiers(content: str, filename: str) -> list[tuple[int, s
     return findings
 
 
+def is_public_agent_doc_path(filename: str) -> bool:
+    """Return whether a path is public agent documentation or rule content."""
+    normalized = Path(filename.replace("\\", "/"))
+    return any(normalized.is_relative_to(root) for root in _PUBLIC_AGENT_DOC_ROOTS)
+
+
+def check_private_tracker_citations(content: str, filename: str) -> list[tuple[int, str, str]]:
+    """Return private tracker citation leaks in public agent documentation and rules."""
+    normalized_filename = filename.replace("\\", "/")
+    if not is_public_agent_doc_path(normalized_filename):
+        return []
+
+    findings: list[tuple[int, str, str]] = []
+    lines = content.splitlines()
+    for idx, line in enumerate(lines, 1):
+        for match in _PRIVATE_TRACKER_PATTERN.finditer(line):
+            findings.append((idx, match.group(0), "Private tracker citation disclosure (Category D OPSEC leak)"))
+    return findings
+
+
 def check_content(
     content: str,
     filename: str,
@@ -221,7 +258,11 @@ def check_content(
             if pattern.search(line):
                 findings.append((idx, line.strip(), desc))
 
-    return findings + check_personal_identifiers(content, filename)
+    return (
+        findings
+        + check_personal_identifiers(content, filename)
+        + check_private_tracker_citations(content, filename)
+    )
 
 
 def get_git_content(rel_path: str, rev: str = "") -> str | None:

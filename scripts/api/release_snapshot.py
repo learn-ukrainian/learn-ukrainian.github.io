@@ -112,6 +112,7 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
         "git",
         "-C",
         str(repo_root),
+        "--no-optional-locks",
         "archive",
         "--format=tar",
         sha,
@@ -373,7 +374,7 @@ def _default_process_runner(
 ) -> subprocess.CompletedProcess[str]:
     """Production runner. The timeout is on this call, not on a bare ``subprocess.run`` default."""
     return subprocess.run(
-        list(args),
+        list(args),  # lock-lint: ok injected runner; its callers pass the lsof argv
         capture_output=capture_output,
         text=text,
         check=check,

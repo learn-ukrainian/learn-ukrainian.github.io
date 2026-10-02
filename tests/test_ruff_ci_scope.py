@@ -83,3 +83,41 @@ def test_ruff_import_roots_are_checkout_independent() -> None:
     config = tomllib.loads((_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert config["tool"]["ruff"]["src"] == [".", "scripts"]
     assert "known-first-party" not in config["tool"]["ruff"].get("lint", {}).get("isort", {})
+
+
+def test_pre_commit_cheap_guards_configuration() -> None:
+    """The three B19 cheap repo-wide guards must be declared in .pre-commit-config.yaml at pre-push."""
+    config = yaml.safe_load(_PRE_COMMIT.read_text(encoding="utf-8"))
+    local_repos = [repo for repo in config["repos"] if repo.get("repo") == "local"]
+    assert len(local_repos) == 1, "expected one local repository in .pre-commit-config.yaml"
+    local_hooks = {hook["id"]: hook for hook in local_repos[0]["hooks"]}
+
+    expected_guards = {
+        "repo-wide-marker-invariant": {
+            "stages": ["pre-push"],
+            "pass_filenames": False,
+            "files": r"^tests/.*\.py$",
+            "test_target": "tests/test_repo_wide_marker_invariant.py",
+        },
+        "task-store-resolver-guard": {
+            "stages": ["pre-push"],
+            "pass_filenames": False,
+            "files": r"^(scripts|tests)/.*\.py$",
+            "test_target": "tests/test_conftest_task_store_guard.py",
+        },
+        "sparse-collection-guard": {
+            "stages": ["pre-push"],
+            "pass_filenames": False,
+            "files": r"^tests/.*\.py$",
+            "test_target": "tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent",
+        },
+    }
+
+    for hook_id, expected in expected_guards.items():
+        assert hook_id in local_hooks, f"missing expected B19 guard hook {hook_id!r}"
+        hook = local_hooks[hook_id]
+        assert hook.get("stages") == expected["stages"], f"{hook_id} stages mismatch"
+        assert hook.get("pass_filenames") is False, f"{hook_id} pass_filenames must be False"
+        assert hook.get("files") == expected["files"], f"{hook_id} files filter mismatch"
+        assert expected["test_target"] in hook.get("entry", ""), f"{hook_id} entry must reference {expected['test_target']}"
+        assert "--override-ini addopts=-q" in hook.get("entry", ""), f"{hook_id} entry must override addopts"

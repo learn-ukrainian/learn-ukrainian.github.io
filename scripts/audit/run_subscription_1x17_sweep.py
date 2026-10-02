@@ -2,8 +2,8 @@
 """Serial subscription-runtime 1×17 QG bakeoff sweep (#4761 / #4762 / #4763).
 
 Python-only — no bash. Examples:
-  QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_subscription_1x17_sweep.py --model claude-opus-4-8
-  QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_subscription_1x17_sweep.py --model gpt-5.5
+  QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_subscription_1x17_sweep.py --model claude-opus-5-5
+  QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_subscription_1x17_sweep.py --model gpt-6.1-sol
 
 Claude and GPT can run in parallel (separate out dirs, separate subscription buckets).
 """
@@ -49,8 +49,8 @@ ALL_FIXTURES = [
 ]
 
 MODEL_OUT_DIRS = {
-    "claude-opus-4-8": REPO / "audit" / "2026-07-08-claude-multirun-1x",
-    "gpt-5.5": REPO / "audit" / "2026-07-08-gpt-multirun-1x",
+    "claude-opus-5-5": REPO / "audit" / "claude-opus-5-5-multirun-1x",
+    "gpt-6.1-sol": REPO / "audit" / "gpt-6.1-sol-multirun-1x",
 }
 
 

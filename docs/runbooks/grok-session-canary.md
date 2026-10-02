@@ -135,7 +135,7 @@ Operator 2026-09-21: keep the product default of 85%. Do not raise it.
   --epic atlas \
   --answers .claude/atlas-epic/canary/answers.json \
   --context-tokens 250000 \
-  --model grok-4.6
+  --model grok-4.7
 
 .venv/bin/python -m scripts.session_canary.grok_lane status --epic atlas
 .venv/bin/python -m scripts.session_canary.grok_lane protocol --epic atlas

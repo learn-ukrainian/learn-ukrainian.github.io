@@ -1,0 +1,24 @@
+# Audited suppression list for pip-audit dependency vulnerability scanning.
+# Reference issue: learn-ukrainian-infra-private#703
+#
+# Every suppressed vulnerability requires:
+# - id: CVE or PYSEC identifier
+# - package: affected package name
+# - version: currently pinned version in requirements-lock.txt
+# - status: upstream-unpatched | upstream-fix-pending | accepted-risk
+# - reason: technical justification why the vulnerability cannot be exploited in this repository
+#
+# Unsuppressed Critical or High vulnerabilities will fail the blocking gate.
+
+vulnerabilities:
+  - id: PYSEC-2026-3804
+    package: accelerate
+    version: 1.14.0
+    status: upstream-unpatched
+    reason: "Path traversal in load_checkpoint_in_model; upstream 1.14.0 has no released patch yet. Model weights are not loaded from untrusted user inputs in this repository."
+
+  - id: PYSEC-2026-1325
+    package: ecdsa
+    version: 0.19.2
+    status: accepted-risk
+    reason: "Minerva timing attack on P-256 curve; upstream considers side-channel attacks out of scope with no planned fix. ECDSA signature verification is unaffected."

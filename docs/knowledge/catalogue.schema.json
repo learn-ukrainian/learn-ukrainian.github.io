@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/docs-knowledge/catalogue.schema.json",
+  "title": "Document and data catalogue (#9412)",
+  "description": "Family-level catalogue of tracked docs/registry/evidence paths and logical data/ stores. Lifecycle values follow docs/architecture/docs-authority-lifecycle.md. Validated by scripts/docs/catalogue.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "denominator", "status_mapping", "entries", "residual"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tracked_roots", "local_store_root"],
+      "properties": {
+        "tracked_roots": {
+          "type": "array",
+          "items": {"enum": ["docs", "registry", "curriculum/l2-uk-en/evidence"]},
+          "minItems": 3,
+          "uniqueItems": true
+        },
+        "local_store_root": {"const": "data"}
+      }
+    },
+    "status_mapping": {
+      "description": "Issue #9412 status words mapped onto the existing lifecycle vocabulary.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current", "historical", "superseded"],
+      "properties": {
+        "current": {"const": "active"},
+        "historical": {"const": "archive"},
+        "superseded": {"const": "superseded"}
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/entry"}
+    },
+    "store_literal_exemptions": {
+      "description": "data/<name>.db|.sqlite|.sqlite3 names that scripts/ code mentions but that are not stores of this repository; every other such name must be claimed by a data_store entry.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["literal", "reason"],
+        "properties": {
+          "literal": {"$ref": "#/$defs/storeName"},
+          "reason": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "residual": {
+      "description": "Tracked paths whose lifecycle cannot be classified yet. Each path still belongs to a family; the family default does not apply to it.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "owner", "reason"],
+        "properties": {
+          "path": {"$ref": "#/$defs/repoPath"},
+          "owner": {"$ref": "#/$defs/owner"},
+          "reason": {"$ref": "#/$defs/text"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {
+      "description": "Free text with at least one non-space character and no C0, DEL or C1 control. Whitespace is the explicit set U+0020, U+00A0, U+1680, U+2000-U+200A, U+2028, U+2029, U+202F, U+205F, U+3000 and U+FEFF plus every control. Every pattern in this schema uses explicit escaped classes only (never the shorthand classes s, S, w, W, d, D, b or the dot) and ends with (?![^\\n]|\\n), never $ (which in Python also matches before a final newline), so Python re and ECMA-262 engines give the same verdict for every string, including U+0085, U+2028, U+2029 and U+FEFF.",
+      "type": "string",
+      "minLength": 3,
+      "pattern": "[^ \\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000\\ufeff\\u0000-\\u001f\\u007f-\\u009f]",
+      "not": {"pattern": "[\\u0000-\\u001f\\u007f-\\u009f]"}
+    },
+    "repoPath": {
+      "description": "Repository-relative POSIX path; never absolute, never parent-relative.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*(?:^|/)\\.\\.(?:/|#|(?![^\\n]|\\n)))[^\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
+    },
+    "glob": {
+      "description": "Catalogue glob dialect (also used by scripts/docs/catalogue.py): literal characters; '*' matches within one path segment, never '/'; '?' matches one character within a segment; '**' is a whole segment spanning one or more segments (zero or more when a segment follows). Character classes ('[...]'), braces ('{a,b}'), empty, '.' and '..' segments, a leading or trailing '/' and control characters are rejected: list each path instead. Catch-all rule (validator): the first segment below the tracked root must be literal, so 'docs/**', 'docs/*/**', 'docs/a*/**' and '**' are errors.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*//)(?![^\\u0000-\\u001f\\u007f-\\u009f]*/(?![^\\n]|\\n))(?!(?:[^\\u0000-\\u001f\\u007f-\\u009f]*/)?\\.\\.?(?:/|(?![^\\n]|\\n)))(?![^\\u0000-\\u001f\\u007f-\\u009f]*[^/]\\*\\*)(?![^\\u0000-\\u001f\\u007f-\\u009f]*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
+    },
+    "storeName": {
+      "description": "A logical store under data/ in the catalogue glob dialect (see $defs/glob); a trailing '/' claims the subtree.",
+      "type": "string",
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*//)data/(?!(?:[^\\u0000-\\u001f\\u007f-\\u009f]*/)?\\.\\.?(?:/|(?![^\\n]|\\n)))(?![^\\u0000-\\u001f\\u007f-\\u009f]*[^/]\\*\\*)(?![^\\u0000-\\u001f\\u007f-\\u009f]*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
+    },
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9](?![^\\n]|\\n)"},
+    "owner": {
+      "description": "A stream key from scripts/config/issue_streams.yaml or an area key from scripts/config/area_assignments.yaml (checked by the validator).",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*(?![^\\n]|\\n)"
+    },
+    "lifecycle": {"enum": ["draft", "active", "superseded", "archive"]},
+    "supersessionTarget": {
+      "description": "A tracked repository path (optionally with #section) or id:<catalogue entry id>.",
+      "type": "string",
+      "minLength": 3,
+      "pattern": "^(?:id:[a-z0-9][a-z0-9-]*[a-z0-9]|(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*(?:^|/)\\.\\.(?:/|#|(?![^\\n]|\\n)))[^\\u0000-\\u001f\\u007f-\\u009f]+)(?![^\\n]|\\n)"
+    },
+    "query": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["surface", "how"],
+        "properties": {
+          "surface": {"enum": ["cli", "api", "mcp", "sqlite", "git_grep"]},
+          "how": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "entrypoints": {
+      "description": "What is current for a topic: topic -> exact tracked path or path#section.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["topic", "path"],
+        "properties": {
+          "topic": {"$ref": "#/$defs/text"},
+          "path": {"$ref": "#/$defs/repoPath"}
+        }
+      }
+    },
+    "override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "lifecycle", "evidence"],
+      "properties": {
+        "path": {"$ref": "#/$defs/repoPath"},
+        "lifecycle": {"$ref": "#/$defs/lifecycle"},
+        "superseded_by": {"$ref": "#/$defs/supersessionTarget"},
+        "evidence": {"$ref": "#/$defs/text"}
+      },
+      "if": {"properties": {"lifecycle": {"const": "superseded"}}},
+      "then": {"required": ["superseded_by"]},
+      "else": {"not": {"required": ["superseded_by"]}}
+    },
+    "common": {
+      "type": "object",
+      "required": ["id", "kind", "purpose", "keywords", "lifecycle", "owner", "query", "content_searchable"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "purpose": {"$ref": "#/$defs/text"},
+        "keywords": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 2, "pattern": "[^ \\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000\\ufeff\\u0000-\\u001f\\u007f-\\u009f]", "not": {"pattern": "[\\u0000-\\u001f\\u007f-\\u009f]"}}
+        },
+        "lifecycle": {"$ref": "#/$defs/lifecycle"},
+        "superseded_by": {"$ref": "#/$defs/supersessionTarget"},
+        "owner": {"$ref": "#/$defs/owner"},
+        "entrypoints": {"$ref": "#/$defs/entrypoints"},
+        "query": {"$ref": "#/$defs/query"},
+        "content_searchable": {"type": "boolean"},
+        "notes": {"$ref": "#/$defs/text"}
+      },
+      "if": {"properties": {"lifecycle": {"const": "superseded"}}, "required": ["lifecycle"]},
+      "then": {"required": ["superseded_by"]},
+      "else": {"not": {"required": ["superseded_by"]}}
+    },
+    "entry": {
+      "description": "The kind selects the shape: data_store entries name logical stores, every other kind names tracked globs.",
+      "if": {"type": "object", "properties": {"kind": {"const": "data_store"}}, "required": ["kind"]},
+      "then": {"$ref": "#/$defs/storeEntry"},
+      "else": {"$ref": "#/$defs/familyEntry"}
+    },
+    "familyEntry": {
+      "description": "Tracked family: globs under the tracked roots.",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [{"$ref": "#/$defs/common"}],
+      "required": ["paths"],
+      "properties": {
+        "kind": {"enum": ["doc_family", "registry", "evidence", "resource_catalogue", "generated"]},
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/glob"}
+        },
+        "overrides": {"type": "array", "items": {"$ref": "#/$defs/override"}}
+      }
+    },
+    "storeEntry": {
+      "description": "Logical local store under data/: identity and producers only, never a host path.",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [{"$ref": "#/$defs/common"}],
+      "required": ["store", "producer", "local_only"],
+      "properties": {
+        "kind": {"const": "data_store"},
+        "store": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/storeName"}
+        },
+        "producer": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/repoPath"}
+        },
+        "producer_note": {"$ref": "#/$defs/text"},
+        "local_only": {"type": "boolean"}
+      }
+    }
+  }
+}

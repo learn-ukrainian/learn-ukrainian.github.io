@@ -776,6 +776,8 @@ def _alternative_seats() -> str:
                 for entry in catalog["review_candidates"].values()
                 if models[entry["model_id"]]["family"] in {"anthropic", "openai"}
                 and catalog["review_scheduler"]["endpoints"].get(entry["route"], {}).get("formal_review_eligible")
+                # A multi-model endpoint is formal only for the models it pins.
+                and entry["model_id"] in catalog["review_scheduler"]["endpoints"][entry["route"]].get("models", [])
             }
         )
         consults = sorted(
@@ -785,8 +787,12 @@ def _alternative_seats() -> str:
                 if models.get(entry["model_id"], {}).get("family") in {"anthropic", "openai", "xai"}
             }
         )
-    except Exception:  # Like is_kimi_model, refusal remains available without the catalog.
+    except ImportError:  # Refusal remains available when the catalog module is unavailable.
         reviewers, consults = ["claude", "codex"], ["claude", "codex", "grok"]
+    except (ValueError, KeyError, TypeError) as exc:
+        raise KimiAdmissionRefused(
+            f"ROUTING REFUSED: MODEL_CATALOG_INVALID: cannot resolve alternative seats ({type(exc).__name__})"
+        ) from exc
     return (
         f"reviews → {', '.join(reviewers)} (per the reviewer resolver); "
         f"consults and discussions → {', '.join(consults[:-1])}, or {consults[-1]}; "

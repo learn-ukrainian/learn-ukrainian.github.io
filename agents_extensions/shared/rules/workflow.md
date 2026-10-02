@@ -49,6 +49,15 @@ curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 .venv/bin/python -m scripts.fleet_comms plane-status
 ```
 
+### Public GitHub publishing
+
+Publish agent-authored GitHub changes with `python -m scripts.publish` using
+its named verbs and closed fields. Repository code uses the same module API.
+Raw `gh` is reserved for the strict read allowlist and verified private
+repository writes. API reads use the module's named read helpers; arbitrary
+API or GraphQL passthrough is unavailable. See `docs/dev/agent-public-text.md`.
+Run Python with the task's prescribed project interpreter.
+
 ### Project Research Registry — orchestrator dispatch duty
 
 Cold-start awareness is not enough. Before **every** `delegate.py dispatch`, the
@@ -153,7 +162,7 @@ or pad. The replacement must run the exact reserved-path commands emitted by
 `context_canary.py mint --snapshot`, `questions`, and strict `score --verdict` before
 the separate challenge proof and `confirm-started` can unlock cleanup.
 
-## Merge policy — ready PRs must not sit (#4703; landing order #7450)
+### Review dispatch admission
 
 For review-typed `delegate.py dispatch` calls, `--review-author-model` and
 `--review-risk` provide trusted inputs to the code reviewer resolver (code
@@ -163,6 +172,8 @@ Without both inputs, no budget substitution occurs. Ukrainian reviews use
 `--review-profile ukrainian` without these code resolver flags. Existing
 `--review-attempt` identities never change. `--pinned-head` requires `--branch`
 or `--pr` and is checked against the fetched and reused heads before launch.
+
+## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 
 The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09-03;
 **CF review-fix before CI** clarified operator 2026-09-18):
@@ -181,11 +192,11 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
 2. Open the PR (CI starts) and obtain **CI Gate green** on that **same** head.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
-makes a prior APPROVE stale. `auto-arm-merge.yml` and the `automerge-ok` label pipeline
-are retired; enqueue with `gh pr merge --squash` after both gates (never `--auto` as a
+makes a prior APPROVE stale. Automated merge pipelines cannot replace review gates; enqueue
+with `python -m scripts.publish pr-merge` after both gates (never `--auto` as a
 substitute for review). Do **not** pass `--delete-branch` while this repo uses a
 merge queue (head deletion mid-queue can close without landing); delete the remote branch
-only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or self-label.
+only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or apply merge-automation labels.
 `--auto` never bypasses blocking checks (#M-0.5 semantics unchanged).
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the

@@ -57,7 +57,7 @@ def test_governor_prompt_keeps_sol_bounded_and_v2_accountable() -> None:
 
     assert "Run on the native Codex CLI as `gpt-6.1-sol` at `high`" in prompt
     assert "summoned supervisor, not a resident polling loop" in prompt
-    assert "Escalate Sol to `xhigh` only for one concrete" in prompt
+    assert "Keep Sol at `high`, including advisory and escalation turns" in prompt
     assert prompt.count("list_agents") >= 3
     assert "native `agents.list_agents` and `agents.spawn_agent` tools" in prompt
     assert "healthy receipt applies only to its exact `model`" in prompt
@@ -96,7 +96,7 @@ def test_governor_prompt_preserves_language_glm_and_trail_boundaries() -> None:
     prompt = _normalized_prompt()
 
     assert "Ukrainian pedagogy" in prompt
-    assert "uses only `agy`, `codex`, `claude`, or `grok-4.6`" in prompt
+    assert "uses only `agy`, `codex`, or `claude`" in prompt
     assert "`gemini-3.8-flash-high` first" in prompt
     assert "Require `sources`/VESUM evidence" in prompt
     assert "GLM-5.3/z.ai" in prompt

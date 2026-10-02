@@ -3,13 +3,13 @@
   "counts": {
     "errors_count": 0,
     "examples_count": 0,
-    "exercises_count": 5,
+    "exercises_count": 6,
     "notes_count": 0,
     "standard_count": 3,
-    "texts_count": 21,
+    "texts_count": 41,
     "unsupported_open_count": 0,
-    "unsupported_resolved_count": 0,
-    "videos_count": 16
+    "unsupported_resolved_count": 1,
+    "videos_count": 15
   },
   "errors": [],
   "kind": "pack-verify",
@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
-    "sha256": "96b696344c3bb5ba94463718cafc55df5aecf13955f1e1d8c16d9a34709c5515"
+    "sha256": "30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock",
-    "sha256": "160e4aa600e8fd2f091ffd7d07aa5ab31a1daded4de56c162d286908b29c492c"
+    "sha256": "2619fa1332e060aca6f1fae85a290ca0bd287954698fdfd03b818f9f3f8424c4"
   },
   "report_schema": 1,
   "reports": [],

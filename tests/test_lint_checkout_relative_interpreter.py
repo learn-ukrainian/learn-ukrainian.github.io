@@ -37,6 +37,10 @@ SCAN_SKIP = {
 
 # path -> (hit count, why this checkout-local join stays)
 ALLOWLIST: dict[str, tuple[int, str]] = {
+    "agents_extensions/shared/hooks/guard-primary-checkout-write.py": (
+        1,
+        "validates the literal interpreter argv anchored to the hook's marker-derived primary; does not spawn, and project_interpreter's runtime fallback must not be admitted",
+    ),
     "scripts/common/repo_root.py": (
         1,
         "defines project_interpreter(); the join names a checkout's .venv interpreter (primary checkout, else that checkout)",

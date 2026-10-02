@@ -290,7 +290,7 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> li
         "--mode",
         "read-only",
         "--model",
-        "claude-opus-4-8",
+        "claude-opus-5-5",
         "--effort",
         effort,
         "--task-id",
@@ -539,7 +539,14 @@ def run_ask_review_dispatch(
 
         status = state.get("status")
         completed = (status == "done" and wait_proc.returncode == 0) or (status == _delegate._NO_DELIVERABLE_STATUS)
-        verdict_failure = _delegate._review_verdict_failure_reason(response)
+        # #9275: success is judged by the shared completion-gate definition for the
+        # read-only, verdict-required dispatch this wrapper launched: the verdict
+        # gate is the only one that applies, and it runs on the read-back response.
+        review_record = {**state, "mode": "read-only", "require_review_verdict": True}
+        gate_failure = _delegate.first_completion_gate_failure(
+            review_record, response=response, commits_ahead=None, worktree=None
+        )
+        verdict_failure = gate_failure.failure if gate_failure is not None else None
         if completed and verdict_failure is None:
             state["ok"] = True
             state["status"] = "done"

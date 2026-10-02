@@ -31,7 +31,7 @@ from jinja2.sandbox import ImmutableSandboxedEnvironment
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.build.fresh.manifest import ATTEMPT_TOKEN, learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
-from scripts.review.receipts import REVIEW_TOOLS
+from scripts.review.receipts.ledger import review_tools
 from scripts.review.render_contract import RENDER_RECORD_KEY, ReviewContractError, render_record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -224,6 +224,8 @@ def template_sources(prompts_dir: Path) -> dict[str, tuple[str, str]]:
     root = prompts_dir.resolve()
     sources: dict[str, tuple[str, str]] = {}
     for path in sorted(root.glob("*.md.j2")):
+        if path.is_symlink():
+            raise TemplateReadError(f"template_alias_refused: template {path.name} is a symlink")
         resolved = path.resolve()
         if resolved.parent != root or not resolved.is_file():
             raise TemplateReadError(f"template {path.name} is not a regular file of {root.as_posix()}")
@@ -430,6 +432,7 @@ def _build_context(
     *,
     review_id: str | None,
     attempt_id: str | None,
+    review_access: str,
 ) -> dict[str, Any]:
     kind = manifest.get("kind")
     missing = [location for location in REQUIRED_PINS.get(str(kind), ()) if not reader.has(location)]
@@ -438,7 +441,8 @@ def _build_context(
     context: dict[str, Any] = {
         "manifest": manifest,
         "manifest_sha256": manifest_sha256,
-        "review_tools": sorted(REVIEW_TOOLS),
+        "review_tools": sorted(review_tools(review_access)),
+        "review_access": review_access,
         "review_id": review_id,
         "attempt_id": attempt_id,
     }
@@ -455,6 +459,7 @@ MANIFEST_CONTEXT_KEYS = frozenset(
         "manifest",
         "manifest_sha256",
         "review_tools",
+        "review_access",
         "learner_state_sha256",
         "previous_attempt_id",
         "review_id",
@@ -507,6 +512,7 @@ def render(
     prompts_dir: Path | None = None,
     review_id: str | None = None,
     attempt_id: str | None = None,
+    review_access: str = "full",
 ) -> Rendering:
     """Render a reviewer prompt from the manifest's pins alone.
 
@@ -519,6 +525,8 @@ def render(
     against its own receipt ledger instead of a guess. Rendering one of those templates without both, or with
     either not a valid attempt token, is refused by name before anything is read.
     """
+    if review_access not in {"full", "isolated"}:
+        raise RenderError("review_access_invalid")
     root = (repo_root or REPO_ROOT).resolve()
     p_dir = (prompts_dir or PROMPTS_DIR).resolve()
 
@@ -573,7 +581,9 @@ def render(
     except jinja2.TemplateSyntaxError as exc:
         raise TemplateReadError(f"template {resolved_template} does not parse: {exc}") from exc
 
-    context = _build_context(manifest_doc, manifest_sha256, reader, review_id=review_id, attempt_id=attempt_id)
+    context = _build_context(
+        manifest_doc, manifest_sha256, reader, review_id=review_id, attempt_id=attempt_id, review_access=review_access
+    )
     try:
         rendered = tmpl.render(**context)
         template_text = tmpl.render(**sentinel_context(context))
@@ -607,6 +617,7 @@ def render_prompt(
     prompts_dir: Path | None = None,
     review_id: str | None = None,
     attempt_id: str | None = None,
+    review_access: str = "full",
 ) -> tuple[str, str, list[Path]]:
     """Render a reviewer prompt from manifest inputs and write prompt sha256 beside it.
 
@@ -623,6 +634,7 @@ def render_prompt(
         prompts_dir=prompts_dir,
         review_id=review_id,
         attempt_id=attempt_id,
+        review_access=review_access,
     )
     rendered, prompt_sha256, root = rendering.prompt, rendering.prompt_sha256, rendering.root
 
@@ -642,6 +654,9 @@ def render_prompt(
                 (prompts_dir or PROMPTS_DIR),
                 {path.name: sha for path, sha in rendering.template_sha256.items()},
                 prompt_sha256,
+                review_id=review_id,
+                attempt_id=attempt_id,
+                input_root=root,
             )
         except ReviewContractError as exc:
             raise RenderError(str(exc)) from exc
@@ -657,11 +672,33 @@ def render_prompt(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Render reviewer prompt from manifest inputs.")
-    parser.add_argument("manifest", help="Path to attempt manifest YAML")
-    parser.add_argument("--template", "-t", default=None, help="Template name (default inferred)")
-    parser.add_argument("--output", "-o", default=None, help="Output prompt path")
-    parser.add_argument("--repo-root", default=None, help="Repository root path")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Render a reviewer prompt from the attempt's authorized, hashed manifest inputs.\n"
+            "Use before formal review dispatch; keep the prompt and render record together for admission."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.review.prompts.render lesson-2.manifest.yaml --output prompt.md "
+            "--review-id R --attempt-id A\n"
+            "  .venv/bin/python -m scripts.review.prompts.render plan-review.manifest.yaml --output plan-prompt.md "
+            "--review-id plan-R --attempt-id plan-A\n\n"
+            "Outputs: prompt text (stdout by default); --output writes the prompt, .sha256 and .files_read.json, "
+            "including the attempt-bound render record.\n"
+            "Exit codes: 0 rendered; 1 refused; 2 invalid arguments.\n"
+            "Related: scripts.review.prompts.check; scripts/delegate.py --review-attempt; "
+            "docs/runbooks/formal-review-attempt-isolation.md; #9012 #9242."
+        ),
+    )
+    parser.add_argument("manifest", help="Attempt manifest YAML, e.g. lesson-2.manifest.yaml")
+    parser.add_argument(
+        "--template", "-t", default=None, help="Template name, e.g. lesson-review (default: inferred from manifest)"
+    )
+    parser.add_argument(
+        "--output", "-o", default=None, help="Output prompt path, e.g. prompt.md (default: stdout, without sidecars)"
+    )
+    parser.add_argument("--repo-root", default=None, help="Pinned input checkout root (default: this repository)")
     parser.add_argument(
         "--review-id",
         default=None,
@@ -680,6 +717,12 @@ def main(argv: list[str] | None = None) -> int:
             "Default: None. Example: --attempt-id claude-att-1"
         ),
     )
+    parser.add_argument(
+        "--review-access",
+        choices=("full", "isolated"),
+        default="full",
+        help="Access policy for prompt bytes and tools (default: full).",
+    )
     args = parser.parse_args(argv)
 
     root = Path(args.repo_root) if args.repo_root else REPO_ROOT
@@ -693,6 +736,7 @@ def main(argv: list[str] | None = None) -> int:
             output_path=out,
             review_id=args.review_id,
             attempt_id=args.attempt_id,
+            review_access=args.review_access,
         )
     except RenderError as exc:
         print(f"FAIL: {type(exc).__name__}: {exc}", file=sys.stderr)

@@ -10,7 +10,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a2-arc.md
     line: '> Sub-epic #8397, issue #8424. Status: **accepted by the operator 2026-09-21** (r2, by the curriculum-upgrade driver).'
-  doc_sha256: 3023551e407b25d93dd905744d9866aea678533e162eb1cb5522d50381932522
+  doc_sha256: cb2ef4357c4a3d21f3f025bd24d2902318c544848ecc9b091dcee7f78e4a46b6
   section_sha256: 253ab2dcc8fc4763dee03359cb0b1c54b1fe414341fa4ecb1c4fea7eb7f05083
   text: |+
     ## 2. Decisions
@@ -103,7 +103,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a2-arc.md
     line: '## 8. Decisions on the five open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently agreed with all five)'
-  doc_sha256: 3023551e407b25d93dd905744d9866aea678533e162eb1cb5522d50381932522
+  doc_sha256: cb2ef4357c4a3d21f3f025bd24d2902318c544848ecc9b091dcee7f78e4a46b6
   section_sha256: 68b53515f471a146a92ba3a01d7696150cb90e18d8d463d12c54a797bab0a577
   text: |+
     ## 8. Decisions on the five open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently agreed with all five)
@@ -161,7 +161,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-writer-contract.md
     line: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
-  doc_sha256: 63fbbeadf40140faecabbc118e3d1e77f4504e62ce6f66f690b6dab16071bfc5
+  doc_sha256: c90a87e53d3e30c18c22b055b8cb13941e323a1fbc0924c6975715b552f8b802
   section_sha256: 285057bde594a5026ec9901179aa5df53c902268668b80e5945489336187a2b4
   text: |+
     ## Decisions of the operator, 2026-09-21 (unchanged in r3)

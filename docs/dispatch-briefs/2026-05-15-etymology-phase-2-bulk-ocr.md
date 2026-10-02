@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch Brief — Etymology Phase 2: bulk Gemini-2.5-Flash OCR
 
 **Date:** 2026-05-15
@@ -182,7 +188,7 @@ Key requirements:
      To resume: rotate the Gemini OAuth account, then re-run:
        cd <worktree>
        gemini /auth   # or gemini login --account other@account
-       .venv/bin/python scripts/etymology/bulk_ocr_gemini.py
+       "$PROJECT_PYTHON" scripts/etymology/bulk_ocr_gemini.py
      The script will skip already-completed pages.
      ============================================================
      ```
@@ -191,7 +197,7 @@ Key requirements:
 ### Step 7 — Run the bulk OCR
 
 ```bash
-.venv/bin/python scripts/etymology/bulk_ocr_gemini.py 2>&1 | tee /tmp/bulk-ocr-run.log
+"$PROJECT_PYTHON" scripts/etymology/bulk_ocr_gemini.py 2>&1 | tee /tmp/bulk-ocr-run.log
 RC=$?
 if [ $RC -eq 2 ]; then
   echo "QUOTA_HALT — orchestrator must notify user to rotate account"
@@ -223,7 +229,7 @@ ls -lh data/raw/esum/vol*-gemini.txt
 Modify or add a flag to `scripts/ingest/esum_ingest.py` so it can read from `vol{N}-gemini.txt` instead of `vol{N}.txt`. Replace (do not append). The parser layer should be format-agnostic since we used a faithful transcription prompt.
 
 ```bash
-.venv/bin/python scripts/ingest/esum_ingest.py --source-suffix gemini --replace
+"$PROJECT_PYTHON" scripts/ingest/esum_ingest.py --source-suffix gemini --replace
 ```
 
 **Verifiable claim 5:** `sqlite3 data/sources.db "SELECT COUNT(*) FROM esum_etymology_meta;"` — row count, was 29,171 before.
@@ -239,7 +245,7 @@ In `scripts/etymology/extract_cognate_forms.py` reject:
 Run extractor and emit coverage delta:
 
 ```bash
-.venv/bin/python scripts/etymology/extract_cognate_forms.py
+"$PROJECT_PYTHON" scripts/etymology/extract_cognate_forms.py
 sqlite3 data/sources.db "SELECT COUNT(*) FROM esum_cognate_forms WHERE forms IS NOT NULL AND LENGTH(forms) > 2;"
 ```
 
@@ -271,7 +277,7 @@ The slug-verification vitest at `starlight/tests/unit/etymology-featured-slugs.t
 ### Step 13 — Rebuild manifest
 
 ```bash
-.venv/bin/python scripts/etymology/build_data_manifest.py
+"$PROJECT_PYTHON" scripts/etymology/build_data_manifest.py
 ls -lh starlight/src/data/etymology-manifest.json  # ~27 MB
 ```
 
@@ -279,7 +285,7 @@ ls -lh starlight/src/data/etymology-manifest.json  # ~27 MB
 
 ```bash
 .venv/bin/ruff check scripts/etymology/ scripts/ingest/
-.venv/bin/python -m pytest tests/ -k "etymology or esum or russicism" -v
+"$PROJECT_PYTHON" -m pytest tests/ -k "etymology or esum or russicism" -v
 (cd starlight && npm run test:unit -- --run etymology-featured-slugs)
 ```
 

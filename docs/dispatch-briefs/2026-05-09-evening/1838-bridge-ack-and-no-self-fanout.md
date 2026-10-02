@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1838 bridge ack-step + drop sender self-fanout
 
 **Why this matters now:** Codex Desktop's Automations feature (per the new ADR addendum at `docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md` § "Codex Desktop Automations") is the canonical path for autonomous orchestrator → Desktop participation. **The Automation prompt requires a clean `ab inbox ack <delivery_id>` CLI** — without it, every automation run leaves the delivery `pending` forever and the inbox warning recurs. Until this lands, the Automation has to call internal `_channels.mark_delivery()` from inline Python, which is ugly and bypasses the bridge's CLI surface.
@@ -184,7 +190,7 @@ automatically — no manual intervention needed for that path.
 
 3. **Implement §1** (new CLI). Add the subparser registration + handler. Test manually:
    ```
-   .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox ack --help
+   "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py inbox ack --help
    ```
 
 4. **Implement §2** (no self-fanout). Find the post path, add the skip, comment why. Search for any test that asserted on the old behavior.

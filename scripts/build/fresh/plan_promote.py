@@ -96,6 +96,7 @@ def promote_plan(level: str, slug: str, *, repo_root: Path, now: datetime | None
         "pack_sha256": pack_sha,
         "attempt_id": review["attempt_id"],
         "promoted_at": moment,
+        **pm.receipt_identity(review),
     }
     reviewed_copy = checked_path(
         root, (directory / f"plan-reviewed.{reviewed_sha}.yaml").relative_to(root), f"{pm.TREE}/evidence"

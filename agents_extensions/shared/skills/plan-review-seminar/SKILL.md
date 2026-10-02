@@ -7,6 +7,10 @@ effort: xhigh
 
 # Plan Review (Seminar): $ARGUMENTS
 
+For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
+escalation turns. This overrides the shared effort above for Sol only;
+other providers retain their effort rules and explicit overrides.
+
 **Scope: FOLK, HIST, BIO, ISTORIO, LIT (all subtracks), OES, RUTH only.** For core levels (A1-C2, PRO), use `/plan-review`.
 
 ## Parse Arguments

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: revise #1791 Decision Graph ADR (Claude review found 4 IMPORTANT issues)
 
 > **PR to revise:** #1791 (in-flight, branch `gemini/decision-graph-adr`)
@@ -9,7 +15,7 @@
 ## Worktree instructions (continue existing worktree)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent gemini --mode danger --worktree .worktrees/dispatch/gemini/decision-graph-adr \
     --task-id gemini-1791-adr-revise \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/1791-adr-revise-gemini.md

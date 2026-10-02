@@ -33,10 +33,19 @@ A **snapshot** is the concrete edition or harvest of a source that an assertion 
 | source_id (register) | snapshot_id form | what fixes it | measured on 2026-09-28 |
 | --- | --- | --- | --- |
 | `ulif` | `ulif@ulif-dictua-v2/2026-09-22..2026-09-27` | `ulif_dictua_entries.parser_version`, `retrieved_at` range, per-entry `content_sha256` and `raw_response_ref` (`sha256:…` into `data/lexicon/cache/ulif_raw.sqlite`) | 262,788 rows `homonym_checked=1`, all `status='ok'`, all `parser_version='ulif-dictua-v2'`, `retrieved_at` 2026-09-22T07:16:23Z … 2026-09-27T23:36:03Z; 6,449 legacy rows `homonym_checked=0` (6,446 `not_found`, 3 `ok`; 6,425 of them from parser `1.0`) are never a source |
-| `vesum` | `vesum@53923150073b4fc7` | `vesum_build_metadata.canonical_jsonl_sha256` = `53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680`, `schema_version=vesum-reingest-v1`, `marker_policy_version=v1` | 442,458 entries (`entry_id`), 422,656 distinct lemmas, 6,970,759 form rows (`forms_all`), 6,632,807 in the `forms` view (markers `bad`, `obsc`, `subst` hidden) |
+| `vesum` | `vesum@53923150073b4fc7` | `vesum_build_metadata.canonical_jsonl_sha256` = `53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680`, `schema_version=vesum-reingest-v2`, `marker_policy_version=v1` | 442,458 entries (`entry_id`), 422,656 distinct lemmas, 6,970,759 form rows (`forms_all`), 6,632,807 in the `forms` view (markers `bad`, `obsc`, `subst` hidden) |
 | `sum20` | `sum20@wordid` | `sum20_articles.content_sha256`, `fetched_at`, `parser_version` | 100 articles, 168 senses, 699 citations (crawl paused) |
 | `atlas0` | `atlas0@manifest-0.1/2026-09-11` | `manifest_metadata` (`version "0.1"`, `generated_at 2026-09-11T10:12:36+00:00`) | the pre-card store: 27,128 articles, 193,530 enrichment rows, 28,295 aliases, 3,690 related entries; used only as a migration snapshot (see `migration.md`) |
 | others (`kaikki`, `wiktionary`, `puls`, `frazeolohichnyi`, `grinchenko`, `sum11`, `textbooks`, `teacher_materials`, …) | `<source>@<table or file>/<date or hash>` | table row ids in `sources.db` or file hashes | e.g. `frazeolohichnyi` 24,683 rows; `puls_cefr` 5,939 rows (A1 962, A2 1,386, B1 2,164, B2 1,194, C1 233); `wiktionary` 50,278 rows |
+
+VESUM store v2 includes indexed `forms_all.word_form_folded` and
+`forms_all.lemma_folded` for receipt lookup. They derive from source spelling
+by casefolding, stripping combining stress and normalizing apostrophes; they
+are not source-record identity. The canonical digest excludes these keys, and
+`forms` continues to expose only `word_form`, `lemma`, `pos`, `tags`, with
+`bad`, `obsc` and `subst` excluded. Cited source rows also exclude the derived
+keys, preserving receipt digests across store versions. Frozen evaluation
+lock/parser consumers resolve release-owned copies rather than live config.
 
 Rules:
 - A snapshot never changes. A re-harvest is a new snapshot; assertions from the old one become `superseded` when the new build replaces them, and stay queryable.
@@ -351,7 +360,7 @@ SELECT id, homonym_index, canonical_headword, grammatical_label, sense_gloss FRO
 SELECT json_extract(payload_json,'$.rows[1]') FROM ulif_dictua_sections WHERE id IN (96929, 96933);  -- ["називний","за́мок","за́мки"] | ["називний","замо́к","замки́"]
 SELECT level, count(*) FROM puls_cefr GROUP BY 1;                           -- A1 962, A2 1386, B1 2164, B2 1194, C1 233
 -- vesum.db
-SELECT * FROM vesum_build_metadata;                                         -- canonical_jsonl_sha256 53923150…, schema_version vesum-reingest-v1
+SELECT * FROM vesum_build_metadata;                                         -- canonical_jsonl_sha256 53923150…, schema_version vesum-reingest-v2
 SELECT count(distinct entry_id), count(distinct lemma) FROM forms_all;      -- 442458 | 422656
 SELECT DISTINCT entry_id, tags, source_comment FROM forms_all WHERE lemma='замок' AND word_form=lemma;
    -- 128972 noun:inanim:m:v_naz:xp1 'замо́к (пристрій)' | 128973 noun:inanim:m:v_naz:xp2 'за́мок (будівля)'

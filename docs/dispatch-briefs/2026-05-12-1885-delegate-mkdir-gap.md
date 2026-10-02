@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — `delegate.py` mkdir gap for task_id with agent prefix
 
 > **Issue:** #1885
@@ -12,7 +18,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. Use absolute paths and `cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && ...` for every command. Use `.venv/bin/python` for the venv.
+Each bash block runs in a FRESH SHELL. Use absolute paths and `cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && ...` for every command. Use `"$PROJECT_PYTHON"` for the venv.
 
 ---
 
@@ -86,7 +92,7 @@ When `task_id` contains a `/` (e.g. `codex/1885-foo`), the implicit subdir is no
 
 6. **Run tests:**
    ```bash
-   cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && .venv/bin/python -m pytest tests/test_delegate*.py -v 2>&1 | tail -20
+   cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && "$PROJECT_PYTHON" -m pytest tests/test_delegate*.py -v 2>&1 | tail -20
    ```
    Quote raw final summary line. Bare "tests pass" is not acceptable per #M-4.
 
@@ -115,7 +121,7 @@ When `task_id` contains a `/` (e.g. `codex/1885-foo`), the implicit subdir is no
 
 - [ ] `.python-version` / `.yamllint` / `.markdownlint.json` unchanged
 - [ ] No `status/*.json` / `audit/*-review.md` / `review/*-review.md` files in diff
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertions weakened
 - [ ] Every changed file directly related to #1885 (expected: `scripts/delegate.py` + 1 test file)

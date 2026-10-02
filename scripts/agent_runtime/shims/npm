@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+# scripts/agent_runtime/shims/npm — agent shim for npm and npx (#9460).
+#
+# Dispatch worktrees get `node_modules` and `site/node_modules` as symlinks into
+# the primary checkout. `npm ci` deletes its target folder first, so running it
+# in a worktree empties the primary's real folder through the link. This shim
+# (and `npx`, a wrapper that runs it with AGENT_SHIM_TOOL=npx) asks
+# scripts/agent_runtime/npm_guard.py first:
+# when the working directory or any ancestor has such a link resolving outside
+# that ancestor (or the working directory cannot be read), only clearly
+# read-only calls (and npx/npm exec running a program on a closed allowlist)
+# run and everything else is refused with the safe alternative;
+# anywhere else every call passes through. Calls that run exec the real tool
+# with their arguments, stdin, stdout, stderr and exit code intact.
+#
+# The npx wrapper runs its sibling `npm` only when that file carries the next
+# line exactly; keep it unchanged.
+# agent-runtime guarded npm shim (#9460)
+
+set -euo pipefail
+
+# The npx wrapper names its tool through AGENT_SHIM_TOOL (a shebang script
+# cannot keep its own argv0). Only npm or npx can be chosen, the guard is told
+# which, and the variable is dropped so the real tool and its children (an
+# inner `npm` run by a script) never inherit it.
+tool="${AGENT_SHIM_TOOL:-${0##*/}}"
+unset AGENT_SHIM_TOOL
+case "$tool" in
+  npm | npx) ;;
+  *) tool="npm" ;;
+esac
+
+shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+shim_dir_physical="$(cd -P "$shim_dir" && pwd -P)"
+
+# True for a directory that is this shim's (however it is spelled: `/.`, a
+# trailing slash, a symlink) or any checkout's shim directory, compared by
+# physical path so a lookup can never resolve back to a shim and recurse.
+_is_shim_dir() {
+  local physical
+  physical="$(cd -P -- "$1" 2> /dev/null && pwd -P)" || return 1
+  [[ "$physical" == "$shim_dir_physical" || "$physical" == */scripts/agent_runtime/shims ]]
+}
+
+# The real NAME: the PINNED path unless it is a shim, else the first executable
+# NAME on the original PATH outside any shim directory.
+_real_binary() {
+  local name="$1" pinned="$2" path_entry
+  if [[ -n "$pinned" && ! "$pinned" -ef "$shim_dir/$name" ]] && ! _is_shim_dir "$(dirname -- "$pinned")"; then
+    printf '%s\n' "$pinned"
+    return 0
+  fi
+
+  IFS=':' read -r -a _path_entries <<< "${AGENT_ORIGINAL_PATH:-${PATH:-}}"
+  for path_entry in "${_path_entries[@]}"; do
+    [[ -z "$path_entry" ]] && continue
+    _is_shim_dir "$path_entry" && continue
+    if [[ -x "$path_entry/$name" && ! -d "$path_entry/$name" && ! "$path_entry/$name" -ef "$shim_dir/$name" ]]; then
+      printf '%s\n' "$path_entry/$name"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+# The guard's interpreter, resolved exactly as the git shim resolves its own
+# (scripts/agent_runtime/shims/git, _blocks_branch_switch): AGENT_GIT_SHIM_PYTHON
+# (the runner stamps it), else the main checkout's .venv found through the git
+# common dir (a linked worktree has no .venv of its own), else this checkout's.
+_guard_python() {
+  if [[ -n "${AGENT_GIT_SHIM_PYTHON:-}" ]]; then
+    printf '%s\n' "$AGENT_GIT_SHIM_PYTHON"
+    return 0
+  fi
+
+  local shim_repo shim_main_root real_git common_dir name
+  shim_repo="$(cd "$shim_dir/../../.." && pwd)"
+  shim_main_root="$shim_repo"
+  if real_git="$(_real_binary git "${AGENT_REAL_GIT:-}")"; then
+    # The question is where this shim's checkout lives, not where the caller's
+    # GIT_DIR or GIT_WORK_TREE point.
+    local -a git_env=(env)
+    while IFS= read -r name; do
+      [[ "$name" == GIT_* ]] && git_env+=(-u "$name")
+    done < <(compgen -e)
+    common_dir="$("${git_env[@]}" "$real_git" -C "$shim_repo" rev-parse --path-format=absolute --git-common-dir 2> /dev/null < /dev/null || true)"
+    if [[ -n "$common_dir" ]]; then
+      shim_main_root="$(dirname -- "$common_dir")"
+    fi
+  fi
+
+  if [[ -x "$shim_main_root/.venv/bin/python" ]]; then
+    printf '%s\n' "$shim_main_root/.venv/bin/python"
+  else
+    printf '%s\n' "$shim_repo/.venv/bin/python"
+  fi
+}
+
+guard_python="$(_guard_python)"
+if [[ ! -x "$guard_python" || -d "$guard_python" ]]; then
+  echo "error: agent $tool shim cannot find the project interpreter ($guard_python); refusing to run $tool unguarded." >&2
+  exit 127
+fi
+
+# The guard runs before the real tool is chosen, so a pinned AGENT_REAL_NPM or
+# AGENT_REAL_NPX selects the binary but never skips the guard.
+guard_status=0
+"$guard_python" -I -S "$shim_dir/../npm_guard.py" "$tool" "$@" < /dev/null || guard_status=$?
+if ((guard_status != 0)); then
+  exit "$guard_status"
+fi
+
+if [[ "$tool" == "npx" ]]; then pinned="${AGENT_REAL_NPX:-}"; else pinned="${AGENT_REAL_NPM:-}"; fi
+real_tool="$(_real_binary "$tool" "$pinned")" || {
+  echo "error: could not locate the real $tool binary behind the agent shim." >&2
+  exit 127
+}
+
+exec "$real_tool" "$@"

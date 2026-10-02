@@ -8,8 +8,10 @@ launcher_adapter_validate() {
 }
 launcher_adapter_preflight() {
   LC_AUTH_SOURCE='cursor-cli-oauth'
-  # Require the unambiguous cursor-agent binary. A generic ``agent`` on PATH can
-  # be a different tool (Grok Build TUI) and must not claim this seat (#6969).
+  # Shell-side exception to resolve_cursor_agent_binary() (#9322): a shell
+  # script cannot call the Python resolver. Require exactly cursor-agent and
+  # exit non-zero when it is missing. A generic agent on PATH is a different
+  # tool (Grok Build TUI) and must not claim this seat (#6969).
   LC_CURSOR_BIN=cursor-agent
   launcher_require_binary "$LC_CURSOR_BIN" 'Cursor agent executable (cursor-agent) is unavailable.' 3 || exit $?
 }
@@ -18,12 +20,9 @@ launcher_adapter_canary() {
   return 0
 }
 launcher_adapter_exec() {
-  local cmd=("$LC_CURSOR_BIN")
-  # Driver defaults LC_MODEL to grok-4.7-high. Always pass a set model so
-  # cursor-agent cannot fall back to Auto or a fast variant.
-  if [ -n "${LC_MODEL:-}" ]; then
-    cmd+=(--model "$LC_MODEL")
-  fi
+  # launcher_validate_cursor_pin has certified LC_MODEL in every mode (#9274);
+  # always pass it so cursor-agent cannot fall back to Auto or a Fast variant.
+  local cmd=("$LC_CURSOR_BIN" --model "$LC_MODEL")
   # cursor-agent has no system-prompt flag and its AGENTS.md loading is
   # unproven: the rules core leads the drive-epic binding (or an ack).
   local arg core_placed=0

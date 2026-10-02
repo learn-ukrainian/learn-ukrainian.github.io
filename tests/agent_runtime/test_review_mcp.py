@@ -103,7 +103,9 @@ def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         review_mcp_module,
         "check_review_contract",
-        lambda _prompt_file, prompt_text: {"prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()},
+        lambda _prompt_file, prompt_text, **_ids: {
+            "prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
+        },
     )
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
 
@@ -175,6 +177,7 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         ENV_ATTEMPT_ID: attempt_id,
         ENV_MANIFEST_SHA256: expected_manifest_sha,
         ENV_LEDGER_PATH: str(plan.ledger_path),
+        "LU_REVIEW_ACCESS": "isolated",
     }
 
     # 5. Plan properties and adapter options
@@ -185,7 +188,9 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         "mcp_server_names": ["sources"],
     }
     if harness == "claude":
-        expected_options["allowed_tools"] = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+        expected_options["allowed_tools"] = ",".join(
+            f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS - {"search_resources"})
+        )
     if harness == "codex":
         expected_options["codex_home_override"] = str(plan.config_path.parent / f"{attempt_id}.codex-home")
     if harness == "agy":
@@ -262,6 +267,8 @@ def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.
             "review-task-grok",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -288,6 +295,8 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
             "review-task-kimicc",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -315,6 +324,8 @@ def test_delegate_dispatch_incomplete_review_attempt_flags(
             "review-task-partial",
             "--prompt",
             "perform review",
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             # Missing --review-id and --attempt-id
@@ -357,7 +368,7 @@ def test_claude_adapter_command_line_contains_review_grant(
     assert plan.cmd[idx : idx + 3] == ["--strict-mcp-config", "--mcp-config", str(review_plan.config_path)]
     assert plan.cmd.count("--allowedTools") == 1
     allowed = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
-    assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS}
+    assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS - {"search_resources"}}
     assert "--permission-mode" not in plan.cmd
 
 
@@ -426,6 +437,8 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
             str(delegate_cli._REPO_ROOT),
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -438,7 +451,8 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
     captured = capsys.readouterr()
     if seat == "cursor":
         assert "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for cursor:" in captured.err
-        assert "ineligible for --review-profile code" in captured.err
+        assert "formal attempts require a proven manifest filesystem boundary" in captured.err
+        assert "Cursor is not admitted (#9251)" in captured.err
     else:
         assert "resolves inside the primary checkout; write-capable dispatch may not run there" in captured.err
 
@@ -480,6 +494,8 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
             "review-task-budget-sub",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -509,6 +525,8 @@ def test_delegate_dispatch_refuses_retired_alias_substitution(
             "review-task-retired-alias",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -545,6 +563,8 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
                 task_id,
                 "--prompt",
                 _attempt_prompt("rev-dry-001", "att-dry-001"),
+                "--review-access",
+                "isolated",
                 "--review-attempt",
                 str(manifest_file),
                 "--review-id",
@@ -583,6 +603,8 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
                 task_id,
                 "--prompt",
                 _attempt_prompt("rev-dup-001", "att-dup-001"),
+                "--review-access",
+                "isolated",
                 "--review-attempt",
                 str(manifest_file),
                 "--review-id",
@@ -774,7 +796,7 @@ def test_codex_scoped_config_names_only_stdio_sources(
     assert sources["command"] == mcp_json["command"]
     assert sources["args"] == mcp_json["args"]
     assert sources["env"] == mcp_json["env"]
-    assert set(sources["env"]) == {ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH}
+    assert set(sources["env"]) == {ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH, "LU_REVIEW_ACCESS"}
     assert sources["default_tools_approval_mode"] == "approve"
     assert sources["required"] is True
     auth = plan.codex_home / "auth.json"

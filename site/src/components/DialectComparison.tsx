@@ -90,15 +90,21 @@ export default function DialectComparison({
   const featureLabel = isUkrainian ? 'Особливість' : 'Feature';
   const explanationLabel = isUkrainian ? 'Пояснення' : 'Explanation';
 
-  const highlightText = (text: string, values: string[]) => {
-    let highlighted = text;
-    values.forEach(value => {
-      if (value) {
-        const regex = new RegExp(`(${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-        highlighted = highlighted.replace(regex, `<mark class="${styles.dialectHighlight}">$1</mark>`);
+  const renderHighlightedText = (text: string, values: string[]): React.ReactNode => {
+    if (!showAllFeatures) return text;
+    const activeValues = values.filter(v => v && v.trim().length > 0);
+    if (activeValues.length === 0) return text;
+
+    const pattern = new RegExp(`(${activeValues.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
+    const parts = text.split(pattern);
+
+    return parts.map((part, i) => {
+      const isMatch = activeValues.some(v => v.toLowerCase() === part.toLowerCase());
+      if (isMatch) {
+        return <mark key={i} className={styles.dialectHighlight}>{part}</mark>;
       }
+      return part;
     });
-    return highlighted;
   };
 
   const valuesA = features.map(f => f.valueA);
@@ -122,22 +128,16 @@ export default function DialectComparison({
         <div className={styles.dialectSplit}>
           <div className={styles.dialectPane}>
             <h4 className={styles.dialectLabel}>{labelA || defaultLabelA}</h4>
-            <div
-              className={styles.dialectText}
-              dangerouslySetInnerHTML={{
-                __html: showAllFeatures ? highlightText(textA, valuesA) : textA
-              }}
-            />
+            <div className={styles.dialectText}>
+              {renderHighlightedText(textA, valuesA)}
+            </div>
           </div>
           <div className={styles.dialectDivider} />
           <div className={styles.dialectPane}>
             <h4 className={styles.dialectLabel}>{labelB || defaultLabelB}</h4>
-            <div
-              className={styles.dialectText}
-              dangerouslySetInnerHTML={{
-                __html: showAllFeatures ? highlightText(textB, valuesB) : textB
-              }}
-            />
+            <div className={styles.dialectText}>
+              {renderHighlightedText(textB, valuesB)}
+            </div>
           </div>
         </div>
 

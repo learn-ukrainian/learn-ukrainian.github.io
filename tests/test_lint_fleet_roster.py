@@ -58,7 +58,7 @@ def _mini_authorities(tmp: Path) -> tuple[Path, Path, dict, dict]:
         "claude": {
             "model_id": "claude-sonnet-5",
             "effort": "high",
-            "escalate_model_id": "claude-fable-5",
+            "escalate_model_id": "claude-fable-5-1",
             "escalate_effort": "xhigh",
         },
         "codex": {
@@ -112,7 +112,9 @@ def test_committed_projections_match_machine_authorities():
     assert eligible["codex"] is True
     assert eligible["claude"] is True
     assert eligible["grok"] is True
-    for name in ("agy", "kimi", "cursor"):
+    # #9488: Cursor is formal only for its catalog-pinned, runtime-attested model.
+    assert eligible["cursor"] is True
+    for name in ("agy", "kimi"):
         assert eligible[name] is False
 
 
@@ -273,7 +275,7 @@ def test_parsers_strip_markdown_emphasis():
         """\
         | seat | model_id | effort | escalate_model_id | escalate_effort |
         | --- | --- | --- | --- | --- |
-        | **claude** | `claude-sonnet-5` | high | `claude-fable-5` | xhigh |
+        | **claude** | `claude-sonnet-5` | high | `claude-fable-5-1` | xhigh |
         """
     )
     seats = parse_seat_projection(block)
@@ -314,12 +316,12 @@ def test_duplicate_normalized_orchestrator_seat_names_fail(tmp_path: Path):
               claude:
                 model_id: claude-sonnet-5
                 effort: high
-                escalate_model_id: claude-fable-5
+                escalate_model_id: claude-fable-5-1
                 escalate_effort: xhigh
               " claude":
                 model_id: claude-sonnet-5
                 effort: high
-                escalate_model_id: claude-fable-5
+                escalate_model_id: claude-fable-5-1
                 escalate_effort: xhigh
             """
         ),

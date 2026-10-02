@@ -303,70 +303,35 @@ class TestDispatchAgent:
 
     @patch("build.dispatch._pace_gemini_calls")
     @patch("agent_runtime.runner.invoke")
-    def test_gemini_dispatch_rate_limit_falls_through_via_agy_to_flash(
-        self,
-        mock_invoke,
-        _mock_pace,
-        tmp_path,
+    def test_gemini_dispatch_exhausts_agy_without_flash_cli(
+        self, mock_invoke, _mock_pace, tmp_path,
     ):
-        """After PR #2375, the ladder hops through agy-cli between gemini-cli
-        pro and gemini-cli flash. This test exercises the FULL fallthrough:
-        pro+oauth rate-limited → agy rate-limited → flash+oauth succeeds.
-        """
+        """AGY-only Flash ids never become Gemini CLI fallback rungs."""
         from agent_runtime.errors import RateLimitedError
-        from agent_runtime.result import Result
 
         mock_invoke.side_effect = [
             RateLimitedError("gemini", "gemini-3.1-pro-preview", "429 quota"),
             RateLimitedError("agy", "gemini-3.8-flash-high", "agy 429"),
-            Result(
-                ok=True,
-                agent="gemini",
-                model="gemini-3-flash-preview",
-                mode="workspace-write",
-                response="flash fallback reply",
-                stderr_excerpt=None,
-                duration_s=0.5,
-                session_id=None,
-                rate_limited=False,
-                stalled=False,
-                returncode=0,
-                usage_record={},
-            ),
         ]
 
         ok, raw = dispatch_agent(
-            "test prompt",
-            agent="gemini-tools",
-            phase="write",
-            orch_dir=tmp_path,
-            timeout=300,
-            model="gemini-3.1-pro-preview",
-            mcp_tools=True,
-            sleep_fn=lambda _s, _r: None,
+            "test prompt", agent="gemini-tools", phase="write",
+            orch_dir=tmp_path, timeout=300, model="gemini-3.1-pro-preview",
+            mcp_tools=True, sleep_fn=lambda _s, _r: None,
         )
 
-        assert ok is True
-        assert raw == "flash fallback reply"
-        first_call = mock_invoke.call_args_list[0].kwargs
-        second_call = mock_invoke.call_args_list[1].kwargs
-        third_call = mock_invoke.call_args_list[2].kwargs
-        # Rung 1: gemini-cli pro + oauth
-        assert first_call["model"] == "gemini-3.1-pro-preview"
-        assert first_call["tool_config"] == {
-            "mcp_server_names": ["sources"],
-            "auth_mode": "subscription",
+        assert ok is False
+        assert raw == "__RATE_LIMITED__"
+        assert mock_invoke.call_count == 2
+        first_call, second_call = mock_invoke.call_args_list
+        assert first_call.args[0] == "gemini"
+        assert first_call.kwargs["model"] == "gemini-3.1-pro-preview"
+        assert first_call.kwargs["tool_config"] == {
+            "mcp_server_names": ["sources"], "auth_mode": "subscription",
         }
-        # Rung 2: agy-cli (the new rung) — tool_config is None, agent is "agy"
-        assert second_call["model"] == "gemini-3.8-flash-high"
-        assert mock_invoke.call_args_list[1].args[0] == "agy"
-        assert second_call["tool_config"] is None
-        # Rung 3: gemini-cli flash + oauth
-        assert third_call["model"] == "gemini-3-flash-preview"
-        assert third_call["tool_config"] == {
-            "mcp_server_names": ["sources"],
-            "auth_mode": "subscription",
-        }
+        assert second_call.args[0] == "agy"
+        assert second_call.kwargs["model"] == "gemini-3.8-flash-high"
+        assert second_call.kwargs["tool_config"] is None
 
 
     @patch("agent_runtime.runner.invoke")

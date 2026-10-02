@@ -3,8 +3,8 @@
 Generate human-readable markdown from YAML plans.
 
 Usage:
-    .venv/bin/python scripts/generate_plan_markdown.py hist
-    .venv/bin/python scripts/generate_plan_markdown.py hist --diff  # Compare with archived
+    .venv/bin/python scripts/generate_mdx/generate_plan_markdown.py hist
+    .venv/bin/python scripts/generate_mdx/generate_plan_markdown.py hist --diff  # Compare with archived
 
 This allows comparing new YAML-based plans with old markdown plans.
 """
@@ -318,6 +318,11 @@ def _render_module_detail(num: int, slug: str, plan: dict) -> list[str]:
 
 def generate_plan_markdown(level: str, base_path: Path) -> str:
     """Generate markdown from YAML plans."""
+    if level.lower() in {"a1", "a2"}:
+        raise FileNotFoundError(
+            f"Level plan '{level}' was retired in #9252; no top-level plan remains to render."
+        )
+
     plans_dir = base_path / "curriculum/l2-uk-en/plans"
     level_plan_path = plans_dir / f"{level}.yaml"
     module_plans_dir = plans_dir / level
@@ -371,7 +376,7 @@ def main():
     parser.add_argument("--output", "-o", help="Output file path (default: stdout)")
     args = parser.parse_args()
 
-    base_path = Path(__file__).parent.parent
+    base_path = Path(__file__).resolve().parents[2]
 
     try:
         markdown = generate_plan_markdown(args.level, base_path)

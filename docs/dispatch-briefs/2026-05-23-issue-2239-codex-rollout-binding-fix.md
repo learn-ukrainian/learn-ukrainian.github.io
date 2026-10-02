@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Issue #2239: codex rollout binding broken (P1)
 
 **Agent:** codex (it's the codex adapter, codex understands its own rollout format best) — fallback claude headless if codex regression makes it untrustworthy
@@ -16,7 +22,7 @@ Every verifiable claim MUST be tool-backed (command + cwd + raw output). Require
 | Claim | Evidence |
 |---|---|
 | Diff inspection captured | `grep -n` output of pre/post payload bytes |
-| Tests pass | `.venv/bin/python -m pytest tests/agent_runtime/test_codex_adapter.py tests/agent_runtime/test_codex_rollout_match.py -v` + raw final line |
+| Tests pass | `"$PROJECT_PYTHON" -m pytest tests/agent_runtime/test_codex_adapter.py tests/agent_runtime/test_codex_rollout_match.py -v` + raw final line |
 | Lint clean | `.venv/bin/ruff check scripts/agent_runtime/adapters/codex.py tests/agent_runtime/test_codex_rollout_match.py` + raw final line |
 | Commit landed | `git log -1 --oneline` raw |
 | PR opened | `gh pr view --json url --jq .url` raw URL |
@@ -79,7 +85,7 @@ Run a fresh codex-tools build to capture the report:
 
 ```bash
 # venv symlinked
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --effort xhigh --worktree 2>&1 | grep --line-buffered '^{"event"' | tee /tmp/codex_build.jsonl
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer codex-tools --effort xhigh --worktree 2>&1 | grep --line-buffered '^{"event"' | tee /tmp/codex_build.jsonl
 ```
 
 Wait for `module_failed` event (or `mcp_tools_never_invoked` gate fail).
@@ -225,21 +231,21 @@ Adjust `CodexAdapter` / `InvocationPlan` constructor args per the actual class s
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/agent_runtime/test_codex_rollout_match.py tests/agent_runtime/test_codex_adapter.py -v --timeout=120
+"$PROJECT_PYTHON" -m pytest tests/agent_runtime/test_codex_rollout_match.py tests/agent_runtime/test_codex_adapter.py -v --timeout=120
 ```
 
 Followed by:
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/agent_runtime/ -v --timeout=120 2>&1 | tail -30
+"$PROJECT_PYTHON" -m pytest tests/agent_runtime/ -v --timeout=120 2>&1 | tail -30
 ```
 
 ### 7. Re-run the codex-tools build to validate end-to-end
 
 ```bash
 # venv symlinked
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --effort xhigh --worktree 2>&1 | grep --line-buffered '^{"event"' | tee /tmp/codex_build_postfix.jsonl
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer codex-tools --effort xhigh --worktree 2>&1 | grep --line-buffered '^{"event"' | tee /tmp/codex_build_postfix.jsonl
 ```
 
 Verify:

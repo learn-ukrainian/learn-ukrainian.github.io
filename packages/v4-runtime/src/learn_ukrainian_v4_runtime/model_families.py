@@ -112,6 +112,40 @@ _FAMILY_PATTERNS = _compile_family_patterns()
 _CURSOR_PATTERN = re.compile(r"(?:^|[^a-z0-9])(?:cursor|composer|auto)(?:$|[^a-z0-9])")
 _CONCRETE_CURSOR_MODEL_PATTERN = re.compile(r"(?:^|[^a-z0-9])composer-2\.5(?:$|[^a-z0-9])")
 
+# Cursor's runtime reports the display name of a model, not its slug (a real
+# dispatch records ``resolved_model: "Composer 2.5"``). Only the exact ASCII
+# spelling of a concrete model Cursor is known to report maps to its slug;
+# every other display name keeps resolving exactly as before. ``re.ASCII``
+# keeps ``IGNORECASE`` from folding non-ASCII look-alikes (U+017F, U+212A) onto
+# ASCII letters, and the separator is ASCII space or tab only.
+# ``"Grok 4.7 256K High"`` is what Cursor reports for the review seat's pinned
+# slug ``grok-4.7-high`` (#9488); the bare slug runs the ``High Fast`` variant,
+# which stays unmapped so a verdict from it is refused.
+_CURSOR_DISPLAY_NAME_SLUGS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"[ \t]*composer[ \t]+2\.5[ \t]*", re.ASCII | re.IGNORECASE), "composer-2.5"),
+    (re.compile(r"[ \t]*grok[ \t]+4\.7[ \t]+256k[ \t]+high[ \t]*", re.ASCII | re.IGNORECASE), "grok-4.7"),
+)
+
+
+def canonical_cursor_model(value: Any) -> str:
+    """Return the concrete slug for a Cursor display name, else ``value`` as text.
+
+    ``"Composer 2.5"`` becomes ``"composer-2.5"`` and ``"Grok 4.7 256K High"``
+    becomes ``"grok-4.7"`` (ASCII letters in any case, a run of ASCII spaces
+    or tabs between the words). Nothing else is rewritten: ``"Composer 2"``,
+    ``"Composer 2.5 Fast"``, ``"Grok 4.7 256K High Fast"``, ``"auto"``, other
+    display names, any non-ASCII look-alike and empty values are returned
+    unchanged (``None`` becomes ``""``).
+    """
+
+    if value is None:
+        return ""
+    text = str(value)
+    for pattern, slug in _CURSOR_DISPLAY_NAME_SLUGS:
+        if pattern.fullmatch(text):
+            return slug
+    return text
+
 
 def normalize_family(value: Any) -> Family:
     """Normalize a single token (string or stringifiable) to a ``Family``.
@@ -125,7 +159,7 @@ def normalize_family(value: Any) -> Family:
 
     if value is None:
         return Family.UNKNOWN
-    text = str(value).strip().casefold()
+    text = canonical_cursor_model(value).strip().casefold()
     if not text:
         return Family.UNKNOWN
     if text in _FIXTURE_MARKERS:

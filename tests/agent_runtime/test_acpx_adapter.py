@@ -2240,7 +2240,7 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
         (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5-5", None),
         (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
         (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
-        (AcpxCursorShadowAdapter, "cursor", "cursor", None, None),
+        (AcpxCursorShadowAdapter, "cursor", "cursor", "grok-4.7", None),
         (AcpxPoolShadowAdapter, "pool", "pool", None, None),
     ],
 )
@@ -2333,6 +2333,48 @@ def test_cursor_acp_uses_existing_key_without_interactive_auth(tmp_path, monkeyp
     assert env["CURSOR_API_KEY"] == "fixture-cursor-key"
 
 
+def _cursor_acp_plan(tmp_path, monkeypatch, model):
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    with acpx_module.active_discussion_scope():
+        return AcpxCursorShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model=model,
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "cursor",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7"), ("grok-4.7", "grok-4.7"), ("composer-2.5", "composer-2.5")])
+def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent):
+    """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never runs Auto."""
+    plan = _cursor_acp_plan(tmp_path, monkeypatch, model)
+    assert ("--model", sent) in zip(plan.cmd, plan.cmd[1:], strict=False)
+    assert plan.cmd.count("--model") == 1
+    assert plan.metadata["model"] == sent
+
+
+@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default", "grok-4.7-fast"])
+def test_cursor_acp_refuses_auto_and_unpinned_models(tmp_path, monkeypatch, model):
+    with pytest.raises(AcpxShadowRefusalError, match="allowed pins"):
+        _cursor_acp_plan(tmp_path, monkeypatch, model)
+
+
+def test_cursor_acp_pins_match_the_catalog_cursor_pins():
+    from scripts.review.model_catalog import cursor_pinned_models
+
+    assert cursor_pinned_models()[0] == acpx_module.CURSOR_ACP_MODEL
+    assert frozenset(cursor_pinned_models()) == acpx_module.CURSOR_ACP_MODELS
+
+
 def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):
     monkeypatch.delenv("CURSOR_API_KEY", raising=False)
     monkeypatch.setattr(acpx_module, "_load_cursor_api_key_from_env_file", lambda: "fixture-file-key")
@@ -2416,7 +2458,7 @@ def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, mo
             prompt="advise on the next infrastructure priority",
             mode="read-only",
             cwd=tmp_path,
-            model="claude-fable-5",
+            model="claude-fable-5-1",
             task_id="t-claude-advisory",
             session_id=None,
             tool_config={
@@ -2431,7 +2473,7 @@ def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, mo
     assert ("--max-turns", "8") in pairs
 
 
-@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-sonnet-5", "claude-fable-5"])
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-fable-5-1"])
 def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch, model):
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")

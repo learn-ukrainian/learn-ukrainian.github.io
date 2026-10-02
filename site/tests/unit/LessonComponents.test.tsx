@@ -74,7 +74,7 @@ describe('DialogueBox', () => {
     expect(screen.queryByText('Діалог')).toBeNull();
   });
 
-  test('does not repeat legacy gloss for structured exchanges', () => {
+  test('shows English support once after structured exchanges', () => {
     render(
       <DialogueBox
         exchanges={[
@@ -87,7 +87,9 @@ describe('DialogueBox', () => {
 
     expect(screen.getByText('Марко')).toBeTruthy();
     expect(screen.getByText('Олена')).toBeTruthy();
-    expect(screen.queryByText('Legacy gloss')).toBeNull();
+    const translation = screen.getByText('Legacy gloss');
+    expect(screen.getAllByText('Legacy gloss')).toHaveLength(1);
+    expect(translation.closest('[class*="dialogueBubble"]')).toBeNull();
   });
 });
 

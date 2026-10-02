@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.audit import check_dossier_wordcount
 
 # The fixture frontmatter block ("---\ntitle: fixture\n---") contributes 4
@@ -129,6 +131,29 @@ def test_non_dossier_research_subdirs_are_exempt(
     assert "atlas/short-note.md" not in output
     assert "2026-06-12-atlas-short-note.md" not in output
     assert "docs/research/bio/real-dossier.md" in output
+
+
+@pytest.mark.parametrize("changed", [False, True])
+def test_retrieval_bakeoff_notes_exempt_but_short_track_dossier_fails(
+    tmp_path: Path, monkeypatch, capsys, changed: bool
+) -> None:
+    monkeypatch.setattr(check_dossier_wordcount, "PROJECT_ROOT", tmp_path)
+    note = tmp_path / "docs/research/retrieval-bakeoff-9233/judging-rubric.md"
+    note.parent.mkdir(parents=True)
+    note.write_text("Tooling research note.\n", encoding="utf-8")
+
+    assert check_dossier_wordcount.main(["--paths", str(note)]) == 0
+    assert "No docs/research dossier files to check." in capsys.readouterr().out
+
+    dossier = _write_dossier(tmp_path, "short-track-dossier", 1199)
+    monkeypatch.setattr(check_dossier_wordcount, "changed_paths", lambda: [note, dossier])
+    args = ["--changed"] if changed else ["--paths", str(note), str(dossier)]
+    assert check_dossier_wordcount.main(args) == 1
+
+    output = capsys.readouterr().out
+    assert "retrieval-bakeoff-9233/judging-rubric.md" not in output
+    assert "docs/research/bio/short-track-dossier.md" in output
+    assert "1199   1200  FAIL" in output
 
 
 def test_wordcount_fails_below_template_floor(

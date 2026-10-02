@@ -602,6 +602,12 @@ def _classify_exit(
     payload: dict[str, Any],
     validations: list[FindingValidation],
 ) -> tuple[int, str]:
+    """Keep findings actionable, including non-blocking findings on correct code.
+
+    ``correct`` with findings means no finding is blocking under critical-rules
+    section 8.4. The findings and their dispositions remain in the receipt;
+    lifecycle acceptance checks that approval without reclassifying it as clean.
+    """
     outcomes = {v.outcome for v in validations}
     if OUTCOME_MALFORMED in outcomes:
         return EXIT_INVALID, EXIT_NAMES[EXIT_INVALID]
@@ -622,7 +628,7 @@ def _classify_exit(
         return EXIT_ACTIONABLE, EXIT_NAMES[EXIT_ACTIONABLE]
     if correctness == "correct" and not findings:
         return EXIT_CLEAN, EXIT_NAMES[EXIT_CLEAN]
-    # correct + findings should not happen often; still actionable.
+    # Findings remain actionable even when the reviewer judges them non-blocking.
     return EXIT_ACTIONABLE, EXIT_NAMES[EXIT_ACTIONABLE]
 
 

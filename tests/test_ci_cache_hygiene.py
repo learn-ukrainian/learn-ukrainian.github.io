@@ -24,7 +24,7 @@ NOW = datetime(2026, 9, 29, 19, 0, tzinfo=UTC)
 MAIN = "refs/heads/main"
 TRAP_JS = "codeql-trap-1-2.27.1-javascript-"
 TRAP_PY = "codeql-trap-1-2.27.1-python-"
-UV = "setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.12.8-"
+UV = "setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.12.14-"
 CURRENT = "c" * 64
 OLD = "a" * 64
 OLDER = "b" * 64
@@ -143,7 +143,7 @@ def test_unknown_prefixes_and_unmatched_keys_are_left_alone() -> None:
     entries = [
         _entry(1, "stanza-uk-model-v2-Linux-" + OLD, hours_ago=500),
         _entry(2, "node-cache-Linux-x64-npm-" + OLD, hours_ago=500),
-        _entry(3, "setup-python-Linux-x64-24.04-Ubuntu-python-3.12.8-pip-" + OLD, hours_ago=500),
+        _entry(3, "setup-python-Linux-x64-24.04-Ubuntu-python-3.12.14-pip-" + OLD, hours_ago=500),
         # TRAP-like key without a commit sha on main: not a known family.
         _entry(4, "codeql-trap-1-2.27.1-javascript-notasha", hours_ago=500),
         _entry(5, TRAP_JS + _sha(5), hours_ago=1),
@@ -220,6 +220,7 @@ def test_list_caches_rejects_duplicated_entries() -> None:
 
 def test_open_pr_base_shas_follows_cursors() -> None:
     seen: list[list[str]] = []
+    documents = []
     pages = iter(
         [
             _pr_page(3, [1, 2], [_sha(1), _sha(1)], "c1"),
@@ -228,13 +229,17 @@ def test_open_pr_base_shas_follows_cursors() -> None:
     )
 
     def fake_gh_api(args: list[str]) -> str:
+        from pathlib import Path
+        documents.append(json.loads(Path(args[args.index("--input") + 1]).read_text()))
         seen.append(args)
         return next(pages)
 
     assert open_pr_base_shas("owner/repo", gh_api=fake_gh_api) == {_sha(1), _sha(2)}
     assert "cursor=c1" not in seen[0]
-    assert seen[1][-2:] == ["-f", "cursor=c1"]
-    assert seen[0][3:7] == ["-f", "owner=owner", "-f", "name=repo"]
+    assert documents[0]["variables"]["cursor"] is None
+    assert documents[1]["variables"]["cursor"] == "c1"
+    assert seen[1][:3] == ["--method", "POST", "graphql"]
+    assert documents[0]["variables"] == {"owner": "owner", "name": "repo", "cursor": None}
 
 
 def test_open_pr_base_shas_rejects_a_short_listing() -> None:

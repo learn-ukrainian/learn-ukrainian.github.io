@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Issue #2208 — fix writer-prompt forcing workbook activities inline
 
 **Date**: 2026-05-24
@@ -43,7 +49,7 @@ The V7 design contract per `docs/best-practices/v7-design-and-corpus.md` Section
    .venv/bin/pytest tests/test_linear_pipeline_wiki_coverage.py tests/test_prompt_cot_tier1_scaffolding.py tests/build/test_writer_pre_emit_checklist.py tests/build/test_linear_pipeline.py -v 2>&1 | tail -20
    ```
    All must pass.
-5. Run prompt size check: `.venv/bin/python scripts/audit/check_writer_prompt_size.py 2>&1 | tail -3`. Must stay under 130KB ceiling. This fix likely ADDS some explanatory text — if size goes over, compress something else (NOT the Option B fixes or the structural markers — those are load-bearing).
+5. Run prompt size check: `"$PROJECT_PYTHON" scripts/audit/check_writer_prompt_size.py 2>&1 | tail -3`. Must stay under 130KB ceiling. This fix likely ADDS some explanatory text — if size goes over, compress something else (NOT the Option B fixes or the structural markers — those are load-bearing).
 6. Verify the change doesn't undo:
    - PR #2260 Option B fixes (citation-authority hierarchy, chunk_id-first protocol, resources.yaml plan-only rule)
    - PR #2257 plan_reference_match gate wiring

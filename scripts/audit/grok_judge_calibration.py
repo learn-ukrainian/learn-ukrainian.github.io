@@ -123,6 +123,9 @@ def call_grok(prompt: str, model: str) -> dict:
     why direct ``api.x.ai/v1/chat/completions`` calls return 403 even
     with a syntactically-valid Bearer token).
     """
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model(model, transport="hermes")
     t0 = time.time()
     try:
         proc = subprocess.run(
@@ -170,6 +173,11 @@ def main() -> int:
         help=f"Output directory (default: {OUT_DIR})",
     )
     args = parser.parse_args()
+
+    from scripts.review.model_catalog import require_execution_model
+
+    if not args.dry_run:
+        require_execution_model(args.model, transport="hermes")
 
     cases = pull_calibration_cases()
     print(f"Loaded {len(cases)} calibration cases from {PR_2006_REF}:{CALIBRATION_BLOB}")

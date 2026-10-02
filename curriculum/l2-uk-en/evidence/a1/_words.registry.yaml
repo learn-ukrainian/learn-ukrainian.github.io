@@ -698,3 +698,612 @@
   id: W-100
   lemma: Панас
   pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 382151
+    source: vesum
+  id: W-101
+  lemma: тато
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 107511
+    source: vesum
+  id: W-102
+  lemma: Евеліна
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 88001
+    source: vesum
+  id: W-103
+  lemma: дах
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 144833
+    source: vesum
+  id: W-104
+  lemma: зима
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 23913
+    source: vesum
+  id: W-105
+  lemma: білка
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 73256
+    source: vesum
+  id: W-106
+  lemma: гарбуз
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 86426
+    source: vesum
+  id: W-107
+  lemma: ґава
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 420990
+    source: vesum
+  id: W-108
+  lemma: чобіт
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 418239
+    source: vesum
+  id: W-109
+  lemma: чай
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 412841
+    source: vesum
+  id: W-110
+  lemma: хліб
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 116453
+    source: vesum
+  id: W-111
+  lemma: жито
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 171618
+    source: vesum
+  id: W-112
+  lemma: комиш
+  pos: noun
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 312771
+    source: vesum
+  id: W-113
+  lemma: прилетіти
+  pos: verb
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 99875
+    source: vesum
+  id: W-114
+  lemma: додому
+  pos: adv
+- allocated_at_build: 4ddb4f8938e23c37c7bca45a23db7ebe3b0ccf8c184c312981dcffccca1b7d32
+  entry:
+    entry_id: 114845
+    source: vesum
+  id: W-115
+  lemma: жабка
+  pos: noun
+- allocated_at_build: 80d55eb7df4abaf97b7c6590d4dd0690cd4a4756f87cdfd4657907b0e44cdc3e
+  entry:
+    entry_id: 105713
+    source: vesum
+  id: W-116
+  lemma: дрова
+  pos: noun
+- allocated_at_build: f50724bf1e6ed1e9f469fd477bb71b029afcd2cc6edb05afa0a85a774f4e3ba0
+  entry:
+    entry_id: 167620
+    source: vesum
+  id: W-117
+  lemma: клен
+  pos: noun
+- allocated_at_build: f50724bf1e6ed1e9f469fd477bb71b029afcd2cc6edb05afa0a85a774f4e3ba0
+  entry:
+    entry_id: 150592
+    source: vesum
+  id: W-118
+  lemma: зуб
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 386404
+    source: vesum
+  id: W-119
+  lemma: тин
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 387271
+    source: vesum
+  id: W-120
+  lemma: тінь
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 157273
+    source: vesum
+  id: W-121
+  lemma: їжа
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 441397
+    source: vesum
+  id: W-122
+  lemma: яма
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 194971
+    source: vesum
+  id: W-123
+  lemma: маля
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 436374
+    source: vesum
+  id: W-124
+  lemma: юрта
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 191790
+    source: vesum
+  id: W-125
+  lemma: люпин
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 357936
+    source: vesum
+  id: W-126
+  lemma: синій
+  pos: adj
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 114516
+    source: vesum
+  id: W-127
+  lemma: єнот
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 416897
+    source: vesum
+  id: W-128
+  lemma: цимбали
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 435773
+    source: vesum
+  id: W-129
+  lemma: щука
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 104727
+    source: vesum
+  id: W-130
+  lemma: дощ
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 405406
+    source: vesum
+  id: W-131
+  lemma: ферма
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 94631
+    source: vesum
+  id: W-132
+  lemma: джміль
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 94367
+    source: vesum
+  id: W-133
+  lemma: джем
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 95003
+    source: vesum
+  id: W-134
+  lemma: дзиґа
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 95183
+    source: vesum
+  id: W-135
+  lemma: дзюрчати
+  pos: verb
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 283111
+    source: vesum
+  id: W-136
+  lemma: пір'я
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 275992
+    source: vesum
+  id: W-137
+  lemma: пити
+  pos: verb
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 359284
+    source: vesum
+  id: W-138
+  lemma: сім'я
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 210131
+    source: vesum
+  id: W-139
+  lemma: м'яч
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 330035
+    source: vesum
+  id: W-140
+  lemma: радіти
+  pos: verb
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 195995
+    source: vesum
+  id: W-141
+  lemma: Марія
+  pos: noun
+- allocated_at_build: dcdbb858bdbbe18f7927f8b2ea55d1ecc9479ccec5d86bfb32a940ec9db16e93
+  entry:
+    entry_id: 203988
+    source: vesum
+  id: W-142
+  lemma: мільярд
+  pos: noun
+- allocated_at_build: 6254d50e26cf3dff4470b3c0d5a57b3baa9a9138c518bf02643df8c6be2bfc74
+  entry:
+    entry_id: 328423
+    source: vesum
+  id: W-143
+  lemma: пюре
+  pos: noun
+- allocated_at_build: 6254d50e26cf3dff4470b3c0d5a57b3baa9a9138c518bf02643df8c6be2bfc74
+  entry:
+    entry_id: 282993
+    source: vesum
+  id: W-144
+  lemma: пір'їна
+  pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 16017
+    source: vesum
+  id: W-145
+  lemma: бак
+  pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 23245
+    source: vesum
+  id: W-146
+  lemma: біб
+  pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 187686
+    source: vesum
+  id: W-147
+  lemma: лід
+  pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 31628
+    source: vesum
+  id: W-148
+  lemma: бук
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 83141
+    source: vesum
+  id: W-149
+  lemma: грати
+  pos: verb
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 86858
+    source: vesum
+  id: W-150
+  lemma: ґрати
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 157965
+    source: vesum
+  id: W-151
+  lemma: кава
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 84094
+    source: vesum
+  id: W-152
+  lemma: грім
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 86930
+    source: vesum
+  id: W-153
+  lemma: ґрунт
+  pos: noun
+- allocated_at_build: c54ba4f655055b4fabbd43f9c86eacc05b4de97b2561dc022097949e2665f228
+  entry:
+    entry_id: 170588
+    source: vesum
+  id: W-154
+  lemma: коло
+  pos: prep
+- allocated_at_build: c54ba4f655055b4fabbd43f9c86eacc05b4de97b2561dc022097949e2665f228
+  entry:
+    entry_id: 253567
+    source: vesum
+  id: W-155
+  lemma: он
+  pos: part
+- allocated_at_build: c54ba4f655055b4fabbd43f9c86eacc05b4de97b2561dc022097949e2665f228
+  entry:
+    entry_id: 363144
+    source: vesum
+  id: W-156
+  lemma: сливка
+  pos: noun
+- allocated_at_build: c54ba4f655055b4fabbd43f9c86eacc05b4de97b2561dc022097949e2665f228
+  entry:
+    entry_id: 164946
+    source: vesum
+  id: W-157
+  lemma: кислий
+  pos: adj
+- allocated_at_build: c54ba4f655055b4fabbd43f9c86eacc05b4de97b2561dc022097949e2665f228
+  entry:
+    entry_id: 357755
+    source: vesum
+  id: W-158
+  lemma: син
+  pos: noun
+- allocated_at_build: bfd1b1bfde66cdf4243055b81a49d376157f769aeb5a0a7e85abd60d1da26a05
+  entry:
+    entry_id: 224219
+    source: vesum
+  id: W-159
+  lemma: настати
+  pos: verb
+- allocated_at_build: bfd1b1bfde66cdf4243055b81a49d376157f769aeb5a0a7e85abd60d1da26a05
+  entry:
+    entry_id: 39769
+    source: vesum
+  id: W-160
+  lemma: весна
+  pos: noun
+- allocated_at_build: bfd1b1bfde66cdf4243055b81a49d376157f769aeb5a0a7e85abd60d1da26a05
+  entry:
+    entry_id: 327218
+    source: vesum
+  id: W-161
+  lemma: птах
+  pos: noun
+- allocated_at_build: bfd1b1bfde66cdf4243055b81a49d376157f769aeb5a0a7e85abd60d1da26a05
+  entry:
+    entry_id: 415172
+    source: vesum
+  id: W-162
+  lemma: хто
+  pos: noun
+- allocated_at_build: bfd1b1bfde66cdf4243055b81a49d376157f769aeb5a0a7e85abd60d1da26a05
+  entry:
+    entry_id: 89327
+    source: vesum
+  id: W-163
+  lemma: де
+  pos: adv
+- allocated_at_build: d465f137427958e4a3ef65eb405a7d830f111cf7fe1f0562c9b1e48a78c803ea
+  entry:
+    entry_id: 429017
+    source: vesum
+  id: W-164
+  lemma: що
+  pos: noun
+- allocated_at_build: d465f137427958e4a3ef65eb405a7d830f111cf7fe1f0562c9b1e48a78c803ea
+  entry:
+    entry_id: 191390
+    source: vesum
+  id: W-165
+  lemma: любити
+  pos: verb
+- allocated_at_build: d465f137427958e4a3ef65eb405a7d830f111cf7fe1f0562c9b1e48a78c803ea
+  entry:
+    entry_id: 329002
+    source: vesum
+  id: W-166
+  lemma: равлик
+  pos: noun
+- allocated_at_build: d465f137427958e4a3ef65eb405a7d830f111cf7fe1f0562c9b1e48a78c803ea
+  entry:
+    entry_id: 248710
+    source: vesum
+  id: W-167
+  lemma: один
+  pos: numr
+- allocated_at_build: d465f137427958e4a3ef65eb405a7d830f111cf7fe1f0562c9b1e48a78c803ea
+  entry:
+    entry_id: 371973
+    source: vesum
+  id: W-168
+  lemma: старенький
+  pos: adj
+- allocated_at_build: d465f137427958e4a3ef65eb405a7d830f111cf7fe1f0562c9b1e48a78c803ea
+  entry:
+    entry_id: 195241
+    source: vesum
+  id: W-169
+  lemma: мандрувати
+  pos: verb
+- allocated_at_build: d465f137427958e4a3ef65eb405a7d830f111cf7fe1f0562c9b1e48a78c803ea
+  entry:
+    entry_id: 418531
+    source: vesum
+  id: W-170
+  lemma: час
+  pos: noun
+- allocated_at_build: 151a964ff8b2eaf821fe1ceb58129f12a416efda96fa1c65ba019a368ebc646b
+  entry:
+    entry_id: 31644
+    source: vesum
+  id: W-171
+  lemma: буква
+  pos: noun
+- allocated_at_build: 151a964ff8b2eaf821fe1ceb58129f12a416efda96fa1c65ba019a368ebc646b
+  entry:
+    entry_id: 214239
+    source: vesum
+  id: W-172
+  lemma: назва
+  pos: noun
+- allocated_at_build: 151a964ff8b2eaf821fe1ceb58129f12a416efda96fa1c65ba019a368ebc646b
+  entry:
+    entry_id: 6202
+    source: vesum
+  id: W-173
+  lemma: алфавіт
+  pos: noun
+- allocated_at_build: 151a964ff8b2eaf821fe1ceb58129f12a416efda96fa1c65ba019a368ebc646b
+  entry:
+    entry_id: 147519
+    source: vesum
+  id: W-174
+  lemma: знак
+  pos: noun
+- allocated_at_build: 151a964ff8b2eaf821fe1ceb58129f12a416efda96fa1c65ba019a368ebc646b
+  entry:
+    entry_id: 210040
+    source: vesum
+  id: W-175
+  lemma: м'якшення
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 358199
+    source: vesum
+  id: W-176
+  lemma: синь
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 335541
+    source: vesum
+  id: W-177
+  lemma: рис
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 335618
+    source: vesum
+  id: W-178
+  lemma: рись
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 33423
+    source: vesum
+  id: W-179
+  lemma: бюро
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 23129
+    source: vesum
+  id: W-180
+  lemma: бити
+  pos: verb
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 354360
+    source: vesum
+  id: W-181
+  lemma: свято
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 142397
+    source: vesum
+  id: W-182
+  lemma: зв'язок
+  pos: noun
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 397241
+    source: vesum
+  id: W-183
+  lemma: Україна
+  pos: noun
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 164577
+    source: vesum
+  id: W-184
+  lemma: Київ
+  pos: noun
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 180859
+    source: vesum
+  id: W-185
+  lemma: кувати
+  pos: verb
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 163732
+    source: vesum
+  id: W-186
+  lemma: квітувати
+  pos: verb
+- allocated_at_build: 3941bf963e74821eb4cf9a3508b0fe459afebabe5dadce47c1ead03f1f9459ce
+  entry:
+    entry_id: 209992
+    source: vesum
+  id: W-187
+  lemma: м'який
+  pos: adj

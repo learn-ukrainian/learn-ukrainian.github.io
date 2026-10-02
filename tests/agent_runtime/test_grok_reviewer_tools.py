@@ -19,8 +19,14 @@ ROOT = Path(__file__).resolve().parents[2]
 def _plan(tmp_path: Path, config: dict | None):
     with patch("scripts.agent_runtime.adapters.grok_build.shutil.which", return_value="/usr/bin/grok"):
         return GrokBuildAdapter().build_invocation(
-            prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
-            task_id=None, session_id=None, tool_config=config, effort="low",
+            prompt="inspect",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=config,
+            effort="low",
         )
 
 
@@ -31,11 +37,17 @@ def test_reviewer_opt_in_adds_bash_and_all_tracked_guards(tmp_path: Path) -> Non
     try:
         agent_path = Path(reviewer.cmd[reviewer.cmd.index("--agent") + 1])
         definition = agent_path.read_text(encoding="utf-8")
-        assert definition.count("type: command") == 9
+        assert definition.count("type: command") == 10
         for name in (
-            "enforce-venv.sh", "heal-core-bare.py", "guard-branch-switch-in-main.py",
-            "guard-admin-merge.py", "guard-pr-merge.py", "guard-secret-print.py",
-            "guard-primary-checkout-write.py", "guard-reviewer-publish.py",
+            "enforce-venv.sh",
+            "heal-core-bare.py",
+            "guard-branch-switch-in-main.py",
+            "guard-admin-merge.py",
+            "guard-pr-merge.py",
+            "guard-secret-print.py",
+            "guard-primary-checkout-write.py",
+            "guard-public-github-text.py",
+            "guard-reviewer-publish.py",
         ):
             assert str(ROOT / "agents_extensions/shared/hooks" / name) in definition
         assert str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py") in definition
@@ -47,7 +59,11 @@ def test_reviewer_opt_in_adds_bash_and_all_tracked_guards(tmp_path: Path) -> Non
         assert normalized == baseline_without_bash[1:]
         assert reviewer.env_overrides == {"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"}
         env = build_agent_env(provider="grok", overrides=reviewer.env_overrides)
-        assert any(value == "url.file:///dev/null/claude-read-only/.pushInsteadOf" for key, value in env.items() if key.startswith("GIT_CONFIG_KEY_"))
+        assert any(
+            value == "url.file:///dev/null/claude-read-only/.pushInsteadOf"
+            for key, value in env.items()
+            if key.startswith("GIT_CONFIG_KEY_")
+        )
     finally:
         adapter.cleanup_invocation(reviewer)
     assert not agent_path.exists()
@@ -72,6 +88,9 @@ def test_nonordinary_callers_keep_baseline_argv(tmp_path: Path, config: dict) ->
     [
         ("gh pr view 8912 --json number", False),
         ("git push --dry-run", True),
+        ("python -m scripts.publish issue-comment --number 1 --body unit", True),
+        ("python -m scripts.publish --help", False),
+        ("python -m scripts.publish pr-comment --help", False),
         ("gh pr comment 8912 --body test", True),
     ],
 )
@@ -83,18 +102,30 @@ def test_grok_hook_bridge_runs_publish_guard(command: str, blocked: bool) -> Non
         "cwd": str(ROOT),
     }
     result = subprocess.run(
-        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
-         str(ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py")],
-        input=json.dumps(event), capture_output=True, text=True, timeout=30,
+        [
+            sys.executable,
+            str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
+            str(ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py"),
+        ],
+        input=json.dumps(event),
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert (result.returncode == 2) is blocked, (command, result.stderr)
 
 
 def test_grok_hook_bridge_denies_unreadable_event() -> None:
     result = subprocess.run(
-        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
-         str(ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py")],
-        input="{}", capture_output=True, text=True, timeout=30,
+        [
+            sys.executable,
+            str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
+            str(ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py"),
+        ],
+        input="{}",
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 2
 
@@ -107,13 +138,12 @@ _FLEET_GUARD_NAMES = (
     "guard-pr-merge.py",
     "guard-secret-print.py",
     "guard-primary-checkout-write.py",
+    "guard-public-github-text.py",
 )
 
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
-def test_write_mode_installs_fleet_guards_without_reviewer_publish_or_push_rewrite(
-    tmp_path: Path, mode: str
-) -> None:
+def test_write_mode_installs_fleet_guards_without_reviewer_publish_or_push_rewrite(tmp_path: Path, mode: str) -> None:
     """Write sessions load the fleet PreToolUse guards and can still push (#8965).
 
     Grok 1.0.41 leaves yolo off when ``--permission-mode auto`` is set, and the
@@ -144,7 +174,7 @@ def test_write_mode_installs_fleet_guards_without_reviewer_publish_or_push_rewri
         definition = agent_path.read_text(encoding="utf-8")
         assert "name: lu-write-worker" in definition
         assert "lu-read-only-reviewer" not in definition
-        assert definition.count("type: command") == 8
+        assert definition.count("type: command") == 9
         for name in _FLEET_GUARD_NAMES:
             assert str(ROOT / "agents_extensions/shared/hooks" / name) in definition
         assert "guard-reviewer-publish.py" not in definition
@@ -170,9 +200,15 @@ def test_write_mode_installs_fleet_guards_without_reviewer_publish_or_push_rewri
         "cwd": str(ROOT),
     }
     result = subprocess.run(
-        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
-         str(ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py")],
-        input=json.dumps(event), capture_output=True, text=True, timeout=30,
+        [
+            sys.executable,
+            str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
+            str(ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py"),
+        ],
+        input=json.dumps(event),
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 2
     assert "git push" in result.stderr
@@ -224,9 +260,15 @@ def test_grok_hook_bridge_primary_checkout_write_guard() -> None:
             "cwd": str(ROOT),
         }
         result = subprocess.run(
-            [sys.executable, str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
-             str(ROOT / "agents_extensions/shared/hooks/guard-primary-checkout-write.py")],
-            input=json.dumps(event), capture_output=True, text=True, timeout=30,
+            [
+                sys.executable,
+                str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
+                str(ROOT / "agents_extensions/shared/hooks/guard-primary-checkout-write.py"),
+            ],
+            input=json.dumps(event),
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
         assert (result.returncode == 2) is blocked, (tool_name, result.returncode, result.stderr)
         if blocked:
@@ -242,9 +284,15 @@ def test_grok_hook_bridge_runs_fleet_venv_guard() -> None:
         "cwd": str(ROOT),
     }
     result = subprocess.run(
-        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
-         str(ROOT / "agents_extensions/shared/hooks/enforce-venv.sh")],
-        input=json.dumps(event), capture_output=True, text=True, timeout=30,
+        [
+            sys.executable,
+            str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
+            str(ROOT / "agents_extensions/shared/hooks/enforce-venv.sh"),
+        ],
+        input=json.dumps(event),
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 2
     assert "Unqualified interpreter blocked" in result.stderr

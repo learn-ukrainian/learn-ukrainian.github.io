@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex Dispatch Brief — #1665 Holovashchuk Usage Dictionary Ingest
 
 **Issue:** #1665
@@ -87,7 +93,7 @@ Numbered explicitly per dispatch-brief checklist:
 
 5. **Run full test suite for affected files:**
    ```bash
-   .venv/bin/python -m pytest tests/test_holovashchuk_ingest.py tests/ -k 'sources or holovashchuk or mcp' -x -q
+   "$PROJECT_PYTHON" -m pytest tests/test_holovashchuk_ingest.py tests/ -k 'sources or holovashchuk or mcp' -x -q
    ```
 
 6. **Run ruff:**

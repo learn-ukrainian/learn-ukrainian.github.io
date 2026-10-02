@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
+import YouTubeVideo from './YouTubeVideo';
 import {
   chromeFacingBilingual,
   useActivityIsUkrainian,
@@ -42,9 +43,10 @@ interface QuizQuestionProps {
    * @ukrainianText false
    */
   isUkrainian?: boolean;
+  host?: { kind: string; url?: string; label?: string };
 }
 
-export function QuizQuestion({ question, options, correctIndex, explanation, optionWhy, isUkrainian }: QuizQuestionProps) {
+export function QuizQuestion({ question, options, correctIndex, explanation, optionWhy, isUkrainian, host }: QuizQuestionProps) {
   // Shuffle options on mount, tracking original indices
   const shuffledOptions = useMemo(() => {
     const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
@@ -73,6 +75,11 @@ export function QuizQuestion({ question, options, correctIndex, explanation, opt
   return (
     <div className={styles.quizQuestion} data-activity="quiz-question">
       <p className={styles.questionText}>{parseMarkdown(question)}</p>
+      {host?.kind === 'video' && host.url && (
+        <div data-activity="listening-host">
+          <YouTubeVideo url={host.url} label={host.label} />
+        </div>
+      )}
       <div className={styles.options} data-activity="quiz-options">
         {shuffledOptions.map((item, index) => (
           <button
@@ -119,6 +126,7 @@ export function QuizQuestion({ question, options, correctIndex, explanation, opt
 }
 
 interface QuizQuestionItem {
+  host?: { kind: string; url?: string; label?: string };
   /**
    * @schemaDescription Question value consumed by this component.
    * @ukrainianText true
@@ -206,6 +214,7 @@ export default function Quiz({ questions, instruction, children, isUkrainian: ba
               correctIndex={correctIndex >= 0 ? correctIndex : 0}
               explanation={item.explanation}
               optionWhy={item.optionWhy}
+              host={item.host}
               isUkrainian={isUkrainian}
             />
           );

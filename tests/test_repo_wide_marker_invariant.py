@@ -62,6 +62,16 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_ask_opencode.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
+        "tests/test_docs_catalogue.py",
+        "tests/test_docs_catalogue_coverage.py",
+        "tests/test_docs_find_lookups_part1.py",
+        "tests/test_docs_find_lookups_part2.py",
+        "tests/test_docs_find_lookups_part3.py",
+        "tests/test_docs_find_lookups_part4.py",
+        "tests/test_docs_find_lookups_part5.py",
+        "tests/test_docs_find_lookups_part6.py",
+        "tests/test_docs_find_lookups_part7.py",
+        "tests/test_docs_find_lookups_part8.py",
         "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
@@ -85,11 +95,13 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
     "tests/projects/open_model_data/test_v4_per_slot_factory.py::test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator",
+    "tests/test_ci_dependency_check.py::test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
@@ -98,6 +110,8 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
     "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
+    "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
+    "tests/test_session_streams.py::test_embedded_host_filter_accepts_every_tracked_basename",
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
 )
@@ -106,6 +120,12 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
 # actually repo-wide. Each entry needs a concrete reason; the registry is kept
 # fresh by ``test_not_repo_wide_entries_are_justified``.
 NOT_REPO_WIDE = {
+    "tests/review/test_prompts.py::test_isolated_prompt_bytes_equal_main_before_9464": (
+        "Globs only tests/review/fixtures/isolated-main-prompts/*.md.j2, not a repository "
+        "tree. Fixture files are not test modules, so changes force the full tier; "
+        "changes to the test module select it directly, and prompt renderer changes "
+        "select it through its imports."
+    ),
     "tests/test_ci_split.py::test_planned_shard_collects_build_tests_through_directory": (
         "Runs `git ls-files -- tests` to plan the CI shards and a pytest --collect-only "
         "over one shard's allowlist; it checks the split and the conftest allowlist hook, "
@@ -244,6 +264,10 @@ NOT_REPO_WIDE = {
     "tests/test_shared_hooks_deploy_depth.py::test_shell_shlex_importers_do_not_write_bytecode": (
         "Globs only agents_extensions/shared/hooks/*.py to check that shell_shlex "
         "is imported after dont_write_bytecode. It does not scan the repository tree."
+    ),
+    "tests/audit/test_secret_scan_local.py::test_tracked_file_beneath_a_symlinked_parent_is_not_scanned": (
+        "Runs `git ls-files` with cwd set to the tmp_path `repo` fixture to confirm a "
+        "staged path exists there; it never lists or reads the live repository tree."
     ),
 }
 

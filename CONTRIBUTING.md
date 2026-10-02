@@ -26,7 +26,7 @@ Found something broken? [Open an issue](https://github.com/learn-ukrainian/learn
 ### Prerequisites
 
 - macOS (primary dev platform)
-- [pyenv](https://github.com/pyenv/pyenv) with Python 3.12.8
+- [pyenv](https://github.com/pyenv/pyenv) with Python 3.12.14
 - Node.js 20+ (for Starlight frontend)
 
 ### Installation
@@ -37,8 +37,8 @@ git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 
 # 2. Python environment (sqlite extensions required for VESUM)
-PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.8
-pyenv local 3.12.8
+PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.14
+pyenv local 3.12.14
 python -m venv .venv
 .venv/bin/pip install -r requirements.txt
 

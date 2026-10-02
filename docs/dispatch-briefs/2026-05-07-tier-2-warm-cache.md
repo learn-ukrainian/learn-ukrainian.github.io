@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Tier 2 warm-cache fix for `ab discuss` (closes #1782 sub-task 1)
 
 > **Issue:** #1782 (umbrella for persistent-listener architecture)
@@ -13,7 +19,7 @@
 
 **Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/tier-2-warm-cache && ...` (or absolute path). The bakeoff brief was bitten by this earlier today; do not repeat the trap.
 
-Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via `.venv/bin/python`.
+Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 

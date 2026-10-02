@@ -214,8 +214,8 @@
     },
     "record_id": {
       "type": "string",
-      "description": "A pack record id an explanation may rest on: T- (textbook chunk), X- (textbook exercise), EX- (example), E- (error), V- (video) or W- (word record).",
-      "pattern": "^(T|X|EX|E|V|W)-[0-9]+$"
+      "description": "A pack record id an explanation may rest on: T- (textbook chunk), X- (textbook exercise), EX- (example), E- (error), V- (video) W- (word record) or S- (State Standard lines).",
+      "pattern": "^(T|X|EX|E|V|W|S)-[0-9]+$"
     },
     "text": {
       "type": "string",
@@ -549,6 +549,11 @@
         },
         "lead_in": {
           "$ref": "#/$defs/text"
+        },
+        "target_record": {
+          "type": "string",
+          "pattern": "^(?:W-[0-9]*[1-9][0-9]*|(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]|[Дд][ЖЗжз]))$",
+          "description": "Optional explicit letter/sound or word ID declared in the pack video models."
         }
       }
     },

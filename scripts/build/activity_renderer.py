@@ -57,9 +57,7 @@ def get_required_imports(activities: list[dict]) -> list[str]:
         component = _TYPE_TO_COMPONENT.get(activity_type)
         if component and component not in seen:
             seen.add(component)
-            imports.append(
-                f"import {component} from '@site/src/components/{component}';"
-            )
+            imports.append(f"import {component} from '@site/src/components/{component}';")
 
     return sorted(imports)
 
@@ -117,6 +115,7 @@ _TYPE_TO_COMPONENT: dict[str, str] = {
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _j(value: Any) -> str:
     """JSON-encode a value for JSX embedding."""
     return json.dumps(value, ensure_ascii=False)
@@ -127,10 +126,10 @@ def _prop(name: str, value: Any) -> str:
     if isinstance(value, str):
         if "\n" in value:
             # MDX chokes on physical newlines inside double quotes. Use template literals.
-            safe_val = value.replace('`', '\\`').replace('${', '\\${')
-            return f' {name}={{`{safe_val}`}}'
-        return f' {name}={{{_j(value)}}}'
-    return f' {name}={{{_j(value)}}}'
+            safe_val = value.replace("`", "\\`").replace("${", "\\${")
+            return f" {name}={{`{safe_val}`}}"
+        return f" {name}={{{_j(value)}}}"
+    return f" {name}={{{_j(value)}}}"
 
 
 def _opt_prop(name: str, value: Any | None, default: Any = None) -> str:
@@ -148,6 +147,7 @@ def _component(name: str, props: str) -> str:
 # ---------------------------------------------------------------------------
 # Core activity renderers
 # ---------------------------------------------------------------------------
+
 
 class QuizCorrectnessError(ValueError):
     """A quiz item's inputs contradict each other or name no correct option."""
@@ -177,9 +177,7 @@ def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
     # strings and objects without the key are not-correct within this claim.
     for i, opt in enumerate(options):
         if isinstance(opt, dict) and "correct" in opt and not isinstance(opt["correct"], bool):
-            raise QuizCorrectnessError(
-                f"{where}: options[{i}].correct={opt['correct']!r} is not a boolean"
-            )
+            raise QuizCorrectnessError(f"{where}: options[{i}].correct={opt['correct']!r} is not a boolean")
     if any(isinstance(opt, dict) and "correct" in opt for opt in options):
         claims["options[].correct"] = {
             i for i, opt in enumerate(options) if isinstance(opt, dict) and opt.get("correct") is True
@@ -189,9 +187,7 @@ def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
         named_set = list(named) if isinstance(named, (list, tuple, set)) else [named]
         for value in named_set:
             if type(value) is not int or not 0 <= value < len(options):
-                raise QuizCorrectnessError(
-                    f"{where}: correct={named!r} is not an option index (0-{len(options) - 1})"
-                )
+                raise QuizCorrectnessError(f"{where}: correct={named!r} is not an option index (0-{len(options) - 1})")
         claims["correct"] = set(named_set)
     if "answer" in item:
         answer = item["answer"]
@@ -200,17 +196,13 @@ def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
         claims["answer"] = {i for i, text in enumerate(texts) if text == answer}
 
     if not claims:
-        raise QuizCorrectnessError(
-            f"{where} names no correct option (needs options[].correct, correct or answer)"
-        )
+        raise QuizCorrectnessError(f"{where} names no correct option (needs options[].correct, correct or answer)")
     described = "; ".join(f"{name} -> {sorted(found) or 'none'}" for name, found in claims.items())
     sets = list(claims.values())
     if any(found != sets[0] for found in sets):
         raise QuizCorrectnessError(f"{where}: claims disagree ({described})")
     if len(sets[0]) != 1:
-        raise QuizCorrectnessError(
-            f"{where}: must name exactly one correct option ({described})"
-        )
+        raise QuizCorrectnessError(f"{where}: must name exactly one correct option ({described})")
     return sorted(sets[0])
 
 
@@ -228,9 +220,7 @@ def group_sort_group_name(group: Any, index: int = 0) -> str:
         raise GroupSortNameError(f"group-sort group {index} is not a mapping: {type(group).__name__}")
     label, name = group.get("label"), group.get("name")
     if label and name and label != name:
-        raise GroupSortNameError(
-            f"group-sort group {index} has label {label!r} and name {name!r}; keep only one"
-        )
+        raise GroupSortNameError(f"group-sort group {index} has label {label!r} and name {name!r}; keep only one")
     return label or name or ""
 
 
@@ -285,10 +275,7 @@ def _render_fill_in(act: dict) -> str:
 
 def _render_match_up(act: dict) -> str:
     """match-up → <MatchUp pairs={[...]} instruction="..." />"""
-    pairs = [
-        {"left": p.get("left", ""), "right": p.get("right", "")}
-        for p in act.get("pairs", [])
-    ]
+    pairs = [{"left": p.get("left", ""), "right": p.get("right", "")} for p in act.get("pairs", [])]
     props = _prop("pairs", pairs)
     props += _opt_prop("instruction", act.get("instruction"))
     return _component("MatchUp", props)
@@ -373,27 +360,21 @@ _ERROR_CORRECTION_TOKEN_RE = re.compile(r"\w+(?:[ʼ’'-]\w+)*|[^\w\s]")
 _SENTENCE_PUNCTUATION = frozenset({".", "?", "!"})
 
 
-def _error_correction_middle_tokens(
-    sentence: str, candidate: str
-) -> tuple[list[str], list[str]]:
+def _error_correction_middle_tokens(sentence: str, candidate: str) -> tuple[list[str], list[str]]:
     """Return non-overlapping differing token spans for a sentence variant."""
     sentence_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(sentence)
     candidate_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(candidate)
     shared_prefix = 0
     limit = min(len(sentence_tokens), len(candidate_tokens))
 
-    while (
-        shared_prefix < limit
-        and sentence_tokens[shared_prefix] == candidate_tokens[shared_prefix]
-    ):
+    while shared_prefix < limit and sentence_tokens[shared_prefix] == candidate_tokens[shared_prefix]:
         shared_prefix += 1
 
     shared_suffix = 0
     while (
         shared_suffix < len(sentence_tokens) - shared_prefix
         and shared_suffix < len(candidate_tokens) - shared_prefix
-        and sentence_tokens[-(shared_suffix + 1)]
-        == candidate_tokens[-(shared_suffix + 1)]
+        and sentence_tokens[-(shared_suffix + 1)] == candidate_tokens[-(shared_suffix + 1)]
     ):
         shared_suffix += 1
 
@@ -437,10 +418,7 @@ def _replacement_tokens_for_error(
     sentence_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(sentence)
     candidate_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(candidate)
     error_words = _word_tokens(_ERROR_CORRECTION_TOKEN_RE.findall(error))
-    sentence_word_indexes = [
-        index for index, token in enumerate(sentence_tokens)
-        if _word_tokens([token])
-    ]
+    sentence_word_indexes = [index for index, token in enumerate(sentence_tokens) if _word_tokens([token])]
     sentence_words = [sentence_tokens[index] for index in sentence_word_indexes]
     if not error_words or len(error_words) > len(sentence_words):
         return None
@@ -448,7 +426,7 @@ def _replacement_tokens_for_error(
     matches: list[tuple[list[str], list[str]]] = []
     width = len(error_words)
     for word_start in range(len(sentence_words) - width + 1):
-        if sentence_words[word_start:word_start + width] != error_words:
+        if sentence_words[word_start : word_start + width] != error_words:
             continue
         token_start = sentence_word_indexes[word_start]
         token_end = sentence_word_indexes[word_start + width - 1] + 1
@@ -457,22 +435,17 @@ def _replacement_tokens_for_error(
         suffix_start = len(candidate_tokens) - len(suffix)
         if (
             len(candidate_tokens) < len(prefix) + len(suffix)
-            or candidate_tokens[:len(prefix)] != prefix
+            or candidate_tokens[: len(prefix)] != prefix
             or candidate_tokens[suffix_start:] != suffix
         ):
             continue
 
         source_middle = sentence_tokens[token_start:token_end]
-        candidate_middle = candidate_tokens[len(prefix):suffix_start]
-        if candidate_middle and (
-            allow_unchanged or candidate_middle != source_middle
-        ):
+        candidate_middle = candidate_tokens[len(prefix) : suffix_start]
+        if candidate_middle and (allow_unchanged or candidate_middle != source_middle):
             matches.append((source_middle, candidate_middle))
 
-    unique_matches = {
-        (tuple(source_middle), tuple(candidate_middle))
-        for source_middle, candidate_middle in matches
-    }
+    unique_matches = {(tuple(source_middle), tuple(candidate_middle)) for source_middle, candidate_middle in matches}
     if len(unique_matches) != 1:
         return None
     source_middle, candidate_middle = unique_matches.pop()
@@ -496,15 +469,11 @@ def derive_error_correction_replacement(
     if not all(isinstance(value, str) for value in (sentence, error, candidate)):
         return None
 
-    replacement_tokens = _replacement_tokens_for_error(
-        sentence, error, candidate, allow_unchanged=allow_unchanged
-    )
+    replacement_tokens = _replacement_tokens_for_error(sentence, error, candidate, allow_unchanged=allow_unchanged)
     if replacement_tokens is None:
         return None
     sentence_middle, candidate_middle = replacement_tokens
-    if _word_tokens(sentence_middle) != _word_tokens(
-        _ERROR_CORRECTION_TOKEN_RE.findall(error)
-    ):
+    if _word_tokens(sentence_middle) != _word_tokens(_ERROR_CORRECTION_TOKEN_RE.findall(error)):
         return None
 
     replacement = _join_error_correction_tokens(candidate_middle)
@@ -525,9 +494,7 @@ def is_punctuation_error_correction(
     if correction.strip() in _SENTENCE_PUNCTUATION:
         return True
 
-    sentence_middle, correction_middle = _error_correction_middle_tokens(
-        sentence, correction
-    )
+    sentence_middle, correction_middle = _error_correction_middle_tokens(sentence, correction)
     return (
         not _word_tokens(sentence_middle)
         and not _word_tokens(_ERROR_CORRECTION_TOKEN_RE.findall(error))
@@ -556,9 +523,7 @@ def error_correction_render_values(
     rendered_options = opts
     if isinstance(opts, list):
         rendered_options = [
-            derive_error_correction_replacement(
-                sentence, error, option, allow_unchanged=True
-            ) or option
+            derive_error_correction_replacement(sentence, error, option, allow_unchanged=True) or option
             for option in opts
         ]
     winner = correct_form or correction
@@ -659,10 +624,7 @@ def unjumble_tokens(item: dict, index: int = 0) -> list[str]:
         if isinstance(value, str):
             separator = "/" if "/" in value else None
             return [token.strip() for token in value.split(separator) if token.strip()]
-        raise TypeError(
-            f"unjumble item {index} field {field_name!r} must be str or list, "
-            f"got {type(value).__name__}"
-        )
+        raise TypeError(f"unjumble item {index} field {field_name!r} must be str or list, got {type(value).__name__}")
     raise KeyError(f"unjumble item {index} missing one of: words, jumbled, prompt, scrambled")
 
 
@@ -702,10 +664,12 @@ def order_correct_indices(items: list, correct_order: list) -> list[int]:
     form we accept rather than HARD-fail at MDX assembly.
     """
     str_items = [str(item) for item in items]
-    if (all(isinstance(entry, str) for entry in correct_order)
-            and len(str_items) == len(set(str_items))
-            and len(correct_order) == len(str_items)
-            and set(correct_order) == set(str_items)):
+    if (
+        all(isinstance(entry, str) for entry in correct_order)
+        and len(str_items) == len(set(str_items))
+        and len(correct_order) == len(str_items)
+        and set(correct_order) == set(str_items)
+    ):
         correct_order = [str_items.index(entry) for entry in correct_order]
     if not all(isinstance(index, int) for index in correct_order):
         raise TypeError("order correct_order must contain integers")
@@ -735,11 +699,13 @@ def _render_cloze(act: dict) -> str:
     text = act.get("text", "")
     blanks = []
     for b in act.get("blanks", []):
-        blanks.append({
-            "index": b.get("id", 0),
-            "options": b.get("options", []),
-            "answer": b.get("answer", ""),
-        })
+        blanks.append(
+            {
+                "index": b.get("id", 0),
+                "options": b.get("options", []),
+                "answer": b.get("answer", ""),
+            }
+        )
 
     props = _prop("passage", text)
     if blanks:
@@ -777,11 +743,13 @@ def _render_grammar_identify(act: dict) -> str:
     """
     items = []
     for item in act.get("items", []):
-        items.append({
-            "text": item.get("text") or item.get("sentence") or item.get("word", ""),
-            "form": item.get("form") or item.get("task") or act.get("instruction", ""),
-            "answer": item.get("answer", ""),
-        })
+        items.append(
+            {
+                "text": item.get("text") or item.get("sentence") or item.get("word", ""),
+                "form": item.get("form") or item.get("task") or act.get("instruction", ""),
+                "answer": item.get("answer", ""),
+            }
+        )
 
     props = _prop("title", act.get("instruction", ""))
     props += _prop("items", items)
@@ -789,18 +757,13 @@ def _render_grammar_identify(act: dict) -> str:
 
 
 def _render_observe(act: dict) -> str:
-    """observe → <Observe> children
-
-    React Observe wraps children. We use the ObserveActivity sub-component
-    which takes examples[] and prompt directly.
-    """
+    """observe → <Observe examples={[...]} prompt="..." instruction="..." />"""
     examples = act.get("examples", [])
     prompt = act.get("prompt", "")
 
-    # ObserveActivity is a named export, but the default export (Observe)
-    # wraps children. We'll render with examples/prompt as data props.
     props = _prop("examples", examples)
     props += _opt_prop("prompt", prompt)
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("Observe", props)
 
 
@@ -844,16 +807,15 @@ def _render_highlight_morphemes(act: dict) -> str:
     """
     items = []
     for item in act.get("items", []):
-        morphemes = [
-            {"text": m.get("text", ""), "type": m.get("type", "")}
-            for m in item.get("morphemes", [])
-        ]
+        morphemes = [{"text": m.get("text", ""), "type": m.get("type", "")} for m in item.get("morphemes", [])]
         if not morphemes and item.get("answer"):
             morphemes = [{"text": item["answer"], "type": item.get("type", "suffix")}]
-        items.append({
-            "word": item.get("word", ""),
-            "morphemes": morphemes,
-        })
+        items.append(
+            {
+                "word": item.get("word", ""),
+                "morphemes": morphemes,
+            }
+        )
 
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -913,9 +875,7 @@ def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
     removed from it; the component shuffles ``[answer, *distractors]``.
     """
     if not isinstance(item, dict):
-        raise ImageToLetterShapeError(
-            f"image-to-letter item {index} must be a mapping, got {type(item).__name__}"
-        )
+        raise ImageToLetterShapeError(f"image-to-letter item {index} must be a mapping, got {type(item).__name__}")
     emoji = item.get("emoji") or item.get("image")
     answer = item.get("answer") or item.get("letter")
     if not emoji or not answer:
@@ -933,9 +893,7 @@ def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
     if "options" in item:
         options = item["options"]
         if not isinstance(options, (list, tuple)) or answer not in options:
-            raise ImageToLetterShapeError(
-                f"image-to-letter item {index} options do not contain letter {answer!r}"
-            )
+            raise ImageToLetterShapeError(f"image-to-letter item {index} options do not contain letter {answer!r}")
     distractors: list[str] = []
     for option in raw or []:
         if option != answer and option not in distractors:
@@ -957,10 +915,7 @@ def _render_image_to_letter(act: dict) -> str:
 
     See :func:`image_to_letter_render_values` for the accepted item shapes.
     """
-    items = [
-        image_to_letter_render_values(item, index)
-        for index, item in enumerate(act.get("items", []))
-    ]
+    items = [image_to_letter_render_values(item, index) for index, item in enumerate(act.get("items", []))]
     props = _prop("items", items)
     props += _opt_prop("title", act.get("title"))
     props += _opt_prop("instruction", act.get("instruction"))
@@ -1063,7 +1018,7 @@ def _render_count_syllables(act: dict) -> str:
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
     if act.get("maxCount"):
-        props += f' maxCount={{{act["maxCount"]}}}'
+        props += f" maxCount={{{act['maxCount']}}}"
     return _component("CountSyllables", props)
 
 
@@ -1097,11 +1052,13 @@ def _render_phrase_table(act: dict) -> str:
                     entry["emoji"] = p["emoji"]
                 phrases.append(entry)
         label = g.get("label") or g.get("function", "")
-        groups.append({
-            "label": label,
-            "function": label,
-            "phrases": phrases,
-        })
+        groups.append(
+            {
+                "label": label,
+                "function": label,
+                "phrases": phrases,
+            }
+        )
 
     props = _prop("groups", groups)
     props += _opt_prop("title", act.get("title"))
@@ -1112,6 +1069,7 @@ def _render_phrase_table(act: dict) -> str:
 # ---------------------------------------------------------------------------
 # Seminar activity renderers
 # ---------------------------------------------------------------------------
+
 
 def _render_critical_analysis(act: dict) -> str:
     """critical-analysis → <CriticalAnalysis title="..." ... />"""
@@ -1135,9 +1093,7 @@ def _render_essay_response(act: dict) -> str:
             # Rubric with criteria/description/points
             rubric_lines = []
             for r in rubric:
-                rubric_lines.append(
-                    f"- {r.get('criteria', '')}: {r.get('description', '')}"
-                )
+                rubric_lines.append(f"- {r.get('criteria', '')}: {r.get('description', '')}")
             props += _prop("rubric", "\n".join(rubric_lines))
         else:
             props += _prop("rubric", "\n".join(f"- {c}" for c in rubric))
@@ -1197,11 +1153,13 @@ def _render_debate(act: dict) -> str:
     positions = []
     for p in act.get("positions", []):
         args = p.get("arguments", [])
-        positions.append({
-            "name": p.get("label", ""),
-            "proponents": "",
-            "argument": "\n".join(args) if args else "",
-        })
+        positions.append(
+            {
+                "name": p.get("label", ""),
+                "proponents": "",
+                "argument": "\n".join(args) if args else "",
+            }
+        )
 
     props = _prop("title", act.get("instruction", ""))
     props += _prop("debateQuestion", act.get("debate_question", ""))
@@ -1218,11 +1176,13 @@ def _render_etymology_trace(act: dict) -> str:
     """
     items = []
     for stage in act.get("stages", []):
-        items.append({
-            "word": stage.get("period", ""),
-            "modern": stage.get("form", ""),
-            "evolution": stage.get("notes", ""),
-        })
+        items.append(
+            {
+                "word": stage.get("period", ""),
+                "modern": stage.get("form", ""),
+                "evolution": stage.get("notes", ""),
+            }
+        )
 
     props = _prop("title", act.get("instruction", ""))
     props += _prop("items", items)
@@ -1237,12 +1197,14 @@ def _render_translation_critique(act: dict) -> str:
     """
     translations = []
     for t in act.get("translations", []):
-        translations.append({
-            "translator": t.get("translator", ""),
-            "text": t.get("text", ""),
-            "accuracyScore": t.get("accuracy_score", 0),
-            "notes": t.get("notes", ""),
-        })
+        translations.append(
+            {
+                "translator": t.get("translator", ""),
+                "text": t.get("text", ""),
+                "accuracyScore": t.get("accuracy_score", 0),
+                "notes": t.get("notes", ""),
+            }
+        )
 
     props = _prop("title", act.get("instruction", ""))
     props += _prop("original", act.get("original", ""))
@@ -1268,12 +1230,14 @@ def _render_paleography_analysis(act: dict) -> str:
     """
     hotspots = []
     for h in act.get("hotspots", []):
-        hotspots.append({
-            "x": h.get("x", 0),
-            "y": h.get("y", 0),
-            "label": h.get("label", ""),
-            "explanation": h.get("explanation", ""),
-        })
+        hotspots.append(
+            {
+                "x": h.get("x", 0),
+                "y": h.get("y", 0),
+                "label": h.get("label", ""),
+                "explanation": h.get("explanation", ""),
+            }
+        )
 
     props = _prop("title", act.get("instruction", ""))
     props += _prop("imageUrl", act.get("image_url", ""))
@@ -1289,12 +1253,14 @@ def _render_dialect_comparison(act: dict) -> str:
     """
     features = []
     for f in act.get("features", []):
-        features.append({
-            "featureName": f.get("feature", ""),
-            "valueA": f.get("variant_a", ""),
-            "valueB": f.get("variant_b", ""),
-            "explanation": f.get("explanation", ""),
-        })
+        features.append(
+            {
+                "featureName": f.get("feature", ""),
+                "valueA": f.get("variant_a", ""),
+                "valueB": f.get("variant_b", ""),
+                "explanation": f.get("explanation", ""),
+            }
+        )
 
     props = _prop("title", act.get("instruction", ""))
     props += _opt_prop("instruction", act.get("instruction"))

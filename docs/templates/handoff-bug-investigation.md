@@ -6,7 +6,7 @@ that requires structured investigation (not simple fixes).
 ## Usage
 
 ```bash
-gh issue create \
+.venv/bin/python -m scripts.publish issue-create \
   --title "bug: Brief description of the problem" \
   --body-file /tmp/issue-body.md \
   --label "bug" \
@@ -48,7 +48,7 @@ gh issue create \
 
 | Factor | Value |
 |--------|-------|
-| Python version | 3.12.8 |
+| Python version | 3.12.14 |
 | OS | macOS / Linux |
 | Branch | main / feature-X |
 | Last working commit | abc123 |

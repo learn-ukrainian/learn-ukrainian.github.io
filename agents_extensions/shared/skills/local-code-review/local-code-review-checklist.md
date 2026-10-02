@@ -95,6 +95,12 @@ must never mutate the source tree:
   prep. A fix is a finding like any other; applying it is Step 6's job,
   done explicitly, by the accountable agent.
 - TypeScript/JS: `npx tsc --noEmit`, `npx eslint {files}` (no `--fix`).
+- Credential, identity, transport or hook changes: confirm the author ran
+  `scripts/audit/secret_scan_local.py tree` (offline) or run it yourself; quote
+  only its totals and per-detector counts, read the report only through its
+  `show-keys` and `count` subcommands (never `jq`, `cat` or `grep`), and never
+  quote a value, path, commit or line. Runbook:
+  `docs/runbooks/secret-scanning.md`.
 - Do not run formatters, code generators, migrations, package installs, or
   any other command that changes files on disk as part of preparing this
   review. If a deterministic check has an autofix flag, run it in
@@ -114,7 +120,7 @@ curl -s 'http://localhost:8765/api/state/routing-budget?fresh_codexbar=true' \
   > /tmp/routing-snapshot.json
 
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" resolve-reviewer \
-  --author-model "<the author's actual model/seat, e.g. claude, codex, deepseek-v4-flash>" \
+  --author-model "<the author's actual model/seat, e.g. claude-opus-5-5, gpt-6.1-sol, grok-4.7>" \
   --review-profile "<same profile as Step 2>" \
   --risk "<same risk as Step 2>" \
   --domain "<code|infra>" \
@@ -152,7 +158,7 @@ to nothing selectable. Disambiguate it one of two ways:
 ```bash
 # Composite form: "<harness>:<concrete-model>"
 --author-model "cursor:claude-opus-5-5"
---author-model "cursor:claude-opus-4-8"
+--author-model "cursor:claude-sonnet-5-5"
 
 # Or an explicit, validated author-family override (e.g. from session logs)
 --author-model "cursor" --author-family "anthropic"

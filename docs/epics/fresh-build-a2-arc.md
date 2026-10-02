@@ -25,7 +25,7 @@ research note in the issue without re-reading.
 | ULP Season 2 and Season 3 | `data/sources.db` `textbook_sections`, `ulp-2-00-lesson-notes` (lessons 41–80) and `ulp-3-00-lesson-notes` (lessons 81–120); titles quoted in §2 | the **schedule** (R-32): noun plural 42–44 → genitive 46–49 → dative 51–53 → accusative incl. prepositions and pronouns 56–58 → verbs of motion 59 → instrumental 61–62 → locative, time and dates 66–68 → vocative 69; then prefixed motion 81–89 → aspect 91–94 → perfective and both futures 96–98 → adverbs 101, 103 → indefinite 102 → comparison 104 → negative 106 → participles 107–108 → reflexive verbs 109 → imperative 111–114 → complex sentences 116–118 → conditional 119. Every fifth lesson is a review |
 | ULP Season 4 | `ulp-4-00-lesson-notes` (lessons 121–160) | where A2 must deliver the learner: Ukrainian-only essays with grammar in small boxes. Measured share of Ukrainian in the lesson notes: S1 38.8 % → S2 49.9 % → S3 51.0 % → S4 89.3 % |
 | Live immersion policy | `scripts/config.py` `IMMERSION_POLICIES["a2"]` | five bands keyed by module number: `a2-bridge` ≤ 3 (75–100 %), `a2-ramp` ≤ 7 (85–100 %), `a2-m01-20` ≤ 20 (85–100 %), `a2-m21-50` ≤ 50 (90–100 %), `a2-m51-70` beyond (95–100 %). Carried over unchanged (R-30) |
-| Current A2 manifest | `curriculum/l2-uk-en/curriculum.yaml`, level `a2`: 69 modules in 10 groups | the slugs and positions this arc keeps (D1). `plans/a2.yaml` (71 modules, 6 phases) is stale and is not an input |
+| Current A2 manifest | `curriculum/l2-uk-en/curriculum.yaml`, level `a2`: 69 modules in 10 groups | the slugs and positions this arc keeps (D1). `curriculum/l2-uk-en/plans/a2.yaml` (71 modules, 6 phases) was stale, contradicted the manifest, and was retired on 2026-09-30 in #9252 item 2; its last commit is `207604e44e` in Git history. It is not an input |
 
 ## 2. Decisions
 
@@ -321,7 +321,8 @@ states. Our A2 is already more immersive than ULP Seasons 2–3; the operator's 
 - ULP lesson 66's English title in `textbook_sections` repeats lesson 62's («Plans for New Year's
   Eve Instrumental case») while its Ukrainian title is «Спогади Місцевий відмінок» — an ingestion
   defect in the corpus, to be reported to the corpus lane.
-- `curriculum/l2-uk-en/plans/a2.yaml` (71 modules, 6 phases) contradicts the manifest (69 modules,
-  10 groups) and is replaced by this arc once accepted.
+- `curriculum/l2-uk-en/plans/a2.yaml` (71 modules, 6 phases) contradicted the manifest (69 modules,
+  10 groups); it was retired on 2026-09-30 in #9252 item 2 and remains in Git history at
+  `207604e44e`. This arc replaces its role as the A2 sequence reference.
 - Mapping-file corrections for A2 belong to #8404.
 - B1 and B2 arcs: #8427, after this one is accepted, so that D5's hand-over list is B1's input.

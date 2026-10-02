@@ -249,7 +249,7 @@ input and transcripts. It does **not** satisfy independent cross-family review.
 
 Formal CF uses one direct `ask-<lane> --type review` request to a qualified
 reviewer outside the author's model family, followed by a verdict and findings
-posted as a PR comment (`gh pr comment` or `gh pr review`) bound to the exact
+posted as a PR comment (`.venv/bin/python -m scripts.publish pr-comment --number <N>` or `.venv/bin/python -m scripts.publish pr-review --number <N>`) bound to the exact
 head SHA. Review requests route to a native toolful worktree seat; ordinary
 ACP/ACPX transport is toolless and cannot ground a tree review. Follow the canonical
 [fleet-comms review method](../../agents_extensions/shared/rules/fleet-comms-coordination.md#required-primitives-tool-backed)
@@ -335,14 +335,19 @@ before dispatching:
 
 1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
 2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
-   recon with exact owned paths and an objective scope ceiling.
-3. Reserve `gpt-6.1-sol` at `high` for hard consequential advisory judgment.
-   When an advisory envelope is needed, include the task contract, exact owned
-   paths, maximum changed-file and non-test-LOC ceilings, constraints, risk
-   boundaries, acceptance evidence, and escalation triggers. Astra is an advisor,
-   not the default implementer or reviewer.
-4. The accountable orchestrator checks owned paths and ceilings before dispatch
-   and against the returned diff. Luna escalates any ceiling overrun,
+   recon, always under a complete Sol advisory envelope (operator decision 2026-09-30, #9275). There is no direct bounded dispatch;
+   the same holds for the `gemini-3.8-flash-high` fallback unless the dispatch is
+   classified Ukrainian authoring or review.
+3. `gpt-6.1-sol` at `high` (the Astra seat) issues that envelope read-only with
+   `--advisory-role bounded_advisory_envelope --advisory-binding <digest>`, where the
+   digest is the worker dispatch's `--print-advisory-binding` output. The envelope
+   holds the task contract, exact owned paths, maximum changed-file and
+   non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence, and
+   escalation triggers. Astra is an advisor, not the default implementer or reviewer.
+4. The worker is dispatched with `--advisory-task <advisor task id>` and an
+   `--owned-path` set equal to the envelope's. `delegate.py` refuses a bounded
+   dispatch without a complete bound envelope and fails the worker at finalize when
+   its diff exceeds the ceilings. Luna escalates any ceiling overrun,
    consequential architecture, security, release, high-risk go/no-go, unresolved
    consequential ambiguity, broader integration, and final disposition. An
    Astra advisory is same-family context and never replaces required independent
@@ -410,7 +415,7 @@ not permanent routing weights and do not override current CodexBar headroom.
   `text-plan-sandbox-v1` (AGY), and `native-acp-pure-v1` (OpenCode).
   The historical `text-oneshot-isolated-v1` Hermes contract is retired;
   it is not a live DeepSeek route. This does not forbid the separately authorized
-  Grok/Codex launcher `--harness hermes` path (private #667 / public #6943).
+  Grok/Codex launcher `--harness hermes` path (authorized under public #6943).
   ACPX built-ins are checked through their `<seat> exec --file` surface rather
   than by duplicating pins for the hidden provider executables. The project
   text ACP server remains digest-checked before use.
@@ -432,13 +437,13 @@ not permanent routing weights and do not override current CodexBar headroom.
 - Exactly one read-only/stateless participant per enabled route: Codex, Grok,
   Claude, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek. Kimi and KimiCC
   seats are named in the registry but refused by `kimi_admission`.
-- Grok fixed effective model/effort: `grok-4.6` / `high` (caller may pass
+- Grok fixed effective model/effort: `grok-4.7` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
   Rotated from `grok-4.5` by operator order 2026-08-16 (#6865).
 - Grok ACP server command (single custom agent argument; never built-in
   `grok-build`, which cannot force `--no-leader`): absolute resolved Grok
   binary plus exact argv order
-  `agent --model grok-4.6 --reasoning-effort high --agent-profile
+  `agent --model grok-4.7 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`.
 - The project-owned Grok profile is digest-checked before every spawn. Its
   empty tool allowlist plus explicit denylist removes write, shell, subagent,

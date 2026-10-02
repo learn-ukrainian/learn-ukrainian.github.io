@@ -826,7 +826,7 @@ def test_run_subscription_1x17_sweep_timeout(tmp_path: Path) -> None:
         return _completed(cmd, returncode=0)
 
     with patch("subprocess.run", side_effect=fake_run), patch.object(rss, "time"):
-        rc = rss._run_cell(tmp_path, "claude-opus-4-8", "vesnianky", "raw")
+        rc = rss._run_cell(tmp_path, "claude-opus-5-5", "vesnianky", "raw")
         assert rc == 0
 
     assert len(calls) == 1
@@ -836,7 +836,7 @@ def test_run_subscription_1x17_sweep_timeout(tmp_path: Path) -> None:
         "subprocess.run",
         side_effect=subprocess.TimeoutExpired(["python"], rss.DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS),
     ), patch.object(rss, "time"):
-        rc = rss._run_cell(tmp_path, "claude-opus-4-8", "vesnianky", "raw")
+        rc = rss._run_cell(tmp_path, "claude-opus-5-5", "vesnianky", "raw")
         assert rc == 124
 
 
@@ -914,3 +914,9 @@ def test_track_deterministic_audit_timeouts() -> None:
     ):
         # TimeoutExpired maps to non-zero rc (124) -> flagged as modified
         assert len(tda.protected_config_changed()) > 0
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

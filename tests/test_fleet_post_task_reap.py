@@ -25,6 +25,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.fleet import post_task_reap
+from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import half_built_prep, leave_half_built
 
 
@@ -176,6 +177,32 @@ def test_no_task_state(hermetic_reap):
     assert report["task_status"] is None
     assert report["main_worktree"]["action"] == "retained"
     assert "no task state" in report["main_worktree"]["reason"]
+
+
+@pytest.mark.parametrize("runtime", [False, True])
+def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime):
+    repo, tasks = hermetic_reap
+    task_id = "preserve-post-task"
+    worktree = _add_acp_runtime_worktree(repo, task_id) if runtime else _add_dispatch_worktree(repo, "kimi", task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("batch_state/\n")
+    artifact = worktree / "batch_state/report.txt"
+    artifact.parent.mkdir()
+    artifact.write_bytes(b"post-task evidence")
+    _write_task_state(
+        tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
+    )
+
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+
+    row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
+    assert row["action"] == "removed", row
+    assert not worktree.exists()
+    state = json.loads((tasks / f"{task_id}.json").read_text())
+    assert state["preserved_artifacts"]["count"] == 1
+    assert (
+        Path(state["preserved_artifacts"]["location"]) / "batch_state/report.txt"
+    ).read_bytes() == b"post-task evidence"
 
 
 def test_running_skip(hermetic_reap):
@@ -783,3 +810,97 @@ def test_initializing_lock_without_a_reservation_stays_retained(hermetic_reap):
     assert report["main_worktree"]["action"] == "retained"
     assert report["main_worktree"]["reason"] == "registered worktree is locked"
     assert worktree.exists()
+
+
+@pytest.mark.parametrize("runtime", [False, True])
+@pytest.mark.parametrize("reference", ["root", "./", "ignored", ".pytest_cache/cache.txt", "ignored/report.txt"])
+def test_post_task_reap_result_named_file_scope(hermetic_reap, runtime, reference):
+    repo, tasks = hermetic_reap
+    task_id = "named-file-scope"
+    worktree = _add_acp_runtime_worktree(repo, task_id) if runtime else _add_dispatch_worktree(repo, "kimi", task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.pytest_cache/\n")
+    for name in ["ignored/report.txt", ".pytest_cache/cache.txt"]:
+        source = worktree / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(b"named evidence")
+    _write_task_state(
+        tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
+    )
+    path = tasks / f"{task_id}.json"
+    record = json.loads(path.read_text())
+    named = str(worktree) if reference == "root" else reference
+    record["response"] = f"Result: `{named}`."
+    path.write_text(json.dumps(record))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
+    assert row["action"] == "removed", row
+    assert not worktree.exists()
+    location = repo / "batch_state/preserved" / task_id
+    if reference == "ignored/report.txt":
+        assert (location / reference).read_bytes() == b"named evidence"
+        assert json.loads(path.read_text())["preserved_artifacts"]["count"] == 1
+    else:
+        assert not location.exists()
+
+
+def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
+    from scripts.orchestration import worktree_artifacts
+
+    repo, tasks = hermetic_reap
+    task_id = "acp-copy-failure"
+    runtime = _add_acp_runtime_worktree(repo, task_id, locked=True)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("batch_state/\n")
+    source = runtime / "batch_state/report.txt"
+    source.parent.mkdir()
+    source.write_bytes(b"must survive failed copy")
+    _write_task_state(tasks, task_id, "done", None, acp_runtime_paths=[runtime])
+
+    def fail_copy(*_args):
+        raise OSError("injected ACP copy failure")
+
+    monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["acp_runtimes"][0]
+    assert row["action"] == "retained", row
+    assert "injected ACP copy failure" in row["reason"]
+    assert source.read_bytes() == b"must survive failed copy"
+    assert not (repo / "batch_state/preserved" / task_id / "batch_state/report.txt").exists()
+
+
+@pytest.mark.parametrize("runtime", [False, True])
+@pytest.mark.parametrize("scenario", links.SCENARIOS)
+def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_path, runtime, scenario):
+    repo, tasks = hermetic_reap
+    task_id = "named-link"
+    worktree = _add_acp_runtime_worktree(repo, task_id) if runtime else _add_dispatch_worktree(repo, "kimi", task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n")
+    named, preserved, target = links.build_named_link(worktree, repo, tmp_path / "outside", scenario)
+    _write_task_state(
+        tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
+    )
+    path = tasks / f"{task_id}.json"
+    path.write_text(json.dumps({**json.loads(path.read_text()), "response": links.worker_response(named)}))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
+    links.restore_access(worktree)
+    state = json.loads(path.read_text())
+    if preserved is None and target is not None:  # Outbound targets outlive the checkout.
+        assert target.read_bytes() == links.PAYLOAD
+    location = repo / "batch_state/preserved" / task_id
+    if scenario in links.REFUSALS:
+        assert row["action"] == ("retained" if runtime else "skipped"), row
+        assert links.REFUSALS[scenario] in row["reason"], row
+        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
+        assert worktree.exists()
+        return
+    assert row["action"] == "removed", row
+    assert not worktree.exists()
+    assert "artifact_preservation_error" not in state
+    if preserved is None:
+        assert not location.exists()
+    else:
+        assert (location / preserved).read_bytes() == links.PAYLOAD
+        assert state["preserved_artifacts"]["count"] == 1

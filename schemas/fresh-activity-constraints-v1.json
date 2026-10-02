@@ -149,7 +149,8 @@
       "allowed_kinds": [
         "form",
         "vocabulary",
-        "comprehension"
+        "comprehension",
+        "listening"
       ],
       "required_item_fields_by_kind": {
         "form": [
@@ -163,6 +164,10 @@
         ],
         "comprehension": [
           "host"
+        ],
+        "listening": [
+          "host",
+          "target_record"
         ]
       }
     },

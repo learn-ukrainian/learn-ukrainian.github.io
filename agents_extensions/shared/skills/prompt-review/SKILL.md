@@ -7,6 +7,10 @@ effort: xhigh
 
 # Prompt Engineering Review: $ARGUMENTS
 
+For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
+escalation turns. This overrides the shared effort above for Sol only;
+other providers retain their effort rules and explicit overrides.
+
 ## Parse Arguments
 
 The user provides one of these argument patterns:

@@ -17,6 +17,8 @@ policy:
   quality_first: true
   selection_order:
     - independence_and_hard_gates
+    - primary_before_last_resort
+    - profile_risk_suitability
     - review_quality_tier
     - health_and_quota_within_tier
     - cost_within_equivalent_fit
@@ -33,12 +35,19 @@ policy:
     - codexbar_health_and_quota
   notes:
     - CodexBar is a health and quota signal, not a complete model inventory.
-    - Cursor auto is a harness choice, never a model identity for formal review.
+    - >-
+      Cursor auto is a harness choice, never a model identity for formal review. Operator decision
+      2026-09-30 (#9274): Auto runs only a well-defined coding task (a write-capable dispatch typed
+      --research-role implementation, with owned paths and a green DoR issue card); every other Cursor use pins a concrete
+      approved model (orchestrator_seats.cursor).
     - >-
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
       Claude Opus 5.5 may use native Claude or an explicitly verified Cursor slug.
       Grok is native CLI ONLY at grok-4.7 for every seat
-      (interactive, orchestrator, ask, dispatch, reviewer/judge, cursor availability fallback).
+      (interactive, orchestrator, ask, dispatch, cursor availability fallback). Native Grok never
+      reviews or judges. Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
+      through the Cursor seat pinned to grok-4.7-high whose runtime attests the concrete model;
+      Sol stays the first seat and the Cursor seat is the Sol-spared last resort.
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
       Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
@@ -64,7 +73,9 @@ policy:
       xai/grok-4.5). Those pins live in hash-bound v2.1 evidence/validator artifacts
       (phase3_functional_roles.py validator_sha256 + phase3_source_production_transport.py
       inventory sha); rotating or rewriting them is outside the fleet seat list and requires
-      a separate open-model-data rebind (#6870 item 3). Fleet routing must not read them.
+      a separate open-model-data rebind (#6870 item 3). The same rebind must cover
+      gemini-3.6/3.7 (including Flash variants), claude-fable-5 and grok-4.6 pins
+      in those hash-bound Phase 3 artifacts. Fleet routing must not read them.
     - >-
       Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged. Composer 2.5
       conservatively shares Moonshot independence lineage with Kimi.
@@ -107,8 +118,8 @@ review_scheduler:
   endpoints:
     claude:
       formal_review_eligible: true
-      # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
-      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
+      # Active formal CF pins; superseded Opus/Sonnet identities are historical only.
+      models: [claude-fable-5-1, claude-sonnet-5-5, claude-opus-5-5]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -132,7 +143,7 @@ review_scheduler:
       capacity_weight: 1.0
     glm:
       formal_review_eligible: true
-      models: [glm-5.3, glm-5.2]
+      models: [glm-5.3]
       participant: glm
       adapter_transport: acp
       catalog_transport: opencode
@@ -156,6 +167,8 @@ review_scheduler:
       credential_limit: 2
       capacity_weight: 1.0
     grok:
+      # Transport flag only: native Grok never judges code or infra; the
+      # resolver and the ladder lint refuse it (#9488 kept that rule).
       formal_review_eligible: true
       models: [grok-4.7]
       participant: grok
@@ -200,8 +213,13 @@ review_scheduler:
       credential_limit: 1
       capacity_weight: 1.0
     cursor:
-      formal_review_eligible: false
-      formal_review_exclusion_reason: generic multi-model harness lacks an attested concrete model/family
+      # Operator decision 2026-10-02 (#9488): only the pinned models below are
+      # formal identities on this multi-model harness. Each is dispatched with an
+      # exact Cursor slug and record_cf_verdict accepts its verdict only from the
+      # runtime-reported model. Composer (Kimi lineage), Auto and Cursor-routed
+      # Claude stay unpinned, so the resolver excludes them as unattested.
+      formal_review_eligible: true
+      models: [grok-4.7]
       participant: cursor
       adapter_transport: acp
       catalog_transport: cursor
@@ -272,11 +290,16 @@ execution_routing:
         - unresolved_consequential_ambiguity
         - broader_integration
         - final_disposition
-    direct_worker:
-      model_id: gpt-6-luna
+    # Operator decision 2026-09-30 (#9275): there is no direct bounded dispatch.
+    # Every dispatch to a bounded worker (preferred_worker, or the Gemini Flash
+    # fallback below unless it carries a Ukrainian authoring/review
+    # classification) needs a complete advisory envelope from the advisor above,
+    # bound to that dispatch; delegate.py refuses one without it.
+    bounded_fallback_worker:
+      model_id: gemini-3.8-flash-high
       effort: high
-      task_types: [bounded_implementation, bounded_investigation, recon, bounded_checks, log_triage]
-      constraints: [objective_scope_ceiling, no_consequential_decisions, no_final_disposition]
+      requires: [complete_advisory_envelope, objective_scope_ceiling]
+      non_bounded_task_families: [ukrainian-authoring, ukrainian-review]
     autonomous_fallback:
       model_id: gpt-6.1-sol
       effort: high
@@ -306,7 +329,8 @@ models:
     notes: >-
       Operator 2026-09-29 (#9230): the only Sol and the only GPT-6 frontier seat.
       Codex orchestrator, coder, reviewer, and the hard advisory seat that GPT-6
-      Astra held, all at high. GPT-6 Luna stays the scouting and bounded-work seat.
+      Astra held. Orchestration, coding, review and the advisory seat
+      use high (#9360). GPT-6 Luna stays the scouting and bounded-work seat.
       API id gpt-6.1-sol (official model page). Context window 1,050,000 tokens,
       max input 922,000, max output 128,000; knowledge cutoff 2026-04-30;
       reasoning effort low, medium (default), high, xhigh, max. Standard price
@@ -401,9 +425,10 @@ models:
   claude-fable-5:
     family: anthropic
     tier: frontier_authority
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: claude-fable-5-1
     roles: [architecture, critical_review, long_horizon_coding]
-    transports: [native_claude, cursor]
+    transports: []
     strengths: [highest_anthropic_capability, long_horizon_work]
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     notes: >-
@@ -420,8 +445,9 @@ models:
     strengths: [highest_anthropic_capability, long_horizon_work, always_on_thinking]
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     notes: >-
-      Fable 5.1 succeeds claude-fable-5 as the Anthropic orchestration and
-      designated-authority seat. Thinking is always on (never send
+      Fable 5.1 is last resort for review, critique, design input and Ukrainian
+      work (#9394); use Opus 5.5 / Sol 6.1 first. It succeeds claude-fable-5
+      as a designated-authority fallback. Thinking is always on (never send
       thinking: disabled). Effort decision topology (operator 2026-09-09): default
       high (API default; start here — do not port Opus/xhigh habits); medium/low
       for routine interactive work (low often beats prior-gen xhigh/max; medium
@@ -433,8 +459,8 @@ models:
       Quirks: high+ on simple tasks over-gathers (lower effort, do not prompt
       around it); low searches less (bump for retrieval-heavy named products);
       effort does not shorten visible output. Keep verification scaffolding —
-      the Opus 5 guidance to delete it does not apply. claude-fable-5 remains as
-      the legacy alias id pinned by existing callers and tests. Full prose:
+      the Opus 5 guidance to delete it does not apply. claude-fable-5 is retired
+      with no executable routes; historical attribution remains unchanged. Full prose:
       docs/best-practices/fleet-shared-doctrine.md § Effort.
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
@@ -448,11 +474,10 @@ models:
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
     notes: >-
       Operator 2026-09-22: default Claude model and the Claude orchestrator seat.
-      Opus 5.5 executes advanced non-linguistic work (architecture, hard coding,
-      deep code review). start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
-      Fable 5.1 stays the designated Anthropic advisor / authority seat, including
-      Ukrainian-specific linguistic judgment; this seat does not confer
-      approval authority. Effort: API default is medium (not high); medium on
+      Opus 5.5 executes architecture, hard coding, deep code review and
+      Ukrainian-specific linguistic work. start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
+      Opus 5.5 / Sol 6.1 take review, critique and design input first (#9394);
+      Fable and the Astra seat are last resort. Effort: API default is medium (not high); medium on
       Opus 5.5 beats Opus 5 @ high on coding and knowledge work. Orchestrating runs
       at high; medium/low for routine turns; xhigh for hard debugging and the
       curriculum/linguistic review skills that pin effort: xhigh; max almost never.
@@ -464,9 +489,10 @@ models:
   claude-opus-5:
     family: anthropic
     tier: frontier_authority
-    lifecycle: active
-    roles: [advisory_consultation, architecture, critical_review, security_review, agentic_coding]
-    transports: [native_claude, cursor]
+    lifecycle: retired
+    replaced_by: claude-opus-5-5
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [deep_reasoning, long_horizon_agentic, high_precision_and_recall_code_review]
     weaknesses: [verbose_by_default, over_delegates_to_subagents, elevated_refusal_surface]
     notes: >-
@@ -480,18 +506,14 @@ models:
       rate-limit bucket from the Opus 4.x pool.
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
-  # Retained alongside claude-opus-5. Opus is the non-binding Anthropic advisory-
-  # consultation seat; designated approval authority remains identity-scoped and the
-  # current advisor roster uses claude-fable-5 + gpt-6.1-sol. This legacy id
-  # is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
-  # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
-  # broke collection with KeyError: 'claude-opus-4-8'.
+  # Historical Opus 4.8 identity; live callers use Opus 5.5.
   claude-opus-4-8:
     family: anthropic
     tier: frontier_authority
-    lifecycle: active
-    roles: [architecture, critical_review, security_review, orchestration]
-    transports: [native_claude, cursor]
+    lifecycle: retired
+    replaced_by: claude-opus-5-5
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
     weaknesses: [frontier_quota_cost, superseded_by_claude-opus-5]
     sources:
@@ -510,7 +532,7 @@ models:
       Route authoring of security-sensitive code (hooks/guards, launchers, credential or secret
       handling, dispatch admission, sandbox/permission logic) to Opus 5.5 or
       Codex Sol. Ukrainian curriculum content stays with sanctioned language
-      lanes; use Fable 5.1 for the Claude lane. For security-sensitive diffs
+      lanes; use Opus 5.5 for the Claude lane, with Fable 5.1 last resort. For security-sensitive diffs
       (hooks/guards, launchers, credential or secret handling, dispatch admission,
       sandbox/permission logic), resolve the reviewer with --risk critical, which
       excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125.
@@ -520,9 +542,10 @@ models:
   claude-sonnet-5:
     family: anthropic
     tier: frontier_practical
-    lifecycle: fallback
-    roles: [implementation, agentic_coding, strong_review]
-    transports: [native_claude, cursor]
+    lifecycle: retired
+    replaced_by: claude-sonnet-5-5
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [speed_intelligence_balance, complex_instruction_following]
     weaknesses: [less_final_authority_than_opus, tokenizer_uses_more_tokens]
     sources:
@@ -538,8 +561,8 @@ models:
     weaknesses: [not_default_critical_authority, deep_architecture_prefers_sol]
     notes: >-
       Default AGY Flash pin (operator GO 2026-09-02). Live `agy models` probe
-      2026-09-02 lists gemini-3.8-flash-high/medium/low; 3.7/3.6 stay in the
-      back-compat allowlist. Native AGY subscribed seat — never OpenRouter.
+      2026-09-02 lists gemini-3.8-flash-high/medium/low; older Flash
+      generations are retired. Native AGY subscribed seat — never OpenRouter.
       Ukrainian-lane default is the Text Arena language-category jump vs 3.7
       Flash High (lmarena 2026-09-02, Gemini 3.8 Flash High): Writing,
       Literature & Language #7→#3; Multi-Turn #9→#4; Longer Query #13→#5;
@@ -555,10 +578,11 @@ models:
   gemini-3.7-flash-high:
     family: google
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: gemini-3.8-flash-high
     aliases: [gemini-3.7-flash, gemini-3.7-flash-medium, gemini-3.7-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
-    transports: [agy]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [superseded_as_default_by_3_8_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     notes: >-
@@ -570,10 +594,11 @@ models:
   gemini-3.6-flash-high:
     family: google
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: gemini-3.8-flash-high
     aliases: [gemini-3.6-flash, gemini-3.6-flash-medium, gemini-3.6-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
-    transports: [agy]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     sources:
@@ -592,10 +617,11 @@ models:
   gemini-3.5-flash-high:
     family: google
     tier: strong_efficient
-    lifecycle: active
-    aliases: [gemini-3.5-flash]
-    roles: [implementation, subagent_work, multimodal_analysis]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: gemini-3.8-flash-high
+    aliases: [gemini-3.5-flash, gemini-3.5-flash-medium, gemini-3.5-flash-low]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [speed, low_cost, back_compat]
     weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority]
     sources:
@@ -617,11 +643,12 @@ models:
   grok-4.6:
     family: xai
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: grok-4.7
     # Prior pin (operator order 2026-08-16 / #6865). Not admitted by the
     # adapter. Defaults and ladders use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
-    transports: [native_grok, cursor]
+    transports: []
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window, superseded_as_default_by_grok_4_7]
     notes: >-
@@ -637,9 +664,9 @@ models:
     # in favor of grok-4.6; kept here (not deleted) only so the disabled
     # grok-hermes registry seat's frozen default_model still resolves against
     # the catalog. Never referenced by any active review_candidate, ladder,
-    # orchestrator_seat, or formal_cf_default — those are grok-4.6 only.
+    # orchestrator_seat, or formal_cf_default — live routes use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
-    transports: [native_grok]
+    transports: []
     strengths: [strong_coding, sharp_review, agentic_work]
     weaknesses: [native_subscription_window, superseded_by_grok_4_6]
     sources:
@@ -778,16 +805,17 @@ models:
   glm-5.2:
     family: zhipu
     tier: frontier_practical
-    lifecycle: fallback
-    # Fallback pin — kept resolvable for pinned workflows; do not route new work here.
+    lifecycle: retired
+    replaced_by: glm-5.3
+    # Historical route metadata only; new work uses GLM-5.3.
     aliases: [glm52]
     glm_routes:
       glmcc_alias: glm-5.2
       platform_model_id: glm-5.2
       coding_model_id: glm-5.2
       context_profile: glmcc_glm52
-    roles: [long_context_review, security_review, complex_debugging]
-    transports: [opencode, glmcc]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [long_horizon_coding, one_million_context, strong_open_model]
     weaknesses: [china_data_egress, local_interactive_only, quota_multiplier, superseded_by_glm_5_3]
     sources:
@@ -799,9 +827,10 @@ models:
     # 9c44e63f63 @ high; supersedes the 2026-08-06 DO NOT USE hold). Pro @ high =
     # hard implement only (complex multi-file, hard lookup) — NOT the default and
     # NOT on the routine review ladder (Flash stays the volume rung).
-    lifecycle: active
-    roles: [hard_implement, complex_coding, long_context_reasoning]
-    transports: [hermes, opencode]
+    lifecycle: retired
+    replaced_by: deepseek-v4.1-flash
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [quality_per_dollar, one_million_context, tool_calling]
     weaknesses: [silent_stall_history, not_for_folk_content, not_default_seat, not_on_routine_review_ladder]
     sources:
@@ -905,9 +934,11 @@ models:
   gpt-oss-120b:
     family: openai
     tier: specialist
-    lifecycle: active
-    roles: [bounded_open_model_work, routine_fact_check]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: gpt-6-luna
+    aliases: [gpt-oss-120b-medium]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [open_weight, tool_calling]
     weaknesses: [not_frontier_authority]
     sources:
@@ -945,9 +976,11 @@ models:
   claude-sonnet-4.6-thinking:
     family: anthropic
     tier: compatibility
-    lifecycle: fallback
-    roles: [compatibility_only]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: claude-sonnet-5-5
+    aliases: [claude-sonnet-4-6, claude-sonnet-4-6-thinking]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [existing_route_compatibility]
     weaknesses: [superseded_by_sonnet_5]
     sources:
@@ -955,28 +988,18 @@ models:
   claude-opus-4.6-thinking:
     family: anthropic
     tier: compatibility
-    lifecycle: fallback
-    roles: [compatibility_only]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: claude-opus-5-5
+    aliases: [claude-opus-4-6-thinking]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [existing_route_compatibility]
     weaknesses: [superseded_by_opus_4.8]
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
 review_candidates:
-  # NOTE: a second `claude-opus-4-8:` key used to appear further down this mapping.
-  # YAML last-wins meant THIS block never took effect, so the duplicate was dead
-  # config that the strict check-yaml hook flagged (fixed 2026-07-24). The surviving
-  # pinned entry now lives below as `claude-opus-5`. Keys here must stay unique.
-  # Kept: scripts/review/reviewer_resolver.py:213 binds CLAUDE_OPUS_4_8 at import
-  # time, so deleting this key breaks collection of every test that imports it.
-  claude-opus-4-8:
-    model_id: claude-opus-4-8
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-4-8
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
+  # Selectable seats reference active models; retired identities stay in models.
   openai_frontier:
     model_id: gpt-6.1-sol
     route: codex
@@ -987,26 +1010,22 @@ review_candidates:
     advisory_only_for_author_families: [openai]
   claude-fable-5-1:
     model_id: claude-fable-5-1
+    last_resort: true
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5-1
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
-  claude-fable-5:
-    model_id: claude-fable-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  claude-fable-5-cursor-fallback:
-    model_id: claude-fable-5
+  claude-fable-5-1-cursor-fallback:
+    model_id: claude-fable-5-1
+    last_resort: true
     route: cursor
     transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5-1-thinking-high
     review_profiles: [code, infra]
     capabilities: [code_review]
   grok-4.7:
+    # Retained identity for explicit-pin refusal; native Grok never judges code/infra.
     model_id: grok-4.7
     route: grok
     transport: native_grok
@@ -1014,21 +1033,17 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   grok-4.7-cursor-fallback:
-    # Explicit Cursor pin — never Cursor auto. Used when native grok is dark.
+    # Operator decision 2026-10-02 (#9488): the Sol-spared code/infra reviewer.
+    # The exact Cursor slug grok-4.7-high is the one whose runtime report
+    # ("Grok 4.7 256K High") record_cf_verdict accepts; bare grok-4.7 runs the
+    # Fast variant. No critical_review role, so critical risk stays Sol/Opus.
     model_id: grok-4.7
+    last_resort: true
     route: cursor
     transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7-high
     review_profiles: [code, infra]
     capabilities: [code_review]
-  grok-4.6:
-    # Historical row. The adapter does not admit this id.
-    model_id: grok-4.6
-    route: grok
-    transport: native_grok
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.6
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
   glm-5.3:
     model_id: glm-5.3
     route: glm
@@ -1051,13 +1066,6 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-opus-5-5-high
     review_profiles: [code, infra]
     capabilities: [code_review]
-  claude-opus-5:
-    model_id: claude-opus-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
   claude-sonnet-5-5:
     model_id: claude-sonnet-5-5
     route: claude
@@ -1065,24 +1073,6 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5-5
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
-  claude-sonnet-5:
-    model_id: claude-sonnet-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  deepseek-v4-pro:
-    model_id: deepseek-v4-pro
-    route: deepseek
-    transport: opencode
-    # Hard implement only (complex multi-file, hard lookup) — not default, not a
-    # routine review-ladder rung (operator GO 2026-08-13, canary #6703).
-    invocation: opencode run --model deepseek/deepseek-v4-pro --variant high
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-    requires_silence_timeout: true
-    domain_excluded_from: [folk_content]
   composer-2.5:
     model_id: composer-2.5
     route: cursor
@@ -1108,20 +1098,12 @@ review_candidates:
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model poolside/poolside/laguna-xs-2.1
     review_profiles: [code, infra]
     capabilities: [code_review]
-  deepseek-v4.1-flash:
-    model_id: deepseek-v4.1-flash
-    route: deepseek
-    transport: opencode
-    invocation: opencode run --model deepseek/deepseek-flash --variant high
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-    domain_excluded_from: [folk_content]
 
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
 # AGY remains fail-closed because its text-only wrapper cannot consume the
-# parent-owned sealed MCP. Grok enters through the proven exact-head ACP review
-# path; Kimi: web, UI and backend coding only, never review.
+# parent-owned sealed MCP. Native Grok never judges (Grok reviews code/infra only through the
+# attested Cursor seat, #9488); Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
@@ -1135,12 +1117,10 @@ orchestrator_seats:
       Operator 2026-09-22: Opus 5.5 is the Claude orchestrator seat and executes
       advanced non-linguistic work (architecture, hard coding, deep code review).
       start-claude-driver.sh pins claude-opus-5-5[1m] @ high unless --model /
-      --effort (or LAUNCHER_MODEL / LAUNCHER_EFFORT) override it. Fable 5.1 stays
-      the designated Anthropic advisor and authority seat, including
-      Ukrainian-specific linguistic judgment (summoned judgment, advisor panels,
-      the critical review ladder); the orchestrator seat does not confer approval
-      authority. Non-binding Anthropic advisory consultations still
-      route to Opus 5 under the 2026-07-31 directive. grok-4.7 owns the daily epic
+      --effort (or LAUNCHER_MODEL / LAUNCHER_EFFORT) override it. Opus 5.5 /
+      Sol 6.1 take review, critique, design input and Ukrainian work first (#9394);
+      Fable and the Astra seat are last resort. Orchestration alone does not
+      confer approval authority. grok-4.7 owns the daily epic
       loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
       Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ high; Claude is an escalation TARGET,
       not an escalator. Driving default is `high` (Opus 5.5 API default is medium;
@@ -1152,10 +1132,11 @@ orchestrator_seats:
     effort: high
     escalate_model_id: gpt-6.1-sol
     escalate_effort: high
-    escalate_when: n/a_same_sku
+    escalate_when: consequential_advisory
     note: >
       Operator 2026-09-29 (#9230): GPT-6.1 Sol @ high is the Codex orchestrator,
-      advanced seat, and advisory escalation (it took GPT-6 Astra's seat). GPT-6
+      advanced seat; ordinary advice uses Sol high; Astra is last resort.
+      The #9275 bounded-envelope route is unchanged. GPT-6
       Luna @ high does scouting and bounded work and is not this seat. Named alternate on
       harness/infra and DevOps — never a concurrent same-stream co-owner.
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
@@ -1179,7 +1160,7 @@ orchestrator_seats:
     escalate_when: n/a_same_sku
     note: "Google-family seat; Flash default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only when explicitly requested)"
   cursor:
-    model_id: auto
+    model_id: grok-4.7
     effort: high
     escalate_model_id: gpt-6.1-sol
     escalate_effort: high
@@ -1187,26 +1168,31 @@ orchestrator_seats:
     auto_allowlist:
       - grok-4.7
       - composer-2.5
+    auto_scope: write_implementation_dispatch_with_green_dor
     attestation_rule: driver_of_record_requires_attested_resolved_model
     unknown_auto_family_resolution: union_family
     unknown_auto_union_families:
       - xai
       - moonshot
     note: >-
-      Cursor Auto orchestrator seat (parent #6952, #6955). Launcher/registry/adapter
-      default pin is grok-4.7 (#8464); Auto remains the catalog seat identity and is
-      permitted only when it resolves within the explicit allowlist (currently
-      grok-4.7 [xAI], composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract).
+      Cursor orchestrator seat (parent #6952, #6955). The seat runs the concrete pin
+      grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin.
+      Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task
+      (auto_scope: a write-capable dispatch typed --research-role implementation, with owned
+      paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI],
+      composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract). The driver
+      seat, review, design, consults, discussions and recon never run Auto.
       When cursor:auto reports resolved_model=unknown, resolve its identity to the
       allowlist-union family {xAI, Moonshot}: Cursor-authored PRs require a single
       cross-family reviewer from outside {xAI, Moonshot}; Cursor-as-reviewer is eligible
-      only against authors outside {xAI, Moonshot}. Attested Cursor grok-4.7 = xAI family.
+      only against authors outside {xAI, Moonshot}. Attested Cursor grok-4.7 = xAI family; it is
+      a formal code/infra reviewer only as the review_candidates grok-4.7-cursor-fallback seat (#9488).
       Driver-of-record still requires an attested concrete resolved_model from the run.
       Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
       from within the driver session).
 
 # Formal CF transport defaults (model + effort; sealed review-pr was removed in #8520). Advisor/authority
-# roles use high effort; Sol high fills the routine Codex reviewer role.
+# roles use their catalog effort; Sol high fills the routine Codex reviewer role.
 # Fable remains off the
 # routine ladder. CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
@@ -1220,17 +1206,13 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5-5
     effort: high
-    # Sealed Claude ACP: Sonnet 5.5 default; Fable / Opus 5.5 / Opus 5 / Opus 4.8 via --model pin
-    # (operator 2026-08-06 formal pin). Effort fixed high on sealed participant.
-    escalate_model_id: claude-fable-5
+    # Opus 5.5 is the first escalation; Fable 5.1 is last resort (#9394).
+    escalate_model_id: claude-opus-5-5
     escalate_effort: high
     family_models:
       - claude-sonnet-5-5
-      - claude-sonnet-5
-      - claude-fable-5
+      - claude-fable-5-1
       - claude-opus-5-5
-      - claude-opus-5
-      - claude-opus-4-8
   glm:
     model_id: glm-5.3
     effort: high
@@ -1240,7 +1222,6 @@ formal_cf_defaults:
     escalate_effort: max
     family_models:
       - glm-5.3
-      - glm-5.2
   pool:
     # Laguna S 2.1 — gen-2 strongest (not m.1; not xs)
     model_id: poolside/laguna-s-2.1
@@ -1267,42 +1248,30 @@ formal_cf_defaults:
     isolation_issue: 5555
 
 review_ladders:
-  # #5293 quality-first: never let a later rung improve quality tier.
-  # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Sol high → Opus 5.5 → Sonnet 5.5 → Grok / DS / pool.
-  # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
-  # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
+  # Hard filters precede last-resort preference, then suitability and quality.
+  # Opus / Sol handle critical review first (#9394). Native Grok never judges;
+  # the attested Cursor Grok seat is the Sol-spared last resort (#9488) and has
+  # no critical_review role, so critical lists it only to record that exclusion.
+  # GLM remains explicit-pin only; Fable is automatic only as critical last resort.
   critical:
     - [openai_frontier]
-    # Fable 5 is the Anthropic authority rung (operator 2026-07-26 — Opus 5
-    # de-advisored: weak in the role, over-verbose; reverses 2026-07-24). Opus is
-    # NOT on the authority ladder at all; it remains a practical/coding seat.
-    - [claude-fable-5]
-    - [claude-fable-5-cursor-fallback]
-    - [claude-sonnet-5-5]
-    - [grok-4.7]
-    - [grok-4.7-cursor-fallback]
-    # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
-    # (volume). Pro hold lifted for hard implement only — never a routine review rung.
-    - [deepseek-v4.1-flash]
+    - [claude-opus-5-5]
+    - [claude-opus-5-5-cursor-fallback]
     - [composer-2.5]
     - [pool]
     - [pool-xs]
+    - [claude-fable-5-1]
+    - [claude-fable-5-1-cursor-fallback]
+    - [grok-4.7-cursor-fallback]
   high: &practical_first_code_review
-    # Routine CF order: Sol high → Opus 5.5 high → Sonnet 5.5 → Grok…
-    # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
     - [claude-opus-5-5]
     - [claude-opus-5-5-cursor-fallback]
     - [claude-sonnet-5-5]
-    - [grok-4.7]
-    - [grok-4.7-cursor-fallback]
-    # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
-    # (volume). Pro hold lifted for hard implement only — never a routine review rung.
-    - [deepseek-v4.1-flash]
     - [composer-2.5]
     - [pool]
     - [pool-xs]
+    - [grok-4.7-cursor-fallback]
   medium: *practical_first_code_review
   low: *practical_first_code_review
 
@@ -1310,8 +1279,8 @@ review_ladders:
 # Keyed by the substitute lane. A source model with a row rewrites to that
 # target. No explicit --model, or an explicit model the substitute adapter
 # does not reject, uses that lane's registry default — the dispatch pin named
-# on orchestrator_seats (cursor: grok-4.7). That pin is not the cursor seat
-# identity `auto`, and not the interactive driver's grok-4.7-high slug.
+# on orchestrator_seats (cursor: grok-4.7), not the driver launcher's
+# grok-4.7-high slug.
 # An explicit model with no row that the substitute adapter rejects is
 # refused before spawn (agy rejects an unknown Gemini slug; codex rejects
 # anything outside gpt-6.1-sol/gpt-6-luna). Cursor forwards an unrecognized
@@ -1323,6 +1292,8 @@ budget_substitution_models:
     gpt-6-luna: gpt-6-luna
   cursor:
     claude-opus-5-5: claude-opus-5-5-high
-    claude-fable-5: claude-fable-5
+    # Read-only cursor-agent --list-models verified 2026-09-30:
+    # claude-fable-5-1-thinking-high - Claude Fable 5.1 1M Thinking (NO ZDR)
+    claude-fable-5-1: claude-fable-5-1-thinking-high
     grok-4.7: grok-4.7
     composer-2.5: composer-2.5

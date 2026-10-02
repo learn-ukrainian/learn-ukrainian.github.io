@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 54a2e3103bc8084464870c82e58d42e47586bd8188020dcf01e6a89d4f02f457
+  components_sha256: 946e6b102bba070df497d872f85b6ffb36d730df801c8ebf61bb996ec320c280
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -1535,6 +1535,10 @@ components:
     props:
       required: []
       optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
       - name: examples
         type: string[]
         description: Examples value consumed by this component.
@@ -1553,7 +1557,8 @@ components:
         ukrainian_text: 'false'
         default: false
     nested_types: {}
-    example: {}
+    example:
+      instruction: Приклад
     deprecated: false
     deprecation_reason: null
   OddOneOut:
@@ -2212,6 +2217,10 @@ components:
         default: false
     nested_types:
       QuizQuestionItem:
+      - name: host
+        type: '{ kind: string; url?: string; label?: string }'
+        description: host prop.
+        ukrainian_text: 'false'
       - name: question
         type: string
         description: Question value consumed by this component.

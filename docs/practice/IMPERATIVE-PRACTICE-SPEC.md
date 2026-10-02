@@ -28,8 +28,8 @@ Deliver a first-class **`imperative`** practice mode that:
 
 Per operator directive:
 - **Kimi (Web Designer)**: Frontend UI/UX, responsive mode tile, card layout, accessible keyboard navigation, misconception feedback displays, and chrome localization in `site/src/`.
-- **Astra / Codex (`gpt-6-astra`)**: Backend generator engine, VESUM 3-slot extraction, deterministic distractor generation, and shard compilation in `scripts/audit/generate_practice_deck.py`.
-- **Claude (`claude-sonnet-5` / `claude-fable-5-1`)**: Linguistic auditing, verification contracts, tests in `tests/test_generate_practice_deck.py`, schema validation in `check_static_practice_assets.py`, and independent held-out review.
+- **Sol / Codex (`gpt-6.1-sol`)**: Backend generator engine, VESUM 3-slot extraction, deterministic distractor generation, and shard compilation in `scripts/audit/generate_practice_deck.py`.
+- **Claude (`claude-sonnet-5-5` / `claude-fable-5-1`)**: Linguistic auditing, verification contracts, tests in `tests/test_generate_practice_deck.py`, schema validation in `check_static_practice_assets.py`, and independent held-out review.
 - **Gemini / AGY (Accountable Orchestrator)**: Architecture governance, ticket breakdown, PR coordination across worktrees, CI gate enforcement, cross-family review routing, squash merges, and merge closeout to `main`.
 
 ---

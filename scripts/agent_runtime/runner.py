@@ -37,6 +37,7 @@ import re
 import shutil
 import signal
 import subprocess
+import sys
 import tempfile
 import time
 from collections.abc import Callable, Mapping, Sequence
@@ -68,6 +69,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
@@ -184,11 +186,11 @@ _SAFE_ACP_FAILURE_CODES = frozenset(
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
-_INVOCATION_ATTRIBUTION: contextvars.ContextVar[InvocationAttribution | None] = (
-    contextvars.ContextVar("agent_runtime_invocation_attribution", default=None)
+_INVOCATION_ATTRIBUTION: contextvars.ContextVar[InvocationAttribution | None] = contextvars.ContextVar(
+    "agent_runtime_invocation_attribution", default=None
 )
-_INTER_AGENT_TRANSPORT: contextvars.ContextVar[AcpxTransportProvenance | None] = (
-    contextvars.ContextVar("agent_runtime_inter_agent_transport", default=None)
+_INTER_AGENT_TRANSPORT: contextvars.ContextVar[AcpxTransportProvenance | None] = contextvars.ContextVar(
+    "agent_runtime_inter_agent_transport", default=None
 )
 _INTER_AGENT_TRANSPORT_NAME = "acp"
 _RESERVED_TRANSPORT_PROVENANCE = frozenset({"source", "agent", "via"})
@@ -201,10 +203,7 @@ class AgentOutputLimitError(AgentRuntimeError):
         self.agent = agent
         self.limit_bytes = limit_bytes
         self.observed_bytes = observed_bytes
-        super().__init__(
-            f"{agent} exceeded streamed_output_limit={limit_bytes} bytes "
-            f"(observed={observed_bytes})"
-        )
+        super().__init__(f"{agent} exceeded streamed_output_limit={limit_bytes} bytes (observed={observed_bytes})")
 
 
 class PrimaryTreeWriteError(AgentRuntimeError):
@@ -219,8 +218,7 @@ class PrimaryTreeWriteError(AgentRuntimeError):
         self.agent = agent
         self.paths = list(paths)
         super().__init__(
-            f"{agent} wrote tracked primary-checkout path(s) during dispatch: "
-            f"{', '.join(self.paths)} (#6818)"
+            f"{agent} wrote tracked primary-checkout path(s) during dispatch: {', '.join(self.paths)} (#6818)"
         )
 
 
@@ -403,10 +401,7 @@ class _ChildCwdPin:
 def _streamed_output_limit(*, agent_name: str, entrypoint: str) -> int | None:
     """Return the opt-in cap for isolated ACP direct-only seats only."""
     acpx_seats = {str(route["seat"]) for route in ACPX_SUPPORTED_PARTICIPANTS.values()}
-    if (
-        agent_name in acpx_seats
-        and entrypoint in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}
-    ):
+    if agent_name in acpx_seats and entrypoint in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}:
         return _ACPX_DIRECT_OUTPUT_LIMIT_BYTES
     return None
 
@@ -454,7 +449,7 @@ def _resolve_plan_telemetry(
     version remains explicitly unknown; the exact binary is instead hashed and
     help/version-probed inside the verified sandbox by the isolation layer.
     """
-    if tool_config and tool_config.get("review_isolation"):
+    if tool_config and (tool_config.get("review_isolation") or tool_config.get("review_attempt_boundary")):
         return InvocationTelemetry(
             model=requested_model,
             effort=requested_effort or "unknown",
@@ -525,17 +520,23 @@ def _prepare_stdin_handle(
         dir=str(directory) if directory is not None else None,
     )
     path = Path(path_str)
+    handle = None
     try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(stdin_payload.encode("utf-8"))
+        handle = os.fdopen(fd, "w+", encoding="utf-8")
+        handle.write(stdin_payload)
+        handle.flush()
+        handle.seek(0)
     except OSError:
+        if handle is not None:
+            handle.close()
+        else:
+            os.close(fd)
         with contextlib.suppress(OSError):
             path.unlink()
         raise
 
     # Ownership transfers to the subprocess lifecycle; _cleanup_stdin_temp
     # closes it in the runner finally block.
-    handle = open(path, encoding="utf-8")  # noqa: SIM115
     if unlink_after_open:
         path.unlink()
         return handle, None
@@ -807,12 +808,15 @@ def _merge_guard_enabled(*, mode: str, env: dict[str, str]) -> bool:
 
 def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
     """Prepend gh/git shims and stamp env vars when merge guard is active."""
+    from scripts.opsec.prepublish import publish_environment
+
     if not _merge_guard_enabled(mode=mode, env=env):
-        unguarded_env = dict(env)
+        unguarded_env = publish_environment(env)
         unguarded_env.pop("AGENT_NO_MERGE", None)
         return unguarded_env
 
     guarded_env = dict(env)
+    guarded_env.pop("LU_OPSEC_OVERRIDE", None)
     original_path = guarded_env.get("PATH", "")
     guarded_env["AGENT_NO_MERGE"] = "1"
     guarded_env["AGENT_ORIGINAL_PATH"] = original_path
@@ -828,6 +832,8 @@ def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
         guarded_env["AGENT_REAL_GIT"] = real_git
     else:
         guarded_env.pop("AGENT_REAL_GIT", None)
+
+    guarded_env["AGENT_GIT_SHIM_PYTHON"] = sys.executable
 
     shim_path = str(_SHIMS_DIR)
     guarded_env["PATH"] = f"{shim_path}{os.pathsep}{original_path}" if original_path else shim_path
@@ -925,10 +931,7 @@ def _load_adapter(name: str, *, allow_direct_only: bool = False) -> AgentAdapter
                 "intended adapter or launcher and flip the registry flag only "
                 "when the seat is operational."
             )
-        raise AgentUnavailableError(
-            f"Agent {name!r} is registered but not available "
-            f"(cli_available=False). {detail}"
-        )
+        raise AgentUnavailableError(f"Agent {name!r} is registered but not available (cli_available=False). {detail}")
 
     # Permission is checked before cache access. A prior direct-only load must
     # never make the same adapter reachable through normal ``invoke()``.
@@ -1044,13 +1047,9 @@ def _build_usage_record(
     privacy_limited = entrypoint in _PRIVACY_LIMITED_USAGE_ENTRYPOINTS
     safe_cwd = None if privacy_limited else (str(cwd)[-250:] if cwd else "")
     safe_task_id = None if privacy_limited else (task_id[:100] if task_id else None)
-    safe_provider_session_id = (
-        None if privacy_limited else (session_id[:100] if session_id else None)
-    )
+    safe_provider_session_id = None if privacy_limited else (session_id[:100] if session_id else None)
     telemetry_source = None if privacy_limited else os.environ.get("LU_TELEMETRY_SOURCE")
-    attribution = _INVOCATION_ATTRIBUTION.get() or resolve_invocation_attribution(
-        task_id=task_id
-    )
+    attribution = _INVOCATION_ATTRIBUTION.get() or resolve_invocation_attribution(task_id=task_id)
     transport = _INTER_AGENT_TRANSPORT.get()
 
     failure_code = _privacy_safe_failure_code(
@@ -1086,11 +1085,7 @@ def _build_usage_record(
         "rate_limited": rate_limited,
         "stalled": stalled,
         "failure_code": failure_code,
-        "stderr_excerpt": (
-            None
-            if privacy_limited
-            else ((stderr_excerpt or "")[:500] if stderr_excerpt else None)
-        ),
+        "stderr_excerpt": (None if privacy_limited else ((stderr_excerpt or "")[:500] if stderr_excerpt else None)),
         "tokens": tokens,
     }
     if agent == "codex":
@@ -1462,6 +1457,18 @@ def _build_gemini_attempt_tool_config(
     return attempt_tool_config
 
 
+def _attempt_boundary_refusal(exc: Exception, *, stage: str) -> str:
+    """Keep the refusal identifier, never isolation diagnostics or exception text."""
+    from scripts.review.isolation import ReviewIsolationError
+
+    detail = type(exc).__name__
+    if isinstance(exc, ReviewIsolationError):
+        code = str(exc).partition(":")[0]
+        if re.fullmatch(r"[a-z][a-z0-9_]*", code):
+            detail = code
+    return f"formal attempt filesystem boundary refused: {stage}: {detail}"
+
+
 def _execute_invocation_plan(
     *,
     agent_name: str,
@@ -1494,7 +1501,18 @@ def _execute_invocation_plan(
     isolation_capability_digest: str | None = None
     isolation_prompt_digest: str | None = None
     isolation_prompt_transport: str | None = None
-    if tool_config and tool_config.get("review_isolation"):
+    if tool_config and tool_config.get("review_attempt_boundary"):
+        boundary = tool_config["review_attempt_boundary"]
+        review_cwd = boundary.workspace
+        try:
+            boundary.verify_seat(review_cmd, plan.env_overrides)
+            review_cmd, env = boundary.wrap(review_cmd, plan.env_overrides)
+        except (OSError, ValueError, RuntimeError) as exc:
+            raise AgentUnavailableError(_attempt_boundary_refusal(exc, stage="wrap")) from exc
+        for key in plan.env_unsets:
+            env.pop(key, None)
+        env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+    elif tool_config and tool_config.get("review_isolation"):
         try:
             from scripts.review.isolation import (
                 ReviewIsolationError,
@@ -1639,11 +1657,7 @@ def _execute_invocation_plan(
             agent_name=agent_name,
             task_id=task_id,
         )
-        stdout_line_transform = (
-            _bounded_acpx_progress_filter()
-            if output_limit is not None
-            else None
-        )
+        stdout_line_transform = _bounded_acpx_progress_filter() if output_limit is not None else None
         watchdog_state, watchdog_threads = start_watchdog(
             proc,
             list(liveness_paths),
@@ -1651,22 +1665,14 @@ def _execute_invocation_plan(
             stderr_master_fd=stderr_master_fd,
             track_process_activity=bool(
                 (stdout_silence_timeout is not None and stdout_silence_timeout > 0)
-                or (
-                    initial_response_timeout is not None
-                    and initial_response_timeout > 0
-                )
+                or (initial_response_timeout is not None and initial_response_timeout > 0)
             ),
             stdout_line_transform=stdout_line_transform,
         )
         capture_repo_raw = None
         if tool_config:
-            capture_repo_raw = (
-                tool_config.get("repo_read_root")
-                or tool_config.get("review_snapshot_root")
-            )
-        capture_repo = Path(
-            str(capture_repo_raw or getattr(plan, "cwd", None) or cwd)
-        )
+            capture_repo_raw = tool_config.get("repo_read_root") or tool_config.get("review_snapshot_root")
+        capture_repo = Path(str(capture_repo_raw or getattr(plan, "cwd", None) or cwd))
         try:
             fleet_capture = FleetCapture.start(
                 host_harness=getattr(plan, "host_harness", None),
@@ -1702,10 +1708,7 @@ def _execute_invocation_plan(
             if output_limit is not None:
                 new_stdout_lines = watchdog_state.stdout_lines[observed_output_stdout_lines:]
                 observed_output_stdout_lines = len(watchdog_state.stdout_lines)
-                streamed_output_bytes += sum(
-                    len(line.encode("utf-8", errors="replace"))
-                    for line in new_stdout_lines
-                )
+                streamed_output_bytes += sum(len(line.encode("utf-8", errors="replace")) for line in new_stdout_lines)
             if mcp_observer is not None:
                 observed_stdout_lines = mcp_observer.observe_lines(
                     watchdog_state.stdout_lines,
@@ -1829,14 +1832,17 @@ def _execute_invocation_plan(
         # the finally clause doesn't try to close them again.
         stdout_master_fd = None
         stderr_master_fd = None
-        parse = adapter.parse_response(
-            stdout=stdout_text,
-            stderr=stderr_text,
-            returncode=final_returncode if final_returncode is not None else -1,
-            output_file=plan.output_file,
-            plan=plan,
-            call_start_time=start_time,
-        )
+        try:
+            parse = adapter.parse_response(
+                stdout=stdout_text,
+                stderr=stderr_text,
+                returncode=final_returncode if final_returncode is not None else -1,
+                output_file=plan.output_file,
+                plan=plan,
+                call_start_time=start_time,
+            )
+        except AttemptReadError as exc:
+            parse = ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
         if (
             not parse.ok
             and final_returncode not in (None, 0)
@@ -1874,7 +1880,7 @@ def _execute_invocation_plan(
             )
             fleet_capture = None
         if v4_claim is not None:
-            _finalize_v4_runner_origin(
+            parse = _finalize_v4_runner_origin(
                 authorization_id=v4_authorization_id or "",
                 claim=v4_claim,
                 plan=plan,
@@ -1991,16 +1997,27 @@ def _finalize_v4_runner_origin(
     returncode: int | None,
     parse: ParseResult,
     requested_model: str,
-) -> None:
-    """Persist the runner-owned V4 observation from this exact process."""
+) -> ParseResult:
+    """Persist the runner-owned V4 observation, including typed read refusals."""
     from scripts.fleet_comms import v4_execution_origin as origin
     from scripts.fleet_comms.request_executor import RequestExecutor
 
     output_bytes = b""
     if getattr(plan, "output_file", None) is not None:
         output_path = Path(plan.output_file)
-        if output_path.is_file():
-            output_bytes = output_path.read_bytes()
+        try:
+            if not (parse.failure_code or "").startswith("attempt_read_"):
+                output_bytes = safe_read_attempt_file(
+                    output_path,
+                    trusted_root=Path(plan.metadata.get("parent_read_root", "/")),
+                )
+        except FileNotFoundError:
+            pass
+        except AttemptReadError as exc:
+            parse = replace(parse, ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+    if (parse.failure_code or "").startswith("attempt_read_"):
+        parse = replace(parse, ok=False, response="", stderr_excerpt=parse.failure_code)
+        stderr_text = parse.failure_code
     with RequestExecutor() as executor:
         executor.finalize_v4_runner_execution(
             request_id=authorization_id,
@@ -2016,6 +2033,7 @@ def _finalize_v4_runner_origin(
             parse_session_id=parse.session_id,
             requested_model=requested_model,
         )
+    return parse
 
 
 def _raise_for_kill_reason(
@@ -2062,10 +2080,7 @@ def _raise_for_kill_reason(
             outcome="error",
             rate_limited=False,
             stalled=False,
-            stderr_excerpt=(
-                f"streamed_output_limit exceeded: limit={limit_bytes} "
-                f"observed={observed_bytes}"
-            ),
+            stderr_excerpt=(f"streamed_output_limit exceeded: limit={limit_bytes} observed={observed_bytes}"),
             tokens=None,
             substitution=record_substitution,
             failure_code="protocol_output_limit",
@@ -2092,8 +2107,7 @@ def _raise_for_kill_reason(
             rate_limited=False,
             stalled=False,
             stderr_excerpt=(
-                f"cwd_unpinned: child cwd never settled under {expected!r} "
-                f"(last observed {observed!r}) (#8516)"
+                f"cwd_unpinned: child cwd never settled under {expected!r} (last observed {observed!r}) (#8516)"
             )[:500],
             tokens=None,
             substitution=record_substitution,
@@ -3054,11 +3068,7 @@ def _invoke_impl(
     """
     # ---------- 1. Resolve adapter ----------
     _validate_agent_name(agent_name)
-    adapter = (
-        _load_adapter(agent_name, allow_direct_only=True)
-        if allow_direct_only
-        else _load_adapter(agent_name)
-    )
+    adapter = _load_adapter(agent_name, allow_direct_only=True) if allow_direct_only else _load_adapter(agent_name)
 
     # ---------- 2. Validate mode ----------
     if mode not in adapter.supported_modes:
@@ -3103,15 +3113,9 @@ def _invoke_impl(
         effective_model = resolve_kimicc_dispatch_model(model)
     else:
         effective_model = model or adapter.default_model
-    failover_chain = (
-        load_failover_chain(agent_name, effective_model=effective_model)
-        if allow_runner_failover
-        else None
-    )
+    failover_chain = load_failover_chain(agent_name, effective_model=effective_model) if allow_runner_failover else None
     if allow_direct_only and failover_chain is not None:
-        raise AgentUnavailableError(
-            f"Direct-only agent {agent_name!r} may not use runner failover"
-        )
+        raise AgentUnavailableError(f"Direct-only agent {agent_name!r} may not use runner failover")
     if failover_chain is not None:
         return _invoke_with_runner_failover(
             agent_name=agent_name,
@@ -3176,7 +3180,9 @@ def _invoke_impl(
     if v4_authorization_id:
         from scripts.fleet_comms.request_executor import RequestExecutorError
 
-        raise RequestExecutorError("legacy V4 runner execution is retired; use the protected packaged V4 service runtime")
+        raise RequestExecutorError(
+            "legacy V4 runner execution is retired; use the protected packaged V4 service runtime"
+        )
     plan_model = model if allow_direct_only else effective_model
     plan = adapter.build_invocation(
         prompt=prompt,
@@ -3316,9 +3322,7 @@ def _invoke_impl(
         isolation_prompt_digest=execution.isolation_prompt_digest,
         isolation_prompt_transport=execution.isolation_prompt_transport,
         transport_metadata=(
-            _INTER_AGENT_TRANSPORT.get().metadata()
-            if _INTER_AGENT_TRANSPORT.get() is not None
-            else None
+            _INTER_AGENT_TRANSPORT.get().metadata() if _INTER_AGENT_TRANSPORT.get() is not None else None
         ),
         transport_outcome=outcome if _INTER_AGENT_TRANSPORT.get() is not None else None,
     )
@@ -3364,21 +3368,32 @@ def invoke(
     )
     attribution_token = _INVOCATION_ATTRIBUTION.set(attribution)
     launch = None
+    attempt = None
     try:
+        from .attempt_boundary import prepare_attempt_boundary
+
+        try:
+            boundary_config = tool_config
+            if tool_config and tool_config.get("review_access") == "full":
+                boundary_config = {**tool_config, "review_cwd": str(cwd)}
+            attempt = prepare_attempt_boundary(agent_name, mode, session_id, boundary_config)
+        except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
+            raise AgentUnavailableError(_attempt_boundary_refusal(exc, stage="prepare")) from exc
+        prepared_config = attempt.tool_config if attempt is not None else tool_config
         launch = prepare_trail_isolation(
             agent_name=agent_name,
             mode=mode,
-            tool_config=tool_config,
+            tool_config=prepared_config,
         )
         return _invoke_impl(
             agent_name,
             prompt,
             mode=mode,
-            cwd=cwd,
+            cwd=attempt.workspace if attempt is not None else cwd,
             model=model,
             task_id=task_id,
             session_id=session_id,
-            tool_config=launch.tool_config if launch is not None else tool_config,
+            tool_config=launch.tool_config if launch is not None else prepared_config,
             entrypoint=entrypoint,
             hard_timeout=hard_timeout,
             stall_timeout=stall_timeout,
@@ -3387,10 +3402,14 @@ def invoke(
             event_sink=event_sink,
             effort=effort,
             v4_authorization_id=v4_authorization_id,
+            allow_runner_failover=attempt is None
+            and not bool(tool_config and (tool_config.get("review_id") or tool_config.get("attempt_id"))),
         )
     finally:
         if launch is not None:
             launch.cleanup()
+        if attempt is not None:
+            attempt.cleanup()
         _INVOCATION_ATTRIBUTION.reset(attribution_token)
 
 
@@ -3409,9 +3428,7 @@ def _require_acp_transport(transport: str | None) -> None:
     """Select ACP only; bridge fallback belongs outside this boundary."""
     selected = _INTER_AGENT_TRANSPORT_NAME if transport is None else str(transport).strip().lower()
     if selected != _INTER_AGENT_TRANSPORT_NAME:
-        raise InterAgentTransportError(
-            "inter-agent transport supports only 'acp'; it never retries the legacy bridge"
-        )
+        raise InterAgentTransportError("inter-agent transport supports only 'acp'; it never retries the legacy bridge")
     active = os.environ.get(ACPX_TRANSPORT_ENV, "off").strip().lower()
     if active != "active":
         raise InterAgentTransportError(
@@ -3425,15 +3442,10 @@ def _validate_transport_metadata(metadata: Mapping[str, object] | None) -> None:
         return
     if not isinstance(metadata, Mapping):
         raise InterAgentTransportError("inter-agent metadata must be a mapping when provided")
-    reserved = sorted(
-        str(key)
-        for key in metadata
-        if str(key).strip().casefold() in _RESERVED_TRANSPORT_PROVENANCE
-    )
+    reserved = sorted(str(key) for key in metadata if str(key).strip().casefold() in _RESERVED_TRANSPORT_PROVENANCE)
     if reserved:
         raise InterAgentTransportError(
-            "Source, Agent, and Via are runner-sealed ACP provenance; "
-            f"caller metadata may not override {reserved!r}"
+            f"Source, Agent, and Via are runner-sealed ACP provenance; caller metadata may not override {reserved!r}"
         )
     if metadata:
         raise InterAgentTransportError(
@@ -3464,9 +3476,7 @@ def _validate_catalog_model(
             f"ACP participant {participant!r} has no enabled catalog route for model {model!r}"
         ) from exc
     if model_entry.get("lifecycle") != "active":
-        raise InterAgentTransportError(
-            f"ACP participant {participant!r} refuses non-active model {model!r}"
-        )
+        raise InterAgentTransportError(f"ACP participant {participant!r} refuses non-active model {model!r}")
     if catalog_transport not in model_entry.get("transports", []):
         raise InterAgentTransportError(
             f"ACP participant {participant!r} does not implement catalog transport "
@@ -3503,19 +3513,13 @@ def resolve_inter_agent_route(
             f"ACP participant {participant!r} is unsupported; refusing without bridge fallback"
         ) from exc
     if not all(isinstance(value, str) and value for value in (seat, target_agent)):
-        raise InterAgentTransportError(
-            f"ACP participant {participant!r} has an invalid enabled adapter route"
-        )
+        raise InterAgentTransportError(f"ACP participant {participant!r} has an invalid enabled adapter route")
     try:
         entry = get_agent_entry(seat)
     except KeyError as exc:
-        raise InterAgentTransportError(
-            f"ACP participant {participant!r} has no registered direct-only seat"
-        ) from exc
+        raise InterAgentTransportError(f"ACP participant {participant!r} has no registered direct-only seat") from exc
     if entry.get("direct_only") is not True or entry.get("cli_available") is not False:
-        raise InterAgentTransportError(
-            f"ACP participant {participant!r} is not an enabled confined direct-only route"
-        )
+        raise InterAgentTransportError(f"ACP participant {participant!r} is not an enabled confined direct-only route")
 
     selected_model = pinned_model
     if pinned_model is None:
@@ -3524,8 +3528,7 @@ def resolve_inter_agent_route(
             selected_model = model
     elif model is not None and model != pinned_model:
         raise InterAgentTransportError(
-            f"ACP participant {participant!r} only supports its registered model pin "
-            f"{pinned_model!r}; got {model!r}"
+            f"ACP participant {participant!r} only supports its registered model pin {pinned_model!r}; got {model!r}"
         )
     else:
         _validate_catalog_model(participant=participant, model=pinned_model)
@@ -3538,8 +3541,7 @@ def resolve_inter_agent_route(
                 "the ACPX one-shot exec interface has no reasoning-effort flag"
             )
         raise InterAgentTransportError(
-            f"ACP participant {participant!r} only supports its registered effort pin "
-            f"{pinned_effort!r}; got {effort!r}"
+            f"ACP participant {participant!r} only supports its registered effort pin {pinned_effort!r}; got {effort!r}"
         )
     return InterAgentRoute(
         participant=participant,
@@ -3614,9 +3616,7 @@ def invoke_inter_agent(
     if sealed_review_mcp_config is not None:
         sealed_config = str(Path(sealed_review_mcp_config))
 
-    validated_task_id = _require_local_metadata_field(
-        "task_id", task_id, adapter_label="InterAgentTransport"
-    )
+    validated_task_id = _require_local_metadata_field("task_id", task_id, adapter_label="InterAgentTransport")
     validated_correlation_id = _require_local_metadata_field(
         "correlation_id", correlation_id, adapter_label="InterAgentTransport"
     )
@@ -3660,11 +3660,7 @@ def invoke_inter_agent(
                     "target_agent": route.target_agent,
                     "correlation_id": validated_correlation_id,
                     "idempotency_key": validated_idempotency_key,
-                    **(
-                        {"sealed_review_mcp_config": sealed_config}
-                        if sealed_config is not None
-                        else {}
-                    ),
+                    **({"sealed_review_mcp_config": sealed_config} if sealed_config is not None else {}),
                 },
                 hard_timeout=hard_timeout,
                 effort=route.effort,
@@ -3712,14 +3708,10 @@ def _invoke_direct_only(
     except KeyError:
         raise AgentUnavailableError(f"Agent {agent_name!r} is not in the registry") from None
     if entry.get("direct_only") is not True or entry["cli_available"]:
-        raise AgentUnavailableError(
-            f"Agent {agent_name!r} is not an unavailable direct-only seat"
-        )
+        raise AgentUnavailableError(f"Agent {agent_name!r} is not an unavailable direct-only seat")
     if entrypoint not in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}:
         raise ValueError("ACPX direct-only invocation entrypoint was altered")
-    attribution_token = _INVOCATION_ATTRIBUTION.set(
-        resolve_invocation_attribution(explicit=initiator, task_id=task_id)
-    )
+    attribution_token = _INVOCATION_ATTRIBUTION.set(resolve_invocation_attribution(explicit=initiator, task_id=task_id))
     started_at = time.monotonic()
     try:
         return _invoke_impl(
@@ -3780,9 +3772,7 @@ def _invoke_native_once(
 ) -> Result:
     """Invoke one native ACPX-pilot authority call without runner failover."""
     if agent_name not in {"codex", "grok"}:
-        raise AgentUnavailableError(
-            f"Agent {agent_name!r} is not a supported ACPX pilot native seat"
-        )
+        raise AgentUnavailableError(f"Agent {agent_name!r} is not a supported ACPX pilot native seat")
     permitted_entrypoints = {"acpx-pilot-native", "acpx-discuss-synthesis"}
     if (
         mode != "read-only"
@@ -3791,9 +3781,7 @@ def _invoke_native_once(
         or (entrypoint == "acpx-discuss-synthesis" and agent_name != "codex")
     ):
         raise ValueError("ACPX pilot native invocation contract was altered")
-    attribution_token = _INVOCATION_ATTRIBUTION.set(
-        resolve_invocation_attribution(explicit=initiator, task_id=task_id)
-    )
+    attribution_token = _INVOCATION_ATTRIBUTION.set(resolve_invocation_attribution(explicit=initiator, task_id=task_id))
     try:
         return _invoke_impl(
             agent_name,

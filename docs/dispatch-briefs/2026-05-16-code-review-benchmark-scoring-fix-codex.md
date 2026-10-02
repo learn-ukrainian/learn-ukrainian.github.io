@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — code-review benchmark: semantic matching + raw response persistence
 
 **Agent:** codex
@@ -56,19 +62,19 @@ def find_semantic_match(model_finding, gold_findings, matched_already):
     """
     Find the best gold finding that matches a model finding semantically.
     Returns the gold_id if matched, else None.
-    
+
     Match criteria (in priority order):
     1. category + file-location match → strong match (severity tolerated ±1 step)
     2. category match + description text overlap > 0.4 (token-set Jaccard) → weak match
     3. else no match
     """
     SEVERITY_ORDER = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
-    
+
     model_category = model_finding.get("category", "").lower()
     model_loc_file = (model_finding.get("location", "") or "").split(":")[0]
     model_sev = SEVERITY_ORDER.get(model_finding.get("severity", "").upper(), 1)
     model_desc_tokens = set(_tokenize(model_finding.get("description", "")))
-    
+
     best = None
     best_score = 0.0
     for gold in gold_findings:
@@ -77,22 +83,22 @@ def find_semantic_match(model_finding, gold_findings, matched_already):
         gold_category = gold.get("category", "").lower()
         gold_loc_file = (gold.get("location", "") or "").split(":")[0]
         gold_sev = SEVERITY_ORDER.get(gold.get("severity", "").upper(), 1)
-        
+
         # Strong match: same category, same file, severity within ±1
-        if (model_category == gold_category 
-            and model_loc_file == gold_loc_file 
+        if (model_category == gold_category
+            and model_loc_file == gold_loc_file
             and abs(model_sev - gold_sev) <= 1):
             return gold["id"]  # Strong match wins immediately
-        
+
         # Weak match: same category + description text overlap
         if model_category == gold_category:
             gold_desc_tokens = set(_tokenize(gold.get("description", "")))
-            jaccard = (len(model_desc_tokens & gold_desc_tokens) 
+            jaccard = (len(model_desc_tokens & gold_desc_tokens)
                        / max(len(model_desc_tokens | gold_desc_tokens), 1))
             if jaccard > 0.4 and jaccard > best_score:
                 best = gold["id"]
                 best_score = jaccard
-    
+
     return best
 
 def _tokenize(s):

@@ -46,6 +46,7 @@ class FakeProc:
     ignores: frozenset[int] = frozenset()
     uid: int = field(default_factory=os.getuid)
     env_unreadable: bool = False
+    cgroup_unreadable: bool = False
 
 
 @dataclass
@@ -82,6 +83,8 @@ class FakeProcs:
     def proc_cgroup(self, pid: int) -> str | None:
         if pid not in self.procs:
             return None
+        if self.procs[pid].cgroup_unreadable:
+            raise worker_leftovers.ScanUnknown(f"/proc/{pid}/cgroup: Permission denied")
         return next((cgroup for cgroup, members in self.cgroups.items() if pid in members), OUTSIDE_CGROUP)
 
     def cmdline(self, pid: int) -> str:

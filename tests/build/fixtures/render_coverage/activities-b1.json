@@ -1,0 +1,331 @@
+{
+  "anagram": {
+    "id": "a1",
+    "instruction": "Instruction for anagram.",
+    "items": [
+      {
+        "letters": [
+          "anagram items 0 letters 0",
+          "anagram items 0 letters 1"
+        ],
+        "answer": "anagram items 0 answer",
+        "hint": "anagram items 0 hint",
+        "explanation": "anagram items 0 explanation"
+      }
+    ]
+  },
+  "authorial-intent": {
+    "id": "a2",
+    "instruction": "Instruction for authorial-intent.",
+    "excerpt": "authorial intent excerpt",
+    "questions": [
+      "authorial intent questions 0"
+    ],
+    "model_answer": "authorial intent model_answer"
+  },
+  "classify": {
+    "id": "a3",
+    "instruction": "Instruction for classify.",
+    "categories": [
+      {
+        "label": "classify categories 0 label",
+        "symbol_hint": "classify categories 0 symbol_hint",
+        "items": [
+          "classify categories 0 items 0"
+        ]
+      },
+      {
+        "label": "classify categories 1 label",
+        "symbol_hint": "classify categories 1 symbol_hint",
+        "items": [
+          "classify categories 1 items 0"
+        ]
+      }
+    ]
+  },
+  "cloze": {
+    "id": "a4",
+    "instruction": "Instruction for cloze.",
+    "text": "cloze text",
+    "options": [
+      "cloze options 0"
+    ],
+    "blanks": [
+      {
+        "id": 1,
+        "answer": "cloze blanks 0 answer",
+        "options": [
+          "cloze blanks 0 options 0",
+          "cloze blanks 0 options 1"
+        ]
+      }
+    ]
+  },
+  "comparative-study": {
+    "id": "a5",
+    "instruction": "Instruction for comparative-study.",
+    "items_to_compare": [
+      "comparative study items_to_compare 0",
+      "comparative study items_to_compare 1"
+    ],
+    "criteria": [
+      "comparative study criteria 0"
+    ],
+    "prompt": "comparative study prompt",
+    "model_answer": "comparative study model_answer"
+  },
+  "critical-analysis": {
+    "id": "a6",
+    "instruction": "Instruction for critical-analysis.",
+    "prompt": "critical analysis prompt",
+    "target_text": "critical analysis target_text",
+    "questions": [
+      "critical analysis questions 0"
+    ],
+    "model_answers": [
+      "critical analysis model_answers 0"
+    ],
+    "evaluation_criteria": [
+      "critical analysis evaluation_criteria 0"
+    ]
+  },
+  "error-correction": {
+    "id": "a7",
+    "instruction": "Instruction for error-correction.",
+    "items": [
+      {
+        "sentence": "Find error correction items 0 error here.",
+        "error": "error correction items 0 error",
+        "correction": "error correction items 0 options 0",
+        "options": [
+          "error correction items 0 options 0",
+          "error correction items 0 options 1"
+        ],
+        "explanation": "error correction items 0 explanation",
+        "error_ref": "E-001"
+      }
+    ]
+  },
+  "essay-response": {
+    "id": "a8",
+    "instruction": "Instruction for essay-response.",
+    "prompt": "essay response prompt",
+    "min_words": 50,
+    "model_answer": "essay response model_answer",
+    "evaluation_criteria": [
+      "essay response evaluation_criteria 0"
+    ],
+    "rubric": [
+      {
+        "criteria": "essay response rubric 0 criteria",
+        "description": "essay response rubric 0 description",
+        "points": 0
+      }
+    ]
+  },
+  "fill-in": {
+    "id": "a9",
+    "instruction": "Instruction for fill-in.",
+    "items": [
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 0 options 0",
+        "options": [
+          "fill in items 0 options 0",
+          "fill in items 0 options 1"
+        ],
+        "explanation": "fill in items 0 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 0 answer_tags"
+      }
+    ]
+  },
+  "group-sort": {
+    "id": "a10",
+    "instruction": "Instruction for group-sort.",
+    "groups": [
+      {
+        "label": "group sort groups 0 label",
+        "items": [
+          "group sort groups 0 items 0"
+        ]
+      },
+      {
+        "label": "group sort groups 1 label",
+        "items": [
+          "group sort groups 1 items 0"
+        ]
+      }
+    ]
+  },
+  "mark-the-words": {
+    "id": "a11",
+    "instruction": "Instruction for mark-the-words.",
+    "text": "mark the words text",
+    "target_words": [
+      "mark the words target_words 0"
+    ],
+    "criteria": "mark the words criteria"
+  },
+  "match-up": {
+    "id": "a12",
+    "instruction": "Instruction for match-up.",
+    "pairs": [
+      {
+        "left": "match up pairs 0 left",
+        "right": "match up pairs 0 right"
+      },
+      {
+        "left": "match up pairs 1 left",
+        "right": "match up pairs 1 right"
+      }
+    ]
+  },
+  "observe": {
+    "id": "a13",
+    "instruction": "Instruction for observe.",
+    "examples": [
+      "observe examples 0",
+      "observe examples 1"
+    ],
+    "prompt": "observe prompt"
+  },
+  "odd-one-out": {
+    "id": "a14",
+    "instruction": "Instruction for odd-one-out.",
+    "items": [
+      {
+        "words": [
+          "odd one out items 0 words 0",
+          "odd one out items 0 words 1",
+          "odd one out items 0 words 2"
+        ],
+        "correct": 0,
+        "explanation": "odd one out items 0 explanation"
+      }
+    ]
+  },
+  "order": {
+    "id": "a15",
+    "instruction": "Instruction for order.",
+    "items": [
+      "order items 0",
+      "order items 1"
+    ],
+    "correct_order": [
+      0,
+      1
+    ]
+  },
+  "phrase-table": {
+    "id": "a16",
+    "instruction": "Instruction for phrase-table.",
+    "groups": [
+      {
+        "label": "phrase table groups 0 label",
+        "phrases": [
+          {
+            "phrase": "phrase table groups 0 phrases 0 phrase",
+            "context": "phrase table groups 0 phrases 0 context",
+            "emoji": "phrase table groups 0 phrases 0 emoji"
+          }
+        ]
+      }
+    ]
+  },
+  "quiz": {
+    "id": "a17",
+    "instruction": "Instruction for quiz.",
+    "items": [
+      {
+        "question": "quiz items 0 question",
+        "options": [
+          "quiz items 0 options 0",
+          "quiz items 0 options 1"
+        ],
+        "correct": 0,
+        "explanation": "quiz items 0 explanation"
+      }
+    ]
+  },
+  "reading": {
+    "id": "a18",
+    "instruction": "Instruction for reading.",
+    "passage": "reading passage",
+    "source": "reading source",
+    "questions": [
+      "reading questions 0"
+    ]
+  },
+  "select": {
+    "id": "a19",
+    "instruction": "Instruction for select.",
+    "items": [
+      {
+        "question": "select items 0 question",
+        "options": [
+          {
+            "text": "select items 0 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 0 options 1 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 1,
+        "explanation": "select items 0 explanation"
+      }
+    ]
+  },
+  "translate": {
+    "id": "a20",
+    "instruction": "Instruction for translate.",
+    "items": [
+      {
+        "source": "translate items 0 source",
+        "answer": "translate items 0 options 0 text",
+        "alternatives": [
+          "translate items 0 alternatives 0"
+        ],
+        "options": [
+          {
+            "text": "translate items 0 options 0 text",
+            "correct": true
+          }
+        ],
+        "explanation": "translate items 0 explanation"
+      }
+    ]
+  },
+  "true-false": {
+    "id": "a21",
+    "instruction": "Instruction for true-false.",
+    "items": [
+      {
+        "statement": "true false items 0 statement",
+        "correct": true,
+        "explanation": "true false items 0 explanation"
+      }
+    ]
+  },
+  "unjumble": {
+    "id": "a22",
+    "instruction": "Instruction for unjumble.",
+    "items": [
+      {
+        "words": [
+          "unjumble items 0 words 0",
+          "unjumble items 0 words 1"
+        ],
+        "correct_order": [
+          "unjumble items 0 correct_order 0",
+          "unjumble items 0 correct_order 1"
+        ],
+        "hint": "unjumble items 0 hint",
+        "explanation": "unjumble items 0 explanation"
+      }
+    ]
+  }
+}

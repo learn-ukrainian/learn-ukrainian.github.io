@@ -11,6 +11,8 @@ import sys
 from contextlib import chdir, redirect_stderr, redirect_stdout
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.common.git_context import sanitized_git_env
@@ -22,8 +24,7 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     # this suite from inside a `git commit` pre-commit hook leaks the OUTER
     # repo's git env into these calls and silently operates on the wrong repo.
     return subprocess.run(
-        ["git", *args], cwd=str(repo), check=True, capture_output=True, text=True, env=sanitized_git_env(),
-        timeout=30
+        ["git", *args], cwd=str(repo), check=True, capture_output=True, text=True, env=sanitized_git_env(), timeout=30
     )
 
 
@@ -235,7 +236,24 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
     assert payload["quorum"] == []
 
 
-def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path):
+@pytest.mark.parametrize("injected_grok", [False, True])
+def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monkeypatch, injected_grok):
+    from scripts.review import reviewer_resolver
+
+    if injected_grok:
+        # Subject exclusion must still refuse a caller-supplied Grok ladder;
+        # automatic ladders list only the attested Cursor Grok seat (#9488).
+        monkeypatch.setitem(
+            reviewer_resolver.REVIEW_LADDERS,
+            "high",
+            (
+                *reviewer_resolver.REVIEW_LADDERS["high"],
+                (
+                    reviewer_resolver.GROK_4_7,
+                    reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,
+                ),
+            ),
+        )
     state_file = tmp_path / "state.json"
     proc = _run_cli(
         state_file,
@@ -251,14 +269,22 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path):
         "--routing-snapshot-file",
         str(_write_claude_unhealthy_snapshot(tmp_path)),
     )
-    assert proc.returncode != 0 or json.loads(proc.stdout)["selected"]["family"] != "xai"
     payload = json.loads(proc.stdout)
-    grok = next(entry for entry in payload["trace"] if entry["name"] == "grok-4.7")
-    assert grok["status"] == "excluded"
-    assert "subject exclusion" in grok["reason"]
-    assert "grok_build.py" in grok["reason"]
+    grok_entries = [entry for entry in payload["trace"] if entry["family"] == "xai"]
+    if injected_grok:
+        assert {entry["name"] for entry in grok_entries} == {"grok-4.7", "grok-4.7-cursor-fallback"}
+        for grok in grok_entries:
+            assert grok["status"] == "excluded"
+            assert "subject exclusion" in grok["reason"]
+            assert "grok_build.py" in grok["reason"]
+    else:
+        assert [entry["name"] for entry in grok_entries] == ["grok-4.7-cursor-fallback"]
+        assert grok_entries[0]["status"] == "excluded"
+        assert "subject exclusion" in grok_entries[0]["reason"]
+        assert "grok_build.py" in grok_entries[0]["reason"]
     selected = payload["selected"]
-    assert selected is None or not str(selected["name"]).startswith("grok")
+    assert selected is None or selected["family"] not in {"openai", "xai"}
+    assert proc.returncode == (1 if selected is None else 0)
 
 
 def _write_claude_unhealthy_snapshot(tmp_path: Path) -> Path:
@@ -386,7 +412,7 @@ def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
         cwd=str(project_root),
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=60,
     )
     assert verify.returncode == 0, verify.stderr
     receipt = json.loads(verify.stdout)

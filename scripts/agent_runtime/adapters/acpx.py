@@ -172,7 +172,11 @@ _HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
 )
 AGY_ACP_MODEL = "gemini-3.8-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
-CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-sonnet-5", "claude-fable-5"})
+CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5-1"})
+# Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
+# participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
+CURSOR_ACP_MODEL = "grok-4.7"
+CURSOR_ACP_MODELS = frozenset({CURSOR_ACP_MODEL, "composer-2.5"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 # DeepSeek ACP seat (#6805): the bare catalog id remains fleet identity.
@@ -2621,6 +2625,8 @@ class AcpxKimiCcShadowAdapter(_AcpxDiscussionAdapter):
 class AcpxCursorShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-cursor-shadow"
     target_agent = "cursor"
+    allowed_models = CURSOR_ACP_MODELS
+    default_model = CURSOR_ACP_MODEL
     # Cursor's ACP authenticate(cursor_login) can wait indefinitely on an
     # interactive login. The child receives the existing API key instead.
     auth_policy = "skip"

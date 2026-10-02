@@ -54,12 +54,12 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   Sources and VESUM tool calls are mandatory (this corpus also feeds a
   Ukrainian LLM dataset).
 - **Gemini self-adjust** after write is allowed. It is **not** the merge gate.
-- **Independent CF of record:** Astra (`gpt-6-astra`) @ **medium**, native
+- **Independent CF of record:** GPT-6.1 Sol (`gpt-6.1-sol`) @ **high**, native
   Codex, exact head. Writer family must not review itself.
 - **Do not use Kimi** for this curriculum upgrade work (write, QG, or CF).
 - Claude is available again as a future seat. Do not force it onto an
-  already-resolved Astra review.
-- If `gh pr review --approve` / `--request-changes` fails because the GitHub
+  already-resolved GPT review.
+- If `.venv/bin/python -m scripts.publish pr-review --number <N> --verdict approve` / `--request-changes` fails because the GitHub
   token is the PR opener, post the CF verdict as a **COMMENT** bound to the
   SHA, with `VERDICT: APPROVE` or `VERDICT: REQUEST_CHANGES` in the body.
   Discussion is not the gate.
@@ -84,7 +84,7 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   CI Gate on heads still in the CF fix loop. Canonical:
   `agents_extensions/shared/rules/workflow.md` § Merge policy.
 - Merge gate: exact-head CF APPROVE **and** CI Gate green on that SHA, then
-  `gh pr merge --squash` (merge queue). Never `--auto`. Never
+  `.venv/bin/python -m scripts.publish pr-merge --number <N>` (merge queue). Never `--auto`. Never
   `--delete-branch` until `gh pr view` shows `MERGED`. Then reap worktrees.
 - **Push to `main` does not publish curriculum.** Auto-deploy
   (`deploy-pages.yml` eligibility) fail-closes on `curriculum/` and
@@ -92,7 +92,7 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   intentional: merge ≠ community rollout.
 - **Continuous deploy (operator 2026-09-18):** after a content merge that
   should be live, the driver runs
-  `gh workflow run deploy-pages.yml --ref main`, proves the learner URL(s)
+  `.venv/bin/python -m scripts.publish workflow-run --workflow deploy-pages.yml --ref main`, proves the learner URL(s)
   **200** (full module paths, not a single lesson), **notifies** the operator,
   and continues — do **not** wait for a per-cutover GO or create a deploy
   bottleneck. Operator checks async.
@@ -102,9 +102,9 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 ## Writer / reviewer split (do not swap hats)
 
 - **Content (V7 writer):** one writer, one reviewer. Writer = Gemini 3.8 Flash
-  High (`agy-tools`). Reviewer = Astra @ medium. They do not swap hats on the
+  High (`agy-tools`). Reviewer = GPT-6.1 Sol @ high. They do not swap hats on the
   same module — the writer does not review its own module and the reviewer
-  does not write. Parallelism model: writer on module N+1 while Astra reviews
+  does not write. Parallelism model: writer on module N+1 while GPT-6.1 Sol reviews
   module N, not two content writers running at once.
 - **Machinery:** Claude Sonnet implements this epic's scripts/docs/CI work;
   Fable advises only if needed. Independent CF of record for machinery
@@ -171,5 +171,5 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 
 ```sh
 .venv/bin/python scripts/build/v7_build.py a1 <slug> --upgrade --worktree --writer gemini-tools
-gh workflow run deploy-pages.yml --ref main
+.venv/bin/python -m scripts.publish workflow-run --workflow deploy-pages.yml --ref main
 ```

@@ -45,7 +45,7 @@ entries:
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: 9d3947ca1a179c0aec6301253579755695d7e6f151fdfba88924407fcd322acf
+    content_sha256: 30c0f29b4568e8c2570013e1cfb3e606d8cf9681bb4bf3464ae3251e8049f493
   a1/remediation-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
@@ -57,7 +57,7 @@ entries:
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: b1f7869d5ee4985042dc0b017ee43c51e283b28d4ba419447fbe911d1b16c3ee
+    content_sha256: 0079d2bec2e0ebe0c24003f30d270b6bd940ffc8e5ef55193187b257d856ba7b
   a2/remediation-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
@@ -75,7 +75,7 @@ entries:
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: 234939aea2a6aeb679fbd3e38972113edd0ee22d0615a3bb97550a3ab8c73aa4
+    content_sha256: bfde0468113d09c446d9d22478e254012cec09d1a905a9e545d637ba7350ca26
   b1/remediation-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
@@ -87,7 +87,7 @@ entries:
     disposition: retained-eval
     owners: [CODE, CONFIG, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: 4cfb5e6ee89dfa3b05fc9f03febbaba3fbd21efef99ee3cfe1567216d47d3653
+    content_sha256: aff22a91328ba9f1150b63fd078b1ba7a27bf82009e9dee3c61dfd87357fdacb
   b2/production-build-orchestrator.md:
     operator_entry_point: false
     disposition: reference-only
@@ -99,7 +99,7 @@ entries:
     disposition: retained-eval
     owners: [PROMPT, POLICY, RETAIN-EVAL]
     rationale_id: semantic-oracle
-    content_sha256: 1cedd96c9c1a3354d789e84c50448f4557781fab043327fb255c2b4dc51351ff
+    content_sha256: a92e84ecb896f22c0a1f8edc5197f50b058adf7df725bd351143837e9c608cfa
   bio/suite-orchestrator.md:
     operator_entry_point: false
     disposition: retained-eval

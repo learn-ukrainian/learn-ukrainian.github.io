@@ -417,7 +417,7 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     assert "not a new coordination plane" in lower or "not** a new coordination plane" in lower
     assert "agent-stdio-v1" in onboarding
     assert "observed" in lower and "not an allowlist" in lower
-    assert "grok-4.6" in onboarding
+    assert "grok-4.7" in onboarding
     assert "--no-leader" in onboarding
     assert "--agent-profile" in onboarding
     assert "digest-checked" in lower
@@ -557,7 +557,7 @@ def test_deepseek_live_acp_contract_uses_opencode(onboarding: str) -> None:
     assert "historical `text-oneshot-isolated-v1` Hermes contract is retired" in acpx
     assert "not a live DeepSeek route" in acpx
     assert "does not forbid the separately authorized Grok/Codex launcher `--harness hermes`" in acpx
-    assert "private #667 / public #6943" in acpx
+    assert "authorized under public #6943" in acpx
     assert "### DeepSeek ACP — historical Hermes route retired" in body
     assert "(#deepseek-acp--historical-hermes-route-retired)" in body
     assert "DeepSeek ACP seat / `ask-hermes` alias no longer uses a Hermes binary" in body

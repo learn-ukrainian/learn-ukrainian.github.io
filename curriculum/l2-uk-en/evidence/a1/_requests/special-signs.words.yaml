@@ -1,0 +1,353 @@
+request_schema: 1
+level: a1
+words:
+- lemma: тин
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 386404
+  want: W-119
+  note: T-001/X-001 hard member of sourced minimal pair; decoding only.
+- lemma: тінь
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 387271
+  want: W-120
+  note: T-001/X-001 soft member of sourced minimal pair.
+- lemma: їжа
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 157273
+  want: W-121
+  note: T-002 Ї word.
+- lemma: яма
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 441397
+  want: W-122
+  note: T-013 word-initial Я model.
+- lemma: маля
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 194971
+  want: W-123
+  note: T-013 post-consonant Я model.
+- lemma: юрта
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 436374
+  want: W-124
+  note: T-004 word-initial Ю model.
+- lemma: люпин
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 191790
+  want: W-125
+  note: T-004 post-consonant Ю model.
+- lemma: синій
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 357936
+  want: W-126
+  note: T-005 post-consonant Є model; source form is neuter, no agreement teaching.
+- lemma: єнот
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 114516
+  want: W-127
+  note: 'Primer part 2 printed p. 49: word-initial Є decoding model.'
+- lemma: цимбали
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 416897
+  want: W-128
+  note: 'Primer part 2 printed p. 53: unfragmented Ц model, incidental instrument.'
+- lemma: щука
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 435773
+  want: W-129
+  note: T-007 Щ word.
+- lemma: дощ
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 104727
+  want: W-130
+  note: T-007 final Щ word.
+- lemma: ферма
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 405406
+  want: W-131
+  note: T-008 Ф word; no visual comparison.
+- lemma: джміль
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 94631
+  want: W-132
+  note: T-009 дж word.
+- lemma: джем
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 94367
+  want: W-133
+  note: T-009 дж syllable-built word.
+- lemma: дзиґа
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 95003
+  want: W-134
+  note: T-010/T-013 inanimate spinning-top sense, not the person sense.
+- lemma: дзюрчати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 95183
+  want: W-135
+  note: T-010 source present form for soft дз; no conjugation explanation.
+- lemma: пір'я
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 283111
+  want: W-136
+  note: T-011 apostrophe with Я.
+- lemma: пити
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 275992
+  want: W-137
+  note: T-011 present source forms for apostrophe with Ю and Є; no conjugation explanation.
+- lemma: сім'я
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 359284
+  want: W-138
+  note: 'Primer part 2 printed p. 69: family sense for whole reading sentence; not the seed sense.'
+- lemma: м'яч
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 210131
+  want: W-139
+  note: T-013 apostrophe before Я model.
+- lemma: радіти
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 330035
+  want: W-140
+  note: 'Primer part 2 printed p. 44: post-vowel Ю source form.'
+- lemma: Марія
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 195995
+  want: W-141
+  note: T-003 personal-name model for post-vowel Я, not place sense.
+- lemma: мільярд
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 203988
+  want: W-142
+  note: T-013 two-sound Я after soft sign; incidental decoding, no counting lesson.
+- lemma: пюре
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 328423
+  want: W-143
+  note: T-015 sourced no-apostrophe contrast with the present first-person form of W-137.
+- lemma: пір'їна
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 282993
+  want: W-144
+  note: Avramenko printed p. 131, apostrophe before Ї, source decoding only.
+- lemma: що
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 429017
+  want: W-164
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact forms in
+    revise-a1-p1-p3.md.
+- lemma: любити
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 191390
+  want: W-165
+  note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
+- lemma: равлик
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 329002
+  want: W-166
+  note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
+- lemma: один
+  pos: numr
+  entry:
+    source: vesum
+    entry_id: 248710
+  want: W-167
+  note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
+- lemma: старенький
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 371973
+  want: W-168
+  note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
+- lemma: мандрувати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 195241
+  want: W-169
+  note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
+- lemma: час
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 418531
+  want: W-170
+  note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
+- lemma: буква
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 31644
+  want: W-171
+  note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
+- lemma: назва
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 214239
+  want: W-172
+  note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
+- lemma: алфавіт
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 6202
+  want: W-173
+  note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
+- lemma: знак
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 147519
+  want: W-174
+  note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
+- lemma: м'якшення
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 210040
+  want: W-175
+  note: 'Retained unused lexical record; not the T-012 soft-sign name. Lesson 7 uses the sourced adjective plus знак instead.'
+- lemma: синь
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 358199
+  want: W-176
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: рис
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 335541
+  want: W-177
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: рись
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 335618
+  want: W-178
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: бюро
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 33423
+  want: W-179
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: бити
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 23129
+  want: W-180
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: свято
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 354360
+  want: W-181
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: зв'язок
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 142397
+  want: W-182
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: Україна
+  pos: noun
+  entry: {source: vesum, entry_id: 397241}
+  want: W-183
+  note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss drill.'
+- lemma: Київ
+  pos: noun
+  entry: {source: vesum, entry_id: 164577}
+  want: W-184
+  note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss drill.'
+- lemma: кувати
+  pos: verb
+  entry: {source: vesum, entry_id: 180859}
+  want: W-185
+  note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation drill.'
+- lemma: квітувати
+  pos: verb
+  entry: {source: vesum, entry_id: 163732}
+  want: W-186
+  note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation drill.'
+- lemma: м'який
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 209992
+  want: new
+  note: Sourced T-012 soft-sign name adjective; incidental letter-name reading only, no adjective grammar or gloss drill.

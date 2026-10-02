@@ -579,7 +579,7 @@ def query_source_evidence(
                 except sqlite3.OperationalError:
                     continue
 
-        # 2. Modern normative fallback: ULIF (data/ulif_dump_all.db or sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
+        # 2. Modern normative fallback: ULIF (sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
         if not source_record:
             dictua_keys = list(
                 dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if not is_phrase else []))
@@ -595,35 +595,6 @@ def query_source_evidence(
                         break
                 except sqlite3.OperationalError:
                     pass
-
-        if not source_record:
-            ulif_keys = list(
-                dict.fromkeys(
-                    [
-                        art,
-                        art.lower(),
-                        art.capitalize(),
-                        art_head,
-                        art_head.lower(),
-                        art_head.capitalize(),
-                    ]
-                    + ([term, term.lower(), term.capitalize()] if not is_phrase else [])
-                )
-            )
-            for tbl in ("ulif_all.ulif_entries", "ulif_entries"):
-                for k in ulif_keys:
-                    try:
-                        s_cur.execute(
-                            f"SELECT 1, canonical_headword, lemma FROM {tbl} WHERE lemma = ? OR canonical_headword = ? LIMIT 1",
-                            (k, k),
-                        )
-                        source_record = s_cur.fetchone()
-                        if source_record:
-                            break
-                    except sqlite3.OperationalError:
-                        continue
-                if source_record:
-                    break
 
         # 3. Modern normative fallback: ВТС (Великий тлумачний словник) in external_articles
         if not source_record:
@@ -1099,10 +1070,6 @@ def build_all_cases() -> list[DecolonizationCase]:
 
     v_cur = v_conn.cursor()
     s_cur = s_conn.cursor()
-
-    ulif_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
-    if ulif_path.is_file():
-        s_cur.execute(f"ATTACH DATABASE 'file:{ulif_path}?mode=ro' AS ulif_all")
 
     style_guide_cache = s_cur.execute("SELECT id, word, section, page, text, excerpt_full FROM style_guide").fetchall()
 

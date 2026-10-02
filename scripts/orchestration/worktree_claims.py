@@ -468,6 +468,7 @@ def git_worktree_remove(
     force: bool,
     timeout: float | None = None,
     approved_temp_roots: Iterable[Path] = (),
+    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -482,6 +483,8 @@ def git_worktree_remove(
     The reaper does not pass a timeout: removal keeps that 120s bound and is
     not clipped to the locked-region deadline. A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
+    A caller may supply ``git_runner`` to preserve its fixed executable,
+    environment and execution-safe configuration inside this chokepoint.
     """
     target = worktree
     if force:
@@ -496,7 +499,7 @@ def git_worktree_remove(
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
-        proc = subprocess.run(
+        proc = git_runner(repo_root, argv[1:]) if git_runner is not None else subprocess.run(
             argv,
             cwd=repo_root,
             capture_output=True,
@@ -534,6 +537,7 @@ def remove_unclaimed_worktree(
     tasks_dir: Path | None = None,
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
+    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -561,6 +565,8 @@ def remove_unclaimed_worktree(
     ``<control_root>/batch_state/tasks`` and ``lock_dir`` to
     :func:`repository_lock_dir` of ``control_root``. ``reason`` is the
     caller's purpose, recorded on success. This never raises.
+    ``git_runner`` supplies the branch probe and raw removal runner for
+    closed maintenance callers; it does not bypass locks or the claim scan.
     """
     branch: str | None = None
     dirty: bool | None = None
@@ -585,7 +591,11 @@ def remove_unclaimed_worktree(
             ok, detail = releasable() if releasable is not None else (True, "")
             if not ok:
                 return outcome("skipped", detail)
-            branch = checked_out_branch(worktree)
+            if git_runner is None:
+                branch = checked_out_branch(worktree)
+            else:
+                probe = git_runner(worktree, ["symbolic-ref", "--quiet", "--short", "HEAD"])
+                branch = probe.stdout.strip() if probe.returncode == 0 else None
             if force:
                 dirty = (dirty_probe if dirty_probe is not None else worktree_is_dirty)(worktree)
                 if dirty is not False:
@@ -603,7 +613,8 @@ def remove_unclaimed_worktree(
                 # Best effort: a checkout that stays locked fails the removal,
                 # which reports git's own error.
                 _git_probe(["worktree", "unlock", str(worktree)], cwd=repo_root)
-            error = git_worktree_remove(repo_root, worktree, force=force)
+            runner_options = {} if git_runner is None else {"git_runner": git_runner}
+            error = git_worktree_remove(repo_root, worktree, force=force, **runner_options)
         except Exception as exc:
             return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
         if error is not None:

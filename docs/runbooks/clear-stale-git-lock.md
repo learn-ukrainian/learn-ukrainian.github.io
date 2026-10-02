@@ -5,7 +5,7 @@ removal tool. A Git lock can belong to a live process. Inspect it before any
 removal:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --dry-run
+.venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --dry-run
 ```
 
 Run from the checkout whose lock failed, or pass that checkout to `--repo`.

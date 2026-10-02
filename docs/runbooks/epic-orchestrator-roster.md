@@ -34,7 +34,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **any epic** — incident · architecture cutover · contested review | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
 | **any epic** — Fable alternate (advisor seat; summon, don't seat) | Fable 5.1 | `./start-claude-driver.sh --epic <epic> --model fable` |
 | **any epic** — routine Anthropic alternate | Sonnet 5.5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5-5` |
-| **any epic** — Cursor TUI driver (Auto; attested after run) | Cursor Auto | `./start-cursor-driver.sh --epic <epic>` |
+| **any epic** — Cursor TUI driver (pinned `grok-4.7-high`, never Auto; attested after run) | Cursor `grok-4.7` | `./start-cursor-driver.sh --epic <epic>` |
 
 **Driver launcher convention:** `./start-<provider>-driver.sh --epic <epic>` where `<provider>` ∈
 `codex · grok · gemini · claude · cursor`. The core owns all launcher flags; provider
@@ -109,9 +109,8 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Fable 5.1** (Anthropic top tier) — hardest judgment and top Anthropic advisor (with
   Astra); summoned, not seated as the resident driver since Opus 5.5 took the driver seat
-  (operator 2026-09-22). **Opus 5.5 is the orchestrator seat. Opus 5 remains a
-  complex-coding/deep-review dispatch seat and the non-binding Anthropic advisory
-  consultation** (`claude-opus-5`, operator 2026-07-26). Designated advisor authority
+  (operator 2026-09-22). **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
+  (`claude-opus-5-5`). Designated advisor authority
   stays Fable 5.1.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
@@ -132,7 +131,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
 | claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
 | codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-| cursor | auto | high | gpt-6.1-sol | high |
+| cursor | grok-4.7 | high | gpt-6.1-sol | high |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -142,7 +141,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | agy | false |
 | claude | true |
 | codex | true |
-| cursor | false |
+| cursor | true |
 | gemini | false |
 | glm-local | true |
 | grok | true |
@@ -200,7 +199,7 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 3. Driver reads live routing from `/api/rules` + `model_catalog.yaml` (never hard-codes the
    roster), then runs the loop: topology → route → dispatch → Monitor settle → cross-family
    exact-head CF → CI Gate green on that head → merge queue (`drive-epic` §6/§7; never
-   `gh pr merge --auto` first) → dual-write handoff.
+   `.venv/bin/python -m scripts.publish pr-merge --auto` first) → dual-write handoff.
 4. Driver ends on its seat's handoff signal (canary **FAIL-HANDOFF** < 8/10 for
    grok/gemini/kimi; the thread-handoff for Claude/Sonnet), not on a compact count.
 
@@ -233,7 +232,7 @@ teaches the message-plane and cross-family review loop.
 A driver escalates instead of deciding solo when it hits: (1) an architecture/layout/process
 change, (2) a contested cross-family verdict, (3) a fragile fix whose right layer is unclear,
 (4) a high-risk route that would trip the `model_catalog.yaml` risk floor, or (5) a repo-wide
-safety interruption of another lane. Advisors for those calls: **Fable, Astra @ high**.
+safety interruption of another lane. Advisors for those calls: **Fable @ high, Astra @ high**.
 
 Everything else the driver runs to completion and reports past-tense — no "should I?" menus.
 

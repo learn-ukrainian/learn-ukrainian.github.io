@@ -25,7 +25,7 @@ cd ../learn-ukrainian-wt-817
 git push -u origin fix/817-fix-v4-terminology
 
 # 3. Create PR after exact-head cross-family CF review (see model-assignment.md)
-gh pr create --title "fix: v4 terminology in logs (#817)"
+.venv/bin/python -m scripts.publish pr-create --title "fix: v4 terminology in logs (#817)"
 
 # 4. Get reviews on the PR
 # - Code review agent reviews automatically
@@ -198,69 +198,51 @@ This makes AI-assisted commits transparent and attributable.
 source of truth for plans, prompts, curriculum.yaml, and pipeline code. Treat
 it accordingly.
 
-### Required rules (configure in GitHub → Settings → Branches → main)
+### Required branch invariants for `main`
 
-1. **Require a pull request before merging** — disabled only for the
-   maintainer's direct commits of content. Code changes go through PRs via
-   the worktree workflow above.
-2. **Require status checks to pass before merging** — must include:
-   - `CI / lint` (ruff on scripts/)
-   - `CI / test` (pytest)
-   - `CI / Secret Scanning (gitleaks)`
-   - `CI / schema-check` (plan / activity YAML schemas)
-3. **Require branches to be up to date before merging** — prevents silent
-   merge-time regressions.
-4. **Require conversation resolution before merging** — no unresolved review
-   comments on merge.
-5. **Require signed commits** — off today because Claude/Gemini/Codex commits
-   aren't signed. Revisit once we gate on GitHub-hosted signing keys.
-6. **Require linear history** — yes. No merge commits on `main`.
-7. **Do not allow bypassing the above settings** — yes, even for admins.
-8. **Restrict who can push to matching branches** — maintainer + release bot
-   only. No collaborators with direct push.
-9. **Rules applied to force pushes** — blocked for everyone.
-10. **Rules applied to deletions** — blocked for everyone.
+1. **Require a pull request before merging** — all code changes land via Pull Request.
+2. **Require status checks to pass before merging** — required CI Gate checks must pass.
+3. **Require branches to be up to date before merging** — prevents merge-time regressions.
+4. **Require conversation resolution before merging** — no unresolved review comments on merge.
+5. **Require linear history** — squash or rebase merge only; no merge commits on `main`.
+6. **Uniform protection enforcement** — invariants apply without administrative bypass.
+7. **Restrict direct branch pushes** — direct push to `main` is disallowed.
+8. **Block force pushes and deletions** — `main` cannot be force-pushed or deleted.
 
-### Auto-deletion
+### Branch and worktree cleanup
 
-- Head branches of merged PRs are deleted automatically (Settings → General →
-  Pull Requests → "Automatically delete head branches").
-- Worktree branches that never land on `main` get cleaned by
-  `scripts/wt.sh clean {issue}`.
+- Remote feature branches are deleted following merge completion.
+- Temporary dispatch worktrees are reaped after task completion.
 
-### Merge guards (the hook layer, where GitHub can't enforce)
+### Local pre-tool merge guards
 
-Branch protection is a paid feature for **private** repos: on a free-plan private
-repo the protection API answers 403, so **no check is ever "required"** there.
-That gap is not theoretical — it cost us a draft PR squash-merged before review,
-plus two merges that landed with the test job red, because `--auto` only ever
-waits for *required* checks and there were none. (This public repo is the lucky
-case: `main` is protected, with `CI Gate` required. The fleet works across both,
-so the guards decide per-repo rather than assuming either.) Two PreToolUse hooks
-close the gap:
+To enforce invariants deterministically across all environments, local client hooks
+and CLI merge wrappers validate that:
+1. PR is not in draft status.
+2. No non-advisory status check is red or failing.
+3. Status checks are not still running (unless `--auto` is armed).
+4. Automated merge is refused against a base branch that lacks verified required status checks.
 
 | Hook | Owns | Blocks |
 | --- | --- | --- |
-| `guard-admin-merge.py` | `gh pr merge --admin` | a blocking check is red (#M-0.5) |
-| `guard-pr-merge.py` | every `gh pr merge`, including `--admin` | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
+| `guard-admin-merge.py` | `gh pr merge --admin` (raw command refused by the shim) | a blocking check is red (#M-0.5) |
+| `guard-pr-merge.py` | every `.venv/bin/python -m scripts.publish pr-merge --number <N>` and raw merge attempts | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
 
 Both guards judge `--admin` merges. They fail **closed**: if the PR, its checks, or the base branch's
 protection can't be read (gh error/timeout), the merge is refused rather than
 assumed safe.
 
-A red check blocks whether or not GitHub calls it required: "required" is a
-config accident (absent entirely on the private repo), while red is red. So every
-check counts unless its name says `advisory` — which is why the two advisory
-jobs, `pip-audit (advisory)` and `npm-audit (advisory)`, carry that word.
+A red check blocks regardless of whether the forge marks it required: red is red. Every
+check counts unless its name says `advisory` — which is why advisory
+jobs carry that word.
 
-`--auto` is the one verdict that does consult protection, because it is the one
-thing protection actually changes: auto-merge waits for *required* checks, so
-with none configured it merges the moment the PR is mergeable, red or not. The
-guard reads `repos/{owner}/{repo}/branches/{base}/protection` per merge — allowed
-against a base with required checks (this repo's `main`), refused where the API
-403s or lists none (the private repo). There, read the checks green yourself and
-merge manually. `gh pr merge --disable-auto` is never blocked; disarming
-auto-merge is the remedy, not the offence.
+`--auto` is the one verdict that does consult branch protection, because auto-merge
+relies on configured required checks to delay merging: with none configured, auto-merge
+merges immediately regardless of check states. The guard inspects branch protection
+per merge — allowed against a base with verified required checks (such as `main`),
+refused when protection cannot be verified or lists no required checks. In that case,
+verify checks green and merge manually. `.venv/bin/python -m scripts.publish pr-disarm --number <N>` is never blocked;
+disarming auto-merge is the remedy, not the offence.
 
 **Escape hatch:** a human runs the merge outside the agent harness. The hooks
 gate the agent fleet, not the maintainer — but see the override log below.

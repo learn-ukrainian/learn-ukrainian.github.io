@@ -128,23 +128,23 @@
 
 ```bash
 # Close A2 completed issues
-gh issue close 275 -c "A2 is 100% complete (57/57 modules pass audit + pipeline)"
-gh issue close 281 -c "A2 vocabulary finalized and database rebuilt"
+.venv/bin/python -m scripts.publish issue-close --number 275 -c "A2 is 100% complete (57/57 modules pass audit + pipeline)"
+.venv/bin/python -m scripts.publish issue-close --number 281 -c "A2 vocabulary finalized and database rebuilt"
 
 # Close superseded B2 issue
-gh issue close 277 -c "Superseded by #301 (B2 has 132 modules, not 110)"
+.venv/bin/python -m scripts.publish issue-close --number 277 -c "Superseded by #301 (B2 has 132 modules, not 110)"
 
 # Close completed migration epic
-gh issue close 346 -c "Phase 1 complete: A1 (34), A2 (57), B1 (86) all migrated to YAML"
+.venv/bin/python -m scripts.publish issue-close --number 346 -c "Phase 1 complete: A1 (34), A2 (57), B1 (86) all migrated to YAML"
 ```
 
 ### Check Status & Close if Complete
 
 ```bash
 # Check if YAML migrations are complete
-gh issue comment 340 -b "**Status check:** Is YAML vocabulary migration complete for all active levels (A1/A2/B1/B2)? If yes, close this epic."
-gh issue comment 312 -b "**Status check:** Are all levels using YAML activities? If yes, close this epic."
-gh issue comment 325 -b "**Status check:** Is cleanup/documentation complete? Part of #312."
+.venv/bin/python -m scripts.publish issue-comment --number 340 -b "**Status check:** Is YAML vocabulary migration complete for all active levels (A1/A2/B1/B2)? If yes, close this epic."
+.venv/bin/python -m scripts.publish issue-comment --number 312 -b "**Status check:** Are all levels using YAML activities? If yes, close this epic."
+.venv/bin/python -m scripts.publish issue-comment --number 325 -b "**Status check:** Is cleanup/documentation complete? Part of #312."
 ```
 
 ### Reframe Issues
@@ -152,7 +152,7 @@ gh issue comment 325 -b "**Status check:** Is cleanup/documentation complete? Pa
 **Grammar Validation (#311):**
 
 ```bash
-gh issue comment 311 -b "**Reframing recommendation:**
+.venv/bin/python -m scripts.publish issue-comment --number 311 -b "**Reframing recommendation:**
 
 Current scope is too broad. Staged generation architecture already exists via /module-stage-* commands.
 
@@ -166,7 +166,7 @@ Close this issue after creating focused replacements."
 **Podcast Work (#336-338):**
 
 ```bash
-gh issue comment 334 -b "**Workflow update:**
+.venv/bin/python -m scripts.publish issue-comment --number 334 -b "**Workflow update:**
 
 Original plan used JSON. Recommendation: Use YAML for consistency with vocab/activity architecture.
 
@@ -179,10 +179,10 @@ Original plan used JSON. Recommendation: Use YAML for consistency with vocab/act
 
 Merge #333 into this epic."
 
-gh issue close 336 -c "Replaced by YAML-based podcast workflow under #334"
-gh issue close 337 -c "Replaced by YAML-based podcast workflow under #334"
-gh issue close 338 -c "Replaced by YAML-based podcast workflow under #334"
-gh issue close 333 -c "Merged into #334 (podcast epic)"
+.venv/bin/python -m scripts.publish issue-close --number 336 -c "Replaced by YAML-based podcast workflow under #334"
+.venv/bin/python -m scripts.publish issue-close --number 337 -c "Replaced by YAML-based podcast workflow under #334"
+.venv/bin/python -m scripts.publish issue-close --number 338 -c "Replaced by YAML-based podcast workflow under #334"
+.venv/bin/python -m scripts.publish issue-close --number 333 -c "Merged into #334 (podcast epic)"
 ```
 
 ---
@@ -268,4 +268,4 @@ ls curriculum/l2-uk-en/b2/*.md | wc -l  # Currently 131, target 145
 
 1. **Podcast YAML Schema** - Define location (e.g., `curriculum/l2-uk-en/podcasts/`) before creating new issues
 2. **Deferred Work Timeline** - Revisit YouTube/research issues when C1 is 50%+ complete
-3. **Batch Close Command** - Use `gh issue close 275 281 277 346 351` for efficiency
+3. **Batch Close Command** - Use `.venv/bin/python -m scripts.publish issue-close --number 275 281 277 346 351` for efficiency

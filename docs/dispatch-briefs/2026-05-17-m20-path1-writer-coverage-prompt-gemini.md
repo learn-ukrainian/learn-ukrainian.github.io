@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — m20 Path 1: writer-coverage explicit-obligation prompt
 
 > Surface: Gemini (gemini-3.0-flash-preview), unmetered. Fully-specified prompt-text edit, docs-near-code lane.
@@ -119,7 +125,7 @@ git diff --name-only main
 
 # 5. Run pre-commit hooks
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -m pre_commit run --files scripts/build/phases/linear-write.md
+"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/phases/linear-write.md
 ```
 
 Quote each command's raw output in the PR body — don't paraphrase.
@@ -184,7 +190,7 @@ Total prompt delta: ~30 LOC additions, no logic / no tests / no API surface chan
 ### Expected impact
 
 # venv symlinked into worktree by delegate.py
-Per morning handoff: ~50% odds of >=80% coverage in 1-2 m20 rebuilds. The next session will validate by re-running `.venv/bin/python -u scripts/build/v7_build.py a1 m20-cooking-and-meals --worktree` and checking `wiki_coverage_gate` output for `covered_pct >= 0.8`.
+Per morning handoff: ~50% odds of >=80% coverage in 1-2 m20 rebuilds. The next session will validate by re-running `"$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 m20-cooking-and-meals --worktree` and checking `wiki_coverage_gate` output for `covered_pct >= 0.8`.
 
 ### Verification
 

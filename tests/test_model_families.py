@@ -166,3 +166,110 @@ def test_self_review_still_blocks_when_families_match() -> None:
     lineage = llm_reviewer_dispatch.AuthorLineage(family="google", source="test")
     with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError):
         llm_reviewer_dispatch.validate_cross_family(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE, lineage)
+
+
+# Cursor's runtime reports display names, not slugs (a recorded dispatch carries
+# ``resolved_model: "Composer 2.5"``); only that exact display name maps to its slug.
+@pytest.mark.parametrize("display", ["Composer 2.5", "composer 2.5", "COMPOSER 2.5", "  Composer   2.5  "])
+def test_cursor_display_name_resolves_to_the_concrete_composer_slug(display: str) -> None:
+    assert model_families.canonical_cursor_model(display) == "composer-2.5"
+    assert model_families.normalize_family(display) is model_families.Family.MOONSHOT
+    assert model_families.normalize_lineage_family({"family": "cursor", "resolved_model": display}) is (
+        model_families.Family.MOONSHOT
+    )
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "auto",
+        "unknown",
+        "",
+        "   ",
+        "Composer",
+        "Composer 2",
+        "Composer 2.4",
+        "Composer 2.50",
+        "Composer 2.5 Fast",
+        "Composer 3",
+    ],
+)
+def test_cursor_display_name_normaliser_rejects_everything_else(value: str) -> None:
+    assert model_families.canonical_cursor_model(value) == value
+    assert model_families.normalize_family(value) is model_families.Family.UNKNOWN
+
+
+def test_cursor_display_name_normaliser_handles_none() -> None:
+    assert model_families.canonical_cursor_model(None) == ""
+    assert model_families.normalize_family(None) is model_families.Family.UNKNOWN
+
+
+@pytest.mark.parametrize("display", ["Grok 4.7 256K High", "grok 4.7 256k high", " Grok\t4.7  256K   High "])
+def test_cursor_grok_high_display_name_maps_to_the_concrete_model(display: str) -> None:
+    """#9488: the Cursor review seat's runtime report names the catalog model."""
+    assert model_families.canonical_cursor_model(display) == "grok-4.7"
+    assert model_families.normalize_family(display) is model_families.Family.XAI
+
+
+@pytest.mark.parametrize(
+    "display",
+    [
+        "Grok 4.7 256K High Fast",
+        "Grok 4.7 256K Medium",
+        "Grok 4.7 256K Extra High",
+        "Grok 4.7 High",
+        "Grok 4.6 256K High",
+        "Gro\u212a 4.7 256K High",  # KELVIN SIGN folds to "k" under Unicode IGNORECASE
+        "Grok 4.7\u00a0256K High",  # no-break space
+        "Grok 4.7 256K High\n",
+    ],
+)
+def test_other_grok_display_names_are_not_rewritten(display: str) -> None:
+    assert model_families.canonical_cursor_model(display) == display
+
+
+@pytest.mark.parametrize(
+    "display,expected",
+    [
+        ("Grok 4.7 256K High Fast", model_families.Family.XAI),
+        ("Claude Fable 5 300K High", model_families.Family.ANTHROPIC),
+        ("composer-2.5", model_families.Family.MOONSHOT),
+        ("composer-2.5-fast", model_families.Family.MOONSHOT),
+    ],
+)
+def test_other_cursor_display_names_resolve_as_before(display: str, expected: model_families.Family) -> None:
+    assert model_families.canonical_cursor_model(display) == display
+    assert model_families.normalize_family(display) is expected
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "Compo\u017fer 2.5",  # LATIN SMALL LETTER LONG S folds to "s" under Unicode IGNORECASE
+        "Composer 2.5".replace("o", "\u043e", 1),  # Cyrillic o
+        "Composer 2.5".replace("o", "\u03bf", 1),  # Greek omicron
+        "Composer 2.5".replace("C", "\u0421", 1),  # Cyrillic Es
+        "\uff23omposer 2.5",  # full-width C
+        "Composer \uff12.\uff15",  # full-width digits
+        "\uff43\uff4f\uff4d\uff50\uff4f\uff53\uff45\uff52 2.5",  # full-width word
+        "Composer\u00a02.5",  # no-break space
+        "Composer\u20032.5",  # em space
+        "Composer\u200b 2.5",  # zero-width space
+        "Composer \u200b2.5",
+        "Composer\n2.5",
+        "Composer 2.5\n",
+        "\nComposer 2.5",
+        "Composer 2.5\x00",
+        "Composer\x002.5",
+        "Composer 2.5\u212a",  # KELVIN SIGN
+        "Composer\r2.5",
+    ],
+)
+def test_cursor_display_name_match_is_ascii_only(value: str) -> None:
+    assert model_families.canonical_cursor_model(value) == value
+    assert model_families.normalize_family(value) is model_families.Family.UNKNOWN
+
+
+@pytest.mark.parametrize("display", ["Composer\t2.5", "composer \t 2.5", "\tComposer 2.5 ", "cOmPoSeR     2.5"])
+def test_cursor_display_name_accepts_ascii_space_and_tab_runs(display: str) -> None:
+    assert model_families.canonical_cursor_model(display) == "composer-2.5"

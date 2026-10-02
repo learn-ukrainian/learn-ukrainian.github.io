@@ -68,9 +68,17 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
         == 0
     )
     payload = json.loads(capsys.readouterr().out)
-    assert any(
-        item["name"] == GROK_4_7.name and "Ukrainian-content language-lanes exclusion" in item["reason"]
-        for item in payload["trace"]
+    assert all(item["family"] in {"openai", "anthropic", "google"}
+               or item["status"] == "excluded" for item in payload["trace"])
+    # #9488: the attested Cursor Grok seat is on the ladder, never for Ukrainian content.
+    xai = [item for item in payload["trace"] if item["family"] == "xai"]
+    assert [item["name"] for item in xai] == ["grok-4.7-cursor-fallback"]
+    assert xai[0]["status"] == "excluded"
+    assert "Ukrainian-content language-lanes exclusion" in xai[0]["reason"]
+    composer = next(item for item in payload["trace"] if item["name"] == "composer-2.5")
+    assert composer["status"] == "excluded"
+    assert composer["reason"] == (
+        "Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini"
     )
 
 
@@ -102,11 +110,12 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     inputs = ResolverInputs(author_model="codex", changed_paths=("curriculum/A1/lesson.mdx",))
     # Kimi is no longer a review candidate at all (web, UI and backend coding only).
     assert "kimi-k3" not in REVIEW_CANDIDATES
+    # DeepSeek is excluded from every review, not just language review.
+    assert "deepseek-v4.1-flash" not in REVIEW_CANDIDATES
     for candidate in (
         GROK_4_7,
         GLM,
         REVIEW_CANDIDATES["composer-2.5"],
-        REVIEW_CANDIDATES["deepseek-v4.1-flash"],
     ):
         result = evaluate_candidate(candidate, inputs)
         assert result.status == "excluded", candidate.name
@@ -121,9 +130,16 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     )
     assert pinned.selected is None
     assert pinned.fail_closed_reason
+    deepseek_pin = resolve_reviewer(
+        ResolverInputs(author_model="codex", pinned_candidate="deepseek-v4.1-flash",
+                       pressure_override_reason="test pin")
+    )
+    assert deepseek_pin.selected is None
+    assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
 
 
-def test_pure_infra_change_can_still_select_grok():
+def test_pure_infra_change_falls_only_to_the_attested_cursor_grok_when_primary_lanes_are_unhealthy():
+    """#9488: native Grok never judges; the runtime-attested Cursor seat is the last resort."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -134,7 +150,18 @@ def test_pure_infra_change_can_still_select_grok():
         ),
     )
     assert resolution.selected is not None
-    assert resolution.selected.name == "grok-4.7"
+    assert (resolution.selected.name, resolution.selected.transport) == ("grok-4.7-cursor-fallback", "cursor")
+    assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7-cursor-fallback"]
+    dark = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            review_profile="infra",
+            domain="infra",
+            changed_paths=("scripts/orchestration/worker.py",),
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "cursor": "unhealthy"},
+        ),
+    )
+    assert dark.selected is None
 
 
 def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
@@ -173,3 +200,11 @@ def test_ukrainian_semantic_profile_still_fails_closed():
     assert resolution.selected is None
     assert resolution.trace == ()
     assert "unsupported local-code-review profile" in resolution.fail_closed_reason
+
+
+@pytest.mark.parametrize("author,expected", [("gpt-6.1-sol", "claude-opus-5-5"),
+                                            ("claude-opus-5-5", "gpt-6.1-sol")])
+def test_critical_ukrainian_code_review_prefers_opus_and_sol(author, expected):
+    resolution = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", language_lane=True))
+    assert resolution.selected.concrete_model == expected
+    assert resolution.selected.family in {"anthropic", "openai"}

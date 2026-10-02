@@ -167,6 +167,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import html
 import json
 import re
 from dataclasses import dataclass, field
@@ -177,7 +178,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.path_guard import checked_existing_path
-from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
@@ -395,6 +396,11 @@ def component_props_from_jsx(jsx: str) -> dict[str, Any]:
     strings or JSX attribute strings (`&quot;` decoded, no backslash escapes).
     """
     props: dict[str, Any] = {}
+    heading = re.match(r"^### ([^\n]+)\n", jsx)
+    if heading:
+        # Some legacy components display instructions in the surrounding heading.
+        # Read that exact page location rather than treating an absent prop as proof.
+        props["_heading"] = html.unescape(heading.group(1))
     for match in _JSX_PROP_RE.finditer(jsx):
         name, template, json_str, jsx_str = match.groups()
         if template is not None:
@@ -408,7 +414,7 @@ def component_props_from_jsx(jsx: str) -> dict[str, Any]:
 
 # Where each unit block lives in the component props, per activity type: the prop holding the
 # item list, then the item field per block role. `opt` names the list field of learner choices
-# and, for dict choices, the text key. Types absent here produce no vpravy units.
+# and, for dict choices, the text key. Activity-level units use the handling below.
 _PAGE_ITEM_LIST: dict[str, str] = {
     "quiz": "questions",
     "multiple-choice": "questions",
@@ -422,6 +428,8 @@ _PAGE_ITEM_LIST: dict[str, str] = {
     "unjumble": "items",
     "anagram": "items",
     "divide-words": "items",
+    "watch-and-repeat": "items",
+    "count-syllables": "items",
 }
 # An answer block whose text the page carries only as the single option it flags correct.
 _KEY_OPTION = "__key_option__"
@@ -442,14 +450,26 @@ _PAGE_ITEM_FIELDS: dict[str, dict[str, Any]] = {
     },
     "image-to-letter": {"explanation": "explanation", "opt": ("options", None)},
     "odd-one-out": {"prompt": "prompt", "explanation": "explanation", "opt": ("words", None)},
-    "unjumble": {"prompt": "jumbled", "answer": "answer"},
-    "anagram": {"answer": "answer"},
-    "divide-words": {"answer": "answer"},
+    "unjumble": {"prompt": "jumbled", "answer": "answer", "explanation": "explanation"},
+    "anagram": {"answer": "answer", "explanation": "explanation"},
+    "divide-words": {"answer": "answer", "explanation": "explanation"},
+    "watch-and-repeat": {"explanation": "explanation"},
+    "count-syllables": {"explanation": "explanation"},
 }
 # Activity-level blocks (item is None): the prop of the same name; pick-syllables choices.
 _PAGE_ACTIVITY_FIELDS: dict[str, dict[str, Any]] = {
     "pick-syllables": {"instruction": "instruction", "explanation": "explanation", "opt": ("syllables", None)},
     "order": {"instruction": "instruction", "explanation": "explanation"},
+}
+# These legacy renderers have no separate instruction prop. Fresh assembly puts
+# the instruction in their existing visible title (Cloze uses its MDX heading).
+_PAGE_INSTRUCTION_FIELD = {
+    "cloze": "_heading",
+    "essay-response": "title",
+    "critical-analysis": "title",
+    "comparative-study": "title",
+    "authorial-intent": "title",
+    "reading": "title",
 }
 _OPT_BLOCK_RE = re.compile(r"^opt_([0-9]+)$")
 _OPTION_WHY_BLOCK_RE = re.compile(r"^option_why_([0-9]+)$")
@@ -521,7 +541,7 @@ def page_field_text(
     option_why_match = _OPTION_WHY_BLOCK_RE.match(block_key)
     if item_idx is None:
         if block_key == "instruction":
-            return _prop_text(props.get("instruction"))
+            return _prop_text(props.get(_PAGE_INSTRUCTION_FIELD.get(act_type, "instruction")))
         pair_why_match = _PAIR_WHY_BLOCK_RE.match(block_key)
         if pair_why_match and act_type == "match-up":
             pairs = props.get("pairs")
@@ -1260,6 +1280,10 @@ def assemble_expanded_document(
                         answer = val
                         break
             if answer:
+                if act_type == "translate":
+                    # The translation parser trims candidate edges. Expand the
+                    # same learner text so provenance describes its actual chips.
+                    answer = answer.strip()
                 for role, span_text in _split_inline_spans(answer, "item_answer"):
                     if act_type == "error-correction":
                         error_ref = item.get("error_ref")
@@ -1357,6 +1381,8 @@ def assemble_expanded_document(
                         if opt_val is None or isinstance(opt_val, bool):
                             continue
                         opt_str = str(opt_val)
+                        if act_type == "translate":
+                            opt_str = opt_str.strip()
 
                         is_key = False
                         if act_type in ("quiz", "multiple-choice"):
@@ -1508,36 +1534,10 @@ def assemble_expanded_document(
             add_unit("slovnyk", None, None, None, f"inc_{wid}", "record_print", lemma, source="record", ref=wid)
 
     # 4. Tab: resursy (Resources) - CITED ids only
-    cited_text_ids: list[str] = []
-    cited_video_ids: list[str] = []
-    for st in lesson_entry.get("steps", []):
-        if isinstance(st, dict):
-            for ev in st.get("evidence", []):
-                if isinstance(ev, str):
-                    if ev.startswith("T-") and ev not in cited_text_ids:
-                        cited_text_ids.append(ev)
-                    elif ev.startswith("V-") and ev not in cited_video_ids:
-                        cited_video_ids.append(ev)
-    for v_entry in lesson_entry.get("videos", []):
-        if isinstance(v_entry, dict):
-            ev = v_entry.get("evidence")
-            if isinstance(ev, str) and ev not in cited_video_ids:
-                cited_video_ids.append(ev)
-
-    for cid in cited_text_ids:
-        t_rec = texts_by_id.get(cid)
-        if t_rec is None:
-            raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
-        src = t_rec.get("source", {})
-        title = str(src.get("work") or src.get("file") or src.get("author") or cid)
-        add_unit("resursy", None, None, None, f"res_{cid}", "record_print", title, source="record", ref=cid)
-
-    for vid in cited_video_ids:
-        v_rec = videos_by_id.get(vid)
-        if v_rec is None:
-            raise AssemblerError(VIDEO_NOT_FOUND, f"cited video record {vid} not found in pack")
-        chan = str(v_rec.get("channel") or vid)
-        add_unit("resursy", None, None, None, f"res_{vid}", "record_print", chan, source="record", ref=vid)
+    for cid, section, resource in build_resursy_entries(lesson_entry, pack):
+        # Resource metadata is exempt from vocabulary checks; quote prose is not.
+        role = "vesum_exempt" if section == "books" else "record_print"
+        add_unit("resursy", None, None, None, f"res_{cid}", role, resource["title"], source="record", ref=cid)
 
     expanded_doc = {
         "expanded_schema": 1,
@@ -1906,6 +1906,8 @@ def build_slovnyk_tab(
 def build_resursy_entries(
     lesson_plan: dict[str, Any],
     pack: dict[str, Any],
+    *,
+    warnings: list[dict[str, str]] | None = None,
 ) -> list[tuple[str, str, dict[str, Any]]]:
     """Build Resursy entries from cited pack records only, as (record id, section, entry)."""
     entries: list[tuple[str, str, dict[str, Any]]] = []
@@ -1922,14 +1924,26 @@ def build_resursy_entries(
 
     cited_text_ids: list[str] = []
     cited_video_ids: list[str] = []
+    cited_standard_ids: list[str] = []
     for st in lesson_plan.get("steps", []):
         if isinstance(st, dict):
-            for ev in st.get("evidence", []):
+            for ev in [*st.get("evidence", []), *st.get("explains", []), *([st["ref"]] if st.get("ref") else [])]:
                 if isinstance(ev, str):
                     if ev.startswith("T-") and ev not in cited_text_ids:
                         cited_text_ids.append(ev)
                     elif ev.startswith("V-") and ev not in cited_video_ids:
                         cited_video_ids.append(ev)
+                    elif ev.startswith("S-") and ev not in cited_standard_ids:
+                        cited_standard_ids.append(ev)
+    # Standard records carry line locators and a file digest, but no citable
+    # bibliographic metadata (evidence-pack-v1). Apply contract §1a's explicit
+    # omission warning rather than silently dropping the citation or inventing it.
+    standard_ids = {record["id"] for record in pack.get("standard", [])}
+    for cid in cited_standard_ids:
+        if cid not in standard_ids:
+            raise AssemblerError("standard_not_found", f"cited standard record {cid} not found in pack")
+        if warnings is not None:
+            warnings.append({"code": "resource_citation_omitted", "record": cid, "reason": "citable_metadata_missing"})
     for v_entry in lesson_plan.get("videos", []):
         if isinstance(v_entry, dict):
             ev = v_entry.get("evidence")
@@ -1938,25 +1952,19 @@ def build_resursy_entries(
 
     for cid in cited_text_ids:
         t_rec = texts_by_id.get(cid)
-        if t_rec:
-            src = t_rec.get("source", {})
-            title = str(src.get("work") or src.get("file") or src.get("author") or cid)
-            author = str(src.get("author") or "")
-            page = str(src.get("page") or "")
-            entries.append(
-                (
-                    cid,
-                    "books",
-                    {
-                        "title": title,
-                        "author": author,
-                        "pages": page,
-                        "url": "",
-                        "source": cid,
-                        "description": str(t_rec.get("supports") or ""),
-                    },
+        if t_rec is None:
+            raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
+        try:
+            citation = publication.resource_citation(t_rec)
+        except ValueError as exc:
+            raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+        if citation is None:
+            if warnings is not None:
+                warnings.append(
+                    {"code": "resource_citation_omitted", "record": cid, "reason": "citable_metadata_missing"}
                 )
-            )
+            continue
+        entries.append((cid, "books", {**citation, "author": "", "pages": "", "source": cid}))
 
     plan_video_uses: dict[str, str] = {}
     for v_entry in lesson_plan.get("videos", []):
@@ -1967,6 +1975,8 @@ def build_resursy_entries(
 
     for vid_id in cited_video_ids:
         vid = videos_by_id.get(vid_id)
+        if vid is None:
+            raise AssemblerError(VIDEO_NOT_FOUND, f"cited video record {vid_id} not found in pack")
         if vid:
             chan = str(vid.get("channel") or vid_id)
             entries.append(
@@ -2140,13 +2150,10 @@ def _render_urok_markdown(
                 ref_id = block.get("ref", "")
                 t_rec = texts_by_id.get(ref_id)
                 if t_rec:
-                    src = t_rec.get("source", {})
-                    author = str(src.get("author") or "")
-                    work = str(src.get("work") or "")
-                    year = src.get("year")
-                    page = src.get("page")
-                    attr_parts = [p for p in [author, work, str(year) if year else "", str(page) if page else ""] if p]
-                    attr = ", ".join(attr_parts) if attr_parts else str(src.get("file", ""))
+                    try:
+                        attr = publication.quote_attribution(t_rec)
+                    except ValueError as exc:
+                        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
                     w.line("> ", *block_fragments(step_id, block_idx, str(t_rec.get("quote", ""))))
                     if attr:
                         w.line(">")
@@ -2252,6 +2259,24 @@ def _render_urok_markdown(
                 for header_line in dialogue_box_header_lines(DIALOGUE_BOX_DEFAULT_TITLE):
                     w.line(header_line)
                 w.line(*payload)
+                translations = dial.get("translation_en") or []
+                if translations:
+                    # Reuse DialogueBox's English support prop, after all Ukrainian
+                    # exchanges. Each translation keeps its own unit location.
+                    english_payload: list[str | _UnitFragment] = ["  en={JSON.parse('\""]
+                    for line_idx, translation in enumerate(translations):
+                        if line_idx:
+                            english_payload.append(encode_js_json_string("\n"))
+                        english_payload.extend(
+                            block_fragments(
+                                step_id,
+                                f"dialogue_translation_{line_idx}",
+                                str(translation),
+                                codec=CODEC_JS_JSON_STRING,
+                            )
+                        )
+                    english_payload.append("\"')}")
+                    w.line(*english_payload)
                 w.line(DIALOGUE_BOX_CLOSING_LINE)
                 w.blank()
 
@@ -2482,7 +2507,8 @@ def check_9_stress_and_render(
 
     slovnyk_entries = build_slovnyk_entries(lesson_entry, words_store, stream)
     vocab_items = [item for _wid, item in slovnyk_entries]
-    resursy_entries = build_resursy_entries(lesson_entry, pack)
+    resource_warnings: list[dict[str, str]] = []
+    resursy_entries = build_resursy_entries(lesson_entry, pack, warnings=resource_warnings)
     external_resources: dict[str, list[dict[str, Any]]] = {}
     for _rid, section, entry in resursy_entries:
         external_resources.setdefault(section, []).append(entry)
@@ -2656,9 +2682,29 @@ def check_9_stress_and_render(
         act_payload["placement"] = plan_act.get("placement")
         if not act_payload.get("title") and plan_act.get("focus"):
             act_payload["title"] = plan_act.get("focus")
+        if act_payload.get("type") in _PAGE_INSTRUCTION_FIELD and act_payload.get("instruction"):
+            act_payload["title"] = act_payload["instruction"]
+        # The parser already preserves host metadata in each quiz question. Resolve
+        # media here from the locked pack rather than accepting a writer-supplied URL.
+        for item in act_payload.get("items") or []:
+            if isinstance(item, dict) and item.get("kind") == "listening":
+                host = item.get("host") or {}
+                video = next((v for v in pack.get("videos", []) if v.get("id") == host.get("ref")), None)
+                if host.get("kind") != "video" or video is None:
+                    return CheckResult(check=9, passed=False, reason="listening_video_missing", layer="pack")
+                item["host"] = {
+                    "kind": "video",
+                    "ref": video["id"],
+                    "url": video["url"],
+                    "label": video.get("channel") or video["id"],
+                }
 
         try:
             act_obj = activity_parser._parse_activity(act_payload)
+            if act_payload.get("type") == "essay-response":
+                # Its legacy serializer concatenates instruction and prompt. The
+                # instruction is already visible as the title; keep the prompt once.
+                act_obj.instruction = ""
             act_obj.placement = plan_act.get("placement")
             converted_activities.append(act_obj)
             parsed_by_id[str(act_id)] = act_obj
@@ -2760,6 +2806,7 @@ def check_9_stress_and_render(
         "stressed_doc": stressed_doc,
         "vocab_items": vocab_items,
         "external_resources": external_resources,
+        "warnings": resource_warnings,
         "mdx": mdx_content,
         "meta_data": meta_data,
     }
@@ -2780,11 +2827,20 @@ def check_11_render(
     astro_build: bool = False,
     module_dir: Path | None = None,
     plan_path: Path | None = None,
+    through_lesson: int | None = None,
 ) -> CheckResult:
     """Check 11: verify_shippable --fresh on assembled site docs."""
     from scripts.build.verify_shippable import verify as vs_verify
 
-    rep = vs_verify(level, slug, module_dir=module_dir, plan_path=plan_path, astro_build=astro_build, fresh=True)
+    rep = vs_verify(
+        level,
+        slug,
+        module_dir=module_dir,
+        plan_path=plan_path,
+        astro_build=astro_build,
+        fresh=True,
+        through_lesson=through_lesson,
+    )
     passed = bool(rep.get("shippable"))
     return CheckResult(
         check=11,
@@ -2940,4 +2996,5 @@ def assemble_lesson(
         "check_11": c11.to_dict(),
         "mdx": c9.artifacts.get("mdx"),
         "frontmatter": c9.artifacts.get("meta_data"),
+        "warnings": c9.artifacts.get("warnings", []),
     }

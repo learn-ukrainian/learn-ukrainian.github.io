@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from copy import deepcopy
 from datetime import date
 from pathlib import Path
@@ -14,12 +16,19 @@ from scripts.audit import model_families
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     ModelCatalogError,
+    bounded_execution_policy,
+    canonical_model_id,
     catalog_age_days,
     catalog_is_stale,
+    cursor_non_dispatch_model_refusal,
+    cursor_pinned_models,
     glm_model_aliases,
+    is_cursor_auto_selector,
     kimi_model_aliases,
     load_model_catalog,
     model_aliases,
+    require_execution_model,
+    resolve_catalog_model_id,
     resolve_glm_model,
     resolve_kimi_model,
     retired_model_refusal,
@@ -36,6 +45,36 @@ def test_committed_catalog_is_structurally_valid_and_current():
     assert catalog_age_days(catalog, as_of=date(2026, 9, 24)) == 0
     assert not catalog_is_stale(catalog, as_of=date(2026, 10, 23))
     assert catalog_is_stale(catalog, as_of=date(2026, 10, 25))
+
+
+@pytest.mark.parametrize("model_id", [
+    model_id for model_id, entry in load_model_catalog()["models"].items()
+    if entry["lifecycle"] == "retired"
+])
+def test_retired_models_cannot_retain_any_transport(model_id):
+    catalog = deepcopy(load_model_catalog())
+    catalog["models"][model_id]["transports"] = ["native_grok"]
+    with pytest.raises(ModelCatalogError, match="transports must be empty for retired models"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize(("model", "transport", "message"), [
+    ("cursor:grok-4.5-high", "cursor", "is retired"),
+    ("claude-opus-4.6", "native_claude", "not in the model catalog"),
+    ("claude-opus-5-5", "hermes", "no admitted hermes transport"),
+    ("gemini-3.8-flash-high", "native_gemini", "no admitted native_gemini transport"),
+])
+def test_execution_defaults_refused_by_catalog_identity_and_transport(model, transport, message):
+    with pytest.raises(ModelCatalogError, match=message):
+        require_execution_model(model, transport=transport)
+
+
+def test_execution_default_resolves_active_alias_and_rejects_hold():
+    catalog = deepcopy(load_model_catalog())
+    assert require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog) == "gemini-3.8-flash-high"
+    catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] = "hold"
+    with pytest.raises(ModelCatalogError, match="not admitted for execution"):
+        require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog)
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -71,10 +110,10 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     }
     assert required <= set(models)
     assert models["claude-sonnet-5-5"]["lifecycle"] == "active"
-    assert models["claude-sonnet-5"]["lifecycle"] == "fallback"
-    for ladder in load_model_catalog()["review_ladders"].values():
+    assert models["claude-sonnet-5"]["lifecycle"] == "retired"
+    for risk, ladder in load_model_catalog()["review_ladders"].items():
         names = {candidate for rung in ladder for candidate in rung}
-        assert "claude-sonnet-5-5" in names
+        assert ("claude-sonnet-5-5" in names) == (risk != "critical")
         assert "claude-sonnet-5" not in names
     assert models["poolside/laguna-s-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
@@ -85,7 +124,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
 def test_fallback_sonnet_candidate_cannot_reenter_automatic_ladder():
     broken = deepcopy(load_model_catalog())
     broken["review_ladders"]["medium"][3] = ["claude-sonnet-5"]
-    with pytest.raises(ModelCatalogError, match="must reference an active model"):
+    with pytest.raises(ModelCatalogError, match=r"unknown candidate|must reference an active model"):
         validate_catalog(broken)
 
 
@@ -182,10 +221,9 @@ def test_glm_is_absent_from_automatic_review_ladders() -> None:
         assert "glm-5.3" not in {candidate for rung in ladder for candidate in rung}
 
 
-def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priority() -> None:
+def test_deepseek_metadata_is_preserved_without_review_seats() -> None:
     catalog = load_model_catalog()
     flash = catalog["models"]["deepseek-v4.1-flash"]
-    candidate = catalog["review_candidates"]["deepseek-v4.1-flash"]
 
     legacy = catalog["models"]["deepseek-v4-flash"]
     assert legacy["lifecycle"] == "retired"
@@ -202,37 +240,15 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
     assert {"frontend_agentic_coding", "strong_code_review"} <= set(flash["roles"])
     assert "not_critical_authority" in flash["weaknesses"]
     assert "https://arena.ai/leaderboard/code" in flash["sources"]
-    assert candidate["transport"] == "opencode"
-    assert candidate["route"] == "deepseek"
-    endpoint = catalog["review_scheduler"]["endpoints"]["deepseek"]
-    assert endpoint["quota_bucket"] == "deepseek"
-    assert endpoint["credential_bucket"] == "deepseek"
-    assert candidate["invocation"].endswith(
-        "opencode run --model deepseek/deepseek-flash --variant high"
-    )
-
-    practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
-    assert "glm-5.3" not in practical
-    assert practical.index("claude-sonnet-5-5") < practical.index("deepseek-v4.1-flash")
-    # Operator 2026-08-13: Pro hold lifted for hard implement only; Flash stays
-    # the only DeepSeek review-ladder rung (volume) — Pro never joins ladders.
-    assert "deepseek-v4.1-flash" in practical
-    assert "deepseek-v4-pro" not in practical
-
-    critical = [rung[0] for rung in catalog["review_ladders"]["critical"] if len(rung) == 1]
-    assert "deepseek-v4.1-flash" in critical
-    assert "deepseek-v4-pro" not in critical
-    # Pro is an active hard-implement seat (complex multi-file, hard lookup) —
-    # not the default, not a routine review rung (operator GO 2026-08-13, canary #6703).
+    # Metadata is retained per #9301's non-goals; it confers no review eligibility.
+    for model in ("deepseek-v4.1-flash", "deepseek-v4-pro"):
+        assert model not in catalog["review_candidates"]
+        for ladder in catalog["review_ladders"].values():
+            assert model not in {name for rung in ladder for name in rung}
     pro = catalog["models"]["deepseek-v4-pro"]
-    assert pro["lifecycle"] == "active"
+    assert pro["lifecycle"] == "retired"
     assert "temporary_operator_hold_prefer_flash" not in pro["weaknesses"]
-    assert {"hard_implement", "complex_coding"} <= set(pro["roles"])
-    pro_candidate = catalog["review_candidates"]["deepseek-v4-pro"]
-    assert pro_candidate["transport"] == "opencode"
-    assert pro_candidate["invocation"].endswith(
-        "opencode run --model deepseek/deepseek-v4-pro --variant high"
-    )
+    assert pro["roles"] == ["historical_record_resolution"]
 
 
 def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
@@ -296,7 +312,8 @@ def test_glm_model_aliases_and_consumer_lint() -> None:
     aliases = glm_model_aliases()
     assert "glm-5.3" in aliases
     assert aliases["glm-5.3"] == "glm-5.3"
-    assert aliases["glm52"] == "glm-5.2"  # prior pin
+    assert "glm52" not in aliases
+    assert model_aliases()["glm52"] == "glm-5.2"  # historical identity
     assert aliases["glm53"] == "glm-5.3"
     assert aliases["glm"] == "glm-5.3"
 
@@ -393,11 +410,12 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
     assert candidates["openai_frontier"]["transport"] == "native_codex"
     assert "gpt-5.6-terra" not in candidates
     assert candidates["grok-4.7"]["transport"] == "native_grok"
-    # Explicit Cursor pin when native grok is dark — never Cursor auto.
+    # #9488: the Sol-spared Cursor seat pins the exact slug the runtime attests — never Cursor auto.
     assert candidates["grok-4.7-cursor-fallback"]["transport"] == "cursor"
     assert candidates["grok-4.7-cursor-fallback"]["model_id"] == "grok-4.7"
+    assert candidates["grok-4.7-cursor-fallback"]["last_resort"] is True
     assert candidates["grok-4.7-cursor-fallback"]["invocation"].endswith(
-        "--agent cursor --model grok-4.7"
+        "--agent cursor --model grok-4.7-high"
     )
 
 
@@ -407,16 +425,16 @@ def test_fable_routes_native_claude_before_pinned_cursor_fallback():
     # Authority seats live on the critical ladder only.
     ladder = catalog["review_ladders"]["critical"]
 
-    assert candidates["claude-fable-5"]["transport"] == "native_claude"
-    assert candidates["claude-fable-5"]["invocation"].endswith(
-        "--agent claude --model claude-fable-5"
+    assert candidates["claude-fable-5-1"]["transport"] == "native_claude"
+    assert candidates["claude-fable-5-1"]["invocation"].endswith(
+        "--agent claude --model claude-fable-5-1"
     )
-    assert candidates["claude-fable-5-cursor-fallback"]["transport"] == "cursor"
-    assert candidates["claude-fable-5-cursor-fallback"]["invocation"].endswith(
-        "--agent cursor --model claude-fable-5"
+    assert candidates["claude-fable-5-1-cursor-fallback"]["transport"] == "cursor"
+    assert candidates["claude-fable-5-1-cursor-fallback"]["invocation"].endswith(
+        "--agent cursor --model claude-fable-5-1-thinking-high"
     )
-    assert ladder.index(["claude-fable-5"]) < ladder.index(
-        ["claude-fable-5-cursor-fallback"]
+    assert ladder.index(["claude-fable-5-1"]) < ladder.index(
+        ["claude-fable-5-1-cursor-fallback"]
     )
 
 
@@ -428,10 +446,8 @@ def test_formal_cf_defaults_pin_role_specific_efforts():
     assert defaults["claude"]["effort"] == "high"
     assert set(defaults["claude"].get("family_models", [])) >= {
         "claude-sonnet-5-5",
-        "claude-sonnet-5",
-        "claude-fable-5",
-        "claude-opus-5",
-        "claude-opus-4-8",
+        "claude-fable-5-1",
+        "claude-opus-5-5",
     }
     assert defaults["glm"]["model_id"] == "glm-5.3"
     assert defaults["glm"]["effort"] == "high"
@@ -462,7 +478,9 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["claude"]["model_id"] == "claude-opus-5-5"
     assert seats["claude"]["effort"] == "high"
     assert seats["grok"]["fallback_model_id"] == "grok-4.7"
-    assert seats["cursor"]["model_id"] == "auto"
+    # Operator decision 2026-09-30 (#9274): the seat runs a concrete pin; Auto is coding-dispatch only.
+    assert seats["cursor"]["model_id"] == "grok-4.7"
+    assert seats["cursor"]["auto_scope"] == "write_implementation_dispatch_with_green_dor"
     assert seats["cursor"]["effort"] == "high"
     assert seats["cursor"]["escalate_model_id"] == "gpt-6.1-sol"
     assert seats["cursor"]["escalate_effort"] == "high"
@@ -482,7 +500,7 @@ def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     # Codex reviewer escalation uses the same Astra high advisor pin.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert fc["claude"]["escalate_model_id"] == "claude-fable-5"
+    assert fc["claude"]["escalate_model_id"] == "claude-opus-5-5"
 
 
 def test_practical_ladders_exclude_advisory_roles():
@@ -490,15 +508,17 @@ def test_practical_ladders_exclude_advisory_roles():
     for risk in ("high", "medium", "low"):
         names = {name for rung in ladders[risk] for name in rung}
         assert "openai_frontier" in names
-        assert "claude-fable-5" not in names
+        assert "claude-fable-5-1" not in names
         assert "claude-opus-4-8" not in names
         assert "gpt-5.6-terra" not in names
         assert "claude-sonnet-5-5" in names
         assert "pool" in names
+        # #9488: only the attested Cursor Grok seat; native Grok never judges.
         assert "grok-4.7-cursor-fallback" in names
+        assert "grok-4.7" not in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
-    assert "claude-fable-5" in critical
+    assert "claude-fable-5-1" in critical
 
 
 def test_bridge_only_reviewers_expose_executable_invocations():
@@ -641,19 +661,97 @@ def test_cursor_orchestrator_unknown_auto_resolves_to_union_family():
         validate_catalog(broken_mismatched_fams)
 
 
-def test_catalog_rejects_cursor_orchestrator_non_auto_model_id():
+@pytest.mark.parametrize("model_id", ["auto", "Auto", "cursor:auto", "grok-4.7-fast", "grok-4.6", "kimi-code/k3"])
+def test_catalog_rejects_cursor_orchestrator_without_concrete_allowlisted_pin(model_id: str):
     broken = deepcopy(load_model_catalog())
-    broken["orchestrator_seats"]["cursor"]["model_id"] = "composer-2.5"
-    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.model_id must be 'auto'"):
+    broken["orchestrator_seats"]["cursor"]["model_id"] = model_id
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.model_id must be a concrete pin"):
         validate_catalog(broken)
+
+
+def test_catalog_accepts_each_allowlisted_cursor_orchestrator_pin():
+    for model_id in ("grok-4.7", "composer-2.5"):
+        catalog = deepcopy(load_model_catalog())
+        catalog["orchestrator_seats"]["cursor"]["model_id"] = model_id
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("scope", [None, "any", "driver_seat"])
+def test_catalog_rejects_cursor_orchestrator_missing_or_widened_auto_scope(scope: str | None):
+    broken = deepcopy(load_model_catalog())
+    if scope is None:
+        del broken["orchestrator_seats"]["cursor"]["auto_scope"]
+    else:
+        broken["orchestrator_seats"]["cursor"]["auto_scope"] = scope
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_scope"):
+        validate_catalog(broken)
+
+
+@pytest.mark.parametrize(
+    ("model", "expected"),
+    [
+        ("auto", True),
+        ("Auto", True),
+        (" AUTO ", True),
+        ("cursor:auto", True),
+        ("cursor/Auto", True),
+        ("default", True),
+        (None, False),
+        ("", False),
+        ("grok-4.7", False),
+        ("grok-4.7-high", False),
+        ("composer-2.5", False),
+        ("autonomous", False),
+    ],
+)
+def test_is_cursor_auto_selector(model: str | None, expected: bool):
+    assert is_cursor_auto_selector(model) is expected
+
+
+def test_cursor_pinned_models_lead_with_the_seat_pin():
+    assert cursor_pinned_models() == ("grok-4.7", "composer-2.5")
+    catalog = deepcopy(load_model_catalog())
+    catalog["orchestrator_seats"]["cursor"]["model_id"] = "composer-2.5"
+    assert cursor_pinned_models(catalog) == ("composer-2.5", "grok-4.7")
+
+
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [
+        (None, "cursor_model_unpinned"),
+        ("  ", "cursor_model_unpinned"),
+        ("auto", "cursor_auto_outside_coding_task"),
+        ("Cursor:Auto", "cursor_auto_outside_coding_task"),
+        ("default", "cursor_auto_outside_coding_task"),
+        ("composer-2.5-fast", "cursor_model_not_approved"),
+        ("grok-4.7-high", "cursor_model_not_approved"),
+        ("claude-opus-5-5", "cursor_model_not_approved"),
+    ],
+)
+def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str):
+    refusal = cursor_non_dispatch_model_refusal(model)
+    assert refusal is not None
+    assert f"({code})" in refusal
+    assert "pin grok-4.7 or composer-2.5" in refusal
+
+
+@pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
+def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
+    assert cursor_non_dispatch_model_refusal(model) is None
 
 
 def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     # In review_scheduler.endpoints
+    # #9488: the Cursor endpoint is formal only for an explicit, policy-admitted
+    # pin; Composer (Kimi lineage) stays non-eligible.
     broken_ep = deepcopy(load_model_catalog())
-    broken_ep["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
-    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor must remain formal_review_eligible: false"):
+    broken_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = ["composer-2.5"]
+    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor\.models cannot pin 'composer-2\.5'"):
         validate_catalog(broken_ep)
+    unpinned_ep = deepcopy(load_model_catalog())
+    unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = []
+    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor needs an explicit models pin"):
+        validate_catalog(unpinned_ep)
 
     broken_ep_models = deepcopy(load_model_catalog())
     broken_ep_models["review_scheduler"]["endpoints"]["cursor"]["models"] = ["auto"]
@@ -695,7 +793,7 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
 
 def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
     broken = deepcopy(load_model_catalog())
-    broken["models"]["grok-4.6"]["transports"].append("hermes")
+    broken["models"]["grok-4.7"]["transports"].append("hermes")
     with pytest.raises(ModelCatalogError, match="must not route"):
         validate_catalog(broken)
 
@@ -729,26 +827,24 @@ def test_catalog_rejects_future_review_date():
         catalog_age_days(validated, as_of=date(2026, 7, 17))
 
 
-def test_critical_ladder_anthropic_authority_is_fable_not_opus():
-    """Advisory consultation must not silently become approval authority.
-
-    The critical authority ladder routes Anthropic approval reviews to Fable.
-    Opus remains the separate, non-binding advisory-consultation seat.
-    """
-    ladder = load_model_catalog()["review_ladders"]["critical"]
-    flat = [model for rung in ladder for model in rung]
-    assert "claude-fable-5" in flat
+def test_critical_ladder_anthropic_authority_is_opus_with_fable_last_resort():
+    catalog = load_model_catalog()
+    flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
+    assert flat[:3] == ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback"]
+    # #9488: the Cursor Grok seat closes the list; it has no critical_review role.
+    assert flat[-3:] == ["claude-fable-5-1", "claude-fable-5-1-cursor-fallback", "grok-4.7-cursor-fallback"]
     assert "claude-opus-5" not in flat
-    # The Opus 5.5 orchestrator seat must not inherit approval authority either.
-    assert "claude-opus-5-5" not in flat
-    assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5-5")
+    assert "claude-sonnet-5-5" not in flat
+    for name in flat:
+        assert catalog["review_candidates"][name].get("last_resort", False) == (
+            name.startswith("claude-fable-") or name == "grok-4.7-cursor-fallback"
+        )
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
     """Model capability metadata must preserve the routing/authority boundary."""
     roles = set(load_model_catalog()["models"]["claude-opus-5"]["roles"])
-    assert "advisory_consultation" in roles
-    assert "orchestration" not in roles
+    assert roles == {"historical_record_resolution"}
 
 
 def test_opus_5_5_is_the_claude_orchestrator_and_formal_cf_pin() -> None:
@@ -803,22 +899,13 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         "final_disposition",
     }
 
-    direct = route["direct_worker"]
-    assert direct == {
-        "model_id": "gpt-6-luna",
+    # Operator decision 2026-09-30 (#9275): no direct bounded dispatch route.
+    assert "direct_worker" not in route
+    assert route["bounded_fallback_worker"] == {
+        "model_id": "gemini-3.8-flash-high",
         "effort": "high",
-        "task_types": [
-            "bounded_implementation",
-            "bounded_investigation",
-            "recon",
-            "bounded_checks",
-            "log_triage",
-        ],
-        "constraints": [
-            "objective_scope_ceiling",
-            "no_consequential_decisions",
-            "no_final_disposition",
-        ],
+        "requires": ["complete_advisory_envelope", "objective_scope_ceiling"],
+        "non_bounded_task_families": ["ukrainian-authoring", "ukrainian-review"],
     }
     assert route["autonomous_fallback"] == {
         "model_id": "gpt-6.1-sol",
@@ -861,12 +948,34 @@ def test_catalog_rejects_luna_safety_set_member_removal(field, member):
     [
         ("advisor", "model_id", "set", "missing-model", "advisor.model_id references unknown model"),
         ("preferred_worker", "model_id", "set", "poolside/laguna-m.1", "preferred_worker.model_id must reference an active model"),
-        ("direct_worker", "model_id", "set", "missing-model", "direct_worker.model_id references unknown model"),
+        (
+            "bounded_fallback_worker",
+            "model_id",
+            "set",
+            "missing-model",
+            "bounded_fallback_worker.model_id references unknown model",
+        ),
+        ("bounded_fallback_worker", "model_id", "set", "gpt-6.1-sol", "must not be a bounded worker model"),
+        (
+            "bounded_fallback_worker",
+            "requires",
+            "set",
+            ["objective_scope_ceiling"],
+            "bounded_fallback_worker.requires must bind",
+        ),
+        (
+            "bounded_fallback_worker",
+            "non_bounded_task_families",
+            "set",
+            [],
+            "non_bounded_task_families must be a non-empty list",
+        ),
+        ("bounded_fallback_worker", "requires", "delete", None, "bounded_fallback_worker must define exactly"),
         ("autonomous_fallback", "model_id", "set", "missing-model", "autonomous_fallback.model_id references unknown model"),
         ("preferred_worker", "escalate_to", "set", "missing-model", "preferred_worker.escalate_to references unknown model"),
         ("advisor", "effort", "set", "ultra", "advisor.effort must be one of"),
         ("preferred_worker", "effort", "set", "ultra", "preferred_worker.effort must be one of"),
-        ("direct_worker", "effort", "set", "ultra", "direct_worker.effort must be one of"),
+        ("bounded_fallback_worker", "effort", "set", "ultra", "bounded_fallback_worker.effort must be one of"),
         ("autonomous_fallback", "effort", "set", "ultra", "autonomous_fallback.effort must be one of"),
         ("advisor", "role", "set", "unbounded", "advisor.role must be"),
         (
@@ -909,6 +1018,47 @@ def test_catalog_rejects_malformed_sol_advised_route(
 
     with pytest.raises(ModelCatalogError, match=message):
         validate_catalog(broken)
+
+
+def test_catalog_refuses_a_direct_bounded_worker_route():
+    """#9275: a restored ``direct_worker`` route fails validation (operator decision 2026-09-30)."""
+    broken = deepcopy(load_model_catalog())
+    broken["execution_routing"]["sol_advised_bounded"]["direct_worker"] = {
+        "model_id": "gpt-6-luna",
+        "effort": "high",
+        "task_types": ["recon"],
+        "constraints": ["objective_scope_ceiling"],
+    }
+    with pytest.raises(ModelCatalogError, match="sol_advised_bounded must define exactly"):
+        validate_catalog(broken)
+
+
+def test_bounded_execution_policy_names_the_envelope_population():
+    policy = bounded_execution_policy()
+    assert policy.advisor_model_id == "gpt-6.1-sol"
+    assert policy.advisor_role == "bounded_advisory_envelope"
+    assert policy.bounded_worker_model_id == "gpt-6-luna"
+    assert policy.bounded_fallback_model_id == "gemini-3.8-flash-high"
+    assert policy.non_bounded_task_families == {"ukrainian-authoring", "ukrainian-review"}
+
+
+@pytest.mark.parametrize(
+    ("spelling", "expected"),
+    [
+        ("gpt-6-luna", "gpt-6-luna"),
+        ("GPT-6-Luna", "gpt-6-luna"),
+        ("codex:gpt-6-luna", "gpt-6-luna"),
+        ("openai/gpt-6-luna", "gpt-6-luna"),
+        ("gpt-6-luna-high", "gpt-6-luna"),
+        ("gemini-3.8-flash", "gemini-3.8-flash-high"),
+        ("gemini-3.8-flash-low", "gemini-3.8-flash-high"),
+        ("claude-opus-5-5[1m]", "claude-opus-5-5"),
+        ("not-a-model", None),
+        (None, None),
+    ],
+)
+def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, expected):
+    assert canonical_model_id(spelling) == expected
 
 
 def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
@@ -1026,3 +1176,267 @@ def test_replaced_by_must_sit_on_retired_model_and_name_active_model():
     broken["models"]["gpt-6-sol"]["replaced_by"] = "gpt-6-astra"
     with pytest.raises(ModelCatalogError, match="replaced_by must reference an active model"):
         validate_catalog(broken)
+
+
+@pytest.mark.parametrize(
+    ("retired", "successor"), [
+        ("claude-fable-5", "claude-fable-5-1"),
+        ("grok-4.6", "grok-4.7"),
+        ("claude-opus-5", "claude-opus-5-5"),
+        ("claude-opus-4-8", "claude-opus-5-5"),
+        ("claude-sonnet-5", "claude-sonnet-5-5"),
+        ("gemini-3.7-flash-high", "gemini-3.8-flash-high"),
+        ("gemini-3.6-flash-high", "gemini-3.8-flash-high"),
+        ("gemini-3.5-flash-high", "gemini-3.8-flash-high"),
+        ("glm-5.2", "glm-5.3"),
+        ("deepseek-v4-pro", "deepseek-v4.1-flash"),
+        ("claude-sonnet-4.6-thinking", "claude-sonnet-5-5"),
+        ("claude-opus-4.6-thinking", "claude-opus-5-5"),
+        ("gpt-oss-120b", "gpt-6-luna"),
+    ]
+)
+def test_issue_9301_retired_ids_remain_historical_only(retired, successor):
+    catalog = load_model_catalog()
+    assert catalog["models"][retired]["lifecycle"] == "retired"
+    assert catalog["models"][retired]["replaced_by"] == successor
+    assert catalog["models"][retired]["transports"] == []
+    for section in ("execution_routing", "review_candidates", "review_scheduler", "orchestrator_seats", "formal_cf_defaults",
+                    "review_ladders", "budget_substitution_models"):
+        assert retired not in json.dumps(catalog[section]).replace(successor, "successor"), section
+    for model in (retired, f"cursor:{retired.upper()}-thinking-high", f"{retired}[1m]"):
+        assert f"use {successor}" in retired_model_refusal(model)
+    assert retired_model_refusal(successor) is None
+
+
+@pytest.mark.parametrize(
+    ("model", "canonical"),
+    [(None, None), ("unknown", None), ("cursor:claude-fable-5-1-thinking-high", "claude-fable-5-1"),
+     ("claude-fable-5[1m]", "claude-fable-5"), ("k3", "kimi-code/k3")]
+)
+def test_catalog_identity_resolves_longest_id_and_preserves_retirement(model, canonical):
+    assert resolve_catalog_model_id(model) == canonical
+
+
+@pytest.mark.parametrize("flag", ["--model {}", "--model={}", "-m {}", "--to-model {}", "--to-model={}"])
+@pytest.mark.parametrize("model", ["claude-fable-5", "claude-sonnet-5-5", "unknown-model"])
+def test_reviewer_invocation_cannot_hide_a_retired_pin_behind_active_metadata(flag, model):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py " + flag.format(model)
+    with pytest.raises(ModelCatalogError, match="invocation model does not match"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("invocation", [
+    "delegate.py --model claude-fable-5-1 --to-model=claude-fable-5",
+    "delegate.py -m claude-fable-5 --model=claude-fable-5-1",
+    "delegate.py --model",
+    "delegate.py --model=",
+])
+def test_reviewer_invocation_checks_every_model_token(invocation):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = invocation
+    with pytest.raises(ModelCatalogError, match="invocation model does not match"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("flag", ["--model '{}'", "--model={}", "-m {}", "--to-model {}", "--to-model={}"])
+def test_reviewer_invocation_accepts_matching_catalog_aliases(flag):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py " + flag.format(
+        "claude-fable-5-1-thinking-high"
+    )
+    validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("prefix", [
+    ".venv/bin/python -m scripts.delegate dispatch",
+    ".venv/bin/python -u -m scripts.delegate dispatch",
+    ".venv/bin/python scripts/delegate.py dispatch",
+])
+@pytest.mark.parametrize("flag", ["--model", "-m"])
+@pytest.mark.parametrize("model", ["claude-fable-5-1", "claude-fable-5"])
+def test_python_module_selection_is_not_a_model_pin(prefix, flag, model):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = (
+        f"{prefix} --agent claude {flag} {model}"
+    )
+    if model == "claude-fable-5-1":
+        validate_catalog(catalog)
+    else:
+        with pytest.raises(ModelCatalogError, match="invocation model does not match"):
+            validate_catalog(catalog)
+
+
+def test_reviewer_invocation_rejects_malformed_shell_quoting():
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py --model 'claude-fable-5-1"
+    with pytest.raises(ModelCatalogError, match="invocation is malformed"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("model", ["grok-4.6", "unknown-model", ""])
+def test_orchestrator_seat_rejects_unroutable_fallback_model(model):
+    catalog = deepcopy(load_model_catalog())
+    catalog["orchestrator_seats"]["grok"]["fallback_model_id"] = model
+    with pytest.raises(ModelCatalogError, match="fallback_model_id"):
+        validate_catalog(catalog)
+
+
+def test_catalog_cli_help_explains_lookup_and_side_effects(monkeypatch, capsys):
+    from scripts.review.model_catalog import _main
+
+    monkeypatch.setattr("sys.argv", ["model_catalog", "--help"])
+    with pytest.raises(SystemExit) as exc:
+        _main()
+    assert exc.value.code == 0
+    output = capsys.readouterr().out
+    for text in ("--resolve-kimi-model", "--resolve-glm-model", "default", "Examples:", "no writes", "Exit codes:", "Related:"):
+        assert text in output
+
+
+@pytest.mark.parametrize(("model", "retired_id", "successor"), [
+    ("gpt-6-sol", "gpt-6-sol", "gpt-6.1-sol"),
+    ("gpt-5.6-sol", "gpt-5.6-sol", "gpt-6.1-sol"),
+    ("claude-fable-5", "claude-fable-5", "claude-fable-5-1"),
+    ("claude-fable-5[1m]", "claude-fable-5", "claude-fable-5-1"),
+])
+def test_catalog_cli_retired_model_prints_only_refusal(model, retired_id, successor):
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", model],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True, text=True, check=False, timeout=10,
+    )
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == (
+        f"model {model!r} is retired in the model catalog ({retired_id}); use {successor}\n"
+    )
+
+
+@pytest.mark.parametrize("model", ["gpt-6.1-sol", "claude-fable-5-1", "unknown-model"])
+def test_catalog_cli_non_retired_model_exits_silently(model):
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", model],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True, text=True, check=False, timeout=10,
+    )
+    assert result.returncode == 0
+    assert result.stdout == result.stderr == ""
+
+
+@pytest.mark.parametrize("model", [
+    "claude-fable-5",
+    "grok-4.6",
+    "claude-opus-5",
+    "claude-opus-4-8",
+    "claude-sonnet-5",
+    "gemini-3.7-flash-high",
+    "gemini-3.6-flash-high",
+    "gemini-3.5-flash-high",
+    "glm-5.2",
+    "deepseek-v4-pro",
+    "claude-sonnet-4.6-thinking",
+    "claude-opus-4.6-thinking",
+    "gpt-oss-120b",
+    "deepseek-v4.1-flash",
+])
+@pytest.mark.parametrize("reference", ["candidate", "endpoint", "default", "escalation", "family", "substitution_source", "substitution_target"])
+def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, reference):
+    catalog = deepcopy(load_model_catalog())
+    if reference == "candidate":
+        catalog["review_candidates"]["claude-fable-5-1"]["model_id"] = model
+    elif reference == "endpoint":
+        catalog["review_scheduler"]["endpoints"]["claude"]["models"].append(model)
+    elif reference == "default":
+        catalog["formal_cf_defaults"]["claude"]["model_id"] = model
+    elif reference == "escalation":
+        catalog["formal_cf_defaults"]["claude"]["escalate_model_id"] = model
+    elif reference == "family":
+        catalog["formal_cf_defaults"]["claude"]["family_models"].append(model)
+    elif reference == "substitution_source":
+        catalog["budget_substitution_models"]["cursor"][model] = "grok-4.7"
+    else:
+        catalog["budget_substitution_models"]["cursor"]["grok-4.7"] = model
+    with pytest.raises(ModelCatalogError):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-sonnet-5"])
+def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_ladders"]["critical"].append([model])
+    with pytest.raises(ModelCatalogError, match=r"Sonnet is excluded from security review|unknown candidate"):
+        validate_catalog(catalog)
+
+
+def test_issue_9301_active_exceptions_and_advisory_effort():
+    catalog = load_model_catalog()
+    for model in ("deepseek-v4.1-flash", "gemini-3.1-pro-high"):
+        assert catalog["models"][model]["lifecycle"] == "active"
+    assert {model for model, spec in catalog["models"].items()
+            if spec["family"] == "openai" and spec["lifecycle"] != "retired"} == {"gpt-6.1-sol", "gpt-6-luna"}
+    for section in ("orchestrator_seats", "formal_cf_defaults"):
+        for spec in catalog[section].values():
+            if spec.get("escalate_model_id") == "gpt-6.1-sol":
+                assert spec["escalate_effort"] == "high"
+    assert catalog["orchestrator_seats"]["codex"]["effort"] == "high"
+    assert catalog["formal_cf_defaults"]["codex"]["effort"] == "high"
+
+
+def test_sol_defaults_and_escalations_use_high_across_catalog():
+    bindings = []
+
+    def visit(value, path):
+        if isinstance(value, dict):
+            for model_key, effort_key in (("model_id", "effort"), ("escalate_model_id", "escalate_effort")):
+                if value.get(model_key) == "gpt-6.1-sol" and effort_key in value:
+                    assert value[effort_key] == "high", f"{path}.{effort_key}"
+                    bindings.append(f"{path}.{effort_key}")
+            for key, child in value.items():
+                visit(child, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                visit(child, f"{path}[{index}]")
+
+    visit(load_model_catalog(), "catalog")
+    assert len(bindings) == 8
+
+
+def test_live_claude_caller_defaults_are_active_catalog_models():
+    from scripts.ai_agent_bridge._claude import CLAUDE_ADVISORY_MODEL, CLAUDE_DEFAULT_ASK_MODEL
+    from scripts.ai_llm.claude_call import CLAUDE_MODEL_LADDER
+    catalog = load_model_catalog()
+    for model in (CLAUDE_DEFAULT_ASK_MODEL, CLAUDE_ADVISORY_MODEL, *CLAUDE_MODEL_LADDER):
+        assert catalog["models"][model]["lifecycle"] == "active"
+    assert CLAUDE_ADVISORY_MODEL == "claude-opus-5-5"
+
+
+@pytest.mark.parametrize("value", ["true", 1, None])
+def test_last_resort_marker_must_be_boolean(value):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["last_resort"] = value
+    with pytest.raises(ModelCatalogError, match="last_resort must be a boolean"):
+        validate_catalog(catalog)
+
+
+def test_primary_cannot_follow_last_resort_even_if_quality_is_equal():
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_ladders"]["critical"] = [["claude-fable-5-1"], ["claude-opus-5-5"]]
+    with pytest.raises(ModelCatalogError, match="improves quality in a later rung"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
+def test_grok_cannot_reenter_any_code_review_ladder(risk):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_ladders"][risk].append(["grok-4.7"])
+    with pytest.raises(ModelCatalogError, match="Grok never judges"):
+        validate_catalog(catalog)
+
+
+def test_catalog_selection_order_matches_last_resort_and_suitability_policy():
+    assert load_model_catalog()["policy"]["selection_order"] == [
+        "independence_and_hard_gates", "primary_before_last_resort",
+        "profile_risk_suitability", "review_quality_tier",
+        "health_and_quota_within_tier", "cost_within_equivalent_fit",
+    ]

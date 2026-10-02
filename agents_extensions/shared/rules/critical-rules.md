@@ -7,8 +7,8 @@
 
 ### 2. Use Python venv
 **ALWAYS** `.venv/bin/python`, **NEVER** `python3` or `python` directly.
-- pyenv Python 3.12.8 with `--enable-loadable-sqlite-extensions`
-- Recreate: `rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv`
+- pyenv Python 3.12.14 with `--enable-loadable-sqlite-extensions`
+- Recreate: `rm -rf .venv && ~/.pyenv/versions/3.12.14/bin/python -m venv .venv`
 
 ### 3. Language Settings
 **English**: all technical work. **Ukrainian**: curriculum content only.
@@ -48,10 +48,10 @@ This is the canonical statement; other files point here instead of restating it.
 not with `--no-verify`, not to unblock something urgent. **PRs only, always.** A direct push skips
 PR CI, review, and the pre-commit hooks in a single action.
 >
-> **This belongs in a repository ruleset, not only here** — industry treats it as a technical supply-chain
+> **This is a non-negotiable repository invariant** — industry treats it as a technical supply-chain
 > control (SLSA Source L3, OpenSSF Scorecard *Branch-Protection*), not etiquette: `main` write-protected,
 > **require pull request · no force-push · no deletions · no admin bypass for agent identities.**
-> Until the ruleset exists, this rule is all that stands there, and it already failed once as prose.
+> This invariant binds every worker, driver, and orchestrator.
 > Why this is a rule and not advice: on 2026-07-25 two commits (`5f425a5fe1`, `9debd99699`) were
 > pushed straight to `main`, changing `site/src/components/**` without regenerating the tracked
 > `docs/lesson-schema.yaml`. The **required** `Lesson Schema Drift` gate went red on `main`, every
@@ -107,6 +107,11 @@ forbidden is the middle path that caused the incident: replying with a question 
 > **Orchestrators:** verify a pushed PR, never a status field. Prior art:
 > `docs/bug-autopsies/codex-dispatch-stall.md` (#2985).
 
+**Local secret scan.** Run `scripts/audit/secret_scan_local.py` (offline TruffleHog) before opening a PR
+that changes credential, identity, transport or hook code, and after any suspected leak; never run
+TruffleHog in verified mode without an operator decision and never paste raw findings anywhere.
+Runbook: `docs/runbooks/secret-scanning.md`.
+
 **8.4 — Before merge, both must hold: (A) required CI green on the merge candidate, and (B) a review
 artifact from a model family different from the author's.** It must be **independent** (never review
 your own work) and an actual review — *discussion does not satisfy it*. Resolve the seat with
@@ -148,8 +153,8 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 - Enqueue **only** when all three hold (landing order #7450): exact-head cross-family CF APPROVE
   with **no BLOCKING finding outstanding** per §8.4 · PR is **not a draft** · **CI Gate green on
   that same head**. Pending is not green; a documented non-blocking finding does not hold enqueue.
-- Use `gh pr merge <N> --squash -R <owner/repo>` after both gates. The `automerge-ok` label and
-  auto-arm pipeline are retired; `--auto` is not a substitute for either gate. See
+- Use `.venv/bin/python -m scripts.publish pr-merge --number <N> --repo <owner/repo>` after both gates. Automated merge
+  configuration and `--auto` are not a substitute for either gate. See
   [`workflow.md`](workflow.md) for the binding landing order.
 - Do **not** pass `--delete-branch` while the PR is queued. Delete the remote branch only after
   `MERGED`, as part of post-merge cleanup (§7a / worktree-cleanup).
@@ -163,32 +168,24 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 - **Never `--admin`-bypass blocking CI** (pytest, ruff, frontend, schema-drift, gitleaks, radon,
   prompt-lint).
 - A **`cancelled`** required check is a gate failure, not a pass — re-run it. But after fixing the
-  **base branch**, use `gh pr update-branch`, **not** `gh run rerun`: rerun re-tests the original
+  **base branch**, use `.venv/bin/python -m scripts.publish pr-update-branch --number <N>`, **not** `.venv/bin/python -m scripts.publish run-rerun --number <N>`: rerun re-tests the original
   pinned merge SHA and reproduces the old result.
 - After any merge: delete the remote branch and remove the worktree (worktree first).
 
-**8.6 — The controls that must exist at the forge (these SOPs are standing in for them).**
-From an independent best-practice audit, ranked by value-per-effort. Anything above the line is worth
-more than any wording in §8.1–8.5:
+**8.6 — Supply-chain controls and merge invariants.**
+Core technical requirements for protected branch workflows:
 
-1. **Ruleset on `main`:** require pull request · required status check · no force-push · no deletions ·
+1. **Branch controls on `main`:** require pull request · required status check · no force-push · no deletions ·
    **no bypass for agent identities.** Stops the direct-push class outright.
 2. **Fix the cancellation lie.** A required check that reports `cancelled` fails the gate (correctly),
    while `cancel-in-progress` *manufactures* cancellations on every push. Together they deadlock the
    queue: no PR can hold a green gate under load. Fix by keying concurrency to the PR number or SHA and
    cancelling **only** for `pull_request`.
-3. **Merge queue** (`merge_group` wired, max group size 1 so failures attribute to one PR). This is the
-   real implementation of *never merge an untested combination* — the problem that two individually
-   green PRs can combine into a state neither validated.
-   > **Availability:** current GitHub documentation states merge queues are available for **any public
-   > repository** (and for private repos on Enterprise Cloud). The 2023 GA announcement's phrasing —
-   > "a managed organization with public repositories and GitHub Enterprise Cloud users" — reads as
-   > ambiguous but has been superseded; an earlier draft of this rule over-stated that uncertainty and
-   > was corrected in review. Verified 2026-07-25: this repo is **Organization-owned and public**, so it
-   > qualifies. Wire `merge_group` into every required workflow, drop wildcard branch rules, and set
-   > **maximum group size 1** if you want per-PR failure attribution.
+3. **Merge queue serialization.** Merge queues validate the exact combination intended for landing,
+   preventing the regression where individually green PRs combine into an unvalidated state. Wire `merge_group`
+   into required workflows and set maximum group size 1 for per-PR failure attribution.
 4. **Split the agent identities:** an author identity distinct from the approver/enqueue identity.
-   With one shared identity GitHub **cannot** enforce required reviews at all, because that identity
+   With one shared identity GitHub cannot enforce required reviews, because that identity
    cannot approve its own PR. This is what makes §8.4 and §8.5 enforceable rather than voluntary.
 5. **Stop gating on a whole-directory content hash.** A tracked generated file that hashes a whole
    directory serialises every PR touching it and invites semantic merge conflicts. Compute it in CI,
@@ -196,7 +193,6 @@ more than any wording in §8.1–8.5:
 
 **Explicitly NOT worth it at this scale** (named so nobody rebuilds them): Kubernetes OWNERS/Prow or
 Chromium CQ ceremony · chasing Scorecard/SLSA badge levels that require multiple humans · paid merge
-products before trying the free native queue · classifying an entire 12k-test suite **before** the
-cancellation and merge-queue fixes land — that last one is process theatre while `main` is red.
+products before trying the native queue · classifying a full 12k-test suite without serialized landing.
 
 </critical>

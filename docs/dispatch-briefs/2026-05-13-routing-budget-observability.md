@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Routing-budget observability: `/api/state/routing-budget` + pre-dispatch check
 
 **Issue:** to be filed as part of this dispatch (no GH issue yet). Premise documented in handoff `2026-05-13-m20-build-iteration-4-contract-shipped-brief.md` and user direction 2026-05-13: "we need much smarter routing."
@@ -16,9 +22,9 @@
 | "Endpoint returns the documented shape" | `curl -s http://localhost:8765/api/state/routing-budget \| python -m json.tool \| head -40` | Quote raw JSON keys |
 | "Burn% is computed from real usage" | `curl -s http://localhost:8765/api/state/routing-budget \| python -c 'import json,sys; d=json.load(sys.stdin); print(d["agents"]["claude"]["burn_pct_7d"])'` | Quote raw float |
 | "Budget config loaded" | `cat scripts/config/agent_budgets.yaml` | Quote raw file |
-| "Pre-dispatch check warns on hot agent" | `.venv/bin/python scripts/delegate.py dispatch --check-budget --agent claude --task-id test-warn --prompt "no-op" --mode read-only --dry-run` | Quote the WARNING line emitted to stderr |
+| "Pre-dispatch check warns on hot agent" | `"$PROJECT_PYTHON" scripts/delegate.py dispatch --check-budget --agent claude --task-id test-warn --prompt "no-op" --mode read-only --dry-run` | Quote the WARNING line emitted to stderr |
 | "Existing endpoints unbroken" | `curl -s http://localhost:8765/api/cost \| python -c 'import json,sys; json.load(sys.stdin); print("OK")'` and `curl -s http://localhost:8765/api/batch/usage \| python -c 'import json,sys; json.load(sys.stdin); print("OK")'` | Quote `OK` from each |
-| "Tests pass" | `.venv/bin/python -m pytest tests/api/ tests/test_delegate*.py tests/analytics/ -v` (NO `-x`) | Quote final `N passed in M.MMs` |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/api/ tests/test_delegate*.py tests/analytics/ -v` (NO `-x`) | Quote final `N passed in M.MMs` |
 | "Ruff clean" | `.venv/bin/ruff check scripts/api/state_router.py scripts/delegate.py scripts/analytics/ scripts/config/` | Quote `All checks passed!` |
 | "PR opened" | `gh pr view --json url` | Quote raw URL |
 
@@ -219,7 +225,7 @@ DO NOT trim other MEMORY entries; user manages those. Adding one bullet is fine 
 
 1. `git worktree add -b fix/routing-budget-observability ../routing-budget origin/main` — set up isolated worktree from clean `main`.
 2. **File-level work** per the 4 deliverables above. Re-use cost_report primitives.
-3. **Test suite:** `.venv/bin/python -m pytest tests/api/ tests/test_delegate*.py tests/analytics/ -v` — must show all new tests PASS and existing tests still PASS. **Forbid `pytest -x`** (per #1942). Capture full failure count if any.
+3. **Test suite:** `"$PROJECT_PYTHON" -m pytest tests/api/ tests/test_delegate*.py tests/analytics/ -v` — must show all new tests PASS and existing tests still PASS. **Forbid `pytest -x`** (per #1942). Capture full failure count if any.
 4. **Existing-endpoint sanity:** `curl -s http://localhost:8765/api/cost && curl -s http://localhost:8765/api/batch/usage` — both must return parseable JSON.
 5. **Ruff:** `.venv/bin/ruff check scripts/api/state_router.py scripts/delegate.py scripts/analytics/ scripts/config/` — "All checks passed!"
 6. **Commit:** conventional message `feat(routing-budget): add /api/state/routing-budget + delegate.py --check-budget pre-flight` — body cites the user direction "we need much smarter routing" and notes the agentic-pool launch trigger (2026-06-15).

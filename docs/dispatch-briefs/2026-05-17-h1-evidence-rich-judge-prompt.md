@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: Experiment H1 — evidence-rich judge prompt
 
 **Agent:** Claude headless (claude-opus-4-7)
@@ -143,7 +149,7 @@ And update `build_judge_prompt` signature to accept the dict instead of a list. 
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -m pytest tests/audit/ -q
+"$PROJECT_PYTHON" -m pytest tests/audit/ -q
 .venv/bin/ruff check scripts/audit/_judge_eval_lib.py scripts/audit/judge_calibration_matrix.py
 ```
 
@@ -153,7 +159,7 @@ If existing tests break: read them, understand why, fix the test if the contract
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -c "
+"$PROJECT_PYTHON" -c "
 import sys; sys.path.insert(0, 'scripts/audit')
 from _judge_eval_lib import build_judge_prompt, retrieve_evidence
 text = 'Доброго дня! Як ваші справи? Сподіваюся, у вас усе гаразд.'
@@ -179,7 +185,7 @@ If the heritage check returns no rows for the greeting, that means the local DB 
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python scripts/audit/judge_calibration_matrix.py \
+"$PROJECT_PYTHON" scripts/audit/judge_calibration_matrix.py \
   --out-dir audit/2026-05-17-judge-calibration-h1 \
   --families anthropic,openai,google,xai \
   --models claude-opus-4-7,claude-haiku-4-5-20251001,gpt-5.5,gemini-3.1-pro-preview,grok-4.3 \

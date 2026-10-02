@@ -18,7 +18,7 @@ def test_paradigm_grouping_keeps_entry_identity_and_order(synthetic_vesum):
 
 
 @pytest.mark.parametrize("status", ["ok", "ambiguous", "not_found", "invalid_input"])
-def test_stress_preserves_oracle_and_maps_tags(monkeypatch, status):
+def test_stress_preserves_oracle_and_maps_tags(monkeypatch, status, synthetic_sources):
     raw = {
         "status": status,
         "matches": [{"synthetic": "source bytes"}],
@@ -32,13 +32,14 @@ def test_stress_preserves_oracle_and_maps_tags(monkeypatch, status):
         return raw
 
     monkeypatch.setattr(sources.stress, "verify_stress", oracle)
-    result = sources.stress_for_form("synthetic’form", "noun:f:v_rod")
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        result = api.stress_for_form("synthetic’form", "noun:f:v_rod")
     assert result.raw is raw
     assert result.content_hash == "a" * 64
     assert calls == [("synthetic'form", ["Case=Gen", "Gender=Fem", "Number=Sing", "upos=NOUN"])]
 
 
-def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch):
+def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch, synthetic_sources):
     calls = []
 
     def oracle(word, *, tags):
@@ -47,7 +48,7 @@ def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch):
 
     monkeypatch.setattr(sources.stress, "verify_stress", oracle)
     progress = []
-    with sources.Sources(report=progress.append) as api:
+    with sources.Sources(sources_db=synthetic_sources, report=progress.append) as api:
         result = api.stress_many(
             [
                 ("synthetic", "noun:f:v_naz"),
@@ -57,7 +58,27 @@ def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch):
             ]
         )
     assert len(result) == len(calls) == 3
-    assert progress == ["stress: 3/3"]
+    assert len(progress) == 3
+    assert progress[0].startswith("snapshot: pinned;")
+    assert progress[1] == "stress: 3/3"
+    assert progress[2].startswith("snapshot: released after")
+
+
+def test_stress_pins_instance_connection_and_passes_lemma(monkeypatch, synthetic_sources):
+    from scripts.wiki import sources_db
+
+    calls = []
+
+    def oracle(word, *, tags, lemma):
+        calls.append((word, tags, lemma, sources_db._get_conn()))
+        return {"status": "pending", "matches": [], "source": {"digest": "a" * 64}}
+
+    monkeypatch.setattr(sources.stress, "verify_stress", oracle)
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        api.stress_for_form("село", "noun:inanim:n:v_naz", lemma="село")
+        assert calls == [
+            ("село", ["Animacy=Inan", "Case=Nom", "Gender=Neut", "Number=Sing", "upos=NOUN"], "село", api._db())
+        ]
 
 
 def test_readonly_uri_and_ulif_group_gate(monkeypatch, synthetic_sources):
@@ -184,9 +205,21 @@ def test_kaikki_exact_readonly_and_alignment(synthetic_kaikki_side_db):
 @pytest.mark.parametrize(
     "gloss",
     [
-        "(bad", "bad)", "[bad", "bad]", "(bad]", "[bad)",
-        "“bad", "bad”", '"bad',
-        ")bad", "]bad", "”bad", ",bad", ";bad", ".bad",
+        "(bad",
+        "bad)",
+        "[bad",
+        "bad]",
+        "(bad]",
+        "[bad)",
+        "“bad",
+        "bad”",
+        '"bad',
+        ")bad",
+        "]bad",
+        "”bad",
+        ",bad",
+        ";bad",
+        ".bad",
         "мною",
         # Copied from Kaikki side-db-v1 content_sha256
         # 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5.
@@ -205,7 +238,8 @@ def test_kaikki_refuses_entire_entry_if_one_gloss_is_malformed():
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
     payload["glosses"] = ["under (a roof)", 'beneath "something" [figurative]']
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (
-        'under (a roof); beneath "something" [figurative]', None
+        'under (a roof); beneath "something" [figurative]',
+        None,
     )
 
 
@@ -221,7 +255,7 @@ def test_kaikki_env_path_override(monkeypatch, tmp_path):
     assert sources.Sources().kaikki_db == side
 
 
-def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch):
+def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch, synthetic_sources):
     calls = []
 
     def oracle(word, *, tags):
@@ -229,8 +263,9 @@ def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch):
         return {"status": "not_found", "matches": [], "source": {"digest": "a" * 64}}
 
     monkeypatch.setattr(sources.stress, "verify_stress", oracle)
-    sources.stress_for_form("цьому", "adj:m:v_dav:pron:dem")
-    sources.stress_for_form("цьому", "adj:m:v_mis:pron:dem")
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        api.stress_for_form("цьому", "adj:m:v_dav:pron:dem")
+        api.stress_for_form("цьому", "adj:m:v_mis:pron:dem")
     assert calls[0][1] == ["Case=Dat", "Gender=Masc", "Number=Sing", "PronType=Dem", "upos=PRON"]
     assert calls[1][1] == ["Case=Loc", "Gender=Masc", "Number=Sing", "PronType=Dem", "upos=PRON"]
 

@@ -1,5 +1,11 @@
 """GitHub integration: posting reviews to issues."""
 
+try:
+    from scripts.opsec.prepublish import PublishBlocked
+    from scripts.publish.github import Request, request_run
+except ModuleNotFoundError:
+    from opsec.prepublish import PublishBlocked
+    from publish.github import Request, request_run
 import subprocess
 
 from secret_redactor import redact_text
@@ -38,10 +44,17 @@ def _split_content(content: str, limit: int = GH_CHAR_LIMIT) -> list[str]:
 def _gh_comment(issue_num: int, body: str) -> bool:
     """Post a comment on a GitHub issue. Returns True on success."""
     body = redact_text(body) or ""
-    result = subprocess.run(
-        ["gh", "issue", "comment", str(issue_num), "-F", "-"],
-        input=body, text=True, capture_output=True, timeout=15
-    )
+    try:
+        result = request_run(
+            Request("issue-comment", number=issue_num, body=body),
+            input=None,
+            text=True,
+            capture_output=True,
+            timeout=15,
+        )
+    except PublishBlocked as exc:
+        print(f"publish_blocked: {exc}")
+        return False
     if result.returncode != 0:
         stderr = redact_text(result.stderr or "") or ""
         print(f"⚠️  GitHub comment failed: {stderr[:200]}")

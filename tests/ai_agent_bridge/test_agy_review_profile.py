@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import json
 from types import SimpleNamespace
 
 import pytest
 
-from scripts.ai_agent_bridge._agy import gemini_review_profile_error
+from scripts.ai_agent_bridge._agy import (
+    gemini_content_paths_error,
+    gemini_review_profile_error,
+    is_content_class_path,
+)
 from scripts.ai_agent_bridge._channels_cli import _gemini_review_request_error
 from scripts.ai_agent_bridge._cli import _handle_acp_compat
 from scripts.audit import llm_reviewer_dispatch
@@ -30,6 +35,46 @@ def test_code_profile_cites_the_operator_rule() -> None:
 
 def test_ukrainian_profile_is_allowed() -> None:
     assert gemini_review_profile_error("ukrainian") is None
+
+
+@pytest.mark.parametrize("level", ["a1", "a2", "b1", "b2"])
+def test_generated_arc_data_is_content(level: str) -> None:
+    path = f"site/src/data/arc-{level}.json"
+    assert is_content_class_path(path)
+    assert gemini_content_paths_error(["site/src/content/docs/a1/index.mdx", path]) is None
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "site/src/data/other.json",
+        "site/src/data/arc-a1.json.bak",
+        "site/src/data/arc-x9.json",
+        "site/src/data/sub/arc-a1.json",
+        "site/src/data/arc-a1.json/x",
+        "scripts/build/build_arc_landing.py",
+    ],
+)
+def test_other_data_and_code_paths_remain_non_content(path: str) -> None:
+    assert not is_content_class_path(path)
+    message = gemini_content_paths_error(["site/src/content/docs/a1/index.mdx", path])
+    assert message is not None
+    assert "gemini_code_review_forbidden" in message
+    assert f"first non-content path: {path}" in message
+
+
+def test_arc_content_paths_match_landing_generator() -> None:
+    """Bind the fixed allowlist to the generator's validated inputs and outputs."""
+    from scripts.ai_agent_bridge._agy import _CONTENT_ARC_PATHS
+    from scripts.build import build_arc_landing as generator
+    from scripts.curriculum.arc.loader import SCHEMA_PATH
+
+    schema = json.loads((generator.REPO_ROOT / SCHEMA_PATH).read_text(encoding="utf-8"))
+    generated_paths = {
+        generator.Roots(generator.REPO_ROOT, level).data_json.relative_to(generator.REPO_ROOT).as_posix()
+        for level in schema["properties"]["level"]["enum"]
+    }
+    assert generated_paths == _CONTENT_ARC_PATHS
 
 
 def test_ask_agy_review_without_profile_is_refused() -> None:
@@ -464,8 +509,90 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
     ]
 
 
+_ADVISOR_TASK = "sol-advisor"
+_OWNED_PATH = "scripts/delegate.py"
+
+
+def _with_sol_envelope(monkeypatch: pytest.MonkeyPatch, tmp_path, argv: list[str]) -> list[str]:
+    """Record a finished, sealed gpt-6.1-sol advisory task bound to ``argv``; return ``argv`` naming it.
+
+    A Gemini Flash implementation dispatch is a bounded worker (#9275): admission
+    refuses it without an envelope before the checks these tests exercise. The
+    record matches what the advisor's own dispatch and worker leave behind.
+    """
+    import json
+
+    from scripts import delegate
+    from scripts.agent_runtime import bounded_advisory
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    binding = delegate.advisory_binding_sha256(delegate.build_parser().parse_args(argv))
+    envelope = {
+        "task_contract": "Add the requested dispatch guard with regression tests.",
+        "owned_paths": [_OWNED_PATH],
+        "max_changed_files": 2,
+        "max_non_test_loc": 40,
+        "constraints": ["change the dispatch guard only"],
+        "risk_boundaries": ["no change to admission logic"],
+        "acceptance_evidence": ["a regression test for the guard"],
+        "escalation_triggers": ["the guard needs a new dispatch flag"],
+        "dispatch_args_sha256": binding,
+    }
+    text = f"Advice follows.\n\n```advisory-envelope\n{json.dumps(envelope, indent=2)}\n```\n"
+    result_path = tasks / f"{_ADVISOR_TASK}.result"
+    result_path.write_text(text, encoding="utf-8")
+    record = {
+        "task_id": _ADVISOR_TASK,
+        "run_nonce": "advisor-nonce",
+        "agent": "codex",
+        "model": "gpt-6.1-sol",
+        "mode": "read-only",
+        "status": "done",
+        "result_file": str(result_path),
+        "advisory_role": "bounded_advisory_envelope",
+        "advisory_route": "execution_routing.sol_advised_bounded.advisor",
+        "advisory_binding_sha256": binding,
+        "advisory_seal": bounded_advisory.seal_advisor_result(text, model="gpt-6.1-sol", run_nonce="advisor-nonce"),
+    }
+    (tasks / f"{_ADVISOR_TASK}.json").write_text(json.dumps(record), encoding="utf-8")
+    return [*argv, "--advisory-task", _ADVISOR_TASK]
+
+
+_AGY_IMPL_ARGV = [
+    "dispatch",
+    "--agent",
+    "agy",
+    "--task-id",
+    "agy-impl",
+    "--prompt",
+    "Implement the requested dispatch guard and add regression tests.",
+    "--owned-path",
+    _OWNED_PATH,
+    "--branch",
+    "feature",
+]
+
+
+def test_agy_implementation_dispatch_without_envelope_is_refused(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path
+) -> None:
+    """With no advisory envelope, admission refuses before any git call or spawn (#9275)."""
+    from scripts import delegate
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr("subprocess.run", lambda command, **_k: (_ for _ in ()).throw(AssertionError(command)))
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    assert delegate.cmd_dispatch(delegate.build_parser().parse_args(_AGY_IMPL_ARGV)) == 2
+    err = capsys.readouterr().err
+    assert "BOUNDED_ENVELOPE_REQUIRED" in err
+    assert "--advisory-task" in err
+    assert not (tmp_path / "tasks" / "agy-impl.json").exists()
+
+
 def test_agy_implementation_dispatch_is_not_review_gated(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path
 ) -> None:
     from scripts import delegate
 
@@ -476,20 +603,9 @@ def test_agy_implementation_dispatch_is_not_review_gated(
             return subprocess.CompletedProcess(command, 0, stdout="feature\n")
         raise AssertionError(f"implementation dispatch must not list a review diff: {command}")
 
+    argv = _with_sol_envelope(monkeypatch, tmp_path, _AGY_IMPL_ARGV)
     monkeypatch.setattr("subprocess.run", fake_run)
-    args = delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "agy",
-            "--task-id",
-            "agy-impl",
-            "--prompt",
-            "Implement the requested dispatch guard and add regression tests.",
-            "--branch",
-            "feature",
-        ]
-    )
+    args = delegate.build_parser().parse_args(argv)
     assert delegate.cmd_dispatch(args) == 2
     err = capsys.readouterr().err
     assert "write-shaped prompt" in err
@@ -847,7 +963,7 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
 
 
 def test_delegate_pr_pinned_head_must_match_resolved_sha(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path
 ) -> None:
     """``--pr`` plus an unrelated ``--pinned-head`` is refused, even with the right branch."""
     from scripts import delegate
@@ -867,7 +983,9 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
 
     monkeypatch.setattr("subprocess.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
-    args = delegate.build_parser().parse_args(
+    argv = _with_sol_envelope(
+        monkeypatch,
+        tmp_path,
         [
             "dispatch",
             "--agent",
@@ -876,14 +994,17 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
             "agy-pr-pin-mismatch",
             "--prompt",
             "Implement the requested dispatch guard and add regression tests.",
+            "--owned-path",
+            _OWNED_PATH,
             "--pr",
             "77",
             "--pinned-head",
             other,
             "--branch",
             "feature",
-        ]
+        ],
     )
+    args = delegate.build_parser().parse_args(argv)
     assert delegate.cmd_dispatch(args) == 2
     err = capsys.readouterr().err
     assert f"--pinned-head {other} is not PR #77 head {sha}" in err
@@ -891,7 +1012,7 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
 
 
 def test_delegate_pr_pinned_head_requires_the_pr_branch(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path
 ) -> None:
     """A pin without ``--branch`` must not fall through and start from main."""
     from scripts import delegate
@@ -910,7 +1031,9 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
 
     monkeypatch.setattr("subprocess.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
-    args = delegate.build_parser().parse_args(
+    argv = _with_sol_envelope(
+        monkeypatch,
+        tmp_path,
         [
             "dispatch",
             "--agent",
@@ -919,12 +1042,15 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
             "agy-pr-pin-no-branch",
             "--prompt",
             "Implement the requested dispatch guard and add regression tests.",
+            "--owned-path",
+            _OWNED_PATH,
             "--pr",
             "77",
             "--pinned-head",
             sha,
-        ]
+        ],
     )
+    args = delegate.build_parser().parse_args(argv)
     assert delegate.cmd_dispatch(args) == 2
     err = capsys.readouterr().err
     assert "--pr 77 with --pinned-head requires --branch 'feature'" in err

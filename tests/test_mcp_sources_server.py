@@ -13,6 +13,7 @@ Covers:
 """
 
 import asyncio
+import copy
 import hashlib
 import importlib.util
 import json
@@ -37,6 +38,13 @@ from mcp.types import CallToolRequestParams, TextContent
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
 VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
+
+
+def test_session_fixture_isolates_request_log(server_module, sources_log_dir: Path) -> None:
+    server_module._log_tool_call("session-isolation-probe", {})
+    log_path = sources_log_dir / "mcp-sources-requests.jsonl"
+    entries = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
+    assert entries[-1]["tool"] == "session-isolation-probe"
 
 
 @pytest.fixture
@@ -103,7 +111,18 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
     monkeypatch.setattr(sources_db, "_conn", None)
     task_id = "sources-read-only-lookup"
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(worktree)})
+    # What dispatch records for a read-only Gemini Flash Ukrainian review (#9275).
+    exemption = {
+        "model_id": "gemini-3.8-flash-high",
+        "task_family": "ukrainian-review",
+        "review_profile": None,
+        "mode": "read-only",
+        "classified_paths": [],
+    }
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(worktree), "mode": "read-only", "advisory_exemption": exemption},
+    )
 
     def lookup(*_args, **_kwargs):
         result = _run(
@@ -208,6 +227,7 @@ class TestListTools:
             "search_text",
             "search_literary",
             "search_external",
+            "search_resources",
             "get_full_text",
             "get_chunk_context",
             "collection_stats",
@@ -1321,7 +1341,7 @@ class TestSearchSourcesHandler:
             _run(server_module.handle_search_sources({"query": "голосні звуки"}))
             mock.assert_called_once_with("голосні звуки", track="", limit=10)
 
-    def test_returns_json_payload(self, server_module):
+    def test_returns_summary_and_structured_hits(self, server_module):
         mock_hits = [
             {
                 "chunk_id": "ukwiki:test-1",
@@ -1337,13 +1357,76 @@ class TestSearchSourcesHandler:
                 server_module.handle_search_sources({"query": "голосні звуки", "track": "a1", "limit": 5})
             )
             mock.assert_called_once_with("голосні звуки", track="a1", limit=5)
-            assert '"corpus": "ukrainian_wiki"' in content[0].text
-            assert '"chunk_id": "ukwiki:test-1"' in content[0].text
+            assert "Found 1 results" in content[0].text
+            assert "1. ukwiki:test-1 — Голосні звуки (keyword_rrf)" in content[0].text
+            assert content[0].text == envelope["summary_prose"]
+            assert envelope["hits"] == mock_hits
             assert envelope["status"] == "ok"
             assert envelope["match_count"] == 1
             assert envelope["hits"][0]["chunk_id"] == "ukwiki:test-1"
             assert envelope["hits"][0]["ranking"] == "keyword_rrf"
             assert envelope["ranking"] == "keyword_rrf"
+
+    def test_source_bodies_appear_once_on_wire(self, server_module, monkeypatch):
+        bodies = [f"UNIQUE_SOURCE_BODY_{i}:" + "x" * 4000 for i in range(5)]
+        hits = [
+            {
+                "chunk_id": f"source:{i}", "title": f"Title {i}",
+                "text": body, "full_text": body, "final_score": 0.9 - i / 10,
+                "ranking": "keyword_rrf",
+            }
+            for i, body in enumerate(bodies)
+        ]
+        original = copy.deepcopy(hits)
+        monkeypatch.setattr(server_module, "_review_recorder", lambda: None)
+        with patch("wiki.sources_db.search_sources", return_value=hits):
+            result = _run(server_module._on_call_tool(
+                None, CallToolRequestParams(name="search_sources", arguments={"query": "fixture", "limit": 5})
+            ))
+
+        assert result.is_error is False
+        envelope = result.structured_content
+        assert envelope["match_count"] == 5
+        assert len(envelope["summary_prose"]) < 1500
+        assert result.content[0].text == envelope["summary_prose"]
+        assert envelope["hits"] == [{k: v for k, v in hit.items() if k != "full_text"} for hit in original]
+        wire = result.model_dump_json(by_alias=True)
+        for body in bodies:
+            assert wire.count(body) == 1
+        assert len(wire) < sum(map(len, bodies)) + 3000
+        assert hits == original  # Presentation must not mutate the database result.
+
+    @pytest.mark.parametrize(("hit", "expected"), [
+        (
+            {"text": "snippet", "full_text": "distinct complete body"},
+            {"text": "snippet", "full_text": "distinct complete body"},
+        ),
+        ({"full_text": "body without a snippet"}, {"full_text": "body without a snippet"}),
+        ({"text": "body without an alias"}, {"text": "body without an alias"}),
+        ({"text": "", "full_text": ""}, {"text": ""}),
+    ])
+    def test_preserves_distinct_or_unpaired_text(self, server_module, hit, expected):
+        original = copy.deepcopy(hit)
+        with patch("wiki.sources_db.search_sources", return_value=[hit]):
+            _, envelope = _run(server_module.handle_search_sources({"query": "fixture"}))
+        assert envelope["hits"] == [expected]
+        assert hit == original
+
+    def test_summary_is_bounded_and_keeps_returned_order(self, server_module):
+        hits = [
+            {"chunk_id": f"source:{i}", "title": "Long title " * 500, "text": f"body:{i}"}
+            for i in range(20)
+        ]
+        with patch("wiki.sources_db.search_sources", return_value=hits):
+            content, envelope = _run(server_module.handle_search_sources({"query": "fixture", "limit": 20}))
+        summary = content[0].text
+        assert len(summary) < 1500
+        assert summary.startswith("Found 20 results")
+        assert "15 more results in structured hits." in summary
+        assert [line.split(" — ")[0] for line in summary.splitlines()[1:6]] == [
+            f"{i + 1}. source:{i}" for i in range(5)
+        ]
+        assert envelope["hits"] == hits
 
     def test_top_level_ranking_is_mixed_when_hits_differ(self, server_module):
         mock_hits = [

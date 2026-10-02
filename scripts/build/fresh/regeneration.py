@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -17,12 +19,41 @@ SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-regeneration-l
 INPUT_KEYS = ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")
 
 
+def inputs_digest(inputs: Mapping[str, str]) -> str:
+    """Short digest of an attempt's ``INPUT_KEYS`` values; missing keys count as zeros, as in the ledger."""
+    values = [inputs.get(key, "0" * 64) for key in INPUT_KEYS]
+    return hashlib.sha256(json.dumps(values, separators=(",", ":")).encode("ascii")).hexdigest()[:10]
+
+
+def writer_inputs(hashes: Mapping[str, str], card_sha256: str, prompt_sha256: str) -> dict[str, str]:
+    """The complete ``INPUT_KEYS`` snapshot every writer entry point keys its task ID and ledger on (#8425)."""
+    return {
+        "plan_sha256": hashes["plan_sha256"],
+        "pack_lock": hashes["pack_lock"],
+        "words_lock": hashes["words_lock"],
+        "card_sha256": card_sha256,
+        "prompt_sha256": prompt_sha256,
+    }
+
+
+def writer_task_id(level: str, slug: str, n: int, attempt: int, effort: str | None, inputs: Mapping[str, str]) -> str:
+    """Key dispatch attempts by inputs and effort; keep the lesson's regeneration budget separate.
+
+    Changed inputs restart the ledger at attempt 1, so their digest keeps a new run from reusing an earlier
+    run's ID; identical inputs keep the same base ID whichever entry point dispatches them. The writer
+    reuses a done record and only adds a retry suffix after a terminal non-done record, retaining all
+    prior evidence. Omitting effort keeps the seat's own default.
+    """
+    task_id = f"write-{level}-{slug}-{n}-{attempt}-{inputs_digest(inputs)}"
+    return f"{task_id}-{effort}" if effort is not None else task_id
+
+
 def _validate(doc: dict[str, Any]) -> None:
     schema = json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(doc)
 
 
-def load_ledger(path: Path, slug: str, n: int) -> dict[str, Any]:
+def load_ledger(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None) -> dict[str, Any]:
     if not path.exists():
         return {"slug": slug, "n": n, "attempts": [], "regenerations": 0, "terminal_layer": None}
     lock.require(path)
@@ -30,35 +61,91 @@ def load_ledger(path: Path, slug: str, n: int) -> dict[str, Any]:
     _validate(doc)
     if (doc["slug"], doc["n"]) != (slug, n):
         raise ValueError("regeneration ledger belongs to another lesson")
+    if (
+        inputs is not None
+        and doc["attempts"]
+        and any(doc["attempts"][-1]["inputs"][key] != inputs.get(key, "0" * 64) for key in INPUT_KEYS)
+    ):
+        doc.update(attempts=[], regenerations=0, terminal_layer=None)
     return doc
 
 
-def record_failure(path: Path, slug: str, n: int, failure: dict[str, Any], inputs: dict[str, str], *,
-                   at: str | None = None) -> dict[str, Any]:
-    """Record a failed attempt; repeated checks and the third failure are terminal."""
-    doc = load_ledger(path, slug, n)
+def record_writer_call(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None) -> dict[str, Any]:
+    """Count delivered retries by completed failures, so re-harvesting a done reply is idempotent.
+
+    Dispatch/harness failures never call this. An interrupted check can harvest the same
+    successful task again without consuming another regeneration.
+    """
+    doc = load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc
+    if doc.get("last_success") or not doc["attempts"]:
+        doc.update(attempts=[], regenerations=0)
+    else:
+        if len(doc["attempts"]) > 2:
+            doc["terminal_layer"] = "driver"
+        else:
+            doc["regenerations"] = max(doc["regenerations"], len(doc["attempts"]))
+    _validate(doc)
+    lock.write(path, lock.yaml_bytes(doc))
+    return doc
+
+
+def record_harness_failure(
+    path: Path, slug: str, n: int, reason: str, inputs: dict[str, str], *, at: str | None = None
+) -> dict[str, Any]:
+    """Keep harness evidence separately, without changing the content regeneration ledger."""
+    evidence_path = path.with_name(f"lesson-{n}.writer-harness.yaml")
+    if evidence_path.exists():
+        lock.require(evidence_path)
+        evidence = yaml.safe_load(evidence_path.read_text(encoding="utf-8"))
+        if (evidence["slug"], evidence["n"]) != (slug, n):
+            raise ValueError("writer harness evidence belongs to another lesson")
+    else:
+        evidence = {"slug": slug, "n": n, "layer": "harness", "failures": []}
+    evidence["failures"].append(
+        {"reason": reason, "inputs": dict(inputs), "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z")}
+    )
+    lock.write(evidence_path, lock.yaml_bytes(evidence))
+    return load_ledger(path, slug, n, inputs)
+
+
+def record_failure(
+    path: Path, slug: str, n: int, failure: dict[str, Any], inputs: dict[str, str], *, at: str | None = None
+) -> dict[str, Any]:
+    """Record a failed attempt; repeated checks and the third failure are terminal."""
+    doc = load_ledger(path, slug, n, inputs)
+    if doc["terminal_layer"] is not None:
+        return doc
+    if doc.get("last_success") or not doc["attempts"]:
+        doc.update(attempts=[], regenerations=0)
     previous = doc["attempts"]
     doc.pop("last_success", None)
     layer = failure["layer"]
     if layer not in {"writer", "plan", "pack", "word_store", "engine", "driver"}:
         raise ValueError(f"unknown failure layer {layer!r}")
     previous_same = any(row["failed_check"] == failure["check"] for row in previous)
-    prior_count = doc["regenerations"]
-    if previous:
-        doc["regenerations"] = min(2, prior_count + 1)
-    previous.append({
-        "attempt": len(previous) + 1,
-        "failed_check": failure["check"],
-        "code": failure.get("code", str(failure["check"])),
-        "reason": failure["reason"],
-        "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
-    })
+    # Both delivered writer replies and direct runner failures use the completed-attempt count.
+    doc["regenerations"] = max(doc["regenerations"], min(2, len(previous)))
+    previous.append(
+        {
+            "attempt": len(previous) + 1,
+            "failed_check": failure["check"],
+            "code": failure.get("code", str(failure["check"])),
+            "reason": failure["reason"],
+            "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+            "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
+        }
+    )
     if previous_same:
-        doc["terminal_layer"] = {"writer": "plan", "plan": "plan", "pack": "pack", "word_store": "pack",
-                                 "engine": "driver", "driver": "driver"}[layer]
+        doc["terminal_layer"] = {
+            "writer": "plan",
+            "plan": "plan",
+            "pack": "pack",
+            "word_store": "pack",
+            "engine": "driver",
+            "driver": "driver",
+        }[layer]
     elif doc["regenerations"] >= 2:
         doc["terminal_layer"] = "driver"
     _validate(doc)
@@ -66,17 +153,25 @@ def record_failure(path: Path, slug: str, n: int, failure: dict[str, Any], input
     return doc
 
 
-def record_success(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None, *,
-                   at: str | None = None) -> dict[str, Any]:
+def record_success(
+    path: Path, slug: str, n: int, inputs: dict[str, str] | None = None, *, at: str | None = None
+) -> dict[str, Any]:
     """Count a regeneration that succeeded without another failure row."""
-    doc = load_ledger(path, slug, n)
+    doc = load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is None:
-        doc["regenerations"] = min(2, max(doc["regenerations"], len(doc["attempts"])))
+        if not doc.get("last_success"):
+            doc["regenerations"] = min(2, max(doc["regenerations"], len(doc["attempts"])))
         if inputs is not None:
             previous = doc.get("last_success") or {}
             if previous.get("inputs") != inputs:
-                doc["last_success"] = {"at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-                                       "through_check": 12, "inputs": dict(inputs)}
+                doc["last_success"] = {
+                    "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+                    "through_check": 12,
+                    "inputs": dict(inputs),
+                }
+        else:
+            # A caller without an input snapshot still ends the failed-attempt series.
+            doc["attempts"] = []
         _validate(doc)
         lock.write(path, lock.yaml_bytes(doc))
     return doc

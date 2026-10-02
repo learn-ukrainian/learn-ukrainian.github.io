@@ -1,0 +1,181 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-special-signs"
+  attempt_id: "claude-full-att-3"
+  manifest_sha256: "46d73712950cd8ab3349e3b54bdf089bfc45529c12f0eae55bf9203dd33de88b"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "e777a0cdeb4402bfcb4c071be7d0fc16dd85076a3641b3f4660618b4c52814d9"
+checks:
+  closing_shape: clean  # shape (a): lesson 8 has kind recap; rule 1(b) is not used, so there is nothing to justify
+  title_describes_job: clean  # title "літери" plus the English subtitle match lessons 1-8; every prose sentence checked is in one language, and Ukrainian items are quoted only when the sentence is about them
+  title_quantities: clean  # "eight remaining letters" = scope letters.count 8; the prior state has 25 letters, and 25 + 8 = 33 (search_text rr-e8345c431b2e13d70bce, chunk 5-klas-ukrmova-zabolotnyi-2023_s0062: "В українському алфавіті 33 букви")
+  quoted_forms: clean  # inspect_words rr-a6b4c53a5a469b19d1df: all 28 quoted forms are CLEAN (радію = verb:imperf:pres:s:1 of радіти; дзиґа inanim xp2 "річ"); їжя and Маріа are NOT_FOUND, as lesson 2 a6 states
+  sequencing: clean  # every letter is taught before use; W-162/W-163 were modeled at position 2 (reading-ukrainian plan, repo context); no arc chunk is analysed
+  sizing: [F-5]
+  inventory: [F-2]
+  activities: [F-1, F-6, F-7, F-8, F-9]
+  evidence_fit: [F-3]
+  standard_and_ulp: [F-4]
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 2, activity: a6, quote: "Original teaching job retained as print decoding plus teacher-supported pronunciation" }
+      - { lesson: 5, activity: a6, quote: "Original teaching job retained as print decoding plus teacher-supported pronunciation" }
+    dimension: activity
+    severity: MINOR
+    claim: >-
+      R-19 names fill-in as the example of a dull exercise. This plan puts a fill-in in every workbook from lesson 2 to
+      lesson 6, and lessons 5 and 6 have two each, so there are seven in all. Each one carries the same boilerplate,
+      which records it as a stand-in for an earlier choose-the-printed-word task. Count-syllables also repeats in
+      lessons 2–5. No focus states a progression that would justify these repeats. The lesson 2 and lesson 5 workbooks
+      have no quiz or find-and-fix model, although the sources support one. Avramenko p. 82 (search_text, chunk
+      5-klas-ukrmova-avramenko-2022_s0083) has the exercise "Знайдіть по одній помилці в кожному звуковому записі" on
+      я/ю/є values. The pack's X-006 already models find-and-repair. T-040–T-042 (Я values) and T-010/T-046 (hard/soft
+      дз) supply the transcriptions such a task needs. In lesson 5, inline a2 and workbook a5–a7 all work on the same
+      four words. Against v1: v1 has 12 activities (7 workbook, 39 workbook response opportunities), including two
+      error-correction activities with 10 items. The fresh plan has more activities (22 workbook) but only one
+      find-and-repair (lesson 3 a5, two items). Response opportunities are not available at plan stage, so the item
+      comparison remains an evidence gap. Fix: in lessons 2 and 5, replace one fill-in with a find-and-fix on a sourced
+      transcription, and state the progression the remaining fill-ins follow.
+    evidence: { receipt: "rr-15b8e8c7bc35ed6d8f25" }
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 8, step: s2, quote: "The snail passage T-035 is optional unscored reading support only." }
+    dimension: recap
+    severity: MINOR
+    claim: >-
+      The recap keeps the T-035 snail passage and lists W-165–W-170 (любити, равлик, один, старенький, мандрувати, час)
+      as incidental words. No earlier lesson of this module uses them, and neither earlier position's plan does. The
+      passage brings B1 vocabulary (query_cefr_level gives равлик as B1; the pack word records give старенький and
+      мандрувати as B1) and the past form любив. Yet the lesson's own rationale promises a recap "without new inventory",
+      and R-03 says a recap is not another presentation cycle. R-28 makes every listed evidence id mandatory, so calling
+      the passage "optional" does not keep it out of the written lesson. Fix: remove T-035 and its six incidental words
+      from lesson 8, or move the passage into a teach lesson where it can be taught.
+    evidence: { receipt: "rr-e3ad9759a351b2a9fd4a" }
+    could_be_a_gate: "no"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 2, activity: a2, quote: "compare the taught Ї/І rows of the displayed alphabet table" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: >-
+      The lesson 2 a2 host, T-012, is the full 33-letter table with letter names (search_text, chunk
+      5-klas-ukrmova-zabolotnyi-2023_s0001). Its Ї and І rows show only the glyphs and the names "ї" and "і". They do not
+      show the [й]+[і] versus [і] values the item asks the learner to choose between, so the displayed quote does not
+      support the decision; the answer rests on explains-only T-013. Showing the table in lesson 2 also puts every letter
+      not yet taught in front of the learner with its name (Є, Ю, Я, Ц, Щ, Ф, Ь "знак м’якшення"), which is lesson 7's
+      job. T-002 ("Бачу Ї, ї. Чую [й], [і].") states the value directly, and T-030 isolates the Ї ї glyphs. Fix: host
+      the item on T-002 and T-030 instead of the whole alphabet table.
+    evidence: { receipt: "rr-e8345c431b2e13d70bce" }
+    could_be_a_gate: "no"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 7, step: s4, quote: "Teach that personal names begin with a capital using T-039" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      Position 3 is the only arc position that cites Standard line 572 (S-001). That line's capital/small examples pair
+      proper names with lowercase derived words: Київ/київський, Олена/олівець, Україна/українець. The plan covers only
+      the personal-name pair (T-039; the plan also cites Pravopys §49.1). No lesson covers geographic names, although
+      Україна and Київ can be decoded after lesson 2 and are printed on the primer's Ї page (T-002). The norm is Pravopys
+      2019 §50 (query_pravopys section 50: rule 1 for geographic proper names; rule 6, "Назви держав пишемо з великої
+      букви", with the example Україна). The pack has no word or rule record for these names, so this is a pack-builder
+      task: add word records for Україна and Київ and a §50 host, so that lesson 7 s4 and a7 can cover the Standard's
+      place-name contrast.
+    evidence: { receipt: "rr-0f794be42619e03f957a" }
+    could_be_a_gate: "no"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 2, step: s2, quote: "Display only T-012 as the clean alphabet-table quote before a2" }
+      - { lesson: 4, step: s3, quote: "Display the attributed capital/small source glyph models, then discriminate their printed shapes." }
+      - { lesson: 6, step: s3, quote: "display these attributed public-textbook quote hosts: T-036" }
+      - { lesson: 7, step: s2, quote: "before these print-choice activities: T-012" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: >-
+      Four practice-kind steps carry no practice and duplicate a neighbouring step. Lesson 2 s2 repeats s3's teach text
+      word for word, and only s3 carries a2. Lesson 4 s3 displays the same T-033/T-034 headings as s4 and tells the
+      learner to "discriminate their printed shapes" with no activity; only s4 carries a4. Lesson 6 s3 and s4 both only
+      display T-036, and neither carries practice. Lesson 7 s2 and s3 both only display T-012, and only s3 carries a2.
+      Steps are fixed structure, so the writer must write each empty duplicate. That pads the lessons and breaks R-27's
+      rhythm of small theory followed by practice, without adding a learning step. Fix: merge each pair into one step.
+      The defect is read from the plan text itself; the logged search only shows the single T-036 line that both lesson
+      6 steps display.
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-15b8e8c7bc35ed6d8f25", outcome: "hits_but_no_support" }
+    could_be_a_gate: "yes — flag practice-kind steps with an empty practice list whose teach text or evidence duplicates an adjacent step"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 1, activity: a5, quote: "This whole-pair application differs from inline a3 individual final-symbol classification" }
+      - { lesson: 3, activity: a5, quote: "Find and repair a mistaken Є reading value on the displayed моє and синє transcriptions" }
+    dimension: activity
+    severity: MINOR
+    claim: >-
+      Two workbook activities repeat an inline decision on the same stimuli. Lesson 1 a5 asks the same hard-or-soft
+      final-consonant decision on the same four words (син/синь, рис/рись) as inline a3; the only stated difference is
+      presentation. Lesson 3 a5 repeats inline a4 on the same two words, моє and синє, with the same two keys, so the
+      find-and-repair has only two items. The primer page the plan already cites for Є (search_text, chunk
+      1-klas-bukvar-zaharijchuk-2025-2_s0047) also prints кує [к у|й е] and квітує [к в′ і|т у| й е], which would give
+      a5 new post-vowel items. In lesson 1, applying the contrast to W-076 or another word the learner can already decode
+      would make the workbook a real further step.
+    evidence: { receipt: "rr-e66947767d614c6aa2a8" }
+    could_be_a_gate: "no"
+  - id: F-7
+    status: active
+    locations:
+      - { lesson: 6, activity: a7, quote: "no apostrophe-presence question answerable by spotting the glyph" }
+    dimension: activity
+    severity: MINOR
+    claim: >-
+      In all three T-036 pairs (бюро — б’ю, пюре — п’ю, свято — зв’язок; search_text, chunk
+      5-klas-ukrmova-avramenko-2022_s0133), the member with separate [йу] or [йа] is exactly the member with the
+      apostrophe. In the reverse items, the answer is exactly the member without it. Every item can therefore be answered
+      by spotting the glyph, contrary to what the focus says. The task still checks the mapping from glyph to sound, but
+      it is not the reading-value test the focus claims. Fix: either say that the item checks the mapping, or mix in
+      contrasts the glyph does not decide, such as the two-sound values already taught at word start and after a vowel
+      (яма, моє) against post-consonant values (маля, синє).
+    evidence: { receipt: "rr-15b8e8c7bc35ed6d8f25" }
+    could_be_a_gate: "no"
+  - id: F-8
+    status: active
+    locations:
+      - { lesson: 7, activity: a5, quote: "build [А, а, Б], [Б, б, В], [В, в, Г], [Г, г, Ґ]" }
+    dimension: activity
+    severity: MINOR
+    claim: >-
+      All four odd-one-out sets come from the first five letters of the table, and the odd member is always the next
+      letter in alphabet order. None of the module's eight new letters appears. The workbook's capital/small check
+      therefore skips this module's own letters and can be solved from the alphabet sequence alone. The T-012 table
+      (search_text, chunk 5-klas-ukrmova-zabolotnyi-2023_s0001) supports sets drawn from across the whole alphabet,
+      including visually close pairs such as Щ щ with Ш, or Ї ї with І.
+    evidence: { receipt: "rr-e8345c431b2e13d70bce" }
+    could_be_a_gate: "no"
+  - id: F-9
+    status: active
+    locations:
+      - { lesson: 4, activity: a2, quote: "Distinguish new Ц from previously taught Ю by their declared native models" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      The listening item contrasts the consonant Ц with the two-sound vowel letter Ю. That is an easy contrast between a
+      consonant and a vowel letter, and it trains no real listening discrimination; the pair was chosen only because
+      those dedicated videos are in this pack. The catalogue holds a free, publisher-evidenced ULP alphabet video for Ч
+      (search_resources, letter Ч: "ULP alphabet — Ч ч", already V-010 in the position-2 pack). Ч was taught at position
+      2, and Ц and Ч are both affricates, so Ц/Ч is the contrast this item should train. Pack-builder task: add the Ч
+      video and its glyph host so that a2 contrasts Ц with Ч.
+    evidence: { receipt: "rr-d8365e4f3b59034d1972" }
+    could_be_a_gate: "no"

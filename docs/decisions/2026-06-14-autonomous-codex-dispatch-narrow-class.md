@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: AGENTS.md
+---
+
 # SUPERSEDED — Should we adopt Symphony-style autonomous dispatch for a narrow class of work?
+
+> **Superseded by:** [AGENTS.md](../../AGENTS.md)
 
 **Status:** SUPERSEDED — resolved 2026-06-14 by the current AGENTS.md economical multi-agent delegation policy.
 **Disposition:** The repo now has a narrower active delegation policy: deterministic local tools first, one to three bounded subagents when useful, and no broad autonomous dispatch. This card is historical context only.

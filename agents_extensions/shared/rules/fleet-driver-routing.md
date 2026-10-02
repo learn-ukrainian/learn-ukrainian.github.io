@@ -2,7 +2,7 @@
 
 **Failure prevented:** Epic drivers (especially Grok) fixate on a small subset of
 seats (e.g. Claude Sonnet only), under-use heap/economical workers, and rarely
-use **advisor → cheap implement** even when an Astra/Fable brief would unlock Luna
+use **advisor → cheap implement** even when a Sol advisory envelope would unlock Luna
 or weaker models. Measured incident: atlas night drive 2026-08-06 used 2/9
 catalog seats with 33% dispatch `done` rate while free lanes sat idle.
 
@@ -29,22 +29,24 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ high; advisory turns only), Opus-class when roster says so |
-| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (review/CF, not judge) |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high) first; Fable / Astra last resort; bounded envelopes use Sol only (§2) |
+| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (code/infra CF only through the runtime-attested Cursor seat below critical, #9488; never a content judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
-review seat and, since operator 2026-09-29 (#9230), also the Astra advisory seat for hard,
-consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting.
-`gpt-6-sol` and `gpt-6-astra` are not routable. "Astra" below names that advisory seat; do
-not spend advisory turns on ordinary implementation or review.
+review seat and, since operator 2026-09-29 (#9230), also holds the named Astra advisory seat at `high`.
+Ordinary advice uses Opus 5.5 / Sol 6.1 first; the named Astra seat is last resort (#9394).
+Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
+`gpt-6-sol` and `gpt-6-astra` are not routable. Designated approval remains separate
+from ordinary advice; do not spend advisory turns on ordinary implementation or review.
 
-**Standing operator preference (2026-08-06):** Fable remains the Anthropic
-authority seat even if the operator shrinks the Claude subscription. Reach Fable via:
+**Standing routing preference (#9394):** Opus 5.5 / Sol 6.1 first; Fable / Astra
+last resort. Designated approval by Fable, Astra or the operator remains unchanged.
+When last-resort Fable is required, use this transport order:
 
-1. Native Claude seat with model pin **claude-fable-5** (preferred when available), or
+1. Native Claude seat with model pin **claude-fable-5-1** (first transport for last-resort Fable), or
 2. **Cursor** multi-model pin to Fable (use composite identity for CF author/review
-   bookkeeping, e.g. `cursor:claude-fable-5` per `resolve_author_family` rules).
+   bookkeeping, e.g. `cursor:claude-fable-5-1` per `resolve_author_family` rules).
 
 Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rsync gates, or smoke
 `--limit 5` jobs.
@@ -53,12 +55,16 @@ Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rs
 
 ### 1b. Free-lane utilization (operator 2026-08-08 / #6468; capacity-first 2026-08-12 / #4707)
 
-**Cursor (operator 2026-09-22):** pass an explicit `--model`. Do not pass `auto`.
-Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
+**Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** pass an explicit
+`--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
+`--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
+card; `delegate.py` refuses it otherwise. The driver seat, design, consults, discussions, recon and
+unclear work pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer
+resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
 pool has headroom. A review of a Grok author must use an Other Models slug, not a Grok
-slug. DeepSeek stays **Flash everyday**; **Pro @ high = hard implement only**.
+slug. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
@@ -92,21 +98,41 @@ stampede one hot lane.
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-5-high`. Draws the API pool. |
-| **DeepSeek V4.1 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4.1-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
+| **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | complex / long-context coding only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
 | **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
 | **Z.AI GLM-5.3** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
-| **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority; ~1 Claude driver |
+| **Claude Sonnet** | routine judgment/CF | Opus 5.5 / Sol 6.1 first for hard judgment; Fable / Astra last resort; ~1 Claude driver |
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / implementation only /
-k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). A valid operator reset
+**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / k3-256k / GLM
+(`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
+`resolve-reviewer` pick, which may be the attested Cursor Grok seat below critical (#9488). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
-Luna handles bounded work; Astra is summoned for hard advice, not implementation or review.
+
+**Credit-balance lanes (#9518):** a lane in `scripts/config/credit_lanes.yaml` whose plan allowance
+is at or below the near-cap threshold and whose fresh probe carries a positive credit balance shows
+as `credit_balance_present` in `capacity_pick`: credit balance present; draw not verified by the
+router. It is usable only while there is no evidence against it, ranked after plan-backed seats,
+with its balance, evidence, coverage and reset advice. The router follows one rule: one or more
+`rate_limited` runtime outcomes for the lane within `rate_limit_window_s` (60 minutes) while the
+plan window is exhausted read `credit_use_unconfirmed` and keep near_cap/AVOID. Missing, stale,
+naive-timestamp or non-numeric credit data also keep near_cap/AVOID. Admission is a separate question
+from the recommendation: whenever the plan window is at or below the threshold and a fresh positive
+balance exists (states `credit_balance_present`, `credit_use_unconfirmed` and `credits_unverified`
+from unreadable usage records), `delegate.py dispatch` refuses any model outside the lane allowlist
+(Codex: `gpt-6.1-sol`, `gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`, even when the router no
+longer recommends the lane. Nothing is gated with a healthy plan window, with no fresh positive
+balance (near cap without credits: unchanged), or on other lanes. A dispatch without `--model` is
+judged by the lane default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
+lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
+decision, and no tool consumes credits or resets.
+Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1
+first, Fable / Astra last resort.
 
 The operator records a shared assertion at `batch_state/routing_budget/operator_reset_reserve.json`
 in the primary checkout. Its exact JSON fields are `schema_version` (`operator-reset-reserve.v1`),
@@ -118,7 +144,7 @@ operator must confirm and refresh the count and expiry; no agent infers them fro
 
 ### Cursor pools (checked 2026-09-22)
 
-Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send `auto`, a Fast variant, or a previous generation.
+Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a Fast variant or a previous generation. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
 
 **Cursor Models pool.** More included usage. Grok and Composer are exempt from the Teams/Enterprise token rate ($0.25 per million on third-party requests). Our pin in this pool is `grok-4.7-high` (Grok 4.7, not Fast).
 
@@ -126,7 +152,7 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | --- | --- | --- | --- | --- |
 | Grok 4.7 | $2 | $0.50 | $6 | `grok-4.7-high` |
 | Grok 4.7 Fast | $4 | $1 | $12 | do not send |
-| Composer 2.5 | $0.50 | $0.20 | $2.50 | do not send (operator 2026-09-22) |
+| Composer 2.5 | $0.50 | $0.20 | $2.50 | `composer-2.5` (concrete pin; operator decision 2026-09-30) |
 | Composer 2.5 Fast | $3 | $0.50 | $15 | do not send |
 | Grok 4.6, Grok 4.5 | $2 | $0.50 | $6 | do not send |
 
@@ -135,7 +161,6 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | Model | Input | Cache write | Cache read | Output | Slug |
 | --- | --- | --- | --- | --- | --- |
 | Claude Sonnet 5.5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-5-high` |
-| Claude Opus 5 | $5 | $6.25 | $0.50 | $25 | `claude-opus-5-thinking-high` |
 | Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` |
 | Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` |
 | Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |
@@ -153,14 +178,36 @@ For **bounded** work (clear owned paths, objective acceptance command, no open
 architecture decision):
 
 ```text
-1) AUTHORITY brief (Astra or Fable) → task_contract, owned_paths, scope ceiling,
-   acceptance_evidence, escalation_triggers
-2) HEAP / PRACTICAL worker(s) execute ONLY that packet
+0) Driver fixes the worker dispatch arguments and prints their binding digest:
+   delegate.py dispatch <worker args> --print-advisory-binding
+1) ADVISOR envelope from the catalog advisor route (the Sol advisor (`gpt-6.1-sol` @ high)):
+   delegate.py dispatch --agent codex --model gpt-6.1-sol --mode read-only \
+     --advisory-role bounded_advisory_envelope --advisory-binding <digest> ...
+   → task_contract, owned_paths, max_changed_files, max_non_test_loc, constraints,
+     risk_boundaries, acceptance_evidence, escalation_triggers
+2) BOUNDED worker executes ONLY that envelope:
+   delegate.py dispatch <worker args> --advisory-task <advisor task id>
 3) Driver integrates; formal CF = independent cross-family (discussion ≠ CF)
 ```
 
-This is the catalog `execution_routing.sol_advised_bounded` idea generalized to
-**Fable or Astra** as advisor. Advisory family **never** satisfies cross-family PR CF.
+This is the catalog `execution_routing.sol_advised_bounded` route. **Operator decision
+2026-09-30 (#9275): there is no direct bounded dispatch.** Every dispatch to the bounded
+worker (`gpt-6-luna`), and to its `gemini-3.8-flash-high` fallback unless the dispatch is
+classified Ukrainian authoring or review, needs a complete envelope from a finished
+`gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `delegate.py` refuses it
+otherwise (`BOUNDED_ENVELOPE_REQUIRED`), including after a budget substitution, and fails
+the worker at finalize when it exceeds the envelope ceilings (a completion gate checked after
+the worker exits, not a limit on what it does while running). A second completion gate
+fails a Ukrainian-classified `gemini-3.8-flash-high` write worker whose changes include a
+code file or a path outside the Ukrainian content roots (`advisory_exempt_code_change`),
+because admission can only classify the files its owned paths held then. The envelope's `owned_paths`
+must equal the worker's `--owned-path` set. A Fable brief is design advice; it is not an
+envelope and does not admit a bounded worker (the packet path used to be "Fable or Astra";
+it is now the catalog advisor route only). Routine lockfile, pointer and smoke tasks take
+no advisory seat, so they go to a non-bounded worker (for example `claude-sonnet-5-5`)
+instead of a bounded one. Native Codex subagents spawned in-session by a `gpt-6.1-sol`
+parent run under that parent's own contract; the parent is their advisor and sets their
+owned paths and ceilings. Advisory family **never** satisfies cross-family PR CF.
 
 For **unbounded / ambiguous** work: practical or authority implementer only after
 the routing card records why heap was refused.
@@ -179,7 +226,7 @@ task_id: <id>
 tier: authority | practical | heap
 model_x_harness: <e.g. codex/gpt-6-luna>   # both axes
 why_this_tier: <one sentence>
-advisor_packet: none | astra | fable | other=<id>  # required for heap
+advisor_packet: none | sol=<advisor task id>  # required for heap; delegate refuses Luna/Flash without it
 owned_paths: <paths>
 acceptance_cmd: <deterministic command that proves done>
 alternatives_considered:
@@ -221,7 +268,7 @@ Trivial one-shot (typo, single-file comment) is exempt if labeled
 | VPS launcher scripts, health probes, rsync gates | practical |
 | Residual lemma EN strategy, morphology policy | **authority brief** → heap fill |
 | Routine formal CF | practical cross-family |
-| Contested CF / architecture / process | authority (Fable or Astra) |
+| Contested CF / architecture / process | Opus 5.5 / Sol 6.1 first; Fable / Astra last resort; operator escalation unchanged; formal CF remains independent and task-qualified |
 | UK content authoring | language-lane only (existing model-assignment) |
 
 ---

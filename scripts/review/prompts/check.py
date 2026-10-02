@@ -133,9 +133,6 @@ MODULE_MANIFEST = "curriculum/l2-uk-en/curriculum.yaml"
 FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
 JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
 
-#: A fenced YAML block (```yaml … ```), where every return template prints its schema (#8996).
-#: Any fence length: pinned data is wrapped in a fence longer than its longest backtick run (``data_fence``).
-YAML_FENCE = re.compile(r"(?ms)^ {0,3}(?P<fence>`{3,})ya?ml[ \t]*\n(?P<body>.*?)^ {0,3}(?P=fence)[ \t]*$")
 #: Top-level keys that mark a fenced block as a return schema: a review (plan, lesson, re-review) names its
 #: ids under ``attempt``; a settle names them at the top level.
 RETURN_SCHEMA_KEYS = ("review_schema", "settle_schema")
@@ -173,8 +170,9 @@ def _return_schemas(prompt_text: str) -> list[dict[str, Any]]:
     ``parse_attempt_ids``.
     """
     schemas: list[dict[str, Any]] = []
-    for fence in YAML_FENCE.finditer(prompt_text):
-        body = fence.group("body")
+    for _, _, language, body in _fenced_blocks(prompt_text):
+        if language not in {"yaml", "yml"}:
+            continue
         try:
             loaded = yaml.safe_load(body)
         except yaml.YAMLError as err:
@@ -182,8 +180,63 @@ def _return_schemas(prompt_text: str) -> list[dict[str, Any]]:
                 raise AttemptIdsUnreadableError(f"a fenced return schema is not valid YAML: {err}") from err
             continue
         if isinstance(loaded, dict) and any(key in loaded for key in RETURN_SCHEMA_KEYS):
-            schemas.append(loaded)
+            schemas.append(_load_id_document(body))
     return schemas
+
+
+def _load_id_document(body: str) -> Any:
+    """Refuse duplicate declarations, non-scalar ids and conflicting ids throughout the YAML graph.
+
+    Walking the nodes also visits anchored mappings and merge-key values, including
+    declarations that a later key would override when the document is loaded.
+    """
+    pending = [yaml.compose(body)]
+    visited: set[int] = set()
+    id_values: dict[str, set[str]] = {"review_id": set(), "attempt_id": set()}
+    while pending:
+        node = pending.pop()
+        if node is None or id(node) in visited:
+            continue
+        visited.add(id(node))
+        if isinstance(node, yaml.nodes.MappingNode):
+            seen: set[str] = set()
+            for key, value in node.value:
+                if isinstance(key, yaml.nodes.ScalarNode) and key.value in {"attempt", "review_id", "attempt_id"}:
+                    if key.value in seen:
+                        raise AttemptIdsUnreadableError(f"duplicate {key.value} declaration")
+                    seen.add(key.value)
+                    if key.value in id_values:
+                        if not isinstance(value, yaml.nodes.ScalarNode):
+                            raise AttemptIdsUnreadableError(f"non_scalar_attempt_id: {key.value} must be a scalar")
+                        id_values[key.value].add(value.value)
+                        if len(id_values[key.value]) > 1:
+                            raise AttemptIdsUnreadableError(f"conflicting {key.value} declarations")
+                pending.append(value)
+        elif isinstance(node, yaml.nodes.SequenceNode):
+            pending.extend(node.value)
+    return yaml.safe_load(body)
+
+
+def _fenced_blocks(prompt_text: str) -> list[tuple[int, int, str, str]]:
+    """Top-level Markdown fences only: nested schema examples remain pinned data."""
+    blocks = []
+    opening = None
+    offset = 0
+    for line in prompt_text.splitlines(keepends=True):
+        if opening is None:
+            match = FENCE_OPEN.fullmatch(line.rstrip("\r\n"))
+            if match:
+                fence = match.group("fence")
+                opening = (offset, offset + len(line), len(fence), line.strip()[len(fence) :].strip())
+        elif re.fullmatch(rf" {{0,3}}`{{{opening[2]},}}[ \t]*", line.rstrip("\r\n")):
+            start, body_start, _, language = opening
+            blocks.append((start, offset + len(line), language, prompt_text[body_start:offset]))
+            opening = None
+        offset += len(line)
+    if opening is not None:
+        start, body_start, _, language = opening
+        blocks.append((start, len(prompt_text), language, prompt_text[body_start:]))
+    return blocks
 
 
 def _schema_ids(schema: dict[str, Any]) -> tuple[str, str]:
@@ -192,37 +245,56 @@ def _schema_ids(schema: dict[str, Any]) -> tuple[str, str]:
     return _ids_from(schema, "the settle return schema")
 
 
-def parse_attempt_ids(prompt_text: str) -> tuple[str | None, str | None]:
+def parse_attempt_ids(prompt_text: str, *, custom: bool = False) -> tuple[str | None, str | None]:
     """The ``review_id``/``attempt_id`` a rendered prompt tells its seat to echo, or ``(None, None)``.
 
     The ids come from the prompt's fenced return schema: under ``attempt`` for a review return (plan, lesson,
     re-review), at the top level for a settle return. Several return schemas must all name the same ids. A prompt with no fenced return schema falls back to a
-    plain ``attempt`` entry. ``(None, None)`` means the prompt mentions neither id key anywhere. In every
+    plain ``attempt`` entry. Custom admission also rejects id prose in any other
+    fenced block; rendered inputs are checked by exact re-render instead.
+    ``(None, None)`` means the prompt mentions neither id key anywhere. In every
     other case the ids must be read, or ``AttemptIdsUnreadableError`` is raised: an id the guard cannot read
     must never count as "no id to compare".
     """
     schemas = _return_schemas(prompt_text)
-    if schemas:
-        found = {_schema_ids(schema) for schema in schemas}
-        if len(found) > 1:
-            # Two return schemas naming different ids: the guard cannot know which one the seat will echo.
+    found = {_schema_ids(schema) for schema in schemas}
+    remaining = prompt_text
+    for start, end, language, body in reversed(_fenced_blocks(prompt_text)):
+        # Custom YAML attempt blocks need not declare a return schema. Other pinned
+        # YAML (e.g. earlier findings) is data, rather than an attempt declaration.
+        is_schema = False
+        is_attempt = False
+        if language in {"yaml", "yml"}:
+            try:
+                loaded = yaml.safe_load(body)
+            except yaml.YAMLError as err:
+                if ID_KEY_MENTION.search(body):
+                    raise AttemptIdsUnreadableError("a fenced attempt entry is not valid YAML") from err
+                loaded = None
+            is_schema = isinstance(loaded, dict) and any(key in loaded for key in RETURN_SCHEMA_KEYS)
+            is_attempt = isinstance(loaded, dict) and "attempt" in loaded
+            if is_attempt and not is_schema:
+                found.add(_ids_from(_load_id_document(body)["attempt"], "fenced attempt"))
+        if custom and ID_KEY_MENTION.search(body) and not (is_schema or is_attempt):
             raise AttemptIdsUnreadableError(
-                "the prompt has several return schemas naming different ids: "
-                + "; ".join(f"{r}/{a}" for r, a in sorted(found))
+                "a custom prompt names ids outside a readable fenced attempt or return schema"
             )
-        return found.pop()
-    entry = ATTEMPT_ENTRY.search(prompt_text)
-    if entry is not None:
+        blanked = re.sub(r"[^\r\n]", " ", remaining[start:end])
+        remaining = remaining[:start] + blanked + remaining[end:]
+    for entry in list(ATTEMPT_ENTRY.finditer(remaining)):
         try:
-            loaded = yaml.safe_load(entry.group(0))
+            loaded = _load_id_document(entry.group(0))
         except yaml.YAMLError as err:
             raise AttemptIdsUnreadableError(f"the prompt's attempt entry is not valid YAML: {err}") from err
-        return _ids_from(loaded.get("attempt") if isinstance(loaded, dict) else None, "the prompt's attempt entry")
-    if ID_KEY_MENTION.search(prompt_text):
+        found.add(_ids_from(loaded.get("attempt") if isinstance(loaded, dict) else None, "the prompt's attempt entry"))
+    remaining = ATTEMPT_ENTRY.sub("", remaining)
+    if ID_KEY_MENTION.search(remaining):
         raise AttemptIdsUnreadableError(
             "the prompt mentions review_id/attempt_id outside any readable return schema or attempt entry"
         )
-    return None, None
+    if len(found) > 1:
+        raise AttemptIdsUnreadableError("the prompt has conflicting attempt ids")
+    return found.pop() if found else (None, None)
 
 
 @dataclass(frozen=True)
@@ -434,9 +506,12 @@ def check_prompt(
     files_read: list[Path | str] | None = None,
     recorded_sha256: str | None = None,
     template_sha256: dict[str, str] | None = None,
+    recorded_prompts_dir: Path | None = None,
+    recorded_templates: dict[str, str] | None = None,
     prompts_dir: Path | None = None,
     review_id: str | None = None,
     attempt_id: str | None = None,
+    review_access: str = "full",
 ) -> RenderedPromptCheckResult:
     """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates.
 
@@ -482,7 +557,12 @@ def check_prompt(
     # 2b. The prompt's own attempt block (#8996), if it prints one, must agree with the ids this attempt
     # is expected to carry; a mismatch is refused by name rather than surfacing as an opaque render diff.
     try:
-        prompt_review_id, prompt_attempt_id = parse_attempt_ids(rendered_prompt)
+        # Rendered inputs may contain arbitrary id prose: only the authored return
+        # schema supplies ids. Exact re-render below verifies all prompt bytes.
+        found = {_schema_ids(schema) for schema in _return_schemas(rendered_prompt)}
+        if len(found) > 1:
+            raise AttemptIdsUnreadableError("the prompt has conflicting return schemas")
+        prompt_review_id, prompt_attempt_id = found.pop() if found else (None, None)
     except AttemptIdsUnreadableError as err:
         errors.append(f"attempt_ids_unreadable: {err}")
         prompt_review_id = prompt_attempt_id = None
@@ -508,6 +588,7 @@ def check_prompt(
             prompts_dir=prompts_dir,
             review_id=effective_review_id,
             attempt_id=effective_attempt_id,
+            review_access=review_access,
         )
     except RenderError as err:
         errors.append(f"render_failed: {type(err).__name__}: {err}")
@@ -529,14 +610,31 @@ def check_prompt(
                 f"{rendering.prompt_sha256}"
             )
 
+    # Relocate only exact loader paths between checkouts. Input pins retain their
+    # original containment checks; resolving template paths here would erase aliases.
+    def recorded_path(value: Path | str) -> Path:
+        path = root / value
+        if recorded_prompts_dir is not None and path.parent == recorded_prompts_dir:
+            return (prompts_dir or PROMPTS_DIR).resolve() / path.name
+        resolved = path.resolve()
+        if recorded_prompts_dir is not None and resolved in used_templates:
+            errors.append("template_identity_mismatch: a recorded template path is not an exact loader path")
+        return resolved
+
+    # The dependency set comes from our render, never from the record's claim.
+    if recorded_templates is not None and recorded_templates != {p.name: sha for p, sha in used_templates.items()}:
+        errors.append(
+            "template_sha256_mismatch: the recorded loader names/hashes differ from the templates the render used"
+        )
+
     # The recorded reads are the verified pins and the templates the render used, each template with its sha256
     if files_read is not None:
-        recorded_paths = {(root / f).resolve() for f in files_read}
+        recorded_paths = {recorded_path(f) for f in files_read}
         for fp in sorted(recorded_paths - set(verified) - set(used_templates)):
             errors.append(f"unauthorized_file_read: file {fp.as_posix()} was read but is not in manifest inputs")
         for fp in sorted(set(used_templates) - recorded_paths):
             errors.append(f"template_read_not_recorded: the render used template {fp.as_posix()}, the reads omit it")
-    if template_sha256 is not None and {(root / k).resolve(): v for k, v in template_sha256.items()} != used_templates:
+    if template_sha256 is not None and {recorded_path(k): v for k, v in template_sha256.items()} != used_templates:
         errors.append(
             "template_sha256_mismatch: the recorded template hashes differ from the templates the render used"
         )
@@ -558,12 +656,31 @@ def check_prompt(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Check rendered reviewer prompt.")
-    parser.add_argument("prompt_file", help="Path to rendered prompt markdown file")
-    parser.add_argument("--manifest", "-m", required=True, help="Path to attempt manifest YAML")
-    parser.add_argument("--template", "-t", default=None, help="Template name")
-    parser.add_argument("--repo-root", default=None, help="Repository root path")
-    parser.add_argument("--prompts-dir", default=None, help="Prompts directory path (test only)")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Verify prompt bytes against an exact re-render and the manifest's authorized input pins.\n"
+            "Use after rendering; this check does not launch a reviewer or replace dispatch admission."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.review.prompts.check prompt.md --manifest lesson-2.manifest.yaml "
+            "--review-id R --attempt-id A\n"
+            "  .venv/bin/python -m scripts.review.prompts.check plan-prompt.md --manifest plan-review.manifest.yaml\n\n"
+            "Outputs: PASS/FAIL and validation details on stdout; no files written. "
+            "Requires the prompt's .sha256 and files_read sidecars.\n"
+            "Exit codes: 0 valid; 1 refused; 2 invalid arguments.\n"
+            "Related: scripts.review.prompts.render; scripts/delegate.py --review-attempt; "
+            "docs/runbooks/formal-review-attempt-isolation.md; #9012."
+        ),
+    )
+    parser.add_argument("prompt_file", help="Rendered prompt markdown file, e.g. prompt.md")
+    parser.add_argument("--manifest", "-m", required=True, help="Attempt manifest YAML, e.g. lesson-2.manifest.yaml")
+    parser.add_argument(
+        "--template", "-t", default=None, help="Template name, e.g. lesson-review (default: inferred from manifest)"
+    )
+    parser.add_argument("--repo-root", default=None, help="Pinned input checkout root (default: this repository)")
+    parser.add_argument("--prompts-dir", default=None, help="Test template directory (default: scripts/review/prompts)")
     parser.add_argument(
         "--files-read",
         default=None,
@@ -586,6 +703,9 @@ def main(argv: list[str] | None = None) -> int:
             "fails with attempt_id_mismatch. Default: None (read from the prompt's own attempt block instead). "
             "Example: --attempt-id claude-att-1"
         ),
+    )
+    parser.add_argument(
+        "--review-access", choices=("full", "isolated"), default="full", help="Prompt access policy (default: full)."
     )
     args = parser.parse_args(argv)
 
@@ -650,6 +770,7 @@ def main(argv: list[str] | None = None) -> int:
         template_sha256=sidecar.get("template_sha256"),
         review_id=args.review_id,
         attempt_id=args.attempt_id,
+        review_access=args.review_access,
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
     )
 

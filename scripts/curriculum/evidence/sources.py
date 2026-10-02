@@ -24,12 +24,15 @@ from collections.abc import Callable, Iterable, Mapping
 from contextlib import closing, suppress
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 from scripts.rag.config import VESUM_DB_PATH
+from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
+from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connection
 
 from . import codes, config, db_identity, tags
 
@@ -38,7 +41,6 @@ SOURCES_DB_SCHEME = "rows-v2"
 SOURCES_DB_META_SCHEME = db_identity.SOURCES_DB_META_SCHEME
 LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
-APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
 journal_mode_from_header = db_identity.journal_mode_from_header
 # VESUM uses noun/adj for pronouns; dmklinger uses pronoun (and particle for
 # determiners). Preserve the requested VESUM POS as the result key.
@@ -79,10 +81,11 @@ STORE_POS = {
 ALPHABET_GUARD_POS = {"prep", "conj", "part"}
 
 # Requirement-receipt locators. Numeric dictionary ids name source rows, not
-# headword guesses. VESUM also accepts the entry and form locators already used
-# by the evaluation receipts; ranges are exact source_location keys.
+# headword guesses. Canonical VESUM locators are exact N-M source_location
+# keys. Legacy bare N may name an entry_id or forms_all.id (both occur in
+# rev 6.5 receipts); neither namespace grants admission without word binding.
 RECEIPT_EVIDENCE_STORES = {
-    "vesum": ("forms_all", "entry_id / id / source_location"),
+    "vesum": ("forms_all", "source_location (canonical); entry_id / id (legacy)"),
     "pravopys": ("2019.pravopys.net/sections/<number>/", "section"),
     "textbook": ("textbooks", "chunk_id"),
     "grinchenko": ("grinchenko", "id"),
@@ -90,6 +93,35 @@ RECEIPT_EVIDENCE_STORES = {
     "vts": ("slovnyk_me_entries", "id (dictionary_slug=vts)"),
     "ulif": ("ulif_dictua_entries", "id"),
 }
+
+
+def _normalize_text_evidence(text: str) -> str:
+    """Remove soft typesetting breaks, preserving spaces without a newline."""
+    return re.sub(r"\u00ad(?:[ \t]*\r?\n[ \t]*)?", "", normalize_evidence_form(text)).replace("\u2011", "-")
+
+
+def _contains_evidence_form(text: str, form: str) -> bool:
+    """Match a whole word or exact phrase independent of typesetting breaks.
+
+    Witnesses need at least two letters, including paradigm variants; standalone
+    one-letter options cannot bind text kinds. Longer function words can bind by
+    occurrence: this establishes identity, never their contextual correctness.
+    Strip soft hyphens, fold non-breaking hyphens, and try line-end hyphens
+    both joined and kept. Collapse whitespace in the witness and option so
+    phrase identity preserves adjacent words rather than PDF line wrapping.
+    """
+    text = _normalize_text_evidence(text)
+    line_end_hyphen = r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])"
+    texts = [re.sub(line_end_hyphen, replacement, text) for replacement in ("", "-")]
+    form = _normalize_text_evidence(form)
+    form = re.sub(r"\s+", " ", form)
+    return bool(
+        sum(char.isalpha() for char in form) >= 2
+        and any(
+            re.search(r"(?<![\w'-])" + re.escape(form) + r"(?![\w'-])", re.sub(r"\s+", " ", candidate))
+            for candidate in texts
+        )
+    )
 
 
 def is_alphabet_letter_gloss(row: dict) -> bool:
@@ -133,6 +165,25 @@ class ParadigmResult(SourceResult[dict]):
 
 def normalize_spelling(word: str) -> str:
     return word.translate(APOSTROPHES)
+
+
+def standard_file_lines(content: str) -> list[str]:
+    """The Standard's lines as ``grep -n`` and editors number them: split at LF only, 1-based by index + 1.
+
+    ``str.splitlines`` also splits at form feeds (and CR, VT, U+2028 and other separators); the
+    Standard holds 139 page-break form feeds, so its line N was not the line N an arc, an editor or
+    ``grep -n`` cites (#9487: the Standard's 4.1.1 is at 571, ``splitlines`` put it at 585). Form
+    feeds and CRs stay inside the line text; only the LF terminators are dropped.
+    """
+    lines = content.split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
+def read_standard_lines(path: Path) -> list[str]:
+    """The Standard file's LF lines, decoded without newline translation (a CR stays text, as in ``grep``)."""
+    return standard_file_lines(path.read_bytes().decode("utf-8"))
 
 
 def _file_hash(path: Path) -> str:
@@ -326,6 +377,8 @@ class Sources:
         self._wal_bytes_start: int | None = None
         self._receipt_evidence: dict[str, list[dict]] = {}
         self._receipt_identities: dict[str, Any] = {}
+        self._receipt_words: dict[str, list[dict]] = {}
+        self._receipt_paradigms: dict[str, list[dict]] = {}
 
     def __enter__(self):
         return self
@@ -337,6 +390,8 @@ class Sources:
         """Release the pinned snapshot (rollback, never commit) and report its lifetime."""
         self._receipt_evidence.clear()
         self._receipt_identities.clear()
+        self._receipt_words.clear()
+        self._receipt_paradigms.clear()
         if self._kaikki_conn is not None:
             side, self._kaikki_conn = self._kaikki_conn, None
             with closing(side), suppress(sqlite3.Error):
@@ -546,8 +601,15 @@ class Sources:
                                     numbers.get(str(row["entry_id"])),
                                     locations.get(row["source_location"]),
                                 } - {None}
+                                # Derived lookup keys are not source evidence.
+                                # Preserve cited-row digests across store versions.
+                                source_row = {
+                                    key: value
+                                    for key, value in dict(row).items()
+                                    if key not in {"word_form_folded", "lemma_folded"}
+                                }
                                 for eid in matches:
-                                    result[eid].append(dict(row))
+                                    result[eid].append(source_row)
                 self._vesum_identity()
                 self._receipt_evidence.update(result)
         for eid in pending:
@@ -558,7 +620,7 @@ class Sources:
                 self._receipt_evidence[eid] = []
                 continue
             if kind == "pravopys":
-                from scripts.rag.source_query import pravopys_section
+                from scripts.rag.source_query import PRAVOPYS_BASE, pravopys_section
 
                 if not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 2 or not 1 <= int(key) <= 61:
                     self._receipt_evidence[eid] = []
@@ -567,7 +629,10 @@ class Sources:
                 if section and section.get("status") == "unavailable":
                     raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
                 self._receipt_evidence[eid] = [section] if section else []
-                self._receipt_identities["pravopys"] = {"scheme": SOURCES_DB_SCHEME}
+                self._receipt_identities["pravopys"] = {
+                    "scheme": "pravopys-live-section-v1",
+                    "origin": PRAVOPYS_BASE,
+                }
                 continue
             if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
                 self._receipt_evidence[eid] = []
@@ -585,17 +650,164 @@ class Sources:
             self._receipt_identities["sources_db"] = {"scheme": SOURCES_DB_SCHEME}
         raw = {eid: self._receipt_evidence[eid] for eid in requested}
         identities = {
-            kind: value for kind, value in self._receipt_identities.items()
+            kind: value
+            for kind, value in self._receipt_identities.items()
             if (kind == "vesum" and any(eid.startswith("vesum:") for eid in requested))
             or (kind == "pravopys" and any(eid.startswith("pravopys:") for eid in requested))
             or (kind == "sources_db" and any(eid.partition(":")[0] not in {"vesum", "pravopys"} for eid in requested))
         }
         return SourceResult(raw, batch_digest(raw), identities)
 
-    def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
+    def _receipt_vesum_rows(
+        self,
+        values: Iterable[str],
+        *,
+        paradigm: bool = False,
+    ) -> SourceResult[dict[str, list[dict]]]:
+        """Read attested analyses or paradigms using Unicode word identity.
+
+        Prefer build-time indexed folded keys; retain the compatibility view's
+        marker exclusions and original four-column shape. Older stores use exact
+        given, casefolded, upper, title, capitalised and per-hyphen-part capitalised
+        candidates, then normalized filtering. Unreachable spellings in older
+        stores fail closed. Cache within the checked static identity.
+        """
+        requested = list(dict.fromkeys(values))
+        digest, metadata = self._vesum_identity()
+        cache = self._receipt_paradigms if paradigm else self._receipt_words
+        pending = [value for value in requested if value not in cache]
+        column = "lemma" if paradigm else "word_form"
+        if pending:
+            with closing(open_readonly(self.vesum_db)) as conn:
+                folded_column = f"{column}_folded"
+                has_folded = folded_column in {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
+                for start in range(0, len(pending), BATCH_SIZE):
+                    batch = pending[start : start + BATCH_SIZE]
+                    candidates = (
+                        batch
+                        if has_folded
+                        else sorted(
+                            {
+                                candidate
+                                for value in batch
+                                for candidate in (
+                                    value,
+                                    value.casefold(),
+                                    value.upper(),
+                                    value.title(),
+                                    value.capitalize(),
+                                    "-".join(part.capitalize() for part in value.split("-")),
+                                )
+                            }
+                        )
+                    )
+                    slots = ",".join("?" for _ in candidates)
+                    condition = (
+                        f"{column} IN (SELECT {column} FROM forms_all WHERE {folded_column} IN ({slots}))"
+                        if has_folded
+                        else f"{column} IN ({slots})"
+                    )
+                    rows = conn.execute(
+                        f"SELECT word_form, lemma, pos, tags FROM forms "
+                        f"WHERE {condition} "
+                        "ORDER BY word_form, lemma, pos, tags",
+                        candidates,
+                    )
+                    found = {value: [] for value in batch}
+                    for row in rows:
+                        normalized = normalize_evidence_form(row[column])
+                        if normalized in found:
+                            found[normalized].append(dict(row))
+                    cache.update(found)
+        self._vesum_identity()
+        return SourceResult({value: cache[value] for value in requested}, digest, metadata)
+
+    def bind_evidence_forms(
+        self,
+        resolved: SourceResult[dict[str, list[dict]]],
+        citations: Iterable[tuple[str, str]],
+    ) -> SourceResult[dict[tuple[str, str], bool]]:
+        """Bind citations to the option's word, for valid and invalid judgements.
+
+        Dictionary headwords/lemmas or word_form must casefold-equal the option
+        or an attested VESUM lemma. Legacy VESUM integers bind through either
+        resolved namespace; canonical N-M remains preferred. Text kinds require
+        a whole-word occurrence of the option or any attested paradigm form of
+        its VESUM lemmas. Stress/apostrophe normalization also applies. No guessed
+        lemmas, definition matches, or metadata witnesses. Binding establishes
+        word identity, never correctness of the contextual language judgement.
+        Only ULIF rows with status='ok' provide witnesses, for both judgements.
+        Text soft hyphens are stripped and line-end hyphens tried joined and
+        kept before matching. Standalone
+        one-letter options and one-letter paradigm witnesses cannot bind text;
+        longer function words can bind by occurrence. Multi-word options require
+        the exact phrase after whitespace collapse, never independent token matches.
+        """
+        fields = {
+            "vesum": ("word_form", "lemma"),
+            "pravopys": ("text",),
+            "textbook": ("text",),
+            "grinchenko": ("word",),
+            "sum20": ("headword", "stressed_headword"),
+            "vts": ("word",),
+            "ulif": ("canonical_headword",),
+        }
+        raw = {}
+        pending = {}
+        for eid, text in dict.fromkeys(citations):
+            kind = eid.partition(":")[0]
+            is_text = kind in {"pravopys", "textbook"}
+            form = _normalize_text_evidence(text) if is_text else normalize_evidence_form(text)
+            witnesses = [
+                normalize_evidence_form(row[field])
+                for row in resolved.raw[eid]
+                if kind != "ulif" or row.get("status") == "ok"
+                for field in fields.get(kind, ())
+                if isinstance(row.get(field), str)
+            ]
+            supported = any(
+                _contains_evidence_form(value, form) if is_text else bool(form and value == form) for value in witnesses
+            )
+            raw[eid, text] = supported
+            if not supported and (
+                not is_text or (sum(char.isalpha() for char in form) >= 2 and not any(char.isspace() for char in form))
+            ):
+                pending[eid, text] = (form, witnesses, is_text)
+        analyses = self._receipt_vesum_rows(form for form, _, _ in pending.values()) if pending else None
+        text_lemmas = {
+            normalize_evidence_form(row["lemma"])
+            for form, _, is_text in pending.values()
+            if is_text
+            for row in analyses.raw[form]
+        }
+        paradigms = self._receipt_vesum_rows(text_lemmas, paradigm=True) if text_lemmas else None
+        for citation, (form, witnesses, is_text) in pending.items():
+            lemmas = {normalize_evidence_form(row["lemma"]) for row in analyses.raw[form]}
+            if is_text:
+                forms = (
+                    {normalize_evidence_form(row["word_form"]) for lemma in lemmas for row in paradigms.raw[lemma]}
+                    if paradigms is not None
+                    else set()
+                )
+                raw[citation] = any(_contains_evidence_form(value, variant) for value in witnesses for variant in forms)
+            else:
+                raw[citation] = any(value in lemmas for value in witnesses)
+        metadata = {"normalization": "stress-apostrophes-casefold-v2"}
+        if analyses is not None:
+            metadata["vesum"] = {"content_hash": analyses.content_hash, **analyses.metadata}
+            metadata["analyses_sha256"] = batch_digest(analyses.raw)
+        if paradigms is not None:
+            metadata["paradigms_sha256"] = batch_digest(paradigms.raw)
+        return SourceResult(raw, batch_digest(raw), metadata)
+
+    def stress_for_form(self, form: str, vesum_tags: str, *, lemma: str | None = None) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""
         mapped_tags = self.mapper(vesum_tags)
-        raw = stress.verify_stress(normalize_spelling(form), tags=mapped_tags)
+        selectors = {"tags": mapped_tags}
+        if lemma is not None:
+            selectors["lemma"] = lemma
+        with using_connection(self._db()):
+            raw = stress.verify_stress(normalize_spelling(form), **selectors)
         # The trie alone does not identify exact-form override changes.
         override_digest = _file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
         return SourceResult(raw, raw["source"]["digest"], {"overrides_sha256": override_digest})
@@ -610,12 +822,19 @@ class Sources:
         return result
 
     def ulif_entries(self, lemmas: Iterable[str]) -> SourceResult[dict[str, list[dict]]]:
-        """Raw entry rows + ordered raw sections. No unchecked group can be eligible."""
+        """Raw DictUA groups keyed by caller spelling, looked up by the oracle's key.
+
+        Case folding identifies the cache group only. Stress readings still
+        require the oracle's positive lemma and POS join to VESUM; a checked
+        common-word group cannot establish a proper-name stress reading.
+        """
         conn = self._db()
         requested = list(dict.fromkeys(map(normalize_spelling, lemmas)))
+        queries = list(dict.fromkeys(map(normalize_ulif_dictua_query, requested)))
+        groups: dict[str, list[dict]] = {query: [] for query in queries}
         result: dict[str, list[dict]] = {lemma: [] for lemma in requested}
-        for start in range(0, len(requested), BATCH_SIZE):
-            batch = requested[start : start + BATCH_SIZE]
+        for start in range(0, len(queries), BATCH_SIZE):
+            batch = queries[start : start + BATCH_SIZE]
             slots = ",".join("?" for _ in batch)
             rows = conn.execute(
                 f"SELECT * FROM ulif_dictua_entries WHERE normalized_query IN ({slots}) ORDER BY normalized_query, homonym_index, id",
@@ -624,7 +843,7 @@ class Sources:
             entries = {row["id"]: dict(row) for row in rows}
             for row in entries.values():
                 row["sections"] = []
-                result[row["normalized_query"]].append(row)
+                groups[row["normalized_query"]].append(row)
             if entries:
                 # Join on requested spellings to stay within SQLite's variable cap.
                 sections = conn.execute(
@@ -633,7 +852,9 @@ class Sources:
                 )
                 for section in sections:
                     entries[section["entry_id"]]["sections"].append(dict(section))
-            self._progress("ulif", min(start + BATCH_SIZE, len(requested)), len(requested))
+            self._progress("ulif", min(start + BATCH_SIZE, len(queries)), len(queries))
+        for lemma in requested:
+            result[lemma] = groups[normalize_ulif_dictua_query(lemma)]
         return self._db_result(result)
 
     @staticmethod
@@ -758,6 +979,14 @@ class Sources:
             markers = [row[0] for row in conn.execute("SELECT DISTINCT marker FROM form_markers ORDER BY marker")]
         return SourceResult({"atoms": atoms, "markers": markers}, digest, metadata)
 
+    def search_resources(
+        self, query: str, *, mode: str = "text", free_only: bool = True, limit: int = 20
+    ) -> list[dict]:
+        """Search catalogue suggestions within this read-only sources snapshot."""
+        from scripts.ingest.resource_catalogue_ingest import search_resources
+
+        return search_resources(self._db(), query, mode=mode, free_only=free_only, limit=limit)
+
     def get_textbook_chunk(self, chunk_id: str | int) -> dict | None:
         conn = self._db()
         sql = """
@@ -829,8 +1058,7 @@ class Sources:
         if not self.standard_path.is_file():
             raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: Standard file not found at {self.standard_path}")
         file_hash = _file_hash(self.standard_path)
-        content = self.standard_path.read_text(encoding="utf-8")
-        lines = content.splitlines()
+        lines = read_standard_lines(self.standard_path)
         total_lines = len(lines)
         if start_line < 1 or end_line < start_line or end_line > total_lines:
             raise ValueError(
@@ -856,36 +1084,72 @@ def heritage_hit_digest(hit: Mapping[str, Any]) -> str:
     return row_digest({key: value for key, value in hit.items() if key != "row_sha256"})
 
 
+# Same honest identifying form used by LinkChecker (its FAQ). This is a robot,
+# not a claim to be a particular browser. RFC 9110 §10.2.3 defines Retry-After.
+LINKCHECK_USER_AGENT = (
+    "Mozilla/5.0 (compatible; learn-ukrainian-linkcheck/1.0; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io)"
+)
+URL_CHECK_ATTEMPTS = 3
+URL_RETRY_CAP = 5.0
+
+
+def _url_retry_delay(retry_after: str | None, attempt: int) -> float:
+    """Bound backoff and either Retry-After representation to five seconds."""
+    delay = 0.5 * 2**attempt
+    if retry_after:
+        try:
+            if retry_after.isascii() and retry_after.isdecimal():
+                requested = float(retry_after)
+            else:
+                requested = (parsedate_to_datetime(retry_after) - datetime.now(UTC)).total_seconds()
+            delay = max(delay, requested)
+        except (ValueError, TypeError, OverflowError):
+            pass
+    return min(delay, URL_RETRY_CAP)
+
+
 def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
-    """Check a video URL with a hard timeout and one retry; follows redirects."""
+    """GET with robot identification, redirects and bounded transient retries.
+
+    Return only the existing pack ``checked`` fields. Verification classifies
+    final statuses; only 200 passes. Exhausted connection failures raise.
+    """
     if timeout is None or timeout <= 0:
         raise ValueError("check_url requires a positive timeout")
-    headers = {"User-Agent": "learn-ukrainian-evidence-pack/1.0"}
-    req = urllib.request.Request(url, headers=headers)
-    last_exc = None
-    for attempt in range(2):
+    req = urllib.request.Request(url, headers={"User-Agent": LINKCHECK_USER_AGENT})
+    for attempt in range(URL_CHECK_ATTEMPTS):
+        retry_after = None
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
-                date_str = datetime.now(UTC).strftime("%Y-%m-%d")
-                return {
+                result = {
                     "http_status": resp.status,
                     "final_url": resp.geturl(),
                     "content_type": resp.headers.get_content_type() if resp.headers else None,
-                    "date": date_str,
+                    "date": datetime.now(UTC).strftime("%Y-%m-%d"),
                 }
+                retry_after = resp.headers.get("Retry-After") if resp.headers else None
         except urllib.error.HTTPError as exc:
-            date_str = datetime.now(UTC).strftime("%Y-%m-%d")
-            return {
-                "http_status": exc.code,
-                "final_url": exc.geturl(),
-                "content_type": exc.headers.get_content_type() if exc.headers else None,
-                "date": date_str,
-            }
+            try:
+                result = {
+                    "http_status": exc.code,
+                    "final_url": exc.geturl(),
+                    "content_type": exc.headers.get_content_type() if exc.headers else None,
+                    "date": datetime.now(UTC).strftime("%Y-%m-%d"),
+                }
+                retry_after = exc.headers.get("Retry-After") if exc.headers else None
+            finally:
+                exc.close()
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            last_exc = exc
-            if attempt == 0:
-                time.sleep(0.5)
-    raise ConnectionError(f"Failed to check URL {url} after retry: {last_exc}")
+            if attempt == URL_CHECK_ATTEMPTS - 1:
+                raise ConnectionError(f"Failed to check URL {url} after {URL_CHECK_ATTEMPTS} attempts: {exc}") from exc
+            time.sleep(_url_retry_delay(None, attempt))
+            continue
+        if result["http_status"] != 429 and not 500 <= result["http_status"] <= 599:
+            return result
+        if attempt == URL_CHECK_ATTEMPTS - 1:
+            return result
+        time.sleep(_url_retry_delay(retry_after, attempt))
 
 
 @lru_cache(maxsize=1)

@@ -7,11 +7,11 @@
       },
       {
         "path": "scripts/lexicon/admit_fmu_boosters.py",
-        "sha256": "d3b7fc4d56aa2b11401a444e6d00afe8760618d2d6947ec0fdca16b105bdd609"
+        "sha256": "0d4cda12165b99f93554c958cbff9912e7d12692050c2ac7a2ad25e60cf28b20"
       },
       {
         "path": "scripts/lexicon/admit_stem_slice_2a.py",
-        "sha256": "ba9544c600f9248424efe0bed2a851c07307b0618efce8f523bcd27c872f38e7"
+        "sha256": "01b25073d7f1b87d4499dc3c7eed71b86bf8b3c6d875e58f8bd8a39e7eba12f8"
       },
       {
         "path": "scripts/lexicon/admit_teacher_table.py",
@@ -179,7 +179,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "b1e60745ea136d8d579ffe7845d0970f12bd71633f0220b0c5fdcaf45b15fc09"
+        "sha256": "1a901eb5193e6edba25f8526074f93892135b8d22165013f32416ec95220645f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -323,7 +323,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "fe55142c3cb85f87474eb7adc53c66dc34b2ddbdb380bc1ce9d883bcd3d2b971"
+        "sha256": "08a662ea5fc36e00847328fc899f8aaa6872d6cf104a4d47d70ab689c87bbad0"
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
@@ -375,7 +375,7 @@
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",
-        "sha256": "089ff24b829211679d963016a531fc76ebcd056b71cd015b34908b02612647d8"
+        "sha256": "b4395d333d14b1fc9da6aa809c2da146b48b179f2687b33ecb71ca2858365908"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",

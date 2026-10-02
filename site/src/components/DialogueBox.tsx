@@ -91,6 +91,11 @@ export default function DialogueBox({
           );
         })}
       </div>
+      {!usesLegacyLine && en && (
+        <div className={directStyles.dialogueTranslation} style={{ whiteSpace: 'pre-line' }}>
+          {en}
+        </div>
+      )}
     </div>
   );
 }

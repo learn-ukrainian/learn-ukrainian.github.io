@@ -91,6 +91,17 @@ def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
     )
 
 
+# What dispatch records for a read-only Gemini Flash Ukrainian review; the worker
+# re-classifies it before starting the model (#9275).
+_AGY_UKRAINIAN_REVIEW = {"mode": "read-only", "advisory_exemption": {
+        "model_id": "gemini-3.8-flash-high",
+        "task_family": "ukrainian-review",
+        "review_profile": None,
+        "mode": "read-only",
+        "classified_paths": [],
+    }}
+
+
 def _finalize_mock_result(response: str = "done"):
     return type(
         "_Result",
@@ -101,7 +112,7 @@ def _finalize_mock_result(response: str = "done"):
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "grok-4.6",
+            "model": "grok-4.7",
             "effort": "high",
             "cli_version": "0.2.111",
         },
@@ -654,7 +665,7 @@ def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
             "stderr_excerpt": "worker killed: out of memory",
             "returncode": -9,
             "rate_limited": False,
-            "model": "grok-4.6",
+            "model": "grok-4.7",
             "effort": "high",
             "cli_version": "0.2.111",
         },
@@ -760,7 +771,7 @@ def test_read_only_snapshot_ignored_scratch_leak_fails_task(
 
     task_id = "read-only-ignored-scratch-leak"
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout), **_AGY_UKRAINIAN_REVIEW})
 
     def ignored_scratch_leak(*_args, **_kwargs):
         (checkout / "check_dead.py").write_text("# scratch\n", encoding="utf-8")
@@ -802,7 +813,7 @@ def test_read_only_snapshot_runtime_noise_still_passes(
 
     task_id = "read-only-runtime-noise"
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout), **_AGY_UKRAINIAN_REVIEW})
 
     noise = [".pytest_cache/v/lastfailed", "batch_state/fleet-comms/v1/comms.sqlite3-wal"]
 
@@ -976,7 +987,7 @@ def test_read_only_snapshot_clean_run_passes(
 
     task_id = "read-only-clean-run"
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout), **_AGY_UKRAINIAN_REVIEW})
 
     with patch("agent_runtime.runner.invoke", side_effect=lambda *_args, **_kwargs: _finalize_mock_result()):
         rc = delegate._run_worker(

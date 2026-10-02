@@ -47,7 +47,12 @@ from pathlib import Path
 
 import yaml
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.api.config import LIVE_REPO_ROOT
+from scripts.opsec.prepublish import publication_cli
+from scripts.publish.github import Request, request_run
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
@@ -790,19 +795,23 @@ def milestone_warnings(
 
 
 def _gh_json(args: list[str], timeout_s: float = 30.0, *, cwd: Path = ROOT):
-    proc = subprocess.run(["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd)
+    proc = request_run(
+        args if isinstance(args, Request) else ["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd
+    )
     if proc.returncode != 0:
         # gh api graphql exits 1 when GraphQL errors are present in the response
         # (e.g. NOT_FOUND for a deleted/transferred issue), even if valid partial
         # JSON was emitted in stdout.
-        if args[:2] == ["api", "graphql"] and proc.stdout:
+        if isinstance(args, Request) and args.verb.startswith("read-subissue") and proc.stdout:
             try:
                 data = json.loads(proc.stdout)
                 if isinstance(data, dict) and "data" in data:
                     return data
             except ValueError:
                 pass
-        raise RuntimeError(f"gh {' '.join(args[:3])}… failed: {proc.stderr.strip()[:200]}")
+        raise RuntimeError(
+            f"gh {args.verb if isinstance(args, Request) else ' '.join(args[:3])}… failed: {proc.stderr.strip()[:200]}"
+        )
     return json.loads(proc.stdout)
 
 
@@ -869,16 +878,6 @@ def _repo_owner_name(repo_root: Path = ROOT) -> tuple[str, str]:
 # because ``gh api graphql`` always sends ``-f`` variables as strings, and an
 # empty-string cursor is not the same as an omitted/null ``after`` argument to
 # GitHub's API.
-_SUBISSUES_FIRST_PAGE_QUERY = (
-    "query=query($owner:String!,$name:String!,$number:Int!){"
-    "repository(owner:$owner,name:$name){issue(number:$number){body "
-    "subIssues(first:100){nodes{number} pageInfo{hasNextPage endCursor}}}}}"
-)
-_SUBISSUES_NEXT_PAGE_QUERY = (
-    "query=query($owner:String!,$name:String!,$number:Int!,$cursor:String!){"
-    "repository(owner:$owner,name:$name){issue(number:$number){"
-    "subIssues(first:100, after:$cursor){nodes{number} pageInfo{hasNextPage endCursor}}}}}"
-)
 # Bounded failure ceiling: 50 pages * 100/page = 5,000 children max. Stops a
 # buggy/adversarial API that always reports ``hasNextPage: true`` from looping
 # forever, while remaining far above any real epic's child count.
@@ -920,31 +919,15 @@ class _RetryBudget:
 def _fetch_subissues_page(epic: int, cursor: str | None, repo_root: Path = ROOT) -> dict:
     """One GraphQL page of ``issue.subIssues`` (+ ``body`` on the first page)."""
     owner, name = _repo_owner_name(repo_root)
-    if cursor is None:
-        args = [
-            "-F",
-            "number=" + str(epic),
-            "-f",
-            f"owner={owner}",
-            "-f",
-            f"name={name}",
-            "-f",
-            _SUBISSUES_FIRST_PAGE_QUERY,
-        ]
-    else:
-        args = [
-            "-F",
-            "number=" + str(epic),
-            "-f",
-            f"owner={owner}",
-            "-f",
-            f"name={name}",
-            "-f",
-            f"cursor={cursor}",
-            "-f",
-            _SUBISSUES_NEXT_PAGE_QUERY,
-        ]
-    data = _gh_json(["api", "graphql", *args], cwd=repo_root)
+    data = _gh_json(
+        Request(
+            "read-subissues" if cursor is None else "read-subissues-next",
+            repo=f"{owner}/{name}",
+            number=epic,
+            **({"cursor": cursor} if cursor is not None else {}),
+        ),
+        cwd=repo_root,
+    )
     return (data.get("data") or {}).get("repository", {}).get("issue") or {}
 
 
@@ -1015,19 +998,9 @@ def _fetch_subissue_batch(
     if retry_budget is None:
         retry_budget = _RetryBudget()
     owner, name = _repo_owner_name(repo_root)
-    fields = []
-    for number, cursor in cursors.items():
-        after = f",after:{json.dumps(cursor)}" if cursor is not None else ""
-        body = "body " if number in (body_roots or set()) and cursor is None else ""
-        fields.append(
-            f"i{number}:issue(number:{number}){{{body}subIssues(first:100{after})"
-            "{nodes{number repository{nameWithOwner} subIssuesSummary{total}}"
-            " pageInfo{hasNextPage endCursor}}}"
-        )
-    query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + " ".join(fields) + "}}"
     try:
         data = _gh_json(
-            ["api", "graphql", "-f", f"owner={owner}", "-f", f"name={name}", "-f", f"query={query}"],
+            Request("read-subissue-batch", repo=f"{owner}/{name}", cursors=cursors, body_roots=body_roots or set()),
             cwd=repo_root,
         )
     except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
@@ -1656,7 +1629,7 @@ def make_issue_resolver(report: dict) -> Callable[[str], bool]:
 
 
 def _node_id(number: int) -> str:
-    data = _gh_json(["api", f"repos/{{owner}}/{{repo}}/issues/{number}", "--jq", "{node_id}"])
+    data = _gh_json(Request("read-issue", repo="/".join(_repo_owner_name()), number=number))
     return data["node_id"]
 
 
@@ -1688,17 +1661,9 @@ def migrate(report: dict) -> int:
                 try:
                     child_node = _node_id(n)
                     _gh_json(
-                        [
-                            "api",
-                            "graphql",
-                            "-f",
-                            "query=mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,"
-                            "subIssueId:$c}){issue{number}}}",
-                            "-f",
-                            f"p={epic_node}",
-                            "-f",
-                            f"c={child_node}",
-                        ]
+                        Request(
+                            "issue-link", repo="/".join(_repo_owner_name()), parent_id=epic_node, child_id=child_node
+                        )
                     )
                     created += 1
                     print(f"linked #{n} → epic #{epic} ({stream_key})")
@@ -1760,8 +1725,13 @@ def human_summary(report: dict) -> str:
     return "\n".join(lines)
 
 
+@publication_cli()
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Audit GitHub issue membership in registered streams.\nUse read-only reporting before any authorized repair.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/orchestration/issue_stream_audit.py --help\nOutputs and exit codes: Membership report and authorized repair receipts. 0: successful command; >=1: audit or runtime error.\nRelated: #9297",
+    )
     parser.add_argument("--json", action="store_true")
     parser.add_argument(
         "--check",

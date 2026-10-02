@@ -28,6 +28,7 @@ from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import pr_identity
 from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
+from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 _DISPATCH_WORKTREES_ROOT = ROOT / ".worktrees" / "dispatch"
@@ -269,7 +270,13 @@ def _remove_acp_runtime_worktree(
     def releasable() -> tuple[bool, str]:
         if not _is_under_acp_runtime_root(path, repo_root):
             return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
-        return True, ""
+        ok, refusal, _artifacts = preserve_worktree_artifacts(
+            path,
+            primary=worktree_claims.control_plane_root(repo_root),
+            task_id=task_id,
+            tasks_dir=tasks_dir,
+        )
+        return ok, refusal
 
     removal = worktree_claims.remove_unclaimed_worktree(
         path,

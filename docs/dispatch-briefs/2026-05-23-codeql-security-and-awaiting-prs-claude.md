@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Claude — CodeQL + security + awaiting PRs (2026-05-23)
 
 ## Mission
@@ -149,7 +155,7 @@ Do NOT enable a feature on the repo (org-policy decision).
   `--admin` flag forbidden.
 - **#M-7 PYTEST BEFORE PUSH.** Any code change touching `.github/`, `scripts/`,
   `tests/`, `curriculum/`, or `.dagger/` requires
-  `.venv/bin/python -m pytest tests/test_<x>.py` of the affected fixture file.
+  `"$PROJECT_PYTHON" -m pytest tests/test_<x>.py` of the affected fixture file.
   YAML-only edits in `.github/dependabot.yml` do NOT require pytest (no
   fixture mirror).
 - **#M-4 DETERMINISTIC OVER HALLUCINATION.** Every "I did X" claim in your
