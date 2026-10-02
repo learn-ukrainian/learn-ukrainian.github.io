@@ -6,6 +6,7 @@ with identical inputs and a readable result, dispatch reuses a ``done`` attempt.
 A fresh per-run state directory therefore needs no persisted regeneration ledger
 to avoid paying again for those completed attempts. Harness recovery has its own
 bounded sidecar; unreadable results and terminal non-done tasks can require retries.
+See ``docs/runbooks/fresh-build-writer-harness.md`` for safe harness recovery.
 """
 
 from __future__ import annotations
