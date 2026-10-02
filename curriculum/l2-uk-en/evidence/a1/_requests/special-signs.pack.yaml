@@ -16,7 +16,7 @@ texts:
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0035
   span:
     first_words: Ї ї
-    last_words: '[ –•| =•|–•– ]'
+    last_words: Чую [й], [і].
   supports: 'Primer part 2, printed p. 36 (catalog heading p. 38): Ї represents [й] and [і], with the printed word row.'
 - id: T-003
   source:
@@ -409,6 +409,46 @@ texts:
     last_words: звуків.
   supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains only; English scaffolding teaches
     the rule before scoring.
+- id: T-048
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  span:
+    first_words: день [ден′]
+    last_words: день [ден′]
+  supports: Clean complete previously known day-word transcription; final soft consonant, no added sound for the sign.
+- id: T-049
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0035
+  span:
+    first_words: мої
+    last_words: мої
+  supports: Exact post-vowel Ї word form, read incidentally without a possession/plural explanation.
+- id: T-050
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0048
+  span:
+    first_words: Бачу І, і.
+    last_words: Чую [і].
+  supports: Previously taught single-sound І model; clean contrast with the two-sound Ї host.
+- id: T-051
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0011
+  span:
+    first_words: Ч ч
+    last_words: Ч ч
+  supports: Previously taught Ч capital/small glyph host for the dedicated Ч recording; no whole-word audio claim.
+- id: T-052
+  source:
+    table: textbooks
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0058
+  span:
+    first_words: Назви країн, міст, сіл, вулиць,
+    last_words: річок, гір пиши з великої букви.
+  supports: Geographic proper names begin with a capital; corroborated by modern Pravopys 2019 section 50.1 and 50.6. Apply only to the two named word-record models.
 exercises:
 - id: X-001
   source:
@@ -650,13 +690,11 @@ videos:
 - id: V-001
   url: https://www.youtube.com/watch?v=cJlal8XKBxo
   channel: Ukrainian Lessons Podcast
-  use: Soft-sign sound model; restrict practice to the taught-letter word pair, not the video vocabulary.
+  use: Listen to the soft-sign pronunciation examples and repeat with your teacher.
 - id: V-002
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   channel: Ukrainian Lessons Podcast
-  use: Native pronunciation models for the taught letters, then the full alphabet after all letters; no ASR transcription is printed.
-    Structured targets are attested by public transcript ext-ulp_youtube-304; no passage timing is supplied. Exact playback/timecode
-    confirmation remains driver-owned.
+  use: Listen to the familiar letter sounds and repeat them aloud.
   models:
     letters:
     - Ю
@@ -667,8 +705,7 @@ videos:
 - id: V-003
   url: https://www.youtube.com/watch?v=9JdIBYCTWGw
   channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Ю. Native Ю sound model before its two primer word values. Scored segment is the publisher-labelled
-    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Listen to the sound of Ю and repeat it aloud.
   models:
     letters:
     - Ю
@@ -677,8 +714,7 @@ videos:
 - id: V-004
   url: https://www.youtube.com/watch?v=u44eCjR2Oz8
   channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Ц. Native Ц sound model before primer reading rows. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Listen to the sound of Ц and repeat it aloud.
   models:
     letters:
     - Ц
@@ -687,8 +723,7 @@ videos:
 - id: V-005
   url: https://www.youtube.com/watch?v=haHRsFFZRQI
   channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Ф. Native Ф sound model; no visual look-alike claim. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Listen to the sound of Ф and repeat it aloud.
   models:
     letters:
     - Ф
@@ -697,21 +732,17 @@ videos:
 - id: V-006
   url: https://www.ukrainianlessons.com/episode2/
   channel: Ukrainian Lessons Podcast
-  use: 'Lesson 1 s1: native model for the intact W-075+W-076 formal greeting before it becomes a reading/copying chunk after ь is taught;
-    public transcript ext-ulp_youtube-302. Also supports greeting recall in lessons 2–7. It does not record the T-001 minimal pair. Structured
-    targets are attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode confirmation remains
-    driver-owned.'
+  use: 'Listen to the formal greeting excerpt and repeat the whole greeting.'
   models:
     letters: []
     words:
     - W-075
     - W-076
-    segment:
+    segment: 04:35–04:39
 - id: V-007
   url: https://www.ukrainianlessons.com/episode15/
   channel: Ukrainian Lessons Podcast
-  use: 'ULP 1-15 public pronunciation trainer: native hard/soft consonant support, including the W-076 day word; public transcript ext-ulp_youtube-289.
-    Support only: it does not say the exact T-001 W-119/W-120 pair and does not close those word-choice requirements.'
+  use: 'Listen to the hard and soft consonant examples with your teacher.'
 - id: V-008
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   channel: Ukrainian Lessons Podcast
@@ -737,3 +768,12 @@ videos:
   channel: Ukrainian Lessons Podcast
   use: Pronunciation model for Ш. Full-alphabet video, publisher-labelled Ш sound demonstration only; not its letter name or a complete
     primer word. Driver must confirm segment playback and exact timecode independently.
+- id: V-013
+  url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+  channel: Ukrainian Lessons Podcast
+  use: Listen to the sound of Ч and repeat it aloud.
+  models:
+    letters:
+    - Ч
+    words: []
+    segment:

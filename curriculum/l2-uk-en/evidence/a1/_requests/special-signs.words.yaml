@@ -324,3 +324,23 @@ words:
   want: W-182
   note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
     and marker-free form required; no gloss drill.'
+- lemma: Україна
+  pos: noun
+  entry: {source: vesum, entry_id: 397241}
+  want: W-183
+  note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss drill.'
+- lemma: Київ
+  pos: noun
+  entry: {source: vesum, entry_id: 164577}
+  want: W-184
+  note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss drill.'
+- lemma: кувати
+  pos: verb
+  entry: {source: vesum, entry_id: 180859}
+  want: W-185
+  note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation drill.'
+- lemma: квітувати
+  pos: verb
+  entry: {source: vesum, entry_id: 163732}
+  want: W-186
+  note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation drill.'

@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: d8e41c36769a34fa930a6d1be305c1b3186eaa75
+  mcp_commit: 70878aaaffab574a9c6caf32f8521d436e151136
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: a33bc7f322dd87b0f73918a5829ad724f6596bb2e5eadccc427acef0cdb86ce7
+  sources_db: a56b9f8dc58c6706e7393fd6dacd72201b82933a17a4ac30a3fc058b41bdcc6d
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -18747,3 +18747,514 @@ words:
     russian_shadow: false
     score: 0.0
   ulif: pending
+- entry:
+    entry_id: 397241
+    source: vesum
+  forms:
+  - form: Україні
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Украї́ні
+    tags: noun:inanim:f:v_dav:prop:geo
+  - form: Україно
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Украї́но
+    tags: noun:inanim:f:v_kly:prop:geo
+  - form: Україні
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Украї́ні
+    tags: noun:inanim:f:v_mis:prop:geo
+  - form: Україна
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Украї́на
+    tags: noun:inanim:f:v_naz:prop:geo
+  - form: Україною
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Украї́ною
+    tags: noun:inanim:f:v_oru:prop:geo
+  - form: України
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Украї́ни
+    tags: noun:inanim:f:v_rod:prop:geo
+  - form: Україну
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Украї́ну
+    tags: noun:inanim:f:v_zna:prop:geo
+  - form: Українам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Украї́нам
+    tags: noun:inanim:p:v_dav:prop:geo
+  - form: України
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Украї́ни
+    tags: noun:inanim:p:v_kly:prop:geo
+  - form: Українах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Украї́нах
+    tags: noun:inanim:p:v_mis:prop:geo
+  - form: України
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Украї́ни
+    tags: noun:inanim:p:v_naz:prop:geo
+  - form: Українами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Украї́нами
+    tags: noun:inanim:p:v_oru:prop:geo
+  - form: Україн
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Украї́н
+    tags: noun:inanim:p:v_rod:prop:geo
+  - form: України
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Украї́ни
+    tags: noun:inanim:p:v_zna:prop:geo
+  id: W-183
+  lemma: Україна
+  note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss
+    drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - Украї́на
+    - 1
+    row_sha256: aa0f3c6613508ead476dbcb95347bb987c7030016bfdbc354dd5a7c0c3fc15fb
+    source: ulif
+- entry:
+    entry_id: 164577
+    source: vesum
+  forms:
+  - form: Києву
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́єву
+    tags: noun:inanim:m:v_dav:prop:geo
+  - form: Київі
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: pending
+    tags: noun:inanim:m:v_dav:prop:geo:subst
+  - form: Києве
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́єве
+    tags: noun:inanim:m:v_kly:prop:geo
+  - form: Києву
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́єву
+    tags: noun:inanim:m:v_mis:prop:geo
+  - form: Києві
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́єві
+    tags: noun:inanim:m:v_mis:prop:geo
+  - form: Київі
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: pending
+    tags: noun:inanim:m:v_mis:prop:geo:subst
+  - form: Київ
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́їв
+    tags: noun:inanim:m:v_naz:prop:geo
+  - form: Києвом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́євом
+    tags: noun:inanim:m:v_oru:prop:geo
+  - form: Києва
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́єва
+    tags: noun:inanim:m:v_rod:prop:geo
+  - form: Київа
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: pending
+    tags: noun:inanim:m:v_rod:prop:geo:subst
+  - form: Київ
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: Ки́їв
+    tags: noun:inanim:m:v_zna:prop:geo
+  id: W-184
+  lemma: Київ
+  note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss
+    drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - Ки́їв
+    - 1
+    row_sha256: 5d38e8238a309412846cb1fdaff01ff7eb3d82459100d4014ab896106187de9a
+    source: ulif
+- entry:
+    entry_id: 180859
+    source: vesum
+  forms:
+  - form: куватимем
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́тимем
+    tags: verb:imperf:futr:p:1
+  - form: куватимемо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́тимемо
+    tags: verb:imperf:futr:p:1
+  - form: куватимете
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́тимете
+    tags: verb:imperf:futr:p:2
+  - form: куватимуть
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́тимуть
+    tags: verb:imperf:futr:p:3
+  - form: куватиму
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́тиму
+    tags: verb:imperf:futr:s:1
+  - form: куватимеш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́тимеш
+    tags: verb:imperf:futr:s:2
+  - form: куватиме
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́тиме
+    tags: verb:imperf:futr:s:3
+  - form: ковано
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ко́вано
+    tags: verb:imperf:impers
+  - form: куймо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ку́ймо
+    tags: verb:imperf:impr:p:1
+  - form: куйте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ку́йте
+    tags: verb:imperf:impr:p:2
+  - form: куй
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: куй
+    tags: verb:imperf:impr:s:2
+  - form: кувати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́ти
+    tags: verb:imperf:inf
+  - form: кувать
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: verb:imperf:inf:short
+  - form: кувала
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́ла
+    tags: verb:imperf:past:f
+  - form: кував
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́в
+    tags: verb:imperf:past:m
+  - form: кувало
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́ло
+    tags: verb:imperf:past:n
+  - form: кували
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кува́ли
+    tags: verb:imperf:past:p
+  - form: куємо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: куємо́
+    tags: verb:imperf:pres:p:1
+  - form: куєм
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: trie
+    stressed: кує́м
+    tags: verb:imperf:pres:p:1:subst
+  - form: куєте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: куєте́
+    tags: verb:imperf:pres:p:2
+  - form: кують
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кую́ть
+    tags: verb:imperf:pres:p:3
+  - form: кую
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кую́
+    tags: verb:imperf:pres:s:1
+  - form: куєш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кує́ш
+    tags: verb:imperf:pres:s:2
+  - form: кує
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: кує́
+    tags: verb:imperf:pres:s:3
+  gloss_en: to forge; to shoe (horses); to cuckoo (to make a sound of a cuckoo)
+  gloss_source: kaikki_wiktionary
+  id: W-185
+  lemma: кувати
+  note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation
+    drill.'
+  pos: verb
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 163732
+    source: vesum
+  forms:
+  - form: квітуватимем
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́тимем
+    tags: verb:imperf:futr:p:1
+  - form: квітуватимемо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́тимемо
+    tags: verb:imperf:futr:p:1
+  - form: квітуватимете
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́тимете
+    tags: verb:imperf:futr:p:2
+  - form: квітуватимуть
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́тимуть
+    tags: verb:imperf:futr:p:3
+  - form: квітуватиму
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́тиму
+    tags: verb:imperf:futr:s:1
+  - form: квітуватимеш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́тимеш
+    tags: verb:imperf:futr:s:2
+  - form: квітуватиме
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́тиме
+    tags: verb:imperf:futr:s:3
+  - form: квітуймо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́ймо
+    tags: verb:imperf:impr:p:1
+  - form: квітуйте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́йте
+    tags: verb:imperf:impr:p:2
+  - form: квітуй
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́й
+    tags: verb:imperf:impr:s:2
+  - form: квітувати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́ти
+    tags: verb:imperf:inf
+  - form: квітувать
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: verb:imperf:inf:short
+  - form: квітувала
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́ла
+    tags: verb:imperf:past:f
+  - form: квітував
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́в
+    tags: verb:imperf:past:m
+  - form: квітувало
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́ло
+    tags: verb:imperf:past:n
+  - form: квітували
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квітува́ли
+    tags: verb:imperf:past:p
+  - form: квітуємо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́ємо
+    tags: verb:imperf:pres:p:1
+  - form: квітуєм
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: trie
+    stressed: квіту́єм
+    tags: verb:imperf:pres:p:1:subst
+  - form: квітуєте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́єте
+    tags: verb:imperf:pres:p:2
+  - form: квітують
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́ють
+    tags: verb:imperf:pres:p:3
+  - form: квітую
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́ю
+    tags: verb:imperf:pres:s:1
+  - form: квітуєш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́єш
+    tags: verb:imperf:pres:s:2
+  - form: квітує
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: квіту́є
+    tags: verb:imperf:pres:s:3
+  id: W-186
+  lemma: квітувати
+  note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation
+    drill.'
+  pos: verb
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - квітува́ти
+    - 1
+    row_sha256: fe9bcb3d411dabeab94b2b7ae4b6797c0276bbfc7284686b5d2b39a799a83dae
+    source: ulif

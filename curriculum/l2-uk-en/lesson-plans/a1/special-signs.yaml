@@ -3,7 +3,7 @@ module: special-signs
 level: a1
 sequence: 3
 slug: special-signs
-version: '5'
+version: '6'
 title: літери
 subtitle: 'Finish the alphabet: eight remaining letters, two digraphs, the apostrophe, hard/soft sounds and dictionary order'
 focus: Finish the primer letter sequence, practise each new item in source words by listening, reading aloud and notebook copying, then use the full alphabet
@@ -21,24 +21,27 @@ prerequisites:
 - reading-ukrainian
 register: Ukrainian models first with English support at A1; pronunciation before print; no free Cyrillic typing.
 changelog:
-- 'First position-3 v2 plan package: six primer teaching groups, a separate alphabet retrieval lesson and the required recap. The two historical unsupported records
-  remain resolved in the provisional pack under the driver amendments.'
-- 'Round 2, #8425: earlier authentic-text/planned-dialogue hosts (superseded by the mandatory D4 story in version 5); ULP notes grounding only; complete word-row
-  admission; explicit native single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored print discrimination.
-  Letters, grammar, lesson count, core vocabulary and word targets unchanged. Integrated-engine acceptance remains driver-owned.'
-- 'Integration, #8425: version 3 declares source glyph engine targets with attested whole single-letter video models; unsupported composite-video bindings use attributed
-  print discrimination plus offline teacher practice. Source ledger: evidence/a1/_requests/integrate-a1-p1-p3-listening.md.'
-- 'Full-access plan review repair round 1, #8425: introductions precede scoring; coherent varied-key listening, source-hosted sound classification and find-and-repair;
-  accurate source roles and model declarations; earlier core recycling restored. P3 recap follows D4 with one mandatory first-person story and questions on that same
-  host. Word targets and module objectives unchanged; learner-state generator repair remains separately owned by #9487.'
+- 'First position-3 v2 plan package: six primer teaching groups, a separate alphabet retrieval lesson and the required recap. The two historical unsupported records remain
+  resolved in the provisional pack under the driver amendments.'
+- 'Round 2, #8425: earlier authentic-text/planned-dialogue hosts (superseded by the mandatory D4 story in version 5); ULP notes grounding only; complete word-row admission;
+  explicit native single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored print discrimination. Letters,
+  grammar, lesson count, core vocabulary and word targets unchanged. Integrated-engine acceptance remains driver-owned.'
+- 'Integration, #8425: version 3 declares source glyph engine targets with attested whole single-letter video models; unsupported composite-video bindings use attributed print
+  discrimination plus offline teacher practice. Source ledger: evidence/a1/_requests/integrate-a1-p1-p3-listening.md.'
+- 'Full-access plan review repair round 1, #8425: introductions precede scoring; coherent varied-key listening, source-hosted sound classification and find-and-repair; accurate
+  source roles and model declarations; earlier core recycling restored. P3 recap follows D4 with one mandatory first-person story and questions on that same host. Word targets
+  and module objectives unchanged; learner-state generator repair remains separately owned by #9487.'
 - 'Round-2 full-access review repair, #8425: mandatory first-person bilingual recap hosts before comprehension and production; source-computed varied keys, evidence-complete
   activity packets, explicit counting, clean public quote spans, one video per URL and source-qualified Latin claims. Word targets unchanged.'
+- 'Round-3 P3 repair, #8425: nine review findings, single quote displays, learner-facing resource purposes, bounded formal greeting, sourced fresh workbook models, personal/place-name
+  coverage, listening concealment and a recap containing only previously modeled story/question chunks. Objectives and every word target unchanged; no engine or decision-source
+  change.'
 arc_ref:
   level: a1
   position: 3
 evidence_ref:
   path: evidence/a1/special-signs.yaml
-  sha256: 889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315
+  sha256: ef2258a8c9766420367bc4ac19358a0057bf7e44da2c296a4f3ab4009961dea1
 lessons:
 - n: 1
   slug: soft-sign-and-sound-pairs
@@ -91,12 +94,12 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Open by reading W-074 whole. Hear V-001, then use the T-001 vowel-constant W-158/W-176 and W-177/W-178 pairs to isolate the final consonant changed by
-      ь. Read and copy their explicit [–•–]/[–•=] schemes with a teacher. W-119/W-120 are secondary comparison only: their vowel and initial-consonant values also
-      change, so they do not isolate ь. T-014 gives the silent backward-looking function of ь. Read and copy W-075 plus W-076 only as one intact greeting chunk after
-      the soft sign is known; never analyse or split it.  Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read
-      aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared
-      in the activity focus and coverage ledger. Display the attributed T-001 source before the dependent inline and workbook decisions; retain paired English support.'
+    teach: 'Open by reading W-074 whole. Hear V-001, then use the T-001 vowel-constant W-158/W-176 and W-177/W-178 pairs to isolate the final consonant changed by ь. Read and
+      copy their explicit [–•–]/[–•=] schemes with a teacher. W-119/W-120 are secondary comparison only: their vowel and initial-consonant values also change, so they do not
+      isolate ь. T-014 gives the silent backward-looking function of ь. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never
+      analyse or split it.  Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling
+      offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Explain
+      the source models here with English support; the practice step provides their single attributed display.'
     uses:
       grammar:
       - G-a1-001
@@ -132,24 +135,25 @@ lessons:
     - video
   - id: s2
     kind: practice
-    teach: Display only the attributed public-textbook quote hosts T-001 before their dependent print decisions. All other T/X records remain explains-only.
-      Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the recap’s Ukrainian-only questions.
+    teach: Display T-001 and the clean T-048 day-word transcription once with attribution and English support before the print decisions. Restrict scored stimuli to the
+      named taught forms; all other theory remains explains-only.
     uses:
       grammar: []
       vocabulary: []
     evidence:
     - T-001
+    - T-048
     practice:
     - a3
     needs:
     - quote
   - id: s3
     kind: practice
-    teach: Return to three previously taught short words W-076, W-081 and W-101 after the contrast. W-119 and W-120 remain incidental sound examples, never
-      meaning drills. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher
-      modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus
-      and coverage ledger. Recycle the earlier W-077, W-086, W-088, W-089 records in the hear/see/read/copy routine or their already-decoded core word models;
-      do not re-teach them.
+    teach: Return to three previously taught short words W-076, W-081 and W-101 after the contrast. W-119 and W-120 remain incidental sound examples, never meaning
+      drills. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline;
+      neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Recycle
+      the earlier W-077, W-086, W-088, W-089 records by reading aloud and copying their already-decoded core word models with teacher modeling offline; do not re-teach
+      them.
     uses:
       grammar:
       - G-a1-005
@@ -193,9 +197,10 @@ lessons:
   - id: a5
     type: quiz
     placement: workbook
-    focus: 'Compare both complete constant-vowel T-001 pairs and find the printed word whose final scheme differs from the requested hard/soft class. kind: comprehension;
-      host: {kind: quote, ref: T-001}. Mix W-158/W-176 and W-177/W-178 in each set, with varied word and position keys. This whole-pair application differs from inline
-      a3 individual final-symbol classification; no excluded old core target or invented misspelling.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-001} or {kind: quote, ref: T-048}. Apply final-consonant hard/soft reading to fresh workbook stimuli: W-119 тин
+      from the source scheme and known W-076 день from its exact transcription. Keys hard [–] and soft [=] both occur; choose the matching final-consonant label, varying positions.
+      Inline a3 keeps W-158/W-176 and W-177/W-178; do not reuse those four words here. Teacher-model both complete source words first; this is print analysis, not a meaning
+      or listening test.'
     model: X-001
   - id: a6
     type: match-up
@@ -212,9 +217,11 @@ lessons:
   - a6
   videos:
   - evidence: V-001
-    use: Step s1 soft-sign model; only the pair and whole taught greeting become decoding tasks.
+    use: Listen to the soft-sign pronunciation examples and repeat with your teacher.
   - evidence: V-007
-    use: Unscored general hard/soft support; not the complete source pair.
+    use: Listen to the hard and soft consonant examples with your teacher.
+  - evidence: V-006
+    use: Listen to the formal greeting excerpt and repeat the whole greeting.
 - n: 2
   slug: yi-and-ya
   title: Ї, Я
@@ -275,14 +282,13 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse or split
-      it. Use the source glyph model with offline teacher pronunciation; V-002 is unscored by-ear support, with no asserted timed segment; T-002 and T-013 show
-      always [йі], never a consonant-softening value. Read and copy W-121, then the post-vowel plural model of W-010 from T-002, without explaining possession
-      or plural. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact
-      primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline;
-      neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger.
-      T-047 explicitly grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with English support before the count activity, without
-      a cluster-division rule.
+    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse or split it. Use the
+      source glyph model with offline teacher pronunciation; V-002 is unscored by-ear support, with no asserted timed segment; T-002 and T-013 show always [йі], never a
+      consonant-softening value. Read and copy W-121, then the post-vowel plural model of W-010 from clean T-049, without explaining possession or plural. Replay the
+      lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words,
+      minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter
+      video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. T-047 explicitly grounds the rule that syllable count
+      equals vowel-nucleus count; teach/recall it with English support before the count activity, without a cluster-division rule.
     uses:
       grammar:
       - G-a1-002
@@ -304,6 +310,7 @@ lessons:
     - T-041
     - T-042
     - T-047
+    - T-049
     practice:
     - a1
     introduces:
@@ -317,36 +324,29 @@ lessons:
     - video
   - id: s2
     kind: practice
-    teach: Display only T-012 as the clean alphabet-table quote before a2; restrict the scored rows to taught І/Ї. T-013 explains their values only.
+    teach: Display only the clean T-002 Ї sound model, T-030 Ї glyph heading and earlier T-050 І sound model once, with attribution and English support. Compare their
+      stated sound values before a2; the full alphabet table is reserved for lesson 7.
     uses:
       grammar: []
       vocabulary: []
     evidence:
-    - T-012
-    - T-013
-    practice: []
-  - id: s3
-    kind: practice
-    teach: Display only T-012 as the clean alphabet-table quote before a2; restrict the scored rows to taught І/Ї. T-013 explains their values only.
-    uses:
-      grammar: []
-      vocabulary: []
-    evidence:
-    - T-012
+    - T-002
+    - T-030
+    - T-050
     practice:
     - a2
     needs:
     - quote
-  - id: s4
+  - id: s3
     kind: teach
-    teach: Use V-002 as unscored by-ear support for Я; no timed segment is asserted. Read and copy W-122 at word start and W-123 after a consonant; compare the
-      two source sound models in T-013. Then read and copy W-141 after a vowel and W-142 after the soft sign, preserving their source senses. T-013 names
-      apostrophe context, but its actual examples are deferred until lesson 6; do not read any apostrophe word here. Exact primer syllables, whole words,
-      minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a
-      generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Recycle the earlier W-082,
-      W-083, W-109, W-110 records in the hear/see/read/copy routine or their already-decoded core word models; do not re-teach them. Explain T-013/T-003 without
-      printing either theory/grid quote; the clean T-040/T-041/T-042 models are displayed separately before scored decisions; retain paired English support.
-      Recall the already taught one-vowel-nucleus/one-syllable counting method before workbook a5; Я changes sound value, not the number of nuclei.
+    teach: Use V-002 as unscored by-ear support for Я; no timed segment is asserted. Read and copy W-122 at word start and W-123 after a consonant; compare the two source
+      sound models in T-013. Then read and copy W-141 after a vowel and W-142 after the soft sign, preserving their source senses. T-013 names apostrophe context, but its
+      actual examples are deferred until lesson 6; do not read any apostrophe word here. Exact primer syllables, whole words, minimal pairs, positional values and
+      sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print
+      substitutions are declared in the activity focus and coverage ledger. Recycle the earlier W-082, W-083, W-109, W-110 records by reading aloud and copying their
+      already-decoded core word models with teacher modeling offline; do not re-teach them. Explain T-013/T-003 without printing either theory/grid quote; the clean
+      T-040/T-041/T-042 models are displayed separately before scored decisions; retain paired English support. Recall the already taught one-vowel-nucleus/one-syllable
+      counting method before workbook a5; Я changes sound value, not the number of nuclei.
     uses:
       grammar:
       - G-a1-005
@@ -370,11 +370,10 @@ lessons:
       vocabulary: []
     needs:
     - video
-  - id: s5
+  - id: s4
     kind: practice
-    teach: Display only the attributed public-textbook quote hosts T-040, T-041, T-042 before their dependent print decisions. All other T/X records remain
-      explains-only. Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the recap’s Ukrainian-only
-      questions.
+    teach: Display only the attributed public-textbook quote hosts T-040, T-041, T-042 before their dependent print decisions. All other T/X records remain explains-only.
+      Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the recap’s Ukrainian-only questions.
     uses:
       grammar: []
       vocabulary: []
@@ -383,6 +382,7 @@ lessons:
     - X-004
     - T-041
     - T-042
+    - X-006
     practice:
     - a4
     needs:
@@ -391,14 +391,14 @@ lessons:
   - id: a1
     type: letter-grid
     placement: inline
-    focus: Read aloud and copy Ї, W-121 and the T-002 plural form of W-010; both Ї contexts keep two sounds. Practised offline — not machine-verified.
+    focus: Read aloud and copy Ї, W-121 and the T-049 plural form of W-010; both Ї contexts keep two sounds. Practised offline — not machine-verified.
     model: X-003
   - id: a2
     type: quiz
     placement: inline
-    focus: "kind: comprehension; host: {kind: quote, ref: T-012}. After Ї teaching, compare the taught Ї/І rows of the displayed alphabet table, using the T-013 explanation
-      through explains only. Select the glyph for the stated [й]+[і] versus [і] value. Keys Ї and І both occur; no capital/small shape-only check. T-012 precedes
-      a2; paired English supports the sound labels."
+    focus: "kind: comprehension; host: {kind: quote, ref: T-002} or {kind: quote, ref: T-050}. Use the clean stated sound models and T-030 glyph heading to select Ї for [й]+[і]
+      and the already taught І for [і]. Both glyph keys occur, with varied positions and English-supported sound labels. The quote step precedes scoring; no full alphabet table
+      or new letter names are displayed."
   - id: a3
     type: letter-grid
     placement: inline
@@ -408,24 +408,22 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: 'Classify the Я value in the displayed W-122/W-123/W-142 clean source models as one vowel with preceding softness or two sounds. kind: comprehension; each
-      item has host {kind: quote, ref: T-040}, {kind: quote, ref: T-041} or {kind: quote, ref: T-042}. Use the exact word-start, post-consonant and post-soft-sign
-      transcriptions; both value keys occur. W-141 post-vowel reading is practiced offline from its verified W record and T-013 explanation; its corrupt T-003 picture
-      grid is never a scored quote host. Do not display apostrophe examples before lesson 6 or infer an exact-word recording.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-040} or {kind: quote, ref: T-041}. Classify the exact word-start W-122 and post-consonant W-123 source transcriptions
+      as two sounds or one vowel with preceding softness. Both keys occur. The post-soft-sign W-142 and post-vowel W-141 models are read with the teacher first; workbook a6
+      transfers the analysis to the post-soft-sign context.'
   - id: a5
     type: count-syllables
     placement: workbook
     focus: Count vowel nuclei in known W-076, W-081 and newly taught W-141; one, two and three syllables give different keys. No single-puzzle repetition,
       guessed division boundary or typing.
   - id: a6
-    type: fill-in
+    type: quiz
     placement: workbook
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records:
-      W-121, W-122, W-123, W-141. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as
-      a nonword. Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original
-      teaching job retained as print decoding plus teacher-supported pronunciation: Read aloud from print W-121, W-122, W-123 or W-141 and choose the matching printed
-      whole word, testing Ї/Я decoding rather than incidental meanings. Required distinct-key witness: W-121 їж___ has key а and W-141 Марі___ has key я. The alternate
-      completions їжя/Маріа are VESUM-unattested. Both keys must occur; do not choose every word’s first а as a blank.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-042} or {kind: quote, ref: T-040}. Find and repair one mistaken Я reading in each exact displayed source transcription:
+      an omitted [й] after ь in W-142 мільярд, or an extra [й] after the consonant in W-123 маля. Choose the complete correct source transcription, never write an invented
+      transcription or misspelled word. Distinct full-model keys and both two-sound/one-vowel repairs occur. This transfers the inline initial/post-consonant contrast to the
+      newly modelled post-soft-sign context. X-006 supplies the find-and-repair method only.'
+    model: X-006
   - id: a7
     type: anagram
     placement: workbook
@@ -444,8 +442,7 @@ lessons:
   - a7
   videos:
   - evidence: V-002
-    use: "Unscored by-ear alphabet support only. No timed target segment is attested; scored glyph discrimination uses the attributed print host, with offline teacher
-      pronunciation and learner repetition."
+    use: "Listen to the familiar letter sounds and repeat them aloud."
 - n: 3
   slug: yu-and-ye
   title: Ю, Є
@@ -471,6 +468,10 @@ lessons:
         evidence: W-140
       - lemma: мій
         evidence: W-010
+      - lemma: кувати
+        evidence: W-185
+      - lemma: квітувати
+        evidence: W-186
       recycled:
       - W-074
       - W-075
@@ -488,13 +489,13 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse or split
-      it. Hear V-003, then read and copy W-124 at word start and W-125 after a consonant from T-004. Read W-140 in its T-025 present first-person form after a
-      vowel; it is an incidental whole form, never a conjugation lesson. Exact primer syllables, whole words, minimal pairs, positional values and sentences in
-      this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print
-      substitutions are declared in the activity focus and coverage ledger. Display the attributed T-004, T-013, T-025 source before the dependent inline and
-      workbook decisions; retain paired English support. T-047 explicitly grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with
-      English support before the count activity, without a cluster-division rule.
+    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse or split it. Hear
+      V-003, then read and copy W-124 at word start and W-125 after a consonant from T-004. Read W-140 in its T-025 present first-person form after a vowel; it is an
+      incidental whole form, never a conjugation lesson. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud
+      from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the
+      activity focus and coverage ledger. Explain these source models with English support; the next practice step gives the single clean T-044/T-045 display. T-047
+      explicitly grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with English support before the count activity, without a
+      cluster-division rule.
     uses:
       grammar:
       - G-a1-005
@@ -528,27 +529,24 @@ lessons:
     - video
   - id: s2
     kind: practice
-    teach: Display only the attributed public-textbook quote hosts T-044, T-045 before their dependent print decisions. All other T/X records remain
-      explains-only. Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the recap’s Ukrainian-only
-      questions.
+    teach: Display the clean T-044 Ю source transcriptions once with attribution and English support before a2. Other records are explains-only.
     uses:
       grammar: []
       vocabulary: []
     evidence:
     - T-044
-    - T-045
     practice:
     - a2
     needs:
     - quote
   - id: s3
     kind: teach
-    teach: Use V-002 only as unscored general by-ear support with no Є model or timed segment claim; the teacher models Є from T-005/T-013, then read and copy
-      the T-022 plural form of W-127 at word start, the T-005 neuter form of W-126 after a consonant and the T-013 neuter form of W-010 after a vowel. Every
-      grammatical category remains unanalysed; no color or agreement lesson is introduced. Exact primer syllables, whole words, minimal pairs, positional values
-      and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their
-      recording. Scored print substitutions are declared in the activity focus and coverage ledger. Display the attributed T-005, T-013, T-022 source before the
-      dependent inline and workbook decisions; retain paired English support.
+    teach: Use V-002 only as unscored general by-ear support with no Є model or timed segment claim; the teacher models Є from T-005/T-013, then read and copy the T-022
+      plural form of W-127 at word start, the T-005 neuter form of W-126 after a consonant and the T-013 neuter form of W-010 after a vowel. Every grammatical category
+      remains unanalysed; no color or agreement lesson is introduced. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are
+      read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared
+      in the activity focus and coverage ledger. Explain these models without printing the broad theory or OCR rows. Read the exact T-045 present source forms W-185 кує
+      and W-186 квітує aloud with teacher modeling and English support before their workbook use; keep them incidental and explain no conjugation or meanings.
     uses:
       grammar:
       - G-a1-007
@@ -561,6 +559,7 @@ lessons:
     - V-002
     - T-037
     - X-006
+    - T-045
     practice:
     - a3
     introduces:
@@ -572,32 +571,31 @@ lessons:
     - video
   - id: s4
     kind: practice
-    teach: Display only the attributed public-textbook quote hosts T-022, T-005, T-043 before their dependent print decisions. All other T/X records remain
-      explains-only. Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the recap’s Ukrainian-only
-      questions.
-    uses:
-      grammar: []
-      vocabulary: []
-    evidence:
-    - T-043
-    practice:
-    - a4
-    needs:
-    - quote
-  - id: s5
-    kind: practice
-    teach: Before consolidation display the clean T-043/T-045 Є transcriptions for a5; explicitly recall vowel-nucleus counting for a7, including the already
-      displayed T-025 present W-140 form.
+    teach: Display the clean T-043 and T-045 Є source transcriptions once with attribution and English support before a4 and workbook a5. Other theory and broken grids
+      remain explains-only.
     uses:
       grammar: []
       vocabulary: []
     evidence:
     - T-043
     - T-045
-    - X-006
-    practice: []
+    practice:
+    - a4
     needs:
     - quote
+  - id: s5
+    kind: practice
+    teach: Refer to the T-045 models from the earlier practice step, with oral recall only here. Before consolidation recall vowel-nucleus counting, including the T-025
+      present W-140 form. Read the previously modeled W-185/W-186 present forms again with teacher support; no new quote block, inventory or conjugation lesson.
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-045
+    - T-025
+    - X-006
+    practice: []
+    needs: []
   activities:
   - id: a1
     type: letter-grid
@@ -622,17 +620,18 @@ lessons:
   - id: a5
     type: quiz
     placement: workbook
-    focus: 'kind: comprehension; host: {kind: quote, ref: T-043} or {kind: quote, ref: T-045}. Find and repair a mistaken Є reading value on the displayed моє and
-      синє transcriptions: the correct keys are [й]+[е] and [е]. Both corrections occur. X-006 models find-and-repair only; no Я host or misspelling.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-045}. Find and repair a mistaken reading of post-vowel Є on fresh workbook models W-185 кує and W-186 квітує. Choose
+      the corresponding complete exact source transcription, preserving its spaces, syllable bars and softness marks. The distinct source-model keys [ к у|й е ] and [ к в′
+      і|т у| й е ] both occur; permute positions. Inline a4 retains моє and синє and those words must not recur here. X-006 models find-and-repair only; no conjugation, meaning
+      drill or invented transcription.'
     model: X-006
   - id: a6
     type: fill-in
     placement: workbook
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records:
-      W-124, W-125, W-127. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword.
-      Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original teaching
-      job retained as print decoding plus teacher-supported pronunciation: Read aloud from print three distinct whole words among W-124, W-125 and W-127 and choose
-      their printed forms; pronunciation decoding, not a gloss test for the unglossed W-125.'
+    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records: W-124,
+      W-125, W-127. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword. Keep all taught
+      positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Retained orthography progresses to choosing
+      taught Ю/Є glyphs at word start versus after a consonant. Require at least two distinct correct completion glyphs across the activity.'
   - id: a7
     type: count-syllables
     placement: workbook
@@ -652,9 +651,9 @@ lessons:
   - a7
   videos:
   - evidence: V-003
-    use: Step s1 Ю pronunciation model.
+    use: Listen to the sound of Ю and repeat it aloud.
   - evidence: V-002
-    use: Step s3 unscored general pronunciation support only; no declared Є model or timed segment. T-005/T-013 and the teacher establish Є.
+    use: Listen to the familiar letter sounds and repeat them aloud.
 - n: 4
   slug: ts-shch-f
   title: Ц, Щ, Ф
@@ -705,13 +704,13 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse or split
-      it. Hear V-004 and the Ц models in T-006, including hard and soft sounds. Read the CV/VC row and read and copy W-128 from T-023 as an incidental word, not
-      an instrument-knowledge test. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is
-      inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling
-      offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and
-      coverage ledger. T-047 explicitly grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with English support before the count
-      activity, without a cluster-division rule.
+    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse or split it. Hear
+      V-004 and the Ц models in T-006, including hard and soft sounds. Read the CV/VC row and read and copy W-128 from T-023 as an incidental word, not an
+      instrument-knowledge test. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred.
+      Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a
+      printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. T-047 explicitly
+      grounds the rule that syllable count equals vowel-nucleus count; teach/recall it with English support before the count activity, without a cluster-division rule.
+      Recall the already taught Ч model before contrasting it with the new Ц recording.
     uses:
       grammar:
       - G-a1-002
@@ -732,8 +731,8 @@ lessons:
     - X-003
     - V-004
     - T-028
-    - V-003
-    - T-027
+    - V-013
+    - T-051
     - T-047
     practice:
     - a1
@@ -778,19 +777,8 @@ lessons:
     - video
   - id: s3
     kind: practice
-    teach: Display the attributed capital/small source glyph models, then discriminate their printed shapes. Teacher pronunciation and learner repetition remain
-      offline; no machine-scored recording is asserted.
-    uses:
-      grammar: []
-      vocabulary: []
-    evidence:
-    - T-033
-    - T-034
-    practice: []
-  - id: s4
-    kind: practice
-    teach: Display only the clean T-033/T-034 capital/small Щ/Ш quote headings before their different reading-value decision a4. T-013 explains their [шч]/[ш]
-      values only; do not print its broad theory.
+    teach: Display only the clean T-033/T-034 capital/small Щ/Ш quote headings before their different reading-value decision a4. T-013 explains their [шч]/[ш] values
+      only; do not print its broad theory.
     uses:
       grammar: []
       vocabulary: []
@@ -801,15 +789,14 @@ lessons:
     - a4
     needs:
     - quote
-  - id: s5
+  - id: s4
     kind: teach
-    teach: Hear V-005, see Ф and its source name in T-008/T-012, read the CV/VC row, then read and copy W-131. Teach the glyph and [ф] sound; T-018 supplies
-      only the F/ph correspondence if mentioned, never any visual look-alike claim. Replay the lesson-listed V/T single-letter target pairs before the scored
-      items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this
-      step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print
-      substitutions are declared in the activity focus and coverage ledger. Recycle the earlier W-084, W-104, W-118, W-151 records in the hear/see/read/copy
-      routine or their already-decoded core word models; do not re-teach them. Display the attributed T-038 source before the dependent inline and workbook
-      decisions; retain paired English support.
+    teach: Hear V-005, see Ф and its source name in T-008/T-012, read the CV/VC row, then read and copy W-131. Teach the glyph and [ф] sound; T-018 supplies only the F/ph
+      correspondence if mentioned, never any visual look-alike claim. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer
+      syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with
+      teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and
+      coverage ledger. Recycle the earlier W-084, W-104, W-118, W-151 records by reading aloud and copying their already-decoded core word models with teacher modeling
+      offline; do not re-teach them. Explain the sound-class rule with English support; the following practice step owns its single attributed display.
     uses:
       grammar:
       - G-a1-002
@@ -841,10 +828,10 @@ lessons:
       vocabulary: []
     needs:
     - video
-  - id: s6
+  - id: s5
     kind: practice
-    teach: Before consolidation display only the attributed public-textbook hosts T-038. Other evidence remains explains-only; these quotes support the separate
-      workbook decisions. Recall vowel-nucleus counting before a7 on the source words W-128/W-129/W-131; do not infer division boundaries.
+    teach: Before consolidation display only the attributed public-textbook hosts T-038. Other evidence remains explains-only; these quotes support the separate workbook
+      decisions. Recall vowel-nucleus counting before a7 on the source words W-128/W-129/W-131; do not infer division boundaries.
     uses:
       grammar: []
       vocabulary: []
@@ -862,10 +849,11 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: "Distinguish new Ц from previously taught Ю by their declared native models; hard/soft Ц remains offline. Required item kind: listening; each item binds
-      host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs: V-004/T-028, V-003/T-027. Present each whole
-      dedicated recording (segment: null) before its item. Use every declared target, vary both correct glyphs and key positions, and choose only taught single glyphs.
-      Latin-shape, sound-class and hard/soft explanations remain separate offline teaching; they are not listening answer classes."
+    focus: "Distinguish new Ц from previously taught Ч by their declared native models; hard/soft Ц remains offline. Required item kind: listening; each item binds host {kind:
+      video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs: V-004/T-028, V-013/T-051. Present each whole dedicated recording
+      (segment: null) before its item. Use every declared target, vary both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class
+      and hard/soft explanations remain separate offline teaching; they are not listening answer classes. Play the original recording audio-only and hide its frames, title,
+      thumbnail, captions and target glyph through answer submission. If the recording cannot be concealed, do not score the listening item."
   - id: a3
     type: letter-grid
     placement: inline
@@ -885,10 +873,11 @@ lessons:
   - id: a6
     type: quiz
     placement: inline
-    focus: "Distinguish new Ф from earlier Ц by their native sound models. Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record
-      equal to the supported glyph. Aligned video/print-evidence pairs: V-005/T-029, V-004/T-028. Present each whole dedicated recording (segment: null) before its
-      item. Use every declared target, vary both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations
-      remain separate offline teaching; they are not listening answer classes."
+    focus: "Distinguish new Ф from earlier Ц by their native sound models. Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal
+      to the supported glyph. Aligned video/print-evidence pairs: V-005/T-029, V-004/T-028. Present each whole dedicated recording (segment: null) before its item. Use every
+      declared target, vary both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain separate
+      offline teaching; they are not listening answer classes. Play the original recording audio-only and hide its frames, title, thumbnail, captions and target glyph through
+      answer submission. If the recording cannot be concealed, do not score the listening item."
   - id: a7
     type: count-syllables
     placement: workbook
@@ -902,11 +891,10 @@ lessons:
   - id: a9
     type: fill-in
     placement: workbook
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records:
-      W-128, W-129, W-130, W-131. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as
-      a nonword. Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original
-      teaching job retained as print decoding plus teacher-supported pronunciation: Read aloud from print W-128, W-129, W-130 or W-131 and select the printed whole
-      word; extend the two-value work to Ц, Щ and Ф word decoding.'
+    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records: W-128,
+      W-129, W-130, W-131. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword. Keep all
+      taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Retained orthography progresses to
+      the new consonant letters Ц/Щ/Ф in complete source words. Require at least two distinct correct completion glyphs.'
   - id: a10
     type: quiz
     placement: workbook
@@ -927,13 +915,13 @@ lessons:
   - a10
   videos:
   - evidence: V-004
-    use: Step s1 Ц sound model.
+    use: Listen to the sound of Ц and repeat it aloud.
   - evidence: V-002
-    use: Step s2 unscored general sound support; no declared Щ model or timed segment. T-007/T-013 and the teacher establish Щ.
+    use: Listen to the familiar letter sounds and repeat them aloud.
   - evidence: V-005
-    use: Step s5 Ф sound model.
-  - evidence: V-003
-    use: Step s1 whole dedicated letter model before its listening choice; no timed segment.
+    use: Listen to the sound of Ф and repeat it aloud.
+  - evidence: V-013
+    use: Recall the sound of Ч, then compare it with Ц.
 - n: 5
   slug: joined-digraphs
   title: дж, дз
@@ -1021,12 +1009,11 @@ lessons:
     - video
   - id: s2
     kind: teach
-    teach: Read T-010 hard and soft дз models aloud with a teacher, read and copy the inanimate W-134 and the source present form of W-135. These are joined
-      sounds, not two separately read consonants. Keep the source verb form incidental and unanalysed. Exact primer syllables, whole words, minimal pairs,
-      positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video
-      is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Keep V-002 in this same step for already-taught
-      individual letter sound recall only; a teacher models the joined digraph/apostrophe words offline. Display the attributed T-010, T-046 source before the
-      dependent inline and workbook decisions; retain paired English support.
+    teach: Read T-010 hard and soft дз models aloud with a teacher, read and copy the inanimate W-134 and the source present form of W-135. These are joined sounds, not
+      two separately read consonants. Keep the source verb form incidental and unanalysed. Exact primer syllables, whole words, minimal pairs, positional values and
+      sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print
+      substitutions are declared in the activity focus and coverage ledger. Keep V-002 in this same step for already-taught individual letter sound recall only; a teacher
+      models the joined digraph/apostrophe words offline. Explain these source models with English support; the next practice step owns their single attributed display.
     uses:
       grammar:
       - G-a1-005
@@ -1040,6 +1027,7 @@ lessons:
     - X-003
     - V-002
     - T-046
+    - X-006
     practice:
     - a3
     introduces:
@@ -1050,14 +1038,14 @@ lessons:
     - video
   - id: s3
     kind: practice
-    teach: Display only T-010 and the clean T-046 word-row quote before a4. T-016/T-017 remain explains-only phonetic qualifications; their theory/OCR bytes are
-      never a learner quote. Recall vowel-nucleus counting before a7.
+    teach: Display only the clean T-010 hard/soft joined-sound symbols and T-046 word row once, with attribution and English support, before a4 and workbook a6.
+      T-016/T-017 remain explains-only. Recall vowel-nucleus counting before a7.
     uses:
       grammar: []
       vocabulary: []
     evidence:
     - T-010
-    - X-004
+    - T-046
     practice:
     - a4
     needs:
@@ -1071,11 +1059,10 @@ lessons:
   - id: a2
     type: fill-in
     placement: inline
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records:
-      W-132, W-133. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword. Keep
-      all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original teaching job
-      retained as print decoding plus teacher-supported pronunciation: Read aloud from print a T-009 word and select its printed form among W-132/W-133 and earlier
-      W-130; do not use prefixed exception words.'
+    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records: W-132,
+      W-133. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as a nonword. Keep all taught positional/sign/digraph
+      contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. The inline orthography now practices intact joined дж word spelling
+      only; the workbook separately repairs hard/soft дз readings. Require at least two distinct completion glyphs.'
   - id: a3
     type: observe
     placement: inline
@@ -1084,22 +1071,21 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: 'kind: comprehension; host: {kind: quote, ref: T-010} or {kind: quote, ref: T-046}. Use the clean hard/soft дз source values and the source W-134/W-135
-      models. The present дзюрчить has soft [дз′]; W-134 has hard [дз]. Both values are keys. T-016/T-017 explain the qualification only; never quote their OCR theory.
-      Teacher pronunciation remains offline.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-010}. Identify the displayed isolated source [дз] and [дз′] symbols as hard or soft joined consonant sounds. Both
+      keys occur; vary their positions. Do not use whole word stimuli here. T-016/T-017 explain the phonetic qualification only; teacher pronunciation remains offline.'
   - id: a5
     type: anagram
     placement: workbook
     focus: Assemble W-132, W-133 and W-134 from taught letters, keeping each adjacent digraph intact when reading the result.
     model: X-004
   - id: a6
-    type: fill-in
+    type: quiz
     placement: workbook
-    focus: 'Read aloud from print with teacher modeling offline, then complete the sourced printed word in fill-in mode orthography (kind: orthography). Target records:
-      W-132, W-133, W-134, W-135. Each item has a printed word-local blank, target_record and marker-free learner key; every wrong completion must be verified as
-      a nonword. Keep all taught positional/sign/digraph contrasts across the listed targets; spoken discrimination and word meaning are not machine-scored. Original
-      teaching job retained as print decoding plus teacher-supported pronunciation: Read aloud from print one of W-132/W-133/W-134 or the T-010 present form of W-135
-      and select the matching printed whole word; the new decision is digraph joining, not a gloss.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-010} or {kind: quote, ref: T-046}. Find and repair a mistaken joined-consonant reading for W-134 дзиґа and the exact
+      source present W-135 дзюрчить. Select hard [дз] for the first and soft [дз′] for the second; both repairs and varied key positions are required. Inline a2 uses W-132/W-133
+      spelling and a4 uses isolated sound symbols, so these whole-word repair items are a further application. Use only the two sourced sound symbols; do not invent a full
+      phonetic transcription. X-006 supplies the repair method.'
+    model: X-006
   - id: a7
     type: count-syllables
     placement: workbook
@@ -1118,7 +1104,7 @@ lessons:
   - a7
   videos:
   - evidence: V-002
-    use: Recall taught letter sounds before joining the primer digraph models; the video is not evidence for a digraph rule.
+    use: Listen to the familiar letter sounds and repeat them aloud.
 - n: 6
   slug: apostrophe-and-whole-sentence
   title: ’
@@ -1160,8 +1146,6 @@ lessons:
         evidence: W-065
       - lemma: мій
         evidence: W-010
-      - lemma: люпин
-        evidence: W-125
       - lemma: бюро
         evidence: W-179
       - lemma: бити
@@ -1176,6 +1160,8 @@ lessons:
         evidence: W-050
       - lemma: що
         evidence: W-164
+      - lemma: Марія
+        evidence: W-141
       recycled:
       - W-074
       - W-075
@@ -1186,6 +1172,8 @@ lessons:
       - W-101
       - W-121
       - W-130
+      - W-006
+      - W-088
   steps:
   - id: s1
     kind: teach
@@ -1255,20 +1243,8 @@ lessons:
     - example
   - id: "s3"
     kind: practice
-    teach: 'Before workbook consolidation, display these attributed public-textbook quote hosts: T-036. Work only with the named taught-letter stimuli; other source
-      prose is explains-only. Read aloud offline with a teacher; scored answers concern the displayed print. Exact primer syllables, whole words, minimal pairs, positional
-      values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording.
-      Scored print substitutions are declared in the activity focus and coverage ledger.'
-    uses:
-      grammar: []
-      vocabulary: []
-    evidence:
-    - T-036
-    practice: []
-  - id: s4
-    kind: practice
-    teach: Before consolidation display only the attributed public-textbook hosts T-036. Other evidence remains explains-only; these quotes support the separate
-      workbook decisions.
+    teach: 'Display the clean T-036 apostrophe/no-apostrophe pairs once with attribution and English support before the separate workbook decisions. Read both forms aloud with
+      teacher modeling. Other broad theory is explains-only.'
     uses:
       grammar: []
       vocabulary: []
@@ -1277,14 +1253,19 @@ lessons:
     practice: []
     needs:
     - quote
-  - id: s5
+  - id: s4
     kind: practice
-    teach: In a separate English-supported practice step, model the known W-001/W-141 narrator, W-010 feminine/W-138 family, W-081/W-101 family members and
-      W-121/W-143 food as one first-person narration. Before recap model W-164 as the food question label with English support, alongside the already-known
-      W-162/W-163 labels. T-020/T-021 explain the D4 structure; these are whole forms, not a person, agreement or interrogative-system lesson.
+    teach: In a separate English-supported practice step, model one first-person narrative from the known W-001/W-141 narrator, W-006 participating group, W-010
+      feminine/W-138 family and W-050 connective, W-081/W-101 family members and W-121/W-143 food labels. Reuse the already taught W-088 reading chunks with mother and
+      father as the other readers of quoted food-word labels. Model complete who-plus-reading questions with W-162 and named-person answers, and the complete
+      what-plus-reading question with W-164 and a quoted word-label answer. The narrator is never an individually queried actor; W-163 where is unnecessary because the
+      story has no location. T-020/T-021 supply methodology through explains only. Keep this as whole known chunks, without explaining agreement, case, conjugation or an
+      interrogative system.
     uses:
       grammar: []
-      vocabulary: []
+      vocabulary:
+      - W-006
+      - W-088
     evidence:
     - T-020
     - T-021
@@ -1329,14 +1310,15 @@ lessons:
     type: quiz
     placement: workbook
     focus: "kind: comprehension; host: {kind: quote, ref: T-036}. Compare all three complete source pairs, W-179/W-180 first-person, W-143/W-137 first-person, W-181/W-182.
-      Choose which member has a hard consonant followed by separate [йу] or [йа], and in reverse items which has the post-consonant vowel value without [й]. Teacher-model
-      both readings before the item, using T-015 through explains only. Both separate/joined sound keys occur; no apostrophe-presence question answerable by spotting
-      the glyph."
+      Choose which member has a hard consonant followed by separate [йу] or [йа], and in reverse items which has the post-consonant vowel value without [й]. Teacher-model both
+      readings before the item, using T-015 through explains only. Both separate/joined sound keys occur; This checks the taught mapping from apostrophe/no-apostrophe print
+      to sound, using the visible glyph as its cue."
   - id: a8
     type: observe
     placement: inline
-    focus: Observe the English-supported first-person narrator/family/food model and W-164 question cue in the separate s5 practice step; repeat whole forms
-      offline, no score or new grammar system.
+    focus: Observe the English-supported first-person narrator/family/food narrative and complete who/what reading-question chunks in the separate practice step. Use
+      W-001/W-141, W-006/W-050, W-010/W-138, W-081/W-101, W-088 and W-121/W-143. Repeat whole forms offline, with named readers for who and quoted word labels for what;
+      no score or new grammar system.
   practice:
     vocabulary: core
     stress: []
@@ -1350,7 +1332,7 @@ lessons:
   - a7
   videos:
   - evidence: V-002
-    use: Unscored recall of declared Я/Ю/Ш models only; no Є/Ї, digraph or apostrophe model or timed segment is asserted.
+    use: Listen to the familiar letter sounds and repeat them aloud.
 - n: 7
   slug: alphabet-order-and-names
   title: алфавіт
@@ -1382,6 +1364,12 @@ lessons:
         evidence: W-174
       - lemma: м'якшення
         evidence: W-175
+      - lemma: Україна
+        evidence: W-183
+      - lemma: Київ
+        evidence: W-184
+      - lemma: Іван
+        evidence: W-093
       recycled:
       - W-074
       - W-075
@@ -1434,21 +1422,8 @@ lessons:
     - video
   - id: "s2"
     kind: practice
-    teach: 'Display only the following attributed public-textbook quotes before these print-choice activities: T-012. Keep all other T/X records as explains-only
-      grounding. Read the declared taught-letter stimuli aloud and copy their models offline with teacher support; the scored decisions are about visible letters/syllables/words,
-      never a claimed recording of an exact primer row. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read
-      aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared
-      in the activity focus and coverage ledger.'
-    uses:
-      grammar: []
-      vocabulary: []
-    evidence:
-    - T-012
-    practice: []
-  - id: s3
-    kind: practice
-    teach: Display only the attributed public-textbook quote hosts T-012 before their dependent print decisions. All other T/X records remain explains-only.
-      Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the recap’s Ukrainian-only questions.
+    teach: 'Display the attributed T-012 complete alphabet table once before the print-choice activity. With teacher support recall all now-taught letter names, then use the
+      table to match a name with its capital/small pair. Other theory remains explains-only.'
     uses:
       grammar: []
       vocabulary: []
@@ -1458,12 +1433,13 @@ lessons:
     - a2
     needs:
     - quote
-  - id: "s4"
+  - id: s3
     kind: practice
-    teach: Teach that personal names begin with a capital using T-039, corroborated by Pravopys §49.1, then copy W-141 and the earlier W-093 name models. Keep
-      common-word models W-076/W-081/W-101/W-121/W-130 lowercase outside sentence start. Use T-012 to put these models in dictionary order. Write one’s own name
-      only from an existing written model offline; no new proper-name spelling is guessed. Display the attributed T-039 source before the dependent inline and
-      workbook decisions; retain paired English support.
+    teach: Explain with English support that personal names begin with a capital (T-039; Pravopys 2019 section 49.1), and geographic names do too (T-052; section 50.1 and
+      50.6). Read and copy the exact W-141/W-093 personal-name and W-183/W-184 place-name models, then the known lowercase W-076/W-081/W-101/W-121/W-130 common words
+      outside sentence start. Keep proper names incidental, without a meaning drill. Use T-012 for dictionary-order recall; retain its one quote block in the earlier
+      practice step. Write one’s own name only from an existing written model offline; never guess a spelling. The next step supplies the single clean rule display before
+      consolidation.
     uses:
       grammar:
       - G-a1-011
@@ -1479,17 +1455,19 @@ lessons:
     - S-001
     - X-003
     - T-039
+    - T-052
     practice:
     - a3
-  - id: s5
+  - id: "s4"
     kind: practice
-    teach: Before consolidation display only the attributed public-textbook hosts T-039. Other evidence remains explains-only; these quotes support the separate
-      workbook decisions.
+    teach: Display the clean attributed T-039 personal-name and T-052 geographic-name rules once with English support before workbook a7. Restrict the scored decisions to
+      the named word-record models; other source prose remains explains-only.
     uses:
       grammar: []
       vocabulary: []
     evidence:
     - T-039
+    - T-052
     practice: []
     needs:
     - quote
@@ -1507,8 +1485,8 @@ lessons:
   - id: a3
     type: letter-grid
     placement: inline
-    focus: Read and copy the five taught word models plus W-141, then write one’s own name from an already-written model into a notebook. Practised offline —
-      not machine-verified.
+    focus: Read and copy the five taught common-word models plus W-141/W-093 personal names and W-183/W-184 place names. Then write one’s own name from an already-written
+      model in a notebook. Practised offline — not machine-verified.
     model: X-003
   - id: a4
     type: order
@@ -1518,9 +1496,9 @@ lessons:
   - id: a5
     type: odd-one-out
     placement: workbook
-    focus: 'kind: comprehension; host: {kind: quote, ref: T-012}. From the source alphabet table, build [А, а, Б], [Б, б, В], [В, в, Г], [Г, г, Ґ]. Choose the glyph
-      with a different letter identity from the capital/small pair. Exactly one member differs; keys Б, В, Г, Ґ vary. Permute positions while keeping each pair intact.
-      Both shapes are candidates, never a three-small-glyph row with two mismatches.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-012}. From the source table build [Щ, щ, Ш], [І, ї, Ї], [Ю, Ц, ю], [Ф, ф, Є]. Choose the glyph with a different
+      letter identity from the capital/small pair; exactly one member differs. Keys Ш, І, Ц, Є vary and the new-letter pairs are required. Permute positions; the odd member
+      is not chosen by alphabet adjacency. Both shapes are candidates, never a row with two mismatches.'
   - id: a6
     type: quiz
     placement: workbook
@@ -1530,9 +1508,9 @@ lessons:
   - id: a7
     type: quiz
     placement: workbook
-    focus: 'kind: comprehension; host: {kind: quote, ref: T-039}. Apply the taught personal-name capital rule to W-141/W-093 versus W-081/W-101 lowercase common-word
-      models outside sentence start. Capital and lowercase decisions both occur; vary word keys and positions. T-003 remains explains-only and is not printed with
-      its OCR fragments or watermark.'
+    focus: 'kind: comprehension; host: {kind: quote, ref: T-039} or {kind: quote, ref: T-052}. Apply the taught capital rule to personal-name W-141/W-093 and geographic-name
+      W-183/W-184 models versus lowercase W-081/W-101 common words outside sentence start. Personal, place and common-word decisions all occur; both capital/lowercase keys
+      and varied word/position keys are required. Use English-supported categories; do not show a misspelled proper name or quiz place-name meanings.'
   practice:
     vocabulary: core
     stress: []
@@ -1547,7 +1525,7 @@ lessons:
   - a7
   videos:
   - evidence: V-002
-    use: Step s1 complete alphabet sound support after every letter is taught; T-012 alone supplies names and order.
+    use: Listen to the familiar letter sounds and repeat them aloud.
 - n: 8
   slug: complete-alphabet-recap
   title: повторення
@@ -1568,16 +1546,10 @@ lessons:
         evidence: W-120
       - lemma: яма
         evidence: W-122
-      - lemma: маля
-        evidence: W-123
       - lemma: юрта
         evidence: W-124
-      - lemma: люпин
-        evidence: W-125
       - lemma: синій
         evidence: W-126
-      - lemma: єнот
-        evidence: W-127
       - lemma: цимбали
         evidence: W-128
       - lemma: щука
@@ -1586,32 +1558,14 @@ lessons:
         evidence: W-131
       - lemma: джміль
         evidence: W-132
-      - lemma: джем
-        evidence: W-133
       - lemma: дзиґа
         evidence: W-134
-      - lemma: дзюрчати
-        evidence: W-135
       - lemma: пір'я
         evidence: W-136
-      - lemma: пити
-        evidence: W-137
       - lemma: сім'я
         evidence: W-138
-      - lemma: м'яч
-        evidence: W-139
-      - lemma: радіти
-        evidence: W-140
       - lemma: Марія
         evidence: W-141
-      - lemma: мільярд
-        evidence: W-142
-      - lemma: пюре
-        evidence: W-143
-      - lemma: пір'їна
-        evidence: W-144
-      - lemma: повторення
-        evidence: W-090
       - lemma: я
         evidence: W-001
       - lemma: вона
@@ -1620,42 +1574,18 @@ lessons:
         evidence: W-011
       - lemma: ось
         evidence: W-065
-      - lemma: весна
-        evidence: W-160
       - lemma: хто
         evidence: W-162
-      - lemma: де
-        evidence: W-163
       - lemma: що
         evidence: W-164
-      - lemma: любити
-        evidence: W-165
-      - lemma: равлик
-        evidence: W-166
-      - lemma: один
-        evidence: W-167
-      - lemma: старенький
-        evidence: W-168
-      - lemma: мандрувати
-        evidence: W-169
-      - lemma: час
-        evidence: W-170
-      - lemma: під
-        evidence: W-032
-      - lemma: буква
-        evidence: W-171
-      - lemma: назва
-        evidence: W-172
-      - lemma: алфавіт
-        evidence: W-173
-      - lemma: знак
-        evidence: W-174
-      - lemma: м'якшення
-        evidence: W-175
       - lemma: мій
         evidence: W-010
       - lemma: і
         evidence: W-050
+      - lemma: сім'я
+        evidence: W-138
+      - lemma: пюре
+        evidence: W-143
       recycled:
       - W-074
       - W-075
@@ -1670,13 +1600,14 @@ lessons:
       - W-089
       - W-121
       - W-130
+      - W-006
   steps:
   - id: s1
     kind: recap
-    teach: 'Present one mandatory short first-person literacy story with Ukrainian-left/English-right alignment before a2. Ground identity in the known W-141 name
-      and W-001; connect the known feminine W-010, W-138, W-081, W-101 and W-050 family models, then the W-121/W-143 food models. T-020/T-021 supply D4 methodology
-      through explains only, never premium-note quotes or a reference-author persona. These whole forms were modeled before recap; introduce no vocabulary or grammar
-      system here. The W-164 food question was modeled with English support in lesson 6 s5; recap only reuses it.'
+    teach: 'Present one mandatory short first-person literacy narrative in Ukrainian-left/English-right alignment before a2. Use the previously modeled W-001/W-141 narrator
+      and W-006 participating group; connect W-010/W-138 family, W-050, W-081/W-101 and W-121/W-143 food labels. Reuse the W-088 reading chunks: mother and father are the other
+      actors who read the two quoted food-word labels. T-020/T-021 give D4 methodology through explains only. The complete W-162/W-164 who/what question chunks were modeled
+      with English support before recap. Introduce no vocabulary or grammar system; do not use a where question without a story location.'
     uses:
       grammar:
       - G-a1-005
@@ -1700,6 +1631,7 @@ lessons:
       - W-089
       - W-121
       - W-130
+      - W-006
     evidence:
     - T-020
     - T-021
@@ -1710,20 +1642,20 @@ lessons:
     - a2
   - id: s2
     kind: recap
-    teach: After the questions on the first-person story, revisit EX-001 whole, the T-001 constant-vowel pairs and all new-letter/digraph/apostrophe models
-      aloud from print with teacher support; complete the one existing notebook production task. The snail passage T-035 is optional unscored reading support
-      only. Do not ask when a snail travelled or introduce a new question word.
+    teach: After the questions on the same first-person story, recall EX-001 whole and the previously taught T-001 W-119/W-120 comparison aloud with teacher support, then
+      complete the one notebook production task. Reuse the new-letter/digraph/apostrophe models already listed in that task. Introduce no second story, incidental reading
+      passage or new question word.
     uses:
       grammar:
       - G-a1-002
       vocabulary: []
     evidence:
-    - T-035
     - EX-001
     - X-001
     - X-003
     - X-005
     - T-005
+    - T-001
     practice:
     - a3
     - a4
@@ -1738,14 +1670,16 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'kind: comprehension; host: {kind: dialogue}. The s1 first-person story block precedes a2. Ask Ukrainian-only questions about its narrator, family members
-      and named food; printed options use already taught forms and different substantive keys. Every answer depends on that story, not the snail passage, a picture
-      or outside knowledge. No new time-question word.'
+    focus: 'kind: comprehension; host: {kind: dialogue}. The s1 first-person narrative precedes a2. Ask Ukrainian-only who-plus-reading questions with named-person answers:
+      the reader of the quoted food label W-121 is W-081 and the reader of W-143 is W-101. Include the previously modeled what-plus-reading question with a quoted food-word
+      label answer. Use the complete W-162/W-164 question chunks modeled before recap, already taught W-088 reading forms, varied person/word keys and varied positions. Do
+      not query the participating narrator individually or ask where when no location exists. Every answer must depend on this same narrative; no outside knowledge or second
+      story.'
   - id: a3
     type: observe
     placement: inline
-    focus: Read EX-001 whole and the sourced X-001 pair aloud from print; recognition scores do not stand for speaking. Practised offline — not
-      machine-verified.
+    focus: Read EX-001 whole and the previously taught T-001 W-119/W-120 comparison aloud from print with teacher modeling first. Recognition scores do not stand for
+      speaking. Practised offline — not machine-verified.
     model: X-001
   - id: a4
     type: letter-grid
@@ -1768,8 +1702,9 @@ lessons:
       gender: f
       evidence: W-141
     register: informal
-    target_grammar: 'Whole known forms only: W-001 and W-141 identify the narrator; the feminine W-010, W-138, W-081, W-101 and W-050 identify family; W-121/W-143
-      identify food. No explained agreement, case or conjugation.'
+    target_grammar: 'Whole previously modeled forms only: W-001/W-141 narrator; W-006 participating group; W-010/W-138/W-050/W-081/W-101 family; W-088 reading chunks and quoted
+      W-121/W-143 food labels. Mother and father are the other readers individually keyed by who; what keys a quoted word label. No explained agreement, case, conjugation or
+      question system.'
     evidence:
     - T-020
     - T-021

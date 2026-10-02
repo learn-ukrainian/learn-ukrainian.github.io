@@ -1272,3 +1272,31 @@
   id: W-182
   lemma: зв'язок
   pos: noun
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 397241
+    source: vesum
+  id: W-183
+  lemma: Україна
+  pos: noun
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 164577
+    source: vesum
+  id: W-184
+  lemma: Київ
+  pos: noun
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 180859
+    source: vesum
+  id: W-185
+  lemma: кувати
+  pos: verb
+- allocated_at_build: 841d2fdd8354381128923e9a69c1751e067707af2b82cab151c96c5db73a5b8f
+  entry:
+    entry_id: 163732
+    source: vesum
+  id: W-186
+  lemma: квітувати
+  pos: verb
