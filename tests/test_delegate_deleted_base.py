@@ -78,6 +78,24 @@ class _Repo:
         _commit(self.worktree, "fix.py", "the fix")
         _git(self.worktree, "push", "-q", "origin", TASK_BRANCH)
 
+    def advance_main(self) -> str:
+        """Land two changes on ``main`` after the base merged; return the tip's SHA.
+
+        The tip has a parent the worker's branch lacks, so cherry-picking it onto the
+        worktree yields a new commit (a different SHA) that is only patch-equivalent.
+        """
+        _git(self.primary, "checkout", "-q", "-B", "main", "origin/main")
+        _commit(self.primary, "landed-first.txt", "an earlier change on main")
+        _commit(self.primary, "landed.txt", "a change already on main")
+        landed = _git(self.primary, "rev-parse", "HEAD")
+        _git(self.primary, "push", "-q", "origin", "main")
+        _git(self.primary, "fetch", "-q", "origin")
+        _git(self.primary, "checkout", "-q", "--detach")
+        return landed
+
+    def push_task_branch(self) -> None:
+        _git(self.worktree, "push", "-q", "origin", TASK_BRANCH)
+
 
 @pytest.fixture
 def repo(tmp_path) -> _Repo:
@@ -222,3 +240,116 @@ def test_recorded_commit_that_is_not_an_ancestor_is_not_trusted(repo):
     unrelated = _git(repo.primary, "rev-parse", "HEAD")
 
     assert delegate._count_commits_ahead(repo.worktree, f"origin/{BASE_BRANCH}", base_sha=unrelated) == 1
+
+
+# --- the default-branch fallback counts only real new changes (#9451) -------------
+#
+# ``origin/main..HEAD`` is a proxy for the lost base, and it overcounts: a merge of
+# main, or a cherry-pick of a change main already has, is "ahead" yet delivers
+# nothing. Each shape below is a real worker end-state settled through ``_run_worker``.
+
+
+def _cherry_pick_landed(repo: _Repo, landed: str) -> None:
+    _git(repo.worktree, "cherry-pick", landed)
+
+
+def _merge_main(repo: _Repo, landed: str) -> None:
+    _git(repo.worktree, "merge", "-q", "--no-ff", "--no-edit", landed)
+
+
+def _merge_main_then_fix(repo: _Repo, landed: str) -> None:
+    _merge_main(repo, landed)
+    _commit(repo.worktree, "fix.py", "the fix")
+
+
+def _fix_then_merge_main(repo: _Repo, landed: str) -> None:
+    _commit(repo.worktree, "fix.py", "the fix")
+    _merge_main(repo, landed)
+
+
+def _cherry_pick_then_fix(repo: _Repo, landed: str) -> None:
+    _cherry_pick_landed(repo, landed)
+    _commit(repo.worktree, "fix.py", "the fix")
+
+
+def _merge_main_then_revert(repo: _Repo, landed: str) -> None:
+    _merge_main(repo, landed)
+    _git(repo.worktree, "revert", "--no-edit", landed)
+
+
+def _empty_commit(repo: _Repo, landed: str) -> None:
+    _git(repo.worktree, "commit", "-q", "--allow-empty", "-m", "nothing changed")
+
+
+def _settle_after(repo: _Repo, task_id: str, work, *, base_sha: str | None) -> dict:
+    repo.delete_base_branch(merged_into_main=True)
+    landed = repo.advance_main()
+    work(repo, landed)
+    repo.push_task_branch()
+    return _settle(repo, task_id, base_sha=base_sha)
+
+
+@pytest.mark.parametrize(
+    "work",
+    [_cherry_pick_landed, _merge_main, _empty_commit],
+    ids=["cherry-pick-of-a-change-on-main", "merge-of-current-main", "empty-commit"],
+)
+def test_default_branch_fallback_does_not_count_no_op_work_as_a_delivery(tmp_tasks_dir, repo, work):
+    state = _settle_after(repo, f"noop-{work.__name__}", work, base_sha=None)
+
+    assert state["status"] == "no_deliverable"
+    assert state["no_deliverable_reason"] == "no_commits_no_changes"
+    assert state["commits_ahead"] == 0
+
+
+@pytest.mark.parametrize(
+    ("work", "real_commits"),
+    [
+        (_merge_main_then_fix, 1),
+        (_fix_then_merge_main, 1),
+        (_cherry_pick_then_fix, 1),
+        (_merge_main_then_revert, 1),
+    ],
+    ids=["new-commit-on-top-of-merged-main", "new-commit-plus-merge-of-main", "cherry-pick-plus-new-commit", "revert-of-a-commit-on-main"],
+)
+def test_default_branch_fallback_counts_real_commits_next_to_no_op_ones(tmp_tasks_dir, repo, work, real_commits):
+    state = _settle_after(repo, f"real-{work.__name__}", work, base_sha=None)
+
+    assert state["status"] == "done"
+    assert state["commits_ahead"] == real_commits
+    assert state.get("no_deliverable_reason") is None
+
+
+@pytest.mark.parametrize(
+    ("work", "expected_status", "expected_ahead"),
+    [
+        (_cherry_pick_landed, "done", 1),
+        (_merge_main, "done", 3),
+        (_empty_commit, "done", 1),
+    ],
+    ids=["cherry-pick", "merge-of-main", "empty-commit"],
+)
+def test_recorded_commit_count_stays_exact_for_the_same_shapes(
+    tmp_tasks_dir, repo, work, expected_status, expected_ahead
+):
+    """The recorded commit is where the worktree started, so ``<sha>..HEAD`` is exact: unchanged."""
+    state = _settle_after(repo, f"recorded-{work.__name__}", work, base_sha=repo.base_sha)
+
+    assert state["status"] == expected_status
+    assert state["commits_ahead"] == expected_ahead
+
+
+def test_default_branch_fallback_fails_closed_when_the_filters_cannot_be_computed(tmp_tasks_dir, repo):
+    repo.deliver()
+    repo.delete_base_branch(merged_into_main=True)
+
+    real_run = delegate._run_git_stdout
+
+    def broken_cherry(worktree, *args):
+        return (128, "") if args and args[0] == "cherry" else real_run(worktree, *args)
+
+    with patch.object(delegate, "_run_git_stdout", broken_cherry):
+        state = _settle(repo, "filters-unknown", base_sha=None)
+
+    assert state["status"] == "no_deliverable"
+    assert state["no_deliverable_reason"] == "commit_count_unknown"

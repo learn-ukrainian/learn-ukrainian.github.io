@@ -4811,6 +4811,50 @@ def _is_ancestor_of_head(worktree: Path, sha: str) -> bool:
     return proc.returncode == 0
 
 
+def _run_git_stdout(worktree: Path, *args: str) -> tuple[int, str] | None:
+    """``(returncode, stdout)`` of a git command, or None when git could not run."""
+    try:
+        proc = subprocess.run(
+            ["git", *args],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return proc.returncode, proc.stdout or ""
+
+
+def _count_real_changes_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
+    """``(count, base_missing)`` of the commits ``HEAD`` adds to ``base`` that change something.
+
+    ``<default>..HEAD`` overcounts as delivery proof: a merge of the default
+    branch, or a cherry-pick of a change it already has, is ahead of a stale or
+    squash-merged base yet adds nothing (#9451). A commit counts only when it is
+    not a merge, not patch-equivalent to a commit already on ``base`` (the ``+``
+    lines of ``git cherry``), and the tree differs from the merge base at all.
+    ``(None, False)`` when any of those cannot be computed, so the caller fails closed.
+    """
+    ahead, base_missing = _run_count_ahead(worktree, base)
+    if ahead is None or ahead == 0:
+        return ahead, base_missing
+    merge_base = _run_git_stdout(worktree, "merge-base", base, "HEAD")
+    if merge_base is None or merge_base[0] != 0 or not merge_base[1].strip():
+        return None, False
+    tree_diff = _run_git_stdout(worktree, "diff", "--quiet", merge_base[1].strip(), "HEAD")
+    if tree_diff is None or tree_diff[0] not in (0, 1):
+        return None, False
+    if tree_diff[0] == 0:
+        return 0, False
+    cherry = _run_git_stdout(worktree, "cherry", base, "HEAD")
+    if cherry is None or cherry[0] != 0:
+        return None, False
+    return sum(1 for line in cherry[1].splitlines() if line.startswith("+ ")), False
+
+
 def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_sha: str | None) -> int | None:
     """Count the branch's commits when the named base ref is gone everywhere (#9451).
 
@@ -4825,17 +4869,23 @@ def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_
     A SHA that does not resolve, or is not an ancestor of ``HEAD`` (the branch
     was rebased off it), is skipped rather than trusted. None when no base
     resolves, so the caller still fails closed.
+
+    The recorded commit is the exact point the worktree started from, so its
+    plain ``<sha>..HEAD`` count is exact. The default branch is only a proxy
+    for the lost base and may already hold the work, so its count is reduced to
+    commits that add real changes (``_count_real_changes_ahead``).
     """
-    candidates: list[str] = []
+    candidates: list[tuple[str, bool]] = []
     if base_sha and _is_ancestor_of_head(worktree, base_sha):
-        candidates.append(base_sha)
+        candidates.append((base_sha, True))
     default_refs = ["origin/main"]
     tracking_remote = _tracking_remote_for_current_branch(worktree)
     if tracking_remote:
         default_refs.append(f"{tracking_remote}/main")
-    candidates.extend(dict.fromkeys(default_refs))
-    for candidate in candidates:
-        count, base_missing = _run_count_ahead(worktree, candidate)
+    candidates.extend((ref, False) for ref in dict.fromkeys(default_refs))
+    for candidate, exact in candidates:
+        count_ahead = _run_count_ahead if exact else _count_real_changes_ahead
+        count, base_missing = count_ahead(worktree, candidate)
         if count is not None:
             print(
                 f"⚠️  base {base_ref!r} is gone; counted commits ahead against {candidate!r} instead",
