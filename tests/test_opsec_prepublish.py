@@ -661,3 +661,103 @@ def test_unicode_normalization_hardens_scanner(obfuscated, expected_rule, expect
         gate.check_texts("github.com/unit/public", [obfuscated], tooling=tooling)
     assert f"class={expected_class}" in str(error.value)
     assert f"rule={expected_rule}" in str(error.value)
+
+
+def test_absolute_path_spans_only_return_validated_offsets(synthetic_opsec):
+    rules = synthetic_rules(rule="3-absolute-path", level=3, pattern=r"/unit/[a-z]+")
+    rules["1"] = {"patterns": [{"id": "synthetic-rule", "regex": TOKEN}]}
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    text = "/unit/one " + TOKEN + " /unit/two"
+    assert gate.absolute_path_spans(text) == [(0, 9), (len(text) - 9, len(text))]
+    assert gate.absolute_path_spans("clean") == []
+
+
+@pytest.mark.parametrize("level", [None, 2])
+def test_absolute_path_spans_require_absolute_rule(synthetic_opsec, level):
+    if level is not None:
+        (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(rule="3-absolute-path", level=level)))
+    with pytest.raises(gate.PublishBlocked, match="absolute-path rule unavailable/incompatible"):
+        gate.absolute_path_spans("clean")
+
+
+@pytest.mark.parametrize(
+    "spans",
+    [
+        [(0, 0)],
+        [(-1, 2)],
+        [(0, 100)],
+        [(3, 2)],
+        [(False, 2)],
+        [(0, 2.0)],
+        [(0, "2")],
+        [(0,)],
+        [(0, 1, 2)],
+        [(0, 2), (1, 3)],
+        [(0, 2), (0, 2)],
+    ],
+)
+def test_absolute_path_spans_refuse_malformed_offsets(monkeypatch, spans):
+    from types import SimpleNamespace
+
+    hits = [SimpleNamespace(rule_id="3-absolute-path", class_id=3, span=span) for span in spans]
+    matcher = SimpleNamespace(scan=lambda text: hits)
+    monkeypatch.setattr(gate, "_load_matcher", lambda path: (matcher, {"3-absolute-path": 3}, set()))
+    with pytest.raises(gate.PublishBlocked, match="result incompatible"):
+        gate.absolute_path_spans("/unit/file", tooling=Path("unused"))
+
+
+def test_absolute_path_spans_sort_disjoint_offsets(monkeypatch):
+    from types import SimpleNamespace
+
+    hits = [SimpleNamespace(rule_id="3-absolute-path", class_id=3, span=span) for span in [(2, 4), (0, 2)]]
+    monkeypatch.setattr(
+        gate, "_load_matcher", lambda path: (SimpleNamespace(scan=lambda text: hits), {"3-absolute-path": 3}, set())
+    )
+    assert gate.absolute_path_spans("abcd", tooling=Path("unused")) == [(0, 2), (2, 4)]
+
+
+@pytest.mark.parametrize("failure", ["raise", "bad-hit", "wrong-rule", "wrong-class", "no-hits"])
+def test_absolute_path_spans_refuse_failed_matcher(monkeypatch, capsys, failure):
+    from types import SimpleNamespace
+
+    def scan(text):
+        print(TOKEN)
+        if failure == "raise":
+            raise RuntimeError(TOKEN)
+        if failure == "no-hits":
+            return None
+        if failure == "bad-hit":
+            return [object()]
+        return [
+            SimpleNamespace(
+                rule_id="unknown" if failure == "wrong-rule" else "3-absolute-path",
+                class_id=2 if failure == "wrong-class" else 3,
+                span=(0, 1),
+            )
+        ]
+
+    monkeypatch.setattr(gate, "_load_matcher", lambda path: (SimpleNamespace(scan=scan), {"3-absolute-path": 3}, set()))
+    with pytest.raises(gate.PublishBlocked, match="result incompatible") as error:
+        gate.absolute_path_spans("/unit/file", tooling=Path("unused"))
+    captured = capsys.readouterr()
+    assert TOKEN not in str(error.value) + captured.out + captured.err
+
+
+def test_absolute_path_spans_missing_tooling_refuses(tmp_path):
+    with pytest.raises(gate.PublishBlocked, match="unavailable/incompatible"):
+        gate.absolute_path_spans("clean", tooling=tmp_path / "missing")
+
+
+def test_absolute_path_spans_lazy_matcher_failure_is_masked(monkeypatch, capsys):
+    from types import SimpleNamespace
+
+    def scan(text):
+        yield SimpleNamespace(rule_id="3-absolute-path", class_id=3, span=(0, 1))
+        print(TOKEN)
+        raise RuntimeError(TOKEN)
+
+    monkeypatch.setattr(gate, "_load_matcher", lambda path: (SimpleNamespace(scan=scan), {"3-absolute-path": 3}, set()))
+    with pytest.raises(gate.PublishBlocked, match="result incompatible") as error:
+        gate.absolute_path_spans("/unit/file", tooling=Path("unused"))
+    captured = capsys.readouterr()
+    assert TOKEN not in str(error.value) + captured.out + captured.err

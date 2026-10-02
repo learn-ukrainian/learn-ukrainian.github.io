@@ -22,7 +22,7 @@ from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
-from scripts.opsec.prepublish import normalize_for_scan, publication_boundary, publication_cli
+from scripts.opsec.prepublish import absolute_path_spans, normalize_for_scan, publication_boundary, publication_cli
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     SHA,
@@ -51,8 +51,6 @@ NORMALIZED = {
 }
 TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\Z")
 MAX_COMMENT_BYTES = 65_000
-# Keep Markdown delimiters and line/column suffixes outside the path token.
-ABSOLUTE_PATH = re.compile(r"(?<![\w/\\:.-])/[^\s`'\"<>()\[\]{},;:|=\\*&]+")
 # Kimi CLI task records can identify the harness without naming its model;
 # this harness is single-family and always runs Moonshot models.
 SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
@@ -221,33 +219,55 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
     if isinstance(checkout, str) and Path(checkout).is_absolute():
         roots.insert(0, Path(checkout))
 
-    def replace(match: re.Match[str]) -> str:
-        token = match.group()
-        path = Path(token)
+    def replace(token: str) -> str:
+        # The scanner alone owns boundaries. Only interpret a terminal citation
+        # annotation, and resolve the actual cited file rather than a suffixed name.
+        filename, colon, annotation = token.partition(":")
+        suffix = colon + annotation
+        if suffix and not re.fullmatch(r":[1-9][0-9]*(?::[1-9][0-9]*)?", suffix):
+            return token
+        path = Path(filename)
         # Do not hide an escape or change the meaning of a symlink/.. walk.
         if ".." in path.parts:
-            return match.group()
+            return token
         for root in roots:
             if not path.is_relative_to(root):
                 continue
             try:
-                resolved_root = root.resolve()
-                resolved_primary = primary_root.resolve()
-                if resolved_root == Path(resolved_root.anchor) or not resolved_root.is_relative_to(resolved_primary):
+                resolved_root = root.resolve(strict=True)
+                resolved_primary = primary_root.resolve(strict=True)
+                if (
+                    not resolved_primary.is_dir()
+                    or not resolved_root.is_dir()
+                    or resolved_root == Path(resolved_root.anchor)
+                    or not resolved_root.is_relative_to(resolved_primary)
+                ):
                     continue
-                if not path.resolve().is_relative_to(resolved_root):
-                    return match.group()
-            except (OSError, RuntimeError):
-                return match.group()
-            return path.relative_to(root).as_posix()
-        return match.group()
+                resolved_path = path.resolve(strict=True)
+                if not resolved_path.is_relative_to(resolved_root):
+                    return token
+                if not (resolved_path.is_file() or resolved_path.is_dir()):
+                    return token
+                if suffix and (not resolved_path.is_file() or Path(token).exists() or Path(token).is_symlink()):
+                    return token
+            except (OSError, RuntimeError, ValueError):
+                return token
+            return path.relative_to(root).as_posix() + suffix
+        return token
 
     # Normalization can compose across a token boundary or reveal traversal.
     # Preserve the entire altered line so its absolute paths reach the scanner.
-    return "".join(
-        ABSOLUTE_PATH.sub(replace, line) if normalize_for_scan(line) == line else line
-        for line in reply.splitlines(keepends=True)
-    )
+    lines = []
+    for line in reply.splitlines(keepends=True):
+        rewritten = line
+        spans = absolute_path_spans(line)
+        if normalize_for_scan(line) == line:
+            for start, end in reversed(spans):
+                rewritten = rewritten[:start] + replace(line[start:end]) + rewritten[end:]
+            if normalize_for_scan(rewritten) != rewritten:
+                rewritten = line
+        lines.append(rewritten)
+    return "".join(lines)
 
 
 def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:

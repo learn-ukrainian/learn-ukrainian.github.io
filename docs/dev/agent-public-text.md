@@ -52,6 +52,16 @@ without text fields do not load private tooling. The private matcher contract
 is `Matcher(rules).scan(text)` with `rule_id`, `class_id`, and half-open `span`.
 Diagnostics contain only rule/class identifiers, field and line.
 
+The verdict recorder uses the scanner's validated absolute-path spans to make
+checkout citations repository-relative. It rewrites only complete spans on
+normalization-stable lines, with strict resolution of existing files or
+directories inside the primary checkout or recorded worktree. A terminal
+`:line[:column]` annotation must identify an actual file and have no competing
+suffixed filename. Outside, nonexistent or ambiguous citations stay verbatim;
+lines made normalization-unstable by editing are restored. The typed publisher
+still scans the complete rendered comment before sending it. Missing path
+rules or incompatible spans refuse recording without a fallback tokenizer.
+
 `LU_OPSEC_OVERRIDE=reason` permits a false-positive match only after a durable
 local log write. It cannot bypass missing or incompatible tooling. The log
 contains timestamp, repository identity, rule identifiers and reason, never
