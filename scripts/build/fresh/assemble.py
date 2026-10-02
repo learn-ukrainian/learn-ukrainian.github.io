@@ -167,6 +167,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import html
 import json
 import re
 from dataclasses import dataclass, field
@@ -395,6 +396,11 @@ def component_props_from_jsx(jsx: str) -> dict[str, Any]:
     strings or JSX attribute strings (`&quot;` decoded, no backslash escapes).
     """
     props: dict[str, Any] = {}
+    heading = re.match(r"^### ([^\n]+)\n", jsx)
+    if heading:
+        # Some legacy components display instructions in the surrounding heading.
+        # Read that exact page location rather than treating an absent prop as proof.
+        props["_heading"] = html.unescape(heading.group(1))
     for match in _JSX_PROP_RE.finditer(jsx):
         name, template, json_str, jsx_str = match.groups()
         if template is not None:
@@ -454,6 +460,16 @@ _PAGE_ITEM_FIELDS: dict[str, dict[str, Any]] = {
 _PAGE_ACTIVITY_FIELDS: dict[str, dict[str, Any]] = {
     "pick-syllables": {"instruction": "instruction", "explanation": "explanation", "opt": ("syllables", None)},
     "order": {"instruction": "instruction", "explanation": "explanation"},
+}
+# These legacy renderers have no separate instruction prop. Fresh assembly puts
+# the instruction in their existing visible title (Cloze uses its MDX heading).
+_PAGE_INSTRUCTION_FIELD = {
+    "cloze": "_heading",
+    "essay-response": "title",
+    "critical-analysis": "title",
+    "comparative-study": "title",
+    "authorial-intent": "title",
+    "reading": "title",
 }
 _OPT_BLOCK_RE = re.compile(r"^opt_([0-9]+)$")
 _OPTION_WHY_BLOCK_RE = re.compile(r"^option_why_([0-9]+)$")
@@ -525,7 +541,7 @@ def page_field_text(
     option_why_match = _OPTION_WHY_BLOCK_RE.match(block_key)
     if item_idx is None:
         if block_key == "instruction":
-            return _prop_text(props.get("instruction"))
+            return _prop_text(props.get(_PAGE_INSTRUCTION_FIELD.get(act_type, "instruction")))
         pair_why_match = _PAIR_WHY_BLOCK_RE.match(block_key)
         if pair_why_match and act_type == "match-up":
             pairs = props.get("pairs")
@@ -1264,6 +1280,10 @@ def assemble_expanded_document(
                         answer = val
                         break
             if answer:
+                if act_type == "translate":
+                    # The translation parser trims candidate edges. Expand the
+                    # same learner text so provenance describes its actual chips.
+                    answer = answer.strip()
                 for role, span_text in _split_inline_spans(answer, "item_answer"):
                     if act_type == "error-correction":
                         error_ref = item.get("error_ref")
@@ -1361,6 +1381,8 @@ def assemble_expanded_document(
                         if opt_val is None or isinstance(opt_val, bool):
                             continue
                         opt_str = str(opt_val)
+                        if act_type == "translate":
+                            opt_str = opt_str.strip()
 
                         is_key = False
                         if act_type in ("quiz", "multiple-choice"):
@@ -2237,6 +2259,24 @@ def _render_urok_markdown(
                 for header_line in dialogue_box_header_lines(DIALOGUE_BOX_DEFAULT_TITLE):
                     w.line(header_line)
                 w.line(*payload)
+                translations = dial.get("translation_en") or []
+                if translations:
+                    # Reuse DialogueBox's English support prop, after all Ukrainian
+                    # exchanges. Each translation keeps its own unit location.
+                    english_payload: list[str | _UnitFragment] = ["  en={JSON.parse('\""]
+                    for line_idx, translation in enumerate(translations):
+                        if line_idx:
+                            english_payload.append(encode_js_json_string("\n"))
+                        english_payload.extend(
+                            block_fragments(
+                                step_id,
+                                f"dialogue_translation_{line_idx}",
+                                str(translation),
+                                codec=CODEC_JS_JSON_STRING,
+                            )
+                        )
+                    english_payload.append("\"')}")
+                    w.line(*english_payload)
                 w.line(DIALOGUE_BOX_CLOSING_LINE)
                 w.blank()
 
@@ -2642,6 +2682,8 @@ def check_9_stress_and_render(
         act_payload["placement"] = plan_act.get("placement")
         if not act_payload.get("title") and plan_act.get("focus"):
             act_payload["title"] = plan_act.get("focus")
+        if act_payload.get("type") in _PAGE_INSTRUCTION_FIELD and act_payload.get("instruction"):
+            act_payload["title"] = act_payload["instruction"]
         # The parser already preserves host metadata in each quiz question. Resolve
         # media here from the locked pack rather than accepting a writer-supplied URL.
         for item in act_payload.get("items") or []:
@@ -2659,6 +2701,10 @@ def check_9_stress_and_render(
 
         try:
             act_obj = activity_parser._parse_activity(act_payload)
+            if act_payload.get("type") == "essay-response":
+                # Its legacy serializer concatenates instruction and prompt. The
+                # instruction is already visible as the title; keep the prompt once.
+                act_obj.instruction = ""
             act_obj.placement = plan_act.get("placement")
             converted_activities.append(act_obj)
             parsed_by_id[str(act_id)] = act_obj
