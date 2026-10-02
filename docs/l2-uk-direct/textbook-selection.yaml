@@ -1435,7 +1435,7 @@ sources:
       chunk_id: 1-klas-angliiska-mova-pukhta-2024_s0001
       page: 3
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Видавництво «Лінгвіст», 2024'
   1-klas-bukvar-zaharijchuk-2025-1:
     kind: textbook
@@ -1462,7 +1462,7 @@ sources:
       chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0002
       page: 4
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2025'
   1-klas-bukvar-zaharijchuk-2025-2:
     kind: textbook
@@ -1489,7 +1489,7 @@ sources:
       chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0002
       page: 4
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2025'
   1-klas-matematyka-lystopad-2025:
     kind: textbook
@@ -1535,7 +1535,7 @@ sources:
       chunk_id: 1-klas-mystetstvo-rublia-2024_s0001
       page: 3
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Х. : Вид-во «Ранок», 2024'
   1-klas-ya-doslidzhuiu-svit-zharkova-2024-1:
     kind: textbook
@@ -1560,7 +1560,7 @@ sources:
       chunk_id: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0002
       page: 5
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Підручники і посібники, 2024'
   1-klas-ya-doslidzhuiu-svit-zharkova-2024-2:
     kind: textbook
@@ -1585,7 +1585,7 @@ sources:
       chunk_id: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2_s0003
       page: 5
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Підручники і посібники, 2024'
   10-11-klas-mystectvo-nazarenko-2018:
     kind: textbook
@@ -1637,7 +1637,7 @@ sources:
       chunk_id: 10-11-klas-tekhnolohiyi-khodzycka-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2019'
   10-klas-algebra-ister-2018:
     kind: textbook
@@ -1659,7 +1659,7 @@ sources:
       chunk_id: 10-klas-algebra-ister-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2018'
   10-klas-angliiska-mova-burenko-2018:
     kind: textbook
@@ -1683,7 +1683,7 @@ sources:
       chunk_id: 10-klas-angliiska-mova-burenko-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-biologija-i-ekologija-zadorozhnij-2018-stand:
     kind: textbook
@@ -1705,7 +1705,7 @@ sources:
       chunk_id: 10-klas-biologija-i-ekologija-zadorozhnij-2018-stand_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-ekonomika-krupska-2018:
     kind: textbook
@@ -1756,7 +1756,7 @@ sources:
       chunk_id: 10-klas-fizyka-barjakhtar-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-geografija-bojko-2018:
     kind: textbook
@@ -1800,7 +1800,7 @@ sources:
       chunk_id: 10-klas-geometrija-ister-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2018'
   10-klas-himija-grygorovych-2018:
     kind: textbook
@@ -1822,7 +1822,7 @@ sources:
       chunk_id: 10-klas-himija-grygorovych-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-hromadianska-gisem-2018:
     kind: textbook
@@ -1846,7 +1846,7 @@ sources:
       chunk_id: 10-klas-hromadianska-gisem-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-informatika-rudenko-2018-stand:
     kind: textbook
@@ -1869,7 +1869,7 @@ sources:
       chunk_id: 10-klas-informatika-rudenko-2018-stand_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : / Вид-во «Ранок», 2018'
   10-klas-istorija-ukrajiny-gisem-2018:
     kind: textbook
@@ -1893,7 +1893,7 @@ sources:
       chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-matematika-merzljak-2018:
     kind: textbook
@@ -1915,7 +1915,7 @@ sources:
       chunk_id: 10-klas-matematika-merzljak-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Х. : Гімназія, 2018'
   10-klas-ukrajinska-literatura-avramenko-2018:
     kind: textbook
@@ -1937,7 +1937,7 @@ sources:
       chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Грамота, 2018'
   10-klas-ukrajinska-mova-avramenko-2018:
     kind: textbook
@@ -1961,7 +1961,7 @@ sources:
       chunk_id: 10-klas-ukrajinska-mova-avramenko-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Грамота, 2018'
   10-klas-ukrmova-glazova-2018:
     kind: textbook
@@ -1983,7 +1983,7 @@ sources:
       chunk_id: 10-klas-ukrmova-glazova-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-ukrmova-karaman-2018:
     kind: textbook
@@ -2005,7 +2005,7 @@ sources:
       chunk_id: 10-klas-ukrmova-karaman-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-vsesvitnia-istoriia-gisem-2018-stand:
     kind: textbook
@@ -2027,7 +2027,7 @@ sources:
       chunk_id: 10-klas-vsesvitnia-istoriia-gisem-2018-stand_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-zakhyst-fuka-2023:
     kind: textbook
@@ -2051,7 +2051,7 @@ sources:
       chunk_id: 10-klas-zakhyst-fuka-2023_s0001
       page: 3
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2023'
   10-klas-zarubizhna-literatura-voloshhuk-2018:
     kind: textbook
@@ -2073,7 +2073,7 @@ sources:
       chunk_id: 10-klas-zarubizhna-literatura-voloshhuk-2018_s0000
       page: 2
       imprint_year: 2018
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2018'
   11-klas-algebra-ister-2019-prof:
     kind: textbook
@@ -2095,7 +2095,7 @@ sources:
       chunk_id: 11-klas-algebra-ister-2019-prof_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2019'
   11-klas-angliiska-mova-kuchma-2019:
     kind: textbook
@@ -2119,7 +2119,7 @@ sources:
       chunk_id: 11-klas-angliiska-mova-kuchma-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Навчальна книга – Богдан, 2019'
   11-klas-astronomiya-pryshliak-2019:
     kind: textbook
@@ -2143,7 +2143,7 @@ sources:
       chunk_id: 11-klas-astronomiya-pryshliak-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків: Вид-во «Ранок», 2019'
   11-klas-biologiia-i-ekologia-shalamov-2019:
     kind: textbook
@@ -2165,7 +2165,7 @@ sources:
       chunk_id: 11-klas-biologiia-i-ekologia-shalamov-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків: Соняшник, 2019'
   11-klas-ekonomika-homiak-2019:
     kind: textbook
@@ -2189,7 +2189,7 @@ sources:
       chunk_id: 11-klas-ekonomika-homiak-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2019'
   11-klas-fizika-astronomiia-zasekina-2019-standart:
     kind: textbook
@@ -2211,7 +2211,7 @@ sources:
       chunk_id: 11-klas-fizika-astronomiia-zasekina-2019-standart_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : УОВЦ «Оріон», 2019'
   11-klas-himia-grygorovych-2019:
     kind: textbook
@@ -2233,7 +2233,7 @@ sources:
       chunk_id: 11-klas-himia-grygorovych-2019_s0003
       page: 4
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2019'
   11-klas-informatyka-rudenko-2019:
     kind: textbook
@@ -2299,7 +2299,7 @@ sources:
       chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0001
       page: 3
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2024'
   11-klas-istoriya-vsesvit-schupak-2024:
     kind: textbook
@@ -2321,7 +2321,7 @@ sources:
       chunk_id: 11-klas-istoriya-vsesvit-schupak-2024_s0002
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: УОВЦ «Оріон», 2024'
   11-klas-matematyka-nelin-2019:
     kind: textbook
@@ -2367,7 +2367,7 @@ sources:
       chunk_id: 11-klas-pravoznavstvo-narovlianskyi-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Грамота, 2019'
   11-klas-ukrajinska-literatura-avramenko-2019:
     kind: textbook
@@ -2389,7 +2389,7 @@ sources:
       chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Грамота, 2019'
   11-klas-ukrajinska-mova-avramenko-2019:
     kind: textbook
@@ -2411,7 +2411,7 @@ sources:
       chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Грамота, 2019'
   11-klas-ukrajinska-mova-glazova-2019:
     kind: textbook
@@ -2433,7 +2433,7 @@ sources:
       chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2019'
   11-klas-zakhist-vitchizni-gudima-2019-med:
     kind: textbook
@@ -2455,7 +2455,7 @@ sources:
       chunk_id: 11-klas-zakhist-vitchizni-gudima-2019-med_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2019'
   11-klas-zarubizhna-literatura-voloshhuk-2019:
     kind: textbook
@@ -2535,7 +2535,7 @@ sources:
       chunk_id: 2-klas-matematyka-ister-2025_s0001
       page: 2
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : ТОВ Генеза, 2025'
   2-klas-mystetstvo-rublia-2024:
     kind: textbook
@@ -2557,7 +2557,7 @@ sources:
       chunk_id: 2-klas-mystetstvo-rublia-2024_s0001
       page: 3
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Х. : Вид-во «Ранок», 2024'
   2-klas-ukrmova-bolshakova-2019-1:
     kind: textbook
@@ -2629,7 +2629,7 @@ sources:
       chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Видавничий дім «Освіта», 2019'
   2-klas-ukrmova-vashulenko-2019-2:
     kind: textbook
@@ -2653,7 +2653,7 @@ sources:
       chunk_id: 2-klas-ukrmova-vashulenko-2019-2_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Видавничий дім «Освіта», 2019'
   2-klas-ya-doslidzhuiu-svit-hrushchynska-2019:
     kind: textbook
@@ -2679,7 +2679,7 @@ sources:
       chunk_id: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : УОВЦ «Оріон», 2019'
   2-klas-ya-doslidzhuiu-svit-morze-2019:
     kind: textbook
@@ -2705,7 +2705,7 @@ sources:
       chunk_id: 2-klas-ya-doslidzhuiu-svit-morze-2019_s0000
       page: 2
       imprint_year: 2019
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : УОВЦ «Оріон», 2019'
   3-klas-angliiska-mova-karpiuk-2020:
     kind: textbook
@@ -2729,7 +2729,7 @@ sources:
       chunk_id: 3-klas-angliiska-mova-karpiuk-2020_s0000
       page: 2
       imprint_year: 2020
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : „Видавництво Астон”, 2020'
   3-klas-informatyka-morze-2025:
     kind: textbook
@@ -2755,7 +2755,7 @@ sources:
       chunk_id: 3-klas-informatyka-morze-2025_s0003
       page: 6
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2025'
   3-klas-matematyka-lystopad-2020-1:
     kind: textbook
@@ -2779,7 +2779,7 @@ sources:
       chunk_id: 3-klas-matematyka-lystopad-2020-1_s0000
       page: 2
       imprint_year: 2020
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2020'
   3-klas-matematyka-lystopad-2020-2:
     kind: textbook
@@ -2803,7 +2803,7 @@ sources:
       chunk_id: 3-klas-matematyka-lystopad-2020-2_s0000
       page: 2
       imprint_year: 2020
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2020'
   3-klas-mystetstvo-arystova-2025:
     kind: textbook
@@ -2825,7 +2825,7 @@ sources:
       chunk_id: 3-klas-mystetstvo-arystova-2025_s0004
       page: 6
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: УОВЦ «Оріон», 2025'
   3-klas-ukrainska-mova-savchenko-2020-2:
     kind: textbook
@@ -2849,7 +2849,7 @@ sources:
       chunk_id: 3-klas-ukrainska-mova-savchenko-2020-2_s0000
       page: 2
       imprint_year: 2020
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2020'
   3-klas-ya-doslidzhuiu-svit-zharkova-2020-1:
     kind: textbook
@@ -2873,7 +2873,7 @@ sources:
       chunk_id: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-1_s0000
       page: 2
       imprint_year: 2020
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Підручники і посібники, 2020'
   3-klas-ya-doslidzhuiu-svit-zharkova-2020-2:
     kind: textbook
@@ -2897,7 +2897,7 @@ sources:
       chunk_id: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-2_s0000
       page: 2
       imprint_year: 2020
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Підручники і посібники, 2020'
   4-klas-angliiska-mova-hubarieva-2021:
     kind: textbook
@@ -2921,7 +2921,7 @@ sources:
       chunk_id: 4-klas-angliiska-mova-hubarieva-2021_s0000
       page: 2
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во « Ранок», 2021'
   4-klas-informatyka-vorontsova-2021:
     kind: textbook
@@ -2943,7 +2943,7 @@ sources:
       chunk_id: 4-klas-informatyka-vorontsova-2021_s0000
       page: 2
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Видавництво «Алатон», 2021'
   4-klas-matematyka-ister-2021-1:
     kind: textbook
@@ -3013,7 +3013,7 @@ sources:
       chunk_id: 4-klas-mystetstvo-rublia-2021_s0000
       page: 2
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2021'
   4-klas-ukrayinska-mova-kravtsova-2021-1:
     kind: textbook
@@ -3039,7 +3039,7 @@ sources:
       chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0000
       page: 2
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Підручники і посібники, 2021'
   4-klas-ukrayinska-mova-ponomarova-2021-1:
     kind: textbook
@@ -3065,7 +3065,7 @@ sources:
       chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0000
       page: 2
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2021'
   4-klas-ukrayinska-mova-savchenko-2021-2:
     kind: textbook
@@ -3091,7 +3091,7 @@ sources:
       chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0000
       page: 2
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2021'
   4-klas-ukrayinska-mova-zaharijchuk-2021-1:
     kind: textbook
@@ -3117,7 +3117,7 @@ sources:
       chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0000
       page: 2
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2021'
   4-klas-ya-doslidzhuiu-svit-zharkova-2021-1:
     kind: textbook
@@ -3141,7 +3141,7 @@ sources:
       chunk_id: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-1_s0001
       page: 3
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Підручники і посібники, 2021'
   4-klas-ya-doslidzhuiu-svit-zharkova-2021-2:
     kind: textbook
@@ -3165,7 +3165,7 @@ sources:
       chunk_id: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-2_s0001
       page: 3
       imprint_year: 2021
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Підручники і посібники, 2021'
   5-klas-angliiska-mova-pakhomova-2022:
     kind: textbook
@@ -3189,7 +3189,7 @@ sources:
       chunk_id: 5-klas-angliiska-mova-pakhomova-2022_s0000
       page: 2
       imprint_year: 2022
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Metodika Publishing, 2022'
   5-klas-etyka-meleshchenko-2022:
     kind: textbook
@@ -3235,7 +3235,7 @@ sources:
       chunk_id: 5-klas-informatyka-morze-2022_s0001
       page: 3
       imprint_year: 2022
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: УОВЦ «Оріон», 2022'
   5-klas-istoriya-schupak-2022:
     kind: textbook
@@ -3386,7 +3386,7 @@ sources:
       chunk_id: 5-klas-ukrlit-avramenko-2022_s0000
       page: 2
       imprint_year: 2022
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2022'
   5-klas-ukrmova-avramenko-2022:
     kind: textbook
@@ -3408,7 +3408,7 @@ sources:
       chunk_id: 5-klas-ukrmova-avramenko-2022_s0000
       page: 2
       imprint_year: 2022
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2022'
   5-klas-ukrmova-golub-2022:
     kind: textbook
@@ -3430,7 +3430,7 @@ sources:
       chunk_id: 5-klas-ukrmova-golub-2022_s0001
       page: 2
       imprint_year: 2022
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Видавничий дім «Освіта», 2022'
   5-klas-ukrmova-zabolotnyi-2023:
     kind: textbook
@@ -3459,7 +3459,7 @@ sources:
       chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0003
       page: 5
       imprint_year: 2022
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2022'
       file_id_year: 2023
       note: Citation uses the book imprint year; the source_file identity is unchanged.
@@ -3529,7 +3529,7 @@ sources:
       chunk_id: 6-klas-angliiska-mova-pakhomova-2023_s0000
       page: 2
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Методика Паблішинг, 2023'
   6-klas-etyka-martyniuk-2023:
     kind: textbook
@@ -3584,7 +3584,7 @@ sources:
       chunk_id: 6-klas-heohrafiya-zapotockyi-2023_s0001
       page: 4
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2023'
   6-klas-informatyka-bondarenko-2023:
     kind: textbook
@@ -3638,7 +3638,7 @@ sources:
       chunk_id: 6-klas-istoriia-shchupak-2023_s0001
       page: 4
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2023'
   6-klas-istoriya-gisem-2023:
     kind: textbook
@@ -3660,7 +3660,7 @@ sources:
       chunk_id: 6-klas-istoriya-gisem-2023_s0002
       page: 3
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2023'
   6-klas-matematyka-tarasenkova-2023-1:
     kind: textbook
@@ -3694,7 +3694,7 @@ sources:
       chunk_id: 6-klas-matematyka-tarasenkova-2023-1_s0002
       page: 4
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2023'
   6-klas-matematyka-tarasenkova-2023-2:
     kind: textbook
@@ -3728,7 +3728,7 @@ sources:
       chunk_id: 6-klas-matematyka-tarasenkova-2023-2_s0003
       page: 4
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2023'
   6-klas-mystetstvo-rublia-2023:
     kind: textbook
@@ -3800,7 +3800,7 @@ sources:
       chunk_id: 6-klas-tekhnolohiyi-bilenko-2023_s0001
       page: 4
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2023'
   6-klas-ukrlit-avramenko-2023:
     kind: textbook
@@ -3822,7 +3822,7 @@ sources:
       chunk_id: 6-klas-ukrlit-avramenko-2023_s0002
       page: 3
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2023'
   6-klas-ukrmova-avramenko-2023:
     kind: textbook
@@ -3844,7 +3844,7 @@ sources:
       chunk_id: 6-klas-ukrmova-avramenko-2023_s0001
       page: 2
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2023'
   6-klas-ukrmova-golub-2023:
     kind: textbook
@@ -3890,7 +3890,7 @@ sources:
       chunk_id: 6-klas-ukrmova-litvinova-2023_s0000
       page: 2
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2023'
   6-klas-zdorovia-vorontsova-2023:
     kind: textbook
@@ -3912,7 +3912,7 @@ sources:
       chunk_id: 6-klas-zdorovia-vorontsova-2023_s0001
       page: 2
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Ê.: Видавництво «Ала тон», 2023'
   7-klas-algebra-merzliak-2024:
     kind: textbook
@@ -3934,7 +3934,7 @@ sources:
       chunk_id: 7-klas-algebra-merzliak-2024_s0001
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Х. : Гімназія, 2024'
   7-klas-angliiska-mova-kosta-2024:
     kind: textbook
@@ -3958,7 +3958,7 @@ sources:
       chunk_id: 7-klas-angliiska-mova-kosta-2024_s0002
       page: 3
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Видавництво «Лінгвіст», 2024'
   7-klas-biolohiya-sobol-2024:
     kind: textbook
@@ -3985,7 +3985,7 @@ sources:
       chunk_id: 7-klas-biolohiya-sobol-2024_s0002
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Кам’янець-Подільський : Видавництво Абетка, 2024'
   7-klas-fizyka-bariakhtar-2024:
     kind: textbook
@@ -4029,7 +4029,7 @@ sources:
       chunk_id: 7-klas-heometriya-merzliak-2024_s0001
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Х. : Гімназія, 2024'
   7-klas-informatyka-bondarenko-2024:
     kind: textbook
@@ -4084,7 +4084,7 @@ sources:
       chunk_id: 7-klas-istoria-ukr-hlibovska-2024_s0001
       page: 2
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2024'
   7-klas-istoriya-shchupak-2024-full:
     kind: textbook
@@ -4115,7 +4115,7 @@ sources:
       chunk_id: 7-klas-istoriya-shchupak-2024-full_s0000
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: УОВЦ «Оріон», 2024'
   7-klas-khimiya-hryhorovych-2024:
     kind: textbook
@@ -4159,7 +4159,7 @@ sources:
       chunk_id: 7-klas-mystetstvo-masol-2024_s0002
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Видавничий дім «Освіта», 2024'
   7-klas-tekhnolohiyi-bilenko-2024:
     kind: textbook
@@ -4183,7 +4183,7 @@ sources:
       chunk_id: 7-klas-tekhnolohiyi-bilenko-2024_s0001
       page: 3
       imprint_year: 2023
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2023'
       file_id_year: 2024
       note: Citation uses the book imprint year; the source_file identity is unchanged. The catalogue entry prints 2023;
@@ -4208,7 +4208,7 @@ sources:
       chunk_id: 7-klas-ukrlit-avramenko-2024_s0004
       page: 5
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2024'
   7-klas-ukrlit-zabolotnyi-2024:
     kind: textbook
@@ -4238,7 +4238,7 @@ sources:
       chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0002
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Літера ЛТД, 2024'
   7-klas-ukrmova-avramenko-2024:
     kind: textbook
@@ -4260,7 +4260,7 @@ sources:
       chunk_id: 7-klas-ukrmova-avramenko-2024_s0005
       page: 5
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2024'
   7-klas-zdorovia-guschyna-2024:
     kind: textbook
@@ -4282,7 +4282,7 @@ sources:
       chunk_id: 7-klas-zdorovia-guschyna-2024_s0002
       page: 4
       imprint_year: 2024
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Видав ни чий дім «Освіта», 2024'
   8-klas-algebra-tarasenkova-2025:
     kind: textbook
@@ -4304,7 +4304,7 @@ sources:
       chunk_id: 8-klas-algebra-tarasenkova-2025_s0001
       page: 4
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: УОВЦ «Оріон», 2025'
   8-klas-biolohiya-anderson-2025:
     kind: textbook
@@ -4326,7 +4326,7 @@ sources:
       chunk_id: 8-klas-biolohiya-anderson-2025_s0000
       page: 2
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: Школяр, 2025'
   8-klas-finans-plastun-2025:
     kind: textbook
@@ -4348,7 +4348,7 @@ sources:
       chunk_id: 8-klas-finans-plastun-2025_s0004
       page: 5
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2025'
   8-klas-fizyka-bariakhtar-2025:
     kind: textbook
@@ -4400,7 +4400,7 @@ sources:
       chunk_id: 8-klas-heohrafiya-hilberh-2025_s0001
       page: 6
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2025'
   8-klas-hromadianska-osvita-vasylkiv-2025:
     kind: textbook
@@ -4422,7 +4422,7 @@ sources:
       chunk_id: 8-klas-hromadianska-osvita-vasylkiv-2025_s0001
       page: 4
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2025'
   8-klas-informatyka-ryvkind-2025:
     kind: textbook
@@ -4444,7 +4444,7 @@ sources:
       chunk_id: 8-klas-informatyka-ryvkind-2025_s0003
       page: 5
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2025'
   8-klas-istoria-ukr-hlibovska-2025:
     kind: textbook
@@ -4468,7 +4468,7 @@ sources:
       chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0001
       page: 2
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль: Астон, 2025'
   8-klas-istoria-ukr-schupak-2025:
     kind: textbook
@@ -4519,7 +4519,7 @@ sources:
       chunk_id: 8-klas-istoria-vsesvitnia-ladychenko-2025_s0001
       page: 4
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Генеза, 2025'
   8-klas-khimiya-hryhorovych-2025:
     kind: textbook
@@ -4565,7 +4565,7 @@ sources:
       chunk_id: 8-klas-mystetstvo-komarovska-2025_s0000
       page: 2
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків: Вид-во «Ранок», 2025'
   8-klas-pryrodnychi-nauky-mandrenko-2025:
     kind: textbook
@@ -4587,7 +4587,7 @@ sources:
       chunk_id: 8-klas-pryrodnychi-nauky-mandrenko-2025_s0002
       page: 5
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2025'
   8-klas-tekhnolohiyi-bilenko-2025:
     kind: textbook
@@ -4609,7 +4609,7 @@ sources:
       chunk_id: 8-klas-tekhnolohiyi-bilenko-2025_s0001
       page: 4
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Астон, 2025'
   8-klas-ukrlit-avramenko-2025:
     kind: textbook
@@ -4631,7 +4631,7 @@ sources:
       chunk_id: 8-klas-ukrlit-avramenko-2025_s0001
       page: 2
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2025'
   8-klas-ukrlit-zabolotnyi-2025:
     kind: textbook
@@ -4653,7 +4653,7 @@ sources:
       chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0002
       page: 4
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Літера ЛТД, 2025'
   8-klas-ukrmova-avramenko-2025:
     kind: textbook
@@ -4675,7 +4675,7 @@ sources:
       chunk_id: 8-klas-ukrmova-avramenko-2025_s0002
       page: 3
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Грамота, 2025'
   8-klas-ukrmova-zabolotnyi-2025:
     kind: textbook
@@ -4752,7 +4752,7 @@ sources:
       chunk_id: 8-klas-zdorovia-vasylenko-2025_s0197
       page: 208
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Літера ЛТД, 2025'
   9-klas-algebra-merzliak-2017:
     kind: textbook
@@ -4774,7 +4774,7 @@ sources:
       chunk_id: 9-klas-algebra-merzliak-2017_s0000
       page: 2
       imprint_year: 2017
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Х. : Гімназія, 2017'
   9-klas-algebra-tarasenkova-2026:
     kind: textbook
@@ -4807,7 +4807,7 @@ sources:
       chunk_id: 9-klas-algebra-tarasenkova-2026_s0001
       page: 3
       imprint_year: 2026
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: УОВЦ «Оріон», 2026'
   9-klas-biolohiya-zadorozhnyi-2026:
     kind: textbook
@@ -4925,7 +4925,7 @@ sources:
       chunk_id: 9-klas-geografiia-boiko-2026_s0002
       page: 4
       imprint_year: 2026
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Літера ЛТД, 2026'
   9-klas-heometriya-bevz-2026:
     kind: textbook
@@ -4969,7 +4969,7 @@ sources:
       chunk_id: 9-klas-heometriya-merzliak-2017_s0000
       page: 2
       imprint_year: 2017
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Х. : Гімназія, 2017'
   9-klas-hromadianska-osvita-pometun-2026:
     kind: textbook
@@ -5015,7 +5015,7 @@ sources:
       chunk_id: 9-klas-informatyka-morze-2026_s0001
       page: 3
       imprint_year: 2026
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ: УОВЦ «Оріон», 2026'
   9-klas-istorija-ukrajini-gisem-2017:
     kind: textbook
@@ -5037,7 +5037,7 @@ sources:
       chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0000
       page: 2
       imprint_year: 2017
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2017'
   9-klas-khimiya-popel-2017:
     kind: textbook
@@ -5059,7 +5059,7 @@ sources:
       chunk_id: 9-klas-khimiya-popel-2017_s0001
       page: 2
       imprint_year: 2017
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : ВЦ «Академія», 2017'
   9-klas-khimiya-yaroshenko-2026:
     kind: textbook
@@ -5088,7 +5088,7 @@ sources:
       chunk_id: 9-klas-khimiya-yaroshenko-2026_s0001
       page: 3
       imprint_year: 2026
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : УОВЦ «Оріон», 2026'
   9-klas-mystetstvo-kondratova-2025:
     kind: textbook
@@ -5112,7 +5112,7 @@ sources:
       chunk_id: 9-klas-mystetstvo-kondratova-2025_s0001
       page: 2
       imprint_year: 2025
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Тернопіль : Навчальна книга — Богдан, 2025'
   9-klas-mystetstvo-masol-2017:
     kind: textbook
@@ -5136,7 +5136,7 @@ sources:
       chunk_id: 9-klas-mystetstvo-masol-2017_s0000
       page: 2
       imprint_year: 2017
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К.: Видавничий дім «Освіта», 2017'
   9-klas-pravoznavstvo-berendieiev-2026:
     kind: textbook
@@ -5158,7 +5158,7 @@ sources:
       chunk_id: 9-klas-pravoznavstvo-berendieiev-2026_s0003
       page: 4
       imprint_year: 2026
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Харків : Вид-во «Ранок», 2026'
   9-klas-tekhnolohiyi-bilenko-2026:
     kind: textbook
@@ -5234,7 +5234,7 @@ sources:
       chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0000
       page: 2
       imprint_year: 2017
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Грамота, 2017'
   9-klas-ukrajinska-mova-avramenko-2017:
     kind: textbook
@@ -5256,7 +5256,7 @@ sources:
       chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0000
       page: 2
       imprint_year: 2017
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'К. : Грамота, 2017'
   9-klas-ukrlit-zabolotnyi-2026:
     kind: textbook
@@ -5278,7 +5278,7 @@ sources:
       chunk_id: 9-klas-ukrlit-zabolotnyi-2026_s0002
       page: 4
       imprint_year: 2026
-      basis: title_page_imprint
+      basis: catalogue_entry
       year_text: 'Київ : Літера ЛТД, 2026'
   9-klas-vsesvitnia-istoriia-pometun-2026:
     kind: textbook
