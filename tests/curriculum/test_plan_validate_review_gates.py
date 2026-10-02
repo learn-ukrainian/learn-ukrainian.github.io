@@ -1,4 +1,4 @@
-"""Tests for the review-checkable plan gates C1–C14 (issue #9487).
+"""Tests for the review-checkable plan gates C1–C20 (issue #9487).
 
 Each gate has a failing (or noted) fixture and a passing one, each built by a
 single mutation of the mechanical gates' passing baseline: a letter-stage
@@ -63,6 +63,15 @@ REVIEW_GATE_CODES = {
     codes.COMPUTED_KEY_SINGLE_VALUE,
     codes.COMPUTED_KEY_FORM_DEPENDENT,
     codes.DUPLICATE_LESSON_VIDEO,
+    codes.ADJACENT_STEP_SAME_DISPLAY,
+    codes.ADJACENT_STEP_DISPLAY_RECALL,
+    codes.INCIDENTAL_NOT_USED,
+    codes.VIDEO_USE_PIPELINE_TOKEN,
+    codes.VIDEO_USE_STEP_MISMATCH,
+    codes.CHOICE_OPTION_LETTER_NOT_TAUGHT,
+    codes.SENTENCE_NOT_DECODABLE_AT_HOST,
+    codes.SENTENCE_DECODABLE_EARLIER,
+    codes.WORD_MODEL_WITHOUT_SEGMENT,
 }
 
 # extra word ids for these fixtures
@@ -121,16 +130,21 @@ def _videos(**models: tuple[list[str], list[str]] | None) -> Mutate:
         for video_id, model in models.items():
             record: dict = {"id": video_id.replace("_", "-")}
             if model is not None:
-                record["models"] = {"letters": model[0], "words": model[1], "segment": None}
+                record["models"] = {"letters": model[0], "words": model[1], "segment": "0:00–0:05"}
             pack["videos"].append(record)
             _step(plan, 1, "s1")["evidence"].append(record["id"])  # a focus names only records a step cites (C9)
 
     return mutate
 
 
-def _incidental(n: int, word_id: str, lemma: str) -> Mutate:
+def _incidental(n: int, word_id: str, lemma: str, named: bool = True) -> Mutate:
+    """An incidental record of lesson n; named (by default) in its first step's teach text (C16)."""
+
     def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
         _lesson(plan, n)["inventory"]["vocabulary"]["incidental"].append({"lemma": lemma, "evidence": word_id})
+        if named:
+            step = _lesson(plan, n)["steps"][0]
+            step["teach"] = f"{step['teach']} {word_id} comes up in passing."
 
     return mutate
 
@@ -229,7 +243,7 @@ def _video_records(*records: tuple[str, str, str | None]) -> Mutate:
             pack["videos"].append(
                 {"id": video_id, "url": url, "models": {"letters": ["М"], "words": [], "segment": segment}}
             )
-            _lesson(plan, 1)["videos"].append({"evidence": video_id, "use": "Step s1 letter model."})
+            _lesson(plan, 1)["videos"].append({"evidence": video_id, "use": "Letter model."})
 
     return mutate
 
@@ -243,7 +257,7 @@ def _recycle_prior_at_lesson_two_s1(step_cites_video: bool) -> Mutate:
         two["inventory"]["vocabulary"]["recycled"] += [PRIOR_ONE, PRIOR_TWO]
         _step(plan, 2, "s1")["uses"]["vocabulary"] += [PRIOR_ONE, PRIOR_TWO]
         pack["videos"].append(
-            {"id": "V-902", "models": {"letters": [], "words": [PRIOR_ONE, PRIOR_TWO], "segment": None}}
+            {"id": "V-902", "models": {"letters": [], "words": [PRIOR_ONE, PRIOR_TWO], "segment": "0:00–0:05"}}
         )
         two["videos"] = [{"evidence": "V-902", "use": "Whole-word model."}]
         if step_cites_video:
@@ -258,6 +272,45 @@ def _core_in_lesson_two(word_id: str, lemma: str) -> Mutate:
             {"lemma": lemma, "evidence": word_id, "forms": ["tag-a"]}
         )
         _step(plan, 2, "s2")["introduces"]["vocabulary"].append(word_id)
+
+    return mutate
+
+
+def _display_in_lesson_two(s1: str, s2: str, s1_needs_quote: bool = False, quote: str = "мама") -> Mutate:
+    """Pack text T-002; lesson 2's teach texts gain s1 and s2 (C15); s1 may print T-002 as a needs: quote step."""
+
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        pack["texts"].append({"id": "T-002", "quote": quote})
+        for step_id, extra in (("s1", s1), ("s2", s2)):
+            step = _step(plan, 2, step_id)
+            step["teach"] = f"{step['teach']} {extra}".strip()
+            step["evidence"].append("T-002")
+        if s1_needs_quote:
+            _step(plan, 2, "s1")["needs"] = ["quote"]
+
+    return mutate
+
+
+def _video_use(use: str) -> Mutate:
+    return lambda plan, pack, words, prior: _lesson(plan, 1)["videos"][0].__setitem__("use", use)
+
+
+def _step_cited_video_with_pack_use(use: str) -> Mutate:
+    """Pack video V-901 with a use line, cited by lesson 1 step s1 but not listed in the lesson's videos (C17)."""
+
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        pack["videos"].append({"id": "V-901", "use": use, "models": {"letters": ["М"], "words": [], "segment": None}})
+        _step(plan, 1, "s1")["evidence"].append("V-901")
+
+    return mutate
+
+
+def _example(text: str, word_ids: list[str], lesson: int) -> Mutate:
+    """Pack example EX-901, cited by step s2 of the given lesson (C19)."""
+
+    def mutate(plan: dict, pack: dict, words: dict, prior: dict) -> None:
+        pack["examples"].append({"id": "EX-901", "text": text, "sentence_ref": {"words": word_ids}})
+        _step(plan, lesson, "s2")["evidence"].append("EX-901")
 
     return mutate
 
@@ -368,13 +421,13 @@ CASES = [
         "c5_heard_word_without_a_modelling_video_is_a_note",
         _teach(1, "s2", f"The letter А. Hear {MAMA} as a whole word."),
         notes=frozenset({codes.HEARD_WORD_WITHOUT_VIDEO}),
-        says=f"the teach text says {MAMA} is heard, but no video the step cites (none)",
+        says=f"the teach text says {MAMA} is heard, but no video the step cites (V-900) lists it",
     ),
     Case(
         "c5_heard_word_with_a_modelling_video_passes",
         _all(
             _videos(V_003=([], [MAMA])),
-            _teach(1, "s2", f"The letter А. Hear {MAMA} as a whole word.", ["T-001", "V-003"]),
+            _teach(1, "s2", f"The letter А. Hear {MAMA} as a whole word.", ["T-001", "V-900", "V-003"]),
         ),
     ),
     Case(
@@ -451,7 +504,10 @@ CASES = [
     # C10 -- a step's words are decodable so far, or recorded
     Case(
         "c10_step_word_with_an_untaught_letter_and_no_recording_fails",
-        lambda plan, pack, words, prior: _lesson(plan, 1).__setitem__("videos", []),
+        _all(
+            lambda plan, pack, words, prior: _lesson(plan, 1).__setitem__("videos", []),
+            lambda plan, pack, words, prior: _step(plan, 1, "s2")["evidence"].remove("V-900"),
+        ),
         failures=frozenset({codes.STEP_WORD_NOT_DECODABLE}),
         says=f"step s2 introduces or uses {MANA} 'мана' (needs н), {MAN} 'ман' (needs н)",
     ),
@@ -563,6 +619,100 @@ CASES = [
             ("V-911", "https://www.youtube.com/watch?v=ksXIXj7CXwc", "0:10–0:20"),
         ),
     ),
+    # C15 -- one record displayed by two adjacent steps
+    Case(
+        "c15_adjacent_steps_displaying_one_quote_fail",
+        _display_in_lesson_two("", "Display the attributed T-002 before b2.", s1_needs_quote=True),
+        failures=frozenset({codes.ADJACENT_STEP_SAME_DISPLAY}),
+        says="steps s1 and s2 both display T-002; steps and their evidence are binding (plan schema §7 decision 1)",
+    ),
+    Case(
+        "c15_second_display_called_a_recall_is_a_note",
+        _display_in_lesson_two("Display T-002 before b1.", "Recall the already displayed T-002 before b2."),
+        notes=frozenset({codes.ADJACENT_STEP_DISPLAY_RECALL}),
+        says="steps s1 and s2 both display T-002, and s2 calls it a recall",
+    ),
+    Case(
+        "c15_record_as_subject_or_negated_display_passes",
+        _display_in_lesson_two("Display T-002 before b1.", "T-002 shows О; do not display T-002 here."),
+    ),
+    # C16 -- an incidental record the lesson never names
+    Case(
+        "c16_incidental_named_nowhere_is_a_note",
+        _incidental(2, ON, "он", named=False),
+        notes=frozenset({codes.INCIDENTAL_NOT_USED}),
+        says=f"1 incidental record named by no step, activity or dialogue of the lesson, nor in a record it displays or a recording it cites: {ON} 'он'",
+    ),
+    Case(
+        "c16_incidental_printed_by_a_displayed_quote_passes",
+        _all(
+            _incidental(2, ON, "он", named=False), _display_in_lesson_two("", "", s1_needs_quote=True, quote="о-н мама")
+        ),
+    ),
+    Case(
+        "c16_a_quote_cited_only_as_grounding_does_not_name_it",
+        _all(_incidental(2, ON, "он", named=False), _display_in_lesson_two("", "", quote="он мама")),
+        notes=frozenset({codes.INCIDENTAL_NOT_USED}),
+        says=f"{ON} 'он'",
+    ),
+    # C17 -- the description Ресурси prints for a lesson video
+    Case(
+        "c17_pipeline_wording_in_a_video_use_fails",
+        _video_use("Step s2 whole-word model (segment: null); acoustic proof remains driver-owned."),
+        failures=frozenset({codes.VIDEO_USE_PIPELINE_TOKEN}),
+        says="carries pipeline wording: 'segment:' (the YAML syntax of the pack field models.segment), 'null'",
+    ),
+    Case(
+        "c17_record_id_in_a_video_use_fails",
+        _video_use("Step s2 whole-word model; T-001 supplies the rows."),
+        failures=frozenset({codes.VIDEO_USE_PIPELINE_TOKEN}),
+        says="'T-001' (a record id)",
+    ),
+    Case(
+        "c17_pack_use_printed_for_a_step_cited_video_fails",
+        _step_cited_video_with_pack_use("Letter model; exact playback/timecode confirmation remains driver-owned."),
+        failures=frozenset({codes.VIDEO_USE_PIPELINE_TOKEN}),
+        says="the Ресурси description of V-901 (the pack record's use:",
+    ),
+    Case(
+        "c17_video_use_naming_a_step_that_does_not_cite_it_fails",
+        _video_use("Step s1 whole-word model."),
+        failures=frozenset({codes.VIDEO_USE_STEP_MISMATCH}),
+        says="the Ресурси description of V-900 (videos[].use) names step s1, which does not cite V-900",
+    ),
+    Case("c17_plain_where_and_why_use_passes", _video_use("Step s2: hear the whole words before reading them.")),
+    # C18 -- a choice option with a letter the lesson has not taught
+    Case(
+        "c18_quiz_option_with_an_untaught_letter_fails",
+        _focus(1, "a1", "Checks the letter М; the options are мама and нона."),
+        failures=frozenset({codes.CHOICE_OPTION_LETTER_NOT_TAUGHT}),
+        says="quiz activity a1 prints 'нона' (needs н, о)",
+    ),
+    Case(
+        "c18_option_a_cited_recording_models_passes",
+        _focus(1, "a1", "Checks the letter М; the options are мама and ман."),
+    ),
+    # C19 -- an example sentence and the lesson that can read it
+    Case(
+        "c19_sentence_cited_before_its_letters_are_taught_fails",
+        _example("Мама, нона.", [MAMA, NONA], 1),
+        failures=frozenset({codes.SENTENCE_NOT_DECODABLE_AT_HOST}),
+        says="example EX-901 ('Мама, нона.') is cited in lesson 1 and needs н, о",
+    ),
+    Case(
+        "c19_sentence_decodable_in_an_earlier_lesson_is_a_note",
+        _example("Мама.", [MAMA], 2),
+        notes=frozenset({codes.SENTENCE_DECODABLE_EARLIER}),
+        says="example EX-901 ('Мама.') is cited first in lesson 2 but is decodable from lesson 1",
+    ),
+    Case("c19_sentence_cited_where_it_becomes_decodable_passes", _example("Мама.", [MAMA], 1)),
+    # C20 -- a word model without its timed segment
+    Case(
+        "c20_word_model_without_a_segment_fails",
+        lambda plan, pack, words, prior: pack["videos"][0]["models"].__setitem__("segment", None),
+        failures=frozenset({codes.WORD_MODEL_WITHOUT_SEGMENT}),
+        says=f"V-900 models {MANA}, {MAN} (words or phrases, not a whole-resource letter) but binds no models.segment",
+    ),
 ]
 
 
@@ -644,3 +794,34 @@ def test_c8_outcome_names_the_comprehension_step(tmp_path: Path) -> None:
     case = next(c for c in CASES if c.name == "c8_production_linked_before_the_questions_fails")
     outcome = run(tmp_path, case.mutate).failures[0]
     assert (outcome.code, outcome.lesson, outcome.step) == (codes.RECAP_COMPREHENSION_AFTER_PRODUCTION, 3, "s1")
+
+
+def test_c18_skips_a_lesson_before_the_first_taught_letter() -> None:
+    plan = mechanical_plan()
+    _activity(plan, 1, "a1")["focus"] = "Checks the options нона and он."
+    store = type("Store", (), {"records": {}})()
+    pack = type("Pack", (), {"video_models": {}})()
+    gates = ReviewGates(Report(LEVEL, SLUG), plan, LEVEL, store, None, None, Path("unused"), pack=pack)  # type: ignore[arg-type]
+    gates.__dict__["taught_through"] = {1: set(), 2: {"м", "а", "н", "о"}, 3: {"м", "а", "н", "о"}}
+    gates.check_choice_options_taught()
+    assert gates.report.failures == []
+
+
+def test_c17_and_c15_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
+    case = next(c for c in CASES if c.name == "c15_adjacent_steps_displaying_one_quote_fail")
+    outcome = run(tmp_path / "c15", case.mutate).failures[0]
+    assert (outcome.code, outcome.lesson, outcome.step) == (codes.ADJACENT_STEP_SAME_DISPLAY, 2, "s2")
+    case = next(c for c in CASES if c.name == "c17_video_use_naming_a_step_that_does_not_cite_it_fails")
+    outcome = run(tmp_path / "c17", case.mutate).failures[0]
+    assert (outcome.code, outcome.lesson) == (codes.VIDEO_USE_STEP_MISMATCH, 1)
+
+
+def test_c18_unavailable_arc_is_not_checked_not_passed(tmp_path: Path) -> None:
+    plan, pack, words, prior = mechanical_plan(), mechanical_pack(), mechanical_words(), prior_plan()
+    _focus(1, "a1", "Checks the letter М; the options are мама and нона.")(plan, pack, words, prior)
+    world = write_world(tmp_path, plan, pack, words)
+    (world.plan_path.parent / "_arc.yaml").unlink()
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    assert codes.CHOICE_OPTION_LETTER_NOT_TAUGHT not in {o.code for o in report.failures}, report.render_text()
+    gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
+    assert "C18" in gates, report.render_text()

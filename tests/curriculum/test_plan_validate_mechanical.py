@@ -114,8 +114,10 @@ def mechanical_plan() -> dict:
         _activity("a4", "count-syllables", "workbook", "Count syllables in «мама» and «ман»."),
     ]
     one["practice"] = {"vocabulary": "core", "stress": [], "patterns": ["a1"]}
-    # мана and ман need Н, taught in lesson 2: the lesson's recording models them (#9487 C10).
+    # мана and ман need Н, taught in lesson 2: the lesson's recording models them (#9487 C10), in the
+    # step its description names (C17).
     one["videos"] = [{"evidence": "V-900", "use": "Step s2 whole-word model."}]
+    one["steps"][1]["evidence"].append("V-900")
 
     two = _lesson(2, "teach", ["Н", "О"], [(NONA, "нона")], [MAMA, MANA, MAN])
     two["inventory"]["vocabulary"]["incidental"] = [{"lemma": "мона", "evidence": MONA}]
@@ -124,7 +126,7 @@ def mechanical_plan() -> dict:
         _step(
             "s2",
             "teach",
-            "The letter О.",
+            f"The letter О; the incidental {MONA} comes up in passing (#9487 C16).",
             {"letters": ["О"], "vocabulary": [NONA]},
             {"vocabulary": [MAMA, MANA, MAN]},
             ["b2", "b3"],
@@ -166,7 +168,8 @@ def mechanical_pack() -> dict:
         "exercises": [{"id": "X-001", "quote": "мама", "items_sample": ["мама"]}],
         "examples": [],
         "errors": [],
-        "videos": [{"id": "V-900", "models": {"letters": [], "words": [MANA, MAN], "segment": None}}],
+        # A word model binds its timed segment (#9487 C20).
+        "videos": [{"id": "V-900", "models": {"letters": [], "words": [MANA, MAN], "segment": "0:00–0:05"}}],
         "standard": [],
     }
 

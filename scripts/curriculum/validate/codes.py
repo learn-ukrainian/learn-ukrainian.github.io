@@ -153,6 +153,13 @@ QUOTE_HOST_WATERMARK = "quote_host_watermark"
 QUOTE_HOST_TOKEN_NOT_IN_VESUM = "quote_host_token_not_in_vesum"
 COMPUTED_KEY_SINGLE_VALUE = "computed_key_single_value"
 DUPLICATE_LESSON_VIDEO = "duplicate_lesson_video"
+# third-round review gates C15–C20 (issue #9487)
+ADJACENT_STEP_SAME_DISPLAY = "adjacent_step_same_display"
+VIDEO_USE_PIPELINE_TOKEN = "video_use_pipeline_token"
+VIDEO_USE_STEP_MISMATCH = "video_use_step_mismatch"
+CHOICE_OPTION_LETTER_NOT_TAUGHT = "choice_option_letter_not_taught"
+SENTENCE_NOT_DECODABLE_AT_HOST = "sentence_not_decodable_at_host"
+WORD_MODEL_WITHOUT_SEGMENT = "word_model_without_segment"
 
 # --- notes (never fail the run) ---------------------------------------------
 # mechanical plan gates M1, M3, M5 (issue #9138) report here or as not_checked, never as failures
@@ -167,6 +174,9 @@ EARLIER_CORE_NOT_RECYCLED = "earlier_core_not_recycled"
 ODD_ONE_OUT_FEATURE_NOT_COMPUTED = "odd_one_out_feature_not_computed"
 STEP_WORD_LEMMA_NOT_DECODABLE = "step_word_lemma_not_decodable"
 COMPUTED_KEY_FORM_DEPENDENT = "computed_key_form_dependent"
+ADJACENT_STEP_DISPLAY_RECALL = "adjacent_step_display_recall"
+INCIDENTAL_NOT_USED = "incidental_not_used"
+SENTENCE_DECODABLE_EARLIER = "sentence_decodable_earlier"
 
 # --- not_checked (never fail the run, always reported) ----------------------
 MINUTES_CONSTANTS_UNDEFINED = "minutes_constants_undefined"
@@ -266,9 +276,18 @@ DESCRIPTIONS = {
     QUOTE_HOST_TOKEN_NOT_IN_VESUM: "failure (gate C12, #9487): a quote host prints a word of two or more vowels that is neither a word-store spelling nor a VESUM form (an OCR fragment, a split word, or a word VESUM does not list)",
     COMPUTED_KEY_SINGLE_VALUE: "failure (gate C13, #9487): an activity whose key is computed from its target form (count-syllables) has one key value across all its targets",
     DUPLICATE_LESSON_VIDEO: "failure (gate C14, #9487): two video entries of one lesson resolve to the same recording (YouTube id or URL, and segment)",
+    ADJACENT_STEP_SAME_DISPLAY: "failure (gate C15, #9487): two adjacent steps of one lesson both display the same text, exercise or example record (a display directive in the teach text, or a needs: quote step's text evidence), and the second does not call it a recall; steps are binding (plan schema §7 decision 1), so the writer prints it twice",
+    VIDEO_USE_PIPELINE_TOKEN: "failure (gate C17, #9487): the description the assembler prints for a lesson video in Ресурси (the plan's videos[].use, else the pack record's use) holds pipeline wording: segment:, null, driver-owned, timecode, timed segment, acoustic proof or a record id",
+    VIDEO_USE_STEP_MISMATCH: "failure (gate C17, #9487): a lesson video's printed description names a step that does not exist in the lesson or does not cite that video in its evidence",
+    CHOICE_OPTION_LETTER_NOT_TAUGHT: "failure (gate C18, #9487): in a letter-stage module, a fill-in or quiz focus prints a Ukrainian word with a letter not taught through its lesson, and no recording the lesson cites models it",
+    SENTENCE_NOT_DECODABLE_AT_HOST: "failure (gate C19, #9487): in a letter-stage module, an example sentence a step cites needs a letter not taught through that lesson",
+    WORD_MODEL_WITHOUT_SEGMENT: "failure (gate C20, #9487): a video the lesson cites models words or phrases (models.words) but binds no segment, so the learner is sent to the whole recording for them",
     STEP_WORD_LEMMA_NOT_DECODABLE: "note (gate C10, #9487): a word a step introduces or uses has a lemma needing letters not taught so far and no recording the lesson cites, while another form of its record is readable; the plan does not bind the form, so the plan review confirms it",
     ODD_ONE_OUT_FEATURE_NOT_COMPUTED: "note (gate C11, #9487): an odd-one-out activity draws rows from a quote host, and its focus states no feature the gate computes; the plan review confirms each row has exactly one odd member",
     COMPUTED_KEY_FORM_DEPENDENT: "note (gate C13, #9487): a count-syllables activity's bound forms and lemmas share one key; another key needs a form the plan does not bind",
+    ADJACENT_STEP_DISPLAY_RECALL: "note (gate C15, #9487): two adjacent steps display the same record and the second calls it a recall (recall, again, already displayed); the plan review confirms the repeat is intended",
+    INCIDENTAL_NOT_USED: "note (gate C16, #9487): an incidental record whose id and spellings appear in no step, activity or dialogue of its lesson nor in a pack record they cite; Словник would list a word the lesson never uses",
+    SENTENCE_DECODABLE_EARLIER: "note (gate C19, #9487): an example sentence is decodable in an earlier lesson (or position) than the one hosting it; the plan review confirms the placement and any rationale that ties it to the host's letters",
     STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
     TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
     CORE_CEFR_ABOVE_MODULE: "note (gate M5, #9138): a core lemma's word-store CEFR level is above the module's level; the plan sets no CEFR ceiling, so the plan review confirms it is intended (for example the module's own metalanguage)",
@@ -308,7 +327,7 @@ DESCRIPTIONS = {
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
     TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
-    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, C10, C12, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level, VESUM); the message names the gate and the reason",
+    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, C10, C12, C18, C19, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level, VESUM); the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 

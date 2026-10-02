@@ -14,9 +14,10 @@ waiver can never be built or merged as buildable.
 The mechanical gates M1, M3 and M5 (mechanical.py, issue #9138) are structural checks over the
 plan, the arc and the word store that plan reviewers had to make by hand;
 what reads a proxy is reported as a note or not_checked, never as a failure.
-The review gates C1–C14 (review_gates.py, issue #9487) decide the plan defects plan
-reviewers marked checkable: C1–C4 and C7–C14 fail; C5, C6 and the form-dependent cases of
-C4, C10 and C13 (and an odd-one-out feature C11 cannot compute) are notes.
+The review gates C1–C20 (review_gates.py, issue #9487) decide the plan defects plan
+reviewers marked checkable: C1–C4, C7–C15 and C17–C20 fail; C5, C6, C16 and the form-dependent
+cases of C4, C10 and C13 (and an odd-one-out feature C11 cannot compute, a recalled repeat
+display in C15, a sentence C19 finds decodable earlier) are notes.
 
 --provisional-pack is the plan-review mode (docs/epics/fresh-build-review-contracts.md
 "Contract 1"): the plan still points at a pack whose sha256 it does not carry yet,

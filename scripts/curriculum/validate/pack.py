@@ -6,7 +6,8 @@ A module pack (evidence/<level>/<slug>.yaml) holds top-level lists `texts`,
 `id`, and no `words:` list — its presence fails. A video record's explicit
 listening models (`models: {letters, words}`) are kept; descriptions never
 establish models (evidence-pack-v1 schema). A text record's `quote` bytes and a
-video record's `url` and `models.segment` are kept for the review gates (#9487).
+video record's `url`, `models.segment` and `use` are kept for the review gates (#9487), as are
+the printable text of text, exercise and example records and an example's `sentence_ref.words`.
 The word store
 (evidence/<level>/_words.yaml) holds `words[] {id, lemma, forms[] {tags}}`.
 A `<file>.lock` sidecar sits beside each file; its first whitespace-delimited
@@ -52,10 +53,12 @@ def lock_digest(path: Path, failure_code: str) -> str:
 
 @dataclass(frozen=True)
 class VideoModels:
-    """A video record's explicit listening models: Ukrainian letters and word-store ids."""
+    """A video record's explicit listening models: Ukrainian letters, word-store ids and the timed segment."""
 
     letters: tuple[str, ...] = ()
     words: tuple[str, ...] = ()
+    #: models.segment: the part of the recording that models them; None is the whole recording.
+    segment: str | None = None
 
 
 @dataclass(frozen=True)
@@ -71,6 +74,12 @@ class Pack:
     quotes: dict[str, str] = field(default_factory=dict)
     #: V- id -> (url, models.segment or None); a video record without a string url is absent.
     video_sources: dict[str, tuple[str, str | None]] = field(default_factory=dict)
+    #: V- id -> the record's `use` line, which the assembler prints when the plan gives none.
+    video_uses: dict[str, str] = field(default_factory=dict)
+    #: text, exercise or example id -> its printable Ukrainian (quote, text, items_sample), one line each.
+    record_texts: dict[str, str] = field(default_factory=dict)
+    #: EX- id -> (sentence text, the word ids of its sentence_ref).
+    examples: dict[str, tuple[str, tuple[str, ...]]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -108,6 +117,9 @@ def load_pack(pack_path: Path) -> Pack:
     video_models: dict[str, VideoModels] = {}
     quotes: dict[str, str] = {}
     video_sources: dict[str, tuple[str, str | None]] = {}
+    video_uses: dict[str, str] = {}
+    record_texts: dict[str, str] = {}
+    examples: dict[str, tuple[str, tuple[str, ...]]] = {}
     for list_name in PACK_LISTS:
         records = data.get(list_name, [])
         if records is None:
@@ -131,12 +143,24 @@ def load_pack(pack_path: Path) -> Pack:
                 video_models[record["id"]] = VideoModels(
                     letters=tuple(item for item in models.get("letters") or [] if isinstance(item, str)),
                     words=tuple(item for item in models.get("words") or [] if isinstance(item, str)),
+                    segment=models["segment"] if isinstance(models.get("segment"), str) else None,
                 )
             if list_name == "videos" and isinstance(record.get("url"), str):
                 segment = (
                     (record.get("models") or {}).get("segment") if isinstance(record.get("models"), dict) else None
                 )
                 video_sources[record["id"]] = (record["url"], segment if isinstance(segment, str) else None)
+            if list_name == "videos" and isinstance(record.get("use"), str):
+                video_uses[record["id"]] = record["use"]
+            if list_name in ("texts", "exercises", "examples"):
+                printable = [record.get(key) for key in ("quote", "text")]
+                printable += record.get("items_sample") if isinstance(record.get("items_sample"), list) else []
+                if any(isinstance(item, str) for item in printable):
+                    record_texts[record["id"]] = "\n".join(item for item in printable if isinstance(item, str))
+            if list_name == "examples" and isinstance(record.get("text"), str):
+                sentence_ref = record.get("sentence_ref") if isinstance(record.get("sentence_ref"), dict) else {}
+                words = sentence_ref.get("words") if isinstance(sentence_ref.get("words"), list) else []
+                examples[record["id"]] = (record["text"], tuple(item for item in words if isinstance(item, str)))
     return Pack(
         path=pack_path,
         ids=frozenset(ids),
@@ -144,6 +168,9 @@ def load_pack(pack_path: Path) -> Pack:
         video_models=video_models,
         quotes=quotes,
         video_sources=video_sources,
+        video_uses=video_uses,
+        record_texts=record_texts,
+        examples=examples,
     )
 
 

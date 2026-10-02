@@ -142,7 +142,7 @@ def base_plan() -> dict:
                 "videos": [{"evidence": "V-001", "use": "After step two."}],
                 "dialogue": {
                     "step": "s3",
-                    "situation": "At a table.",
+                    "situation": "At a table; the incidental W-002 comes up in passing (#9487 C16).",
                     "setting": "A room with a table.",
                     "speakers": [
                         {"name": "Name One", "role": "host", "gender": "f", "evidence": "W-004"},
@@ -397,7 +397,8 @@ def build_cyrillic_lemma() -> tuple[dict, dict, dict]:
     plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["lemma"] = LEMMA_MAMA
     words["words"][0]["lemma"] = LEMMA_MAMA
     # М is not among the lesson's letters, so the lesson's recording models the word (#9487 C10).
-    pack["videos"][0]["models"] = {"letters": [], "words": [words["words"][0]["id"]], "segment": None}
+    # A word model binds its timed segment (#9487 C20).
+    pack["videos"][0]["models"] = {"letters": [], "words": [words["words"][0]["id"]], "segment": "0:00–0:05"}
     plan["lessons"][1]["videos"] = [{"evidence": "V-001", "use": "Recap whole-word model."}]
     plan["lessons"][1]["steps"][0]["evidence"].append("V-001")
     return plan, pack, words

@@ -5,7 +5,7 @@ script can decide; each cost a review round. These gates decide them from data
 the validator already reads — the plan, the module pack (video models and
 URLs, quote bytes), the level word store, the arc and the earlier plans — so a
 plan with the defect fails before a reviewer is spent. C1–C6 come from the
-first reviews, C7–C14 from the second.
+first reviews, C7–C14 from the second, C15–C20 from the third.
 
   C1  a word id named in a dialogue's target_grammar, or in the focus of an activity in a
       step's practice, is introduced at or before that step (failure)
@@ -35,6 +35,16 @@ first reviews, C7–C14 from the second.
   C13 a count-syllables activity whose targets all have the same syllable count (failure); the
       same when the count depends on a form the plan does not bind (note)
   C14 two video entries of one lesson whose pack records are the same recording (failure)
+  C15 two adjacent steps of one lesson that display the same text, exercise or example record (failure); the
+      same when the second step calls it a recall (note)
+  C16 an incidental record named by no step, activity or dialogue of its lesson (note)
+  C17 a lesson video whose printed Ресурси description carries pipeline wording, or names a step that does not
+      cite the video (failure)
+  C18 in a letter-stage module, a fill-in or quiz focus that prints a word with a letter not taught through its
+      lesson and modelled by no recording the lesson cites (failure)
+  C19 in a letter-stage module, an example sentence cited in a lesson that cannot read it (failure); one first
+      cited later than the lesson that could read it (note)
+  C20 a cited video that models words but binds no segment (failure)
 
 Check 7 of #9487 is a learner-state fix (scripts/curriculum/learner_state/planned.py). Check 9 of the
 second round is in pack-verify (scripts/curriculum/evidence/sources.py, Standard line numbering).
@@ -95,6 +105,31 @@ How exact each gate is:
   printable quotes); the preflight runs the same checks (scripts/build/fresh/preflight.py).
 - C14 compares a YouTube video by its id, any other URL without its fragment and trailing slash,
   together with ``models.segment``: two segments of one video are two recordings.
+- C15 reads a step's displays two ways. A teach-text sentence (split at . ; ! ?) directs a display when
+  "display" or "show" (imperative, participle or gerund — never "shows", whose subject is the record) comes
+  before a T-/X-/EX- id of the pack and is not negated ("do not display"); and a step prints the text records it
+  cites under ``needs: quote`` and the example records it cites under ``needs: example``, as the preflight does.
+  Steps are fixed structure (plan schema §7 decision 1: which steps exist, their evidence and practice are
+  binding), so a writer cannot merge the two displays: a repeat fails. A repeat the second step's teach text
+  calls a recall (recall, again, already displayed, re-display) is a deliberate return and only a note.
+- C16 is a note: an incidental word may be writer-optional (plan schema §4 lifts the inventory as a limit). A
+  record is named by its W- id or by a spelling of it (lemma or a store form, case-folded, syllable hyphens
+  removed) anywhere in the lesson's steps, activities and dialogue, in the bytes of a record the lesson
+  displays (C15's displays, an activity's quote host or model, an example's sentence words), or in the
+  models.words of a video it cites. A record cited only as grounding is not displayed, so its words do not count.
+- C17 lints the description the assembler prints (scripts/build/fresh/assemble.py ``build_resursy_entries``:
+  the plan's ``videos[].use``, else the pack record's ``use``, for every video the lesson's steps or videos
+  cite). The pipeline wording is the wording the A1 plans and packs actually put there: ``segment:``, ``null``,
+  ``driver-owned``, ``timecode``, ``timed (…) segment``, ``acoustic proof`` and record ids (R-27, W-081, T-040,
+  G-a1-002). A step reference (``s3``) must name a step of the lesson that cites the video in its evidence.
+- C18 reads the Ukrainian words a fill-in or quiz focus prints (two or more letters), from the first lesson
+  that has a taught letter (before it nothing is read). A word a recording the lesson cites models (a store
+  record in its models.words) is heard, so it passes. It is a failure although it reads focus prose: a word
+  the focus prints is what the writer puts on screen.
+- C19 applies to example records (EX-) a step cites: the host is the first lesson citing one. The letters
+  taught through a lesson are the arc's earlier positions plus this plan's introductions so far (as C4).
+- C20 reads the pack: a video whose models.words is not empty and whose models.segment is null. A letter
+  video may be a whole resource; a word or phrase model inside a whole episode needs the timed segment.
 """
 
 from __future__ import annotations
@@ -130,6 +165,28 @@ _ODD_ONE_OUT = re.compile(r"\bodd\b|\bdiffers?\s+from\b", re.IGNORECASE)
 _ROW_WORD = f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*"
 _ROW = re.compile(rf"\s*{_ROW_WORD}(?:[\s,;]+{_ROW_WORD}){{2,}}[\s,;.]*")
 _ROW_TOKEN = re.compile(_ROW_WORD)
+_SENTENCE_BREAK = re.compile(r"[.;!?](?=\s|$)")
+#: A display directive: the imperative or participle of display/show (never "X shows Y", where X is the subject).
+_DISPLAY = re.compile(r"\b(?:re-?)?(?:display|displayed|displaying|show|shown|showing)\b", re.IGNORECASE)
+_NOT_DISPLAY = re.compile(r"\b(?:not|never)\s+(?:\w+\s+){0,2}?(?:re-?)?(?:display|show)", re.IGNORECASE)
+_RECALL = re.compile(
+    r"\brecall(?:s|ed|ing)?\b|\balready\s+(?:displayed|shown)\b|\bagain\b|\bre-?(?:display|show)", re.IGNORECASE
+)
+_DISPLAYABLE_ID = re.compile(r"\b(?:T|X|EX)-\d+\b")
+_STEP_REF = re.compile(r"\bs\d+\b")
+#: Pipeline wording a video description must not carry (C17): (pattern, what it is). Built from the
+#: wording the A1 plans and packs actually put in `use` lines, not from a guess.
+_PIPELINE_TOKENS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"\bsegment\s*:", re.IGNORECASE), "the YAML syntax of the pack field models.segment"),
+    (re.compile(r"\bnull\b", re.IGNORECASE), "the YAML null literal"),
+    (re.compile(r"\bdriver-owned\b", re.IGNORECASE), "fleet role wording"),
+    (re.compile(r"\btimecodes?\b", re.IGNORECASE), "pack verification wording"),
+    (re.compile(r"\btimed\s+(?:\w+\s+)?segments?\b", re.IGNORECASE), "pack field wording (models.segment)"),
+    (re.compile(r"\bacoustic\s+proof\b", re.IGNORECASE), "verification wording"),
+    (re.compile(r"\b(?:[A-Z][A-Z0-9]*-\d+|G-[a-z]\d+-\d+)\b"), "a record id"),
+)
+_CHOICE_TYPES = frozenset({"fill-in", "quiz"})
+_APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'"})
 _YOUTUBE = re.compile(
     r"(?:youtube(?:-nocookie)?\.com/(?:watch\?(?:[^#]*&)?v=|embed/|shorts/|live/|v/)|youtu\.be/)([A-Za-z0-9_-]{11})"
 )
@@ -215,6 +272,41 @@ def _video_key(url: str, segment: str | None) -> tuple[str, str | None]:
     if match:
         return f"youtube:{match.group(1)}", segment
     return url.split("#", 1)[0].rstrip("/").casefold(), segment
+
+
+def _displays(step: dict, displayable: set[str], printed: dict[str, set[str]]) -> tuple[set[str], set[str]]:
+    """(records the step displays, records its teach text calls a recall) for C15 and C16.
+
+    A step displays a record when a teach-text sentence directs its display (display/show before the id,
+    not negated) or when it cites the record under a need the preflight prints: a text record of a
+    ``quote`` step, an example record of an ``example`` step (``printed`` maps the need to those ids)."""
+    shown, recalled = set(), set()
+    for sentence in _SENTENCE_BREAK.split(step.get("teach") or ""):
+        refs = [ref for ref in _ids(_DISPLAYABLE_ID, sentence) if ref in displayable]
+        directive = _DISPLAY.search(sentence)
+        if directive and not _NOT_DISPLAY.search(sentence):
+            shown |= {ref for ref in refs if sentence.index(ref) > directive.start()}
+        if _RECALL.search(sentence):
+            recalled |= set(refs)
+    for need in step.get("needs") or []:
+        shown |= {ref for ref in step.get("evidence") or [] if ref in printed.get(need, set())}
+    return shown, recalled
+
+
+def _strings(value: object) -> list[str]:
+    """Every string inside a plan value (a mapping, list or scalar), in order."""
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        return [text for item in value.values() for text in _strings(item)]
+    if isinstance(value, list):
+        return [text for item in value for text in _strings(item)]
+    return []
+
+
+def _spelling(text: str) -> str:
+    """A spelling as C16 compares it: case-folded, one apostrophe, syllable hyphens removed."""
+    return text.translate(_APOSTROPHES).casefold().replace("-", "")
 
 
 @dataclass
@@ -801,6 +893,221 @@ class ReviewGates(Gates):
                         lesson["n"],
                     )
 
+    # -- third round: C15–C20 ------------------------------------------------------------
+
+    # -- C15 ------------------------------------------------------------------
+
+    @cached_property
+    def _display_inputs(self) -> tuple[set[str], dict[str, set[str]]]:
+        displayable = {ref for ref in self.pack.ids if _DISPLAYABLE_ID.fullmatch(ref)}
+        return displayable, {"quote": set(self.pack.quotes), "example": set(self.pack.examples)}
+
+    def check_adjacent_display(self) -> None:
+        for lesson in self.plan["lessons"]:
+            previous: tuple[str, set[str]] | None = None
+            for step in lesson["steps"]:
+                shown, recalled = _displays(step, *self._display_inputs)
+                if previous is not None:
+                    prior_id, prior_shown = previous
+                    repeated = [ref for ref in sorted(prior_shown & shown) if ref not in recalled]
+                    recall = sorted(prior_shown & shown & recalled)
+                    if repeated:
+                        self.fail(
+                            codes.ADJACENT_STEP_SAME_DISPLAY,
+                            f"steps {prior_id} and {step['id']} both display {', '.join(repeated)}; steps and their "
+                            "evidence are binding (plan schema §7 decision 1), so the writer prints the same record "
+                            "twice in a row; keep one display step and drop the directive from the other (#9487 C15)",
+                            lesson["n"],
+                            step["id"],
+                        )
+                    if recall:
+                        self.note(
+                            codes.ADJACENT_STEP_DISPLAY_RECALL,
+                            f"steps {prior_id} and {step['id']} both display {', '.join(recall)}, and {step['id']} calls "
+                            "it a recall; the plan review confirms the repeat is intended (#9487 C15)",
+                            lesson["n"],
+                            step["id"],
+                        )
+                previous = (step["id"], shown)
+
+    # -- C16 ------------------------------------------------------------------
+
+    def check_incidental_used(self) -> None:
+        for lesson in self.plan["lessons"]:
+            incidental = lesson["inventory"]["vocabulary"]["incidental"]
+            if not incidental:
+                continue
+            named = _strings([lesson["steps"], lesson.get("activities"), lesson.get("dialogue")])
+            shown = {ref for step in lesson["steps"] for ref in _displays(step, *self._display_inputs)[0]}
+            for activity in lesson.get("activities") or []:
+                shown |= {activity.get("model"), *_quote_host_refs(activity["focus"])}
+            for item in shown:
+                if item in self.pack.record_texts:
+                    named.append(self.pack.record_texts[item])
+                named += self.pack.examples.get(item, ("", ()))[1]
+            videos = [entry["evidence"] for entry in lesson.get("videos") or []]
+            videos += [item for step in lesson["steps"] for item in step.get("evidence") or [] if item.startswith("V-")]
+            named += sorted(self._modelled(videos))
+            text = "\n".join(named)
+            ids = set(_ids(_WORD_ID, text))
+            spellings = {_spelling(token) for token in _ROW_TOKEN.findall(text)}
+            unused = []
+            for entry in incidental:
+                record = self.store.records.get(entry["evidence"])
+                forms = {_spelling(form) for form in (entry["lemma"], *(record.form_texts if record else ()))}
+                if entry["evidence"] not in ids and not forms & spellings:
+                    unused.append(f"{entry['evidence']} {entry['lemma']!r}")
+            if unused:
+                self.note(
+                    codes.INCIDENTAL_NOT_USED,
+                    f"{len(unused)} incidental record{'s' if len(unused) > 1 else ''} named by no step, activity or "
+                    f"dialogue of the lesson, nor in a record it displays or a recording it cites: {', '.join(unused)}; Словник lists every "
+                    "incidental, so learners would get cards for words the lesson does not use (#9487 C16)",
+                    lesson["n"],
+                )
+
+    # -- C17 ------------------------------------------------------------------
+
+    def check_video_descriptions(self) -> None:
+        for lesson in self.plan["lessons"]:
+            steps = {step["id"]: step for step in lesson["steps"]}
+            uses = {entry["evidence"]: entry.get("use") or "" for entry in lesson.get("videos") or []}
+            cited = [
+                item
+                for step in lesson["steps"]
+                for item in [*(step.get("evidence") or []), *(step.get("explains") or []), step.get("ref")]
+                if isinstance(item, str) and item.startswith("V-")
+            ]
+            for video in dict.fromkeys([*cited, *uses]):
+                description = uses.get(video) or self.pack.video_uses.get(video, "")
+                source = "videos[].use" if uses.get(video) else "the pack record's use"
+                found = [
+                    f"{match.group(0)!r} ({what})"
+                    for pattern, what in _PIPELINE_TOKENS
+                    for match in [pattern.search(description)]
+                    if match
+                ]
+                if found:
+                    self.fail(
+                        codes.VIDEO_USE_PIPELINE_TOKEN,
+                        f"the Ресурси description of {video} ({source}: {description!r}) carries pipeline wording: "
+                        f"{', '.join(found)}; the assembler prints it to the learner (#9487 C17)",
+                        lesson["n"],
+                    )
+                wrong = [
+                    ref
+                    for ref in _ids(_STEP_REF, description)
+                    if ref not in steps or video not in (steps[ref].get("evidence") or [])
+                ]
+                if wrong:
+                    self.fail(
+                        codes.VIDEO_USE_STEP_MISMATCH,
+                        f"the Ресурси description of {video} ({source}) names step {', '.join(wrong)}, which "
+                        f"{'does' if len(wrong) == 1 else 'do'} not cite {video} in its evidence (#9487 C17)",
+                        lesson["n"],
+                    )
+
+    # -- C18 ------------------------------------------------------------------
+
+    def check_choice_options_taught(self) -> None:
+        lessons = [
+            lesson
+            for lesson in self.plan["lessons"]
+            if any(
+                activity["type"] in _CHOICE_TYPES
+                and any(len(_word_letters(token)) >= 2 for token in _ROW_TOKEN.findall(activity["focus"]))
+                for activity in lesson.get("activities") or []
+            )
+        ]
+        if not lessons or self.letter_state_or_skip("C18", True) is None:
+            return  # no choice focus prints a word, or not a letter stage (or its arc is unavailable)
+        for lesson in lessons:
+            taught = self.taught_through[lesson["n"]]
+            if not taught:
+                continue  # before the first taught letter nothing is read
+            videos = [entry["evidence"] for entry in lesson.get("videos") or []]
+            videos += [item for step in lesson["steps"] for item in step.get("evidence") or [] if item.startswith("V-")]
+            modelled = self._modelled(videos)
+            for activity in lesson.get("activities") or []:
+                if activity["type"] not in _CHOICE_TYPES:
+                    continue
+                words = [
+                    token
+                    for token in dict.fromkeys(_ROW_TOKEN.findall(activity["focus"]))
+                    if len(_word_letters(token)) >= 2
+                    and not self._readable(token, taught)
+                    and not self.index.get(token.translate(_APOSTROPHES).casefold(), set()) & modelled
+                ]
+                if words:
+                    shown = ", ".join(
+                        f"{word!r} (needs {', '.join(sorted(self._letters(word) - taught))})" for word in words
+                    )
+                    self.fail(
+                        codes.CHOICE_OPTION_LETTER_NOT_TAUGHT,
+                        f"{activity['type']} activity {activity['id']} prints {shown}: letters not taught through "
+                        f"lesson {lesson['n']}, and no recording the lesson cites models the word; a learner can "
+                        "answer by rejecting the unknown glyph (#9487 C18)",
+                        lesson["n"],
+                    )
+
+    # -- C19 ------------------------------------------------------------------
+
+    def check_sentence_decodability(self) -> None:
+        hosts: dict[str, int] = {}
+        for lesson in self.plan["lessons"]:
+            for step in lesson["steps"]:
+                for item in step.get("evidence") or []:
+                    if item in self.pack.examples:
+                        hosts.setdefault(item, lesson["n"])
+        if not hosts or self.letter_state_or_skip("C19", True) is None or self.taught_before is None:
+            return
+        first_lesson = self.plan["lessons"][0]["n"]
+        for item, host in hosts.items():
+            text = self.pack.examples[item][0]
+            letters = self._letters(text)
+            missing = sorted(letters - self.taught_through[host])
+            if missing:
+                self.fail(
+                    codes.SENTENCE_NOT_DECODABLE_AT_HOST,
+                    f"example {item} ({text!r}) is cited in lesson {host} and needs {', '.join(missing)}, not taught "
+                    "through that lesson (#9487 C19)",
+                    host,
+                )
+                continue
+            if letters <= self.taught_before[first_lesson]:
+                earliest = "before this module"
+            else:
+                earliest = next(
+                    (f"from lesson {n}" for n, taught in self.taught_through.items() if letters <= taught), None
+                )
+            if earliest is not None and earliest != f"from lesson {host}":
+                self.note(
+                    codes.SENTENCE_DECODABLE_EARLIER,
+                    f"example {item} ({text!r}) is cited first in lesson {host} but is decodable {earliest}; the "
+                    "plan review confirms the placement and any rationale tying it to this lesson's letters "
+                    "(#9487 C19)",
+                    host,
+                )
+
+    # -- C20 ------------------------------------------------------------------
+
+    def check_word_model_segments(self) -> None:
+        for lesson in self.plan["lessons"]:
+            videos = [entry["evidence"] for entry in lesson.get("videos") or []]
+            videos += [item for step in lesson["steps"] for item in step.get("evidence") or [] if item.startswith("V-")]
+            for video in dict.fromkeys(videos):
+                models = self.pack.video_models.get(video)
+                if models is None or not models.words:
+                    continue
+                if models.segment is None:
+                    self.fail(
+                        codes.WORD_MODEL_WITHOUT_SEGMENT,
+                        f"{video} models {', '.join(models.words)} (words or phrases, not a whole-resource letter) "
+                        "but binds no models.segment, so the learner is sent to the whole recording; the pack binds "
+                        "the timed segment that models them (#9487 C20)",
+                        lesson["n"],
+                    )
+
 
 _QUOTE_CODES = {
     quote_bytes.PRIVATE_USE: codes.QUOTE_HOST_PRIVATE_USE,
@@ -820,7 +1127,7 @@ def check_review_gates(
     level_plans: LevelPlans,
     words_path: Path,
 ) -> None:
-    """Run gates C1–C14 on a plan that already passed the schema, with its pack and word store loaded."""
+    """Run gates C1–C20 on a plan that already passed the schema, with its pack and word store loaded."""
     gates = ReviewGates(report, plan, level, store, arc, level_plans, words_path, pack=pack)
     gates.check_named_before_introduction()
     gates.check_duplicate_focus()
@@ -836,3 +1143,9 @@ def check_review_gates(
     gates.check_quote_host_bytes()
     gates.check_computed_key()
     gates.check_duplicate_videos()
+    gates.check_adjacent_display()
+    gates.check_incidental_used()
+    gates.check_video_descriptions()
+    gates.check_choice_options_taught()
+    gates.check_sentence_decodability()
+    gates.check_word_model_segments()
