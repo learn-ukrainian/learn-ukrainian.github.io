@@ -17,6 +17,7 @@ paths:
 
 ## Core tools (always use)
 - `mcp__sources__verify_word` / `mcp__sources__verify_words` / `mcp__sources__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Also surfaces `is_archaic` and `has_archaic_forms` metadata flags for forms tagged as historical.
+- `mcp__sources__query_ulif` — ULIF («Словники України on-line» УМІФ НАН України, 269K entries, 336K sections, 4.74M forms with normative stress where attested in `data/sources.db`). Serves inflectional paradigms with stress where attested, synonyms, antonyms, and phraseology. Core dual-backbone tool alongside VESUM.
 - `mcp__sources__check_modern_form` — VESUM metadata extraction to explicitly check if a word has modern codified forms vs only archaic forms.
 - `mcp__sources__verify_stress` — stress oracle: stressed form + 0-based stressed-vowel index for a word, from the offline `ukrainian-word-stress` dictionary (2.9M forms) + the project's manual override layer + a best-effort VESUM join. Returns JSON (unlike the other `verify_*` tools' prose). Pass `pos`/`tags` to disambiguate a heteronym (e.g. за́мок "castle" vs замо́к "lock").
 - `mcp__sources__search_sources` — **PREFERRED unified entry point** across textbooks, literary corpora, Wikipedia, external articles, and `ukrainian_wiki`
@@ -83,7 +84,7 @@ Our lexicon tools do not erase historical dictionaries; they contextualize them 
    - Not erased, but surfaced explicitly as `soviet_colonization_context` («Радянський окупаційний контекст») alongside its `sovietization_risk` and markers to teach learners how totalitarian censorship altered vocabulary and promoted Russian convergence.
 
 3. **СУМ-20 (2010–present) / ВТС / ULIF — Independent Ukrainian Standard:**
-   - The authoritative decolonized baseline for contemporary standard Ukrainian.
+   - The authoritative decolonized baseline for contemporary standard Ukrainian. **ULIF and VESUM constitute the dual computational backbone of our Single Source of Truth (SSOT) and Правопис.**
 
 ## Sovietization caveat & Soviet Colonization Context (СУМ-11) — issue #1659
 
@@ -122,6 +123,7 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 
 | Dictionary | Entries | Type | Collection/File |
 |-----------|---------|------|-----------------|
+| **ULIF** | 269K entries, 336K sections, 4.74M forms | Normative morphological paradigms, canonical stress (where attested), synonyms, antonyms, phraseology (УМІФ НАН України) | `data/sources.db` (`ulif_dictua_*`, `ulif_forms`) |
 | **VESUM** | 409K lemmas, 6.7M forms | Morphological (POS, gender, inflections) | `data/vesum.db` (SQLite) |
 | **UA-GEC** | 8.9K high-signal pairs | Human-annotated errors (calques, cases, etc.) | `data/sources.db` FTS5 |
 | **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |
