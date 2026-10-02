@@ -272,6 +272,7 @@ SHORT_ENDINGS = ('', 's', 'es', 'ed', 'ing', 'er', 'ers')
 STEM_SUFFIXES = ('ations', 'ation', 'ments', 'ment', 'ions', 'ion', 'ing', 'ies', 'ed', 'es', 's')
 MIN_STEM = 4
 UNDOUBLED = re.compile(r'([b-df-hj-km-np-rtv-xz])\1$')  # a doubled final consonant other than l, s, z
+VERB_NOUN_AL = re.compile(r'(?<=[svw])als?$')  # approval(s), removal, proposal, renewal: a verb's -al noun
 
 
 @functools.lru_cache(maxsize=4096)
@@ -282,10 +283,13 @@ def stem(term: str) -> str:
     (ation, ion, ment and their plurals), longest first, so "parsing" meets "parse", "deletion"
     meets "delete", "enforcement" meets "enforce", "migration" meets "migrate" and "entries"
     meets "entry". A doubled final consonant left by ing or ed is undoubled (scanning, scan),
-    as in Porter's stemmer; a double ``ss`` keeps its ``s`` (process, class).
+    as in Porter's stemmer; a double ``ss`` keeps its ``s`` (process, class). A verb's -al noun
+    loses its -al (approval meets approve, removal meets remove, proposal meets propose).
     """
     if term.endswith('ss'):
         return term
+    if (found := VERB_NOUN_AL.search(term)) and found.start() >= MIN_STEM:
+        return term[:found.start()]
     for suffix in STEM_SUFFIXES:
         if term.endswith(suffix) and len(term) - len(suffix) >= MIN_STEM:
             base = term[:-len(suffix)]
@@ -1229,12 +1233,19 @@ def _mark_candidates(state: State, candidates: dict[str, Candidate], intent_word
 
 # ---------------------------------------------------------------- step 2: names
 
+GIT_FILE = re.compile(r'\.git[a-z]+')
+
+
 def name_words(path: str) -> list[str]:
     """The words of a path that can say what it is about: every word except a README or index file
     name, which only says that the file describes its directory ("read" never meets README)."""
     name = PurePosixPath(path).name
     found = words(path)
-    return found[:-len(words(name))] if INDEX_NAME.fullmatch(name) else found
+    if INDEX_NAME.fullmatch(name):
+        return found[:-len(words(name))]
+    if GIT_FILE.fullmatch(name):  # .gitattributes is git's attributes file: "git" and "attributes"
+        return [*found[:-1], 'git', found[-1][3:]]
+    return found
 
 
 def name_covered(path: str, terms: list[str]) -> bool:
@@ -1460,6 +1471,10 @@ INI_DESCRIPTION = re.compile(r'\s*Description\s*=')
 SYMBOL_SHAPES = {'.py': _PY, '.sh': _SH, '.bash': _SH, '': _SH, '.js': _JS, '.mjs': _JS, '.cjs': _JS, '.ts': _JS,
                  '.tsx': _JS, '.yaml': _YAML, '.yml': _YAML, '.toml': _TOML, '.md': _MD,
                  **dict.fromkeys(INI_SUFFIXES, _INI)}
+# Git's own pattern files (.gitattributes, .gitignore): every line is a path pattern and its attributes
+# ("data/literary_texts/*.jsonl filter=lfs"), the record of how those paths are stored.
+_GIT_PATTERNS = re.compile(r'^\s*([^#\s]\S*)(?:\s+(\S.*))?')
+NAMED_SHAPES = {'.gitattributes': _GIT_PATTERNS, '.gitignore': _GIT_PATTERNS}
 CAMEL = re.compile(r'(?<=[a-z0-9])(?=[A-Z])')
 HEADER_LINE = re.compile(r'''\s*(?:#|//|/\*|\*|--|<!--|[rRbBuU]{0,2}(?:"""|\'\'\'))''')
 # A quoted UPPER_SNAKE literal names a typed code (an error, finding or event type) wherever it sits.
@@ -1499,7 +1514,7 @@ def symbol_text(path: str, line_no: int, line: str) -> str | None:
     contributes its name; a comment or docstring-opening line among the first HEADER_LINES
     (the file's own summary) contributes all of its text. camelCase is split.
     """
-    shape = SYMBOL_SHAPES.get(_suffix(path))
+    shape = NAMED_SHAPES.get(PurePosixPath(path).name) or SYMBOL_SHAPES.get(_suffix(path))
     found = shape.search(line) if shape else None
     names = [g for g in found.groups() if g] if found else []
     names += CODE_LITERAL.findall(line)
