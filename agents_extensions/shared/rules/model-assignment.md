@@ -8,19 +8,21 @@
 (`--agent cursor --model grok-4.7-high`), the Sol-spared last resort below critical risk (it has no
 `critical_review` role), never on a Grok-authored change, and its verdict counts only when the Cursor
 runtime reports the model itself. Operator decision 2026-10-02 (#9538): a formal code or infra review at
-`high` risk resolves only to `claude-opus-5-5` (native or Cursor transport) or `gpt-6.1-sol` (Codex); when
-neither is eligible the resolver returns no reviewer and the trace states why, never another model. DeepSeek is excluded from every dispatch and
+`high` risk is performed only by `claude-opus-5-5` (native or Cursor transport) or `gpt-6.1-sol` (Codex).
+`review_scheduler.risk_reviewer_models` is the one definition; it is an eligibility gate, so automatic
+ladders, explicit pins, custom ladders and delegate review admission (including `--force-agent` and budget
+substitution or retention) all refuse any other model with that stated reason, never another model. DeepSeek is excluded from every dispatch and
 review, and Sonnet is excluded from critical security review. Historical
 capability and transport descriptions below confer no routing permission.
 
 **Resolver preference:** after hard gates, `review_scheduler.profile_risk_role_order`
 prefers primary seats before last resort, then ranks semantic suitability before quality tier; health and quota break ties
 within that suitability and tier. YAML rung order is a fallback inventory.
-At `medium` and `low`, an eligible Opus seat can lose to Sonnet 5.5 on
-`code` (Opus matches `critical_review` at rank 3, Sonnet `strong_review` at
-rank 0); when both match the requested role equally, Opus's authority tier wins.
-The `high` ladder holds only Sol and Opus. Inspect the returned suitability and
-selection trace rather than inferring eligibility or priority from rung position.
+At `medium` and `low`, an eligible Opus seat can lose to Sonnet 5.5, because
+Sonnet's roles match earlier in that profile's role order; when both match the
+requested role equally, Opus's authority tier wins. The resolver's returned
+`suitability_rank` and selection trace are the authority: inspect them rather than
+inferring eligibility or priority from rung position or from this text.
 
 Match the EXACT command — not a principle. Memory does not enforce; the dispatch tool does. Established 2026-05-06 after repeated drift on cost discipline.
 

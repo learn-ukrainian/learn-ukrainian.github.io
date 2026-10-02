@@ -545,7 +545,7 @@ def test_native_grok_never_judges_and_cursor_grok_needs_a_healthy_cursor_lane():
         "kimi": "unhealthy",
     }
     injected = resolve_reviewer(
-        ResolverInputs(author_model="claude", risk="high", routing_snapshot=snapshot),
+        ResolverInputs(author_model="claude", risk="medium", routing_snapshot=snapshot),
         ladder=((GROK_4_7, GROK_4_7_CURSOR_FALLBACK),),
     )
     native = next(item for item in injected.trace if item.name == "grok-4.7")
@@ -896,7 +896,7 @@ def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier
 def test_near_cap_falls_to_a_healthy_same_quality_suitable_candidate(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     resolution = resolve_reviewer(
-        ResolverInputs(author_model="gemini", risk="high"),
+        ResolverInputs(author_model="gemini", risk="medium"),
         ladder=((sonnet, PRACTICAL_ASTRA),),
         runtime_state={"agents": {"claude": {"status": "near_cap"}, "codex": {"status": "healthy"}}},
     )
@@ -1015,7 +1015,7 @@ def test_glm_on_ladder_is_skipped_unless_explicitly_pinned():
             author_model="gpt-5.6-sol",
             author_family="openai",
             review_profile="infra",
-            risk="high",
+            risk="medium",
             data_egress_policy="local_interactive",
             exact_head="f" * 40,
         ),
@@ -1035,7 +1035,7 @@ def test_explicit_glm_pin_remains_eligible_with_egress_policy():
             author_model="gpt-5.6-sol",
             author_family="openai",
             review_profile="infra",
-            risk="high",
+            risk="medium",
             data_egress_policy="local_interactive",
             exact_head="f" * 40,
             pinned_candidate="glm-5.3",
@@ -1251,12 +1251,12 @@ def test_resolve_reviewer_subject_seat_for_grok_adapter_never_selects_grok():
 
 
 def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy():
-    """The #8912 shape: codex author, infra domain, high risk, Grok adapter."""
+    """The #8912 shape (Grok adapter, codex author, infra domain) at medium risk, where Grok may review (#9538)."""
     without = resolve_reviewer(
         ResolverInputs(
             author_model="codex:gpt-6.1-sol",
             domain="infra",
-            risk="high",
+            risk="medium",
             routing_snapshot={"claude": "unhealthy"},
         ),
         ladder=(*REVIEW_LADDERS["high"], (GROK_4_7, GROK_4_7_CURSOR_FALLBACK)),
@@ -1270,7 +1270,7 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
         ResolverInputs(
             author_model="codex:gpt-6.1-sol",
             domain="infra",
-            risk="high",
+            risk="medium",
             routing_snapshot={"claude": "unhealthy"},
             owned_paths=("scripts/agent_runtime/adapters/grok_build.py",),
         ),
@@ -1287,7 +1287,7 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
 
 def test_resolve_reviewer_explicit_subject_family_excludes_xai_without_guessing_paths():
     resolution = resolve_reviewer(
-        ResolverInputs(author_model="claude", risk="high", subject_families=frozenset({"xai"})),
+        ResolverInputs(author_model="claude", risk="medium", subject_families=frozenset({"xai"})),
         ladder=(*REVIEW_LADDERS["high"], (GROK_4_7, GROK_4_7_CURSOR_FALLBACK)),
     )
     assert resolution.selected is not None
@@ -1608,3 +1608,37 @@ def test_high_risk_with_opus_unavailable_never_falls_back_to_sonnet():
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="high", routing_snapshot=snapshot))
     assert resolution.selected is None
     assert {entry.name for entry in resolution.trace} == _HIGH_SEATS
+
+
+_HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol, claude-opus-5-5"
+
+
+@pytest.mark.parametrize("profile", ["code", "infra"])
+@pytest.mark.parametrize("name", ["claude-sonnet-5-5", "claude-fable-5-1", "grok-4.7-cursor-fallback"])
+def test_high_risk_pin_and_custom_ladder_refuse_seats_outside_sol_and_opus(profile, name):
+    """#9538: the rule is an eligibility gate, so neither a pin nor a caller ladder bypasses it."""
+    author = "claude-opus-5-5" if name.startswith("grok") else "gpt-6.1-sol"
+    inputs = ResolverInputs(author_model=author, review_profile=profile, domain=profile, risk="high")
+    pinned = resolve_reviewer(replace(inputs, pinned_candidate=name, pressure_override_reason="pressure probe"))
+    assert pinned.selected is None
+    assert pinned.fail_closed_reason == f"explicit reviewer pin {name!r} failed a hard eligibility gate"
+    assert {entry.name: entry.reason for entry in pinned.trace}[name].startswith(_HIGH_RISK_RULE)
+    custom = resolve_reviewer(inputs, ladder=((REVIEW_CANDIDATES[name],),))
+    assert custom.selected is None
+    assert custom.trace[0].status == "excluded" and custom.trace[0].reason.startswith(_HIGH_RISK_RULE)
+    medium = evaluate_candidate(REVIEW_CANDIDATES[name], replace(inputs, risk="medium"))
+    assert medium.reason is None or not medium.reason.startswith(_HIGH_RISK_RULE)
+
+
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_high_risk_opus_pin_is_still_admitted(profile):
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol", review_profile=profile, domain=profile, risk="high",
+        pinned_candidate="claude-opus-5-5", pressure_override_reason="pressure probe",
+    )
+    assert resolve_reviewer(inputs).selected.name == "claude-opus-5-5"
+
+
+def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="high", formal_review=False)
+    assert not (evaluate_candidate(SONNET_5_5, inputs).reason or "").startswith(_HIGH_RISK_RULE)

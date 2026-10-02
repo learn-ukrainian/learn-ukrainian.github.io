@@ -97,25 +97,48 @@ def test_denominator_selects_an_attested_seat_or_states_the_policy_reason(author
         assert (risk == "high" and GROK_SEAT not in trace) or trace[GROK_SEAT].status != "selected"
 
 
+HIGH_RISK_REFUSAL = (
+    "a formal review at high risk is performed only by gpt-6.1-sol, claude-opus-5-5 "
+    "(operator decision 2026-10-02, #9538); got 'grok-4.7'"
+)
+
+
 def test_sol_healthy_stays_first_even_where_grok_has_the_closer_role_fit():
-    """Grok's strong_review fit never outranks Sol: it is off the high ladder (#9538)."""
+    """At medium Grok holds a role Sol does not; Sol still wins as the primary seat."""
+    resolution = resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="medium"))
+    trace = {entry.name: entry for entry in resolution.trace}
+    assert trace[GROK_SEAT].status == "eligible"
+    assert resolution.selected.name == "openai_frontier"
     high = resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="high"))
     assert GROK_SEAT not in {entry.name for entry in high.trace}
     assert high.selected.name == "openai_frontier"
-    # The seat is still eligible on its own at high, so the ladder alone keeps it out.
-    direct = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], ResolverInputs(author_model="claude-opus-5-5", risk="high"))
-    assert direct.status == "eligible"
-    medium = resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="medium"))
-    assert medium.selected.name == "openai_frontier"
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
-@pytest.mark.parametrize("risk", ["high", "medium", "low"])
+@pytest.mark.parametrize("risk", ["medium", "low"])
 def test_cursor_grok_seat_stays_qualified_for_an_anthropic_author(profile, risk):
     inputs = ResolverInputs(author_model="claude-opus-5-5", review_profile=profile, domain=profile, risk=risk)
     result = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], inputs)
     assert result.status == "eligible"
     assert result.family == "xai"
+
+
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_cursor_grok_seat_is_refused_at_high_by_eligibility_not_only_the_ladder(profile):
+    """#9538: the high-risk rule is an eligibility gate, so an explicit pin cannot reach Grok."""
+    inputs = ResolverInputs(author_model="claude-opus-5-5", review_profile=profile, domain=profile, risk="high")
+    result = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], inputs)
+    assert result.status == "excluded"
+    assert result.reason == HIGH_RISK_REFUSAL
+    pinned = resolve_reviewer(
+        replace(inputs, pinned_candidate=GROK_SEAT, pressure_override_reason="probe", routing_snapshot=SOL_UNAVAILABLE)
+    )
+    assert pinned.selected is None
+    assert pinned.fail_closed_reason == f"explicit reviewer pin {GROK_SEAT!r} failed a hard eligibility gate"
+    assert {entry.name: entry.reason for entry in pinned.trace}[GROK_SEAT] == HIGH_RISK_REFUSAL
+    custom = resolve_reviewer(replace(inputs, routing_snapshot=SOL_UNAVAILABLE), ladder=((REVIEW_CANDIDATES[GROK_SEAT],),))
+    assert custom.selected is None
+    assert custom.trace[0].reason == HIGH_RISK_REFUSAL
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
