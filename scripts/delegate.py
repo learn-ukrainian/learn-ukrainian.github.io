@@ -82,6 +82,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
         "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "failure_code": str | absent,               # runtime's typed failure, e.g. provider_policy_refusal; last_error names the class (#9532)
         "advisory_envelope": {requirement, advisory_args, advisory_args_sha256, prompt_sha256,
                               admitted_execution, research_block, repo_root, advisor_task_id, advisor_model,
                               advisor_run_nonce, result_path, result_sha256, envelope_sha256,
@@ -8824,6 +8825,7 @@ def _run_worker(
     returncode: int | None = None
     returncode_reason: str | None = None
     rate_limited = False
+    runtime_failure_code: str | None = None
     timed_out = False
     result = None
     substitution: dict[str, Any] | None = None
@@ -9032,6 +9034,9 @@ def _run_worker(
             stderr_excerpt = result.stderr_excerpt
             returncode = result.returncode
             rate_limited = result.rate_limited
+            runtime_failure_code = getattr(result, "failure_code", None)
+            if not isinstance(runtime_failure_code, str):
+                runtime_failure_code = None
             substitution = getattr(result, "substitution", None)
         except KeyboardInterrupt as exc:
             # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
@@ -9153,6 +9158,10 @@ def _run_worker(
             final_state.pop(gate_key, None)
         final_state["require_review_verdict"] = require_review_verdict
         final_state["review_verdict_failure"] = None
+        # The runtime's typed failure class, e.g. a provider policy refusal (#9532).
+        final_state.pop("failure_code", None)
+        if runtime_failure_code and not ok_outcome:
+            final_state["failure_code"] = runtime_failure_code
         if advisory_prompt_sha256 is not None:
             final_state["advisory_prompt_sha256"] = advisory_prompt_sha256
         if advisory_handoff_refusal is not None:

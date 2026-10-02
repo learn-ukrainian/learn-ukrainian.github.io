@@ -708,3 +708,95 @@ def test_shipped_config_declares_no_grok_chain():
             if chain is not None
             else ""
         )
+
+
+_TOOL_OUTPUT_RATE_LIMIT_TEXT = "API rate limit exceeded\nHTTP 429 secondary rate limit\nTo get started with GitHub CLI, please run: gh auth login"
+
+
+@pytest.mark.parametrize(
+    ("failure_code", "rate_limited", "expected"),
+    [
+        ("provider_policy_refusal", False, None),
+        ("provider_overloaded", False, "overloaded"),
+        ("provider_auth", False, "auth"),
+        ("rate_limited", True, "rate_limited"),
+    ],
+)
+def test_classifier_honors_structured_provider_failure_code_over_raw_text(failure_code, rate_limited, expected):
+    """#9532: a typed structured provider error outranks tool output in the raw streams."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(
+            ok=False,
+            response="",
+            stderr_excerpt=f"{failure_code} (codex_error_info=x): provider message",
+            rate_limited=rate_limited,
+            failure_code=failure_code,
+        ),
+        returncode=1,
+        kill_reason=None,
+        stdout_text=_TOOL_OUTPUT_RATE_LIMIT_TEXT,
+        stderr_text=_TOOL_OUTPUT_RATE_LIMIT_TEXT,
+    )
+
+    assert trigger == expected
+
+
+@pytest.mark.parametrize(
+    ("excerpt", "expected"),
+    [
+        ("provider_error (codex_error_info=other): stream closed early", None),
+        ("provider_error (codex_error_info=other): unexpected status 401 Unauthorized", "auth"),
+    ],
+)
+def test_classifier_reads_only_the_excerpt_for_untyped_provider_error(excerpt, expected):
+    """#9532: an untyped structured provider error is classified on the provider's
+    own message, never on tool output in the raw streams."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=excerpt, failure_code="provider_error"),
+        returncode=1,
+        kill_reason=None,
+        stdout_text=_TOOL_OUTPUT_RATE_LIMIT_TEXT,
+        stderr_text=_TOOL_OUTPUT_RATE_LIMIT_TEXT,
+    )
+
+    assert trigger == expected
+
+
+def test_runner_failover_never_rotates_or_cools_on_policy_refusal(tmp_path, monkeypatch, capsys):
+    """#9532: a provider policy refusal is a typed failure, not a rate limit."""
+    from agent_runtime.failover import FailoverCooldownStore, FailoverRoute
+
+    excerpt = "provider_policy_refusal (codex_error_info=cyber_policy): This content was flagged."
+    adapter, records, _emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": ParseResult(
+                    ok=False, response="", stderr_excerpt=excerpt, failure_code="provider_policy_refusal"
+                ),
+                "returncode": 1,
+                "stderr_text": _TOOL_OUTPUT_RATE_LIMIT_TEXT,
+            },
+            "fallback-model": {"parse": ParseResult(ok=True, response="fallback ok"), "returncode": 0},
+        },
+    )
+
+    result = runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+    assert adapter.attempts == ["primary-model"]
+    assert result.ok is False
+    assert result.rate_limited is False
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.stderr_excerpt == excerpt
+    assert records[0]["outcome"] == "error"
+    assert records[0]["rate_limited"] is False
+    assert records[0]["failure_code"] == "provider_policy_refusal"
+    primary = FailoverRoute(provider="primary-provider", model="primary-model", index=0)
+    store = FailoverCooldownStore(tmp_path / "cooldowns.sqlite3")
+    assert store.is_cooling(primary, agent_name="failover-test") is False
+    assert RUNNER_FAILOVER_MARKER not in capsys.readouterr().err

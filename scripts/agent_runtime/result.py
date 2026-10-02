@@ -56,7 +56,11 @@ class ParseResult:
             disappear between parse, usage telemetry, and delegate state.
         failure_code: Optional closed, body-free failure classification. ACP
             adapters use this to preserve diagnostics while privacy-limited
-            usage records discard raw stderr and provider text.
+            usage records discard raw stderr and provider text. Codex sets it
+            from the provider's structured terminal error
+            (``provider_policy_refusal``, ``provider_overloaded``,
+            ``provider_auth``, ``provider_error``, ``rate_limited``); the
+            failover classifier and delegate task records honor it.
     """
     ok: bool
     response: str
@@ -141,3 +145,6 @@ class Result:
     transport_outcome: str | None = None
     # Optional provenance; absent historical records imply no provider observation.
     model_identity: dict[str, str | None] | None = None
+    # The adapter's closed, body-free failure classification (ParseResult.failure_code),
+    # e.g. ``provider_policy_refusal``; None on success or when unclassified.
+    failure_code: str | None = None

@@ -2907,6 +2907,83 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["returncode_reason"] is None
 
 
+def test_run_worker_records_provider_policy_refusal_and_status_shows_it(tmp_tasks_dir, tmp_path, capsys):
+    """#9532: a provider policy refusal settles ``failed`` with its typed class and
+    the provider's message, never ``rate_limited``, and ``status`` shows both."""
+    task_id = "policy-refusal"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "model": "unknown", "cli_version": "unknown"})
+    excerpt = (
+        "provider_policy_refusal (codex_error_info=cyber_policy): "
+        "This content was flagged for possible cybersecurity risk."
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": False,
+            "response": "",
+            "stderr_excerpt": excerpt,
+            "returncode": 1,
+            "rate_limited": False,
+            "failure_code": "provider_policy_refusal",
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "cli_version": "0.159.3",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    assert rc == 1
+    state = delegate._read_state(state_path)
+    assert state["status"] == "failed"
+    assert state["failure_code"] == "provider_policy_refusal"
+    assert state["last_error"] == excerpt
+
+    capsys.readouterr()
+    assert delegate.cmd_status(argparse.Namespace(task_id=task_id)) == 0
+    shown = json.loads(capsys.readouterr().out)
+    assert shown["status"] == "failed"
+    assert shown["failure_code"] == "provider_policy_refusal"
+    assert "cyber_policy" in shown["last_error"]
+    assert "flagged for possible cybersecurity risk" in shown["last_error"]
+
+
+def test_run_worker_drops_a_stale_failure_code_on_success(tmp_tasks_dir, tmp_path):
+    """#9532: ``failure_code`` describes this run; a successful rerun removes an old one."""
+    task_id = "policy-refusal-rerun"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "failure_code": "provider_policy_refusal"})
+    mock_result = type(
+        "_Result",
+        (),
+        {"ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0, "rate_limited": False,
+         "failure_code": None},
+    )()  # fmt: skip
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id=task_id, agent="claude", prompt="hi", mode="read-only", cwd_str=str(tmp_path),
+            model=None, hard_timeout=60, effort=None,
+        )  # fmt: skip
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state["status"] == "done"
+    assert "failure_code" not in state
+
+
 @pytest.mark.parametrize(
     ("strict", "code"),
     [

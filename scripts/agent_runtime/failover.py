@@ -80,6 +80,18 @@ _CONTENT_POLICY_RE = re.compile(
     r"\brefusal\b|refused for safety|blocked by safety",
     re.IGNORECASE,
 )
+# Closed failure codes an adapter derives from the provider's structured
+# terminal error. A policy refusal neither rotates nor cools a route: another
+# route would see the same content.
+_STRUCTURED_PROVIDER_TRIGGERS: dict[str, str | None] = {
+    "provider_policy_refusal": None,
+    "provider_overloaded": "overloaded",
+    "provider_auth": "auth",
+    "rate_limited": "rate_limited",
+}
+# A structured provider error the adapter could not type further: classify on
+# the adapter's excerpt (the provider's own message), never the raw streams.
+_UNTYPED_PROVIDER_ERROR_CODE = "provider_error"
 _REQUEST_FORMAT_RE = re.compile(
     r"\b400\b|bad request|invalid[_ -]?request|request format|"
     r"unsupported parameter|unknown parameter|schema validation|"
@@ -342,15 +354,12 @@ def classify_failover_trigger(
     stderr_text: str,
 ) -> str | None:
     """Map one failed attempt to an eligible failover trigger, if any."""
-    text = "\n".join(
-        part
-        for part in (
-            parse.stderr_excerpt or "",
-            stderr_text or "",
-            stdout_text or "",
-        )
-        if part
-    )
+    # An adapter's classification of a structured provider error outranks any
+    # text match: the raw output can carry the agent's tool output (#9532).
+    if parse.failure_code in _STRUCTURED_PROVIDER_TRIGGERS:
+        return _STRUCTURED_PROVIDER_TRIGGERS[parse.failure_code]
+    raw_streams = () if parse.failure_code == _UNTYPED_PROVIDER_ERROR_CODE else (stderr_text, stdout_text)
+    text = "\n".join(part for part in (parse.stderr_excerpt, *raw_streams) if part)
 
     if GH_AUTH_FAILURE_RE.search(text):
         return "auth"

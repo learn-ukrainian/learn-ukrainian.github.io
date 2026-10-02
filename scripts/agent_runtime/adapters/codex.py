@@ -39,12 +39,14 @@ import re
 import shutil
 import tempfile
 import unicodedata
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.review.receipts.ledger import review_tools
+from scripts.secret_redactor import redact_text
 
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
@@ -69,6 +71,8 @@ _SESSION_META_READ_BYTES = 1024 * 1024
 # roughly by specificity — specific phrases first, generic last.
 _RATE_LIMIT_PATTERNS = (
     r"usage limit reached",
+    # Codex's own usage-limit error: "You've hit your usage limit. ..."
+    r"hit your usage limit",
     r"rate limit",
     r"rate_limit",
     r"quota exceeded",
@@ -89,6 +93,112 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # so ^/$ match at each line boundary.
 _CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+
+# Codex exec prints its own failures as ``ERROR: <message>`` (exec event
+# processor) or ``Error: <message>`` (top-level exit). It echoes tool output
+# verbatim in the same stream, so only these lines may carry a provider error
+# when the rollout has no structured one (#9532).
+_CODEX_ERROR_LINE_RE = re.compile(r"^(?:\[[^\]\n]*\]\s*)?(?:ERROR|Error):\s")
+_ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+# The bound rollout's terminal ``task_complete.error.codex_error_info`` is the
+# provider's own failure class and decides the outcome over any stderr text
+# (#9532). Class names are the CLI's closed enum (codex-cli 0.159).
+_CODEX_RATE_LIMIT_ERROR_CLASSES = frozenset({"usage_limit_exceeded", "rate_limit_exceeded"})
+_CODEX_POLICY_ERROR_CLASSES = frozenset({"cyber_policy", "bio_policy", "misalignment_policy_violation"})
+# A class the CLI adds later that names a policy or safety refusal.
+_CODEX_POLICY_ERROR_CLASS_RE = re.compile(r"polic|safety|refus|moderation", re.IGNORECASE)
+_CODEX_ERROR_FAILURE_CODES = {"server_overloaded": "provider_overloaded", "unauthorized": "provider_auth"}
+_CODEX_ERROR_MESSAGE_CHARS = 300
+# Rollout records whose string content is tool output, never a provider error.
+_ROLLOUT_TOOL_OUTPUT_ITEMS = frozenset({"function_call_output", "custom_tool_call_output"})
+_ROLLOUT_TOOL_OUTPUT_EVENTS = frozenset({"exec_command_end", "mcp_tool_call_end", "patch_apply_end"})
+
+
+@dataclass(frozen=True)
+class CodexTerminalError:
+    """The provider failure Codex recorded on a turn's ``task_complete``."""
+
+    error_class: str
+    message: str
+    http_status: int | None = None
+
+    @property
+    def failure_code(self) -> str:
+        if self.error_class in _CODEX_RATE_LIMIT_ERROR_CLASSES or self.http_status == 429:
+            return "rate_limited"
+        if self.error_class in _CODEX_POLICY_ERROR_CLASSES or _CODEX_POLICY_ERROR_CLASS_RE.search(self.error_class):
+            return "provider_policy_refusal"
+        return _CODEX_ERROR_FAILURE_CODES.get(self.error_class, "provider_error")
+
+    def excerpt(self) -> str:
+        return f"{self.failure_code} (codex_error_info={self.error_class}): {self.message}"[:500]
+
+
+def codex_terminal_error(events: list[dict[str, Any]]) -> CodexTerminalError | None:
+    """Return the error on the last ``task_complete`` event, if it has one."""
+    terminal: dict[str, Any] | None = None
+    for event in events:
+        payload = event.get("payload")
+        if event.get("type") == "event_msg" and isinstance(payload, dict) and payload.get("type") == "task_complete":
+            terminal = payload
+    error = terminal.get("error") if terminal is not None else None
+    if not isinstance(error, dict):
+        return None
+    info = error.get("codex_error_info")
+    error_class = "unknown"
+    http_status: int | None = None
+    if isinstance(info, str) and info.strip():
+        error_class = info.strip()
+    elif isinstance(info, dict) and len(info) == 1:
+        # Variants with data serialize as {"http_connection_failed": {"http_status_code": 429}}.
+        name, detail = next(iter(info.items()))
+        error_class = str(name)
+        status = detail.get("http_status_code") if isinstance(detail, dict) else None
+        http_status = status if isinstance(status, int) and not isinstance(status, bool) else None
+    raw_message = error.get("message")
+    message = " ".join((redact_text(raw_message) or "").split()) if isinstance(raw_message, str) else ""
+    if error_class == "unknown" and not message:
+        return None
+    return CodexTerminalError(error_class[:80], message[:_CODEX_ERROR_MESSAGE_CHARS], http_status)
+
+
+def _string_leaves(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        return [leaf for item in value.values() for leaf in _string_leaves(item)]
+    if isinstance(value, list):
+        return [leaf for item in value for leaf in _string_leaves(item)]
+    return []
+
+
+def _rollout_tool_output_text(events: list[dict[str, Any]]) -> str:
+    """Return every tool output the bound rollout recorded, joined."""
+    chunks: list[str] = []
+    for event in events:
+        payload = event.get("payload")
+        if not isinstance(payload, dict):
+            continue
+        if event.get("type") == "response_item" and payload.get("type") in _ROLLOUT_TOOL_OUTPUT_ITEMS:
+            chunks.extend(_string_leaves(payload.get("output")))
+        elif event.get("type") == "event_msg" and payload.get("type") in _ROLLOUT_TOOL_OUTPUT_EVENTS:
+            chunks.extend(_string_leaves(payload))
+    return "\n".join(chunks)
+
+
+def _codex_error_lines(stderr: str, *, tool_output: str = "") -> str:
+    """Return Codex's own error lines from the post-prompt stderr region.
+
+    Lines the bound rollout recorded as tool output are excluded even when
+    they look like Codex error lines.
+    """
+    region = _strip_codex_prompt_echo(_ANSI_ESCAPE_RE.sub("", stderr or ""))
+    return "\n".join(
+        line
+        for line in region.splitlines()
+        if _CODEX_ERROR_LINE_RE.match(line) and not (tool_output and line.strip() in tool_output)
+    )
 
 
 # Exposure filtering remains effective even under parent-sandboxed bypass.
@@ -648,20 +758,61 @@ class CodexAdapter:
         # prove successful completion after a nonzero exit.
         durable_output = (file_output or rollout_response) if returncode == 0 else rollout_response
 
-        # Rate-limit detection — with THREE critical caveats.
+        # Older Codex CLIs printed the session id on stdout. Current CLIs keep
+        # stdout quiet and persist it in the invocation-matched rollout's
+        # session_meta record.
+        session_id: str | None = None
+        session_match = _SESSION_RE.search(stdout or "")
+        if session_match:
+            session_id = session_match.group(1)
+        elif plan is not None:
+            session_id = self._read_session_id_from_rollout(plan)
+
+        rollout_trace = ""
+        if plan is not None:
+            rollout_trace = self._read_latest_rollout_trace(plan)
+        trace_events = parse_json_events(
+            rollout_trace,
+            source="codex",
+            logger=_logger,
+        )
+        tool_calls = normalize_tool_calls(trace_events)
+
+        # The provider's structured terminal error decides the outcome. A
+        # policy refusal is never a rate limit, whatever stderr says (#9532).
+        terminal_error = codex_terminal_error(trace_events)
+        if terminal_error is not None:
+            failure_code = terminal_error.failure_code
+            return ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt=terminal_error.excerpt(),
+                rate_limited=failure_code == "rate_limited",
+                session_id=session_id,
+                tokens=None,
+                tool_calls=tool_calls,
+                failure_code=failure_code,
+            )
+
+        # Rate-limit detection without a structured error — with FOUR
+        # critical caveats.
         #
         # Codex CLI (with -o <file>) writes everything to stderr: the
         # startup banner, the echoed user prompt, the reasoning trace,
-        # AND real error messages. Pattern-matching stderr naively is
-        # broken because user prompts can contain ANY human-language
-        # phrase, including "rate limit" and "usage limit reached" (our
-        # own bridge standing rules literally do).
+        # the agent's tool-call output AND real error messages.
+        # Pattern-matching stderr naively is broken because user prompts
+        # and tool output can contain ANY text, including "rate limit"
+        # and "HTTP 429" (our own bridge standing rules and tests do).
         #
         # Fix 1 (prompt echo sanitization): take the stderr body AFTER
         # the last "--------" divider line. The closing prompt divider
         # always has Codex's own output after it, so anything past the
         # last divider is guaranteed to be Codex's actual response,
         # never echoed user prompt. See _strip_codex_prompt_echo.
+        #
+        # Fix 1b (tool output, #9532): within that region only Codex's own
+        # ``ERROR:``/``Error:`` lines count, minus any line the bound
+        # rollout recorded as tool output. See _codex_error_lines.
         #
         # Fix 2 (success guard): even after sanitization, rate_limited
         # is only TRUE when the call actually failed (returncode != 0
@@ -685,34 +836,12 @@ class CodexAdapter:
             # Signaled exit — don't even look at stderr for rate limits.
             rate_limited = False
         else:
-            stderr_for_check = _strip_codex_prompt_echo(stderr)
-            combined_for_rl_check = "\n".join(
-                part for part in (stdout, stderr_for_check, file_output, rollout_response) if part
-            )
+            stderr_for_check = _codex_error_lines(stderr, tool_output=_rollout_tool_output_text(trace_events))
+            combined_for_rl_check = "\n".join(part for part in (stdout, stderr_for_check, file_output, rollout_response) if part)
             pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
             # Call failed if neither -o nor rollout gave us content.
             call_failed = returncode != 0 or not durable_output
             rate_limited = pattern_hit and call_failed
-
-        # Older Codex CLIs printed the session id on stdout. Current CLIs keep
-        # stdout quiet and persist it in the invocation-matched rollout's
-        # session_meta record.
-        session_id: str | None = None
-        session_match = _SESSION_RE.search(stdout or "")
-        if session_match:
-            session_id = session_match.group(1)
-        elif plan is not None:
-            session_id = self._read_session_id_from_rollout(plan)
-
-        rollout_trace = ""
-        if plan is not None:
-            rollout_trace = self._read_latest_rollout_trace(plan)
-        trace_events = parse_json_events(
-            rollout_trace,
-            source="codex",
-            logger=_logger,
-        )
-        tool_calls = normalize_tool_calls(trace_events)
 
         if output_schema is not None:
             # Only this invocation's -o result is schema-constrained. Preserve
