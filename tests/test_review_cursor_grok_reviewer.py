@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import copy
 import json
+from dataclasses import replace
 
 import pytest
 
@@ -311,3 +312,111 @@ def test_a_grok_receipt_that_is_not_the_pinned_high_variant_is_refused(monkeypat
 def test_a_grok_verdict_on_a_grok_authored_change_is_refused(monkeypatch, tmp_path):
     with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
         _record(monkeypatch, tmp_path, resolved_model="Grok 4.7 256K High", families=frozenset({"xai"}))
+
+
+# --- second review round (#9488): fail closed on every ineligible identity -----
+
+
+@pytest.mark.usefixtures("_publishing")
+@pytest.mark.parametrize(
+    "resolved_model",
+    [
+        "grok-4.7-high-fast",  # the reviewer's reproduction: attested, but not the pinned variant
+        "grok-4.6",
+        "grok-4.5",
+        "xai",
+        "grok-4.7",  # a bare slug names no variant; Cursor runs it as High Fast
+        "grok-4.7-high",  # the dispatch slug is not the runtime's report
+        "composer-2.5",
+        "Composer 2.5",
+        "claude-opus-5-5",  # Cursor-routed Claude is not a pinned formal seat
+    ],
+)
+def test_a_runtime_attested_cursor_identity_the_resolver_never_selects_is_refused(
+    monkeypatch, tmp_path, resolved_model
+):
+    with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
+        _record(monkeypatch, tmp_path, resolved_model=resolved_model)
+
+
+@pytest.mark.usefixtures("_publishing")
+@pytest.mark.parametrize(
+    "agent,model,extra",
+    [
+        # The reviewer's reproduction: main refuses this native display name.
+        ("grok", "Grok 4.7 256K High", {"resolved_model_known": False, "resolved_model_source": "unattested-harness"}),
+        ("grok", "grok-4.7", {}),
+        ("grok", "grok-4.7-high", {}),
+        ("claude", "grok-4.7", {}),
+        ("kimi", "kimi-code/k3", {}),
+        ("kimi", "composer-2.5", {}),
+    ],
+)
+def test_a_grok_or_kimi_verdict_through_any_other_harness_is_refused(monkeypatch, tmp_path, agent, model, extra):
+    with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
+        _record(monkeypatch, tmp_path, resolved_model=model, agent=agent, **extra)
+
+
+@pytest.mark.usefixtures("_publishing")
+@pytest.mark.parametrize("model,family", [("gpt-6.1-sol", "openai"), ("claude-opus-5-5", "anthropic")])
+def test_native_primary_reviewers_are_still_recorded(monkeypatch, tmp_path, model, family):
+    agent = "codex" if family == "openai" else "claude"
+    result, comments = _record(
+        monkeypatch, tmp_path, resolved_model=model, agent=agent, families=frozenset({"xai"})
+    )
+    assert result["comment"] == "posted"
+    assert f"model={model} family={family}" in comments[0]["body"]
+
+
+def _all_catalog_roles() -> list[str]:
+    return sorted({role for model in load_model_catalog()["models"].values() for role in model.get("roles", [])})
+
+
+@pytest.mark.parametrize("role", _all_catalog_roles())
+def test_a_requested_role_never_admits_the_cursor_grok_seat_at_critical(role):
+    """The reviewer's reproduction: strong_review at critical selected Grok, Sol healthy or not."""
+    for author in AUTHORS:
+        for profile in ("code", "infra"):
+            for sol in SOL_STATES.values():
+                inputs = ResolverInputs(
+                    author_model=author,
+                    review_profile=profile,
+                    domain=profile,
+                    risk="critical",
+                    requested_role=role,
+                    routing_snapshot=sol,
+                )
+                resolution = resolve_reviewer(inputs)
+                assert resolution.selected is None or resolution.selected.name != GROK_SEAT, (author, profile, role)
+                trace = {entry.name: entry for entry in resolution.trace}
+                if GROK_SEAT in trace:
+                    assert trace[GROK_SEAT].status == "excluded", (author, profile, role)
+
+
+@pytest.mark.parametrize("role", _all_catalog_roles())
+def test_a_requested_role_only_narrows_the_profile_risk_qualified_set(role):
+    """Whatever a role selects must be eligible with no role requested (never widened)."""
+    for author in AUTHORS:
+        for profile in ("code", "infra"):
+            for risk in RISKS:
+                for sol in SOL_STATES.values():
+                    base = ResolverInputs(
+                        author_model=author, review_profile=profile, domain=profile, risk=risk, routing_snapshot=sol
+                    )
+                    selected = resolve_reviewer(replace(base, requested_role=role)).selected
+                    if selected is None:
+                        continue
+                    assert role in REVIEW_CANDIDATES[selected.name].model_roles
+                    unnarrowed = evaluate_candidate(REVIEW_CANDIDATES[selected.name], base)
+                    assert unnarrowed.status == "eligible", (author, profile, risk, role, selected.name)
+
+
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_a_role_held_below_the_critical_floor_names_the_floor(profile):
+    inputs = ResolverInputs(
+        author_model="claude-opus-5-5", review_profile=profile, domain=profile, risk="critical",
+        requested_role="strong_review",
+    )
+    result = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], inputs)
+    assert result.status == "excluded"
+    assert result.reason == f"missing required review role suitability: {profile}/critical catalog suitability"

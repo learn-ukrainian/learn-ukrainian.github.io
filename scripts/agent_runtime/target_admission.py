@@ -354,7 +354,8 @@ def _resolve_review_target(
 
     from .telemetry import _default_model_for
 
-    concrete = (model or _default_model_for(seat) or "").split("[", 1)[0]
+    requested_model = model or _default_model_for(seat) or ""
+    concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
     # Composer/Kimi never review. Grok is admitted only as the resolver's
     # runtime-attested Cursor seat (#9488); native Grok is excluded there.
@@ -398,9 +399,13 @@ def _resolve_review_target(
     if profile == "ukrainian":
         eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
     else:
+        # A Cursor seat is admitted only at its exact pinned slug: the adapter
+        # sends the requested string unchanged, so a bracket suffix
+        # (``grok-4.7-high[fast]``) would run an unattested variant (#9488).
         eligible = family not in forbidden and any(
             candidate.route == seat
-            and candidate_dispatch_model(candidate) == concrete
+            and candidate_dispatch_model(candidate)
+            == (requested_model if candidate.transport == "cursor" else concrete)
             and evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
             for candidate in REVIEW_CANDIDATES.values()
         )

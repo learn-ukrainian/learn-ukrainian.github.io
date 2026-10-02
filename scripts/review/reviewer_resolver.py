@@ -240,6 +240,16 @@ def candidate_dispatch_model(candidate: ReviewerCandidate) -> str:
     return candidate.concrete_model
 
 
+# Catalog ids a Cursor review receipt may attest: the Cursor seats the resolver
+# can select (pinned on the formal Cursor endpoint, #9488). Composer, Auto and
+# Cursor-routed Claude are unpinned, so a verdict from them is never recorded.
+FORMAL_CURSOR_REVIEW_MODELS: frozenset[str] = frozenset(
+    candidate.concrete_model
+    for candidate in REVIEW_CANDIDATES.values()
+    if candidate.route == "cursor" and candidate.transport == "cursor" and candidate.formal_review_eligible
+)
+
+
 def _catalog_ladder(risk: str) -> tuple[tuple[ReviewerCandidate, ...], ...]:
     return tuple(tuple(REVIEW_CANDIDATES[name] for name in rung) for rung in _MODEL_CATALOG["review_ladders"][risk])
 
@@ -576,20 +586,22 @@ def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> i
     This intentionally precedes quality and all resource pressure. It is not a
     probabilistic score and has no rotation term: a lower integer means a
     better profile/risk role match among candidates that passed hard gates.
+
+    A requested role narrows the profile/risk-qualified set to the candidates
+    holding it (all ranked equal); it never admits a candidate the profile/risk
+    order excludes, so it cannot lower the critical-risk floor (#9488).
     """
-    requested_role = (inputs.requested_role or "").strip()
-    if requested_role:
-        return 0 if requested_role in candidate.model_roles else None
     profile = inputs.review_profile.strip().casefold()
     risk = inputs.risk.strip().casefold()
     try:
         ordered_roles = _SCHEDULER_POLICY["profile_risk_role_order"][profile][risk]
     except (KeyError, TypeError):
         return None
-    for rank, role in enumerate(ordered_roles):
-        if role in candidate.model_roles:
-            return rank
-    return None
+    rank = next((rank for rank, role in enumerate(ordered_roles) if role in candidate.model_roles), None)
+    requested_role = (inputs.requested_role or "").strip()
+    if requested_role:
+        return 0 if rank is not None and requested_role in candidate.model_roles else None
+    return rank
 
 
 def _retired_alias_target(candidate: ReviewerCandidate) -> str | None:
@@ -897,7 +909,12 @@ def evaluate_candidate(
 
     suitability_rank = _suitability_rank(candidate, inputs)
     if suitability_rank is None:
-        requested = inputs.requested_role or f"{inputs.review_profile}/{inputs.risk} catalog suitability"
+        requested_role = (inputs.requested_role or "").strip()
+        requested = (
+            requested_role
+            if requested_role and requested_role not in candidate.model_roles
+            else f"{inputs.review_profile}/{inputs.risk} catalog suitability"
+        )
         return CandidateResult(
             name=candidate.name,
             concrete_model=candidate.concrete_model,

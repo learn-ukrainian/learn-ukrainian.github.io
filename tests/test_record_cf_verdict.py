@@ -398,12 +398,22 @@ def cursor_receipt(tasks, **updates):
 
 def test_cursor_display_name_receipt_records_the_concrete_slug_and_family(monkeypatch, tmp_path):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
-    cursor_receipt(tasks, resolved_model="Composer 2.5", resolved_model_known=True)
+    cursor_receipt(tasks, resolved_model="Grok 4.7 256K High", resolved_model_known=True)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert result["comment"] == "posted"
-    assert "Reviewer family: moonshot" in comments[0]["body"]
-    assert "Reviewer model: composer-2.5" in comments[0]["body"]
-    assert "model=composer-2.5 family=moonshot" in comments[0]["body"]
+    assert "Reviewer family: xai" in comments[0]["body"]
+    assert "Reviewer model: grok-4.7" in comments[0]["body"]
+    assert "model=grok-4.7 family=xai" in comments[0]["body"]
+
+
+@pytest.mark.parametrize("model", ["Composer 2.5", "composer-2.5"])
+def test_an_attested_composer_receipt_is_refused_because_the_resolver_never_selects_it(monkeypatch, tmp_path, model):
+    """#9488: Composer is unpinned on the formal Cursor endpoint, so its verdict is not recorded."""
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    cursor_receipt(tasks, resolved_model=model, resolved_model_known=True)
+    with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
 
 
 @pytest.mark.parametrize(
@@ -461,12 +471,12 @@ def test_cursor_receipt_without_a_runtime_reported_source_is_refused(monkeypatch
 @pytest.mark.parametrize("source", sorted(recorder.RUNTIME_REPORTED_MODEL_SOURCES))
 def test_cursor_display_name_receipt_accepts_each_runtime_reported_source(monkeypatch, tmp_path, source):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
-    cursor_receipt(tasks, resolved_model="Composer 2.5", resolved_model_known=True, resolved_model_source=source)
+    cursor_receipt(tasks, resolved_model="Grok 4.7 256K High", resolved_model_known=True, resolved_model_source=source)
     assert (
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["comment"]
         == "posted"
     )
-    assert "model=composer-2.5 family=moonshot" in comments[0]["body"]
+    assert "model=grok-4.7 family=xai" in comments[0]["body"]
 
 
 def test_cursor_receipt_with_a_non_ascii_look_alike_name_is_refused(monkeypatch, tmp_path):

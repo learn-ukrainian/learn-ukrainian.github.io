@@ -10,6 +10,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import delegate
+from scripts.agent_runtime import target_admission
 from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 from scripts.review import reviewer_resolver
 
@@ -237,6 +238,12 @@ def test_review_dispatch_keeps_the_cursor_grok_seat_at_its_attested_slug(monkeyp
     [
         ("grok-4.7", "claude-opus-5-5", "high"),  # bare slug runs the unattested Fast variant
         ("grok-4.7-high-fast", "claude-opus-5-5", "high"),
+        # A bracket suffix reaches the adapter's --model unchanged, so only the exact slug is kept.
+        ("grok-4.7-high[fast]", "claude-opus-5-5", "high"),
+        ("grok-4.7-high[1m]", "claude-opus-5-5", "high"),
+        ("grok-4.7-high[1m]", "claude-opus-5-5", "medium"),
+        ("grok-4.7-high ", "claude-opus-5-5", "high"),
+        ("GROK-4.7-HIGH", "claude-opus-5-5", "high"),
         ("grok-4.7-high", "cursor:grok-4.7", "high"),  # Grok never reviews Grok
         ("grok-4.7-high", "claude-opus-5-5", "critical"),  # no critical_review role
     ],
@@ -249,6 +256,39 @@ def test_review_dispatch_replaces_a_cursor_grok_request_outside_policy(model, au
     assert reviewer_resolver.resolve_family(target.model) != reviewer_resolver.resolve_author_family(author)
     assert routing.substitution["source"] == "reviewer-resolver"
     assert routing.substitution["requested_model"] == model
+
+
+
+def _review_target(model, *, attempt=False, seat="cursor", author="claude-opus-5-5"):
+    return target_admission._resolve_review_target(
+        seat,
+        model,
+        author_model=author,
+        risk="high",
+        profile="code",
+        attempt=attempt,
+        snapshot=None,
+        budget_seat=seat,
+    )
+
+
+@pytest.mark.parametrize("model", ["grok-4.7-high[fast]", "grok-4.7-high[1m]", "grok-4.7-high[]"])
+def test_a_suffixed_cursor_grok_slug_is_never_an_attempt_identity(model):
+    """#9488: eligibility is decided on the exact string the adapter would send as --model."""
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        _review_target(model, attempt=True)
+
+
+def test_the_exact_cursor_grok_slug_is_kept_as_requested():
+    assert _review_target("grok-4.7-high", attempt=True) == ("cursor", "grok-4.7-high")
+
+
+def test_a_native_seat_keeps_its_context_suffix():
+    """Bracket suffixes on native seats (context windows) keep their pre-#9488 admission."""
+    assert _review_target("claude-opus-5-5[1m]", seat="claude", author="gpt-6.1-sol") == (
+        "claude",
+        "claude-opus-5-5[1m]",
+    )
 
 
 def test_same_family_requested_reviewer_takes_resolvers_eligible_seat(monkeypatch):
