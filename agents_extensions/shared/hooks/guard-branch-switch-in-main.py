@@ -49,7 +49,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
-        preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
     )
@@ -64,7 +63,6 @@ try:
         scope_events,
         segments_with_following_operator,
         unknown_repository_segments,
-        unmodeled_shell_offset,
     )
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
@@ -581,9 +579,9 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
             if _segment_is_dangerous(segment) or _gh_pr_checkout_reason(segment, None):
                 return "branch-switch target could not be parsed safely"
         return None
-    # Repair the body-induced unreadability without changing the established
-    # plain-body multiline scope gap tracked separately in #9484.
-    if "<<" in command and unmodeled_shell_offset(preprocess_shell_command(command)) is not None:
+    # Preprocess every heredoc before the line scope reader: quoted bodies are
+    # data, while real expansions in unquoted bodies remain executable syntax.
+    if "<<" in command:
         command = preprocess_branch_command(command)
     events = scope_events(
         command,

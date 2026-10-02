@@ -8,8 +8,8 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "agents_extensions/shared/hooks"))
-from shell_redirects import command_repository_unknown, scope_events, unmodeled_shell_offset
-from shell_shlex import preprocess_shell_command
+from shell_redirects import command_repository_unknown, preprocess_branch_command, scope_events, unmodeled_shell_offset
+from shell_shlex import ShellPreprocessLimit, preprocess_shell_command
 
 
 @pytest.mark.parametrize(
@@ -248,4 +248,17 @@ def test_nested_heredoc_depth_limit_is_fail_closed():
     command = "cat <<'EOF'\ntext\nEOF"
     for _ in range(17):
         command = "$(" + command + "\n)"
+    assert command_repository_unknown(command)
+
+
+def test_branch_preprocessing_does_not_consume_array_arithmetic_as_a_heredoc():
+    command = "x[1 << EOF ]=1\ngit checkout -b fixture\nEOF"
+    assert "git checkout -b fixture" in preprocess_branch_command(command)
+
+
+@pytest.mark.parametrize("opener", ["<<EOF\r", r"<<E\OF"])
+def test_branch_preprocessing_preserves_conservative_exotic_delimiter_refusal(opener):
+    command = f"cat {opener}\ngit checkout -b fixture\nEOF"
+    with pytest.raises(ShellPreprocessLimit, match="ambiguous heredoc delimiter"):
+        preprocess_branch_command(command)
     assert command_repository_unknown(command)

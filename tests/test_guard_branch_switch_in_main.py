@@ -1234,14 +1234,9 @@ def test_issue_9479_r7_commit_and_pr_heredoc_bash(repos, tmp_path, start, separa
         assert records[-1][-1] == body
     # Parameter parentheses in an unquoted body remain active expansions.
     expansion_tripwire = not quoted and body == "${y:-(z)}"
-    # Preserve #9484's explicitly excluded primary plain-body scope gap.
-    from shell_redirects import unmodeled_shell_offset
-    from shell_shlex import preprocess_shell_command
-
-    old_tripwire = unmodeled_shell_offset(preprocess_shell_command(command)) is not None
-    expected = expansion_tripwire or (
-        start == "public" and (separator == "\n" or old_tripwire or shape == R7_SHAPES[-1])
-    )
+    # Round 8 preprocesses every heredoc before scope reading. Tighten the
+    # primary expectation: plain bodies must not hide the real switch either.
+    expected = expansion_tripwire or start == "public"
     assert (guard._command_danger_reason(command, repos[start]) is not None) == expected
 
 
@@ -1300,3 +1295,59 @@ def test_issue_9479_r7_primary_apostrophe_is_still_blocked(repos, tmp_path):
     assert _r7_bash_records(tmp_path, command, repos["public"])[0][2:] == ["switch", "-c", "fixture"]
     assert guard._command_danger_reason(command, repos["public"]) is not None
     assert guard._command_danger_reason(command, repos["public_worktree"]) is None
+
+
+R8_BODIES = [
+    "uses `git checkout -b x` in text",
+    "git checkout -b x",
+    "## Summary\n- run `git switch main` then `git checkout -b feat`",
+    "Use `gh pr checkout 12` to test",
+    "`git branch -D old`",
+    "a literal $(git checkout -b x)",
+    "git switch main",
+]
+R8_SHAPES = [
+    ('git commit -m "$(cat {opener}\n{body}\n{closer}\n)"', ["git", "commit", "-m"]),
+    ('gh pr create --body "$(cat {opener}\n{body}\n{closer}\n)"', ["gh", "pr", "create", "--body"]),
+    ("git commit -F - {opener}\n{body}\n{closer}", ["git", "commit", "-F"]),
+    ("gh pr create --body-file - {opener}\n{body}\n{closer}", ["gh", "pr", "create", "--body-file"]),
+]
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("prefix", ["", "git switch -c fixture && "])
+@pytest.mark.parametrize("opener", ["<<'EOF'", '<<"EOF"', r"<<\EOF", "<<-'EOF'"])
+@pytest.mark.parametrize("apostrophe", [False, True])
+@pytest.mark.parametrize("body", R8_BODIES)
+@pytest.mark.parametrize("shape,argv", R8_SHAPES)
+def test_issue_9479_r8_quoted_branch_prose_is_data_bash(
+    repos, tmp_path, start, prefix, opener, apostrophe, body, shape, argv
+):
+    if apostrophe:
+        body += "\nIt's documented"
+    closer = "\tEOF" if opener.startswith("<<-") else "EOF"
+    command = prefix + shape.format(opener=opener, body=body, closer=closer)
+    records = _r7_bash_records(tmp_path, command, repos[start])
+    # Exact argv and call count prove that backticks, $(), and branch-looking
+    # lines inside a quoted body execute no extra git or gh invocation.
+    expected = [[argv[0], str(repos[start]), *argv[1:], "-" if " - " in shape else body]]
+    if prefix:
+        expected.insert(0, ["git", str(repos[start]), "switch", "-c", "fixture"])
+    assert records == expected
+    assert (guard._command_danger_reason(command, repos[start]) is not None) == (bool(prefix) and start == "public")
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("opener", ["<<EOF", "<<-EOF"])
+@pytest.mark.parametrize("apostrophe", [False, True])
+@pytest.mark.parametrize("expansion", ["$(git checkout -b evil)", "`git checkout -b evil`"])
+def test_issue_9479_r8_unquoted_branch_expansion_executes_bash(repos, tmp_path, start, opener, apostrophe, expansion):
+    body = ("It's active: " if apostrophe else "active: ") + expansion
+    closer = "\tEOF" if opener.startswith("<<-") else "EOF"
+    command = f'git commit -m "$(cat {opener}\n{body}\n{closer}\n)"'
+    records = _r7_bash_records(tmp_path, command, repos[start])
+    assert records == [
+        ["git", str(repos[start]), "checkout", "-b", "evil"],
+        ["git", str(repos[start]), "commit", "-m", "It's active: " if apostrophe else "active: "],
+    ]
+    assert (guard._command_danger_reason(command, repos[start]) is not None) == (start == "public")

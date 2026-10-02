@@ -292,6 +292,10 @@ def preprocess_branch_command(command: str) -> str:
                 opening = next((op for op in ("$((", "$(", "${", "$[", "`") if command.startswith(op, index)), "")
                 if not data and not quote and not opening:
                     opening = next((op for op in ("<(", ">(", "((", "(") if command.startswith(op, index)), "")
+                    # Match shared preprocessing's arithmetic array context;
+                    # its << is a shift, never a heredoc introducer (#9102).
+                    if not opening and ch == "[" and re.search(r"[A-Za-z_][A-Za-z0-9_]*$", command[:index]):
+                        opening = "["
                 if opening:
                     close = (
                         "))"
@@ -299,14 +303,14 @@ def preprocess_branch_command(command: str) -> str:
                         else "}"
                         if opening == "${"
                         else "]"
-                        if opening == "$["
+                        if opening in {"$[", "["}
                         else "`"
                         if opening == "`"
                         else ")"
                     )
                     # Arithmetic/parameter punctuation is argument data, but
                     # nested substitutions there still have shell syntax.
-                    opaque = opening in {"$((", "((", "${", "$["}
+                    opaque = opening in {"$((", "((", "${", "$[", "["}
                     body, index = scan(index + len(opening), close, data=opaque, depth=depth + 1)
                     # Expose executable substitutions to the line scope
                     # reader just as shared preprocessing exposes backticks.
@@ -365,6 +369,14 @@ def preprocess_branch_command(command: str) -> str:
                     else:
                         delimiter.append(char)
                     index += 1
+                # Preserve conservative delimiter admission: CR belongs to
+                # Bash's word; interior escapes remain exotic (#9088). The
+                # supported leading escape is \EOF.
+                raw_delimiter = command[start:index]
+                if command[index : index + 1] == "\r" or (
+                    "\\" in raw_delimiter and not re.fullmatch(r"\\[A-Za-z_][A-Za-z0-9_]*", raw_delimiter)
+                ):
+                    raise ShellPreprocessLimit("ambiguous heredoc delimiter")
                 name = "".join(delimiter)
                 if delimiter_quote or index == start or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
                     raise ShellPreprocessLimit("ambiguous heredoc delimiter")
