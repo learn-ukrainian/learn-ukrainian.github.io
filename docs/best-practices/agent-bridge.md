@@ -405,7 +405,10 @@ checkout's; with none of them it refuses to run npm. `AGENT_REAL_NPM`/
 is read, so a pin chooses the binary but never skips the guard. Shim
 directories on `PATH` are recognised by physical path, so a spelling such as
 `shims/.`, `shims//` or a symlink to the directory cannot make the shim find
-itself.
+itself. `npx` is a regular file that runs the sibling `npm` shim by its
+physical path with `AGENT_SHIM_TOOL=npx`; the npm shim accepts only `npm` or
+`npx` from that variable (anything else means npm), tells the guard which,
+and unsets it before the real tool runs.
 
 Not covered (owner `claude-infra`, each tracked under the #9460 follow-up):
 

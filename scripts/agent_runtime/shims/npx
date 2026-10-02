@@ -1,1 +1,13 @@
-npm
+#!/usr/bin/env bash
+# scripts/agent_runtime/shims/npx — agent shim for npx (#9460).
+#
+# Runs the sibling `npm` shim as npx: that shim asks
+# scripts/agent_runtime/npm_guard.py about the npx call before the real npx
+# runs. The sibling is found by this file's physical directory, never through
+# PATH; arguments, stdin, stdout, stderr and the exit code pass through.
+
+set -euo pipefail
+
+shim_dir_physical="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+export AGENT_SHIM_TOOL=npx
+exec "$shim_dir_physical/npm" "$@"

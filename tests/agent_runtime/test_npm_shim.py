@@ -33,6 +33,7 @@ from scripts.agent_runtime import npm_guard
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SHIM_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "shims" / "npm"
+NPX_SOURCE = SHIM_SOURCE.parent / "npx"
 GUARD_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "npm_guard.py"
 SENTINEL = "sentinel.txt"
 
@@ -364,7 +365,7 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
     shim_dir.mkdir(parents=True)
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
-    (shim_dir / "npx").symlink_to("npm")
+    shutil.copy2(NPX_SOURCE, shim_dir / "npx")
     shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
     (tooling / ".venv" / "bin").mkdir(parents=True)
     (tooling / ".venv" / "bin" / "python").symlink_to(sys.executable)
@@ -1179,7 +1180,7 @@ def _linked_shim_checkout(tmp_path: Path) -> tuple[Path, Path]:
     shim_dir = main_root / "scripts" / "agent_runtime" / "shims"
     shim_dir.mkdir(parents=True)
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
-    (shim_dir / "npx").symlink_to("npm")
+    shutil.copy2(NPX_SOURCE, shim_dir / "npx")
     shutil.copy2(GUARD_SOURCE, main_root / "scripts" / "agent_runtime" / "npm_guard.py")
     (main_root / ".gitignore").write_text(".venv/\n", encoding="utf-8")
     _git(main_root, "init", "-q", "-b", "main")
@@ -1290,13 +1291,131 @@ def test_pinned_real_tool_does_not_bypass_the_guard(layout):
     _assert_refused(layout, proc)
 
 
+# --- the npx wrapper and AGENT_SHIM_TOOL ----------------------------------------
+
+
+def _argv0_npx(layout: dict[str, Path]) -> Path:
+    """The former mechanism: a shim checkout whose `npx` is a symlink to the npm shim."""
+    tooling = layout["tmp"] / "argv0-tooling"
+    shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
+    shim_dir.mkdir(parents=True)
+    shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
+    (shim_dir / "npx").symlink_to("npm")
+    shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
+    (tooling / ".venv" / "bin").mkdir(parents=True)
+    (tooling / ".venv" / "bin" / "python").symlink_to(sys.executable)
+    return shim_dir / "npx"
+
+
+def _run_path(layout: dict[str, Path], tool_path: Path, args: list[str], cwd: Path, extra_env=None):
+    env = {
+        "PATH": f"{layout['shim_dir']}:{layout['fake_bin']}:/usr/bin:/bin",
+        "HOME": str(layout["tmp"]),
+        "FAKE_NPM_LOG": str(layout["log"]),
+        **(extra_env or {}),
+    }
+    return subprocess.run(
+        [str(tool_path), *args], cwd=cwd, env=env, capture_output=True, text=True, check=False, timeout=60
+    )
+
+
+NPX_CASES = [
+    ["--version"],
+    ["--help"],
+    *(args for tool, args, _ in [*LAUNCH_REFUSALS.values(), *EXEC_FALSE_REFUSALS.values()] if tool == "npx"),
+    *(args for tool, args in [*REVIEW_SHELL_CALLS.values(), *LAUNCHES] if tool == "npx"),
+]
+NPX_REFUSALS = {case: value[1:] for case, value in LAUNCH_REFUSALS.items() if value[0] == "npx"}
+
+
+@pytest.mark.parametrize("args", NPX_CASES, ids=_launch_id)
+def test_npx_wrapper_behaves_exactly_like_the_former_argv0_npx(layout, args):
+    """Same exit code, output, refusal and real-tool call as the npm shim reached as `npx` by argv0."""
+    cwd = layout["worktree"]
+    legacy = _argv0_npx(layout)
+    outcomes = []
+    for tool_path in (layout["shim_dir"] / "npx", legacy):
+        layout["log"].unlink(missing_ok=True)
+        proc = _run_path(layout, tool_path, args, cwd)
+        outcomes.append((proc.returncode, proc.stdout, proc.stderr, _fake_calls(layout)))
+        assert _sentinels_intact(layout)
+    assert outcomes[0] == outcomes[1]
+
+
+def test_npx_wrapper_runs_its_sibling_shim_whatever_path_says(layout):
+    """The sibling npm shim is found by physical path, so a real npm first on PATH is never reached unguarded."""
+    proc = _run_path(
+        layout,
+        layout["shim_dir"] / "npx",
+        ["sh", "-c", "npm ci"],
+        layout["worktree"],
+        {"PATH": f"{layout['fake_bin']}:{layout['shim_dir']}:/usr/bin:/bin"},
+    )
+    _assert_refused(layout, proc)
+    assert "agent npx shim refused" in proc.stderr
+
+
+HOSTILE_TOOL_VALUES = ["", "rm", "../npm", "npx; true", "NPX", "npx\n", "/usr/bin/npx"]
+
+
+@pytest.mark.parametrize("value", HOSTILE_TOOL_VALUES, ids=repr)
+def test_hostile_shim_tool_value_leaves_the_npm_shim_as_npm(layout, value):
+    env = {"AGENT_SHIM_TOOL": value}
+    proc = _run(layout, "npm", ["--version"], layout["worktree"], env)
+    _assert_passed_through(layout, proc, "npm", ["--version"], layout["worktree"], 0)
+    layout["log"].unlink()
+    proc = _run(layout, "npm", ["ci"], layout["worktree"], env)
+    _assert_refused(layout, proc)
+    assert "agent npm shim refused `npm ci`" in proc.stderr
+
+
+@pytest.mark.parametrize("value", [*HOSTILE_TOOL_VALUES, "npm"], ids=repr)
+def test_caller_shim_tool_value_cannot_change_the_npx_wrapper(layout, value):
+    env = {"AGENT_SHIM_TOOL": value}
+    proc = _run(layout, "npx", ["--version"], layout["worktree"], env)
+    _assert_passed_through(layout, proc, "npx", ["--version"], layout["worktree"], 0)
+    layout["log"].unlink()
+    proc = _run(layout, "npx", ["sh", "-c", "npm ci"], layout["worktree"], env)
+    _assert_refused(layout, proc)
+    assert "agent npx shim refused" in proc.stderr
+
+
+@pytest.mark.parametrize("case", sorted(NPX_REFUSALS))
+def test_shim_tool_npx_on_the_npm_shim_is_still_guarded_as_npx(layout, case):
+    """Choosing npx through the variable only selects npx, which the guard checks as npx."""
+    args, reason = NPX_REFUSALS[case]
+    proc = _run(layout, "npm", args, layout["worktree"], {"AGENT_SHIM_TOOL": "npx"})
+    _assert_refused(layout, proc)
+    assert reason in proc.stderr and "agent npx shim refused" in proc.stderr
+
+
+@pytest.mark.parametrize("tool,extra_env", [("npx", {}), ("npm", {"AGENT_SHIM_TOOL": "npx"})], ids=str)
+def test_real_tool_never_inherits_the_shim_tool_variable(layout, tool, extra_env):
+    """An inner `npm` run by the real npx must see itself as npm, so the variable is dropped."""
+    (layout["fake_bin"] / "npx").write_text(
+        '#!/usr/bin/env bash\nprintf "%s\\n" "${AGENT_SHIM_TOOL-unset}"\n', encoding="utf-8"
+    )
+    proc = _run(layout, tool, ["vitest"], layout["worktree"], extra_env)
+    assert (proc.returncode, proc.stdout) == (0, "unset\n"), proc.stderr
+
+
 # --- wiring: dispatched shells resolve npm/npx to the shim ---------------------
 
 
-def test_shim_files_are_executable_and_npx_shares_the_npm_shim():
-    assert os.access(SHIM_SOURCE, os.X_OK)
-    npx = SHIM_SOURCE.parent / "npx"
-    assert npx.is_symlink() and os.readlink(npx) == "npm"
+def test_shim_files_are_regular_executables():
+    """Both shims are regular files (the docs catalogue refuses tracked symlinks)."""
+    for shim in (SHIM_SOURCE, NPX_SOURCE):
+        assert shim.is_file() and not shim.is_symlink() and os.access(shim, os.X_OK)
+    listed = subprocess.run(
+        ["git", "ls-files", "-s", "--", "scripts/agent_runtime/shims"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    ).stdout
+    modes = {line.split("\t")[1].rsplit("/", 1)[1]: line.split()[0] for line in listed.splitlines()}
+    assert modes["npm"] == modes["npx"] == "100755"
 
 
 def test_dispatch_worker_path_resolves_npm_and_npx_to_the_shim(monkeypatch):

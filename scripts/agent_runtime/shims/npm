@@ -4,7 +4,8 @@
 # Dispatch worktrees get `node_modules` and `site/node_modules` as symlinks into
 # the primary checkout. `npm ci` deletes its target folder first, so running it
 # in a worktree empties the primary's real folder through the link. This shim
-# (and `npx`, a symlink to it) asks scripts/agent_runtime/npm_guard.py first:
+# (and `npx`, a wrapper that runs it with AGENT_SHIM_TOOL=npx) asks
+# scripts/agent_runtime/npm_guard.py first:
 # when the working directory or any ancestor has such a link resolving outside
 # that ancestor (or the working directory cannot be read), only clearly
 # read-only calls (and npx/npm exec running a program on a closed allowlist)
@@ -14,7 +15,12 @@
 
 set -euo pipefail
 
-tool="${0##*/}"
+# The npx wrapper names its tool through AGENT_SHIM_TOOL (a shebang script
+# cannot keep its own argv0). Only npm or npx can be chosen, the guard is told
+# which, and the variable is dropped so the real tool and its children (an
+# inner `npm` run by a script) never inherit it.
+tool="${AGENT_SHIM_TOOL:-${0##*/}}"
+unset AGENT_SHIM_TOOL
 case "$tool" in
   npm | npx) ;;
   *) tool="npm" ;;
