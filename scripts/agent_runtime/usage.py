@@ -200,7 +200,8 @@ def summarize_lane_runtime(
     but could not be read (``files``: unreadable or unlistable lane files;
     ``lines``: unparseable lines in a lane file; ``records``: ``rate_limited``
     records without an explicit-UTC timestamp), so "none found" stays distinct
-    from "could not read". A missing file or directory is the empty case.
+    from "could not read". A missing file or directory is the empty case; a listed
+    symlink with a missing target is unreadable.
     """
     now_ts = time.time() if now is None else now
     cutoff = now_ts - float(window_s)
@@ -263,7 +264,11 @@ def summarize_lane_runtime(
                             if isinstance(model, str) and model:
                                 models_limited.add(model)
             except FileNotFoundError:
-                continue  # a file removed after the listing holds no records
+                # A regular file (or its directory) removed after the listing held no
+                # records; a listed symlink whose target is missing is evidence that
+                # cannot be read.
+                if os.path.islink(file_path):
+                    unreadable["files"] += 1
             except OSError:
                 unreadable["files"] += 1
 

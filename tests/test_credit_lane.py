@@ -475,6 +475,54 @@ def test_unlistable_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
     assert state["evidence"]["unreadable_records"] == {"files": 1}
 
 
+def test_dangling_symlink_named_like_a_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
+    # The glob lists the link, stat() follows it and raises FileNotFoundError: the evidence is gone, not removed.
+    (tmp_path / _LANE_FILE).symlink_to(tmp_path / "missing-target.jsonl")
+    state = _real_reader_state(monkeypatch, tmp_path, {})
+    assert state["state"] == _UNVERIFIED
+    assert state["evidence"]["unreadable_records"] == {"files": 1}
+
+
+def test_symlink_to_a_readable_file_without_rate_limits_is_readable(monkeypatch, tmp_path):
+    (tmp_path / "target.jsonl").write_bytes(_line(ts="2026-10-02T16:30:00Z", outcome="ok"))
+    (tmp_path / _LANE_FILE).symlink_to(tmp_path / "target.jsonl")
+    state = _real_reader_state(monkeypatch, tmp_path, {})
+    assert state["state"] == _PRESENT
+    assert "unreadable_records" not in state["evidence"]
+
+
+def test_symlink_to_a_file_with_a_utc_rate_limit_is_counted(monkeypatch, tmp_path):
+    (tmp_path / "target.jsonl").write_bytes(_line(ts="2026-10-02T16:30:00Z"))
+    (tmp_path / _LANE_FILE).symlink_to(tmp_path / "target.jsonl")
+    state = _real_reader_state(monkeypatch, tmp_path, {})
+    assert state["state"] == _UNCONFIRMED
+    assert "unreadable_records" not in state["evidence"]
+
+
+def test_regular_file_removed_between_listing_and_open_is_ignored(monkeypatch, tmp_path):
+    from scripts.agent_runtime import usage
+
+    path = tmp_path / _LANE_FILE
+    path.write_bytes(_line())  # would be unreadable evidence if it were still read
+
+    def vanishing_open(file, *args, **kwargs):
+        Path(file).unlink()
+        raise FileNotFoundError(2, "No such file or directory", str(file))
+
+    monkeypatch.setattr(usage, "open", vanishing_open, raising=False)
+    state = _real_reader_state(monkeypatch, tmp_path, {})
+    assert not path.exists()
+    assert state["state"] == _PRESENT
+    assert "unreadable_records" not in state["evidence"]
+
+
+def test_dangling_symlink_of_another_lane_is_ignored(monkeypatch, tmp_path):
+    (tmp_path / "usage_claude-delegate_2026-10-02.jsonl").symlink_to(tmp_path / "missing-target.jsonl")
+    state = _real_reader_state(monkeypatch, tmp_path, {})
+    assert state["state"] == _PRESENT
+    assert "unreadable_records" not in state["evidence"]
+
+
 def test_directory_in_place_of_a_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
     (tmp_path / _LANE_FILE).mkdir()
     assert _real_reader_state(monkeypatch, tmp_path, {})["state"] == _UNVERIFIED
