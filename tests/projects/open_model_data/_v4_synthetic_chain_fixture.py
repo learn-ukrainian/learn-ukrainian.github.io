@@ -217,7 +217,8 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
             dest_contracts.mkdir(parents=True, exist_ok=True)
             for f in child.iterdir():
                 if f.is_file():
-                    os.link(f, dest_contracts / f.name)
+                    shutil.copy2(f, dest_contracts / f.name)
+                    (dest_contracts / f.name).chmod(0o600)
         elif child.is_dir():
             target = artifact_dest / child.name
             target.symlink_to(child)
