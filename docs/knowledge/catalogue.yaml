@@ -24,6 +24,9 @@
 # - A family that owns any path under a component the docs inventory excludes
 #   for privacy (session-state, private, secrets, credentials, cache, ...) must
 #   set content_searchable: false. Ownership is what decides, not glob text.
+#   The exclusion covers bodies: a directory's README or index note (prose) is
+#   never excluded and is read even in such a family, because it is the public
+#   record of what the directory holds and whether it is still live.
 # - lifecycle uses the contract vocabulary: draft | active | superseded | archive.
 #   superseded needs superseded_by: a tracked path (optionally #section) or
 #   id:<entry>. Chains must end at an active or archive node, with no cycles;
@@ -229,6 +232,7 @@ entries:
     content_searchable: true
     overrides:
       - {path: docs/rules-core-draft-notes.md, lifecycle: draft, evidence: "Draft notes for the rules core (2026-09-30); no consumer found."}
+      - {path: docs/MASTER-PLAN.md, lifecycle: superseded, superseded_by: docs/WORKSTREAMS.md, evidence: "The census records it as a March 2026 snapshot (catalogue-census-2026-10-01.md, Misleading names); CLAUDE.md names docs/WORKSTREAMS.md the workstreams and priorities document, which calls itself the living once-per-session orientation layer."}
 
   # ================================================================ architecture, decisions, design
   - id: architecture-adr
@@ -402,11 +406,11 @@ entries:
     kind: doc_family
     paths: [docs/runbooks/*]
     purpose: Operating procedures for driver seats, harnesses, review isolation, sessions, handoffs, CI, storage, backup, worktree cleanup, module gates and builds.
-    keywords: [runbook, procedure, driver seat, formal review isolation, worktree cleanup, storage topology, CI gate, session supervisor, recovery]
+    keywords: [runbook, procedure, driver seat, formal review isolation, worktree cleanup, storage topology, storage layout, data layout, where data lives, CI gate, session supervisor, recovery]
     lifecycle: active
     owner: infra-harness
     entrypoints:
-      - {topic: storage topology, path: docs/runbooks/storage-topology.md}
+      - {topic: 'storage topology: where data is stored and lives on disk - the layout of bulk raw sources, active SQLite databases, the local working set, the Linux data volume and mirrors', path: docs/runbooks/storage-topology.md}
       - {topic: worktree cleanup, path: docs/runbooks/worktree-cleanup.md}
       - {topic: CI gate, path: docs/runbooks/ci-gate.md}
       - {topic: agent seat onboarding, path: docs/runbooks/agent-seat-onboarding.md}
@@ -472,7 +476,7 @@ entries:
     kind: doc_family
     paths: [docs/guardrails/**, docs/ops/**, docs/entire/**, docs/examples/**, docs/specs/**, docs/third-party/**, docs/playbooks/**]
     purpose: Fleet tooling guardrail, fleet session-awareness charter, Entire recall receipts, launchd example, task-family manager spec and vendored third-party licence text.
-    keywords: [agent fleet guardrail, Entire, launchd example, task family manager, third-party licence, fleet agent eyes]
+    keywords: [agent fleet guardrail, Gemini CLI, AGY route, supported agent routes, Entire, launchd example, task family manager, third-party licence, fleet agent eyes]
     lifecycle: active
     owner: infra-harness
     entrypoints:
@@ -527,7 +531,7 @@ entries:
     query:
       - {surface: api, how: "GET /api/session/current?agent=<agent>&format=json"}
     content_searchable: false
-    notes: Bodies are excluded from content search, matching the docs inventory's session-state exclusion.
+    notes: Bodies are excluded from content search, matching the docs inventory's session-state exclusion; the directory README, which states that these files are compatibility routes and not live state, is read.
 
   - id: handoffs-march-2026
     kind: doc_family
@@ -1459,7 +1463,7 @@ entries:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/projects/open-model-data"}
     content_searchable: true
     overrides:
-      - {path: docs/projects/open-model-data/PHASE_3_6_PILOT_CANARY.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25, pilot data failed acceptance."}
+      - {path: docs/projects/open-model-data/PHASE_3_6_PILOT_CANARY.md, lifecycle: superseded, superseded_by: docs/projects/open-model-data/REAL_TRAINING_RUN_SCORECARD_8338.md, evidence: "Own banner: withdrawn 2026-09-25, pilot data failed acceptance; superseded by Issue #8338, whose scorecard is REAL_TRAINING_RUN_SCORECARD_8338.md."}
       - {path: docs/projects/open-model-data/PILOT_VERIFICATION_AND_DELIBERATION.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25."}
       - {path: docs/projects/open-model-data/PRODUCTION_RELEASE_PLAN.md, lifecycle: archive, evidence: "Own banner: withdrawn 2026-09-25."}
       - {path: docs/projects/open-model-data/PHASE_3_7_PRODUCTION_SHARDS.md, lifecycle: archive, evidence: "Own banner: ARCHIVED / SUPERSEDED 2026-09-22."}

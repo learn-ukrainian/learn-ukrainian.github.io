@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/WORKSTREAMS.md
+---
+
 # Master Plan — Priority Sequencing
+
+> **Superseded by:** [docs/WORKSTREAMS.md](WORKSTREAMS.md)
 
 > 75 open issues. Zero shipped modules. This plan sequences everything so each phase unblocks the next.
 
