@@ -12,6 +12,10 @@
 # run and everything else is refused with the safe alternative;
 # anywhere else every call passes through. Calls that run exec the real tool
 # with their arguments, stdin, stdout, stderr and exit code intact.
+#
+# The npx wrapper runs its sibling `npm` only when that file carries the next
+# line exactly; keep it unchanged.
+# agent-runtime guarded npm shim (#9460)
 
 set -euo pipefail
 

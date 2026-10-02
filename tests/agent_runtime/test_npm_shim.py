@@ -1355,6 +1355,74 @@ def test_npx_wrapper_runs_its_sibling_shim_whatever_path_says(layout):
     assert "agent npx shim refused" in proc.stderr
 
 
+def _copied_npx(layout: dict[str, Path], sibling: str, *, guard: bool = True) -> Path:
+    """The npx wrapper copied into another shim directory whose sibling `npm` is ``sibling``."""
+    tooling = layout["tmp"] / "copied-tooling"
+    shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
+    shim_dir.mkdir(parents=True)
+    shutil.copy2(NPX_SOURCE, shim_dir / "npx")
+    if guard:
+        shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
+    (tooling / ".venv" / "bin").mkdir(parents=True)
+    (tooling / ".venv" / "bin" / "python").symlink_to(sys.executable)
+    npm = shim_dir / "npm"
+    if sibling == "symlink-to-real-npm":
+        npm.symlink_to(layout["fake_bin"] / "npm")
+    elif sibling == "regular-file-without-marker":
+        shutil.copy2(layout["fake_bin"] / "npm", npm)
+    elif sibling == "symlink-to-the-shim":
+        npm.symlink_to(SHIM_SOURCE)
+    else:
+        assert sibling == "shim"
+        shutil.copy2(SHIM_SOURCE, npm)
+    return shim_dir / "npx"
+
+
+def _assert_npx_unguarded_refused(layout: dict[str, Path], proc: subprocess.CompletedProcess[str]) -> None:
+    assert proc.returncode == 127, proc.stderr
+    assert "is not the guarded npm shim" in proc.stderr and "refusing to run npx unguarded" in proc.stderr
+    assert proc.stdout == ""
+    assert _fake_calls(layout) == []
+    assert _sentinels_intact(layout)
+
+
+NPX_DESTROYER = ["ci", "--ignore-scripts", "--no-audit", "--no-fund", "--offline"]
+
+
+@pytest.mark.parametrize(
+    "sibling,guard",
+    [
+        ("symlink-to-real-npm", True),
+        ("symlink-to-real-npm", False),
+        ("regular-file-without-marker", True),
+        ("symlink-to-the-shim", True),
+        ("shim", False),
+    ],
+    ids=str,
+)
+@pytest.mark.parametrize("args", [NPX_DESTROYER, ["--version"]], ids=" ".join)
+def test_copied_npx_beside_anything_but_the_guarded_shim_fails_closed(layout, sibling, guard, args):
+    """Review reproduction: a copied wrapper must never run a sibling that is not the guarded npm shim."""
+    proc = _run_path(layout, _copied_npx(layout, sibling, guard=guard), args, layout["worktree"])
+    _assert_npx_unguarded_refused(layout, proc)
+
+
+def test_copied_npx_beside_the_guarded_shim_works_as_before(layout):
+    npx = _copied_npx(layout, "shim")
+    proc = _run_path(layout, npx, NPX_DESTROYER, layout["worktree"])
+    _assert_refused(layout, proc)
+    assert "agent npx shim refused" in proc.stderr
+    proc = _run_path(layout, npx, ["--version"], layout["worktree"])
+    _assert_passed_through(layout, proc, "npx", ["--version"], layout["worktree"], 0)
+
+
+def test_npm_shim_carries_the_marker_the_npx_wrapper_requires():
+    marker_lines = [line for line in NPX_SOURCE.read_text(encoding="utf-8").splitlines() if line.startswith("marker=")]
+    assert len(marker_lines) == 1
+    marker = marker_lines[0].removeprefix("marker=").strip('"')
+    assert SHIM_SOURCE.read_text(encoding="utf-8").splitlines().count(marker) == 1
+
+
 HOSTILE_TOOL_VALUES = ["", "rm", "../npm", "npx; true", "NPX", "npx\n", "/usr/bin/npx"]
 
 

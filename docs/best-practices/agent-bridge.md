@@ -408,7 +408,12 @@ directories on `PATH` are recognised by physical path, so a spelling such as
 itself. `npx` is a regular file that runs the sibling `npm` shim by its
 physical path with `AGENT_SHIM_TOOL=npx`; the npm shim accepts only `npm` or
 `npx` from that variable (anything else means npm), tells the guard which,
-and unsets it before the real tool runs.
+and unsets it before the real tool runs. The wrapper runs its sibling only
+when that sibling is a regular file (not a symlink), executable, carries the
+npm shim's fixed marker line `# agent-runtime guarded npm shim (#9460)`, and
+`npm_guard.py` sits beside the shim directory; otherwise it prints an error
+and exits 127 without running anything, so a copy of `npx` placed next to the
+real npm (or a symlink to it) fails closed.
 
 Not covered (owner `claude-infra`, each tracked under the #9460 follow-up):
 
@@ -431,6 +436,11 @@ Not covered (owner `claude-infra`, each tracked under the #9460 follow-up):
   call passes through;
 - `AGENT_GIT_SHIM_PYTHON` naming a program that is not a Python interpreter
   (for example one that always exits 0), which replaces the guard's verdict.
+- a sibling `npm` that forges the marker line (a regular file copied beside
+  `npx` that carries the marker but is not the guarded shim), or an
+  `npm_guard.py` beside it that is not the guard: the same class as a
+  hostile interpreter, since whoever can write the shim directory can
+  replace the shims themselves.
 
 ## Context file conventions
 
