@@ -15,8 +15,9 @@
 # repository issues, rules and handoffs; the L-prefixed lookups are the visible
 # dev set the issue driver verified (23 real lookups). The held-out acceptance
 # set is separate and is never used here.
-# Checked by tests/test_docs_catalogue_coverage.py (verification always; the
-# ranking within top_n except the ids listed in known_misses, each with a reason).
+# Checked by tests/test_docs_catalogue_coverage.py (verification always) and
+# tests/test_docs_find_lookups_part<k>.py (the ranking within top_n except the ids
+# listed in known_misses, each with a reason).
 # Scores on this set (68 lookups, 2026-10-02), within 20 / within 5 / first:
 # before #9412 PR 3, short queries 52 / 48 / 26 and questions 48 / 42 / 24;
 # after it, short queries 68 / 62 / 38 and questions 68 / 62 / 38; after round 3

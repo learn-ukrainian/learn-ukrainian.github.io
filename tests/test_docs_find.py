@@ -1,8 +1,8 @@
 """The one query surface (#9412): ``scripts/docs/find.py``, its CLI and ``GET /api/knowledge/find``.
 
 Every test runs against a small Git fixture repository, never the real tree (the
-real-tree checks, including the dev-set lookups, live in
-``tests/test_docs_catalogue_coverage.py``).
+real-tree checks live in ``tests/test_docs_catalogue_coverage.py``, and the dev-set
+lookups are ranked in ``tests/test_docs_find_lookups_part<k>.py``).
 """
 import ast
 import dataclasses

@@ -15,8 +15,8 @@
 # verbatim as the query). A lookup passes when an expected path is among the
 # first `top_n` hits; the ids in known_misses are excluded for the protocols
 # they name, each with its reason and its rank when recorded (null: not within
-# 200). Checked by tests/test_docs_catalogue_coverage.py, which fails on any
-# miss not listed here. The held-out acceptance set is separate and is never
+# 200). Checked by tests/test_docs_catalogue_coverage.py and ranked by
+# tests/test_docs_find_lookups_part<k>.py, which fail on any miss not listed here. The held-out acceptance set is separate and is never
 # used here.
 #
 # Scores within 20 (68 lookups, 2026-10-02), blind queries / full questions:

@@ -7,8 +7,9 @@
 * Front matter, banners and catalogue overrides agree; the README's generated family
   table is current.
 * The development lookups (tests/fixtures/docs_find_dev_lookups.yaml and the natural-wording
-  set docs_find_dev_lookups_natural.yaml) are answered from the one entry point, as short
-  queries and as full questions.
+  set docs_find_dev_lookups_natural.yaml) are verified authorities, and the one entry point
+  answers them as short queries and as full questions (the top-n sweep is split over
+  tests/test_docs_find_lookups_part<k>.py; the resource and multi-answer gates are here).
 
 Failure messages name the exact path and print a ready-to-paste stub
 (``python -m scripts.docs.catalogue check --suggest``).
@@ -16,17 +17,28 @@ Failure messages name the exact path and print a ready-to-paste stub
 import posixpath
 import re
 import subprocess
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
-import yaml
 from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 from scripts.docs import catalogue as cat
 from scripts.docs import find as find_module
 from scripts.docs.find import find
+from tests.helpers.docs_find_lookups import (
+    DEV_KINDS,
+    DEV_LOOKUPS,
+    FIELDS,
+    NATURAL_LOOKUPS,
+    PART_COUNT,
+    SETS,
+    known_miss,
+    rank,
+    top_n_lookups,
+    verify_command,
+)
+from tests.helpers.docs_find_lookups import part as sweep_part
 
 # Reads the whole tracked denominator and scripts/ code, so the module is registered in
 # tests/test_repo_wide_marker_invariant.py.
@@ -86,16 +98,9 @@ def test_the_readme_block_is_generated_from_the_catalogue(checked):
 
 # ------------------------------------------------------------------ the entry point answers real lookups
 
-# The development lookups (tests/fixtures/docs_find_dev_lookups.yaml): resources, documents, data
-# stores, status ("is X current, what replaced it?") and process ("where is X implemented?")
-# questions, each with its authority path and the evidence that it is that authority. The
-# held-out acceptance lookups are separate and never used here.
-DEV_LOOKUPS = yaml.safe_load((REPO / 'tests/fixtures/docs_find_dev_lookups.yaml').read_text(encoding='utf-8'))
-DEV_KINDS = {'resource', 'doc', 'data_store', 'status', 'process'}
-
-
-def _verify_command(check: dict) -> list[str]:
-    return ['git', '-C', str(REPO), 'grep', '--cached', '-n', '-F', '-i', '-e', check['contains'], '--', check['path']]
+# The development lookups (tests/helpers/docs_find_lookups.py) are verified authorities here; their
+# top-n sweep runs one lookup per test in tests/test_docs_find_lookups_part<k>.py, split so the CI
+# shard splitter spreads it over shards. The resource and multi-answer gates below rank theirs.
 
 
 def test_dev_lookups_are_verified_authorities():
@@ -103,38 +108,9 @@ def test_dev_lookups_are_verified_authorities():
     assert len(lookups) >= 30 and {lk['kind'] for lk in lookups} == DEV_KINDS
     assert len({lk['id'] for lk in lookups}) == len(lookups)
     assert all(1 <= len(lk['query'].split()) <= 8 for lk in lookups)
-    failed = [(lk['id'], ' '.join(_verify_command(check))) for lk in lookups for check in lk['verify']
-              if subprocess.run(_verify_command(check), capture_output=True, timeout=60).returncode != 0]
+    failed = [(lk['id'], ' '.join(verify_command(check))) for lk in lookups for check in lk['verify']
+              if subprocess.run(verify_command(check), capture_output=True, timeout=60).returncode != 0]
     assert failed == []
-
-
-def _rank(lookup: dict, field: str) -> int | None:
-    # Ranking, not latency, is measured here: a loaded CI runner must not cut the search short.
-    result = find(lookup[field], 50, repo=REPO, budget_seconds=60)
-    assert not result['coverage']['incomplete'], (lookup['id'], result['coverage']['incomplete_reasons'])
-    paths = [hit['path'] for hit in result['hits']]
-    found = [paths.index(p) + 1 for p in lookup['expect'] if p in paths]
-    return min(found) if found else None
-
-
-# One test per kind and protocol keeps each well inside the per-test timeout (a lookup takes ~1-2 s).
-@pytest.mark.parametrize('kind', sorted(DEV_KINDS))
-@pytest.mark.parametrize('field', ['query', 'question'])
-def test_dev_lookups_are_answered_in_one_query(field, kind):
-    bar = DEV_LOOKUPS['top_n'][field]
-    lookups = [lk for lk in DEV_LOOKUPS['lookups'] if lk['kind'] == kind and lk['id'] not in DEV_LOOKUPS['known_misses']
-               and 'gate' not in lk]
-    with ThreadPoolExecutor(max_workers=2) as pool:  # each lookup mostly waits on git grep subprocesses
-        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(lambda lk: _rank(lk, field), lookups), strict=True))
-    misses = {lk['id']: (lk[field], ranks[lk['id']]) for lk in lookups
-              if ranks[lk['id']] is None or ranks[lk['id']] > bar}
-    assert misses == {}, f'expected path not within the first {bar} hits: {misses}'
-
-
-# The second development lookups (tests/fixtures/docs_find_dev_lookups_natural.yaml): natural
-# wording that avoids the answer's own name, with a blind one-shot query. A miss not listed in
-# known_misses for its protocol fails; a listed miss that now passes is reported so the list shrinks.
-NATURAL_LOOKUPS = yaml.safe_load((REPO / 'tests/fixtures/docs_find_dev_lookups_natural.yaml').read_text(encoding='utf-8'))
 
 
 def test_natural_lookups_are_verified_authorities():
@@ -142,26 +118,23 @@ def test_natural_lookups_are_verified_authorities():
     assert len(lookups) >= 60 and {lk['kind'] for lk in lookups} <= DEV_KINDS
     assert len({lk['id'] for lk in lookups}) == len(lookups)
     assert set(NATURAL_LOOKUPS['known_misses']) <= {lk['id'] for lk in lookups}
-    failed = [(lk['id'], ' '.join(_verify_command(check))) for lk in lookups for check in lk['verify']
-              if subprocess.run(_verify_command(check), capture_output=True, timeout=60).returncode != 0]
+    failed = [(lk['id'], ' '.join(verify_command(check))) for lk in lookups for check in lk['verify']
+              if subprocess.run(verify_command(check), capture_output=True, timeout=60).returncode != 0]
     assert failed == []
 
 
-# Chunks of NATURAL_CHUNK lookups keep each test well inside the per-test timeout.
-NATURAL_CHUNK = 8
-NATURAL_CHUNKS = range(0, len(NATURAL_LOOKUPS['lookups']), NATURAL_CHUNK)
-
-
-@pytest.mark.parametrize('start', NATURAL_CHUNKS)
-@pytest.mark.parametrize('field', ['query', 'question'])
-def test_natural_lookups_are_answered_in_one_query(field, start):
-    bar = NATURAL_LOOKUPS['top_n'][field]
-    known = {i for i, miss in NATURAL_LOOKUPS['known_misses'].items() if field in miss}
-    lookups = NATURAL_LOOKUPS['lookups'][start:start + NATURAL_CHUNK]
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(lambda lk: _rank(lk, field), lookups), strict=True))
-    misses = {i: rank for i, rank in ranks.items() if (rank is None or rank > bar) and i not in known}
-    assert misses == {}, f'expected path not within the first {bar} hits (not a known miss): {misses}'
+def test_the_sweep_parts_rank_every_lookup_once_in_both_protocols():
+    parts = [[tuple(param.values) for param in sweep_part(k)] for k in range(1, PART_COUNT + 1)]
+    ranked = [(name, field, lk['id']) for part in parts for name, field, lk in part]
+    expected = [(name, field, lk['id']) for name, field, lk in top_n_lookups()]
+    assert sorted(ranked) == sorted(expected) and len(set(ranked)) == len(ranked)
+    dev = {lk['id'] for lk in DEV_LOOKUPS['lookups'] if 'gate' not in lk} - set(DEV_LOOKUPS['known_misses'])
+    for name, ids in (('dev', dev), ('natural', {lk['id'] for lk in NATURAL_LOOKUPS['lookups']})):
+        for field in FIELDS:
+            assert {i for n, f, i in ranked if (n, f) == (name, field)} == ids
+    assert {lk['kind'] for name, _, lk in top_n_lookups() if name == 'dev'} == DEV_KINDS
+    files = sorted(p.name for p in (REPO / 'tests').glob('test_docs_find_lookups_part*.py'))
+    assert files == [f'test_docs_find_lookups_part{k}.py' for k in range(1, PART_COUNT + 1)]
 
 
 def test_the_motivating_lookup_ranks_the_live_list_above_its_backup():
@@ -239,25 +212,21 @@ def test_a_question_naming_a_session_router_is_answered_by_the_directory_readme(
 # evidence elsewhere (round 4 of #9412 lost one held-out resource lookup whole). Every resource
 # lookup of both development sets is held within 20 under the CLI's own default limit, whose
 # read pool is the one a reader gets, in both protocols.
-RESOURCE_LOOKUPS = [(name, lk) for name, data in (('dev', DEV_LOOKUPS), ('natural', NATURAL_LOOKUPS))
-                    for lk in data['lookups'] if lk['kind'] == 'resource' and 'gate' not in lk]
+RESOURCE_LOOKUPS = [(name, field, lk) for name, data in SETS.items() for field in FIELDS
+                    for lk in data['lookups'] if lk['kind'] == 'resource' and 'gate' not in lk
+                    and not known_miss(name, lk, field)]
 
 
-@pytest.mark.parametrize('field', ['query', 'question'])
+@pytest.mark.parametrize('field', FIELDS)
 @pytest.mark.parametrize('name', ['dev', 'natural'])
-def test_resource_lookups_keep_their_answers_at_the_default_limit(name, field):
-    known = {i for i, miss in NATURAL_LOOKUPS['known_misses'].items() if field in miss} if name == 'natural' else set()
-    lookups = [lk for n, lk in RESOURCE_LOOKUPS if n == name and lk['id'] not in known]
-    assert len(lookups) >= 6
+def test_each_set_has_resource_lookups_to_hold(name, field):
+    assert len([lk for n, f, lk in RESOURCE_LOOKUPS if (n, f) == (name, field)]) >= 6
 
-    def rank(lk):
-        result = find(lk[field], repo=REPO, budget_seconds=60)
-        assert not result['coverage']['incomplete'], (lk['id'], result['coverage']['incomplete_reasons'])
-        paths = [hit['path'] for hit in result['hits']]
-        return min((paths.index(p) + 1 for p in lk['expect'] if p in paths), default=None)
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(rank, lookups), strict=True))
-    assert {i: r for i, r in ranks.items() if r is None} == {}
+
+@pytest.mark.parametrize(('name', 'field', 'lookup'),
+                         [pytest.param(*item, id=f'{item[0]}-{item[1]}-{item[2]["id"]}') for item in RESOURCE_LOOKUPS])
+def test_resource_lookup_keeps_its_answer_at_the_default_limit(name, field, lookup):
+    assert rank(lookup, field, limit=None) is not None, f'{name} {lookup["id"]}: {lookup[field]!r}'
 
 
 # The multi-answer gate (docs_find_dev_lookups.yaml, `gate: multi_answer`): sibling files under one
@@ -281,20 +250,13 @@ def test_multi_answer_paths_are_name_candidates_of_their_query():
     assert missing == {}
 
 
-@pytest.mark.parametrize('field', ['query', 'question'])
-def test_multi_answer_lookups_keep_an_answer_at_the_default_limit(field):
+@pytest.mark.parametrize(('field', 'lookup'), [
+    pytest.param(field, lk, id=f'{field}-{lk["id"]}') for field in FIELDS for lk in MULTI_ANSWER
+    if field not in MULTI_ANSWER_GATE['known_misses'].get(lk['id'], {})])
+def test_multi_answer_lookup_keeps_an_answer_at_the_default_limit(field, lookup):
     bar = MULTI_ANSWER_GATE['top_n']
-    known = {i for i, miss in MULTI_ANSWER_GATE['known_misses'].items() if field in miss}
-
-    def rank(lk):
-        result = find(lk[field], repo=REPO, budget_seconds=60)
-        assert not result['coverage']['incomplete'], (lk['id'], result['coverage']['incomplete_reasons'])
-        paths = [hit['path'] for hit in result['hits']]
-        return min((paths.index(p) + 1 for p in lk['expect'] if p in paths), default=None)
-    lookups = [lk for lk in MULTI_ANSWER if lk['id'] not in known]
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        ranks = dict(zip((lk['id'] for lk in lookups), pool.map(rank, lookups), strict=True))
-    assert {i: r for i, r in ranks.items() if r is None or r > bar} == {}
+    found = rank(lookup, field, limit=None)
+    assert found is not None and found <= bar, f'{lookup["id"]}: {lookup[field]!r} (rank {found})'
 
 
 # A storage-layout question asked shortly is carried by the catalogue: the storage-topology entry
