@@ -84,6 +84,7 @@ MIN_RARITY = 0.1  # the rarity weight floor: a word in most files still counts a
 PROCESS_CODE_BOOST = 1.3  # code evidence for a process question ("what stops ...", "where do we check ...")
 UNIT_WEIGHT = 0.6  # a word in a code file's summary, or beside another query word in one short passage of text
 INTENT_NAME_BONUS = 0.25  # an intent word ("deprecated", "old") in a path name: the folder says what is asked
+RECORD_SHARE = 0.5  # a lifecycle line must hold at least this rarity-weighted share of a status question
 LONG_LINE = 1000  # a matching line longer than this (a one-line data dump) is no evidence of proximity
 DEFAULT_BUDGET_SECONDS = 10.0
 MAX_BUDGET_SECONDS = 120.0
@@ -845,7 +846,7 @@ def _lifecycle_rank(state: State, path: str, status_question: bool = False) -> i
     return LIFECYCLE_RANK.get(state.lifecycle_of(path)[1], 1)
 
 
-def field_weight(c: Candidate, term: str, process: bool = False, status: bool = False) -> float:
+def field_weight(c: Candidate, term: str, process: bool = False, record: bool = False) -> float:
     """How strongly ``c`` holds ``term``: its best field.
 
     1 in the path name; CATALOGUE_WEIGHT in its family's keywords, id or entry-point topic;
@@ -854,13 +855,12 @@ def field_weight(c: Candidate, term: str, process: bool = False, status: bool = 
     short passage of text (PASSAGE_SPAN lines) or in its family's purpose; TEXT_WEIGHT times the
     BM25 length factor anywhere in its text, CODE_BAG_WEIGHT times it over all its code
     identifier units. For a process question (``is_process_question``) the three code fields
-    count PROCESS_CODE_BOOST times as much (at most 1): the implementation is the answer. For a
-    status question, a word on a line that records a lifecycle state (``lifecycle_record``: a
-    registry row, a banner, a configuration comment) counts like the catalogue: that line is the
-    record that answers it.
+    count PROCESS_CODE_BOOST times as much (at most 1): the implementation is the answer. With
+    ``record`` (a status question whose words ``c`` records on one lifecycle line, ``record_share``),
+    a word on that line counts like a word in the name: the line is the record that answers it.
     """
     boost = PROCESS_CODE_BOOST if process else 1.0
-    if term in c.name_terms or (status and term in c.record_terms):
+    if term in c.name_terms or (record and term in c.record_terms):
         return 1.0
     if term in c.catalogue_terms:
         return CATALOGUE_WEIGHT
@@ -887,6 +887,16 @@ def is_process_question(text: str, intent_words: Sequence[str]) -> bool:
     return bool(found) and found[0] in QUESTION_WORDS and bool(_prefix_hits(sorted(PROCESS_VERBS), found))
 
 
+def record_share(c: Candidate, terms: list[str], weights: dict[str, float]) -> float:
+    """The rarity-weighted share of the query that ``c`` holds on one lifecycle line (``lifecycle_record``),
+    or 0 below RECORD_SHARE: a record answers a status question only when it names most of what is
+    asked about, not when a common word or two sit beside "legacy" or "historical"."""
+    if not c.record_terms:
+        return 0.0
+    share = sum(weights[t] for t in c.record_terms) / sum(weights[t] for t in terms)
+    return share if share >= RECORD_SHARE else 0.0
+
+
 def rarity(searched: int, holding: int) -> float:
     """A word's rarity weight: BM25's Robertson-Sparck Jones idf, log((N - n + 0.5) / (n + 0.5)), floored
     at MIN_RARITY. A word in most searched files ("check", "data") carries almost no weight, so the
@@ -905,7 +915,8 @@ def relevance(c: Candidate, terms: list[str], weights: dict[str, float], process
     "old") adds INTENT_NAME_BONUS.
     """
     total = sum(weights[t] for t in terms)
-    score = sum(weights[t] * field_weight(c, t, process, status) for t in terms) / total
+    record = status and record_share(c, terms, weights) > 0
+    score = sum(weights[t] * field_weight(c, t, process, record) for t in terms) / total
     if len(terms) > 1:
         if c.phrase_in_name:
             score += 1.0
@@ -946,8 +957,7 @@ def _rank_key(state: State, c: Candidate, terms: list[str], weights: dict[str, f
     name_weight = sum(weights[t] for t in c.name_terms)
     lifecycle = _lifecycle_rank(state, c.path, status_question)
     banded = score - LIFECYCLE_PENALTY * lifecycle
-    # For a status question, a line recording the lifecycle of what is asked about is the answer.
-    record = round(sum(weights[t] for t in c.record_terms) / sum(weights[t] for t in terms), 6) if status_question else 0
+    record = round(record_share(c, terms, weights), 6) if status_question else 0
     return (tier, -round(banded * 4), -len(c.defined), -len(c.compounds | c.defined), -record, lifecycle,
             not c.authority, -round(name_weight, 6), -c.line_terms, -round(score, 6), c.path)
 
@@ -1257,14 +1267,27 @@ def _read_lines(state: State, pool: list[Candidate], terms: list[str], text: str
             path = parts[0].decode('utf-8', 'replace')
             if path in by_path:
                 found.setdefault(path, []).append((int(parts[1]), parts[2].decode('utf-8', 'replace')))
+    echoes = catalogue_echoes(state)
     for path, lines in found.items():
         candidate = by_path[path]
         candidate.line, candidate.line_text = _best_line(lines, terms, normalise(text) if len(phrase) > 1 else '')
         folded = normalise(candidate.line_text)
         candidate.line_terms = (sum(t in folded for t in terms) if len(candidate.line_text) <= LONG_LINE else 0)
         candidate.passage_terms = best_passage(lines, terms)
-        candidate.record_terms = lifecycle_record(lines, terms)
+        if path not in echoes:
+            candidate.record_terms = lifecycle_record(lines, terms)
     return complete
+
+
+def catalogue_echoes(state: State) -> set[str]:
+    """The files that restate the catalogue's lifecycle records: the catalogue's own family (the
+    catalogue, its census) and the documentation map whose family table is generated from it. Find
+    reads the catalogue as structure (every hit carries its status and replacement), so their
+    lifecycle lines are never a second record (``lifecycle_record``)."""
+    def build() -> set[str]:
+        own = state.lifecycle_of(cat.CATALOGUE_PATH)[0]
+        return {p for p, (family, _) in state.report.resolved.items() if own and family == own} | {cat.README_PATH}
+    return _derived(state, 'echoes', build)
 
 
 def lifecycle_record(lines: list[tuple[int, str]], terms: list[str]) -> set[str]:
