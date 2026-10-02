@@ -685,6 +685,8 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             importlib.import_module("scripts.verify_review")._post_summary(1, {"final_disposition": TOKEN})
         elif consumer == "verdict":
             module = importlib.import_module("scripts.review.record_cf_verdict")
+            # Exercise publication blocking independently of path rewriting.
+            monkeypatch.setattr(module, "absolute_path_spans", lambda text: [])
             task = {
                 "repository": "unit/public",
                 "worktree_branch": "unit",
