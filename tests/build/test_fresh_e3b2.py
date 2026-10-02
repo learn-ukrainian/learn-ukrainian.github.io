@@ -966,6 +966,32 @@ def test_module_writer_budget_counts_only_delivered_content(tmp_path, monkeypatc
     assert report["lessons"][0]["regenerations"] == prior_failures
     assert attempts[-1] == prior_failures + 1
 
+    # A delivered draft followed by a build-environment failure must stop the
+    # module loop before it requests another writer response.
+    before_render = ledger_path.read_bytes()
+    calls_before = list(attempts)
+    runner_calls = []
+
+    def harness_runner(*a, **kw):
+        runner_calls.append(1)
+        failure = {"check": 11, "status": "failed", "layer": "harness", "reason": "site interpreter unavailable"}
+        record_failure(ledger_path, slug, 1, failure, inputs)
+        return {"passed": False, "passed_through": 11, "checks": [failure]}
+
+    report = module.build_module(
+        level,
+        slug,
+        repo_root=tmp_path,
+        lesson_n=1,
+        writer_seat="codex:fixture",
+        writer_dispatch=delivered_writer,
+        runner=harness_runner,
+    )
+    assert runner_calls == [1]
+    assert report["lessons"][0]["layer"] == "harness"
+    assert attempts == calls_before
+    assert ledger_path.read_bytes() == before_render
+
 
 def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, capsys):
     """Exercise the real checks 1-12 with injected model, resolver, and render edges."""

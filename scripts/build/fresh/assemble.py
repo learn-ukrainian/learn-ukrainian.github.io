@@ -193,6 +193,7 @@ from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_PAYLOAD_PREFIX,
     DIALOGUE_BOX_PAYLOAD_SUFFIX,
     dialogue_box_header_lines,
+    mdx_safe_text,
 )
 from scripts.generate_mdx.core import generate_mdx
 from scripts.generate_mdx.unit_map import (
@@ -408,7 +409,7 @@ def component_props_from_jsx(jsx: str) -> dict[str, Any]:
         elif json_str is not None:
             props[name] = json.loads(json_str)
         else:
-            props[name] = jsx_str.replace("&quot;", '"')
+            props[name] = html.unescape(jsx_str)
     return props
 
 
@@ -2034,9 +2035,14 @@ class _UrokWriter:
         for fragment in fragments:
             if isinstance(fragment, _UnitFragment):
                 encoded = (
-                    encode_js_json_string(fragment.piece) if fragment.codec == CODEC_JS_JSON_STRING else fragment.piece
+                    encode_js_json_string(fragment.piece)
+                    if fragment.codec == CODEC_JS_JSON_STRING
+                    else mdx_safe_text(fragment.piece, preserve_heading_markup=True)
                 )
-                self._ranges.append((fragment.index, position, position + len(encoded), fragment.piece, fragment.codec))
+                # Plain units track their source entities; check 9 decodes them
+                # only after verifying their exact location in the final page.
+                mapped_piece = fragment.piece if fragment.codec == CODEC_JS_JSON_STRING else encoded
+                self._ranges.append((fragment.index, position, position + len(encoded), mapped_piece, fragment.codec))
                 parts.append(encoded)
                 position += len(encoded)
             else:
@@ -2104,7 +2110,11 @@ def _render_urok_markdown(
         if indices:
             return unit_fragments(indices, codec)
         piece = render_unit_piece(fallback, replace_gloss)
-        return [encode_js_json_string(piece) if codec == CODEC_JS_JSON_STRING else piece]
+        return [
+            encode_js_json_string(piece)
+            if codec == CODEC_JS_JSON_STRING
+            else mdx_safe_text(piece, preserve_heading_markup=True)
+        ]
 
     def joined(cells: list[list[str | _UnitFragment]], separator: str) -> list[str | _UnitFragment]:
         out: list[str | _UnitFragment] = []
@@ -2143,7 +2153,7 @@ def _render_urok_markdown(
                     w.line("> ", *block_fragments(step_id, block_idx, str(ex_rec.get("text", ""))))
                     if en:
                         w.line(">")
-                        w.line("> *", en, "*")
+                        w.line("> *", mdx_safe_text(en), "*")
                     w.blank()
 
             elif kind == "quote":
@@ -2157,7 +2167,7 @@ def _render_urok_markdown(
                     w.line("> ", *block_fragments(step_id, block_idx, str(t_rec.get("quote", ""))))
                     if attr:
                         w.line(">")
-                        w.line("> — *", attr, "*")
+                        w.line("> — *", mdx_safe_text(attr), "*")
                     w.blank()
 
             elif kind == "paradigm":
@@ -2235,7 +2245,7 @@ def _render_urok_markdown(
                 if vid_rec:
                     chan = str(vid_rec.get("channel") or "")
                     url = str(vid_rec.get("url") or "")
-                    w.line("> [", chan, "](", url, ")")
+                    w.line("> [", mdx_safe_text(chan), "](", mdx_safe_text(url), ")")
                     w.blank()
 
             elif kind == "dialogue":
@@ -2294,6 +2304,17 @@ def _render_urok_markdown(
     # Only the renderer's own trailing block separators are dropped; a unit's bytes (including
     # edge whitespace) are emitted exactly as mapped, so the mapping describes the output.
     return w.finish()
+
+
+def expand_payload_text(value: Any, replace_gloss: Any) -> Any:
+    """Expand print markup in every nested payload field, including non-units."""
+    if isinstance(value, str):
+        return render_unit_piece(value, replace_gloss)
+    if isinstance(value, list):
+        return [expand_payload_text(item, replace_gloss) for item in value]
+    if isinstance(value, dict):
+        return {key: expand_payload_text(item, replace_gloss) for key, item in value.items()}
+    return value
 
 
 def apply_stress_to_activities(
@@ -2435,7 +2456,7 @@ def apply_stress_to_activities(
                         for right_key in ("right", "answer"):
                             if right_key in pair:
                                 pair[right_key] = format_act_text(act_id, item_idx, f"pair_r_{p_idx}", pair[right_key])
-    return stressed_activities, rendered_by_unit
+    return expand_payload_text(stressed_activities, replace_gloss_fn), rendered_by_unit
 
 
 def _page_unit_label(key: Any, stressed_doc: dict[str, Any]) -> str:
@@ -2620,7 +2641,8 @@ def check_9_stress_and_render(
 
     meta_data = {
         "title": str(lesson_entry.get("title", "")),
-        "subtitle": str(lesson_entry.get("rationale") or ""),
+        # Rationale is authoring guidance, not a learner description.
+        "subtitle": "",
         "evidence": {
             "lessons_lock_sha256": lessons_lock_sha256,
             "lesson_entry_sha256": lesson_entry_sha256,
@@ -2635,9 +2657,14 @@ def check_9_stress_and_render(
         # the Lesson tab's reading list, the contract `generate_mdx` already has for `readings`.
         "readings": [entry for entry in lesson_entry.get("reading_passages") or [] if isinstance(entry, dict)],
     }
+    replace_gloss = gloss_replacer(words_store)
+    meta_data = expand_payload_text(meta_data, replace_gloss)
+    for reading in meta_data["readings"]:
+        for field_name in ("title", "genre"):
+            if field_name in reading:
+                reading[field_name] = mdx_safe_text(reading[field_name])
 
     urok_md, unit_map = _render_urok_markdown(draft, stressed_doc, pack, words_store)
-    replace_gloss = gloss_replacer(words_store)
 
     plan_acts_by_id = {
         act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act
@@ -2680,10 +2707,11 @@ def check_9_stress_and_render(
         act_payload = copy.deepcopy(act_dict)
         act_payload["type"] = plan_act.get("type")
         act_payload["placement"] = plan_act.get("placement")
-        if not act_payload.get("title") and plan_act.get("focus"):
-            act_payload["title"] = plan_act.get("focus")
+        if not act_payload.get("title"):
+            act_payload["title"] = act_payload.get("instruction") or ""
         if act_payload.get("type") in _PAGE_INSTRUCTION_FIELD and act_payload.get("instruction"):
             act_payload["title"] = act_payload["instruction"]
+        act_payload["title"] = mdx_safe_text(act_payload["title"])
         # The parser already preserves host metadata in each quiz question. Resolve
         # media here from the locked pack rather than accepting a writer-supplied URL.
         for item in act_payload.get("items") or []:
@@ -2739,6 +2767,13 @@ def check_9_stress_and_render(
     except Exception as exc:
         return CheckResult(check=9, passed=False, reason=f"MDX rendering failed: {exc}", layer="writer")
 
+    # Inspect the source before entities/JSON can conceal a missed print marker.
+    payloads = [stressed_activities, meta_data, vocab_items, external_resources]
+    if re.search(r"\{\{(?:gloss|uk):", html.unescape(mdx_content)) or any(
+        re.search(r"\{\{(?:gloss|uk):", json.dumps(payload, ensure_ascii=False)) for payload in payloads
+    ):
+        return CheckResult(check=9, passed=False, reason="unexpanded_print_placeholder", layer="engine")
+
     # Provenance is verified against what the page receives. Every urok unit is read back at
     # its own location in the final MDX (the renderer's mapping carried through every
     # `generate_mdx` transform); vpravy units are located in the props of the component JSX
@@ -2753,7 +2788,14 @@ def check_9_stress_and_render(
             reason=f"{code}: {_page_unit_label(exc.key, stressed_doc)}: {exc.message}",
             layer="engine",
         )
-    rendered_by_unit: dict[int, str] = {key: text for key, text in page_units.items() if isinstance(key, int)}
+    rendered_by_unit: dict[int, str] = {
+        key: html.unescape(text)
+        if stressed_doc["units"][key].get("tab") == "urok"
+        and not str(stressed_doc["units"][key].get("block", "")).startswith("dialogue_")
+        else text
+        for key, text in page_units.items()
+        if isinstance(key, int)
+    }
     page_jsx: dict[str, list[str]] = {}
     for key, text in page_units.items():
         if isinstance(key, tuple) and key[0] == "activity":
@@ -2842,11 +2884,13 @@ def check_11_render(
         through_lesson=through_lesson,
     )
     passed = bool(rep.get("shippable"))
+    failures = [step for step in rep.get("steps", []) if step.get("passed") is not True]
+    harness_failure = any(step.get("layer") == "harness" for step in failures)
     return CheckResult(
         check=11,
         passed=passed,
         reason=None if passed else "verify_shippable check 11 reported not shippable",
-        layer=None if passed else "render",
+        layer=None if passed else "harness" if harness_failure else "engine",
         artifacts={"verify_shippable": rep},
     )
 

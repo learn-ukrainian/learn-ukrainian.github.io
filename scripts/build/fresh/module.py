@@ -288,6 +288,11 @@ def build_module(
                 bad = next((row for row in report.get("checks", []) if row["status"] == "failed"), None)
                 check = report.get("stopping_check") or (bad["check"] if bad else report.get("passed_through", 0))
                 reason = report.get("reason") or (bad["reason"] if bad else "build_failed")
+                if bad and bad["layer"] == "harness":
+                    stopped = _stop(n, reason, check=check, layer="harness")
+                    stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
+                    results.append(stopped)
+                    break
                 if ledger["terminal_layer"] is not None:
                     stopped = _stop(n, reason, check=check, layer=bad["layer"] if bad else "engine")
                     stopped["regenerations"] = ledger["regenerations"]

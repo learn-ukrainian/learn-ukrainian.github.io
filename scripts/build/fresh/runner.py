@@ -1753,10 +1753,16 @@ def run_lesson(
         rendered_check = render_check(
             level, slug, astro_build=True, module_dir=site_dir, plan_path=plans_dir / f"{slug}.yaml", through_lesson=n
         )
+    except (OSError, subprocess.TimeoutExpired) as err:
+        return finish(failure(11, f"verify_shippable_environment_error: {err}", "harness"))
     except Exception as err:
         return finish(failure(11, f"verify_shippable_error: {err}", "engine"))
     if not rendered_check.passed:
-        row = failure(11, rendered_check.reason or "verify_shippable_failed", "engine")
+        row = failure(
+            11,
+            rendered_check.reason or "verify_shippable_failed",
+            "harness" if rendered_check.layer == "harness" else "engine",
+        )
         row["details"] = {"verify_shippable": rendered_check.artifacts.get("verify_shippable", {})}
         return finish(row)
     rows.append(_pass(11, {"verify_shippable": rendered_check.artifacts.get("verify_shippable", {})}))

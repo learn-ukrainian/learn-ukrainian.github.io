@@ -114,6 +114,8 @@ def record_failure(
     path: Path, slug: str, n: int, failure: dict[str, Any], inputs: dict[str, str], *, at: str | None = None
 ) -> dict[str, Any]:
     """Record a failed attempt; repeated checks and the third failure are terminal."""
+    if failure["layer"] == "harness":
+        return record_harness_failure(path, slug, n, failure["reason"], inputs, at=at)
     doc = load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc

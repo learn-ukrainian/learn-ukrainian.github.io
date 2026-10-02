@@ -7,6 +7,7 @@ and MDX normalization.
 
 from __future__ import annotations
 
+import html
 import json
 import re
 import sys
@@ -36,6 +37,29 @@ if str(_SCRIPTS_DIR) not in sys.path:
 
 from manifest_utils import get_module_by_slug
 from yaml_activities import Activity, ActivityParser
+
+
+def mdx_safe_text(text: str, *, preserve_heading_markup: bool = False) -> str:
+    """Encode learner text as MDX text, preserving its displayed characters.
+
+    Entities work in both Markdown and quoted JSX attributes. JS/JSON payloads
+    use their existing serializers instead: entities inside JSON are literal.
+    """
+    entities = {char: html.escape(char, quote=True) for char in ("&", "<", ">", '"', "'")}
+    entities.update({"{": "&#123;", "}": "&#125;", "`": "&#96;", "$": "&#36;", "\\": "&#92;", "|": "&#124;"})
+    if not preserve_heading_markup:
+        entities["#"] = "&#35;"
+    # Translate original characters once. Escaping HTML first would also encode
+    # the # in generated entities (e.g. &#x27;) and change the displayed text.
+    encoded = str(text).translate(str.maketrans(entities))
+    # MDX treats import/export at the start of a paragraph as ESM, even
+    # without JSX punctuation. Keep source text from becoming executable syntax.
+    return re.sub(
+        r"^(\s*)([ie])(?=(?:mport|xport)\s)",
+        lambda match: match[1] + f"&#{ord(match[2])};",
+        encoded,
+        flags=re.MULTILINE,
+    )
 
 
 def _activity_id(activity: Activity) -> str:

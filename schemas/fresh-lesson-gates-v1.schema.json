@@ -16,7 +16,7 @@
         "status": {"enum": ["passed", "failed", "not_checked"]},
         "code": {"type": "string"},
         "reason": {"type": "string"},
-        "layer": {"enum": ["writer", "plan", "pack", "word_store", "engine", "driver"]},
+        "layer": {"enum": ["writer", "plan", "pack", "word_store", "engine", "driver", "harness"]},
         "step": {"type": ["string", "null"]},
         "activity": {"type": ["string", "null"]},
         "token": {"type": ["string", "null"]},

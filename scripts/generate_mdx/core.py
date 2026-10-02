@@ -513,6 +513,7 @@ def generate_mdx(
         "MotifFormula": "import MotifFormula from '@site/src/components/MotifFormula';",
         "MythBuster": "import MythBuster from '@site/src/components/MythBuster';",
         "PrimaryReading": "import PrimaryReading from '@site/src/components/PrimaryReading';",
+        "PhraseTable": "import PhraseTable from '@site/src/components/PhraseTable';",
         "PerformanceActivity": "import PerformanceActivity from '@site/src/components/PerformanceActivity';",
         "HighCultureBridge": "import HighCultureBridge from '@site/src/components/HighCultureBridge';",
     }
@@ -562,14 +563,22 @@ def generate_mdx(
     if level.lower() in SEMINAR_LEVELS and re.search(r"[A-Za-z]", description):
         description = f"Матеріал до теми «{title}»"
 
-    frontmatter = f'''---
-title: "{escape_jsx(title)}"
-description: "{escape_jsx(description)}"
+    # Frontmatter is YAML, so JSX/template escaping (e.g. \`) is invalid.
+    title_yaml = json.dumps(title, ensure_ascii=False) if fresh else f'"{escape_jsx(title)}"'
+    description_yaml = json.dumps(description, ensure_ascii=False) if fresh else f'"{escape_jsx(description)}"'
+    label_yaml = (
+        json.dumps(f"{str(module_num).zfill(2)}. {title}", ensure_ascii=False)
+        if fresh
+        else f'"{str(module_num).zfill(2)}. {escape_jsx(title)}"'
+    )
+    frontmatter = f"""---
+title: {title_yaml}
+description: {description_yaml}
 sidebar:
   order: {module_num}
-  label: "{str(module_num).zfill(2)}. {escape_jsx(title)}"{extra_fm_lines}
+  label: {label_yaml}{extra_fm_lines}
 ---
-'''
+"""
 
     # 1. Clean up body: Remove existing Vocabulary, Activities, and Resources placeholders
     log = edit(body)
@@ -794,7 +803,7 @@ sidebar:
         "import HighlightMorphemes from '@site/src/components/HighlightMorphemes';",
         "import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';",
     ]
-    for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity", "PrimaryReading"):
+    for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity", "PrimaryReading", "PhraseTable"):
         if re.search(rf"<{component}\b", tabbed):
             import_lines.append(optional_imports[component])
     import_lines.extend([
