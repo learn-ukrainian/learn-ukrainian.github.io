@@ -797,6 +797,19 @@ def _hermetic_dispatch_admission_host(monkeypatch):
     monkeypatch.setenv("LU_TEST_DISPATCH_HEALTHY_HOST", "1")
 
 
+@pytest.fixture(autouse=True)
+def _hermetic_credit_lane_snapshot(monkeypatch):
+    """Credit-period admission sees no live Monitor snapshot (#9518).
+
+    The live Monitor on a developer box can report a credit-backed lane and
+    refuse the off-allowlist dispatches other tests make. Credit-lane tests
+    monkeypatch ``read_routing_budget`` themselves.
+    """
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+
+
 # One numbered directory per process. ``mktemp`` lists the base to pick the
 # next number, so a per-test call is quadratic over a long session (#8654).
 _WRITE_OWNERSHIP_SEQ = itertools.count()

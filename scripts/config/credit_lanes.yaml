@@ -1,0 +1,34 @@
+# Credit-period lane policy (#9518) — canonical source of truth.
+# Read by scripts/fleet/credit_lane.py for scripts/fleet/capacity_pick.py (router)
+# and delegate.py dispatch admission. Neither consumes credits or resets.
+#
+# A configured lane is `credit_backed` only while its plan allowance is at or
+# below `near_cap_remaining_pct` AND the routing-budget record carries a
+# positive numeric credit balance from a fresh probe (younger than
+# `credit_max_age_s`). Missing, stale or non-numeric credit data keeps the
+# lane in its plan state (today's near_cap/AVOID behaviour).
+# While a lane is credit_backed, dispatch admission refuses any model outside
+# its `allowed_models` (a dispatch without --model is judged by the lane's
+# default model). With a healthy plan allowance nothing is restricted.
+schema_version: credit-lanes.v1
+
+# Plan remaining-% at or below which credits may back the lane. 10.0 matches the
+# router's near_cap line (>= 90% of the plan window used).
+near_cap_remaining_pct: 10.0
+
+# Credit freshness bound; matches the plan-window freshness bound the router
+# already uses (routing-budget stale_threshold_s and the reset reserve's 15 min).
+credit_max_age_s: 900
+
+# Reset advice: hold a free full reset while the natural plan reset is within
+# this many hours. Whether a full reset re-anchors the weekly window is not
+# stated by the provider usage record or by repository documentation, so the
+# advice stays conservative.
+reset_hold_hours: 48
+
+lanes:
+  codex:
+    # Credit-period policy: the Codex lane receives only these catalog ids.
+    allowed_models:
+      - gpt-6.1-sol
+      - gpt-6-luna

@@ -281,8 +281,19 @@ def test_recorded_codex_near_cap_reaches_note_without_relaxing(monkeypatch, tmp_
     reserve = {"remaining_resets": 0, "asserted_at": None}
     row = next(r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve) if r["lane"] == "codex")
     assert "free full reset available (2; operator decision)" in row["notes"]
-    assert row["avoid"] and not row["reset_reserve_eligible"]
+    # The recorded probe carries a fresh 62500 credit balance: credits (#9518), not the
+    # reset inventory, keep the lane usable.
+    assert not row["avoid"] and not row["reset_reserve_eligible"]
+    assert row["status"] == "credit_backed" and row["credit"]["credit_balance"] == 62500.0
     assert reserve == {"remaining_resets": 0, "asserted_at": None}
+
+    codex = budget["agents"]["codex"]
+    codex["credit_balance"] = None
+    codex["codexbar"]["credit_balance"] = None
+    row = next(r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve) if r["lane"] == "codex")
+    assert "free full reset available (2; operator decision)" in row["notes"]
+    assert row["avoid"] and not row["reset_reserve_eligible"]
+    assert row["credit"]["state"] == "credits_unverified"
 
 
 @pytest.mark.parametrize("raw", [SENTINEL, IDENTIFIER, None])
