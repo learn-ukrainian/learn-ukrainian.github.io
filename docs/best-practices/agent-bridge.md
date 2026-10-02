@@ -364,18 +364,31 @@ any ancestor resolves outside that ancestor (the symlinks into the primary
 checkout that dispatch worktrees receive), only clearly read-only calls run — `--version`
 or `--help`, and an allowlisted subcommand such as `run`, `test`, `ls`,
 `view` or `config get` with no install-like word (`ci`, `install`, `update`,
-`prune`, …) anywhere in the arguments. `npx`, `npm exec` and `npm x` also run
-(`npm --prefix site exec -- vitest run`, `npx @anthropic-ai/claude-code`):
-they launch an existing binary or fetch one into npm's own cache, not into
-the project's `node_modules`. They are refused only when an argument names a
-package manager (`npm`, `npx`, `pnpm`, `yarn`, `yarnpkg`, `corepack`, `bun`,
-`npm-cli.js`, `pnpm.cjs`, … as a name, version spec, scope or path, in a
-`--key=value` or in the shell command of `-c`/`--call`) or is an install word
-from the same list; `npx some-tool install` is therefore refused although the
-tool may not install anything. Everything else is refused, including global
-installs (`npm i -g`), and so are read-only calls the guard cannot classify,
-such as `npm view ci` or options with a separate value before the subcommand
-(write `--key=value`; `--prefix` and `--workspace` are understood). To
+`prune`, …) anywhere in the arguments. `npx`, `npm exec` and `npm x` run
+only a closed allowlist of programs this repository uses that way
+(`EXEC_PROGRAMS` in the guard: `vitest`, `tsc`, `playwright`,
+`markdownlint-cli2` and the Claude adapter's `@anthropic-ai/claude-code`
+fallback), as in `npm --prefix site exec -- vitest run` or
+`npx @anthropic-ai/claude-code@latest`; they launch an existing binary or
+fetch one into npm's own cache, not into the project's `node_modules`. The
+guard never reads shell text: the program is the first word after the options
+(or after `--`), and only `-y`/`--yes`, `--no`, `--no-install`, `--no-fund`,
+`--no-audit`, `--prefix`/`-C` and `--` may appear where npm parses options.
+`-c`/`--call`, `-p`/`--package`, `--shell`, `--node-options` and any other
+option are refused whatever their value, and so is a call with no program
+(npm would run a shell or the configured `call`). A shell, interpreter or
+package manager (`sh`, `bash`, `env`, `node`, `npm`, `pnpm`, `yarn`, …) is
+simply not on the list; a version spec (`vitest@3`) or path whose last part
+is an allowlisted name is accepted, an `npm:` alias, URL, `git` spec or
+foreign scope is not. An argument of the program that names a package manager
+or is an install word still refuses the call. Known false positives:
+`npx playwright install`, any tool not on the list (such as `eslint`), and
+`npx --no vitest` (write `npx --no -- vitest`). Everything else is refused,
+including global installs (`npm i -g`), and so are read-only calls the guard
+cannot classify, such as `npm view ci` or options with a separate value
+before the subcommand (write `--key=value`; `--prefix` and `--workspace` are
+understood). So a worktree whose `node_modules` links outward now runs only
+these allowlisted `exec`/`npx` programs. To
 install, `unlink` the link inside the worktree first so npm creates a
 worktree-local folder, or run the command outside the worktree. Without such
 a link every call passes through untouched. Because git is never asked
@@ -399,16 +412,20 @@ Not covered (owner `claude-infra`, each tracked under the #9460 follow-up):
 - calling npm by absolute path or through `node`, or a `node_modules/.bin/npm`;
 - a stripped `PATH` without the shim directory, and pnpm, yarn or bun called
   directly;
-- a tool launched by `npx`/`npm exec` that starts a package manager itself (an
-  inner `npm` on `PATH` still reaches the shim; pnpm, yarn or an npm by path
-  do not);
-- npm config such as `npm_config_call` or an `.npmrc` `call=` supplying the
-  command;
+- an allowlisted program that starts a package manager itself (an inner `npm`
+  on `PATH` still reaches the shim; pnpm, yarn or an npm by path do not), or a
+  local file with an allowlisted name (`./x/vitest`) that is something else;
+- npm config from the environment or an `.npmrc`, such as `script-shell`,
+  replacing the shell npm runs the program with (a configured `call` no longer
+  applies: the guard requires a program and npm refuses `call` together with
+  one);
 - running from a checkout with a real `node_modules`, such as the primary,
   with `--prefix`/`-C` pointing into a dispatch worktree (that call passes
   through; workers do not run from there);
 - a working directory physically inside the shared folder (reached through the
-  link) in a process without `$PWD`, where only the physical path is visible;
+  link) while `$PWD` is missing, stale or forged, so it does not name the same
+  directory through the worktree: only the physical path is visible and every
+  call passes through;
 - `AGENT_GIT_SHIM_PYTHON` naming a program that is not a Python interpreter
   (for example one that always exits 0), which replaces the guard's verdict.
 

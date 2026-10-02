@@ -6,8 +6,9 @@ real ``node_modules`` and ``site/node_modules`` holding a sentinel file, and a
 them. A fake ``npm``/``npx`` behind the shim records each call, exits early on
 ``--version``/``--help`` like npm, and for tree-writing commands empties the
 target ``node_modules`` the way ``npm ci`` does; no network and no real install
-is involved. The real ``npm`` only runs harmless commands against scratch
-directories.
+is involved. The real ``npm`` runs offline and only against scratch
+directories: harmless commands, and in the unguarded controls a real
+``npm ci`` that empties the scratch sentinel folder.
 
 Failing-before proof: every refusal test asserts the fake was never invoked and
 the sentinel survived. Without the shim (``test_unguarded_fake_npm_destroys_the_sentinel``)
@@ -195,7 +196,20 @@ FALSE_REFUSALS = {
     "unknown-command": (["pkg", "get", "name"], "`pkg` is not on the guard's read-only allowlist"),
     "version-bump": (["version", "patch"], "`version patch` is not on the guard's read-only allowlist"),
     "config-set": (["config", "set", "x=y"], "`config set` is not on the guard's read-only allowlist"),
-    "exec-after-bare-option": (["--json", "exec", "vitest"], "could not tell whether `vitest`"),
+    # Adapted for the closed exec rule: the unknown option itself now refuses.
+    "exec-after-bare-option": (["--json", "exec", "vitest"], "`--json` is refused"),
+}
+
+# npx/npm exec calls that are harmless but refused by the closed rule (documented false positives).
+EXEC_FALSE_REFUSALS = {
+    "program-off-the-allowlist": ("npx", ["eslint", "."], "`eslint` is not on the allowlist"),
+    "npm-x-off-the-allowlist": ("npm", ["x", "eslint", "."], "`eslint` is not on the allowlist"),
+    "playwright-install": ("npx", ["playwright", "install", "chromium"], "`install` is an install word"),
+    "no-before-the-program": ("npx", ["--no", "vitest"], "could not tell whether `vitest` is the program"),
+    "workspace-option": ("npm", ["-w", "site", "exec", "--", "vitest"], "`-w` is refused"),
+    "program-option-before-dashdash": ("npm", ["exec", "vitest", "--run"], "`--run` is refused"),
+    "range-version": ("npx", ["vitest@>=3"], "`vitest@>=3` is not on the allowlist"),
+    "no-program": ("npx", [], "npx names no program"),
 }
 
 # The Claude adapter's npx fallback: its prompt and settings arguments mention
@@ -212,57 +226,94 @@ CLAUDE_FALLBACK = [
     "Fix the build: run npm ci, then /usr/bin/npm install and yarn add x.",
 ]
 
-# npx and npm exec launching a tool that is not a package manager: they run an
-# existing binary or fetch one into npm's own cache, never rewriting node_modules.
+# npx and npm exec running an allowlisted program: they run an existing binary
+# or fetch one into npm's own cache, never rewriting node_modules.
 LAUNCHES = [
     ("npm", ["--prefix", "site", "exec", "--", "vitest", "run"]),
     ("npm", ["--prefix", "site", "exec", "--", "vitest", "run", "-t", "adds it"]),
     ("npm", ["--prefix", "site", "exec", "--", "tsc", "--noEmit"]),
     ("npm", ["--prefix", "site", "exec", "--", "playwright", "test", "e2e/atlas-practice.spec.ts"]),
-    ("npm", ["x", "eslint", "."]),
+    ("npm", ["--prefix=site", "exec", "--yes", "--no-fund", "--", "tsc", "--noEmit"]),
+    ("npm", ["-C", "site", "x", "vitest", "run"]),
     ("npx", ["playwright", "--version"]),
+    ("npx", ["playwright", "test", "ui-policy"]),
+    ("npx", ["vitest"]),
     ("npx", ["vitest", "-c", "vitest.config.ts"]),
+    ("npx", ["vitest@3", "run", "--reporter=verbose"]),
+    ("npx", ["./node_modules/.bin/vitest", "run"]),
+    ("npx", ["-y", "--no-fund", "--", "vitest", "run"]),
+    ("npx", ["--no", "--", "tsc", "--noEmit"]),
+    ("npx", ["--yes", "markdownlint-cli2", "docs/README.md"]),
     ("npx", ["@anthropic-ai/claude-code", "--version"]),
+    ("npx", ["@anthropic-ai/claude-code@latest", "--version"]),
     ("npx", CLAUDE_FALLBACK),
 ]
 
-# npx and npm exec naming a package manager (as a name, spec, scope or path, in
-# a --key=value or in a -c/--call shell command) or an install word.
+# The independent review's reproductions: real npm resolved the escaped shell
+# text to `npm ci` and emptied the shared folder past the text-classifying guard.
+ESCAPED_NPM_CI = "/usr/bin/n\\pm c\\i --ignore-scripts --no-audit --no-fund"
+REVIEW_SHELL_CALLS = {
+    "npm-exec-c": ("npm", ["exec", "-c", ESCAPED_NPM_CI]),
+    "npm-exec-call-eq": ("npm", ["exec", f"--call={ESCAPED_NPM_CI}"]),
+    "npx-c": ("npx", ["-c", ESCAPED_NPM_CI]),
+    "npx-call-eq": ("npx", [f"--call={ESCAPED_NPM_CI}"]),
+}
+
+# npx and npm exec reaching a package manager through a shell, an interpreter,
+# a package option or shell text: refused without reading any of the text.
 LAUNCH_REFUSALS = {
-    "npx-npm-ci": ("npx", ["npm", "ci"], "`npm` names a package manager"),
-    "npx-npx": ("npx", ["npx", "pnpm"], "`npx` names a package manager"),
-    "npx-npm-install": ("npx", ["npm", "install"], "`npm` names a package manager"),
-    "npx-npm-version-spec": ("npx", ["npm@10", "install"], "`npm@10` names a package manager"),
-    "npx-yes-npm-ci": ("npx", ["--yes", "npm", "ci", "--ignore-scripts"], "`npm` names a package manager"),
-    "npx-absolute-npm": ("npx", ["/usr/bin/npm", "ci"], "`/usr/bin/npm` names a package manager"),
-    "npx-node-npm-cli": (
-        "npx",
-        ["node", "/usr/lib/node_modules/npm/bin/npm-cli.js", "ci"],
-        "names a package manager",
-    ),
-    "npx-pnpm-cjs": ("npx", ["./tools/pnpm.cjs", "store", "path"], "`./tools/pnpm.cjs` names a package manager"),
-    "npx-scoped-pnpm": ("npx", ["@pnpm/exe", "list"], "`@pnpm/exe` names a package manager"),
-    "npx-corepack": ("npx", ["corepack", "pnpm", "i"], "`corepack` names a package manager"),
-    "npx-yarn": ("npx", ["yarn"], "`yarn` names a package manager"),
-    "npx-yarnpkg": ("npx", ["yarnpkg", "--frozen-lockfile"], "`yarnpkg` names a package manager"),
-    "npx-bun": ("npx", ["bun", "x", "vite"], "`bun` names a package manager"),
-    "npx-package-option": ("npx", ["-p", "npm", "-c", "npm ci"], "`npm` names a package manager"),
-    "npx-call-shell": ("npx", ["-c", "echo start && npm ci"], "`npm` names a package manager"),
-    "npx-call-shell-pnpm": ("npx", ["--call=cd site; pnpm i"], "`pnpm` names a package manager"),
-    "npx-call-subshell": ("npx", ["-c", "node $(which npm) ci"], "`npm` names a package manager"),
-    "npx-version-then-pnpm": ("npx", ["--version", "pnpm", "install"], "`pnpm` names a package manager"),
-    "npx-install-word": ("npx", ["some-tool", "install"], "`install` is an install word"),
-    "npx-call-install-word": ("npx", ["-c", "some-tool add left-pad"], "`add` is an install word"),
-    "exec-pnpm-install": ("npm", ["exec", "--", "pnpm", "install"], "`pnpm` names a package manager"),
-    "exec-yarn-add": ("npm", ["exec", "--", "yarn", "add", "x"], "`yarn` names a package manager"),
-    "exec-package-npm": ("npm", ["exec", "--package=npm", "--", "npm", "ci"], "`npm` names a package manager"),
-    "x-npm-ci": ("npm", ["x", "npm", "ci"], "`npm` names a package manager"),
-    "exec-call-install": ("npm", ["exec", "-c", "npm install"], "`npm` names a package manager"),
-    "exec-yarn": ("npm", ["exec", "yarn"], "`yarn` names a package manager"),
-    "exec-yarn-version": ("npm", ["exec", "--", "yarn", "--version"], "`yarn` names a package manager"),
+    **{
+        f"review-{case}": (tool, args, "is refused: as its own options")
+        for case, (tool, args) in REVIEW_SHELL_CALLS.items()
+    },
+    "npx-sh-c": ("npx", ["sh", "-c", "npm ci"], "`sh` is not on the allowlist"),
+    "npx-bash-c": ("npx", ["bash", "-c", "npm ci"], "`bash` is not on the allowlist"),
+    "exec-bash-c": ("npm", ["exec", "--", "bash", "-c", "n\\pm c\\i"], "`bash` is not on the allowlist"),
+    "npx-dash-c": ("npx", ["dash", "-c", "npm ci"], "`dash` is not on the allowlist"),
+    "npx-node-e": ("npx", ["node", "-e", "require('child_process').execSync('npm ci')"], "`node` is not on"),
+    "npx-env-npm-ci": ("npx", ["env", "npm", "ci"], "`env` is not on the allowlist"),
+    "exec-env-npm-ci": ("npm", ["exec", "--", "env", "npm", "ci"], "`env` is not on the allowlist"),
+    "npx-python": ("npx", ["python3", "-c", "import os; os.system('npm ci')"], "`python3` is not on"),
+    "npx-p-npm": ("npx", ["-p", "npm", "npm", "ci"], "`-p` is refused"),
+    "npx-package-eq": ("npx", ["--package=npm@10", "npm", "ci"], "`--package` is refused"),
+    "npx-yes-npm-ci": ("npx", ["--yes", "npm", "ci"], "`npm` is not on the allowlist"),
+    "npx-npm-ci": ("npx", ["npm", "ci"], "`npm` is not on the allowlist"),
+    "npx-npx": ("npx", ["npx", "pnpm"], "`npx` is not on the allowlist"),
+    "npx-npm-version-spec": ("npx", ["npm@10", "install"], "`npm@10` is not on the allowlist"),
+    "npx-absolute-npm": ("npx", ["/usr/bin/npm", "ci"], "`/usr/bin/npm` is not on the allowlist"),
+    "npx-escaped-npm": ("npx", ["/usr/bin/n\\pm", "c\\i"], "`/usr/bin/n\\pm` is not on the allowlist"),
+    "npx-quoted-npm": ("npx", ["'npm'", "ci"], "`'npm'` is not on the allowlist"),
+    "npx-ansi-c-quoted": ("npx", ["-c", "$'\\x6epm' ci"], "`-c` is refused"),
+    "npx-parameter-expansion": ("npx", ["-c", "x=npm; ${x} ci"], "`-c` is refused"),
+    "npx-command-substitution": ("npx", ["--call", "$(printf npm) ci"], "`--call` is refused"),
+    "npx-eval": ("npx", ["-c", "eval 'n''pm ci'"], "`-c` is refused"),
+    "npx-shell-option": ("npx", ["--shell=/bin/sh", "vitest"], "`--shell` is refused"),
+    "npx-script-shell": ("npx", ["--script-shell", "/usr/bin/npm", "vitest"], "`--script-shell` is refused"),
+    "npx-node-options": ("npx", ["--node-options=--require=./x.js", "vitest"], "`--node-options` is refused"),
+    "npx-unknown-option": ("npx", ["--loglevel", "silent", "vitest"], "`--loglevel` is refused"),
+    "npx-terminator-then-shell": ("npx", ["--", "sh", "-c", "npm ci"], "`sh` is not on the allowlist"),
+    "npx-alias-spec": ("npx", ["vitest@npm:pnpm"], "`vitest@npm:pnpm` is not on the allowlist"),
+    "npx-git-spec": ("npx", ["github:someone/vitest"], "`github:someone/vitest` is not on the allowlist"),
+    "npx-foreign-scope": ("npx", ["@someone/vitest"], "`@someone/vitest` is not on the allowlist"),
+    "npx-script-extension": ("npx", ["./tools/pnpm.cjs", "store", "path"], "`./tools/pnpm.cjs` is not on"),
+    "npx-corepack": ("npx", ["corepack", "pnpm", "i"], "`corepack` is not on the allowlist"),
+    "npx-yarn": ("npx", ["yarn"], "`yarn` is not on the allowlist"),
+    "npx-bun": ("npx", ["bun", "x", "vite"], "`bun` is not on the allowlist"),
+    "npx-deno": ("npx", ["deno", "run", "npm:npm", "ci"], "`deno` is not on the allowlist"),
+    "npx-version-then-pnpm": ("npx", ["--version", "pnpm", "install"], "`--version` is refused"),
+    "npx-allowed-program-install-word": ("npx", ["vitest", "install"], "`install` is an install word"),
+    "npx-allowed-program-names-npm": ("npx", ["vitest", "--config=/usr/bin/npm"], "`--config=/usr/bin/npm` names a"),
+    "npx-prefix-swallows-option": ("npx", ["--prefix", "-c", "npm ci"], "`--prefix` must be followed"),
+    "exec-pnpm-install": ("npm", ["exec", "--", "pnpm", "install"], "`pnpm` is not on the allowlist"),
+    "exec-package-npm": ("npm", ["exec", "--package=npm", "--", "npm", "ci"], "`--package` is refused"),
+    "x-npm-ci": ("npm", ["x", "npm", "ci"], "`npm` is not on the allowlist"),
+    "exec-call-after-program": ("npm", ["exec", "vitest", "-c", "npm ci"], "`-c` is refused"),
+    "exec-call-before-subcommand": ("npm", ["-c", "npm ci", "exec", "vitest"], "`-c` is refused"),
+    "exec-without-program": ("npm", ["exec"], "npm exec names no program"),
+    "exec-after-read-only-word": ("npm", ["--json", "exec", "run", "-c", "npm ci"], "`--json` is refused"),
     "exec-prefix-install-word": (
         "npm",
-        ["--prefix", "site", "exec", "--", "some-tool", "ci"],
+        ["--prefix", "site", "exec", "--", "vitest", "ci"],
         "`ci` is an install word",
     ),
 }
@@ -431,8 +482,18 @@ def test_global_installs_are_refused_while_the_link_exists(layout, case):
 
 
 @pytest.mark.parametrize("case", sorted(LAUNCH_REFUSALS))
-def test_npx_and_npm_exec_launching_a_package_manager_are_refused(layout, case):
+@pytest.mark.parametrize("relative_cwd", [".", "site"])
+def test_npx_and_npm_exec_outside_the_closed_rule_are_refused(layout, case, relative_cwd):
     tool, args, reason = LAUNCH_REFUSALS[case]
+    proc = _run(layout, tool, args, layout["worktree"] / relative_cwd)
+    _assert_refused(layout, proc)
+    assert reason in proc.stderr
+    assert "only run allowlisted programs" in proc.stderr
+
+
+@pytest.mark.parametrize("case", sorted(EXEC_FALSE_REFUSALS))
+def test_harmless_exec_calls_outside_the_closed_rule_are_refused_with_the_reason(layout, case):
+    tool, args, reason = EXEC_FALSE_REFUSALS[case]
     proc = _run(layout, tool, args, layout["worktree"])
     _assert_refused(layout, proc)
     assert reason in proc.stderr
@@ -522,12 +583,38 @@ def _launch_id(value):
 @pytest.mark.parametrize("relative_cwd", [".", "site"])
 def test_npx_and_npm_exec_launching_a_tool_pass_through(layout, tool, args, relative_cwd):
     """Arguments, stdin, stdout, stderr and the exit code reach the real tool unchanged."""
+    _assert_forwarded_unchanged(layout, tool, args, layout["worktree"] / relative_cwd)
+
+
+def test_claude_adapter_npx_fallback_passes_through(layout, monkeypatch):
+    """The adapter's own npx command line (no native claude), as build_invocation assembles it."""
+    from scripts.agent_runtime.adapters import claude as claude_adapter
+
+    monkeypatch.setattr(claude_adapter, "_default_claude_bin", lambda: None)
+    monkeypatch.setattr(claude_adapter.shutil, "which", lambda name, *a, **k: "/usr/bin/npx" if name == "npx" else None)
+    monkeypatch.setattr(claude_adapter, "_ensure_supported_claude_cli_version", lambda prefix: (2, 1, 200))
+    plan = claude_adapter.ClaudeAdapter().build_invocation(
+        prompt="Fix the build: run npm ci, then /usr/bin/npm install and yarn add x.",
+        mode="workspace-write",
+        cwd=layout["worktree"],
+        model="claude-sonnet-5-5",
+        task_id="task-9460",
+        session_id=None,
+        tool_config={},
+    )
+    assert plan.cmd[:2] == ["npx", "@anthropic-ai/claude-code@latest"]
+    assert npm_guard.refusal_reason("npx", plan.cmd[1:]) is None
+    for relative_cwd in (".", "site"):
+        layout["log"].unlink(missing_ok=True)
+        _assert_forwarded_unchanged(layout, "npx", plan.cmd[1:], layout["worktree"] / relative_cwd)
+
+
+def _assert_forwarded_unchanged(layout, tool: str, args: list[str], cwd: Path) -> None:
     for name in ("npm", "npx"):
         (layout["fake_bin"] / name).write_text(
             '#!/usr/bin/env bash\nprintf "%s\\0" "$@" > "$FAKE_NPM_LOG"\ncat\necho "fake-stderr" >&2\nexit 9\n',
             encoding="utf-8",
         )
-    cwd = layout["worktree"] / relative_cwd
     proc = subprocess.run(
         [str(layout["shim_dir"] / tool), *args],
         cwd=cwd,
@@ -661,17 +748,19 @@ def _real_npm() -> str | None:
     return None
 
 
-def _run_real(layout: dict[str, Path], args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+def _run_real(
+    layout: dict[str, Path], args: list[str], cwd: Path, tool: str = "npm", *, shim: bool = True
+) -> subprocess.CompletedProcess[str]:
     real_npm = Path(_real_npm())
     path_entries = [str(layout["shim_dir"]), str(real_npm.parent), "/usr/bin", "/bin"]
     env = {
-        "PATH": os.pathsep.join(path_entries),
+        "PATH": os.pathsep.join(path_entries if shim else path_entries[1:]),
         "HOME": str(layout["tmp"]),
         "npm_config_update_notifier": "false",
         "npm_config_offline": "true",
     }
     return subprocess.run(
-        [str(layout["shim_dir"] / "npm"), *args],
+        [str(layout["shim_dir"] / tool) if shim else str(real_npm.parent / tool), *args],
         cwd=cwd,
         env=env,
         capture_output=True,
@@ -699,6 +788,91 @@ def test_real_npm_early_exits_run_and_leave_the_link_target_intact(layout, args)
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout.strip()
     assert "refused" not in proc.stderr
+    assert _sentinels_intact(layout)
+
+
+def _lockable(layout: dict[str, Path]) -> None:
+    """Give the worktree and site/ a package.json and an empty lockfile, so real `npm ci` runs offline."""
+    for folder, name in ((layout["worktree"], "worktree"), (layout["worktree"] / "site", "site")):
+        _write_json(folder / "package.json", {"name": name, "version": "1.0.0"})
+        _write_json(
+            folder / "package-lock.json",
+            {"name": name, "version": "1.0.0", "lockfileVersion": 3, "requires": True, "packages": {"": {}}},
+        )
+
+
+def _escaped_npm_ci(args: list[str], real_npm: Path) -> list[str]:
+    """The review's shell text with the real npm's directory: the shell turns `n\\pm c\\i` into `npm ci`."""
+    return [arg.replace("/usr/bin/", f"{real_npm.parent}/") for arg in args]
+
+
+@pytest.mark.skipif(_real_npm() is None, reason="needs a real npm")
+@pytest.mark.parametrize("case", sorted(REVIEW_SHELL_CALLS))
+@pytest.mark.parametrize("relative_cwd", [".", "site"])
+def test_real_npm_escaped_shell_call_is_refused(layout, case, relative_cwd):
+    """The review's eight reproductions: through the shim real npm never runs and the sentinel survives."""
+    _lockable(layout)
+    tool, args = REVIEW_SHELL_CALLS[case]
+    args = _escaped_npm_ci(args, Path(_real_npm()))
+    proc = _run_real(layout, args, layout["worktree"] / relative_cwd, tool)
+    assert proc.returncode == 1, proc.stderr
+    assert "is refused: as its own options" in proc.stderr
+    assert _sentinels_intact(layout)
+
+
+@pytest.mark.skipif(_real_npm() is None, reason="needs a real npm")
+@pytest.mark.parametrize("case", ["npm-exec-c", "npx-call-eq"])
+@pytest.mark.parametrize("relative_cwd", [".", "site"])
+def test_real_npm_escaped_shell_call_unguarded_destroys_the_sentinel(layout, case, relative_cwd):
+    """Control: without the shim the same escaped text reaches `npm ci`, which empties the shared folder."""
+    _lockable(layout)
+    tool, args = REVIEW_SHELL_CALLS[case]
+    proc = _run_real(
+        layout, _escaped_npm_ci(args, Path(_real_npm())), layout["worktree"] / relative_cwd, tool, shim=False
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert not _sentinels_intact(layout)
+
+
+REAL_SHELL_REFUSALS = [
+    ("npx", ["sh", "-c", "npm ci"]),
+    ("npm", ["exec", "--", "bash", "-c", "n\\pm c\\i"]),
+    ("npx", ["node", "-e", "require('child_process').execSync('npm ci')"]),
+    ("npx", ["env", "npm", "ci"]),
+    ("npx", ["-p", "npm", "npm", "ci"]),
+    ("npx", ["--package=npm@10", "npm", "ci"]),
+    ("npx", ["--yes", "npm", "ci"]),
+    ("npx", ["-c", "$'\\x6epm' ci"]),
+    ("npx", ["-c", "x=npm; ${x} ci"]),
+]
+
+
+@pytest.mark.skipif(_real_npm() is None, reason="needs a real npm")
+@pytest.mark.parametrize("tool,args", REAL_SHELL_REFUSALS, ids=_launch_id)
+def test_real_npm_shell_and_interpreter_launches_are_refused(layout, tool, args):
+    _lockable(layout)
+    proc = _run_real(layout, args, layout["worktree"] / "site", tool)
+    assert proc.returncode == 1, proc.stderr
+    assert "refused" in proc.stderr and "#9460" in proc.stderr
+    assert _sentinels_intact(layout)
+
+
+@pytest.mark.skipif(_real_npm() is None, reason="needs a real npm")
+@pytest.mark.parametrize(
+    "tool,args,relative_cwd",
+    [("npm", ["--prefix", "site", "exec", "--", "vitest", "run"], "."), ("npx", ["vitest", "run"], "site")],
+    ids=["npm-prefix-exec", "npx-in-site"],
+)
+def test_real_npm_allowlisted_program_runs_with_the_sentinel_intact(layout, tool, args, relative_cwd):
+    """A local vitest bin behind the link runs through real npm; its output and exit code come back unchanged."""
+    bin_dir = layout["primary"] / "site" / "node_modules" / ".bin"
+    bin_dir.mkdir()
+    (bin_dir / "vitest").write_text('#!/bin/sh\necho "vitest ran: $*"\necho vitest-err >&2\nexit 3\n', encoding="utf-8")
+    (bin_dir / "vitest").chmod(0o755)
+    proc = _run_real(layout, args, layout["worktree"] / relative_cwd, tool)
+    assert proc.returncode == 3, proc.stderr
+    assert proc.stdout == "vitest ran: run\n"
+    assert "vitest-err" in proc.stderr and "refused" not in proc.stderr
     assert _sentinels_intact(layout)
 
 
@@ -771,22 +945,43 @@ def test_pinned_real_tool_is_used(layout):
         ("npm", ["cache", "clean"], False),
         ("npm", ["LS"], False),
         ("npx", ["--version"], True),
-        ("npx", ["-y", "--version"], True),
-        ("npx", [], True),
+        # Adapted for the closed exec rule (each was allowed by the text-classifying rule):
+        # no program, a --package or -c option, or a program off the allowlist now refuses.
+        ("npx", ["-y", "--version"], False),
+        ("npx", [], False),
+        ("npx", ["--package=@scope/tool@1.2.3", "tool"], False),
+        ("npx", ["npm-check-updates"], False),
+        ("npx", ["-c", "tool run build"], False),
+        ("npm", ["exec"], False),
+        ("npm", ["--json", "exec", "ls"], False),
         ("npx", ["vitest", "--reporter=verbose"], True),
-        ("npx", ["--package=@scope/tool@1.2.3", "tool"], True),
         ("npx", ["--package=npm@10", "tool"], False),
         ("npx", ["-c=npm ci"], False),
         ("npx", ["NPM"], False),
+        ("npx", ["Vitest"], False),
+        ("npx", ["vitest.cmd"], False),
         ("npx", ["pnpm.exe"], False),
         ("npx", ["npm:pnpm@9"], False),
-        ("npx", ["npm-check-updates"], True),
-        ("npx", ["tool", "--save=install"], False),
-        ("npx", ["-c", "tool run build"], True),
-        ("npm", ["exec"], True),
-        ("npm", ["--json", "exec", "ls"], True),
+        ("npx", ["vitest", "--save=install"], False),
+        ("npx", ["---", "vitest", "-c", "x"], True),
+        ("npx", ["--prefix", "site", "vitest"], True),
+        ("npx", ["-C=site", "vitest"], True),
+        ("npx", ["--prefix"], False),
+        ("npx", ["--no-install", "vitest"], True),
+        ("npx", ["--no-fund", "vitest"], False),
+        ("npx", ["--no-fund", "--yes", "vitest"], True),
+        ("npx", ["@anthropic-ai/claude-code@latest"], True),
+        ("npx", ["@anthropic-ai/claude-code/../npm"], False),
+        ("npx", ["@anthropic-ai/claude-code@npm:npm"], False),
+        ("npx", ["vitest@"], False),
+        ("npm", ["--no-fund", "exec", "--", "vitest"], True),
+        ("npm", ["--no", "exec", "--", "vitest"], False),
+        ("npm", ["exec", "--", "vitest", "-c", "npm ci"], True),
+        ("npm", ["exec", "vitest", "--", "-c", "npm ci"], True),
         ("npm", ["exec", "--", "tool", "audit", "fix"], False),
         ("npm", ["run", "x", "ci"], False),
+        ("npm", ["run", "x"], True),
+        ("npm", ["--json", "true", "exec", "vitest"], False),
     ],
     ids=lambda value: value if isinstance(value, str) else (" ".join(value) if isinstance(value, list) else str(value)),
 )

@@ -23,17 +23,20 @@ resolution are deliberately not modelled, so none of them can steer the guard:
 * At least one does, or the working directory cannot be read: only clearly
   read-only calls pass, namely a version/help
   early exit, an allowlisted read-only subcommand with no destructive command
-  word anywhere in the arguments, or ``npx``/``npm exec`` whose arguments name
-  no package manager and no install word. Everything else is refused, including
-  global installs.
+  word anywhere in the arguments, or ``npx``/``npm exec`` running a program on
+  a closed allowlist. Everything else is refused, including global installs.
 
 ``npx`` and ``npm exec`` run an existing binary or fetch a package into npm's
 own cache; they do not rewrite the project's node_modules. The hazard is the
-tool they launch: a package manager (or an install through some other tool)
-writes through the link, and pnpm, yarn or an npm reached by path bypass this
-shim. So any argument naming a package manager, as a name, spec, scope or path,
-in a ``--key=value`` or in the shell command of ``-c``/``--call``, refuses the
-call, and so does any argument that is an install word.
+program they launch: a package manager, or a shell or interpreter that starts
+one, writes through the link, and pnpm, yarn or an npm reached by path bypass
+this shim. Telling such a program apart by reading shell text keeps failing
+open (escapes, quoting, substitutions, nested interpreters), so no text is
+read: the program, found from the argument list alone, must be one of the
+tools this repository runs that way, every option npm parses must be one of a
+handful of harmless ones (``-c``/``--call``, ``--package`` and ``--shell`` are
+refused outright, whatever their value), and no argument of the program may
+name a package manager or be an install word.
 
 Standard library only: the shim runs it with ``-I -S``.
 """
@@ -100,8 +103,33 @@ PACKAGE_MANAGERS = frozenset(
 )
 SCRIPT_EXTENSIONS = frozenset({"js", "cjs", "mjs", "cmd", "exe", "ps1"})
 
-# npx/npm exec options whose value is a shell command line.
-SHELL_OPTIONS = frozenset({"-c", "--call"})
+# The only programs npx, npm exec and npm x may run in a protected worktree: the
+# tools this repository runs that way. A shell, an interpreter or a package
+# manager is deliberately absent, so it is refused like any other program.
+EXEC_PROGRAMS = frozenset(
+    {
+        "vitest",  # site unit tests: docs/practice/K3-BUILD-SPEC.md, docs/runbooks/pronunciation-audio.md
+        "tsc",  # site type check: docs/practice/K3-BUILD-SPEC.md
+        "playwright",  # site e2e: .github/workflows/ui-policy-gate.yml, docs/practice/K3-BUILD-SPEC.md
+        "markdownlint-cli2",  # docs lint: docs/prompts/orchestrators/shared/validation-checklist.md
+        "@anthropic-ai/claude-code",  # Claude adapter fallback: scripts/agent_runtime/adapters/claude.py
+    }
+)
+
+# Options npx/npm exec may carry where npm parses them (before the program, and
+# for npm exec anywhere before ``--``), besides ``--``, ``--prefix``/``-C``. Any
+# other option refuses, notably -c/--call, -p/--package and --shell.
+EXEC_FLAGS = frozenset({"-y", "--yes", "--no", "--no-install", "--no-fund", "--no-audit"})
+EXEC_PREFIX_OPTIONS = frozenset({"--prefix", "-C"})
+# Flags after which the next word might be read as their value rather than as
+# the program: npx knows only npm's boolean options (``yes``) as value-less, and
+# ``--no`` is no npm option at all.
+NPX_FLAGS_BEFORE_A_VALUE = frozenset({"--no", "--no-fund", "--no-audit"})
+NPM_FLAGS_BEFORE_A_VALUE = frozenset({"--no"})
+
+# A package version or tag: no ``npm:`` alias, URL, path or range with spaces.
+_VERSION = re.compile(r"[A-Za-z0-9._^~*+-]+")
+_SCOPED_PACKAGE = re.compile(r"(@[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._-]*)(?:@(.*))?")
 
 
 def start_paths(cwd: Path | None = None) -> list[Path] | None:
@@ -255,35 +283,92 @@ def _names_package_manager(word: str) -> bool:
     return False
 
 
-def _launch_words(args: Sequence[str]) -> list[str]:
-    """The arguments, ``--key=value`` values and the words of ``-c``/``--call`` shell commands."""
-    words: list[str] = []
-    shell_next = False
-    for token in args:
-        key, equals, value = token.partition("=")
-        if shell_next:
-            words += re.split(r"[\s;&|()<>`'\"$]+", token)
-        elif token.startswith("-") and equals:
-            words += re.split(r"[\s;&|()<>`'\"$]+", value) if key in SHELL_OPTIONS else [value]
+def _program_name(word: str) -> str | None:
+    """The allowlist name ``word`` spells (``vitest``, ``vitest@3``, ``./node_modules/.bin/vitest``,
+    ``@scope/pkg@latest``), or None for any other spelling (an alias, URL, ``git:`` spec, a range)."""
+    if not word or any(char.isspace() or char in ":\\" for char in word):
+        return None
+    if word.startswith("@"):
+        match = _SCOPED_PACKAGE.fullmatch(word)
+        if not match or (match[2] is not None and not _VERSION.fullmatch(match[2])):
+            return None
+        return match[1]
+    if "/" in word:
+        return word.rsplit("/", 1)[1] or None
+    name, at, version = word.partition("@")
+    if at and not _VERSION.fullmatch(version):
+        return None
+    return name
+
+
+def _exec_refusal(launcher: str, args: Sequence[str]) -> str | None:
+    """Why ``npx ARGS`` or the exec call ``npm ARGS`` is refused, or None when it runs.
+
+    The program is found from the argument list alone: npm parses options up to
+    the first ``--`` (npx first puts ``--`` before the first word that is not an
+    option's value), so it is the first word that is neither an option nor
+    ``--prefix``'s value (for npm, the word after ``exec``/``x``), or the token
+    after ``--``. Every option npm parses must be a harmless one, and when a
+    flag could swallow the next word as its value the program is undecidable.
+    """
+    npx = launcher == "npx"
+    flags_before_a_value = NPX_FLAGS_BEFORE_A_VALUE if npx else NPM_FLAGS_BEFORE_A_VALUE
+    words: list[int] = []
+    ended = False
+    index = 0
+    while index < len(args):
+        token = args[index]
+        following = args[index + 1] if index + 1 < len(args) else None
+        if ended or not token.startswith("-") or token == "-":
+            words.append(index)
+            ended = ended or npx
+        elif set(token) == {"-"}:
+            ended = True
+        elif token in EXEC_PREFIX_OPTIONS:
+            if following is None or following.startswith("-"):
+                return f"`{token}` must be followed by a directory that does not start with `-`."
+            index += 1
+        elif token.partition("=")[0] in EXEC_PREFIX_OPTIONS:
+            pass
+        elif token in EXEC_FLAGS:
+            if token in flags_before_a_value and following is not None and not following.startswith("-"):
+                return (
+                    f"could not tell whether `{following}` is the program or the value of `{token}`; "
+                    f"write `{token} -- {following}`."
+                )
         else:
-            words.append(token)
-        shell_next = not shell_next and token in SHELL_OPTIONS
-    return words
-
-
-def _launch_refusal(launcher: str, args: Sequence[str]) -> str | None:
-    """Why ``npx``/``npm exec`` with ``args`` could reach a package manager, or None."""
-    for word in _launch_words(args):
-        if _names_package_manager(word):
             return (
-                f"`{word}` names a package manager; {launcher} may launch other tools here, but a "
-                "package manager would write through the link."
+                f"`{token.partition('=')[0]}` is refused: as its own options {launcher} here takes only "
+                "-y/--yes, --no, --no-install, --no-fund, --no-audit, --prefix/-C and --; shell-call "
+                "options (-c, --call), --package and every other option are refused without reading "
+                "their value (put the program's own options after `--`)."
             )
-        if word in DESTRUCTIVE_WORDS:
-            return (
-                f"`{word}` is an install word; {launcher} is refused when any argument is one rather "
-                "than guess whether the launched tool installs."
-            )
+        index += 1
+
+    position = 0 if npx else 1
+    if not npx and (not words or args[words[0]] not in EXEC_COMMANDS):
+        return "could not tell which word is the npm subcommand; put options after `exec`."
+    if len(words) <= position:
+        return f"{launcher} names no program; without one it runs a shell or the configured `call` command."
+    program = args[words[position]]
+    if _program_name(program) not in EXEC_PROGRAMS:
+        return (
+            f"`{program}` is not on the allowlist of programs {launcher} may run here "
+            f"({', '.join(sorted(EXEC_PROGRAMS))}); shells, interpreters and package managers never are."
+        )
+    for word in args[words[position] + 1 :]:
+        _, equals, value = word.partition("=")
+        for candidate in (word, value) if word.startswith("-") and equals else (word,):
+            if _names_package_manager(candidate):
+                return (
+                    f"`{candidate}` names a package manager; {launcher} is refused when an argument of "
+                    "the program does."
+                )
+            if candidate in DESTRUCTIVE_WORDS:
+                return (
+                    f"`{candidate}` is an install word; {launcher} is refused when an argument of the "
+                    "program is one rather than guess whether the program installs."
+                )
     return None
 
 
@@ -293,12 +378,12 @@ def refusal_reason(tool: str, args: Sequence[str]) -> str | None:
     if _early_exit(tool, args, kinds):
         return None
     if tool == "npx":
-        return _launch_refusal("npx", args)
+        return _exec_refusal("npx", args)
     words = [index for index, kind in enumerate(kinds) if kind in ("positional", "maybe-value")]
-    if any(args[index] in EXEC_COMMANDS for index in words):
-        reason = _launch_refusal("npm exec", args)
-        if reason:
-            return reason
+    # Any word npm might take as the subcommand: everything up to the first certain one.
+    candidates = words[: next((n + 1 for n, index in enumerate(words) if kinds[index] == "positional"), None)]
+    if any(args[index] in EXEC_COMMANDS for index in candidates):
+        return _exec_refusal("npm exec", args)
     destructive = [token for token in args if token in DESTRUCTIVE_WORDS]
     if destructive:
         return (
@@ -309,11 +394,6 @@ def refusal_reason(tool: str, args: Sequence[str]) -> str | None:
         return "`audit fix` rewrites node_modules."
     for position, index in enumerate(words):
         word = args[index]
-        if word in EXEC_COMMANDS and position == 0:
-            # Its arguments passed the launch check; as a maybe-value the next word decides.
-            if kinds[index] == "positional":
-                return None
-            continue
         if word not in READ_ONLY_COMMANDS:
             if kinds[index] == "maybe-value" or position > 0:
                 return (
@@ -338,9 +418,9 @@ def refusal_message(tool: str, args: Sequence[str], links: Sequence[tuple[Path, 
     if links:
         unlinks = " && ".join(f"unlink {link}" for _, link, _ in links)
         lines += [
-            "       While such a link exists only clearly read-only npm commands run here; installs,",
-            "       global installs (-g), and npx or npm exec naming a package manager or an install",
-            "       word are refused because they could empty the shared folder through the link.",
+            "       While such a link exists only clearly read-only npm commands run here, and npx or",
+            "       npm exec only run allowlisted programs; installs, global installs (-g) and every",
+            "       other program are refused because they could empty the shared folder through the link.",
             f"       Safe alternative: remove the link inside this worktree first (`{unlinks}`",
             "       deletes only the link, never its target), then install here so npm creates a",
             "       worktree-local node_modules; or run the command outside this worktree.",

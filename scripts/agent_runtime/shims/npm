@@ -7,8 +7,8 @@
 # (and `npx`, a symlink to it) asks scripts/agent_runtime/npm_guard.py first:
 # when the working directory or any ancestor has such a link resolving outside
 # that ancestor (or the working directory cannot be read), only clearly
-# read-only calls (and npx/npm exec that name no package manager and no install
-# word) run and everything else is refused with the safe alternative;
+# read-only calls (and npx/npm exec running a program on a closed allowlist)
+# run and everything else is refused with the safe alternative;
 # anywhere else every call passes through. Calls that run exec the real tool
 # with their arguments, stdin, stdout, stderr and exit code intact.
 
