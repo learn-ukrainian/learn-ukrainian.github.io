@@ -174,7 +174,24 @@ def recap_lesson(n: int) -> dict:
         "word_target": 5,
         "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": []}},
         "steps": [{"id": "s1", "kind": "practice", "evidence": ["T-001"], "practice": ["a1"]}],
-        "activities": [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Review quiz."}],
+        "activities": [
+            {
+                "id": "a1",
+                "type": "quiz",
+                "placement": "inline",
+                "focus": "Review quiz. kind: comprehension; host: {kind: dialogue}.",
+            }
+        ],
+        # The recap's first-person story (A1 arc D4; #9487 C7): a dialogue block with one narrator.
+        "dialogue": {
+            "step": "s1",
+            "situation": "The narrator retells the module.",
+            "setting": "One short story.",
+            "speakers": [{"name": "Narrator", "role": "narrator", "gender": "f", "evidence": "W-040"}],
+            "register": "informal",
+            "target_grammar": "Retells the module.",
+            "evidence": ["T-001"],
+        },
     }
 
 

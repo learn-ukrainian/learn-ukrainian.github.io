@@ -174,9 +174,24 @@ def base_plan() -> dict:
                     }
                 ],
                 "activities": [
-                    {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Review quiz."},
+                    {
+                        "id": "a1",
+                        "type": "quiz",
+                        "placement": "inline",
+                        "focus": "Review quiz. kind: comprehension; host: {kind: dialogue}.",
+                    },
                     {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Review workbook quiz."},
                 ],
+                # The recap's first-person story (A1 arc D4; #9487 C7): a dialogue block with one narrator.
+                "dialogue": {
+                    "step": "s1",
+                    "situation": "The narrator retells the module.",
+                    "setting": "One short story.",
+                    "speakers": [{"name": "Name One", "role": "narrator", "gender": "f", "evidence": "W-004"}],
+                    "register": "informal",
+                    "target_grammar": "Retells the first point.",
+                    "evidence": ["T-001"],
+                },
             },
         ],
     }
@@ -381,6 +396,10 @@ def build_cyrillic_lemma() -> tuple[dict, dict, dict]:
     plan, pack, words = build_base()
     plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["lemma"] = LEMMA_MAMA
     words["words"][0]["lemma"] = LEMMA_MAMA
+    # М is not among the lesson's letters, so the lesson's recording models the word (#9487 C10).
+    pack["videos"][0]["models"] = {"letters": [], "words": [words["words"][0]["id"]], "segment": None}
+    plan["lessons"][1]["videos"] = [{"evidence": "V-001", "use": "Recap whole-word model."}]
+    plan["lessons"][1]["steps"][0]["evidence"].append("V-001")
     return plan, pack, words
 
 

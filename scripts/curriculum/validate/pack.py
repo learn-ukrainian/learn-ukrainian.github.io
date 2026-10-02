@@ -5,7 +5,9 @@ A module pack (evidence/<level>/<slug>.yaml) holds top-level lists `texts`,
 `exercises`, `examples`, `errors`, `videos`, `standard` of records carrying
 `id`, and no `words:` list — its presence fails. A video record's explicit
 listening models (`models: {letters, words}`) are kept; descriptions never
-establish models (evidence-pack-v1 schema). The word store
+establish models (evidence-pack-v1 schema). A text record's `quote` bytes and a
+video record's `url` and `models.segment` are kept for the review gates (#9487).
+The word store
 (evidence/<level>/_words.yaml) holds `words[] {id, lemma, forms[] {tags}}`.
 A `<file>.lock` sidecar sits beside each file; its first whitespace-delimited
 token is the lowercase hex sha256 of the file's bytes. Duplicate ids fail.
@@ -65,6 +67,10 @@ class Pack:
     error_ids: frozenset[str] = field(default_factory=frozenset)
     #: V- id -> its explicit models; a video record without a models mapping is absent here.
     video_models: dict[str, VideoModels] = field(default_factory=dict)
+    #: T- id -> the record's quote bytes, as the engine would print them; a text record without a quote is absent.
+    quotes: dict[str, str] = field(default_factory=dict)
+    #: V- id -> (url, models.segment or None); a video record without a string url is absent.
+    video_sources: dict[str, tuple[str, str | None]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -76,6 +82,8 @@ class WordRecord:
     form_texts: tuple[str, ...] = ()
     #: The record's CEFR level as the store spells it ("A1"…"C2"); None when it carries none.
     cefr_level: str | None = None
+    #: (tags, surface text) of every form that carries a text, in store order.
+    tagged_forms: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -98,6 +106,8 @@ def load_pack(pack_path: Path) -> Pack:
     ids: set[str] = set()
     error_ids: set[str] = set()
     video_models: dict[str, VideoModels] = {}
+    quotes: dict[str, str] = {}
+    video_sources: dict[str, tuple[str, str | None]] = {}
     for list_name in PACK_LISTS:
         records = data.get(list_name, [])
         if records is None:
@@ -114,13 +124,27 @@ def load_pack(pack_path: Path) -> Pack:
             ids.add(record["id"])
             if list_name == "errors":
                 error_ids.add(record["id"])
+            if list_name == "texts" and isinstance(record.get("quote"), str):
+                quotes[record["id"]] = record["quote"]
             if list_name == "videos" and isinstance(record.get("models"), dict):
                 models = record["models"]
                 video_models[record["id"]] = VideoModels(
                     letters=tuple(item for item in models.get("letters") or [] if isinstance(item, str)),
                     words=tuple(item for item in models.get("words") or [] if isinstance(item, str)),
                 )
-    return Pack(path=pack_path, ids=frozenset(ids), error_ids=frozenset(error_ids), video_models=video_models)
+            if list_name == "videos" and isinstance(record.get("url"), str):
+                segment = (
+                    (record.get("models") or {}).get("segment") if isinstance(record.get("models"), dict) else None
+                )
+                video_sources[record["id"]] = (record["url"], segment if isinstance(segment, str) else None)
+    return Pack(
+        path=pack_path,
+        ids=frozenset(ids),
+        error_ids=frozenset(error_ids),
+        video_models=video_models,
+        quotes=quotes,
+        video_sources=video_sources,
+    )
 
 
 def load_words(words_path: Path) -> WordStore:
@@ -139,6 +163,7 @@ def load_words(words_path: Path) -> WordStore:
             raise PlanError(codes.WORDS_MALFORMED, f"{words_path}: a word record lacks id, lemma or forms: {entry!r}")
         tags: set[str] = set()
         form_texts: list[str] = []
+        tagged_forms: list[tuple[str, str]] = []
         for form in entry["forms"]:
             if not isinstance(form, dict) or not isinstance(form.get("tags"), str):
                 raise PlanError(
@@ -147,6 +172,7 @@ def load_words(words_path: Path) -> WordStore:
             tags.add(form["tags"])
             if isinstance(form.get("form"), str):
                 form_texts.append(form["form"])
+                tagged_forms.append((form["tags"], form["form"]))
         if entry["id"] in records:
             raise PlanError(codes.DUPLICATE_WORD_ID, f"{words_path}: id {entry['id']} appears twice")
         cefr = entry.get("cefr")
@@ -157,5 +183,6 @@ def load_words(words_path: Path) -> WordStore:
             form_tags=frozenset(tags),
             form_texts=tuple(form_texts),
             cefr_level=cefr_level,
+            tagged_forms=tuple(tagged_forms),
         )
     return WordStore(path=words_path, records=records)

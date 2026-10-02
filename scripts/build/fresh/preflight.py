@@ -4,7 +4,10 @@ Before any paid writer call, verifies availability of evidence records:
 - for each step's needs:
   * example: EX- record exists with right kind ('example') and locked bytes
   * quote: T- record exists and the source registry permits this excerpt
-    with its required attribution
+    with its required attribution; its bytes carry no private-use code point,
+    no non-Cyrillic symbol in a transcription bracket, no web-address watermark
+    and no word that is neither a word-store spelling nor a VESUM form
+    (#9487 C12, scripts/curriculum/validate/quote_bytes.py)
   * error: E- record exists with right kind ('error') and locked bytes
   * video: V- record exists with right kind ('video') and locked bytes
   * culture: T- record exists with right kind ('culture') and locked bytes
@@ -16,6 +19,7 @@ Before any paid writer call, verifies availability of evidence records:
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -27,6 +31,7 @@ from scripts.curriculum.evidence import pack as pack_module
 from scripts.curriculum.resolver.ambiguity import readings
 from scripts.curriculum.resolver.inputs import Allowlist
 from scripts.curriculum.resolver.narrow import FormIndex
+from scripts.curriculum.validate import quote_bytes
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -89,6 +94,47 @@ def compute_homographs(allowlist: Allowlist) -> list[str]:
     return sorted(ambiguities)
 
 
+def _quote_byte_gaps(
+    quote_records: dict[str, str],
+    pack_records: dict[str, dict[str, Any]],
+    store_records: dict[str, dict[str, Any]],
+    lookup: Callable[[list[str]], set[str]] | None,
+) -> list[Gap]:
+    """quote_bytes gaps for the quote records a lesson's steps need (#9487 C12)."""
+    gaps: list[Gap] = []
+    tokens: dict[str, list[quote_bytes.WordToken]] = {}
+    for rid, step_id in quote_records.items():
+        text = pack_records[rid].get("quote")
+        if not isinstance(text, str):
+            continue
+        for defect in quote_bytes.byte_defects(text):
+            gaps.append(Gap(step=step_id, need="quote_bytes", detail=f"{defect.kind}: quote {rid} {defect.detail}"))
+        tokens[rid] = quote_bytes.word_tokens(text)
+    if not any(tokens.values()):
+        return gaps
+    known = quote_bytes.known_spellings(
+        text
+        for record in store_records.values()
+        for text in [record.get("lemma"), *(form.get("form") for form in record.get("forms") or [])]
+        if isinstance(text, str)
+    )
+    try:
+        unknown = set(
+            quote_bytes.unknown_words(
+                [token for found in tokens.values() for token in found], known, lookup or quote_bytes.vesum_lookup
+            )
+        )
+    except quote_bytes.VesumUnavailable as error:
+        first = next(iter(tokens))
+        return [*gaps, Gap(step=quote_records[first], need="quote_bytes", detail=f"vesum_unavailable: {error}")]
+    for rid, found in tokens.items():
+        words = [token.surface for token in found if token.surface in unknown]
+        if words:
+            detail = f"{quote_bytes.NOT_IN_VESUM}: quote {rid} prints {', '.join(map(repr, words))}"
+            gaps.append(Gap(step=quote_records[rid], need="quote_bytes", detail=detail))
+    return gaps
+
+
 def preflight_lesson(
     plan_entry: dict[str, Any],
     *,
@@ -107,12 +153,15 @@ def preflight_lesson(
     repo_root: Path | None = None,
     plans_dir: Path | None = None,
     evidence_dir: Path | None = None,
+    quote_word_lookup: Callable[[list[str]], set[str]] | None = None,
 ) -> PreflightResult:
     """Run preflight checks for one lesson entry.
 
     Verifies availability, record kind, and lock integrity.
     If any gap is found, status is 'evidence_gap', passed is False, and
     gap report is written atomically (0o644) to gap_report_path if specified.
+    quote_word_lookup replaces the VESUM lookup of quote words (tests); an unreadable
+    VESUM is a ``quote_bytes`` gap, never a pass.
     """
     gaps: list[Gap] = []
     steps = plan_entry.get("steps", [])
@@ -176,6 +225,7 @@ def preflight_lesson(
                 store_records[rec["id"]] = rec
 
     # 4. Check step needs by record kind (containing pack list) and existence
+    quote_records: dict[str, str] = {}  # quote record id -> first step that needs it
     for step in steps:
         step_id = step.get("id", "")
         needs = step.get("needs") or []
@@ -210,6 +260,7 @@ def preflight_lesson(
                                 publication.quote_attribution(pack_records[rid], source_registry)
                             except ValueError as exc:
                                 gaps.append(Gap(step=step_id, need="publication_right", detail=str(exc)))
+                            quote_records.setdefault(rid, step_id)
                 else:
                     # No record found in expected_list
                     mismatched = [
@@ -285,6 +336,9 @@ def preflight_lesson(
                                         detail=f"word_store: cited paradigm form {pending_form.get('form')!r} ({p_tag}) in {wid} has pending stress",
                                     )
                                 )
+
+    # 4b. Quote bytes the engine would print verbatim (#9487 C12)
+    gaps += _quote_byte_gaps(quote_records, pack_records, store_records, quote_word_lookup)
 
     # 5. Check all cited forms in lesson for non-pending stress (R-23)
     inv = plan_entry.get("inventory") or {}

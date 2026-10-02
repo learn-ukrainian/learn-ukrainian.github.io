@@ -139,6 +139,20 @@ NAMED_BEFORE_INTRODUCTION = "named_before_introduction"
 DUPLICATE_ACTIVITY_FOCUS = "duplicate_activity_focus"
 LISTENING_QUIZ_SINGLE_KEY = "listening_quiz_single_key"
 INCIDENTAL_NOT_DECODABLE = "incidental_not_decodable"
+# second-round review gates C7–C14 (issue #9487)
+RECAP_STORY_MISSING = "recap_story_missing"
+RECAP_COMPREHENSION_NOT_ON_STORY = "recap_comprehension_not_on_story"
+RECAP_COMPREHENSION_AFTER_PRODUCTION = "recap_comprehension_after_production"
+FOCUS_EVIDENCE_NOT_IN_STEPS = "focus_evidence_not_in_steps"
+STEP_WORD_NOT_DECODABLE = "step_word_not_decodable"
+RECYCLED_WORD_NOT_DECODABLE_IN_PRINT = "recycled_word_not_decodable_in_print"
+ODD_ONE_OUT_ROW_INVALID = "odd_one_out_row_invalid"
+QUOTE_HOST_PRIVATE_USE = "quote_host_private_use"
+QUOTE_HOST_TRANSCRIPTION_SYMBOL = "quote_host_transcription_symbol"
+QUOTE_HOST_WATERMARK = "quote_host_watermark"
+QUOTE_HOST_TOKEN_NOT_IN_VESUM = "quote_host_token_not_in_vesum"
+COMPUTED_KEY_SINGLE_VALUE = "computed_key_single_value"
+DUPLICATE_LESSON_VIDEO = "duplicate_lesson_video"
 
 # --- notes (never fail the run) ---------------------------------------------
 # mechanical plan gates M1, M3, M5 (issue #9138) report here or as not_checked, never as failures
@@ -150,6 +164,9 @@ CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
 INCIDENTAL_LEMMA_NOT_DECODABLE = "incidental_lemma_not_decodable"
 HEARD_WORD_WITHOUT_VIDEO = "heard_word_without_video"
 EARLIER_CORE_NOT_RECYCLED = "earlier_core_not_recycled"
+ODD_ONE_OUT_FEATURE_NOT_COMPUTED = "odd_one_out_feature_not_computed"
+STEP_WORD_LEMMA_NOT_DECODABLE = "step_word_lemma_not_decodable"
+COMPUTED_KEY_FORM_DEPENDENT = "computed_key_form_dependent"
 
 # --- not_checked (never fail the run, always reported) ----------------------
 MINUTES_CONSTANTS_UNDEFINED = "minutes_constants_undefined"
@@ -236,6 +253,22 @@ DESCRIPTIONS = {
     INCIDENTAL_LEMMA_NOT_DECODABLE: "note (gate C4, #9487): an incidental lemma needs a letter not taught through its lesson while another form of its record is readable; the plan does not bind the form, so the plan review confirms it",
     HEARD_WORD_WITHOUT_VIDEO: "note (gate C5, #9487): a teach-text clause says a word id is heard, and no video the step cites lists it in models.words; 'heard' is read from prose, so the plan review confirms it",
     EARLIER_CORE_NOT_RECYCLED: "note (gate C6, #9487): core records of earlier positions that no recycled list of the module names, listed with their lemma and position",
+    RECAP_STORY_MISSING: "failure (gate C7, #9487): a recap lesson declares no first-person story, i.e. no dialogue block with exactly one speaker, the narrator (A1 arc D4, plan schema §2b)",
+    RECAP_COMPREHENSION_NOT_ON_STORY: "failure (gate C7, #9487): a recap lesson has no kind: comprehension activity, or one whose declared host is not its story block (host: {kind: dialogue})",
+    RECAP_COMPREHENSION_AFTER_PRODUCTION: "failure (gate C8, #9487): in a recap lesson an activity other than an unscored observe is linked (steps, practice order, consolidation) before a comprehension activity",
+    FOCUS_EVIDENCE_NOT_IN_STEPS: "failure (gate C9, #9487): an activity focus names a pack record that no step of its lesson cites as evidence and that is not the activity's own model or error_refs, so the writer never receives it (R-26)",
+    STEP_WORD_NOT_DECODABLE: "failure (gate C10, #9487): in a letter-stage module, a word a step introduces or uses has no word-store spelling readable with the letters taught so far, and no video the lesson cites lists it in models.words",
+    RECYCLED_WORD_NOT_DECODABLE_IN_PRINT: "failure (gate C10, #9487): a recycled word a step uses is not readable with the letters taught so far, and the video that models it is cited by the lesson but not by that step",
+    ODD_ONE_OUT_ROW_INVALID: "failure (gate C11, #9487): an odd-one-out row (a quote-host line of three or more words) does not have exactly one member differing in the feature the focus states (initial or final letter, syllables, letter count)",
+    QUOTE_HOST_PRIVATE_USE: "failure (gate C12, #9487): a quote host's bytes carry a private-use code point",
+    QUOTE_HOST_TRANSCRIPTION_SYMBOL: "failure (gate C12, #9487): a quote host's transcription bracket holds a character that is not a Cyrillic letter, combining mark, space, prime, apostrophe, | , - or length mark",
+    QUOTE_HOST_WATERMARK: "failure (gate C12, #9487): a quote host's bytes carry a web address (a publisher watermark)",
+    QUOTE_HOST_TOKEN_NOT_IN_VESUM: "failure (gate C12, #9487): a quote host prints a word of two or more vowels that is neither a word-store spelling nor a VESUM form (an OCR fragment, a split word, or a word VESUM does not list)",
+    COMPUTED_KEY_SINGLE_VALUE: "failure (gate C13, #9487): an activity whose key is computed from its target form (count-syllables) has one key value across all its targets",
+    DUPLICATE_LESSON_VIDEO: "failure (gate C14, #9487): two video entries of one lesson resolve to the same recording (YouTube id or URL, and segment)",
+    STEP_WORD_LEMMA_NOT_DECODABLE: "note (gate C10, #9487): a word a step introduces or uses has a lemma needing letters not taught so far and no recording the lesson cites, while another form of its record is readable; the plan does not bind the form, so the plan review confirms it",
+    ODD_ONE_OUT_FEATURE_NOT_COMPUTED: "note (gate C11, #9487): an odd-one-out activity draws rows from a quote host, and its focus states no feature the gate computes; the plan review confirms each row has exactly one odd member",
+    COMPUTED_KEY_FORM_DEPENDENT: "note (gate C13, #9487): a count-syllables activity's bound forms and lemmas share one key; another key needs a form the plan does not bind",
     STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
     TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
     CORE_CEFR_ABOVE_MODULE: "note (gate M5, #9138): a core lemma's word-store CEFR level is above the module's level; the plan sets no CEFR ceiling, so the plan review confirms it is intended (for example the module's own metalanguage)",
@@ -275,7 +308,7 @@ DESCRIPTIONS = {
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
     TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
-    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); the message names the gate and the reason",
+    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, C10, C12, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level, VESUM); the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 
@@ -288,6 +321,9 @@ NOTE_CODES = frozenset(
         INCIDENTAL_LEMMA_NOT_DECODABLE,
         HEARD_WORD_WITHOUT_VIDEO,
         EARLIER_CORE_NOT_RECYCLED,
+        ODD_ONE_OUT_FEATURE_NOT_COMPUTED,
+        STEP_WORD_LEMMA_NOT_DECODABLE,
+        COMPUTED_KEY_FORM_DEPENDENT,
     }
 )
 NOT_CHECKED_CODES = frozenset(

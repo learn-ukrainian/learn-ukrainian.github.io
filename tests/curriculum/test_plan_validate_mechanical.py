@@ -114,6 +114,8 @@ def mechanical_plan() -> dict:
         _activity("a4", "count-syllables", "workbook", "Count syllables in «мама» and «ман»."),
     ]
     one["practice"] = {"vocabulary": "core", "stress": [], "patterns": ["a1"]}
+    # мана and ман need Н, taught in lesson 2: the lesson's recording models them (#9487 C10).
+    one["videos"] = [{"evidence": "V-900", "use": "Step s2 whole-word model."}]
 
     two = _lesson(2, "teach", ["Н", "О"], [(NONA, "нона")], [MAMA, MANA, MAN])
     two["inventory"]["vocabulary"]["incidental"] = [{"lemma": "мона", "evidence": MONA}]
@@ -139,7 +141,19 @@ def mechanical_plan() -> dict:
     recap = _lesson(3, "recap", [], [], [MAMA, MANA, MAN, NONA])
     recap["steps"] = [_step("s1", "practice", "Review.", {}, {"vocabulary": [MAMA, MANA, MAN, NONA]}, ["c1"])]
     recap["steps"][0].pop("teach")
-    recap["activities"] = [_activity("c1", "quiz", "inline", "Review quiz.")]
+    recap["activities"] = [
+        _activity("c1", "quiz", "inline", "Review quiz. kind: comprehension; host: {kind: dialogue}.")
+    ]
+    # The recap's first-person story (A1 arc D4; #9487 C7): a dialogue block with one narrator.
+    recap["dialogue"] = {
+        "step": "s1",
+        "situation": "The narrator retells the module.",
+        "setting": "One short story.",
+        "speakers": [{"name": "Narrator", "role": "narrator", "gender": "f", "evidence": MAMA}],
+        "register": "informal",
+        "target_grammar": "Retells the module.",
+        "evidence": ["T-001"],
+    }
     plan["lessons"] = [one, two, recap]
     return plan
 
@@ -152,7 +166,7 @@ def mechanical_pack() -> dict:
         "exercises": [{"id": "X-001", "quote": "мама", "items_sample": ["мама"]}],
         "examples": [],
         "errors": [],
-        "videos": [],
+        "videos": [{"id": "V-900", "models": {"letters": [], "words": [MANA, MAN], "segment": None}}],
         "standard": [],
     }
 
@@ -374,8 +388,8 @@ def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) ->
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert codes.ARC_UNAVAILABLE in {o.code for o in report.failures}
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    # M1 and the incidental-readability gate C4 (#9487) both need the taught-letter state
-    assert {gate.message.split()[1] for gate in gates} == {"M1", "C4"}
+    # M1 and the readability gates C4 and C10 (#9487) need the taught-letter state
+    assert {gate.message.split()[1] for gate in gates} == {"M1", "C4", "C10"}
 
 
 def produced_mechanical_codes(root: Path) -> set[str]:
