@@ -40,8 +40,9 @@ def writer_task_id(level: str, slug: str, n: int, attempt: int, effort: str | No
     """Key dispatch attempts by inputs and effort; keep the lesson's regeneration budget separate.
 
     Changed inputs restart the ledger at attempt 1, so their digest keeps a new run from reusing an earlier
-    run's ID; identical inputs keep the same ID whichever entry point dispatches them. Omitting effort keeps
-    the seat's own default.
+    run's ID; identical inputs keep the same base ID whichever entry point dispatches them. The writer
+    reuses a done record and only adds a retry suffix after a terminal non-done record, retaining all
+    prior evidence. Omitting effort keeps the seat's own default.
     """
     task_id = f"write-{level}-{slug}-{n}-{attempt}-{inputs_digest(inputs)}"
     return f"{task_id}-{effort}" if effort is not None else task_id
@@ -70,20 +71,43 @@ def load_ledger(path: Path, slug: str, n: int, inputs: dict[str, str] | None = N
 
 
 def record_writer_call(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None) -> dict[str, Any]:
-    """Count only retries of failed inputs, before parsing or validating the reply."""
+    """Count delivered retries by completed failures, so re-harvesting a done reply is idempotent.
+
+    Dispatch/harness failures never call this. An interrupted check can harvest the same
+    successful task again without consuming another regeneration.
+    """
     doc = load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc
     if doc.get("last_success") or not doc["attempts"]:
         doc.update(attempts=[], regenerations=0)
     else:
-        if doc["regenerations"] >= 2:
+        if len(doc["attempts"]) > 2:
             doc["terminal_layer"] = "driver"
         else:
-            doc["regenerations"] += 1
+            doc["regenerations"] = max(doc["regenerations"], len(doc["attempts"]))
     _validate(doc)
     lock.write(path, lock.yaml_bytes(doc))
     return doc
+
+
+def record_harness_failure(
+    path: Path, slug: str, n: int, reason: str, inputs: dict[str, str], *, at: str | None = None
+) -> dict[str, Any]:
+    """Keep harness evidence separately, without changing the content regeneration ledger."""
+    evidence_path = path.with_name(f"lesson-{n}.writer-harness.yaml")
+    if evidence_path.exists():
+        lock.require(evidence_path)
+        evidence = yaml.safe_load(evidence_path.read_text(encoding="utf-8"))
+        if (evidence["slug"], evidence["n"]) != (slug, n):
+            raise ValueError("writer harness evidence belongs to another lesson")
+    else:
+        evidence = {"slug": slug, "n": n, "layer": "harness", "failures": []}
+    evidence["failures"].append(
+        {"reason": reason, "inputs": dict(inputs), "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z")}
+    )
+    lock.write(evidence_path, lock.yaml_bytes(evidence))
+    return load_ledger(path, slug, n, inputs)
 
 
 def record_failure(
@@ -101,7 +125,7 @@ def record_failure(
     if layer not in {"writer", "plan", "pack", "word_store", "engine", "driver"}:
         raise ValueError(f"unknown failure layer {layer!r}")
     previous_same = any(row["failed_check"] == failure["check"] for row in previous)
-    # The module records calls before parsing; direct runner users count completed attempts here.
+    # Both delivered writer replies and direct runner failures use the completed-attempt count.
     doc["regenerations"] = max(doc["regenerations"], min(2, len(previous)))
     previous.append(
         {

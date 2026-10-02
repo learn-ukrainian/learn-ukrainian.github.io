@@ -527,7 +527,7 @@ result_path.write_text('''```yaml
 
 @pytest.mark.parametrize("module_first", [True, False])
 def test_module_build_and_cli_write_share_one_task_id(tmp_path, module_first):
-    """Identical work dispatched through build_module and CLI write is one task: the second is refused (#8425)."""
+    """Both entry points share one ID; a fake harness refusing that ID must not spend writer budget."""
     _build_synthetic_tree(tmp_path)
     cards = tmp_path / "docs/style-cards"
     cards.mkdir(parents=True)
@@ -582,7 +582,13 @@ result.write_text({reply!r}, encoding="utf-8")
     else:
         assert cli_write() == 0
         stopped = module_build()["lessons"][0]
-        assert (stopped["passed"], stopped["layer"]) == (False, "writer")
+        assert (stopped["passed"], stopped["layer"]) == (False, "engine")
+        assert stopped["regenerations"] == 0
+        assert stopped["terminal_layer"] is None
+        state = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/synthetic-mod"
+        harness = yaml.safe_load((state / "lesson-1.writer-harness.yaml").read_text())
+        assert harness["layer"] == "harness"
+        assert len(harness["failures"]) == 1
         refusal = stopped["reason"]
     # Exactly one paid writer execution, and the refused dispatch named that same task ID.
     (task_id,) = executions.read_text(encoding="utf-8").split()

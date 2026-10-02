@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from jsonschema import Draft202012Validator
+from jsonschema import Draft7Validator, Draft202012Validator
 
 from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.assemble import PROVENANCE_SCHEMA_PATH, get_provenance_validator
@@ -1502,6 +1502,133 @@ def test_assembly_rejects_form_choice_item_without_record() -> None:
 
 
 # --- r4: verification runs against what the page receives ---
+
+
+@pytest.mark.parametrize(
+    ("activity_type", "item"),
+    [
+        ("watch-and-repeat", {"video": "https://www.youtube.com/watch?v=abcdefghijk"}),
+        ("count-syllables", {"word": "слово", "correct": 2}),
+        ("anagram", {"letters": list("оволс"), "answer": "слово"}),
+        ("unjumble", {"words": ["слово"], "answer": "слово"}),
+        ("divide-words", {"word": "слово", "answer": "сло-во"}),
+    ],
+)
+def test_check_9_a1_item_explanations_reach_the_page(tmp_path, monkeypatch, activity_type, item):
+    """Each missing item mapping failed check 9 even though the page received its explanation."""
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": activity_type, "placement": "inline", "focus": "Practice"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Practice", "items": [{**item, "explanation": "Feedback"}]}]
+    schema = json.loads((Path(__file__).resolve().parents[2] / "schemas/activities-a1.schema.json").read_text())
+    Draft7Validator(schema).validate([{**draft["activities"][0], "type": activity_type}])
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+
+    # Reproduce the old omission using the same fixture and the real page renderer.
+    with monkeypatch.context() as old:
+        fields = dict(assemble._PAGE_ITEM_FIELDS[activity_type])
+        fields.pop("explanation")
+        old.setitem(assemble._PAGE_ITEM_FIELDS, activity_type, fields)
+        before = _check_9_direct(tmp_path, monkeypatch, expanded, prov, draft, plan, pack, words)
+        assert not before.passed
+        assert "span_location_unrendered" in before.reason
+        assert "explanation" in before.reason
+    after = _check_9_direct(tmp_path, monkeypatch, expanded, prov, draft, plan, pack, words)
+    assert after.passed, after.reason
+    mdx = (tmp_path / "site" / "1.mdx").read_text()
+    assert '"explanation": "Feedback"' in mdx
+
+
+# This is the A1 renderer inventory, including types with only activity-level units.
+# Observe has no item blocks: examples/prompt are not currently expanded as units, and
+# its optional instruction is a heading rather than a component prop.
+_A1_PAGE_PAYLOADS = {
+    "anagram": {"items": [{"letters": list("word"), "answer": "word", "explanation": "Feedback"}]},
+    "classify": {"categories": [{"label": "First", "items": ["A"]}, {"label": "Second", "items": ["B"]}]},
+    "count-syllables": {"items": [{"word": "word", "correct": 1, "explanation": "Feedback"}]},
+    "divide-words": {"items": [{"word": "word", "answer": "word", "explanation": "Feedback"}]},
+    "error-correction": {
+        "items": [
+            {"sentence": "bad", "error": "bad", "correction": "good", "error_ref": "E-001", "explanation": "Feedback"}
+        ]
+    },
+    "fill-in": {
+        "items": [{"sentence": "____", "answer": "word", "options": ["word", "other"], "explanation": "Feedback"}]
+    },
+    "group-sort": {
+        "groups": [{"label": label, "items": [{"text": label, "why": "Feedback"}]} for label in ("First", "Second")]
+    },
+    "image-to-letter": {
+        "items": [{"image": "letter.png", "letter": "A", "options": ["A", "B"], "explanation": "Feedback"}]
+    },
+    "letter-grid": {"letters": [{"upper": "A", "lower": "a"}]},
+    "match-up": {
+        "pairs": [{"left": left, "right": right, "why": "Feedback"} for left, right in (("A", "a"), ("B", "b"))]
+    },
+    "observe": {"examples": ["first", "second"], "prompt": "Notice the pattern."},
+    "odd-one-out": {"items": [{"words": ["one", "two", "other"], "correct": 2, "explanation": "Feedback"}]},
+    "order": {"items": ["first", "second"], "correct_order": [0, 1], "explanation": "Feedback"},
+    "phrase-table": {"groups": [{"label": "Greetings", "phrases": ["Hello"]}]},
+    "pick-syllables": {
+        "syllables": ["one", "two"],
+        "correctIndices": [0],
+        "category": "закриті",
+        "explanation": "Feedback",
+    },
+    "quiz": {"items": [{"question": "Choose", "options": ["one", "two"], "correct": 0, "explanation": "Feedback"}]},
+    "translate": {"items": [{"source": "Translate", "answer": "word", "explanation": "Feedback"}]},
+    "true-false": {"items": [{"statement": "Statement", "correct": True, "explanation": "Feedback"}]},
+    "unjumble": {"items": [{"words": ["one", "two"], "answer": "one two", "explanation": "Feedback"}]},
+    "watch-and-repeat": {"items": [{"video": "clip", "explanation": "Feedback"}]},
+}
+
+
+@pytest.mark.parametrize("activity_type", sorted(_A1_PAGE_PAYLOADS))
+def test_every_a1_inventory_type_locates_its_emitted_unit_blocks(activity_type):
+    from scripts.yaml_activities import ActivityParser
+
+    schema = json.loads((Path(__file__).resolve().parents[2] / "schemas/activities-a1.schema.json").read_text())
+    inventory = {row["$ref"].rsplit("/", 1)[-1].removesuffix("-a1") for row in schema["items"]["oneOf"]}
+    assert set(_A1_PAGE_PAYLOADS) == inventory  # Inventory drift needs an explicit audit.
+    payload = {"id": "a1", "type": activity_type, **copy.deepcopy(_A1_PAGE_PAYLOADS[activity_type])}
+    if activity_type != "observe":
+        payload["instruction"] = "Instruction"
+    Draft7Validator(schema).validate([payload])
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": activity_type, "placement": "inline", "focus": "Practice"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{key: value for key, value in payload.items() if key != "type"}]
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    activities, pieces = assemble.apply_stress_to_activities(
+        draft["activities"], expanded, lambda match: match.group(0), activity_types={"a1": activity_type}
+    )
+    parser = ActivityParser()
+    parsed = parser._parse_activity({**activities[0], "type": activity_type})
+    located = assemble.locate_units_in_component_props(
+        expanded, pieces, {"a1": parsed}, {"a1": [parser._activity_to_mdx(parsed)]}, spans=prov["spans"]
+    )
+    expected = {i for i, unit in enumerate(expanded["units"]) if unit["tab"] == "vpravy"}
+    assert set(located) == expected
+    assert bool(expected) == (activity_type != "observe")
+
+
+def test_a1_observe_instruction_missing_from_component_props_fails_closed():
+    """Audit residual: Observe receives examples/prompt, not the generic instruction field."""
+    from scripts.yaml_activities import ActivityParser
+
+    payload = {"id": "a1", "type": "observe", "instruction": "Instruction", **_A1_PAGE_PAYLOADS["observe"]}
+    parser = ActivityParser()
+    parsed = parser._parse_activity(payload)
+    props = assemble.component_props_from_jsx(parser._activity_to_mdx(parsed))
+    assert "instruction" not in props
+    assert assemble.page_field_text("observe", props, None, "instruction") is None
+    unit = {"tab": "vpravy", "activity": "a1", "item": None, "block": "instruction", "text": "Instruction"}
+    with pytest.raises(assemble.AssemblerError, match="receives no 'instruction' field"):
+        assemble.locate_units_in_component_props(
+            {"units": [unit]}, {0: "Instruction"}, {"a1": parsed}, {"a1": [parser._activity_to_mdx(parsed)]}
+        )
 
 
 def _check_9_direct(

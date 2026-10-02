@@ -6,6 +6,7 @@ import copy
 import json
 import re
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -17,11 +18,14 @@ from scripts.build.fresh.regeneration import (
     INPUT_KEYS,
     inputs_digest,
     load_ledger,
+    record_failure,
     record_writer_call,
     writer_task_id,
 )
 from scripts.build.fresh.writer import (
     WriterCallError,
+    WriterHarnessError,
+    _available_task_id,
     dispatch_writer,
     parse_and_validate_reply,
     strip_markdown_fence,
@@ -34,6 +38,21 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 INPUTS = {key: str(i) * 64 for i, key in enumerate(INPUT_KEYS, start=1)}
+
+
+@pytest.mark.parametrize("prior_failures", [1, 2])
+def test_reharvested_done_retry_does_not_spend_budget_twice(tmp_path, prior_failures):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    for check in range(1, prior_failures + 1):
+        record_failure(path, "sample", 1, {"check": check, "layer": "writer", "reason": "failed"}, INPUTS)
+    first = record_writer_call(path, "sample", 1, INPUTS)
+    before = path.read_bytes()
+    # The paid writer task is done, but the process checking it was interrupted.
+    second = record_writer_call(path, "sample", 1, INPUTS)
+    assert first == second
+    assert second["regenerations"] == prior_failures
+    assert second["terminal_layer"] is None
+    assert path.read_bytes() == before
 
 
 def _inputs(prompt_sha256: str) -> dict[str, str]:
@@ -49,6 +68,109 @@ def a1_valid_fixture():
 @pytest.fixture
 def passing_preflight():
     return PreflightResult(passed=True, status="ok", gaps=[], homographs=[], homograph_count=0)
+
+
+@pytest.mark.parametrize(
+    "status",
+    ["failed", "timeout", "rate_limited", "cancelled", "crashed", "dry_run", "needs_finalize", "no_deliverable"],
+)
+@pytest.mark.parametrize("archived", [False, True])
+def test_terminal_writer_collision_retries_then_reuses_done(
+    tmp_path, monkeypatch, a1_valid_fixture, passing_preflight, status, archived
+):
+    """The same paid success is reused even when it followed failed terminal records."""
+    from scripts.orchestration.task_record_store import task_record_path
+
+    store = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(store))
+    store.mkdir()
+    base_id = writer_task_id("a1", "collision", 1, 1, None, INPUTS)
+    prior_dir = store / "archive" if archived else store
+    prior_dir.mkdir(exist_ok=True)
+    prior = task_record_path(prior_dir, base_id)
+    prior.write_text(json.dumps({"status": status}))
+    prior_result = prior.with_suffix(".result")
+    prior_result.write_text("old unchecked output")
+    draft, types = a1_valid_fixture
+    commands = []
+
+    def delegate(cmd, **kwargs):
+        commands.append(cmd)
+        action = cmd[2]
+        task_id = cmd[cmd.index("--task-id") + 1] if action == "dispatch" else cmd[3]
+        record_path = task_record_path(store, task_id)
+        result_path = record_path.with_suffix(".result")
+        if action == "dispatch":
+            assert not record_path.exists(), "a duplicate would pay again"
+            result_path.write_text(yaml.safe_dump(draft, allow_unicode=True))
+            record_path.write_text(json.dumps({"status": "done", "result_file": str(result_path)}))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return subprocess.CompletedProcess(cmd, 0, record_path.read_text(), "")
+
+    monkeypatch.setattr(subprocess, "run", delegate)
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("fixture prompt")
+    kwargs = dict(
+        writer="codex",
+        level="a1",
+        slug="collision",
+        lesson_n=1,
+        prompt_file=prompt,
+        prompt_sha256=INPUTS["prompt_sha256"],
+        inputs=INPUTS,
+        output_dir=tmp_path / "out",
+        preflight_result=passing_preflight,
+        plan_activity_types=types,
+        repo_root=tmp_path,
+    )
+    first = dispatch_writer(**kwargs)
+    second = dispatch_writer(**kwargs)
+    assert first["task_id"] == second["task_id"] == f"{base_id}-retry-1"
+    assert [cmd[2] for cmd in commands] == ["dispatch", "wait", "wait"]
+    assert prior_result.read_text() == "old unchecked output"
+    assert json.loads(prior.read_text())["status"] == status
+
+    # Reuse still validates the output; a done status cannot admit an unchecked draft.
+    task_record_path(store, first["task_id"]).with_suffix(".result").write_text("not a draft")
+    with pytest.raises(WriterCallError, match="not a YAML dictionary"):
+        dispatch_writer(**kwargs)
+    assert [cmd[2] for cmd in commands].count("dispatch") == 1
+
+
+@pytest.mark.parametrize("status", ["done", "running", "spawning"])
+def test_writer_done_and_live_records_are_never_redispatched(tmp_path, monkeypatch, status):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "stable.json").write_text(json.dumps({"status": status}))
+    assert _available_task_id("stable") == ("stable", True)
+
+
+@pytest.mark.parametrize("record", ["invalid JSON", "[]", '{"status": ["done"]}', '{"status": "unknown"}'])
+def test_unreadable_or_unknown_writer_record_fails_closed(tmp_path, monkeypatch, record):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "stable.json").write_text(record)
+    with pytest.raises(WriterHarnessError):
+        _available_task_id("stable")
+
+
+@pytest.mark.parametrize("failure", [OSError("cannot launch"), subprocess.TimeoutExpired("delegate", 60)])
+def test_writer_subprocess_failures_are_harness_errors(tmp_path, monkeypatch, passing_preflight, failure):
+    def fail(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(subprocess, "run", fail)
+    with pytest.raises(WriterHarnessError, match="harness execution failed"):
+        dispatch_writer(
+            writer="codex",
+            level="a1",
+            slug="launch",
+            lesson_n=1,
+            prompt_file=tmp_path / "prompt.md",
+            prompt_sha256=INPUTS["prompt_sha256"],
+            inputs=INPUTS,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            repo_root=tmp_path,
+        )
 
 
 def test_strip_markdown_fence(a1_valid_fixture):
