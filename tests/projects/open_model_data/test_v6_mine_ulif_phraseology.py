@@ -1551,9 +1551,42 @@ def test_ulif_phraseology_split_quotations_and_editorial_brackets(tmp_path: Path
 
 @requires_sources
 def test_verify_receipt_invariants_grounding_rejects_codex_r2_probes():
-    """Codex R2 Finding 2: Grounding invariant must validate displayed definition, quotation, and attribution separately."""
+    """Codex R2/R3 Findings: Grounding invariant must strictly validate displayed definition, quotation, and attribution.
+
+    Rejects changed initials, altered quotations, negated definitions, and thought-only matches.
+    """
     with tempfile.TemporaryDirectory() as tmpdir:
         td = Path(tmpdir)
+        db_path = td / "sources.db"
+        with sqlite3.connect(str(db_path)) as conn:
+            conn.executescript(
+                """
+                CREATE TABLE frazeolohichnyi (word TEXT, definition TEXT, entry_json TEXT);
+                CREATE TABLE ulif_dictua_entries (
+                    id INTEGER PRIMARY KEY,
+                    normalized_query TEXT,
+                    canonical_headword TEXT,
+                    status TEXT
+                );
+                CREATE TABLE ulif_dictua_sections (
+                    id INTEGER PRIMARY KEY,
+                    entry_id INTEGER,
+                    kind TEXT,
+                    payload_json TEXT
+                );
+                """
+            )
+            raw_html = (
+                "<p><b>абсолю́тний нуль. </b>Нікчемна і непотрібна людина. "
+                "<i>Пояснив </i>[Лаврін Тесля]<i>:</i> "
+                "<i>— Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе</i> (Л. Дмитерко).</p>"
+            )
+            conn.execute("INSERT INTO ulif_dictua_entries VALUES (1, 'нуль', 'нуль', 'ok')")
+            conn.execute(
+                "INSERT INTO ulif_dictua_sections VALUES (10, 1, 'phraseology', ?)",
+                (json.dumps({"raw_html": raw_html, "citations": ["Л. Дмитерко"]}),),
+            )
+
         sft_dir = td / "sft"
         dpo_dir = td / "dpo"
         sft_dir.mkdir()
@@ -1565,72 +1598,123 @@ def test_verify_receipt_invariants_grounding_rejects_codex_r2_probes():
             "rejected": "<thought>Помилкова думка.</thought>\n\nНеправильно.",
         }, ensure_ascii=False) + "\n", encoding="utf-8")
 
-        # Probe 1: Altered quote (Codex R2 probe 1)
         sft_shard_1 = sft_dir / "sft_shard_001_of_001.jsonl"
+
+        # Probe 1: Negated definition (prefixing with 'Не')
         probe_1_row = {
             "task_type": "idiom_interpretation_literary",
             "target_phrase": "абсолютний нуль",
             "final_response": (
-                "<thought>Аналізую абсолютний нуль. Нікчемна і непотрібна людина. Л. Дмитерко.</thought>\n\n"
-                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
+                "<thought>Аналізую образну семантику звороту абсолютний нуль.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Не нікчемна і непотрібна людина.\n\n"
                 "**Стилістичний регістр:** загальновживаний літературний.\n\n"
                 "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
-                "«Це зовсім інша цитата про абсолютний нуль і щось інше.»"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
             ),
         }
         sft_shard_1.write_text(json.dumps(probe_1_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
         with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
             verify_receipt_invariants(
-                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
                 sft_dir=sft_dir,
                 dpo_dir=dpo_dir,
                 cur_ves=None,
-                sources_db=DEFAULT_SOURCES_DB,
+                sources_db=db_path,
             )
 
-        # Probe 2: Wrong author and fake quote (Codex R2 probe 2)
+        # Probe 2: Changed initial ('А. Дмитерко' vs 'Л. Дмитерко')
         probe_2_row = {
             "task_type": "idiom_interpretation_literary",
             "target_phrase": "абсолютний нуль",
             "final_response": (
-                "<thought>Аналізую абсолютний нуль. Нікчемна і непотрібна людина. Дмитерко.</thought>\n\n"
+                "<thought>Аналізую образну семантику звороту абсолютний нуль.</thought>\n\n"
                 "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
                 "**Стилістичний регістр:** загальновживаний літературний.\n\n"
-                "**Зразок уживання в художній літературі (Іван Франко):**\n"
-                "«Фальшива цитата зовсім іншого автора про нуль.»"
+                "**Зразок уживання в художній літературі (А. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
             ),
         }
         sft_shard_1.write_text(json.dumps(probe_2_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
         with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
             verify_receipt_invariants(
-                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
                 sft_dir=sft_dir,
                 dpo_dir=dpo_dir,
                 cur_ves=None,
-                sources_db=DEFAULT_SOURCES_DB,
+                sources_db=db_path,
             )
 
-        # Probe 3: Altered definition with single shared token (Codex R2 probe 3)
+        # Probe 3: Altered quotation snippet ('Я — король' vs 'Я — ніщо')
         probe_3_row = {
             "task_type": "idiom_interpretation_literary",
             "target_phrase": "абсолютний нуль",
             "final_response": (
-                "<thought>Аналізую абсолютний нуль. Нікчемна і непотрібна людина. Л. Дмитерко.</thought>\n\n"
-                "Український фразеологізм **«абсолютний нуль»** позначає: Дуже добра і чуйна людина.\n\n"
+                "<thought>Аналізую образну семантику звороту абсолютний нуль.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
                 "**Стилістичний регістр:** загальновживаний літературний.\n\n"
                 "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
-                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+                "«Пояснив Лаврін Тесля: — Я — король. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
             ),
         }
         sft_shard_1.write_text(json.dumps(probe_3_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
         with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
             verify_receipt_invariants(
-                eval_records=[{"target_idiom": "яблуко розбрату"}],
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
                 sft_dir=sft_dir,
                 dpo_dir=dpo_dir,
                 cur_ves=None,
-                sources_db=DEFAULT_SOURCES_DB,
+                sources_db=db_path,
             )
+
+        # Probe 4: Thought mask (definition inside thought, false definition displayed)
+        probe_4_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту абсолютний нуль. позначає: Нікчемна і непотрібна людина. Л. Дмитерко.</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Дуже добра і чуйна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(probe_4_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "абсолютний нуль"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=db_path,
+            )
+
+        # Control: Authentic valid record passes
+        valid_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "абсолютний нуль",
+            "final_response": (
+                "<thought>Аналізую образну семантику звороту «абсолютний нуль».\n"
+                "Метафоричне значення базується на переносному вживанні: Нікчемна і непотрібна людина.\n"
+                "Стилістичний регістр висловлювання: загальновживаний літературний.\n"
+                "Контекст ілюструється класичним слововживанням (Л. Дмитерко).\n</thought>\n\n"
+                "Український фразеологізм **«абсолютний нуль»** позначає: Нікчемна і непотрібна людина.\n\n"
+                "**Стилістичний регістр:** загальновживаний літературний.\n\n"
+                "**Зразок уживання в художній літературі (Л. Дмитерко):**\n"
+                "«Пояснив Лаврін Тесля: — Я — ніщо. Розумієте, абсолютний нуль. Навіть не перекотиполе»"
+            ),
+        }
+        sft_shard_1.write_text(json.dumps(valid_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        res = verify_receipt_invariants(
+            eval_records=[{"target_idiom": "абсолютний нуль"}],
+            sft_dir=sft_dir,
+            dpo_dir=dpo_dir,
+            cur_ves=None,
+            sources_db=db_path,
+        )
+        assert res["classical_literary_citations_grounded"] is True
+        assert res["literary_citations_grounded_count"] == 1

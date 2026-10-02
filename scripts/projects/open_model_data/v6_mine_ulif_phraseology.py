@@ -1130,6 +1130,18 @@ def clean_raw_html_and_tags(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def normalize_grounding_text(s: str) -> str:
+    """Normalize whitespace, quotes, dashes, and punctuation for strict grounding verification."""
+    if not s:
+        return ""
+    s = s.replace("\xa0", " ").strip()
+    s = re.sub(r"[\s\n]+", " ", s)
+    s = re.sub(r"[—–-]", "-", s)
+    s = s.replace("…", "...").replace("«", "").replace("»", "").replace('"', "")
+    s = s.strip(" \t\r\n.,;:!?")
+    return s.lower()
+
+
 def extract_quote_for_author(text: str, author_name: str) -> str | None:
     """Extract clean sentence quotation preceding an author citation in parentheses."""
     clean_t = clean_stress_marks(text)
@@ -3573,11 +3585,9 @@ def verify_receipt_invariants(
         k = u.idiom.strip().lower()
         base_k = re.split(r"[\(/,]", k)[0].strip()
         cand_info = {
-            "definition": u.definition.strip(),
-            "citation": u.citation_text.strip(),
-            "def_stems": set(get_content_stems(u.definition)),
-            "cit_stems": set(get_content_stems(u.citation_text)),
-            "author": u.author.strip().lower(),
+            "definition": normalize_grounding_text(u.definition),
+            "citation": normalize_grounding_text(u.citation_text),
+            "author": normalize_grounding_text(u.author),
             "idiom": k,
         }
         attested_tuples[k].append(cand_info)
@@ -3688,63 +3698,37 @@ def verify_receipt_invariants(
                     if not cands:
                         unattested_literary.append(f"{shard_path.name}:{line_no} '{target_p}'")
                     else:
-                        # Extract displayed definition, quotation, and attribution separately (Finding 2)
+                        # Strip thought block so displayed definition cannot be masked by thought text (Finding 2)
+                        disp_text = re.sub(r"<thought>.*?</thought>", "", resp, flags=re.DOTALL).strip()
+
+                        # Extract displayed definition, quotation, and attribution exclusively from displayed text
                         m_def = re.search(
                             r"(?:позначає|на позначення|має значення|полягає у такому|виражає|тлумачиться як):\s*([^\n]+)",
-                            resp,
+                            disp_text,
                             re.IGNORECASE,
                         )
-                        disp_def = m_def.group(1).strip() if m_def else ""
+                        disp_def = normalize_grounding_text(m_def.group(1)) if m_def else ""
 
-                        m_auth_quote = re.search(r"\(([^()]+)\)[*:]*\s*\n+«([^»]+)»", resp)
+                        m_auth_quote = re.search(r"\(([^()]+)\)[*:]*\s*\n+«([^»]+)»", disp_text)
                         if m_auth_quote:
-                            disp_auth = m_auth_quote.group(1).strip()
-                            disp_quote = m_auth_quote.group(2).strip()
+                            disp_auth = normalize_grounding_text(m_auth_quote.group(1))
+                            disp_quote = normalize_grounding_text(m_auth_quote.group(2))
                         else:
-                            quotes = re.findall(r"«([^»]+)»", resp)
-                            disp_quote = quotes[-1].strip() if quotes else ""
-                            m_auth = re.search(r"\(([^()]+)\)[*:]*\s*\n+«", resp)
-                            disp_auth = m_auth.group(1).strip() if m_auth else ""
-
-                        disp_q_stems = set(get_content_stems(disp_quote))
-                        disp_def_stems = set(get_content_stems(disp_def))
+                            quotes = re.findall(r"«([^»]+)»", disp_text)
+                            disp_quote = normalize_grounding_text(quotes[-1]) if quotes else ""
+                            m_auth = re.search(r"\(([^()]+)\)[*:]*\s*\n+«", disp_text)
+                            disp_auth = normalize_grounding_text(m_auth.group(1)) if m_auth else ""
 
                         matched_grounding = False
                         if disp_def and disp_quote and disp_auth:
-                            d_auth_low = disp_auth.lower()
-                            disp_q_low = disp_quote.lower()
-                            disp_def_low = disp_def.lower().rstrip(".")
-
                             for cand in cands:
-                                c_auth = cand["author"]
-                                auth_match = (
-                                    c_auth in d_auth_low
-                                    or d_auth_low in c_auth
-                                    or any(w in d_auth_low for w in c_auth.split() if len(w) > 3)
-                                )
-                                if not auth_match:
-                                    continue
-
-                                c_q_stems = cand["cit_stems"]
-                                q_overlap = len(disp_q_stems & c_q_stems)
-                                min_required_q = min(len(c_q_stems), max(2, int(len(c_q_stems) * 0.7)))
-                                c_cit_low = cand["citation"].lower()
-                                q_contained = c_cit_low in disp_q_low or disp_q_low in c_cit_low
-                                cit_match = q_contained or (q_overlap >= min_required_q and q_overlap >= min(2, len(c_q_stems)))
-                                if not cit_match:
-                                    continue
-
-                                c_def_stems = cand["def_stems"]
-                                def_overlap = len(disp_def_stems & c_def_stems)
-                                min_required_def = min(len(c_def_stems), max(2, int(len(c_def_stems) * 0.7)))
-                                c_def_low = cand["definition"].lower().rstrip(".")
-                                def_contained = c_def_low in disp_def_low or disp_def_low in c_def_low
-                                def_match = def_contained or (def_overlap >= min_required_def and def_overlap >= min(2, len(c_def_stems)))
-                                if not def_match:
-                                    continue
-
-                                matched_grounding = True
-                                break
+                                if (
+                                    cand["author"] == disp_auth
+                                    and cand["citation"] == disp_quote
+                                    and cand["definition"] == disp_def
+                                ):
+                                    matched_grounding = True
+                                    break
 
                         if matched_grounding:
                             literary_grounded_count += 1
