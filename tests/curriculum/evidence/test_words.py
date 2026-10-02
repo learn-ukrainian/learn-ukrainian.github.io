@@ -1137,7 +1137,7 @@ def test_heritage_hits_carry_the_identity_of_the_rows_they_were_read_from(
     words.validate_store_data(res["store"])
 
 
-def test_kaikki_fallback_never_overrides_dmklinger(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
+def test_kaikki_agreement_and_ambiguous_fallback(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
     _oracle(monkeypatch)
     side = tmp_path / "kaikki.sqlite"
     with sqlite3.connect(side) as conn:
@@ -1154,7 +1154,7 @@ def test_kaikki_fallback_never_overrides_dmklinger(synthetic_vesum, synthetic_so
         )
         conn.execute(
             "INSERT INTO kaikki VALUES (?, ?)",
-            ("synthetic", json.dumps({"pos": ["noun"], "glosses": ["first copied sense", "second copied sense"]})),
+            ("synthetic", json.dumps({"pos": ["noun"], "glosses": ["first translation", "second copied sense"]})),
         )
     request = _request(tmp_path, [SYNTHETIC_NOUN])
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, kaikki_db=side) as api:
@@ -1165,8 +1165,10 @@ def test_kaikki_fallback_never_overrides_dmklinger(synthetic_vesum, synthetic_so
         conn.execute("DELETE FROM dmklinger_uk_en WHERE word = 'synthetic'")
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, kaikki_db=side) as api:
         second = words.build_words("a1", request, evidence_dir=tmp_path / "second", sources_instance=api)
-    assert second["store"]["words"][0]["gloss_en"] == "first copied sense; second copied sense"
-    assert second["store"]["words"][0]["gloss_source"] == "kaikki_wiktionary"
+    assert "gloss_en" not in second["store"]["words"][0]
+    assert "gloss_source" not in second["store"]["words"][0]
+    assert second["unglossed"][0]["reason"] == codes.GLOSS_SENSE_UNRESOLVED
+    assert {c["gloss"] for c in second["unglossed"][0]["candidates"]} == {"first translation", "second copied sense"}
     assert "gloss_ref" not in second["store"]["words"][0]
     assert second["store"]["built_with"]["kaikki_content_sha256"] == "f" * 64
     assert second["store"]["built_with"]["kaikki_attribution"] == sources.KAIKKI_ATTRIBUTION
@@ -1181,4 +1183,16 @@ def test_kaikki_fallback_never_overrides_dmklinger(synthetic_vesum, synthetic_so
     word = third["store"]["words"][0]
     assert "gloss_en" not in word
     assert "gloss_source" not in word
-    assert third["unglossed"] == [{"lemma": "synthetic", "pos": "noun", "reason": "kaikki_malformed"}]
+    assert third["unglossed"] == [
+        {"lemma": "synthetic", "pos": "noun", "reason": "kaikki_malformed", "word_id": "W-001", "candidates": []}
+    ]
+
+    with sqlite3.connect(side) as conn:
+        conn.execute(
+            "UPDATE kaikki SET payload = ? WHERE lemma_key = ?",
+            (json.dumps({"pos": ["noun"], "glosses": ["first copied sense"]}), "synthetic"),
+        )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, kaikki_db=side) as api:
+        fourth = words.build_words("a1", request, evidence_dir=tmp_path / "fourth", sources_instance=api)
+    assert fourth["store"]["words"][0]["gloss_en"] == "first copied sense"
+    assert fourth["store"]["words"][0]["gloss_source"] == "kaikki_wiktionary"

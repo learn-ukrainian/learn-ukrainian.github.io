@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from collections.abc import Callable
 from pathlib import Path
@@ -253,37 +254,16 @@ def verify_words_store(
             # Check Gloss against source
             gloss_rows = sources_instance.gloss_rows([(lemma, pos)]).raw.get((lemma, pos), [])
             pronoun_entry = any("pron" in str(form.get("tags", "")).split(":") for form in word.get("forms", []))
-            gloss_rows = sources.filter_pronominal_gloss_rows(gloss_rows, lemma, pos, pronoun_entry)
-            expected_gloss = None
-            expected_gloss_source = None
-            expected_gloss_ref = None
-            if gloss_rows:
-                first_row = gloss_rows[0]
-                raw_trans = first_row.get("translations", "")
-                if isinstance(raw_trans, str):
-                    try:
-                        parsed_trans = json.loads(raw_trans)
-                    except Exception:
-                        parsed_trans = [raw_trans]
-                else:
-                    parsed_trans = raw_trans
-                if parsed_trans and isinstance(parsed_trans, list) and len(parsed_trans) > 0:
-                    first_str = str(parsed_trans[0])
-                    if first_str:
-                        expected_gloss = first_str
-                        expected_gloss_source = "dmklinger_uk_en"
-                        expected_gloss_ref = {
-                            "table": "dmklinger_uk_en",
-                            "id": first_row["id"],
-                            "row_sha256": sources.row_digest(first_row),
-                        }
-
-            if expected_gloss is None:
-                expected_gloss, _ = sources.aligned_kaikki_gloss(kaikki_result.raw.get(lemma), pos, pronoun_entry)
-                if expected_gloss is not None:
-                    expected_gloss_source = "kaikki_wiktionary"
+            selection = sources.select_gloss(
+                word, gloss_rows, kaikki_result.raw.get(lemma), pronoun_entry=pronoun_entry
+            )
+            expected_gloss = selection.gloss
+            expected_gloss_source = selection.source
+            expected_gloss_ref = selection.ref
 
             stored_gloss = word.get("gloss_en")
+            if stored_gloss is not None and not sources.is_learner_gloss(stored_gloss):
+                errors.append(f"{codes.GLOSS_NOT_LEARNER_SENSE}: {word_id} ({lemma}): {stored_gloss!r}")
             stored_gloss_source = word.get("gloss_source")
             stored_gloss_ref = word.get(
                 "gloss_ref", stored_gloss_source if isinstance(stored_gloss_source, dict) else None
@@ -614,6 +594,71 @@ def _standard_text_location(sources_instance: sources.Sources, text: str) -> str
     return None
 
 
+def cited_gloss_ids(plan: dict) -> set[str]:
+    """Vocabulary referenced by core/incidental/recycled inventories or uses."""
+
+    def ids(value: Any) -> set[str]:
+        if isinstance(value, str):
+            return {value} if re.fullmatch(r"W-\d+", value) else set()
+        if isinstance(value, dict):
+            return set().union(*(ids(item) for item in value.values()))
+        if isinstance(value, list):
+            return set().union(*(ids(item) for item in value))
+        return set()
+
+    found: set[str] = set()
+
+    def walk(value: Any) -> None:
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if key in {"core", "incidental", "recycled", "uses"}:
+                    found.update(ids(item))
+                else:
+                    walk(item)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
+
+    walk(plan)
+    return found
+
+
+def verify_plan_glosses(plan: dict, store: dict, module: str, api: sources.Sources) -> list[str]:
+    """Unconditional learner-gloss gate for a module's cited words.
+
+    Recompute the builder's gap diagnostics without adding fields to records.
+    Proper names require a nonempty paradigm with prop on every form.
+    """
+    errors: list[str] = []
+    by_id = {word["id"]: word for word in store.get("words", [])}
+    cited = cited_gloss_ids(plan)
+    requested = [by_id[wid] for wid in sorted(cited) if wid in by_id]
+    common = [
+        word
+        for word in requested
+        if not (word.get("forms") and all("prop" in form.get("tags", "").split(":") for form in word["forms"]))
+    ]
+    rows = api.gloss_rows((word["lemma"], word["pos"]) for word in common).raw if common else {}
+    payloads = api.kaikki_rows(word["lemma"] for word in common).raw if common else {}
+    for wid in sorted(cited):
+        word = by_id.get(wid)
+        if word is None:
+            errors.append(f"{codes.GLOSS_MISSING}: {module} {wid} (lemma unavailable): word_record_missing")
+            continue
+        label = f"{module} {wid} ({word['lemma']})"
+        stored = word.get("gloss_en")
+        if stored is not None and not sources.is_learner_gloss(stored):
+            errors.append(f"{codes.GLOSS_NOT_LEARNER_SENSE}: {label}: {stored!r}")
+        if word not in common:
+            continue
+        selection = sources.select_gloss(word, rows.get((word["lemma"], word["pos"]), []), payloads.get(word["lemma"]))
+        if not stored or not isinstance(stored, str) or not stored.strip():
+            errors.append(f"{codes.GLOSS_MISSING}: {label}: builder reason={selection.reason or 'gloss_not_stored'}")
+        if selection.reason == codes.GLOSS_SENSE_UNRESOLVED:
+            errors.append(f"{codes.GLOSS_SENSE_UNRESOLVED}: {label}: candidates={list(selection.candidates)!r}")
+    return errors
+
+
 def verify_pack(
     level: str,
     slug: str,
@@ -822,6 +867,17 @@ def verify_pack(
             if not isinstance(plan_doc, dict):
                 raise ValueError("plan must be a mapping")
             quote_refs = publication.quoted_records(plan_doc)
+            if cited_gloss_ids(plan_doc):
+                try:
+                    store = yaml.safe_load((evidence_base / "_words.yaml").read_text(encoding="utf-8"))
+                    if not isinstance(store, dict):
+                        raise ValueError("word store must be a mapping")
+                    errors.extend(verify_plan_glosses(plan_doc, store, f"{level}/{slug}", sources_instance))
+                except (OSError, ValueError, yaml.YAMLError, KeyError, TypeError) as exc:
+                    for wid in sorted(cited_gloss_ids(plan_doc)):
+                        errors.append(
+                            f"{codes.GLOSS_MISSING}: {level}/{slug} {wid} (lemma unavailable): {type(exc).__name__}"
+                        )
         except (OSError, ValueError, yaml.YAMLError, AttributeError, TypeError) as exc:
             errors.append(
                 f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {type(exc).__name__}"

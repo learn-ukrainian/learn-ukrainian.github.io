@@ -194,8 +194,8 @@ def test_kaikki_exact_readonly_and_alignment(synthetic_kaikki_side_db):
         with pytest.raises(sqlite3.OperationalError, match="readonly"):
             api._kaikki_conn.execute("DELETE FROM kaikki")
     assert sources.aligned_kaikki_gloss(result.raw["вона"], "noun", True) == (
-        "she (person); it (feminine gender)",
         None,
+        codes.GLOSS_SENSE_UNRESOLVED,
     )
     assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (None, "kaikki_multi_pos")
     assert sources.aligned_kaikki_gloss(result.raw["вона"], "verb", False) == (None, "kaikki_pos_mismatch")
@@ -238,8 +238,8 @@ def test_kaikki_refuses_entire_entry_if_one_gloss_is_malformed():
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
     payload["glosses"] = ["under (a roof)", 'beneath "something" [figurative]']
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (
-        'under (a roof); beneath "something" [figurative]',
         None,
+        codes.GLOSS_SENSE_UNRESOLVED,
     )
 
 

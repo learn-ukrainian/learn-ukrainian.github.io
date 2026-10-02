@@ -246,26 +246,181 @@ def _well_formed_kaikki_gloss(gloss: str) -> bool:
     return not brackets and not curly_open and straight_quotes % 2 == 0
 
 
-def aligned_kaikki_gloss(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[str | None, str | None]:
+def aligned_kaikki_senses(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[list[str], str | None]:
     """Only a single source POS can align with a VESUM store record."""
     if payload is None:
-        return None, "kaikki_absent"
+        return [], "kaikki_absent"
     source_pos = payload.get("pos")
     if not isinstance(source_pos, list) or len(source_pos) != 1:
-        return None, "kaikki_multi_pos"
+        return [], "kaikki_multi_pos"
     expected = STORE_POS.get(pos, set()).copy()
     if pos == "noun" and pronoun_entry:
         expected = {"PRON"}
     elif pos == "adj" and pronoun_entry:
         expected = {"PRON", "DET"}
     if KAIKKI_POS.get(source_pos[0]) not in expected:
-        return None, "kaikki_pos_mismatch"
+        return [], "kaikki_pos_mismatch"
     glosses = payload.get("glosses")
     if not isinstance(glosses, list) or not glosses or not all(isinstance(g, str) and g for g in glosses):
-        return None, "kaikki_no_gloss"
+        return [], "kaikki_no_gloss"
     if not all(_well_formed_kaikki_gloss(gloss) for gloss in glosses):
-        return None, "kaikki_malformed"
-    return "; ".join(glosses), None
+        return [], "kaikki_malformed"
+    return glosses, None
+
+
+def aligned_kaikki_gloss(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[str | None, str | None]:
+    """Compatibility accessor: never return a joined sense dump."""
+    result = select_gloss({"lemma": "", "pos": pos}, [], payload, pronoun_entry=pronoun_entry)
+    return result.gloss, result.reason
+
+
+def unstressed_headword(text: str) -> str:
+    """An exact spelling index key; remove stress, preserving all other letters."""
+    nfd = unicodedata.normalize("NFD", normalize_spelling(text))
+    return unicodedata.normalize("NFC", nfd.replace("\u0301", "").replace("\u0300", ""))
+
+
+def is_learner_gloss(gloss: Any) -> bool:
+    """The shared D2 bound, applied to source spans and stored learner values."""
+    return bool(
+        isinstance(gloss, str)
+        and gloss.strip()
+        and ";" not in gloss
+        and len(gloss) <= 60
+        and len(gloss.split()) <= 8
+        and _well_formed_kaikki_gloss(gloss)
+    )
+
+
+@dataclass(frozen=True)
+class GlossSelection:
+    gloss: str | None = None
+    source: str | None = None
+    ref: dict | None = None
+    reason: str | None = None
+    candidates: tuple[dict, ...] = ()
+
+
+def _sense_spans(sense: str) -> list[str]:
+    """Comma-separated source alternatives, never commas inside qualifiers.
+
+    No paraphrasing or length truncation. A source's comma list attests its
+    alternatives together; separate list entries remain separate senses.
+    """
+    if not _well_formed_kaikki_gloss(sense):
+        return []
+    spans, start, depth = [], 0, 0
+    for index, char in enumerate(sense):
+        if char in "([":
+            depth += 1
+        elif char in ")]":
+            depth -= 1
+        elif char == "," and depth == 0:
+            spans.append(sense[start:index].strip())
+            start = index + 1
+    spans.append(sense[start:].strip())
+    return [
+        span
+        for span in spans
+        if span and not re.match(r"(?:verbal noun of|alternative form|alternative spelling|a |an |the )", span, re.I)
+    ]
+
+
+def select_gloss(
+    word: dict, rows: list[dict], payload: dict | None, *, pronoun_entry: bool | None = None
+) -> GlossSelection:
+    """One attested learner span, or a typed gap; shared by build and verification.
+
+    A unique cross-source agreement group may settle competing senses. Tied
+    meaning groups are never ordered by length or row id. Without agreement,
+    only a single source-attested group is selectable. Qualifiers stay unless
+    grammatical, or another source explicitly attests the unqualified span.
+    """
+    lemma, pos = word["lemma"], word["pos"]
+    if pronoun_entry is None:
+        pronoun_entry = any("pron" in form.get("tags", "").split(":") for form in word.get("forms", []))
+    headwords = {row["word"] for row in rows}
+    collision = len(headwords) > 1
+    if collision:
+        ulif = word.get("ulif")
+        key = ulif.get("key", []) if isinstance(ulif, dict) else []
+        selected = [row for row in rows if key and normalize_spelling(row["word"]) == normalize_spelling(key[0])]
+        if not selected:
+            return GlossSelection(
+                reason=codes.GLOSS_SENSE_UNRESOLVED,
+                candidates=tuple(
+                    {
+                        "source": "dmklinger_uk_en",
+                        "id": row["id"],
+                        "headword": row["word"],
+                        "translations": row["translations"],
+                    }
+                    for row in rows
+                ),
+            )
+        rows = selected
+    rows = filter_pronominal_gloss_rows(rows, lemma, pos, pronoun_entry)
+    senses, reason = aligned_kaikki_senses(payload, pos, pronoun_entry)
+    # Kaikki's flat list cannot bind to the selected stressed homonym.
+    if collision:
+        senses = []
+    groups: list[list[dict]] = []
+    for row in rows:
+        raw = row.get("translations") or []
+        try:
+            translations = json.loads(raw) if isinstance(raw, str) else raw
+        except (ValueError, TypeError):
+            translations = [raw]
+        if isinstance(translations, list):
+            for sense in translations:
+                if isinstance(sense, str):
+                    groups.append(
+                        [{"span": span, "source": "dmklinger_uk_en", "row": row} for span in _sense_spans(sense)]
+                    )
+    for sense in senses:
+        groups.append([{"span": span, "source": "kaikki_wiktionary", "row": None} for span in _sense_spans(sense)])
+    original = [(candidate["span"], candidate["source"]) for group in groups for candidate in group]
+    for group in groups:
+        for candidate in group:
+            span = candidate["span"]
+            # Only grammatical labels are intrinsically dispensable.
+            span = re.sub(
+                r"\s+\((?:noun|verb|adjective|adverb|pronoun|personal pronoun|particle|preposition|conjunction|interjection)\)$",
+                "",
+                span,
+            )
+            base = re.sub(r"(?:\s+\([^()]*\))+$", "", span)
+            if any(source != candidate["source"] and other == base for other, source in original):
+                span = base
+            candidate["span"] = span
+    candidates = [c for group in groups for c in group]
+    diagnostic = tuple(
+        {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
+    )
+    if not candidates:
+        return GlossSelection(reason=reason or codes.GLOSS_MISSING, candidates=diagnostic)
+    support: dict[str, set[str]] = {}
+    for candidate in candidates:
+        support.setdefault(candidate["span"], set()).add(candidate["source"])
+    agreed = {span for span, providers in support.items() if len(providers) > 1}
+    eligible = agreed or set(support)
+    # Connect only alternatives explicitly grouped by a source, and only
+    # through eligible spans: an unsupported bridge cannot settle ambiguity.
+    components = [{span} for span in eligible]
+    for group in groups:
+        alternatives = {c["span"] for c in group} & eligible
+        overlapping = [component for component in components if component & alternatives]
+        if overlapping:
+            components = [component for component in components if not component & alternatives]
+            components.append(set.union(*overlapping))
+    if len(components) != 1:
+        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
+    chosen = next((c for c in candidates if c["span"] in eligible and is_learner_gloss(c["span"])), None)
+    if chosen is None:
+        return GlossSelection(reason=codes.GLOSS_MISSING, candidates=diagnostic)
+    row = chosen["row"]
+    ref = {"table": "dmklinger_uk_en", "id": row["id"], "row_sha256": row_digest(row)} if row else None
+    return GlossSelection(chosen["span"], chosen["source"], ref, candidates=diagnostic)
 
 
 def filter_pronominal_gloss_rows(rows: list[dict], lemma: str, pos: str, pronoun_entry: bool) -> list[dict]:
@@ -280,9 +435,13 @@ def filter_pronominal_gloss_rows(rows: list[dict], lemma: str, pos: str, pronoun
     if pronoun_entry:
         selected = [row for row in selected if not is_alphabet_letter_gloss(row)]
     if pronoun_entry and pos == "adj":
-        # The reflexive possessive pronoun takes its broad pronoun row first.
+        # Preserve the existing grammatical alignment: attributive determiners
+        # vs independent pronouns. This cannot choose among lexical meanings
+        # within that POS class; select_gloss still refuses those ambiguities.
         preferred = "pronoun" if lemma == "свій" else "particle"
-        selected.sort(key=lambda row: row["pos"] != preferred)
+        preferred_rows = [row for row in selected if row["pos"] == preferred]
+        if preferred_rows:
+            selected = preferred_rows
     return selected
 
 
@@ -379,6 +538,7 @@ class Sources:
         self._receipt_identities: dict[str, Any] = {}
         self._receipt_words: dict[str, list[dict]] = {}
         self._receipt_paradigms: dict[str, list[dict]] = {}
+        self._gloss_index: dict[str, list[dict]] | None = None
 
     def __enter__(self):
         return self
@@ -392,6 +552,7 @@ class Sources:
         self._receipt_identities.clear()
         self._receipt_words.clear()
         self._receipt_paradigms.clear()
+        self._gloss_index = None
         if self._kaikki_conn is not None:
             side, self._kaikki_conn = self._kaikki_conn, None
             with closing(side), suppress(sqlite3.Error):
@@ -862,30 +1023,33 @@ class Sources:
         return bool(entries) and all(row.get("homonym_checked") == 1 and row.get("status") == "ok" for row in entries)
 
     def gloss_rows(self, requests: Iterable[tuple[str, str]]) -> SourceResult[dict[tuple[str, str], list[dict]]]:
-        """Exact lemma + explicit POS equivalents, ordered by stable row id.
+        """Stress-free spelling index + explicit POS, retaining original rows.
 
-        No accent stripping or prefix/fuzzy fallback: a stressed-only headword
-        that differs from the requested spelling is absent under brief rule 6.
+        The index belongs to this pinned read snapshot; collisions survive for
+        select_gloss to bind against the record's ULIF stressed key.
         """
         conn = self._db()
+        if self._gloss_index is None:
+            self._gloss_index = {}
+            for row in conn.execute("SELECT * FROM dmklinger_uk_en ORDER BY id"):
+                self._gloss_index.setdefault(unstressed_headword(row["word"]), []).append(dict(row))
         requested = list(dict.fromkeys((normalize_spelling(lemma), pos) for lemma, pos in requests))
         result = {key: [] for key in requested}
         for start in range(0, len(requested), BATCH_SIZE):
             batch = requested[start : start + BATCH_SIZE]
             words = list(dict.fromkeys(lemma for lemma, _ in batch))
-            slots = ",".join("?" for _ in words)
-            rows = conn.execute(f"SELECT * FROM dmklinger_uk_en WHERE word IN ({slots}) ORDER BY id", words).fetchall()
+            rows = [row for word in words for row in self._gloss_index.get(unstressed_headword(word), [])]
             for key in batch:
                 labelled = [
                     row
                     for row in rows
-                    if row["word"] == key[0]
+                    if unstressed_headword(row["word"]) == unstressed_headword(key[0])
                     and row["pos"] == {"prep": "preposition", "conj": "conjunction"}.get(key[1])
                 ]
                 result[key] = [
                     dict(row)
                     for row in rows
-                    if row["word"] == key[0]
+                    if unstressed_headword(row["word"]) == unstressed_headword(key[0])
                     and row["pos"] in GLOSS_POS.get(key[1], (key[1],))
                     and not (key[1] in ALPHABET_GUARD_POS and is_alphabet_letter_gloss(dict(row)))
                     and not has_incompatible_function_label(dict(row), key[1])

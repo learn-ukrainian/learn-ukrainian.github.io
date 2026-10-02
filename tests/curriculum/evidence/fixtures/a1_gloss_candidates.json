@@ -1,0 +1,4009 @@
+{
+  "attribution": "Wiktionary via Kaikki.org, CC BY-SA 3.0",
+  "store_base_sha": "2b18047772e9a8fcc696116e1d5ac1d7e47f50df",
+  "records": {
+    "W-001": {
+      "lemma": "я",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 15,
+          "word": "я",
+          "pos": "pronoun",
+          "translations": "[\"I (personal pronoun)\", \"I (first-person singular subject pronoun)\", \"(psychology) ego\"]",
+          "text": "я (pronoun): I (personal pronoun); I (first-person singular subject pronoun); (psychology) ego",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19149,
+          "word": "я",
+          "pos": "noun",
+          "translations": "[\"ya (a letter of the Cyrillic alphabet \\\"Я/я\\\")\", \"The thirty-third letter of the Ukrainian alphabet, called я, and written in the Cyrillic script\"]",
+          "text": "я (noun): ya (a letter of the Cyrillic alphabet \"Я/я\"); The thirty-third letter of the Ukrainian alphabet, called я, and written in the Cyrillic script",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The twenty-sixth letter of the Ukrainian alphabet, called я (ja) and written in the Cyrillic script.",
+          "The thirty-third letter of the Ukrainian alphabet, called я (ja) and written in the Cyrillic script.",
+          "I (first-person singular subject pronoun)",
+          "ego"
+        ],
+        "pos": [
+          "character",
+          "pron"
+        ]
+      }
+    },
+    "W-002": {
+      "lemma": "ти",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 269,
+          "word": "ти",
+          "pos": "pronoun",
+          "translations": "[\"thou (singular nominative form of you)\", \"you (singular); thou\", \"you (subject pronoun: the person being addressed)\"]",
+          "text": "ти (pronoun): thou (singular nominative form of you); you (singular); thou; you (subject pronoun: the person being addressed)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "you (singular); thou"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-003": {
+      "lemma": "він",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 14269,
+          "word": "він",
+          "pos": "pronoun",
+          "translations": "[\"personal pronoun \\\"he\\\"\"]",
+          "text": "він (pronoun): personal pronoun \"he\"",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "he"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-004": {
+      "lemma": "вона",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4065,
+          "word": "вона́",
+          "pos": "pronoun",
+          "translations": "[\"she (person)\", \"it (feminine gender)\"]",
+          "text": "вона́ (pronoun): she (person); it (feminine gender)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "she (person)",
+          "it (feminine gender)"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-005": {
+      "lemma": "воно",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 548,
+          "word": "воно́",
+          "pos": "pronoun",
+          "translations": "[\"it (subject — inanimate thing)\"]",
+          "text": "воно́ (pronoun): it (subject — inanimate thing)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "it"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-006": {
+      "lemma": "ми",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 14,
+          "word": "ми",
+          "pos": "pronoun",
+          "translations": "[\"generic we (the speaker and at least one other person, regardless of whether it's the person being addressed)\", \"we (first-person plural)\"]",
+          "text": "ми (pronoun): generic we (the speaker and at least one other person, regardless of whether it's the person being addressed); we (first-person plural)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "we (first-person plural)"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-007": {
+      "lemma": "ви",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 37,
+          "word": "ви",
+          "pos": "pronoun",
+          "translations": "[\"you (subject pronoun: the group being addressed)\", \"you (second-person plural or formal)\", \"you (subject pronoun: the person being addressed)\"]",
+          "text": "ви (pronoun): you (subject pronoun: the group being addressed); you (second-person plural or formal); you (subject pronoun: the person being addressed)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "you (second-person plural or formal)",
+          "Second-person singular formal pronoun used in documents e.g. applications, reports, legal papers, etc.",
+          "Second-person singular formal pronoun used in all the same contexts as its lowercase counterpart."
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-008": {
+      "lemma": "вони",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 17483,
+          "word": "вони́",
+          "pos": "pronoun",
+          "translations": "[\"they (third-person plural pronoun)\", \"(the third-person plural) they\", \"they (third-person singular, of unknown, irrelevant, or non-binary gender)\", \"(the third-person singular, usually colloquial and respectful) they\"]",
+          "text": "вони́ (pronoun): they (third-person plural pronoun); (the third-person plural) they; they (third-person singular, of unknown, irrelevant, or non-binary gender); (the third-person singular, usually colloquial and respectful) they",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "they"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-009": {
+      "lemma": "себе",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 42,
+          "word": "се́бе",
+          "pos": "pronoun",
+          "translations": "[\"itself ((reflexive) it)\", \"oneself (reflexive pronoun)\", \"myself\", \"yourself\", \"himself\", \"herself\", \"themself\", \"yourselves\", \"themselves\"]",
+          "text": "се́бе (pronoun): itself ((reflexive) it); oneself (reflexive pronoun); myself; yourself; himself",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 43,
+          "word": "себе́",
+          "pos": "pronoun",
+          "translations": "[\"myself (me, reflexive form of me)\", \"oneself (reflexive pronoun)\", \"themselves (the reflexive case of they, the third-person plural personal pronoun)\", \"ourselves (reflexive: us)\", \"yourself\", \"himself\", \"herself\", \"itself\", \"themself\", \"yourselves\"]",
+          "text": "себе́ (pronoun): myself (me, reflexive form of me); oneself (reflexive pronoun); themselves (the reflexive case of they, the third-person plural personal pronoun); ourselves (reflexive: us); yourself",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "oneself (reflexive pronoun)",
+          "myself",
+          "yourself",
+          "himself",
+          "herself",
+          "itself"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-010": {
+      "lemma": "мій",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 121,
+          "word": "мій",
+          "pos": "pronoun",
+          "translations": "[\"mine (that which belongs to me)\", \"(possessive) my, mine\"]",
+          "text": "мій (pronoun): mine (that which belongs to me); (possessive) my, mine",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19272,
+          "word": "мій",
+          "pos": "particle",
+          "translations": "[\"my (belonging to me) (determiner)\"]",
+          "text": "мій (particle): my (belonging to me) (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "my, mine"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-011": {
+      "lemma": "твій",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 1814,
+          "word": "твій",
+          "pos": "pronoun",
+          "translations": "[\"yours (sincerely)\", \"(possessive) your, yours, thy, thine (2nd-person familiar, singular only)\", \"thine (possessive pronoun)\"]",
+          "text": "твій (pronoun): yours (sincerely); (possessive) your, yours, thy, thine (2nd-person familiar, singular only); thine (possessive pronoun)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19467,
+          "word": "твій",
+          "pos": "particle",
+          "translations": "[\"your (belonging to you (singular; one owner)) (determiner)\", \"thine (possessive determiner)\", \"thy (possessive determiner)\"]",
+          "text": "твій (particle): your (belonging to you (singular; one owner)) (determiner); thine (possessive determiner); thy (possessive determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "your, yours, thy, thine (2nd-person familiar, singular only)"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-012": {
+      "lemma": "свій",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 18763,
+          "word": "свій",
+          "pos": "pronoun",
+          "translations": "[\"(possessive) one's, my, his, her, its, our, your, their (always refers to the subject of the sentence)\"]",
+          "text": "свій (pronoun): (possessive) one's, my, his, her, its, our, your, their (always refers to the subject of the sentence)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19455,
+          "word": "свій",
+          "pos": "particle",
+          "translations": "[\"its (belonging to it) (determiner)\", \"one's (belonging to one) (determiner)\", \"his (attributive: belonging to him) (determiner)\"]",
+          "text": "свій (particle): its (belonging to it) (determiner); one's (belonging to one) (determiner); his (attributive: belonging to him) (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "one's, my, his, her, its, our, your, their (always refers to the subject of the sentence)"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-013": {
+      "lemma": "наш",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 24,
+          "word": "наш",
+          "pos": "pronoun",
+          "translations": "[\"ours (that which belongs to us)\", \"(possessive) our, ours\", \"(Canada) ethnically Ukrainian\"]",
+          "text": "наш (pronoun): ours (that which belongs to us); (possessive) our, ours; (Canada) ethnically Ukrainian",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19278,
+          "word": "наш",
+          "pos": "particle",
+          "translations": "[\"our (belonging to us) (determiner)\"]",
+          "text": "наш (particle): our (belonging to us) (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "our, ours",
+          "ethnically Ukrainian"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-014": {
+      "lemma": "ваш",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 272,
+          "word": "ваш",
+          "pos": "pronoun",
+          "translations": "[\"yours (sincerely)\", \"your, yours (2nd-person singular formal or 2nd-person plural)\"]",
+          "text": "ваш (pronoun): yours (sincerely); your, yours (2nd-person singular formal or 2nd-person plural)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 19235,
+          "word": "ваш",
+          "pos": "particle",
+          "translations": "[\"your (belonging to you (singular; one owner)) (determiner)\", \"your (belonging to you (plural; more owners)) (determiner)\"]",
+          "text": "ваш (particle): your (belonging to you (singular; one owner)) (determiner); your (belonging to you (plural; more owners)) (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "your, yours (2nd-person singular formal or 2nd-person plural)"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-015": {
+      "lemma": "їхній",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 17859,
+          "word": "ї́хній",
+          "pos": "pronoun",
+          "translations": "[\"(possessive) their, theirs\"]",
+          "text": "ї́хній (pronoun): (possessive) their, theirs",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 20670,
+          "word": "ї́хній",
+          "pos": "particle",
+          "translations": "[\"their (belonging to them (plural)) (determiner)\"]",
+          "text": "ї́хній (particle): their (belonging to them (plural)) (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "their, theirs"
+        ],
+        "pos": [
+          "pron"
+        ]
+      }
+    },
+    "W-016": {
+      "lemma": "цей",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 6630,
+          "word": "цей",
+          "pos": "pronoun",
+          "translations": "[\"this (the thing, item, etc. being indicated)\"]",
+          "text": "цей (pronoun): this (the thing, item, etc. being indicated)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 10484,
+          "word": "цей",
+          "pos": "particle",
+          "translations": "[\"this (the (thing) here) (determiner)\", \"this (determiner)\"]",
+          "text": "цей (particle): this (the (thing) here) (determiner); this (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "this"
+        ],
+        "pos": [
+          "det"
+        ]
+      }
+    },
+    "W-017": {
+      "lemma": "той",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 18941,
+          "word": "той",
+          "pos": "particle",
+          "translations": "[\"that (what is being indicated) (determiner)\", \"that (determiner)\"]",
+          "text": "той (particle): that (what is being indicated) (determiner); that (determiner)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "that"
+        ],
+        "pos": [
+          "det"
+        ]
+      }
+    },
+    "W-018": {
+      "lemma": "у",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 3,
+          "word": "у",
+          "pos": "particle",
+          "translations": "[\"contained by (preposition)\", \"(+ locative case) in, at (preposition)\", \"into (going inside) (preposition)\", \"in order to\", \"at (in or very near a particular place) (preposition)\", \"in (surrounded by) (preposition)\"]",
+          "text": "у (particle): contained by (preposition); (+ locative case) in, at (preposition); into (going inside) (preposition); in order to; at (in or very near a particular place) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The twenty-fourth letter of the Ukrainian alphabet, called у (u) and written in the Cyrillic script.",
+          "in, at [with locative] (to express static position/location; the following word starts with a consonant)",
+          "in, into, to [with accusative] (movement to reach a place and go inside it; the following word starts with a consonant)",
+          "at, by, near, in the possession of"
+        ],
+        "pos": [
+          "character",
+          "prep"
+        ]
+      }
+    },
+    "W-019": {
+      "lemma": "в",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 2,
+          "word": "в",
+          "pos": "particle",
+          "translations": "[\"contained by (preposition)\", \"(+ locative case) in, at (preposition)\", \"into (going inside) (preposition)\", \"per (used in expressing ratios of units) (preposition)\", \"used to indicated exponentiation (preposition)\", \"to (in the direction of, and arriving at) (preposition)\", \"at (in or very near a particular place) (preposition)\", \"in (surrounded by) (preposition)\"]",
+          "text": "в (particle): contained by (preposition); (+ locative case) in, at (preposition); into (going inside) (preposition); per (used in expressing ratios of units) (preposition); used to indicated exponentiation (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The third letter of the Ukrainian alphabet, called ве (ve) and written in the Cyrillic script.",
+          "in, at [with locative] (used to express static position/location; followed by a vowel)",
+          "in, into, to [with accusative] (movement to reach a place and go inside it; followed by a vowel)"
+        ],
+        "pos": [
+          "character",
+          "prep"
+        ]
+      }
+    },
+    "W-020": {
+      "lemma": "уві",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 19477,
+          "word": "уві́",
+          "pos": "particle",
+          "translations": "[\"contained by (preposition)\", \"in (surrounded by) (preposition)\"]",
+          "text": "уві́ (particle): contained by (preposition); in (surrounded by) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-021": {
+      "lemma": "з",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 5,
+          "word": "з",
+          "pos": "particle",
+          "translations": "[\"of (containing, comprising or made from) (preposition)\", \"from (preposition)\", \"with (preposition)\", \"of (preposition)\", \"as of (from a specified time) (preposition)\", \"out of (from the inside to the outside of) (preposition)\", \"with (in the company of) (preposition)\", \"since (from (time)) (preposition)\", \"from (with the source or provenance of or at) (preposition)\", \"of (connecting numeral or quantifier with quantified) (preposition)\"]",
+          "text": "з (particle): of (containing, comprising or made from) (preposition); from (preposition); with (preposition); of (preposition); as of (from a specified time) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The tenth letter of the Ukrainian alphabet, called зе (ze) and written in the Cyrillic script.",
+          "from (from inside a place, e.g., a building or a geographical place)",
+          "of, out of (as above, with the meaning of \"from inside a place\")",
+          "in (in the fixed expression \"specialist in\")",
+          "with (somebody, with a comitative meaning; otherwise, to express \"with/using/through something\" with an instrumental meaning, the instrumental case is used directly, without any preposition)"
+        ],
+        "pos": [
+          "character",
+          "prep"
+        ]
+      }
+    },
+    "W-022": {
+      "lemma": "із",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 17,
+          "word": "із",
+          "pos": "particle",
+          "translations": "[\"with (in the company of) (preposition)\", \"Alternative form of з (preposition)\", \"out of (from the inside to the outside of) (preposition)\"]",
+          "text": "із (particle): with (in the company of) (preposition); Alternative form of з (preposition); out of (from the inside to the outside of) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-023": {
+      "lemma": "зі",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 87,
+          "word": "зі",
+          "pos": "particle",
+          "translations": "[\"with (in the company of) (preposition)\", \"Alternative form of з (preposition)\", \"out of (from the inside to the outside of) (preposition)\"]",
+          "text": "зі (particle): with (in the company of) (preposition); Alternative form of з (preposition); out of (from the inside to the outside of) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-024": {
+      "lemma": "зо",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 7194,
+          "word": "зо",
+          "pos": "particle",
+          "translations": "[\"with (in the company of) (preposition)\", \"(with два, три, ) approximately, roughly (preposition)\", \"(rare) (before мно́ю, and possibly other consonant custers) with, together with, along with (preposition)\"]",
+          "text": "зо (particle): with (in the company of) (preposition); (with два, три, ) approximately, roughly (preposition); (rare) (before мно́ю, and possibly other consonant custers) with, together with, along with (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "approximately, roughly",
+          "(analogous to зі (zi), used before consonant custers) with, together with, along with"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-025": {
+      "lemma": "на",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 1,
+          "word": "на",
+          "pos": "particle",
+          "translations": "[\"positioned at the upper surface of (preposition)\", \"(+accusative case) (preposition)\", \"here you are! take it! (interjection)\", \"to, toward (preposition)\", \"upon (being directly supported by another) (preposition)\", \"onto (preposition)\", \"upon (being above and in contact with another) (preposition)\", \"(+locative case) (preposition)\", \"over (math: divided by) (preposition)\", \"at (preposition)\"]",
+          "text": "на (particle): positioned at the upper surface of (preposition); (+accusative case) (preposition); here you are! take it! (interjection); to, toward (preposition); upon (being directly supported by another) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "onto (movement that reaches the top of an object or place, e.g., 'Land on, put on, throw on, fall on')",
+          "to, toward",
+          "on (for the position/localization of an object or person, e.g. 'The book is on the table')",
+          "at",
+          "here you go! take it! (encouraging someone to accept something, used when giving or providing something)"
+        ],
+        "pos": [
+          "intj",
+          "prep"
+        ]
+      }
+    },
+    "W-026": {
+      "lemma": "до",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 7,
+          "word": "до",
+          "pos": "particle",
+          "translations": "[\"(to tell the time) before, to, e.g. a quarter of three (2:45) (preposition)\", \"to, toward (preposition)\", \"toward (in the direction of) (preposition)\", \"until (preposition)\", \"into (going inside) (preposition)\", \"until (before) (preposition)\", \"until (up to the time of) (preposition)\", \"till (until) (preposition)\", \"by (not later than) (preposition)\", \"before (earlier than) (preposition)\"]",
+          "text": "до (particle): (to tell the time) before, to, e.g. a quarter of three (2:45) (preposition); to, toward (preposition); toward (in the direction of) (preposition); until (preposition); into (going inside) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to, toward",
+          "to (in the fixed expression 'Welcome to...!')",
+          "until",
+          "by (not later than)",
+          "do (musical note)"
+        ],
+        "pos": [
+          "noun",
+          "prep"
+        ]
+      }
+    },
+    "W-027": {
+      "lemma": "від",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 16,
+          "word": "від",
+          "pos": "particle",
+          "translations": "[\"from (with the source or provenance of or at) (preposition)\", \"from (preposition)\", \"than (Introduces a comparison) (preposition)\", \"against (as protection from) (preposition)\", \"since (from (time)) (preposition)\"]",
+          "text": "від (particle): from (with the source or provenance of or at) (preposition); from (preposition); than (Introduces a comparison) (preposition); against (as protection from) (preposition); since (from (time)) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "from (a general point of departure to state the direction of the movement, without implying that the subject was inside a space such as a building or a geographical place)",
+          "from (in the fixed expression \"to be far from\")",
+          "from (in the fixed expression \"stay away from... !\")",
+          "from/between (in the fixed expression \"from... to...\", without implying change or movement) e.g. \"The temperature is between 2 to 3°C\", Температура коливається від двох до трьох градусів за Цельсієм. By contrast, \"I move from L'viv to Kyiv\" Переїжджаю зі Львова до Києва)",
+          "of, out of (to express cause)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-028": {
+      "lemma": "од",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 7219,
+          "word": "од",
+          "pos": "particle",
+          "translations": "[\"(nonstandard) from (preposition)\"]",
+          "text": "од (particle): (nonstandard) from (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "noun",
+          "prep"
+        ]
+      }
+    },
+    "W-029": {
+      "lemma": "для",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 12,
+          "word": "для",
+          "pos": "particle",
+          "translations": "[\"for (directed at, intended to belong to) (preposition)\", \"for (2) (preposition)\"]",
+          "text": "для (particle): for (directed at, intended to belong to) (preposition); for (2) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "for (2)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-030": {
+      "lemma": "без",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 75,
+          "word": "без",
+          "pos": "particle",
+          "translations": "[\"without (not having) (preposition)\"]",
+          "text": "без (particle): without (not having) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "without (not having)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-031": {
+      "lemma": "за",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 8,
+          "word": "за",
+          "pos": "particle",
+          "translations": "[\"for (supporting) (preposition)\", \"(with genitive case) (preposition)\", \"Used in the set expression що (то) за\", \"(with accusative case) (preposition)\", \"beyond (further away than) (preposition)\", \"indicating movement to the other side of something: behind, beyond, over (preposition)\", \"what a... what kind/sort of...\", \"indicating taking a standing or seated position next to something: at, to (preposition)\", \"behind (at the back of) (preposition)\", \"indicating period when something happened or is happening: during, in, over (preposition)\"]",
+          "text": "за (particle): for (supporting) (preposition); (with genitive case) (preposition); Used in the set expression що (то) за; (with accusative case) (preposition); beyond (further away than) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "indicating period or circumstance in which something happened or is happening: during, in, under",
+          "indicating movement to the other side of something: behind, beyond, over",
+          "indicating taking a standing or seated position next to something: at, to",
+          "indicating period when something happened or is happening: during, in, over",
+          "indicating future time interval: in",
+          "indicating time interval before an event"
+        ],
+        "pos": [
+          "adv",
+          "particle",
+          "prep"
+        ]
+      }
+    },
+    "W-032": {
+      "lemma": "під",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 38,
+          "word": "під",
+          "pos": "particle",
+          "translations": "[\"under (at a lower level than) (preposition)\", \"under (preposition)\", \"beneath (below) (preposition)\", \"below (lower in spatial position than) (preposition)\", \"under (beneath the surface of) (preposition)\"]",
+          "text": "під (particle): under (at a lower level than) (preposition); under (preposition); beneath (below) (preposition); below (lower in spatial position than) (preposition); under (beneath the surface of) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "under (+ instrumental case)",
+          "under (expressing motion towards)",
+          "at/in/on, until, during (used to express the eve of an action)",
+          "pit, cavity",
+          "loft"
+        ],
+        "pos": [
+          "noun",
+          "prep"
+        ]
+      }
+    },
+    "W-033": {
+      "lemma": "піді",
+      "pos": "prep",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "“under”), used before awkward consonant clusters and chiefly before мно́ю (mnóju)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-034": {
+      "lemma": "підо",
+      "pos": "prep",
+      "rows": [],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-035": {
+      "lemma": "над",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 233,
+          "word": "над",
+          "pos": "particle",
+          "translations": "[\"above (in or to a higher place) (preposition)\", \"above, over (preposition)\", \"over (physical positioning: on top of; above) (preposition)\"]",
+          "text": "над (particle): above (in or to a higher place) (preposition); above, over (preposition); over (physical positioning: on top of; above) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "above, over (+ instrumental case)",
+          "over (expression motion towards)",
+          "more than, like (used when increasing the higher measure, the degree of comparison, etc.)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-036": {
+      "lemma": "наді",
+      "pos": "prep",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "“over”), used before awkward consonant clusters and chiefly before мно́ю (mnóju)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-037": {
+      "lemma": "надо",
+      "pos": "prep",
+      "rows": [],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-038": {
+      "lemma": "перед",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 20412,
+          "word": "пе́ред",
+          "pos": "particle",
+          "translations": "[\"before (in front of in space) (preposition)\", \"just before, in front of (expressing position in space or time) (+ instrumental) (preposition)\", \"in front of (at or near the front part of) (preposition)\", \"just before, in front of (expressing motion towards) (+ accusative) (preposition)\", \"before (earlier than) (preposition)\", \"ago (+ instrumental) (preposition)\"]",
+          "text": "пе́ред (particle): before (in front of in space) (preposition); just before, in front of (expressing position in space or time) (+ instrumental) (preposition); in front of (at or near the front part of) (preposition); just before, in front of (expressing motion towards) (+ accusative) (preposition); before (earlier than) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "just before, in front of (expressing position in space or time) (+ instrumental)",
+          "just before, in front of (expressing motion towards) (+ accusative)",
+          "ago (+ instrumental)",
+          "front, front part"
+        ],
+        "pos": [
+          "noun",
+          "prep"
+        ]
+      }
+    },
+    "W-039": {
+      "lemma": "переді",
+      "pos": "prep",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "“in front of”), used before awkward consonant clusters and chiefly before мно́ю (mnóju)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-040": {
+      "lemma": "передо",
+      "pos": "prep",
+      "rows": [],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-041": {
+      "lemma": "після",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 54,
+          "word": "пі́сля",
+          "pos": "particle",
+          "translations": "[\"after (subsequently; following in time; later than) (preposition)\", \"after (in time) (preposition)\", \"upon (at a prescribed point in time) (preposition)\"]",
+          "text": "пі́сля (particle): after (subsequently; following in time; later than) (preposition); after (in time) (preposition); upon (at a prescribed point in time) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "after (in time)",
+          "later, afterwards"
+        ],
+        "pos": [
+          "adv",
+          "prep"
+        ]
+      }
+    },
+    "W-042": {
+      "lemma": "між",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 99,
+          "word": "мі́ж",
+          "pos": "particle",
+          "translations": "[\"amid (surrounded by) (preposition)\", \"between, among (expressing position in space or time) (+ instrumental or more rarely genitive) (preposition)\", \"among (mingling or intermixing) (preposition)\", \"between, among (expressing motion towards) (+ accusative) (preposition)\", \"between (in the position or interval that separates two things) (preposition)\"]",
+          "text": "мі́ж (particle): amid (surrounded by) (preposition); between, among (expressing position in space or time) (+ instrumental or more rarely genitive) (preposition); among (mingling or intermixing) (preposition); between, among (expressing motion towards) (+ accusative) (preposition); between (in the position or interval that separates two things) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "between, among (expressing position in space or time) (+ instrumental or more rarely genitive)",
+          "between, among (expressing motion towards) (+ accusative)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-043": {
+      "lemma": "межи",
+      "pos": "prep",
+      "rows": [],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-044": {
+      "lemma": "біля",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 860,
+          "word": "бі́ля",
+          "pos": "particle",
+          "translations": "[\"near (in close proximity to) (preposition)\", \"near, next to (preposition)\", \"around (near) (preposition)\"]",
+          "text": "бі́ля (particle): near (in close proximity to) (preposition); near, next to (preposition); around (near) (preposition)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 861,
+          "word": "біля́",
+          "pos": "particle",
+          "translations": "[\"at (in or very near a particular place) (preposition)\"]",
+          "text": "біля́ (particle): at (in or very near a particular place) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "next to; near (as a preposition)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-045": {
+      "lemma": "через",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 60,
+          "word": "че́рез",
+          "pos": "particle",
+          "translations": "[\"for (because of) (preposition)\", \"across, over (from one side to the other of) (preposition)\", \"due to (caused by) (preposition)\", \"via (preposition)\", \"because of (on account of, by reason of, for the purpose of) (preposition)\", \"through, with (means) (preposition)\", \"throughout (in every part of; all through) (preposition)\", \"because of, due to (preposition)\", \"through (from one side of an opening to the other) (preposition)\", \"in, after (time) (preposition)\"]",
+          "text": "че́рез (particle): for (because of) (preposition); across, over (from one side to the other of) (preposition); due to (caused by) (preposition); via (preposition); because of (on account of, by reason of, for the purpose of) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "across, over (from one side to the other of)",
+          "through",
+          "via",
+          "through, with (means)",
+          "because of, due to",
+          "in, after (time)"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-046": {
+      "lemma": "про",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 10,
+          "word": "про",
+          "pos": "particle",
+          "translations": "[\"about (concerning) (preposition)\", \"about, concerning (preposition)\", \"of (introducing topic or subject matter) (preposition)\", \"about (concerned with, engaged in) (preposition)\"]",
+          "text": "про (particle): about (concerning) (preposition); about, concerning (preposition); of (introducing topic or subject matter) (preposition); about (concerned with, engaged in) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "about, concerning",
+          "for"
+        ],
+        "pos": [
+          "prep"
+        ]
+      }
+    },
+    "W-047": {
+      "lemma": "при",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 103,
+          "word": "при",
+          "pos": "particle",
+          "translations": "[\"at (in or very near a particular place) (preposition)\"]",
+          "text": "при (particle): at (in or very near a particular place) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "at, by, near (in the general vicinity of)",
+          "with (in the presence of)",
+          "at the time of, during, when",
+          "at (event, instant, occurrence)",
+          "at, in (a circumstance or condition)",
+          "with (in the employment or service of)"
+        ],
+        "pos": [
+          "prep",
+          "verb"
+        ]
+      }
+    },
+    "W-048": {
+      "lemma": "о",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 7431,
+          "word": "о",
+          "pos": "particle",
+          "translations": "[\"indicating time (preposition)\", \"(with locative case) at (for indicating time in hours) (preposition)\", \"O (a vocative particle)\"]",
+          "text": "о (particle): indicating time (preposition); (with locative case) at (for indicating time in hours) (preposition); O (a vocative particle)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The nineteenth letter of the Ukrainian alphabet, called о (o) and written in the Cyrillic script.",
+          "The name of the Cyrillic script letter О.",
+          "at (for indicating time in hours)",
+          "against (for indicating contact or impact)"
+        ],
+        "pos": [
+          "character",
+          "noun",
+          "prep"
+        ]
+      }
+    },
+    "W-049": {
+      "lemma": "об",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 1033,
+          "word": "об",
+          "pos": "particle",
+          "translations": "[\"at (for indicating time in hours) (preposition)\"]",
+          "text": "об (particle): at (for indicating time in hours) (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "at (for indicating time in hours)",
+          "Ob (a major river in western Siberia, Russia)"
+        ],
+        "pos": [
+          "name",
+          "prep"
+        ]
+      }
+    },
+    "W-050": {
+      "lemma": "і",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 2582,
+          "word": "і",
+          "pos": "particle",
+          "translations": "[\"and (used to connect two similar words, phrases, et cetera) (conjunction)\", \"and, also, even (conjunction)\", \"Augmentative particle, even, and\", \"Expressing pain, fear, surprise, joy, disappointment, anger, hatred, etc (interjection)\", \"and (used to string together sentences or sentence fragments in chronological order) (conjunction)\", \"and (used at the end of a list to indicate the last item) (conjunction)\"]",
+          "text": "і (particle): and (used to connect two similar words, phrases, et cetera) (conjunction); and, also, even (conjunction); Augmentative particle, even, and; Expressing pain, fear, surprise, joy, disappointment, anger, hatred, etc (interjection); and (used to string together sentences or sentence fragments in chronological order) (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The twelfth letter of the Ukrainian alphabet, called і (i) and written in the Cyrillic script.",
+          "and, also, even",
+          "Augmentative particle, even, and.",
+          "Expressing pain, fear, surprise, joy, disappointment, anger, hatred, etc.",
+          "The twelfth letter of the Ukrainian alphabet, written in the Cyrillic script, representing /i/."
+        ],
+        "pos": [
+          "character",
+          "conj",
+          "intj",
+          "particle"
+        ]
+      }
+    },
+    "W-051": {
+      "lemma": "й",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 4742,
+          "word": "й",
+          "pos": "particle",
+          "translations": "[\"and (used to connect two similar words, phrases, et cetera) (conjunction)\", \"and (conjunction)\", \"and (used to string together sentences or sentence fragments in chronological order) (conjunction)\", \"and (used at the end of a list to indicate the last item) (conjunction)\"]",
+          "text": "й (particle): and (used to connect two similar words, phrases, et cetera) (conjunction); and (conjunction); and (used to string together sentences or sentence fragments in chronological order) (conjunction); and (used at the end of a list to indicate the last item) (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The fourteenth letter of the Ukrainian alphabet, called йот (jot) or й (j) and written in the Cyrillic script.",
+          "and",
+          "The fourteenth letter of the Ukrainian alphabet, called йе (je) and written in the Cyrillic script."
+        ],
+        "pos": [
+          "character",
+          "conj"
+        ]
+      }
+    },
+    "W-052": {
+      "lemma": "та",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 19171,
+          "word": "та",
+          "pos": "particle",
+          "translations": "[\"and (used to connect two similar words, phrases, et cetera) (conjunction)\", \"and, also, even (conjunction)\", \"and (used to string together sentences or sentence fragments in chronological order) (conjunction)\", \"and (used at the end of a list to indicate the last item) (conjunction)\"]",
+          "text": "та (particle): and (used to connect two similar words, phrases, et cetera) (conjunction); and, also, even (conjunction); and (used to string together sentences or sentence fragments in chronological order) (conjunction); and (used at the end of a list to indicate the last item) (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "and, also, even",
+          "but",
+          "yes, yeah, yay"
+        ],
+        "pos": [
+          "conj",
+          "det",
+          "intj"
+        ]
+      }
+    },
+    "W-053": {
+      "lemma": "а",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 19146,
+          "word": "а",
+          "pos": "particle",
+          "translations": "[\"and (used to string together sentences or sentence fragments in chronological order) (conjunction)\", \"and, and yet, but (conjunction)\", \"interrogative particle: introduces a question\", \"ah!, oh!, oh well (interjection)\", \"but (rather) (conjunction)\"]",
+          "text": "а (particle): and (used to string together sentences or sentence fragments in chronological order) (conjunction); and, and yet, but (conjunction); interrogative particle: introduces a question; ah!, oh!, oh well (interjection); but (rather) (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "The first letter of the Ukrainian alphabet, called а (a) and written in the Cyrillic script.",
+          "and, and yet, but",
+          "interrogative particle: introduces a question",
+          "ah!, oh!, oh well"
+        ],
+        "pos": [
+          "character",
+          "conj",
+          "intj",
+          "particle"
+        ]
+      }
+    },
+    "W-054": {
+      "lemma": "але",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 14961,
+          "word": "але́",
+          "pos": "particle",
+          "translations": "[\"but (although) (conjunction)\", \"but (rather) (conjunction)\", \"only (but) (conjunction)\", \"yet (nevertheless; however) (conjunction)\"]",
+          "text": "але́ (particle): but (although) (conjunction); but (rather) (conjunction); only (but) (conjunction); yet (nevertheless; however) (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "but (rather)"
+        ],
+        "pos": [
+          "conj"
+        ]
+      }
+    },
+    "W-055": {
+      "lemma": "бо",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 19159,
+          "word": "бо",
+          "pos": "particle",
+          "translations": "[\"because (by or for the cause that; on this account that; for the reason that) (conjunction)\", \"because (conjunction)\"]",
+          "text": "бо (particle): because (by or for the cause that; on this account that; for the reason that) (conjunction); because (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "because, for, since, as"
+        ],
+        "pos": [
+          "conj"
+        ]
+      }
+    },
+    "W-056": {
+      "lemma": "або",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 19365,
+          "word": "або́",
+          "pos": "particle",
+          "translations": "[\"or (conjunction)\"]",
+          "text": "або́ (particle): or (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "or"
+        ],
+        "pos": [
+          "conj"
+        ]
+      }
+    },
+    "W-057": {
+      "lemma": "якщо",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 19831,
+          "word": "якщо́",
+          "pos": "particle",
+          "translations": "[\"if (supposing that) (conjunction)\", \"if, in case (conjunction)\"]",
+          "text": "якщо́ (particle): if (supposing that) (conjunction); if, in case (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "if, in case"
+        ],
+        "pos": [
+          "conj"
+        ]
+      }
+    },
+    "W-058": {
+      "lemma": "щоб",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 486,
+          "word": "щоб",
+          "pos": "particle",
+          "translations": "[\"that (connecting a clause indicating purpose (\\\"final\\\")) (conjunction)\", \"so that, in order that; in order to (conjunction)\", \"so that (in order to) (conjunction)\", \"lest (conjunction)\", \"so (in order that) (interjection)\", \"so (in order that) (conjunction)\"]",
+          "text": "щоб (particle): that (connecting a clause indicating purpose (\"final\")) (conjunction); so that, in order that; in order to (conjunction); so that (in order to) (conjunction); lest (conjunction); so (in order that) (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "so that, in order that; in order to",
+          "lest"
+        ],
+        "pos": [
+          "conj"
+        ]
+      }
+    },
+    "W-059": {
+      "lemma": "щоби",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 19817,
+          "word": "що́би",
+          "pos": "particle",
+          "translations": "[\"so that (in order to) (conjunction)\", \"so that, in order that; in order to (conjunction)\", \"lest (conjunction)\"]",
+          "text": "що́би (particle): so that (in order to) (conjunction); so that, in order that; in order to (conjunction); lest (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "so that, in order that; in order to",
+          "lest"
+        ],
+        "pos": [
+          "conj"
+        ]
+      }
+    },
+    "W-060": {
+      "lemma": "поки",
+      "pos": "conj",
+      "rows": [
+        {
+          "id": 19732,
+          "word": "по́ки",
+          "pos": "particle",
+          "translations": "[\"as (at the same time that) (conjunction)\", \"so long as, while (conjunction)\", \"as long as (while) (conjunction)\", \"until, before (conjunction)\", \"until (up to the time that) (conjunction)\", \"while (during the same time that) (conjunction)\", \"as (at the same time that) (preposition)\"]",
+          "text": "по́ки (particle): as (at the same time that) (conjunction); so long as, while (conjunction); as long as (while) (conjunction); until, before (conjunction); until (up to the time that) (conjunction)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "for the present, for the time being. for now, so far, yet",
+          "so long as, while",
+          "until, before"
+        ],
+        "pos": [
+          "adv",
+          "conj"
+        ]
+      }
+    },
+    "W-061": {
+      "lemma": "не",
+      "pos": "part",
+      "rows": [
+        {
+          "id": 4,
+          "word": "не",
+          "pos": "particle",
+          "translations": "[\"not\"]",
+          "text": "не (particle): not",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "not (used to negate verbs)"
+        ],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-062": {
+      "lemma": "ні",
+      "pos": "part",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "no",
+          "not a single, not even (a)",
+          "neither, nor"
+        ],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-063": {
+      "lemma": "же",
+      "pos": "part",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-064": {
+      "lemma": "ж",
+      "pos": "part",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "The ninth letter of the Ukrainian alphabet, called же (že) and written in the Cyrillic script.",
+          "stresses the topic; is, really, right, isn't it, etc. (used as a tag question would be in English)"
+        ],
+        "pos": [
+          "character",
+          "particle"
+        ]
+      }
+    },
+    "W-065": {
+      "lemma": "ось",
+      "pos": "part",
+      "rows": [
+        {
+          "id": 395,
+          "word": "ось",
+          "pos": "particle",
+          "translations": "[\"here (is), this (is), there (is), that (is)\"]",
+          "text": "ось (particle): here (is), this (is), there (is), that (is)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "here (is), this (is), there (is), that (is)"
+        ],
+        "pos": [
+          "particle"
+        ]
+      }
+    },
+    "W-066": {
+      "lemma": "ще",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 29,
+          "word": "ще",
+          "pos": "adverb",
+          "translations": "[\"yet (in addition)\", \"yet, more\", \"as well (in addition, also)\", \"else\", \"even (emphasising comparative)\", \"more (comparative of much)\", \"still (up to a time, as in the preceding time)\", \"yet (not as of the time referenced)\", \"yet (thus far)\"]",
+          "text": "ще (adverb): yet (in addition); yet, more; as well (in addition, also); else; even (emphasising comparative)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "yet, more",
+          "else",
+          "still"
+        ],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-067": {
+      "lemma": "іще",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 1234,
+          "word": "іще́",
+          "pos": "adverb",
+          "translations": "[\"yet (thus far)\", \"still (up to a time, as in the preceding time)\"]",
+          "text": "іще́ (adverb): yet (thus far); still (up to a time, as in the preceding time)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-068": {
+      "lemma": "вже",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 33,
+          "word": "вже́",
+          "pos": "adverb",
+          "translations": "[\"already (prior to some time)\", \"Alternative form of уже́: already\"]",
+          "text": "вже́ (adverb): already (prior to some time); Alternative form of уже́: already",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-069": {
+      "lemma": "уже",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 150,
+          "word": "уже́",
+          "pos": "adverb",
+          "translations": "[\"already (prior to some time)\"]",
+          "text": "уже́ (adverb): already (prior to some time)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "already"
+        ],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-070": {
+      "lemma": "лише",
+      "pos": "part",
+      "rows": [
+        {
+          "id": 19662,
+          "word": "лише́",
+          "pos": "particle",
+          "translations": "[\"mere (just, only; no more than)\"]",
+          "text": "лише́ (particle): mere (just, only; no more than)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "only, merely, just"
+        ],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-071": {
+      "lemma": "лиш",
+      "pos": "part",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-072": {
+      "lemma": "тільки",
+      "pos": "part",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "only, but"
+        ],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-073": {
+      "lemma": "саме",
+      "pos": "part",
+      "rows": [
+        {
+          "id": 19748,
+          "word": "са́ме",
+          "pos": "particle",
+          "translations": "[\"exactly (signifying agreement or recognition) (interjection)\", \"(emphatic) exactly, just, precisely\"]",
+          "text": "са́ме (particle): exactly (signifying agreement or recognition) (interjection); (emphatic) exactly, just, precisely",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "just",
+          "right",
+          "exactly, just, precisely"
+        ],
+        "pos": [
+          "adj",
+          "adv",
+          "particle",
+          "pron"
+        ]
+      }
+    },
+    "W-074": {
+      "lemma": "привіт",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8228,
+          "word": "приві́т",
+          "pos": "noun",
+          "translations": "[\"regards (greeting to pass to another person)\", \"greeting\"]",
+          "text": "приві́т (noun): regards (greeting to pass to another person); greeting",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "greeting",
+          "hello (informal)"
+        ],
+        "pos": [
+          "intj",
+          "noun"
+        ]
+      }
+    },
+    "W-075": {
+      "lemma": "добрий",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 576,
+          "word": "до́брий",
+          "pos": "adjective",
+          "translations": "[\"acting in the interest of good; ethical good intentions\", \"good, benign, genial, gentle, kind, kindly\", \"delicious (pleasing to taste)\", \"good (having positive qualities; useful for a particular purpose)\", \"nice (pleasant)\", \"good, tasty (food)\", \"kind (affectionate, nice)\", \"good (of food, having a particularly pleasant taste)\", \"good (useful for a particular purpose)\"]",
+          "text": "до́брий (adjective): acting in the interest of good; ethical good intentions; good, benign, genial, gentle, kind, kindly; delicious (pleasing to taste); good (having positive qualities; useful for a particular purpose); nice (pleasant)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "good, benign, genial, gentle, kind, kindly",
+          "good (having positive qualities; useful for a particular purpose)",
+          "good, tasty (food)"
+        ],
+        "pos": [
+          "adj"
+        ]
+      }
+    },
+    "W-076": {
+      "lemma": "день",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 10903,
+          "word": "де́нь",
+          "pos": "noun",
+          "translations": "[\"daylight (period of time between sunrise and sunset)\", \"day (period of 24 hours)\", \"day (period between sunrise and sunset)\", \"part of a day period which one spends at one's job, school, etc.\", \"day (rotational period of a planet)\", \"day (period from midnight to the following midnight)\"]",
+          "text": "де́нь (noun): daylight (period of time between sunrise and sunset); day (period of 24 hours); day (period between sunrise and sunset); part of a day period which one spends at one's job, school, etc.; day (rotational period of a planet)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "day"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-077": {
+      "lemma": "звук",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3740,
+          "word": "звук",
+          "pos": "noun",
+          "translations": "[\"sound (sensation perceived by the ear)\", \"(music, linguistics) sound\", \"sound (auditory sensation)\", \"(uncountable) sound (mechanical vibration)\"]",
+          "text": "звук (noun): sound (sensation perceived by the ear); (music, linguistics) sound; sound (auditory sensation); (uncountable) sound (mechanical vibration)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "sound",
+          "sound (auditory sensation)",
+          "sound (mechanical vibration)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-078": {
+      "lemma": "літера",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 18072,
+          "word": "лі́тера",
+          "pos": "noun",
+          "translations": "[\"letter (a symbol in an alphabet)\", \"character (symbol or letter)\"]",
+          "text": "лі́тера (noun): letter (a symbol in an alphabet); character (symbol or letter)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "letter (a symbol in an alphabet)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-079": {
+      "lemma": "голосний",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 14316,
+          "word": "голосни́й",
+          "pos": "noun",
+          "translations": "[\"vowel (sound)\"]",
+          "text": "голосни́й (noun): vowel (sound)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "loud, sonorous",
+          "well-known",
+          "pretentious",
+          "vocalic, voiced (of a sound)",
+          "vowel"
+        ],
+        "pos": [
+          "adj",
+          "noun"
+        ]
+      }
+    },
+    "W-080": {
+      "lemma": "приголосний",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "consonant, consonantal"
+        ],
+        "pos": [
+          "adj"
+        ]
+      }
+    },
+    "W-081": {
+      "lemma": "мама",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1466,
+          "word": "ма́ма",
+          "pos": "noun",
+          "translations": "[\"mother (female (human) who parents a child, gives birth to a baby, or is pregnant)\", \"mama, mummy, mom, ma\", \"mum (mother (informal, familiar))\", \"ma (colloquial form of mother)\", \"mummy (child's term for mother)\"]",
+          "text": "ма́ма (noun): mother (female (human) who parents a child, gives birth to a baby, or is pregnant); mama, mummy, mom, ma; mum (mother (informal, familiar)); ma (colloquial form of mother); mummy (child's term for mother)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "mama, mummy, mom, ma"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-082": {
+      "lemma": "малина",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 15382,
+          "word": "мали́на",
+          "pos": "noun",
+          "translations": "[\"raspberry (plant)\", \"(uncountable, collectively) raspberries (fruit)\", \"raspberry (fruit)\", \"(uncountable) raspberry (plant)\"]",
+          "text": "мали́на (noun): raspberry (plant); (uncountable, collectively) raspberries (fruit); raspberry (fruit); (uncountable) raspberry (plant)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "raspberries (fruit)",
+          "raspberry (plant)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-083": {
+      "lemma": "слива",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 18812,
+          "word": "сли́ва",
+          "pos": "noun",
+          "translations": "[\"plum (fruit of Prunus domestica)\", \"plum (tree and fruit)\"]",
+          "text": "сли́ва (noun): plum (fruit of Prunus domestica); plum (tree and fruit)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "plum (tree and fruit)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-084": {
+      "lemma": "рука",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 301,
+          "word": "рука́",
+          "pos": "noun",
+          "translations": "[\"hand (part of the fore limb)\", \"(anatomy) hand\", \"arm (upper appendage from shoulder to wrist)\", \"(anatomy) arm\", \"(writing) hand, handwriting\"]",
+          "text": "рука́ (noun): hand (part of the fore limb); (anatomy) hand; arm (upper appendage from shoulder to wrist); (anatomy) arm; (writing) hand, handwriting",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "hand",
+          "arm",
+          "hand, handwriting",
+          "the culprit of a theft, the person who stole something (used with a possessive pronoun to indicate the thief)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-085": {
+      "lemma": "ріка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5978,
+          "word": "ріка́",
+          "pos": "noun",
+          "translations": "[\"river (large stream which drains a landmass)\", \"river (any large flow of a liquid)\"]",
+          "text": "ріка́ (noun): river (large stream which drains a landmass); river (any large flow of a liquid)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "river"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-086": {
+      "lemma": "чути",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 1152,
+          "word": "чу́ти",
+          "pos": "verb",
+          "translations": "[\"hear (to perceive with the ear)\", \"to hear\", \"feel (transitive: to experience an emotion or other mental state about)\", \"to feel, to sense\", \"smell (sense with nose)\", \"to smell\", \"listen (to hear (something))\", \"hear (to perceive sounds through the ear)\"]",
+          "text": "чу́ти (verb): hear (to perceive with the ear); to hear; feel (transitive: to experience an emotion or other mental state about); to feel, to sense; smell (sense with nose)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to hear",
+          "to feel, to sense",
+          "to smell"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-087": {
+      "lemma": "бачити",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 249,
+          "word": "ба́чити",
+          "pos": "verb",
+          "translations": "[\"see (perceive with the eyes)\", \"to see (perceive with the eyes)\", \"to have the faculty of eyesight\"]",
+          "text": "ба́чити (verb): see (perceive with the eyes); to see (perceive with the eyes); to have the faculty of eyesight",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to see (perceive with the eyes)",
+          "to have the faculty of eyesight"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-088": {
+      "lemma": "читати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 763,
+          "word": "чита́ти",
+          "pos": "verb",
+          "translations": "[\"read (to look at and interpret letters or other information)\", \"(transitive) to read\"]",
+          "text": "чита́ти (verb): read (to look at and interpret letters or other information); (transitive) to read",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to read"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-089": {
+      "lemma": "писати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 325,
+          "word": "писа́ти",
+          "pos": "verb",
+          "translations": "[\"write (to form letters, etc.)\", \"(transitive) to write\", \"(transitive) to send written information to, to notify, to text\", \"(transitive) to create text in written form\", \"(transitive, intransitive) to be the author (of a book, article, poem, etc.)\", \"(transitive) to draw (an art piece)\", \"(transitive, dated) to give someone or something a name (in a document)\", \"(transitive, obsolete) to bequeath\", \"(transitive, obsolete) to decorate (with ornament)\"]",
+          "text": "писа́ти (verb): write (to form letters, etc.); (transitive) to write; (transitive) to send written information to, to notify, to text; (transitive) to create text in written form; (transitive, intransitive) to be the author (of a book, article, poem, etc.)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to write",
+          "to send written information to, to notify, to text",
+          "to create text in written form",
+          "to be the author (of a book, article, poem, etc.)",
+          "to draw (an art piece)",
+          "to give someone or something a name (in a document)"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-090": {
+      "lemma": "повторення",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5429,
+          "word": "повто́рення",
+          "pos": "noun",
+          "translations": "[\"review (second or subsequent reading of a text or artifact)\", \"revision (act of revising)\", \"reiteration\", \"repetition (act or an instance of repeating or being repeated)\", \"verbal noun of повтори́ти\"]",
+          "text": "повто́рення (noun): review (second or subsequent reading of a text or artifact); revision (act of revising); reiteration; repetition (act or an instance of repeating or being repeated); verbal noun of повтори́ти",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "repetition",
+          "reiteration"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-091": {
+      "lemma": "Ніна",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4441,
+          "word": "Ні́на",
+          "pos": "noun",
+          "translations": "[\"a female given name, Nina, equivalent to English Nina (proper noun)\"]",
+          "text": "Ні́на (noun): a female given name, Nina, equivalent to English Nina (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-092": {
+      "lemma": "Нонна",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-093": {
+      "lemma": "Іван",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 591,
+          "word": "Іва́н",
+          "pos": "noun",
+          "translations": "[\"Ivan (male given name) (proper noun)\", \"John, one of the twelve apostles (proper noun)\", \"John (male given name) (proper noun)\", \"a male given name, Ivan, equivalent to English John or Russian Ива́н Iván (proper noun)\"]",
+          "text": "Іва́н (noun): Ivan (male given name) (proper noun); John, one of the twelve apostles (proper noun); John (male given name) (proper noun); a male given name, Ivan, equivalent to English John or Russian Ива́н Iván (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-094": {
+      "lemma": "Вова",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-095": {
+      "lemma": "Ава",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-096": {
+      "lemma": "так",
+      "pos": "part",
+      "rows": [
+        {
+          "id": 129,
+          "word": "так",
+          "pos": "particle",
+          "translations": "[\"yes (word used to indicate agreement or acceptance)\", \"yes (interjection)\", \"eh (used as a tag question) (interjection)\", \"so (slang: very much) (interjection)\", \"so (in a particular manner) (interjection)\", \"so (to a particular extent) (interjection)\", \"so (slang: very much) (conjunction)\", \"so (in a particular manner) (conjunction)\", \"so (to a particular extent) (conjunction)\", \"as (to such an extent or degree) (preposition)\"]",
+          "text": "так (particle): yes (word used to indicate agreement or acceptance); yes (interjection); eh (used as a tag question) (interjection); so (slang: very much) (interjection); so (in a particular manner) (interjection)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "so, thus",
+          "yes"
+        ],
+        "pos": [
+          "adv",
+          "intj"
+        ]
+      }
+    },
+    "W-097": {
+      "lemma": "коса",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 10065,
+          "word": "коса́",
+          "pos": "noun",
+          "translations": "[\"braid (hairstyle)\", \"braided hair\", \"scythe (farm tool)\", \"spit (generally low, narrow, pointed, usually sandy peninsula)\", \"(dialectal) spleen, pancreas\", \"(dialectal) tendon\"]",
+          "text": "коса́ (noun): braid (hairstyle); braided hair; scythe (farm tool); spit (generally low, narrow, pointed, usually sandy peninsula); (dialectal) spleen, pancreas",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "A standard, three-strand hair braid",
+          "scythe",
+          "spleen, pancreas",
+          "tendon",
+          "cockeyed female person"
+        ],
+        "pos": [
+          "adj",
+          "noun"
+        ]
+      }
+    },
+    "W-098": {
+      "lemma": "Павлик",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-099": {
+      "lemma": "Поліна",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 20850,
+          "word": "Полі́на",
+          "pos": "noun",
+          "translations": "[\"a female given name, Polina, equivalent to English Paulina (proper noun)\"]",
+          "text": "Полі́на (noun): a female given name, Polina, equivalent to English Paulina (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-100": {
+      "lemma": "Панас",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 15518,
+          "word": "Пана́с",
+          "pos": "noun",
+          "translations": "[\"a male given name, Panas (proper noun)\", \"a surname: Panas (proper noun)\"]",
+          "text": "Пана́с (noun): a male given name, Panas (proper noun); a surname: Panas (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-101": {
+      "lemma": "тато",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4949,
+          "word": "та́то",
+          "pos": "noun",
+          "translations": "[\"father (male parent)\", \"daddy (father)\", \"dad (informal: a father)\"]",
+          "text": "та́то (noun): father (male parent); daddy (father); dad (informal: a father)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "dad"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-102": {
+      "lemma": "Евеліна",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-103": {
+      "lemma": "дах",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3029,
+          "word": "дах",
+          "pos": "noun",
+          "translations": "[\"roof (the cover at the top of a building)\"]",
+          "text": "дах (noun): roof (the cover at the top of a building)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "roof (the cover at the top of a building)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-104": {
+      "lemma": "зима",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3625,
+          "word": "зима́",
+          "pos": "noun",
+          "translations": "[\"winter (fourth season, marked by short days and the lowest temperatures)\"]",
+          "text": "зима́ (noun): winter (fourth season, marked by short days and the lowest temperatures)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "winter"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-105": {
+      "lemma": "білка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 14198,
+          "word": "бі́лка",
+          "pos": "noun",
+          "translations": "[\"squirrel (rodent)\"]",
+          "text": "бі́лка (noun): squirrel (rodent)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "squirrel"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-106": {
+      "lemma": "гарбуз",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 9106,
+          "word": "гарбу́з",
+          "pos": "noun",
+          "translations": "[\"pumpkin (plant)\", \"pumpkin (plant and fruit)\", \"mitten (type of glove)\", \"pumpkin (fruit of this plant)\"]",
+          "text": "гарбу́з (noun): pumpkin (plant); pumpkin (plant and fruit); mitten (type of glove); pumpkin (fruit of this plant)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "pumpkin (plant and fruit)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-107": {
+      "lemma": "ґава",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 19841,
+          "word": "ґа́ва",
+          "pos": "noun",
+          "translations": "[\"crow (any bird of the genus Corvus)\"]",
+          "text": "ґа́ва (noun): crow (any bird of the genus Corvus)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "crow",
+          "a Ukrainian surname"
+        ],
+        "pos": [
+          "name",
+          "noun"
+        ]
+      }
+    },
+    "W-108": {
+      "lemma": "чобіт",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8121,
+          "word": "чо́біт",
+          "pos": "noun",
+          "translations": "[\"boot (heavy shoe that covers part of the leg)\"]",
+          "text": "чо́біт (noun): boot (heavy shoe that covers part of the leg)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "boot; sturdy footwear covering the foot and extending above the ankle, often for outdoor or winter use."
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-109": {
+      "lemma": "чай",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5698,
+          "word": "чай",
+          "pos": "noun",
+          "translations": "[\"dried leaves of tea plant\", \"(figuratively) teatime\", \"tea (drink made from other plants)\", \"drink made from leaves of tea plant\"]",
+          "text": "чай (noun): dried leaves of tea plant; (figuratively) teatime; tea (drink made from other plants); drink made from leaves of tea plant",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "tea",
+          "teatime"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-110": {
+      "lemma": "хліб",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1805,
+          "word": "хліб",
+          "pos": "noun",
+          "translations": "[\"bread (baked dough made from cereals)\", \"(usually in the plural) cereal, crops or cultures (rye, wheat, etc.)\", \"bread (baked)\", \"(usually in the singular) unthreshed grain\", \"countable: any variety of bread\", \"(usually in the singular) harvest (of grain)\", \"(in the singular) grain (used to produce flour)\"]",
+          "text": "хліб (noun): bread (baked dough made from cereals); (usually in the plural) cereal, crops or cultures (rye, wheat, etc.); bread (baked); (usually in the singular) unthreshed grain; countable: any variety of bread",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "cereal, crops or cultures (rye, wheat, etc.)",
+          "unthreshed grain",
+          "harvest (of grain)",
+          "bread (baked)",
+          "grain (used to produce flour)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-111": {
+      "lemma": "жито",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 9330,
+          "word": "жи́то",
+          "pos": "noun",
+          "translations": "[\"grain (harvested seeds of various grass-related food crops)\", \"rye (the grass Secale cereale or its grains as food)\"]",
+          "text": "жи́то (noun): grain (harvested seeds of various grass-related food crops); rye (the grass Secale cereale or its grains as food)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "rye"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-112": {
+      "lemma": "комиш",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 20243,
+          "word": "коми́ш",
+          "pos": "noun",
+          "translations": "[\"reed (grass-like plant)\"]",
+          "text": "коми́ш (noun): reed (grass-like plant)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-113": {
+      "lemma": "прилетіти",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 8230,
+          "word": "прилеті́ти",
+          "pos": "verb",
+          "translations": "[\"to fly in (arrive by flying)\", \"(colloquial) to rush in, to come rushing in\"]",
+          "text": "прилеті́ти (verb): to fly in (arrive by flying); (colloquial) to rush in, to come rushing in",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to fly in (arrive by flying)",
+          "to rush in, to come rushing in"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-114": {
+      "lemma": "додому",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 2413,
+          "word": "додо́му",
+          "pos": "adverb",
+          "translations": "[\"(direction) home, homewards\", \"homeward (towards home)\"]",
+          "text": "додо́му (adverb): (direction) home, homewards; homeward (towards home)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "home, homewards"
+        ],
+        "pos": [
+          "adv"
+        ]
+      }
+    },
+    "W-115": {
+      "lemma": "жабка",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-116": {
+      "lemma": "дрова",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6820,
+          "word": "дро́ва",
+          "pos": "noun",
+          "translations": "[\"firewood (wood intended to be burned, typically for heat)\"]",
+          "text": "дро́ва (noun): firewood (wood intended to be burned, typically for heat)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "firewood"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-117": {
+      "lemma": "клен",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 14473,
+          "word": "клен",
+          "pos": "noun",
+          "translations": "[\"maple (tree of the Acer genus)\", \"maple, maple tree (Acer, gen. et spp.)\"]",
+          "text": "клен (noun): maple (tree of the Acer genus); maple, maple tree (Acer, gen. et spp.)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "maple, maple tree (Acer gen. et spp.)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-118": {
+      "lemma": "зуб",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5364,
+          "word": "зуб",
+          "pos": "noun",
+          "translations": "[\"anatomy: tooth\", \"tooth, projection, cog (on a rake, comb, gear, etc.)\", \"gear tooth\", \"saw tooth\"]",
+          "text": "зуб (noun): anatomy: tooth; tooth, projection, cog (on a rake, comb, gear, etc.); gear tooth; saw tooth",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "tooth",
+          "tooth, projection, cog (on a rake, comb, gear, etc.)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-119": {
+      "lemma": "тин",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 12824,
+          "word": "тин",
+          "pos": "noun",
+          "translations": "[\"fence (barrier)\", \"fence made out of vines and branches; wattle\", \"a fence in general\"]",
+          "text": "тин (noun): fence (barrier); fence made out of vines and branches; wattle; a fence in general",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "fence made out of vines and branches; wattle",
+          "a fence in general"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-120": {
+      "lemma": "тінь",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2830,
+          "word": "тінь",
+          "pos": "noun",
+          "translations": "[\"shadow (dark image projected onto a surface)\", \"shadow, shade\", \"shade (darkness where light is blocked)\", \"shadow (imperfect and faint representation)\", \"that which looms as though a shadow\", \"shadow (area protected by an obstacle)\", \"shadow (relative darkness)\"]",
+          "text": "тінь (noun): shadow (dark image projected onto a surface); shadow, shade; shade (darkness where light is blocked); shadow (imperfect and faint representation); that which looms as though a shadow",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "shadow, shade"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-121": {
+      "lemma": "їжа",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2698,
+          "word": "ї́жа",
+          "pos": "noun",
+          "translations": "[\"food (any substance consumed by living organisms to sustain life)\", \"(uncountable) food\", \"eating (food, comestibles)\", \"(uncountable) meal\", \"diet (food a person or animal consumes)\", \"meal (food that is prepared and eaten)\"]",
+          "text": "ї́жа (noun): food (any substance consumed by living organisms to sustain life); (uncountable) food; eating (food, comestibles); (uncountable) meal; diet (food a person or animal consumes)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "food",
+          "meal"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-122": {
+      "lemma": "яма",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3618,
+          "word": "я́ма",
+          "pos": "noun",
+          "translations": "[\"pit (hole in the ground)\", \"pit, hole (in the ground)\", \"pothole (a hole in a road)\"]",
+          "text": "я́ма (noun): pit (hole in the ground); pit, hole (in the ground); pothole (a hole in a road)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "pit, hole (in the ground)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-123": {
+      "lemma": "маля",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 7639,
+          "word": "маля́",
+          "pos": "noun",
+          "translations": "[\"kid (child (colloq.))\", \"infant, baby\", \"infant animal, baby animal\", \"tot (small child)\"]",
+          "text": "маля́ (noun): kid (child (colloq.)); infant, baby; infant animal, baby animal; tot (small child)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "infant, baby",
+          "infant animal, baby animal"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-124": {
+      "lemma": "юрта",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 19145,
+          "word": "ю́рта",
+          "pos": "noun",
+          "translations": "[\"yurt (large, round tent with vertical walls and conical roof)\"]",
+          "text": "ю́рта (noun): yurt (large, round tent with vertical walls and conical roof)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "yurt"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-125": {
+      "lemma": "люпин",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 20289,
+          "word": "люпи́н",
+          "pos": "noun",
+          "translations": "[\"lupin (any member of the genus Lupinus in the family Fabaceae)\"]",
+          "text": "люпи́н (noun): lupin (any member of the genus Lupinus in the family Fabaceae)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-126": {
+      "lemma": "синій",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 5289,
+          "word": "си́ній",
+          "pos": "adjective",
+          "translations": "[\"blue-colored\", \"deep blue, indigo (color)\", \"having a navy (dark blue) colour\"]",
+          "text": "си́ній (adjective): blue-colored; deep blue, indigo (color); having a navy (dark blue) colour",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "deep blue, indigo (color)"
+        ],
+        "pos": [
+          "adj"
+        ]
+      }
+    },
+    "W-127": {
+      "lemma": "єнот",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 19833,
+          "word": "єно́т",
+          "pos": "noun",
+          "translations": "[\"raccoon (nocturnal omnivore living in North America, Procyon lotor)\", \"(obsolete) genet\", \"raccoon (mammal)\", \"raccoon fur, coonskin\", \"raccoon dog\"]",
+          "text": "єно́т (noun): raccoon (nocturnal omnivore living in North America, Procyon lotor); (obsolete) genet; raccoon (mammal); raccoon fur, coonskin; raccoon dog",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "genet",
+          "raccoon (mammal)",
+          "raccoon fur, coonskin",
+          "raccoon dog"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-128": {
+      "lemma": "цимбали",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 15847,
+          "word": "цимба́ли",
+          "pos": "noun",
+          "translations": "[\"tsymbaly (the Ukrainian version of the hammered dulcimer)\", \"dulcimer (musical instrument)\"]",
+          "text": "цимба́ли (noun): tsymbaly (the Ukrainian version of the hammered dulcimer); dulcimer (musical instrument)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "tsymbaly (the Ukrainian version of the hammered dulcimer)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-129": {
+      "lemma": "щука",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 11530,
+          "word": "щу́ка",
+          "pos": "noun",
+          "translations": "[\"pike (fish)\", \"pike (fish of the genus Esox)\"]",
+          "text": "щу́ка (noun): pike (fish); pike (fish of the genus Esox)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "pike (fish)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-130": {
+      "lemma": "дощ",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3919,
+          "word": "дощ",
+          "pos": "noun",
+          "translations": "[\"rain (condensed water from a cloud)\", \"(meteorology) rain\"]",
+          "text": "дощ (noun): rain (condensed water from a cloud); (meteorology) rain",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "rain"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-131": {
+      "lemma": "ферма",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5823,
+          "word": "фе́рма",
+          "pos": "noun",
+          "translations": "[\"farm (a place where agricultural activities take place)\"]",
+          "text": "фе́рма (noun): farm (a place where agricultural activities take place)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "farm"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-132": {
+      "lemma": "джміль",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 17625,
+          "word": "джміль",
+          "pos": "noun",
+          "translations": "[\"bumblebee (genus of bee)\"]",
+          "text": "джміль (noun): bumblebee (genus of bee)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "bumblebee (bee of the genus Bombus)",
+          "bumblebee (iced drink of layered orange juice and espresso)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-133": {
+      "lemma": "джем",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 16211,
+          "word": "джем",
+          "pos": "noun",
+          "translations": "[\"jam (sweet mixture of fruit boiled with sugar)\", \"jam (food)\", \"marmalade (citrus jam)\"]",
+          "text": "джем (noun): jam (sweet mixture of fruit boiled with sugar); jam (food); marmalade (citrus jam)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "jam (food)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-134": {
+      "lemma": "дзиґа",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 12497,
+          "word": "дзи́ґа",
+          "pos": "noun",
+          "translations": "[\"spinning top (a toy)\"]",
+          "text": "дзи́ґа (noun): spinning top (a toy)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "spinning top"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-135": {
+      "lemma": "дзюрчати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 17628,
+          "word": "дзюрча́ти",
+          "pos": "verb",
+          "translations": "[\"purl (to make the sound of gently running water)\", \"babble (to make a continuous murmuring noise)\"]",
+          "text": "дзюрча́ти (verb): purl (to make the sound of gently running water); babble (to make a continuous murmuring noise)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-136": {
+      "lemma": "пір'я",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": {
+        "glosses": [
+          "feathers"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-137": {
+      "lemma": "пити",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 3478,
+          "word": "пи́ти",
+          "pos": "verb",
+          "translations": "[\"drink (consume liquid through the mouth)\", \"(transitive) to drink\"]",
+          "text": "пи́ти (verb): drink (consume liquid through the mouth); (transitive) to drink",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to drink"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-138": {
+      "lemma": "сім'я",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 7144,
+          "word": "сі́м'я",
+          "pos": "noun",
+          "translations": "[\"any small seed-like fruit\", \"(uncountable) seed\", \"semen (male reproductory fluid)\", \"(uncountable) hemp seed\", \"seed (semen)\", \"(uncountable) sperm\"]",
+          "text": "сі́м'я (noun): any small seed-like fruit; (uncountable) seed; semen (male reproductory fluid); (uncountable) hemp seed; seed (semen)",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 7145,
+          "word": "сім'я́",
+          "pos": "noun",
+          "translations": "[\"family (group of people related by blood, marriage, law, or custom)\", \"family, household\", \"family (linguistics: a group of languages believed to have descended from the same ancestral language)\", \"cum (slang: semen)\"]",
+          "text": "сім'я́ (noun): family (group of people related by blood, marriage, law, or custom); family, household; family (linguistics: a group of languages believed to have descended from the same ancestral language); cum (slang: semen)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "seed",
+          "hemp seed",
+          "sperm",
+          "family, household"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-139": {
+      "lemma": "м'яч",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6763,
+          "word": "м'яч",
+          "pos": "noun",
+          "translations": "[\"ball (object, generally spherical, used for playing games)\", \"ball (object for playing games)\"]",
+          "text": "м'яч (noun): ball (object, generally spherical, used for playing games); ball (object for playing games)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "ball (object for playing games)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-140": {
+      "lemma": "радіти",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 3497,
+          "word": "раді́ти",
+          "pos": "verb",
+          "translations": "[\"rejoice (be happy)\", \"(intransitive) to rejoice, to exult, to jubilate, to be glad\"]",
+          "text": "раді́ти (verb): rejoice (be happy); (intransitive) to rejoice, to exult, to jubilate, to be glad",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to rejoice, to exult, to jubilate, to be glad"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-141": {
+      "lemma": "Марія",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2148,
+          "word": "Марі́я",
+          "pos": "noun",
+          "translations": "[\"Mary (female given name) (proper noun)\", \"a female given name, Mariya, equivalent to English Maria or Mary (proper noun)\", \"Mary, mother of Jesus (proper noun)\"]",
+          "text": "Марі́я (noun): Mary (female given name) (proper noun); a female given name, Mariya, equivalent to English Maria or Mary (proper noun); Mary, mother of Jesus (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-142": {
+      "lemma": "мільярд",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 812,
+          "word": "мілья́рд",
+          "pos": "noun",
+          "translations": "[\"billion (short scale), one thousand million or milliard (long scale) (10<sup>9</sup>)\"]",
+          "text": "мілья́рд (noun): billion (short scale), one thousand million or milliard (long scale) (10<sup>9</sup>)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "billion (short scale), one thousand million or milliard (long scale) (10⁹)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-143": {
+      "lemma": "пюре",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 16830,
+          "word": "пюре́",
+          "pos": "noun",
+          "translations": "[\"puree (food that has been ground into a thick liquid)\", \"purée\", \"mashed potatoes (dish)\"]",
+          "text": "пюре́ (noun): puree (food that has been ground into a thick liquid); purée; mashed potatoes (dish)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "puree"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-144": {
+      "lemma": "пір'їна",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-145": {
+      "lemma": "бак",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6807,
+          "word": "бак",
+          "pos": "noun",
+          "translations": "[\"tank (closed container for fluids)\", \"cistern (reservoir for holding water)\", \"tank (fuel reservoir)\"]",
+          "text": "бак (noun): tank (closed container for fluids); cistern (reservoir for holding water); tank (fuel reservoir)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "tank, cistern, can (a large vessel for storing liquids, typically cylindrical)",
+          "forecastle"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-146": {
+      "lemma": "біб",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 16001,
+          "word": "біб",
+          "pos": "noun",
+          "translations": "[\"bean (seed)\", \"broad bean (Vicia faba)\", \"(dialectal) potato\"]",
+          "text": "біб (noun): bean (seed); broad bean (Vicia faba); (dialectal) potato",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "bean",
+          "potato"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-147": {
+      "lemma": "лід",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8978,
+          "word": "лід",
+          "pos": "noun",
+          "translations": "[\"ice (water in frozen form)\", \"lede (introductory paragraph or paragraphs of a newspaper or other news article)\"]",
+          "text": "лід (noun): ice (water in frozen form); lede (introductory paragraph or paragraphs of a newspaper or other news article)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "ice"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-148": {
+      "lemma": "бук",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 13571,
+          "word": "бук",
+          "pos": "noun",
+          "translations": "[\"beech (tree of genus Fagus)\", \"beech (tree of the genus Fagus)\", \"(dialectal) stick (elongated piece of wood)\"]",
+          "text": "бук (noun): beech (tree of genus Fagus); beech (tree of the genus Fagus); (dialectal) stick (elongated piece of wood)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "beech (tree of the genus Fagus)",
+          "stick (elongated piece of wood)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-149": {
+      "lemma": "грати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 982,
+          "word": "гра́ти",
+          "pos": "verb",
+          "translations": "[\"act (to perform a theatrical role)\", \"(intransitive, transitive) to play a musical instrument\", \"play (produce music using a musical instrument (transitive sense), affecting a noun)\", \"(intransitive, colloquial) to play\", \"play (act in a manner such that one has fun)\", \"(intransitive) to participate in a game\", \"(intransitive, figuratively) to be in motion all the time, to make quick moves\", \"(intransitive) to not take something seriously\", \"(intransitive) to effervesce\", \"(intransitive, figuratively) to glimmer\"]",
+          "text": "гра́ти (verb): act (to perform a theatrical role); (intransitive, transitive) to play a musical instrument; play (produce music using a musical instrument (transitive sense), affecting a noun); (intransitive, colloquial) to play; play (act in a manner such that one has fun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to play a musical instrument",
+          "to play",
+          "to participate in a game",
+          "to be in motion all the time, to make quick moves",
+          "to not take something seriously",
+          "to effervesce"
+        ],
+        "pos": [
+          "noun",
+          "verb"
+        ]
+      }
+    },
+    "W-150": {
+      "lemma": "ґрати",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 5352,
+          "word": "ґра́ти",
+          "pos": "noun",
+          "translations": "[\"grid (rectangular array of squares or rectangles of equal size, such as in a crossword puzzle)\", \"grid, bars\", \"bars (grating, grill, grid)\", \"grating (barrier)\"]",
+          "text": "ґра́ти (noun): grid (rectangular array of squares or rectangles of equal size, such as in a crossword puzzle); grid, bars; bars (grating, grill, grid); grating (barrier)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "grid, bars"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-151": {
+      "lemma": "кава",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4642,
+          "word": "ка́ва",
+          "pos": "noun",
+          "translations": "[\"coffee (beverage)\", \"(uncountable) coffee (beverage)\"]",
+          "text": "ка́ва (noun): coffee (beverage); (uncountable) coffee (beverage)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "coffee (beverage)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-152": {
+      "lemma": "грім",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 8020,
+          "word": "грім",
+          "pos": "noun",
+          "translations": "[\"thunder (sound caused by lightning)\", \"(meteorology) thunder, thunderbolt\", \"roar, thunderous sound\"]",
+          "text": "грім (noun): thunder (sound caused by lightning); (meteorology) thunder, thunderbolt; roar, thunderous sound",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "thunder, thunderbolt",
+          "roar, thunderous sound"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-153": {
+      "lemma": "ґрунт",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2347,
+          "word": "ґрунт",
+          "pos": "noun",
+          "translations": "[\"ground (surface of the Earth)\", \"soil, ground, bottom\", \"soil (unconsolidated mineral or organic material on the immediate surface of the earth)\", \"(historical) allotment land\", \"soil (mineral or organic material serving as a natural medium for the growth of land plants)\", \"(figuratively) ground, basis, foundation\", \"soil (mixture of sand and organic material)\"]",
+          "text": "ґрунт (noun): ground (surface of the Earth); soil, ground, bottom; soil (unconsolidated mineral or organic material on the immediate surface of the earth); (historical) allotment land; soil (mineral or organic material serving as a natural medium for the growth of land plants)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "soil, ground, bottom",
+          "allotment land",
+          "ground, basis, foundation"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-154": {
+      "lemma": "коло",
+      "pos": "prep",
+      "rows": [
+        {
+          "id": 5944,
+          "word": "ко́ло",
+          "pos": "particle",
+          "translations": "[\"about (in the immediate neighborhood of) (preposition)\", \"around (surrounding) (preposition)\", \"around (near) (preposition)\", \"around, about, approximately (preposition)\"]",
+          "text": "ко́ло (particle): about (in the immediate neighborhood of) (preposition); around (surrounding) (preposition); around (near) (preposition); around, about, approximately (preposition)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "circle",
+          "circle-shaped object",
+          "circuit",
+          "wheel (in a mill or other machine)",
+          "round dance",
+          "around (surrounding)"
+        ],
+        "pos": [
+          "noun",
+          "prep"
+        ]
+      }
+    },
+    "W-155": {
+      "lemma": "он",
+      "pos": "part",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-156": {
+      "lemma": "сливка",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 21627,
+          "word": "сли́вка",
+          "pos": "noun",
+          "translations": "[\"plum (tree and fruit)\"]",
+          "text": "сли́вка (noun): plum (tree and fruit)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "plum (tree and fruit)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-157": {
+      "lemma": "кислий",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 13139,
+          "word": "ки́слий",
+          "pos": "adjective",
+          "translations": "[\"acid (sour, sharp, or biting to the taste)\", \"sour (having an acidic, sharp or tangy taste)\", \"acidic (chemistry: having pH less than 7)\"]",
+          "text": "ки́слий (adjective): acid (sour, sharp, or biting to the taste); sour (having an acidic, sharp or tangy taste); acidic (chemistry: having pH less than 7)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "sour"
+        ],
+        "pos": [
+          "adj"
+        ]
+      }
+    },
+    "W-158": {
+      "lemma": "син",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1064,
+          "word": "син",
+          "pos": "noun",
+          "translations": "[\"a male person in relation to his parents\", \"son (familiar address)\"]",
+          "text": "син (noun): a male person in relation to his parents; son (familiar address)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "son"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-159": {
+      "lemma": "настати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 3431,
+          "word": "наста́ти",
+          "pos": "verb",
+          "translations": "[\"to come, to begin (period of time)\", \"to fall, to descend, to come (silence, night, evening, darkness)\"]",
+          "text": "наста́ти (verb): to come, to begin (period of time); to fall, to descend, to come (silence, night, evening, darkness)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to come, to begin (period of time)",
+          "to fall, to descend, to come (silence, night, evening, darkness)"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-160": {
+      "lemma": "весна",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 3547,
+          "word": "весна́",
+          "pos": "noun",
+          "translations": "[\"spring (season between winter and summer in temperate climates)\", \"spring (season)\"]",
+          "text": "весна́ (noun): spring (season between winter and summer in temperate climates); spring (season)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "spring (season)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-161": {
+      "lemma": "птах",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 16825,
+          "word": "птах",
+          "pos": "noun",
+          "translations": "[\"bird (animal)\"]",
+          "text": "птах (noun): bird (animal)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "bird"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-162": {
+      "lemma": "хто",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 48,
+          "word": "хто",
+          "pos": "pronoun",
+          "translations": "[\"who? (interrogative pronoun)\", \"who (relative pronoun)\", \"who (interrogative pronoun)\"]",
+          "text": "хто (pronoun): who? (interrogative pronoun); who (relative pronoun); who (interrogative pronoun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "who",
+          "who (relative pronoun)",
+          "who (interrogative pronoun)"
+        ],
+        "pos": [
+          "conj",
+          "pron"
+        ]
+      }
+    },
+    "W-163": {
+      "lemma": "де",
+      "pos": "adv",
+      "rows": [
+        {
+          "id": 71,
+          "word": "де",
+          "pos": "adverb",
+          "translations": "[\"where (at or in what place)\", \"(interrogative) where\"]",
+          "text": "де (adverb): where (at or in what place); (interrogative) where",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "where (in what place?)",
+          "where, whither (to what place?)",
+          "The letter д (d), the 6th letter of the Ukrainian alphabet."
+        ],
+        "pos": [
+          "adv",
+          "noun"
+        ]
+      }
+    },
+    "W-164": {
+      "lemma": "що",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 13,
+          "word": "що",
+          "pos": "pronoun",
+          "translations": "[\"what? (interrogative pronoun)\", \"that, which (relative pronoun)\", \"who (relative pronoun)\", \"what (interrogative pronoun)\", \"what (nonstandard relative pronoun)\"]",
+          "text": "що (pronoun): what? (interrogative pronoun); that, which (relative pronoun); who (relative pronoun); what (interrogative pronoun); what (nonstandard relative pronoun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "that",
+          "that, which (relative pronoun)",
+          "what (interrogative pronoun)"
+        ],
+        "pos": [
+          "conj",
+          "pron"
+        ]
+      }
+    },
+    "W-165": {
+      "lemma": "любити",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 805,
+          "word": "люби́ти",
+          "pos": "verb",
+          "translations": "[\"love (have a strong affection for)\", \"to like, to love (platonically or aesthetically)\", \"like (to enjoy)\"]",
+          "text": "люби́ти (verb): love (have a strong affection for); to like, to love (platonically or aesthetically); like (to enjoy)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to like, to love (platonically or aesthetically)"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-166": {
+      "lemma": "равлик",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 10742,
+          "word": "ра́влик",
+          "pos": "noun",
+          "translations": "[\"snail (any animal of the class Gastropoda having a shell)\", \"at sign (name of the symbol )\", \"commercial at (@)\"]",
+          "text": "ра́влик (noun): snail (any animal of the class Gastropoda having a shell); at sign (name of the symbol ); commercial at (@)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "snail",
+          "commercial at (@)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-167": {
+      "lemma": "один",
+      "pos": "numr",
+      "rows": [
+        {
+          "id": 26,
+          "word": "оди́н",
+          "pos": "numeral",
+          "translations": "[\"one (cardinal number 1)\", \"one (1)\"]",
+          "text": "оди́н (numeral): one (cardinal number 1); one (1)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "one (1)",
+          "as one, unified"
+        ],
+        "pos": [
+          "num"
+        ]
+      }
+    },
+    "W-168": {
+      "lemma": "старенький",
+      "pos": "adj",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-169": {
+      "lemma": "мандрувати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 6582,
+          "word": "мандрува́ти",
+          "pos": "verb",
+          "translations": "[\"travel (be on a journey)\", \"(intransitive) to travel, to voyage, to tour, to wander, to roam, to rove, to peregrinate, to itinerate (go from place to place)\"]",
+          "text": "мандрува́ти (verb): travel (be on a journey); (intransitive) to travel, to voyage, to tour, to wander, to roam, to rove, to peregrinate, to itinerate (go from place to place)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to travel, to voyage, to tour, to wander, to roam, to rove, to peregrinate, to itinerate (go from place to place)"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-170": {
+      "lemma": "час",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 20,
+          "word": "час",
+          "pos": "noun",
+          "translations": "[\"time (inevitable passing of events)\", \"tense (verb forms distinguishing time)\", \"(grammar) tense\", \"age (particular period of time in history)\", \"time (person's experiences or biography)\", \"numerical indication of a particular moment in time\", \"measurement under some system of the time of day or moment in time\", \"time of day, as indicated by a clock, etc\", \"measurement of a quantity of time\", \"quantity of availability in time\"]",
+          "text": "час (noun): time (inevitable passing of events); tense (verb forms distinguishing time); (grammar) tense; age (particular period of time in history); time (person's experiences or biography)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "time",
+          "tense"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-171": {
+      "lemma": "буква",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 4390,
+          "word": "бу́ква",
+          "pos": "noun",
+          "translations": "[\"letter (a symbol in an alphabet)\"]",
+          "text": "бу́ква (noun): letter (a symbol in an alphabet)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "letter (a symbol in an alphabet)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-172": {
+      "lemma": "назва",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 659,
+          "word": "на́зва",
+          "pos": "noun",
+          "translations": "[\"name (word or phrase indicating a particular person, place, class or thing)\", \"name, appellation\", \"title (name of a book, etc)\", \"title (of a book)\"]",
+          "text": "на́зва (noun): name (word or phrase indicating a particular person, place, class or thing); name, appellation; title (name of a book, etc); title (of a book)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "appellation",
+          "name",
+          "title (of a book, movie, documentary, article, painting...)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-173": {
+      "lemma": "алфавіт",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 23405,
+          "word": "алфа́ві́т",
+          "pos": "noun",
+          "translations": "[\"alphabet (an ordered set of letters used in a language)\"]",
+          "text": "алфа́ві́т (noun): alphabet (an ordered set of letters used in a language)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "alphabet (an ordered set of letters used in a language)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-174": {
+      "lemma": "знак",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1869,
+          "word": "зна́к",
+          "pos": "noun",
+          "translations": "[\"astrological sign (sign that is used as the basis of astrology)\", \"sign (trace, impression, token)\", \"omen\", \"symbol (character or glyph)\", \"sign (visible indication)\", \"character (symbol or letter)\", \"brand (name, symbol, logo)\", \"badge (distinctive mark)\", \"signal (sign made to give notice)\", \"mark (indication for reference or measurement)\"]",
+          "text": "зна́к (noun): astrological sign (sign that is used as the basis of astrology); sign (trace, impression, token); omen; symbol (character or glyph); sign (visible indication)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "symbol",
+          "omen",
+          "sign (trace, impression, token)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-175": {
+      "lemma": "м'якшення",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-176": {
+      "lemma": "синь",
+      "pos": "noun",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-177": {
+      "lemma": "рис",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 18667,
+          "word": "рис",
+          "pos": "noun",
+          "translations": "[\"rice (plants)\", \"(botany) rice, paddy (plants)\", \"rice (food)\"]",
+          "text": "рис (noun): rice (plants); (botany) rice, paddy (plants); rice (food)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "rice, paddy (plants)",
+          "rice (food)"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-178": {
+      "lemma": "рись",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 14763,
+          "word": "рись",
+          "pos": "noun",
+          "translations": "[\"lynx (wild cat)\"]",
+          "text": "рись (noun): lynx (wild cat)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "lynx"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-179": {
+      "lemma": "бюро",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 2131,
+          "word": "бюро́",
+          "pos": "noun",
+          "translations": "[\"bureau (unit of governance, office)\", \"office, bureau, agency\", \"office (room(s) or building used for non-manual work)\", \"bureau (office (room))\"]",
+          "text": "бюро́ (noun): bureau (unit of governance, office); office, bureau, agency; office (room(s) or building used for non-manual work); bureau (office (room))",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "office, bureau, agency"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-180": {
+      "lemma": "бити",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 2241,
+          "word": "би́ти",
+          "pos": "verb",
+          "translations": "[\"beat (to hit, to knock, to pound, to strike)\", \"(transitive) to beat, to hit, to strike\", \"trounce (to beat severely)\", \"lather (to beat or whip)\", \"strike (to hit)\", \"hit (to administer a blow)\"]",
+          "text": "би́ти (verb): beat (to hit, to knock, to pound, to strike); (transitive) to beat, to hit, to strike; trounce (to beat severely); lather (to beat or whip); strike (to hit)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to beat, to hit, to strike"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-181": {
+      "lemma": "свято",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 1139,
+          "word": "свя́то",
+          "pos": "noun",
+          "translations": "[\"festival (event or community gathering)\", \"public holiday (national or regional holiday from work on a specific day)\", \"feast day (religious festival)\", \"celebration (social gathering for entertainment and fun)\", \"holiday (day declared free from work by the government)\", \"holiday (day on which a festival, religious event, or national celebration is traditionally observed)\"]",
+          "text": "свя́то (noun): festival (event or community gathering); public holiday (national or regional holiday from work on a specific day); feast day (religious festival); celebration (social gathering for entertainment and fun); holiday (day declared free from work by the government)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "piously, with awe",
+          "holiday"
+        ],
+        "pos": [
+          "adv",
+          "noun"
+        ]
+      }
+    },
+    "W-182": {
+      "lemma": "зв'язок",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 6415,
+          "word": "зв'я́зок",
+          "pos": "noun",
+          "translations": "[\"(dialectal) bundle\"]",
+          "text": "зв'я́зок (noun): (dialectal) bundle",
+          "source": "dmklinger UK→EN"
+        },
+        {
+          "id": 6416,
+          "word": "зв'язо́к",
+          "pos": "noun",
+          "translations": "[\"connection (point at which two or more things are joined)\", \"(plural only) relations, ties, links\", \"bond (chemistry: link or force between neighbouring atoms in a molecule)\", \"(plural only) connections\", \"bond (emotional link, connection or union)\", \"(chemistry) bond\", \"relation (way in which two things may be associated)\", \"(uncountable) communication\", \"contact (an establishment of communication)\", \"(uncountable) means of communication\"]",
+          "text": "зв'язо́к (noun): connection (point at which two or more things are joined); (plural only) relations, ties, links; bond (chemistry: link or force between neighbouring atoms in a molecule); (plural only) connections; bond (emotional link, connection or union)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "relations, ties, links",
+          "connections",
+          "bond",
+          "communication",
+          "means of communication",
+          "bundle"
+        ],
+        "pos": [
+          "noun"
+        ]
+      }
+    },
+    "W-183": {
+      "lemma": "Україна",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 9,
+          "word": "Украї́на",
+          "pos": "noun",
+          "translations": "[\"Ukraine (country in Eastern Europe) (proper noun)\", \"Ukraine (a country in Eastern Europe; capital and largest city: Kyiv) (proper noun)\"]",
+          "text": "Украї́на (noun): Ukraine (country in Eastern Europe) (proper noun); Ukraine (a country in Eastern Europe; capital and largest city: Kyiv) (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-184": {
+      "lemma": "Київ",
+      "pos": "noun",
+      "rows": [
+        {
+          "id": 134,
+          "word": "Ки́їв",
+          "pos": "noun",
+          "translations": "[\"Kyiv (capital city of Ukraine) (proper noun)\", \"Kyiv (the capital city of Ukraine) (proper noun)\"]",
+          "text": "Ки́їв (noun): Kyiv (capital city of Ukraine) (proper noun); Kyiv (the capital city of Ukraine) (proper noun)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": null
+    },
+    "W-185": {
+      "lemma": "кувати",
+      "pos": "verb",
+      "rows": [
+        {
+          "id": 11316,
+          "word": "кува́ти",
+          "pos": "verb",
+          "translations": "[\"forge (to shape a metal)\", \"(transitive) to forge\", \"(intransitive) to cuckoo (to make a sound of a cuckoo)\", \"(transitive) to shoe (horses)\"]",
+          "text": "кува́ти (verb): forge (to shape a metal); (transitive) to forge; (intransitive) to cuckoo (to make a sound of a cuckoo); (transitive) to shoe (horses)",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "to forge",
+          "to shoe (horses)",
+          "to cuckoo (to make a sound of a cuckoo)"
+        ],
+        "pos": [
+          "verb"
+        ]
+      }
+    },
+    "W-186": {
+      "lemma": "квітувати",
+      "pos": "verb",
+      "rows": [],
+      "kaikki": null
+    },
+    "W-187": {
+      "lemma": "м'який",
+      "pos": "adj",
+      "rows": [
+        {
+          "id": 4554,
+          "word": "м'яки́й",
+          "pos": "adjective",
+          "translations": "[\"soft (easily giving way under pressure)\", \"gentle\", \"mild\", \"(grammar) soft, palatalized\"]",
+          "text": "м'яки́й (adjective): soft (easily giving way under pressure); gentle; mild; (grammar) soft, palatalized",
+          "source": "dmklinger UK→EN"
+        }
+      ],
+      "kaikki": {
+        "glosses": [
+          "soft",
+          "gentle",
+          "mild",
+          "soft, palatalized"
+        ],
+        "pos": [
+          "adj"
+        ]
+      }
+    }
+  }
+}

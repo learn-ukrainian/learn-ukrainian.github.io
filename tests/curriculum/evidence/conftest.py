@@ -113,8 +113,10 @@ def synthetic_sources(tmp_path):
             "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
             [
                 (3, "synthetic", "verb", '["wrong POS"]', "", "synthetic"),
-                (2, "synthetic", "noun", '["second row"]', "", "synthetic"),
-                (1, "synthetic", "noun", '["first translation", "second translation"]', "", "synthetic"),
+                # Same attested sense in two rows: provenance tests need a
+                # selectable gloss. Distinct-sense refusal has its own tests.
+                (2, "synthetic", "noun", '["first translation"]', "", "synthetic"),
+                (1, "synthetic", "noun", '["first translation"]', "", "synthetic"),
                 (4, "synthetic-adj", "adjective", '["adjective translation"]', "", "synthetic"),
             ],
         )

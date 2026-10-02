@@ -1038,6 +1038,38 @@ def _texts_only_request(tmp_path) -> Path:
     return req_file
 
 
+@pytest.mark.parametrize("location", ["core", "incidental", "recycled", "uses"])
+@pytest.mark.parametrize("proper_name", [False, True])
+def test_pack_verify_gloss_gate_names_record_and_exempts_proper_names(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, location, proper_name
+):
+    plan_path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/test-mod.yaml"
+    plan_path.write_text(yaml.safe_dump({location: ["W-001"]}))
+    if proper_name:
+        store_path = synthetic_word_store / "_words.yaml"
+        doc = yaml.safe_load(store_path.read_text())
+        doc["words"][0]["forms"][0]["tags"] += ":prop"
+        lock.write(store_path, lock.yaml_bytes(doc))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as api:
+        pack.build_pack(
+            "a1",
+            "test-mod",
+            _texts_only_request(tmp_path),
+            evidence_dir=synthetic_word_store,
+            sources_instance=api,
+            offline=True,
+        )
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, sources_instance=api, offline=True
+        )
+    if proper_name:
+        assert result["errors"] == []
+        assert result["status"] == "ok"
+    else:
+        assert result["status"] == "failed"
+        assert any(f"{codes.GLOSS_MISSING}: a1/test-mod W-001 (synthetic)" in error for error in result["errors"])
+
+
 def test_texts_only_build_without_vesum_records_null(
     synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
 ):
