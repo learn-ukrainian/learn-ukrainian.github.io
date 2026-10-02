@@ -4787,6 +4787,9 @@ def _run_count_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
     except (OSError, subprocess.TimeoutExpired):
         return None, False
     if proc.returncode != 0:
+        ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
+        if ref_check is not None and ref_check[0] == 0:
+            return None, False
         return None, True
     try:
         return int((proc.stdout or "").strip()), False
@@ -4922,7 +4925,8 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
 
     ``base_missing`` is True only when git ran and rejected ``base`` (the ref or
     SHA does not resolve): the one case where trying another base candidate is
-    sound.
+    sound. A present base that has no common ancestor with HEAD or whose
+    computation failed fails closed ((None, False)).
     """
     try:
         proc = subprocess.run(
@@ -4936,10 +4940,13 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
         )
     except (OSError, subprocess.TimeoutExpired):
         return None, False
-    if proc.returncode != 0:
-        return None, True
-    sha = (proc.stdout or "").strip()
-    return (sha or None), False
+    if proc.returncode == 0:
+        sha = (proc.stdout or "").strip()
+        return (sha or None), False
+    ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
+    if ref_check is not None and ref_check[0] == 0:
+        return None, False
+    return None, True
 
 
 def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = None) -> str | None:

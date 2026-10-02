@@ -645,3 +645,90 @@ def test_advisory_completion_gate_with_deleted_base(tmp_tasks_dir, repo):
     assert check["measured"] is True
     assert check["changed_paths"] == ["fix.py"]
     assert failure == "advisory_exempt_code_change"
+
+
+def test_present_unrelated_base_fails_closed_across_all_checks(tmp_path):
+    """A present base that has no common ancestor with HEAD fails closed.
+
+    It must NOT be treated as a missing base and must NOT fall back to origin/main.
+    """
+    origin = tmp_path / "origin.git"
+    primary = tmp_path / "primary"
+    subprocess.run(["git", "init", "--bare", "-q", "-b", "main", str(origin)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(primary)], check=True, timeout=30)
+    _git(primary, "config", "user.email", "test@example.com")
+    _git(primary, "config", "user.name", "Test")
+    _git(primary, "remote", "add", "origin", str(origin))
+    _commit(primary, "root.txt", "root")
+    _git(primary, "push", "-q", "-u", "origin", "main")
+
+    # Create an unrelated orphan branch with its own commit
+    _git(primary, "checkout", "-q", "--orphan", "unrelated-base")
+    _commit(primary, "other.txt", "unrelated")
+    _git(primary, "push", "-q", "-u", "origin", "unrelated-base")
+
+    # Worker branches from main (origin/main is at HEAD)
+    worktree = primary / ".worktrees" / "dispatch" / "worker"
+    _git(primary, "worktree", "add", "-q", "-b", "worker", str(worktree), "origin/main")
+    _git(worktree, "config", "user.email", "test@example.com")
+    _git(worktree, "config", "user.name", "Test")
+
+    # 1. _run_merge_base must report (None, False): base is present, not missing!
+    sha, base_missing = delegate._run_merge_base(worktree, "origin/unrelated-base")
+    assert sha is None
+    assert base_missing is False
+
+    # 2. _resolve_merge_base must return None (fail closed), not origin/main (which would be HEAD)
+    mb = delegate._resolve_merge_base(worktree, "origin/unrelated-base", base_sha=None)
+    assert mb is None
+
+    # 3. _advisory_ceiling_check fails closed
+    envelope = {"max_changed_files": 2, "max_non_test_loc": 20}
+    verdict = delegate._advisory_ceiling_check(worktree, "origin/unrelated-base", envelope, base_sha=None)
+    assert verdict["measured"] is False
+    assert verdict["error"] == "merge-base with the base branch is unknown"
+
+    # 4. _exempt_change_check fails closed
+    check = delegate._exempt_change_check(worktree, "origin/unrelated-base", base_sha=None)
+    assert check["measured"] is False
+    assert check["error"] == "merge-base with the base branch is unknown"
+
+    # 5. _kimi_diff_refusal refuses diff
+    refusal = delegate._kimi_diff_refusal(worktree, "origin/unrelated-base", "kimi", base_sha=None)
+    assert refusal is not None
+    assert "could not be read" in refusal
+
+
+def test_git_computation_failure_fails_closed_across_all_checks(repo, monkeypatch):
+    """When git merge-base fails with an OS/timeout error on a present base, fail closed."""
+    repo.deliver()
+    envelope = {"max_changed_files": 2, "max_non_test_loc": 20}
+
+    original_run = subprocess.run
+
+    def mock_run(args, **kwargs):
+        if len(args) >= 2 and args[0] == "git" and args[1] == "merge-base":
+            raise subprocess.TimeoutExpired(cmd=args, timeout=30)
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", mock_run)
+
+    # 1. _run_merge_base returns (None, False)
+    sha, base_missing = delegate._run_merge_base(repo.worktree, BASE_BRANCH)
+    assert sha is None
+    assert base_missing is False
+
+    # 2. _resolve_merge_base fails closed
+    assert delegate._resolve_merge_base(repo.worktree, BASE_BRANCH, base_sha=repo.base_sha) is None
+
+    # 3. Ceiling check fails closed
+    verdict = delegate._advisory_ceiling_check(repo.worktree, BASE_BRANCH, envelope, base_sha=repo.base_sha)
+    assert verdict["measured"] is False
+
+    # 4. Exemption check fails closed
+    check = delegate._exempt_change_check(repo.worktree, BASE_BRANCH, base_sha=repo.base_sha)
+    assert check["measured"] is False
+
+    # 5. Kimi diff refusal fails closed
+    refusal = delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)
+    assert refusal is not None
