@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
 import stat
 import subprocess
@@ -236,8 +237,21 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
 
         env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
         try:
+            head_proc = subprocess.run(
+                ["git", "rev-parse", "--verify", "HEAD"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            rev_list_args = ["git", "rev-list", "--branches"]
+            if head_proc.returncode == 0:
+                rev_list_args.append("HEAD")
+            rev_list_args.extend(["--not", "--remotes"])
+
             res = subprocess.run(
-                ["git", "rev-list", "--branches", "--not", "--remotes"],
+                rev_list_args,
                 cwd=source,
                 capture_output=True,
                 env=env,
@@ -260,10 +274,11 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 f"unpushed work must not be discarded"
             )
 
+        quoted_clean_name = shlex.quote(clean_name)
         raise ValueError(
             f"artifact is a nested git repository with no unpushed commits "
             f"({file_count} files, {total_size} bytes): {name}; "
-            f"clear with: rm -rf '{clean_name}'"
+            f"clear with: rm -rf {quoted_clean_name}"
         )
 
     # Directory of ordinary regular files (no .git)

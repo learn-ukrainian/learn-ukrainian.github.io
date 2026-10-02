@@ -342,11 +342,14 @@ def test_success_clears_a_stale_preservation_error(checkout):
 
 
 _GIT_ENV = {
-    **{k: v for k, v in os.environ.items() if not k.startswith("GIT_")},
+    **{k: v for k, v in os.environ.items() if not k.startswith("GIT_") and k != "AGENT_NO_MERGE"},
     "GIT_AUTHOR_NAME": "Test Worker",
     "GIT_AUTHOR_EMAIL": "worker@example.com",
     "GIT_COMMITTER_NAME": "Test Worker",
     "GIT_COMMITTER_EMAIL": "worker@example.com",
+    "GIT_CONFIG_GLOBAL": "/dev/null",
+    "GIT_CONFIG_SYSTEM": "/dev/null",
+    "GIT_CONFIG_NOSYSTEM": "1",
 }
 
 
@@ -371,16 +374,16 @@ def test_ignored_artifact_nested_repo_no_unpushed_commits(checkout, tmp_path):
     """Denominator row 3 & AC-01: nested repo with no unpushed commits refuses removal with actionable command."""
     # Create upstream remote
     upstream = tmp_path / "upstream"
-    subprocess.run(["git", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
 
     # Clone upstream into batch_state
     scratch_dir = checkout[0] / "batch_state/reports/scratch_repo"
-    subprocess.run(["git", "clone", str(upstream), str(scratch_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(scratch_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
     # Add and push a commit so there are zero unpushed commits
     (scratch_dir / "probe.txt").write_text("probe output\n")
     subprocess.run(["git", "add", "probe.txt"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
     subprocess.run(["git", "commit", "-m", "init probe"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
-    subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
     subprocess.run(["git", "fetch", "origin"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
 
     ok, reason, metadata = guard(checkout)
@@ -388,7 +391,7 @@ def test_ignored_artifact_nested_repo_no_unpushed_commits(checkout, tmp_path):
     assert "artifact is a nested git repository with no unpushed commits" in reason
     assert "files" in reason and "bytes" in reason
     assert "batch_state/reports/scratch_repo" in reason
-    assert "clear with: rm -rf 'batch_state/reports/scratch_repo'" in reason
+    assert "clear with: rm -rf batch_state/reports/scratch_repo" in reason
 
     # AC-01: Actionable single command removes the scratch repo and allows worktree release
     import shutil
@@ -471,3 +474,48 @@ def test_ignored_artifact_nested_repo_corrupt_fails_closed(checkout):
     ok, reason, metadata = guard(checkout)
     assert not ok and metadata is None
     assert "artifact is an invalid nested git repository" in reason
+
+
+def test_ignored_artifact_nested_repo_detached_head_unpushed_never_discarded(checkout):
+    """AC-02 & P1: unpushed commits on a detached HEAD must refuse without a cleanup command."""
+    detached_dir = checkout[0] / "batch_state/reports/detached_unpushed"
+    detached_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(detached_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (detached_dir / "unpushed.txt").write_text("detached unpushed data\n")
+    subprocess.run(["git", "add", "unpushed.txt"], cwd=detached_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "detached commit"], cwd=detached_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "checkout", "--detach", "HEAD"], cwd=detached_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_shell_quoting_in_cleanup_recommendation(checkout, tmp_path):
+    """P1: paths with apostrophes or spaces in cleanup recommendations are safely shell-quoted."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    scratch_dir = checkout[0] / "batch_state/reports/probe' 'valuable"
+    scratch_dir.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(scratch_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    (scratch_dir / "probe.txt").write_text("pushed data\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "probe"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with no unpushed commits" in reason
+    assert "clear with: " in reason
+
+    import shlex
+    cmd_part = reason.split("clear with: ")[1].split(";")[0].strip()
+    tokens = shlex.split(cmd_part)
+    assert tokens[:2] == ["rm", "-rf"]
+    assert len(tokens) == 3, f"Expected exactly 1 target path, got: {tokens[2:]}"
+    assert tokens[2] == "batch_state/reports/probe' 'valuable"
