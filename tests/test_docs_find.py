@@ -998,3 +998,188 @@ def test_the_code_search_is_skipped_with_a_family(code_repo):
     result = find('verdict', family='guide', repo=code_repo)
     assert result['coverage']['code_files_searched'] == 0
     assert 'scripts/checks/verdict.py' not in paths_of(result)
+
+
+# ------------------------------------------------------------------ ranking helpers and lifecycle records
+
+@pytest.mark.parametrize('term, stemmed', [('approval', 'approv'), ('proposals', 'propos'), ('renewal', 'renew'),
+                                           ('signal', 'signal'), ('usual', 'usual'), ('journal', 'journal')])
+def test_a_verbs_al_noun_meets_the_verb(term, stemmed):
+    assert find_module.stem(term) == stemmed
+
+
+def test_numerals_meet_their_words_both_ways():
+    assert find_module._prefix_hits(['four', 'rounds'], ['cap', 'at', '4', 'rounds']) == {'four', 'rounds'}
+    assert find_module._prefix_hits(['4'], ['four', 'rounds']) == {'4'}
+    assert find_module._prefix_hits(['four'], ['44']) == set()
+
+
+@pytest.mark.parametrize('lines, record', [
+    ([(1, '| dec-3 | superseded | Cap review fix rounds at 4 |')], {'review', 'fix', 'four'}),
+    ([(1, 'Review fix rounds are capped at 4.')], set()),  # no lifecycle word: not a record
+    ([(1, 'The legacy review notes.')], set()),  # one query word beside "legacy" is any sentence
+    ([(1, 'x' * 1001 + ' superseded review fix')], set()),  # a one-line dump is no record
+    ([(1, '# the glm lane is retired'), (2, 'review: fix')], set()),  # marker and words on different lines
+])
+def test_a_lifecycle_record_is_one_line_with_a_marker_and_two_query_words(lines, record):
+    assert find_module.lifecycle_record(lines, ['review', 'fix', 'four']) == record
+
+
+def test_a_record_counts_only_when_it_names_most_of_the_question():
+    weights = {'zorbl': 3.0, 'loops': 1.0, 'cap': 0.5}
+    named = find_module.Candidate('a', record_terms={'zorbl', 'loops'})
+    common = find_module.Candidate('b', record_terms={'loops', 'cap'})
+    assert find_module.record_share(named, ['zorbl', 'loops', 'cap'], weights) == pytest.approx(4 / 4.5)
+    assert find_module.record_share(common, ['zorbl', 'loops', 'cap'], weights) == 0.0
+    assert find_module.field_weight(named, 'zorbl', record=True) == 1.0
+    assert find_module.field_weight(named, 'zorbl') == 0.0  # outside a status question a record is no field
+
+
+@pytest.mark.parametrize('hit, historical', [
+    ({'path': 'docs/a.md', 'lifecycle': 'archive'}, True),
+    ({'path': 'docs/a.md', 'lifecycle': 'superseded'}, True),
+    ({'path': 'docs/a.md', 'lifecycle': 'active', 'backup_like': True}, True),
+    ({'path': 'scripts/legacy/tool/run.py', 'lifecycle': None}, True),
+    ({'path': 'scripts/assets/scripts-deprecated/a.js', 'lifecycle': None}, True),
+    ({'path': 'scripts/oldest/a.py', 'lifecycle': None}, False),  # a word, not a prefix
+    ({'path': 'docs/a.md', 'lifecycle': 'active'}, False),
+])
+def test_a_historical_hit_is_catalogued_backed_up_or_named_so(hit, historical):
+    assert find_module.is_historical(hit) is historical
+
+
+@pytest.mark.parametrize('path, found', [
+    ('.gitattributes', ['git', 'attributes']), ('site/.gitignore', ['site', 'git', 'ignore']),
+    ('docs/guide/README.md', ['docs', 'guide']), ('docs/guide/notes.md', ['docs', 'guide', 'notes', 'md']),
+])
+def test_name_words_split_git_files_and_drop_index_names(path, found):
+    assert find_module.name_words(path) == found
+
+
+@pytest.mark.parametrize('path, line, text', [
+    ('.gitattributes', 'data/texts/*.jsonl filter=lfs diff=lfs -text', 'data/texts/*.jsonl filter=lfs diff=lfs -text'),
+    ('site/.gitignore', 'node_modules/', 'node_modules/'),
+    ('.gitattributes', '   ', None),
+])
+def test_git_pattern_files_are_read_as_identifiers(path, line, text):
+    assert find_module.symbol_text(path, 40, line) == text
+
+
+@pytest.mark.parametrize('text, process', [
+    ('what stops an agent from deleting a worktree', True), ('where do we check the trailer', True),
+    ('where is resolve-reviewer implemented', True), ('teacher deck rebuild', False),
+    ('where is the podcast list', False), ('check the trailer', False),
+])
+def test_a_process_question_asks_where_something_is_done(text, process):
+    assert find_module.is_process_question(text, find_module.query_plan(text)[1]) is process
+
+
+def test_a_passage_is_query_words_together_within_a_few_lines():
+    lines = [(1, 'alpha here'), (2, 'beta there'), (9, 'gamma far away'), (10, 'x' * 1001 + ' alpha beta gamma')]
+    assert find_module.best_passage(lines, ['alpha', 'beta', 'gamma']) == {'alpha', 'beta'}
+    assert find_module.best_passage([(1, 'alpha only')], ['alpha', 'beta']) == set()
+
+
+@pytest.mark.parametrize('path, covered', [
+    ('.python-version', True), ('docs/python-version-notes.md', False), ('docs/README.md', False),
+])
+def test_a_name_is_covered_when_every_word_of_it_is_a_query_word(path, covered):
+    assert find_module.name_covered(path, ['python', 'version', 'pin']) is covered
+
+
+def test_length_factor_and_rarity_follow_bm25():
+    assert find_module.length_factor(None, 100.0) == 1.0
+    assert find_module.length_factor(10, 100.0) == 1.0  # capped: a short file is never above a name
+    assert find_module.length_factor(1000, 100.0) < find_module.length_factor(200, 100.0) < 1.0
+    assert find_module.rarity(1000, 1) > find_module.rarity(1000, 100) > find_module.rarity(1000, 900)
+    assert find_module.rarity(1000, 1000) == find_module.MIN_RARITY
+
+
+def test_summary_lines_are_the_header_of_a_program_and_the_lead_of_markdown():
+    py = [(1, '#!/usr/bin/env python'), (2, '"""Prune stale worktrees.'), (3, 'Second line."""'),
+          (4, 'import os'), (5, '# not the header')]
+    assert find_module.summary_lines('a.py', py) == py[1:3]
+    md = [(1, '---'), (2, 'description: Rules for agents'), (3, '---'), (4, '# Title'), (5, 'First paragraph.'),
+          (6, ''), (7, 'Second paragraph.')]
+    assert find_module.summary_lines('a.md', md) == [md[1], md[3], md[4]]
+    ini = [(1, '[Unit]'), (2, 'Description=Nightly backup'), (3, 'After=network.target')]
+    assert find_module.summary_lines('a.service', ini) == [ini[1]]
+
+
+HISTORY_FILES = {
+    'docs/decisions/INDEX.md': ('# Decisions\n\n| ID | Status | Title |\n| --- | --- | --- |\n'
+                                '| dec-9 | superseded | Cap zorbl loops at 4 rounds |\n'
+                                '| dec-8 | active | [Quux plan](2026-01-01-quux-plan.md) |\n'),
+    'docs/decisions/2026-01-01-quux-plan.md': '# Quux plan\nWe plan the quux rollout.\n',
+    'docs/guide/zorbl.md': 'Zorbl loops are fun.\nMore zorbl loops.\n',
+    'scripts/legacy/widget/README.md': '# Widget\nDeprecated: the widget runner is not used any more.\n',
+    'scripts/legacy/widget/run.py': 'def widget_runner():\n    """Run the widget."""\n',
+}
+
+
+@pytest.fixture(scope='module')
+def history_repo(tmp_path_factory):
+    root = make_repo(tmp_path_factory.mktemp('find-history') / 'repo')
+    for rel, text in HISTORY_FILES.items():
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_text(text, encoding='utf-8')
+    data = fixture_catalogue()
+    data['entries'].append(entry('decisions', ['docs/decisions/**'], kind='registry', keywords=['decision journal'],
+                                 entrypoints=[{'topic': 'decision index', 'path': 'docs/decisions/INDEX.md'}],
+                                 overrides=[{'path': 'docs/decisions/2026-01-01-quux-plan.md', 'lifecycle': 'archive',
+                                             'evidence': 'Shipped.'}]))
+    write_catalogue(root, data)
+    git(root, 'add', '.')
+    return root
+
+
+def test_a_registry_row_answers_a_status_question(history_repo):
+    result = find('Do we still cap zorbl loops after four rounds?', repo=history_repo)
+    first = result['hits'][0]
+    assert (first['path'], first['line']) == ('docs/decisions/INDEX.md', 5)
+    assert 'four' in first['matched']
+    plain = find('cap zorbl loops four rounds', repo=history_repo)  # no status intent: no record weight
+    assert hit_for(plain, 'docs/decisions/INDEX.md')
+
+
+def test_a_historical_document_is_followed_by_the_index_that_names_it(history_repo):
+    result = find('is the quux plan still current', repo=history_repo)
+    paths = paths_of(result)
+    doc = paths.index('docs/decisions/2026-01-01-quux-plan.md')
+    assert result['hits'][doc]['status'] == 'historical'
+    record = result['hits'][doc + 1]
+    assert (record['path'], record['match'], record['records'], record['line']) == (
+        'docs/decisions/INDEX.md', 'lifecycle_record', 'docs/decisions/2026-01-01-quux-plan.md', 6)
+    assert 'Quux plan' in record['excerpt'] and paths.count('docs/decisions/INDEX.md') == 1
+    assert ('docs/decisions/INDEX.md:6  [lifecycle_record; decisions; current, records the lifecycle of '
+            'docs/decisions/2026-01-01-quux-plan.md]') in find_module.format_text(result)
+
+
+def test_legacy_code_is_followed_by_the_readme_of_its_directory(history_repo):
+    result = find('is the widget runner still used', repo=history_repo)
+    paths = paths_of(result)
+    code = paths.index('scripts/legacy/widget/run.py')
+    record = result['hits'][code + 1]
+    assert (record['path'], record['match'], record['records'], record['line']) == (
+        'scripts/legacy/widget/README.md', 'lifecycle_record', 'scripts/legacy/widget/run.py', None)
+
+
+def test_lifecycle_records_follow_only_status_questions(history_repo):
+    result = find('widget runner', repo=history_repo)
+    assert all(hit['match'] != 'lifecycle_record' for hit in result['hits'])
+
+
+def test_lifecycle_authorities_never_name_an_unreadable_file(history_repo):
+    state = find_module.load_state(history_repo)
+    assert find_module.lifecycle_authorities(state, 'docs/decisions/2026-01-01-quux-plan.md') == (
+        ['docs/decisions/INDEX.md'], ['docs/decisions/INDEX.md'])
+    assert find_module.lifecycle_authorities(state, 'scripts/legacy/widget/run.py') == (
+        [], ['scripts/legacy/widget/README.md'])
+    assert PRIVATE.rsplit('/', 1)[0] not in find_module.directory_indexes(state)
+
+
+def test_the_catalogue_and_its_generated_map_are_no_second_record(history_repo):
+    state = find_module.load_state(history_repo)
+    echoes = find_module.catalogue_echoes(state)
+    assert {'docs/knowledge/catalogue.yaml', 'docs/README.md'} <= echoes
+    assert 'docs/decisions/INDEX.md' not in echoes
