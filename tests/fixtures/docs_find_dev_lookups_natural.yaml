@@ -39,7 +39,6 @@ known_misses:
   N54: {question: 24, reason: 'Four places outside: the store record names few of the question''s words about messages.'}
   N59: {question: 71, reason: 'The common words of the long question are held by prose; the short query ranks .gitattributes first.'}
   N64: {question: 28, reason: 'Not diagnosed in round 3.'}
-  N68: {question: 21, reason: 'Not diagnosed in round 3.'}
 lookups:
 
   # ---------------------------------------------------------------- status: is it still current, used or valid, what replaced it
