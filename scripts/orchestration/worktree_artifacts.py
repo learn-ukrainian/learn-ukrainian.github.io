@@ -222,6 +222,43 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                         f"points at another artifact ({target_rel}): {name}"
                     )
 
+        # Check for executable or filter configuration in .git/config
+        config_files: list[Path] = []
+        if dot_git.is_dir():
+            config_files.append(dot_git / "config")
+        elif dot_git.is_file():
+            with contextlib.suppress(OSError):
+                gitdir_text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
+                if gitdir_text.startswith("gitdir:"):
+                    gitdir_path = Path(gitdir_text[7:].strip())
+                    if not gitdir_path.is_absolute():
+                        gitdir_path = (source / gitdir_path).resolve()
+                    config_files.append(gitdir_path / "config")
+                    config_files.append(gitdir_path / "config.worktree")
+                    commondir_file = gitdir_path / "commondir"
+                    if commondir_file.is_file():
+                        commondir_text = commondir_file.read_text(encoding="utf-8", errors="replace").strip()
+                        commondir_path = Path(commondir_text)
+                        if not commondir_path.is_absolute():
+                            commondir_path = (gitdir_path / commondir_path).resolve()
+                        config_files.append(commondir_path / "config")
+
+        dangerous_config_re = re.compile(
+            r"\b(clean|smudge|process|command|textconv|fsmonitor|hookspath)\s*=",
+            re.IGNORECASE,
+        )
+        for cfg_path in config_files:
+            if cfg_path.is_file():
+                try:
+                    cfg_text = cfg_path.read_text(encoding="utf-8", errors="replace")
+                except OSError as exc:
+                    raise ValueError(f"failed to read git config in nested repository {name}: {exc}") from exc
+                if dangerous_config_re.search(cfg_text):
+                    raise ValueError(
+                        f"artifact is a nested git repository with executable or filter configuration: {name}; "
+                        f"refusing removal to prevent code execution"
+                    )
+
         # Count regular files and compute total size in bytes
         file_count = 0
         total_size = 0
@@ -268,6 +305,35 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 raise ValueError(
                     f"artifact is a nested git repository with uncommitted or ignored changes "
                     f"({file_count} files, {total_size} bytes; uncommitted: {dirty_summary}): {name}; "
+                    f"uncommitted work must not be discarded"
+                )
+
+            ls_proc = subprocess.run(
+                [*git_cmd, "ls-files", "-v"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if ls_proc.returncode != 0:
+                err = ls_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            concealed_files: list[str] = []
+            for raw_line in ls_proc.stdout.decode("utf-8", "replace").splitlines():
+                line = raw_line.strip()
+                if not line:
+                    continue
+                tag = line[0]
+                if tag == "S" or tag.islower():
+                    concealed_files.append(line)
+
+            if concealed_files:
+                concealed_summary = ", ".join(concealed_files[:3]) + ("..." if len(concealed_files) > 3 else "")
+                raise ValueError(
+                    f"artifact is a nested git repository with concealed tracked changes (assume-unchanged or skip-worktree) "
+                    f"({file_count} files, {total_size} bytes; concealed: {concealed_summary}): {name}; "
                     f"uncommitted work must not be discarded"
                 )
 

@@ -657,3 +657,70 @@ def test_ignored_artifact_nested_repo_reflog_only_commits_never_discarded(checko
     assert "artifact is a nested git repository with unpushed commits" in reason
     assert "unpushed work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_clean_filter_hook_rejected_without_execution(checkout):
+    """P1: nested repository clean filter configuration is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/clean_filter_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "clean_filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    subprocess.run(["git", "config", "filter.probe.clean", str(script)], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with executable or filter configuration" in reason
+    assert not marker.exists(), "clean filter was executed!"
+
+
+def test_ignored_artifact_nested_repo_assume_unchanged_never_discarded(checkout, tmp_path):
+    """P1: tracked files marked assume-unchanged refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/assume_unchanged_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Mark assume-unchanged and modify content
+    subprocess.run(["git", "update-index", "--assume-unchanged", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("modified concealed\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "concealed tracked changes" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_skip_worktree_never_discarded(checkout, tmp_path):
+    """P1: tracked files marked skip-worktree refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/skip_worktree_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Mark skip-worktree and modify content
+    subprocess.run(["git", "update-index", "--skip-worktree", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("modified concealed\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "concealed tracked changes" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
