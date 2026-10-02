@@ -959,8 +959,30 @@ CASES = [
         says=f"{NONA} 'нона', which no host (T-002) prints in spelling",
     ),
     Case(
-        "c26_targets_the_host_prints_or_excludes_pass",
-        _comprehension_on_quote("он м а м а", f"Answer about {MAMA}. Do not reuse {NONA} here; inline b2 uses {MANA}."),
+        "c26_targets_the_host_prints_pass_and_another_activity_is_skipped",
+        _comprehension_on_quote("он м а м а", f"Answer about {MAMA}. Inline b2 uses {MANA}."),
+    ),
+    # Exclusion wording in prose does not say which id it excludes, so an unhosted id there notes, never vanishes.
+    Case(
+        "c26_unhosted_target_in_an_excluding_sentence_is_a_note",
+        _comprehension_on_quote("он мама", f"Asks about {NONA} and do not give hints."),
+        notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
+        says=f"names {NONA} 'нона' in «Asks about {NONA} and do not give hints», which no host (T-002) prints",
+    ),
+    Case(
+        "c26_same_target_in_a_plain_sentence_fails",
+        _comprehension_on_quote("он мама", f"Asks about {NONA}. Give no hints."),
+        failures=frozenset({codes.COMPREHENSION_TARGET_NOT_IN_HOST}),
+        says=f"comprehension activity b4 names {NONA} 'нона', which no host (T-002) prints or models",
+    ),
+    Case(
+        "c26_target_also_in_a_plain_sentence_fails_without_a_note",
+        _comprehension_on_quote("он мама", f"Answer about {NONA}. Do not reuse {NONA} later."),
+        failures=frozenset({codes.COMPREHENSION_TARGET_NOT_IN_HOST}),
+    ),
+    Case(
+        "c26_hosted_target_in_an_excluding_sentence_passes",
+        _comprehension_on_quote("он м а м а", f"Asks about {MAMA} and do not give hints."),
     ),
     # C27 -- a new letter with no recording that models it
     Case(

@@ -193,6 +193,8 @@ LETTER_TEACHER_MODELED_ONLY = "letter_teacher_modeled_only"
 NAMED_BEFORE_INTRODUCTION_UNVERIFIED = "named_before_introduction_unverified"
 CHOICE_OPTION_UNVERIFIED = "choice_option_unverified"
 MODELED_PRINT_TEACHER_FRAME = "modeled_print_teacher_frame"
+# C26 reads exclusion wording from prose, so a word named only in such a sentence only notes
+COMPREHENSION_TARGET_UNVERIFIED = "comprehension_target_unverified"
 
 # --- not_checked (never fail the run, always reported) ----------------------
 MINUTES_CONSTANTS_UNDEFINED = "minutes_constants_undefined"
@@ -316,6 +318,7 @@ DESCRIPTIONS = {
     CONSTRUCTION_DISTRACTOR_CUED: "note (gate C23, #9487): a construction item's other completion forms an attested word, and the focus says its stems carry a cue (gloss, picture) that selects the key; the plan review confirms the cue",
     ANAGRAM_LETTERS_FORM_OTHER_WORD: "note (gate C23, #9487): an anagram target's letters also spell another VESUM or word-store form; most are rare inflected or archaic forms, so the plan review confirms none is a word an A1 learner could build instead",
     COMPREHENSION_TARGET_ONLY_TRANSCRIBED: "note (gate C26, #9487): a quote-hosted comprehension activity names a word record no host prints in spelling, and a host holds a transcription that may show it; the plan review confirms the host shows each word the items ask about",
+    COMPREHENSION_TARGET_UNVERIFIED: "note (gate C26, #9487): a quote- or recording-hosted comprehension activity names a word record no host holds, only in a focus sentence with exclusion wording; the prose does not say whether the word is the one excluded, so the plan review confirms every word the items ask about is in the host",
     LETTER_TEACHER_MODELED_ONLY: "note (gate C27, #9487): a step introduces a letter that no cited recording models, and its teach text records the teacher modelling that letter instead; the plan review confirms no recording is available",
     STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
     TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",

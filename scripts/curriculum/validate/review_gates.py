@@ -55,7 +55,8 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
   C24 a rationale or job that says the lesson recycles a category of word records none of which it recycles (failure)
   C25 a practice step with no practice, need, dialogue or paradigm (failure)
   C26 a comprehension activity hosted only on quotes or recordings that names a word no host holds (failure); the
-      same when a host holds a transcription that may show it (note)
+      same when a host holds a transcription that may show it, or when the word is named only in a sentence with
+      exclusion wording (note)
   C27 in a letter-stage module, a letter a step introduces that no recording the lesson cites models (failure); the
       same when the step records the teacher modelling that letter (note)
   C28 a word id a step's teach text names outside the lesson's inventory and the prior learner state (failure)
@@ -193,8 +194,11 @@ making them failures needs structured target and option fields, which is a plan-
   paradigm leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
 - C26 applies to a comprehension activity whose every host is a pack quote or a video with models (a dialogue host
   is drafted by the writer, so it is not decided). Its words are the W- ids of its focus outside sentences that
-  exclude them or speak of another activity. A word is held when a spelling of its record is a token of a host quote
-  (also read with spaces removed, for letter-spaced print) or a host video models it.
+  speak of another activity. A word is held when a spelling of its record is a token of a host quote (also read with
+  spaces removed, for letter-spaced print) or a host video models it. The host side is structural, so an unheld word
+  fails. A word named only in a sentence with exclusion wording ("do not", "instead of" …) is a note quoting that
+  sentence: the wording may exclude the word ("do not reuse W-201") or something else ("asks about W-201 and do not
+  give hints"), prose cannot tell which, and skipping it would let an unhosted target pass unseen.
 - C27 compares each letter a step introduces with the models.letters of every recording the lesson cites
   (case-folded); a teach-text sentence naming the teacher's model or pronunciation and the letter itself is a note.
 - C28 compares the W- ids of each teach text with C1's allowed set (the lesson's inventory, its steps' vocabulary,
@@ -309,7 +313,7 @@ _META_TERMS = frozenset(
     | {"and", "or", "the", "a", "an", "of", "for", "with", "to", "in", "on", "by", "as", "its", "their", "all"}
     | {"both", "other", "some", "such", "this", "that", "these", "those", "previously", "taught", "earlier"}
 )
-#: C26: a focus sentence that names word ids it excludes ("do not reuse those four words here").
+#: C26: exclusion wording in a focus sentence ("do not reuse those four words here"); its ids only note.
 _EXCLUDING = re.compile(r"\b(?:do not|don't|never|exclude[sd]?|excluding|must not|instead of)\b", re.IGNORECASE)
 _STRESS_MARKS = re.compile("[̀́]")
 _ACTIVITY_REF = re.compile(r"\b[a-z]\d+\b")
@@ -1638,23 +1642,44 @@ class ReviewGates(Gates):
                 }
                 others = {item["id"] for item in lesson.get("activities") or []} - {activity["id"]}
                 modelled = self._modelled([ref for kind, ref in hosts if kind == "video"])
-                targets = [
-                    item
-                    for sentence in _SENTENCE_BREAK.split(focus)
-                    if not _EXCLUDING.search(sentence)
-                    and not others & set(_ids(_ACTIVITY_REF, sentence))  # a sentence about another activity
-                    for item in _ids(_WORD_ID, sentence)
-                ]
-                missing = []
-                for item in dict.fromkeys(targets):
-                    record = self.store.records.get(item)
-                    if record is None or item in modelled:
+                # A sentence about another activity is skipped. Exclusion language in prose does not say which
+                # of its ids it excludes ("Asks about W-201 and do not give hints."), so those ids only note.
+                targets: list[str] = []
+                excluded: dict[str, str] = {}
+                for sentence in _SENTENCE_BREAK.split(focus):
+                    if others & set(_ids(_ACTIVITY_REF, sentence)):
                         continue
-                    if not {_spelling(text) for text in (record.lemma, *record.form_texts)} & printed:
-                        missing.append(f"{item} {record.lemma!r}")
+                    for item in _ids(_WORD_ID, sentence):
+                        if _EXCLUDING.search(sentence):
+                            excluded.setdefault(item, sentence)
+                        else:
+                            targets.append(item)
+
+                unhosted = {
+                    item: f"{item} {record.lemma!r}"
+                    for item in dict.fromkeys([*targets, *excluded])
+                    if (record := self.store.records.get(item)) is not None
+                    and item not in modelled
+                    and not {_spelling(text) for text in (record.lemma, *record.form_texts)} & printed
+                }
+                where = ", ".join(ref for _kind, ref in hosts)
+                unverified = [
+                    f"{unhosted[item]} in {_span(sentence, item)}"
+                    for item, sentence in excluded.items()
+                    if item not in targets and item in unhosted
+                ]
+                if unverified:
+                    self.note(
+                        codes.COMPREHENSION_TARGET_UNVERIFIED,
+                        f"comprehension activity {activity['id']} names {'; '.join(unverified)}, which no host "
+                        f"({where}) prints or models; the sentence says something is excluded and is prose, so whether "
+                        "it excludes the word is not read from it, and the plan review confirms every word the items "
+                        "ask about is in the host (#9487 C26)",
+                        lesson["n"],
+                    )
+                missing = [unhosted[item] for item in dict.fromkeys(targets) if item in unhosted]
                 if not missing:
                     continue
-                where = ", ".join(ref for _kind, ref in hosts)
                 if any("[" in text for text in quotes):
                     self.note(
                         codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
