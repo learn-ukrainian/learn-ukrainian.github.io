@@ -1,7 +1,7 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 3fde66114438177228d094d1928a6936981f0f77
+  mcp_commit: d8e41c36769a34fa930a6d1be305c1b3186eaa75
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: a33bc7f322dd87b0f73918a5829ad724f6596bb2e5eadccc427acef0cdb86ce7

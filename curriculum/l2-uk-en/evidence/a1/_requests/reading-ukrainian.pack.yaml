@@ -261,6 +261,31 @@ texts:
     last_words: А а
   supports: Exact capital/small heading for taught letter А; listening target and visible-glyph discrimination only, not a whole-word
     recording.
+- id: T-041
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084
+  span:
+    first_words: Та-то
+    last_words: Та-то
+  supports: The exact two distinct syllables of core W-101; no full-page OCR host or guessed split.
+- id: T-042
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0096
+  span:
+    first_words: Зи-ма
+    last_words: Зи-ма
+  supports: Exact source segmentation of the recycled winter word; two different source syllables for assembly.
+- id: T-043
+  source:
+    table: textbooks
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0017
+  span:
+    first_words: У слові стільки складів
+    last_words: звуків.
+  supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains only; English scaffolding teaches
+    the rule before scoring.
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084}

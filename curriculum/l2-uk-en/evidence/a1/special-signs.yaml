@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 3fde66114438177228d094d1928a6936981f0f77
+  mcp_commit: d8e41c36769a34fa930a6d1be305c1b3186eaa75
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: d254f8034a1b4a7b3d7d7cd35be819c868faa42989d381851646531431c71c0c
+  sources_db: 4bbfb2e786b6d5c59ec2c4947ba3c17eda67fef4f98111f209437d8e3ea0ea3e
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -234,50 +234,14 @@ module: a1/special-signs
 standard:
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   id: S-001
-  lines: 585-586
-  text: '      4.1.1. Український алфавіт. Друковані та писані літери. Великі і малі
-
-    літери: Київ, київський, Олена, олівець, Україна, українець.'
+  lines: 571-572
+  text: "\n     4. Каталог В. Зміст мовної компетентності."
 texts:
 - id: T-001
-  quote: 'ь
-
-    Бачу ь (м’який знак).
-
-    т * л ь п а н и л ь о н
-
-    л * л ь к а
-
-    [ = • – ]
-
-    кі
-
-    ті
-
-    лі
-
-    нь
-
-    сі
-
-    мі
-
-    ро
-
-    ль
-
-    де
-
-    пе
-
-    о-ле
-
-    нь
-
-    тин [–• – ] син [–• – ] рис [–• – ]
+  quote: 'тин [–• – ] син [–• – ] рис [–• – ]
 
     тінь [=• = ] синь [–• =] рись [–• = ]'
-  sha256: b024d813f4ca058875c5bf28821343e4ea197b3cf3340775829372b8880a568c
+  sha256: eacb0509d3d61eaf052350d940d8b78d220b4e8a1842c81dd9632f57ddb6f9f7
   source:
     author: zaharijchuk
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
@@ -785,32 +749,8 @@ texts:
   supports: 'Primer part 2, printed p. 64 (catalog heading p. 66): дж follows Ф, with a single [дж] sound and word-building
     models.'
 - id: T-010
-  quote: 'дз
-
-    Бачу Дз, дз (дз).
-
-    Чую [дз], [дз′].
-
-    д з и ґ а д з в о н
-
-    д з
-
-    б а н и к
-
-    [ – •| –•] [ – –• – ]
-
-    [ – –• | –• –]
-
-    еркало ґу ики кукуру а
-
-    дзвінкий
-
-    дзюрчить
-
-    дзвонити
-
-    дзвонила'
-  sha256: 8040d4de268e8cfa497b651bae705b3c1fe69945149ae62af957da7c7656abf7
+  quote: Чую [дз], [дз′].
+  sha256: addc3ae37a67ae7a046da63aa99e4d8df232d5d2c467c789cddee14474bd5aa5
   source:
     author: zaharijchuk
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0065
@@ -1545,6 +1485,85 @@ texts:
     row_sha256: d9720d45c51439ad17a1553fb1a4543a1b221f5c3e6293ea01e43e7319bd6a39
     section_id: 38993
   supports: Two-sound Є after a vowel; exact source transcription.
+- id: T-044
+  quote: '[ й у р|т а ] л ю п и н
+
+    [ =•|–•– ]
+
+    [ л′ у|п и н ]'
+  sha256: 9ff4a8d26b5cc1a84d865df105880784abb0574ac0d85ef364d2876324cb6b83
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+  supports: Only the clean юрта/люпин source transcriptions; the source spaces and word schemes are retained, never repaired
+    by hand.
+- id: T-045
+  quote: 'кує квітує
+
+    синє
+
+    [–•|=•] [– =•|–•|=•]
+
+    [–•|=•]
+
+    [ к у|й е ]
+
+    [ с и|н′ е ]
+
+    [ к в′ і|т у| й е ]'
+  sha256: 16978e06ee05e2a86ff332932eff99eea687722a3e3ea26e990d51e2df3fff8d
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0047
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 50
+    row_sha256: 2752514386dfd25119d07b7099f614373475f848aaa326e6142ecc0567467a3a
+    section_id: 13109
+  supports: Clean complete Є word/value models and source transcriptions; exclude OCR picture grids, watermark and broken
+    poem.
+- id: T-046
+  quote: 'дзвінкий
+
+    дзюрчить
+
+    дзвонити
+
+    дзвонила'
+  sha256: a14a52451f2388238687f57df365ae6667dbc1a75ee36a741e8656b98c876b2c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0065
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 68
+    row_sha256: 624ace710093c120dcf03df13eaadec8e8b83220a248ddbc8f361272de0c44c0
+    section_id: 13127
+  supports: Clean complete дз word row, including the attested present W-135 form; no letter-stripped picture fragments.
+- id: T-047
+  quote: 'У слові стільки складів, скільки в ньому голосних
+
+    звуків.'
+  sha256: 96a62c2950c3ea1f17089e43c40cd2fb9a693645425ce28b060baef393ba9958
+  source:
+    author: vashulenko
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0017
+    file: 2-klas-ukrmova-vashulenko-2019-1
+    grade: '2'
+    kind: textbook
+    page: 19
+    row_sha256: 65a0648c5e87f716f7553c9476a6b4cc87f79d00903d1acbe42804e697f45783
+    section_id: 22017
+  supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains
+    only; English scaffolding teaches the rule before scoring.
 unsupported:
 - claim: The required named English-speaker teaching point classifying Ф as a visual look-alike has no identified supporting
     T- or X- source. T-008 establishes the native glyph and sound, T-012 establishes the alphabet table, and T-018 establishes
@@ -1578,8 +1597,9 @@ unsupported:
     is retained as diagnostic evidence of the incorrect extraction, not as alphabet coverage. The request does not substitute
     another range; correcting the helper is outside this packet owned paths.
   id: U-002
-  resolved_by:
-    record: S-001
+  resolved_by: 'Request locators now use canonical LF-numbered Standard lines. The #9487 r3 engine lane implements the corresponding
+    builder/verifier correction; this content packet makes no engine edit. Rebuild with that merged engine before accepting
+    Standard locator proof.'
   searches:
   - query: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:571-572 contains section 4.1.1 on the Ukrainian alphabet, printed
       and handwritten letters, uppercase and lowercase letters.

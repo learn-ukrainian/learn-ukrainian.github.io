@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 3fde66114438177228d094d1928a6936981f0f77
+  mcp_commit: d8e41c36769a34fa930a6d1be305c1b3186eaa75
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: dca7883992555dbe3c0a58361ed951aba0b5cf699282aabd0715ec39c2efb4f7
+  sources_db: 0ff01184650749c1553aa7cfd993a6ff8c1de2485a2968ef8a314953bdf59d0b
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -129,7 +129,9 @@ exercises:
 
     ма- __ -на -ли-, ми-, -лим
 
-    со- __ ма-, -ва, -ла'
+    со- __ ма-, -ва, -ла
+
+    __ -ва -ни, ва-, сли-'
   pattern: Pick a missing syllable from a bounded list to complete a known word.
   quote: 'Відшукай «загублений» склад у словах — на-
 
@@ -137,8 +139,10 @@ exercises:
 
     ма- __ -на -ли-, ми-, -лим
 
-    со- __ ма-, -ва, -ла'
-  sha256: fdc0697a623c7d4f687322a5be35dd058cdfe40bcac9068186f3c778ebf8463c
+    со- __ ма-, -ва, -ла
+
+    __ -ва -ни, ва-, сли-'
+  sha256: b85f9636b69a7252ef084475204431f107ca76fa43c20082b81b2d98eede861c
   source:
     author: zaharijchuk
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
@@ -194,48 +198,24 @@ module: a1/sounds-letters-and-hello
 standard:
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   id: S-001
-  lines: 351-353
-  text: "      1.3.1.1. Особа вміє:\n      написати власне прізвище та ім’я, а також імена і прізвища знайомих чи\nвідомих\
-    \ людей;"
+  lines: 342-344
+  text: "     студент / студентка;\n     клієнт / клієнтка;\n     пацієнт / пацієнтка;"
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   id: S-002
-  lines: 357-359
-  text: '      написати чи переписати з друкованого зразка короткі, прості тексти на
-
-    листівці чи в смс-повідомленні, наприклад привітання зі святом, вітання з місця
-
-    перебування, побажання, висловлення вдячності: Вітаю. Бажаю успіху.'
+  lines: 348-350
+  text: "\n     1.3.1. Загальний перелік умінь:\n"
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   id: S-003
-  lines: 430-432
-  text: "межах мінімального набору мовленнєвих ситуацій (див. Каталог Б);\n      вживати стандартні мовні формули привітання,\
-    \ прощання, подяки,\nвибачення і побажання;"
+  lines: 419-421
+  text: "     1.4.1.2. Діалогічне мовлення:\n\n     1.4.1.2.1. Особа розуміє прості висловлювання співрозмовника в межах"
 texts:
 - id: T-001
   quote: 'Мовні звуки: голосні та приголосні
 
     Вимов перший звук у словах — назвах предметів.
 
-    Який це звук? Голосний звук позначаємо так: [•].
-
-    [ • ] [ • ]
-
-    Вимов перший звук у словах — назвах предме-
-
-    тів. Який це звук? Приголосний звук позначає-
-
-    мо так: [–].
-
-    [ – ] [ – ] [ – ]
-
-    [ – ]
-
-    Вимов голосні звуки в словах — назвах предме-
-
-    тів.
-
-    Вимов приголосні звуки в словах — назвах'
-  sha256: cf7b97e67622e18683d7ff0c0fe290cc4c31023dd57fb56be4977053fb247d1b
+    Який це звук? Голосний звук позначаємо так: [•].'
+  sha256: a1737ee43bb1f3c4bbbafb8083aaa892340506e6c5fe5369b370dc94ffca34cb
   source:
     author: zaharijchuk
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
@@ -809,6 +789,46 @@ texts:
     section_id: 12965
   supports: 'Primer printed p.15: find the incorrect analysis and repair it. Model methodology only; the fresh tasks correct
     source-symbol assignments or vowel counts, never invent misspelled Ukrainian words or untaught cluster boundaries.'
+- id: T-039
+  quote: 'Мовні звуки: голосні та приголосні
+
+    Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].
+
+    [ • ] [ • ]
+
+    Вимов перший звук у словах — назвах предме-
+
+    тів. Який це звук? Приголосний звук позначає-
+
+    мо так: [–].'
+  sha256: 0976d573b9cdc32474b06b65fb98b6dc08596efad61cf10cd47ba99f700adf85
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 15
+    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
+    section_id: 12963
+  supports: Full source statement of both sound classes and their [•]/[–] symbols; original line-end typesetting wraps are
+    retained, not OCR word damage.
+- id: T-040
+  quote: Добрий день!
+  sha256: f905560bbf423ddad80d2db6886b4831d7f1ae2a6d27ecc9ee8e23c6565f85e0
+  source:
+    author: zharkova
+    chunk_id: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0020
+    file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1
+    grade: '1'
+    kind: textbook
+    page: 25
+    row_sha256: d3de9c9b5d8bf5c60135dbad59eea37888162a12def12902cad42f72da891114
+    section_id: 49863
+  supports: A clean public grade-1 greeting utterance for the separate formal model. T-003/T-021 establish the register through
+    explains only; V-002 supplies the intact recorded chunk.
 unsupported:
 - claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and
     lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named

@@ -3,11 +3,10 @@ module: sounds-letters-and-hello
 level: a1
 sequence: 1
 slug: sounds-letters-and-hello
-version: '4'
+version: '5'
 title: 'звук, літера, привіт'
 subtitle: 'First greetings and the first 13 letters'
-focus: 'Hear and say greeting chunks, distinguish sounds from letters, and read and copy syllables and short words using the first primer letter
-  group.'
+focus: 'Hear and say greeting chunks, distinguish sounds from letters, and read and copy syllables and short words using the first primer letter group.'
 objectives:
 - 'Respond aloud to familiar and formal greeting chunks heard before their spelling is taught.'
 - 'Distinguish what is heard from what is seen and distinguish vowels from consonants.'
@@ -17,25 +16,28 @@ connects_to: []
 prerequisites: []
 register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
 changelog:
-- 'Position-1 plan package updated after claude-att-4 review: added dedicated practice and step for letter N in lesson 3, expanded workbook decodable
-  words and names, resolved lesson 1 match-up overlap, sustained vowel/consonant contrast through lessons 4-6, differentiated workbook activity
-  pairs, added affirmative particle tak for recap questions, restricted recap copying to taught letters, moved rika to incidental, and dropped
-  misplaced model X-002 in lesson 2.'
-- 'Position-1 plan package updated after claude-att-5 review: added decodable words and names (kosa, Pavlyk, Polina, Panas) for letters K and
-  P in lesson 5, listed affirmative particle tak as lesson 6 incidental, recycled malyna, slyva, and Ivan in lesson 6 recap, changed lesson 3
-  a8 to odd-one-out to ensure distinct discriminating tasks, and added ULP lesson 2 pack records T-020 and T-021 for formal situations cited in
-  lesson 1 a5.'
-- 'Position-1 plan package updated after claude-att-6 review: framed formal greeting situations (boss, cashier from T-002; receptionist from T-020;
-  teacher from T-021) dropping colleague in lesson 1 a5 and step s2; demoted kosa to incidental in lesson 5 and removed it from a7 gloss matching;
-  dropped animal name Ava (W-095); demoted the seven proper names (Nina, Nonna, Ivan, Vova, Pavlyk, Polina, Panas) from core to incidental decoding
-  material across lessons 3-5 and updated lesson 6 recap.'
-- 'Round 2, #8425: authorized authentic-text/planned-dialogue recap hosts; ULP notes grounding only; complete word-row admission; explicit native
-  single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored print discrimination.
+- 'Position-1 plan package updated after claude-att-4 review: added dedicated practice and step for letter N in lesson 3, expanded workbook decodable words and names,
+  resolved lesson 1 match-up overlap, sustained vowel/consonant contrast through lessons 4-6, differentiated workbook activity pairs, added affirmative particle tak
+  for recap questions, restricted recap copying to taught letters, moved rika to incidental, and dropped misplaced model X-002 in lesson 2.'
+- 'Position-1 plan package updated after claude-att-5 review: added decodable words and names (kosa, Pavlyk, Polina, Panas) for letters K and P in lesson 5, listed
+  affirmative particle tak as lesson 6 incidental, recycled malyna, slyva, and Ivan in lesson 6 recap, changed lesson 3 a8 to odd-one-out to ensure distinct discriminating
+  tasks, and added ULP lesson 2 pack records T-020 and T-021 for formal situations cited in lesson 1 a5.'
+- 'Position-1 plan package updated after claude-att-6 review: framed formal greeting situations (boss, cashier from T-002; receptionist from T-020; teacher from T-021)
+  dropping colleague in lesson 1 a5 and step s2; demoted kosa to incidental in lesson 5 and removed it from a7 gloss matching; dropped animal name Ava (W-095); demoted
+  the seven proper names (Nina, Nonna, Ivan, Vova, Pavlyk, Polina, Panas) from core to incidental decoding material across lessons 3-5 and updated lesson 6 recap.'
+- 'Round 2, #8425: earlier authentic-text/planned-dialogue hosts (superseded by the mandatory D4 story in version 5); ULP notes grounding only; complete word-row
+  admission; explicit native single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored print discrimination.
   Letters, grammar, lesson count, core vocabulary and word targets unchanged. Integrated-engine acceptance remains driver-owned.'
-- 'Full-access plan review repair round 1, #8425: introductions precede scoring; coherent varied-key listening, source-hosted sound classification
-  and find-and-repair; accurate source roles and model declarations; earlier core recycling restored. P3 recap follows D4 with one mandatory first-person
-  story and questions on that same host. Word targets and module objectives unchanged; learner-state generator repair remains separately owned
-  by #9487.'
+- 'Full-access plan review repair round 1, #8425: introductions precede scoring; coherent varied-key listening, source-hosted sound classification and find-and-repair;
+  accurate source roles and model declarations; earlier core recycling restored. P3 recap follows D4 with one mandatory first-person story and questions on that same
+  host. Word targets and module objectives unchanged; learner-state generator repair remains separately owned by #9487.'
+- 'Round-2 full-access review repair, #8425: mandatory first-person bilingual recap hosts before comprehension and production; source-computed varied keys, evidence-complete
+  activity packets, explicit counting, clean public quote spans, one video per URL and source-qualified Latin claims. Word targets unchanged.'
+- 'Step-decodability sweep: the seven Ukrainian metalanguage/action lexical records whose letters are unavailable at position 1 move to their first decodable steps
+  in position 2. Position-1 literacy distinctions retain English scaffolding and the same objectives. W-089 uses verified decodable past chunks, never its unreadable
+  infinitive; no grammatical system is added.'
+- The Latin-claim sweep also removes unsupported position-1 sound equivalences and visual-trap claims; native primer/audio reading jobs remain unchanged. No new
+  correspondence is inferred from glyph resemblance.
 arc_ref: {level: a1, position: 1}
 evidence_ref: {path: evidence/a1/sounds-letters-and-hello.yaml, sha256: 805a24cd4a0ef7c9a2910c7c6c9df3eeb72e0cba82cd03d0879d9b44eb60e767}
 lessons:
@@ -44,8 +46,8 @@ lessons:
   title: 'привіт'
   kind: teach
   job: 'Hear an informal or formal first greeting and say the appropriate memorised response aloud.'
-  rationale: 'D3 chunks come first by ear as in ULP S1 lessons 1–2; do not decode their unseen letters or analyse adjective, noun, or case forms.
-    A 210-word target gives two short Ukrainian-first models, English context support, and explicit out-loud practice without padding.'
+  rationale: 'D3 chunks come first by ear as in ULP S1 lessons 1–2; do not decode their unseen letters or analyse adjective, noun, or case forms. A 210-word target
+    gives two short Ukrainian-first models, English context support, and explicit out-loud practice without padding.'
   word_target: 210
   inventory:
     grammar: []
@@ -65,8 +67,8 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Play only the informal V-001 peer greeting; show the Ukrainian model beside English support, then repeat and respond aloud as a whole
-      D3 chunk on X-001. Do not decode names or letters. T-002 grounds the peer register through explains only; premium notes are never quoted.'
+    teach: 'Play only the informal V-001 peer greeting; show the Ukrainian model beside English support, then repeat and respond aloud as a whole D3 chunk on X-001.
+      Do not decode names or letters. T-002 grounds the peer register through explains only; premium notes are never quoted.'
     introduces: {letters: [], grammar: [], vocabulary: [W-074]}
     uses: {grammar: [], vocabulary: []}
     evidence:
@@ -79,21 +81,38 @@ lessons:
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Introduce and play the formal V-002 greeting as the intact W-075+W-076 chunk, then contrast it with W-074 by social situation before
-      a4. T-002 grounds boss/cashier boundaries; T-020 grounds the receptionist. T-021 establishes only that a teacher is a formal addressee,
-      not a greeting quotation. Repeat and give the matching spoken response on X-001. ULP records remain explains-only; premium notes are never
-      quoted.'
+    teach: 'Introduce and play the formal V-002 greeting as the intact W-075+W-076 chunk, then contrast it with W-074 by social situation before a4. T-002 grounds
+      boss/cashier boundaries; T-020 grounds the receptionist. T-021 establishes only that a teacher is a formal addressee, not a greeting quotation. Repeat and give
+      the matching spoken response on X-001. ULP records remain explains-only; premium notes are never quoted.'
     introduces: {letters: [], grammar: [], vocabulary: [W-075, W-076]}
     uses: {grammar: [], vocabulary: [W-074]}
-    evidence: [T-002, T-003, T-020, T-021, V-002, S-003]
+    evidence:
+    - T-002
+    - T-003
+    - T-020
+    - T-021
+    - V-002
+    - S-003
     practice:
     - a3
     needs: [video]
   - id: s3
     kind: practice
-    teach: After both introductions, present the planned peer-then-teacher dialogue with paired English support, grounded in T-035 for the
-      peer exchange and T-003 for the formal greeting. T-021 supplies only the teacher register. Display the dialogue before a2 and workbook
-      a5. No name, greeting spelling or unseen letter is a reading target.
+    teach: Display only the attributed clean public T-040 formal greeting quote, paired with English; ULP notes remain explains-only in the adjacent practice
+      step.
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-040
+    practice: []
+    needs:
+    - quote
+  - id: s4
+    kind: practice
+    teach: 'After both recorded greeting introductions, display the informal peer dialogue, then the separate attributed T-040 formal greeting quote. Pair both with
+      English. The dialogue has only peers and stays informal; the formal teacher example is outside it, grounded in T-003/T-021 through explains only. Both hosts
+      precede a2/a4/a5; no greeting or name spelling is a decoding target.'
     uses:
       grammar: []
       vocabulary:
@@ -108,6 +127,7 @@ lessons:
     - T-021
     - V-001
     - V-002
+    - T-040
     practice:
     - a2
     - a4
@@ -115,31 +135,35 @@ lessons:
     - video
   consolidation: [a5]
   activities:
-  - {id: a1, type: watch-and-repeat, placement: inline, focus: 'Hear and say the informal greeting aloud; practised offline — not machine-verified.',
+  - {id: a1, type: watch-and-repeat, placement: inline, focus: 'Hear and say the informal greeting aloud; practised offline — not machine-verified.', model:
+      X-001}
+  - {id: a2, type: quiz, placement: inline, focus: 'kind: comprehension; each item has host: {kind: dialogue} for the peer exchange or host: {kind: quote, ref: T-040}
+      for the separate formal example. Recognise the intact greeting shown in the peer exchange versus the separate formal teacher model. Both greeting keys Привіт
+      and Добрий день occur; vary substantive keys and option positions. T-002/T-020/T-021 establish roles only and T-003 establishes the formal register, all through
+      explains only. English accompanies every stem, option and explanation. Recordings V-001/V-002 introduce the intact chunks; no spoken phrase-choice binding,
+      name decoding or formalisation of peer turns.', model: X-001}
+  - {id: a3, type: watch-and-repeat, placement: inline, focus: 'Hear and say the formal greeting aloud in a new situation; practised offline — not machine-verified.',
     model: X-001}
-  - {id: a2, type: quiz, placement: inline, focus: 'Recognise who used each intact greeting in the displayed peer-then-teacher exchange, including
-      both informal and formal turns. kind: comprehension; host: {kind: dialogue}. Dialogue in s3 precedes a2. Vary the substantive greeting keys
-      and their positions; pair every stem, option and explanation with English support. No name decoding or recorded-phrase binding.',
-      model: X-001}
-  - {id: a3, type: watch-and-repeat, placement: inline, focus: 'Hear and say the formal greeting aloud in a new situation; practised offline —
-      not machine-verified.', model: X-001}
-  - {id: a4, type: quiz, placement: inline, focus: 'Choose the matching intact response to the informal and formal greetings in the s3 dialogue
-      after the s2 register contrast. kind: comprehension; host: {kind: dialogue}. Display the source-grounded prompt and response turns before
-      a4. Both response chunks occur as keys. This is the X-001 answer-a-greeting operation applied to the displayed exchange; paired English
-      accompanies stems, options and explanations, and spoken responses remain offline. Unlike a2, identify the fitting reply rather than its
-      speaker.', model: X-001}
-  - {id: a5, type: quiz, placement: workbook, focus: 'Transfer the displayed peer/teacher contrast to a mixed friend, boss/cashier, receptionist
-      and teacher situation set using T-002/T-020/T-021 for register only and T-003 for the formal greeting. kind: comprehension; host: {kind:
-      dialogue}. The s3 dialogue precedes consolidation. Choose the intact greeting appropriate to each English-supported role; both greeting
-      keys occur, rather than repeating who-said-what recall. Pair every stem, option and explanation with English support.'}
+  - {id: a4, type: quiz, placement: inline, focus: 'kind: comprehension; each item has host: {kind: dialogue} for the peer exchange or host: {kind: quote, ref: T-040}
+      for the separate formal example. Choose the matching whole reply to each informal peer or formal teacher greeting. Both greeting keys Привіт and Добрий день
+      occur; vary substantive keys and option positions. T-002/T-020/T-021 establish roles only and T-003 establishes the formal register, all through explains only.
+      English accompanies every stem, option and explanation. Recordings V-001/V-002 introduce the intact chunks; no spoken phrase-choice binding, name decoding or
+      formalisation of peer turns.', model: X-001}
+  - {id: a5, type: quiz, placement: workbook, focus: 'kind: comprehension; each item has host: {kind: dialogue} for the peer exchange or host: {kind: quote, ref:
+      T-040} for the separate formal example. Transfer the modeled informal/formal contrast to the source-supported friend, boss/cashier, receptionist and teacher
+      roles. Both greeting keys Привіт and Добрий день occur; vary substantive keys and option positions. T-002/T-020/T-021 establish roles only and T-003 establishes
+      the formal register, all through explains only. English accompanies every stem, option and explanation. Recordings V-001/V-002 introduce the intact chunks;
+      no spoken phrase-choice binding, name decoding or formalisation of peer turns.'}
   videos:
-  - {evidence: V-001, use: 'Step s1 informal model, then s3 replay.'}
-  - {evidence: V-002, use: 'Step s2 formal introduction before a4, then s3 dialogue replay.'}
+  - evidence: V-001
+    use: 'Step s1 informal model, then s3 replay.'
+  - evidence: V-002
+    use: 'Step s2 formal introduction before a4, then s3 dialogue replay.'
   practice: {vocabulary: core, stress: [], patterns: [a2, a4, a5]}
   dialogue:
-    step: s3
-    situation: At a classroom entrance, two peers greet each other, then greet the teacher; questions refer to who greeted whom in this
-      exchange.
+    step: s4
+    situation: Two peers exchange the informal greeting. A separate formal teacher example remains in s2 and is recalled beside the peer dialogue in s3; the
+      dialogue register applies only to its peer turns.
     setting: Classroom entrance; English identifies the social roles before the Ukrainian greeting chunks.
     speakers:
     - name: Ніна
@@ -150,68 +174,72 @@ lessons:
       evidence: W-093
       role: peer
       gender: m
-    - name: Поліна
-      evidence: W-099
-      role: teacher
-      gender: f
-    register: formal
-    target_grammar: Whole informal W-074 and formal W-075+W-076 chunks only; no grammar analysis.
+    register: informal
+    target_grammar: Only informal peer greeting chunks inside the dialogue; compare the separate formal model without changing the peer register.
     evidence:
     - T-035
     - T-002
-    - T-003
-    - T-020
-    - T-021
-
 - n: 2
   slug: sounds-and-letters
   title: 'звук і літера'
   kind: teach
   job: 'Tell an audible sound from a visible letter and recognise and copy А, О, У, И in primer order.'
-  rationale: 'The primer names what one hears before what one sees, then introduces these four vowels in this order; this lesson owns the sound/letter
-    contrast, leaving sound classes and blending for the next lesson. A 240-word target covers one explanation and four brief letter models with
-    notebook instructions.'
+  rationale: 'The primer names what one hears before what one sees, then introduces these four vowels in this order; this lesson owns the sound/letter contrast, leaving
+    sound classes and blending for the next lesson. A 240-word target covers one explanation and four brief letter models with notebook instructions.'
   word_target: 240
   inventory:
     phonetics: {letters: [А, О, У, И], sounds: []}
     grammar:
-    - {id: G-a1-001, point: 'An audible sound and a visible letter are different units, even when a letter represents that sound.', evidence: [
-        T-001, T-006]}
+    - {id: G-a1-001, point: 'An audible sound and a visible letter are different units, even when a letter represents that sound.', evidence: [T-001, T-006]}
     vocabulary:
-      core:
-      - {lemma: звук, evidence: W-077, forms: ['noun:inanim:m:v_naz:xp1']}
-      - {lemma: літера, evidence: W-078, forms: ['noun:inanim:f:v_naz']}
-      - {lemma: чути, evidence: W-086, forms: ['verb:imperf:inf:insert:predic']}
-      - {lemma: бачити, evidence: W-087, forms: ['verb:imperf:inf']}
+      core: []
       incidental: []
       recycled: []
   steps:
   - id: s1
     kind: teach
-    teach: 'First listen to a sound, then look at its symbol; teach the hear and see infinitives as lexical action labels and name the sound/letter
-      distinction without asking the learner to read an untaught word or conjugate a verb.'
-    introduces: {letters: [], grammar: [G-a1-001], vocabulary: [W-077, W-078, W-086, W-087]}
+    teach: 'First listen to a sound, then look at its symbol and teach the sound-versus-letter distinction in English. The hearing and seeing action labels are English
+      scaffolding here; their Ukrainian lexical spellings wait until their letters are taught in position 2. No new conjugation or unreadable word is a print target.'
+    introduces: {letters: [], grammar: [G-a1-001], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: [T-001, T-006]
+    evidence:
+    - T-001
+    - T-006
     practice:
     - a1
   - id: s2
     kind: teach
-    teach: 'Present А, О, У, И one at a time in primer order: hear the sound, see the letter, trace it, then copy it into a notebook. Replay the
-      lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred.'
+    teach: 'Present А, О, У, И one at a time in primer order: hear the sound, see the letter, trace it, then copy it into a notebook. Replay the lesson-listed V/T
+      single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Use English for action/category metalanguage whose Ukrainian
+      spelling is still outside the taught letters; do not make those spellings a print-reading or scored stimulus. Ukrainian sound/letter/category and hear/see/read
+      spellings are introduced as lexical targets only at their decodable points in position 2; English explains these literacy operations here.'
     introduces: {letters: [А, О, У, И], grammar: [], vocabulary: []}
-    uses: {grammar: [G-a1-001], vocabulary: [W-077, W-078]}
-    evidence: [T-006, T-007, T-008, T-009, V-004, V-005, V-006, V-007, S-002, T-022, T-023, T-024, T-025]
+    uses: {grammar: [G-a1-001], vocabulary: []}
+    evidence:
+    - T-006
+    - T-007
+    - T-008
+    - T-009
+    - V-004
+    - V-005
+    - V-006
+    - V-007
+    - S-002
+    - T-022
+    - T-023
+    - T-024
+    - T-025
     practice:
     - a3
     - a4
     needs: [video]
   - id: "s3"
     kind: practice
-    teach: 'After all four vowels are introduced in s2, display the T-022 capital/small heading before a2. Ask whether the displayed unit is a
-      visible letter or a heard sound, with paired English support; the teacher supplies the sound offline. Before workbook a6, use the same shown
-      heading to distinguish a matching capital/small pair from a different taught vowel glyph. No audible syllable or vocabulary decoding is
-      scored.'
+    teach: 'After all four vowels are introduced, display the attributed T-006/T-007/T-008/T-009 primer models. Each pairs a visible capital/small letter after the
+      seeing cue with a bracketed sound after the hearing cue. Teach the two notations with English support before a2. The print models identify a letter or a sound
+      representation; no unrecorded sound is machine-scored. Before a6, show T-022/T-023/T-024/T-025 as the matching capital/small pairs. Use English for action/category
+      metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings a print-reading or scored stimulus. Ukrainian sound/letter/category
+      and hear/see/read spellings are introduced as lexical targets only at their decodable points in position 2; English explains these literacy operations here.'
     uses:
       grammar: []
       vocabulary: []
@@ -224,18 +252,24 @@ lessons:
     - T-024
     - V-007
     - T-025
+    - T-006
+    - T-007
+    - T-008
+    - T-009
     practice: []
     needs:
     - video
   - id: s4
     kind: practice
-    teach: Display only the attributed public-textbook quote hosts T-022 before their dependent print decisions. All other T/X records
-      remain explains-only. Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the
-      recap’s Ukrainian-only questions.
+    teach: Display T-006/T-007/T-008/T-009 verbatim before a2, and the four clean T-022/T-023/T-024/T-025 glyph pairs before workbook consolidation. English
+      supports labels; the scored stimuli are only the taught glyphs or bracketed sounds. Use English for action/category metalanguage whose Ukrainian spelling
+      is still outside the taught letters; do not make those spellings a print-reading or scored stimulus. Ukrainian sound/letter/category and hear/see/read
+      spellings are introduced as lexical targets only at their decodable points in position 2; English explains these literacy operations here.
     uses:
       grammar: []
       vocabulary: []
     evidence:
+    - T-006
     - T-022
     practice:
     - a2
@@ -244,25 +278,29 @@ lessons:
   consolidation: [a5, a6]
   activities:
   - {id: a1, type: observe, placement: inline, focus: 'Notice the primer contrast between heard sound and visible letter.'}
-  - {id: a2, type: quiz, placement: inline, focus: 'Choose whether a presented unit is heard or seen, from the primer model. Required item kind:
-      comprehension; quote host refs T-022 must be displayed before this activity, with attribution. Stem/options depend on the displayed print;
-      no new source prose or premium-note quote.'}
+  - {id: a2, type: quiz, placement: inline, focus: 'kind: comprehension; each item has host {kind: quote, ref: T-006}, {kind: quote, ref: T-007}, {kind: quote, ref:
+      T-008} or {kind: quote, ref: T-009}. Distinguish the capital/small glyph after the seeing cue from the bracketed sound representation after the hearing cue.
+      Use both fragments of every model; keys are letter versus sound, not an assertion of recorded audio. Pair stems, options and explanations with English.'}
   - {id: a3, type: watch-and-repeat, placement: inline, focus: 'Hear and repeat the four vowel sounds in primer order.'}
-  - {id: a4, type: letter-grid, placement: inline, focus: 'Find А, О, У, И and copy each shape into a notebook; copying practised offline — not
-      machine-verified.'}
-  - {id: a5, type: quiz, placement: workbook, focus: "Retrieve the mixed taught glyphs from their replayed native sound models, with a different
-      target in each contrast. Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported
-      glyph. Aligned video/print-evidence pairs: V-004/T-022, V-005/T-023, V-006/T-024, V-007/T-025. Present each whole dedicated recording (segment:
-      null) before its item. Use every declared target, vary both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape,
-      sound-class and hard/soft explanations remain separate offline teaching; they are not listening answer classes."}
-  - {id: a6, type: odd-one-out, placement: workbook, focus: 'Select the taught vowel glyph that differs from the displayed T-022 capital/small
-      pair. kind: comprehension; host: {kind: quote, ref: T-022}. Quote appears after vowel introduction and before workbook consolidation. This
-      scores visible correspondence, while the native vowel videos model the heard sounds separately.'}
+  - {id: a4, type: letter-grid, placement: inline, focus: 'Find А, О, У, И and copy each shape into a notebook; copying practised offline — not machine-verified.'}
+  - {id: a5, type: quiz, placement: workbook, focus: "Retrieve the mixed taught glyphs from their replayed native sound models, with a different target in each contrast.
+      Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs:
+      V-004/T-022, V-005/T-023, V-006/T-024, V-007/T-025. Present each whole dedicated recording (segment: null) before its item. Use every declared target, vary
+      both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain separate offline teaching;
+      they are not listening answer classes."}
+  - {id: a6, type: odd-one-out, placement: workbook, focus: 'kind: comprehension; host {kind: quote, ref: T-022}, {kind: quote, ref: T-023}, {kind: quote, ref: T-024}
+      or {kind: quote, ref: T-025}. Build each odd-one-out row from two matching capital/small glyphs and one other taught vowel: [А, а, О], [О, о, У], [У, у, И],
+      [И, и, А]. Exactly one member differs in letter identity; keys О, У, И, А vary. Permute presentation positions, preserving each pair. All four quote pairs precede
+      consolidation; English supports instructions.'}
   videos:
-  - {evidence: V-004, use: 'Step s2 pronunciation model for letter А.'}
-  - {evidence: V-005, use: 'Step s2 pronunciation model for letter О.'}
-  - {evidence: V-006, use: 'Step s2 pronunciation model for letter У.'}
-  - {evidence: V-007, use: 'Step s2 pronunciation model for letter И.'}
+  - evidence: V-004
+    use: 'Step s2 pronunciation model for letter А.'
+  - evidence: V-005
+    use: 'Step s2 pronunciation model for letter О.'
+  - evidence: V-006
+    use: 'Step s2 pronunciation model for letter У.'
+  - evidence: V-007
+    use: 'Step s2 pronunciation model for letter И.'
   practice: {vocabulary: core, stress: [], patterns: [a2, a5]}
 
 - n: 3
@@ -270,48 +308,54 @@ lessons:
   title: 'М, І, Н'
   kind: teach
   job: 'Hear the vowel/consonant contrast, keep И distinct from І, and read first CV and VC syllables with М and Н.'
-  rationale: 'A first consonant makes the two sound classes concrete; the primer places М, then І, then Н and supplies syllable tables, while
-    ULP explains И to English speakers. A 290-word target supports three focused steps for sound contrasts, syllable tables with М and Н, and
-    offline copying.'
+  rationale: 'A first consonant makes the two sound classes concrete; the primer places М, then І, then Н and supplies syllable tables, while ULP explains И to English
+    speakers. A 290-word target supports three focused steps for sound contrasts, syllable tables with М and Н, and offline copying.'
   word_target: 290
   inventory:
     phonetics: {letters: [М, І, Н], sounds: []}
     grammar:
-    - {id: G-a1-002, point: 'Vowels and consonants are different sound classes identified by hearing before sorting their letters.',
-        evidence: [T-001, T-010]}
-    - {id: G-a1-003, point: 'The two Ukrainian vowel letters introduced here represent different sounds and are not interchangeable.',
-        evidence: [T-004, T-009, T-011]}
+    - {id: G-a1-002, point: 'Vowels and consonants are different sound classes identified by hearing before sorting their letters.', evidence: [T-001, T-010]}
+    - {id: G-a1-003, point: 'The two Ukrainian vowel letters introduced here represent different sounds and are not interchangeable.', evidence: [T-004, T-009,
+          T-011]}
     vocabulary:
       core:
-      - {lemma: голосний, evidence: W-079, forms: ['noun:inanim:m:v_naz']}
-      - {lemma: приголосний, evidence: W-080, forms: ['noun:inanim:m:v_naz']}
       - {lemma: мама, evidence: W-081, forms: ['noun:anim:f:v_naz']}
-      - {lemma: читати, evidence: W-088, forms: ['verb:imperf:inf']}
       incidental:
       - {lemma: Ніна, evidence: W-091}
       - {lemma: Нонна, evidence: W-092}
-      recycled: [W-077, W-078]
+      recycled: []
   steps:
   - id: s1
     kind: teach
-    teach: 'Hear vowel and consonant sounds before assigning their letters; add М after the prior four vowels, teach the read infinitive as a
-      lexical action label, then read the primer CV and VC rows and copy a first short word. Exact primer syllables, whole words, minimal pairs,
-      positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic
-      letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger.'
-    introduces: {letters: [М], grammar: [G-a1-002], vocabulary: [W-079, W-080, W-081, W-088]}
-    uses: {grammar: [G-a1-001], vocabulary: [W-077, W-078]}
-    evidence: [T-001, T-010, X-002, X-003, V-008]
+    teach: 'Hear vowel and consonant sounds before assigning their letters; add М after the prior four vowels, give the reading action label in English; its Ukrainian
+      lexical spelling follows the remaining letters in position 2, then read the primer CV and VC rows and copy a first short word. Exact primer syllables, whole
+      words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic
+      letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Explicitly teach consonant-first CV versus
+      vowel-first VC order on X-003 before their separate classification and odd-one-out applications in the workbook; both orders occur. Use English for action/category
+      metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings a print-reading or scored stimulus. Ukrainian sound/letter/category
+      and hear/see/read spellings are introduced as lexical targets only at their decodable points in position 2; English explains these literacy operations here.'
+    introduces: {letters: [М], grammar: [G-a1-002], vocabulary: [W-081]}
+    uses: {grammar: [G-a1-001], vocabulary: []}
+    evidence:
+    - T-001
+    - T-010
+    - X-002
+    - X-003
+    - V-008
+    - T-039
     practice:
     - a2
     needs: [video]
   - id: "s2"
     kind: practice
-    teach: 'Display only the following attributed public-textbook quotes before these print-choice activities: T-026. Keep all other T/X records
-      as explains-only grounding. Read the declared taught-letter stimuli aloud and copy their models offline with teacher support; the scored
-      decisions are about visible letters/syllables/words, never a claimed recording of an exact primer row. Exact primer syllables, whole words,
-      minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source
-      nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Display
-      the attributed T-001 source before the dependent inline and workbook decisions; retain paired English support.'
+    teach: 'Display only the following attributed public-textbook quotes before these print-choice activities: T-026. Keep all other T/X records as explains-only
+      grounding. Read the declared taught-letter stimuli aloud and copy their models offline with teacher support; the scored decisions are about visible letters/syllables/words,
+      never a claimed recording of an exact primer row. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read
+      aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared
+      in the activity focus and coverage ledger. Display the attributed T-039 source before the dependent inline and workbook decisions; retain paired English support.
+      Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings a print-reading or scored
+      stimulus. Ukrainian sound/letter/category and hear/see/read spellings are introduced as lexical targets only at their decodable points in position 2; English
+      explains these literacy operations here.'
     uses:
       grammar:
       - G-a1-002
@@ -319,56 +363,79 @@ lessons:
     evidence:
     - T-026
     - T-001
+    - T-039
     practice: []
   - id: s3
     kind: practice
-    teach: Display only the attributed public-textbook quote hosts T-001 before their dependent print decisions. All other T/X records
-      remain explains-only. Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the
-      recap’s Ukrainian-only questions.
+    teach: Display only the attributed public-textbook quote hosts T-039 before their dependent print decisions. All other T/X records remain explains-only.
+      Restrict scored stimuli to the named taught forms; pair English support with learner-facing labels, except the recap’s Ukrainian-only questions. Use
+      English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings a print-reading or
+      scored stimulus. Ukrainian sound/letter/category and hear/see/read spellings are introduced as lexical targets only at their decodable points in position
+      2; English explains these literacy operations here.
     uses:
       grammar: []
       vocabulary: []
     evidence:
-    - T-001
+    - T-039
     practice:
     - a1
     needs:
     - quote
   - id: "s4"
     kind: teach
-    teach: 'Add І after the known vowels, compare И and І by listening and by the two visible symbols, and recognise them in short syllables.
-      Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact
-      primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling
-      offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity
-      focus and coverage ledger.'
+    teach: 'Add І after the known vowels, compare И and І by listening and by the two visible symbols, and recognise them in short syllables. Replay the lesson-listed
+      V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs,
+      positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is
+      their recording. Scored print substitutions are declared in the activity focus and coverage ledger. Use English for action/category metalanguage whose Ukrainian
+      spelling is still outside the taught letters; do not make those spellings a print-reading or scored stimulus. Ukrainian sound/letter/category and hear/see/read
+      spellings are introduced as lexical targets only at their decodable points in position 2; English explains these literacy operations here.'
     introduces: {letters: [І], grammar: [G-a1-003], vocabulary: []}
     uses: {grammar: [G-a1-002], vocabulary: []}
-    evidence: [T-004, T-009, T-011, V-003, V-009, V-007, T-025, T-027]
+    evidence:
+    - T-004
+    - T-009
+    - T-011
+    - V-003
+    - V-009
+    - V-007
+    - T-025
+    - T-027
     practice:
     - a3
     - a4
     needs: [video]
   - id: "s5"
     kind: teach
-    teach: 'Add Н, read first CV and VC syllables with Н alongside decodable names, check the Latin-looking Н shape against its Ukrainian [н]
-      sound rather than English H, and name the second soft sound without explaining the later soft-consonant system. Replay the lesson-listed
-      V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole
-      words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed
-      source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger.'
+    teach: 'Add Н, read first CV and VC syllables with Н alongside decodable names, read Н by the cited Ukrainian [н] model, and name the second soft sound without
+      explaining the later soft-consonant system. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word
+      audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling
+      offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and coverage
+      ledger. Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings a print-reading
+      or scored stimulus. Ukrainian sound/letter/category and hear/see/read spellings are introduced as lexical targets only at their decodable points in position
+      2; English explains these literacy operations here.'
     introduces: {letters: [Н], grammar: [], vocabulary: []}
     uses: {grammar: [G-a1-001, G-a1-002], vocabulary: [W-081]}
-    evidence: [T-012, T-019, X-003, V-010, T-028, V-008, T-026, X-004]
+    evidence:
+    - T-012
+    - T-019
+    - X-003
+    - V-010
+    - T-028
+    - V-008
+    - T-026
+    - X-004
     practice:
     - a5
     - a6
     needs: [video]
   - id: "s6"
     kind: practice
-    teach: 'Before workbook consolidation, display these attributed public-textbook quote hosts: T-037. Work only with the named taught-letter
-      stimuli; other source prose is explains-only. Read aloud offline with a teacher; scored answers concern the displayed print. Exact primer
-      syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher modeling offline;
-      neither a printed source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and
-      coverage ledger.'
+    teach: 'Before workbook consolidation, display these attributed public-textbook quote hosts: T-037. Work only with the named taught-letter stimuli; other source
+      prose is explains-only. Read aloud offline with a teacher; scored answers concern the displayed print. Exact primer syllables, whole words, minimal pairs, positional
+      values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording.
+      Scored print substitutions are declared in the activity focus and coverage ledger. Use English for action/category metalanguage whose Ukrainian spelling is
+      still outside the taught letters; do not make those spellings a print-reading or scored stimulus. Ukrainian sound/letter/category and hear/see/read spellings
+      are introduced as lexical targets only at their decodable points in position 2; English explains these literacy operations here.'
     uses:
       grammar: []
       vocabulary: []
@@ -377,8 +444,10 @@ lessons:
     practice: []
   - id: s7
     kind: practice
-    teach: Before consolidation display only the attributed public-textbook hosts T-037. Other evidence remains explains-only; these quotes
-      support the separate workbook decisions.
+    teach: Before consolidation display only the attributed public-textbook hosts T-037. Other evidence remains explains-only; these quotes support the separate
+      workbook decisions. Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings
+      a print-reading or scored stimulus. Ukrainian sound/letter/category and hear/see/read spellings are introduced as lexical targets only at their decodable
+      points in position 2; English explains these literacy operations here.
     uses:
       grammar: []
       vocabulary: []
@@ -389,49 +458,50 @@ lessons:
     - quote
   consolidation: [a7, a8]
   activities:
-  - {id: a1, type: quiz, placement: inline, focus: 'Sort the sounds represented by taught А, О, У, И and М into the T-001 primer [•] vowel and
-      [–] consonant classes. kind: comprehension; host: {kind: quote, ref: T-001}. Each item shows one taught glyph and offers both class symbols
-      with paired English labels; both classes must be keys. The glyph itself is not an answer. This scored classification follows s1 teaching
-      and differs from listening-to-glyph recognition.', model: X-002}
-  - {id: a2, type: letter-grid, placement: inline, focus: 'Read first М+vowel and vowel+М rows, then copy the grid and model word into a notebook;
-      copying practised offline — not machine-verified.', model: X-003}
+  - {id: a1, type: quiz, placement: inline, focus: 'Sort the sounds represented by taught А, О, У, И and М into the T-001 primer [•] vowel and [–] consonant classes.
+      kind: comprehension; host: {kind: quote, ref: T-039}. Each item shows one taught glyph and offers both class symbols with paired English labels; both classes
+      must be keys. The glyph itself is not an answer. This scored classification follows s1 teaching and differs from listening-to-glyph recognition. T-039 supplies
+      both source class names and their symbols; English supports the explanatory words, which are not word-decoding targets.', model: X-002}
+  - {id: a2, type: letter-grid, placement: inline, focus: 'Read first М+vowel and vowel+М rows, then copy the grid and model word into a notebook; copying practised
+      offline — not machine-verified.', model: X-003}
   - {id: a3, type: watch-and-repeat, placement: inline, focus: 'Hear and repeat distinct И and І sounds before reading their symbols.'}
-  - {id: a4, type: quiz, placement: inline, focus: "Retrieve the mixed taught glyphs from their replayed native sound models, with a different
-      target in each contrast. Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported
-      glyph. Aligned video/print-evidence pairs: V-007/T-025, V-009/T-027. Present each whole dedicated recording (segment: null) before its item.
-      Use every declared target, vary both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class and
-      hard/soft explanations remain separate offline teaching; they are not listening answer classes."}
-  - {id: a5, type: letter-grid, placement: inline, focus: 'Read Н+vowel and vowel+Н rows on the primer syllable pattern, then copy the grid and
-      model names into a notebook; copying practised offline — not machine-verified.', model: X-003}
-  - {id: a6, type: quiz, placement: inline, focus: "Distinguish newly taught Н from earlier М by hearing their native sound models. Required item
-      kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence
-      pairs: V-010/T-028, V-008/T-026. Present each whole dedicated recording (segment: null) before its item. Use every declared target, vary
-      both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain
-      separate offline teaching; they are not listening answer classes."}
-  - {id: a7, type: pick-syllables, placement: workbook, focus: 'Select the missing taught syllables in the T-036 source-segmented W-081 model;
-      use the X-004 missing-syllable operation, not the read-and-copy grid. Exclude W-091 and W-092 from this operation: their names have no sourced
-      syllable boundary here. Use taught syllable distractors and vary their positions.', model: X-004}
-  - {id: a8, type: odd-one-out, placement: workbook, focus: 'Identify the odd printed syllable among taught М CV/VC combinations from T-037; kind:
-      comprehension; host: {kind: quote, ref: T-037}. Display the complete row before workbook consolidation. Read the row aloud with a teacher
-      offline; no missing syllable recording is claimed.'}
+  - {id: a4, type: quiz, placement: inline, focus: "Retrieve the mixed taught glyphs from their replayed native sound models, with a different target in each contrast.
+      Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs:
+      V-007/T-025, V-009/T-027. Present each whole dedicated recording (segment: null) before its item. Use every declared target, vary both correct glyphs and key
+      positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain separate offline teaching; they are not listening
+      answer classes."}
+  - {id: a5, type: letter-grid, placement: inline, focus: 'Read Н+vowel and vowel+Н rows on the primer syllable pattern, then copy the grid and model names into a
+      notebook; copying practised offline — not machine-verified.', model: X-003}
+  - {id: a6, type: quiz, placement: inline, focus: "Distinguish newly taught Н from earlier М by hearing their native sound models. Required item kind: listening;
+      each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs: V-010/T-028, V-008/T-026.
+      Present each whole dedicated recording (segment: null) before its item. Use every declared target, vary both correct glyphs and key positions, and choose only
+      taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain separate offline teaching; they are not listening answer classes."}
+  - {id: a7, type: quiz, placement: workbook, focus: 'kind: comprehension; host: {kind: quote, ref: T-037}. Classify the source syllables ма, мо, му, ми versus ам,
+      ом, ум, им by consonant-first CV or vowel-first VC order. Both source rows give different keys CV and VC. These are explicit syllable units, not lexical words
+      or missing whole-word syllables. T-037 and X-003 supply the actual grid; paired English explains the two orders.', model: X-003}
+  - {id: a8, type: odd-one-out, placement: workbook, focus: 'kind: comprehension; host: {kind: quote, ref: T-037}. Odd-one-out in syllable order, from the actual
+      T-037 CV/VC grid: [ма, мо, ам], [ам, ом, му], [му, ми, им], [ум, им, ми]. Exactly one member has the other consonant/vowel order; keys ам, му, им, ми vary.
+      Permute rows without changing membership. These are syllable units rather than words; read aloud offline with a teacher and English-supported labels.'}
   videos:
-  - {evidence: V-003, use: "Step s4 listening model for the И sound before its contrast with І."}
-  - {evidence: V-008, use: 'Step s1 pronunciation model for consonant М.'}
-  - {evidence: V-009, use: "Step s4 pronunciation model for vowel І."}
-  - {evidence: V-010, use: "Step s5 pronunciation model for consonant Н."}
+  - evidence: V-003
+    use: "Step s4 listening model for the И sound before its contrast with І."
+  - evidence: V-008
+    use: 'Step s1 pronunciation model for consonant М.'
+  - evidence: V-009
+    use: "Step s4 pronunciation model for vowel І."
+  - evidence: V-010
+    use: "Step s5 pronunciation model for consonant Н."
   - evidence: V-007
-    use: 'Replay its whole dedicated letter recording (segment: null) before the corresponding listening choice; independent acoustic proof remains
-      driver-owned.'
+    use: 'Replay its whole dedicated letter recording (segment: null) before the corresponding listening choice; independent acoustic proof remains driver-owned.'
   practice: {vocabulary: core, stress: [], patterns: [a1, a4, a6, a7]}
 
 - n: 4
   slug: more-syllables-and-words
   title: 'В, Л, С'
   kind: teach
-  job: 'Read and copy syllables and short words after adding В, Л, С, checking Latin-shaped letters by their Ukrainian sounds.'
-  rationale: 'The primer extends the same CV/VC tables through В, Л, С and supplies decodable words; the adult reading check targets the visual
-    В/B trap as another Latin-shape contrast, while А, О, М remain look-and-read-alike cases. A 250-word target leaves room for short word models
-    and two notebook copy prompts.'
+  job: 'Read and copy syllables and short words after adding В, Л, С, checking each letter against its cited Ukrainian sound model.'
+  rationale: 'The primer extends the same CV/VC tables through В, Л, С and supplies decodable words; the reader checks each native sound and glyph model without an
+    unsourced Latin correspondence. The unchanged 250-word target leaves room for short word models and two notebook copy prompts.'
   word_target: 250
   inventory:
     phonetics: {letters: [В, Л, С], sounds: []}
@@ -440,78 +510,108 @@ lessons:
       core:
       - {lemma: малина, evidence: W-082, forms: ['noun:inanim:f:v_naz']}
       - {lemma: слива, evidence: W-083, forms: ['noun:inanim:f:v_naz']}
-      - {lemma: писати, evidence: W-089, forms: ['verb:imperf:inf']}
       incidental:
       - {lemma: Іван, evidence: W-093}
       - {lemma: Вова, evidence: W-094}
-      recycled: [W-079, W-080, W-081, W-088]
+      recycled:
+      - W-081
   steps:
   - id: s1
     kind: teach
-    teach: 'Add В after the known letters, classifying it as a consonant; have the English reader check its primer sound rather than the Latin
-      B shape, alongside the look-and-read-alike А, О, М examples. Replay the lesson-listed V/T single-letter target pairs before the scored items;
-      no exact primer syllable or word audio is inferred. Teacher models the exact printed CV/VC/CVC rows, before-І contrast and complete word
-      pairs offline; the learner reads aloud and copies their source models. Retained letter videos model only the named letters, not these exact
-      combinations.'
+    teach: 'Add В after the known letters, classifying it as a consonant; read its cited primer sound alongside the already taught А, О, М native models. Replay the
+      lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Teacher models the exact printed CV/VC/CVC
+      rows, before-І contrast and complete word pairs offline; the learner reads aloud and copies their source models. Retained letter videos model only the named
+      letters, not these exact combinations. Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make
+      those spellings a print-reading or scored stimulus.'
     introduces: {letters: [В], grammar: [], vocabulary: []}
-    uses: {grammar: [G-a1-001, G-a1-002], vocabulary: [W-079, W-080]}
-    evidence: [T-006, T-007, T-010, T-013, V-011, T-029, V-010, T-028]
+    uses: {grammar: [G-a1-001, G-a1-002], vocabulary: []}
+    evidence:
+    - T-006
+    - T-007
+    - T-010
+    - T-013
+    - V-011
+    - T-029
+    - V-010
+    - T-028
     practice:
     - a1
     - a2
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Add Л and С in order as consonants, naming the soft sound heard before І without explaining the formal palatalization system; move
-      from CV to CVC and short words and names (малина, слива, Іван, Вова), teach the write infinitive as a lexical action label, then copy the
-      printed models into a notebook without keyboard input. Replay the lesson-listed V/T single-letter target pairs before the scored items;
-      no exact primer syllable or word audio is inferred. Teacher models the exact printed CV/VC/CVC rows, before-І contrast and complete word
-      pairs offline; the learner reads aloud and copies their source models. Retained letter videos model only the named letters, not these exact
-      combinations. Display the attributed T-001 source before the dependent inline and workbook decisions; retain paired English support.'
-    introduces: {letters: [Л, С], grammar: [], vocabulary: [W-082, W-083, W-089]}
-    uses: {grammar: [G-a1-002], vocabulary: [W-081, W-088]}
-    evidence: [T-014, T-015, T-019, X-003, X-005, V-012, V-013, S-002, V-011, T-029, T-030, T-031, T-001, T-038, X-006]
+    teach: 'Add Л and С in order as consonants, naming the soft sound heard before І without explaining the formal palatalization system; move from CV to CVC and
+      short words and names (малина, слива, Іван, Вова), give the copying action in English; its Ukrainian writing chunks follow П in lesson 5, then copy the printed
+      models into a notebook without keyboard input. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or
+      word audio is inferred. Teacher models the exact printed CV/VC/CVC rows, before-І contrast and complete word pairs offline; the learner reads aloud and copies
+      their source models. Retained letter videos model only the named letters, not these exact combinations. Display the attributed T-039 source before the dependent
+      inline and workbook decisions; retain paired English support. Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught
+      letters; do not make those spellings a print-reading or scored stimulus.'
+    introduces: {letters: [Л, С], grammar: [], vocabulary: [W-082, W-083]}
+    uses: {grammar: [G-a1-002], vocabulary: [W-081]}
+    evidence:
+    - T-014
+    - T-015
+    - T-019
+    - X-003
+    - X-005
+    - V-012
+    - V-013
+    - S-002
+    - V-011
+    - T-029
+    - T-030
+    - T-031
+    - T-001
+    - T-038
+    - X-006
+    - T-039
+    - X-004
     practice:
     - a3
     - a4
     needs: [video]
   - id: s3
     kind: practice
-    teach: Before consolidation display only the attributed public-textbook hosts T-001. Other evidence remains explains-only; these quotes
-      support the separate workbook decisions.
+    teach: Before consolidation display only the attributed public-textbook hosts T-039. Other evidence remains explains-only; these quotes support the separate
+      workbook decisions. Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings
+      a print-reading or scored stimulus.
     uses:
       grammar: []
       vocabulary: []
     evidence:
-    - T-001
+    - T-039
     practice: []
     needs:
     - quote
   consolidation: [a5, a6]
   activities:
-  - {id: a1, type: watch-and-repeat, placement: inline, focus: 'Hear and repeat the В sound before trusting its Latin-looking shape.'}
-  - {id: a2, type: quiz, placement: inline, focus: "Distinguish new В from earlier Н by their native sound models. Required item kind: listening;
-      each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs: V-011/T-029,
-      V-010/T-028. Present each whole dedicated recording (segment: null) before its item. Use every declared target, vary both correct glyphs
-      and key positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain separate offline teaching;
-      they are not listening answer classes."}
-  - {id: a3, type: letter-grid, placement: inline, focus: 'Read Л and С rows and copy their letter shapes and model short words in a notebook;
-      copying practised offline — not machine-verified.', model: X-003}
-  - {id: a4, type: pick-syllables, placement: inline, focus: 'Select the missing syllable in the exact source W-082/W-083 models from X-004; use
-      its complete missing-syllable rows, with more than one syllable key.', model: X-004}
-  - {id: a5, type: quiz, placement: workbook, focus: "Retrieve the mixed taught glyphs from their replayed native sound models, with a different
-      target in each contrast. Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported
-      glyph. Aligned video/print-evidence pairs: V-011/T-029, V-012/T-030, V-013/T-031. Present each whole dedicated recording (segment: null)
-      before its item. Use every declared target, vary both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape,
-      sound-class and hard/soft explanations remain separate offline teaching; they are not listening answer classes."}
-  - {id: a6, type: quiz, placement: workbook, focus: 'Find a wrong assignment of one taught А/І/В/Л/С glyph to the T-001 vowel [•] or consonant
-      [–] class and choose its repaired assignment. kind: comprehension; host: {kind: quote, ref: T-001}. Both class labels occur as corrections
-      and key positions vary. X-006 supplies the find-and-repair methodology via explains only; no invented misspelling or guessed syllable boundary.',
-    model: X-006}
+  - {id: a1, type: watch-and-repeat, placement: inline, focus: 'Hear and repeat the source-modeled В sound before reading its printed glyph.'}
+  - {id: a2, type: quiz, placement: inline, focus: "Distinguish new В from earlier Н by their native sound models. Required item kind: listening; each item binds
+      host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs: V-011/T-029, V-010/T-028. Present each whole
+      dedicated recording (segment: null) before its item. Use every declared target, vary both correct glyphs and key positions, and choose only taught single glyphs.
+      Latin-shape, sound-class and hard/soft explanations remain separate offline teaching; they are not listening answer classes."}
+  - {id: a3, type: letter-grid, placement: inline, focus: 'Read Л and С rows and copy their letter shapes and model short words in a notebook; copying practised offline
+      — not machine-verified.', model: X-003}
+  - {id: a4, type: pick-syllables, placement: inline, focus: 'From the complete X-004 missing-syllable rows, use only core W-082 and W-083: the middle blank in ма-
+      __ -на has key ли, and the initial blank in __ -ва has key сли. The unrelated со- __ row is not scored. Both keys and their option positions vary. Exact source
+      syllables, not a guessed boundary.', model: X-004}
+  - {id: a5, type: quiz, placement: workbook, focus: "Retrieve the mixed taught glyphs from their replayed native sound models, with a different target in each contrast.
+      Required item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs:
+      V-011/T-029, V-012/T-030, V-013/T-031. Present each whole dedicated recording (segment: null) before its item. Use every declared target, vary both correct
+      glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain separate offline teaching; they are
+      not listening answer classes."}
+  - {id: a6, type: quiz, placement: workbook, focus: 'Find a wrong assignment of one taught А/І/В/Л/С glyph to the T-001 vowel [•] or consonant [–] class and choose
+      its repaired assignment. kind: comprehension; host: {kind: quote, ref: T-039}. Both class labels occur as corrections and key positions vary. X-006 supplies
+      the find-and-repair methodology via explains only; no invented misspelling or guessed syllable boundary. T-039 supplies both source class names and their symbols;
+      English supports the explanatory words, which are not word-decoding targets.', model: X-006}
   videos:
-  - {evidence: V-011, use: 'Step s1 pronunciation model for consonant В.'}
-  - {evidence: V-012, use: 'Step s2 pronunciation model for consonant Л.'}
-  - {evidence: V-013, use: 'Step s2 pronunciation model for consonant С.'}
+  - evidence: V-011
+    use: 'Step s1 pronunciation model for consonant В.'
+  - evidence: V-012
+    use: 'Step s2 pronunciation model for consonant Л.'
+  - evidence: V-013
+    use: 'Step s2 pronunciation model for consonant С.'
   - evidence: V-010
     use: Step s1 whole dedicated letter model before its listening choice; no timed segment.
   practice: {vocabulary: core, stress: [], patterns: [a2, a4, a5]}
@@ -521,11 +621,11 @@ lessons:
   title: 'К, П, Р'
   kind: teach
   job: 'Read and copy the final three letters and short words, then copy a sourced model name from a written model into a notebook.'
-  rationale: 'The primer gives К, П, Р in this order and progresses from syllable grids to short connected text and notebook copying; Р/P is another
-    Latin-shape trap (after Н and В), while К reads alike. The noun коса, the personal names Павлик, Поліна, Панас, and the B1 noun ріка (minimal
-    pair with core рука) provide decodable reading material as incidental vocabulary, while рука is the core decodable noun taught for comprehension
-    and gloss matching. Workbook practice progresses from class repair to active syllable assembly and a cumulative match-up of all taught core
-    decodable words. A 290-word target supports the final sound rows, short-word reading, and the separate offline name-copy instruction.'
+  rationale: 'The primer gives К, П, Р in this order and progresses from syllable grids to short connected text and notebook copying; the native recordings and primer
+    glyphs establish their Ukrainian readings. The noun коса, the personal names Павлик, Поліна, Панас, and the B1 noun ріка (minimal pair with core рука) provide
+    decodable reading material as incidental vocabulary, while рука is the core decodable noun taught for comprehension and gloss matching. Workbook practice progresses
+    from class repair to active syllable assembly and a cumulative match-up of all taught core decodable words. A 290-word target supports the final sound rows, short-word
+    reading, and the separate offline name-copy instruction.'
   word_target: 290
   inventory:
     phonetics: {letters: [К, П, Р], sounds: []}
@@ -533,39 +633,72 @@ lessons:
     vocabulary:
       core:
       - {lemma: рука, evidence: W-084, forms: ['noun:inanim:f:v_naz']}
+      - {lemma: писати, evidence: W-089, forms: [verb:imperf:past:p, verb:imperf:past:f, verb:imperf:past:m]}
+      - lemma: ми
+        evidence: W-006
+        forms:
+        - noun:anim:p:v_naz:pron:pers:1
       incidental:
       - {lemma: коса, evidence: W-097}
       - {lemma: Павлик, evidence: W-098}
       - {lemma: Поліна, evidence: W-099}
       - {lemma: Панас, evidence: W-100}
       - {lemma: ріка, evidence: W-085}
-      recycled: [W-079, W-080, W-081, W-082, W-083, W-089]
+      recycled:
+      - W-081
+      - W-082
+      - W-083
   steps:
   - id: s1
     kind: teach
-    teach: 'Add К and П in primer order, classifying them as consonants; read new CV aloud from print, VC, then CVC combinations and decodable
-      words and names (коса, Павлик, Поліна, Панас), keeping the source words inside the taught inventory. Teacher models the exact printed CV/VC/CVC
-      rows, before-І contrast and complete word pairs offline; the learner reads aloud and copies their source models. Retained letter videos
-      model only the named letters, not these exact combinations.'
-    introduces: {letters: [К, П], grammar: [], vocabulary: []}
-    uses: {grammar: [G-a1-001, G-a1-002], vocabulary: [W-079, W-080]}
-    evidence: [T-016, T-017, X-003, X-004, X-005, V-014, V-015]
+    teach: 'Add К and П in primer order, classifying them as consonants; read new CV aloud from print, VC, then CVC combinations and decodable words and names (коса,
+      Павлик, Поліна, Панас), keeping the source words inside the taught inventory. Teacher models the exact printed CV/VC/CVC rows, before-І contrast and complete
+      word pairs offline; the learner reads aloud and copies their source models. Retained letter videos model only the named letters, not these exact combinations.
+      Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings a print-reading or scored
+      stimulus. After П, model W-089 писали, писала and писав as English-supported whole writing chunks; all their letters are now taught, with no tense/person analysis.
+      Model the decodable W-006 participant-group pronoun alongside the writing chunks, with English support and no grammar analysis.'
+    introduces: {letters: [К, П], grammar: [], vocabulary: [W-089, W-006]}
+    uses: {grammar: [G-a1-001, G-a1-002], vocabulary: []}
+    evidence:
+    - T-016
+    - T-017
+    - X-003
+    - X-004
+    - X-005
+    - V-014
+    - V-015
+    - T-036
     practice:
     - a1
     - a2
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Add Р and read short words, contrasting рука with the incidental minimal pair ріка, and naming the soft sound heard before І without
-      explaining the formal palatalization system; explicitly override the Latin P-looking shape with the primer Р sound, then copy the model
-      words and a sourced personal name model by eye into a notebook (or one’s own name from a provided model). Replay the lesson-listed V/T single-letter
-      target pairs before the scored items; no exact primer syllable or word audio is inferred. Teacher models the exact printed CV/VC/CVC rows,
-      before-І contrast and complete word pairs offline; the learner reads aloud and copies their source models. Retained letter videos model
-      only the named letters, not these exact combinations. Display the attributed T-001 source before the dependent inline and workbook decisions;
-      retain paired English support.'
+    teach: 'Add Р and read short words, contrasting рука with the incidental minimal pair ріка, and naming the soft sound heard before І without explaining the formal
+      palatalization system; read Р by its cited native primer sound, then copy the model words and a sourced personal name model by eye into a notebook (or one’s
+      own name from a provided model). Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is
+      inferred. Teacher models the exact printed CV/VC/CVC rows, before-І contrast and complete word pairs offline; the learner reads aloud and copies their source
+      models. Retained letter videos model only the named letters, not these exact combinations. Display the attributed T-039 source before the dependent inline and
+      workbook decisions; retain paired English support. Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters;
+      do not make those spellings a print-reading or scored stimulus. Before recap model the first-person plural W-006 and W-089 past plural/feminine/masculine forms
+      as unanalyzed, English-supported writing chunks. All letters in ми, писали, писала, писав are now readable. Reuse the copying scene of X-005; do not teach tense,
+      person or agreement as a system.'
     introduces: {letters: [Р], grammar: [], vocabulary: [W-084]}
-    uses: {grammar: [G-a1-002], vocabulary: [W-081, W-082, W-083, W-089]}
-    evidence: [T-018, X-005, V-016, S-001, S-002, T-034, V-014, T-032, V-015, T-033, T-001]
+    uses: {grammar: [G-a1-002], vocabulary: [W-081, W-082, W-083]}
+    evidence:
+    - T-018
+    - X-005
+    - V-016
+    - S-001
+    - S-002
+    - T-034
+    - V-014
+    - T-032
+    - V-015
+    - T-033
+    - T-001
+    - T-039
+    - T-036
     practice:
     - a3
     - a4
@@ -573,65 +706,68 @@ lessons:
     needs: [video]
   - id: s3
     kind: practice
-    teach: Before consolidation display only the attributed public-textbook hosts T-001. Other evidence remains explains-only; these quotes
-      support the separate workbook decisions.
+    teach: Before consolidation display only the attributed public-textbook hosts T-039. Other evidence remains explains-only; these quotes support the separate
+      workbook decisions. Use English for action/category metalanguage whose Ukrainian spelling is still outside the taught letters; do not make those spellings
+      a print-reading or scored stimulus.
     uses:
       grammar: []
       vocabulary: []
     evidence:
-    - T-001
+    - T-039
+    - X-002
     practice: []
     needs:
     - quote
   consolidation: [a6, a7, a8]
   activities:
-  - {id: a1, type: letter-grid, placement: inline, focus: 'Read and copy К and П syllable rows into a notebook; copying practised offline — not
-      machine-verified.', model: X-003}
-  - {id: a2, type: pick-syllables, placement: inline, focus: 'Pick CV or VC syllables for the new letter group to complete decodable words and
-      names (коса, Павлик, Поліна).', model: X-004}
-  - {id: a3, type: watch-and-repeat, placement: inline, focus: 'Hear and repeat Р before reading its Latin P-looking shape.'}
-  - {id: a4, type: quiz, placement: inline, focus: "Distinguish Р, К and П from their native sound models after all three introductions. Required
-      item kind: listening; each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence
-      pairs: V-016/T-034, V-014/T-032, V-015/T-033. Present each whole dedicated recording (segment: null) before its item. Use every declared
-      target, vary both correct glyphs and key positions, and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations
-      remain separate offline teaching; they are not listening answer classes."}
-  - {id: a5, type: letter-grid, placement: inline, focus: 'Display model words and a sourced personal-name copying frame; copy both by hand, not
-      into a keyboard; practised offline — not machine-verified.', model: X-005}
-  - {id: a6, type: pick-syllables, placement: workbook, focus: 'Complete newly readable short words and names by selecting missing syllables formed
-      with К, П, and Р (коса, Павлик, Поліна, рука). Include the complete printed W-084 рука and W-085 ріка models after Р is introduced, and
-      select their distinguishing ру / рі unit plus the common ка to reproduce each intact word. This is scored print/syllable discrimination,
-      not word meaning or recorded-word recognition; the teacher models both words before offline read-aloud. Keep the exact verified source forms
-      and progress from class repair to active assembly.', model: X-004}
-  - {id: a7, type: match-up, placement: workbook, focus: 'Match taught core decodable word forms (мама, малина, слива, рука) to English glosses
-      using bound W records; drills only core decodable vocabulary.'}
+  - {id: a1, type: letter-grid, placement: inline, focus: 'Read and copy К and П syllable rows into a notebook; copying practised offline — not machine-verified.',
+    model: X-003}
+  - {id: a2, type: pick-syllables, placement: inline, focus: 'Use the exact T-036 source segmentations of W-098 and W-099 after К/П are introduced. Select their missing
+      initial syllables: Пав-лик gives Пав and По-лі-на gives По. The keys differ; canonical whole forms come from the W records. X-004 supplies missing-syllable
+      methodology only, not these word rows.', model: X-004}
+  - {id: a3, type: watch-and-repeat, placement: inline, focus: 'Hear and repeat the source-modeled Р sound before reading its printed glyph.'}
+  - {id: a4, type: quiz, placement: inline, focus: "Distinguish Р, К and П from their native sound models after all three introductions. Required item kind: listening;
+      each item binds host {kind: video, ref: V-id} and target_record equal to the supported glyph. Aligned video/print-evidence pairs: V-016/T-034, V-014/T-032,
+      V-015/T-033. Present each whole dedicated recording (segment: null) before its item. Use every declared target, vary both correct glyphs and key positions,
+      and choose only taught single glyphs. Latin-shape, sound-class and hard/soft explanations remain separate offline teaching; they are not listening answer classes."}
+  - {id: a5, type: letter-grid, placement: inline, focus: 'Display model words and a sourced personal-name copying frame; copy both by hand, not into a keyboard;
+      practised offline — not machine-verified.', model: X-005}
+  - {id: a6, type: pick-syllables, placement: workbook, focus: 'Select missing final syllables in the exact T-036 source W-098 and W-099 segmentations: Пав-лик gives
+      лик and По-лі-на gives на. These two substantive keys differ from the initial-syllable task a2; no guessed рука/ріка or коса boundary. Teacher-supported whole-word
+      read-aloud precedes selection.', model: X-004}
+  - {id: a7, type: match-up, placement: workbook, focus: 'Match taught core decodable word forms (мама, малина, слива, рука) to English glosses using bound W records;
+      drills only core decodable vocabulary.'}
   - id: a8
     type: quiz
     placement: workbook
     model: X-002
-    focus: 'Sort mixed taught vowel and consonant glyphs including І, К, П and Р by T-001 [•]/[–]. kind: comprehension; host: {kind: quote, ref:
-      T-001}. Both class keys occur, progressing from lesson 4 repair to cumulative classification. Paired English supports each class label.'
+    focus: 'Sort mixed taught vowel and consonant glyphs including І, К, П and Р by T-001 [•]/[–]. kind: comprehension; host: {kind: quote, ref: T-039}. Both class
+      keys occur, progressing from lesson 4 repair to cumulative classification. Paired English supports each class label. T-039 supplies both source class names
+      and their symbols; English supports the explanatory words, which are not word-decoding targets.'
   videos:
-  - {evidence: V-014, use: 'Step s1 pronunciation model for consonant К.'}
-  - {evidence: V-015, use: 'Step s1 pronunciation model for consonant П.'}
-  - {evidence: V-016, use: 'Step s2 pronunciation model for consonant Р.'}
+  - evidence: V-014
+    use: 'Step s1 pronunciation model for consonant К.'
+  - evidence: V-015
+    use: 'Step s1 pronunciation model for consonant П.'
+  - evidence: V-016
+    use: 'Step s2 pronunciation model for consonant Р.'
   practice: {vocabulary: core, stress: [], patterns: [a2, a4, a6, a7, a8]}
 
 - n: 6
   slug: first-letters-recap
-  title: 'повторення'
+  title: 'ми писали'
   kind: recap
-  job: 'Recycle the module letters and words in a connected planned dialogue, answer Ukrainian-only questions about that exchange, and copy decodable
-    source-model lines and a model personal name offline; any bilingual story is unscored support.'
-  rationale: 'ULP S1 lesson 10 supplies the first-person side-by-side review shape; this recap introduces no language system or letter and recycles
-    previously taught word records including greetings, sound-letter terms, and vowel/consonant categories. A 170-word target keeps the story
-    and English alignment short, leaving the production task as notebook copying rather than unsupported machine scoring.'
+  job: 'Read one first-person plural bilingual literacy story about the narrator and family copying taught words, answer Ukrainian-only questions about that same
+    story, then perform one notebook copying task.'
+  rationale: 'ULP S1 lesson 10 supplies the first-person side-by-side review shape; this recap introduces no language system or letter and recycles previously taught
+    word records including greetings, sound-letter terms, and vowel/consonant categories. A 170-word target keeps the story and English alignment short, leaving the
+    production task as notebook copying rather than unsupported machine scoring.'
   word_target: 170
   inventory:
     grammar: []
     vocabulary:
       core: []
       incidental:
-      - {lemma: повторення, evidence: W-090}
       - {lemma: Іван, evidence: W-093}
       - lemma: вона
         evidence: W-004
@@ -649,47 +785,92 @@ lessons:
         evidence: W-155
       - lemma: сливка
         evidence: W-156
-      - lemma: кислий
-        evidence: W-157
       - lemma: син
         evidence: W-158
-      recycled: [W-074, W-075, W-076, W-077, W-078, W-079, W-080, W-081, W-082, W-083, W-084, W-086, W-087, W-088, W-089]
+      recycled:
+      - W-074
+      - W-075
+      - W-076
+      - W-081
+      - W-082
+      - W-083
+      - W-084
+      - W-089
+      - W-006
   steps:
   - id: s1
     kind: recap
-    teach: 'Recall both whole greetings by ear, then present the planned two-speaker dialogue grounded in T-036 before a2. Use the verified canonical,
-      unhyphenated forms of the source complete turns through the mother’s complete negative reply; never complete the primer’s later blank or
-      claim the new dialogue is a verbatim quotation. Ukrainian first and aligned English support. Ask Ukrainian-only selection questions about
-      the spoken-to mother, the named fruit, and the mother’s answer; use decodable elliptical stems and different substantive answers, with all
-      words in the allowlist. The writer’s first-person bilingual literacy story may remain separate, unscored support only; T-005 supplies methodology
-      through explains, never a quote or scored host. Finish the existing notebook task using only the 13 taught letters.'
-    uses: {grammar: [], vocabulary: [W-074, W-075, W-076, W-077, W-078, W-079, W-080, W-081, W-082, W-083, W-084, W-086, W-087, W-088, W-089]}
-    evidence: [T-005, T-002, X-005, S-001, S-002, T-036]
-    practice: [a1, a2, a3]
+    teach: Present one mandatory short first-person plural story, Ukrainian-left/English-right, narrated by W-099. Open with W-006 plus the modeled W-089 past
+      plural writing chunk. Bind the narrator to the W-081 written word, W-098 to W-083, and W-081 as a family member to W-082. These three copied-word
+      associations determine the answer keys; the narrator participates in the group. Use only the modeled W-089 past forms, the named actors, the three quoted
+      word labels and the thirteen taught letters. T-005 explains the first-person bilingual D4 shape; never quote premium notes. The single-speaker dialogue
+      block is this story, not an optional appendix or a two-person exchange. Display it before a2.
+    uses:
+      grammar: []
+      vocabulary:
+      - W-006
+      - W-081
+      - W-082
+      - W-083
+      - W-089
+    evidence:
+    - T-005
+    - T-036
+    - X-005
+    practice:
+    - a1
+    - a2
+  - id: s2
+    kind: recap
+    teach: After a2, perform the single notebook production task on the story words and a sourced personal-name model. English-supported recall may revisit the
+      intact recorded greetings, never their undecodable spelling as a print target. No new letter, vocabulary lesson or grammatical analysis.
+    uses:
+      grammar: []
+      vocabulary:
+      - W-081
+      - W-082
+      - W-083
+      - W-084
+      - W-074
+      - W-075
+      - W-076
+    evidence:
+    - X-005
+    - S-001
+    - S-002
+    - V-001
+    - V-002
+    practice:
+    - a3
+    needs:
+    - video
   activities:
-  - {id: a1, type: observe, placement: inline, focus: 'Read the new planned dialogue after its Ukrainian-first/English-supported presentation;
-      optionally retain the writer’s bilingual literacy story as separate unscored support. Recycle sound/letter and vowel/consonant distinctions
-      in English-supported recall.'}
-  - {id: a2, type: quiz, placement: inline, focus: 'kind: comprehension; host: {kind: dialogue}. Dialogue block precedes a2 in s1. Ukrainian-only
-      decodable selection questions about the mother, the plum and the source answer, with different substantive keys; no question about the optional
-      bilingual story.'}
-  - {id: a3, type: letter-grid, placement: inline, focus: 'Display the decodable recap lines written only with the 13 taught letters and the model
-      name frame for one notebook production task: copy the lines and model name; practised offline — not machine-verified.', model: X-005}
+  - {id: a1, type: observe, placement: inline, focus: 'Read the mandatory first-person plural literacy story in its Ukrainian-left/English-right alignment. The W-099
+      narrator participates in the W-006 group; W-089 forms are modeled before recap. This story is the single-speaker dialogue host for a2, not unscored optional
+      support.'}
+  - {id: a2, type: quiz, placement: inline, focus: 'kind: comprehension; host: {kind: dialogue}. The mandatory first-person bilingual story block precedes a2 in s1.
+      Use Ukrainian-only decodable actor-label elliptical questions; the narrator W-099 wrote W-081, W-098 wrote W-083, and the mother W-081 wrote W-082. Required
+      word keys мама, слива, малина vary, and answers depend on the displayed story. No untaught question word, greeting spelling or optional host.'}
+  - {id: a3, type: letter-grid, placement: inline, focus: 'Display the decodable recap lines written only with the 13 taught letters and the model name frame for
+      one notebook production task: copy the lines and model name; practised offline — not machine-verified.', model: X-005}
   practice: {vocabulary: core, stress: [], patterns: [a2]}
   dialogue:
     step: s1
-    situation: Pavlyk asks his mother about the plum beside them, as in the primer exchange; she answers his sourness question.
-    setting: Beside the plum tree of the primer scene; no new place name.
+    situation: One participant narrates the group's notebook writing; first-person plural, with aligned English.
+    setting: A notebook-writing session using the already modeled X-005 copying task.
     speakers:
-    - name: Павлик
-      role: child
-      gender: m
-      evidence: W-098
-    - name: мама
-      role: mother
+    - name: Поліна
+      role: first-person narrator participating in the group
       gender: f
-      evidence: W-081
+      evidence: W-099
     register: informal
-    target_grammar: Understand and respond to the complete sourced turns using known word forms as chunks, with no case/agreement teaching.
+    target_grammar: W-006 and previously modeled W-089 past forms are whole chunks; no tense or agreement teaching.
     evidence:
+    - T-005
     - T-036
+    - X-005
+  videos:
+  - evidence: V-001
+    use: Optional intact informal greeting recall after story comprehension; no spelling decoding.
+  - evidence: V-002
+    use: Optional intact formal greeting recall after story comprehension; no spelling decoding.

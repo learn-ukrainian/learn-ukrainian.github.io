@@ -6,12 +6,10 @@ texts:
     table: textbooks
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
   span:
-    first_words: 'ь
-
-      Бачу ь (м’який знак).'
+    first_words: тин [–• – ]
     last_words: рись [–• = ]
-  supports: 'Primer part 1, printed p. 102 (catalog heading p. 104): the soft sign and the sourced hard/soft pairs тин/тінь, син/синь and
-    рис/рись. This held-back letter precedes the part-2 inventory.'
+  supports: 'Primer part 1, printed p. 102 (catalog heading p. 104): the soft sign and the sourced hard/soft pairs тин/тінь, син/синь and рис/рись. This held-back
+    letter precedes the part-2 inventory.'
 - id: T-002
   source:
     table: textbooks
@@ -87,10 +85,8 @@ texts:
     table: textbooks
     chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0065
   span:
-    first_words: 'дз
-
-      Бачу Дз, дз (дз).'
-    last_words: дзвонила
+    first_words: Чую [дз], [дз′].
+    last_words: Чую [дз], [дз′].
   supports: 'Primer part 2, printed p. 66 (catalog heading p. 68): дз follows дж and has hard and soft sound models [дз] and [дз′].'
 - id: T-011
   source:
@@ -380,6 +376,39 @@ texts:
     first_words: моє [мойе]
     last_words: моє [мойе]
   supports: Two-sound Є after a vowel; exact source transcription.
+- id: T-044
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+  span:
+    first_words: '[ й у р|т а ]'
+    last_words: '[ л′ у|п и н ]'
+  supports: Only the clean юрта/люпин source transcriptions; the source spaces and word schemes are retained, never repaired by hand.
+- id: T-045
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0047
+  span:
+    first_words: кує квітує
+    last_words: '[ к в′ і|т у| й е ]'
+  supports: Clean complete Є word/value models and source transcriptions; exclude OCR picture grids, watermark and broken poem.
+- id: T-046
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0065
+  span:
+    first_words: дзвінкий
+    last_words: дзвонила
+  supports: Clean complete дз word row, including the attested present W-135 form; no letter-stripped picture fragments.
+- id: T-047
+  source:
+    table: textbooks
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0017
+  span:
+    first_words: У слові стільки складів
+    last_words: звуків.
+  supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains only; English scaffolding teaches
+    the rule before scoring.
 exercises:
 - id: X-001
   source:
@@ -457,7 +486,7 @@ exercises:
   pattern: Classify the taught sound represented by a letter using the primer vowel and consonant symbols.
 standard:
 - id: S-001
-  lines: 585-586
+  lines: 571-572
 unsupported:
 - claim: The required named English-speaker teaching point classifying Ф as a visual look-alike has no identified supporting T- or X-
     source. T-008 establishes the native glyph and sound, T-012 establishes the alphabet table, and T-018 establishes F/ph-to-ф
@@ -484,25 +513,24 @@ unsupported:
   resolved_by: 'Requirement withdrawn by the accountable driver (issue #8425, driver update 2026-09-30): no identified source supports a
     visual look-alike claim about Ф, so the module asserts none. Ф''s glyph, sound and decodable words remain taught from T-008, T-012, T-013
     and T-018.'
-- claim: The required Standard alphabet citation at canonical newline-numbered lines 571-572 cannot be built correctly by this base.
-    S-001 requested 571-572 but contains a blank line and the heading for Catalog V instead of the alphabet requirement. The canonical
-    file hash is 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac. scripts/curriculum/evidence/sources.py
-    get_standard_lines() uses str.splitlines(), which also treats the file form-feed page breaks as line separators. S-001 is retained
-    as diagnostic evidence of the incorrect extraction, not as alphabet coverage. The request does not substitute another range;
-    correcting the helper is outside this packet owned paths.
+- claim: The required Standard alphabet citation at canonical newline-numbered lines 571-572 cannot be built correctly by this base. S-001 requested 571-572 but
+    contains a blank line and the heading for Catalog V instead of the alphabet requirement. The canonical file hash is
+    29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac. scripts/curriculum/evidence/sources.py get_standard_lines() uses str.splitlines(), which
+    also treats the file form-feed page breaks as line separators. S-001 is retained as diagnostic evidence of the incorrect extraction, not as alphabet
+    coverage. The request does not substitute another range; correcting the helper is outside this packet owned paths.
   id: U-002
   searches:
-  - query: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:571-572 contains section 4.1.1 on the Ukrainian alphabet, printed and
-      handwritten letters, uppercase and lowercase letters.
+  - query: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:571-572 contains section 4.1.1 on the Ukrainian alphabet, printed and handwritten letters, uppercase
+      and lowercase letters.
     tool: nl -ba on canonical Standard text
-  - query: 'read_text().split(newline) versus read_text().splitlines() at one-based indices 571-572: the first gives the alphabet requirement;
-      the second gives a blank line and the Catalog V heading.'
+  - query: 'read_text().split(newline) versus read_text().splitlines() at one-based indices 571-572: the first gives the alphabet requirement; the second gives a
+      blank line and the Catalog V heading.'
     tool: read-only canonical text comparison
-  - query: scripts/curriculum/evidence/sources.py:992-997 get_standard_lines() calls content.splitlines(); build-pack writes the
-      resulting wrong slice into S-001 and pack-verify confirms that same slice.
+  - query: scripts/curriculum/evidence/sources.py:992-997 get_standard_lines() calls content.splitlines(); build-pack writes the resulting wrong slice into
+      S-001 and pack-verify confirms that same slice.
     tool: read-only source inspection
-  resolved_by:
-    record: S-001
+  resolved_by: 'Request locators now use canonical LF-numbered Standard lines. The #9487 r3 engine lane implements the corresponding builder/verifier correction;
+    this content packet makes no engine edit. Rebuild with that merged engine before accepting Standard locator proof.'
 - id: U-003
   claim: No confirmed free recording models both W-119 and W-120 as the intact T-001/X-001 hard/soft pair required by lesson 1
     s1/a1/a3/a5. V-001 has other example words and V-007 is generic hard/soft support; the corpus occurrence resembling W-119 is a

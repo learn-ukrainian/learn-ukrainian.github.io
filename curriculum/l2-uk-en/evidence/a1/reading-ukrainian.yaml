@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 3fde66114438177228d094d1928a6936981f0f77
+  mcp_commit: d8e41c36769a34fa930a6d1be305c1b3186eaa75
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 6d488159bc0ee7e78a2f40b7eb803fcc8046ec96c45fb68efff37930272edd91
+  sources_db: 39d1ea1da76e7da2e68b2f70d262661069f57cc3549aa4c1345fbe53570a3729
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -1554,6 +1554,48 @@ texts:
     section_id: 38931
   supports: Exact capital/small heading for taught letter А; listening target and visible-glyph discrimination only, not a
     whole-word recording.
+- id: T-041
+  quote: Та-то
+  sha256: 2cdb1268a00262aa83e6b269b7965c817f55ffcc16d3cd3efce847c85b6a3799
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 88
+    row_sha256: 3d99901d08c101c5efaea24ceaebc0d231698cbc5b20df24af6e5265fed04da9
+    section_id: 13035
+  supports: The exact two distinct syllables of core W-101; no full-page OCR host or guessed split.
+- id: T-042
+  quote: Зи-ма
+  sha256: d057d23f83859d3b2d8aaa28e3dc2b94504c3a4a8589f09abf21795fd5570b8f
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0096
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 100
+    row_sha256: 2b1b8286bc46f4e3a53deddd47968362297f38dca1026157888f2e54a76ab0a3
+    section_id: 13047
+  supports: Exact source segmentation of the recycled winter word; two different source syllables for assembly.
+- id: T-043
+  quote: 'У слові стільки складів, скільки в ньому голосних
+
+    звуків.'
+  sha256: 96a62c2950c3ea1f17089e43c40cd2fb9a693645425ce28b060baef393ba9958
+  source:
+    author: vashulenko
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0017
+    file: 2-klas-ukrmova-vashulenko-2019-1
+    grade: '2'
+    kind: textbook
+    page: 19
+    row_sha256: 65a0648c5e87f716f7553c9476a6b4cc87f79d00903d1acbe42804e697f45783
+    section_id: 22017
+  supports: The explicit vowel-nucleus syllable-count rule, without any instruction to divide clusters. Methodology explains
+    only; English scaffolding teaches the rule before scoring.
 unsupported:
 - claim: An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or a typical English-reader
     difficulty for each). The sources give each Ukrainian sound (primer "Чую [ж]" lines, T-010 to T-014) and a native pronunciation

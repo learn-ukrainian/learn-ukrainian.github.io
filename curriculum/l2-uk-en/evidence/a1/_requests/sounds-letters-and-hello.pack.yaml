@@ -3,7 +3,7 @@ module: a1/sounds-letters-and-hello
 texts:
 - id: T-001
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012}
-  span: {first_words: 'Мовні звуки: голосні та приголосні', last_words: 'Вимов приголосні звуки в словах — назвах'}
+  span: {first_words: 'Мовні звуки: голосні та приголосні', last_words: 'Який це звук? Голосний звук позначаємо так: [•].'}
   supports: 'Hear and say the initial sound before naming vowel and consonant classes; primer printed page 13.'
 - id: T-002
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w001}
@@ -239,6 +239,23 @@ texts:
     last_words: льованого предмета на склади?
   supports: 'Primer printed p.15: find the incorrect analysis and repair it. Model methodology only; the fresh tasks correct source-symbol
     assignments or vowel counts, never invent misspelled Ukrainian words or untaught cluster boundaries.'
+- id: T-039
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+  span:
+    first_words: 'Мовні звуки: голосні та приголосні'
+    last_words: 'мо так: [–].'
+  supports: Full source statement of both sound classes and their [•]/[–] symbols; original line-end typesetting wraps are retained, not OCR word damage.
+- id: T-040
+  source:
+    table: textbooks
+    chunk_id: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0020
+  span:
+    first_words: Добрий день!
+    last_words: Добрий день!
+  supports: A clean public grade-1 greeting utterance for the separate formal model. T-003/T-021 establish the register through explains only; V-002 supplies
+    the intact recorded chunk.
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
@@ -254,7 +271,7 @@ exercises:
   pattern: 'Read and copy a consonant-vowel table followed by a vowel-consonant table.'
 - id: X-004
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077}
-  span: {first_words: 'Відшукай «загублений» склад у словах', last_words: 'со- __ ма-, -ва, -ла'}
+  span: {first_words: 'Відшукай «загублений» склад у словах', last_words: '__ -ва -ни, ва-, сли-'}
   pattern: 'Pick a missing syllable from a bounded list to complete a known word.'
 - id: X-005
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077}
@@ -434,9 +451,9 @@ videos:
     words: []
     segment:
 standard:
-- {id: S-001, lines: '351-353'}
-- {id: S-002, lines: '357-359'}
-- {id: S-003, lines: '430-432'}
+- {id: S-001, lines: '342-344'}
+- {id: S-002, lines: '348-350'}
+- {id: S-003, lines: '419-421'}
 unsupported:
 - id: U-001
   claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and lesson 5
