@@ -18,6 +18,7 @@ import yaml
 from scripts.build.fresh.cli import _build_parser, main
 from scripts.build.fresh.manifest import learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.path_guard import checked_path
+from scripts.build.fresh.regeneration import writer_task_id
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.learner_state.planned import planned_state
 from scripts.review.prompts.render import ManifestReader, _learner_state_context
@@ -504,7 +505,9 @@ result_path.write_text('''```yaml
     assert draft_file.is_file()
     meta = yaml.safe_load(draft_file.with_name("lesson-1.writer.yaml").read_text())
     assert meta["effort"] == "unknown"
-    assert meta["task_id"] == "write-a1-synthetic-mod-1-1" + (f"-{effort}" if effort else "")
+    assert meta["task_id"] == writer_task_id(
+        "a1", "synthetic-mod", 1, 1, effort, {"prompt_sha256": meta["prompt_sha256"]}
+    )
 
 
 def test_cli_recap_render_prompt_and_write(tmp_path, capsys):

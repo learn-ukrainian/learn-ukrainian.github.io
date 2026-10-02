@@ -152,7 +152,7 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                     try:
                         writer_dispatch(writer=agent, model=model, level=level, slug=slug, lesson_n=n,
                                     prompt_file=prompt_path, prompt_sha256=prompt_sha, output_dir=state_dir,
-                                    preflight_result=preflight, attempt=ledger["regenerations"] + 1,
+                                    preflight_result=preflight, attempt=ledger["regenerations"] + 1, inputs=current,
                                     plan_activity_types={a["id"]: a["type"] for a in entry.get("activities") or []},
                                     repo_root=repo_root)
                     except (OSError, ValueError, KeyError, TypeError, WriterCallError) as err:

@@ -4,7 +4,7 @@ The writer call:
 - takes explicit --writer {claude,codex,agy} (code never auto-routes)
 - requires preflight result: refuses structurally unless preflight passed (#8431 §7 row 0)
 - runs scripts/delegate.py dispatch --agent <writer> --mode read-only --worktree
-  --task-id write-<level>-<slug>-<n>-<attempt> --prompt-file ... --research-role writer
+  --task-id write-<level>-<slug>-<n>-<attempt>-<inputs digest>[-<effort>] --prompt-file ... --research-role writer
 - runs delegate.py wait <task-id> (wait is mandatory before reading result)
 - forwards explicit effort only when supplied; completed task effort is recorded or unknown
 - fails if wait reports non-done status
@@ -22,7 +22,7 @@ import datetime
 import json
 import subprocess
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -112,6 +112,7 @@ def dispatch_writer(
     schemas_dir: Path | None = None,
     model: str | None = None,
     effort: str | None = None,
+    inputs: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Execute the writer call, wait for completion, parse and validate the draft.
 
@@ -119,6 +120,8 @@ def dispatch_writer(
     Saves raw reply and seat metadata before schema validation so provenance is preserved
     even on schema failure (#8431 §1, Finding 11).
     Fake seats may write <task-id>.json beside their result to supply resolved model/effort.
+    ``inputs`` is the regeneration ledger's input snapshot; its digest keys the task ID (#8425). Without it
+    the prompt hash alone keys it.
     """
     # 0. Structural preflight gate (#8431 §7 row 0, Finding 4)
     if preflight_result is None or not preflight_result.passed:
@@ -130,7 +133,11 @@ def dispatch_writer(
         raise ValueError(f"Invalid writer effort {effort!r}. Expected one of {WRITER_EFFORTS}.")
 
     root = repo_root or REPO_ROOT
-    task_id = writer_task_id(level, slug, lesson_n, attempt, effort)
+    if inputs is None:
+        inputs = {"prompt_sha256": prompt_sha256}
+    elif inputs.get("prompt_sha256") != prompt_sha256:
+        raise ValueError("Writer inputs snapshot does not match prompt_sha256.")
+    task_id = writer_task_id(level, slug, lesson_n, attempt, effort, inputs)
     del_script = delegate_script or (root / "scripts/delegate.py")
 
     output_dir = Path(output_dir)
