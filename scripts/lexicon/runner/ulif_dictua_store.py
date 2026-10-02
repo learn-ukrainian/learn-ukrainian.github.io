@@ -1,8 +1,8 @@
 """Homonym-safe ULIF entry table for the runner's own SQLite store.
 
 The legacy crawler previously wrote ``ulif_entries`` (one row per spelling) in
-standalone crawl databases (e.g. ``data/ulif_dump.db``). The legacy
-``data/ulif_dump_all.db`` is retired. Canonical entries live in ``sources.db``
+standalone crawl databases (e.g. ``data/ulif_dump.db``). Legacy standalone
+dumps are retired. Canonical entries live in ``sources.db``
 under ``ulif_dictua_entries`` keyed by ``(normalized_query, homonym_index)``.
 """
 
