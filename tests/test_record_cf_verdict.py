@@ -373,6 +373,7 @@ def test_missing_task_record_fails_closed_for_multifamily_harnesses(monkeypatch,
         ("/checkout-other/private.py", "/checkout-other/private.py"),
         ("/else/checkout/scripts/unit.py", "/else/checkout/scripts/unit.py"),
         ("/checkout/../private.py", "/checkout/../private.py"),
+        ("/checkout/scripts/cafe\u0301.py", "/checkout/scripts/cafe\u0301.py"),
         ("https://example.test/checkout/scripts/unit.py", "https://example.test/checkout/scripts/unit.py"),
     ],
 )
@@ -382,13 +383,64 @@ def test_repository_relative_reply_preserves_citations_and_outside_text(text, ex
 
 
 @pytest.mark.parametrize("checkout", [
-    {"worktree_path": "/review"}, {"worktree_path": "/review", "cwd": "/review/scripts"},
-    {"worktree_path": "/review", "cwd": "/"},
+    {"worktree_path": "/checkout/.worktrees/review"},
+    {"worktree_path": "/checkout/.worktrees/review", "cwd": "/review/scripts"},
+    {"worktree_path": "/checkout/.worktrees/review", "cwd": "/"},
+    {"worktree_path": "/checkout"},
 ])
 def test_repository_relative_reply_uses_recorded_checkout(checkout):
     assert recorder.repository_relative_reply(
-        "/review/scripts/unit.py:12", task=checkout, primary_root=Path("/checkout")
+        f"{checkout['worktree_path']}/scripts/unit.py:12", task=checkout, primary_root=Path("/checkout")
     ) == "scripts/unit.py:12"
+
+
+@pytest.mark.parametrize("checkout", ["/review", "/checkout-other", "/else/checkout"])
+def test_repository_relative_reply_refuses_roots_outside_primary(checkout):
+    text = f"{checkout}/scripts/unit.py /checkout/scripts/unit.py"
+    assert recorder.repository_relative_reply(text, task={"worktree_path": checkout}, primary_root=Path("/checkout")) == (
+        f"{checkout}/scripts/unit.py scripts/unit.py"
+    )
+
+
+def test_repository_relative_reply_refuses_worktree_root_resolving_outside_primary(tmp_path):
+    root = tmp_path / "checkout"
+    worktree = root / ".worktrees" / "review"
+    worktree.parent.mkdir(parents=True)
+    worktree.symlink_to(tmp_path / "outside", target_is_directory=True)
+    text = f"{worktree}/scripts/unit.py {root}/scripts/unit.py"
+    assert recorder.repository_relative_reply(text, task={"worktree_path": str(worktree)}, primary_root=root) == (
+        f"{worktree}/scripts/unit.py scripts/unit.py"
+    )
+
+
+@pytest.mark.parametrize("checkout", ["primary", "worktree"])
+@pytest.mark.parametrize(
+    "suffix",
+    [
+        pytest.param("/\uff0e\uff0e/private/unit.py", id="fullwidth-dots"),
+        pytest.param("/.\u200b./private/unit.py", id="zero-width-dots"),
+        pytest.param("/\u2024\u2024/private/unit.py", id="one-dot-leaders"),
+        pytest.param("/\u2025/private/unit.py", id="two-dot-leader"),
+        pytest.param("/a.py\uff0fsrv\uff0fdata\uff0fx", id="fullwidth-slashes"),
+        pytest.param("/a.py\uff3csrv\uff3cdata\uff3cx", id="fullwidth-backslashes"),
+        pytest.param("/a.py\uff5c/srv/data/x", id="fullwidth-pipe"),
+        pytest.param("/a.py\ufe54/srv/data/x", id="small-semicolon"),
+    ],
+)
+def test_repository_relative_reply_unicode_paths_still_refuse_real_scanner(checkout, suffix):
+    from scripts.opsec import prepublish as gate
+    from tests.test_opsec_prepublish import real_tooling
+
+    tooling = real_tooling()
+    primary = gate.primary_root()
+    worktree = primary / ".worktrees/dispatch/cursor/review"
+    root = primary if checkout == "primary" else worktree
+    reply = f"VERDICT: APPROVE\n`{root}{suffix}:12`"
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=primary)
+    for text in (reply, rewritten):
+        with pytest.raises(gate.PublishBlocked, match="OPSEC blocked"):
+            gate.check_texts("github.com/unit/public", [text], tooling=tooling, environment={})
+    assert rewritten == reply
 
 
 @pytest.mark.parametrize("checkout", [{"cwd": "/"}, {"cwd": "/review"}, {"worktree_path": "/"}, {"worktree_path": "/repo"}])
@@ -461,6 +513,9 @@ def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path):
         ("VERDICT: APPROVE\n/checkout/scripts/unit.py /outside/private.py:12", True),
         ("VERDICT: APPROVE\n/checkout-other/private.py", True),
         ("VERDICT: APPROVE\n/checkout/../private.py", True),
+        ("VERDICT: APPROVE\n/checkout/\uff0e\uff0e/private.py", True),
+        ("VERDICT: APPROVE\n/checkout/.\u200b./private.py", True),
+        ("VERDICT: APPROVE\n/checkout/a.py\uff0fsrv\uff0fdata\uff0fx", True),
         ("VERDICT: APPROVE\n/checkout/scripts/unit.py\nSENTINEL-HOST-TOKEN", True),
         *[(f"VERDICT: APPROVE\n/checkout/scripts/unit.py{separator}/outside/x", True)
           for separator in "|=\\*;&<>\"'()[]{}"],

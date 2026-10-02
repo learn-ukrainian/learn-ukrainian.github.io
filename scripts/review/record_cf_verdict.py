@@ -22,7 +22,7 @@ from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
-from scripts.opsec.prepublish import publication_boundary, publication_cli
+from scripts.opsec.prepublish import normalize_for_scan, publication_boundary, publication_cli
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     SHA,
@@ -222,7 +222,13 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
         roots.insert(0, Path(checkout))
 
     def replace(match: re.Match[str]) -> str:
-        path = Path(match.group())
+        token = match.group()
+        normalized = normalize_for_scan(token)
+        # Leave altered tokens visible to the scanner: normalization can reveal
+        # traversal or separators that raw filesystem paths treat as literals.
+        if normalized != token:
+            return token
+        path = Path(normalized)
         # Do not hide an escape or change the meaning of a symlink/.. walk.
         if ".." in path.parts:
             return match.group()
@@ -232,9 +238,7 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
             try:
                 resolved_root = root.resolve()
                 resolved_primary = primary_root.resolve()
-                if resolved_root == Path(resolved_root.anchor) or (
-                    resolved_root != resolved_primary and resolved_primary.is_relative_to(resolved_root)
-                ):
+                if resolved_root == Path(resolved_root.anchor) or not resolved_root.is_relative_to(resolved_primary):
                     continue
                 if not path.resolve().is_relative_to(resolved_root):
                     return match.group()
