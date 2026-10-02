@@ -30,7 +30,7 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
 | **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high) first; Fable / Astra last resort; bounded envelopes use Sol only (§2) |
-| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (review/CF, not judge) |
+| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (code/infra CF only through the runtime-attested Cursor seat below critical, #9488; never a content judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
@@ -108,10 +108,29 @@ stampede one hot lane.
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / implementation only /
-k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). A valid operator reset
+**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / k3-256k / GLM
+(`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
+`resolve-reviewer` pick, which may be the attested Cursor Grok seat below critical (#9488). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
+
+**Credit-balance lanes (#9518):** a lane in `scripts/config/credit_lanes.yaml` whose plan allowance
+is at or below the near-cap threshold and whose fresh probe carries a positive credit balance shows
+as `credit_balance_present` in `capacity_pick`: credit balance present; draw not verified by the
+router. It is usable only while there is no evidence against it, ranked after plan-backed seats,
+with its balance, evidence, coverage and reset advice. The router follows one rule: one or more
+`rate_limited` runtime outcomes for the lane within `rate_limit_window_s` (60 minutes) while the
+plan window is exhausted read `credit_use_unconfirmed` and keep near_cap/AVOID. Missing, stale,
+naive-timestamp or non-numeric credit data also keep near_cap/AVOID. Admission is a separate question
+from the recommendation: whenever the plan window is at or below the threshold and a fresh positive
+balance exists (states `credit_balance_present`, `credit_use_unconfirmed` and `credits_unverified`
+from unreadable usage records), `delegate.py dispatch` refuses any model outside the lane allowlist
+(Codex: `gpt-6.1-sol`, `gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`, even when the router no
+longer recommends the lane. Nothing is gated with a healthy plan window, with no fresh positive
+balance (near cap without credits: unchanged), or on other lanes. A dispatch without `--model` is
+judged by the lane default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
+lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
+decision, and no tool consumes credits or resets.
 Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1
 first, Fable / Astra last resort.
 

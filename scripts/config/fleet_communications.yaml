@@ -24,7 +24,8 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 #   codex → gpt-6.1-sol @ high · claude → claude-sonnet-5-5 @ high · glm → glm-5.3 @ high (advisory max)
 #   claude formal pins also: claude-fable-5-1, claude-opus-5-5
 #   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
-#   grok → daily driver only; never formal review or judgment
+#   grok → daily driver only; native Grok never reviews or judges (Grok reviews code/infra
+#          only as the attested cursor grok-4.7-high seat below critical, #9488)
 #   agy → gemini-3.8-flash-high @ high (orchestrator seat; text-only ACP wrapper is not a formal-review route)
 # Codex advisory escalation: gpt-6.1-sol @ high; routine reviewer stays high.
 # Automatic authority Opus 5.5/Sol 6.1 selection stays on the critical ladder;
@@ -85,7 +86,9 @@ endpoints:
     retry_class: standard
     concurrency_limit: 1
     # Native Grok uses the hash-pinned sealed-review profile only when the
-    # parent supplies a validated exact-head MCP config.
+    # parent supplies a validated exact-head MCP config. Policy still refuses
+    # native Grok as a code/infra reviewer; Grok reviews only through the
+    # runtime-attested Cursor seat (#9488).
     formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver
   - name: kimi
@@ -111,9 +114,11 @@ endpoints:
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
-    # Harness multi-model seat; not a sealed formal CF identity. Cursor auto is
-    # never a model identity for formal review (model_catalog policy).
-    formal_review_eligible: false
+    # Multi-model harness: formal only for the concrete models the catalog pins
+    # on review_scheduler.endpoints.cursor (grok-4.7 dispatched as grok-4.7-high,
+    # its verdict accepted only from the runtime-reported model; #9488). Cursor
+    # auto, Composer and Cursor-routed Claude are never formal review identities.
+    formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver
   - name: gemini
     aliases: [gemini]

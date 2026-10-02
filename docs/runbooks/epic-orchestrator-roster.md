@@ -141,7 +141,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | agy | false |
 | claude | true |
 | codex | true |
-| cursor | false |
+| cursor | true |
 | gemini | false |
 | glm-local | true |
 | grok | true |

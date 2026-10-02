@@ -187,39 +187,6 @@ def _fixture_worktree_lock_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
-def dispatch_slice_probe(monkeypatch):
-    """Decouple these tests from the host's ``lu-dispatch.slice`` (#8891).
-
-    ``probe_isolation`` asks the host's systemd user manager whether the
-    dispatch slice can hold a worker. Where it can (and CI cannot),
-    ``cmd_dispatch`` takes the ``systemd-run --scope`` launch path, which
-    needs a real ``Popen`` surface (``poll()``, pipes, ``/proc``) that the
-    fake worker processes here do not provide. Default the probe to "not
-    ready" so every test takes the plain-``Popen`` path; a slice-path test
-    sets ``dispatch_slice_probe["ready"] = True`` instead.
-    ``LU_TEST_FORCE_DISPATCH_SCOPE=1`` forces that ready probe for a whole run
-    without asking the host. An ambient ``LU_DISPATCH_ISOLATION=fallback``
-    would override even a "ready" probe, so the fixture clears it; only the
-    test that exercises the forced fallback sets it again itself.
-    """
-    monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
-    state = {"ready": False, "reason": "test stub: host slice probe disabled"}
-    if os.environ.get("LU_TEST_FORCE_DISPATCH_SCOPE") == "1":
-        state["ready"] = True
-        state["reason"] = None
-
-    def _probe(env=None, **_kwargs):
-        source = os.environ if env is None else env
-        forced = delegate.dispatch_isolation._forced_fallback(source)
-        if forced is not None:
-            return forced
-        return delegate.dispatch_isolation.ProbeResult(ready=state["ready"], reason=state["reason"])
-
-    monkeypatch.setattr(delegate.dispatch_isolation, "probe_isolation", _probe)
-    return state
-
-
-@pytest.fixture(autouse=True)
 def _keep_delegate_unit_tests_local(monkeypatch):
     """Isolate delegate unit tests from a live checkout's VPS occupancy marker."""
     monkeypatch.setenv(job_host_exec.ENV_ALLOW_NOTEBOOK, "1")
@@ -11984,7 +11951,7 @@ def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tas
 
 def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
     _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
-    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args, **_kwargs: None)
 
     result = delegate._rescue_task(state_path, apply=False)
 

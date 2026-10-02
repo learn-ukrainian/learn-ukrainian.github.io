@@ -1,0 +1,1312 @@
+{
+  "quiz": {
+    "items": [
+      {
+        "question": "quiz items 0 question",
+        "options": [
+          {
+            "text": "quiz items 0 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 0 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 0 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 0 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 0 explanation"
+      },
+      {
+        "question": "quiz items 1 question",
+        "options": [
+          {
+            "text": "quiz items 1 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 1 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 1 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 1 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 1 explanation"
+      },
+      {
+        "question": "quiz items 2 question",
+        "options": [
+          {
+            "text": "quiz items 2 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 2 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 2 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 2 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 2 explanation"
+      },
+      {
+        "question": "quiz items 3 question",
+        "options": [
+          {
+            "text": "quiz items 3 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 3 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 3 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 3 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 3 explanation"
+      },
+      {
+        "question": "quiz items 4 question",
+        "options": [
+          {
+            "text": "quiz items 4 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 4 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 4 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 4 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 4 explanation"
+      },
+      {
+        "question": "quiz items 5 question",
+        "options": [
+          {
+            "text": "quiz items 5 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 5 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 5 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 5 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 5 explanation"
+      },
+      {
+        "question": "quiz items 6 question",
+        "options": [
+          {
+            "text": "quiz items 6 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 6 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 6 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 6 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 6 explanation"
+      },
+      {
+        "question": "quiz items 7 question",
+        "options": [
+          {
+            "text": "quiz items 7 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 7 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 7 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 7 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 7 explanation"
+      },
+      {
+        "question": "quiz items 8 question",
+        "options": [
+          {
+            "text": "quiz items 8 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 8 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 8 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 8 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 8 explanation"
+      },
+      {
+        "question": "quiz items 9 question",
+        "options": [
+          {
+            "text": "quiz items 9 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "quiz items 9 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 9 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "quiz items 9 options 3 text",
+            "correct": false
+          }
+        ],
+        "explanation": "quiz items 9 explanation"
+      }
+    ],
+    "instruction": "Instruction for quiz.",
+    "id": "a1"
+  },
+  "match-up": {
+    "instruction": "Instruction for match-up.",
+    "pairs": [
+      {
+        "left": "match up pairs 0 left",
+        "right": "match up pairs 0 right"
+      },
+      {
+        "left": "match up pairs 1 left",
+        "right": "match up pairs 1 right"
+      },
+      {
+        "left": "match up pairs 2 left",
+        "right": "match up pairs 2 right"
+      },
+      {
+        "left": "match up pairs 3 left",
+        "right": "match up pairs 3 right"
+      },
+      {
+        "left": "match up pairs 4 left",
+        "right": "match up pairs 4 right"
+      },
+      {
+        "left": "match up pairs 5 left",
+        "right": "match up pairs 5 right"
+      },
+      {
+        "left": "match up pairs 6 left",
+        "right": "match up pairs 6 right"
+      },
+      {
+        "left": "match up pairs 7 left",
+        "right": "match up pairs 7 right"
+      },
+      {
+        "left": "match up pairs 8 left",
+        "right": "match up pairs 8 right"
+      },
+      {
+        "left": "match up pairs 9 left",
+        "right": "match up pairs 9 right"
+      }
+    ],
+    "id": "a2"
+  },
+  "fill-in": {
+    "instruction": "Instruction for fill-in.",
+    "items": [
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 0 options 0",
+        "options": [
+          "fill in items 0 options 0",
+          "fill in items 0 options 1",
+          "fill in items 0 options 2",
+          "fill in items 0 options 3"
+        ],
+        "explanation": "fill in items 0 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 0 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 1 options 0",
+        "options": [
+          "fill in items 1 options 0",
+          "fill in items 1 options 1",
+          "fill in items 1 options 2",
+          "fill in items 1 options 3"
+        ],
+        "explanation": "fill in items 1 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 1 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 2 options 0",
+        "options": [
+          "fill in items 2 options 0",
+          "fill in items 2 options 1",
+          "fill in items 2 options 2",
+          "fill in items 2 options 3"
+        ],
+        "explanation": "fill in items 2 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 2 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 3 options 0",
+        "options": [
+          "fill in items 3 options 0",
+          "fill in items 3 options 1",
+          "fill in items 3 options 2",
+          "fill in items 3 options 3"
+        ],
+        "explanation": "fill in items 3 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 3 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 4 options 0",
+        "options": [
+          "fill in items 4 options 0",
+          "fill in items 4 options 1",
+          "fill in items 4 options 2",
+          "fill in items 4 options 3"
+        ],
+        "explanation": "fill in items 4 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 4 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 5 options 0",
+        "options": [
+          "fill in items 5 options 0",
+          "fill in items 5 options 1",
+          "fill in items 5 options 2",
+          "fill in items 5 options 3"
+        ],
+        "explanation": "fill in items 5 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 5 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 6 options 0",
+        "options": [
+          "fill in items 6 options 0",
+          "fill in items 6 options 1",
+          "fill in items 6 options 2",
+          "fill in items 6 options 3"
+        ],
+        "explanation": "fill in items 6 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 6 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 7 options 0",
+        "options": [
+          "fill in items 7 options 0",
+          "fill in items 7 options 1",
+          "fill in items 7 options 2",
+          "fill in items 7 options 3"
+        ],
+        "explanation": "fill in items 7 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 7 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 8 options 0",
+        "options": [
+          "fill in items 8 options 0",
+          "fill in items 8 options 1",
+          "fill in items 8 options 2",
+          "fill in items 8 options 3"
+        ],
+        "explanation": "fill in items 8 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 8 answer_tags"
+      },
+      {
+        "sentence": "Complete ____ here.",
+        "answer": "fill in items 9 options 0",
+        "options": [
+          "fill in items 9 options 0",
+          "fill in items 9 options 1",
+          "fill in items 9 options 2",
+          "fill in items 9 options 3"
+        ],
+        "explanation": "fill in items 9 explanation",
+        "mode": "form-choice",
+        "record": "W-1",
+        "answer_tags": "fill in items 9 answer_tags"
+      }
+    ],
+    "id": "a3"
+  },
+  "group-sort": {
+    "instruction": "Instruction for group-sort.",
+    "groups": [
+      {
+        "name": "group sort groups 0 name",
+        "items": [
+          "group sort groups 0 items 0"
+        ]
+      },
+      {
+        "name": "group sort groups 1 name",
+        "items": [
+          "group sort groups 1 items 0"
+        ]
+      }
+    ],
+    "id": "a4"
+  },
+  "unjumble": {
+    "items": [
+      {
+        "words": [
+          "unjumble items 0 words 0",
+          "unjumble items 0 words 1",
+          "unjumble items 0 words 2",
+          "unjumble items 0 words 3",
+          "unjumble items 0 words 4",
+          "unjumble items 0 words 5"
+        ],
+        "answer": "unjumble items 0 answer",
+        "explanation": "unjumble items 0 explanation"
+      },
+      {
+        "words": [
+          "unjumble items 1 words 0",
+          "unjumble items 1 words 1",
+          "unjumble items 1 words 2",
+          "unjumble items 1 words 3",
+          "unjumble items 1 words 4",
+          "unjumble items 1 words 5"
+        ],
+        "answer": "unjumble items 1 answer",
+        "explanation": "unjumble items 1 explanation"
+      },
+      {
+        "words": [
+          "unjumble items 2 words 0",
+          "unjumble items 2 words 1",
+          "unjumble items 2 words 2",
+          "unjumble items 2 words 3",
+          "unjumble items 2 words 4",
+          "unjumble items 2 words 5"
+        ],
+        "answer": "unjumble items 2 answer",
+        "explanation": "unjumble items 2 explanation"
+      },
+      {
+        "words": [
+          "unjumble items 3 words 0",
+          "unjumble items 3 words 1",
+          "unjumble items 3 words 2",
+          "unjumble items 3 words 3",
+          "unjumble items 3 words 4",
+          "unjumble items 3 words 5"
+        ],
+        "answer": "unjumble items 3 answer",
+        "explanation": "unjumble items 3 explanation"
+      },
+      {
+        "words": [
+          "unjumble items 4 words 0",
+          "unjumble items 4 words 1",
+          "unjumble items 4 words 2",
+          "unjumble items 4 words 3",
+          "unjumble items 4 words 4",
+          "unjumble items 4 words 5"
+        ],
+        "answer": "unjumble items 4 answer",
+        "explanation": "unjumble items 4 explanation"
+      },
+      {
+        "words": [
+          "unjumble items 5 words 0",
+          "unjumble items 5 words 1",
+          "unjumble items 5 words 2",
+          "unjumble items 5 words 3",
+          "unjumble items 5 words 4",
+          "unjumble items 5 words 5"
+        ],
+        "answer": "unjumble items 5 answer",
+        "explanation": "unjumble items 5 explanation"
+      },
+      {
+        "words": [
+          "unjumble items 6 words 0",
+          "unjumble items 6 words 1",
+          "unjumble items 6 words 2",
+          "unjumble items 6 words 3",
+          "unjumble items 6 words 4",
+          "unjumble items 6 words 5"
+        ],
+        "answer": "unjumble items 6 answer",
+        "explanation": "unjumble items 6 explanation"
+      },
+      {
+        "words": [
+          "unjumble items 7 words 0",
+          "unjumble items 7 words 1",
+          "unjumble items 7 words 2",
+          "unjumble items 7 words 3",
+          "unjumble items 7 words 4",
+          "unjumble items 7 words 5"
+        ],
+        "answer": "unjumble items 7 answer",
+        "explanation": "unjumble items 7 explanation"
+      }
+    ],
+    "instruction": "Instruction for unjumble.",
+    "id": "a5"
+  },
+  "true-false": {
+    "instruction": "Instruction for true-false.",
+    "items": [
+      {
+        "statement": "true false items 0 statement",
+        "correct": true,
+        "explanation": "true false items 0 explanation"
+      },
+      {
+        "statement": "true false items 1 statement",
+        "correct": true,
+        "explanation": "true false items 1 explanation"
+      },
+      {
+        "statement": "true false items 2 statement",
+        "correct": true,
+        "explanation": "true false items 2 explanation"
+      },
+      {
+        "statement": "true false items 3 statement",
+        "correct": true,
+        "explanation": "true false items 3 explanation"
+      },
+      {
+        "statement": "true false items 4 statement",
+        "correct": true,
+        "explanation": "true false items 4 explanation"
+      },
+      {
+        "statement": "true false items 5 statement",
+        "correct": true,
+        "explanation": "true false items 5 explanation"
+      },
+      {
+        "statement": "true false items 6 statement",
+        "correct": true,
+        "explanation": "true false items 6 explanation"
+      },
+      {
+        "statement": "true false items 7 statement",
+        "correct": true,
+        "explanation": "true false items 7 explanation"
+      },
+      {
+        "statement": "true false items 8 statement",
+        "correct": true,
+        "explanation": "true false items 8 explanation"
+      },
+      {
+        "statement": "true false items 9 statement",
+        "correct": true,
+        "explanation": "true false items 9 explanation"
+      }
+    ],
+    "id": "a6"
+  },
+  "cloze": {
+    "passage": "cloze passage",
+    "blanks": [
+      {
+        "id": 1,
+        "answer": "cloze blanks 0 answer",
+        "options": [
+          "cloze blanks 0 options 0",
+          "cloze blanks 0 options 1",
+          "cloze blanks 0 options 2",
+          "cloze blanks 0 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 1 answer",
+        "options": [
+          "cloze blanks 1 options 0",
+          "cloze blanks 1 options 1",
+          "cloze blanks 1 options 2",
+          "cloze blanks 1 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 2 answer",
+        "options": [
+          "cloze blanks 2 options 0",
+          "cloze blanks 2 options 1",
+          "cloze blanks 2 options 2",
+          "cloze blanks 2 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 3 answer",
+        "options": [
+          "cloze blanks 3 options 0",
+          "cloze blanks 3 options 1",
+          "cloze blanks 3 options 2",
+          "cloze blanks 3 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 4 answer",
+        "options": [
+          "cloze blanks 4 options 0",
+          "cloze blanks 4 options 1",
+          "cloze blanks 4 options 2",
+          "cloze blanks 4 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 5 answer",
+        "options": [
+          "cloze blanks 5 options 0",
+          "cloze blanks 5 options 1",
+          "cloze blanks 5 options 2",
+          "cloze blanks 5 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 6 answer",
+        "options": [
+          "cloze blanks 6 options 0",
+          "cloze blanks 6 options 1",
+          "cloze blanks 6 options 2",
+          "cloze blanks 6 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 7 answer",
+        "options": [
+          "cloze blanks 7 options 0",
+          "cloze blanks 7 options 1",
+          "cloze blanks 7 options 2",
+          "cloze blanks 7 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 8 answer",
+        "options": [
+          "cloze blanks 8 options 0",
+          "cloze blanks 8 options 1",
+          "cloze blanks 8 options 2",
+          "cloze blanks 8 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 9 answer",
+        "options": [
+          "cloze blanks 9 options 0",
+          "cloze blanks 9 options 1",
+          "cloze blanks 9 options 2",
+          "cloze blanks 9 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 10 answer",
+        "options": [
+          "cloze blanks 10 options 0",
+          "cloze blanks 10 options 1",
+          "cloze blanks 10 options 2",
+          "cloze blanks 10 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 11 answer",
+        "options": [
+          "cloze blanks 11 options 0",
+          "cloze blanks 11 options 1",
+          "cloze blanks 11 options 2",
+          "cloze blanks 11 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 12 answer",
+        "options": [
+          "cloze blanks 12 options 0",
+          "cloze blanks 12 options 1",
+          "cloze blanks 12 options 2",
+          "cloze blanks 12 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 13 answer",
+        "options": [
+          "cloze blanks 13 options 0",
+          "cloze blanks 13 options 1",
+          "cloze blanks 13 options 2",
+          "cloze blanks 13 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 14 answer",
+        "options": [
+          "cloze blanks 14 options 0",
+          "cloze blanks 14 options 1",
+          "cloze blanks 14 options 2",
+          "cloze blanks 14 options 3"
+        ]
+      },
+      {
+        "id": 1,
+        "answer": "cloze blanks 15 answer",
+        "options": [
+          "cloze blanks 15 options 0",
+          "cloze blanks 15 options 1",
+          "cloze blanks 15 options 2",
+          "cloze blanks 15 options 3"
+        ]
+      }
+    ],
+    "instruction": "Instruction for cloze.",
+    "id": "a7"
+  },
+  "error-correction": {
+    "instruction": "Instruction for error-correction.",
+    "items": [
+      {
+        "sentence": "Find error correction items 0 error here.",
+        "error": "error correction items 0 error",
+        "answer": "error correction items 0 options 0",
+        "options": [
+          "error correction items 0 options 0",
+          "error correction items 0 options 1",
+          "error correction items 0 options 2",
+          "error correction items 0 options 3"
+        ],
+        "explanation": "error correction items 0 explanation",
+        "correction": "error correction items 0 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 1 error here.",
+        "error": "error correction items 1 error",
+        "answer": "error correction items 1 options 0",
+        "options": [
+          "error correction items 1 options 0",
+          "error correction items 1 options 1",
+          "error correction items 1 options 2",
+          "error correction items 1 options 3"
+        ],
+        "explanation": "error correction items 1 explanation",
+        "correction": "error correction items 1 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 2 error here.",
+        "error": "error correction items 2 error",
+        "answer": "error correction items 2 options 0",
+        "options": [
+          "error correction items 2 options 0",
+          "error correction items 2 options 1",
+          "error correction items 2 options 2",
+          "error correction items 2 options 3"
+        ],
+        "explanation": "error correction items 2 explanation",
+        "correction": "error correction items 2 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 3 error here.",
+        "error": "error correction items 3 error",
+        "answer": "error correction items 3 options 0",
+        "options": [
+          "error correction items 3 options 0",
+          "error correction items 3 options 1",
+          "error correction items 3 options 2",
+          "error correction items 3 options 3"
+        ],
+        "explanation": "error correction items 3 explanation",
+        "correction": "error correction items 3 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 4 error here.",
+        "error": "error correction items 4 error",
+        "answer": "error correction items 4 options 0",
+        "options": [
+          "error correction items 4 options 0",
+          "error correction items 4 options 1",
+          "error correction items 4 options 2",
+          "error correction items 4 options 3"
+        ],
+        "explanation": "error correction items 4 explanation",
+        "correction": "error correction items 4 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 5 error here.",
+        "error": "error correction items 5 error",
+        "answer": "error correction items 5 options 0",
+        "options": [
+          "error correction items 5 options 0",
+          "error correction items 5 options 1",
+          "error correction items 5 options 2",
+          "error correction items 5 options 3"
+        ],
+        "explanation": "error correction items 5 explanation",
+        "correction": "error correction items 5 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 6 error here.",
+        "error": "error correction items 6 error",
+        "answer": "error correction items 6 options 0",
+        "options": [
+          "error correction items 6 options 0",
+          "error correction items 6 options 1",
+          "error correction items 6 options 2",
+          "error correction items 6 options 3"
+        ],
+        "explanation": "error correction items 6 explanation",
+        "correction": "error correction items 6 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 7 error here.",
+        "error": "error correction items 7 error",
+        "answer": "error correction items 7 options 0",
+        "options": [
+          "error correction items 7 options 0",
+          "error correction items 7 options 1",
+          "error correction items 7 options 2",
+          "error correction items 7 options 3"
+        ],
+        "explanation": "error correction items 7 explanation",
+        "correction": "error correction items 7 options 0",
+        "error_ref": "E-001"
+      },
+      {
+        "sentence": "Find error correction items 0 error here.",
+        "error": "error correction items 0 error",
+        "answer": "error correction items 0 options 0",
+        "options": [
+          "error correction items 0 options 0",
+          "error correction items 0 options 1",
+          "error correction items 0 options 2",
+          "error correction items 0 options 3"
+        ],
+        "explanation": "error correction items 0 explanation",
+        "error_ref": "E-001"
+      }
+    ],
+    "id": "a8"
+  },
+  "mark-the-words": {
+    "instruction": "Instruction for mark-the-words.",
+    "text": "mark the words text",
+    "answers": [
+      "mark the words answers 0"
+    ],
+    "id": "a9"
+  },
+  "select": {
+    "items": [
+      {
+        "question": "select items 0 question",
+        "options": [
+          {
+            "text": "select items 0 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 0 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 0 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 0 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 0 explanation"
+      },
+      {
+        "question": "select items 1 question",
+        "options": [
+          {
+            "text": "select items 1 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 1 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 1 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 1 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 1 explanation"
+      },
+      {
+        "question": "select items 2 question",
+        "options": [
+          {
+            "text": "select items 2 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 2 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 2 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 2 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 2 explanation"
+      },
+      {
+        "question": "select items 3 question",
+        "options": [
+          {
+            "text": "select items 3 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 3 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 3 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 3 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 3 explanation"
+      },
+      {
+        "question": "select items 4 question",
+        "options": [
+          {
+            "text": "select items 4 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 4 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 4 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 4 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 4 explanation"
+      },
+      {
+        "question": "select items 5 question",
+        "options": [
+          {
+            "text": "select items 5 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 5 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 5 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 5 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 5 explanation"
+      },
+      {
+        "question": "select items 6 question",
+        "options": [
+          {
+            "text": "select items 6 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 6 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 6 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 6 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 6 explanation"
+      },
+      {
+        "question": "select items 7 question",
+        "options": [
+          {
+            "text": "select items 7 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "select items 7 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "select items 7 options 2 text",
+            "correct": false
+          },
+          {
+            "text": "select items 7 options 3 text",
+            "correct": false
+          }
+        ],
+        "min_correct": 2,
+        "explanation": "select items 7 explanation"
+      }
+    ],
+    "instruction": "Instruction for select.",
+    "id": "a10"
+  },
+  "translate": {
+    "items": [
+      {
+        "source": "translate items 0 source",
+        "options": [
+          {
+            "text": "translate items 0 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 0 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 0 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 0 explanation"
+      },
+      {
+        "source": "translate items 1 source",
+        "options": [
+          {
+            "text": "translate items 1 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 1 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 1 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 1 explanation"
+      },
+      {
+        "source": "translate items 2 source",
+        "options": [
+          {
+            "text": "translate items 2 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 2 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 2 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 2 explanation"
+      },
+      {
+        "source": "translate items 3 source",
+        "options": [
+          {
+            "text": "translate items 3 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 3 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 3 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 3 explanation"
+      },
+      {
+        "source": "translate items 4 source",
+        "options": [
+          {
+            "text": "translate items 4 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 4 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 4 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 4 explanation"
+      },
+      {
+        "source": "translate items 5 source",
+        "options": [
+          {
+            "text": "translate items 5 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 5 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 5 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 5 explanation"
+      },
+      {
+        "source": "translate items 6 source",
+        "options": [
+          {
+            "text": "translate items 6 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 6 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 6 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 6 explanation"
+      },
+      {
+        "source": "translate items 7 source",
+        "options": [
+          {
+            "text": "translate items 7 options 0 text",
+            "correct": true
+          },
+          {
+            "text": "translate items 7 options 1 text",
+            "correct": false
+          },
+          {
+            "text": "translate items 7 options 2 text",
+            "correct": false
+          }
+        ],
+        "explanation": "translate items 7 explanation"
+      }
+    ],
+    "instruction": "Instruction for translate.",
+    "id": "a11"
+  },
+  "essay-response": {
+    "id": "a12",
+    "instruction": "Instruction for essay-response.",
+    "prompt": "essay response prompt",
+    "min_words": 150,
+    "model_answer": "essay response model_answer essay response model_answer essay response model_answer essay response model_answer essay response model_answer essay response model_answer",
+    "rubric": [
+      {
+        "criteria": "essay response rubric 0 criteria",
+        "description": "essay response rubric 0 description",
+        "points": 0
+      }
+    ],
+    "peer_review_guidelines": "essay response peer_review_guidelines"
+  },
+  "critical-analysis": {
+    "id": "a13",
+    "instruction": "Instruction for critical-analysis.",
+    "target_text": "critical analysis target_text",
+    "questions": [
+      "critical analysis questions 0",
+      "critical analysis questions 1",
+      "critical analysis questions 2"
+    ],
+    "model_answers": [
+      "critical analysis model_answers 0",
+      "critical analysis model_answers 1",
+      "critical analysis model_answers 2"
+    ],
+    "focus_points": [
+      "critical analysis focus_points 0"
+    ]
+  },
+  "comparative-study": {
+    "id": "a14",
+    "instruction": "Instruction for comparative-study.",
+    "items_to_compare": [
+      "comparative study items_to_compare 0",
+      "comparative study items_to_compare 1"
+    ],
+    "criteria": [
+      "comparative study criteria 0"
+    ],
+    "prompt": "comparative study prompt",
+    "model_answer": "comparative study model_answer"
+  },
+  "authorial-intent": {
+    "id": "a15",
+    "instruction": "Instruction for authorial-intent.",
+    "text_excerpt": "authorial intent text_excerpt",
+    "prompt": "authorial intent prompt",
+    "techniques_to_identify": [
+      "authorial intent techniques_to_identify 0"
+    ],
+    "model_answer": "authorial intent model_answer"
+  },
+  "reading": {
+    "id": "a16",
+    "instruction": "Instruction for reading.",
+    "resource": {
+      "type": "reading resource type",
+      "url": "reading resource url",
+      "title": "reading resource title"
+    },
+    "tasks": [
+      "reading tasks 0"
+    ],
+    "text": "reading text",
+    "source": "reading source"
+  }
+}

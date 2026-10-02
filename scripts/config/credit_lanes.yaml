@@ -1,0 +1,49 @@
+# Credit-period lane policy (#9518) — canonical source of truth.
+# Read by scripts/fleet/credit_lane.py for scripts/fleet/capacity_pick.py (router)
+# and delegate.py dispatch admission. Neither consumes credits or resets.
+#
+# A configured lane reads `credit_balance_present` only while its plan allowance
+# is at or below `near_cap_remaining_pct`, the routing-budget record carries a
+# positive numeric credit balance from a fresh probe (age and explicit-UTC
+# fetch time younger than `credit_max_age_s`), AND the runtime usage records
+# show no `rate_limited` outcome for the lane within `rate_limit_window_s`.
+# The router sees a balance, not the provider drawing it: a recent rate limit
+# while the plan window is exhausted reads `credit_use_unconfirmed`. Every
+# other case keeps the lane in its plan state (today's near_cap/AVOID).
+# Dispatch admission is a separate question from that router state: whenever the
+# plan allowance is at or below the threshold AND a fresh positive credit balance
+# exists (credit_balance_present, credit_use_unconfirmed, or credits_unverified
+# from unreadable usage records), admission refuses any model outside the lane's
+# `allowed_models`, even while the router does not recommend the lane (a
+# dispatch without --model is judged by the lane's default model). With a
+# healthy plan allowance, or no fresh positive balance, nothing is restricted.
+# If this file cannot be read or validated, only the lanes in
+# credit_lane.DEFAULT_ALLOWED_MODELS stay restricted (plan state, built-in
+# allowlist); every other lane is unaffected.
+schema_version: credit-lanes.v1
+
+# Plan remaining-% at or below which a credit balance is considered. 10.0 matches the
+# router's near_cap line (>= 90% of the plan window used).
+near_cap_remaining_pct: 10.0
+
+# Credit freshness bound; matches the plan-window freshness bound the router
+# already uses (routing-budget stale_threshold_s and the reset reserve's 15 min).
+credit_max_age_s: 900
+
+# Evidence window: one or more `rate_limited` runtime outcomes for the lane in
+# this many seconds, while the plan window is exhausted, means the credits are
+# not confirmed to back calls. Must be positive.
+rate_limit_window_s: 3600
+
+# Reset advice: hold a free full reset while the natural plan reset is within
+# this many hours. Whether a full reset re-anchors the weekly window is not
+# stated by the provider usage record or by repository documentation, so the
+# advice stays conservative.
+reset_hold_hours: 48
+
+lanes:
+  codex:
+    # Credit-period policy: the Codex lane receives only these catalog ids.
+    allowed_models:
+      - gpt-6.1-sol
+      - gpt-6-luna

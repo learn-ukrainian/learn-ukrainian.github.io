@@ -711,7 +711,7 @@ Additional audit guardrails:
 - `scripts/lexicon/admit_teacher_table.py` - local-only teacher-table Atlas admission and English-card enrichment; writes a separate staged manifest, private deltas, and a named VESUM residual ledger but never publishes
 - `scripts/atlas/atlas_db.py` - rebuild `data/atlas.db` from the hydrated Atlas manifest, materialize the Astro article payload projection, and validate alias targets
 - `scripts/atlas/fill_local.py` - Phase-1 offline local enrichment writer for `data/atlas.db`; reads local dictionary/cache data only and reports per-section before/after coverage
-- `scripts/lexicon/thin_page_report.py` - read-only thin-page report over `data/atlas.db` (#8313): per-entry thinness tier (`bare`/`thin`/`rich`), missing enrichment sections of all 18, and per-section × per-source fillable counts from `data/lexicon/slovnyk_cache/`, `data/ulif_dump_all.db` (opened `mode=ro`, safe while `dump_ulif.py` writes), and `data/sources.db`; never parks or mutates entries. CLI: `.venv/bin/python -m scripts.lexicon.thin_page_report --json /tmp/thin.json`
+- `scripts/lexicon/thin_page_report.py` - read-only thin-page report over `data/atlas.db` (#8313): per-entry thinness tier (`bare`/`thin`/`rich`), missing enrichment sections of all 18, and per-section × per-source fillable counts from `data/lexicon/slovnyk_cache/` and `data/sources.db` (`ulif_dictua_sections`); never parks or mutates entries. CLI: `.venv/bin/python -m scripts.lexicon.thin_page_report --json /tmp/thin.json`
 - `scripts/lexicon/lesson_atlas_link_census.py` - read-only census of committed lesson `/lexicon/<slug>/` targets against the published search index and alias file (#8734). Classifies each slug as entry, unique alias, ambiguous, or dead. Does not generate links. CLI: `.venv/bin/python scripts/lexicon/lesson_atlas_link_census.py`
 - `site/scripts/benchmark-atlas-db.mjs` - benchmark Atlas DB build, preload, and getStaticPaths mapping at current and synthetic sizes
 - `scripts/audit/curriculum_qg_harness.py` - deterministic Ukrainian curriculum QG fixture harness; use it to calibrate B1-27, A1/A2 scaffolding, B1+ leakage, and seminar-register checks before changing QG behavior
@@ -848,6 +848,48 @@ with no mapping row that the substitute adapter rejects is refused before
 spawn. If neither the mapped model nor that default is valid for the
 substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
+
+**Credit-balance lanes (#9518):** `scripts/config/credit_lanes.yaml` lists the lanes that can show a
+prepaid credit balance once their plan allowance is used (the router does not verify the provider
+drawing it), and the models each may receive then (Codex: `gpt-6.1-sol`, `gpt-6-luna`). The router sees a credit balance, not the provider
+drawing it, so `scripts/fleet/credit_lane.py` claims no more than that: a lane reads
+`credit_balance_present` (credit balance present; draw not verified by the router) only when its
+tightest plan window has at most `near_cap_remaining_pct` (10%) remaining, the routing-budget record
+carries a positive numeric credit balance from a probe younger than `credit_max_age_s` (900 s; both
+`age_s` and an explicit-UTC `fetched_at`), and the runtime usage records
+(`batch_state/api_usage/usage_<lane>-*.jsonl`, plus the snapshot's own runtime summary) show no
+`rate_limited` outcome for the lane within `rate_limit_window_s` (3600 s). One or more rate limits
+in that window read `credit_use_unconfirmed`. Evidence that cannot be read also reads
+`credits_unverified` (reason names the cause): an unreadable lane file, an unparseable line in one,
+or a `rate_limited` record without an explicit-UTC timestamp; `summarize_lane_runtime` exposes these
+as `unreadable` (`files`, `lines`, `records`, `total`). A missing file is the empty case. The
+recent-rate-limit state reads ("recent rate limit while the plan window is exhausted:
+credit use not confirmed"). These states, a missing, stale, non-numeric or non-positive balance, a
+naive or non-UTC timestamp (parsed by the reset reserve's `utc_datetime`), unreadable usage records
+or a stale snapshot all leave the lane in its plan state (near_cap/AVOID). `capacity_pick` shows
+status `credit_balance_present`, ranks the lane after plan-backed seats, and adds a `credit` object
+to every JSON row (`state`, `reason`, `plan_remaining_pct`, `credit_balance`, `allowed_models`,
+`evidence` with the rate-limit count, window and newest time and the balance with its fetch time,
+`coverage`, `reset_advice`). Lanes without a policy entry carry `{"state": "not_configured"}` and
+are otherwise unchanged. Coverage is reported as unknown because runtime usage records carry no
+per-task credit consumption. `reset_advice.advice` is `use_reset_now`, `hold_reset` or
+`not_applicable`. A free full reset is held while the natural reset is within `reset_hold_hours`
+(48 h) or its time is unknown, because no provider record or repository document says whether a
+full reset re-anchors the window. `delegate.py dispatch` checks the admitted route (after aliases,
+substitution and review selection; no `--model` means the lane default). Admission is a separate
+question from the router recommendation: the allowlist applies whenever the plan window is at or
+below `near_cap_remaining_pct` and a fresh positive balance exists (`credit_balance_present`,
+`credit_use_unconfirmed`, or `credits_unverified` caused by unreadable usage records; the credit
+object carries `allowlist_applies`), so a recent rate limit stops the router recommending the lane
+but never widens the models it may receive. An off-allowlist model then exits 2 with
+`CREDIT_PERIOD_MODEL_REFUSED`. Nothing is gated with a healthy plan window, with a missing, stale
+or non-positive balance (near cap without credits: unchanged), or on other lanes. `--check-budget`
+no longer substitutes away from a lane in `credit_balance_present`. If the policy file is missing, malformed or has an empty
+allowlist, only the built-in default lanes (`credit_lane.DEFAULT_ALLOWED_MODELS`: Codex with the same
+two models, pinned to the shipped yaml by a test) are affected: `capacity_pick` still prints every
+lane, marks Codex `credit.state: policy_error` in its plan state and adds a warning line, and
+admission refuses only off-allowlist Codex dispatches (`allowlist_applies` true), with a stderr warning; every other lane is
+admitted as before. Nothing consumes credits or resets.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
@@ -1368,7 +1410,7 @@ Differential Soviet candidate miner and modern whitelist filter (ULDR Phase 3.4,
 
 ### `scripts/projects/open_model_data/v4_verify_trajectory_claims.py`
 
-Automated Chain-of-Thought (CoT) factual claim-verifier for Ukrainian linguistic reasoning trajectories (ULDR Phase 3.5, #8009, Epic #6321). Ingests trajectory JSONL records, parses reasoning steps, and grounds linguistic claims against local databases (`vesum.db` for lemma attestation, inflected forms count, tags, and living standard validity; `sources.db` for СУМ-11 headwords, volume citations, and definitions; `r2u_differential_cache.json` for 1920s Academy dictionary attestation; and `ulif_dump_all.db` for orthographic register). Trajectories with ungrounded, fabricated, or miscounted claims are hard-rejected. Emits cryptographic verification receipts validated against `v1_cot_claim_verification_receipt.schema.json`.
+Automated Chain-of-Thought (CoT) factual claim-verifier for Ukrainian linguistic reasoning trajectories (ULDR Phase 3.5, #8009, Epic #6321). Ingests trajectory JSONL records, parses reasoning steps, and grounds linguistic claims against local databases (`vesum.db` for lemma attestation, inflected forms count, tags, and living standard validity; `sources.db` for СУМ-11 headwords, volume citations, and definitions; `r2u_differential_cache.json` for 1920s Academy dictionary attestation; and `sources.db` `ulif_dictua_*` for orthographic register). Trajectories with ungrounded, fabricated, or miscounted claims are hard-rejected. Emits cryptographic verification receipts validated against `v1_cot_claim_verification_receipt.schema.json`.
 
 ```bash
 # Run claim verification across input trajectories

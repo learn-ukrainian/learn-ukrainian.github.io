@@ -135,9 +135,25 @@ def under_roots(path: str, roots=TRACKED_ROOTS) -> bool:
     return any(path == root or path.startswith(root + '/') for root in roots)
 
 
+# A directory's README or index note (prose) states what the directory holds and whether it is
+# still used: public lifecycle text, not one of the private bodies the exclusion protects. A
+# language tag counts only before a prose extension (README.uk.md), so index.js is no note.
+DIRECTORY_NOTE = re.compile(r'(?:readme|index)(?:(?:\.[a-z]{2})?\.(?:md|markdown|txt|rst))?', re.IGNORECASE)
+
+
+def is_directory_note(path: str) -> bool:
+    """True for a README or index note in prose (README, README.md, index.uk.md, ...)."""
+    return bool(DIRECTORY_NOTE.fullmatch(PurePosixPath(path).name))
+
+
 def is_excluded(path: str) -> bool:
-    """True when the docs inventory's privacy exclusion covers ``path`` (one shared list)."""
-    return bool(EXCLUDED_PARTS.intersection(PurePosixPath(path).parts))
+    """True when the docs inventory's privacy exclusion (one shared list) covers the body of ``path``.
+
+    The exclusion keeps private bodies (handoffs, secrets, caches) out of every read and result;
+    the README or index note of an excluded directory (``is_directory_note``) is exempt, because
+    it is the public record of that directory's lifecycle.
+    """
+    return bool(EXCLUDED_PARTS.intersection(PurePosixPath(path).parts)) and not is_directory_note(path)
 
 
 def root_of(pattern: str, roots=TRACKED_ROOTS) -> str | None:
@@ -385,6 +401,7 @@ class Report:
     data_stores: int = 0
     schema_ok: bool = False
     searchable_entries: set[str] = field(default_factory=set)  # families whose bodies may be read
+    private_entries: set[str] = field(default_factory=set)  # families that own privacy-excluded bodies
     store_literals: dict[str, list[str]] | None = None  # set by repository_check
     store_files_scanned: int = 0  # text files under scripts/ the store scan read
     markers_unverifiable: int = 0  # superseded Markdown overrides the privacy gate kept unread
@@ -571,6 +588,7 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
     for path, eid in owner_of.items():
         if is_excluded(path):
             excluded_owned[eid].append(path)
+    report.private_entries = set(excluded_owned)
     for eid, paths in sorted(excluded_owned.items()):
         if by_id[eid]['content_searchable']:
             report.errors.append(f'{shown(eid)}: owns {len(paths)} inventory-excluded path(s) such as {paths[0]!r}, '
@@ -724,15 +742,19 @@ DRAFT_MARKERS = (
 def body_readable(report: Report, path: str) -> bool:
     """The privacy boundary for content reads: may this path's body be read at all?
 
-    True only for a path that resolves to a content-searchable family and has no
-    inventory-excluded component (docs_inventory.EXCLUDED_PARTS) and no control
-    character. Everything else, including unresolved paths, stays unread.
+    True only for a path that resolves to a family, is not privacy-excluded (``is_excluded``)
+    and has no control character, and that either belongs to a content-searchable family or
+    is the directory note (``is_directory_note``) of a family that owns private bodies: the
+    privacy exclusion keeps those bodies unread, while the README that says what they are
+    is read. A family made unsearchable for any other reason stays wholly unread, as does
+    every unresolved path.
     ``read_heads`` is the only body reader and applies this gate itself, so a
     scanner cannot bypass it.
     """
     owner = report.resolved.get(path)
-    return (owner is not None and owner[0] in report.searchable_entries and not is_excluded(path)
-            and not CONTROL_CHARS.search(path))
+    return (owner is not None and (owner[0] in report.searchable_entries
+                                   or (owner[0] in report.private_entries and is_directory_note(path)))
+            and not is_excluded(path) and not CONTROL_CHARS.search(path))
 
 
 def _index_blobs(repo: Path, objects: dict[str, str]) -> dict[str, bytes]:

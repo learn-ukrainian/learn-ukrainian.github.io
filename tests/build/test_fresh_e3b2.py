@@ -864,6 +864,109 @@ def test_success_snapshot_controls_draft_reuse(tmp_path):
     assert not draft_is_current(ledger, draft, inputs)
 
 
+@pytest.mark.parametrize("prior_failures", [0, 2])
+@pytest.mark.parametrize("failure_kind", ["refusal", "timeout", "harvest", "configuration", "invalid_reply"])
+def test_module_writer_budget_counts_only_delivered_content(tmp_path, monkeypatch, prior_failures, failure_kind):
+    from scripts.build.fresh import cli, module
+    from scripts.build.fresh.preflight import PreflightResult
+    from scripts.build.fresh.regeneration import writer_inputs
+    from scripts.build.fresh.writer import WriterCallError, WriterHarnessError
+    from tests.build.test_fresh_runner import _fixture as lesson_fixture
+
+    level, slug, plan_dir, evidence_dir, state, _ = _fixture(tmp_path)
+    draft, plan, pack, words = lesson_fixture()
+    entry = plan["lessons"][0]
+    paths = {
+        "plan": plan_dir / f"{slug}.yaml",
+        "pack": evidence_dir / f"{slug}.yaml",
+        "words": evidence_dir / "_words.yaml",
+        "state_dir": evidence_dir / "_state",
+    }
+    hashes = {
+        key: "a" * 64
+        for key in ("plan_sha256", "pack_lock", "words_lock", "lesson_lock_entry_sha256", "learner_state_sha256")
+    }
+    monkeypatch.setattr(cli, "_load_lesson_data", lambda *a, **kw: (plan, entry, pack, words, paths))
+    monkeypatch.setattr(cli, "_compute_input_hashes", lambda *a: hashes.copy())
+    monkeypatch.setattr(cli, "_load_cited_records", lambda *a: {})
+    monkeypatch.setattr(module, "planned_state", lambda *a, **kw: object())
+    monkeypatch.setattr(module, "render_lesson_prompt", lambda *a, **kw: "fixture prompt")
+    monkeypatch.setattr(module, "check_rendered_prompt", lambda *a, **kw: type("Check", (), {"passed": True})())
+    monkeypatch.setattr(module, "lesson_immersion_payload", lambda *a, **kw: {})
+    monkeypatch.setattr(
+        module,
+        "preflight_lesson",
+        lambda *a, **kw: PreflightResult(passed=True, status="ok", gaps=[], homographs=[], homograph_count=0),
+    )
+    inputs = writer_inputs(
+        hashes,
+        hashlib.sha256((tmp_path / "docs/style-cards/a1.md").read_bytes()).hexdigest(),
+        hashlib.sha256(b"fixture prompt").hexdigest(),
+    )
+    ledger_path = state / "lesson-1.regeneration.yaml"
+    for check in range(1, prior_failures + 1):
+        record_failure(ledger_path, slug, 1, {"check": check, "layer": "writer", "reason": f"check {check}"}, inputs)
+    before = ledger_path.read_bytes() if ledger_path.exists() else None
+    errors = {
+        "refusal": WriterHarnessError("delegate.py dispatch refused"),
+        "timeout": WriterHarnessError("delegate.py wait timed out"),
+        "harvest": OSError("result unavailable"),
+        "configuration": ValueError("invalid seat"),
+        "invalid_reply": WriterCallError("Failed to parse writer output as YAML"),
+    }
+    attempts = []
+
+    def failing_writer(**kw):
+        attempts.append(kw["attempt"])
+        raise errors[failure_kind]
+
+    for _ in range(2 if failure_kind != "invalid_reply" else 1):
+        report = module.build_module(
+            level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:fixture", writer_dispatch=failing_writer
+        )
+        lesson = report["lessons"][0]
+        if failure_kind == "invalid_reply":
+            assert lesson["layer"] == "writer"
+            assert len(load_ledger(ledger_path, slug, 1)["attempts"]) == prior_failures + 1
+            assert not (state / "lesson-1.writer-harness.yaml").exists()
+            return
+        assert lesson["layer"] == "engine"
+        assert lesson["terminal_layer"] is None
+        assert lesson["regenerations"] == max(0, prior_failures - 1)
+        assert (ledger_path.read_bytes() if ledger_path.exists() else None) == before
+    assert attempts == [prior_failures + 1] * 2
+    harness = yaml.safe_load((state / "lesson-1.writer-harness.yaml").read_text())
+    assert harness["layer"] == "harness"
+    assert len(harness["failures"]) == 2
+    assert lock.check(state / "lesson-1.writer-harness.yaml")
+
+    def delivered_writer(**kw):
+        attempts.append(kw["attempt"])
+        lock.write(state / "lesson-1.draft.yaml", lock.yaml_bytes(draft))
+
+    def passing_runner(*a, **kw):
+        record_success(
+            ledger_path,
+            slug,
+            1,
+            {**inputs, "draft_sha256": hashlib.sha256((state / "lesson-1.draft.yaml").read_bytes()).hexdigest()},
+        )
+        return {"passed": True, "manifest_sha256": "b" * 64}
+
+    report = module.build_module(
+        level,
+        slug,
+        repo_root=tmp_path,
+        lesson_n=1,
+        writer_seat="codex:fixture",
+        writer_dispatch=delivered_writer,
+        runner=passing_runner,
+    )
+    assert report["complete"]
+    assert report["lessons"][0]["regenerations"] == prior_failures
+    assert attempts[-1] == prior_failures + 1
+
+
 def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, capsys):
     """Exercise the real checks 1-12 with injected model, resolver, and render edges."""
     from scripts.build.fresh import assemble, cli, module, runner

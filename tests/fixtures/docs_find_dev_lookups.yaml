@@ -1,0 +1,292 @@
+# Development lookups for the one entry point, scripts/docs/find.py (#9412).
+#
+# Each lookup is one query as an agent would type it (short, not the whole
+# question), the question as asked, the authority path(s) that answer it, and
+# the evidence that the path is that authority: `verify` lists {path, contains}
+# pairs, each checked by `git grep --cached -n -F -i -e <contains> -- <path>`
+# (a lookup whose expected file is not a tracked file, such as a data store,
+# verifies against the catalogue entry that names it). A lookup passes when an
+# expected path is among the first `top_n.query` hits for its short query and
+# the first `top_n.question` hits for its question used verbatim as the query
+# (the long-query protocol).
+#
+# Kinds: resource, doc, data_store, status ("is X still current, what replaced
+# it?") and process ("where is this check or step implemented?"). Sources are
+# repository issues, rules and handoffs; the L-prefixed lookups are the visible
+# dev set the issue driver verified (23 real lookups). The held-out acceptance
+# set is separate and is never used here.
+# Checked by tests/test_docs_catalogue_coverage.py (verification always) and
+# tests/test_docs_find_lookups_part<k>.py (the ranking within top_n except the ids
+# listed in known_misses, each with a reason).
+# Scores on this set (68 lookups, 2026-10-02), within 20 / within 5 / first:
+# before #9412 PR 3, short queries 52 / 48 / 26 and questions 48 / 42 / 24;
+# after it, short queries 68 / 62 / 38 and questions 68 / 62 / 38; after round 3
+# (lifecycle records), short queries 68 / 63 / 35 and questions 68 / 64 / 35; after round 4
+# (directory notes, abbreviations, function spans), 68 / 63 / 34 and 68 / 64 / 34; after round 5
+# (the read pool counts text candidates, a family hit lists only the entry points the query
+# names), 68 / 64 / 34 and 68 / 65 / 34, at the gate's limit of 50 (read pool 150); after round 6
+# (a query word meets its path in any inflection and in a closed compound; within a band exact
+# relevance ranks before line evidence), 68 / 64 / 35 and 68 / 65 / 35. These counts leave out the
+# multi-answer gate (R05-R10), which round 5 held at 1 of 6 within 20 per protocol and round 6 at
+# 5 of 6 short queries and 2 of 6 questions (ranks in multi_answer_gate.known_misses).
+version: 1
+top_n: {query: 10, question: 20}
+known_misses: {}
+# The lookups marked `gate: multi_answer` are ranked by their own gate, not by top_n: every expected
+# path is a name candidate of its short query (its path holds a query word, in any inflection), and
+# an expected path is within the first top_n hits at the CLI's default limit, except the protocols
+# listed in known_misses with their rank at the round-6 head (null: not within the default 20).
+multi_answer_gate:
+  top_n: 20
+  known_misses:
+    R07: {question: null, reason: 'Round 1 ranked it 25. The rare filler word "waiting" outweighs the path words.'}
+    R08: {query: null, question: null, reason: 'Round 1 ranked it 2. The path words decolonization and reviews are common in text, so code files naming lexicon outrank it.'}
+    R09: {question: null, reason: 'Round 1 ranked it 12. The rare filler word "automatically" outweighs four path words of a historical file.'}
+    R10: {question: null, reason: 'Round 1 ranked it 14. Text holding most of a long question outranks two path words.'}
+lookups:
+  # ---------------------------------------------------------------- resources
+  - {id: L02, question: 'Where is the list of podcast episodes for season 4?', kind: resource, query: podcast episode list season 4,
+     expect: [docs/resources/podcasts/raw_lists/seasons_4_5.txt],
+     verify: [{path: docs/resources/podcasts/raw_lists/seasons_4_5.txt, contains: 'Season: 4'}]}
+  - {id: L03, question: 'Which ULP podcast episodes belong to each curriculum module?', kind: resource, query: ULP podcast episodes per module,
+     expect: [docs/resources/podcasts/ulp_mapping.yaml],
+     verify: [{path: docs/resources/podcasts/ulp_mapping.yaml, contains: episode}]}
+  - {id: L04, question: 'Where are the external YouTube resources per module and their schema?', kind: resource, query: external resources youtube links per module schema,
+     expect: [docs/resources/external_resources.yaml, docs/resources/EXTERNAL_RESOURCES_SCHEMA.md],
+     verify: [{path: docs/resources/EXTERNAL_RESOURCES_SCHEMA.md, contains: youtube}]}
+  - {id: L07, question: 'Where is the list of trusted sources we may cite?', kind: resource, query: trusted sources,
+     expect: [docs/resources/trusted_sources.yaml],
+     verify: [{path: docs/resources/trusted_sources.yaml, contains: http}]}
+  - {id: R01, question: 'Where are the ULP alphabet videos for each letter recorded?', kind: resource, query: alphabet letter videos ULP,
+     expect: [docs/resources/ulp-alphabet.yaml],
+     verify: [{path: docs/resources/ulp-alphabet.yaml, contains: letter heading}]}
+  - {id: R02, question: 'Where are the MiyKlas grammar lessons for the resources tab?', kind: resource, query: miyklas grammar lessons resources tab,
+     expect: [docs/resources/miyklas-resources.yaml],
+     verify: [{path: docs/resources/miyklas-resources.yaml, contains: Ресурси}]}
+  - {id: R03, question: 'Where is the table of author death years used for rights decisions?', kind: resource, query: author death year rights table,
+     expect: [registry/authors_rights.yaml],
+     verify: [{path: registry/authors_rights.yaml, contains: death_year}]}
+  - {id: R04, question: 'Where are the Ukrainian Lessons blog articles mapped to modules?', kind: resource, query: ukrainianlessons blog articles mapped to modules,
+     expect: [docs/resources/ukrainianlessons/blog_db.json, docs/resources/ulp-article-mappings.yaml,
+              docs/resources/ukrainianlessons/MAPPING_REPORT.md],
+     verify: [{path: docs/resources/ulp-article-mappings.yaml, contains: ukrainianlessons}]}
+  # The multi-answer gate (multi_answer_gate above): several sibling files of one pattern under one
+  # directory, named in the question by a word that the path holds in another inflection or
+  # derivation (translated / translations, mapped / MAPPING, decolonizing / decolonization,
+  # hallucinated / hallucinations). The path is often their only evidence (data files outside the
+  # readable text), so a word that no longer meets its path loses them whole. Round d of #9412 lost
+  # all six (none within 200) where round 1 held them.
+  - {id: R05, gate: multi_answer, question: 'Where are the batches of translated words?', kind: resource, query: translated word batches,
+     expect: [registry/translations/batch-aa-translations.json, registry/translations/batch-ab-translations.json,
+              registry/translations/gemini-batch-1-translations.json],
+     verify: [{path: registry/translations/batch-aa-translations.json, contains: '"ава": "Ava"'}]}
+  - {id: R06, gate: multi_answer, question: 'Where are the reports on how the Ukrainian Lessons articles were mapped?', kind: resource, query: ukrainian lessons articles mapped reports,
+     expect: [docs/resources/ukrainianlessons/MAPPING_REPORT.md, docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md,
+              docs/resources/ukrainianlessons/MAPPING_METHODOLOGY.md],
+     verify: [{path: docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, contains: 'mapping of Ukrainian Lessons content'}]}
+  - {id: R07, gate: multi_answer, question: 'Where are the word batches waiting to be translated?', kind: resource, query: word batches to be translated,
+     expect: [registry/translations/input/batch-aa, registry/translations/input/batch-ab, registry/translations/input/batch-ac],
+     verify: [{path: registry/translations/input/batch-aa, contains: айвазовське}]}
+  - {id: R08, gate: multi_answer, question: 'Where are the reviews of the decolonizing lexicon cases?', kind: resource, query: decolonizing lexicon case reviews,
+     expect: [registry/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json,
+              registry/projects/open_model_data/components/decolonization/reviews/decol_lex_002.review.json,
+              registry/projects/open_model_data/components/decolonization/reviews/decol_lex_003.review.json],
+     verify: [{path: registry/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json, contains: '"case_id": "decol_lex_001"'}]}
+  - {id: R09, gate: multi_answer, question: 'Where are the summaries of how Ukrainian Lessons articles were mapped automatically?', kind: resource, query: ukrainian lessons automated mapping summary,
+     expect: [docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, docs/resources/ukrainianlessons/MAPPING_REPORT.md,
+              docs/resources/ukrainianlessons/MAPPING_METHODOLOGY.md],
+     verify: [{path: docs/resources/ukrainianlessons/AUTOMATED_MAPPING_SUMMARY.md, contains: 'Automated Mapping - Final Summary'}]}
+  - {id: R10, gate: multi_answer, question: 'Where are the dictionary pages Gemini hallucinated during OCR, kept as samples?', kind: resource, query: gemini ocr hallucinated pages,
+     expect: [tests/fixtures/etymology/gemini-hallucinations/vol3_p0233.md, tests/fixtures/etymology/gemini-hallucinations/vol3_p0379.md,
+              tests/fixtures/etymology/gemini-hallucinations/vol4_p0530.md],
+     verify: [{path: tests/fixtures/etymology/gemini-hallucinations/README.md, contains: 'quarantine samples containing various hallucination patterns'}]}
+
+  # ---------------------------------------------------------------- documents
+  - {id: L18, question: 'How do I rebuild the teacher deck?', kind: doc, query: teacher deck rebuild,
+     expect: [docs/practice/teacher-deck-artifacts.md, docs/runbooks/teacher-curated-seed-rebuild.md,
+              registry/practice/function_words_deck.json],
+     verify: [{path: docs/runbooks/teacher-curated-seed-rebuild.md, contains: rebuild}]}
+  - {id: L22, question: 'What is the default of the fleet-comms dual_write setting?', kind: doc, query: fleet-comms dual_write default,
+     expect: [docs/runbooks/fleet-comms-open-gaps.md],
+     verify: [{path: docs/runbooks/fleet-comms-open-gaps.md, contains: dual_write}]}
+  - {id: L33, question: 'How do I clear a stale git index.lock?', kind: doc, query: stale git index.lock,
+     expect: [docs/runbooks/clear-stale-git-lock.md],
+     verify: [{path: docs/runbooks/clear-stale-git-lock.md, contains: index.lock}]}
+  - {id: L34, question: 'How do I clean up worktrees and sweep stale branches?', kind: doc, query: worktree cleanup branch sweep,
+     expect: [docs/runbooks/worktree-cleanup.md, scripts/hygiene/branch_sweep.py],
+     verify: [{path: scripts/hygiene/branch_sweep.py, contains: stale agent branches}]}
+  - {id: L38, question: 'Where is the CI speed program documented?', kind: doc, query: CI speed program,
+     expect: [docs/epics/ci-speed-program.md],
+     verify: [{path: docs/epics/ci-speed-program.md, contains: CI}]}
+  - {id: L39, question: 'What is the task lifecycle closeout contract?', kind: doc, query: task lifecycle closeout,
+     expect: [agents_extensions/shared/contracts/task-lifecycle-closeout.md],
+     verify: [{path: agents_extensions/shared/contracts/task-lifecycle-closeout.md, contains: closeout}]}
+  - {id: L40, question: 'Where is the schema for fresh build plans?', kind: doc, query: fresh build plan schema,
+     expect: [docs/epics/fresh-build-plan-schema.md, docs/epics/fresh-build-build-program.md],
+     verify: [{path: docs/epics/fresh-build-plan-schema.md, contains: plan}]}
+  - {id: O01, question: 'How do we scan the repository for leaked secrets with trufflehog?', kind: doc, query: scan for leaked secrets trufflehog,
+     expect: [docs/runbooks/secret-scanning.md],
+     verify: [{path: docs/runbooks/secret-scanning.md, contains: trufflehog}]}
+  - {id: O02, question: 'How do I back up the data directory?', kind: doc, query: how to back up the data directory,
+     expect: [docs/runbooks/data-backup.md],
+     verify: [{path: docs/runbooks/data-backup.md, contains: backup}]}
+  - {id: O03, question: 'What are the ULP presentation practices for A1 lessons?', kind: doc, query: ULP presentation practices,
+     expect: [docs/best-practices/ulp-presentation-pattern.md],
+     verify: [{path: docs/best-practices/ulp-presentation-pattern.md, contains: practice}]}
+  - {id: O04, question: 'Which CI checks are required by the merge gate?', kind: doc, query: required CI checks merge gate,
+     expect: [docs/runbooks/ci-gate.md],
+     verify: [{path: docs/runbooks/ci-gate.md, contains: CI Gate}]}
+  - {id: O05, question: 'Where are the model routing rules for each task?', kind: doc, query: model routing rules per task,
+     expect: [agents_extensions/shared/rules/model-assignment.md, scripts/config/model_catalog.yaml],
+     verify: [{path: agents_extensions/shared/rules/model-assignment.md, contains: review}]}
+
+  # ---------------------------------------------------------------- data stores
+  - {id: L09, question: 'Where is the VESUM database and how do I query it?', kind: data_store, query: VESUM database,
+     expect: [agents_extensions/shared/rules/mcp-sources-and-dictionaries.md, scripts/rag/import_vesum.py,
+              docs/DICTIONARY-PIPELINE-STATUS.md, data/vesum.db],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/vesum.db'}]}
+  - {id: L11, question: 'Where is atlas.db and what writes it?', kind: data_store, query: atlas.db,
+     expect: [scripts/atlas/atlas_db.py, docs/architecture/adr/adr-017-atlas-schema-and-lifecycle.md],
+     verify: [{path: scripts/atlas/atlas_db.py, contains: atlas.db}]}
+  - {id: D01, question: 'Which tables are in sources.db?', kind: data_store, query: which tables are in sources.db,
+     expect: [data/sources.db, docs/corpus-inventory.md],
+     verify: [{path: docs/corpus-inventory.md, contains: sources.db}]}
+  - {id: D02, question: 'Where is the ULIF dump SQLite database?', kind: data_store, query: ULIF dump sqlite,
+     expect: [data/ulif_dump.db, scripts/lexicon/tools/dump_ulif.py],
+     verify: [{path: scripts/lexicon/tools/dump_ulif.py, contains: '--db data/ulif_dump.db'}]}
+  - {id: D03, question: 'Where is the embedding manifest store?', kind: data_store, query: embedding manifest store,
+     expect: [data/embeddings/, scripts/wiki/embedding_manifest.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/embeddings/'}]}
+  - {id: D04, question: 'Where are Wikipedia API responses cached?', kind: data_store, query: wikipedia api response cache,
+     expect: [data/wiki_cache.db, scripts/rag/wiki_cache.py],
+     verify: [{path: scripts/rag/wiki_cache.py, contains: Wikipedia API responses}]}
+  - {id: D05, question: 'Where are the extracted textbook chunks stored?', kind: data_store, query: textbook chunks extracted text,
+     expect: [data/textbook_chunks/, scripts/rag/extract_text.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/textbook_chunks/'}]}
+  - {id: D06, question: 'Where is the content-addressed artifact store?', kind: data_store, query: content addressed artifact store,
+     expect: [data/.artifact-store/, scripts/storage/artifacts.py],
+     verify: [{path: scripts/storage/artifacts.py, contains: content-addressed artifact store}]}
+  - {id: D07, question: 'Where is the UberText word frequency data?', kind: data_store, query: ubertext word frequency data,
+     expect: [data/ubertext-freq/, scripts/rag/convert_phase2.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/ubertext-freq/'}]}
+  - {id: D08, question: 'Where is the slovnyk lexicon cache?', kind: data_store, query: slovnyk cache lexicon,
+     expect: [data/lexicon/slovnyk_cache/, scripts/lexicon/enrich_manifest.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/lexicon/slovnyk_cache/'}]}
+  - {id: D09, question: 'Where are the API telemetry records stored?', kind: data_store, query: api telemetry records store,
+     expect: [data/telemetry/, scripts/api/telemetry_router.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/telemetry/'}]}
+
+  # ---------------------------------------------------------------- status: still current, what replaced it
+  - {id: L20, question: 'Is the wiki still the research input for the core rebuild, and what replaced it?', kind: status, query: wiki research input core rebuild,
+     expect: [docs/decisions/2026-09-30-core-rebuild-pack-replaces-wiki.md],
+     verify: [{path: docs/decisions/2026-09-30-core-rebuild-pack-replaces-wiki.md, contains: wiki}]}
+  - {id: S01, question: 'Is gpt-6-astra still current, and what replaced it?', kind: status, query: gpt-6-astra retired replacement,
+     expect: [scripts/config/model_catalog.yaml],
+     verify: [{path: scripts/config/model_catalog.yaml, contains: 'replaced_by: gpt-6.1-sol'}]}
+  - {id: S02, question: 'Is claude-fable-5 still a current model?', kind: status, query: is claude-fable-5 still current,
+     expect: [scripts/config/model_catalog.yaml],
+     verify: [{path: scripts/config/model_catalog.yaml, contains: 'claude-fable-5:'}]}
+  - {id: S03, question: 'Is the pytest four-shard matrix still used, and what replaced it?', kind: status, query: pytest four shard matrix still used,
+     expect: [docs/decisions/2026-07-22-pytest-four-shard-matrix.md, docs/runbooks/ci-gate.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'superseded_by: docs/runbooks/ci-gate.md'}]}
+  - {id: S04, question: 'Is docs/architecture/ARCHITECTURE.md still current?', kind: status, query: ARCHITECTURE.md still current,
+     expect: [docs/architecture/ARCHITECTURE.md, docs/architecture/v7-pipeline.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'docs/architecture/ARCHITECTURE.md, lifecycle: superseded'}]}
+  - {id: S05, question: 'Is the build module v5 design still current, and what replaced it?', kind: status, query: build module v5 design replaced,
+     expect: [docs/design/build-module-v5.md, docs/architecture/v7-pipeline.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'docs/design/build-module-v5.md, lifecycle: superseded'}]}
+  - {id: S06, question: 'Is the agent capability matrix still current, and what replaced it?', kind: status, query: agent capability matrix current,
+     expect: [docs/agents/AGENT-CAPABILITY-MATRIX.md, docs/best-practices/agent-activity-matrix.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'superseded_by: docs/best-practices/agent-activity-matrix.md'}]}
+  - {id: S07, question: 'Is the VESUM importer retired, and what should I use instead?', kind: status, query: vesum importer retired what to use,
+     expect: [scripts/rag/import_vesum.py, scripts/rag/build_vesum_shadow.py],
+     verify: [{path: scripts/rag/import_vesum.py, contains: Retired VESUM importer}]}
+  - {id: S08, question: 'Are the activity guidelines deprecated, and what replaced them?', kind: status, query: activity guidelines deprecated,
+     expect: [docs/l2-uk-en/ACTIVITY-GUIDELINES.md, docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'superseded_by: docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md'}]}
+  - {id: S09, question: 'What is the status of the reviewer-as-fixer decision?', kind: status, query: reviewer-as-fixer decision status,
+     expect: [docs/decisions/decisions.yaml],
+     verify: [{path: docs/decisions/decisions.yaml, contains: reviewer-as-fixer}]}
+  - {id: S10, question: 'Is the MLX encoder still used for embeddings?', kind: status, query: MLX encoder retired,
+     expect: [docs/architecture/adr/adr-006-compile-layer-retrieval.md],
+     verify: [{path: docs/architecture/adr/adr-006-compile-layer-retrieval.md, contains: MLX retired}]}
+  - {id: S11, question: 'Can agents still use the Gemini CLI?', kind: status, query: can agents use gemini cli,
+     expect: [docs/guardrails/agent-fleet-tooling.md],
+     verify: [{path: docs/guardrails/agent-fleet-tooling.md, contains: AGY}]}
+  - {id: S12, question: 'Are the legacy orchestrator prompts still current, and what replaced them?', kind: status, query: legacy orchestrator prompts replaced,
+     expect: [agents_extensions/shared/skills/curriculum-lifecycle/SKILL.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'superseded_by: agents_extensions/shared/skills/curriculum-lifecycle/SKILL.md'}]}
+  - {id: S13, question: 'Is the layer B entailment gate still active?', kind: status, query: layer b entailment gate shelved,
+     expect: [docs/decisions/2026-10-01-layerb-entailment-gate-shelved.md],
+     verify: [{path: docs/decisions/2026-10-01-layerb-entailment-gate-shelved.md, contains: entailment}]}
+  - {id: S14, question: 'What is the lifecycle of the gpt-5.6-terra model?', kind: status, query: gpt-5.6-terra model lifecycle,
+     expect: [scripts/config/model_catalog.yaml],
+     verify: [{path: scripts/config/model_catalog.yaml, contains: 'gpt-5.6-terra:'}]}
+  - {id: S15, question: 'Is the content review workflow command still current, and what replaced it?', kind: status, query: content review workflow command replaced,
+     expect: [docs/workflows/review-content.md, agents_extensions/shared/skills/content-review/SKILL.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'superseded_by: agents_extensions/shared/skills/content-review/SKILL.md'}]}
+
+  # ---------------------------------------------------------------- process: where is it implemented
+  - {id: L27, question: 'Where is the immersion band for a module computed?', kind: process, query: immersion band,
+     expect: [scripts/config.py],
+     verify: [{path: scripts/config.py, contains: def compute_immersion_band}]}
+  - {id: L32, question: 'Where is the resolve-reviewer command implemented?', kind: process, query: resolve-reviewer,
+     expect: [scripts/review/closeout_cli.py, scripts/review/reviewer_resolver.py],
+     verify: [{path: scripts/review/closeout_cli.py, contains: resolve-reviewer}]}
+  - {id: L35, question: 'Where is the backup data wrapper script?', kind: process, query: backup data wrapper,
+     expect: [scripts/backup-data.sh],
+     verify: [{path: scripts/backup-data.sh, contains: backup}]}
+  - {id: L36, question: 'Where are the git pre-push and commit-msg hooks?', kind: process, query: git hooks pre-push commit-msg,
+     expect: [.githooks/pre-push, .githooks/commit-msg],
+     verify: [{path: .githooks/pre-push, contains: pre-push}]}
+  - {id: L37, question: 'Where is the heal-core-bare hook?', kind: process, query: heal-core-bare,
+     expect: [agents_extensions/shared/hooks/heal-core-bare.py],
+     verify: [{path: agents_extensions/shared/hooks/heal-core-bare.py, contains: bare}]}
+  - {id: L42, question: 'Where is the driver breadth report generated?', kind: process, query: driver breadth report,
+     expect: [scripts/fleet/driver_breadth_report.py],
+     verify: [{path: scripts/fleet/driver_breadth_report.py, contains: breadth}]}
+  - {id: L43, question: 'Where is the sources MCP server implemented?', kind: process, query: sources MCP server,
+     expect: [.mcp/servers/sources/server.py],
+     verify: [{path: .mcp/servers/sources/server.py, contains: check_russian_shadow}]}
+  - {id: L29, question: 'Where is the Python version pinned?', kind: process, query: python version pin,
+     expect: [.python-version],
+     verify: [{path: .python-version, contains: '3.'}]}
+  - {id: L30, question: 'Where is the model routing table and the model catalog?', kind: process, query: model routing table model catalog,
+     expect: [agents_extensions/shared/rules/model-assignment.md, scripts/config/model_catalog.yaml],
+     verify: [{path: scripts/config/model_catalog.yaml, contains: review_ladders}]}
+  - {id: P01, question: 'Where is self-review detected and refused?', kind: process, query: where is self review detected,
+     expect: [scripts/audit/checks/review_gaming.py],
+     verify: [{path: scripts/audit/checks/review_gaming.py, contains: SELF_REVIEW_DETECTED}]}
+  - {id: P02, question: 'Where is the X-Agent commit trailer linted?', kind: process, query: X-Agent trailer lint,
+     expect: [scripts/audit/lint_agent_trailer.py],
+     verify: [{path: scripts/audit/lint_agent_trailer.py, contains: X-Agent}]}
+  - {id: P03, question: 'Where is the check_russian_shadow tool handled?', kind: process, query: check_russian_shadow handler,
+     expect: [.mcp/servers/sources/server.py],
+     verify: [{path: .mcp/servers/sources/server.py, contains: def handle_check_russian_shadow}]}
+  - {id: P04, question: 'Where is the cross-family review preflight before a PR implemented?', kind: process, query: cross-family preflight before PR,
+     expect: [scripts/build/cf_preflight.py],
+     verify: [{path: scripts/build/cf_preflight.py, contains: class CfPreflightResult}]}
+  - {id: P05, question: 'What reaps dispatch worktrees after a PR merges?', kind: process, query: reap dispatch worktrees after merge,
+     expect: [scripts/orchestration/merge_closeout.py, scripts/fleet/post_task_reap.py],
+     verify: [{path: scripts/orchestration/merge_closeout.py, contains: reap its dispatch worktrees}]}
+  - {id: P06, question: 'Where does the reviewer resolver pick a ladder seat?', kind: process, query: reviewer resolver ladder selection,
+     expect: [scripts/review/reviewer_resolver.py],
+     verify: [{path: scripts/review/reviewer_resolver.py, contains: def resolve_reviewer}]}
+  - {id: P07, question: 'Where are review verdicts parsed?', kind: process, query: review verdict parsing,
+     expect: [scripts/delegate.py],
+     verify: [{path: scripts/delegate.py, contains: def parse_review_verdict}]}
+  - {id: P08, question: 'Where is the DoR preflight implemented in delegate?', kind: process, query: DoR preflight in delegate,
+     expect: [scripts/delegate.py],
+     verify: [{path: scripts/delegate.py, contains: def _run_dor_preflight}]}
+  - {id: P09, question: 'Where is the one-command definition of done for a module?', kind: process, query: one command definition of done module,
+     expect: [scripts/build/verify_shippable.py],
+     verify: [{path: scripts/build/verify_shippable.py, contains: one-command Definition-of-Done}]}
+  - {id: P10, question: 'Where is the pytest stamp checked before a push?', kind: process, query: pytest stamp check before push,
+     expect: [.githooks/check-pytest-stamp.py, .githooks/pre-push],
+     verify: [{path: .githooks/pre-push, contains: check-pytest-stamp.py}]}
+  - {id: P11, question: 'Where is the dispatch worktree anchor directory checked?', kind: process, query: dispatch worktree anchor directory check,
+     expect: [scripts/delegate.py],
+     verify: [{path: scripts/delegate.py, contains: .worktrees/dispatch/<agent>}]}
+  - {id: P12, question: 'What deletes stale agent branches safely?', kind: process, query: stale agent branches safe delete,
+     expect: [scripts/hygiene/branch_sweep.py],
+     verify: [{path: scripts/hygiene/branch_sweep.py, contains: List stale agent branches}]}

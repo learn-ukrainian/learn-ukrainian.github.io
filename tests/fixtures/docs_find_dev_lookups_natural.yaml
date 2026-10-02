@@ -1,0 +1,391 @@
+# Second development lookups for the one entry point, scripts/docs/find.py (#9412),
+# written so the first set (docs_find_dev_lookups.yaml) cannot be tuned against.
+#
+# Each question is asked the way a reader NEW to the repository would ask it, in
+# natural wording that avoids the answer file's own name and identifiers ("what
+# stops an agent from ..." rather than a hook's name). An independent curator
+# drew the questions from issues, handoffs, runbooks and rules (`source`), and
+# established the authority paths by reading them; `verify` lists {path,
+# contains} pairs, each checked by `git grep --cached -n -F -i -e <contains> --
+# <path>` (a data store, which is not a tracked file, verifies against the
+# catalogue entry that names it). A second agent, blind to the answers and to the
+# tool, wrote the one short `query` per question.
+#
+# Protocols: `query` (the blind one-shot query) and `question` (the question used
+# verbatim as the query). A lookup passes when an expected path is among the
+# first `top_n` hits; the ids in known_misses are excluded for the protocols
+# they name, each with its reason and its rank when recorded (null: not within
+# 200). Checked by tests/test_docs_catalogue_coverage.py and ranked by
+# tests/test_docs_find_lookups_part<k>.py, which fail on any miss not listed here. The held-out acceptance set is separate and is never
+# used here.
+#
+# Scores within 20 (68 lookups, 2026-10-02), blind queries / full questions:
+# before this set existed (#9412 PR 3 round 1, b67381806e) 40 / 29;
+# after round 2 (92f6330f30), 61 / 51; after round 3 (lifecycle records), 63 / 54;
+# after round 4 (directory notes, supersession records, abbreviations, function spans), 64 / 56.
+# At the gate's limit of 50 (read pool 150) the round-4 head scores 64 / 58, and after round 5
+# (the read pool counts text candidates, a family hit lists only the entry points the query
+# names, the storage-topology topic carries a short layout question) 64 / 58; after round 6 (inflections
+# and closed compounds in path names, exact relevance before line evidence) 64 / 59.
+version: 1
+top_n: {query: 20, question: 20}
+known_misses:
+  N22: {query: null, question: null, reason: 'Vocabulary gap: the guard says accidental disclosure, the question says leak and infrastructure details.'}
+  N28: {question: null, reason: 'Not diagnosed in round 3.'}
+  N30: {query: 59, question: null, reason: 'Not diagnosed in round 3.'}
+  N35: {question: null, reason: 'Not diagnosed in round 3.'}
+  N38: {query: 51, reason: 'Not diagnosed in round 3.'}
+  N40: {query: 84, question: 36, reason: 'Vocabulary gap: the step says it sets the evidence digest, the question says updates.'}
+  N43: {question: 175, reason: 'Not diagnosed in round 3.'}
+  N54: {question: 24, reason: 'Four places outside: the store record names few of the question''s words about messages.'}
+  N59: {question: 71, reason: 'The common words of the long question are held by prose; the short query ranks .gitattributes first.'}
+  N64: {question: 28, reason: 'Not diagnosed in round 3.'}
+lookups:
+
+  # ---------------------------------------------------------------- status: is it still current, used or valid, what replaced it
+  - {id: N01, kind: status, source: 'issue #1577',
+     question: 'Is the old reboot material for the first literacy modules still part of any build, or is it only kept for reference?',
+     query: 'legacy reboot A1 literacy modules reference only status',
+     expect: [docs/reboot/phase-8-references/README.md],
+     verify: [{path: docs/reboot/phase-8-references/README.md, contains: 'REFERENCE ONLY'}]}
+  - {id: N02, kind: status, source: 'issue #9218',
+     question: 'Are the old TypeScript build scripts still used, or was everything moved to Python?',
+     query: 'deprecated TypeScript build scripts Python migration',
+     expect: [scripts/legacy/typescript/README.md],
+     verify: [{path: scripts/legacy/typescript/README.md, contains: 'Complete migration to Python'}]}
+  - {id: N03, kind: status, source: 'issue #9412',
+     question: 'Are the plain JavaScript files that used to power the old HTML output still in use?',
+     query: 'legacy JavaScript HTML output scripts deprecated',
+     expect: [scripts/assets/scripts-deprecated/README.md],
+     verify: [{path: scripts/assets/scripts-deprecated/README.md, contains: 'NOT used in the current system'}]}
+  - {id: N04, kind: status, source: 'issue #7888',
+     question: 'Can I restart generating original dataset rows with the old version-4 runtime package, or what is the supported path now?',
+     query: 'legacy V4 dataset row generation supported path',
+     expect: [packages/v4-runtime/README.md, docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md],
+     verify: [{path: packages/v4-runtime/README.md, contains: 'original-row generation is stopped'}]}
+  - {id: N05, kind: status, source: 'issue #9412',
+     question: 'Where did the loose review notes and temporary drafts that used to sit at the top of the repository go, and are they still needed?',
+     query: 'archived root review notes scratch drafts moved',
+     expect: [docs/archive/repo-root-scratch-2026-05-08/README.md],
+     verify: [{path: docs/archive/repo-root-scratch-2026-05-08/README.md, contains: 'sitting at the repository'}]}
+  - {id: N06, kind: status, source: 'docs/decisions/2026-07-28-public-ua-eval-ownership-and-data-boundaries.md',
+     question: 'Is the Ukrainian translation of the evaluation harness data card still the authoritative version?',
+     query: 'Ukrainian translation evaluation harness data card',
+     expect: [docs/archive/ua-eval-harness/README.md, docs/projects/ua-eval-harness/DATA_CARD.en.md],
+     verify: [{path: docs/archive/ua-eval-harness/README.md, contains: 'superseded translations'}]}
+  - {id: N07, kind: status, source: 'docs/decisions/decisions.yaml (dec-012)',
+     question: 'Is it still decided that the site stays static-first forever with the backend only as an enhancement, or was that replaced?',
+     query: 'static-first site backend enhancement decision',
+     expect: [docs/decisions/INDEX.md, docs/decisions/decisions.yaml],
+     verify: [{path: docs/decisions/INDEX.md, contains: 'Static-first forever'}]}
+  - {id: N08, kind: status, source: 'docs/decisions/decisions.yaml (dec-003)',
+     question: 'Do we still stop the review-and-fix loop after four rounds?',
+     query: 'review-fix loop round limit four rounds',
+     expect: [docs/decisions/INDEX.md, docs/decisions/decisions.yaml],
+     verify: [{path: docs/decisions/INDEX.md, contains: 'Cap review fix rounds at 4'}]}
+  - {id: N09, kind: status, source: 'issue #9275',
+     question: 'Was the idea of letting the OpenAI coding agent pick up a small class of tasks on its own, without a driver, ever adopted?',
+     query: 'Codex autonomous small tasks without driver proposal',
+     expect: [docs/decisions/2026-06-14-autonomous-codex-dispatch-narrow-class.md, AGENTS.md],
+     verify: [{path: docs/decisions/2026-06-14-autonomous-codex-dispatch-narrow-class.md, contains: 'superseded_by: AGENTS.md'}]}
+  - {id: N10, kind: status, source: 'docs/architecture/adr/README.md',
+     question: 'Did we ever decide where the edition of the course for native speakers lives and what it is called?',
+     query: 'native speakers course edition name location decision',
+     expect: [docs/architecture/adr/adr-008-uk-native-track-destination.md, docs/architecture/adr/README.md],
+     verify: [{path: docs/architecture/adr/adr-008-uk-native-track-destination.md, contains: 'Status:** Deferred'}]}
+  - {id: N11, kind: status, source: 'issue #9412',
+     question: 'Has the architecture record saying code should drive the curriculum lifecycle, with prompts versioned like source code, actually been accepted?',
+     query: 'ADR code drives curriculum lifecycle prompts versioned accepted',
+     expect: [docs/architecture/adr/README.md, docs/architecture/adr/adr-012-code-driven-curriculum-lifecycle.md],
+     verify: [{path: docs/architecture/adr/README.md, contains: 'Code-driven curriculum lifecycle and prompts as versioned source | Proposed'}]}
+  - {id: N12, kind: status, source: 'issue #2001',
+     question: 'Are we still re-scanning the etymological dictionary with a vision model, or where does its text come from now?',
+     query: 'etymological dictionary vision model rescan text source',
+     expect: [docs/bug-autopsies/esum-ocr-pivot.md, docs/bug-autopsies/INDEX.md],
+     verify: [{path: docs/bug-autopsies/INDEX.md, contains: 'ESUM re-OCR project killed'}]}
+  - {id: N13, kind: status, source: 'docs/session-state/current.claude-infra.md',
+     question: 'I found a folder of dated end-of-session handoff notes from March. Should I still write my handoff as a markdown file like those?',
+     query: 'session handoff notes markdown archive March',
+     expect: [docs/session-state/README.md, docs/handoffs/SESSION-HANDOFF-2026-03-20.md],
+     verify: [{path: docs/session-state/README.md, contains: 'Do not add handoffs in this directory'}]}
+  - {id: N14, kind: status, source: 'issue #7994',
+     question: 'Is upgrading the existing A1 modules in place still the plan, or what replaced it?',
+     query: 'upgrade existing A1 modules in place replaced',
+     expect: [docs/epics/a1-upgrade-operating-rules.md, docs/epics/fresh-build-build-program.md],
+     verify: [{path: docs/epics/a1-upgrade-operating-rules.md, contains: 'is abandoned for A1'}]}
+  - {id: N15, kind: status, source: 'docs/decisions/2026-07-07-benchmark-public-release-parked.md',
+     question: 'Is the strategy about getting Google''s open-model team to notice our benchmarks still current?',
+     query: 'Google open-model team benchmarks outreach strategy',
+     expect: [docs/strategy/STRATEGY_MAKING_GOOGLE_NOTICE_OUR_BENCHMARKS.md, docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md],
+     verify: [{path: docs/strategy/STRATEGY_MAKING_GOOGLE_NOTICE_OUR_BENCHMARKS.md, contains: 'superseded_by: docs/strategy/UKRAINIAN_OPEN_MODEL_DATA_INFRASTRUCTURE_NORTH_STAR.md'}]}
+  - {id: N16, kind: status, source: 'docs/decisions/2026-07-10-grammar-wordchoice-priority-finetuning-parked.md',
+     question: 'Is the old walkthrough for training a Google open-weights model on a hosted platform still how we plan to train on our data?',
+     query: 'train Gemma hosted platform walkthrough fine-tuning',
+     expect: [docs/guides/HUGGINGFACE_GEMMA_FINETUNING_GUIDE.md, docs/research/hramatka_literary_poltava_candidate_audit.md],
+     verify: [{path: docs/guides/HUGGINGFACE_GEMMA_FINETUNING_GUIDE.md, contains: 'superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md'}]}
+  - {id: N17, kind: status, source: 'issue #8343',
+     question: 'Can the old Kyivan Rus graffiti and Middle Ukrainian chancery datasets still be used for model training?',
+     query: 'Kyivan Rus graffiti Middle Ukrainian chancery datasets training',
+     expect: [registry/projects/open_model_data/archive/quarantined_historical/README.md],
+     verify: [{path: registry/projects/open_model_data/archive/quarantined_historical/README.md, contains: 'DO NOT USE FOR MODEL TRAINING'}]}
+  - {id: N18, kind: status, source: 'issue #9412',
+     question: 'Are the vocabulary translation batches stored in the registry still applied to the vocabulary files?',
+     query: 'vocabulary translation batches registry applied vocabulary files',
+     expect: [registry/translations/README.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Legacy vocabulary translation batches'}]}
+  - {id: N19, kind: status, source: 'issue #9213',
+     question: 'Should a new agent still post to the old topic channels to coordinate with other agents, or has something replaced that?',
+     query: 'agent coordination topic channels replaced Fleet Comms',
+     expect: [agents_extensions/shared/rules/fleet-comms-coordination.md, docs/agent-bridge-setup-guide.md],
+     verify: [{path: agents_extensions/shared/rules/fleet-comms-coordination.md, contains: 'Do not create new authoritative bridge'}]}
+  - {id: N20, kind: status, source: 'CLAUDE.md Inter-Agent Communication (budget substitutions)',
+     question: 'Can I still send work to the GLM lane, and where does it go if I try?',
+     query: 'GLM lane dispatch rejected redirect',
+     expect: [scripts/config/agent_fallback_substitutions.yaml],
+     verify: [{path: scripts/config/agent_fallback_substitutions.yaml, contains: 'subscription backing the glm lane is retired'}]}
+  - {id: N21, kind: status, source: 'issue #9270',
+     question: 'Are the token usage reports under docs a current view of what we spend?',
+     query: 'token usage reports docs spend',
+     expect: [docs/token-usage/token_report.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'not current usage'}]}
+
+  # ---------------------------------------------------------------- process: where is this check, guard or step done
+  - {id: N22, kind: process, source: 'issue #9297',
+     question: 'Before an agent posts an issue comment or pull request text to GitHub, where do we check it for internal infrastructure details?',
+     query: 'GitHub comment PR text infrastructure details leak check',
+     expect: [scripts/opsec/prepublish.py, docs/dev/agent-public-text.md],
+     verify: [{path: scripts/opsec/prepublish.py, contains: 'before public GitHub writes'}]}
+  - {id: N23, kind: process, source: 'issue #9088',
+     question: 'What stops an agent from dumping environment variables or a secrets file into the session transcript?',
+     query: 'block env dump secrets file transcript hook',
+     expect: [agents_extensions/shared/hooks/guard-secret-print.py],
+     verify: [{path: agents_extensions/shared/hooks/guard-secret-print.py, contains: 'block clear secret-value dumps'}]}
+  - {id: N24, kind: process, source: 'issue #9094',
+     question: 'What prevents an agent from editing files in the main checkout instead of in its own worktree?',
+     query: 'hook blocks editing main checkout outside worktree',
+     expect: [agents_extensions/shared/hooks/guard-primary-checkout-write.py],
+     verify: [{path: agents_extensions/shared/hooks/guard-primary-checkout-write.py, contains: 'block write tools from dirtying the primary checkout'}]}
+  - {id: N25, kind: process, source: 'AGENTS.md (Python invocation)',
+     question: 'What rejects a shell command that calls bare python3 instead of the project''s virtual environment?',
+     query: 'hook rejects bare python3 virtual environment',
+     expect: [agents_extensions/shared/hooks/enforce-venv.sh],
+     verify: [{path: agents_extensions/shared/hooks/enforce-venv.sh, contains: 'Enforce .venv/bin/python usage'}]}
+  - {id: N26, kind: process, source: 'issue #9455',
+     question: 'Which CI check blocks pull requests that pull in dependencies with serious known vulnerabilities, and where are the accepted advisories listed?',
+     query: 'CI dependency audit vulnerabilities accepted advisories',
+     expect: [.github/workflows/security-audit.yml, scripts/config/pip-audit-ignore.yaml],
+     verify: [{path: .github/workflows/security-audit.yml, contains: 'Blocking dependency-vulnerability security gate'}]}
+  - {id: N27, kind: process, source: 'issue #9101',
+     question: 'Where do we delete stale GitHub Actions cache entries so the repository stays under the cache size limit?',
+     query: 'delete stale GitHub Actions cache entries',
+     expect: [.github/workflows/cache-hygiene.yml, scripts/ci/cache_hygiene.py],
+     verify: [{path: .github/workflows/cache-hygiene.yml, contains: 'Deletes dead Actions cache entries'}]}
+  - {id: N28, kind: process, source: 'issue #8505',
+     question: 'Where do we catch a PR description that would accidentally close an issue by saying something like ''does not fix #123''?',
+     query: 'PR description closing keyword "does not fix" lint',
+     expect: [.github/workflows/pr-body-guard.yml, scripts/audit/lint_pr_closing_references.py],
+     verify: [{path: .github/workflows/pr-body-guard.yml, contains: 'Negated-closing-reference guard'}]}
+  - {id: N29, kind: process, source: 'issue #9058',
+     question: 'How can I measure how long CI jobs take and how long pull requests wait in the merge queue?',
+     query: 'CI job duration merge queue wait metrics',
+     expect: [scripts/ci/ci_timings.py],
+     verify: [{path: scripts/ci/ci_timings.py, contains: 'how long do PRs'}]}
+  - {id: N30, kind: process, source: 'docs/bug-autopsies/ci-hang-unbounded-jobs.md',
+     question: 'Does anything record when a branch is updated directly in the main checkout, for example a commit straight onto main?',
+     query: 'log direct branch update main checkout commit',
+     expect: [.githooks/reference-transaction],
+     verify: [{path: .githooks/reference-transaction, contains: 'records only committed ref updates in the primary'}]}
+  - {id: N31, kind: process, source: 'issue #9277',
+     question: 'Where do we refuse to give Ukrainian-language content, reviews or design work to the Moonshot coding seats?',
+     query: 'Moonshot Kimi seats refuse Ukrainian content routing',
+     expect: [scripts/agent_runtime/kimi_admission.py],
+     verify: [{path: scripts/agent_runtime/kimi_admission.py, contains: 'admit web, UI and backend coding only'}]}
+  - {id: N32, kind: process, source: 'issue #9021',
+     question: 'When a script runs inside an agent worktree, where is it decided which Python interpreter to launch?',
+     query: 'worktree script Python interpreter selection',
+     expect: [scripts/common/repo_root.py, scripts/lib/project_interpreter.sh],
+     verify: [{path: scripts/common/repo_root.py, contains: 'def project_interpreter'}]}
+  - {id: N33, kind: process, source: 'issue #8645',
+     question: 'Where is the shared memory ceiling for all background agent workers set, so one runaway worker cannot take down the driver?',
+     query: 'shared memory ceiling background agent workers cgroup',
+     expect: [packaging/systemd/README.md, packaging/systemd/lu-dispatch.slice],
+     verify: [{path: packaging/systemd/README.md, contains: 'One slice for every detached worker'}]}
+  - {id: N34, kind: process, source: 'issue #9143',
+     question: 'Where are memory limits enforced for the dictionary enrichment workers?',
+     query: 'memory limit dictionary enrichment workers',
+     expect: [scripts/lexicon/runner/memory.py],
+     verify: [{path: scripts/lexicon/runner/memory.py, contains: 'Hard memory enforcement for enrichment workers'}]}
+  - {id: N35, kind: process, source: 'issue #9067',
+     question: 'Where is the list of tests temporarily excused as flaky, with owners and expiry dates, and what validates it?',
+     query: 'flaky tests quarantine list owners expiry validator',
+     expect: [scripts/common/flake_quarantine.py, tests/flake_quarantine.yaml],
+     verify: [{path: scripts/common/flake_quarantine.py, contains: 'Validate the bounded flake quarantine'}]}
+  - {id: N36, kind: process, source: 'docs/decisions/INDEX.md',
+     question: 'Where do we check whether a recorded team decision has passed its expiry date?',
+     query: 'decision journal expiry check script',
+     expect: [scripts/audit/check_decisions.py, scripts/check_decisions.py],
+     verify: [{path: scripts/audit/check_decisions.py, contains: 'flags any active decision past its'}]}
+  - {id: N37, kind: process, source: 'docs/architecture/adr/README.md',
+     question: 'What checks that architecture decision records are numbered without gaps and that proposals do not sit unaccepted for too long?',
+     query: 'ADR numbering gaps stale proposed check',
+     expect: [scripts/audit/check_adrs.py],
+     verify: [{path: scripts/audit/check_adrs.py, contains: 'Stale Proposed'}]}
+  - {id: N38, kind: process, source: 'issue #9364',
+     question: 'Where do we refuse to send code changes to the Google-family reviewer and allow it to review only Ukrainian learner content?',
+     query: 'Gemini reviewer refuse code review Ukrainian learner content only',
+     expect: [scripts/ai_agent_bridge/_agy.py],
+     verify: [{path: scripts/ai_agent_bridge/_agy.py, contains: 'Gemini reviews Ukrainian only, never code'}]}
+  - {id: N39, kind: process, source: 'docs/epics/fresh-build-build-program.md',
+     question: 'Before we pay for a lesson-writing model call, where do we check that every example, quote and video the plan needs has an evidence record?',
+     query: 'preflight evidence record check before writer call',
+     expect: [scripts/build/fresh/preflight.py],
+     verify: [{path: scripts/build/fresh/preflight.py, contains: 'Before any paid writer call'}]}
+  - {id: N40, kind: process, source: 'PR #9497',
+     question: 'After a plan review approves, what step updates the plan so it points at the evidence pack that was reviewed?',
+     query: 'after plan review approval update plan evidence pack',
+     expect: [scripts/build/fresh/plan_promote.py],
+     verify: [{path: scripts/build/fresh/plan_promote.py, contains: 'after an APPROVE plan review'}]}
+  - {id: N41, kind: process, source: 'issue #9390',
+     question: 'Where does the lesson build keep count of how many times each lesson has been regenerated?',
+     query: 'lesson regeneration count attempts build state',
+     expect: [scripts/build/fresh/regeneration.py],
+     verify: [{path: scripts/build/fresh/regeneration.py, contains: 'Stable per-lesson regeneration ledger'}]}
+  - {id: N42, kind: process, source: 'issue #9124',
+     question: 'What schedules the daily backup of the data folder?',
+     query: 'daily backup data folder server timer schedule',
+     expect: [packaging/systemd/learn-ukrainian-backup.timer, packaging/systemd/learn-ukrainian-backup.service],
+     verify: [{path: packaging/systemd/learn-ukrainian-backup.timer, contains: 'daily data backup timer'}]}
+  - {id: N43, kind: process, source: 'issue #9229',
+     question: 'Where do the roughly six hundred tests that need the real local databases get run every night?',
+     query: 'nightly tests real local databases',
+     expect: [packaging/systemd/learn-ukrainian-data-tier.timer, scripts/ci/data_tier.py],
+     verify: [{path: packaging/systemd/learn-ukrainian-data-tier.timer, contains: 'nightly host data-tier test timer'}]}
+  - {id: N44, kind: process, source: 'issue #9305',
+     question: 'Where should I add a regression test that replays a recorded production input through a parser without calling any model?',
+     query: 'regression test replay recorded production input parser fixture',
+     expect: [tests/replay/README.md],
+     verify: [{path: tests/replay/README.md, contains: 'deterministic, LLM-free regressions'}]}
+
+  # ---------------------------------------------------------------- data stores and storage layout
+  - {id: N45, kind: data_store, source: 'docs/corpus-inventory.md',
+     question: 'Where do the big raw source files such as literary texts and textbook chunks live, as opposed to the working databases?',
+     query: 'raw source files literary texts textbook chunks location',
+     expect: [agents_extensions/shared/rules/storage-topology.md, docs/corpus-inventory.md],
+     verify: [{path: agents_extensions/shared/rules/storage-topology.md, contains: 'Bulk raw sources (primary)'}]}
+  - {id: N46, kind: data_store, source: 'issue #8804',
+     question: 'Can I move the main corpus database onto the network share to free up local disk space?',
+     query: 'move corpus database network share disk space',
+     expect: [agents_extensions/shared/rules/storage-topology.md, scripts/storage/topology.py],
+     verify: [{path: agents_extensions/shared/rules/storage-topology.md, contains: 'Never open SQLite from SMB'}]}
+  - {id: N47, kind: data_store, source: 'issue #8803',
+     question: 'Where does the code read the textbook PDFs from now that the old links under the data folder are gone?',
+     query: 'textbook PDFs path after data symlinks removed',
+     expect: [docs/runbooks/storage-topology.md],
+     verify: [{path: docs/runbooks/storage-topology.md, contains: 'Textbook PDFs'}]}
+  - {id: N48, kind: data_store, source: 'issue #8804',
+     question: 'Is the data folder on its own disk, and what stops services from starting when that disk is not mounted?',
+     query: 'Linux server data disk mount required systemd',
+     expect: [docs/runbooks/storage-topology.md, scripts/storage/data_volume_guard.sh],
+     verify: [{path: docs/runbooks/storage-topology.md, contains: 'Linux repository data volume'}]}
+  - {id: N49, kind: data_store, source: 'CLAUDE.md Reference Docs (corpus inventory)',
+     question: 'I scraped a new literary text into the data folder. Why does a forced rebuild of the corpus database not pick it up, and where should the file go?',
+     query: 'scraped literary text forced rebuild corpus database not picked up',
+     expect: [docs/corpus-inventory.md],
+     verify: [{path: docs/corpus-inventory.md, contains: 'freshly-scraped jsonl'}]}
+  - {id: N50, kind: data_store, source: 'issue #2001',
+     question: 'Where are the parsed etymological dictionary entries kept before they are loaded into the corpus database?',
+     query: 'parsed etymological dictionary entries before corpus load',
+     expect: [data/processed/, scripts/ingest/esum_abbyy_parser.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Parsed etymological dictionary (ESUM)'}]}
+  - {id: N51, kind: data_store, source: 'agents_extensions/shared/rules/mcp-sources-and-dictionaries.md',
+     question: 'Where is the local copy of the Ukrainian grammatical error corpus that the calque search draws on?',
+     query: 'UA-GEC local copy calque search',
+     expect: [data/ua-gec/],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Local clone of the UA-GEC'}]}
+  - {id: N52, kind: data_store, source: 'issue #9391',
+     question: 'Where do the safety copies of local SQLite databases made before a migration end up?',
+     query: 'SQLite backup before migration location',
+     expect: [data/backups/],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Pre-migration safety copies'}]}
+  - {id: N53, kind: data_store, source: 'issue #7888',
+     question: 'Where are the exported Ukrainian pedagogy datasets and their dataset cards kept, and what produces them?',
+     query: 'exported Ukrainian pedagogy datasets dataset cards',
+     expect: [data/datasets/, data/datasets/hramatka_uk_pedagogy_v1/README.md, scripts/dataset/export_ukrainian_pedagogy_dataset.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Exported Hramatka datasets'}]}
+  - {id: N54, kind: data_store, source: 'docs/runbooks/fleet-comms-open-gaps.md',
+     question: 'There is an empty fleet comms database file in the data folder. Is that where agent messages are stored?',
+     query: 'empty fleet comms database file data folder',
+     expect: [data/comms_plane.db, data/fleet_comms.db],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'not the comms store'}]}
+  - {id: N55, kind: data_store, source: 'issue #4705',
+     question: 'Where are the coverage ledgers for the exam-prep channel''s auto-captions and the speech-recognition bake-off kept?',
+     query: 'coverage ledgers auto-captions speech recognition bake-off',
+     expect: [data/corpus_audit/, scripts/navsi200_captions.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'NAVSI-200 ASR bake-off and captions ledgers'}]}
+  - {id: N56, kind: data_store, source: 'issue #9409',
+     question: 'Where is the list of YouTube videos found by title pattern kept before their articles are fetched?',
+     query: 'YouTube videos title pattern list before article fetch',
+     expect: [data/youtube_discovery/, scripts/crawl/discover_yt_by_pattern.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'YouTube discovery backfill list'}]}
+  - {id: N57, kind: data_store, source: 'issue #7551',
+     question: 'Which part of the per-grade school textbook word inventories is in git, and where is the untracked part kept?',
+     query: 'per-grade school textbook word inventories tracked untracked',
+     expect: [data/lexicon/source-inventory/, registry/lexicon/source-inventory/grade-01/README.md],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Untracked per-grade textbook word inventories'}]}
+  - {id: N58, kind: data_store, source: 'issue #9180',
+     question: 'Where do the large open-model-data payload files live, compared with the tracked registry records?',
+     query: 'open-model-data payload files registry records',
+     expect: [data/projects/open_model_data/, scripts/projects/open_model_data/build_decolonization_cases.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'mirroring the tracked registry/projects/open_model_data layout'}]}
+  - {id: N59, kind: data_store, source: 'docs/corpus-inventory.md',
+     question: 'Which corpus files are stored through Git LFS rather than as plain git objects?',
+     query: 'Git LFS tracked files',
+     expect: [.gitattributes],
+     verify: [{path: .gitattributes, contains: 'data/literary_texts/*.jsonl filter=lfs'}]}
+  - {id: N60, kind: data_store, source: 'docs/architecture/adr/adr-017-atlas-schema-and-lifecycle.md',
+     question: 'Is there a generated stand-in copy of the word atlas database for performance tests, and what creates it?',
+     query: 'synthetic word atlas database performance tests generator',
+     expect: [data/atlas-synthetic.db, scripts/benchmarks/generate_synthetic_atlas.py],
+     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Synthetic Atlas database for read-path benchmarks'}]}
+  - {id: N61, kind: data_store, source: 'issue #9391',
+     question: 'When the morphology database is switched to its new schema, where is the old copy backed up and how is the switch rolled back?',
+     query: 'morphology database new schema backup rollback',
+     expect: [scripts/rag/activate_vesum_db.py],
+     verify: [{path: scripts/rag/activate_vesum_db.py, contains: 'automatic backup'}]}
+
+  # ---------------------------------------------------------------- resources and how-to documents
+  - {id: N62, kind: resource, source: 'issue #4696',
+     question: 'Do we ship recorded audio clips for word pronunciation, or how is pronunciation played on the site?',
+     query: 'word pronunciation audio clips site',
+     expect: [docs/runbooks/pronunciation-audio.md],
+     verify: [{path: docs/runbooks/pronunciation-audio.md, contains: 'on-device Ukrainian TTS'}]}
+  - {id: N63, kind: resource, source: 'issue #9463',
+     question: 'Where can I find links for reading the cited school textbooks online?',
+     query: 'online links cited school textbooks',
+     expect: [docs/references/textbook-urls.yaml],
+     verify: [{path: docs/references/textbook-urls.yaml, contains: 'Canonical read-online URLs'}]}
+  - {id: N64, kind: resource, source: 'issue #9252',
+     question: 'Where is the full text of the official state language standard, and how do I find which lines cover a given module?',
+     query: 'state language standard full text module lines',
+     expect: [docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt, docs/l2-uk-en/UKRAINIAN-STANDARD-INDEX.md],
+     verify: [{path: docs/l2-uk-en/UKRAINIAN-STANDARD-INDEX.md, contains: 'maps specific Curriculum Modules to the exact line ranges'}]}
+  - {id: N65, kind: resource, source: 'docs/corpus-inventory.md',
+     question: 'Do we have a local copy of the open-licensed university grammar textbook we cite, and where is it?',
+     query: 'open-licensed university grammar textbook local copy',
+     expect: [docs/references/dobra-forma/README.md],
+     verify: [{path: docs/references/dobra-forma/README.md, contains: 'comprehensive Ukrainian grammar textbook'}]}
+  - {id: N66, kind: resource, source: 'agents_extensions/shared/rules/storage-topology.md',
+     question: 'How do I refresh the bulk raw-source mirror on the Windows machine from the cloud copy without deleting anything?',
+     query: 'refresh raw-source mirror Windows from cloud without deleting',
+     expect: [scripts/storage/windows/README.md, scripts/storage/windows/Copy-BulkSourcesFromDrive.ps1],
+     verify: [{path: scripts/storage/windows/README.md, contains: 'Windows bulk-source maintenance'}]}
+  - {id: N67, kind: resource, source: 'agents_extensions/shared/rules/ukrainian-linguistics.md',
+     question: 'Where are the hand-labelled examples for testing whether a judge correctly spots Russianisms?',
+     query: 'Russianism judge hand-labelled test examples',
+     expect: [eval/russianism/README.md],
+     verify: [{path: eval/russianism/README.md, contains: 'calibration-cases.jsonl'}]}
+  - {id: N68, kind: resource, source: 'issue #2177',
+     question: 'Where are the saved samples of OCR output in which the vision model invented text?',
+     query: 'OCR hallucination samples vision model invented text',
+     expect: [tests/fixtures/etymology/gemini-hallucinations/README.md],
+     verify: [{path: tests/fixtures/etymology/gemini-hallucinations/README.md, contains: 'hallucination patterns generated by vision-LLM OCR'}]}

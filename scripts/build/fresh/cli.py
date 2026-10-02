@@ -37,6 +37,7 @@ from scripts.build.fresh.prompt import (
     render_recap_prompt,
     style_card_info,
 )
+from scripts.build.fresh.regeneration import writer_inputs
 from scripts.build.fresh.writer import ALLOWED_WRITERS, WRITER_EFFORTS, dispatch_writer
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.evidence import pack as pack_module
@@ -1060,7 +1061,7 @@ def main(argv: list[str] | None = None) -> int:
         plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(
             args.level, args.slug, args.lesson, repo_root=repo_root
         )
-        card_path, _, _card_sha = style_card_info(args.level, cards_dir=cards_dir)
+        card_path, _, card_sha = style_card_info(args.level, cards_dir=cards_dir)
         pos = plan_dict.get("arc_ref", {}).get("position", 1)
         p_state = planned_state(
             args.level,
@@ -1201,6 +1202,7 @@ def main(argv: list[str] | None = None) -> int:
             fake_seat=args.fake_seat,
             effort=args.writer_effort,
             repo_root=repo_root,
+            inputs=writer_inputs(hashes, card_sha, check_res.prompt_sha256),
         )
 
         print(f"Writer call succeeded for {args.level}/{args.slug} lesson {args.lesson} (seat: {args.writer}).")

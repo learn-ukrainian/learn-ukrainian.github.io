@@ -3,7 +3,7 @@
 > **Document Status:** Authoritative Operational Plan & Roadmap (Comprehensive Tri-Family Adjudication: Gemini, Claude Fable 5.1, Codex Sol)
 > **Stream Epic:** #6321 (Open Model Data)
 > **Target Alignment:** Google Gemma 3 (12B-it, 4B-it) & Gemma 4 Architectures
-> **Source Corpus:** Local repository storage in `data/sources.db`, `data/vesum.db`, `data/ulif_dump_all.db`, and `scripts.rag.source_query.r2u_translate`
+> **Source Corpus:** Local repository storage in `data/sources.db`, `data/vesum.db`, and `scripts.rag.source_query.r2u_translate`
 
 ---
 
@@ -51,7 +51,7 @@ To ensure major frontier AI labs (Google DeepMind, Anthropic, Meta, Mistral, Ope
 | **Antonenko-Davydovych *«Як ми говоримо»*** | `sources.db` $\rightarrow$ `style_guide` | **342 full chapters** | Morphemic, etymological, and literary reasoning steps (Train-only) | Train-only research partition |
 | **Pre-Soviet & 1920s Dictionaries (R2U)** | `scripts.rag.source_query.r2u_translate` | **Full indexed endpoints** | Pre-1933 authentic equivalents (Krymskyi-Yefremov 1924–33, Pidmohylnyi-Pluzhnyk 1926–27) used as historical discovery heuristics | Public Domain (Public redistribution) |
 | **Soviet СУМ-11 (Differential Mirror)** | `sources.db` $\rightarrow$ `sum11` | **127,069 entries** | Negative differential mirror: detecting Soviet ideological elevation and artificial convergence (7,152 `sovietization_risk` flags) | Academic research mirror |
-| **ULIF (Словники України on-line)** | `data/ulif_dump_all.db` $\rightarrow$ `ulif_entries` | **13,392 entries** | Register qualifiers (`діал.`, `розм.`, `книжн.`, `заст.`), stress, and synonym spectrum to bound purism | Lexicographical reference |
+| **ULIF (Словники України on-line)** | `sources.db` $\rightarrow$ `ulif_dictua_entries` / `ulif_dictua_sections` | **269K entries, 336K sections** | Register qualifiers (`діал.`, `розм.`, `книжн.`, `заст.`), stress, and synonym spectrum to bound purism | Lexicographical reference |
 | **VESUM Morphological Engine** | `data/vesum.db` $\rightarrow$ `forms` / `forms_all` | **409K lemmas, 6.7M forms** | Paradigm verification, inflectional consistency, and non-standard marker detection (`:bad`, `:subst`) | Open source (GPL/CC) |
 
 ---

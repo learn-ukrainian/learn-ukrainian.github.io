@@ -196,7 +196,7 @@ flag against the index; all other stores exist only in the local `data/` directo
 | `data-sources-db` | `data/sources.db` | active | corpus-channels | `scripts/wiki/build_sources_db.py`, `scripts/lexicon/runner/fetch_ulif_homonyms.py` |
 | `data-vesum-db` | `data/vesum.db`, `data/vesum.db.bak`, `data/vesum.db.bak.*`, `data/vesum_shadow_v680.db` | active | corpus-channels | `scripts/rag/activate_vesum_db.py`, `scripts/rag/build_vesum_shadow.py` |
 | `data-atlas-db` | `data/atlas.db` | active | atlas-practice | `scripts/atlas/atlas_db.py` |
-| `data-ulif-dumps` | `data/ulif_dump_all.db`, `data/ulif_dump.db`, `data/ulif_scrape.log` | active | atlas-practice | `scripts/lexicon/tools/dump_ulif.py` (`ulif_dump.db` only; the other two have no writer in `scripts/`) |
+| `data-ulif-dumps` | `data/ulif_dump.db`, `data/ulif_scrape.log` (legacy `data/ulif_dump_all.db` retired #8798) | active | atlas-practice | `scripts/lexicon/tools/dump_ulif.py` (`ulif_dump.db` only; `ulif_dump_all.db` retired) |
 | `data-wiki-cache` | `data/wiki_cache.db`, `data/wiki_sources.db` | active | corpus-channels | `scripts/rag/wiki_cache.py` (`wiki_cache.db` only; nothing in `scripts/` names `wiki_sources.db`) |
 | `data-empty-comms-placeholders` | `data/comms_plane.db`, `data/fleet_comms.db` | archive | infra-harness | Zero-byte files with no writer in scripts/; the Fleet Comms plane keeps its durable store elsewhere. |
 | `data-lexicon-ulif-cache` | `data/lexicon/cache/` | active | atlas-practice | `scripts/lexicon/runner/fetch_ulif_homonyms.py`, `scripts/lexicon/ulif_raw_cache.py`, `scripts/lexicon/enrich_manifest.py` |

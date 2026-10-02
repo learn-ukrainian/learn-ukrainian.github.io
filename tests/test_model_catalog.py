@@ -410,11 +410,12 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
     assert candidates["openai_frontier"]["transport"] == "native_codex"
     assert "gpt-5.6-terra" not in candidates
     assert candidates["grok-4.7"]["transport"] == "native_grok"
-    # Explicit Cursor pin when native grok is dark — never Cursor auto.
+    # #9488: the Sol-spared Cursor seat pins the exact slug the runtime attests — never Cursor auto.
     assert candidates["grok-4.7-cursor-fallback"]["transport"] == "cursor"
     assert candidates["grok-4.7-cursor-fallback"]["model_id"] == "grok-4.7"
+    assert candidates["grok-4.7-cursor-fallback"]["last_resort"] is True
     assert candidates["grok-4.7-cursor-fallback"]["invocation"].endswith(
-        "--agent cursor --model grok-4.7"
+        "--agent cursor --model grok-4.7-high"
     )
 
 
@@ -512,7 +513,8 @@ def test_practical_ladders_exclude_advisory_roles():
         assert "gpt-5.6-terra" not in names
         assert "claude-sonnet-5-5" in names
         assert "pool" in names
-        assert "grok-4.7-cursor-fallback" not in names
+        # #9488: only the attested Cursor Grok seat; native Grok never judges.
+        assert "grok-4.7-cursor-fallback" in names
         assert "grok-4.7" not in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
@@ -740,10 +742,16 @@ def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
 
 def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     # In review_scheduler.endpoints
+    # #9488: the Cursor endpoint is formal only for an explicit, policy-admitted
+    # pin; Composer (Kimi lineage) stays non-eligible.
     broken_ep = deepcopy(load_model_catalog())
-    broken_ep["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
-    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor must remain formal_review_eligible: false"):
+    broken_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = ["composer-2.5"]
+    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor\.models cannot pin 'composer-2\.5'"):
         validate_catalog(broken_ep)
+    unpinned_ep = deepcopy(load_model_catalog())
+    unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = []
+    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor needs an explicit models pin"):
+        validate_catalog(unpinned_ep)
 
     broken_ep_models = deepcopy(load_model_catalog())
     broken_ep_models["review_scheduler"]["endpoints"]["cursor"]["models"] = ["auto"]
@@ -823,11 +831,14 @@ def test_critical_ladder_anthropic_authority_is_opus_with_fable_last_resort():
     catalog = load_model_catalog()
     flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
     assert flat[:3] == ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback"]
-    assert flat[-2:] == ["claude-fable-5-1", "claude-fable-5-1-cursor-fallback"]
+    # #9488: the Cursor Grok seat closes the list; it has no critical_review role.
+    assert flat[-3:] == ["claude-fable-5-1", "claude-fable-5-1-cursor-fallback", "grok-4.7-cursor-fallback"]
     assert "claude-opus-5" not in flat
     assert "claude-sonnet-5-5" not in flat
     for name in flat:
-        assert catalog["review_candidates"][name].get("last_resort", False) == name.startswith("claude-fable-")
+        assert catalog["review_candidates"][name].get("last_resort", False) == (
+            name.startswith("claude-fable-") or name == "grok-4.7-cursor-fallback"
+        )
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:

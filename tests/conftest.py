@@ -184,6 +184,45 @@ _LIVE_GITHUB_ALLOWED = False
 
 
 @pytest.fixture(autouse=True)
+def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
+    """Decouple tests from the host's ``lu-dispatch.slice`` (#8891, #9514).
+
+    ``probe_isolation`` asks the host's systemd user manager whether the
+    dispatch slice can hold a worker, and it reaches that manager even from a
+    shell without ``XDG_RUNTIME_DIR`` (#9514). Where it can (and CI cannot),
+    ``cmd_dispatch`` takes the ``systemd-run --scope`` launch path, which
+    needs a real ``Popen`` surface (``poll()``, pipes, ``/proc``) that fake
+    worker processes do not provide. Default the probe to "not ready" so every
+    dispatch takes the plain-``Popen`` path; a slice-path test sets
+    ``dispatch_slice_probe["ready"] = True`` instead, and a test of the probe
+    itself is marked ``host_dispatch_probe``.
+    ``LU_TEST_FORCE_DISPATCH_SCOPE=1`` forces that ready probe for a whole run
+    without asking the host. An ambient ``LU_DISPATCH_ISOLATION=fallback``
+    would override even a "ready" probe, so the fixture clears it; only a
+    test that exercises the forced fallback sets it again itself.
+    """
+    state: dict[str, Any] = {"ready": False, "reason": "test stub: host slice probe disabled"}
+    if request.node.get_closest_marker("host_dispatch_probe") is not None:
+        return state
+    from scripts.orchestration import dispatch_isolation
+
+    monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
+    if os.environ.get("LU_TEST_FORCE_DISPATCH_SCOPE") == "1":
+        state["ready"] = True
+        state["reason"] = None
+
+    def _probe(env: Any = None, **_kwargs: Any) -> Any:
+        source = os.environ if env is None else env
+        forced = dispatch_isolation._forced_fallback(source)
+        if forced is not None:
+            return forced
+        return dispatch_isolation.ProbeResult(ready=state["ready"], reason=state["reason"])
+
+    monkeypatch.setattr(dispatch_isolation, "probe_isolation", _probe)
+    return state
+
+
+@pytest.fixture(autouse=True)
 def _live_github_spawn_policy(request: pytest.FixtureRequest) -> Generator[None, None, None]:
     """Permit real ``gh`` only for tests explicitly marked as integrations."""
     global _LIVE_GITHUB_ALLOWED
@@ -756,6 +795,25 @@ def _hermetic_dispatch_admission_host(monkeypatch):
     for name in ("DISPATCH_MAX_LIVE_WRITE_WORKERS", "DISPATCH_MIN_MEM_AVAILABLE_GIB", "DISPATCH_MAX_LOAD_PER_CPU"):
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("LU_TEST_DISPATCH_HEALTHY_HOST", "1")
+
+
+@pytest.fixture(autouse=True)
+def _hermetic_credit_lane_snapshot(monkeypatch):
+    """Credit-period state sees no live Monitor snapshot or runtime usage records (#9518).
+
+    The live Monitor on a developer box can report a credit balance and refuse
+    the off-allowlist dispatches other tests make, and the live runtime usage
+    records hold real rate limits. Credit-lane tests monkeypatch both readers
+    themselves.
+    """
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+    monkeypatch.setattr(
+        credit_lane,
+        "read_recent_rate_limits",
+        lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
+    )
 
 
 # One numbered directory per process. ``mktemp`` lists the base to pick the
@@ -1785,6 +1843,10 @@ def pytest_configure(config: pytest.Config) -> None:
     )
     config.addinivalue_line(
         "markers",
+        "host_dispatch_probe: test runs the real dispatch_isolation probe instead of the not-ready stub",
+    )
+    config.addinivalue_line(
+        "markers",
         "needs_artifact(group, rel): test requires data/<rel> from artifact group; "
         "skipped only when the artifact is absent",
     )
@@ -2771,6 +2833,7 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
     real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
     monkeypatch.setenv("LU_TEST_ACP_PRIMARY_ROOT", str(real_checkout))
     monkeypatch.setenv("LU_TEST_ACP_SCRATCH_ROOT", str(tmp_path_factory.getbasetemp()))
+
 
 # Opt-in synthetic private tooling for tests of public publishing consumers.
 from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401

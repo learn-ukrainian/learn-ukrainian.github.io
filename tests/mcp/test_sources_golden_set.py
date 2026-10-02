@@ -17,12 +17,15 @@ assert _SPEC is not None and _SPEC.loader is not None
 _GOLDEN = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(_GOLDEN)
 
-_UNSTABLE_KEYS = frozenset({
-    "entry_id",
-    "source_version",
-    "canonical_jsonl_sha256",
-    "evidence_identifiers",
-})
+_UNSTABLE_KEYS = frozenset(
+    {
+        "entry_id",
+        "source_version",
+        "canonical_jsonl_sha256",
+        "evidence_identifiers",
+        "schema_version",
+    }
+)
 _FINGERPRINT_KEYS = frozenset(_GOLDEN._DICTIONARY_FINGERPRINT_KEYS)
 
 
@@ -41,6 +44,7 @@ def _assert_compared_payload(value: Any) -> None:
     if isinstance(value, str):
         assert '"entry_id"' not in value
         assert '"source_version"' not in value
+        assert '"schema_version"' not in value
         assert "canonical_jsonl_sha256" not in value
 
 

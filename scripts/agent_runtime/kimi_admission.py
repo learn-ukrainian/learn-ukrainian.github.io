@@ -776,6 +776,8 @@ def _alternative_seats() -> str:
                 for entry in catalog["review_candidates"].values()
                 if models[entry["model_id"]]["family"] in {"anthropic", "openai"}
                 and catalog["review_scheduler"]["endpoints"].get(entry["route"], {}).get("formal_review_eligible")
+                # A multi-model endpoint is formal only for the models it pins.
+                and entry["model_id"] in catalog["review_scheduler"]["endpoints"][entry["route"]].get("models", [])
             }
         )
         consults = sorted(

@@ -242,7 +242,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
 
     if injected_grok:
         # Subject exclusion must still refuse a caller-supplied Grok ladder;
-        # automatic ladders omit Grok entirely under the no-judge policy.
+        # automatic ladders list only the attested Cursor Grok seat (#9488).
         monkeypatch.setitem(
             reviewer_resolver.REVIEW_LADDERS,
             "high",
@@ -278,7 +278,10 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
             assert "subject exclusion" in grok["reason"]
             assert "grok_build.py" in grok["reason"]
     else:
-        assert grok_entries == []
+        assert [entry["name"] for entry in grok_entries] == ["grok-4.7-cursor-fallback"]
+        assert grok_entries[0]["status"] == "excluded"
+        assert "subject exclusion" in grok_entries[0]["reason"]
+        assert "grok_build.py" in grok_entries[0]["reason"]
     selected = payload["selected"]
     assert selected is None or selected["family"] not in {"openai", "xai"}
     assert proc.returncode == (1 if selected is None else 0)

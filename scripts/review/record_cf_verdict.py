@@ -18,6 +18,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
+
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import publication_boundary, publication_cli
@@ -33,6 +35,7 @@ from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
+    FORMAL_CURSOR_REVIEW_MODELS,
     UNRESOLVED_AUTHOR_FAMILIES,
     resolve_author_family,
     resolve_family,
@@ -51,6 +54,15 @@ MAX_COMMENT_BYTES = 65_000
 # Kimi CLI task records can identify the harness without naming its model;
 # this harness is single-family and always runs Moonshot models.
 SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
+# ``resolved_model_source`` values the Cursor adapter writes only when the model
+# came out of the runtime's own output (``scripts/agent_runtime/adapters/cursor.py``
+# ``parse``: stream-json stdout, this invocation's transcript, stderr JSON events).
+# The ``unattested-harness`` / ``pending`` / ``unknown`` fallbacks and any other
+# value are not runtime reports, so a receipt carrying them proves no model.
+RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
+# Families the resolver never selects through a native harness: Grok reviews
+# only through the attested Cursor seat and Kimi never reviews (core.md P2).
+NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
 
 
 class RecordError(RuntimeError):
@@ -250,6 +262,23 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
+def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, family: str) -> None:
+    """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
+
+    Through Cursor only a pinned formal seat counts, and only when the runtime
+    reported its display name (``"Grok 4.7 256K High"``): a bare or other-variant
+    slug (``grok-4.7``, ``grok-4.7-high-fast``) attests no variant, and Composer,
+    Auto and Cursor-routed Claude are unpinned. Through any other harness Grok
+    never judges and Kimi never reviews.
+    """
+    if cursor:
+        if model in FORMAL_CURSOR_REVIEW_MODELS and reported != model:
+            return
+    elif family not in NATIVE_NON_REVIEWER_FAMILIES:
+        return
+    raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
+
+
 @publication_boundary(RecordError)
 def record(
     task_id: str, *, pr_number: int | None = None, task_root: Path | None = None, lock_root: Path | None = None
@@ -265,14 +294,21 @@ def record(
         raise RecordError("review repository unavailable")
     if not isinstance(sha, str) or not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA missing or invalid")
-    model = task.get("resolved_model") if task.get("agent") == "cursor" else task.get("model")
-    if task.get("agent") == "cursor" and task.get("resolved_model_known") is not True:
+    cursor = task.get("agent") == "cursor"
+    reported = task.get("resolved_model") if cursor else task.get("model")
+    if cursor and task.get("resolved_model_known") is not True:
         raise RecordError("Cursor reviewer model unknown")
+    source = task.get("resolved_model_source")
+    if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
+        raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
+    # Only Cursor's runtime reports display names; record its catalog id.
+    model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
+    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family)
     verdict = normalize_verdict(reply)
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:

@@ -4761,7 +4761,147 @@ def _commit_count_refs(worktree: Path, base_ref: str) -> tuple[str, ...]:
     return tuple(dict.fromkeys(candidate for candidate in candidates if candidate))
 
 
-def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
+def _recorded_base_sha(record: Mapping[str, Any]) -> str | None:
+    """The commit the task's worktree was branched from, as its record stored it, or None."""
+    sha = record.get("worktree_base_sha")
+    return sha.strip() if isinstance(sha, str) and sha.strip() else None
+
+
+def _run_count_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
+    """``(count, base_missing)`` for ``git rev-list --count <base>..HEAD``.
+
+    ``base_missing`` is True only when git ran and rejected ``base`` (the ref
+    does not resolve): the one case where trying another base is sound. A git
+    that cannot run, or output that is not a number, is unknown outright.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", "--count", f"{base}..HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None, False
+    if proc.returncode != 0:
+        return None, True
+    try:
+        return int((proc.stdout or "").strip()), False
+    except ValueError:
+        return None, False
+
+
+def _is_ancestor_of_head(worktree: Path, sha: str) -> bool:
+    """Whether ``sha`` names a commit in the repository that is an ancestor of ``HEAD``."""
+    try:
+        proc = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", f"{sha}^{{commit}}", "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def _run_git_stdout(worktree: Path, *args: str) -> tuple[int, str] | None:
+    """``(returncode, stdout)`` of a git command, or None when git could not run."""
+    try:
+        proc = subprocess.run(
+            ["git", *args],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return proc.returncode, proc.stdout or ""
+
+
+def _count_real_changes_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
+    """``(count, base_missing)`` of ``<base>..HEAD``, or 0 when merging ``HEAD`` into ``base`` changes nothing.
+
+    ``<default>..HEAD`` overcounts as delivery proof: an empty commit, a merge of
+    the default branch, a cherry-pick of a change it already has, or a squash of
+    work it already holds is ahead of a stale or squash-merged base yet adds
+    nothing (#9451). Rather than approximate that per commit shape, ask git the
+    exact question: ``git merge-tree --write-tree <base> HEAD`` is the tree a
+    merge would produce, so when it equals ``base``'s own tree nothing new is
+    delivered. A different tree, or a conflict (exit status 1, which a real
+    change colliding with ``base`` produces), is a delivery. Any other failure,
+    including a git without ``--write-tree`` or history too shallow to merge, is
+    ``(None, False)`` so the caller fails closed.
+    """
+    ahead, base_missing = _run_count_ahead(worktree, base)
+    if ahead is None or ahead == 0:
+        return ahead, base_missing
+    base_tree = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{tree}}")
+    if base_tree is None or base_tree[0] != 0 or not base_tree[1].strip():
+        return None, False
+    merged = _run_git_stdout(worktree, "merge-tree", "--write-tree", "--no-messages", base, "HEAD")
+    if merged is None or merged[0] not in (0, 1):
+        return None, False
+    if merged[0] == 1:
+        return ahead, False
+    merged_tree = merged[1].strip().splitlines()[0] if merged[1].strip() else ""
+    if not merged_tree:
+        return None, False
+    return (0 if merged_tree == base_tree[1].strip() else ahead), False
+
+
+def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_sha: str | None) -> int | None:
+    """Count the branch's commits when the named base ref is gone everywhere (#9451).
+
+    A base branch deleted after it merged leaves nothing to count against, which
+    recorded a pushed fix as ``commit_count_unknown``. Fall back, in order, to:
+
+    1. the commit the worktree was branched from (``base_sha``, as the dispatch
+       recorded it), when it is an ancestor of ``HEAD``;
+    2. the merge base of ``HEAD`` with the default branch (``origin/main``, then
+       the upstream remote's ``main``), which is what ``<default>..HEAD`` counts.
+
+    A SHA that does not resolve, or is not an ancestor of ``HEAD`` (the branch
+    was rebased off it), is skipped rather than trusted. None when no base
+    resolves, so the caller still fails closed.
+
+    The recorded commit is the exact point the worktree started from, so its
+    plain ``<sha>..HEAD`` count is exact. The default branch is only a proxy
+    for the lost base and may already hold the work, so its commits count only
+    when merging ``HEAD`` into it would change it (``_count_real_changes_ahead``).
+    """
+    candidates: list[tuple[str, bool]] = []
+    if base_sha and _is_ancestor_of_head(worktree, base_sha):
+        candidates.append((base_sha, True))
+    default_refs = ["origin/main"]
+    tracking_remote = _tracking_remote_for_current_branch(worktree)
+    if tracking_remote:
+        default_refs.append(f"{tracking_remote}/main")
+    candidates.extend((ref, False) for ref in dict.fromkeys(default_refs))
+    for candidate, exact in candidates:
+        count_ahead = _run_count_ahead if exact else _count_real_changes_ahead
+        count, base_missing = count_ahead(worktree, candidate)
+        if count is not None:
+            print(
+                f"⚠️  base {base_ref!r} is gone; counted commits ahead against {candidate!r} instead",
+                file=sys.stderr,
+            )
+            return count
+        if not base_missing:
+            return None
+    return None
+
+
+def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = None) -> int | None:
     """Return commits on HEAD not reachable from an eligible base ref, or None.
 
     ``None`` means "cannot count", and a vanished worktree is exactly that: on
@@ -4771,27 +4911,19 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
     dead pid — invisible to every settle-loop watching it. The sibling
     ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
     contract, and callers already fail closed on ``None``.
+
+    When every named candidate is gone (the base branch was deleted after it
+    merged, #9451), the count falls back to the recorded ``base_sha`` and then
+    the default-branch merge base; a present base is always measured first,
+    unchanged.
     """
     for candidate in _commit_count_refs(worktree, base_ref):
-        try:
-            proc = subprocess.run(
-                ["git", "rev-list", "--count", f"{candidate}..HEAD"],
-                cwd=worktree,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
-        except (OSError, subprocess.TimeoutExpired):
+        count, base_missing = _run_count_ahead(worktree, candidate)
+        if count is not None:
+            return count
+        if not base_missing:
             return None
-        if proc.returncode != 0:
-            continue
-        try:
-            return int((proc.stdout or "").strip())
-        except ValueError:
-            return None
-    return None
+    return _count_commits_ahead_without_named_base(worktree, base_ref, base_sha)
 
 
 def _unpushed_commit_refs(worktree: Path, branch: str) -> tuple[str, ...]:
@@ -6476,7 +6608,9 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 return row
             if not dirty:
                 ahead = _count_commits_ahead(
-                    worktree, _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main"))
+                    worktree,
+                    _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main")),
+                    base_sha=_recorded_base_sha(state),
                 )
                 if ahead is None:
                     row["reason"] = "ahead count unavailable"
@@ -9017,6 +9151,7 @@ def _run_worker(
                 commits_ahead = _count_commits_ahead(
                     Path(worktree_path),
                     base_ref,
+                    base_sha=_recorded_base_sha(final_state),
                 )
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
@@ -9095,7 +9230,9 @@ def _run_worker(
                         owned_paths=final_state.get("owned_paths"),
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
-                    commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
+                    commits_ahead = _count_commits_ahead(
+                        Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state)
+                    )
                     if auto_finalize.ok and not auto_finalize.skipped_paths:
                         needs_finalize = False
                         ok_outcome = True
@@ -10261,6 +10398,15 @@ def _dispatch(
         except (OSError, ValueError, RuntimeError) as exc:
             print(f"❌ review attempt refused: {exc}", file=sys.stderr)
             return 2
+
+    # #9518: while a lane is past its plan cap with a fresh positive credit balance
+    # (router state irrelevant), only its credit-period models are admitted. Checked on the admitted route (aliases,
+    # substitution and review selection applied; no --model means the lane default)
+    # before any side effect.
+    credit_refusal = _credit_period_refusal(dispatch_agent, launch_target.model)
+    if credit_refusal:
+        print(f"❌ dispatch refused: {credit_refusal}", file=sys.stderr)
+        return 2
 
     # #9275 (operator decision 2026-09-30): a bounded worker is admitted only with a
     # complete advisory envelope bound to this dispatch. Checked on the admitted
@@ -12958,6 +13104,22 @@ def _lane_default_model(agent: str) -> str | None:
     return _default_model_for(agent)
 
 
+def _credit_period_refusal(dispatch_agent: str, launch_model: str | None) -> str | None:
+    """Typed refusal when the credit-period allowlist applies to ``dispatch_agent`` and the launch model is off it (#9518).
+
+    The allowlist applies whenever the plan window is at or below the threshold
+    and a fresh positive credit balance exists, whether or not the router
+    currently recommends the lane. A dispatch without ``--model`` is judged by the lane's default model. The
+    policy (``scripts/config/credit_lanes.yaml``) and the lane state come from
+    ``scripts.fleet.credit_lane``, the same reader ``capacity_pick`` uses; an
+    unreadable policy restricts only the built-in credit lanes and warns on
+    stderr. Reads snapshots only: never consumes credits or resets.
+    """
+    from scripts.fleet import credit_lane
+
+    return credit_lane.dispatch_refusal(dispatch_agent, launch_model or _lane_default_model(dispatch_agent))
+
+
 def _load_budget_substitution_table() -> dict[str, dict[str, str]]:
     from scripts.review.model_catalog import ModelCatalogError, budget_substitution_table, load_model_catalog
 
@@ -13101,6 +13263,7 @@ def _resolve_agent_with_budget_guard(
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path.
+    A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
     """
     requested = (agent or "").strip().lower()
     if language_lane and requested not in _LANGUAGE_LANES:
@@ -13208,6 +13371,26 @@ def _resolve_agent_with_budget_guard(
             "provider and runtime headroom checks passed.",
             file=sys.stderr,
         )
+    credit_relaxes = False
+    if not reserve_relaxes:
+        # #9518: a lane with a credit balance present and no recent rate limit stays
+        # usable (the credit-period model check runs on the admitted route); unknown,
+        # stale or contradicted credit data, or an unreadable policy, keeps today's guard.
+        from scripts.fleet import credit_lane
+
+        try:
+            credit = credit_lane.lane_credit_state(
+                requested, agent_dict, credit_lane.load_policy(), snapshot_stale=is_stale
+            )
+        except ValueError:
+            credit = {"state": None}
+        credit_relaxes = credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+        if credit_relaxes:
+            print(
+                f"⚠ lane {requested} has a {credit_lane.DRAW_NOT_VERIFIED} ({credit['reason']}); "
+                f"credit-period models only: {', '.join(credit['allowed_models'])}.",
+                file=sys.stderr,
+            )
     burn = (
         agent_info.get("burn_pct_7d")
         if requested != "claude"
@@ -13216,7 +13399,7 @@ def _resolve_agent_with_budget_guard(
 
     needs_action, reason = (
         (False, "")
-        if reserve_relaxes
+        if reserve_relaxes or credit_relaxes
         else _budget_needs_hard_capacity_action(
             status=status,
             will_last=will_last,

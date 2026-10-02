@@ -39,7 +39,7 @@ MIN_AVAILABLE_BYTES = 6 * 1024**3
 RUN_BUDGET_SECONDS = 7 * 3600
 HYDRATION_BUDGET_SECONDS = 3600
 ISSUE_BODY_LIMIT = 60000
-HOST_DATABASES = ("sources.db", "vesum.db", "atlas.db", "ulif_dump_all.db")
+HOST_DATABASES = ("sources.db", "vesum.db", "atlas.db")
 ABSOLUTE_PATH = re.compile(r"(?<![A-Za-z0-9])/(?!/)[^\s\]\[),:;]+")
 NETWORK_ADDRESS = re.compile(r"https?://[^\s\]\[),:;]+|(?<!\d)(?:\d{1,3}\.){3}\d{1,3}(?!\d)")
 
