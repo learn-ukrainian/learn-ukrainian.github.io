@@ -108,8 +108,9 @@ stampede one hot lane.
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / implementation only /
-k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). A valid operator reset
+**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / k3-256k / GLM
+(`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
+`resolve-reviewer` pick, which may be the attested Cursor Grok seat below critical (#9488). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
 Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1
