@@ -382,24 +382,30 @@ def test_repository_relative_reply_preserves_citations_and_outside_text(text, ex
     assert recorder.repository_relative_reply(text, task=review, primary_root=Path("/checkout")) == expected
 
 
-@pytest.mark.parametrize("checkout", [
-    {"worktree_path": "/checkout/.worktrees/review"},
-    {"worktree_path": "/checkout/.worktrees/review", "cwd": "/review/scripts"},
-    {"worktree_path": "/checkout/.worktrees/review", "cwd": "/"},
-    {"worktree_path": "/checkout"},
-])
+@pytest.mark.parametrize(
+    "checkout",
+    [
+        {"worktree_path": "/checkout/.worktrees/review"},
+        {"worktree_path": "/checkout/.worktrees/review", "cwd": "/review/scripts"},
+        {"worktree_path": "/checkout/.worktrees/review", "cwd": "/"},
+        {"worktree_path": "/checkout"},
+    ],
+)
 def test_repository_relative_reply_uses_recorded_checkout(checkout):
-    assert recorder.repository_relative_reply(
-        f"{checkout['worktree_path']}/scripts/unit.py:12", task=checkout, primary_root=Path("/checkout")
-    ) == "scripts/unit.py:12"
+    assert (
+        recorder.repository_relative_reply(
+            f"{checkout['worktree_path']}/scripts/unit.py:12", task=checkout, primary_root=Path("/checkout")
+        )
+        == "scripts/unit.py:12"
+    )
 
 
 @pytest.mark.parametrize("checkout", ["/review", "/checkout-other", "/else/checkout"])
 def test_repository_relative_reply_refuses_roots_outside_primary(checkout):
     text = f"{checkout}/scripts/unit.py /checkout/scripts/unit.py"
-    assert recorder.repository_relative_reply(text, task={"worktree_path": checkout}, primary_root=Path("/checkout")) == (
-        f"{checkout}/scripts/unit.py scripts/unit.py"
-    )
+    assert recorder.repository_relative_reply(
+        text, task={"worktree_path": checkout}, primary_root=Path("/checkout")
+    ) == (f"{checkout}/scripts/unit.py scripts/unit.py")
 
 
 def test_repository_relative_reply_refuses_worktree_root_resolving_outside_primary(tmp_path):
@@ -425,6 +431,14 @@ def test_repository_relative_reply_refuses_worktree_root_resolving_outside_prima
         pytest.param("/a.py\uff3csrv\uff3cdata\uff3cx", id="fullwidth-backslashes"),
         pytest.param("/a.py\uff5c/srv/data/x", id="fullwidth-pipe"),
         pytest.param("/a.py\ufe54/srv/data/x", id="small-semicolon"),
+        *[
+            pytest.param(
+                f"/a{separator}{ignorable}\u0338/../../private/unit.py",
+                id=f"composing-{name}{'-zero-width' if ignorable else ''}",
+            )
+            for separator, name in [("<", "less-than"), (">", "greater-than"), ("=", "equals")]
+            for ignorable in ["", "\u200b"]
+        ],
     ],
 )
 def test_repository_relative_reply_unicode_paths_still_refuse_real_scanner(checkout, suffix):
@@ -443,7 +457,33 @@ def test_repository_relative_reply_unicode_paths_still_refuse_real_scanner(check
     assert rewritten == reply
 
 
-@pytest.mark.parametrize("checkout", [{"cwd": "/"}, {"cwd": "/review"}, {"worktree_path": "/"}, {"worktree_path": "/repo"}])
+@pytest.mark.parametrize(
+    "changed_text",
+    ["\u2026", "\u00a0", "\u200b", "\uff0f", "\u0661", "cafe\u0301", "<\u0338", ">\u200b\u0338", "=\u0338"],
+)
+@pytest.mark.parametrize("position", ["before", "between", "after"])
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r", "\u2028", ""])
+def test_repository_relative_reply_preserves_whole_normalization_changed_line(changed_text, position, ending):
+    paths = "/checkout/scripts/unit.py /checkout/tests/test_unit.py"
+    changed_line = {
+        "before": f"{changed_text} {paths}",
+        "between": f"/checkout/scripts/unit.py {changed_text} /checkout/tests/test_unit.py",
+        "after": f"{paths} {changed_text}",
+    }[position] + ending
+    assert recorder.normalize_for_scan(changed_line) != changed_line
+    # Stable neighboring lines still rewrite; preserve all text and line endings
+    # on the altered line, even when the change is outside both path tokens.
+    text = f"/checkout/scripts/before.py\n{changed_line}"
+    expected = f"scripts/before.py\n{changed_line}"
+    if ending:
+        text += "/checkout/scripts/after.py"
+        expected += "scripts/after.py"
+    assert recorder.repository_relative_reply(text, task={}, primary_root=Path("/checkout")) == expected
+
+
+@pytest.mark.parametrize(
+    "checkout", [{"cwd": "/"}, {"cwd": "/review"}, {"worktree_path": "/"}, {"worktree_path": "/repo"}]
+)
 def test_repository_relative_reply_refuses_cwd_and_ancestor_roots(checkout):
     text = "/review/unit.py /repo/outside/unit.py /repo/checkout/scripts/unit.py"
     assert recorder.repository_relative_reply(text, task=checkout, primary_root=Path("/repo/checkout")) == (
@@ -471,21 +511,29 @@ def test_repository_relative_reply_refuses_resolved_ancestor_root(tmp_path):
 def test_repository_relative_reply_ends_path_at_shell_and_markup_separators(separator):
     worktree = "/checkout/.worktrees/dispatch/cursor/review"
     text = f"{worktree}/a{separator}/outside/x"
-    assert recorder.repository_relative_reply(text, task={"worktree_path": worktree}, primary_root=Path("/checkout")) == (
-        f"a{separator}/outside/x"
-    )
+    assert recorder.repository_relative_reply(
+        text, task={"worktree_path": worktree}, primary_root=Path("/checkout")
+    ) == (f"a{separator}/outside/x")
     # A traversal in the outside path must not prevent rewriting the first
     # citation: the separator makes them independent path tokens.
-    assert recorder.repository_relative_reply(
-        f"{worktree}/a{separator}/outside/../x", task={"worktree_path": worktree}, primary_root=Path("/checkout")
-    ) == f"a{separator}/outside/../x"
+    assert (
+        recorder.repository_relative_reply(
+            f"{worktree}/a{separator}/outside/../x", task={"worktree_path": worktree}, primary_root=Path("/checkout")
+        )
+        == f"a{separator}/outside/../x"
+    )
 
 
 @pytest.mark.parametrize("checkout", [None, "relative", 123])
 def test_repository_relative_reply_ignores_invalid_checkout(checkout):
-    assert recorder.repository_relative_reply(
-        "/outside/unit.py /checkout/scripts/unit.py", task={"worktree_path": checkout}, primary_root=Path("/checkout")
-    ) == "/outside/unit.py scripts/unit.py"
+    assert (
+        recorder.repository_relative_reply(
+            "/outside/unit.py /checkout/scripts/unit.py",
+            task={"worktree_path": checkout},
+            primary_root=Path("/checkout"),
+        )
+        == "/outside/unit.py scripts/unit.py"
+    )
 
 
 def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path):
@@ -507,8 +555,11 @@ def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path):
 @pytest.mark.parametrize(
     "reply,refused",
     [
-        ("VERDICT: APPROVE\n`/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py:12`\n"
-         "```\n/checkout/tests/test_unit.py:3\n```", False),
+        (
+            "VERDICT: APPROVE\n`/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py:12`\n"
+            "```\n/checkout/tests/test_unit.py:3\n```",
+            False,
+        ),
         ("VERDICT: APPROVE", False),
         ("VERDICT: APPROVE\n/checkout/scripts/unit.py /outside/private.py:12", True),
         ("VERDICT: APPROVE\n/checkout-other/private.py", True),
@@ -517,11 +568,15 @@ def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path):
         ("VERDICT: APPROVE\n/checkout/.\u200b./private.py", True),
         ("VERDICT: APPROVE\n/checkout/a.py\uff0fsrv\uff0fdata\uff0fx", True),
         ("VERDICT: APPROVE\n/checkout/scripts/unit.py\nSENTINEL-HOST-TOKEN", True),
-        *[(f"VERDICT: APPROVE\n/checkout/scripts/unit.py{separator}/outside/x", True)
-          for separator in "|=\\*;&<>\"'()[]{}"],
+        *[
+            (f"VERDICT: APPROVE\n/checkout/scripts/unit.py{separator}/outside/x", True)
+            for separator in "|=\\*;&<>\"'()[]{}"
+        ],
     ],
 )
-def test_record_fixture_dry_run_through_publication_scanner(monkeypatch, tmp_path, synthetic_opsec, capsys, reply, refused):
+def test_record_fixture_dry_run_through_publication_scanner(
+    monkeypatch, tmp_path, synthetic_opsec, capsys, reply, refused
+):
     """Run the recorder and typed publisher with only the GitHub transport faked."""
     from scripts.publish import github
     from tests.opsec_fixtures import synthetic_rules
@@ -556,11 +611,15 @@ def test_record_fixture_dry_run_through_publication_scanner(monkeypatch, tmp_pat
         diagnostic = str(error.value)
         assert "publish_blocked" in diagnostic and "class=1" in diagnostic
         assert reply not in diagnostic
-        assert "/outside" not in diagnostic and "/checkout" not in diagnostic and "SENTINEL-HOST-TOKEN" not in diagnostic
+        assert (
+            "/outside" not in diagnostic and "/checkout" not in diagnostic and "SENTINEL-HOST-TOKEN" not in diagnostic
+        )
         assert calls == {"posts": 0, "statuses": 0}
         record = recorder.record
         monkeypatch.setattr(
-            recorder, "record", lambda task_id, **kwargs: record(task_id, task_root=tasks, lock_root=tmp_path / "locks", **kwargs)
+            recorder,
+            "record",
+            lambda task_id, **kwargs: record(task_id, task_root=tasks, lock_root=tmp_path / "locks", **kwargs),
         )
         assert recorder.main(["--task-id", "review-one", "--pr", "42"]) == 1
         output = capsys.readouterr()

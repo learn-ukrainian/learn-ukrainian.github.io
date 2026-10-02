@@ -141,9 +141,9 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
                     author_task = json.loads(task_file.read_text(encoding="utf-8"))
                 except (OSError, ValueError) as exc:
                     raise RecordError("author task provenance unavailable") from exc
-                if author_task.get("repository") != repository or not str(
-                    author_task.get("agent") or ""
-                ).startswith(harness):
+                if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
+                    harness
+                ):
                     raise RecordError("author task provenance conflicts with commit trailer")
                 if harness.startswith("cursor"):
                     if author_task.get("resolved_model_known") is not True:
@@ -215,7 +215,7 @@ def build_comment(*, sha: str, task_id: str, started: str, verdict: str, model: 
 
 
 def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root: Path) -> str:
-    """Rewrite checkout citations only; the publisher still scans the final text."""
+    """Rewrite checkout citations on scanner-stable lines; scan the final text."""
     checkout = task.get("worktree_path")
     roots = [primary_root]
     if isinstance(checkout, str) and Path(checkout).is_absolute():
@@ -223,12 +223,7 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
 
     def replace(match: re.Match[str]) -> str:
         token = match.group()
-        normalized = normalize_for_scan(token)
-        # Leave altered tokens visible to the scanner: normalization can reveal
-        # traversal or separators that raw filesystem paths treat as literals.
-        if normalized != token:
-            return token
-        path = Path(normalized)
+        path = Path(token)
         # Do not hide an escape or change the meaning of a symlink/.. walk.
         if ".." in path.parts:
             return match.group()
@@ -247,7 +242,12 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
             return path.relative_to(root).as_posix()
         return match.group()
 
-    return ABSOLUTE_PATH.sub(replace, reply)
+    # Normalization can compose across a token boundary or reveal traversal.
+    # Preserve the entire altered line so its absolute paths reach the scanner.
+    return "".join(
+        ABSOLUTE_PATH.sub(replace, line) if normalize_for_scan(line) == line else line
+        for line in reply.splitlines(keepends=True)
+    )
 
 
 def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:
