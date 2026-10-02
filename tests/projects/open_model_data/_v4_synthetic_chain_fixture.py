@@ -224,6 +224,9 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
 
     shutil.copytree(REGISTRY_OPEN_MODEL_DATA_DIR / "admission", artifact_dest / "admission", dirs_exist_ok=True)
     admission_dir = artifact_dest / "admission"
+    for f in admission_dir.iterdir():
+        if f.is_file():
+            f.chmod(0o600)
     (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(resolved_a2))
     (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(synthetic_a4))
     (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(synthetic_a5))
