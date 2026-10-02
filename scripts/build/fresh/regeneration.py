@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -17,12 +19,31 @@ SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-regeneration-l
 INPUT_KEYS = ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")
 
 
-def writer_task_id(level: str, slug: str, n: int, attempt: int, effort: str | None = None) -> str:
-    """Key dispatch attempts by effort; keep the lesson's regeneration budget separate.
+def inputs_digest(inputs: Mapping[str, str]) -> str:
+    """Short digest of an attempt's ``INPUT_KEYS`` values; missing keys count as zeros, as in the ledger."""
+    values = [inputs.get(key, "0" * 64) for key in INPUT_KEYS]
+    return hashlib.sha256(json.dumps(values, separators=(",", ":")).encode("ascii")).hexdigest()[:10]
 
-    Omitting effort preserves the historical task ID and the seat's own default.
+
+def writer_inputs(hashes: Mapping[str, str], card_sha256: str, prompt_sha256: str) -> dict[str, str]:
+    """The complete ``INPUT_KEYS`` snapshot every writer entry point keys its task ID and ledger on (#8425)."""
+    return {
+        "plan_sha256": hashes["plan_sha256"],
+        "pack_lock": hashes["pack_lock"],
+        "words_lock": hashes["words_lock"],
+        "card_sha256": card_sha256,
+        "prompt_sha256": prompt_sha256,
+    }
+
+
+def writer_task_id(level: str, slug: str, n: int, attempt: int, effort: str | None, inputs: Mapping[str, str]) -> str:
+    """Key dispatch attempts by inputs and effort; keep the lesson's regeneration budget separate.
+
+    Changed inputs restart the ledger at attempt 1, so their digest keeps a new run from reusing an earlier
+    run's ID; identical inputs keep the same ID whichever entry point dispatches them. Omitting effort keeps
+    the seat's own default.
     """
-    task_id = f"write-{level}-{slug}-{n}-{attempt}"
+    task_id = f"write-{level}-{slug}-{n}-{attempt}-{inputs_digest(inputs)}"
     return f"{task_id}-{effort}" if effort is not None else task_id
 
 
