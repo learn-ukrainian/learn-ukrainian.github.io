@@ -11984,7 +11984,7 @@ def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tas
 
 def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
     _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
-    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args, **_kwargs: None)
 
     result = delegate._rescue_task(state_path, apply=False)
 
