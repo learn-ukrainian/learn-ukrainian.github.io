@@ -204,10 +204,34 @@ def test_cursor_display_name_normaliser_handles_none() -> None:
     assert model_families.normalize_family(None) is model_families.Family.UNKNOWN
 
 
+@pytest.mark.parametrize("display", ["Grok 4.7 256K High", "grok 4.7 256k high", " Grok\t4.7  256K   High "])
+def test_cursor_grok_high_display_name_maps_to_the_concrete_model(display: str) -> None:
+    """#9488: the Cursor review seat's runtime report names the catalog model."""
+    assert model_families.canonical_cursor_model(display) == "grok-4.7"
+    assert model_families.normalize_family(display) is model_families.Family.XAI
+
+
+@pytest.mark.parametrize(
+    "display",
+    [
+        "Grok 4.7 256K High Fast",
+        "Grok 4.7 256K Medium",
+        "Grok 4.7 256K Extra High",
+        "Grok 4.7 High",
+        "Grok 4.6 256K High",
+        "Gro\u212a 4.7 256K High",  # KELVIN SIGN folds to "k" under Unicode IGNORECASE
+        "Grok 4.7\u00a0256K High",  # no-break space
+        "Grok 4.7 256K High\n",
+    ],
+)
+def test_other_grok_display_names_are_not_rewritten(display: str) -> None:
+    assert model_families.canonical_cursor_model(display) == display
+
+
 @pytest.mark.parametrize(
     "display,expected",
     [
-        ("Grok 4.7 256K High", model_families.Family.XAI),
+        ("Grok 4.7 256K High Fast", model_families.Family.XAI),
         ("Claude Fable 5 300K High", model_families.Family.ANTHROPIC),
         ("composer-2.5", model_families.Family.MOONSHOT),
         ("composer-2.5-fast", model_families.Family.MOONSHOT),

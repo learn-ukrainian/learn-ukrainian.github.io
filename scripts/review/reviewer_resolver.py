@@ -15,7 +15,9 @@ The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
 ``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
-Fable is last resort, routine ladders keep practical seats, and Grok never judges.
+Fable is last resort, routine ladders keep practical seats, native Grok never
+judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
+below critical (#9488).
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
@@ -39,6 +41,7 @@ from scripts.audit import model_families
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     VALID_RISKS,
+    invocation_model,
     load_model_catalog,
     resolve_catalog_model_id,
     retired_model_refusal,
@@ -224,6 +227,27 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
 REVIEW_CANDIDATES: dict[str, ReviewerCandidate] = {
     name: _catalog_candidate(name) for name in _MODEL_CATALOG["review_candidates"]
 }
+
+
+def candidate_dispatch_model(candidate: ReviewerCandidate) -> str:
+    """The ``--model`` a review dispatch to ``candidate`` must send.
+
+    A Cursor seat runs its exact Cursor slug (``grok-4.7-high``), because that
+    slug is what the runtime then attests; other routes use the catalog id.
+    """
+    if candidate.transport == "cursor":
+        return invocation_model(candidate.invocation) or candidate.concrete_model
+    return candidate.concrete_model
+
+
+# Catalog ids a Cursor review receipt may attest: the Cursor seats the resolver
+# can select (pinned on the formal Cursor endpoint, #9488). Composer, Auto and
+# Cursor-routed Claude are unpinned, so a verdict from them is never recorded.
+FORMAL_CURSOR_REVIEW_MODELS: frozenset[str] = frozenset(
+    candidate.concrete_model
+    for candidate in REVIEW_CANDIDATES.values()
+    if candidate.route == "cursor" and candidate.transport == "cursor" and candidate.formal_review_eligible
+)
 
 
 def _catalog_ladder(risk: str) -> tuple[tuple[ReviewerCandidate, ...], ...]:
@@ -562,20 +586,22 @@ def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> i
     This intentionally precedes quality and all resource pressure. It is not a
     probabilistic score and has no rotation term: a lower integer means a
     better profile/risk role match among candidates that passed hard gates.
+
+    A requested role narrows the profile/risk-qualified set to the candidates
+    holding it (all ranked equal); it never admits a candidate the profile/risk
+    order excludes, so it cannot lower the critical-risk floor (#9488).
     """
-    requested_role = (inputs.requested_role or "").strip()
-    if requested_role:
-        return 0 if requested_role in candidate.model_roles else None
     profile = inputs.review_profile.strip().casefold()
     risk = inputs.risk.strip().casefold()
     try:
         ordered_roles = _SCHEDULER_POLICY["profile_risk_role_order"][profile][risk]
     except (KeyError, TypeError):
         return None
-    for rank, role in enumerate(ordered_roles):
-        if role in candidate.model_roles:
-            return rank
-    return None
+    rank = next((rank for rank, role in enumerate(ordered_roles) if role in candidate.model_roles), None)
+    requested_role = (inputs.requested_role or "").strip()
+    if requested_role:
+        return 0 if rank is not None and requested_role in candidate.model_roles else None
+    return rank
 
 
 def _retired_alias_target(candidate: ReviewerCandidate) -> str | None:
@@ -671,13 +697,22 @@ def evaluate_candidate(
                 health=health,
             )
 
-    if candidate.family == "xai" or model_family == "xai":
+    # Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
+    # through the Cursor seat whose runtime attests the concrete model. Every
+    # other gate below (independence, suitability, health) still applies to it.
+    if (candidate.family == "xai" or model_family == "xai") and not (
+        candidate.transport == "cursor" and candidate.route == "cursor"
+    ):
         return CandidateResult(
             name=candidate.name, concrete_model=candidate.concrete_model,
             family=candidate.family, route=candidate.route, transport=candidate.transport,
             invocation=candidate.invocation, quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded", reason="Grok never judges: excluded from code and infra review by core.md P2",
+            status="excluded",
+            reason=(
+                "native Grok never judges: Grok reviews code and infra only through the "
+                "runtime-attested Cursor seat (core.md P2, #9488)"
+            ),
             health=health,
         )
 
@@ -874,7 +909,12 @@ def evaluate_candidate(
 
     suitability_rank = _suitability_rank(candidate, inputs)
     if suitability_rank is None:
-        requested = inputs.requested_role or f"{inputs.review_profile}/{inputs.risk} catalog suitability"
+        requested_role = (inputs.requested_role or "").strip()
+        requested = (
+            requested_role
+            if requested_role and requested_role not in candidate.model_roles
+            else f"{inputs.review_profile}/{inputs.risk} catalog suitability"
+        )
         return CandidateResult(
             name=candidate.name,
             concrete_model=candidate.concrete_model,

@@ -318,7 +318,8 @@ def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
     assert resolution.selected is None
     fallback = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-1-cursor-fallback")
     assert fallback.status == "excluded"
-    assert ("formal-review transport" in fallback.reason) or ("generic multi-model harness" in fallback.reason)
+    # The Cursor endpoint is formal only for the models it pins (#9488); Fable is not one.
+    assert fallback.reason == "sealed endpoint 'cursor' is not pinned for model 'claude-fable-5-1'"
     native = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-1")
     assert native.status == "excluded"
     assert "unhealthy" in native.reason
@@ -531,7 +532,12 @@ def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
     assert resolution.selected is None
 
 
-def test_native_grok_dark_never_falls_to_cursor_grok():
+def test_native_grok_never_judges_and_cursor_grok_needs_a_healthy_cursor_lane():
+    """#9488 replaced "Grok never judges" with "native Grok never judges".
+
+    Native Grok stays excluded whatever its health; the attested Cursor seat is
+    selectable only while the Cursor lane itself is not unhealthy.
+    """
     snapshot = {
         "grok": "unhealthy",
         "cursor": "healthy",
@@ -540,16 +546,19 @@ def test_native_grok_dark_never_falls_to_cursor_grok():
         "agy": "unhealthy",
         "kimi": "unhealthy",
     }
-    resolution = resolve_reviewer(
-        ResolverInputs(author_model="claude", risk="high", routing_snapshot=snapshot)
-    )
-    assert resolution.selected is None
     injected = resolve_reviewer(
         ResolverInputs(author_model="claude", risk="high", routing_snapshot=snapshot),
         ladder=((GROK_4_7, GROK_4_7_CURSOR_FALLBACK),),
     )
-    assert injected.selected is None
-    assert all(item.status == "excluded" and "Grok never judges" in item.reason for item in injected.trace)
+    native = next(item for item in injected.trace if item.name == "grok-4.7")
+    assert native.status == "excluded" and "native Grok never judges" in native.reason
+    assert injected.selected is not None and injected.selected.name == "grok-4.7-cursor-fallback"
+    dark = resolve_reviewer(
+        ResolverInputs(author_model="claude", risk="high", routing_snapshot={**snapshot, "cursor": "unhealthy"})
+    )
+    assert dark.selected is None
+    cursor = next(item for item in dark.trace if item.name == "grok-4.7-cursor-fallback")
+    assert cursor.reason == "lane health is unhealthy — route is operationally unavailable"
 
 
 def test_missing_health_signal_is_fail_open():
@@ -934,16 +943,18 @@ def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(pr
     assert missing_reason.selected is None
     assert "pressure_override_reason" in missing_reason.fail_closed_reason
 
+    # Composer is a Cursor model the formal endpoint does not pin (#9488).
     unsafe = resolve_reviewer(
         ResolverInputs(
             author_model="gemini",
-            pinned_candidate="grok-4.7-cursor-fallback",
+            pinned_candidate="composer-2.5",
             pressure_override_reason="native capacity incident",
         ),
-        ladder=((REVIEW_CANDIDATES["grok-4.7-cursor-fallback"],),),
+        ladder=((REVIEW_CANDIDATES["composer-2.5"],),),
     )
     assert unsafe.selected is None
     assert "hard eligibility" in unsafe.fail_closed_reason
+    assert unsafe.trace[0].reason == "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"
 
 
 def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
@@ -1242,8 +1253,10 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
         ),
         ladder=(*REVIEW_LADDERS["high"], (GROK_4_7, GROK_4_7_CURSOR_FALLBACK)),
     )
-    assert without.selected is None
-    assert "Grok never judges" in _grok_trace(without)["grok-4.7"].reason
+    # #9488: native Grok still never judges; the attested Cursor seat is the
+    # last resort once every Anthropic primary is unavailable.
+    assert without.selected is not None and without.selected.name == "grok-4.7-cursor-fallback"
+    assert "native Grok never judges" in _grok_trace(without)["grok-4.7"].reason
 
     resolution = resolve_reviewer(
         ResolverInputs(
@@ -1504,13 +1517,20 @@ def test_fable_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
     assert "last resort" in resolution.substitution_note
 
 
-@pytest.mark.parametrize("candidate", [GROK_4_7, GROK_4_7_CURSOR_FALLBACK])
+@pytest.mark.parametrize(
+    "candidate,reason",
+    [
+        (GROK_4_7, "native Grok never judges"),
+        # #9488: the Cursor seat has no critical_review role in the catalogue.
+        (GROK_4_7_CURSOR_FALLBACK, "missing required review role suitability"),
+    ],
+)
 @pytest.mark.parametrize("profile", ["code", "infra"])
-def test_grok_review_forbidden_even_with_explicit_pin_and_custom_ladder(candidate, profile):
+def test_grok_critical_review_forbidden_even_with_explicit_pin_and_custom_ladder(candidate, reason, profile):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="critical", review_profile=profile,
                             formal_review=False, pinned_candidate=candidate.name,
                             pressure_override_reason="adversarial test")
     resolution = resolve_reviewer(inputs, ladder=((candidate,),))
     assert resolution.selected is None
     assert "hard eligibility gate" in resolution.fail_closed_reason
-    assert "Grok never judges" in resolution.trace[0].reason
+    assert reason in resolution.trace[0].reason
