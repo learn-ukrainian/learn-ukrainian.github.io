@@ -8,7 +8,7 @@
     "slug": {"type": "string", "minLength": 1},
     "n": {"type": "integer", "minimum": 1},
     "regenerations": {"type": "integer", "minimum": 0, "maximum": 2},
-    "terminal_layer": {"enum": [null, "plan", "pack", "driver"]},
+    "terminal_layer": {"enum": [null, "plan", "pack", "word_store", "engine", "driver"]},
     "last_success": {"type": "object", "additionalProperties": false,
       "required": ["at", "through_check", "inputs"],
       "properties": {

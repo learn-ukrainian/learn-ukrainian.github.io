@@ -33,16 +33,36 @@ def _raw(attempt):
 
 
 def _plan():
-    return {"lessons": [{"n": 1, "kind": "teach", "steps": [
-        {"id": "s1", "evidence": ["T-002", "X-001", "V-001"]},
-        {"id": "s2", "evidence": ["T-002", "T-003", "T-020", "T-021"]},
-    ], "activities": [{"id": aid, "type": typ} for aid, typ in TYPES.items()]}]}
+    return {
+        "lessons": [
+            {
+                "n": 1,
+                "kind": "teach",
+                "steps": [
+                    {"id": "s1", "evidence": ["T-002", "X-001", "V-001"]},
+                    {"id": "s2", "evidence": ["T-002", "T-003", "T-020", "T-021"]},
+                ],
+                "activities": [{"id": aid, "type": typ} for aid, typ in TYPES.items()],
+            }
+        ]
+    }
 
 
 def _run(root, draft, plan=None, expected_inputs=None):
-    return run_lesson("a1", "sounds-letters-and-hello", 1, draft=draft, plan=plan or _plan(),
-                      pack={}, words={}, state_dir=root, repo_root=Path(__file__).resolve().parents[2],
-                      plans_dir=root, evidence_dir=root, expected_inputs=expected_inputs)
+    return run_lesson(
+        "a1",
+        "sounds-letters-and-hello",
+        1,
+        draft=draft,
+        plan=plan or _plan(),
+        pack={},
+        words={},
+        state_dir=root,
+        repo_root=Path(__file__).resolve().parents[2],
+        plans_dir=root,
+        evidence_dir=root,
+        expected_inputs=expected_inputs,
+    )
 
 
 @pytest.mark.parametrize("attempt", [1, 2])
@@ -55,7 +75,9 @@ def test_real_gap_replies_validate_and_stop_at_gap_layer(tmp_path, attempt):
     assert all(row["status"] == "not_checked" for row in report["checks"] if row["check"] > 2)
 
 
-@pytest.mark.parametrize("need", ["quote", "publication_right", "example", "error", "word_form", "video", "standard_line"])
+@pytest.mark.parametrize(
+    "need", ["quote", "publication_right", "example", "error", "word_form", "video", "standard_line"]
+)
 def test_gap_need_routes_to_pack(tmp_path, need):
     draft = yaml.safe_load(_raw(1))
     for gap in draft["gaps"]:
@@ -96,8 +118,10 @@ def test_quote_host_must_belong_to_gap_step(tmp_path, need, host, host_step, gap
     assert (bad["check"], bad["layer"]) == (2, "pack" if host_step == gap_step else "plan")
 
 
-@pytest.mark.parametrize("defect", ["empty_gaps", "unknown_need", "missing_hash", "bad_hash", "unknown_step",
-                                    "nonempty_gap_step", "duplicate_step"])
+@pytest.mark.parametrize(
+    "defect",
+    ["empty_gaps", "unknown_need", "missing_hash", "bad_hash", "unknown_step", "nonempty_gap_step", "duplicate_step"],
+)
 def test_gap_shape_and_identity_inputs_remain_binding(defect):
     draft = yaml.safe_load(_raw(2))
     if defect == "empty_gaps":
@@ -149,8 +173,12 @@ def module_build(tmp_path, monkeypatch):
     for directory in (ev, plans, cards):
         directory.mkdir(parents=True)
     (cards / "a1.md").write_text("A1 card", encoding="utf-8")
-    paths = {"state_dir": ev / "_state", "pack": ev / "pack.yaml", "words": ev / "_words.yaml",
-             "plan": plans / "module.yaml"}
+    paths = {
+        "state_dir": ev / "_state",
+        "pack": ev / "pack.yaml",
+        "words": ev / "_words.yaml",
+        "plan": plans / "module.yaml",
+    }
     hashes = yaml.safe_load(_raw(1))["inputs"]
     hashes["style_card_sha256"] = hashlib.sha256((cards / "a1.md").read_bytes()).hexdigest()
     monkeypatch.setattr(cli, "_load_lesson_data", lambda *a, **kw: (plan, plan["lessons"][0], {}, {}, paths))
@@ -165,8 +193,14 @@ def module_build(tmp_path, monkeypatch):
     state = ev / "_state" / slug
     calls = []
 
-    def build(*, invalid_second=False, runner=run_lesson, writer_seat="codex:gpt-6.1-sol",
-              successful=False, prompt="fixture prompt"):
+    def build(
+        *,
+        invalid_second=False,
+        runner=run_lesson,
+        writer_seat="codex:gpt-6.1-sol",
+        successful=False,
+        prompt="fixture prompt",
+    ):
         monkeypatch.setattr(module, "render_lesson_prompt", lambda *a, **kw: prompt)
 
         def writer(**kw):
@@ -183,32 +217,43 @@ def module_build(tmp_path, monkeypatch):
             # Only the synthetic tree's input identity differs from the real reply.
             draft["inputs"] = dict(hashes)
             lock.write(state / "lesson-1.draft.yaml", lock.yaml_bytes(draft))
-        return module.build_module("a1", slug, repo_root=tmp_path, lesson_n=1, writer_seat=writer_seat,
-                                   writer_dispatch=writer, runner=runner)
+
+        return module.build_module(
+            "a1", slug, repo_root=tmp_path, lesson_n=1, writer_seat=writer_seat, writer_dispatch=writer, runner=runner
+        )
 
     return build, state, calls
 
 
-def test_repeated_real_gaps_stop_without_third_call_and_counts_agree(module_build):
+def test_real_gap_stops_without_regeneration_and_counts_agree(module_build):
     build, state, calls = module_build
     report = build()
-    assert calls == [1, 2]
+    assert calls == [1]
     ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sounds-letters-and-hello", 1)
     stored = yaml.safe_load((state / "module.build.yaml").read_text(encoding="utf-8"))
     assert report == stored
-    assert len(ledger["attempts"]) == 2
-    assert ledger["regenerations"] == stored["lessons"][0]["regenerations"] == 1
+    assert len(ledger["attempts"]) == 1
+    assert ledger["regenerations"] == stored["lessons"][0]["regenerations"] == 0
     assert ledger["terminal_layer"] == stored["lessons"][0]["terminal_layer"] == "pack"
     assert (stored["lessons"][0]["stopping_check"], stored["lessons"][0]["layer"]) == (2, "pack")
-    assert json.loads(stored["lessons"][0]["reason"].removeprefix("evidence_gap: ")) == yaml.safe_load(_raw(2))["gaps"]
+    assert json.loads(stored["lessons"][0]["reason"].removeprefix("evidence_gap: ")) == yaml.safe_load(_raw(1))["gaps"]
     rerun = build()
-    assert calls == [1, 2]  # A terminal rerun never dispatches again.
+    assert calls == [1]  # A terminal rerun never dispatches again.
     assert rerun == report
+
+
+def _writer_failure(*args, **kw):
+    """A delivered writer defect permits the second reply in accounting tests."""
+    failure = {"check": 6, "status": "failed", "layer": "writer", "reason": "fixture writer failure"}
+    expected = kw["expected_inputs"]
+    inputs = {key: expected["style_card_sha256" if key == "card_sha256" else key] for key in INPUT_KEYS}
+    record_failure(kw["state_dir"] / "lesson-1.regeneration.yaml", args[1], args[2], failure, inputs)
+    return {"passed": False, "checks": [failure]}
 
 
 def test_rejected_second_reply_still_counts_writer_call(module_build):
     build, state, calls = module_build
-    report = build(invalid_second=True)
+    report = build(invalid_second=True, runner=_writer_failure)
     ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sounds-letters-and-hello", 1)
     assert calls == [1, 2]
     assert ledger["regenerations"] == report["lessons"][0]["regenerations"] == 1
@@ -218,7 +263,7 @@ def test_rejected_second_reply_still_counts_writer_call(module_build):
 
 def test_resume_without_writer_preserves_count_in_both_state_files(module_build):
     build, state, calls = module_build
-    build(invalid_second=True)
+    build(invalid_second=True, runner=_writer_failure)
     report = build(writer_seat=None)
     ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sounds-letters-and-hello", 1)
     stored = yaml.safe_load((state / "module.build.yaml").read_text(encoding="utf-8"))
@@ -268,10 +313,10 @@ def test_retry_after_failure_counts_once_even_when_successful(tmp_path):
 def test_changed_inputs_start_fresh_failure_series(tmp_path, changed_key, terminal, record_call):
     path = tmp_path / "lesson-1.regeneration.yaml"
     inputs = {key: "a" * 64 for key in INPUT_KEYS}
-    failure = {"check": 2, "layer": "pack", "reason": "gap"}
+    failure = {"check": 2, "layer": "writer", "reason": "writer failure"}
     record_failure(path, "sample", 1, failure, inputs)
     if terminal:
-        assert record_failure(path, "sample", 1, failure, inputs)["terminal_layer"] == "pack"
+        assert record_failure(path, "sample", 1, failure, inputs)["terminal_layer"] == "plan"
     changed = {**inputs, changed_key: "b" * 64}
     if record_call:
         before = record_writer_call(path, "sample", 1, changed)
@@ -312,4 +357,4 @@ def test_runner_changed_inputs_restart_terminal_gap_series(tmp_path):
     bad = next(row for row in _run(tmp_path, draft, expected_inputs=inputs)["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["layer"]) == (2, "pack")
     ledger = load_ledger(path, "sounds-letters-and-hello", 1)
-    assert (ledger["regenerations"], ledger["terminal_layer"], len(ledger["attempts"])) == (0, None, 1)
+    assert (ledger["regenerations"], ledger["terminal_layer"], len(ledger["attempts"])) == (0, "pack", 1)
