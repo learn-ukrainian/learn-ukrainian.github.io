@@ -1,0 +1,18 @@
+# Audited suppression list for npm audit dependency vulnerability scanning.
+# Reference issue: learn-ukrainian/learn-ukrainian.github.io#9561
+#
+# Every suppressed vulnerability requires:
+# - id: GHSA or CVE identifier
+# - package: affected package name
+# - version: currently pinned or installed version range
+# - status: upstream-unpatched | upstream-fix-pending | accepted-risk
+# - reason: technical justification why the vulnerability cannot be exploited in this repository
+#
+# Unsuppressed Critical or High vulnerabilities will fail the blocking gate.
+
+vulnerabilities:
+  - id: GHSA-ch52-4w7c-c8xp
+    package: http-cache-semantics
+    version: 4.2.0
+    status: upstream-unpatched
+    reason: "http-cache-semantics max-stale handling can disclose cross-user cached responses in multi-user HTTP caches handling untrusted client max-stale directives. In this repository, site/ is a statically built documentation site with no runtime multi-user cache proxy."

@@ -8,6 +8,8 @@ import yaml
 from scripts.ci.audit_dependencies import (
     audit_node,
     audit_python,
+    filter_npm_audit_vulnerabilities,
+    load_npm_audit_ignores,
     load_pip_audit_ignores,
     main,
 )
@@ -37,6 +39,96 @@ def test_load_pip_audit_ignores_empty_file(tmp_path: Path):
     empty_file = tmp_path / "empty.yaml"
     empty_file.write_text("", encoding="utf-8")
     assert load_pip_audit_ignores(empty_file) == []
+
+
+def test_load_npm_audit_ignores(tmp_path: Path):
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    data = {
+        "vulnerabilities": [
+            {"id": "GHSA-ch52-4w7c-c8xp", "package": "http-cache-semantics", "reason": "test"},
+            {"cve": "CVE-2026-9999", "package": "foo", "reason": "test2"},
+            {"package": "bar", "reason": "test3"},
+            "GHSA-1111-2222-3333",
+        ]
+    }
+    ignore_file.write_text(yaml.safe_dump(data), encoding="utf-8")
+
+    ignores = load_npm_audit_ignores(ignore_file)
+    assert "GHSA-CH52-4W7C-C8XP" in ignores
+    assert "CVE-2026-9999" in ignores
+    assert "bar" in ignores
+    assert "GHSA-1111-2222-3333" in ignores
+
+
+def test_load_npm_audit_ignores_missing_and_empty(tmp_path: Path):
+    assert load_npm_audit_ignores(None) == []
+    assert load_npm_audit_ignores(tmp_path / "does-not-exist.yaml") == []
+    empty_file = tmp_path / "empty.yaml"
+    empty_file.write_text("", encoding="utf-8")
+    assert load_npm_audit_ignores(empty_file) == []
+
+
+def test_filter_npm_audit_vulnerabilities_all_suppressed():
+    vulns = {
+        "@astrojs/mdx": {
+            "name": "@astrojs/mdx",
+            "severity": "high",
+            "via": ["astro"],
+        },
+        "astro": {
+            "name": "astro",
+            "severity": "high",
+            "via": ["http-cache-semantics"],
+        },
+        "http-cache-semantics": {
+            "name": "http-cache-semantics",
+            "severity": "high",
+            "via": [
+                {
+                    "name": "http-cache-semantics",
+                    "dependency": "http-cache-semantics",
+                    "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                    "severity": "high",
+                }
+            ],
+        },
+    }
+    suppressed, unsuppressed = filter_npm_audit_vulnerabilities(vulns, ["GHSA-CH52-4W7C-C8XP"])
+    assert suppressed == {"@astrojs/mdx", "astro", "http-cache-semantics"}
+    assert unsuppressed == {}
+
+
+def test_filter_npm_audit_vulnerabilities_unsuppressed():
+    vulns = {
+        "astro": {
+            "name": "astro",
+            "severity": "high",
+            "via": [
+                "http-cache-semantics",
+                {
+                    "name": "astro",
+                    "dependency": "astro",
+                    "url": "https://github.com/advisories/GHSA-unsuppressed",
+                    "severity": "high",
+                },
+            ],
+        },
+        "http-cache-semantics": {
+            "name": "http-cache-semantics",
+            "severity": "high",
+            "via": [
+                {
+                    "name": "http-cache-semantics",
+                    "dependency": "http-cache-semantics",
+                    "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                    "severity": "high",
+                }
+            ],
+        },
+    }
+    suppressed, unsuppressed = filter_npm_audit_vulnerabilities(vulns, ["GHSA-CH52-4W7C-C8XP"])
+    assert suppressed == {"http-cache-semantics"}
+    assert "astro" in unsuppressed
 
 
 def test_audit_python_no_lockfile(tmp_path: Path):
@@ -97,8 +189,95 @@ def test_audit_node_success(mock_run: MagicMock, tmp_path: Path):
     for call_item in mock_run.call_args_list:
         cmd = call_item[0][0]
         kwargs = call_item[1]
-        assert cmd == ["npm", "audit", "--omit=dev", "--audit-level=high"]
+        assert cmd == ["npm", "audit", "--omit=dev", "--audit-level=high", "--json"]
         assert kwargs.get("timeout") == 120
+
+
+@patch("subprocess.run")
+def test_audit_node_suppressed(mock_run: MagicMock, tmp_path: Path):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    ignore_file.write_text(
+        "vulnerabilities:\n  - id: GHSA-ch52-4w7c-c8xp\n    package: http-cache-semantics\n",
+        encoding="utf-8",
+    )
+
+    audit_json = json.dumps({
+        "vulnerabilities": {
+            "http-cache-semantics": {
+                "name": "http-cache-semantics",
+                "severity": "high",
+                "via": [
+                    {
+                        "name": "http-cache-semantics",
+                        "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                        "severity": "high",
+                    }
+                ],
+            }
+        }
+    })
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path, ignore_file)
+    assert res == 0
+
+
+@patch("subprocess.run")
+def test_audit_node_unsuppressed_fails(mock_run: MagicMock, tmp_path: Path):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    audit_json = json.dumps({
+        "vulnerabilities": {
+            "unsuppressed-pkg": {
+                "name": "unsuppressed-pkg",
+                "severity": "high",
+                "via": [
+                    {
+                        "name": "unsuppressed-pkg",
+                        "url": "https://github.com/advisories/GHSA-xxxx-yyyy-zzzz",
+                        "severity": "high",
+                    }
+                ],
+            }
+        }
+    })
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path)
+    assert res == 1
+
+
+@patch("subprocess.run")
+def test_audit_node_unparseable_json_fails(mock_run: MagicMock, tmp_path: Path):
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    mock_run.return_value = MagicMock(returncode=1, stdout="not json", stderr="fatal error")
+
+    res = audit_node(tmp_path)
+    assert res == 1
 
 
 @patch("scripts.ci.audit_dependencies.audit_python")
