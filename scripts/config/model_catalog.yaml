@@ -115,6 +115,12 @@ review_scheduler:
       medium: [standard_review, strong_review, security_review, long_context_review, routine_review, critical_review]
       low: [routine_review, standard_review, strong_review, security_review, long_context_review, critical_review]
   automatic_near_cap_assignments: false
+  # Operator decision 2026-10-02 (#9538): a formal review at a listed risk is
+  # performed only by these models, on any catalogued transport (Opus 5.5
+  # natively or through Cursor). This is an eligibility gate: ladders, explicit
+  # pins, custom ladders and delegate review admission all apply it.
+  risk_reviewer_models:
+    high: [gpt-6.1-sol, claude-opus-5-5]
   endpoints:
     claude:
       formal_review_eligible: true
@@ -1263,7 +1269,13 @@ review_ladders:
     - [claude-fable-5-1]
     - [claude-fable-5-1-cursor-fallback]
     - [grok-4.7-cursor-fallback]
-  high: &practical_first_code_review
+  # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
+  # neither seat is eligible the resolver returns no reviewer with a stated reason.
+  high:
+    - [openai_frontier]
+    - [claude-opus-5-5]
+    - [claude-opus-5-5-cursor-fallback]
+  medium: &practical_first_code_review
     - [openai_frontier]
     - [claude-opus-5-5]
     - [claude-opus-5-5-cursor-fallback]
@@ -1272,7 +1284,6 @@ review_ladders:
     - [pool]
     - [pool-xs]
     - [grok-4.7-cursor-fallback]
-  medium: *practical_first_code_review
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).

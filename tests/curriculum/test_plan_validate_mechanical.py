@@ -37,7 +37,7 @@ from tests.curriculum.test_plan_validate import (
 pytestmark = pytest.mark.reads_content
 
 # word ids of the fixture store
-MAMA, MANA, NONA, MAN, BASE_WORD, MOKA, MA, ON = (
+MAMA, MANA, NONA, MAN, BASE_WORD, MONA, MA, ON = (
     "W-201",
     "W-202",
     "W-203",
@@ -114,15 +114,19 @@ def mechanical_plan() -> dict:
         _activity("a4", "count-syllables", "workbook", "Count syllables in «мама» and «ман»."),
     ]
     one["practice"] = {"vocabulary": "core", "stress": [], "patterns": ["a1"]}
+    # мана and ман need Н, taught in lesson 2: the lesson's recording models them (#9487 C10), in the
+    # step its description names (C17).
+    one["videos"] = [{"evidence": "V-900", "use": "Step s2 whole-word model."}]
+    one["steps"][1]["evidence"].append("V-900")
 
     two = _lesson(2, "teach", ["Н", "О"], [(NONA, "нона")], [MAMA, MANA, MAN])
-    two["inventory"]["vocabulary"]["incidental"] = [{"lemma": "мока", "evidence": MOKA}]
+    two["inventory"]["vocabulary"]["incidental"] = [{"lemma": "мона", "evidence": MONA}]
     two["steps"] = [
         _step("s1", "teach", "The letter Н.", {"letters": ["Н"]}, {}, ["b1"]),
         _step(
             "s2",
             "teach",
-            "The letter О.",
+            f"The letter О; the incidental {MONA} comes up in passing (#9487 C16).",
             {"letters": ["О"], "vocabulary": [NONA]},
             {"vocabulary": [MAMA, MANA, MAN]},
             ["b2", "b3"],
@@ -135,11 +139,24 @@ def mechanical_plan() -> dict:
         _activity("b3", "pick-syllables", "workbook", "Complete «мама», «мана» and «нона» from syllables."),
     ]
     two["practice"] = {"vocabulary": "core", "stress": [], "patterns": ["b2"]}
+    two["videos"] = [{"evidence": "V-899", "use": "Letter models for Н and О."}]  # #9487 C27
 
     recap = _lesson(3, "recap", [], [], [MAMA, MANA, MAN, NONA])
     recap["steps"] = [_step("s1", "practice", "Review.", {}, {"vocabulary": [MAMA, MANA, MAN, NONA]}, ["c1"])]
     recap["steps"][0].pop("teach")
-    recap["activities"] = [_activity("c1", "quiz", "inline", "Review quiz.")]
+    recap["activities"] = [
+        _activity("c1", "quiz", "inline", "Review quiz. kind: comprehension; host: {kind: dialogue}.")
+    ]
+    # The recap's first-person story (A1 arc D4; #9487 C7): a dialogue block with one narrator.
+    recap["dialogue"] = {
+        "step": "s1",
+        "situation": "The narrator retells the module.",
+        "setting": "One short story.",
+        "speakers": [{"name": "Narrator", "role": "narrator", "gender": "f", "evidence": MAMA}],
+        "register": "informal",
+        "target_grammar": "Retells the module.",
+        "evidence": ["T-001"],
+    }
     plan["lessons"] = [one, two, recap]
     return plan
 
@@ -152,7 +169,12 @@ def mechanical_pack() -> dict:
         "exercises": [{"id": "X-001", "quote": "мама", "items_sample": ["мама"]}],
         "examples": [],
         "errors": [],
-        "videos": [],
+        # A word model binds its timed segment (#9487 C20).
+        "videos": [
+            {"id": "V-900", "models": {"letters": ["М", "А"], "words": [MANA, MAN], "segment": "0:00–0:05"}},
+            # Each lesson's recordings model the letters it introduces (#9487 C27).
+            {"id": "V-899", "models": {"letters": ["Н", "О"], "words": [], "segment": None}},
+        ],
         "standard": [],
     }
 
@@ -176,7 +198,7 @@ def mechanical_words() -> dict:
             record(NONA, "нона"),
             record(MAN, "ман"),
             record(BASE_WORD, "мам"),
-            record(MOKA, "мока"),
+            record(MONA, "мона"),
             record(MA, "ма"),
             record(ON, "он"),
         ]
@@ -276,7 +298,7 @@ CASES = [
     ),
     Case(
         "m3_quoted_token_is_read_in_every_quote_style",
-        _set_focus(1, "a2", 'Complete "нона", “кум”, \'мок\' and `бак` with А.'),
+        _set_focus(1, "a2", "Complete \"нона\", “кум”, 'мок' and `бак` with А."),
         notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
         not_checked=frozenset({codes.TOKEN_UNRESOLVED}),
         says="quotes 'кум', 'мок', 'бак'",
@@ -364,8 +386,8 @@ def test_missing_base_layer_reports_not_checked_instead_of_guessing(tmp_path: Pa
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert report.ok, report.render_text()
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M3"}
-    assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M3"})
+    assert {gate.message.split()[1] for gate in gates} == {"M3", "C28"}
+    assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M3", "C28"})
 
 
 def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) -> None:
@@ -374,7 +396,8 @@ def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) ->
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert codes.ARC_UNAVAILABLE in {o.code for o in report.failures}
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M1"}
+    # M1 and the readability gates C4 and C10 (#9487) need the taught-letter state
+    assert {gate.message.split()[1] for gate in gates} == {"M1", "C4", "C10", "C27"}
 
 
 def produced_mechanical_codes(root: Path) -> set[str]:

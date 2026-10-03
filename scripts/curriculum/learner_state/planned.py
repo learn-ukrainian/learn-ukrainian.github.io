@@ -8,7 +8,9 @@ allowlist:
 - grammar_ids and letters: accumulated the same way
 - name_ids: speaker and place ids from every earlier plan and this plan's dialogues
   of lessons 1..lesson_n (admits names through current lesson; core stops at previous lesson; admitted for use, never counted as vocab)
-- cumulative_core_count = len(core_ids) — base layer and names excluded from count
+- cumulative_core_count = len(core_ids) — base layer excluded from count; a name id counts
+  only when a plan declares that record core (a declared core record stays core when it is
+  also a dialogue speaker or place, #9487)
 - incidental ids never enter state
 - Rule 1: Planned state is ids, never lemmas. A bare lemma anywhere is a failure (bare_lemma).
 """
@@ -279,13 +281,14 @@ def planned_state(
     grammar_ids = dict(sorted(grammar_ids.items()))
     name_ids = dict(sorted(name_ids.items()))
 
-    # Base-layer ids and name ids must not increase cumulative_core_count,
-    # even when a plan lists them as core.
+    # Base-layer ids must not increase cumulative_core_count, even when a plan lists them
+    # as core. A record a plan declares core stays core when it is also a dialogue speaker
+    # or place (#9487: мама, core at position 1, is also a speaker of its recap dialogue);
+    # a name that is never declared core stays in name_ids only.
     base_id_set = set(base_ids)
-    name_id_set = set(name_ids.keys())
-    core_ids = {k: v for k, v in core_ids.items() if k not in base_id_set and k not in name_id_set}
+    core_ids = {k: v for k, v in core_ids.items() if k not in base_id_set}
 
-    # cumulative_core_count = len(core_ids) — base layer and names excluded
+    # cumulative_core_count = len(core_ids) — base layer excluded
     cumulative_core_count = len(core_ids)
 
     return PlannedState(

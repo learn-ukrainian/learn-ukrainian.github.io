@@ -1,0 +1,198 @@
+"""Quote-host byte checks (issue #9487 gate C12), shared by plan-validate and the fresh preflight.
+
+The engine prints a quote record's bytes exactly (writer contract §1), so a quote host whose bytes
+carry OCR damage reaches the learner as "the textbook". Four classes are decided from the bytes:
+
+  private_use           a private-use code point (Unicode category Co, every plane): a glyph only
+                        the source PDF's font could draw
+  transcription_symbol  inside a transcription bracket (a ``[…]`` holding a Cyrillic letter), a
+                        character that is not a Cyrillic letter, a combining mark, white space, a
+                        prime or apostrophe, ``|``, ``-`` or a length mark; a bracket without a
+                        Cyrillic letter is a primer scheme (``[ = • – ]``) and is not read
+  watermark             a web address (``http…``, ``www.…`` or a dotted name ending in a top-level
+                        domain), such as a publisher's page watermark
+  not_in_vesum          a word of the quote, outside brackets, that is neither a spelling of a
+                        word-store record nor a VESUM word form
+
+How exact ``not_in_vesum`` is: a primer prints letters and syllables, which are not words, so a token
+with at most one vowel letter is not looked up, nor is an alphabet-table cell: a token that is exactly a
+capital Ukrainian letter (or the digraph ``Дж``/``Дз``) followed by its own small form (``Єє``);
+any other letter run (``ЄИ``, ``єє``, ``Аб``) is still looked up. A hyphenated token whose parts each hold at most
+one vowel is a word printed with its syllables divided (``ма-ма``); it passes when the joined
+spelling is a word. A word hyphenated at a line end is joined first: that is the page's typesetting. Stress marks (U+0301, U+0300) are removed before the lookup; apostrophes are
+normalised to one spelling, as the word store and VESUM do. A word is read with its combining marks, so a
+decomposed (NFD) quote tokenises as its composed (NFC) twin: the reported word keeps the quote's own bytes, and
+its lookup spelling is the NFC form, which is how the word store and VESUM spell. The lookup is the existing
+verification path (``scripts.verification.vesum.verify_words``) after the word store; when VESUM
+is unavailable the class is not decided and the caller reports that as an unchecked outcome, which strict
+plan validation and the fresh preflight treat as not passing.
+
+The quote hosts are the records an activity focus declares as its host, in the writer contract's syntax
+(``host: {kind: quote, ref: T-…}`` or "quote host refs T-…"), and the quote records a step needing ``quote``
+cites; plan-validate (gate C12) and the fresh preflight read the same hosts.
+"""
+
+from __future__ import annotations
+
+import re
+import unicodedata
+from collections.abc import Callable, Iterable
+from dataclasses import dataclass
+
+from scripts.practice.euphony_stem_engine import VOWELS as VOWEL_LETTERS
+
+from .scope import CYRILLIC_LETTER_CLASS
+
+PRIVATE_USE = "private_use"
+TRANSCRIPTION_SYMBOL = "transcription_symbol"
+WATERMARK = "watermark"
+NOT_IN_VESUM = "not_in_vesum"
+
+_BRACKET = re.compile(r"\[([^\[\]]*)\]")
+_CYRILLIC = re.compile(f"[{CYRILLIC_LETTER_CLASS}]")
+#: Combining marks a decomposed (NFD) letter carries: й is и + U+0306, ї is і + U+0308, stress is U+0301.
+_MARKS = "\u0300-\u036f"
+_LETTER_WITH_MARKS = f"[{CYRILLIC_LETTER_CLASS}][{_MARKS}]*"
+_TOKEN = re.compile(f"(?:{_LETTER_WITH_MARKS})+(?:['’ʼ-](?:{_LETTER_WITH_MARKS})+)*")
+#: A word the page hyphenated at a line end (``предме-\nтів``): one word, as printed.
+_LINE_BREAK_HYPHEN = re.compile(f"([{CYRILLIC_LETTER_CLASS}][{_MARKS}]*)-[ \t]*\n[ \t]*([{CYRILLIC_LETTER_CLASS}])")
+#: An activity focus declaring its host, and the prose form "quote host refs T-…" (writer contract syntax).
+HOST = re.compile(r"\{\s*kind:\s*(dialogue|quote|video)\s*(?:,\s*ref:\s*([A-Z][A-Z0-9]*-\d+)\s*)?\}")
+QUOTE_HOST_REFS = re.compile(r"\bquote host refs?\s+(T-\d+(?:\s*(?:,|/|and)\s*T-\d+)*)")
+_WEB_ADDRESS = re.compile(
+    r"(?i)\bhttps?://\S+|\bwww\.\S+|\b[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.(?:com|net|org|info|edu|gov|biz|ua|ru|io)\b"
+)
+#: Characters a transcription may carry besides Cyrillic letters, combining marks and white space.
+_TRANSCRIPTION_MARKS = frozenset("′ʹ'’ʼ|-:ː")
+_APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'"})
+_STRESS = str.maketrans({"́": None, "̀": None})
+#: The 33 letters of the Ukrainian alphabet, capitals; an alphabet table prints each with its small letter.
+_ALPHABET = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
+#: The two-letter units the alphabet table may also print as a capital-and-small pair.
+_DIGRAPHS = ("Дж", "Дз")
+#: Tokens that are a capital letter (or digraph) immediately followed by its own small form (``Єє``, ``Дждж``).
+_LETTER_PAIRS = frozenset(unit + unit.lower() for unit in (*_ALPHABET, *_DIGRAPHS))
+
+
+class VesumUnavailable(Exception):
+    """The VESUM database cannot be read, so not_in_vesum is not decided."""
+
+
+@dataclass(frozen=True)
+class QuoteDefect:
+    kind: str
+    detail: str
+
+
+@dataclass(frozen=True)
+class WordToken:
+    """A word of a quote: as printed, and the spellings any one of which makes it a word."""
+
+    surface: str
+    spellings: tuple[str, ...]
+
+
+def _is_transcription_character(char: str) -> bool:
+    if char.isspace() or char in _TRANSCRIPTION_MARKS:
+        return True
+    category = unicodedata.category(char)
+    if category.startswith("M"):
+        return True
+    return category.startswith("L") and unicodedata.name(char, "").startswith("CYRILLIC")
+
+
+def byte_defects(text: str) -> list[QuoteDefect]:
+    """The private_use, transcription_symbol and watermark defects of a quote's bytes."""
+    defects: list[QuoteDefect] = []
+    private = sorted({f"U+{ord(char):04X}" for char in text if unicodedata.category(char) == "Co"})
+    if private:
+        defects.append(QuoteDefect(PRIVATE_USE, ", ".join(private)))
+    for bracket in _BRACKET.finditer(text):
+        body = bracket.group(1)
+        if not _CYRILLIC.search(body):
+            continue  # a primer scheme, not a transcription
+        foreign = sorted({char for char in body if not _is_transcription_character(char)})
+        if foreign:
+            shown = ", ".join(f"{char!r} (U+{ord(char):04X})" for char in foreign)
+            defects.append(QuoteDefect(TRANSCRIPTION_SYMBOL, f"{bracket.group(0)!r} holds {shown}"))
+    addresses = list(dict.fromkeys(match.group(0) for match in _WEB_ADDRESS.finditer(text)))
+    if addresses:
+        defects.append(QuoteDefect(WATERMARK, ", ".join(repr(address) for address in addresses)))
+    return defects
+
+
+def _vowels(text: str) -> int:
+    return sum(1 for char in text.casefold() if char in VOWEL_LETTERS)
+
+
+def _spelling(text: str) -> str:
+    """The lookup spelling: stress marks removed, composed (NFC), one apostrophe."""
+    return unicodedata.normalize("NFC", text.translate(_STRESS)).translate(_APOSTROPHES)
+
+
+def quote_host_refs(focus: str) -> list[str]:
+    """Every quote record an activity focus declares as its host, in order, once each."""
+    refs = [match.group(2) for match in HOST.finditer(focus) if match.group(1) == "quote" and match.group(2)]
+    for match in QUOTE_HOST_REFS.finditer(focus):
+        refs += re.findall(r"T-\d+", match.group(1))
+    return list(dict.fromkeys(refs))
+
+
+def word_tokens(text: str) -> list[WordToken]:
+    """The words of a quote outside brackets that need a lookup, in order, once each.
+
+    The surface keeps the quote's bytes (stress marks removed); the spellings are composed (NFC)."""
+    outside = _LINE_BREAK_HYPHEN.sub(r"\1\2", _BRACKET.sub(" ", text.translate(_STRESS)))
+    tokens: dict[str, WordToken] = {}
+    for match in _TOKEN.finditer(outside):
+        surface = match.group(0)
+        if _spelling(surface) in _LETTER_PAIRS:
+            continue  # an alphabet-table cell: a capital letter and its own small letter
+        parts = re.split(r"-", _spelling(surface))
+        if "-" in surface and all(_vowels(part) <= 1 for part in parts):
+            joined = "".join(parts)
+            if _vowels(joined) <= 1:
+                continue
+            spellings = (joined, _spelling(surface))
+        elif _vowels(_spelling(surface)) <= 1:
+            continue  # a letter or a syllable, as a primer prints them
+        else:
+            spellings = (_spelling(surface),)
+        tokens.setdefault(surface, WordToken(surface, spellings))
+    return list(tokens.values())
+
+
+def _variants(spelling: str) -> tuple[str, str]:
+    return spelling, spelling.casefold()
+
+
+def unknown_words(tokens: Iterable[WordToken], known: set[str], lookup: Callable[[list[str]], set[str]]) -> list[str]:
+    """Surfaces of tokens that are no word-store spelling (known: case-folded) and no VESUM form.
+
+    Raises VesumUnavailable when a lookup is needed and VESUM cannot be read."""
+    pending = [token for token in tokens if not any(spelling.casefold() in known for spelling in token.spellings)]
+    keys = sorted({key for token in pending for spelling in token.spellings for key in _variants(spelling)})
+    found = lookup(keys) if keys else set()
+    return [
+        token.surface
+        for token in pending
+        if not any(key in found for spelling in token.spellings for key in _variants(spelling))
+    ]
+
+
+def vesum_lookup(words: list[str]) -> set[str]:
+    """The words VESUM lists as a form, through the existing verification path."""
+    import sqlite3
+
+    from scripts.verification.vesum import verify_words
+
+    try:
+        matches = verify_words(words)
+    except (FileNotFoundError, sqlite3.Error) as error:
+        raise VesumUnavailable(str(error)) from error
+    return {word for word, rows in matches.items() if rows}
+
+
+def known_spellings(spellings: Iterable[str]) -> set[str]:
+    """The word-store spellings, normalised for unknown_words."""
+    return {_spelling(spelling).casefold() for spelling in spellings}

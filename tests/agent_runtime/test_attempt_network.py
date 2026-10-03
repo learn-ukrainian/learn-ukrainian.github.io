@@ -24,10 +24,18 @@ from scripts.agent_runtime.attempt_network import (
 
 ALLOWED = frozenset({"api.provider.example"})
 
+# Liveness guard (#9549): the longest a test waits on a child process, socket or
+# event-loop call before declaring it hung. It is never a performance
+# assertion, so it is sized for a loaded CI runner (the production resolver
+# child resolves in ~30 ms locally) rather than for a fast host. The fixture's
+# 0.2 s proxy limits and `connect_seconds=.1` are deliberate fault-injection
+# timings and stay short.
+LIVENESS_SECONDS = 30
+
 
 def request(proxy, data):
     with socket.socket(socket.AF_UNIX) as client:
-        client.settimeout(3)
+        client.settimeout(LIVENESS_SECONDS)
         client.connect(str(proxy.endpoint))
         client.sendall(data)
         return client.recv(16384)
@@ -132,7 +140,7 @@ def test_success_is_byte_only_and_logs_no_payload(proxy, monkeypatch):
         with listener.accept()[0] as connection:
             data = connection.recv(1024)
             connection.sendall(data)
-            stopped.wait(2)
+            stopped.wait(LIVENESS_SECONDS)
 
     thread = threading.Thread(target=echo)
     thread.start()
@@ -148,20 +156,20 @@ def test_success_is_byte_only_and_logs_no_payload(proxy, monkeypatch):
     monkeypatch.setattr(proxy, "_connect", connect)
     try:
         with socket.socket(socket.AF_UNIX) as client:
-            client.settimeout(2)
+            client.settimeout(LIVENESS_SECONDS)
             client.connect(str(proxy.endpoint))
             client.sendall(b"CONNECT api.provider.example:443 HTTP/1.1\r\nHost: api.provider.example:443\r\n\r\n")
             assert client.recv(1024).startswith(b"HTTP/1.1 200")
             client.sendall(b"PRIVATE_PAYLOAD")
             assert client.recv(1024) == b"PRIVATE_PAYLOAD"
-        deadline = time.monotonic() + 2
+        deadline = time.monotonic() + LIVENESS_SECONDS
         while proxy.records[0]["bytes"] < 30 and time.monotonic() < deadline:
             time.sleep(.01)
         assert proxy.records == [{"destination": "api.provider.example:443", "bytes": 30}]
     finally:
         stopped.set()
         listener.close()
-        thread.join(2)
+        thread.join(LIVENESS_SECONDS)
 
 
 def test_resolver_hang_and_cancellation_reap_child(proxy, monkeypatch):
@@ -181,7 +189,7 @@ def test_resolver_hang_and_cancellation_reap_child(proxy, monkeypatch):
     try:
         client.connect(str(proxy.endpoint))
         client.sendall(b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n")
-        deadline = time.monotonic() + 2
+        deadline = time.monotonic() + LIVENESS_SECONDS
         while len(children) < 2 and time.monotonic() < deadline:
             time.sleep(.01)
         proxy.cleanup()
@@ -196,7 +204,7 @@ def test_slow_client_large_header_and_flood_are_bounded(proxy):
     try:
         for _ in range(proxy.limits.connections + 5):
             client = socket.socket(socket.AF_UNIX)
-            client.settimeout(2)
+            client.settimeout(LIVENESS_SECONDS)
             client.connect(str(proxy.endpoint))
             clients.append(client)
         assert len(proxy.tasks) <= proxy.limits.connections
@@ -236,7 +244,7 @@ def test_resolver_concurrency_limit_and_cleanup(proxy, monkeypatch):
             client.connect(str(proxy.endpoint))
             client.sendall(b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n")
             clients.append(client)
-        deadline = time.monotonic() + 2
+        deadline = time.monotonic() + LIVENESS_SECONDS
         while len(children) < 2 and time.monotonic() < deadline:
             time.sleep(.005)
         assert len(children) == proxy.limits.resolvers
@@ -267,8 +275,11 @@ def test_connect_deadline_closes_numeric_socket(proxy, monkeypatch):
 def test_real_resolver_is_parent_only_and_numeric(proxy):
     # No external lookup: libc's local hosts entry is sufficient to exercise
     # the production child; the subsequent address contract must refuse it.
+    # The fixture's 0.2 s resolve limit is for the hung-resolver fault tests; a
+    # real interpreter child must be allowed to start on a loaded runner.
+    proxy.limits = replace(proxy.limits, resolve_seconds=LIVENESS_SECONDS)
     future = asyncio.run_coroutine_threadsafe(proxy._resolve("localhost"), proxy.loop)
-    answers = future.result(timeout=3)
+    answers = future.result(timeout=LIVENESS_SECONDS)
     assert answers and all(ipaddress.ip_address(a).is_loopback for a in answers)
 
 
@@ -283,7 +294,7 @@ def test_proxy_start_failure_and_forwarder_help(tmp_path, monkeypatch):
     with pytest.raises(ReviewIsolationError, match="start_failed"):
         AttemptEgress(bad, ALLOWED)
     forwarder = Path(__file__).resolve().parents[2] / "scripts/agent_runtime/attempt_forwarder.py"
-    help_run = subprocess.run([sys.executable, str(forwarder), "--help"], capture_output=True, text=True, timeout=5)
+    help_run = subprocess.run([sys.executable, str(forwarder), "--help"], capture_output=True, text=True, timeout=LIVENESS_SECONDS)
     assert help_run.returncode == 0
     assert "Exit codes:" in help_run.stdout and "Outputs:" in help_run.stdout
 
@@ -318,7 +329,7 @@ def test_one_way_stream_stays_alive_then_idle_closes(proxy, monkeypatch):
     monkeypatch.setattr(proxy, "_connect", connect)
     try:
         with socket.socket(socket.AF_UNIX) as client:
-            client.settimeout(2)
+            client.settimeout(LIVENESS_SECONDS)
             client.connect(str(proxy.endpoint))
             client.sendall(b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n")
             header = bytearray()
@@ -332,7 +343,7 @@ def test_one_way_stream_stays_alive_then_idle_closes(proxy, monkeypatch):
             assert not failures
     finally:
         listener.close()
-        thread.join(2)
+        thread.join(LIVENESS_SECONDS)
 
 
 def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, monkeypatch, tmp_path):
@@ -349,7 +360,7 @@ def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, 
         "assert os.environ['NO_PROXY']==os.environ['no_proxy']==''\n"
         "assert all(os.environ[k]==os.environ['HTTPS_PROXY'] for k in "
         "['https_proxy','HTTP_PROXY','http_proxy','ALL_PROXY','all_proxy'])\n"
-        "with socket.create_connection((p.hostname,p.port),timeout=2) as s:\n"
+        f"with socket.create_connection((p.hostname,p.port),timeout={LIVENESS_SECONDS}) as s:\n"
         " s.sendall(b'CONNECT not-allowed.example:443 HTTP/1.1\\r\\n\\r\\n')\n"
         " assert s.recv(1024).startswith(b'HTTP/1.1 403')\n"
         "raise SystemExit(7)\n"
@@ -363,7 +374,7 @@ def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, 
     # Internal launcher main must refuse before child startup on missing proxy.
     module = __import__("scripts.agent_runtime.attempt_forwarder", fromlist=["main"])
     result = subprocess.run([sys.executable, module.__file__, str(missing), "/bin/true"],
-                            capture_output=True, text=True, timeout=5)
+                            capture_output=True, text=True, timeout=LIVENESS_SECONDS)
     assert result.returncode == 125 and "attempt_forwarder_start_failed" in result.stderr
 
 

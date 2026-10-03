@@ -924,6 +924,11 @@ thresholds.
 is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
 arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
 is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
+A dispatcher started without `XDG_RUNTIME_DIR` (a headless shell, or a worker's sanitized
+environment) still reaches the user manager: `systemd-run` and the probe get
+`XDG_RUNTIME_DIR=/run/user/<uid>` and its `bus` socket when that directory is the
+caller's own and the socket exists. The worker never receives them. `launch_user_bus`
+records `caller`, `derived` (with the variable names), or `unavailable` (with the reason).
 Fallback is the supported path when no user manager is reachable, linger is off, cgroup
 v2 memory is not delegated, or the slice is missing or does not have those limits:
 dispatch prints one warning and uses plain `Popen`. The same fallback is used when
@@ -953,6 +958,21 @@ treated as clear. Both set `incomplete_run_reason` (`background_jobs_alive_at_ex
 `leftovers_scan_unknown`), record the worker's scope as `leftovers_scope`, and make the run
 `needs_finalize`, never `done`, in every mode, read-only included. Such a run is never
 auto-finalized. Detection does not kill anything.
+
+A Cursor dispatch usually leaves one such process: cursor-agent (checked in 2026.09.26 to
+2026.10.01) starts a `worker-server` for the workspace's Git root, inside the CLI's process
+group and with the CLI's environment, and does not stop it when the CLI exits. The server
+exits on its own 300 s after its last request. It is a shared daemon: a later cursor-agent
+for the same root, from any session, reuses its socket, and that can happen after any check
+the adapter could make, so no stop request can be proven safe. The adapter therefore never
+stops it (#9534). A run shorter than that idle window ends with the server in the worker's
+scope (scope mode) or carrying the worker's task marker in its session (`popen-fallback`),
+so the exit scan reports it as `live` and the run is `needs_finalize`. The derived user bus
+above lets headless dispatches use scope mode. A dispatch that still falls back to
+`popen-fallback` because no user manager is reachable keeps that fail-closed report for the
+Cursor server too: the fallback scan cannot tell a shared server from any other leftover,
+and reporting is the safe answer. Stopping it is the reaper's job at worktree removal, under
+the checks below, not the adapter's.
 
 When that worktree is later removed (settle, `reap_worktrees.py`,
 `fleet/post_task_reap.py`), those processes are stopped first, and only inside the worker's

@@ -71,6 +71,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
         "launch_fallback_reason": str | null,
+        "launch_user_bus": {source: "caller" | "derived" | "unavailable", variables?, reason?},  # #9534
         "peak_rss_mib": float | null,               # terminal records; largest reaped child
         "owned_paths": [str] | absent,              # the --owned-path values: auto-finalize scope (#8991)
         "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
@@ -12714,12 +12715,18 @@ CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
 
 
 def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
-    """True when any review flag types this dispatch as a review."""
+    """True when any review flag types this dispatch as a review.
+
+    ``--review-author-model`` and ``--review-risk`` exist only for reviewer
+    resolution, so either one types the dispatch as a (code-profile) review.
+    """
     return (
         bool(getattr(args, "review", False))
         or bool(getattr(args, "review_attempt", None))
         or bool(getattr(args, "require_review_verdict", False))
         or bool(getattr(args, "review_profile", None))
+        or bool(getattr(args, "review_author_model", None))
+        or bool(getattr(args, "review_risk", None))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review"
     )
 
@@ -13096,9 +13103,8 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
-            review_dispatch=bool(
-                getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)
-            ),
+            # Every review-typed dispatch passes reviewer admission, not only verdict-gated ones (#9538).
+            review_dispatch=_dispatch_is_review_typed(args),
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
