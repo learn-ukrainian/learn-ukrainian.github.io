@@ -35,6 +35,7 @@ import hashlib
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 import yaml
@@ -43,6 +44,7 @@ from jsonschema import Draft202012Validator
 from ..arc.loader import SCHEMA_PATH as ARC_SCHEMA_PATH
 from ..evidence import lock as evidence_lock
 from . import codes
+from .activity_report import UNSCORED_ACTIVITY_TYPES
 from .activity_report import plan_report as build_plan_report
 from .cross import check_arc, check_rule4, load_level_plans
 from .loader import (
@@ -102,6 +104,11 @@ def _cyrillic_allowed(path: tuple) -> bool:
     if len(rest) >= 2 and rest[0] == "steps" and rest[2:] == ("teach",):
         return True
     if len(rest) >= 2 and rest[0] == "activities" and rest[2:] == ("focus",):
+        return True
+    if rest[0] == "activities" and (
+        (len(rest) == 4 and rest[2] == "options")
+        or (len(rest) == 6 and rest[2] == "learner_reads" and rest[4] == "words")
+    ):
         return True
     if len(rest) >= 2 and rest[0] == "videos" and rest[2:] == ("use",):
         return True
@@ -451,6 +458,31 @@ def _check_activities(report: Report, plan: dict, allowlist: set[str] | None) ->
                     f"activity {activity_id} has type {activity['type']!r}, not in the level allowlist (rule 6)",
                     lesson=n,
                 )
+            if activity["type"] in {"quiz", "fill-in"} and "options" not in activity:
+                report.notes.append(
+                    Outcome(codes.OPTIONS_MISSING, f"activity {activity_id} requires options (PR1 advisory)", n)
+                )
+            if activity["type"] in UNSCORED_ACTIVITY_TYPES and "options" in activity:
+                report.notes.append(
+                    Outcome(
+                        codes.OPTIONS_FORBIDDEN, f"unscored activity {activity_id} forbids options (PR1 advisory)", n
+                    )
+                )
+            for option in activity.get("options", []):
+                if unicodedata.normalize("NFC", option) != option:
+                    _fail(
+                        report, codes.OPTIONS_NOT_NFC, f"activity {activity_id} option {option!r} is not NFC", lesson=n
+                    )
+            for selection in activity.get("learner_reads", []):
+                if isinstance(selection, dict):
+                    for word in selection["words"]:
+                        if unicodedata.normalize("NFC", word) != word:
+                            _fail(
+                                report,
+                                codes.LEARNER_READ_WORD_NOT_NFC,
+                                f"activity {activity_id} learner_reads {selection['ref']} word {word!r} is not NFC",
+                                lesson=n,
+                            )
             error_refs = activity.get("error_refs")
             if activity["type"] == "error-correction" and not error_refs:
                 _fail(

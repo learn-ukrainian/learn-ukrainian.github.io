@@ -211,6 +211,16 @@ MECHANICAL_RULE_NOT_CHECKED = "mechanical_rule_not_checked"
 # not_checked outside --strict, a failure under --strict (C12, C23, #9487)
 VESUM_UNAVAILABLE = "vesum_unavailable"
 
+# Structured activity declarations (#9541); optional-field policy notes become failures in PR2.
+TARGET_NOT_AVAILABLE = "target_not_available"
+CHOICE_OPTION_NOT_DECODABLE = "choice_option_not_decodable"
+OPTIONS_NOT_NFC = "options_not_nfc"
+LEARNER_READ_WORD_NOT_NFC = "learner_read_word_not_nfc"
+OPTIONS_MISSING = "options_missing"
+OPTIONS_FORBIDDEN = "options_forbidden"
+LEARNER_READ_REF_NOT_PRINTABLE = "learner_read_ref_not_printable"
+LEARNER_READ_WORD_NOT_IN_PRINT = "learner_read_word_not_in_print"
+
 DESCRIPTIONS = {
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
     PLAN_YAML_INVALID: "failure: the plan file is not valid YAML",
@@ -367,10 +377,20 @@ DESCRIPTIONS = {
     MODELED_PRINT_TEACHER_FRAME: "note (gate C21, #9487): a directive to model a record's exact print whose untaught words may be the frame the plan says the teacher reads; the plan review confirms",
     MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, C10, C18, C19, C21, C27, C28, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); VESUM is vesum_unavailable; the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
+    TARGET_NOT_AVAILABLE: "failure (C1): a declared target is unknown, outside the allowed set or introduced later",
+    CHOICE_OPTION_NOT_DECODABLE: "failure (C18): a printed option needs an untaught letter at its step; recordings do not exempt print",
+    OPTIONS_NOT_NFC: "failure: declared option text must already be NFC, with exact case preserved",
+    LEARNER_READ_WORD_NOT_NFC: "failure: learner_reads selector words must already be NFC, with exact case preserved",
+    OPTIONS_MISSING: "note (PR1): quiz and fill-in require an options declaration",
+    OPTIONS_FORBIDDEN: "note (PR1): unscored types forbid an options declaration, including an empty one",
+    LEARNER_READ_REF_NOT_PRINTABLE: "failure (C21): learner_reads references a record without printable pack text",
+    LEARNER_READ_WORD_NOT_IN_PRINT: "failure (C21): a learner_reads selection does not occur in the record's exact print",
 }
 
 NOTE_CODES = frozenset(
     {
+        OPTIONS_MISSING,
+        OPTIONS_FORBIDDEN,
         CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW,
         STEP_LETTER_NOT_PRACTISED,
         TOKEN_NOT_ALLOWED,

@@ -409,11 +409,40 @@
               },
               "focus": {
                 "type": "string",
-                "description": "What the activity checks; Ukrainian allowed (rule 7)"
+                "description": "Pedagogical guidance; declared targets, options and learner_reads are authoritative for their facts. Ukrainian allowed (rule 7)"
               },
               "model": {
                 "$ref": "#/$defs/packId",
                 "description": "Optional: pack exercise the activity is modelled on"
+              },
+              "targets": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "$ref": "#/$defs/wordId" },
+                "description": "Word records scored or presented; empty means no word target. Requiredness is a validator policy."
+              },
+              "options": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Complete Cyrillic printed choice pool, NFC and exact case; requiredness and normalization are validator policies."
+              },
+              "learner_reads": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    { "$ref": "#/$defs/packId" },
+                    {
+                      "type": "object",
+                      "required": ["ref", "words"],
+                      "additionalProperties": false,
+                      "properties": {
+                        "ref": { "$ref": "#/$defs/packId" },
+                        "words": { "type": "array", "items": { "type": "string" } }
+                      }
+                    }
+                  ]
+                },
+                "description": "Exact learner-read pack print, optionally narrowed to source-attested words or formulas."
               },
               "error_refs": {
                 "type": "array",

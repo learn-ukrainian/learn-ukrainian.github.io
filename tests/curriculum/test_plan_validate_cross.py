@@ -786,7 +786,10 @@ def test_cross_case(tmp_path: Path, case: CrossCase) -> None:
     report = run_cross(tmp_path, case)
     assert {o.code for o in report.failures} == set(case.expected), report.render_text()
     assert {o.code for o in report.waivers} == set(case.waived), report.render_text()
-    assert {o.code for o in report.notes} == set(case.notes), report.render_text()
+    # Schema/load failures return before activity policy checks; every valid fixture
+    # here retains at least one undeclared quiz, so PR1 adds its missing-options note.
+    policy_notes = {codes.OPTIONS_MISSING} if report.activity_report else set()
+    assert {o.code for o in report.notes} == set(case.notes) | policy_notes, report.render_text()
     expected_not_checked = set(ALWAYS_NOT_CHECKED)
     if case.name == "rule4_waived_id_unverifiable_is_not_checked":
         expected_not_checked.add(codes.INTRODUCED_EARLIER_UNVERIFIED)

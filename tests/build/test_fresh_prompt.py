@@ -42,8 +42,6 @@ from scripts.review.prompts.render import ManifestReader, _learner_state_context
 
 pytestmark = pytest.mark.reads_content
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-
 SAMPLE_WORD_STORE = {"words": [{"id": "W-base-1", "lemma": "і"}]}
 
 SHA = "0" * 64
@@ -1236,3 +1234,125 @@ def test_recap_without_consolidation_renders(sample_plan_entry, sample_learner_s
     prompt = _render(plan, sample_learner_state, ALL_KINDS, recap=True)
     assert "### Consolidation" not in prompt
     assert _check(prompt, plan, sample_learner_state, recap=True).errors == []
+
+
+@pytest.mark.parametrize("recap", [False, True])
+def test_legacy_activity_prompt_bytes_unchanged(sample_plan_entry, sample_learner_state, sample_cited_records, recap):
+    """Fixed inputs pin the pre-#9541 activity format without pinning evolving plan/pack bytes."""
+    sample_plan_entry["activities"] = [
+        {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Identify letter"},
+        {
+            "id": "a2",
+            "type": "error-correction",
+            "placement": "workbook",
+            "focus": "Repair spelling",
+            "error_refs": ["E-001", "E-002"],
+            "model": "X-004",
+        },
+        {"id": "a3", "type": "quiz", "placement": "inline", "focus": "Choose letter", "error_refs": [], "model": ""},
+    ]
+    prompt = _render(sample_plan_entry, sample_learner_state, sample_cited_records, recap=recap)
+    expected = (
+        "\n\n- `a1`: type: `quiz`, placement: `inline`, focus: Identify letter\n\n"
+        "- `a2`: type: `error-correction`, placement: `workbook`, focus: Repair spelling, "
+        "error_refs: E-001, E-002, model: X-004\n\n"
+        "- `a3`: type: `quiz`, placement: `inline`, focus: Choose letter\n\n\n"
+    )
+    activity_block = prompt.split("### Activities", 1)[1].split("### Inventory", 1)[0]
+    assert activity_block.encode("utf-8") == expected.encode("utf-8")
+    for field in ("targets", "options", "learner_reads"):
+        assert f"Binding {field}:" not in prompt
+
+
+@pytest.mark.parametrize("recap", [False, True])
+def test_structured_activity_constraints_render_even_when_empty(
+    sample_plan_entry, sample_learner_state, sample_cited_records, recap
+):
+    from scripts.build.fresh.prompt import extract_plan_citations
+
+    activity = sample_plan_entry["activities"][0]
+    activity.update(targets=[], options=[], learner_reads=[])
+    common = dict(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=sample_learner_state,
+        word_store=SAMPLE_WORD_STORE,
+        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+    )
+    prompt = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
+    for field in ("targets", "options", "learner_reads"):
+        assert f"Binding {field}: []" in prompt
+    activity.update(
+        targets=["W-123"],
+        options=["мама", "п'ять"],
+        learner_reads=["T-123", {"ref": "X-123", "words": ["добрий день"]}],
+    )
+    assert {"W-123", "T-123", "X-123"} <= extract_plan_citations(sample_plan_entry)
+    prompt = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
+    assert 'Binding targets: ["W-123"]' in prompt
+    assert "Binding options:" in prompt and "exact case" in prompt
+    assert 'Binding options: ["мама", "п\'ять"]' in prompt
+    assert '"words": ["добрий день"]' in prompt
+    assert "\\u" not in prompt.split("Binding options:", 1)[1].split("\n", 1)[0]
+    assert "Binding learner_reads:" in prompt and "T-123" in prompt and "X-123" in prompt
+
+
+def test_structured_citations_reach_the_writer_record_loader():
+    from scripts.build.fresh.cli import _load_cited_records
+
+    target = {"id": "W-123", "lemma": "fixture"}
+    quote = {"id": "T-123", "quote": "fixture"}
+    exercise = {"id": "X-123", "items_sample": ["fixture"]}
+    entry = {"activities": [{"targets": ["W-123"], "learner_reads": ["T-123", {"ref": "X-123", "words": []}]}]}
+    assert _load_cited_records(entry, {"texts": [quote], "exercises": [exercise]}, {"words": [target]}) == {
+        "W-123": target,
+        "T-123": quote,
+        "X-123": exercise,
+    }
+
+
+def test_structured_citation_discovery_preserves_existing_sources_and_ignores_prose():
+    from scripts.build.fresh.prompt import extract_plan_citations
+
+    entry = {
+        "steps": [{"explains": ["T-1"], "evidence": ["EX-1"], "ref": "T-2", "paradigm": {"id": "P-1", "word": "W-1"}}],
+        "activities": [
+            {
+                "error_refs": ["E-1"],
+                "targets": ["W-2"],
+                "options": ["W-999 text"],
+                "learner_reads": ["T-3", {"ref": "X-1", "words": ["W-998"]}],
+                "model": "X-2",
+                "focus": "W-997",
+            }
+        ],
+        "dialogue": {"evidence": ["T-4"], "speakers": [{"evidence": "W-3"}], "places": [{"evidence": "W-4"}]},
+        "inventory": {
+            "vocabulary": {"core": [{"evidence": "W-5"}], "incidental": [{"evidence": "W-6"}], "recycled": ["W-7"]},
+            "grammar": [{"id": "G-a1-001"}],
+        },
+        "videos": [{"evidence": "V-1"}],
+    }
+    assert extract_plan_citations(entry) == {
+        "T-1",
+        "EX-1",
+        "T-2",
+        "P-1",
+        "W-1",
+        "E-1",
+        "W-2",
+        "T-3",
+        "X-1",
+        "X-2",
+        "T-4",
+        "W-3",
+        "W-4",
+        "W-5",
+        "W-6",
+        "W-7",
+        "G-a1-001",
+        "V-1",
+    }
