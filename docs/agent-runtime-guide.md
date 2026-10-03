@@ -411,6 +411,36 @@ builds' cache access is unchanged.
 
 ### Claude headless permissions
 
+Every Claude adapter invocation passes the supported
+`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` through `--settings`'s `env` block
+(#9690). This disables Bash and subagent `run_in_background` and automatic
+backgrounding. `Monitor`, which only runs background watches, is denied through
+the same settings. Foreground Bash remains available under the existing tool
+profile, so a worker waits for its command before producing its final report.
+This applies to read-only, write, danger, new/resumed sessions, explicit tool
+lists, discussion and isolated review profiles, and native/npx launch paths.
+
+The policy is in invocation settings because the runtime environment sanitizer
+strips these variable names and ordinary user/project `env` settings can replace
+inherited shell values. No installed user or project settings are edited.
+`BASH_DEFAULT_TIMEOUT_MS` and `BASH_MAX_TIMEOUT_MS` are both set to `86400000`
+(24 hours), matching the runner's default hard timeout, so disabling automatic
+backgrounding does not kill long foreground commands at the CLI's default
+two-minute timeout. An explicit shorter Bash timeout still stops that command;
+the runner independently enforces the invocation's hard timeout. There is no
+resume loop. This controls Claude's tool backgrounding, not arbitrary shell
+detachment such as `nohup` or `&`; the existing delegate exit scan remains the
+backstop for leftover processes.
+
+Sources: Claude Code's [environment variable reference](https://code.claude.com/docs/en/env-vars),
+[foreground and background command behavior](https://code.claude.com/docs/en/tools-reference#foreground-commands-that-move-to-the-background),
+and [settings precedence](https://code.claude.com/docs/en/settings).
+`--allowedTools` pre-approves tool calls; `--disallowedTools` denies them. The
+[permission syntax](https://code.claude.com/docs/en/permissions#match-by-input-parameter)
+also supports deny rules such as `Bash(run_in_background:true)`, but such a
+rule alone does not prevent automatic backgrounding. Bash command patterns
+also apply to Monitor; denying Bash itself would remove foreground execution.
+
 Ordinary Claude `read-only` dispatches and bridge asks opt in with
 `tool_config={"reviewer_tools": True}`. When no explicit `allowed_tools` is
 supplied, this enables `dontAsk` with read/search tools, Bash, and web lookup.
@@ -447,8 +477,9 @@ This covers content quality reviews and tool-less bakeoff calls. Outside sealed
 `review_isolation`, an explicit `allowed_tools` value is passed
 unchanged as the sole `--allowedTools` argument, including an empty string. The
 adapter does not add reviewer tools or `dontAsk`, the reviewer deny list,
-publish hook, or push rewrite in that case; it adds only the sources persisting-tool
-denies. Shared worker guards still load. This keeps a read-only caller's
+publish hook, or push rewrite in that case; its `--disallowedTools` argument adds
+only the sources persisting-tool denies. Shared worker guards and the foreground
+execution policy still load. This keeps a read-only caller's
 `mcp__sources__*` allowlist (V7 dimension reviewers, wiki review) restricted to
 the read-only sources tools.
 
@@ -597,16 +628,17 @@ ones. The runner replaces that with **two-layer stall detection**:
    returns paths in `liveness_signal_paths(plan)`. A second thread polls
    mtimes every 5s; any bump is treated as activity.
 
-Both signals feed ONE `last_activity` clock. Runner kills only when:
-- `now - last_activity > stall_timeout` → `AgentStalledError`
-- `now - start_time > hard_timeout` → `AgentTimeoutError`
+These signals track activity. The runner can stop a call when an explicitly
+configured `stdout_silence_timeout` or `initial_response_timeout` expires
+(`AgentStalledError`), or when its `hard_timeout` expires (`AgentTimeoutError`).
 
 Distinct exception types so callers can handle them differently. The
 usage record carries the outcome as `"stalled"` or `"hard_timeout"`
 (NOT collapsed into generic "error") so metrics stay honest.
 
-Defaults: `stall_timeout=180` (3 min), `hard_timeout=1800` (30 min).
-Override per-call when you know the workload needs more.
+The default `hard_timeout=86400` (24 hours) is a last-resort leak guard.
+`stall_timeout` remains accepted for compatibility but is ignored; explicit
+stdout-silence and initial-response timeouts can still bound a call.
 
 ## Usage logging — zero new plumbing
 

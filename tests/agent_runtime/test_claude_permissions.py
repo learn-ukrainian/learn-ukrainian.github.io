@@ -949,6 +949,10 @@ def test_every_read_only_path_denies_every_sources_writer(
         session_id=session_id,
         tool_config=READ_ONLY_PATHS[path](tmp_path, monkeypatch),
     )
+    # The same headless policy also covers sealed reviews and caller tool lists (#9690).
+    settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
+    assert settings["env"]["CLAUDE_CODE_DISABLE_BACKGROUND_TASKS"] == "1"
+    assert settings["permissions"]["deny"] == ["Monitor"]
     denied = _denied(plan.cmd)
     assert set(PERSISTING_RULES) <= set(denied)
     # Readers are never denied: ordinary lookups keep working.

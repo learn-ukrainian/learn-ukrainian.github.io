@@ -139,6 +139,18 @@ _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _AGENT_FLAG_MIN_VERSION = (2, 1, 119)
 
+# Supported Claude settings env (https://code.claude.com/docs/en/env-vars).
+# Keep commands foreground for headless workers (#9690). Match the runner's
+# 24-hour default leak guard instead of killing long Bash commands at 120s;
+# the runner still enforces each invocation's hard timeout independently.
+# Use --settings.env: build_agent_env intentionally strips these variable names,
+# and ordinary user/project settings can overwrite inherited environment values.
+_HEADLESS_WORKER_ENV = {
+    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
+    "BASH_DEFAULT_TIMEOUT_MS": "86400000",
+    "BASH_MAX_TIMEOUT_MS": "86400000",
+}
+
 # Installed Claude Code 2.1.283 ``--permission-mode`` value for a headless
 # worker. dontAsk runs pre-approved tools and denies anything that would
 # prompt, so the session never waits. bypassPermissions still runs hooks;
@@ -343,7 +355,7 @@ def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
-    """Build hook settings from tracked sources in this checkout."""
+    """Build tracked guards and the foreground-only headless execution policy."""
     source_root = Path(__file__).resolve().parents[3]
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
@@ -364,7 +376,15 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
         )
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
-    return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
+    return json.dumps(
+        {
+            "hooks": {"PreToolUse": groups},
+            "env": _HEADLESS_WORKER_ENV,
+            # Monitor is background-only; denying it preserves foreground Bash.
+            "permissions": {"deny": ["Monitor"]},
+        },
+        separators=(",", ":"),
+    )
 
 
 def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
