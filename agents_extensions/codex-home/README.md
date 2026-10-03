@@ -17,9 +17,10 @@ The default spawned agent is Luna high. Use Luna medium explicitly for routine
 scouting and high for ambiguous investigations or bounded coding. Sol high
 handles broader coding and adversarial review. `sol_advisor_high` runs at high
 as the on-demand advisor for consequential design and difficult linguistic
-judgment. Advice and designated approval come from Opus 5.5 and Sol 6.1;
-approval needs both, neither the author, and a split goes to the operator
-(#9583). This profile supplies only the Sol half. Sol high
+judgment. Advice and designated approval come from Opus 5.5 and Sol 6.1:
+approval comes from the operator or from the two agreeing; when one of them
+authored the proposal, the other's approval completes it; if they disagree,
+the operator decides (#9583, #9616). This profile supplies only the Sol half. Sol high
 is the Ukrainian content authoring default, subject to VESUM, sources, and
 track immersion checks. This is a routing decision, not a comparative
 Ukrainian-quality benchmark.
