@@ -82,6 +82,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
         "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "failure_code": str | absent,               # runtime's typed failure, e.g. provider_policy_refusal; last_error names the class (#9532)
         "advisory_envelope": {requirement, advisory_args, advisory_args_sha256, prompt_sha256,
                               admitted_execution, research_block, repo_root, advisor_task_id, advisor_model,
                               advisor_run_nonce, result_path, result_sha256, envelope_sha256,
@@ -5785,7 +5786,7 @@ def _kimi_worker_refusal(
         format_refusal,
         is_kimi_seat,
     )
-    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 
     boundary_errors = (kimi_boundary.BoundaryError, OSError, subprocess.SubprocessError)
     if not is_kimi_seat(agent, model=model):
@@ -5794,7 +5795,10 @@ def _kimi_worker_refusal(
                 kimi_boundary.remove(cwd, env=_sanitized_git_env())
             except boundary_errors as exc:
                 return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}", None
-        (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
+        try:
+            (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
+        except ReviewAdmissionRefused as exc:  # #9583: a review model without a catalog review role
+            return str(exc), None
         return None, target
     try:
         if mode != ADMITTED_MODE or review:
@@ -8821,6 +8825,7 @@ def _run_worker(
     returncode: int | None = None
     returncode_reason: str | None = None
     rate_limited = False
+    runtime_failure_code: str | None = None
     timed_out = False
     result = None
     substitution: dict[str, Any] | None = None
@@ -9029,6 +9034,9 @@ def _run_worker(
             stderr_excerpt = result.stderr_excerpt
             returncode = result.returncode
             rate_limited = result.rate_limited
+            runtime_failure_code = getattr(result, "failure_code", None)
+            if not isinstance(runtime_failure_code, str):
+                runtime_failure_code = None
             substitution = getattr(result, "substitution", None)
         except KeyboardInterrupt as exc:
             # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
@@ -9150,6 +9158,10 @@ def _run_worker(
             final_state.pop(gate_key, None)
         final_state["require_review_verdict"] = require_review_verdict
         final_state["review_verdict_failure"] = None
+        # The runtime's typed failure class, e.g. a provider policy refusal (#9532).
+        final_state.pop("failure_code", None)
+        if runtime_failure_code and not ok_outcome:
+            final_state["failure_code"] = runtime_failure_code
         if advisory_prompt_sha256 is not None:
             final_state["advisory_prompt_sha256"] = advisory_prompt_sha256
         if advisory_handoff_refusal is not None:
@@ -10236,10 +10248,14 @@ def _review_attempt_prompt_admission(
         manifest = yaml.safe_load(Path(args.review_attempt).read_bytes())
         if isinstance(manifest, dict) and any(key in manifest for key in ("manifest_schema", "kind", "inputs")):
             contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
+            try:
+                input_root = worktree_claims.review_contract_input_root(contract)
+            except ValueError as err:
+                return f"❌ review attempt refused: {err}", None
             checked = check_prompt(
                 prompt,
                 Path(args.review_attempt),
-                repo_root=Path(contract["input_root"]),
+                repo_root=Path(input_root),
                 prompts_dir=Path(contract["server_checkout"]) / "scripts/review/prompts",
                 recorded_prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
                 files_read=contract["recorded_files_read"],
@@ -10289,6 +10305,44 @@ def _review_attempt_prompt_admission(
         return f"❌ {err}", None
     except (OSError, ValueError) as err:
         return f"❌ review attempt refused: prompt_render_invalid: {type(err).__name__}", None
+
+
+def _lock_review_input_root(
+    contract: dict[str, Any],
+    locks: contextlib.ExitStack,
+    *,
+    locked_worktree: Path | None = None,
+    review_access: str = "full",
+) -> None:
+    """Protect input preparation until the task's persisted contract takes over (#9485).
+
+    Use the containing registered checkout's removal lock, rather than an input
+    subdirectory's lock. The dispatch stack releases it on every early return or
+    exception, and the kernel releases it on process exit; no git lock leaks.
+    """
+    root = worktree_claims.review_contract_input_root(contract, review_access=review_access)
+    if root is None:
+        return
+    input_root = Path(root).resolve()
+    if not input_root.is_dir():
+        raise ValueError("review input root disappeared before preparation")
+    # Reuse eligibility excludes ACP runtime checkouts. Reading one still
+    # requires its removal lock, so consult registration directly here.
+    wc = _load_worktree_containment()
+    try:
+        main_root = wc.resolve_main_root(input_root)
+    except wc.NotAGitRepositoryError:
+        return
+    registered = wc.registered_worktrees(main_root)
+    if not registered:
+        raise ValueError("review input worktree registration unavailable")
+    input_worktree = worktree_claims.review_input_worktree(input_root, main_root=main_root, registered=registered)
+    if input_worktree is None:
+        return
+    if locked_worktree is None or input_worktree != locked_worktree.resolve():
+        locks.enter_context(worktree_lock(input_worktree))
+    if not input_root.is_dir() or input_worktree not in wc.registered_worktrees(main_root):
+        raise ValueError("review input worktree disappeared while dispatch waited for its lock")
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -10735,6 +10789,11 @@ def _dispatch(
         review_refusal, review_contract = _review_attempt_prompt_admission(args, early_prompt, review_id, attempt_id)
         if review_refusal:
             print(review_refusal, file=sys.stderr)
+            return 2
+        try:
+            worktree_claims.review_contract_input_root(review_contract, review_access=review_access)
+        except ValueError as exc:
+            print(f"❌ review attempt refused: {exc}", file=sys.stderr)
             return 2
 
     invalid_owned_paths = _owned_path_errors(getattr(args, "owned_path", None))
@@ -11497,24 +11556,6 @@ def _dispatch(
             print(f"❌ {admission_refusal}", file=sys.stderr)
             return _ADMISSION_REFUSED_EXIT
 
-    if review_attempt and review_access != "full":
-        from scripts.agent_runtime.review_mcp import prepare_review_attempt
-
-        effective_harness = requested_harness or dispatch_agent
-        try:
-            review_plan = prepare_review_attempt(
-                review_id=review_id,
-                attempt_id=attempt_id,
-                manifest_path=Path(review_attempt),
-                harness=effective_harness,
-                review_access=review_access,
-                # Launch-time check (#9163): the primary may have changed since admission.
-                review_contract=review_contract,
-            )
-        except (ValueError, FileExistsError) as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
@@ -11713,14 +11754,18 @@ def _dispatch(
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
 
-    if review_attempt and review_access == "full":
+    if review_attempt:
         from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
         from scripts.agent_runtime.review_mcp import prepare_review_attempt
         from scripts.review.isolation import ReviewIsolationError
 
         try:
+            _lock_review_input_root(
+                review_contract, worktree_locks, locked_worktree=worktree_path, review_access=review_access
+            )
             # A refused tree must not reserve the attempt id or create its ledger.
-            verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
+            if review_access == "full":
+                verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
             review_plan = prepare_review_attempt(
                 review_id=review_id,
                 attempt_id=attempt_id,
@@ -11729,9 +11774,12 @@ def _dispatch(
                 review_access=review_access,
                 review_contract=review_contract,
             )
-        except (ReviewIsolationError, ValueError, FileExistsError) as exc:
+        except (ReviewIsolationError, ValueError, FileExistsError, WorktreeLockError) as exc:
             stdout_fd.close()
             stderr_fd.close()
+            # The remover takes the same lock; release dispatch's hold before
+            # asking the guarded cleanup path to remove an unpublished tree.
+            worktree_locks.close()
             if worktree_path is not None and worktree_telemetry.get("reused") is False:
                 cleanup = _settle_worktree_reap(worktree_path, created_by_this_dispatch=True, settling_task_id=task_id)
                 print(f"   review refusal cleanup: {cleanup}", file=sys.stderr)

@@ -557,6 +557,24 @@ def test_acp_runtime_reap_when_process_gone(hermetic_reap):
     assert not acp_path.exists()
 
 
+def test_post_task_reap_preserves_another_reviews_input_until_terminal(hermetic_reap):
+    repo_root, tasks_dir = hermetic_reap
+    acp_path = _add_acp_runtime_worktree(repo_root, "input-owner", locked=False)
+    _write_task_state(tasks_dir, "input-owner", "done", None, acp_runtime_paths=[acp_path])
+    state = tasks_dir / "reviewer.json"
+    record = {"task_id": "reviewer", "status": "running", "review_contract": {"input_root": str(acp_path)}}
+    state.write_text(json.dumps(record))
+    report = post_task_reap.post_task_reap("input-owner", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+    assert report["acp_runtimes"][0]["action"] == "retained"
+    assert "review input root claimed by active task reviewer" in report["acp_runtimes"][0]["reason"]
+    assert acp_path.exists()
+    record["status"] = "crashed"
+    state.write_text(json.dumps(record))
+    report = post_task_reap.post_task_reap("input-owner", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+    assert report["acp_runtimes"][0]["action"] == "removed"
+    assert not acp_path.exists()
+
+
 def test_acp_runtime_retain_while_process_alive(hermetic_reap, monkeypatch):
     repo_root, tasks_dir = hermetic_reap
     main_worktree = _add_dispatch_worktree(repo_root, "kimi", "acp-task")

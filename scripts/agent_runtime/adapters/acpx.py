@@ -91,6 +91,7 @@ except ImportError:
     from common.repo_root import project_interpreter  # agent_runtime loaded with scripts/ on path
 
 from ..binary_resolve import resolve_agent_binary
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
 from .base import InvocationPlan
@@ -172,7 +173,9 @@ _HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
 )
 AGY_ACP_MODEL = "gemini-3.8-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
-CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5-1"})
+# Opus 5.5 is the Claude authority pin for advice and review; Fable holds no
+# advisory or review role (operator decision 2026-10-03, #9583).
+CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-opus-5-5"})
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
 CURSOR_ACP_MODEL = "grok-4.7"
@@ -214,9 +217,7 @@ _NODE_HOST_BIN_DIRS = (
     Path.home() / ".hermes" / "node" / "bin",
 )
 # ``node --version`` prints a single line like ``v22.23.2``.
-_NODE_VERSION_LINE_RE = re.compile(
-    r"^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:[-+][0-9A-Za-z.-]+)?$"
-)
+_NODE_VERSION_LINE_RE = re.compile(r"^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:[-+][0-9A-Za-z.-]+)?$")
 _CLAUDE_ACP_PACKAGE = "@agentclientprotocol/claude-agent-acp"
 _CLAUDE_ACP_MIN_VERSION = (0, 64, 2)
 _CLAUDE_ACP_MAX_VERSION = (1, 0, 0)
@@ -1960,8 +1961,7 @@ class AcpxAdapter:
         approved_models = frozenset({"gpt-6-luna", "gpt-6.1-sol"})
         if model is not None and model not in approved_models:
             raise AcpxShadowRefusalError(
-                "AcpxAdapter: model="
-                f"{model!r} rejected; approved models are {', '.join(sorted(approved_models))}"
+                f"AcpxAdapter: model={model!r} rejected; approved models are {', '.join(sorted(approved_models))}"
             )
         if mode not in self.supported_modes:
             raise ValueError(
@@ -2088,7 +2088,7 @@ class AcpxAdapter:
         malformed token fields in such an update also fail closed.
         """
         _ = output_file, plan, call_start_time
-        lines = [line for line in stdout.splitlines() if line.strip()]
+        lines = [line for line in jsonl_lines(stdout) if line.strip()]
 
         if not lines:
             return self._closed(f"acpx exec produced no NDJSON output (rc={returncode})", stderr)
@@ -2210,11 +2210,7 @@ class AcpxAdapter:
                 # when no matching client request was sent. They are not a
                 # terminal receipt for this one-shot prompt. Grok emits two
                 # such successful skills-reload replies on some starts.
-                if (
-                    event_id not in request_method_by_id
-                    and has_result
-                    and "stopReason" not in event["result"]
-                ):
+                if event_id not in request_method_by_id and has_result and "stopReason" not in event["result"]:
                     continue
                 if event_id in terminal_generations:
                     duplicate_id = event_id
@@ -2251,11 +2247,7 @@ class AcpxAdapter:
             if not isinstance(message, str) or not message.strip():
                 detail = data.get("message") or data.get("detail")
                 message = next(
-                    (
-                        value
-                        for value in (raw_data, detail)
-                        if isinstance(value, str) and value.strip()
-                    ),
+                    (value for value in (raw_data, detail) if isinstance(value, str) and value.strip()),
                     "acpx error",
                 )
             if (

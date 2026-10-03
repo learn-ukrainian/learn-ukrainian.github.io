@@ -17,7 +17,7 @@ attach tool-backed breadth evidence on handoff; missing card is a process defect
 only, PATH/tool outage already substituted) is allowed; silent single-seat
 marathons are not.
 
-**Escape:** Operator or advisor (Fable/Astra) may waive breadth for one named
+**Escape:** The operator, or Opus 5.5 and Sol 6.1 jointly (designated approval), may waive breadth for one named
 session with a written NOTE on the issue/handoff. Cannot become the default.
 
 **Sunset review:** 2026-09-06 or when breadth report shows median driver
@@ -29,26 +29,23 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high) first; Fable / Astra last resort; bounded envelopes use Sol only (§2) |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high); bounded envelopes use Sol only (§2) |
 | **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (code/infra CF only through the runtime-attested Cursor seat below critical, #9488; never a content judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
-review seat and, since operator 2026-09-29 (#9230), also holds the named Astra advisory seat at `high`.
-Ordinary advice uses Opus 5.5 / Sol 6.1 first; the named Astra seat is last resort (#9394).
+review seat and, since operator 2026-09-29 (#9230), took over the former Astra advisory seat at `high`.
+Ordinary advice uses Opus 5.5 / Sol 6.1; Fable and the former Astra seat hold no advisory role (#9583).
 Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
 `gpt-6-sol` and `gpt-6-astra` are not routable. Designated approval remains separate
 from ordinary advice; do not spend advisory turns on ordinary implementation or review.
 
-**Standing routing preference (#9394):** Opus 5.5 / Sol 6.1 first; Fable / Astra
-last resort. Designated approval by Fable, Astra or the operator remains unchanged.
-When last-resort Fable is required, use this transport order:
+**Standing routing preference (#9583, operator decision 2026-10-03):** advice, critique, review and
+design input use Opus 5.5 / Sol 6.1. Designated approval is given by the operator, or by
+`claude-opus-5-5` and `gpt-6.1-sol` both approving, neither being the proposal's author; if they
+disagree, the operator decides. Fable and the former Astra seat are not a last resort for any of these.
 
-1. Native Claude seat with model pin **claude-fable-5-1** (first transport for last-resort Fable), or
-2. **Cursor** multi-model pin to Fable (use composite identity for CF author/review
-   bookkeeping, e.g. `cursor:claude-fable-5-1` per `resolve_author_family` rules).
-
-Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rsync gates, or smoke
+Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or smoke
 `--limit 5` jobs.
 
 ---
@@ -104,7 +101,7 @@ stampede one hot lane.
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
 | **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
 | **Z.AI GLM-5.3** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
-| **Claude Sonnet** | routine judgment/CF | Opus 5.5 / Sol 6.1 first for hard judgment; Fable / Astra last resort; ~1 Claude driver |
+| **Claude Sonnet** | routine judgment/CF | Opus 5.5 / Sol 6.1 for hard judgment; ~1 Claude driver |
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
@@ -131,8 +128,7 @@ balance (near cap without credits: unchanged), or on other lanes. A dispatch wit
 judged by the lane default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
 lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
 decision, and no tool consumes credits or resets.
-Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1
-first, Fable / Astra last resort.
+Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1.
 
 The operator records a shared assertion at `batch_state/routing_budget/operator_reset_reserve.json`
 in the primary checkout. Its exact JSON fields are `schema_version` (`operator-reset-reserve.v1`),
@@ -201,9 +197,9 @@ the worker exits, not a limit on what it does while running). A second completio
 fails a Ukrainian-classified `gemini-3.8-flash-high` write worker whose changes include a
 code file or a path outside the Ukrainian content roots (`advisory_exempt_code_change`),
 because admission can only classify the files its owned paths held then. The envelope's `owned_paths`
-must equal the worker's `--owned-path` set. A Fable brief is design advice; it is not an
-envelope and does not admit a bounded worker (the packet path used to be "Fable or Astra";
-it is now the catalog advisor route only). Routine lockfile, pointer and smoke tasks take
+must equal the worker's `--owned-path` set. A design brief that is not a Sol envelope does
+not admit a bounded worker (the packet path used to be "Fable or Astra"; it is now the catalog
+advisor route only). Routine lockfile, pointer and smoke tasks take
 no advisory seat, so they go to a non-bounded worker (for example `claude-sonnet-5-5`)
 instead of a bounded one. Native Codex subagents spawned in-session by a `gpt-6.1-sol`
 parent run under that parent's own contract; the parent is their advisor and sets their
@@ -268,7 +264,7 @@ Trivial one-shot (typo, single-file comment) is exempt if labeled
 | VPS launcher scripts, health probes, rsync gates | practical |
 | Residual lemma EN strategy, morphology policy | **authority brief** → heap fill |
 | Routine formal CF | practical cross-family |
-| Contested CF / architecture / process | Opus 5.5 / Sol 6.1 first; Fable / Astra last resort; operator escalation unchanged; formal CF remains independent and task-qualified |
+| Contested CF / architecture / process | Opus 5.5 / Sol 6.1; designated approval needs both (#9583); operator escalation unchanged; formal CF remains independent and task-qualified |
 | UK content authoring | language-lane only (existing model-assignment) |
 
 ---

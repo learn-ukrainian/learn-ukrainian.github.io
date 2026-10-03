@@ -566,3 +566,30 @@ def test_gemini_fail_tip_points_at_agy_cli_not_api_key():
     assert "API key" in text
     assert "missing credential" not in text.lower()
     assert "no credential" not in text.lower()
+
+
+@pytest.mark.parametrize(
+    ("credit", "suffix"),
+    [
+        (None, ""),
+        ({"state": "not_configured"}, ""),
+        (
+            {"state": "credit_balance_present", "allowed_models": ["gpt-6.1-sol", "gpt-6-luna"]},
+            " | credit_balance_present: credit balance present; draw not verified by the router; "
+            "usable for gpt-6.1-sol, gpt-6-luna only",
+        ),
+        (
+            {"state": "credit_use_unconfirmed", "reason": "recent rate limit"},
+            " | credit_use_unconfirmed: recent rate limit (plan state applies)",
+        ),
+        ({"state": "credits_exhausted"}, " | credits_exhausted: no reason given (plan state applies)"),
+    ],
+    ids=["unpublished", "not-configured", "present", "unconfirmed", "no-reason"],
+)
+def test_show_names_the_published_credit_state(budget, credit, suffix):
+    """#9517: the credits line says when credits are usable and that the draw is unverified."""
+    codex = budget["agents"]["codex"]
+    codex["credit_balance"] = 62500.0
+    if credit is not None:
+        codex["credit"] = credit
+    assert f"  credits: balance=62500.0{suffix}\n" in usage.format_human(budget) + "\n"

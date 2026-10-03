@@ -244,6 +244,44 @@ def _run_transport(command, *, capture_output=False, check=False, timeout=None, 
                 signal.signal(signum, handler)
 
 
+SQUASH_TEXT_QUERY = (
+    "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){"
+    "pullRequest(number:$number){headRefOid isMergeQueueEnabled "
+    "viewerMergeHeadlineText(mergeType:SQUASH) viewerMergeBodyText(mergeType:SQUASH)}}}"
+)
+
+
+def _squash_text(gh_repo, fields, dest, temp, runner, cwd, environment):
+    """Read GitHub's default squash subject and body for the pinned head."""
+    owner, name = gh_repo.split("/", 1)
+    query = temp / "squash-text.json"
+    variables = {"owner": owner, "name": name, "number": fields["number"]}
+    query.write_bytes(json.dumps({"query": SQUASH_TEXT_QUERY, "variables": variables}).encode("utf-8"))
+    try:
+        result = runner(
+            ["gh", "api", "--method", "POST", "graphql", "--input", str(query), *_hostname_flag(dest)],
+            cwd=cwd,
+            env=dict(environment),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+        pull = json.loads(result.stdout)["data"]["repository"]["pullRequest"] if result.returncode == 0 else None
+        subject, body = pull["viewerMergeHeadlineText"], pull["viewerMergeBodyText"]
+        if not (
+            isinstance(subject, str)
+            and isinstance(body, str)
+            and type(pull["isMergeQueueEnabled"]) is bool
+            and isinstance(pull["headRefOid"], str)
+            and pull["headRefOid"].lower() == fields["match_head"].lower()
+        ):
+            raise ValueError
+    except Exception:
+        raise gate.PublishBlocked("OPSEC: merge refused: squash text unverifiable.") from None
+    return {"subject": subject, "body": body, "queue": pull["isMergeQueueEnabled"]}
+
+
 def publish(
     verb: str,
     *,
@@ -294,6 +332,29 @@ def publish(
                     fields[field] = raw.decode("utf-8")
                 except UnicodeError:
                     raise gate.PublishBlocked("OPSEC: publisher text is not UTF-8.") from None
+        if verb == "pr-merge":
+            from scripts.publish.merge_guard import ensure_merge_ready
+
+            def readiness_runner(args, **kwargs):
+                return _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
+
+            fields["match_head"] = ensure_merge_ready(
+                gh_repo,
+                fields["number"],
+                runner=readiness_runner,
+                cwd=cwd,
+                environment=environment,
+                match_head=fields.get("match_head"),
+            )
+            # GitHub's default squash text carries the PR title and commit messages.
+            # Omitted fields are sent explicitly so the scanned text is the sent text;
+            # a merge queue ignores explicit text, so its defaults are scanned too.
+            default = _squash_text(gh_repo, fields, dest, temp, readiness_runner, cwd, environment)
+            for key in ("subject", "body"):
+                if key not in fields:
+                    fields[key] = default[key]
+                elif default["queue"]:
+                    scan("default_" + key, default[key])
         schema = SCHEMAS[verb][1]
         for key, value in fields.items():
             if schema[key] == "text":
@@ -345,15 +406,6 @@ def publish(
                 frozen = temp / (key + ".txt")
                 frozen.write_bytes(fields[key].encode("utf-8"))
                 argv.extend(["--" + key + "-file", str(frozen)])
-
-        if verb == "pr-merge":
-            from scripts.publish.merge_guard import ensure_merge_ready
-            def readiness_runner(args, **kwargs):
-                return _send(args, environment=kwargs.pop("env"), runner=runner,
-                             cwd=kwargs.pop("cwd"), **kwargs)
-            fields["match_head"] = ensure_merge_ready(gh_repo, fields["number"],
-                runner=readiness_runner, cwd=cwd, environment=environment,
-                match_head=fields.get("match_head"))
 
         if verb in {"issue-create", "issue-edit", "pr-create", "pr-edit", "issue-comment", "pr-comment", "pr-review"}:
             option("title")
@@ -562,12 +614,14 @@ REST_READS = {
 }
 GQL_READS = {
     "budget": "query { rateLimit { limit remaining used resetAt } }",
+    "default-head": "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){nameWithOwner defaultBranchRef{name target{oid}}}}",
     "queue-status": '\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n',
     "pr-bases": '\nquery($owner: String!, $name: String!, $cursor: String) {\n  repository(owner: $owner, name: $name) {\n    pullRequests(states: OPEN, first: 100, after: $cursor) {\n      totalCount\n      pageInfo { hasNextPage endCursor }\n      nodes { number baseRefOid }\n    }\n  }\n}\n',
     "issue-scope": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){number body labels(first:100){nodes{name}} parent{number}}}}",
     "membership-head": "query($owner:String!,$name:String!,$number:Int!,$branch:String!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid isInMergeQueue} mergeQueue(branch:$branch){url}}}",
     "issue-parent": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){number state url parent{number url}}}}",
     "membership": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}",
+    "squash-text": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid viewerMergeHeadlineText(mergeType:SQUASH) viewerMergeBodyText(mergeType:SQUASH) mergeQueueEntry{headCommit{oid message}}}}}",
     "subissues": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){body subIssues(first:100){nodes{number} pageInfo{hasNextPage endCursor}}}}}",
     "subissues-next": "query($owner:String!,$name:String!,$number:Int!,$cursor:String!){repository(owner:$owner,name:$name){issue(number:$number){subIssues(first:100, after:$cursor){nodes{number} pageInfo{hasNextPage endCursor}}}}}",
 }
@@ -622,7 +676,7 @@ def read(
     else:
         variables = dict(zip(("owner", "name"), gh_repo.split("/", 1), strict=True)) if "/" in gh_repo else {}
         if operation in GQL_READS:
-            expected = (set() if operation == "budget" else {"cursor"} if operation == "pr-bases" else {"number", "branch"} if operation == "queue-status" else
+            expected = (set() if operation in {"budget", "default-head"} else {"cursor"} if operation == "pr-bases" else {"number", "branch"} if operation == "queue-status" else
                 {"number", "cursor"}
                 if operation == "subissues-next"
                 else {"number", "branch"}

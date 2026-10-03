@@ -193,11 +193,37 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         )
     if harness == "codex":
         expected_options["codex_home_override"] = str(plan.config_path.parent / f"{attempt_id}.codex-home")
+        expected_options["review_access"] = "isolated"
     if harness == "agy":
         expected_options["agy_home_override"] = str(plan.config_path.parent / f"{attempt_id}.agy-home")
     assert plan.adapter_options == expected_options
     assert plan.mcp_config_path == plan.config_path
     assert plan.strict_mcp_config is True
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_prepared_codex_contract_survives_adapter_overrides(manifest_file: Path, tmp_path: Path, access: str) -> None:
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.review.receipts.ledger import review_tools
+    from tests.agent_runtime.test_sources_read_only import _server_config
+
+    prepared = prepare_review_attempt(
+        "review", "attempt", manifest_file, "codex", receipts_root=tmp_path / "receipts", review_access=access
+    )
+    invocation = CodexAdapter().build_invocation(
+        prompt="use mcp__sources__verify_words",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=prepared.adapter_options,
+    )
+    try:
+        assert prepared.adapter_options["review_access"] == access
+        assert set(_server_config(invocation.cmd)["enabled_tools"]) == review_tools(access)
+    finally:
+        invocation.output_file.unlink()
 
 
 def test_prepare_review_attempt_files_mode_0o600(manifest_file: Path, tmp_path: Path) -> None:
@@ -580,8 +606,16 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
 
 
 def test_delegate_dispatch_refuses_reused_attempt_id(
-    manifest_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    manifest_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    from tests.test_delegate import _add_local_bare_origin, _init_repo_with_worktree, _sanitize_git_env_for_test
+
+    main, reviewer = _init_repo_with_worktree(tmp_path)
+    _add_local_bare_origin(main)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate_cli, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate_cli, "_local_repo_root", reviewer)
+    monkeypatch.setattr(delegate_cli, "_resolve_invocation_git_root", lambda *_args: main)
     receipts_root = tmp_path / "batch_state" / "review-receipts"
     attempt_dir = receipts_root / "rev-dup-001"
     attempt_dir.mkdir(parents=True, exist_ok=True)
@@ -616,6 +650,9 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
     assert rc == 2
     captured = capsys.readouterr()
     assert "review attempt 'att-dup-001' already exists for review 'rev-dup-001'" in captured.err
+    assert "'action': 'removed'" in captured.err
+    assert not (main / ".worktrees/dispatch/claude" / task_id).exists()
+    assert (attempt_dir / "att-dup-001.jsonl").read_bytes() == b"prior-receipts\n"
 
 
 def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path) -> None:
@@ -899,7 +936,7 @@ def test_codex_scoped_config_names_only_stdio_sources(
     assert sources["args"] == mcp_json["args"]
     assert sources["env"] == mcp_json["env"]
     assert set(sources["env"]) == {ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH, "LU_REVIEW_ACCESS"}
-    assert sources["default_tools_approval_mode"] == "approve"
+    assert sources["default_tools_approval_mode"] == "prompt"
     assert sources["required"] is True
     auth = plan.codex_home / "auth.json"
     assert auth.is_symlink()
@@ -1101,7 +1138,7 @@ def test_codex_adapter_final_argv_and_env_use_scoped_home(manifest_file: Path, t
     joined = " ".join(invocation.cmd)
     assert "mcp_servers.sources.url" not in joined
     assert "8766" not in joined
-    assert 'mcp_servers.sources.default_tools_approval_mode="approve"' in invocation.cmd
+    assert 'mcp_servers.sources.default_tools_approval_mode="prompt"' in invocation.cmd
 
 
 def test_codex_ordinary_dispatch_has_no_scoped_home_or_url_override(tmp_path: Path) -> None:

@@ -23,8 +23,13 @@ from scripts.agent_runtime.env_sanitize import build_agent_env
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
 def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode=mode, cwd=tmp_path, model=None,
-        task_id=None, session_id=None, tool_config=None,
+        prompt="inspect",
+        mode=mode,
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
     )
     assert "--bare" not in plan.cmd
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
@@ -33,9 +38,13 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     commands = [hook["command"] for group in hooks for hook in group["hooks"]]
     tracked_hooks = Path(__file__).resolve().parents[2] / "agents_extensions/shared/hooks"
     for name in (
-        "guard-primary-checkout-write.py", "guard-secret-print.py",
-        "guard-pr-merge.py", "guard-branch-switch-in-main.py",
-        "guard-admin-merge.py", "enforce-venv.sh", "heal-core-bare.py",
+        "guard-primary-checkout-write.py",
+        "guard-secret-print.py",
+        "guard-pr-merge.py",
+        "guard-branch-switch-in-main.py",
+        "guard-admin-merge.py",
+        "enforce-venv.sh",
+        "heal-core-bare.py",
     ):
         assert str(tracked_hooks / name) in commands
     assert all(Path(command).is_file() for command in commands)
@@ -49,8 +58,15 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
         assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
         granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
         assert granted == [
-            "Bash", "Read", "Edit", "Write",
-            "Grep", "Glob", "LS", "WebFetch", "WebSearch",
+            "Bash",
+            "Read",
+            "Edit",
+            "Write",
+            "Grep",
+            "Glob",
+            "LS",
+            "WebFetch",
+            "WebSearch",
         ]
         assert "NotebookEdit" not in granted
         assert not any(name.startswith("mcp__") for name in granted)
@@ -64,8 +80,12 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
 
 def test_workspace_write_keeps_explicit_allowed_tools(tmp_path: Path) -> None:
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-        task_id=None, session_id=None,
+        prompt="inspect",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={"allowed_tools": "mcp__sources__*"},
     )
     assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
@@ -83,8 +103,12 @@ def test_workspace_write_names_mcp_servers_from_config(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-        task_id=None, session_id=None,
+        prompt="inspect",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={"mcp_config_path": str(config)},
     )
     granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
@@ -100,8 +124,13 @@ def test_workspace_write_mcp_config_comes_from_worker_cwd(tmp_path: Path) -> Non
         encoding="utf-8",
     )
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-        task_id=None, session_id=None, tool_config=None,
+        prompt="inspect",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
     )
     granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
     assert "mcp__worker_only__*" in granted
@@ -119,8 +148,12 @@ def test_explicit_mcp_config_path_wins_over_worker_cwd(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-        task_id=None, session_id=None,
+        prompt="inspect",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={"mcp_config_path": str(explicit)},
     )
     granted = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
@@ -128,8 +161,12 @@ def test_explicit_mcp_config_path_wins_over_worker_cwd(tmp_path: Path) -> None:
     assert "mcp__from_cwd__*" not in granted
 
     missing = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-        task_id=None, session_id=None,
+        prompt="inspect",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={"mcp_config_path": str(tmp_path / "absent.json")},
     )
     missing_granted = missing.cmd[missing.cmd.index("--allowedTools") + 1].split(",")
@@ -141,8 +178,13 @@ def test_workspace_write_rejects_invalid_mcp_config(tmp_path: Path) -> None:
     (tmp_path / ".mcp.json").write_text("{", encoding="utf-8")
     with pytest.raises(ValueError, match="invalid JSON"):
         ClaudeAdapter().build_invocation(
-            prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-            task_id=None, session_id=None, tool_config=None,
+            prompt="inspect",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
         )
 
     shaped = tmp_path / "shaped"
@@ -150,8 +192,13 @@ def test_workspace_write_rejects_invalid_mcp_config(tmp_path: Path) -> None:
     (shaped / ".mcp.json").write_text("[]", encoding="utf-8")
     with pytest.raises(ValueError, match="mcpServers"):
         ClaudeAdapter().build_invocation(
-            prompt="inspect", mode="workspace-write", cwd=shaped, model=None,
-            task_id=None, session_id=None, tool_config=None,
+            prompt="inspect",
+            mode="workspace-write",
+            cwd=shaped,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
         )
 
 
@@ -162,8 +209,13 @@ def test_workspace_write_rejects_unreadable_mcp_config(tmp_path: Path) -> None:
     try:
         with pytest.raises(ValueError, match="unreadable"):
             ClaudeAdapter().build_invocation(
-                prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-                task_id=None, session_id=None, tool_config=None,
+                prompt="inspect",
+                mode="workspace-write",
+                cwd=tmp_path,
+                model=None,
+                task_id=None,
+                session_id=None,
+                tool_config=None,
             )
     finally:
         config.chmod(0o644)
@@ -177,16 +229,25 @@ def test_workspace_write_rejects_inexpressible_mcp_server_name(tmp_path: Path) -
     )
     with pytest.raises(ValueError, match="cannot be expressed"):
         ClaudeAdapter().build_invocation(
-            prompt="inspect", mode="workspace-write", cwd=tmp_path, model=None,
-            task_id=None, session_id=None,
+            prompt="inspect",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
             tool_config={"mcp_config_path": str(config)},
         )
 
 
 def test_reviewer_tools_opt_in_installs_profile(tmp_path: Path) -> None:
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
-        task_id=None, session_id=None, tool_config={"reviewer_tools": True},
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"reviewer_tools": True},
     )
     assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
     sources_read = {f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS}
@@ -205,8 +266,13 @@ def test_reviewer_tools_opt_in_installs_profile(tmp_path: Path) -> None:
 
 def test_discussion_readonly_keeps_separate_permissions(tmp_path: Path) -> None:
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
-        task_id=None, session_id=None, tool_config={"discussion_readonly": True},
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"discussion_readonly": True},
     )
     assert "--settings" in plan.cmd
     assert "--permission-mode" not in plan.cmd
@@ -224,12 +290,19 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
     monkeypatch.setattr(isolation, "validated_review_write_root", lambda _: tmp_path)
     monkeypatch.setattr(claude, "_isolated_review_response_schema", lambda _: "{}")
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
-        task_id=None, session_id=None,
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={
-            "review_isolation": True, "review_engine_binary": "/bin/true",
-            "strict_mcp_config": True, "mcp_config_path": str(mcp),
-            "setting_sources": "", "allowed_tools": "",
+            "review_isolation": True,
+            "review_engine_binary": "/bin/true",
+            "strict_mcp_config": True,
+            "mcp_config_path": str(mcp),
+            "setting_sources": "",
+            "allowed_tools": "",
         },
     )
     assert "--settings" in plan.cmd
@@ -251,17 +324,27 @@ def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Pat
     seed.mkdir()
     tracked_claude = subprocess.run(
         ["git", "-C", str(root), "ls-tree", "--name-only", "HEAD", ".claude"],
-        check=True, capture_output=True, text=True, timeout=30,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert tracked_claude.stdout == ""
     archived = subprocess.run(
         [
-            "git", "-C", str(root), "archive", "--format=tar", "HEAD",
+            "git",
+            "-C",
+            str(root),
+            "archive",
+            "--format=tar",
+            "HEAD",
             "agents_extensions/shared/settings.json",
             "agents_extensions/shared/hooks",
             "scripts/agent_runtime/adapters/claude.py",
         ],
-        check=True, capture_output=True, timeout=30,
+        check=True,
+        capture_output=True,
+        timeout=30,
     )
     with tarfile.open(fileobj=io.BytesIO(archived.stdout), mode="r|") as bundle:
         bundle.extractall(seed, filter="data")
@@ -288,28 +371,56 @@ def test_readonly_transport_rejects_every_push_wrapper(tmp_path: Path) -> None:
     subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "init", str(work)], check=True, capture_output=True, timeout=30)
     (work / "sample.txt").write_text("sample\n", encoding="utf-8")
-    for args in (["config", "user.name", "Test"], ["config", "user.email", "test@example.invalid"],
-                 ["add", "sample.txt"], ["commit", "-m", "fixture"],
-                 ["remote", "add", "origin", str(remote)],
-                 ["config", "remote.origin.push", "HEAD:refs/heads/probe"]):
+    for args in (
+        ["config", "user.name", "Test"],
+        ["config", "user.email", "test@example.invalid"],
+        ["add", "sample.txt"],
+        ["commit", "-m", "fixture"],
+        ["remote", "add", "origin", str(remote)],
+        ["config", "remote.origin.push", "HEAD:refs/heads/probe"],
+    ):
         subprocess.run(["git", "-C", str(work), *args], check=True, capture_output=True, timeout=30)
 
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="read-only", cwd=work, model=None,
-        task_id=None, session_id=None, tool_config={"reviewer_tools": True},
+        prompt="inspect",
+        mode="read-only",
+        cwd=work,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"reviewer_tools": True},
     )
     env = build_agent_env(provider="claude", overrides=plan.env_overrides)
-    assert subprocess.run(["git", "-C", str(work), "status", "--porcelain"], env=env, capture_output=True, timeout=30).returncode == 0
-    assert subprocess.run(["git", "-C", str(work), "ls-remote", "origin"], env=env, capture_output=True, timeout=30).returncode == 0
+    assert (
+        subprocess.run(
+            ["git", "-C", str(work), "status", "--porcelain"], env=env, capture_output=True, timeout=30
+        ).returncode
+        == 0
+    )
+    assert (
+        subprocess.run(
+            ["git", "-C", str(work), "ls-remote", "origin"], env=env, capture_output=True, timeout=30
+        ).returncode
+        == 0
+    )
     for command, cwd in (
         (["git", "push"], work),
         (["git", "-C", str(work), "push"], tmp_path),
         (["bash", "-c", "git push"], work),
-        ([sys.executable, "-c", "import subprocess; raise SystemExit(subprocess.run(['git','push']).returncode)"], work),
+        (
+            [sys.executable, "-c", "import subprocess; raise SystemExit(subprocess.run(['git','push']).returncode)"],
+            work,
+        ),
     ):
         result = subprocess.run(command, cwd=cwd, env=env, capture_output=True, text=True, timeout=30)
         assert result.returncode != 0, (command, result.stdout, result.stderr)
-        refs = subprocess.run(["git", "--git-dir", str(remote), "for-each-ref", "--format=%(refname)"], capture_output=True, text=True, check=True, timeout=30)
+        refs = subprocess.run(
+            ["git", "--git-dir", str(remote), "for-each-ref", "--format=%(refname)"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
         assert refs.stdout == ""
 
 
@@ -483,7 +594,10 @@ def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
     (tmp_path / ".mcp.json").write_text("{", encoding="utf-8")  # never read for formal attempts
     attempt = tmp_path / "attempt.json"
     cmd = _reviewer_plan(tmp_path, mcp_config_path=str(attempt), strict_mcp_config=True, review_access="full")
-    assert _granted(cmd) == [*REVIEWER_PERMISSION_PROFILE["allow"], *review_tools_allowed_csv("claude", "full").split(",")]
+    assert _granted(cmd) == [
+        *REVIEWER_PERMISSION_PROFILE["allow"],
+        *review_tools_allowed_csv("claude", "full").split(","),
+    ]
     assert _denied(cmd) == list(REVIEWER_PERMISSION_PROFILE["deny"])
     # The formal attempt's own harness-written config is the only one loaded.
     assert cmd.count("--mcp-config") == 1
@@ -526,11 +640,17 @@ def test_sources_config_leaves_write_and_danger_argv_unchanged(tmp_path: Path, m
 @pytest.mark.parametrize("allowed_tools", ["mcp__sources__*", "Read,Bash(git push *)", ""])
 @pytest.mark.parametrize("strict_mcp_config", [False, True])
 def test_explicit_allowed_tools_are_not_widened_or_narrowed(
-    tmp_path: Path, allowed_tools: str, strict_mcp_config: bool,
+    tmp_path: Path,
+    allowed_tools: str,
+    strict_mcp_config: bool,
 ) -> None:
     plan = ClaudeAdapter().build_invocation(
-        prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
-        task_id=None, session_id=None,
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={
             "reviewer_tools": True,
             "allowed_tools": allowed_tools,
@@ -550,8 +670,12 @@ def test_explicit_allowed_tools_are_not_widened_or_narrowed(
 
 def test_readonly_content_writer_keeps_legacy_cli_permissions(tmp_path: Path) -> None:
     plan = ClaudeAdapter().build_invocation(
-        prompt="write content", mode="read-only", cwd=tmp_path, model=None,
-        task_id=None, session_id=None,
+        prompt="write content",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={},
     )
     assert "--allowedTools" not in plan.cmd

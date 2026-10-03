@@ -309,7 +309,7 @@ Adapters return validated canonical JSON in the existing runtime `response`
 field. Review callers validate it against the authoritative profile and pass an
 object into the dimension/direct consumers. Missing, malformed, truncated,
 unsuccessful or schema-rejected results fail; assistant prose cannot rescue
-them. Codex schema calls neither recover rollout prose nor reap before the CLI
+them. Codex schema calls neither return streamed prose nor reap before the CLI
 has written its constrained output and exited. Existing tool-call telemetry is
 preserved.
 
@@ -375,6 +375,26 @@ level. Runner rejects invocations requesting an unsupported mode with
 `cwd` is **mandatory** for `workspace-write` and `danger`. Runner raises
 `ValueError` if missing. This prevents "write to wherever Python happens
 to be running" bugs.
+
+Sources access in review routes uses the tool set derived from the server's
+`readOnlyHint` annotations, checked by the behavioral side-effect audit. Formal
+receipt contracts are subsets of that set. Codex scoped review config lists the
+receipt contract's readers; the adapter's final argv overrides enforce that same
+contract for formal attempts, including the parent sandbox's stdio proxy. Ad hoc
+read-only argv instead expose all audited readers. Both approve each exposed tool
+individually and hide writers even when a verified parent OS sandbox requires
+nested sandbox bypass. Sealed Codex reviews ignore user config and use only the
+injected `sealed_review` server; the adapter adds no Sources settings unless a
+Sources transport is explicitly defined. Claude's ordinary ad hoc reviewer profile denies
+the persisting tools explicitly. Claude and AGY formal attempts enforce the
+receipt contract through the sources boundary and full-review allow rules. The
+Sources server also filters listings and refuses calls outside the formal
+receipt contract, independently of CLI exposure controls.
+Claude still maintains local tool tuples, checked for parity with the shared
+module; other Claude read-only profiles and explicit caller allowlists do not
+add persisting-tool denies. Cache-writing ULIF and Wikipedia tools are excluded
+from formal receipt contracts and these scoped reviewer grants; writers' access
+is unchanged.
 
 ### Claude headless permissions
 
@@ -632,6 +652,43 @@ updates, and CPU/disk work in the agent process tree. It is intentionally a loca
 liveness signal, not proof that a remote provider accepted or completed the task.
 Content-policy refusals, 4xx request-format errors, and mid-stream silence
 timeouts after partial output do not fail over.
+
+An adapter that types its outcome sets `ParseResult.provider_error_text` (even
+to `""`). The classifier then reads only its `failure_code`: `rate_limited`,
+`provider_overloaded` and `provider_auth` trigger, while
+`provider_policy_refusal`, `provider_error` and `provider_stream_incomplete`
+never do. No raw stdout/stderr text is read; only the runner's own startup
+timeouts still mean `transport`.
+
+### Codex outcomes come from `codex exec --json` (#9532)
+
+The Codex adapter runs `codex exec --json`. Exec prints typed JSONL events on
+stdout, already filtered to this invocation's thread and turn, and that stream
+is the only outcome authority (`scripts/agent_runtime/adapters/codex_events.py`):
+
+- **Completed**: one `turn.completed` with exit 0. The answer is always the `-o`
+  file (schema-validated when an output schema is bound), never a streamed
+  agent message.
+- **Failed**: one `turn.failed`. Its full `error.message` is matched by anchored
+  recognisers for the CLI's own usage-limit, quota, capacity, 401 and
+  policy-refusal wording. Unfamiliar or conflicting messages are
+  `provider_error`.
+- **Incomplete** (`provider_stream_incomplete`): no terminal event, malformed
+  JSON, a nonzero exit after `turn.completed`, a second thread, turn or
+  terminal, or a resumed call whose `thread.started.thread_id` is not the
+  session it resumed. The runner keeps its own timeout or cancellation code.
+
+A top-level `error` event is only a notice: followed by `turn.completed` it was
+retried and never cools a route. Nested item fields are never searched. These
+include agent text, reasoning, command output, MCP results and
+`item.type="error"` warnings. Stderr and the shared session rollout are never
+read for the outcome. The session id is `thread.started.thread_id`, and tool
+telemetry maps typed items: `mcp_tool_call` becomes `mcp__<server>__<tool>`.
+Usage is recorded only for fresh threads, because `turn.completed.usage` holds
+session totals. Early reap waits for `turn.completed` plus identical non-empty
+`-o` bytes on two checks two seconds apart. Exec writes `-o` after
+`turn.completed`, so a reaped call is accepted only if `-o` still holds those
+bytes.
 
 Every runner-level switch emits the same substitution-shaped payload used by
 Hermes fallback surfacing: `requested_provider`, `requested_model`,

@@ -45,7 +45,9 @@ def test_review_gh_shim_creates_and_cleans_tempfiles(tmp_path, args, gh_shim_san
     assert "mktemp" in before.stderr
 
     plan = review_plan(checkout, lease)
-    after = subprocess.run([str(shim), *args], env={**env, **plan.env_overrides}, capture_output=True, text=True, timeout=30)
+    after = subprocess.run(
+        [str(shim), *args], env={**env, **plan.env_overrides}, capture_output=True, text=True, timeout=30
+    )
     assert after.returncode == 0, after.stderr
     assert after.stdout.splitlines() == list(args)
     assert not list(lease.glob("agent-gh.*"))
@@ -65,7 +67,10 @@ def test_review_gh_shim_refuses_raw_comment_without_calling_backend(tmp_path, gh
     env = {**os.environ, **plan.env_overrides, "AGENT_REAL_GH": str(backend), "AGENT_NO_MERGE": "1"}
     result = subprocess.run(
         [str(shim), "pr", "comment", "123", "--body", "verdict"],
-        env=env, capture_output=True, text=True, timeout=30,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert result.returncode != 0
     assert "raw public write refused" in result.stderr
@@ -89,7 +94,7 @@ def test_review_permissions_only_write_lease(tmp_path, session_id):
     assert profile["network"]["domains"] == {"github.com": "allow", "api.github.com": "allow"}
     assert config["features"]["network_proxy"] is True
     assert config["approval_policy"] == "never"
-    assert config["mcp_servers"]["sources"]["default_tools_approval_mode"] == "approve"
+    assert config["mcp_servers"]["sources"]["default_tools_approval_mode"] == "prompt"
     assert "-s" not in plan.cmd
     assert "--dangerously-bypass-approvals-and-sandbox" not in plan.cmd
     assert plan.env_overrides["TMPDIR"] == str(lease)

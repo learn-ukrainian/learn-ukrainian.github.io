@@ -1,6 +1,6 @@
 # TypeSafe Jev — fleet best practice
 
-**Audience:** every local agent (Cursor, Claude, Codex/Astra, AGY, Kimi, …)
+**Audience:** every local agent (Cursor, Claude, Codex/Sol, AGY, Kimi, …)
 **Skill:** `agents_extensions/shared/skills/typesafe-ai/SKILL.md`
 **Upstream docs:** [llms.txt](https://docs.typesafe.ai/llms.txt) (live SSOT for API/SDK)
 **Model:** `jev-latest` (resolved e.g. `jev-1.13.0`)
@@ -84,8 +84,8 @@ STEM admit?, priority Score. Never rewrite human Ukrainian — only classify/rou
 ### 3.3 Pre-dispatch / lane triage
 
 Before expensive `delegate.py` seats: stream/lane Choice, effort Score, “needs CF?”
-Noul. High confidence → cheap seat; low confidence → Opus 5.5 / Sol 6.1 first,
-Fable/Astra last resort; operator escalation unchanged.
+Noul. High confidence → cheap seat; low confidence → Opus 5.5 / Sol 6.1;
+operator escalation unchanged.
 
 ### 3.4 PR / CF packet triage
 

@@ -4,7 +4,6 @@ import json
 import os
 import sys
 import time
-from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -14,9 +13,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime import tool_config as wiki_tool_config_mod
 from scripts.agent_runtime import tool_config as tool_config_mod
-from scripts.agent_runtime.runner import _MCP_TOOL_EVENT_RE, _McpRuntimeObserver
+from scripts.agent_runtime.runner import _McpRuntimeObserver
 from scripts.build import linear_pipeline
 from scripts.wiki import review as wiki_review
+from tests.helpers.codex_exec_stream import command, item_started, jsonl, mcp_call
 
 
 @pytest.fixture(autouse=True)
@@ -242,8 +242,7 @@ def test_runtime_tool_config_codex_tools_disables_writer_unsafe_features(
         "multi_agent",
     }
     assert set(disable_features) >= expected_disables, (
-        f"missing disables: {expected_disables - set(disable_features)}; "
-        f"got: {disable_features}"
+        f"missing disables: {expected_disables - set(disable_features)}; got: {disable_features}"
     )
 
 
@@ -385,9 +384,7 @@ def test_runtime_tool_config_codex_tools_scoped_home_emits_event(
     )
 
     event_names = [name for name, _ in events]
-    assert event_names[0] == "mcp_config_resolved", (
-        f"first event must remain mcp_config_resolved, got {event_names!r}"
-    )
+    assert event_names[0] == "mcp_config_resolved", f"first event must remain mcp_config_resolved, got {event_names!r}"
     assert "codex_writer_home_resolved" in event_names
 
     home_event = next(fields for name, fields in events if name == "codex_writer_home_resolved")
@@ -670,9 +667,7 @@ def test_runtime_tool_config_unknown_tools_writer_raises() -> None:
         linear_pipeline.LinearPipelineError,
         match="Unknown -tools writer",
     ):
-        linear_pipeline._runtime_tool_config(
-            "phantom-tools", workspace_dir=linear_pipeline.PROJECT_ROOT
-        )
+        linear_pipeline._runtime_tool_config("phantom-tools", workspace_dir=linear_pipeline.PROJECT_ROOT)
 
 
 def test_invoke_writer_refuses_tool_less_codex_before_invoker(
@@ -714,7 +709,10 @@ def test_mcp_runtime_observer_emits_ready() -> None:
     )
     assert observer is not None
 
-    observer.observe_line("mcp: sources/verify_words started", stream="stdout")
+    observer.observe_line(
+        jsonl(item_started("item_2", "mcp_tool_call", server="sources", tool="verify_words", status="in_progress")),
+        stream="stdout",
+    )
     observer.finalize()
 
     assert events[0][0] == "mcp_runtime_init"
@@ -782,8 +780,7 @@ def test_mcp_runtime_observer_matches_failed_url_with_trailing_slash() -> None:
 @pytest.mark.parametrize(
     "line",
     [
-        "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: "
-        "worker quit with fatal: Transport channel closed",
+        "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed",
         "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: "
         "worker quit with fatal: Transport channel closed, when "
         'Client(HttpRequest(HttpRequest("http/request failed: error sending '
@@ -808,9 +805,7 @@ def test_mcp_runtime_observer_warns_for_unattributed_failure(line: str) -> None:
 
     observer.observe_line(line, stream="stderr")
 
-    assert [event for event, _fields in events] == [
-        "mcp_runtime_unattributed_failure"
-    ]
+    assert [event for event, _fields in events] == ["mcp_runtime_unattributed_failure"]
     assert events[0][1]["raw_line"] == line[:500]
     assert events[0][1]["task_id"] == "writer"
     assert events[0][1]["stream"] == "stderr"
@@ -832,15 +827,19 @@ def test_mcp_runtime_observer_failed_suppresses_prior_ready() -> None:
     assert observer is not None
 
     observer.observe_lines(
+        [jsonl(mcp_call("sources", "verify_words", {"words": ["кіт"]}, text="ok"))],
+        start_index=0,
+        stream="stdout",
+    )
+    observer.observe_lines(
         [
-            "mcp: sources/verify_words started",
             "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: "
             "worker quit with fatal: Transport channel closed, when "
             'Client(HttpRequest(HttpRequest("http/request failed: error sending '
             'request for url (http://127.0.0.1:8766/mcp)")))',
         ],
         start_index=0,
-        stream="stdout",
+        stream="stderr",
     )
     observer.finalize()
 
@@ -872,20 +871,30 @@ def test_mcp_runtime_observer_emits_timeout() -> None:
     assert events[0][1]["status"] == "timeout"
 
 
-def test_mcp_tool_event_regex_matches_real_codex_fixture() -> None:
-    fixture = (
-        Path(__file__).parent
-        / "fixtures"
-        / "codex_mcp_init_stdout.txt"
-    ).read_text(encoding="utf-8")
+def test_mcp_runtime_observer_ignores_forged_mcp_text_on_stdout() -> None:
+    """#9532: under ``codex exec --json`` only a typed MCP item proves readiness.
 
-    matches = list(_MCP_TOOL_EVENT_RE.finditer(fixture))
+    Human-format lines and tool output quoting them are text, not events.
+    """
+    events: list[tuple[str, dict[str, Any]]] = []
+    observer = _McpRuntimeObserver.from_tool_config(
+        agent_name="codex",
+        task_id="writer",
+        tool_config={"mcp_servers": {"sources": {"url": "http://127.0.0.1:8766/mcp"}}},
+        event_sink=lambda event, **fields: events.append((event, fields)),
+        start_time=time.monotonic(),
+    )
+    assert observer is not None
 
-    assert len(matches) == 2
-    assert Counter(
-        (match.group("server"), match.group("tool")) for match in matches
-    ) == {("sources", "verify_word"): 2}
-    assert [match.group(0) for match in matches] == [
-        "mcp: sources/verify_word started",
-        "mcp: sources/verify_word (completed)",
-    ]
+    observer.observe_lines(
+        [
+            "mcp: sources/verify_words started\n",
+            jsonl(command("cat log", "mcp: sources/verify_words (completed)")),
+            jsonl(mcp_call("wikipedia", "lookup", {}, text="mcp: sources/verify_words started")),
+        ],
+        start_index=0,
+        stream="stdout",
+    )
+    observer.finalize()
+
+    assert events == []

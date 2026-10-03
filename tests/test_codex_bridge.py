@@ -35,6 +35,7 @@ from scripts.ai_agent_bridge._codex import (
 from scripts.ai_agent_bridge._db import get_db, init_db
 from scripts.ai_agent_bridge._messaging import detect_sender, send_message
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
+from tests.helpers.codex_exec_stream import completed_stream
 
 
 @pytest.fixture(autouse=True)
@@ -462,7 +463,9 @@ def test_process_for_codex_cold_starts_without_stored_session(monkeypatch):
     monkeypatch.setattr("scripts.ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": None})
     monkeypatch.setattr("scripts.ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
     monkeypatch.setattr("scripts.ai_agent_bridge._codex.build_codex_prompt", lambda *_args, **_kwargs: "bridge prompt")
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.agent_runner.invoke", lambda *_args, **kwargs: captured.update(kwargs) or result)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._codex.agent_runner.invoke", lambda *_args, **kwargs: captured.update(kwargs) or result
+    )
     monkeypatch.setattr("scripts.ai_agent_bridge._codex.send_message", lambda **_kwargs: 11)
     monkeypatch.setattr("scripts.ai_agent_bridge._codex.acknowledge", lambda *_args: None)
     monkeypatch.setattr("scripts.ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
@@ -472,21 +475,12 @@ def test_process_for_codex_cold_starts_without_stored_session(monkeypatch):
     assert captured["session_id"] is None
 
 
-def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypatch):
+def test_codex_adapter_reads_session_id_from_its_event_stream(tmp_path, monkeypatch):
+    """#9532: the session id is the stream's own ``thread.started.thread_id``."""
     adapter = CodexAdapter()
     fake_home = tmp_path / "home"
     fake_home.mkdir()
     monkeypatch.setenv("HOME", str(fake_home))
-    today = datetime.now(UTC)
-    sessions_today = (
-        fake_home
-        / ".codex"
-        / "sessions"
-        / f"{today.year:04d}"
-        / f"{today.month:02d}"
-        / f"{today.day:02d}"
-    )
-    sessions_today.mkdir(parents=True)
 
     plan = adapter.build_invocation(
         prompt="continuity probe",
@@ -498,41 +492,11 @@ def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypa
         tool_config=None,
     )
     session_id = "019fb7cd-8344-7440-a3ff-a60c45f62b73"
-    rollout = sessions_today / f"rollout-2026-07-31T12-52-06-{session_id}.jsonl"
-    rollout.write_text(
-        "\n".join(
-            [
-                json.dumps(
-                    {
-                        "type": "session_meta",
-                        "payload": {"id": session_id, "session_id": session_id},
-                    }
-                ),
-                json.dumps(
-                    {
-                        "type": "event_msg",
-                        "payload": {"type": "user_message", "message": "continuity probe"},
-                    }
-                ),
-                json.dumps(
-                    {
-                        "type": "event_msg",
-                        "payload": {
-                            "type": "task_complete",
-                            "last_agent_message": "initial turn done",
-                        },
-                    }
-                ),
-            ]
-        )
-        + "\n",
-        encoding="utf-8",
-    )
     output_file = tmp_path / "output.txt"
     output_file.write_text("done", encoding="utf-8")
 
     result = adapter.parse_response(
-        stdout="",
+        stdout=completed_stream(thread_id=session_id),
         stderr="",
         returncode=0,
         output_file=output_file,
@@ -541,6 +505,7 @@ def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypa
 
     assert result.ok is True
     assert result.session_id == session_id
+    plan.output_file.unlink(missing_ok=True)
 
     resumed = adapter.build_invocation(
         prompt="continuity follow-up",
@@ -553,55 +518,36 @@ def test_codex_adapter_reads_session_id_from_matching_rollout(tmp_path, monkeypa
     )
     assert resumed.cmd[1:3] == ["exec", "resume"]
     assert resumed.cmd[-2:] == [session_id, "-"]
+    assert "--json" in resumed.cmd
     assert "-C" not in resumed.cmd
     assert "--color" not in resumed.cmd
     assert "-s" not in resumed.cmd
     assert 'sandbox_mode="read-only"' in resumed.cmd
 
-    with rollout.open("a", encoding="utf-8") as stream:
-        stream.write(
-            json.dumps(
-                {
-                    "type": "event_msg",
-                    "payload": {
-                        "type": "user_message",
-                        "message": "continuity follow-up",
-                    },
-                }
-            )
-            + "\n"
-        )
-
-    assert adapter._read_latest_rollout_task_complete(resumed) == ""
-
-    with rollout.open("a", encoding="utf-8") as stream:
-        stream.write(
-            json.dumps(
-                {
-                    "type": "event_msg",
-                    "payload": {
-                        "type": "task_complete",
-                        "last_agent_message": "follow-up done",
-                    },
-                }
-            )
-            + "\n"
-        )
-
     resumed_output = tmp_path / "resumed-output.txt"
     resumed_output.write_text("follow-up done", encoding="utf-8")
     resumed_result = adapter.parse_response(
-        stdout="",
+        stdout=completed_stream(thread_id=session_id),
         stderr="",
         returncode=0,
         output_file=resumed_output,
         plan=resumed,
     )
+    assert resumed_result.ok is True
+    assert resumed_result.response == "follow-up done"
     assert resumed_result.session_id == session_id
-    assert adapter._read_latest_rollout_task_complete(resumed) == "follow-up done"
-    resumed_trace = adapter._read_latest_rollout_trace(resumed)
-    assert "initial turn done" not in resumed_trace
-    assert "follow-up done" in resumed_trace
+
+    # A stream reporting another thread cannot be this resume's evidence.
+    foreign = adapter.parse_response(
+        stdout=completed_stream(thread_id="019fb7cd-8344-7440-a3ff-a60c45f62b74"),
+        stderr="",
+        returncode=0,
+        output_file=resumed_output,
+        plan=resumed,
+    )
+    assert foreign.ok is False and foreign.session_id is None
+    assert foreign.failure_code == "provider_stream_incomplete"
+    resumed.output_file.unlink(missing_ok=True)
 
     for mode in ("workspace-write", "danger"):
         resumed_write = adapter.build_invocation(

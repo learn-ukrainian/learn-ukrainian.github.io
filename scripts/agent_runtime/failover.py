@@ -1,4 +1,5 @@
 """Runner-level provider failover configuration, cooldowns, and classifiers."""
+
 from __future__ import annotations
 
 import contextlib
@@ -80,6 +81,15 @@ _CONTENT_POLICY_RE = re.compile(
     r"\brefusal\b|refused for safety|blocked by safety",
     re.IGNORECASE,
 )
+# Closed failure codes an adapter derives from the provider's structured
+# terminal error. A policy refusal neither rotates nor cools a route: another
+# route would see the same content.
+_STRUCTURED_PROVIDER_TRIGGERS: dict[str, str | None] = {
+    "provider_policy_refusal": None,
+    "provider_overloaded": "overloaded",
+    "provider_auth": "auth",
+    "rate_limited": "rate_limited",
+}
 _REQUEST_FORMAT_RE = re.compile(
     r"\b400\b|bad request|invalid[_ -]?request|request format|"
     r"unsupported parameter|unknown parameter|schema validation|"
@@ -204,8 +214,7 @@ def load_failover_chain(
             # the whole chain via the len<2 check below (review D4,
             # PR #4580). Only route 0 may omit model (inherits request).
             logging.getLogger(__name__).warning(
-                "runner failover chain %s[%d] dropped: missing %s "
-                "(routes after index 0 must set an explicit model)",
+                "runner failover chain %s[%d] dropped: missing %s (routes after index 0 must set an explicit model)",
                 agent_name,
                 index,
                 "provider" if not provider else "model",
@@ -326,11 +335,7 @@ def ordered_available_routes(
     store: FailoverCooldownStore,
 ) -> tuple[FailoverRoute, ...]:
     """Return chain routes not currently cooling, preserving configured order."""
-    return tuple(
-        route
-        for route in chain.routes
-        if not store.is_cooling(route, agent_name=chain.agent_name)
-    )
+    return tuple(route for route in chain.routes if not store.is_cooling(route, agent_name=chain.agent_name))
 
 
 def classify_failover_trigger(
@@ -342,25 +347,28 @@ def classify_failover_trigger(
     stderr_text: str,
 ) -> str | None:
     """Map one failed attempt to an eligible failover trigger, if any."""
-    text = "\n".join(
-        part
-        for part in (
-            parse.stderr_excerpt or "",
-            stderr_text or "",
-            stdout_text or "",
-        )
-        if part
-    )
+    if parse.provider_error_text is not None:
+        # The adapter classified this attempt from its provider's typed
+        # evidence. Its raw streams carry agent and tool text, so neither they
+        # nor the provider message are read again: an unknown or incomplete
+        # outcome picks no provider trigger (#9532). Only the runner's own
+        # startup observations still mean a transport failure.
+        if parse.failure_code in _STRUCTURED_PROVIDER_TRIGGERS:
+            return _STRUCTURED_PROVIDER_TRIGGERS[parse.failure_code]
+        if kill_reason == "initial_response_timeout":
+            return "transport"
+        if kill_reason == "stdout_silence_timeout" and not (stdout_text or "").strip():
+            return "transport"
+        return None
+
+    text = "\n".join(part for part in (parse.stderr_excerpt, stderr_text, stdout_text) if part)
 
     if GH_AUTH_FAILURE_RE.search(text):
         return "auth"
     if _CONTENT_POLICY_RE.search(text):
         return None
     if _REQUEST_FORMAT_RE.search(text) and not (
-        parse.rate_limited
-        or _RATE_LIMIT_RE.search(text)
-        or _AUTH_RE.search(text)
-        or _OVERLOADED_RE.search(text)
+        parse.rate_limited or _RATE_LIMIT_RE.search(text) or _AUTH_RE.search(text) or _OVERLOADED_RE.search(text)
     ):
         return None
 
@@ -378,12 +386,7 @@ def classify_failover_trigger(
         return "transport"
     if _EMPTY_RESPONSE_RE.search(text):
         return "empty_response"
-    if (
-        not parse.ok
-        and returncode == 0
-        and not (parse.response or "").strip()
-        and not text.strip()
-    ):
+    if not parse.ok and returncode == 0 and not (parse.response or "").strip() and not text.strip():
         return "empty_response"
     return None
 
@@ -409,15 +412,10 @@ def substitution_for_route(
     actual_provider = actual_route.provider
     actual_model = actual_route.model
     if isinstance(adapter_substitution, dict):
-        actual_provider = str(
-            adapter_substitution.get("actual_provider") or actual_provider
-        )
+        actual_provider = str(adapter_substitution.get("actual_provider") or actual_provider)
         actual_model = str(adapter_substitution.get("actual_model") or actual_model)
 
-    substituted = (
-        actual_provider != requested_route.provider
-        or actual_model != requested_route.model
-    )
+    substituted = actual_provider != requested_route.provider or actual_model != requested_route.model
     if not substituted:
         return adapter_substitution
 

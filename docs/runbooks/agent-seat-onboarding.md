@@ -338,24 +338,25 @@ before dispatching:
    recon, always under a complete Sol advisory envelope (operator decision 2026-09-30, #9275). There is no direct bounded dispatch;
    the same holds for the `gemini-3.8-flash-high` fallback unless the dispatch is
    classified Ukrainian authoring or review.
-3. `gpt-6.1-sol` at `high` (the Astra seat) issues that envelope read-only with
+3. `gpt-6.1-sol` at `high` issues that envelope read-only with
    `--advisory-role bounded_advisory_envelope --advisory-binding <digest>`, where the
    digest is the worker dispatch's `--print-advisory-binding` output. The envelope
    holds the task contract, exact owned paths, maximum changed-file and
    non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence, and
-   escalation triggers. Astra is an advisor, not the default implementer or reviewer.
+   escalation triggers. In this role Sol advises; it is not the bounded task's
+   implementer or reviewer.
 4. The worker is dispatched with `--advisory-task <advisor task id>` and an
    `--owned-path` set equal to the envelope's. `delegate.py` refuses a bounded
    dispatch without a complete bound envelope and fails the worker at finalize when
    its diff exceeds the ceilings. Luna escalates any ceiling overrun,
    consequential architecture, security, release, high-risk go/no-go, unresolved
-   consequential ambiguity, broader integration, and final disposition. An
-   Astra advisory is same-family context and never replaces required independent
+   consequential ambiguity, broader integration, and final disposition. A
+   Sol advisory envelope is same-family context and never replaces required independent
    cross-family review.
 
 Record the envelope and Luna's acceptance evidence with the task handoff. If an
 escalation trigger fires, stop bounded execution and return the unresolved point
-to Astra at `high` or the accountable orchestrator before making a consequential decision.
+to Sol at `high` or the accountable orchestrator before making a consequential decision.
 
 ### Fleet-comms authority and legacy projections
 

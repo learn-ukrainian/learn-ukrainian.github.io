@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 import sys
-from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -14,15 +13,18 @@ from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter
 from agent_runtime.tool_calls import summarize_tool_output
+from tests.helpers.codex_exec_stream import THREAD_ID, command, completed_stream, mcp_call
 
 
 def test_claude_adapter_parses_tool_use_events() -> None:
-    stdout = "\n".join([
-        '{"type":"assistant","message":{"content":[{"type":"tool_use","id":"u1","name":"mcp__sources__verify_words","input":{"words":["ранок"]}}]}}',
-        '{"type":"user","message":{"content":[{"type":"tool_result","tool_use_id":"u1","content":"ранок: verified"}]}}',
-        '{"type":"assistant","message":{"content":[{"type":"tool_use","id":"u2","name":"mcp__sources__search_heritage","input":{"query":"Київ"}}]}}',
-        '{"type":"result","subtype":"success","result":"Done.","session_id":"session-123"}',
-    ])
+    stdout = "\n".join(
+        [
+            '{"type":"assistant","message":{"content":[{"type":"tool_use","id":"u1","name":"mcp__sources__verify_words","input":{"words":["ранок"]}}]}}',
+            '{"type":"user","message":{"content":[{"type":"tool_result","tool_use_id":"u1","content":"ранок: verified"}]}}',
+            '{"type":"assistant","message":{"content":[{"type":"tool_use","id":"u2","name":"mcp__sources__search_heritage","input":{"query":"Київ"}}]}}',
+            '{"type":"result","subtype":"success","result":"Done.","session_id":"session-123"}',
+        ]
+    )
 
     result = ClaudeAdapter().parse_response(
         stdout=stdout,
@@ -42,10 +44,12 @@ def test_claude_adapter_parses_tool_use_events() -> None:
 
 
 def test_claude_adapter_extracts_stream_text_without_result_event() -> None:
-    stdout = "\n".join([
-        '{"type":"assistant","message":{"content":[{"type":"text","text":"Привіт."}]}}',
-        '{"type":"assistant","message":{"content":[{"type":"text","text":"Готово."}]}}',
-    ])
+    stdout = "\n".join(
+        [
+            '{"type":"assistant","message":{"content":[{"type":"text","text":"Привіт."}]}}',
+            '{"type":"assistant","message":{"content":[{"type":"text","text":"Готово."}]}}',
+        ]
+    )
 
     result = ClaudeAdapter().parse_response(
         stdout=stdout,
@@ -73,9 +77,7 @@ def test_claude_stream_json_without_text_fails_loudly() -> None:
     assert result.tool_calls[0]["name"] == "mcp__sources__verify_words"
 
 
-def test_claude_adapter_recovers_tool_calls_from_session_jsonl(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_claude_adapter_recovers_tool_calls_from_session_jsonl(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("HOME", str(tmp_path))
     cwd = tmp_path / "work"
     cwd.mkdir()
@@ -85,23 +87,20 @@ def test_claude_adapter_recovers_tool_calls_from_session_jsonl(
     session_dir.mkdir(parents=True)
     session_file = session_dir / f"{session_id}.jsonl"
     session_file.write_text(
-        "\n".join([
-            (
-                '{"type":"assistant","message":{"content":['
-                '{"type":"tool_use","id":"u1","name":"mcp__sources__verify_word",'
-                '"input":{"word":"тест"}}]}}'
-            ),
-            (
-                '{"type":"user","message":{"content":['
-                '{"type":"tool_result","tool_use_id":"u1","content":"ok"}]}}'
-            ),
-        ])
+        "\n".join(
+            [
+                (
+                    '{"type":"assistant","message":{"content":['
+                    '{"type":"tool_use","id":"u1","name":"mcp__sources__verify_word",'
+                    '"input":{"word":"тест"}}]}}'
+                ),
+                ('{"type":"user","message":{"content":[{"type":"tool_result","tool_use_id":"u1","content":"ok"}]}}'),
+            ]
+        )
         + "\n",
         encoding="utf-8",
     )
-    stdout = (
-        '{"type":"result","subtype":"success","result":"Done.","session_id":"abc-123"}'
-    )
+    stdout = '{"type":"result","subtype":"success","result":"Done.","session_id":"abc-123"}'
     plan = InvocationPlan(
         cmd=["claude"],
         cwd=cwd,
@@ -139,10 +138,12 @@ def test_claude_stream_json_invocation_adds_verbose(tmp_path: Path) -> None:
 
 
 def test_gemini_adapter_parses_tool_calls() -> None:
-    stderr = "\n".join([
-        'DEBUG tool_call {"type":"tool_call","name":"mcp__sources__verify_words","arguments":{"words":["дім"]},"timestamp":"2026-05-07T10:00:00Z"}',
-        'DEBUG tool_call {"type":"tool_call","name":"mcp__sources__search_heritage","arguments":{"query":"Львів"},"output":"found 2"}',
-    ])
+    stderr = "\n".join(
+        [
+            'DEBUG tool_call {"type":"tool_call","name":"mcp__sources__verify_words","arguments":{"words":["дім"]},"timestamp":"2026-05-07T10:00:00Z"}',
+            'DEBUG tool_call {"type":"tool_call","name":"mcp__sources__search_heritage","arguments":{"query":"Львів"},"output":"found 2"}',
+        ]
+    )
 
     result = GeminiAdapter().parse_response(
         stdout="Final response.",
@@ -196,14 +197,14 @@ def test_gemini_adapter_parses_session_file_tool_calls(
     assert result.tool_calls[0]["arguments"] == {"words": ["ранок"]}
 
 
-def test_codex_adapter_ignores_stdout_tool_calls(tmp_path: Path) -> None:
+def test_codex_adapter_ignores_untyped_stdout_tool_calls(tmp_path: Path) -> None:
+    """#9532: only typed exec items are tool calls; other JSON objects are not."""
     output_file = tmp_path / "codex-output.txt"
     output_file.write_text("Final answer.", encoding="utf-8")
-    stdout = "\n".join([
-        "session id: 00000000-0000-0000-0000-000000000001",
-        '{"type":"tool_call","name":"mcp__sources__verify_words","arguments":{"words":["мати"]},"output":"ok"}',
-        '{"type":"tool_call","name":"mcp__sources__search_heritage","arguments":{"query":"Чернігів"}}',
-    ])
+    stdout = completed_stream(
+        {"type": "tool_call", "name": "mcp__sources__verify_words", "arguments": {"words": ["мати"]}, "output": "ok"},
+        command("cat trace.jsonl", '{"type":"tool_call","name":"mcp__sources__search_heritage"}'),
+    )
 
     result = CodexAdapter().parse_response(
         stdout=stdout,
@@ -213,8 +214,8 @@ def test_codex_adapter_ignores_stdout_tool_calls(tmp_path: Path) -> None:
     )
 
     assert result.ok is True
-    assert result.session_id == "00000000-0000-0000-0000-000000000001"
-    assert result.tool_calls == []
+    assert result.session_id == THREAD_ID
+    assert [call["name"] for call in result.tool_calls] == ["exec_command"]
 
 
 def test_codex_adapter_ignores_stderr_tool_calls(tmp_path: Path) -> None:
@@ -222,7 +223,7 @@ def test_codex_adapter_ignores_stderr_tool_calls(tmp_path: Path) -> None:
     output_file.write_text("Final answer.", encoding="utf-8")
 
     result = CodexAdapter().parse_response(
-        stdout="",
+        stdout=completed_stream(),
         stderr='{"type":"tool_call","name":"mcp__sources__verify_words","arguments":{"words":["ніч"]},"output":"ok"}',
         returncode=0,
         output_file=output_file,
@@ -232,101 +233,29 @@ def test_codex_adapter_ignores_stderr_tool_calls(tmp_path: Path) -> None:
     assert result.tool_calls == []
 
 
-def test_codex_adapter_parses_matching_rollout_tool_calls(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    home = tmp_path / "home"
-    today = datetime.now(UTC)
-    rollout_dir = (
-        home
-        / ".codex"
-        / "sessions"
-        / f"{today.year:04d}"
-        / f"{today.month:02d}"
-        / f"{today.day:02d}"
-    )
-    rollout_dir.mkdir(parents=True)
+def test_codex_adapter_maps_typed_mcp_items_to_tool_calls(tmp_path: Path) -> None:
     output_file = tmp_path / "codex-output.txt"
     output_file.write_text("Final answer.", encoding="utf-8")
-    prompt = "Write the module."
-    monkeypatch.setattr(Path, "home", lambda: home)
-    adapter = CodexAdapter()
-    adapter._reset_per_invocation_state()
 
-    rollout = rollout_dir / "rollout-test.jsonl"
-    rollout.write_text(
-        "\n".join(
-            [
-                '{"type":"event_msg","payload":{"type":"user_message","message":"Write the module."}}',
-                '{"type":"response_item","payload":{"type":"function_call","name":"mcp__sources__verify_words","arguments":{"words":["день"]},"call_id":"call-1"}}',
-                '{"type":"response_item","payload":{"type":"function_result","call_id":"call-1","output":"день: verified"}}',
-            ]
+    result = CodexAdapter().parse_response(
+        stdout=completed_stream(
+            mcp_call("sources", "verify_words", {"words": ["день"]}, text="день: verified", item_id="item_1"),
+            mcp_call("sources", "search_text", {"query": "ступені"}, text="Found 1 result", item_id="item_2"),
+            mcp_call("sources", "verify_word", {"word": "ніч"}, error="server unavailable", item_id="item_3"),
         ),
-        encoding="utf-8",
-    )
-
-    result = adapter.parse_response(
-        stdout="session id: 00000000-0000-0000-0000-000000000002",
         stderr="",
         returncode=0,
         output_file=output_file,
-        plan=InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt),
     )
 
     assert result.ok is True
-    assert result.tool_calls[0]["name"] == "mcp__sources__verify_words"
-    assert result.tool_calls[0]["arguments"] == {"words": ["день"]}
-    assert result.tool_calls[0]["output_summary"] == "день: verified"
-
-
-def test_codex_adapter_attaches_function_call_output(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    home = tmp_path / "home"
-    today = datetime.now(UTC)
-    rollout_dir = (
-        home
-        / ".codex"
-        / "sessions"
-        / f"{today.year:04d}"
-        / f"{today.month:02d}"
-        / f"{today.day:02d}"
-    )
-    rollout_dir.mkdir(parents=True)
-    output_file = tmp_path / "codex-output.txt"
-    output_file.write_text("Final answer.", encoding="utf-8")
-    prompt = "Write the module."
-    monkeypatch.setattr(Path, "home", lambda: home)
-    adapter = CodexAdapter()
-    adapter._reset_per_invocation_state()
-
-    rollout = rollout_dir / "rollout-test.jsonl"
-    rollout.write_text(
-        "\n".join(
-            [
-                '{"type":"event_msg","payload":{"type":"user_message","message":"Write the module."}}',
-                '{"type":"response_item","payload":{"type":"function_call","name":"search_text","namespace":"mcp__sources__","arguments":"{\\"query\\":\\"ступені\\"}","call_id":"call-1"}}',
-                '{"type":"response_item","payload":{"type":"function_call_output","call_id":"call-1","output":"Wall time: 0.0010 seconds\\nOutput:\\n[{\\"type\\":\\"text\\",\\"text\\":\\"Found 1 result\\"}]"}}',
-                '{"type":"event_msg","payload":{"type":"mcp_tool_call_end","call_id":"call-2","result":{"Ok":{"content":[{"type":"text","text":"verified"}]}}}}',
-            ]
-        ),
-        encoding="utf-8",
-    )
-
-    result = adapter.parse_response(
-        stdout="session id: 00000000-0000-0000-0000-000000000002",
-        stderr="",
-        returncode=0,
-        output_file=output_file,
-        plan=InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt),
-    )
-
-    assert result.ok is True
-    assert result.tool_calls[0]["name"] == "mcp__sources__search_text"
-    assert result.tool_calls[0]["result"] == [{"type": "text", "text": "Found 1 result"}]
-    assert result.tool_calls[0]["output_summary"] == '[{"text": "Found 1 result", "type": "text"}]'
+    verify, search, failed = result.tool_calls
+    assert verify["name"] == "mcp__sources__verify_words"
+    assert verify["arguments"] == {"words": ["день"]}
+    assert search["name"] == "mcp__sources__search_text"
+    assert search["result"] == [{"type": "text", "text": "Found 1 result"}]
+    assert search["output_summary"] == '[{"text": "Found 1 result", "type": "text"}]'
+    assert failed["status"] == "failed" and failed["output_summary"] == "server unavailable"
 
 
 def test_tool_call_output_summary_truncation() -> None:
@@ -336,42 +265,15 @@ def test_tool_call_output_summary_truncation() -> None:
     assert summary.endswith("[...truncated]")
 
 
-def test_tool_call_arguments_are_bounded(tmp_path: Path, monkeypatch) -> None:
-    home = tmp_path / "home"
-    today = datetime.now(UTC)
-    rollout_dir = (
-        home
-        / ".codex"
-        / "sessions"
-        / f"{today.year:04d}"
-        / f"{today.month:02d}"
-        / f"{today.day:02d}"
-    )
-    rollout_dir.mkdir(parents=True)
-    monkeypatch.setattr(Path, "home", lambda: home)
+def test_tool_call_arguments_are_bounded(tmp_path: Path) -> None:
     output_file = tmp_path / "codex-output.txt"
     output_file.write_text("Final answer.", encoding="utf-8")
-    prompt = "Write the module."
-    adapter = CodexAdapter()
-    adapter._reset_per_invocation_state()
-    rollout = rollout_dir / "rollout-test.jsonl"
-    rollout.write_text(
-        "\n".join([
-            '{"type":"event_msg","payload":{"type":"user_message","message":"Write the module."}}',
-            '{"type":"response_item","payload":{"type":"function_call","name":"Write",'
-            '"arguments":{"file_path":"lesson.md","content":"'
-            + ("x" * 10_000)
-            + '"},"call_id":"call-1"}}',
-        ]),
-        encoding="utf-8",
-    )
 
-    result = adapter.parse_response(
-        stdout="",
+    result = CodexAdapter().parse_response(
+        stdout=completed_stream(mcp_call("sources", "write", {"file_path": "lesson.md", "content": "x" * 10_000})),
         stderr="",
         returncode=0,
         output_file=output_file,
-        plan=InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt),
     )
 
     assert result.ok is True

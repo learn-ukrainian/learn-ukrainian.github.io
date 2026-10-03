@@ -1,4 +1,5 @@
 """Adversarial parent reads: no seat-controlled name can expose host bytes."""
+
 from __future__ import annotations
 
 import os
@@ -17,6 +18,7 @@ from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.agent_runtime.result import ParseResult
 from scripts.agent_runtime.watchdog import tail_liveness_file_for_debug
+from tests.helpers.codex_exec_stream import completed_stream
 
 SENTINEL = b"FORBIDDEN_PARENT_READ_SENTINEL"
 UUID = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
@@ -31,16 +33,22 @@ def scripts_only_tree(tmp_path_factory):
 
 
 @pytest.mark.repo_wide
-@pytest.mark.parametrize("module", [
-    "scripts.agent_runtime.attempt_safe_read",
-    "scripts.agent_runtime.attempt_boundary",
-    "scripts.agent_runtime.runner",
-    "scripts.agent_runtime.watchdog",
-    *[
-        f"scripts.agent_runtime.adapters.{path.stem}"
-        for path in sorted((Path(__file__).resolve().parents[2] / "scripts/agent_runtime/adapters").glob("*.py"))
+@pytest.mark.parametrize(
+    "module",
+    [
+        "scripts.agent_runtime.attempt_safe_read",
+        "scripts.agent_runtime.attempt_boundary",
+        "scripts.agent_runtime.runner",
+        "scripts.agent_runtime.watchdog",
+        "scripts.agent_runtime.sources_read_only",
+        "scripts.agent_runtime.review_mcp",
+        "scripts.review.receipts.ledger",
+        *[
+            f"scripts.agent_runtime.adapters.{path.stem}"
+            for path in sorted((Path(__file__).resolve().parents[2] / "scripts/agent_runtime/adapters").glob("*.py"))
+        ],
     ],
-])
+)
 def test_scripts_only_import_does_not_load_isolation(scripts_only_tree, module):
     probe = """
 import importlib
@@ -102,11 +110,17 @@ def test_safe_read_regular_offset_and_exact_bound(files):
     assert safe_read_attempt_file(target, max_bytes=0) == b""
 
 
-@pytest.mark.parametrize("attack,code", [
-    ("symlink", "unsafe_path"), ("hardlink", "link_count"),
-    ("fifo", "not_regular"), ("directory", "not_regular"),
-    ("oversized", "oversized"), ("component", "unsafe_path"),
-])
+@pytest.mark.parametrize(
+    "attack,code",
+    [
+        ("symlink", "unsafe_path"),
+        ("hardlink", "link_count"),
+        ("fifo", "not_regular"),
+        ("directory", "not_regular"),
+        ("oversized", "oversized"),
+        ("component", "unsafe_path"),
+    ],
+)
 def test_safe_read_refuses_swapped_names(files, attack, code):
     root, target, forbidden = files
     target.unlink()
@@ -295,8 +309,7 @@ def test_codex_output_swap_refuses_without_sentinel(files, attack):
     assert SENTINEL.decode() not in repr(result)
 
 
-@pytest.mark.parametrize("reader", [agy._read_transcript_events, agy._conversation_id_from_log,
-                                     CodexAdapter()._read_rollout_segment, CodexAdapter._read_rollout_session_id])
+@pytest.mark.parametrize("reader", [agy._read_transcript_events, agy._conversation_id_from_log])
 @pytest.mark.parametrize("attack", ["symlink", "hardlink"])
 def test_remaining_adapter_reads_refuse_swaps(files, reader, attack):
     _, target, forbidden = files
@@ -307,19 +320,6 @@ def test_remaining_adapter_reads_refuse_swaps(files, reader, attack):
         os.link(forbidden, target)
     with pytest.raises(AttemptReadError):
         reader(target)
-
-
-def test_codex_prompt_match_and_completion_do_not_swallow_refusal(files, monkeypatch):
-    _, target, forbidden = files
-    target.unlink()
-    target.symlink_to(forbidden)
-    adapter = CodexAdapter()
-    plan = InvocationPlan(cmd=[], cwd=target.parent, stdin_payload="prompt")
-    with pytest.raises(AttemptReadError):
-        adapter._rollout_matches_plan(target, plan)
-    monkeypatch.setattr(adapter, "_select_rollout_for_plan", lambda plan: target)
-    with pytest.raises(AttemptReadError):
-        adapter._read_latest_rollout_task_complete(plan)
 
 
 def test_agy_saved_result_component_swap_is_refused(tmp_path):
@@ -351,7 +351,9 @@ def test_agy_saved_result_nul_pointer_is_typed(tmp_path, monkeypatch, attempt, c
     monkeypatch.setattr(boundary.os, "read", lambda *a: pytest.fail("malformed pointer must read no bytes"))
     with pytest.raises(AttemptReadError, match=r"^attempt_read_unsafe_path$"):
         agy._inline_saved_tool_result_pointer(
-            text, transcript_path=transcript, trusted_root=tmp_path if attempt else Path("/"),
+            text,
+            transcript_path=transcript,
+            trusted_root=tmp_path if attempt else Path("/"),
         )
 
 
@@ -386,8 +388,12 @@ def test_agy_saved_result_uses_plan_root_after_transcript_read(tmp_path, monkeyp
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: root / "agy.log")
     plan = agy.AgyAdapter().build_invocation(
-        prompt="prompt", mode="workspace-write", cwd=tmp_path,
-        model=None, task_id=None, session_id=None,
+        prompt="prompt",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={"agy_home_override": str(alias / "home"), "review_write_root": str(root)},
     )
     assert plan.metadata["parent_read_root"] == str(root)
@@ -399,11 +405,22 @@ def test_agy_saved_result_uses_plan_root_after_transcript_read(tmp_path, monkeyp
     output.write_text("own saved result")
     transcript.parent.mkdir(parents=True)
     events = [
-        {"tool_calls": [{"name": "call_mcp_tool", "args": {
-            "ServerName": "sources", "ToolName": "search_text", "Arguments": {},
-        }}]},
-        {"type": "GENERIC" if shape == "generic" else "MCP_TOOL",
-         "content": f"The output was large and was saved to: {output.as_uri()}"},
+        {
+            "tool_calls": [
+                {
+                    "name": "call_mcp_tool",
+                    "args": {
+                        "ServerName": "sources",
+                        "ToolName": "search_text",
+                        "Arguments": {},
+                    },
+                }
+            ]
+        },
+        {
+            "type": "GENERIC" if shape == "generic" else "MCP_TOOL",
+            "content": f"The output was large and was saved to: {output.as_uri()}",
+        },
     ]
     if shape != "fifo":
         for index, event in enumerate(events):
@@ -519,10 +536,12 @@ def test_schema_loaders_cannot_follow_seat_symlink(files, loader):
     target.unlink()
     target.symlink_to(forbidden)
     with pytest.raises(AttemptReadError, match="unsafe_path"):
-        loader({
-            "output_schema_path": str(target),
-            "output_schema_sha256": hashlib.sha256(SENTINEL).hexdigest(),
-        })
+        loader(
+            {
+                "output_schema_path": str(target),
+                "output_schema_sha256": hashlib.sha256(SENTINEL).hexdigest(),
+            }
+        )
 
 
 def test_prefix_suffix_size_and_tail_ignore_unread_history(files, monkeypatch):
@@ -562,9 +581,13 @@ def test_trusted_root_allows_symlinks_above_it_but_refuses_beneath(tmp_path):
         safe_read_attempt_file(sub / "output", trusted_root=known_root)
 
 
-@pytest.mark.parametrize("returncode", [0, 1])
 @pytest.mark.parametrize("large_history", [False, True])
-def test_ordinary_codex_newer_huge_rollout_preserves_bound_answer(tmp_path, monkeypatch, returncode, large_history):
+def test_ordinary_codex_resume_never_reads_rollouts(tmp_path, monkeypatch, large_history):
+    """#9532: a resumed call's answer and session come from -o and its own stream.
+
+    Huge or unrelated session rollouts beside it are never read, so they can
+    neither block nor supply this invocation's outcome.
+    """
     import json
     import time
 
@@ -589,63 +612,20 @@ def test_ordinary_codex_newer_huge_rollout_preserves_bound_answer(tmp_path, monk
     )
     try:
         unrelated = directory / "rollout-unrelated.jsonl"
-        with unrelated.open("wb") as writer:
-            writer.write(
-                json.dumps({"type": "session_meta", "payload": {"id": "ffffffff-bbbb-cccc-dddd-eeeeeeeeeeee"}}).encode()
-                + b"\n"
-            )
-            writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 1)
-        os.utime(unrelated, (time.time() + 10, time.time() + 10))
-        with valid.open("a") as writer:
-            writer.write(
-                json.dumps({"type": "event_msg", "payload": {"type": "user_message", "message": "current prompt"}})
-                + "\n"
-            )
-            writer.write(
-                json.dumps(
-                    {"type": "event_msg", "payload": {"type": "task_complete", "last_agent_message": "valid answer"}}
-                )
-                + "\n"
-            )
+        unrelated.symlink_to(tmp_path / "forbidden-rollout")
+        (tmp_path / "forbidden-rollout").write_bytes(SENTINEL)
+        os.utime(valid, (time.time() + 10, time.time() + 10))
         plan.output_file.write_text("valid answer")
         result = adapter.parse_response(
-            stdout="", stderr="", returncode=returncode, output_file=plan.output_file, plan=plan
+            stdout=completed_stream(thread_id=UUID), stderr="", returncode=0, output_file=plan.output_file, plan=plan
         )
         assert result.ok and result.response == "valid answer" and result.session_id == UUID
-        assert adapter._bound_rollout == valid
+        assert SENTINEL.decode() not in repr(result)
     finally:
         plan.output_file.unlink()
 
 
-@pytest.mark.parametrize("resumed", [False, True])
-def test_refused_unbound_rollout_is_nonmatch_but_bound_refusal_raises(files, monkeypatch, resumed):
-    import json
-
-    root, target, forbidden = files
-    bad = root / "rollout-bad.jsonl"
-    bad.symlink_to(forbidden)
-    good = root / "rollout-good.jsonl"
-    good.write_text(
-        json.dumps({"type": "session_meta", "payload": {"id": UUID}})
-        + "\n"
-        + json.dumps({"type": "event_msg", "payload": {"type": "user_message", "message": "prompt"}})
-        + "\n"
-    )
-    adapter = CodexAdapter()
-    adapter._rollout_read_root = root
-    adapter._resume_session_id = UUID if resumed else None
-    monkeypatch.setattr(adapter, "_candidate_rollout_dirs", lambda: [root])
-    plan = InvocationPlan(cmd=[], cwd=root, stdin_payload="prompt")
-    assert adapter._select_rollout_for_plan(plan) == good
-    good.unlink()
-    good.symlink_to(forbidden)
-    with pytest.raises(AttemptReadError, match="unsafe_path"):
-        adapter._select_rollout_for_plan(plan)
-    assert target.read_bytes() == b"own return"
-
-
 def test_ordinary_codex_symlinked_temp_and_home_ancestors(tmp_path, monkeypatch):
-    import json
 
     real = tmp_path / "real"
     real.mkdir()
@@ -670,17 +650,12 @@ def test_ordinary_codex_symlinked_temp_and_home_ancestors(tmp_path, monkeypatch)
         from datetime import UTC, datetime
 
         day = datetime.now(UTC)
-        directory = real / "home" / "sessions" / day.strftime("%Y/%m/%d")
-        directory.mkdir(parents=True)
-        rollout = directory / "rollout-own.jsonl"
-        rollout.write_text(
-            json.dumps({"type": "session_meta", "payload": {"id": UUID}})
-            + "\n"
-            + json.dumps({"type": "event_msg", "payload": {"type": "user_message", "message": "prompt"}})
-            + "\n"
-        )
+        (real / "home" / "sessions" / day.strftime("%Y/%m/%d")).mkdir(parents=True)
+        assert adapter._candidate_rollout_dirs()
         (alias / plan.output_file.name).write_text("valid answer")
-        result = adapter.parse_response(stdout="", stderr="", returncode=0, output_file=plan.output_file, plan=plan)
+        result = adapter.parse_response(
+            stdout=completed_stream(thread_id=UUID), stderr="", returncode=0, output_file=plan.output_file, plan=plan
+        )
         assert result.ok and result.response == "valid answer" and result.session_id == UUID
     finally:
         plan.output_file.unlink()

@@ -21,10 +21,11 @@ Key design points:
   agent message to a file; we read it in ``parse_response``. The file path
   goes into ``liveness_signal_paths`` so the runner's mtime poller catches
   Codex writing progress even when stdout is quiet.
-- **Session ID bound to the invocation.** Older CLIs printed
-  ``session id: <uuid>`` on stdout. Current CLIs persist it in the matched
-  rollout's ``session_meta`` event. We accept either source so bridge callers
-  can feed the exact session into later rounds.
+- **Outcome from the typed event stream.** ``codex exec --json`` prints its
+  typed events on stdout, already filtered to this invocation's thread and
+  turn. That stream alone decides completion, failure class, session id,
+  tool telemetry and usage; human-formatted stderr and the shared session
+  rollout never do (#9532). See ``codex_events``.
 
 Issue: #1184
 """
@@ -38,64 +39,51 @@ import os
 import re
 import shutil
 import tempfile
-import unicodedata
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
+from scripts.review.receipts.ledger import review_tools
+from scripts.secret_redactor import redact_text
 
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
-from ..tool_calls import normalize_tool_calls, parse_json_events
+from ..sources_read_only import sources_tool_sets
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
+from .codex_events import (
+    INCOMPLETE_FAILURE_CODE,
+    codex_outcome,
+    fresh_invocation_tokens,
+    parse_exec_stream,
+    tool_calls_from_items,
+)
 
 _logger = logging.getLogger(__name__)
 
-# Matches the session id line in Codex stdout. Case-insensitive.
-_SESSION_RE = re.compile(r"session id:\s*([0-9a-f-]{8,})", re.IGNORECASE)
-_SESSION_ID_VALUE_RE = re.compile(
-    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-    re.IGNORECASE,
-)
-# session_meta includes instructions/configuration; 64 KiB can truncate it.
-# Read at most 1 MiB even when a resumed rollout has a much larger history.
-_SESSION_META_READ_BYTES = 1024 * 1024
-
-# Stderr phrases that indicate the provider rate-limited us. Ordered
-# roughly by specificity — specific phrases first, generic last.
-_RATE_LIMIT_PATTERNS = (
-    r"usage limit reached",
-    r"rate limit",
-    r"rate_limit",
-    r"quota exceeded",
-    r"too many requests",
-    r"\bHTTP 429\b",
-    r"\bstatus 429\b",
-    # Bare 429, but never inside a dotted version/number: the Codex exec
-    # banner (e.g. "OpenAI Codex v0.152.429") must not read as a rate
-    # limit.  Plain \b429\b still matches ".429" because "." is a
-    # non-word character, so exclude a leading digit-or-dot explicitly.
-    r"(?<![\w.])429\b",
-)
-_RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
-
-# Matches a dashes-only line (at least 3 dashes, nothing else on the
-# line). Used to split Codex's stderr into segments so we can isolate
-# the post-prompt portion for rate-limit pattern matching. MULTILINE
-# so ^/$ match at each line boundary.
-_CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+_EXCERPT_CHARS = 500
 
 
-# Codex treats an unannotated MCP tool as approval-required. Under
-# approval_policy=never and a read-only sandbox, exec cancels that call
-# ("MCP tool call requires approval, but approval policy is never").
-# Approving the sources server keeps the filesystem sandbox and lets the
-# read-only sources MCP run. Write modes already pass
-# --dangerously-bypass-approvals-and-sandbox.
-_SOURCES_MCP_APPROVAL = 'mcp_servers.sources.default_tools_approval_mode="approve"'
+# Exposure filtering remains effective even under parent-sandboxed bypass.
+
+
+def _sources_read_only_flags(tool_names: tuple[str, ...] | None = None) -> list[str]:
+    """Replace inherited sources grants with the route's readers, then approve each."""
+    if tool_names is None:
+        tool_names = sources_tool_sets()[0]
+    tools = {name: {"approval_mode": "approve"} for name in tool_names}
+    approvals = "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in tools) + "}"
+    return [
+        "-c",
+        "mcp_servers.sources.enabled_tools=" + _json.dumps(list(tool_names)),
+        "-c",
+        'mcp_servers.sources.default_tools_approval_mode="prompt"',
+        "-c",
+        "mcp_servers.sources.tools=" + approvals,
+    ]
 
 
 def _prompt_names_sources_mcp(prompt: str) -> bool:
@@ -105,7 +93,12 @@ def _prompt_names_sources_mcp(prompt: str) -> bool:
 def _argv_can_call_sources_mcp(argv: list[str]) -> bool:
     if "--dangerously-bypass-approvals-and-sandbox" in argv:
         return True
-    return any(_SOURCES_MCP_APPROVAL in item for item in argv)
+    if any(
+        all(flag in argv for flag in _sources_read_only_flags(tools))
+        for tools in (tuple(sorted(review_tools())), tuple(sorted(review_tools("full"))))
+    ):
+        return True
+    return all(flag in argv for flag in _sources_read_only_flags())
 
 
 def _read_only_tmp_flags(root: Path) -> list[str]:
@@ -126,16 +119,14 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
         "features.network_proxy=true",
         "-c",
         'approval_policy="never"',
-        "-c",
-        _SOURCES_MCP_APPROVAL,
     ]
 
 
-def _normalize_payload_for_rollout_match(payload: str) -> str:
-    """Normalize Codex-stored prompt text before rollout binding."""
-    normalized = unicodedata.normalize("NFC", payload)
-    normalized = normalized.replace("\r\n", "\n").replace("\r", "\n")
-    return normalized.rstrip()
+def _resumed_session_id(plan: InvocationPlan | None) -> str | None:
+    """Return the session a ``codex exec resume`` plan names in its own argv."""
+    if plan is None or plan.cmd[1:3] != ["exec", "resume"] or len(plan.cmd) < 5 or plan.cmd[-1] != "-":
+        return None
+    return plan.cmd[-2]
 
 
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
@@ -143,57 +134,6 @@ def _discussion_readonly_requested(tool_config: dict | None) -> bool:
     return bool(
         os.environ.get("AB_DISCUSS_READONLY") == "1" or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
     )
-
-
-def _strip_codex_prompt_echo(stderr: str) -> str:
-    """Return only the portion of Codex stderr that is safe to
-    pattern-match for rate-limit errors.
-
-    Codex CLI (with -o <file>) lays out stderr as a sequence of
-    sections separated by dashes-only lines::
-
-        OpenAI Codex v0.118.0 ...       ← banner
-        --------
-        workdir: ...
-        model: ...
-        --------
-        user                            ← echoed prompt starts
-        <entire user prompt>
-        --------
-        codex                           ← Codex's own output
-        <reasoning + final message>
-        tokens used
-        <n>
-
-    On a rate-limit error, Codex exits non-zero and writes the error
-    message AFTER the last divider — in the "codex" or equivalent
-    section. The echoed user prompt can contain ANY text, including
-    legitimate inline dashes-only lines (a code block showing a
-    divider, a Markdown horizontal rule, a consultation prompt
-    literally discussing rate limits). Any regex that tries to
-    identify "the prompt block" by matching between two dividers can
-    be defeated by a prompt containing its own dividers.
-
-    Fix: don't try to strip the prompt at all. Instead, take the
-    stderr body AFTER the LAST divider line — that region is
-    guaranteed to be Codex's own output, never echoed prompt, because
-    the prompt echo always appears before Codex's response section.
-    If there are no dividers at all (degenerate cases: truncated
-    output, early crash before banner), fall back to the whole
-    stderr.
-
-    See #1184 Gemini 2026-04-10 review for the incident that led here.
-    """
-    if not stderr:
-        return stderr
-    # Find the position right after the LAST divider line.
-    last_divider = None
-    for m in _CODEX_DIVIDER_LINE_RE.finditer(stderr):
-        last_divider = m
-    if last_divider is None:
-        # No dividers — return as-is. Likely a very early crash.
-        return stderr
-    return stderr[last_divider.end() :]
 
 
 # Operator 2026-09-29 (#9230). GPT-6.1 Sol is the only Sol: it orchestrates and
@@ -213,10 +153,16 @@ class CodexAdapter:
 
     # Per-invocation scoped $CODEX_HOME path. Set by ``build_invocation``
     # from ``tool_config["codex_home_override"]`` (V7 writer); read by
-    # ``_candidate_rollout_dirs`` so the post-call rollout scan looks in
-    # the scoped sessions/ dir, not the user's real ``~/.codex/sessions/``.
+    # ``_candidate_rollout_dirs`` so liveness polls the scoped sessions/ dir,
+    # not the user's real ``~/.codex/sessions/``.
     _codex_home_scope: str | None = None
-    _resume_session_id: str | None = None
+
+    def __init__(self) -> None:
+        # Early-reap evidence, keyed by each invocation's unique -o path so
+        # concurrent invocations sharing this adapter never mix.
+        self._early_reap_checked_at: dict[str, float] = {}
+        self._early_reap_candidates: dict[str, str] = {}
+        self._early_reaped_outputs: dict[str, str] = {}
 
     def build_invocation(
         self,
@@ -247,11 +193,14 @@ class CodexAdapter:
         """
         if model is not None and model not in CODEX_APPROVED_MODELS:
             approved = ", ".join(sorted(CODEX_APPROVED_MODELS))
-            raise ValueError(
-                f"CodexAdapter: model={model!r} rejected; approved models are {approved}"
-            )
+            raise ValueError(f"CodexAdapter: model={model!r} rejected; approved models are {approved}")
 
         tc_early = tool_config or {}
+        if tc_early.get("attempt_os_sandbox"):
+            from ..attempt_boundary import AttemptBoundary
+
+            if not isinstance(tc_early.get("review_attempt_boundary"), AttemptBoundary):
+                raise ValueError("CodexAdapter: attempt_os_sandbox requires the parent attempt boundary")
         read_only_tmp_root = validate_read_only_tmp_root(tc_early, cwd, mode, adapter="CodexAdapter")
         review_write_root: Path | None = None
         if tc_early.get("review_isolation"):
@@ -260,35 +209,14 @@ class CodexAdapter:
             review_write_root = validated_review_write_root(tc_early)
 
         # Per-invocation scoped $CODEX_HOME (set by V7 writer via
-        # ``tool_config["codex_home_override"]``). Stored on the
-        # adapter BEFORE ``_reset_per_invocation_state`` so that the
-        # rollout-snapshot it triggers scans the correct sessions/
-        # directory (the scoped one, not the user's real
-        # ``~/.codex/sessions/``). Without this ordering the snapshot
-        # would record an empty set, and post-call rollout discovery
-        # would treat real rollouts as "already-existing" and skip
-        # them. Empirical reference: failed build
-        # a1-my-morning-20260522-205831 — codex wrote 38 valid MCP
-        # calls into ``$TMPDIR/codex-v7-writer-501/sessions/...``, the
-        # adapter scanned ``~/.codex/sessions/`` and saw 0.
+        # ``tool_config["codex_home_override"]``): liveness must poll the
+        # sessions/ directory the subprocess actually writes to.
         effective_codex_home = tc_early.get("codex_home_override")
         if not effective_codex_home and review_write_root is not None:
             effective_codex_home = str(review_write_root / "home" / ".codex")
         self._codex_home_scope = str(
             Path(effective_codex_home or os.environ.get("CODEX_HOME") or Path.home() / ".codex").resolve()
         )
-        self._rollout_read_root = (
-            Path(str(tc_early["review_write_root"]))
-            if tc_early.get("review_write_root")
-            else self._codex_home_path().resolve()
-        )
-
-        # Reset per-invocation state so _read_latest_rollout_task_complete
-        # uses a fresh rollout snapshot (prevents cross-contamination
-        # between consecutive calls on the same adapter instance).
-        # Codex 2026-04-10 audit.
-        self._reset_per_invocation_state()
-        self._resume_session_id = session_id
 
         discussion_readonly = _discussion_readonly_requested(tool_config)
         if discussion_readonly and mode != "read-only":
@@ -363,6 +291,8 @@ class CodexAdapter:
         # default is max when the caller omits effort (operator 2026-08-13).
         cmd.extend(["-c", f"model_reasoning_effort={effective_effort}"])
         cmd.append("--skip-git-repo-check")
+        # Typed JSONL events on stdout: the only outcome authority (#9532).
+        cmd.append("--json")
         if not has_session_to_resume:
             # ``codex exec resume`` does not accept -C or --color. It resumes
             # the original session boundary and the subprocess itself still
@@ -405,7 +335,7 @@ class CodexAdapter:
             # ``resume`` has no -s/--sandbox flag, but accepts config
             # overrides. Reassert the requested boundary instead of inheriting
             # a broader mode if a caller changes delivery metadata mid-thread.
-            cmd.extend(["-c", 'sandbox_mode="read-only"', "-c", _SOURCES_MCP_APPROVAL])
+            cmd.extend(["-c", 'sandbox_mode="read-only"'])
         else:
             cmd.extend(self._mode_flags(mode))
         # Dispatched workers must have NO write-capable GitHub connector tools
@@ -416,6 +346,18 @@ class CodexAdapter:
         # enables toggles.
         cmd.extend(["--disable", "apps"])
         cmd.extend(self._tool_config_flags(tool_config))
+        mcp_servers = tc.get("mcp_servers")
+        sources = mcp_servers.get("sources") if isinstance(mcp_servers, dict) else None
+        sources_defined = isinstance(sources, dict) and bool(sources.get("command") or sources.get("url"))
+        if mode == "read-only" and ("--ignore-user-config" not in cmd or sources_defined):
+            # Last overrides win: caller/global config cannot re-expose writers.
+            # Formal scoped homes use the receipt contract, including when the
+            # parent AttemptBoundary replaces their server with a stdio proxy.
+            if tc.get("codex_home_override") and tc.get("mcp_config_path"):
+                tools = tuple(sorted(review_tools(tc.get("review_access", "isolated"))))
+            else:
+                tools = sources_tool_sets()[0]
+            cmd.extend(_sources_read_only_flags(tools))
         if has_session_to_resume:
             cmd.append(session_id)
         cmd.append("-")  # Read prompt from stdin.
@@ -573,154 +515,118 @@ class CodexAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
-        """Parse the codex exec output into a ParseResult.
+        """Parse one ``codex exec --json`` invocation into a ParseResult.
 
-        A zero exit requires final content. Nonzero exits may leave partial
-        bytes in the output file, so recovery requires a task_complete message
-        from this invocation's bound rollout. This preserves completed-turn
-        recovery after early reap without treating partial output as success.
+        The stdout event stream is the only outcome authority. A completed
+        turn succeeds only after a clean exit, or after an early reap that
+        verified the final ``-o`` bytes, and its answer always comes from
+        ``-o``. Every failure sets ``provider_error_text`` so the failover
+        classifier reads the typed outcome, never the raw streams (#9532).
         """
-        file_output = ""
+        _ = call_start_time
+        file_bytes: bytes | None = None
         if output_file is not None:
             try:
-                file_output = (
-                    safe_read_attempt_file(
-                        output_file,
-                        trusted_root=Path(plan.metadata.get("parent_read_root", "/")) if plan else Path("/"),
-                    )
-                    .decode("utf-8", errors="replace")
-                    .strip()
+                file_bytes = safe_read_attempt_file(
+                    output_file,
+                    trusted_root=Path(plan.metadata.get("parent_read_root", "/")) if plan else Path("/"),
                 )
             except AttemptReadError as exc:
-                return ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+                return ParseResult(
+                    ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc), provider_error_text=str(exc)
+                )
             except FileNotFoundError:
                 pass
+        file_output = file_bytes.decode("utf-8", errors="replace").strip() if file_bytes is not None else ""
+        reaped_digest = self._early_reaped_outputs.pop(str(output_file), None) if output_file is not None else None
 
-        output_schema = plan_output_schema(plan)
+        resumed_session_id = _resumed_session_id(plan)
+        stream = parse_exec_stream(stdout)
+        outcome = codex_outcome(stream, resumed_session_id=resumed_session_id)
+        tool_calls = tool_calls_from_items(stream.completed_items)
+        session_id = outcome.thread_id
 
-        # Empty output and nonzero exits require invocation-bound completion
-        # evidence, even when the output file already contains partial text.
-        rollout_response = ""
-        rollout_source_note: str | None = None
-        if output_schema is None and (returncode != 0 or not file_output) and plan is not None:
-            rollout_response = self._read_latest_rollout_task_complete(
-                plan,
-                call_start_time=call_start_time,
-            ).strip()
-            if rollout_response:
-                reason = "rc=0 but -o empty" if returncode == 0 else f"rc={returncode}, terminal completion verified"
-                rollout_source_note = (
-                    f"recovered {len(rollout_response)} chars from "
-                    f"~/.codex/sessions/.../rollout-*.jsonl (reason: {reason})"
+        if outcome.state == "completed":
+            # ``turn.completed`` precedes exec's -o write, so the process must
+            # exit cleanly or have been reaped after its -o bytes were seen.
+            reaped_intact = (
+                reaped_digest is not None
+                and file_bytes is not None
+                and hashlib.sha256(file_bytes).hexdigest() == reaped_digest
+            )
+            if returncode == 0 or reaped_intact:
+                return self._completed_result(
+                    file_output,
+                    plan=plan,
+                    session_id=session_id,
+                    tool_calls=tool_calls,
+                    tokens=fresh_invocation_tokens(stream, resumed=resumed_session_id is not None),
                 )
-
-        # Prefer the terminal message on recovery; file bytes alone cannot
-        # prove successful completion after a nonzero exit.
-        durable_output = (file_output or rollout_response) if returncode == 0 else rollout_response
-
-        # Rate-limit detection — with THREE critical caveats.
-        #
-        # Codex CLI (with -o <file>) writes everything to stderr: the
-        # startup banner, the echoed user prompt, the reasoning trace,
-        # AND real error messages. Pattern-matching stderr naively is
-        # broken because user prompts can contain ANY human-language
-        # phrase, including "rate limit" and "usage limit reached" (our
-        # own bridge standing rules literally do).
-        #
-        # Fix 1 (prompt echo sanitization): take the stderr body AFTER
-        # the last "--------" divider line. The closing prompt divider
-        # always has Codex's own output after it, so anything past the
-        # last divider is guaranteed to be Codex's actual response,
-        # never echoed user prompt. See _strip_codex_prompt_echo.
-        #
-        # Fix 2 (success guard): even after sanitization, rate_limited
-        # is only TRUE when the call actually failed (returncode != 0
-        # OR empty output file). A successful Codex exec with a
-        # non-empty final message in the -o file CANNOT be rate-limited,
-        # period. This mirrors the same guard we have on GeminiAdapter.
-        #
-        # Fix 3 (signal-killed processes, Codex 2026-04-10 review):
-        # a negative returncode means the process was killed by a
-        # signal (SIGTERM, SIGKILL, SIGINT — Python/POSIX convention
-        # reports -SIGNUM for signaled exits). If we killed the process
-        # ourselves (hard_timeout, cancel, exception mid-poll), its
-        # stderr may contain ONLY a partial prompt echo — no closing
-        # divider, no Codex response section — and my "take stderr
-        # after last divider" heuristic will return the prompt body
-        # itself. To prevent that class of false positive, skip
-        # pattern matching entirely on signaled exits. A signaled
-        # exit is classified as "failed", never as "rate_limited",
-        # because we KNOW why the process died: we killed it.
-        if returncode is not None and returncode < 0:
-            # Signaled exit — don't even look at stderr for rate limits.
-            rate_limited = False
-        else:
-            stderr_for_check = _strip_codex_prompt_echo(stderr)
-            combined_for_rl_check = "\n".join(part for part in (stdout, stderr_for_check, file_output, rollout_response) if part)
-            pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
-            # Call failed if neither -o nor rollout gave us content.
-            call_failed = returncode != 0 or not durable_output
-            rate_limited = pattern_hit and call_failed
-
-        # Older Codex CLIs printed the session id on stdout. Current CLIs keep
-        # stdout quiet and persist it in the invocation-matched rollout's
-        # session_meta record.
-        session_id: str | None = None
-        session_match = _SESSION_RE.search(stdout or "")
-        if session_match:
-            session_id = session_match.group(1)
-        elif plan is not None:
-            session_id = self._read_session_id_from_rollout(plan)
-
-        rollout_trace = ""
-        if plan is not None:
-            rollout_trace = self._read_latest_rollout_trace(plan)
-        trace_events = parse_json_events(
-            rollout_trace,
-            source="codex",
-            logger=_logger,
-        )
-        tool_calls = normalize_tool_calls(trace_events)
-
-        if output_schema is not None:
-            # Only this invocation's -o result is schema-constrained. Preserve
-            # tool telemetry, but never recover unconstrained rollout prose.
-            return structured_result(
-                json_value(file_output), output_schema, returncode=returncode,
-                session_id=session_id, tool_calls=tool_calls,
+            outcome = replace(
+                outcome, state="incomplete", failure_code=INCOMPLETE_FAILURE_CODE, detail="exit_after_turn_completed"
             )
 
-        # Nonzero exit content is admitted only through the bound terminal
-        # recovery above. Provider quota failures still veto that recovery.
-        ok = bool(durable_output) and not rate_limited
-        response = durable_output if ok else ""
-        stderr_excerpt: str | None = None
-        if not ok:
-            # Build a useful excerpt: stderr first, then file_output as
-            # fallback (Codex often puts errors in the output file).
-            excerpt_parts: list[str] = []
-            if stderr.strip():
-                excerpt_parts.append(stderr.strip())
-            if not stderr.strip() and file_output:
-                excerpt_parts.append(f"[codex output file]\n{file_output}")
-            stderr_excerpt = "\n".join(excerpt_parts)[:500] or None
-        elif rollout_source_note:
-            # We recovered from the rollout file. Surface the note so
-            # logs/usage records show it.
-            stderr_excerpt = rollout_source_note
+        if outcome.state == "failed":
+            failure_code = outcome.failure_code or "provider_error"
+            message = " ".join((redact_text(outcome.provider_message) or "").split())
+            return ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt=f"{failure_code}: {message}"[:_EXCERPT_CHARS],
+                rate_limited=failure_code == "rate_limited",
+                session_id=session_id,
+                tool_calls=tool_calls,
+                failure_code=failure_code,
+                provider_error_text=message,
+            )
 
+        # Incomplete: the stream proves neither success nor a provider failure.
+        # stderr and notices are diagnostics only; they never classify.
+        excerpt_parts = [f"{INCOMPLETE_FAILURE_CODE}: {outcome.detail} (rc={returncode})"]
+        if stream.notices:
+            excerpt_parts.append(f"last notice: {' '.join(stream.notices[-1].split())}")
+        if stderr.strip():
+            excerpt_parts.append(stderr.strip())
         return ParseResult(
-            ok=ok,
-            response=response,
-            stderr_excerpt=stderr_excerpt,
-            rate_limited=rate_limited,
+            ok=False,
+            response="",
+            stderr_excerpt=(redact_text("\n".join(excerpt_parts)) or "")[:_EXCERPT_CHARS],
             session_id=session_id,
-            tokens=None,  # codex exec does not expose token counts.
             tool_calls=tool_calls,
+            failure_code=INCOMPLETE_FAILURE_CODE,
+            provider_error_text="",
+        )
+
+    @staticmethod
+    def _completed_result(
+        file_output: str,
+        *,
+        plan: InvocationPlan | None,
+        session_id: str | None,
+        tool_calls: list[dict[str, Any]],
+        tokens: int | None,
+    ) -> ParseResult:
+        output_schema = plan_output_schema(plan)
+        if output_schema is not None:
+            schema_result = structured_result(
+                json_value(file_output), output_schema, returncode=0, session_id=session_id, tool_calls=tool_calls
+            )
+            return schema_result if schema_result.ok else replace(schema_result, provider_error_text="")
+        if file_output:
+            return ParseResult(
+                ok=True, response=file_output, session_id=session_id, tokens=tokens, tool_calls=tool_calls
+            )
+        return ParseResult(
+            ok=False,
+            response="",
+            stderr_excerpt="codex turn completed but wrote no final message to -o",
+            session_id=session_id,
+            tool_calls=tool_calls,
+            provider_error_text="",
         )
 
     # ---------------------------------------------------------------------
-    # Early reap — break out of Codex CLI's post-completion hang
+    # Early reap — break out of a Codex CLI post-completion hang
     # ---------------------------------------------------------------------
 
     def check_early_reap(
@@ -728,79 +634,63 @@ class CodexAdapter:
         plan: InvocationPlan,
         *,
         call_start_time: float | None = None,
+        stdout_lines: list[str] | None = None,
     ) -> bool:
-        """Return True if the Codex rollout JSONL has a task_complete event.
+        """Return True once the turn completed and its final ``-o`` bytes are stable.
 
-        This is the fix for the Codex 0.118.0 post-completion hang.
-        Verified empirically 2026-04-10: all Codex threads end up in
-        _pthread_cond_wait on an internal Tokio runtime condition
-        variable AFTER writing task_complete to the rollout file. The
-        process never exits on its own. Without this method the runner
-        would wait the full hard_timeout (1h+) on every such hang.
+        Codex 0.118 hung after finishing a turn, holding the call until the
+        hard timeout. The runner calls this every poll tick with the captured
+        stdout; True makes it kill the process and parse what is on disk.
 
-        The runner calls this periodically (every few poll ticks). When
-        it returns True, the runner kills the subprocess and falls
-        through to ``parse_response()``, which recovers the response
-        via ``_read_latest_rollout_task_complete()``.
-
-        Optimizations to keep overhead negligible:
-        1. Warmup window: don't scan before 5 seconds elapsed.
-           Codex can't possibly have emitted task_complete that early.
-        2. Throttle: at most one scan every 2 seconds per adapter
-           instance.
-        3. Mtime gate: skip the scan if the rollout directory mtime
-           hasn't changed since the last scan. The sessions dir bumps
-           on every file creation inside it, and the rollout file's
-           OWN mtime bumps on every write. We snapshot the newest
-           rollout file's mtime and only re-scan when it advances.
+        ``turn.completed`` precedes exec's shutdown and its ``-o`` write
+        (``exec/src/lib.rs``), so completion alone never authorizes a reap:
+        the same non-empty ``-o`` bytes must be seen on two checks at least
+        two seconds apart. ``parse_response`` accepts a reaped call only when
+        ``-o`` still holds exactly those bytes. Schema calls never reap: they
+        must exit cleanly after writing their constrained result.
         """
         import time as _time
 
-        if plan_output_schema(plan) is not None:
-            # Schema calls require the CLI to finish writing its constrained
-            # -o result and exit successfully; a rollout is not that result.
+        if plan_output_schema(plan) is not None or stdout_lines is None or plan.output_file is None:
             return False
-
         now = _time.monotonic()
-
-        # Guard 1: warmup window.
         if call_start_time is not None and (now - call_start_time) < 5.0:
             return False
-
-        # Guard 2: throttle.
-        last_check = getattr(self, "_last_early_reap_check", 0.0)
-        if now - last_check < 2.0:
+        key = str(plan.output_file)
+        if now - self._early_reap_checked_at.get(key, 0.0) < 2.0:
             return False
-        self._last_early_reap_check = now
+        self._early_reap_checked_at[key] = now
 
-        # Guard 3: mtime gate — quick stat instead of a full file scan.
+        lines = list(stdout_lines)
+        last_line = next((line for line in reversed(lines) if line.strip()), "")
         try:
-            rollouts = [
-                rollout for directory in self._candidate_rollout_dirs() for rollout in directory.glob("rollout-*.jsonl")
-            ]
-            if not rollouts:
-                return False
-            newest = max(rollouts, key=lambda p: p.stat().st_mtime)
-            current_mtime = newest.stat().st_mtime
-        except OSError:
+            last_event = _json.loads(last_line)
+        except (ValueError, RecursionError):
             return False
-
-        last_mtime = getattr(self, "_last_early_reap_mtime", 0.0)
-        if current_mtime <= last_mtime:
-            # File hasn't advanced since last scan — task_complete
-            # can't have been added. Skip the scan.
+        if not isinstance(last_event, dict) or last_event.get("type") != "turn.completed":
             return False
-        self._last_early_reap_mtime = current_mtime
-
-        # All guards passed — do the actual scan.
-        msg = self._read_latest_rollout_task_complete(
-            plan,
-            call_start_time=call_start_time,
-        )
-        return bool(msg)
+        stream = parse_exec_stream("".join(lines))
+        if codex_outcome(stream, resumed_session_id=_resumed_session_id(plan)).state != "completed":
+            return False
+        try:
+            output = safe_read_attempt_file(
+                plan.output_file, trusted_root=Path(plan.metadata.get("parent_read_root", "/"))
+            )
+        except (AttemptReadError, OSError):
+            return False
+        if not output.strip():
+            return False
+        digest = hashlib.sha256(output).hexdigest()
+        if self._early_reap_candidates.get(key) != digest:
+            self._early_reap_candidates[key] = digest
+            return False
+        self._early_reap_candidates.pop(key, None)
+        self._early_reap_checked_at.pop(key, None)
+        self._early_reaped_outputs[key] = digest
+        return True
 
     # ---------------------------------------------------------------------
-    # Rollout-file recovery (post-completion hang fallback)
+    # Codex home and session directories (liveness signals only)
     # ---------------------------------------------------------------------
 
     def _codex_home_path(self) -> Path:
@@ -818,26 +708,16 @@ class CodexAdapter:
         return datetime.now(UTC), datetime.now().astimezone()
 
     def _candidate_rollout_dirs(self) -> list[Path]:
-        """Return plausible Codex rollout session dirs.
+        """Return plausible Codex rollout session dirs for liveness polling.
 
         Codex stores rollout files under the local-date session dir
-        (``sessions/YYYY/MM/DD``), while this adapter historically scanned
-        UTC-date dirs. Include +/- 1 day around both UTC and local clocks so
-        midnight-straddling runs are found in either direction.
+        (``sessions/YYYY/MM/DD``). Include +/- 1 day around both UTC and local
+        clocks so midnight-straddling runs are found in either direction. Only
+        directory mtimes are polled; rollout contents are never read (#9532).
 
-        Honors the per-invocation scoped ``$CODEX_HOME`` so the V7
-        writer's scoped-tempdir rollouts (materialized by
-        ``linear_pipeline._ensure_codex_writer_home`` and passed via
-        ``tool_config["codex_home_override"]``) are discovered
-        correctly. Without this, the adapter scanned
-        ``~/.codex/sessions/`` while the subprocess wrote rollouts
-        under the scoped home — the codex-tools writer phase appeared
-        to make zero MCP calls (no rollout found → empty tool_calls
-        → ``mcp_tools_never_invoked`` fires) even though 38+ valid
-        ``mcp__sources__*`` calls were actually recorded. Empirical
-        reference: failed build ``a1-my-morning-20260522-205831``,
-        rollout at
-        ``$TMPDIR/codex-v7-writer-501/sessions/2026/05/22/...``.
+        Honors the per-invocation scoped ``$CODEX_HOME`` (the V7 writer's
+        ``tool_config["codex_home_override"]``) so liveness watches the
+        sessions directory the subprocess actually writes to.
 
         Resolution order:
         1. ``self._codex_home_scope`` — set at ``build_invocation``
@@ -864,302 +744,6 @@ class CodexAdapter:
                 seen_dirs.add(candidate)
                 dirs.append(candidate)
         return dirs
-
-    def _snapshot_preexisting_rollouts(self) -> set[Path]:
-        """Snapshot rollout files that exist BEFORE our call starts.
-
-        Stored on the adapter instance the first time check_early_reap
-        runs for a given invocation. Any rollout file NOT in the
-        snapshot, when a new check happens, is a candidate for "this
-        call's rollout" — avoiding the critical cross-contamination bug
-        where two concurrent Codex runs would see each other's results.
-        Codex 2026-04-10 audit finding.
-
-        Note: adapters are logically stateless across calls, but
-        check_early_reap + parse_response are guaranteed to both see
-        the same invocation (the runner doesn't reuse an adapter
-        instance mid-call). The snapshot is reset on each new
-        invocation via _reset_per_invocation_state().
-        """
-        preexisting: set[Path] = set()
-        for d in self._candidate_rollout_dirs():
-            try:
-                preexisting.update(d.glob("rollout-*.jsonl"))
-            except OSError:
-                continue
-        return preexisting
-
-    def _reset_per_invocation_state(self) -> None:
-        """Clear per-invocation caches AND take a fresh snapshot of
-        pre-existing rollout files. Called from build_invocation.
-
-        Taking the snapshot eagerly (in build_invocation) instead of
-        lazily (on the first check_early_reap call) is correct: we
-        want to capture the state of the sessions dir at the MOMENT
-        the call begins, not at some arbitrary later time when a fresh
-        rollout may already have been created. For resumed sessions, Codex
-        appends to a pre-existing rollout; its captured byte length is the
-        current invocation's safe scan boundary.
-        """
-        self._last_early_reap_check = 0.0
-        self._last_early_reap_mtime = 0.0
-        self._rollout_snapshot = self._snapshot_preexisting_rollouts()
-        self._rollout_start_offsets = {}
-        for rollout in self._rollout_snapshot:
-            try:
-                self._rollout_start_offsets[rollout] = rollout.stat().st_size
-            except OSError:
-                continue
-        self._bound_rollout = None
-        self._resume_session_id = None
-
-    def _read_latest_rollout_task_complete(
-        self,
-        plan: InvocationPlan,
-        *,
-        call_start_time: float | None = None,
-    ) -> str:
-        """Extract the ``last_agent_message`` from THIS invocation's
-        rollout JSONL.
-
-        Per-invocation identification (fixed 2026-04-10 after Codex
-        audit): we do NOT pick the newest rollout file globally,
-        because concurrent Codex runs in the same repo would
-        cross-contaminate. Instead we:
-
-        1. Fresh calls ignore files in the build-time snapshot and prompt-bind
-           one newly created candidate.
-        2. Resumed calls session-ID-bind the original rollout and prompt-match
-           only bytes appended after its build-time length.
-        3. Once bound, later scans keep the same file and the same byte
-           boundary, so prior turns cannot satisfy task completion or pollute
-           current-turn tool telemetry.
-
-        Also checks yesterday's sessions dir for UTC-midnight rollover.
-
-        Returns ``last_agent_message`` or ''.
-        """
-        _ = call_start_time  # reserved; currently using snapshot-based binding
-        _ = plan  # plan.task_id could be used for tighter matching in future
-        try:
-            rollout_to_scan = self._select_rollout_for_plan(plan)
-            if rollout_to_scan is None:
-                return ""
-
-            # 4. Scan our bound rollout for task_complete
-            last_message = ""
-            for line in self._read_rollout_segment(rollout_to_scan).splitlines():
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    event = _json.loads(line)
-                except _json.JSONDecodeError:
-                    continue
-                if event.get("type") != "event_msg":
-                    continue
-                payload = event.get("payload") or {}
-                if payload.get("type") != "task_complete":
-                    continue
-                msg = payload.get("last_agent_message")
-                if isinstance(msg, str) and msg:
-                    last_message = msg
-
-            return last_message
-        except AttemptReadError:
-            raise
-        except Exception:
-            # Last-resort fallback: never let a rollout-parse error
-            # bubble out of parse_response. Swallow everything and
-            # fall back to the primary code path.
-            return ""
-
-    def _select_rollout_for_plan(self, plan: InvocationPlan) -> Path | None:
-        """Return the rollout JSONL scoped to this invocation, if available."""
-        # The snapshot is taken at build_invocation time. If an adapter is used
-        # directly in a unit test, fall back to newest-wins among matching files.
-        snapshot: set[Path] = getattr(self, "_rollout_snapshot", None) or set()
-
-        bound: Path | None = getattr(self, "_bound_rollout", None)
-        if bound is not None and bound.exists() and self._rollout_matches_plan(bound, plan):
-            return bound
-
-        all_candidates: list[Path] = []
-        for directory in self._candidate_rollout_dirs():
-            try:
-                all_candidates.extend(directory.glob("rollout-*.jsonl"))
-            except OSError:
-                continue
-
-        def mtime(path: Path) -> float:
-            try:
-                return path.stat().st_mtime
-            except OSError:
-                return 0.0
-
-        # Current Codex appends every resumed turn to the original session
-        # rollout instead of creating a new file. That exact file is therefore
-        # present in the pre-invocation snapshot. Bind it by BOTH the trusted
-        # stored session ID and this invocation's normalized prompt before
-        # applying the fresh-call snapshot exclusion below.
-        resume_session_id = getattr(self, "_resume_session_id", None)
-        if resume_session_id:
-            for candidate in sorted(all_candidates, key=mtime, reverse=True):
-                try:
-                    matches = self._read_rollout_session_id(
-                        candidate, trusted_root=getattr(self, "_rollout_read_root", Path("/"))
-                    ) == resume_session_id and self._rollout_matches_plan(candidate, plan)
-                except AttemptReadError:
-                    continue  # Unbound candidates have supplied no eligible bytes.
-                if matches:
-                    self._bound_rollout = candidate
-                    return candidate
-
-        new_candidates = [path for path in all_candidates if path not in snapshot]
-        if not new_candidates:
-            return None
-
-        for candidate in sorted(new_candidates, key=mtime, reverse=True):
-            try:
-                matches = self._rollout_matches_plan(candidate, plan)
-            except AttemptReadError:
-                continue
-            if matches:
-                self._bound_rollout = candidate
-                return candidate
-        return None
-
-    def _read_latest_rollout_trace(self, plan: InvocationPlan) -> str:
-        """Read this invocation's Codex rollout JSONL for tool-call telemetry."""
-        rollout = self._select_rollout_for_plan(plan)
-        if rollout is None:
-            return ""
-        return self._read_rollout_segment(rollout)
-
-    def _read_rollout_segment(self, rollout: Path) -> str:
-        """Read only bytes appended during the current invocation.
-
-        A fresh invocation owns a newly created rollout and starts at byte zero.
-        A resumed invocation appends to a pre-existing session rollout, whose
-        starting length was captured synchronously in ``build_invocation``.
-        """
-        offsets: dict[Path, int] = getattr(self, "_rollout_start_offsets", {})
-        start_offset = offsets.get(rollout, 0)
-        try:
-            return safe_read_attempt_file(
-                rollout, offset=start_offset, trusted_root=getattr(self, "_rollout_read_root", Path("/"))
-            ).decode("utf-8", errors="replace")
-        except OSError:
-            return ""
-
-    def _read_session_id_from_rollout(self, plan: InvocationPlan) -> str | None:
-        """Read the exact invocation's session id from ``session_meta``.
-
-        The rollout selector first proves that a fresh file or the exact
-        resumed session contains this plan's normalized prompt in the current
-        invocation segment. Never take an ID from the globally newest rollout:
-        concurrent Codex calls may share the same date directory.
-        """
-        rollout = self._select_rollout_for_plan(plan)
-        if rollout is None:
-            return None
-        return self._read_rollout_session_id(rollout, trusted_root=getattr(self, "_rollout_read_root", Path("/")))
-
-    @staticmethod
-    def _read_rollout_session_id(rollout: Path, *, trusted_root: Path = Path("/")) -> str | None:
-        """Read a UUID from the first 25 lines within a 1 MiB prefix.
-
-        Metadata truncated by that bound remains unbound; no partial JSON or
-        unvalidated session identifier is accepted.
-        """
-        try:
-            lines = (
-                safe_read_attempt_file(
-                    rollout, trusted_root=trusted_root, max_bytes=_SESSION_META_READ_BYTES, prefix=True,
-                )
-                .decode("utf-8", errors="replace")
-                .splitlines()
-            )
-            for line_number, line in enumerate(lines, start=1):
-                if line_number > 25:
-                    break
-                try:
-                    event = _json.loads(line)
-                except (TypeError, ValueError, RecursionError):
-                    continue
-                if not isinstance(event, dict) or event.get("type") != "session_meta":
-                    continue
-                payload = event.get("payload")
-                if not isinstance(payload, dict):
-                    return None
-                for key in ("session_id", "id"):
-                    candidate = payload.get(key)
-                    if isinstance(candidate, str) and _SESSION_ID_VALUE_RE.fullmatch(candidate):
-                        return candidate
-                return None
-        except OSError:
-            return None
-        return None
-
-    def _rollout_matches_plan(self, rollout_path: Path, plan: InvocationPlan) -> bool:
-        """Return True when a rollout's user prompt matches this invocation.
-
-        Snapshot-based binding alone is insufficient when multiple Codex exec
-        calls start after build_invocation and write new rollouts concurrently.
-        Validate against the actual stdin payload so we never recover unrelated
-        durable output from another task in the same repo.
-        """
-        expected = _normalize_payload_for_rollout_match(plan.stdin_payload or "")
-        if not expected:
-            return True
-
-        try:
-            for line in self._read_rollout_segment(rollout_path).splitlines():
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    event = _json.loads(line)
-                except _json.JSONDecodeError:
-                    continue
-
-                payload = event.get("payload") or {}
-                if not isinstance(payload, dict):
-                    continue
-
-                if (
-                    event.get("type") == "event_msg"
-                    and payload.get("type") == "user_message"
-                    and isinstance(payload.get("message"), str)
-                    and _normalize_payload_for_rollout_match(payload["message"]) == expected
-                ):
-                    return True
-
-                if (
-                    event.get("type") == "response_item"
-                    and payload.get("type") == "message"
-                    and payload.get("role") == "user"
-                ):
-                    content = payload.get("content")
-                    if isinstance(content, list):
-                        parts: list[str] = []
-                        for item in content:
-                            if isinstance(item, dict):
-                                text = item.get("text")
-                                if isinstance(text, str):
-                                    parts.append(text)
-                        if parts:
-                            candidates = [*parts, "\n".join(parts)]
-                            if any(
-                                _normalize_payload_for_rollout_match(candidate) == expected
-                                for candidate in candidates
-                            ):
-                                return True
-            return False
-        except AttemptReadError:
-            raise
-        except Exception:
-            return False
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
         """Return paths the runner should poll for mtime changes.
@@ -1259,7 +843,7 @@ class CodexAdapter:
         dispatch.py::_codex_dispatch_flags for consistency during migration.
         """
         if mode == "read-only":
-            return ["-s", "read-only", "-c", _SOURCES_MCP_APPROVAL]
+            return ["-s", "read-only"]
         # workspace-write and danger both need the bypass flag for MCP
         # access. multi_agent is on by default to match start-codex.sh.
         return [

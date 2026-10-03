@@ -63,9 +63,8 @@ Before **every** implement `delegate.py dispatch`:
    (operator decision 2026-09-30, #9275): `delegate.py` refuses Luna, and Flash not classified
    Ukrainian authoring/review, without a complete envelope bound to that dispatch. See
    `fleet-driver-routing.md` §2.
-4. **Last-resort Fable path:** Opus 5.5 / Sol 6.1 first; when Fable is required, use native
-   `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
-   lockfiles / pointer / smoke jobs.
+4. **Advisory path:** Opus 5.5 / Sol 6.1; Fable holds no advisory role (#9583). Do not spend
+   an advisory seat on lockfiles / pointer / smoke jobs.
 5. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a
    written `NOTE: fleet_breadth` with tool-backed blockers.
 6. Before handoff, run and attach:

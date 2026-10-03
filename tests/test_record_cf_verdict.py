@@ -116,6 +116,20 @@ def test_missing_or_ambiguous_verdict_refused(reply):
         ),
         ({}, "VERDICT: APPROVE\nVERDICT: BLOCKED", "ambiguous"),
         ({}, "No verdict", "missing"),
+        # #9583: a model the catalog gives no review role never approves, on any harness.
+        ({"agent": "claude", "model": "claude-fable-5-1"}, "VERDICT: APPROVE", "holds no review"),
+        ({"agent": "claude", "model": "claude-fable-5-1[1m]"}, "VERDICT: APPROVE", "holds no review"),
+        (
+            {
+                "agent": "cursor",
+                "resolved_model_known": True,
+                "resolved_model": "claude-fable-5-1-thinking-high",
+                "resolved_model_source": "cursor-stream-json",
+            },
+            "VERDICT: APPROVE",
+            "is not a formal reviewer on this harness",
+        ),
+        ({"agent": "codex", "model": "gpt-6-astra"}, "VERDICT: APPROVE", "retired in the model catalog"),
     ],
 )
 def test_task_refusals_before_network(tmp_path, updates, reply, reason):
@@ -123,6 +137,11 @@ def test_task_refusals_before_network(tmp_path, updates, reply, reason):
     write_task(tasks, reply=reply, **updates)
     with pytest.raises(recorder.RecordError, match=reason):
         recorder.record("review-one", task_root=tasks, lock_root=tmp_path / "locks")
+
+
+@pytest.mark.parametrize("model,family", [("claude-opus-5-5", "anthropic"), ("gpt-6.1-sol", "openai")])
+def test_formal_reviewer_still_admits_opus_and_sol(model, family):
+    recorder._require_formal_reviewer(cursor=False, reported=model, model=model, family=family)
 
 
 def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=None, status_error=False):
@@ -1441,6 +1460,64 @@ def test_suffixed_file_symlink_outside_refuses(citation_checkout, tmp_path, real
     (cited_root / "link.py").symlink_to(outside)
     reply = f"VERDICT: APPROVE\n`{cited_root}/link.py{suffix}`"
     rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+    assert rewritten == reply
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+@pytest.mark.parametrize("checkout", ["primary", "worktree"])
+@pytest.mark.parametrize("target_kind", ["file", "directory", "missing"])
+def test_interpreter_symlink_citation_rewrites(
+    citation_checkout, tmp_path, real_recorder_matcher, checkout, target_kind
+):
+    from scripts.opsec import prepublish as gate
+
+    root, worktree = citation_checkout
+    target = tmp_path / "interpreter"
+    if target_kind == "file":
+        target.write_text("# external interpreter fixture\n")
+    elif target_kind == "directory":
+        target.mkdir()
+    cited_root = root if checkout == "primary" else worktree
+    interpreter = cited_root / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.symlink_to(target, target_is_directory=target_kind == "directory")
+    reply = f"VERDICT: APPROVE\n`{interpreter}`"
+
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+
+    assert rewritten == "VERDICT: APPROVE\n`.venv/bin/python`"
+    gate.check_texts("github.com/unit/public", [rewritten], tooling=real_recorder_matcher, environment={})
+
+
+@pytest.mark.parametrize("checkout", ["primary", "worktree"])
+@pytest.mark.parametrize("suffix", ["", ":12", ":12:3"])
+def test_symlinked_parent_escape_stays_absolute(citation_checkout, tmp_path, real_recorder_matcher, checkout, suffix):
+    root, worktree = citation_checkout
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "python").write_text("# outside fixture\n")
+    cited_root = root if checkout == "primary" else worktree
+    (cited_root / "escape").symlink_to(outside, target_is_directory=True)
+    reply = f"VERDICT: APPROVE\n`{cited_root}/escape/python{suffix}`"
+
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+
+    assert rewritten == reply
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+@pytest.mark.parametrize("checkout", ["primary", "worktree"])
+def test_outside_symlinked_parent_into_checkout_stays_absolute(
+    citation_checkout, tmp_path, real_recorder_matcher, checkout
+):
+    root, worktree = citation_checkout
+    cited_root = root if checkout == "primary" else worktree
+    alias = tmp_path / "alias"
+    alias.symlink_to(cited_root, target_is_directory=True)
+    reply = f"VERDICT: APPROVE\n`{alias}/scripts/unit.py`"
+
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+
     assert rewritten == reply
     assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
 

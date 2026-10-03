@@ -44,6 +44,7 @@ from agent_runtime.adapters.acpx import (
 )
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 from agent_runtime.usage import has_headroom
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
@@ -57,29 +58,7 @@ router = APIRouter(tags=["runtime"])
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
 _RUNTIME_ATTRIBUTION_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,99}$")
 _RUNTIME_ATTRIBUTION_SOURCES = frozenset({"explicit", "session_env", "unknown"})
-_RUNTIME_FAILURE_CODES = frozenset(
-    {
-        "acp_adapter_incompatible",
-        "acp_adapter_missing",
-        "acp_agent_disconnected",
-        "acp_agent_startup",
-        "acp_auth_required",
-        "acp_permission_denied",
-        "acp_permission_unavailable",
-        "acp_review_evidence_invalid",
-        "acp_review_evidence_too_large",
-        "acp_session_create_timeout",
-        "acp_turn_limit",
-        "adapter_refused",
-        "protocol_output_limit",
-        "provider_unavailable",
-        "rate_limited",
-        "result_invalid",
-        "timeout",
-        "transport_error",
-        "unknown",
-    }
-)
+_RUNTIME_FAILURE_CODES = RUNTIME_FAILURE_CODES
 _ACP_LEGACY_PARTICIPANTS = ("codex", "grok")
 _ACP_ENABLED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 _ACP_STATES = frozenset({

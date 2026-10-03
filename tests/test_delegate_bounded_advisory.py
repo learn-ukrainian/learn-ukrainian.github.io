@@ -729,6 +729,20 @@ def test_advisor_flags_are_refused_when_inconsistent(env, capsys, extra, model, 
     _assert_refused(env, capsys, rc, code, task_id=ADVISOR_ID)
 
 
+@pytest.mark.parametrize(
+    "agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")]
+)
+def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
+    """#9583: the advisor is the catalog's advisor model; Fable holds no advisory role on any seat."""
+    rc = _dispatch(
+        _argv(
+            "--advisory-role", "bounded_advisory_envelope", "--advisory-binding", "a" * 64,
+            agent=agent, model=model, task_id=ADVISOR_ID,
+        )
+    )
+    _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=ADVISOR_ID)
+
+
 def test_advisor_must_run_read_only(env, capsys):
     argv = _argv(
         "--mode",

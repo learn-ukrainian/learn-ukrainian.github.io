@@ -16,7 +16,7 @@ launcher_adapter_validate() {
   if [ "$LC_HARNESS" = hermes ]; then
     launcher_hermes_validate
     if [ "$LC_MODE" != interactive ]; then
-      launcher_error 'Codex/Hermes is interactive only; Astra must not start an epic driver.'
+      launcher_error 'Codex/Hermes is interactive only; it must not start an epic driver.'
       exit 4
     fi
     # Hermes' wire vocabulary is narrower than its generic CLI vocabulary.

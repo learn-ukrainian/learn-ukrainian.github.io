@@ -20,6 +20,7 @@ Design rationale (from consultation, see docs/design/agent-runtime.md v1 Changel
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -78,6 +79,7 @@ class InvocationPlan:
             the only external fleet owners in the current rollout. ``None``
             means native capture or no capture.
     """
+
     cmd: list[str]
     cwd: Path
     stdin_payload: str = ""
@@ -105,6 +107,7 @@ class AgentAdapter(Protocol):
         supported_modes: Subset of ``{"read-only", "workspace-write", "danger"}``.
             The runner rejects invocations requesting a mode not in this set.
     """
+
     name: str
     default_model: str
     supported_modes: frozenset[str]
@@ -203,12 +206,12 @@ class AgentAdapter(Protocol):
 
     # --- OPTIONAL method (not part of the structural Protocol) ---
     #
-    # Adapters MAY implement ``check_early_reap(plan, call_start_time)
-    # -> bool``. If present, the runner calls it periodically in its
-    # poll loop. A True return value means "the response is on disk,
-    # kill the subprocess NOW" — used by CodexAdapter to work around
-    # the 0.118 post-completion hang where Codex writes task_complete
-    # to the rollout file then hangs in Tokio runtime shutdown.
+    # Adapters MAY implement ``check_early_reap(plan, *, call_start_time,
+    # stdout_lines) -> bool``. If present, the runner calls it every poll
+    # tick with the stdout lines captured so far. A True return value means
+    # "the final response is on disk, kill the subprocess NOW" — used by
+    # CodexAdapter to survive a post-completion hang once its event stream
+    # reports the completed turn and its ``-o`` bytes are stable.
     #
     # Not declared on the Protocol because structural typing would
     # then require EVERY adapter to implement it, including the ones
@@ -222,6 +225,7 @@ class AgentAdapter(Protocol):
     #         plan: InvocationPlan,
     #         *,
     #         call_start_time: float | None = None,
+    #         stdout_lines: list[str] | None = None,
     #     ) -> bool: ...
 
     def liveness_signal_paths(
