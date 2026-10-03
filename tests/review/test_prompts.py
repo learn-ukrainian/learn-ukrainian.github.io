@@ -2255,9 +2255,52 @@ def test_review_prompt_requires_full_context_and_ledgered_claims_without_new_sch
     assert "do not add a field or verdict dimension" in text
 
 
+AGY_PLAN_TOOL_GUIDANCE = """### AGY tool use (full and isolated access)
+
+On AGY, use the built-in file-reading and search tools for permitted file
+context, and the listed Sources MCP tools for ledgered evidence. Do not invoke
+command execution for this review: no Git commands (`git diff`, `git log`,
+`git show`), directory or text commands (`ls`, `find`, `grep`, `rg`), shells,
+interpreters (`python`), or scripts. The manifest inputs are already supplied
+below. Git history is unavailable on AGY; if unavailable context is needed for
+a judgement, report an evidence gap instead of attempting a command. This
+guidance does not broaden isolated access beyond the manifest's permitted inputs.
+
+"""
+
+
+@pytest.mark.parametrize("access", ["full", "isolated"])
+def test_agy_plan_prompt_uses_native_readers_without_command_requests(tmp_path, monkeypatch, access):
+    from scripts.review.prompts.render import render
+
+    path, _, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    rendered = render(
+        path,
+        repo_root=tmp_path,
+        review_id=TEST_REVIEW_ID,
+        attempt_id=TEST_ATTEMPT_ID,
+        review_access=access,
+    )
+    # Guidance must be instructions, outside the fenced, untrusted manifest data,
+    # and included in the attested render rather than appended by the adapter.
+    assert rendered.template_text.count(AGY_PLAN_TOOL_GUIDANCE) == 1
+    assert rendered.prompt.index(AGY_PLAN_TOOL_GUIDANCE) < rendered.prompt.index("## 5. Fenced Manifest Inputs")
+    assert rendered.prompt_sha256 == hashlib.sha256(rendered.prompt.encode()).hexdigest()
+    assert "its git history" not in rendered.prompt
+    assert "verify_words" in rendered.prompt
+    if access == "full":
+        assert "access; AGY does not." in rendered.prompt
+        assert "search_resources" in rendered.prompt
+    else:
+        assert "Full access and evidence duty" not in rendered.prompt
+        assert "search_resources" not in rendered.prompt
+    checked = check_prompt(rendered.prompt, path, repo_root=tmp_path, review_access=access)
+    assert checked.passed, checked.errors
+
+
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kind):
-    """Frozen main templates from 1a0207b784; independent of the modified templates."""
+    """Frozen 1a0207b784 bytes, plus only the explicit #9625 AGY guidance for plans."""
     from scripts.review.prompts.render import render
 
     if kind == "plan":
@@ -2281,7 +2324,12 @@ def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kin
     )
     main = render(path, prompts_dir=baseline, **kw)
     isolated = render(path, **kw)
-    assert isolated.prompt.encode() == main.prompt.encode()
+    expected = main.prompt
+    if kind == "plan":
+        anchor = "## 3. Review Tools and Receipts\n\n"
+        assert expected.count(anchor) == 1
+        expected = expected.replace(anchor, anchor + AGY_PLAN_TOOL_GUIDANCE, 1)
+    assert isolated.prompt.encode() == expected.encode()
     assert "search_resources" not in isolated.prompt
     assert "Full access and evidence duty" not in isolated.prompt
     assert check_prompt(

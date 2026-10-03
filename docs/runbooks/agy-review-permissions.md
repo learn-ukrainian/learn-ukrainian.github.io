@@ -26,6 +26,37 @@ never granted. Command grants are permission prefixes, **not a replacement for
 the existing OS review boundary**; flags on a reader can have side effects.
 The separate unsupported AGY code-review isolation route still refuses.
 
+## Production plan prompt command decisions
+
+The plan template's full-access paragraph previously promised "read access to
+the repository checkout, its git history" and described "catalogue and git
+reads" as context (`scripts/review/prompts/plan-review.md.j2`, section 3).
+The review contract likewise permits "the full matching checkout, textbook
+corpus, resource catalogue" and "git history"
+(`docs/epics/fresh-build-review-contracts.md`, full-access review section).
+Neither requires a command invocation; the plan checks ask to "Read the
+plan-stage activity report" and "Compare" the mapped activity totals, already
+included as manifest inputs. Isolated access supplies those same pinned inputs
+without the full-access paragraph. No positive instruction in the template or
+contract requires `ls`, `find`, `grep`, `rg`, a shell or Python.
+
+| Command | AGY plan review decision (full and isolated) | Evidence / replacement |
+| --- | --- | --- |
+| `git diff`, `git log`, `git show` | No grant; explicitly unavailable in the prompt | `--output` and Git helpers make prefix grants unsafe; no additional read-only sandbox binds are introduced. Use supplied manifest inputs and built-in file reads; report an evidence gap when history is needed. |
+| `ls` | No grant; do not invoke | Built-in file discovery covers permitted context. |
+| `find` | No grant; do not invoke | `-exec`, `-delete` and `-fprint` can execute or write; use built-in discovery. |
+| `grep`, `rg` | No grant; do not invoke | Built-in search covers permitted context; `rg --pre` executes a program. |
+| Python, shells, scripts | No grant; do not invoke | Arbitrary execution is unnecessary for these content checks; deterministic reports are supplied. |
+| `cat`, `head`, `tail`, `wc` | Retain existing audited grants; production plan prompt uses built-in readers | Existing per-route flag audit remains the gate; forced-reader driver canaries still exercise `cat`. |
+| Listed Sources MCP tools | Retain exact per-tool grants | These issue the receipts required by the review contract. |
+
+The template gives explicit AGY guidance in both access modes, before the
+full-only context paragraph. Other harnesses retain permitted Git context.
+The guidance is part of the rendered, hashed prompt, not an adapter-side
+rewrite after attestation. It does not change the allow set or filesystem
+boundary. Prompt render/check tests cover both access modes; live production
+template success remains a driver canary requirement.
+
 A caller can declare its known requirements using
 `tool_config["agy_required_permissions"]`, a list of exact permission resources.
 A resource outside the route's allow set raises `AgyReviewPermissionError` with
@@ -60,6 +91,11 @@ a driver canary.
 Run from the reviewed dispatch checkout, with its prescribed shared project
 interpreter in `PROJECT_PYTHON`. Set `CANARY_MANIFEST` and `CANARY_INPUT_ROOT` to
 an eligible, hash-pinned **trivial content-plan** fixture and its input checkout.
+For `full` and `plan-template`, `CANARY_INPUT_ROOT` must be the Git checkout
+top level containing the fixture, not its fixture subdirectory; otherwise the
+boundary refuses with `full_review_checkout_missing`. Paths in the manifest
+are relative to that root. The snippet's explicit `PYTHONPATH` supplies both
+the checkout's `scripts` import root (for `ai_llm`) and the checkout itself.
 Set `CANARY_INITIATOR` to the driver's own trusted Source identity.
 Use a public fixture whose first non-empty plan line is suitable for an output
 comparison; never use private text. These are real provider calls, reserved for
@@ -69,8 +105,12 @@ ends that canary without a retry or provider substitution.
 Define the function once, then run the exact command for each route:
 
 ```bash
+CANARY_CHECKOUT="$(git rev-parse --show-toplevel)"
+# Default to the reviewed checkout; override only with another eligible input checkout.
+CANARY_INPUT_ROOT="${CANARY_INPUT_ROOT:-$CANARY_CHECKOUT}"
 agy_review_canary() {
-  "$PROJECT_PYTHON" - "$1" "$CANARY_MANIFEST" "$CANARY_INPUT_ROOT" <<'PY'
+  PYTHONPATH="$CANARY_CHECKOUT/scripts:$CANARY_CHECKOUT" \
+    "$PROJECT_PYTHON" - "$1" "$CANARY_MANIFEST" "$CANARY_INPUT_ROOT" <<'PY'
 import json
 import os
 import shlex
@@ -194,6 +234,9 @@ Use the dispatch's prescribed shared interpreter as `PROJECT_PYTHON`.
   tests/agent_runtime/test_sibling_provider_signals.py \
   tests/review/test_full_review_access.py \
   tests/review/test_prompts.py \
+  tests/review/test_prompt_structural_rules.py \
+  tests/review/test_record.py \
+  tests/review/seeds/test_manifest.py \
   tests/agent_runtime/test_review_contract.py \
   tests/agent_runtime/test_claude_permissions.py \
   tests/agent_runtime/test_sources_read_only.py \
