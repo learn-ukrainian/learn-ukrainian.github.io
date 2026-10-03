@@ -10,8 +10,6 @@ from pathlib import Path
 
 import yaml
 
-from scripts.audit.source_inventory_intake import _SAFE_LOADER, _records_from_structured_inventory
-
 from .quote_bytes import VesumUnavailable
 
 INVENTORY_PATH = Path(__file__).resolve().parents[3] / "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml"
@@ -34,6 +32,8 @@ def reference_spellings(path: Path = INVENTORY_PATH) -> tuple[frozenset[str], fr
 @lru_cache(maxsize=2)
 def _spellings_from_bytes(content: bytes) -> tuple[frozenset[str], frozenset[str]]:
     """Parse each exact inventory once; immutable results cannot be changed by callers."""
+    from scripts.audit.source_inventory_intake import _SAFE_LOADER, _records_from_structured_inventory
+
     members: set[str] = set()
     words: set[str] = set()
     for record in _records_from_structured_inventory(
@@ -58,6 +58,8 @@ def closed_class_a1(path: Path = CLOSED_CLASS_PATH) -> frozenset[tuple[str, str]
 
 @lru_cache(maxsize=2)
 def _closed_class_from_bytes(content: bytes) -> frozenset[tuple[str, str]]:
+    from scripts.audit.source_inventory_intake import _SAFE_LOADER, _records_from_structured_inventory
+
     payload = yaml.load(content.decode("utf-8-sig"), Loader=_SAFE_LOADER)
     if not isinstance(payload, dict) or set(payload) != {"version", "kind", "sources"}:
         raise ValueError("invalid A1 closed-class inventory")
@@ -119,6 +121,8 @@ def teaching_replacements(
     form_tags: frozenset[str], readable, lemma_tags, path: Path = INVENTORY_PATH
 ) -> tuple[str, ...]:
     """Teaching replacements: same POS, open class, common word, >=3 letters."""
+    from scripts.audit.source_inventory_intake import _SAFE_LOADER, _records_from_structured_inventory
+
     positions = {tags.split(":")[0] for tags in form_tags}
     if not positions & {"noun", "adj", "verb", "adv", "numr", "intj", "noninfl"}:
         return ()  # no supported open-class POS can match an inventory candidate

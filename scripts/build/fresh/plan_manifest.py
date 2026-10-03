@@ -165,18 +165,24 @@ def sha256_bytes(data: bytes) -> str:
 #: root — e.g. schemas/module-plan-v2.schema.json, or
 #: scripts/curriculum/validate/placement_table.yaml (issue #8889 r5 §B2).
 _CODE_ROOTS = ("schemas", "scripts")
+#: C29 reads this data from the installed repository, like code inputs, even
+#: when validating a separate curriculum tree. Other registry data stays local
+#: to that tree; do not broaden this exception to the registry directory.
+_CODE_OWNED_DATA_FILES = ("registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml",)
 
 
 def current_sha(root: Path, relative: str) -> str | None:
     """sha256 of a recorded repo-relative path now; None when it is not a file.
 
-    Entries under a _CODE_ROOTS directory are code, resolved against this
-    repository; everything else against the tree's repository root.
+    Entries under a _CODE_ROOTS directory and exact _CODE_OWNED_DATA_FILES
+    paths resolve against this repository: C29 reads its reference inventory
+    from the installed repository. Everything else uses the tree's root.
     """
     rel = Path(relative)
     if rel.is_absolute() or ".." in rel.parts:
         return None
-    base = REPO_ROOT if rel.parts and rel.parts[0] in _CODE_ROOTS else root
+    code_owned = (rel.parts and rel.parts[0] in _CODE_ROOTS) or rel.as_posix() in _CODE_OWNED_DATA_FILES
+    base = REPO_ROOT if code_owned else root
     path = base / rel
     return file_sha256(path) if path.is_file() else None
 

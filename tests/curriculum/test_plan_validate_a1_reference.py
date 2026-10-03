@@ -1,7 +1,10 @@
 """C29 membership and exceptions; strings are letter-arithmetic fixtures."""
 
 import json
+import shutil
 import sqlite3
+import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -18,6 +21,26 @@ from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.curriculum.test_plan_validate_review_gates import _world
 
 pytestmark = pytest.mark.reads_content
+
+
+def test_validator_module_import_needs_no_registry_files(tmp_path):
+    """Import the implementation, not just the lazy package, from a minimal checkout."""
+    copied = tmp_path / "checkout"
+    shutil.copytree(REPO_ROOT / "scripts", copied / "scripts")
+    assert not (copied / "registry/lexicon/vesum_inflection_aliases.json").exists()
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; import scripts.curriculum.validate.validate; "
+            "assert 'scripts.audit.source_inventory_intake' not in sys.modules",
+        ],
+        cwd=copied,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, f"stdout={result.stdout!r} stderr={result.stderr!r}"
 
 
 def gates(lemma, exception=None, *, field="core", tags="noun", level="a1"):
