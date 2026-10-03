@@ -180,7 +180,7 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.agent_runtime import bounded_advisory
 from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
-from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
+from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
@@ -8100,6 +8100,31 @@ def _ensure_worktree(
     return worktree_path, worktree_branch, telemetry
 
 
+def _resolve_primary_root_for_worktree(cwd_or_worktree: Path) -> Path:
+    """Resolve the primary checkout root for a worktree or arbitrary cwd."""
+    primary_root = _main_checkout_root(cwd_or_worktree)
+    if primary_root == cwd_or_worktree and cwd_or_worktree != _REPO_ROOT:
+        primary_root = _main_checkout_root(_REPO_ROOT)
+    return primary_root
+
+
+def _primary_database_path(primary_root: Path, name: str) -> Path:
+    """Resolve the canonical primary path for data/sources.db or data/vesum.db (#9122)."""
+    if name == "sources.db":
+        override = os.environ.get("LU_SOURCES_DB")
+        if override:
+            p = Path(override).expanduser()
+            return p.resolve() if p.is_absolute() else (primary_root / p).resolve()
+        return (primary_root / "data" / "sources.db").resolve()
+    return (primary_root / "data" / "vesum.db").resolve()
+
+
+def _primary_database_connect_code(target: Path) -> str:
+    """Return Python connect code opening target read-only via RFC file URI (#9122)."""
+    uri = f"{target.resolve().as_uri()}?mode=ro"
+    return f"sqlite3.connect({uri!r}, uri=True)"
+
+
 def _augment_prompt_with_worktree(
     prompt: str,
     worktree_path: Path | None,
@@ -8182,6 +8207,22 @@ def _augment_prompt_with_worktree(
             "Run at most the specific tests that reproduce a finding you are checking.\n"
             "Cite CI run ids for suite results.\n"
         )
+    db_note = ""
+    if worktree_path is not None:
+        primary_root = _resolve_primary_root_for_worktree(worktree_path)
+        primary_sources = _primary_database_path(primary_root, "sources.db")
+        primary_vesum = _primary_database_path(primary_root, "vesum.db")
+        sources_code = _primary_database_connect_code(primary_sources)
+        vesum_code = _primary_database_connect_code(primary_vesum)
+        db_note = (
+            "\n[database access in worktrees]\n"
+            "Primary databases (data/sources.db, data/vesum.db) reside in the primary checkout, "
+            "not in this worktree. Prefer MCP tools (`sources` server: `verify_words`, `search_text`, etc.) "
+            "which resolve databases automatically. If running ad-hoc Python/SQLite queries, NEVER use a relative "
+            "path like `data/sources.db` or `data/vesum.db` (which creates an empty file in the worktree and triggers "
+            "read-only checkout mutation failure); connect to the primary database using its absolute path read-only: "
+            f"`{sources_code}` or `{vesum_code}`.\n"
+        )
     # #8775: the path is data. ASCII JSON quoting keeps it one quoted line even
     # if an unvalidated path ever reaches this block.
     return (
@@ -8202,7 +8243,7 @@ def _augment_prompt_with_worktree(
         "(the absolute primary interpreter), never `python`, `.venv/bin/python`, or "
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
-        f"{sparse_note}{test_scope}{delivery_note}\n"
+        f"{sparse_note}{test_scope}{delivery_note}{db_note}\n"
         f"{prompt}"
     )
 
@@ -9459,6 +9500,18 @@ def _run_worker(
             last_error = f"{reason}; {last_error}" if last_error else reason
         if read_only_mutation_paths:
             mutation_diagnostic = "read-only checkout mutation detected: " + ", ".join(read_only_mutation_paths)
+            db_mutations = [p for p in read_only_mutation_paths if p in ("data/sources.db", "data/vesum.db")]
+            if db_mutations:
+                primary_root = _resolve_primary_root_for_worktree(Path(cwd))
+                remedies = []
+                for p in db_mutations:
+                    name = "sources.db" if p == "data/sources.db" else "vesum.db"
+                    target = _primary_database_path(primary_root, name)
+                    remedies.append(_primary_database_connect_code(target))
+                mutation_diagnostic += (
+                    f" (databases do not reside in sparse worktrees; ad-hoc queries must open the "
+                    f"primary database read-only by absolute path: {'; '.join(remedies)})"
+                )
             # Never REPLACE a real failure with the guard diagnostic (#7124):
             # overwriting it hid the actual cause (e.g. a SIGKILLed worker's
             # stderr) behind the mutation list. The paths stay independently
