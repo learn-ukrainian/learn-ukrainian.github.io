@@ -68,18 +68,12 @@ def _activity_id(activity: Activity) -> str:
     return str(getattr(activity, "id", "") or "").strip()
 
 
-def _activity_type(activity: Activity) -> str:
-    if isinstance(activity, dict):
-        return str(activity.get("type", "") or "").strip() or "unknown"
-    return str(getattr(activity, "type", "") or "").strip() or "unknown"
-
-
-def _activity_title_or_type(activity: Activity) -> str:
+def _activity_title(activity: Activity) -> str:
     if isinstance(activity, dict):
         title = str(activity.get("title", "") or "").strip()
     else:
         title = str(getattr(activity, "title", "") or "").strip()
-    return title or _activity_type(activity)
+    return title
 
 
 def activity_identity_key(activity: Activity) -> str:
@@ -222,7 +216,10 @@ def _inline_activity_cross_ref_to_mdx(
     section_title: str,
     is_ukrainian_forced: bool,
 ) -> str:
-    title = escape_jsx(_activity_title_or_type(activity))
+    # An engine type is a binding, never a learner label. With no explicit
+    # title, omit the pointer heading at every level. A1's English scaffold
+    # stays on the Lesson-tab activity; A2+ gains no English fallback here.
+    title = escape_jsx(_activity_title(activity))
     section_title = section_title.strip()
     if section_title:
         if is_ukrainian_forced:
@@ -233,7 +230,8 @@ def _inline_activity_cross_ref_to_mdx(
         reference = "див. вкладку «Урок»"
     else:
         reference = "see lesson tab"
-    return f"### {title}\n\n*({reference})*"
+    heading = f"### {title}\n\n" if title else ""
+    return f"{heading}*({reference})*"
 
 
 def highlight_morphemes_to_jsx(item: HighlightMorphemesItem, title: str, is_ukrainian_forced: bool = False) -> str:

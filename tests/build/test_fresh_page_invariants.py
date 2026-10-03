@@ -164,6 +164,90 @@ def render_activity_blocks(blocks, tmp_path):
 
 
 @pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.parametrize("placement", ["inline", "workbook"])
+@pytest.mark.site_toolchain
+def test_no_activity_type_id_is_visible_on_any_page(level, placement, render_environment, tmp_path, monkeypatch):
+    inputs = maximal_draft(level)
+    draft, plan, _, _ = inputs
+    schema = json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())
+    types = {name.removesuffix("-" + level) for name in schema["definitions"]}
+    types_by_id = {a["id"]: a["type"] for a in plan["lessons"][0]["activities"]}
+    assert set(types_by_id.values()) == types
+    for activity in draft["activities"]:
+        activity.pop("title", None)
+        # The maximal transport fixture prefixes every payload with its type.
+        # Anagram splits "anagram items ..." into visible tiles; independent
+        # letter data ensures a tile cannot masquerade as an engine leak.
+        if types_by_id[activity["id"]] == "anagram":
+            for item in activity["items"]:
+                item.update(letters=["x", "y"], answer="xy")
+    for activity in plan["lessons"][0]["activities"]:
+        activity["placement"] = "practice" if placement == "inline" else "workbook"
+    # Exercise every type in the Lesson tab or exclusively in the workbook,
+    # rather than only the maximal fixture's first inline type.
+    draft["steps"][0]["blocks"] = [b for b in draft["steps"][0]["blocks"] if b["kind"] != "activity"]
+    draft["consolidation"]["activities"] = []
+    plan["lessons"][0]["steps"][0]["practice"] = []
+    if placement == "inline":
+        ids = [a["id"] for a in draft["activities"]]
+        draft["steps"][0]["blocks"].extend({"kind": "activity", "ref": aid} for aid in ids)
+        plan["lessons"][0]["steps"][0]["practice"] = ids
+
+    from scripts.generate_mdx.unit_map import LessonUnitMap
+
+    blocks = []
+    original = LessonUnitMap.verify
+
+    def capture(mapping, page):
+        pieces = original(mapping, page)
+        blocks.extend(value for key, value in pieces.items() if isinstance(key, tuple) and key[0] == "activity")
+        return pieces
+
+    monkeypatch.setattr(LessonUnitMap, "verify", capture)
+    result, _ = check_render(inputs, level)
+    assert result.passed, result.to_dict()
+    assert len(blocks) == len(types)
+    page = html.unescape(result.artifacts["mdx"])
+    lesson_end = page.index("</TabItem>")
+    assert all((page.index(html.unescape(block)) < lesson_end) == (placement == "inline") for block in blocks)
+    rendered = render_activity_blocks(blocks, tmp_path)
+    # Check surrounding Markdown across all tabs and actual component text;
+    # engine ids inside JSX/JSON props are bindings, not visible prose.
+    markdown_lines = {re.sub(r"^#{1,6}\s+", "", line.strip()) for line in page.splitlines()}
+    visible_lines = {
+        line.strip()
+        for line in html.unescape(re.sub(r"<[^>]+>", "\n", "\n".join(rendered))).splitlines()
+    }
+    assert not (types & (markdown_lines | visible_lines)), f"Visible activity type ids: {types & (markdown_lines | visible_lines)}"
+
+
+def test_attempt5_has_no_activity_type_heading(render_environment):
+    page, _ = reassemble_attempt5()
+    types = set().union(*(
+        {name.removesuffix("-" + level) for name in json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"]}
+        for level in LEVELS
+    ))
+    lines = {re.sub(r"^#{1,6}\s+", "", line.strip()) for line in html.unescape(page).splitlines()}
+    assert not types & lines, f"Visible activity type ids: {types & lines}"
+
+
+@pytest.mark.parametrize("as_dict", [False, True])
+@pytest.mark.parametrize("title", ["", "   ", "Learner title"])
+@pytest.mark.parametrize("ukrainian", [False, True])
+def test_inline_pointer_uses_only_an_explicit_learner_title(as_dict, title, ukrainian):
+    from types import SimpleNamespace
+
+    from scripts.generate_mdx.converters import _inline_activity_cross_ref_to_mdx
+
+    fields = {"type": "quiz", "title": title}
+    activity = fields if as_dict else SimpleNamespace(**fields)
+    pointer = _inline_activity_cross_ref_to_mdx(activity, "", ukrainian)
+    heading = f"### {title.strip()}\n\n" if title.strip() else ""
+    reference = "див. вкладку «Урок»" if ukrainian else "see lesson tab"
+    assert pointer == f"{heading}*({reference})*"
+
+
+@pytest.mark.parametrize("level", LEVELS)
 @pytest.mark.parametrize("title_mode", ["absent", "same", "distinct"])
 @pytest.mark.site_toolchain
 def test_every_activity_instruction_is_visible_exactly_once(level, title_mode, render_environment, tmp_path, monkeypatch):
