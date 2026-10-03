@@ -14,7 +14,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT / "agents_extensions/shared/rules/core.md"
 CATALOG = ROOT / "scripts/config/model_catalog.yaml"
-CORE_BYTE_BUDGET = 34_000
+# 34_000 -> 34_100: the binding p9-rights obligation (#9618) is a real obligation that needs the room.
+CORE_BYTE_BUDGET = 34_100
 PILLARS = tuple(f"P{n}" for n in range(10))
 # A launcher context-window suffix such as `[1m]` is not part of the model id; the base id is checked.
 MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s\[]*)(?:\[[^\]`\s]*\])?`")
