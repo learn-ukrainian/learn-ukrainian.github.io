@@ -30,6 +30,7 @@ avoid races with concurrent dispatches; if a caller passes ``effort`` and the
 readable top-level Hermes config disagrees, we log a warning and continue with
 the configured runtime behavior.
 """
+
 from __future__ import annotations
 
 import logging
@@ -49,6 +50,7 @@ from .hermes_common import (
 )
 
 _logger = logging.getLogger(__name__)
+
 
 @dataclass(frozen=True)
 class HermesQwenParseResult(ParseResult):
@@ -95,8 +97,7 @@ class HermesQwenAdapter:
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; "
-                "use hard-timeout/silence-timeout instead",
+                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
                 self.name,
                 max_budget_usd,
             )
@@ -191,6 +192,8 @@ class HermesQwenAdapter:
             response=fields.response,
             stderr_excerpt=fields.stderr_excerpt,
             rate_limited=fields.rate_limited,
+            failure_code=fields.failure_code,
+            provider_error_text=fields.provider_error_text,
             session_id=None,
             tokens=None,
             tool_calls=[],
