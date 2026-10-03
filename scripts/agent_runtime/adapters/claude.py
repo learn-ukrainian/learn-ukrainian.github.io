@@ -91,6 +91,7 @@ import json
 import logging
 import os
 import re
+import shlex
 import shutil
 import subprocess
 from functools import cache
@@ -323,22 +324,57 @@ def _reviewer_mcp_config() -> str:
     return json.dumps(isolated_sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
 
 
+_DEPLOYED_HOOKS_PREFIX = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
+_PROJECT_PYTHON_HOOK_WRAPPER = "run-project-python-hook.sh"
+# Guards that need the project interpreter (their parser dependency is not in
+# the system Python). Only these may appear in the wrapper form.
+PROJECT_PYTHON_GUARDS = frozenset({"guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py"})
+
+
+def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
+    """Translate one deployed hook command into a tracked-source invocation.
+
+    ``$CLAUDE_PROJECT_DIR/.claude/hooks/<guard>`` becomes the tracked guard
+    path. ``bash "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh"
+    <guard>`` becomes the project interpreter plus the tracked guard, for the
+    guards in ``PROJECT_PYTHON_GUARDS`` only. Any other use of the wrapper is
+    refused so a guard is never silently dropped. Commands in neither form are
+    not fleet guards and return ``None``.
+    """
+    hooks_dir = source_root / "agents_extensions/shared/hooks"
+    if _PROJECT_PYTHON_HOOK_WRAPPER in command:
+        try:
+            argv = shlex.split(command)
+        except ValueError as exc:
+            raise RuntimeError(f"Claude worker guard command is unreadable: {command}") from exc
+        wrapper = _DEPLOYED_HOOKS_PREFIX + _PROJECT_PYTHON_HOOK_WRAPPER
+        if len(argv) != 3 or argv[:2] != ["bash", wrapper] or argv[2] not in PROJECT_PYTHON_GUARDS:
+            raise RuntimeError(f"Claude worker guard has an unsupported project-interpreter form: {command}")
+        tracked = hooks_dir / argv[2]
+        if not tracked.is_file():
+            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+        from scripts.common.repo_root import project_interpreter
+
+        return shlex.join([str(project_interpreter(source_root)), str(tracked)])
+    if not command.startswith(_DEPLOYED_HOOKS_PREFIX):
+        return None
+    tracked = hooks_dir / command.removeprefix(_DEPLOYED_HOOKS_PREFIX)
+    if not tracked.is_file():
+        raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+    return str(tracked)
+
+
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
     """Build hook settings from tracked sources in this checkout."""
     source_root = Path(__file__).resolve().parents[3]
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
-    prefix = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
     for group in source["hooks"]["PreToolUse"]:
         hooks = []
         for hook in group["hooks"]:
-            command = hook.get("command", "")
-            if not command.startswith(prefix):
-                continue
-            tracked = source_root / "agents_extensions/shared/hooks" / command.removeprefix(prefix)
-            if not tracked.is_file():
-                raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
-            hooks.append({**hook, "command": str(tracked)})
+            invocation = _worker_guard_invocation(hook.get("command", ""), source_root)
+            if invocation is not None:
+                hooks.append({**hook, "command": invocation})
         if hooks:
             groups.append({"matcher": group["matcher"], "hooks": hooks})
     if publish_guard:
