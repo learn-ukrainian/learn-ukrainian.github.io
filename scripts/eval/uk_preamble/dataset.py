@@ -39,6 +39,7 @@ from .common import (
     HarnessError,
     read_json,
     sha256_file,
+    sha256_text,
 )
 
 _LABEL = re.compile(r"^[a-z0-9][a-z0-9.-]{0,31}$")
@@ -97,7 +98,7 @@ class EvalSet:
 class Variant:
     label: str
     preamble: str | None
-    sha256: str | None
+    sha256: str | None  # of ``preamble``, the exact text placed in the prompt
 
 
 def _require(condition: bool, message: str) -> None:
@@ -208,7 +209,7 @@ def protocol_shortfalls(eval_set: EvalSet) -> list[str]:
 
 
 def parse_variant(spec: str) -> Variant:
-    """``none`` or ``LABEL=PATH``; the preamble is read once and hashed."""
+    """``none`` or ``LABEL=PATH``; the preamble is read once and its prompt text hashed."""
     if spec == BASELINE_VARIANT:
         return Variant(BASELINE_VARIANT, None, None)
     label, sep, path_text = spec.partition("=")
@@ -216,13 +217,12 @@ def parse_variant(spec: str) -> Variant:
         raise HarnessError(f"--variant {spec!r}: expected 'none' or LABEL=PATH (label: lowercase, digits, '.', '-')")
     path = Path(path_text).expanduser()
     try:
-        data = path.read_bytes()
-        text = data.decode("utf-8").strip()
+        text = path.read_bytes().decode("utf-8").strip()
     except (OSError, UnicodeDecodeError) as exc:
         raise HarnessError(f"--variant {label}: cannot read preamble {path}: {exc}") from exc
     if not text:
         raise HarnessError(f"--variant {label}: preamble file is empty")
-    return Variant(label, text, sha256_file(path))
+    return Variant(label, text, sha256_text(text))
 
 
 def parse_variants(specs: list[str]) -> list[Variant]:

@@ -10,7 +10,7 @@ import pytest
 
 import scripts.delegate as delegate
 from scripts.eval.uk_preamble.common import HarnessError
-from scripts.eval.uk_preamble.dataset import load_set, parse_variant, protocol_shortfalls
+from scripts.eval.uk_preamble.dataset import ReviewItem, Span, load_set, parse_variant, protocol_shortfalls
 from scripts.eval.uk_preamble.prompts import (
     build_prompt,
     extract_json,
@@ -18,6 +18,7 @@ from scripts.eval.uk_preamble.prompts import (
     validate_response,
     writing_payload,
 )
+from scripts.eval.uk_preamble.runner import render, rules_block
 from scripts.eval.uk_preamble.scoring import score_review_item
 
 
@@ -69,7 +70,7 @@ def test_exact_hits_and_accepted_alternative(eval_set):
     assert result["hits"] == 2
     assert [e["hit"] for e in result["errors"]] == [True, True]
     assert result["false_alarms"] == 0
-    assert result["unlogged_changes"] is False
+    assert (result["unlogged_change_units"], result["unapplied_logged_units"]) == (0, 0)
 
 
 def test_miss_when_error_untouched(eval_set):
@@ -97,9 +98,50 @@ def test_wider_span_with_unchanged_context_still_hits(eval_set):
 def test_bad_offsets_relocated_by_span_and_whitespace_apostrophe_normalised(eval_set):
     item = _item(eval_set, "R1")
     correction = fix(item.text, "на протязі години", "протягом  години", offset_shift=5)
-    result = score_review_item(item, answer(item.text, [correction], corrected=item.text))
+    corrected = item.text.replace("на протязі години", "протягом   години")
+    result = score_review_item(item, answer(item.text, [correction], corrected=corrected))
     assert result["errors"][1]["hit"] is True
-    assert result["unlogged_changes"] is True  # corrected_text was left unchanged
+    assert result["false_alarms"] == 0 and result["unlogged_change_units"] == 0
+
+
+# --------------------------------------------------------------------------- finding 2: corrections must be applied
+
+
+def test_logged_correction_not_applied_in_corrected_text_is_not_a_hit(eval_set):
+    """Reviewer probe: the correct fix is logged but the original error stays in corrected_text."""
+    item = _item(eval_set, "R1")
+    result = score_review_item(
+        item, answer(item.text, [fix(item.text, "приймав участь", "брав участь")], corrected=item.text)
+    )
+    assert result["hits"] == 0 and not result["failed"]
+    assert result["unapplied_logged_units"] == 1 and result["false_alarms"] == 0
+
+
+def test_silent_change_to_protected_text_counts_although_unlogged(eval_set):
+    """Reviewer probe: a logged correct fix plus a silent replacement of protected text."""
+    item = _item(eval_set, "R1")
+    corrected = item.text.replace("приймав участь", "брав участь").replace("пляцки", "пироги")
+    result = score_review_item(
+        item, answer(item.text, [fix(item.text, "приймав участь", "брав участь")], corrected=corrected)
+    )
+    assert result["hits"] == 1
+    assert (result["fa_protected"], result["protected_touched"]) == (1, ["R1-p1"])
+    assert result["unlogged_change_units"] == 1
+
+
+def test_unlogged_fix_in_corrected_text_is_a_hit(eval_set):
+    item = _item(eval_set, "R1")
+    corrected = item.text.replace("на протязі години", "протягом години")
+    result = score_review_item(item, answer(item.text, [], corrected=corrected))
+    assert {e["id"]: e["hit"] for e in result["errors"]} == {"R1-e1": False, "R1-e2": True}
+    assert result["false_alarms"] == 0 and result["unlogged_change_units"] == 1
+
+
+def test_whitespace_and_apostrophe_variants_in_corrected_text_change_nothing(eval_set):
+    item = _item(eval_set, "R2")
+    corrected = "  " + item.text.replace("п'ятницю", "пʼятницю").replace(" ", "  ") + "\n"
+    result = score_review_item(item, answer(item.text, [], corrected=corrected))
+    assert result["false_alarms"] == 0 and result["unlogged_change_units"] == 0
 
 
 def test_apostrophe_only_change_is_noop_not_false_alarm(eval_set):
@@ -161,18 +203,83 @@ def test_one_correction_covering_two_errors_fixing_one_hits_one(eval_set):
     assert result["false_alarms"] == 0
 
 
-def test_overlapping_corrections_fail_the_item_but_keep_its_errors(eval_set):
+def test_overlapping_logged_corrections_are_scored_from_the_corrected_text(eval_set):
     item = _item(eval_set, "R3")
-    result = score_review_item(
-        item,
-        answer(
-            item.text,
-            [fix(item.text, "являється слідуючим", "є наступним"), fix(item.text, "слідуючим", "наступним")],
-            corrected=item.text,
+    corrections = [fix(item.text, "являється слідуючим", "є наступним"), fix(item.text, "слідуючим", "наступним")]
+    unapplied = score_review_item(item, answer(item.text, corrections, corrected=item.text))
+    assert unapplied["failed"] is False and unapplied["hits"] == 0
+    assert unapplied["unapplied_logged_units"] == 2
+    applied = score_review_item(item, answer(item.text, corrections, corrected="Цей пункт є наступним кроком."))
+    assert applied["hits"] == 2 and applied["false_alarms"] == 0 and applied["unapplied_logged_units"] == 0
+
+
+# --------------------------------------------------------------------------- finding 3: packaging does not matter
+
+PACKAGED = "Цей пункт являється без сумніву слідуючим кроком."
+
+
+def _packaged_item() -> ReviewItem:
+    def span(fragment: str, ident: str, accepted=()) -> Span:
+        start = PACKAGED.index(fragment)
+        return Span(ident, start, start + len(fragment), fragment, "lexical-russianism", tuple(accepted))
+
+    errors = (span("являється", "e1", ["є"]), span("слідуючим", "e2", ["наступним"]))
+    return ReviewItem("P", PACKAGED, errors, (span("без сумніву", "p1"),))
+
+
+_KEYS = ("hits", "fa_protected", "fa_other", "fa_unanchored", "wrong_corrections")
+
+
+@pytest.mark.parametrize(
+    ("corrected", "packagings", "expected"),
+    [
+        # Two errors fixed around unchanged protected text: no false alarm however grouped.
+        (
+            "Цей пункт є без сумніву наступним кроком.",
+            [
+                [("являється без сумніву слідуючим", "є без сумніву наступним")],
+                [("являється", "є"), ("слідуючим", "наступним")],
+                [],
+            ],
+            (2, 0, 0, 0, 0),
         ),
-    )
-    assert result["failed"] is True
-    assert len(result["errors"]) == 2 and result["hits"] == 0
+        # An error fix combined with a replacement of unprotected correct text: one false alarm however grouped.
+        (
+            "Цей пункт є без сумніву наступним етапом.",
+            [
+                [("являється без сумніву слідуючим кроком", "є без сумніву наступним етапом")],
+                [("являється", "є"), ("слідуючим кроком", "наступним етапом")],
+                [("являється", "є"), ("слідуючим", "наступним"), ("кроком", "етапом")],
+                [],
+            ],
+            (2, 0, 1, 0, 0),
+        ),
+        # A collateral rewrite of protected text inside one combined correction.
+        (
+            "Цей пункт є безперечно наступним кроком.",
+            [
+                [("являється без сумніву слідуючим", "є безперечно наступним")],
+                [("являється", "є"), ("без сумніву", "безперечно"), ("слідуючим", "наступним")],
+            ],
+            (2, 1, 0, 0, 0),
+        ),
+    ],
+)
+def test_counts_do_not_depend_on_how_corrections_are_grouped(corrected, packagings, expected):
+    item = _packaged_item()
+    for packaging in packagings:
+        corrections = [fix(PACKAGED, span, replacement) for span, replacement in packaging]
+        result = score_review_item(item, answer(PACKAGED, corrections, corrected=corrected))
+        assert tuple(result[k] for k in _KEYS) == expected, packaging
+
+
+def test_unapplied_accusation_of_correct_text_counts_once_however_grouped():
+    item = _packaged_item()
+    one = [fix(PACKAGED, "пункт являється", "розділ являється")]
+    two = [fix(PACKAGED, "пункт", "розділ"), fix(PACKAGED, "пункт", "розділ")]
+    for corrections in (one, two):
+        result = score_review_item(item, answer(PACKAGED, corrections, corrected=PACKAGED))
+        assert (result["fa_other"], result["unapplied_logged_units"]) == (1, 1)
 
 
 def test_insertion_error_hit_by_comma(eval_set):
@@ -216,8 +323,6 @@ def test_newly_introduced_invalid_forms_counted():
 
         def writing_metrics(self, text: str, level: str) -> dict[str, Any]:
             raise AssertionError
-
-    from scripts.eval.uk_preamble.dataset import ReviewItem, Span
 
     text = "Я приймав участь."
     item = ReviewItem("R", text, (Span("e", 2, 16, "приймав участь", "lexical-russianism", ("брав участь",)),), ())
@@ -279,9 +384,10 @@ def test_variants_differ_only_by_leading_preamble(eval_set):
 
 
 @pytest.mark.parametrize("kind", ["review", "writing", "judge"])
-def test_prompts_pass_the_read_only_write_shape_guard(eval_set, kind):
+def test_rendered_prompts_pass_the_read_only_write_intent_guard(eval_set, kind):
     payload = review_payload(eval_set.review) if kind == "review" else writing_payload(eval_set.writing)
-    assert not delegate._has_write_directive(build_prompt(kind, payload))
+    prompt = render(build_prompt(kind, payload, "Ти — редактор."), rules_block())
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
 
 
 def test_set_validation_rejects_span_mismatch_and_overlap(tmp_path: Path, mini_set_dict):

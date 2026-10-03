@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-HARNESS_VERSION = "uk-preamble-harness/1"
+HARNESS_VERSION = "uk-preamble-harness/2"
 BASELINE_VARIANT = "none"
 # Pre-registered adoption order (Protocol v2, #9623): adapted-v2 is the candidate, original the alternative.
 CANDIDATE_ORDER = ("adapted-v2", "original")
@@ -21,6 +21,8 @@ CEFR_LEVELS = ("A1", "A2", "B1", "B2", "C1", "C2")
 PROTOCOL_MIN_ERRORS = 60
 PROTOCOL_MIN_PROTECTED = 40
 PROTOCOL_WRITING_LEVELS = ("A2", "B1", "B2", "C1")
+PROTOCOL_REPEATS = 3
+PROTOCOL_KINDS = ("review", "writing")
 
 # Error-type labels shared by the set and the review instructions (Protocol v2 strata).
 ERROR_TYPES = (
@@ -85,6 +87,23 @@ def normalise(text: str) -> str:
     return _WHITESPACE.sub(" ", fold_apostrophes(unicodedata.normalize("NFC", text))).strip()
 
 
+_CYRILLIC_WORD = re.compile(r"[А-Яа-яІіЇїЄєҐґ]+(?:['’ʼ-][А-Яа-яІіЇїЄєҐґ]+)*")
+_LATIN_WORD = re.compile(r"[A-Za-z]+(?:['’-][A-Za-z]+)*")
+
+
+def cyrillic_words(text: str) -> list[str]:
+    return _CYRILLIC_WORD.findall(text)
+
+
+def latin_words(text: str) -> list[str]:
+    return _LATIN_WORD.findall(text)
+
+
+def word_count(text: str) -> int:
+    """Cyrillic plus Latin-script words; the one length measure for metrics and judge length control."""
+    return len(cyrillic_words(text)) + len(latin_words(text))
+
+
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -99,6 +118,57 @@ def sha256_file(path: Path) -> str:
 
 def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+# --------------------------------------------------------------------------- private results directory
+
+_RUN_TAG = re.compile(r"^[a-z0-9][a-z0-9-]{0,31}$")
+_SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$")
+
+
+def validate_run_tag(tag: str) -> str:
+    """A run tag enters task ids and file names: lowercase letters, digits and '-', at most 32 characters."""
+    if not _RUN_TAG.match(tag):
+        raise HarnessError(f"--run-tag {tag!r}: expected lowercase letters, digits and '-' (1-32, alphanumeric first)")
+    return tag
+
+
+def enclosing_work_tree(path: Path) -> Path | None:
+    """The nearest of ``path`` and its ancestors that holds a ``.git`` entry (a Git work tree), else None."""
+    for candidate in (path, *path.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return None
+
+
+class ResultsDir:
+    """The private results directory; every output path is checked to stay inside it.
+
+    The directory must resolve (symlinks followed) outside every Git work tree, so
+    prompts, set items and model outputs can never land in this repository or any
+    other checkout where they could be committed. Checked before anything is written.
+    """
+
+    def __init__(self, path: Path) -> None:
+        root = path.expanduser().resolve()
+        tree = enclosing_work_tree(root)
+        if tree is not None:
+            raise HarnessError(
+                f"results directory {root} is inside the Git work tree {tree}; "
+                "private prompts and outputs must live outside every repository"
+            )
+        self.root = root
+
+    def path(self, *parts: str) -> Path:
+        """``root/part/...`` after checking each part is a plain file name and the result stays inside root."""
+        for part in parts:
+            if not _SAFE_NAME.match(part):
+                raise HarnessError(f"unsafe results file name {part!r}")
+        candidate = self.root.joinpath(*parts)
+        resolved = candidate.resolve()
+        if not resolved.is_relative_to(self.root) or enclosing_work_tree(resolved) is not None:
+            raise HarnessError(f"{candidate} resolves to {resolved}, outside the private results directory")
+        return candidate
 
 
 def write_private_text(path: Path, text: str) -> None:

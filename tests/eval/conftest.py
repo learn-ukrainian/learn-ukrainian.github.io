@@ -80,6 +80,39 @@ def build_mini_set() -> dict[str, Any]:
     }
 
 
+def build_full_set() -> dict[str, Any]:
+    """A synthetic set at the Protocol v2 minimums: 60 errors, 60 protected spans, writing at A2-C1."""
+    review = []
+    for i in range(60):
+        text = f"Вчора в пункті {i} я приймав участь у зборах, а Галя принесла пляцки."
+        review.append(
+            {
+                "id": f"F{i:02d}",
+                "text": text,
+                "errors": [
+                    _span(
+                        text,
+                        "приймав участь",
+                        f"F{i:02d}-e1",
+                        error_type="lexical-russianism",
+                        accepted=["брав участь"],
+                    )
+                ],
+                "protected": [_span(text, "пляцки", f"F{i:02d}-p1", kind="regional")],
+            }
+        )
+    writing = [
+        {"id": f"W{level}", "level": level, "instruction": "Опишіть свій вихідний день."}
+        for level in ("A2", "B1", "B2", "C1")
+    ]
+    return {"set_id": "full", "review": review, "writing": writing}
+
+
 @pytest.fixture
 def mini_set_dict() -> dict[str, Any]:
     return build_mini_set()
+
+
+@pytest.fixture
+def full_set_dict() -> dict[str, Any]:
+    return build_full_set()

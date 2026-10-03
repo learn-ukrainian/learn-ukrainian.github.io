@@ -12,14 +12,22 @@ adopt ``adapted-v2`` (else ``original``) only when
   2. the false-alarm rate (all false alarms per 100 protected spans) does not
      rise by more than 2 points (point estimate of the paired difference);
   3. writing calque density (verdict-tier check_text calque/Russianism
-     occurrences per 100 tokens; suspicions are reported, not ruled on) does not rise (point estimate <= 0), and every writing answer of
-     both variants was scored (a failed writing item makes it inconclusive).
+     occurrences per 100 tokens; suspicions are reported, not ruled on) does
+     not rise (point estimate <= 0), and every writing answer of both
+     variants was scored (a failed writing item makes it inconclusive).
 Anything else, including an inconclusive result, means no change for that seat.
+
+The denominator is the frozen plan in the run manifest, never what happens to
+be in ``scores.json``. A comparison is incomplete, and can never adopt, when
+the plan is a smoke plan (below the Protocol v2 set, repeat or task-kind
+minimums), when any planned answer of either variant is missing, duplicated or
+unplanned, when any planned task was not run or not accepted, or when any
+paired cell ran under conditions that differ in more than the preamble.
 """
 
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Callable, Sequence
 from typing import Any
 
@@ -131,8 +139,41 @@ def _writing_comparison(
     }
 
 
-def _adoption_check(review: dict[str, Any], writing: dict[str, Any]) -> dict[str, Any]:
-    reasons = []
+def _coverage(records: Sequence[dict[str, Any]], plan: dict[str, Any], seat: str, label: str, kind: str) -> list[str]:
+    """Why the answers of one seat x variant x kind do not cover the frozen plan (empty when they do)."""
+    if kind not in plan["kinds"]:
+        return [f"{kind} was not part of the plan"]
+    expected = {(repeat, item) for repeat in range(1, plan["repeats"] + 1) for item in plan["item_ids"][kind]}
+    rows = [r for r in records if r["seat"] == seat and r["variant"] == label]
+    seen = Counter((r["repeat"], r["item_id"]) for r in rows)
+    problems = []
+    missing, unplanned = expected - seen.keys(), seen.keys() - expected
+    duplicated = [key for key, count in seen.items() if count > 1]
+    if missing:
+        problems.append(f"{label} {kind}: {len(missing)} of {len(expected)} planned answers missing")
+    if unplanned:
+        problems.append(f"{label} {kind}: {len(unplanned)} unplanned answers")
+    if duplicated:
+        problems.append(f"{label} {kind}: {len(duplicated)} answers recorded more than once")
+    unaccepted = {r["task_id"] for r in rows if r.get("task_state") != "accepted"}
+    if unaccepted:
+        problems.append(f"{label} {kind}: {len(unaccepted)} planned tasks not run or not accepted")
+    return problems
+
+
+def _completeness(scores: dict[str, Any], plan: dict[str, Any], seat: str, label: str) -> list[str]:
+    problems = [f"smoke plan: {'; '.join(plan['protocol_shortfalls'])}"] if plan["protocol_shortfalls"] else []
+    for variant in (BASELINE_VARIANT, label):
+        for kind in ("review", "writing"):
+            problems += _coverage(scores[kind], plan, seat, variant, kind)
+    invalid = [p for p in scores.get("pairs", []) if p["seat"] == seat and p["variant"] == label and p["problem"]]
+    if invalid:
+        problems.append(f"{len(invalid)} invalid pairs (first: {invalid[0]['problem']})")
+    return problems
+
+
+def _adoption_check(review: dict[str, Any], writing: dict[str, Any], incomplete: Sequence[str]) -> dict[str, Any]:
+    reasons = [f"incomplete: {problem}" for problem in incomplete]
     recall_ok = review.get("available") and review["recall_delta"][1] > 0
     if not recall_ok:
         reasons.append("recall CI does not exclude zero" if review.get("available") else "no review data")
@@ -147,7 +188,7 @@ def _adoption_check(review: dict[str, Any], writing: dict[str, Any]) -> dict[str
         reasons.append("writing inconclusive (missing or failed writing answers)")
     elif not calque_ok:
         reasons.append(f"calque density rises by {writing['density_delta'][0]:.3f} per 100 tokens")
-    return {"passes": bool(recall_ok and fa_ok and calque_ok), "reasons": reasons}
+    return {"passes": bool(recall_ok and fa_ok and calque_ok and not incomplete), "reasons": reasons}
 
 
 def _per_type(review: Sequence[dict[str, Any]], seat: str, variant: str) -> dict[str, list[int]]:
@@ -178,7 +219,8 @@ def _variant_totals(
         "fa_other": sum(r["fa_other"] for r in rows),
         "fa_unanchored": sum(r["fa_unanchored"] for r in rows),
         "wrong_corrections": sum(r["wrong_corrections"] for r in rows),
-        "unlogged_changes": sum(r["unlogged_changes"] for r in rows),
+        "unlogged_change_units": sum(r["unlogged_change_units"] for r in rows),
+        "unapplied_logged_units": sum(r["unapplied_logged_units"] for r in rows),
         "new_invalid_forms": sum(len(r["new_invalid_forms"]) for r in rows),
         "style_total": sum(r["style"]["total"] for r in rows),
         "style_on_protected": sum(r["style"]["on_protected"] for r in rows),
@@ -195,12 +237,20 @@ def _variant_totals(
     }
 
 
-def _judge_summary(judge: Sequence[dict[str, Any]], seat: str) -> list[dict[str, Any]]:
+def _judge_summary(
+    judge: Sequence[dict[str, Any]], exclusions: Sequence[dict[str, Any]], seat: str
+) -> list[dict[str, Any]]:
     out = []
-    pairs = sorted({tuple(r["pair"]) for r in judge if r["candidate_seat"] == seat})
-    for pair in pairs:
-        rows = [r for r in judge if r["candidate_seat"] == seat and tuple(r["pair"]) == pair]
-        for judge_seat in sorted({r["judge_seat"] for r in rows}):
+    rows_for_seat = [r for r in judge if r["candidate_seat"] == seat]
+    excluded_for_seat = [e for e in exclusions if e["candidate_seat"] == seat]
+    for pair in sorted({tuple(r["pair"]) for r in [*rows_for_seat, *excluded_for_seat]}):
+        rows = [r for r in rows_for_seat if tuple(r["pair"]) == pair]
+        excluded = [e for e in excluded_for_seat if tuple(e["pair"]) == pair]
+        counts = {
+            "excluded_length": sum(e["reason"] != "missing text" for e in excluded),
+            "excluded_missing": sum(e["reason"] == "missing text" for e in excluded),
+        }
+        for judge_seat in sorted({r["judge_seat"] for r in rows}) or [None]:
             sub = [r for r in rows if r["judge_seat"] == judge_seat]
             out.append(
                 {
@@ -209,32 +259,43 @@ def _judge_summary(judge: Sequence[dict[str, Any]], seat: str) -> list[dict[str,
                     "wins": {label: sum(r["winner"] == label for r in sub) for label in pair},
                     "ties": sum(r["winner"] == "tie" for r in sub),
                     "failed": sum(r["failed"] for r in sub),
+                    **counts,
                 }
             )
     return out
 
 
-def build_report(scores: dict[str, Any], iterations: int = 10_000, seed: int = 9623) -> dict[str, Any]:
-    review, writing, judge = scores["review"], scores["writing"], scores.get("judge", [])
-    seats = list(dict.fromkeys(r["seat"] for r in [*review, *writing]))
-    labels = ordered_labels({r["variant"] for r in [*review, *writing]})
-    report: dict[str, Any] = {"denominator": scores.get("denominator", {}), "seats": {}}
-    for seat in seats:
+def build_report(
+    scores: dict[str, Any], plan: dict[str, Any], iterations: int = 10_000, seed: int = 9623
+) -> dict[str, Any]:
+    """Per-seat comparisons and decisions over the frozen ``plan`` (the run manifest's frozen terms)."""
+    review, writing = scores["review"], scores["writing"]
+    judge, exclusions = scores.get("judge", []), scores.get("judge_exclusions", [])
+    labels = ordered_labels(plan["variants"])
+    report: dict[str, Any] = {
+        "denominator": scores.get("denominator", {}),
+        "protocol_shortfalls": plan["protocol_shortfalls"],
+        "judge_terms": scores.get("judge_terms"),
+        "seats": {},
+    }
+    for seat in plan["seats"]:
         seat_report: dict[str, Any] = {
             "totals": {label: _variant_totals(review, writing, seat, label) for label in labels},
             "comparisons": {},
-            "judge": _judge_summary(judge, seat),
+            "judge": _judge_summary(judge, exclusions, seat),
         }
         for label in labels:
             if label == BASELINE_VARIANT:
                 continue
             rev = _review_comparison(review, seat, label, iterations, seed)
             wri = _writing_comparison(writing, seat, label, iterations, seed)
+            incomplete = _completeness(scores, plan, seat, label)
             seat_report["comparisons"][label] = {
                 "review": rev,
                 "writing": wri,
                 "eligible": label in CANDIDATE_ORDER,
-                "rule": _adoption_check(rev, wri),
+                "complete": not incomplete,
+                "rule": _adoption_check(rev, wri, incomplete),
             }
         adopted = next(
             (
@@ -245,6 +306,7 @@ def build_report(scores: dict[str, Any], iterations: int = 10_000, seed: int = 9
             None,
         )
         seat_report["decision"] = adopted or "no change"
+        seat_report["complete"] = all(c["complete"] for c in seat_report["comparisons"].values())
         report["seats"][seat] = seat_report
     return report
 
@@ -286,10 +348,15 @@ def render_markdown(report: dict[str, Any]) -> str:
                 f"| {_fmt(wri.get('density_delta'), 3)} | {rule} |"
             )
     lines += ["", "## Decisions", ""]
-    lines += [f"- {seat}: **{data['decision']}**" for seat, data in report["seats"].items()]
+    if report.get("protocol_shortfalls"):
+        lines.append("Smoke plan (cannot authorise adoption): " + "; ".join(report["protocol_shortfalls"]))
+        lines.append("")
+    for seat, data in report["seats"].items():
+        note = "" if data["complete"] else " (incomplete run: no comparison can adopt)"
+        lines.append(f"- {seat}: **{data['decision']}**{note}")
     lines += ["", "## Per-variant totals", ""]
     lines.append(
-        "| Seat | Variant | Failed review | FA protected / other / unanchored | Wrong fixes | Unlogged edits "
+        "| Seat | Variant | Failed review | FA protected / other / unanchored | Wrong fixes | Unlogged / unapplied units "
         "| New invalid forms | Style (all / protected / on error) | Failed writing | Calque density (verdict / suspicion) | VESUM-invalid "
         "| Level adherence | English intrusion |"
     )
@@ -299,7 +366,7 @@ def render_markdown(report: dict[str, Any]) -> str:
             lines.append(
                 f"| {seat} | {label} | {t['review_failed']}/{t['review_answers']} "
                 f"| {t['fa_protected']} / {t['fa_other']} / {t['fa_unanchored']} | {t['wrong_corrections']} "
-                f"| {t['unlogged_changes']} | {t['new_invalid_forms']} "
+                f"| {t['unlogged_change_units']} / {t['unapplied_logged_units']} | {t['new_invalid_forms']} "
                 f"| {t['style_total']} / {t['style_on_protected']} / {t['style_on_error']} "
                 f"| {t['writing_failed']}/{t['writing_answers']} "
                 f"| {_fmt(t['calque_density'], 3)} / {_fmt(t['calque_suspicion_density'], 3)} "
@@ -320,12 +387,20 @@ def render_markdown(report: dict[str, Any]) -> str:
             lines.append(f"| {error_type} | " + " | ".join(cells) + " |")
         lines.append("")
     lines += ["## Blind pairwise judgements", ""]
-    lines.append("| Candidate seat | Pair | Judge | Wins | Ties | Failed |")
-    lines.append("| --- | --- | --- | --- | --- | --- |")
+    terms = report.get("judge_terms") or {}
+    if terms:
+        lines.append(
+            f"Length control: pairs whose shorter text has fewer than {terms['length_ratio_min']} of the longer "
+            "text's words are not judged."
+        )
+        lines.append("")
+    lines.append("| Candidate seat | Pair | Judge | Wins | Ties | Failed | Excluded (length / missing text) |")
+    lines.append("| --- | --- | --- | --- | --- | --- | --- |")
     for seat, data in report["seats"].items():
         for row in data["judge"]:
             wins = ", ".join(f"{k} {v}" for k, v in row["wins"].items())
             lines.append(
-                f"| {seat} | {' vs '.join(row['pair'])} | {row['judge_seat']} | {wins} | {row['ties']} | {row['failed']} |"
+                f"| {seat} | {' vs '.join(row['pair'])} | {row['judge_seat'] or '-'} | {wins} | {row['ties']} "
+                f"| {row['failed']} | {row['excluded_length']} / {row['excluded_missing']} |"
             )
     return "\n".join(lines) + "\n"
