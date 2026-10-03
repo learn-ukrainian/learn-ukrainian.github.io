@@ -7,12 +7,14 @@ import argparse
 import fcntl
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Any
 
 if __package__ in (None, ""):
@@ -107,40 +109,67 @@ def _hot_or_archived(task_root: Path, name: str) -> Path:
     return archived if not hot.exists() and archived.exists() else hot
 
 
-def _is_clean_base_merge(commit_sha: str, base_sha: str) -> bool:
-    """Exempt only a two-parent base merge whose tree Git reproduces without conflicts."""
-    if not SHA.fullmatch(commit_sha) or not SHA.fullmatch(base_sha):
+def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
+    """Bind a conflict-free base merge to GitHub metadata and raw local objects."""
+    commit_sha = entry.get("sha")
+    commit_data = entry.get("commit")
+    tree_data = commit_data.get("tree") if isinstance(commit_data, dict) else None
+    tree = tree_data.get("sha") if isinstance(tree_data, dict) else None
+    parent_data = entry.get("parents")
+    if not isinstance(parent_data, list) or len(parent_data) != 2:
         return False
-    git = ["git", "--no-replace-objects"]
+    parents = [parent.get("sha") if isinstance(parent, dict) else None for parent in parent_data]
+    if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in [commit_sha, base_sha, tree, *parents]):
+        return False
+    git = ["git", "--no-replace-objects", "-c", "core.commitGraph=false"]
     try:
-        commit = subprocess.run(
-            [*git, "show", "--no-patch", "--format=%T%n%P", commit_sha],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=30,
-        )
-        lines = commit.stdout.strip().splitlines()
-        if len(lines) != 2 or not SHA.fullmatch(lines[0]):
-            return False
-        tree = lines[0]
-        parents = lines[1].split()
-        if len(parents) != 2 or not all(SHA.fullmatch(parent) for parent in parents):
-            return False
-        subprocess.run(
-            [*git, "merge-base", "--is-ancestor", parents[1], base_sha],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=30,
-        )
-        merged = subprocess.run(
-            [*git, "merge-tree", "--write-tree", "--no-messages", *parents],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=30,
-        )
+        # A private directory keeps this nonexistent graft path out of shared .git.
+        with TemporaryDirectory(prefix="cf-merge-") as isolated:
+            env = {
+                **os.environ,
+                "GIT_GRAFT_FILE": str(Path(isolated) / "no-grafts"),
+                "GIT_NO_REPLACE_OBJECTS": "1",
+                "GIT_NO_LAZY_FETCH": "1",
+            }
+            commit = subprocess.run(
+                [*git, "cat-file", "commit", commit_sha],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=30,
+            )
+            headers = commit.stdout.partition("\n\n")[0].splitlines()
+            if [line[5:] for line in headers if line.startswith("tree ")] != [tree]:
+                return False
+            if [line[7:] for line in headers if line.startswith("parent ")] != parents:
+                return False
+            base = subprocess.run(
+                [*git, "cat-file", "-e", f"{base_sha}^{{commit}}"],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=30,
+            )
+            if base.returncode:
+                raise RecordError("base object not available locally; fetch and retry")
+            subprocess.run(
+                [*git, "merge-base", "--is-ancestor", parents[1], base_sha],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=30,
+            )
+            merged = subprocess.run(
+                [*git, "merge-tree", "--write-tree", "--no-messages", *parents],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=30,
+            )
     except (OSError, subprocess.SubprocessError, UnicodeError):
         # Missing objects, conflicts, unsupported Git, and timeouts prove no exemption.
         return False
@@ -163,13 +192,11 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
             commit_sha = entry.get("sha")
             if isinstance(commit_sha, str) and SHA.fullmatch(commit_sha):
                 if base_sha is None:
-                    pr = _run_json(
-                        ["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid"]
-                    )
+                    pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid"])
                     base_sha = pr.get("baseRefOid") if isinstance(pr, dict) else None
                     if not isinstance(base_sha, str) or not SHA.fullmatch(base_sha):
                         raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
-                if _is_clean_base_merge(commit_sha, base_sha):
+                if _is_clean_base_merge(entry, base_sha):
                     continue
         if len(trailers) != 1 or "/" not in trailers[0]:
             raise RecordError("author model unknown: missing explicit X-Agent model trailer")
