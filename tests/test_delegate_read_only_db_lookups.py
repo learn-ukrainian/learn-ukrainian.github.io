@@ -305,7 +305,7 @@ def test_read_only_database_openers_never_create_a_missing_file(tmp_path: Path, 
     assert list(missing.parent.iterdir()) == []
 
 
-def test_augment_prompt_with_worktree_teaches_primary_database_access(primary: Path) -> None:
+def test_augment_prompt_with_worktree_teaches_primary_database_access(primary: Path, monkeypatch) -> None:
     """_augment_prompt_with_worktree teaches primary database paths and MCP preference."""
     worktree = primary / ".worktrees" / "dispatch" / "agy" / "task-1"
     prompt = delegate._augment_prompt_with_worktree(
@@ -315,4 +315,82 @@ def test_augment_prompt_with_worktree_teaches_primary_database_access(primary: P
     assert str(primary / "data" / "sources.db") in prompt
     assert str(primary / "data" / "vesum.db") in prompt
     assert "mode=ro" in prompt
+    assert "uri=True" in prompt
     assert "Prefer MCP tools (`sources` server: `verify_words`, `search_text`, etc.)" in prompt
+
+    # With LU_SOURCES_DB override pointing to home-relative path
+    monkeypatch.setenv("LU_SOURCES_DB", "~/custom/sources.db")
+    prompt_override = delegate._augment_prompt_with_worktree(
+        "Review sentences.", worktree, mode="read-only"
+    )
+    expected_override = (Path.home() / "custom" / "sources.db").resolve()
+    assert str(expected_override) in prompt_override
+
+
+@pytest.mark.parametrize(
+    ("override", "expected_fn"),
+    [
+        (None, lambda root: (root / "data" / "sources.db").resolve()),
+        ("~/db/sources.db", lambda _root: (Path.home() / "db" / "sources.db").resolve()),
+        ("custom/sources.db", lambda root: (root / "custom" / "sources.db").resolve()),
+        ("/tmp/absolute_sources.db", lambda _root: Path("/tmp/absolute_sources.db").resolve()),
+    ],
+)
+def test_primary_database_path_resolution(
+    primary: Path, monkeypatch, override: str | None, expected_fn
+) -> None:
+    """_primary_database_path resolves default, home-relative, relative, and absolute overrides."""
+    if override is None:
+        monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+    else:
+        monkeypatch.setenv("LU_SOURCES_DB", override)
+
+    resolved_sources = delegate._primary_database_path(primary, "sources.db")
+    assert resolved_sources == expected_fn(primary)
+
+    # vesum.db always resolves to primary / data / vesum.db regardless of LU_SOURCES_DB
+    resolved_vesum = delegate._primary_database_path(primary, "vesum.db")
+    assert resolved_vesum == (primary / "data" / "vesum.db").resolve()
+
+
+def test_primary_database_connect_code_executes_read_only_and_creates_no_files(tmp_path: Path) -> None:
+    """Connect code safely escapes fragments/quotes, enforces read-only, and creates no stray files."""
+    db_path = tmp_path / "source#frag?param'quote.db"
+    with sqlite3.connect(db_path) as init_conn:
+        init_conn.execute("CREATE TABLE test_data (val TEXT)")
+        init_conn.execute("INSERT INTO test_data VALUES ('sample')")
+    init_conn.close()
+
+    connect_code = delegate._primary_database_connect_code(db_path)
+    assert "mode=ro" in connect_code
+    assert "uri=True" in connect_code
+    assert "%23frag" in connect_code  # '#' is percent-encoded so it cannot swallow '?mode=ro'
+
+    # Execute generated code to open connection
+    local_scope: dict[str, object] = {"sqlite3": sqlite3}
+    exec(f"conn = {connect_code}", local_scope)
+    conn: sqlite3.Connection = local_scope["conn"]
+
+    try:
+        # Verify read access works
+        row = conn.execute("SELECT val FROM test_data").fetchone()
+        assert row[0] == "sample"
+
+        # Verify write operations are strictly rejected
+        with pytest.raises(sqlite3.OperationalError, match="readonly database"):
+            conn.execute("CREATE TABLE unintended (x INT)")
+
+        with pytest.raises(sqlite3.OperationalError, match="readonly database"):
+            conn.execute("INSERT INTO test_data VALUES ('illegal')")
+    finally:
+        conn.close()
+
+    # Verify no unintended files were created (e.g. no truncated 'source' file from unescaped '#')
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["source#frag?param'quote.db"]
+
+    # Verify connect code for a nonexistent file fails typed without creating anything
+    missing_path = tmp_path / "missing#frag.db"
+    missing_code = delegate._primary_database_connect_code(missing_path)
+    with pytest.raises(sqlite3.OperationalError, match="unable to open database file"):
+        exec(f"conn = {missing_code}", local_scope)
+    assert not missing_path.exists()

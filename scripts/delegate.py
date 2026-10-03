@@ -8100,6 +8100,31 @@ def _ensure_worktree(
     return worktree_path, worktree_branch, telemetry
 
 
+def _resolve_primary_root_for_worktree(cwd_or_worktree: Path) -> Path:
+    """Resolve the primary checkout root for a worktree or arbitrary cwd."""
+    primary_root = _main_checkout_root(cwd_or_worktree)
+    if primary_root == cwd_or_worktree and cwd_or_worktree != _REPO_ROOT:
+        primary_root = _main_checkout_root(_REPO_ROOT)
+    return primary_root
+
+
+def _primary_database_path(primary_root: Path, name: str) -> Path:
+    """Resolve the canonical primary path for data/sources.db or data/vesum.db (#9122)."""
+    if name == "sources.db":
+        override = os.environ.get("LU_SOURCES_DB")
+        if override:
+            p = Path(override).expanduser()
+            return p.resolve() if p.is_absolute() else (primary_root / p).resolve()
+        return (primary_root / "data" / "sources.db").resolve()
+    return (primary_root / "data" / "vesum.db").resolve()
+
+
+def _primary_database_connect_code(target: Path) -> str:
+    """Return Python connect code opening target read-only via RFC file URI (#9122)."""
+    uri = f"{target.resolve().as_uri()}?mode=ro"
+    return f"sqlite3.connect({uri!r}, uri=True)"
+
+
 def _augment_prompt_with_worktree(
     prompt: str,
     worktree_path: Path | None,
@@ -8184,16 +8209,11 @@ def _augment_prompt_with_worktree(
         )
     db_note = ""
     if worktree_path is not None:
-        primary_root = _main_checkout_root(worktree_path)
-        if primary_root == worktree_path and worktree_path != _REPO_ROOT:
-            primary_root = _main_checkout_root(_REPO_ROOT)
-        sources_override = os.environ.get("LU_SOURCES_DB")
-        primary_sources = (
-            Path(sources_override).resolve()
-            if sources_override
-            else (primary_root / "data" / "sources.db")
-        )
-        primary_vesum = primary_root / "data" / "vesum.db"
+        primary_root = _resolve_primary_root_for_worktree(worktree_path)
+        primary_sources = _primary_database_path(primary_root, "sources.db")
+        primary_vesum = _primary_database_path(primary_root, "vesum.db")
+        sources_code = _primary_database_connect_code(primary_sources)
+        vesum_code = _primary_database_connect_code(primary_vesum)
         db_note = (
             "\n[database access in worktrees]\n"
             "Primary databases (data/sources.db, data/vesum.db) reside in the primary checkout, "
@@ -8201,8 +8221,7 @@ def _augment_prompt_with_worktree(
             "which resolve databases automatically. If running ad-hoc Python/SQLite queries, NEVER use a relative "
             "path like `data/sources.db` or `data/vesum.db` (which creates an empty file in the worktree and triggers "
             "read-only checkout mutation failure); connect to the primary database using its absolute path read-only: "
-            f"`sqlite3.connect('file:{primary_sources}?mode=ro', uri=True)` or "
-            f"`sqlite3.connect('file:{primary_vesum}?mode=ro', uri=True)`.\n"
+            f"`{sources_code}` or `{vesum_code}`.\n"
         )
     # #8775: the path is data. ASCII JSON quoting keeps it one quoted line even
     # if an unvalidated path ever reaches this block.
@@ -9483,20 +9502,12 @@ def _run_worker(
             mutation_diagnostic = "read-only checkout mutation detected: " + ", ".join(read_only_mutation_paths)
             db_mutations = [p for p in read_only_mutation_paths if p in ("data/sources.db", "data/vesum.db")]
             if db_mutations:
-                primary_root = _main_checkout_root(Path(cwd))
-                if primary_root == Path(cwd) and Path(cwd) != _REPO_ROOT:
-                    primary_root = _main_checkout_root(_REPO_ROOT)
-                sources_override = os.environ.get("LU_SOURCES_DB")
-                primary_sources = (
-                    Path(sources_override).resolve()
-                    if sources_override
-                    else (primary_root / "data" / "sources.db")
-                )
-                primary_vesum = primary_root / "data" / "vesum.db"
+                primary_root = _resolve_primary_root_for_worktree(Path(cwd))
                 remedies = []
                 for p in db_mutations:
-                    target = primary_sources if p == "data/sources.db" else primary_vesum
-                    remedies.append(f"sqlite3.connect('file:{target}?mode=ro', uri=True)")
+                    name = "sources.db" if p == "data/sources.db" else "vesum.db"
+                    target = _primary_database_path(primary_root, name)
+                    remedies.append(_primary_database_connect_code(target))
                 mutation_diagnostic += (
                     f" (databases do not reside in sparse worktrees; ad-hoc queries must open the "
                     f"primary database read-only by absolute path: {'; '.join(remedies)})"
