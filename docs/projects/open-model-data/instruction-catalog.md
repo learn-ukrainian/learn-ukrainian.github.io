@@ -1,661 +1,531 @@
-# E10 instruction catalog — draft 0.1.0
+# E10 instruction catalog — draft 0.2.0
 
 Issue #9611; parent #6321. Author: GPT-6.1 Sol, Codex.
-Tool checkpoint: 2026-10-03T18:43:55Z (`date -u`).
-This is a **draft**, with `training_eligible: false`, not PA6 approval.
-The brief and approved plan v3.4.4 require C1–C9; the issue still counts C1–C8.
-The driver must reconcile that denominator before closeout.
+This is a **draft**, with `training_eligible: false`. Round 2 resolves the
+findings on `45a16f67e714e15c665f370a07e48d6f1c12e3e6`; it does not certify PA6.
 
 [Catalog](../../../registry/projects/open_model_data/instruction_catalog.yaml) ·
-[Draft schema](../../../registry/projects/open_model_data/instruction_catalog.schema.json) ·
-[Canonical plan](PLAN.md)
+[Versioned structural schema](../../../registry/projects/open_model_data/instruction_catalog.schema.json) ·
+[Committed checks](../../../tests/projects/open_model_data/test_instruction_catalog.py) · [Plan](PLAN.md)
 
-The plan-body SHA-256, from
-`sed '1,/^-->$/d' docs/projects/open-model-data/PLAN.md | sha256sum`, is
-`2d5db0ae7d15336b61c361c1dacdf89c3c9811cfd0109acc8f156f16149e94e1`.
-
-## Scope, counts and source bindings
+## Scope and counts
 
 Only `components.*.instructions[].template` is project-written training text.
-Control metadata, this document and tool quotes must not be exported.
-There is no authored answer, explanation, reasoning or worked solution.
-The JSON Schema Draft 2020-12 follows existing repository contract conventions.
-It checks draft structure; it cannot certify source relationships or Ukrainian
-quality. No production helper or existing acceptance checker changes here.
+Control metadata and evidence never become instructions, answers or reasoning.
+No answer text, explanation or worked solution is authored here.
 
-| Component | Lines | Coverage |
+| Component | Lines | Operations and source units |
 | --- | ---: | --- |
-| C1 | 8 | Aligned human sentence correction. |
-| C2 | 8 | Agreed form, with lemma, homonym/sense, slot and variant identity. |
-| C3 | 16 | Eight synonym prompts and eight antonym prompts. |
-| C4 | 8 | Verbatim dictionary definition, with same-entry citation binding. |
-| C5 | 8 | Retrieve the printed rule for its own printed example. |
-| C6 | 16 | Eight human sentence-correction prompts and eight printed book-replacement prompts. |
-| C7 | 8 | Select the modern-attested side of an admitted opt-in contrast pair. |
-| C8 | 8 | Printed normative/admissible transcription and the book's own verdict. |
-| C9 | 8 | Verbatim section headed by the textbook's own title. |
-| **Total** | **88** | **9 components, 11 operations.** |
+| C1 | 12 | Sentence correction including unchanged no-edit pairs. |
+| C2 | 12 | Agreed form; printable grammatical label only in instructions. |
+| C3 | 24 | 12 synonym and 12 antonym lines; source-readable sense labels. |
+| C4 | 12 | Dictionary definition **and citation from the same entry**. |
+| C5 | 12 | Full Правопис § containing its printed example. |
+| C6 | 24 | 12 calque-only sentence lines and 12 signed book-replacement lines. |
+| C7 | 12 | Modern-attested side of an admitted opt-in contrast pair. |
+| C8 | 12 | Normative/admissible transcription and the author's quoted verdict. |
+| C9 | 12 | Complete text under an authenticated printed textbook heading. |
+| **Total** | **132** | **9 components, 11 operations, 12 lines per operation.** |
 
-Each operation has eight distinct lexical starts. Balanced use gives top1 =
-12.5% and top5 = 62.5%. This is compact enough for line-by-line review and
-supports the proposed bounds below. Six starts would have balanced top5 =
-83.3%. C3 and C6 need separate eight-line sets for their different operations;
-four per operation would make a five-prefix bound meaningless. This count
-does not claim eight distinct reasoning skills or model generalization.
+Twelve distinct starts per operation give balanced top1 = 1/12 (8.33%) and
+top5 = 5/12 (41.67%). Dropping two disputed lines leaves ten starts:
+0.10/0.50. Both retain slack under the proposed 0.15/0.60 prefix bounds.
+Counts establish scheduling capacity, not semantic variety or model quality.
 
-Slots are the **field roles named in the plan's component bindings**, not
-guessed physical database column names. E4 must authenticate adapters and
-the exact source row/field locators before rendering. Use single-pass exact
-interpolation: no inflection, paraphrase, truncation, added stress, synonym
-substitution or recursive expansion. Braces in source values remain literal
-data. Missing, ambiguous or inapplicable fields withhold the record.
-Source context and targets use only the fixed E4/E5 serialization schema;
-this catalog authorizes no new free-text answer or context.
+## Binding and interpolation rules
 
-- **C1:** learner sentence ↔ human-corrected sentence, same document/annotator.
-  All document annotations and both UA-GEC layers stay together.
-- **C2:** preserve the P3 tuple and variant identity as lossless metadata.
-  Copy the source's grammatical label; never expand it into an authored
-  description. Omit all P3 exclusions and single-source forms.
-- **C3:** copy a source-readable sense label, not a gloss invented from a
-  numeric sense ID. Withhold this draft operation if the source has no
-  printable disambiguating label; the group must belong to that sense.
-- **C4:** the target definition and supporting citation come from one entry.
-  No generated usage example; exclude ruler-overlapping citations.
-- **C5:** prompts request the cited paragraph's verbatim rule, not correction
-  of the example. The example must be printed in that paragraph. Ambiguous
-  examples need their paragraph locator in serialized input context.
-- **C6:** UA-GEC targets are aligned human-corrected sentences. Book targets
-  are explicitly printed replacements from the same passage, with individual
-  Sol and Opus pair sign-off. No invented sentence bridges the two forms.
-- **C7:** no interpolation slots: the plan does not name printable pair
-  fields. The admitted #8982 pair is mandatory lossless input context, with
-  contemporary-source and Soviet-context roles. SUM-11 is never normative;
-  arbitrary unadjudicated pairs, the default split and pretraining are refused.
-- **C8:** the word and phonetic context must be printed in the source. Require
-  its transcription, supporting span, same-paragraph quoted verdict,
-  rule/page and ULIF stress cross-check. Target only a printed normative or
-  admissible transcription plus the book's verdict. A non-norm transcription
-  occurs only on the serialized rejected side of a printed contrast.
-  Non-norm-only paragraphs, ambiguous status and stress mismatches are
-  withheld; this operation never invents a normative answer.
-- **C9:** the slot is only the book's own section title; target is its complete
-  verbatim headed section, not a summary. The printed-question/printed-answer
-  route uses source text directly. Withhold unkeyed exercises, tables of
-  contents and OCR-damaged text.
+Slots are binding roles, never guessed physical database columns. E4 must
+authenticate source adapters and exact row/field/span locators. Interpolation
+is single-pass and verbatim: no inflection, paraphrase, truncation, added stress,
+replacement or recursive expansion. Braces in source values remain literal.
+Missing, ambiguous or inapplicable fields withhold the record. E4/E5 supplies
+source context and target serialization; this catalog creates no new context
+or answer format.
 
-The draft schema requires every component, exact operation counts, declared
-slot sets and no extra fields. It refuses invented placeholder names and
-eligible/approved status. Relationship, real-slot applicability and later
-rendered-record integrity remain E4/E5 gates, not schema conclusions.
+Sentences, printed examples and phonetic contexts follow a colon without outer
+quotes or added terminal punctuation. A source sentence's own punctuation and
+internal quotes remain intact. Other quoted slots withhold values containing
+guillemets, preventing nested same-form quotes without transforming the source.
+This policy is explicit in `interpolation.quoted_slot_policy`.
 
-## Proposed prefix metric: instruction-prefix.v1-draft
+- **C1:** same-document/annotator aligned pairs; all annotations and both
+  UA-GEC layers stay together. Unchanged no-edit pairs remain eligible and
+  target the unchanged sentence. Every line allows preservation, without
+  presupposing an error or asking for an explanation.
+- **C2:** only lemma and a **printable source grammatical label** appear in
+  instructions. Homonym identifiers, sense, grammatical tags and variant
+  identity remain lossless context. Integers and code lists are never labels.
+  Withhold if no printable source label exists; do not author a label or
+  expand tags. P3 exclusions and VESUM/ULIF agreement still bind.
+- **C3:** the group must belong to the selected headword sense. Withhold if no
+  source-readable sense label exists; a numeric sense ID cannot become a gloss.
+  Both .03 lines use `до слова`, not `для слова`.
+- **C4:** **citation stays in the target**, together with the definition from
+  that same dictionary entry. Every instruction requests both explicitly.
+  Never invent an example; exclude ruler-overlapping citations.
+- **C5:** E3b stores complete §§ with locators, not separate sub-points.
+  Accordingly every line requests the full **параграф Правопису** containing
+  its own printed example. The § locator is mandatory context, especially
+  when an example appears in multiple §§. No outside-case rule selection.
+- **C6:** a sentence×annotator unit must have at least one edit and **only
+  F/Calque edits**. Mixed units belong to C1; no-edit units cannot enter C6.
+  The full aligned human correction is then a calque-only target. Book pairs
+  require both forms printed in the same cited passage and individual Sol
+  and Opus sign-off. `автор` refers to authenticated author context; no
+  dangling book reference or invented sentence bridge remains.
+- **C7:** no interpolation slots. The admitted #8982 pair is mandatory context,
+  with modern-source and Soviet-context roles. SUM-11 never supplies the norm;
+  unadjudicated pairs, the default split and pretraining remain excluded.
+- **C8:** printed word and phonetic context require transcription, supporting
+  paragraph span, same-paragraph verdict, rule/page and ULIF stress cross-check.
+  All lines request normative/admissible transcription **and** the author's
+  assessment, with author identity in context. Wording varies throughout;
+  no repeated second sentence or dangling paragraph reference remains.
+  Non-norm-only paragraphs, ambiguous verdicts, mismatches and illegible
+  notation are withheld. A non-norm reading is only on the rejected side.
+- **C9:** `section_title` is a heading **printed in textbook text**, extracted
+  verbatim with position by #8341. It is keyed by verbatim book title, grade
+  or level, unit identity and page. Lines ask for text **під заголовком**:
+  this fits a theme, § or chapter without miscalling every unit `розділ`.
+  Refuse ingester labels (`Сторінка N`, `Reference N`, `Entry N`,
+  `Private lesson …`) and **all non-textbook files**. Existing section labels
+  alone prove no eligible heading. Until #8341 provides printed-heading
+  evidence, withhold records. Targets are complete verbatim headed units;
+  no summaries, unkeyed exercises, contents pages or OCR-damaged text.
+  The printed-question/printed-answer route uses source text directly.
 
-This is a **proposal**, not the final PA6 threshold. The driver must freeze
-metric, catalog version/hash and threshold after two non-author reviews and
-before E12. Prior art: the existing `check_2_form_letters` in
-`scripts/projects/open_model_data/audit_dataset_acceptance.py` uses frequency
-counts of delexicalized queries/answers. That whole-text measure cannot prove
-instruction diversity and is not replaced or modified by this draft.
+The Draft 2020-12 schema uses typed version/plan/status/metric metadata, rather
+than constants pinning one draft. It can validate an approved version's shape;
+it cannot grant approval or training eligibility. Drafts must remain ineligible.
+Component/operation and source-role constraints remain closed. Every declared
+slot must occur in its template (schema lookaheads and committed mutation tests);
+the committed test also requires placeholder order to match `slots` exactly.
 
-1. Validate each exported record's catalog version/hash and instruction ID.
-   Re-render authenticated source fields and compare the instruction byte for
-   byte. Unknown IDs, changed literals, missing source spans/locators or extra
-   authored text fail the relationship gate before concentration.
-2. Use the matched template, replacing every placeholder with the same atomic
-   `SLOT` marker. Placeholder names and filled values create no new prefixes.
-   Exclude serialized source context, source questions, targets, quotations
-   and reasoning from this counter. A book's original printed question is
-   `source_question`, with a separate denominator, never catalog diversity.
-3. Only for metric comparison: NFC, Unicode casefold and U+0027 apostrophe →
-   U+2019. Tokens are `SLOT` or Unicode letter runs allowing an internal
-   apostrophe; punctuation/whitespace separate them. No stemming, model
-   tokenizer or language-model judgment; exported source bytes stay untouched.
-4. Count first **one** and first **four** tokens independently. A shorter
-   template contributes its full tuple; never pad with source text or omit it.
-   Each catalog-instructed exported record contributes once; no deduplication.
-   Records containing multiple catalog IDs are outside this draft and fail closed.
-5. For each **(component, operation, exported split)** bucket, N is the actual
-   catalog-instructed record count. Sort prefix frequencies n_i descending:
-   `top1 = max(n_i)/N`; `top5 = sum(five largest n_i)/N`, or all if fewer
-   than five. Report N, distinct prefixes, both shares at both lengths, and
-   instruction-ID shares. Whole-split totals are diagnostic; pooling cannot
-   rescue a failing operation. C7 remains a separate opt-in split.
-6. Proposed bounds: **top1 ≤ 0.15 and top5 ≤ 0.65**, at both prefix lengths
-   **and for instruction-ID frequencies**. Compare exact ratios without
-   rounding. N = 0 is missing required coverage, never PASS; N < 8 is
-   insufficient evidence. If integer counts cannot meet the bounds, withhold
-   the build; never round up allowances or manufacture source records.
-7. Source-text diversity is an independent report over verbatim source
-   units/fingerprints/locators, with its own denominator. Distinct sentences
-   under one instruction still have top1 = top5 = 1 here. Report instruction
-   origin counts against the frozen component manifest so source questions
-   cannot silently substitute for catalog records to evade the gate.
+## Proposed concentration measures
 
-15%/65% allows 2.5 percentage points above balanced eight-start use while
-preventing a dominant prompt or five prompts covering roughly 85%. The
-issue's 85.4% finding motivates separation; it is not a measurement of this
-metric. These are anti-concentration bounds, not confidence intervals or
-semantic proof. D4's independent sealed evaluation remains necessary.
+These remain **proposals**. The accountable driver freezes catalog bytes/hash,
+metric version and thresholds after non-author reviews and before E12. Prior
+art: `check_2_form_letters` in
+`scripts/projects/open_model_data/audit_dataset_acceptance.py` measures
+whole-text frequency. This draft does not change it or the production checker.
 
-Before any build, test feasibility against admitted records and available
-source fields without reading the sealed final ruler. Schedule only
-semantically eligible instructions deterministically under a frozen version;
-never rewrite, duplicate or rebind sources to pass. A dropped line or an
-eligibility stratum with too few prefixes returns to the driver before freeze.
+1. Before counting, validate catalog version/hash and ID; re-render authenticated
+   fields byte for byte. Unknown IDs, changed literals, missing spans/locators,
+   multiple catalog IDs or extra authored text fail the relationship gate.
+2. Count the matched **template**, with every placeholder replaced by atomic
+   `SLOT`. Source values, slot names, context, questions, targets, citations and
+   reasoning cannot supply diversity. Original printed questions have a separate
+   `source_question` denominator.
+3. For comparison only: NFC, Unicode casefold and U+0027 apostrophe to U+2019.
+   Tokens are Unicode letter runs with an internal apostrophe, including `slot`
+   as one token. Punctuation separates tokens. No stemming, model tokenizer or
+   language-model judgment; source/export bytes stay untouched.
+4. For each **(component, operation, exported split)**, N is the actual record
+   count; each record contributes once, without deduplication. C7 is separate
+   and opt-in. Whole-split totals are diagnostic and cannot rescue a bucket.
+   N = 0 is missing coverage; N < 10 is insufficient evidence, never PASS.
+5. `instruction-prefix.v1-draft`: independently count the first **one** and
+   **four** tokens, using the full tuple if shorter. With descending counts n_i,
+   `top1 = max(n_i)/N`, `top5 = sum(five largest n_i)/N` (all if fewer than five).
+   Proposed bounds: **top1 ≤ 0.15, top5 ≤ 0.60**, at both lengths and on ID
+   frequencies. Compare exact ratios, never rounded allowances.
+6. `instruction-repetition.v1-draft`, using the same N and tokenization:
+   - **Whole template:** full-token tuple frequencies, top1 ≤ 0.15 and top5 ≤ 0.60.
+   - **Suffix:** last **eight** tokens (full tuple if shorter), top1 ≤ **0.60**.
+     Report distinct suffixes, top1 and diagnostic top5.
+   - **Whole-template n-grams:** all contiguous **eight-token** grams anywhere
+     in a template (one full-tuple gram if shorter). Count each distinct gram
+     **once per record**, even if repeated inside it. Maximum record prevalence
+     `max_gram(records containing gram)/N` ≤ **0.60**. Denominator is records,
+     never gram positions. Report the leading grams and their shares.
+   These catch the old C8 repeated second sentence (prevalence 1.0), even if
+   moved into the middle. Eight tokens capture a shared sentence-length span
+   while allowing short binding vocabulary. This does not prove semantic variety.
+7. Report N, distinct prefixes/templates/suffixes, their shares and ID shares.
+   Source-unit/fingerprint/locator diversity is independent with its own
+   denominator. Distinct sentences under one instruction still fail here.
+   Report instruction-origin counts against the frozen component manifest.
 
-### E5-backed fixtures required after this draft
+With 12 balanced lines, prefixes/IDs/whole templates give 0.0833/0.4167.
+After any two starts are dropped, 0.10/0.50 stays below 0.15/0.60. The n-gram
+and suffix 0.60 proposal refuses a common long span in a majority exceeding
+three fifths, with slack for necessary repeated relational language. In the
+current balanced catalog, maximal n-gram/suffix prevalence is at most 2/12.
+These are anti-concentration limits, not confidence intervals or held-out proof.
 
-| Fixture | Expected |
+Check feasibility against admitted records and fields before building, without
+reading the sealed final ruler. Schedule semantically eligible instructions
+under the frozen version. Never rewrite, duplicate or rebind sources to pass.
+Infeasible integer counts or fewer than ten eligible lines withhold the bucket
+and return it to the driver; dropping a disputed line never licenses relaxation.
+
+## Committed checks and remaining production proof
+
+`tests/projects/open_model_data/test_instruction_catalog.py` checks schema/plan hash, counts/IDs,
+every declared slot, a missing-slot mutation for each applicable slot,
+versionable approval metadata, closed roles, sentence interpolation and
+concentration arithmetic. Negative fixtures cover:
+
+| Fixture | Expected arithmetic/contract result |
 | --- | --- |
-| 100 distinct sentences under one catalog template | FAIL: top1 = top5 = 1 despite source diversity. |
-| Eight templates used equally across 800 records | Proposed arithmetic passes: 0.125 / 0.625. |
-| Eight balanced IDs all starting with one lexical token | FAIL at prefix length one. |
-| Good C1 pooled with single-template C6 | FAIL for C6; no pooled rescue. |
-| C7 included in default split | Split/relationship refusal. |
-| N = 0 or N < 8 | Missing coverage or insufficient evidence, never PASS. |
-| Unknown ID, changed literal, fake locator or missing span | Relationship refusal before counting prefixes. |
-| Source slots containing braces, quotes or newlines | Single-pass literal data, never recursive interpolation. |
+| Single repeated template | Prefix/template/suffix/n-gram shares 1.0: FAIL. |
+| Twelve balanced lines, then two dropped | Prefix/ID/template limits retain slack. |
+| Distinct IDs with one first token | Prefix top1 = 1.0: FAIL. |
+| Balanced prefixes with old C8 suffix | Suffix and n-gram prevalence 1.0: FAIL. |
+| Old C8 sentence moved into the middle | Whole-template n-gram prevalence 1.0: FAIL. |
+| Same gram repeated many times inside a record | Count that record once. |
+| Short templates | Full tuple retained, never omitted. |
+| Missing declared slot or invented role/answer | Schema refusal. |
 
-**AC4's production checker test is pending E5.** The smoke check below
-exercises schema and catalog-prefix arithmetic, not the exported-record
-checker or independent held-out proof. This author has not inspected the
-evaluation steward's sealed final set.
+**These are local contract/arithmetic fixtures, not the E5-backed exported-record
+checker or independent held-out proof.** AC4 remains pending E5 integration.
+D4 remains the evaluation steward's independent sealed proof; this author did
+not inspect the sealed ruler. Real source-field applicability and relationship
+verification remain E4/E5 responsibilities.
 
-## Draft validation
+## Round 2 finding disposition
 
-Executed from the assigned worktree with the prescribed shared interpreter:
+| Review finding | Change |
+| --- | --- |
+| Opus 1: unavailable C9 slot, identity and wrong chapter term | Printed heading/position via #8341; title + grade slots; label/non-textbook exclusions; text-under-heading wording. |
+| Opus 2: C2 identifiers displayed | Homonym/tags only in context; printable grammatical source label or withhold. |
+| Opus 3: C6 mixed edits | Calque-only sentence×annotator binding and exclusion; mixed units to C1. |
+| Opus 4: C1 no-edit units | Remain eligible; all instructions allow preserving correct sentences. |
+| Opus 5: quotation punctuation | Sentence/example/context after colon; quoted slots cannot nest guillemets. |
+| Opus 6: C4 omitted citation request | Definition plus same-entry citation explicitly requested in every line; both stay in target. |
+| Opus 7: concentration/slack | 12 lines/operation; 0.15/0.60 proposal; suffix and whole-template 8-gram prevalence. |
+| Opus 8 + Flash C3 .03 fixes | `до слова` in both synonym/antonym .03 lines. |
+| Opus 9: dangling references | Author identified in context; C6/C8 refer to author, without unnamed book/paragraph. |
+| Opus 10: C5 wrong unit | Full § requested, matching E3b storage; no sub-point selection. |
+| Opus 11: evidence/schema/test nits | Official offline Правопис proof; mandatory slots + committed mutations; typed versionable metadata. |
+| Flash C2.agreed_form.03 | `форму слова`; no `для` and no visible homonym ID. |
+| Flash C5.printed_spelling_rule.01 | Full paragraph containing its printed example; no `для` or unresolved pronoun. |
 
-- The reproducible smoke block below returned
-  `PASS: schema; 9 components; 88 IDs; 11 operations; 22 prefix projections; 8 rejected mutations`.
-- `-m yamllint registry/projects/open_model_data/instruction_catalog.yaml`
-  exited 0 with no output after three long metadata lines were folded.
-- `-m ruff check --stdin-filename instruction_catalog_smoke.py -` on the
-  extracted smoke block returned `All checks passed!` after using the
-  component variable in an ID assertion.
-- `git diff --check` returned no whitespace errors.
+## Sources evidence for every changed/new line
 
-These are author-side draft checks; the two independent reviews, production
-checker test and acceptance proof remain pending.
+Tool checkpoint: `2026-10-03T19:19:01Z` (`date -u`). Sources batch started `2026-10-03T19:12:33Z`.
+Catalog SHA-256: `b0a8f16e6ccedff3f4222882ec1993d6fa135d711d65d67d95a7dc64af0fcbb7`.
 
-## Quoted sources-MCP evidence
+The connected Sources instance returned `No pravopys section found for: '164'`
+and the older mirror for §23. A transient **stdio Sources MCP session**, launched
+from this worktree with the prescribed project interpreter and the canonical
+`LU_SOURCES_DB` override, supplied the evidence below. No shared service was
+restarted. Calls used `ClientSession.call_tool`, not replacement lookup logic.
+All source reads were read-only; request diagnostics stayed outside the worktree.
 
-VESUM attests forms, not sentence naturalness. Russian shadow is suspicion,
-not a calque verdict. Антоненко-Давидович is lexical/style evidence, not a
-substitute for Правопис or modern morphology. Both book-search surfaces were
-queried per line. Empty searches are not approval; returned keyword candidates
-often do not attest the entire phrase. Counts are capped retrieval results,
-not counts of all book matches. Non-author semantic/grammar review is pending.
+Form attestation proves morphology, not sentence naturalness. Russian-shadow
+checks are suspicion detectors, never a calque verdict. Both Антоненко surfaces
+were queried for every changed/new line; empty retrieval is not approval and
+keyword hits do not attest the whole sentence. The two source-search surfaces
+are style evidence; Правопис supplies spelling/punctuation authority. Independent
+non-author language/semantic review of this new head is still required.
 
-Authored tokens were lowercased for case-sensitive VESUM lookup while catalog
-sentence capitalization is preserved. An initial capitalized imperative
-probe missed forms; the lowercase/verb-filter calls resolved those misses.
-Unknown future slot contents must be verified at record build, not fabricated
-as examples here.
+There are 110 changed/new templates; 22 prior templates retain their wording.
+Each per-line call strips placeholders, lowercases authored words for VESUM,
+and verifies the distinct literal words with `verify_words`. The style/book
+query is the space-joined Cyrillic word runs from the literal template in its
+original case. Both searches use `limit=1`; `search_text` also uses
+`source_file='antonenko-davydovych-yak-my-hovorymo'`. Below are exact returned
+`Found` summaries and full search status lines, with returned book chunk IDs.
+These are capped retrieval counts, never total matches across the book.
 
-### Every authored word: verify_words
+### Official offline Правопис
 
-Call: `verify_words(words=<122 distinct authored tokens>)`.
-Exact tool text:
+Call: `query_pravopys(topic='164')`. Returned `source_id: pravopys_2019_official`.
 
 ```text
-344 analyses (108 distinct lemmas)
-
-Batch verification: 122 words
-
-Found: 122/122
-
-- **абзацу** — FOUND (3 analyses (1 distinct lemma)): абзац(noun), абзац(noun), абзац(noun)
-- **або** — FOUND (1 analysis (1 distinct lemma)): або(conj)
-- **антоніми** — FOUND (3 analyses (1 distinct lemma)): антонім(noun), антонім(noun), антонім(noun)
-- **без** — FOUND (1 analysis (1 distinct lemma)): без(prep)
-- **в** — FOUND (1 analysis (1 distinct lemma)): в(prep)
-- **варіант** — FOUND (2 analyses (1 distinct lemma)): варіант(noun), варіант(noun)
-- **виділи** — FOUND (5 analyses (3 distinct lemmas)): виділ(noun), виділ(noun), виділ(noun)
-- **визнає** — FOUND (2 analyses (2 distinct lemmas)): визнавати(verb), визнати(verb)
-- **вимови** — FOUND (4 analyses (1 distinct lemma)): вимова(noun), вимова(noun), вимова(noun)
-- **вимовляти** — FOUND (1 analysis (1 distinct lemma)): вимовляти(verb)
-- **вимову** — FOUND (1 analysis (1 distinct lemma)): вимова(noun)
-- **виправ** — FOUND (3 analyses (3 distinct lemmas)): виправа(noun), виправити(verb), випрати(verb)
-- **виправлене** — FOUND (3 analyses (1 distinct lemma)): виправлений(adj), виправлений(adj), виправлений(adj)
-- **виправлений** — FOUND (3 analyses (1 distinct lemma)): виправлений(adj), виправлений(adj), виправлений(adj)
-- **вислову** — FOUND (3 analyses (1 distinct lemma)): вислів(noun), вислів(noun), вислів(noun)
-- **вислів** — FOUND (2 analyses (1 distinct lemma)): вислів(noun), вислів(noun)
-- **вкажи** — FOUND (1 analysis (1 distinct lemma)): вказати(verb)
-- **відповідає** — FOUND (1 analysis (1 distinct lemma)): відповідати(verb)
-- **відповідне** — FOUND (3 analyses (1 distinct lemma)): відповідний(adj), відповідний(adj), відповідний(adj)
-- **відредагуй** — FOUND (1 analysis (1 distinct lemma)): відредагувати(verb)
-- **відтвори** — FOUND (1 analysis (1 distinct lemma)): відтворити(verb)
-- **для** — FOUND (1 analysis (1 distinct lemma)): для(prep)
-- **до** — FOUND (15 analyses (1 distinct lemma)): до(noun), до(noun), до(noun)
-- **добери** — FOUND (2 analyses (2 distinct lemmas)): дібрати(verb), добрати(verb)
-- **допустимо** — FOUND (2 analyses (2 distinct lemmas)): допустимо(adv), допустити(verb)
-- **допустимою** — FOUND (1 analysis (1 distinct lemma)): допустимий(adj)
-- **допустиму** — FOUND (1 analysis (1 distinct lemma)): допустимий(adj)
-- **з** — FOUND (1 analysis (1 distinct lemma)): з(prep)
-- **за** — FOUND (3 analyses (1 distinct lemma)): за(adv), за(part), за(prep)
-- **заміни** — FOUND (5 analyses (2 distinct lemmas)): заміна(noun), заміна(noun), заміна(noun)
-- **замінити** — FOUND (1 analysis (1 distinct lemma)): замінити(verb)
-- **заміну** — FOUND (1 analysis (1 distinct lemma)): заміна(noun)
-- **записати** — FOUND (1 analysis (1 distinct lemma)): записати(verb)
-- **запиши** — FOUND (1 analysis (1 distinct lemma)): записати(verb)
-- **значення** — FOUND (7 analyses (1 distinct lemma)): значення(noun), значення(noun), значення(noun)
-- **значенні** — FOUND (1 analysis (1 distinct lemma)): значення(noun)
-- **його** — FOUND (31 analyses (4 distinct lemmas)): він(noun), він(noun), воно(noun)
-- **кальки** — FOUND (4 analyses (1 distinct lemma)): калька(noun), калька(noun), калька(noun)
-- **калькований** — FOUND (6 analyses (1 distinct lemma)): калькований(adj), калькований(adj), калькований(adj)
-- **калькою** — FOUND (1 analysis (1 distinct lemma)): калька(noun)
-- **кальку** — FOUND (1 analysis (1 distinct lemma)): калька(noun)
-- **книжка** — FOUND (1 analysis (1 distinct lemma)): книжка(noun)
-- **книжкою** — FOUND (1 analysis (1 distinct lemma)): книжка(noun)
-- **контексті** — FOUND (1 analysis (1 distinct lemma)): контекст(noun)
-- **котра** — FOUND (1 analysis (1 distinct lemma)): котрий(adj)
-- **має** — FOUND (2 analyses (2 distinct lemmas)): мати(verb), маяти(verb)
-- **містить** — FOUND (2 analyses (1 distinct lemma)): містити(verb), містити(verb)
-- **наведене** — FOUND (3 analyses (1 distinct lemma)): наведений(adj), наведений(adj), наведений(adj)
-- **наведено** — FOUND (1 analysis (1 distinct lemma)): навести(verb)
-- **наведеного** — FOUND (3 analyses (1 distinct lemma)): наведений(adj), наведений(adj), наведений(adj)
-- **наведеному** — FOUND (4 analyses (1 distinct lemma)): наведений(adj), наведений(adj), наведений(adj)
-- **наведеної** — FOUND (1 analysis (1 distinct lemma)): наведений(adj)
-- **наведеній** — FOUND (2 analyses (1 distinct lemma)): наведений(adj), наведений(adj)
-- **наведи** — FOUND (1 analysis (1 distinct lemma)): навести(verb)
-- **назви** — FOUND (5 analyses (2 distinct lemmas)): назва(noun), назва(noun), назва(noun)
-- **написано** — FOUND (1 analysis (1 distinct lemma)): написати(verb)
-- **нормативно** — FOUND (1 analysis (1 distinct lemma)): нормативно(adv)
-- **нормативною** — FOUND (1 analysis (1 distinct lemma)): нормативний(adj)
-- **нормативну** — FOUND (1 analysis (1 distinct lemma)): нормативний(adj)
-- **нормі** — FOUND (2 analyses (1 distinct lemma)): норма(noun), норма(noun)
-- **ньому** — FOUND (2 analyses (2 distinct lemmas)): він(noun), воно(noun)
-- **обери** — FOUND (1 analysis (1 distinct lemma)): обрати(verb)
-- **оцінку** — FOUND (1 analysis (1 distinct lemma)): оцінка(noun)
-- **пари** — FOUND (11 analyses (2 distinct lemmas)): пар(noun), пар(noun), пар(noun)
-- **парі** — FOUND (19 analyses (3 distinct lemmas)): пар(noun), пара(noun), пара(noun)
-- **подай** — FOUND (1 analysis (1 distinct lemma)): подати(verb)
-- **поданих** — FOUND (3 analyses (1 distinct lemma)): поданий(adj), поданий(adj), поданий(adj)
-- **подано** — FOUND (1 analysis (1 distinct lemma)): подати(verb)
-- **поданої** — FOUND (1 analysis (1 distinct lemma)): поданий(adj)
-- **подає** — FOUND (2 analyses (1 distinct lemma)): подавати(verb), подавати(verb)
-- **позначенню** — FOUND (2 analyses (1 distinct lemma)): позначення(noun), позначення(noun)
-- **помилки** — FOUND (4 analyses (1 distinct lemma)): помилка(noun), помилка(noun), помилка(noun)
-- **помилок** — FOUND (1 analysis (1 distinct lemma)): помилка(noun)
-- **постав** — FOUND (5 analyses (4 distinct lemmas)): постав(noun), постав(noun), постава(noun)
-- **правило** — FOUND (4 analyses (2 distinct lemmas)): правило(noun), правило(noun), правило(noun)
-- **правильно** — FOUND (1 analysis (1 distinct lemma)): правильно(adv)
-- **правопис** — FOUND (2 analyses (1 distinct lemma)): правопис(noun), правопис(noun)
-- **правопису** — FOUND (3 analyses (1 distinct lemma)): правопис(noun), правопис(noun), правопис(noun)
-- **приклад** — FOUND (4 analyses (1 distinct lemma)): приклад(noun), приклад(noun), приклад(noun)
-- **прикладом** — FOUND (2 analyses (1 distinct lemma)): приклад(noun), приклад(noun)
-- **прикладу** — FOUND (6 analyses (2 distinct lemmas)): приклад(noun), приклад(noun), приклад(noun)
-- **пропонує** — FOUND (1 analysis (1 distinct lemma)): пропонувати(verb)
-- **процитуй** — FOUND (1 analysis (1 distinct lemma)): процитувати(verb)
-- **підручника** — FOUND (2 analyses (1 distinct lemma)): підручник(noun), підручник(noun)
-- **підручнику** — FOUND (3 analyses (1 distinct lemma)): підручник(noun), підручник(noun), підручник(noun)
-- **разом** — FOUND (2 analyses (2 distinct lemmas)): раз(noun), разом(adv)
-- **речення** — FOUND (7 analyses (1 distinct lemma)): речення(noun), речення(noun), речення(noun)
-- **реченні** — FOUND (1 analysis (1 distinct lemma)): речення(noun)
-- **розділ** — FOUND (2 analyses (1 distinct lemma)): розділ(noun), розділ(noun)
-- **розділу** — FOUND (3 analyses (1 distinct lemma)): розділ(noun), розділ(noun), розділ(noun)
-- **розділі** — FOUND (1 analysis (1 distinct lemma)): розділ(noun)
-- **самого** — FOUND (6 analyses (2 distinct lemmas)): сам(adj), сам(adj), сам(adj)
-- **синоніми** — FOUND (3 analyses (1 distinct lemma)): синонім(noun), синонім(noun), синонім(noun)
-- **слова** — FOUND (4 analyses (1 distinct lemma)): слово(noun), слово(noun), слово(noun)
-- **словник** — FOUND (2 analyses (1 distinct lemma)): словник(noun), словник(noun)
-- **словникове** — FOUND (3 analyses (1 distinct lemma)): словниковий(adj), словниковий(adj), словниковий(adj)
-- **словником** — FOUND (1 analysis (1 distinct lemma)): словник(noun)
-- **слово** — FOUND (3 analyses (1 distinct lemma)): слово(noun), слово(noun), слово(noun)
-- **сучасну** — FOUND (1 analysis (1 distinct lemma)): сучасний(adj)
-- **сучасній** — FOUND (2 analyses (1 distinct lemma)): сучасний(adj), сучасний(adj)
-- **також** — FOUND (1 analysis (1 distinct lemma)): також(adv)
-- **текст** — FOUND (2 analyses (1 distinct lemma)): текст(noun), текст(noun)
-- **тлумачення** — FOUND (7 analyses (1 distinct lemma)): тлумачення(noun), тлумачення(noun), тлумачення(noun)
-- **тлумачить** — FOUND (2 analyses (1 distinct lemma)): тлумачити(verb), тлумачити(verb)
-- **того** — FOUND (7 analyses (4 distinct lemmas)): те(noun), тога(noun), того(adv)
-- **у** — FOUND (1 analysis (1 distinct lemma)): у(prep)
-- **усунь** — FOUND (1 analysis (1 distinct lemma)): усунути(verb)
-- **утвори** — FOUND (4 analyses (2 distinct lemmas)): утвір(noun), утвір(noun), утвір(noun)
-- **форм** — FOUND (1 analysis (1 distinct lemma)): форма(noun)
-- **форма** — FOUND (1 analysis (1 distinct lemma)): форма(noun)
-- **форму** — FOUND (1 analysis (1 distinct lemma)): форма(noun)
-- **формі** — FOUND (2 analyses (1 distinct lemma)): форма(noun), форма(noun)
-- **цієї** — FOUND (1 analysis (1 distinct lemma)): цей(adj)
-- **що** — FOUND (3 analyses (1 distinct lemma)): що(conj), що(noun), що(noun)
-- **як** — FOUND (4 analyses (1 distinct lemma)): як(adv), як(conj), як(noun)
-- **яка** — FOUND (3 analyses (2 distinct lemmas)): як(noun), як(noun), який(adj)
-- **яке** — FOUND (2 analyses (1 distinct lemma)): який(adj), який(adj)
-- **який** — FOUND (2 analyses (1 distinct lemma)): який(adj), який(adj)
-- **якому** — FOUND (4 analyses (1 distinct lemma)): який(adj), який(adj), який(adj)
-- **яку** — FOUND (3 analyses (2 distinct lemmas)): як(noun), як(noun), який(adj)
-- **які** — FOUND (2 analyses (1 distinct lemma)): який(adj), який(adj)
-- **із** — FOUND (1 analysis (1 distinct lemma)): із(prep)
+**Український правопис (2019), § 164. Лапки (« », “ ”, „ “, рідше „ ”)**
+**Locator**: Український правопис. Київ: Наукова думка, 2019, § 164, с. 246–248
+**Source**: official authorized edition (Наукова думка, 2019), stored offline in sources.db — https://www.ulif.org.ua/system/files/pravopus-new.pdf (sha256 0d2fd75a2e9b…, retrieved 2026-10-03T15:53:24Z)
 ```
 
-### Imperatives: verify_words with pos_filter='verb'
-
-This resolves noun/verb ambiguity obscured by the summary's first analyses.
-The intended `виправити` analysis is `verb:perf:impr:s:2`, not the archaic
-noun analysis. Exact tool text:
+Exact punctuation note from this response:
 
 ```text
-20 analyses (20 distinct lemmas)
+Примітка 1. Такі розділові знаки, як крапка, кома, крапка з комою,
+двокрапка й тире, ніколи не ставимо перед закритими лапками, а
+тільки після них.
+```
 
-Batch verification: 16 words
+Exact nested-quote guidance:
 
-Found: 16/16
+```text
+доцільно використовувати лапки різної форми — зовнішні і
+внутрішні.
+```
 
-- **виправ** — FOUND (2 analyses (2 distinct lemmas)): виправити(verb), випрати(verb)
+Call: `query_pravopys(topic='23')`. Returned `source_id: pravopys_2019_official`.
+
+```text
+**Український правопис (2019), § 23. Уживання прийменників У, В і початкових У-, В-**
+**Locator**: Український правопис. Київ: Наукова думка, 2019, § 23, с. 25–28
+**Source**: official authorized edition (Наукова думка, 2019), stored offline in sources.db — https://www.ulif.org.ua/system/files/pravopus-new.pdf (sha256 0d2fd75a2e9b…, retrieved 2026-10-03T15:53:24Z)
+```
+
+Call: `query_pravopys(topic='155')`. Returned `source_id: pravopys_2019_official`.
+
+```text
+**Український правопис (2019), § 155. Крапка (.)**
+**Locator**: Український правопис. Київ: Наукова думка, 2019, § 155, с. 197–199
+**Source**: official authorized edition (Наукова думка, 2019), stored offline in sources.db — https://www.ulif.org.ua/system/files/pravopus-new.pdf (sha256 0d2fd75a2e9b…, retrieved 2026-10-03T15:53:24Z)
+```
+
+Call: `query_pravopys(topic='160')`. Returned `source_id: pravopys_2019_official`.
+
+```text
+**Український правопис (2019), § 160. Двокрапка (:)**
+**Locator**: Український правопис. Київ: Наукова думка, 2019, § 160, с. 228–230
+**Source**: official authorized edition (Наукова думка, 2019), stored offline in sources.db — https://www.ulif.org.ua/system/files/pravopus-new.pdf (sha256 0d2fd75a2e9b…, retrieved 2026-10-03T15:53:24Z)
+```
+
+E3b stores §§ with paragraph locators. The queried official §23 spans pages
+25–28; C5 therefore asks for the complete paragraph, not one sub-point.
+The official note supersedes the old draft's mirror-only evidence.
+
+### Forms and Russian shadow
+
+Calls: `check_text(items=<110 literal templates>, checks=['vesum',
+'russian_shadow'], max_findings=200)`. Exact returned summary/problemlists:
+Stress and UA-GEC checks were not requested; their zero counters below do not
+establish verification of those facets.
+
+```json
+{
+  "summary": {
+    "tokens": 920,
+    "unique_forms": 204,
+    "problems_per_check": {
+      "vesum": 0,
+      "stress": 0,
+      "russian_shadow": 0,
+      "ua_gec": 0
+    },
+    "suspicions_count": 0,
+    "uncut_count": 0,
+    "truncated": false
+  },
+  "problems": [],
+  "suspicions": []
+}
+```
+
+Imperative disambiguation: `verify_words(pos_filter="verb", words=<the 22 forms below>)`. Exact response:
+
+```text
+25 analyses (25 distinct lemmas)
+
+Batch verification: 22 words
+
+Found: 22/22
+
+- **перевір** — FOUND (1 analysis (1 distinct lemma)): перевірити(verb)
 - **подай** — FOUND (1 analysis (1 distinct lemma)): подати(verb)
 - **запиши** — FOUND (1 analysis (1 distinct lemma)): записати(verb)
 - **відредагуй** — FOUND (1 analysis (1 distinct lemma)): відредагувати(verb)
 - **усунь** — FOUND (1 analysis (1 distinct lemma)): усунути(verb)
 - **наведи** — FOUND (1 analysis (1 distinct lemma)): навести(verb)
-- **утвори** — FOUND (1 analysis (1 distinct lemma)): утворити(verb)
+- **збережи** — FOUND (1 analysis (1 distinct lemma)): зберегти(verb)
+- **виправ** — FOUND (2 analyses (2 distinct lemmas)): виправити(verb), випрати(verb)
+- **залиш** — FOUND (1 analysis (1 distinct lemma)): залишити(verb)
 - **добери** — FOUND (2 analyses (2 distinct lemmas)): дібрати(verb), добрати(verb)
 - **вкажи** — FOUND (1 analysis (1 distinct lemma)): вказати(verb)
+- **утвори** — FOUND (1 analysis (1 distinct lemma)): утворити(verb)
 - **постав** — FOUND (2 analyses (2 distinct lemmas)): поставити(verb), постати(verb)
 - **назви** — FOUND (1 analysis (1 distinct lemma)): назвати(verb)
 - **відтвори** — FOUND (1 analysis (1 distinct lemma)): відтворити(verb)
-- **заміни** — FOUND (1 analysis (1 distinct lemma)): замінити(verb)
-- **обери** — FOUND (1 analysis (1 distinct lemma)): обрати(verb)
-- **виділи** — FOUND (2 analyses (2 distinct lemmas)): виділити(verb), видіти(verb)
+- **перелічи** — FOUND (1 analysis (1 distinct lemma)): перелічити(verb)
 - **процитуй** — FOUND (1 analysis (1 distinct lemma)): процитувати(verb)
+- **додай** — FOUND (1 analysis (1 distinct lemma)): додати(verb)
+- **заміни** — FOUND (1 analysis (1 distinct lemma)): замінити(verb)
+- **позбудься** — FOUND (1 analysis (1 distinct lemma)): позбутися(verb)
+- **обери** — FOUND (1 analysis (1 distinct lemma)): обрати(verb)
+- **випиши** — FOUND (1 analysis (1 distinct lemma)): виписати(verb)
 ```
 
-### Every authored word: check_russian_shadow
+### Per-line source calls
 
-Each of the 122 tokens above was submitted individually as `word`.
-The exact word-to-output groups are quoted below; all returned
-`matches_russian: false`, but confidence values differ. This is not
-phrase-level approval.
-
-Words (119): `абзацу`, `або`, `антоніми`, `без`, `в`, `варіант`, `виділи`, `визнає`, `вимови`, `вимовляти`, `вимову`, `виправ`, `виправлене`, `виправлений`, `вислову`, `вкажи`, `відповідає`, `відповідне`, `відредагуй`, `відтвори`, `для`, `до`, `добери`, `допустимо`, `допустимою`, `допустиму`, `з`, `за`, `заміни`, `замінити`, `заміну`, `записати`, `запиши`, `значення`, `значенні`, `його`, `кальки`, `калькований`, `калькою`, `кальку`, `книжка`, `книжкою`, `контексті`, `котра`, `має`, `містить`, `наведене`, `наведено`, `наведеного`, `наведеному`, `наведеної`, `наведеній`, `наведи`, `назви`, `написано`, `нормативно`, `нормативною`, `нормативну`, `нормі`, `обери`, `оцінку`, `пари`, `парі`, `подай`, `поданих`, `подано`, `поданої`, `подає`, `позначенню`, `помилки`, `помилок`, `постав`, `правило`, `правильно`, `правопис`, `правопису`, `приклад`, `прикладом`, `прикладу`, `пропонує`, `процитуй`, `підручника`, `підручнику`, `разом`, `речення`, `реченні`, `розділ`, `розділу`, `розділі`, `самого`, `синоніми`, `слова`, `словник`, `словникове`, `словником`, `слово`, `сучасну`, `сучасній`, `також`, `текст`, `тлумачення`, `тлумачить`, `того`, `у`, `усунь`, `утвори`, `форм`, `форма`, `форму`, `формі`, `цієї`, `що`, `як`, `яка`, `яке`, `якому`, `яку`, `які`, `із`.
-
-```json
-{
-  "matches_russian": false,
-  "russian_lemma": null,
-  "ukrainian_alternative": null,
-  "confidence": 0.0
-}
-```
-
-Words (1): `вислів`.
-
-```json
-{
-  "matches_russian": false,
-  "russian_lemma": null,
-  "ukrainian_alternative": null,
-  "confidence": 0.48497320061255744
-}
-```
-
-Words (1): `ньому`.
-
-```json
-{
-  "matches_russian": false,
-  "russian_lemma": null,
-  "ukrainian_alternative": null,
-  "confidence": 0.3333379302736099
-}
-```
-
-Words (1): `який`.
-
-```json
-{
-  "matches_russian": false,
-  "russian_lemma": null,
-  "ukrainian_alternative": null,
-  "confidence": 0.35714285714285715
-}
-```
-
-### Spelling question: query_pravopys(topic='у-в')
-
-The live tool returned these exact section-title lines:
-
-> § 23.
-> Позиції вживання прийменників і префіксів У та В
-
-Its rule before `ф` covers fixed `у формі`; its vowel-to-consonant
-rule covers `помилки в реченні`. Quotes must keep source slots unchanged;
-real-value euphony still needs reviewer checking. The response identifies
-`https://2019.pravopys.net/sections/23/`, an unofficial mirror.
-This is the actual spelling response, not proof of PA2 or official E3b
-ingestion; the driver must check official-source availability on review seats.
-
-### Each line: forms, style index and full-book search
-
-Every row quotes the final successful form-check `Found` line, the complete
-style-search status, and the first book-search response line with locators.
-The style query strips placeholders and adjacent punctuation from the
-template; the book query wraps that string in double quotes and uses
-`source_file='antonenko-davydovych-yak-my-hovorymo', limit=2`.
-The search tool may broaden phrases; hits do not prove exact attestation.
-All words in each line are covered by its VESUM call and the shadow groups.
-
-| ID | verify_words | search_style_guide | search_text and chunk locators |
+| ID | verify_words | search_style_guide | search_text; returned chunk |
 | --- | --- | --- | --- |
-| C1.sentence_correction.01 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Виправ помилки в реченні"` | `Found 2 results for: ""Виправ помилки в реченні""` — `antonenko-davydovych-yak-my-hovorymo_p059`, `antonenko-davydovych-yak-my-hovorymo_p070` |
-| C1.sentence_correction.02 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Подай виправлене речення"` | `Found 2 results for: ""Подай виправлене речення""` — `antonenko-davydovych-yak-my-hovorymo_p011`, `antonenko-davydovych-yak-my-hovorymo_p144` |
-| C1.sentence_correction.03 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Запиши речення без помилок"` | `Found 2 results for: ""Запиши речення без помилок""` — `antonenko-davydovych-yak-my-hovorymo_p117`, `antonenko-davydovych-yak-my-hovorymo_p153` |
-| C1.sentence_correction.04 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Відредагуй наведене речення"` | `Found 2 results for: ""Відредагуй наведене речення""` — `antonenko-davydovych-yak-my-hovorymo_p124`, `antonenko-davydovych-yak-my-hovorymo_p144` |
-| C1.sentence_correction.05 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Усунь помилки в наведеному реченні"` | `Found 2 results for: ""Усунь помилки в наведеному реченні""` — `antonenko-davydovych-yak-my-hovorymo_p059`, `antonenko-davydovych-yak-my-hovorymo_p167` |
-| C1.sentence_correction.06 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Наведи виправлений варіант речення"` | `Found 2 results for: ""Наведи виправлений варіант речення""` — `antonenko-davydovych-yak-my-hovorymo_p152`, `antonenko-davydovych-yak-my-hovorymo_p144` |
-| C1.sentence_correction.07 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Речення запиши без помилок"` | `Found 2 results for: ""Речення запиши без помилок""` — `antonenko-davydovych-yak-my-hovorymo_p117`, `antonenko-davydovych-yak-my-hovorymo_p153` |
-| C1.sentence_correction.08 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Як правильно записати речення"` | `Found 2 results for: ""Як правильно записати речення""` — `antonenko-davydovych-yak-my-hovorymo_p014`, `antonenko-davydovych-yak-my-hovorymo_p113` |
-| C2.agreed_form.01 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Подай форму слова"` | `Found 2 results for: ""Подай форму слова""` — `antonenko-davydovych-yak-my-hovorymo_p023`, `antonenko-davydovych-yak-my-hovorymo_p101` |
-| C2.agreed_form.02 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Запиши слово у формі"` | `Found 2 results for: ""Запиши слово у формі""` — `antonenko-davydovych-yak-my-hovorymo_p070`, `antonenko-davydovych-yak-my-hovorymo_p089` |
-| C2.agreed_form.03 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Наведи форму для слова"` | `Found 2 results for: ""Наведи форму для слова""` — `antonenko-davydovych-yak-my-hovorymo_p101`, `antonenko-davydovych-yak-my-hovorymo_p023` |
-| C2.agreed_form.04 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Утвори форму слова"` | `Found 2 results for: ""Утвори форму слова""` — `antonenko-davydovych-yak-my-hovorymo_p023`, `antonenko-davydovych-yak-my-hovorymo_p101` |
-| C2.agreed_form.05 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Добери форму слова"` | `Found 2 results for: ""Добери форму слова""` — `antonenko-davydovych-yak-my-hovorymo_p023`, `antonenko-davydovych-yak-my-hovorymo_p101` |
-| C2.agreed_form.06 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Вкажи форму слова"` | `Found 2 results for: ""Вкажи форму слова""` — `antonenko-davydovych-yak-my-hovorymo_p023`, `antonenko-davydovych-yak-my-hovorymo_p101` |
-| C2.agreed_form.07 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Слово постав у форму"` | `Found 2 results for: ""Слово постав у форму""` — `antonenko-davydovych-yak-my-hovorymo_p101`, `antonenko-davydovych-yak-my-hovorymo_p024` |
-| C2.agreed_form.08 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Яка форма слова відповідає позначенню"` | `Found 2 results for: ""Яка форма слова відповідає позначенню""` — `antonenko-davydovych-yak-my-hovorymo_p047`, `antonenko-davydovych-yak-my-hovorymo_p024` |
-| C3.synonyms.01 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Подай синоніми до слова у значенні"` | `Found 2 results for: ""Подай синоніми до слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p158`, `antonenko-davydovych-yak-my-hovorymo_p039` |
-| C3.synonyms.02 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши синоніми слова у значенні"` | `Found 2 results for: ""Запиши синоніми слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p158`, `antonenko-davydovych-yak-my-hovorymo_p039` |
-| C3.synonyms.03 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Наведи синоніми для слова у значенні"` | `Found 2 results for: ""Наведи синоніми для слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p158`, `antonenko-davydovych-yak-my-hovorymo_p039` |
-| C3.synonyms.04 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Добери синоніми до слова у значенні"` | `Found 2 results for: ""Добери синоніми до слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p158`, `antonenko-davydovych-yak-my-hovorymo_p039` |
-| C3.synonyms.05 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вкажи синоніми слова у значенні"` | `Found 2 results for: ""Вкажи синоніми слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p158`, `antonenko-davydovych-yak-my-hovorymo_p039` |
-| C3.synonyms.06 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Назви синоніми до слова у значенні"` | `Found 2 results for: ""Назви синоніми до слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p158`, `antonenko-davydovych-yak-my-hovorymo_p039` |
-| C3.synonyms.07 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Слово у значенні які його синоніми"` | `Found 2 results for: ""Слово у значенні які його синоніми""` — `antonenko-davydovych-yak-my-hovorymo_p158`, `antonenko-davydovych-yak-my-hovorymo_p039` |
-| C3.synonyms.08 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Які синоніми має слово у значенні"` | `Found 2 results for: ""Які синоніми має слово у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p030`, `antonenko-davydovych-yak-my-hovorymo_p158` |
-| C3.antonyms.01 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Подай антоніми до слова у значенні"` | `Found 2 results for: ""Подай антоніми до слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p119`, `antonenko-davydovych-yak-my-hovorymo_p158` |
-| C3.antonyms.02 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши антоніми слова у значенні"` | `Found 2 results for: ""Запиши антоніми слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p119`, `antonenko-davydovych-yak-my-hovorymo_p158` |
-| C3.antonyms.03 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Наведи антоніми для слова у значенні"` | `Found 2 results for: ""Наведи антоніми для слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p119`, `antonenko-davydovych-yak-my-hovorymo_p138` |
-| C3.antonyms.04 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Добери антоніми до слова у значенні"` | `Found 2 results for: ""Добери антоніми до слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p119`, `antonenko-davydovych-yak-my-hovorymo_p158` |
-| C3.antonyms.05 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вкажи антоніми слова у значенні"` | `Found 2 results for: ""Вкажи антоніми слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p119`, `antonenko-davydovych-yak-my-hovorymo_p158` |
-| C3.antonyms.06 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Назви антоніми до слова у значенні"` | `Found 2 results for: ""Назви антоніми до слова у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p119`, `antonenko-davydovych-yak-my-hovorymo_p158` |
-| C3.antonyms.07 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Слово у значенні які його антоніми"` | `Found 2 results for: ""Слово у значенні які його антоніми""` — `antonenko-davydovych-yak-my-hovorymo_p119`, `antonenko-davydovych-yak-my-hovorymo_p032` |
-| C3.antonyms.08 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Які антоніми має слово у значенні"` | `Found 2 results for: ""Які антоніми має слово у значенні""` — `antonenko-davydovych-yak-my-hovorymo_p032`, `antonenko-davydovych-yak-my-hovorymo_p119` |
-| C4.idiom_definition.01 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Подай словникове значення вислову"` | `Found 2 results for: ""Подай словникове значення вислову""` — `antonenko-davydovych-yak-my-hovorymo_p121`, `antonenko-davydovych-yak-my-hovorymo_p115` |
-| C4.idiom_definition.02 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши значення вислову за словником"` | `Found 2 results for: ""Запиши значення вислову за словником""` — `antonenko-davydovych-yak-my-hovorymo_p121`, `antonenko-davydovych-yak-my-hovorymo_p115` |
-| C4.idiom_definition.03 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Наведи словникове тлумачення вислову"` | `Found 2 results for: ""Наведи словникове тлумачення вислову""` — `antonenko-davydovych-yak-my-hovorymo_p121`, `antonenko-davydovych-yak-my-hovorymo_p018` |
-| C4.idiom_definition.04 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вкажи значення вислову за словником"` | `Found 2 results for: ""Вкажи значення вислову за словником""` — `antonenko-davydovych-yak-my-hovorymo_p121`, `antonenko-davydovych-yak-my-hovorymo_p115` |
-| C4.idiom_definition.05 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Відтвори словникове тлумачення вислову"` | `Found 2 results for: ""Відтвори словникове тлумачення вислову""` — `antonenko-davydovych-yak-my-hovorymo_p121`, `antonenko-davydovych-yak-my-hovorymo_p018` |
-| C4.idiom_definition.06 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вислів яке його словникове значення"` | `Found 2 results for: ""Вислів яке його словникове значення""` — `antonenko-davydovych-yak-my-hovorymo_p163`, `antonenko-davydovych-yak-my-hovorymo_p083` |
-| C4.idiom_definition.07 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Яке значення вислову подає словник"` | `Found 2 results for: ""Яке значення вислову подає словник""` — `antonenko-davydovych-yak-my-hovorymo_p152`, `antonenko-davydovych-yak-my-hovorymo_p021` |
-| C4.idiom_definition.08 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Як словник тлумачить вислів"` | `Found 2 results for: ""Як словник тлумачить вислів""` — `antonenko-davydovych-yak-my-hovorymo_p050`, `antonenko-davydovych-yak-my-hovorymo_p117` |
-| C5.printed_spelling_rule.01 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Подай правило правопису для наведеного в ньому прикладу"` | `Found 2 results for: ""Подай правило правопису для наведеного в ньому прикладу""` — `antonenko-davydovych-yak-my-hovorymo_p011`, `antonenko-davydovych-yak-my-hovorymo_p065` |
-| C5.printed_spelling_rule.02 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Наведи правило, у якому подано приклад"` | `Found 2 results for: ""Наведи правило, у якому подано приклад""` — `antonenko-davydovych-yak-my-hovorymo_p040`, `antonenko-davydovych-yak-my-hovorymo_p011` |
-| C5.printed_spelling_rule.03 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Запиши правило правопису, що містить приклад"` | `Found 2 results for: ""Запиши правило правопису, що містить приклад""` — `antonenko-davydovych-yak-my-hovorymo_p040`, `antonenko-davydovych-yak-my-hovorymo_p151` |
-| C5.printed_spelling_rule.04 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вкажи правило правопису з прикладом"` | `Found 2 results for: ""Вкажи правило правопису з прикладом""` — `antonenko-davydovych-yak-my-hovorymo_p040`, `antonenko-davydovych-yak-my-hovorymo_p151` |
-| C5.printed_spelling_rule.05 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Відтвори правило правопису, у якому наведено"` | `Found 2 results for: ""Відтвори правило правопису, у якому наведено""` — `antonenko-davydovych-yak-my-hovorymo_p147`, `antonenko-davydovych-yak-my-hovorymo_p040` |
-| C5.printed_spelling_rule.06 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Приклад яке правило правопису його містить"` | `Found 2 results for: ""Приклад яке правило правопису його містить""` — `antonenko-davydovych-yak-my-hovorymo_p040`, `antonenko-davydovych-yak-my-hovorymo_p149` |
-| C5.printed_spelling_rule.07 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Яке правило правопису наведено разом із прикладом"` | `Found 2 results for: ""Яке правило правопису наведено разом із прикладом""` — `antonenko-davydovych-yak-my-hovorymo_p147`, `antonenko-davydovych-yak-my-hovorymo_p040` |
-| C5.printed_spelling_rule.08 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Правопис містить приклад наведи відповідне правило"` | `Found 2 results for: ""Правопис містить приклад наведи відповідне правило""` — `antonenko-davydovych-yak-my-hovorymo_p040`, `antonenko-davydovych-yak-my-hovorymo_p070` |
-| C6.calque_correction.01 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Виправ кальку в реченні"` | `Found 2 results for: ""Виправ кальку в реченні""` — `antonenko-davydovych-yak-my-hovorymo_p141`, `antonenko-davydovych-yak-my-hovorymo_p070` |
-| C6.calque_correction.02 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Подай речення без кальки"` | `No results found.` — none |
-| C6.calque_correction.03 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши наведене речення без кальки"` | `Found 2 results for: ""Запиши наведене речення без кальки""` — `antonenko-davydovych-yak-my-hovorymo_p124`, `antonenko-davydovych-yak-my-hovorymo_p120` |
-| C6.calque_correction.04 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Усунь кальку в наведеному реченні"` | `Found 2 results for: ""Усунь кальку в наведеному реченні""` — `antonenko-davydovych-yak-my-hovorymo_p167`, `antonenko-davydovych-yak-my-hovorymo_p114` |
-| C6.calque_correction.05 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Заміни калькований вислів у реченні"` | `Found 2 results for: ""Заміни калькований вислів у реченні""` — `antonenko-davydovych-yak-my-hovorymo_p163`, `antonenko-davydovych-yak-my-hovorymo_p108` |
-| C6.calque_correction.06 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Наведи виправлений варіант речення з калькою"` | `Found 2 results for: ""Наведи виправлений варіант речення з калькою""` — `antonenko-davydovych-yak-my-hovorymo_p112`, `antonenko-davydovych-yak-my-hovorymo_p152` |
-| C6.calque_correction.07 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Речення запиши без кальки"` | `Found 2 results for: ""Речення запиши без кальки""` — `antonenko-davydovych-yak-my-hovorymo_p120`, `antonenko-davydovych-yak-my-hovorymo_p100` |
-| C6.calque_correction.08 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Як записати речення без кальки"` | `Found 2 results for: ""Як записати речення без кальки""` — `antonenko-davydovych-yak-my-hovorymo_p120`, `antonenko-davydovych-yak-my-hovorymo_p100` |
-| C6.book_calque_replacement.01 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Подай заміну вислову за книжкою"` | `Found 2 results for: ""Подай заміну вислову за книжкою""` — `antonenko-davydovych-yak-my-hovorymo_p028`, `antonenko-davydovych-yak-my-hovorymo_p121` |
-| C6.book_calque_replacement.02 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Наведи заміну вислову за книжкою"` | `Found 2 results for: ""Наведи заміну вислову за книжкою""` — `antonenko-davydovych-yak-my-hovorymo_p028`, `antonenko-davydovych-yak-my-hovorymo_p121` |
-| C6.book_calque_replacement.03 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши заміну вислову за книжкою"` | `Found 2 results for: ""Запиши заміну вислову за книжкою""` — `antonenko-davydovych-yak-my-hovorymo_p028`, `antonenko-davydovych-yak-my-hovorymo_p121` |
-| C6.book_calque_replacement.04 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вкажи заміну вислову за книжкою"` | `Found 2 results for: ""Вкажи заміну вислову за книжкою""` — `antonenko-davydovych-yak-my-hovorymo_p028`, `antonenko-davydovych-yak-my-hovorymo_p121` |
-| C6.book_calque_replacement.05 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Відтвори заміну вислову за книжкою"` | `Found 2 results for: ""Відтвори заміну вислову за книжкою""` — `antonenko-davydovych-yak-my-hovorymo_p028`, `antonenko-davydovych-yak-my-hovorymo_p121` |
-| C6.book_calque_replacement.06 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вислів яку заміну пропонує книжка"` | `Found 2 results for: ""Вислів яку заміну пропонує книжка""` — `antonenko-davydovych-yak-my-hovorymo_p125`, `antonenko-davydovych-yak-my-hovorymo_p138` |
-| C6.book_calque_replacement.07 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Яку заміну вислову пропонує книжка"` | `Found 2 results for: ""Яку заміну вислову пропонує книжка""` — `antonenko-davydovych-yak-my-hovorymo_p028`, `antonenko-davydovych-yak-my-hovorymo_p125` |
-| C6.book_calque_replacement.08 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Як книжка пропонує замінити вислів"` | `Found 2 results for: ""Як книжка пропонує замінити вислів""` — `antonenko-davydovych-yak-my-hovorymo_p125`, `antonenko-davydovych-yak-my-hovorymo_p138` |
-| C7.modern_norm_selection.01 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Обери сучасну нормативну форму з наведеної пари"` | `Found 2 results for: ""Обери сучасну нормативну форму з наведеної пари""` — `antonenko-davydovych-yak-my-hovorymo_p042`, `antonenko-davydovych-yak-my-hovorymo_p066` |
-| C7.modern_norm_selection.02 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Вкажи сучасну нормативну форму в наведеній парі"` | `Found 2 results for: ""Вкажи сучасну нормативну форму в наведеній парі""` — `antonenko-davydovych-yak-my-hovorymo_p099`, `antonenko-davydovych-yak-my-hovorymo_p114` |
-| C7.modern_norm_selection.03 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Назви сучасну нормативну форму з поданої пари"` | `Found 2 results for: ""Назви сучасну нормативну форму з поданої пари""` — `antonenko-davydovych-yak-my-hovorymo_p066`, `antonenko-davydovych-yak-my-hovorymo_p062` |
-| C7.modern_norm_selection.04 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Подай сучасну нормативну форму з наведеної пари"` | `Found 2 results for: ""Подай сучасну нормативну форму з наведеної пари""` — `antonenko-davydovych-yak-my-hovorymo_p042`, `antonenko-davydovych-yak-my-hovorymo_p011` |
-| C7.modern_norm_selection.05 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Запиши сучасну нормативну форму з поданої пари"` | `Found 2 results for: ""Запиши сучасну нормативну форму з поданої пари""` — `antonenko-davydovych-yak-my-hovorymo_p066`, `antonenko-davydovych-yak-my-hovorymo_p120` |
-| C7.modern_norm_selection.06 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Виділи сучасну нормативну форму в наведеній парі"` | `Found 2 results for: ""Виділи сучасну нормативну форму в наведеній парі""` — `antonenko-davydovych-yak-my-hovorymo_p099`, `antonenko-davydovych-yak-my-hovorymo_p114` |
-| C7.modern_norm_selection.07 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Яка форма в наведеній парі відповідає сучасній нормі"` | `Found 2 results for: ""Яка форма в наведеній парі відповідає сучасній нормі""` — `antonenko-davydovych-yak-my-hovorymo_p047`, `antonenko-davydovych-yak-my-hovorymo_p016` |
-| C7.modern_norm_selection.08 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Котра з поданих форм відповідає сучасній нормі"` | `Found 2 results for: ""Котра з поданих форм відповідає сучасній нормі""` — `antonenko-davydovych-yak-my-hovorymo_p109`, `antonenko-davydovych-yak-my-hovorymo_p017` |
-| C8.supported_pronunciation.01 | `Found: 19/19` | `No results in Антоненко-Давидович for: "Подай нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Подай нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p011`, `antonenko-davydovych-yak-my-hovorymo_p147` |
-| C8.supported_pronunciation.02 | `Found: 19/19` | `No results in Антоненко-Давидович for: "Запиши нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Запиши нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p147`, `antonenko-davydovych-yak-my-hovorymo_p028` |
-| C8.supported_pronunciation.03 | `Found: 18/18` | `No results in Антоненко-Давидович for: "Наведи нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Наведи нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p147`, `antonenko-davydovych-yak-my-hovorymo_p028` |
-| C8.supported_pronunciation.04 | `Found: 19/19` | `No results in Антоненко-Давидович for: "Вкажи нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Вкажи нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p147`, `antonenko-davydovych-yak-my-hovorymo_p028` |
-| C8.supported_pronunciation.05 | `Found: 19/19` | `No results in Антоненко-Давидович for: "Відтвори нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Відтвори нормативну або допустиму вимову слова в контексті за книжкою Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p147`, `antonenko-davydovych-yak-my-hovorymo_p028` |
-| C8.supported_pronunciation.06 | `Found: 19/19` | `No results in Антоненко-Давидович for: "Слово у контексті яку вимову книжка визнає нормативною або допустимою Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Слово у контексті яку вимову книжка визнає нормативною або допустимою Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p129`, `antonenko-davydovych-yak-my-hovorymo_p125` |
-| C8.supported_pronunciation.07 | `Found: 19/19` | `No results in Антоненко-Давидович for: "Яку вимову слова в контексті книжка визнає нормативною або допустимою Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Яку вимову слова в контексті книжка визнає нормативною або допустимою Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p125`, `antonenko-davydovych-yak-my-hovorymo_p129` |
-| C8.supported_pronunciation.08 | `Found: 19/19` | `No results in Антоненко-Давидович for: "Як за книжкою нормативно або допустимо вимовляти слово в контексті Наведи також оцінку цієї вимови з того самого абзацу"` | `Found 2 results for: ""Як за книжкою нормативно або допустимо вимовляти слово в контексті Наведи також оцінку цієї вимови з того самого абзацу""` — `antonenko-davydovych-yak-my-hovorymo_p028`, `antonenko-davydovych-yak-my-hovorymo_p148` |
-| C9.verbatim_section.01 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Подай текст розділу з підручника"` | `Found 2 results for: ""Подай текст розділу з підручника""` — `antonenko-davydovych-yak-my-hovorymo_p146`, `antonenko-davydovych-yak-my-hovorymo_p011` |
-| C9.verbatim_section.02 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Наведи текст розділу з підручника"` | `Found 2 results for: ""Наведи текст розділу з підручника""` — `antonenko-davydovych-yak-my-hovorymo_p146`, `antonenko-davydovych-yak-my-hovorymo_p145` |
-| C9.verbatim_section.03 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Відтвори текст розділу з підручника"` | `Found 2 results for: ""Відтвори текст розділу з підручника""` — `antonenko-davydovych-yak-my-hovorymo_p146`, `antonenko-davydovych-yak-my-hovorymo_p145` |
-| C9.verbatim_section.04 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши текст розділу з підручника"` | `Found 2 results for: ""Запиши текст розділу з підручника""` — `antonenko-davydovych-yak-my-hovorymo_p146`, `antonenko-davydovych-yak-my-hovorymo_p145` |
-| C9.verbatim_section.05 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Процитуй розділ з підручника"` | `Found 2 results for: ""Процитуй розділ з підручника""` — `antonenko-davydovych-yak-my-hovorymo_p146`, `antonenko-davydovych-yak-my-hovorymo_p145` |
-| C9.verbatim_section.06 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Розділ подай його текст із підручника"` | `Found 2 results for: ""Розділ подай його текст із підручника""` — `antonenko-davydovych-yak-my-hovorymo_p146`, `antonenko-davydovych-yak-my-hovorymo_p011` |
-| C9.verbatim_section.07 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Який текст містить розділ у підручнику"` | `Found 2 results for: ""Який текст містить розділ у підручнику""` — `antonenko-davydovych-yak-my-hovorymo_p058`, `antonenko-davydovych-yak-my-hovorymo_p123` |
-| C9.verbatim_section.08 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Що написано в розділі підручника"` | `Found 2 results for: ""Що написано в розділі підручника""` — `antonenko-davydovych-yak-my-hovorymo_p020`, `antonenko-davydovych-yak-my-hovorymo_p146` |
+| C1.sentence_correction.01 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Перевір речення і виправ помилки якщо вони є"` | `Found 1 results for: "Перевір речення і виправ помилки якщо вони є"`; `antonenko-davydovych-yak-my-hovorymo_p144` |
+| C1.sentence_correction.02 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Подай речення після перевірки виправ лише наявні помилки"` | `Found 1 results for: "Подай речення після перевірки виправ лише наявні помилки"`; `antonenko-davydovych-yak-my-hovorymo_p169` |
+| C1.sentence_correction.03 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Запиши речення виправивши помилки якщо вони є"` | `Found 1 results for: "Запиши речення виправивши помилки якщо вони є"`; `antonenko-davydovych-yak-my-hovorymo_p144` |
+| C1.sentence_correction.04 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Відредагуй речення якщо воно потребує виправлень інакше збережи його"` | `Found 1 results for: "Відредагуй речення якщо воно потребує виправлень інакше збережи його"`; `antonenko-davydovych-yak-my-hovorymo_p158` |
+| C1.sentence_correction.05 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Усунь помилки якщо вони є і запиши речення"` | `Found 1 results for: "Усунь помилки якщо вони є і запиши речення"`; `antonenko-davydovych-yak-my-hovorymo_p144` |
+| C1.sentence_correction.06 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Наведи речення після перевірки зберігши його якщо помилок немає"` | `Found 1 results for: "Наведи речення після перевірки зберігши його якщо помилок немає"`; `antonenko-davydovych-yak-my-hovorymo_p117` |
+| C1.sentence_correction.07 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Речення перевір і запиши за потреби виправ помилки"` | `Found 1 results for: "Речення перевір і запиши за потреби виправ помилки"`; `antonenko-davydovych-yak-my-hovorymo_p144` |
+| C1.sentence_correction.08 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Як слід записати це речення Якщо помилок немає збережи його"` | `Found 1 results for: "Як слід записати це речення Якщо помилок немає збережи його"`; `antonenko-davydovych-yak-my-hovorymo_p117` |
+| C1.sentence_correction.09 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Збережи речення якщо воно правильне якщо є помилки виправ їх"` | `Found 1 results for: "Збережи речення якщо воно правильне якщо є помилки виправ їх"`; `antonenko-davydovych-yak-my-hovorymo_p100` |
+| C1.sentence_correction.10 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Виправ лише наявні помилки й подай речення правильне збережи"` | `Found 1 results for: "Виправ лише наявні помилки й подай речення правильне збережи"`; `antonenko-davydovych-yak-my-hovorymo_p144` |
+| C1.sentence_correction.11 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Правильно запиши речення залишивши його без змін якщо помилок немає"` | `Found 1 results for: "Правильно запиши речення залишивши його без змін якщо помилок немає"`; `antonenko-davydovych-yak-my-hovorymo_p117` |
+| C1.sentence_correction.12 | `Found: 10/10` | `No results in Антоненко-Давидович for: "За потреби виправ помилки а правильне речення залиш без змін"` | `Found 1 results for: "За потреби виправ помилки а правильне речення залиш без змін"`; `antonenko-davydovych-yak-my-hovorymo_p100` |
+| C2.agreed_form.01 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Подай форму слова за граматичним позначенням"` | `Found 1 results for: "Подай форму слова за граматичним позначенням"`; `antonenko-davydovych-yak-my-hovorymo_p023` |
+| C2.agreed_form.02 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Запиши слово у формі"` | `Found 1 results for: "Запиши слово у формі"`; `antonenko-davydovych-yak-my-hovorymo_p070` |
+| C2.agreed_form.03 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Наведи форму слова"` | `Found 1 results for: "Наведи форму слова"`; `antonenko-davydovych-yak-my-hovorymo_p023` |
+| C2.agreed_form.04 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Утвори форму слова"` | `Found 1 results for: "Утвори форму слова"`; `antonenko-davydovych-yak-my-hovorymo_p023` |
+| C2.agreed_form.05 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Добери форму слова"` | `Found 1 results for: "Добери форму слова"`; `antonenko-davydovych-yak-my-hovorymo_p023` |
+| C2.agreed_form.06 | `Found: 3/3` | `No results in Антоненко-Давидович for: "Вкажи форму слова"` | `Found 1 results for: "Вкажи форму слова"`; `antonenko-davydovych-yak-my-hovorymo_p023` |
+| C2.agreed_form.07 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Слово постав у форму"` | `Found 1 results for: "Слово постав у форму"`; `antonenko-davydovych-yak-my-hovorymo_p101` |
+| C2.agreed_form.08 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Яка форма слова відповідає позначенню"` | `Found 1 results for: "Яка форма слова відповідає позначенню"`; `antonenko-davydovych-yak-my-hovorymo_p047` |
+| C2.agreed_form.09 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Назви форму слова з таким граматичним позначенням"` | `Found 1 results for: "Назви форму слова з таким граматичним позначенням"`; `antonenko-davydovych-yak-my-hovorymo_p031` |
+| C2.agreed_form.10 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Відтвори форму слова за позначенням"` | `Found 1 results for: "Відтвори форму слова за позначенням"`; `antonenko-davydovych-yak-my-hovorymo_p023` |
+| C2.agreed_form.11 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Постав слово у форму"` | `Found 1 results for: "Постав слово у форму"`; `antonenko-davydovych-yak-my-hovorymo_p101` |
+| C2.agreed_form.12 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Граматичне позначення потрібної форми слова Подай цю форму"` | `Found 1 results for: "Граматичне позначення потрібної форми слова Подай цю форму"`; `antonenko-davydovych-yak-my-hovorymo_p067` |
+| C3.synonyms.03 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Наведи синоніми до слова у значенні"` | `Found 1 results for: "Наведи синоніми до слова у значенні"`; `antonenko-davydovych-yak-my-hovorymo_p158` |
+| C3.synonyms.09 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Відтвори синоніми слова у значенні"` | `Found 1 results for: "Відтвори синоніми слова у значенні"`; `antonenko-davydovych-yak-my-hovorymo_p158` |
+| C3.synonyms.10 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Перелічи синоніми до слова у значенні"` | `Found 1 results for: "Перелічи синоніми до слова у значенні"`; `antonenko-davydovych-yak-my-hovorymo_p158` |
+| C3.synonyms.11 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Значення слова Наведи його синоніми"` | `Found 1 results for: "Значення слова Наведи його синоніми"`; `antonenko-davydovych-yak-my-hovorymo_p039` |
+| C3.synonyms.12 | `Found: 7/7` | `No results in Антоненко-Давидович for: "У значенні слово має синоніми Назви їх"` | `Found 1 results for: "У значенні слово має синоніми Назви їх"`; `antonenko-davydovych-yak-my-hovorymo_p030` |
+| C3.antonyms.03 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Наведи антоніми до слова у значенні"` | `Found 1 results for: "Наведи антоніми до слова у значенні"`; `antonenko-davydovych-yak-my-hovorymo_p119` |
+| C3.antonyms.09 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Відтвори антоніми слова у значенні"` | `Found 1 results for: "Відтвори антоніми слова у значенні"`; `antonenko-davydovych-yak-my-hovorymo_p119` |
+| C3.antonyms.10 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Перелічи антоніми до слова у значенні"` | `Found 1 results for: "Перелічи антоніми до слова у значенні"`; `antonenko-davydovych-yak-my-hovorymo_p119` |
+| C3.antonyms.11 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Значення слова Наведи його антоніми"` | `Found 1 results for: "Значення слова Наведи його антоніми"`; `antonenko-davydovych-yak-my-hovorymo_p033` |
+| C3.antonyms.12 | `Found: 7/7` | `No results in Антоненко-Давидович for: "У значенні слово має антоніми Назви їх"` | `Found 1 results for: "У значенні слово має антоніми Назви їх"`; `antonenko-davydovych-yak-my-hovorymo_p032` |
+| C4.idiom_definition.01 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Подай словникове значення вислову і цитату з тієї самої статті"` | `Found 1 results for: "Подай словникове значення вислову і цитату з тієї самої статті"`; `antonenko-davydovych-yak-my-hovorymo_p068` |
+| C4.idiom_definition.02 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Запиши значення вислову за словником разом із цитатою з цієї статті"` | `Found 1 results for: "Запиши значення вислову за словником разом із цитатою з цієї статті"`; `antonenko-davydovych-yak-my-hovorymo_p141` |
+| C4.idiom_definition.03 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Наведи словникове тлумачення вислову та його ілюстрацію цитату з тієї самої статті"` | `Found 1 results for: "Наведи словникове тлумачення вислову та його ілюстрацію цитату з тієї самої статті"`; `antonenko-davydovych-yak-my-hovorymo_p134` |
+| C4.idiom_definition.04 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Вкажи значення вислову і відтвори цитату наведену в тій самій словниковій статті"` | `Found 1 results for: "Вкажи значення вислову і відтвори цитату наведену в тій самій словниковій статті"`; `antonenko-davydovych-yak-my-hovorymo_p068` |
+| C4.idiom_definition.05 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Відтвори словникове тлумачення вислову разом із цитатою з цієї ж статті"` | `Found 1 results for: "Відтвори словникове тлумачення вислову разом із цитатою з цієї ж статті"`; `antonenko-davydovych-yak-my-hovorymo_p141` |
+| C4.idiom_definition.06 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Вислів подай його словникове значення та цитату з тієї самої статті"` | `Found 1 results for: "Вислів подай його словникове значення та цитату з тієї самої статті"`; `antonenko-davydovych-yak-my-hovorymo_p137` |
+| C4.idiom_definition.07 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Яке значення вислову подає словник Наведи також цитату з цієї статті"` | `Found 1 results for: "Яке значення вислову подає словник Наведи також цитату з цієї статті"`; `antonenko-davydovych-yak-my-hovorymo_p050` |
+| C4.idiom_definition.08 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Як словник тлумачить вислів Подай тлумачення і цитату з тієї ж статті"` | `Found 1 results for: "Як словник тлумачить вислів Подай тлумачення і цитату з тієї ж статті"`; `antonenko-davydovych-yak-my-hovorymo_p050` |
+| C4.idiom_definition.09 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Процитуй тлумачення вислову та ілюстративну цитату з однієї словникової статті"` | `Found 1 results for: "Процитуй тлумачення вислову та ілюстративну цитату з однієї словникової статті"`; `antonenko-davydovych-yak-my-hovorymo_p134` |
+| C4.idiom_definition.10 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Значення вислову запиши за словником і додай цитату з цієї самої статті"` | `Found 1 results for: "Значення вислову запиши за словником і додай цитату з цієї самої статті"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C4.idiom_definition.11 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Словникове тлумачення вислову наведи разом із цитатою з тієї ж статті"` | `Found 1 results for: "Словникове тлумачення вислову наведи разом із цитатою з тієї ж статті"`; `antonenko-davydovych-yak-my-hovorymo_p141` |
+| C4.idiom_definition.12 | `Found: 14/14` | `No results in Антоненко-Давидович for: "Додай до словникового значення вислову цитату з тієї самої статті й подай обидва тексти"` | `Found 1 results for: "Додай до словникового значення вислову цитату з тієї самої статті й подай обидва тексти"`; `antonenko-davydovych-yak-my-hovorymo_p167` |
+| C5.printed_spelling_rule.01 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Подай повний текст параграфа Правопису у якому наведено приклад"` | `Found 1 results for: "Подай повний текст параграфа Правопису у якому наведено приклад"`; `antonenko-davydovych-yak-my-hovorymo_p147` |
+| C5.printed_spelling_rule.02 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Наведи дослівно параграф Правопису що містить такий приклад"` | `Found 1 results for: "Наведи дослівно параграф Правопису що містить такий приклад"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C5.printed_spelling_rule.03 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Запиши весь параграф Правопису у якому подано приклад"` | `Found 1 results for: "Запиши весь параграф Правопису у якому подано приклад"`; `antonenko-davydovych-yak-my-hovorymo_p151` |
+| C5.printed_spelling_rule.04 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Вкажи повний текст параграфа Правопису з таким прикладом"` | `Found 1 results for: "Вкажи повний текст параграфа Правопису з таким прикладом"`; `antonenko-davydovych-yak-my-hovorymo_p149` |
+| C5.printed_spelling_rule.05 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Відтвори весь параграф Правопису де наведено приклад"` | `Found 1 results for: "Відтвори весь параграф Правопису де наведено приклад"`; `antonenko-davydovych-yak-my-hovorymo_p147` |
+| C5.printed_spelling_rule.06 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Приклад із Правопису наведено далі Подай повний текст його параграфа"` | `Found 1 results for: "Приклад із Правопису наведено далі Подай повний текст його параграфа"`; `antonenko-davydovych-yak-my-hovorymo_p147` |
+| C5.printed_spelling_rule.07 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Який параграф Правопису містить такий приклад Наведи весь його текст"` | `Found 1 results for: "Який параграф Правопису містить такий приклад Наведи весь його текст"`; `antonenko-davydovych-yak-my-hovorymo_p149` |
+| C5.printed_spelling_rule.08 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Правопис містить наведений далі приклад Запиши дослівно весь відповідний параграф"` | `Found 1 results for: "Правопис містить наведений далі приклад Запиши дослівно весь відповідний параграф"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C5.printed_spelling_rule.09 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Процитуй повністю параграф Правопису у якому є приклад"` | `Found 1 results for: "Процитуй повністю параграф Правопису у якому є приклад"`; `antonenko-davydovych-yak-my-hovorymo_p151` |
+| C5.printed_spelling_rule.10 | `Found: 10/10` | `No results in Антоненко-Давидович for: "Текст параграфа Правопису відтвори повністю за наведеним у ньому прикладом"` | `Found 1 results for: "Текст параграфа Правопису відтвори повністю за наведеним у ньому прикладом"`; `antonenko-davydovych-yak-my-hovorymo_p149` |
+| C5.printed_spelling_rule.11 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Дослівно наведи весь параграф Правопису що містить приклад"` | `Found 1 results for: "Дослівно наведи весь параграф Правопису що містить приклад"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C5.printed_spelling_rule.12 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Повністю запиши параграф Правопису у якому надруковано приклад"` | `Found 1 results for: "Повністю запиши параграф Правопису у якому надруковано приклад"`; `antonenko-davydovych-yak-my-hovorymo_p022` |
+| C6.calque_correction.01 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Виправ кальку в реченні"` | `Found 1 results for: "Виправ кальку в реченні"`; `antonenko-davydovych-yak-my-hovorymo_p141` |
+| C6.calque_correction.02 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Подай речення без кальки"` | `Found 1 results for: "Подай речення без кальки"`; `antonenko-davydovych-yak-my-hovorymo_p011` |
+| C6.calque_correction.03 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши наведене речення без кальки"` | `Found 1 results for: "Запиши наведене речення без кальки"`; `antonenko-davydovych-yak-my-hovorymo_p124` |
+| C6.calque_correction.04 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Усунь кальку в наведеному реченні"` | `Found 1 results for: "Усунь кальку в наведеному реченні"`; `antonenko-davydovych-yak-my-hovorymo_p167` |
+| C6.calque_correction.05 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Заміни калькований вислів у реченні"` | `Found 1 results for: "Заміни калькований вислів у реченні"`; `antonenko-davydovych-yak-my-hovorymo_p163` |
+| C6.calque_correction.06 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Наведи виправлений варіант речення з калькою"` | `Found 1 results for: "Наведи виправлений варіант речення з калькою"`; `antonenko-davydovych-yak-my-hovorymo_p112` |
+| C6.calque_correction.07 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Речення запиши без кальки"` | `Found 1 results for: "Речення запиши без кальки"`; `antonenko-davydovych-yak-my-hovorymo_p120` |
+| C6.calque_correction.08 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Як записати це речення без кальки Подай виправлений варіант"` | `Found 1 results for: "Як записати це речення без кальки Подай виправлений варіант"`; `antonenko-davydovych-yak-my-hovorymo_p152` |
+| C6.calque_correction.09 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Відредагуй речення усунувши кальку"` | `Found 1 results for: "Відредагуй речення усунувши кальку"`; `antonenko-davydovych-yak-my-hovorymo_p141` |
+| C6.calque_correction.10 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Позбудься кальки й запиши речення"` | `Found 1 results for: "Позбудься кальки й запиши речення"`; `antonenko-davydovych-yak-my-hovorymo_p144` |
+| C6.calque_correction.11 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Правильно запиши речення замінивши калькований вислів"` | `Found 1 results for: "Правильно запиши речення замінивши калькований вислів"`; `antonenko-davydovych-yak-my-hovorymo_p117` |
+| C6.calque_correction.12 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Без кальки подай наведене речення"` | `Found 1 results for: "Без кальки подай наведене речення"`; `antonenko-davydovych-yak-my-hovorymo_p124` |
+| C6.book_calque_replacement.01 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Подай заміну вислову яку пропонує автор"` | `Found 1 results for: "Подай заміну вислову яку пропонує автор"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C6.book_calque_replacement.02 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Наведи авторову заміну вислову"` | `Found 1 results for: "Наведи авторову заміну вислову"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C6.book_calque_replacement.03 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Запиши заміну вислову за автором"` | `Found 1 results for: "Запиши заміну вислову за автором"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C6.book_calque_replacement.04 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вкажи заміну вислову наведену автором"` | `Found 1 results for: "Вкажи заміну вислову наведену автором"`; `antonenko-davydovych-yak-my-hovorymo_p068` |
+| C6.book_calque_replacement.05 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Відтвори заміну вислову яку подає автор"` | `Found 1 results for: "Відтвори заміну вислову яку подає автор"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C6.book_calque_replacement.06 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Вислів яку заміну пропонує автор"` | `Found 1 results for: "Вислів яку заміну пропонує автор"`; `antonenko-davydovych-yak-my-hovorymo_p125` |
+| C6.book_calque_replacement.07 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Яку заміну вислову подає автор"` | `Found 1 results for: "Яку заміну вислову подає автор"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C6.book_calque_replacement.08 | `Found: 5/5` | `No results in Антоненко-Давидович for: "Як автор пропонує замінити вислів"` | `Found 1 results for: "Як автор пропонує замінити вислів"`; `antonenko-davydovych-yak-my-hovorymo_p125` |
+| C6.book_calque_replacement.09 | `Found: 4/4` | `No results in Антоненко-Давидович for: "Процитуй авторову заміну вислову"` | `Found 1 results for: "Процитуй авторову заміну вислову"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C6.book_calque_replacement.10 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Заміни вислів так як пропонує автор"` | `Found 1 results for: "Заміни вислів так як пропонує автор"`; `antonenko-davydovych-yak-my-hovorymo_p163` |
+| C6.book_calque_replacement.11 | `Found: 8/8` | `No results in Антоненко-Давидович for: "Заміна вислову є в автора Наведи її дослівно"` | `Found 1 results for: "Заміна вислову є в автора Наведи її дослівно"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C6.book_calque_replacement.12 | `Found: 6/6` | `No results in Антоненко-Давидович for: "Автор подає заміну вислову Відтвори її"` | `Found 1 results for: "Автор подає заміну вислову Відтвори її"`; `antonenko-davydovych-yak-my-hovorymo_p121` |
+| C7.modern_norm_selection.09 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Випиши сучасну нормативну форму з поданої пари"` | `Found 1 results for: "Випиши сучасну нормативну форму з поданої пари"`; `antonenko-davydovych-yak-my-hovorymo_p066` |
+| C7.modern_norm_selection.10 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Форму що відповідає сучасній нормі обери з наведеної пари"` | `Found 1 results for: "Форму що відповідає сучасній нормі обери з наведеної пари"`; `antonenko-davydovych-yak-my-hovorymo_p120` |
+| C7.modern_norm_selection.11 | `Found: 7/7` | `No results in Антоненко-Давидович for: "Сучасну нормативну форму запиши з наведеної пари"` | `Found 1 results for: "Сучасну нормативну форму запиши з наведеної пари"`; `antonenko-davydovych-yak-my-hovorymo_p042` |
+| C7.modern_norm_selection.12 | `Found: 9/9` | `No results in Антоненко-Давидович for: "Із поданих форм назви ту що відповідає сучасній нормі"` | `Found 1 results for: "Із поданих форм назви ту що відповідає сучасній нормі"`; `antonenko-davydovych-yak-my-hovorymo_p168` |
+| C8.supported_pronunciation.01 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Подай нормативну або допустиму вимову слова та оцінку яку дає автор Фонетичний контекст"` | `Found 1 results for: "Подай нормативну або допустиму вимову слова та оцінку яку дає автор Фонетичний контекст"`; `antonenko-davydovych-yak-my-hovorymo_p131` |
+| C8.supported_pronunciation.02 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Запиши нормативну або допустиму вимову слова разом з авторовою оцінкою Контекст вимови"` | `Found 1 results for: "Запиши нормативну або допустиму вимову слова разом з авторовою оцінкою Контекст вимови"`; `antonenko-davydovych-yak-my-hovorymo_p125` |
+| C8.supported_pronunciation.03 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Наведи авторову оцінку й нормативну або допустиму вимову слова в такому контексті"` | `Found 1 results for: "Наведи авторову оцінку й нормативну або допустиму вимову слова в такому контексті"`; `antonenko-davydovych-yak-my-hovorymo_p138` |
+| C8.supported_pronunciation.04 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Вкажи нормативну або допустиму вимову слова і процитуй оцінку автора Контекст"` | `Found 1 results for: "Вкажи нормативну або допустиму вимову слова і процитуй оцінку автора Контекст"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
+| C8.supported_pronunciation.05 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Відтвори нормативну або допустиму вимову слова та її оцінку автором у наведеному контексті"` | `Found 1 results for: "Відтвори нормативну або допустиму вимову слова та її оцінку автором у наведеному контексті"`; `antonenko-davydovych-yak-my-hovorymo_p050` |
+| C8.supported_pronunciation.06 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Слово має нормативну або допустиму вимову Подай її та оцінку автора Фонетичний контекст"` | `Found 1 results for: "Слово має нормативну або допустиму вимову Подай її та оцінку автора Фонетичний контекст"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
+| C8.supported_pronunciation.07 | `Found: 14/14` | `No results in Антоненко-Давидович for: "Яку вимову слова автор визнає нормативною або допустимою Наведи її та авторову оцінку Контекст"` | `Found 1 results for: "Яку вимову слова автор визнає нормативною або допустимою Наведи її та авторову оцінку Контекст"`; `antonenko-davydovych-yak-my-hovorymo_p025` |
+| C8.supported_pronunciation.08 | `Found: 15/15` | `No results in Антоненко-Давидович for: "Як нормативно або допустимо вимовляти слово Подай вимову й оцінку яку дає автор Контекст вимови"` | `Found 1 results for: "Як нормативно або допустимо вимовляти слово Подай вимову й оцінку яку дає автор Контекст вимови"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
+| C8.supported_pronunciation.09 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Процитуй оцінку автора й запиши нормативну або допустиму вимову слова Фонетичний контекст"` | `Found 1 results for: "Процитуй оцінку автора й запиши нормативну або допустиму вимову слова Фонетичний контекст"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
+| C8.supported_pronunciation.10 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Дослівно відтвори нормативну або допустиму вимову слова разом з оцінкою автора Контекст"` | `Found 1 results for: "Дослівно відтвори нормативну або допустиму вимову слова разом з оцінкою автора Контекст"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C8.supported_pronunciation.11 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Нормативну або допустиму вимову слова наведи з авторовою оцінкою в такому фонетичному контексті"` | `Found 1 results for: "Нормативну або допустиму вимову слова наведи з авторовою оцінкою в такому фонетичному контексті"`; `antonenko-davydovych-yak-my-hovorymo_p138` |
+| C8.supported_pronunciation.12 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Оцінку автора подай разом із нормативною або допустимою вимовою слова Контекст вимови"` | `Found 1 results for: "Оцінку автора подай разом із нормативною або допустимою вимовою слова Контекст вимови"`; `antonenko-davydovych-yak-my-hovorymo_p129` |
+| C9.verbatim_section.01 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Подай дослівно текст під таким заголовком Підручник клас або рівень заголовок"` | `Found 1 results for: "Подай дослівно текст під таким заголовком Підручник клас або рівень заголовок"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C9.verbatim_section.02 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Наведи текст під надрукованим заголовком без змін Назва підручника клас або рівень заголовок"` | `Found 1 results for: "Наведи текст під надрукованим заголовком без змін Назва підручника клас або рівень заголовок"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
+| C9.verbatim_section.03 | `Found: 12/12` | `No results in Антоненко-Давидович for: "Відтвори повністю текст під заголовком із підручника Назва заголовок клас або рівень"` | `Found 1 results for: "Відтвори повністю текст під заголовком із підручника Назва заголовок клас або рівень"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
+| C9.verbatim_section.04 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Запиши дослівно текст під заголовком у зазначеному підручнику Клас або рівень підручник заголовок"` | `Found 1 results for: "Запиши дослівно текст під заголовком у зазначеному підручнику Клас або рівень підручник заголовок"`; `antonenko-davydovych-yak-my-hovorymo_p007` |
+| C9.verbatim_section.05 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Процитуй увесь текст під таким заголовком Заголовок підручник клас або рівень"` | `Found 1 results for: "Процитуй увесь текст під таким заголовком Заголовок підручник клас або рівень"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
+| C9.verbatim_section.06 | `Found: 14/14` | `No results in Антоненко-Давидович for: "Заголовок надруковано в підручнику Подай весь текст під ним Заголовок клас або рівень назва підручника"` | `Found 1 results for: "Заголовок надруковано в підручнику Подай весь текст під ним Заголовок клас або рівень назва підручника"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
+| C9.verbatim_section.07 | `Found: 14/14` | `No results in Антоненко-Давидович for: "Який текст надруковано під цим заголовком Відтвори його повністю Підручник клас або рівень заголовок"` | `Found 1 results for: "Який текст надруковано під цим заголовком Відтвори його повністю Підручник клас або рівень заголовок"`; `antonenko-davydovych-yak-my-hovorymo_p022` |
+| C9.verbatim_section.08 | `Found: 13/13` | `No results in Антоненко-Давидович for: "Що написано під наведеним заголовком Процитуй увесь текст Клас або рівень заголовок підручник"` | `Found 1 results for: "Що написано під наведеним заголовком Процитуй увесь текст Клас або рівень заголовок підручник"`; `antonenko-davydovych-yak-my-hovorymo_p144` |
+| C9.verbatim_section.09 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Дослівно наведи текст під заголовком Назва підручника заголовок клас або рівень"` | `Found 1 results for: "Дослівно наведи текст під заголовком Назва підручника заголовок клас або рівень"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
+| C9.verbatim_section.10 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Текст під заголовком відтвори без скорочень Клас або рівень підручник заголовок"` | `Found 1 results for: "Текст під заголовком відтвори без скорочень Клас або рівень підручник заголовок"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
+| C9.verbatim_section.11 | `Found: 11/11` | `No results in Антоненко-Давидович for: "Повністю запиши текст під таким заголовком Заголовок підручник клас або рівень"` | `Found 1 results for: "Повністю запиши текст під таким заголовком Заголовок підручник клас або рівень"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
+| C9.verbatim_section.12 | `Found: 14/14` | `No results in Антоненко-Давидович for: "Без змін подай увесь текст під надрукованим заголовком Клас або рівень заголовок назва підручника"` | `Found 1 results for: "Без змін подай увесь текст під надрукованим заголовком Клас або рівень заголовок назва підручника"`; `antonenko-davydovych-yak-my-hovorymo_p164` |
 
-Eight initial calls returned `Tool call failed: search_style_guide.` or
-`Tool call failed: search_text.`. Same-tool/query retries succeeded:
+The four `для` fixes follow both the structured article and the full-book
+surface, not only Russian-shadow morphology. Supplemental calls:
 
-- C1.sentence_correction.01: `search_style_guide`.
-- C3.antonyms.01: `search_text`.
-- C6.calque_correction.01: `search_text`.
-- C8.supported_pronunciation.01: `search_style_guide`.
-- C8.supported_pronunciation.07: `search_style_guide`.
-- C9.verbatim_section.02: `search_style_guide`.
-- C9.verbatim_section.04: `search_style_guide`.
-- C9.verbatim_section.06: `search_style_guide`.
+`search_style_guide(query="Для, задля, на, про, під, до")`:
 
-Shorter collocation queries supplement the long per-line queries:
+```text
+Found 1 results in **Антоненко-Давидович** for: "Для, задля, на, про, під, до"
+```
 
-| Query | Style output | Book output and locators |
-| --- | --- | --- |
-| `добери` | `No results in Антоненко-Давидович for: "добери"` | `No results found.` — none |
-| `вкажи` | `No results in Антоненко-Давидович for: "вкажи"` | `No results found.` — none |
-| `словникове тлумачення` | `No results in Антоненко-Давидович for: "словникове тлумачення"` | `No results found.` — none |
-| `сучасна норма` | `No results in Антоненко-Давидович for: "сучасна норма"` | `Found 3 results for: "сучасна норма"` — `antonenko-davydovych-yak-my-hovorymo_p012`, `antonenko-davydovych-yak-my-hovorymo_p029`, `antonenko-davydovych-yak-my-hovorymo_p093` |
-| `допустима вимова` | `No results in Антоненко-Давидович for: "допустима вимова"` | `Found 1 results for: "допустима вимова"` — `antonenko-davydovych-yak-my-hovorymo_p147` |
-| `калькований вислів` | `No results in Антоненко-Давидович for: "калькований вислів"` | `Found 3 results for: "калькований вислів"` — `antonenko-davydovych-yak-my-hovorymo_p163`, `antonenko-davydovych-yak-my-hovorymo_p083`, `antonenko-davydovych-yak-my-hovorymo_p047` |
+`search_text(query="Для, задля, на, про, під, до", source_file="antonenko-davydovych-yak-my-hovorymo")`:
 
-## Reproducible schema and arithmetic smoke check
+```text
+Found 1 results for: "Для, задля, на, про, під, до"
+```
 
-Run in the assigned worktree, with `LU_PROJECT_PYTHON` set to the
-task-prescribed shared interpreter. Do not create a worktree virtualenv.
+### Reproduction
+
+From the assigned worktree, use the task-prescribed shared interpreter as
+`LU_PROJECT_PYTHON`; never create a worktree virtualenv. For source calls, start
+`.mcp/servers/sources/server.py` with that interpreter through the MCP stdio
+client; use the task's canonical database and scratch logging overrides.
+Authenticate with `mcp_server_identity`, then call `query_pravopys` (§§23, 155,
+160, 164), `verify_words` and both per-line searches as specified above.
+The Sources MCP transport and canonical database, not the connected stale
+instance, determine these responses.
 
 ```bash
-"$LU_PROJECT_PYTHON" - <<'PY'
-import copy
-import hashlib
-import json
-import re
-import unicodedata
-from collections import Counter
-from pathlib import Path
-
-import yaml
-from jsonschema import Draft202012Validator
-
-root = Path("registry/projects/open_model_data")
-schema = json.loads((root / "instruction_catalog.schema.json").read_text())
-catalog = yaml.safe_load((root / "instruction_catalog.yaml").read_text())
-Draft202012Validator.check_schema(schema)
-validator = Draft202012Validator(schema)
-validator.validate(catalog)
-plan_body = Path(catalog["plan"]["path"]).read_bytes().split(b"-->\n", 1)[1]
-assert hashlib.sha256(plan_body).hexdigest() == catalog["plan"]["body_sha256"]
-ids = set()
-operations = 0
-for component, entry in catalog["components"].items():
-    assert entry["line_count"] == len(entry["instructions"])
-    groups = {}
-    for line in entry["instructions"]:
-        assert line["id"].startswith(component + ".")
-        assert line["id"] not in ids
-        ids.add(line["id"])
-        slots = re.findall(r"\{([a-z_]+)\}", line["template"])
-        assert slots == line["slots"]
-        assert set(slots) <= set(entry["source_fields"])
-        groups.setdefault(line["operation"], []).append(line["template"])
-    for templates in groups.values():
-        operations += 1
-        assert len(templates) == 8
-        for length in (1, 4):
-            prefixes = []
-            for template in templates:
-                masked = re.sub(r"\{[a-z_]+\}", "SLOT", template)
-                text = unicodedata.normalize("NFC", masked).casefold().replace("'", "’")
-                tokens = re.findall(r"[^\W\d_]+(?:’[^\W\d_]+)*", text)
-                prefixes.append(tuple(tokens[:length]))
-            counts = Counter(prefixes)
-            assert max(counts.values()) / 8 <= 0.15
-            assert sum(sorted(counts.values(), reverse=True)[:5]) / 8 <= 0.65
-bad_catalogs = []
-bad = copy.deepcopy(catalog)
-del bad["components"]["C9"]
-bad_catalogs.append(bad)
-for field, value in (("training_eligible", True), ("status", "approved"), ("answer", "forbidden")):
-    bad = copy.deepcopy(catalog)
-    bad[field] = value
-    bad_catalogs.append(bad)
-for field, value in (("template", "Подай {invented}."), ("slots", ["invented"]), ("operation", "invented")):
-    bad = copy.deepcopy(catalog)
-    bad["components"]["C9"]["instructions"][0][field] = value
-    bad_catalogs.append(bad)
-bad = copy.deepcopy(catalog)
-bad["components"]["C9"]["source_fields"]["invented"] = "forbidden"
-bad_catalogs.append(bad)
-for bad in bad_catalogs:
-    assert list(validator.iter_errors(bad)), "schema admitted a must-reject mutation"
-assert len(ids) == 88 and len(catalog["components"]) == 9 and operations == 11
-print("PASS: schema; 9 components; 88 IDs; 11 operations; 22 prefix projections; 8 rejected mutations")
-PY
+"$LU_PROJECT_PYTHON" -m pytest tests/projects/open_model_data/test_instruction_catalog.py -q
+"$LU_PROJECT_PYTHON" -m ruff check tests/projects/open_model_data/test_instruction_catalog.py
+"$LU_PROJECT_PYTHON" -m yamllint registry/projects/open_model_data/instruction_catalog.yaml
+git diff --check
 ```
 
-This is a draft-structure and arithmetic check, not the production checker,
-source-relationship gate or independent evaluation. No existing importing-code
-test is affected: the changed files are only the catalog, its schema and this
-document. The checker test and independent fixtures belong to the E5-backed
-follow-up; they are deliberately not claimed as executed here.
+Executed in the assigned dispatch worktree with the task-prescribed shared
+interpreter. Final scoped pytest output:
 
-## Driver handback: open questions and remaining proof
+```text
+337 passed in 10.03s
+```
 
-This worker's milestone is a pushed draft with clean status, not issue closure.
-The accountable `claude-open-model-data` driver owns all remaining issue work:
+The first run in the owned test directory was skipped by the repository's
+`data/projects` sparse-tree guard. After `git sparse-checkout add data/projects`,
+all 337 cases ran and passed; no skip rule or test expectation was changed.
+Ruff check returned `All checks passed!`; Ruff format check returned
+`1 file already formatted`. YAML lint and `git diff --check` exited 0 without
+output. No other importing consumer was found by the scoped Python-source
+search for `instruction_catalog`; no full test suite was collected.
 
-1. Reconcile C1–C8 in #9611 with the ordered C1–C9 denominator.
-2. Obtain exact-head Opus and fresh non-author Sol reviews, with tool canaries.
-   This author cannot supply the Sol approval. Review naturalness, semantics,
-   printable slot availability and euphony with real source values.
-3. Approve or revise the proposed 15%/65% prefix and ID bounds before E12.
-   Check whether the eight starts and C8's common verdict suffix provide
-   sufficient variety; prefix arithmetic is not semantic diversity.
-4. Authenticate source-field adapters, especially C2 tuple labels, C3 sense
-   text and C8 phonetic context. Determine whether non-norm-only C8 cases need
-   a separately reviewed contrast operation; this draft withholds them rather
-   than inventing a normative answer.
-5. After E5, integrate the checker and independently execute the must-fail
-   fixtures. Smoke success cannot satisfy AC4.
-6. Verify official Правопис availability on the review harness. Then pursue
-   CF, PR, CI, merge and cleanup through the existing driver flow.
+## Driver handback and stopping rule
 
-No two-seat review, threshold freeze, E5-backed checker test or independent
-held-out proof is claimed. The worker does not open a PR, merge, train a model
-or inspect the sealed ruler. The source-slot and metric proposals stay drafts.
+The worker milestone is a pushed review-fix branch with clean status, not issue
+closure. The live #9611 body now names C1–C9 (9 components); no denominator
+reconciliation remains. The accountable `claude-open-model-data` driver owns:
 
-Stop/residual policy: unresolved lines cannot enter training. If reviewers
-disagree after the required tool-backed resolution, drop the line. Recheck
-counts and feasibility; an operation that cannot meet the frozen bound or has
-missing source fields is withheld and returned to the driver. Never invent
-text, lower a gate or claim PA6 complete to overcome that gap.
+1. Fresh exact-head non-author language/semantic reviews and code CF where
+   applicable. Prior reviews of 45a16f67 do not approve this revision.
+2. Freeze or revise the proposed metrics/thresholds before E12 after those
+   reviews; verify scheduling feasibility in each source eligibility stratum.
+3. E4 source-field authentication: C2 printable labels, C3 sense labels, C8
+   context/author identity and C9 printed headings/position from #8341.
+   Sparse label availability means withholding, never inferred labels.
+4. E5-backed production checker with independently executed negative fixtures;
+   the local arithmetic test cannot satisfy that production gate or D4.
+5. PR, CI, merge, issue closeout and cleanup via the existing driver flow.
+
+After this second fix round, unresolved source/meaning/grammar findings block
+acceptance. If reviewers still disagree after tool-backed resolution, drop the
+line per the issue policy; recheck 10–12 lines/operation, source eligibility and
+metric feasibility. A missing required component, infeasible bucket or missing
+source field is withheld and stays open with the driver as owner. New finding
+classes require a changed approach, never a lowered bar. No two-seat approval,
+threshold freeze, production checker or independent held-out proof is claimed.

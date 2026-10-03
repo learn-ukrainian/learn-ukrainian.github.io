@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Draft instruction catalog for open-model-data E10",
-  "description": "Draft-only shape and binding-role schema. It cannot certify source relationships, Ukrainian quality, independent review, concentration or training eligibility.",
+  "title": "Versioned instruction catalog for open-model-data E10",
+  "description": "Structural and binding-role schema only; source relationships, language, reviews, concentration and training eligibility require external evidence.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,54 +13,152 @@
     "plan",
     "interpolation",
     "prefix_metric",
-    "components"
+    "components",
+    "repetition_metric"
   ],
   "properties": {
     "schema_version": {
       "const": "instruction-catalog.v1"
     },
     "version": {
-      "const": "0.1.0-draft"
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[a-z0-9.-]+)?$"
     },
     "status": {
-      "const": "draft"
+      "enum": [
+        "draft",
+        "approved"
+      ]
     },
     "training_eligible": {
-      "const": false
+      "type": "boolean"
     },
     "issue": {
-      "const": 9611
+      "type": "integer",
+      "minimum": 1
     },
     "plan": {
-      "const": {
-        "path": "docs/projects/open-model-data/PLAN.md",
-        "version": "3.4.4",
-        "body_sha256": "2d5db0ae7d15336b61c361c1dacdf89c3c9811cfd0109acc8f156f16149e94e1"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "version",
+        "body_sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "body_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
       }
     },
     "interpolation": {
-      "const": {
-        "mode": "verbatim_source_fields_only",
-        "missing_field": "withhold",
-        "transformations": "none",
-        "recursive_interpolation": false,
-        "scope": "Only instructions[].template is project-authored training text. All other catalog fields are control metadata and must not be exported as instructions or answers.",
-        "field_mapping": "Slots name binding roles from PLAN.md, not guessed physical database columns. E4 must authenticate the exact source adapter and row/field locators before any rendering."
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "missing_field",
+        "transformations",
+        "recursive_interpolation",
+        "scope",
+        "field_mapping",
+        "quoted_slot_policy"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "verbatim_source_fields_only"
+          ]
+        },
+        "missing_field": {
+          "enum": [
+            "withhold"
+          ]
+        },
+        "transformations": {
+          "enum": [
+            "none"
+          ]
+        },
+        "recursive_interpolation": {
+          "type": "boolean",
+          "const": false
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_mapping": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quoted_slot_policy": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "prefix_metric": {
-      "const": {
-        "id": "instruction-prefix.v1-draft",
-        "status": "proposed",
-        "scope": "Per component, operation and exported split; additionally the whole split for visibility. C7 remains opt-in and separate.",
-        "prefix_lengths": [
-          1,
-          4
-        ],
-        "top1_max": 0.15,
-        "top5_max": 0.65,
-        "small_denominator": "N<8 is insufficient evidence, never PASS. For N>=8 use exact shares without rounding allowances; if integer counts cannot meet both bounds, withhold the build.",
-        "specification": "docs/projects/open-model-data/instruction-catalog.md"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "scope",
+        "prefix_lengths",
+        "top1_max",
+        "top5_max",
+        "small_denominator",
+        "specification"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prefix_lengths": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "top1_max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "top5_max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "small_denominator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "specification": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "components": {
@@ -106,6 +204,63 @@
           "$ref": "#/$defs/C9"
         }
       }
+    },
+    "repetition_metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "scope",
+        "ngram_length",
+        "whole_template_top1_max",
+        "whole_template_top5_max",
+        "suffix_top1_max",
+        "ngram_record_share_max",
+        "specification"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ngram_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "whole_template_top1_max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "whole_template_top5_max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "suffix_top1_max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "ngram_record_share_max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "specification": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     }
   },
   "$defs": {
@@ -141,12 +296,13 @@
           }
         },
         "required_context": {
-          "const": [
-            "same_document",
-            "same_annotator",
-            "both_annotation_layers",
-            "source_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -161,7 +317,9 @@
           }
         },
         "line_count": {
-          "const": 8
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 12
         },
         "line_count_rationale": {
           "type": "string",
@@ -169,8 +327,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 8,
-          "maxItems": 8,
+          "minItems": 10,
+          "maxItems": 12,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -194,12 +352,18 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:sentence)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{sentence\\})(?:[^{}]|\\{(?:sentence)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "sentence"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "enum": [
+                        "sentence"
+                      ]
+                    }
                   }
                 }
               }
@@ -218,8 +382,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -248,15 +412,10 @@
           "additionalProperties": false,
           "required": [
             "lemma",
-            "homonym",
             "slot"
           ],
           "properties": {
             "lemma": {
-              "type": "string",
-              "minLength": 1
-            },
-            "homonym": {
               "type": "string",
               "minLength": 1
             },
@@ -267,12 +426,13 @@
           }
         },
         "required_context": {
-          "const": [
-            "homonym_sense",
-            "variant",
-            "vesum_ulif_agreement",
-            "source_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -287,7 +447,9 @@
           }
         },
         "line_count": {
-          "const": 8
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 12
         },
         "line_count_rationale": {
           "type": "string",
@@ -295,8 +457,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 8,
-          "maxItems": 8,
+          "minItems": 10,
+          "maxItems": 12,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -320,14 +482,19 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:lemma|slot|homonym)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{lemma\\})(?=[\\s\\S]*\\{slot\\})(?:[^{}]|\\{(?:lemma|slot)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "lemma",
-                      "slot",
-                      "homonym"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "enum": [
+                        "lemma",
+                        "slot"
+                      ]
+                    }
                   }
                 }
               }
@@ -346,8 +513,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -390,11 +557,13 @@
           }
         },
         "required_context": {
-          "const": [
-            "sense_identity",
-            "ulif_group_identity",
-            "source_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -409,7 +578,9 @@
           }
         },
         "line_count": {
-          "const": 16
+          "type": "integer",
+          "minimum": 20,
+          "maximum": 24
         },
         "line_count_rationale": {
           "type": "string",
@@ -417,8 +588,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 16,
-          "maxItems": 16,
+          "minItems": 20,
+          "maxItems": 24,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -442,13 +613,19 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:headword|sense)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{sense\\})(?=[\\s\\S]*\\{headword\\})(?:[^{}]|\\{(?:sense|headword)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "headword",
-                      "sense"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "enum": [
+                        "sense",
+                        "headword"
+                      ]
+                    }
                   }
                 }
               },
@@ -472,13 +649,19 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:headword|sense)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{sense\\})(?=[\\s\\S]*\\{headword\\})(?:[^{}]|\\{(?:sense|headword)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "headword",
-                      "sense"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "enum": [
+                        "sense",
+                        "headword"
+                      ]
+                    }
                   }
                 }
               }
@@ -497,8 +680,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             },
             {
               "contains": {
@@ -512,8 +695,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -551,11 +734,13 @@
           }
         },
         "required_context": {
-          "const": [
-            "same_entry_definition",
-            "same_entry_citation",
-            "source_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -570,7 +755,9 @@
           }
         },
         "line_count": {
-          "const": 8
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 12
         },
         "line_count_rationale": {
           "type": "string",
@@ -578,8 +765,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 8,
-          "maxItems": 8,
+          "minItems": 10,
+          "maxItems": 12,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -603,12 +790,18 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:idiom)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{idiom\\})(?:[^{}]|\\{(?:idiom)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "idiom"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "enum": [
+                        "idiom"
+                      ]
+                    }
                   }
                 }
               }
@@ -627,8 +820,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -666,10 +859,13 @@
           }
         },
         "required_context": {
-          "const": [
-            "same_paragraph_example",
-            "paragraph_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -684,7 +880,9 @@
           }
         },
         "line_count": {
-          "const": 8
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 12
         },
         "line_count_rationale": {
           "type": "string",
@@ -692,8 +890,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 8,
-          "maxItems": 8,
+          "minItems": 10,
+          "maxItems": 12,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -717,12 +915,18 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:example)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{example\\})(?:[^{}]|\\{(?:example)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "example"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "enum": [
+                        "example"
+                      ]
+                    }
                   }
                 }
               }
@@ -741,8 +945,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -785,11 +989,13 @@
           }
         },
         "required_context": {
-          "const": [
-            "same_document_annotator_or_signed_book_pair",
-            "aligned_calque_edit_or_explicit_pair",
-            "source_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -804,7 +1010,9 @@
           }
         },
         "line_count": {
-          "const": 16
+          "type": "integer",
+          "minimum": 20,
+          "maximum": 24
         },
         "line_count_rationale": {
           "type": "string",
@@ -812,8 +1020,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 16,
-          "maxItems": 16,
+          "minItems": 20,
+          "maxItems": 24,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -837,12 +1045,18 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:sentence)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{sentence\\})(?:[^{}]|\\{(?:sentence)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "sentence"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "enum": [
+                        "sentence"
+                      ]
+                    }
                   }
                 }
               },
@@ -866,12 +1080,18 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:expression)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{expression\\})(?:[^{}]|\\{(?:expression)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "expression"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "enum": [
+                        "expression"
+                      ]
+                    }
                   }
                 }
               }
@@ -890,8 +1110,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             },
             {
               "contains": {
@@ -905,8 +1125,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -937,12 +1157,13 @@
           "properties": {}
         },
         "required_context": {
-          "const": [
-            "modern_source_attestation",
-            "soviet_colonization_context",
-            "admitted_contrast_pair",
-            "source_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -957,7 +1178,9 @@
           }
         },
         "line_count": {
-          "const": 8
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 12
         },
         "line_count_rationale": {
           "type": "string",
@@ -965,8 +1188,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 8,
-          "maxItems": 8,
+          "minItems": 10,
+          "maxItems": 12,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -993,7 +1216,8 @@
                     "pattern": "^[^{}]+$"
                   },
                   "slots": {
-                    "const": []
+                    "type": "array",
+                    "maxItems": 0
                   }
                 }
               }
@@ -1012,8 +1236,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -1056,14 +1280,13 @@
           }
         },
         "required_context": {
-          "const": [
-            "phonetic_context",
-            "supporting_paragraph_span",
-            "quoted_book_verdict",
-            "rule_paragraph",
-            "page",
-            "ulif_stress_crosscheck"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -1078,7 +1301,9 @@
           }
         },
         "line_count": {
-          "const": 8
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 12
         },
         "line_count_rationale": {
           "type": "string",
@@ -1086,8 +1311,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 8,
-          "maxItems": 8,
+          "minItems": 10,
+          "maxItems": 12,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -1111,13 +1336,19 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:word|context)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{word\\})(?=[\\s\\S]*\\{context\\})(?:[^{}]|\\{(?:word|context)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "word",
-                      "context"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "enum": [
+                        "word",
+                        "context"
+                      ]
+                    }
                   }
                 }
               }
@@ -1136,8 +1367,8 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
@@ -1165,22 +1396,33 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "section_title"
+            "section_title",
+            "book_title",
+            "grade"
           ],
           "properties": {
             "section_title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "book_title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "grade": {
               "type": "string",
               "minLength": 1
             }
           }
         },
         "required_context": {
-          "const": [
-            "book_identity",
-            "grade_or_university_level",
-            "section_identity",
-            "page_locator"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "target_policy": {
           "type": "string",
@@ -1195,7 +1437,9 @@
           }
         },
         "line_count": {
-          "const": 8
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 12
         },
         "line_count_rationale": {
           "type": "string",
@@ -1203,8 +1447,8 @@
         },
         "instructions": {
           "type": "array",
-          "minItems": 8,
-          "maxItems": 8,
+          "minItems": 10,
+          "maxItems": 12,
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -1228,12 +1472,20 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?:[^{}]|\\{(?:section_title)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{grade\\})(?=[\\s\\S]*\\{section_title\\})(?=[\\s\\S]*\\{book_title\\})(?:[^{}]|\\{(?:grade|section_title|book_title)\\})+$"
                   },
                   "slots": {
-                    "const": [
-                      "section_title"
-                    ]
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "enum": [
+                        "grade",
+                        "section_title",
+                        "book_title"
+                      ]
+                    }
                   }
                 }
               }
@@ -1252,12 +1504,33 @@
                   }
                 }
               },
-              "minContains": 8,
-              "maxContains": 8
+              "minContains": 10,
+              "maxContains": 12
             }
           ]
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "draft"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "training_eligible": {
+            "const": false
+          }
+        }
+      }
+    }
+  ]
 }
