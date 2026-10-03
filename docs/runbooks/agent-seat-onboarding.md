@@ -541,7 +541,7 @@ receive the contract for awareness but do not start conversations independently.
 | --- | --- | --- |
 | Claude orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | Codex orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
-| AGY/Gemini orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
+| AGY/Gemini sessions (not a driver seat, #9584) | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | Grok orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | Kimi and KimiCC seats | Not an ACP caller or participant (web, UI and backend coding only) | Refused by `kimi_admission`; dispatch for owned web, UI and backend paths only |
 | Cursor orchestrators with an explicit model | Eligible caller | Explicit routine ACP selection only; never use an automatic/opaque model route |

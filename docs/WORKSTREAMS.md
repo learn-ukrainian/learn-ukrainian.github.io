@@ -75,7 +75,7 @@ is the single source of truth for membership (auditor:
 
 The `eval-harness` and `a1-upgrade` launcher streams were retired on 2026-09-24. Closed #4913's residual was folded into #6943 and #6321 per #8305; #7995 closed with no sub-issues.
 
-Rules for every orchestrator (Claude, Codex UI, agy, cursor): work from your stream epic;
+Rules for every orchestrator (Claude, Codex UI, cursor, grok): work from your stream epic;
 link new issues to a stream at creation; orphans get flagged at every cold start.
 
 The completed public benchmark v0.1.1 is owned by closed #2156. Closed #6057
