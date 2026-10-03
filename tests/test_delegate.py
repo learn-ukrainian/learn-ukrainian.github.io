@@ -16869,6 +16869,9 @@ def _run_bg_worker(tmp_path, monkeypatch, *, task_id, mode, fake, dirty, extra_s
         },
     )
     monkeypatch.setattr(delegate, "_worker_process_reader", reader or (lambda: fake))
+    # Never a real signal: the exit scan's pidfd calls go to the fake table.
+    if fake is not None:
+        monkeypatch.setattr(delegate, "_worker_pidfd_ops", fake.pidfd_ops)
     monkeypatch.setattr(delegate, "_BACKGROUND_JOBS_SETTLE_S", 0.0)
     publish_calls: list[str] = []
     monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: publish_calls.append("push"))
@@ -16977,6 +16980,67 @@ def test_run_worker_without_background_jobs_settles_done_unchanged(tmp_tasks_dir
     assert "leftovers_scope" not in state
     assert "background_jobs_alive_at_exit" not in state
     assert "incomplete_run_reason" not in state
+
+
+@pytest.mark.parametrize("with_job", [False, True])
+def test_scope_worker_stops_the_cursor_worker_server_before_the_exit_scan(
+    tmp_tasks_dir, tmp_path, monkeypatch, with_job
+):
+    """#9534 AC-02: the Cursor CLI's own worker-server in the task's scope is stopped, not exempted.
+
+    It gets SIGTERM through a pidfd and is recorded under ``leftovers_terminated``;
+    any other process alive in the same scope is not signalled and still makes
+    the run ``needs_finalize``.
+    """
+    from tests.worker_leftovers_fakes import FakeProc, FakeProcs
+
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = f"bg-cursor-ws-{with_job}"
+    unit = delegate.dispatch_isolation.scope_unit_name(task_id, "n0nce")
+    cgroup = delegate.dispatch_isolation.scope_cgroup(unit, uid=os.getuid())
+    version_dir = tmp_path / "cursor-agent" / "versions" / "2026.10.01-e373342"
+    argv = [str(version_dir / "node"), str(version_dir / "index.js"), "worker-server"]
+    procs = {_BG_JOB_PID: FakeProc(exe=version_dir / "node", argv=argv, cmd=" ".join(argv))}
+    if with_job:
+        procs[_BG_JOB_PID + 1] = FakeProc(cmd="python -m pytest tests/test_slow.py")
+    fake = FakeProcs(procs=procs, cgroups={cgroup: [os.getpid(), *procs]}, own=cgroup)
+    monkeypatch.setattr(
+        delegate.worker_leftovers, "resolve_agent_binary", lambda *_a, **_k: str(version_dir / "cursor-agent")
+    )
+
+    rc, state, _ = _run_bg_worker(
+        tmp_path,
+        monkeypatch,
+        task_id=task_id,
+        mode="danger",
+        fake=fake,
+        dirty=False,
+        extra_state={"launch_mode": "scope", "launch_unit": unit},
+    )
+
+    assert fake.signals == [(_BG_JOB_PID, signal.SIGTERM)]
+    assert state["leftovers_terminated"] == [
+        {
+            "pid": _BG_JOB_PID,
+            "cmdline": " ".join(argv)[: delegate.worker_leftovers.CMDLINE_MAX_CHARS],
+            "signals": ["SIGTERM"],
+            "stopped": True,
+            "left_scope": False,
+        }
+    ]
+    assert "leftovers_excluded" not in state
+    if with_job:
+        assert rc == 1
+        assert state["status"] == "needs_finalize"
+        assert state["leftovers_scan"] == "live"
+        assert [proc["pid"] for proc in state["background_jobs_alive_at_exit"]["processes"]] == [_BG_JOB_PID + 1]
+        assert state["leftovers_scope"]["cgroup"] == cgroup
+    else:
+        assert state["status"] == "done", state.get("last_error")
+        assert rc == 0
+        assert state["leftovers_scan"] == "clear"
+        assert "incomplete_run_reason" not in state
+        assert "background_jobs_alive_at_exit" not in state
 
 
 def _bg_task_record(task_id: str, **overrides: Any) -> dict[str, Any]:

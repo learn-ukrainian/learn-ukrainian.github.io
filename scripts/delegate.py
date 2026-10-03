@@ -77,6 +77,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
         "leftovers_scope": {task_id, launch_mode, unit, cgroup, run_nonce, ...} | absent,
         "leftovers_scan_error": str | absent,       # why the scan was unknown
+        "leftovers_terminated": [{pid, cmdline, signals, stopped, left_scope}] | absent,  # Cursor worker-server stopped before the scan (#9534)
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
@@ -8476,6 +8477,11 @@ def _worker_process_reader() -> worker_leftovers.ProcessReader:
     return worker_leftovers.ProcFsReader()
 
 
+def _worker_pidfd_ops() -> worker_leftovers.PidfdOps:
+    """Seam for tests: the live pidfd calls the exit scan signals through."""
+    return worker_leftovers.live_pidfd_ops()
+
+
 def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> worker_leftovers.ExitScan | None:
     """Whether processes of this worker outlived its CLI (#8991); None when not checked.
 
@@ -8486,7 +8492,9 @@ def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> worke
     session) bound the scan. A headless session cannot be woken by a
     background-task notification, so whatever is still running is unfinished
     work, and a scan that could not read everything it needed is ``unknown``,
-    never ``clear``. Never raises.
+    never ``clear``. A scope launch first stops the Cursor CLI's own
+    ``worker-server`` in its cgroup (#9534); anything that survives is still
+    reported. Never raises.
     """
     launch_mode = state.get("launch_mode")
     if launch_mode not in {dispatch_isolation.LAUNCH_SCOPE, dispatch_isolation.LAUNCH_FALLBACK}:
@@ -8511,7 +8519,9 @@ def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> worke
             run_nonce=recorded("run_nonce"),
             reader=reader,
         )
-        scan = worker_leftovers.exit_scan(scope, reader=reader, settle_s=_BACKGROUND_JOBS_SETTLE_S)
+        scan = worker_leftovers.exit_scan(
+            scope, reader=reader, settle_s=_BACKGROUND_JOBS_SETTLE_S, pidfd=_worker_pidfd_ops()
+        )
     except Exception as exc:
         scan = worker_leftovers.ExitScan(
             status=worker_leftovers.SCAN_UNKNOWN, scope=scope, error=f"{type(exc).__name__}: {exc}"[:300]

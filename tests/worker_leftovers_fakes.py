@@ -47,6 +47,10 @@ class FakeProc:
     uid: int = field(default_factory=os.getuid)
     env_unreadable: bool = False
     cgroup_unreadable: bool = False
+    # ``/proc/<pid>/exe``; argv defaults to ``cmd`` split on spaces.
+    exe: Path | None = None
+    argv: list[str] | None = None
+    exe_unreadable: bool = False
 
 
 @dataclass
@@ -90,6 +94,18 @@ class FakeProcs:
     def cmdline(self, pid: int) -> str:
         proc = self.procs.get(pid)
         return proc.cmd if proc else ""
+
+    def argv(self, pid: int) -> list[str] | None:
+        proc = self.procs.get(pid)
+        if proc is None:
+            return None
+        return list(proc.argv) if proc.argv is not None else proc.cmd.split()
+
+    def exe(self, pid: int) -> Path | None:
+        proc = self.procs.get(pid)
+        if proc is not None and proc.exe_unreadable:
+            raise worker_leftovers.ScanUnknown(f"/proc/{pid}/exe: Permission denied")
+        return proc.exe if proc else None
 
     def cwd(self, pid: int) -> Path | None:
         proc = self.procs.get(pid)
