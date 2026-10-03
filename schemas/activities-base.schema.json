@@ -62,7 +62,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -128,7 +128,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -240,7 +240,7 @@
                 "maxItems": 4,
                 "items": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "explanation": {
@@ -303,7 +303,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               }
             }
@@ -441,7 +441,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "answer": {
@@ -518,7 +518,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "explanation": {
@@ -619,7 +619,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -1235,7 +1235,7 @@
           "type": "array",
           "items": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "^(?![\\s\\S])|\\S"
           },
           "description": "List of possible feature terms (e.g., Ustav, Skoropys)"
         }
@@ -1651,7 +1651,7 @@
                 "minItems": 2,
                 "items": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 },
                 "description": "Possible registers"
               },
@@ -1976,7 +1976,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 },
                 "description": "Words or phrases, one of which contains an error"
               },
@@ -2057,7 +2057,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 },
                 "description": "Possible endings"
               },

@@ -106,7 +106,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -217,7 +217,7 @@
                 "maxItems": 4,
                 "items": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "explanation": {
@@ -325,7 +325,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 },
                 "description": "B2 unjumble requires 6-18 words per sentence (relaxed from 10 to support natural formal phrases)"
               },
@@ -442,7 +442,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               }
             }
@@ -518,7 +518,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "explanation": {
@@ -622,7 +622,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -694,7 +694,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"

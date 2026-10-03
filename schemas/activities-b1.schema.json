@@ -113,7 +113,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 },
                 "description": "Scrambled letters"
               },
@@ -270,7 +270,7 @@
           "items": {
             "type": "string",
             "minLength": 1,
-            "pattern": "\\S"
+            "pattern": "^(?![\\s\\S])|\\S"
           },
           "description": "Global option pool (for simpler cloze)"
         },
@@ -299,7 +299,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               }
             },
@@ -482,7 +482,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "explanation": {
@@ -619,7 +619,7 @@
                 "maxItems": 6,
                 "items": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "explanation": {
@@ -872,7 +872,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "correct": {
@@ -1063,7 +1063,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 }
               },
               "correct": {
@@ -1177,7 +1177,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -1262,7 +1262,7 @@
                     "text": {
                       "type": "string",
                       "minLength": 1,
-                      "pattern": "\\S"
+                      "pattern": "^(?![\\s\\S])|\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -1378,7 +1378,7 @@
                 "items": {
                   "type": "string",
                   "minLength": 1,
-                  "pattern": "\\S"
+                  "pattern": "^(?![\\s\\S])|\\S"
                 },
                 "description": "Jumbled words"
               },

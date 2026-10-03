@@ -10,6 +10,7 @@ import ast
 import copy
 import inspect
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -380,7 +381,7 @@ def coverage_probe_leaf(*args):
 
 
 @pytest.mark.parametrize("level", LEVELS)
-@pytest.mark.parametrize("blank", [" ", "\t\n", "\u00a0"])
+@pytest.mark.parametrize("blank", [" ", "\t", "\n", "\t\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000"])
 def test_translate_whitespace_choice_fails_live_activity_and_draft_schema(level, blank):
     from scripts.build.fresh.draft_schema import validate_draft
 
@@ -400,8 +401,7 @@ def test_translate_whitespace_choice_fails_live_activity_and_draft_schema(level,
     assert any("pattern" in e.reason or "match" in e.reason for e in validate_draft(draft, level, activity_types=types))
 
 
-@pytest.mark.parametrize("filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]])
-def test_every_choice_schema_rejects_whitespace_and_accepts_edge_spaces(filename):
+def choice_text_schemas(filename):
     def choices(node):
         if isinstance(node, dict):
             for key, child in node.items():
@@ -420,13 +420,61 @@ def test_every_choice_schema_rejects_whitespace_and_accepts_edge_spaces(filename
         for variant in node.get("oneOf", []) + node.get("anyOf", []):
             yield from texts(variant)
 
-    schemas = [text for choice in choices(json.loads((ROOT / "schemas" / filename).read_text())) for text in texts(choice)]
+    return [text for choice in choices(json.loads((ROOT / "schemas" / filename).read_text())) for text in texts(choice)]
+
+
+@pytest.mark.parametrize("filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]])
+def test_every_choice_schema_preserves_empty_but_rejects_whitespace(filename):
+    schemas = choice_text_schemas(filename)
     assert schemas
+    assert any(schema.get("minLength", 0) == 0 for schema in schemas)
     for schema in schemas:
         validator = jsonschema.Draft7Validator(schema)
-        for blank in ("", " ", "\n\t", "\u00a0"):
+        # Exact empty is the documented "no letter" orthography token.
+        # Preserve each field's pre-existing minLength contract separately.
+        jsonschema.Draft7Validator({"type": "string", "pattern": schema["pattern"]}).validate("")
+        if schema.get("minLength", 0) == 0:
+            validator.validate("")
+        else:
+            assert not validator.is_valid("")
+        # A newline alone must fail too: ^$ would accept it in Python.
+        for blank in (" ", "\t", "\n", "\n\t", "\r\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000"):
             assert not validator.is_valid(blank), schema
+        validator.validate("Learner choice")
         validator.validate("  Learner choice  ")
+
+
+@pytest.mark.site_toolchain
+@pytest.mark.parametrize("filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]])
+def test_choice_patterns_preserve_empty_and_reject_unicode_whitespace_in_ecmascript(filename):
+    schemas = choice_text_schemas(filename)
+    assert schemas
+    # JSON Schema specifies ECMA regexes; exercise the actual runtime as well
+    # as Python jsonschema, especially NBSP and the exact-empty alternative.
+    script = r"""
+const fs = require('node:fs');
+const patterns = JSON.parse(fs.readFileSync(0, 'utf8'));
+const whitespace = [' ', '\t', '\n', '\r\n', '\u00a0', '\u2003',
+                    '\u2028', '\u2029', '\u202f', '\u3000', '\ufeff'];
+for (const pattern of patterns) {
+    const regex = new RegExp(pattern);
+    for (const text of ['', 'Learner choice', '  Learner choice  ']) {
+        if (!regex.test(text)) throw new Error(`Rejected ${JSON.stringify(text)}: ${pattern}`);
+    }
+    for (const text of whitespace) {
+        if (regex.test(text)) throw new Error(`Accepted ${JSON.stringify(text)}: ${pattern}`);
+    }
+}
+"""
+    result = subprocess.run(
+        ["node", "-e", script],
+        input=json.dumps([schema["pattern"] for schema in schemas]),
+        text=True,
+        capture_output=True,
+        cwd=ROOT,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 @pytest.mark.parametrize("level", ["a2", "b1", "b2"])
