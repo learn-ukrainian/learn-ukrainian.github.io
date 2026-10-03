@@ -35,7 +35,10 @@ One JSON object (see the `dataset.py` docstring): `review` paragraphs with
 seeded `errors` (offsets, exact `span`, `error_type` from the fixed label list,
 `accepted` corrections) and `protected` correct-but-tricky spans; `writing`
 tasks with a CEFR `level`, an `instruction` and an optional word range. Spans
-must equal `text[start:end]`; errors and protected spans may not overlap. `run`
+must equal `text[start:end]` and start and end on scoring-token boundaries
+(below); a non-empty span must hold a token. A set is refused when seeded errors
+overlap each other or a protected span, or when an accepted form tokenises to
+its error's own tokens (for example an apostrophe variant). `run`
 refuses a plan below Protocol v2 (60 errors, 40 protected spans, writing at A2,
 B1, B2 and C1, three repeats, both task kinds) unless `--smoke` is given; a
 smoke plan is reported as incomplete and never authorises adoption.
@@ -84,39 +87,85 @@ smoke plan is reported as incomplete and never authorises adoption.
   collected but not accepted (its dispatch-time checkout is unknown); failed or
   unaccepted tasks are re-dispatched only with `--retry-failed`. The complete
   plan (set, variants, templates, rules core, seats, repeats, kinds, item ids,
-  chunking, run tag, worker cwd, delegate's frame, protocol shortfalls) is frozen in
+  chunking, run tag, worker cwd, delegate's frame, protocol shortfalls, scoring
+  version) is frozen in
   `manifest.json`; a resumed run with any different term is refused, and
   `score` and `report` read the plan from the manifest.
 
 ## Scoring
 
-Review, from the answer's `corrected_text` (the evidence) and its
-`corrections` (the claims):
+### Review scoring contract (`uk-preamble-scoring/2`)
 
-- Changes are the token-level difference between the original and
-  `corrected_text` (words, punctuation marks, whitespace; apostrophe variants
-  and whitespace amounts compare equal; whitespace-only changes ignored). They
-  depend only on the two texts, never on how corrections were grouped.
-- A seeded error is a hit when `corrected_text` realises one of its accepted
-  corrections. A logged correction that `corrected_text` does not apply is not
-  a hit; an unlogged change counts like a logged one. A remaining difference on
-  an error span is a wrong correction (a miss).
-- False alarms are counted in packaging-independent units: each protected span
-  changed or accused (including inside paragraphs with errors), and each other
-  correct word or insertion point changed or accused, collateral changes
-  included. An accusation is the token difference a logged correction makes
-  when applied alone to the whole paragraph, so quoted unchanged context is
-  never accused and one edit accuses the same units however it is logged (for
-  example `safe → safer` and an insertion of `r` after `safe`). Corrections that cannot be
-  anchored are unsupported accusations, one each. The rule's false-alarm rate
-  is all false alarms per 100 protected spans.
+Frozen by the designated decision of 2026-10-03 on #9623 (an alternative by
+`gpt-6.1-sol`, approved with amendments by `claude-opus-5-5`). Implemented in
+`scripts/eval/uk_preamble/scoring.py`; the set checks are in `dataset.py`.
+
+- **Evidence.** Only the answer's `corrected_text` is scored. Its `corrections`
+  are claims: they never create, split or merge a counted unit, so every
+  schema-valid claim list (empty, combined, partitioned, irrelevant, unapplied
+  or unanchorable) gives the same primary counts.
+- **Tokens.** NFC; apostrophe variants folded to `'`, U+2010 and U+2011 to `-`,
+  `…` to `...`; U+00AD, U+200B–U+200D, U+2060 and U+FEFF deleted. A word is a
+  run of letters, digits and combining marks (U+0300–U+036F, so a stress mark
+  stays part of its word) joined internally by `'` or `-`; two or more full
+  stops are one token; every other non-space character is its own token.
+  Whitespace is never a token, so whitespace-only edits are invisible.
+  Comparison is case-sensitive. Dashes (U+2013, U+2014) and quote marks are not
+  folded: hyphen and dash are distinct in the norm (Правопис 2019, § 35, item 6.3,
+  note: `три-чотири` but `3 — 4 дні`).
+  Joining or splitting words is a real change (`не має` → `немає` counts two).
+- **Alignment.** One alignment of the original's tokens to the corrected
+  text's tokens, computed without seeds, protected spans or claims. Cost is
+  lexicographic: first token edits (delete, insert, substitute one each), then
+  character edits (Levenshtein distance for a substitution, the token's length
+  for a deletion or insertion). Among minimum-cost alignments, forward
+  reconstruction takes the first admissible operation in the order equal,
+  delete, insert, substitute. `difflib` is not used.
+- **Hits.** Seeds with no correct token between them form a cluster; its window
+  runs between the nearest correct tokens aligned as unchanged on either side.
+  When the corrected window equals the original window with every seed in it
+  given an accepted form or left as it was, the seeds that take an accepted form
+  in every such assignment are hits, and nothing else in that window counts.
+  Otherwise a seed is a hit when its slice (target tokens aligned to it plus
+  insertions strictly inside it; for an empty seed, the insertions at its point)
+  equals an accepted form, trying no edge insertion, then the left one, the
+  right one, then both. An edge insertion the match does not need is collateral.
+  A seed changed but not hit is a wrong correction: a miss, never a false alarm.
+  No alignment or assignment is chosen to maximise hits.
+- **False alarms (primary units).** Each protected span affected once (a token
+  changed or an insertion strictly inside it); each changed correct token
+  outside protected spans once; each other insertion site once. An insertion at
+  a protected span's edge is an ordinary insertion site. The rule's false-alarm
+  rate is all false alarms per 100 protected spans.
+- **Logging diagnostics, outside adoption.** Changed units some claim covers;
+  claims applied (the corrected text realises the claimed replacement over the
+  claimed tokens, so overlap alone never counts), unapplied, no-op and
+  unanchorable; protected spans an unapplied claim accuses that stay unchanged;
+  tokens inserted at false-alarm sites (a site counts once however long the
+  insertion). None of these enters the adoption rule.
+- **Documented residual.** When equal-cost alignments attribute a repeated
+  token differently, the tie order decides. For `p A x A q` → `p B A q` with the
+  seed on the first `A`, the seed counts as a miss and `x` as a changed token,
+  although the writer may have meant the opposite. Oracle case C8b pins this.
 - Style suggestions are tallied separately (total, on protected spans, on
-  error spans) and never count as hits or false alarms.
-- Also reported: changed units no correction claims (unlogged), claimed units
-  `corrected_text` does not change (unapplied), and VESUM-invalid forms that
-  the corrected text introduces.
+  error spans) and never count as hits or false alarms. VESUM-invalid forms the
+  corrected text introduces are reported.
 - A failed item (no answer, malformed JSON, schema violation, task not run or
   not accepted) stays in the denominator with all its errors missed.
+
+The worked oracle cases (R1–R3, C5–C10 of the decision) are tests with literal
+expected counts in `tests/eval/test_uk_preamble_scoring_contract.py`, with a
+seeded exhaustive check that every schema-valid claim list scores identically.
+
+**Version rule.** The scoring version is frozen in `manifest.json`. `run`
+(resume), `score` and `report` refuse a results directory frozen under another
+scoring version, including manifests written before scoring was versioned
+(`uk-preamble-scoring/1`, the per-correction diffing): results are never
+compared across scoring versions. The contract changed before any evaluation
+was paid for: no adoption-run result exists under version 1, so the change
+cannot have been tuned to a viewed result.
+
+### Writing and judging
 
 Writing, per text, through the local `sources` tool implementations:
 calque density (verdict-tier `check_text` Russian-shadow and multi-token UA-GEC

@@ -10,7 +10,15 @@ from typing import Any
 import pytest
 
 import scripts.eval.uk_preamble.__main__ as cli
-from scripts.eval.uk_preamble.common import SEATS, HarnessError, ResultsDir, judge_seats, read_json, sha256_text
+from scripts.eval.uk_preamble.common import (
+    SCORING_VERSION,
+    SEATS,
+    HarnessError,
+    ResultsDir,
+    judge_seats,
+    read_json,
+    sha256_text,
+)
 from scripts.eval.uk_preamble.dataset import load_set, parse_variants
 from scripts.eval.uk_preamble.dispatch import DispatchError, TaskOutcome, composition_of
 from scripts.eval.uk_preamble.report import build_report, render_markdown
@@ -22,7 +30,7 @@ from scripts.eval.uk_preamble.runner import (
     plan_judge_tasks,
     rules_block,
 )
-from scripts.eval.uk_preamble.scoring import score_judgements
+from scripts.eval.uk_preamble.scoring import LOGGING_KEYS, score_judgements
 
 PREAMBLE = "Ти — досвідчений редактор української мови."
 _INPUT = re.compile(r"Input:\n```json\n(.*)\n```\n\Z", re.DOTALL)
@@ -433,6 +441,29 @@ def test_manifest_freezes_the_complete_plan_and_refuses_plan_drift(env, capsys):
     assert "seats" in capsys.readouterr().err
 
 
+@pytest.mark.parametrize("old", [None, "uk-preamble-scoring/1"])
+def test_manifest_from_another_scoring_version_is_refused_by_run_score_and_report(env, capsys, old):
+    assert cli.main(env["run"]) == 0
+    assert _score(env) == 0
+    path = env["results"] / "manifest.json"
+    manifest = read_json(path)
+    assert manifest["frozen"]["scoring"] == SCORING_VERSION == "uk-preamble-scoring/2"
+    if old is None:
+        del manifest["frozen"]["scoring"]  # written before scoring was versioned
+    else:
+        manifest["frozen"]["scoring"] = old
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    capsys.readouterr()
+    for command in (
+        lambda: cli.main(env["run"]),
+        lambda: _score(env),
+        lambda: cli.main(["report", "--results", str(env["results"]), "--bootstrap", "300"]),
+    ):
+        assert command() == 2
+        err = capsys.readouterr().err
+        assert "review-scoring version" in err and "never compared across scoring versions" in err
+
+
 def test_plan_below_protocol_refused_without_smoke(env, capsys):
     args = [a for a in env["run"] if a != "--smoke"]
     assert cli.main(args) == 2
@@ -451,6 +482,9 @@ def test_smoke_run_never_authorises_adoption(env, capsys):
         assert any(r.startswith("incomplete: smoke plan") for r in comparison["rule"]["reasons"])
         assert seat_report["decision"] == "no change"
     assert "Smoke plan" in markdown and "incomplete run" in markdown
+    assert "Logging diagnostics (outside the adoption rule)" in markdown
+    totals = report["seats"][next(iter(SEATS))]["totals"]["adapted-v2"]
+    assert set(totals["logging"]) == set(LOGGING_KEYS)
 
 
 def test_full_plan_adopts_end_to_end(full_env, capsys):
@@ -739,11 +773,11 @@ def _synthetic(
                         "hits": hit,
                         "false_alarms": 1 if i < fa[label] else 0,
                         "fa_protected": 0,
-                        "fa_other": 0,
-                        "fa_unanchored": 0,
+                        "fa_tokens": 0,
+                        "fa_insertions": 0,
+                        "fa_inserted_tokens": 0,
                         "wrong_corrections": 0,
-                        "unlogged_change_units": 0,
-                        "unapplied_logged_units": 0,
+                        "logging": dict.fromkeys(LOGGING_KEYS, 0),
                         "new_invalid_forms": [],
                         "style": {"total": 0, "on_protected": 0, "on_error": 0},
                     }

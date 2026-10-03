@@ -38,6 +38,7 @@ from .common import (
     HARNESS_VERSION,
     PROTOCOL_KINDS,
     PROTOCOL_REPEATS,
+    SCORING_VERSION,
     SEATS,
     HarnessError,
     ResultsDir,
@@ -149,6 +150,7 @@ def frozen_plan(
     """
     return {
         "harness": HARNESS_VERSION,
+        "scoring": SCORING_VERSION,
         "set_id": eval_set.set_id,
         "set_sha256": eval_set.sha256,
         "variants": {variant.label: variant.sha256 for variant in variants},
@@ -173,6 +175,7 @@ def ensure_manifest(results: ResultsDir, frozen: dict[str, Any], set_path: Path)
     path = results.path("manifest.json")
     if path.exists():
         manifest = read_json(path)
+        _require_scoring_version(path, manifest)
         changed = sorted(
             key for key in frozen.keys() | manifest["frozen"].keys() if frozen.get(key) != manifest["frozen"].get(key)
         )
@@ -184,6 +187,16 @@ def ensure_manifest(results: ResultsDir, frozen: dict[str, Any], set_path: Path)
     return manifest
 
 
+def _require_scoring_version(path: Path, manifest: dict[str, Any]) -> None:
+    """Refuse a manifest frozen under another review-scoring contract; results never cross versions."""
+    found = manifest.get("frozen", {}).get("scoring") or "uk-preamble-scoring/1 (unversioned)"
+    if found != SCORING_VERSION:
+        raise HarnessError(
+            f"{path} was frozen under review-scoring version {found}, not {SCORING_VERSION}; results are never "
+            "compared across scoring versions: start a new results directory"
+        )
+
+
 def load_manifest(results: ResultsDir) -> dict[str, Any]:
     path = results.path("manifest.json")
     if not path.is_file():
@@ -191,6 +204,7 @@ def load_manifest(results: ResultsDir) -> dict[str, Any]:
     manifest = read_json(path)
     if manifest.get("frozen", {}).get("harness") != HARNESS_VERSION:
         raise HarnessError(f"{path} was written by another harness version; start a new results directory")
+    _require_scoring_version(path, manifest)
     return manifest
 
 

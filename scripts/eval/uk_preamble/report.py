@@ -16,6 +16,9 @@ adopt ``adapted-v2`` (else ``original``) only when
      not rise (point estimate <= 0), and every writing answer of both
      variants was scored (a failed writing item makes it inconclusive).
 Anything else, including an inconclusive result, means no change for that seat.
+The logging diagnostics (claim coverage, applied, unapplied, no-op and
+unanchored claims, protected spans accused but unchanged, inserted tokens) are
+reported per variant and never enter the rule.
 
 The denominator is the frozen plan in the run manifest, never what happens to
 be in ``scores.json``. A comparison is incomplete, and can never adopt, when
@@ -35,6 +38,7 @@ import numpy as np
 
 from .common import BASELINE_VARIANT, CANDIDATE_ORDER, FALSE_ALARM_MAX_RISE
 from .runner import ordered_labels
+from .scoring import LOGGING_KEYS
 
 CI_LEVEL = 0.95
 
@@ -216,11 +220,11 @@ def _variant_totals(
         "review_answers": len(rows),
         "review_failed": sum(r["failed"] for r in rows),
         "fa_protected": sum(r["fa_protected"] for r in rows),
-        "fa_other": sum(r["fa_other"] for r in rows),
-        "fa_unanchored": sum(r["fa_unanchored"] for r in rows),
+        "fa_tokens": sum(r["fa_tokens"] for r in rows),
+        "fa_insertions": sum(r["fa_insertions"] for r in rows),
+        "fa_inserted_tokens": sum(r["fa_inserted_tokens"] for r in rows),
         "wrong_corrections": sum(r["wrong_corrections"] for r in rows),
-        "unlogged_change_units": sum(r["unlogged_change_units"] for r in rows),
-        "unapplied_logged_units": sum(r["unapplied_logged_units"] for r in rows),
+        "logging": {key: sum(r["logging"][key] for r in rows) for key in LOGGING_KEYS},
         "new_invalid_forms": sum(len(r["new_invalid_forms"]) for r in rows),
         "style_total": sum(r["style"]["total"] for r in rows),
         "style_on_protected": sum(r["style"]["on_protected"] for r in rows),
@@ -356,21 +360,35 @@ def render_markdown(report: dict[str, Any]) -> str:
         lines.append(f"- {seat}: **{data['decision']}**{note}")
     lines += ["", "## Per-variant totals", ""]
     lines.append(
-        "| Seat | Variant | Failed review | FA protected / other / unanchored | Wrong fixes | Unlogged / unapplied units "
-        "| New invalid forms | Style (all / protected / on error) | Failed writing | Calque density (verdict / suspicion) | VESUM-invalid "
-        "| Level adherence | English intrusion |"
+        "| Seat | Variant | Failed review | FA protected / tokens / insertion sites (inserted tokens) | Wrong fixes "
+        "| New invalid forms | Style (all / protected / on error) | Failed writing | Calque density (verdict / suspicion) "
+        "| VESUM-invalid | Level adherence | English intrusion |"
     )
-    lines.append("| " + " | ".join(["---"] * 13) + " |")
+    lines.append("| " + " | ".join(["---"] * 12) + " |")
     for seat, data in report["seats"].items():
         for label, t in data["totals"].items():
             lines.append(
                 f"| {seat} | {label} | {t['review_failed']}/{t['review_answers']} "
-                f"| {t['fa_protected']} / {t['fa_other']} / {t['fa_unanchored']} | {t['wrong_corrections']} "
-                f"| {t['unlogged_change_units']} / {t['unapplied_logged_units']} | {t['new_invalid_forms']} "
+                f"| {t['fa_protected']} / {t['fa_tokens']} / {t['fa_insertions']} ({t['fa_inserted_tokens']}) "
+                f"| {t['wrong_corrections']} | {t['new_invalid_forms']} "
                 f"| {t['style_total']} / {t['style_on_protected']} / {t['style_on_error']} "
                 f"| {t['writing_failed']}/{t['writing_answers']} "
                 f"| {_fmt(t['calque_density'], 3)} / {_fmt(t['calque_suspicion_density'], 3)} "
                 f"| {_fmt(t['vesum_invalid_mean'], 2)} | {_fmt(t['level_adherence'], 3)} | {_fmt(t['english_intrusion'], 3)} |"
+            )
+    lines += ["", "## Logging diagnostics (outside the adoption rule)", ""]
+    lines.append(
+        "| Seat | Variant | Changed units claimed | Claims | Applied | Unapplied | No-op | Unanchored "
+        "| Protected accused, unchanged |"
+    )
+    lines.append("| " + " | ".join(["---"] * 9) + " |")
+    for seat, data in report["seats"].items():
+        for label, t in data["totals"].items():
+            g = t["logging"]
+            lines.append(
+                f"| {seat} | {label} | {g['claimed_change_units']}/{g['change_units']} | {g['claims']} "
+                f"| {g['applied_claims']} | {g['unapplied_claims']} | {g['noop_claims']} | {g['unanchored_claims']} "
+                f"| {g['protected_accused_unchanged']} |"
             )
     lines += ["", "## Recall by error type (hits/errors over all repeats)", ""]
     for seat, data in report["seats"].items():

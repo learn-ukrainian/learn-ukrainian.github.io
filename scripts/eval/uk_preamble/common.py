@@ -13,6 +13,9 @@ from pathlib import Path
 from typing import Any
 
 HARNESS_VERSION = "uk-preamble-harness/3"
+# The review-scoring contract frozen in every manifest (#9623, designated decision 2026-10-03).
+# Version 1 was the unversioned per-correction diffing; results are never compared across versions.
+SCORING_VERSION = "uk-preamble-scoring/2"
 BASELINE_VARIANT = "none"
 # Pre-registered adoption order (Protocol v2, #9623): adapted-v2 is the candidate, original the alternative.
 CANDIDATE_ORDER = ("adapted-v2", "original")
@@ -73,7 +76,8 @@ def judge_seats(candidate: str) -> list[Seat]:
     return [seat for seat in SEATS.values() if seat.family != family]
 
 
-_APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "‘": "'", "`": "'", "ʹ": "'", "´": "'"})
+APOSTROPHE_VARIANTS = "’ʼ‘`ʹ´"
+_APOSTROPHES = str.maketrans(dict.fromkeys(APOSTROPHE_VARIANTS, "'"))
 _WHITESPACE = re.compile(r"\s+")
 
 
@@ -85,6 +89,52 @@ def fold_apostrophes(text: str) -> str:
 def normalise(text: str) -> str:
     """Comparison form: NFC, one apostrophe, collapsed whitespace, trimmed."""
     return _WHITESPACE.sub(" ", fold_apostrophes(unicodedata.normalize("NFC", text))).strip()
+
+
+# --------------------------------------------------------------------------- scoring tokens
+
+# Folded before tokenising (scoring contract, #9623): apostrophe variants to ASCII; the Unicode
+# hyphen U+2010 and non-breaking hyphen U+2011 to the hyphen-minus; the ellipsis to three full stops.
+# The soft hyphen, zero-width space/non-joiner/joiner, word joiner and BOM are deleted. Dashes
+# (U+2013, U+2014) and quote marks are not folded: hyphen and dash are distinct in the norm.
+_SCORING_FOLD = {
+    **dict.fromkeys(APOSTROPHE_VARIANTS, "'"),
+    "\u2010": "-",
+    "\u2011": "-",
+    "\u2026": "...",
+    **dict.fromkeys("\u00ad\u200b\u200c\u200d\u2060\ufeff", ""),
+}
+# A word is a run of word characters and combining marks (stress) joined internally by an
+# apostrophe or hyphen; two or more full stops are one token; any other non-space character
+# is its own token. Whitespace is never a token.
+_WORD_CHARS = r"[\w\u0300-\u036f]"
+_SCORING_TOKEN = re.compile(rf"{_WORD_CHARS}+(?:['-]{_WORD_CHARS}+)*|\.{{2,}}|\S")
+
+
+@dataclass(frozen=True)
+class Token:
+    """One scoring token: ``key`` is its folded form; ``start``/``end`` are offsets into the NFC text."""
+
+    start: int
+    end: int
+    key: str
+
+
+def tokenize(text: str) -> list[Token]:
+    """The scoring tokens of ``text`` (NFC, folded as above; comparison is case-sensitive)."""
+    text = unicodedata.normalize("NFC", text)
+    chars: list[str] = []
+    origin: list[int] = []
+    for index, char in enumerate(text):
+        for out in _SCORING_FOLD.get(char, char):
+            chars.append(out)
+            origin.append(index)
+    folded = "".join(chars)
+    return [Token(origin[m.start()], origin[m.end() - 1] + 1, m.group()) for m in _SCORING_TOKEN.finditer(folded)]
+
+
+def token_keys(text: str) -> tuple[str, ...]:
+    return tuple(token.key for token in tokenize(text))
 
 
 _CYRILLIC_WORD = re.compile(r"[А-Яа-яІіЇїЄєҐґ]+(?:['’ʼ-][А-Яа-яІіЇїЄєҐґ]+)*")

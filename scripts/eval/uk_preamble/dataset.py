@@ -17,12 +17,18 @@ Set format (one JSON object, private, passed by path)::
     }
 
 Offsets are 0-based Python string offsets into ``text`` (end exclusive) and
-``span`` must equal ``text[start:end]``. Error spans and protected spans never
-overlap. An empty error span marks an insertion point (e.g. a missing comma).
+``span`` must equal ``text[start:end]``. An empty error span marks an insertion
+point (e.g. a missing comma). Spans start and end on scoring-token boundaries
+(``common.tokenize``) and hold at least one token unless empty; seeded errors
+never overlap each other or a protected span; no accepted form tokenises to its
+error's own tokens (see ``review_geometry``).
 """
 
 from __future__ import annotations
 
+import bisect
+import functools
+import itertools
 import re
 import unicodedata
 from dataclasses import dataclass
@@ -37,9 +43,12 @@ from .common import (
     PROTOCOL_MIN_PROTECTED,
     PROTOCOL_WRITING_LEVELS,
     HarnessError,
+    Token,
     read_json,
     sha256_file,
     sha256_text,
+    token_keys,
+    tokenize,
 )
 
 _LABEL = re.compile(r"^[a-z0-9][a-z0-9.-]{0,31}$")
@@ -131,6 +140,97 @@ def _overlap(a: Span, b: Span) -> bool:
     return a.start < b.end and b.start < a.end
 
 
+@dataclass(frozen=True)
+class TokenSpan:
+    """A span over source tokens [i1, i2); an empty one (i1 == i2) is the boundary before token i1."""
+
+    span: Span
+    i1: int
+    i2: int
+
+
+@dataclass(frozen=True)
+class Geometry:
+    """A review paragraph in scoring tokens: its spans, accepted forms and clusters of adjacent seeds."""
+
+    tokens: tuple[Token, ...]
+    seeds: tuple[TokenSpan, ...]  # sorted by (i1, i2)
+    protected: tuple[TokenSpan, ...]
+    accepted: dict[str, tuple[tuple[str, ...], ...]]  # seed id -> accepted forms as token keys
+    clusters: tuple[tuple[TokenSpan, ...], ...]  # maximal runs of seeds with no correct token between them
+
+    @property
+    def keys(self) -> tuple[str, ...]:
+        return tuple(token.key for token in self.tokens)
+
+
+def _token_span(tokens: tuple[Token, ...], span: Span, where: str) -> TokenSpan:
+    for pos in sorted({span.start, span.end}):
+        inside = next((t for t in tokens if t.start < pos < t.end), None)
+        if inside is not None:
+            raise HarnessError(
+                f"{where}: span {span.id} does not start and end on token boundaries "
+                f"(offset {pos} falls inside {inside.key!r})"
+            )
+    starts = [t.start for t in tokens]
+    i1 = bisect.bisect_left(starts, span.start)
+    i2 = bisect.bisect_left(starts, span.end) if span.end > span.start else i1
+    _require(span.start == span.end or i2 > i1, f"{where}: span {span.id} contains no token (whitespace only)")
+    return TokenSpan(span, i1, i2)
+
+
+def _token_overlap(a: TokenSpan, b: TokenSpan) -> bool:
+    if a.i1 == a.i2 and b.i1 == b.i2:
+        return a.i1 == b.i1
+    if a.i1 == a.i2:
+        return b.i1 < a.i1 < b.i2
+    if b.i1 == b.i2:
+        return a.i1 < b.i1 < a.i2
+    return a.i1 < b.i2 and b.i1 < a.i2
+
+
+@functools.lru_cache(maxsize=4096)
+def review_geometry(item: ReviewItem, where: str | None = None) -> Geometry:
+    """Validate ``item`` against the scoring contract and return its token geometry.
+
+    Refused (HarnessError): a seed or protected span that does not start and end
+    on token boundaries or holds no token; seeds overlapping each other or a
+    protected span; an accepted form that tokenises to the seed's own tokens.
+    """
+    where = where or f"review item {item.id}"
+    tokens = tuple(tokenize(item.text))
+    keys = tuple(token.key for token in tokens)
+    seeds = sorted((_token_span(tokens, err, where) for err in item.errors), key=lambda s: (s.i1, s.i2, s.span.start))
+    protected = tuple(_token_span(tokens, prot, where) for prot in item.protected)
+    for a, b in itertools.combinations(seeds, 2):
+        _require(
+            not _overlap(a.span, b.span) and not _token_overlap(a, b),
+            f"{where}: seeds {a.span.id} and {b.span.id} overlap",
+        )
+    for seed in seeds:
+        for prot in protected:
+            _require(
+                not _overlap(seed.span, prot.span) and not _token_overlap(seed, prot),
+                f"{where}: error {seed.span.id} overlaps protected span {prot.span.id}",
+            )
+    accepted: dict[str, tuple[tuple[str, ...], ...]] = {}
+    for seed in seeds:
+        forms = tuple(dict.fromkeys(token_keys(form) for form in seed.span.accepted))
+        own = keys[seed.i1 : seed.i2]
+        _require(
+            own not in forms,
+            f"{where}: an accepted form of {seed.span.id} tokenises to the seed's own tokens {list(own)}",
+        )
+        accepted[seed.span.id] = forms
+    clusters: list[list[TokenSpan]] = []
+    for seed in seeds:
+        if clusters and seed.i1 <= max(s.i2 for s in clusters[-1]):
+            clusters[-1].append(seed)
+        else:
+            clusters.append([seed])
+    return Geometry(tokens, tuple(seeds), protected, accepted, tuple(tuple(c) for c in clusters))
+
+
 def _review_item(raw: Any, index: int) -> ReviewItem:
     where = f"review[{index}]"
     _require(isinstance(raw, dict), f"{where}: expected an object")
@@ -157,10 +257,9 @@ def _review_item(raw: Any, index: int) -> ReviewItem:
         start, end, span = _offsets(prot, text, pw)
         _require(start < end, f"{pw}: protected spans must be non-empty")
         protected.append(Span(_str(prot.get("id"), f"{pw}.id"), start, end, span, _str(prot.get("kind"), f"{pw}.kind")))
-    for err in errors:
-        for prot in protected:
-            _require(not _overlap(err, prot), f"{where}: error {err.id} overlaps protected span {prot.id}")
-    return ReviewItem(item_id, text, tuple(errors), tuple(protected))
+    item = ReviewItem(item_id, text, tuple(errors), tuple(protected))
+    review_geometry(item, where)
+    return item
 
 
 def _writing_task(raw: Any, index: int) -> WritingTask:
