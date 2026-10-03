@@ -904,7 +904,7 @@ def _tool_calls_from_claude_session_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
     """Extract assistant text from Claude ``--output-format stream-json`` events."""
-    result_text = ""
+    results: list[str] = []
     structured_output: dict[str, Any] | None = None
     text_parts: list[str] = []
     for event in events:
@@ -913,7 +913,9 @@ def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
             structured_output = structured
         result = event.get("result")
         if isinstance(result, str) and result.strip():
-            result_text = result.strip()
+            text = result.strip()
+            if not results or results[-1] != text:
+                results.append(text)
         message = event.get("message")
         if isinstance(message, dict):
             content = message.get("content")
@@ -932,6 +934,6 @@ def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
             text_parts.append(content)
     if structured_output is not None:
         return json.dumps(structured_output, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
-    if result_text:
-        return result_text
+    if results:
+        return "\n\n".join(results)
     return "\n".join(part.strip() for part in text_parts if part.strip()).strip()
