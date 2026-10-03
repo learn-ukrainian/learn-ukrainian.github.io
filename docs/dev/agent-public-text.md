@@ -6,6 +6,10 @@ Both interfaces validate the same closed field schemas. PR creation requires
 explicit base and head names so implicit branch names cannot escape scanning. Arbitrary flags,
 endpoints, GraphQL documents and payload passthrough are unavailable.
 
+Destination resolution validates ASCII hostname labels before lowercasing;
+malformed destinations remain `unknown`. Repository-bound operations refuse
+`unknown`; both `GH_HOST` and API hostname flags use the resolved host.
+
 ```sh
 python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md
 python -m scripts.publish pr-review --repo unit/public --number 1 --verdict approve

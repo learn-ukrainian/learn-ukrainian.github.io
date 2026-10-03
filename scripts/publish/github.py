@@ -50,7 +50,10 @@ SCHEMAS = {
     "pr-close": ({"number"}, {**COMMON, "number": "number"}),
     "issue-reopen": ({"number"}, {**COMMON, "number": "number"}),
     "run-rerun": ({"number"}, {**COMMON, "number": "number"}),
-    "workflow-run": ({"workflow", "ref"}, {**COMMON, "workflow": "workflow", "ref": "ref", "inputs": "workflow_inputs"}),
+    "workflow-run": (
+        {"workflow", "ref"},
+        {**COMMON, "workflow": "workflow", "ref": "ref", "inputs": "workflow_inputs"},
+    ),
     "pr-disarm": ({"number"}, {**COMMON, "number": "number"}),
     "pr-dequeue": ({"node_id"}, {**COMMON, "node_id": "node"}),
     "release-create": (
@@ -118,16 +121,22 @@ PATTERNS = {
 }
 
 
+def _validated_environment(env) -> dict[str, str]:
+    """Copy the environment and refuse malformed GH_HOST even without a repo."""
+    environment = dict(os.environ if env is None else env)
+    if "GH_HOST" in environment:
+        hostname = gate.normalize_hostname(environment["GH_HOST"])
+        if hostname is None:
+            raise gate.PublishBlocked("OPSEC: invalid publisher hostname.")
+        environment["GH_HOST"] = hostname
+    return environment
+
+
 def _hostname_flag(dest: str) -> list[str]:
-    """Select an API host from a resolved destination using ASCII hostname labels."""
+    """Select an API host from a destination already validated by the resolver."""
     if dest == "unknown":
         return []
-    host, separator, rest = dest.partition("/")
-    # Validate ASCII before lowercasing so Unicode look-alikes cannot normalize in.
-    label = r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-    if not separator or not rest or not host.isascii() or not re.fullmatch(rf"{label}(?:\.{label})*", host.lower()):
-        raise gate.PublishBlocked("OPSEC: invalid publisher hostname.")
-    host = host.lower()
+    host = dest.split("/", 1)[0]
     return [] if host == "github.com" else ["--hostname", host]
 
 
@@ -308,7 +317,7 @@ def publish(
     }
     if verb in {"issue-edit", "pr-edit", "release-edit"} and not (set(fields) - {"number", "tag", "repo"}):
         raise gate.PublishBlocked("OPSEC: edit requires explicit fields; interactive publishing refused.")
-    environment = dict(os.environ if env is None else env)
+    environment = _validated_environment(env)
     cwd = Path(cwd or Path.cwd())
     dest = "unknown" if verb == "gist-create" else repository(cwd, environment, fields.get("repo"))
     if dest == "unknown" and verb != "gist-create":
@@ -540,11 +549,13 @@ def main(argv=None, *, runner=None):
             elif kind in {"texts", "assets"}:
                 kwargs["action"] = "append"
                 if kind == "assets":
+
                     def asset_arg(value):
                         try:
                             return Asset(value)
                         except gate.PublishBlocked:
                             raise argparse.ArgumentTypeError("invalid artifact") from None
+
                     kwargs["type"] = asset_arg
             elif kind == "number":
                 kwargs["type"] = int
@@ -554,7 +565,12 @@ def main(argv=None, *, runner=None):
                 kwargs["choices"] = sorted(ENUMS[kind])
             sub.add_argument("--" + key.replace("_", "-"), **kwargs)
     read_parser = verbs.add_parser("read", help="Named REST and GraphQL reads", allow_abbrev=False)
-    read_parser.add_argument("name", choices=sorted(set(REST_READS) | set(GQL_READS) | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}))
+    read_parser.add_argument(
+        "name",
+        choices=sorted(
+            set(REST_READS) | set(GQL_READS) | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}
+        ),
+    )
     read_parser.add_argument("--repo")
     for key in ("number",):
         read_parser.add_argument("--" + key, type=int, default=argparse.SUPPRESS)
@@ -615,8 +631,8 @@ REST_READS = {
 GQL_READS = {
     "budget": "query { rateLimit { limit remaining used resetAt } }",
     "default-head": "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){nameWithOwner defaultBranchRef{name target{oid}}}}",
-    "queue-status": '\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n',
-    "pr-bases": '\nquery($owner: String!, $name: String!, $cursor: String) {\n  repository(owner: $owner, name: $name) {\n    pullRequests(states: OPEN, first: 100, after: $cursor) {\n      totalCount\n      pageInfo { hasNextPage endCursor }\n      nodes { number baseRefOid }\n    }\n  }\n}\n',
+    "queue-status": "\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n",
+    "pr-bases": "\nquery($owner: String!, $name: String!, $cursor: String) {\n  repository(owner: $owner, name: $name) {\n    pullRequests(states: OPEN, first: 100, after: $cursor) {\n      totalCount\n      pageInfo { hasNextPage endCursor }\n      nodes { number baseRefOid }\n    }\n  }\n}\n",
     "issue-scope": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){number body labels(first:100){nodes{name}} parent{number}}}}",
     "membership-head": "query($owner:String!,$name:String!,$number:Int!,$branch:String!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid isInMergeQueue} mergeQueue(branch:$branch){url}}}",
     "issue-parent": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){number state url parent{number url}}}}",
@@ -645,7 +661,7 @@ def read(
     **fields,
 ):
     """Specific API reads with fixed GET endpoints or internally built query documents."""
-    environment = dict(os.environ if env is None else env)
+    environment = _validated_environment(env)
     cwd = Path(cwd or Path.cwd())
     dest = "unknown" if operation == "budget" else repository(cwd, environment, repo)
     if dest == "unknown" and operation not in {"identity", "budget", "merge-facts"}:
@@ -676,8 +692,14 @@ def read(
     else:
         variables = dict(zip(("owner", "name"), gh_repo.split("/", 1), strict=True)) if "/" in gh_repo else {}
         if operation in GQL_READS:
-            expected = (set() if operation in {"budget", "default-head"} else {"cursor"} if operation == "pr-bases" else {"number", "branch"} if operation == "queue-status" else
-                {"number", "cursor"}
+            expected = (
+                set()
+                if operation in {"budget", "default-head"}
+                else {"cursor"}
+                if operation == "pr-bases"
+                else {"number", "branch"}
+                if operation == "queue-status"
+                else {"number", "cursor"}
                 if operation == "subissues-next"
                 else {"number", "branch"}
                 if operation == "membership-head"
@@ -685,7 +707,11 @@ def read(
             )
             if (
                 set(fields) != expected
-                or ("cursor" in fields and not isinstance(fields["cursor"], str) and not (operation == "pr-bases" and fields["cursor"] is None))
+                or (
+                    "cursor" in fields
+                    and not isinstance(fields["cursor"], str)
+                    and not (operation == "pr-bases" and fields["cursor"] is None)
+                )
                 or ("branch" in fields and not isinstance(fields["branch"], str))
             ):
                 raise gate.PublishBlocked("OPSEC: invalid query fields.")
@@ -693,8 +719,11 @@ def read(
             variables.update(fields)
         elif operation == "issue-states" and set(fields) == {"numbers"}:
             numbers = fields["numbers"]
-            if (not isinstance(numbers, (list, tuple)) or not 1 <= len(numbers) <= 100
-                    or any(type(n) is not int or n <= 0 for n in numbers)):
+            if (
+                not isinstance(numbers, (list, tuple))
+                or not 1 <= len(numbers) <= 100
+                or any(type(n) is not int or n <= 0 for n in numbers)
+            ):
                 raise gate.PublishBlocked("OPSEC: invalid issue batch.")
             aliases = "\n".join(f"i{n}: issue(number: {n}) {{ number state }}" for n in numbers)
             query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + aliases + "}}"
@@ -704,16 +733,24 @@ def read(
                 raise gate.PublishBlocked("OPSEC: invalid merge batch.")
             grouped = {}
             for item in batch:
-                if (not isinstance(item, (list, tuple)) or len(item) != 2
-                        or not isinstance(item[0], str) or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", item[0])
-                        or type(item[1]) is not int or item[1] <= 0):
+                if (
+                    not isinstance(item, (list, tuple))
+                    or len(item) != 2
+                    or not isinstance(item[0], str)
+                    or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", item[0])
+                    or type(item[1]) is not int
+                    or item[1] <= 0
+                ):
                     raise gate.PublishBlocked("OPSEC: invalid merge selector.")
                 grouped.setdefault(item[0], []).append(item[1])
             selections = []
             for i, (slug, numbers) in enumerate(grouped.items()):
                 owner, name = slug.split("/")
-                selections.append(f"r{i}:repository(owner:{json.dumps(owner)},name:{json.dumps(name)}){{" +
-                    " ".join(f"p{n}:pullRequest(number:{n}){{mergedAt}}" for n in numbers) + "}")
+                selections.append(
+                    f"r{i}:repository(owner:{json.dumps(owner)},name:{json.dumps(name)}){{"
+                    + " ".join(f"p{n}:pullRequest(number:{n}){{mergedAt}}" for n in numbers)
+                    + "}"
+                )
             query = "query {" + " ".join(selections) + "}"
             variables = {}
         elif operation == "queue-snapshot" and set(fields) == {"branches"}:
