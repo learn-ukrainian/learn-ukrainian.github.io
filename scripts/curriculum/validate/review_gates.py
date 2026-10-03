@@ -132,7 +132,7 @@ making them failures needs structured target and option fields, which is a plan-
   printable quotes); the preflight runs the same checks on the same hosts (scripts/build/fresh/preflight.py). A
   quote is tokenised composed (NFC), so decomposed bytes are read as the words they spell. When VESUM cannot be
   read, the byte defects are still reported and the lookup is ``vesum_unavailable``: not_checked, and a failure
-  under --strict.
+  under --strict unless the run declares an environment without VESUM (--not-checked-when-unavailable vesum).
 - C14 compares a YouTube video by its id, any other URL without its fragment and trailing slash,
   together with ``models.segment``: two segments of one video are two recordings.
 - C15 reads a step's displays two ways. A teach-text sentence (split at . ; ! ?) directs a display when
@@ -185,7 +185,8 @@ making them failures needs structured target and option fields, which is a plan-
   spelling or a VESUM form, looked up in lower case, and capitalised too only when the row's word is a name. An
   anagram's other arrangements (targets of at most seven letters) are mostly rare inflected or archaic forms, so a
   hit is a note. Completions the word store attests are decided without VESUM; when VESUM cannot be read the rest
-  are ``vesum_unavailable`` (not_checked, a failure under --strict).
+  are ``vesum_unavailable`` (not_checked, a failure under --strict unless the run declares an environment without
+  VESUM).
 - C24 reads a rationale or job sentence saying the lesson recycles word records "including" (or "such as") a list.
   Each English word of the list names a category when it equals the head word of store records' gloss_en ("sound",
   "letter"); function words and words describing records do not. A quoted Ukrainian word names its records. The
@@ -578,6 +579,9 @@ class ReviewGates(Gates):
     pack: Pack = field(kw_only=True)
     #: --strict: a lookup the run could not make fails the run instead of being reported as not_checked.
     strict: bool = field(default=False, kw_only=True)
+    #: --not-checked-when-unavailable vesum: the run declares an environment without VESUM (the CI runner), so an
+    #: undecided lookup stays a not_checked line under --strict too, and says why.
+    vesum_declared_unavailable: bool = field(default=False, kw_only=True)
 
     def fail(self, code: str, message: str, lesson: int | None, step: str | None = None) -> None:
         self.report.failures.append(Outcome(code, message, lesson, step))
@@ -585,10 +589,15 @@ class ReviewGates(Gates):
     def lookup_unavailable(self, rule: str, detail: str) -> None:
         """VESUM could not be read: the gate's lookup outcome is unknown, never a pass.
 
-        Outside --strict it is a not_checked line; --strict (CI, plan-promote) needs every gate decided, so there it
-        fails the run. Findings the gate decided from local evidence are reported before this."""
-        outcome = Outcome(codes.VESUM_UNAVAILABLE, f"gate {rule} is undecided because VESUM is unavailable: {detail}")
-        (self.report.failures if self.strict else self.report.not_checked).append(outcome)
+        Outside --strict it is a not_checked line; --strict (plan-promote) needs every gate decided, so
+        there it fails the run, unless the run declared an environment without VESUM. Findings the gate decided from
+        local evidence are reported before this."""
+        message = f"gate {rule} is undecided because VESUM is unavailable: {detail}"
+        if self.vesum_declared_unavailable:
+            message += " (declared by --not-checked-when-unavailable vesum)"
+        outcome = Outcome(codes.VESUM_UNAVAILABLE, message)
+        failing = self.strict and not self.vesum_declared_unavailable
+        (self.report.failures if failing else self.report.not_checked).append(outcome)
 
     # -- C1 -------------------------------------------------------------------
 
@@ -1930,9 +1939,21 @@ def check_review_gates(
     level_plans: LevelPlans,
     words_path: Path,
     strict: bool = False,
+    vesum_declared_unavailable: bool = False,
 ) -> None:
     """Run gates C1–C28 on a plan that already passed the schema, with its pack and word store loaded."""
-    gates = ReviewGates(report, plan, level, store, arc, level_plans, words_path, pack=pack, strict=strict)
+    gates = ReviewGates(
+        report,
+        plan,
+        level,
+        store,
+        arc,
+        level_plans,
+        words_path,
+        pack=pack,
+        strict=strict,
+        vesum_declared_unavailable=vesum_declared_unavailable,
+    )
     gates.check_named_before_introduction()
     gates.check_duplicate_focus()
     gates.check_listening_single_key()

@@ -13,6 +13,7 @@ Ukrainian.
 
 from __future__ import annotations
 
+import json
 import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -24,6 +25,7 @@ import yaml
 from scripts.curriculum.validate import codes, quote_bytes, review_gates
 from scripts.curriculum.validate.report import Report
 from scripts.curriculum.validate.review_gates import ReviewGates
+from scripts.curriculum.validate.validate import main as validate_main
 from scripts.curriculum.validate.validate import validate_plan
 from tests.curriculum.test_plan_validate import LEVEL, NOT_CHECKED, PRIOR_SLUG, SLUG, prior_plan, write_world
 from tests.curriculum.test_plan_validate_mechanical import (
@@ -101,10 +103,14 @@ PRIOR_ONE, PRIOR_TWO, MANOK, NOMA = "W-209", "W-210", "W-211", "W-212"
 VESUM_FORMS = {"мамою", "ятір", "юнак", "рік", "яма", "кран", "мої", "крайній"}
 
 
+def _stub_lookup(words: list[str]) -> set[str]:
+    return {word for word in words if word in VESUM_FORMS}
+
+
 @pytest.fixture(autouse=True)
 def _stub_vesum(monkeypatch: pytest.MonkeyPatch) -> None:
     """Quote words outside the word store are looked up in a stub, so the cases never need VESUM."""
-    monkeypatch.setattr(quote_bytes, "vesum_lookup", lambda words: {word for word in words if word in VESUM_FORMS})
+    monkeypatch.setattr(quote_bytes, "vesum_lookup", _stub_lookup)
 
 
 Mutate = Callable[[dict, dict, dict, dict], None]  # plan, pack, words, prior plan
@@ -1182,6 +1188,11 @@ CASES = [
 
 
 def run(root: Path, mutate: Mutate | None, strict: bool = False) -> Report:
+    return validate_plan(LEVEL, SLUG, plan_path=_world(root, mutate), strict=strict)
+
+
+def _world(root: Path, mutate: Mutate | None) -> Path:
+    """The plan path of a written world: the mechanical plan, its prior plan and its base request."""
     plan, pack, words, prior = mechanical_plan(), mechanical_pack(), mechanical_words(), prior_plan()
     if mutate is not None:
         mutate(plan, pack, words, prior)
@@ -1193,7 +1204,7 @@ def run(root: Path, mutate: Mutate | None, strict: bool = False) -> Report:
     (world.words_path.parent / "_base.request.yaml").write_text(
         yaml.safe_dump(request, allow_unicode=True), encoding="utf-8"
     )
-    return validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=strict)
+    return world.plan_path
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda case: case.name)
@@ -1234,9 +1245,13 @@ def test_c4_skips_a_lesson_before_the_first_taught_letter() -> None:
 
 
 def produced_review_gate_codes(root: Path) -> set[str]:
+    """Every code the cases produce, with this module's VESUM stub: test_plan_validate's registry test calls this
+    outside the autouse fixture, and the set must not depend on whether the host has VESUM."""
     produced: set[str] = set()
-    for index, case in enumerate(CASES):
-        produced |= run(root / f"case-{index}", case.mutate).codes()
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(quote_bytes, "vesum_lookup", _stub_lookup)
+        for index, case in enumerate(CASES):
+            produced |= run(root / f"case-{index}", case.mutate).codes()
 
     def unavailable(words: list[str]) -> set[str]:
         raise quote_bytes.VesumUnavailable("no database")
@@ -1273,6 +1288,82 @@ def test_c12_unavailable_vesum_never_passes_strict(tmp_path: Path, monkeypatch: 
     report = run(tmp_path, _quote("мама мамою"), strict=True)
     assert codes.VESUM_UNAVAILABLE in {o.code for o in report.failures}, report.render_text()
     assert report.status == "fail"
+
+
+def _vesum_unreadable(monkeypatch: pytest.MonkeyPatch) -> None:
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
+
+
+DECLARE_NO_VESUM = ["--not-checked-when-unavailable", "vesum"]
+
+
+def test_strict_cli_fails_an_undecided_vesum_gate_unless_declared(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """CI's runner has no VESUM: only the declared option keeps the undecided gate not_checked under --strict."""
+    _vesum_unreadable(monkeypatch)
+    plan_path = _world(tmp_path, _quote("мама мамою"))
+    command = [LEVEL, SLUG, "--plan", str(plan_path), "--strict"]
+
+    assert validate_main(command) == 1
+    assert "FAIL vesum_unavailable: gate C12 is undecided because VESUM is unavailable" in capsys.readouterr().out
+
+    assert validate_main([*command, *DECLARE_NO_VESUM]) == 0
+    out = capsys.readouterr().out
+    assert "status: pass" in out
+    assert "FAIL " not in out
+    undecided = [line for line in out.splitlines() if line.startswith("NOT_CHECKED vesum_unavailable: ")]
+    assert len(undecided) == 1, out
+    assert undecided[0].startswith("NOT_CHECKED vesum_unavailable: gate C12 is undecided because VESUM is unavailable")
+    assert undecided[0].endswith("no database (declared by --not-checked-when-unavailable vesum)"), undecided
+
+
+def test_declared_vesum_unavailable_lists_each_undecided_gate_in_the_report(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _vesum_unreadable(monkeypatch)
+    plan_path = _world(tmp_path, _pick("Complete но-на from its syllables; select the missing first syllable."))
+    assert validate_main([LEVEL, SLUG, "--plan", str(plan_path), "--strict", "--json", *DECLARE_NO_VESUM]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "pass"
+    undecided = [entry["message"] for entry in payload["not_checked"] if entry["code"] == codes.VESUM_UNAVAILABLE]
+    assert len(undecided) == 1 and undecided[0].startswith("gate C23 is undecided"), undecided
+
+
+def test_declared_vesum_unavailable_never_hides_another_strict_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _vesum_unreadable(monkeypatch)
+    plan_path = _world(tmp_path, _quote("мама мамою \uf0fc"))
+    assert validate_main([LEVEL, SLUG, "--plan", str(plan_path), "--strict", *DECLARE_NO_VESUM]) == 1
+    out = capsys.readouterr().out
+    assert f"FAIL {codes.QUOTE_HOST_PRIVATE_USE}" in out
+    assert "NOT_CHECKED vesum_unavailable: gate C12" in out
+
+
+def test_all_mode_prints_declared_undecided_gates_of_a_passing_plan(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """--all prints only failing plans' reports, so a passing plan's undecided gates get their own lines. The
+    level's prior plan is a schema stub that fails on its own, so this reads the plan's lines, not the exit code
+    (the single-plan test above holds the exit codes)."""
+    _vesum_unreadable(monkeypatch)
+    plan_path = _world(tmp_path, _quote("мама мамою"))
+    command = [LEVEL, "--all", "--level-dir", str(plan_path.parent), "--strict"]
+
+    validate_main(command)
+    out = capsys.readouterr().out
+    assert f"{LEVEL}/{SLUG}: fail (1 failures)" in out
+    assert "FAIL vesum_unavailable: gate C12 is undecided" in out
+
+    validate_main([*command, *DECLARE_NO_VESUM])
+    out = capsys.readouterr().out
+    assert f"{LEVEL}/{SLUG}: pass" in out.splitlines()
+    assert f"{LEVEL}/{SLUG}: NOT_CHECKED vesum_unavailable: gate C12 is undecided" in out
+    assert "FAIL vesum_unavailable" not in out
 
 
 def test_c8_outcome_names_the_comprehension_step(tmp_path: Path) -> None:
