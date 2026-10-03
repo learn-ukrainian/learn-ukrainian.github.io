@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sys
 from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from scripts.fleet import credit_lane
 from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
@@ -1642,3 +1644,147 @@ def test_high_risk_opus_pin_is_still_admitted(profile):
 def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="high", formal_review=False)
     assert not (evaluate_candidate(SONNET_5_5, inputs).reason or "").startswith(_HIGH_RISK_RULE)
+
+
+# --- #9517: near-cap lanes with a published credit balance -------------------
+
+
+def _credit_codex(credit: dict | None, **overrides) -> dict:
+    """A near-cap, healthy Codex routing-budget record publishing ``credit``."""
+    record = {"status": "near_cap", "health": {"healthy": True}, **overrides}
+    if credit is not None:
+        record["credit"] = credit
+    return {"agents": {"codex": record}}
+
+
+def _published_credit(*, fetched_at: datetime | None = None) -> dict:
+    """The credit field routing-budget publishes, computed by credit_lane itself (conftest: no rate limits)."""
+    now = datetime.now(UTC)
+    fetched = (fetched_at or now - timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
+    info = {
+        "remaining_pct": 1.0,
+        "freshness": "fresh",
+        "age_s": 60.0,
+        "credit_balance": 62500.0,
+        "codexbar": {"weekly_remaining_pct": 1.0, "freshness": "fresh", "age_s": 60.0, "fetched_at": fetched},
+    }
+    return credit_lane.lane_credit_state("codex", info, credit_lane.load_policy(), now=now)
+
+
+def test_near_cap_codex_with_credit_balance_keeps_allowlisted_reviewer_eligible():
+    credit = _published_credit()
+    assert credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit))
+    result = evaluate_candidate(OPENAI_FRONTIER, inputs)
+    assert result.status == "eligible", result.reason
+    assert result.health == "near_cap"
+    assert result.credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+    assert result.credit["model_allowed"] is True
+    assert result.credit["draw"] == credit_lane.DRAW_NOT_VERIFIED
+    assert result.credit["evidence"]["credit_balance"] == 62500.0
+
+    resolution = resolve_reviewer(inputs)
+    traced = next(item for item in resolution.trace if item.name == "openai_frontier")
+    assert traced.status in {"eligible", "selected"}
+    assert traced.credit["allowed_models"] == ["gpt-6.1-sol", "gpt-6-luna"]
+
+
+@pytest.mark.parametrize(
+    "credit",
+    [
+        None,
+        {"state": credit_lane.CREDIT_USE_UNCONFIRMED, "reason": "recent rate limit"},
+        {"state": credit_lane.CREDITS_UNVERIFIED, "reason": "credit probe freshness=stale"},
+        {"state": credit_lane.CREDITS_EXHAUSTED, "reason": "credit balance 0"},
+        {"state": credit_lane.POLICY_ERROR, "reason": "credit-lane policy unreadable"},
+        {"state": credit_lane.PLAN_UNKNOWN, "reason": "plan allowance unknown"},
+        {"state": credit_lane.NOT_CONFIGURED},
+    ],
+    ids=[
+        "no-credit-field",
+        "use-unconfirmed",
+        "unverified",
+        "exhausted",
+        "policy-error",
+        "plan-unknown",
+        "not-configured",
+    ],
+)
+def test_near_cap_without_usable_credits_stays_excluded(credit):
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit))
+    result = evaluate_candidate(OPENAI_FRONTIER, inputs)
+    assert result.status == "excluded"
+    assert result.reason == "quota bucket is near cap — automatic assignments are prohibited"
+    assert result.credit is None
+
+
+def test_flat_near_cap_map_carries_no_credit_and_stays_excluded():
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot={"codex": "near_cap"})
+    result = evaluate_candidate(OPENAI_FRONTIER, inputs)
+    assert result.status == "excluded" and result.credit is None
+
+
+def test_stale_published_credit_balance_stays_excluded():
+    stale = _published_credit(fetched_at=datetime.now(UTC) - timedelta(minutes=1))
+    stale["evidence"]["credit_fetched_at"] = (datetime.now(UTC) - timedelta(hours=2)).isoformat().replace("+00:00", "Z")
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(stale))
+    result = evaluate_candidate(OPENAI_FRONTIER, inputs)
+    assert result.status == "excluded"
+    assert "near cap" in result.reason and credit_lane.CREDITS_UNVERIFIED in result.reason
+    assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+
+
+def test_credit_balance_never_relaxes_hard_health_exclusion():
+    snapshot = _credit_codex(_published_credit(), health={"healthy": False})
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=snapshot)
+    )
+    assert result.status == "excluded"
+    assert result.reason == "lane health is unhealthy — route is operationally unavailable"
+
+
+def test_off_allowlist_model_on_credit_lane_is_excluded_naming_the_allowlist(monkeypatch):
+    policy = credit_lane.load_policy()
+    monkeypatch.setattr(
+        credit_lane, "load_policy", lambda path=None: replace(policy, allowed_models={"codex": ("gpt-6-luna",)})
+    )
+    inputs = ResolverInputs(
+        author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(_published_credit())
+    )
+    result = evaluate_candidate(OPENAI_FRONTIER, inputs)
+    assert result.status == "excluded"
+    assert "outside the credit-period allowlist [gpt-6-luna]" in result.reason
+    assert result.credit["model_allowed"] is False
+
+
+def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
+    inputs = ResolverInputs(author_model="gemini", exact_head="d" * 40, requested_role="implementation")
+    ladder = ((PRACTICAL_ASTRA, sonnet),)
+    # Without credit evidence the lighter-loaded Codex seat wins the balance.
+    light_codex = {"completed_input_bytes": 0, "active_reserved_input_bytes": 0}
+    busy_claude = {"completed_input_bytes": 900, "active_reserved_input_bytes": 0}
+    plain = {"agents": {"codex": {"scheduler": light_codex}, "claude": {"scheduler": busy_claude}}}
+    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=plain).selected.name == "synthetic-practical-astra"
+
+    credit_backed = {
+        "agents": {
+            "codex": {"status": "near_cap", "credit": _published_credit(), "scheduler": light_codex},
+            "claude": {"status": "healthy", "scheduler": busy_claude},
+        }
+    }
+    resolution = resolve_reviewer(inputs, ladder=ladder, runtime_state=credit_backed)
+    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert next(item for item in resolution.trace if item.name == "synthetic-practical-astra").status == "eligible"
+
+    # With the plan-backed seat near cap too, the credit-backed seat is selected and the receipt says so.
+    only_credit = {
+        "agents": {
+            "codex": {"status": "near_cap", "credit": _published_credit()},
+            "claude": {"status": "near_cap"},
+        }
+    }
+    resolution = resolve_reviewer(inputs, ladder=ladder, runtime_state=only_credit)
+    assert resolution.selected.name == "synthetic-practical-astra"
+    assert resolution.selected.credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+    assert credit_lane.DRAW_NOT_VERIFIED in resolution.substitution_note

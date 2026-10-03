@@ -891,6 +891,21 @@ lane, marks Codex `credit.state: policy_error` in its plan state and adds a warn
 admission refuses only off-allowlist Codex dispatches (`allowlist_applies` true), with a stderr warning; every other lane is
 admitted as before. Nothing consumes credits or resets.
 
+**Credit lanes in routing-budget, the reviewer resolver and `usage show` (#9517):**
+`/api/state/routing-budget` publishes each subscription lane's `credit_lane.lane_credit_state` as the
+additive `agents.<lane>.credit` field; the raw quota `status` keeps its vocabulary (a near-cap Codex
+lane still reads `near_cap`). The recommendation considers a lane in `credit_balance_present` only
+after every cool and warm plan-backed lane (instead of `inline_orchestrator`), says so in its
+rationale and adds a warning naming the credit-period allowlist. `closeout_cli resolve-reviewer`
+(given a full routing-budget snapshot) keeps a near-cap candidate eligible only when that published
+state is `credit_balance_present`, its balance fetch time is still fresh now, and the candidate's
+concrete model is on the lane's allowlist in the local policy (otherwise the exclusion reason names
+the credit state or the allowlist). Such a candidate ranks after plan-backed candidates of equal
+standing, and its receipt carries `credit` (state, evidence, allowlist, `draw`); a flat health map
+or any other credit state keeps the near-cap exclusion. `usage show` appends the published state to
+the Codex `credits:` line (`credit_balance_present: credit balance present; draw not verified by the
+router; usable for … only`, or the fail-closed state with its reason).
+
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
