@@ -734,13 +734,15 @@ def test_build_slovnyk_and_resursy_tabs(monkeypatch):
     resursy = build_resursy_tab(lesson_plan, pack)
     assert "books" in resursy
     assert len(resursy["books"]) == 1
-    assert resursy["books"][0]["source"] == "T-1"
+    assert "source" not in resursy["books"][0]
     assert resursy["books"][0]["title"] == "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 10"
 
     assert "youtube" in resursy
     assert len(resursy["youtube"]) == 1
     assert resursy["youtube"][0]["channel"] == "LearnUA"
-    assert resursy["youtube"][0]["description"] == "Watch the alphabet song"
+    assert resursy["youtube"][0]["description"] == ""
+    assert "Watch the alphabet song" not in str(resursy)
+    assert "Default use" not in str(resursy)
 
 
 def test_whole_sentence_rendered_with_inline_markup():

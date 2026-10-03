@@ -13,6 +13,6 @@
         "stopping_check": {"type": ["integer", "null"]}, "reason": {"type": ["string", "null"]},
         "regenerations": {"type": "integer", "minimum": 0},
         "terminal_layer": {"enum": [null, "plan", "pack", "word_store", "engine", "driver"]},
-        "layer": {"enum": [null, "writer", "plan", "pack", "word_store", "engine", "driver"]}}}}
+        "layer": {"enum": [null, "writer", "plan", "pack", "word_store", "engine", "driver", "harness"]}}}}
   }
 }

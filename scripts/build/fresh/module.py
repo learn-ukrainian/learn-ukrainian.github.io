@@ -223,12 +223,13 @@ def build_module(
                 results.append(result)
                 break
             while True:
+                harness = load_harness(ledger_path, slug, n)
+                if harness["terminal_state"] is not None:
+                    stopped = _stop(n, HARNESS_EXHAUSTED, check=1, layer="engine" if not fresh else "harness")
+                    stopped.update(regenerations=ledger["regenerations"], terminal_layer="driver")
+                    results.append(stopped)
+                    break
                 if not fresh:
-                    if load_harness(ledger_path, slug, n)["terminal_state"] is not None:
-                        stopped = _stop(n, HARNESS_EXHAUSTED, check=1, layer="engine")
-                        stopped.update(regenerations=ledger["regenerations"], terminal_layer="driver")
-                        results.append(stopped)
-                        break
                     if not writer_seat:
                         results.append(_stop(n, "writer_seat_required"))
                         break
@@ -294,6 +295,7 @@ def build_module(
                     # Only a delivered reply can spend the content-regeneration budget.
                     ledger = record_writer_call(ledger_path, slug, n, current)
                 draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
+                harness_failures_before = len(load_harness(ledger_path, slug, n)["failures"])
                 report = runner(
                     level,
                     slug,
@@ -333,6 +335,21 @@ def build_module(
                 check = report.get("stopping_check") or (bad["check"] if bad else report.get("passed_through", 0))
                 reason = report.get("reason") or (bad["reason"] if bad else "build_failed")
                 layer = bad["layer"] if bad else (report.get("layer") or "engine")
+                if layer == "harness":
+                    # The real runner records its failure. Report-only runners need
+                    # accounting here, but the same failure must never count twice.
+                    harness = load_harness(ledger_path, slug, n)
+                    if len(harness["failures"]) == harness_failures_before:
+                        record_harness_failure(ledger_path, slug, n, reason, current)
+                        harness = load_harness(ledger_path, slug, n)
+                    exhausted = harness["terminal_state"] is not None
+                    stopped = _stop(n, HARNESS_EXHAUSTED if exhausted else reason, check=check, layer="harness")
+                    stopped.update(
+                        regenerations=ledger["regenerations"],
+                        terminal_layer="driver" if exhausted else ledger["terminal_layer"],
+                    )
+                    results.append(stopped)
+                    break
                 if layer != "writer" and ledger["terminal_layer"] is None:
                     # The real runner records failures itself. Injected runners and
                     # check-12 reports without a failed gate row must stop as well.

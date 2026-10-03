@@ -7,6 +7,7 @@ and MDX normalization.
 
 from __future__ import annotations
 
+import html
 import json
 import re
 import sys
@@ -38,24 +39,41 @@ from manifest_utils import get_module_by_slug
 from yaml_activities import Activity, ActivityParser
 
 
+def mdx_safe_text(text: str, *, preserve_heading_markup: bool = False) -> str:
+    """Encode learner text as MDX text, preserving its displayed characters.
+
+    Entities work in both Markdown and quoted JSX attributes. JS/JSON payloads
+    use their existing serializers instead: entities inside JSON are literal.
+    """
+    entities = {char: html.escape(char, quote=True) for char in ("&", "<", ">", '"', "'")}
+    entities.update({"{": "&#123;", "}": "&#125;", "`": "&#96;", "$": "&#36;", "\\": "&#92;", "|": "&#124;"})
+    if not preserve_heading_markup:
+        entities["#"] = "&#35;"
+    # Translate original characters once. Escaping HTML first would also encode
+    # the # in generated entities (e.g. &#x27;) and change the displayed text.
+    encoded = str(text).translate(str.maketrans(entities))
+    # MDX treats import/export at the start of a paragraph as ESM, even
+    # without JSX punctuation. Keep source text from becoming executable syntax.
+    return re.sub(
+        r"^(\s*)([ie])(?=(?:mport|xport)\s)",
+        lambda match: match[1] + f"&#{ord(match[2])};",
+        encoded,
+        flags=re.MULTILINE,
+    )
+
+
 def _activity_id(activity: Activity) -> str:
     if isinstance(activity, dict):
         return str(activity.get("id", "") or "").strip()
     return str(getattr(activity, "id", "") or "").strip()
 
 
-def _activity_type(activity: Activity) -> str:
-    if isinstance(activity, dict):
-        return str(activity.get("type", "") or "").strip() or "unknown"
-    return str(getattr(activity, "type", "") or "").strip() or "unknown"
-
-
-def _activity_title_or_type(activity: Activity) -> str:
+def _activity_title(activity: Activity) -> str:
     if isinstance(activity, dict):
         title = str(activity.get("title", "") or "").strip()
     else:
         title = str(getattr(activity, "title", "") or "").strip()
-    return title or _activity_type(activity)
+    return title
 
 
 def activity_identity_key(activity: Activity) -> str:
@@ -102,6 +120,50 @@ def yaml_activities_to_jsx(
     )
 
 
+# Display owners read from the site TSX implementations (including activity-kit
+# shims). Cloze's serializer supplies no instruction/title prop, so MDX owns it.
+# Runtime tests render every live A1-B2 activity to catch component/serializer drift.
+_FRESH_COMPONENT_LABEL_FIELDS = {
+    **dict.fromkeys((
+        "Anagram", "CountSyllables", "DivideWords", "ErrorCorrection", "FillIn",
+        "GroupSort", "LetterGrid", "MarkTheWords", "MatchUp", "Observe", "OddOneOut",
+        "Order", "PickSyllables", "Quiz", "Select", "Translate", "TrueFalse", "Unjumble",
+    ), ("instruction",)),
+    **dict.fromkeys(("Classify", "ImageToLetter", "PhraseTable", "WatchAndRepeat"), ("title", "instruction")),
+    **dict.fromkeys(("EssayResponse", "ReadingActivity", "CriticalAnalysis", "ComparativeStudy", "AuthorialIntent"), ("title",)),
+    "Cloze": (),
+}
+
+
+def fresh_activity_mdx(activity: Activity, mdx: str, *, level: str = "a1") -> str:
+    """Keep each component-owned label out of the surrounding MDX heading.
+
+    All fresh components receiving an instruction print it; title-only legacy
+    components print their title. Cloze receives neither and keeps its heading.
+    Compare the actual serializer's bytes before insertion and range tracking.
+    """
+    heading = re.search(r"^### ([^\n]*)\n\n", mdx, re.MULTILINE)
+    if heading is None:
+        return mdx
+    component = mdx[heading.end():]
+    name = re.match(r"<([A-Z]\w*)\b", component)
+    if name is None or name.group(1) not in _FRESH_COMPONENT_LABEL_FIELDS:
+        raise ValueError("Fresh activity has no component display contract")
+    fields = _FRESH_COMPONENT_LABEL_FIELDS[name.group(1)]
+    # A1 retains its established English scaffold. Above A1, with no learner
+    # title, use the component's localized header instead of an English fallback.
+    if not heading.group(1).strip() or (
+        level.lower() != "a1" and not getattr(activity, "title", "") and "instruction" in fields
+    ):
+        return mdx[:heading.start()] + component
+    parser = ActivityParser()
+    for field in fields:
+        value = getattr(activity, field, "")
+        if value and heading.group(1) == parser._escape_jsx(value):
+            return mdx[:heading.start()] + component
+    return mdx
+
+
 def yaml_activity_mdx_parts(
     activities: list[Activity],
     is_ukrainian_forced: bool = False,
@@ -109,6 +171,8 @@ def yaml_activity_mdx_parts(
     inline_cross_ref_positions: set[int] | None = None,
     inline_cross_ref_fingerprints: set[str] | None = None,
     inline_cross_ref_section_titles: dict[str, str] | None = None,
+    fresh: bool = False,
+    level: str = "a1",
 ) -> list[tuple[str | None, str]]:
     """The workbook tab's parts in order: `(activity id, component JSX)` for a full activity,
     `(None, mdx)` for an inline cross-reference. `yaml_activities_to_jsx` joins them."""
@@ -122,23 +186,27 @@ def yaml_activity_mdx_parts(
     cross_referencing = bool(inline_ids or inline_positions or inline_fingerprints)
 
     parts: list[tuple[str | None, str]] = []
+    emitted_pointers: set[str] = set()
     for index, activity in enumerate(activities):
         activity_id = _activity_id(activity)
         if cross_referencing and (index in inline_positions or activity_id in inline_ids):
-            parts.append(
-                (
-                    None,
-                    _inline_activity_cross_ref_to_mdx(
-                        activity,
-                        section_titles.get(activity_id, ""),
-                        is_ukrainian_forced,
-                    ),
-                )
+            pointer = _inline_activity_cross_ref_to_mdx(
+                activity,
+                section_titles.get(activity_id, ""),
+                is_ukrainian_forced,
             )
+            # Repeated references add no learner context. Distinct sections
+            # and explicit activity titles remain distinct pointers, in order.
+            if pointer in emitted_pointers:
+                continue
+            emitted_pointers.add(pointer)
+            parts.append((None, pointer))
             continue
         if cross_referencing and activity_identity_key(activity) in inline_fingerprints:
             continue
         mdx = parser._activity_to_mdx(activity, is_ukrainian_forced)
+        if fresh:
+            mdx = fresh_activity_mdx(activity, mdx, level=level)
         if not mdx:
             continue
         parts.append((activity_id or None, mdx))
@@ -150,7 +218,10 @@ def _inline_activity_cross_ref_to_mdx(
     section_title: str,
     is_ukrainian_forced: bool,
 ) -> str:
-    title = escape_jsx(_activity_title_or_type(activity))
+    # An engine type is a binding, never a learner label. With no explicit
+    # title, omit the pointer heading at every level. A1's English scaffold
+    # stays on the Lesson-tab activity; A2+ gains no English fallback here.
+    title = escape_jsx(_activity_title(activity))
     section_title = section_title.strip()
     if section_title:
         if is_ukrainian_forced:
@@ -161,7 +232,8 @@ def _inline_activity_cross_ref_to_mdx(
         reference = "див. вкладку «Урок»"
     else:
         reference = "see lesson tab"
-    return f"### {title}\n\n*({reference})*"
+    heading = f"### {title}\n\n" if title else ""
+    return f"{heading}*({reference})*"
 
 
 def highlight_morphemes_to_jsx(item: HighlightMorphemesItem, title: str, is_ukrainian_forced: bool = False) -> str:

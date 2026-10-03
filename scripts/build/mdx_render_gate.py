@@ -7,13 +7,12 @@ literal (see ``scripts/generate_mdx/utils.dump_json_for_jsx`` / #3137): the page
 builds-syntax-OK but the prop expression throws when evaluated, so the module
 ships and does not render. Only CI's full astro build caught it.
 
-This gate closes that hole *cheaply and deterministically*: it extracts every
-``JSON.parse(`…`)`` template literal from the assembled MDX and evaluates it with
+This gate compiles the complete page with the site's configured Astro MDX
+processor, then extracts every ``JSON.parse(`…`)`` template literal and evaluates it with
 **Node** — the real JS engine — so template-literal + JSON.parse semantics are
 exact (no re-implementation of JS string escaping, which is the very thing that
-broke). A full astro build remains the catch-all for non-island render breaks
-(wire via ``verify_shippable.py --astro-build``); this gate is the fast,
-always-on guard for the island-prop class that ``python_qg`` cannot see.
+broke). A full Astro build remains the catch-all for import resolution and
+render-time failures (``verify_shippable.py --astro-build``).
 
 Degrades gracefully: if Node is unavailable the gate reports ``passed=None``
 (skipped) rather than failing, mirroring the DB-gated checks elsewhere.
@@ -106,7 +105,7 @@ def _node_eval_one(inner: str, *, timeout: int = 30) -> str | None:
 
 
 def check_mdx_render(mdx_text: str, *, timeout: int = 30) -> dict:
-    """Render gate over assembled MDX text.
+    """Compile the whole page and evaluate its JSON islands with Node.
 
     Returns a ``python_qg``-style gate report::
 
@@ -122,9 +121,11 @@ def check_mdx_render(mdx_text: str, *, timeout: int = 30) -> dict:
             "skipped": True,
             "message": "node unavailable — mdx_render gate skipped",
             "islands_checked": 0,
+            "compiled": None,
             "failures": [],
         }
 
+    compilation = _compile_page(mdx_text, timeout=timeout)
     inners = iter_template_literals(mdx_text)
     failures: list[dict] = []
     for inner in inners:
@@ -133,9 +134,13 @@ def check_mdx_render(mdx_text: str, *, timeout: int = 30) -> dict:
             snippet = inner[:80].replace("\n", "\\n")
             failures.append({"snippet": snippet, "error": err})
 
+    if compilation["passed"] is not True:
+        failures.insert(0, {"snippet": "whole MDX page", "error": compilation["message"]})
     passed = not failures
     if passed:
-        msg = f"all {len(inners)} JSON.parse(`…`) island prop(s) evaluate"
+        msg = f"page compiled with Astro MDX; all {len(inners)} JSON.parse(`…`) island prop(s) evaluate"
+    elif compilation["passed"] is not True:
+        msg = "whole-page MDX compilation failed — module would not render"
     else:
         msg = (
             f"{len(failures)}/{len(inners)} JSON.parse(`…`) island prop(s) fail to "
@@ -143,10 +148,60 @@ def check_mdx_render(mdx_text: str, *, timeout: int = 30) -> dict:
         )
     return {
         "passed": passed,
+        "compiled": compilation["passed"],
+        "layer": compilation.get("layer") if not passed else None,
         "message": msg,
         "islands_checked": len(inners),
         "failures": failures,
     }
+
+
+def _compile_page(mdx_text: str, *, timeout: int = 30) -> dict:
+    """Use the same configured renderer and options as @astrojs/mdx.
+
+    Import/setup failures are harness failures, while compiler rejections are
+    page failures. No substitute compiler can certify a missing site toolchain.
+    """
+    site = Path(__file__).resolve().parents[2] / "site"
+    script = r"""
+import { pathToFileURL } from 'node:url';
+let renderer, parseFrontmatter;
+try {
+  const { default: config } = await import(pathToFileURL(process.cwd() + '/astro.config.mjs'));
+  const { markdownConfigDefaults } = await import('@astrojs/internal-helpers/markdown');
+  ({ parseFrontmatter } = await import('@astrojs/internal-helpers/frontmatter'));
+  renderer = await config.markdown.processor.createMdxRenderer(
+    { ...markdownConfigDefaults, ...config.markdown },
+    { optimize: false, srcDir: pathToFileURL(process.cwd() + '/src/'), sourcemap: false }
+  );
+} catch (error) {
+  process.stdout.write(JSON.stringify({passed: false, layer: 'harness', message: 'MDX toolchain setup failed: ' + error.message}));
+  process.exit(0);
+}
+let source = '';
+for await (const chunk of process.stdin) source += chunk;
+try {
+  const { frontmatter, content } = parseFrontmatter(source, { frontmatter: 'empty-with-spaces' });
+  await renderer.process(content, process.cwd() + '/src/content/docs/__render_gate__.mdx', frontmatter);
+  process.stdout.write(JSON.stringify({passed: true, message: 'Astro MDX compiled'}));
+} catch (error) {
+  process.stdout.write(JSON.stringify({passed: false, layer: 'engine', message: error.message}));
+}
+"""
+    try:
+        proc = subprocess.run(
+            ["node", "--input-type=module", "-e", script],
+            cwd=site,
+            input=mdx_text,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+        if proc.returncode == 0:
+            return json.loads(proc.stdout)
+        return {"passed": False, "layer": "harness", "message": "MDX compiler process failed"}
+    except (OSError, subprocess.TimeoutExpired, ValueError) as exc:
+        return {"passed": False, "layer": "harness", "message": f"MDX compiler unavailable: {type(exc).__name__}"}
 
 
 def check_mdx_render_path(mdx_path: str | Path, *, timeout: int = 30) -> dict:

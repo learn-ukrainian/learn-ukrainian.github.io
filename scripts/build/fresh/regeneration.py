@@ -126,8 +126,7 @@ def record_writer_call(path: Path, slug: str, n: int, inputs: dict[str, str] | N
     return doc
 
 
-@_serialized
-def record_harness_failure(
+def _record_harness_failure(
     path: Path, slug: str, n: int, reason: str, inputs: dict[str, str], *, at: str | None = None
 ) -> dict[str, Any]:
     """Bound harness failures separately, without spending the content budget."""
@@ -135,7 +134,11 @@ def record_harness_failure(
     evidence = _load_harness(path, slug, n)
     if evidence["terminal_state"] is None:
         evidence["failures"].append(
-            {"reason": reason, "inputs": dict(inputs), "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z")}
+            {
+                "reason": reason,
+                "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
+                "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+            }
         )
         if len(evidence["failures"]) >= MAX_HARNESS_FAILURES:
             evidence["terminal_state"] = HARNESS_EXHAUSTED
@@ -145,6 +148,14 @@ def record_harness_failure(
     if evidence["terminal_state"] is not None:
         doc["terminal_layer"] = "driver"
     return doc
+
+
+@_serialized
+def record_harness_failure(
+    path: Path, slug: str, n: int, reason: str, inputs: dict[str, str], *, at: str | None = None
+) -> dict[str, Any]:
+    """Record one harness failure under the shared lesson accounting mutex."""
+    return _record_harness_failure(path, slug, n, reason, inputs, at=at)
 
 
 def _validate_harness(doc: dict[str, Any]) -> None:
@@ -190,7 +201,9 @@ def load_harness(path: Path, slug: str, n: int) -> dict[str, Any]:
 def record_failure(
     path: Path, slug: str, n: int, failure: dict[str, Any], inputs: dict[str, str], *, at: str | None = None
 ) -> dict[str, Any]:
-    """Stop non-writer failures immediately; bound retries of writer failures."""
+    """Stop non-writer failures; account for harness failures outside the writer budget."""
+    if failure["layer"] == "harness":
+        return _record_harness_failure(path, slug, n, failure["reason"], inputs, at=at)
     doc = _load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc

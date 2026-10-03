@@ -1,0 +1,3173 @@
+{
+  "draft": {
+    "activities": [
+      {
+        "id": "a1",
+        "instruction": "Play the short excerpt, repeat it aloud, then replay it and give the matching greeting back.",
+        "items": [
+          {
+            "explanation": "Imagine an equal peer greeting you and respond with the same whole greeting.",
+            "note": "Use only 05:23–05:26. Practise offline; your spoken response is not machine-verified.",
+            "video": "V-001",
+            "word": "{{gloss:W-074}}"
+          }
+        ]
+      },
+      {
+        "id": "a2",
+        "instruction": "Use the peer exchange or the printed model named in each question. Choose the greeting that fits.",
+        "items": [
+          {
+            "correct": 1,
+            "explanation": "The two peers exchange the informal greeting, with the same response.",
+            "host": {
+              "kind": "dialogue"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This is the separate formal model, not the greeting spoken in the peer exchange.",
+              "This is the greeting spoken by both peers in the dialogue."
+            ],
+            "options": [
+              "{{gloss:W-075}} {{gloss:W-076}}!",
+              "{{gloss:W-074}}!"
+            ],
+            "question": "Which greeting do both peers use in the classroom entrance exchange?"
+          },
+          {
+            "correct": 0,
+            "explanation": "A teacher is a formal addressee; the printed model shows the spelling of the formal greeting.",
+            "host": {
+              "kind": "quote",
+              "ref": "T-040"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This matches the printed model and the formal greeting introduced for this situation.",
+              "This is the informal peer greeting and does not match the printed model."
+            ],
+            "options": [
+              "{{gloss:W-075}} {{gloss:W-076}}!",
+              "{{gloss:W-074}}!"
+            ],
+            "question": "You are greeting a teacher. Which greeting matches the printed model for this formal situation?"
+          }
+        ]
+      },
+      {
+        "id": "a3",
+        "instruction": "Imagine arriving at a hotel reception. Play the excerpt, repeat the complete greeting, then give the matching response aloud.",
+        "items": [
+          {
+            "explanation": "Keep the formal greeting intact when repeating it and when responding to the receptionist.",
+            "note": "Use only 04:35–04:39. Practise offline; your spoken response is not machine-verified.",
+            "video": "V-002",
+            "word": "{{gloss:W-075}} {{gloss:W-076}}"
+          }
+        ]
+      },
+      {
+        "id": "a4",
+        "instruction": "Find the greeting mismatch in each situation. Choose the modeled formal greeting as the repair.",
+        "items": [
+          {
+            "correct": 1,
+            "explanation": "Use the formal model for a boss; the printed quotation shows its spelling.",
+            "host": {
+              "kind": "quote",
+              "ref": "T-040"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This keeps the informal greeting that needs replacing in the boss situation.",
+              "This replaces the informal greeting with the modeled formal greeting."
+            ],
+            "options": [
+              "{{gloss:W-074}}!",
+              "{{gloss:W-075}} {{gloss:W-076}}!"
+            ],
+            "question": "When greeting a boss, {{uk:привіт}} is the informal greeting to replace. Which printed greeting repairs the mismatch?"
+          },
+          {
+            "correct": 0,
+            "explanation": "The cashier situation calls for the formal model rather than the familiar peer greeting.",
+            "host": {
+              "kind": "quote",
+              "ref": "T-040"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This gives the modeled formal greeting shown in the printed quotation.",
+              "This repeats the informal greeting instead of repairing the mismatch."
+            ],
+            "options": [
+              "{{gloss:W-075}} {{gloss:W-076}}!",
+              "{{gloss:W-074}}!"
+            ],
+            "question": "At the checkout, {{uk:привіт}} is the greeting to replace when addressing the cashier. Which printed greeting repairs the mismatch?"
+          }
+        ]
+      },
+      {
+        "id": "a5",
+        "instruction": "Transfer the contrast to these situations. Use the peer exchange or the printed model named in each question.",
+        "items": [
+          {
+            "correct": 1,
+            "explanation": "Use the informal greeting modeled by the two peers for this friend exchange.",
+            "host": {
+              "kind": "dialogue"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This belongs to the separate formal model rather than the peer exchange requested here.",
+              "This reproduces the informal response heard in the peer exchange."
+            ],
+            "options": [
+              "{{gloss:W-075}} {{gloss:W-076}}!",
+              "{{gloss:W-074}}!"
+            ],
+            "question": "A friend greets you at the entrance. Which greeting from the peer exchange can you give back?"
+          },
+          {
+            "correct": 0,
+            "explanation": "The hotel receptionist situation uses the formal model; the quotation supplies its printed spelling.",
+            "host": {
+              "kind": "quote",
+              "ref": "T-040"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This matches the printed model and the greeting introduced for the receptionist situation.",
+              "This is the peer greeting rather than the formal greeting modeled for reception."
+            ],
+            "options": [
+              "{{gloss:W-075}} {{gloss:W-076}}!",
+              "{{gloss:W-074}}!"
+            ],
+            "question": "You arrive at a hotel reception. Which greeting from the printed model fits the receptionist situation?"
+          },
+          {
+            "correct": 1,
+            "explanation": "Choose the formal greeting for a boss, using the printed model to recognise the intact chunk.",
+            "host": {
+              "kind": "quote",
+              "ref": "T-040"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This is the informal greeting that the lesson distinguishes from a greeting to a boss.",
+              "This matches the printed formal model appropriate to the boss situation."
+            ],
+            "options": [
+              "{{gloss:W-074}}!",
+              "{{gloss:W-075}} {{gloss:W-076}}!"
+            ],
+            "question": "You meet your boss before work. Which greeting matches the printed model for this formal situation?"
+          },
+          {
+            "correct": 0,
+            "explanation": "Use the formal greeting for the cashier rather than the familiar peer greeting.",
+            "host": {
+              "kind": "quote",
+              "ref": "T-040"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This is the modeled formal greeting whose spelling appears in the quotation.",
+              "This is the informal greeting that does not fit the modeled cashier situation."
+            ],
+            "options": [
+              "{{gloss:W-075}} {{gloss:W-076}}!",
+              "{{gloss:W-074}}!"
+            ],
+            "question": "You reach the cashier. Which greeting matches the printed model for this formal situation?"
+          },
+          {
+            "correct": 1,
+            "explanation": "The teacher is a formal addressee; use the formal model shown in the printed quotation.",
+            "host": {
+              "kind": "quote",
+              "ref": "T-040"
+            },
+            "kind": "comprehension",
+            "option_why": [
+              "This is the informal peer greeting rather than the formal model requested here.",
+              "This matches the printed model for the separately established formal situation."
+            ],
+            "options": [
+              "{{gloss:W-074}}!",
+              "{{gloss:W-075}} {{gloss:W-076}}!"
+            ],
+            "question": "You greet your teacher on arrival. Which greeting matches the printed model for this formal situation?"
+          }
+        ]
+      }
+    ],
+    "consolidation": {
+      "activities": [
+        "a5"
+      ],
+      "lead_in": "Try the new situations, then practise your responses aloud."
+    },
+    "dialogue": {
+      "lines": [
+        {
+          "speaker": "Ніна",
+          "text": "Привіт!"
+        },
+        {
+          "speaker": "Іван",
+          "text": "Привіт!"
+        }
+      ],
+      "translation_en": [
+        "Hi!",
+        "Hi!"
+      ]
+    },
+    "draft_schema": 1,
+    "gaps": [],
+    "inputs": {
+      "learner_state_sha256": "e4feb81e4f11e39f1ab165186d6b0b49a5221624a3740781663518c88fc22818",
+      "lesson_lock_entry_sha256": "1e18424a4c2eb8bd5645cd8fc9e69759abdf46d91677e25d4449619ef33e0336",
+      "pack_lock": "30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46",
+      "plan_sha256": "23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75",
+      "style_card_sha256": "89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0",
+      "words_lock": "9b754018b20e06f598343811eacf29a53cf1ef2cafcbaa7e3d1b31d8ee6d3498"
+    },
+    "lesson": {
+      "module": "a1/sounds-letters-and-hello",
+      "n": 1
+    },
+    "status": "ok",
+    "steps": [
+      {
+        "blocks": [
+          {
+            "kind": "video",
+            "lead_in": "Play only 05:23–05:26. Listen before looking at the model.",
+            "ref": "V-001",
+            "target_record": "W-074"
+          },
+          {
+            "en": [
+              "You are greeting a friend."
+            ],
+            "kind": "bilingual",
+            "uk": [
+              "{{gloss:W-074}}!"
+            ]
+          },
+          {
+            "explains": [
+              "T-002",
+              "X-001",
+              "S-003"
+            ],
+            "kind": "prose",
+            "text": "Use this informal greeting with a friend or an equal peer. Learn it as one whole spoken chunk. Hear the greeting, then give the same greeting back aloud. You do not need to read individual letters to respond. Keep your attention on the sound of the whole greeting."
+          },
+          {
+            "kind": "activity",
+            "ref": "a1"
+          }
+        ],
+        "id": "s1"
+      },
+      {
+        "blocks": [
+          {
+            "kind": "video",
+            "lead_in": "Play only 04:35–04:39. Listen to the whole greeting.",
+            "ref": "V-002",
+            "target_record": "W-075"
+          },
+          {
+            "en": [
+              "You are greeting a hotel receptionist."
+            ],
+            "kind": "bilingual",
+            "uk": [
+              "{{gloss:W-075}} {{gloss:W-076}}!"
+            ]
+          },
+          {
+            "explains": [
+              "T-002",
+              "T-003",
+              "T-020",
+              "T-021",
+              "T-041",
+              "X-001",
+              "S-003"
+            ],
+            "kind": "prose",
+            "text": "Keep these two words together as one memorised greeting. This is the formal model, usable at any time of day. Use it for a boss or cashier rather than the informal peer greeting. A teacher is also a formal addressee. Listen again, repeat the complete greeting, and give that greeting back aloud without analysing its words."
+          },
+          {
+            "kind": "activity",
+            "ref": "a3"
+          }
+        ],
+        "id": "s2"
+      },
+      {
+        "blocks": [
+          {
+            "kind": "quote",
+            "ref": "T-040"
+          },
+          {
+            "explains": [
+              "T-040"
+            ],
+            "kind": "prose",
+            "text": "This printed greeting appears in a list of polite words. It is a spelling model, rather than a teacher's spoken turn. Recall the formal greeting you heard while looking at this printed model; this is not a letter-reading task."
+          }
+        ],
+        "id": "s3"
+      },
+      {
+        "blocks": [
+          {
+            "kind": "video",
+            "lead_in": "Replay only 05:23–05:26.",
+            "ref": "V-001",
+            "target_record": "W-074"
+          },
+          {
+            "kind": "video",
+            "lead_in": "Replay only 04:35–04:39.",
+            "ref": "V-002",
+            "target_record": "W-075"
+          },
+          {
+            "explains": [
+              "T-035",
+              "T-002",
+              "T-003",
+              "T-020",
+              "T-021",
+              "T-040",
+              "T-041"
+            ],
+            "kind": "prose",
+            "text": "Two peers meet at the classroom entrance. Their exchange uses the informal greeting. Compare their greeting with the printed model already shown. For a teacher, receptionist or cashier, choose the separate formal model. The social situation guides your choice; the printed quotation supplies spelling, not the register rule. First identify who is being greeted. Then recognise the matching chunk in the model. Keep the peers' dialogue informal when practising their turns."
+          },
+          {
+            "kind": "dialogue"
+          },
+          {
+            "kind": "activity",
+            "ref": "a2"
+          },
+          {
+            "kind": "activity",
+            "ref": "a4"
+          }
+        ],
+        "id": "s4",
+        "lead_in": "Return to the recordings, then meet the two peers."
+      }
+    ]
+  },
+  "plan": {
+    "arc_ref": {
+      "level": "a1",
+      "position": 1
+    },
+    "lessons": [
+      {
+        "n": 1,
+        "slug": "greetings-by-ear",
+        "title": "привіт",
+        "kind": "teach",
+        "job": "Hear an informal or formal first greeting and say the appropriate memorised response aloud.",
+        "rationale": "D3 chunks come first by ear as in ULP S1 lessons 1–2; do not decode their unseen letters or analyse adjective, noun, or case forms. A 210-word target gives two short Ukrainian-first models, English context support, and explicit out-loud practice without padding.",
+        "word_target": 210,
+        "inventory": {
+          "grammar": [],
+          "vocabulary": {
+            "core": [
+              {
+                "lemma": "привіт",
+                "evidence": "W-074",
+                "forms": [
+                  "noun:inanim:m:v_naz"
+                ]
+              },
+              {
+                "lemma": "добрий",
+                "evidence": "W-075",
+                "forms": [
+                  "adj:m:v_naz:compb"
+                ]
+              },
+              {
+                "lemma": "день",
+                "evidence": "W-076",
+                "forms": [
+                  "noun:inanim:m:v_naz"
+                ]
+              }
+            ],
+            "incidental": [
+              {
+                "lemma": "Ніна",
+                "evidence": "W-091"
+              },
+              {
+                "lemma": "Іван",
+                "evidence": "W-093"
+              }
+            ],
+            "recycled": []
+          }
+        },
+        "steps": [
+          {
+            "id": "s1",
+            "kind": "teach",
+            "teach": "Play only the informal V-001 peer greeting; show the Ukrainian model beside English support, then repeat and respond aloud as a whole D3 chunk on X-001. Do not decode names or letters. T-002 grounds the peer register through explains only; premium notes are never quoted.",
+            "introduces": {
+              "letters": [],
+              "grammar": [],
+              "vocabulary": [
+                "W-074"
+              ]
+            },
+            "uses": {
+              "grammar": [],
+              "vocabulary": []
+            },
+            "evidence": [
+              "T-002",
+              "X-001",
+              "V-001",
+              "S-003"
+            ],
+            "practice": [
+              "a1"
+            ],
+            "needs": [
+              "video"
+            ]
+          },
+          {
+            "id": "s2",
+            "kind": "teach",
+            "teach": "Introduce and play the formal V-002 greeting as the intact W-075+W-076 chunk, then contrast it with W-074 by social situation before a4. T-002 grounds boss/cashier boundaries; T-020 grounds the receptionist. T-021 establishes only that a teacher is a formal addressee, not a greeting quotation. Repeat and give the matching spoken response on X-001. ULP records remain explains-only; premium notes are never quoted.",
+            "introduces": {
+              "letters": [],
+              "grammar": [],
+              "vocabulary": [
+                "W-075",
+                "W-076"
+              ]
+            },
+            "uses": {
+              "grammar": [],
+              "vocabulary": [
+                "W-074"
+              ]
+            },
+            "evidence": [
+              "T-002",
+              "T-003",
+              "T-020",
+              "T-021",
+              "V-002",
+              "S-003",
+              "T-041"
+            ],
+            "practice": [
+              "a3"
+            ],
+            "needs": [
+              "video"
+            ]
+          },
+          {
+            "id": "s3",
+            "kind": "practice",
+            "teach": "Display the attributed public T-040 printed spelling of Добрий день once, paired with English. It is a list of polite words, not a teacher speaking. T-041 explains formal register; T-021 identifies a teacher as a formal addressee. Premium notes are grounding only.",
+            "uses": {
+              "grammar": [],
+              "vocabulary": []
+            },
+            "evidence": [
+              "T-040"
+            ],
+            "practice": [],
+            "needs": [
+              "quote"
+            ]
+          },
+          {
+            "id": "s4",
+            "kind": "practice",
+            "teach": "After both recorded greeting introductions and the single T-040 display in s3, present the informal peer dialogue with paired English. Compare that dialogue with the already displayed printed spelling of Добрий день; do not repeat the quote. English establishes the friend versus teacher, receptionist or cashier situation from T-002/T-020/T-021. T-041 explains formal register; the public quote supplies only spelling. Both hosts precede a2/a4/a5; no greeting or name spelling is a decoding target.",
+            "uses": {
+              "grammar": [],
+              "vocabulary": [
+                "W-074",
+                "W-075",
+                "W-076"
+              ]
+            },
+            "evidence": [
+              "T-035",
+              "T-002",
+              "T-003",
+              "T-020",
+              "T-021",
+              "V-001",
+              "V-002",
+              "T-040",
+              "T-041"
+            ],
+            "practice": [
+              "a2",
+              "a4"
+            ],
+            "needs": [
+              "video"
+            ]
+          }
+        ],
+        "consolidation": [
+          "a5"
+        ],
+        "activities": [
+          {
+            "id": "a1",
+            "type": "watch-and-repeat",
+            "placement": "inline",
+            "focus": "Hear and say the informal greeting aloud; practised offline — not machine-verified.",
+            "model": "X-001"
+          },
+          {
+            "id": "a2",
+            "type": "quiz",
+            "placement": "inline",
+            "focus": "kind: comprehension; each item has host: {kind: dialogue} for the peer exchange or host: {kind: quote, ref: T-040} for the printed spelling of Добрий день. Recognise the intact greeting shown in the peer exchange versus the separate formal greeting in the stated social situation. Both greeting keys Привіт and Добрий день occur; vary substantive keys and option positions. T-002/T-020/T-021 establish roles only and T-041 establishes the formal register, all through explains only. English accompanies every stem, option and explanation. Recordings V-001/V-002 introduce the intact chunks; no spoken phrase-choice binding, name decoding or formalisation of peer turns.",
+            "model": "X-001"
+          },
+          {
+            "id": "a3",
+            "type": "watch-and-repeat",
+            "placement": "inline",
+            "focus": "Hear and say the formal greeting aloud in a new situation; practised offline — not machine-verified.",
+            "model": "X-001"
+          },
+          {
+            "id": "a4",
+            "type": "quiz",
+            "placement": "inline",
+            "focus": "Find and fix an informal greeting addressed to a boss or cashier: choose the modeled formal greeting as its repair. T-002 establishes this register boundary through explains only; T-040 is the printed spelling of Добрий день, not evidence of formality. English accompanies every stem, option and explanation; vary option positions. V-001/V-002 introduce both intact chunks; no name or greeting spelling is a decoding target.",
+            "model": "X-001"
+          },
+          {
+            "id": "a5",
+            "type": "quiz",
+            "placement": "workbook",
+            "focus": "kind: comprehension; each item has host: {kind: dialogue} for the peer exchange or host: {kind: quote, ref: T-040} for the printed spelling of Добрий день. Transfer the modeled informal/formal contrast to the source-supported friend, boss/cashier, receptionist and teacher roles. Both greeting keys Привіт and Добрий день occur; vary substantive keys and option positions. T-002/T-020/T-021 establish roles only and T-041 establishes the formal register, all through explains only. English accompanies every stem, option and explanation. Recordings V-001/V-002 introduce the intact chunks; no spoken phrase-choice binding, name decoding or formalisation of peer turns."
+          }
+        ],
+        "videos": [
+          {
+            "evidence": "V-001",
+            "use": "Hear and repeat the familiar informal greeting. Compare the printed Добрий день example with the peer dialogue after both greeting models."
+          },
+          {
+            "evidence": "V-002",
+            "use": "Hear and repeat the familiar formal greeting. Compare the printed Добрий день example with the peer dialogue after both greeting models."
+          }
+        ],
+        "practice": {
+          "vocabulary": "core",
+          "stress": [],
+          "patterns": [
+            "a2",
+            "a4",
+            "a5"
+          ]
+        },
+        "dialogue": {
+          "step": "s4",
+          "situation": "Two peers exchange the informal greeting in s4. Compare it with the printed spelling of Добрий день displayed once in s3; English supplies the separately stated formal social roles.",
+          "setting": "Classroom entrance; English identifies the social roles before the Ukrainian greeting chunks.",
+          "speakers": [
+            {
+              "name": "Ніна",
+              "evidence": "W-091",
+              "role": "peer",
+              "gender": "f"
+            },
+            {
+              "name": "Іван",
+              "evidence": "W-093",
+              "role": "peer",
+              "gender": "m"
+            }
+          ],
+          "register": "informal",
+          "target_grammar": "Only informal peer greeting chunks inside the dialogue; compare the separate formal model without changing the peer register.",
+          "evidence": [
+            "T-035",
+            "T-002"
+          ]
+        }
+      }
+    ]
+  },
+  "pack": {
+    "texts": [
+      {
+        "id": "T-001",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0012",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 15,
+          "row_sha256": "08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741",
+          "section_id": 12963
+        }
+      },
+      {
+        "id": "T-002",
+        "source": {
+          "author": "Ukrainian Lessons Podcast",
+          "chunk_id": "ulp-1-00-lesson-notes_l0001_w001",
+          "file": "ulp-1-00-lesson-notes",
+          "grade": "",
+          "kind": "textbook",
+          "page": null,
+          "row_sha256": "fdeae961eb4af3a1eed4bbb3ee94a23cf39126e488a7822c14a10ca7c6836c78",
+          "section_id": null
+        }
+      },
+      {
+        "id": "T-003",
+        "source": {
+          "author": "Ukrainian Lessons Podcast",
+          "chunk_id": "ulp-1-00-lesson-notes_l0002_w002",
+          "file": "ulp-1-00-lesson-notes",
+          "grade": "",
+          "kind": "textbook",
+          "page": null,
+          "row_sha256": "512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34",
+          "section_id": null
+        }
+      },
+      {
+        "id": "T-004",
+        "source": {
+          "author": "Ukrainian Lessons Podcast",
+          "chunk_id": "ulp-1-00-lesson-notes_l0005_w003",
+          "file": "ulp-1-00-lesson-notes",
+          "grade": "",
+          "kind": "textbook",
+          "page": null,
+          "row_sha256": "48b85cf51525e14be84b0b0447e25c7a1d147f8b22397f9390de6b503b3c0bf9",
+          "section_id": null
+        }
+      },
+      {
+        "id": "T-005",
+        "source": {
+          "author": "Ukrainian Lessons Podcast",
+          "chunk_id": "ulp-1-00-lesson-notes_l0010_w001",
+          "file": "ulp-1-00-lesson-notes",
+          "grade": "",
+          "kind": "textbook",
+          "page": null,
+          "row_sha256": "8e20831c40bd3220377f8938974d54137be1eead194837919a1a3a35c79d982e",
+          "section_id": null
+        }
+      },
+      {
+        "id": "T-006",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0028",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 32,
+          "row_sha256": "f9fff508eae04b848fb619e7ec56f7ab6baa40b8620a6805bb486067f53aedc4",
+          "section_id": 12979
+        }
+      },
+      {
+        "id": "T-007",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0032",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 36,
+          "row_sha256": "f41569c855b3ad6197c38705081cc4963a5363633e4beb1a90aa268f8fa807e8",
+          "section_id": 12983
+        }
+      },
+      {
+        "id": "T-008",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0036",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 40,
+          "row_sha256": "8ed71d88a83c82eaee8d33848c08c43f4d204d314d5b9b2a12c5de3142626a0a",
+          "section_id": 12987
+        }
+      },
+      {
+        "id": "T-009",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0040",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 44,
+          "row_sha256": "8cbe87e65296572d403da1a44aae67c72e399cbca43cfe74ba4edaa4a4b80a4a",
+          "section_id": 12991
+        }
+      },
+      {
+        "id": "T-010",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0044",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 48,
+          "row_sha256": "140cf00d173a65981c4d56e6883aaa986cee1be10923f07307db5cd13d171952",
+          "section_id": 12995
+        }
+      },
+      {
+        "id": "T-011",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0048",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 52,
+          "row_sha256": "4467f04dd445110aef7abe8d80d9851f2c6ced95d9a5e0b55eaf291bbd85c679",
+          "section_id": 12999
+        }
+      },
+      {
+        "id": "T-012",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0052",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 56,
+          "row_sha256": "26e8454975ac9ca9b04fad2fc00edb615219d5b98f5969073ae6a47c328006ef",
+          "section_id": 13003
+        }
+      },
+      {
+        "id": "T-013",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0056",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 60,
+          "row_sha256": "196b5ea837c32d6f3f1efb922eb71384cd672bcd7ebb2adce3cd835abee53f08",
+          "section_id": 13007
+        }
+      },
+      {
+        "id": "T-014",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0060",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 64,
+          "row_sha256": "8cacea6f9e89c0db972ca89747132a11b2ae2df7f352aeb48f72463a23889092",
+          "section_id": 13011
+        }
+      },
+      {
+        "id": "T-015",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0064",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 68,
+          "row_sha256": "6831aef94e5fee8504aacb3ffd49ffca2f52de980a1b16bef2f48fa357472ebc",
+          "section_id": 13015
+        }
+      },
+      {
+        "id": "T-016",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0068",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 72,
+          "row_sha256": "3584721af83e7666dcd56df3e076fb357e66e1c11b07765c967c9908cfa83bf4",
+          "section_id": 13019
+        }
+      },
+      {
+        "id": "T-017",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0072",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 76,
+          "row_sha256": "70d576bba7247b5042ce303c633e74218bc49104f6c401903d2a5790812c7d76",
+          "section_id": 13023
+        }
+      },
+      {
+        "id": "T-018",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0080",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 84,
+          "row_sha256": "79a7aded6a89dd72ffd48a0d0342f3bc43c87866cb15e6af43efa0e889efe219",
+          "section_id": 13031
+        }
+      },
+      {
+        "id": "T-019",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0058",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 62,
+          "row_sha256": "e635252ed2329a8b5e60594a9fd48b953ebdd1bf8e4d1b8ac9a8194815fa1712",
+          "section_id": 13009
+        }
+      },
+      {
+        "id": "T-020",
+        "source": {
+          "author": "Ukrainian Lessons Podcast",
+          "chunk_id": "ulp-1-00-lesson-notes_l0002_w001",
+          "file": "ulp-1-00-lesson-notes",
+          "grade": "",
+          "kind": "textbook",
+          "page": null,
+          "row_sha256": "11ce1c1713a5d69c5a60504d3830c97b76c7b0ad1608bbc816e3d5c66a3a7702",
+          "section_id": null
+        }
+      },
+      {
+        "id": "T-021",
+        "source": {
+          "author": "Ukrainian Lessons Podcast",
+          "chunk_id": "ulp-1-00-lesson-notes_l0002_w002",
+          "file": "ulp-1-00-lesson-notes",
+          "grade": "",
+          "kind": "textbook",
+          "page": null,
+          "row_sha256": "512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34",
+          "section_id": null
+        }
+      },
+      {
+        "id": "T-022",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-023",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-024",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-025",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-026",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-027",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-028",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-029",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-030",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-031",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-032",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-033",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-034",
+        "source": {
+          "author": "zabolotnyi",
+          "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0001",
+          "file": "5-klas-ukrmova-zabolotnyi-2023",
+          "grade": "5",
+          "kind": "textbook",
+          "page": 2,
+          "row_sha256": "1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916",
+          "section_id": 38931
+        }
+      },
+      {
+        "id": "T-035",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0027",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 31,
+          "row_sha256": "4c2d8261c4c7d79a81c0b7196f74574141165b6af3450cb308f1c933546d9376",
+          "section_id": 12978
+        }
+      },
+      {
+        "id": "T-036",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0072",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 76,
+          "row_sha256": "70d576bba7247b5042ce303c633e74218bc49104f6c401903d2a5790812c7d76",
+          "section_id": 13023
+        }
+      },
+      {
+        "id": "T-037",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0044",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 48,
+          "row_sha256": "140cf00d173a65981c4d56e6883aaa986cee1be10923f07307db5cd13d171952",
+          "section_id": 12995
+        }
+      },
+      {
+        "id": "T-038",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0014",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 17,
+          "row_sha256": "26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8",
+          "section_id": 12965
+        }
+      },
+      {
+        "id": "T-039",
+        "source": {
+          "author": "zaharijchuk",
+          "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0012",
+          "file": "1-klas-bukvar-zaharijchuk-2025-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 15,
+          "row_sha256": "08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741",
+          "section_id": 12963
+        }
+      },
+      {
+        "id": "T-040",
+        "source": {
+          "author": "zharkova",
+          "chunk_id": "1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0020",
+          "file": "1-klas-ya-doslidzhuiu-svit-zharkova-2024-1",
+          "grade": "1",
+          "kind": "textbook",
+          "page": 25,
+          "row_sha256": "d3de9c9b5d8bf5c60135dbad59eea37888162a12def12902cad42f72da891114",
+          "section_id": 49863
+        },
+        "quote": "Добрий день!"
+      },
+      {
+        "id": "T-041",
+        "source": {
+          "author": "Ukrainian Lessons Podcast",
+          "chunk_id": "ulp-1-00-lesson-notes_l0002_w001",
+          "file": "ulp-1-00-lesson-notes",
+          "grade": "",
+          "kind": "textbook",
+          "page": null,
+          "row_sha256": "11ce1c1713a5d69c5a60504d3830c97b76c7b0ad1608bbc816e3d5c66a3a7702",
+          "section_id": null
+        }
+      }
+    ],
+    "videos": [
+      {
+        "channel": "Ukrainian Lessons Podcast",
+        "id": "V-001",
+        "url": "https://www.ukrainianlessons.com/episode1/",
+        "use": "Intact informal greeting in ULP 1-01, publisher repeat-after-me excerpt 05:23–05:26. Source transcript ext-ulp_youtube-303 establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt, never the whole episode as the greeting model."
+      },
+      {
+        "channel": "Ukrainian Lessons Podcast",
+        "id": "V-002",
+        "url": "https://www.ukrainianlessons.com/episode2/",
+        "use": "Intact formal greeting in ULP 1-02, publisher repeat-after-me excerpt 04:35–04:39. Source transcript ext-ulp_youtube-302 establishes the target; the free publisher podcast recording establishes the bounded playback clock. Play only this excerpt, never the whole episode as the greeting model."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-004",
+        "url": "https://www.youtube.com/watch?v=hvB3VpcR3ZE",
+        "use": "Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-005",
+        "url": "https://www.youtube.com/watch?v=gJFxRIPRZbI",
+        "use": "Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-006",
+        "url": "https://www.youtube.com/watch?v=VB1O6PmtYRU",
+        "use": "Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-007",
+        "url": "https://www.youtube.com/watch?v=W-1rCu0indE",
+        "use": "Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-008",
+        "url": "https://www.youtube.com/watch?v=Ez95H4ibuJo",
+        "use": "Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-009",
+        "url": "https://www.youtube.com/watch?v=Z9TH0H4ShGo",
+        "use": "Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-010",
+        "url": "https://www.youtube.com/watch?v=vNUfiKHPYaU",
+        "use": "Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-011",
+        "url": "https://www.youtube.com/watch?v=aFcvYfvQ2X4",
+        "use": "Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-012",
+        "url": "https://www.youtube.com/watch?v=v6-3Xg52Buk",
+        "use": "Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-013",
+        "url": "https://www.youtube.com/watch?v=7UsFBgSL91E",
+        "use": "Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-014",
+        "url": "https://www.youtube.com/watch?v=J7sGEI4-xJo",
+        "use": "Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-015",
+        "url": "https://www.youtube.com/watch?v=JksSjjxyW5Y",
+        "use": "Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      },
+      {
+        "channel": "Ukrainian Lessons",
+        "id": "V-016",
+        "url": "https://www.youtube.com/watch?v=fMGsQ5KPQgg",
+        "use": "Pronunciation model for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned."
+      }
+    ],
+    "examples": [],
+    "errors": [],
+    "standard": [
+      {
+        "file_sha256": "29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac",
+        "id": "S-001",
+        "lines": "342-344",
+        "text": "      1.3.1.1. Особа вміє:\n      написати власне прізвище та ім’я, а також імена і прізвища знайомих чи\nвідомих людей;"
+      },
+      {
+        "file_sha256": "29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac",
+        "id": "S-002",
+        "lines": "348-350",
+        "text": "      написати чи переписати з друкованого зразка короткі, прості тексти на\nлистівці чи в смс-повідомленні, наприклад привітання зі святом, вітання з місця\nперебування, побажання, висловлення вдячності: Вітаю. Бажаю успіху."
+      },
+      {
+        "file_sha256": "29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac",
+        "id": "S-003",
+        "lines": "420-421",
+        "text": "      вживати стандартні мовні формули привітання, прощання, подяки,\nвибачення і побажання;"
+      }
+    ]
+  },
+  "words": {
+    "words": [
+      {
+        "entry": {
+          "entry_id": 310865,
+          "source": "vesum"
+        },
+        "forms": [
+          {
+            "form": "привітові",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́тові",
+            "tags": "noun:inanim:m:v_dav"
+          },
+          {
+            "form": "привіту",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́ту",
+            "tags": "noun:inanim:m:v_dav"
+          },
+          {
+            "form": "привіте",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́те",
+            "tags": "noun:inanim:m:v_kly"
+          },
+          {
+            "form": "привітові",
+            "learner": true,
+            "markers": [],
+            "stress_source": "trie",
+            "stressed": "приві́тові",
+            "tags": "noun:inanim:m:v_mis"
+          },
+          {
+            "form": "привіту",
+            "learner": true,
+            "markers": [],
+            "stress_source": "trie",
+            "stressed": "приві́ту",
+            "tags": "noun:inanim:m:v_mis"
+          },
+          {
+            "form": "привіті",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́ті",
+            "tags": "noun:inanim:m:v_mis"
+          },
+          {
+            "form": "привіт",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́т",
+            "tags": "noun:inanim:m:v_naz"
+          },
+          {
+            "form": "привітом",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́том",
+            "tags": "noun:inanim:m:v_oru"
+          },
+          {
+            "form": "привіту",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́ту",
+            "tags": "noun:inanim:m:v_rod"
+          },
+          {
+            "form": "привіт",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́т",
+            "tags": "noun:inanim:m:v_zna"
+          },
+          {
+            "form": "привітам",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́там",
+            "tags": "noun:inanim:p:v_dav"
+          },
+          {
+            "form": "привіти",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́ти",
+            "tags": "noun:inanim:p:v_kly"
+          },
+          {
+            "form": "привітах",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́тах",
+            "tags": "noun:inanim:p:v_mis"
+          },
+          {
+            "form": "привіти",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́ти",
+            "tags": "noun:inanim:p:v_naz"
+          },
+          {
+            "form": "привітами",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́тами",
+            "tags": "noun:inanim:p:v_oru"
+          },
+          {
+            "form": "привітів",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́тів",
+            "tags": "noun:inanim:p:v_rod"
+          },
+          {
+            "form": "привіти",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "приві́ти",
+            "tags": "noun:inanim:p:v_zna"
+          }
+        ],
+        "id": "W-074",
+        "lemma": "привіт",
+        "note": "Greeting formula learned by ear, informal; ULP S1 lesson 1.",
+        "pos": "noun",
+        "shadow": {
+          "russian_shadow": false,
+          "score": 0.0
+        },
+        "ulif": {
+          "key": [
+            "приві́т",
+            1
+          ],
+          "row_sha256": "22694ba7d93f20a03805475d093d66ce25b5a1b1cbf0742d8fae5b686eb4ea99",
+          "source": "ulif"
+        }
+      },
+      {
+        "cefr": {
+          "level": "A1",
+          "row_id": 4686,
+          "row_sha256": "533ad41de8bad822b7d6bc160ae6304660a0bfea50a2d101e22947048ea53b34",
+          "source": "puls"
+        },
+        "entry": {
+          "entry_id": 98319,
+          "source": "vesum"
+        },
+        "forms": [
+          {
+            "form": "добрій",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брій",
+            "tags": "adj:f:v_dav:compb"
+          },
+          {
+            "form": "добра",
+            "learner": true,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:f:v_kly:compb"
+          },
+          {
+            "form": "добрая",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:f:v_kly:compb:long"
+          },
+          {
+            "form": "добрій",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брій",
+            "tags": "adj:f:v_mis:compb"
+          },
+          {
+            "form": "добра",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́бра",
+            "tags": "adj:f:v_naz:compb"
+          },
+          {
+            "form": "добрая",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:f:v_naz:compb:long"
+          },
+          {
+            "form": "доброю",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брою",
+            "tags": "adj:f:v_oru:compb"
+          },
+          {
+            "form": "доброї",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брої",
+            "tags": "adj:f:v_rod:compb"
+          },
+          {
+            "form": "добру",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́бру",
+            "tags": "adj:f:v_zna:compb"
+          },
+          {
+            "form": "добрую",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:f:v_zna:compb:long"
+          },
+          {
+            "form": "доброму",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брому",
+            "tags": "adj:m:v_dav:compb"
+          },
+          {
+            "form": "добрий",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брий",
+            "tags": "adj:m:v_kly:compb"
+          },
+          {
+            "form": "доброму",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брому",
+            "tags": "adj:m:v_mis:compb"
+          },
+          {
+            "form": "добрім",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брім",
+            "tags": "adj:m:v_mis:compb"
+          },
+          {
+            "form": "добрий",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брий",
+            "tags": "adj:m:v_naz:compb"
+          },
+          {
+            "form": "добрим",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брим",
+            "tags": "adj:m:v_oru:compb"
+          },
+          {
+            "form": "доброго",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брого",
+            "tags": "adj:m:v_rod:compb"
+          },
+          {
+            "form": "доброго",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брого",
+            "tags": "adj:m:v_zna:ranim:compb"
+          },
+          {
+            "form": "добрий",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брий",
+            "tags": "adj:m:v_zna:rinanim:compb"
+          },
+          {
+            "form": "доброму",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брому",
+            "tags": "adj:n:v_dav:compb"
+          },
+          {
+            "form": "добре",
+            "learner": true,
+            "markers": [],
+            "stress_source": "trie",
+            "stressed": "до́бре",
+            "tags": "adj:n:v_kly:compb"
+          },
+          {
+            "form": "добреє",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:n:v_kly:compb:long"
+          },
+          {
+            "form": "доброму",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брому",
+            "tags": "adj:n:v_mis:compb"
+          },
+          {
+            "form": "добрім",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брім",
+            "tags": "adj:n:v_mis:compb"
+          },
+          {
+            "form": "добре",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́бре",
+            "tags": "adj:n:v_naz:compb"
+          },
+          {
+            "form": "добреє",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:n:v_naz:compb:long"
+          },
+          {
+            "form": "добрим",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брим",
+            "tags": "adj:n:v_oru:compb"
+          },
+          {
+            "form": "доброго",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брого",
+            "tags": "adj:n:v_rod:compb"
+          },
+          {
+            "form": "добре",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́бре",
+            "tags": "adj:n:v_zna:compb"
+          },
+          {
+            "form": "добреє",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:n:v_zna:compb:long"
+          },
+          {
+            "form": "добрим",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брим",
+            "tags": "adj:p:v_dav:compb"
+          },
+          {
+            "form": "добрі",
+            "learner": true,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:p:v_kly:compb"
+          },
+          {
+            "form": "добрії",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:p:v_kly:compb:long"
+          },
+          {
+            "form": "добрих",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брих",
+            "tags": "adj:p:v_mis:compb"
+          },
+          {
+            "form": "добрі",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брі",
+            "tags": "adj:p:v_naz:compb"
+          },
+          {
+            "form": "добрії",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:p:v_naz:compb:long"
+          },
+          {
+            "form": "добрими",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брими",
+            "tags": "adj:p:v_oru:compb"
+          },
+          {
+            "form": "добрих",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брих",
+            "tags": "adj:p:v_rod:compb"
+          },
+          {
+            "form": "добрих",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брих",
+            "tags": "adj:p:v_zna:ranim:compb"
+          },
+          {
+            "form": "добрі",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "до́брі",
+            "tags": "adj:p:v_zna:rinanim:compb"
+          },
+          {
+            "form": "добрії",
+            "learner": false,
+            "markers": [],
+            "stress_source": "pending",
+            "tags": "adj:p:v_zna:rinanim:compb:long"
+          }
+        ],
+        "gloss_en": "good, benign, genial, gentle, kind, kindly; good (having positive qualities; useful for a particular purpose); good, tasty (food)",
+        "gloss_source": "kaikki_wiktionary",
+        "id": "W-075",
+        "lemma": "добрий",
+        "note": "Part of the fixed formal greeting chunk, not adjective grammar; ULP S1 lesson 2.",
+        "pos": "adj",
+        "shadow": {
+          "russian_shadow": false,
+          "score": 0.0
+        },
+        "ulif": {
+          "key": [
+            "до́брий",
+            1
+          ],
+          "row_sha256": "cb46a09224ddb593140d7201eae798f67465ac9bc230d0f24d13488997bc7917",
+          "source": "ulif"
+        }
+      },
+      {
+        "cefr": {
+          "level": "A1",
+          "row_id": 4799,
+          "row_sha256": "abdf686c3b07dd85499653a90ba703a5a77b214a10a11cdc7c0c99db8067b9dd",
+          "source": "puls"
+        },
+        "entry": {
+          "entry_id": 92026,
+          "source": "vesum"
+        },
+        "forms": [
+          {
+            "form": "дневі",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "дне́ві",
+            "tags": "noun:inanim:m:v_dav"
+          },
+          {
+            "form": "дню",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дню",
+            "tags": "noun:inanim:m:v_dav"
+          },
+          {
+            "form": "дню",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дню",
+            "tags": "noun:inanim:m:v_kly"
+          },
+          {
+            "form": "дневі",
+            "learner": true,
+            "markers": [],
+            "stress_source": "trie",
+            "stressed": "дне́ві",
+            "tags": "noun:inanim:m:v_mis"
+          },
+          {
+            "form": "дню",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дню",
+            "tags": "noun:inanim:m:v_mis"
+          },
+          {
+            "form": "дні",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дні",
+            "tags": "noun:inanim:m:v_mis"
+          },
+          {
+            "form": "день",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "день",
+            "tags": "noun:inanim:m:v_naz"
+          },
+          {
+            "form": "днем",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "днем",
+            "tags": "noun:inanim:m:v_oru"
+          },
+          {
+            "form": "дня",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дня",
+            "tags": "noun:inanim:m:v_rod"
+          },
+          {
+            "form": "день",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "день",
+            "tags": "noun:inanim:m:v_zna"
+          },
+          {
+            "form": "дням",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дням",
+            "tags": "noun:inanim:p:v_dav"
+          },
+          {
+            "form": "дні",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дні",
+            "tags": "noun:inanim:p:v_kly"
+          },
+          {
+            "form": "днях",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "днях",
+            "tags": "noun:inanim:p:v_mis"
+          },
+          {
+            "form": "дні",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дні",
+            "tags": "noun:inanim:p:v_naz"
+          },
+          {
+            "form": "днями",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "дня́ми",
+            "tags": "noun:inanim:p:v_oru"
+          },
+          {
+            "form": "днів",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "днів",
+            "tags": "noun:inanim:p:v_rod"
+          },
+          {
+            "form": "дні",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "дні",
+            "tags": "noun:inanim:p:v_zna"
+          }
+        ],
+        "gloss_en": "day",
+        "gloss_source": "kaikki_wiktionary",
+        "id": "W-076",
+        "lemma": "день",
+        "note": "Part of the fixed formal greeting chunk, not noun grammar; ULP S1 lesson 2.",
+        "pos": "noun",
+        "shadow": {
+          "russian_shadow": false,
+          "score": 0.0
+        },
+        "ulif": {
+          "key": [
+            "день",
+            1
+          ],
+          "row_sha256": "60c246de58afb64ff6eaa1b38dbe2c0ce5c1a5df26cea7bf8e50a83414499fd3",
+          "source": "ulif"
+        }
+      },
+      {
+        "entry": {
+          "entry_id": 239577,
+          "source": "vesum"
+        },
+        "forms": [
+          {
+            "form": "Ніні",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́ні",
+            "tags": "noun:anim:f:v_dav:prop:fname"
+          },
+          {
+            "form": "Ніно",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́но",
+            "tags": "noun:anim:f:v_kly:prop:fname"
+          },
+          {
+            "form": "Ніні",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́ні",
+            "tags": "noun:anim:f:v_mis:prop:fname"
+          },
+          {
+            "form": "Ніна",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́на",
+            "tags": "noun:anim:f:v_naz:prop:fname"
+          },
+          {
+            "form": "Ніною",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́ною",
+            "tags": "noun:anim:f:v_oru:prop:fname"
+          },
+          {
+            "form": "Ніни",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́ни",
+            "tags": "noun:anim:f:v_rod:prop:fname"
+          },
+          {
+            "form": "Ніну",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́ну",
+            "tags": "noun:anim:f:v_zna:prop:fname"
+          },
+          {
+            "form": "Нінам",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́нам",
+            "tags": "noun:anim:p:v_dav:prop:fname"
+          },
+          {
+            "form": "Ніни",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́ни",
+            "tags": "noun:anim:p:v_kly:prop:fname"
+          },
+          {
+            "form": "Нінах",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́нах",
+            "tags": "noun:anim:p:v_mis:prop:fname"
+          },
+          {
+            "form": "Ніни",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́ни",
+            "tags": "noun:anim:p:v_naz:prop:fname"
+          },
+          {
+            "form": "Нінами",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Ні́нами",
+            "tags": "noun:anim:p:v_oru:prop:fname"
+          },
+          {
+            "form": "Нін",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "Нін",
+            "tags": "noun:anim:p:v_rod:prop:fname"
+          },
+          {
+            "form": "Нін",
+            "learner": true,
+            "markers": [],
+            "stress_source": "none",
+            "stressed": "Нін",
+            "tags": "noun:anim:p:v_zna:prop:fname"
+          }
+        ],
+        "id": "W-091",
+        "lemma": "Ніна",
+        "note": "Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.",
+        "pos": "noun",
+        "shadow": {
+          "russian_shadow": false,
+          "score": 0.0
+        },
+        "ulif": {
+          "key": [
+            "Ні́на",
+            1
+          ],
+          "row_sha256": "70a7cd630aab83eba54aa1e58508f889f58af8925adad21a2a9703f348eb0cae",
+          "source": "ulif"
+        }
+      },
+      {
+        "entry": {
+          "entry_id": 151545,
+          "source": "vesum"
+        },
+        "forms": [
+          {
+            "form": "Іванові",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́нові",
+            "tags": "noun:anim:m:v_dav:prop:fname"
+          },
+          {
+            "form": "Івану",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́ну",
+            "tags": "noun:anim:m:v_dav:prop:fname"
+          },
+          {
+            "form": "Іване",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́не",
+            "tags": "noun:anim:m:v_kly:prop:fname"
+          },
+          {
+            "form": "Іванові",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́нові",
+            "tags": "noun:anim:m:v_mis:prop:fname"
+          },
+          {
+            "form": "Івану",
+            "learner": true,
+            "markers": [],
+            "stress_source": "trie",
+            "stressed": "Іва́ну",
+            "tags": "noun:anim:m:v_mis:prop:fname"
+          },
+          {
+            "form": "Івані",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́ні",
+            "tags": "noun:anim:m:v_mis:prop:fname"
+          },
+          {
+            "form": "Іван",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́н",
+            "tags": "noun:anim:m:v_naz:prop:fname"
+          },
+          {
+            "form": "Іваном",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́ном",
+            "tags": "noun:anim:m:v_oru:prop:fname"
+          },
+          {
+            "form": "Івана",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́на",
+            "tags": "noun:anim:m:v_rod:prop:fname"
+          },
+          {
+            "form": "Івана",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́на",
+            "tags": "noun:anim:m:v_zna:prop:fname"
+          },
+          {
+            "form": "Іванам",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́нам",
+            "tags": "noun:anim:p:v_dav:prop:fname"
+          },
+          {
+            "form": "Івани",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́ни",
+            "tags": "noun:anim:p:v_kly:prop:fname"
+          },
+          {
+            "form": "Іванах",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́нах",
+            "tags": "noun:anim:p:v_mis:prop:fname"
+          },
+          {
+            "form": "Івани",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́ни",
+            "tags": "noun:anim:p:v_naz:prop:fname"
+          },
+          {
+            "form": "Іванами",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́нами",
+            "tags": "noun:anim:p:v_oru:prop:fname"
+          },
+          {
+            "form": "Іванів",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́нів",
+            "tags": "noun:anim:p:v_rod:prop:fname"
+          },
+          {
+            "form": "Іванів",
+            "learner": true,
+            "markers": [],
+            "stress_source": "ulif",
+            "stressed": "Іва́нів",
+            "tags": "noun:anim:p:v_zna:prop:fname"
+          }
+        ],
+        "id": "W-093",
+        "lemma": "Іван",
+        "note": "Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters only.",
+        "pos": "noun",
+        "shadow": {
+          "russian_shadow": false,
+          "score": 0.0
+        },
+        "ulif": {
+          "key": [
+            "Іва́н",
+            1
+          ],
+          "row_sha256": "c48e63c0b0a22ba582f16533d6e38c4b9257681490fc51258517edb49bfc1055",
+          "source": "ulif"
+        }
+      }
+    ]
+  },
+  "stream": {
+    "tokens": [
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": null,
+          "block": "bilingual_1_0",
+          "item": null,
+          "step": "s1",
+          "tab": "urok"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": null,
+          "block": "bilingual_1_0",
+          "item": null,
+          "step": "s2",
+          "tab": "urok"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": null,
+          "block": "bilingual_1_0",
+          "item": null,
+          "step": "s2",
+          "tab": "urok"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "adj:m:v_kly:compb",
+            "adj:m:v_naz:compb",
+            "adj:m:v_zna:rinanim:compb"
+          ],
+          "record": "W-075",
+          "stressed": "до́брий"
+        },
+        "surface": "sentence_token",
+        "token": "Добрий",
+        "unit": {
+          "activity": null,
+          "block": 0,
+          "item": null,
+          "step": "s3",
+          "tab": "urok"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 7,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:inanim:m:v_naz",
+            "noun:inanim:m:v_zna"
+          ],
+          "record": "W-076",
+          "stressed": "день"
+        },
+        "surface": "sentence_token",
+        "token": "день",
+        "unit": {
+          "activity": null,
+          "block": 0,
+          "item": null,
+          "step": "s3",
+          "tab": "urok"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:inanim:m:v_naz",
+            "noun:inanim:m:v_zna"
+          ],
+          "record": "W-074",
+          "stressed": "приві́т"
+        },
+        "surface": "sentence_token",
+        "token": "Привіт",
+        "unit": {
+          "activity": null,
+          "block": "dialogue_0",
+          "item": null,
+          "step": "s4",
+          "tab": "urok"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:inanim:m:v_naz",
+            "noun:inanim:m:v_zna"
+          ],
+          "record": "W-074",
+          "stressed": "приві́т"
+        },
+        "surface": "sentence_token",
+        "token": "Привіт",
+        "unit": {
+          "activity": null,
+          "block": "dialogue_1",
+          "item": null,
+          "step": "s4",
+          "tab": "urok"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a2",
+          "block": "opt_0",
+          "item": 0,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a2",
+          "block": "opt_0",
+          "item": 0,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a2",
+          "block": "opt_1",
+          "item": 0,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a2",
+          "block": "opt_0",
+          "item": 1,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a2",
+          "block": "opt_0",
+          "item": 1,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a2",
+          "block": "opt_1",
+          "item": 1,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:inanim:m:v_naz",
+            "noun:inanim:m:v_zna"
+          ],
+          "record": "W-074",
+          "stressed": "приві́т"
+        },
+        "surface": "sentence_token",
+        "token": "привіт",
+        "unit": {
+          "activity": "a4",
+          "block": "prompt",
+          "item": 0,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a4",
+          "block": "opt_0",
+          "item": 0,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a4",
+          "block": "opt_1",
+          "item": 0,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a4",
+          "block": "opt_1",
+          "item": 0,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:inanim:m:v_naz",
+            "noun:inanim:m:v_zna"
+          ],
+          "record": "W-074",
+          "stressed": "приві́т"
+        },
+        "surface": "sentence_token",
+        "token": "привіт",
+        "unit": {
+          "activity": "a4",
+          "block": "prompt",
+          "item": 1,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a4",
+          "block": "opt_0",
+          "item": 1,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a4",
+          "block": "opt_0",
+          "item": 1,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a4",
+          "block": "opt_1",
+          "item": 1,
+          "step": "s4",
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 0,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 0,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_1",
+          "item": 0,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 1,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 1,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_1",
+          "item": 1,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 2,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_1",
+          "item": 2,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_1",
+          "item": 2,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 3,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 3,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_1",
+          "item": 3,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-074",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-074",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_0",
+          "item": 4,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-075",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-075",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_1",
+          "item": 4,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 8,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [],
+          "record": "W-076",
+          "stressed": null
+        },
+        "surface": "gloss_ref",
+        "token": "W-076",
+        "unit": {
+          "activity": "a5",
+          "block": "opt_1",
+          "item": 4,
+          "tab": "vpravy"
+        }
+      },
+      {
+        "candidates": [
+          "W-074"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:inanim:m:v_naz",
+            "noun:inanim:m:v_zna"
+          ],
+          "record": "W-074",
+          "stressed": "приві́т"
+        },
+        "surface": "sentence_token",
+        "token": "привіт",
+        "unit": {
+          "activity": null,
+          "block": "core_W-074",
+          "item": null,
+          "tab": "slovnyk"
+        }
+      },
+      {
+        "candidates": [
+          "W-075"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "adj:m:v_kly:compb",
+            "adj:m:v_naz:compb",
+            "adj:m:v_zna:rinanim:compb"
+          ],
+          "record": "W-075",
+          "stressed": "до́брий"
+        },
+        "surface": "sentence_token",
+        "token": "добрий",
+        "unit": {
+          "activity": null,
+          "block": "core_W-075",
+          "item": null,
+          "tab": "slovnyk"
+        }
+      },
+      {
+        "candidates": [
+          "W-076"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:inanim:m:v_naz",
+            "noun:inanim:m:v_zna"
+          ],
+          "record": "W-076",
+          "stressed": "день"
+        },
+        "surface": "sentence_token",
+        "token": "день",
+        "unit": {
+          "activity": null,
+          "block": "core_W-076",
+          "item": null,
+          "tab": "slovnyk"
+        }
+      },
+      {
+        "candidates": [
+          "W-091"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:anim:f:v_naz:prop:fname"
+          ],
+          "record": "W-091",
+          "stressed": "Ні́на"
+        },
+        "surface": "proper_noun",
+        "token": "Ніна",
+        "unit": {
+          "activity": null,
+          "block": "inc_W-091",
+          "item": null,
+          "tab": "slovnyk"
+        }
+      },
+      {
+        "candidates": [
+          "W-093"
+        ],
+        "class": "resolved",
+        "offset": 0,
+        "provenance": "deterministic",
+        "selected": {
+          "forms": [
+            "noun:anim:m:v_naz:prop:fname"
+          ],
+          "record": "W-093",
+          "stressed": "Іва́н"
+        },
+        "surface": "proper_noun",
+        "token": "Іван",
+        "unit": {
+          "activity": null,
+          "block": "inc_W-093",
+          "item": null,
+          "tab": "slovnyk"
+        }
+      }
+    ]
+  }
+}

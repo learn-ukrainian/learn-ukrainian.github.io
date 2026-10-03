@@ -12,6 +12,7 @@ import inspect
 import json
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import jsonschema
 import pytest
@@ -387,3 +388,89 @@ def test_fresh_translate_candidate_edges_match_the_parser(with_options, render_e
     draft_validator("a1").validate(inputs[0])
     result, _ = check_render(inputs, "a1")
     assert result.passed, result.to_dict()
+
+
+@pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.site_toolchain
+def test_fresh_every_plan_and_draft_text_field_is_mdx_safe(level, render_environment):
+    from scripts.build.mdx_render_gate import check_mdx_render
+
+    inputs = maximal_draft(level)
+    inputs[1]["lessons"][0]["reading_passages"] = [
+        {"title": "Read this", "genre": "Passage", "reading_slug": "fixture-reading"}
+    ]
+    # Structural identities, enum selectors, references, URLs and tag strings
+    # are deliberately fixed. Every learner/writer text leaf receives the same
+    # suffix, so text-valued answer keys keep matching their options.
+    structural = {
+        "id",
+        "type",
+        "kind",
+        "ref",
+        "explains",
+        "evidence",
+        "video",
+        "word_ref",
+        "word_id",
+        "error_ref",
+        "mode",
+        "placement",
+        "module",
+        "tests_feature",
+        "tests_features",
+        "learner",
+        "record",
+        "lemma_ref",
+        "gap_id",
+        "url",
+        "reading_slug",
+        "forms",
+        "pos",
+        "source",
+        "tags",
+        "image",
+        "lesson_lock_entry_sha256",
+        "pack_lock_sha256",
+        "words_lock_sha256",
+        "style_card_sha256",
+        "plan_entry_sha256",
+        "state_sha256",
+        "inventory_sha256",
+        "style_sha256",
+        "learner_state_sha256",
+    }
+    visited = []
+
+    def inject(value, path=()):
+        if isinstance(value, dict):
+            return {k: inject(v, (*path, k)) for k, v in value.items()}
+        if isinstance(value, list):
+            return [inject(v, (*path, i)) for i, v in enumerate(value)]
+        keys = [p for p in path if isinstance(p, str)]
+        if isinstance(value, str) and not any(k in structural or k.endswith("sha256") for k in keys):
+            if value in {"ok", "evidence_gap"} or value.startswith(("W-", "P-", "T-", "EX-", "E-", "V-")):
+                return value
+            visited.append(path)
+            if keys[-1] == "image" and value.endswith(".svg"):
+                return value.removesuffix(".svg") + " { } < > ` $.svg"
+            return value + " { } < > ` $"
+        return value
+
+    inputs = (inject(inputs[0]), inject(inputs[1]), inputs[2], inputs[3])
+    assert any("instruction" in path for path in visited)
+    assert any("focus" in path for path in visited)
+    assert any("title" in path for path in visited)
+    with patch("scripts.generate_mdx.core.reading_href_for", return_value="/readings/fixture-reading/"):
+        result, _ = check_render(inputs, level)
+    assert result.passed, result.to_dict()
+    report = check_mdx_render(result.artifacts["mdx"])
+    assert report["passed"] is True, report["failures"]
+
+
+def test_fresh_plan_directives_never_supply_activity_headings(render_environment):
+    inputs = maximal_draft("a1")
+    for activity in inputs[1]["lessons"][0]["activities"]:
+        activity["focus"] = "WRITER DIRECTIVE: consult evidence {kind: dialogue}"
+    result, _ = check_render(inputs, "a1")
+    assert result.passed, result.to_dict()
+    assert "WRITER DIRECTIVE" not in result.artifacts["mdx"]

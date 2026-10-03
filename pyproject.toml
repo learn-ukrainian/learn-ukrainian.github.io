@@ -24,6 +24,7 @@ filterwarnings = [
     "ignore::DeprecationWarning",
 ]
 markers = [
+    "site_toolchain: real Astro MDX compilation; requires site/node_modules and runs in Frontend CI",
     "website: Docusaurus website integrity tests (links, frontmatter, sidebar)",
     "slow: tests that load ML models or require long execution time",
     "repo_invariant: repo-wide invariant checks that run in the PR-tier fastlane",
