@@ -61,23 +61,24 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
 
 
-# #9488: medium has no shortfall. #9538: high admits only Sol and Opus, so each
-# of their author families has the other one as its single cross-family seat.
-# #9583: without Fable, critical is the same for OpenAI authors (Opus only).
-SHORTFALL_FAMILIES = {"medium": [], "high": ["anthropic", "openai"], "critical": ["anthropic", "openai"]}
-
-
-@pytest.mark.parametrize("risk", ["medium", "high", "critical"])
-def test_bench_exclusions_match_automatic_resolver(risk, capsys):
-    results = check_bench_health(routing_snapshot={}, risk=risk)
-    assert main(["--risk", risk], routing_snapshot={}) == (1 if SHORTFALL_FAMILIES[risk] else 0)
-    findings = _findings(capsys.readouterr())
-    assert [finding["author_family"] for finding in findings] == SHORTFALL_FAMILIES[risk]
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
+    results, exclusions = bench_health._bench_inventory(
+        {}, data_egress_policy="local_interactive", review_profile=profile, risk=risk
+    )
+    assert results == check_bench_health(routing_snapshot={}, review_profile=profile, risk=risk)
+    assert main(["--risk", risk, "--profile", profile], routing_snapshot={}) == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert "BENCH HEALTH PASS" in captured.out
+    assert captured.out.count("[EXPECTED single seat]") == (2 if risk in {"high", "critical"} else 0)
     for family, seats in results.items():
         resolution = resolve_reviewer(
             ResolverInputs(
                 author_model=family,
                 author_family=family,
+                review_profile=profile,
                 risk=risk,
                 data_egress_policy="local_interactive",
                 routing_snapshot={},
@@ -91,30 +92,88 @@ def test_bench_exclusions_match_automatic_resolver(risk, capsys):
         }
         for family in set(AUTHOR_FAMILIES) - {"anthropic", "openai"}:
             assert results[family] == ["openai_frontier", "claude-opus-5-5"]
-        # The shortfall names the single eligibility rule, not a bench-local list.
+        # The resolver names the single eligibility rule, not a bench-local list.
         rule = "performed only by gpt-6.1-sol, claude-opus-5-5"
-        assert rule in findings[0]["excluded_seats"][GROK]
-        assert rule in findings[1]["excluded_seats"][GROK]
-        assert rule in findings[1]["excluded_seats"]["claude-sonnet-5-5"]
+        assert rule in exclusions["anthropic"][GROK]
+        assert rule in exclusions["openai"][GROK]
+        assert rule in exclusions["openai"]["claude-sonnet-5-5"]
         return
     if risk != "critical":
         return
-    finding = findings[0]
-    assert finding["type"] == "insufficient_bench_capacity"
-    assert finding["minimum"] == 2
-    assert finding["counted_seats"] == ["openai_frontier"]
-    assert set(finding["excluded_seats"]) == set(REVIEW_CANDIDATES) - {"openai_frontier"}
-    assert finding["excluded_seats"]["glm-5.3"] == "retired→cursor"
+    assert results["anthropic"] == ["openai_frontier"]
+    assert results["openai"] == ["claude-opus-5-5"]
+    assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier"}
+    assert exclusions["anthropic"]["glm-5.3"] == "retired→cursor"
+    assert exclusions["anthropic"]["composer-2.5"] == "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"
     assert (
-        finding["excluded_seats"]["composer-2.5"] == "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"
-    )
-    assert (
-        finding["excluded_seats"][GROK] == "missing required review role suitability: code/critical catalog suitability"
+        exclusions["anthropic"][GROK]
+        == f"missing required review role suitability: {profile}/critical catalog suitability"
     )
     for name in ("pool", "pool-xs"):
-        assert (
-            finding["excluded_seats"][name] == "ACP participant does not yet pin and attest the concrete Laguna model"
-        )
+        assert exclusions["anthropic"][name] == "ACP participant does not yet pin and attest the concrete Laguna model"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("family", AUTHOR_FAMILIES)
+@pytest.mark.parametrize("count", [0, 1])
+def test_only_accepted_family_risk_single_seats_pass(risk, family, count, monkeypatch, capsys):
+    seats = ["seat-one"] if count else []
+    monkeypatch.setattr(
+        bench_health,
+        "_bench_inventory",
+        lambda *args, **kwargs: (
+            {name: seats if name == family else ["seat-one", "seat-two"] for name in AUTHOR_FAMILIES},
+            {name: {} for name in AUTHOR_FAMILIES},
+        ),
+    )
+    accepted = risk in {"high", "critical"} and family in {"anthropic", "openai"}
+    expected_pass = accepted and count == 1
+    assert main(["--risk", risk], routing_snapshot={}) == (0 if expected_pass else 1)
+    captured = capsys.readouterr()
+    if expected_pass:
+        assert "[EXPECTED single seat]" in captured.out
+        assert captured.err == ""
+    else:
+        assert "[EXPECTED single seat]" not in captured.out
+        assert _findings(captured) == [
+            {
+                "type": "insufficient_bench_capacity",
+                "author_family": family,
+                "minimum": 1 if accepted else 2,
+                "counted_seats": seats,
+                "excluded_seats": {},
+            }
+        ]
+        assert "BENCH HEALTH FAIL" in captured.err
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("snapshot", [{}, {"cursor": "healthy", "pool": "healthy"}])
+def test_composer_and_pool_exclusions_are_resolver_gates(risk, snapshot):
+    eligible, excluded = bench_health._bench_inventory(
+        snapshot, data_egress_policy="local_interactive", review_profile="code", risk=risk
+    )
+    inputs = ResolverInputs(
+        author_model="claude", risk=risk, routing_snapshot=snapshot, data_egress_policy="local_interactive"
+    )
+    resolution = resolve_reviewer(inputs)
+    expected_reasons = {
+        "composer-2.5": "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'",
+        "pool": "ACP participant does not yet pin and attest the concrete Laguna model",
+        "pool-xs": "ACP participant does not yet pin and attest the concrete Laguna model",
+    }
+    for name, reason in expected_reasons.items():
+        evaluation = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
+        assert evaluation.status == "excluded"
+        assert evaluation.reason == excluded["anthropic"][name] == reason
+        if risk == "high":
+            # High's ladder only contains Sol and Opus; these seats are never attempted.
+            assert name not in {entry.name for entry in resolution.trace}
+        else:
+            trace = next(entry for entry in resolution.trace if entry.name == name)
+            assert trace.status == "excluded"
+            assert trace.reason == reason
+        assert name not in eligible["anthropic"]
 
 
 def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, capsys):
@@ -133,8 +192,8 @@ def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, 
     results = check_bench_health(routing_snapshot={"glm": "healthy"})
     assert all("glm-5.3" not in seats for seats in results.values())
     assert results["anthropic"] == ["openai_frontier", GROK]
-    # Critical keeps the Anthropic shortfall (#9488), so its finding lists the exclusion.
-    assert main(["--risk", "critical"], routing_snapshot={"glm": "healthy"}) == 1
+    # Removing Sol leaves zero seats; the finding must still list the retired route.
+    assert main(["--risk", "critical"], routing_snapshot={"glm": "healthy", "codex": "unhealthy"}) == 1
     assert _findings(capsys.readouterr())[0]["excluded_seats"]["glm-5.3"] == "retired→cursor"
 
 
@@ -195,6 +254,18 @@ def test_bench_health_preserves_critical_role_gate():
     assert all("claude-sonnet-5-5" not in seats for seats in results.values())
 
 
+@pytest.mark.parametrize("risk", ["high", "critical"])
+@pytest.mark.parametrize("status", ["unhealthy", "near_cap"])
+@pytest.mark.parametrize("route,family", [("codex", "anthropic"), ("claude", "openai")])
+def test_accepted_single_seat_still_requires_available_reviewer(risk, status, route, family, capsys):
+    assert main(["--risk", risk], routing_snapshot={route: status}) == 1
+    captured = capsys.readouterr()
+    finding = next(item for item in _findings(captured) if item["author_family"] == family)
+    assert finding["minimum"] == 1
+    assert finding["counted_seats"] == []
+    assert "BENCH HEALTH FAIL: At least one author family is below its required reviewer minimum." in captured.err
+
+
 def test_catalog_reserves_count_only_on_automatic_ladder():
     medium = check_bench_health(routing_snapshot={})
     critical = check_bench_health(routing_snapshot={}, risk="critical")
@@ -215,7 +286,7 @@ def test_bench_health_main_returns_zero_when_healthy(monkeypatch, capsys):
     )
     assert main([], routing_snapshot={}) == 0
     captured = capsys.readouterr()
-    assert "BENCH HEALTH PASS" in captured.out
+    assert "BENCH HEALTH PASS: All author families meet their required reviewer minimum." in captured.out
     assert captured.err == ""
 
 
@@ -241,3 +312,5 @@ def test_bench_health_help_documents_inventory_and_exit_codes(capsys):
     help_text = capsys.readouterr().out
     for text in ("automatic routing", "exclusion reasons", "Examples:", "Outputs:", "Exit codes:", "Related:"):
         assert text in help_text
+    assert "Anthropic/OpenAI authors at high/critical risk" in help_text
+    assert "Zero seats always fails" in help_text

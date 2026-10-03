@@ -13,6 +13,23 @@ Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
 meet it so agents can use them without source-diving.
 
+## Reviewer bench health
+
+`.venv/bin/python -m scripts.review.bench_health [--profile code|infra] [--risk low|medium|high|critical]`
+counts only reviewers eligible for automatic routing. It exits 0 when every author
+family meets its required minimum and 1 for any shortfall, with JSON exclusion
+reasons on stderr. The default minimum is two seats. The documented
+`ACCEPTED_SINGLE_SEAT_BENCHES` constant accepts one seat for Anthropic and OpenAI
+authors at high/critical risk (#9423 AC-02). High is limited to Sol/Opus by #9538;
+critical by the catalog's `critical_review` role (#9583). OpenAI authors have
+Opus alone because Cursor-routed Claude stays unpinned (#9488). Such rows
+display `[EXPECTED single seat]`; zero seats always fails. The summaries are
+`BENCH HEALTH PASS: All author families meet their required reviewer minimum.` or
+`BENCH HEALTH FAIL: At least one author family is below its required reviewer minimum.`
+This diagnostic exception changes neither eligibility nor routing policy.
+
+For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9423).
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
