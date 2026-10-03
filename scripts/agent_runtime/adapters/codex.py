@@ -197,7 +197,7 @@ def _strip_codex_prompt_echo(stderr: str) -> str:
 
 
 # Operator 2026-09-29 (#9230). GPT-6.1 Sol is the only Sol: it orchestrates and
-# advises alongside Opus 5.5 (#9583). Luna scouts.
+# holds the former Astra advisory seat. Luna scouts.
 CODEX_APPROVED_MODELS = frozenset({"gpt-6-luna", "gpt-6.1-sol"})
 
 
