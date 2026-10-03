@@ -63,8 +63,11 @@ for the denominator, access caveats and search interface.
 
 The private inventory supplies every row and typed skip. Per-file/page accounting
 retains missing files, unreadable inputs and OCR gaps; available text does not hide
-partial rows. Existing works keep their identities. ULP premium text uses a 95%
-sentence-overlap deduplication rule against each season's stored lesson rows.
+partial rows. Garbled PDF pages are withheld and counted separately for OCR;
+clean pages remain ingestable. Directory inventories also support UTF-8 CSV
+reference text and account for JPEG pages as OCR residuals. Existing works keep their identities; ULP premium
+packs list the six already-ingested season identities, each validated against the
+corpus and rights record. No sentence-overlap deduplication is used.
 `registry/sources/owned-rights.yaml` denies all owned quotes and denies citations
 of private-permission material. See the [private-reference regeneration
 recipe](corpus-inventory.md#private-reference-sources-textbooks). Apply to a local

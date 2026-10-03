@@ -26,17 +26,20 @@ from bs4 import BeautifulSoup
 from docx import Document
 from lxml import etree
 
+from scripts.curriculum.evidence.publication import load_owned_rights
 from scripts.ingest._section_coverage import LessonSection, ensure_section_schema, link_lesson_sections
-from scripts.ingest.ulp_lesson_notes_ingest import _is_page_furniture
 from scripts.storage.topology import is_network_filesystem_path
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 MEMBER_CAP = 200 * 1024 * 1024
 CHUNK_SIZE = 6000
-FORMATS = {".pdf", ".docx", ".epub", ".pptx"}
 SKIPS = {"skip_audio", "skip_audio_and_decks", "skip_derived", "missing_source"}
-STATES = SKIPS | {"already_ingested", "new_text_only", "pdf_text_only"}
+STATES = SKIPS | {"already_ingested", "pdf_text_only"}
 RIGHTS = {"owned_cite_only", "private_permission"}
+UKRAINIAN_LETTERS = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
+ALLOWED_LETTERS = frozenset(
+    UKRAINIAN_LETTERS + UKRAINIAN_LETTERS.lower() + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+)
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 
 
@@ -72,18 +75,35 @@ def load_inventory(path: Path) -> list[dict]:
                 or not isinstance(files, list)
                 or any(not isinstance(p, str) or not p or Path(p).is_absolute() or ".." in Path(p).parts for p in files)
                 or (row.get("ingest") not in SKIPS and not files)
-                or (row.get("ingest") == "already_ingested" and not SLUG.fullmatch(row.get("source_file", "")))
             ):
                 raise IngestError("invalid_inventory")
+            source_identities(row)
             seen.add(ident)
         return rows
     except (OSError, ValueError, TypeError, yaml.YAMLError):
         raise IngestError("invalid_inventory") from None
 
 
-def source_slug(row: dict) -> str:
-    """Preserve legacy identities; new identities depend only on inventory id."""
-    return row["source_file"] if row.get("ingest") == "already_ingested" else f"owned-{row['id']}"
+def source_identities(row: dict) -> list[str]:
+    """Validate singular or plural legacy identities without disclosing inputs."""
+    if "source_file" in row and "source_files" in row:
+        raise IngestError("conflicting_source_identities")
+    if row.get("ingest") != "already_ingested":
+        return [f"owned-{row['id']}"]
+    if "source_files" in row:
+        identities = row["source_files"]
+        if (
+            not isinstance(identities, list)
+            or not identities
+            or any(not isinstance(s, str) or not SLUG.fullmatch(s) for s in identities)
+            or len(set(identities)) != len(identities)
+        ):
+            raise IngestError("invalid_source_files")
+        return identities
+    identity = row.get("source_file")
+    if not isinstance(identity, str) or not SLUG.fullmatch(identity):
+        raise IngestError("invalid_source_file")
+    return [identity]
 
 
 def metadata(row: dict) -> tuple[str, str, str]:
@@ -96,37 +116,14 @@ def metadata(row: dict) -> tuple[str, str, str]:
     return row["title"], row.get("author") or "", row.get("author_uk") or row.get("author") or ""
 
 
-def normalise(text: str) -> str:
-    """NFC, unstress and drop ULP page furniture before sentence comparison."""
-    lines = unicodedata.normalize("NFC", text).replace("\u0301", "").splitlines()
-    return " ".join(" ".join(line.split()) for line in lines if not _is_page_furniture(line)).strip()
-
-
-def sentences(text: str) -> list[str]:
-    """Split only at terminal punctuation; wrapped lines stay within a sentence."""
-    return [s.strip() for s in re.split(r"(?<=[.!?…])\s+", normalise(text)) if s.strip()]
-
-
-def season_hint(name: str, inherited: int | None = None) -> int | None:
-    """Use season markers as routing data, never as emitted metadata."""
-    hits = {int(m) for m in re.findall(r"(?:season[ _-]*|ulp[ _-]*|\bs)([1-6])(?=\D|$)", name, re.I)}
-    return next(iter(hits)) if len(hits) == 1 else inherited
-
-
-def season_sentences(conn: sqlite3.Connection, season: int) -> set[str]:
-    """Join existing chunks before splitting, retaining cross-chunk sentences."""
-    rows = conn.execute(
-        "SELECT text FROM textbooks WHERE source_file=? ORDER BY chunk_id", (f"ulp-{season}-00-lesson-notes",)
-    ).fetchall()
-    if not rows:
-        raise IngestError("dedupe_source_missing")
-    return set(sentences("\n".join(r[0] for r in rows)))
-
-
-def overlap_ratio(units: list[tuple[int, str]], existing: set[str]) -> float:
-    """Count sentence occurrences, rather than unique sentences, in this PDF."""
-    candidate = sentences("\n".join(text for _, text in units))
-    return sum(s in existing for s in candidate) / len(candidate) if candidate else 0.0
+def page_text_status(text: str) -> str:
+    """Classify extracted letters after NFC and unstressing; exactly 20% is kept."""
+    normalised = unicodedata.normalize("NFC", text).replace("\u0301", "")
+    letters = [c for c in normalised if unicodedata.category(c).startswith("L")]
+    if not letters:
+        return "page_no_text"
+    disallowed = sum(c not in ALLOWED_LETTERS for c in letters)
+    return "garbled_text_layer" if disallowed * 5 > len(letters) else "text"
 
 
 def read_member(archive: zipfile.ZipFile, member: str | zipfile.ZipInfo) -> bytes:
@@ -206,13 +203,15 @@ def extract(payload: bytes, extension: str) -> tuple[list[tuple[int, str]], list
     try:
         page_errors = set()
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            if extension == ".pdf":
+            if extension in {".pdf", ".jpeg", ".jpg"}:
                 old_errors = pymupdf.TOOLS.mupdf_display_errors()
                 old_warnings = pymupdf.TOOLS.mupdf_display_warnings()
                 try:
                     pymupdf.TOOLS.mupdf_display_errors(False)
                     pymupdf.TOOLS.mupdf_display_warnings(False)
-                    with pymupdf.open(stream=payload, filetype="pdf") as document:
+                    if extension in {".jpeg", ".jpg"}:
+                        pymupdf.Pixmap(payload)  # Decode, rather than accepting a lazy image wrapper.
+                    with pymupdf.open(stream=payload, filetype=extension[1:]) as document:
                         if document.is_encrypted:
                             raise IngestError("encrypted")
                         units = []
@@ -225,6 +224,10 @@ def extract(payload: bytes, extension: str) -> tuple[list[tuple[int, str]], list
                 finally:
                     pymupdf.TOOLS.mupdf_display_errors(old_errors)
                     pymupdf.TOOLS.mupdf_display_warnings(old_warnings)
+            elif extension == ".csv":
+                # Grounding needs the serialized reference text, not inferred
+                # columns. Preserve separators and quotes across CSV dialects.
+                units = [(1, payload.decode("utf-8-sig"))]
             elif extension == ".docx":
                 with zipfile.ZipFile(io.BytesIO(payload)) as archive:
                     for member in archive.infolist():
@@ -244,33 +247,38 @@ def extract(payload: bytes, extension: str) -> tuple[list[tuple[int, str]], list
         pages = [
             {
                 "page": page,
-                "status": "error:corrupt" if page in page_errors else "text" if text.strip() else "page_no_text",
+                "status": ("error:corrupt" if page in page_errors else page_text_status(text)),
                 "characters": len(text),
             }
             for page, text in units
         ]
-        nonempty = [(page, text) for page, text in units if text.strip()]
+        nonempty = [
+            (page, text)
+            for (page, text), accounting in zip(units, pages, strict=True)
+            if accounting["status"] == "text"
+        ]
         if page_errors:
             return nonempty, pages, "error:corrupt"
-        if extension == ".pdf" and len(nonempty) * 2 < len(units):
+        no_text = sum(p["status"] == "page_no_text" for p in pages)
+        garbled = sum(p["status"] == "garbled_text_layer" for p in pages)
+        if extension in {".pdf", ".jpeg", ".jpg"} and no_text * 2 > len(units) - garbled:
             return [], pages, "skipped:scanned_needs_ocr"
-        return nonempty, pages, "extracted" if nonempty else "skipped:page_no_text"
+        return (
+            nonempty,
+            pages,
+            ("extracted" if nonempty else "skipped:garbled_text_layer" if garbled else "skipped:page_no_text"),
+        )
     except IngestError:
         raise
     except Exception:
         raise IngestError("corrupt") from None
 
 
-def collect(
-    row: dict, files: list[Path], root: Path, conn: sqlite3.Connection
-) -> tuple[list[tuple[str, int, str]], list[dict]]:
+def collect(row: dict, files: list[Path]) -> tuple[list[tuple[str, int, str]], list[dict]]:
     """Account for every matched file and archive leaf without disclosing names."""
     units, accounting = [], []
-    seasons: dict[int, set[str]] = {}
 
-    def visit(
-        payload: bytes | None, name: str, index: str, hint: int | None, depth: int, path: Path | None = None
-    ) -> None:
+    def visit(payload: bytes | None, name: str, index: str, depth: int, path: Path | None = None) -> None:
         entry = {"file_index": index}
         accounting.append(entry)
         extension = Path(name).suffix.lower()
@@ -283,7 +291,11 @@ def collect(
                     members = sorted((m for m in archive.infolist() if not m.is_dir()), key=lambda m: m.filename)
                     count = 0
                     for member in members:
-                        if "__MACOSX" in Path(member.filename).parts or Path(member.filename).name == ".DS_Store":
+                        if (
+                            "__MACOSX" in Path(member.filename).parts
+                            or Path(member.filename).name == ".DS_Store"
+                            or Path(member.filename).name.startswith("._")
+                        ):
                             continue
                         count += 1
                         child = f"{index}.{count}"
@@ -309,7 +321,7 @@ def collect(
                                 }
                             )
                             continue
-                        visit(data, member.filename, child, season_hint(member.filename, hint), depth + 1)
+                        visit(data, member.filename, child, depth + 1)
                     entry.update(status="extracted" if count else "skipped:empty_archive", members=count)
                 return
             if row.get("ingest") == "pdf_text_only" and extension != ".pdf":
@@ -320,16 +332,6 @@ def collect(
                 return
             extracted, pages, status = extract(path.read_bytes() if path is not None else payload, extension)
             entry.update(status=status, pages=pages)
-            if row.get("ingest") == "new_text_only" and extension == ".pdf" and extracted:
-                if hint is None:
-                    raise IngestError("dedupe_season_unknown")
-                if hint not in seasons:
-                    seasons[hint] = season_sentences(conn, hint)
-                ratio = overlap_ratio(extracted, seasons[hint])
-                entry["overlap_ratio"] = ratio
-                if ratio >= 0.95:
-                    entry["status"] = f"duplicate_of:ulp-{hint}-00-lesson-notes"
-                    return
             units.extend((index, page, text) for page, text in extracted)
         except IngestError as exc:
             entry["status"] = f"skipped:{exc}" if str(exc) == "member_too_large" else f"error:{exc}"
@@ -337,16 +339,16 @@ def collect(
             entry["status"] = "error:corrupt"
 
     for index, path in enumerate(files, 1):
-        hint = season_hint(str(path.relative_to(root)))
-        visit(None, path.name, str(index), hint, 0, path)
+        visit(None, path.name, str(index), 0, path)
     return units, accounting
 
 
 def matched_files(row: dict, root: Path) -> tuple[list[Path], list[dict]]:
-    """Pathlib globs are recursive with **; each unmatched expectation is explicit."""
+    """Expand terminal ** to recursive files regardless of Python glob version."""
     found, missing = set(), []
     for index, pattern in enumerate(row["files"], 1):
-        members = [p for p in root.glob(pattern) if p.is_file()]
+        file_pattern = pattern + "/*" if pattern.endswith("/**") or pattern == "**" else pattern
+        members = [p for p in root.glob(file_pattern) if p.is_file()]
         if not members:
             missing.append({"file_index": f"pattern-{index}", "status": "error:missing_file"})
         for path in members:
@@ -372,14 +374,15 @@ def input_digest(row: dict, files: list[Path], root: Path) -> str:
 def chunks(row: dict, units: list[tuple[str, int, str]]) -> list[dict]:
     """Bound chunks without dropping text; stable ids use numeric source locators."""
     title, author, author_uk = metadata(row)
+    slug = source_identities(row)[0]
     result = []
     for file_index, page, text in units:
         for part, start in enumerate(range(0, len(text), CHUNK_SIZE), 1):
             content = text[start : start + CHUNK_SIZE]
             result.append(
                 {
-                    "chunk_id": f"{source_slug(row)}_f{file_index}_p{page:04d}_c{part:04d}",
-                    "source_file": source_slug(row),
+                    "chunk_id": f"{slug}_f{file_index}_p{page:04d}_c{part:04d}",
+                    "source_file": slug,
                     "title": title,
                     "author": author,
                     "author_uk": author_uk,
@@ -427,7 +430,10 @@ def retrieval_proof(conn: sqlite3.Connection, slug: str) -> dict:
         "SELECT id,chunk_id,text,parent_section_id FROM textbooks WHERE source_file=? ORDER BY chunk_id", (slug,)
     ).fetchall()
     for rowid, chunk_id, text, section in candidates:
-        tokens = sorted(set(re.findall(r"[^\W\d_]{5,}", normalise(text))), key=lambda token: (-len(token), token))
+        tokens = sorted(
+            set(re.findall(r"[^\W\d_]{5,}", unicodedata.normalize("NFC", text).replace("\u0301", ""))),
+            key=lambda token: (-len(token), token),
+        )
         for token in tokens:
             hit = conn.execute(
                 "SELECT rowid FROM textbooks_fts WHERE textbooks_fts MATCH ? AND rowid=?", (f'"{token}"', rowid)
@@ -468,10 +474,10 @@ def process_work(
     conn: sqlite3.Connection, row: dict, root: Path, out_dir: Path, *, check: bool, dry_run: bool, force: bool
 ) -> dict:
     """Reconcile one whole inventory row and its private receipt without hidden drops."""
-    slug = source_slug(row)
     report = {"id": row["id"], "status": "error:unexplained_row", "files": []}
     state = row.get("ingest")
     if state is not None and state not in STATES:
+        report["status"] = "error:unknown_ingest"
         return report
     if state in SKIPS:
         files, _ = matched_files(row, root)
@@ -482,15 +488,34 @@ def process_work(
         return report
     files, missing = matched_files(row, root)
     if state == "already_ingested":
-        count = conn.execute("SELECT count(*) FROM textbooks WHERE source_file=?", (slug,)).fetchone()[0]
+        try:
+            rights = load_owned_rights()
+        except ValueError:
+            raise IngestError("owned_rights_unreadable") from None
+        if any(rights.get(identity, {}).get("rights") != row["rights"] for identity in source_identities(row)):
+            raise IngestError("existing_source_rights_missing")
+        sources = [
+            {
+                "source_file": identity,
+                "rights": row["rights"],
+                "chunks": conn.execute("SELECT count(*) FROM textbooks WHERE source_file=?", (identity,)).fetchone()[0],
+            }
+            for identity in source_identities(row)
+        ]
         report.update(
-            status="already_ingested" if count else "error:existing_source_missing",
-            chunks=count,
-            files=[{"file_index": str(i), "status": f"duplicate_of:{slug}"} for i, _ in enumerate(files, 1)] + missing,
+            status="already_ingested" if all(s["chunks"] for s in sources) else "error:existing_source_missing",
+            chunks=sum(s["chunks"] for s in sources),
+            sources=sources,
+            files=[
+                {"file_index": str(i), "status": "duplicate_of:" + ",".join(source_identities(row))}
+                for i, _ in enumerate(files, 1)
+            ]
+            + missing,
         )
         if missing:
             report["status"] = "error:missing_file"
         return report
+    slug = source_identities(row)[0]
     digest = input_digest(row, files, root)
     receipt_path, jsonl = out_dir / f"{slug}.manifest.json", out_dir / f"{slug}.jsonl"
     saved = None
@@ -534,7 +559,7 @@ def process_work(
         elif records:
             report["retrieval"] = retrieval_proof(conn, slug)
         return report
-    units, accounting = collect(row, files, root, conn)
+    units, accounting = collect(row, files)
     report["files"] = accounting + missing
     records = chunks(row, units)
     failures = any(f["status"].startswith("error:") for f in report["files"])
@@ -547,6 +572,8 @@ def process_work(
     else:
         report["status"] = "typed-skip"
     report["chunks"] = len(records)
+    for status in ("garbled_text_layer", "page_no_text"):
+        report[status] = sum(p["status"] == status for f in accounting for p in f.get("pages", []))
     if check:
         if records and not failures:
             report["status"] = "error:not_ingested"

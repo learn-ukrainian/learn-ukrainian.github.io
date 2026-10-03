@@ -279,14 +279,22 @@ Regenerate against a local backup before applying to the active corpus:
 ```
 
 The sibling `drive-ukrainian/` directory holds inventory-matched inputs. Extraction
-supports PDF, DOCX, EPUB spine order and PPTX presentation order, including ZIP
+supports PDF, DOCX, EPUB spine order, PPTX presentation order and UTF-8 CSV text,
+including ZIP
 members and one nested archive level. Oversized members, unreadable documents,
 missing expected files and PDF pages without text remain accounted for; predominantly
-scanned PDFs require OCR. Available text is ingested even when another file is
-missing, but the row remains an error and `--check` fails. ULP premium PDFs are
-compared with the matching season's stored sentences: at least 95% overlap means
-a duplicate, otherwise the whole PDF is ingested with its overlap ratio recorded.
-Existing lesson chunks are joined before sentence comparison.
+scanned PDFs and validated JPEG image pages require OCR. Available text is ingested even when another file is
+missing, but the row remains an error and `--check` fails. PDF pages with more than
+20% letters outside Ukrainian and ASCII English are reported as `garbled_text_layer`
+and withheld for OCR; clean pages remain ingestable. The same classifier filters
+extracted slides and other text units. Zero-letter pages count as
+`page_no_text`. Garbled pages are excluded from the scanned-PDF threshold.
+An `already_ingested` row supplies either `source_file` or a nonempty, unique
+`source_files` list. Every identity must exist in the corpus and rights record.
+ULP premium packs map to the six existing season identities without new extraction.
+Unknown ingest modes fail with `unknown_ingest`. Terminal `/**` globs select all
+regular files recursively; AppleDouble archive members (`._*`) are ignored. CSV
+text retains serialized rows, separators and quotes without guessing its dialect.
 
 Unchanged reruns make no writes. A changed input digest is `stale_input` until
 `--force` explicitly replaces that work's JSONL, corpus rows, FTS entries and

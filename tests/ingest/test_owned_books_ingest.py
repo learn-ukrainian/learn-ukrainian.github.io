@@ -227,6 +227,8 @@ def test_archive_sorting_nested_depth_ignored_members_and_size_cap(env, monkeypa
             ("a.pdf", a),
             ("__MACOSX/secret.pdf", z),
             (".DS_Store", "secret"),
+            ("._a.pdf", b"broken AppleDouble"),
+            ("folder/._z.pdf", b"broken AppleDouble"),
             ("nested.zip", archive([("inner.pdf", z), ("deeper.zip", archive([("deep.pdf", z)]))])),
             ("audio.mp3", "sound"),
             ("bad.bin", b"unknown"),
@@ -237,6 +239,7 @@ def test_archive_sorting_nested_depth_ignored_members_and_size_cap(env, monkeypa
     report, code = owned.run(request)
     assert code == 1  # unknown leaf never hidden by another successful chunk
     file_reports = report["rows"][0]["files"]
+    assert len(file_reports) == 8
     assert file_reports[1]["file_index"] == "1.1"
     assert any(f["status"] == "skipped:nested_archive_depth" for f in file_reports)
     assert any(f["status"] == "error:unsupported_format" for f in file_reports)
@@ -258,53 +261,14 @@ def test_pdf_only_archive_filter(env):
     assert any(f["status"] == "skipped:pdf_text_only" for f in report["rows"][0]["files"])
 
 
-@pytest.mark.parametrize(
-    "text,ratio,duplicate",
-    [
-        ("First synthetic sentence. Second synthetic sentence.", 1.0, True),
-        ("First synthetic sentence. Completely novel sentence.", 0.5, False),
-        ("Brandnewword entirely novel sentence.", 0.0, False),
-    ],
-)
-def test_ulp_dedupe_includes_sentence_across_existing_chunk_boundaries(env, text, ratio, duplicate):
-    db, root, _inventory, _out = env
-    with sqlite3.connect(db) as conn:
-        conn.execute(
-            "INSERT INTO textbooks(chunk_id,source_file,text) VALUES('lesson-1','ulp-1-00-lesson-notes','First synthetic')"
-        )
-        conn.execute(
-            "INSERT INTO textbooks(chunk_id,source_file,text) VALUES('lesson-2','ulp-1-00-lesson-notes','sentence. Second synthetic sentence.')"
-        )
-    (root / "Season 1.pdf").write_bytes(pdf(text))
-    request = args(env, [row(ingest="new_text_only")])
-    report, code = owned.run(request)
-    assert code == 0
-    entry = report["rows"][0]["files"][0]
-    assert entry["overlap_ratio"] == ratio
-    assert (entry["status"] == "duplicate_of:ulp-1-00-lesson-notes") is duplicate
-    request.check = True
-    assert owned.run(request)[1] == 0
-
-
-def test_normalisation_furniture_nfc_and_stress():
-    assert owned.normalise("cafe\u0301\n  123\n  Hello   world.  \nUkrainianLessons.com") == "café Hello world."
-    assert owned.sentences("First sentence\nwrapped here. Second sentence!") == [
-        "First sentence wrapped here.",
-        "Second sentence!",
-    ]
-    assert owned.season_hint("Season 3.zip") == 3
-    assert owned.season_hint("unmarked.pdf", 4) == 4
-    assert owned.season_hint("unknown") is None
-    assert owned.overlap_ratio([], set()) == 0
-
-
 @pytest.mark.parametrize("state", sorted(owned.SKIPS))
 def test_typed_inventory_skip(env, state):
     report, code = owned.run(args(env, [row(ingest=state)], check=True))
     assert code == 0 and report["rows"][0]["status"] == f"skipped:{state}"
 
 
-def test_legacy_identity_rights_only_and_missing_source(env):
+def test_legacy_identity_rights_only_and_missing_source(env, monkeypatch):
+    monkeypatch.setattr(owned, "load_owned_rights", lambda: {"legacy-book": {"rights": "owned_cite_only"}})
     db, root, _inventory, out = env
     (root / "existing.pdf").write_bytes(pdf("Legacyword unchanged work."))
     request = args(env, [row(ingest="already_ingested", source_file="legacy-book", title=None, author=None)])
@@ -484,7 +448,7 @@ def test_unexplained_inventory_state_reports_that_row_and_keeps_denominator(env)
         args(env, [row(ingest="unexplained"), row(id="skipped-work", ingest="missing_source")], check=True)
     )
     assert code == 1 and report["denominator"] == 2
-    assert report["rows"][0]["status"] == "error:unexplained_row"
+    assert report["rows"][0]["status"] == "error:unknown_ingest"
     assert report["rows"][1]["status"] == "skipped:missing_source"
 
 
@@ -541,3 +505,205 @@ def test_inline_markup_preserves_words_and_block_boundaries():
         ]
     )
     assert owned.package_text(payload, ".pptx") == [(1, "Extraordinaryword.\nNext paragraph.")]
+
+
+@pytest.mark.parametrize("pattern", ["tree/**", "tree/**/*", "**", "**/*"])
+def test_recursive_directory_glob_includes_direct_and_nested_files(env, pattern):
+    _db, root, _inventory, _out = env
+    (root / "tree/nested/deep").mkdir(parents=True)
+    (root / "tree/empty").mkdir()
+    direct = root / "tree/direct.pdf"
+    nested = root / "tree/nested/deep/book.pdf"
+    direct.write_bytes(pdf("Directword page."))
+    nested.write_bytes(pdf("Nestedword page."))
+    files, missing = owned.matched_files(row(files=[pattern]), root)
+    assert files == sorted([direct, nested]) and missing == []
+
+
+@pytest.mark.parametrize(
+    "text,status",
+    [
+        ("ɭɤɪɚʀғɧɫɶɤɨɸ", "garbled_text_layer"),
+        (owned.UKRAINIAN_LETTERS + owned.UKRAINIAN_LETTERS.lower(), "text"),
+        ("Clean English text ABC xyz", "text"),
+        ("abcdɭ", "text"),
+        ("abcɭ", "garbled_text_layer"),
+        ("123 ! \u0301", "page_no_text"),
+        ("І\u0308 И\u0306 Ґґ єї \u0301", "text"),
+        ("abcdeɭ\u0301" + "!123" * 20, "text"),
+    ],
+)
+def test_pdf_letter_classifier_exact_boundary_normalisation_and_denominator(text, status):
+    assert owned.page_text_status(text) == status
+
+
+@pytest.mark.parametrize(
+    "texts,expected,status",
+    [
+        (
+            ["ɭɤɪɚʀғɧɫɶɤɨɸ", "ɭɤɪɚʀғɧɫɶɤɨɸ", "Readableword page."],
+            ["garbled_text_layer", "garbled_text_layer", "text"],
+            "extracted",
+        ),
+        (["ɭɤɪɚʀғɧɫɶɤɨɸ"], ["garbled_text_layer"], "skipped:garbled_text_layer"),
+        (["123 !", "Readableword page."], ["page_no_text", "text"], "extracted"),
+        (["abcdɭ", "abcɭ"], ["text", "garbled_text_layer"], "extracted"),
+        ([owned.UKRAINIAN_LETTERS, "Clean English"], ["text", "text"], "extracted"),
+    ],
+)
+def test_pdf_filters_garbled_pages_and_keeps_clean_pages(monkeypatch, texts, expected, status):
+    # Stub only the PDF text layer: built-in PDF fonts cannot encode these scripts.
+    monkeypatch.setattr(pymupdf.Page, "get_text", lambda page: texts[page.number])
+    units, pages, actual = owned.extract(pdf(*("Placeholder" for _ in texts)), ".pdf")
+    assert actual == status
+    assert [p["status"] for p in pages] == expected
+    assert units == [
+        (i, text) for i, (text, state) in enumerate(zip(texts, expected, strict=True), 1) if state == "text"
+    ]
+
+
+def test_garbled_counts_are_separate_and_only_clean_text_is_stored(env, monkeypatch):
+    db, root, _inventory, out = env
+    texts = ["ɭɤɪɚʀғɧɫɶɤɨɸ", "ɭɤɪɚʀғɧɫɶɤɨɸ", "Readableword content.", "123!"]
+    monkeypatch.setattr(pymupdf.Page, "get_text", lambda page: texts[page.number])
+    (root / "fixture.pdf").write_bytes(pdf(*("Placeholder" for _ in texts)))
+    request = args(env)
+    report, code = owned.run(request)
+    assert code == 0
+    assert report["rows"][0]["chunks"] == 1
+    assert report["rows"][0]["garbled_text_layer"] == 2
+    assert report["rows"][0]["page_no_text"] == 1
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT text FROM textbooks").fetchall() == [(texts[2],)]
+    assert "ɭ" not in (out / "owned-synthetic-work.jsonl").read_text()
+    request.check = True
+    checked, code = owned.run(request)
+    assert code == 0 and checked == report
+
+
+@pytest.mark.parametrize("identities", [[], ["same", "same"], "legacy-book", [None], ["bad slug"]])
+def test_invalid_source_files_rejected_with_typed_error(env, identities):
+    with pytest.raises(owned.IngestError, match=r"^invalid_source_files$"):
+        owned.run(args(env, [row(ingest="already_ingested", source_files=identities)]))
+
+
+def test_singular_and_plural_identity_conflict_is_typed(env):
+    with pytest.raises(owned.IngestError, match=r"^conflicting_source_identities$"):
+        owned.run(args(env, [row(ingest="already_ingested", source_file="legacy", source_files=["legacy"])]))
+
+
+def test_all_existing_identities_required_and_rights_preserved(env, monkeypatch):
+    db, root, _inventory, out = env
+    identities = [f"ulp-{i}-00-lesson-notes" for i in range(1, 7)]
+    rights = owned.load_owned_rights()
+    assert all(rights[identity]["rights"] == "owned_cite_only" for identity in identities)
+    (root / "existing.pdf").write_bytes(pdf("Existingword notes."))
+    request = args(env, [row(ingest="already_ingested", source_files=identities)])
+    with sqlite3.connect(db) as conn:
+        conn.executemany(
+            "INSERT INTO textbooks(chunk_id,source_file,text) VALUES(?,?,?)",
+            [(identity, identity, "Existing body") for identity in identities[:-1]],
+        )
+    report, code = owned.run(request)
+    assert code == 1 and report["rows"][0]["status"] == "error:existing_source_missing"
+    assert len(report["rows"][0]["sources"]) == 6
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO textbooks(chunk_id,source_file,text) VALUES(?,?,?)",
+            (identities[-1], identities[-1], "Existing body"),
+        )
+    before = db.read_bytes()
+    for mode in ({}, {"check": True}):
+        request.check = mode.get("check", False)
+        report, code = owned.run(request)
+        assert code == 0 and report["rows"][0]["status"] == "already_ingested"
+        assert report["rows"][0]["chunks"] == 6
+        assert [s["source_file"] for s in report["rows"][0]["sources"]] == identities
+        assert all(s["rights"] == "owned_cite_only" for s in report["rows"][0]["sources"])
+        assert db.read_bytes() == before and not out.exists()
+    monkeypatch.setattr(owned, "load_owned_rights", lambda: {k: v for k, v in rights.items() if k != identities[-1]})
+    assert owned.run(request)[0]["rows"][0]["status"] == "error:existing_source_rights_missing"
+
+
+@pytest.mark.parametrize("state", ["unknown", "new_text_only"])
+def test_unknown_ingest_modes_have_typed_error(env, state):
+    report, code = owned.run(args(env, [row(ingest=state)], check=True))
+    assert code == 1 and report["rows"][0]["status"] == "error:unknown_ingest"
+
+
+@pytest.mark.parametrize("identity", [None, "", [], "bad slug"])
+def test_invalid_singular_identity_has_typed_error(env, identity):
+    with pytest.raises(owned.IngestError, match=r"^invalid_source_file$"):
+        owned.run(args(env, [row(ingest="already_ingested", source_file=identity)]))
+
+
+def test_unreadable_legacy_rights_have_sanitized_typed_error(env, monkeypatch):
+    _db, root, _inventory, _out = env
+    (root / "existing.pdf").write_bytes(pdf("Existingword notes."))
+
+    def unreadable():
+        raise ValueError("SENSITIVE_NAME_SENTINEL")
+
+    monkeypatch.setattr(owned, "load_owned_rights", unreadable)
+    report, code = owned.run(args(env, [row(ingest="already_ingested", source_file="legacy")]))
+    assert code == 1 and report["rows"][0]["status"] == "error:owned_rights_unreadable"
+    assert "SENSITIVE_NAME_SENTINEL" not in str(report)
+
+
+@pytest.mark.parametrize("extension", [".pptx", ".epub"])
+def test_packaged_text_filters_garbled_units_before_ingestion(monkeypatch, extension):
+    monkeypatch.setattr(owned, "package_text", lambda payload, ext: [(1, "ɭɤɪɚʀғɧɫɶɤɨɸ"), (2, "Readableword unit.")])
+    units, pages, status = owned.extract(b"synthetic", extension)
+    assert status == "extracted" and units == [(2, "Readableword unit.")]
+    assert [p["status"] for p in pages] == ["garbled_text_layer", "text"]
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        '"First, quoted field",Anotherword\n"Second\nwrapped field",Moreword\n',
+        'Firstword;Anotherword\n"Unescaped "quote"";Moreword\n',
+        "Firstword\tAnotherword\nSecondword\tMoreword\n",
+    ],
+)
+def test_csv_preserves_serialized_text_bom_quotes_and_separators(content):
+    units, pages, status = owned.extract(("\ufeff" + content).encode(), ".csv")
+    assert status == "extracted" and units == [(1, content)]
+    assert [p["status"] for p in pages] == ["text"]
+
+
+def test_csv_invalid_utf8_is_typed_corrupt():
+    with pytest.raises(owned.IngestError, match=r"^corrupt$"):
+        owned.extract(b"\xff", ".csv")
+
+
+@pytest.mark.parametrize("extension", [".jpeg", ".jpg"])
+def test_jpeg_pages_are_validated_and_accounted_as_ocr_residual(extension):
+    image = pymupdf.Pixmap(pymupdf.csRGB, (0, 0, 4, 4), False)
+    image.clear_with(255)
+    units, pages, status = owned.extract(image.tobytes("jpeg"), extension)
+    assert not units and status == "skipped:scanned_needs_ocr"
+    assert pages == [{"page": 1, "status": "page_no_text", "characters": 0}]
+    with pytest.raises(owned.IngestError, match=r"^corrupt$"):
+        owned.extract(b"not a JPEG", extension)
+
+
+def test_directory_inventory_accounts_csv_images_and_scanned_pdf(env):
+    _db, root, _inventory, _out = env
+    (root / "tree").mkdir()
+    (root / "tree/notes.csv").write_text("Readableword,reference\nOtherword,notes\n")
+    image = pymupdf.Pixmap(pymupdf.csRGB, (0, 0, 4, 4), False)
+    image.clear_with(255)
+    (root / "tree/image.jpeg").write_bytes(image.tobytes("jpeg"))
+    (root / "tree/scanned.pdf").write_bytes(pdf(""))
+    request = args(env, [row(files=["tree/**"])])
+    report, code = owned.run(request)
+    assert code == 0 and report["rows"][0]["chunks"] == 1
+    assert report["rows"][0]["page_no_text"] == 2
+    assert [f["status"] for f in report["rows"][0]["files"]] == [
+        "skipped:scanned_needs_ocr",
+        "extracted",
+        "skipped:scanned_needs_ocr",
+    ]
+    request.check = True
+    assert owned.run(request)[1] == 0
