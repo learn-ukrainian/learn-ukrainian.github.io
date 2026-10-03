@@ -12,6 +12,7 @@ from scripts.ci.audit_dependencies import (
     load_npm_audit_ignores,
     load_pip_audit_ignores,
     main,
+    resolve_cve_to_ghsa,
 )
 
 
@@ -653,3 +654,147 @@ def test_audit_node_transitive_suppressed_high_with_unsuppressed_moderate_passes
 
     res = audit_node(tmp_path, ignore_file)
     assert res == 0
+
+
+def test_resolve_cve_to_ghsa():
+    # Known alias from static table
+    assert resolve_cve_to_ghsa("CVE-2026-93748") == "GHSA-CH52-4W7C-C8XP"
+    assert resolve_cve_to_ghsa("cve-2026-93748") == "GHSA-CH52-4W7C-C8XP"
+
+    # Custom aliases dictionary
+    custom = {"CVE-9999-1111": "GHSA-CUSTOM-ID"}
+    assert resolve_cve_to_ghsa("CVE-9999-1111", custom) == "GHSA-CUSTOM-ID"
+
+    # Unknown CVE returns None when network fails/is mocked
+    with patch("urllib.request.urlopen", side_effect=Exception("network offline")):
+        assert resolve_cve_to_ghsa("CVE-0000-0000") is None
+
+
+def test_load_npm_audit_ignores_with_cve_aliases(tmp_path: Path):
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    data = {
+        "aliases": {
+            "CVE-1111-2222": "GHSA-custom-alias",
+        },
+        "vulnerabilities": [
+            {"cve": "CVE-2026-93748", "package": "http-cache-semantics"},
+            {"cve": "CVE-1111-2222", "package": "other-pkg"},
+        ],
+    }
+    ignore_file.write_text(yaml.safe_dump(data), encoding="utf-8")
+
+    ignores = load_npm_audit_ignores(ignore_file)
+    assert "CVE-2026-93748" in ignores
+    assert "GHSA-CH52-4W7C-C8XP" in ignores
+    assert "CVE-1111-2222" in ignores
+    assert "GHSA-CUSTOM-ALIAS" in ignores
+    assert "http-cache-semantics" not in ignores
+
+
+def test_filter_npm_audit_vulnerabilities_cve_resolves_to_ghsa():
+    vulns = {
+        "http-cache-semantics": {
+            "name": "http-cache-semantics",
+            "severity": "high",
+            "via": [
+                {
+                    "name": "http-cache-semantics",
+                    "dependency": "http-cache-semantics",
+                    "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                    "severity": "high",
+                }
+            ],
+        },
+    }
+    suppressed, unsuppressed = filter_npm_audit_vulnerabilities(vulns, ["CVE-2026-93748"])
+    assert suppressed == {"http-cache-semantics"}
+    assert unsuppressed == {}
+
+
+@patch("subprocess.run")
+def test_audit_node_cve_suppression_successfully_suppresses_intended_canonical_advisory(
+    mock_run: MagicMock, tmp_path: Path
+):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    ignore_file.write_text(
+        "vulnerabilities:\n  - cve: CVE-2026-93748\n    package: http-cache-semantics\n",
+        encoding="utf-8",
+    )
+
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "high",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        }
+                    ],
+                }
+            }
+        }
+    )
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path, ignore_file)
+    assert res == 0
+
+
+@patch("subprocess.run")
+def test_audit_node_cve_suppression_with_intended_and_unrelated_critical_fails(mock_run: MagicMock, tmp_path: Path):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    ignore_file.write_text(
+        "vulnerabilities:\n  - cve: CVE-2026-93748\n    package: http-cache-semantics\n",
+        encoding="utf-8",
+    )
+
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "critical",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        },
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-unrelated-critical",
+                            "severity": "critical",
+                        },
+                    ],
+                }
+            }
+        }
+    )
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path, ignore_file)
+    assert res == 1

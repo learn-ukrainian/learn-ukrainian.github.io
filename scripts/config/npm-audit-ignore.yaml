@@ -12,6 +12,7 @@
 
 vulnerabilities:
   - id: GHSA-ch52-4w7c-c8xp
+    cve: CVE-2026-93748
     package: http-cache-semantics
     version: 4.2.0
     status: upstream-unpatched

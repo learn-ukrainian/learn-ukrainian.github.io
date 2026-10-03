@@ -13,6 +13,8 @@ import json
 import re
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 import yaml
@@ -82,6 +84,50 @@ SEVERITY_BY_RANK: dict[int, str] = {
     5: "critical",
 }
 
+KNOWN_CVE_ALIASES: dict[str, str] = {
+    "CVE-2026-93748": "GHSA-CH52-4W7C-C8XP",
+}
+
+
+def resolve_cve_to_ghsa(cve_id: str, custom_aliases: dict[str, str] | None = None) -> str | None:
+    """Resolve a CVE identifier to its canonical GHSA advisory ID.
+
+    Checks:
+    1. Caller/YAML custom aliases
+    2. Static/offline known aliases table
+    3. OSV vulnerability API (with short timeout; fails gracefully if offline)
+    """
+    clean = cve_id.strip().upper()
+    if custom_aliases and clean in custom_aliases:
+        return custom_aliases[clean].upper()
+    if clean in KNOWN_CVE_ALIASES:
+        return KNOWN_CVE_ALIASES[clean].upper()
+
+    try:
+        url = f"https://api.osv.dev/v1/vulns/{clean}"
+        req = urllib.request.Request(url, headers={"User-Agent": "learn-ukrainian-ci"})
+        with urllib.request.urlopen(req, timeout=1.5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            primary_id = str(data.get("id", ""))
+            if primary_id.upper().startswith("GHSA-"):
+                return primary_id.upper()
+            for alias in data.get("aliases", []):
+                if str(alias).upper().startswith("GHSA-"):
+                    return str(alias).upper()
+    except urllib.error.HTTPError as e:
+        try:
+            body = json.loads(e.read().decode("utf-8"))
+            msg = str(body.get("message", ""))
+            ghsa_match = re.search(r"GHSA-[a-z0-9-]+", msg, re.IGNORECASE)
+            if ghsa_match:
+                return ghsa_match.group(0).upper()
+        except Exception:
+            pass
+    except Exception:
+        pass
+
+    return None
+
 
 def load_npm_audit_ignores(ignore_file: Path | None) -> list[str]:
     """Load list of suppressed vulnerability IDs / package names from YAML config."""
@@ -89,22 +135,54 @@ def load_npm_audit_ignores(ignore_file: Path | None) -> list[str]:
         return []
     with open(ignore_file, encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
+
+    custom_aliases: dict[str, str] = {}
+    if isinstance(data.get("aliases"), dict):
+        for k, v in data["aliases"].items():
+            if str(k).strip() and str(v).strip():
+                custom_aliases[str(k).strip().upper()] = str(v).strip().upper()
+
     vulns = data.get("vulnerabilities", [])
+
+    # Collect intra-entry aliases where both id and cve are present
+    for item in vulns:
+        if isinstance(item, dict):
+            entry_id = str(item.get("id", "")).strip().upper()
+            entry_cve = str(item.get("cve", "")).strip().upper()
+            if entry_id.startswith("GHSA-") and entry_cve.startswith("CVE-"):
+                custom_aliases[entry_cve] = entry_id
+            elif entry_id.startswith("CVE-") and entry_cve.startswith("GHSA-"):
+                custom_aliases[entry_id] = entry_cve
+
     ignore_ids: list[str] = []
     for item in vulns:
         if isinstance(item, dict):
             has_id = bool(item.get("id") and str(item["id"]).strip())
             has_cve = bool(item.get("cve") and str(item["cve"]).strip())
             if has_id:
-                ignore_ids.append(str(item["id"]).strip().upper())
+                raw_id = str(item["id"]).strip().upper()
+                ignore_ids.append(raw_id)
+                if raw_id.startswith("CVE-"):
+                    resolved = resolve_cve_to_ghsa(raw_id, custom_aliases)
+                    if resolved:
+                        ignore_ids.append(resolved)
             if has_cve:
-                ignore_ids.append(str(item["cve"]).strip().upper())
+                raw_cve = str(item["cve"]).strip().upper()
+                ignore_ids.append(raw_cve)
+                resolved = resolve_cve_to_ghsa(raw_cve, custom_aliases)
+                if resolved:
+                    ignore_ids.append(resolved)
             if not has_id and not has_cve and item.get("package") and str(item["package"]).strip():
                 ignore_ids.append(str(item["package"]).strip().lower())
         elif isinstance(item, str):
             val = item.strip()
             if val:
-                ignore_ids.append(val)
+                val_upper = val.upper()
+                ignore_ids.append(val_upper)
+                if val_upper.startswith("CVE-"):
+                    resolved = resolve_cve_to_ghsa(val_upper, custom_aliases)
+                    if resolved:
+                        ignore_ids.append(resolved)
     return [i for i in ignore_ids if i]
 
 
@@ -136,9 +214,16 @@ def filter_npm_audit_vulnerabilities(vulns: dict, ignored_list: list[str]) -> tu
 
     Returns (suppressed_packages, unsuppressed_vulnerabilities).
     """
-    ignored_set = {i.upper() for i in ignored_list}
+    expanded_ignored: list[str] = list(ignored_list)
+    for item in ignored_list:
+        if isinstance(item, str) and item.strip().upper().startswith("CVE-"):
+            resolved = resolve_cve_to_ghsa(item.strip().upper())
+            if resolved and resolved not in expanded_ignored:
+                expanded_ignored.append(resolved)
+
+    ignored_set = {i.upper() for i in expanded_ignored}
     ignored_pkgs = {
-        i.lower() for i in ignored_list if not (i.upper().startswith(("GHSA-", "CVE-", "PYSEC-")) or i.isdigit())
+        i.lower() for i in expanded_ignored if not (i.upper().startswith(("GHSA-", "CVE-", "PYSEC-")) or i.isdigit())
     }
 
     direct_rank: dict[str, int] = {}
