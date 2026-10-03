@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
 import stat
 import subprocess
@@ -24,13 +25,38 @@ _DISPOSABLE_DIRECTORIES = frozenset(
     {".pytest_cache", ".ruff_cache", ".mypy_cache", "__pycache__", "node_modules", ".venv", ".git"}
 )
 
+_CONFIG_INDIRECTION_RE = re.compile(
+    r"^\s*(\[\s*include(if)?\b|include(if)?\b)",
+    re.IGNORECASE | re.MULTILINE,
+)
+_REDIRECTED_WORKTREE_RE = re.compile(
+    r"\bworktree\s*=",
+    re.IGNORECASE,
+)
+_DANGEROUS_CONFIG_RE = re.compile(
+    r"(\b(clean|smudge|process|command|textconv|fsmonitor|hookspath|sshcommand|askpass|editor|pager|helper|driver|cmd|promisor|partialclone|uploadpack|receivepack|trustctime|checkstat)\s*=|\bext::|\bprotocol\.[^.\s]+\.allow\s*=)",
+    re.IGNORECASE,
+)
+
+
+def _safe_git_env() -> dict[str, str]:
+    """Return an isolated Git environment with global and system configuration disabled."""
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env["GIT_CONFIG_GLOBAL"] = os.devnull
+    env["GIT_CONFIG_SYSTEM"] = os.devnull
+    env["GIT_CONFIG_NOSYSTEM"] = "1"
+    env["GIT_OPTIONAL_LOCKS"] = "0"
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    env["GIT_NO_REPLACE_OBJECTS"] = "1"
+    return env
+
 
 def _git_paths(worktree: Path, *args: str) -> list[str]:
     """Read NUL-delimited paths, refusing an unavailable inventory."""
     result = subprocess.run(
         ["git", "ls-files", "-z", *args],
         cwd=worktree,
-        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        env=_safe_git_env(),
         capture_output=True,
         check=True,
         timeout=30,
@@ -186,6 +212,465 @@ def _update_existing_task_record(path: Path, updates: Mapping[str, Any], *, clea
         return True
 
 
+def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> list[str]:
+    """Inspect a directory entry in the ignored inventory.
+
+    If it contains a nested git repository or linked worktree, verifies commit
+    and pointer safety, failing closed with actionable diagnostics or refusing
+    discard of unpushed commits. If it is a directory of ordinary files, yields
+    the non-empty regular files inside it. Symlinks and escapes fail closed.
+    """
+    clean_name = name.rstrip("/")
+    dot_git = source / ".git"
+
+    if dot_git.is_symlink():
+        raise ValueError(f"artifact has a symlinked .git entry: {name}")
+
+    if dot_git.exists():
+        # Check linked worktree gitdir pointer
+        if dot_git.is_file():
+            try:
+                content = dot_git.read_text(encoding="utf-8").strip()
+            except (OSError, UnicodeDecodeError) as exc:
+                raise ValueError(f"artifact has an unreadable .git file ({exc}): {name}") from exc
+            if content.startswith("gitdir:"):
+                target_str = content.removeprefix("gitdir:").strip()
+                target_path = Path(target_str)
+                if not target_path.is_absolute():
+                    target_path = (source / target_path).resolve()
+                else:
+                    target_path = target_path.resolve()
+                if target_path.is_relative_to(worktree.resolve()):
+                    target_rel = target_path.relative_to(worktree.resolve()).as_posix()
+                    raise ValueError(
+                        f"artifact is a nested linked worktree whose gitdir pointer "
+                        f"points at another artifact ({target_rel}): {name}"
+                    )
+
+        # Check for executable, filter, redirection, or indirection configuration in git configs
+        config_files: list[Path] = []
+        if dot_git.is_dir():
+            for p in dot_git.glob("config*"):
+                if p.is_file():
+                    config_files.append(p)
+            wt_dir = dot_git / "worktrees"
+            if wt_dir.is_dir():
+                for p in wt_dir.rglob("config*"):
+                    if p.is_file():
+                        config_files.append(p)
+            commondir_file = dot_git / "commondir"
+            if commondir_file.is_file():
+                try:
+                    commondir_text = commondir_file.read_text(encoding="utf-8", errors="replace").strip()
+                    commondir_path = Path(commondir_text)
+                    if not commondir_path.is_absolute():
+                        commondir_path = (dot_git / commondir_path).resolve()
+                    for p in commondir_path.glob("config*"):
+                        if p.is_file():
+                            config_files.append(p)
+                    cwt_dir = commondir_path / "worktrees"
+                    if cwt_dir.is_dir():
+                        for p in cwt_dir.rglob("config*"):
+                            if p.is_file():
+                                config_files.append(p)
+                except OSError:
+                    pass
+        elif dot_git.is_file():
+            with contextlib.suppress(OSError):
+                gitdir_text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
+                if gitdir_text.startswith("gitdir:"):
+                    gitdir_path = Path(gitdir_text[7:].strip())
+                    if not gitdir_path.is_absolute():
+                        gitdir_path = (source / gitdir_path).resolve()
+                    for p in gitdir_path.glob("config*"):
+                        if p.is_file():
+                            config_files.append(p)
+                    commondir_file = gitdir_path / "commondir"
+                    if commondir_file.is_file():
+                        commondir_text = commondir_file.read_text(encoding="utf-8", errors="replace").strip()
+                        commondir_path = Path(commondir_text)
+                        if not commondir_path.is_absolute():
+                            commondir_path = (gitdir_path / commondir_path).resolve()
+                        for p in commondir_path.glob("config*"):
+                            if p.is_file():
+                                config_files.append(p)
+                        cwt_dir = commondir_path / "worktrees"
+                        if cwt_dir.is_dir():
+                            for p in cwt_dir.rglob("config*"):
+                                if p.is_file():
+                                    config_files.append(p)
+
+        seen_configs: set[Path] = set()
+        for cfg_path in config_files:
+            if cfg_path in seen_configs:
+                continue
+            seen_configs.add(cfg_path)
+            if not cfg_path.is_file():
+                continue
+            try:
+                cfg_text = cfg_path.read_text(encoding="utf-8", errors="replace")
+            except OSError as exc:
+                raise ValueError(f"failed to read git config in nested repository {name}: {exc}") from exc
+
+            cleaned_lines: list[str] = []
+            for line in cfg_text.splitlines():
+                stripped = line.strip()
+                if stripped.startswith(("#", ";")):
+                    continue
+                cleaned_lines.append(line)
+            cleaned_text = "\n".join(cleaned_lines)
+
+            if _CONFIG_INDIRECTION_RE.search(cleaned_text):
+                raise ValueError(
+                    f"artifact is a nested git repository with configuration indirection (include/includeIf): {name}; "
+                    f"refusing removal to prevent code execution"
+                )
+
+            if _REDIRECTED_WORKTREE_RE.search(cleaned_text):
+                raise ValueError(
+                    f"artifact is a nested git repository with redirected worktree (core.worktree): {name}; "
+                    f"refusing removal"
+                )
+
+            if _DANGEROUS_CONFIG_RE.search(cleaned_text):
+                raise ValueError(
+                    f"artifact is a nested git repository with executable or filter configuration: {name}; "
+                    f"refusing removal to prevent code execution"
+                )
+
+        if dot_git.is_dir() and (dot_git / "commondir").is_file():
+            raise ValueError(
+                f"artifact is a nested git repository with commondir metadata indirection: {name}; "
+                f"refusing removal to prevent code execution"
+            )
+
+        # Count regular files and compute total size in bytes,
+        # and pre-inspect for embedded git repositories.
+        file_count = 0
+        total_size = 0
+        has_embedded_git = False
+        resolved_dot_git = dot_git.resolve()
+        for root_dir, dirs, filenames in os.walk(source):
+            current_path = Path(root_dir).resolve()
+            if (
+                current_path != source.resolve()
+                and current_path != resolved_dot_git
+                and resolved_dot_git not in current_path.parents
+                and (
+                    ".git" in dirs
+                    or ".git" in filenames
+                    or (current_path / ".git").exists()
+                    or (current_path / ".git").is_symlink()
+                )
+            ):
+                has_embedded_git = True
+            for fname in filenames:
+                fpath = Path(root_dir) / fname
+                try:
+                    st = fpath.lstat()
+                    file_count += 1
+                    total_size += st.st_size
+                except OSError:
+                    pass
+
+        has_submodules = has_embedded_git or (source / ".gitmodules").is_file()
+        if not has_submodules:
+            modules_dirs: list[Path] = []
+            if dot_git.is_dir():
+                modules_dirs.append(dot_git / "modules")
+            elif dot_git.is_file():
+                with contextlib.suppress(OSError):
+                    gitdir_text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
+                    if gitdir_text.startswith("gitdir:"):
+                        gitdir_path = Path(gitdir_text[7:].strip())
+                        if not gitdir_path.is_absolute():
+                            gitdir_path = (source / gitdir_path).resolve()
+                        modules_dirs.append(gitdir_path / "modules")
+                        commondir_file = gitdir_path / "commondir"
+                        if commondir_file.is_file():
+                            cd_text = commondir_file.read_text(encoding="utf-8", errors="replace").strip()
+                            cd_path = Path(cd_text)
+                            if not cd_path.is_absolute():
+                                cd_path = (gitdir_path / cd_path).resolve()
+                            modules_dirs.append(cd_path / "modules")
+            for mdir in modules_dirs:
+                if mdir.is_dir():
+                    has_submodules = True
+                    break
+        if not has_submodules:
+            submodule_section_re = re.compile(r"^\s*\[\s*submodule\b", re.IGNORECASE | re.MULTILINE)
+            for cfg_path in seen_configs:
+                try:
+                    cfg_text = cfg_path.read_text(encoding="utf-8", errors="replace")
+                    if submodule_section_re.search(cfg_text):
+                        has_submodules = True
+                        break
+                except OSError:
+                    pass
+
+        if has_submodules:
+            raise ValueError(
+                f"artifact is a nested git repository with unverified submodules "
+                f"({file_count} files, {total_size} bytes): {name}; "
+                f"submodules must not be discarded without independent verification"
+            )
+
+        env = _safe_git_env()
+        git_cmd = [
+            "git",
+            "--no-lazy-fetch",
+            "-c",
+            "core.fsmonitor=",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "-c",
+            "protocol.ext.allow=never",
+            "-c",
+            "core.alternateRefsCommand=",
+            "-c",
+            "core.attributesFile=/dev/null",
+            "-c",
+            "core.trustctime=true",
+            "-c",
+            "core.checkStat=default",
+        ]
+        try:
+            toplevel_proc = subprocess.run(
+                [*git_cmd, "rev-parse", "--show-toplevel"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if toplevel_proc.returncode != 0:
+                err = toplevel_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            toplevel_str = toplevel_proc.stdout.decode("utf-8", "replace").strip()
+            if not toplevel_str:
+                raise ValueError(f"artifact is an invalid nested git repository (no toplevel): {name}")
+            toplevel_path = Path(toplevel_str).resolve()
+            if toplevel_path != source.resolve():
+                raise ValueError(
+                    f"artifact git repository worktree ({toplevel_path}) does not match "
+                    f"expected directory ({source.resolve()}): {name}; refusing removal"
+                )
+
+            # Check for gitlinks (mode 160000) and verify tracked file contents independently
+            stage_proc = subprocess.run(
+                [*git_cmd, "ls-files", "--stage", "-z"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if stage_proc.returncode != 0:
+                err = stage_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            stage_entries: list[tuple[bytes, bytes, bytes]] = []
+            for entry in stage_proc.stdout.split(b"\0"):
+                if not entry:
+                    continue
+                meta, path_b = entry.split(b"\t", 1)
+                mode_b, sha_b, _stage_b = meta.split(b" ")
+                if mode_b == b"160000":
+                    raise ValueError(
+                        f"artifact is a nested git repository with unverified submodules "
+                        f"({file_count} files, {total_size} bytes): {name}; "
+                        f"submodules must not be discarded without independent verification"
+                    )
+                stage_entries.append((mode_b, sha_b, path_b))
+
+            head_proc = subprocess.run(
+                [*git_cmd, "rev-parse", "--verify", "HEAD"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if head_proc.returncode == 0:
+                tree_proc = subprocess.run(
+                    [*git_cmd, "ls-tree", "-r", "HEAD"],
+                    cwd=source,
+                    capture_output=True,
+                    env=env,
+                    timeout=15,
+                    check=False,
+                )
+                if tree_proc.returncode != 0:
+                    err = tree_proc.stderr.decode("utf-8", "replace").strip()
+                    raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+                for raw_line in tree_proc.stdout.decode("utf-8", "replace").splitlines():
+                    line = raw_line.strip()
+                    if line.startswith("160000 "):
+                        raise ValueError(
+                            f"artifact is a nested git repository with unverified submodules "
+                            f"({file_count} files, {total_size} bytes): {name}; "
+                            f"submodules must not be discarded without independent verification"
+                        )
+
+            ls_proc = subprocess.run(
+                [*git_cmd, "ls-files", "-v"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if ls_proc.returncode != 0:
+                err = ls_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            concealed_files: list[str] = []
+            for raw_line in ls_proc.stdout.decode("utf-8", "replace").splitlines():
+                line = raw_line.strip()
+                if not line:
+                    continue
+                tag = line[0]
+                if tag == "S" or tag.islower():
+                    concealed_files.append(line)
+
+            if concealed_files:
+                concealed_summary = ", ".join(concealed_files[:3]) + ("..." if len(concealed_files) > 3 else "")
+                raise ValueError(
+                    f"artifact is a nested git repository with concealed tracked changes (assume-unchanged or skip-worktree) "
+                    f"({file_count} files, {total_size} bytes; concealed: {concealed_summary}): {name}; "
+                    f"uncommitted work must not be discarded"
+                )
+
+            status_proc = subprocess.run(
+                [*git_cmd, "status", "--porcelain", "-uall", "--ignored", "--ignore-submodules=none"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if status_proc.returncode != 0:
+                err = status_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            dirty_lines: list[str] = []
+            for raw_line in status_proc.stdout.decode("utf-8", "replace").splitlines():
+                if not raw_line or len(raw_line) < 3:
+                    continue
+                code = raw_line[:2]
+                path_str = raw_line[3:].strip()
+                if code == "!!":
+                    parts = Path(path_str).parts
+                    if any(part in _DISPOSABLE_DIRECTORIES for part in parts):
+                        continue
+                dirty_lines.append(raw_line.strip())
+
+            if dirty_lines:
+                dirty_summary = ", ".join(dirty_lines[:3]) + ("..." if len(dirty_lines) > 3 else "")
+                raise ValueError(
+                    f"artifact is a nested git repository with uncommitted or ignored changes "
+                    f"({file_count} files, {total_size} bytes; uncommitted: {dirty_summary}): {name}; "
+                    f"uncommitted work must not be discarded"
+                )
+
+            for mode_b, sha_b, path_b in stage_entries:
+                rel_path = os.fsdecode(path_b)
+                target_path = source / path_b.decode("utf-8", "surrogateescape")
+                if mode_b in (b"100644", b"100755"):
+                    if not target_path.is_file() or target_path.is_symlink():
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted or missing tracked files "
+                            f"({file_count} files, {total_size} bytes; missing: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
+                    try:
+                        content = target_path.read_bytes()
+                    except OSError as exc:
+                        raise ValueError(f"artifact tracked file unreadable ({exc}): {name}") from exc
+                    header = f"blob {len(content)}\0".encode("ascii")
+                    hasher = hashlib.sha256() if len(sha_b) == 64 else hashlib.sha1()
+                    hasher.update(header)
+                    hasher.update(content)
+                    if hasher.hexdigest().encode("ascii") != sha_b:
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted tracked changes "
+                            f"({file_count} files, {total_size} bytes; modified: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
+                elif mode_b == b"120000":
+                    if not target_path.is_symlink():
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted tracked changes "
+                            f"({file_count} files, {total_size} bytes; modified symlink: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
+                    try:
+                        target = os.readlink(target_path).encode("utf-8", "surrogateescape")
+                    except OSError as exc:
+                        raise ValueError(f"artifact tracked symlink unreadable ({exc}): {name}") from exc
+                    header = f"blob {len(target)}\0".encode("ascii")
+                    hasher = hashlib.sha256() if len(sha_b) == 64 else hashlib.sha1()
+                    hasher.update(header)
+                    hasher.update(target)
+                    if hasher.hexdigest().encode("ascii") != sha_b:
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted tracked changes "
+                            f"({file_count} files, {total_size} bytes; modified symlink: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
+
+            rev_list_args = [*git_cmd, "rev-list", "--all", "--reflog"]
+            if head_proc.returncode == 0:
+                rev_list_args.append("HEAD")
+            rev_list_args.extend(["--not", "--remotes"])
+
+            res = subprocess.run(
+                rev_list_args,
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if res.returncode != 0:
+                err = res.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            unpushed = [line.strip() for line in res.stdout.decode("ascii", "replace").split() if line.strip()]
+            if unpushed:
+                commits_summary = ", ".join(unpushed[:3]) + ("..." if len(unpushed) > 3 else "")
+                raise ValueError(
+                    f"artifact is a nested git repository with unpushed commits "
+                    f"({file_count} files, {total_size} bytes; unpushed: {commits_summary}): {name}; "
+                    f"unpushed work must not be discarded"
+                )
+        except (subprocess.SubprocessError, OSError) as exc:
+            raise ValueError(f"failed to check git status in nested repository {name}: {exc}") from exc
+
+        quoted_clean_name = shlex.quote(clean_name)
+        raise ValueError(
+            f"artifact is a nested git repository with no unpushed commits "
+            f"({file_count} files, {total_size} bytes): {name}; "
+            f"clear with: rm -rf {quoted_clean_name}"
+        )
+
+    # Directory of ordinary regular files (no .git)
+    collected: list[str] = []
+    for root_dir, dirs, filenames in os.walk(source):
+        dirs[:] = [d for d in dirs if d not in _DISPOSABLE_DIRECTORIES]
+        for fname in filenames:
+            fpath = Path(root_dir) / fname
+            f_resolved = fpath.resolve()
+            if f_resolved != fpath.absolute() or not stat.S_ISREG(fpath.lstat().st_mode):
+                rel_path = fpath.relative_to(worktree).as_posix()
+                raise ValueError(f"artifact is not a local regular file: {rel_path}")
+            if fpath.stat().st_size:
+                collected.append(fpath.relative_to(worktree).as_posix())
+    return collected
+
+
 def preserve_worktree_artifacts(
     worktree: Path,
     *,
@@ -234,7 +719,13 @@ def preserve_worktree_artifacts(
             # Shared primary task records/sidecars are not destroyed with the link.
             if resolved.is_relative_to(tasks_dir.resolve()) and resolved.is_relative_to(primary):
                 continue
-            if resolved != source.absolute() or not stat.S_ISREG(source.lstat().st_mode):
+            if resolved != source.absolute():
+                raise ValueError(f"artifact is not a local regular file: {name}")
+            if stat.S_ISDIR(source.lstat().st_mode):
+                for regular_file in _inspect_directory_artifact(source, name, worktree=worktree):
+                    files.append(regular_file)
+                continue
+            if not stat.S_ISREG(source.lstat().st_mode):
                 raise ValueError(f"artifact is not a local regular file: {name}")
             if source.stat().st_size:
                 files.append(name)

@@ -339,3 +339,859 @@ def test_success_clears_a_stale_preservation_error(checkout):
     assert guard(checkout, record=record)[0]
     assert "artifact_preservation_error" not in json.loads(path.read_text())
     assert "artifact_preservation_error" not in record
+
+
+_GIT_ENV = {
+    **{k: v for k, v in os.environ.items() if not k.startswith("GIT_") and k != "AGENT_NO_MERGE"},
+    "GIT_AUTHOR_NAME": "Test Worker",
+    "GIT_AUTHOR_EMAIL": "worker@example.com",
+    "GIT_COMMITTER_NAME": "Test Worker",
+    "GIT_COMMITTER_EMAIL": "worker@example.com",
+    "GIT_CONFIG_GLOBAL": "/dev/null",
+    "GIT_CONFIG_SYSTEM": "/dev/null",
+    "GIT_CONFIG_NOSYSTEM": "1",
+}
+
+
+def test_ignored_artifact_directory_of_regular_files(checkout):
+    """Denominator row 2: a directory of regular files has its files discovered and preserved."""
+    (checkout[2] / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    f1 = artifact(checkout, "batch_state/reports/probe/report1.json", payload=b'{"metric": 1}')
+    f2 = artifact(checkout, "batch_state/reports/probe/report2.json", payload=b'{"metric": 2}')
+    (checkout[0] / "batch_state/reports/probe/__pycache__").mkdir(parents=True, exist_ok=True)
+    (checkout[0] / "batch_state/reports/probe/__pycache__/cached.pyc").write_bytes(b"disposable")
+
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason
+    assert metadata["count"] == 2
+    location = Path(metadata["location"])
+    assert (location / "batch_state/reports/probe/report1.json").read_bytes() == f1.read_bytes()
+    assert (location / "batch_state/reports/probe/report2.json").read_bytes() == f2.read_bytes()
+    assert not (location / "batch_state/reports/probe/__pycache__").exists()
+
+
+def test_ignored_artifact_nested_repo_no_unpushed_commits(checkout, tmp_path):
+    """Denominator row 3 & AC-01: nested repo with no unpushed commits refuses removal with actionable command."""
+    # Create upstream remote
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Clone upstream into batch_state
+    scratch_dir = checkout[0] / "batch_state/reports/scratch_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(scratch_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    # Add and push a commit so there are zero unpushed commits
+    (scratch_dir / "probe.txt").write_text("probe output\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init probe"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with no unpushed commits" in reason
+    assert "files" in reason and "bytes" in reason
+    assert "batch_state/reports/scratch_repo" in reason
+    assert "clear with: rm -rf batch_state/reports/scratch_repo" in reason
+
+    # AC-01: Actionable single command removes the scratch repo and allows worktree release
+    import shutil
+    shutil.rmtree(scratch_dir)
+    ok_after, reason_after, _ = guard(checkout)
+    assert ok_after and not reason_after
+
+
+def test_ignored_artifact_nested_repo_with_unpushed_commits_never_discarded(checkout):
+    """Denominator row 4 & AC-02: nested repo with unpushed commits refuses and is never discarded."""
+    unpushed_dir = checkout[0] / "batch_state/reports/unpushed_repo"
+    unpushed_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", str(unpushed_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (unpushed_dir / "unpushed_work.txt").write_text("valuable local probe data\n")
+    subprocess.run(["git", "add", "unpushed_work.txt"], cwd=unpushed_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "valuable unpushed probe"], cwd=unpushed_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    rev_proc = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=unpushed_dir, check=True, capture_output=True, env=_GIT_ENV, text=True, timeout=30
+    )
+    commit_sha = rev_proc.stdout.strip()
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert commit_sha[:7] in reason or commit_sha in reason
+    assert "files" in reason and "bytes" in reason
+
+    # AC-02: The unpushed repo and its commits are preserved intact on disk
+    assert unpushed_dir.exists()
+    assert (unpushed_dir / "unpushed_work.txt").read_text() == "valuable local probe data\n"
+    log_proc = subprocess.run(["git", "log", "-1", "--oneline"], cwd=unpushed_dir, check=True, capture_output=True, text=True, env=_GIT_ENV, timeout=30)
+    assert "valuable unpushed probe" in log_proc.stdout
+
+
+def test_ignored_artifact_nested_linked_worktree_pointing_at_another_artifact(checkout):
+    """Denominator row 5: nested linked worktree pointing at another artifact refuses removal."""
+    primary_repo = checkout[0] / "batch_state/reports/primary_repo"
+    primary_repo.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", str(primary_repo)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (primary_repo / "initial.txt").write_text("seed\n")
+    subprocess.run(["git", "add", "initial.txt"], cwd=primary_repo, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "seed"], cwd=primary_repo, check=True, env=_GIT_ENV, timeout=30)
+
+    linked_wt = checkout[0] / "batch_state/reports/linked_wt"
+    subprocess.run(
+        ["git", "worktree", "add", str(linked_wt), "-b", "wt-branch"],
+        cwd=primary_repo,
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested linked worktree whose gitdir pointer points at another artifact" in reason
+    assert "batch_state/reports/primary_repo" in reason
+
+
+def test_ignored_artifact_nested_repo_symlink_dot_git(checkout, tmp_path):
+    """A directory whose .git is a symlink fails closed."""
+    real_git_repo = tmp_path / "real_git_repo"
+    subprocess.run(["git", "init", str(real_git_repo)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    bad_repo = checkout[0] / "batch_state/reports/bad_repo"
+    bad_repo.mkdir(parents=True, exist_ok=True)
+    (bad_repo / ".git").symlink_to(real_git_repo / ".git")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact has a symlinked .git entry" in reason
+
+
+def test_ignored_artifact_nested_repo_corrupt_fails_closed(checkout):
+    """A nested repo with corrupted git internals fails closed."""
+    corrupt_dir = checkout[0] / "batch_state/reports/corrupt_repo"
+    subprocess.run(["git", "init", str(corrupt_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (corrupt_dir / ".git/config").write_text("bad config syntax [[[")
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is an invalid nested git repository" in reason
+
+
+def test_ignored_artifact_nested_repo_detached_head_unpushed_never_discarded(checkout):
+    """AC-02 & P1: unpushed commits on a detached HEAD must refuse without a cleanup command."""
+    detached_dir = checkout[0] / "batch_state/reports/detached_unpushed"
+    detached_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(detached_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (detached_dir / "unpushed.txt").write_text("detached unpushed data\n")
+    subprocess.run(["git", "add", "unpushed.txt"], cwd=detached_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "detached commit"], cwd=detached_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "checkout", "--detach", "HEAD"], cwd=detached_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_shell_quoting_in_cleanup_recommendation(checkout, tmp_path):
+    """P1: paths with apostrophes or spaces in cleanup recommendations are safely shell-quoted."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    scratch_dir = checkout[0] / "batch_state/reports/probe' 'valuable"
+    scratch_dir.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(scratch_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    (scratch_dir / "probe.txt").write_text("pushed data\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "probe"], cwd=scratch_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=scratch_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with no unpushed commits" in reason
+    assert "clear with: " in reason
+
+    import shlex
+    cmd_part = reason.split("clear with: ")[1].split(";")[0].strip()
+    tokens = shlex.split(cmd_part)
+    assert tokens[:2] == ["rm", "-rf"]
+    assert len(tokens) == 3, f"Expected exactly 1 target path, got: {tokens[2:]}"
+    assert tokens[2] == "batch_state/reports/probe' 'valuable"
+
+
+def test_ignored_artifact_nested_repo_unpushed_tag_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by a local tag refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/tag_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add commit on tag only, then move branch back to base
+    (repo_dir / "tagged.txt").write_text("tagged commit\n")
+    subprocess.run(["git", "add", "tagged.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "tagged commit"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "tag", "v0.9.0"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_unpushed_stash_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by refs/stash refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/stash_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Modify file and stash changes
+    (repo_dir / "base.txt").write_text("stashed modification\n")
+    subprocess.run(["git", "stash"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_dirty_working_tree_never_discarded(checkout, tmp_path):
+    """P1: repositories with uncommitted working-tree or index changes refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/dirty_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Modify file without committing
+    (repo_dir / "base.txt").write_text("uncommitted dirty changes\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with uncommitted" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_fsmonitor_hook_disabled(checkout):
+    """P1: nested repository core.fsmonitor hooks must never execute during inspection."""
+    repo_dir = checkout[0] / "batch_state/reports/fsmonitor_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "hook_executed.marker"
+    hook_script = repo_dir / "fsmonitor_hook.sh"
+    hook_script.write_text(f"#!/bin/sh\ntouch '{marker}'\nexit 0\n")
+    hook_script.chmod(0o755)
+    subprocess.run(["git", "config", "core.fsmonitor", str(hook_script)], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    guard(checkout)
+    assert not marker.exists(), "core.fsmonitor hook script in nested repository was executed!"
+
+
+def test_ignored_artifact_nested_repo_ignored_evidence_never_discarded(checkout, tmp_path):
+    """P1: non-disposable ignored files in a nested repository must never be recommended for deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/ignored_evidence_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".gitignore").write_text("*.json\n")
+    subprocess.run(["git", "add", ".gitignore"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "ignore json"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add ignored evidence file
+    (repo_dir / "valuable.json").write_text('{"evidence": "important probe"}')
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with uncommitted or ignored changes" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_reflog_only_commits_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by reflogs must refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/reflog_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add unpushed commit then reset --hard back to base
+    (repo_dir / "reflog_work.txt").write_text("unpushed reflog work\n")
+    subprocess.run(["git", "add", "reflog_work.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "unpushed reflog commit"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_clean_filter_hook_rejected_without_execution(checkout):
+    """P1: nested repository clean filter configuration is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/clean_filter_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "clean_filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    subprocess.run(["git", "config", "filter.probe.clean", str(script)], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with executable or filter configuration" in reason
+    assert not marker.exists(), "clean filter was executed!"
+
+
+def test_ignored_artifact_nested_repo_assume_unchanged_never_discarded(checkout, tmp_path):
+    """P1: tracked files marked assume-unchanged refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/assume_unchanged_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Mark assume-unchanged and modify content
+    subprocess.run(["git", "update-index", "--assume-unchanged", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("modified concealed\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "concealed tracked changes" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_skip_worktree_never_discarded(checkout, tmp_path):
+    """P1: tracked files marked skip-worktree refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/skip_worktree_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Mark skip-worktree and modify content
+    subprocess.run(["git", "update-index", "--skip-worktree", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("modified concealed\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "concealed tracked changes" in reason
+    assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_include_indirection_rejected_without_execution(checkout):
+    """P1: nested repository include indirection is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/include_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    extra_cfg = repo_dir / "extra.config"
+    extra_cfg.write_text(f'[filter "probe"]\n  clean = "{script}"\n')
+    cfg = repo_dir / ".git" / "config"
+    with open(cfg, "a", encoding="utf-8") as fp:
+        fp.write(f"\n[include]\n  path = {extra_cfg}\n")
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "configuration indirection (include/includeIf)" in reason
+    assert not marker.exists(), "clean filter was executed via include indirection!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_includeif_indirection_rejected_without_execution(checkout):
+    """P1: nested repository includeIf indirection is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/includeif_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    extra_cfg = repo_dir / "extra.config"
+    extra_cfg.write_text(f'[filter "probe"]\n  clean = "{script}"\n')
+    cfg = repo_dir / ".git" / "config"
+    with open(cfg, "a", encoding="utf-8") as fp:
+        fp.write(f'\n[includeIf "gitdir:*"]\n  path = {extra_cfg}\n')
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "configuration indirection (include/includeIf)" in reason
+    assert not marker.exists(), "clean filter was executed via includeIf indirection!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_config_worktree_filter_rejected_without_execution(checkout):
+    """P1: nested repository config.worktree filter is rejected before git execution."""
+    repo_dir = checkout[0] / "batch_state/reports/config_worktree_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "extensions.worktreeConfig", "true"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    marker = repo_dir / "filter_executed.marker"
+    script = repo_dir / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    cfg_wt = repo_dir / ".git" / "config.worktree"
+    cfg_wt.write_text(f'[filter "probe"]\n  clean = "{script}"\n')
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "artifact is a nested git repository with executable or filter configuration" in reason
+    assert not marker.exists(), "clean filter was executed via config.worktree!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_core_worktree_redirection_never_discarded(checkout, tmp_path):
+    """P1: nested repo with core.worktree pointing to clean dir never discards dirty artifact."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    clean_external = tmp_path / "clean_external"
+    clean_external.mkdir()
+
+    repo_dir = checkout[0] / "batch_state/reports/redirected_worktree_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Modify the actual artifact file so it has uncommitted bytes
+    (repo_dir / "probe.txt").write_text("modified dirty content in artifact\n")
+
+    # Mirror base file to external clean dir and point core.worktree there
+    (clean_external / "probe.txt").write_text("base content\n")
+    subprocess.run(["git", "config", "core.worktree", str(clean_external)], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert (
+        "redirected worktree (core.worktree)" in reason
+        or "does not match expected directory" in reason
+    )
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_commondir_clean_filter_rejected_without_execution(checkout, tmp_path):
+    """P1: nested repo with commondir clean filter is rejected before git execution."""
+    common = tmp_path / "common"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(common)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    marker = tmp_path / "filter_executed.marker"
+    script = tmp_path / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    with open(common / "config", "a", encoding="utf-8") as fp:
+        fp.write(f'\n[filter "probe"]\n  clean = "{script}"\n')
+
+    repo_dir = checkout[0] / "batch_state/reports/commondir_filter_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "-b", "main", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+    subprocess.run(["git", "add", "tracked.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / ".git/commondir").write_text(f"{common}\n")
+
+    # Modify tracked file with same size so clean filter would trigger on status
+    (repo_dir / "tracked.txt").write_text("updated content\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert (
+        "executable or filter configuration" in reason
+        or "commondir metadata indirection" in reason
+    )
+    assert not marker.exists(), "commondir clean filter was executed!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_commondir_metadata_indirection_rejected(checkout, tmp_path):
+    """P1: nested repo with commondir metadata indirection is rejected before git execution."""
+    common = tmp_path / "clean_common"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(common)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/commondir_clean_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "-b", "main", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+    subprocess.run(["git", "add", "tracked.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".git/commondir").write_text(f"{common}\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "commondir metadata indirection" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_submodule_ignored_dirty_never_discarded(checkout, tmp_path):
+    """P1: nested repo with submodule.<name>.ignore=all and dirty child file never discards work."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    child_init = tmp_path / "child_init"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(child_init)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (child_init / "valuable.txt").write_text("child base content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/main"], cwd=child_init, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/submodule_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "protocol.file.allow=always", "-c", "core.hooksPath=/dev/null", "submodule", "add", "-b", "main", str(upstream_child), "sub"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add submodule"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Configure submodule.sub.ignore=all
+    subprocess.run(["git", "config", "submodule.sub.ignore", "all"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    # Modify child file
+    (repo_dir / "sub/valuable.txt").write_text("modified dirty content in submodule\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert (
+        "uncommitted or ignored changes" in reason
+        or "unverified submodules" in reason
+    )
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_submodule_clean_never_recommended_for_rm_rf(checkout, tmp_path):
+    """P1: nested repo with submodules never recommended for deletion without independent verification."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    child_init = tmp_path / "child_init"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(child_init)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (child_init / "valuable.txt").write_text("child base content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/main"], cwd=child_init, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/clean_submodule_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "protocol.file.allow=always", "-c", "core.hooksPath=/dev/null", "submodule", "add", "-b", "main", str(upstream_child), "sub"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add submodule"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "unverified submodules" in reason
+    assert "submodules must not be discarded without independent verification" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_submodule_clean_filter_rejected_without_execution(checkout, tmp_path):
+    """P1: nested repo with submodule clean filter is rejected before git execution."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    child_init = tmp_path / "child_init"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(child_init)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (child_init / "valuable.txt").write_text("child base content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/main"], cwd=child_init, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/submodule_filter_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "protocol.file.allow=always", "-c", "core.hooksPath=/dev/null", "submodule", "add", "-b", "main", str(upstream_child), "sub"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add submodule"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Configure clean filter in submodule gitdir
+    marker = tmp_path / "filter_executed.marker"
+    script = tmp_path / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    sub_gitdir = repo_dir / ".git/modules/sub"
+    with open(sub_gitdir / "config", "a", encoding="utf-8") as fp:
+        fp.write(f'\n[filter "probe"]\n  clean = "{script}"\n')
+    (repo_dir / "sub/.gitattributes").write_text("* filter=probe\n")
+
+    # Modify tracked file with same size so clean filter would trigger on status
+    (repo_dir / "sub/valuable.txt").write_text("child same-size!\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "unverified submodules" in reason
+    assert not marker.exists(), "submodule clean filter was executed!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_unregistered_gitlink_filter_rejected_without_execution(checkout, tmp_path):
+    """P1: nested repo with unregistered gitlink (mode 160000) clean filter is rejected before git execution."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/unregistered_gitlink_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    # Clone child directly into sub directory (unregistered gitlink, no git submodule add)
+    sub_dir = repo_dir / "sub"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(sub_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (sub_dir / "valuable.txt").write_text("child base content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    # In parent, add sub directory as a gitlink (mode 160000 in index) without .gitmodules
+    subprocess.run(["git", "add", "sub"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add unregistered gitlink"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Configure clean filter in child repository gitdir
+    marker = tmp_path / "unregistered_filter_executed.marker"
+    script = tmp_path / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    with open(sub_dir / ".git/config", "a", encoding="utf-8") as fp:
+        fp.write(f'\n[filter "probe"]\n  clean = "{script}"\n')
+    (sub_dir / ".gitattributes").write_text("* filter=probe\n")
+
+    # Modify child file so git status on child would evaluate the filter
+    (sub_dir / "valuable.txt").write_text("child same-size!\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "unverified submodules" in reason
+    assert not marker.exists(), "clean filter in unregistered gitlink was executed!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_unregistered_gitlink_no_child_gitdir_rejected(checkout, tmp_path):
+    """P1: nested repo with indexed gitlink whose child .git was deleted is still rejected before status."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/unregistered_gitlink_nogit_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    sub_dir = repo_dir / "sub"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(sub_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (sub_dir / "valuable.txt").write_text("child content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    subprocess.run(["git", "add", "sub"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add unregistered gitlink"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Delete child .git directory so pure-python walk won't see .git in sub
+    import shutil
+    shutil.rmtree(sub_dir / ".git")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "unverified submodules" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_promisor_ext_helper_rejected_without_execution(checkout, tmp_path):
+    """P1: nested repo with promisor ext:: transport helper is rejected without helper execution."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/promisor_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "file.txt").write_text("content\n")
+    subprocess.run(["git", "add", "file.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    marker = tmp_path / "helper_executed.marker"
+    helper = tmp_path / "helper.sh"
+    helper.write_text(f"#!/bin/sh\ntouch '{marker}'\nexit 1\n")
+    helper.chmod(0o755)
+
+    # Configure partial clone with ext:: remote helper
+    subprocess.run(["git", "config", "core.repositoryformatversion", "1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "extensions.partialclone", "origin"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "remote.origin.promisor", "true"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "remote.origin.url", f"ext::{helper}"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "protocol.ext.allow", "always"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    # Delete tree object to trigger lazy fetch if not disabled
+    tree_sha = subprocess.run(["git", "rev-parse", "HEAD^{tree}"], cwd=repo_dir, check=True, capture_output=True, text=True, env=_GIT_ENV, timeout=30).stdout.strip()
+    tree_obj = repo_dir / ".git/objects" / tree_sha[:2] / tree_sha[2:]
+    if tree_obj.exists():
+        tree_obj.unlink()
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert not marker.exists(), "promisor ext:: transport helper was executed!"
+    assert (
+        "executable or filter configuration" in reason
+        or "invalid nested git repository" in reason
+    )
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_global_clean_filter_rejected_without_execution(checkout, tmp_path, monkeypatch):
+    """P1: global clean filter configuration is ignored during inspection and never executed."""
+    fake_home = tmp_path / "fake_home"
+    fake_home.mkdir()
+    marker = tmp_path / "global_filter_executed.marker"
+    script = tmp_path / "global_filter.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+
+    (fake_home / ".gitconfig").write_text(
+        f"[user]\n  name = Tester\n  email = test@example.com\n[filter \"probe\"]\n  clean = \"{script}\"\n"
+    )
+
+    repo_dir = checkout[0] / "batch_state/reports/global_filter_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+    subprocess.run(["git", "add", ".gitattributes", "tracked.txt"], cwd=repo_dir, check=True, env={**os.environ, "HOME": str(fake_home)}, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env={**os.environ, "HOME": str(fake_home)}, timeout=30)
+    if marker.exists():
+        marker.unlink()
+
+    # Modify tracked file with same length to ensure git status evaluates filter if active
+    (repo_dir / "tracked.txt").write_text("updated content\n")
+
+    monkeypatch.setenv("HOME", str(fake_home))
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "uncommitted or ignored changes" in reason
+    assert not marker.exists(), "global clean filter was executed!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_trustctime_config_rejected(checkout):
+    """P1: nested repository with core.trustctime configured is rejected before deletion advice."""
+    repo_dir = checkout[0] / "batch_state/reports/trustctime_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "core.trustctime", "false"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "file.txt").write_text("hello\n")
+    subprocess.run(["git", "add", "file.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "executable or filter configuration" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_same_mtime_modified_bytes_rejected_without_deletion_advice(checkout, tmp_path):
+    """P1: modified tracked bytes with restored mtime are verified independently and never recommended for deletion."""
+    import time
+
+    upstream = tmp_path / "upstream_same_mtime"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/stat_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    probe = repo_dir / "probe.txt"
+    probe.write_text("original bytes\n")
+    # Set mtime in past so it is non-racy with index timestamp
+    past = time.time() - 100
+    os.utime(probe, (past, past))
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    st = probe.stat()
+    with open(probe, "r+b") as fp:
+        fp.write(b"modified bytes\n")
+    os.utime(probe, ns=(st.st_atime_ns, st.st_mtime_ns))
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert (
+        "uncommitted tracked changes" in reason
+        or "uncommitted or ignored changes" in reason
+    )
+    assert "clear with: rm -rf" not in reason
