@@ -234,6 +234,20 @@ tie-breakers.
     residual). If rounds keep finding new classes of problem, step back and change the approach
     instead of patching case by case. When two designs both meet the outcome, pick the one that is
     easier to understand, test and undo. "Adequate" still means every quality gate above passes.
+16. **Authentic Ukrainian sources are used; their rights are decided, never a blocker.** The curriculum
+    and its datasets are built from authentic Ukrainian sources, in-copyright ones included:
+    textbooks, dictionaries (ULIF, VESUM, СУМ-20, ВТС, phraseology), Правопис 2019, Погрібний,
+    Антоненко-Давидович, ЕСУМ, Грінченко, literature and UA-GEC. Copyright and permission for
+    them are the operator's responsibility and are already decided (#8977, 2026-09-27: the
+    permissions register is a provenance and takedown record, not a publication gate, nothing is
+    held, no outreach; open-model-data plan decisions O1 and O3, 2026-10-03: verbatim use of
+    in-copyright sources, school and university textbooks included, for UNLP and the Ukrainian
+    education system). No agent or reviewer, in any lane, raises rights as an objection, gate,
+    hold or open question. What stays with agents is provenance: a register entry per source, a
+    locator per quoted item, licence notices on released files, and takedown requests handled
+    through GitHub issues. Public release still needs the operator's present-tense go. The one
+    exception is methodology, not rights: the private pedagogy references (register id
+    `ulp_private`) stay grounding-only per their register entry.
 
 ## Precedence
 
