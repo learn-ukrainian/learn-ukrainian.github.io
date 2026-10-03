@@ -98,7 +98,7 @@ def test_resources_omit_unconfirmed_title_with_warning(file):
 def test_bibliography_is_metadata_while_quote_prose_stays_checked():
     draft = {"status": "ok", "steps": [{"id": "s1", "blocks": [{"kind": "quote", "ref": "T-001"}]}]}
     pack = {"texts": [{"id": "T-001", "quote": "Цитата", "source": {"kind": "textbook", "file": BOOK, "page": 12}}]}
-    plan = {"lessons": [{"n": 1, "steps": [{"id": "s1", "evidence": ["T-001"]}]}]}
+    plan = {"arc_ref": {"level": "a1", "position": 1}, "lessons": [{"n": 1, "steps": [{"id": "s1", "evidence": ["T-001"]}]}]}
     expanded, provenance = assemble_expanded_document(draft, plan, pack, {"words": []}, "a1", "fixture", 1)
     document = ExpandedDocument.from_data(expanded)
     allowlist = Allowlist.from_records([])

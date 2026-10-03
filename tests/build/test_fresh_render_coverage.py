@@ -11,6 +11,7 @@ import copy
 import inspect
 import json
 import subprocess
+import unicodedata
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -380,8 +381,21 @@ def coverage_probe_leaf(*args):
     return {"helper_only_coverage_field": args}
 
 
+# Independent Unicode category enumeration plus zero-width non-Cf characters.
+# The schema pattern uses Unicode 17 assigned Cf/default-ignorable codepoints;
+# ECMA and Python must also reject mixed whitespace/format-only choices.
+INVISIBLE_CHOICE_TEXTS = (
+    " ", "\t", "\n", "\n\t", "\r\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000",
+    *(chr(cp) for cp in range(0x110000) if unicodedata.category(chr(cp)) == "Cf"),
+    "\u034f", "\u115f", "\u1160", "\u17b4", "\u17b5", "\u3164", "\uffa0", "\ufe0f", "\U000e0100",
+    " \ufeff\u200b\u2060\u200d\n", "\U0001bca0\U000e0020\U000e0100",
+    "\U00013440", "\U00013447",
+)
+VISIBLE_CHOICE_TEXTS = ("Learner choice", "  Learner choice  ", "\ufeffx\u200b", "\U0001f642", "\U0001d11e")
+
+
 @pytest.mark.parametrize("level", LEVELS)
-@pytest.mark.parametrize("blank", [" ", "\t", "\n", "\t\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000"])
+@pytest.mark.parametrize("blank", [" ", "\t", "\n", "\t\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000", "\ufeff", "\u200b", "\u2060", "\u200d", "\U000e0020", "\ufe0f"])
 def test_translate_whitespace_choice_fails_live_activity_and_draft_schema(level, blank):
     from scripts.build.fresh.draft_schema import validate_draft
 
@@ -438,10 +452,10 @@ def test_every_choice_schema_preserves_empty_but_rejects_whitespace(filename):
         else:
             assert not validator.is_valid("")
         # A newline alone must fail too: ^$ would accept it in Python.
-        for blank in (" ", "\t", "\n", "\n\t", "\r\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000"):
+        for blank in INVISIBLE_CHOICE_TEXTS:
             assert not validator.is_valid(blank), schema
-        validator.validate("Learner choice")
-        validator.validate("  Learner choice  ")
+        for visible in VISIBLE_CHOICE_TEXTS:
+            validator.validate(visible)
 
 
 @pytest.mark.site_toolchain
@@ -453,22 +467,23 @@ def test_choice_patterns_preserve_empty_and_reject_unicode_whitespace_in_ecmascr
     # as Python jsonschema, especially NBSP and the exact-empty alternative.
     script = r"""
 const fs = require('node:fs');
-const patterns = JSON.parse(fs.readFileSync(0, 'utf8'));
-const whitespace = [' ', '\t', '\n', '\r\n', '\u00a0', '\u2003',
-                    '\u2028', '\u2029', '\u202f', '\u3000', '\ufeff'];
+const {patterns, invisible, visible} = JSON.parse(fs.readFileSync(0, 'utf8'));
 for (const pattern of patterns) {
-    const regex = new RegExp(pattern);
-    for (const text of ['', 'Learner choice', '  Learner choice  ']) {
+  for (const flags of ['', 'u']) {
+    const regex = new RegExp(pattern, flags);
+    for (const text of ['', ...visible]) {
         if (!regex.test(text)) throw new Error(`Rejected ${JSON.stringify(text)}: ${pattern}`);
     }
-    for (const text of whitespace) {
+    for (const text of invisible) {
         if (regex.test(text)) throw new Error(`Accepted ${JSON.stringify(text)}: ${pattern}`);
     }
+  }
 }
 """
     result = subprocess.run(
         ["node", "-e", script],
-        input=json.dumps([schema["pattern"] for schema in schemas]),
+        input=json.dumps({"patterns": [schema["pattern"] for schema in schemas],
+                          "invisible": INVISIBLE_CHOICE_TEXTS, "visible": VISIBLE_CHOICE_TEXTS}),
         text=True,
         capture_output=True,
         cwd=ROOT,

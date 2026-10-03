@@ -1245,6 +1245,7 @@ def test_publication_quote_and_listening_models_verify_and_assemble_together(
     pack_doc = built["pack"]
     words = yaml.safe_load((synthetic_word_store / "_words.yaml").read_text())
     plan = {
+        "arc_ref": {"level": "a1", "position": 1},
         "lessons": [
             {
                 "n": 1,
