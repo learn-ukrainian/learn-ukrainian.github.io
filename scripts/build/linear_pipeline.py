@@ -11500,7 +11500,13 @@ def _nonstandard_case_surfaces_cleared_by_casefold(
 def _resolve_foreign_proper_noun_attested_missing(
     missing_lc: set[str],
     unchecked_pairs: Sequence[tuple[str, str, str]],
-) -> set[str]:
+) -> set[tuple[str, str, str]]:
+    """Surface pairs the foreign proper-noun attestations accept.
+
+    Attestation is per surface, not per lowercase key: «Йоль» is attested,
+    but «ЙОль» or «йоль» beside it shares only the key and stays unattested
+    (#9368).
+    """
     if not missing_lc:
         return set()
 
@@ -11508,7 +11514,7 @@ def _resolve_foreign_proper_noun_attested_missing(
     if not attestation_index:
         return set()
 
-    attested: set[str] = set()
+    attested: set[tuple[str, str, str]] = set()
     for surface, lower, original_case_lookup in unchecked_pairs:
         if lower not in missing_lc:
             continue
@@ -11517,7 +11523,7 @@ def _resolve_foreign_proper_noun_attested_missing(
             if not _is_titlecase_ukrainian_proper_noun_surface(normalized):
                 continue
             if normalized.lower() in attestation_index:
-                attested.add(lower)
+                attested.add((surface, lower, original_case_lookup))
                 break
 
     return attested
@@ -12139,10 +12145,10 @@ def _vesum_gate(
             for _surface, lower, _original_case_lookup in roman_numeral_exempted_pairs
             if lower not in non_roman_missing_lc
         }
-    foreign_proper_attested_lc: set[str] = set()
+    foreign_proper_attested_pairs: set[tuple[str, str, str]] = set()
     if missing_lc and _vesum_heritage_attestation_enabled(level):
         try:
-            foreign_proper_attested_lc = _resolve_foreign_proper_noun_attested_missing(
+            foreign_proper_attested_pairs = _resolve_foreign_proper_noun_attested_missing(
                 missing_lc,
                 unchecked_pairs,
             )
@@ -12152,7 +12158,11 @@ def _vesum_gate(
                 "error": str(exc),
                 "checked": len(unchecked_pairs),
             }
-        missing_lc -= foreign_proper_attested_lc
+        # A key leaves the missing set only when every surface sharing it is
+        # attested. An unattested sibling («ЙОль» beside «Йоль») keeps the key
+        # open for the later fallbacks, which judge that surface on its own.
+        foreign_unattested_lc = {pair[1] for pair in unchecked_pairs if pair not in foreign_proper_attested_pairs}
+        missing_lc -= {pair[1] for pair in foreign_proper_attested_pairs} - foreign_unattested_lc
     # #9344 rejects malformed casing on the folk gate only. Other seminar
     # tracks keep the casefold acceptance they had before that rejection.
     folk_level = str(level or "").strip().lower() == "folk"
@@ -12209,18 +12219,20 @@ def _vesum_gate(
             for surface, lower, original in unchecked_pairs
             if lower in missing_lc
             and (surface, lower, original) not in roman_numeral_exempted_pairs
+            and (surface, lower, original) not in foreign_proper_attested_pairs
         }
         | nonstandard_case_surfaces
     )
+    foreign_proper_attested_surfaces = {pair[0] for pair in foreign_proper_attested_pairs}
+    foreign_proper_attested_words = sorted(foreign_proper_attested_surfaces)
     heritage_attested_words = sorted(
         {
             surface
             for surface, lower, _original in unchecked_pairs
-            if lower in heritage_attested_lc and surface not in nonstandard_case_surfaces
+            if lower in heritage_attested_lc
+            and surface not in nonstandard_case_surfaces
+            and surface not in foreign_proper_attested_surfaces
         }
-    )
-    foreign_proper_attested_words = sorted(
-        {surface for surface, lower, _original in unchecked_pairs if lower in foreign_proper_attested_lc}
     )
     plan_exempted_words = sorted(
         {surface for words in plan_exempted_by_category.values() for surface in words}
