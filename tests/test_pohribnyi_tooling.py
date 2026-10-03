@@ -6,6 +6,8 @@ import copy
 import hashlib
 import json
 import sqlite3
+import unicodedata
+from itertools import permutations
 from pathlib import Path
 
 import pymupdf
@@ -23,13 +25,7 @@ def table():
 
 @pytest.fixture
 def frozen(table):
-    # Synthetic freeze metadata, never evidence of a book inventory review.
-    result = copy.deepcopy(table)
-    result.update(provisional=False, pending_classes=[], freeze_reviewers=["fixture-a", "fixture-b"])
-    for symbol in result["symbols"]:
-        symbol["provisional"] = False
-    tooling.validate_notation(result)
-    return result
+    return copy.deepcopy(table)
 
 
 def row(text="[а́]", *, page=10, paragraph=1):
@@ -50,11 +46,26 @@ def packet(*rows):
     }
 
 
-def test_provisional_inventory_and_starter_codepoints(table):
-    assert table["provisional"] is True
-    assert {"U+0301", "U+A675", "U+2DF7", "U+0306", "U+0361"} <= {s["codepoint"] for s in table["symbols"]}
-    assert "ґ" in table["letters"] and "г" in table["letters"]
-    assert table["pending_classes"]
+def test_frozen_inventory_and_provenance(table):
+    assert table["status"] == "frozen" and table["provisional"] is False
+    assert table["pending_classes"] == []
+    assert table["freeze_reviewers"] == [
+        "gpt-6.1-sol/e3c-freeze-sol", "claude-opus-5-5/e3c-freeze-opus",
+    ]
+    assert table["driver_reconciliation"]["issue"] == 9604
+    assert table["driver_reconciliation"]["driver"] == "claude-open-model-data"
+    assert {"U+A675", "U+2DF7", "U+A677", "U+2DEA", "U+1E08F", "U+1ABB", "U+1ABC",
+            "U+0301", "U+0300", "U+032D", "U+0358", "U+0361", "U+02B9", "U+02BC",
+            "U+02D0", "U+044B", "U+0020", "U+002C", "U+003B", "U+2010", "U+2013",
+            "U+1E034", "U+1E036", "U+1E037", "U+1E040", "U+1E044", "U+1E045", "U+1E046",
+            "U+045E", "U+0439", "U+0450", "U+045D"} <= {s["codepoint"] for s in table["symbols"]}
+    assert set("ґгы") <= set(table["letters"])
+    assert set("ўйѐѝ") <= set(table["precomposed_letters"])
+    for symbol in table["symbols"]:
+        assert symbol["provisional"] is False
+        assert symbol["source_page"] >= 4
+        if symbol["source_kind"] in {"key", "body"}:
+            assert symbol["definition_uk"]
 
 
 @pytest.mark.parametrize("text", ["[а́]", "[еꙵ]", "[иⷷ]", "[ў]", "[д͡з]", "[ґг]", "[лʼ]"])
@@ -69,7 +80,13 @@ def test_starter_symbols_are_preserved(text, table):
         ("[é]", "Latin"),
         ("[іi]", "Latin"),
         ("[ə]", "Latin"),
-        ("[аː]", "Unknown"),
+        ("[аˈ]", "Unknown"),
+        ("[л·]", "Unknown"),
+        ("[н:]", "Unknown"),
+        ("[еⁱ]", "Latin"),
+        ("[еꙶ]", "Unknown"),
+        ("[а\u0378]", "Unassigned"),
+        ("fixture \u0378 [а]", "Unassigned"),
         ("[а\u200b]", "Unknown"),
         ("[у\u0306]", "NFC"),
         ("[и\u0306]", "NFC"),
@@ -82,6 +99,167 @@ def test_starter_symbols_are_preserved(text, table):
 def test_transcription_refusals(text, message, table):
     with pytest.raises(ValueError, match=message):
         tooling.validate_text(text, table)
+
+
+@pytest.mark.parametrize("mark, letter", [
+    ("\ua675", "и"), ("\u2df7", "е"), ("\ua677", "у"),
+    ("\u2dea", "о"), ("\U0001e08f", "і"),
+])
+@pytest.mark.parametrize("degree_mark, degree", [("", 0), ("\u1abb", 1), ("\u1abc", 2)])
+@pytest.mark.parametrize("stress_mark, stress", [("", None), ("\u0301", "primary"), ("\u0300", "secondary")])
+def test_approximation_degree_stress_roundtrip(mark, letter, degree_mark, degree, stress_mark, stress, table):
+    text = f"[е{mark}{degree_mark}{stress_mark}]"
+    groups = tooling.parse_transcription(text, table)
+    assert groups[0]["base"] == "е"
+    assert groups[0]["approximation_letter"] == letter
+    assert groups[0]["degree"] == degree
+    assert groups[0]["stress"] == stress
+    assert tooling.serialize_transcription(groups, table) == text
+
+
+@pytest.mark.parametrize("point, letter", [
+    (0x1E034, "д"), (0x1E037, "з"), (0x1E044, "ц"), (0x1E036, "ж"),
+    (0x1E046, "ш"), (0x1E045, "ч"), (0x1E040, "т"),
+])
+@pytest.mark.parametrize("softness, value", [("", None), ("ʹ", "soft"), ("ʼ", "half_soft")])
+def test_raised_letters_keep_their_own_softness_and_survive_nfc(point, letter, softness, value, table):
+    text = f"[дʹː{chr(point)}{softness}а]"
+    groups = tooling.parse_transcription(text, table)
+    assert groups[0]["softness"] == "soft"
+    assert groups[0]["length"] is True
+    assert groups[0]["raised_group"] == [{"letter": letter, "tie": False, "softness": value}]
+    assert tooling.serialize_transcription(groups, table) == text
+    assert tooling.normalize_transcription(text, table) == text
+    folded = unicodedata.normalize("NFKC", text)
+    assert folded != text
+    assert tooling.diff_transcriptions([row(text)], [row(folded)], table)["disagreement_count"] > 0
+
+
+def test_raised_affricate_tie_and_softness_roundtrip(table):
+    text = "[дʹ\U0001e034͡\U0001e037ʹі́]"
+    groups = tooling.parse_transcription(text, table)
+    assert groups[0]["raised_group"] == [
+        {"letter": "д", "tie": True, "softness": None},
+        {"letter": "з", "tie": False, "softness": "soft"},
+    ]
+    assert tooling.serialize_transcription(groups, table) == text
+
+
+@pytest.mark.parametrize("text", [
+    "[л͘и́]", "[р̭]", "[лʹ]", "[лʼ]", "[нʹː]", "[д͡зʹ]", "[д͡ж]",
+    "[ўйѐѝы]", "[а б,в;г‐д–е]", "[ї́й́ў̀]", "[ЎЙЀЍЫ]",
+])
+def test_other_symbol_classes_roundtrip(text, table):
+    groups = tooling.parse_transcription(text, table)
+    assert tooling.serialize_transcription(groups, table) == text
+
+
+def test_all_mark_classes_in_reconciled_order(table):
+    text = "[е\u032d\ua675\u1abb\u0301\u0358\u0361ʹː\U0001e034͡\U0001e037ʹа]"
+    groups = tooling.parse_transcription(text, table)
+    assert groups[0]["devoicing"] and groups[0]["slight_softening"] and groups[0]["tie"]
+    assert tooling.serialize_transcription(groups, table) == text
+    assert tooling.normalize_transcription(text, table) == text
+
+
+@pytest.mark.parametrize("marks", ["".join(p) for p in permutations("\ua675\u1abb\u0301") if p != tuple("\ua675\u1abb\u0301")])
+def test_equal_class_permutations_are_rejected(marks, table):
+    text = f"[е{marks}]"
+    assert unicodedata.normalize("NFC", text) == text
+    with pytest.raises(ValueError, match="combining mark order"):
+        tooling.validate_text(text, table)
+
+
+@pytest.mark.parametrize("text, message", [
+    ("[е̭́]", "NFC"), ("[л͘͡з]", "NFC"),
+    ("[нːʹ]", "base letter"), ("[нʹʹ]", "base letter"), ("[нːː]", "base letter"),
+    ("[ʹн]", "base letter"), ("[\U0001e034а]", "base letter"),
+    ("[д\U0001e034ːа]", "base letter"), ("[д\U0001e034́а]", "base letter"),
+    ("[е\u1abb]", "requires an approximation"), ("[еꙵⷷ]", "Duplicate approximation"),
+    ("[е́̀]", "Duplicate stress"), ("[еꙵ\u1abb\u1abc]", "Duplicate degree"),
+    ("[л͘͘]", "Duplicate slight"), ("[р̭̭]", "Duplicate devoicing"),
+    ("[д͡͡з]", "Duplicate tie"), ("[д͡]", "following base"),
+    ("[д\U0001e034͡а]", "following raised"), ("[ӑ]", "NFC"),
+    ("[ӗ]", "NFC"), ("[о̆]", "intrinsic"),
+])
+def test_structural_and_order_refusals(text, message, table):
+    with pytest.raises(ValueError, match=message):
+        tooling.validate_text(text, table)
+
+
+@pytest.mark.parametrize("text", ["prose [а]", "[а] [б]", "а"])
+def test_structured_parser_requires_one_whole_span(text, table):
+    with pytest.raises(ValueError, match="exactly one"):
+        tooling.parse_transcription(text, table)
+
+
+def test_serializer_refuses_fields_that_do_not_roundtrip(table):
+    groups = tooling.parse_transcription("[а]", table)
+    groups[0]["degree"] = 1
+    with pytest.raises(ValueError, match="requires an approximation"):
+        tooling.serialize_transcription(groups, table)
+    groups[0]["degree"] = 0
+    groups[0]["extra"] = "not serializable"
+    with pytest.raises(ValueError, match="does not round-trip"):
+        tooling.serialize_transcription(groups, table)
+
+
+@pytest.mark.parametrize("field, value", [("glyph", "а"), ("unicode_name", "wrong"), ("combining_class", 0)])
+def test_notation_checks_unicode_metadata(field, value, table):
+    table["symbols"][0][field] = value
+    with pytest.raises(ValueError, match="metadata mismatch"):
+        tooling.validate_notation(table)
+
+
+def test_notation_refuses_unassigned_symbols(table):
+    table["symbols"][0]["codepoint"] = "U+0378"
+    with pytest.raises(ValueError, match="Unassigned"):
+        tooling.validate_notation(table)
+
+
+def test_notation_pins_reconciled_order(table):
+    order = table["combining_mark_order"]
+    order[2], order[9] = order[9], order[2]
+    with pytest.raises(ValueError, match="driver reconciliation"):
+        tooling.validate_notation(table)
+
+
+def test_notation_requires_unicode_15(monkeypatch, table):
+    monkeypatch.setattr(tooling.unicodedata, "unidata_version", "14.0.0")
+    with pytest.raises(ValueError, match="Unicode 15"):
+        tooling.validate_notation(table)
+
+
+def test_notation_rejects_inconsistent_status(table):
+    table["status"] = "provisional"
+    with pytest.raises(ValueError, match="status and provisional"):
+        tooling.validate_notation(table)
+
+
+
+@pytest.mark.parametrize("point", ["U+02B9", "U+02D0", "U+1E034", "U+2010"])
+def test_frozen_table_cannot_omit_a_symbol_class(point, table):
+    table["symbols"] = [s for s in table["symbols"] if s["codepoint"] != point]
+    with pytest.raises(ValueError, match="Frozen symbol inventory"):
+        tooling.validate_notation(table)
+
+
+@pytest.mark.parametrize("point", ["U+A675", "U+1E034"])
+def test_table_rejects_missing_or_wrong_derived_letters(point, table):
+    symbol = next(s for s in table["symbols"] if s["codepoint"] == point)
+    symbol["letter"] = "а"
+    with pytest.raises(ValueError, match="letter mapping"):
+        tooling.validate_notation(table)
+    del symbol["letter"]
+    with pytest.raises(ValueError, match="letter mapping"):
+        tooling.validate_notation(table)
+
+
+def test_table_rejects_relabelled_raised_letter(table):
+    symbol = next(s for s in table["symbols"] if s["role"] == "raised_de")
+    symbol["role"] = "ordinary_de"
+    with pytest.raises(ValueError, match="Raised letter mapping"):
+        tooling.validate_notation(table)
 
 
 def test_latin_prose_allowed_and_offsets_stable(table):
@@ -106,7 +284,9 @@ def test_latin_prose_allowed_and_offsets_stable(table):
         {"combining_mark_order": []},
         {"combining_mark_order": ["U+0301"]},
         {"precomposed_letters": "é"},
-        {"provisional": False},
+        {"provisional": True},
+        {"status": "provisional"},
+        {"minimum_unicode_version": "14.0.0"},
     ],
 )
 def test_notation_schema_rejects_invalid_tables(tmp_path, table, change):
@@ -231,8 +411,10 @@ def test_ingest_preserves_ocr_and_locators_and_is_idempotent(schema_copy, frozen
 def test_ingest_refuses_provisional_and_incomplete_without_schema_changes(schema_copy, table, frozen):
     _, conn = schema_copy
     before = conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall()
+    provisional = copy.deepcopy(table)
+    provisional.update(status="provisional", provisional=True)
     with pytest.raises(ValueError, match="provisional"):
-        ingest.ingest_adjudicated(conn, packet(row()), table, census_counts={"10": 1})
+        ingest.ingest_adjudicated(conn, packet(row()), provisional, census_counts={"10": 1})
     data = packet(row())
     data["paragraph_counts"]["10"] = 2
     with pytest.raises(ValueError, match="Incomplete"):
@@ -332,9 +514,7 @@ def test_ingest_cli_private_packet_and_dry_run(schema_copy, frozen, tmp_path, ca
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 3
     with pytest.raises(SystemExit):
         ingest.main([*args, "--apply", "--force"])
-    with pytest.raises(SystemExit) as exc:
-        ingest.main(["--adjudicated", str(data), "--db", str(db), "--census", str(census), "--dry-run"])
-    assert exc.value.code == 1
+    assert ingest.main(["--adjudicated", str(data), "--db", str(db), "--census", str(census), "--dry-run"]) == 0
 
 
 def test_ingest_transaction_is_owned_by_caller(schema_copy, frozen):
@@ -404,10 +584,10 @@ def test_ingest_cli_refuses_missing_db_without_creating_it(tmp_path, frozen):
     assert not missing.exists()
 
 
-@pytest.mark.parametrize("marks", ["\u0301\u2df7", "\u0301\ua675\u2df7", "\u0306\u0301\ua675\u2df7"])
+@pytest.mark.parametrize("marks", ["\u2df7\u0301", "\ua675\u1abb\u0301", "\ua677\u1abc\u0300"])
 def test_equal_class_order_is_pinned_and_diff_normalizes(marks, table):
     canonical = tooling.normalize_transcription(f"[е{marks}]", table)
-    reversed_text = f"[е{marks[::-1]}]"
+    reversed_text = unicodedata.normalize("NFC", f"[е{marks[::-1]}]")
     tooling.validate_text(canonical, table)
     with pytest.raises(ValueError, match="combining mark order"):
         tooling.validate_text(reversed_text, table)
