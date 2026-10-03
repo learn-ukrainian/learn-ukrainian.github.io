@@ -597,6 +597,10 @@ class TestQueryUlifRecordsHandler:
         assert "tags" in tool.input_schema["properties"]
 
 
+# The live-site outage tests run as if no official edition were stored (#9610).
+_PRAVOPYS_NOT_STORED = {"status": "store_unavailable", "reason": "missing_table"}
+
+
 class TestLiveSourceUnavailable:
     """An outage (Cloudflare/network/HTTP failure) must never render as a
     false negative ('no entry'/'not found') — see #9005."""
@@ -2207,7 +2211,10 @@ class TestWikipediaPravopysHeritageOutage:
 
     def test_pravopys_outage_is_unavailable(self, server_module):
         unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
-        with patch("rag.source_query.pravopys_section", return_value=unavailable) as fetch:
+        with (
+            patch("rag.source_query.pravopys_offline", return_value=_PRAVOPYS_NOT_STORED),
+            patch("rag.source_query.pravopys_section", return_value=unavailable) as fetch,
+        ):
             result = _run(server_module.handle_query_pravopys({"topic": "3"}))
         content = result[0] if isinstance(result, tuple) else result
         assert fetch.call_args.kwargs.get("report_unavailable") is True
@@ -2245,7 +2252,10 @@ class TestWikipediaPravopysHeritageOutage:
 def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):
     """#9005 r4: the structured envelope of an unreachable Правопис is status=error, not the miss status."""
     unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
-    with patch("rag.source_query.pravopys_section", return_value=unavailable):
+    with (
+        patch("rag.source_query.pravopys_offline", return_value=_PRAVOPYS_NOT_STORED),
+        patch("rag.source_query.pravopys_section", return_value=unavailable),
+    ):
         result = _run(server_module.handle_query_pravopys({"topic": "3"}))
     assert isinstance(result, tuple)
     _content, envelope = result

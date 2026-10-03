@@ -1715,3 +1715,70 @@ sources:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
     scope: the stored copies listed in stored_in (deleted only with the operator's authorisation).
   open_questions: []
+- id: pravopys_2019
+  name: «Український правопис» (2019), authorized edition (Наукова думка, 2019, ISBN 978-966-00-1728-3)
+  organisation: Інститут мовознавства ім. О. О. Потебні НАН України, Інститут української мови НАН України
+    and Український мовно-інформаційний фонд НАН України (© holders); НВП «Видавництво “Наукова думка” НАН
+    України» (design). Approved by Cabinet of Ministers Resolution No. 437 of 22 May 2019.
+  role: The official spelling norm — rule text by §, the examples printed in each §, and § locators (plan
+    component C5, #6321).
+  fields_used:
+  - rule_text
+  - rule_examples
+  - paragraph_locator
+  - section_headings
+  appears_in:
+  - internal
+  appears_note: Stored in sources.db and served by the sources MCP tool query_pravopys. No learner page or dataset
+    export reads these tables yet; the dataset use (C5) waits for operator decision O1 of the #6321 plan.
+  stored_in:
+  - data/sources.db pravopys_sources, pravopys_sections, pravopys_paragraphs (scripts/ingest/pravopys_2019_ingest.py,
+    #9610); the PDF is fetched and hash-checked by the ingest, and no copy is committed
+  provenance:
+    urls:
+    - https://www.ulif.org.ua/system/files/pravopus-new.pdf
+    - https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf
+    - https://zakon.rada.gov.ua/laws/show/437-2019-%D0%BF
+    retrieved: '2026-10-03'
+    retrieved_evidence: sources.db pravopys_sources.retrieved_at and file_sha256 (ULIF copy, sha256 0d2fd75a…e501a);
+      why this is the official text is set out in docs/sources/pravopys-2019-official-source.md.
+  terms:
+    found: true
+    licence:
+      name: All rights reserved (© the three NAS of Ukraine institutes, 2019); no open licence found
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+    quotes:
+    - id: pravopys_copyright
+      quote: © Інститут мовознавства ім. О. О. Потебні НАН України, 2019 © Інститут української мови НАН України,
+        2019 © Український мовно-інформаційний фонд НАН України, 2019 © НВП «Видавництво “Наукова думка” НАН
+        України», дизайн, 2019
+      gloss_en: Copyright notice on the imprint page (p. 2) of the authorized edition.
+      url: https://www.ulif.org.ua/system/files/pravopus-new.pdf
+      read_on: '2026-10-03'
+    - id: pravopys_authorized
+      quote: Українська національна комісія з питань правопису своїм рішенням від 12 липня 2019 р. визначила Видавництво
+        «Наукова думка» НАН України установою, яка уповноважена випустити у світ авторизоване видання Українського
+        правопису в редакції 2019 р.
+      gloss_en: The National Commission on Orthography named Наукова думка as the publisher of the authorized edition
+        (imprint page, p. 2).
+      url: https://www.ulif.org.ua/system/files/pravopus-new.pdf
+      read_on: '2026-10-03'
+    searched:
+    - https://2019.pravopys.net/ (unofficial copy with advertising; not the source)
+    legal_refs:
+    - law_art22_quotation
+  citation:
+    form: 'Український правопис. Київ: Наукова думка, 2019, § <N>, с. <page> (авторизоване видання; схвалено
+      постановою Кабінету Міністрів України № 437 від 22 травня 2019 р.)'
+    shown_label: null
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: the stored copies listed in stored_in (deleted only with the operator's authorisation) and any dataset
+      records quoting this source.
+  open_questions:
+  - Whether the text, approved by a Cabinet of Ministers resolution, is an official document outside copyright;
+    the authorized edition itself carries a copyright notice (operator decision O1 of #6321).
