@@ -3,7 +3,7 @@ name: Security Audit (blocking)
 # Blocking dependency-vulnerability security gate for production dependencies.
 # Enforces zero unsuppressed High or Critical vulnerabilities across Python
 # (pip-audit with .pip-audit-ignore.yaml) and Node.js production dependencies
-# (npm audit --omit=dev --audit-level=high).
+# (npm audit with scripts/config/npm-audit-ignore.yaml).
 #
 # Reference issue: learn-ukrainian-infra-private#703
 
@@ -24,6 +24,7 @@ on:
       - 'requirements-lock.txt'
       - 'site/package-lock.json'
       - 'scripts/config/pip-audit-ignore.yaml'
+      - 'scripts/config/npm-audit-ignore.yaml'
       - 'scripts/ci/audit_dependencies.py'
       - '.github/workflows/security-audit.yml'
 
@@ -57,18 +58,22 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: site/package-lock.json
 
-      - name: npm audit (blocking production check)
-        working-directory: site
+      - name: npm audit (blocking production check with suppressions)
         run: |
-          echo "::group::npm audit (production deps, high/critical blocking)"
-          npm audit --omit=dev --audit-level=high
+          python -m pip install --upgrade pip pyyaml
+          echo "::group::npm audit (production deps, audited suppressions)"
+          python -m scripts.ci.audit_dependencies --skip-python
           echo "::endgroup::"
           echo "::group::npm audit (all, advisory summary)"
-          npm audit || true
+          (cd site && npm audit || true)
           echo "::endgroup::"
