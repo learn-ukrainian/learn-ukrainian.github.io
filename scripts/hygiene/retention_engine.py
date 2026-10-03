@@ -58,6 +58,43 @@ EXIT_ERROR = 3
 EXIT_DIGEST_MISMATCH = 4
 
 
+def reap_attributed_temp(
+    path: Path,
+    *,
+    temp_root: Path,
+    repo_root: Path,
+    expected_dev: int,
+    expected_ino: int,
+) -> None:
+    """Use the common descriptor-safe scratch reaper for a proven legacy child.
+
+    The caller owns attribution, age and live-process rechecks. This layer
+    enforces direct-child containment and recorded identity without introducing
+    another recursive deletion implementation.
+    """
+    from scripts.common.task_scratch import _DIR_OPEN_FLAGS, _remove_invocation_dir
+
+    if temp_root.is_symlink() or not temp_root.is_dir():
+        raise ValueError("temporary root is not a plain directory")
+    root = temp_root.resolve(strict=True)
+    if path.parent != root or path.is_symlink():
+        raise ValueError("temporary target must be a plain direct child")
+    target = assert_delete_target(path, repo_root=repo_root, approved_temp_roots=(root,))
+    if target != path:
+        raise ValueError("temporary target changed during containment check")
+    root_fd = os.open(root, _DIR_OPEN_FLAGS)
+    try:
+        _remove_invocation_dir(
+            root_fd,
+            path.name,
+            namespace=root,
+            expected_dev=expected_dev,
+            expected_ino=expected_ino,
+        )
+    finally:
+        os.close(root_fd)
+
+
 def _utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -68,11 +105,7 @@ def _canonical_json(payload: dict[str, Any]) -> str:
 
 def plan_digest(plan_body: dict[str, Any]) -> str:
     """SHA-256 over the plan body excluding volatile envelope fields."""
-    body = {
-        k: v
-        for k, v in plan_body.items()
-        if k not in {"created_at", "digest", "plan_path", "receipt"}
-    }
+    body = {k: v for k, v in plan_body.items() if k not in {"created_at", "digest", "plan_path", "receipt"}}
     return hashlib.sha256(_canonical_json(body).encode("utf-8")).hexdigest()
 
 
@@ -111,18 +144,13 @@ def build_plan(
         safe_only=safe_only,
     )
     would_reap = [
-        _reap_result_dict(r)
-        for r in reaper_results
-        if r.action in {"would_remove", "would_preserve_then_remove"}
+        _reap_result_dict(r) for r in reaper_results if r.action in {"would_remove", "would_preserve_then_remove"}
     ]
     preserved = [
         _reap_result_dict(r)
         for r in reaper_results
         if r.action == "skipped"
-        and any(
-            token in (r.reason or "").lower()
-            for token in ("dirty", "ahead", "lease", "active", "untracked")
-        )
+        and any(token in (r.reason or "").lower() for token in ("dirty", "ahead", "lease", "active", "untracked"))
     ]
 
     scanner = scan_dispatch_worktrees(repo_root=primary, stale_hours=stale_hours)
@@ -252,10 +280,7 @@ def record_gate5_observation(
 
         plans = list(log.get("plans") or [])
         if not any(
-            isinstance(p, dict)
-            and p.get("file") == entry["file"]
-            and p.get("digest") == entry["digest"]
-            for p in plans
+            isinstance(p, dict) and p.get("file") == entry["file"] and p.get("digest") == entry["digest"] for p in plans
         ):
             plans.append(entry)
 
@@ -351,9 +376,7 @@ def apply_plan(
         }
 
     target_paths = [
-        Path(row["path"])
-        for row in (plan.get("candidates") or {}).get("worktree_reap") or []
-        if row.get("path")
+        Path(row["path"]) for row in (plan.get("candidates") or {}).get("worktree_reap") or [] if row.get("path")
     ]
     if dry_run or not target_paths:
         return {
@@ -375,11 +398,7 @@ def apply_plan(
         safe_only=bool(policy.get("safe_only", True)),
     )
     applied = [_reap_result_dict(r) for r in results]
-    mutations = sum(
-        1
-        for r in results
-        if r.action in {"removed", "preserved_then_removed"}
-    )
+    mutations = sum(1 for r in results if r.action in {"removed", "preserved_then_removed"})
     receipt = {
         "ok": True,
         "mode": "apply",

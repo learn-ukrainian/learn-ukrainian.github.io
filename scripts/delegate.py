@@ -8180,7 +8180,7 @@ def _augment_prompt_with_worktree(
             "`git push -u origin HEAD`\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Keep scratch git repositories and probes outside `batch_state/reports/` "
-            "(use a temp directory outside the worktree or clean them up before exit); "
+            "(use `$TMPDIR`, the managed lease, never a literal system temp path); "
             "`batch_state/` is reserved for report files and logs.\n"
             "Do not open or merge PRs unless the brief says so; "
             "report the pushed head SHA and clean status.\n"

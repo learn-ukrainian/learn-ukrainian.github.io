@@ -1574,9 +1574,9 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.integration_check run-crafted --out /tmp/r2b-crafted\n"
-            "  .venv/bin/python -m scripts.review.integration_check prepare-real --out /tmp/r2b-real\n"
-            "  .venv/bin/python -m scripts.review.integration_check finish-real --out /tmp/r2b-real\n"
+            '  .venv/bin/python -m scripts.review.integration_check run-crafted --out "$TMPDIR/r2b-crafted"\n'
+            '  .venv/bin/python -m scripts.review.integration_check prepare-real --out "$TMPDIR/r2b-real"\n'
+            '  .venv/bin/python -m scripts.review.integration_check finish-real --out "$TMPDIR/r2b-real"\n'
             "\nOutputs: one PASS/FAIL line per case with its evidence (paths, hashes, database row counts); prepare-real\n"
             "also prints the cards and writes cards/*.json, prompts, returns/ and integration-state.json under --out.\n"
             "Exit codes: 0 every case passes; 1 a case fails or prepare-real found a problem; 2 usage or unusable --out.\n"
