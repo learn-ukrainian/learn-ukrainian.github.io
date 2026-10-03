@@ -835,3 +835,581 @@ def test_refusal_message_counts_peers_not_claim_rows():
     )
     assert conflict.count("one(pid 777)") == 1, conflict
     assert "(+2 more paths)" in conflict, conflict
+
+
+def test_ownership_ledger_release_pid_scoped_and_pidless_preserves_live(tmp_path: Path):
+    """#8659: release(pid=None) must preserve claims of a live replacement run."""
+    import sqlite3
+    import time
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(ledger_path)
+    task_id = "test-task"
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    # Stale/dead PID claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/a.py"}', 999_999_999, time.time() - 100),
+    )
+    # Stale/NULL PID claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/b.py"}', None, time.time() - 100),
+    )
+    # Live PID replacement claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/c.py"}', os.getpid(), time.time()),
+    )
+    conn.commit()
+    conn.close()
+
+    # PID-less release cleans NULL and dead PIDs, preserves live PID
+    ledger.release(task_id, pid=None)
+
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 1
+    assert rows[0][0] == os.getpid()
+    assert "scripts/c.py" in rows[0][1]
+
+    # Explicit PID release cleans only matching PID
+    ledger.release(task_id, pid=os.getpid())
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 0
+
+
+def test_reconciliation_distinguishes_verified_replacement_from_recycled_pid(tmp_path: Path):
+    """#8659 / CF r5 F1: Beyond-grace reconciliation preserves verified replacement runs and cleans recycled PIDs."""
+    import sqlite3
+    import time
+
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    task_id = "test-task"
+    (state_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
+    )
+
+    # 1. Verified replacement run: matcher confirms process identity
+    ledger_path_1 = tmp_path / "own1.sqlite3"
+    ledger_1 = OwnershipLedger(
+        ledger_path_1,
+        task_state_dir=state_dir,
+        process_matches_task=lambda p, tid: p == os.getpid() and tid == task_id,
+    )
+    conn = sqlite3.connect(ledger_path_1)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/c.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    res1 = ledger_1.admit(
+        task_id="challenger",
+        mode="workspace-write",
+        owned_paths=["scripts/c.py"],
+        pid=os.getpid(),
+    )
+    assert res1.admitted is False
+    assert res1.would_refuse is True
+
+    conn = sqlite3.connect(ledger_path_1)
+    rows1 = conn.execute("SELECT pid FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows1) == 1
+
+    # 2. Recycled PID: process is alive (e.g. os.getpid()) but matcher rejects (unrelated process)
+    ledger_path_2 = tmp_path / "own2.sqlite3"
+    ledger_2 = OwnershipLedger(
+        ledger_path_2,
+        task_state_dir=state_dir,
+        process_matches_task=lambda _p, _tid: False,
+    )
+    conn = sqlite3.connect(ledger_path_2)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/c.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    res2 = ledger_2.admit(
+        task_id="challenger",
+        mode="workspace-write",
+        owned_paths=["scripts/c.py"],
+        pid=os.getpid(),
+    )
+    assert res2.admitted is True
+    assert res2.would_refuse is False
+
+    conn = sqlite3.connect(ledger_path_2)
+    rows2 = conn.execute("SELECT pid FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows2) == 0
+
+
+def test_pid_matches_task_real_process_identity(tmp_path: Path):
+    """#8659 / CF r5 F1: Verify _pid_matches_task using real subprocesses with environ/cmdline."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "real-worker-task"
+
+    # Spawn real worker subprocess carrying task identity in environ
+    worker = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
+    )
+    # Spawn dummy subprocess carrying no task identity
+    dummy = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        env={k: v for k, v in os.environ.items() if "TASK_ID" not in k},
+    )
+
+    try:
+        assert _pid_matches_task(worker.pid, task_id) is True
+        assert _pid_matches_task(worker.pid, "other-task") is False
+        assert _pid_matches_task(dummy.pid, task_id) is False
+
+        # Now test OwnershipLedger default matcher with real processes
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir()
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
+        )
+
+        ledger_path = tmp_path / "own_real.sqlite3"
+        ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+        conn = sqlite3.connect(ledger_path)
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        # 1. Test recycled PID cleanup with dummy process
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/c.py"}', dummy.pid, time.time() - 200),
+        )
+        conn.commit()
+
+        challenger = ledger.admit(
+            task_id="challenger-1",
+            mode="workspace-write",
+            owned_paths=["scripts/c.py"],
+            pid=worker.pid,
+        )
+        assert challenger.admitted is True
+
+        # 2. Test verified replacement worker preservation
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/d.py"}', worker.pid, time.time() - 200),
+        )
+        conn.commit()
+        conn.close()
+
+        challenger_blocked = ledger.admit(
+            task_id="challenger-2",
+            mode="workspace-write",
+            owned_paths=["scripts/d.py"],
+            pid=dummy.pid,
+        )
+        assert challenger_blocked.admitted is False
+        assert challenger_blocked.would_refuse is True
+    finally:
+        worker.terminate()
+        worker.wait()
+        dummy.terminate()
+        dummy.wait()
+
+
+def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
+    """#8659 / CF r6 F1 & CF r7 F1: Unavailable evidence or denied /proc inspection preserves claims."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+    from unittest.mock import patch
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "unknown-proc-task"
+
+    # Spawn live worker process carrying task marker
+    worker = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
+    )
+
+    try:
+        # 1. Missing /proc root or PermissionError on proc_root -> returns None
+        missing_proc = tmp_path / "nonexistent_proc"
+        assert _pid_matches_task(worker.pid, task_id, proc_root=missing_proc) is None
+        with patch.object(Path, "is_dir", side_effect=PermissionError("Permission denied on /proc")):
+            assert _pid_matches_task(worker.pid, task_id) is None
+
+        # 2. Denied inspection (PermissionError) -> returns None
+        with patch("pathlib.Path.read_bytes", side_effect=PermissionError("Permission denied")):
+            with patch("os.readlink", side_effect=PermissionError("Permission denied")):
+                assert _pid_matches_task(worker.pid, task_id) is None
+
+        # 3. Reviewer R7 probe: FileNotFoundError on environ while worker is alive -> returns None
+        # and default OwnershipLedger matcher preserves claim and refuses challenger
+        with patch.object(Path, "read_bytes", side_effect=FileNotFoundError("No such file: environ")):
+            assert _pid_matches_task(worker.pid, task_id) is None
+
+            state_dir = tmp_path / "tasks"
+            state_dir.mkdir(exist_ok=True)
+            (state_dir / f"{task_id}.json").write_text(
+                json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
+            )
+
+            ledger_path = tmp_path / "own_fnf.sqlite3"
+            ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+            conn = sqlite3.connect(ledger_path)
+            conn.execute(
+                "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+            )
+            conn.execute(
+                "INSERT INTO write_claims VALUES (?,?,?,?)",
+                (task_id, '{"kind":"file","norm":"scripts/fnf.py"}', worker.pid, time.time() - 200),
+            )
+            conn.commit()
+
+            challenger = ledger.admit(
+                task_id="challenger-fnf",
+                mode="workspace-write",
+                owned_paths=["scripts/fnf.py"],
+                pid=worker.pid,
+            )
+            assert challenger.admitted is False
+            assert challenger.would_refuse is True
+            # Claim remains in database
+            rows = conn.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+            assert rows[0] == 1
+            conn.close()
+
+        # 4. Unavailable cwd (e.g. /proc/<pid>/cwd vanishes or readlink fails with FileNotFoundError) -> returns None
+        with patch("os.readlink", side_effect=FileNotFoundError("No such file: cwd")):
+            with patch.object(Path, "read_bytes", side_effect=FileNotFoundError("No such file: environ")):
+                assert _pid_matches_task(worker.pid, task_id) is None
+
+        # 5. Cwd resolution failure (cwd_path.resolve() raises OSError) -> returns None
+        with patch.object(Path, "resolve", side_effect=OSError("Resolution error")):
+            assert _pid_matches_task(worker.pid, "other-task") is None
+
+        # 6. Confirmed death: if process is dead, FileNotFoundError on probe returns False
+        with patch("scripts.guardrails.delegate_ownership._pid_alive", return_value=False):
+            assert _pid_matches_task(worker.pid, task_id) is False
+    finally:
+        worker.terminate()
+        worker.wait()
+
+
+def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: Path):
+    """#8659 / CF r6 F2: Working-directory matching rejects prefix/suffix substrings and preserves genuine worktrees."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "target-task-8659"
+
+    # Set up directories
+    unrelated_dir = tmp_path / f"{task_id}-unrelated"
+    unrelated_dir.mkdir()
+    prefix_dir = tmp_path / f"prefix-{task_id}"
+    prefix_dir.mkdir()
+    genuine_dir = tmp_path / task_id
+    genuine_dir.mkdir()
+
+    clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
+
+    # Spawn processes in each directory without task marker in env or cmdline
+    p_unrelated = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(unrelated_dir),
+        env=clean_env,
+    )
+    p_prefix = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(prefix_dir),
+        env=clean_env,
+    )
+    p_genuine = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(genuine_dir),
+        env=clean_env,
+    )
+
+    try:
+        # Direct _pid_matches_task checks
+        assert _pid_matches_task(p_unrelated.pid, task_id) is False
+        assert _pid_matches_task(p_prefix.pid, task_id) is False
+        assert _pid_matches_task(p_genuine.pid, task_id) is True
+
+        # OwnershipLedger integration
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir()
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(genuine_dir)}),
+            encoding="utf-8",
+        )
+
+        ledger_path = tmp_path / "own_cwd.sqlite3"
+        ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+        conn = sqlite3.connect(ledger_path)
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn.commit()
+
+        # 1. Negative suffix cwd (<task-id>-unrelated): stale claim cleaned up, challenger admitted
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/suf.py"}', p_unrelated.pid, time.time() - 200),
+        )
+        conn.commit()
+        ch_suf = ledger.admit(
+            task_id="challenger-suf",
+            mode="workspace-write",
+            owned_paths=["scripts/suf.py"],
+            pid=p_genuine.pid,
+        )
+        assert ch_suf.admitted is True
+
+        # 2. Negative prefix cwd (prefix-<task-id>): stale claim cleaned up, challenger admitted
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/pre.py"}', p_prefix.pid, time.time() - 200),
+        )
+        conn.commit()
+        ch_pre = ledger.admit(
+            task_id="challenger-pre",
+            mode="workspace-write",
+            owned_paths=["scripts/pre.py"],
+            pid=p_genuine.pid,
+        )
+        assert ch_pre.admitted is True
+
+        # 3. Genuine worktree cwd: claim preserved, challenger refused
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/gen.py"}', p_genuine.pid, time.time() - 200),
+        )
+        conn.commit()
+        conn.close()
+
+        ch_gen = ledger.admit(
+            task_id="challenger-gen",
+            mode="workspace-write",
+            owned_paths=["scripts/gen.py"],
+            pid=p_unrelated.pid,
+        )
+        assert ch_gen.admitted is False
+        assert ch_gen.would_refuse is True
+    finally:
+        for p in (p_unrelated, p_prefix, p_genuine):
+            p.terminate()
+            p.wait()
+
+
+def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
+    """#8659 / CF r8 F1: Removed process cwd evidence is treated as unknown and preserves claims."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "deleted-cwd-task"
+
+    # Directory for the process cwd
+    target_dir = tmp_path / "worktrees" / task_id
+    target_dir.mkdir(parents=True)
+
+    # Spawn real process with marker-free environment and command line
+    clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
+    p = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(target_dir),
+        env=clean_env,
+    )
+
+    try:
+        # Before removal: cwd matches task_id exactly
+        assert _pid_matches_task(p.pid, task_id) is True
+
+        # Delete process cwd on disk while process remains alive
+        target_dir.rmdir()
+
+        # After removal: Linux /proc/<pid>/cwd is marked "(deleted)" or fails resolution strict
+        # With marker-free env/cmdline, the matcher must return None (unknown identity), not False!
+        assert _pid_matches_task(p.pid, task_id) is None
+
+        # OwnershipLedger integration with claim older than admission grace period
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir(exist_ok=True)
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(target_dir)}),
+            encoding="utf-8",
+        )
+
+        ledger_path = tmp_path / "own_del_cwd.sqlite3"
+        ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+        conn = sqlite3.connect(ledger_path)
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/del.py"}', p.pid, time.time() - 200),
+        )
+        conn.commit()
+
+        # Challenger must be refused because unknown process identity preserves protection
+        challenger = ledger.admit(
+            task_id="challenger-del",
+            mode="workspace-write",
+            owned_paths=["scripts/del.py"],
+            pid=os.getpid(),
+        )
+        assert challenger.admitted is False
+        assert challenger.would_refuse is True
+
+        # Claim remains in database
+        rows = conn.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+        assert rows[0] == 1
+        conn.close()
+    finally:
+        p.terminate()
+        p.wait()
+
+
+def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Path):
+    """#8659 / CF r9 F1: Unavailable worktree_path resolution (FileNotFoundError/PermissionError) preserves claims."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+    from unittest.mock import patch
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "wt-res-task"
+    cwd_dir = tmp_path / "generic_cwd"
+    cwd_dir.mkdir()
+
+    # Marker-free environment and command line: environ and cmdline read cleanly without matching
+    clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
+    p = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(cwd_dir),
+        env=clean_env,
+    )
+
+    try:
+        # 1. worktree_path resolution raises FileNotFoundError
+        missing_wt = tmp_path / "missing_worktree"
+        assert _pid_matches_task(p.pid, task_id, worktree_path=missing_wt) is None
+
+        # 2. worktree_path resolution raises PermissionError
+        with patch.object(Path, "resolve", side_effect=PermissionError("Permission denied on worktree")):
+            assert _pid_matches_task(p.pid, task_id, worktree_path=tmp_path / "denied_wt") is None
+
+        # 3. OwnershipLedger integration with FileNotFoundError on worktree_path
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir(exist_ok=True)
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(missing_wt)}),
+            encoding="utf-8",
+        )
+
+        ledger_path_fnf = tmp_path / "own_wt_fnf.sqlite3"
+        ledger_fnf = OwnershipLedger(ledger_path_fnf, task_state_dir=state_dir)
+        conn_fnf = sqlite3.connect(ledger_path_fnf)
+        conn_fnf.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn_fnf.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/wt_fnf.py"}', p.pid, time.time() - 200),
+        )
+        conn_fnf.commit()
+
+        ch_fnf = ledger_fnf.admit(
+            task_id="challenger-wt-fnf",
+            mode="workspace-write",
+            owned_paths=["scripts/wt_fnf.py"],
+            pid=os.getpid(),
+        )
+        assert ch_fnf.admitted is False
+        assert ch_fnf.would_refuse is True
+        rows_fnf = conn_fnf.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+        assert rows_fnf[0] == 1
+        conn_fnf.close()
+
+        # 4. OwnershipLedger integration with PermissionError on worktree_path
+        state_dir_perm = tmp_path / "tasks_perm"
+        state_dir_perm.mkdir(exist_ok=True)
+        denied_wt = tmp_path / "denied_worktree"
+        (state_dir_perm / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(denied_wt)}),
+            encoding="utf-8",
+        )
+
+        ledger_path_perm = tmp_path / "own_wt_perm.sqlite3"
+        ledger_perm = OwnershipLedger(ledger_path_perm, task_state_dir=state_dir_perm)
+        conn_perm = sqlite3.connect(ledger_path_perm)
+        conn_perm.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn_perm.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/wt_perm.py"}', p.pid, time.time() - 200),
+        )
+        conn_perm.commit()
+
+        orig_resolve = Path.resolve
+
+        def mock_resolve_perm(self: Path, strict: bool = False) -> Path:
+            if "denied_worktree" in str(self) or "denied_wt" in str(self):
+                raise PermissionError(f"Permission denied: {self}")
+            return orig_resolve(self, strict=strict)
+
+        with patch.object(Path, "resolve", autospec=True, side_effect=mock_resolve_perm):
+            ch_perm = ledger_perm.admit(
+                task_id="challenger-wt-perm",
+                mode="workspace-write",
+                owned_paths=["scripts/wt_perm.py"],
+                pid=os.getpid(),
+            )
+            assert ch_perm.admitted is False
+            assert ch_perm.would_refuse is True
+            rows_perm = conn_perm.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+            assert rows_perm[0] == 1
+            conn_perm.close()
+    finally:
+        p.terminate()
+        p.wait()

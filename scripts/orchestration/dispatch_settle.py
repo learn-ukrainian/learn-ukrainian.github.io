@@ -32,7 +32,7 @@ from scripts.guardrails.delegate_ownership import (
     default_ledger_path,
 )
 from scripts.opsec.prepublish import publication_boundary, publication_cli
-from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal
+from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, mark_missing_worktree_failed
 from scripts.publish.github import Request, request_run
 
 
@@ -153,11 +153,11 @@ def heal_zombie_task(
             allowed_statuses=("running",),
             pid_alive=_pid_alive,
             resolve_head=lambda path: _run(["git", "rev-parse", "HEAD"], cwd=path).stdout.strip() or None,
+            ledger=ledger,
         )
         if changed:
             actions.append("marked_failed_zombie_running")
             if ledger is not None:
-                ledger.release(task_id)
                 actions.append("released_ownership_claims")
     return actions
 
@@ -172,7 +172,8 @@ def settle_missing_worktree(
 
     Such a record is pure history: there is no tree to probe, push, or review.
     Mark it terminal with the existing vocabulary and release write-ownership
-    claims. Records with a live PID are never settled here.
+    claims under the task state lock bound to the observed run. Records with a
+    live PID or active worktree are never settled here.
     """
     actions: list[str] = []
     data = _load_task(task_dir, task_id)
@@ -191,20 +192,20 @@ def settle_missing_worktree(
     if worktree is None or worktree.is_dir() or _pid_alive(pid):
         return actions
 
-    if status not in TERMINAL_TASK_STATUSES:
-        data["status"] = "failed"
-        if data.get("require_review_verdict"):
-            data["failure_reason"] = "worktree_missing_at_settle"
-        data["exit_code"] = data.get("exit_code") if data.get("exit_code") is not None else -9
-        data["returncode"] = data.get("returncode") if data.get("returncode") is not None else -9
-        data["last_error"] = (
-            data.get("last_error")
-            or "dispatch_settle: recorded worktree is missing and PID is dead; settling as pure history"
-        )
-        _save_task(task_dir, task_id, data)
-        actions.append("marked_failed_missing_worktree")
+    if status in TERMINAL_TASK_STATUSES:
+        return actions
+
+    task_path = task_dir / f"{task_id}.json"
+    _current, changed = mark_missing_worktree_failed(
+        task_path,
+        data,
+        pid_alive=_pid_alive,
+        ledger=ledger,
+    )
+    if not changed:
+        return actions
+    actions.append("marked_failed_missing_worktree")
     if ledger is not None:
-        ledger.release(task_id)
         actions.append("released_ownership_claims")
     return actions
 

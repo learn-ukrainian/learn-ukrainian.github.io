@@ -11,12 +11,18 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
 from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
 
 
 @contextmanager
 def task_state_lock(path: Path) -> Iterator[None]:
-    """Use a stable adjacent lock file; locking the replaced JSON inode is unsafe."""
+    """Use a stable adjacent lock file; locking the replaced JSON inode is unsafe.
+
+    Lock files (<task>.json.lock) are permanent stable anchors: deleting or moving
+    a lock file while a writer holds or waits on its descriptor breaks mutual exclusion
+    by letting subsequent callers open a new, distinct inode (#8659).
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor = os.open(path.with_suffix(path.suffix + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
     try:
@@ -43,6 +49,7 @@ def mark_dead_worker_terminal(
     allowed_statuses: tuple[str, ...],
     pid_alive: Callable[[int], bool],
     resolve_head: Callable[[Path], str | None],
+    ledger: OwnershipLedger | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Recheck a dead worker under the writer lock, then persist its final HEAD."""
     with task_state_lock(path):
@@ -81,6 +88,9 @@ def mark_dead_worker_terminal(
                 f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
             )
         write_state_unlocked(path, current)
+        if ledger is not None:
+            task_id = current.get("task_id") or path.stem
+            ledger.release(task_id, pid=pid)
         return current, True
 
 
@@ -164,3 +174,52 @@ def mark_orphaned_admission_hold_crashed(
             f"(state said {prior!r}, no worker spawned); marked crashed by {source} probe"
         ),
     )
+
+
+def mark_missing_worktree_failed(
+    path: Path,
+    observed: dict[str, Any],
+    *,
+    pid_alive: Callable[[int], bool],
+    ledger: OwnershipLedger | None = None,
+) -> tuple[dict[str, Any], bool]:
+    """Recheck a dead worker whose worktree is missing under the writer lock, then mark it failed.
+
+    If ledger is provided, releases write claims bound to the observed PID before releasing the lock (#8659).
+    """
+    with task_state_lock(path):
+        try:
+            current = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return observed, False
+        if not isinstance(current, dict):
+            return observed, False
+        raw_pid = current.get("pid")
+        pid = int(raw_pid) if isinstance(raw_pid, int) or (isinstance(raw_pid, str) and raw_pid.isdigit()) else None
+        worktree_raw = current.get("worktree_path") or current.get("cwd")
+        worktree = Path(str(worktree_raw)) if worktree_raw else None
+        if (
+            worktree is None
+            or worktree.is_dir()
+            or (pid is not None and pid_alive(pid))
+            or current.get("status") in TERMINAL_TASK_STATUSES
+            or current.get("run_nonce") != observed.get("run_nonce")
+            or current.get("pid") != observed.get("pid")
+            or current.get("started_at") != observed.get("started_at")
+        ):
+            return current, False
+        current["status"] = "failed"
+        current["finished_at"] = datetime.now(UTC).isoformat()
+        if current.get("require_review_verdict"):
+            current["failure_reason"] = "worktree_missing_at_settle"
+        current["exit_code"] = current.get("exit_code") if current.get("exit_code") is not None else -9
+        current["returncode"] = current.get("returncode") if current.get("returncode") is not None else -9
+        current["last_error"] = (
+            current.get("last_error")
+            or "dispatch_settle: recorded worktree is missing and PID is dead; settling as pure history"
+        )
+        write_state_unlocked(path, current)
+        if ledger is not None:
+            task_id = current.get("task_id") or path.stem
+            ledger.release(task_id, pid=pid)
+        return current, True

@@ -1033,12 +1033,24 @@ file is added, no owned deletion is. Those paths are listed in
 `needs_finalize`, not `done`. When no change falls under the owned paths, nothing is
 committed (`no_changes_under_owned_paths`).
 
+**Explicit auto-finalize PRs (#8508, #8658):** Auto-finalize pushes the branch and
+records `final_branch_head_commit`, but it never opens a pull request implicitly. To
+open a draft PR automatically after a successful dirty-worktree auto-finalize push, pass
+`--finalize-open-pr` at dispatch.
+
+**Dispatch rescue (#8508, #8658):** `delegate.py rescue` inspects or preserves unpushed
+terminal non-success work (crashed, timeout, failed, no_deliverable, needs_finalize) on a
+dedicated `rescue/<agent>/<task>` branch before worktree reaping runs:
+- `python scripts/delegate.py rescue <task_id>` preserves a single task's work immediately.
+- `python scripts/delegate.py rescue --all-stale --older-than 6h` previews candidate tasks without modifying git state.
+- `python scripts/delegate.py rescue --all-stale --older-than 6h --apply` cleans disposable residue, commits uncommitted changes, pushes to `rescue/<agent>/<task>`, and records the rescue ref.
+
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
 
 - `settle-stale` settles `needs_finalize` records older than 7 days once their worktree,
   local branch, remote branch **and work** are gone. The work counts as gone only when the
-  record names a commit (`auto_finalize.commit_sha`) that no ref holds under any name, or
+  record names a commit (preferring `final_branch_head_commit`, falling back to `auto_finalize.commit_sha`) that no ref holds under any name, or
   when the task exited clean with no commits. Each run (dry runs too) first does one
   `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
   that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
@@ -1051,7 +1063,9 @@ committed (`no_changes_under_owned_paths`).
   commit still on origin, a local branch or ref still holding the work (even renamed), a
   dirty worktree, and commits with no recorded commit id.
 - `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
-  sidecars, into `batch_state/tasks/archive/`. A record stays hot while its checkout path or
+  sidecars, into `batch_state/tasks/archive/`. Adjacent `<task>.json.lock` files are intentionally
+  preserved as permanent stable lock anchors to ensure serialization across processes and prevent
+  split-brain inode acquisition (#8659). A record stays hot while its checkout path or
   an `acp_runtime_paths` entry still exists. Each move holds the record's lock, and it
   re-checks the record's mtime and status first.
 - `restore` moves an archived record back. No move ever replaces a file: if a writer
