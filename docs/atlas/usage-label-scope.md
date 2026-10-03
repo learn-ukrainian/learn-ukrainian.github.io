@@ -28,26 +28,24 @@ Without the article headword nothing binds, so no `lemma` label is returned.
 
 ## Source proof
 
-Russianism and calque proof comes from the current curated records,
-`scripts/lexicon/calque_corrections.py` and
-`registry/lexicon/heritage_pairs.yaml`, never from citations copied into a
-stored Atlas record. `usage_source_records` keeps, for each record and the
-headword it is keyed by:
+Russianism and calque proof comes from the current curated records (`scripts/lexicon/calque_corrections.py`,
+`registry/lexicon/heritage_pairs.yaml`), never from citations copied into a stored Atlas record.
+`usage_source_records` keeps, for each record and the headword it is keyed by:
 
-- **judgments**: a heritage pair frame's `normativeJudgment` (rejected form,
-  endorsed form, sense) whose `passageSha256` or `currentNormPassageSha256`
-  matches the stored `normativeSupport`/`currentNormSupport` passage at the
-  same locator, digest normalised as `scripts/audit/generate_practice_deck.py`
-  (`docs/practice/heritage-pairs-growth.md`). The rejected form must be the
-  headword, the locator a normative chunk, and the passage still its digest;
-  endorsed forms of judgments with differing senses keep their sense.
-- **citations**, sense and phrase records only: a `locator: excerpt` item whose
-  chunk a reviewer read in `sources.db` and bound (`SOURCE_CHECKED_CHUNKS`:
-  scope, rejected form, endorsed forms with any context the passage sets,
-  excerpt digest). Digest, scope and headword must match; only forms among the
-  record's corrections are offered (`являтися` → `бути`), each with its source
-  context (`чинний (закон)`, `активний (вулкан)`), never pooled under one sense.
-  Co-occurring words or another book's locator stay an unverified reference.
+- **judgments**: a heritage pair frame's `normativeJudgment` (rejected form, endorsed form, sense) whose
+  `passageSha256` or `currentNormPassageSha256` matches the stored `normativeSupport`/`currentNormSupport`
+  passage at the same locator (digest as `scripts/audit/generate_practice_deck.py`,
+  `docs/practice/heritage-pairs-growth.md`). The rejected form must be the headword, the locator a normative
+  chunk, and the passage still its digest; endorsed forms of judgments with differing senses keep their sense.
+  When every judgment's passage corrects a whole expression that the record's correction states
+  (`брати (участь)`: p165 and s0015 name both «приймати участь» and «брати участь»), the proof is `phrasal`,
+  its `sense` the rejected expression and its correction the endorsed one, never the bare form.
+- **citations**, sense and phrase records only: a `locator: excerpt` item whose chunk a reviewer read in
+  `sources.db` and bound (`SOURCE_CHECKED_CHUNKS`: scope, rejected form, endorsed forms with any context the
+  passage sets, excerpt digest). Digest, scope and headword must match; only forms among the record's
+  corrections are offered (`являтися` → `бути`), each with its source context (`чинний (закон)`,
+  `активний (вулкан)`), never pooled under one sense. Co-occurring words or another book's locator stay an
+  unverified reference.
 
 A normative chunk is a `sources.db` chunk id of Антоненко-Давидович «Як ми
 говоримо» (`antonenko-davydovych-yak-my-hovorymo_p031`), Караванський,
@@ -58,30 +56,23 @@ A normative chunk is a `sources.db` chunk id of Антоненко-Давидо�
 locator plus a headword occurrence admits nothing either: a paragraph that
 mentions the word without correcting it is not a correction.
 
-`scripts/audit/generate_search_index.py` writes this view into
-`site/src/data/lexicon-browse-meta.json` as `usageSources`
-(`schema: atlas-usage-sources.v1`) with the SHA-256 of both inputs. Browse
-uses it directly. Entry pages read it through `usageSourceProof` in
-`heritage-severity.ts`. Both judge every stored record by it: a stored
-locator that the current record no longer cites (`являтися`, `s0162` →
-`s0159`) is never shown as a source. A record that the current data no longer
-proves keeps its stored scope with no authority.
+`scripts/audit/generate_search_index.py` writes this view into `site/src/data/lexicon-browse-meta.json` as
+`usageSources` (`schema: atlas-usage-sources.v1`) with the SHA-256 of both inputs. Browse uses it directly;
+entry pages read it through `usageSourceProof` in `heritage-severity.ts`. Both judge every stored record by it:
+a locator the current record no longer cites (`являтися`, `s0162` → `s0159`) is never shown as a source, and a
+record the current data no longer proves keeps its stored scope with no authority.
 
 ## Russianism or calque for the whole word
 
-The curated record (the current one, else the stored `curated_calque` or a
-`calque_warning` with `kind`) must have `kind: lexical` and a judgment whose
-rejected form is the headword. `participle` names a word-formation type, not
-a scope (the `діючий` record is sense-split). Any other or missing kind is
-unresolved (`curated_kind_without_scope`); a lexical record without a
-judgment is unresolved (`no_headword_bound_evidence`).
+The curated record (the current one, else the stored `curated_calque` or a `calque_warning` with `kind`) must
+have `kind: lexical` and a judgment whose rejected form is the headword. `participle` names a word-formation
+type, not a scope (the `діючий` record is sense-split). Any other or missing kind is unresolved
+(`curated_kind_without_scope`); a lexical record without a judgment is unresolved (`no_headword_bound_evidence`).
 
-The record is `rus` when `is_russianism` is set on a non-authentic
-classification. Otherwise it is `calq`. The red or yellow box names the
-judgment locators and quotes the judged passage. Sense and phrase records keep
-their contextual scope. Their authority lists judgment and citation locators.
-Without either, the box says no normative source binds the caution and lists
-the record's references.
+The record is `rus` when `is_russianism` is set on a non-authentic classification, otherwise `calq`. The red
+or yellow box names the judgment locators and quotes the judged passage. Sense and phrase records keep their
+contextual scope, with judgment and citation locators as authority; without either, the box says no normative
+source binds the caution and lists the record's references.
 
 `primary_source: surzhyk_to_avoid` is provenance, not authority. It turns a
 bound `rus`/`calq` into the browse code `avoid` and the red box. Alone, it
@@ -135,41 +126,32 @@ bound lexical calque.
 
 ## Visible wording
 
-- The green box describes evidence, not origin. VESUM attests a form's
-  morphology only. The box is «Засвідчена українська форма» and lists each
-  attesting source with its role. It never says «питома». A bound register
-  label is titled by its register and quotes the headword-slot excerpt and
-  locator.
-- Reverse notes keep the record's direction (`X` as replacement for `Y`), its
-  scope note (the `чинний` law/volcano split) and its references. They state
-  that no normative excerpt establishes the replacement or its extent.
-- Unresolved notes keep replacements (a source's only with source proof, else
-  Atlas suggestions), the record's unchecked citations and the Atlas note.
+- The green box describes evidence, not origin. VESUM attests a form's morphology only. The box is
+  «Засвідчена українська форма» and lists each attesting source with its role; it never says «питома». A bound
+  register label is titled by its register and quotes the headword-slot excerpt and locator.
+- Reverse notes keep the record's direction (`X` as replacement for `Y`), its scope note (the `чинний`
+  law/volcano split) and its references, and state that no normative excerpt establishes the replacement or its
+  extent. Unresolved notes keep replacements (a source's only with source proof, else Atlas suggestions), the
+  record's unchecked citations and the Atlas note.
 - An editorial `avoid:` gloss (`слідуючий`) or an embedded `(Russian calque; standard Ukrainian: …)`
   clause (`переключити`) is verbatim only with a lemma-bound Russianism or calque (`міроприємство`).
   Otherwise the entry header, translation, page description, course-phrase gloss, browse and search
   show the meaning with a qualified Atlas note (`displayGloss`). A historism badge names its source marker
   (`Історизм · ЕСУМ, т. 1, с. 592`) and claims nothing about current usage.
-- Atlas prose stored with a record (`noteUk`, `note`, `detail`) is
-  commentary. Every box and style note marks it as not confirmed by a source
-  excerpt, so a scoped caution never carries a broader unsourced claim
-  (`неділя`: the duration caution is sourced, the stored «лише сьомий день»
-  wording is not).
+- Atlas prose stored with a record (`noteUk`, `note`, `detail`) is commentary. Every box and style note marks it
+  as not confirmed by a source excerpt, so a scoped caution never carries a broader unsourced claim (`неділя`:
+  the duration caution is sourced, the stored «лише сьомий день» wording is not).
 
 ## Producer and projection
 
-- `compute_warning_severity(…, headword=…)` derives `russianism_red` and
-  `calque_yellow` only from the scoped label. An unresolved claim is `none`,
-  not `treasured`. `classification` and `is_russianism` (the V7 gate inputs)
-  are unchanged.
-- The classifier and `enrich_manifest._curated_calque` carry `evidence` and
-  the digest-bound `judgments` into the stored record. The producer resolves
-  its own fresh record. An explicit heritage-pair `kind` replaces the
-  `participle` default.
-- `scripts/audit/generate_search_index.py` (`classification_code`) and the
-  entry model never trust stored `warning_severity` or `classification` on
-  their own. They re-resolve every stored record, including stale ones, with
-  the article headword, gloss, definition cards and the `usageSources`
-  projection.
-- Source observations (`attestations`, `reverse_calques`, curated notes) are
-  preserved and rendered as notes.
+- `compute_warning_severity(…, headword=…)` derives `russianism_red` and `calque_yellow` only from the scoped
+  label. An unresolved claim is `none`, not `treasured`. `classification` and `is_russianism` (the V7 gate
+  inputs) are unchanged.
+- The classifier and `enrich_manifest._curated_calque` carry `evidence` and the digest-bound `judgments` into
+  the stored record; the producer resolves its own fresh record (replacements may be `standard_alternatives`).
+  An explicit heritage-pair `kind` replaces the `participle` default.
+- `scripts/audit/generate_search_index.py` (`classification_code`, both the `--db` and the manifest exporter)
+  and the entry model never trust stored `warning_severity` or `classification` on their own. They re-resolve
+  every stored record, including stale ones, with the article headword, gloss, definition cards and the
+  `usageSources` projection, and both exporters write `display_gloss`.
+- Source observations (`attestations`, `reverse_calques`, curated notes) are preserved and rendered as notes.

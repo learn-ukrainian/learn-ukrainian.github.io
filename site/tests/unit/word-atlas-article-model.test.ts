@@ -2222,6 +2222,23 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(notes.join(" ")).toContain("Посилання запису: antonenko-p001.");
   });
 
+  test("R1: the приймати page names «приймати участь» → «брати участь», never bare «брати»", () => {
+    const props = heritageEntry("приймати", {
+      classification: "russianism",
+      is_russianism: true,
+      attestations: [{ source: "VESUM", ref: "приймати" }],
+      calque_warning: { standard_alternatives: ["брати"] },
+      warning_severity: "russianism_red",
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.statusBadges.map((badge) => badge.label).join(" ")).not.toMatch(/русиз|кальк/iu);
+    const html = renderWordAtlasArticle(props);
+    expect(html).not.toContain('data-severity="red"');
+    expect(html).toContain("сполучення («приймати участь»)");
+    expect(html).toContain("джерело радить: брати участь.");
+    expect(html).not.toMatch(/радить: брати\./u);
+  });
+
   test("an avoid-listed record with a contextual scope keeps the list as provenance and offers its replacements", () => {
     const props = heritageEntry(
       "рахувати",

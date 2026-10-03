@@ -1316,6 +1316,15 @@ def test_usage_source_records_from_actual_curated_inputs() -> None:
         "при допомозі": ["за допомогою"],
         "приймати участь": ["брати участь"],
     }
+    # R1: both reviewed passages correct the expression, so its whole unit is kept.
+    pryimaty = records["приймати"]
+    assert (pryimaty["kind"], pryimaty["corrections"], pryimaty["sense"]) == ("phrasal", ["брати участь"], "приймати участь")
+    assert [item["locator"] for item in pryimaty["judgments"]] == [
+        "antonenko-davydovych-yak-my-hovorymo_p165",
+        "5-klas-ukrmova-avramenko-2022_s0015",
+    ]
+    for headword in ("вид", "вірний", "включити", "відкривати", "розповсюджувати", "другий"):
+        assert records[headword]["kind"] == "sense_restricted"
     assert records["діючий"]["corrections"] == ["чинний (закон)", "активний (вулкан)"]
     # Contextual records whose cited books are absent from sources.db keep no
     # source proof; діючий keeps its two checked chunks, not zabolotnyi-7 s0124.
@@ -1398,3 +1407,52 @@ def test_source_checked_chunks_load_when_heritage_classifier_is_loaded_as_a_file
 
     monkeypatch.setitem(sys.modules, "scripts.lexicon.calque_corrections", None)
     assert heritage_classifier._source_checked_chunks() == SOURCE_CHECKED_CHUNKS
+
+
+# Actual reviewed passages of the приймати pair (sources.db p165, s0015).
+_P165_PASSAGE = (
+    'Принагідно звернімо увагу на хибний вислів "приймати участь", що раз у раз трапляється на письмі й у '
+    'живому мовленні, замість якого треба казати й писати "брати участь"'
+)
+_S0015_PASSAGE = "НЕПРАВИЛЬНО приймати участь ПРАВИЛЬНО\nбрати участь"
+
+
+def _pryimaty(passage: str, endorsed: str = "брати", locator: str = "antonenko-davydovych-yak-my-hovorymo_p165") -> dict:
+    return {
+        "locator": locator,
+        "passage": passage,
+        "passageSha256": source_text_digest(passage),
+        "rejectedForm": "приймати",
+        "endorsedForm": endorsed,
+        "sense": "taking part in an activity",
+    }
+
+
+def test_expression_judgment_keeps_its_rejected_and_endorsed_units() -> None:
+    """R1: a judgment whose passage corrects «приймати участь» never advises bare «брати»."""
+    record = {
+        "kind": "sense_restricted",
+        "corrections": ["брати (участь)", "вживати (ліки)"],
+        "judgments": [_pryimaty(_P165_PASSAGE), _pryimaty(_S0015_PASSAGE, locator="5-klas-ukrmova-avramenko-2022_s0015")],
+    }
+    proof = admitted_source_proof(record, "приймати")
+    assert (proof["kind"], proof["corrections"], proof["sense"]) == ("phrasal", ["брати участь"], "приймати участь")
+    assert heritage_classifier._expression_unit(_pryimaty(_S0015_PASSAGE), ["брати (участь)"]) == ("приймати участь", "брати участь")
+    label = resolve_usage_label({"classification": "standard", "calque_warning": record}, headword="приймати")
+    assert (label["code"], label["scope"], label["evidence"]) == (None, "phrase", "приймати участь")
+    # The producer's stored shape lists replacements as ``standard_alternatives``.
+    stored = {"kind": "sense_restricted", "standard_alternatives": record["corrections"], "judgments": record["judgments"]}
+    assert admitted_source_proof(stored, "приймати")["corrections"] == ["брати участь"]
+    # Negative controls: the context must be the curator's and in the passage, for the endorsed form.
+    sense_only = "Дієслово приймати слушне в значенні одержувати; тут краще брати"
+    for unit_record in (
+        {**record, "corrections": ["брати"]},
+        {**record, "corrections": ["брати (гроші)"]},
+        {**record, "judgments": [_pryimaty(sense_only)]},
+        {**record, "judgments": [_pryimaty(_P165_PASSAGE, endorsed="взяти")], "corrections": ["взяти (участь)"]},
+    ):
+        result = admitted_source_proof(unit_record, "приймати")
+        assert result["kind"] == "sense_restricted" and "участь" not in result["sense"]
+    # A partly expression-bound record keeps its stored scope.
+    mixed = {**record, "judgments": [_pryimaty(_P165_PASSAGE), _pryimaty(sense_only)]}
+    assert admitted_source_proof(mixed, "приймати")["kind"] == "sense_restricted"

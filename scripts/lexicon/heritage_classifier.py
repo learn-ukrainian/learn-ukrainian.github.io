@@ -563,6 +563,17 @@ def _source_checked_chunks() -> dict[str, tuple[str, str, tuple[str, ...], str]]
     return SOURCE_CHECKED_CHUNKS
 
 
+def _expression_unit(judgment: dict[str, str], corrections: list[str]) -> tuple[str, str] | None:
+    """The ``(rejected, endorsed)`` expressions of a correction ``брати (участь)`` its passage names in full."""
+    text = f" {' '.join(_words(judgment['passage']))} "
+    for form in corrections:
+        endorsed, _, context = form.removesuffix(")").partition(" (")
+        units = (f"{judgment['rejectedForm']} {context}", f"{endorsed} {context}")
+        if context and endorsed == judgment["endorsedForm"] and all(f" {' '.join(_words(u))} " in text for u in units):
+            return units
+    return None
+
+
 def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any] | None:
     """The source proof a curated record carries for ``headword``, or ``None``.
 
@@ -589,9 +600,15 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
         and is_normative_locator(str(item.get("locator") or ""))
         and source_text_digest(str(item.get("passage") or "")) == item.get("passageSha256")
     ]
-    corrections = [str(item) for item in record.get("corrections") or [] if str(item or "").strip()]
+    stated = record.get("corrections") or record.get("standard_alternatives")
+    corrections = [str(item) for item in stated or [] if str(item or "").strip()]
     pooled = len({item["sense"] for item in judgments}) > 1
     citations, endorsed = [], [item["endorsedForm"] + (f" ({item['sense']})" if pooled else "") for item in judgments]
+    # A judgment whose passage corrects an expression keeps it whole (#9603).
+    units = [unit for item in judgments if (unit := _expression_unit(item, corrections))]
+    expressions = list(dict.fromkeys(unit[0] for unit in units)) if units and len(units) == len(judgments) else []
+    if expressions:
+        kind, endorsed = "phrasal", [unit[1] for unit in units]
     for locator, excerpt in _evidence_items(record):
         scope, rejected, forms, digest = _source_checked_chunks().get(locator, ("", "", (), ""))
         supported = [form for form in forms if form.partition(" (")[0] in corrections]
@@ -608,9 +625,8 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
     return {
         "kind": kind,
         "corrections": list(dict.fromkeys(endorsed)),
-        "sense": judgments[0]["sense"]
-        if judgments
-        else str(record.get("calque_sense") or record.get("calqueSense") or ""),
+        "sense": ", ".join(expressions)
+        or (judgments[0]["sense"] if judgments else str(record.get("calque_sense") or record.get("calqueSense") or "")),
         "judgments": judgments,
         "citations": citations,
     }

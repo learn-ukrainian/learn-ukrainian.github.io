@@ -1130,3 +1130,53 @@ def test_definition_cards_for_slug_reads_payload_or_fails_closed() -> None:
     assert _definition_cards_for_slug(conn, "a") == [{"id": "sum20"}]
     assert _definition_cards_for_slug(conn, "b") is None
     assert _definition_cards_for_slug(conn, "missing") is None
+
+
+def test_manifest_index_qualifies_unsupported_norm_glosses() -> None:
+    """F1: the retained manifest exporter shows the same scoped gloss as the DB path (actual stored shapes)."""
+    slid = entry(
+        "слідуючий",
+        gloss="avoid: наступний",
+        primary_source="surzhyk_to_avoid",
+        classification="russianism",
+        is_russianism=True,
+        warning_severity="russianism_red",
+        curated_calque={
+            "kind": "lexical",
+            "corrections": ["наступний"],
+            "evidence": ["9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; ... наступний"],
+        },
+    )
+    switch = entry(
+        "переключити",
+        gloss="to switch over (Russian calque; standard Ukrainian: перемкнути)",
+        primary_source="lexicon_curated",
+        classification="russianism",
+        is_russianism=True,
+        warning_severity="russianism_red",
+    )
+    miro = entry(
+        "міроприємство",
+        gloss="avoid: захід",
+        primary_source="surzhyk_to_avoid",
+        classification="russianism",
+        is_russianism=True,
+        curated_calque={"kind": "lexical", "corrections": ["захід", "заходи"]},
+    )
+    rows = {row["l"]: row for row in build_index([slid, switch, miro])}
+    assert rows["слідуючий"]["g"] == "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"
+    assert rows["переключити"]["g"] == (
+        "to switch over (примітка Атласу: «Russian calque; standard Ukrainian: перемкнути»; обсяг застереження не встановлено)"
+    )
+    assert "cls" not in rows["слідуючий"] and "cls" not in rows["переключити"]
+    assert (rows["міроприємство"]["g"], rows["міроприємство"]["cls"]) == ("avoid: захід", "avoid")
+    _meta, shards, flagged = build_browse_outputs(list(rows.values()))
+    assert {row["l"]: row["g"] for row in flagged} == {"міроприємство": "avoid: захід"}
+    assert all("avoid:" not in row["hay"] for row in shards["С"])
+
+
+def test_committed_usage_sources_keep_the_pryimaty_expression() -> None:
+    """R1: the committed projection binds приймати to «приймати участь» → «брати участь»."""
+    records = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))["usageSources"]["records"]
+    record = records["приймати"]
+    assert (record["kind"], record["corrections"], record["sense"]) == ("phrasal", ["брати участь"], "приймати участь")

@@ -547,6 +547,7 @@ def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
     if level:
         row["c"] = level
     cls = classification_code(entry)
+    row["g"] = display_gloss(gloss, cls)
     if cls:
         row["cls"] = cls
     gerund_parent = _gerund_parent(entry)

@@ -785,6 +785,32 @@ describe('scope helpers', () => {
     }
   });
 
+  test('R1: the committed приймати proof keeps the corrected expression whole', () => {
+    // Actual stored DB shape: stale russianism_red, a bare «брати» alternative and no kind.
+    const entry = {
+      lemma: 'приймати',
+      gloss: 'to take',
+      heritage_status: {
+        classification: 'russianism',
+        is_russianism: true,
+        russian_shadow: true,
+        vesum_attested: true,
+        attestations: [{ source: 'VESUM', ref: 'приймати' }],
+        calque_warning: { standard_alternatives: ['брати'] },
+        warning_severity: 'russianism_red',
+      },
+    } as LexiconEntryForSeverity;
+    const boxes = resolveHeritageBoxes(entry);
+    expect(boxes.red).toBeUndefined();
+    expect(boxes.inline).toBeUndefined();
+    expect(boxes.usageLabel).toMatchObject({ code: null, scope: 'phrase', evidence: 'приймати участь' });
+    expect(boxes.yellow?.title).toBe('Калькове застереження щодо сполучення');
+    expect(boxes.yellow?.body).toBe(
+      'Застереження стосується сполучення («приймати участь»), а не слова загалом. У цьому вжитку джерело радить: брати участь. Джерело: antonenko-davydovych-yak-my-hovorymo_p165, 5-klas-ukrmova-avramenko-2022_s0015.',
+    );
+    expect(displayGloss(entry.gloss, boxes.usageLabel)).toEqual({ text: 'to take', note: false });
+  });
+
   test('sharesReferent compares content words only', () => {
     expect(sharesReferent('нижча верхівка княжої дружини', HRYD_GLOSS)).toBe(true);
     expect(sharesReferent('нижча верхівка княжої дружини', 'sofa')).toBe(false);
