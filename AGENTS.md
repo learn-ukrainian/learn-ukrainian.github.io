@@ -43,8 +43,9 @@ non-skippable:
 10. Drive decided work within approved scope.
 11. Repository hard gates bind.
 12. Do not make NEW architecture, layout, process, or policy decisions without
-    present-tense operator approval or designated approval (both Opus 5.5 and Sol 6.1,
-    neither the author; if they disagree, the operator decides); this does not reopen
+    present-tense operator approval or designated approval (Opus 5.5 and Sol 6.1 agreeing;
+    when one of them authored the proposal, the other's approval completes it; a proposal
+    by any other agent needs both; if they disagree, the operator decides); this does not reopen
     approval on already-ordered or already-approved work — drive that per item 10.
 13. Apply adversarial quality: lead with failure modes and missing evidence.
 14. **Pre-dispatch outcome adequacy:** before presenting or dispatching a

@@ -131,8 +131,9 @@ Seat-specific adjustments for your model and for the seats you route to:
 
 Seek **Opus 5.5 / Sol 6.1** for review, critique and design input. Route the decisions
 below for approval to the **operator**, or to **designated approval**: `claude-opus-5-5` and
-`gpt-6.1-sol` both approve, neither being the proposal's author, and if they disagree the
-operator decides (#9583). Never resolve them from the loop:
+`gpt-6.1-sol` agree; when one of them authored the proposal, the other's approval completes
+it, and a proposal by any other agent needs both; if they disagree, the operator decides
+(#9583, #9616). Never resolve them from the loop:
 
 1. Any **architecture, layout, or process** change.
 2. A **contested CF verdict** (reviewer and author disagree, or two reviewers split).
