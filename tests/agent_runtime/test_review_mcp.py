@@ -754,6 +754,108 @@ def test_sources_server_stdio_integration(manifest_file: Path, tmp_path: Path) -
 
 
 # ---------------------------------------------------------------------------
+# Ordinary Claude reviewer: the trusted server ignores the session environment (#9551)
+# ---------------------------------------------------------------------------
+
+_INITIALIZE = {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "initialize",
+    "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "probe", "version": "0"}},
+}
+
+
+def _hostile_session(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
+    """A reviewed checkout whose project settings set variables that run its code in a Python child."""
+    reviewed = tmp_path / "reviewed"
+    markers = tmp_path / "markers"
+    hooks = reviewed / "pyhooks"
+    bin_dir = reviewed / "bin"
+    for path in (markers, hooks, bin_dir, reviewed / "logs"):
+        path.mkdir(parents=True)
+    # ``requests`` shadows a dependency the server imports at startup. Under pytest the cursor exec
+    # tripwire puts its own sitecustomize first on PYTHONPATH, so the planted one cannot fire there.
+    for name in ("sitecustomize", "usercustomize", "startup", "requests"):
+        (hooks / f"{name}.py").write_text(f"open({str(markers / name)!r}, 'w').close()\n", encoding="utf-8")
+    fake_git = bin_dir / "git"
+    fake_git.write_text(f"#!/bin/sh\n: > {markers / 'git'}\nexit 1\n", encoding="utf-8")
+    fake_git.chmod(0o755)
+    env = {
+        **os.environ,
+        "PYTHONPATH": str(hooks),
+        "PYTHONSTARTUP": str(hooks / "startup.py"),
+        "PYTHONUSERBASE": str(reviewed / "userbase"),
+        "PATH": f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}",
+        "LU_MCP_SOURCES_LOG_DIR": str(reviewed / "logs"),
+        ENV_ATTEMPT_ID: "att-hostile",
+        ENV_LEDGER_PATH: str(reviewed / "ledger.jsonl"),
+    }
+    return reviewed, markers, env
+
+
+def _launch_like_claude(server: dict, session_env: dict[str, str], cwd: Path) -> tuple[dict, dict[str, str] | None]:
+    """Start a stdio server as Claude Code 2.1.288 does (config ``env`` merged over the session's), then initialize.
+
+    Returns the initialize reply and, where ``/proc`` exists, the server process's own environment.
+    """
+    proc = subprocess.Popen(
+        [server["command"], *server["args"]],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env={**session_env, **server.get("env", {})},
+        cwd=cwd,
+    )
+    timer = threading.Timer(60, proc.kill)
+    timer.start()
+    try:
+        proc.stdin.write(json.dumps(_INITIALIZE).encode("utf-8") + b"\n")
+        proc.stdin.flush()
+        line = proc.stdout.readline()
+        environ_path = Path(f"/proc/{proc.pid}/environ")
+        server_env = None
+        if environ_path.exists():
+            raw = environ_path.read_bytes().decode("utf-8", "surrogateescape")
+            server_env = dict(item.split("=", 1) for item in raw.split("\0") if item)
+        _, stderr = proc.communicate()  # Closes stdin: the server exits at end of input.
+    finally:
+        timer.cancel()
+    assert line, f"no initialize reply; stderr: {stderr.decode('utf-8', 'replace')[-2000:]}"
+    return json.loads(line), server_env
+
+
+def test_round_two_launch_runs_reviewed_checkout_code(tmp_path: Path) -> None:
+    """Positive control: the plain launch the probe below must not match runs the branch's startup code."""
+    reviewed, markers, session_env = _hostile_session(tmp_path)
+    plain = review_mcp_module.sources_mcp_config(*review_mcp_module.sources_server_launch())["mcpServers"]["sources"]
+    reply, _ = _launch_like_claude(plain, session_env, reviewed)
+    assert reply["result"]["serverInfo"]["name"] == "sources"
+    assert {"requests", "git"} <= {path.name for path in markers.iterdir()}
+
+
+def test_isolated_sources_server_ignores_the_session_environment(tmp_path: Path) -> None:
+    """A branch's PYTHON*, PATH and LU_* variables neither run code in nor reach the reviewer's server (#9551)."""
+    reviewed, markers, session_env = _hostile_session(tmp_path)
+    session_env["PYTHONHOME"] = str(reviewed / "pythonhome")  # Honoured, it would stop the interpreter starting.
+    python_bin, sources_server = review_mcp_module.sources_server_launch()
+    config = review_mcp_module.isolated_sources_mcp_config(python_bin, sources_server)
+    server = config["mcpServers"]["sources"]
+    assert list(config["mcpServers"]) == ["sources"]
+    assert server == {
+        "command": "/usr/bin/env",
+        "args": ["-i", "PATH=/usr/bin:/bin", "LC_ALL=C.UTF-8", str(python_bin), "-I", str(sources_server)],
+    }
+
+    reply, server_env = _launch_like_claude(server, session_env, reviewed)
+
+    assert reply["result"]["serverInfo"]["name"] == "sources"
+    assert sorted(path.name for path in markers.iterdir()) == []
+    assert list((reviewed / "logs").iterdir()) == []
+    if server_env is not None:
+        assert server_env == dict(review_mcp_module.REVIEWER_SOURCES_ENV)
+
+
+# ---------------------------------------------------------------------------
 # Codex: scoped CODEX_HOME + effective-config gate (#8517)
 # ---------------------------------------------------------------------------
 

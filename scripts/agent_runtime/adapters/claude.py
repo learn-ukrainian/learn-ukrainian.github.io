@@ -31,9 +31,11 @@ Mode handling:
   edits and common Git/GitHub mutations. The reviewer's MCP servers never come
   from the reviewed checkout: ``--strict-mcp-config`` loads only a
   harness-built ``sources`` server, started over stdio from the primary
-  checkout's interpreter and server script (``review_mcp.sources_mcp_config``),
-  so a branch's ``.mcp.json`` cannot add a server or point ``sources``
-  elsewhere. Each read-only ``sources`` tool is allowed by name; the tools
+  checkout's interpreter and server script under ``env -i`` and ``python -I``
+  (``review_mcp.isolated_sources_mcp_config``), so neither a branch's
+  ``.mcp.json`` nor the environment its project settings set can add a
+  server, point ``sources`` elsewhere, or run code in the server before it
+  starts. Each read-only ``sources`` tool is allowed by name; the tools
   that persist a live fetch are denied. An ``mcp_config_path`` is accepted
   only for a formal full-access attempt, whose harness-written config and
   tool contract are unchanged. Explicit caller tool
@@ -58,6 +60,14 @@ Mode handling:
   what skips hooks. An allow glob ``mcp__*`` is ignored, so each configured
   server is named. The reviewer deny list does not apply. An explicit
   ``allowed_tools`` value stays the sole allow list.
+  Threat model: read-only is not a sandbox against the reviewed branch. The
+  reviewer runs branch code through its own Bash tool (its tests, for
+  example), and that code can write wherever the user can. The reviewer's MCP
+  grant must not add a write path beyond that one: the ``sources`` server it
+  loads is launched by the harness, not the branch, and every tool it is
+  granted is read-only in behavior (``tests/mcp/test_sources_tool_side_effects.py``).
+  Whatever the session applies to every process it starts (Bash and hooks
+  included) is reviewer-sandbox hardening, outside this grant.
 - ``danger``: Appends ``--dangerously-skip-permissions``. Reserved for
   cases where the caller explicitly needs sandbox bypass.
 Every headless invocation receives shared PreToolUse guard settings from the
@@ -304,11 +314,12 @@ def _reviewer_mcp_config() -> str:
     """The ordinary reviewer's only MCP configuration: the trusted stdio sources server.
 
     Built by the harness from the primary checkout, never read from the
-    reviewed checkout, and passed inline with ``--strict-mcp-config``.
+    reviewed checkout, and passed inline with ``--strict-mcp-config``. The
+    server starts with a pinned environment and isolated Python startup.
     """
-    from scripts.agent_runtime.review_mcp import sources_mcp_config, sources_server_launch
+    from scripts.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
 
-    return json.dumps(sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
+    return json.dumps(isolated_sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:

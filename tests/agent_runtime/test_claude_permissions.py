@@ -402,17 +402,29 @@ def test_sources_tool_split_matches_server_annotations() -> None:
 
 
 def test_reviewer_loads_only_the_trusted_sources_server(tmp_path: Path) -> None:
-    from scripts.agent_runtime.review_mcp import review_server_checkout, sources_mcp_config, sources_server_launch
+    from scripts.agent_runtime.review_mcp import (
+        isolated_sources_mcp_config,
+        review_server_checkout,
+        sources_server_launch,
+    )
     from scripts.common.repo_root import project_interpreter
 
     cmd = _reviewer_plan(tmp_path)
     config = _mcp_config(cmd)
-    assert config == sources_mcp_config(*sources_server_launch())
+    assert config == isolated_sources_mcp_config(*sources_server_launch())
     server = config["mcpServers"]["sources"]
     assert list(config["mcpServers"]) == ["sources"]
+    # tests/agent_runtime/test_review_mcp.py launches this under a hostile session environment.
     assert server == {
-        "command": str(project_interpreter()),
-        "args": [str(review_server_checkout() / ".mcp" / "servers" / "sources" / "server.py")],
+        "command": "/usr/bin/env",
+        "args": [
+            "-i",
+            "PATH=/usr/bin:/bin",
+            "LC_ALL=C.UTF-8",
+            str(project_interpreter()),
+            "-I",
+            str(review_server_checkout() / ".mcp" / "servers" / "sources" / "server.py"),
+        ],
     }
     granted = _granted(cmd)
     assert granted == [*REVIEWER_PERMISSION_PROFILE["allow"], *SOURCES_RULES]

@@ -665,13 +665,39 @@ def sources_server_launch() -> tuple[Path, Path]:
 def sources_mcp_config(python_bin: Path, sources_server: Path, env: Mapping[str, str] | None = None) -> dict[str, Any]:
     """An MCP configuration defining only a stdio ``sources`` server started from ``python_bin`` and ``sources_server``.
 
-    Formal attempts pass their recording ``env``. An ordinary Claude reviewer passes none and loads this as its
-    only MCP configuration, so the reviewed checkout's ``.mcp.json`` cannot add or replace a server (#9551).
+    Formal attempts pass their recording ``env``. An ordinary Claude reviewer uses
+    ``isolated_sources_mcp_config`` instead.
     """
     server: dict[str, Any] = {"command": str(python_bin), "args": [str(sources_server)]}
     if env is not None:
         server["env"] = dict(env)
     return {"mcpServers": {"sources": server}}
+
+
+# The whole environment of an ordinary reviewer's sources server (#9551). PATH: the server
+# runs ``git rev-parse`` at import for its identity, so PATH names only system directories.
+# LC_ALL: locale-dependent text decoding stays UTF-8 whatever locale the session has. The
+# server needs nothing else: its stores, request log and recording are found from its own
+# path, and recording stays off with every ``LU_REVIEW_*`` variable absent.
+REVIEWER_SOURCES_ENV: tuple[tuple[str, str], ...] = (
+    ("PATH", "/usr/bin:/bin"),
+    ("LC_ALL", "C.UTF-8"),
+)
+_ENV_COMMAND = "/usr/bin/env"
+
+
+def isolated_sources_mcp_config(python_bin: Path, sources_server: Path) -> dict[str, Any]:
+    """The ordinary Claude reviewer's only MCP configuration: ``sources`` started apart from the session environment.
+
+    Claude Code merges a server's ``env`` into the session environment it passes on, and that environment
+    includes the reviewed checkout's project settings, so ``env`` alone cannot remove a variable a branch sets.
+    ``env -i`` starts the server with exactly ``REVIEWER_SOURCES_ENV``. ``-I`` additionally ignores every
+    ``PYTHON*`` variable, the user site and the working directory on ``sys.path``, so the reviewed checkout
+    (the server's working directory) cannot run code before the server initializes (#9551).
+    """
+    assignments = [f"{key}={value}" for key, value in REVIEWER_SOURCES_ENV]
+    args = ["-i", *assignments, str(python_bin), "-I", str(sources_server)]
+    return {"mcpServers": {"sources": {"command": _ENV_COMMAND, "args": args}}}
 
 
 def check_review_contract(
