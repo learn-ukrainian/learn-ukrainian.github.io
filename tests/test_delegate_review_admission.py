@@ -240,16 +240,183 @@ def test_review_dispatch_protects_attempt_inputs_outside_the_input_root(tmp_path
         )
 
 
-def test_review_attempt_input_paths_cover_manifest_code_and_output_schema(tmp_path, monkeypatch):
+def test_review_dispatch_freezes_the_manifest_target_before_preparation(tmp_path, monkeypatch):
+    """#9597: a removable checkout holding only the manifest's symlink is never read again."""
+    from scripts.orchestration import worktree_claims
+    from tests.test_delegate import (
+        _init_repo_with_worktree,
+        _patch_worker_popen,
+        _rendered_attempt_prompt,
+        _review_code,
+        _sanitize_git_env_for_test,
+        _write_args,
+    )
+
+    main, code_checkout = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", code_checkout)
+    tasks = main / "batch_state/tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    _patch_worker_popen(monkeypatch)
+    fake_popen = delegate.subprocess.Popen
+    workers = []
+
+    def capture_worker(argv, *args, **kwargs):
+        if "_worker" in argv:
+            workers.append(list(argv))
+        return fake_popen(argv, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", capture_worker)
+    trees = {}
+    for name in ("render-inputs", "link-tree"):
+        trees[name] = main / ".worktrees/dispatch/codex" / name
+        subprocess.run(
+            ["git", "worktree", "add", "--detach", str(trees[name]), "main"],
+            cwd=main,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+    input_root = trees["render-inputs"] / "inputs"
+    input_root.mkdir()
+    target = input_root / "review.yaml"
+    target.write_text("review: test\n")
+    # A tracked symlink keeps the link checkout clean, so the shared guard may remove it.
+    link = trees["link-tree"] / "review.yaml"
+    link.symlink_to(target)
+    for command in (["add", "review.yaml"], ["commit", "-qm", "manifest link"]):
+        subprocess.run(["git", *command], cwd=trees["link-tree"], check=True, capture_output=True, timeout=30)
+    _review_code(main)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.verify_full_review_tree", lambda *_args: None)
+    prompt_file = _rendered_attempt_prompt(main, tmp_path / "prompt.md", input_root=input_root)
+    removals = []
+
+    def prepare(**kwargs):
+        # The link's checkout is removed during preparation; every later read uses the frozen target.
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            removal = executor.submit(
+                worktree_claims.remove_unclaimed_worktree,
+                trees["link-tree"],
+                repo_root=main,
+                tasks_dir=tasks,
+                lock_dir=delegate._worktree_lock_dir(),
+                lock_timeout_s=0.1,
+                owner_task_id=None,
+                reason="race probe",
+            )
+            removals.append(removal.result(timeout=5).action)
+        assert kwargs["manifest_path"].read_text() == "review: test\n"
+        return SimpleNamespace(config_path=tmp_path / "config.json", manifest_sha256="a" * 64)
+
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", prepare)
+    args = _write_args(
+        agent="claude",
+        model="claude-opus-5-5",
+        task_id="review-link",
+        mode="read-only",
+        prompt=None,
+        prompt_file=str(prompt_file),
+        cwd=str(code_checkout),
+        full_checkout=True,
+        review_access="isolated",
+        review_attempt=str(link),
+        review_id="rev-test",
+        attempt_id="att-test",
+    )
+    assert delegate.cmd_dispatch(args) == 0
+    assert removals == ["removed"] and not link.exists()
+    (argv,) = workers
+    assert argv[argv.index("--review-manifest") + 1] == str(target.resolve())
+    record = json.loads(delegate._state_path("review-link").read_bytes())
+    assert record["review_input_paths"] == [str(target.resolve()), str(code_checkout)]
+
+
+@pytest.mark.parametrize("nested", [False, True])
+def test_review_dispatch_refuses_scratch_in_a_linked_checkout_before_reservation(tmp_path, monkeypatch, capsys, nested):
+    """#9597: no record claims the runtime tmp lease, so its root may not sit in a removable tree."""
+    from tests.test_delegate import (
+        _init_repo_with_worktree,
+        _rendered_attempt_prompt,
+        _review_code,
+        _sanitize_git_env_for_test,
+        _write_args,
+    )
+
+    main, code_checkout = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", code_checkout)
+    monkeypatch.setenv("LU_TASKS_DIR", str(main / "batch_state/tasks"))
+    inputs = main / ".worktrees/dispatch/codex/render-inputs"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(inputs), "main"],
+        cwd=main,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    input_root = inputs / "inputs"
+    input_root.mkdir()
+    manifest = input_root / "review.yaml"
+    manifest.write_text("review: test\n")
+    # An existing ignored-style directory, or a root dispatch would create later.
+    scratch = inputs / "scratch" / ("not-yet" if nested else "")
+    if not nested:
+        scratch.mkdir()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
+    _review_code(main)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.verify_full_review_tree", lambda *_args: None)
+    prompt_file = _rendered_attempt_prompt(main, tmp_path / "prompt.md", input_root=input_root)
+
+    def unexpected(**_kwargs):
+        pytest.fail("scratch in a removable checkout must refuse before spending an attempt id")
+
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", unexpected)
+    args = _write_args(
+        agent="claude",
+        model="claude-opus-5-5",
+        task_id="review-scratch",
+        mode="read-only",
+        prompt=None,
+        prompt_file=str(prompt_file),
+        cwd=str(code_checkout),
+        full_checkout=True,
+        review_access="isolated",
+        review_attempt=str(manifest),
+        review_id="rev-test",
+        attempt_id="att-test",
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "review_scratch_root_in_worktree" in capsys.readouterr().err
+    assert not delegate._state_path("review-scratch").exists()
+    assert not (scratch / "learn-ukrainian").exists()
+
+
+def test_review_scratch_guard_allows_outside_git_and_fails_closed_without_registration(tmp_path, monkeypatch):
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
+
+    def outside_git(_path):
+        raise wc.NotAGitRepositoryError("fixture outside git")
+
+    monkeypatch.setattr(wc, "resolve_main_root", outside_git)
+    delegate._refuse_review_scratch_in_worktree()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path])
+    delegate._refuse_review_scratch_in_worktree()  # the primary checkout is not removable
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [])
+    with pytest.raises(ValueError, match="review_scratch_root_unverifiable"):
+        delegate._refuse_review_scratch_in_worktree()
+
+
+def test_review_attempt_input_paths_cover_manifest_and_code(tmp_path, monkeypatch):
+    # A formal attempt takes no output schema (attempt_output_schema_unsupported), so none is claimed.
     monkeypatch.setattr(delegate, "_local_repo_root", tmp_path / "code")
     manifest = tmp_path / "review.yaml"
-    schema = tmp_path / "schema.json"
-    assert delegate._review_attempt_input_paths(str(manifest), None) == [manifest.resolve(), tmp_path / "code"]
-    assert delegate._review_attempt_input_paths(str(manifest), str(schema)) == [
-        manifest.resolve(),
-        tmp_path / "code",
-        schema,
-    ]
+    assert delegate._review_attempt_input_paths(str(manifest)) == [manifest.resolve(), tmp_path / "code"]
 
 
 def test_review_input_lock_covers_extra_inputs_and_refuses_missing_one(tmp_path, monkeypatch):

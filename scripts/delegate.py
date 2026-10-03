@@ -10347,18 +10347,42 @@ def _lock_review_input_root(
         raise ValueError("review input worktree disappeared while dispatch waited for its lock")
 
 
-def _review_attempt_input_paths(manifest: str, output_schema_path: str | None) -> list[Path]:
+def _review_attempt_input_paths(manifest: str) -> list[Path]:
     """Paths a formal attempt reads after its id is reserved, besides its input root (#9597).
 
-    The worker re-reads the manifest (``attempt_boundary``), runs this checkout's
-    code and its lazy imports for the whole attempt, and a Codex seat reads its
-    output schema. The receipts, the sources server and its interpreter live in
-    the primary checkout or this one; the runtime tmp root is outside any checkout.
+    The worker re-reads the manifest (``attempt_boundary``) at the canonical path
+    dispatch froze at admission, and runs this checkout's code and its lazy
+    imports for the whole attempt. A formal attempt takes no output schema
+    (``attempt_output_schema_unsupported``). The receipts, the sources server and
+    its interpreter live in the primary checkout or this one; the runtime tmp root
+    is refused inside a removable checkout (``_refuse_review_scratch_in_worktree``).
     """
-    paths = [Path(manifest).resolve(), _local_repo_root]
-    if output_schema_path is not None:
-        paths.append(Path(output_schema_path))
-    return list(dict.fromkeys(paths))
+    return list(dict.fromkeys([Path(manifest).resolve(), _local_repo_root]))
+
+
+def _refuse_review_scratch_in_worktree() -> None:
+    """Refuse an attempt whose runtime scratch would sit in a removable checkout (#9597).
+
+    The worker's tmp lease lives under the fleet scratch root for the whole
+    attempt and no task record claims it, so a scratch root inside a registered
+    linked checkout is refused before the attempt id is reserved.
+    """
+    scratch = resolve_scratch_root().resolve()
+    existing = next(path for path in (scratch, *scratch.parents) if path.exists())
+    wc = _load_worktree_containment()
+    try:
+        main_root = wc.resolve_main_root(existing)
+    except wc.NotAGitRepositoryError:
+        return
+    registered = wc.registered_worktrees(main_root)
+    if not registered:
+        raise ValueError("review_scratch_root_unverifiable: worktree registration unavailable")
+    tree = worktree_claims.review_input_worktree(scratch, main_root=main_root, registered=registered)
+    if tree is not None:
+        raise ValueError(
+            f"review_scratch_root_in_worktree: the fleet scratch root {scratch} lies in removable "
+            f"checkout {tree}; set LU_SCRATCH_ROOT outside every linked checkout"
+        )
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -10784,6 +10808,9 @@ def _dispatch(
         if not manifest_path.is_file():
             print(f"❌ review manifest file not found: {manifest_path}", file=sys.stderr)
             return 2
+        # Admission, preparation and the worker read one canonical manifest path (#9597):
+        # only the target's checkout is claimed, so a supplied symlink's checkout may go.
+        review_attempt = args.review_attempt = str(manifest_path.resolve())
 
         effective_harness = requested_harness or args.agent
         from scripts.agent_runtime.review_mcp import (
@@ -11779,7 +11806,8 @@ def _dispatch(
         from scripts.review.isolation import ReviewIsolationError
 
         try:
-            review_input_paths = _review_attempt_input_paths(review_attempt, output_schema_path)
+            _refuse_review_scratch_in_worktree()
+            review_input_paths = _review_attempt_input_paths(review_attempt)
             _lock_review_input_root(
                 review_contract, worktree_locks, locked_worktree=worktree_path, inputs=review_input_paths
             )
@@ -12131,7 +12159,7 @@ def _dispatch(
                     str(review_plan.config_path),
                     "--strict-mcp-config",
                     "--review-manifest",
-                    str(Path(review_attempt).resolve()),
+                    review_attempt,
                     "--review-input-root",
                     str(review_input_root),
                 ]
