@@ -202,6 +202,41 @@ def test_read_only_uri_caller_refuses_a_writable_mode(quarantined_db, mode):
         sum20_lookup._get_db(f"{quarantined_db.as_uri()}?mode={mode}", write=False)
 
 
+@pytest.mark.parametrize("suffix", ["#section", "?cache=shared#section", "?mode=ro#x", "#"])
+def test_read_only_uri_caller_refuses_a_fragment(quarantined_db, tmp_path, suffix):
+    with pytest.raises(ValueError, match="fragment"):
+        sum20_lookup._get_db(quarantined_db.as_uri() + suffix, write=False)
+    missing = tmp_path / "absent.db"
+    with pytest.raises(ValueError, match="fragment"):
+        sum20_lookup._get_db(missing.as_uri() + suffix, write=False)
+    assert not missing.exists()
+
+
+def test_refused_fragment_uri_leaves_an_existing_database_unmodified(quarantined_db):
+    before = quarantined_db.read_bytes()
+    with pytest.raises(ValueError, match="fragment"):
+        sum20_lookup._get_db(quarantined_db.as_uri() + "?cache=shared#section", write=False)
+    assert quarantined_db.read_bytes() == before
+
+
+def test_read_only_uri_rewrites_to_one_mode_ro_parameter(quarantined_db):
+    rewritten = sum20_lookup._read_only_uri(quarantined_db.as_uri() + "?cache=shared&mode=ro&mode=ro")
+    assert rewritten == quarantined_db.as_uri() + "?cache=shared&mode=ro"
+    assert sum20_lookup._read_only_uri("file:rel.db") == "file:rel.db?mode=ro"
+
+
+def test_write_branch_passes_a_file_uri_through_unchanged(tmp_path):
+    uri = (tmp_path / "fresh.db").as_uri() + "?cache=shared"
+    conn = sum20_lookup._get_db(uri, write=True)
+    try:
+        conn.execute("CREATE TABLE IF NOT EXISTS probe (x INTEGER)")
+        conn.execute("INSERT INTO probe VALUES (1)")
+        conn.commit()
+    finally:
+        conn.close()
+    assert (tmp_path / "fresh.db").exists()
+
+
 def test_read_only_uri_keeps_other_parameters_and_an_explicit_mode_ro(quarantined_db):
     for uri in (f"{quarantined_db.as_uri()}?mode=ro", f"{quarantined_db.as_uri()}?cache=shared"):
         conn = sum20_lookup._get_db(uri, write=False)

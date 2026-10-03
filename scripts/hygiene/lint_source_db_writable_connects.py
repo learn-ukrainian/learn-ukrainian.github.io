@@ -24,8 +24,19 @@ linter parses every tracked Python file (``git ls-files``) except ``tests/``,
   a URI that carries ``mode=ro`` or ``immutable=1`` as literal text.  An argument that is read-only on some paths
   only (``a if read_only else b``) is reported as ``conditional``.
 
-Known limit: a path handed in from another module under a neutral name, into a
-module that never names a source database, is not followed.
+Caller arguments are mapped to parameters by call shape: ``obj.read(p)`` and
+``Cls().read(p)`` bind ``self``, ``Cls.read(obj, p)`` passes it explicitly,
+``@classmethod`` binds ``cls`` either way, ``@staticmethod`` binds nothing, and
+``Cls(p)`` / ``Cls.__init__(self, p)`` / ``super().__init__(p)`` reach ``__init__``.
+
+Known limits.  This is a lint backstop; the runtime defence is that the read paths
+open the databases read-only.  Not followed: calls across modules (a path handed
+in from another module under a neutral name, into a module that never names a
+source database), arguments forwarded through ``*args`` / ``**kwargs``, callables
+wrapped in ``functools.partial``, callbacks and other first-class function
+values, a class bound to another name, and subclass constructors that inherit
+``__init__``.  Callers are matched by name, so unrelated same-named callables
+add evidence (over-approximation, never a missed writer).
 
 Remaining writable sites are allowlisted by ``(path, stripped snippet,
 max_occurrences, reason)``; the allowlist may only shrink.  Stale entries fail.
@@ -528,16 +539,30 @@ class _ModuleAnalysis:
             self._caller_cache[key] = self._find_caller_arguments(function, parameter)
         return self._caller_cache[key]
 
+    def _implicit_arguments(self, function: _FunctionNode, call: ast.Call) -> int:
+        """Leading positional parameters ``call`` binds implicitly (``self`` / ``cls``)."""
+        owner = self.parents.get(function)
+        if not isinstance(owner, ast.ClassDef):
+            return 0
+        decorators = {d.id for d in function.decorator_list if isinstance(d, ast.Name)}
+        if "staticmethod" in decorators:
+            return 0
+        if "classmethod" in decorators:
+            return 1  # ``cls`` is bound through the class and through an instance alike
+        func = call.func
+        if isinstance(func, ast.Attribute):
+            # ``Reader.read(Reader(), path)`` passes ``self`` explicitly; ``obj.read(path)`` binds it.
+            through_class = isinstance(func.value, ast.Name) and func.value.id in self.classes
+            return 0 if through_class else 1
+        return 1 if function.name == "__init__" else 0
+
     def _find_caller_arguments(self, function: _FunctionNode, parameter: str) -> list[ast.expr]:
         params = _parameter_list(function)
         positional = [name for name, _default, is_positional in params if is_positional]
-        is_method = isinstance(self.parents.get(function), ast.ClassDef)
-        if is_method and positional and positional[0] in {"self", "cls"}:
-            positional = positional[1:]
         callee_names = {function.name}
         owner = self.parents.get(function)
         if function.name == "__init__" and isinstance(owner, ast.ClassDef):
-            callee_names = {owner.name}
+            callee_names = {owner.name, "__init__"}  # ``Reader(path)`` and ``super().__init__(path)``
         found: list[ast.expr] = []
         for call in self.calls:
             func = call.func
@@ -548,8 +573,10 @@ class _ModuleAnalysis:
                 if keyword.arg == parameter:
                     found.append(keyword.value)
             if parameter in positional:
-                position = positional.index(parameter)
-                if position < len(call.args) and not any(isinstance(a, ast.Starred) for a in call.args[: position + 1]):
+                position = positional.index(parameter) - self._implicit_arguments(function, call)
+                if 0 <= position < len(call.args) and not any(
+                    isinstance(a, ast.Starred) for a in call.args[: position + 1]
+                ):
                     found.append(call.args[position])
         return found
 

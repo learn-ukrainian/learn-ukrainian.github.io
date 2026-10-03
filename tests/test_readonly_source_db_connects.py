@@ -143,6 +143,70 @@ WRITABLE_CASES = {
             return read("file:data/sources.db?mode=rw")
         """
     ),
+    "unbound_method_call_through_the_class": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main():
+            return Reader.read(Reader(), "sources.db")
+        """
+    ),
+    "bound_method_call": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main():
+            return Reader().read("sources.db")
+        """
+    ),
+    "staticmethod_call": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            @staticmethod
+            def read(path="cache.db"):
+                return sqlite3.connect(path)
+        def main():
+            return Reader.read("sources.db")
+        """
+    ),
+    "classmethod_call": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            @classmethod
+            def read(cls, path="cache.db"):
+                return sqlite3.connect(path)
+        def main():
+            return Reader.read("sources.db")
+        """
+    ),
+    "classmethod_call_through_an_instance": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            @classmethod
+            def read(cls, path="cache.db"):
+                return sqlite3.connect(path)
+        def main():
+            return Reader().read("sources.db")
+        """
+    ),
+    "unbound_init_call": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def __init__(self, path="cache.db"):
+                self.conn = sqlite3.connect(path)
+        class Sub(Reader):
+            def __init__(self):
+                Reader.__init__(self, "sources.db")
+        """
+    ),
     "public_helper_in_source_module": textwrap.dedent(
         """
         import sqlite3
@@ -186,6 +250,16 @@ READ_ONLY_OR_UNRELATED = {
         def open_db(sources_db):
             uri = f"file:{sources_db}?mode=ro"
             return sqlite3.connect(uri, uri=True)
+        """
+    ),
+    "unbound_call_reads_the_path_argument_not_self": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main(sources_db_holder):
+            return Reader.read(sources_db_holder, "other.db")
         """
     ),
     "default_and_every_caller_are_other_databases": textwrap.dedent(

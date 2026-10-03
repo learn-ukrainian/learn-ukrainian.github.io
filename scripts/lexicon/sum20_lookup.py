@@ -17,7 +17,7 @@ import sqlite3
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, unquote
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 import requests
 from bs4 import BeautifulSoup
@@ -60,16 +60,16 @@ def _resolve_sources_db() -> Path:
 
 
 def _read_only_uri(uri: str) -> str:
-    """``uri`` with ``mode=ro`` enforced; a URI asking for any other mode is refused."""
-    base, _, query = uri.partition("?")
-    kept: list[str] = []
-    for segment in filter(None, query.split("&")):
-        key, _, value = segment.partition("=")
-        if unquote(key) != "mode":
-            kept.append(segment)
-        elif unquote(value) != "ro":
-            raise ValueError(f"read-only СУМ-20 lookup refuses a URI with mode={unquote(value)}: {uri}")
-    return f"{base}?{'&'.join([*kept, 'mode=ro'])}"
+    """``uri`` with ``mode=ro`` enforced; a fragment or any other ``mode`` is refused."""
+    parts = urlsplit(uri)
+    if "#" in uri:  # SQLite ends the path/query at "#", so even an empty fragment changes the parse
+        raise ValueError(f"read-only СУМ-20 lookup refuses a URI with a fragment: {uri}")
+    params = parse_qsl(parts.query, keep_blank_values=True)
+    for key, value in params:
+        if key == "mode" and value != "ro":
+            raise ValueError(f"read-only СУМ-20 lookup refuses a URI with mode={value}: {uri}")
+    kept = [(key, value) for key, value in params if key != "mode"]
+    return urlunsplit(parts._replace(query=urlencode([*kept, ("mode", "ro")])))
 
 
 def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite3.Connection:
