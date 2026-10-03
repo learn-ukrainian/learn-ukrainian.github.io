@@ -17,11 +17,11 @@ from scripts.agent_runtime.review_mcp import (
 )
 from scripts.agent_runtime.sources_read_only import (
     SERVER_PATH,
-    SOURCES_PERSISTING_TOOLS,
-    SOURCES_READ_ONLY_TOOLS,
     sources_tool_sets,
 )
 from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
+
+SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
 
 
 def _server_config(cmd):
@@ -146,6 +146,111 @@ def test_annotation_change_removes_new_writer_without_updating_a_list(tmp_path):
     )
     readers, writers = sources_tool_sets(path)
     assert "verify_word" not in readers and "verify_word" in writers
+
+
+def test_tool_sets_cache_successful_reads(tmp_path, monkeypatch):
+    path = tmp_path / "server.py"
+    path.write_text(SERVER_PATH.read_text())
+    read_text = Path.read_text
+    reads = []
+
+    def counted_read(self, *args, **kwargs):
+        reads.append(self)
+        return read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", counted_read)
+    first = sources_tool_sets(path)
+    assert sources_tool_sets(path) is first
+    assert reads == [path]
+
+
+def test_missing_server_fails_closed_and_can_be_retried(tmp_path):
+    path = tmp_path / "server.py"
+    with pytest.raises(FileNotFoundError):
+        sources_tool_sets(path)
+    path.write_text(SERVER_PATH.read_text())
+    assert sources_tool_sets(path) == (SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS)
+
+
+@pytest.mark.parametrize("session", [None, "resume-reader"])
+def test_ad_hoc_codex_missing_server_refuses_even_hostile_grants(tmp_path, monkeypatch, session):
+    from scripts.agent_runtime.adapters import codex
+
+    def missing():
+        return sources_tool_sets(tmp_path / "missing.py")
+
+    monkeypatch.setattr(codex, "sources_tool_sets", missing)
+    with pytest.raises(FileNotFoundError):
+        CodexAdapter().build_invocation(
+            prompt="use mcp__sources__verify_words",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=session,
+            tool_config={"mcp_servers": {"sources": {"default_tools_approval_mode": "approve"}}},
+        )
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+@pytest.mark.parametrize("session", [None, "resume-reader"])
+def test_formal_codex_missing_server_keeps_explicit_contract(tmp_path, monkeypatch, access, session):
+    from scripts.agent_runtime import review_mcp
+    from scripts.agent_runtime.adapters import codex
+    from scripts.review.receipts import ledger
+
+    def unexpected():
+        pytest.fail("formal explicit tool contracts must not read the server file")
+
+    monkeypatch.setattr(codex, "sources_tool_sets", unexpected)
+    monkeypatch.setattr(review_mcp, "sources_tool_sets", unexpected)
+    monkeypatch.setattr(ledger, "sources_tool_sets", lambda: sources_tool_sets(tmp_path / "missing.py"))
+    config = tomllib.loads(
+        _render_codex_review_config(Path("/bin/python"), tmp_path / "missing.py", {"LU_REVIEW_ACCESS": access})
+    )
+    plan = CodexAdapter().build_invocation(
+        prompt="use mcp__sources__verify_words",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=session,
+        tool_config={
+            "codex_home_override": str(tmp_path / "scoped-home"),
+            "mcp_config_path": str(tmp_path / "attempt.mcp.json"),
+            "review_access": access,
+        },
+    )
+    try:
+        expected = REVIEW_TOOLS if access == "isolated" else FULL_REVIEW_TOOLS
+        for sources in (config["mcp_servers"]["sources"], _server_config(plan.cmd)):
+            assert set(sources["enabled_tools"]) == expected
+            assert sources["tools"] == {tool: {"approval_mode": "approve"} for tool in expected}
+            assert sources["default_tools_approval_mode"] == "prompt"
+    finally:
+        plan.output_file.unlink()
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+@pytest.mark.parametrize("writer", ["verify_words", "search_resources"])
+def test_formal_contract_refuses_reclassified_writer_at_call_time(tmp_path, monkeypatch, access, writer):
+    from scripts.review.receipts import ledger
+
+    path = tmp_path / "server.py"
+    path.write_text(
+        SERVER_PATH.read_text().replace(f'name="{writer}",', f'name="{writer}", annotations=_PERSISTING_LOOKUP_TOOL,')
+    )
+    monkeypatch.setattr(ledger, "sources_tool_sets", lambda: sources_tool_sets(path))
+    with pytest.raises(ValueError, match="review_contract_contains_non_read_only_sources_tool"):
+        ledger.review_tools(access)
+
+
+def test_ad_hoc_config_missing_server_refuses(tmp_path, monkeypatch):
+    from scripts.agent_runtime import review_mcp
+
+    monkeypatch.setattr(review_mcp, "sources_tool_sets", lambda: sources_tool_sets(tmp_path / "missing.py"))
+    with pytest.raises(FileNotFoundError):
+        _render_codex_review_config(Path("/bin/python"), tmp_path / "missing.py", {})
 
 
 @pytest.mark.parametrize("writer", SOURCES_PERSISTING_TOOLS)

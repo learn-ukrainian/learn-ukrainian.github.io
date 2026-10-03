@@ -1,4 +1,5 @@
 """Adversarial parent reads: no seat-controlled name can expose host bytes."""
+
 from __future__ import annotations
 
 import os
@@ -31,16 +32,22 @@ def scripts_only_tree(tmp_path_factory):
 
 
 @pytest.mark.repo_wide
-@pytest.mark.parametrize("module", [
-    "scripts.agent_runtime.attempt_safe_read",
-    "scripts.agent_runtime.attempt_boundary",
-    "scripts.agent_runtime.runner",
-    "scripts.agent_runtime.watchdog",
-    *[
-        f"scripts.agent_runtime.adapters.{path.stem}"
-        for path in sorted((Path(__file__).resolve().parents[2] / "scripts/agent_runtime/adapters").glob("*.py"))
+@pytest.mark.parametrize(
+    "module",
+    [
+        "scripts.agent_runtime.attempt_safe_read",
+        "scripts.agent_runtime.attempt_boundary",
+        "scripts.agent_runtime.runner",
+        "scripts.agent_runtime.watchdog",
+        "scripts.agent_runtime.sources_read_only",
+        "scripts.agent_runtime.review_mcp",
+        "scripts.review.receipts.ledger",
+        *[
+            f"scripts.agent_runtime.adapters.{path.stem}"
+            for path in sorted((Path(__file__).resolve().parents[2] / "scripts/agent_runtime/adapters").glob("*.py"))
+        ],
     ],
-])
+)
 def test_scripts_only_import_does_not_load_isolation(scripts_only_tree, module):
     probe = """
 import importlib
@@ -102,11 +109,17 @@ def test_safe_read_regular_offset_and_exact_bound(files):
     assert safe_read_attempt_file(target, max_bytes=0) == b""
 
 
-@pytest.mark.parametrize("attack,code", [
-    ("symlink", "unsafe_path"), ("hardlink", "link_count"),
-    ("fifo", "not_regular"), ("directory", "not_regular"),
-    ("oversized", "oversized"), ("component", "unsafe_path"),
-])
+@pytest.mark.parametrize(
+    "attack,code",
+    [
+        ("symlink", "unsafe_path"),
+        ("hardlink", "link_count"),
+        ("fifo", "not_regular"),
+        ("directory", "not_regular"),
+        ("oversized", "oversized"),
+        ("component", "unsafe_path"),
+    ],
+)
 def test_safe_read_refuses_swapped_names(files, attack, code):
     root, target, forbidden = files
     target.unlink()
@@ -295,8 +308,15 @@ def test_codex_output_swap_refuses_without_sentinel(files, attack):
     assert SENTINEL.decode() not in repr(result)
 
 
-@pytest.mark.parametrize("reader", [agy._read_transcript_events, agy._conversation_id_from_log,
-                                     CodexAdapter()._read_rollout_segment, CodexAdapter._read_rollout_session_id])
+@pytest.mark.parametrize(
+    "reader",
+    [
+        agy._read_transcript_events,
+        agy._conversation_id_from_log,
+        CodexAdapter()._read_rollout_segment,
+        CodexAdapter._read_rollout_session_id,
+    ],
+)
 @pytest.mark.parametrize("attack", ["symlink", "hardlink"])
 def test_remaining_adapter_reads_refuse_swaps(files, reader, attack):
     _, target, forbidden = files
@@ -351,7 +371,9 @@ def test_agy_saved_result_nul_pointer_is_typed(tmp_path, monkeypatch, attempt, c
     monkeypatch.setattr(boundary.os, "read", lambda *a: pytest.fail("malformed pointer must read no bytes"))
     with pytest.raises(AttemptReadError, match=r"^attempt_read_unsafe_path$"):
         agy._inline_saved_tool_result_pointer(
-            text, transcript_path=transcript, trusted_root=tmp_path if attempt else Path("/"),
+            text,
+            transcript_path=transcript,
+            trusted_root=tmp_path if attempt else Path("/"),
         )
 
 
@@ -386,8 +408,12 @@ def test_agy_saved_result_uses_plan_root_after_transcript_read(tmp_path, monkeyp
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: root / "agy.log")
     plan = agy.AgyAdapter().build_invocation(
-        prompt="prompt", mode="workspace-write", cwd=tmp_path,
-        model=None, task_id=None, session_id=None,
+        prompt="prompt",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
         tool_config={"agy_home_override": str(alias / "home"), "review_write_root": str(root)},
     )
     assert plan.metadata["parent_read_root"] == str(root)
@@ -399,11 +425,22 @@ def test_agy_saved_result_uses_plan_root_after_transcript_read(tmp_path, monkeyp
     output.write_text("own saved result")
     transcript.parent.mkdir(parents=True)
     events = [
-        {"tool_calls": [{"name": "call_mcp_tool", "args": {
-            "ServerName": "sources", "ToolName": "search_text", "Arguments": {},
-        }}]},
-        {"type": "GENERIC" if shape == "generic" else "MCP_TOOL",
-         "content": f"The output was large and was saved to: {output.as_uri()}"},
+        {
+            "tool_calls": [
+                {
+                    "name": "call_mcp_tool",
+                    "args": {
+                        "ServerName": "sources",
+                        "ToolName": "search_text",
+                        "Arguments": {},
+                    },
+                }
+            ]
+        },
+        {
+            "type": "GENERIC" if shape == "generic" else "MCP_TOOL",
+            "content": f"The output was large and was saved to: {output.as_uri()}",
+        },
     ]
     if shape != "fifo":
         for index, event in enumerate(events):
@@ -519,10 +556,12 @@ def test_schema_loaders_cannot_follow_seat_symlink(files, loader):
     target.unlink()
     target.symlink_to(forbidden)
     with pytest.raises(AttemptReadError, match="unsafe_path"):
-        loader({
-            "output_schema_path": str(target),
-            "output_schema_sha256": hashlib.sha256(SENTINEL).hexdigest(),
-        })
+        loader(
+            {
+                "output_schema_path": str(target),
+                "output_schema_sha256": hashlib.sha256(SENTINEL).hexdigest(),
+            }
+        )
 
 
 def test_prefix_suffix_size_and_tail_ignore_unread_history(files, monkeypatch):

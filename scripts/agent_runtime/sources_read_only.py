@@ -8,13 +8,19 @@ The side-effect audit tests these annotations against actual persistent writes.
 from __future__ import annotations
 
 import ast
+from functools import lru_cache
 from pathlib import Path
 
 SERVER_PATH = Path(__file__).resolve().parents[2] / ".mcp/servers/sources/server.py"
 
 
+@lru_cache(maxsize=1)
 def sources_tool_sets(server_path: Path = SERVER_PATH) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    """Partition literal tool declarations by readOnlyHint, without executing code."""
+    """Lazily partition declarations once per process, without executing code.
+
+    Missing or unreadable declarations propagate their error: callers must not
+    fall back to unrestricted tools. Failed reads are not cached.
+    """
     tree = ast.parse(server_path.read_text(encoding="utf-8"))
     annotations = {}
     for node in tree.body:
@@ -62,6 +68,3 @@ def sources_tool_sets(server_path: Path = SERVER_PATH) -> tuple[tuple[str, ...],
     if not read_only:
         raise ValueError("sources_read_only_tools_empty")
     return tuple(sorted(read_only)), tuple(sorted(persisting))
-
-
-SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()

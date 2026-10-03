@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.sources_read_only import SOURCES_READ_ONLY_TOOLS
+from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.curriculum.evidence.lock import atomic_write
 
@@ -63,14 +63,21 @@ REVIEW_TOOLS = frozenset(
     }
 )
 FULL_REVIEW_TOOLS = REVIEW_TOOLS | {"search_resources"}
-if not frozenset(SOURCES_READ_ONLY_TOOLS) >= FULL_REVIEW_TOOLS:
-    raise ValueError("review_contract_contains_non_read_only_sources_tool")
 
 
 def review_tools(review_access: str = "isolated") -> frozenset[str]:
     """Keep the original isolated tool contract; catalogue evidence is full-only."""
     if review_access not in {"isolated", "full"}:
         raise ValueError("review_access_invalid")
+    try:
+        readers = frozenset(sources_tool_sets()[0])
+    except FileNotFoundError:
+        # Scripts-only checkouts still have an explicit, restricted contract.
+        # No missing declarations may turn this into an unrestricted grant.
+        pass
+    else:
+        if not readers >= FULL_REVIEW_TOOLS:
+            raise ValueError("review_contract_contains_non_read_only_sources_tool")
     return FULL_REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS
 
 

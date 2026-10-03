@@ -48,7 +48,7 @@ from scripts.review.receipts.ledger import review_tools
 
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
-from ..sources_read_only import SOURCES_READ_ONLY_TOOLS
+from ..sources_read_only import sources_tool_sets
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -94,8 +94,10 @@ _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 # Exposure filtering remains effective even under parent-sandboxed bypass.
 
 
-def _sources_read_only_flags(tool_names: tuple[str, ...] = SOURCES_READ_ONLY_TOOLS) -> list[str]:
+def _sources_read_only_flags(tool_names: tuple[str, ...] | None = None) -> list[str]:
     """Replace inherited sources grants with the route's readers, then approve each."""
+    if tool_names is None:
+        tool_names = sources_tool_sets()[0]
     tools = {name: {"approval_mode": "approve"} for name in tool_names}
     approvals = "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in tools) + "}"
     return [
@@ -115,10 +117,12 @@ def _prompt_names_sources_mcp(prompt: str) -> bool:
 def _argv_can_call_sources_mcp(argv: list[str]) -> bool:
     if "--dangerously-bypass-approvals-and-sandbox" in argv:
         return True
-    return any(
+    if any(
         all(flag in argv for flag in _sources_read_only_flags(tools))
-        for tools in (SOURCES_READ_ONLY_TOOLS, tuple(sorted(review_tools())), tuple(sorted(review_tools("full"))))
-    )
+        for tools in (tuple(sorted(review_tools())), tuple(sorted(review_tools("full"))))
+    ):
+        return True
+    return all(flag in argv for flag in _sources_read_only_flags())
 
 
 def _read_only_tmp_flags(root: Path) -> list[str]:
@@ -437,9 +441,10 @@ class CodexAdapter:
             # Last overrides win: caller/global config cannot re-expose writers.
             # Formal scoped homes use the receipt contract, including when the
             # parent AttemptBoundary replaces their server with a stdio proxy.
-            tools = SOURCES_READ_ONLY_TOOLS
             if tc.get("codex_home_override") and tc.get("mcp_config_path"):
                 tools = tuple(sorted(review_tools(tc.get("review_access", "isolated"))))
+            else:
+                tools = sources_tool_sets()[0]
             cmd.extend(_sources_read_only_flags(tools))
         if has_session_to_resume:
             cmd.append(session_id)
