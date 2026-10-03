@@ -75,5 +75,5 @@ jobs:
           python -m scripts.ci.audit_dependencies --skip-python
           echo "::endgroup::"
           echo "::group::npm audit (all, advisory summary)"
-          (cd site && npm audit || true)
+          npm audit --prefix site || true
           echo "::endgroup::"
