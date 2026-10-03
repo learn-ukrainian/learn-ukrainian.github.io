@@ -247,6 +247,7 @@ _ROW_WORD = f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*
 _ROW = re.compile(rf"\s*{_ROW_WORD}(?:[\s,;]+{_ROW_WORD}){{2,}}[\s,;.]*")
 _ROW_TOKEN = re.compile(_ROW_WORD)
 _PRINT_TOKEN = re.compile(r"[^\W_]+(?:['’ʼ-][^\W_]+)*")
+_PRINT_SENTENCE_BREAK = re.compile(r"[.!?…]+")
 _SENTENCE_BREAK = re.compile(r"[.;!?](?=\s|$)")
 #: The evidence span of a prose-read finding is its sentence, kept with its closing punctuation.
 _SPAN_BREAK = re.compile(r"(?<=[.;!?])\s+")
@@ -575,8 +576,11 @@ def _print_holds(text: str, spelling: str, *, exact: bool = False) -> bool:
 
     Selectors preserve NFC spelling and case; word-record host matching folds case,
     apostrophes and syllable hyphens, and also accepts letter-spaced host print.
-    Whitespace, including line wrapping, separates tokens without breaking a run.
+    Whitespace, including line wrapping, separates tokens without breaking a run;
+    sentence-final punctuation breaks it. Non-NFC exact selectors are rejected.
     """
+    if exact and _nfc(spelling) != spelling:
+        return False
     normalize = (lambda value: value) if exact else _spelling
     # Latin text/numbers interrupt a run too; they cannot disappear between Cyrillic words.
     wanted = [normalize(token) for token in _PRINT_TOKEN.findall(_nfc(spelling))]
@@ -585,9 +589,10 @@ def _print_holds(text: str, spelling: str, *, exact: bool = False) -> bool:
     text = _nfc(text)
     variants = (text,) if exact else (text, _LETTER_SPACED.sub(lambda match: match.group(0).replace(" ", ""), text))
     for variant in variants:
-        tokens = [normalize(token) for token in _PRINT_TOKEN.findall(variant)]
-        if any(tokens[i : i + len(wanted)] == wanted for i in range(len(tokens) - len(wanted) + 1)):
-            return True
+        for sentence in _PRINT_SENTENCE_BREAK.split(variant):
+            tokens = [normalize(token) for token in _PRINT_TOKEN.findall(sentence)]
+            if any(tokens[i : i + len(wanted)] == wanted for i in range(len(tokens) - len(wanted) + 1)):
+                return True
     return False
 
 

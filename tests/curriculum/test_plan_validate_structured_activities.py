@@ -56,6 +56,7 @@ STRUCTURED_CODES = {
     codes.COMPREHENSION_TARGET_UNKNOWN,
     codes.COMPREHENSION_TARGET_NOT_IN_HOST,
     codes.OPTIONS_NOT_NFC,
+    codes.LEARNER_READ_WORD_NOT_NFC,
 }
 
 CASES = [
@@ -92,6 +93,11 @@ CASES = [
         "options_nfc",
         declaration(1, "a1", options=["і\u0308"]),
         {codes.OPTIONS_NOT_NFC, codes.CHOICE_OPTION_NOT_DECODABLE},
+    ),
+    (
+        "selector_nfc",
+        _all(_quote("й"), declaration(2, "b4", learner_reads=[{"ref": "T-002", "words": ["и\u0306"]}])),
+        {codes.LEARNER_READ_WORD_NOT_NFC, codes.LEARNER_READ_WORD_NOT_IN_PRINT, codes.MODELED_PRINT_NOT_DECODABLE},
     ),
     ("c21_all_print_pass", _all(_quote("мама мона"), declaration(2, "b4", learner_reads=["T-002"])), set()),
     (
@@ -382,3 +388,54 @@ def test_c21_selected_formula_can_wrap_in_source_print(tmp_path):
         _all(_quote("мама\nмона"), declaration(2, "b4", learner_reads=[{"ref": "T-002", "words": ["мама мона"]}])),
     )
     assert not any(o.code == codes.LEARNER_READ_WORD_NOT_IN_PRINT for o in report.failures), report.render_text()
+
+
+@pytest.mark.parametrize("selector,nfc", [("и\u0306", False), ("й", True)])
+def test_learner_read_selector_must_already_be_nfc(tmp_path, selector, nfc):
+    report = run(
+        tmp_path,
+        _all(_quote("й"), declaration(2, "b4", learner_reads=[{"ref": "T-002", "words": [selector]}])),
+    )
+    failures = {o.code for o in report.failures}
+    assert (codes.LEARNER_READ_WORD_NOT_NFC in failures) == (not nfc), report.render_text()
+    assert (codes.LEARNER_READ_WORD_NOT_IN_PRINT in failures) == (not nfc), report.render_text()
+
+
+@pytest.mark.parametrize("punctuation", [".", "!", "?", "…", '."', ".\n"])
+@pytest.mark.parametrize("declared", [False, True])
+def test_c26_formula_cannot_cross_sentence_end(tmp_path, punctuation, declared):
+    # The legacy prose path uses the same matcher as declared targets.
+    mutations = [_word("W-299", "добрий день"), _quote(f"добрий{punctuation} День")]
+    mutations.append(
+        declaration(2, "b4", targets=["W-299"])
+        if declared
+        else _focus(2, "b4", "Checks W-299. kind: comprehension; host: {kind: quote, ref: T-002}.")
+    )
+    report = run(tmp_path, _all(*mutations))
+    assert any(o.code == codes.COMPREHENSION_TARGET_NOT_IN_HOST for o in report.failures), report.render_text()
+
+
+@pytest.mark.parametrize("text,held", [("добрий День", True), ("добрий\nДень", True), ("добрий.День", False)])
+def test_formula_print_matching_preserves_case_policy_and_wrapping(text, held):
+    from scripts.curriculum.validate.review_gates import _print_holds
+
+    assert _print_holds(text, "добрий день") == held
+    assert not _print_holds(text, "добрий день", exact=True)
+
+
+def test_exact_print_match_does_not_normalize_selector():
+    from scripts.curriculum.validate.review_gates import _print_holds
+
+    assert not _print_holds("й", "и\u0306", exact=True)
+    assert _print_holds("й", "и\u0306")
+
+
+@pytest.mark.parametrize("text,held", [("добрий день", True), ("добрий\nдень", True), ("добрий. день", False)])
+def test_c21_formula_selector_cannot_cross_sentence_end(tmp_path, text, held):
+    report = run(
+        tmp_path,
+        _all(_quote(text), declaration(2, "b4", learner_reads=[{"ref": "T-002", "words": ["добрий день"]}])),
+    )
+    assert any(o.code == codes.LEARNER_READ_WORD_NOT_IN_PRINT for o in report.failures) == (not held), (
+        report.render_text()
+    )

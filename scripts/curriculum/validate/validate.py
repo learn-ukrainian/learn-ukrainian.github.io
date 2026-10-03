@@ -473,6 +473,16 @@ def _check_activities(report: Report, plan: dict, allowlist: set[str] | None) ->
                     _fail(
                         report, codes.OPTIONS_NOT_NFC, f"activity {activity_id} option {option!r} is not NFC", lesson=n
                     )
+            for selection in activity.get("learner_reads", []):
+                if isinstance(selection, dict):
+                    for word in selection["words"]:
+                        if unicodedata.normalize("NFC", word) != word:
+                            _fail(
+                                report,
+                                codes.LEARNER_READ_WORD_NOT_NFC,
+                                f"activity {activity_id} learner_reads {selection['ref']} word {word!r} is not NFC",
+                                lesson=n,
+                            )
             error_refs = activity.get("error_refs")
             if activity["type"] == "error-correction" and not error_refs:
                 _fail(

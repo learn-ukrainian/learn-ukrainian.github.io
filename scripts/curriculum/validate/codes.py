@@ -215,6 +215,7 @@ VESUM_UNAVAILABLE = "vesum_unavailable"
 TARGET_NOT_AVAILABLE = "target_not_available"
 CHOICE_OPTION_NOT_DECODABLE = "choice_option_not_decodable"
 OPTIONS_NOT_NFC = "options_not_nfc"
+LEARNER_READ_WORD_NOT_NFC = "learner_read_word_not_nfc"
 OPTIONS_MISSING = "options_missing"
 OPTIONS_FORBIDDEN = "options_forbidden"
 LEARNER_READ_REF_NOT_PRINTABLE = "learner_read_ref_not_printable"
@@ -379,6 +380,7 @@ DESCRIPTIONS = {
     TARGET_NOT_AVAILABLE: "failure (C1): a declared target is unknown, outside the allowed set or introduced later",
     CHOICE_OPTION_NOT_DECODABLE: "failure (C18): a printed option needs an untaught letter at its step; recordings do not exempt print",
     OPTIONS_NOT_NFC: "failure: declared option text must already be NFC, with exact case preserved",
+    LEARNER_READ_WORD_NOT_NFC: "failure: learner_reads selector words must already be NFC, with exact case preserved",
     OPTIONS_MISSING: "note (PR1): quiz and fill-in require an options declaration",
     OPTIONS_FORBIDDEN: "note (PR1): unscored types forbid an options declaration, including an empty one",
     LEARNER_READ_REF_NOT_PRINTABLE: "failure (C21): learner_reads references a record without printable pack text",
