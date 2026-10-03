@@ -25,6 +25,7 @@ from scripts.agent_runtime.adapters._output_schema import load_output_schema
 from scripts.audit import llm_reviewer, qg_schema
 from scripts.build import build_module_direct as direct
 from scripts.build import linear_pipeline as linear
+from tests.helpers.codex_exec_stream import agent_message, completed_stream
 
 pytestmark = pytest.mark.reads_content
 
@@ -46,20 +47,28 @@ def mechanical_payload(profile: str) -> dict[str, Any]:
     """Public synthetic transport data; never a linguistic/held-out oracle."""
     if profile == "dimension":
         return {
-            "score": 7.0, "evidence": '"mechanical fixture quote"',
+            "score": 7.0,
+            "evidence": '"mechanical fixture quote"',
             "evidence_quotes": ["mechanical fixture quote"],
             "rubric_mapping": "Quote maps to a synthetic defect.",
             "issue_ids": ["MECHANICAL_FIXTURE"],
-            "findings": [{
-                "issue_id": "MECHANICAL_FIXTURE", "quote": "mechanical fixture quote",
-                "severity": "high", "explanation": "Synthetic transport defect.",
-                "replacement": None, "dimension": None,
-            }],
-            "flags": ["mechanical_flag"], "verdict": "REVISE",
+            "findings": [
+                {
+                    "issue_id": "MECHANICAL_FIXTURE",
+                    "quote": "mechanical fixture quote",
+                    "severity": "high",
+                    "explanation": "Synthetic transport defect.",
+                    "replacement": None,
+                    "dimension": None,
+                }
+            ],
+            "flags": ["mechanical_flag"],
+            "verdict": "REVISE",
         }
     if profile == "direct":
         return {
-            "verdict": "FAIL", "summary": "Synthetic transport defect.",
+            "verdict": "FAIL",
+            "summary": "Synthetic transport defect.",
             "dimensions": {
                 dim: {"status": "FAIL" if dim == "activities" else "PASS", "notes": "Mechanical note."}
                 for dim in ("language", "pedagogy", "activities", "l1_agnosticism", "decodability")
@@ -67,12 +76,20 @@ def mechanical_payload(profile: str) -> dict[str, Any]:
             "issues": ["activities[0]: mechanical fixture defect"],
         }
     return {
-        "findings": [{
-            "issue_id": "MECHANICAL_FIXTURE", "issue_class": "other", "dimension": "mechanics",
-            "severity": "warning", "excerpt": "fixture ```json text", "message": "Synthetic defect.",
-            "suggested_replacement": None, "grounding": None,
-        }],
-        "fact_checks": [], "evidence_gaps": [],
+        "findings": [
+            {
+                "issue_id": "MECHANICAL_FIXTURE",
+                "issue_class": "other",
+                "dimension": "mechanics",
+                "severity": "warning",
+                "excerpt": "fixture ```json text",
+                "message": "Synthetic defect.",
+                "suggested_replacement": None,
+                "grounding": None,
+            }
+        ],
+        "fact_checks": [],
+        "evidence_gaps": [],
     }
 
 
@@ -96,24 +113,40 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
 
 def build_plan(adapter, cwd: Path, config: dict[str, Any], *, model=None):
     return adapter.build_invocation(
-        prompt="Public mechanical schema fixture.", mode="read-only", cwd=cwd,
-        model=model, task_id="qg-schema-mechanics", session_id=None, tool_config=config,
+        prompt="Public mechanical schema fixture.",
+        mode="read-only",
+        cwd=cwd,
+        model=model,
+        task_id="qg-schema-mechanics",
+        session_id=None,
+        tool_config=config,
     )
 
 
 def terminal_output(route: str, payload: Any) -> str:
     if route == "claude":
-        return json.dumps({
-            "type": "result", "subtype": "success", "is_error": False,
-            "structured_output": payload,
-            # Decoy proves that findings come from structured_output alone.
-            "result": '{"findings": [], "verdict": "PASS"}',
-        })
+        return json.dumps(
+            {
+                "type": "result",
+                "subtype": "success",
+                "is_error": False,
+                "structured_output": payload,
+                # Decoy proves that findings come from structured_output alone.
+                "result": '{"findings": [], "verdict": "PASS"}',
+            }
+        )
     if route == "agy":
-        return json.dumps({"event": "result", "result": {
-            "conversation_id": AGY_FIXTURE_CONVERSATION, "status": "SUCCESS",
-            "structured_output": payload, "response": "decoy prose",
-        }})
+        return json.dumps(
+            {
+                "event": "result",
+                "result": {
+                    "conversation_id": AGY_FIXTURE_CONVERSATION,
+                    "status": "SUCCESS",
+                    "structured_output": payload,
+                    "response": "decoy prose",
+                },
+            }
+        )
     if route == "grok":
         return json.dumps({"stopReason": "end_turn", "structuredOutput": payload, "text": "decoy prose"})
     return json.dumps(payload)
@@ -144,8 +177,12 @@ def parse_terminal(adapter, plan, route: str, wire: str, *, returncode=0):
     if route == "agy":
         plan = bind_agy_transcript(plan)
     return adapter.parse_response(
-        stdout=wire if route != "codex" else "",
-        stderr="", returncode=returncode, output_file=plan.output_file, plan=plan,
+        # Codex reports completion in its --json event stream; the answer is -o.
+        stdout=wire if route != "codex" else completed_stream(),
+        stderr="",
+        returncode=returncode,
+        output_file=plan.output_file,
+        plan=plan,
     )
 
 
@@ -195,7 +232,11 @@ def test_matrix_schema_passed_and_consumed(profile, route, tmp_path, monkeypatch
         assert not seen
         return
     response, _ = llm_reviewer.invoke_reviewer_with_schema(
-        route, "fixture", profile=profile, cwd=tmp_path, invoker=runtime,
+        route,
+        "fixture",
+        profile=profile,
+        cwd=tmp_path,
+        invoker=runtime,
     )
     result = consume(profile, response)
     if profile == "dimension":
@@ -263,7 +304,10 @@ def test_schema_rejection_does_not_retry(profile, route, tmp_path, caplog):
 def test_consumers_revalidate_even_if_runtime_claims_success(profile, route, response, tmp_path, caplog):
     with pytest.raises(ValueError, match=r"structured output|no result"):
         llm_reviewer.invoke_reviewer_with_schema(
-            route, "fixture", profile=profile, cwd=tmp_path,
+            route,
+            "fixture",
+            profile=profile,
+            cwd=tmp_path,
             invoker=lambda *a, **kw: SimpleNamespace(ok=True, response=response),
         )
     assert "compatibility fallback" not in caplog.text
@@ -273,7 +317,10 @@ def test_consumers_revalidate_even_if_runtime_claims_success(profile, route, res
 def test_unsupported_route_cannot_discard_a_requested_schema(route, tmp_path):
     with pytest.raises(ValueError, match="cannot enforce a requested output schema"):
         llm_reviewer.invoke_reviewer_with_schema(
-            route, "fixture", profile="dimension", cwd=tmp_path,
+            route,
+            "fixture",
+            profile="dimension",
+            cwd=tmp_path,
             tool_config=qg_schema.write_reviewer_output_schema(tmp_path, "dimension"),
             invoker=lambda *a, **kw: pytest.fail("unsupported requested schema reached runtime"),
         )
@@ -307,8 +354,10 @@ def test_native_envelope_requires_structured_terminal(route, profile, damage, tm
     else:
         if route == "agy":
             envelope["result"] = {
-                "conversation_id": AGY_FIXTURE_CONVERSATION, "status": "SUCCESS",
-                "response": json.dumps(payload), **payload,
+                "conversation_id": AGY_FIXTURE_CONVERSATION,
+                "status": "SUCCESS",
+                "response": json.dumps(payload),
+                **payload,
             }
         else:
             envelope = payload
@@ -321,16 +370,17 @@ def test_native_envelope_requires_structured_terminal(route, profile, damage, tm
 def test_codex_dimension_and_direct_missing_file_never_recovers_prose(tmp_path, monkeypatch):
     adapter = adapter_for("codex", monkeypatch)
 
-    def forbidden(*args, **kwargs):
-        pytest.fail("schema invocation attempted unconstrained rollout recovery")
-
-    monkeypatch.setattr(adapter, "_read_latest_rollout_task_complete", forbidden)
     for profile in ("dimension", "direct"):
         plan = build_plan(adapter, tmp_path, qg_schema.write_reviewer_output_schema(tmp_path, profile))
-        assert adapter.check_early_reap(plan) is False
+        stream = completed_stream(agent_message(json.dumps(mechanical_payload(profile))))
+        assert adapter.check_early_reap(plan, stdout_lines=stream.splitlines(keepends=True)) is False
+        # The streamed agent message is never the answer: only -o is.
         result = adapter.parse_response(
-            stdout=json.dumps(mechanical_payload(profile)), stderr="", returncode=0,
-            output_file=None, plan=plan,
+            stdout=stream,
+            stderr="",
+            returncode=0,
+            output_file=None,
+            plan=plan,
         )
         assert result.ok is False and result.response == ""
 
@@ -346,8 +396,10 @@ def test_non_json_or_ambiguous_objects_rejected(wire):
 def test_nullable_schema_distinguishes_null_from_missing(route, tmp_path, monkeypatch):
     schema_path = tmp_path / "nullable.json"
     schema_path.write_text(json.dumps({"type": ["object", "null"]}))
-    config = {"output_schema_path": str(schema_path),
-              "output_schema_sha256": hashlib.sha256(schema_path.read_bytes()).hexdigest()}
+    config = {
+        "output_schema_path": str(schema_path),
+        "output_schema_sha256": hashlib.sha256(schema_path.read_bytes()).hexdigest(),
+    }
     adapter = adapter_for(route, monkeypatch)
     plan = build_plan(adapter, tmp_path, config)
     valid = parse_terminal(adapter, plan, route, terminal_output(route, None))
@@ -420,8 +472,13 @@ def test_dimension_production_wrapper_passes_schema_and_consumes_object(route, t
         return parse_terminal(adapter, plan, route, terminal_output(route, mechanical_payload("dimension")))
 
     result = linear.invoke_reviewer_dim_ensemble(
-        "fixture", f"{route}-tools", dim="pedagogical", writer_under_review="fixture",
-        reviewer_samples=1, cwd=tmp_path, invoker=runtime,
+        "fixture",
+        f"{route}-tools",
+        dim="pedagogical",
+        writer_under_review="fixture",
+        reviewer_samples=1,
+        cwd=tmp_path,
+        invoker=runtime,
     )
     assert calls == [route]
     assert result["findings"][0]["quote"] == "mechanical fixture quote"
@@ -437,16 +494,22 @@ def test_dimension_grok_frozen_model_remains_refused(reviewer, tmp_path, monkeyp
     assert reviewer not in linear.REVIEWER_DEFAULTS
     assert reviewer not in linear.REVIEWER_CHOICES
     with pytest.raises(linear.LinearPipelineError, match="Grok dimension reviewers are prohibited"):
-        linear.invoke_reviewer_dim("fixture", reviewer, dim="pedagogical", writer_under_review="fixture",
-                                   cwd=tmp_path, invoker=forbidden)
+        linear.invoke_reviewer_dim(
+            "fixture", reviewer, dim="pedagogical", writer_under_review="fixture", cwd=tmp_path, invoker=forbidden
+        )
 
 
 def direct_context(tmp_path: Path) -> direct.DirectModuleContext:
     path = tmp_path / "module.yaml"
     path.write_text("type: vocabulary\ntitle: Public mechanical fixture\n", encoding="utf-8")
     return direct.DirectModuleContext(
-        slug="fixture", level="a1", yaml_path=path, status_path=tmp_path / "status.json",
-        orch_dir=tmp_path / "artifacts", module_data={"type": "vocabulary"}, do_review=True,
+        slug="fixture",
+        level="a1",
+        yaml_path=path,
+        status_path=tmp_path / "status.json",
+        orch_dir=tmp_path / "artifacts",
+        module_data={"type": "vocabulary"},
+        do_review=True,
     )
 
 
@@ -512,7 +575,10 @@ def test_audit_claude_schema_and_embedded_fence_survive_consumption(tmp_path, mo
 def test_direct_live(tmp_path, monkeypatch):
     """Public frozen D input, redirected to temp; semantic held-out still separate."""
     source = ROOT / "curriculum/l2-uk-direct/a1/dozvillia.yaml"
-    assert hashlib.sha256(source.read_bytes()).hexdigest() == "5560effd4abd5476347b936bf15057b92f52f31adc85a544d176f92e69a80d27"
+    assert (
+        hashlib.sha256(source.read_bytes()).hexdigest()
+        == "5560effd4abd5476347b936bf15057b92f52f31adc85a544d176f92e69a80d27"
+    )
     ctx = direct_context(tmp_path)
     ctx.yaml_path.write_bytes(source.read_bytes())
     ctx.module_data = direct.load_module_yaml(ctx.yaml_path)
@@ -523,4 +589,6 @@ def test_direct_live(tmp_path, monkeypatch):
     report = direct.parse_direct_review_response(json.loads(raw.read_text()))
     assert passed == (report["verdict"] == "PASS")
     assert ctx.status_data["phases"]["review"]["dimensions"] == report["dimensions"]
-    print(f"direct live: dimensions={len(report['dimensions'])} issues={len(report['issues'])} verdict={report['verdict']}; PASS")
+    print(
+        f"direct live: dimensions={len(report['dimensions'])} issues={len(report['issues'])} verdict={report['verdict']}; PASS"
+    )

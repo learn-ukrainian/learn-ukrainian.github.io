@@ -6,8 +6,6 @@ from typing import Any
 
 import yaml
 
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.build.linear_pipeline import (
     _result_items_from_call,
     _summarize_tool_result,
@@ -75,10 +73,3 @@ def test_search_text_summary_preserves_replayed_result_items() -> None:
     assert items
     assert items[0]["source_type"] == "textbook"
     assert items[0]["text"] == "some text"
-
-
-def test_codex_rollout_matches_replayed_agents_md_envelope() -> None:
-    rollout_path = FIXTURES_DIR / "rollouts" / "agents_md_envelope.jsonl"
-    plan = InvocationPlan(cmd=["codex"], cwd=Path("."), stdin_payload="real prompt")
-
-    assert CodexAdapter()._rollout_matches_plan(rollout_path, plan) is True

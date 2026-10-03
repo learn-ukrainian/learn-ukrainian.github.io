@@ -14,6 +14,8 @@ from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
 from typing import Any
 
+from .jsonl import jsonl_lines
+
 OUTPUT_SUMMARY_LIMIT = 500
 TRUNCATION_SUFFIX = "[...truncated]"
 ARGUMENT_ITEM_LIMIT = 50
@@ -61,7 +63,7 @@ def parse_json_events(text: str, *, source: str, logger: logging.Logger) -> list
             return [item for item in parsed if isinstance(item, dict)]
 
     events: list[dict[str, Any]] = []
-    for lineno, raw_line in enumerate(text.splitlines(), start=1):
+    for lineno, raw_line in enumerate(jsonl_lines(text), start=1):
         line = raw_line.strip()
         if not line:
             continue
@@ -136,6 +138,20 @@ def normalize_tool_calls(events: Iterable[Mapping[str, Any]]) -> list[dict[str, 
     return calls
 
 
+def tool_call_record(*, name: str, arguments: Any, output: Any) -> dict[str, Any]:
+    """Build one normalized record from a call the provider already typed."""
+    output = _coerce_tool_output(output)
+    call: dict[str, Any] = {
+        "name": name,
+        "arguments": _coerce_arguments(arguments),
+        "output_summary": summarize_tool_output(output),
+        "timestamp": datetime.now(UTC).isoformat(),
+    }
+    if output is not None:
+        call["result"] = output
+    return call
+
+
 def _looks_like_tool_line(line: str) -> bool:
     return bool(re.search(r"tool[_ -]?(call|use|result)|function[_ -]?call", line, re.I))
 
@@ -201,11 +217,7 @@ def _is_tool_use_payload(payload: Mapping[str, Any]) -> bool:
         }
         or "functionCall" in payload
         or "toolCall" in payload
-        or (
-            payload_type == "function"
-            and isinstance(payload.get("function"), Mapping)
-            and bool(_tool_name(payload))
-        )
+        or (payload_type == "function" and isinstance(payload.get("function"), Mapping) and bool(_tool_name(payload)))
         or (
             bool(_tool_name(payload))
             and any(key in payload for key in ("arguments", "args", "input", "parameters"))

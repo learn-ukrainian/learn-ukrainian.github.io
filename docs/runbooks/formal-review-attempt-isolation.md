@@ -282,17 +282,13 @@ already-resolved attempt `write_root` or known adapter root, then walks every
 component below it with `openat` directory descriptors and `O_NOFOLLOW | O_DIRECTORY`,
 then opens the leaf with `O_NOFOLLOW | O_NONBLOCK | O_NOCTTY`. It checks the opened
 fd for a regular file, runner UID ownership and exactly one hard link. Full and
-invocation-suffix reads cap accepted data at 64 MiB, refusing overflow; session-ID
-reads consume up to a 1 MiB prefix and parse at most 25 lines, irrespective of
-total rollout size. Checked fd metadata supplies resumed lengths, and diagnostic
-tails seek on that fd.
+invocation-suffix reads cap accepted data at 64 MiB, refusing overflow. Checked
+fd metadata supplies resumed lengths, and diagnostic tails seek on that fd.
 Reads use that fd only, with a bounded read and a second metadata check. Missing
 optional telemetry remains absent; unsafe reads raise body-free `AttemptReadError`
 codes. Runner parsing converts refusals to failed `ParseResult` values with no response, without
-rollout, stdout or provider fallback. A refused, unbound rollout candidate is a
-non-match; a refused bound rollout remains a typed failure. V4 finalization
-records empty output and the typed refusal instead of raising on the same read.
-Diagnostic tail refusals yield no text.
+stdout or provider fallback. V4 finalization records empty output and the typed
+refusal instead of raising on the same read. Diagnostic tail refusals yield no text.
 
 This uses the directory-fd method described in the
 [Linux open/openat reference](https://man7.org/linux/man-pages/man2/open.2.html);
@@ -302,8 +298,7 @@ This uses the directory-fd method described in the
 | --- | --- | --- |
 | Codex `parse_response`: final output file | Plan `parent_read_root`: parent-owned attempt `write_root`; ordinary temp root resolved before launch; `/` without a plan. | Shared reader; unsafe output returns typed failure immediately. |
 | Shared `_output_schema.load_output_schema` and Codex `_tool_config_flags`: caller-supplied output schema | Parent-owned `review_write_root` when supplied; otherwise schema parent resolved before launch. | Shared reader before JSON/hash validation. Dispatch refuses `--review-attempt` with `--output-schema` as `attempt_output_schema_unsupported`. |
-| Codex `_read_rollout_segment`: completion, prompt binding and tool trace | Adapter `_rollout_read_root`: parent-owned attempt `write_root`; ordinary Codex home resolved before launch; `/` for unplanned calls. | Shared reader with invocation offset; unsafe reads cannot be swallowed by matching/recovery. |
-| Codex `_select_rollout_for_plan` and `_read_rollout_session_id`: session metadata | Same `_rollout_read_root`, passed through to the session-ID reader; `/` for direct calls. | Shared reader before metadata parsing. |
+| Codex `check_early_reap`: final output file before a reap | Plan `parent_read_root`, as for `parse_response`. | Shared reader; an unsafe read never authorizes a reap. |
 | AGY `_read_transcript_events`: transcript events | `_transcript_read_location`: parent-owned attempt `write_root`; ordinary app-data root resolved before launch; `/` for changed ordinary overrides or direct calls. | Shared reader with invocation offset; a shortened resumed transcript remains unbound. |
 | AGY `_transcript_baseline`: resumed prefix sizing | App-data root resolved before launch, while still parent-controlled; formal attempts cannot resume. | Checked fd `fstat` size; no transcript bytes read. |
 | AGY `_conversation_id_from_log`: invocation log | Plan `log_read_root`: parent-owned attempt `write_root`; ordinary log parent resolved before launch; `/` for direct calls. | Shared reader before UUID extraction. |
@@ -318,14 +313,9 @@ isolation claims. A fallback `/` is conservative and does not trust a replaced
 intermediate directory. The sandbox swap regression builds each plan with its
 real adapter and preserves these anchors while substituting the probe command.
 
-Residual N5: the Codex session-ID prefix bound is raised from 64 KiB to 1 MiB,
-giving more headroom for session metadata containing instructions and configuration.
-Metadata truncated by that bound or beyond the first 25 lines remains unbound;
-partial JSON and unvalidated session IDs are not accepted. Infra owns any future
-change to these limits, with an oversized metadata-line regression and exact-head
-review before landing.
-
-Codex rollout timestamps, snapshot sizes, liveness mtime polling and runner
+Codex no longer reads session rollouts (#9532): completion, failure class,
+session id and tool telemetry come from the invocation's own `codex exec --json`
+stdout, a parent-held pipe or PTY. Codex liveness mtime polling and runner
 cleanup size checks inspect metadata only; they never read target bytes.
 Attempt provisioning reads manifest pins, MCP configuration, installed runtime
 headers and parent-created proxy configuration before any seat launches. These
@@ -439,7 +429,7 @@ request is made by the host probes:
   tests/agent_runtime/test_attempt_boundary.py \
   tests/agent_runtime/test_attempt_network.py \
   tests/agent_runtime/test_codex_adapter.py \
-  tests/agent_runtime/test_codex_rollout_match.py \
+  tests/agent_runtime/test_codex_exec_stream.py \
   tests/agent_runtime/test_codex_hook_probe.py \
   tests/agent_runtime/adapters/test_agy_adapter.py \
   tests/agent_runtime/test_review_mcp.py \

@@ -109,6 +109,27 @@ def test_provider_error_wrappers_fail_even_with_success_terminal(meta):
 
 
 @pytest.mark.parametrize(
+    ("provider_line", "expected"),
+    [("acp transport: unexpected status 401 Unauthorized", "auth"), ("provider: quota exceeded for this account", "rate_limited")],
+)
+def test_failover_classifies_real_acpx_provider_error_after_diagnostic_noise(provider_line, expected):
+    """#9532 leaves acpx unchanged: provider evidence past the 500-char excerpt still counts."""
+    from scripts.agent_runtime.failover import classify_failover_trigger
+
+    stderr = "\n".join([*(f"[acpx] diagnostic {index}: loading session state" for index in range(30)), provider_line])
+    meta = {"codex": {"threadStatus": {"type": "systemError"}}}
+    stdout = stream({"sessionUpdate": "session_info_update", "_meta": meta})
+    result = acpx.AcpxAdapter().parse_response(stdout=stdout, stderr=stderr, returncode=1, output_file=None)
+
+    assert result.failure_code == "provider_error"
+    assert provider_line not in result.stderr_excerpt  # The excerpt alone has lost it.
+    trigger = classify_failover_trigger(
+        parse=result, returncode=1, kill_reason=None, stdout_text=stdout, stderr_text=stderr
+    )
+    assert trigger == expected
+
+
+@pytest.mark.parametrize(
     "answer",
     [
         ERROR_BODY,

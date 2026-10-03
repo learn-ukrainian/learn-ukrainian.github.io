@@ -97,6 +97,7 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
@@ -783,7 +784,7 @@ class ClaudeAdapter:
 
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
-            strict_events = [json_value(line) for line in stdout.splitlines() if line.strip()]
+            strict_events = [json_value(line) for line in jsonl_lines(stdout) if line.strip()]
             intact = bool(strict_events) and all(isinstance(event, dict) for event in strict_events)
             terminal = strict_events[-1] if intact else {}
             return structured_result(
@@ -889,7 +890,7 @@ def _claude_session_jsonl_path(
 
 def _tool_calls_from_claude_session_jsonl(path: Path) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
-    for raw_line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+    for raw_line in jsonl_lines(path.read_text(encoding="utf-8", errors="replace")):
         line = raw_line.strip()
         if not line:
             continue

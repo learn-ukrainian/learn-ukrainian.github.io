@@ -13,6 +13,7 @@ Both are frozen dataclasses. Frozen = hashable, immutable, mypy-strict clean.
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -56,8 +57,21 @@ class ParseResult:
             disappear between parse, usage telemetry, and delegate state.
         failure_code: Optional closed, body-free failure classification. ACP
             adapters use this to preserve diagnostics while privacy-limited
-            usage records discard raw stderr and provider text.
+            usage records discard raw stderr and provider text. Codex sets it
+            from its ``--json`` event stream: the classified terminal failure
+            (``provider_policy_refusal``, ``provider_overloaded``,
+            ``provider_auth``, ``provider_error``, ``rate_limited``) or
+            ``provider_stream_incomplete`` when the stream proves no outcome.
+            The failover classifier and delegate task records honor it.
+        provider_error_text: Failure text the adapter attributes to the
+            provider itself, isolated from its raw streams. None means the
+            adapter makes no such claim and the failover classifier reads the
+            excerpt and raw stdout/stderr. When set (even empty), the adapter's
+            typed ``failure_code`` is the whole classification: the failover
+            classifier reads no text at all. Codex sets it on every failure
+            because its streams carry agent and tool text (#9532).
     """
+
     ok: bool
     response: str
     stderr_excerpt: str | None = None
@@ -68,6 +82,7 @@ class ParseResult:
     substitution: dict[str, Any] | None = None
     response_envelope: ResponseEnvelope | None = None
     failure_code: str | None = None
+    provider_error_text: str | None = None
 
 
 @dataclass(frozen=True)
@@ -113,6 +128,7 @@ class Result:
             provider/model. When ``substituted`` is true, callers must treat
             the run as a different review/cost/egress lane.
     """
+
     ok: bool
     agent: str
     model: str
@@ -141,3 +157,6 @@ class Result:
     transport_outcome: str | None = None
     # Optional provenance; absent historical records imply no provider observation.
     model_identity: dict[str, str | None] | None = None
+    # The adapter's closed, body-free failure classification (ParseResult.failure_code),
+    # e.g. ``provider_policy_refusal``; None on success or when unclassified.
+    failure_code: str | None = None
