@@ -366,6 +366,12 @@ EOF
 fi
 
 if [[ "$_opsec_push" == 1 ]]; then
+  # GIT_CONFIG changes what `git config` reports, not the configuration Git
+  # pushes with (core.sshCommand, core.hooksPath, ...), so the scanner and the
+  # caller-hook chain could read a different configuration than the push uses.
+  if [[ -n "${GIT_CONFIG+set}" ]]; then
+    _opsec_refuse "GIT_CONFIG is set, which changes what 'git config' reports but not the configuration Git pushes with (unset it)"
+  fi
   if _opsec_skips_hook "${@:_opsec_index+2}"; then
     _opsec_refuse "--no-verify would skip the push scan"
   fi

@@ -240,6 +240,12 @@ scan:
 - `--no-verify` in any spelling Git accepts (`--no-verify`, `--no-verif`,
   `--no-veri`) and the shorter ambiguous prefixes, in any argument position;
 - `--shallow-file`, which swaps the shallow file Git walks;
+- `GIT_CONFIG` set to anything, empty included. It narrows what `git config`
+  reports to one file, while the push itself reads every configuration
+  source, so a `core.sshCommand` or `core.hooksPath` the push uses would be
+  invisible to the scanner's and the chain's configuration reads. It is the
+  only Git 2.53 variable that changes `git config` and nothing else (the
+  other `GIT_CONFIG_*` variables apply to every Git command);
 - a missing or non-executable hook, a missing scanner or a missing project
   interpreter. Git itself would silently skip a missing hook.
 
@@ -248,6 +254,9 @@ push runs, for the tracking refs) and `chain`. After a clean scan `chain` runs
 the caller's own hook of the same name with the same arguments and input: the
 last `core.hooksPath` value that is not the pinned directory, else the
 repository's `hooks` directory. A caller hook that fails still refuses the push.
+Like the scanner's configuration reads, the chain's `core.hooksPath` query
+runs with `GIT_CONFIG` unset, so both see the configuration Git pushes with
+even when Git is started with the pinned hooks path but without the shim.
 
 **What is scanned.** The hook reads its whole input and validates every line
 before allowing anything: four fields, split from the right because the local
@@ -309,8 +318,8 @@ hides nothing the push sends, and a forged entry cannot shrink the scan set. An
 unreadable, non-regular or malformed shallow file and `GIT_SHALLOW_FILE` refuse
 the push.
 
-**What the scan writes.** The scan's own git calls drop `GIT_TRACE*` and
-`GIT_CURL_VERBOSE`, set the trace2 targets to `0`, and disable prompts and lazy
+**What the scan writes.** The scan's own git calls drop `GIT_TRACE*`,
+`GIT_CURL_VERBOSE` and `GIT_CONFIG`, set the trace2 targets to `0`, and disable prompts and lazy
 fetches. They keep Git's repository variables, so the hook reads the
 repository and object stores the push reads; the scanner's own catalogue,
 matcher and override log lookups drop them.

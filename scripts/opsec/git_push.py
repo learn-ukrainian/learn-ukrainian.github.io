@@ -123,15 +123,18 @@ def scan_environment(environment: dict[str, str]) -> dict[str, str]:
     """The hook's environment for the scan's own git calls.
 
     Git's repository variables stay, so the scan reads the repository and
-    object stores the push reads. No override, tracing, credential prompts or
-    partial-clone object fetches; replacement objects and grafts disabled. A
-    trace2 target of "0" in the environment outranks one set in system or
-    global configuration. Messages are untranslated.
+    object stores the push reads. GIT_CONFIG goes: it narrows what git config
+    reports to one file, while the push reads every configuration source, so
+    the scan's configuration reads see what the push uses. No override,
+    tracing, credential prompts or partial-clone object fetches; replacement
+    objects and grafts disabled. A trace2 target of "0" in the environment
+    outranks one set in system or global configuration. Messages are
+    untranslated.
     """
     scrubbed = {
         key: value
         for key, value in environment.items()
-        if key != "LU_OPSEC_OVERRIDE" and not key.startswith("GIT_TRACE") and key != "GIT_CURL_VERBOSE"
+        if key not in ("LU_OPSEC_OVERRIDE", "GIT_CONFIG", "GIT_CURL_VERBOSE") and not key.startswith("GIT_TRACE")
     }
     scrubbed.update(
         GIT_TRACE2="0",

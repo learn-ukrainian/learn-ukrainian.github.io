@@ -4,6 +4,8 @@
 # git shim pins (#9339). That hooks path is the last core.hooksPath value that
 # is not this directory, else the repository's hooks directory; a relative value
 # is relative to the directory Git runs hooks in, which is the current one.
+# GIT_CONFIG is unset for the query: it narrows `git config` to one file, while
+# Git reads core.hooksPath from every configuration source.
 set -u
 name="$1"
 shift
@@ -14,7 +16,7 @@ while IFS= read -r -d '' value; do
   if [[ "$(cd "$value" 2>/dev/null && pwd -P)" != "$ours" ]]; then
     dir="$value"
   fi
-done < <("$git" config -z --type=path --get-all core.hooksPath)
+done < <(env -u GIT_CONFIG "$git" config -z --type=path --get-all core.hooksPath)
 if [[ -z "$dir" ]]; then
   dir="$("$git" rev-parse --git-common-dir)/hooks" || exit 1
 fi

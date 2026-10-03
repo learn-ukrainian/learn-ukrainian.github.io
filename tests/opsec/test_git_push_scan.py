@@ -1734,6 +1734,25 @@ def test_the_callers_reference_transaction_hook_sees_the_tracking_update(push_sa
     assert f"{sha} refs/remotes/origin/trunk" in Path(f"{log}.input").read_text()
 
 
+def test_git_config_never_hides_the_callers_refusing_hook(push_sandbox):
+    """A command-scope hooks path that `git config` under GIT_CONFIG would not report."""
+    log = push_sandbox.tmp / "caller"
+    directory = push_sandbox.tmp / "caller-hooks"
+    _caller_hook(directory, "pre-push", log, status=1)
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    pushing = ["-c", f"core.hooksPath={directory}", "push", "origin", "HEAD:refs/heads/feature"]
+    result = push_sandbox.push(*pushing, GIT_CONFIG=os.devnull)
+    assert result.returncode == 2 and "OPSEC: GIT_CONFIG is set" in result.stderr, result.stderr
+    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
+    assert not Path(f"{log}.args").exists()
+    # Past the shim, the chain still finds the caller's hook, which runs and refuses.
+    result = _pinned(push_sandbox, *pushing, GIT_CONFIG=os.devnull)
+    assert result.returncode != 0, result.stderr
+    assert Path(f"{log}.args").read_text() == f"origin {push_sandbox.remote}\n"
+    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
+
+
 # --- Private exemption only on the trusted transport route ---
 
 FAKE_SSH = """#!/bin/sh
@@ -1802,6 +1821,91 @@ def test_public_ssh_remote_is_scanned(ssh_sandbox, url):
     result = ssh_sandbox.push("push", url, "HEAD:refs/heads/feature", **ssh_sandbox.ssh_env)
     assert result.returncode != 0 and f"field=commit[{sha[:12]}].message" in result.stderr, result.stderr
     assert _git(ssh_sandbox.served / "unit/public.git", "for-each-ref") == ""
+
+
+REDIRECT_SSH = """#!/bin/sh
+# Deliver every ssh git URL to the local public repository, whatever path it names.
+for last; do :; done
+command=${last%% *}
+exec git "${command#git-}" "$FAKE_SSH_ROOT/unit/public.git"
+"""
+
+
+def _redirect(sandbox, shape):
+    """(global options, environment) that set core.sshCommand to a redirect to the public receiver."""
+    program = sandbox.tmp / "redirect-ssh"
+    program.write_text(REDIRECT_SSH)
+    program.chmod(0o755)
+    if shape == "repository":
+        _git(sandbox.work, "config", "core.sshCommand", str(program))
+        return [], {}
+    if shape == "command-line":
+        return ["-c", f"core.sshCommand={program}"], {}
+    if shape == "config-env":
+        return ["--config-env=core.sshCommand=UNIT_SSH"], {"UNIT_SSH": str(program)}
+    assert shape == "count", shape
+    return [], {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.sshCommand", "GIT_CONFIG_VALUE_0": str(program)}
+
+
+def _pinned(sandbox, *args, **extra):
+    """Git run as the shim runs a push (hooks path pinned, scanner variables set), without the shim's checks."""
+    hooks = sandbox.root / "scripts/opsec/push_hooks"
+    command = args.index("push")
+    return _plain(
+        sandbox,
+        *args[:command],
+        "-c",
+        f"core.hooksPath={hooks}",
+        *args[command:],
+        LU_OPSEC_PUSH_PYTHON=str(sandbox.root / ".venv/bin/python"),
+        LU_OPSEC_REAL_GIT=REAL_GIT,
+        **extra,
+    )
+
+
+def assert_nothing_served(sandbox, sha):
+    for name in ("private", "public"):
+        assert _git(sandbox.served / f"unit/{name}.git", "for-each-ref") == ""
+        assert not _remote_has(sandbox, sha, sandbox.served / f"unit/{name}.git")
+
+
+REDIRECT_SHAPES = ["repository", "command-line", "config-env", "count"]
+
+
+@pytest.mark.parametrize("shape", REDIRECT_SHAPES)
+def test_push_with_git_config_set_is_refused_before_git_runs(ssh_sandbox, shape):
+    """GIT_CONFIG hides core.sshCommand from `git config` but not from the push, so the shim refuses it."""
+    _git(ssh_sandbox.work, "remote", "add", "hosted", "git@github.com:unit/private.git")
+    options, environment = _redirect(ssh_sandbox, shape)
+    sha = ssh_sandbox.commit("subject " + TOKEN)
+    pushing = [*options, "push", "hosted", "HEAD:refs/heads/feature"]
+    result = ssh_sandbox.push(*pushing, GIT_CONFIG=os.devnull, **ssh_sandbox.ssh_env, **environment)
+    assert result.returncode == 2, result.stderr
+    assert "OPSEC: GIT_CONFIG is set" in result.stderr and "push refused." in result.stderr, result.stderr
+    assert_nothing_served(ssh_sandbox, sha)
+    # Control: plain Git delivers the same push to the public receiver.
+    control = _plain(ssh_sandbox, *pushing, GIT_CONFIG=os.devnull, **ssh_sandbox.ssh_env, **environment)
+    assert control.returncode == 0, control.stderr
+    assert _git(ssh_sandbox.served / "unit/public.git", "rev-parse", "refs/heads/feature") == sha
+
+
+@pytest.mark.parametrize("shape", REDIRECT_SHAPES)
+def test_scanner_sees_the_route_git_config_hides(ssh_sandbox, shape):
+    """Past the shim, the scanner's configuration reads still find core.sshCommand and scan the push."""
+    _git(ssh_sandbox.work, "remote", "add", "hosted", "git@github.com:unit/private.git")
+    options, environment = _redirect(ssh_sandbox, shape)
+    sha = ssh_sandbox.commit("subject " + TOKEN)
+    pushing = [*options, "push", "hosted", "HEAD:refs/heads/feature"]
+    result = _pinned(ssh_sandbox, *pushing, GIT_CONFIG=os.devnull, **ssh_sandbox.ssh_env, **environment)
+    assert result.returncode != 0 and f"field=commit[{sha[:12]}].message" in result.stderr, result.stderr
+    assert TOKEN not in result.stderr
+    assert_nothing_served(ssh_sandbox, sha)
+
+
+def test_trusted_route_reads_past_git_config(push_sandbox, monkeypatch):
+    _git(push_sandbox.work, "config", "core.sshCommand", "ssh")
+    url = "git@github.com:unit/private.git"
+    assert _trusted(push_sandbox.work, monkeypatch, url, GIT_CONFIG=os.devnull) is False
 
 
 def _trusted(work, monkeypatch, url, remote="origin", git=REAL_GIT, **extra):
