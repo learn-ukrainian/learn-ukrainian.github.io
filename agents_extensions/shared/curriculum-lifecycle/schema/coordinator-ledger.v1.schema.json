@@ -247,7 +247,21 @@
         "lane": {"$ref": "#/$defs/identifier"},
         "status": {"type": "string", "minLength": 1},
         "healthy": {"type": "boolean"},
-        "stale": {"type": "boolean"}
+        "stale": {"type": "boolean"},
+        "credit_state": {"type": ["string", "null"], "minLength": 1},
+        "credit": {"$ref": "#/$defs/healthLaneCredit"}
+      }
+    },
+    "healthLaneCredit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason", "allowed_models", "wave_models", "model_check"],
+      "properties": {
+        "state": {"type": "string", "minLength": 1},
+        "reason": {"type": ["string", "null"]},
+        "allowed_models": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "wave_models": {"type": ["array", "null"], "items": {"type": "string", "minLength": 1}},
+        "model_check": {"type": "string", "minLength": 1}
       }
     },
     "readiness": {

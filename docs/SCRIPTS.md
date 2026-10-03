@@ -904,7 +904,11 @@ the credit state or the allowlist). Such a candidate ranks after plan-backed can
 standing, and its receipt carries `credit` (state, evidence, allowlist, `draw`); a flat health map
 or any other credit state keeps the near-cap exclusion. `usage show` appends the published state to
 the Codex `credits:` line (`credit_balance_present: credit balance present; draw not verified by the
-router; usable for … only`, or the fail-closed state with its reason).
+router; usable for … only`, or the fail-closed state with its reason). The curriculum coordinator's
+wave health gate counts a healthy, fresh `near_cap` lane as available under the same re-check
+(`credit_lane.published_credit_relief`); every per-lane diagnostic records `credit_state`, and the re-check's
+`credit` object (on a near-cap lane published as `credit_balance_present`) names the allowlist and notes that health groups configure no
+per-lane models (`wave_models: null`), so dispatch admission enforces the allowlist.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
