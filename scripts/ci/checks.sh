@@ -36,9 +36,13 @@ plan_validate() {
     return 0
   fi
   local level_dir status=0
+  # The runner has no VESUM (data/vesum.db is not in the repo): the VESUM lookups of
+  # gates C12 and C23 are declared not_checked and printed, never passed. Every other
+  # strict failure still fails, and plan-promote never declares it.
   for level_dir in curriculum/l2-uk-en/lesson-plans/*/; do
     if find "$level_dir" -maxdepth 1 -name '*.yaml' ! -name '_*' | grep -q .; then
-      .venv/bin/python -m scripts.curriculum.validate "$(basename "$level_dir")" --all --strict || status=1
+      .venv/bin/python -m scripts.curriculum.validate "$(basename "$level_dir")" --all --strict \
+        --not-checked-when-unavailable vesum || status=1
     fi
   done
   return "$status"

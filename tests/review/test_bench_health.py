@@ -61,13 +61,18 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
 
 
+# #9488: medium has no shortfall and critical keeps the Anthropic one. #9538:
+# high admits only Sol and Opus, so each of their author families has the
+# other one as its single cross-family seat.
+SHORTFALL_FAMILIES = {"medium": [], "high": ["anthropic", "openai"], "critical": ["anthropic"]}
+
+
 @pytest.mark.parametrize("risk", ["medium", "high", "critical"])
 def test_bench_exclusions_match_automatic_resolver(risk, capsys):
     results = check_bench_health(routing_snapshot={}, risk=risk)
-    # #9488: only critical keeps the Anthropic shortfall.
-    assert main(["--risk", risk], routing_snapshot={}) == (1 if risk == "critical" else 0)
+    assert main(["--risk", risk], routing_snapshot={}) == (1 if SHORTFALL_FAMILIES[risk] else 0)
     findings = _findings(capsys.readouterr())
-    assert [finding["author_family"] for finding in findings] == (["anthropic"] if risk == "critical" else [])
+    assert [finding["author_family"] for finding in findings] == SHORTFALL_FAMILIES[risk]
     for family, seats in results.items():
         resolution = resolve_reviewer(
             ResolverInputs(
@@ -79,6 +84,19 @@ def test_bench_exclusions_match_automatic_resolver(risk, capsys):
             )
         )
         assert set(seats) == {entry.name for entry in resolution.trace if entry.status in {"selected", "eligible"}}
+    if risk == "high":
+        assert {family: results[family] for family in ("anthropic", "openai")} == {
+            "anthropic": ["openai_frontier"],
+            "openai": ["claude-opus-5-5"],
+        }
+        for family in set(AUTHOR_FAMILIES) - {"anthropic", "openai"}:
+            assert results[family] == ["openai_frontier", "claude-opus-5-5"]
+        # The shortfall names the single eligibility rule, not a bench-local list.
+        rule = "performed only by gpt-6.1-sol, claude-opus-5-5"
+        assert rule in findings[0]["excluded_seats"][GROK]
+        assert rule in findings[1]["excluded_seats"][GROK]
+        assert rule in findings[1]["excluded_seats"]["claude-sonnet-5-5"]
+        return
     if risk != "critical":
         return
     finding = findings[0]

@@ -23,6 +23,8 @@ here gets those two from :func:`user_manager_env` when the caller lacks them
 (#9514). The worker never receives them through this path: the start wrapper
 removes exactly the variables that were added for ``systemd-run`` before it
 execs the worker, so the worker's environment is the one the caller passed.
+The task records whether those variables were the caller's, derived, or not
+derivable and why (``launch_user_bus``, #9534).
 
 The byte values below match ``MemoryMax=20G`` and ``MemorySwapMax=1G`` in
 ``packaging/systemd/lu-dispatch.slice``. systemd parses the ``G`` suffix in
@@ -123,6 +125,8 @@ class WorkerLaunch:
     mode: str
     unit: str | None = None
     fallback_reason: str | None = None
+    # How the user-manager calls behind this launch reached the user bus (#9534).
+    user_bus: dict[str, Any] | None = None
 
     def as_state(self) -> dict[str, Any]:
         state: dict[str, Any] = {"launch_mode": self.mode}
@@ -130,6 +134,8 @@ class WorkerLaunch:
             state["launch_unit"] = self.unit
         if self.fallback_reason is not None:
             state["launch_fallback_reason"] = self.fallback_reason
+        if self.user_bus is not None:
+            state["launch_user_bus"] = self.user_bus
         return state
 
 
@@ -214,32 +220,68 @@ def build_scope_argv(
     ]
 
 
-def user_manager_env(env: Mapping[str, str], *, uid: int | None = None) -> dict[str, str]:
-    """``env`` plus the user-bus variables it lacks, for user-manager calls only (#9514).
+@dataclass(frozen=True)
+class UserBus:
+    """The environment for user-manager calls, and how it was reached (#9534).
+
+    ``derived`` names the variables added to the caller's environment.
+    ``unavailable`` says why nothing was added when the caller lacked
+    ``XDG_RUNTIME_DIR``. Neither is set when the caller's own values are used.
+    """
+
+    env: dict[str, str]
+    derived: tuple[str, ...] = ()
+    unavailable: str | None = None
+
+    def as_state(self) -> dict[str, Any]:
+        if self.derived:
+            return {"source": "derived", "variables": list(self.derived)}
+        if self.unavailable is not None:
+            return {"source": "unavailable", "reason": self.unavailable}
+        return {"source": "caller"}
+
+
+def resolve_user_bus(env: Mapping[str, str], *, uid: int | None = None) -> UserBus:
+    """``env`` plus the user-bus variables it lacks, for user-manager calls only (#9514, #9534).
 
     sd-bus finds the user manager through ``DBUS_SESSION_BUS_ADDRESS`` or
     ``XDG_RUNTIME_DIR``. When ``XDG_RUNTIME_DIR`` is absent, it is derived as
     logind's ``/run/user/<uid>``, and ``DBUS_SESSION_BUS_ADDRESS`` (if also
-    absent) as that directory's ``bus`` socket, only when the directory exists,
-    is a real directory and is owned by ``uid``. A variable the caller has is
-    kept as is, even when empty. A caller with ``XDG_RUNTIME_DIR`` but no bus
-    address is left alone: sd-bus derives ``$XDG_RUNTIME_DIR/bus`` itself.
-    The result is never a worker's environment.
+    absent) as that directory's ``bus`` socket, only when the directory is a
+    real directory owned by ``uid`` and ``bus`` in it is a socket. A variable
+    the caller has is kept as is, even when empty. A caller with
+    ``XDG_RUNTIME_DIR`` but no bus address is left alone: sd-bus derives
+    ``$XDG_RUNTIME_DIR/bus`` itself. The result is never a worker's environment.
     """
-    derived = dict(env)
-    if "XDG_RUNTIME_DIR" in derived:
-        return derived
+    source = dict(env)
+    if "XDG_RUNTIME_DIR" in source:
+        return UserBus(env=source)
     uid = os.getuid() if uid is None else uid
     runtime = _USER_RUNTIME_ROOT / str(uid)
+    bus = runtime / "bus"
     try:
         info = runtime.lstat()
-    except OSError:
-        return derived
-    if not stat.S_ISDIR(info.st_mode) or info.st_uid != uid:
-        return derived
+    except OSError as exc:
+        return UserBus(env=source, unavailable=f"{runtime}: {exc.strerror or exc}")
+    if not stat.S_ISDIR(info.st_mode):
+        return UserBus(env=source, unavailable=f"{runtime} is not a directory")
+    if info.st_uid != uid:
+        return UserBus(env=source, unavailable=f"{runtime} is owned by uid {info.st_uid}, not {uid}")
+    try:
+        bus_info = bus.lstat()
+    except OSError as exc:
+        return UserBus(env=source, unavailable=f"{bus}: {exc.strerror or exc}")
+    if not stat.S_ISSOCK(bus_info.st_mode):
+        return UserBus(env=source, unavailable=f"{bus} is not a socket")
+    derived = dict(source)
     derived["XDG_RUNTIME_DIR"] = str(runtime)
-    derived.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path={runtime}/bus")
-    return derived
+    derived.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path={bus}")
+    return UserBus(env=derived, derived=tuple(sorted(derived.keys() - source.keys())))
+
+
+def user_manager_env(env: Mapping[str, str], *, uid: int | None = None) -> dict[str, str]:
+    """The environment :func:`resolve_user_bus` gives user-manager calls."""
+    return resolve_user_bus(env, uid=uid).env
 
 
 def probe_isolation(
@@ -297,6 +339,7 @@ def spawn_detached_worker(
     image that cannot be read, raises :class:`DispatchIsolationError` instead
     of starting a second worker. A process that is already the worker is
     returned as-is. ``start_new_session=True`` matches the historical spawn.
+    The launch records how the probe or ``systemd-run`` reached the user bus.
     """
     if not cmd:
         raise ValueError("worker command is empty")
@@ -318,13 +361,16 @@ def spawn_detached_worker(
                 stderr=stderr,
                 reason=probed.reason or "isolation probe failed",
                 allow_fallback=allow_fallback,
+                user_bus=resolve_user_bus(os.environ if probe_env is None else probe_env),
             )
 
     unit = scope_unit_name(task_id, run_nonce)
+    scope_bus = resolve_user_bus(worker_env)
     proc, failure = _try_scope(
         cmd,
         popen=popen,
         env=worker_env,
+        scope_bus=scope_bus,
         stdin=stdin,
         stdout=stdout,
         stderr=stderr,
@@ -334,7 +380,7 @@ def spawn_detached_worker(
         timeout_s=timeout_s,
     )
     if proc is not None:
-        return proc, WorkerLaunch(mode=LAUNCH_SCOPE, unit=unit)
+        return proc, WorkerLaunch(mode=LAUNCH_SCOPE, unit=unit, user_bus=scope_bus.as_state())
     return _fallback(
         cmd,
         popen=popen,
@@ -344,6 +390,7 @@ def spawn_detached_worker(
         stderr=stderr,
         reason=failure or "systemd-run failed before the worker started",
         allow_fallback=allow_fallback,
+        user_bus=scope_bus,
     )
 
 
@@ -391,12 +438,13 @@ def _fallback(
     stderr: Any,
     reason: str,
     allow_fallback: bool,
+    user_bus: UserBus,
 ) -> tuple[subprocess.Popen[Any], WorkerLaunch]:
     if not allow_fallback:
         raise DispatchIsolationError(reason)
     _warn(reason)
     proc = popen(list(cmd), **_popen_kwargs(env=env, stdin=stdin, stdout=stdout, stderr=stderr))
-    return proc, WorkerLaunch(mode=LAUNCH_FALLBACK, fallback_reason=reason)
+    return proc, WorkerLaunch(mode=LAUNCH_FALLBACK, fallback_reason=reason, user_bus=user_bus.as_state())
 
 
 def _try_scope(
@@ -404,6 +452,7 @@ def _try_scope(
     *,
     popen: Callable[..., subprocess.Popen[Any]],
     env: dict[str, str],
+    scope_bus: UserBus,
     stdin: Any,
     stdout: Any,
     stderr: Any,
@@ -417,9 +466,8 @@ def _try_scope(
         os.set_inheritable(write_fd, True)
         # systemd-run passes its own environment on to the worker, so the
         # wrapper removes what was added only for systemd-run (#9514).
-        scope_env = user_manager_env(env)
-        added = sorted(scope_env.keys() - env.keys())
-        wrapped = [cmd[0], "-c", _MARKER_CODE, str(write_fd), ",".join(added), *cmd]
+        scope_env = scope_bus.env
+        wrapped = [cmd[0], "-c", _MARKER_CODE, str(write_fd), ",".join(scope_bus.derived), *cmd]
         argv = build_scope_argv(wrapped, unit=unit, slice_unit=slice_unit)
         start = _file_size(stderr_log)
         try:

@@ -2178,12 +2178,12 @@ def _terminal_dispatch_reason(
     return f"settled dispatch task-id={task_id} status={task_status}"
 
 
-# Tool-regenerated caches a worker leaves behind. They are the only paths a
-# clean detached checkout may hold and still be reaped; everything else,
-# ``.venv/`` and ``node_modules/`` included, may hold an only copy of work.
+# Tool-regenerated caches and exact dispatcher-provisioned links are disposable.
+# Real ``.venv/`` and ``node_modules/`` entries may hold an only copy of work.
 _PYCACHE_DIR = "__pycache__"
 _TOPLEVEL_CACHE_PREFIXES = (".pytest_cache/", ".ruff_cache/", ".mypy_cache/")
 _ENV_DIRS = frozenset({".venv", "node_modules"})
+_PROVISIONED_LINK_PATHS = frozenset({"data/sources.db", "data/vesum.db", "node_modules", "site/node_modules"})
 
 _DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
 
@@ -2203,13 +2203,14 @@ def _is_regenerable_cache_path(path: str) -> bool:
 
 
 def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
-    """True only when every entry git lists in ``path`` is an ignored regenerable cache.
+    """True only for ignored regenerable caches or verified provisioned links.
 
     Deliberately stricter than :func:`_worktree_clean`: only status ``!!``
     (ignored) is tolerated, so any staged, modified, renamed or untracked entry
-    preserves the tree, and the cache allowlist is fixed rather than read from
-    ``.gitignore`` or ``info/exclude``. A git failure is not proof, so it reads
-    as "not disposable".
+    preserves the tree. Both allowlists are fixed rather than read from
+    ``.gitignore`` or ``info/exclude``. Provisioned links must resolve to the
+    same relative path in this repository's primary checkout; no target is
+    opened or removed here. A git or resolution failure is not proof.
     """
     status = _run(
         ["git", "status", "--porcelain=v1", "-z", "--ignored", "--untracked-files=all"],
@@ -2222,7 +2223,23 @@ def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = N
         if not entry:
             continue
         # ``XY <path>``; rename/copy entries carry a status other than ``!!``.
-        if not entry.startswith("!! ") or not _is_regenerable_cache_path(entry[3:]):
+        if not entry.startswith("!! "):
+            return False
+        relative = entry[3:]
+        if _is_regenerable_cache_path(relative):
+            continue
+        if relative not in _PROVISIONED_LINK_PATHS:
+            return False
+        link = path / relative
+        try:
+            primary = primary_checkout_root(path)
+            if (
+                not link.is_symlink()
+                or primary.resolve(strict=True) == path.resolve(strict=True)
+                or link.resolve(strict=True) != (primary / relative).resolve(strict=True)
+            ):
+                return False
+        except (OSError, RuntimeError):
             return False
     return True
 
@@ -2240,7 +2257,7 @@ def _detached_clean_contained_reason(
     A worker's baseline or scratch checkout (``git worktree add --detach``)
     holds nothing unique once its HEAD is an ancestor of ``origin/main`` or
     contained in some ``origin/*`` ref and the tree has no tracked, untracked,
-    or non-cache ignored changes. It is a Class B superset that needs neither
+    or non-disposable ignored changes. It is a Class B superset that needs neither
     a settled task record nor a 24h age, and it never consults PR state:
     nothing is lost even if a PR names the commit. A locked checkout, an
     active or non-terminal task bound to the path, and live cwds (checked by
@@ -2377,9 +2394,10 @@ def _review_checkout_gate(
 ) -> bool:
     """Safety checks every review-checkout class shares.
 
-    A tree holding only regenerable ignored caches (the same exhaustive guard
-    as the detached clean contained class: no tolerance for ``.venv`` or
-    ``node_modules`` entries, tracked changes, or non-cache ignored files),
+    A tree holding only regenerable ignored caches or verified provisioned links
+    (the same exhaustive guard as the detached clean contained class: no
+    tolerance for real ``.venv`` or ``node_modules`` entries, tracked changes,
+    or other ignored files),
     HEAD on a remote ref, unlocked, and no task that is still unfinished. Live process cwds and active tasks are refused earlier by
     :func:`_activity_reason` and again at removal. An unavailable active-task
     probe fails closed, like the detached clean contained class.

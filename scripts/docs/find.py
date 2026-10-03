@@ -97,6 +97,10 @@ MAX_BUDGET_SECONDS = 120.0
 GREP_OUTPUT_CAP = 16 * 1024 * 1024
 EXCERPT_OUTPUT_CAP = 32 * 1024 * 1024
 CODE_OUTPUT_CAP = 32 * 1024 * 1024
+# Worker threads per git grep. Git's default is one per CPU, and a query runs up to six greps at once
+# (four text searches beside the code search and its span read), so one query held 102 threads on a
+# 16-CPU host; two each bound a query to twelve worker threads, whatever the host.
+GREP_THREADS = 2
 LIFECYCLE_RANK = {'active': 0, None: 0, 'draft': 1, 'residual': 1, 'archive': 2, 'superseded': 3}
 BACKUP_RANK = 4
 LIFECYCLE_PENALTY = 0.03  # relevance a file gives up per lifecycle step (historical: 0.06, backup: 0.12)
@@ -287,6 +291,16 @@ MORPH_ENDINGS = ('ations', 'ation', 'ments', 'ment', 'ings', 'ions', 'ion', 'ing
 MIN_STEM = 4
 UNDOUBLED = re.compile(r'([b-df-hj-km-np-rtv-xz])\1$')  # a doubled final consonant other than l, s, z
 VERB_NOUN_AL = re.compile(r'(?<=[svw])als?$')  # approval(s), removal, proposal, renewal: a verb's -al noun
+# The endings after a term whose last letter the ending changes (``changed_ending``), as in Porter's
+# steps 1b and 1c: a silent e drops before -ing (close, closing), a y after a consonant becomes i
+# before the inflections that change it (entry, entries; retry, retried; early, earlier). Never e
+# for the y: story is no store, and flaky meets flake only through a dictionary, which find has not.
+E_DROP_ENDINGS = ('ings', 'ing')
+Y_ENDINGS = ('iers', 'ies', 'ied', 'ier')
+# The words a y-plural's stem begins (entries: entr): the y word and its inflections, and an ie noun
+# (cookies, cookie); never the stem's other words, so stories is no store and parties no parts.
+Y_PLURAL_ENDINGS = ('y', 'ie', *Y_ENDINGS)
+VOWELS = frozenset('aeiouy')
 
 
 @functools.lru_cache(maxsize=4096)
@@ -296,9 +310,10 @@ def stem(term: str) -> str:
     The suffixes are inflectional (ing, ed, es, s, ies) and the common derivational endings
     (ation, ion, ment and their plurals), longest first, so "parsing" meets "parse", "deletion"
     meets "delete", "enforcement" meets "enforce", "migration" meets "migrate" and "entries"
-    meets "entry". A doubled final consonant left by ing or ed is undoubled (scanning, scan),
-    as in Porter's stemmer; a double ``ss`` keeps its ``s`` (process, class). A verb's -al noun
-    loses its -al (approval meets approve, removal meets remove, proposal meets propose).
+    meets "entry" (and only "entry" and its inflections: ``y_plural``). A doubled final consonant
+    left by ing or ed is undoubled (scanning, scan), as in Porter's stemmer; a double ``ss`` keeps
+    its ``s`` (process, class). A verb's -al noun loses its -al (approval meets approve, removal
+    meets remove, proposal meets propose).
     """
     if term.endswith('ss'):
         return term
@@ -309,6 +324,44 @@ def stem(term: str) -> str:
             base = term[:-len(suffix)]
             return base[:-1] if suffix in ('ing', 'ed') and UNDOUBLED.search(base) else base
     return term
+
+
+def y_plural(term: str) -> str | None:
+    """The ``stem`` of a term whose -ies replaced a y after a consonant (entries: entr), else None."""
+    base = stem(term)
+    return base if term.endswith('ies') and base == term[:-3] and base[-1] not in VOWELS else None
+
+
+def stem_prefixes(term: str) -> tuple[str, ...]:
+    """The prefixes a word the term meets through its ``stem`` begins with: the stem, or for a
+    ``y_plural`` the stem's y and i forms (entry, entri), which every Y_PLURAL_ENDINGS word begins."""
+    base = y_plural(term)
+    return (stem(term),) if base is None else (base + 'y', base + 'i')
+
+
+@functools.lru_cache(maxsize=4096)
+def changed_ending(term: str) -> tuple[str, tuple[str, ...]] | None:
+    """(the term without its last letter, the endings that replace it) when an ending changes the
+    term's last letter: a silent e after a consonant (close: clos + ing; at least MIN_PREFIX letters
+    remain), a y after a consonant (entry: entr + ies; at least MIN_STEM letters remain). None otherwise."""
+    if len(term) > MIN_PREFIX and term.endswith('e') and term[-2] not in VOWELS:
+        return term[:-1], E_DROP_ENDINGS
+    if len(term) > MIN_STEM and term.endswith('y') and term[-2] not in VOWELS:
+        return term[:-1], Y_ENDINGS
+    return None
+
+
+@functools.lru_cache(maxsize=4096)
+def term_prefixes(term: str) -> tuple[str, ...]:
+    """The fixed strings that begin every word ``term`` meets (``_term_body``): its ``stem_prefixes``
+    and, for a changed last letter, the base with each shortest ending (clos-ing, entr-ies). Searches
+    look for these, so a file holding only "closing" or "entries" is found."""
+    changed = changed_ending(term)
+    if changed is None:
+        return stem_prefixes(term)
+    base, endings = changed
+    shortest = [e for e in endings if not any(o != e and e.startswith(o) for o in endings)]
+    return (*stem_prefixes(term), *(base + e for e in shortest))
 
 
 def escape_excerpt(text: str) -> str:
@@ -353,11 +406,14 @@ def _term_body(term: str) -> str:
     The word is the term as typed and then at most MAX_PREFIX_EXTRA more characters or (a term of
     MIN_STEM letters) one of WORD_ENDINGS; or the term's ``stem``, as much of the rest of the term
     as the word shares, and one of MORPH_ENDINGS; or either with a doubled final consonant and a
-    DOUBLING_ENDINGS ending. So two inflections of one word meet however far each runs past their
-    shared part: translated, translations; mapped, mapping; decolonizing, decolonization;
-    assessing, assessment; and parse, parser; deletion, deleted; pack, packed, never packages,
-    nor reading, readiness, nor invented, inventory, nor com, command. A term shorter than
-    MIN_PREFIX ("pr", "ci") meets only itself and its SHORT_ENDINGS inflections.
+    DOUBLING_ENDINGS ending; or, when an ending changes its last letter (``changed_ending``), the
+    term without that letter and such an ending. A ``y_plural``'s stem takes Y_PLURAL_ENDINGS only.
+    So two inflections of one word meet however far each runs past their shared part: translated,
+    translations; mapped, mapping; decolonizing, decolonization; assessing, assessment; and parse,
+    parser, parsing; deletion, deleted; entry, entries; pack, packed, never packages, nor reading,
+    readiness, nor ready, reader, nor story, store, nor stories, stored, nor reviewer, review (an
+    -er word may be no agent noun: corner, proper), nor invented, inventory, nor com, command. A
+    term shorter than MIN_PREFIX ("pr", "ci") meets only itself and its SHORT_ENDINGS inflections.
     """
     if len(term) < MIN_PREFIX:
         body = re.escape(term) + '(?:' + '|'.join(re.escape(e) for e in SHORT_ENDINGS) + ')'
@@ -367,11 +423,15 @@ def _term_body(term: str) -> str:
         # The term as typed may run on by any few characters (pack, packed); its stem only by an
         # inflection or derivation (invented meets invention, never inventory).
         alternatives = [re.escape(term) + (f'(?:{_either(WORD_ENDINGS)}|{free})' if len(term) >= MIN_STEM else free)]
-        if base != term:
+        if y_plural(term):  # entries: entry, entried, never entre
+            alternatives.append(re.escape(base) + _either(Y_PLURAL_ENDINGS))
+        elif base != term:
             shared = [term[len(base):k] for k in range(len(term) - 1, len(base) - 1, -1)]  # longest first
             alternatives.append(re.escape(base) + _either(shared) + _either(MORPH_ENDINGS))
         alternatives += [re.escape(word + word[-1]) + _either(DOUBLING_ENDINGS)
                          for word in dict.fromkeys((term, base)) if UNDOUBLED.match(word[-1] * 2)]
+        if changed := changed_ending(term):  # close, closing; entry, entries
+            alternatives.append(re.escape(changed[0]) + _either(changed[1]))
         body = '(?:' + '|'.join(alternatives) + ')'
     return body
 
@@ -519,10 +579,10 @@ class GitRun:
 def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
     """Run one ``git grep --cached`` with a wall-clock deadline and an output cap.
 
-    ``args`` are options, ``-e`` patterns and pathspecs built by ``_search_args``.
-    Exit status 1 is "no match".
+    ``args`` are options, ``-e`` patterns and pathspecs built by ``_search_args``; every grep runs
+    GREP_THREADS worker threads. Exit status 1 is "no match".
     """
-    return _run_git(repo, ['grep', '--cached', *args], deadline, cap)
+    return _run_git(repo, ['grep', '--cached', f'--threads={GREP_THREADS}', *args], deadline, cap)
 
 
 def _run_git(repo: Path, argv: list[str], deadline: float, cap: int) -> GitRun:
@@ -608,14 +668,17 @@ def _variants(pattern: str) -> list[str]:
     return sorted(forms)
 
 
-def _files_args(pattern: str, pathspecs: list[str]) -> list[str]:
-    """Files holding ``pattern`` as a fixed string: ``-i`` for ASCII, explicit forms otherwise."""
+def _files_args(patterns: str | Sequence[str], pathspecs: list[str]) -> list[str]:
+    """Files holding any of ``patterns`` as a fixed string: ``-i`` for ASCII, explicit forms otherwise."""
+    patterns = [patterns] if isinstance(patterns, str) else list(patterns)
     args = ['--no-color', '-I', '-F', '--null', '-l']
-    if pattern.isascii():
-        args += ['-i', '-e', pattern]
+    if all(p.isascii() for p in patterns):
+        args.append('-i')
+        forms = patterns
     else:
-        for form in _variants(pattern):
-            args += ['-e', form]
+        forms = [form for p in patterns for form in _variants(p)]
+    for form in dict.fromkeys(forms):
+        args += ['-e', form]
     return [*args, '--', *pathspecs]
 
 
@@ -1317,7 +1380,8 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
     The catalogue is curated metadata about a family, so it is read before body text: query words
     in a family's keywords or id (and, for one entry point, its topic) count at CATALOGUE_WEIGHT for
     each of its ``authority_files``; words in its purpose or notes count as text. A data store has
-    no tracked file, so its store becomes a candidate of its own (rendered as a data_store hit).
+    no tracked file, so its store becomes a candidate of its own (rendered as a data_store hit), and
+    its purpose and notes, the one description of what it holds, count like its keywords.
     A keyword that names one entry point's topic (its words are among that topic's or path's
     words) speaks for that entry point only, so a family's runbook keyword "storage topology"
     is not credited to its CI-gate runbook. Every entry point, README or index that speaks for
@@ -1347,8 +1411,8 @@ def _catalogue_evidence(state: State, terms: list[str], family: str | None,
             if strong or weak:
                 store = entry['store'][0]
                 candidate = candidates.setdefault(store, Candidate(store))
-                candidate.catalogue_terms |= strong
-                candidate.purpose_terms |= weak
+                # A store has no text: its purpose is the one description of what it holds.
+                candidate.catalogue_terms |= strong | weak
                 candidate.name_terms |= _prefix_hits(terms, words(store))
                 candidate.defined |= {u for u in units if _contains_words(words(store), words(u))}
                 candidate.store, candidate.authority = entry, True
@@ -1437,7 +1501,7 @@ def _name_candidates(state: State, terms: list[str], phrase: list[str], family: 
     spoken: dict[str, Candidate] = {}  # note path -> its best-matching private file
     for path in state.files:
         folded = normalise(path)
-        if not any(stem(t) in folded for t in terms):
+        if not any(p in folded for t in terms for p in term_prefixes(t)):
             continue  # cheap screen: a prefix of a path word is a substring of the path
         if cat.CONTROL_CHARS.search(path):
             continue
@@ -1472,10 +1536,11 @@ def _name_strength(c: Candidate) -> tuple:
 
 # ---------------------------------------------------------------- step 3: tracked text
 
-def _text_pattern(term: str) -> str:
-    """What the text search looks for: the term's ``stem`` as a fixed string, so "regenerated" meets
-    "regeneration" and "deletion" meets "deleted" (the stem keeps at least MIN_STEM letters)."""
-    return stem(term)
+def _text_patterns(term: str) -> tuple[str, ...]:
+    """What the text search looks for: the term's ``term_prefixes`` as fixed strings, so "regenerated"
+    meets "regeneration", "deletion" meets "deleted" (the stem keeps at least MIN_STEM letters) and
+    "close" meets "closing"."""
+    return term_prefixes(term)
 
 
 def _name_only_terms(terms: list[str]) -> list[str]:
@@ -1496,7 +1561,7 @@ def _content_candidates(state: State, terms: list[str], text: str, phrase: list[
     # phrase only (``_name_only_terms``, reported in the coverage): in text it occurs in almost
     # every file, so it carries no evidence and the lowest rarity weight. The search is complete.
     name_only = _name_only_terms(terms)
-    patterns = [(t, _text_pattern(t)) for t in terms if t not in name_only]
+    patterns = [(t, _text_patterns(t)) for t in terms if t not in name_only]
     if len(phrase) > 1:
         patterns.append(('\0phrase', text))  # the cleaned query as typed: separators and all
     patterns += [(f'\0compound {unit}', unit) for unit in units]
@@ -1541,7 +1606,7 @@ def _read_lines(state: State, pool: list[Candidate], terms: list[str], text: str
         return True
     # One-character words match almost every line, so they pick lines only when nothing longer exists.
     words_only = [t for t in terms if len(t) > 1] or terms
-    stems = list(dict.fromkeys(_text_pattern(t) for t in words_only))
+    stems = list(dict.fromkeys(p for t in words_only for p in _text_patterns(t)))
     jobs = []
     for phrase_files, patterns, cap in ((True, [text], EXCERPT_LINES_PER_FILE), (False, stems, PASSAGE_LINES_PER_FILE)):
         paths = sorted(p for p, c in by_path.items() if c.phrase_in_content == phrase_files)
@@ -2022,12 +2087,16 @@ def enclosing_span(spans: list[tuple[int, int, str]], line_no: int) -> tuple[int
 
 
 def _summary_hits(summaries: CodeSummaries, terms: list[str]) -> dict[str, set[str]]:
-    """Per code file, the terms its summary holds as a word prefix (as typed or as their stem)."""
+    """Per code file, the terms its summary holds as a word prefix (as typed or as their
+    ``stem_prefixes``), or as a word whose ending changes the term's last letter (``changed_ending``:
+    closing, entries)."""
     hits: dict[str, set[str]] = {}
     for term in terms:
-        prefixes = (term, stem(term))
+        prefixes = (term, *stem_prefixes(term))
+        changed = term_prefixes(term)[len(stem_prefixes(term)):]
         for word, paths in summaries.index.items():
-            if word.startswith(prefixes):
+            # A changed last letter is checked against the whole word: entry meets entries, never entrepreneur.
+            if word.startswith(prefixes) or (word.startswith(changed) and _term_pattern(term).search(f' {word} ')):
                 for path in paths:
                     hits.setdefault(path, set()).add(term)
     return hits
@@ -2067,7 +2136,8 @@ def _symbol_scan(state: State, terms: list[str], deadline: float, units: Sequenc
         table, failure = abbreviations(state, deadline)
         # Words shorter than MIN_CODE_PATTERN occur on most code lines: they never select lines, but
         # still count on a line another query word selected (a query of short words only uses them).
-        patterns = list(dict.fromkeys(stem(t) for t in terms if len(t) >= MIN_CODE_PATTERN)) or terms
+        patterns = list(dict.fromkeys(
+            p for t in terms if len(t) >= MIN_CODE_PATTERN for p in term_prefixes(t))) or terms
         fixed, whole = table.query_patterns(list(phrase), terms)
         run = _total_grep(state.repo, _line_args([*patterns, *fixed], pathspecs, None, whole), deadline,
                           CODE_OUTPUT_CAP)

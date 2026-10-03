@@ -377,33 +377,62 @@ def test_letters_keep_the_plans_introduction_order(tmp_path: Path) -> None:
     assert list(state.to_dict()["letters"]) == ["Б", "А"]
 
 
-def test_base_and_name_ids_in_plan_core_do_not_increase_cumulative_count(tmp_path: Path) -> None:
-    """Base-layer and name IDs must not increase cumulative_core_count even if listed as core in plan."""
+def test_base_ids_in_plan_core_do_not_increase_cumulative_count(tmp_path: Path) -> None:
+    """Base-layer IDs must not increase cumulative_core_count even if listed as core in plan."""
     plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
 
-    # In module-one.yaml lesson 1, add W-BASE-01 and W-NAME-01 to core vocabulary
+    # In module-one.yaml lesson 1, add W-BASE-01 to core vocabulary
     p1_file = plans_dir / "module-one.yaml"
     data = yaml.safe_load(p1_file.read_text(encoding="utf-8"))
     data["lessons"][0]["inventory"]["vocabulary"]["core"] = [
         {"lemma": "base-one", "evidence": "W-BASE-01"},
-        {"lemma": "Speaker One", "evidence": "W-NAME-01"},
         {"lemma": "core-one", "evidence": "W-CORE-01"},
     ]
     _write_yaml(p1_file, data)
 
     s1_2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
-    # W-BASE-01 and W-NAME-01 must not increase cumulative_core_count
     assert s1_2.cumulative_core_count == 1
     assert "W-CORE-01" in s1_2.core_ids
     assert "W-BASE-01" not in s1_2.core_ids
-    assert "W-NAME-01" not in s1_2.core_ids
-
-    # All remain admitted in learner state
     assert "W-BASE-01" in s1_2.base_ids
-    assert "W-NAME-01" in s1_2.name_ids
     assert "W-BASE-01" in s1_2.all_allowed_ids
-    assert "W-NAME-01" in s1_2.all_allowed_ids
     assert "W-CORE-01" in s1_2.all_allowed_ids
+
+
+def test_declared_core_record_stays_core_when_also_a_dialogue_name(tmp_path: Path) -> None:
+    """#9487 check 7: a record an earlier plan declares core stays in core_ids (and counts) when it is
+    also a dialogue speaker; position 1 declared W-081 core and named it as a recap speaker, and the
+    generator dropped it from core_ids."""
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+
+    p1_file = plans_dir / "module-one.yaml"
+    data = yaml.safe_load(p1_file.read_text(encoding="utf-8"))
+    data["lessons"][0]["inventory"]["vocabulary"]["core"] = [
+        {"lemma": "Speaker One", "evidence": "W-NAME-01"},
+        {"lemma": "core-one", "evidence": "W-CORE-01"},
+    ]
+    _write_yaml(p1_file, data)
+
+    # W-NAME-01 is a speaker of position 1 lesson 1's dialogue; position 2 reads all of position 1
+    state = planned_state("a1", 2, 1, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert "W-NAME-01" in state.name_ids
+    assert state.core_ids["W-NAME-01"] == {"position": 1, "lesson": 1}
+    assert "W-CORE-01" in state.core_ids
+    assert state.cumulative_core_count == len(state.core_ids)
+
+    # within the same plan, the next lesson sees it as core too
+    s1_2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert "W-NAME-01" in s1_2.core_ids
+    assert "W-NAME-01" in s1_2.name_ids
+
+
+def test_name_never_declared_core_stays_out_of_core_ids(tmp_path: Path) -> None:
+    """A dialogue name that no plan declares core is admitted by name_ids only and never counted."""
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+    state = planned_state("a1", 2, 1, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert "W-NAME-01" in state.name_ids
+    assert "W-NAME-01" not in state.core_ids
+    assert "W-NAME-01" in state.all_allowed_ids
 
 
 def test_arc_ref_level_mismatch_fails(tmp_path: Path) -> None:

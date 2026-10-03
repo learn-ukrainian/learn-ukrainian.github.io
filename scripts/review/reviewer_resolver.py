@@ -17,7 +17,9 @@ versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 ``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
 Fable is last resort, routine ladders keep practical seats, native Grok never
 judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
-below critical (#9488).
+below critical (#9488). A formal review at high risk is performed only by the
+models ``review_scheduler.risk_reviewer_models`` lists (#9538); that is an
+eligibility gate, so it binds explicit pins and custom ladders too.
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
@@ -45,6 +47,7 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     resolve_catalog_model_id,
     retired_model_refusal,
+    risk_reviewer_refusal,
 )
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
 from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
@@ -835,6 +838,10 @@ def evaluate_candidate(
         )
 
     reason = _hard_exclusion_reason(candidate, inputs)
+    if not reason and inputs.formal_review:
+        # Operator decision 2026-10-02 (#9538): the catalog names the only
+        # models that perform a formal review at this risk, on any transport.
+        reason = risk_reviewer_refusal(candidate.concrete_model, inputs.risk, _MODEL_CATALOG)
     if reason:
         return CandidateResult(
             name=candidate.name,

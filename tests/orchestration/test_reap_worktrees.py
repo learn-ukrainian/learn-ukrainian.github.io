@@ -5366,6 +5366,145 @@ def test_detached_clean_contained_preserves_non_cache_ignored_files(
     assert (worktree / "data" / "unique.db").exists()
 
 
+_PROVISIONED_LINKS = ("data/sources.db", "data/vesum.db", "node_modules", "site/node_modules")
+
+
+@pytest.fixture
+def provisioned_repo(tmp_path: Path) -> tuple[Path, Path, dict[Path, bytes]]:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(
+        ".worktrees/\nbatch_state/\n/data/\n/node_modules\n/site/node_modules\n/other-ignored\n",
+        encoding="utf-8",
+    )
+    git(repo, "commit", "-am", "ignore provisioned paths")
+    git(repo, "push", "origin", "main")
+    snapshots = {}
+    for relative in _PROVISIONED_LINKS:
+        target = repo / relative
+        if relative.endswith("node_modules"):
+            target = target / "package" / "index.js"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        snapshots[target] = f"primary content: {relative}\n".encode()
+        target.write_bytes(snapshots[target])
+    return repo, _detached_dispatch_worktree(repo), snapshots
+
+
+@pytest.mark.parametrize("relatives", [(relative,) for relative in _PROVISIONED_LINKS] + [_PROVISIONED_LINKS])
+@pytest.mark.parametrize("relative_target", [False, True])
+def test_detached_clean_contained_reaps_provisioned_links_without_following_them(
+    provisioned_repo: tuple[Path, Path, dict[Path, bytes]],
+    monkeypatch: pytest.MonkeyPatch,
+    relatives: tuple[str, ...],
+    relative_target: bool,
+) -> None:
+    repo, worktree, snapshots = provisioned_repo
+    for relative in relatives:
+        link = worktree / relative
+        link.parent.mkdir(parents=True, exist_ok=True)
+        target = repo / relative
+        link.symlink_to(os.path.relpath(target, link.parent) if relative_target else target)
+    assert rw._tree_holds_only_disposable_residue(worktree)
+    dry = result_for(_reap_contained(repo, monkeypatch, apply=False), worktree)
+    assert dry.action == "would_remove", dry.reason
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "removed", result.reason
+    assert not worktree.exists()
+    assert {target: target.read_bytes() for target in snapshots} == snapshots
+    assert {target for target in (repo / "data").rglob("*") if target.is_file()} == {
+        repo / "data/sources.db",
+        repo / "data/vesum.db",
+    }
+    for relative in ("node_modules", "site/node_modules"):
+        assert sorted(str(target.relative_to(repo / relative)) for target in (repo / relative).rglob("*")) == [
+            "package",
+            "package/index.js",
+        ]
+    assert_main_checkout_unchanged(repo)
+
+
+@pytest.mark.parametrize("relative", _PROVISIONED_LINKS)
+@pytest.mark.parametrize(
+    "residue",
+    [
+        "elsewhere",
+        "wrong_relative",
+        "file",
+        "directory",
+        "broken",
+        "loop",
+        "extra_ignored",
+        "extra_untracked",
+        "unignored",
+    ],
+)
+def test_detached_clean_contained_preserves_non_provisioned_residue(
+    provisioned_repo: tuple[Path, Path, dict[Path, bytes]],
+    monkeypatch: pytest.MonkeyPatch,
+    relative: str,
+    residue: str,
+) -> None:
+    repo, worktree, snapshots = provisioned_repo
+    link = worktree / relative
+    link.parent.mkdir(parents=True, exist_ok=True)
+    target = repo / relative
+    if residue == "file":
+        link.write_text("only copy", encoding="utf-8")
+    elif residue == "directory":
+        link.mkdir()
+        (link / "only-copy").write_text("only copy", encoding="utf-8")
+    else:
+        if residue == "elsewhere":
+            target = repo.parent / "elsewhere"
+            target.write_text("only copy", encoding="utf-8")
+        elif residue == "wrong_relative":
+            target = repo / next(item for item in _PROVISIONED_LINKS if item != relative)
+        elif residue == "broken":
+            target = repo.parent / "missing"
+        elif residue == "loop":
+            target = link
+        link.symlink_to(target)
+    if residue in {"extra_ignored", "extra_untracked"}:
+        extra = worktree / ("data/unique.db" if residue == "extra_ignored" else "only-copy.txt")
+        extra.parent.mkdir(parents=True, exist_ok=True)
+        extra.write_text("only copy", encoding="utf-8")
+    elif residue == "unignored":
+        # Keep HEAD contained while making the provisioned link an untracked entry.
+        (worktree / ".gitignore").write_text(".worktrees/\nbatch_state/\n", encoding="utf-8")
+        git(worktree, "commit", "-am", "unignore links")
+        git(worktree, "push", "origin", "HEAD:refs/heads/unignored")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped", result.reason
+    assert worktree.exists()
+    assert link.is_symlink() or link.exists()
+    if residue in {"extra_ignored", "extra_untracked"}:
+        assert extra.read_text(encoding="utf-8") == "only copy"
+    assert {target: target.read_bytes() for target in snapshots} == snapshots
+
+
+def test_detached_clean_contained_rechecks_provisioned_link_target_under_lock(
+    provisioned_repo: tuple[Path, Path, dict[Path, bytes]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo, worktree, snapshots = provisioned_repo
+    link = worktree / "node_modules"
+    link.symlink_to(repo / "node_modules")
+    dry = result_for(_reap_contained(repo, monkeypatch, apply=False), worktree)
+    assert dry.action == "would_remove", dry.reason
+    info = next(info for info in rw.list_git_worktrees(repo) if info.path == worktree)
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    assert rw._detached_clean_contained_recheck(repo, info) is None
+
+    link.unlink()
+    link.symlink_to(repo / "site/node_modules")
+
+    assert rw._detached_clean_contained_recheck(repo, info) == "detached clean contained proof changed during cleanup"
+    assert worktree.exists()
+    assert {target: target.read_bytes() for target in snapshots} == snapshots
+
+
 def test_detached_clean_contained_preserves_dirty_tracked_change(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -6298,6 +6437,41 @@ def _review_class_worktree(
 
 
 _REVIEW_KINDS = ["superseded", "unrecorded", "foreign"]
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+@pytest.mark.parametrize("relative", _PROVISIONED_LINKS)
+def test_review_checkout_classes_reap_provisioned_links_without_following_them(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+    relative: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".git" / "info" / "exclude").write_text(f"/{relative}\n", encoding="utf-8")
+    target = repo / relative
+    payload = target / "package" / "index.js" if relative.endswith("node_modules") else target
+    payload.parent.mkdir(parents=True, exist_ok=True)
+    payload.write_bytes(b"primary content\n")
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    link = worktree / relative
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(target)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "removed", result.reason
+    if kind == "superseded":
+        assert result.reason.startswith(f"superseded PR #{_OLD_PR} head ")
+    else:
+        assert result.reason == {
+            "unrecorded": "unrecorded detached checkout",
+            "foreign": "foreign registered checkout",
+        }[kind]
+    assert not worktree.exists()
+    assert target.exists()
+    assert payload.read_bytes() == b"primary content\n"
+    assert_main_checkout_unchanged(repo)
 
 
 @pytest.mark.parametrize("kind", _REVIEW_KINDS)

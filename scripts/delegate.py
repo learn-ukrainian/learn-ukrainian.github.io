@@ -71,6 +71,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
         "launch_fallback_reason": str | null,
+        "launch_user_bus": {source: "caller" | "derived" | "unavailable", variables?, reason?},  # #9534
         "peak_rss_mib": float | null,               # terminal records; largest reaped child
         "owned_paths": [str] | absent,              # the --owned-path values: auto-finalize scope (#8991)
         "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
@@ -4787,7 +4788,12 @@ def _run_count_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
     except (OSError, subprocess.TimeoutExpired):
         return None, False
     if proc.returncode != 0:
-        return None, True
+        # Permit fallback only on confirmed absence (exit 1 from rev-parse).
+        # Unavailable verification (None), operational error (!= 1), or ref present (0) fails closed.
+        ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
+        if ref_check is not None and ref_check[0] == 1:
+            return None, True
+        return None, False
     try:
         return int((proc.stdout or "").strip()), False
     except ValueError:
@@ -4879,15 +4885,7 @@ def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_
     for the lost base and may already hold the work, so its commits count only
     when merging ``HEAD`` into it would change it (``_count_real_changes_ahead``).
     """
-    candidates: list[tuple[str, bool]] = []
-    if base_sha and _is_ancestor_of_head(worktree, base_sha):
-        candidates.append((base_sha, True))
-    default_refs = ["origin/main"]
-    tracking_remote = _tracking_remote_for_current_branch(worktree)
-    if tracking_remote:
-        default_refs.append(f"{tracking_remote}/main")
-    candidates.extend((ref, False) for ref in dict.fromkeys(default_refs))
-    for candidate, exact in candidates:
+    for candidate, exact in _fallback_base_candidates(worktree, base_sha):
         count_ahead = _run_count_ahead if exact else _count_real_changes_ahead
         count, base_missing = count_ahead(worktree, candidate)
         if count is not None:
@@ -4898,6 +4896,98 @@ def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_
             return count
         if not base_missing:
             return None
+    return None
+
+
+def _fallback_base_candidates(worktree: Path, base_sha: str | None) -> list[tuple[str, bool]]:
+    """Return ordered ``(ref_or_sha, is_exact_recorded_commit)`` candidates when the named base is gone (#9451, #9489).
+
+    1. The recorded commit the worktree was branched from (``base_sha``), when
+       it is reachable and an ancestor of ``HEAD``;
+    2. The default branch (``origin/main``, then the upstream remote's ``main``).
+
+    The recorded commit is exact. The default branch is only a proxy for the lost
+    base: when the base was squash-merged, the default branch's merge-base
+    predates the base branch, so diffs and commit counts can include the base
+    branch's own commits (an overcount). Testing the recorded commit first avoids
+    this whenever ``worktree_base_sha`` was preserved.
+    """
+    candidates: list[tuple[str, bool]] = []
+    if base_sha and _is_ancestor_of_head(worktree, base_sha):
+        candidates.append((base_sha, True))
+    default_refs = ["origin/main"]
+    tracking_remote = _tracking_remote_for_current_branch(worktree)
+    if tracking_remote:
+        default_refs.append(f"{tracking_remote}/main")
+    candidates.extend((ref, False) for ref in dict.fromkeys(default_refs))
+    return candidates
+
+
+def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
+    """``(merge_base_sha, base_missing)`` for ``git merge-base <base> HEAD`` (#9489).
+
+    ``base_missing`` is True only when git ran and rejected ``base`` (the ref or
+    SHA does not resolve): the one case where trying another base candidate is
+    sound. A present base that has no common ancestor with HEAD or whose
+    computation failed fails closed ((None, False)).
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "merge-base", base, "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None, False
+    if proc.returncode == 0:
+        sha = (proc.stdout or "").strip()
+        return (sha or None), False
+    ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
+    if ref_check is not None and ref_check[0] == 1:
+        # Confirmed absence: git rev-parse ran and confirmed the ref does not exist (exit 1).
+        return None, True
+    # Either ref exists (0), verification was unavailable (None), or failed operationally (!= 1).
+    # Fail closed in all these cases: do NOT treat as missing and do NOT fall back.
+    return None, False
+
+
+def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = None) -> str | None:
+    """Return the merge-base SHA between base_ref and HEAD, or a fallback if base_ref was deleted (#9489).
+
+    First tries eligible candidates for base_ref (_commit_count_refs).
+    When all candidates for base_ref are missing (the base branch was deleted
+    after merging), falls back to:
+    1. the recorded base commit (base_sha) when reachable and an ancestor of HEAD;
+    2. the default-branch merge-base (origin/main).
+
+    When the base was squash-merged, the default branch fallback can overcount
+    changes because the merge base with main is older than the task's starting
+    point; the recorded base commit avoids this whenever available.
+
+    Returns None if no merge base can be resolved (failing closed).
+    """
+    for candidate in _commit_count_refs(worktree, base_ref):
+        sha, base_missing = _run_merge_base(worktree, candidate)
+        if sha is not None:
+            return sha
+        if not base_missing:
+            return None
+
+    for candidate, _exact in _fallback_base_candidates(worktree, base_sha):
+        sha, base_missing = _run_merge_base(worktree, candidate)
+        if sha is not None:
+            print(
+                f"⚠️  base {base_ref!r} is gone; resolved merge-base against {candidate!r} instead",
+                file=sys.stderr,
+            )
+            return sha
+        if not base_missing:
+            return None
+
     return None
 
 
@@ -5734,33 +5824,22 @@ def _kimi_worker_refusal(
     return None, target
 
 
-def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
+def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str, *, base_sha: str | None = None) -> str | None:
     """The refusal when a Kimi worker's changed files are not plain UTF-8 text or hold Cyrillic text; None otherwise.
 
     The changes run from the merge base with ``base_ref`` to the working tree,
     so they cover the worker's own commits and its uncommitted and untracked
     files. Each changed path's post-image is read in full, so git's binary
-    classification cannot hide text. Fails closed: changes that cannot be
-    read are a refusal.
+    classification cannot hide text. When ``base_ref`` was deleted after
+    merging, falls back to the recorded ``base_sha`` and then the default-branch
+    merge base (#9489). Fails closed: changes that cannot be read are a refusal.
     """
     from scripts.agent_runtime import kimi_boundary
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_kimi_changes
 
     unreadable = format_refusal(agent, ["the finalized changes could not be read for Ukrainian content"])
-    try:
-        base_proc = subprocess.run(
-            ["git", "merge-base", base_ref, "HEAD"],
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return unreadable
-    merge_base = (base_proc.stdout or "").strip()
-    if base_proc.returncode != 0 or not merge_base:
+    merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
+    if not merge_base:
         return unreadable
     name_status = _worktree_diff_output(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
     if name_status is None:
@@ -5777,18 +5856,24 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
     return None
 
 
-def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: Mapping[str, Any]) -> dict[str, Any]:
+def _advisory_ceiling_check(
+    worktree: Path | None, base_branch: str, envelope: Mapping[str, Any], *, base_sha: str | None = None
+) -> dict[str, Any]:
     """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
 
     Changes run from the merge base with the base branch to the working tree:
-    the worker's commits plus its uncommitted and untracked files.
+    the worker's commits plus its uncommitted and untracked files. When the base
+    branch was deleted after merging, falls back to the recorded ``base_sha``
+    and then the default branch (#9489).
     """
     try:
         max_files = int(envelope["max_changed_files"])
         max_loc = int(envelope["max_non_test_loc"])
     except (KeyError, TypeError, ValueError):
         return {"measured": False, "error": "the task record's envelope has no ceilings"}
-    numstat, error = _advisory_worker_diff(worktree, base_branch, ["--numstat", "-z", "--no-renames"])
+    numstat, error = _advisory_worker_diff(
+        worktree, base_branch, ["--numstat", "-z", "--no-renames"], base_sha=base_sha
+    )
     if numstat is None:
         return {"measured": False, "error": error}
     try:
@@ -5799,30 +5884,26 @@ def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: M
 
 
 def _advisory_worker_diff(
-    worktree: Path | None, base_branch: str, diff_args: Sequence[str], *, committed_only: bool = False
+    worktree: Path | None,
+    base_branch: str,
+    diff_args: Sequence[str],
+    *,
+    committed_only: bool = False,
+    base_sha: str | None = None,
 ) -> tuple[str | None, str | None]:
     """``(git diff <diff_args> <merge-base>, None)`` over the worker's changes, or ``(None, why)`` when unreadable.
 
     Changes run from the merge base with the base branch to the working tree:
     the worker's commits plus its uncommitted and untracked files; with
-    ``committed_only``, to ``HEAD``: its commits alone.
+    ``committed_only``, to ``HEAD``: its commits alone. When the base branch was
+    deleted after merging, falls back to the recorded ``base_sha`` and then the
+    default branch (#9489).
     """
     if worktree is None or not worktree.is_dir():
         return None, "no worktree to measure"
-    try:
-        base_proc = subprocess.run(
-            ["git", "merge-base", _commit_count_base_ref(worktree, base_branch), "HEAD"],
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        return None, f"merge-base: {exc}"
-    merge_base = (base_proc.stdout or "").strip()
-    if base_proc.returncode != 0 or not merge_base:
+    base_ref = _commit_count_base_ref(worktree, base_branch)
+    merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
+    if not merge_base:
         return None, "merge-base with the base branch is unknown"
     if committed_only:
         try:
@@ -5859,9 +5940,10 @@ def _advisory_completion_gate(
     Ukrainian content exemption. Unmeasurable changes fail.
     """
     base_branch = str(record.get("worktree_base") or "main")
+    base_sha = _recorded_base_sha(record)
     envelope = record.get("advisory_envelope")
     if isinstance(envelope, dict):
-        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope)
+        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope, base_sha=base_sha)
         failure = (
             bounded_advisory.CEILING_UNMEASURED
             if not ceiling.get("measured")
@@ -5870,7 +5952,7 @@ def _advisory_completion_gate(
         detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
         return "advisory_ceiling_check", ceiling, failure, detail
     if isinstance(record.get("advisory_exemption"), dict):
-        check = _exempt_change_check(worktree, base_branch)
+        check = _exempt_change_check(worktree, base_branch, base_sha=base_sha)
         failure = (
             bounded_advisory.EXEMPT_CHANGES_UNMEASURED
             if not check.get("measured")
@@ -6078,16 +6160,20 @@ def _advisory_completion_gate_fails(record: Mapping[str, Any], worktree: Path) -
     return gate is not None and gate[2] is not None
 
 
-def _exempt_change_check(worktree: Path | None, base_branch: str) -> dict[str, Any]:
+def _exempt_change_check(worktree: Path | None, base_branch: str, *, base_sha: str | None = None) -> dict[str, Any]:
     """Classify every path a content-exempt worker changed (#9275); unmeasurable is reported as such.
 
     Every committed path is classified, and every uncommitted one except the
     scratch residue auto-finalize never publishes (``_is_disposable_auto_finalize_path``),
-    which is listed as ``ignored_residue``.
+    which is listed as ``ignored_residue``. When the base branch was deleted
+    after merging, falls back to the recorded ``base_sha`` and then the default
+    branch (#9489).
     """
     name_args = ["--name-only", "-z", "--no-renames"]
-    names, error = _advisory_worker_diff(worktree, base_branch, name_args)
-    committed, committed_error = _advisory_worker_diff(worktree, base_branch, name_args, committed_only=True)
+    names, error = _advisory_worker_diff(worktree, base_branch, name_args, base_sha=base_sha)
+    committed, committed_error = _advisory_worker_diff(
+        worktree, base_branch, name_args, committed_only=True, base_sha=base_sha
+    )
     if names is None or committed is None:
         return {"measured": False, "error": error or committed_error}
     assert worktree is not None
@@ -9159,7 +9245,12 @@ def _run_worker(
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
                 if kimi_worker:
-                    kimi_content_refusal = _kimi_diff_refusal(Path(worktree_path), base_ref, agent)
+                    kimi_content_refusal = _kimi_diff_refusal(
+                        Path(worktree_path),
+                        base_ref,
+                        agent,
+                        base_sha=_recorded_base_sha(final_state),
+                    )
                 # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
                 #
                 # ``_count_commits_ahead`` returns None when it cannot count, and
@@ -12627,12 +12718,18 @@ CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
 
 
 def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
-    """True when any review flag types this dispatch as a review."""
+    """True when any review flag types this dispatch as a review.
+
+    ``--review-author-model`` and ``--review-risk`` exist only for reviewer
+    resolution, so either one types the dispatch as a (code-profile) review.
+    """
     return (
         bool(getattr(args, "review", False))
         or bool(getattr(args, "review_attempt", None))
         or bool(getattr(args, "require_review_verdict", False))
         or bool(getattr(args, "review_profile", None))
+        or bool(getattr(args, "review_author_model", None))
+        or bool(getattr(args, "review_risk", None))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review"
     )
 
@@ -13009,9 +13106,8 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
-            review_dispatch=bool(
-                getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)
-            ),
+            # Every review-typed dispatch passes reviewer admission, not only verdict-gated ones (#9538).
+            review_dispatch=_dispatch_is_review_typed(args),
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),

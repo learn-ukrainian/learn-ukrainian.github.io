@@ -11,6 +11,7 @@ import ast
 import json
 import os
 import signal
+import stat
 import subprocess
 import sys
 import textwrap
@@ -1072,14 +1073,19 @@ def test_real_scope_puts_the_popen_pid_in_a_throwaway_slice(monkeypatch: pytest.
 _BUS_VARS = ("XDG_RUNTIME_DIR", "DBUS_SESSION_BUS_ADDRESS")
 
 
-def _runtime_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, create: bool = True) -> Path:
-    """Point the derivation at a temporary ``/run/user`` and return ``<root>/<uid>``."""
+def _runtime_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, create: bool = True, bus: bool = True) -> Path:
+    """Point the derivation at a temporary ``/run/user`` and return ``<root>/<uid>``.
+
+    ``bus`` adds a socket node named ``bus``, as the user manager does.
+    """
     root = tmp_path / "run-user"
     root.mkdir()
     monkeypatch.setattr(iso, "_USER_RUNTIME_ROOT", root)
     runtime = root / str(os.getuid())
     if create:
         runtime.mkdir(mode=0o700)
+        if bus:
+            os.mknod(runtime / "bus", stat.S_IFSOCK | 0o600)
     return runtime
 
 
@@ -1120,16 +1126,92 @@ def test_user_manager_env_derives_nothing_without_an_owned_runtime_dir(tmp_path:
     # Another uid's directory as seen by us: ours, not that uid's.
     other = os.getuid() + 1
     (runtime.parent / str(other)).mkdir()
+    os.mknod(runtime.parent / str(other) / "bus", stat.S_IFSOCK | 0o600)
     assert iso.user_manager_env({}, uid=other) == {}
 
     target = tmp_path / "elsewhere"
     target.mkdir()
+    os.mknod(target / "bus", stat.S_IFSOCK | 0o600)
     runtime.symlink_to(target)
     assert iso.user_manager_env({}) == {}
 
     runtime.unlink()
     runtime.write_text("", encoding="ascii")
     assert iso.user_manager_env({}) == {}
+
+
+@pytest.mark.parametrize("bus", ["missing", "regular-file", "directory"])
+def test_resolve_user_bus_needs_the_bus_socket(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bus: str):
+    """An owned runtime directory without a ``bus`` socket derives nothing and says why (#9534)."""
+    runtime = _runtime_root(tmp_path, monkeypatch, bus=False)
+    if bus == "regular-file":
+        (runtime / "bus").write_text("", encoding="ascii")
+    elif bus == "directory":
+        (runtime / "bus").mkdir()
+
+    resolved = iso.resolve_user_bus({"PATH": "/usr/bin"})
+
+    assert resolved.env == {"PATH": "/usr/bin"}
+    assert resolved.derived == ()
+    state = resolved.as_state()
+    assert state["source"] == "unavailable"
+    assert str(runtime / "bus") in state["reason"]
+    if bus != "missing":
+        assert state["reason"].endswith("is not a socket")
+
+
+def test_resolve_user_bus_records_where_the_variables_came_from(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    runtime = _runtime_root(tmp_path, monkeypatch)
+
+    derived = iso.resolve_user_bus({})
+    assert derived.derived == ("DBUS_SESSION_BUS_ADDRESS", "XDG_RUNTIME_DIR")
+    assert derived.as_state() == {"source": "derived", "variables": ["DBUS_SESSION_BUS_ADDRESS", "XDG_RUNTIME_DIR"]}
+
+    bus_only = iso.resolve_user_bus({"DBUS_SESSION_BUS_ADDRESS": "unix:path=/caller/bus"})
+    assert bus_only.as_state() == {"source": "derived", "variables": ["XDG_RUNTIME_DIR"]}
+
+    caller = iso.resolve_user_bus({"XDG_RUNTIME_DIR": "/caller/run"})
+    assert caller.as_state() == {"source": "caller"}
+
+    (runtime / "bus").unlink()
+    runtime.rmdir()
+    gone = iso.resolve_user_bus({})
+    assert gone.as_state()["source"] == "unavailable"
+    assert str(runtime) in gone.as_state()["reason"]
+
+
+def test_worker_launch_state_carries_the_user_bus_record():
+    launch = iso.WorkerLaunch(mode=iso.LAUNCH_SCOPE, unit="u", user_bus={"source": "caller"})
+    assert launch.as_state() == {"launch_mode": "scope", "launch_unit": "u", "launch_user_bus": {"source": "caller"}}
+    assert "launch_user_bus" not in iso.WorkerLaunch(mode=iso.LAUNCH_FALLBACK, fallback_reason="r").as_state()
+
+
+def test_fallback_without_a_bus_socket_records_why(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """A headless caller whose user manager has no bus socket falls back and records the reason."""
+    runtime = _runtime_root(tmp_path, monkeypatch, bus=False)
+    bindir = _install_fakes(tmp_path)
+    env = _without_bus(_env(bindir, FAKE_REQUIRE_BUS="1"))
+
+    proc, launch = iso.spawn_detached_worker(
+        [_PY, "-c", "pass"],
+        task_id="headless-no-bus",
+        run_nonce="nonce9534",
+        env=env,
+        probe_env=env,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        subtree_path=_subtree(tmp_path),
+    )
+    proc.wait(timeout=10)
+
+    state = launch.as_state()
+    assert launch.mode == iso.LAUNCH_FALLBACK
+    assert state["launch_fallback_reason"].startswith("user-manager:")
+    assert state["launch_user_bus"] == {
+        "source": "unavailable",
+        "reason": f"{runtime / 'bus'}: No such file or directory",
+    }
 
 
 def test_probe_reaches_the_user_manager_without_the_callers_bus_variables(
@@ -1143,6 +1225,7 @@ def test_probe_reaches_the_user_manager_without_the_callers_bus_variables(
     assert _probe(env, subtree).ready
     assert not set(_BUS_VARS) & env.keys()
 
+    (runtime / "bus").unlink()
     runtime.rmdir()
     missing = _probe(env, subtree)
     assert not missing.ready
@@ -1178,6 +1261,11 @@ def test_scope_launch_reaches_the_user_manager_and_keeps_the_worker_env(
     out, _err = proc.communicate(timeout=10)
 
     assert launch.mode == iso.LAUNCH_SCOPE, launch.fallback_reason
+    assert launch.as_state()["launch_user_bus"] == (
+        {"source": "caller"}
+        if caller_has_bus
+        else {"source": "derived", "variables": ["DBUS_SESSION_BUS_ADDRESS", "XDG_RUNTIME_DIR"]}
+    )
     expected_bus = (
         {"XDG_RUNTIME_DIR": "/caller/run", "DBUS_SESSION_BUS_ADDRESS": "unix:path=/caller/bus"}
         if caller_has_bus

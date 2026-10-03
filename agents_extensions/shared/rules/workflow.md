@@ -164,7 +164,10 @@ the separate challenge proof and `confirm-started` can unlock cleanup.
 
 ### Review dispatch admission
 
-For review-typed `delegate.py dispatch` calls, `--review-author-model` and
+A `delegate.py dispatch` call is review-typed when it passes any of
+`--require-review-verdict`, `--review-attempt`, `--review-profile`,
+`--review-author-model` or `--review-risk`; every review-typed call passes
+reviewer admission (#9538). For these calls, `--review-author-model` and
 `--review-risk` provide trusted inputs to the code reviewer resolver (code
 profile only). An eligible requested reviewer is retained; necessary admission
 or budget substitutions use the resolver and emit a typed identity-change note.
@@ -449,7 +452,7 @@ Strong success criteria enable independent looping. Weak criteria ("make it work
 review lane per `model-assignment.md` Code review row and document findings on the GH issue.
 Gemini-family seats stay off that row. Two residuals are accepted there:
 `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion
-with no path check, and `delegate --agent agy` without `--require-review-verdict`
+with no path check, and `delegate --agent agy` with no review-typing flag
 is not gated.
 ```bash
 printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
