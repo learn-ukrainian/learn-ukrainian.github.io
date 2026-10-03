@@ -650,7 +650,8 @@ def _near_cap_credit(lane: str, record: Mapping[str, Any], now: datetime | None)
     """Credit receipt for a near-cap lane from its published ``agents.<lane>.credit`` (#9517).
 
     :func:`credit_lane.published_credit_relief` re-checks the published state
-    against the local policy and the clock; None when nothing could relax the
+    against the local policy, the clock and the current shared runtime
+    rate-limit records; None when nothing could relax the
     plan state (any published state other than ``credit_balance_present``, a
     lane outside the policy, or an unreadable policy).
     """

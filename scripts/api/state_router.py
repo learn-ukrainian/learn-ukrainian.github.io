@@ -60,6 +60,7 @@ except ImportError:
     from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.agent_runtime.acp_health import probe_acp_health
+from scripts.common.repo_root import main_checkout_root
 from scripts.fleet import credit_lane
 from scripts.fleet.reset_reserve import (
     codex_is_threatened,
@@ -1162,8 +1163,13 @@ def _compute_dispatch_routing_budget(
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
+    # Default to the shared checkout's runtime plane, as the canonical runtime
+    # usage reader does: a linked-worktree caller (the curriculum coordinator)
+    # must see fleet-wide rate limits and tasks, not its own empty copy (#9517).
     resolved_batch_state = (
-        batch_state_dir if batch_state_dir is not None else (Path(__file__).resolve().parents[2] / "batch_state")
+        batch_state_dir
+        if batch_state_dir is not None
+        else main_checkout_root(Path(__file__).resolve().parents[2]) / "batch_state"
     )
     usage_dir = resolved_batch_state / "api_usage"
     runtime_records_7d = _runtime_usage_records_7d(usage_dir=usage_dir)

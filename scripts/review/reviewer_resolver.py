@@ -535,7 +535,8 @@ def _near_cap_credit(candidate: ReviewerCandidate, snapshot: Mapping[str, object
     Only a full routing-budget snapshot carries the credit state its producer
     computed with :func:`credit_lane.lane_credit_state`; a flat health map has
     none. :func:`credit_lane.published_credit_relief` re-checks the published
-    state against the local policy and the clock.
+    state against the local policy, the clock and the current shared runtime
+    rate-limit records.
     """
     agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
     record = agents.get(candidate.route) if isinstance(agents, Mapping) else None

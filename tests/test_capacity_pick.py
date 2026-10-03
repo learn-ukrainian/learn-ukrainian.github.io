@@ -540,6 +540,11 @@ def _credit_rows(codex: dict) -> list[dict]:
 
 
 def test_credit_balance_codex_picks_after_plan_backed_warm_seat():
+    """Regression guard: capacity_pick already ordered a credit-backed lane this way before #9517.
+
+    It passes on the merge-base too; it pins the existing behaviour the
+    routing-budget credit field now feeds, it does not prove new behaviour.
+    """
     rows = _credit_rows(_credit_codex())
     codex = next(row for row in rows if row["lane"] == "codex")
     assert (codex["status"], codex["avoid"]) == ("credit_balance_present", False)

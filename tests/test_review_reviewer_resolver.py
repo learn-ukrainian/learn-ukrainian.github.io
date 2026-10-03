@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
@@ -1648,6 +1649,9 @@ def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
 
 # --- #9517: near-cap lanes with a published credit balance -------------------
 
+# Captured at import, before the conftest autouse fixture stubs the reader.
+_REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
+
 
 def _credit_codex(credit: dict | None, **overrides) -> dict:
     """A near-cap, healthy Codex routing-budget record publishing ``credit``."""
@@ -1788,3 +1792,41 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
     assert resolution.selected.name == "synthetic-practical-astra"
     assert resolution.selected.credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
     assert credit_lane.DRAW_NOT_VERIFIED in resolution.substitution_note
+
+
+def _shared_rate_limit(monkeypatch, tmp_path, *, at: datetime) -> None:
+    """One codex ``rate_limited`` record at ``at`` in a simulated shared runtime log, read by the real reader."""
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", _REAL_RATE_LIMIT_READER)
+    stamp = at.astimezone(UTC)
+    (tmp_path / f"usage_codex-delegate_{stamp:%Y-%m-%d}.jsonl").write_text(
+        json.dumps({"ts": stamp.isoformat().replace("+00:00", "Z"), "outcome": "rate_limited"}) + "\n",
+        encoding="utf-8",
+    )
+
+
+def test_published_credit_snapshot_is_not_reused_after_a_new_rate_limit(monkeypatch, tmp_path):
+    credit = _published_credit()  # published while the lane had no rate limit
+    assert credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+    _shared_rate_limit(monkeypatch, tmp_path, at=datetime.now(UTC) - timedelta(minutes=10))
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit))
+    result = evaluate_candidate(OPENAI_FRONTIER, inputs)
+    assert result.status == "excluded"
+    assert credit_lane.CREDIT_USE_UNCONFIRMED in result.reason
+    assert result.credit["state"] == credit_lane.CREDIT_USE_UNCONFIRMED
+    assert result.credit["evidence"]["rate_limited_count"] == 1
+
+
+def test_unreadable_rate_limit_evidence_denies_credit_relief(monkeypatch):
+    def broken(*_args, **_kwargs):
+        raise OSError("usage dir unreadable")
+
+    credit = _published_credit()
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", broken)
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit))
+    result = evaluate_candidate(OPENAI_FRONTIER, inputs)
+    assert result.status == "excluded"
+    assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED

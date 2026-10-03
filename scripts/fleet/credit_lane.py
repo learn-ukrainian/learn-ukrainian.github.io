@@ -511,13 +511,19 @@ def published_credit_relief(
 ) -> dict[str, Any] | None:
     """Re-check the credit state a routing-budget snapshot published for ``lane`` (``agents.<lane>.credit``).
 
-    For consumers that read a snapshot but not the runtime records (the
-    reviewer resolver). None when there is nothing that could relax the plan
+    For consumers that act on a snapshot (the reviewer resolver and the
+    coordinator wave gate). None when there is nothing that could relax the plan
     state: the snapshot does not say ``credit_balance_present``, the lane is
     not in the local policy, or the policy is unreadable. Otherwise a receipt
     with the state, reason, evidence, the local allowlist and whether ``model``
     is on it; the state reads ``credits_unverified`` when the published balance
     fetch time is no longer fresh now (an old snapshot file proves nothing).
+
+    The published rate-limit evidence is as old as the snapshot, so the
+    current evidence is re-read through :func:`read_recent_rate_limits` (the
+    shared runtime usage records): a rate limit since then reads
+    ``credit_use_unconfirmed`` and unreadable records ``credits_unverified``,
+    as :func:`lane_credit_state` would decide now.
     """
     if not isinstance(published, dict) or published.get("state") != CREDIT_BALANCE_PRESENT:
         return None
@@ -547,6 +553,19 @@ def published_credit_relief(
         receipt["reason"] = (
             f"published credit balance fetch time missing, not explicit UTC, or older than {policy.credit_max_age_s:g}s"
         )
+        return receipt
+    count, last, unreadable = _rate_limit_evidence(lane, {}, policy, current)
+    receipt["evidence"].update(
+        {"rate_limited_count": count, "last_rate_limited_at": last, "rate_limits_checked_at": _iso(current)}
+    )
+    if unreadable is not None:
+        receipt["evidence"]["unreadable_records"] = unreadable
+    if count is None:
+        receipt["state"] = CREDITS_UNVERIFIED
+        receipt["reason"] = "runtime usage records unreadable now: rate limits cannot be ruled out"
+    elif count > 0:
+        receipt["state"] = CREDIT_USE_UNCONFIRMED
+        receipt["reason"] = RATE_LIMIT_REASON
     return receipt
 
 
