@@ -269,6 +269,49 @@ PLANNED = 24
 # --------------------------------------------------------------------------- run and resume
 
 
+def _dispatcher_python(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, python: str | None) -> str:
+    seen: dict[str, Any] = {}
+
+    class Recorder:
+        def __init__(self, **kwargs: Any) -> None:
+            seen.update(kwargs)
+
+    monkeypatch.setattr(cli, "DelegateDispatcher", Recorder)
+    args = cli.build_parser().parse_args(["run", "--set", "s", "--results", "r", "--variant", "none", *(["--python", python] if python else [])])
+    cli.make_dispatcher(args, tmp_path)
+    return seen["python"]
+
+
+def test_default_interpreter_comes_from_the_shared_helper(monkeypatch, tmp_path: Path):
+    asked: list[Path] = []
+
+    def fake(root: Path | None = None) -> Path:
+        asked.append(root)
+        return tmp_path / "shared-python"
+
+    monkeypatch.setattr(cli, "project_interpreter", fake)
+    assert _dispatcher_python(monkeypatch, tmp_path, None) == str(tmp_path / "shared-python")
+    assert asked == [cli.REPO_ROOT]
+
+
+def test_python_flag_overrides_the_helper(monkeypatch, tmp_path: Path):
+    def refuse(root: Path | None = None) -> Path:
+        raise AssertionError("helper must not run when --python is given")
+
+    monkeypatch.setattr(cli, "project_interpreter", refuse)
+    assert _dispatcher_python(monkeypatch, tmp_path, "/custom/python") == "/custom/python"
+
+
+def test_missing_project_interpreter_is_a_harness_error(monkeypatch, tmp_path: Path):
+    def missing(root: Path | None = None) -> Path:
+        raise FileNotFoundError("no interpreter")
+
+    monkeypatch.setattr(cli, "project_interpreter", missing)
+    with pytest.raises(HarnessError, match="--python"):
+        _dispatcher_python(monkeypatch, tmp_path, None)
+
+
+
 def test_run_dispatches_every_cell_and_resume_skips_accepted(env):
     assert cli.main(env["run"]) == 0
     assert len(env["fake"].dispatched) == PLANNED

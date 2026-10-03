@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
+
+from scripts.common.repo_root import project_interpreter
 
 from .common import (
     SEATS,
@@ -67,24 +68,17 @@ Related:
 """
 
 
-def _primary_python() -> str:
-    """The primary checkout's project interpreter (worktrees share it)."""
+def _default_python() -> str:
+    """The shared project interpreter (worktrees use the primary checkout's)."""
     try:
-        common = subprocess.run(
-            ["git", "-C", str(REPO_ROOT), "rev-parse", "--path-format=absolute", "--git-common-dir"],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=30,
-        ).stdout.strip()
-        return str(Path(common).parent / ".venv" / "bin" / "python")
-    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        return str(REPO_ROOT / ".venv" / "bin" / "python")
+        return str(project_interpreter(REPO_ROOT))
+    except FileNotFoundError as exc:
+        raise HarnessError(f"no project interpreter found ({exc}); pass --python") from exc
 
 
 def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
     return DelegateDispatcher(
-        python=args.python or _primary_python(),
+        python=args.python or _default_python(),
         delegate=REPO_ROOT / "scripts" / "delegate.py",
         cwd=worker_cwd,
         hard_timeout=args.hard_timeout,
@@ -156,7 +150,7 @@ def _add_dispatch_args(sub: argparse.ArgumentParser) -> None:
         "--hard-timeout", type=_positive, default=3600, help="Per-task wall-clock limit in seconds. Default: 3600."
     )
     sub.add_argument(
-        "--python", default=None, help="Interpreter used to call scripts/delegate.py. Default: primary .venv python."
+        "--python", default=None, help="Interpreter used to call scripts/delegate.py. Default: the shared project interpreter."
     )
 
 
