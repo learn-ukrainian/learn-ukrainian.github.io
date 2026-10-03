@@ -10,6 +10,10 @@ launcher_usage() {
     name="start-${LC_PROVIDER}.sh"
   fi
   case "$LC_PROVIDER" in
+    gemini)
+      driver_mode="  driver       Refused: AGY/Gemini is not a driver seat. Use claude-opus-5-5
+               (Opus 5.5) or gpt-6.1-sol (Sol 6.1); fallback: grok-4.7."
+      ;;
     kimi|glm)
       driver_mode="  driver       No certified ${LC_PROVIDER} driver entrypoint is available."
       ;;
@@ -33,6 +37,7 @@ launcher_usage() {
   GLMCC_SECRET_FILE        Override path for the file-backed Z.AI key.' ;;
   esac
   case "$LC_PROVIDER:$LC_MODE" in
+    gemini:*) example_three='./start-gemini.sh --model gemini-3.8-flash-high' ;;
     kimi:interactive) example_three='./start-kimicc.sh --endpoint coding' ;;
     glm:interactive) example_three='./start-glmcc.sh --endpoint coding' ;;
     *:driver) example_three="./${name} --epic devops"$'\n'"  ./${name} --epic infra --force" ;;
@@ -675,7 +680,18 @@ launcher_validate_mode() {
   LC_EPIC="$(launcher_session_epic "$LC_EPIC")"
 }
 
+launcher_refuse_gemini_driver() {
+  [ "$LC_MODE" = driver ] || return 0
+  case "$LC_PROVIDER:$LC_MODEL" in
+    gemini:*|*:gemini-*|*:gemini:*)
+      launcher_error "AGY/Gemini is not a planning, design or driver seat. Eligible driver seats: claude-opus-5-5 (Opus 5.5), gpt-6.1-sol (Sol 6.1); driver fallback: grok-4.7."
+      exit 4
+      ;;
+  esac
+}
+
 launcher_validate_driver_certification() {
+  launcher_refuse_gemini_driver
   # Interactive Grok: empty --model keeps the last TUI selection; an explicit
   # pin must be the certified native model (refuse retired grok-4.5, #6870).
   # Cursor pins a concrete model in every mode: an interactive session is not a
@@ -703,7 +719,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|grok:grok-4.7)
       return 0
       ;;
     *)
@@ -765,7 +781,6 @@ launcher_prepare_driver_identity() {
   case "$LC_PROVIDER" in
     claude) handoff="$(handoff_identity_for_epic "$LC_EPIC")"; harness="claude-code" ;;
     codex) handoff="$(handoff_identity_for_codex_epic "$LC_EPIC")"; harness="codex-cli" ;;
-    gemini) handoff="$(handoff_identity_for_gemini_epic "$LC_EPIC")"; harness="agy" ;;
     grok) handoff="$(handoff_identity_for_grok_epic "$LC_EPIC")"; harness="grok-tui" ;;
     cursor) handoff="$(handoff_identity_for_cursor_epic "$LC_EPIC")"; harness="cursor-agent" ;;
   esac
@@ -1281,6 +1296,9 @@ launcher_main() {
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"
+  # Reject before root resolution, adapter preflight, deployment, or any
+  # continuity/lease/canary/provider work. Help remains a read-only request.
+  launcher_refuse_gemini_driver
   launcher_drop_force_from_successor_args
   launcher_normalize_effort
   # Provider adapters are sourced dynamically and consume these values.

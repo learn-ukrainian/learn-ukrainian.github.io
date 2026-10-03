@@ -92,9 +92,14 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     binary.write_text("#!/bin/sh\nprintf 'provider cwd=%s\\n' \"$PWD\"\n", encoding="utf-8")
     binary.chmod(0o755)
     result = run_launcher(
-        "start-claude.sh", dry_run=False, root=checkout,
-        env={"PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
-             "HOME": str(tmp_path / "home"), "LU_SKIP_PLANE_TUNNEL_CHECK": "1"},
+        "start-claude.sh",
+        dry_run=False,
+        root=checkout,
+        env={
+            "PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+            "HOME": str(tmp_path / "home"),
+            "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
+        },
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Agent extensions deployed (agents:deploy)" in result.stdout
@@ -197,7 +202,7 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
     assert missing.returncode == 2
     untrusted = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "not-certified")
     assert untrusted.returncode == 4
-    invalid = run_launcher("start-gemini-driver.sh", "--epic", "not-a-lane")
+    invalid = run_launcher("start-claude-driver.sh", "--epic", "not-a-lane")
     assert invalid.returncode == 2
 
 
@@ -367,13 +372,7 @@ def _blocking_signal_provider(signal_marker: Path, child_ready: Path) -> str:
     """
     marker = shlex.quote(os.fspath(signal_marker))
     ready = shlex.quote(os.fspath(child_ready))
-    return (
-        f'trap "touch {marker}; exit 0" INT TERM HUP\n'
-        f"touch {ready}\n"
-        "while :; do\n"
-        "  sleep 0.1\n"
-        "done\n"
-    )
+    return f'trap "touch {marker}; exit 0" INT TERM HUP\ntouch {ready}\nwhile :; do\n  sleep 0.1\ndone\n'
 
 
 def _append_forward_ready_hook(launcher_core: Path, forward_ready: Path) -> None:
@@ -407,8 +406,7 @@ def _wait_for_launcher_readiness(
     stdout, stderr = process.communicate(timeout=10)
     missing = ", ".join(os.fspath(path) for path in ready_paths if not path.is_file())
     pytest.fail(
-        "timed out waiting for launcher readiness "
-        f"(missing {missing}, rc={process.returncode}):\n{stdout}{stderr}"
+        f"timed out waiting for launcher readiness (missing {missing}, rc={process.returncode}):\n{stdout}{stderr}"
     )
 
 
@@ -713,9 +711,7 @@ def test_renew_loops_spawn_no_orphanable_sleeps() -> None:
         subshell = section.split("(\n", 1)[1].rsplit(") &", 1)[0]
         assert not re.search(r"sleep[^\n|;]*&", subshell), f"{name} backgrounds a sleep"
         assert "$!" not in subshell, f"{name} captures a background child PID"
-        assert not re.search(r"^\s+sleep (?!0\.1\b)", subshell, re.MULTILINE), (
-            f"{name} runs a long foreground sleep"
-        )
+        assert not re.search(r"^\s+sleep (?!0\.1\b)", subshell, re.MULTILINE), f"{name} runs a long foreground sleep"
 
 
 def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_path: Path) -> None:
@@ -738,16 +734,19 @@ def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_
     helper.write_text(
         body.replace(
             boundary,
-            f"  while [ ! -f {os.fspath(child_started)!r} ]; do sleep 0.01; done\n"
-            '  kill -TERM "$$"\n' + boundary,
+            f'  while [ ! -f {os.fspath(child_started)!r} ]; do sleep 0.01; done\n  kill -TERM "$$"\n' + boundary,
         ),
         encoding="utf-8",
     )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     process = subprocess.Popen(
         ["bash", os.fspath(launcher), "--epic", "devops"],
-        cwd=launcher.parent, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        text=True, start_new_session=True,
+        cwd=launcher.parent,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
     )
     try:
         stdout, stderr = process.communicate(timeout=_LAUNCHER_READY_TIMEOUT_S)
@@ -940,8 +939,7 @@ def test_linked_worktree_helper_calls_use_durable_helper_python(tmp_path: Path) 
     stub = helper_root / ".venv" / "bin" / "python"
     stub.parent.mkdir(parents=True)
     stub.write_text(
-        "#!/usr/bin/env bash\n"
-        f"printf '%s\\n' \"$@\" >> {log}\n",
+        f"#!/usr/bin/env bash\nprintf '%s\\n' \"$@\" >> {log}\n",
         encoding="utf-8",
     )
     stub.chmod(0o755)
@@ -954,7 +952,7 @@ LC_EPIC=devops
 LC_ROOT={session_root}
 LC_SESSION_ROOT={session_root}
 LC_DURABLE_HELPER_ROOT={helper_root}
-source {REPO / 'scripts' / 'lib' / 'launcher_core.sh'}
+source {REPO / "scripts" / "lib" / "launcher_core.sh"}
 launcher_cursor_observer_presence
 launcher_close_driver_lease
 """
@@ -1036,7 +1034,9 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     assert result.returncode == 0, result.stderr
     assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
     # The driver pins --model/--effort first (Opus 5.5 default), then --agent.
-    assert "would exec claude --model claude-opus-5-5\\[1m\\] --effort high --agent infra-orchestrator " in result.stdout
+    assert (
+        "would exec claude --model claude-opus-5-5\\[1m\\] --effort high --agent infra-orchestrator " in result.stdout
+    )
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr
@@ -1056,13 +1056,17 @@ def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str
     import shlex
 
     binary = tmp_path / "hermes"
-    help_text = help_text if help_text is not None else (
-        "  -m MODEL, --model MODEL\n"
-        "  --provider PROVIDER\n"
-        "  -q QUERY, --query QUERY\n"
-        "  --in DIR\n"
-        "  --cli\n"
-        "  --reasoning LEVEL  Reasoning effort: low, medium, high, xhigh, max.\n"
+    help_text = (
+        help_text
+        if help_text is not None
+        else (
+            "  -m MODEL, --model MODEL\n"
+            "  --provider PROVIDER\n"
+            "  -q QUERY, --query QUERY\n"
+            "  --in DIR\n"
+            "  --cli\n"
+            "  --reasoning LEVEL  Reasoning effort: low, medium, high, xhigh, max.\n"
+        )
     )
     binary.write_text(
         "#!/usr/bin/env bash\n"
@@ -1087,7 +1091,11 @@ def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str
 def test_hermes_absent_binary_fails_before_lifecycle(provider: str) -> None:
     assert shutil.which("hermes", path=os.defpath) is None
     result = run_launcher(
-        f"start-{provider}.sh", "--harness", "hermes", env={"PATH": os.defpath}, dry_run=False,
+        f"start-{provider}.sh",
+        "--harness",
+        "hermes",
+        env={"PATH": os.defpath},
+        dry_run=False,
     )
     assert result.returncode == 3
     assert "Hermes executable is unavailable" in result.stderr
@@ -1102,11 +1110,22 @@ def test_hermes_environment_is_not_opt_in(provider: str) -> None:
 
 
 @pytest.mark.parametrize("provider", ("grok", "codex"))
-@pytest.mark.parametrize("override", (
-    "--provider=openrouter", "--model=other", "-mother", "--reasoning=ultra",
-    "--yolo", "--safe-mode", "--ignore-rules", "--api-key=private-test-credential",
-    "--resume=latest", "--oneshot", "--query=override",
-))
+@pytest.mark.parametrize(
+    "override",
+    (
+        "--provider=openrouter",
+        "--model=other",
+        "-mother",
+        "--reasoning=ultra",
+        "--yolo",
+        "--safe-mode",
+        "--ignore-rules",
+        "--api-key=private-test-credential",
+        "--resume=latest",
+        "--oneshot",
+        "--query=override",
+    ),
+)
 def test_hermes_forwarded_flags_fail_closed_without_echoing_values(provider: str, override: str) -> None:
     result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--", override)
     assert result.returncode == 2
@@ -1116,11 +1135,14 @@ def test_hermes_forwarded_flags_fail_closed_without_echoing_values(provider: str
 
 @pytest.mark.parametrize("provider", ("grok", "codex"))
 def test_hermes_unproven_effort_is_rejected(tmp_path: Path, provider: str) -> None:
-    env = hermes_stub_env(tmp_path, help_text=(
-        "  --model MODEL\n  --provider PROVIDER\n  --query QUERY\n  --in DIR\n  --cli\n"
-        "  --reasoning LEVEL  Reasoning effort: medium, high.\n"
-        "  --verbosity LEVEL  Verbosity: low, high.\n"
-    ))
+    env = hermes_stub_env(
+        tmp_path,
+        help_text=(
+            "  --model MODEL\n  --provider PROVIDER\n  --query QUERY\n  --in DIR\n  --cli\n"
+            "  --reasoning LEVEL  Reasoning effort: medium, high.\n"
+            "  --verbosity LEVEL  Verbosity: low, high.\n"
+        ),
+    )
     result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "low", env=env)
     assert result.returncode == 2
     assert "does not advertise" in result.stderr
@@ -1139,18 +1161,29 @@ def test_hermes_configured_fallback_is_refused_and_redacted(tmp_path: Path, prov
 @pytest.mark.parametrize("provider", ("grok", "codex"))
 def test_hermes_help_never_probes_or_claims(provider: str) -> None:
     result = run_launcher(
-        f"start-{provider}-driver.sh", "--harness", "hermes", "--help", env={"PATH": os.defpath},
+        f"start-{provider}-driver.sh",
+        "--harness",
+        "hermes",
+        "--help",
+        env={"PATH": os.defpath},
     )
     assert result.returncode == 0
     assert "Rollback: omit --harness hermes" in result.stdout
     assert "would claim lease" not in result.stdout
 
 
-@pytest.mark.parametrize("provider,model,route", (
-    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6.1-sol", "openai-codex"),
-))
+@pytest.mark.parametrize(
+    "provider,model,route",
+    (
+        ("grok", "grok-4.7", "xai-oauth"),
+        ("codex", "gpt-6.1-sol", "openai-codex"),
+    ),
+)
 def test_hermes_real_exec_preserves_literal_prompt_argv(
-    tmp_path: Path, provider: str, model: str, route: str,
+    tmp_path: Path,
+    provider: str,
+    model: str,
+    route: str,
 ) -> None:
     """Run the real adapter against a fake binary, without deployment/lease effects."""
     import shlex
@@ -1166,13 +1199,29 @@ def test_hermes_real_exec_preserves_literal_prompt_argv(
         "launcher_adapter_validate\nlauncher_adapter_preflight\nlauncher_adapter_exec\n"
     )
     result = subprocess.run(
-        ["bash", "-eu", "-c", command], cwd=REPO, env=env,
-        capture_output=True, text=True, check=False, timeout=30,
+        ["bash", "-eu", "-c", command],
+        cwd=REPO,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.split("\0") == [
-        "chat", "--cli", "--provider", route, "--model", model,
-        "--in", str(tmp_path / "repo with spaces"), "--reasoning", "low", "--query", prompt, "",
+        "chat",
+        "--cli",
+        "--provider",
+        route,
+        "--model",
+        model,
+        "--in",
+        str(tmp_path / "repo with spaces"),
+        "--reasoning",
+        "low",
+        "--query",
+        prompt,
+        "",
     ]
 
 
@@ -1195,13 +1244,15 @@ def test_hermes_rejects_effort_that_transport_would_clamp(provider: str) -> None
 @pytest.mark.parametrize("recover", [True, False])
 def test_close_waits_with_capped_backoff_and_safe_exhaustion(tmp_path: Path, reason: str, recover: bool) -> None:
     launcher, attempts, closed, _ = _core_driver_exit_fixture(
-        tmp_path, provider_body="exit 0", failed_close_attempts=8 if recover else 100,
+        tmp_path,
+        provider_body="exit 0",
+        failed_close_attempts=8 if recover else 100,
         close_stderr=reason + "\n$(hostile-secret)",
     )
     # Advance Bash's elapsed clock deterministically; verify the production
     # ten-minute budget without spending ten minutes on every regression run.
     script = f"""
-source {launcher.parent / 'scripts/lib/launcher_core.sh'}
+source {launcher.parent / "scripts/lib/launcher_core.sh"}
 LC_PROVIDER=claude
 LC_SESSION_ROOT={launcher.parent}
 LC_DURABLE_HELPER_ROOT={launcher.parent}
@@ -1228,7 +1279,9 @@ launcher_close_driver_lease
 @pytest.mark.parametrize("watcher_exit", [76, 2, 0, 75])
 @pytest.mark.parametrize("notify", [False, True])
 def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
-    tmp_path: Path, watcher_exit: int, notify: bool,
+    tmp_path: Path,
+    watcher_exit: int,
+    notify: bool,
 ) -> None:
     completed = tmp_path / "provider-completed"
     restarted = tmp_path / "watcher-restarted"
@@ -1246,13 +1299,14 @@ def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
     watcher.write_text(
         "#!/usr/bin/env bash\n"
         f"if [ -f {str(first)!r} ]; then touch {str(restarted)!r}; exec sleep 300; fi\n"
-        f"touch {str(first)!r}\n"
-        + ('kill -USR1 "$PPID"\n' if notify else '')
-        + f"exit {watcher_exit}\n",
+        f"touch {str(first)!r}\n" + ('kill -USR1 "$PPID"\n' if notify else "") + f"exit {watcher_exit}\n",
     )
     result = subprocess.run(
-        ["bash", str(launcher), "--epic", "devops"], cwd=launcher.parent,
-        capture_output=True, text=True, timeout=10,
+        ["bash", str(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        capture_output=True,
+        text=True,
+        timeout=10,
         env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
     )
     # Even 75 without a delivery is not a valid prepared wake.

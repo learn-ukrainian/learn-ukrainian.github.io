@@ -308,7 +308,7 @@ def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None
 @pytest.mark.parametrize(
     ("launcher", "arguments", "expected_code"),
     [
-        ("start-gemini-driver.sh", ["unknown"], 2),
+        ("start-gemini-driver.sh", ["unknown"], 4),
         ("start-grok-driver.sh", ["unknown"], 2),
         ("start-claude-driver.sh", ["unknown"], 2),
         ("start-codex-driver.sh", ["unknown"], 2),
@@ -324,6 +324,9 @@ def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[s
         timeout=60,
     )
     assert result.returncode == expected_code
+    if launcher == "start-gemini-driver.sh":
+        assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
+        return
     assert "unknown lane selector 'unknown'" in result.stderr
     assert "Valid lane selectors:" in result.stderr
 

@@ -463,8 +463,9 @@ handoff_identity_for_kimi_epic() {
 }
 
 # handoff_identity_for_gemini_epic "<epic-name>"
-# Echo the per-epic Gemini / Antigravity orchestrator rollover slot. Provider-specific so
-# a Gemini seat never adopts Claude/Codex/Grok/Kimi packets.
+# Resolve legacy Gemini / Antigravity handoff identities for historical packet
+# lookup only. These are not registered driver slots; launcher_core refuses
+# AGY/Gemini driver sessions before identity resolution.
 handoff_identity_for_gemini_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0

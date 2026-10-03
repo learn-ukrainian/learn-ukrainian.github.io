@@ -3,9 +3,8 @@
 > **Gemini 3.8 Flash (AGY) is not a planning, design or driver seat** (operator decision
 > 2026-10-03, #9584). Epic driving belongs to `gpt-6.1-sol` and `claude-opus-5-5`
 > (see `docs/runbooks/epic-orchestrator-roster.md`). Use Gemini for bounded, fully specified
-> work and Ukrainian content review. The driver entrypoint below remains in the launcher
-> estate only for existing operator tooling; it is not a routing recommendation. Gemini 4 is
-> re-evaluated at general availability.
+> work and Ukrainian content review. The former driver entrypoint is a refusing
+> compatibility stub (#9633).
 
 ## Launcher
 
@@ -14,55 +13,38 @@
 ## Usage
 
 ```bash
-# Pin a lane and auto-claim the stream lease through the driver entrypoint
-./start-gemini-driver.sh --epic atlas
-
-# Optional: Use Gemini 3.1 Pro High on explicit request (Flash is default for routine and deep)
-./start-gemini-driver.sh --epic harness --model gemini-3.1-pro-high
-
-# Pass an explicit driver prompt after the core's binding
-./start-gemini-driver.sh --epic atlas "check issue streams and open PRs"
-
-# Non-epic mode — standard agy session
+# Standalone AGY session for bounded work or Ukrainian content review
 ./start-gemini.sh --model gemini-3.8-flash-high
+
+# Gemini Pro only on explicit request
+./start-gemini.sh --model gemini-3.1-pro-high
+
+# Forward AGY arguments after the launcher separator
+./start-gemini.sh -- --sandbox read-only
 ```
+
+`start-gemini-driver.sh` is retained as a refusing compatibility stub. Every
+AGY/Gemini driver attempt exits with code 4 and names `claude-opus-5-5`
+(Opus 5.5), `gpt-6.1-sol` (Sol 6.1), and the `grok-4.7` driver fallback.
+The shared launcher refuses before root resolution, adapter preflight,
+deployment, stream lease, canary or provider execution, including dry-run
+and forced attempts. Help remains read-only. `--epic` and `--force` are
+rejected by the standalone launcher; it never claims a driver lease.
 
 ## Launcher Flags
 
 | Flag | Meaning |
 | --- | --- |
-| `--epic <name>` | Pin lane (atlas, harness, hramatka, …) |
-| `--stream <id>` | Override stream id (default derived from epic) |
-| `--handoff-agent <id>` | Override `SESSION_HANDOFF_AGENT` |
-| `--model <id>` | Gemini model (`gemini-3.8-flash-high` [default], `pro` / `gemini-3.1-pro-high` [explicit request only]) |
-| `--no-always-approve` | Require manual tool approval (do not pass `--dangerously-skip-permissions`) |
-| `--help-launcher` | Show launcher help |
+| `--model <id>` | Gemini model (`gemini-3.8-flash-high` by default; Pro on explicit request) |
+| `--harness agy` | Native Antigravity harness; other harnesses are refused |
+| `--help` | Show launcher help without starting a session |
+| `--` | Forward remaining arguments to AGY |
 
-All positional prompt arguments are passed to `agy -i <prompt>` for interactive session startup.
-
-## Cold-Start Flow with `--epic`
-
-1. Launcher resolves the epic to a stream id via `scripts/lib/session_supervisor.sh`.
-2. Launcher calls the common session supervisor (`scripts.session_supervisor open --role driver`) with agent `gemini` / harness `agy`.
-3. Launcher sources `SESSION_STREAM_*` from supervisor output.
-4. Launcher writes a capsule to `.agent/session-capsules/<stream>/`.
-5. Launcher injects an auto-continue prompt if no prompt was supplied.
-6. Launcher execs `agy -i <prompt> --model <model> --dangerously-skip-permissions`.
-
-The cold-start prompt explicitly tells Gemini **not** to open or resume the lease — the launcher has already claimed it.
-
-## Gemini Model Selection
-
-- **`gemini-3.8-flash-high`** (Default): Extremely fast, high throughput; default for routine AND deep bounded work (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro).
-- **`gemini-3.1-pro-high`** (`--model pro`): Deep reasoning (1M-2M context window); superseded as deep default by 3.8 Flash High; only on explicit request.
-
-## Handoff Identity
-
-| Epic | `SESSION_HANDOFF_AGENT` |
-| --- | --- |
-| atlas, hramatka, folk, bio, … | `gemini-<epic>` |
-| harness / infra | `gemini-infra` |
-| devops | `gemini-devops` |
+Standalone `start-gemini.sh` and `delegate.py --agent agy` remain available
+for their permitted non-driver roles. The rules core is included in the
+standalone session. Gemini driver slots are absent from
+`scripts/config/area_assignments.yaml`; the legacy handoff identity resolver
+is retained solely for historical packet lookup.
 
 ## Fleet Management & Rate Limits
 

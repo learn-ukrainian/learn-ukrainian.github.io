@@ -14,7 +14,6 @@ assignments:
     slots:
       - claude-infra
       - codex-infra
-      - gemini-infra
       - grok-infra
       - kimi-infra
       - cursor-infra
@@ -23,7 +22,6 @@ assignments:
     slots:
       - claude-devops
       - codex-devops
-      - gemini-devops
       - grok-devops
       - kimi-devops
       - cursor-devops
@@ -37,7 +35,6 @@ assignments:
     slots:
       - claude-corpus
       - codex-corpus
-      - gemini-corpus
       - grok-corpus
       - kimi-corpus
       - cursor-corpus
@@ -49,7 +46,6 @@ assignments:
     slots:
       - claude-atlas
       - codex-atlas
-      - gemini-atlas
       - grok-atlas
       - kimi-atlas
       - cursor-atlas
@@ -75,14 +71,11 @@ assignments:
     slots:
       - claude-folk
       - codex-folk
-      - gemini-folk
       - claude-bio
       - codex-bio
-      - gemini-bio
   hramatka:
     driver_agent_type: curriculum-orchestrator
     # Same operator order applies to Ukrainian language content here.
     slots:
       - claude-hramatka
       - codex-hramatka
-      - gemini-hramatka

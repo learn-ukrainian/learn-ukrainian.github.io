@@ -1342,10 +1342,16 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
             first.terminate()
             first.communicate(timeout=10)
 
-    assert second.returncode == 1
-    assert "already has live session" in second.stderr
-    assert first_provider in second.stderr
-    assert "expires_at=" in second.stderr
+    if second_provider == "gemini":
+        assert second.returncode == 4
+        assert "AGY/Gemini is not a planning, design or driver seat" in second.stderr
+        assert "claude-opus-5-5" in second.stderr
+        assert "gpt-6.1-sol" in second.stderr
+    else:
+        assert second.returncode == 1
+        assert "already has live session" in second.stderr
+        assert first_provider in second.stderr
+        assert "expires_at=" in second.stderr
     assert not started[second_provider].exists()
     stream = SessionStreamStore(
         SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
