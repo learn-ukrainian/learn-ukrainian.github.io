@@ -12,6 +12,8 @@ import inspect
 import json
 import re
 import subprocess
+from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 import pytest
 
@@ -568,28 +570,47 @@ def test_unknown_publication_field_fails_closed():
         assemble.learner_text_permission("pack.texts.*.future_url", {})
 
 
-def english_schema_paths(node, document, path=()):
-    """Resolve local schema refs and arrays without depending on the registry."""
-    if not isinstance(node, dict):
-        return set()
-    found = set()
-    if "$ref" in node and node["$ref"].startswith("#/"):
-        target = document
-        for part in node["$ref"].removeprefix("#/").split("/"):
-            target = target[part]
-        found.update(english_schema_paths(target, document, path))
-    for key, child in node.get("properties", {}).items():
-        if key == "en" or key.endswith("_en") or key.startswith("english_") or key == "sense_gloss":
-            suffix = ("*",) if child.get("type") == "array" else ()
-            found.add(".".join((*path, key, *suffix)))
-        else:
-            found.update(english_schema_paths(child, document, (*path, key)))
-    if node.get("type") == "array":
-        found.update(english_schema_paths(node.get("items"), document, (*path, "*")))
-    for keyword in ("oneOf", "anyOf", "allOf"):
-        for child in node.get(keyword, []):
-            found.update(english_schema_paths(child, document, path))
-    return found
+def english_schema_paths(node, document, path=(), *, schema_path=None, schemas_dir=ROOT / "schemas"):
+    """Walk file-local schema refs, pruning cycles only on the current branch."""
+    schemas_dir = schemas_dir.resolve()
+    schema_path = (schema_path or schemas_dir / "inline.schema.json").resolve()
+    documents = {schema_path: document}
+
+    def walk(node, document, schema_path, path, ancestors):
+        if not isinstance(node, dict) or id(node) in ancestors:
+            return set()
+        ancestors = ancestors | {id(node)}
+        found = set()
+        if "$ref" in node:
+            ref = urlsplit(node["$ref"])
+            assert not (ref.scheme or ref.netloc or ref.query), f"Non-local schema ref: {node['$ref']}"
+            target_path = (schema_path.parent / unquote(ref.path)).resolve() if ref.path else schema_path
+            assert target_path.is_relative_to(schemas_dir), f"Schema ref outside schemas/: {node['$ref']}"
+            if target_path not in documents:
+                documents[target_path] = json.loads(target_path.read_text(encoding="utf-8"))
+            target_document = documents[target_path]
+            target = target_document
+            pointer = unquote(ref.fragment)
+            assert not pointer or pointer.startswith("/"), f"Unsupported schema anchor: {node['$ref']}"
+            if pointer:
+                for part in pointer[1:].split("/"):
+                    part = part.replace("~1", "/").replace("~0", "~")
+                    target = target[int(part)] if isinstance(target, list) else target[part]
+            found.update(walk(target, target_document, target_path, path, ancestors))
+        for key, child in node.get("properties", {}).items():
+            if key == "en" or key.endswith("_en") or key.startswith("english_") or key == "sense_gloss":
+                suffix = ("*",) if child.get("type") == "array" else ()
+                found.add(".".join((*path, key, *suffix)))
+            else:
+                found.update(walk(child, document, schema_path, (*path, key), ancestors))
+        if node.get("type") == "array":
+            found.update(walk(node.get("items"), document, schema_path, (*path, "*"), ancestors))
+        for keyword in ("oneOf", "anyOf", "allOf"):
+            for child in node.get(keyword, []):
+                found.update(walk(child, document, schema_path, path, ancestors))
+        return found
+
+    return walk(node, document, schema_path, path, frozenset())
 
 
 @pytest.mark.parametrize("level", LEVELS)
@@ -598,9 +619,65 @@ def test_every_english_schema_path_is_classified_in_production(level):
     for root, filename in (("draft", f"lesson-draft-{level}-v1.schema.json"),
                            ("pack", "evidence-pack-v1.schema.json"),
                            ("words", "evidence-words-v1.schema.json")):
-        schema = json.loads((ROOT / "schemas" / filename).read_text())
-        paths.update(english_schema_paths(schema, schema, (root,)))
-    assert paths == set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS
+        schema_path = ROOT / "schemas" / filename
+        schema = json.loads(schema_path.read_text())
+        paths.update(english_schema_paths(schema, schema, (root,), schema_path=schema_path))
+        if root == "draft":
+            # The validator binds these definitions by plan type, outside the
+            # root schema's payload-key union. They share the activity path.
+            for definition in schema["$defs"]["activity_types"].values():
+                paths.update(english_schema_paths(
+                    definition, schema, ("draft", "activities", "*"), schema_path=schema_path,
+                ))
+    classified = set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS
+    assert paths == classified, f"Unclassified English schema paths: {sorted(paths - classified)}"
+
+
+@pytest.mark.parametrize("level", LEVELS)
+def test_new_activity_english_field_fails_production_classification(level, monkeypatch):
+    schema_path = ROOT / "schemas" / f"activities-{level}.schema.json"
+    schema = json.loads(schema_path.read_text())
+    schema["definitions"][f"quiz-{level}"]["properties"]["hint_en"] = {"type": "string"}
+    original = Path.read_text
+
+    def read_text(path, *args, **kwargs):
+        if path == schema_path:
+            return json.dumps(schema)
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+    with pytest.raises(AssertionError, match=r"draft\.activities\.\*\.hint_en"):
+        test_every_english_schema_path_is_classified_in_production(level)
+
+
+def test_schema_ref_cycles_preserve_each_sibling_path_and_target_document(tmp_path):
+    schema_path = tmp_path / "first.schema.json"
+    schema = {"properties": {
+        key: {"$ref": "nested/second.schema.json"} for key in ("first", "second")
+    }, "allOf": [{"$ref": "#"}]}
+    other = {"properties": {
+        "hint_en": {"type": "string"},
+        "again": {"$ref": "../first.schema.json"},
+        "detail": {"$ref": "#/$defs/a~1b~0c"},
+    }, "$defs": {"a/b~c": {"properties": {"english_note": {"type": "array"}}}}}
+    (tmp_path / "nested").mkdir()
+    (tmp_path / "nested/second.schema.json").write_text(json.dumps(other))
+    schema_path.write_text(json.dumps(schema))
+    assert english_schema_paths(schema, schema, ("draft",), schema_path=schema_path, schemas_dir=tmp_path) == {
+        "draft.first.hint_en", "draft.second.hint_en",
+        "draft.first.detail.english_note.*", "draft.second.detail.english_note.*",
+    }
+
+
+@pytest.mark.parametrize("ref,error", [
+    ("../outside.schema.json", "outside schemas/"),
+    ("https://example.com/schema.json", "Non-local schema ref"),
+    ("missing.schema.json", None),
+])
+def test_schema_refs_cannot_silently_skip_unresolvable_targets(ref, error, tmp_path):
+    schema = {"$ref": ref}
+    with pytest.raises(AssertionError if error else FileNotFoundError, match=error):
+        english_schema_paths(schema, schema, schemas_dir=tmp_path)
 
 
 def test_new_english_path_with_an_existing_field_name_requires_classification():
