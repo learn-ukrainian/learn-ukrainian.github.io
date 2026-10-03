@@ -12,9 +12,9 @@ Known behavioral facts (verify against the installed CLI when changing transport
 - ``--input-format stream-json --output-format stream-json`` accepts one
   NDJSON user message on stdin and returns a terminal ``result`` event.
 - Resume/new conversation is ``--conversation=<uuid>``.
-- Write-capable modes use ``--dangerously-skip-permissions``. Read-only
-  hangs on interactive permission prompts; callers must force
-  ``mode="danger"`` for headless dispatch (mirrors the codex protection).
+- Review routes write exact Sources and evidence-reading command grants in
+  their scoped home's ``settings.json``; they never skip permissions.
+  Non-review dispatches retain their existing headless permission mode.
 - Stream-json stdout carries the final answer in ``result.response``. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
   ``--log-file`` path for each invocation: the conversation id that log names
@@ -469,11 +469,22 @@ class AgyAdapter:
 
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
+        review_route = bool(
+            review_isolation
+            or tc.get("review_attempt_boundary")
+            or tc.get("review_access")
+            or tc.get("review_id")
+            or tc.get("attempt_id")
+            or tc.get("reviewer_tools")
+            or (tc.get("strict_mcp_config") and tc.get("agy_home_override"))
+        )
         if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
             )
+        if review_route:
+            _write_review_permissions(tc, mode=mode, session_id=session_id)
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
@@ -495,16 +506,7 @@ class AgyAdapter:
 
         # Non-review: `--dangerously-skip-permissions` is unconditional so
         # headless tool use does not hang on interactive prompts.
-        # Review (#5285): never skip permissions; require OS sandbox (runner)
-        # plus AGY `--sandbox` when available. Fail closed if review asks for
-        # skip-permissions explicitly.
-        full_review = tc.get("review_access") == "full"
-        if full_review and mode != "read-only":
-            raise ValueError("full_review_requires_read_only")
-        if (review_isolation or full_review) and tc.get("agy_skip_permissions"):
-            raise ValueError(
-                "AgyAdapter: review_isolation forbids agy_skip_permissions / --dangerously-skip-permissions"
-            )
+        # Review: exact scoped grants plus the OS boundary and AGY --sandbox.
 
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
@@ -515,10 +517,9 @@ class AgyAdapter:
             )
             + "\n"
         )
-        if review_isolation or full_review:
+        if review_route:
             # The OS boundary owns full-review write denial; native sandbox is supplementary.
-            if full_review or tc.get("agy_review_sandbox", True):
-                cmd.append("--sandbox")
+            cmd.append("--sandbox")
         else:
             cmd.append("--dangerously-skip-permissions")
         cmd.extend(
@@ -769,6 +770,87 @@ class AgyAdapter:
             return
         with contextlib.suppress(FileNotFoundError):
             path.unlink()
+
+
+class AgyReviewPermissionError(ValueError):
+    """A body-free, pre-launch review permission refusal."""
+
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(reason)
+
+
+def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None) -> None:
+    """Write a fresh scoped allow set; refuse requirements or config drift first.
+
+    ``agy_required_permissions`` is a list of exact action(target) resources
+    declared by the caller, never extracted from prompt text. An undeclared
+    model action cannot be predicted by this preflight; it remains subject to
+    native permissions and the OS boundary. Existing settings must match exactly
+    so global presets, ask/deny rules and wildcards cannot silently win.
+    """
+    from ..review_mcp import _open_runtime_dir, _safe_open_below, _strict_json_object, agy_review_settings
+
+    access = tc.get("review_access", "isolated")
+    if access not in {"full", "isolated"}:
+        raise AgyReviewPermissionError("agy_review_permissions_invalid_access")
+    if mode != "read-only":
+        raise AgyReviewPermissionError(
+            "full_review_requires_read_only" if access == "full" else "agy_review_permissions_require_read_only"
+        )
+    if session_id:
+        raise AgyReviewPermissionError("agy_review_permissions_require_fresh_session")
+    expected = agy_review_settings(access)
+    allow = set(expected["permissions"]["allow"])
+    required = tc.get("agy_required_permissions", [])
+    if (
+        not isinstance(required, (list, tuple))
+        or any(not isinstance(rule, str) or rule not in allow for rule in required)
+        or tc.get("agy_skip_permissions")
+        or tc.get("mcp_server_names", ["sources"]) != ["sources"]
+    ):
+        raise AgyReviewPermissionError("agy_review_permission_outside_allow_set: review forbids permission widening")
+    if (tools := tc.get("allowed_tools")) and (
+        not isinstance(tools, str)
+        or any(
+            tool not in {"Read", "Glob", "Grep"} and f"mcp(sources/{tool.removeprefix('mcp__sources__')})" not in allow
+            for tool in tools.split(",")
+        )
+    ):
+        raise AgyReviewPermissionError("agy_review_permission_outside_allow_set")
+    if not tc.get("agy_home_override"):
+        raise AgyReviewPermissionError("agy_review_permissions_require_scoped_home")
+    home = Path(str(tc["agy_home_override"])).absolute()
+    app_data = home / ".gemini" / "antigravity-cli"
+    if app_data.resolve() == _agy_app_data({}).resolve() or home.resolve() == Path.home().resolve():
+        raise AgyReviewPermissionError("agy_review_permissions_require_scoped_home")
+    directory = file_fd = None
+    try:
+        directory = _open_runtime_dir(home.parent, (home.name, ".gemini", "antigravity-cli"), create=False)
+        try:
+            file_fd = _safe_open_below(directory, "settings.json", os.O_RDONLY)
+        except FileNotFoundError:
+            file_fd = _safe_open_below(directory, "settings.json", os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+            os.fchmod(file_fd, 0o600)
+            payload = (json.dumps(expected) + "\n").encode()
+            with os.fdopen(file_fd, "wb") as handle:
+                file_fd = None
+                handle.write(payload)
+        else:
+            with os.fdopen(file_fd, "rb") as handle:
+                file_fd = None
+                raw = handle.read(65537)
+                if len(raw) > 65536 or _strict_json_object(raw.decode()) != expected:
+                    raise AgyReviewPermissionError("agy_review_permissions_config_mismatch")
+    except AgyReviewPermissionError:
+        raise
+    except (OSError, ValueError, RuntimeError):
+        raise AgyReviewPermissionError("agy_review_permissions_unsafe_config") from None
+    finally:
+        if file_fd is not None:
+            os.close(file_fd)
+        if directory is not None:
+            os.close(directory)
 
 
 def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
