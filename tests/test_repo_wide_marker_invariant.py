@@ -14,7 +14,9 @@ Two checks keep the marker honest:
 1. **The registry is the guarantee.** ``KNOWN_REPO_WIDE_MODULES`` and
    ``KNOWN_REPO_WIDE_FUNCTIONS`` are the authoritative list of whole-tree
    scanners. New scanners must be added there and marked; the registry checks
-   fail if an entry disappears or loses its marker.
+   fail if an entry disappears or loses its marker, and the completeness check
+   fails if a marked test has no registry row (#9434), so deleting a row cannot
+   pass silently.
 2. **The heuristic is a best-effort net.** It parses each test module's AST and
    flags test functions that walk a repository source tree (a repo-root path
    expression joined to ``.rglob()``/``.glob()``, ``os.walk``/``os.scandir``,
@@ -38,7 +40,7 @@ from __future__ import annotations
 import ast
 import re
 import textwrap
-from collections.abc import Iterator
+from collections.abc import Collection, Iterable, Iterator
 from functools import lru_cache
 from pathlib import Path
 
@@ -56,6 +58,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/ai_agent_bridge/test_module_identity.py",
         "tests/api/test_api_subprocess_timeout.py",
         "tests/api/test_import_pinning.py",
+        "tests/hygiene/test_tracked_symlink_targets.py",
         "tests/orchestration/test_thread_restart_e2e.py",
         "tests/orchestration/test_worktree_removal_invariant.py",
         "tests/test_agent_fleet_tooling_guardrails.py",
@@ -75,6 +78,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
+        "tests/test_lesson_atlas_link_census.py",
         "tests/test_lint_fleet_roster.py",
         "tests/test_lint_prompts.py",
         "tests/test_lint_test_assertions.py",
@@ -82,6 +86,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_post_processor_mutation_invariant.py",
         "tests/test_public_tree_no_baked_host_run_root.py",
         "tests/test_pytest_plugins_not_test_modules.py",
+        "tests/test_repo_wide_marker_invariant.py",
         "tests/test_session_identity_env_isolation.py",
         "tests/test_session_state_retired.py",
         "tests/test_sparse_collection_guard.py",
@@ -89,6 +94,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_sum11_source_guard.py",
         "tests/test_threshold_source_of_truth.py",
         "tests/test_work_privacy.py",
+        "tests/validate/test_word_card_examples.py",
     }
 )
 
@@ -97,23 +103,59 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
+    "tests/agent_runtime/test_npm_shim.py::test_shim_files_are_regular_executables",
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
+    "tests/build/test_fresh_page_safety.py::test_ci_runs_site_toolchain_tests_in_required_frontend_job",
+    "tests/build/test_fresh_plan_review.py::test_every_plan_manifest_of_record_in_the_repository_still_validates",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
+    "tests/packaging/test_systemd_templates.py::test_data_volume_dropins_cover_all_services_and_preserve_commands",
+    "tests/projects/open_model_data/test_k_path_literal_guard.py::test_k_path_literals_are_resolved_or_allowlisted",
     "tests/projects/open_model_data/test_v4_per_slot_factory.py::test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator",
+    "tests/projects/open_model_data/test_v6_mine_ulif_phraseology.py::test_held_phraseology_release_directory_has_no_tracked_files",
+    "tests/review/test_integration_check.py::test_no_cyrillic_in_the_check_or_its_tests",
+    "tests/review/test_prompts.py::test_a_re_review_template_may_name_its_previous_findings_but_a_first_review_template_may_not",
+    "tests/review/test_prompts.py::test_a_template_that_includes_imports_or_extends_a_file_fails_lint_and_render",
+    "tests/review/test_prompts.py::test_no_cyrillic_characters_in_templates_or_code",
+    "tests/review/test_prompts.py::test_no_e3d_placeholder_markers_are_left",
+    "tests/review/test_prompts.py::test_template_lint_refuses_an_unclosed_fence_and_a_template_that_does_not_parse",
+    "tests/review/test_prompts.py::test_template_lint_refuses_another_modules_slug_but_not_ordinary_prose",
+    "tests/review/test_prompts.py::test_template_lint_refuses_unresolved_placeholders_in_what_a_template_renders",
+    "tests/review/test_prompts.py::test_template_lint_refuses_v1_writer_and_earlier_edition_wording",
+    "tests/review/test_prompts.py::test_the_shipped_templates_pass_the_lint_and_are_all_linted",
+    "tests/review/test_prompts.py::test_the_template_prose_exemption_is_exactly_the_real_collisions_of_the_shipped_templates",
+    "tests/storage/test_no_tracked_data.py::test_tracked_data_paths_are_all_allowlisted",
+    "tests/test_agent_seat_onboarding_docs.py::test_live_driver_diagnostics_never_claim_again",
     "tests/test_ci_dependency_check.py::test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache",
+    "tests/test_conftest_task_store_guard.py::test_task_store_consumers_use_call_time_resolver",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
+    "tests/test_deploy_script_idempotency.py::test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs",
+    "tests/test_deploy_script_idempotency.py::test_claude_diff_excludes_do_not_mask_shipped_source",
+    "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
+    "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
+    "tests/test_drive_epic_skill_core.py::test_every_reference_is_linked_from_the_core",
+    "tests/test_drive_epic_skill_core.py::test_section_citations_used_by_scripts_still_resolve",
+    "tests/test_driver_work_api_onboarding.py::test_skill_teaches_grok_bot_with_hard_exclusions",
+    "tests/test_driver_work_api_onboarding.py::test_skill_teaches_the_full_health_enum",
+    "tests/test_driver_work_api_onboarding.py::test_skill_teaches_work_api_projection_semantics",
+    "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
+    "tests/test_live_driver_message_consumption.py::test_drive_epic_skill_keeps_all_required_live_inbox_boundaries",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",
+    "tests/test_no_hardcoded_venv_interpreter.py::test_no_executing_hardcoded_venv_interpreter",
     "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
+    "tests/test_operator_contract_wiring.py::test_epic_driver_and_v2_template_keep_prompt_adequacy_gate",
     "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens",
+    "tests/test_review_reviewer_resolver.py::test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
+    "tests/test_session_streams.py::test_backslash_tracked_paths_add_no_hostname_rejections",
     "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
     "tests/test_session_streams.py::test_embedded_host_filter_accepts_every_tracked_basename",
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
+    "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
 )
 
 # Escape hatch for a scanner the best-effort heuristic flags but that is not
@@ -749,6 +791,143 @@ def test_known_repo_wide_functions_carry_the_marker() -> None:
         "known repo-wide tests lost their per-function repo_wide decorator "
         "(decorator order and comments must not matter):\n" + "\n".join(unmarked)
     )
+
+
+def _marked_repo_wide_nodes(sources: Iterable[tuple[str, str]]) -> tuple[frozenset[str], frozenset[str]]:
+    """Modules marked at module scope, and tests marked only on themselves or their class.
+
+    ``sources`` yields ``(repo-relative path, module source)``. A test inside a
+    module-marked module is covered by the module row, so it is not listed.
+    """
+    modules: set[str] = set()
+    functions: set[str] = set()
+    for relative, source in sources:
+        # A real marker is the ``pytest.mark.repo_wide`` attribute chain, so its
+        # module source always contains the bare name.
+        if "repo_wide" not in source:
+            continue
+        tree = ast.parse(source, filename=relative)
+        if _module_marked(tree):
+            modules.add(relative)
+            continue
+        functions.update(f"{relative}::{name}" for name in _top_level_functions(tree) if _function_marked(tree, name))
+    return frozenset(modules), frozenset(functions)
+
+
+def _unregistered_repo_wide_nodes(
+    marked: tuple[frozenset[str], frozenset[str]],
+    known_modules: Collection[str],
+    known_functions: Collection[str],
+) -> list[str]:
+    modules, functions = marked
+    return sorted((modules - set(known_modules)) | (functions - set(known_functions)))
+
+
+def _repository_test_sources() -> list[tuple[str, str]]:
+    return [
+        (module.relative_to(_REPO_ROOT).as_posix(), module.read_text(encoding="utf-8"))
+        for module in _test_module_paths()
+    ]
+
+
+def test_every_marked_test_has_a_registry_row() -> None:
+    """The registry is complete: a marked test without a row fails (#9434).
+
+    The two checks above only follow registry rows to their markers, so a
+    deleted row used to pass. This check walks the markers back to the rows.
+    """
+    unregistered = _unregistered_repo_wide_nodes(
+        _marked_repo_wide_nodes(_repository_test_sources()), KNOWN_REPO_WIDE_MODULES, KNOWN_REPO_WIDE_FUNCTIONS
+    )
+    assert not unregistered, (
+        "These tests carry the repo_wide marker but have no row in KNOWN_REPO_WIDE_MODULES "
+        "(module-level marker) or KNOWN_REPO_WIDE_FUNCTIONS (function or class marker). "
+        "Add the row:\n" + "\n".join(unregistered)
+    )
+
+
+def test_removing_any_registry_row_fails_the_completeness_check() -> None:
+    """Every row is load-bearing: dropping it is reported, and only it is reported."""
+    marked = _marked_repo_wide_nodes(_repository_test_sources())
+    rows = sorted(KNOWN_REPO_WIDE_MODULES) + list(KNOWN_REPO_WIDE_FUNCTIONS)
+    assert len(rows) == len(set(rows)), "a registry row is listed twice"
+    for row in rows:
+        unregistered = _unregistered_repo_wide_nodes(
+            marked,
+            KNOWN_REPO_WIDE_MODULES - {row},
+            [function for function in KNOWN_REPO_WIDE_FUNCTIONS if function != row],
+        )
+        assert unregistered == [row], f"removing {row} reported {unregistered}"
+
+
+def test_completeness_check_covers_class_markers_and_ignores_mentions() -> None:
+    sources = [
+        (
+            "tests/test_class_marked.py",
+            textwrap.dedent(
+                """
+                import pytest
+
+                @pytest.mark.repo_wide
+                class TestScan:
+                    def test_x(self):
+                        ...
+
+                def test_unmarked():
+                    ...
+                """
+            ),
+        ),
+        (
+            "tests/test_module_marked.py",
+            textwrap.dedent(
+                """
+                import pytest
+
+                pytestmark = pytest.mark.repo_wide
+
+                @pytest.mark.repo_wide
+                def test_also_decorated():
+                    ...
+                """
+            ),
+        ),
+        (
+            "tests/test_mention_only.py",
+            textwrap.dedent(
+                '''
+                """repo_wide is only mentioned here."""
+                import pytest
+
+                @pytest.mark.slow
+                def test_x():
+                    assert "repo_wide"
+                '''
+            ),
+        ),
+    ]
+    marked = _marked_repo_wide_nodes(sources)
+    assert marked == (
+        frozenset({"tests/test_module_marked.py"}),
+        frozenset({"tests/test_class_marked.py::TestScan.test_x"}),
+    )
+    assert _unregistered_repo_wide_nodes(marked, [], []) == [
+        "tests/test_class_marked.py::TestScan.test_x",
+        "tests/test_module_marked.py",
+    ]
+    assert (
+        _unregistered_repo_wide_nodes(
+            marked, ["tests/test_module_marked.py"], ["tests/test_class_marked.py::TestScan.test_x"]
+        )
+        == []
+    )
+    # A module row does not stand in for a function row, or the reverse.
+    assert _unregistered_repo_wide_nodes(
+        marked, ["tests/test_class_marked.py"], ["tests/test_module_marked.py::test_also_decorated"]
+    ) == [
+        "tests/test_class_marked.py::TestScan.test_x",
+        "tests/test_module_marked.py",
+    ]
 
 
 def test_not_repo_wide_entries_are_justified() -> None:
