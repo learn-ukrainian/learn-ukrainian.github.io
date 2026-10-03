@@ -13,6 +13,7 @@ stays on the ordinary author-family ladder.
 
 from __future__ import annotations
 
+import unicodedata
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from functools import lru_cache
@@ -229,7 +230,49 @@ def classify_owned_path(path: str) -> OwnedPathClassification:
     Unrelated paths (a README, a generic timing hook) do not imply a subject
     seat. Ambiguous paths must not be turned into a guess.
     """
-    rel = normalize_owned_path(path)
+    return _classify_rel(normalize_owned_path(path))
+
+
+# Unicode categories an exact Git filename may not hold: control, format,
+# line/paragraph separators, and lone surrogates (bytes that are not UTF-8).
+_INEXACT_NAME_CATEGORIES = frozenset({"Cc", "Cf", "Cs", "Zl", "Zp"})
+
+
+def exact_change_path_problem(path: object) -> str | None:
+    """Why ``path`` is not an exact repository-relative Git filename, or None when it is (#9577).
+
+    The recorded reviewer exception reads changed files only by the names
+    Git reports for them (``-z`` output, or a PR's file list), unchanged.
+    A name that would need trimming, separator rewriting or segment cleanup
+    to read is refused, not normalized.
+    """
+    if not isinstance(path, str) or not path:
+        return "is empty"
+    if path != path.strip():
+        return "has whitespace at either end"
+    if any(unicodedata.category(char) in _INEXACT_NAME_CATEGORIES for char in path):
+        return "has control, format or non-UTF-8 characters"
+    if "\\" in path:
+        return "has a backslash"
+    if path.startswith("/") or any(segment in {"", ".", ".."} for segment in path.split("/")):
+        return "is not a canonical repository-relative path"
+    return None
+
+
+def classify_exact_changed_path(path: str) -> OwnedPathClassification:
+    """Classify a changed file by its exact Git filename (#9577).
+
+    Only a name equal to a classified adapter or reviewer-hook path names a
+    seat: no prefix stripping, trimming or case folding, so a fixture such as
+    ``tests/fixtures/scripts/agent_runtime/adapters/codex.py`` is unrelated.
+    A name :func:`exact_change_path_problem` refuses is unrelated too.
+    """
+    if exact_change_path_problem(path) is not None:
+        return OwnedPathClassification("unrelated", frozenset(), "not an exact repository-relative Git filename")
+    return _classify_rel(path)
+
+
+def _classify_rel(rel: str) -> OwnedPathClassification:
     hooked = _HOOK_SEATS.get(rel)
     if hooked is not None:
         return OwnedPathClassification("seat", frozenset({hooked}), hooked)
@@ -325,7 +368,9 @@ def change_supported_seats(
 ) -> frozenset[str]:
     """Subject seats the changed files themselves support (#9577).
 
-    An unambiguous adapter or hook path supports its one seat. An ambiguous
+    Changed files are classified by their exact Git filenames
+    (:func:`classify_exact_changed_path`), never a normalized form. An
+    unambiguous adapter or hook path supports its one seat. An ambiguous
     path supports a declared seat only when its classification lists that
     seat (a shared adapter that seat runs on); a shared surface that lists no
     seat supports none. A declared seat no changed path supports is a claim,
@@ -335,7 +380,7 @@ def change_supported_seats(
     supported: set[str] = set()
     listed: set[str] = set()
     for raw_path in changed_paths:
-        classification = classify_owned_path(raw_path)
+        classification = classify_exact_changed_path(raw_path)
         if classification.kind == "seat":
             supported.update(classification.seats)
         elif classification.kind == "ambiguous":

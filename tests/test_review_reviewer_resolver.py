@@ -1654,6 +1654,12 @@ from scripts.review.reviewer_resolver import (
     review_exception_receipt,
     verify_review_exception_receipt,
 )
+from scripts.review.subject_seat import (
+    change_supported_seats,
+    classify_exact_changed_path,
+    classify_owned_path,
+    exact_change_path_problem,
+)
 
 _EXCEPTION_ID = "subject-seat-exhausted-kimi-k3-cursor"
 _AUTHORS = {"openai": "gpt-6.1-sol", "anthropic": "claude-opus-5-5", "moonshot": "composer-2.5"}
@@ -1869,6 +1875,40 @@ def test_9577_receipt_is_issued_only_for_the_exact_seat_slug_mode_and_change():
     ):
         receipt, reason = review_exception_decision(**{**_RECEIPT_ARGS, **change})
         assert receipt is None and reason, change
+
+
+@pytest.mark.parametrize(
+    ("path", "reason"),
+    [
+        pytest.param("tests/fixtures/" + _SEAT_PATHS["codex"], "does not select", id="nested-test-fixture"),
+        pytest.param("docs/" + _SEAT_PATHS["codex"], "does not select", id="nested-docs"),
+        pytest.param(_SEAT_PATHS["codex"].replace("scripts", "Scripts", 1), "does not select", id="case-variant"),
+        pytest.param(_SEAT_PATHS["codex"] + " ", "has whitespace at either end", id="trailing-space"),
+        pytest.param(" " + _SEAT_PATHS["codex"], "has whitespace at either end", id="leading-space"),
+        pytest.param(_SEAT_PATHS["codex"] + "\t", "has whitespace at either end", id="trailing-tab"),
+        pytest.param(_SEAT_PATHS["codex"].replace("/", "\\"), "has a backslash", id="backslash"),
+        pytest.param("scripts\\" + _SEAT_PATHS["codex"], "has a backslash", id="backslash-prefix"),
+        pytest.param(_SEAT_PATHS["codex"].replace(".py", "\x07.py"), "control", id="control-character"),
+        pytest.param(_SEAT_PATHS["codex"].replace(".py", "\u200b.py"), "format", id="format-character"),
+        pytest.param("./" + _SEAT_PATHS["codex"], "not a canonical", id="dot-prefix"),
+        pytest.param(_SEAT_PATHS["codex"].replace("/adapters/", "//adapters/"), "not a canonical", id="empty-segment"),
+        pytest.param("/" + _SEAT_PATHS["codex"], "not a canonical", id="absolute"),
+    ],
+)
+def test_9577_only_an_exact_git_filename_makes_a_subject_seat(path, reason):
+    """Review 9577-b: an adapter-looking or untrimmed name never derives the Codex seat."""
+    receipt, why = review_exception_decision(**{**_RECEIPT_ARGS, "change": replace(_CHANGE, changed_paths=(path,))})
+    assert receipt is None and reason in why, why
+    assert change_supported_seats((path,)) == frozenset()
+
+
+def test_9577_exact_filenames_keep_the_genuine_adapter_and_hook_seats():
+    assert exact_change_path_problem(_SEAT_PATHS["codex"]) is None
+    assert change_supported_seats((_SEAT_PATHS["codex"], _UNRELATED)) == frozenset({"codex"})
+    assert change_supported_seats(("scripts/agent_runtime/codex_hook_policy.py",)) == frozenset({"codex"})
+    assert classify_exact_changed_path("tests/fixtures/" + _SEAT_PATHS["codex"]).kind == "unrelated"
+    # The ordinary exclusion path still normalizes owned paths: it only excludes.
+    assert classify_owned_path("./" + _SEAT_PATHS["codex"]).seats == frozenset({"codex"})
 
 
 def test_9577_unsupported_declared_seat_is_named_in_the_refusal():

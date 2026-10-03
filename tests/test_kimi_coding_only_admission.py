@@ -3538,3 +3538,52 @@ def test_9577_worker_without_a_receipt_still_refuses_the_kimi_review(tmp_path, m
     )
     assert target is None and _TOKEN in refusal and "review dispatches" in refusal
     assert not (tmp_path / "tasks").exists()
+
+
+# --- Review 9577-b: changed files are exact Git filenames, read literally ----------------
+
+
+def test_9577_worktree_review_change_keeps_exact_git_filenames(reviewed_change):
+    """``-z`` names are neither trimmed nor unquoted: the trailing space survives."""
+    _repo, change = reviewed_change({_CODEX_ADAPTER + " ": "VALUE = 1\n", "scripts/a b.py": "X = 1\n"})
+    assert set(change.changed_paths) == {_CODEX_ADAPTER + " ", "scripts/a b.py"}
+
+
+@pytest.mark.parametrize(
+    ("name", "reason"),
+    [
+        pytest.param(_CODEX_ADAPTER + " ", "has whitespace at either end", id="trailing-space"),
+        pytest.param(" " + _CODEX_ADAPTER, "has whitespace at either end", id="leading-space"),
+        pytest.param(_CODEX_ADAPTER.replace("/", "\\"), "has a backslash", id="backslash"),
+    ],
+)
+def test_9577_review_change_reasons_refuse_inexact_names_instead_of_reading_another_file(
+    reviewed_change, name, reason
+):
+    """The trailing-space file holds a Cyrillic identifier; trimming it would read the clean adapter instead."""
+    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", name: "Урок = 1\n"})
+    for tree in (kimi_admission.CommitTree(repo, change.head_sha), kimi_admission.DirectoryTree(repo)):
+        reasons = kimi_admission.review_change_reasons(change.changed_paths, (tree,))
+        assert any(f"reviewed change path {name!r} {reason}" in r for r in reasons), reasons
+        with pytest.raises(ValueError, match=reason):
+            tree.literal_file(name)
+
+
+@pytest.mark.parametrize("tree_kind", ["commit", "directory"])
+def test_9577_review_change_reasons_read_each_file_by_its_literal_name(reviewed_change, tree_kind):
+    """Glob characters are part of the name: ``x[1].py`` is read itself, never matched as a pattern."""
+    repo, change = reviewed_change({"scripts/ci/x[1].py": "Урок = 1\n", "scripts/ci/x1.py": "VALUE = 1\n"})
+    tree = kimi_admission.CommitTree(repo, change.head_sha) if tree_kind == "commit" else kimi_admission.DirectoryTree(repo)
+    assert tree.literal_file("scripts/ci/x[1].py") == (True, "Урок = 1\n".encode())
+    assert tree.literal_file("scripts/ci/missing.py") == (False, None)
+    assert tree.literal_file("scripts/ci") == (True, None)
+    reasons = kimi_admission.review_change_reasons(("scripts/ci/x[1].py",), (tree,))
+    assert any("Cyrillic text in 'scripts/ci/x[1].py'" in r for r in reasons), reasons
+    assert kimi_admission.review_change_reasons(("scripts/ci/x1.py",), (tree,)) == []
+
+
+def test_9577_review_change_reasons_admit_the_genuine_adapter_and_code_data(reviewed_change):
+    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES})
+    tree = (kimi_admission.CommitTree(repo, change.head_sha),)
+    assert kimi_admission.review_change_reasons(change.changed_paths, tree) == []
+    assert _exception_receipt(change)["subject_seats"] == ["codex"]

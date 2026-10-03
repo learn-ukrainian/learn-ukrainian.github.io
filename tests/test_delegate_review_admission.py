@@ -826,6 +826,7 @@ def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_
 import os
 import subprocess
 
+from scripts.agent_runtime import kimi_admission
 from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
 from scripts.ai_agent_bridge import _agy
 
@@ -868,13 +869,8 @@ def reviewed_pr(tmp_path, monkeypatch):
         head = _git(repo, "rev-parse", "HEAD")
         monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
         monkeypatch.setattr(_agy, "resolve_same_repo_pr_head", lambda number, *, repo_root: ("claude/impl-9532", head))
-        monkeypatch.setattr(
-            _agy,
-            "list_commit_changed_paths",
-            lambda sha, *, repo_root: _git(
-                repo_root, "diff", "--name-only", "--no-renames", f"origin/main...{sha}"
-            ).splitlines(),
-        )
+        # The head is already local; only the fetch from GitHub is replaced.
+        monkeypatch.setattr(kimi_admission, "fetch_reviewed_commit", lambda repo, sha: None)
         return head
 
     return build
@@ -910,6 +906,48 @@ def test_9577_an_unrelated_change_declaring_codex_is_refused(monkeypatch, review
     assert "codex are not supported by the changed files" in refusal
 
 
+@pytest.mark.parametrize(
+    ("files", "reason"),
+    [
+        pytest.param(
+            {"tests/fixtures/scripts/agent_runtime/adapters/codex.py": "VALUE = 1\n"},
+            "the resolver does not select the recorded exception",
+            id="nested-test-fixture",
+        ),
+        pytest.param(
+            {"docs/scripts/agent_runtime/adapters/codex.py": "VALUE = 1\n"},
+            "the resolver does not select the recorded exception",
+            id="nested-docs",
+        ),
+        pytest.param(
+            {"Scripts/agent_runtime/adapters/codex.py": "VALUE = 1\n"},
+            "the resolver does not select the recorded exception",
+            id="case-variant",
+        ),
+        pytest.param(
+            {_CODEX_ADAPTER + " ": "Урок = 1\n"},
+            f"the reviewed change path {_CODEX_ADAPTER + ' '!r} has whitespace at either end",
+            id="trailing-space",
+        ),
+        pytest.param(
+            {" " + _CODEX_ADAPTER: "VALUE = 1\n"},
+            "has whitespace at either end",
+            id="leading-space",
+        ),
+        pytest.param(
+            {_CODEX_ADAPTER.replace("/", "\\"): "VALUE = 1\n"},
+            "has a backslash",
+            id="backslash",
+        ),
+    ],
+)
+def test_9577_only_exact_git_filenames_make_a_subject_seat(monkeypatch, reviewed_pr, files, reason):
+    """Review 9577-b: an adapter-looking or untrimmed name is not the adapter, and is never read as it."""
+    reviewed_pr(files)
+    (refusal, target), _ = _admit(_kimi_review(*_EXCEPTION_FLAGS), monkeypatch, _budget(codex="cool"))
+    assert target is None and _KIMI_TOKEN in refusal and reason in refusal, refusal
+
+
 _CODE_DATA_FILES = {
     "tests/agent_runtime/test_codex_exec_stream.py": "MESSAGE = 'ліміт'  # Ukrainian sample\n",
     "scripts/agent_runtime/tool_calls.py": "WORD = 'кіт'\n",
@@ -921,6 +959,61 @@ def test_9577_dispatch_admits_cyrillic_strings_in_python_code_as_code_data(monke
     reviewed_pr({_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES})
     (refusal, target), _ = _admit(_kimi_review(*_EXCEPTION_FLAGS), monkeypatch, _budget(codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("cursor", "kimi-k3-high"), refusal
+
+
+# PR #9557's changed files, exactly as GitHub lists them.
+_PR_9557_PATHS = (
+    "docs/agent-runtime-guide.md",
+    "docs/runbooks/formal-review-attempt-isolation.md",
+    "scripts/agent_runtime/acpx_pilot.py",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/adapters/base.py",
+    "scripts/agent_runtime/adapters/claude.py",
+    "scripts/agent_runtime/adapters/codex.py",
+    "scripts/agent_runtime/adapters/codex_events.py",
+    "scripts/agent_runtime/codex_hook_probe.py",
+    "scripts/agent_runtime/failover.py",
+    "scripts/agent_runtime/failure_codes.py",
+    "scripts/agent_runtime/jsonl.py",
+    "scripts/agent_runtime/result.py",
+    "scripts/agent_runtime/runner.py",
+    "scripts/agent_runtime/tool_calls.py",
+    "scripts/api/runtime_router.py",
+    "scripts/delegate.py",
+    "scripts/review/subject_seat.py",
+    "tests/agent_runtime/test_acpx_provider_failures.py",
+    "tests/agent_runtime/test_attempt_safe_read.py",
+    "tests/agent_runtime/test_codex_adapter.py",
+    "tests/agent_runtime/test_codex_exec_stream.py",
+    "tests/agent_runtime/test_codex_rollout_match.py",
+    "tests/agent_runtime/test_jsonl_lines.py",
+    "tests/agent_runtime/test_runner_failover.py",
+    "tests/build/test_reviewer_schema_transport.py",
+    "tests/fixtures/codex_mcp_init_stdout.txt",
+    "tests/helpers/codex_exec_stream.py",
+    "tests/replay/fixtures/rollouts/agents_md_envelope.jsonl",
+    "tests/replay/test_adversarial_fixtures.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_codex_bridge.py",
+    "tests/test_delegate.py",
+    "tests/test_mcp_init_observability.py",
+    "tests/test_review_reviewer_resolver.py",
+    "tests/test_runner_tool_calls.py",
+    "tests/test_runtime_source_provenance.py",
+    "tests/test_trace_capture_no_contamination.py",
+)
+
+
+def test_9577_dispatch_admits_the_9557_file_set(monkeypatch, reviewed_pr):
+    """Every #9557 name is an exact Git filename; the genuine adapters still make Codex and Claude subject seats.
+
+    Its shared adapter surfaces (``acpx.py``, ``base.py``) need the explicit seat.
+    """
+    reviewed_pr({path: _CODE_DATA_FILES.get(path, "VALUE = 1\n") for path in _PR_9557_PATHS})
+    args = _kimi_review(*_EXCEPTION_FLAGS, "--subject-seat", "codex")
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert refusal is None and (target.recipient, target.model) == ("cursor", "kimi-k3-high"), refusal
+    assert target.review_exception["subject_seats"] == ["claude", "codex"]
 
 
 @pytest.mark.parametrize(
@@ -988,7 +1081,7 @@ def test_9577_a_read_only_kimi_dispatch_typed_as_no_review_is_refused_without_re
     def unread(*_args, **_kwargs):
         pytest.fail("a non-review Kimi request must not read the reviewed change")
 
-    monkeypatch.setattr(_agy, "list_commit_changed_paths", unread)
+    monkeypatch.setattr(kimi_admission, "commit_review_change", unread)
     args = _kimi_review("--pr", "9557", verdict=False)
     assert not delegate._dispatch_is_review_typed(args)
     (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))

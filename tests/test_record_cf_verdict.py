@@ -1684,6 +1684,34 @@ def test_9577_recorder_accepts_the_exception_seat_with_its_receipt(monkeypatch, 
         pytest.param(
             {"review_author_model": "gpt-6.1-sol"}, (_CODEX_ADAPTER,), {"anthropic"}, "does not hold", id="task-author"
         ),
+        # Review 9577-b: the PR's own file names are classified exactly, never normalized.
+        pytest.param(
+            {},
+            ("tests/fixtures/" + _CODEX_ADAPTER,),
+            {"anthropic"},
+            "does not hold.*does not select the recorded exception",
+            id="nested-adapter-fixture",
+        ),
+        pytest.param(
+            {},
+            ("docs/" + _CODEX_ADAPTER,),
+            {"anthropic"},
+            "does not hold.*does not select the recorded exception",
+            id="nested-adapter-docs",
+        ),
+        pytest.param(
+            {}, (_CODEX_ADAPTER + " ",), {"anthropic"}, "does not hold.*whitespace at either end", id="trailing-space"
+        ),
+        pytest.param(
+            {}, (_CODEX_ADAPTER.replace("/", "\\"),), {"anthropic"}, "does not hold.*a backslash", id="backslash"
+        ),
+        pytest.param(
+            {},
+            (_CODEX_ADAPTER.replace("scripts", "Scripts", 1),),
+            {"anthropic"},
+            "does not hold.*does not select the recorded exception",
+            id="case-variant",
+        ),
     ],
 )
 def test_9577_recorder_refuses_the_exception_seat_without_a_matching_receipt(

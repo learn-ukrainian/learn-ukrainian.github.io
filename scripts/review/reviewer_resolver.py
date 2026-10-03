@@ -55,7 +55,12 @@ from scripts.review.model_catalog import (
     subject_seat_review_exception,
 )
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
-from scripts.review.subject_seat import change_supported_seats, prepare_subject_exclusion, subject_exclusion_reason
+from scripts.review.subject_seat import (
+    change_supported_seats,
+    exact_change_path_problem,
+    prepare_subject_exclusion,
+    subject_exclusion_reason,
+)
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
@@ -1062,8 +1067,9 @@ class ReviewChange:
     """The exact change a recorded-exception review covers (#9577).
 
     ``changed_paths`` are the files the change touches at ``head_sha`` against
-    its base (a PR's files, or the pinned diff ``origin/main...<head>``). Each
-    check builds this from its own context, never from the receipt.
+    its base (a PR's files, or the pinned diff ``origin/main...<head>`` read
+    with ``-z``), named exactly as Git reports them. Each check builds this
+    from its own context, never from the receipt.
     """
 
     repository: str
@@ -1088,9 +1094,11 @@ def review_exception_decision(
 
     The request must name the exception seat exactly (route, Cursor slug,
     read-only mode) with trusted author and risk inputs and one exact change
-    (repository, task, full head SHA and its changed files). The canonical
+    (repository, task, full head SHA and its changed files, each an exact
+    Git filename: :func:`~scripts.review.subject_seat.exact_change_path_problem`
+    refuses any other name). The canonical
     resolver then decides from that change: its changed files are the owned
-    and changed paths, so subject seats come from the diff (a declared seat
+    and changed paths, so subject seats come from the diff's exact filenames (a declared seat
     counts only where a changed path supports it, and only to exclude) and
     the resolver's Ukrainian-content and language-lane exclusions apply. The
     receipt binds every input it was decided from. Dispatch admission, the
@@ -1114,6 +1122,12 @@ def review_exception_decision(
         return None, "the reviewed change has no repository, task id or full head SHA"
     if not change.changed_paths:
         return None, "the reviewed change lists no changed files"
+    for path in change.changed_paths:
+        if problem := exact_change_path_problem(path):
+            return None, (
+                f"the reviewed change path {path!r} {problem}; the recorded exception reads only exact "
+                "repository-relative Git filenames"
+            )
     profile_name = (profile or "code").strip().casefold()
     changed = tuple(change.changed_paths)
     resolution = resolve_reviewer(

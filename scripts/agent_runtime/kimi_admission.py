@@ -45,6 +45,7 @@ import json
 import os
 import posixpath
 import re
+import stat
 import subprocess
 import tokenize
 from collections.abc import Callable, Iterable, Mapping, Sequence
@@ -304,6 +305,24 @@ class ContentTree(Protocol):
         """
         ...
 
+    def literal_file(self, name: str) -> tuple[bool, bytes | None]:
+        """Whether the exact filename ``name`` exists in the tree, and its content (#9577).
+
+        ``name`` is read literally: no glob, pathspec or directory scope.
+        Content is None for an entry that is not a file (a directory or a
+        submodule). Raises ``ValueError`` for a name
+        ``exact_change_path_problem`` refuses, and ``OSError`` or
+        ``RuntimeError`` when the tree cannot be read.
+        """
+        ...
+
+
+def _require_exact_name(name: str) -> None:
+    from scripts.review.subject_seat import exact_change_path_problem
+
+    if problem := exact_change_path_problem(name):
+        raise ValueError(f"{name!r} {problem}")
+
 
 @dataclass(frozen=True)
 class DirectoryTree:
@@ -317,6 +336,18 @@ class DirectoryTree:
     def owned_files(self, normalized: str) -> tuple[bool, dict[str, bytes | None]]:
         is_scope, files = scope_files(normalized, repo_root=self.root)
         return is_scope, {rel: (self.root / rel).read_bytes() for rel in files}
+
+    def literal_file(self, name: str) -> tuple[bool, bytes | None]:
+        _require_exact_name(name)
+        target = self.root / name
+        try:
+            info = target.lstat()
+        except FileNotFoundError:
+            return False, None
+        if stat.S_ISLNK(info.st_mode):
+            # Git records a symlink as its target text; read that, never what it points at.
+            return True, os.fsencode(os.readlink(target))
+        return True, target.read_bytes() if stat.S_ISREG(info.st_mode) else None
 
 
 @dataclass(frozen=True)
@@ -383,6 +414,18 @@ class CommitTree:
             is_scope = bool(entries) and normalized not in entries
         blobs = self._blobs(oid for kind, oid in entries.values() if kind == "blob")
         return is_scope, {path: blobs.get(oid) if kind == "blob" else None for path, (kind, oid) in entries.items()}
+
+    def literal_file(self, name: str) -> tuple[bool, bytes | None]:
+        # ``<commit>:<path>`` names one tree entry by its literal path (no pathspec).
+        _require_exact_name(name)
+        line = self._git("cat-file", "--batch-check", stdin=f"{self.commit}:{name}\n".encode()).rstrip(b"\n")
+        if line.endswith(b" missing"):
+            return False, None
+        fields = line.decode("ascii").split()
+        if len(fields) != 3:
+            raise RuntimeError(f"git cat-file cannot read {name!r}")
+        oid, kind, _size = fields
+        return True, self._blobs([oid]).get(oid) if kind == "blob" else None
 
 
 def _sample(paths: list[str]) -> str:
@@ -497,6 +540,19 @@ def owned_scope_reasons(
                 f"owned scope {normalized!r} contains excluded or off-allowlist paths ({_sample(blocked)}); "
                 "narrow it to specific files or clean subdirectories"
             )
+    where = f"owned scope {normalized!r} holds" if is_scope else "owned file holds"
+    reasons.extend(_files_content_reasons(files, where, tree, code_data=code_data))
+    return reasons
+
+
+def _files_content_reasons(
+    files: Mapping[str, bytes | None],
+    where: str,
+    tree: ContentTree,
+    *,
+    code_data: Callable[[str, bytes], bool] | None = None,
+) -> list[str]:
+    """Why ``files`` (name to content) hold Cyrillic text, a Cyrillic name or content that is not plain text."""
     cyrillic: list[str] = []
     not_text: list[str] = []
     for rel, data in files.items():
@@ -507,7 +563,7 @@ def owned_scope_reasons(
             cyrillic.append(rel)
         elif problem:
             not_text.append(rel)
-    where = f"owned scope {normalized!r} holds" if is_scope else "owned file holds"
+    reasons: list[str] = []
     if cyrillic:
         reasons.append(f"{where} Ukrainian content (Cyrillic text in {_sample(cyrillic)}, {tree})")
     if not_text:
@@ -798,63 +854,113 @@ def review_change_reasons(
     """Why the change a recorded-exception review reads is outside Kimi's content boundary (#9577).
 
     The exception relaxes only the no-reviews rule and write ownership, never
-    the language and content boundary. A changed path is refused when it is
-    not repository-relative, names a Ukrainian-language surface
-    (``_review_language_path``) or has a Cyrillic name; every changed
-    file present in ``trees`` goes through the owned-file content check
-    (``_content_reasons``), except that Cyrillic in the string literals and
+    the language and content boundary. Changed paths are exact Git filenames:
+    one that is not (whitespace at either end, a control character, a
+    backslash, a non-canonical segment: ``exact_change_path_problem``) is
+    refused, never trimmed or rewritten. A changed path is also refused when
+    it names a Ukrainian-language surface (``_review_language_path``) or has
+    a Cyrillic name. Every changed file is read by its literal name in each
+    of ``trees`` (``ContentTree.literal_file``) and goes through the
+    owned-file content check, except that Cyrillic in the string literals and
     comments of Python files under ``scripts/`` and ``tests/`` is code data
     (``review_code_data_cyrillic``, a driver decision on #9577 for this
-    read-only exception only). The resolver's own Ukrainian-content path rule
+    read-only exception only). A file absent from a tree (a deletion) holds
+    nothing to read there. The resolver's own Ukrainian-content path rule
     applies through the receipt.
     """
-    normalized: list[str] = []
+    from scripts.review.subject_seat import exact_change_path_problem
+
+    exact: list[str] = []
     reasons: list[str] = []
     for path in changed_paths:
-        rel = normalize_owned_path(path)
-        if rel is None:
-            reasons.append(f"reviewed change path {path!r} is not a repository-relative path")
+        if problem := exact_change_path_problem(path):
+            reasons.append(f"reviewed change path {path!r} {problem} (only exact Git filenames are read)")
             continue
-        normalized.append(rel)
-    language = [rel for rel in normalized if _review_language_path(rel)]
+        exact.append(path)
+    language = [rel for rel in exact if _review_language_path(rel)]
     if language:
         reasons.append(f"the reviewed change touches Ukrainian-language surfaces ({_sample(language)})")
-    named = [rel for rel in normalized if CYRILLIC.search(rel)]
+    named = [rel for rel in exact if CYRILLIC.search(rel)]
     if named:
         reasons.append(f"the reviewed change has Cyrillic file names ({_sample(named)})")
-    reasons.extend(
-        f"reviewed change: {reason}"
-        for reason in _content_reasons(tuple(normalized), trees, code_data=review_code_data_cyrillic)
-    )
+    reasons.extend(f"reviewed change: {reason}" for reason in _literal_content_reasons(exact, trees))
     return reasons
+
+
+def _literal_content_reasons(
+    names: Sequence[str], trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]]
+) -> list[str]:
+    try:
+        resolved = trees() if callable(trees) else trees
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+        return [f"the tree the review reads cannot be read for Ukrainian content ({exc})"]
+    if not resolved:
+        return ["the reviewed change cannot be checked for Ukrainian content (no tree to read)"]
+    reasons: list[str] = []
+    for tree in resolved:
+        files: dict[str, bytes | None] = {}
+        for name in names:
+            try:
+                present, data = tree.literal_file(name)
+            except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+                reasons.append(f"changed file {name!r} cannot be read by its literal name {tree} ({exc})")
+                continue
+            if present:
+                files[name] = data
+        reasons.extend(_files_content_reasons(files, "owned file holds", tree, code_data=review_code_data_cyrillic))
+    return list(dict.fromkeys(reasons))
+
+
+def _review_git(repo: Path, *args: str) -> bytes:
+    try:
+        proc = subprocess.run(
+            ["git", *args], cwd=repo, capture_output=True, check=False, env=_git_env(), timeout=_GIT_TIMEOUT_S
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError(f"git {args[0]} in {repo} failed ({exc})") from exc
+    if proc.returncode != 0:
+        detail = proc.stderr.decode("utf-8", "replace").strip() or f"exit {proc.returncode}"
+        raise RuntimeError(f"git {args[0]} in {repo} failed: {detail}")
+    return proc.stdout
+
+
+def exact_changed_names(repo: Path, head: str) -> tuple[str, ...]:
+    """The files ``head`` changes against ``origin/main``, named exactly as Git reports them (#9577).
+
+    The merge-base diff ``origin/main...<head>`` with renames split
+    (``--no-renames``) and NUL-separated names (``-z``), so no name is
+    quoted, trimmed or otherwise rewritten. Every recorded-exception gate
+    lists the reviewed change this way. Raises ``RuntimeError`` when the
+    diff cannot be read.
+    """
+    raw = _review_git(repo, "diff", "--name-only", "--no-renames", "-z", f"origin/main...{head}", "--")
+    return tuple(item.decode("utf-8", "surrogateescape") for item in raw.split(b"\0") if item)
+
+
+def fetch_reviewed_commit(repo: Path, head: str) -> None:
+    """Fetch the reviewed commit ``head`` from ``origin`` without moving a ref. Raises ``RuntimeError`` on failure."""
+    _review_git(repo, "fetch", "origin", head)
+
+
+def commit_review_change(repo: Path, head: str, *, task_id: str | None, repository: str | None) -> Any:
+    """The ``ReviewChange`` of the pinned commit ``head``, fetched first; dispatch reads it this way (#9577)."""
+    from scripts.review.reviewer_resolver import ReviewChange
+
+    fetch_reviewed_commit(repo, head)
+    paths = exact_changed_names(repo, head)
+    return ReviewChange(repository=repository or "", task_id=task_id or "", head_sha=head, changed_paths=paths)
 
 
 def worktree_review_change(worktree: Path, *, task_id: str | None, repository: str | None) -> Any:
     """The ``ReviewChange`` checked out in ``worktree``: its HEAD and the files it changes against ``origin/main``.
 
-    The diff is the merge-base diff ``origin/main...HEAD`` with renames split
-    (``--no-renames``), the form dispatch lists for a pinned head. Raises
-    ``RuntimeError`` when either cannot be read.
+    The changed files are ``exact_changed_names``, the form dispatch lists
+    for a pinned head. Raises ``RuntimeError`` when either cannot be read.
     """
     from scripts.review.reviewer_resolver import ReviewChange
 
-    env = _git_env()
-
-    def git(*args: str) -> bytes:
-        try:
-            proc = subprocess.run(
-                ["git", *args], cwd=worktree, capture_output=True, check=False, env=env, timeout=_GIT_TIMEOUT_S
-            )
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            raise RuntimeError(f"git {args[0]} in {worktree} failed ({exc})") from exc
-        if proc.returncode != 0:
-            detail = proc.stderr.decode("utf-8", "replace").strip() or f"exit {proc.returncode}"
-            raise RuntimeError(f"git {args[0]} in {worktree} failed: {detail}")
-        return proc.stdout
-
-    head = git("rev-parse", "--verify", "HEAD^{commit}").decode("ascii", "replace").strip()
-    raw = git("diff", "--name-only", "--no-renames", "-z", f"origin/main...{head}", "--")
-    paths = tuple(item.decode("utf-8", "surrogateescape") for item in raw.split(b"\0") if item)
+    head = _review_git(worktree, "rev-parse", "--verify", "HEAD^{commit}").decode("ascii", "replace").strip()
+    paths = exact_changed_names(worktree, head)
     return ReviewChange(repository=repository or "", task_id=task_id or "", head_sha=head, changed_paths=paths)
 
 

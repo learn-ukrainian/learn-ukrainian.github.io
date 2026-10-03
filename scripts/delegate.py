@@ -13262,22 +13262,19 @@ def _dispatch_review_change(args: argparse.Namespace) -> tuple[Callable[[], Any]
     Both are read only when ``resolve_and_admit`` sees a request for exactly
     the exception's seat, slug and mode. The head is ``--pinned-head``, else
     the ``--pr`` head resolved once; the changed files are that commit's
-    merge-base diff against ``origin/main`` (``list_commit_changed_paths``,
-    which fetches it), read again by the worker, the runner and, from the
-    PR's files, the verdict recorder. Raises ``RuntimeError`` or
-    ``ValueError`` when there is no exact head or it cannot be listed.
+    merge-base diff against ``origin/main``, fetched and named exactly as Git
+    reports them (``kimi_admission.commit_review_change``), read again the
+    same way by the worker and the runner and, from the PR's files, by the
+    verdict recorder. Raises ``RuntimeError`` or ``ValueError`` when there
+    is no exact head or it cannot be listed.
     """
     cached: list[Any] = []
 
     def change() -> Any:
         if cached:
             return cached[0]
-        from scripts.ai_agent_bridge._agy import (
-            GeminiChangedPathListError,
-            list_commit_changed_paths,
-            resolve_same_repo_pr_head,
-        )
-        from scripts.review.reviewer_resolver import ReviewChange
+        from scripts.agent_runtime.kimi_admission import commit_review_change
+        from scripts.ai_agent_bridge._agy import GeminiChangedPathListError, resolve_same_repo_pr_head
 
         head = str(getattr(args, "pinned_head", None) or "").strip().lower()
         pr_number = getattr(args, "pr", None)
@@ -13286,17 +13283,15 @@ def _dispatch_review_change(args: argparse.Namespace) -> tuple[Callable[[], Any]
                 _branch, head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
             if not head:
                 raise ValueError("no exact reviewed head: pass --pr, or --branch with --pinned-head")
-            paths = list_commit_changed_paths(head, repo_root=str(_REPO_ROOT))
-        except GeminiChangedPathListError as exc:
-            raise RuntimeError(f"the reviewed change cannot be listed: {exc}") from exc
-        cached.append(
-            ReviewChange(
-                repository=_resolve_dispatch_repository(_REPO_ROOT) or "",
+            reviewed = commit_review_change(
+                _REPO_ROOT,
+                head,
                 task_id=str(getattr(args, "task_id", "") or ""),
-                head_sha=head,
-                changed_paths=tuple(paths),
+                repository=_resolve_dispatch_repository(_REPO_ROOT) or "",
             )
-        )
+        except (GeminiChangedPathListError, RuntimeError) as exc:
+            raise RuntimeError(f"the reviewed change cannot be listed: {exc}") from exc
+        cached.append(reviewed)
         return cached[0]
 
     def trees() -> list[Any]:
