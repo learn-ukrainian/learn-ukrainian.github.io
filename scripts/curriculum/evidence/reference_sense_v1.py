@@ -160,9 +160,20 @@ def classify(text: str) -> Group:
     prefix = re.match(r"^\s*([\w -]+):\s*(.+)$", text, re.DOTALL)
     if prefix:
         label = normalize(prefix[1], "noun")
-        if label not in TOPIC_LABELS:
+        if label not in TOPIC_LABELS and (
+            label in RESTRICTING_LABELS or any(pattern.fullmatch(label) for pattern, _ in _REGISTER_PATTERNS)
+        ):
             return Group(reason="unknown_label")
         group = classify(prefix[2])
+        if label not in TOPIC_LABELS:
+            # Unknown prefixes remain unselectable, but a well-scoped head
+            # can still compete with a bare sense of that same atom.
+            return Group(
+                group.head,
+                tuple(sorted({*group.labels, "topic:" + label})),
+                group.definitions,
+                group.reason or "unknown_label",
+            )
         return Group(group.head, tuple(sorted({*group.labels, TOPIC_LABELS[label]})), group.definitions, group.reason)
     notes, stack, start = [], [], 0
     for index, char in enumerate(text):
@@ -267,7 +278,12 @@ def row_spans(row: dict) -> list[tuple[str, str]]:
 
 
 def candidates(
-    word: dict, rows: list[dict], *, pronoun_entry: bool | None = None, report: dict | None = None
+    word: dict,
+    rows: list[dict],
+    *,
+    pronoun_entry: bool | None = None,
+    report: dict | None = None,
+    include_competitors: bool = False,
 ) -> list[dict]:
     """Classify before splitting; recheck lemma/POS before any candidate."""
     lemma, pos = word["lemma"], word["pos"]
@@ -293,11 +309,12 @@ def candidates(
                 if report is not None:
                     field = group.reason + "_spans"
                     report[field] = report.get(field, 0) + 1
-                continue
+                if not include_competitors or group.reason != "unknown_label" or not group.head:
+                    continue
             # The parser may already split commas/semicolons. Classify its span
             # only to remove notes; labels always come from the complete group.
             local = classify(span)
-            if local.reason:
+            if local.reason and (local.reason != "unknown_label" or not local.head):
                 continue
             for atom_index, atom in enumerate(source_atoms(local.head)):
                 if not sources.is_learner_gloss(atom):
@@ -314,6 +331,7 @@ def candidates(
                         "labels": group.labels,
                         "definitions": group.definitions,
                         "headword": row["word"],
+                        **({"competition_only": True} if group.reason or local.reason else {}),
                     }
                 )
     return result
@@ -340,12 +358,29 @@ def select(
     report: dict | None = None,
 ) -> sources.GlossSelection:
     """Every head must resolve to the same displayed atom and label signature."""
-    pool = candidates(word, rows, pronoun_entry=pronoun_entry, report=report)
+    pool = candidates(word, rows, pronoun_entry=pronoun_entry, report=report, include_competitors=True)
     reference = classify(meaning)
     heads = atoms(meaning, word["pos"])
     if not heads:
         return sources.GlossSelection(reason="reference_no_match")
-    matches = [[c for c in pool if head in c["atoms"] and reference.labels == c["labels"]] for head in heads]
+    matches = [
+        [c for c in pool if head in c["atoms"] and reference.labels == c["labels"] and not c.get("competition_only")]
+        for head in heads
+    ]
+    topic_labels = set(TOPIC_LABELS.values())
+    competitors = [
+        [
+            c
+            for c in pool
+            if head in c["atoms"]
+            and set(reference.labels) < set(c["labels"])
+            and all(
+                label in topic_labels or label.startswith("topic:")
+                for label in set(c["labels"]) - set(reference.labels)
+            )
+        ]
+        for head in heads
+    ]
     pronoun = (
         pronoun_entry
         if pronoun_entry is not None
@@ -365,6 +400,15 @@ def select(
             [c for c in group if sources.normalize_spelling(c["headword"]) == sources.normalize_spelling(key[0])]
             for group in matches
         ]
+        competitors = [
+            [c for c in group if sources.normalize_spelling(c["headword"]) == sources.normalize_spelling(key[0])]
+            for group in competitors
+        ]
+    if any(
+        selected and any(signature(other) != signature(c) for other in competing for c in selected)
+        for selected, competing in zip(matches, competitors, strict=True)
+    ):
+        return sources.GlossSelection(reason="reference_ambiguous")
     if any(len({display_signature(c) for c in group}) > 1 for group in matches):
         return sources.GlossSelection(reason="reference_ambiguous")
     if any(not group for group in matches):

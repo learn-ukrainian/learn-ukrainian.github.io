@@ -67,8 +67,9 @@ existing parser or atom splitting can discard annotations. Closed constants in
 - `RESTRICTING_LABELS`: register, time, attitude, region/country, figurative use,
   paganism and short/long scale. Exact aliases have one canonical label.
 - `TOPIC_LABELS`: domains, including sports, medicine, music, furniture,
-  anatomy/anatomical and mechanics/mechanical. These also restrict matching.
-  A leading `label:` prefix is a topic label and restricts the complete group.
+  anatomy/anatomical and mechanics/mechanical. These restrict selection.
+  A leading `label:` prefix is a topic label and restricts the complete group;
+  an unknown prefix remains unselectable and can only compete for ambiguity.
   `ukraine`, `us` and `uk` restrict only as whole edge or nested parenthetical
   labels; they do not restrict when mentioned inside a definition.
 
@@ -80,7 +81,12 @@ above. A binding certifies the **displayed atom**, not equivalence of trailing
 definitions; those definitions are not compared with the reference meaning.
 Every restricting/domain
 label must equal the reference's label set; a topic-labelled sense cannot match
-a bare reference head. Leading unknown labels, partly recognised label lists
+a bare reference head for selection. However, an atom with additional topic
+labels (including a leading `label:` prefix) competes with a selectable atom
+matching the same reference head. If their source sense signatures differ,
+the result is `reference_ambiguous` and goes to the reviewed remainder.
+Register/restricting label mismatches continue to exclude a sense entirely.
+Leading unknown parenthetical labels, partly recognised label lists
 and uncertain internal scope are withheld. Unknown labels and uncertain scope
 are counted as excluded **parser spans per reference-selection attempt**; a
 record with multiple inventory entries can evaluate a row more than once.
@@ -137,9 +143,13 @@ After committing the public bindings, on a clean head:
   --verify-receipt --pr PR_NUMBER
 ```
 
-`--check` reselects and recomputes commitments, scans committed files and new
-commit messages and scans PR title/body/comments when
-available. All committed HEAD files are scanned; `origin/main` bounds commit messages.
+`--check` reselects and recomputes commitments and certifies the change. Its gate
+scans every HEAD blob in paths added or modified since the merge-base of
+`origin/main` and HEAD (or the supplied `--base`), every commit message in that
+range, and PR title/body/comments when available. The level's
+`_sense_bindings.yaml` and `_words.yaml` blobs are always scanned, even when
+unchanged. The sealed receipt records merge-base SHA, head SHA, changed-path
+count and commit count. It does not certify the whole repository history.
 The scan distinguishes two signals after NFC, casefold and whitespace
 normalization: distinctive private wording (at least three word tokens, equal
 to no open-dictionary atom or span for that lemma), and a non-public private
@@ -151,8 +161,22 @@ locations retain their scalar exemptions. Tracked HEAD blobs are read through
 one `git cat-file --batch` stream; patterns are compiled once. Diagnostics
 contain only paths, public locators and counts. An unavailable PR is explicitly
 `unverified`. Resolve every suspected leak
-before issuing the receipt. Never publish scan matches or private text in reports.
+in the gate scope before issuing the receipt. Never publish scan matches or
+private text in reports.
 Any changed head, bindings, private input, key or matcher invalidates replay.
+
+For a report of all committed HEAD blobs, add an external destination:
+
+```bash
+.venv/bin/python -m scripts.curriculum.evidence sense-select a1 --private-input PRIVATE_JSONL \
+  --check --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT \
+  --full-tree-report PRIVATE_TREE_REPORT_JSON
+```
+
+The full-tree report contains ids, paths, signal counts and scanned-file/byte
+counts only and never affects the receipt gate. It must be outside the
+repository. Pre-existing full-tree suspects belong to the affected file's lane;
+route them there for disposition rather than suppressing either privacy signal.
 
 To replace a lost or rotated key: allocate a new key id and private key, re-extract
 and independently prove the private input, rerun `--write`, commit the resulting

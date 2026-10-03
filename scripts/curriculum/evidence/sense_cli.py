@@ -198,7 +198,7 @@ def _record_texts(value: object, ancestors: frozenset[int] = frozenset()):
             yield "\n".join(parts)
 
 
-def _head_blobs(repo: Path):
+def _head_blobs(repo: Path, paths: set[str] | None = None):
     """Read committed blobs through one cat-file stream, including binary files."""
     entries = bindings.git(repo, "ls-tree", "-r", "-z", "HEAD").split(b"\0")
     with subprocess.Popen(
@@ -214,7 +214,7 @@ def _head_blobs(repo: Path):
                     continue
                 metadata, path = entry.split(b"\t", 1)
                 _mode, kind, oid = metadata.split()
-                if kind != b"blob":
+                if kind != b"blob" or (paths is not None and path.decode("utf-8") not in paths):
                     continue
                 process.stdin.write(oid + b"\n")
                 process.stdin.flush()
@@ -242,8 +242,31 @@ def leak_scan(
     *,
     base: str = "origin/main",
     pr_text: str | None = None,
+    full_tree_report: Path | None = None,
 ) -> dict:
-    """Scan distinctive private wording and non-public mappings; ids/counts only."""
+    """Gate changed blobs and level stores; optionally report the whole tree."""
+    if full_tree_report is not None:
+        from scripts.ingest.build_ohoiko_a1_reference import require_private_path
+
+        require_private_path(full_tree_report, repo)
+    merge_base = bindings.git(repo, "merge-base", base, "HEAD").decode().strip()
+    head = bindings.git(repo, "rev-parse", "HEAD").decode().strip()
+    changed_paths = {
+        p.decode("utf-8")
+        for p in bindings.git(
+            repo, "diff", "--no-renames", "--name-only", "--diff-filter=AM", "-z", merge_base, head
+        ).split(b"\0")
+        if p
+    }
+    prefix = f"curriculum/l2-uk-en/evidence/{context.level}/"
+    gate_paths = changed_paths | {prefix + bindings.BINDINGS, prefix + "_words.yaml"}
+    scope = {
+        "kind": "diff",
+        "merge_base": merge_base,
+        "head": head,
+        "changed_path_count": len(changed_paths),
+        "commit_count": int(bindings.git(repo, "rev-list", "--count", f"{merge_base}..{head}")),
+    }
     words = {w["id"]: w for w in store["words"]}
     entries = {row["locator"]: row for row in context.inventory}
     lemmas = {sources.unstressed_headword(row["lemma"]) for row in entries.values()}
@@ -301,6 +324,10 @@ def leak_scan(
     signals = Counter(distinctive_wording=0, mapping_copy=0)
     suspects = []
     files, byte_count = 0, 0
+    full_counts = Counter(committed_files=0)
+    full_signals = Counter(distinctive_wording=0, mapping_copy=0)
+    full_suspects = []
+    full_files, full_bytes = 0, 0
 
     def mapping_ids(text: str) -> set[str]:
         meanings, forms = set(), set()
@@ -310,7 +337,7 @@ def leak_scan(
                 forms.update(mapping_forms.get(term, ()))
         return meanings & forms
 
-    def scan(content: bytes, path: str, category: str):
+    def scan(content: bytes, path: str, category: str, *, gate: bool = True):
         text = content.decode("utf-8", errors="replace")
         wording = Counter()
         for match in wording_pattern.finditer(_scan_normalize(text)):
@@ -332,23 +359,52 @@ def leak_scan(
         for signal, matches in (("distinctive_wording", wording), ("mapping_copy", Counter({p: 1 for p in pairs}))):
             count = sum(matches.values())
             if count:
-                leaks[category] += count
-                signals[signal] += count
-                suspects.append({"path": path, "signal": signal, "locators": sorted(matches), "count": count})
+                suspect = {"path": path, "signal": signal, "locators": sorted(matches), "count": count}
+                if gate:
+                    leaks[category] += count
+                    signals[signal] += count
+                    suspects.append(suspect)
+                if full_tree_report is not None and category == "committed_files":
+                    full_counts[category] += count
+                    full_signals[signal] += count
+                    full_suspects.append(suspect)
 
-    for path, content in _head_blobs(repo):
-        files += 1
-        byte_count += len(content)
-        prefix = f"curriculum/l2-uk-en/evidence/{context.level}/"
+    for path, content in _head_blobs(repo, None if full_tree_report is not None else gate_paths):
+        if path in gate_paths:
+            files += 1
+            byte_count += len(content)
+        full_files += 1
+        full_bytes += len(content)
         kind = (
             "bindings" if path == prefix + bindings.BINDINGS else "words" if path == prefix + "_words.yaml" else "other"
         )
-        scan(_redact_validated_locations(content, context, words, api, kind=kind), path, "committed_files")
-    messages = bindings.git(repo, "log", "--format=%B", f"{base}..HEAD")
+        scan(
+            _redact_validated_locations(content, context, words, api, kind=kind),
+            path,
+            "committed_files",
+            gate=path in gate_paths,
+        )
+    messages = bindings.git(repo, "log", "--format=%B", f"{merge_base}..{head}")
     scan(messages, "commit_messages", "commit_messages")
     if pr_text is not None:
         scan(pr_text.encode(), "pr_text", "pr_text")
+    if full_tree_report is not None:
+        full_tree_report.write_text(
+            json.dumps(
+                {
+                    "scope": {"kind": "full_tree", "head": head},
+                    "status": "report_only",
+                    "counts": dict(full_counts),
+                    "signals": dict(full_signals),
+                    "suspects": full_suspects,
+                    "tracked_files": full_files,
+                    "tracked_bytes": full_bytes,
+                }
+            )
+            + "\n"
+        )
     return {
+        "scope": scope,
         "counts": dict(leaks),
         "signals": dict(signals),
         "suspects": suspects,
@@ -390,7 +446,14 @@ def parser(command: str) -> argparse.ArgumentParser:
         p.add_argument("--receipt", type=Path, help="Host-local HMAC receipt outside Git")
         p.add_argument("--verify-receipt", action="store_true", help="Refuse stale receipt instead of issuing one")
         p.add_argument(
-            "--base", default="origin/main", help="Base ref for commit message scan (all HEAD files are scanned)"
+            "--base",
+            default="origin/main",
+            help="Ref whose merge-base with HEAD bounds changed blobs and commit messages (default: origin/main)",
+        )
+        p.add_argument(
+            "--full-tree-report",
+            type=Path,
+            help="Optional full HEAD tree ids/paths/counts JSON outside the repository, e.g. /tmp/tree-report.json; report only, requires --check",
         )
         p.add_argument(
             "--pr", type=int, help="PR number whose title/body/comments are scanned; absent means unverified"
@@ -417,10 +480,12 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
         from scripts.ingest.build_ohoiko_a1_reference import require_private_path
 
         if command == "select":
-            for private_path in (args.private_input, args.key_file, args.receipt):
+            for private_path in (args.private_input, args.key_file, args.receipt, args.full_tree_report):
                 if private_path is not None:
                     require_private_path(private_path, repo)
         if command == "select" and args.verify_receipt and not args.check:
+            raise ValueError("receipt_check_required")
+        if command == "select" and args.full_tree_report and not args.check:
             raise ValueError("receipt_check_required")
         store = yaml.safe_load((evidence / "_words.yaml").read_text())
         context = bindings.Context.read(args.level, evidence)
@@ -520,13 +585,23 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                             pr_text = " ".join([data["title"], data["body"], *(c["body"] for c in data["comments"])])
                         except (ValueError, KeyError, TypeError):
                             pr_text = None
-                scan = leak_scan(repo, private, context, store, api, base=args.base, pr_text=pr_text)
+                scan = leak_scan(
+                    repo,
+                    private,
+                    context,
+                    store,
+                    api,
+                    base=args.base,
+                    pr_text=pr_text,
+                    full_tree_report=args.full_tree_report,
+                )
                 print(json.dumps({"leak_scan": scan}))
                 if scan["status"] != "checked":
                     raise ValueError("private_text_leak_suspected")
                 if not args.receipt:
                     raise ValueError("local_receipt_required")
                 payload = bindings.receipt_payload(path, private, key, args.key_id, repo)
+                payload["leak_scan_scope"] = scan["scope"]
                 if args.verify_receipt:
                     if not bindings.verify_receipt(args.receipt, payload, key):
                         raise ValueError("local_receipt_stale_or_invalid")

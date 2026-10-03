@@ -301,7 +301,9 @@ def test_private_coverage_and_keyed_commitment(bound):
         bindings.private_entries(p, bindings.public_entries(a1_reference.INVENTORY_PATH))
 
 
-@pytest.mark.parametrize("change", ["head", "bindings_sha256", "private_input_commitment", "matcher", "key_id"])
+@pytest.mark.parametrize(
+    "change", ["head", "bindings_sha256", "private_input_commitment", "matcher", "key_id", "leak_scan_scope"]
+)
 def test_receipt_replay_refused(tmp_path, change):
     payload = {
         "head": "a" * 40,
@@ -309,6 +311,13 @@ def test_receipt_replay_refused(tmp_path, change):
         "private_input_commitment": "c" * 64,
         "matcher": matcher.VERSION,
         "key_id": "test",
+        "leak_scan_scope": {
+            "kind": "diff",
+            "merge_base": "d" * 40,
+            "head": "a" * 40,
+            "changed_path_count": 2,
+            "commit_count": 1,
+        },
     }
     p = tmp_path / "receipt"
     bindings.write_receipt(p, payload, KEY)
@@ -351,7 +360,8 @@ def git(repo, *args):
     return subprocess.run(["git", *args], cwd=repo, capture_output=True, text=True, check=True, timeout=30).stdout
 
 
-def test_leak_scan_validated_location_only_and_commit_messages(bound, tmp_path):
+@pytest.mark.parametrize("unchanged_binding", [False, True])
+def test_leak_scan_validated_location_only_and_commit_messages(bound, tmp_path, unchanged_binding):
     root, api, b = bound
     repo = tmp_path / "git-probe"
     repo.mkdir()
@@ -367,6 +377,8 @@ def test_leak_scan_validated_location_only_and_commit_messages(bound, tmp_path):
     bindings.write(path / bindings.BINDINGS, "a1", {"W-001": b})
     git(repo, "add", ".")
     git(repo, "commit", "-qm", "public binding")
+    if unchanged_binding:
+        base = git(repo, "rev-parse", "HEAD").strip()
     context = bindings.Context.read("a1", root)
     store = {"words": [WORD]}
     private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "invented private destination"}}
@@ -402,6 +414,79 @@ def test_privacy_exemptions_use_scalar_locations_not_occurrence_counts(bound):
     assert sense_cli._redact_validated_locations(content, context, store, api, kind="bindings") == content
 
 
+@pytest.mark.parametrize("location", ["unchanged", "changed", "message", "bindings", "words"])
+def test_diff_gate_and_report_only_full_tree(bound, tmp_path, location):
+    root, api, _b = bound
+    repo = tmp_path / "diff-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    level = repo / "curriculum/l2-uk-en/evidence/a1"
+    level.mkdir(parents=True)
+    leak = "invented private destination"
+    path = (
+        level / bindings.BINDINGS
+        if location == "bindings"
+        else level / "_words.yaml"
+        if location == "words"
+        else repo / "note.txt"
+    )
+    path.write_text(leak if location in {"unchanged", "bindings", "words"} else "baseline")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    base = git(repo, "rev-parse", "HEAD").strip()
+    if location == "changed":
+        path.write_text(leak)
+    (repo / "changed.txt").write_text("public content")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", leak if location == "message" else "change")
+    context = bindings.Context.read("a1", root)
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": leak}}
+    report = tmp_path / "full-tree.json"
+    result = sense_cli.leak_scan(repo, private, context, {"words": [WORD]}, api, base=base, full_tree_report=report)
+    assert (result["status"] == "failed") == (location != "unchanged")
+    assert result["scope"] == {
+        "kind": "diff",
+        "merge_base": base,
+        "head": git(repo, "rev-parse", "HEAD").strip(),
+        "changed_path_count": 2 if location == "changed" else 1,
+        "commit_count": 1,
+    }
+    full = json.loads(report.read_text())
+    assert full["status"] == "report_only"
+    assert full["counts"]["committed_files"] == int(location != "message")
+    if location == "unchanged":
+        assert full["suspects"][0]["path"] == "note.txt"
+        assert result["suspects"] == []
+        assert result["tracked_files"] == 1
+    assert leak not in json.dumps(result) + report.read_text()
+    plain = sense_cli.leak_scan(repo, private, context, {"words": [WORD]}, api, base=base)
+    assert plain == result
+    with pytest.raises(ValueError, match="private_output_inside_repository"):
+        sense_cli.leak_scan(
+            repo, private, context, {"words": [WORD]}, api, base=base, full_tree_report=repo / "report.json"
+        )
+
+
+def test_head_blob_reader_path_filter_and_nonblob(tmp_path):
+    repo = tmp_path / "reader"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    (repo / "one").write_bytes(b"one\x00")
+    (repo / "two").write_bytes(b"two")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    head = git(repo, "rev-parse", "HEAD").strip()
+    git(repo, "update-index", "--add", "--cacheinfo", f"160000,{head},submodule")
+    git(repo, "commit", "-qm", "gitlink")
+    assert dict(sense_cli._head_blobs(repo)) == {"one": b"one\x00", "two": b"two"}
+    assert dict(sense_cli._head_blobs(repo, {"two"})) == {"two": b"two"}
+    assert list(sense_cli._head_blobs(repo, set())) == []
+
+
 @pytest.mark.parametrize(
     "meaning,content,name,expected",
     [
@@ -431,13 +516,14 @@ def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, mea
     git(repo, "init", "-q")
     git(repo, "config", "user.email", "fixture@example.invalid")
     git(repo, "config", "user.name", "Fixture")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
     (repo / name).write_text(content)
     git(repo, "add", ".")
     git(repo, "commit", "-qm", "baseline")
     context = bindings.Context.read("a1", root)
     private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": meaning}}
     store = {"words": [{**WORD, "forms": [{"form": "form-alias"}]}]}
-    result = sense_cli.leak_scan(repo, private, context, store, api, base="HEAD")
+    result = sense_cli.leak_scan(repo, private, context, store, api, base="HEAD^")
     assert (result["status"] == "failed") == expected, result
     assert result["tracked_files"] == 1
     assert result["tracked_bytes"] == len(content.encode())
@@ -475,13 +561,14 @@ def test_leak_scan_public_kaikki_atoms_and_matcher_normalization(
     git(repo, "init", "-q")
     git(repo, "config", "user.email", "fixture@example.invalid")
     git(repo, "config", "user.name", "Fixture")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
     (repo / "note.txt").write_text(f"synthetic: {meaning}")
     git(repo, "add", ".")
     git(repo, "commit", "-qm", "baseline")
     context = bindings.Context.read("a1", root)
     context.inventory[0]["pos"] = pos
     private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": meaning}}
-    result = sense_cli.leak_scan(repo, private, context, {"words": [WORD]}, api, base="HEAD")
+    result = sense_cli.leak_scan(repo, private, context, {"words": [WORD]}, api, base="HEAD^")
     assert result["status"] == "checked"
     assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 0}
 
@@ -704,6 +791,9 @@ def test_cli_help_exits(command, capsys):
         "pr_unavailable",
         "pr_malformed",
         "pr_available",
+        "full_tree",
+        "full_tree_without_check",
+        "full_tree_inside",
     ],
 )
 def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
@@ -719,7 +809,11 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
     monkeypatch.setattr(
         sense_cli,
         "leak_scan",
-        lambda *a, **k: {"status": "failed" if mode == "leak" else "checked", "pr_text": "unverified"},
+        lambda *a, **k: {
+            "status": "failed" if mode == "leak" else "checked",
+            "pr_text": "unverified",
+            "scope": {"kind": "diff"},
+        },
     )
     args = ["a1", "--evidence-dir", str(root), "--private-input", str(private)]
     if mode.startswith("pr_"):
@@ -742,11 +836,18 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
 
         def scan(*args, **kwargs):
             assert kwargs["pr_text"] == ("public public" if mode == "pr_available" else None)
-            return {"status": "checked", "pr_text": "scanned" if kwargs["pr_text"] else "unverified"}
+            return {
+                "status": "checked",
+                "pr_text": "scanned" if kwargs["pr_text"] else "unverified",
+                "scope": {"kind": "diff"},
+            }
 
         monkeypatch.setattr(sense_cli, "leak_scan", scan)
         args += ["--pr", "1"]
-    if mode != "dry":
+    if mode.startswith("full_tree"):
+        report = Path.cwd() / "batch_state/report.json" if mode == "full_tree_inside" else root / "tree-report.json"
+        args += ["--full-tree-report", str(report)]
+    if mode not in {"dry", "full_tree_without_check"}:
         args += ["--write" if mode == "write" else "--check"]
         if mode != "missing_key":
             args += ["--key-file", str(key), "--key-id", "test-key"]
@@ -758,12 +859,24 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
         bindings.write_receipt(receipt, {"head": "stale"}, KEY)
         args += ["--verify-receipt"]
     result = sense_cli.main(args)
-    assert result == int(mode in {"commitment", "replay", "leak", "missing_key", "missing_receipt"})
+    assert result == int(
+        mode
+        in {
+            "commitment",
+            "replay",
+            "leak",
+            "missing_key",
+            "missing_receipt",
+            "full_tree_without_check",
+            "full_tree_inside",
+        }
+    )
     output = capsys.readouterr().out
     assert "TARGET" not in output
-    if mode == "check":
+    if mode in {"check", "full_tree"}:
         payload = json.loads(receipt.read_text())["payload"]
         assert payload["head"] == "a" * 40
+        assert payload["leak_scan_scope"] == {"kind": "diff"}
         assert bindings.verify_receipt(receipt, payload, KEY)
 
 
@@ -809,7 +922,11 @@ def test_bind_cli_candidate_list_and_review(bound, review_dispatch, monkeypatch,
     key = root / "key"
     key.write_bytes(KEY)
     monkeypatch.setattr(bindings, "git", lambda repo, *args: b"" if args[0] == "status" else b"a" * 40)
-    monkeypatch.setattr(sense_cli, "leak_scan", lambda *a, **k: {"status": "checked", "pr_text": "unverified"})
+    monkeypatch.setattr(
+        sense_cli,
+        "leak_scan",
+        lambda *a, **k: {"status": "checked", "pr_text": "unverified", "scope": {"kind": "diff"}},
+    )
     assert (
         sense_cli.main(
             [
@@ -1195,6 +1312,26 @@ def test_topic_colon_prefix_must_match_reference_labels(label):
     result = matcher.select(WORD, [row([f"{label}: target"])], f"target ({label})")
     assert result.gloss == "target"
     assert matcher.classify("unknown-topic: target").reason == "unknown_label"
+
+
+@pytest.mark.parametrize("label", [*sorted(matcher.TOPIC_LABELS), "unknown-topic"])
+@pytest.mark.parametrize("prefix", [False, True])
+def test_topic_senses_compete_but_cannot_be_selected_bare(label, prefix):
+    labelled = f"{label}: target" if prefix else f"target ({label})"
+    result = matcher.select(WORD, [row([labelled, "target (an unrelated definition)"])], "target")
+    expected = "reference_ambiguous" if label != "unknown-topic" or prefix else None
+    assert result.reason == expected
+    alone = matcher.select(WORD, [row([labelled])], "target")
+    assert alone.reason == (None if label == "unknown-topic" and not prefix else "reference_no_match")
+    if label == "unknown-topic" and prefix:
+        assert matcher.candidates(WORD, [row([labelled])]) == []
+
+
+@pytest.mark.parametrize("label", sorted(set(matcher.RESTRICTING_LABELS.values()) - set(matcher.TOPIC_LABELS.values())))
+def test_register_mismatch_does_not_compete(label):
+    assert matcher.select(WORD, [row([f"target ({label})", "target"])], "target").gloss == "target"
+    assert matcher.select(WORD, [row([f"anatomy: target ({label})", "target"])], "target").gloss == "target"
+    assert matcher.select(WORD, [row([f"{label}: target", "target"])], "target").gloss == "target"
 
 
 @pytest.mark.parametrize("label", ["ukraine", "us", "uk"])
