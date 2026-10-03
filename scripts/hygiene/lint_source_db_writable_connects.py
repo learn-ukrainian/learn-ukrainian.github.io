@@ -24,17 +24,23 @@ linter parses every tracked Python file (``git ls-files``) except ``tests/``,
   a URI that carries ``mode=ro`` or ``immutable=1`` as literal text.  An argument that is read-only on some paths
   only (``a if read_only else b``) is reported as ``conditional``.
 
-Caller arguments are mapped to parameters by call shape: ``obj.read(p)`` and
-``Cls().read(p)`` bind ``self``, ``Cls.read(obj, p)`` passes it explicitly,
+Caller arguments are mapped to parameters by call shape.  The receiver of a method
+call is resolved by its full dotted path against every class of the module, nested
+classes included: ``obj.read(p)`` / ``Cls().read(p)`` / ``Outer.Cls().read(p)`` bind
+``self``, ``Cls.read(obj, p)`` / ``Outer.Cls.read(obj, p)`` pass it explicitly,
 ``@classmethod`` binds ``cls`` either way, ``@staticmethod`` binds nothing, and
 ``Cls(p)`` / ``Cls.__init__(self, p)`` / ``super().__init__(p)`` reach ``__init__``.
+A receiver that is not provably a class or an instance (an alias, an attribute chain
+into another object, a shadowed name) fails closed: the mapping is evaluated with
+``self`` bound and unbound, and an argument that reaches a writable open under
+either mapping is reported.
 
 Known limits.  This is a lint backstop; the runtime defence is that the read paths
 open the databases read-only.  Not followed: calls across modules (a path handed
 in from another module under a neutral name, into a module that never names a
 source database), arguments forwarded through ``*args`` / ``**kwargs``, callables
 wrapped in ``functools.partial``, callbacks and other first-class function
-values, a class bound to another name, and subclass constructors that inherit
+values, and subclass constructors that inherit
 ``__init__``.  Callers are matched by name, so unrelated same-named callables
 add evidence (over-approximation, never a missed writer).
 
@@ -349,6 +355,18 @@ class _Scope:
     parameters: dict[str, ast.expr | None] = field(default_factory=dict)
 
 
+def _dotted_path(node: ast.expr) -> str | None:
+    """``"Outer.Reader"`` for a pure ``Name`` / ``Attribute`` chain, else ``None``."""
+    parts: list[str] = []
+    while isinstance(node, ast.Attribute):
+        parts.append(node.attr)
+        node = node.value
+    if not isinstance(node, ast.Name):
+        return None
+    parts.append(node.id)
+    return ".".join(reversed(parts))
+
+
 def _target_names(target: ast.expr) -> Iterator[str]:
     if isinstance(target, ast.Name):
         yield target.id
@@ -422,7 +440,7 @@ class _ModuleAnalysis:
         _collect_assignments(tree.body, self.module_scope.assignments)
         self.module_names_source_db = bool(SOURCE_DB_TOKEN.search(source))
         self.functions: dict[str, list[_FunctionNode]] = {}
-        self.classes: dict[str, ast.ClassDef] = {}
+        self.class_paths: set[str] = set()  # qualified names: ``Reader``, ``Outer.Reader``
         self.class_attributes: dict[ast.ClassDef, dict[str, list[ast.expr]]] = {}
         self.parents: dict[ast.AST, ast.AST] = {}
         self.calls: list[ast.Call] = []
@@ -436,7 +454,7 @@ class _ModuleAnalysis:
             if isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 self.functions.setdefault(parent.name, []).append(parent)
             elif isinstance(parent, ast.ClassDef):
-                self.classes[parent.name] = parent
+                self.class_paths.add(self._qualified_name(parent))
                 self.class_attributes[parent] = self._self_attributes(parent)
             elif isinstance(parent, ast.Call):
                 self.calls.append(parent)
@@ -539,22 +557,80 @@ class _ModuleAnalysis:
             self._caller_cache[key] = self._find_caller_arguments(function, parameter)
         return self._caller_cache[key]
 
-    def _implicit_arguments(self, function: _FunctionNode, call: ast.Call) -> int:
-        """Leading positional parameters ``call`` binds implicitly (``self`` / ``cls``)."""
+    def _qualified_name(self, cls: ast.ClassDef) -> str:
+        names = [cls.name]
+        current = self.parents.get(cls)
+        while current is not None:
+            if isinstance(current, ast.ClassDef):
+                names.append(current.name)
+            current = self.parents.get(current)
+        return ".".join(reversed(names))
+
+    def _resolves_to_class(self, path: str) -> bool:
+        """``path`` names a class defined in this module (``Reader``, ``Outer.Reader``)."""
+        return any(known == path or known.endswith(f".{path}") for known in self.class_paths)
+
+    @staticmethod
+    def _binding_scope(name: str, scopes: list[_Scope]) -> _Scope | None:
+        return next((scope for scope in scopes if name in scope.parameters or name in scope.assignments), None)
+
+    def _receiver_kind(self, receiver: ast.expr, call: ast.Call) -> str | None:
+        """``"class"`` / ``"instance"`` when the receiver of ``call`` is provably one, else ``None``.
+
+        Only an unshadowed dotted path to a class of this module, a call of such a
+        path (or of ``super``), or the first parameter of an enclosing method counts as
+        proof; aliases, attribute chains into other objects and everything else stay
+        unresolved, and the caller then tries every binding.
+        """
+        scopes, _cls = self.context(call)
+        path = _dotted_path(receiver)
+        if path is not None:
+            scope = self._binding_scope(path.split(".")[0], scopes)
+            if scope is None:
+                return "class" if self._resolves_to_class(path) else None
+            method = scope.node
+            if "." in path or not isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                return None
+            positional = [*method.args.posonlyargs, *method.args.args]
+            is_first = bool(positional) and positional[0].arg == path and path not in scope.assignments
+            if not (is_first and isinstance(self.parents.get(method), ast.ClassDef)):
+                return None
+            decorators = {d.id for d in method.decorator_list if isinstance(d, ast.Name)}
+            if "staticmethod" in decorators:
+                return None
+            return "class" if "classmethod" in decorators else "instance"
+        if isinstance(receiver, ast.Call):
+            callee = _dotted_path(receiver.func)
+            unshadowed = callee is not None and self._binding_scope(callee.split(".")[0], scopes) is None
+            if unshadowed and (callee == "super" or self._resolves_to_class(callee)):
+                return "instance"
+        return None
+
+    def _implicit_bindings(self, function: _FunctionNode, call: ast.Call) -> set[int]:
+        """Leading positional parameters ``call`` may bind implicitly (``self`` / ``cls``).
+
+        One value when the call shape is provable; ``{0, 1}`` when it is not, so that
+        the argument mapping is checked under every plausible binding (fail closed).
+        """
         owner = self.parents.get(function)
         if not isinstance(owner, ast.ClassDef):
-            return 0
+            return {0}
         decorators = {d.id for d in function.decorator_list if isinstance(d, ast.Name)}
         if "staticmethod" in decorators:
-            return 0
+            return {0}
         if "classmethod" in decorators:
-            return 1  # ``cls`` is bound through the class and through an instance alike
+            return {1}  # ``cls`` is bound through the class and through an instance alike
         func = call.func
+        if function.name == "__init__":
+            if isinstance(func, ast.Name) and func.id == owner.name:
+                return {1}  # ``Reader(path)``
+            if isinstance(func, ast.Attribute) and func.attr == owner.name:
+                return {1}  # ``Outer.Reader(path)``
         if isinstance(func, ast.Attribute):
             # ``Reader.read(Reader(), path)`` passes ``self`` explicitly; ``obj.read(path)`` binds it.
-            through_class = isinstance(func.value, ast.Name) and func.value.id in self.classes
-            return 0 if through_class else 1
-        return 1 if function.name == "__init__" else 0
+            kind = self._receiver_kind(func.value, call)
+            return {0} if kind == "class" else {1} if kind == "instance" else {0, 1}
+        return {0, 1}
 
     def _find_caller_arguments(self, function: _FunctionNode, parameter: str) -> list[ast.expr]:
         params = _parameter_list(function)
@@ -573,11 +649,12 @@ class _ModuleAnalysis:
                 if keyword.arg == parameter:
                     found.append(keyword.value)
             if parameter in positional:
-                position = positional.index(parameter) - self._implicit_arguments(function, call)
-                if 0 <= position < len(call.args) and not any(
-                    isinstance(a, ast.Starred) for a in call.args[: position + 1]
-                ):
-                    found.append(call.args[position])
+                for implicit in sorted(self._implicit_bindings(function, call)):
+                    position = positional.index(parameter) - implicit
+                    if 0 <= position < len(call.args) and not any(
+                        isinstance(a, ast.Starred) for a in call.args[: position + 1]
+                    ):
+                        found.append(call.args[position])
         return found
 
 

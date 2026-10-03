@@ -207,6 +207,91 @@ WRITABLE_CASES = {
                 Reader.__init__(self, "sources.db")
         """
     ),
+    "nested_class_unbound_call": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        def main():
+            return Outer.Reader.read(Outer.Reader(), "sources.db")
+        """
+    ),
+    "nested_class_bound_call": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        def main():
+            return Outer.Reader().read("sources.db")
+        """
+    ),
+    "two_level_nested_class_unbound_call": textwrap.dedent(
+        """
+        import sqlite3
+        class A:
+            class B:
+                class C:
+                    def read(self, path="cache.db"):
+                        return sqlite3.connect(path)
+        def main():
+            return A.B.C.read(A.B.C(), "sources.db")
+        """
+    ),
+    "unresolved_receiver_chain_unbound": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main(holder):
+            return holder.klass.read(holder.obj, "sources.db")
+        """
+    ),
+    "unresolved_receiver_chain_bound": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main(holder):
+            return holder.obj.read("sources.db")
+        """
+    ),
+    "aliased_class_unbound": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main():
+            alias = Reader
+            return alias.read(alias(), "sources.db")
+        """
+    ),
+    "shadowed_class_name_unbound": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main(Reader):
+            return Reader.read(Reader(), "sources.db")
+        """
+    ),
+    "self_call_binds_self": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+            def run(self):
+                return self.read("sources.db")
+        """
+    ),
     "public_helper_in_source_module": textwrap.dedent(
         """
         import sqlite3
@@ -279,6 +364,27 @@ READ_ONLY_OR_UNRELATED = {
             return sqlite3.connect(uri, uri=True)
         def main():
             return read("file:data/vesum.db?mode=ro"), read(uri="file:data/sources.db?immutable=1")
+        """
+    ),
+    "nested_class_unbound_call_with_other_database": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        def main():
+            return Outer.Reader.read(Outer.Reader(), "other.db")
+        """
+    ),
+    "unresolved_receiver_every_binding_passes_other_database": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def main(holder):
+            return holder.klass.read(holder.obj, "other.db")
         """
     ),
     "other_database": 'import sqlite3\nconn = sqlite3.connect("data/atlas.db")\n',
