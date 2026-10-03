@@ -113,6 +113,26 @@ _HERITAGE_CLASSIFIER = _load_helper_module(
     PROJECT_ROOT / "scripts" / "lexicon" / "heritage_classifier.py",
 )
 resolve_usage_label = _HERITAGE_CLASSIFIER.resolve_usage_label
+# Curated inputs of the ``usageSources`` projection in browse meta.
+USAGE_SOURCE_INPUTS = ("registry/lexicon/heritage_pairs.yaml", "scripts/lexicon/calque_corrections.py")
+_USAGE_SOURCES: dict[str, dict[str, Any]] | None = None
+
+
+def usage_sources() -> dict[str, dict[str, Any]]:
+    """Current curated source proof by headword (``usage_source_records``), cached."""
+    global _USAGE_SOURCES
+    if _USAGE_SOURCES is None:
+        _USAGE_SOURCES = _HERITAGE_CLASSIFIER.usage_source_records()
+    return _USAGE_SOURCES
+
+
+def usage_sources_payload() -> dict[str, Any]:
+    """The ``usageSources`` projection: proof records plus the digests of their inputs."""
+    return {
+        "schema": "atlas-usage-sources.v1",
+        "inputs": {path: _sha256((PROJECT_ROOT / path).read_bytes()) for path in USAGE_SOURCE_INPUTS},
+        "records": usage_sources(),
+    }
 
 
 def kind_for_source(source: Any) -> str:
@@ -347,17 +367,21 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
 
     Stored ``warning_severity``/``classification`` fields are never trusted on
     their own: a code is emitted only for a lemma-scoped label bound to the
-    headword by source evidence (``resolve_usage_label``). Sense, phrase,
-    reverse-calque and unresolved records stay unlabelled in browse. The
-    ``surzhyk_to_avoid`` list is provenance, not authority: it upgrades a
-    bound Russianism/calque to ``avoid`` and never labels a word alone (#9603).
+    headword by source evidence (``resolve_usage_label``). Russianism and
+    calque proof comes from the current curated records (``usage_sources``),
+    never from citations stored with the entry. Sense, phrase, reverse-calque
+    and unresolved records stay unlabelled in browse. The ``surzhyk_to_avoid``
+    list is provenance, not authority: it upgrades a bound Russianism/calque
+    to ``avoid`` and never labels a word alone (#9603).
     """
 
+    headword = _clean_text(entry.get("lemma"))
     label = resolve_usage_label(
         dict(_heritage_status(entry)),
-        headword=_clean_text(entry.get("lemma")),
+        headword=headword,
         definition_cards=_definition_cards(entry),
         gloss=_clean_text(entry.get("gloss")),
+        source_proof=usage_sources().get(_HERITAGE_CLASSIFIER._normalize_word(headword or "")) or {},
     )
     if label["scope"] != "lemma" or label["code"] not in CLASSIFICATION_CODES:
         return None
@@ -966,6 +990,7 @@ def build_browse_outputs(
         },
         "browseShardCount": len(browse_shards),
         "browseShards": browse_shards,
+        "usageSources": usage_sources_payload(),
     }
     flagged_rows = sorted(flagged_rows, key=lambda item: _uk_sort_key(item["l"]))
     return meta, shards, flagged_rows

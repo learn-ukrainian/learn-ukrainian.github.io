@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from scripts.atlas import atlas_db
+from scripts.audit import generate_search_index
 from scripts.audit.generate_search_index import (
     DEFAULT_BROWSE_DIR,
     DEFAULT_BROWSE_META_OUT,
@@ -69,12 +70,40 @@ def entry(
 
 
 def _named(lemma: str) -> dict[str, object]:
-    """A lexical record bound to ``lemma`` by a (fixture) normative excerpt naming it."""
+    """A stored lexical record whose own excerpt names ``lemma``; alone it binds nothing (#9603)."""
     return {
         "kind": "lexical",
         "corrections": ["інше"],
-        "evidence": [f"antonenko-fixture_p000: слово {lemma} уживати не слід, кажіть інакше"],
+        "evidence": [f"antonenko-davydovych-yak-my-hovorymo_p000: слово {lemma} уживати не слід, кажіть інакше"],
     }
+
+
+def _proof(lemma: str) -> dict[str, object]:
+    """Current curated proof: a reviewed judgment rejecting ``lemma`` (fixture passage)."""
+    passage = f"Слова {lemma} в українській мові нема, кажіть інше."
+    return {
+        "kind": "lexical",
+        "corrections": ["інше"],
+        "sense": "fixture sense",
+        "citations": [],
+        "judgments": [
+            {
+                "locator": "antonenko-davydovych-yak-my-hovorymo_p000",
+                "passage": passage,
+                "passageSha256": generate_search_index._HERITAGE_CLASSIFIER.source_text_digest(passage),
+                "rejectedForm": lemma,
+                "endorsedForm": "інше",
+                "sense": "fixture sense",
+            }
+        ],
+    }
+
+
+@pytest.fixture(autouse=True)
+def _fixture_usage_sources(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Fixture headwords get current proof next to the actual curated projection."""
+    proofs = {lemma: _proof(lemma) for lemma in ("всьо", "avoid", "red", "calque", "бета", "калька")}
+    monkeypatch.setattr(generate_search_index, "_USAGE_SOURCES", {**generate_search_index.usage_sources(), **proofs})
 
 
 def _avoid_entry(lemma: str, gloss: str) -> dict[str, object]:
@@ -483,14 +512,16 @@ def test_classification_code_precedence_and_standard_omit() -> None:
         (_avoid_entry("avoid", "avoid: x"), "avoid"),
         (
             entry(
-                "avoid",
+                "borrowed",
                 primary_source="surzhyk_to_avoid",
                 warning_severity="russianism_red",
                 classification="borrowing",
             ),
             None,
         ),
-        (entry("avoid", primary_source="surzhyk_to_avoid", classification="russianism", is_russianism=True), None),
+        (entry("bare", primary_source="surzhyk_to_avoid", classification="russianism", is_russianism=True), None),
+        # A stored excerpt naming the headword is not proof without a current judgment.
+        (entry("stored", classification="russianism", is_russianism=True, curated_calque=_named("stored")), None),
         (entry("red", classification="russianism", is_russianism=True, curated_calque=_named("red")), "rus"),
         (entry("calque", classification="calque", curated_calque=_named("calque")), "calq"),
         (entry("arch", classification="authentic-archaism", sum20=sum20("arch", "заст.")), "arch"),
@@ -508,9 +539,9 @@ def test_classification_code_precedence_and_standard_omit() -> None:
 def test_classification_code_never_trusts_unscoped_stored_fields() -> None:
     """#9603 negative controls: stale severity, bare classifications, shadows."""
     cases = [
-        entry("red", warning_severity="russianism_red"),
+        entry("stale-red", warning_severity="russianism_red"),
         entry("shadow", classification="unknown", is_russianism=True),
-        entry("calque", warning_severity="calque_yellow"),
+        entry("stale-calque", warning_severity="calque_yellow"),
         entry("arch", classification="authentic-archaism"),
         entry("dial", classification="dialect"),
         entry("hist", classification="historism"),
@@ -932,19 +963,46 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
                 "classification": "russianism",
                 "is_russianism": True,
                 "warning_severity": "russianism_red",
+                # Actual stored shape: the excerpt names only the etymon and the
+                # replacement; the current reviewed judgment (p031) binds the word.
                 "curated_calque": {
                     "kind": "lexical",
-                    "corrections": ["захід"],
-                    "source": ["antonenko-p044"],
-                    "normative_support": [
-                        {
-                            "locator": "antonenko-davydovych-yak-my-hovorymo_p031",
-                            "passage": "У нас провели такі міроприємства. Такого слова не було й нема в українській мові.",
-                        }
-                    ],
+                    "corrections": ["захід", "заходи"],
+                    "source": ["antonenko-p044", "glazova-10"],
+                    "evidence": ["Антоненко-Давидович: Відповідником до російських мера, мероприятие є захід"],
                 },
             },
             primary_source="surzhyk_to_avoid",
+        ),
+        # Round 3: ЕСУМ 5:580 marker followed by a parenthetical explanation.
+        _db_entry(
+            "тіун",
+            {
+                "classification": "historism",
+                "warning_severity": "treasured",
+                "attestations": [
+                    {
+                        "source": "esum",
+                        "ref": "тіун:5:580",
+                        "word": "тіун",
+                        "detail": "тіун (іст.) (назва ряду службових осіб на Русі управитель княжим господарством)",
+                    }
+                ],
+            },
+            gloss="У Київській Русі — господарський управитель князя, бояр.",
+        ),
+        # Old stored являтися record citing s0162: sense-scoped, never a browse flag.
+        _db_entry(
+            "являтися",
+            {
+                "classification": "standard",
+                "warning_severity": "calque_yellow",
+                "curated_calque": {
+                    "kind": "sense_restricted",
+                    "corrections": ["бути", "є"],
+                    "evidence": ["9-klas-ukrajinska-mova-avramenko-2017_s0162: Неправильно: являтися переможцем"],
+                },
+            },
         ),
     ]
     db = atlas_db_fixture(tmp_path, entries=entries)
@@ -976,8 +1034,31 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
         ("возний", "hist"),
         ("гридь", "hist"),
         ("міроприємство", "avoid"),
+        ("тіун", "hist"),
     ]
-    assert json.loads(meta_out.read_text(encoding="utf-8"))["chipCounts"] == {"avoid": 1, "hist": 2}
+    meta = json.loads(meta_out.read_text(encoding="utf-8"))
+    assert meta["chipCounts"] == {"avoid": 1, "hist": 3}
+    # The projection entry pages consume: current proof plus its input digests.
+    usage = meta["usageSources"]
+    assert usage["schema"] == "atlas-usage-sources.v1"
+    assert set(usage["inputs"]) == {"registry/lexicon/heritage_pairs.yaml", "scripts/lexicon/calque_corrections.py"}
+    assert [item["locator"] for item in usage["records"]["являтися"]["citations"]] == [
+        "9-klas-ukrajinska-mova-avramenko-2017_s0159"
+    ]
+
+
+def test_committed_usage_sources_are_bound_to_their_passages() -> None:
+    """#9603: every committed judgment keeps the digest of the passage it quotes."""
+    meta = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))
+    records = meta["usageSources"]["records"]
+    digest = generate_search_index._HERITAGE_CLASSIFIER.source_text_digest
+    normalize = generate_search_index._HERITAGE_CLASSIFIER._normalize_word
+    assert records["міроприємство"]["kind"] == "lexical"
+    for headword, record in records.items():
+        assert record["judgments"] or record["citations"]
+        for judgment in record["judgments"]:
+            assert normalize(judgment["rejectedForm"]) == headword
+            assert judgment["passageSha256"] == digest(judgment["passage"])
 
 
 def test_committed_browse_flags_never_brand_named_regressions() -> None:

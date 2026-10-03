@@ -260,3 +260,15 @@ def test_requested_spot_checks_resolve_with_evidence():
         assert note["evidence"], f"no evidence for {form}"
         assert "search_heritage" in note["heritage_guard"]
         print(f"SPOT_CHECK_{form}:", note)
+
+
+def test_yavlyatysia_cites_the_chunk_that_holds_its_correction():
+    """#9603: Авраменко 9 кл. s0159 holds «являтися переможцем → бути переможцем»; s0162 does not.
+
+    Verified by the driver's source receipt (sources MCP get_chunk_context on
+    both chunks); this pins the repaired locator offline.
+    """
+    evidence = SENSE_RESTRICTED_CALQUES["являтися"]["evidence"]
+    locators = [item.partition(":")[0] for item in evidence]
+    assert "9-klas-ukrajinska-mova-avramenko-2017_s0159" in locators
+    assert "9-klas-ukrajinska-mova-avramenko-2017_s0162" not in locators

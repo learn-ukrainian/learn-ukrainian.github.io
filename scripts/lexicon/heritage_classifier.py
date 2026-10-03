@@ -9,6 +9,7 @@ signal but never decides by itself.
 
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import os
@@ -232,11 +233,11 @@ def _classify(
             )
         if curated_calque.get("citations"):
             built_calque_warning["citations"] = list(curated_calque["citations"])
-        # #9603: the excerpts that may bind the claim to this headword.
+        # #9603: the source proof that may bind the claim to this headword.
         if curated_calque.get("evidence"):
             built_calque_warning["evidence"] = list(curated_calque["evidence"])
-        if curated_calque.get("normative_support"):
-            built_calque_warning["normative_support"] = list(curated_calque["normative_support"])
+        if curated_calque.get("judgments"):
+            built_calque_warning["judgments"] = list(curated_calque["judgments"])
 
     russianism = (
         None
@@ -405,10 +406,12 @@ def _has_reverse_calque(heritage_status: dict[str, Any]) -> bool:
 # Usage-label scope (#9603). Contract: docs/atlas/usage-label-scope.md.
 #
 # A public Word Atlas label («русизм», «калька», «архаїзм», «діалектизм»,
-# «історизм», «запозичення») may describe the whole headword only when the
-# record carries a source locator AND an excerpt from that source that binds
-# the claim to this headword. Sense, phrase and reverse (replacement-word)
-# guidance stays contextual; anything else is unresolved — never a lexical
+# «історизм», «запозичення») describes the whole headword only with source
+# proof of that scope. A Russianism or calque needs a reviewed directional
+# judgment whose rejected form is the headword, bound by digest to a passage
+# from a normative source; a register label needs a dictionary marker in the
+# headword slot of the same headword. Sense, phrase and reverse (replacement)
+# guidance stays contextual; anything else is unresolved, never a lexical
 # condemnation. ``site/src/lib/lexicon/heritage-severity.ts`` mirrors this.
 # ---------------------------------------------------------------------------
 
@@ -431,25 +434,13 @@ UNRESOLVED_CLAIM_REASONS = frozenset(
 # word-formation type, not a scope (the діючий record is sense-split), and any
 # other or missing kind states no scope at all.
 _LEMMA_CALQUE_KINDS = {"lexical"}
-# Normative Russianism/calque authorities (rules P5): Антоненко-Давидович (also
-# slovnyk.me ``davydov``), Караванський, Волощак and named school textbooks.
-_NORMATIVE_CITATION_FAMILIES = (
-    "antonenko",
-    "davydov",
-    "karavansk",
-    "voloshchak",
-    "voloschak",
-    "антоненко",
-    "караванськ",
-    "волощак",
-)
+# Normative Russianism/calque authorities (rules P5), cited by sources.db chunk
+# id: Антоненко-Давидович «Як ми говоримо» pages, Караванський, Волощак and
+# named school textbooks.
+_NORMATIVE_SOURCE_FAMILIES = ("antonenko", "karavansk", "voloshchak", "voloschak")
 _NORMATIVE_TEXTBOOK_AUTHORS = {"avramenko", "zabolotnyi", "glazova", "litvinova", "voron"}
-_NORMATIVE_TEXTBOOK_RE = re.compile(r"^(?:avramenko|zabolotnyi|glazova|litvinova|voron)-(?:[1-9]|1[01])$")
-_CITATION_TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-_][a-z0-9]+)*")
-_LOCATOR_PART_RE = re.compile(r"[^\W_]+", re.UNICODE)
+_CHUNK_LOCATOR_RE = re.compile(r"^[0-9a-z]+(?:-[0-9a-z]+)*_[ps]\d{3,4}$")
 _WORD_RE = re.compile(r"[а-яіїєґʼ'a-z]+(?:-[а-яіїєґʼ'a-z]+)*")
-# A bare citation ("antonenko:Бажаючий") is a locator, not an excerpt.
-_MIN_EXCERPT_WORDS = 4
 _LETTER_CLASS = "а-яіїєґa-z"
 _USAGE_MARKER_RES = {
     "historism": re.compile(rf"(?<![{_LETTER_CLASS}])(?:іст|істор)\."),
@@ -460,11 +451,22 @@ _MODERN_DICTIONARY_CARDS = (("sum20", "СУМ-20"), ("vts", "ВТС"))
 _SUPERSCRIPT_DIGITS = "¹²³⁴⁵⁶⁷⁸⁹⁰"
 _HOMONYM_INDEX_RE = re.compile(rf"^(?:[{_SUPERSCRIPT_DIGITS}]+|I|II|III|IV|V)[,.]?$")
 _SENSE_START_RE = re.compile(r"^(?:\d|[《◊/]|[А-ЯІЇЄҐA-Z])")
+_SECOND_SENSE_RE = re.compile(r"(?<!\S)2[.)]")
 _EDGE_PUNCT = ",.;:!?«»\"'()[]"
-_ESUM_HEADWORD_SLOT_RE = re.compile(r"^\s*(?P<word>[^\s(«]+)\s*\((?P<marker>[^)]{1,40})\)\s*«(?P<gloss>[^»]{1,200})»")
+# An ЕСУМ headword slot: the word, its marker, then a «gloss» or a
+# parenthesised explanation (``тіун (іст.) (назва ряду службових осіб …)``).
+_ESUM_HEADWORD_SLOT_RE = re.compile(
+    r"^\s*(?P<word>[^\s(«]+)\s*\((?P<marker>[^)]{1,40})\)\s*"
+    r"(?:«(?P<gloss>[^»]{1,200})»|\((?P<explanation>[^()]{1,300})\))"
+)
 _ESUM_REF_RE = re.compile(r"^[^:]*:(?P<volume>\d+):(?P<page>\d+)$")
 # Referent comparison ignores short function words.
 _MIN_REFERENT_TOKEN_LEN = 5
+# ``passageSha256`` normalisation, as ``_normalize_source_text`` in
+# scripts/audit/generate_practice_deck.py (docs/practice/heritage-pairs-growth.md).
+_SOURCE_TEXT_TRANSLATION = str.maketrans(
+    {"–": "-", "—": "-", "‑": "-", "«": '"', "»": '"', "“": '"', "”": '"', "„": '"', "’": "'", "ʼ": "'"}
+)
 
 
 def _citation_list(value: object) -> list[str]:
@@ -475,31 +477,19 @@ def _citation_list(value: object) -> list[str]:
     return []
 
 
-def normative_citations(citations: object) -> list[str]:
-    """Return the citations that name a normative Russianism/calque authority.
-
-    A matching citation only names where to look; it is never evidence by
-    itself (see :func:`bound_evidence`).
-    """
-    named: list[str] = []
-    for citation in _citation_list(citations):
-        tokens = _CITATION_TOKEN_RE.findall(citation.casefold())
-        if any(
-            token.startswith(_NORMATIVE_CITATION_FAMILIES) or _NORMATIVE_TEXTBOOK_RE.match(token) for token in tokens
-        ) or is_normative_locator(citation):
-            named.append(citation)
-    return named
-
-
 def is_normative_locator(locator: str) -> bool:
-    """True when a source locator names a normative style authority or textbook.
+    """True when ``locator`` is a sources.db chunk of a normative style guide or textbook.
 
-    Accepts style-guide ids (``antonenko-davydovych-yak-my-hovorymo_p031``),
-    attributions (``Антоненко-Давидович``) and textbook chunk ids
-    (``11-klas-ukrajinska-mova-avramenko-2019_s0074``).
+    ``antonenko-davydovych-yak-my-hovorymo_p031`` and
+    ``9-klas-ukrajinska-mova-avramenko-2017_s0159`` qualify. An attribution
+    (``Антоненко-Давидович``), an author-grade citation (``voron-9``) or any
+    other source names no passage and does not.
     """
-    parts = _LOCATOR_PART_RE.findall(str(locator or "").casefold())
-    if any(part.startswith(_NORMATIVE_CITATION_FAMILIES) for part in parts):
+    text = str(locator or "").strip().casefold()
+    if not _CHUNK_LOCATOR_RE.match(text):
+        return False
+    parts = re.split(r"[-_]", text)
+    if any(part.startswith(_NORMATIVE_SOURCE_FAMILIES) for part in parts):
         return True
     return "klas" in parts and any(part in _NORMATIVE_TEXTBOOK_AUTHORS for part in parts)
 
@@ -528,13 +518,56 @@ def names_headword(text: str, headword: str | None) -> bool:
     return any(word == target or (word.startswith(stem) and abs(len(word) - len(target)) <= 3) for word in words)
 
 
+def source_text_digest(text: str) -> str:
+    """SHA-256 of a source passage, normalised as for a heritage pair's ``passageSha256``."""
+    text = re.sub(r"(?<=[а-яіїєґ'’ʼ])[-­]\s*\n\s*(?=[а-яіїєґ])", "", str(text).replace("́", ""))
+    normalized = _SPACE_RE.sub(" ", text.translate(_SOURCE_TEXT_TRANSLATION)).strip().casefold()
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+
+def reviewed_judgments(pair: dict[str, Any]) -> list[dict[str, str]]:
+    """A heritage pair's reviewed directional judgments, each bound to its passage.
+
+    A frame's ``normativeJudgment`` names the rejected and endorsed forms and
+    the sense; ``passageSha256`` (and ``currentNormPassageSha256``) lock it to
+    the exact ``normativeSupport`` (``currentNormSupport``) passage the curator
+    reviewed. A judgment matching no stored passage is dropped: form
+    occurrence alone never states a correction's direction.
+    """
+    passages = [
+        item
+        for key in ("normativeSupport", "currentNormSupport")
+        for item in pair.get(key) or []
+        if isinstance(item, dict)
+    ]
+    judgments: list[dict[str, str]] = []
+    for frame in pair.get("frames") or []:
+        judgment = frame.get("normativeJudgment") if isinstance(frame, dict) else None
+        if not isinstance(judgment, dict):
+            continue
+        direction = {name: str(judgment.get(name) or "").strip() for name in ("rejectedForm", "endorsedForm", "sense")}
+        if not all(direction.values()):
+            continue
+        for locator_key, digest_key in (
+            ("locator", "passageSha256"),
+            ("currentNormLocator", "currentNormPassageSha256"),
+        ):
+            for item in passages:
+                passage = str(item.get("passage") or "")
+                if (
+                    passage
+                    and item.get("locator") == judgment.get(locator_key)
+                    and source_text_digest(passage) == judgment.get(digest_key)
+                ):
+                    bound = {"locator": str(item["locator"]), "passage": passage, "passageSha256": judgment[digest_key]}
+                    if {**bound, **direction} not in judgments:
+                        judgments.append({**bound, **direction})
+    return judgments
+
+
 def _evidence_items(record: dict[str, Any]) -> list[tuple[str, str]]:
-    """``(locator, excerpt)`` pairs stored on a curated record."""
+    """``(locator, excerpt)`` pairs of a curated record's ``locator: excerpt`` evidence."""
     items: list[tuple[str, str]] = []
-    for key in ("normative_support", "normativeSupport", "current_norm_support", "currentNormSupport"):
-        for item in record.get(key) or []:
-            if isinstance(item, dict) and str(item.get("locator") or "").strip():
-                items.append((str(item["locator"]).strip(), str(item.get("passage") or "")))
     for item in _citation_list(record.get("evidence")):
         locator, separator, excerpt = item.partition(":")
         if separator:
@@ -542,20 +575,66 @@ def _evidence_items(record: dict[str, Any]) -> list[tuple[str, str]]:
     return items
 
 
-def bound_evidence(record: dict[str, Any], headword: str | None) -> list[tuple[str, str]]:
-    """Evidence items that bind a curated claim to ``headword``.
+def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any] | None:
+    """The source proof a curated record carries for ``headword``, or ``None``.
 
-    Each item needs a normative locator and an excerpt from that source that
-    names the headword itself. A bare citation, an excerpt about another form
-    (the Russian etymon, the replacement) or a missing headword binds nothing.
+    ``judgments`` are reviewed judgments (:func:`reviewed_judgments`) whose
+    rejected form is the headword, from a normative chunk; only they establish
+    a whole-word Russianism or calque. ``citations`` cite a sense- or
+    phrase-restricted caution: curated ``locator: excerpt`` evidence from a
+    normative chunk whose excerpt names the headword and one of the record's
+    corrections, i.e. both sides of its correction. A locator, a source name
+    or a headword occurrence alone admits nothing.
     """
-    return [
-        (locator, excerpt)
-        for locator, excerpt in _evidence_items(record)
-        if is_normative_locator(locator)
-        and len(_words(excerpt)) >= _MIN_EXCERPT_WORDS
-        and names_headword(excerpt, headword)
+    head = _normalize_word(headword or "")
+    if not head or not isinstance(record, dict):
+        return None
+    kind = str(record.get("kind") or "").strip()
+    judgments = [
+        dict(item)
+        for item in record.get("judgments") or []
+        if isinstance(item, dict)
+        and _normalize_word(str(item.get("rejectedForm") or "")) == head
+        and is_normative_locator(str(item.get("locator") or ""))
     ]
+    corrections = [str(item) for item in record.get("corrections") or [] if str(item or "").strip()]
+    citations = [
+        {"locator": locator, "excerpt": excerpt}
+        for locator, excerpt in _evidence_items(record)
+        if kind in _CONTEXTUAL_CALQUE_SCOPES
+        and is_normative_locator(locator)
+        and names_headword(excerpt, head)
+        and any(names_headword(excerpt, correction) for correction in corrections)
+    ]
+    if not judgments and not citations:
+        return None
+    return {
+        "kind": kind,
+        "corrections": list(dict.fromkeys(item["endorsedForm"] for item in judgments)) or corrections,
+        "sense": judgments[0]["sense"]
+        if judgments
+        else str(record.get("calque_sense") or record.get("calqueSense") or ""),
+        "judgments": judgments,
+        "citations": citations,
+    }
+
+
+def usage_source_records() -> dict[str, dict[str, Any]]:
+    """Admitted source proof of every curated record, keyed by the headword it binds.
+
+    ``scripts/audit/generate_search_index.py`` writes this view into
+    ``lexicon-browse-meta.json`` (``usageSources``), so browse and entry pages
+    judge stored Atlas records by current curated proof, never by citations
+    copied into the database.
+    """
+    import yaml  # noqa: F401 -- the reviewed judgments live in heritage_pairs.yaml; never drop them silently
+
+    records: dict[str, dict[str, Any]] = {}
+    for key, record in sorted(_curated_calque_map().items()):
+        proof = admitted_source_proof(record, key)
+        if proof:
+            records[key] = proof
+    return records
 
 
 def _curated_scope_record(status: dict[str, Any]) -> dict[str, Any] | None:
@@ -670,7 +749,7 @@ def _esum_headword_marker(
             continue
         if marker_class not in _usage_marker_classes(_normalize_word(match["marker"])):
             continue
-        if not shares_referent(match["gloss"], gloss):
+        if not shares_referent(match["gloss"] or match["explanation"], gloss):
             continue
         return _usage_label(
             USAGE_LABEL_CODES[marker_class],
@@ -702,24 +781,32 @@ def _treasured_label(
         return _usage_label(None, "unresolved", [], None, reason="no_headword_etymology")
     code = USAGE_LABEL_CODES[classification]
     marker_class = "authentic-archaism" if code == "arch" else classification
-    # Each source keeps its evidential role (rules P5). The article's modern
-    # explanatory card for the same headword is the evidence on modern register:
-    # a label in its headword slot binds; a label on one numbered sense, a
-    # homonym-indexed card or an unlabelled headword does not. Without such a
-    # card, an ЕСУМ marker in the headword slot of the same headword and
-    # referent is a historical witness. Грінченко and VESUM tags stay
-    # attestations.
+    # Each source keeps its evidential role (rules P5). A label in the headword
+    # slot of the article's modern explanatory card for the same headword
+    # binds; a label on one numbered sense or a homonym-indexed card does not.
+    # An ЕСУМ marker in the headword slot of the same headword and referent is
+    # a historical witness. Archaism and dialect are claims about current
+    # register, which the modern card decides: an unlabelled card outweighs
+    # the witness (платівка). A historism names a historical referent, which
+    # an unlabelled single-sense card does not contradict; homonyms or several
+    # senses limit it to one sense. Грінченко and VESUM tags stay attestations.
     modern = _modern_dictionary_card(definition_cards, headword)
+    whole_word = True
     if modern is not None:
         source_label, definition = modern
         classes, ambiguous = modern_headword_labels(definition)
         if not ambiguous and marker_class in classes:
             return _usage_label(code, "lemma", [source_label], definition[:240])
-        return _usage_label(None, "unresolved", [], None, reason=f"{source_label}_headword_unlabelled")
+        whole_word = (
+            marker_class == "historism" and not ambiguous and not _SECOND_SENSE_RE.search(_strip_accents(definition))
+        )
     witness = _esum_headword_marker(status, marker_class, headword=headword, gloss=gloss)
     if witness is not None:
-        return witness
-    return _usage_label(None, "unresolved", [], None, reason="no_headword_bound_label")
+        if whole_word:
+            return witness
+        return {**witness, "code": None, "scope": "unresolved", "reason": "source_marker_not_whole_word"}
+    reason = f"{modern[0]}_headword_unlabelled" if modern is not None else "no_headword_bound_label"
+    return _usage_label(None, "unresolved", [], None, reason=reason)
 
 
 def _usage_label(
@@ -745,6 +832,7 @@ def resolve_usage_label(
     headword: str | None = None,
     definition_cards: object = None,
     gloss: str | None = None,
+    source_proof: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Resolve the source-scoped Word Atlas usage label for one record.
 
@@ -754,6 +842,12 @@ def resolve_usage_label(
     replacement, ``unresolved`` marks warnings or labels whose scope or
     authority the record does not establish. Without ``headword`` nothing can
     bind to the word, so no lemma label is returned.
+
+    ``source_proof`` is the current curated proof for this headword
+    (:func:`usage_source_records`; ``{}`` when there is none). Consumers of
+    stored records always pass it: citations stored in an old record are
+    provenance, never authority. Without it (the producer, whose record is
+    current) the record's own proof is admitted.
     """
     status = heritage_status or {}
     classification = str(status.get("classification") or "unknown")
@@ -770,21 +864,27 @@ def resolve_usage_label(
         if treasured["scope"] == "lemma":
             return treasured
 
-    curated = _curated_scope_record(status)
+    stored = _curated_scope_record(status)
+    proof = (admitted_source_proof(stored, headword) if source_proof is None else source_proof) or {}
+    curated = proof if proof.get("kind") else stored
     if curated is not None:
         kind = str(curated.get("kind")).strip()
-        evidence = bound_evidence(curated, headword)
-        authority = list(dict.fromkeys(locator for locator, _ in evidence))
+        judgments = list(proof.get("judgments") or [])
+        authority = list(dict.fromkeys(item["locator"] for item in judgments + list(proof.get("citations") or [])))
         contextual = _CONTEXTUAL_CALQUE_SCOPES.get(kind)
         if contextual:
-            scope_text = curated.get("calque_sense") or curated.get("calqueSense") or curated.get("note")
+            scope_text = (
+                proof.get("sense") or curated.get("calque_sense") or curated.get("calqueSense") or curated.get("note")
+            )
             return _usage_label(None, contextual, authority, scope_text)
         if kind not in _LEMMA_CALQUE_KINDS:
             return _usage_label(None, "unresolved", [], None, reason="curated_kind_without_scope")
-        if not evidence:
+        if not judgments:
             return _usage_label(None, "unresolved", [], None, reason="no_headword_bound_evidence")
         is_rus = bool(status.get("is_russianism")) and classification not in _AUTHENTIC_CLASSIFICATIONS
-        return _usage_label("rus" if is_rus else "calq", "lemma", authority, evidence[0][1][:240])
+        passage = judgments[0]["passage"]
+        excerpt = f"{passage[:240]}…" if len(passage) > 240 else passage
+        return _usage_label("rus" if is_rus else "calq", "lemma", authority, excerpt)
 
     if (
         bool(status.get("is_russianism"))
@@ -975,16 +1075,6 @@ def _apostrophe_variants(term: str) -> tuple[str, ...]:
 _CURATED_CALQUE_MAP: dict[str, dict[str, Any]] | None = None
 
 
-def support_passages(pair: dict[str, Any]) -> list[dict[str, str]]:
-    """``{locator, passage}`` excerpts a heritage pair quotes from its sources."""
-    passages: list[dict[str, str]] = []
-    for key in ("normativeSupport", "currentNormSupport"):
-        for item in pair.get(key) or []:
-            if isinstance(item, dict) and item.get("locator") and item.get("passage"):
-                passages.append({"locator": str(item["locator"]), "passage": str(item["passage"])})
-    return passages
-
-
 def _curated_calque_map() -> dict[str, dict[str, Any]]:
     global _CURATED_CALQUE_MAP
     if _CURATED_CALQUE_MAP is not None:
@@ -994,11 +1084,19 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
 
     # 1. Load from calque_corrections.py if available
     try:
-        from scripts.lexicon.calque_corrections import (
-            CURATED_CALQUES,
-            PHRASAL_CALQUES,
-            SENSE_RESTRICTED_CALQUES,
-        )
+        try:
+            from scripts.lexicon.calque_corrections import (
+                CURATED_CALQUES,
+                PHRASAL_CALQUES,
+                SENSE_RESTRICTED_CALQUES,
+            )
+        except ImportError:
+            # Loaded as a file (generate_search_index.py): only scripts/ is on sys.path.
+            from lexicon.calque_corrections import (  # type: ignore[no-redef]
+                CURATED_CALQUES,
+                PHRASAL_CALQUES,
+                SENSE_RESTRICTED_CALQUES,
+            )
 
         for term, data in CURATED_CALQUES.items():
             norm = _normalize_word(term)
@@ -1059,7 +1157,7 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                     "calqueSense": p.get("calqueSense"),
                     "authenticSense": p.get("authenticSense"),
                     "citations": list(p.get("citations") or []),
-                    "normative_support": support_passages(p),
+                    "judgments": reviewed_judgments(p),
                     "source": "heritage_pairs",
                     "severity": p.get("severity", "calque_yellow"),
                     "curator": p.get("curator", ""),
@@ -1107,10 +1205,10 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                             )
                         if not merged.get("rationaleUk"):
                             merged["rationaleUk"] = existing.get("rationaleUk") or entry.get("rationaleUk") or ""
-                        merged["normative_support"] = list(existing.get("normative_support") or []) + [
+                        merged["judgments"] = list(existing.get("judgments") or []) + [
                             item
-                            for item in entry.get("normative_support") or []
-                            if item not in (existing.get("normative_support") or [])
+                            for item in entry.get("judgments") or []
+                            if item not in (existing.get("judgments") or [])
                         ]
                         calque_map[norm_k] = merged
                     else:

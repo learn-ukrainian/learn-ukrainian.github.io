@@ -42,7 +42,7 @@ THEREFORE the consumer MUST apply the runtime safety gate:
 Provenance — every entry is grounded in the State-Standard NUS corpus or a human-
 annotated error corpus, NOT invented. Replacement forms are VESUM-verified.
 Sources (sources.db chunk ids / corpus refs):
-    glazova-11    = 11-klas-ukrajinska-mova-glazova-2019_s0072
+    glazova-11    = 11-klas-ukrajinska-mova-glazova-2019_s0071
     avramenko-11  = 11-klas-ukrajinska-mova-avramenko-2019_s0075
     avramenko-7   = 7-klas-ukrmova-avramenko-2024_s0108
     litvinova-7   = 7-klas-ukrmova-litvinova-2024_s0096
@@ -78,7 +78,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "source": ["antonenko-p099", "glazova-11"],
         "evidence": [
             "antonenko-davydovych-yak-my-hovorymo_p099: Бажаючий – що (котрий, який) бажає – охочий",
-            "11-klas-ukrajinska-mova-glazova-2019_s0072: замість бажаючий — охочий",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: замість бажаючий — охочий",
         ],
         "heritage_guard": "search_heritage(бажаючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is a related охочий-family row, not an attestation of бажаючий as safe.",
     },
@@ -89,7 +89,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "evidence": [
             "antonenko-davydovych-yak-my-hovorymo_p101: Працюючий – що (котрий, який) працює – ... працівник",
             "antonenko-davydovych-yak-my-hovorymo_p144: Тато, що не працює в неділю ... (instead of не працюючий тато)",
-            "11-klas-ukrajinska-mova-glazova-2019_s0072: замість працюючий — працівник",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: замість працюючий — працівник",
         ],
         "heritage_guard": "search_heritage(працюючий, include_live_slovnyk=false): No heritage evidence found.",
     },
@@ -98,7 +98,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "note": "agent noun -ач",
         "source": ["glazova-11", "zabolotnyi-7"],
         "evidence": [
-            "11-klas-ukrajinska-mova-glazova-2019_s0072: замість завідуючий — завідувач",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: замість завідуючий — завідувач",
             "7-klas-ukrmova-zabolotnyi-2024_s0124: завідувач бібліотеки / завідуючий бібліотекою",
         ],
         "heritage_guard": "search_heritage(завідуючий, include_live_slovnyk=false): ЕСУМ rows describe зав-/завгосп as Russian-modeled abbreviations, not a safe headword attestation.",
@@ -107,7 +107,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "corrections": ["мандрівний"],
         "note": "мандруючий сюжет → мандрівний сюжет",
         "source": ["glazova-11"],
-        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: мандрівний (а не мандруючий) сюжет"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0071: мандрівний (а не мандруючий) сюжет"],
         "heritage_guard": "search_heritage(мандруючий, include_live_slovnyk=false): No heritage evidence found.",
     },
     "початкуючий": {
@@ -116,7 +116,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "source": ["antonenko-p101", "glazova-11", "zabolotnyi-7"],
         "evidence": [
             "antonenko-davydovych-yak-my-hovorymo_p101: Початкуючий – початківець",
-            "11-klas-ukrajinska-mova-glazova-2019_s0072: художник-початківець (а не початкуючий художник)",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: художник-початківець (а не початкуючий художник)",
             "7-klas-ukrmova-zabolotnyi-2024_s0124: поет-початківець / початкуючий поет",
         ],
         "heritage_guard": "search_heritage(початкуючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is a related письменець row.",
@@ -125,7 +125,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "corrections": ["узагальнювальний"],
         "note": "суфікс -альн-",
         "source": ["glazova-11"],
-        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: узагальнювальне (а не узагальнююче) слово"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0071: узагальнювальне (а не узагальнююче) слово"],
         "heritage_guard": "search_heritage(узагальнюючий, include_live_slovnyk=false): No heritage evidence found.",
     },
     "зволожуючий": {
@@ -133,7 +133,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "note": "суфікс -альн- (зволожувальний крем)",
         "source": ["glazova-11", "zabolotnyi-7"],
         "evidence": [
-            "11-klas-ukrajinska-mova-glazova-2019_s0072: зволожувальний (а не зволожуючий) крем",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: зволожувальний (а не зволожуючий) крем",
             "7-klas-ukrmova-zabolotnyi-2024_s0124: зволожувальний крем / зволожуючий крем",
         ],
         "heritage_guard": "search_heritage(зволожуючий, include_live_slovnyk=false): No heritage evidence found.",
@@ -143,7 +143,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "note": "суфікс -альн- (знеболювальні ліки)",
         "source": ["glazova-11", "zabolotnyi-7"],
         "evidence": [
-            "11-klas-ukrajinska-mova-glazova-2019_s0072: знеболювальні (а не знеболюючі) ліки",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: знеболювальні (а не знеболюючі) ліки",
             "7-klas-ukrmova-zabolotnyi-2024_s0124: знеболювальний засіб / знеболюючий засіб",
         ],
         "heritage_guard": "search_heritage(знеболюючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is a новокаїн definition, not a safe headword attestation.",
@@ -152,7 +152,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "corrections": ["зворушливий"],
         "note": "хвилюючий спогад → зворушливий спогад",
         "source": ["glazova-11"],
-        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: зворушливий (а не хвилюючий) спогад"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0071: зворушливий (а не хвилюючий) спогад"],
         "heritage_guard": "search_heritage(хвилюючий, include_live_slovnyk=false): No heritage evidence found.",
     },
     "діючий": {
@@ -160,7 +160,7 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "note": "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)",
         "source": ["glazova-11", "avramenko-11", "avramenko-7", "zabolotnyi-7"],
         "evidence": [
-            "11-klas-ukrajinska-mova-glazova-2019_s0072: чинний (а не діючий) закон",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: чинний (а не діючий) закон",
             "7-klas-ukrmova-avramenko-2024_s0106: синоніми ... діючий — чинний (закон) або активний (вулкан)",
             "7-klas-ukrmova-zabolotnyi-2024_s0124: чинний закон / діючий закон",
         ],
@@ -170,14 +170,14 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "corrections": ["молодий"],
         "note": "підростаюче покоління → молоде покоління",
         "source": ["glazova-11"],
-        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: молоде (а не підростаюче) покоління"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0071: молоде (а не підростаюче) покоління"],
         "heritage_guard": "search_heritage(підростаючий, include_live_slovnyk=false): No heritage evidence found.",
     },
     "потопаючий": {
         "corrections": ["той, що потопає"],
         "note": "relative clause",
         "source": ["glazova-11"],
-        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: Щури тікають з корабля, що потопає (not з потопаючого корабля)"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0071: Щури тікають з корабля, що потопає (not з потопаючого корабля)"],
         "heritage_guard": "search_heritage(потопаючий, include_live_slovnyk=false): No heritage evidence found.",
     },
     "головуючий": {
@@ -355,7 +355,7 @@ PHRASAL_CALQUES: dict[str, dict[str, object]] = {
         "note": "syntactic calque; use the instrumental phrase за допомогою",
         "source": ["glazova-11"],
         "evidence": [
-            "11-klas-ukrajinska-mova-glazova-2019_s0079: Неправильно: при допомозі; Правильно: за допомогою",
+            "11-klas-ukrajinska-mova-glazova-2019_s0078: Неправильно: при допомозі; Правильно: за допомогою",
         ],
         "heritage_guard": "search_heritage(при допомозі, include_live_slovnyk=false): No heritage evidence found.",
     },
@@ -440,7 +440,7 @@ SENSE_RESTRICTED_CALQUES: dict[str, dict[str, object]] = {
         "note": "Грінченко attests являтися as 'show/appear'; calque only in copular use: являтися переможцем → бути переможцем.",
         "source": ["grinchenko", "avramenko-9", "zabolotnyi-9", "ua-gec"],
         "evidence": [
-            "9-klas-ukrajinska-mova-avramenko-2017_s0162: Неправильно: являтися переможцем; Правильно: бути переможцем",
+            "9-klas-ukrajinska-mova-avramenko-2017_s0159: Неправильно: являтися переможцем; Правильно: бути переможцем",
             "9-klas-ukrmova-zabolotnyi-2017_s0101: Правильно: він є студентом; НЕПРАВИЛЬНО: він являється студентом",
             "UA-GEC 0301: Error: являється; Correction: є; Type: F/Calque",
             "Грінченко: Являтися ... Являться, явиться, показываться, показаться.",
@@ -506,7 +506,7 @@ SENSE_RESTRICTED_CALQUES: dict[str, dict[str, object]] = {
         "note": "Calque only in 'regarding' use: на рахунок цього → щодо цього; keep literal account/bank uses.",
         "source": ["avramenko-5", "zabolotnyi-9", "grinchenko", "ua-gec"],
         "evidence": [
-            "5-klas-ukrmova-avramenko-2022_s0057: Неправильно: на рахунок цього; Правильно: щодо цього",
+            "5-klas-ukrmova-avramenko-2022_s0056: Неправильно: на рахунок цього; Правильно: щодо цього",
             "9-klas-ukrmova-zabolotnyi-2017_s0031: Правильно: рахунок у банку; НЕПРАВИЛЬНО: счьот у банку",
             "UA-GEC 1296: Error: на рахунок; Correction: щодо; Type: F/Calque",
             "Грінченко: Рахунок ... Счет, разсчет. В рахунку помилився.",

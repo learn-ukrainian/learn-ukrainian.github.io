@@ -1436,7 +1436,7 @@ function avoidListNote(usageLabel: UsageLabel, alternatives: string[]): string {
   return `Слово внесено до переліку Атласу «суржик, якого слід уникати». Витягу з джерела, який стосувався б усього слова, запис не містить, тому слово не позначено як ненормативне.${offered}`;
 }
 
-function unresolvedNotes(heritage: HeritageStatus | null, gloss: string | null): string[] {
+function unresolvedNotes(heritage: HeritageStatus | null, gloss: string | null, usageLabel: UsageLabel): string[] {
   const notes: string[] = [];
   const alternatives = standardAlternatives(heritage, gloss);
   const classLabel = USAGE_CLASS_LABELS_UK[heritage?.classification ?? ""];
@@ -1444,15 +1444,23 @@ function unresolvedNotes(heritage: HeritageStatus | null, gloss: string | null):
     notes.push(
       `Довідкові джерела пропонують відповідники: ${alternatives.join(", ")}. Джерело не визначає, чи це стосується всього слова, окремого значення чи сполучення, тому слово не позначено як русизм або кальку.`,
     );
+  } else if (classLabel && usageLabel.evidence) {
+    // A source headword-slot marker that the modern card does not confirm for the whole word.
+    notes.push(
+      `${usageLabel.authority.join(", ")}: ${asSentence(usageLabel.evidence)} Сучасна тлумачна стаття про це слово не має такої позначки в заголовку або подає кілька значень чи омонімів, тому позначку «${classLabel}» не показано як ознаку всього слова.`,
+    );
   } else if (classLabel) {
     notes.push(
-      `Класифікацію «${classLabel}» не підтверджено позначкою в заголовку словникової статті про це слово, тому її не показано як ознаку слова.`,
+      `Атлас не пов'язав класифікацію «${classLabel}» з позначкою джерела саме для цього слова й цього значення, тому її не показано як ознаку слова.`,
     );
   }
+  // Citations stored with an old record are provenance, not checked source excerpts.
   for (const item of (heritage?.curated_calque?.evidence ?? []).slice(0, MAX_EVIDENCE_NOTES)) {
     const separator = item.indexOf(":");
     if (separator > 0) {
-      notes.push(`Витяг із джерела (${item.slice(0, separator).trim()}): ${asSentence(item.slice(separator + 1))}`);
+      notes.push(
+        `Посилання запису Атласу, не звірене з джерелом (${item.slice(0, separator).trim()}): ${asSentence(item.slice(separator + 1))}`,
+      );
     }
   }
   const atlasNote = heritage?.curated_calque?.noteUk ?? heritage?.["§6_note"]?.noteUk;
@@ -1486,7 +1494,7 @@ function buildStyleNotes(
   }
   // Guidance whose scope the record does not establish stays a note.
   if (usageLabel.scope === "unresolved") {
-    notes.push(...unresolvedNotes(heritage, context.gloss));
+    notes.push(...unresolvedNotes(heritage, context.gloss, usageLabel));
   }
   for (const item of heritage?.reverse_calques ?? []) {
     notes.push(reverseCalqueNote(item, context.headword ?? ""));

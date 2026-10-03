@@ -1628,7 +1628,7 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(html).toContain("діючий вулкан → активний вулкан");
   });
 
-  test("sense-restricted calque (біля) renders a scoped box, its references and no headword badge", () => {
+  test("sense-restricted calque (біля) renders a scoped box with its projected citations and no headword badge", () => {
     const props = heritageEntry("біля", {
       classification: "standard",
       attestations: [{ source: "VESUM", ref: "біля" }],
@@ -1648,11 +1648,118 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
     const html = renderWordAtlasArticle(props);
     expect(html).toContain("а не слова загалом");
-    expect(html).toContain("Нормативного джерела, що прямо стосується цього слова, запис не містить.");
-    expect(html).toContain("grinchenko, litvinova-7, zabolotnyi-7, ua-gec");
+    expect(html).toContain("Джерело: 7-klas-ukrmova-litvinova-2024_s0186, 7-klas-ukrmova-zabolotnyi-2024_s0229.");
   });
 
-  test("unresolved replacement suggestion (вид) renders a neutral note, no red box", () => {
+  test("a sense-restricted record without current proof names its references, not an authority (рахувати)", () => {
+    const props = heritageEntry("рахувати", {
+      classification: "standard",
+      curated_calque: {
+        kind: "sense_restricted",
+        corrections: ["вважати"],
+        calque_sense: "to be of the opinion",
+        note: "calque only in 'я рахую, що…'",
+        source: ["grinchenko", "grok-3098"],
+      },
+    });
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("Нормативного джерела, що прямо стосується цього слова, запис не містить.");
+    expect(html).toContain("Посилання запису (без витягу з джерела): grinchenko, grok-3098.");
+  });
+
+  // Round 3: the actual stored records of the four repaired controls.
+  test("являтися cites its verified s0159 correction; the stored s0162 locator is never shown", () => {
+    const props = heritageEntry("являтися", {
+      classification: "standard",
+      attestations: [{ source: "VESUM", ref: "являтися" }],
+      warning_severity: "calque_yellow",
+      curated_calque: {
+        kind: "sense_restricted",
+        corrections: ["бути", "є"],
+        calque_sense: "to be / constitute (рос. являться = 'to be')",
+        note: "Грінченко attests являтися as 'show/appear'; calque only in copular use.",
+        source: ["grinchenko", "avramenko-9", "zabolotnyi-9", "ua-gec"],
+        evidence: ["9-klas-ukrajinska-mova-avramenko-2017_s0162: Неправильно: являтися переможцем; Правильно: бути переможцем"],
+      },
+    });
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("Джерело: 9-klas-ukrajinska-mova-avramenko-2017_s0159.");
+    expect(html).not.toContain("s0162");
+    expect(buildWordAtlasArticleView(props.record, "test", "test").statusBadges.map((badge) => badge.label)).not.toContain(
+      "Калькове застереження",
+    );
+  });
+
+  test("неділя keeps the duration caution and marks the stored universal note as Atlas commentary", () => {
+    const noteUk =
+      "В українській мові слово \"неділя\" означає лише сьомий день тижня (недільний день, неділя). Його вживання для позначення семиденного проміжку часу (тижня) є калькою з російської мови.";
+    const props = heritageEntry("неділя", {
+      classification: "standard",
+      attestations: [{ source: "VESUM", ref: "неділя" }],
+      warning_severity: "calque_yellow",
+      curated_calque: {
+        kind: "sense_restricted",
+        corrections: ["тиждень"],
+        calque_sense: "week / a seven-day period (рос. неделя)",
+        authentic_sense: "Sunday (day of the week)",
+        note: "Грінченко attests неділя as Sunday; calque only when it means a week-long period → тиждень.",
+        source: ["glazova-10", "grinchenko"],
+        evidence: ["10-klas-ukrmova-glazova-2018_s0075: Прем’єра ... через дві неділі ... Довідка. Тиждень"],
+        noteUk,
+      },
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.yellow?.body).toContain("Джерело: 10-klas-ukrmova-glazova-2018_s0075.");
+    expect(view.heritageBoxes.yellow?.detail).toBe(`Примітка Атласу, не підтверджена витягом із джерела: ${noteUk}`);
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("Примітка Атласу, не підтверджена витягом із джерела: В українській мові слово");
+  });
+
+  test("тіун keeps its ЕСУМ 5:580 historism with a parenthetical explanation", () => {
+    const props = heritageEntry(
+      "тіун",
+      {
+        classification: "historism",
+        attestations: [
+          {
+            source: "esum",
+            ref: "тіун:5:580",
+            word: "тіун",
+            detail: "тіун (іст.) (назва ряду службових осіб на Русі ХІ-- ХМІЇ ст. управитель княжим або панським господарством, суддя нижчої категорії тощо); «(наглядач Кузі»",
+          },
+        ],
+        warning_severity: "treasured",
+      },
+      { gloss: "У Київській Русі … — господарський управитель князя, бояр..." },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.statusBadges).toContainEqual({ className: "archaic", label: "Історизм у сучасному вжитку", title: "ЕСУМ, т. 5, с. 580" });
+    expect(view.styleNotes.join(" ")).not.toContain("історизм");
+  });
+
+  test("платівка: an unlabelled СУМ-20 card outweighs the ЕСУМ (заст.) marker, which stays a sourced note", () => {
+    const props = heritageEntry(
+      "платівка",
+      {
+        classification: "authentic-archaism",
+        attestations: [{ source: "esum", ref: "платівка:4:431", word: "платівка", detail: "платівка (заст.) «пластинка»;-очевидно" }],
+        warning_severity: "treasured",
+      },
+      {
+        gloss: "Те саме, що пласти́нка 1-3.",
+        enrichment: {
+          definition_cards: [{ id: "sum20", source: "СУМ-20", definitions: ["ПЛАТІ́ВКА, и, ж. Те саме, що пласти́нка 1–3. Патефонна платівка."] }],
+        },
+      },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.statusBadges.map((badge) => badge.className)).not.toContain("archaic");
+    expect(view.styleNotes).toContain(
+      "ЕСУМ, т. 4, с. 431: платівка (заст.) «пластинка». Сучасна тлумачна стаття про це слово не має такої позначки в заголовку або подає кілька значень чи омонімів, тому позначку «архаїзм» не показано як ознаку всього слова.",
+    );
+  });
+
+  test("stale stored вид gets the projected landscape-sense caution, never a red box or word badge", () => {
     const props = heritageEntry("вид", {
       classification: "russianism",
       attestations: [
@@ -1667,9 +1774,13 @@ describe("usage-label scope on entry pages (#9603)", () => {
     const view = buildWordAtlasArticleView(props.record, "test", "test");
     expect(view.heritageBoxes.red).toBeUndefined();
     expect(view.shouldShowEditorialWarning).toBe(false);
-    expect(view.styleNotes.join(" ")).toContain("Довідкові джерела пропонують відповідники: вигляд.");
+    expect(view.heritageBoxes.yellow?.scope).toBe("sense");
+    expect(view.heritageBoxes.yellow?.alternatives).toEqual(["краєвид"]);
+    expect(view.heritageBoxes.yellow?.body).toContain("antonenko-davydovych-yak-my-hovorymo_p018");
+    expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
     const html = renderWordAtlasArticle(props);
     expect(html).not.toContain('data-editorial-warn="russianism_red"');
+    expect(html).toContain("а не слова загалом");
   });
 
   // D01: the actual stored слідуючий record; the avoid list and the stored note are not authority.
@@ -1704,14 +1815,17 @@ describe("usage-label scope on entry pages (#9603)", () => {
     const notes = view.styleNotes.join(" ");
     expect(notes).toContain("Слово внесено до переліку Атласу «суржик, якого слід уникати».");
     expect(notes).toContain("Довідкові джерела пропонують відповідники: наступний, черговий, дальший.");
-    expect(notes).toContain("Витяг із джерела (9-klas-ukrajinska-mova-voron-2017_s0232): следующий — тут: наступний");
+    expect(notes).toContain(
+      "Посилання запису Атласу, не звірене з джерелом (9-klas-ukrajinska-mova-voron-2017_s0232): следующий — тут: наступний",
+    );
+    expect(notes).not.toContain("Витяг із джерела");
     expect(notes).toContain("Примітка Атласу, не підтверджена витягом із джерела: У значенні");
     const html = renderWordAtlasArticle(props);
     expect(html).not.toContain('data-severity="red"');
     expect(html).not.toContain("ненормативну");
   });
 
-  test("avoid-listed word with a bound normative excerpt keeps the red warning (міроприємство)", () => {
+  test("avoid-listed міроприємство keeps the red warning through its reviewed Antonenko judgment", () => {
     const props = heritageEntry(
       "міроприємство",
       {
@@ -1723,20 +1837,19 @@ describe("usage-label scope on entry pages (#9603)", () => {
           kind: "lexical",
           corrections: ["захід", "заходи"],
           note: "рос. мероприятие; use захід / заходи",
-          source: ["antonenko-p044"],
-          normative_support: [
-            {
-              locator: "antonenko-davydovych-yak-my-hovorymo_p031",
-              passage: "\"У нас провели такі міроприємства\" і под. Такого слова не було й нема в українській мові.",
-            },
-          ],
+          source: ["antonenko-p044", "glazova-10"],
+          // Actual stored excerpt: it names the etymon and the replacement only.
+          evidence: ["Антоненко-Давидович: Відповідником до російських мера, мероприятие є захід, а в множині — заходи"],
         },
       },
       { primary_source: "surzhyk_to_avoid" },
     );
     const view = buildWordAtlasArticleView(props.record, "test", "test");
     expect(view.heritageBoxes.red?.body).toContain("antonenko-davydovych-yak-my-hovorymo_p031");
+    expect(view.heritageBoxes.red?.body).toContain("Такого слова не було й нема в українській мові");
+    expect(view.statusBadges.map((badge) => badge.className)).toContain("heritage-warn");
     expect(view.styleNotes.join(" ")).not.toContain("Слово внесено до переліку Атласу");
+    expect(view.styleNotes.join(" ")).not.toContain("Посилання запису Атласу, не звірене");
     expect(renderWordAtlasArticle(props)).toContain('data-severity="red"');
   });
 
@@ -1757,7 +1870,7 @@ describe("usage-label scope on entry pages (#9603)", () => {
     const dyvanView = buildWordAtlasArticleView(dyvan.record, "test", "test");
     expect(dyvanView.statusBadges.map((badge) => badge.label)).not.toContain("Історизм у сучасному вжитку");
     expect(dyvanView.styleNotes.join(" ")).toContain(
-      "Класифікацію «історизм» не підтверджено позначкою в заголовку словникової статті про це слово",
+      "Атлас не пов'язав класифікацію «історизм» з позначкою джерела саме для цього слова й цього значення",
     );
     expect(renderWordAtlasArticle(dyvan)).not.toContain("Історизм у сучасному вжитку");
 
@@ -1818,7 +1931,7 @@ describe("usage-label scope on entry pages (#9603)", () => {
       label: "Історизм у сучасному вжитку",
       title: "ЕСУМ, т. 1, с. 592",
     });
-    expect(view.styleNotes.join(" ")).not.toContain("Класифікацію «історизм»");
+    expect(view.styleNotes.join(" ")).not.toContain("класифікацію «історизм»");
     expect(renderWordAtlasArticle(props)).toContain("гридь (іст.) «нижча верхівка княжої дружини»");
   });
 
@@ -1830,6 +1943,85 @@ describe("usage-label scope on entry pages (#9603)", () => {
     );
     const view = buildWordAtlasArticleView(props.record, "test", "test");
     expect(view.statusBadges).toContainEqual({ className: "dialect", label: "Регіонально-літературне", title: "СУМ-20" });
+  });
+
+  test("a lexical calque bound by a reviewed judgment gets the headword calque badge; ВТС archaism its badge", () => {
+    const calque = heritageEntry("міроприємство", {
+      classification: "calque",
+      is_russianism: false,
+      curated_calque: { kind: "lexical", corrections: ["захід"], note: "рос. мероприятие", source: [] },
+    });
+    const view = buildWordAtlasArticleView(calque.record, "test", "test");
+    expect(view.heritageBoxes.yellow?.scope).toBe("lemma");
+    expect(view.statusBadges).toContainEqual({ className: "heritage-warn", label: "Калькове застереження" });
+
+    const kryn = heritageEntry(
+      "крин",
+      { classification: "authentic-archaism", attestations: [] },
+      { enrichment: { definition_cards: [{ id: "vts", source: "ВТС", definitions: ["крин -у, ч. , заст. Лілея."] }] } },
+    );
+    expect(buildWordAtlasArticleView(kryn.record, "test", "test").statusBadges).toContainEqual({
+      className: "archaic",
+      label: "Архаїзм",
+      title: "ВТС",
+    });
+  });
+
+  test("reverse notes state each record's scope, with or without its own note and references", () => {
+    const props = heritageEntry("слово", {
+      classification: "standard",
+      reverse_calques: [
+        { calque: "по словах", kind: "phrasal", note: "", source: [] },
+        { calque: "словечко", kind: "sense_restricted", note: "", noteUk: "лише в розмові", source: [] },
+        { calque: "слово-калька", kind: "lexical", note: "", source: ["antonenko-p001"] },
+      ],
+    });
+    const notes = buildWordAtlasArticleView(props.record, "test", "test").styleNotes;
+    expect(notes).toContain(
+      "Запис Атласу подає «слово» як заміну для «по словах» (у сполученні). Застереження стосується «по словах», а не цього слова. Витягу з нормативного джерела, який установлював би цю заміну та її обсяг, запис не містить.",
+    );
+    expect(notes.join(" ")).toContain("як заміну для «словечко» (лише в окремому значенні). Примітка запису: лише в розмові.");
+    expect(notes.join(" ")).toContain("як заміну для «слово-калька». Застереження стосується «слово-калька»");
+    expect(notes.join(" ")).toContain("Посилання запису: antonenko-p001.");
+  });
+
+  test("an avoid-listed record with a contextual scope keeps the list as provenance and offers its replacements", () => {
+    const props = heritageEntry(
+      "рахувати",
+      {
+        classification: "standard",
+        curated_calque: {
+          kind: "sense_restricted",
+          corrections: ["вважати"],
+          calque_sense: "to be of the opinion",
+          note: "calque only in 'я рахую, що…'",
+          source: ["grinchenko"],
+        },
+      },
+      { primary_source: "surzhyk_to_avoid" },
+    );
+    const notes = buildWordAtlasArticleView(props.record, "test", "test").styleNotes.join(" ");
+    expect(notes).toContain("Слово внесено до переліку Атласу «суржик, якого слід уникати».");
+    expect(notes).toContain("Атлас пропонує відповідники: вважати; чи стосується це всього слова");
+  });
+
+  test("unresolved notes skip stored citations without a locator and use the §6 Atlas note", () => {
+    const props = heritageEntry("слідуючий", {
+      classification: "russianism",
+      is_russianism: true,
+      curated_calque: {
+        kind: "lexical",
+        corrections: [],
+        note: "рос. следующий",
+        source: [],
+        evidence: ["без локатора", "voron-9: наступний урок"],
+      },
+      "§6_note": { corrections: [], note: "", source: [], noteUk: "Кажіть «наступний»" },
+    });
+    const notes = buildWordAtlasArticleView(props.record, "test", "test").styleNotes;
+    expect(notes.join(" ")).not.toContain("без локатора");
+    expect(notes).toContain("Посилання запису Атласу, не звірене з джерелом (voron-9): наступний урок.");
+    expect(notes).toContain("Примітка Атласу, не підтверджена витягом із джерела: Кажіть «наступний».");
   });
 
   // D06: VESUM attests morphology only.

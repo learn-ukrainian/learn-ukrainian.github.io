@@ -81,7 +81,7 @@ from scripts.lexicon.calque_corrections import (
     PHRASAL_CALQUES,
     SENSE_RESTRICTED_CALQUES,
 )
-from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity, support_passages
+from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity, reviewed_judgments
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.load_relation_candidates import load_approved_synonym_verdicts
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
@@ -3541,7 +3541,7 @@ def _get_heritage_pairs_data() -> tuple[dict[str, dict[str, Any]], dict[str, lis
                     "authentic_sense": str(p.get("authenticSense", "")) if p.get("authenticSense") else None,
                     "source": list(p.get("citations") or []),
                     "evidence": list(p.get("citations") or []),
-                    "normative_support": support_passages(p),
+                    "judgments": reviewed_judgments(p),
                     "heritage_guard": "data/lexicon/heritage_pairs.yaml",
                 }
 
@@ -3594,9 +3594,9 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
                 "evidence": list(row.get("evidence", [])),
                 "heritage_guard": str(row.get("heritage_guard", "")),
             }
-            # #9603: the heritage pair's source excerpts may bind the claim.
-            if pair.get("normative_support"):
-                res["normative_support"] = list(pair["normative_support"])
+            # #9603: the heritage pair's reviewed judgments may bind the claim.
+            if pair.get("judgments"):
+                res["judgments"] = list(pair["judgments"])
             rat_uk = rationale_uk_map.get(key)
             if rat_uk:
                 res["noteUk"] = rat_uk
@@ -3648,8 +3648,8 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
             }
             if row.get("noteUk"):
                 res["noteUk"] = row["noteUk"]
-            if row.get("normative_support"):
-                res["normative_support"] = list(row["normative_support"])
+            if row.get("judgments"):
+                res["judgments"] = list(row["judgments"])
             if row.get("calque_sense"):
                 res["calque_sense"] = row["calque_sense"]
             if row.get("authentic_sense"):

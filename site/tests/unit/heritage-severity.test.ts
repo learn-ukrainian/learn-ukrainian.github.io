@@ -1,15 +1,14 @@
 import { describe, expect, test } from 'vitest';
 import {
-  boundEvidence,
+  atlasNoteDetail,
   cardHeadwordMatches,
-  isNormativeLocator,
   modernHeadwordLabels,
-  namesHeadword,
-  normativeCitations,
   resolveHeritageBoxes,
   resolveUsageLabel,
   sharesReferent,
+  usageSourceProof,
   type LexiconEntryForSeverity,
+  type UsageSourceProof,
 } from '@site/src/lib/lexicon/heritage-severity';
 
 const SUM20_VOZNYI = 'ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець у Польщі (до XIX ст.).';
@@ -18,17 +17,40 @@ const SUM20_HOMONYM = 'ДИВА́Н ² , у, ч., іст. Дорадчий ор�
 const SUM20_ATTACHED_HOMONYM = 'ДИВА́Н², у, ч., іст. Дорадчий орган у султанській Туреччині.';
 const SUM20_HOROD = 'ГОРО́Д, а, ч. Ділянка землі, перев. при садибі, для вирощування овочів.';
 const VTS_KRYN = 'крин -у, ч. , заст. Лілея.';
-// Real excerpts (sources MCP: style_guide id 44 / antonenko p031; heritage_pairs normativeSupport).
-const MIRO_SUPPORT = {
-  locator: 'antonenko-davydovych-yak-my-hovorymo_p031',
-  passage:
-    '"У нас провели такі міроприємства" і под. Такого слова не було й нема в українській мові, його наспіх склепали ті, що не знали багатства нашої мови.',
+// Real passage (heritage_pairs normativeSupport p031; sources MCP style_guide id 44).
+const MIRO_PASSAGE =
+  '"У нас провели такі міроприємства" і под. Такого слова не було й нема в українській мові, його наспіх склепали ті, що не знали багатства нашої мови.';
+// Current curated proof as projected into browse meta: a reviewed judgment rejecting the headword.
+const MIRO_PROOF: UsageSourceProof = {
+  kind: 'lexical',
+  corrections: ['захід'],
+  sense: 'an organized charitable event',
+  citations: [],
+  judgments: [
+    {
+      locator: 'antonenko-davydovych-yak-my-hovorymo_p031',
+      passage: MIRO_PASSAGE,
+      passageSha256: 'fixture',
+      rejectedForm: 'міроприємство',
+      endorsedForm: 'захід',
+      sense: 'an organized charitable event',
+    },
+  ],
 };
 // Stored Atlas DB evidence: it names the Russian etymon and the replacement, not the headword.
 const MIRO_STORED_EVIDENCE = 'Антоненко-Давидович: Відповідником до російських мера, мероприятие є захід, а в множині — заходи';
 const SLID_STORED_EVIDENCE =
   '9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; Як правильно перекласти ... следующий? ... наступний';
-const BAZH_EVIDENCE = 'antonenko-davydovych-yak-my-hovorymo_p099: Бажаючий – що (котрий, який) бажає – охочий';
+// The round-3 counterexample: a normative locator and the headword, but no correction.
+const GENERIC_PARAGRAPH =
+  'antonenko-davydovych-yak-my-hovorymo_p031: Учні переписали слово міроприємство до зошита та прочитали наступне речення.';
+const ESUM_TIUN = {
+  source: 'esum',
+  ref: 'тіун:5:580',
+  word: 'тіун',
+  detail: 'тіун (іст.) (назва ряду службових осіб на Русі ХІ-- ХМІЇ ст. управитель княжим або панським господарством, суддя нижчої категорії тощо); «(наглядач Кузі»',
+};
+const TIUN_GLOSS = 'У Київській Русі … — господарський управитель князя, бояр...';
 const ESUM_HRYD = {
   source: 'esum',
   ref: 'гридь:1:592',
@@ -58,18 +80,33 @@ describe('resolveHeritageBoxes', () => {
       expected: { red: false, yellow: false, green: false, blue: false },
     },
     {
-      name: 'avoid-listed word with headword-bound normative evidence is RED (міроприємство)',
+      name: 'avoid-listed word with a reviewed judgment on the headword is RED (міроприємство)',
       entry: {
         lemma: 'міроприємство',
         primary_source: 'surzhyk_to_avoid',
         heritage_status: {
           classification: 'russianism',
           is_russianism: true,
-          curated_calque: { kind: 'lexical', corrections: ['захід'], source: ['antonenko-p044'], normative_support: [MIRO_SUPPORT] },
+          curated_calque: { kind: 'lexical', corrections: ['захід', 'заходи'], evidence: [MIRO_STORED_EVIDENCE] },
         },
       },
+      proof: MIRO_PROOF,
       expected: { red: true, yellow: false, green: false, blue: false },
       alternatives: ['захід'],
+    },
+    {
+      name: 'the same stored record without current proof is not RED',
+      entry: {
+        lemma: 'міроприємство',
+        primary_source: 'surzhyk_to_avoid',
+        heritage_status: {
+          classification: 'russianism',
+          is_russianism: true,
+          curated_calque: { kind: 'lexical', corrections: ['захід'], evidence: [MIRO_STORED_EVIDENCE, GENERIC_PARAGRAPH] },
+        },
+      },
+      proof: null,
+      expected: { red: false, yellow: false, green: false, blue: false },
     },
     {
       // #9603 D05: ``participle`` is a word-formation type, not a scope; a citation is not evidence.
@@ -92,17 +129,14 @@ describe('resolveHeritageBoxes', () => {
       expected: { red: false, yellow: false, green: false, blue: false },
     },
     {
-      name: 'lexical calque bound by an excerpt naming the headword is YELLOW (бажаючий)',
+      name: 'lexical calque with a reviewed judgment on the headword is YELLOW',
       entry: {
-        lemma: 'бажаючий',
-        heritage_status: {
-          classification: 'calque',
-          calque_warning: { kind: 'lexical', evidence: [BAZH_EVIDENCE], standard_alternatives: ['охочий'] },
-          attestations: [],
-        },
+        lemma: 'міроприємство',
+        heritage_status: { classification: 'calque', calque_warning: { kind: 'lexical', standard_alternatives: ['заходи'] } },
       },
+      proof: MIRO_PROOF,
       expected: { red: false, yellow: true, green: false, blue: false },
-      alternatives: ['охочий'],
+      alternatives: ['захід'],
     },
     {
       name: 'dialect labelled on the СУМ-20 headword resolves to GREEN',
@@ -175,8 +209,8 @@ describe('resolveHeritageBoxes', () => {
       },
       expected: { red: false, yellow: false, green: false, blue: false },
     },
-  ])('$name', ({ entry, expected, alternatives }) => {
-    const boxes = resolveHeritageBoxes(entry as LexiconEntryForSeverity);
+  ])('$name', ({ entry, expected, alternatives, proof }) => {
+    const boxes = resolveHeritageBoxes(entry as LexiconEntryForSeverity, (proof ?? null) as UsageSourceProof | null);
 
     expect(Boolean(boxes.red)).toBe(expected.red);
     expect(Boolean(boxes.yellow)).toBe(expected.yellow);
@@ -189,18 +223,23 @@ describe('resolveHeritageBoxes', () => {
     }
   });
 
-  test('a bound avoid-list warning names its locator and the list', () => {
+  test('actual stored міроприємство is RED through the projected judgment, quoting its passage', () => {
+    // Stored DB shape: its own excerpt names only the etymon and the replacement.
     const boxes = resolveHeritageBoxes({
       lemma: 'міроприємство',
       primary_source: 'surzhyk_to_avoid',
       heritage_status: {
         classification: 'russianism',
         is_russianism: true,
-        curated_calque: { kind: 'lexical', corrections: ['захід'], normative_support: [MIRO_SUPPORT] },
+        curated_calque: { kind: 'lexical', corrections: ['захід', 'заходи'], evidence: [MIRO_STORED_EVIDENCE] },
       },
     } as LexiconEntryForSeverity);
+    expect(boxes.usageLabel).toMatchObject({ code: 'rus', scope: 'lemma' });
     expect(boxes.red?.body).toContain('antonenko-davydovych-yak-my-hovorymo_p031');
+    expect(boxes.red?.body).toContain('11-klas-ukrajinska-mova-glazova-2019_s0263');
+    expect(boxes.red?.body).toContain('Витяг: «"У нас провели такі міроприємства" і под. Такого слова не було й нема');
     expect(boxes.red?.body).toContain('перелік суржику');
+    expect(boxes.red?.alternatives).toEqual(['захід']);
     expect(boxes.inline?.severity).toBe('red');
   });
 
@@ -306,7 +345,7 @@ describe('resolveHeritageBoxes', () => {
         },
         attestations: [{ source: 'VESUM', ref: 'вилка' }],
       },
-    } as LexiconEntryForSeverity);
+    } as LexiconEntryForSeverity, null);
 
     expect(boxes.yellow).toBeDefined();
     expect(boxes.yellow?.scope).toBe('sense');
@@ -315,8 +354,51 @@ describe('resolveHeritageBoxes', () => {
     expect(boxes.yellow?.body).toContain('а не слова загалом');
     expect(boxes.yellow?.body).toContain('Нормативного джерела, що прямо стосується цього слова, запис не містить.');
     expect(boxes.yellow?.alternatives).toEqual(['виделка']);
+    // Stored Atlas prose is commentary, never a source excerpt.
+    expect(boxes.yellow?.detail).toBe(
+      'Примітка Атласу, не підтверджена витягом із джерела: Столовий прибор для їжі в українській мові називається винятково «виделка».',
+    );
     expect(boxes.inline).toBeUndefined();
     expect(boxes.green).toBeUndefined();
+  });
+
+  test('actual stored являтися cites the projected s0159 correction, never the stored s0162', () => {
+    const boxes = resolveHeritageBoxes({
+      lemma: 'являтися',
+      heritage_status: {
+        classification: 'standard',
+        warning_severity: 'calque_yellow',
+        curated_calque: {
+          kind: 'sense_restricted',
+          corrections: ['бути', 'є'],
+          calque_sense: "to be / constitute (рос. являться = 'to be')",
+          evidence: ['9-klas-ukrajinska-mova-avramenko-2017_s0162: Неправильно: являтися переможцем; Правильно: бути переможцем'],
+        },
+      },
+    } as LexiconEntryForSeverity);
+    expect(boxes.usageLabel).toMatchObject({ scope: 'sense', authority: ['9-klas-ukrajinska-mova-avramenko-2017_s0159'] });
+    expect(boxes.yellow?.body).toContain('Джерело: 9-klas-ukrajinska-mova-avramenko-2017_s0159.');
+    expect(boxes.yellow?.body).not.toContain('s0162');
+    expect(boxes.inline).toBeUndefined();
+  });
+
+  test('неділя keeps its duration caution; the stored «лише» prose is Atlas commentary', () => {
+    const boxes = resolveHeritageBoxes({
+      lemma: 'неділя',
+      heritage_status: {
+        classification: 'standard',
+        curated_calque: {
+          kind: 'sense_restricted',
+          corrections: ['тиждень'],
+          calque_sense: 'week / a seven-day period (рос. неделя)',
+          noteUk: 'В українській мові слово "неділя" означає лише сьомий день тижня.',
+        },
+      },
+    } as LexiconEntryForSeverity);
+    expect(boxes.yellow?.body).toContain('«week / a seven-day period (рос. неделя)»');
+    expect(boxes.yellow?.body).toContain('Джерело: 10-klas-ukrmova-glazova-2018_s0075.');
+    expect(boxes.yellow?.detail).toMatch(/^Примітка Атласу, не підтверджена витягом із джерела: /u);
+    expect(atlasNoteDetail('  ')).toBeUndefined();
   });
 });
 
@@ -359,26 +441,36 @@ describe('resolveUsageLabel', () => {
       warning_severity: 'russianism_red' as const,
     };
     expect(resolveUsageLabel(status, { headword: 'другий' }).scope).toBe('unresolved');
+    const stale = resolveHeritageBoxes({ lemma: 'другий', heritage_status: status }, null);
+    expect(stale.red).toBeUndefined();
+    expect(stale.yellow).toBeUndefined();
+    expect(stale.inline).toBeUndefined();
+    // Current proof (Антоненко-Давидович p107) keeps a sense caution, never a word badge.
     const boxes = resolveHeritageBoxes({ lemma: 'другий', heritage_status: status });
     expect(boxes.red).toBeUndefined();
-    expect(boxes.yellow).toBeUndefined();
+    expect(boxes.yellow?.scope).toBe('sense');
+    expect(boxes.yellow?.body).toContain('antonenko-davydovych-yak-my-hovorymo_p107');
+    expect(boxes.yellow?.alternatives).toEqual(['інший']);
     expect(boxes.inline).toBeUndefined();
   });
 
-  test('a lexical Russianism bound by a passage naming the headword stays a lemma warning (міроприємство)', () => {
+  test('a lexical Russianism needs a reviewed judgment rejecting the headword (міроприємство)', () => {
     const status = {
       classification: 'russianism',
       is_russianism: true,
-      curated_calque: { kind: 'lexical', corrections: ['захід'], source: ['antonenko-p044'], normative_support: [MIRO_SUPPORT] },
+      curated_calque: { kind: 'lexical', corrections: ['захід'], evidence: [MIRO_STORED_EVIDENCE] },
     };
-    expect(resolveUsageLabel(status, { headword: 'міроприємство' })).toMatchObject({
-      code: 'rus',
-      scope: 'lemma',
-      authority: ['antonenko-davydovych-yak-my-hovorymo_p031'],
-    });
-    expect(resolveUsageLabel(status, { headword: 'міроприємство' }).evidence).toContain('Такого слова не було');
-    // Without a headword nothing binds.
-    expect(resolveUsageLabel(status).scope).toBe('unresolved');
+    const label = resolveUsageLabel(status, { headword: 'міроприємство', sourceProof: MIRO_PROOF });
+    expect(label).toMatchObject({ code: 'rus', scope: 'lemma', authority: ['antonenko-davydovych-yak-my-hovorymo_p031'] });
+    expect(label.evidence).toBe(MIRO_PASSAGE);
+    const long = { ...MIRO_PROOF, judgments: [{ ...MIRO_PROOF.judgments[0], passage: 'слово '.repeat(60) }] };
+    expect(resolveUsageLabel(status, { headword: 'міроприємство', sourceProof: long }).evidence?.endsWith('…')).toBe(true);
+    // The replacement side, another headword or no headword binds nothing.
+    expect(resolveUsageLabel(status, { headword: 'захід', sourceProof: MIRO_PROOF }).scope).toBe('unresolved');
+    expect(resolveUsageLabel(status, { sourceProof: MIRO_PROOF }).scope).toBe('unresolved');
+    // Without current proof the stored excerpt binds nothing.
+    expect(resolveUsageLabel(status, { headword: 'міроприємство' }).reason).toBe('no_headword_bound_evidence');
+    expect(resolveUsageLabel({ ...status, is_russianism: false, classification: 'calque' }, { headword: 'міроприємство', sourceProof: MIRO_PROOF }).code).toBe('calq');
   });
 
   test.each([
@@ -419,9 +511,9 @@ describe('resolveUsageLabel', () => {
       reason: 'no_headword_bound_evidence',
     },
     {
-      name: 'a normative excerpt bound to another headword',
-      headword: 'бажаний',
-      record: { kind: 'lexical', evidence: [BAZH_EVIDENCE] },
+      name: 'a generic paragraph naming the headword from a normative locator (round 3)',
+      headword: 'міроприємство',
+      record: { kind: 'lexical', corrections: ['захід'], evidence: [GENERIC_PARAGRAPH] },
       reason: 'no_headword_bound_evidence',
     },
   ])('curated record stays unresolved: $name', ({ headword, record, reason }) => {
@@ -480,11 +572,40 @@ describe('resolveUsageLabel', () => {
     { name: 'marker on a derivative only', headword: 'гридь', gloss: HRYD_GLOSS, attestations: [{ ...ESUM_HRYD, detail: 'гридь «нижча верхівка княжої дружини», гридниця (іст.) «приміщення»' }], cards: null },
     { name: 'attestation of another word', headword: 'гридня', gloss: HRYD_GLOSS, attestations: [ESUM_HRYD], cards: null },
     { name: 'cognate marker (або)', headword: 'або', gloss: 'or', attestations: [{ source: 'esum', ref: 'або:1:37', word: 'або', detail: 'або «чи»; — п. діал. «елементарний»' }], cards: null },
-    { name: 'modern card for the headword is unlabelled', headword: 'гридь', gloss: HRYD_GLOSS, attestations: [ESUM_HRYD], cards: [{ id: 'vts', definitions: ['гридь -і, ж., збірн. Нижча верства княжої дружини.'] }] },
+    { name: 'nested explanation', headword: 'тіун', gloss: TIUN_GLOSS, attestations: [{ ...ESUM_TIUN, detail: 'тіун (іст.) (управитель (княжий) двору)' }], cards: null },
+    { name: 'modern card with several senses', headword: 'гридь', gloss: HRYD_GLOSS, attestations: [ESUM_HRYD], cards: [{ id: 'sum20', definitions: ['ГРИДЬ, і, ж. 1. Нижча верства княжої дружини. 2. Приміщення.'] }] },
   ])('ЕСУМ marker does not bind: $name', ({ headword, gloss, attestations, cards }) => {
     const label = resolveUsageLabel({ classification: 'historism', attestations }, { headword, gloss, definitionCards: cards });
     expect(label.code).toBeNull();
     expect(label.scope).toBe('unresolved');
+  });
+
+  test('ЕСУМ marker followed by a parenthetical explanation binds (тіун)', () => {
+    const status = { classification: 'historism', attestations: [ESUM_TIUN] };
+    const label = resolveUsageLabel(status, { headword: 'тіун', gloss: TIUN_GLOSS });
+    expect(label).toMatchObject({ code: 'hist', scope: 'lemma', authority: ['ЕСУМ, т. 5, с. 580'] });
+    expect(label.evidence).toMatch(/^тіун \(іст\.\) \(назва ряду службових осіб на Русі/u);
+    const boxes = resolveHeritageBoxes({ lemma: 'тіун', gloss: TIUN_GLOSS, heritage_status: status });
+    expect(boxes.green?.title).toBe('Історизм');
+    expect(boxes.green?.body).toContain('ЕСУМ, т. 5, с. 580');
+  });
+
+  test('an unlabelled modern card keeps a historism but decides current register (гридь, платівка)', () => {
+    const vts = [{ id: 'vts', definitions: ['гридь -і, ж., збірн. Нижча верства княжої дружини.'] }];
+    expect(resolveUsageLabel({ classification: 'historism', attestations: [ESUM_HRYD] }, { headword: 'гридь', gloss: HRYD_GLOSS, definitionCards: vts }).code).toBe('hist');
+    const status = {
+      classification: 'authentic-archaism',
+      attestations: [{ source: 'esum', ref: 'платівка:4:431', word: 'платівка', detail: 'платівка (заст.) «пластинка»; утворено від' }],
+    };
+    const definitionCards = [{ id: 'sum20', definitions: ['ПЛАТІ́ВКА, и, ж. Те саме, що пласти́нка 1–3. Патефонна платівка.'] }];
+    const label = resolveUsageLabel(status, { headword: 'платівка', gloss: 'Те саме, що пласти́нка 1-3.', definitionCards });
+    expect(label).toEqual({
+      code: null,
+      scope: 'unresolved',
+      authority: ['ЕСУМ, т. 4, с. 431'],
+      evidence: 'платівка (заст.) «пластинка»',
+      reason: 'source_marker_not_whole_word',
+    });
   });
 
   test('borrowing binds only through ЕСУМ etymology of the headword', () => {
@@ -499,14 +620,13 @@ describe('resolveUsageLabel', () => {
 
 describe('scoped boxes: remaining branches', () => {
   test('a bound lexical Russianism outside the avoid list is RED with its locator', () => {
-    const boxes = resolveHeritageBoxes({
-      lemma: 'міроприємство',
-      heritage_status: {
-        classification: 'russianism',
-        is_russianism: true,
-        curated_calque: { kind: 'lexical', normative_support: [MIRO_SUPPORT] },
-      },
-    } as LexiconEntryForSeverity);
+    const boxes = resolveHeritageBoxes(
+      {
+        lemma: 'міроприємство',
+        heritage_status: { classification: 'russianism', is_russianism: true, curated_calque: { kind: 'lexical' } },
+      } as LexiconEntryForSeverity,
+      { ...MIRO_PROOF, corrections: [] },
+    );
     expect(boxes.red?.body).toContain('antonenko-davydovych-yak-my-hovorymo_p031');
     expect(boxes.red?.body).not.toContain('перелік суржику');
     expect(boxes.red?.body).toContain('Перевіряйте рекомендовані відповідники');
@@ -519,7 +639,7 @@ describe('scoped boxes: remaining branches', () => {
         classification: 'standard',
         calque_warning: { kind: 'phrasal', citations: ['antonenko-p091'], standard_alternatives: ['брати участь'] },
       },
-    } as LexiconEntryForSeverity);
+    } as LexiconEntryForSeverity, null);
     expect(boxes.yellow?.title).toBe('Калькове застереження щодо сполучення');
     expect(boxes.yellow?.body).toContain('Посилання запису (без витягу з джерела): antonenko-p091.');
   });
@@ -579,31 +699,19 @@ describe('scope helpers', () => {
     expect(cardHeadwordMatches(SUM20_VOZNYI, '')).toBe(false);
   });
 
-  test('namesHeadword allows inflection only for longer single words', () => {
-    expect(namesHeadword(MIRO_SUPPORT.passage, 'міроприємство')).toBe(true);
-    expect(namesHeadword(SLID_STORED_EVIDENCE, 'слідуючий')).toBe(false);
-    expect(namesHeadword('Вид — це не тип.', 'вид')).toBe(true);
-    expect(namesHeadword('Види бувають різні.', 'вид')).toBe(false);
-    expect(namesHeadword('Тут треба брати участь у грі.', 'брати участь')).toBe(true);
-    expect(namesHeadword('Тут треба брати у грі участь.', 'брати участь')).toBe(false);
-    expect(namesHeadword('будь-що', undefined)).toBe(false);
-  });
-
-  test('isNormativeLocator recognises style guides and textbook chunks only', () => {
-    expect(isNormativeLocator('antonenko-davydovych-yak-my-hovorymo_p031')).toBe(true);
-    expect(isNormativeLocator('Антоненко-Давидович')).toBe(true);
-    expect(isNormativeLocator('11-klas-ukrajinska-mova-avramenko-2019_s0074')).toBe(true);
-    expect(isNormativeLocator('voron-9')).toBe(false);
-    expect(isNormativeLocator('ua-gec')).toBe(false);
-    expect(isNormativeLocator('5-klas-istoriya-hisem-2022_s0001')).toBe(false);
-  });
-
-  test('boundEvidence keeps only normative excerpts that name the headword', () => {
-    expect(boundEvidence({ evidence: [BAZH_EVIDENCE, MIRO_STORED_EVIDENCE] }, 'бажаючий')).toEqual([
-      ['antonenko-davydovych-yak-my-hovorymo_p099', 'Бажаючий – що (котрий, який) бажає – охочий'],
+  test('usageSourceProof reads the committed projection by headword', () => {
+    const miro = usageSourceProof('міроприємство');
+    expect(miro?.kind).toBe('lexical');
+    expect(miro?.judgments.map((item) => [item.locator, item.rejectedForm, item.endorsedForm])).toContainEqual([
+      'antonenko-davydovych-yak-my-hovorymo_p031',
+      'міроприємство',
+      'захід',
     ]);
-    expect(boundEvidence({ normativeSupport: [MIRO_SUPPORT, { locator: '', passage: 'x' }] }, 'міроприємство')).toHaveLength(1);
-    expect(boundEvidence({}, 'слово')).toEqual([]);
+    expect(usageSourceProof('Являтися')?.citations.map((item) => item.locator)).toEqual(['9-klas-ukrajinska-mova-avramenko-2017_s0159']);
+    // Recommended replacements and words that are only another record's surface get no proof.
+    for (const headword of ['бути', 'є', 'захід', 'наступний', 'голова', undefined]) {
+      expect(usageSourceProof(headword)).toBeNull();
+    }
   });
 
   test('sharesReferent compares content words only', () => {
@@ -611,18 +719,5 @@ describe('scope helpers', () => {
     expect(sharesReferent('нижча верхівка княжої дружини', 'sofa')).toBe(false);
     expect(sharesReferent('у на до', 'у на до')).toBe(false);
     expect(sharesReferent('дружини', null)).toBe(false);
-  });
-
-  test('normativeCitations matches the Python contract', () => {
-    expect(normativeCitations(['antonenko-p044', 'glazova-10', 'ua-gec', 'grinchenko', 'sum-11', 'grok-3098'])).toEqual([
-      'antonenko-p044',
-      'glazova-10',
-    ]);
-    expect(normativeCitations(['slovnyk:davydov', 'slovnyk:foreign_shtepa', 'state-standard', 'state-standard:avramenko-7'])).toEqual([
-      'slovnyk:davydov',
-      'state-standard:avramenko-7',
-    ]);
-    expect(normativeCitations('antonenko-p091')).toEqual(['antonenko-p091']);
-    expect(normativeCitations(undefined)).toEqual([]);
   });
 });

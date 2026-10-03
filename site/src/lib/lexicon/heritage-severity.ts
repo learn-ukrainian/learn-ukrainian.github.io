@@ -1,3 +1,5 @@
+import browseMeta from "../../data/lexicon-browse-meta.json";
+
 export type WarningSeverity =
   | "none"
   | "treasured"
@@ -28,7 +30,6 @@ export interface HeritageStatus {
     authentic_sense?: string;
     citations?: string[];
     evidence?: string[];
-    normative_support?: Array<{ locator?: string; passage?: string }>;
   } | null;
   curated_calque?: {
     kind?: string;
@@ -38,7 +39,6 @@ export interface HeritageStatus {
     source?: string[];
     calque_sense?: string;
     evidence?: string[];
-    normative_support?: Array<{ locator?: string; passage?: string }>;
   } | null;
   "§6_note"?: {
     corrections?: string[];
@@ -70,6 +70,38 @@ export interface LexiconEntryForSeverity {
   form_of?: unknown;
   heritage_status?: HeritageStatus | null;
   enrichment?: { definition_cards?: DefinitionCard[] | null } | null;
+}
+
+/** A reviewed directional judgment bound by digest to a source passage (#9603). */
+export interface SourceJudgment {
+  locator: string;
+  passage: string;
+  passageSha256: string;
+  rejectedForm: string;
+  endorsedForm: string;
+  sense: string;
+}
+
+/**
+ * Current curated source proof for one headword: the ``usageSources``
+ * projection in browse meta (``usage_source_records`` in
+ * scripts/lexicon/heritage_classifier.py). Citations stored in an old Atlas
+ * record are provenance, never authority.
+ */
+export interface UsageSourceProof {
+  kind: string;
+  corrections: string[];
+  sense: string;
+  judgments: SourceJudgment[];
+  citations: Array<{ locator: string; excerpt: string }>;
+}
+
+const USAGE_SOURCES: Record<string, UsageSourceProof> =
+  (browseMeta as { usageSources?: { records?: Record<string, UsageSourceProof> } }).usageSources?.records ?? {};
+
+/** The projected source proof for ``headword``, or ``null``. */
+export function usageSourceProof(headword: string | undefined): UsageSourceProof | null {
+  return USAGE_SOURCES[normalizeWord(headword ?? "")] ?? null;
 }
 
 /** Where a usage label applies (#9603; mirrors ``resolve_usage_label``). */
@@ -149,22 +181,7 @@ const UNRESOLVED_CLAIM_REASONS = new Set([
   "no_headword_bound_evidence",
   "curated_kind_without_scope",
 ]);
-const NORMATIVE_CITATION_FAMILIES = [
-  "antonenko",
-  "davydov",
-  "karavansk",
-  "voloshchak",
-  "voloschak",
-  "антоненко",
-  "караванськ",
-  "волощак",
-];
-const NORMATIVE_TEXTBOOK_AUTHORS = new Set(["avramenko", "zabolotnyi", "glazova", "litvinova", "voron"]);
-const NORMATIVE_TEXTBOOK_RE = /^(?:avramenko|zabolotnyi|glazova|litvinova|voron)-(?:[1-9]|1[01])$/;
-const CITATION_TOKEN_RE = /[a-z0-9]+(?:[-_][a-z0-9]+)*/g;
-const LOCATOR_PART_RE = /[\p{L}\p{N}]+/gu;
 const WORD_RE = /[а-яіїєґʼ'a-z]+(?:-[а-яіїєґʼ'a-z]+)*/gu;
-const MIN_EXCERPT_WORDS = 4;
 const MIN_REFERENT_TOKEN_LEN = 5;
 const LETTER_CLASS = "а-яіїєґa-z";
 const USAGE_MARKER_RES: Record<string, RegExp> = {
@@ -179,8 +196,11 @@ const MODERN_DICTIONARY_CARDS: Array<[string, string]> = [
 const SUPERSCRIPT_DIGITS = "¹²³⁴⁵⁶⁷⁸⁹⁰";
 const HOMONYM_INDEX_RE = /^(?:[¹²³⁴⁵⁶⁷⁸⁹⁰]+|I|II|III|IV|V)[,.]?$/u;
 const SENSE_START_RE = /^(?:\d|[《◊/]|[А-ЯІЇЄҐA-Z])/u;
+const SECOND_SENSE_RE = /(?<!\S)2[.)]/u;
 const EDGE_CHARS = new Set([..."¹²³⁴⁵⁶⁷⁸⁹⁰,.;:!?«»\"'()[]"]);
-const ESUM_HEADWORD_SLOT_RE = /^\s*(?<word>[^\s(«]+)\s*\((?<marker>[^)]{1,40})\)\s*«(?<gloss>[^»]{1,200})»/u;
+// The word, its marker, then a «gloss» or a parenthesised explanation (``тіун (іст.) (…)``).
+const ESUM_HEADWORD_SLOT_RE =
+  /^\s*(?<word>[^\s(«]+)\s*\((?<marker>[^)]{1,40})\)\s*(?:«(?<gloss>[^»]{1,200})»|\((?<explanation>[^()]{1,300})\))/u;
 const ESUM_REF_RE = /^[^:]*:(?<volume>\d+):(?<page>\d+)$/u;
 const ACUTE_RE = /[́̀]/gu;
 
@@ -188,25 +208,6 @@ function citationList(value: unknown): string[] {
   if (typeof value === "string") return value.trim() ? [value] : [];
   if (Array.isArray(value)) return value.map((item) => String(item ?? "")).filter((item) => item.trim());
   return [];
-}
-
-/** True when a locator names a normative style authority or a school textbook. */
-export function isNormativeLocator(locator: string): boolean {
-  const parts: string[] = String(locator ?? "").toLocaleLowerCase("uk").match(LOCATOR_PART_RE) ?? [];
-  if (parts.some((part) => NORMATIVE_CITATION_FAMILIES.some((family) => part.startsWith(family)))) return true;
-  return parts.includes("klas") && parts.some((part) => NORMATIVE_TEXTBOOK_AUTHORS.has(part));
-}
-
-/** Citations naming a normative authority; a citation is never evidence by itself. */
-export function normativeCitations(citations: unknown): string[] {
-  return citationList(citations).filter(
-    (citation) =>
-      (citation.toLocaleLowerCase("en").match(CITATION_TOKEN_RE) ?? []).some(
-        (token) =>
-          NORMATIVE_CITATION_FAMILIES.some((family) => token.startsWith(family)) ||
-          NORMATIVE_TEXTBOOK_RE.test(token),
-      ) || isNormativeLocator(citation),
-  );
 }
 
 function normalizeWord(text: string): string {
@@ -222,55 +223,6 @@ function normalizeWord(text: string): string {
 
 function words(text: string): string[] {
   return normalizeWord(text).replace(/ʼ/g, "'").match(WORD_RE) ?? [];
-}
-
-/** True when ``text`` names ``headword`` (inflected forms of six-plus-letter words allowed). */
-export function namesHeadword(text: string, headword: string | undefined): boolean {
-  const head = words(headword ?? "");
-  if (head.length === 0) return false;
-  const found = words(text);
-  if (head.length > 1) {
-    return found.some((_, index) => head.every((word, offset) => found[index + offset] === word));
-  }
-  const target = head[0];
-  if (target.length < 6) return found.includes(target);
-  const stem = target.slice(0, -2);
-  return found.some(
-    (word) => word === target || (word.startsWith(stem) && Math.abs(word.length - target.length) <= 3),
-  );
-}
-
-type EvidenceRecord = {
-  evidence?: unknown;
-  normative_support?: unknown;
-  normativeSupport?: unknown;
-  current_norm_support?: unknown;
-  currentNormSupport?: unknown;
-};
-
-function evidenceItems(record: EvidenceRecord): Array<[string, string]> {
-  const items: Array<[string, string]> = [];
-  for (const key of ["normative_support", "normativeSupport", "current_norm_support", "currentNormSupport"] as const) {
-    const support = record[key];
-    if (!Array.isArray(support)) continue;
-    for (const item of support) {
-      const locator = String((item as { locator?: unknown })?.locator ?? "").trim();
-      if (locator) items.push([locator, String((item as { passage?: unknown }).passage ?? "")]);
-    }
-  }
-  for (const item of citationList(record.evidence)) {
-    const separator = item.indexOf(":");
-    if (separator >= 0) items.push([item.slice(0, separator).trim(), item.slice(separator + 1).trim()]);
-  }
-  return items;
-}
-
-/** Evidence items binding a curated claim to ``headword``: normative locator + excerpt naming it. */
-export function boundEvidence(record: EvidenceRecord, headword: string | undefined): Array<[string, string]> {
-  return evidenceItems(record).filter(
-    ([locator, excerpt]) =>
-      isNormativeLocator(locator) && words(excerpt).length >= MIN_EXCERPT_WORDS && namesHeadword(excerpt, headword),
-  );
 }
 
 function usageMarkerClasses(text: string): Set<string> {
@@ -360,7 +312,7 @@ function esumHeadwordMarker(
     const match = String(attestation.detail ?? "").replace(ACUTE_RE, "").match(ESUM_HEADWORD_SLOT_RE);
     if (!match?.groups || normalizeWord(match.groups.word) !== head) continue;
     if (!usageMarkerClasses(normalizeWord(match.groups.marker)).has(markerClass)) continue;
-    if (!sharesReferent(match.groups.gloss, gloss)) continue;
+    if (!sharesReferent(match.groups.gloss ?? match.groups.explanation, gloss)) continue;
     return usageLabel(USAGE_LABEL_CODES[markerClass], "lemma", [esumLocator(attestation.ref)], match[0].trim());
   }
   return null;
@@ -399,21 +351,26 @@ function treasuredLabel(
   }
   const code = USAGE_LABEL_CODES[classification];
   const markerClass = code === "arch" ? "authentic-archaism" : classification;
-  // The modern card for the same headword is the evidence on modern register;
-  // without one, an ЕСУМ headword-slot marker with the same referent is a
-  // historical witness. Грінченко and VESUM tags stay attestations.
+  // A headword-slot label on the modern card for the same headword binds. An
+  // ЕСУМ headword-slot marker with the same referent is a historical witness.
+  // The modern card decides current register (archaism, dialect); a historism
+  // names a historical referent, which an unlabelled single-sense card does
+  // not contradict. Грінченко and VESUM stay attestations.
   const modern = modernDictionaryCard(cards, headword);
+  let wholeWord = true;
   if (modern) {
     const [sourceLabel, definition] = modern;
     const { classes, ambiguous } = modernHeadwordLabels(definition);
     if (!ambiguous && classes.has(markerClass)) {
       return usageLabel(code, "lemma", [sourceLabel], definition.slice(0, 240));
     }
-    return usageLabel(null, "unresolved", [], null, `${sourceLabel}_headword_unlabelled`);
+    wholeWord = markerClass === "historism" && !ambiguous && !SECOND_SENSE_RE.test(definition.replace(ACUTE_RE, ""));
   }
   const witness = esumHeadwordMarker(status, markerClass, headword, gloss);
-  if (witness) return witness;
-  return usageLabel(null, "unresolved", [], null, "no_headword_bound_label");
+  if (witness) {
+    return wholeWord ? witness : { ...witness, code: null, scope: "unresolved", reason: "source_marker_not_whole_word" };
+  }
+  return usageLabel(null, "unresolved", [], null, modern ? `${modern[0]}_headword_unlabelled` : "no_headword_bound_label");
 }
 
 function curatedReferences(status: HeritageStatus | null): string[] {
@@ -435,13 +392,19 @@ function curatedScopeRecord(status: HeritageStatus) {
 /**
  * Resolve the source-scoped usage label for a heritage record (#9603).
  *
- * ``code`` is set only for ``scope === "lemma"``: a source locator plus an
- * excerpt binding the claim to the headword. Stored ``warning_severity`` is
- * never trusted on its own; without a headword nothing binds.
+ * ``code`` is set only for ``scope === "lemma"``. A Russianism or calque needs
+ * a reviewed judgment in ``sourceProof`` whose rejected form is the headword;
+ * citations stored in the record are never authority. Stored
+ * ``warning_severity`` is never trusted; without a headword nothing binds.
  */
 export function resolveUsageLabel(
   status: HeritageStatus | null | undefined,
-  options: { headword?: string; definitionCards?: DefinitionCard[] | null; gloss?: string | null } = {},
+  options: {
+    headword?: string;
+    definitionCards?: DefinitionCard[] | null;
+    gloss?: string | null;
+    sourceProof?: UsageSourceProof | null;
+  } = {},
 ): UsageLabel {
   const record = status ?? {};
   const classification = record.classification ?? "unknown";
@@ -452,19 +415,23 @@ export function resolveUsageLabel(
     if (treasured.scope === "lemma") return treasured;
   }
 
-  const curated = curatedScopeRecord(record);
+  const proof = options.sourceProof ?? null;
+  const curated = proof?.kind ? proof : curatedScopeRecord(record);
   if (curated) {
     const kind = String(curated.kind).trim();
-    const evidence = boundEvidence(curated as EvidenceRecord, options.headword);
-    const authority = unique(evidence.map(([locator]) => locator));
+    const head = normalizeWord(options.headword ?? "");
+    const judgments = (proof?.judgments ?? []).filter((item) => head && normalizeWord(item.rejectedForm) === head);
+    const authority = unique([...judgments, ...(proof?.citations ?? [])].map((item) => item.locator));
     const contextual = CONTEXTUAL_CALQUE_SCOPES[kind];
     if (contextual) {
-      return usageLabel(null, contextual, authority, curated.calque_sense ?? curated.note);
+      const stored = curated as { calque_sense?: string; note?: string };
+      return usageLabel(null, contextual, authority, proof?.sense || stored.calque_sense || stored.note);
     }
     if (!LEMMA_CALQUE_KINDS.has(kind)) return usageLabel(null, "unresolved", [], null, "curated_kind_without_scope");
-    if (evidence.length === 0) return usageLabel(null, "unresolved", [], null, "no_headword_bound_evidence");
+    if (judgments.length === 0) return usageLabel(null, "unresolved", [], null, "no_headword_bound_evidence");
     const isRus = Boolean(record.is_russianism) && !AUTHENTIC_CLASSIFICATIONS.has(classification);
-    return usageLabel(isRus ? "rus" : "calq", "lemma", authority, evidence[0][1].slice(0, 240));
+    const passage = judgments[0].passage;
+    return usageLabel(isRus ? "rus" : "calq", "lemma", authority, passage.length > 240 ? `${passage.slice(0, 240)}…` : passage);
   }
 
   if (
@@ -630,10 +597,18 @@ function scopedCalqueBody(label: UsageLabel, alternatives: string[], references:
   return `${use}${authorityClause(label.authority)}`;
 }
 
-export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBoxes {
+/** Atlas prose stored with a record is commentary, never a source excerpt (#9603). */
+export function atlasNoteDetail(note: string | undefined): string | undefined {
+  return note?.trim() ? `Примітка Атласу, не підтверджена витягом із джерела: ${note.trim()}` : undefined;
+}
+
+export function resolveHeritageBoxes(
+  entry: LexiconEntryForSeverity,
+  sourceProof: UsageSourceProof | null = usageSourceProof(entry.lemma),
+): HeritageBoxes {
   const status = entry.heritage_status ?? null;
   const definitionCards = entry.enrichment?.definition_cards ?? null;
-  const label = resolveUsageLabel(status, { headword: entry.lemma, definitionCards, gloss: entry.gloss });
+  const label = resolveUsageLabel(status, { headword: entry.lemma, definitionCards, gloss: entry.gloss, sourceProof });
   if (entry.form_of) return { usageLabel: label };
 
   const sovietizationRisk = maxSovietizationRisk(entry);
@@ -645,7 +620,9 @@ export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBo
     (label.code === "rus" || label.code === "calq");
   const severity = avoid ? "russianism_red" : scopedSeverity(status, label);
   const boxes: HeritageBoxes = { usageLabel: label };
-  const alternatives = standardAlternatives(status, entry.gloss ?? null);
+  const alternatives = sourceProof?.corrections.length
+    ? sourceProof.corrections
+    : standardAlternatives(status, entry.gloss ?? null);
 
   if (severity === "russianism_red") {
     const authority = [...label.authority, ...(avoid ? ["Атлас: перелік суржику, якого слід уникати"] : [])];
@@ -658,7 +635,8 @@ export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBo
         (alternatives.length > 0
           ? `Джерело позначає цю форму як ненормативну. Рекомендовані відповідники: ${alternatives.join(", ")}.`
           : "Джерело позначає цю форму як ненормативну. Перевіряйте рекомендовані відповідники в джерелах.") +
-        authorityClause(authority),
+        authorityClause(authority) +
+        (label.evidence ? ` Витяг: «${label.evidence.trim()}»` : ""),
       alternatives,
     };
   } else if (severity === "calque_yellow") {
@@ -669,12 +647,13 @@ export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBo
       title: scopedCalqueTitle(label.scope),
       body: scopedCalqueBody(label, alternatives, curatedReferences(status)),
       alternatives,
-      detail:
+      detail: atlasNoteDetail(
         status?.curated_calque?.noteUk ??
-        status?.["§6_note"]?.noteUk ??
-        status?.calque_warning?.noteUk ??
-        status?.calque_warning?.detail ??
-        status?.calque_warning?.note,
+          status?.["§6_note"]?.noteUk ??
+          status?.calque_warning?.noteUk ??
+          status?.calque_warning?.detail ??
+          status?.calque_warning?.note,
+      ),
     };
   } else if (severity === "treasured") {
     boxes.green = {
