@@ -286,21 +286,38 @@ def candidates(
     include_competitors: bool = False,
 ) -> list[dict]:
     """Classify before splitting; recheck lemma/POS before any candidate."""
+    if word.get("kind") == "formula":
+        from .formulas import headword, printed_headword
+
+        names = {printed_headword(word["text"]), *(headword(a) for a in word.get("aliases", []))}
+        rows = [r for r in rows if headword(r["word"]) in names]
+        # Re-enter the same parser with each row's exact identity, without the lexical POS gates.
+        result = []
+        for row in sorted(rows, key=lambda r: r["id"]):
+            result.extend(
+                candidates({"lemma": row["word"], "pos": row["pos"], "formula_parser": True}, [row], report=report)
+            )
+        return result
     lemma, pos = word["lemma"], word["pos"]
     if pronoun_entry is None:
         pronoun_entry = any("pron" in f.get("tags", "").split(":") for f in word.get("forms", []))
-    rows = [
-        r
-        for r in rows
-        if sources.unstressed_headword(r["word"]) == sources.unstressed_headword(lemma)
-        and r["pos"] in sources.GLOSS_POS.get(pos, (pos,))
-        and not (pos in sources.ALPHABET_GUARD_POS and sources.is_alphabet_letter_gloss(r))
-        and not sources.has_incompatible_function_label(r, pos)
-    ]
+    rows = (
+        rows
+        if word.get("formula_parser")
+        else [
+            r
+            for r in rows
+            if sources.unstressed_headword(r["word"]) == sources.unstressed_headword(lemma)
+            and r["pos"] in sources.GLOSS_POS.get(pos, (pos,))
+            and not (pos in sources.ALPHABET_GUARD_POS and sources.is_alphabet_letter_gloss(r))
+            and not sources.has_incompatible_function_label(r, pos)
+        ]
+    )
     labelled = [r for r in rows if r["pos"] == {"prep": "preposition", "conj": "conjunction"}.get(pos)]
-    if labelled:
+    if labelled and not word.get("formula_parser"):
         rows = [r for r in rows if r["pos"] != "particle"]
-    rows = sources.filter_pronominal_gloss_rows(rows, lemma, pos, pronoun_entry)
+    if not word.get("formula_parser"):
+        rows = sources.filter_pronominal_gloss_rows(rows, lemma, pos, pronoun_entry)
     result = []
     for row in sorted(rows, key=lambda r: r["id"]):
         for index, (span, context) in enumerate(row_spans(row)):

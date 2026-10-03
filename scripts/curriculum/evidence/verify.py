@@ -183,7 +183,9 @@ def verify_words_store(
         total_forms = 0
 
         words_list = store_doc.get("words", [])
-        kaikki_result = sources_instance.kaikki_rows(word["lemma"] for word in words_list)
+        kaikki_result = sources_instance.kaikki_rows(
+            word["lemma"] for word in words_list if word.get("kind") != "formula"
+        )
         if any(isinstance(word.get("gloss_source"), str) for word in words_list) and (
             "kaikki_content_sha256" not in built_with or "kaikki_attribution" not in built_with
         ):
@@ -204,6 +206,30 @@ def verify_words_store(
             prev_num = cur_num
 
         for word in words_list:
+            if word.get("kind") == "formula":
+                try:
+                    sense_bindings.formulas.validate(word, {w["id"]: w for w in words_list}, sources_instance)
+                    selection = binding_context.select(word, sense_bindings.rows_for(word, sources_instance), None)
+                    if selection.reason:
+                        (
+                            errors
+                            if word.get("gloss_en") or selection.reason == "formula_binding_invalid"
+                            else warnings
+                        ).append(f"{word['id']}: {selection.reason}")
+                    if (
+                        word.get("gloss_en") != selection.gloss
+                        or word.get("gloss_ref") != selection.ref
+                        or word.get("gloss_source") != selection.source
+                        or word.get("gloss_basis") != (binding_context.basis(word["id"]) if selection.gloss else None)
+                    ):
+                        errors.append(f"{word['id']}: formula_binding_invalid")
+                    binding = binding_context.entries.get(word["id"], {})
+                    if "commitment" in binding:
+                        warnings.append(f"{word['id']}: {sense_bindings.CI_NOTICE}")
+                        not_checked.append(f"{word['id']}:private_commitment")
+                except (ValueError, OSError, KeyError) as exc:
+                    errors.append(f"{word['id']}: {exc}")
+                continue
             word_id = word["id"]
             lemma = word["lemma"]
             pos = word["pos"]
@@ -666,25 +692,35 @@ def verify_plan_glosses(
         for word in requested
         if not (word.get("forms") and all("prop" in form.get("tags", "").split(":") for form in word["forms"]))
     ]
-    rows = api.gloss_rows((word["lemma"], word["pos"]) for word in common).raw if common else {}
-    payloads = api.kaikki_rows(word["lemma"] for word in common).raw if common else {}
-    ulif = api.ulif_entries(word["lemma"] for word in common).raw if common else {}
+    rows = (
+        api.gloss_rows((word["lemma"], word["pos"]) for word in common if word.get("kind") != "formula").raw
+        if common
+        else {}
+    )
+    payloads = api.kaikki_rows(word["lemma"] for word in common if word.get("kind") != "formula").raw if common else {}
+    ulif = api.ulif_entries(word["lemma"] for word in common if word.get("kind") != "formula").raw if common else {}
     for wid in sorted(cited):
         word = by_id.get(wid)
         if word is None:
             errors.append(f"{codes.GLOSS_MISSING}: {module} {wid} (lemma unavailable): word_record_missing")
             continue
-        label = f"{module} {wid} ({word['lemma']})"
+        label = f"{module} {wid} ({word.get('text', word.get('lemma'))})"
         stored = word.get("gloss_en")
         if stored is not None and not sources.is_learner_gloss(stored):
             errors.append(f"{codes.GLOSS_NOT_LEARNER_SENSE}: {label}: {stored!r}")
         if word not in common:
             continue
+        if word.get("kind") == "formula":
+            try:
+                sense_bindings.formulas.validate(word, by_id, api)
+            except (ValueError, OSError, KeyError) as exc:
+                errors.append(f"{label}: {exc}")
+                continue
         selection = binding_context.select(
             word,
-            rows.get((word["lemma"], word["pos"]), []),
-            payloads.get(word["lemma"]),
-            ulif_entries=ulif.get(word["lemma"], []),
+            api.formula_rows(word).raw if word.get("kind") == "formula" else rows.get((word["lemma"], word["pos"]), []),
+            payloads.get(word.get("lemma")),
+            ulif_entries=ulif.get(word.get("lemma"), []),
         )
         if (
             selection.gloss
@@ -696,7 +732,12 @@ def verify_plan_glosses(
             )
         ):
             errors.append(f"{codes.GLOSS_MISMATCH}: {label}: selected_gloss_changed")
-        if selection.reason in {"reference_binding_missing", "reference_binding_invalid"}:
+        if selection.reason in {
+            "reference_binding_missing",
+            "reference_binding_invalid",
+            "formula_binding_missing",
+            "formula_binding_invalid",
+        }:
             errors.append(f"{codes.GLOSS_MISSING}: {label}: {selection.reason}")
         elif selection.reason == codes.GLOSS_SENSE_UNRESOLVED:
             errors.append(f"{codes.GLOSS_SENSE_UNRESOLVED}: {label}: candidates={list(selection.candidates)!r}")
@@ -920,11 +961,16 @@ def verify_pack(
                         raise ValueError("word store must be a mapping")
                     context = sense_bindings.Context.read(level, evidence_base)
                     for wid in sorted(cited_gloss_ids(plan_doc)):
-                        method = context.entries.get(wid, {}).get("method")
-                        if method in {"a1_reference_meaning.v1", "reviewed.v1"}:
+                        binding = context.entries.get(wid, {})
+                        method = binding.get("method")
+                        if method in {"a1_reference_meaning.v1", "reviewed.v1"} or (
+                            method == "formula_row.v1" and "commitment" in binding
+                        ):
                             warnings.append(f"{level}/{slug} {wid}: {sense_bindings.CI_NOTICE}")
                             unchecked = (
-                                "private_commitment" if method == "a1_reference_meaning.v1" else "review_provenance"
+                                "private_commitment"
+                                if method in {"a1_reference_meaning.v1", "formula_row.v1"}
+                                else "review_provenance"
                             )
                             not_checked.append(f"{wid}:{unchecked}")
                     errors.extend(
