@@ -68,6 +68,15 @@ _AMBIGUOUS_PREFIXES = (
 
 _ADAPTER_PREFIX = "scripts/agent_runtime/adapters/"
 
+# Adapter modules the registry does not name but that serve exactly one seat:
+# ``kimicc.py`` is the Kimi Claude Code harness, and ``codex_events.py`` parses
+# the ``codex exec --json`` stream for ``codex.py`` and the runner's Codex-only
+# MCP observer.
+_ADAPTER_COMPANION_SEATS: dict[str, str] = {
+    "kimicc.py": "kimi",
+    "codex_events.py": "codex",
+}
+
 
 class _SeatCandidate(Protocol):
     name: str
@@ -207,9 +216,8 @@ def adapter_subject_index() -> Mapping[str, frozenset[str]]:
     """Map ``scripts/agent_runtime/adapters/<file>.py`` to the seats that own it.
 
     Built from the agent registry so a new per-seat adapter is classified
-    without a second hand-written ladder. ``kimicc.py`` is the Kimi Claude Code
-    harness; the registry names the seat ``kimi`` and points the
-    dispatch adapter at ``kimi.py``.
+    without a second hand-written ladder. Single-seat companion modules the
+    registry does not name come from ``_ADAPTER_COMPANION_SEATS``.
     """
     from scripts.agent_runtime.registry import AGENTS
 
@@ -219,7 +227,8 @@ def adapter_subject_index() -> Mapping[str, frozenset[str]]:
         filename = module.rsplit(".", 1)[-1] + ".py"
         rel = f"{_ADAPTER_PREFIX}{filename}"
         by_file.setdefault(rel, set()).add(canonical_subject_seat(name))
-    by_file.setdefault(f"{_ADAPTER_PREFIX}kimicc.py", set()).add("kimi")
+    for filename, seat in _ADAPTER_COMPANION_SEATS.items():
+        by_file.setdefault(f"{_ADAPTER_PREFIX}{filename}", set()).add(seat)
     return {path: frozenset(seats) for path, seats in by_file.items()}
 
 

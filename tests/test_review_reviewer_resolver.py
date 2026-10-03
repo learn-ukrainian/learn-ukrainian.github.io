@@ -1445,6 +1445,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "base.py": None,
         "claude.py": "claude",
         "codex.py": "codex",
+        "codex_events.py": "codex",
         "cursor.py": "cursor",
         "deepseek.py": "deepseek",
         "gemini.py": "gemini",
