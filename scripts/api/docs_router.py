@@ -216,7 +216,7 @@ def _relative_to_root(path: Path, root: Path) -> str:
     # Resolved containment remains the responsibility of _assert_under_root.
     root_parts = root.parts
     path_parts = path.parts
-    if path_parts[:len(root_parts)] != root_parts:
+    if path.anchor != root.anchor or path_parts[:len(root_parts)] != root_parts:
         raise ValueError(f"{str(path)!r} is not in the subpath of {str(root)!r}")
     return "/".join(path_parts[len(root_parts):]) or "."
 
