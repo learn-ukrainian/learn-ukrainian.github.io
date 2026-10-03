@@ -12524,7 +12524,7 @@ def test_settle_final_state_keeps_preservation_receipt(tmp_tasks_dir, tmp_path, 
 
 
 @pytest.mark.parametrize("over_cap", [False, True])
-def test_settle_ignored_output_mtime_and_cap(tmp_tasks_dir, tmp_path, monkeypatch, over_cap):
+def test_settle_preserves_pre_start_output_and_enforces_cap(tmp_tasks_dir, tmp_path, monkeypatch, over_cap):
     from scripts.fleet import ignored_task_output as output
 
     task_id = "ignored-output-boundary"
@@ -12535,17 +12535,15 @@ def test_settle_ignored_output_mtime_and_cap(tmp_tasks_dir, tmp_path, monkeypatc
     old.parent.mkdir()
     old.write_bytes(b"pre-existing")
     os.utime(old, (946684799, 946684799))
-    cutoff = datetime.now(UTC).timestamp() + 1
     recent = old.parent / "recent.txt"
     recent.write_bytes(b"task output")
-    os.utime(recent, (cutoff, cutoff))
     if over_cap:
         monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
     record = {
         "task_id": task_id,
         "status": "done",
         "worktree_path": str(worktree),
-        "started_at": datetime.fromtimestamp(cutoff, UTC).isoformat(),
+        "started_at": "2999-01-01T00:00:00Z",
     }
     delegate._write_state_atomic(delegate._state_path(task_id), record)
 
@@ -12560,10 +12558,10 @@ def test_settle_ignored_output_mtime_and_cap(tmp_tasks_dir, tmp_path, monkeypatc
     else:
         assert result["action"] == "removed" and not worktree.exists()
         receipt = delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]
-        assert receipt["count"] == 1 and receipt["bytes"] == len(b"task output")
+        assert receipt["count"] == 2 and receipt["bytes"] == len(b"pre-existingtask output")
         location = Path(receipt["location"])
         assert (location / ".cache/recent.txt").read_bytes() == b"task output"
-        assert not (location / ".cache/old.txt").exists()
+        assert (location / ".cache/old.txt").read_bytes() == b"pre-existing"
 
 
 def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):

@@ -11,6 +11,7 @@ import sqlite3
 import subprocess
 import threading
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -919,6 +920,9 @@ def test_pushed_origin_clean_worktree_is_removed(
     git(worktree, "add", "pushed.txt")
     git(worktree, "commit", "-m", "feat: pushed")
     git(worktree, "push", "-u", "origin", "codex/pushed")
+    # This case isolates remote containment; fixture push-hook subprocesses
+    # must not replace that decision with incidental host process activity.
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {})
 
     results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
@@ -1495,6 +1499,8 @@ def test_open_pr_matching_origin_is_not_reaped(
     git(worktree, "add", "wip.txt")
     git(worktree, "commit", "-m", "wip")
     git(worktree, "push", "-u", "origin", "codex/open-pr")
+    # PR precedence is the subject here; liveness refusals have separate tests.
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(
         monkeypatch,
         {"codex/open-pr": [{"number": 99, "state": "OPEN"}]},
@@ -3368,6 +3374,7 @@ def test_open_pr_worktree_counted_as_open_pr_not_unmerged(tmp_path: Path, monkey
     git(worktree, "add", "code.py")
     git(worktree, "commit", "-m", "add code")
     git(worktree, "push", "-u", "origin", "codex/feature-open")
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(
         monkeypatch,
         {"codex/feature-open": [{"number": 105, "state": "OPEN"}]},
@@ -5325,6 +5332,7 @@ def test_detached_clean_contained_in_remote_branch_only_is_reaped(
     git(worktree, "commit", "--allow-empty", "-m", "pushed side commit")
     git(worktree, "push", "origin", "HEAD:refs/heads/side")
     git(repo, "fetch", "origin")
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
 
     result = result_for(_reap_contained(repo, monkeypatch), worktree)
 
@@ -6881,6 +6889,34 @@ def test_canonical_reaper_preserves_old_output_when_task_id_was_redispatched(tmp
     receipt = result.preserved_artifacts
     assert receipt["count"] == 1 and Path(receipt["receipt_path"]).exists()
     assert (Path(receipt["location"]) / ".cache/out/page.txt").read_bytes() == b"old task output"
+
+
+def test_canonical_reaper_preserves_earlier_attempt_output_in_reused_checkout(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "reused-output"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    payload = b"earlier attempt output"
+    source.write_bytes(payload)
+    # The later record binds to the same checkout, as on a same-id re-dispatch.
+    later_start = max(source.stat().st_mtime, source.stat().st_ctime) + 2
+    _write_task_record(
+        repo, task_id, status="done", worktree_path=str(worktree),
+        worktree_reused=True, started_at=datetime.fromtimestamp(later_start, UTC).isoformat(),
+    )
+    assert git(worktree, "status", "--porcelain") == ""
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9645, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    receipt = result.preserved_artifacts
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())["preserved_artifacts"] == receipt
+    assert (Path(receipt["location"]) / ".cache/out/page.txt").read_bytes() == payload
 
 
 @pytest.mark.parametrize("scenario", links.SCENARIOS)

@@ -11,7 +11,6 @@ import subprocess
 import sys
 import uuid
 from collections.abc import Mapping
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -25,14 +24,6 @@ MAX_PRESERVED_BYTES = 256 * 1024 * 1024
 
 def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, Any]) -> list[str]:
     """Inventory output, including unignored files when no index was checked out."""
-    started_at = record.get("started_at")
-    cutoff = None
-    if started_at is not None:
-        started = datetime.fromisoformat(str(started_at).replace("Z", "+00:00"))
-        if started.tzinfo is None:
-            raise ValueError("task start must include a timezone")
-        cutoff = started.timestamp()
-
     # Retain the existing named-link safety checks and nested-repository gates.
     named = artifacts._named_artifact_files(worktree, record, primary=primary)
     names = artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard")
@@ -68,16 +59,7 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
         else:
             raise ValueError("ignored output is not a regular file")
     files.update(named)
-    selected = []
-    for name in sorted(files):
-        if artifacts._is_disposable_path(Path(name)):
-            continue
-        if cutoff is not None:
-            status = (worktree / name).stat()
-            if max(status.st_mtime, status.st_ctime) < cutoff:
-                continue
-        selected.append(name)
-    return selected
+    return sorted(name for name in files if not artifacts._is_disposable_path(Path(name)))
 
 
 def _record_matches_worktree(record: Mapping[str, Any], worktree: Path) -> bool:
@@ -155,8 +137,8 @@ def preserve_worktree_artifacts(
 ) -> tuple[bool, str, dict[str, Any] | None]:
     """Copy all ignored output before removal, independent of terminal status.
 
-    Call under the remover's existing ownership/liveness lock. Missing task
-    start conservatively includes all non-cache ignored files. An absent task
+    Call under the remover's existing ownership/liveness lock. Task start values
+    never affect selection: earlier attempts' output must survive too. An absent task
     identity is derived from the dispatch path, or uses a worktree path digest. Each
     changed output has its own destination; identical verified copies are reused.
     Inventory, cap, copy, verification and record errors retain the

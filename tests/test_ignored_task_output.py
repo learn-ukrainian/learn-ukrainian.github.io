@@ -39,20 +39,21 @@ def test_all_ignored_output_preserved_without_response_names(checkout, status):
     assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
 
 
-def test_start_boundary_includes_modified_and_equal_timestamps_only(checkout):
+@pytest.mark.parametrize(
+    "start", ["2000-01-01T00:00:00Z", None, "bad", "2000-01-01T00:00:00", "2999-01-01T00:00:00Z"],
+    ids=["old", "missing", "malformed", "naive", "future"],
+)
+def test_start_values_are_irrelevant_to_selection(checkout, start):
     old = artifact(checkout, "ignored/old.txt")
-    cutoff = int(old.stat().st_ctime) + 2
-    equal = artifact(checkout, "ignored/equal.txt")
     modified = artifact(checkout, "ignored/modified.txt", b"new version")
     os.utime(old, (946684799, 946684799))
-    os.utime(equal, (cutoff, cutoff))
-    os.utime(modified, (cutoff + 1, cutoff + 1))
-    ok, _, receipt = preserve(checkout, {"started_at": datetime.fromtimestamp(cutoff, UTC).isoformat()})
+    record = {} if start is None else {"started_at": start}
+    ok, _, receipt = preserve(checkout, record)
     assert ok and receipt["count"] == 2
     location = Path(receipt["location"])
-    assert not (location / "ignored/old.txt").exists()
-    assert (location / "ignored/equal.txt").exists()
-    assert (location / "ignored/modified.txt").read_bytes() == b"new version"
+    assert (location / "ignored/old.txt").read_bytes() == old.read_bytes()
+    assert (location / "ignored/modified.txt").read_bytes() == modified.read_bytes()
+    assert set(receipt) == {"count", "bytes", "location", "worktree_path", "content_sha256", "reused"}
 
 
 @pytest.mark.parametrize("cache", sorted(output.artifacts._DISPOSABLE_DIRECTORIES - {".git"}))
@@ -61,14 +62,12 @@ def test_known_caches_excluded(checkout, cache):
     assert preserve(checkout) == (True, "", None)
 
 
-@pytest.mark.parametrize("failure", ["cap", "copy", "record", "inventory", "changed", "added", "invalid_start"])
+@pytest.mark.parametrize("failure", ["cap", "copy", "record", "inventory", "changed", "added"])
 def test_failure_retains_sources(checkout, monkeypatch, failure):
     source = artifact(checkout, "ignored/report.txt", b"task output")
     record = {"status": "done"}
     if failure == "cap":
         monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 10)
-    elif failure == "invalid_start":
-        record["started_at"] = "bad"
     elif failure == "inventory":
         monkeypatch.setattr(
             output.artifacts, "_git_paths", lambda *args: (_ for _ in ()).throw(subprocess.SubprocessError())
@@ -148,7 +147,7 @@ def test_retry_reuses_identical_copy_without_copying(checkout, monkeypatch):
 
 
 @pytest.mark.parametrize("binding", ["missing", "other", "cwd", "alias"])
-def test_only_real_path_bound_record_supplies_cutoff_and_receives_receipt(checkout, binding):
+def test_only_real_path_bound_record_receives_receipt(checkout, binding):
     repo, _, tasks = checkout
     artifact(checkout, "ignored/old.txt", b"old output")
     record = {"started_at": "2999-01-01T00:00:00Z"}
@@ -167,33 +166,32 @@ def test_only_real_path_bound_record_supplies_cutoff_and_receives_receipt(checko
     ok, _, receipt = output.preserve_worktree_artifacts(
         repo, primary=checkout[1], task_id="output-task", tasks_dir=tasks, task_record=record
     )
-    assert ok
+    assert ok and receipt["count"] == 1
+    assert (Path(receipt["location"]) / "ignored/old.txt").read_bytes() == b"old output"
     if binding in {"cwd", "alias"}:
-        assert receipt is None  # Matching future cutoff is applicable.
+        assert json.loads(path.read_text())["preserved_artifacts"] == receipt
+        assert record["preserved_artifacts"] == receipt
     else:
-        assert receipt["count"] == 1
         assert Path(receipt["receipt_path"]).exists()
-        assert (Path(receipt["location"]) / "ignored/old.txt").read_bytes() == b"old output"
-    assert json.loads(path.read_text()) == record and "preserved_artifacts" not in record
+        assert json.loads(path.read_text()) == record and "preserved_artifacts" not in record
 
 
 def test_matching_archive_wins_over_unrelated_hot_record(checkout):
     repo, primary, tasks = checkout
     old = artifact(checkout, "ignored/old.txt", b"old")
     new = artifact(checkout, "ignored/new.txt", b"new")
-    cutoff = int(old.stat().st_ctime) + 2
-    os.utime(new, (cutoff, cutoff))
     other = repo.parent / "other"
     other.mkdir()
     hot = {"worktree_path": str(other), "started_at": "2999-01-01T00:00:00Z"}
     (tasks / "output-task.json").write_text(json.dumps(hot))
     archive = tasks / "archive/output-task.json"
     archive.parent.mkdir()
-    archive.write_text(json.dumps({"cwd": str(repo), "started_at": datetime.fromtimestamp(cutoff, UTC).isoformat()}))
+    archive.write_text(json.dumps({"cwd": str(repo), "started_at": "2999-01-01T00:00:00Z"}))
     ok, _, receipt = output.preserve_worktree_artifacts(repo, primary=primary, task_id="output-task", tasks_dir=tasks)
-    assert ok and receipt["count"] == 1 and not receipt["reused"]
+    assert ok and receipt["count"] == 2 and not receipt["reused"]
     assert (Path(receipt["location"]) / "ignored/new.txt").read_bytes() == b"new"
-    assert not (Path(receipt["location"]) / "ignored/old.txt").exists()
+    assert (Path(receipt["location"]) / "ignored/old.txt").read_bytes() == old.read_bytes()
+    assert (Path(receipt["location"]) / "ignored/new.txt").read_bytes() == new.read_bytes()
     assert json.loads(archive.read_text())["preserved_artifacts"] == receipt
     assert json.loads((tasks / "output-task.json").read_text()) == hot
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -220,3 +221,30 @@ def test_claims_remove_preserves_old_output_when_task_id_was_redispatched(tmp_pa
     assert len(receipts) == 1
     assert json.loads(receipts[0].read_text())["count"] == 1
     assert json.loads(capsys.readouterr().out)["action"] == "removed"
+
+
+def test_claims_remove_preserves_earlier_attempt_output_in_reused_checkout(tmp_path, monkeypatch, capsys):
+    primary = _primary(tmp_path)
+    checkout = _linked(primary, "codex/reused-output")
+    (primary / ".git/info/exclude").write_text(".cache/\n")
+    source = checkout / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    payload = b"earlier attempt output"
+    source.write_bytes(payload)
+    # Same id and checkout, but the re-dispatch replaces the creating record
+    # with a later start. Both file clocks precede that start in the reproduction.
+    later_start = max(source.stat().st_mtime, source.stat().st_ctime) + 2
+    _record(
+        primary, "reused-output", status="done", worktree_path=str(checkout),
+        worktree_reused=True, started_at=datetime.fromtimestamp(later_start, UTC).isoformat(),
+    )
+    record_path = primary / "batch_state/tasks/reused-output.json"
+    monkeypatch.setenv("LU_TASKS_DIR", str(record_path.parent))
+    assert _git(checkout, "status", "--porcelain") == ""
+    assert worktree_claims.main(["remove", str(checkout), "--json"]) == worktree_claims.EXIT_REMOVED
+    result = json.loads(capsys.readouterr().out)
+    assert result["action"] == "removed" and not checkout.exists()
+    receipt = json.loads(record_path.read_text())["preserved_artifacts"]
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert result["preserved_artifacts"] == receipt
+    assert (Path(receipt["location"]) / ".cache/out/page.txt").read_bytes() == payload

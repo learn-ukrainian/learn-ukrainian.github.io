@@ -68,18 +68,19 @@ They are not registered worktree-root removers. In particular,
 The guard inventories all Git-ignored regular files, including `.cache/`
 outputs never named in a response. No-checkout runtimes have an empty index and
 no on-disk ignore rules, so the guard inventories all untracked non-cache files.
-Files with `max(st_mtime, st_ctime)` at or after the task's
-recorded `started_at` are copied only when the record's `worktree_path` (or
-fallback `cwd`) resolves to the checkout being removed. Hot then archived
-records are checked for that binding; task ids alone never bind records.
+All such output is preserved, including files from earlier attempts in a
+reused checkout and files written before the current task started. Start values
+(old, missing, malformed, naive, or future) never affect file selection. There
+is no time cutoff or creator-history eligibility check. Record binding only
+attributes the receipt: the record's `worktree_path` (or fallback `cwd`) must
+resolve to the checkout being removed. Hot then archived records are checked
+for that binding; task ids alone never bind records.
 Output retains its relative paths under
 `batch_state/preserved/<task-id>/<attempt-nonce>/`. A manifest binds each copy
 to its resolved worktree and a digest of the file list and bytes. Retries reuse
 an existing copy only after verifying its complete file list and bytes again;
 changed output gets a new attempt directory, keeping earlier copies intact.
-An absent or unbound start conservatively includes all
-ignored non-cache files; a malformed start refuses removal. Closeout without a
-task identity derives it from the dispatch path, or uses `worktree-<path-digest>`
+Closeout without a task identity derives it from the dispatch path, or uses `worktree-<path-digest>`
 at the same destination. Empty files
 are included. Existing copy verification checks size and SHA-256, refuses
 conflicting evidence, and rechecks inventory and copied bytes before removal.
@@ -95,11 +96,16 @@ Automatic preservation is capped at **256 MiB per worktree**, bounding disk
 duplication while accommodating text output and small reports. Above the cap,
 no partial copy is attempted and the worktree is retained for its owner's
 disposition. Inventory, copy, byte-verification, or task-record write failures
-also retain it. Task terminal status never changes preservation eligibility.
+also retain it, as do manifest or fallback-receipt write failures. Task terminal
+status never changes preservation eligibility. Existing ownership and liveness
+gates still apply before preservation and removal.
 Existing task records and reap/closeout receipts report `preserved_artifacts`
-with `count`, `bytes`, and `location`. Each copy's location is printed. If no task
+with `count`, `bytes`, `location`, `worktree_path`, `content_sha256`, and `reused`.
+No timestamp or creator-history fields are stored in preservation metadata.
+Each copy's location is printed. If no task
 record is bound to the checkout, a `.receipt.json` file beside the copy stores
-that metadata and its path is printed; no task record is synthesized or changed.
+that metadata plus `record_update` and `receipt_path`, and its path is printed;
+no task record is synthesized or changed.
 Binding is rechecked under the shared task-record writer lock before updates.
 Reused copies report `reused: true`, with a fresh receipt when no bound record
 exists. The infra lane
