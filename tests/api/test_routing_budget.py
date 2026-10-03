@@ -6,8 +6,13 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+
 from scripts.api import state_router
-from scripts.fleet import capacity_pick
+from scripts.fleet import capacity_pick, credit_lane
+
+# Captured at import, before the conftest autouse fixture stubs the reader.
+REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
 
 
 def _write_budget_config(tmp_path: Path) -> Path:
@@ -315,3 +320,173 @@ def test_subscription_need_login_reaches_capacity_pick(monkeypatch, tmp_path):
     for lane in ("claude", "codex", "kimi", "grok"):
         assert budget["agents"][lane]["probe_state"] == "NEED_LOGIN"
         assert rows[lane]["avoid"] is True
+
+
+# --- #9517: near-cap lanes with a credit balance ----------------------------
+
+_CREDIT_NOW = datetime(2026, 10, 2, 17, 0, tzinfo=UTC)
+
+
+def _credit_budget(
+    monkeypatch, tmp_path, *, codex_balance=62500.0, claude_used=95.0, default_batch_state=False
+) -> dict:
+    """routing-budget with Codex 99% used plus ``codex_balance`` credits and Claude at ``claude_used``%.
+
+    ``default_batch_state`` omits ``batch_state_dir`` so the producer resolves its own default.
+    """
+    budget_path = _write_budget_config(tmp_path)
+    _configure_base(monkeypatch, tmp_path)
+    fetched_at = "2026-10-02T16:59:00Z"
+
+    def usage(provider):
+        if provider == "codex":
+            return {
+                "lane": "codex",
+                "weekly_used_pct": 99.0,
+                "weekly_remaining_pct": 1.0,
+                "credit_balance": codex_balance,
+                "freshness": "fresh",
+                "age_s": 60.0,
+                "stale": False,
+                "fetched_at": fetched_at,
+                "source": "codexbar",
+            }
+        if provider == "claude":
+            return {
+                "lane": "claude",
+                "weekly_used_pct": claude_used,
+                "weekly_remaining_pct": 100.0 - claude_used,
+                "freshness": "fresh",
+                "age_s": 60.0,
+                "stale": False,
+                "fetched_at": fetched_at,
+                "source": "codexbar",
+            }
+        return {"lane": provider, "weekly_used_pct": None, "status": "unknown", "source": "codexbar"}
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", usage)
+    monkeypatch.setattr(
+        state_router, "get_cursor_lane_usage", lambda **_kwargs: {"lane": "cursor", "status": "unknown"}
+    )
+    monkeypatch.setattr(
+        state_router,
+        "summarize_fleet_burn",
+        lambda agent, **_kwargs: {"source": "agent_runtime_jsonl", "agent": agent, "windows": {}},
+    )
+    return state_router.compute_routing_budget(
+        _CREDIT_NOW,
+        budget_config_path=budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        **({} if default_batch_state else {"batch_state_dir": tmp_path}),
+    )
+
+
+def test_near_cap_codex_with_credits_is_recommended_when_no_plan_backed_seat_remains(monkeypatch, tmp_path):
+    data = _credit_budget(monkeypatch, tmp_path)
+    codex = data["agents"]["codex"]
+    assert codex["status"] == "near_cap"  # raw quota vocabulary unchanged
+    assert codex["credit"]["state"] == "credit_balance_present"
+    assert codex["credit"]["evidence"]["credit_balance"] == 62500.0
+    assert data["agents"]["claude"]["credit"] == {"state": "not_configured"}
+    rec = data["recommendation"]
+    assert rec["primary_agent_for_code"] == "codex"
+    assert "draw not verified by the router" in rec["rationale"]
+    assert "gpt-6.1-sol, gpt-6-luna" in rec["rationale"]
+    assert any(
+        w.startswith("recommendation 'codex' is past its plan cap") and "credit-period allowlist" in w
+        for w in rec["warnings"]
+    )
+
+    # capacity_pick keeps that recommendation instead of suppressing it as AVOID.
+    report = capacity_pick.build_report(
+        data, active_in_flight={}, admission={"line": "admission: test"}, now=_CREDIT_NOW
+    )
+    assert report["recommendation"]["primary_agent_for_code"] == "codex"
+
+
+def test_plan_backed_warm_seat_still_precedes_credit_lane(monkeypatch, tmp_path):
+    data = _credit_budget(monkeypatch, tmp_path, claude_used=60.0)
+    assert data["agents"]["codex"]["credit"]["state"] == "credit_balance_present"
+    assert data["recommendation"]["primary_agent_for_code"] == "claude"
+
+
+@pytest.mark.parametrize(
+    ("balance", "state"),
+    [(0.0, "credits_exhausted"), (None, "credits_unverified")],
+    ids=["exhausted", "missing"],
+)
+def test_near_cap_codex_without_usable_credits_is_unchanged(monkeypatch, tmp_path, balance, state):
+    data = _credit_budget(monkeypatch, tmp_path, codex_balance=balance)
+    assert data["agents"]["codex"]["status"] == "near_cap"
+    assert data["agents"]["codex"]["credit"]["state"] == state
+    assert data["recommendation"]["primary_agent_for_code"] == "inline_orchestrator"
+
+
+def test_recent_rate_limit_keeps_the_credit_lane_out(monkeypatch, tmp_path):
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(
+        credit_lane,
+        "read_recent_rate_limits",
+        lambda *_a, **_k: {"count": 1, "last_rate_limited_at": "2026-10-02T16:40:00Z"},
+    )
+    data = _credit_budget(monkeypatch, tmp_path)
+    assert data["agents"]["codex"]["credit"]["state"] == "credit_use_unconfirmed"
+    assert data["recommendation"]["primary_agent_for_code"] == "inline_orchestrator"
+
+
+def test_worktree_caller_reads_rate_limits_from_the_shared_runtime_log(monkeypatch, tmp_path):
+    """A linked-worktree caller without ``batch_state_dir`` sees the shared checkout's rate limits."""
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
+    shared_root = tmp_path / "primary"
+    shared_usage = shared_root / "batch_state" / "api_usage"
+    shared_usage.mkdir(parents=True)
+    (shared_usage / "usage_codex-delegate_2026-10-02.jsonl").write_text(
+        json.dumps({"ts": "2026-10-02T16:50:00Z", "outcome": "rate_limited"}) + "\n", encoding="utf-8"
+    )
+    source_root = Path(state_router.__file__).resolve().parents[2]
+    resolved: list[Path] = []
+
+    def shared_checkout(root: Path) -> Path:
+        resolved.append(root)
+        return shared_root
+
+    monkeypatch.setattr(state_router, "main_checkout_root", shared_checkout)
+    monkeypatch.setattr(usage, "_usage_dir", lambda: shared_usage)
+
+    data = _credit_budget(monkeypatch, tmp_path, default_batch_state=True)
+    codex = data["agents"]["codex"]
+    assert codex["credit"]["state"] == "credit_use_unconfirmed"
+    assert codex["credit"]["evidence"]["rate_limited_count"] == 1
+    assert resolved == [source_root]
+    assert data["recommendation"]["primary_agent_for_code"] == "inline_orchestrator"
+
+    # An explicit batch_state_dir still overrides the shared default.
+    explicit = _credit_budget(monkeypatch, tmp_path)
+    assert explicit["agents"]["codex"]["credit"]["state"] == "credit_balance_present"
+
+
+def test_unreadable_credit_policy_publishes_policy_error_and_keeps_near_cap(monkeypatch, tmp_path):
+    from scripts.fleet import credit_lane
+
+    def broken(path=None):
+        raise ValueError("unreadable")
+
+    monkeypatch.setattr(credit_lane, "load_policy", broken)
+    data = _credit_budget(monkeypatch, tmp_path)
+    assert data["agents"]["codex"]["credit"]["state"] == "policy_error"
+    assert data["agents"]["claude"]["credit"] == {"state": "not_configured"}
+    assert data["recommendation"]["primary_agent_for_code"] == "inline_orchestrator"
+
+
+def test_need_login_credit_lane_is_not_credit_backed():
+    present = {"state": "credit_balance_present", "allowed_models": ["gpt-6.1-sol"]}
+    assert state_router._credit_backed({"credit": present}) is True
+    assert state_router._credit_backed({"credit": present, "probe_state": "NEED_LOGIN"}) is False
+    assert state_router._credit_backed({"credit": {"state": "credits_exhausted"}}) is False
+    assert state_router._credit_backed(None) is False

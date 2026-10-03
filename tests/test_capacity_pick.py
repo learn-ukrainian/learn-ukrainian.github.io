@@ -492,3 +492,81 @@ def test_cursor_does_not_inherit_glm_quota():
     assert row["status"] == "unknown"
     assert row["remaining_pct"] is None
     assert "quota:glm" not in row["notes"]
+
+
+# --- #9517: near-cap Codex with a credit balance ----------------------------
+
+_CREDIT_NOW = datetime(2026, 10, 2, 17, 0, tzinfo=UTC)
+
+
+def _credit_codex(**overrides) -> dict:
+    info = {
+        "status": "near_cap",
+        "remaining_pct": 1.0,
+        "burn_pct_7d": 99.0,
+        "freshness": "fresh",
+        "age_s": 60.0,
+        "eligible": True,
+        "health": {"healthy": True},
+        "credit_balance": 62500.0,
+        "runtime": {"headroom_blocked": False, "rate_limited": 0},
+        "codexbar": {
+            "weekly_remaining_pct": 1.0,
+            "freshness": "fresh",
+            "age_s": 60.0,
+            "stale": False,
+            "fetched_at": "2026-10-02T16:59:00Z",
+        },
+    }
+    info.update(overrides)
+    return info
+
+
+def _credit_rows(codex: dict) -> list[dict]:
+    from scripts.fleet.reset_reserve import unavailable_reserve
+
+    budget = {
+        "agents": {
+            "codex": codex,
+            "cursor": {"status": "warm", "remaining_pct": 40.0, "health": {"healthy": True}},
+            "claude": {"status": "hot", "remaining_pct": 30.0, "health": {"healthy": True}},
+        },
+        "api_accounts": {},
+        "diagnostics": {"stale": False},
+    }
+    return capacity_pick.build_lane_rows(
+        budget, active_in_flight={}, reset_reserve=unavailable_reserve(), now=_CREDIT_NOW
+    )
+
+
+def test_credit_balance_codex_picks_after_plan_backed_warm_seat():
+    """Regression guard: capacity_pick already ordered a credit-backed lane this way before #9517.
+
+    It passes on the merge-base too; it pins the existing behaviour the
+    routing-budget credit field now feeds, it does not prove new behaviour.
+    """
+    rows = _credit_rows(_credit_codex())
+    codex = next(row for row in rows if row["lane"] == "codex")
+    assert (codex["status"], codex["avoid"]) == ("credit_balance_present", False)
+    order = capacity_pick.build_pick_order(rows)
+    usable = [entry["lane"] for entry in order if entry["pick"] != "AVOID"]
+    # After every usable plan-backed seat (warm cursor first, unknown-status lanes next), never AVOID.
+    assert usable[0] == "cursor" and usable[-1] == "codex"
+    assert next(entry["pick"] for entry in order if entry["lane"] == "claude") == "AVOID"
+    assert "codex" in capacity_pick.cooler_lanes(rows)
+
+
+@pytest.mark.parametrize(
+    ("overrides", "state"),
+    [
+        ({"credit_balance": 0.0}, "credits_exhausted"),
+        ({"credit_balance": None}, "credits_unverified"),
+        ({"runtime": {"headroom_blocked": True, "rate_limited": 3}}, "credit_use_unconfirmed"),
+    ],
+    ids=["exhausted", "missing", "rate-limited"],
+)
+def test_codex_without_usable_credits_stays_near_cap_avoid(overrides, state):
+    rows = _credit_rows(_credit_codex(**overrides))
+    codex = next(row for row in rows if row["lane"] == "codex")
+    assert (codex["credit"]["state"], codex["status"], codex["avoid"]) == (state, "near_cap", True)
+    assert "codex" not in capacity_pick.cooler_lanes(rows)

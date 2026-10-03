@@ -223,16 +223,21 @@ def _fresh_probe(info: dict[str, Any], policy: CreditPolicy, *, snapshot_stale: 
     return True, ""
 
 
-def read_recent_rate_limits(lane: str, window_s: float, *, now: datetime | None = None) -> dict[str, Any]:
+def read_recent_rate_limits(
+    lane: str, window_s: float, *, now: datetime | None = None, usage_dir: Path | None = None
+) -> dict[str, Any]:
     """``rate_limited`` outcomes for ``lane`` in the runtime usage records within ``window_s``.
 
-    ``unreadable`` counts relevant records that could not be read (see
+    ``usage_dir`` defaults to the shared runtime usage directory. ``unreadable``
+    counts relevant records that could not be read (see
     ``summarize_lane_runtime``); a count of 0 with ``unreadable["total"] > 0``
     is not "no rate limits".
     """
     from scripts.agent_runtime.usage import summarize_lane_runtime
 
-    summary = summarize_lane_runtime(lane, window_s=window_s, now=now.timestamp() if now is not None else None)
+    summary = summarize_lane_runtime(
+        lane, window_s=window_s, usage_dir=usage_dir, now=now.timestamp() if now is not None else None
+    )
     return {
         "count": int(summary["rate_limited"]),
         "last_rate_limited_at": summary["last_rate_limited_at"],
@@ -241,7 +246,7 @@ def read_recent_rate_limits(lane: str, window_s: float, *, now: datetime | None 
 
 
 def _rate_limit_evidence(
-    lane: str, record: dict[str, Any], policy: CreditPolicy, now: datetime
+    lane: str, record: dict[str, Any], policy: CreditPolicy, now: datetime, usage_dir: Path | None = None
 ) -> tuple[int | None, str | None, dict[str, int] | None]:
     """Recent rate-limit count, newest time and unreadable-record counts.
 
@@ -253,7 +258,7 @@ def _rate_limit_evidence(
     inside the policy window (it can come from another usage directory).
     """
     try:
-        local = read_recent_rate_limits(lane, policy.rate_limit_window_s, now=now)
+        local = read_recent_rate_limits(lane, policy.rate_limit_window_s, now=now, usage_dir=usage_dir)
         count = local["count"]
         last = local["last_rate_limited_at"]
         unreadable = local.get("unreadable")
@@ -293,8 +298,13 @@ def lane_credit_state(
     *,
     now: datetime | None = None,
     snapshot_stale: bool = False,
+    usage_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Credit state of one routing-budget lane record; see the module docstring for fail-closed rules."""
+    """Credit state of one routing-budget lane record; see the module docstring for fail-closed rules.
+
+    ``usage_dir`` is the runtime usage directory the rate-limit evidence is read
+    from (default: the shared one).
+    """
     models = policy.lane_models(lane)
     if models is None:
         return {"state": NOT_CONFIGURED}
@@ -343,7 +353,7 @@ def lane_credit_state(
     result["credit_balance"] = balance
     if balance <= 0:
         return {**result, "state": CREDITS_EXHAUSTED, "reason": f"credit balance {balance:g}"}
-    count, last, unreadable = _rate_limit_evidence(lane, record, policy, current)
+    count, last, unreadable = _rate_limit_evidence(lane, record, policy, current, usage_dir)
     evidence["rate_limited_count"] = count
     evidence["last_rate_limited_at"] = last
     if unreadable is not None:
@@ -489,6 +499,74 @@ def lane_credit_report(
         **state,
         "reset_advice": reset_advice(lane, info, policy, state["state"], now=now, snapshot_stale=snapshot_stale),
     }
+
+
+def published_credit_relief(
+    lane: str,
+    published: Any,
+    model: str | None,
+    *,
+    policy: CreditPolicy | None = None,
+    now: datetime | None = None,
+) -> dict[str, Any] | None:
+    """Re-check the credit state a routing-budget snapshot published for ``lane`` (``agents.<lane>.credit``).
+
+    For consumers that act on a snapshot (the reviewer resolver and the
+    coordinator wave gate). None when there is nothing that could relax the plan
+    state: the snapshot does not say ``credit_balance_present``, the lane is
+    not in the local policy, or the policy is unreadable. Otherwise a receipt
+    with the state, reason, evidence, the local allowlist and whether ``model``
+    is on it; the state reads ``credits_unverified`` when the published balance
+    fetch time is no longer fresh now (an old snapshot file proves nothing).
+
+    The published rate-limit evidence is as old as the snapshot, so the
+    current evidence is re-read through :func:`read_recent_rate_limits` (the
+    shared runtime usage records): a rate limit since then reads
+    ``credit_use_unconfirmed`` and unreadable records ``credits_unverified``,
+    as :func:`lane_credit_state` would decide now.
+    """
+    if not isinstance(published, dict) or published.get("state") != CREDIT_BALANCE_PRESENT:
+        return None
+    if policy is None:
+        try:
+            policy = load_policy()
+        except ValueError:
+            return None
+    allowed = policy.lane_models(lane)
+    if allowed is None:
+        return None
+    current = (now or datetime.now(UTC)).astimezone(UTC)
+    evidence = published.get("evidence") if isinstance(published.get("evidence"), dict) else {}
+    receipt: dict[str, Any] = {
+        "lane": lane.strip().lower(),
+        "state": CREDIT_BALANCE_PRESENT,
+        "reason": published.get("reason"),
+        "credit_balance": published.get("credit_balance"),
+        "evidence": dict(evidence),
+        "allowed_models": list(allowed),
+        "model": model,
+        "model_allowed": _allowed(allowed, model),
+        "draw": DRAW_NOT_VERIFIED,
+    }
+    if _fresh_at(evidence.get("credit_fetched_at"), current, policy.credit_max_age_s) is None:
+        receipt["state"] = CREDITS_UNVERIFIED
+        receipt["reason"] = (
+            f"published credit balance fetch time missing, not explicit UTC, or older than {policy.credit_max_age_s:g}s"
+        )
+        return receipt
+    count, last, unreadable = _rate_limit_evidence(lane, {}, policy, current)
+    receipt["evidence"].update(
+        {"rate_limited_count": count, "last_rate_limited_at": last, "rate_limits_checked_at": _iso(current)}
+    )
+    if unreadable is not None:
+        receipt["evidence"]["unreadable_records"] = unreadable
+    if count is None:
+        receipt["state"] = CREDITS_UNVERIFIED
+        receipt["reason"] = "runtime usage records unreadable now: rate limits cannot be ruled out"
+    elif count > 0:
+        receipt["state"] = CREDIT_USE_UNCONFIRMED
+        receipt["reason"] = RATE_LIMIT_REASON
+    return receipt
 
 
 def _allowed(allowed: tuple[str, ...], model: str | None) -> bool:

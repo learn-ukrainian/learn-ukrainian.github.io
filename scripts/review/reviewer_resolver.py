@@ -40,6 +40,7 @@ from typing import Literal
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
+from scripts.fleet import credit_lane
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     VALID_RISKS,
@@ -433,6 +434,9 @@ class CandidateResult:
     # is deliberately opaque-but-stable so ledger callers can persist the
     # exact decision without this resolver acquiring storage authority.
     selection_score: tuple[object, ...] | None = None
+    # Credit-period receipt (#9517) when a near-cap lane's published
+    # ``credit_balance_present`` state decided this candidate's eligibility.
+    credit: Mapping[str, object] | None = field(default=None, hash=False)
 
     @property
     def quota_bucket(self) -> str:
@@ -523,6 +527,22 @@ def _health_of(candidate: ReviewerCandidate, snapshot: Mapping[str, str] | None)
             None,
         )
     )
+
+
+def _near_cap_credit(candidate: ReviewerCandidate, snapshot: Mapping[str, object] | None) -> dict[str, object] | None:
+    """Credit receipt for a near-cap candidate from the snapshot's ``agents.<route>.credit`` (#9517).
+
+    Only a full routing-budget snapshot carries the credit state its producer
+    computed with :func:`credit_lane.lane_credit_state`; a flat health map has
+    none. :func:`credit_lane.published_credit_relief` re-checks the published
+    state against the local policy, the clock and the current shared runtime
+    rate-limit records.
+    """
+    agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
+    record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
+    if not isinstance(record, Mapping):
+        return None
+    return credit_lane.published_credit_relief(candidate.route, record.get("credit"), candidate.concrete_model)
 
 
 def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs) -> str | None:
@@ -899,20 +919,34 @@ def evaluate_candidate(
             reason="lane health is unhealthy — route is operationally unavailable",
             health=health,
         )
+    credit: dict[str, object] | None = None
     if health == "near_cap" and inputs.pinned_candidate != candidate.name:
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason="quota bucket is near cap — automatic assignments are prohibited",
-            health=health,
-        )
+        # A near-cap lane with a usable credit balance stays eligible for an
+        # allowlisted model only (#9517); every other credit state keeps the cap.
+        credit = _near_cap_credit(candidate, inputs.routing_snapshot)
+        reason = "quota bucket is near cap — automatic assignments are prohibited"
+        if credit is not None and credit["state"] != credit_lane.CREDIT_BALANCE_PRESENT:
+            reason += f" ({credit['state']}: {credit['reason']})"
+        elif credit is not None and not credit["model_allowed"]:
+            reason += (
+                f" (credit balance present, but {candidate.concrete_model} is outside the credit-period "
+                f"allowlist [{', '.join(credit['allowed_models'])}])"
+            )
+        if credit is None or credit["state"] != credit_lane.CREDIT_BALANCE_PRESENT or not credit["model_allowed"]:
+            return CandidateResult(
+                name=candidate.name,
+                concrete_model=candidate.concrete_model,
+                family=candidate.family,
+                route=candidate.route,
+                transport=candidate.transport,
+                invocation=candidate.invocation,
+                quality_tier=candidate.quality_tier,
+                requires_silence_timeout=candidate.requires_silence_timeout,
+                status="excluded",
+                reason=reason,
+                health=health,
+                credit=credit,
+            )
 
     suitability_rank = _suitability_rank(candidate, inputs)
     if suitability_rank is None:
@@ -934,6 +968,7 @@ def evaluate_candidate(
             status="excluded",
             reason=f"missing required review role suitability: {requested}",
             health=health,
+            credit=credit,
         )
 
     return CandidateResult(
@@ -949,16 +984,17 @@ def evaluate_candidate(
         reason=None,
         health=health,
         suitability_rank=suitability_rank,
+        credit=credit,
     )
 
 
 def _best_eligible(
-    eligible_by_fit_and_tier: dict[tuple[bool, int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]],
+    eligible_by_fit_and_tier: dict[tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]],
     *,
     exclude_families: frozenset[str] = frozenset(),
 ) -> tuple[ReviewerCandidate, CandidateResult, int] | None:
     """Pick the best eligible entry: primary before last resort, then suitability and tier,
-    deterministic selection_score inside it. ``exclude_families`` lets the
+    plan-backed before credit-backed, deterministic selection_score inside it. ``exclude_families`` lets the
     dual-family quorum path pick a second seat outside the first seat's
     family without relaxing the fit-before-pressure ordering."""
     filtered = {
@@ -1154,7 +1190,11 @@ def resolve_reviewer(
     # rungs with the same semantic suitability and catalog tier form one
     # balancing set, so insertion order cannot pin traffic or promote an idle
     # weaker model over a better task fit.
-    eligible_by_fit_and_tier: dict[tuple[bool, int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]] = {}
+    # A credit-backed near-cap seat (#9517) ranks after every plan-backed seat
+    # of equal standing (same last-resort flag, suitability and tier).
+    eligible_by_fit_and_tier: dict[
+        tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
+    ] = {}
     tier_for_candidate = {
         name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
         for name, candidate in REVIEW_CANDIDATES.items()
@@ -1185,7 +1225,12 @@ def resolve_reviewer(
             if result.status == "advisory_only":
                 advisory.append(result)
             elif result.status == "eligible":
-                fit_key = (candidate.last_resort, result.suitability_rank or 0, tier_for_candidate[candidate.name])
+                fit_key = (
+                    candidate.last_resort,
+                    result.suitability_rank or 0,
+                    tier_for_candidate[candidate.name],
+                    result.credit is not None,
+                )
                 eligible_by_fit_and_tier.setdefault(fit_key, []).append((candidate, result, rung_index))
 
     if quorum_required:
@@ -1268,6 +1313,7 @@ def resolve_reviewer(
             health=best.health,
             suitability_rank=best.suitability_rank,
             selection_score=best.selection_score,
+            credit=best.credit,
         )
         for i, entry in enumerate(trace):
             if entry is best:
@@ -1312,6 +1358,11 @@ def resolve_reviewer(
         if inputs.pinned_candidate:
             substitution_notes.append(
                 f"explicit pressure override selected {selected.name}: {inputs.pressure_override_reason.strip()}"
+            )
+        if selected.credit is not None:
+            substitution_notes.append(
+                f"selected {selected.name} on lane {selected.route} past its plan cap: {credit_lane.DRAW_NOT_VERIFIED}; "
+                f"credit-period allowlist [{', '.join(selected.credit['allowed_models'])}]"
             )
 
     return ReviewerResolution(

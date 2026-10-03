@@ -24,6 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.fleet import credit_lane
 from scripts.orchestration.curriculum_readiness import (
     ReadinessError,
     evaluate_preparation,
@@ -637,10 +638,47 @@ def default_health_probe() -> Mapping[str, Any]:
     return compute_routing_budget(fresh_codexbar=True)
 
 
+# Health capability groups name lanes, not models (the config schema has no
+# per-lane model list), so the gate cannot check a wave's models against a
+# credit-period allowlist; dispatch admission (credit_lane.dispatch_refusal) does.
+WAVE_MODELS_UNREADABLE = (
+    "wave models are not configured per lane; dispatch admission refuses models outside the credit-period allowlist"
+)
+
+
+def _near_cap_credit(lane: str, record: Mapping[str, Any], now: datetime | None) -> dict[str, Any] | None:
+    """Credit receipt for a near-cap lane from its published ``agents.<lane>.credit`` (#9517).
+
+    :func:`credit_lane.published_credit_relief` re-checks the published state
+    against the local policy, the clock and the current shared runtime
+    rate-limit records; None when nothing could relax the
+    plan state (any published state other than ``credit_balance_present``, a
+    lane outside the policy, or an unreadable policy).
+    """
+    receipt = credit_lane.published_credit_relief(lane, record.get("credit"), None, now=now)
+    if receipt is None:
+        return None
+    return {
+        "state": receipt["state"],
+        "reason": receipt["reason"],
+        "allowed_models": receipt["allowed_models"],
+        "wave_models": None,
+        "model_check": WAVE_MODELS_UNREADABLE,
+    }
+
+
 def _health_assessment(
     snapshot: Mapping[str, Any],
     health_config: Mapping[str, Any],
+    *,
+    now: datetime | None = None,
 ) -> tuple[bool, dict[str, Any]]:
+    """Wave gate: every capability group has enough lanes in an acceptable, healthy, fresh state.
+
+    A ``near_cap`` lane also counts when its published credit state is a fresh
+    ``credit_balance_present`` (#9517); every other credit state, and a lane
+    without one, keeps the plan status decision.
+    """
     agents = snapshot.get("agents")
     diagnostics = snapshot.get("diagnostics")
     if not isinstance(agents, Mapping) or not isinstance(diagnostics, Mapping):
@@ -665,9 +703,25 @@ def _health_assessment(
             codexbar = record.get("codexbar")
             stale = bool(codexbar.get("stale")) if isinstance(codexbar, Mapping) else False
             relevant_lane_stale = relevant_lane_stale or stale
-            lane_available = status in acceptable and healthy and not stale
-            available += int(lane_available)
-            lanes.append({"lane": lane, "status": status, "healthy": healthy, "stale": stale})
+            published = record.get("credit")
+            entry: dict[str, Any] = {
+                "lane": lane,
+                "status": status,
+                "healthy": healthy,
+                "stale": stale,
+                "credit_state": str(published["state"])
+                if isinstance(published, Mapping) and published.get("state")
+                else None,
+            }
+            plan_ok = status in acceptable
+            if status == "near_cap":
+                credit = _near_cap_credit(lane, record, now)
+                if credit is not None:
+                    entry["credit_state"] = credit["state"]
+                    entry["credit"] = credit
+                    plan_ok = credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+            available += int(plan_ok and healthy and not stale)
+            lanes.append(entry)
         passed = available >= int(group["minimum_available"])
         all_groups_pass = all_groups_pass and passed
         groups.append(

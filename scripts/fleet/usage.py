@@ -18,6 +18,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.fleet import credit_lane
 from scripts.fleet.prepaid_status import api_lane_status_from_account
 
 
@@ -197,6 +198,18 @@ def _pace_line(
     return f"    pace: {format_usage_pace_summary(pace, kind=kind)}"
 
 
+def _credit_state_text(info: dict[str, Any]) -> str:
+    """Suffix naming the lane's published credit-period state (#9517); empty when none is published."""
+    credit = info.get("credit") if isinstance(info.get("credit"), dict) else {}
+    state = credit.get("state")
+    if not state or state == credit_lane.NOT_CONFIGURED:
+        return ""
+    if state == credit_lane.CREDIT_BALANCE_PRESENT:
+        models = ", ".join(credit.get("allowed_models") or [])
+        return f" | {state}: {credit_lane.DRAW_NOT_VERIFIED}; usable for {models} only"
+    return f" | {state}: {credit.get('reason') or 'no reason given'} (plan state applies)"
+
+
 def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
     """Human lines for weekly/monthly/module pools that actually exist on the payload."""
     lines: list[str] = []
@@ -233,7 +246,7 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
         inventory = info.get("reset_credits", native.get("reset_credits")) or {}
         count = inventory.get("available_count")
         expirations = inventory.get("expires_at")
-        lines.append(f"  credits: balance={balance if _is_number(balance) else 'unknown'}")
+        lines.append(f"  credits: balance={balance if _is_number(balance) else 'unknown'}{_credit_state_text(info)}")
         lines.append(
             f"  free full resets: available={count if _is_number(count) else 'unknown'} "
             f"expires={', '.join(_resets_text(value) if value is not None else 'no expiry' for value in expirations) if isinstance(expirations, list) and expirations else 'unknown'}"
