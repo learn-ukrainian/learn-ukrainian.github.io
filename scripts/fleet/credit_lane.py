@@ -299,11 +299,13 @@ def lane_credit_state(
     now: datetime | None = None,
     snapshot_stale: bool = False,
     usage_dir: Path | None = None,
+    for_pace_deficit: bool = False,
 ) -> dict[str, Any]:
     """Credit state of one routing-budget lane record; see the module docstring for fail-closed rules.
 
     ``usage_dir`` is the runtime usage directory the rate-limit evidence is read
-    from (default: the shared one).
+    from (default: the shared one). ``for_pace_deficit`` checks reserves even
+    above the plan cap; it does not extend the credit-period admission gate.
     """
     models = policy.lane_models(lane)
     if models is None:
@@ -328,7 +330,7 @@ def lane_credit_state(
     }
     if remaining is None:
         return {**result, "state": PLAN_UNKNOWN, "reason": "plan allowance unknown"}
-    if remaining > policy.near_cap_remaining_pct:
+    if remaining > policy.near_cap_remaining_pct and not for_pace_deficit:
         return {
             **result,
             "state": PLAN_HEALTHY,
@@ -360,7 +362,7 @@ def lane_credit_state(
         evidence["unreadable_records"] = unreadable
     # A fresh positive balance exists from here on: the admission allowlist applies
     # whatever the router's recommendation state says about the rate-limit evidence.
-    result["allowlist_applies"] = True
+    result["allowlist_applies"] = remaining <= policy.near_cap_remaining_pct
     if unreadable is not None:
         parts = ", ".join(f"{n} {kind}" for kind, n in unreadable.items())
         return {
@@ -375,11 +377,85 @@ def lane_credit_state(
     return {
         **result,
         "state": CREDIT_BALANCE_PRESENT,
-        "reason": f"plan remaining {remaining:g}% at or below {policy.near_cap_remaining_pct:g}%; "
-        f"fresh credit balance {balance:g}; no rate limit in the last {policy.rate_limit_window_s:g}s; "
+        "reason": f"plan remaining {remaining:g}%"
+        + ("; " if for_pace_deficit else f" at or below {policy.near_cap_remaining_pct:g}%; ")
+        + f"fresh credit balance {balance:g}; no rate limit in the last {policy.rate_limit_window_s:g}s; "
         "draw not verified by the router",
         "coverage": {"dispatches": None, "basis": COVERAGE_BASIS},
     }
+
+
+def pace_deficit_state(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    pace: dict[str, Any] | None = None,
+    model: str | None = None,
+    policy: CreditPolicy | None = None,
+    now: datetime | None = None,
+    snapshot_stale: bool = False,
+    usage_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Shared uncovered-pace decision for routing, admission and review (#9615).
+
+    A fresh positive balance covers pace only for credit-allowlisted models;
+    a fresh unexpired full reset covers any model. Both require readable,
+    rate-limit-free runtime evidence. Nothing is consumed. Raw pace remains
+    visible, and a runtime hot label or near_cap status is never relaxed here.
+    """
+    from scripts.api.subscription_usage import pace_is_deficit
+
+    record = info if isinstance(info, dict) else {}
+    if pace is None:
+        pace = record.get("codexbar") or record.get("pace") or record
+    current = (now or datetime.now(UTC)).astimezone(UTC)
+    raw = pace_is_deficit(pace, now=current)
+    status = record.get("status") or (record.get("interactive") or {}).get("status")
+    result: dict[str, Any] = {
+        "raw_deficit": raw,
+        "uncovered": raw,
+        "covered_by": [],
+        "status": status,
+        "reason": "pace deficit uncovered" if raw is True else "no confirmed pace deficit",
+    }
+    if raw is not True:
+        return result
+    remaining = plan_remaining_pct(record)
+    if status in {"cool", "warm", "hot"} and remaining is not None and remaining > 10:
+        result["status"] = "hot"
+    if policy is None:
+        try:
+            policy = load_policy()
+        except ValueError:
+            return {**result, "reason": "pace deficit uncovered: reserve policy unreadable"}
+    credit = lane_credit_state(
+        lane,
+        record,
+        policy,
+        now=current,
+        snapshot_stale=snapshot_stale,
+        usage_dir=usage_dir,
+        for_pace_deficit=True,
+    )
+    if credit["state"] == CREDIT_BALANCE_PRESENT and (model is None or model_allowed(policy, lane, model)):
+        result["covered_by"].append("credits")
+    live = _verified_inventory(record, policy, current, snapshot_stale=snapshot_stale)
+    if live:
+        count, _, _ = _rate_limit_evidence(lane, record, policy, current, usage_dir)
+        if count == 0:
+            result["covered_by"].append("free full reset")
+    if result["covered_by"]:
+        result["uncovered"] = False
+        result["reason"] = "pace deficit covered by " + " and ".join(result["covered_by"])
+        runtime = record.get("runtime") if isinstance(record.get("runtime"), dict) else {}
+        if (
+            status in {"cool", "warm", "hot"}
+            and not runtime.get("headroom_blocked")
+            and remaining is not None
+            and remaining > 10
+        ):
+            result["status"] = "cool" if remaining > 50 else "warm"
+    return result
 
 
 def allowlist_applies(state: dict[str, Any]) -> bool:

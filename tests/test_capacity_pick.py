@@ -140,7 +140,8 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
     }
     rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve)}
     assert rows["codex"]["avoid"] is False
-    assert rows["codex"]["status"] == "hot"
+    assert rows["codex"]["status"] == "warm"
+    assert rows["codex"]["pace_deficit"]["covered_by"] == ["free full reset"]
     assert rows["codex"]["will_last"] is False
     assert rows["codex"]["reset_reserve_eligible"] is True
     assert "reset reserve eligible (2 remaining)" in rows["codex"]["notes"]

@@ -1,0 +1,297 @@
+"""#9615: the same reserve-backed pace decision in all five routing consumers."""
+
+from __future__ import annotations
+
+import copy
+from dataclasses import replace
+from datetime import UTC, datetime, timedelta
+
+import pytest
+
+from scripts import delegate
+from scripts.api import state_router
+from scripts.fleet import capacity_pick, credit_lane, idle_settle
+from scripts.fleet.reset_reserve import unavailable_reserve
+from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate, resolve_reviewer
+from tests.api.test_routing_budget import _configure_base
+
+
+@pytest.fixture(
+    params=[
+        "both",
+        "credits",
+        "resets",
+        "none",
+        "stale_credits",
+        "rate_limited",
+        "expired_resets",
+        "unreadable",
+        "stale_resets",
+        "stale_snapshot",
+    ]
+)
+def reserve_case(request, monkeypatch):
+    now = datetime.now(UTC)
+    fetched = (now - timedelta(seconds=60)).isoformat()
+    info = {
+        "status": "hot",
+        "remaining_pct": 87.0,
+        "burn_pct_7d": 13.0,
+        "freshness": "fresh",
+        "age_s": 60.0,
+        "fetched_at": fetched,
+        "credit_balance": 62500.0,
+        "reset_credits": {
+            "available_count": 2,
+            "expires_at": [(now + timedelta(days=19)).isoformat(), (now + timedelta(days=26)).isoformat()],
+            "fetched_at": fetched,
+        },
+        "runtime": {"headroom_blocked": False, "window_s": 300, "rate_limited": 0},
+        "codexbar": {
+            "weekly_used_pct": 13.0,
+            "weekly_remaining_pct": 87.0,
+            "weekly_pace_delta_pct": 2.5,
+            "weekly_expected_pct": 10.5,
+            "will_last_to_reset": False,
+            "pace_summary": "pace_delta=+2.5%",
+            "freshness": "fresh",
+            "age_s": 60.0,
+            "fetched_at": fetched,
+        },
+    }
+    case = request.param
+    if case in {"credits", "none", "stale_credits"}:
+        info["reset_credits"] = None
+    if case in {"resets", "none", "expired_resets", "stale_resets"}:
+        info["credit_balance"] = 0.0
+    if case == "stale_credits":
+        info["fetched_at"] = (now - timedelta(hours=1)).isoformat()
+    if case == "expired_resets":
+        info["reset_credits"]["expires_at"] = [(now - timedelta(days=1)).isoformat()] * 2
+    if case == "stale_resets":
+        info["reset_credits"]["fetched_at"] = (now - timedelta(hours=1)).isoformat()
+    if case == "unreadable":
+        info["reset_credits"] = "unreadable"
+        info["credit_balance"] = None
+    count = int(case == "rate_limited")
+    monkeypatch.setattr(
+        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": count, "last_rate_limited_at": None}
+    )
+    stale = case == "stale_snapshot"
+    if stale:
+        info["freshness"] = "stale_last_good"
+    return info, case in {"both", "credits", "resets"}, now
+
+
+def test_shared_deficit_decision(reserve_case):
+    info, covered, now = reserve_case
+    receipt = credit_lane.pace_deficit_state("codex", info, now=now)
+    assert receipt["raw_deficit"] is True
+    assert receipt["uncovered"] is (not covered)
+    assert bool(receipt["covered_by"]) is covered
+    assert receipt["status"] == ("cool" if covered else "hot")
+
+
+def test_routing_budget_covered_deficit(reserve_case, monkeypatch, tmp_path):
+    info, covered, now = reserve_case
+    budget_path = _configure_base(monkeypatch, tmp_path)
+    native = {**info["codexbar"], **copy.deepcopy(info), "lane": "codex"}
+    # The producer gets reserve fields on the native record, without a nested native record.
+    native.pop("codexbar")
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda lane: native if lane == "codex" else {})
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda: {})
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *_a, **_k: {"windows": {}})
+    data = state_router.compute_routing_budget(
+        now,
+        budget_config_path=budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+    codex = data["agents"]["codex"]
+    assert codex["status"] == ("cool" if covered else "hot")
+    assert codex["codexbar"]["weekly_pace_delta_pct"] == 2.5
+    assert codex["pace_deficit"]["uncovered"] is (not covered)
+    if covered:
+        assert any("deficit covered by" in w for w in data["recommendation"]["warnings"])
+
+
+def test_capacity_pick_covered_deficit(reserve_case):
+    info, covered, now = reserve_case
+    rows = capacity_pick.build_lane_rows(
+        {"agents": {"codex": info}},
+        reset_reserve=unavailable_reserve(),
+        now=now,
+    )
+    row = next(row for row in rows if row["lane"] == "codex")
+    assert row["avoid"] is (not covered)
+    assert row["status"] == ("cool" if covered else "hot")
+    assert "+2.5" in row["pace"]
+    if covered:
+        assert "deficit covered by" in row["notes"]
+
+
+def test_delegate_budget_guard_covered_deficit(reserve_case, monkeypatch):
+    info, covered, _ = reserve_case
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "agents": {"codex": info, "claude": {"status": "cool"}},
+            "diagnostics": {"stale": False, "records_loaded": 1},
+        },
+    )
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
+    result = delegate._resolve_agent_with_budget_guard(
+        "codex",
+        requested_model="gpt-6.1-sol",
+        fallbacks={"codex": "claude"},
+    )
+    assert result == ("codex" if covered else "claude")
+    assert ("codex" in delegate._budget_cooler_lanes({"codex": info}, exclude="claude")) is covered
+
+
+def test_idle_settle_covered_deficit(reserve_case):
+    info, covered, _ = reserve_case
+    row = {**info, "lane": "codex", "quota_ok": True}
+    snapshot = idle_settle.parse_snapshot({"lanes": [row]})
+    assert snapshot.lanes[0].quota_ok is covered
+    assert snapshot.lanes[0].status == ("cool" if covered else "hot")
+    lanes = idle_settle.lanes_from_capacity_rows([row])
+    assert lanes[0].quota_ok is covered
+    assert lanes[0].status == snapshot.lanes[0].status
+
+
+def test_reviewer_resolver_covered_deficit(reserve_case):
+    info, covered, _ = reserve_case
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            review_profile="code",
+            risk="critical",
+            routing_snapshot={"agents": {"codex": info}},
+        )
+    )
+    assert (result.selected is not None) is covered
+    if covered:
+        assert result.selected.concrete_model == "gpt-6.1-sol"
+
+
+@pytest.mark.parametrize("native_only", [False, True])
+def test_capacity_rows_retain_reserve_evidence_for_idle_settle(reserve_case, native_only):
+    info, covered, now = reserve_case
+    info = copy.deepcopy(info)
+    if native_only:
+        for key in ("freshness", "age_s", "fetched_at", "reset_credits", "credit_balance"):
+            info["codexbar"][key] = info.pop(key)
+    rows = capacity_pick.build_lane_rows(
+        {"agents": {"codex": info}},
+        reset_reserve=unavailable_reserve(),
+        now=now,
+    )
+    lanes = idle_settle.lanes_from_capacity_rows(rows)
+    codex = next(lane for lane in lanes if lane.lane == "codex")
+    assert codex.is_healthy_available() is covered
+
+
+@pytest.mark.parametrize("used", [90.0, 95.0])
+def test_reserves_do_not_change_near_cap(reserve_case, used):
+    info, _, now = reserve_case
+    info = copy.deepcopy(info)
+    info.update(status="near_cap", remaining_pct=100 - used)
+    info["codexbar"].update(weekly_used_pct=used, weekly_remaining_pct=100 - used)
+    assert credit_lane.pace_deficit_state("codex", info, now=now)["status"] == "near_cap"
+    assert state_router._status_from_weekly_used(used, info["codexbar"], lane="codex", info=info, now=now) == "near_cap"
+
+
+def test_credit_relief_is_model_specific(reserve_case, monkeypatch):
+    info, covered, now = reserve_case
+    info = copy.deepcopy(info)
+    info["reset_credits"] = None
+    allowed = credit_lane.pace_deficit_state("codex", info, model="gpt-6.1-sol", now=now)
+    forbidden = credit_lane.pace_deficit_state("codex", info, model="gpt-5-codex", now=now)
+    assert forbidden["uncovered"] is True
+    if covered and info["credit_balance"]:
+        assert allowed["uncovered"] is False
+    # A producer's cool label is not sufficient to grant model-specific relief.
+    info["status"] = "cool"
+    info["pace_deficit"] = {"raw_deficit": True, "covered_by": ["credits"]}
+    policy = replace(credit_lane.load_policy(), allowed_models={"codex": ("gpt-6-luna",)})
+    monkeypatch.setattr(credit_lane, "load_policy", lambda: policy)
+    result = evaluate_candidate(
+        OPENAI_FRONTIER,
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            routing_snapshot={"agents": {"codex": info}},
+        ),
+    )
+    assert result.status == "excluded"
+    assert "quota bucket is near cap" in result.reason
+
+
+@pytest.mark.parametrize("failure", ["reader_raises", "unreadable_records", "policy", "headroom", "future_fetch"])
+def test_reserve_evidence_fails_closed(reserve_case, monkeypatch, failure):
+    info, _, now = reserve_case
+    info = copy.deepcopy(info)
+    if failure == "reader_raises":
+
+        def broken(*_a, **_k):
+            raise OSError("unreadable")
+
+        monkeypatch.setattr(credit_lane, "read_recent_rate_limits", broken)
+    elif failure == "unreadable_records":
+        monkeypatch.setattr(
+            credit_lane,
+            "read_recent_rate_limits",
+            lambda *_a, **_k: {
+                "count": 0,
+                "last_rate_limited_at": None,
+                "unreadable": {"total": 1, "files": 1},
+            },
+        )
+    elif failure == "policy":
+
+        def broken_policy():
+            raise ValueError("unreadable")
+
+        monkeypatch.setattr(credit_lane, "load_policy", broken_policy)
+    elif failure == "headroom":
+        info["runtime"]["headroom_blocked"] = True
+    else:
+        info["fetched_at"] = (now + timedelta(hours=1)).isoformat()
+        if isinstance(info["reset_credits"], dict):
+            info["reset_credits"]["fetched_at"] = info["fetched_at"]
+    assert credit_lane.pace_deficit_state("codex", info, now=now)["uncovered"] is True
+
+
+def test_coverage_claim_is_rechecked(reserve_case, monkeypatch):
+    info, _, now = reserve_case
+    info = copy.deepcopy(info)
+    info["pace_deficit"] = {"uncovered": False, "covered_by": ["credits", "free full reset"]}
+    info["credit_balance"] = 0.0
+    info["reset_credits"] = None
+    assert credit_lane.pace_deficit_state("codex", info, now=now)["uncovered"] is True
+
+
+@pytest.mark.parametrize("default_model", ["gpt-6.1-sol", "gpt-5-codex", None])
+def test_delegate_credit_relief_checks_lane_default(reserve_case, monkeypatch, default_model):
+    info, _, _ = reserve_case
+    info = copy.deepcopy(info)
+    info["reset_credits"] = None
+    covered = credit_lane.pace_deficit_state("codex", info, model="gpt-6.1-sol")["uncovered"] is False
+    previous_default = delegate._lane_default_model
+    monkeypatch.setattr(
+        delegate, "_lane_default_model", lambda lane: default_model if lane == "codex" else previous_default(lane)
+    )
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "agents": {"codex": info, "claude": {"status": "cool"}},
+            "diagnostics": {"stale": False, "records_loaded": 1},
+        },
+    )
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
+    result = delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "claude"})
+    assert result == ("codex" if covered and default_model == "gpt-6.1-sol" else "claude")

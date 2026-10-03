@@ -891,6 +891,20 @@ lane, marks Codex `credit.state: policy_error` in its plan state and adds a warn
 admission refuses only off-allowlist Codex dispatches (`allowlist_applies` true), with a stderr warning; every other lane is
 admitted as before. Nothing consumes credits or resets.
 
+**Covered weekly pace deficits (#9615):** `credit_lane.pace_deficit_state` is the shared decision
+for routing-budget, `capacity_pick`, the delegate budget guard, idle-settle and the reviewer
+resolver. A visible pace deficit is uncovered only when neither a fresh positive balance for
+the lane's credit-allowlisted model nor a fresh unexpired free full reset is available. Both
+reserves require readable runtime evidence with no recent rate limits; stale or unreadable
+reserve evidence and expired resets give no relief. Routing-budget publishes `pace_deficit`
+with `raw_deficit`, `uncovered`, `covered_by` and a reason; the raw pace delta stays visible,
+and routing warnings and capacity rows say “pace deficit covered by credits”, “free full reset”,
+or both. Consumers re-check reserve freshness and runtime evidence rather than trusting a
+published coverage flag. Only pace pressure is relaxed: `near_cap` (90% used), runtime
+headroom blocks, login and health gates retain their existing behavior. This does not consume
+a reset, verify provider credit draw, or extend the credit-period admission allowlist gate
+to healthy plan windows.
+
 **Credit lanes in routing-budget, the reviewer resolver and `usage show` (#9517):**
 `/api/state/routing-budget` publishes each subscription lane's `credit_lane.lane_credit_state` as the
 additive `agents.<lane>.credit` field; the raw quota `status` keeps its vocabulary (a near-cap Codex

@@ -89,7 +89,6 @@ from .runtime_router import summarize_runtime_usage
 from .subscription_usage import (
     _api_account_cache_ttl_s,
     compute_usage_pace,
-    pace_is_deficit,
 )
 
 try:
@@ -954,16 +953,34 @@ def _runtime_usage_records_7d(*, usage_dir: Path | None = None) -> int | None:
         return None
 
 
-def _status_from_weekly_used(weekly_used: float, pace: dict[str, Any] | None) -> str:
+def _status_from_weekly_used(
+    weekly_used: float,
+    pace: dict[str, Any] | None,
+    *,
+    lane: str = "",
+    info: dict[str, Any] | None = None,
+    now: datetime | None = None,
+    snapshot_stale: bool = False,
+    usage_dir: Path | None = None,
+) -> str:
     """Map weekly used-percent to a routing status.
 
-    ``near_cap`` stays at >= 90% used. Below that, ``hot`` is only a pace
-    deficit (:func:`pace_is_deficit`): visible, projected to run out before
-    reset, and outside the on-pace band.
+    ``near_cap`` stays at >= 90% used. Below that, ``hot`` requires a visible
+    pace deficit outside the on-pace band with no verified covering reserve.
     """
     if weekly_used >= 90.0:
         return "near_cap"
-    if pace_is_deficit(pace) is True:
+    if (
+        credit_lane.pace_deficit_state(
+            lane,
+            info,
+            pace=pace,
+            now=now,
+            snapshot_stale=snapshot_stale,
+            usage_dir=usage_dir,
+        )["uncovered"]
+        is True
+    ):
         return "hot"
     if weekly_used < 50.0:
         return "cool"
@@ -1291,9 +1308,7 @@ def _compute_dispatch_routing_budget(
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
-            "reset_reserve": load_reset_reserve(
-                project_root or Path(__file__).resolve().parents[2], now=current_time
-            ),
+            "reset_reserve": load_reset_reserve(project_root or Path(__file__).resolve().parents[2], now=current_time),
             "api_accounts": api_accounts,
             "in_flight": in_flight_by_agent,
             "recommendation": rec,
@@ -1457,15 +1472,15 @@ def _compute_dispatch_routing_budget(
             cb_sourced_any = True
             weekly_used = capacity_used
 
-            # near_cap (>= 90%) is unchanged. Below that, hot requires pace_is_deficit.
-            if weekly_used >= 90.0:
-                cb_status = "near_cap"
-            elif pace_is_deficit(cb_data, now=current_time) is True:
-                cb_status = "hot"
-            elif weekly_used < 50.0:
-                cb_status = "cool"
-            else:
-                cb_status = "warm"
+            cb_status = _status_from_weekly_used(
+                weekly_used,
+                cb_data,
+                lane=lane,
+                info={**cb_data, "codexbar": cb_data},
+                now=current_time,
+                snapshot_stale=bool(cb_data.get("stale")),
+                usage_dir=usage_dir,
+            )
 
             # Check if stale
             if cb_data.get("stale"):
@@ -1710,9 +1725,21 @@ def _compute_dispatch_routing_budget(
     # Build warnings for any lane in deficit (authoritative or fallback)
     for lane in SUBSCRIPTION_LANES:
         if lane in agents:
+            deficit = credit_lane.pace_deficit_state(
+                lane,
+                agents[lane],
+                now=current_time,
+                snapshot_stale=is_stale,
+                usage_dir=usage_dir,
+            )
+            agents[lane]["pace_deficit"] = deficit
+            if deficit["status"] is not None:
+                agents[lane]["status"] = deficit["status"]
+                if lane == "claude":
+                    agents[lane]["interactive"]["status"] = deficit["status"]
             cb = agents[lane].get("codexbar")
             if cb:
-                is_in_deficit = pace_is_deficit(cb, now=current_time) is True or (
+                is_in_deficit = deficit["uncovered"] is True or (
                     cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0
                 )
                 pace_sum = cb.get("pace_summary") or f"{cb.get('weekly_used_pct')}% used"
@@ -1723,6 +1750,8 @@ def _compute_dispatch_routing_budget(
                 burn_pct = agents[lane].get("burn_pct_7d") or agents[lane].get("interactive", {}).get("burn_pct_7d")
                 pace_sum = f"burn pct {burn_pct}%" if burn_pct is not None else "unknown"
 
+            if deficit["covered_by"]:
+                warnings.append(f"lane {lane}: {deficit['reason']} ({pace_sum})")
             if is_in_deficit:
                 # Deficit is a plan-period pace signal. Quote the short/primary
                 # window too — but only call it "5h" when that window is ≤5h.
