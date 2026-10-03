@@ -97,14 +97,15 @@ def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
-def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+def _matched_review_contract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Dispatch tests here dispatch literal prompts with no render record; the contract checks have their own tests
-    (#9163), here and in test_review_contract.py."""
+    (#9163), here and in test_review_contract.py. Like a real contract it names an input root (#9597)."""
     monkeypatch.setattr(
         review_mcp_module,
         "check_review_contract",
         lambda _prompt_file, prompt_text, **_ids: {
-            "prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
+            "prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest(),
+            "input_root": str(tmp_path),
         },
     )
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
