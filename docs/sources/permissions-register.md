@@ -77,6 +77,7 @@ term of protection (Art. 31) and public domain (Art. 32(3)).
 | `frazeolohichnyi` | Compilers (Білоноженко В. М. та ін.) / publisher Наукова думка — rights holder not confirmed | internal, site, dataset | In copyright (co-authored, 2003); no licence found | Фразеологічний словник української мови |
 | `antonenko_style_guide` | Heirs of Борис Антоненко-Давидович (d. 9 May 1984) — no contact found | internal, site, dataset | In copyright until 31 Dec 2054 (Art. 31(2)); rights with the heirs | «Як ми говоримо» Антоненка-Давидовича |
 | `ulp_private` | Anna Ohoiko (Ukrainian Lessons) | internal | All rights reserved (Anna Ohoiko) | — |
+| `pravopys_2019` | Інститут мовознавства ім. О. О. Потебні, Інститут української мови, Український мовно-інформаційний фонд НАН України (©); Наукова думка (design) | internal | All rights reserved (© the three NAS of Ukraine institutes, 2019); no open licence found | — |
 
 ## Open questions
 
@@ -615,3 +616,22 @@ Correcting those texts is #9000.
   - «(h) to spam, phish, pharm, pretext, spider, crawl, or scrape» — Listed among prohibited uses of the website (https://www.ukrainianlessons.com/terms-and-conditions/, read 2026-09-27)
 - **Citation:** Not shown; cited only in internal notes as Ukrainian Lessons (Anna Ohoiko). Label shown: not named on learner pages.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the stored copies listed in stored_in (deleted only with the operator's authorisation).
+
+### «Український правопис» (2019), authorized edition (Наукова думка, 2019, ISBN 978-966-00-1728-3) — `pravopys_2019`
+
+- **Organisation:** Інститут мовознавства ім. О. О. Потебні НАН України, Інститут української мови НАН України and Український мовно-інформаційний фонд НАН України (© holders); НВП «Видавництво “Наукова думка” НАН України» (design). Approved by Cabinet of Ministers Resolution No. 437 of 22 May 2019.
+- **Role:** The official spelling norm — rule text by §, the examples printed in each §, and § locators (plan component C5, #6321).
+- **Fields:** rule_text, rule_examples, paragraph_locator, section_headings
+- **Appears in:** internal — Stored in sources.db and served by the sources MCP tool query_pravopys. No learner page or dataset export reads these tables yet; the dataset use (C5) waits for operator decision O1 of the #6321 plan.
+- **Stored in:** data/sources.db pravopys_sources, pravopys_sections, pravopys_paragraphs (scripts/ingest/pravopys_2019_ingest.py, #9610); the PDF is fetched and hash-checked by the ingest, and no copy is committed
+- **Where from:** https://www.ulif.org.ua/system/files/pravopus-new.pdf; https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf; https://zakon.rada.gov.ua/laws/show/437-2019-%D0%BF · Retrieved 2026-10-03; sources.db pravopys_sources.retrieved_at and file_sha256 (ULIF copy, sha256 0d2fd75a…e501a); why this is the official text is set out in [pravopys-2019-official-source.md](pravopys-2019-official-source.md).
+- **Licence as found:** All rights reserved (© the three NAS of Ukraine institutes, 2019); no open licence found. Share-alike: not stated. Non-commercial: not stated.
+- **Terms as found:**
+  - «© Інститут мовознавства ім. О. О. Потебні НАН України, 2019 © Інститут української мови НАН України, 2019 © Український мовно-інформаційний фонд НАН України, 2019 © НВП «Видавництво “Наукова думка” НАН України», дизайн, 2019» — Copyright notice on the imprint page (p. 2) of the authorized edition (https://www.ulif.org.ua/system/files/pravopus-new.pdf, read 2026-10-03)
+  - «Українська національна комісія з питань правопису своїм рішенням від 12 липня 2019 р. визначила Видавництво «Наукова думка» НАН України установою, яка уповноважена випустити у світ авторизоване видання Українського правопису в редакції 2019 р.» — The National Commission on Orthography named Наукова думка as the publisher of the authorized edition (imprint page, p. 2) (https://www.ulif.org.ua/system/files/pravopus-new.pdf, read 2026-10-03)
+- **Also searched:** https://2019.pravopys.net/ (unofficial copy with advertising; not the source)
+- **Statute referred to:** `law_art22_quotation`
+- **Citation:** Український правопис. Київ: Наукова думка, 2019, § <N>, с. <page> (авторизоване видання; схвалено постановою Кабінету Міністрів України № 437 від 22 травня 2019 р.). Label shown: not named on learner pages.
+- **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the stored copies listed in stored_in (deleted only with the operator's authorisation) and any dataset records quoting this source.
+- **Open questions:**
+  - Whether the text, approved by a Cabinet of Ministers resolution, is an official document outside copyright; the authorized edition itself carries a copyright notice (operator decision O1 of #6321).
