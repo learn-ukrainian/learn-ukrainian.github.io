@@ -42,21 +42,7 @@ _DANGEROUS_CONFIG_RE = re.compile(
 def _git_paths(worktree: Path, *args: str) -> list[str]:
     """Read NUL-delimited paths, refusing an unavailable inventory."""
     result = subprocess.run(
-        [
-            "git",
-            "--no-lazy-fetch",
-            "-c",
-            "core.fsmonitor=",
-            "-c",
-            "core.hooksPath=/dev/null",
-            "-c",
-            "protocol.ext.allow=never",
-            "-c",
-            "core.alternateRefsCommand=",
-            "ls-files",
-            "-z",
-            *args,
-        ],
+        ["git", "ls-files", "-z", *args],
         cwd=worktree,
         env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
         capture_output=True,
