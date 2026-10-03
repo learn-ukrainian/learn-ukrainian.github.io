@@ -253,7 +253,7 @@ def _verify(synthetic_sources, synthetic_standard, evidence_dir, *, strict):
     [
         ("1-klas-bukvar-zaharijchuk-2025-1", True, False, None),
         ("1-klas-bukvar-zaharijchuk-2025-1", True, True, "publication_limit"),
-        ("ulp-1-00-lesson-notes", True, False, "publication_right"),
+        ("ulp-1-00-lesson-notes", True, False, "owned_quote_refused"),
         ("unregistered", True, False, "publication_right"),
         ("ulp-1-00-lesson-notes", False, False, None),
     ],

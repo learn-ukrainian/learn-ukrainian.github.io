@@ -250,16 +250,50 @@ tool returns `status: error`, `error_code: resource_catalogue_missing`.
 
 ### Private reference sources (`textbooks`)
 
-Eight ingested sources live in the `textbooks` table but are **not** redistributable
-school textbooks. Source `.txt` files are gitignored under `docs/references/private/`;
-they are local-only references for RAG grounding and must **never** be quoted verbatim
-in pipeline outputs.
+Owned books and premium notes are private references for grounding and pedagogy
+research. Their raw files, extracted JSONL and digest receipts stay outside the
+repository. The committed `registry/sources/owned-rights.yaml` is a mandatory
+publication overlay: `owned_cite_only` permits a Resources credit but refuses any
+printed quote; `private_permission` refuses both quotes and citations, with typed
+errors. Pack claims and injected textbook-selection registries cannot override it.
+An unreadable or malformed rights record also fails publication closed.
 
-| `source_file` | `author` | Chunks | What it is |
-| --- | --- | ---: | --- |
-| `ulp-1-00-lesson-notes` … `ulp-6-00-lesson-notes` | Ukrainian Lessons Podcast | 4,286 total | ULP Seasons 1–6 lesson-note chunks. Ingest: `scripts/ingest/ulp_lesson_notes_ingest.py` / `ulp_to_jsonl.py`. |
-| `anna-ohoiko-1000-words-2nd-ed` | Anna Ohoiko | 1,000 | «1000 Most Useful Ukrainian Words» (2nd ed.). Ingest: `scripts/ingest/ohoiko_books_ingest.py`. |
-| `anna-ohoiko-500-verbs` | Anna Ohoiko | 500 | «500+ Ukrainian Verbs». Ingest: `scripts/ingest/ohoiko_verbs_ingest.py`. |
+The private inventory is the denominator (23 work rows at the #9581 intake).
+Existing Ohoiko word/verb books and the pronunciation reference retain their
+`source_file`; ULP Seasons 1–6 retain `ulp-N-00-lesson-notes`. New sources use
+`owned-<inventory-id>`. The inventory also covers workbooks and transcripts,
+premium text packs and charts, readers and children's books, and two private
+teacher-material sets, used with permission. Teacher identities are absent from
+public records and corpus metadata. Audio, decks, derived study files and an
+intentional missing source have explicit skip states.
+
+Regenerate against a local backup before applying to the active corpus:
+
+```bash
+<shared-project-python> -m scripts.ingest.owned_books_ingest \
+  --inventory <private>/INVENTORY.yaml --out-dir <private>/jsonl \
+  --db <local>/sources-copy.db
+<shared-project-python> -m scripts.ingest.owned_books_ingest \
+  --inventory <private>/INVENTORY.yaml --out-dir <private>/jsonl \
+  --db <local>/sources-copy.db --check
+```
+
+The sibling `drive-ukrainian/` directory holds inventory-matched inputs. Extraction
+supports PDF, DOCX, EPUB spine order and PPTX presentation order, including ZIP
+members and one nested archive level. Oversized members, unreadable documents,
+missing expected files and PDF pages without text remain accounted for; predominantly
+scanned PDFs require OCR. Available text is ingested even when another file is
+missing, but the row remains an error and `--check` fails. ULP premium PDFs are
+compared with the matching season's stored sentences: at least 95% overlap means
+a duplicate, otherwise the whole PDF is ingested with its overlap ratio recorded.
+Existing lesson chunks are joined before sentence comparison.
+
+Unchanged reruns make no writes. A changed input digest is `stale_input` until
+`--force` explicitly replaces that work's JSONL, corpus rows, FTS entries and
+section links. `--dry-run` extracts and accounts without writes; `--only ID`
+selects one work. Accounting exposes only inventory ids, numeric file/page
+locators, counts and statuses. The driver owns backup, live application, Sources
+restart and MCP verification; rehearsal on a copy does not establish live delivery.
 
 > Also available separately (not in `sources.db`): **VESUM** morphological dict at `data/vesum.db`
 > (409K lemmas / 6.7M forms) via `verify_word`/`verify_words`/`verify_lemma`; **stress dict** (2.7M

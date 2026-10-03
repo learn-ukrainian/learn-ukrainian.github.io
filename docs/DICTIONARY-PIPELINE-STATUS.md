@@ -55,6 +55,21 @@ driver activates and verifies the live database separately. See
 [corpus inventory](corpus-inventory.md#curated-listening-and-reading-catalogues-9409)
 for the denominator, access caveats and search interface.
 
+## Owned private references (#9581)
+
+| Ingestion tool | Enable / verify | Private artifacts | Corpus targets |
+| --- | --- | --- | --- |
+| `scripts.ingest.owned_books_ingest` | Explicit `--inventory`, `--out-dir`, `--db`; `--check` verifies installed state; `--force` replaces stale inputs | Per-work JSONL and digest receipts outside every checkout | `textbooks`, `textbooks_fts`, `textbook_sections` |
+
+The private inventory supplies every row and typed skip. Per-file/page accounting
+retains missing files, unreadable inputs and OCR gaps; available text does not hide
+partial rows. Existing works keep their identities. ULP premium text uses a 95%
+sentence-overlap deduplication rule against each season's stored lesson rows.
+`registry/sources/owned-rights.yaml` denies all owned quotes and denies citations
+of private-permission material. See the [private-reference regeneration
+recipe](corpus-inventory.md#private-reference-sources-textbooks). Apply to a local
+backup first; the accountable driver applies and verifies the live Sources corpus.
+
 ## Need ingestion
 
 | Dictionary | JSONL | Entries | Command |

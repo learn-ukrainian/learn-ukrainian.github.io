@@ -15,6 +15,56 @@ import yaml
 from . import codes
 
 REGISTRY_PATH = Path(__file__).resolve().parents[3] / "docs/l2-uk-direct/textbook-selection.yaml"
+OWNED_RIGHTS_PATH = Path(__file__).resolve().parents[3] / "registry/sources/owned-rights.yaml"
+
+
+class _UniqueRightsLoader(yaml.SafeLoader):
+    """A duplicate key must never withdraw a protected identity silently."""
+
+    def construct_mapping(self, node, deep=False):
+        keys = [self.construct_object(key, deep=deep) for key, _ in node.value]
+        if len(set(keys)) != len(keys):
+            raise ValueError("duplicate rights key")
+        return super().construct_mapping(node, deep=deep)
+
+
+def load_owned_rights() -> dict[str, dict]:
+    """Read the mandatory rights overlay, including on injected-registry calls.
+
+    No cache: withdrawals and malformed revisions are effective on the next
+    publication check. This record can deny quotes, never grant them.
+    """
+    try:
+        document = yaml.load(OWNED_RIGHTS_PATH.read_text(encoding="utf-8"), Loader=_UniqueRightsLoader)
+        entries = document.get("sources") if isinstance(document, dict) else None
+        if type(document.get("schema")) is not int or document["schema"] != 1 or not isinstance(entries, dict) or not entries:
+            raise ValueError("invalid rights document")
+        for slug, entry in entries.items():
+            if (
+                not isinstance(slug, str)
+                or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug)
+                or not isinstance(entry, dict)
+                or entry.get("rights") not in {"owned_cite_only", "private_permission"}
+                or set(entry) - {"rights", "title", "author"}
+                or (entry["rights"] == "private_permission" and set(entry) != {"rights"})
+                or ("title" in entry and (not isinstance(entry["title"], str) or not entry["title"].strip()))
+                or ("author" in entry and not isinstance(entry["author"], str))
+            ):
+                raise ValueError("invalid rights entry")
+        return entries
+    except (OSError, ValueError, TypeError, AttributeError, yaml.YAMLError):
+        raise ValueError(f"{codes.OWNED_RIGHTS_UNREADABLE}: cannot validate owned rights") from None
+
+
+def _owned_entry(record: dict, *, quote: bool = False) -> dict | None:
+    """Resolve non-overridable denials before any textbook-selection grant."""
+    entry = load_owned_rights().get((record.get("source") or {}).get("file"))
+    if entry is not None:
+        if quote:
+            raise ValueError(f"{codes.OWNED_QUOTE_REFUSED}: owned text is reference only")
+        if entry["rights"] == "private_permission":
+            raise ValueError(f"{codes.PRIVATE_CITATION_REFUSED}: private reference cannot be cited")
+    return entry
 
 
 @lru_cache(maxsize=8)
@@ -46,6 +96,7 @@ def source_attribution(record: dict, registry: dict | None = None) -> str:
     Metadata is registry-owned. This formats a citation, never grants quote rights.
     Grade ranges keep two positive integer endpoints rather than a string grade.
     """
+    _owned_entry(record)
     entries = load_registry() if registry is None else registry
     source = record.get("source") or {}
     entry = entries.get(source.get("file"))
@@ -90,6 +141,7 @@ def resource_citation(record: dict, registry: dict | None = None) -> dict[str, s
     Sources without citable metadata are omitted; registry read failures still
     propagate. A credit never admits the record's quote or supports text.
     """
+    owned = _owned_entry(record)
     entries = load_registry() if registry is None else registry
     source = record.get("source") or {}
     entry = entries.get(source.get("file"))
@@ -109,6 +161,13 @@ def resource_citation(record: dict, registry: dict | None = None) -> dict[str, s
                 ):
                     description = f"<{episode}>"
                 return {"title": title, "url": url, "description": description}
+    if owned is not None and entry is None and source.get("kind") == "textbook":
+        # Registry-owned bibliography only; pack text and private locators can
+        # never supply a title. Owned books need no school-grade attribution.
+        title = owned.get("title", "Owned reference")
+        if owned.get("author"):
+            title = f"{owned['author']}, «{title}»"
+        return {"title": title, "url": "", "description": ""}
     try:
         return {
             "title": source_attribution(record, entries),
@@ -125,6 +184,7 @@ def quote_attribution(record: dict, registry: dict | None = None) -> str:
     limit_chars measures the original excerpt's Unicode characters, before
     normalization or stress annotation. No truncation or pack-provided policy.
     """
+    _owned_entry(record, quote=True)
     entries = load_registry() if registry is None else registry
     source = record.get("source") or {}
     entry = entries.get(source.get("file"))

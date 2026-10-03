@@ -544,7 +544,7 @@ def test_url_allowlist_uses_registry_permission_not_pack_claim(field, source_fil
     resources = assemble.build_resursy_tab({"steps": [{"explains": ["T-1"]}]}, {"texts": [record]})
     assert (url in json.dumps(resources)) == permitted
     if permitted:
-        with pytest.raises(assemble.AssemblerError, match="publication_right"):
+        with pytest.raises(assemble.AssemblerError, match="owned_quote_refused"):
             assemble.learner_text_allowed("pack.texts.*.quote", record)
 
 
