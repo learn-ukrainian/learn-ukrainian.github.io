@@ -1,7 +1,7 @@
 ---
 # Draft only; PA6 still requires non-author reviews and the E5-backed checker.
 schema_version: instruction-catalog.v1
-version: 0.3.0-draft
+version: 0.4.0-draft
 status: draft
 training_eligible: false
 issue: 9611
@@ -12,6 +12,10 @@ plan:
 interpolation:
   mode: verbatim_source_fields_only
   missing_field: withhold
+  empty_field_policy: Missing fields and empty or whitespace-only declared slots withhold. C2 sense must exist as a
+    string; an empty or whitespace-only sense selects without_sense only if homonym forms do not differ and
+    the headword group has no parse_error. Absent header levels are positional empty arrays or an empty row
+    string; at least one authenticated header cell must contain non-whitespace text.
   transformations: fixed_lossless_serialization_only
   recursive_interpolation: false
   scope: Only instructions[].template is project-authored training text. All other catalog fields are control
@@ -116,17 +120,20 @@ components:
         slots:
           - sentence
   C2:
-    binding: Lemma + model-visible source sense + fixed header-cell serialization → all agreed variant forms;
+    binding: Lemma + fixed header-cell serialization + visible source sense when nonempty → all agreed variant forms;
       VESUM/ULIF agreement and ULIF stress remain mandatory.
     source_fields:
       lemma: Verbatim ulif_dictua_entries.canonical_headword, authenticated as the P3 tuple headword
-      slot: c2-header-cells.v1 JSON serialization of verbatim ULIF paradigm header cells; source is
+      slot: c2-header-cells.v2 JSON serialization of verbatim ULIF paradigm header cells; source is
         ulif_dictua_sections.payload_json.raw_html with rows cross-check and exact cell locators.
-      sense: Verbatim ulif_dictua_entries.sense_gloss; empty only when homonym forms do not differ.
+      sense: Verbatim ulif_dictua_entries.sense_gloss; empty selects without_sense only with equal homonym forms
+        and no group parse_error.
     serialization:
-      header_slot: c2-header-cells.v1
+      header_slot: c2-header-cells.v2
       target: ordered_json_array_all_agreed_variants
-      sense_visibility: every_instruction
+      sense_visibility: with_sense_variant_only
+      empty_sense: without_sense_if_equal_forms_and_no_group_parse_error
+      parse_error_homonym: withhold_group_empty_sense_records
       ambiguous_sense: withhold_missing_or_non_discriminating
       specification: docs/projects/open-model-data/instruction-catalog.md
     required_context:
@@ -138,7 +145,8 @@ components:
       - lossless_homonym_identifier
       - header_cell_locators
       - complete_variant_agreement
-      - model_visible_sense
+      - model_visible_sense_when_nonempty
+      - headword_group_parse_error_check
     target_policy: Target is one JSON array containing every agreed form_stressed for the entry and grammatical slot,
       ordered by variant_order then form id. Never select one variant or discard a disagreed variant; withhold
       the entire record if agreement is incomplete. Tuple identity and per-variant locators stay in metadata.
@@ -147,13 +155,16 @@ components:
       - No authenticated header cells; numeric identifiers or code-list labels used as printable headers.
       - Differing homonym forms with missing sense_gloss or the same gloss mapping to conflicting targets.
       - Missing variant agreement, variant locators or source ordering; never silently select one variant.
-    line_count: 12
-    line_count_rationale: Twelve lines per operation give balanced top1=1/12 and top5=5/12. After two disputed
-      lines are dropped, ten distinct starts give 0.10/0.50, retaining slack under proposed 0.15/0.60 bounds.
+      - Empty-sense records in any headword group containing a homonym with status=parse_error.
+    line_count: 24
+    line_count_rationale: Twelve lines per sense variant of agreed_form give balanced top1=1/12 and top5=5/12.
+      After two disputed lines are dropped, ten distinct starts give 0.10/0.50,
+      retaining slack under proposed 0.15/0.60 bounds.
       Repetition is measured separately; counts do not prove semantic diversity.
     instructions:
       - id: C2.agreed_form.01
         operation: agreed_form
+        sense_variant: with_sense
         template: "Подай форму слова «{lemma}» за граматичним позначенням: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -161,6 +172,7 @@ components:
           - sense
       - id: C2.agreed_form.02
         operation: agreed_form
+        sense_variant: with_sense
         template: "Запиши слово «{lemma}» у формі: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -168,6 +180,7 @@ components:
           - sense
       - id: C2.agreed_form.03
         operation: agreed_form
+        sense_variant: with_sense
         template: "Наведи форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -175,6 +188,7 @@ components:
           - sense
       - id: C2.agreed_form.04
         operation: agreed_form
+        sense_variant: with_sense
         template: "Утвори форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -182,6 +196,7 @@ components:
           - sense
       - id: C2.agreed_form.05
         operation: agreed_form
+        sense_variant: with_sense
         template: "Добери форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -189,6 +204,7 @@ components:
           - sense
       - id: C2.agreed_form.06
         operation: agreed_form
+        sense_variant: with_sense
         template: "Вкажи форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -196,6 +212,7 @@ components:
           - sense
       - id: C2.agreed_form.07
         operation: agreed_form
+        sense_variant: with_sense
         template: "Слово «{lemma}» постав у форму: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -203,6 +220,7 @@ components:
           - sense
       - id: C2.agreed_form.08
         operation: agreed_form
+        sense_variant: with_sense
         template: "Яка форма слова «{lemma}» відповідає позначенню: {slot}?\nЗначення: {sense}"
         slots:
           - lemma
@@ -210,6 +228,7 @@ components:
           - sense
       - id: C2.agreed_form.09
         operation: agreed_form
+        sense_variant: with_sense
         template: "Назви форму слова «{lemma}» з таким граматичним позначенням: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -217,6 +236,7 @@ components:
           - sense
       - id: C2.agreed_form.10
         operation: agreed_form
+        sense_variant: with_sense
         template: "Відтвори форму слова «{lemma}» за позначенням: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -224,6 +244,7 @@ components:
           - sense
       - id: C2.agreed_form.11
         operation: agreed_form
+        sense_variant: with_sense
         template: "Постав слово «{lemma}» у форму: {slot}\nЗначення: {sense}"
         slots:
           - lemma
@@ -231,11 +252,96 @@ components:
           - sense
       - id: C2.agreed_form.12
         operation: agreed_form
+        sense_variant: with_sense
         template: "Граматичне позначення потрібної форми слова «{lemma}»: {slot}. Подай цю форму.\nЗначення: {sense}"
         slots:
           - lemma
           - slot
           - sense
+      - id: C2.agreed_form_without_sense.01
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Подай форму слова «{lemma}» за граматичним позначенням: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.02
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Запиши слово «{lemma}» у формі: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.03
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Наведи форму слова «{lemma}»: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.04
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Утвори форму слова «{lemma}»: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.05
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Добери форму слова «{lemma}»: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.06
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Вкажи форму слова «{lemma}»: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.07
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Слово «{lemma}» постав у форму: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.08
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Яка форма слова «{lemma}» відповідає позначенню: {slot}?'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.09
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Назви форму слова «{lemma}» з таким граматичним позначенням: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.10
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Відтвори форму слова «{lemma}» за позначенням: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.11
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Постав слово «{lemma}» у форму: {slot}'
+        slots:
+          - lemma
+          - slot
+      - id: C2.agreed_form_without_sense.12
+        operation: agreed_form
+        sense_variant: without_sense
+        template: 'Граматичне позначення потрібної форми слова «{lemma}»: {slot}. Подай цю форму.'
+        slots:
+          - lemma
+          - slot
   C3:
     binding: Headword sense ↔ ULIF synonym/antonym group for that same sense.
     source_fields:
@@ -315,13 +421,13 @@ components:
           - sense
       - id: C3.synonyms.11
         operation: synonyms
-        template: "Значення врахуй і наведи синоніми слова «{headword}». Значення: {sense}"
+        template: "Синоніми слова «{headword}» наведи списком. Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.12
         operation: synonyms
-        template: "У цьому значенні слово «{headword}» має синоніми. Назви їх. Значення: {sense}"
+        template: "До слова «{headword}» добери синоніми. Значення: {sense}"
         slots:
           - headword
           - sense
@@ -387,13 +493,13 @@ components:
           - sense
       - id: C3.antonyms.11
         operation: antonyms
-        template: "Значення врахуй і наведи антоніми слова «{headword}». Значення: {sense}"
+        template: "Антоніми слова «{headword}» наведи списком. Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.12
         operation: antonyms
-        template: "У цьому значенні слово «{headword}» має антоніми. Назви їх. Значення: {sense}"
+        template: "До слова «{headword}» добери антоніми. Значення: {sense}"
         slots:
           - headword
           - sense
