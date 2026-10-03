@@ -22,6 +22,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+from scripts.orchestration.handoff_slot_registry import registered_slots
+
 from .registry import AGENTS, get_agent_entry
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -44,7 +46,7 @@ def resolve_handoff_agent(identity: str) -> str:
     Registry keys are the authority for provider prefixes; area lanes (including
     empty-slot aliases) do not create separate executable adapters.
     """
-    providers = [key for key in AGENTS if identity.startswith(f"{key}-")]
+    providers = [key for key in AGENTS if identity.startswith(f"{key}-") and identity in registered_slots(key)]
     return max(providers, key=len) if providers else identity
 
 
@@ -121,6 +123,8 @@ def probe_lane(agent: str, *, cwd: Path, timeout_seconds: int = _DEFAULT_TIMEOUT
     started = time.monotonic()
     result: dict[str, Any] = {"agent": agent, "status": "unhealthy"}
     try:
+        if agent not in AGENTS:
+            raise KeyError(agent)
         entry = get_agent_entry(agent)
     except KeyError:
         result["reason"] = "agent is not registered"

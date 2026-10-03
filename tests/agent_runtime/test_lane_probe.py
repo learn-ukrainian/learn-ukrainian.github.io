@@ -188,12 +188,28 @@ def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch):
         assert lane_probe.resolve_handoff_agent(slot) == provider
     for provider in lane_probe.AGENTS:
         if "-" not in provider:
-            for area in areas:
+            for area, assignment in areas.items():
+                if assignment["slots"]:
+                    continue
                 assert lane_probe.resolve_handoff_agent(f"{provider}-{area}") == provider
     _registered_lane(monkeypatch, "new-provider")
-    assert lane_probe.resolve_handoff_agent("new-provider-new-lane") == "new-provider"
+    assert lane_probe.resolve_handoff_agent("new-provider-monitor") == "new-provider"
+    assert lane_probe.resolve_handoff_agent("new-provider-new-lane") == "new-provider-new-lane"
     assert lane_probe.resolve_handoff_agent("unknown-lane") == "unknown-lane"
     assert lane_probe.resolve_handoff_agent("claude") == "claude"
+
+
+@pytest.mark.parametrize("identity", ["claude-", "claude-typo-lane", "CLAUDE-infra", "claudex-infra", "kimi-folk"])
+def test_handoff_cli_rejects_unmintable_identity(monkeypatch, tmp_path, capsys, identity):
+    def unexpected_adapter(_agent):
+        pytest.fail("an unmintable identity must not probe a provider")
+
+    monkeypatch.setattr(lane_probe, "_load_adapter", unexpected_adapter)
+    assert lane_probe.main(["--handoff-agent", identity, "--cwd", str(tmp_path)]) == 1
+    probe = json.loads(capsys.readouterr().out)["probes"][0]
+    assert probe["agent"] == identity
+    assert probe["status"] == "unhealthy"
+    assert probe["reason"] == "agent is not registered"
 
 
 @pytest.mark.parametrize("returncode", [0, 23])

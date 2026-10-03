@@ -4559,14 +4559,13 @@ def test_alias_lane_detect_skips_foreign_packet_without_mutation(
     args = ["--repo-root", str(tmp_path), "detect", "--agent", "claude-open-model-data"]
     if use_environment:
         monkeypatch.setenv("SESSION_STREAM_ID", f"epic:{session_epic}")
-        monkeypatch.setenv("SESSION_TASK_FAMILY", "open-model-data")
     else:
         args += ["--stream", f"epic:{session_epic}", "--task-family", "open-model-data"]
     assert th.main(args) == 0
     result = json.loads(capsys.readouterr().out)
     assert th.main([*args, "--format", "session-start"]) == 0
     context = capsys.readouterr().out
-    if stream_match and family_match:
+    if stream_match:
         assert result["status"] == "pending_start"
         assert "bootstrap-replacement" in context and "confirm-replacement" in context
         assert "Skipped foreign candidate" not in context
@@ -4593,6 +4592,8 @@ def test_detect_matching_packets_stay_ambiguous_with_foreign_candidate(tmp_path:
                     "claude",
                     "--active-thread-id",
                     f"old-thread-{index}",
+                    "--stream-epic",
+                    str(1001 if index < 2 else 1002),
                     "--task-family",
                     family,
                     "--semantic-title",
@@ -4610,6 +4611,8 @@ def test_detect_matching_packets_stay_ambiguous_with_foreign_candidate(tmp_path:
         "detect",
         "--agent",
         "claude-open-model-data",
+        "--stream",
+        "epic:1001",
         "--task-family",
         "open-model-data",
     ]
@@ -4623,6 +4626,101 @@ def test_detect_matching_packets_stay_ambiguous_with_foreign_candidate(tmp_path:
     assert "MULTIPLE LIVE PENDING ROLLOVERS" in context
     assert "Skipped foreign candidate" in context
     assert not any("bind:" in line and foreign in line for line in context.splitlines())
+
+
+@pytest.mark.parametrize(
+    "families", [("infra", "infra-driver"), ("thread-rollover", "infra-driver"), ("infra-driver",)]
+)
+def test_same_stream_family_hint_preserves_candidates(tmp_path: Path, capsys, monkeypatch, families):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    # Model the launcher (--epic infra) and the two different families observed
+    # on its stream, without pinning the registry's succession-sensitive epic.
+    import yaml
+
+    registry = yaml.safe_load((_REPO_ROOT / "scripts/config/issue_streams.yaml").read_text())
+    epic = registry["streams"]["infra-harness"]["epics"][0]
+    packets = []
+    for index, family in enumerate(families):
+        assert (
+            th.main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "prepare",
+                    "--agent",
+                    "claude-infra",
+                    "--active-thread-id",
+                    f"old-infra-{index}",
+                    "--stream-epic",
+                    str(epic),
+                    "--task-family",
+                    family,
+                    "--semantic-title",
+                    "Repair infra session routing",
+                    "--terminal-goal",
+                    "merge",
+                ]
+            )
+            == 0
+        )
+        packets.append(json.loads(capsys.readouterr().out))
+    # The infra launcher does not pass a family hint. Also exercise a hint
+    # that matches nothing, which must retain the same exact-ID stop.
+    for hint in ([], ["--task-family", "unmatched-epic-name"]):
+        args = [
+            "--repo-root",
+            str(tmp_path),
+            "detect",
+            "--agent",
+            "claude-infra",
+            "--stream",
+            f"epic:{epic}",
+            *hint,
+            "--format",
+            "session-start",
+        ]
+        assert th.main(args) == (2 if len(families) > 1 else 0)
+        context = capsys.readouterr().out
+        assert "COLD START" not in context
+        assert "Skipped foreign candidate" not in context
+        if len(families) > 1:
+            assert "MULTIPLE LIVE PENDING ROLLOVERS" in context
+            assert "Do NOT cold-start" in context
+            for packet in packets:
+                bind = next(line for line in context.splitlines() if "bind:" in line and packet["lineage_id"] in line)
+                assert packet["rollover_id"] in bind
+                assert "--lineage-id" in bind and "--rollover-id" in bind
+        else:
+            assert "PENDING THREAD ROLLOVER DETECTED" in context
+            assert "bootstrap-replacement" in context
+
+
+@pytest.mark.parametrize("packet_agent", ["claude-open-model-data", "claude"])
+def test_detect_missing_stream_is_candidate_only_in_own_directory(tmp_path: Path, capsys, monkeypatch, packet_agent):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            ["--repo-root", str(tmp_path), "prepare", "--agent", packet_agent, "--active-thread-id", "legacy-thread"]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    assert (
+        th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude-open-model-data", "--stream", "epic:1001"])
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    if packet_agent == "claude":
+        assert result["status"] == "none"
+        assert result["skipped_foreign"][0]["stream"] == ""
+    else:
+        assert result["status"] == "pending_start"
+        assert "skipped_foreign" not in result
+
+
+def test_detect_ignores_unset_by_launcher_task_family_environment(monkeypatch):
+    monkeypatch.setenv("SESSION_TASK_FAMILY", "infra")
+    assert th.build_parser().parse_args(["detect"]).task_family == ""
 
 
 def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:

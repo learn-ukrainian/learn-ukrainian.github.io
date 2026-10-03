@@ -575,12 +575,10 @@ if [ -n "${SESSION_EPIC:-}" ]; then
   fi
 fi
 
-# Optional task-family filter from launcher epic (#5398). SESSION_EPIC is the
-# epic name (hramatka, atlas, harness); task_family on packets usually matches.
+# Optional disambiguation hint from the launcher epic (#5398). Packet families
+# need not equal the epic name; detect keeps candidates when no family matches.
 TASK_FAMILY_ARGS=()
-if [ -n "${SESSION_TASK_FAMILY:-}" ]; then
-  TASK_FAMILY_ARGS=(--task-family "$SESSION_TASK_FAMILY")
-elif [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
+if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
   case "${SESSION_EPIC}" in
     harness|infra) : ;; # do not over-filter infra packets
     *) TASK_FAMILY_ARGS=(--task-family "$SESSION_EPIC") ;;
@@ -735,6 +733,7 @@ if [ "$GATE_RC" -eq 0 ] && [ -n "$GATE_JSON" ]; then
 fi
 
 GATE_DETECT_STATUS=""
+GATE_DETECT_CONTEXT=""
 if [ "$GATE_RC" -ne 0 ] || [ ${#GATE_FIELDS[@]} -lt 13 ]; then
   ISSUES+=("SESSION GATE COULD NOT RUN (rc=$GATE_RC): session-record, venv-pin, and primary-on-main checks did not run.")
   case "$HANDOFF_AGENT" in
@@ -782,7 +781,8 @@ else
   case "${GATE_FIELDS[10]}" in
     ok|skipped)
       GATE_DETECT_STATUS="${GATE_FIELDS[12]}"
-      [ -n "${GATE_FIELDS[11]}" ] && INFO+=("${GATE_FIELDS[11]}")
+      GATE_DETECT_CONTEXT="${GATE_FIELDS[11]}"
+      [ -n "$GATE_DETECT_CONTEXT" ] && INFO+=("$GATE_DETECT_CONTEXT")
       ;;
     *)
       if [ -z "$HANDOFF_CONTEXT" ]; then
@@ -879,7 +879,7 @@ if [ -z "$HANDOFF_CONTEXT" ] && [ "$GATE_DETECT_STATUS" = "none" ]; then
     fi
   fi
 
-  if [ -z "$HANDOFF_CONTEXT" ]; then
+  if [ -z "$HANDOFF_CONTEXT" ] && [ -z "$GATE_DETECT_CONTEXT" ]; then
     if ! HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
       --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
       --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \

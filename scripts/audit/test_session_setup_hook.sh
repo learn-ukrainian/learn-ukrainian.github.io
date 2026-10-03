@@ -434,6 +434,37 @@ assert_contains "$output" "COLD START: NO LIVE THREAD ROLLOVER" "engine cold sta
 assert_contains "$output" "Orient from durable project state with tool-backed reads" "engine cold start"
 assert_not_contains "$output" "context_canary.py mint" "engine cold start"
 
+# 12a. Foreign-only fallback packets emit the gate's cold-start block once,
+# even when there is no local handoff pointer and fallback detect could run.
+setup_fixture "$fixture_root"
+prepare_fixture "$fixture_root" claude old-foreign-thread
+output="$(run_hook "$fixture_root" 0 claude-open-model-data "" "" native_claude "" "" open-model-data)"
+assert_contains "$output" "Skipped foreign candidate: owner=claude" "foreign-only cold start"
+cold_start_count=$(awk '{count += gsub(/COLD START: NO LIVE THREAD ROLLOVER/, "")} END {print count + 0}' <<< "$output")
+[ "$cold_start_count" -eq 1 ] || fail "foreign-only cold start: expected one block, got $cold_start_count"
+assert_not_contains "$output" "bootstrap-replacement" "foreign-only cold start"
+assert_not_contains "$output" "confirm-replacement" "foreign-only cold start"
+
+# 12b. --epic infra keeps both same-stream packets with different families.
+setup_fixture "$fixture_root"
+infra_fixture_stream=$(bash -c 'source "$1/scripts/lib/handoff_identity.sh"; launcher_selector_stream infra' _ "$REPO_ROOT")
+for family in infra infra-driver; do
+  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    --repo-root "$fixture_root" --monitor-base-url http://127.0.0.1:1 prepare \
+    --agent claude-infra --active-thread-id "old-$family" \
+    --stream-epic "${infra_fixture_stream#epic:}" --task-family "$family" \
+    --semantic-title "Repair infra session routing" --terminal-goal merge >/dev/null
+done
+output="$(run_hook "$fixture_root" 0 claude-infra "" "" native_claude "" "" infra)"
+assert_contains "$output" "MULTIPLE LIVE PENDING ROLLOVERS" "same-stream infra ambiguity"
+assert_contains "$output" "Candidate count: 2" "same-stream infra ambiguity"
+assert_contains "$output" "family=infra title=" "same-stream infra ambiguity"
+assert_contains "$output" "family=infra-driver title=" "same-stream infra ambiguity"
+bind_count=$(awk '{count += gsub(/bind: /, "")} END {print count + 0}' <<< "$output")
+[ "$bind_count" -eq 2 ] || fail "same-stream infra ambiguity: expected two bind commands, got $bind_count"
+assert_not_contains "$output" "COLD START: NO LIVE THREAD ROLLOVER" "same-stream infra ambiguity"
+assert_not_contains "$output" "Skipped foreign candidate" "same-stream infra ambiguity"
+
 # 13. Engine lane isolation across local .agent paths.
 setup_fixture "$fixture_root"
 prepare_fixture "$fixture_root" claude old-claude

@@ -6059,10 +6059,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
                 packet_stream = f"epic:{stream_epic}" if stream_epic is not None else ""
                 packet_family = _candidate_task_family(state, replacement)
                 mismatches = []
-                if stream_filter and packet_stream != stream_filter:
+                if stream_filter and packet_stream != stream_filter and (packet_stream or scan_agent != agent):
                     mismatches.append("stream differs from session")
-                if task_family_filter and packet_family != task_family_filter:
-                    mismatches.append("task family differs from session")
                 if mismatches:
                     skipped_foreign.append(
                         {
@@ -6076,6 +6074,13 @@ def cmd_detect(args: argparse.Namespace) -> int:
                     )
                     continue
                 live_leases.append((path, state, replacement, scan_agent))
+
+    # A family is a disambiguation hint, not stream identity. If it matches no
+    # live packet, retain the full candidate set and require exact-ID binding.
+    if len(live_leases) > 1 and task_family_filter:
+        matching = [lease for lease in live_leases if _candidate_task_family(lease[1], lease[2]) == task_family_filter]
+        if matching:
+            live_leases = matching
 
     if not live_leases:
         output: dict[str, Any] = {"agent": agent, "status": "none"}
@@ -6610,10 +6615,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     detect.add_argument(
         "--task-family",
-        default=os.environ.get("SESSION_TASK_FAMILY", ""),
+        default="",
         help=(
-            "Offer only packets whose task_family matches (e.g. hramatka; default: SESSION_TASK_FAMILY). "
-            "Other families are reported as skipped foreign candidates, even for a single packet."
+            "Narrow multiple live packets by task_family (e.g. hramatka; default: no hint). "
+            "A single packet or a set with no matching family remains eligible."
         ),
     )
     detect.add_argument("--format", choices=("json", "session-start"), default="json")

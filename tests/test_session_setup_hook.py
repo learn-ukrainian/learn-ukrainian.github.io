@@ -126,7 +126,8 @@ def test_hook_passes_stream_and_task_family_to_gate_and_fallback(tmp_path: Path)
     fallback = hook[hook.index("if ! HANDOFF_CONTEXT=$(run_bounded") :]
     assert '"${TASK_FAMILY_ARGS[@]}"' in fallback
     assert '"${ROLLOVER_STREAM_ARGS[@]}"' in fallback
-    assert 'TASK_FAMILY_ARGS=(--task-family "$SESSION_TASK_FAMILY")' in hook
+    assert 'TASK_FAMILY_ARGS=(--task-family "$SESSION_EPIC")' in hook
+    assert "SESSION_TASK_FAMILY" not in hook
 
 
 def test_legacy_table_parser_avoids_gnu_sed_anchor_escape() -> None:
