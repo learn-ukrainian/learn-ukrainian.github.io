@@ -35,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db
@@ -1579,7 +1580,10 @@ def paired_cluster_bootstrap(query_values: dict[str, tuple[float, float]], clust
 
 def _read_labels(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
     labels: dict[tuple[str, str], dict[str, Any]] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
+    if lines[-1] == "":
+        lines.pop()
+    for line in lines:
         row = json.loads(line)
         required = {"usable_quotation", "usable_exercise", "usable_example", "reason"}
         if not required.issubset(row):

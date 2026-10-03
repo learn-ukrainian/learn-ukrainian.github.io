@@ -32,6 +32,11 @@ import re
 import sys
 from pathlib import Path
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
@@ -64,7 +69,7 @@ def overlap_match(judge_phrase: str, gold_phrase: str) -> bool:
 def load_gold(path: Path) -> dict[str, dict]:
     """``prompt_id`` → {clean: bool, flags: list, rationale: str, text: str}"""
     out: dict[str, dict] = {}
-    for line in path.read_text().splitlines():
+    for line in split_jsonl_lines(path.read_text()):
         if not line.strip():
             continue
         d = json.loads(line)
@@ -82,7 +87,7 @@ def load_judgments(path: Path) -> dict[str, dict]:
     out: dict[str, dict] = {}
     if not path.exists():
         return out
-    for line in path.read_text().splitlines():
+    for line in split_jsonl_lines(path.read_text()):
         if not line.strip():
             continue
         d = json.loads(line)

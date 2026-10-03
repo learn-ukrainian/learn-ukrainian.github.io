@@ -26,6 +26,7 @@ from scripts.atlas.lexical_projection import (
     canonical_json,
     deterministic_attestation_id,
 )
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[2]
 UA_SLUG_RE = re.compile(r"[^а-яіїєґa-z0-9]+", re.IGNORECASE)
@@ -173,11 +174,7 @@ def convert_seed_file(
     deck_title: str = "Curated private teacher-lesson seed v5",
 ) -> list[dict[str, Any]]:
     """Read seed JSONL and emit de-duplicated ADR-017 records."""
-    rows = [
-        json.loads(line)
-        for line in input_path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    rows = [json.loads(line) for line in split_jsonl_lines(input_path.read_text(encoding="utf-8")) if line.strip()]
     records: list[dict[str, Any]] = [
         {
             "record_type": "practice_deck",

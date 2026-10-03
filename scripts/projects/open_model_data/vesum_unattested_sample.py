@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import document_signal_manifest as phase1
 from scripts.projects.open_model_data import language_contact_detector as detector
 from scripts.projects.open_model_data import profile_corpus as profile
@@ -143,7 +144,10 @@ def _phase1_rows(manifest_path: Path, receipt_path: Path) -> dict[str, dict[str,
     except (phase1.ManifestError, OSError, json.JSONDecodeError) as exc:
         raise SampleError(f"invalid Phase 1 binding: {exc}") from exc
     rows: dict[str, dict[str, Any]] = {}
-    for line in manifest_path.read_text(encoding="utf-8").splitlines():
+    lines = split_jsonl_lines(manifest_path.read_text(encoding="utf-8"))
+    if lines[-1] == "":
+        lines.pop()
+    for line in lines:
         row = json.loads(line)
         record_id = row["record_id"]
         if record_id in rows:

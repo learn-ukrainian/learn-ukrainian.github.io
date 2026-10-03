@@ -57,6 +57,8 @@ except ModuleNotFoundError:
         score_case,
     )
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
 OPENCODE_BIN = "opencode"
 REQUEST_TIMEOUT_S = 600  # opencode startup + reasoning overhead
 
@@ -106,7 +108,7 @@ def call_opencode(prompt: str, model: str) -> dict:
     # textual reply lives in events of type "text" inside ``part.text``.
     # Concatenate all "text" parts to assemble the full assistant response.
     text_parts: list[str] = []
-    for line in proc.stdout.splitlines():
+    for line in split_jsonl_lines(proc.stdout):
         line = line.strip()
         if not line.startswith("{"):
             continue

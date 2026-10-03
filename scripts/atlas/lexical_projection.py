@@ -19,12 +19,18 @@ import json
 import os
 import re
 import sqlite3
+import sys
 import tempfile
 import unicodedata
 from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
@@ -283,7 +289,7 @@ def _record_key(record: dict[str, Any]) -> tuple[str, tuple[str, ...]]:
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     seen: set[tuple[str, tuple[str, ...]]] = set()
-    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+    for line_number, line in enumerate(split_jsonl_lines(path.read_text(encoding="utf-8")), start=1):
         if not line.strip():
             continue
         try:

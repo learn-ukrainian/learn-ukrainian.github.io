@@ -28,6 +28,7 @@ import yaml
 
 from scripts.audit import anchor_primitives, llm_qg_canaries, llm_reviewer, model_families, qg_schema
 from scripts.audit.content_surface_gates import policy_for_level
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DAILY_SPEND_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_reviewer_spend.jsonl"
@@ -952,7 +953,7 @@ def read_daily_spend(path: Path | None = None, *, day: date | None = None) -> fl
         return 0.0
     wanted = (day or datetime.now(UTC).date()).isoformat()
     total = 0.0
-    for line in ledger.read_text(encoding="utf-8").splitlines():
+    for line in split_jsonl_lines(ledger.read_text(encoding="utf-8")):
         if not line.strip():
             continue
         try:

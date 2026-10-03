@@ -11,6 +11,12 @@ import json
 import os
 import sys
 import urllib.request
+from pathlib import Path
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 REFERENCE_TOOLS = frozenset({
     "verify_word", "verify_words", "verify_lemma", "verify_stress", "search_text",
@@ -25,7 +31,7 @@ def decode_response(raw: bytes) -> dict:
     if text.lstrip().startswith("{"):
         return json.loads(text)
     for event in text.replace("\r\n", "\n").split("\n\n"):
-        payload = "\n".join(line[5:].lstrip() for line in event.splitlines() if line.startswith("data:"))
+        payload = "\n".join(line[5:].lstrip() for line in split_jsonl_lines(event) if line.startswith("data:"))
         if payload:
             result = json.loads(payload)
             if isinstance(result, dict) and ("result" in result or "error" in result):

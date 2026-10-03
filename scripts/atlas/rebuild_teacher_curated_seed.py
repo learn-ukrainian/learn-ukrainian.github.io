@@ -22,6 +22,7 @@ from pathlib import Path
 import yaml
 
 from scripts.atlas.teacher_vesum_attest import DEFAULT_VESUM_DB, VesumAttestation, attest_lemmas
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -41,7 +42,7 @@ VESUM_ATTESTATION_FIELD = "vesumAttestation"
 
 
 def _read_jsonl(path: Path) -> list[dict[str, object]]:
-    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rows = [json.loads(line) for line in split_jsonl_lines(path.read_text(encoding="utf-8")) if line.strip()]
     if not all(isinstance(row, dict) for row in rows):
         raise ValueError(f"JSONL rows must be objects: {path}")
     return rows

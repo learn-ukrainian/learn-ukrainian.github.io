@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.ua_eval_harness import verify_release_freeze as v010
 from scripts.projects.ua_eval_harness.evaluate_model import (
     import_model_responses,
@@ -191,7 +192,9 @@ def _read_json(path: Path) -> dict[str, Any]:
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = split_jsonl_lines(path.read_text(encoding="utf-8"))
+        if lines[-1] == "":
+            lines.pop()
     except OSError as exc:
         raise FreezeError(f"cannot read JSONL {path}: {exc}") from exc
     for line_number, line in enumerate(lines, 1):

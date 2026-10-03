@@ -50,6 +50,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, Protocol
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.typesafe.client import (
     DEFAULT_MODEL,
     DEFAULT_TIMEOUT,
@@ -468,7 +469,7 @@ def load_cases(path: Path) -> list[dict[str, Any]]:
     """Load JSONL citations. Raises ``OSError`` or ``ValueError`` on I/O or shape errors."""
     text = path.read_text(encoding="utf-8")
     cases: list[dict[str, Any]] = []
-    for line_no, line in enumerate(text.splitlines(), start=1):
+    for line_no, line in enumerate(split_jsonl_lines(text), start=1):
         if not line.strip():
             continue
         try:
