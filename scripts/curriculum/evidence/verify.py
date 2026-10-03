@@ -263,12 +263,8 @@ def verify_words_store(
                 pronoun_entry=pronoun_entry,
                 ulif_entries=sources_instance.ulif_entries([lemma]).raw.get(lemma, []),
             )
-            if selection.reason == "reference_binding_invalid" or (
-                selection.reason == "reference_binding_missing" and word.get("gloss_en")
-            ):
+            if selection.reason == "reference_binding_invalid":
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: {selection.reason}")
-            elif selection.reason == "reference_binding_missing":
-                warnings.append(f"{word_id}: reference_binding_missing")
             if word.get("gloss_basis") != binding_context.basis(word_id):
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: binding_basis_mismatch")
             method = binding_context.entries.get(word_id, {}).get("method")
@@ -696,7 +692,7 @@ def verify_plan_glosses(
             )
         ):
             errors.append(f"{codes.GLOSS_MISMATCH}: {label}: selected_gloss_changed")
-        if selection.reason in {"reference_binding_missing", "reference_binding_invalid"}:
+        if selection.reason == "reference_binding_invalid":
             errors.append(f"{codes.GLOSS_MISSING}: {label}: {selection.reason}")
         elif selection.reason == codes.GLOSS_SENSE_UNRESOLVED:
             errors.append(f"{codes.GLOSS_SENSE_UNRESOLVED}: {label}: candidates={list(selection.candidates)!r}")

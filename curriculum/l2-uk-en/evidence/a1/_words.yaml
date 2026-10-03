@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 269b57bbc9ba4061fd4d6197470fee33e20d4aa5
+  mcp_commit: 6aa5fe11c8cfe2fd44b14dde40efe8a7197b4445
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 86d1e0d2dfab74d61b9683a0abe5ef7232cf001ba4eadce711e0fc8b201693cd
+  sources_db: 5ef2f082ebc972f7d9d576b6429cf76fa6b93cc40b62a07546d331b6a7fa7862
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -75,7 +75,7 @@ words:
     stress_source: none
     stressed: мя
     tags: noun:anim:s:v_zna:pron:pers:1:arch
-  gloss_en: I (personal pronoun)
+  gloss_en: I
   gloss_ref:
     id: 15
     row_sha256: 43139920eaad62eab01037a21d7cecae9ec23139f06d467e09b85a9262e31e86
@@ -163,7 +163,7 @@ words:
     stress_source: none
     stressed: тя
     tags: noun:anim:s:v_zna:pron:pers:2:arch
-  gloss_en: thou (singular nominative form of you)
+  gloss_en: thou
   gloss_ref:
     id: 269
     row_sha256: c26798fbeaf218a1cf49750532cf0a6c7fd106ff2417ce5e66d23ccdc4099783
@@ -371,8 +371,12 @@ words:
     stress_source: trie
     stressed: є́ї
     tags: noun:unanim:f:v_zna:pron:pers:3:arch
-  gloss_en: she (person); it (feminine gender)
-  gloss_source: kaikki_wiktionary
+  gloss_en: she
+  gloss_ref:
+    id: 4065
+    row_sha256: aade1db1265e61447c08af1d69fb739c773ac71eb571dffc312f5a4432890644
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-004
   lemma: вона
   note: 'closed class: personal pronoun (3rd pers fem sing); taught at position 8 (things-have-gender)'
@@ -433,7 +437,11 @@ words:
     stress_source: pending
     tags: noun:unanim:n:v_zna:pron:pers:3
   gloss_en: it
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 548
+    row_sha256: f5b0d8a7086c98fa39b3bc0eca3e06cc3db358bfd1b656594561e2088d2a884d
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-005
   lemma: воно
   note: 'closed class: personal pronoun (3rd pers neut sing); taught at position 8 (things-have-gender)'
@@ -486,7 +494,7 @@ words:
     stress_source: none
     stressed: нас
     tags: noun:anim:p:v_zna:pron:pers:1
-  gloss_en: generic we (the speaker and at least one other person, regardless of whether it's the person being addressed)
+  gloss_en: we
   gloss_ref:
     id: 14
     row_sha256: 244ea8fdcf76183fd927f2db4fd463d73521c46728fcc59ec97580d31092b4c5
@@ -550,7 +558,7 @@ words:
     stress_source: none
     stressed: вас
     tags: noun:anim:p:v_zna:pron:pers:2
-  gloss_en: 'you (subject pronoun: the group being addressed)'
+  gloss_en: you
   gloss_ref:
     id: 37
     row_sha256: d9df543eefdfc60e9b60f2aa034629294de10e73cb746711d0b5662da356c440
@@ -630,7 +638,11 @@ words:
     stressed: їх
     tags: noun:unanim:p:v_zna:pron:pers:3
   gloss_en: they
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 17483
+    row_sha256: d6a75f035ab402ac71d5022fafc0c1b63ecc5947ad1c414b1ea0f9b8e0ef05b9
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-008
   lemma: вони
   note: 'closed class: personal pronoun (3rd pers plur); taught at position 13 (many-things)'
@@ -702,8 +714,12 @@ words:
     stress_source: pending
     tags: noun:unanim:s:v_zna:pron:refl
     unresolvable_by_tags: true
-  gloss_en: oneself (reflexive pronoun); myself; yourself; himself; herself; itself
-  gloss_source: kaikki_wiktionary
+  gloss_en: myself
+  gloss_ref:
+    id: 43
+    row_sha256: 95e83323b26161cfc5916e3d58102a208dcd8b014775cbc976a5321f79cea5ec
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-009
   lemma: себе
   note: 'closed class: reflexive pronoun (lemma for себе/собі/собою); basic reference'
@@ -1042,7 +1058,7 @@ words:
     stress_source: ulif
     stressed: мої́
     tags: adj:p:v_zna:rinanim:pron:pos
-  gloss_en: my (belonging to me) (determiner)
+  gloss_en: my
   gloss_ref:
     id: 19272
     row_sha256: 0b6e85ed789d82cea873973cef161677375f79103fd9b1157ad410eb4fec91ab
@@ -1382,7 +1398,7 @@ words:
     stress_source: ulif
     stressed: твої́
     tags: adj:p:v_zna:rinanim:pron:pos
-  gloss_en: your (belonging to you (singular; one owner)) (determiner)
+  gloss_en: your
   gloss_ref:
     id: 19467
     row_sha256: 8a2a11cf35600852d5d738b8f8f04e6e97f9d417d8d06a554bab08f516d753cb
@@ -1698,7 +1714,7 @@ words:
     stress_source: ulif
     stressed: свої́
     tags: adj:p:v_zna:rinanim:pron:pos
-  gloss_en: (possessive) one's, my, his, her, its, our, your, their (always refers to the subject of the sentence)
+  gloss_en: one's
   gloss_ref:
     id: 18763
     row_sha256: 8bd5886627a4ebe30aa8641e30aba8b71b158c13c1f573bdb40f21cb0be1da97
@@ -1918,7 +1934,7 @@ words:
     stress_source: ulif
     stressed: на́ші
     tags: adj:p:v_zna:rinanim:pron:pos
-  gloss_en: our (belonging to us) (determiner)
+  gloss_en: our
   gloss_ref:
     id: 19278
     row_sha256: d0bea47dc84d9f8dac29e08d1d23581265659c2dfac9dd130b1fd21bfd15db1e
@@ -2138,7 +2154,7 @@ words:
     stress_source: ulif
     stressed: ва́ші
     tags: adj:p:v_zna:rinanim:pron:pos
-  gloss_en: your (belonging to you (singular; one owner)) (determiner)
+  gloss_en: your
   gloss_ref:
     id: 19235
     row_sha256: a8a7eee6d5b15a088e0aaf4b7510525ea0d929b04dfd4460a746386dbf479db0
@@ -2364,8 +2380,12 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:pron:pos:long
-  gloss_en: their, theirs
-  gloss_source: kaikki_wiktionary
+  gloss_en: their
+  gloss_ref:
+    id: 20670
+    row_sha256: 9dbf2c785da8bf9835d64c4c74d3340c17b4980b0f32d160213194f185d0f747
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-015
   lemma: їхній
   note: 'closed class: possessive pronoun (3rd pers plur); basic possessive reference'
@@ -2629,7 +2649,7 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:pron:dem:long
-  gloss_en: this (the (thing) here) (determiner)
+  gloss_en: this
   gloss_ref:
     id: 10484
     row_sha256: 3039208321b379f83382da5a00ab22d7b437d61e75d5c7d8eb28867b2d224adb
@@ -2889,7 +2909,7 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:pron:dem:long
-  gloss_en: that (what is being indicated) (determiner)
+  gloss_en: that
   gloss_ref:
     id: 18941
     row_sha256: 9f59eb66057d55da2485fa3e9b766064ed26f00526dc9d984907dc99980c2904
@@ -2918,7 +2938,7 @@ words:
     stress_source: none
     stressed: у
     tags: prep
-  gloss_en: contained by (preposition)
+  gloss_en: contained by
   gloss_ref:
     id: 3
     row_sha256: 8f4fa83f7c9f63eab2aa3da78770d3fa2d70dfceccea13658e473227c2458509
@@ -2942,7 +2962,7 @@ words:
     stress_source: none
     stressed: в
     tags: prep
-  gloss_en: contained by (preposition)
+  gloss_en: contained by
   gloss_ref:
     id: 2
     row_sha256: cfe093c0d8ce2c59086caecd90f22897f83f8d7d95e1a2bb66fdfd6f57093222
@@ -2971,6 +2991,12 @@ words:
     stress_source: ulif
     stressed: уві́
     tags: prep
+  gloss_en: contained by
+  gloss_ref:
+    id: 19477
+    row_sha256: b14ac493c86daf086db899f4b5777eba67b8391f748dd5706f05e06c54242f28
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-020
   lemma: уві
   note: 'closed class: preposition, euphonic partner of у'
@@ -2994,7 +3020,7 @@ words:
     stress_source: none
     stressed: з
     tags: prep
-  gloss_en: of (containing, comprising or made from) (preposition)
+  gloss_en: of
   gloss_ref:
     id: 5
     row_sha256: 3850cfb33c989ccdb02c7b3b162bc1e2e03ddd229b5c3fef337ab00efd7de8b5
@@ -3023,7 +3049,7 @@ words:
     stress_source: none
     stressed: із
     tags: prep
-  gloss_en: with (in the company of) (preposition)
+  gloss_en: with
   gloss_ref:
     id: 17
     row_sha256: c9b68d0a7594f3613e0f57c74fa9514a140f8b8c9068446952e76fc16e22896e
@@ -3052,7 +3078,7 @@ words:
     stress_source: none
     stressed: зі
     tags: prep
-  gloss_en: with (in the company of) (preposition)
+  gloss_en: with
   gloss_ref:
     id: 87
     row_sha256: bdc237a3a0362f1cc4bf5617e3627826fca1561b7a06a6245cc89f45b5daeae6
@@ -3081,7 +3107,7 @@ words:
     stress_source: none
     stressed: зо
     tags: prep
-  gloss_en: with (in the company of) (preposition)
+  gloss_en: with
   gloss_ref:
     id: 7194
     row_sha256: 524f08c3e1127c383d3513f4b4a2c492f0bd0572493f0edaa7091e1154afa855
@@ -3115,7 +3141,7 @@ words:
     stress_source: none
     stressed: на
     tags: prep
-  gloss_en: positioned at the upper surface of (preposition)
+  gloss_en: positioned at the upper surface of
   gloss_ref:
     id: 1
     row_sha256: 074e5a052cd3e000a40e1e0b6973b87763d7a1f74f92fb87fe9a21c239f7e5df
@@ -3144,7 +3170,7 @@ words:
     stress_source: none
     stressed: до
     tags: prep
-  gloss_en: (to tell the time) before, to, e.g. a quarter of three (2:45) (preposition)
+  gloss_en: before
   gloss_ref:
     id: 7
     row_sha256: 091b64439e9a908d49f07bca46955d1558d1aff99ca2c518e4e6b2108a9ac04f
@@ -3173,7 +3199,7 @@ words:
     stress_source: none
     stressed: від
     tags: prep
-  gloss_en: from (with the source or provenance of or at) (preposition)
+  gloss_en: from
   gloss_ref:
     id: 16
     row_sha256: 011b98b54ec41096d3528c852488e171f424ac45df5977142c92591386c420a0
@@ -3202,7 +3228,7 @@ words:
     stress_source: none
     stressed: од
     tags: prep
-  gloss_en: (nonstandard) from (preposition)
+  gloss_en: from
   gloss_ref:
     id: 7219
     row_sha256: 9b3a7226629469b42cdb85399b2aa26ee7773793b227649deac71a1e208c6471
@@ -3236,7 +3262,7 @@ words:
     stress_source: none
     stressed: для
     tags: prep
-  gloss_en: for (directed at, intended to belong to) (preposition)
+  gloss_en: for
   gloss_ref:
     id: 12
     row_sha256: 18fe75631a5d109797ba949e6172f506fb8d3398ff205bdad01ee051e96bff51
@@ -3270,7 +3296,7 @@ words:
     stress_source: none
     stressed: без
     tags: prep
-  gloss_en: without (not having) (preposition)
+  gloss_en: without
   gloss_ref:
     id: 75
     row_sha256: 03aac7307532abe78f6d0edc4afca091bb215fcebb3d37f0afd83955712bc352
@@ -3299,7 +3325,7 @@ words:
     stress_source: none
     stressed: за
     tags: prep
-  gloss_en: for (supporting) (preposition)
+  gloss_en: for
   gloss_ref:
     id: 8
     row_sha256: 331a576ff94d547d853aff948fb462c1f6e65f7164f1ad5bddd0692a85795dd0
@@ -3328,7 +3354,7 @@ words:
     stress_source: none
     stressed: під
     tags: prep
-  gloss_en: under (at a lower level than) (preposition)
+  gloss_en: under
   gloss_ref:
     id: 38
     row_sha256: 04cfeb17f67871447767b8a35464aff77bfaa89691c290030b457ba1f9af8c09
@@ -3397,7 +3423,7 @@ words:
     stress_source: none
     stressed: над
     tags: prep
-  gloss_en: above (in or to a higher place) (preposition)
+  gloss_en: above
   gloss_ref:
     id: 233
     row_sha256: 34203d336eea5724d233d69517d4b5da8625d3ea7d87f2b1d53ed030bcc8d274
@@ -3477,6 +3503,12 @@ words:
     stress_source: ulif
     stressed: пе́ред
     tags: prep
+  gloss_en: before
+  gloss_ref:
+    id: 20412
+    row_sha256: de11962a46947252e361c6a33920ed1f55d581177be282c93486ffe335e87720
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-038
   lemma: перед
   note: 'closed class: preposition; spatial and temporal preposition'
@@ -3543,6 +3575,12 @@ words:
     stress_source: ulif
     stressed: пі́сля
     tags: prep
+  gloss_en: after
+  gloss_ref:
+    id: 54
+    row_sha256: 04bc08670b375a0efce44fd5eece10f3fc8be226416fb1b1bbd997469c4f2d3f
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-041
   lemma: після
   note: 'closed class: preposition; taught at position 23 (days-and-months) and position 25 (my-day)'
@@ -3566,9 +3604,12 @@ words:
     stress_source: none
     stressed: між
     tags: prep
-  gloss_en: between, among (expressing position in space or time) (+ instrumental or more rarely genitive); between, among
-    (expressing motion towards) (+ accusative)
-  gloss_source: kaikki_wiktionary
+  gloss_en: between
+  gloss_ref:
+    id: 99
+    row_sha256: f6de14d418912c744320c61137235bd465e31794c46ea610c60f1186ec5fc827
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-042
   lemma: між
   note: 'closed class: preposition; spatial relational preposition'
@@ -3621,8 +3662,12 @@ words:
     stress_source: ulif
     stressed: бі́ля
     tags: prep
-  gloss_en: next to; near (as a preposition)
-  gloss_source: kaikki_wiktionary
+  gloss_en: near
+  gloss_ref:
+    id: 860
+    row_sha256: 1ce7620a79c83844f7435a58c48ccc6fb92eec56c6ab9470fbf652bd3b40a2a7
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-044
   lemma: біля
   note: 'closed class: preposition; taught at position 29 (where-is-it) and position 30 (my-city)'
@@ -3651,9 +3696,12 @@ words:
     stress_source: ulif
     stressed: че́рез
     tags: prep
-  gloss_en: across, over (from one side to the other of); through; via; through, with (means); because of, due to; in, after
-    (time)
-  gloss_source: kaikki_wiktionary
+  gloss_en: across
+  gloss_ref:
+    id: 60
+    row_sha256: 01dd531997f0dd2243be8f88287bcdb80bb281a27bbd96878e421ef05e57f982
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-045
   lemma: через
   note: 'closed class: preposition; relational preposition of traversal/cause'
@@ -3682,7 +3730,7 @@ words:
     stress_source: none
     stressed: про
     tags: prep
-  gloss_en: about (concerning) (preposition)
+  gloss_en: about
   gloss_ref:
     id: 10
     row_sha256: 3ddfa43d9c242591324e7ce746f2c5d0a3fc07e7528596901fe710984c055e56
@@ -3716,7 +3764,7 @@ words:
     stress_source: none
     stressed: при
     tags: prep
-  gloss_en: at (in or very near a particular place) (preposition)
+  gloss_en: at
   gloss_ref:
     id: 103
     row_sha256: 3c3e8107a8fc56610f2fba82f3fc933d6274fb343366eb61590c12f744903be0
@@ -3750,7 +3798,7 @@ words:
     stress_source: none
     stressed: о
     tags: prep
-  gloss_en: indicating time (preposition)
+  gloss_en: indicating time
   gloss_ref:
     id: 7431
     row_sha256: bd5092d22556c9779ad6f11b962652ca551657b7a3c04e950831447690e69bc9
@@ -3779,7 +3827,7 @@ words:
     stress_source: none
     stressed: об
     tags: prep
-  gloss_en: at (for indicating time in hours) (preposition)
+  gloss_en: at
   gloss_ref:
     id: 1033
     row_sha256: 6d9b4308fdb77b6892c8f96419af69e0c21105b32993c5a7a53dcc0399ad24c0
@@ -3808,7 +3856,7 @@ words:
     stress_source: none
     stressed: і
     tags: conj:coord
-  gloss_en: and (used to connect two similar words, phrases, et cetera) (conjunction)
+  gloss_en: and
   gloss_ref:
     id: 2582
     row_sha256: ecf74a124f99adb839325ab8a55a0c4c0193705b585b55cbde2f654dfede22d5
@@ -3832,7 +3880,7 @@ words:
     stress_source: none
     stressed: й
     tags: conj:coord
-  gloss_en: and (used to connect two similar words, phrases, et cetera) (conjunction)
+  gloss_en: and
   gloss_ref:
     id: 4742
     row_sha256: 2ec3c9f817a1f0f4f21952e36a32450ad3ea5987d61100dc2b406858ca8b7cd1
@@ -3861,7 +3909,7 @@ words:
     stress_source: none
     stressed: та
     tags: conj:coord
-  gloss_en: and (used to connect two similar words, phrases, et cetera) (conjunction)
+  gloss_en: and
   gloss_ref:
     id: 19171
     row_sha256: 962d3df6816096e625993e51ee03894e6a0876036fa2b49ea70d7152bf3a6ef2
@@ -3895,7 +3943,7 @@ words:
     stress_source: none
     stressed: а
     tags: conj:coord
-  gloss_en: and (used to string together sentences or sentence fragments in chronological order) (conjunction)
+  gloss_en: and
   gloss_ref:
     id: 19146
     row_sha256: 596bfcbf0290e2d6a1dd33eb524b6345f0d3c62a179643ab857021c2bd4e5808
@@ -3924,8 +3972,12 @@ words:
     stress_source: ulif
     stressed: але́
     tags: conj:coord
-  gloss_en: but (rather)
-  gloss_source: kaikki_wiktionary
+  gloss_en: but
+  gloss_ref:
+    id: 14961
+    row_sha256: 05ec347a27bf5fc4c02f71ed342be56e12afd0489e393ec799e99999bb7c249c
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-054
   lemma: але
   note: 'closed class: coordinating conjunction (adversative); taught at position 44 (linking-ideas)'
@@ -3949,7 +4001,7 @@ words:
     stress_source: none
     stressed: бо
     tags: conj:subord
-  gloss_en: because (by or for the cause that; on this account that; for the reason that) (conjunction)
+  gloss_en: because
   gloss_ref:
     id: 19159
     row_sha256: 858028414cacd83a4955ca8dda875122035c05ffcf92beadf51f249f7b06da21
@@ -3979,7 +4031,11 @@ words:
     stressed: або́
     tags: conj:coord
   gloss_en: or
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 19365
+    row_sha256: 8e3e1a42d2735b536fe1da434f2e5bbe48214af1f67ab38f4c8dc585831c335c
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-056
   lemma: або
   note: 'closed class: coordinating conjunction (disjunctive); basic clause connector'
@@ -4003,8 +4059,12 @@ words:
     stress_source: ulif
     stressed: якщо́
     tags: conj:subord
-  gloss_en: if, in case
-  gloss_source: kaikki_wiktionary
+  gloss_en: if
+  gloss_ref:
+    id: 19831
+    row_sha256: e643456ed882e42c91f7e2c0151facf447eb03dbe16536c17712847d0e7f22bf
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-057
   lemma: якщо
   note: 'closed class: subordinating conjunction (conditional); basic clause connector'
@@ -4033,7 +4093,7 @@ words:
     stress_source: none
     stressed: щоб
     tags: conj:subord
-  gloss_en: that (connecting a clause indicating purpose ("final")) (conjunction)
+  gloss_en: so that
   gloss_ref:
     id: 486
     row_sha256: d0d247f17582698f12147ab0601f22378e92ede687138734187f564aa2acb1c1
@@ -4062,8 +4122,12 @@ words:
     stress_source: ulif
     stressed: що́би
     tags: conj:subord
-  gloss_en: so that, in order that; in order to; lest
-  gloss_source: kaikki_wiktionary
+  gloss_en: so that
+  gloss_ref:
+    id: 19817
+    row_sha256: d3933affae150c94e35f967d15736e60809e42bdcac49cb0509e7d572ebc5228
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-059
   lemma: щоби
   note: 'closed class: subordinating conjunction (purpose), partner of щоб; basic clause connector'
@@ -4087,6 +4151,12 @@ words:
     stress_source: trie
     stressed: по́ки
     tags: conj:subord
+  gloss_en: as
+  gloss_ref:
+    id: 19732
+    row_sha256: 962830b83b4e808b138063067bcb3a3b497ad4ae4fcc8c961f6ef6be4f2e01e9
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-060
   lemma: поки
   note: 'closed class: subordinating conjunction (temporal); basic clause connector'
@@ -4228,7 +4298,7 @@ words:
     stress_source: none
     stressed: ось
     tags: part
-  gloss_en: here (is), this (is), there (is), that (is)
+  gloss_en: here
   gloss_ref:
     id: 395
     row_sha256: a935eb12ccf0472d63a649a569a95be42dd78417787555681493b4cb7e943c44
@@ -4262,7 +4332,7 @@ words:
     stress_source: none
     stressed: ще
     tags: adv
-  gloss_en: yet (in addition)
+  gloss_en: yet
   gloss_ref:
     id: 29
     row_sha256: 7039c2824353fbb9872037d9937febe0afe990ba02c4ce22e5631bd6216e53a2
@@ -4296,6 +4366,12 @@ words:
     stress_source: ulif
     stressed: іще́
     tags: adv
+  gloss_en: yet
+  gloss_ref:
+    id: 1234
+    row_sha256: eb688ceae76bdcb617079e6f4bf3a37b8c00877690b468e0b58e9546c64854ec
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-067
   lemma: іще
   note: 'closed class: temporal/additive discourse adverb, euphonic partner of ще'
@@ -4319,6 +4395,12 @@ words:
     stress_source: none
     stressed: вже
     tags: adv
+  gloss_en: already
+  gloss_ref:
+    id: 33
+    row_sha256: d8a0d7c2a485862392f95f1e0b4a54c37578602da5edea5a07c4a53af9c86776
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-068
   lemma: вже
   note: 'closed class: temporal discourse adverb functioning as particle; basic aspectual particle'
@@ -4343,7 +4425,11 @@ words:
     stressed: уже́
     tags: adv
   gloss_en: already
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 150
+    row_sha256: d45173a2b7a42fadf6e4b49c56f879784f52302d9937c11946a37183f97abe65
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-069
   lemma: уже
   note: 'closed class: temporal discourse adverb, euphonic partner of вже'
@@ -4372,6 +4458,12 @@ words:
     stress_source: ulif
     stressed: лише́
     tags: part
+  gloss_en: mere
+  gloss_ref:
+    id: 19662
+    row_sha256: 16f21a3fb4786d3d9426d5ba7fccb292f306de4716d010ed9fad46d5e259c5f1
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-070
   lemma: лише
   note: 'closed class: restrictive particle'
@@ -4441,6 +4533,12 @@ words:
     stress_source: ulif
     stressed: са́ме
     tags: part
+  gloss_en: exactly
+  gloss_ref:
+    id: 19748
+    row_sha256: 04b3e3aa53962821eb265b3146b30f26e5f0b4c7283134ebe733661613a91edb
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-073
   lemma: саме
   note: 'closed class: identifying/emphatic particle'
@@ -4555,6 +4653,12 @@ words:
     stress_source: ulif
     stressed: приві́ти
     tags: noun:inanim:p:v_zna
+  gloss_en: regards
+  gloss_ref:
+    id: 8228
+    row_sha256: 156b2c7ba895d06085b29dcf9a8ad4977fb20dd9ddf5f2f82459cfe4d6b7477e
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-074
   lemma: привіт
   note: Greeting formula learned by ear, informal; ULP S1 lesson 1.
@@ -4812,9 +4916,12 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:compb:long
-  gloss_en: good, benign, genial, gentle, kind, kindly; good (having positive qualities; useful for a particular purpose);
-    good, tasty (food)
-  gloss_source: kaikki_wiktionary
+  gloss_en: good
+  gloss_ref:
+    id: 576
+    row_sha256: 8d16896d7e5e6a36cf204fb75d9de48a58b7c0b4946f2aa5ef0880830040794c
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-075
   lemma: добрий
   note: Part of the fixed formal greeting chunk, not adjective grammar; ULP S1 lesson 2.
@@ -4940,7 +5047,11 @@ words:
     stressed: дні
     tags: noun:inanim:p:v_zna
   gloss_en: day
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 10903
+    row_sha256: f4cfedc3e4aebf44cdce35b74b0a6bc18ebb966d59792fc6ecbd7c68e10911dc
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-076
   lemma: день
   note: Part of the fixed formal greeting chunk, not noun grammar; ULP S1 lesson 2.
@@ -5064,7 +5175,7 @@ words:
     stress_source: ulif
     stressed: зву́ки
     tags: noun:inanim:p:v_zna:xp1
-  gloss_en: sound (sensation perceived by the ear)
+  gloss_en: sound
   gloss_ref:
     id: 3740
     row_sha256: 6f0c5887b62d9b19dd78f278cc0e28aecf9890f44f4005700e75d70f81e1da54
@@ -5171,8 +5282,12 @@ words:
     stress_source: ulif
     stressed: лі́тери
     tags: noun:inanim:p:v_zna
-  gloss_en: letter (a symbol in an alphabet)
-  gloss_source: kaikki_wiktionary
+  gloss_en: letter
+  gloss_ref:
+    id: 18072
+    row_sha256: 9f0807abab2b92e65a4449dfd408301ef34634d717d7a72cb6d066b783bc106a
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-078
   lemma: літера
   note: Written letter, contrasted with heard sound; primer part 1 pp. 30–82.
@@ -5285,6 +5400,12 @@ words:
     stress_source: trie
     stressed: голосні́
     tags: noun:inanim:p:v_zna
+  gloss_en: vowel
+  gloss_ref:
+    id: 14316
+    row_sha256: 973266a7b273e8044400b1921a285abe5097f7e5e0e84eff531824921b68229a
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-079
   lemma: голосний
   note: Vowel as a sound category, not the adjective; primer part 1 p. 13.
@@ -5596,8 +5717,12 @@ words:
     markers: []
     stress_source: pending
     tags: noun:anim:p:v_zna:rare
-  gloss_en: mama, mummy, mom, ma
-  gloss_source: kaikki_wiktionary
+  gloss_en: mama
+  gloss_ref:
+    id: 1466
+    row_sha256: d5f9de7f1117c7fc09e215226baa3687441d7908fce2cb941885b973e0523fb0
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-081
   lemma: мама
   note: First decodable CVCV word on primer letter pages.
@@ -5701,8 +5826,12 @@ words:
     stress_source: trie
     stressed: мали́ни
     tags: noun:inanim:p:v_zna
-  gloss_en: raspberries (fruit); raspberry (plant)
-  gloss_source: kaikki_wiktionary
+  gloss_en: raspberry
+  gloss_ref:
+    id: 15382
+    row_sha256: 2ca123218e3319d6b01987b12883d342674031e6681b8437bb0fe5161fec7b0f
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-082
   lemma: малина
   note: Decodable word from primer reading practice.
@@ -5809,8 +5938,12 @@ words:
     stress_source: ulif
     stressed: сли́ви
     tags: noun:inanim:p:v_zna
-  gloss_en: plum (tree and fruit)
-  gloss_source: kaikki_wiktionary
+  gloss_en: plum
+  gloss_ref:
+    id: 18812
+    row_sha256: 7e104e6e7f10449ed59aaf6d791803d3495b232b721b8b5c7da42b5a3e293647
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-083
   lemma: слива
   note: Decodable word from primer reading practice.
@@ -5917,9 +6050,12 @@ words:
     stress_source: ulif
     stressed: ру́ки
     tags: noun:inanim:p:v_zna
-  gloss_en: hand; arm; hand, handwriting; the culprit of a theft, the person who stole something (used with a possessive pronoun
-    to indicate the thief)
-  gloss_source: kaikki_wiktionary
+  gloss_en: hand
+  gloss_ref:
+    id: 301
+    row_sha256: be1a80a672250b589064154fec1c400bf709b8769373a36bb51705db699c8f94
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-084
   lemma: рука
   note: Decodable word using the final letter group.
@@ -6027,7 +6163,11 @@ words:
     stressed: рі́ки
     tags: noun:inanim:p:v_zna
   gloss_en: river
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 5978
+    row_sha256: 4911c4aa2b5d37fb731e4b6f2762b6201cc852ee71ac4f18499def19411386f0
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-085
   lemma: ріка
   note: Decodable word using the final letter group.
@@ -6197,8 +6337,12 @@ words:
     stress_source: ulif
     stressed: чу́є
     tags: verb:imperf:pres:s:3
-  gloss_en: to hear; to feel, to sense; to smell
-  gloss_source: kaikki_wiktionary
+  gloss_en: to hear
+  gloss_ref:
+    id: 1152
+    row_sha256: 1bce8fe374a81bdfadbe6acf0442cbc1519b56a3708230e504ecda56d1693131
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-086
   lemma: чути
   note: 'Hear: primer sound-first teacher verb; lexical action only, no conjugation system.'
@@ -6384,8 +6528,12 @@ words:
       origin: tag
     stress_source: pending
     tags: verb:imperf:pres:s:3:subst
-  gloss_en: to see (perceive with the eyes); to have the faculty of eyesight
-  gloss_source: kaikki_wiktionary
+  gloss_en: to see
+  gloss_ref:
+    id: 249
+    row_sha256: 1e1a8edb235f66d393856aba5e9e9c571b0d517500aa9e22807a92c1b89713e7
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-087
   lemma: бачити
   note: 'See: primer contrasts seeing a letter and hearing a sound; lexical action only.'
@@ -6561,7 +6709,11 @@ words:
     stressed: чита́
     tags: verb:imperf:pres:s:3:short
   gloss_en: to read
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 763
+    row_sha256: a9d8786c3ddfe49885159317cba22babeab7c247a657a9abab43ee6df5e6b17b
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-088
   lemma: читати
   note: 'Read: primer reading instruction; lexical action only.'
@@ -6741,9 +6893,12 @@ words:
     stress_source: ulif
     stressed: пи́ше
     tags: verb:imperf:pres:s:3
-  gloss_en: to write; to send written information to, to notify, to text; to create text in written form; to be the author
-    (of a book, article, poem, etc.); to draw (an art piece); to give someone or something a name (in a document)
-  gloss_source: kaikki_wiktionary
+  gloss_en: to write
+  gloss_ref:
+    id: 325
+    row_sha256: 4f038e36febc6b6ee348e800f8b32688aaa894fed69855ceda5f3e9400592252
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-089
   lemma: писати
   note: 'Write and copy: primer workbook action; lexical action only.'
@@ -6856,8 +7011,12 @@ words:
     stress_source: ulif
     stressed: повто́рення
     tags: noun:inanim:p:v_zna
-  gloss_en: repetition; reiteration
-  gloss_source: kaikki_wiktionary
+  gloss_en: repetition
+  gloss_ref:
+    id: 5429
+    row_sha256: 592cc272b66ba6729bb5ee2bea83b60e03b2cf93c734825dc7f8a3f213f23377
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-090
   lemma: повторення
   note: Recap title and task label, from ULP S1 lesson 10 review pattern.
@@ -7181,6 +7340,12 @@ words:
     stress_source: ulif
     stressed: Іва́нів
     tags: noun:anim:p:v_zna:prop:fname
+  gloss_en: Ivan
+  gloss_ref:
+    id: 591
+    row_sha256: b94c4290fb515ea6a5da9a811743ccab15a9ac182a87304b30cfb1568dc03aee
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-093
   lemma: Іван
   note: Decodable personal name from primer reading page 60 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0058); taught letters
@@ -7331,7 +7496,7 @@ words:
     stress_source: none
     stressed: так
     tags: part
-  gloss_en: yes (word used to indicate agreement or acceptance)
+  gloss_en: 'yes'
   gloss_ref:
     id: 129
     row_sha256: 3748cf6d062c6bf60a9df494a0bbf2c0ecfbb55703203b93de5a8df6b6407b80
@@ -7462,9 +7627,16 @@ words:
     stress_source: ulif
     stressed: ко́си
     tags: noun:inanim:p:v_zna
+  gloss_en: braid
+  gloss_ref:
+    id: 10065
+    row_sha256: ad551bef059742a9769b1b21a5ab6a08922f6473d6f27625352b533b3f5985c0
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-097
   lemma: коса
-  note: Decodable noun with letter K from primer page 81 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.
+  note: 'Braid (hair, as in the primer sentence «Поліна помила коси»): decodable noun with letter K from primer page 81 (chunk
+    1-klas-bukvar-zaharijchuk-2025-1_s0077); taught letters only.'
   pos: noun
   shadow:
     russian_shadow: false
@@ -7925,7 +8097,11 @@ words:
     stressed: та́ти
     tags: noun:anim:p:v_zna:rare
   gloss_en: dad
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 4949
+    row_sha256: b3c5466c0880b4c6a64de2ca7092bcf16797ba50e0dfda128992fdff90e80544
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-101
   lemma: тато
   note: 'Primer part 1 printed page 86: first Т word, printed by syllables.'
@@ -8144,7 +8320,7 @@ words:
     stress_source: ulif
     stressed: дахи́
     tags: noun:inanim:p:v_zna
-  gloss_en: roof (the cover at the top of a building)
+  gloss_en: roof
   gloss_ref:
     id: 3029
     row_sha256: 375d5574fbcca57069c35bd678ddb706bbb267af6b338910145ac2b29d2b0fd2
@@ -8257,7 +8433,11 @@ words:
     stressed: зими́
     tags: noun:inanim:p:v_zna
   gloss_en: winter
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 3625
+    row_sha256: a50a87dd529edc9a8c290719084a49234afe314c1744a04b1ba5cee669f7b5b3
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-104
   lemma: зима
   note: Decodable З word on primer part 1 printed page 98, printed by syllables.
@@ -8366,7 +8546,11 @@ words:
     stressed: бі́лок
     tags: noun:anim:p:v_zna
   gloss_en: squirrel
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 14198
+    row_sha256: 385a6897213ce13526c0641f5fa0e0aa541f0ce97f1efc74955fc355fc329879
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-105
   lemma: білка
   note: Decodable Б word on primer part 1 printed page 106; animal sense.
@@ -8497,8 +8681,12 @@ words:
     stress_source: ulif
     stressed: гарбузи́
     tags: noun:inanim:p:v_zna
-  gloss_en: pumpkin (plant and fruit)
-  gloss_source: kaikki_wiktionary
+  gloss_en: pumpkin
+  gloss_ref:
+    id: 9106
+    row_sha256: a049ea7160db2f3ccd99cd1d34b46793070a4b8a925b573da83a9d55df43812f
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-106
   lemma: гарбуз
   note: Decodable Г word on primer part 2 printed pages 4-5.
@@ -8611,6 +8799,12 @@ words:
     stress_source: ulif
     stressed: ґа́ви
     tags: noun:anim:p:v_zna
+  gloss_en: crow
+  gloss_ref:
+    id: 19841
+    row_sha256: 81b112f1fd79a5df7c24b209dd7232e315a880cbec037e321062464a3d76f41a
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-107
   lemma: ґава
   note: Decodable Ґ word on primer part 2 printed pages 8-9; unlike ґедзик, it has no дз.
@@ -8763,8 +8957,12 @@ words:
     stress_source: ulif
     stressed: чо́боти
     tags: noun:inanim:p:v_zna
-  gloss_en: boot; sturdy footwear covering the foot and extending above the ankle, often for outdoor or winter use.
-  gloss_source: kaikki_wiktionary
+  gloss_en: boot
+  gloss_ref:
+    id: 8121
+    row_sha256: b448857f1906e62bfab21da1d6b11d1b14d38897a369df525bfbaf380499d9ee
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-108
   lemma: чобіт
   note: Decodable Ч word; plural чоботи appears on primer part 2 printed page 12.
@@ -8889,7 +9087,7 @@ words:
     stress_source: ulif
     stressed: чаї́
     tags: noun:inanim:p:v_zna
-  gloss_en: dried leaves of tea plant
+  gloss_en: tea
   gloss_ref:
     id: 5698
     row_sha256: 19d26315995d68a8a238cbfe5904343c07fd21d94781fd30a06fc9bd4daf0a04
@@ -9031,7 +9229,7 @@ words:
     stress_source: ulif
     stressed: хліби́
     tags: noun:inanim:p:v_zna
-  gloss_en: bread (baked dough made from cereals)
+  gloss_en: bread
   gloss_ref:
     id: 1805
     row_sha256: 5d4ee6287d32a40cbd6c88e4fcc6a4e289f60e8309b86988718ac849eb452883
@@ -9098,7 +9296,11 @@ words:
     stressed: жи́то
     tags: noun:inanim:n:v_zna
   gloss_en: rye
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 9330
+    row_sha256: 33f27f599a34da6d4acdfe327f30d021a0707f01417a63d95991608373a146d3
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-111
   lemma: жито
   note: Decodable Ж word on primer part 2 printed page 24.
@@ -9218,6 +9420,12 @@ words:
     stress_source: ulif
     stressed: комиші́
     tags: noun:inanim:p:v_zna
+  gloss_en: reed
+  gloss_ref:
+    id: 20243
+    row_sha256: 67ecd5198acaec5b8018e6abbe3c4e0120fb195cb55565ad72988f65a884a21c
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-112
   lemma: комиш
   note: Decodable Ш word on primer part 2 printed pages 28-29; plural комиші appears in poem.
@@ -9345,8 +9553,12 @@ words:
     stress_source: ulif
     stressed: прилеті́ли
     tags: verb:perf:past:p
-  gloss_en: to fly in (arrive by flying); to rush in, to come rushing in
-  gloss_source: kaikki_wiktionary
+  gloss_en: to fly in
+  gloss_ref:
+    id: 8230
+    row_sha256: 3d9c9e29fb12fa82b8b7a78ff4522d72f99ab9cc4978b35e7da2729d5f7912c7
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-113
   lemma: прилетіти
   note: Incidental sentence word in whole sourced reading sentence on primer part 2 printed page 30.
@@ -9375,8 +9587,12 @@ words:
     stress_source: ulif
     stressed: додо́му
     tags: adv
-  gloss_en: home, homewards
-  gloss_source: kaikki_wiktionary
+  gloss_en: home
+  gloss_ref:
+    id: 2413
+    row_sha256: c91d09143648cfdaa9226a9712eb447a351f57fea3ebc571a33dec17559f46b6
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-114
   lemma: додому
   note: Incidental sentence word in whole sourced reading sentence on primer part 2 printed page 30.
@@ -9558,7 +9774,11 @@ words:
     stressed: дро́ва
     tags: noun:inanim:p:v_zna:ns
   gloss_en: firewood
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 6820
+    row_sha256: c1aca0e5c593e57f5b6f162865d7dd2a91839c4ae4e997a0a9ccb6c6760f8015
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-116
   lemma: дрова
   note: Decodable Д word on primer part 1 printed page 94; дах needs Х and is held until later in the module.
@@ -9681,7 +9901,7 @@ words:
     stress_source: ulif
     stressed: кле́ни
     tags: noun:inanim:p:v_zna
-  gloss_en: maple (tree of the Acer genus)
+  gloss_en: maple
   gloss_ref:
     id: 14473
     row_sha256: d0956f3815f523fc2b56f08510b07c39b859397b9bd030f021053fdcbacb062b
@@ -9816,7 +10036,7 @@ words:
     stress_source: ulif
     stressed: зу́би
     tags: noun:inanim:p:v_zna
-  gloss_en: 'anatomy: tooth'
+  gloss_en: tooth
   gloss_ref:
     id: 5364
     row_sha256: 0abbba737e30319bffb6acdf7edd38252f25c22ef262ee7144880fc495b295c1
@@ -9941,7 +10161,7 @@ words:
     stress_source: ulif
     stressed: тини́
     tags: noun:inanim:p:v_zna
-  gloss_en: fence (barrier)
+  gloss_en: fence made out of vines and branches
   gloss_ref:
     id: 12824
     row_sha256: 1531990b13104cf868e9dd9960ee1465e59af221034fce7c5de41adbc7223ac8
@@ -10080,7 +10300,7 @@ words:
     stress_source: trie
     stressed: тіни́
     tags: noun:inanim:p:v_zna:arch
-  gloss_en: shadow (dark image projected onto a surface)
+  gloss_en: shadow
   gloss_ref:
     id: 2830
     row_sha256: ca172c6cdc39aea5996f991c6a664bd8ad2defc0f04c9265e35764e00e04a32c
@@ -10150,8 +10370,12 @@ words:
     stress_source: ulif
     stressed: ї́жу
     tags: noun:inanim:f:v_zna
-  gloss_en: food; meal
-  gloss_source: kaikki_wiktionary
+  gloss_en: food
+  gloss_ref:
+    id: 2698
+    row_sha256: b4370a216fb4028f068677badf4e588ec40f702d625f42a102756ae381bf0adf
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-121
   lemma: їжа
   note: T-002 Ї word.
@@ -10253,8 +10477,12 @@ words:
     stress_source: ulif
     stressed: я́ми
     tags: noun:inanim:p:v_zna
-  gloss_en: pit, hole (in the ground)
-  gloss_source: kaikki_wiktionary
+  gloss_en: pit
+  gloss_ref:
+    id: 3618
+    row_sha256: cf7912bd99a432ddeb63c8cb84e3dd048ac576732d880190cc4e7015f6e75131
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-122
   lemma: яма
   note: T-013 word-initial Я model.
@@ -10367,8 +10595,12 @@ words:
     stress_source: trie
     stressed: маля́та
     tags: noun:anim:p:v_zna:rare
-  gloss_en: infant, baby; infant animal, baby animal
-  gloss_source: kaikki_wiktionary
+  gloss_en: infant
+  gloss_ref:
+    id: 7639
+    row_sha256: 188a542adfd3b2239b523c0ed32336d4de61e99fd956ff321a992f9af20ff56d
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-123
   lemma: маля
   note: T-013 post-consonant Я model.
@@ -10471,7 +10703,11 @@ words:
     stressed: ю́рти
     tags: noun:inanim:p:v_zna
   gloss_en: yurt
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 19145
+    row_sha256: 9cc4541ed85ecf64a6bfcb3802b4b2bbb5a8fee0ce51b49c9bf04f87d58928f2
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-124
   lemma: юрта
   note: T-004 word-initial Ю model.
@@ -10591,6 +10827,12 @@ words:
     stress_source: ulif
     stressed: люпи́ни
     tags: noun:inanim:p:v_zna
+  gloss_en: lupin
+  gloss_ref:
+    id: 20289
+    row_sha256: 91e75c7704ba81c8a167593d5c19819ae8766b4d23e197a81d22a58d6aa53683
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-125
   lemma: люпин
   note: T-004 post-consonant Ю model.
@@ -10874,8 +11116,12 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:compb:long
-  gloss_en: deep blue, indigo (color)
-  gloss_source: kaikki_wiktionary
+  gloss_en: deep blue
+  gloss_ref:
+    id: 5289
+    row_sha256: 539782ce5748705678b1a90d0b0092a840425d571f94d85f5eb9610c4f4f8a74
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-126
   lemma: синій
   note: T-005 post-consonant Є model; source form is neuter, no agreement teaching.
@@ -11001,8 +11247,12 @@ words:
     stress_source: ulif
     stressed: єно́тів
     tags: noun:anim:p:v_zna
-  gloss_en: genet; raccoon (mammal); raccoon fur, coonskin; raccoon dog
-  gloss_source: kaikki_wiktionary
+  gloss_en: raccoon
+  gloss_ref:
+    id: 19833
+    row_sha256: 308452998f0f416164c6f34d15d77c77aea1b30579b1d56f789ab95e6c1b227c
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-127
   lemma: єнот
   note: 'Primer part 2 printed p. 49: word-initial Є decoding model.'
@@ -11068,8 +11318,12 @@ words:
     stress_source: ulif
     stressed: цимба́ли
     tags: noun:inanim:p:v_zna:ns
-  gloss_en: tsymbaly (the Ukrainian version of the hammered dulcimer)
-  gloss_source: kaikki_wiktionary
+  gloss_en: tsymbaly
+  gloss_ref:
+    id: 15847
+    row_sha256: f69a579fe3fd0792c87909e6b45b65e22872cdda98a2aa2ce6fa44eb73002513
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-128
   lemma: цимбали
   note: 'Primer part 2 printed p. 53: unfragmented Ц model, incidental instrument.'
@@ -11182,8 +11436,12 @@ words:
     stress_source: ulif
     stressed: щу́ки
     tags: noun:anim:p:v_zna
-  gloss_en: pike (fish)
-  gloss_source: kaikki_wiktionary
+  gloss_en: pike
+  gloss_ref:
+    id: 11530
+    row_sha256: 4d28d6c288e684bd5ff160dec4d4a7ef807883a3ded8ec80e27ad0b8ec867281
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-129
   lemma: щука
   note: T-007 Щ word.
@@ -11308,7 +11566,7 @@ words:
     stress_source: ulif
     stressed: дощі́
     tags: noun:inanim:p:v_zna
-  gloss_en: rain (condensed water from a cloud)
+  gloss_en: rain
   gloss_ref:
     id: 3919
     row_sha256: 6720366ad7f22ce914026726805f602fa405e0a79bd7595aebc64b1f56872f80
@@ -11421,7 +11679,11 @@ words:
     stressed: фе́рми
     tags: noun:inanim:p:v_zna
   gloss_en: farm
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 5823
+    row_sha256: 0da1816a0514b9d12e33ed7bf2ee2b0f51fe1c8222ea132fa073858e2fbdc407
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-131
   lemma: ферма
   note: T-008 Ф word; no visual comparison.
@@ -11542,7 +11804,7 @@ words:
     stress_source: ulif
     stressed: джмелі́в
     tags: noun:anim:p:v_zna
-  gloss_en: bumblebee (genus of bee)
+  gloss_en: bumblebee
   gloss_ref:
     id: 17625
     row_sha256: b488f7e4c0bb642358dd4f73888d19b296fa43f3fa11cd1cbfc782229e569b9e
@@ -11672,7 +11934,7 @@ words:
     stress_source: ulif
     stressed: дже́ми
     tags: noun:inanim:p:v_zna
-  gloss_en: jam (sweet mixture of fruit boiled with sugar)
+  gloss_en: jam
   gloss_ref:
     id: 16211
     row_sha256: a19ef15fa1a5cc37177356bc86159a2afeab2055b1c6055e124194858688f45e
@@ -11790,7 +12052,11 @@ words:
     stressed: дзи́ґи
     tags: noun:inanim:p:v_zna
   gloss_en: spinning top
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 12497
+    row_sha256: 5431f3732a82e99e7a6b58854d19ebb0d2bd66bebbc0827f36c0e9bce1950adf
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-134
   lemma: дзиґа
   note: T-010/T-013 inanimate spinning-top sense, not the person sense.
@@ -11941,6 +12207,12 @@ words:
     stress_source: ulif
     stressed: дзюрчи́ть
     tags: verb:imperf:pres:s:3
+  gloss_en: to purl
+  gloss_ref:
+    id: 17628
+    row_sha256: 98894596a180a7a855284091451588aba91e05e241fa1ea416939403ab47c43e
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-135
   lemma: дзюрчати
   note: T-010 source present form for soft дз; no conjugation explanation.
@@ -12216,7 +12488,11 @@ words:
     stressed: п'є
     tags: verb:imperf:pres:s:3
   gloss_en: to drink
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 3478
+    row_sha256: e5f81f31702ca1530521aeaba67705c51c39c8fda3c38ae0e7cdbd96ff0a8c39
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-137
   lemma: пити
   note: T-011 present source forms for apostrophe with Ю and Є; no conjugation explanation.
@@ -12319,8 +12595,12 @@ words:
     stress_source: ulif
     stressed: сі́м'ї
     tags: noun:inanim:p:v_zna:xp1
-  gloss_en: seed; hemp seed; sperm; family, household
-  gloss_source: kaikki_wiktionary
+  gloss_en: family
+  gloss_ref:
+    id: 7145
+    row_sha256: a3155ddfb72e3b325e4d9e00880133e34e6e0038c38c8ba6f0b51239c684ff26
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-138
   lemma: сім'я
   note: 'Primer part 2 printed p. 69: family sense for whole reading sentence; not the seed sense.'
@@ -12441,7 +12721,7 @@ words:
     stress_source: ulif
     stressed: м'ячі́
     tags: noun:inanim:p:v_zna
-  gloss_en: ball (object, generally spherical, used for playing games)
+  gloss_en: ball
   gloss_ref:
     id: 6763
     row_sha256: bfe4633c2c801c90e1b0a9740687d02f0cba1848d508ef8b607fa244dd6b96c1
@@ -12608,8 +12888,12 @@ words:
     stress_source: ulif
     stressed: раді́є
     tags: verb:imperf:pres:s:3
-  gloss_en: to rejoice, to exult, to jubilate, to be glad
-  gloss_source: kaikki_wiktionary
+  gloss_en: to rejoice
+  gloss_ref:
+    id: 3497
+    row_sha256: 71f411c605979653f7a9e89b91d024029de8751084a5b0c0af97a9937e1043fc
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-140
   lemma: радіти
   note: 'Primer part 2 printed p. 44: post-vowel Ю source form.'
@@ -12711,6 +12995,12 @@ words:
     stress_source: ulif
     stressed: Марі́й
     tags: noun:anim:p:v_zna:prop:fname
+  gloss_en: Mary
+  gloss_ref:
+    id: 2148
+    row_sha256: 5c3c6ff74f328fdd560ec52add4d57d2a155848e4b6454b8db42ac3265c71f03
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-141
   lemma: Марія
   note: T-003 personal-name model for post-vowel Я, not place sense.
@@ -12835,8 +13125,12 @@ words:
     stress_source: ulif
     stressed: мілья́рди
     tags: noun:inanim:p:v_zna:numr
-  gloss_en: billion (short scale), one thousand million or milliard (long scale) (10⁹)
-  gloss_source: kaikki_wiktionary
+  gloss_en: billion (short scale)
+  gloss_ref:
+    id: 812
+    row_sha256: b65433357848852d87f5b25ff2ed12bb421cf765a7c910d91f31f2bd71d67321
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-142
   lemma: мільярд
   note: T-013 two-sound Я after soft sign; incidental decoding, no counting lesson.
@@ -12944,7 +13238,11 @@ words:
     stressed: пюре́
     tags: noun:inanim:p:v_zna:nv
   gloss_en: puree
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 16830
+    row_sha256: 0fee34ad28623b7e916e595d2a902f09756e4712090a7fd9250ad2c896fcb473
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-143
   lemma: пюре
   note: T-015 sourced no-apostrophe contrast with the present first-person form of W-137.
@@ -13165,7 +13463,7 @@ words:
     stress_source: ulif
     stressed: ба́ки
     tags: noun:inanim:p:v_zna
-  gloss_en: tank (closed container for fluids)
+  gloss_en: tank
   gloss_ref:
     id: 6807
     row_sha256: b952f36d7d5ef48b5466bc80d49f0ab5fe3b0bb7f827c4723491d76384f308d8
@@ -13285,7 +13583,7 @@ words:
     stress_source: ulif
     stressed: боби́
     tags: noun:inanim:p:v_zna
-  gloss_en: bean (seed)
+  gloss_en: bean
   gloss_ref:
     id: 16001
     row_sha256: dc192976ba79ea1b96650634bda1be1a7b16ac1e240f4efbd8c52250ac33f9a1
@@ -13441,7 +13739,7 @@ words:
     stress_source: ulif
     stressed: льоди́
     tags: noun:inanim:p:v_zna
-  gloss_en: ice (water in frozen form)
+  gloss_en: ice
   gloss_ref:
     id: 8978
     row_sha256: df52a556dc7975e0892e8dd3b69f194fde02e8f821b5d9bfd5da3ee9015d1ae5
@@ -13573,7 +13871,7 @@ words:
     stress_source: ulif
     stressed: бу́ки
     tags: noun:inanim:p:v_zna
-  gloss_en: beech (tree of genus Fagus)
+  gloss_en: beech
   gloss_ref:
     id: 13571
     row_sha256: 0076f1942f00cd2546b838068c58aef09eeed8bb47917ce269f2d5e9f6ccf373
@@ -13743,6 +14041,12 @@ words:
     stress_source: ulif
     stressed: гра́є
     tags: verb:imperf:pres:s:3
+  gloss_en: to act
+  gloss_ref:
+    id: 982
+    row_sha256: 5361a504d176ac18f4a42e89e6a520dc7e355f3ccfa325863654a0ee4f38801a
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-149
   lemma: грати
   note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
@@ -13811,8 +14115,12 @@ words:
     stress_source: ulif
     stressed: ґра́ти
     tags: noun:inanim:p:v_zna:ns
-  gloss_en: grid, bars
-  gloss_source: kaikki_wiktionary
+  gloss_en: grid
+  gloss_ref:
+    id: 5352
+    row_sha256: edf9691f33a93073165d91b90b9c581228b3f117c746262c556cb7657f51284c
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-150
   lemma: ґрати
   note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
@@ -13920,8 +14228,12 @@ words:
     stress_source: ulif
     stressed: ка́ви
     tags: noun:inanim:p:v_zna
-  gloss_en: coffee (beverage)
-  gloss_source: kaikki_wiktionary
+  gloss_en: coffee
+  gloss_ref:
+    id: 4642
+    row_sha256: 2bcdac73b28124841fff7a3328f55bc9825c08f129e42331d302cfbfe3887b64
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-151
   lemma: кава
   note: 'Core A1 coffee word: modeled with its gloss in reading-ukrainian lesson 3 and recycled in lesson 4; X-002 also supplies
@@ -14041,7 +14353,7 @@ words:
     stress_source: ulif
     stressed: громи́
     tags: noun:inanim:p:v_zna
-  gloss_en: thunder (sound caused by lightning)
+  gloss_en: thunder
   gloss_ref:
     id: 8020
     row_sha256: 04dd6d7ccd34e8f77879222a37fb551b33e9a65645b9a350b4ba12f7fce98fb8
@@ -14171,7 +14483,7 @@ words:
     stress_source: ulif
     stressed: ґрунти́
     tags: noun:inanim:p:v_zna
-  gloss_en: ground (surface of the Earth)
+  gloss_en: ground
   gloss_ref:
     id: 2347
     row_sha256: baf8d8834e5289f9d8245992e7cdc9ba16c276b9a334c992ae7f527260a049c2
@@ -14206,6 +14518,12 @@ words:
     stress_source: ulif
     stressed: ко́ло
     tags: prep
+  gloss_en: about
+  gloss_ref:
+    id: 5944
+    row_sha256: ab107be128d05216e5274a3875b1cce05c7af05e0999ed413e6ca2d764bc7b44
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-154
   lemma: коло
   note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact
@@ -14332,8 +14650,12 @@ words:
     stress_source: ulif
     stressed: сливки́
     tags: noun:inanim:p:v_zna
-  gloss_en: plum (tree and fruit)
-  gloss_source: kaikki_wiktionary
+  gloss_en: plum
+  gloss_ref:
+    id: 21627
+    row_sha256: e6e5efd27267cc2dc773db238fc825d7f0bd945568df84e9488a8f89f3213f90
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-156
   lemma: сливка
   note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact
@@ -14550,7 +14872,11 @@ words:
     stressed: ки́слі
     tags: adj:p:v_zna:rinanim:compb
   gloss_en: sour
-  gloss_source: kaikki_wiktionary
+  gloss_ref:
+    id: 13139
+    row_sha256: f8cde82736be157fc01ed035517e613ad0235de426a91d74c1d82c7ac4f7dd40
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-157
   lemma: кислий
   note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact
@@ -14690,7 +15016,7 @@ words:
     stress_source: trie
     stressed: сини́
     tags: noun:anim:p:v_zna:rare
-  gloss_en: a male person in relation to his parents
+  gloss_en: son
   gloss_ref:
     id: 1064
     row_sha256: 64a9746fca0c673859dc5cabea4f354d7fb75d50a9c4c04bde3ce99d684fae02
@@ -14804,8 +15130,12 @@ words:
     stress_source: ulif
     stressed: наста́ли
     tags: verb:perf:past:p
-  gloss_en: to come, to begin (period of time); to fall, to descend, to come (silence, night, evening, darkness)
-  gloss_source: kaikki_wiktionary
+  gloss_en: to come
+  gloss_ref:
+    id: 3431
+    row_sha256: a1a9b38d59279818b6ee5ead26abfb91e82c26108d60d22d804557fb2bdfb94b
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-159
   lemma: настати
   note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact
@@ -14913,8 +15243,12 @@ words:
     stress_source: ulif
     stressed: ве́сни
     tags: noun:inanim:p:v_zna
-  gloss_en: spring (season)
-  gloss_source: kaikki_wiktionary
+  gloss_en: spring
+  gloss_ref:
+    id: 3547
+    row_sha256: e2ae7f7a1bfee32215ee43d188f2d7a420c5e71454b4f7b7e3ca6ab9659dc392
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-160
   lemma: весна
   note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact
@@ -15039,7 +15373,7 @@ words:
     stress_source: ulif
     stressed: птахі́в
     tags: noun:anim:p:v_zna
-  gloss_en: bird (animal)
+  gloss_en: bird
   gloss_ref:
     id: 16825
     row_sha256: 6d535a539016b5b7259f591e165bf4a9905951fd340eadbeca1d1f2ca22bc442
@@ -15114,7 +15448,7 @@ words:
     stress_source: trie
     stressed: кого́
     tags: noun:anim:m:v_zna:pron:int:rel
-  gloss_en: who? (interrogative pronoun)
+  gloss_en: who
   gloss_ref:
     id: 48
     row_sha256: cffc35293c2b4eb9f1bfbe28fac1b4e980c4859d8a6339e90ca9005283e3ccf5
@@ -15144,7 +15478,7 @@ words:
     stress_source: none
     stressed: де
     tags: adv:pron:int:rel
-  gloss_en: where (at or in what place)
+  gloss_en: where
   gloss_ref:
     id: 71
     row_sha256: d92666cbabda8118cf2890c2985f84710e31aa649df1fd795e83babee836cf43
@@ -15232,7 +15566,7 @@ words:
     stress_source: trie
     stressed: ві́що
     tags: noun:inanim:n:v_zna:pron:int:rel:rare
-  gloss_en: what? (interrogative pronoun)
+  gloss_en: what
   gloss_ref:
     id: 13
     row_sha256: aac4dd6e88bf71e61a0af1b60c1f8df81c9de5cf84dc5b09b7d27db44307bdc1
@@ -15413,8 +15747,12 @@ words:
     stress_source: ulif
     stressed: лю́бить
     tags: verb:imperf:pres:s:3
-  gloss_en: to like, to love (platonically or aesthetically)
-  gloss_source: kaikki_wiktionary
+  gloss_en: to love
+  gloss_ref:
+    id: 805
+    row_sha256: f0b74e46981e208354573009b0158598c8cfab3f39ef14f80a92133399ebf603
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-165
   lemma: любити
   note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
@@ -15539,8 +15877,12 @@ words:
     stress_source: ulif
     stressed: ра́вликів
     tags: noun:anim:p:v_zna
-  gloss_en: snail; commercial at (@)
-  gloss_source: kaikki_wiktionary
+  gloss_en: snail
+  gloss_ref:
+    id: 10742
+    row_sha256: 0fb24c269a09ace8fc251c7326735dd2f8dd78ca9bdf7953e8b160b5470dbf25
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-166
   lemma: равлик
   note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
@@ -15797,8 +16139,12 @@ words:
     stress_source: ulif
     stressed: одні́
     tags: numr:p:v_zna:rinanim
-  gloss_en: one (1); as one, unified
-  gloss_source: kaikki_wiktionary
+  gloss_en: one
+  gloss_ref:
+    id: 26
+    row_sha256: cceeb92b0399e7bcbfe28f0c0770e6d56b3b94fe7625fd2944942779366f807b
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-167
   lemma: один
   note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
@@ -16215,8 +16561,12 @@ words:
     stress_source: ulif
     stressed: мандру́є
     tags: verb:imperf:pres:s:3
-  gloss_en: to travel, to voyage, to tour, to wander, to roam, to rove, to peregrinate, to itinerate (go from place to place)
-  gloss_source: kaikki_wiktionary
+  gloss_en: to travel
+  gloss_ref:
+    id: 6582
+    row_sha256: f1fc724896ca80667136c617a35136b72a19572c617d97b10e07d5e4149615d7
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-169
   lemma: мандрувати
   note: Primer part 2 printed page 73, two complete sentences about snails; incidental recap reading only.
@@ -16340,7 +16690,7 @@ words:
     stress_source: ulif
     stressed: часи́
     tags: noun:inanim:p:v_zna
-  gloss_en: time (inevitable passing of events)
+  gloss_en: time
   gloss_ref:
     id: 20
     row_sha256: 22425636b1c5c10cec56d56ba6932fce9d95282ef59ab4dc64e9afab4ed6d088
@@ -16460,8 +16810,12 @@ words:
     stress_source: ulif
     stressed: бу́кви
     tags: noun:inanim:p:v_zna
-  gloss_en: letter (a symbol in an alphabet)
-  gloss_source: kaikki_wiktionary
+  gloss_en: letter
+  gloss_ref:
+    id: 4390
+    row_sha256: 41ae8f3f105ccf2531beaf0930072c86a2004dc0393af4d62cd385b998e57d61
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-171
   lemma: буква
   note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
@@ -16568,8 +16922,12 @@ words:
     stress_source: ulif
     stressed: на́зви
     tags: noun:inanim:p:v_zna
-  gloss_en: appellation; name; title (of a book, movie, documentary, article, painting...)
-  gloss_source: kaikki_wiktionary
+  gloss_en: name
+  gloss_ref:
+    id: 659
+    row_sha256: 5655923c2a364eee4435b8fe89f5ead2c4e26ce54af78772b67d35a47f284379
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-172
   lemma: назва
   note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
@@ -16958,8 +17316,12 @@ words:
       - 5
     stress_source: pending
     tags: noun:inanim:p:v_zna
-  gloss_en: alphabet (an ordered set of letters used in a language)
-  gloss_source: kaikki_wiktionary
+  gloss_en: alphabet
+  gloss_ref:
+    id: 23405
+    row_sha256: 2217d84e4759680188b623e1c17ea03d5154db7d2e691a6cf59136ae35e2f998
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-173
   lemma: алфавіт
   note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
@@ -17356,8 +17718,12 @@ words:
     stress_source: pending
     tags: noun:inanim:p:v_zna:xp1
     unresolvable_by_tags: true
-  gloss_en: symbol; omen; sign (trace, impression, token)
-  gloss_source: kaikki_wiktionary
+  gloss_en: symbol
+  gloss_ref:
+    id: 1869
+    row_sha256: 59a3e4f07aea4afaa8cc3208803b703f4a3aa3af8dc10a4da310ed050365e0b8
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-174
   lemma: знак
   note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
@@ -17560,7 +17926,7 @@ words:
     stress_source: none
     stressed: рис
     tags: noun:inanim:m:v_zna
-  gloss_en: rice (plants)
+  gloss_en: rice
   gloss_ref:
     id: 18667
     row_sha256: fafb1cf59aa03a388b2da6731002d3f102f6dc80d8c363158b91dd4a89c134a0
@@ -17679,7 +18045,7 @@ words:
     stress_source: ulif
     stressed: ри́сі
     tags: noun:anim:p:v_zna
-  gloss_en: lynx (wild cat)
+  gloss_en: lynx
   gloss_ref:
     id: 14763
     row_sha256: 11c069fb1986c87a008789e50da0024a5bc0d4c59d2a5d0f5817953e47dc0f96
@@ -17787,8 +18153,12 @@ words:
     stress_source: ulif
     stressed: бюро́
     tags: noun:inanim:p:v_zna:nv
-  gloss_en: office, bureau, agency
-  gloss_source: kaikki_wiktionary
+  gloss_en: bureau
+  gloss_ref:
+    id: 2131
+    row_sha256: 8b68fa97d0bb7fcce3b895e7f18aea815b6f31dd324f35332006af8faf1e8b9d
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-179
   lemma: бюро
   note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
@@ -17959,8 +18329,12 @@ words:
     stress_source: none
     stressed: б'є
     tags: verb:imperf:pres:s:3
-  gloss_en: to beat, to hit, to strike
-  gloss_source: kaikki_wiktionary
+  gloss_en: to beat
+  gloss_ref:
+    id: 2241
+    row_sha256: 6f0e05539cf125703c41922db755ac6da770271bba4e5d946216a6079c9de4f0
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-180
   lemma: бити
   note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
@@ -18179,6 +18553,12 @@ words:
       - 4
     stress_source: pending
     tags: noun:inanim:p:v_zna
+  gloss_en: festival
+  gloss_ref:
+    id: 1139
+    row_sha256: c16eb731756b681bb1dcdb2001603939386f8744dbd1d93595d1a721353d48f0
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-181
   lemma: свято
   note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
@@ -18736,8 +19116,12 @@ words:
     stress_source: pending
     tags: noun:inanim:p:v_zna
     unresolvable_by_tags: true
-  gloss_en: relations, ties, links; connections; bond; communication; means of communication; bundle
-  gloss_source: kaikki_wiktionary
+  gloss_en: connection
+  gloss_ref:
+    id: 6416
+    row_sha256: 195ea5c06b1ef6b16479f632a23df01e8e60d1143c04cf5b2dc86970f29a1298
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-182
   lemma: зв'язок
   note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
@@ -18835,6 +19219,12 @@ words:
     stress_source: trie
     stressed: Украї́ни
     tags: noun:inanim:p:v_zna:prop:geo
+  gloss_en: Ukraine
+  gloss_ref:
+    id: 9
+    row_sha256: 5c4c6ba296461f58e1d29dc4e04669ca79009d6c9777cb43a59d163a1e4f9723
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-183
   lemma: Україна
   note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss
@@ -18925,6 +19315,12 @@ words:
     stress_source: ulif
     stressed: Ки́їв
     tags: noun:inanim:m:v_zna:prop:geo
+  gloss_en: Kyiv
+  gloss_ref:
+    id: 134
+    row_sha256: 62668733ad5bc32ec2ac7804ddbf3c971ccaaec87b72da6d444915c8a0fca218
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-184
   lemma: Київ
   note: 'P3 review F-4: geographic proper-name print model; Pravopys 2019 section 50 and textbook place-name rule; no gloss
@@ -19089,8 +19485,12 @@ words:
     stress_source: ulif
     stressed: кує́
     tags: verb:imperf:pres:s:3
-  gloss_en: to forge; to shoe (horses); to cuckoo (to make a sound of a cuckoo)
-  gloss_source: kaikki_wiktionary
+  gloss_en: to forge
+  gloss_ref:
+    id: 11316
+    row_sha256: 37f9763299107ebab9bfcf69ef8b7c85f68f9b0d743b4cf43f1ad9dfb02baa91
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-185
   lemma: кувати
   note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation
@@ -19454,8 +19854,12 @@ words:
     stress_source: ulif
     stressed: м'які́
     tags: adj:p:v_zna:rinanim:compb
-  gloss_en: soft; gentle; mild; soft, palatalized
-  gloss_source: kaikki_wiktionary
+  gloss_en: soft
+  gloss_ref:
+    id: 4554
+    row_sha256: 97c9ce7e143cd175f4e24716c543a3deef5d9b5149c0a1fc2bc319f002a04feb
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
   id: W-187
   lemma: м'який
   note: Sourced T-012 soft-sign name adjective; incidental letter-name reading only, no adjective grammar or gloss drill.

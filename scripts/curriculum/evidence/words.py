@@ -506,6 +506,10 @@ def build_words(
             if exact_cefr and exact_cefr.get("level") in {"A1", "A2", "B1", "B2", "C1", "C2"}:
                 word_doc["cefr"] = cefr_field(exact_cefr)
 
+            # The note names the lesson's meaning, so it precedes gloss selection.
+            if note:
+                word_doc["note"] = note
+
             selection = binding_context.select(
                 word_doc,
                 gloss_batch.get((lemma, pos), []),
@@ -541,10 +545,6 @@ def build_words(
                 if heritage_hits:
                     word_doc["heritage"] = heritage_hits
 
-            # Note
-            if note:
-                word_doc["note"] = note
-
             if word_id in existing_words and existing_words[word_id] != word_doc:
                 changed_ids.append(word_id)
 
@@ -574,14 +574,11 @@ def build_words(
                     k: v for k, v in old.items() if k not in {"gloss_en", "gloss_source", "gloss_ref", "gloss_basis"}
                 }
                 if selection.gloss is not None:
-                    updated.update(
-                        {
-                            "gloss_en": selection.gloss,
-                            "gloss_source": selection.source,
-                            "gloss_ref": selection.ref,
-                            "gloss_basis": binding_context.basis(wid),
-                        }
-                    )
+                    updated.update({"gloss_en": selection.gloss, "gloss_source": selection.source})
+                    if selection.ref is not None:
+                        updated["gloss_ref"] = selection.ref
+                    if basis := binding_context.basis(wid):
+                        updated["gloss_basis"] = basis
                 else:
                     unglossed.append(
                         {

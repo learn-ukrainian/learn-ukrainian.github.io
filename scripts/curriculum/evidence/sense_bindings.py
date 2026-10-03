@@ -117,9 +117,8 @@ class Context:
         ]
 
     def select(self, word: dict, rows: list[dict], payload: dict | None, **kwargs) -> sources.GlossSelection:
-        """Bindings first; a reference member is never precision-first fallback."""
+        """An exact binding wins; any other word, reference member or not, takes the plain first meaning."""
         binding = self.entries.get(word["id"])
-        member = bool(self.members(word))
         if self.invalid:
             return sources.GlossSelection(reason="reference_binding_invalid")
         if binding:
@@ -140,8 +139,6 @@ class Context:
                 "dmklinger_uk_en",
                 {k: binding[k] for k in matcher.REF_FIELDS},
             )
-        if member:
-            return sources.GlossSelection(reason="reference_binding_missing")
         if word.get("gloss_basis"):
             return sources.GlossSelection(reason="reference_binding_invalid")
         return sources.select_gloss(word, rows, payload, **kwargs)

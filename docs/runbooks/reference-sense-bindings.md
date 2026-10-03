@@ -6,9 +6,11 @@ lifecycle: active
 
 This procedure implements #9582 AC-04 and the approved #9546 design. A private
 reference meaning selects an exact **open dictionary** atom. Only that atom is
-published. A1 reference members without a valid binding retain a typed gap;
-outside members keep the precision-first selector. This runbook does not change
-plans, source decisions, or publication eligibility.
+published. An exact binding wins; A1 reference members without one, like every
+other word, take the plain first meaning (`select_gloss`, operator decision on
+#9543, 2026-10-03), and the cross-family lesson review catches a wrong gloss.
+An invalid binding still withholds. This runbook does not change plans, source
+decisions, or publication eligibility.
 
 ## Private extraction
 
@@ -99,8 +101,10 @@ distinct heads cannot share it. They remain a documented limitation and go to
 the reviewed remainder. Candidates with identical displayed atom text
 and labels collapse to the lowest row id, then span/atom index, even when their
 definitions differ; different visible text or labels is ambiguous. Lemma, POS
-and homonym compatibility bind before selection. Kaikki-only matches remain
-withheld. No reference-member fallback is permitted.
+and homonym compatibility bind before selection. A matcher result without an
+exact match (`reference_no_match`, `reference_ambiguous`, `reference_multi_head`,
+`reference_kaikki_only`) writes no binding, so the member takes the plain first
+meaning.
 
 ## Reviewed remainder
 

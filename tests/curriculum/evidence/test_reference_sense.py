@@ -141,7 +141,11 @@ def test_missing_invalid_and_nonmember_fallback(bound):
     root, api, _b = bound
     pool = api.gloss_rows([("synthetic", "noun")]).raw[("synthetic", "noun")]
     context = bindings.Context("a1", {}, bindings.public_entries(a1_reference.INVENTORY_PATH))
-    assert context.select(WORD, pool, None).reason == "reference_binding_missing"
+    # A reference member without a binding takes the plain first meaning (#9543).
+    assert context.members(WORD)
+    fallback = context.select(WORD, pool, None)
+    assert (fallback.gloss, fallback.reason) == (sources.select_gloss(WORD, pool, None).gloss, None)
+    assert fallback.gloss == "first translation"
     context.invalid = True
     assert context.select(WORD, pool, None).reason == "reference_binding_invalid"
     assert context.select({**WORD, "lemma": "outsider"}, [], None).reason == "reference_binding_invalid"
@@ -1066,8 +1070,8 @@ def test_review_role_author_and_sources_provenance_rejected(review_dispatch, mut
         bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
 
 
-@pytest.mark.parametrize("invalidate", [False, True])
-def test_partial_build_revalidates_carried_reference_gloss(bound, monkeypatch, synthetic_vesum, invalidate):
+@pytest.mark.parametrize("change", ["keep", "invalidate", "unbind"])
+def test_partial_build_revalidates_carried_reference_gloss(bound, monkeypatch, synthetic_vesum, change):
     root, api, b = bound
     with sqlite3.connect(synthetic_vesum) as db:
         db.execute(
@@ -1105,9 +1109,12 @@ def test_partial_build_revalidates_carried_reference_gloss(bound, monkeypatch, s
             }
         )
     )
+    if change == "unbind":
+        # A reference member that was never bound is carried with its plain gloss.
+        bindings.write(root / bindings.BINDINGS, "a1", {})
     words.build_words("a1", req, evidence_dir=root, sources_instance=api, mcp_commit="a" * 40)
     # The second request owns another word, so the existing gloss must be rechecked.
-    if invalidate:
+    if change == "invalidate":
         bindings.write(root / bindings.BINDINGS, "a1", {"W-001": {**b, "span_index": 0}})
     req.write_text(
         yaml.safe_dump(
@@ -1116,9 +1123,14 @@ def test_partial_build_revalidates_carried_reference_gloss(bound, monkeypatch, s
     )
     result = words.build_words("a1", req, evidence_dir=root, sources_instance=api, mcp_commit="a" * 40)
     carried = next(w for w in result["store"]["words"] if w["id"] == "W-001")
-    if invalidate:
+    if change == "invalidate":
         assert "gloss_en" not in carried and "gloss_ref" not in carried
         assert any(d["word_id"] == "W-001" and d["reason"] == "reference_binding_invalid" for d in result["unglossed"])
+    elif change == "unbind":
+        # The unbound member takes the plain first meaning; no empty basis/ref fields (#9543).
+        assert carried["gloss_en"] == "first translation"
+        assert carried["gloss_ref"]["id"] == 1 and "span" not in carried["gloss_ref"]
+        assert "gloss_basis" not in carried
     else:
         assert carried["gloss_en"] == carried["gloss_ref"]["span"] == b["span"]
 
