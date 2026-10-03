@@ -332,10 +332,26 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 f"refusing removal to prevent code execution"
             )
 
-        # Count regular files and compute total size in bytes
+        # Count regular files and compute total size in bytes,
+        # and pre-inspect for embedded git repositories.
         file_count = 0
         total_size = 0
-        for root_dir, _dirs, filenames in os.walk(source):
+        has_embedded_git = False
+        resolved_dot_git = dot_git.resolve()
+        for root_dir, dirs, filenames in os.walk(source):
+            current_path = Path(root_dir).resolve()
+            if (
+                current_path != source.resolve()
+                and current_path != resolved_dot_git
+                and resolved_dot_git not in current_path.parents
+                and (
+                    ".git" in dirs
+                    or ".git" in filenames
+                    or (current_path / ".git").exists()
+                    or (current_path / ".git").is_symlink()
+                )
+            ):
+                has_embedded_git = True
             for fname in filenames:
                 fpath = Path(root_dir) / fname
                 try:
@@ -345,7 +361,7 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 except OSError:
                     pass
 
-        has_submodules = (source / ".gitmodules").is_file()
+        has_submodules = has_embedded_git or (source / ".gitmodules").is_file()
         if not has_submodules:
             modules_dirs: list[Path] = []
             if dot_git.is_dir():
@@ -412,6 +428,84 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     f"expected directory ({source.resolve()}): {name}; refusing removal"
                 )
 
+            # Check for gitlinks (mode 160000) in the index before running git status
+            stage_proc = subprocess.run(
+                [*git_cmd, "ls-files", "--stage"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if stage_proc.returncode != 0:
+                err = stage_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            for raw_line in stage_proc.stdout.decode("utf-8", "replace").splitlines():
+                line = raw_line.strip()
+                if line.startswith("160000 "):
+                    raise ValueError(
+                        f"artifact is a nested git repository with unverified submodules "
+                        f"({file_count} files, {total_size} bytes): {name}; "
+                        f"submodules must not be discarded without independent verification"
+                    )
+
+            head_proc = subprocess.run(
+                [*git_cmd, "rev-parse", "--verify", "HEAD"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if head_proc.returncode == 0:
+                tree_proc = subprocess.run(
+                    [*git_cmd, "ls-tree", "-r", "HEAD"],
+                    cwd=source,
+                    capture_output=True,
+                    env=env,
+                    timeout=15,
+                    check=False,
+                )
+                if tree_proc.returncode == 0:
+                    for raw_line in tree_proc.stdout.decode("utf-8", "replace").splitlines():
+                        line = raw_line.strip()
+                        if line.startswith("160000 "):
+                            raise ValueError(
+                                f"artifact is a nested git repository with unverified submodules "
+                                f"({file_count} files, {total_size} bytes): {name}; "
+                                f"submodules must not be discarded without independent verification"
+                            )
+
+            ls_proc = subprocess.run(
+                [*git_cmd, "ls-files", "-v"],
+                cwd=source,
+                capture_output=True,
+                env=env,
+                timeout=15,
+                check=False,
+            )
+            if ls_proc.returncode != 0:
+                err = ls_proc.stderr.decode("utf-8", "replace").strip()
+                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+            concealed_files: list[str] = []
+            for raw_line in ls_proc.stdout.decode("utf-8", "replace").splitlines():
+                line = raw_line.strip()
+                if not line:
+                    continue
+                tag = line[0]
+                if tag == "S" or tag.islower():
+                    concealed_files.append(line)
+
+            if concealed_files:
+                concealed_summary = ", ".join(concealed_files[:3]) + ("..." if len(concealed_files) > 3 else "")
+                raise ValueError(
+                    f"artifact is a nested git repository with concealed tracked changes (assume-unchanged or skip-worktree) "
+                    f"({file_count} files, {total_size} bytes; concealed: {concealed_summary}): {name}; "
+                    f"uncommitted work must not be discarded"
+                )
+
             status_proc = subprocess.run(
                 [*git_cmd, "status", "--porcelain", "-uall", "--ignored", "--ignore-submodules=none"],
                 cwd=source,
@@ -445,43 +539,6 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     f"uncommitted work must not be discarded"
                 )
 
-            ls_proc = subprocess.run(
-                [*git_cmd, "ls-files", "-v"],
-                cwd=source,
-                capture_output=True,
-                env=env,
-                timeout=15,
-                check=False,
-            )
-            if ls_proc.returncode != 0:
-                err = ls_proc.stderr.decode("utf-8", "replace").strip()
-                raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
-
-            concealed_files: list[str] = []
-            for raw_line in ls_proc.stdout.decode("utf-8", "replace").splitlines():
-                line = raw_line.strip()
-                if not line:
-                    continue
-                tag = line[0]
-                if tag == "S" or tag.islower():
-                    concealed_files.append(line)
-
-            if concealed_files:
-                concealed_summary = ", ".join(concealed_files[:3]) + ("..." if len(concealed_files) > 3 else "")
-                raise ValueError(
-                    f"artifact is a nested git repository with concealed tracked changes (assume-unchanged or skip-worktree) "
-                    f"({file_count} files, {total_size} bytes; concealed: {concealed_summary}): {name}; "
-                    f"uncommitted work must not be discarded"
-                )
-
-            head_proc = subprocess.run(
-                [*git_cmd, "rev-parse", "--verify", "HEAD"],
-                cwd=source,
-                capture_output=True,
-                env=env,
-                timeout=15,
-                check=False,
-            )
             rev_list_args = [*git_cmd, "rev-list", "--all", "--reflog"]
             if head_proc.returncode == 0:
                 rev_list_args.append("HEAD")

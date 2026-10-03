@@ -992,3 +992,82 @@ def test_ignored_artifact_nested_repo_submodule_clean_filter_rejected_without_ex
     assert "unverified submodules" in reason
     assert not marker.exists(), "submodule clean filter was executed!"
     assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_unregistered_gitlink_filter_rejected_without_execution(checkout, tmp_path):
+    """P1: nested repo with unregistered gitlink (mode 160000) clean filter is rejected before git execution."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/unregistered_gitlink_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    # Clone child directly into sub directory (unregistered gitlink, no git submodule add)
+    sub_dir = repo_dir / "sub"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(sub_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (sub_dir / "valuable.txt").write_text("child base content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    # In parent, add sub directory as a gitlink (mode 160000 in index) without .gitmodules
+    subprocess.run(["git", "add", "sub"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add unregistered gitlink"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Configure clean filter in child repository gitdir
+    marker = tmp_path / "unregistered_filter_executed.marker"
+    script = tmp_path / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    with open(sub_dir / ".git/config", "a", encoding="utf-8") as fp:
+        fp.write(f'\n[filter "probe"]\n  clean = "{script}"\n')
+    (sub_dir / ".gitattributes").write_text("* filter=probe\n")
+
+    # Modify child file so git status on child would evaluate the filter
+    (sub_dir / "valuable.txt").write_text("child same-size!\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "unverified submodules" in reason
+    assert not marker.exists(), "clean filter in unregistered gitlink was executed!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_unregistered_gitlink_no_child_gitdir_rejected(checkout, tmp_path):
+    """P1: nested repo with indexed gitlink whose child .git was deleted is still rejected before status."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/unregistered_gitlink_nogit_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    sub_dir = repo_dir / "sub"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(sub_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (sub_dir / "valuable.txt").write_text("child content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=sub_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    subprocess.run(["git", "add", "sub"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add unregistered gitlink"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Delete child .git directory so pure-python walk won't see .git in sub
+    import shutil
+    shutil.rmtree(sub_dir / ".git")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "unverified submodules" in reason
+    assert "clear with: rm -rf" not in reason
