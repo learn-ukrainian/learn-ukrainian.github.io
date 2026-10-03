@@ -6,10 +6,10 @@ consume Claude-shaped fields. This bridge preserves the original payload and
 adds the shape the guards require; an unreadable event or missing guard denies.
 Reviewer sessions and write sessions both enter through this bridge.
 
-The guard argument is either a guard path, run directly, or the project
-interpreter followed by one of the tracked guards that need it. The Claude
-adapter emits that second form; any other interpreter, guard or extra argument
-denies.
+The guard argument is either a tracked guard path in this checkout, run
+directly, or the project interpreter followed by one of the tracked guards that
+need it. The Claude adapter emits that second form; any other path,
+interpreter, guard or extra argument denies.
 """
 
 from __future__ import annotations
@@ -40,6 +40,8 @@ _TOOL_NAMES = {
 # two sets together. The bridge does not import the adapter: it runs on every
 # guarded tool call.
 PROJECT_PYTHON_GUARDS = frozenset({"guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py"})
+# The deployed wrapper is translated away by the adapter; it is never a guard.
+_PROJECT_PYTHON_HOOK_WRAPPER = "run-project-python-hook.sh"
 
 
 class GuardInvocationError(ValueError):
@@ -55,18 +57,28 @@ def _project_interpreter(source_root: Path) -> Path:
 
 
 def guard_argv(command: str) -> list[str]:
-    """Return the argv for one guard path or one pinned interpreter invocation."""
-    if Path(command).is_file():
-        return [command]
+    """Return the argv for one guard path or one pinned interpreter invocation.
+
+    The argument is split into shell words first, so quoting and escaping never
+    change how it is classified; an unreadable argument denies.
+    """
     try:
         argv = shlex.split(command)
     except ValueError as exc:
         raise GuardInvocationError("unreadable fleet guard invocation") from exc
+    source_root = Path(__file__).resolve().parents[2]
+    hooks_dir = source_root / "agents_extensions/shared/hooks"
+    if len(argv) == 1:
+        guard = Path(argv[0])
+        if guard != hooks_dir / guard.name or guard.name == _PROJECT_PYTHON_HOOK_WRAPPER:
+            raise GuardInvocationError("only tracked fleet guards may run")
+        if not guard.is_file():
+            raise GuardInvocationError("fleet guard unavailable")
+        return argv
     if len(argv) != 2:
         raise GuardInvocationError("one fleet guard path or pinned interpreter invocation required")
     python_bin, guard = (Path(arg) for arg in argv)
-    source_root = Path(__file__).resolve().parents[2]
-    if guard.name not in PROJECT_PYTHON_GUARDS or guard != source_root / "agents_extensions/shared/hooks" / guard.name:
+    if guard.name not in PROJECT_PYTHON_GUARDS or guard != hooks_dir / guard.name:
         raise GuardInvocationError("only tracked parser guards may run under the project interpreter")
     if not guard.is_file():
         raise GuardInvocationError("fleet guard unavailable")

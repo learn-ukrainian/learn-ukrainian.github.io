@@ -329,39 +329,47 @@ _PROJECT_PYTHON_HOOK_WRAPPER = "run-project-python-hook.sh"
 # Guards that need the project interpreter (their parser dependency is not in
 # the system Python). Only these may appear in the wrapper form.
 PROJECT_PYTHON_GUARDS = frozenset({"guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py"})
+# A command whose raw text or shell words contain any of these is a fleet guard
+# and must take one of the two supported forms.
+_FLEET_GUARD_MARKERS = (".claude/hooks/", _PROJECT_PYTHON_HOOK_WRAPPER, *sorted(PROJECT_PYTHON_GUARDS))
 
 
 def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
     """Translate one deployed hook command into a tracked-source invocation.
 
+    The command is split into shell words first, so quoting and escaping never
+    change its classification; an unreadable command raises. The single word
     ``$CLAUDE_PROJECT_DIR/.claude/hooks/<guard>`` becomes the tracked guard
-    path. ``bash "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh"
-    <guard>`` becomes the project interpreter plus the tracked guard, for the
-    guards in ``PROJECT_PYTHON_GUARDS`` only. Any other use of the wrapper is
-    refused so a guard is never silently dropped. Commands in neither form are
-    not fleet guards and return ``None``.
+    path. The words ``bash $CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh
+    <guard>`` become the project interpreter plus the tracked guard, for the
+    guards in ``PROJECT_PYTHON_GUARDS`` only. Any other command naming the hooks
+    directory, the wrapper or one of those guards raises, so a guard is never
+    silently dropped. Commands naming none of them are not fleet guards and
+    return ``None``.
     """
+    try:
+        argv = shlex.split(command)
+    except ValueError as exc:
+        raise RuntimeError(f"Claude worker hook command is unreadable: {command}") from exc
+    if not any(marker in text for text in (command, *argv) for marker in _FLEET_GUARD_MARKERS):
+        return None
     hooks_dir = source_root / "agents_extensions/shared/hooks"
-    if _PROJECT_PYTHON_HOOK_WRAPPER in command:
-        try:
-            argv = shlex.split(command)
-        except ValueError as exc:
-            raise RuntimeError(f"Claude worker guard command is unreadable: {command}") from exc
-        wrapper = _DEPLOYED_HOOKS_PREFIX + _PROJECT_PYTHON_HOOK_WRAPPER
-        if len(argv) != 3 or argv[:2] != ["bash", wrapper] or argv[2] not in PROJECT_PYTHON_GUARDS:
-            raise RuntimeError(f"Claude worker guard has an unsupported project-interpreter form: {command}")
+    wrapper = _DEPLOYED_HOOKS_PREFIX + _PROJECT_PYTHON_HOOK_WRAPPER
+    if len(argv) == 3 and argv[:2] == ["bash", wrapper] and argv[2] in PROJECT_PYTHON_GUARDS:
         tracked = hooks_dir / argv[2]
         if not tracked.is_file():
             raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
         from scripts.common.repo_root import project_interpreter
 
         return shlex.join([str(project_interpreter(source_root)), str(tracked)])
-    if not command.startswith(_DEPLOYED_HOOKS_PREFIX):
-        return None
-    tracked = hooks_dir / command.removeprefix(_DEPLOYED_HOOKS_PREFIX)
-    if not tracked.is_file():
-        raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
-    return str(tracked)
+    plain = len(argv) == 1 and argv[0].startswith(_DEPLOYED_HOOKS_PREFIX)
+    name = argv[0].removeprefix(_DEPLOYED_HOOKS_PREFIX) if plain else ""
+    if name not in {"", ".", "..", _PROJECT_PYTHON_HOOK_WRAPPER} and "/" not in name:
+        tracked = hooks_dir / name
+        if not tracked.is_file():
+            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+        return shlex.quote(str(tracked))
+    raise RuntimeError(f"Claude worker guard has an unsupported form: {command}")
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
@@ -381,7 +389,9 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
         guard = source_root / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
         if not guard.is_file():
             raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
-        groups.append({"matcher": "Bash", "hooks": [{"type": "command", "command": str(guard), "timeout": 5}]})
+        groups.append(
+            {"matcher": "Bash", "hooks": [{"type": "command", "command": shlex.quote(str(guard)), "timeout": 5}]}
+        )
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
     return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
