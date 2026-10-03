@@ -934,9 +934,10 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="query_pravopys",
             description=(
-                "Look up Ukrainian orthography rules from the official 2019 Pravopys. "
-                "Query by topic keyword (e.g., 'апостроф', 'м-який-знак', 'у-в') "
-                "or by section number (1-61)."
+                "Look up Ukrainian orthography rules in the official 2019 Pravopys (authorized edition, "
+                "Наукова думка 2019), answered offline from sources.db with a § locator; an unofficial "
+                "live site is used only when the offline copy is missing. Query by topic keyword "
+                "(e.g., 'апостроф', 'м’який знак', 'у-в', 'кличний відмінок') or by § number (1-168)."
             ),
             inputSchema={
                 "type": "object",
@@ -944,8 +945,8 @@ async def list_tools() -> list[Tool]:
                     "topic": {
                         "type": "string",
                         "description": (
-                            "Topic keyword (e.g., 'апостроф', 'м-який-знак', 'у-в', 'подвоєння', "
-                            "'велика-літера', 'префікси') or section number as string (e.g., '7')"
+                            "Topic keyword (e.g., 'апостроф', 'м’який знак', 'у-в', 'подвоєння', "
+                            "'велика буква', 'префікси') or § number as string (e.g., '7' or '§ 82')"
                         ),
                     },
                 },
@@ -3632,11 +3633,18 @@ async def handle_query_pravopys(args: dict):
     topic = topic.strip()
     query_obj = {"topic": topic}
 
-    from rag.source_query import pravopys_lookup, pravopys_section
+    from rag.source_query import pravopys_lookup, pravopys_offline, pravopys_section
 
-    # Check if topic is a number
-    if topic.strip().isdigit():
-        result = await asyncio.to_thread(pravopys_section, int(topic.strip()), report_unavailable=True)
+    # #9610: the official authorized text stored in sources.db answers first; the
+    # unofficial live site is only a fallback when no complete official copy is stored.
+    offline = await asyncio.to_thread(pravopys_offline, topic)
+    if offline is None or offline.get("status") == "ok":
+        return _pravopys_offline_response(topic, query_obj, offline)
+    fallback_reason = offline.get("reason", "unknown")
+
+    number = topic.lstrip("§").strip()
+    if number.isdigit():
+        result = await asyncio.to_thread(pravopys_section, int(number), report_unavailable=True)
     else:
         result = await asyncio.to_thread(pravopys_lookup, topic, report_unavailable=True)
 
@@ -3663,11 +3671,47 @@ async def handle_query_pravopys(args: dict):
     lines = [
         f"**Pravopys section {result['section']}**",
         f"**URL**: {result['url']}",
+        "**Source**: 2019.pravopys.net — unofficial copy, live fallback "
+        f"(the official text is not stored offline: {fallback_reason})",
         "",
         result["text"][:3000],
     ]
     prose = "\n".join(lines)
     envelope = build_search_envelope(tool="query_pravopys", query=query_obj, hits=[result], summary_prose=prose)
+    return [TextContent(type="text", text=prose)], envelope
+
+
+_PRAVOPYS_OFFLINE_MAX_CHARS = 6000
+
+
+def _pravopys_offline_response(topic: str, query_obj: dict, result: dict | None):
+    """Render a § of the official 2019 text read from sources.db (#9610)."""
+    if result is None:
+        prose = f"No pravopys section found for: '{topic}'"
+        envelope = build_search_envelope(tool="query_pravopys", query=query_obj, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], envelope
+    text = result["text"]
+    shown = text[:_PRAVOPYS_OFFLINE_MAX_CHARS]
+    title = f". {result['title']}" if result["title"] else ""
+    lines = [
+        f"**Український правопис (2019), § {result['section']}{title}**",
+        f"**Locator**: {result['locator']}",
+        "**Source**: official authorized edition (Наукова думка, 2019), stored offline in sources.db — "
+        f"{result['url']} (sha256 {result['file_sha256'][:12]}…, retrieved {result['retrieved_at']})",
+    ]
+    if result["section_path"]:
+        lines.append(f"**Section**: {' › '.join(result['section_path'])}")
+    others = result.get("other_matches") or []
+    if others:
+        lines.append(
+            "**Other matches**: " + "; ".join(f"§ {m['section']} {m['title']}".strip() for m in others)
+        )
+    lines += ["", shown]
+    if len(shown) < len(text):
+        lines.append(f"\n… [truncated: {len(shown)} of {len(text)} characters of § {result['section']}]")
+    prose = "\n".join(lines)
+    hit = {key: value for key, value in result.items() if key != "text_normalized"}
+    envelope = build_search_envelope(tool="query_pravopys", query=query_obj, hits=[hit], summary_prose=prose)
     return [TextContent(type="text", text=prose)], envelope
 
 
