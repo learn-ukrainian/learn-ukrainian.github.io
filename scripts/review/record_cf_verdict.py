@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 from contextlib import contextmanager
@@ -367,12 +368,15 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
                     or not resolved_root.is_relative_to(resolved_primary)
                 ):
                     continue
-                resolved_path = path.resolve(strict=True)
+                # Resolve parents to reject escapes, but cite the final directory
+                # entry itself: the project interpreter can link outside the repo.
+                resolved_path = resolved_root if path == root else path.parent.resolve(strict=True) / path.name
                 if not resolved_path.is_relative_to(resolved_root):
                     return token
-                if not (resolved_path.is_file() or resolved_path.is_dir()):
+                mode = resolved_path.lstat().st_mode
+                if not (stat.S_ISREG(mode) or stat.S_ISDIR(mode) or stat.S_ISLNK(mode)):
                     return token
-                if suffix and (not resolved_path.is_file() or Path(token).exists() or Path(token).is_symlink()):
+                if suffix and (not stat.S_ISREG(mode) or Path(token).exists() or Path(token).is_symlink()):
                     return token
             except (OSError, RuntimeError, ValueError):
                 return token
