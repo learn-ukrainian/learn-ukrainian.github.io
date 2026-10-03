@@ -438,6 +438,83 @@ def test_fable_holds_no_review_or_advisory_role():
     assert catalog["budget_substitution_models"]["cursor"]["claude-fable-5-1"] in fable["aliases"]
 
 
+@pytest.mark.parametrize("model", ["claude-fable-5-1", "claude-fable-5-1[1m]", "claude-fable-5-1-thinking-high"])
+@pytest.mark.parametrize("activity", ["review", "consult"])
+def test_fable_is_refused_every_review_and_consult_activity(model, activity):
+    """#9583: activity admission reads the catalog roles, so every Fable spelling is refused."""
+    from scripts.review.model_catalog import activity_role_refusal
+
+    refusal = activity_role_refusal(model, activity)
+    assert refusal and "(claude-fable-5-1) holds no" in refusal
+
+
+@pytest.mark.parametrize("activity", ["review", "consult"])
+def test_retired_astra_holds_no_activity_role(activity):
+    from scripts.review.model_catalog import activity_role_refusal
+
+    assert "retired in the model catalog" in activity_role_refusal("gpt-6-astra", activity)
+
+
+@pytest.mark.parametrize("model", ["claude-opus-5-5", "gpt-6.1-sol", "gemini-3.8-flash-high", "claude-sonnet-5-5"])
+@pytest.mark.parametrize("activity", ["review", "consult"])
+def test_opus_sol_and_reviewers_are_admitted_every_activity(model, activity):
+    from scripts.review.model_catalog import activity_role_refusal
+
+    assert activity_role_refusal(model, activity) is None
+
+
+def test_recon_models_consult_but_never_review():
+    from scripts.review.model_catalog import activity_role_refusal
+
+    assert activity_role_refusal("gpt-6-luna", "consult") is None
+    assert "holds no review" in activity_role_refusal("gpt-6-luna", "review")
+
+
+def test_unknown_activity_and_unknown_model():
+    from scripts.review.model_catalog import activity_role_refusal
+
+    assert activity_role_refusal("not-a-catalog-model", "review") is None
+    with pytest.raises(ValueError, match="unknown activity"):
+        activity_role_refusal("claude-opus-5-5", "approve")
+
+
+@pytest.mark.parametrize(
+    "mutate,message",
+    [
+        (lambda c: c["review_scheduler"].pop("activity_roles"), "activity_roles must be a mapping"),
+        (lambda c: c["review_scheduler"]["activity_roles"].pop("consult"), "must define exactly"),
+        (lambda c: c["review_scheduler"]["activity_roles"]["review"].append("typo_review"), "which no model holds"),
+        (
+            lambda c: c["review_candidates"]["claude-opus-5-5"].update(
+                model_id="claude-fable-5-1",
+                invocation=c["review_candidates"]["claude-opus-5-5"]["invocation"].replace(
+                    "claude-opus-5-5", "claude-fable-5-1"
+                ),
+            ),
+            r"review_candidates\.claude-opus-5-5: .*holds no review",
+        ),
+        (
+            lambda c: c["review_scheduler"]["endpoints"]["claude"]["models"].append("claude-fable-5-1"),
+            r"endpoints\.claude\.models: .*holds no review",
+        ),
+        (
+            lambda c: c["review_scheduler"]["risk_reviewer_models"]["high"].append("claude-fable-5-1"),
+            r"risk_reviewer_models\.high: .*holds no review",
+        ),
+        (
+            lambda c: c["models"]["gpt-6.1-sol"]["roles"].remove("bounded_advisory_envelope"),
+            r"advisor\.model_id 'gpt-6\.1-sol' does not hold the 'bounded_advisory_envelope' role",
+        ),
+    ],
+    ids=["missing", "missing-activity", "unheld-role", "candidate", "endpoint", "risk-model", "advisor"],
+)
+def test_catalog_requires_activity_roles_for_reviewers_and_the_advisor(mutate, message):
+    catalog = deepcopy(load_model_catalog())
+    mutate(catalog)
+    with pytest.raises(ModelCatalogError, match=message):
+        validate_catalog(catalog)
+
+
 def test_formal_cf_defaults_pin_role_specific_efforts():
     defaults = load_model_catalog()["formal_cf_defaults"]
     assert defaults["codex"]["model_id"] == "gpt-6.1-sol"
