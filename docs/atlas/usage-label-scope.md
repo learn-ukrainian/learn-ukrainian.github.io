@@ -145,11 +145,10 @@ bound lexical calque.
   that no normative excerpt establishes the replacement or its extent.
 - Unresolved notes keep suggested replacements, the stored record's citations
   (marked as not checked against the source) and the Atlas note.
-- An editorial `avoid:`/`rus:`/`calque:` gloss (`слідуючий`: `avoid: наступний`)
-  is shown verbatim only with a lemma-bound Russianism or calque
-  (`міроприємство`). Otherwise the entry header, the course-phrase gloss,
-  browse and search show a qualified Atlas note (`displayGloss`,
-  `display_gloss`). A historism badge names its source marker
+- An editorial `avoid:` gloss (`слідуючий`) or an embedded `(Russian calque; standard Ukrainian: …)`
+  clause (`переключити`) is verbatim only with a lemma-bound Russianism or calque (`міроприємство`).
+  Otherwise the entry header, translation, page description, course-phrase gloss, browse and search
+  show the meaning with a qualified Atlas note (`displayGloss`). A historism badge names its source marker
   (`Історизм · ЕСУМ, т. 1, с. 592`) and claims nothing about current usage.
 - Atlas prose stored with a record (`noteUk`, `note`, `detail`) is
   commentary. Where a box shows it, it is marked as not confirmed by a source

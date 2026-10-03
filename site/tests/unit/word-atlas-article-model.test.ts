@@ -1688,6 +1688,45 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(plain).toContain("іменник · «gloss»");
   });
 
+  // 1429 control: actual stored переключити; its embedded norm clause has no lemma-scoped authority.
+  const PEREKLIUCHYTY_STATUS = {
+    classification: "russianism",
+    attestations: [
+      { source: "ua-gec", ref: "UA-GEC F/Calque", detail: "UA-GEC reviewed correction: перемкнути" },
+      { source: "standard_alternative", ref: "перемкнути", detail: "Ukrainian standard alternative for переключити" },
+    ],
+    is_russianism: true,
+    russian_shadow: true,
+    vesum_attested: true,
+    warning_severity: "russianism_red",
+    calque_warning: { standard_alternatives: ["перемкнути", "перемикнути"] },
+  };
+  const PEREKLIUCHYTY_GLOSS = "to switch over (Russian calque; standard Ukrainian: перемкнути)";
+  const PEREKLIUCHYTY_SHOWN =
+    "to switch over (примітка Атласу: «Russian calque; standard Ukrainian: перемкнути»; обсяг застереження не встановлено)";
+
+  test("an unresolved embedded norm clause (переключити) keeps the meaning and qualifies the clause everywhere", () => {
+    const props = heritageEntry("переключити", PEREKLIUCHYTY_STATUS, {
+      gloss: PEREKLIUCHYTY_GLOSS,
+      enrichment: { translation: { en: [PEREKLIUCHYTY_GLOSS, "to switch"], source: "learner_english_gloss" } },
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.usageLabel).toMatchObject({ scope: "unresolved", code: null, authority: [] });
+    expect(view.glossDisplay).toEqual({ text: PEREKLIUCHYTY_SHOWN, note: true });
+    expect(view.entry.gloss).toBe(PEREKLIUCHYTY_GLOSS);
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain(`<div class="word-pos">іменник · ${PEREKLIUCHYTY_SHOWN}</div>`);
+    expect(html).toContain(`<p>${PEREKLIUCHYTY_SHOWN}</p>`);
+    expect(html).toContain(`<span class="en-term">${PEREKLIUCHYTY_SHOWN}</span><span class="en-term">to switch</span>`);
+    expect(html).toContain("Довідкові джерела пропонують відповідники: перемкнути, перемикнути.");
+    expect(html).not.toContain("(Russian calque");
+    const form = renderWordAtlasArticle(
+      heritageEntry("переключив", {}, { gloss: PEREKLIUCHYTY_GLOSS, form_of: { url_slug: "переключити", lemma: "переключити" } }),
+    );
+    expect(form).toContain(`іменник · ${PEREKLIUCHYTY_SHOWN}`);
+    expect(form).not.toContain("(Russian calque");
+  });
+
   // b0 blocker 1: both cited 7-klas 2024 books are absent from sources.db.
   test("sense-restricted calque (біля) keeps its scoped caution but never cites unverified books as a source", () => {
     const props = heritageEntry("біля", {

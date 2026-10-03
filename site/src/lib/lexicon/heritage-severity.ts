@@ -599,18 +599,23 @@ function scopedCalqueBody(label: UsageLabel, alternatives: string[], references:
 
 const EDITORIAL_GLOSS_RE = /^\s*(avoid|rus|calque)\s*:\s*(\S.*?)\s*$/isu;
 const EDITORIAL_GLOSS_LEADS: Record<string, string> = { avoid: "радять", rus: "русизм —", calque: "калька —" };
+const EMBEDDED_NORM_RE = /\(([^()]*\b(?:calque|russianism|surzhyk|standard Ukrainian)\b[^()]*)\)/giu;
 
 /**
  * The gloss as displayed (#9603; mirrors ``display_gloss`` in
- * scripts/audit/generate_search_index.py). Editorial ``avoid:``/``rus:``/``calque:``
- * metadata reads as a word-wide instruction, so it stays verbatim only for a
- * lemma-bound Russianism or calque; otherwise it is a qualified Atlas note.
- * ``note`` marks that text; the stored gloss is unchanged.
+ * scripts/audit/generate_search_index.py). An ``avoid:``/``rus:``/``calque:`` gloss or
+ * embedded ``(… calque …)`` clause reads as a word-wide instruction, so it stays verbatim
+ * only for a lemma-bound Russianism or calque; otherwise it is a qualified Atlas note
+ * beside the meaning. ``note`` marks that text; the stored gloss is unchanged.
  */
 export function displayGloss(gloss: string | null | undefined, label: UsageLabel): { text: string; note: boolean } | null {
   if (!gloss) return null;
+  if (label.scope === "lemma" && (label.code === "rus" || label.code === "calq")) return { text: gloss, note: false };
   const match = gloss.match(EDITORIAL_GLOSS_RE);
-  if (!match || (label.scope === "lemma" && (label.code === "rus" || label.code === "calq"))) return { text: gloss, note: false };
+  if (!match) {
+    const text = gloss.replace(EMBEDDED_NORM_RE, "(примітка Атласу: «$1»; обсяг застереження не встановлено)");
+    return { text, note: text !== gloss };
+  }
   const lead = EDITORIAL_GLOSS_LEADS[match[1].toLowerCase()];
   return { text: `примітка Атласу: ${lead} «${match[2]}»; обсяг застереження не встановлено`, note: true };
 }

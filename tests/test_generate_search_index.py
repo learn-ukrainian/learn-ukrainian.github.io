@@ -1067,8 +1067,14 @@ def test_display_gloss_qualifies_editorial_metadata_outside_lemma_scope() -> Non
         assert display_gloss("avoid: наступний", code) == "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"
     assert display_gloss(" RUS:  інший ", None) == "примітка Атласу: русизм — «інший»; обсяг застереження не встановлено"
     assert display_gloss("calque: брати участь", None) == "примітка Атласу: калька — «брати участь»; обсяг застереження не встановлено"
-    # Ordinary glosses, prefixes inside a gloss, empty and non-string values pass through.
-    for gloss in ("next", "to avoid: dodge", "avoid:", None, 3):
+    switch = "to switch over (Russian calque; standard Ukrainian: перемкнути)"
+    assert display_gloss(switch, "calq") == switch
+    for code in (None, "hist"):
+        assert display_gloss(switch, code) == (
+            "to switch over (примітка Атласу: «Russian calque; standard Ukrainian: перемкнути»; обсяг застереження не встановлено)"
+        )
+    # Ordinary glosses, parentheticals naming Russia or avoidance, empty and non-string values pass through.
+    for gloss in ("next", "to avoid: dodge", "avoid:", None, 3, "RF (Russian Federation)", "to save (avoid the expenditure of)"):
         assert display_gloss(gloss, None) == gloss
 
 
@@ -1081,6 +1087,10 @@ def test_committed_browse_and_search_show_scoped_editorial_glosses() -> None:
     assert search["діюча"] == "примітка Атласу: радять «чинна»; обсяг застереження не встановлено"
     assert search["міроприємство"] == "avoid: захід"
     assert not [slug for slug, gloss in search.items() if isinstance(gloss, str) and gloss.startswith(("avoid:", "rus:", "calque:")) and slug != "міроприємство"]
+    for slug, letter in (("переключити", "П"), ("кримчанин", "К"), ("просвітитель", "П")):
+        shard = {row["s"]: row for row in json.loads((PROJECT_ROOT / f"site/public/lexicon/browse/{letter}.json").read_text(encoding="utf-8"))}
+        assert search[slug] == shard[slug]["g"] and "(примітка Атласу: «Russian calque; standard Ukrainian:" in search[slug]
+        assert "(russian calque" not in shard[slug]["hay"]
 
 
 def test_committed_usage_sources_are_bound_to_their_passages() -> None:

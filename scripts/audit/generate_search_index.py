@@ -392,19 +392,22 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
 
 _EDITORIAL_GLOSS_RE = re.compile(r"^\s*(avoid|rus|calque)\s*:\s*(\S.*?)\s*$", re.IGNORECASE | re.DOTALL)
 _EDITORIAL_GLOSS_LEADS = {"avoid": "радять", "rus": "русизм —", "calque": "калька —"}
+_EMBEDDED_NORM_RE = re.compile(r"\(([^()]*\b(?:calque|russianism|surzhyk|standard Ukrainian)\b[^()]*)\)", re.IGNORECASE)
 
 
 def display_gloss(gloss: object, code: str | None) -> object:
     """Browse/search gloss for ``gloss`` under browse ``code`` (#9603).
 
-    Editorial ``avoid:``/``rus:``/``calque:`` metadata reads as a word-wide
-    instruction, so it stays verbatim only for a lemma-bound Russianism or
-    calque; otherwise it is a qualified Atlas note (``displayGloss`` in
-    site/src/lib/lexicon/heritage-severity.ts). The stored gloss is unchanged.
+    An editorial ``avoid:``/``rus:``/``calque:`` gloss or embedded ``(… calque …)``
+    clause reads as a word-wide instruction, so it stays verbatim only for a
+    lemma-bound Russianism or calque; otherwise it is a qualified Atlas note beside
+    the meaning (``displayGloss`` in heritage-severity.ts). The stored gloss is unchanged.
     """
-    match = _EDITORIAL_GLOSS_RE.match(gloss) if isinstance(gloss, str) else None
-    if match is None or code in {"avoid", "rus", "calq"}:
+    if not isinstance(gloss, str) or code in {"avoid", "rus", "calq"}:
         return gloss
+    match = _EDITORIAL_GLOSS_RE.match(gloss)
+    if match is None:
+        return _EMBEDDED_NORM_RE.sub(r"(примітка Атласу: «\1»; обсяг застереження не встановлено)", gloss)
     lead = _EDITORIAL_GLOSS_LEADS[match[1].lower()]
     return f"примітка Атласу: {lead} «{match[2]}»; обсяг застереження не встановлено"
 

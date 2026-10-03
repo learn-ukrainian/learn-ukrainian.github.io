@@ -25,6 +25,7 @@ import {
   type AtlasLinkCatalog,
   type VerbParadigm,
 } from "../lib/lexicon/word-atlas-article-model";
+import { displayGloss } from "../lib/lexicon/heritage-severity";
 import { morphologyFormCountLabel } from "../lib/lexicon/register-markers";
 import ChromeText from "../lib/i18n/ChromeText";
 import { CHROME_STRINGS } from "../lib/i18n/chrome";
@@ -1378,7 +1379,7 @@ function WordAtlasArticleBody({
                 <span className="uk-side">{entry.lemma}</span>
                 <span className="arrow">↔</span>
                 <div className="en-side" lang="en">
-                  {enrichment.translation.en.map((term) => <span key={term} className="en-term">{term}</span>)}
+                  {enrichment.translation.en.map((term) => <span key={term} className="en-term">{displayGloss(term, heritageBoxes.usageLabel)?.text}</span>)}
                 </div>
               </div>
               <p className="atlas-muted">Джерело: {translationSource ?? enrichment.translation.source}</p>

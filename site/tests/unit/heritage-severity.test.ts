@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, test } from 'vitest';
 import {
   atlasNoteDetail,
@@ -12,6 +13,7 @@ import {
   type UsageLabel,
   type UsageSourceProof,
 } from '@site/src/lib/lexicon/heritage-severity';
+import { articleProps } from '../helpers/word-atlas-record';
 
 const SUM20_VOZNYI = 'ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець у Польщі (до XIX ст.).';
 const SUM20_DYVAN_SENSE = 'ДИВА́Н, у, ч. 1. іст. Дорадчий орган у султанській Туреччині. 2. М’який меблевий виріб.';
@@ -757,6 +759,33 @@ describe('displayGloss', () => {
     );
   });
 
+  const SWITCH = 'to switch over (Russian calque; standard Ukrainian: перемкнути)';
+  const SWITCH_NOTE =
+    'to switch over (примітка Атласу: «Russian calque; standard Ukrainian: перемкнути»; обсяг застереження не встановлено)';
+
+  test.each(['unresolved', 'none', 'sense', 'phrase', 'reverse'] as const)('qualifies an embedded norm clause under %s scope', (scope) => {
+    expect(displayGloss(SWITCH, label(scope))).toEqual({ text: SWITCH_NOTE, note: true });
+    expect(displayGloss('enlightener (a Russianism) or (surzhyk)', label(scope))?.text).toBe(
+      'enlightener (примітка Атласу: «a Russianism»; обсяг застереження не встановлено) or (примітка Атласу: «surzhyk»; обсяг застереження не встановлено)',
+    );
+  });
+
+  test('keeps an embedded norm clause verbatim only for a lemma-bound Russianism or calque', () => {
+    expect(displayGloss(SWITCH, label('lemma', 'calq'))).toEqual({ text: SWITCH, note: false });
+    expect(displayGloss(SWITCH, label('lemma', 'hist'))).toEqual({ text: SWITCH_NOTE, note: true });
+  });
+
+  test('ordinary parentheticals naming Russia or avoidance are meaning, not norm claims', () => {
+    for (const gloss of [
+      'Moscow (a federal city, the capital of Russia)',
+      'RF (Russian Federation) (proper noun)',
+      'to save, to economize (store unspent; avoid the expenditure of)',
+      'calque',
+    ]) {
+      expect(displayGloss(gloss, label('unresolved'))).toEqual({ text: gloss, note: false });
+    }
+  });
+
   test('ordinary, prefixed-elsewhere and empty glosses are unchanged', () => {
     expect(displayGloss('next', label('unresolved'))).toEqual({ text: 'next', note: false });
     expect(displayGloss('to avoid: dodge', label('none'))).toEqual({ text: 'to avoid: dodge', note: false });
@@ -764,4 +793,44 @@ describe('displayGloss', () => {
     expect(displayGloss('', label('none'))).toBeNull();
     expect(displayGloss(null, label('none'))).toBeNull();
   });
+});
+
+// #9603: the route <meta name="description"> reads the same scoped gloss projection as the article.
+describe('lexicon route description', () => {
+  const route = (extra: Record<string, unknown>, heritage_status: Record<string, unknown> = {}) =>
+    articleProps({ lemma: 'переключити', url_slug: 'переключити', gloss: 'gloss', entry_type: 'lemma', pos: 'verb',
+      ipa: null, primary_source: 'course', course_usage: [], heritage_status, ...extra } as never);
+
+  async function description(props: ReturnType<typeof route>): Promise<string | undefined> {
+    const { experimental_AstroContainer: AstroContainer } = await import('astro/container');
+    const { default: reactRenderer } = await import('@astrojs/react/server.js');
+    const { default: Page } = (await import('@site/src/pages/lexicon/[lemma].astro')) as never;
+    const container = await AstroContainer.create();
+    container.addServerRenderer({ renderer: reactRenderer });
+    const html = await container.renderToString(Page, { props: { ...props, generatedAt: 'test', manifestVersion: '0.1' } });
+    return html.match(/<meta name="description" content="([^"]*)"/)?.[1];
+  }
+
+  test('lemma route qualifies unscoped editorial glosses and keeps bound or ordinary ones', async () => {
+    expect(await description(route({ gloss: 'to switch over (Russian calque; standard Ukrainian: перемкнути)' }, { classification: 'russianism', is_russianism: true }))).toBe(
+      'переключити — to switch over (примітка Атласу: «Russian calque; standard Ukrainian: перемкнути»; обсяг застереження не встановлено)',
+    );
+    expect(await description(route({ lemma: 'слідуючий', url_slug: 'слідуючий', gloss: 'avoid: наступний', primary_source: 'surzhyk_to_avoid' }, { classification: 'russianism', is_russianism: true }))).toBe(
+      'слідуючий — примітка Атласу: радять «наступний»; обсяг застереження не встановлено',
+    );
+    expect(
+      await description(
+        route(
+          { lemma: 'міроприємство', url_slug: 'міроприємство', gloss: 'avoid: захід', primary_source: 'surzhyk_to_avoid' },
+          { classification: 'russianism', is_russianism: true, curated_calque: { kind: 'lexical', corrections: ['захід'] } },
+        ),
+      ),
+    ).toBe('міроприємство — avoid: захід');
+    expect(await description(route({ gloss: 'to switch over' }))).toBe('переключити — to switch over');
+  }, 60_000);
+
+  test('form route keeps its form-of description', async () => {
+    const props = route({ lemma: 'переключив', url_slug: 'переключив', gloss: 'avoid: x', form_of: { url_slug: 'переключити', lemma: 'переключити' } });
+    expect(await description(props)).toBe('переключив — форма слова «переключити»');
+  }, 60_000);
 });
