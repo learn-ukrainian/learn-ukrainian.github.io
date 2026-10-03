@@ -672,7 +672,7 @@ seats rotate — operator wording; the catalog-refresh contract §above owns nam
 
 | Area | Advisor pool | Evidence anchor |
 | --- | --- | --- |
-| Ukrainian language & pedagogy | Opus · Sol · Gemini (Fable/Astra last resort; sanctioned language seats ONLY) | LANGUAGE-LANES RULE binds |
+| Ukrainian language & pedagogy | Opus · Sol (Fable/Astra last resort; sanctioned language seats ONLY). Gemini joins only as task-level content reviewer under a fixed brief, never for planning or advice on new design (operator decision 2026-10-03, #9584) | LANGUAGE-LANES RULE binds |
 | Architecture & process design | Sol (designer) · Opus (counter-reader); Astra/Fable last resort | fleet topology §above |
 | Code & infrastructure review | GLM-5.3 · GPT-6.1 Sol | Historical Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
 | Security-sensitive changes | Sol · Opus; Astra last resort | ambient-Anthropic-token→z.ai leak caught pre-merge (#5931 arc) |
