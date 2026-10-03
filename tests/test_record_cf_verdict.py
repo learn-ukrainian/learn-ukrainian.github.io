@@ -116,6 +116,20 @@ def test_missing_or_ambiguous_verdict_refused(reply):
         ),
         ({}, "VERDICT: APPROVE\nVERDICT: BLOCKED", "ambiguous"),
         ({}, "No verdict", "missing"),
+        # #9583: a model the catalog gives no review role never approves, on any harness.
+        ({"agent": "claude", "model": "claude-fable-5-1"}, "VERDICT: APPROVE", "holds no review"),
+        ({"agent": "claude", "model": "claude-fable-5-1[1m]"}, "VERDICT: APPROVE", "holds no review"),
+        (
+            {
+                "agent": "cursor",
+                "resolved_model_known": True,
+                "resolved_model": "claude-fable-5-1-thinking-high",
+                "resolved_model_source": "cursor-stream-json",
+            },
+            "VERDICT: APPROVE",
+            "is not a formal reviewer on this harness",
+        ),
+        ({"agent": "codex", "model": "gpt-6-astra"}, "VERDICT: APPROVE", "retired in the model catalog"),
     ],
 )
 def test_task_refusals_before_network(tmp_path, updates, reply, reason):
@@ -123,6 +137,11 @@ def test_task_refusals_before_network(tmp_path, updates, reply, reason):
     write_task(tasks, reply=reply, **updates)
     with pytest.raises(recorder.RecordError, match=reason):
         recorder.record("review-one", task_root=tasks, lock_root=tmp_path / "locks")
+
+
+@pytest.mark.parametrize("model,family", [("claude-opus-5-5", "anthropic"), ("gpt-6.1-sol", "openai")])
+def test_formal_reviewer_still_admits_opus_and_sol(model, family):
+    recorder._require_formal_reviewer(cursor=False, reported=model, model=model, family=family)
 
 
 def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=None, status_error=False):

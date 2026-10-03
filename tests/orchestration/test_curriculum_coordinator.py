@@ -5,12 +5,14 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 import pytest
 import yaml
 
+from scripts.fleet import credit_lane
 from scripts.orchestration import curriculum_coordinator as coordinator
 
 pytestmark = pytest.mark.reads_content
@@ -364,6 +366,210 @@ def test_health_pause_resume_serial_waves_and_no_change(repo: Path, tmp_path: Pa
     ]
     assert coordinator.compact_status(final)["status"] == "complete"
     assert not (runtime / "leases/tracks/folk.json").exists()
+
+
+CREDIT_NOW = datetime(2026, 7, 14, 12, 0, tzinfo=UTC)
+# Captured at import, before the conftest autouse fixture stubs the reader.
+REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
+
+
+def _credit_snapshot(
+    credit: Any,
+    *,
+    status: str = "near_cap",
+    healthy: bool = True,
+    stale: bool = False,
+) -> dict[str, Any]:
+    """Health snapshot whose codex lane carries ``credit`` as its published ``agents.codex.credit``."""
+    snapshot = _health()()
+    snapshot["agents"]["codex"].update(
+        {"status": status, "health": {"healthy": healthy}, "codexbar": {"stale": stale}, "credit": credit}
+    )
+    return snapshot
+
+
+def _published_credit(state: str = "credit_balance_present", *, fetched_at: datetime = CREDIT_NOW) -> dict[str, Any]:
+    return {
+        "state": state,
+        "reason": "fixture",
+        "credit_balance": 12.5,
+        "allowed_models": ["gpt-6.1-sol", "gpt-6-luna"],
+        "evidence": {"credit_fetched_at": fetched_at.isoformat().replace("+00:00", "Z")},
+    }
+
+
+def _build_group(assessment: dict[str, Any]) -> dict[str, Any]:
+    return next(group for group in assessment["groups"] if group["id"] == "curriculum-build")
+
+
+def test_near_cap_lane_with_fresh_credit_balance_passes_wave_gate() -> None:
+    config = coordinator.load_config()
+    passed, assessment = coordinator._health_assessment(
+        _credit_snapshot(_published_credit(fetched_at=CREDIT_NOW - timedelta(seconds=60))),
+        config["health"],
+        now=CREDIT_NOW,
+    )
+    assert passed
+    group = _build_group(assessment)
+    assert group["available"] == 1 and group["passed"]
+    [lane] = group["lanes"]
+    assert lane["status"] == "near_cap"
+    assert lane["credit_state"] == "credit_balance_present"
+    assert lane["credit"] == {
+        "state": "credit_balance_present",
+        "reason": "fixture",
+        "allowed_models": ["gpt-6.1-sol", "gpt-6-luna"],
+        "wave_models": None,
+        "model_check": coordinator.WAVE_MODELS_UNREADABLE,
+    }
+
+
+@pytest.mark.parametrize(
+    "credit",
+    [
+        _published_credit("credits_exhausted"),
+        _published_credit("credits_unverified"),
+        _published_credit("credit_use_unconfirmed"),
+        _published_credit("plan_unknown"),
+        _published_credit("policy_error"),
+        _published_credit("not_configured"),
+        {"reason": "no state"},
+        "credit_balance_present",
+        None,
+    ],
+    ids=[
+        "exhausted",
+        "unverified",
+        "use-unconfirmed",
+        "plan-unknown",
+        "policy-error",
+        "not-configured",
+        "no-state",
+        "not-a-mapping",
+        "none",
+    ],
+)
+def test_near_cap_lane_without_credit_relief_keeps_failing_wave_gate(credit: Any) -> None:
+    config = coordinator.load_config()
+    passed, assessment = coordinator._health_assessment(_credit_snapshot(credit), config["health"], now=CREDIT_NOW)
+    assert not passed
+    group = _build_group(assessment)
+    assert group["available"] == 0 and not group["passed"]
+    [lane] = group["lanes"]
+    assert "credit" not in lane
+    expected = credit["state"] if isinstance(credit, dict) and "state" in credit else None
+    assert lane["credit_state"] == expected
+
+
+def test_near_cap_lane_without_credit_field_is_unchanged() -> None:
+    config = coordinator.load_config()
+    passed, assessment = coordinator._health_assessment(_health(codex="near_cap")(), config["health"], now=CREDIT_NOW)
+    assert not passed
+    assert _build_group(assessment)["lanes"] == [
+        {"lane": "codex", "status": "near_cap", "healthy": True, "stale": False, "credit_state": None}
+    ]
+
+
+def test_old_published_credit_balance_reads_unverified_and_fails_wave_gate() -> None:
+    config = coordinator.load_config()
+    old = CREDIT_NOW - timedelta(seconds=credit_lane.load_policy().credit_max_age_s + 1)
+    passed, assessment = coordinator._health_assessment(
+        _credit_snapshot(_published_credit(fetched_at=old)), config["health"], now=CREDIT_NOW
+    )
+    assert not passed
+    [lane] = _build_group(assessment)["lanes"]
+    assert lane["credit_state"] == "credits_unverified"
+    assert lane["credit"]["state"] == "credits_unverified"
+
+
+@pytest.mark.parametrize(
+    ("status", "healthy", "stale"),
+    [("near_cap", False, False), ("near_cap", True, True), ("unavailable", True, False), ("unknown", True, False)],
+    ids=["unhealthy", "stale", "unavailable-status", "unknown-status"],
+)
+def test_credit_relief_never_overrides_health_staleness_or_non_near_cap_status(
+    status: str, healthy: bool, stale: bool
+) -> None:
+    config = coordinator.load_config()
+    snapshot = _credit_snapshot(_published_credit(), status=status, healthy=healthy, stale=stale)
+    passed, assessment = coordinator._health_assessment(snapshot, config["health"], now=CREDIT_NOW)
+    assert not passed
+    assert _build_group(assessment)["available"] == 0
+
+
+def test_cool_lane_records_published_credit_state() -> None:
+    config = coordinator.load_config()
+    passed, assessment = coordinator._health_assessment(
+        _credit_snapshot(_published_credit("plan_healthy"), status="cool"), config["health"], now=CREDIT_NOW
+    )
+    assert passed
+    [lane] = _build_group(assessment)["lanes"]
+    assert lane["credit_state"] == "plan_healthy" and "credit" not in lane
+
+
+def test_credit_relief_diagnostics_are_valid_ledger_events(repo: Path, tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(repo, runtime)
+    run_id = ledger["run_id"]
+    old = datetime.now(UTC) - timedelta(seconds=credit_lane.load_policy().credit_max_age_s + 60)
+
+    _path, paused, item = _acquire(
+        repo, runtime, run_id, health_probe=lambda: _credit_snapshot(_published_credit(fetched_at=old))
+    )
+    assert item is None
+    pause = paused["history"][-1]["details"]["health"]
+    assert _build_group(pause)["lanes"][0]["credit"]["state"] == "credits_unverified"
+
+    fresh = datetime.now(UTC) - timedelta(seconds=30)
+    _path, active, item = _acquire(
+        repo, runtime, run_id, health_probe=lambda: _credit_snapshot(_published_credit(fetched_at=fresh))
+    )
+    assert item and item["slug"] == "alpha"
+    assert any(
+        event["event"] == "RUN_RESUMED" and event["details"]["reason"] == "wave-health-restored"
+        for event in active["history"]
+    )
+
+
+def test_published_credit_relief_is_not_reused_after_a_new_rate_limit(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """The wave gate re-reads the shared runtime log: a rate limit after publication fails the gate."""
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
+    (tmp_path / "usage_codex-delegate_2026-07-14.jsonl").write_text(
+        json.dumps({"ts": "2026-07-14T11:50:00Z", "outcome": "rate_limited"}) + "\n", encoding="utf-8"
+    )
+    config = coordinator.load_config()
+    passed, assessment = coordinator._health_assessment(
+        _credit_snapshot(_published_credit(fetched_at=CREDIT_NOW - timedelta(seconds=60))),
+        config["health"],
+        now=CREDIT_NOW,
+    )
+    assert not passed
+    group = _build_group(assessment)
+    assert group["available"] == 0
+    [lane] = group["lanes"]
+    assert lane["credit_state"] == lane["credit"]["state"] == "credit_use_unconfirmed"
+
+
+def test_unreadable_rate_limit_evidence_fails_the_wave_gate(monkeypatch: pytest.MonkeyPatch) -> None:
+    def broken(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
+        raise OSError("usage dir unreadable")
+
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", broken)
+    config = coordinator.load_config()
+    passed, assessment = coordinator._health_assessment(
+        _credit_snapshot(_published_credit(fetched_at=CREDIT_NOW - timedelta(seconds=60))),
+        config["health"],
+        now=CREDIT_NOW,
+    )
+    assert not passed
+    [lane] = _build_group(assessment)["lanes"]
+    assert lane["credit"]["state"] == "credits_unverified"
 
 
 def test_global_mutation_lease_blocks_cross_track_work(repo: Path, tmp_path: Path) -> None:

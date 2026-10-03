@@ -23,15 +23,15 @@
 
 | Role | Primary | Secondary / volume | Effort | Confidence |
 |---|---|---|---|---|
-| Ceiling advisor/designer | Claude Opus 5.5 / GPT-6.1 Sol | Fable / Astra last resort | `high` | provisional |
+| Ceiling advisor/designer | Claude Opus 5.5 / GPT-6.1 Sol | — | `high` | provisional |
 | Accountable orchestrator | GPT-6.1 Sol, Claude Opus 5.5 | — | `high` | provisional |
-| General implementer | GPT-6.1 Sol, Claude Sonnet 5.5 for well-scoped non-security code, Grok 4.7 | GPT-6 Luna for bounded work under a Sol advisory envelope; Gemini 3.8 Flash for well-defined work; K3 (web, UI and backend code only); Cursor (**pin family**). Security-sensitive code authoring goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Opus 5.5 first, Fable 5.1 last resort, for Claude). | `high` by task fit | provisional |
+| General implementer | GPT-6.1 Sol, Claude Sonnet 5.5 for well-scoped non-security code, Grok 4.7 | GPT-6 Luna for bounded work under a Sol advisory envelope; Gemini 3.8 Flash for well-defined work; K3 (web, UI and backend code only); Cursor (**pin family**). Security-sensitive code authoring goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Opus 5.5 for Claude). | `high` by task fit | provisional |
 | Polished written deliverables in English | Claude Sonnet 5.5 | Reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts | By task fit | provisional |
-| Hard implementer | GPT-6.1 Sol, Claude Opus 5.5 | Escalate hard design judgment to Opus 5.5 / Sol 6.1 first; Fable / Astra last resort | `high` | provisional |
-| UI / visual product design | Claude Opus 5.5 / GPT-6.1 Sol | Fable / Astra last resort; K3 implements the approved design as web/UI code only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `high` | provisional |
+| Hard implementer | GPT-6.1 Sol, Claude Opus 5.5 | Escalate hard design judgment to Opus 5.5 / Sol 6.1 | `high` | provisional |
+| UI / visual product design | Claude Opus 5.5 / GPT-6.1 Sol | K3 implements the approved design as web/UI code only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `high` | provisional |
 | Code/security CF review | **Author-family-conditional** (see §3); for security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125 | — | `high`+ | provisional |
-| Critical CF review | GPT-6.1 Sol ↔ Opus 5.5 **cross-family** | Fable / Astra last resort | `high` | provisional |
-| Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6.1 Sol / Claude Opus 5.5 first, Fable 5.1 last resort + sources | `high` | provisional (morphology remains VESUM-gated) |
+| Critical CF review | GPT-6.1 Sol ↔ Opus 5.5 **cross-family** | — | `high` | provisional |
+| Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6.1 Sol / Claude Opus 5.5 + sources | `high` | provisional (morphology remains VESUM-gated) |
 | Recon / triage | GPT-6 Luna, Claude Haiku, Gemini 3.8 Flash | — | Luna `high` with exact owned paths + objective scope ceiling, from a Sol advisory envelope (always required, #9275); others by task fit; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.
@@ -42,12 +42,12 @@
 
 | Model | Strengths | Weaknesses | Route / egress notes | Project seat |
 |---|---|---|---|---|
-| **Fable 5.1** | Hard advisory judgment and architecture | Costly as bulk worker | Anthropic | Last-resort ceiling advisor; Opus 5.5 / Sol 6.1 first |
-| **GPT-6.1 Sol** | Accountable driving, coding, adversarial review, and hard OpenAI advisory judgment (holds the named Astra seat since 2026-09-29, #9230) | Same-family review of OpenAI work is not independent | OpenAI / native Codex | Regular driver, coder, reviewer and ordinary advisor @ high; named Astra seat last resort |
-| **Claude Opus 5.5** | Hard Claude-lane coding and deep code review | Costly as bulk worker | Anthropic / native Claude or verified Cursor slug | Hard coding and review @ high |
+| **Fable 5.1** | Selectable Claude model | Costly as bulk worker | Anthropic | No advisory, approval or review role (#9583) |
+| **GPT-6.1 Sol** | Accountable driving, coding, adversarial review, and hard OpenAI advisory judgment | Same-family review of OpenAI work is not independent | OpenAI / native Codex | Regular driver, coder, reviewer and advisor @ high; designated approver jointly with Opus 5.5 (#9583) |
+| **Claude Opus 5.5** | Hard Claude-lane coding, deep code review and hard advisory judgment | Costly as bulk worker | Anthropic / native Claude or verified Cursor slug | Hard coding, review and advisor @ high; designated approver jointly with Sol 6.1 (#9583) |
 | **GPT-6 Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / native Codex | Bounded worker / recon @ high |
 | **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
-| **Sonnet 5.5** | Well-scoped everyday coding and bug fixes; polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, design review of pages/artifacts; faster and uses fewer tokens than Sonnet 5 | Weaker than Opus 5.5 on complex, open-ended work; security-sensitive code authoring (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Opus 5.5 first, Fable 5.1 last resort, for Claude); escalate hard judgment to Opus 5.5 / Sol 6.1 first, Fable / Astra last resort; designated approval remains separate | Anthropic | Provisional practical worker: after 10 recorded Sonnet 5.5 review or implementation outcomes, adopt or demote with evidence (#9111) |
+| **Sonnet 5.5** | Well-scoped everyday coding and bug fixes; polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, design review of pages/artifacts; faster and uses fewer tokens than Sonnet 5 | Weaker than Opus 5.5 on complex, open-ended work; security-sensitive code authoring (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Opus 5.5 for Claude); escalate hard judgment to Opus 5.5 / Sol 6.1; designated approval remains separate | Anthropic | Provisional practical worker: after 10 recorded Sonnet 5.5 review or implementation outcomes, adopt or demote with evidence (#9111) |
 | **Grok 4.7** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator; native Grok never judges | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker; code/infra CF review only as the attested Cursor seat `grok-4.7-high` below critical (#9488) |
 | **Gemini 3.8 Flash High** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane (3.1 Pro only on explicit request (operator 2026-09-22)) |
 | **K3** | Long-horizon web, UI and backend coding (implementer only) | Maintainability ≠ demo; Moonshot route/egress; never reviewer, consult, advisor, design sign-off or Ukrainian-language seat | Moonshot | UI + long implement |
@@ -63,9 +63,9 @@ Never use a fixed unordered list that can pick the author’s family.
 
 | Author family | Prefer CF reviewers (code/infra) | Avoid as sole CF |
 |---|---|---|
-| Anthropic (Opus/Sonnet/Fable, with Fable last resort) | Grok, GPT-6.1 Sol, GLM local, Gemini | Sonnet/Opus/Fable self-family |
-| OpenAI (GPT-6.1 Sol, GPT-6 Luna) | Grok, Opus/Sonnet, GLM local, Gemini; Fable last resort; for security-sensitive diffs use `--risk critical`, which excludes Sonnet 5.5 (#9125 tracks resolver enforcement at lower risk levels) | GPT-6 self-family |
-| xAI (Grok) | Opus/Sonnet, GPT-6.1 Sol, GLM local, Gemini; Fable last resort; for security-sensitive diffs use `--risk critical`, which excludes Sonnet 5.5 (#9125 tracks resolver enforcement at lower risk levels) | Grok self-family |
+| Anthropic (Opus/Sonnet/Fable) | Grok, GPT-6.1 Sol, GLM local, Gemini | Sonnet/Opus/Fable self-family |
+| OpenAI (GPT-6.1 Sol, GPT-6 Luna) | Grok, Opus/Sonnet, GLM local, Gemini; for security-sensitive diffs use `--risk critical`, which excludes Sonnet 5.5 (#9125 tracks resolver enforcement at lower risk levels) | GPT-6 self-family |
+| xAI (Grok) | Opus/Sonnet, GPT-6.1 Sol, GLM local, Gemini; for security-sensitive diffs use `--risk critical`, which excludes Sonnet 5.5 (#9125 tracks resolver enforcement at lower risk levels) | Grok self-family |
 | Google (Gemini via AGY) | Grok, OpenAI, Anthropic, GLM local | Gemini self-family alone for CF of Gemini-authored infra |
 | Moonshot (K3, Cursor Composer) | Grok, OpenAI, Anthropic, GLM local, Gemini (K3 is never itself a reviewer) | K3 / Composer self-family |
 | Zhipu (GLM) | Grok, OpenAI, Anthropic, Gemini | GLM self-family |
@@ -107,7 +107,7 @@ Never use a fixed unordered list that can pick the author’s family.
 | Event | Action |
 |---|---|
 | New major model release | Mark affected rows **provisional**; run ≥3 relevant cells |
-| New xAI ceiling model | Bakeoff vs Opus 5.5 / Sol 6.1 first; Fable / Astra last-resort comparators before **advisor** seat |
+| New xAI ceiling model | Bakeoff vs Opus 5.5 / Sol 6.1 before **advisor** seat |
 | 2 consecutive fails on validated cell | Demote to provisional; consider deprecated for that task family |
 | Validated win on hard cell | May promote within role (not auto-orchestrator) |
 
@@ -121,10 +121,10 @@ Store bakeoff notes under `docs/best-practices/fleet-bakeoffs/` (create when fir
 GPT-6 Luna / Claude Haiku / Gemini 3.8 Flash recon
   → GPT-6.1 Sol / Opus 5.5 / Sonnet 5.5 (well-scoped everyday work and polished English deliverables) / Grok 4.7 implement (worktree)
     → security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions): Opus 5.5 or Codex Sol, never Sonnet 5.5
-    → Ukrainian curriculum content: sanctioned language lanes (Opus 5.5 first, Fable 5.1 last resort, for Claude), never Sonnet 5.5
+    → Ukrainian curriculum content: sanctioned language lanes (Opus 5.5 for Claude), never Sonnet 5.5
     → escalate immediately if security / high blast radius / unclear invariants / multi-architecture
     → otherwise escalate after evidence-backed root-cause attempts fail
-      → Opus 5.5 / Sol 6.1 (high) first for hard advisory judgment; Fable / Astra last resort
+      → Opus 5.5 / Sol 6.1 (high) for hard advisory judgment
         → orchestrator integrates
         → CF review: other family + task-qualified
 ```
@@ -136,7 +136,7 @@ GPT-6 Luna / Claude Haiku / Gemini 3.8 Flash recon
 | Entitlement | Treat as | Do not treat as |
 |---|---|---|
 | SuperGrok Heavy | Verified **capacity** for longer/more parallel Grok workers | Automatic intelligence rank or orchestrator promotion |
-| Future xAI Fable/Astra-class | **Candidate** ceiling advisor + hard coder after bakeoff | Auto king of fleet / sole orchestrator |
+| Future xAI ceiling-class | **Candidate** ceiling advisor + hard coder after bakeoff | Auto king of fleet / sole orchestrator |
 
 Re-verify capacity and routing when the subscription plan or API routing changes.
 
@@ -156,13 +156,13 @@ Re-verify capacity and routing when the subscription plan or API routing changes
 Routine code/fix          → GPT-6.1 Sol high | GPT-6 Luna high when bounded (Sol envelope) | Sonnet 5.5 for well-scoped non-security work | Grok 4.7
 Security-sensitive code  → Claude Opus 5.5 | Codex Sol (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions; never Sonnet 5.5)
 Polished English work     → Sonnet 5.5 (reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, design review)
-Ukrainian curriculum      → sanctioned language lanes; Opus 5.5 first, Fable 5.1 last resort, for Claude (never Sonnet 5.5)
-Hard code                 → GPT-6.1 Sol high | Claude Opus 5.5 high; Opus/Sol advice first, Fable/Astra last resort
+Ukrainian curriculum      → sanctioned language lanes; Opus 5.5 for Claude (never Sonnet 5.5)
+Hard code                 → GPT-6.1 Sol high | Claude Opus 5.5 high; Opus/Sol advice
 Orchestrate stream        → GPT-6.1 Sol high | Claude Opus 5.5 high (exactly one)
-UI / visual product       → Opus/Sol design first, Fable/Astra last resort → K3 or Sol/Opus/Grok implement web/UI code → Opus/Sol first if systems-hard
+UI / visual product       → Opus/Sol design → K3 or Sol/Opus/Grok implement web/UI code → Opus/Sol first if systems-hard
 UA language                 → Gemini 3.8 Flash High (AGY) + VESUM/sources (3.1 Pro only on explicit request, operator 2026-09-22)
 Security/bug CF             → author-family-conditional (Grok/GLM/Opus/…)
-Architecture decision       → Opus/Sol advice first, Fable/Astra last resort → designated approval → orchestrator integrates
+Architecture decision       → Opus/Sol advice → designated approval (Opus 5.5 + Sol 6.1, or operator) → orchestrator integrates
 Recon                     → GPT-6 Luna high (Sol envelope) | Claude Haiku | Gemini 3.8 Flash (Sol envelope)
 ```
 
@@ -174,5 +174,6 @@ Recon                     → GPT-6 Luna high (Sol envelope) | Claude Haiku | Ge
 |---|---|---|---|
 | 2026-07-19 | Initial scorecard from operator intent + web research + Sol #3588/#3593 | **drafted / provisional** — not full bakeoff-validated | grok/fleet-doctrine-scorecard |
 | 2026-07-19 | Add Claude Haiku to recon seat (with Luna / Gemini 3.5 Flash) | provisional | grok/fleet-scorecard-haiku-recon |
+| 2026-10-03 | Opus 5.5 and Sol 6.1 replace Fable / Astra as advisors and designated approvers (both approve, neither the author; operator decides on disagreement); Fable holds no advisory, approval or review role (#9583) | operator decision | claude/impl-9583 |
 
 **Approval authority:** operator for ceiling-seat changes; orchestrator may update provisional notes and evidence ledger.

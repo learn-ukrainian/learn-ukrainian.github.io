@@ -60,6 +60,8 @@ except ImportError:
     from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.agent_runtime.acp_health import probe_acp_health
+from scripts.common.repo_root import main_checkout_root
+from scripts.fleet import credit_lane
 from scripts.fleet.reset_reserve import (
     codex_is_threatened,
     codex_reset_reserve_eligible,
@@ -628,6 +630,43 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
     return in_flight
 
 
+def _attach_credit_states(
+    agents: dict[str, Any], *, current_time: datetime, snapshot_stale: bool, usage_dir: Path | None
+) -> None:
+    """Publish each lane's credit-period state as the additive ``agents.<lane>.credit`` field (#9517).
+
+    The raw quota ``status`` keeps its vocabulary; consumers that act on credit
+    (the recommendation below, the reviewer resolver) read this field. The state
+    is :func:`credit_lane.lane_credit_state`; an unreadable policy publishes
+    ``policy_error`` for the built-in credit lanes (plan state applies).
+    """
+    try:
+        policy: credit_lane.CreditPolicy | None = credit_lane.load_policy()
+        policy_error = ""
+    except ValueError as exc:
+        policy, policy_error = None, str(exc)
+    for lane, info in agents.items():
+        if not isinstance(info, dict):
+            continue
+        info["credit"] = (
+            credit_lane.lane_credit_state(
+                lane, info, policy, now=current_time, snapshot_stale=snapshot_stale, usage_dir=usage_dir
+            )
+            if policy is not None
+            else credit_lane.policy_error_state(lane, policy_error)
+        )
+
+
+def _credit_backed(info: dict[str, Any] | None) -> bool:
+    """True when the lane's published credit state is ``credit_balance_present`` and it is logged in."""
+    info = info if isinstance(info, dict) else {}
+    credit = info.get("credit") if isinstance(info.get("credit"), dict) else {}
+    return credit.get("state") == credit_lane.CREDIT_BALANCE_PRESENT and "NEED_LOGIN" not in {
+        info.get("login_state"),
+        info.get("probe_state"),
+    }
+
+
 def _recommend_agent(
     agents: dict[str, Any],
     warnings: list[str],
@@ -644,6 +683,9 @@ def _recommend_agent(
     fresh CodexBar overlay is authoritative even when the local USD ledger is
     empty.
     Reset-aware: if top pick resets within N hours, note deferral warning (N configurable).
+    A lane past its plan cap whose published credit state is
+    ``credit_balance_present`` is a candidate after every cool and warm
+    plan-backed lane (#9517); its raw status is not rewritten.
     """
     # Hard admission failures cannot use the soft all-unhealthy budget fallback.
     agents = {lane: info for lane, info in agents.items() if info.get("eligible", True)}
@@ -700,7 +742,8 @@ def _recommend_agent(
     # Only claim inline_orchestrator if at least one lane is actually observed AND all observed lanes are hot/near_cap.
     # An empty observation set (all unknown/unavailable) must NEVER satisfy this.
     observed_statuses = [s for s in status_by_agent.values() if s not in {"unknown", "unavailable"}]
-    if observed_statuses and all(s in {"hot", "near_cap"} for s in observed_statuses):
+    credit_lanes = {a for a, s in status_by_agent.items() if s not in {"cool", "warm"} and _credit_backed(agents[a])}
+    if observed_statuses and all(s in {"hot", "near_cap"} for s in observed_statuses) and not credit_lanes:
         warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
         return {
             "primary_agent_for_code": "inline_orchestrator",
@@ -734,6 +777,20 @@ def _recommend_agent(
             # Cursor-first for cool Ultra is the explicit branch above, not this sort.
             return (burn_key, CODE_IMPLEMENT_LANE_PRIORITY.get(agent, 50))
 
+        credit_candidates = [agent for agent in status_map if agent in credit_lanes]
+
+        def credit_pick() -> dict[str, Any]:
+            pool = [c for c in credit_candidates if c not in imminent] or credit_candidates
+            recommended = min(pool, key=_sort_burn)
+            models = ", ".join(agents_dict[recommended]["credit"].get("allowed_models") or [])
+            return {
+                "primary_agent_for_code": recommended,
+                "rationale": (
+                    f"No cool or warm plan-backed lane; {recommended} is past its plan cap with a "
+                    f"{credit_lane.DRAW_NOT_VERIFIED}; dispatch only {models} (credit-period allowlist)."
+                ),
+            }
+
         if "near_cap" in status_map.values():
             candidates = [agent for agent, st in status_map.items() if st == "cool"]
             if not candidates:
@@ -749,6 +806,8 @@ def _recommend_agent(
                         f"available 7d burn ({_format_pct(burn_map.get(recommended))}%)."
                     ),
                 }
+            if credit_candidates:
+                return credit_pick()
 
         # Operator 2026-08-26: authenticated Cursor Ultra must lead cool code-implement seats.
         cursor_st = status_map.get("cursor")
@@ -797,6 +856,9 @@ def _recommend_agent(
                 "primary_agent_for_code": recommended,
                 "rationale": rationale,
             }
+
+        if credit_candidates:
+            return credit_pick()
 
         # fallback to lowest burn among known
         known = [a for a, s in status_map.items() if s not in ("unknown", "unavailable")]
@@ -858,6 +920,13 @@ def _recommend_agent(
                 cf = h.get("consecutive_failures", 0)
                 sm = h.get("span_minutes", 0)
                 warnings.append(f"lane {lane} skipped for recommendation: {cf} spawn failures in {sm}m")
+
+    primary = res.get("primary_agent_for_code")
+    if primary in credit_lanes:
+        warnings.append(
+            f"recommendation {primary!r} is past its plan cap with a {credit_lane.DRAW_NOT_VERIFIED}: dispatch only "
+            f"{', '.join(agents[primary]['credit'].get('allowed_models') or [])} (credit-period allowlist)"
+        )
 
     return {
         "primary_agent_for_code": res.get("primary_agent_for_code"),
@@ -1094,8 +1163,13 @@ def _compute_dispatch_routing_budget(
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
+    # Default to the shared checkout's runtime plane, as the canonical runtime
+    # usage reader does: a linked-worktree caller (the curriculum coordinator)
+    # must see fleet-wide rate limits and tasks, not its own empty copy (#9517).
     resolved_batch_state = (
-        batch_state_dir if batch_state_dir is not None else (Path(__file__).resolve().parents[2] / "batch_state")
+        batch_state_dir
+        if batch_state_dir is not None
+        else main_checkout_root(Path(__file__).resolve().parents[2]) / "batch_state"
     )
     usage_dir = resolved_batch_state / "api_usage"
     runtime_records_7d = _runtime_usage_records_7d(usage_dir=usage_dir)
@@ -1186,6 +1260,7 @@ def _compute_dispatch_routing_budget(
             current_time=current_time,
             budgets={},
         )
+        _attach_credit_states(agents, current_time=current_time, snapshot_stale=False, usage_dir=usage_dir)
         if nb_sourced_any:
             ranked_subs = [
                 {
@@ -1713,6 +1788,7 @@ def _compute_dispatch_routing_budget(
         lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
         agents[lane]["health"] = lane_health
 
+    _attach_credit_states(agents, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
     recommendation_agents = {lane: dict(info) for lane, info in agents.items()}
     codex_info = agents.get("codex", {})
     reset_reserve = load_reset_reserve(

@@ -61,10 +61,10 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
 
 
-# #9488: medium has no shortfall and critical keeps the Anthropic one. #9538:
-# high admits only Sol and Opus, so each of their author families has the
-# other one as its single cross-family seat.
-SHORTFALL_FAMILIES = {"medium": [], "high": ["anthropic", "openai"], "critical": ["anthropic"]}
+# #9488: medium has no shortfall. #9538: high admits only Sol and Opus, so each
+# of their author families has the other one as its single cross-family seat.
+# #9583: without Fable, critical is the same for OpenAI authors (Opus only).
+SHORTFALL_FAMILIES = {"medium": [], "high": ["anthropic", "openai"], "critical": ["anthropic", "openai"]}
 
 
 @pytest.mark.parametrize("risk", ["medium", "high", "critical"])
@@ -199,7 +199,8 @@ def test_catalog_reserves_count_only_on_automatic_ladder():
     medium = check_bench_health(routing_snapshot={})
     critical = check_bench_health(routing_snapshot={}, risk="critical")
     assert "claude-fable-5-1" not in medium["openai"]
-    assert "claude-fable-5-1" in critical["openai"]
+    # #9583: Fable is no reviewer at any risk.
+    assert "claude-fable-5-1" not in critical["openai"]
 
 
 def test_bench_health_main_returns_zero_when_healthy(monkeypatch, capsys):

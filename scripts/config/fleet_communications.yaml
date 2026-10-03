@@ -22,19 +22,19 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 #
 # Formal CF model+effort pins (model_catalog formal_cf_defaults; review-pr removed in #8520):
 #   codex → gpt-6.1-sol @ high · claude → claude-sonnet-5-5 @ high · glm → glm-5.3 @ high (advisory max)
-#   claude formal pins also: claude-fable-5-1, claude-opus-5-5
+#   claude formal pins also: claude-opus-5-5
 #   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
 #   grok → daily driver only; native Grok never reviews or judges (Grok reviews code/infra
 #          only as the attested cursor grok-4.7-high seat below critical, #9488)
 #   agy → gemini-3.8-flash-high @ high (orchestrator seat; text-only ACP wrapper is not a formal-review route)
 # Codex advisory escalation: gpt-6.1-sol @ high; routine reviewer stays high.
 # Automatic authority Opus 5.5/Sol 6.1 selection stays on the critical ladder;
-# Fable and Astra are last resort. An explicit operator pin at another risk keeps every
+# Fable and Astra hold no review role (#9583). An explicit operator pin at another risk keeps every
 # formal eligibility, isolation, family, capability, health, and circuit gate
 # enforced.
 #
 # Orchestrator seats for this stream (model_catalog.orchestrator_seats):
-#   claude(claude-opus-5-5 @ high; Fable last resort)
+#   claude(claude-opus-5-5 @ high)
 #   · codex(gpt-6.1-sol @ high) · grok(daily driver) · agy(gemini-3.8-flash-high @ high)
 #   (codex was dropped as a driver on 2026-07-22, then re-added on 2026-07-23 because
 #    HydrationCapsuleV1 reduces rollover overhead; formal-CF eligibility is unchanged.)

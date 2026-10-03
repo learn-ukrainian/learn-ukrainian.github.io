@@ -18,6 +18,12 @@ EXPECTED_SCHEMA_VERSION = "model-catalog.v1"
 VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
+# ``review_scheduler.activity_roles`` keys (#9583): ``review`` admits a review,
+# critique or approval of record; ``consult`` admits an ACP ask, consult or
+# discussion together with the ``review`` roles.
+REVIEW_ACTIVITY = "review"
+CONSULT_ACTIVITY = "consult"
+ACTIVITIES = frozenset({REVIEW_ACTIVITY, CONSULT_ACTIVITY})
 EXPECTED_SELECTION_ORDER = [
     "independence_and_hard_gates",
     "primary_before_last_resort",
@@ -170,6 +176,12 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
     if advisor["role"] != "bounded_advisory_envelope":
         raise ModelCatalogError(
             "execution_routing.sol_advised_bounded.advisor.role must be 'bounded_advisory_envelope'"
+        )
+    if advisor["role"] not in models[advisor_model_id]["roles"]:
+        # #9583: the advisor seat reads the advisor model's catalog roles.
+        raise ModelCatalogError(
+            f"execution_routing.sol_advised_bounded.advisor.model_id {advisor_model_id!r} does not hold "
+            f"the {advisor['role']!r} role"
         )
     if advisor["output_fields"] != ADVISOR_OUTPUT_FIELDS:
         raise ModelCatalogError(
@@ -402,6 +414,36 @@ def _validate_review_scheduler(raw: Any, models: dict[str, Any]) -> None:
             raise ModelCatalogError(f"{label} must be a non-empty list of model ids")
         for model_id in allowed:
             _require_routable_model(models, model_id, label)
+    activity_roles = _require_mapping(scheduler.get("activity_roles"), "review_scheduler.activity_roles")
+    if set(activity_roles) != ACTIVITIES:
+        raise ModelCatalogError(f"review_scheduler.activity_roles must define exactly {sorted(ACTIVITIES)}")
+    held = {role for model in models.values() for role in model.get("roles", [])}
+    for activity, roles in activity_roles.items():
+        for role in _require_string_list(roles, f"review_scheduler.activity_roles.{activity}"):
+            if role not in held:
+                raise ModelCatalogError(f"review_scheduler.activity_roles.{activity} names {role!r}, which no model holds")
+
+
+def _validate_activity_role_holders(catalog: dict[str, Any]) -> None:
+    """Every formal reviewer holds a role the review activity admits (#9583)."""
+    scheduler = catalog.get("review_scheduler")
+    if scheduler is None:
+        return
+    references = [(f"review_candidates.{name}", entry["model_id"]) for name, entry in catalog["review_candidates"].items()]
+    references += [
+        (f"review_scheduler.endpoints.{name}.models", model_id)
+        for name, endpoint in scheduler["endpoints"].items()
+        if endpoint.get("formal_review_eligible") is True
+        for model_id in endpoint.get("models") or []
+    ]
+    references += [
+        (f"review_scheduler.risk_reviewer_models.{risk}", model_id)
+        for risk, allowed in scheduler.get("risk_reviewer_models", {}).items()
+        for model_id in allowed
+    ]
+    for label, model_id in references:
+        if refusal := activity_role_refusal(model_id, REVIEW_ACTIVITY, catalog):
+            raise ModelCatalogError(f"{label}: {refusal}")
 
 
 def invocation_model(invocation: str) -> str | None:
@@ -755,6 +797,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
 
     _validate_orchestrator_seats(catalog.get("orchestrator_seats"), models)
     _validate_review_scheduler(catalog.get("review_scheduler"), models)
+    _validate_activity_role_holders(catalog)
     _validate_cursor_review_seats(catalog)
     _validate_formal_cf_defaults(catalog.get("formal_cf_defaults"), models)
     cursor_endpoint = (catalog.get("review_scheduler") or {}).get("endpoints", {}).get("cursor") or {}
@@ -973,6 +1016,40 @@ def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> 
     replacement = models[model_id].get("replaced_by")
     advice = f"use {replacement}" if replacement else "use an active catalog model"
     return f"model {text!r} is retired in the model catalog ({model_id}); {advice}"
+
+
+def activity_role_refusal(model: Any, activity: str, catalog: dict[str, Any] | None = None) -> str | None:
+    """Refuse a model pin whose catalog ``roles`` admit no ``activity`` (#9583).
+
+    ``activity`` is ``review`` (a review, critique or approval of record) or
+    ``consult`` (an ACP ask, consult or discussion, which the review roles also
+    admit); ``review_scheduler.activity_roles`` names the roles each admits. A
+    retired model holds no role. Unknown ids return None; transport and
+    resolver gates own them.
+    """
+    text = str(model or "").strip()
+    if not text:
+        return None
+    catalog = catalog or load_model_catalog()
+    model_id = resolve_catalog_model_id(text, catalog)
+    if model_id is None:
+        return None
+    if refusal := retired_model_refusal(model_id, catalog):
+        return refusal
+    activity_roles = catalog["review_scheduler"]["activity_roles"]
+    admitted = set(activity_roles[REVIEW_ACTIVITY])
+    if activity == CONSULT_ACTIVITY:
+        admitted |= set(activity_roles[CONSULT_ACTIVITY])
+    elif activity != REVIEW_ACTIVITY:
+        raise ValueError(f"unknown activity {activity!r}; expected one of {sorted(ACTIVITIES)}")
+    roles = catalog["models"][model_id]["roles"]
+    if admitted.intersection(roles):
+        return None
+    work = "review, critique or approval" if activity == REVIEW_ACTIVITY else "ACP ask, consult or discussion"
+    return (
+        f"model {text!r} ({model_id}) holds no {work} role in the model catalog (roles: {', '.join(roles)}; "
+        f"review_scheduler.activity_roles.{activity}, #9583)"
+    )
 
 
 def risk_reviewer_refusal(model: Any, risk: Any, catalog: dict[str, Any] | None = None) -> str | None:

@@ -1822,6 +1822,8 @@ def _dispatch_headless_review(
     `delegate.py wait` blocks for the terminal result — this is the reviewer
     seat other headless reviews already use. Never falls back to ACP.
     """
+    from agent_runtime.target_admission import ReviewAdmissionRefused
+
     from ._acp_compat import require_compat_target
     from ._dispatch_wrappers import run_ask_review_dispatch
 
@@ -1848,6 +1850,8 @@ def _dispatch_headless_review(
             review_profile=review_profile,
             pinned_head=pinned_head,
         )
+    except ReviewAdmissionRefused as exc:
+        raise SystemExit(str(exc)) from exc
     except RuntimeError as exc:
         missing = _missing_origin_branch_message(exc, branch=branch, pr_number=pr_number)
         raise SystemExit(missing or str(exc)) from exc

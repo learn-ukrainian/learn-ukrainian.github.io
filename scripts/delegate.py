@@ -5785,7 +5785,7 @@ def _kimi_worker_refusal(
         format_refusal,
         is_kimi_seat,
     )
-    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 
     boundary_errors = (kimi_boundary.BoundaryError, OSError, subprocess.SubprocessError)
     if not is_kimi_seat(agent, model=model):
@@ -5794,7 +5794,10 @@ def _kimi_worker_refusal(
                 kimi_boundary.remove(cwd, env=_sanitized_git_env())
             except boundary_errors as exc:
                 return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}", None
-        (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
+        try:
+            (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
+        except ReviewAdmissionRefused as exc:  # #9583: a review model without a catalog review role
+            return str(exc), None
         return None, target
     try:
         if mode != ADMITTED_MODE or review:
