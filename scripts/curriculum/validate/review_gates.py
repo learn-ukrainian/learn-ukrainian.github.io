@@ -224,7 +224,7 @@ import unicodedata
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from functools import cached_property
+from functools import cached_property, lru_cache
 from itertools import permutations
 from pathlib import Path
 
@@ -2005,15 +2005,17 @@ class ReviewGates(Gates):
             members, alternatives = a1_reference.reference_spellings(a1_reference.INVENTORY_PATH)
             closed_class = a1_reference.closed_class_a1(a1_reference.CLOSED_CLASS_PATH)
             for path in (a1_reference.INVENTORY_PATH, a1_reference.CLOSED_CLASS_PATH, Path(config.__file__)):
-                self.report.inputs[str(path.relative_to(Path(__file__).resolve().parents[3]))] = (
-                    hashlib.sha256(path.read_bytes()).hexdigest()
-                )
+                self.report.inputs[str(path.relative_to(Path(__file__).resolve().parents[3]))] = hashlib.sha256(
+                    path.read_bytes()
+                ).hexdigest()
         except (OSError, ValueError, yaml.YAMLError) as error:
             self.fail(codes.A1_REFERENCE_INVALID, f"C29: cannot read reference inventory: {error}", None)
             return
         emit = self.note if mode == "advisory" else self.fail
+        lemma_tags = lru_cache(maxsize=None)(a1_reference.lemma_form_tags)
         for lesson in self.plan["lessons"]:
             vocabulary = lesson["inventory"]["vocabulary"]
+            activities = {activity["id"]: activity for activity in lesson.get("activities") or []}
             for item in vocabulary["core"] + vocabulary["incidental"]:
                 record = self.store.records.get(item["evidence"])
                 if record is None:
@@ -2025,13 +2027,46 @@ class ReviewGates(Gates):
                 if lemma in members and exception is None:
                     continue
                 step_id = next(
-                    (s["id"] for s in lesson["steps"] if record.id in (s.get("introduces") or {}).get("vocabulary", [])), None
+                    (
+                        s["id"]
+                        for s in lesson["steps"]
+                        if record.id in (s.get("introduces") or {}).get("vocabulary", [])
+                    ),
+                    None,
                 )
-                if lemma not in members and exception is None and a1_reference.eligible_closed_class(
-                    record.lemma, record.form_tags, closed_class,
+                if step_id is None:
+                    # Incidentals need not appear in introduces.vocabulary. Use their
+                    # first explicit step reference, including a bound activity.
+                    step_id = next(
+                        (
+                            step["id"]
+                            for step in lesson["steps"]
+                            if record.id in (step.get("uses") or {}).get("vocabulary", [])
+                            or record.id in _ids(_WORD_ID, step.get("teach") or "")
+                            or any(
+                                record.id in _ids(_WORD_ID, activities[activity_id]["focus"])
+                                or record.id in activities[activity_id].get("targets", [])
+                                for activity_id in step.get("practice") or []
+                                if activity_id in activities
+                            )
+                        ),
+                        None,
+                    )
+                if (
+                    lemma not in members
+                    and exception is None
+                    and a1_reference.eligible_closed_class(
+                        record.lemma,
+                        record.form_tags,
+                        closed_class,
+                    )
                 ):
-                    self.note(codes.A1_REFERENCE_CLOSED_CLASS_A1,
-                              f"C29: {record.id} {record.lemma}: closed_class_a1 source attestation", lesson["n"], step_id)
+                    self.note(
+                        codes.A1_REFERENCE_CLOSED_CLASS_A1,
+                        f"C29: {record.id} {record.lemma}: closed_class_a1 source attestation",
+                        lesson["n"],
+                        step_id,
+                    )
                     continue
                 reason = "absent from the A1 reference inventory"
                 if exception is not None:
@@ -2046,7 +2081,9 @@ class ReviewGates(Gates):
                         step = next((s for s in lesson["steps"] if s["id"] == step_id), None)
                         if step is None:
                             reason = f"exception step {step_id} does not exist in this lesson"
-                        elif letter not in {a1_reference.normalize(v) for v in (step.get("introduces") or {}).get("letters", [])}:
+                        elif letter not in {
+                            a1_reference.normalize(v) for v in (step.get("introduces") or {}).get("letters", [])
+                        }:
                             reason = f"exception step {step_id} does not introduce letter {letter}"
                         elif letter not in lemma:
                             reason = f"lemma does not contain exception letter {letter}"
@@ -2060,10 +2097,26 @@ class ReviewGates(Gates):
                             reason = f"decodable inventory alternatives for {letter}: {', '.join(available)}"
                     else:
                         reason = "unknown reference exception class"
+                elif self.taught_before is None or step_id is None:
+                    reason += "; teaching replacements unavailable: introducing-step letter state is unavailable"
+                else:
+                    taught = self._taught_at_steps(lesson)[step_id]
+                    try:
+                        replacements = a1_reference.teaching_replacement_text(
+                            record.form_tags,
+                            lambda word, taught=taught: self._readable(word, taught),
+                            lemma_tags,
+                            a1_reference.INVENTORY_PATH,
+                        )
+                    except quote_bytes.VesumUnavailable:
+                        reason += "; teaching replacements unavailable: VESUM lookup failed"
+                    else:
+                        reason += f"; teaching replacements: {replacements}"
                 emit(
                     codes.A1_REFERENCE_WORD_MISSING if exception is None else codes.A1_REFERENCE_EXCEPTION_INVALID,
                     f"C29: {record.id} {record.lemma}: {reason} (#9582; enforcement={mode})",
-                    lesson["n"], step_id,
+                    lesson["n"],
+                    step_id,
                 )
 
 

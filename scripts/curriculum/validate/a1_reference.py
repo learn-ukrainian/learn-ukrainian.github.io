@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import sqlite3
 import unicodedata
 from functools import lru_cache
 from pathlib import Path
@@ -10,6 +11,8 @@ from pathlib import Path
 import yaml
 
 from scripts.audit.source_inventory_intake import _SAFE_LOADER, _records_from_structured_inventory
+
+from .quote_bytes import VesumUnavailable
 
 INVENTORY_PATH = Path(__file__).resolve().parents[3] / "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml"
 CLOSED_CLASS_PATH = Path(__file__).with_name("data") / "a1-closed-class.yaml"
@@ -67,10 +70,15 @@ def _closed_class_from_bytes(content: bytes) -> frozenset[tuple[str, str]]:
         if not isinstance(row, dict) or row.get("source") != "PULS":
             raise ValueError("invalid A1 closed-class source")
         fields = {"lemma", "kind", "class", "level", "source"}
-        if (set(row) != fields or row.get("kind") != "word" or row.get("level") != "A1" or row.get("class") not in {"pron", "conj", "prep", "part"}
-                or not isinstance(row.get("lemma"), str)
-                or not re.fullmatch(r"[а-яіїєґ’\-]+", row["lemma"])
-                or normalize(row["lemma"]) != row["lemma"]):
+        if (
+            set(row) != fields
+            or row.get("kind") != "word"
+            or row.get("level") != "A1"
+            or row.get("class") not in {"pron", "conj", "prep", "part"}
+            or not isinstance(row.get("lemma"), str)
+            or not re.fullmatch(r"[а-яіїєґ’\-]+", row["lemma"])
+            or normalize(row["lemma"]) != row["lemma"]
+        ):
             raise ValueError("invalid A1 closed-class word")
         key = (row["lemma"], row["class"])
         if key in members:
@@ -89,37 +97,63 @@ def eligible_closed_class(lemma: str, form_tags: frozenset[str], attestations: f
         elif parts[0] in {"conj", "prep", "part"}:
             classes.add(parts[0])
     # A record mixing classes must have an A1 attestation for each selected class.
-    return bool(classes) and all((normalize(lemma), cls) in attestations for cls in classes) and all(
-        "pron" in tags.split(":") or tags.split(":")[0] in {"conj", "prep", "part"} for tags in form_tags
+    return (
+        bool(classes)
+        and all((normalize(lemma), cls) in attestations for cls in classes)
+        and all("pron" in tags.split(":") or tags.split(":")[0] in {"conj", "prep", "part"} for tags in form_tags)
     )
 
 
-def teaching_replacements(form_tags: frozenset[str], readable, lemma_tags, path: Path = INVENTORY_PATH) -> tuple[str, ...]:
-    """Report-only replacements: same POS, open class, common word, >=3 letters."""
-    positions = {tags.split(':')[0] for tags in form_tags}
+def lemma_form_tags(spelling: str) -> frozenset[str]:
+    """Read VESUM tags bound to the candidate lemma; failed lookup stays unknown."""
+    from scripts.verification.vesum import verify_word
+
+    try:
+        analyses = verify_word(spelling)
+    except (OSError, sqlite3.Error) as error:
+        raise VesumUnavailable("replacement VESUM lookup failed") from error
+    return frozenset(row["tags"] for row in analyses if normalize(row["lemma"]) == normalize(spelling))
+
+
+def teaching_replacements(
+    form_tags: frozenset[str], readable, lemma_tags, path: Path = INVENTORY_PATH
+) -> tuple[str, ...]:
+    """Teaching replacements: same POS, open class, common word, >=3 letters."""
+    positions = {tags.split(":")[0] for tags in form_tags}
+    if not positions & {"noun", "adj", "verb", "adv", "numr", "intj", "noninfl"}:
+        return ()  # no supported open-class POS can match an inventory candidate
     closed = {lemma for lemma, _ in closed_class_a1()}
     _, common = reference_spellings(path)
     choices = set()
     for record in _records_from_structured_inventory(
-        yaml.load(path.read_bytes().decode('utf-8-sig'), Loader=_SAFE_LOADER), inventory_path=str(path),
+        yaml.load(path.read_bytes().decode("utf-8-sig"), Loader=_SAFE_LOADER),
+        inventory_path=str(path),
     ):
-        if record.kind == 'phrase':
+        if record.kind == "phrase":
             continue
-        record_positions = set(record.vesum_pos or ()) if record.pos == 'unlabelled' else {record.pos}
-        if not positions & record_positions or record_positions & {'conj', 'prep', 'part'}:
+        record_positions = set(record.vesum_pos or ()) if record.pos == "unlabelled" else {record.pos}
+        if not positions & record_positions or record_positions & {"conj", "prep", "part"}:
             continue
         for spelling in (record.lemma, *record.variants):
             spelling = normalize(spelling)
-            tags = lemma_tags(spelling)
-            if not tags or any("pron" in t.split(":") or t.split(":")[0] in {"prep", "conj", "part"}
-                               or "prop" in t.split(":") for t in tags):
+            if (
+                spelling not in common
+                or spelling in closed
+                or sum(c.isalpha() for c in spelling) < 3
+                or not readable(spelling)
+            ):
                 continue
-            if spelling in common and spelling not in closed and sum(c.isalpha() for c in spelling) >= 3 and readable(spelling):
-                choices.add(spelling)
+            tags = lemma_tags(spelling)
+            if not tags or any(
+                "pron" in t.split(":") or t.split(":")[0] in {"prep", "conj", "part"} or "prop" in t.split(":")
+                for t in tags
+            ):
+                continue
+            choices.add(spelling)
     return tuple(sorted(choices))
 
 
 def teaching_replacement_text(form_tags: frozenset[str], readable, lemma_tags, path: Path = INVENTORY_PATH) -> str:
-    """Render at most three report candidates, or the explicit no-replacement result."""
+    """Render at most three teaching candidates, or the explicit no-replacement result."""
     choices = teaching_replacements(form_tags, readable, lemma_tags, path)
     return ", ".join(choices[:3]) if choices else "no replacement found"

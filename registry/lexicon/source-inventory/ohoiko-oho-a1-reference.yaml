@@ -11399,12 +11399,13 @@ sources:
       vesum: found
   - lemma: бувай
     stressed: Бува́й!
-    pos: intj
+    pos: unlabelled
     kind: word
     locator: p216 Словничок
     variants:
     - бувайте
     vesum: found
+    vesum_pos: []
   - lemma: вибачати
     stressed: вибача́ти
     pos: verb
