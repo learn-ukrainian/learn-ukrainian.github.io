@@ -1175,6 +1175,25 @@ def test_internationalized_host_names_are_rejected(body: str) -> None:
         validate_entry_body(body)
 
 
+@pytest.mark.parametrize(
+    ("separator", "template"),
+    product(
+        ("。", "．", "｡"),
+        ("example{0}com", "https://example{0}com/", "Дивіться example{0}com{0}", "Сайт www{0}example{0}org працює"),
+    ),
+)
+def test_idna_full_stops_separate_ascii_host_labels(separator: str, template: str) -> None:
+    # An all-ASCII host spelled with an IDNA full stop is the same host.
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        validate_entry_body(template.format(separator))
+
+
+@pytest.mark.parametrize("separator", ["。", "．", "｡"])
+def test_idna_full_stops_keep_ukrainian_prose_and_files(separator: str) -> None:
+    for body in ("Модуль готовий{0} Далі буде рев'ю{0}", "і т{0}д{0} і т{0}п{0}", "Оновлено звіт{0}json"):
+        validate_entry_body(body.format(separator))
+
+
 def test_every_unicode_public_suffix_label_is_rejected_in_both_spellings() -> None:
     # Denominator: every IDN top-level label of the vendored snapshot.
     unicode_labels = sorted(

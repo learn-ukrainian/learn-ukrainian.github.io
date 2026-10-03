@@ -174,7 +174,7 @@ _SUFFIX_LABEL_MARKS = sorted(
     }
 )
 _UNICODE_HOST_TOKEN_RE = re.compile(
-    "[\\w.\\-\u0300-\u036f\u3002\uff0e\uff61" + "".join(re.escape(char) for char in _SUFFIX_LABEL_MARKS) + "]+"
+    "[\\w.\\-\u0300-\u036f" + "".join(re.escape(char) for char in _SUFFIX_LABEL_MARKS) + "]+"
 )
 # Exact tracked basenames whose stem ends in a suffix label (localized .uk.md
 # docs, .report.json gate evidence, decolonization .review.json records and
@@ -308,7 +308,6 @@ def _contains_unicode_hostname(body: str) -> bool:
         token = match.group()
         if token.isascii():
             continue
-        token = token.translate(_IDNA_FULL_STOPS)
         raw_labels = token.strip(".").split(".")
         if len(raw_labels) < 2:
             continue
@@ -341,6 +340,9 @@ def _contains_hostname(body: str) -> bool:
     # drive/device filenames retain their existing exemption. Network roots
     # become a double separator regardless of case or slash spelling.
     body = _WINDOWS_NAMESPACE_RE.sub(lambda match: "\\\\" if match["network"] else "\\", body)
+    # Both scanners see an IDNA full stop as ".": example\u3002com is example.com.
+    # The one-to-one mapping keeps match offsets aligned with the body.
+    body = body.translate(_IDNA_FULL_STOPS)
     return _contains_ascii_hostname(body) or _contains_unicode_hostname(body)
 
 
