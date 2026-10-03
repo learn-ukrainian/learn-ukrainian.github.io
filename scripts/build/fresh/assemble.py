@@ -1965,30 +1965,23 @@ def build_resursy_entries(
                     {"code": "resource_citation_omitted", "record": cid, "reason": "citable_metadata_missing"}
                 )
             continue
-        entries.append((cid, "books", {**citation, "author": "", "pages": "", "source": cid}))
-
-    plan_video_uses: dict[str, str] = {}
-    for v_entry in lesson_plan.get("videos", []):
-        if isinstance(v_entry, dict):
-            ev = v_entry.get("evidence")
-            if isinstance(ev, str):
-                plan_video_uses[ev] = str(v_entry.get("use") or "")
+        entries.append((cid, "books", {**citation, "author": "", "pages": ""}))
 
     for vid_id in cited_video_ids:
         vid = videos_by_id.get(vid_id)
         if vid is None:
             raise AssemblerError(VIDEO_NOT_FOUND, f"cited video record {vid_id} not found in pack")
         if vid:
-            chan = str(vid.get("channel") or vid_id)
+            chan = str(vid.get("channel") or "")
             entries.append(
                 (
                     vid_id,
                     "youtube",
                     {
-                        "title": chan,
+                        "title": str(vid.get("title") or chan),
                         "url": str(vid.get("url") or ""),
                         "channel": chan,
-                        "description": plan_video_uses.get(vid_id) or str(vid.get("use") or ""),
+                        "description": chan if vid.get("title") else "",
                     },
                 )
             )
@@ -2707,7 +2700,12 @@ def check_9_stress_and_render(
         act_payload = copy.deepcopy(act_dict)
         act_payload["type"] = plan_act.get("type")
         act_payload["placement"] = plan_act.get("placement")
-        if not act_payload.get("title"):
+        # Quiz and WatchAndRepeat display the instruction prop once. Their
+        # renderer supplies a component heading when there is no separate title.
+        if act_payload.get("type") in {"quiz", "watch-and-repeat"}:
+            if not act_payload.get("title") or act_payload.get("title") == act_payload.get("instruction"):
+                act_payload["title"] = ""
+        elif not act_payload.get("title"):
             act_payload["title"] = act_payload.get("instruction") or ""
         if act_payload.get("type") in _PAGE_INSTRUCTION_FIELD and act_payload.get("instruction"):
             act_payload["title"] = act_payload["instruction"]

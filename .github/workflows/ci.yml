@@ -177,28 +177,34 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Python CI environment
+        uses: ./.github/actions/python-ci-env
+      - name: Install site toolchain
+        working-directory: site
+        run: npm ci
+      # Required even when the full frontend build is outside the changed-path scope.
+      - name: Real MDX compiler regressions
+        run: |
+          .venv/bin/python -m pytest tests/build/test_fresh_page_safety.py tests/build/test_fresh_render_coverage.py \
+            tests/build/test_lesson_assembler.py tests/build/test_fresh_listening.py \
+            -m site_toolchain --strict-markers --override-ini addopts=-q --timeout=120
       - id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 scripts/ci/frontend_change_scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
-      - if: steps.scope.outputs.run == 'true'
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: '22'
-          cache: npm
-          cache-dependency-path: site/package-lock.json
-      - if: steps.scope.outputs.run == 'true'
-        name: Python CI environment
-        uses: ./.github/actions/python-ci-env
       # Drift check sits between build and test:unit, which re-runs hydrate (#7673).
       - if: steps.scope.outputs.run == 'true'
         name: Build, drift check, unit and built-output tests
         working-directory: site
         run: |
           set -euo pipefail
-          npm ci
           npm run build
           git diff --exit-code -- src/data/lexicon-teacher-lesson-keys.json src/data/practice-zno-meta.json
           npm run test:unit
@@ -256,7 +262,7 @@ jobs:
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
             | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" > "$LU_PYTEST_SHARD_FILES"
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
-            --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
+            --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
           # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
           .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \

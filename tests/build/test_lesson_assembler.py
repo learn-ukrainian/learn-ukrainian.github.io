@@ -60,6 +60,7 @@ def test_invalid_numbering_fails_before_writing(gold, tmp_path):
     assert not (tmp_path / "output").exists()
 
 
+@pytest.mark.site_toolchain
 def test_gold_activity_payloads_and_render(gold, tmp_path):
     from scripts.build.mdx_render_gate import check_mdx_render
 

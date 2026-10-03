@@ -546,3 +546,24 @@ def test_verify_fresh_scoped_cli_out_of_plan_is_typed_failure(tmp_path, capsys):
 
     report = json.loads(capsys.readouterr().out)
     assert report["steps"][0]["reason"] == "invalid_lesson_scope"
+
+
+@pytest.mark.parametrize("foreign", [False, True])
+def test_fresh_full_build_attributes_only_this_modules_pages(tmp_path, monkeypatch, foreign):
+    site_mod, plan_file = _mk_fresh(tmp_path)
+    monkeypatch.setattr(vs, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda _: {"passed": True, "failures": []})
+    failed_page = site_mod.parent / "other" / "1.mdx" if foreign else site_mod / "1.mdx"
+
+    def build(log):
+        log.write_text(f"{failed_page}:123:51 Could not parse expression with acorn")
+        return False
+
+    monkeypatch.setattr(vs, "_astro_build", build)
+    report = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, astro_build=True)
+    failure = next(step for step in report["steps"] if step["step"] == "astro_build")
+    assert report["shippable"] is False
+    assert failure["layer"] == ("harness" if foreign else "engine")
+    if foreign:
+        assert "site/src/content/docs/a1/other/1.mdx" in failure["detail"]
+        assert str(tmp_path) not in failure["detail"].split("foreign MDX page(s):", 1)[1]

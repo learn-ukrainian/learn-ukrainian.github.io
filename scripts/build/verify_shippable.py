@@ -295,18 +295,34 @@ def _astro_build(log_path: Path) -> bool:
     return proc.returncode == 0
 
 
-def _astro_build_step(log_path: Path) -> dict:
+def _astro_build_step(log_path: Path, *, fresh_pages: list[Path] | None = None) -> dict:
     """Keep environment failures distinct from MDX compilation failures."""
     ok = _astro_build(log_path)
     output = log_path.read_text(encoding="utf-8") if log_path.is_file() else ""
     # Only a positively identified page/compiler defect is attributable to the
     # engine. Hydration, dependencies, process death and timeouts are harness.
-    page_failure = re.search(r"MDXError|Could not parse expression|\.mdx:\d+:\d+", output)
+    filenames = re.findall(r"[^\s\"'():]+\.mdx(?=:\d+:\d+)", output)
+    owned = {page.resolve() for page in (fresh_pages or [])}
+    resolved = [
+        Path(name).resolve() if Path(name).is_absolute() else (PROJECT_ROOT / "site" / name).resolve()
+        for name in filenames
+    ]
+    page_failure = bool(resolved) and all(page in owned for page in resolved)
+    foreign = [
+        page.relative_to(PROJECT_ROOT).as_posix() if page.is_relative_to(PROJECT_ROOT) else page.name
+        for page in resolved
+        if page not in owned
+    ]
     return {
         "step": "astro_build",
         "passed": ok,
         "layer": None if ok else "engine" if page_failure else "harness",
-        "detail": "astro build green" if ok else f"astro build FAILED — full log: {log_path}",
+        "detail": "astro build green"
+        if ok
+        else (
+            f"astro build FAILED — full log: {log_path}"
+            + (f"; foreign MDX page(s): {', '.join(foreign)}" if foreign else "")
+        ),
     }
 
 
@@ -400,7 +416,7 @@ def verify(
         if astro_build:
             log_path = PROJECT_ROOT / "batch_state" / "verify_shippable" / f"{level}-{slug}.astro-build.log"
             log_path.parent.mkdir(parents=True, exist_ok=True)
-            steps.append(_astro_build_step(log_path))
+            steps.append(_astro_build_step(log_path, fresh_pages=mdx_files))
 
         return _finalize(level, slug, steps)
 

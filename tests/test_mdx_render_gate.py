@@ -11,7 +11,7 @@ import shutil
 
 import pytest
 
-from scripts.build.mdx_render_gate import check_mdx_render, iter_template_literals
+from scripts.build.mdx_render_gate import _node_eval_one, iter_template_literals
 from scripts.generate_mdx.utils import dump_json_for_jsx
 
 node_required = pytest.mark.skipif(
@@ -50,9 +50,9 @@ def test_canonical_escaper_round_trips_every_tricky_char():
     # " ` ${ \ and newline — each one breaks a naive template-literal embed
     payload = [{"w": 'ка"з"ка', "n": "back\\slash", "t": "x${y}", "k": "a`b", "m": "l1\nl2"}]
     mdx = f"<VocabCard words={{JSON.parse(`{dump_json_for_jsx(payload, compact=True)}`)}} />"
-    report = check_mdx_render(mdx)
-    assert report["passed"] is True, report
-    assert report["islands_checked"] == 1
+    inners = iter_template_literals(mdx)
+    assert len(inners) == 1
+    assert _node_eval_one(inners[0]) is None
 
 
 @node_required
@@ -65,9 +65,7 @@ def test_under_escaped_quote_is_caught():
         .replace("${", "\\${")
     )
     mdx = f"<VocabCard words={{JSON.parse(`{bad}`)}} />"
-    report = check_mdx_render(mdx)
-    assert report["passed"] is False
-    assert report["failures"]
+    assert "SyntaxError" in _node_eval_one(iter_template_literals(mdx)[0])
 
 
 @node_required
@@ -79,21 +77,21 @@ def test_renderers_duplicate_escaper_round_trips():
 
     payload = [{"w": 'він "сказав"', "m": "рядок1\nрядок2", "p": "a`b"}]
     mdx = f"<X items={{JSON.parse(`{flat_dump(payload)}`)}} />"
-    assert check_mdx_render(mdx)["passed"] is True
+    assert _node_eval_one(iter_template_literals(mdx)[0]) is None
 
 
 @node_required
 def test_sentinel_catches_template_interpolation():
     # an unescaped ${...} that would run code (escaper bypass) must FAIL, not pass
     mdx = "<X p={JSON.parse(`${process.exit(0)}`)} />"
-    assert check_mdx_render(mdx)["passed"] is False
+    assert "did not reach JSON.parse" in _node_eval_one(iter_template_literals(mdx)[0])
 
 
 @node_required
 def test_clean_payload_passes():
     payload = [{"word": "коляда", "translation": "carol"}]
     mdx = f"<VocabCard words={{JSON.parse(`{dump_json_for_jsx(payload)}`)}} />"
-    assert check_mdx_render(mdx)["passed"] is True
+    assert _node_eval_one(iter_template_literals(mdx)[0]) is None
 
 
 # --- graceful degradation -----------------------------------------------------

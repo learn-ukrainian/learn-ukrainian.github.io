@@ -391,6 +391,7 @@ def test_fresh_translate_candidate_edges_match_the_parser(with_options, render_e
 
 
 @pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.site_toolchain
 def test_fresh_every_plan_and_draft_text_field_is_mdx_safe(level, render_environment):
     from scripts.build.mdx_render_gate import check_mdx_render
 
