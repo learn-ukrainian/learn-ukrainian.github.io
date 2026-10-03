@@ -9,12 +9,13 @@ from __future__ import annotations
 
 import json
 import logging
+from types import SimpleNamespace
 
 import pytest
 
 from scripts.agent_runtime import acpx_pilot, codex_hook_probe
 from scripts.agent_runtime.adapters.acpx import AcpxAdapter
-from scripts.agent_runtime.adapters.claude import _tool_calls_from_claude_session_jsonl
+from scripts.agent_runtime.adapters.claude import ClaudeAdapter, _tool_calls_from_claude_session_jsonl
 from scripts.agent_runtime.jsonl import jsonl_lines
 from scripts.agent_runtime.tool_calls import parse_json_events
 
@@ -79,6 +80,26 @@ def test_acpx_stream_joined_by_unicode_line_breaks_fails_closed(sep):
     result = AcpxAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
 
     assert result.ok is False and "malformed NDJSON at line 1" in result.stderr_excerpt
+
+
+_VERDICT_SCHEMA = {
+    "type": "object",
+    "properties": {"verdict": {"type": "string"}},
+    "required": ["verdict"],
+    "additionalProperties": False,
+}
+
+
+@UNICODE_LINE_BREAKS
+def test_claude_structured_stream_with_unicode_line_breaks_is_intact(sep):
+    stdout = _jsonl(
+        {"type": "assistant", "message": {"content": [{"type": "text", "text": f"a{sep}b"}]}},
+        {"type": "result", "subtype": "success", "is_error": False, "structured_output": {"verdict": f"ok{sep}"}},
+    )
+    plan = SimpleNamespace(cwd=None, metadata={"output_schema": _VERDICT_SCHEMA})
+    result = ClaudeAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+
+    assert result.ok is True and json.loads(result.response) == {"verdict": f"ok{sep}"}
 
 
 @UNICODE_LINE_BREAKS
