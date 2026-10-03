@@ -4,6 +4,7 @@ import asyncio
 import importlib.util
 import io
 import json
+import shlex
 import subprocess
 import sys
 import tarfile
@@ -363,6 +364,186 @@ def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Pat
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
     assert str(clone / "agents_extensions/shared/hooks/guard-reviewer-publish.py") in commands
     assert all(Path(command).is_file() for command in commands)
+
+
+_ROOT = Path(__file__).resolve().parents[2]
+_WRAPPER = 'bash "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh"'
+_PINNED_GUARDS = ("guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py")
+
+
+def _guard_source_tree(root: Path, commands: list[str], *, interpreter: bool = True) -> Path:
+    """A checkout-shaped tree whose settings name ``commands`` as Bash PreToolUse hooks."""
+    hooks = root / "agents_extensions/shared/hooks"
+    hooks.mkdir(parents=True)
+    for name in ("enforce-venv.sh", "guard-secret-print.py", *_PINNED_GUARDS):
+        (hooks / name).write_text("#!/bin/sh\n", encoding="utf-8")
+    groups = [{"matcher": "Bash", "hooks": [{"type": "command", "command": c, "timeout": 7} for c in commands]}]
+    (root / "agents_extensions/shared/settings.json").write_text(
+        json.dumps({"hooks": {"PreToolUse": groups}}), encoding="utf-8"
+    )
+    if interpreter:
+        python = root / ".venv/bin/python"
+        python.parent.mkdir(parents=True)
+        python.write_text("", encoding="utf-8")
+    return hooks
+
+
+def _settings_from(root: Path, monkeypatch) -> list[dict]:
+    from scripts.agent_runtime.adapters import claude
+
+    monkeypatch.setattr(claude, "__file__", str(root / "scripts/agent_runtime/adapters/claude.py"))
+    settings = json.loads(claude._worker_guard_settings())
+    return [hook for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
+
+
+def test_worker_guards_run_parser_guards_under_the_project_interpreter(tmp_path: Path, monkeypatch) -> None:
+    from scripts.agent_runtime.adapters.claude import PROJECT_PYTHON_GUARDS
+
+    assert set(_PINNED_GUARDS) == PROJECT_PYTHON_GUARDS
+    hooks_dir = _guard_source_tree(
+        tmp_path,
+        [
+            "$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-venv.sh",
+            *(f"{_WRAPPER} {name}" for name in _PINNED_GUARDS),
+            "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-secret-print.py",
+            "sh -c 'entire hooks claude-code pre-task || true'",
+        ],
+    )
+    hooks = _settings_from(tmp_path, monkeypatch)
+    python = str(tmp_path / ".venv/bin/python")
+    assert [hook["command"] for hook in hooks] == [
+        str(hooks_dir / "enforce-venv.sh"),
+        *(shlex.join([python, str(hooks_dir / name)]) for name in _PINNED_GUARDS),
+        str(hooks_dir / "guard-secret-print.py"),
+    ]
+    assert all(hook["timeout"] == 7 and hook["type"] == "command" for hook in hooks)
+
+
+_SPLIT_WRAPPER = 'bash "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-"hook.sh'
+_ESCAPED_WRAPPER = r"bash $CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python\-hook.sh"
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        f"{_SPLIT_WRAPPER} guard-pr-merge.py",
+        f"{_WRAPPER} 'guard-pr-'merge.py",
+        f"{_ESCAPED_WRAPPER} guard\\-pr-merge.py",
+        f'{_WRAPPER} "guard-pr-merge.py"',
+    ],
+)
+def test_worker_guards_classify_the_wrapper_after_tokenization(tmp_path: Path, monkeypatch, command: str) -> None:
+    hooks_dir = _guard_source_tree(tmp_path, [command])
+    [hook] = _settings_from(tmp_path, monkeypatch)
+    assert hook["command"] == shlex.join([str(tmp_path / ".venv/bin/python"), str(hooks_dir / "guard-pr-merge.py")])
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        '"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-secret-"print.py',
+        r"$CLAUDE_PROJECT_DIR/.claude/hooks/guard\-secret-print.py",
+    ],
+)
+def test_worker_guards_classify_the_plain_path_after_tokenization(tmp_path: Path, monkeypatch, command: str) -> None:
+    hooks_dir = _guard_source_tree(tmp_path, [command])
+    [hook] = _settings_from(tmp_path, monkeypatch)
+    assert hook["command"] == str(hooks_dir / "guard-secret-print.py")
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "sh -c 'entire hooks claude-code pre-task || true'",
+        "echo hello",
+        "",
+    ],
+)
+def test_worker_guards_leave_unrelated_hooks_untouched(tmp_path: Path, command: str) -> None:
+    from scripts.agent_runtime.adapters.claude import _worker_guard_invocation
+
+    assert _worker_guard_invocation(command, tmp_path) is None
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        # Unknown guard, extra or missing arguments in the canonical spelling.
+        f"{_WRAPPER} guard-secret-print.py",
+        f"{_WRAPPER} guard-pr-merge.py --extra",
+        f"{_WRAPPER} ../hooks/guard-pr-merge.py",
+        f"{_WRAPPER}",
+        # The same defects behind split quoting and backslash spellings.
+        f"{_SPLIT_WRAPPER} guard-pr-merge.py --extra",
+        f"{_SPLIT_WRAPPER}",
+        f"{_SPLIT_WRAPPER} guard-secret-print.py",
+        f"{_ESCAPED_WRAPPER} guard-pr-merge.py extra",
+        f"{_ESCAPED_WRAPPER}",
+        f"{_WRAPPER} 'guard-pr-'merge.py --extra",
+        # Another launcher, wrapper path or nesting.
+        'sh "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh" guard-pr-merge.py',
+        '"$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh" guard-pr-merge.py',
+        'bash "/elsewhere/run-project-python-hook.sh" guard-pr-merge.py',
+        "sh -c 'bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh\" guard-pr-merge.py'",
+        "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh",
+        # A parser guard or the hooks directory outside both supported forms.
+        "/usr/bin/python3 'guard-pr-'merge.py",
+        "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-pr-merge.py --extra",
+        "bash $CLAUDE_PROJECT_DIR/.claude/hooks/enforce-venv.sh",
+        "$CLAUDE_PROJECT_DIR/.claude/hooks/../hooks/guard-pr-merge.py",
+        "$CLAUDE_PROJECT_DIR/.claude/hooks/",
+    ],
+)
+def test_worker_guards_refuse_other_fleet_guard_forms(tmp_path: Path, monkeypatch, command: str) -> None:
+    _guard_source_tree(tmp_path, [command])
+    with pytest.raises(RuntimeError, match="Claude worker guard has an unsupported form"):
+        _settings_from(tmp_path, monkeypatch)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [f"{_WRAPPER} 'guard-pr-merge.py", "sh -c 'entire hooks claude-code pre-task"],
+)
+def test_worker_guards_refuse_an_unreadable_hook_command(tmp_path: Path, monkeypatch, command: str) -> None:
+    _guard_source_tree(tmp_path, [command])
+    with pytest.raises(RuntimeError, match="unreadable"):
+        _settings_from(tmp_path, monkeypatch)
+
+
+def test_grok_agent_definition_keeps_a_split_quoted_parser_guard(tmp_path: Path, monkeypatch) -> None:
+    from scripts.agent_runtime.adapters.grok_build import _guard_agent_definition
+
+    hooks_dir = _guard_source_tree(tmp_path, [f"{_SPLIT_WRAPPER} guard-pr-merge.py"])
+    _settings_from(tmp_path, monkeypatch)  # points the adapter at the fixture tree
+    definition = _guard_agent_definition(
+        name="probe", description="probe", body="probe", publish_guard=False, native_aliases=False
+    )
+    pinned = shlex.join([str(tmp_path / ".venv/bin/python"), str(hooks_dir / "guard-pr-merge.py")])
+    bridge = shlex.quote(str(_ROOT / "scripts/agent_runtime/grok_hook_bridge.py"))
+    assert json.dumps(f"{bridge} {shlex.quote(pinned)}") in definition
+
+
+@pytest.mark.parametrize(
+    "command",
+    [f"{_WRAPPER} guard-pr-merge.py", "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-pr-merge.py"],
+)
+def test_worker_guards_refuse_a_missing_guard_file(tmp_path: Path, monkeypatch, command: str) -> None:
+    hooks_dir = _guard_source_tree(tmp_path, [command])
+    (hooks_dir / "guard-pr-merge.py").unlink()
+    with pytest.raises(RuntimeError, match="Claude worker guard unavailable"):
+        _settings_from(tmp_path, monkeypatch)
+
+
+def test_worker_guards_fail_closed_without_a_project_interpreter(tmp_path: Path, monkeypatch) -> None:
+    # No .venv in the tree, and the running interpreter belongs to another checkout.
+    root = tmp_path / "checkout"
+    _guard_source_tree(root, [f"{_WRAPPER} guard-pr-merge.py"], interpreter=False)
+    foreign = tmp_path / "other/.venv/bin/python"
+    foreign.parent.mkdir(parents=True)
+    foreign.write_text("", encoding="utf-8")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+    with pytest.raises(FileNotFoundError, match="project interpreter not found"):
+        _settings_from(root, monkeypatch)
 
 
 def test_readonly_transport_rejects_every_push_wrapper(tmp_path: Path) -> None:
