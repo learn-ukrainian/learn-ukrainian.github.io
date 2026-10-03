@@ -19,6 +19,7 @@ import unicodedata
 from collections.abc import Mapping
 from datetime import UTC, datetime
 from functools import wraps
+from itertools import pairwise
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -203,26 +204,56 @@ def _load_matcher(tooling: Path):
         raise PublishBlocked("OPSEC: private matcher or rules unavailable/incompatible; write refused.") from None
 
 
-def _scan(text: str, loaded) -> list[dict]:
+def _validated_matcher_hits(text: str, loaded) -> list[tuple[str, int, int, int]]:
+    """Validate matcher identities and half-open offsets without exposing text."""
     import contextlib
     import io
 
-    text = normalize_for_scan(text)
     matcher, identities, _ = loaded
     try:
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            hits = matcher.scan(text)
-        findings = []
+            hits = list(matcher.scan(text))
+        validated = []
         for hit in hits:
             rule, level, (start, end) = hit.rule_id, hit.class_id, hit.span
             if (
                 not re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", rule)
                 or identities.get(rule) != level
+                or type(level) is not int
                 or level not in range(1, 7)
-                or not 0 <= start <= end <= len(text)
+                or type(start) is not int
+                or type(end) is not int
+                or not 0 <= start < end <= len(text)
             ):
                 raise ValueError
-            findings.append({"rule_id": rule, "class": level, "start": start, "line": text.count("\n", 0, start) + 1})
+            validated.append((rule, level, start, end))
+        return validated
+    except Exception:
+        raise PublishBlocked("OPSEC: private matcher result incompatible; write refused.") from None
+
+
+def absolute_path_spans(text: str, *, tooling: Path | None = None) -> list[tuple[int, int]]:
+    """Return validated absolute-path spans in normalized text; never tokenize locally."""
+    loaded = _load_matcher(tooling or private_tooling())
+    if loaded[1].get("3-absolute-path") != 3:
+        raise PublishBlocked("OPSEC: absolute-path rule unavailable/incompatible; write refused.")
+    spans = sorted(
+        (start, end)
+        for rule, _, start, end in _validated_matcher_hits(normalize_for_scan(text), loaded)
+        if rule == "3-absolute-path"
+    )
+    if any(left[1] > right[0] for left, right in pairwise(spans)):
+        raise PublishBlocked("OPSEC: private matcher result incompatible; write refused.")
+    return spans
+
+
+def _scan(text: str, loaded) -> list[dict]:
+    text = normalize_for_scan(text)
+    findings = [
+        {"rule_id": rule, "class": level, "start": start, "line": text.count("\n", 0, start) + 1}
+        for rule, level, start, _ in _validated_matcher_hits(text, loaded)
+    ]
+    try:
         for match in CREDENTIAL_TOKEN_PATTERN.finditer(text):
             start = match.start()
             findings.append(

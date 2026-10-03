@@ -240,6 +240,8 @@ def test_every_ladder_lists_the_cursor_grok_seat_last():
 @pytest.fixture
 def _publishing(synthetic_opsec, publisher_transport, monkeypatch):
     monkeypatch.setenv("GH_REPO", "unit/public")
+    # Receipt identity tests leave path matching to the recorder's own tests.
+    monkeypatch.setattr(recorder, "absolute_path_spans", lambda text: [])
 
 
 def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthropic"}), **extra):
