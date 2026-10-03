@@ -243,4 +243,139 @@ real_git="$(_real_git)" || {
   exit 127
 }
 
+# Pushes publish commit messages and ref and tag names (#9339). Git runs the
+# pre-push hook on the exact ref updates it is about to send, so every push
+# (also one an alias expands to) runs with core.hooksPath pinned to the scanner's
+# hooks directory. As the last command-line assignment the pin outranks every
+# other configuration source, and Git hands it to recursive submodule pushes.
+# A push that would skip the hook, or whose scanner is unusable, is refused.
+
+# Git's builtins (git --list-cmds=builtins, 2.53, push aside) need no alias lookup: Git ignores
+# aliases that hide them. Any other command is looked up as an alias.
+_OPSEC_BUILTINS="
+  add am annotate apply archive backfill bisect blame branch bugreport bundle cat-file check-attr
+  check-ignore check-mailmap check-ref-format checkout checkout--worker checkout-index cherry cherry-pick
+  clean clone column commit commit-graph commit-tree config count-objects credential credential-cache
+  credential-cache--daemon credential-store describe diagnose diff diff-files diff-index diff-pairs
+  diff-tree difftool fast-export fast-import fetch fetch-pack fmt-merge-msg for-each-ref for-each-repo
+  format-patch fsck fsck-objects fsmonitor--daemon gc get-tar-commit-id grep hash-object help hook
+  index-pack init init-db interpret-trailers last-modified log ls-files ls-remote ls-tree mailinfo mailsplit
+  maintenance merge merge-base merge-file merge-index merge-ours merge-recursive merge-recursive-ours
+  merge-recursive-theirs merge-subtree merge-tree mktag mktree multi-pack-index mv name-rev notes
+  pack-objects pack-redundant pack-refs patch-id pickaxe prune prune-packed pull range-diff read-tree rebase
+  receive-pack reflog refs remote remote-ext remote-fd repack replace replay repo rerere reset restore
+  rev-list rev-parse revert rm send-pack shortlog show show-branch show-index show-ref sparse-checkout stage
+  stash status stripspace submodule--helper switch symbolic-ref tag unpack-file unpack-objects update-index
+  update-ref update-server-info upload-archive upload-archive--writer upload-pack var verify-commit
+  verify-pack verify-tag version whatchanged worktree write-tree
+"
+
+_opsec_builtin() {
+  [[ " ${_OPSEC_BUILTINS//$'\n'/ } " == *" $1 "* ]]
+}
+
+_opsec_refuse() {
+  echo "OPSEC: $1; push refused." >&2
+  exit 2
+}
+
+# git push accepts --no-verify and its unique abbreviations; shorter prefixes are
+# ambiguous today and refused too, wherever they appear.
+_opsec_skips_hook() {
+  local arg name
+  for arg in "$@"; do
+    name="${arg%%=*}"
+    if [[ ${#name} -ge 3 && "--no-verify" == "$name"* ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Global options as git.c reads them; those listed take the next argument.
+_opsec_index=0
+_opsec_shallow=0
+_opsec_informational=0
+while [[ $_opsec_index -lt $# ]]; do
+  _opsec_arg="${@:_opsec_index+1:1}"
+  case "$_opsec_arg" in
+    -C | -c | --git-dir | --work-tree | --namespace | --config-env | --attr-source) _opsec_index=$((_opsec_index + 2)) ;;
+    --shallow-file) _opsec_shallow=1 && _opsec_index=$((_opsec_index + 2)) ;;
+    -h | --help | -v | --version | --exec-path | --html-path | --man-path | --info-path)
+      _opsec_informational=1 && _opsec_index=$((_opsec_index + 1)) ;;
+    -*) _opsec_index=$((_opsec_index + 1)) ;;
+    *) break ;;
+  esac
+done
+_opsec_globals=("${@:1:_opsec_index}")
+_opsec_command="${@:_opsec_index+1:1}"
+_opsec_push=0
+_opsec_alias_options=0
+_opsec_expansion=()
+if [[ "$_opsec_command" == "push" ]]; then
+  _opsec_push=1
+elif [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
+  # Follow aliases as Git does: the first word after any options names the next command.
+  _opsec_name="$_opsec_command"
+  for _opsec_depth in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16; do
+    _opsec_builtin "$_opsec_name" && break
+    _opsec_value="$("$real_git" "${_opsec_globals[@]}" config --get "alias.$_opsec_name" 2>/dev/null)" || break
+    # A shell alias runs its commands outside this shim (a recorded gap, like absolute git).
+    [[ "$_opsec_value" == '!'* ]] && break
+    _opsec_words=()
+    read -r -d '' -a _opsec_words <<<"$_opsec_value" || true
+    _opsec_next=""
+    _opsec_skip=0
+    for _opsec_word in "${_opsec_words[@]}"; do
+      _opsec_word="${_opsec_word//[\'\"\\]/}"
+      _opsec_expansion+=("$_opsec_word")
+      if [[ -n "$_opsec_next" ]]; then
+        continue
+      elif [[ "$_opsec_skip" == 1 ]]; then
+        _opsec_skip=0
+      elif [[ "$_opsec_word" == -* ]]; then
+        # An option in an alias (-c, --config-env) is applied after the pin and could replace it.
+        _opsec_alias_options=1
+        [[ "$_opsec_word" == -c || "$_opsec_word" == --config-env ]] && _opsec_skip=1
+      else
+        _opsec_next="$_opsec_word"
+      fi
+    done
+    [[ -z "$_opsec_next" ]] && break
+    if [[ "$_opsec_next" == "push" ]]; then
+      _opsec_push=1
+      break
+    fi
+    _opsec_name="$_opsec_next"
+  done
+fi
+
+if [[ "$_opsec_push" == 1 ]]; then
+  if [[ "$_opsec_alias_options" == 1 ]]; then
+    _opsec_refuse "an alias that sets Git options before push could replace the scan's hooks path"
+  fi
+  if _opsec_skips_hook "${@:_opsec_index+2}" "${_opsec_expansion[@]}"; then
+    _opsec_refuse "--no-verify would skip the push scan"
+  fi
+  if [[ "$_opsec_shallow" == 1 ]]; then
+    _opsec_refuse "--shallow-file is not supported for a scanned push"
+  fi
+  _opsec_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd -P)"
+  _opsec_hooks="$_opsec_root/scripts/opsec/push_hooks"
+  _opsec_python="$_opsec_root/.venv/bin/python"
+  if [[ ! -x "$_opsec_python" ]]; then
+    # A linked worktree has no interpreter of its own: use the main checkout's.
+    _opsec_common="$(env -u GIT_DIR -u GIT_COMMON_DIR -u GIT_WORK_TREE "$real_git" -C "$_opsec_root" \
+      rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    _opsec_python="${_opsec_common:+$(dirname "$_opsec_common")/.venv/bin/python}"
+  fi
+  for _opsec_hook in pre-push reference-transaction chain; do
+    [[ -f "$_opsec_hooks/$_opsec_hook" && -x "$_opsec_hooks/$_opsec_hook" ]] || _opsec_refuse "push scanner hooks unavailable"
+  done
+  [[ -f "$_opsec_root/scripts/opsec/git_push.py" ]] || _opsec_refuse "push scanner unavailable"
+  [[ -n "$_opsec_python" && -x "$_opsec_python" ]] || _opsec_refuse "project interpreter unavailable"
+  export LU_OPSEC_PUSH_PYTHON="$_opsec_python" LU_OPSEC_REAL_GIT="$real_git"
+  exec "$real_git" "${_opsec_globals[@]}" -c "core.hooksPath=$_opsec_hooks" "${@:_opsec_index+1}"
+fi
+
 exec "$real_git" "$@"

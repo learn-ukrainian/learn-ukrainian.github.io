@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# chain <hook> [<argument>...]: run the caller's own hook of that name with
+# these arguments and this input, as Git would without the hooks path the agent
+# git shim pins (#9339). That hooks path is the last core.hooksPath value that
+# is not this directory, else the repository's hooks directory; a relative value
+# is relative to the directory Git runs hooks in, which is the current one.
+set -u
+name="$1"
+shift
+ours="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+git="${LU_OPSEC_REAL_GIT:-git}"
+dir=""
+while IFS= read -r -d '' value; do
+  if [[ "$(cd "$value" 2>/dev/null && pwd -P)" != "$ours" ]]; then
+    dir="$value"
+  fi
+done < <("$git" config -z --type=path --get-all core.hooksPath)
+if [[ -z "$dir" ]]; then
+  dir="$("$git" rev-parse --git-common-dir)/hooks" || exit 1
+fi
+hook="$dir/$name"
+if [[ -f "$hook" && -x "$hook" ]]; then
+  exec "$hook" "$@"
+fi
+exit 0

@@ -31,6 +31,10 @@ def spy(calls):
             return subprocess.CompletedProcess(args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), "")
         if args[:3] == ["gh", "pr", "checks"] and "--json" in args and args[args.index("--json") + 1] == "name,bucket,state":
             return subprocess.CompletedProcess(args, 0, "[]", "")
+        if args[:5] == ["gh", "api", "--method", "POST", "graphql"] and "isMergeQueueEnabled viewerMergeHeadlineText" in Path(args[6]).read_text():
+            pull = {"headRefOid": "a" * 40, "isMergeQueueEnabled": False,
+                    "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "* clean"}
+            return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
         record = {"argv": args, "env": kwargs.get("env", {})}
         for flag in ("--body-file", "--notes-file", "--input"):
             if flag in args:
@@ -191,7 +195,6 @@ def test_artifact_names_block_and_files_are_not_reread(synthetic_opsec, tmp_path
     "verb,fields",
     [
         ("issue-close", {"number": 1}),
-        ("pr-merge", {"number": 1}),
         ("pr-review", {"number": 1, "verdict": "approve"}),
         ("pr-disarm", {"number": 1}),
     ],
@@ -330,6 +333,8 @@ def test_private_destination_last_selector_and_resource_url(selectors, environme
         ("subissues-next", {"number": 1, "cursor": TOKEN}),
         ("queue-snapshot", {"branches": ['unit") { mutation {x} }']}),
         ("subissue-batch", {"cursors": {1: 'unit") { mutation {x} }'}, "body_roots": {1}}),
+        ("default-head", {}),
+        ("squash-text", {"number": 1}),
     ],
 )
 def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
@@ -365,6 +370,8 @@ def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, mo
         ("graphql", {"query": "mutation{x}"}),
         ("subissue-batch", {"cursors": {"unit": None}, "body_roots": set()}),
         ("membership", {"number": 1, "query": "mutation{x}"}),
+        ("default-head", {"number": 1}),
+        ("squash-text", {"number": 1, "query": "mutation{x}"}),
     ],
 )
 def test_typed_reads_refuse_arbitrary_documents_paths_and_fields(operation, fields):

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Git runs this hook for every push the agent git shim makes, which pins
+# core.hooksPath here (#9339): the scanner reads the ref updates Git is about to
+# send, then runs the caller's own pre-push hook. Without the interpreter the
+# shim provides, the push is refused.
+python="${LU_OPSEC_PUSH_PYTHON:-}"
+scanner="$(dirname "${BASH_SOURCE[0]}")/../git_push.py"
+if [[ -z "$python" || ! -x "$python" || ! -r "$scanner" ]]; then
+  echo "OPSEC: push scanner unavailable; push refused." >&2
+  exit 1
+fi
+exec "$python" "$scanner" "$@"
