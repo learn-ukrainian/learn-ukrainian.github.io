@@ -167,16 +167,19 @@ def init_repo(
                 "scripts/deploy/agent_directory.py",
             ]
         )
+        # Whole packages, as Git tracks them: package data (migrations, the
+        # vendored public suffix list the session-stream store loads at import)
+        # ships with the code, and no suffix filter can silently drop it.
         sources.extend(
-            str(path.relative_to(REPO_ROOT))
-            for source_dir in (
-                REPO_ROOT / "scripts/control_plane",
-                REPO_ROOT / "scripts/session_canary",
-                REPO_ROOT / "scripts/session_supervisor",
-                REPO_ROOT / "agents_extensions/shared/session_streams",
-            )
-            for path in sorted(source_dir.rglob("*"))
-            if path.is_file() and path.suffix in {".py", ".sql"}
+            git(
+                REPO_ROOT,
+                "ls-files",
+                "--",
+                "scripts/control_plane",
+                "scripts/session_canary",
+                "scripts/session_supervisor",
+                "agents_extensions/shared/session_streams",
+            ).stdout.splitlines()
         )
         (primary / "package.json").write_text(
             '{"scripts":{"agents:deploy":"scripts/deploy_prompts.sh"}}\n',
