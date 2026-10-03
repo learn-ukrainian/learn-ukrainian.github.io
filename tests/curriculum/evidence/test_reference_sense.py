@@ -1521,3 +1521,31 @@ def test_book_gloss_builds_verifies_and_gates_plans(book_bound, monkeypatch):
     assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context) == []
     record["gloss_en"] = "target"
     assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context)
+
+
+def test_unrelated_aliases_keep_the_validated_exemption_but_an_aliased_gloss_does_not(book_bound):
+    root, api, _binding = book_bound
+    context = bindings.Context.read("a1", root)
+    pool = api.gloss_rows([("synthetic", "noun")]).raw[("synthetic", "noun")]
+    selection = context.select(WORD, pool, None)
+    shared = {"lemma": "synthetic", "row_sha256": "0" * 64}
+    record = {
+        **WORD,
+        "forms": [{"form": "a", "vesum": shared}, {"form": "b", "vesum": shared}],
+        "gloss_en": selection.gloss,
+        "gloss_source": selection.source,
+        "gloss_basis": selection.basis,
+    }
+    # The builder shares one VESUM mapping between readings; the dumper writes it as an alias.
+    store = lock_yaml({"words": [record]})
+    assert b"*id001" in store
+    redacted = sense_cli._redact_validated_locations(store, context, {"W-001": WORD}, api, kind="words")
+    assert b"TARGET" not in redacted and b"*id001" in redacted
+    aliased = store.replace(b"gloss_en: TARGET", b"gloss_en: *gloss").replace(b"words:", b"note: &gloss TARGET\nwords:")
+    assert sense_cli._redact_validated_locations(aliased, context, {"W-001": WORD}, api, kind="words") == aliased
+
+
+def lock_yaml(data):
+    from scripts.curriculum.evidence import lock
+
+    return lock.yaml_bytes(data)

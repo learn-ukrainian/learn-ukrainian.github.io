@@ -68,11 +68,26 @@ def _redact_validated_locations(
         return content
     try:
         text = content.decode("utf-8")
-        # Aliases can point outside the allowed location, and duplicate keys
-        # make the parsed value's origin ambiguous. Neither receives exemptions.
-        if any(isinstance(event, yaml.AliasEvent) for event in yaml.parse(text)):
-            return content
         tree = yaml.compose(text)
+        # An alias repeats its anchor's value outside the allowed location, so a
+        # node reached more than once (directly or inside an aliased subtree) is
+        # never exempt. Unrelated aliases elsewhere in the file void nothing.
+        reached = Counter()
+
+        def reach(node, ancestors: frozenset[int] = frozenset()) -> None:
+            reached[id(node)] += 1
+            if id(node) in ancestors:
+                return
+            inner = ancestors | {id(node)}
+            if isinstance(node, yaml.SequenceNode):
+                for child in node.value:
+                    reach(child, inner)
+            elif isinstance(node, yaml.MappingNode):
+                for key, value in node.value:
+                    reach(key, inner)
+                    reach(value, inner)
+
+        reach(tree)
 
         def mapping(node):
             if not isinstance(node, yaml.MappingNode):
@@ -116,7 +131,11 @@ def _redact_validated_locations(
                 if isinstance(selection.ref, dict) and "span" in selection.ref:
                     allowed.append(mapping(fields["gloss_ref"])["span"])
             for scalar in allowed:
-                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != binding[shown_field]:
+                if (
+                    not isinstance(scalar, yaml.ScalarNode)
+                    or scalar.value != binding[shown_field]
+                    or reached[id(scalar)] != 1
+                ):
                     return content
                 ranges.append((scalar.start_mark.index, scalar.end_mark.index))
         for start, end in sorted(ranges, reverse=True):
