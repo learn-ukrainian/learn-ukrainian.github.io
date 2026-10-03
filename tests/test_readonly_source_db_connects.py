@@ -105,6 +105,44 @@ WRITABLE_CASES = {
     "aliased_import": 'from sqlite3 import connect as c\nconn = c("vesum.db")\n',
     "mode_rw": 'import sqlite3\nconn = sqlite3.connect(SOURCES_DB.as_uri() + "?mode=rw", uri=True)\n',
     "mode_ro_without_uri_flag": 'import sqlite3\nconn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro")\n',
+    "explicit_argument_overrides_default": textwrap.dedent(
+        """
+        import sqlite3
+        def read(path="cache.db"):
+            return sqlite3.connect(path)
+        def main():
+            return read("data/sources.db")
+        """
+    ),
+    "keyword_argument_overrides_default": textwrap.dedent(
+        """
+        import sqlite3
+        def read(*, path="cache.db"):
+            return sqlite3.connect(path)
+        def main():
+            return read(path="data/vesum.db")
+        """
+    ),
+    "override_through_a_second_call_level": textwrap.dedent(
+        """
+        import sqlite3
+        def read(path="cache.db"):
+            return sqlite3.connect(path)
+        def middle(target="other.db"):
+            return read(target)
+        def main():
+            return middle(target="data/sources.db")
+        """
+    ),
+    "writable_argument_overrides_read_only_default": textwrap.dedent(
+        """
+        import sqlite3
+        def read(uri="file:data/sources.db?mode=ro"):
+            return sqlite3.connect(uri, uri=True)
+        def main():
+            return read("file:data/sources.db?mode=rw")
+        """
+    ),
     "public_helper_in_source_module": textwrap.dedent(
         """
         import sqlite3
@@ -148,6 +186,25 @@ READ_ONLY_OR_UNRELATED = {
         def open_db(sources_db):
             uri = f"file:{sources_db}?mode=ro"
             return sqlite3.connect(uri, uri=True)
+        """
+    ),
+    "default_and_every_caller_are_other_databases": textwrap.dedent(
+        """
+        import sqlite3
+        SOURCES_DB = "sources.db"
+        def read(path="cache.db"):
+            return sqlite3.connect(path)
+        def main():
+            return read("index.sqlite"), read(path="other.db")
+        """
+    ),
+    "read_only_default_and_read_only_callers": textwrap.dedent(
+        """
+        import sqlite3
+        def read(uri="file:data/sources.db?mode=ro"):
+            return sqlite3.connect(uri, uri=True)
+        def main():
+            return read("file:data/vesum.db?mode=ro"), read(uri="file:data/sources.db?immutable=1")
         """
     ),
     "other_database": 'import sqlite3\nconn = sqlite3.connect("data/atlas.db")\n',

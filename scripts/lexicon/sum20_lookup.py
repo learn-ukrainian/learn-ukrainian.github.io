@@ -17,7 +17,7 @@ import sqlite3
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 import requests
 from bs4 import BeautifulSoup
@@ -59,9 +59,22 @@ def _resolve_sources_db() -> Path:
     return local
 
 
+def _read_only_uri(uri: str) -> str:
+    """``uri`` with ``mode=ro`` enforced; a URI asking for any other mode is refused."""
+    base, _, query = uri.partition("?")
+    kept: list[str] = []
+    for segment in filter(None, query.split("&")):
+        key, _, value = segment.partition("=")
+        if unquote(key) != "mode":
+            kept.append(segment)
+        elif unquote(value) != "ro":
+            raise ValueError(f"read-only СУМ-20 lookup refuses a URI with mode={unquote(value)}: {uri}")
+    return f"{base}?{'&'.join([*kept, 'mode=ro'])}"
+
+
 def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite3.Connection:
-    if isinstance(db_path, str) and (db_path.startswith("file:") or "?" in db_path):
-        conn = sqlite3.connect(db_path, uri=True)
+    if isinstance(db_path, str) and db_path.startswith("file:"):
+        conn = sqlite3.connect(db_path if write else _read_only_uri(db_path), uri=True)
     else:
         target = Path(db_path) if db_path else _resolve_sources_db()
         read_only_uri = f"{target.resolve().as_uri()}?mode=ro"

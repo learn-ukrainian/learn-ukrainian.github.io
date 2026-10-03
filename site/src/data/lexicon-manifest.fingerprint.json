@@ -355,7 +355,7 @@
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",
-        "sha256": "341cfc5d1fede6faf445b6257d4d3b9650176faef4cc91d93cd8765935b99a08"
+        "sha256": "b47bb558a3832fd6d7295b49a57e5c0a6a75aa7e1c56e6484ae452cae71d390d"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",
@@ -375,7 +375,7 @@
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",
-        "sha256": "57f04b28b2a2e61b60fd665489fc4c5a12bf91cd230d1289f6a800eeed516678"
+        "sha256": "0a9bcd858cb09e6bed6e0200d01597bc5673c7f7771e0ca389c386b13f731124"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",

@@ -13,13 +13,15 @@ linter parses every tracked Python file (``git ls-files``) except ``tests/``,
   values of module-local functions (bounded depth).  The call targets a source
   database when a resolved string contains ``sources.db`` / ``vesum.db`` or a
   resolved identifier names one (``sources_db``, ``SOURCES_DB_PATH``,
-  ``_resolve_sources_db``, ``vesum_db`` ...).  A function parameter without a
-  default is followed to the module's own calls of that function; a parameter
-  with no caller in the module (a public helper) counts as a source-database
-  target when the module itself names a source database anywhere.
+  ``_resolve_sources_db``, ``vesum_db`` ...).  A function parameter is resolved
+  through its default *and* the arguments of the module's own calls of that
+  function (keyword and positional, through any number of call levels), because
+  an explicit argument overrides the default; a parameter with neither a default
+  nor a caller in the module (a public helper) counts as a source-database target
+  when the module itself names a source database anywhere.
 * **Mode.**  The open is read-only only when ``uri=True`` is passed literally and
-  the database argument is, on every path, a URI that carries ``mode=ro`` or
-  ``immutable=1`` as literal text.  An argument that is read-only on some paths
+  the database argument is, on every path (defaults and caller arguments alike),
+  a URI that carries ``mode=ro`` or ``immutable=1`` as literal text.  An argument that is read-only on some paths
   only (``a if read_only else b``) is reported as ``conditional``.
 
 Known limit: a path handed in from another module under a neutral name, into a
@@ -301,6 +303,12 @@ ALLOWLIST: tuple[AllowedSite, ...] = (
         "schema backfill: literary_texts metadata columns and values",
     ),
     AllowedSite(
+        "scripts/wiki/rollback_sections.py",
+        "with sqlite3.connect(str(db_path)) as conn, conn:",
+        1,
+        "migration rollback: drops textbook_sections and textbooks.parent_section_id (--db sources.db)",
+    ),
+    AllowedSite(
         "scripts/wiki/sources_db.py",
         "conn = sqlite3.connect(str(db_path), check_same_thread=False)",
         1,
@@ -410,6 +418,7 @@ class _ModuleAnalysis:
         self.connect_names: set[str] = set()
         self.sqlite_aliases: set[str] = set()
         self._scope_cache: dict[ast.AST, _Scope] = {}
+        self._caller_cache: dict[tuple[ast.AST, str], list[ast.expr]] = {}
         for parent in ast.walk(tree):
             for child in ast.iter_child_nodes(parent):
                 self.parents[child] = parent
@@ -498,10 +507,15 @@ class _ModuleAnalysis:
     def lookup(self, name: str, scopes: list[_Scope]) -> tuple[_Scope, list[ast.expr]] | None:
         for scope in scopes:
             if name in scope.parameters:
+                # A parameter is bound by its default, by reassignments in the body
+                # and by whatever the module's own callers pass; the default alone
+                # never decides, because an explicit argument overrides it.
                 values = list(scope.assignments.get(name, []))
                 default = scope.parameters[name]
                 if default is not None:
                     values.append(default)
+                if isinstance(scope.node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    values.extend(self.caller_arguments(scope.node, name))
                 return scope, values
             if name in scope.assignments:
                 return scope, scope.assignments[name]
@@ -509,6 +523,12 @@ class _ModuleAnalysis:
 
     def caller_arguments(self, function: _FunctionNode, parameter: str) -> list[ast.expr]:
         """Arguments passed for ``parameter`` by the module's own calls of ``function``."""
+        key = (function, parameter)
+        if key not in self._caller_cache:
+            self._caller_cache[key] = self._find_caller_arguments(function, parameter)
+        return self._caller_cache[key]
+
+    def _find_caller_arguments(self, function: _FunctionNode, parameter: str) -> list[ast.expr]:
         params = _parameter_list(function)
         positional = [name for name, _default, is_positional in params if is_positional]
         is_method = isinstance(self.parents.get(function), ast.ClassDef)
@@ -602,17 +622,8 @@ class _Walker:
         self._seen.add(key)
         for value in values:
             self.collect(value, *self.analysis.context(value), depth + 1)
-        if (
-            values
-            or name not in scope.parameters
-            or not isinstance(scope.node, (ast.FunctionDef, ast.AsyncFunctionDef))
-        ):
-            return
-        arguments = self.analysis.caller_arguments(scope.node, name)
-        if not arguments:
+        if not values and name in scope.parameters and isinstance(scope.node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             self.evidence.open_parameter = True
-        for argument in arguments:
-            self.collect(argument, *self.analysis.context(argument), depth + 1)
 
     # -- read-only mode --------------------------------------------------
     def read_only(self, node: ast.AST | None, scopes: list[_Scope], depth: int = 0) -> bool:

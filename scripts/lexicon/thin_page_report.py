@@ -171,7 +171,7 @@ def normalize_key(text: str) -> str:
 
 def _connect_ro(path: Path) -> sqlite3.Connection:
     """Open a SQLite database strictly read-only (safe next to live writers)."""
-    return sqlite3.connect(f"file:{path}?mode=ro", uri=True, timeout=30.0)
+    return sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True, timeout=30.0)
 
 
 def _filled_sections_by_slug(conn: sqlite3.Connection) -> dict[str, set[str]]:
@@ -262,9 +262,12 @@ def ulif_capabilities(ulif_db: Path) -> dict[str, set[str]]:
     """Map normalized lemma -> sections the ULIF store has material for."""
     capabilities: dict[str, set[str]] = {}
     with _connect_ro(ulif_db) as conn:
-        has_dictua_entries = conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_entries'"
-        ).fetchone() is not None
+        has_dictua_entries = (
+            conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_entries'"
+            ).fetchone()
+            is not None
+        )
 
         if has_dictua_entries:
             # 1. Derive headword stress for all valid entries independently of section presence
@@ -279,9 +282,12 @@ def ulif_capabilities(ulif_db: Path) -> dict[str, set[str]]:
                             capabilities.setdefault(key, set()).add("stress")
 
             # 2. Map enrichment sections if sections table is present
-            has_dictua_sections = conn.execute(
-                "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_sections'"
-            ).fetchone() is not None
+            has_dictua_sections = (
+                conn.execute(
+                    "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_dictua_sections'"
+                ).fetchone()
+                is not None
+            )
             if has_dictua_sections:
                 rows = conn.execute(
                     """SELECT e.normalized_query, e.canonical_headword, s.kind
@@ -307,9 +313,12 @@ def ulif_capabilities(ulif_db: Path) -> dict[str, set[str]]:
             return capabilities
 
         # Legacy fallback if an old crawl database is passed
-        has_legacy = conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_entries'"
-        ).fetchone() is not None
+        has_legacy = (
+            conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='ulif_entries'"
+            ).fetchone()
+            is not None
+        )
         if not has_legacy:
             return capabilities
 

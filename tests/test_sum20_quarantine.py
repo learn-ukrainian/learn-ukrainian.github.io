@@ -179,6 +179,69 @@ def test_lookup_on_a_missing_database_returns_nothing_and_creates_no_file(tmp_pa
     assert not missing.exists()
 
 
+def test_read_only_uri_caller_cannot_create_a_missing_database(tmp_path):
+    missing = tmp_path / "absent.db"
+    with pytest.raises(sqlite3.OperationalError):
+        sum20_lookup._get_db(missing.as_uri(), write=False)
+    assert not missing.exists()
+
+
+def test_read_only_uri_caller_cannot_write(quarantined_db):
+    conn = sum20_lookup._get_db(quarantined_db.as_uri(), write=False)
+    try:
+        conn.execute("PRAGMA query_only = OFF")
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("DELETE FROM sum20_articles")
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize("mode", ["rw", "rwc", "memory", "%72w"])
+def test_read_only_uri_caller_refuses_a_writable_mode(quarantined_db, mode):
+    with pytest.raises(ValueError, match="refuses a URI"):
+        sum20_lookup._get_db(f"{quarantined_db.as_uri()}?mode={mode}", write=False)
+
+
+def test_read_only_uri_keeps_other_parameters_and_an_explicit_mode_ro(quarantined_db):
+    for uri in (f"{quarantined_db.as_uri()}?mode=ro", f"{quarantined_db.as_uri()}?cache=shared"):
+        conn = sum20_lookup._get_db(uri, write=False)
+        try:
+            conn.execute("PRAGMA query_only = OFF")
+            with pytest.raises(sqlite3.OperationalError, match="readonly"):
+                conn.execute("DELETE FROM sum20_articles")
+            assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] > 0
+        finally:
+            conn.close()
+
+
+def test_path_branch_still_opens_read_only_and_creates_no_file(quarantined_db, tmp_path):
+    conn = sum20_lookup._get_db(quarantined_db)
+    try:
+        conn.execute("PRAGMA query_only = OFF")
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("DELETE FROM sum20_articles")
+    finally:
+        conn.close()
+    missing = tmp_path / "absent.db"
+    with pytest.raises(sqlite3.OperationalError):
+        sum20_lookup._get_db(missing)
+    assert not missing.exists()
+
+
+def test_thin_page_report_opens_a_path_with_uri_metacharacters_read_only(quarantined_db, tmp_path):
+    odd = tmp_path / "a#b?c"
+    odd.mkdir()
+    copy = odd / "sources.db"
+    copy.write_bytes(quarantined_db.read_bytes())
+    conn = thin_page_report._connect_ro(copy)
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] > 0
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("DELETE FROM sum20_articles")
+    finally:
+        conn.close()
+
+
 def test_thin_page_probe_excludes_quarantined_keys(quarantined_db):
     sql, _sections = thin_page_report.SOURCES_DB_PROBES["sources.db:sum20"]
     with sqlite3.connect(quarantined_db) as conn:
