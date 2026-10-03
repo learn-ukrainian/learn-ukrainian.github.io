@@ -5,7 +5,9 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shlex
 import subprocess
+import zlib
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -258,10 +260,9 @@ def real_commit_set(monkeypatch, tmp_path):
     repo = tmp_path / "git-repo"
     repo.mkdir()
     monkeypatch.chdir(repo)
-    for key in GIT_REDIRECT_ENV_KEYS:
-        monkeypatch.delenv(key, raising=False)
-    monkeypatch.delenv("GIT_GRAFT_FILE", raising=False)
-    monkeypatch.delenv("GIT_NO_REPLACE_OBJECTS", raising=False)
+    for key in os.environ:
+        if key.startswith("GIT_"):
+            monkeypatch.delenv(key, raising=False)
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", os.devnull)
     monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
 
@@ -281,7 +282,7 @@ def real_commit_set(monkeypatch, tmp_path):
         git("config", "core.hooksPath", os.devnull)
         root = commit("shared.txt", "original\n", "root\n\nX-Agent: claude/claude-opus-5-5")
         git("checkout", "-b", "head")
-        conflict = case == "conflict_resolution"
+        conflict = case in {"conflict_resolution", "union_resolution"}
         author = commit("shared.txt" if conflict else "head.txt", "authored\n", "work\n\nX-Agent: codex/gpt-6.1-sol")
         git("checkout", "base")
         base = commit(
@@ -295,9 +296,10 @@ def real_commit_set(monkeypatch, tmp_path):
             commit("other.txt", "other branch\n", "other work\n\nX-Agent: agy/gemini-3.8-flash-high")
             git("checkout", "head")
             git("merge", "--no-ff", "other", "-m", "merge other branch")
-        elif case == "conflict_resolution":
+        elif conflict:
             assert git("merge", "--no-ff", "base", "-m", "update branch", check=False).returncode == 1
-            commit("shared.txt", "authored resolution\n", "resolved merge")
+            resolution = "authored\nbase fix\n" if case == "union_resolution" else "authored resolution\n"
+            commit("shared.txt", resolution, "resolved merge")
         elif case != "all_trailered":
             git("merge", "--no-ff", "--no-commit", "base")
             if case == "dirty_merge":
@@ -462,15 +464,176 @@ def test_only_exempt_merges_prove_no_author_family(real_commit_set, tmp_path):
         recorder.author_families(REPOSITORY, 42, tmp_path)
 
 
-def test_git_replace_cannot_hide_authored_merge_changes(real_commit_set, tmp_path):
+@pytest.mark.parametrize("target", ["merge", "first_parent"])
+def test_git_replace_cannot_hide_authored_merge_changes(real_commit_set, tmp_path, target):
     git, commits, head, base = real_commit_set("dirty_merge")
     parents = git("show", "--no-patch", "--format=%P", head).stdout.split()
     clean_tree = git("merge-tree", "--write-tree", *parents).stdout.strip()
     clean = git("commit-tree", clean_tree, "-p", parents[0], "-p", parents[1], "-m", "clean").stdout.strip()
-    git("replace", head, clean)
+    if target == "merge":
+        git("replace", head, clean)
+    else:
+        tree = commits[-1]["commit"]["tree"]["sha"]
+        helper = git("commit-tree", tree, "-p", parents[0], "-m", "unlisted helper").stdout.strip()
+        git("replace", parents[0], helper)
     assert not recorder._is_clean_base_merge(commits[-1], base)
     with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
         recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_local_merge_driver_cannot_launder_conflict_resolution_or_execute(real_commit_set, tmp_path):
+    git, commits, _, base = real_commit_set("conflict_resolution")
+    parents = [parent["sha"] for parent in commits[-1]["parents"]]
+    assert git("merge-tree", "--write-tree", *parents, check=False).returncode == 1
+    marker = tmp_path / "driver-ran"
+    git("config", "merge.evil.driver", f"printf 'authored resolution\\n' > %A; touch {shlex.quote(str(marker))}")
+    attributes = Path(git("rev-parse", "--git-path", "info/attributes").stdout.strip())
+    attributes.write_text("shared.txt merge=evil\n")
+    # The unisolated command both launders the resolution and runs the shell.
+    assert git("merge-tree", "--write-tree", *parents).stdout.strip() == commits[-1]["commit"]["tree"]["sha"]
+    assert marker.exists()
+    marker.unlink()
+    assert not recorder._is_clean_base_merge(commits[-1], base)
+    assert not marker.exists()
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("source", ["count", "parameters", "global", "system"])
+def test_injected_git_config_cannot_execute_merge_driver(real_commit_set, monkeypatch, tmp_path, source):
+    git, commits, _, base = real_commit_set("conflict_resolution")
+    attributes = tmp_path / "injected-attributes"
+    attributes.write_text("shared.txt merge=evil\n")
+    marker = tmp_path / "driver-ran"
+    settings = {
+        "core.attributesFile": str(attributes),
+        "merge.evil.driver": f"printf 'authored resolution\\n' > %A; touch {shlex.quote(str(marker))}",
+    }
+    if source == "count":
+        monkeypatch.setenv("GIT_CONFIG_COUNT", str(len(settings)))
+        for index, (key, value) in enumerate(settings.items()):
+            monkeypatch.setenv(f"GIT_CONFIG_KEY_{index}", key)
+            monkeypatch.setenv(f"GIT_CONFIG_VALUE_{index}", value)
+    elif source == "parameters":
+        monkeypatch.setenv(
+            "GIT_CONFIG_PARAMETERS",
+            git("rev-parse", "--sq-quote", *(f"{key}={value}" for key, value in settings.items())).stdout.strip(),
+        )
+    else:
+        config = tmp_path / "injected-config"
+        config.write_text(
+            f'[core]\n\tattributesFile = {attributes}\n[merge "evil"]\n'
+            f"\tdriver = {json.dumps(settings['merge.evil.driver'])}\n"
+        )
+        monkeypatch.setenv(f"GIT_CONFIG_{source.upper()}", str(config))
+        if source == "system":
+            monkeypatch.delenv("GIT_CONFIG_NOSYSTEM")
+    parents = [parent["sha"] for parent in commits[-1]["parents"]]
+    assert git("merge-tree", "--write-tree", *parents).stdout.strip() == commits[-1]["commit"]["tree"]["sha"]
+    assert marker.exists()
+    marker.unlink()
+    assert not recorder._is_clean_base_merge(commits[-1], base)
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("source", ["info", "worktree", "global_config", "xdg"])
+def test_local_attributes_cannot_launder_conflict_resolution(real_commit_set, monkeypatch, tmp_path, source):
+    git, commits, _, base = real_commit_set("union_resolution")
+    parents = [parent["sha"] for parent in commits[-1]["parents"]]
+    assert git("merge-tree", "--write-tree", *parents, check=False).returncode == 1
+    if source == "info":
+        attributes = Path(git("rev-parse", "--git-path", "info/attributes").stdout.strip())
+    elif source == "worktree":
+        attributes = Path.cwd() / ".gitattributes"
+    else:
+        attributes = tmp_path / "xdg/git/attributes"
+        attributes.parent.mkdir(parents=True)
+        if source == "global_config":
+            config = tmp_path / "global-config"
+            config.write_text(f"[core]\n\tattributesFile = {attributes}\n")
+            monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(config))
+        else:
+            monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    attributes.write_text("shared.txt merge=union\n")
+    assert git("merge-tree", "--write-tree", *parents).stdout.strip() == commits[-1]["commit"]["tree"]["sha"]
+    assert not recorder._is_clean_base_merge(commits[-1], base)
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        *GIT_REDIRECT_ENV_KEYS,
+        "GIT_CONFIG_COUNT",
+        "GIT_CONFIG_PARAMETERS",
+        "GIT_ATTR_SOURCE",
+        "GIT_TEMPLATE_DIR",
+        "GIT_TRACE",
+    ],
+)
+def test_inherited_git_environment_cannot_redirect_merge_proof(real_commit_set, monkeypatch, tmp_path, key):
+    _, commits, _, base = real_commit_set("clean_update_merge")
+    injected = tmp_path / "injected"
+    monkeypatch.setenv(key, "invalid" if key in {"GIT_CONFIG_COUNT", "GIT_CONFIG_PARAMETERS"} else str(injected))
+    # Even malformed settings cannot deny or redirect an otherwise valid proof.
+    assert recorder._is_clean_base_merge(commits[-1], base)
+    assert not injected.exists()
+
+
+@pytest.mark.parametrize("case", ["clean_update_merge", "conflict_resolution", "dirty_merge"])
+def test_merge_proof_never_writes_shared_objects(real_commit_set, tmp_path, case):
+    git, commits, _, base = real_commit_set(case)
+    objects = Path(git("rev-parse", "--git-path", "objects").stdout.strip())
+
+    def snapshot():
+        return {str(path.relative_to(objects)): path.read_bytes() for path in objects.rglob("*") if path.is_file()}
+
+    before = snapshot()
+    assert recorder._is_clean_base_merge(commits[-1], base) == (case == "clean_update_merge")
+    assert snapshot() == before
+    if case == "conflict_resolution":
+        # Conflict blobs/trees do not already exist: prove this fixture detects
+        # the writes that the former shared-repository implementation performed.
+        parents = [parent["sha"] for parent in commits[-1]["parents"]]
+        assert git("merge-tree", "--write-tree", *parents, check=False).returncode == 1
+        assert snapshot() != before
+
+
+@pytest.mark.parametrize("layout", ["directory", "gitfile", "linked_worktree"])
+def test_merge_proof_discovers_objects_without_git(real_commit_set, monkeypatch, tmp_path, layout):
+    git, commits, _, base = real_commit_set("clean_update_merge")
+    objects = Path.cwd() / ".git/objects"
+    if layout == "linked_worktree":
+        checkout = tmp_path / "linked"
+        git("worktree", "add", "--detach", str(checkout))
+        git("config", "extensions.worktreeConfig", "true")
+        subprocess.run(
+            ["git", "-C", str(checkout), "config", "--worktree", "merge.default", "evil"], check=True, timeout=30
+        )
+    elif layout == "gitfile":
+        checkout = Path.cwd()
+        git_dir = tmp_path / "separate-git"
+        (checkout / ".git").rename(git_dir)
+        (checkout / ".git").write_text("gitdir: ../separate-git\n")
+        objects = git_dir / "objects"
+    else:
+        checkout = Path.cwd()
+    subdir = checkout / "nested/child"
+    subdir.mkdir(parents=True)
+    monkeypatch.chdir(subdir)
+    assert recorder._merge_proof_object_store() == objects.resolve()
+    assert recorder._is_clean_base_merge(commits[-1], base)
+
+
+@pytest.mark.parametrize("marker", [None, "not a git pointer", "gitdir: missing", "gitdir: missing\nsecond line"])
+def test_merge_proof_missing_checkout_refuses(monkeypatch, tmp_path, marker):
+    monkeypatch.chdir(tmp_path)
+    if marker is not None:
+        (tmp_path / ".git").write_text(marker)
+    with pytest.raises(OSError):
+        recorder._merge_proof_object_store()
+    entry = {"sha": SHA, "commit": {"tree": {"sha": SHA}}, "parents": [{"sha": SHA}, {"sha": OTHER}]}
+    assert not recorder._is_clean_base_merge(entry, OTHER)
 
 
 @pytest.mark.parametrize("source", ["info/grafts", "environment"])
@@ -500,8 +663,26 @@ def test_git_grafts_cannot_hide_authored_or_nonbase_merges(real_commit_set, monk
     else:
         assert git("merge-base", "--is-ancestor", parents[1], base, check=False).returncode == 0
     assert not recorder._is_clean_base_merge(entry, base)
+    if target == "merge":
+        # A listing forged to agree with grafted parents still fails raw binding.
+        entry["parents"] = [{"sha": helper}, {"sha": base}]
+        assert not recorder._is_clean_base_merge(entry, base)
     with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
         recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_hash_mismatched_loose_object_cannot_hide_authored_merge_changes(real_commit_set):
+    git, commits, _, base = real_commit_set("dirty_merge")
+    entry = commits[-1]
+    parent = entry["parents"][0]["sha"]
+    raw = git("cat-file", "commit", parent).stdout
+    original_tree = raw.splitlines()[0][5:]
+    forged = raw.replace(original_tree, entry["commit"]["tree"]["sha"], 1).encode()
+    body = b"commit " + str(len(forged)).encode() + b"\0" + forged
+    object_path = Path.cwd() / ".git/objects" / parent[:2] / parent[2:]
+    object_path.chmod(0o600)
+    object_path.write_bytes(zlib.compress(body))
+    assert not recorder._is_clean_base_merge(entry, base)
 
 
 def test_git_commit_graph_cannot_fake_base_ancestry(real_commit_set, monkeypatch, tmp_path):
@@ -582,28 +763,67 @@ def test_clean_merge_missing_or_malformed_github_metadata_refuses(real_commit_se
         recorder.author_families(REPOSITORY, 42, tmp_path)
 
 
-def test_all_merge_proof_calls_disable_mutable_ancestry(real_commit_set, monkeypatch, tmp_path):
-    real_commit_set("clean_update_merge")
+@pytest.mark.parametrize("failure", [None, "timeout", "missing_base", "metadata_mismatch", "conflict"])
+def test_all_merge_proof_calls_are_isolated_and_cleaned_up(real_commit_set, monkeypatch, tmp_path, failure):
+    _, commits, _, _ = real_commit_set("conflict_resolution" if failure == "conflict" else "clean_update_merge")
+    if failure == "metadata_mismatch":
+        commits[-1]["commit"]["tree"]["sha"] = "c" * 40
     original_run = subprocess.run
     calls = []
-    graft_paths = set()
+    proof_dirs = set()
 
     def guarded_run(args, **kwargs):
-        assert args[:4] == ["git", "--no-replace-objects", "-c", "core.commitGraph=false"]
+        assert args[0] == "git"
         env = kwargs["env"]
-        graft_path = Path(env["GIT_GRAFT_FILE"])
-        assert graft_path.parent.is_dir() and not graft_path.exists()
-        assert env["GIT_NO_REPLACE_OBJECTS"] == "1"
-        assert env["GIT_NO_LAZY_FETCH"] == "1"
-        graft_paths.add(graft_path)
-        calls.append(args[4:])
+        assert {key for key in env if key.startswith("GIT_")} == {
+            "GIT_DIR",
+            "GIT_CONFIG_NOSYSTEM",
+            "GIT_CONFIG_GLOBAL",
+            "GIT_ATTR_NOSYSTEM",
+            "GIT_NO_LAZY_FETCH",
+        }
+        assert all(env[key] == "1" for key in ("GIT_CONFIG_NOSYSTEM", "GIT_ATTR_NOSYSTEM", "GIT_NO_LAZY_FETCH"))
+        proof_dir = Path(env["GIT_DIR"])
+        assert proof_dir.is_dir() and proof_dir != Path.cwd() / ".git"
+        assert not Path(env["GIT_CONFIG_GLOBAL"]).exists()
+        assert (proof_dir / "config").read_text() == (
+            "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
+            f"\tcommitGraph = false\n\tattributesFile = {os.devnull}\n"
+        )
+        assert list((proof_dir / "refs").iterdir()) == []
+        assert not (proof_dir / "info").exists()
+        assert not (proof_dir / "index").exists()
+        assert not (proof_dir / "commondir").exists()
+        assert (proof_dir / "objects/info/alternates").read_text() == json.dumps(
+            str(Path.cwd() / ".git/objects")
+        ) + "\n"
+        proof_dirs.add(proof_dir)
+        calls.append(args[1:])
+        if failure == "timeout" and args[1] == "merge-tree":
+            raise subprocess.TimeoutExpired(args, 30)
+        if failure == "missing_base" and args[1:3] == ["cat-file", "-e"]:
+            return subprocess.CompletedProcess(args, 1, "", "missing base")
         return original_run(args, **kwargs)
 
     monkeypatch.setattr(recorder.subprocess, "run", guarded_run)
-    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"openai"}
-    assert [call[0] for call in calls] == ["cat-file", "cat-file", "merge-base", "merge-tree"]
-    assert len(graft_paths) == 1
-    assert not next(iter(graft_paths)).parent.exists()
+    if failure:
+        reason = (
+            "base object not available locally; fetch and retry"
+            if failure == "missing_base"
+            else "missing explicit X-Agent"
+        )
+        with pytest.raises(recorder.RecordError, match=reason):
+            recorder.author_families(REPOSITORY, 42, tmp_path)
+    else:
+        assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"openai"}
+    expected = ["cat-file", "cat-file", "merge-base", "merge-tree"]
+    if failure == "metadata_mismatch":
+        expected = ["cat-file"]
+    elif failure == "missing_base":
+        expected = ["cat-file", "cat-file"]
+    assert [call[0] for call in calls] == expected
+    assert len(proof_dirs) == 1
+    assert not next(iter(proof_dirs)).exists()
 
 
 @pytest.mark.parametrize("commit,base", [("head", SHA), (SHA, "base")])

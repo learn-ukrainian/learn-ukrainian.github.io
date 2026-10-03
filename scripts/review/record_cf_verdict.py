@@ -109,6 +109,30 @@ def _hot_or_archived(task_root: Path, name: str) -> Path:
     return archived if not hot.exists() and archived.exists() else hot
 
 
+def _merge_proof_object_store() -> Path:
+    """Find the checkout's shared objects without running Git or reading config."""
+    cwd = Path.cwd()
+    for root in (cwd, *cwd.parents):
+        marker = root / ".git"
+        if marker.is_dir():
+            git_dir = marker
+        elif marker.is_file():
+            text = marker.read_text(encoding="utf-8").strip()
+            if not text.startswith("gitdir: ") or "\n" in text:
+                raise OSError("invalid Git directory pointer")
+            git_dir = (root / text[8:]).resolve(strict=True)
+        else:
+            continue
+        common_file = git_dir / "commondir"
+        if common_file.is_file():
+            git_dir = git_dir / common_file.read_text(encoding="utf-8").strip()
+        objects = (git_dir / "objects").resolve(strict=True)
+        if not objects.is_dir():
+            raise OSError("Git object store unavailable")
+        return objects
+    raise OSError("Git checkout unavailable")
+
+
 def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
     """Bind a conflict-free base merge to GitHub metadata and raw local objects."""
     commit_sha = entry.get("sha")
@@ -121,14 +145,31 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
     parents = [parent.get("sha") if isinstance(parent, dict) else None for parent in parent_data]
     if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in [commit_sha, base_sha, tree, *parents]):
         return False
-    git = ["git", "--no-replace-objects", "-c", "core.commitGraph=false"]
+    git = ["git"]
     try:
-        # A private directory keeps this nonexistent graft path out of shared .git.
+        objects = _merge_proof_object_store()
         with TemporaryDirectory(prefix="cf-merge-") as isolated:
+            # Construct a bare repository without importing init templates, config,
+            # refs, grafts, attributes, or an index from the writable shared Git dir.
+            proof_dir = Path(isolated)
+            (proof_dir / "objects/info").mkdir(parents=True)
+            (proof_dir / "refs").mkdir()
+            (proof_dir / "HEAD").write_text("ref: refs/heads/proof\n", encoding="utf-8")
+            (proof_dir / "config").write_text(
+                "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
+                # Commit graphs can also be read from the alternate object store.
+                f"\tcommitGraph = false\n\tattributesFile = {os.devnull}\n",
+                encoding="utf-8",
+            )
+            (proof_dir / "objects/info/alternates").write_text(
+                json.dumps(str(objects), ensure_ascii=False) + "\n", encoding="utf-8"
+            )
             env = {
-                **os.environ,
-                "GIT_GRAFT_FILE": str(Path(isolated) / "no-grafts"),
-                "GIT_NO_REPLACE_OBJECTS": "1",
+                **{key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+                "GIT_DIR": isolated,
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": str(proof_dir / "no-global-config"),
+                "GIT_ATTR_NOSYSTEM": "1",
                 "GIT_NO_LAZY_FETCH": "1",
             }
             commit = subprocess.run(
