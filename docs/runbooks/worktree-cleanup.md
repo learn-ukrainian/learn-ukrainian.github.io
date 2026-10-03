@@ -34,8 +34,9 @@ once, after ownership/claim checks and before deletion. A preservation failure
 returns a typed skipped/refusal result and leaves the directory intact.
 `branch_sweep` deletes branch refs only. The separate husk removal accepts
 only unregistered directories with no files or symlinks. The legacy temp leak
-sweep refuses a candidate containing a linked worktree's `.git` file or a
-symlinked `.git` anywhere in its directory tree (or an unreadable scan).
+sweep and review temporary-tree cleanup refuse a candidate containing a linked
+worktree's `.git` file or a symlinked `.git` anywhere in its directory tree (or
+an unreadable scan).
 Matching scratch names do not permit removing linked worktrees outside the
 shared guard; ordinary disposable clones with their own `.git` directory
 retain their existing scratch-cleanup behavior.
@@ -55,7 +56,7 @@ retain their existing scratch-cleanup behavior.
 | `reap_worktrees._reap_qualified_worktree`; `merge_closeout`; scheduled cleanup | Locked reaper pipeline, then guarded raw Git. |
 | `reap_worktrees._remove_dispatch_husk_locked`: `shutil.rmtree` | Only unregistered, file-free and symlink-free husks; rechecked under the shared lock. |
 | `tmp_leak_sweep._remove_path`: `shutil.rmtree` | Refuses linked worktree markers, including nested checkouts and unreadable scans. |
-| `review.isolation._remove_review_temp_tree`: `shutil.rmtree` | **Residual:** legacy review-name cleanup can remove a linked worktree. Infra driver owns the additional guard and tests before #9645 closes. |
+| `review.isolation._remove_review_temp_tree`: `shutil.rmtree` | Repairs review permissions without following symlinks, then refuses linked worktree markers, nested checkouts and unreadable scans before deletion. Root symlinks are refused; the orphan sweep reports refusals as errors. Plain temporary trees and disposable clones remain eligible. |
 
 The remaining recursive deletion and `rmdir` hits operate on runtime leases,
 review snapshot/neutral metadata, capture records, generated staging/output,
