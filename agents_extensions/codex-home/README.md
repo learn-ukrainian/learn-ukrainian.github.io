@@ -11,13 +11,15 @@ guidance, and named profiles. The regular driver uses GPT-6.1 Sol high.
 | `sol_coder_high` | `gpt-6.1-sol` | high | workspace-write |
 | `sol_red_team_high` | `gpt-6.1-sol` | high | read-only |
 | `sol_ukrainian_content_high` | `gpt-6.1-sol` | high | workspace-write |
-| `astra_advisor_high` | `gpt-6.1-sol` | high | read-only |
+| `sol_advisor_high` | `gpt-6.1-sol` | high | read-only |
 
 The default spawned agent is Luna high. Use Luna medium explicitly for routine
 scouting and high for ambiguous investigations or bounded coding. Sol high
-handles broader coding and adversarial review. `astra_advisor_high` keeps its
-name but runs GPT-6.1 Sol, which took the GPT-6 Astra advisor seat (#9230); it
-runs at high as the on-demand advisor for consequential design and difficult linguistic judgment. Sol high
+handles broader coding and adversarial review. `sol_advisor_high` runs at high
+as the on-demand advisor for consequential design and difficult linguistic
+judgment. Advice and designated approval come from Opus 5.5 and Sol 6.1;
+approval needs both, neither the author, and a split goes to the operator
+(#9583). This profile supplies only the Sol half. Sol high
 is the Ukrainian content authoring default, subject to VESUM, sources, and
 track immersion checks. This is a routing decision, not a comparative
 Ukrainian-quality benchmark.
@@ -57,8 +59,9 @@ home's `.deploy-backups/` directory. A failure must be investigated using its
 receipt before retrying; per-file atomic replacement is not a multi-file
 transaction. Dry-run and check modes do not write.
 
-The old names `astra_worker_low` and `astra_red_team_high` are superseded.
-The deployer refuses to apply changes while either remains active. Inspect
+The old names `astra_worker_low`, `astra_red_team_high`, and
+`astra_advisor_high` (replaced by `sol_advisor_high`, #9583) are superseded.
+The deployer refuses to apply changes while any of them remains active. Inspect
 those target files and move them into a private backup outside `agents/`
 before deployment; record the moves for rollback. Older retired names
 (`luna_explorer_xhigh`, `luna_worker_max`, `sol_worker_high`,

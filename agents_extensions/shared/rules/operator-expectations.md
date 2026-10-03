@@ -96,7 +96,7 @@ tie-breakers.
    **Driver routing is enforced** (operator GO 2026-08-06): every dispatch needs a
    `ROUTING_CARD_V1` (tier · model×harness · advisor packet · alternatives); default bounded
    work is **Sol 6.1 advisory envelope → bounded worker** (#9275); Sol is the default brief
-   author. Fable/Astra are last-resort design advisors; their briefs do not admit bounded
+   author. An advisory brief that is not a Sol envelope does not admit bounded
    workers. Session breadth floor + handoff report:
    `fleet-driver-routing.md` + `python -m scripts.fleet.driver_breadth_report`.
 5. **Know each model's strengths and weaknesses; route by fit.** The canonical per-task routing
@@ -104,9 +104,8 @@ tie-breakers.
    constants — confirm current capability before relying on a specific string. Distinguish the
    MODEL from the HARNESS it rides in (see "Harness vs model" in `model-assignment.md`):
    hermes and opencode each host many models and add their own capabilities.
-   **Tiers:** authority (Opus 5.5 / Sol 6.1 first; Fable/Astra last resort) · practical
+   **Tiers:** authority (Opus 5.5 / Sol 6.1) · practical
    (Terra/Sonnet/Flash-high) · heap (Luna and weaker with a complete Sol advisory envelope).
-   Last-resort Fable uses a native Claude pin first, then **Cursor → Fable**.
    **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
    consults, design or rules.**
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal
@@ -185,12 +184,14 @@ tie-breakers.
     contract.
 12. **Advisor / operator approval gate (binding) — new decisions only.** Agents must **not**
     invent or unilaterally adopt **new** architecture, local layout, process, or policy
-    without **present-tense approval** from the **operator** or a designated **advisor**.
-    Current designated advisors: **Fable** and **Astra** (roster may change — confirm via
-    `/api/rules` / `model-assignment.md` when unsure; do not treat stale digests as roster).
+    without **present-tense approval** from the **operator** or **designated approval**: both
+    designated advisors, **Opus 5.5** (`claude-opus-5-5`) and **Sol 6.1** (`gpt-6.1-sol`),
+    approve, neither being the proposal's author; if they disagree, the operator decides
+    (#9583; roster may change — confirm via `/api/rules` / `model-assignment.md` when unsure;
+    do not treat stale digests as roster). Fable and the former Astra seat hold no advisory,
+    approval or review role.
     **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
-    consults, design or rules.** Fable is a summoned design advisor, not a standing reviewer or
-    routing default. Discussion/panels improve quality but do **not** replace advisor approval
+    consults, design or rules.** Discussion/panels improve quality but do **not** replace advisor approval
     for design. This gate governs *deciding*, not *implementing*: once the operator or an
     advisor has ordered or approved the work, item 10 governs — drive it to a complete outcome
     without re-opening a GO request. Routine implementation of already-queued work does not

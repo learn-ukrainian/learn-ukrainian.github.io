@@ -171,13 +171,13 @@ Use the live model catalog and rules as authority. Standing task-fit defaults:
   `gemini-3.8-flash-high` for deep work when live policy permits. Require
   `sources`/VESUM evidence for linguistic claims.
 - Codex routing: Sol @ `high` handles coding and review; Luna @ `high` handles
-  routine bounded work and scouting; Astra @ `high` is for hard consequential
-  advisory judgment only. Do not route routine implementation or review to Astra.
+  routine bounded work and scouting; hard consequential advisory judgment uses
+  Opus 5.5 / Sol 6.1 @ `high` (#9583).
 - Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8
   Flash handles Ukrainian and well-defined work with a complete brief and
   acceptance criteria.
-- Grok may own sustained daily driving where the roster permits. Fable and Astra
-  are summoned for short judgment, not polling.
+- Grok may own sustained daily driving where the roster permits. Advisors
+  (Opus 5.5 / Sol 6.1) are summoned for short judgment, not polling.
 - GLM-5.3/z.ai is eligible for public, non-sensitive code/infra, bug/security,
   and cross-file analysis only. It is local-invocation-only, sends prompt data
   to China, never runs in CI or automated pipelines, never receives secrets,

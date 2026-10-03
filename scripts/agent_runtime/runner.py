@@ -3458,9 +3458,14 @@ def _validate_catalog_model(
     participant: str,
     model: str,
 ) -> None:
-    """Require a current active catalog model on the adapter's real route."""
+    """Require a current active catalog model on the adapter's real route that may consult (#9583)."""
     try:
-        from scripts.review.model_catalog import load_model_catalog, model_aliases
+        from scripts.review.model_catalog import (
+            CONSULT_ACTIVITY,
+            activity_role_refusal,
+            load_model_catalog,
+            model_aliases,
+        )
 
         catalog = load_model_catalog()
     except (ImportError, OSError, ValueError) as exc:
@@ -3482,6 +3487,9 @@ def _validate_catalog_model(
             f"ACP participant {participant!r} does not implement catalog transport "
             f"{catalog_transport!r} for model {model!r}"
         )
+    # ACP carries asks, consults, discussions and sealed reviews only.
+    if refusal := activity_role_refusal(model, CONSULT_ACTIVITY, catalog):
+        raise InterAgentTransportError(f"ACP participant {participant!r} refuses {refusal}")
 
 
 def resolve_inter_agent_route(

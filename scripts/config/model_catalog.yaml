@@ -114,6 +114,37 @@ review_scheduler:
       high: [strong_review, security_review, standard_review, long_context_review, critical_review]
       medium: [standard_review, strong_review, security_review, long_context_review, routine_review, critical_review]
       low: [routine_review, standard_review, strong_review, security_review, long_context_review, critical_review]
+  # Operator decision 2026-10-03 (#9583): activity admission reads a pinned
+  # model's catalog `roles`. A review, critique or approval of record (delegate
+  # review dispatch, bridge review, recorded verdict) needs a `review` role; an
+  # ACP ask, consult or discussion needs a `review` or `consult` role. A model
+  # holding only coding or orchestration roles (claude-fable-5-1) is refused
+  # on every seat and transport; a retired model holds no role.
+  activity_roles:
+    review:
+      - critical_review
+      - standard_review
+      - strong_review
+      - routine_review
+      - long_context_review
+      - security_review
+      - factual_review
+      - adversarial_review
+      - surface_review
+      - strong_code_review
+      - free_lane_code_review
+      - cheap_volume_review
+      - ukrainian_review
+    consult:
+      - architecture
+      - architecture_support
+      - consequential_advisory
+      - bounded_advisory_envelope
+      - advisory
+      - high_volume_dissent
+      - web_fact_check
+      - recon
+      - bounded_investigation
   automatic_near_cap_assignments: false
   # Operator decision 2026-10-02 (#9538): a formal review at a listed risk is
   # performed only by these models, on any catalogued transport (Opus 5.5
@@ -125,7 +156,7 @@ review_scheduler:
     claude:
       formal_review_eligible: true
       # Active formal CF pins; superseded Opus/Sonnet identities are historical only.
-      models: [claude-fable-5-1, claude-sonnet-5-5, claude-opus-5-5]
+      models: [claude-sonnet-5-5, claude-opus-5-5]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -329,6 +360,7 @@ models:
       - agentic_coding
       - bounded_advisory_envelope
       - consequential_advisory
+      - ukrainian_review
     transports: [native_codex]
     strengths: [agentic_coding, demanding_reasoning, frontier_technical_judgment, near_astra_at_lower_cost]
     weaknesses: [not_independent_from_openai_authors]
@@ -446,14 +478,18 @@ models:
     family: anthropic
     tier: frontier_authority
     lifecycle: active
-    roles: [architecture, critical_review, long_horizon_coding, orchestration]
+    # #9583: no architecture/advisory or review role; launchable model only.
+    # The alias is the Cursor slug budget substitution sends.
+    aliases: [claude-fable-5-1-thinking-high]
+    roles: [long_horizon_coding, orchestration]
     transports: [native_claude, cursor]
     strengths: [highest_anthropic_capability, long_horizon_work, always_on_thinking]
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     notes: >-
-      Fable 5.1 is last resort for review, critique, design input and Ukrainian
-      work (#9394); use Opus 5.5 / Sol 6.1 first. It succeeds claude-fable-5
-      as a designated-authority fallback. Thinking is always on (never send
+      Operator decision 2026-10-03 (#9583): Fable 5.1 holds no advisory, approval,
+      review or critique role and is not a last resort for any of them; Opus 5.5 /
+      Sol 6.1 hold those roles. It succeeds claude-fable-5 as a launchable Claude
+      model only. Thinking is always on (never send
       thinking: disabled). Effort decision topology (operator 2026-09-09): default
       high (API default; start here — do not port Opus/xhigh habits); medium/low
       for routine interactive work (low often beats prior-gen xhigh/max; medium
@@ -474,7 +510,7 @@ models:
     family: anthropic
     tier: frontier_authority
     lifecycle: active
-    roles: [orchestration, architecture, agentic_coding, critical_review, security_review]
+    roles: [orchestration, architecture, agentic_coding, critical_review, security_review, ukrainian_review]
     transports: [native_claude, cursor]
     strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
@@ -482,8 +518,8 @@ models:
       Operator 2026-09-22: default Claude model and the Claude orchestrator seat.
       Opus 5.5 executes architecture, hard coding, deep code review and
       Ukrainian-specific linguistic work. start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
-      Opus 5.5 / Sol 6.1 take review, critique and design input first (#9394);
-      Fable and the Astra seat are last resort. Effort: API default is medium (not high); medium on
+      Opus 5.5 / Sol 6.1 take review, critique and design input and jointly hold
+      designated approval (#9583). Effort: API default is medium (not high); medium on
       Opus 5.5 beats Opus 5 @ high on coding and knowledge work. Orchestrating runs
       at high; medium/low for routine turns; xhigh for hard debugging and the
       curriculum/linguistic review skills that pin effort: xhigh; max almost never.
@@ -504,7 +540,7 @@ models:
     notes: >-
       Anthropic authority-tier seat. Operator 2026-08-06: formal CF eligible when pinned
       on the sealed claude endpoint (sealed review-pr was removed in #8520).
-      Advisory consultations remain non-binding for designated advisor authority (Sol/Fable).
+      Advisory consultations remain non-binding for designated approval authority (Opus 5.5 + Sol 6.1, #9583).
       Kimi: web, UI and backend coding only — no Ukrainian-language content, no
       reviews, consults, design or rules.
       Effort ladder low..max; use high for advisory and xhigh only for a documented hard turn.
@@ -538,7 +574,7 @@ models:
       Route authoring of security-sensitive code (hooks/guards, launchers, credential or secret
       handling, dispatch admission, sandbox/permission logic) to Opus 5.5 or
       Codex Sol. Ukrainian curriculum content stays with sanctioned language
-      lanes; use Opus 5.5 for the Claude lane, with Fable 5.1 last resort. For security-sensitive diffs
+      lanes; use Opus 5.5 for the Claude lane. For security-sensitive diffs
       (hooks/guards, launchers, credential or secret handling, dispatch admission,
       sandbox/permission logic), resolve the reviewer with --risk critical, which
       excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125.
@@ -561,7 +597,8 @@ models:
     tier: frontier_practical
     lifecycle: active
     aliases: [gemini-3.8-flash, gemini-3.8-flash-medium, gemini-3.8-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
+    # The first-choice Ukrainian reviewer (core.md P2); never a code reviewer.
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis, ukrainian_review]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [not_default_critical_authority, deep_architecture_prefers_sol]
@@ -577,7 +614,7 @@ models:
       Claude Opus 5 High #8 (1492) and Gemini 3.7 Flash High #10 (1491).
       Agent Arena #14 (+5.94%) vs 3.7 Flash High #32 (+0.84%) is supporting
       agentic evidence, not the language-lane reason. WebDev Code Arena #18
-      (1567) is not a Ukrainian-lane claim. Not Sol/Fable/Opus authority.
+      (1567) is not a Ukrainian-lane claim. Not Sol/Opus authority.
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
@@ -1014,22 +1051,6 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
     advisory_only_for_author_families: [openai]
-  claude-fable-5-1:
-    model_id: claude-fable-5-1
-    last_resort: true
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5-1
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  claude-fable-5-1-cursor-fallback:
-    model_id: claude-fable-5-1
-    last_resort: true
-    route: cursor
-    transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5-1-thinking-high
-    review_profiles: [code, infra]
-    capabilities: [code_review]
   grok-4.7:
     # Retained identity for explicit-pin refusal; native Grok never judges code/infra.
     model_id: grok-4.7
@@ -1124,8 +1145,8 @@ orchestrator_seats:
       advanced non-linguistic work (architecture, hard coding, deep code review).
       start-claude-driver.sh pins claude-opus-5-5[1m] @ high unless --model /
       --effort (or LAUNCHER_MODEL / LAUNCHER_EFFORT) override it. Opus 5.5 /
-      Sol 6.1 take review, critique, design input and Ukrainian work first (#9394);
-      Fable and the Astra seat are last resort. Orchestration alone does not
+      Sol 6.1 take review, critique, design input and Ukrainian work and jointly
+      hold designated approval (#9583). Orchestration alone does not
       confer approval authority. grok-4.7 owns the daily epic
       loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
       Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ high; Claude is an escalation TARGET,
@@ -1141,7 +1162,7 @@ orchestrator_seats:
     escalate_when: consequential_advisory
     note: >
       Operator 2026-09-29 (#9230): GPT-6.1 Sol @ high is the Codex orchestrator,
-      advanced seat; ordinary advice uses Sol high; Astra is last resort.
+      advanced seat; ordinary advice uses Sol high.
       The #9275 bounded-envelope route is unchanged. GPT-6
       Luna @ high does scouting and bounded work and is not this seat. Named alternate on
       harness/infra and DevOps — never a concurrent same-stream co-owner.
@@ -1199,8 +1220,7 @@ orchestrator_seats:
 
 # Formal CF transport defaults (model + effort; sealed review-pr was removed in #8520). Advisor/authority
 # roles use their catalog effort; Sol high fills the routine Codex reviewer role.
-# Fable remains off the
-# routine ladder. CodexBar health probes must never collapse routing to one seat.
+# Fable holds no review role (#9583). CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
   codex:
     model_id: gpt-6.1-sol
@@ -1212,12 +1232,11 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5-5
     effort: high
-    # Opus 5.5 is the first escalation; Fable 5.1 is last resort (#9394).
+    # Opus 5.5 is the escalation; Fable holds no review role (#9583).
     escalate_model_id: claude-opus-5-5
     escalate_effort: high
     family_models:
       - claude-sonnet-5-5
-      - claude-fable-5-1
       - claude-opus-5-5
   glm:
     model_id: glm-5.3
@@ -1258,7 +1277,7 @@ review_ladders:
   # Opus / Sol handle critical review first (#9394). Native Grok never judges;
   # the attested Cursor Grok seat is the Sol-spared last resort (#9488) and has
   # no critical_review role, so critical lists it only to record that exclusion.
-  # GLM remains explicit-pin only; Fable is automatic only as critical last resort.
+  # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
   critical:
     - [openai_frontier]
     - [claude-opus-5-5]
@@ -1266,8 +1285,6 @@ review_ladders:
     - [composer-2.5]
     - [pool]
     - [pool-xs]
-    - [claude-fable-5-1]
-    - [claude-fable-5-1-cursor-fallback]
     - [grok-4.7-cursor-fallback]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # neither seat is eligible the resolver returns no reviewer with a stated reason.

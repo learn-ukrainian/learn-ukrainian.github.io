@@ -25,14 +25,14 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **ops-api** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic ops-api` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
-| **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
+| **hramatka** (teacher lesson service) | Grok 4.6 | `./start-grok-driver.sh --epic hramatka` |
 | **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` (slot `grok-core`; file handoff `.claude/curriculum-upgrade-epic/`) |
 | **a1-upgrade** (#7995 closed 2026-09-24) | Retired selector; no driver launch | — |
 | **eval-harness** (#4913 closed 2026-09-24) | Retired selector; route new infra work through `infra` | — |
 | **folk** (curriculum track) | Grok 4.6 † | `./start-grok-driver.sh --epic folk` |
 | **bio** (curriculum track) | Grok 4.6 | `./start-grok-driver.sh --epic bio` |
 | **any epic** — incident · architecture cutover · contested review | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
-| **any epic** — Fable alternate (advisor seat; summon, don't seat) | Fable 5.1 | `./start-claude-driver.sh --epic <epic> --model fable` |
+| **any epic** — Fable alternate (selectable Claude model; no advisory, approval or review role, #9583) | Fable 5.1 | `./start-claude-driver.sh --epic <epic> --model fable` |
 | **any epic** — routine Anthropic alternate | Sonnet 5.5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5-5` |
 | **any epic** — Cursor TUI driver (pinned `grok-4.7-high`, never Auto; attested after run) | Cursor `grok-4.7` | `./start-cursor-driver.sh --epic <epic>` |
 
@@ -107,11 +107,12 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 `drive-epic` skill enforces this.
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
-- **Fable 5.1** (Anthropic top tier) — hardest judgment and top Anthropic advisor (with
-  Astra); summoned, not seated as the resident driver since Opus 5.5 took the driver seat
-  (operator 2026-09-22). **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
-  (`claude-opus-5-5`). Designated advisor authority
-  stays Fable 5.1.
+- **Fable 5.1** — selectable with `--model fable`, but not seated as the resident driver
+  since Opus 5.5 took the driver seat (operator 2026-09-22); it holds no advisory, approval
+  or review role (#9583). **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
+  (`claude-opus-5-5`). Designated approval is given by the operator, or when
+  `claude-opus-5-5` and `gpt-6.1-sol` both approve, neither being the proposal's author;
+  if they disagree, the operator decides.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
@@ -232,7 +233,8 @@ teaches the message-plane and cross-family review loop.
 A driver escalates instead of deciding solo when it hits: (1) an architecture/layout/process
 change, (2) a contested cross-family verdict, (3) a fragile fix whose right layer is unclear,
 (4) a high-risk route that would trip the `model_catalog.yaml` risk floor, or (5) a repo-wide
-safety interruption of another lane. Advisors for those calls: **Fable @ high, Astra @ high**.
+safety interruption of another lane. Advisors for those calls: **Opus 5.5 @ high, Sol 6.1 @ high**; designated approval needs both,
+neither being the proposal's author, and the operator decides if they disagree.
 
 Everything else the driver runs to completion and reports past-tense — no "should I?" menus.
 

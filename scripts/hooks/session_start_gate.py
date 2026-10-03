@@ -172,9 +172,7 @@ def phase_primary_main(args: argparse.Namespace) -> dict[str, Any]:
     except Exception as exc:
         return _crash(exc)
     try:
-        rc, _out, _err = _run_cli_inprocess(
-            assert_primary_on_main.main, ["--cwd", args.project_dir, "--quiet"]
-        )
+        rc, _out, _err = _run_cli_inprocess(assert_primary_on_main.main, ["--cwd", args.project_dir, "--quiet"])
     except Exception as exc:
         return _crash(exc)
     if rc != 0:
@@ -313,9 +311,7 @@ def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
                     f"this queue.\nOutput:\n{out.strip() or err.strip()}"
                 ),
             }
-        status_note = (
-            f"status={payload.get('status')!r}" if isinstance(payload, dict) else "unstructured output"
-        )
+        status_note = f"status={payload.get('status')!r}" if isinstance(payload, dict) else "unstructured output"
         return {
             "status": "crashed",
             "error": f"claim-thread-lease rc={rc} with {status_note}",
@@ -351,9 +347,7 @@ def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
         )
     corrupt = payload.get("recovered_from_corrupt_lease")
     if corrupt:
-        banner_parts.append(
-            f"THREAD LEASE HEALED: on-disk lease was corrupt and was reset -- {corrupt}."
-        )
+        banner_parts.append(f"THREAD LEASE HEALED: on-disk lease was corrupt and was reset -- {corrupt}.")
     return {"status": "ok", "generation": generation, "takeover_banner": "\n".join(banner_parts)}
 
 
@@ -414,10 +408,7 @@ def phase_rollover_detect(args: argparse.Namespace) -> dict[str, Any]:
         return {
             "status": "crashed",
             "error": "detect output was not valid JSON",
-            "context": (
-                "ERROR: thread_handoff.py detect output could not be parsed. Stop.\n"
-                f"Output:\n{(out or err)}"
-            ),
+            "context": (f"ERROR: thread_handoff.py detect output could not be parsed. Stop.\nOutput:\n{(out or err)}"),
         }
     detect_status = str(payload.get("status") or "")
     if detect_status in {"ambiguous", "pending_start", "resumed"}:
@@ -429,12 +420,22 @@ def phase_rollover_detect(args: argparse.Namespace) -> dict[str, Any]:
             return {
                 "status": "crashed",
                 "error": f"detect --format session-start rc={frc}",
-                "context": (
-                    f"ERROR: thread_handoff.py detect failed. Stop.\nOutput:\n{(fout or ferr).strip()}"
-                ),
+                "context": (f"ERROR: thread_handoff.py detect failed. Stop.\nOutput:\n{(fout or ferr).strip()}"),
             }
         return {"status": "stop", "context": fout, "detect_status": detect_status}
     if detect_status == "none":
+        if payload.get("skipped_foreign"):
+            try:
+                frc, fout, ferr = _formatted()
+            except Exception as exc:
+                return _crash(exc)
+            if frc != 0:
+                return {
+                    "status": "crashed",
+                    "error": f"detect --format session-start rc={frc}",
+                    "context": fout or ferr,
+                }
+            return {"status": "ok", "detect_status": "none", "context": fout}
         return {"status": "ok", "detect_status": "none"}
     return {
         "status": "stop",

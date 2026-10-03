@@ -35,6 +35,7 @@ from scripts.orchestration.integration_sweep import (
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
+from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_MODELS,
@@ -450,14 +451,18 @@ def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, fami
     reported its display name (``"Grok 4.7 256K High"``): a bare or other-variant
     slug (``grok-4.7``, ``grok-4.7-high-fast``) attests no variant, and Composer,
     Auto and Cursor-routed Claude are unpinned. Through any other harness Grok
-    never judges and Kimi never reviews.
+    never judges and Kimi never reviews. On every harness the model must also
+    hold a catalog review role (#9583), so Fable and retired models never approve.
     """
     if cursor:
-        if model in FORMAL_CURSOR_REVIEW_MODELS and reported != model:
-            return
-    elif family not in NATIVE_NON_REVIEWER_FAMILIES:
-        return
-    raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
+        admitted = model in FORMAL_CURSOR_REVIEW_MODELS and reported != model
+    else:
+        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES
+    if not admitted:
+        raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
+    # #9583: a model the catalog gives no review role never approves, on any harness.
+    if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
+        raise RecordError(f"reviewer model refused: {refusal}")
 
 
 @publication_boundary(RecordError)

@@ -603,29 +603,95 @@ def test_same_family_requested_reviewer_takes_resolvers_eligible_seat(monkeypatc
     assert routing.substitution["source"] == "reviewer-resolver"
 
 
-@pytest.mark.parametrize("risk,model", [("medium", "claude-fable-5-1")])
+FABLE_PINS = [
+    ("claude", "claude-fable-5-1"),
+    ("claude", "claude-fable-5-1[1m]"),
+    ("cursor", "claude-fable-5-1-thinking-high"),  # the Cursor fallback slug
+]
+NO_REVIEW_ROLE = "holds no review, critique or approval role in the model catalog"
+
+
+@pytest.mark.parametrize("seat,model", FABLE_PINS)
+@pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
-def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk, model, flags):
-    # Fable stays off every routine ladder; an explicit eligible pin is still admitted.
+def test_fable_code_review_pin_is_refused(monkeypatch, seat, model, risk, flags):
+    """#9583: Fable holds no review role in the catalog, so an explicit pin is refused, never substituted."""
     args = _args(
-        "--agent",
-        "claude",
-        "--model",
-        model,
-        "--review-author-model",
-        "gpt-6.1-sol",
-        "--review-risk",
-        risk,
-        *flags,
+        "--agent", seat, "--model", model,
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, *flags,
     )
-    assert all(
-        candidate.concrete_model != args.model for rung in reviewer_resolver.REVIEW_LADDERS[risk] for candidate in rung
-    )
-    (refusal, target), routing = _admit(args, monkeypatch)
-    assert refusal is None
-    assert (target.recipient, target.model) == ("claude", model)
+    (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None
+    assert refusal.startswith("REVIEW_ROUTE_REFUSED:") and NO_REVIEW_ROLE in refusal
     assert routing.substitution is None
-    assert "SUBSTITUT" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("seat,model", FABLE_PINS)
+@pytest.mark.parametrize(
+    "typing",
+    [
+        pytest.param(("--require-review-verdict",), id="verdict"),
+        pytest.param(("--review-profile", "code"), id="code"),
+        pytest.param(("--review-profile", "ukrainian"), id="ukrainian"),
+        pytest.param(("--review-profile", "ukrainian", "--require-review-verdict"), id="ukrainian-verdict"),
+        pytest.param(("--review-attempt", "attempt-1"), id="attempt"),
+    ],
+)
+def test_fable_review_pin_is_refused_for_every_profile(monkeypatch, seat, model, typing):
+    """#9583: the Ukrainian path admitted Claude by family alone; the catalog role now decides."""
+    args = _args("--agent", seat, "--model", model, *typing, verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None
+    assert NO_REVIEW_ROLE in refusal and "claude-fable-5-1" in refusal
+
+
+@pytest.mark.parametrize(
+    "seat,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("agy", "gemini-3.8-flash-high")]
+)
+def test_ukrainian_review_still_admits_the_catalog_reviewers(monkeypatch, seat, model):
+    args = _args("--agent", seat, "--model", model, "--review-profile", "ukrainian", verdict=False)
+    (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert refusal is None
+    assert (target.recipient, target.model) == (seat, model)
+    assert routing.substitution is None
+
+
+@pytest.mark.parametrize("seat,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")])
+def test_code_review_still_admits_opus_and_sol(monkeypatch, seat, model):
+    author = "gpt-6.1-sol" if seat == "claude" else "claude-opus-5-5"
+    args = _args("--agent", seat, "--model", model, "--review-author-model", author, "--review-risk", "high")
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert refusal is None
+    assert (target.recipient, target.model) == (seat, model)
+
+
+def test_retired_astra_review_pin_is_refused(monkeypatch):
+    args = _args("--model", "gpt-6-astra", "--review-profile", "ukrainian", verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None and "retired in the model catalog (gpt-6-astra)" in refusal
+
+
+@pytest.mark.parametrize("seat,model", FABLE_PINS)
+def test_bridge_review_mode_refuses_a_fable_pin(seat, model):
+    """``ask-* --review`` admits in ``REVIEW_MODE`` before any prompt or dispatch is written."""
+    from scripts.agent_runtime.kimi_admission import REVIEW_MODE
+
+    with pytest.raises(ReviewAdmissionRefused, match=NO_REVIEW_ROLE):
+        resolve_and_admit((seat,), mode=REVIEW_MODE, model=model, review=True)
+    (target,) = resolve_and_admit(("claude",), mode=REVIEW_MODE, model="claude-opus-5-5", review=True)
+    assert target.model == "claude-opus-5-5"
+
+
+def test_the_review_worker_refuses_a_fable_pin(tmp_path):
+    """The worker re-admits its review identity; a Fable pin there is a refusal, not a traceback."""
+    refusal, target = delegate._kimi_worker_refusal(
+        "review-9583", agent="claude", model="claude-fable-5-1", mode="read-only", cwd=tmp_path, review=True
+    )
+    assert target is None and NO_REVIEW_ROLE in refusal
+    refusal, target = delegate._kimi_worker_refusal(
+        "review-9583", agent="claude", model="claude-opus-5-5", mode="read-only", cwd=tmp_path, review=True
+    )
+    assert refusal is None and target.model == "claude-opus-5-5"
 
 
 HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol, claude-opus-5-5"
@@ -635,7 +701,6 @@ HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol,
     "seat,model,author,expected",
     [
         ("claude", "claude-sonnet-5-5", "gpt-6.1-sol", ("claude", "claude-opus-5-5")),
-        ("claude", "claude-fable-5-1", "gpt-6.1-sol", ("claude", "claude-opus-5-5")),
         ("cursor", "grok-4.7-high", "claude-opus-5-5", ("codex", "gpt-6.1-sol")),
     ],
 )
@@ -738,22 +803,10 @@ def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monke
     assert "NOTE: REVIEW_BUDGET_RETAINED" in capsys.readouterr().err
 
 
-def test_off_ladder_reviewer_is_substituted_when_budget_requires_it(monkeypatch, capsys):
+def test_eligible_reviewer_is_substituted_when_budget_requires_it(monkeypatch, capsys):
     args = _args(
-        "--agent",
-        "claude",
-        "--model",
-        "claude-fable-5-1",
-        "--check-budget",
-        "--review-author-model",
-        "composer-2.5",
-        "--review-risk",
-        "medium",
-    )
-    assert all(
-        candidate.concrete_model != args.model
-        for rung in reviewer_resolver.REVIEW_LADDERS[args.review_risk]
-        for candidate in rung
+        "--agent", "claude", "--model", "claude-sonnet-5-5", "--check-budget",
+        "--review-author-model", "composer-2.5", "--review-risk", "medium",
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")

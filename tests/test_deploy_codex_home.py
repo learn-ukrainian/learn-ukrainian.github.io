@@ -55,6 +55,19 @@ def test_canonical_source_matches_gpt6_role_matrix():
     }
 
 
+def test_astra_seat_is_retired_and_advisor_states_the_approval_rule():
+    root = Path(deployer.__file__).resolve().parents[1] / "agents_extensions/codex-home"
+    assert "astra_advisor_high" in deployer.SUPERSEDED_PROFILES
+    assert not set(deployer.SUPERSEDED_PROFILES) & set(deployer.PROFILE_ROLES)
+    assert not any("astra" in name for name in deployer.PROFILE_ROLES)
+    assert not (root / "agents/astra_advisor_high.toml").exists()
+    assert "astra" not in (root / "AGENTS.md").read_text().lower()
+    advisor = tomllib.loads((root / "agents/sol_advisor_high.toml").read_text())
+    rule = advisor["developer_instructions"]
+    for phrase in ("Opus 5.5 and Sol 6.1", "approval needs both", "neither may be the author", "operator decides"):
+        assert phrase in rule
+
+
 def test_preservation_idempotence_backups(source):
     home = source.parent / "home"
     home.mkdir()
@@ -327,7 +340,7 @@ def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):
     (home / "config.toml").write_text(sentinel)
     cli = [sys.executable, str(Path(deployer.__file__)), "--codex-home", str(home)]
     result = subprocess.run(cli, capture_output=True, text=True, check=True, timeout=60)
-    assert "agents/astra_advisor_high.toml: changed" in result.stdout
+    assert "agents/sol_advisor_high.toml: changed" in result.stdout
     config = tomllib.loads((home / "config.toml").read_text())
     assert config["model"] == "gpt-6.1-sol"
     assert config["model_reasoning_effort"] == "high"
@@ -340,7 +353,7 @@ def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):
     assert '# sentinel comment\n' in (home / "config.toml").read_text()
     assert '"xhigh" # nested sentinel\n' in (home / "config.toml").read_text()
     expected = {
-        "astra_advisor_high": ("gpt-6.1-sol", "high", "read-only"),
+        "sol_advisor_high": ("gpt-6.1-sol", "high", "read-only"),
         "sol_coder_high": ("gpt-6.1-sol", "high", "workspace-write"),
         "sol_red_team_high": ("gpt-6.1-sol", "high", "read-only"),
         "sol_ukrainian_content_high": ("gpt-6.1-sol", "high", "workspace-write"),
