@@ -97,6 +97,10 @@ MAX_BUDGET_SECONDS = 120.0
 GREP_OUTPUT_CAP = 16 * 1024 * 1024
 EXCERPT_OUTPUT_CAP = 32 * 1024 * 1024
 CODE_OUTPUT_CAP = 32 * 1024 * 1024
+# Worker threads per git grep. Git's default is one per CPU, and a query runs up to six greps at once
+# (four text searches beside the code search and its span read), so one query held 102 threads on a
+# 16-CPU host; two each bound a query to twelve worker threads, whatever the host.
+GREP_THREADS = 2
 LIFECYCLE_RANK = {'active': 0, None: 0, 'draft': 1, 'residual': 1, 'archive': 2, 'superseded': 3}
 BACKUP_RANK = 4
 LIFECYCLE_PENALTY = 0.03  # relevance a file gives up per lifecycle step (historical: 0.06, backup: 0.12)
@@ -288,15 +292,15 @@ MIN_STEM = 4
 UNDOUBLED = re.compile(r'([b-df-hj-km-np-rtv-xz])\1$')  # a doubled final consonant other than l, s, z
 VERB_NOUN_AL = re.compile(r'(?<=[svw])als?$')  # approval(s), removal, proposal, renewal: a verb's -al noun
 # The endings after a term whose last letter the ending changes (``changed_ending``), as in Porter's
-# steps 1b and 1c: a silent e drops before -ing (close, closing), a y after a consonant becomes ie or
-# e (entry, entries; expiry, expires; flaky, flake). Never -er or -ing for the y: ready is no reader.
+# steps 1b and 1c: a silent e drops before -ing (close, closing), a y after a consonant becomes i
+# before the inflections that change it (entry, entries; retry, retried; early, earlier). Never e
+# for the y: story is no store, and flaky meets flake only through a dictionary, which find has not.
 E_DROP_ENDINGS = ('ings', 'ing')
-Y_ENDINGS = ('iers', 'ies', 'ied', 'ier', 'es', 'ed', 'e')
+Y_ENDINGS = ('iers', 'ies', 'ied', 'ier')
+# The words a y-plural's stem begins (entries: entr): the y word and its inflections, and an ie noun
+# (cookies, cookie); never the stem's other words, so stories is no store and parties no parts.
+Y_PLURAL_ENDINGS = ('y', 'ie', *Y_ENDINGS)
 VOWELS = frozenset('aeiouy')
-# An agent noun meets the word it is made from where both are read (reviewer, review; checkers, check);
-# the searches never widen to that word, so "interpreter" never selects every "interpret".
-AGENT_NOUN = re.compile(r'([a-z]{4,})ers?')  # at least MIN_STEM letters before the -er
-AGENT_BASE_ENDINGS = ('es', 'ed', 's', 'e', '')  # never -ing: header is no heading
 
 
 @functools.lru_cache(maxsize=4096)
@@ -306,9 +310,10 @@ def stem(term: str) -> str:
     The suffixes are inflectional (ing, ed, es, s, ies) and the common derivational endings
     (ation, ion, ment and their plurals), longest first, so "parsing" meets "parse", "deletion"
     meets "delete", "enforcement" meets "enforce", "migration" meets "migrate" and "entries"
-    meets "entry". A doubled final consonant left by ing or ed is undoubled (scanning, scan),
-    as in Porter's stemmer; a double ``ss`` keeps its ``s`` (process, class). A verb's -al noun
-    loses its -al (approval meets approve, removal meets remove, proposal meets propose).
+    meets "entry" (and only "entry" and its inflections: ``y_plural``). A doubled final consonant
+    left by ing or ed is undoubled (scanning, scan), as in Porter's stemmer; a double ``ss`` keeps
+    its ``s`` (process, class). A verb's -al noun loses its -al (approval meets approve, removal
+    meets remove, proposal meets propose).
     """
     if term.endswith('ss'):
         return term
@@ -319,6 +324,19 @@ def stem(term: str) -> str:
             base = term[:-len(suffix)]
             return base[:-1] if suffix in ('ing', 'ed') and UNDOUBLED.search(base) else base
     return term
+
+
+def y_plural(term: str) -> str | None:
+    """The ``stem`` of a term whose -ies replaced a y after a consonant (entries: entr), else None."""
+    base = stem(term)
+    return base if term.endswith('ies') and base == term[:-3] and base[-1] not in VOWELS else None
+
+
+def stem_prefixes(term: str) -> tuple[str, ...]:
+    """The prefixes a word the term meets through its ``stem`` begins with: the stem, or for a
+    ``y_plural`` the stem's y and i forms (entry, entri), which every Y_PLURAL_ENDINGS word begins."""
+    base = y_plural(term)
+    return (stem(term),) if base is None else (base + 'y', base + 'i')
 
 
 @functools.lru_cache(maxsize=4096)
@@ -335,15 +353,15 @@ def changed_ending(term: str) -> tuple[str, tuple[str, ...]] | None:
 
 @functools.lru_cache(maxsize=4096)
 def term_prefixes(term: str) -> tuple[str, ...]:
-    """The fixed strings that begin every word ``term`` meets (``_term_body``): its ``stem`` (which
-    begins the term itself) and, for a changed last letter, the base with each shortest ending (clos-ing,
-    entr-ies, flak-e). Searches look for these, so a file holding only "closing" or "flake" is found."""
+    """The fixed strings that begin every word ``term`` meets (``_term_body``): its ``stem_prefixes``
+    and, for a changed last letter, the base with each shortest ending (clos-ing, entr-ies). Searches
+    look for these, so a file holding only "closing" or "entries" is found."""
     changed = changed_ending(term)
     if changed is None:
-        return (stem(term),)
+        return stem_prefixes(term)
     base, endings = changed
     shortest = [e for e in endings if not any(o != e and e.startswith(o) for o in endings)]
-    return (stem(term), *(base + e for e in shortest))
+    return (*stem_prefixes(term), *(base + e for e in shortest))
 
 
 def escape_excerpt(text: str) -> str:
@@ -389,13 +407,13 @@ def _term_body(term: str) -> str:
     MIN_STEM letters) one of WORD_ENDINGS; or the term's ``stem``, as much of the rest of the term
     as the word shares, and one of MORPH_ENDINGS; or either with a doubled final consonant and a
     DOUBLING_ENDINGS ending; or, when an ending changes its last letter (``changed_ending``), the
-    term without that letter and such an ending; or, for an agent noun (AGENT_NOUN), the word it is
-    made from with AGENT_BASE_ENDINGS. So two inflections of one word meet however far each runs
-    past their shared part: translated, translations; mapped, mapping; decolonizing,
-    decolonization; assessing, assessment; and parse, parser, parsing; deletion, deleted; entry,
-    entries; reviewer, review; pack, packed, never packages, nor reading, readiness, nor ready,
-    reader, nor invented, inventory, nor com, command. A term shorter than
-    MIN_PREFIX ("pr", "ci") meets only itself and its SHORT_ENDINGS inflections.
+    term without that letter and such an ending. A ``y_plural``'s stem takes Y_PLURAL_ENDINGS only.
+    So two inflections of one word meet however far each runs past their shared part: translated,
+    translations; mapped, mapping; decolonizing, decolonization; assessing, assessment; and parse,
+    parser, parsing; deletion, deleted; entry, entries; pack, packed, never packages, nor reading,
+    readiness, nor ready, reader, nor story, store, nor stories, stored, nor reviewer, review (an
+    -er word may be no agent noun: corner, proper), nor invented, inventory, nor com, command. A
+    term shorter than MIN_PREFIX ("pr", "ci") meets only itself and its SHORT_ENDINGS inflections.
     """
     if len(term) < MIN_PREFIX:
         body = re.escape(term) + '(?:' + '|'.join(re.escape(e) for e in SHORT_ENDINGS) + ')'
@@ -405,15 +423,15 @@ def _term_body(term: str) -> str:
         # The term as typed may run on by any few characters (pack, packed); its stem only by an
         # inflection or derivation (invented meets invention, never inventory).
         alternatives = [re.escape(term) + (f'(?:{_either(WORD_ENDINGS)}|{free})' if len(term) >= MIN_STEM else free)]
-        if base != term:
+        if y_plural(term):  # entries: entry, entried, never entre
+            alternatives.append(re.escape(base) + _either(Y_PLURAL_ENDINGS))
+        elif base != term:
             shared = [term[len(base):k] for k in range(len(term) - 1, len(base) - 1, -1)]  # longest first
             alternatives.append(re.escape(base) + _either(shared) + _either(MORPH_ENDINGS))
         alternatives += [re.escape(word + word[-1]) + _either(DOUBLING_ENDINGS)
                          for word in dict.fromkeys((term, base)) if UNDOUBLED.match(word[-1] * 2)]
-        if changed := changed_ending(term):  # close, closing; entry, entries; flaky, flake
+        if changed := changed_ending(term):  # close, closing; entry, entries
             alternatives.append(re.escape(changed[0]) + _either(changed[1]))
-        if agent := AGENT_NOUN.fullmatch(term):  # reviewer, review; checkers, check
-            alternatives.append(re.escape(agent.group(1)) + _either(AGENT_BASE_ENDINGS))
         body = '(?:' + '|'.join(alternatives) + ')'
     return body
 
@@ -561,10 +579,10 @@ class GitRun:
 def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
     """Run one ``git grep --cached`` with a wall-clock deadline and an output cap.
 
-    ``args`` are options, ``-e`` patterns and pathspecs built by ``_search_args``.
-    Exit status 1 is "no match".
+    ``args`` are options, ``-e`` patterns and pathspecs built by ``_search_args``; every grep runs
+    GREP_THREADS worker threads. Exit status 1 is "no match".
     """
-    return _run_git(repo, ['grep', '--cached', *args], deadline, cap)
+    return _run_git(repo, ['grep', '--cached', f'--threads={GREP_THREADS}', *args], deadline, cap)
 
 
 def _run_git(repo: Path, argv: list[str], deadline: float, cap: int) -> GitRun:
@@ -2069,12 +2087,13 @@ def enclosing_span(spans: list[tuple[int, int, str]], line_no: int) -> tuple[int
 
 
 def _summary_hits(summaries: CodeSummaries, terms: list[str]) -> dict[str, set[str]]:
-    """Per code file, the terms its summary holds as a word prefix (as typed or as their stem), or as
-    a word whose ending changes the term's last letter (``changed_ending``: closing, flake)."""
+    """Per code file, the terms its summary holds as a word prefix (as typed or as their
+    ``stem_prefixes``), or as a word whose ending changes the term's last letter (``changed_ending``:
+    closing, entries)."""
     hits: dict[str, set[str]] = {}
     for term in terms:
-        prefixes = (term, stem(term))
-        changed = term_prefixes(term)[1:]
+        prefixes = (term, *stem_prefixes(term))
+        changed = term_prefixes(term)[len(stem_prefixes(term)):]
         for word, paths in summaries.index.items():
             # A changed last letter is checked against the whole word: entry meets entries, never entrepreneur.
             if word.startswith(prefixes) or (word.startswith(changed) and _term_pattern(term).search(f' {word} ')):
