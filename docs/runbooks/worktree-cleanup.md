@@ -23,6 +23,47 @@ environment residue.
 
 ## Safety contract
 
+Before automatic removal, the dispatch exit reaper, post-task reaper (including
+ACP runtimes), and common P0 reaper share the ignored-output preservation guard
+in `scripts/fleet/ignored_task_output.py`. `merge_closeout` and the scheduled
+worktree cleanup invoke the common reaper; `branch_sweep` deletes branch refs
+only and never removes worktrees. The common reaper's separate husk removal
+accepts only unregistered directories with no files or symlinks.
+
+Direct removers outside that reap chain still call
+`scripts/orchestration/worktree_claims.py`: ACP execution teardown,
+data-tier cleanup, sibling Git maintenance, task-family cleanup, and the
+guarded removal CLI. They do not yet call this preservation guard. Git's
+unforced removal also discards ignored files, so their existing clean-tree
+checks do not establish ignored-output preservation. Extending the guard to
+that common boundary remains owned by the infra driver; do not treat the
+task-reap fix as proof for those separate removal paths.
+
+The guard inventories all Git-ignored regular files, including `.cache/`
+outputs never named in a response. Files with mtime at or after the task's
+recorded `started_at` are copied, retaining their relative paths under
+`batch_state/preserved/<task-id>/`. An absent start conservatively includes all
+ignored non-cache files; a malformed start refuses removal. Closeout without a
+task identity uses `worktree-<path-digest>` at the same destination. Empty files
+are included. Existing copy verification checks size and SHA-256, refuses
+conflicting evidence, and rechecks inventory and copied bytes before removal.
+
+Known tool directories (`__pycache__`, `.pytest_cache`, `.ruff_cache`,
+`.mypy_cache`, `.venv`, `node_modules`, and Git metadata) are excluded. `.cache`
+itself is deliberately not a tool-cache exemption. Shared state and verified
+provisioned database links survive outside the worktree and are never copied.
+Task output placed in an excluded cache remains disposable.
+
+Automatic preservation is capped at **256 MiB per worktree**, bounding disk
+duplication while accommodating text output and small reports. Above the cap,
+no partial copy is attempted and the worktree is retained for its owner's
+disposition. Inventory, copy, byte-verification, or task-record write failures
+also retain it. Task terminal status never changes preservation eligibility.
+Existing task records and reap/closeout receipts report `preserved_artifacts`
+with `count`, `bytes`, and `location`; missing task records are reported in the
+receipt rather than synthesized. Owners must recover the preserved outputs
+before separately deciding retention; automatic reaping does not delete them.
+
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
 
 - its pull request is open (`open_pr`);

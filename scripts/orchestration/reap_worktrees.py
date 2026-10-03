@@ -53,8 +53,8 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
+from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_claims, worktree_prep
-from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -108,6 +108,7 @@ class ReapResult:
     branch_pruned: bool = False
     recovery_ref: str | None = None
     owner: str | None = None
+    preserved_artifacts: dict[str, Any] | None = None
     # Report-only findings (#8663): kind, evidence, and a "verify first:"
     # removal command a human runs; the reaper never acts on them.
     needs_attention: dict[str, Any] | None = None
@@ -3572,7 +3573,7 @@ def _reap_qualified_worktree(
         # ``_worktree_clean`` accepts disposable ignored residue such as a
         # worker's ``.venv``; git still counts it, so force is required.
         control_root = control_plane_root(repo_root)
-        artifacts_ok, artifact_refusal, _artifacts = preserve_worktree_artifacts(
+        artifacts_ok, artifact_refusal, preserved_artifacts = preserve_worktree_artifacts(
             info.path,
             primary=control_root,
             task_id=_dispatch_task_id(repo_root, info),
@@ -3587,6 +3588,7 @@ def _reap_qualified_worktree(
                 dirty=dirty,
                 pr=_pr_dict(pr_state),
                 recovery_ref=recovery_ref,
+                preserved_artifacts=preserved_artifacts,
             )
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
         approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
@@ -3606,6 +3608,7 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
                 error=remove_error,
                 recovery_ref=recovery_ref,
+                preserved_artifacts=preserved_artifacts,
             )
 
         # Prune and the daily-cap write do not need the per-worktree lock.
@@ -3640,6 +3643,7 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
                 error=branch_prune_error,
                 recovery_ref=recovery_ref,
+                preserved_artifacts=preserved_artifacts,
             )
         return ReapResult(
             path=str(info.path),
@@ -3650,6 +3654,7 @@ def _reap_qualified_worktree(
             pr=_pr_dict(pr_state),
             branch_pruned=branch_pruned,
             recovery_ref=recovery_ref,
+            preserved_artifacts=preserved_artifacts,
         )
     except subprocess.TimeoutExpired as exc:
         # A git call outlived its locked-region bound (#8748): skip, never

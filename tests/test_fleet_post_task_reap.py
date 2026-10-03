@@ -180,14 +180,15 @@ def test_no_task_state(hermetic_reap):
 
 
 @pytest.mark.parametrize("runtime", [False, True])
-def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime):
+@pytest.mark.parametrize("artifact_name", ["batch_state/report.txt", ".cache/transcriptions/page.txt"])
+def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime, artifact_name):
     repo, tasks = hermetic_reap
     task_id = "preserve-post-task"
     worktree = _add_acp_runtime_worktree(repo, task_id) if runtime else _add_dispatch_worktree(repo, "kimi", task_id)
     with (repo / ".git/info/exclude").open("a") as exclude:
-        exclude.write("batch_state/\n")
-    artifact = worktree / "batch_state/report.txt"
-    artifact.parent.mkdir()
+        exclude.write("batch_state/\n.cache/\n")
+    artifact = worktree / artifact_name
+    artifact.parent.mkdir(parents=True)
     artifact.write_bytes(b"post-task evidence")
     _write_task_state(
         tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
@@ -200,9 +201,8 @@ def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime):
     assert not worktree.exists()
     state = json.loads((tasks / f"{task_id}.json").read_text())
     assert state["preserved_artifacts"]["count"] == 1
-    assert (
-        Path(state["preserved_artifacts"]["location"]) / "batch_state/report.txt"
-    ).read_bytes() == b"post-task evidence"
+    assert state["preserved_artifacts"]["bytes"] == len(b"post-task evidence")
+    assert (Path(state["preserved_artifacts"]["location"]) / artifact_name).read_bytes() == b"post-task evidence"
 
 
 def test_running_skip(hermetic_reap):
@@ -855,11 +855,9 @@ def test_post_task_reap_result_named_file_scope(hermetic_reap, runtime, referenc
     assert row["action"] == "removed", row
     assert not worktree.exists()
     location = repo / "batch_state/preserved" / task_id
-    if reference == "ignored/report.txt":
-        assert (location / reference).read_bytes() == b"named evidence"
-        assert json.loads(path.read_text())["preserved_artifacts"]["count"] == 1
-    else:
-        assert not location.exists()
+    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
+    assert not (location / ".pytest_cache/cache.txt").exists()
+    assert json.loads(path.read_text())["preserved_artifacts"]["count"] == 1
 
 
 def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):

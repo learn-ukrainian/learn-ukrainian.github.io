@@ -1132,8 +1132,11 @@ def test_ignored_artifact_nested_repo_global_clean_filter_rejected_without_execu
     subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
     (repo_dir / ".gitattributes").write_text("* filter=probe\n")
     (repo_dir / "tracked.txt").write_text("initial content\n")
-    subprocess.run(["git", "add", ".gitattributes", "tracked.txt"], cwd=repo_dir, check=True, env={**os.environ, "HOME": str(fake_home)}, timeout=30)
-    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env={**os.environ, "HOME": str(fake_home)}, timeout=30)
+    # Select the fixture config explicitly: the test harness may suppress global
+    # configuration through GIT_CONFIG_GLOBAL, overriding HOME's .gitconfig.
+    fixture_env = {**_GIT_ENV, "HOME": str(fake_home), "GIT_CONFIG_GLOBAL": str(fake_home / ".gitconfig")}
+    subprocess.run(["git", "add", ".gitattributes", "tracked.txt"], cwd=repo_dir, check=True, env=fixture_env, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=fixture_env, timeout=30)
     if marker.exists():
         marker.unlink()
 
@@ -1141,6 +1144,7 @@ def test_ignored_artifact_nested_repo_global_clean_filter_rejected_without_execu
     (repo_dir / "tracked.txt").write_text("updated content\n")
 
     monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(fake_home / ".gitconfig"))
     ok, reason, metadata = guard(checkout)
     assert not ok and metadata is None
     assert "uncommitted or ignored changes" in reason

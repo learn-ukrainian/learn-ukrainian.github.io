@@ -6851,12 +6851,10 @@ def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, referen
     assert result.action == "removed", result
     assert not worktree.exists()
     location = repo / "batch_state/preserved" / task_id
-    if reference == "ignored/report.txt":
-        assert (location / reference).read_bytes() == b"named evidence"
-        saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
-        assert saved["preserved_artifacts"]["count"] == 1
-    else:
-        assert not location.exists()
+    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
+    assert not (location / ".pytest_cache/cache.txt").exists()
+    saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+    assert saved["preserved_artifacts"]["count"] == 1
 
 
 @pytest.mark.parametrize("scenario", links.SCENARIOS)

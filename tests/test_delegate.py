@@ -12412,18 +12412,23 @@ def test_read_only_clean_settle_removes_worktree_and_keeps_branch(tmp_tasks_dir,
 
 
 @pytest.mark.parametrize("copy_fails", [False, True])
-def test_settle_preserves_ignored_artifacts_before_removal(tmp_tasks_dir, tmp_path, monkeypatch, copy_fails):
+@pytest.mark.parametrize("artifact_name", ["batch_state/reports/result.patch", ".cache/transcriptions/page.txt"])
+def test_settle_preserves_ignored_artifacts_before_removal(
+    tmp_tasks_dir, tmp_path, monkeypatch, copy_fails, artifact_name
+):
     from scripts.orchestration import worktree_artifacts
 
     task_id = "reap-preserve-artifacts"
     primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
     with (primary / ".git" / "info" / "exclude").open("a") as exclude:
         exclude.write("batch_state/\n")
-    artifact = worktree / "batch_state" / "reports" / "result.patch"
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    artifact = worktree / artifact_name
     artifact.parent.mkdir(parents=True)
     payload = b"unapplied patch\x00\xff\n"
     artifact.write_bytes(payload)
-    record = {"task_id": task_id, "status": "done", "response": f"Capture `{artifact}`."}
+    record = {"task_id": task_id, "status": "done", "started_at": "2000-01-01T00:00:00Z"}
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     if copy_fails:
 
@@ -12446,8 +12451,12 @@ def test_settle_preserves_ignored_artifacts_before_removal(tmp_tasks_dir, tmp_pa
         assert out["action"] == "removed", out
         assert not worktree.exists()
         location = primary / "batch_state" / "preserved" / task_id
-        assert (location / "batch_state/reports/result.patch").read_bytes() == payload
-        assert state["preserved_artifacts"] == record["preserved_artifacts"] == {"count": 1, "location": str(location)}
+        assert (location / artifact_name).read_bytes() == payload
+        assert (
+            state["preserved_artifacts"]
+            == record["preserved_artifacts"]
+            == {"count": 1, "bytes": len(payload), "location": str(location)}
+        )
     assert _branch_ref_present(primary, branch)
 
 
@@ -12477,6 +12486,42 @@ def test_settle_final_state_keeps_preservation_receipt(tmp_tasks_dir, tmp_path, 
     assert state["preserved_artifacts"]["count"] == 1
     assert Path(state["preserved_artifacts"]["location"]) == primary / "batch_state/preserved/reap-receipt"
     assert not worktree.exists()
+
+
+@pytest.mark.parametrize("over_cap", [False, True])
+def test_settle_ignored_output_mtime_and_cap(tmp_tasks_dir, tmp_path, monkeypatch, over_cap):
+    from scripts.fleet import ignored_task_output as output
+
+    task_id = "ignored-output-boundary"
+    primary, worktree, _ = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    old = worktree / ".cache/old.txt"
+    old.parent.mkdir()
+    old.write_bytes(b"pre-existing")
+    os.utime(old, (946684799, 946684799))
+    recent = old.parent / "recent.txt"
+    recent.write_bytes(b"task output")
+    if over_cap:
+        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+    record = {"task_id": task_id, "status": "done", "started_at": "2000-01-01T00:00:00Z"}
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+
+    result = delegate._settle_worktree_reap(
+        worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
+    )
+
+    if over_cap:
+        assert result["action"] == "skipped" and "preservation cap" in result["reason"]
+        assert recent.read_bytes() == b"task output" and old.exists()
+        assert not (primary / "batch_state/preserved" / task_id).exists()
+    else:
+        assert result["action"] == "removed" and not worktree.exists()
+        receipt = delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]
+        assert receipt["count"] == 1 and receipt["bytes"] == len(b"task output")
+        location = Path(receipt["location"])
+        assert (location / ".cache/recent.txt").read_bytes() == b"task output"
+        assert not (location / ".cache/old.txt").exists()
 
 
 def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -17775,11 +17820,9 @@ def test_settle_result_named_file_scope(tmp_tasks_dir, tmp_path, monkeypatch, re
     assert result["action"] == "removed", result
     assert not worktree.exists()
     location = primary / "batch_state/preserved" / task_id
-    if reference == "ignored/report.txt":
-        assert (location / reference).read_bytes() == b"named evidence"
-        assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
-    else:
-        assert not location.exists()
+    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
+    assert not (location / ".pytest_cache/cache.txt").exists()
+    assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
 
 
 @pytest.mark.parametrize("scenario", worktree_artifact_links.SCENARIOS)

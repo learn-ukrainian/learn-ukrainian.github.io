@@ -378,6 +378,55 @@ def test_apply_reaps_matched_worktree_by_branch_and_deletes_branches(
     assert local.returncode != 0
 
 
+@pytest.mark.parametrize("failure", [None, "cap", "copy"])
+def test_merge_closeout_preserves_unnamed_ignored_output_without_task_record(tmp_path, monkeypatch, failure):
+    from scripts.fleet import ignored_task_output as output
+
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/output")
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n__pycache__/\n")
+    source = worktree / ".cache/transcriptions/page.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"transcription proof")
+    cache = worktree / "__pycache__/worker.pyc"
+    cache.parent.mkdir()
+    cache.write_bytes(b"tool cache")
+    head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", "codex/output")
+    patch_gh(
+        monkeypatch,
+        pr_number=9645,
+        state="MERGED",
+        head_ref_name="codex/output",
+        head_sha=head,
+        branch_prs={"codex/output": [{"number": 9645, "state": "MERGED", "headRefOid": head}]},
+    )
+    if failure == "cap":
+        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+    elif failure == "copy":
+
+        def fail_copy(*args):
+            raise OSError("copy denied")
+
+        monkeypatch.setattr(output.artifacts, "_copy_verified", fail_copy)
+
+    result = mc.run_merge_closeout(repo, 9645, apply=True, live_cwds=set())
+
+    if failure:
+        assert not result.ok and worktree.exists()
+        assert source.read_bytes() == b"transcription proof"
+        assert result.reap_results[0]["action"] == "skipped"
+        assert "refusing worktree removal" in result.reap_results[0]["reason"]
+    else:
+        assert result.ok and not worktree.exists()
+        receipt = result.reap_results[0]["preserved_artifacts"]
+        assert receipt["count"] == 1 and receipt["bytes"] == len(b"transcription proof")
+        location = Path(receipt["location"])
+        assert (location / ".cache/transcriptions/page.txt").read_bytes() == b"transcription proof"
+        assert not (location / "__pycache__").exists()
+
+
 def test_apply_matches_detached_review_sibling_by_exact_sha(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

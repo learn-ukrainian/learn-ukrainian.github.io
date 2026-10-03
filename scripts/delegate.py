@@ -6912,7 +6912,7 @@ def _remove_dispatch_worktree(
     Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
     ``skipped``, or ``error``; this never raises.
     """
-    from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
+    from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
 
     preserved_artifacts = None
 
