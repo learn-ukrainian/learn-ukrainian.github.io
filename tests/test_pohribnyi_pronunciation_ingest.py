@@ -33,6 +33,7 @@ from pathlib import Path
 import pytest
 
 from scripts.ingest import pohribnyi_pronunciation_ingest as pohribnyi
+from tests.pohribnyi_schema import open_schema_copy
 
 # ---------------------------------------------------------------------------
 # Fixtures — a 3-page synthetic fixture mirroring the real OCR layout
@@ -131,27 +132,8 @@ def test_page_render_preserves_internal_blanks(tmp_path: Path) -> None:
 
 
 def _make_textbooks_db(path: Path) -> sqlite3.Connection:
-    """Minimal schema: textbooks + textbook_sections + the
-    parent_section_id column. The ``_section_coverage`` helper provides
-    its own ``ensure_section_schema`` defensive layer, but we still
-    create the textbooks table because the helper does not."""
-    conn = sqlite3.connect(str(path))
-    conn.executescript(
-        """
-        CREATE TABLE textbooks (
-            id INTEGER PRIMARY KEY,
-            chunk_id TEXT NOT NULL DEFAULT '',
-            title TEXT NOT NULL DEFAULT '',
-            text TEXT NOT NULL DEFAULT '',
-            source_file TEXT NOT NULL DEFAULT '',
-            grade TEXT DEFAULT '',
-            author TEXT DEFAULT '',
-            author_uk TEXT DEFAULT '',
-            char_count INTEGER DEFAULT 0
-        );
-        """
-    )
-    return conn
+    """Live textbook/section DDL including FTS and its source insert trigger."""
+    return open_schema_copy(path)
 
 
 def test_ingest_pages_round_trip_with_section_coverage(tmp_path: Path) -> None:
