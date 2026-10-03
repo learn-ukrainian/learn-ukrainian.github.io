@@ -37,17 +37,17 @@ headword it is keyed by:
 - **judgments**: a heritage pair frame's `normativeJudgment` (rejected form,
   endorsed form, sense) whose `passageSha256` or `currentNormPassageSha256`
   matches the stored `normativeSupport`/`currentNormSupport` passage at the
-  same locator. The digest normalisation is the one
-  `scripts/audit/generate_practice_deck.py` defines
+  same locator, digest normalised as `scripts/audit/generate_practice_deck.py`
   (`docs/practice/heritage-pairs-growth.md`). The rejected form must be the
-  headword, the locator a normative chunk, and the passage still its digest.
-- **citations**, for sense and phrase records only: a `locator: excerpt` item
-  whose chunk a reviewer read in `sources.db` and bound to one correction
-  (`SOURCE_CHECKED_CHUNKS` in `calque_corrections.py`: scope, rejected form,
-  endorsed forms, digest of the verbatim excerpt). Excerpt digest, scope and
-  rejected form (the headword) must match, and only endorsed forms among the
-  record's corrections are offered (`являтися` → `бути`). Words co-occurring in
-  an excerpt or another book's locator are an unverified Atlas reference.
+  headword, the locator a normative chunk, and the passage still its digest;
+  endorsed forms of judgments with differing senses keep their sense.
+- **citations**, sense and phrase records only: a `locator: excerpt` item whose
+  chunk a reviewer read in `sources.db` and bound (`SOURCE_CHECKED_CHUNKS`:
+  scope, rejected form, endorsed forms with any context the passage sets,
+  excerpt digest). Digest, scope and headword must match; only forms among the
+  record's corrections are offered (`являтися` → `бути`), each with its source
+  context (`чинний (закон)`, `активний (вулкан)`), never pooled under one sense.
+  Co-occurring words or another book's locator stay an unverified reference.
 
 A normative chunk is a `sources.db` chunk id of Антоненко-Давидович «Як ми
 говоримо» (`antonenko-davydovych-yak-my-hovorymo_p031`), Караванський,

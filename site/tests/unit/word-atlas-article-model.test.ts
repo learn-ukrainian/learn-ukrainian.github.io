@@ -1880,6 +1880,49 @@ describe("usage-label scope on entry pages (#9603)", () => {
     );
   });
 
+  // #9603 CF 89dec F1: actual classify_lemma("діючий") output through the model and the rendered article.
+  test("діючий keeps чинний for закон and активний for вулкан, never pooled under the law sense", () => {
+    const props = heritageEntry("діючий", {
+      "classification": "unknown",
+      "attestations": [],
+      "is_russianism": false,
+      "russian_shadow": true,
+      "vesum_attested": false,
+      "sovietization_risk": 0,
+      "calque_warning": {
+        "standard_alternatives": [
+          "чинний",
+          "активний"
+        ],
+        "kind": "sense_restricted",
+        "note": "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)",
+        "calque_sense": "чинний квиток, закон або документ (рос. действующий)",
+        "authentic_sense": "активний вулкан або дія, що відбувається",
+        "citations": [
+          "glazova-11",
+          "avramenko-11",
+          "avramenko-7",
+          "zabolotnyi-7"
+        ],
+        "evidence": [
+          "11-klas-ukrajinska-mova-glazova-2019_s0071: Сучасній українській мові активні дієприкметники теперішнього часу не властиві, тому їх заміщують: … синонімами: зворушливий (а не хвилюючий) спогад; чинний (а не діючий) закон",
+          "7-klas-ukrmova-avramenko-2024_s0106: Замість активних дієприкметників уживаємо: … синоніми: хвилюючий — зворушливий, діючий — чинний (закон) або активний (вулкан)",
+          "7-klas-ukrmova-zabolotnyi-2024_s0124: чинний закон / діючий закон"
+        ]
+      },
+      "warning_severity": "calque_yellow"
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    const body = view.heritageBoxes.yellow?.body ?? "";
+    expect(body).toContain("Залежно від контексту джерело радить: чинний (закон), активний (вулкан).");
+    expect(body).not.toMatch(/активний(?! \(вулкан\))/u);
+    expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("чинний (закон), активний (вулкан)");
+    expect(html).not.toContain("радить: чинний, активний");
+    expect(html).toContain("діючий вулкан → активний вулкан");
+  });
+
   test("неділя keeps the duration caution and marks the stored universal note as Atlas commentary", () => {
     const noteUk =
       "В українській мові слово \"неділя\" означає лише сьомий день тижня (недільний день, неділя). Його вживання для позначення семиденного проміжку часу (тижня) є калькою з російської мови.";

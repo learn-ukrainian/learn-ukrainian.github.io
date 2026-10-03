@@ -1316,7 +1316,7 @@ def test_usage_source_records_from_actual_curated_inputs() -> None:
         "при допомозі": ["за допомогою"],
         "приймати участь": ["брати участь"],
     }
-    assert records["діючий"]["corrections"] == ["чинний", "активний"]
+    assert records["діючий"]["corrections"] == ["чинний (закон)", "активний (вулкан)"]
     # Contextual records whose cited books are absent from sources.db keep no
     # source proof; діючий keeps its two checked chunks, not zabolotnyi-7 s0124.
     for headword in ("біля", "на протязі", "дякуючи", "в кінці кінців"):
@@ -1339,6 +1339,47 @@ def test_usage_source_records_from_actual_curated_inputs() -> None:
     # Replacements and words that only appear as another record's surface get no proof.
     for headword in ("бути", "є", "захід", "наступний", "тиждень", "інший", "голова"):
         assert headword not in records
+
+
+def test_dijuchyi_law_advice_never_pools_the_volcano_replacement() -> None:
+    """#9603 CF 89dec F1: producer-to-consumer proof for the actual curated діючий record.
+
+    Avramenko s0106 reads «діючий — чинний (закон) або активний (вулкан)»;
+    Glazova s0071 «чинний (а не діючий) закон». The record's sense is the
+    law/document use, so активний is never advice for it, while the volcano
+    alternative stays bound to its own source context. No діючий article is
+    in the current Atlas DB: this is producer proof, not DB-page coverage.
+    """
+    producer = classify_lemma("діючий", db_path=DB, vesum_db_path=VESUM_DB)
+    warning = producer["calque_warning"]
+    assert (warning["kind"], warning["calque_sense"]) == ("sense_restricted", "чинний квиток, закон або документ (рос. действующий)")
+    assert producer["warning_severity"] == "calque_yellow"
+    proof = usage_source_records()["діючий"]
+    assert proof["sense"] == warning["calque_sense"]
+    corrections = proof["corrections"]
+    # Negative: no bare (sense-wide) активний and no активний tied to a law context.
+    assert "активний" not in corrections
+    assert [item for item in corrections if item.partition(" (")[0] == "активний"] == ["активний (вулкан)"]
+    # Positive controls: чинний for закон, активний for вулкан, each in an admitted excerpt.
+    assert corrections == ["чинний (закон)", "активний (вулкан)"]
+    excerpts = {item["locator"]: item["excerpt"] for item in proof["citations"]}
+    assert "чинний (закон) або активний (вулкан)" in excerpts["7-klas-ukrmova-avramenko-2024_s0106"]
+    assert "чинний (а не діючий) закон" in excerpts["11-klas-ukrajinska-mova-glazova-2019_s0071"]
+    # Every other checked binding endorses one unconditioned form, consistent with its sense.
+    for locator, (_scope, rejected, endorsed, _digest) in SOURCE_CHECKED_CHUNKS.items():
+        if rejected != "діючий":
+            assert len(endorsed) == 1 and "(" not in endorsed[0], locator
+
+
+def test_judgments_of_differing_senses_keep_each_endorsed_form_in_its_sense() -> None:
+    first = _judgment("міроприємство", "захід")
+    other = {**_judgment("міроприємство", "акція"), "sense": "a street campaign"}
+    record = {"kind": "lexical", "corrections": ["захід", "акція"], "judgments": [first, other]}
+    proof = admitted_source_proof(record, "міроприємство")
+    assert proof["corrections"] == ["захід (an organized charitable event)", "акція (a street campaign)"]
+    # One sense: the forms stay plain under it.
+    single = admitted_source_proof({**record, "judgments": [first, _judgment("міроприємство", "акція")]}, "міроприємство")
+    assert single["corrections"] == ["захід", "акція"]
 
 
 def test_esum_helpers_fail_closed() -> None:

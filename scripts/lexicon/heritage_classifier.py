@@ -574,8 +574,8 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
     and bound to one correction (``SOURCE_CHECKED_CHUNKS``). The excerpt must
     be that reviewed passage (by digest), and the binding's scope, rejected
     form (the headword) and an endorsed form among the record's corrections
-    must match. A locator, a source name or words co-occurring in an excerpt
-    admit nothing: they stay an unverified Atlas reference.
+    must match; corrections keep their source context (``активний (вулкан)``). A
+    locator, a source name or co-occurring words admit nothing (Atlas reference).
     """
     head = _normalize_word(headword or "")
     if not head or not isinstance(record, dict):
@@ -590,10 +590,11 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
         and source_text_digest(str(item.get("passage") or "")) == item.get("passageSha256")
     ]
     corrections = [str(item) for item in record.get("corrections") or [] if str(item or "").strip()]
-    citations, endorsed = [], [item["endorsedForm"] for item in judgments]
+    pooled = len({item["sense"] for item in judgments}) > 1
+    citations, endorsed = [], [item["endorsedForm"] + (f" ({item['sense']})" if pooled else "") for item in judgments]
     for locator, excerpt in _evidence_items(record):
         scope, rejected, forms, digest = _source_checked_chunks().get(locator, ("", "", (), ""))
-        supported = [form for form in forms if form in corrections]
+        supported = [form for form in forms if form.partition(" (")[0] in corrections]
         if (
             scope == _CONTEXTUAL_CALQUE_SCOPES.get(kind)
             and _normalize_word(rejected) == head

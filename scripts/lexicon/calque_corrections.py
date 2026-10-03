@@ -66,18 +66,18 @@ sense-scoped soft note, never a blanket warn or auto-replace.
 
 from __future__ import annotations
 
-# #9603: evidence chunks a reviewer read in sources.db, each bound to the one
-# correction it states: (scope, rejected form, endorsed forms, source_text_digest
-# of the record's verbatim excerpt). Only that excerpt may cite a sense or phrase
-# caution as its source; other evidence (books absent from sources.db, such as
+# #9603: evidence chunks a reviewer read in sources.db, each bound to the correction it
+# states: (scope, rejected form, endorsed forms with the context the passage sets, if any,
+# source_text_digest of the record's verbatim excerpt). Only that excerpt may cite a sense or
+# phrase caution as its source; other evidence (books absent from sources.db, such as
 # 7-klas litvinova/zabolotnyi 2024) is an unverified Atlas reference.
 SOURCE_CHECKED_CHUNKS: dict[str, tuple[str, str, tuple[str, ...], str]] = {
     "antonenko-davydovych-yak-my-hovorymo_p091": ("phrase", "приймати участь", ("брати участь",), "2d04add57db343c0e3449df53cb3f692f9ba65e981379d33670ea597d9b21655"),
     "5-klas-ukrmova-avramenko-2022_s0056": ("sense", "на рахунок", ("щодо",), "34b6f9ae420fe1f06c32309607a6fed659160d02c96e0e60c57c4b1fbb6fba58"),
-    "7-klas-ukrmova-avramenko-2024_s0106": ("sense", "діючий", ("чинний", "активний"), "754d213821645d79516846e025d962715bb5a37b69ed4162badc600d8f52353d"),
+    "7-klas-ukrmova-avramenko-2024_s0106": ("sense", "діючий", ("чинний (закон)", "активний (вулкан)"), "754d213821645d79516846e025d962715bb5a37b69ed4162badc600d8f52353d"),
     "9-klas-ukrajinska-mova-avramenko-2017_s0159": ("sense", "являтися", ("бути",), "c437d36c0c3beab3a697dc1bc6b126b8a3ecf5a595032c8772ad2bbf0fc3babf"),
     "10-klas-ukrmova-glazova-2018_s0075": ("sense", "неділя", ("тиждень",), "fab2108c6c08df5d904b21e04e4753d8bb30bce5a87d2b530ae294e3f5a4f47f"),
-    "11-klas-ukrajinska-mova-glazova-2019_s0071": ("sense", "діючий", ("чинний",), "971b0f054d0644ff03975a71fd511f74574bb138ef0c9415ae87958bf1488bfd"),
+    "11-klas-ukrajinska-mova-glazova-2019_s0071": ("sense", "діючий", ("чинний (закон)",), "971b0f054d0644ff03975a71fd511f74574bb138ef0c9415ae87958bf1488bfd"),
     "11-klas-ukrajinska-mova-glazova-2019_s0078": ("phrase", "при допомозі", ("за допомогою",), "2ba4469f4ba178a3ff07c9a20e1237a41761f850573000cba2f426bf8a8d2692"),
 }
 

@@ -579,7 +579,8 @@ function scopedCalqueBody(label: UsageLabel, alternatives: string[], references:
         ? `окремого значення${label.evidence ? ` («${label.evidence}»)` : ""}`
         : `сполучення${label.evidence ? ` («${label.evidence}»)` : ""}`;
     const who = label.authority.length > 0 ? "джерело радить" : "Атлас пропонує (без звірки з джерелом)";
-    const use = alternatives.length > 0 ? ` У цьому вжитку ${who}: ${alternatives.join(", ")}.` : "";
+    const context = alternatives.some((item) => item.endsWith(")")) ? "Залежно від контексту" : "У цьому вжитку";
+    const use = alternatives.length > 0 ? ` ${context} ${who}: ${alternatives.join(", ")}.` : "";
     const authority =
       label.authority.length > 0 ? authorityClause(label.authority) : `${NO_BOUND_AUTHORITY}${referencesClause(references)}`;
     return `Застереження стосується ${where}, а не слова загалом.${use}${authority}`;

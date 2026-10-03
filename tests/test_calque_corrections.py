@@ -290,9 +290,15 @@ def test_source_checked_chunks_bind_each_cited_excerpt_to_its_correction():
     for locator, (scope, rejected, endorsed, digest) in SOURCE_CHECKED_CHUNKS.items():
         row = _curated_calque_map()[rejected]
         assert row["kind"] == kinds[scope], locator
-        assert set(endorsed) <= set(row["corrections"]), locator
+        assert {form.partition(" (")[0] for form in endorsed} <= set(row["corrections"]), locator
         excerpts = [item.partition(":")[2].strip() for item in row["evidence"] if item.partition(":")[0] == locator]
         assert [source_text_digest(item) for item in excerpts] == [digest], locator
+        # A stated context is the passage's own: «чинний (закон)», «активний (вулкан)».
+        for form in endorsed:
+            base, _, context = form.partition(" (")
+            text = excerpts[0].casefold()
+            assert base in text and context.rstrip(")") in text, (locator, form)
+    assert SOURCE_CHECKED_CHUNKS["7-klas-ukrmova-avramenko-2024_s0106"][2] == ("чинний (закон)", "активний (вулкан)")
     cited = {
         item.partition(":")[0]
         for bucket in (CURATED_CALQUES, PHRASAL_CALQUES, SENSE_RESTRICTED_CALQUES)

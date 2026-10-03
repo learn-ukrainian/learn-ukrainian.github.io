@@ -367,6 +367,50 @@ describe('resolveHeritageBoxes', () => {
     expect(boxes.green).toBeUndefined();
   });
 
+  // #9603 CF 89dec F1: the actual classify_lemma("діючий") output (receipt producer-probe.json) with the
+  // committed usageSources proof. No діючий article is in the current Atlas DB: producer-to-consumer proof.
+  test('діючий law/document advice never offers the volcano replacement', () => {
+    const heritage_status = {
+      "classification": "unknown",
+      "attestations": [],
+      "is_russianism": false,
+      "russian_shadow": true,
+      "vesum_attested": false,
+      "sovietization_risk": 0,
+      "calque_warning": {
+        "standard_alternatives": [
+          "чинний",
+          "активний"
+        ],
+        "kind": "sense_restricted",
+        "note": "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)",
+        "calque_sense": "чинний квиток, закон або документ (рос. действующий)",
+        "authentic_sense": "активний вулкан або дія, що відбувається",
+        "citations": [
+          "glazova-11",
+          "avramenko-11",
+          "avramenko-7",
+          "zabolotnyi-7"
+        ],
+        "evidence": [
+          "11-klas-ukrajinska-mova-glazova-2019_s0071: Сучасній українській мові активні дієприкметники теперішнього часу не властиві, тому їх заміщують: … синонімами: зворушливий (а не хвилюючий) спогад; чинний (а не діючий) закон",
+          "7-klas-ukrmova-avramenko-2024_s0106: Замість активних дієприкметників уживаємо: … синоніми: хвилюючий — зворушливий, діючий — чинний (закон) або активний (вулкан)",
+          "7-klas-ukrmova-zabolotnyi-2024_s0124: чинний закон / діючий закон"
+        ]
+      },
+      "warning_severity": "calque_yellow"
+    };
+    expect(usageSourceProof('діючий')?.corrections).toEqual(['чинний (закон)', 'активний (вулкан)']);
+    const boxes = resolveHeritageBoxes({ lemma: 'діючий', heritage_status } as LexiconEntryForSeverity);
+    expect(boxes.usageLabel).toMatchObject({ scope: 'sense', evidence: 'чинний квиток, закон або документ (рос. действующий)' });
+    const body = boxes.yellow?.body ?? '';
+    expect(body).toContain('Залежно від контексту джерело радить: чинний (закон), активний (вулкан).');
+    expect(body).not.toContain('У цьому вжитку');
+    expect(body).not.toMatch(/активний(?! \(вулкан\))/u);
+    expect(boxes.yellow?.alternatives).toEqual(['чинний (закон)', 'активний (вулкан)']);
+    expect(boxes.red).toBeUndefined();
+  });
+
   test('actual stored являтися cites the projected s0159 correction, never the stored s0162', () => {
     const boxes = resolveHeritageBoxes({
       lemma: 'являтися',
