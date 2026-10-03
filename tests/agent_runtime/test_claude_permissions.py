@@ -1,6 +1,7 @@
 """Command and deployed-hook coverage for headless Claude workers."""
 
 import asyncio
+import fnmatch
 import importlib.util
 import io
 import json
@@ -22,6 +23,15 @@ from scripts.agent_runtime.sources_read_only import sources_tool_sets
 SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
 SOURCES_RULES = [f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS]
 PERSISTING_RULES = [f"mcp__sources__{name}" for name in SOURCES_PERSISTING_TOOLS]
+# Claude matches MCP rules against the configured server name, so writers are
+# also denied under any name: a deny glob must match the whole tool name.
+WRITER_DENIES = [*PERSISTING_RULES, *(f"mcp__*__{name}" for name in SOURCES_PERSISTING_TOOLS)]
+ALTERNATE_SERVER_NAMES = ("sources_alias", "plugin_lu_sources", "srv")
+
+
+def _claude_denies(rules: list[str], tool: str) -> bool:
+    """Claude's documented deny match: an exact name, or a glob over the full tool name."""
+    return any(fnmatch.fnmatchcase(tool, rule) for rule in rules)
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
@@ -56,7 +66,7 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
     if mode == "read-only":
         assert plan.cmd.count("--disallowedTools") == 1
-        assert plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",") == PERSISTING_RULES
+        assert plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",") == WRITER_DENIES
     else:
         assert "--disallowedTools" not in plan.cmd
     if mode == "workspace-write":
@@ -259,11 +269,10 @@ def test_reviewer_tools_opt_in_installs_profile(tmp_path: Path) -> None:
     )
     assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
     sources_read = {f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS}
-    sources_persisting = {f"mcp__sources__{name}" for name in SOURCES_PERSISTING_TOOLS}
     assert set(REVIEWER_PERMISSION_PROFILE["allow"]) | sources_read == set(
         plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
     )
-    assert set(REVIEWER_PERMISSION_PROFILE["deny"]) | sources_persisting == set(
+    assert set(REVIEWER_PERMISSION_PROFILE["deny"]) | set(WRITER_DENIES) == set(
         plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",")
     )
     assert plan.env_overrides["LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK"] == "1"
@@ -285,7 +294,7 @@ def test_discussion_readonly_keeps_separate_permissions(tmp_path: Path) -> None:
     assert "--settings" in plan.cmd
     assert "--permission-mode" not in plan.cmd
     assert "--allowedTools" not in plan.cmd
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert _denied(plan.cmd) == WRITER_DENIES
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
@@ -318,7 +327,7 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
     assert "--safe-mode" in plan.cmd
     assert "--permission-mode" not in plan.cmd
     assert "--allowedTools" not in plan.cmd
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert _denied(plan.cmd) == WRITER_DENIES
     assert plan.cmd[plan.cmd.index("--tools") + 1] == ""
 
 
@@ -550,7 +559,7 @@ def test_reviewer_loads_only_the_trusted_sources_server(tmp_path: Path) -> None:
     assert "mcp__sources__*" not in granted
     assert not set(PERSISTING_RULES) & set(granted)
     # Deny outranks any allow rule a reviewed checkout's settings file could add.
-    assert _denied(cmd) == [*REVIEWER_PERMISSION_PROFILE["deny"], *PERSISTING_RULES]
+    assert _denied(cmd) == [*REVIEWER_PERMISSION_PROFILE["deny"], *WRITER_DENIES]
     assert "mcp__sources__query_wikipedia" in _denied(cmd)
     assert not {"Edit", "Write", "NotebookEdit", "MultiEdit"} & set(granted)
     assert cmd[cmd.index("--permission-mode") + 1] == "dontAsk"
@@ -607,7 +616,7 @@ def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
         *review_tools_allowed_csv("claude", "full").split(","),
     ]
     # Deny wins over the formal allow list: a writer added to it stays denied.
-    assert _denied(cmd) == [*REVIEWER_PERMISSION_PROFILE["deny"], *PERSISTING_RULES]
+    assert _denied(cmd) == [*REVIEWER_PERMISSION_PROFILE["deny"], *WRITER_DENIES]
     # The formal attempt's own harness-written config is the only one loaded.
     assert cmd.count("--mcp-config") == 1
     assert cmd[cmd.index("--mcp-config") + 1] == str(attempt)
@@ -671,7 +680,7 @@ def test_explicit_allowed_tools_are_not_widened_or_narrowed(
     assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == allowed_tools
     assert "--permission-mode" not in plan.cmd
     # Only the sources writers are added; the reviewer deny list is not.
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert _denied(plan.cmd) == WRITER_DENIES
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
@@ -690,7 +699,7 @@ def test_readonly_without_profile_keeps_legacy_permissions_and_denies_writers(tm
     )
     assert "--allowedTools" not in plan.cmd
     assert "--permission-mode" not in plan.cmd
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert _denied(plan.cmd) == WRITER_DENIES
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
 
@@ -763,9 +772,96 @@ def test_every_read_only_path_denies_every_sources_writer(
     assert set(PERSISTING_RULES) <= set(denied)
     # Readers are never denied: ordinary lookups keep working.
     assert not set(SOURCES_RULES) & set(denied)
+    # The same holds whatever name the server is registered under.
+    for server in ALTERNATE_SERVER_NAMES:
+        assert all(_claude_denies(denied, f"mcp__{server}__{name}") for name in SOURCES_PERSISTING_TOOLS)
+        assert not any(_claude_denies(denied, f"mcp__{server}__{name}") for name in SOURCES_READ_ONLY_TOOLS)
     if "--allowedTools" in plan.cmd and path != "explicit-writer-grant":
         # The adapter itself never grants a writer; only a caller's own list can name one.
         assert not set(PERSISTING_RULES) & set(_granted(plan.cmd))
+
+
+def _alias_sources_config(path: Path, server: str) -> Path:
+    """An MCP config that registers the real sources launcher under ``server``."""
+    from scripts.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
+
+    launch = isolated_sources_mcp_config(*sources_server_launch())["mcpServers"]["sources"]
+    path.write_text(json.dumps({"mcpServers": {server: launch}}), encoding="utf-8")
+    return path
+
+
+@pytest.mark.parametrize("strict_mcp_config", [False, True])
+@pytest.mark.parametrize("server", ALTERNATE_SERVER_NAMES)
+@pytest.mark.parametrize("session", ["fresh", "resumed"])
+def test_explicit_config_alternate_server_name_cannot_expose_a_writer(
+    tmp_path: Path, server: str, session: str, strict_mcp_config: bool
+) -> None:
+    """Review blocker (#9560): an explicit config naming sources otherwise escapes ``mcp__sources__<writer>``."""
+    config = _alias_sources_config(tmp_path / "alias.json", server)
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id="00000000-0000-4000-8000-000000000000",
+        tool_config={
+            "is_new_session": session == "fresh",
+            "mcp_config_path": str(config),
+            "strict_mcp_config": strict_mcp_config,
+            "allowed_tools": f"mcp__{server}__*",
+        },
+    )
+    assert ("--session-id" if session == "fresh" else "--resume") in plan.cmd
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(config)
+    denied = _denied(plan.cmd)
+    for name in SOURCES_PERSISTING_TOOLS:
+        assert _claude_denies(denied, f"mcp__{server}__{name}"), name
+    # Readers under the alias stay allowed by the caller's glob and are not denied.
+    assert _granted(plan.cmd) == [f"mcp__{server}__*"]
+    for name in SOURCES_READ_ONLY_TOOLS:
+        assert not _claude_denies(denied, f"mcp__{server}__{name}"), name
+
+
+@pytest.mark.parametrize("tool_config", [None, {"allowed_tools": "mcp__sources_alias__*"}, {"reviewer_tools": True}])
+def test_settings_provided_alternate_server_name_cannot_expose_a_writer(tmp_path: Path, tool_config) -> None:
+    """A checkout's ``.mcp.json`` and settings can register and allow sources under another name.
+
+    The adapter never reads those files for a read-only run; the deny covers every server name instead.
+    """
+    _alias_sources_config(tmp_path / ".mcp.json", "sources_alias")
+    (tmp_path / ".claude").mkdir()
+    (tmp_path / ".claude" / "settings.json").write_text(
+        json.dumps(
+            {
+                "enabledMcpjsonServers": ["sources_alias"],
+                "permissions": {"allow": ["mcp__sources_alias__*"]},
+            }
+        ),
+        encoding="utf-8",
+    )
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    denied = _denied(plan.cmd)
+    for name in SOURCES_PERSISTING_TOOLS:
+        assert _claude_denies(denied, f"mcp__sources_alias__{name}"), name
+    for name in SOURCES_READ_ONLY_TOOLS:
+        assert not _claude_denies(denied, f"mcp__sources_alias__{name}"), name
+
+
+def test_any_server_writer_deny_leaves_longer_reader_names_alone() -> None:
+    """``mcp__*__query_ulif`` must match the whole name, so ``query_ulif_records`` stays reachable."""
+    denies = [f"mcp__*__{name}" for name in SOURCES_PERSISTING_TOOLS]
+    assert "query_ulif_records" in SOURCES_READ_ONLY_TOOLS
+    assert _claude_denies(denies, "mcp__sources_alias__query_ulif")
+    assert not _claude_denies(denies, "mcp__sources_alias__query_ulif_records")
 
 
 def test_ad_hoc_discuss_env_denies_every_sources_writer(tmp_path: Path, monkeypatch) -> None:
@@ -779,7 +875,7 @@ def test_ad_hoc_discuss_env_denies_every_sources_writer(tmp_path: Path, monkeypa
         session_id=None,
         tool_config=None,
     )
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert _denied(plan.cmd) == WRITER_DENIES
 
 
 def test_readers_stay_allowed_where_they_were(tmp_path: Path) -> None:

@@ -393,6 +393,15 @@ Every Claude `read-only` invocation takes both sets from the shared module and
 passes each persisting tool in `--disallowedTools`: the ordinary and formal
 reviewer profiles, explicit caller allowlists (including `mcp__sources__*`),
 `discussion_readonly`, `review_isolation`, and read-only calls with no profile.
+Claude matches MCP rules against the configured server name, so each writer is
+denied twice: as `mcp__sources__<tool>` and as `mcp__*__<tool>`. A deny glob
+must match the whole tool name, so the second rule removes the writer whatever
+name an explicit config, `.mcp.json`, user config or plugin registers the server
+under (for example `sources_alias`), while `query_ulif_records` and other longer
+reader names stay reachable. A same-named tool on another server is denied too.
+A live probe on Claude Code 2.1.288 with the real server registered as
+`sources_alias` showed all five writers exposed under the canonical deny alone,
+and none under the glob deny, even with `mcp__sources_alias__*` allowed.
 Claude applies deny rules before allow rules, so the deny also wins over user or
 checkout settings. If the server declarations cannot be read, the read-only
 invocation fails instead of launching without the denies. Cache-writing ULIF and

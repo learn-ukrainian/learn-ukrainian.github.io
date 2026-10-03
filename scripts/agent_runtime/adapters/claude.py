@@ -43,8 +43,10 @@ Mode handling:
   Every ``read-only`` invocation, whatever its profile (ordinary or formal
   reviewer, explicit caller list, ``discussion_readonly``,
   ``review_isolation``, or none), denies each ``sources`` tool that persists
-  a live fetch (``sources_read_only.sources_tool_sets``). Deny wins over any
-  allow rule, including ``mcp__sources__*`` and the user's global settings.
+  a live fetch (``sources_read_only.sources_tool_sets``), as
+  ``mcp__sources__<tool>`` and as ``mcp__*__<tool>`` so a server registered
+  under another name is covered. Deny wins over any allow rule, including
+  ``mcp__<server>__*`` and the user's global settings.
   Prefix Bash denies are advisory; the repository PreToolUse guards are the
   primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
   a primary-checkout write in a live probe, so it is not that backstop.
@@ -261,6 +263,21 @@ def _workspace_write_allows(cwd: Path, tool_config: dict[str, Any]) -> tuple[str
 
 def _sources_rules(tools: tuple[str, ...]) -> list[str]:
     return [f"mcp__{SOURCES_MCP_SERVER}__{name}" for name in tools]
+
+
+def _sources_writer_denies(tools: tuple[str, ...]) -> list[str]:
+    """Deny each writer under every server name, not only the canonical ``sources``.
+
+    Claude matches MCP rules against the configured server name, so a config,
+    project ``.mcp.json``, user config, or plugin that registers the server as,
+    say, ``sources_alias`` would escape ``mcp__sources__<tool>``. Deny rules
+    accept a glob that must match the whole tool name: ``mcp__*__<tool>``
+    removes ``<tool>`` from every server and leaves longer reader names such as
+    ``query_ulif_records`` alone (live probe, Claude Code 2.1.288). A
+    same-named tool on another server is denied too, which fails closed. The
+    exact canonical rule stays first and does not depend on glob support.
+    """
+    return [*_sources_rules(tools), *(f"mcp__*__{name}" for name in tools)]
 
 
 def _reviewer_mcp_config() -> str:
@@ -619,9 +636,10 @@ class ClaudeAdapter:
         # default (manual): nothing answers the prompt, so Bash, edits, web,
         # and MCP are denied. dontAsk runs the worker allow list and still
         # executes the --settings guards; --bare is what skips hooks.
-        # Every read-only run denies the sources writers: deny wins over the
-        # formal allow list, an explicit caller list, ``mcp__sources__*``, and
-        # any allow rule in user or checkout settings. An unreadable server
+        # Every read-only run denies the sources writers under any server name:
+        # deny wins over the formal allow list, an explicit caller list,
+        # ``mcp__<server>__*``, and any allow rule in user or checkout
+        # settings, whatever name the server is registered under. An unreadable server
         # declaration raises here rather than launching without the denies.
         sources_readers, sources_writers = sources_tool_sets() if mode == "read-only" else ((), ())
         if mode == "danger":
@@ -630,7 +648,7 @@ class ClaudeAdapter:
             profile = REVIEWER_PERMISSION_PROFILE
             cmd.extend(["--permission-mode", profile["mode"]])
             granted = [*profile["allow"]]
-            denied = [*profile["deny"], *_sources_rules(sources_writers)]
+            denied = [*profile["deny"], *_sources_writer_denies(sources_writers)]
             if tc.get("mcp_config_path") and tc.get("review_access") == "full":
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
@@ -646,7 +664,7 @@ class ClaudeAdapter:
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(denied)])
         elif mode == "read-only" and sources_writers:
-            cmd.extend(["--disallowedTools", ",".join(_sources_rules(sources_writers))])
+            cmd.extend(["--disallowedTools", ",".join(_sources_writer_denies(sources_writers))])
         elif mode == "workspace-write" and not review_isolation:
             cmd.extend(["--permission-mode", WORKSPACE_WRITE_PERMISSION_MODE])
             if not explicit_allowed_tools:
