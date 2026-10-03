@@ -1042,7 +1042,7 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
 
 
 def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
-    """#8659 / CF r6 F1: Unavailable evidence or denied /proc inspection preserves claims."""
+    """#8659 / CF r6 F1 & CF r7 F1: Unavailable evidence or denied /proc inspection preserves claims."""
     import sqlite3
     import subprocess
     import sys
@@ -1053,7 +1053,7 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
 
     task_id = "unknown-proc-task"
 
-    # Spawn live worker process
+    # Spawn live worker process carrying task marker
     worker = subprocess.Popen(
         [sys.executable, "-c", "import time; time.sleep(30)"],
         env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
@@ -1069,39 +1069,55 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
             with patch("os.readlink", side_effect=PermissionError("Permission denied")):
                 assert _pid_matches_task(worker.pid, task_id) is None
 
-        # 3. OwnershipLedger: unknown inspection preserves claim and refuses challenger
-        state_dir = tmp_path / "tasks"
-        state_dir.mkdir()
-        (state_dir / f"{task_id}.json").write_text(
-            json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
-        )
+        # 3. Reviewer R7 probe: FileNotFoundError on environ while worker is alive -> returns None
+        # and default OwnershipLedger matcher preserves claim and refuses challenger
+        with patch.object(Path, "read_bytes", side_effect=FileNotFoundError("No such file: environ")):
+            assert _pid_matches_task(worker.pid, task_id) is None
 
-        ledger_path = tmp_path / "own_unknown.sqlite3"
-        ledger = OwnershipLedger(
-            ledger_path,
-            task_state_dir=state_dir,
-            process_matches_task=lambda _p, _tid: None,  # Simulated unknown/denied inspection
-        )
-        conn = sqlite3.connect(ledger_path)
-        conn.execute(
-            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
-        )
-        conn.execute(
-            "INSERT INTO write_claims VALUES (?,?,?,?)",
-            (task_id, '{"kind":"file","norm":"scripts/unknown.py"}', worker.pid, time.time() - 200),
-        )
-        conn.commit()
-        conn.close()
+            state_dir = tmp_path / "tasks"
+            state_dir.mkdir(exist_ok=True)
+            (state_dir / f"{task_id}.json").write_text(
+                json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
+            )
 
-        # Challenger must be refused because unknown process identity preserves protection
-        challenger = ledger.admit(
-            task_id="challenger-unknown",
-            mode="workspace-write",
-            owned_paths=["scripts/unknown.py"],
-            pid=worker.pid,
-        )
-        assert challenger.admitted is False
-        assert challenger.would_refuse is True
+            ledger_path = tmp_path / "own_fnf.sqlite3"
+            ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+            conn = sqlite3.connect(ledger_path)
+            conn.execute(
+                "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+            )
+            conn.execute(
+                "INSERT INTO write_claims VALUES (?,?,?,?)",
+                (task_id, '{"kind":"file","norm":"scripts/fnf.py"}', worker.pid, time.time() - 200),
+            )
+            conn.commit()
+
+            challenger = ledger.admit(
+                task_id="challenger-fnf",
+                mode="workspace-write",
+                owned_paths=["scripts/fnf.py"],
+                pid=worker.pid,
+            )
+            assert challenger.admitted is False
+            assert challenger.would_refuse is True
+            # Claim remains in database
+            rows = conn.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+            assert rows[0] == 1
+            conn.close()
+
+        # 4. Unavailable cwd (e.g. /proc/<pid>/cwd vanishes or readlink fails with FileNotFoundError) -> returns None
+        with patch("os.readlink", side_effect=FileNotFoundError("No such file: cwd")):
+            with patch.object(Path, "read_bytes", side_effect=FileNotFoundError("No such file: environ")):
+                assert _pid_matches_task(worker.pid, task_id) is None
+
+        # 5. Cwd resolution failure (cwd_path.resolve() raises OSError) -> returns None
+        with patch.object(Path, "resolve", side_effect=OSError("Resolution error")):
+            with patch.object(Path, "read_bytes", side_effect=FileNotFoundError("No such file")):
+                assert _pid_matches_task(worker.pid, task_id) is None
+
+        # 6. Confirmed death: if process is dead, FileNotFoundError on probe returns False
+        with patch("scripts.guardrails.delegate_ownership._pid_alive", return_value=False):
+            assert _pid_matches_task(worker.pid, task_id) is False
     finally:
         worker.terminate()
         worker.wait()

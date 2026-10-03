@@ -367,14 +367,15 @@ def _pid_matches_task(
     """Return True if pid belongs to task_id, False if confirmed mismatch, or None if unknown.
 
     Distinguishes a real live worker / dispatcher for task_id from an
-    unrelated process that inherited a recycled PID (#8659 / CF r5 F1, CF r6 F1 & F2).
+    unrelated process that inherited a recycled PID (#8659 / CF r5 F1, CF r6 F1 & F2, CF r7 F1).
 
     Returns:
         True: Confirmed match (environ, cmdline, or cwd positively verified).
-        False: Confirmed mismatch (process inspected without permission denial,
+        False: Confirmed mismatch (all probes inspected without error/denial,
                and no task identity marker matched; or process is dead).
-        None: Unknown identity (inspection unavailable or denied, e.g. /proc missing,
-              or PermissionError / access restrictions prevented full inspection).
+        None: Unknown identity (inspection unavailable, probe missing, or denied,
+              e.g. /proc missing, FileNotFoundError, PermissionError, or cwd
+              resolution failure while process remains alive).
               Callers must preserve claim protection when identity is unknown.
     """
     if pid <= 0:
@@ -393,9 +394,11 @@ def _pid_matches_task(
                 return False
             return None
     except OSError:
+        if not _pid_alive(pid):
+            return False
         return None
 
-    evidence_denied = False
+    evidence_unavailable = False
     task_bytes = task_id.encode("utf-8")
     safe_task_id = _safe_task_state_name(task_id)
 
@@ -405,15 +408,10 @@ def _pid_matches_task(
         expected_env = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_bytes
         if expected_env in env_raw.split(b"\0"):
             return True
-    except PermissionError:
-        evidence_denied = True
-    except FileNotFoundError:
-        if not _pid_alive(pid):
-            return False
     except OSError:
         if not _pid_alive(pid):
             return False
-        evidence_denied = True
+        evidence_unavailable = True
 
     # 2. Check cmdline: dispatchers and workers receive --task-id <task_id>
     try:
@@ -424,48 +422,34 @@ def _pid_matches_task(
                 return True
             if part.startswith(b"--task-id=") and part[len(b"--task-id=") :] == task_bytes:
                 return True
-    except PermissionError:
-        evidence_denied = True
-    except FileNotFoundError:
-        if not _pid_alive(pid):
-            return False
     except OSError:
         if not _pid_alive(pid):
             return False
-        evidence_denied = True
+        evidence_unavailable = True
 
     # 3. Check cwd: dispatch worktrees contain the exact task_id directory component
     try:
         raw_cwd = os.readlink(proc_dir / "cwd")
         cwd_path = Path(raw_cwd)
-        if worktree_path is not None:
-            try:
-                resolved_wt = Path(worktree_path).resolve()
-                resolved_cwd = cwd_path.resolve()
-                if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
-                    return True
-            except OSError:
-                pass
         cwd_parts = cwd_path.parts
         if task_id in cwd_parts or safe_task_id in cwd_parts:
             return True
-        try:
+
+        if worktree_path is not None:
+            resolved_wt = Path(worktree_path).resolve()
+            resolved_cwd = cwd_path.resolve()
+            if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
+                return True
+        else:
             resolved_parts = cwd_path.resolve().parts
             if task_id in resolved_parts or safe_task_id in resolved_parts:
                 return True
-        except OSError:
-            pass
-    except PermissionError:
-        evidence_denied = True
-    except FileNotFoundError:
-        if not _pid_alive(pid):
-            return False
     except OSError:
         if not _pid_alive(pid):
             return False
-        evidence_denied = True
+        evidence_unavailable = True
 
-    if evidence_denied:
+    if evidence_unavailable:
         return None
 
     return False
