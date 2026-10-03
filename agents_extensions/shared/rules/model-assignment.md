@@ -104,9 +104,10 @@ conflict. Resolved-model attestation (or pinned `composer-2.5` / `grok-4.7` auth
 the primary provenance path.
 
 **Designated approval (operator decisions 2026-10-03, #9583, #9616):** a new architecture,
-layout, process or policy decision is approved by the operator, or when `claude-opus-5-5` and
-`gpt-6.1-sol` agree; when one of them authored the proposal, the other's approval completes it;
-if they disagree, the operator decides. Fable and the former Astra seat hold no advisory, approval, review or critique
+layout, process or policy decision is approved by the operator, or when two frontier families
+agree through `claude-opus-5-5` and `gpt-6.1-sol`: when one of them authored the proposal, the
+other's approval completes it; a proposal by any other agent (Gemini, Grok, Kimi or another seat)
+needs both; if they disagree, the operator decides. Fable and the former Astra seat hold no advisory, approval, review or critique
 role and are not a last resort for any of them.
 
 **Claude default model: Opus 5.5 (operator directive 2026-09-22):**
@@ -128,7 +129,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
 - **Advanced non-linguistic execution** (architecture, hard coding, deep code review, contested architectural implementation):
   **`claude-opus-5-5` (Opus 5.5)**.
 - **Ukrainian-specific linguistic judgment**: Use **`claude-opus-5-5` (Opus 5.5)** whenever Ukrainian language norms and pedagogy are evaluated.
-- **Advice and critical review**: **Opus 5.5 / Sol 6.1**. Designated approval (the two agreeing; when one authored the proposal, the other's approval completes it) remains a separate authority boundary; orchestration alone does not confer it.
+- **Advice and critical review**: **Opus 5.5 / Sol 6.1**. Designated approval (the two agreeing; when one authored the proposal, the other's approval completes it; any other author needs both) remains a separate authority boundary; orchestration alone does not confer it.
 - **Everyday routine infrastructure and standard non-linguistic coding**:
   Use **`claude-sonnet-5-5` (Sonnet 5.5)** for well-scoped non-security work to preserve
   frontier rate limits and execution speed. Route authoring of security-sensitive code (hooks/guards,
@@ -156,7 +157,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
   * **Top advisors**: Opus 5.5 / Sol 6.1 for advice, critiques and design input; they hold
     designated approval by agreeing; when one authored the proposal, the other's approval
-    completes it (#9583, #9616).
+    completes it, and any other author needs both (#9583, #9616).
   * **Other advisors**: `gemini-3.8-flash-high` (default for routine and deep; `gemini-3.1-pro-high` only on explicit request) ·
     `glm-5.3` @ `max` (advisory) · `grok-4.7` @ `high`. (Kimi: web, UI and backend coding only —
     no Ukrainian-language content, no reviews, consults, design or rules.)
@@ -663,7 +664,7 @@ seats rotate — operator wording; the catalog-refresh contract §above owns nam
 | Area | Advisor pool | Evidence anchor |
 | --- | --- | --- |
 | Ukrainian language & pedagogy | Opus · Sol · Gemini (sanctioned language seats ONLY) | LANGUAGE-LANES RULE binds |
-| Architecture & process design | Sol (designer) · Opus (counter-reader); the non-author's approval completes designated approval | fleet topology §above |
+| Architecture & process design | Sol (designer) · Opus (counter-reader); designated approval needs the non-author's approval when Opus or Sol authored the proposal, both otherwise | fleet topology §above |
 | Code & infrastructure review | GLM-5.3 · GPT-6.1 Sol | Historical Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
 | Security-sensitive changes | Sol · Opus | ambient-Anthropic-token→z.ai leak caught pre-merge (#5931 arc) |
 | Debugging & forensics | Grok · GLM-5.3 | Grok: #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
@@ -816,7 +817,7 @@ The compatibility key `execution_routing.sol_advised_bounded` retains its name.
 Its current advisor is the Sol advisor (`gpt-6.1-sol` @ high) and its bounded worker is Luna high, with Sol
 high for broader autonomous integration; it has no direct-worker route, and its
 `bounded_fallback_worker` (`gemini-3.8-flash-high`) needs the same envelope. Current designated advice uses **Opus / Sol**;
-designated approval needs them to agree, and when one authored the proposal the other's approval completes it (#9583, #9616). The mandatory #9275 envelope advisor is Sol 6.1 alone; an envelope is not an approval.
+designated approval needs them to agree, and when one authored the proposal the other's approval completes it, and any other author needs both (#9583, #9616). The mandatory #9275 envelope advisor is Sol 6.1 alone; an envelope is not an approval.
 Kimi: web, UI and backend coding only — no
 Ukrainian-language content, no reviews, consults, design or rules. All GPT-6 models are OpenAI-family and
 cannot satisfy independent CF for an OpenAI-authored PR.

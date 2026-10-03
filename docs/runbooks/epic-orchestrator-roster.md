@@ -112,7 +112,8 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
   or review role (#9583). **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
   (`claude-opus-5-5`). Designated approval is given by the operator, or when
   `claude-opus-5-5` and `gpt-6.1-sol` agree; when one of them authored the proposal, the
-  other's approval completes it; if they disagree, the operator decides.
+  other's approval completes it; a proposal by any other agent needs both; if they
+  disagree, the operator decides.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
@@ -234,7 +235,7 @@ A driver escalates instead of deciding solo when it hits: (1) an architecture/la
 change, (2) a contested cross-family verdict, (3) a fragile fix whose right layer is unclear,
 (4) a high-risk route that would trip the `model_catalog.yaml` risk floor, or (5) a repo-wide
 safety interruption of another lane. Advisors for those calls: **Opus 5.5 @ high, Sol 6.1 @ high**; designated approval needs them to
-agree; when one of them authored the proposal, the other's approval completes it; the operator decides if they disagree.
+agree; when one of them authored the proposal, the other's approval completes it; any other author needs both; the operator decides if they disagree.
 
 Everything else the driver runs to completion and reports past-tense — no "should I?" menus.
 

@@ -67,6 +67,7 @@ def test_astra_seat_is_retired_and_advisor_states_the_approval_rule():
     for phrase in (
         "Opus 5.5 and Sol 6.1 agreeing",
         "when one of them authored the proposal, the other's approval completes it",
+        "a proposal by any other agent (Gemini, Grok, Kimi or another seat) needs both",
         "operator decides",
         "never approve work you authored",
     ):

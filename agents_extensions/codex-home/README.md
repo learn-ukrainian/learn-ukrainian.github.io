@@ -19,8 +19,8 @@ handles broader coding and adversarial review. `sol_advisor_high` runs at high
 as the on-demand advisor for consequential design and difficult linguistic
 judgment. Advice and designated approval come from Opus 5.5 and Sol 6.1:
 approval comes from the operator or from the two agreeing; when one of them
-authored the proposal, the other's approval completes it; if they disagree,
-the operator decides (#9583, #9616). This profile supplies only the Sol half. Sol high
+authored the proposal, the other's approval completes it, and a proposal by any
+other agent needs both; if they disagree, the operator decides (#9583, #9616). This profile supplies only the Sol half. Sol high
 is the Ukrainian content authoring default, subject to VESUM, sources, and
 track immersion checks. This is a routing decision, not a comparative
 Ukrainian-quality benchmark.
