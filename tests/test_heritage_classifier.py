@@ -10,6 +10,9 @@ from scripts.lexicon.heritage_classifier import (
     classify_lemma,
     classify_surface_form,
     compute_warning_severity,
+    modern_headword_labels,
+    normative_citations,
+    resolve_usage_label,
 )
 
 DB = Path(__file__).resolve().parent / "fixtures" / "heritage_sample.db"
@@ -64,10 +67,13 @@ def test_specified_russianisms_keep_standard_alternatives() -> None:
 
         assert status["classification"] == "russianism"
         assert status["is_russianism"] is True
+        # #9603: a replacement suggestion is gate evidence, not a named
+        # lemma-level authority, so the public Atlas label stays unresolved.
         assert (
             classification_code({"primary_source": "built_vocabulary", "heritage_status": status})
-            == "rus"
+            is None
         )
+        assert resolve_usage_label(status)["scope"] == "unresolved"
         assert any(
             attestation["source"] == "standard_alternative" and attestation["ref"] == alternative
             for attestation in status["attestations"]
@@ -94,14 +100,12 @@ def test_atlas_heritage_labels_use_source_backed_evidence() -> None:
 
         assert status["classification"] == classification
         assert status["is_russianism"] is False
-        expected_cls = {
-            "authentic-archaism": "arch",
-            "dialect": "dial",
-            "historism": "hist",
-        }[classification]
-        assert (
-            classification_code({"primary_source": "built_vocabulary", "heritage_status": status})
-            == expected_cls
+        # #9603: ЕСУМ/Грінченко attestations are preserved, but their markers
+        # may belong to a sense, cognate or quotation, so they never label the
+        # headword by themselves. «глагол» keeps «калька» only through its
+        # curated lexical record naming Антоненко-Давидович.
+        assert classification_code({"primary_source": "built_vocabulary", "heritage_status": status}) == (
+            "calq" if lemma == "глагол" else None
         )
         assert any(
             attestation["source"] in {"grinchenko_1907", "esum"}
@@ -203,15 +207,25 @@ def test_cached_slovnyk_hits_rejects_stale_schema_version(monkeypatch, tmp_path)
     assert hits[0]["source_family"] == "slovnyk_me"
 
 
+_NAMED_LEXICAL_CALQUE = {
+    "kind": "participle",
+    "corrections": ["чинний"],
+    "source": ["antonenko-p144"],
+}
+
+
 @pytest.mark.parametrize(
     ("heritage_status", "vesum_attested", "max_sovietization_risk", "expected"),
     [
+        # #9603: is_russianism from a replacement suggestion alone (no named,
+        # lemma-scoped authority) is unresolved, never a red lemma warning.
         (
             {"classification": "russianism", "is_russianism": True, "attestations": []},
             False,
             0,
-            "russianism_red",
+            "none",
         ),
+        # A Russian morphological shadow alone is never normative authority.
         (
             {
                 "classification": "unknown",
@@ -221,7 +235,7 @@ def test_cached_slovnyk_hits_rejects_stale_schema_version(monkeypatch, tmp_path)
             },
             False,
             0,
-            "russianism_red",
+            "none",
         ),
         (
             {
@@ -232,7 +246,7 @@ def test_cached_slovnyk_hits_rejects_stale_schema_version(monkeypatch, tmp_path)
             },
             False,
             0,
-            "russianism_red",
+            "none",
         ),
         (
             {
@@ -289,21 +303,67 @@ def test_cached_slovnyk_hits_rejects_stale_schema_version(monkeypatch, tmp_path)
             0,
             "treasured",
         ),
+        # Positive control: a curated lexical calque naming Антоненко-Давидович.
         (
             {
                 "classification": "unknown",
                 "is_russianism": False,
                 "russian_shadow": False,
                 "attestations": [],
-                "curated_calque": {"corrections": ["чинний"]},
+                "curated_calque": _NAMED_LEXICAL_CALQUE,
             },
             False,
             0,
             "calque_yellow",
         ),
+        # Positive control: a named lexical Russianism stays red.
         (
-            # reverse-calque word (the recommended replacement) → yellow, matching
-            # the TS resolver (agy off-seat review #3759: data model must match UI).
+            {
+                "classification": "russianism",
+                "is_russianism": True,
+                "attestations": [],
+                "curated_calque": {**_NAMED_LEXICAL_CALQUE, "kind": "lexical"},
+            },
+            False,
+            0,
+            "russianism_red",
+        ),
+        # A curated record without a named normative authority is unresolved.
+        (
+            {
+                "classification": "unknown",
+                "is_russianism": False,
+                "attestations": [],
+                "curated_calque": {"kind": "lexical", "corrections": ["чинний"], "source": ["ua-gec"]},
+            },
+            False,
+            0,
+            "none",
+        ),
+        # Sense- and phrase-scoped cautions about this headword stay yellow.
+        (
+            {
+                "classification": "standard",
+                "attestations": [{"source": "VESUM", "ref": "біля"}],
+                "curated_calque": {"kind": "sense_restricted", "corrections": ["близько"], "source": ["litvinova-7"]},
+            },
+            True,
+            0,
+            "calque_yellow",
+        ),
+        (
+            {
+                "classification": "standard",
+                "attestations": [{"source": "VESUM", "ref": "приймати"}],
+                "calque_warning": {"kind": "phrasal", "standard_alternatives": ["брати участь"]},
+            },
+            True,
+            0,
+            "calque_yellow",
+        ),
+        # #9603: the recommended replacement of a calque (reverse calque) is
+        # never branded; it keeps its own positive attestation.
+        (
             {
                 "classification": "standard",
                 "is_russianism": False,
@@ -313,7 +373,7 @@ def test_cached_slovnyk_hits_rejects_stale_schema_version(monkeypatch, tmp_path)
             },
             True,
             0,
-            "calque_yellow",
+            "treasured",
         ),
         (
             {
@@ -335,7 +395,7 @@ def test_cached_slovnyk_hits_rejects_stale_schema_version(monkeypatch, tmp_path)
             },
             False,
             2,
-            "russianism_red",
+            "soviet_def_blue",
         ),
     ],
 )
@@ -487,3 +547,220 @@ def test_poizdka_retains_standard_without_calque_warning() -> None:
     assert res["warning_severity"] in ("none", "treasured")
     assert res["is_russianism"] is False
     assert res.get("calque_warning") is None
+
+
+# --- #9603 usage-label scope ------------------------------------------------
+
+_SUM20_VOZNYI = "ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець у Польщі (до XIX ст.)."
+_SUM20_DYVAN_SENSE = "ДИВА́Н, у, ч. 1. іст. Дорадчий орган у султанській Туреччині. 2. М'який меблевий виріб."
+_SUM20_HOMONYM = "ДИВА́Н ² , у, ч., іст. Дорадчий орган у султанській Туреччині."
+_SUM20_HOROD = "ГОРО́Д, а, ч. Ділянка землі, перев. при садибі, для вирощування овочів."
+_VTS_KRYN = "крин -у, ч. , заст. Лілея."
+
+
+def _card(card_id: str, text: str) -> dict:
+    return {"id": card_id, "definitions": [text]}
+
+
+@pytest.mark.parametrize(
+    ("definition", "classes", "ambiguous"),
+    [
+        (_SUM20_VOZNYI, {"historism"}, False),
+        (_SUM20_DYVAN_SENSE, set(), False),
+        (_SUM20_HOMONYM, {"historism"}, True),
+        (_SUM20_HOROD, set(), False),
+        (_VTS_KRYN, {"authentic-archaism"}, False),
+        ("I г`ород -а, ч. , спорт. Місце. II гор`од -у, ч. Ділянка.", set(), True),
+        # Whole-token markers only: «хвіст.» must not read as «іст.».
+        ("ХВІСТ, хвоста́, ч. Задня частина тіла.", set(), False),
+    ],
+)
+def test_modern_headword_labels_bind_only_the_headword_slot(definition, classes, ambiguous) -> None:
+    assert modern_headword_labels(definition) == (classes, ambiguous)
+
+
+@pytest.mark.parametrize(
+    ("citations", "expected"),
+    [
+        (["antonenko-p044", "glazova-10"], ["antonenko-p044", "glazova-10"]),
+        (["antonenko:200 Другий та інший"], ["antonenko:200 Другий та інший"]),
+        (["slovnyk:davydov"], ["slovnyk:davydov"]),
+        (["state-standard:avramenko-7"], ["state-standard:avramenko-7"]),
+        (["ua-gec:F/Calque n=2", "grinchenko", "sum-11", "sum-20", "grok-3098"], []),
+        (["state-standard", "slovnyk-dicts", "legacy-manifest", "classifier:is_russianism"], []),
+        (["slovnyk:foreign_shtepa"], []),
+        ("antonenko-p091", ["antonenko-p091"]),
+        (None, []),
+    ],
+)
+def test_normative_citations_name_only_normative_authorities(citations, expected) -> None:
+    assert normative_citations(citations) == expected
+
+
+def test_reverse_calque_never_brands_its_recommended_replacement() -> None:
+    # Stored DB shape for «бути» (является → бути).
+    status = {
+        "classification": "standard",
+        "attestations": [{"source": "VESUM", "ref": "бути"}],
+        "is_russianism": False,
+        "russian_shadow": False,
+        "vesum_attested": True,
+        "calque_warning": None,
+        "warning_severity": "calque_yellow",
+        "reverse_calques": [
+            {"calque": "являтися", "kind": "sense_restricted", "source": ["avramenko-9", "zabolotnyi-9"]}
+        ],
+    }
+    label = resolve_usage_label(status, headword="бути")
+    assert label == {"code": None, "scope": "reverse", "authority": [], "evidence": None, "reason": "reverse"}
+    assert compute_warning_severity(status, vesum_attested=True) == "treasured"
+    assert classification_code({"lemma": "бути", "heritage_status": status}) is None
+
+
+def test_sense_restricted_calque_stays_contextual() -> None:
+    status = {
+        "classification": "standard",
+        "attestations": [{"source": "VESUM", "ref": "біля"}],
+        "curated_calque": {
+            "kind": "sense_restricted",
+            "corrections": ["близько"],
+            "calque_sense": "approximately before a quantity",
+            "source": ["grinchenko", "litvinova-7", "ua-gec"],
+        },
+    }
+    label = resolve_usage_label(status, headword="біля")
+    assert label["scope"] == "sense"
+    assert label["code"] is None
+    assert label["authority"] == ["litvinova-7"]
+    assert label["evidence"] == "approximately before a quantity"
+    assert classification_code({"lemma": "біля", "heritage_status": status}) is None
+
+
+def test_stale_db_russianism_without_scope_is_unresolved() -> None:
+    # Stored DB shape for «вид»/«другий» written by calque-cluster reconciliation.
+    status = {
+        "classification": "russianism",
+        "attestations": [
+            {"source": "VESUM", "ref": "другий"},
+            {"source": "standard_alternative", "ref": "інший"},
+        ],
+        "is_russianism": True,
+        "russian_shadow": True,
+        "vesum_attested": True,
+        "calque_warning": {"standard_alternatives": ["інший"]},
+        "warning_severity": "russianism_red",
+    }
+    label = resolve_usage_label(status, headword="другий")
+    assert label["scope"] == "unresolved"
+    assert label["code"] is None
+    assert compute_warning_severity(status, vesum_attested=True) == "none"
+    assert classification_code({"lemma": "другий", "heritage_status": status}) is None
+
+
+def test_stale_severity_alone_never_labels() -> None:
+    for severity in ("russianism_red", "calque_yellow", "treasured"):
+        status = {"classification": "standard", "warning_severity": severity, "attestations": []}
+        assert resolve_usage_label(status)["code"] is None
+        assert classification_code({"lemma": "слово", "heritage_status": status}) is None
+
+
+@pytest.mark.parametrize(
+    ("status", "cards", "expected_code", "expected_reason"),
+    [
+        # СУМ-20 headword label binds the historism.
+        ({"classification": "historism"}, [_card("sum20", _SUM20_VOZNYI)], "hist", "lemma"),
+        # The label belongs to sense 1 only (диван): no word-level label.
+        ({"classification": "historism"}, [_card("sum20", _SUM20_DYVAN_SENSE)], None, "СУМ-20_headword_unlabelled"),
+        # A homonym-indexed card cannot label one Atlas headword.
+        ({"classification": "historism"}, [_card("sum20", _SUM20_HOMONYM)], None, "СУМ-20_headword_unlabelled"),
+        # The modern dictionary has the headword unlabelled (город).
+        ({"classification": "authentic-archaism"}, [_card("sum20", _SUM20_HOROD)], None, "СУМ-20_headword_unlabelled"),
+        # ВТС is the modern fallback when СУМ-20 is absent.
+        ({"classification": "authentic-archaism"}, [_card("vts", _VTS_KRYN)], "arch", "lemma"),
+        # ЕСУМ cognate marker (або: «п. діал.») never labels the headword.
+        (
+            {
+                "classification": "dialect",
+                "attestations": [{"source": "esum", "ref": "або:1:37", "word": "або", "detail": "або «чи»; — п. діал. «елементарний»"}],
+            },
+            None,
+            None,
+            "no_modern_dictionary_label",
+        ),
+        # Грінченко quotation substring (хвіст.) never labels the headword.
+        (
+            {
+                "classification": "historism",
+                "attestations": [{"source": "grinchenko_1907", "ref": "1", "word": "зловити", "detail": "Зловив зайця за хвіст."}],
+            },
+            [_card("sum20", "ЗЛОВИ́ТИ, влю́, ви́ш, док. Схопити.")],
+            None,
+            "СУМ-20_headword_unlabelled",
+        ),
+        # Borrowing is an etymological claim: ЕСУМ on the headword binds it.
+        (
+            {
+                "classification": "borrowing",
+                "attestations": [{"source": "esum", "ref": "диван:2:63", "word": "диван", "detail": "диван «канапа» — запозичення з турецької"}],
+            },
+            None,
+            "borr",
+            "lemma",
+        ),
+        (
+            {
+                "classification": "borrowing",
+                "attestations": [{"source": "esum", "ref": "x:1:1", "word": "канапа", "detail": "канапа — запозичення"}],
+            },
+            None,
+            None,
+            "no_headword_etymology",
+        ),
+    ],
+)
+def test_treasured_labels_need_headword_bound_modern_evidence(status, cards, expected_code, expected_reason) -> None:
+    headword = "диван" if status["classification"] == "borrowing" else "слово"
+    label = resolve_usage_label(status, headword=headword, definition_cards=cards)
+    assert label["code"] == expected_code
+    assert label["reason"] == expected_reason
+    if expected_code:
+        assert label["scope"] == "lemma"
+        assert label["authority"]
+
+
+def test_bound_treasured_label_precedes_curated_russianism() -> None:
+    status = {
+        "classification": "authentic-archaism",
+        "is_russianism": True,
+        "curated_calque": {**_NAMED_LEXICAL_CALQUE, "kind": "lexical"},
+    }
+    assert resolve_usage_label(status, definition_cards=[_card("vts", _VTS_KRYN)])["code"] == "arch"
+    # Unbound archaism does not hide a named lexical calque.
+    assert resolve_usage_label(status)["code"] == "calq"
+
+
+def test_curated_lexical_russianism_with_named_authority_is_retained() -> None:
+    status = {
+        "classification": "russianism",
+        "is_russianism": True,
+        "curated_calque": {
+            "kind": "lexical",
+            "corrections": ["захід"],
+            "note": "рос. мероприятие; use захід / заходи",
+            "source": ["antonenko-p044", "glazova-10"],
+        },
+    }
+    label = resolve_usage_label(status, headword="міроприємство")
+    assert label["code"] == "rus"
+    assert label["scope"] == "lemma"
+    assert label["authority"] == ["antonenko-p044", "glazova-10"]
+    assert classification_code({"lemma": "міроприємство", "heritage_status": status}) == "rus"
+
+
+def test_phrasal_calque_and_unattested_curated_record() -> None:
+    phrase = {"classification": "unknown", "calque_warning": {"kind": "phrasal", "citations": ["antonenko-p091"]}}
+    assert resolve_usage_label(phrase)["scope"] == "phrase"
+    bare = {"classification": "calque", "curated_calque": {"kind": "lexical", "corrections": ["x"]}}
+    assert resolve_usage_label(bare)["reason"] == "curated_record_without_named_authority"
+    assert resolve_usage_label({})["scope"] == "none"
+    assert resolve_usage_label(None)["scope"] == "none"

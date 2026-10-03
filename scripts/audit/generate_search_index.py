@@ -41,11 +41,6 @@ ENTRY_TYPES = (
     "multiword_term",
     "proper_name",
 )
-AUTHENTIC_RUSSIANISM_EXEMPTIONS = {
-    "authentic-archaism",
-    "dialect",
-    "historism",
-}
 _UK_SORT_ORDER = {letter: index for index, letter in enumerate(UKRAINIAN_ALPHABET)}
 _TOKEN_RE = re.compile(r"[\w\u0400-\u04ff]+", re.UNICODE)
 _LEADING_SENSE_RE = re.compile(r"^\s*\d+[.)]\s*")
@@ -110,6 +105,14 @@ _LEXEME_FILTER = _load_helper_module(
 )
 is_lexeme_entry = _LEXEME_FILTER.is_lexeme_entry
 _SURZHYK_SOURCE = _LEXEME_FILTER.SURZHYK_SOURCE
+
+# One source-scope contract for producer and projection (#9603); the module is
+# stdlib-only at import time, so the frontend CI interpreter can load it.
+_HERITAGE_CLASSIFIER = _load_helper_module(
+    "_atlas_heritage_classifier",
+    PROJECT_ROOT / "scripts" / "lexicon" / "heritage_classifier.py",
+)
+resolve_usage_label = _HERITAGE_CLASSIFIER.resolve_usage_label
 
 
 def kind_for_source(source: Any) -> str:
@@ -332,34 +335,33 @@ def _uk_sort_key(value: object) -> tuple[tuple[int, str], ...]:
     return tuple(key)
 
 
+def _definition_cards(entry: Mapping[str, Any]) -> object:
+    enrichment = entry.get("enrichment")
+    if isinstance(enrichment, Mapping):
+        return enrichment.get("definition_cards")
+    return None
+
+
 def classification_code(entry: Mapping[str, Any]) -> str | None:
-    """Return compact Atlas browse classification code, if any."""
+    """Return compact Atlas browse classification code, if any.
+
+    Stored ``warning_severity``/``classification`` fields are never trusted on
+    their own: a code is emitted only for a lemma-scoped label with a named
+    authority (``resolve_usage_label``). Sense, phrase, reverse-calque and
+    unresolved records stay unlabelled in browse (#9603).
+    """
 
     kind = kind_for_source(entry.get("primary_source"))
     if kind == "avoid":
         return "avoid"
 
-    status = _heritage_status(entry)
-    classification = _clean_text(status.get("classification"))
-    warning_severity = _clean_text(status.get("warning_severity"))
-    is_russianism = status.get("is_russianism") is True
-
-    if classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS and (
-        warning_severity == "russianism_red" or is_russianism
-    ):
-        return "rus"
-    if warning_severity == "calque_yellow" and classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS:
-        return "calq"
-    if classification == "authentic-archaism":
-        return "arch"
-    if classification == "dialect":
-        return "dial"
-    if classification == "historism":
-        return "hist"
-    if classification == "borrowing":
-        return "borr"
-    if warning_severity == "calque_yellow":
-        return "calq"
+    label = resolve_usage_label(
+        dict(_heritage_status(entry)),
+        headword=_clean_text(entry.get("lemma")),
+        definition_cards=_definition_cards(entry),
+    )
+    if label["scope"] == "lemma" and label["code"] in CLASSIFICATION_CODES:
+        return str(label["code"])
     return None
 
 
@@ -637,6 +639,19 @@ def _heritage_status_for_slug(
     return {}
 
 
+def _definition_cards_for_slug(conn: sqlite3.Connection, slug: str) -> object:
+    row = conn.execute(
+        "SELECT payload_json FROM enrichment WHERE slug = ? AND section = 'definition_cards'",
+        (slug,),
+    ).fetchone()
+    if row is None:
+        return None
+    try:
+        return json.loads(row[0])
+    except (TypeError, json.JSONDecodeError):
+        return None
+
+
 def browse_rows_from_db_articles(
     articles: list[dict[str, Any]],
     db_path: Path,
@@ -645,22 +660,25 @@ def browse_rows_from_db_articles(
 
     conn = sqlite3.connect(db_path)
     try:
-        heritage_by_slug = {
-            slug: heritage_classification
-            for slug, heritage_classification in conn.execute(
-                "SELECT slug, heritage_classification FROM articles"
+        article_meta = {
+            slug: (heritage_classification, lemma)
+            for slug, heritage_classification, lemma in conn.execute(
+                "SELECT slug, heritage_classification, lemma FROM articles"
             )
         }
         browse_rows: list[dict[str, Any]] = []
         for row in articles:
             slug = str(row["s"])
+            heritage_classification, lemma = article_meta.get(slug, (None, None))
             pseudo_entry = {
+                "lemma": lemma or row.get("l"),
                 "primary_source": _primary_source_for_slug(conn, slug),
                 "heritage_status": _heritage_status_for_slug(
                     conn,
                     slug,
-                    heritage_classification=_clean_text(heritage_by_slug.get(slug)),
+                    heritage_classification=_clean_text(heritage_classification),
                 ),
+                "enrichment": {"definition_cards": _definition_cards_for_slug(conn, slug)},
             }
             browse_row = dict(row)
             cls = classification_code(pseudo_entry)

@@ -1553,3 +1553,129 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
     });
   });
 });
+
+// #9603: entry pages keep source scope — phrase/sense/reverse guidance never
+// becomes a whole-headword Russianism/calque/register badge.
+describe("usage-label scope on entry pages (#9603)", () => {
+  function heritageEntry(lemma: string, heritage_status: Record<string, unknown>, extra: Record<string, unknown> = {}) {
+    return articleProps({
+      lemma,
+      url_slug: lemma,
+      gloss: "gloss",
+      entry_type: "lemma",
+      pos: "noun",
+      ipa: null,
+      primary_source: "course",
+      course_usage: [],
+      heritage_status,
+      ...extra,
+    } as never);
+  }
+
+  test("reverse calque (бути) renders a replacement note, not a calque badge", () => {
+    const props = heritageEntry("бути", {
+      classification: "standard",
+      attestations: [{ source: "VESUM", ref: "бути" }],
+      is_russianism: false,
+      russian_shadow: false,
+      warning_severity: "calque_yellow",
+      reverse_calques: [
+        {
+          calque: "являтися",
+          kind: "sense_restricted",
+          note: "calque only in copular use",
+          source: ["avramenko-9", "zabolotnyi-9"],
+          calque_sense: "to be / constitute",
+        },
+      ],
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.yellow).toBeUndefined();
+    expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
+    expect(view.styleNotes).toContain(
+      "«бути» — рекомендований відповідник замість «являтися» (лише в значенні: to be / constitute). Застереження стосується «являтися», а не цього слова. Джерела: avramenko-9, zabolotnyi-9.",
+    );
+    const html = renderWordAtlasArticle(props);
+    expect(html).not.toContain('data-severity="yellow"');
+    expect(html).toContain("рекомендований відповідник замість «являтися»");
+  });
+
+  test("sense-restricted calque (біля) renders a scoped box and no headword badge", () => {
+    const props = heritageEntry("біля", {
+      classification: "standard",
+      attestations: [{ source: "VESUM", ref: "біля" }],
+      is_russianism: false,
+      russian_shadow: false,
+      warning_severity: "calque_yellow",
+      curated_calque: {
+        kind: "sense_restricted",
+        corrections: ["близько"],
+        calque_sense: "approximately / about before a quantity",
+        note: "calque only before approximate quantities",
+        source: ["grinchenko", "litvinova-7", "zabolotnyi-7", "ua-gec"],
+      },
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.yellow?.title).toBe("Калькове застереження щодо окремого значення");
+    expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("а не слова загалом");
+    expect(html).toContain("litvinova-7, zabolotnyi-7");
+  });
+
+  test("unresolved replacement suggestion (вид) renders a neutral note, no red box", () => {
+    const props = heritageEntry("вид", {
+      classification: "russianism",
+      attestations: [
+        { source: "VESUM", ref: "вид" },
+        { source: "standard_alternative", ref: "вигляд" },
+      ],
+      is_russianism: true,
+      russian_shadow: true,
+      calque_warning: { standard_alternatives: ["вигляд"] },
+      warning_severity: "russianism_red",
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.red).toBeUndefined();
+    expect(view.shouldShowEditorialWarning).toBe(false);
+    expect(view.styleNotes.join(" ")).toContain("Довідкові джерела пропонують відповідники: вигляд.");
+    const html = renderWordAtlasArticle(props);
+    expect(html).not.toContain('data-editorial-warn="russianism_red"');
+  });
+
+  test("historism on one СУМ-20 sense (диван) gets no register badge; headword label (возний) keeps it", () => {
+    const dyvan = heritageEntry(
+      "диван",
+      {
+        classification: "historism",
+        attestations: [{ source: "esum", ref: "диван:2:63", word: "диван", detail: "диван «канапа; (іст.) рада»" }],
+        warning_severity: "treasured",
+      },
+      {
+        enrichment: {
+          definition_cards: [{ id: "sum20", source: "СУМ-20", definitions: ["ДИВА́Н, у, ч. 1. іст. Рада. 2. Меблі."] }],
+        },
+      },
+    );
+    const dyvanView = buildWordAtlasArticleView(dyvan.record, "test", "test");
+    expect(dyvanView.statusBadges.map((badge) => badge.label)).not.toContain("Історизм у сучасному вжитку");
+    expect(dyvanView.styleNotes.join(" ")).toContain("Позначку «історизм» у джерелах не прив'язано до слова загалом");
+    expect(renderWordAtlasArticle(dyvan)).not.toContain("Історизм у сучасному вжитку");
+
+    const voznyi = heritageEntry(
+      "возний",
+      { classification: "historism", attestations: [], warning_severity: "treasured" },
+      {
+        enrichment: {
+          definition_cards: [{ id: "sum20", source: "СУМ-20", definitions: ["ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець."] }],
+        },
+      },
+    );
+    const voznyiView = buildWordAtlasArticleView(voznyi.record, "test", "test");
+    expect(voznyiView.statusBadges).toContainEqual({
+      className: "archaic",
+      label: "Історизм у сучасному вжитку",
+      title: "СУМ-20",
+    });
+  });
+});

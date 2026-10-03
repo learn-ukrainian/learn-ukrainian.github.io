@@ -35,6 +35,9 @@ def entry(
     is_russianism: bool = False,
     warning_severity: str | None = None,
     cefr: object | None = None,
+    curated_calque: dict[str, object] | None = None,
+    attestations: list[dict[str, object]] | None = None,
+    sum20: str | None = None,
 ) -> dict[str, object]:
     heritage: dict[str, object] = {}
     if classification:
@@ -43,6 +46,10 @@ def entry(
         heritage["is_russianism"] = True
     if warning_severity:
         heritage["warning_severity"] = warning_severity
+    if curated_calque:
+        heritage["curated_calque"] = curated_calque
+    if attestations:
+        heritage["attestations"] = attestations
 
     row: dict[str, object] = {
         "lemma": lemma,
@@ -52,9 +59,22 @@ def entry(
     }
     if heritage:
         row["enrichment"] = {"heritage": heritage}
+    if sum20:
+        enrichment = row.setdefault("enrichment", {})
+        assert isinstance(enrichment, dict)
+        enrichment["definition_cards"] = [{"id": "sum20", "definitions": [sum20]}]
     if cefr is not None:
         row["cefr"] = cefr
     return row
+
+
+_NAMED_RUS = {"kind": "lexical", "corrections": ["захід"], "source": ["antonenko-p044"]}
+_NAMED_CALQ = {"kind": "participle", "corrections": ["чинний"], "source": ["antonenko-p144"]}
+_ESUM_BORROWING = [{"source": "esum", "ref": "борщ:1:1", "word": "борщ", "detail": "борщ «страва» — запозичення"}]
+
+
+def sum20(head: str, label: str) -> str:
+    return f"{head.upper()}, у, ч., {label} Значення слова."
 
 
 def fixture_entries() -> list[dict[str, object]]:
@@ -450,13 +470,12 @@ def test_classification_code_precedence_and_standard_omit() -> None:
             ),
             "avoid",
         ),
-        (entry("red", warning_severity="russianism_red"), "rus"),
-        (entry("shadow", classification="unknown", is_russianism=True), "rus"),
-        (entry("calque", warning_severity="calque_yellow"), "calq"),
-        (entry("arch", classification="authentic-archaism"), "arch"),
-        (entry("dial", classification="dialect"), "dial"),
-        (entry("hist", classification="historism"), "hist"),
-        (entry("borr", classification="borrowing"), "borr"),
+        (entry("red", classification="russianism", is_russianism=True, curated_calque=_NAMED_RUS), "rus"),
+        (entry("calque", classification="calque", curated_calque=_NAMED_CALQ), "calq"),
+        (entry("arch", classification="authentic-archaism", sum20=sum20("arch", "заст.")), "arch"),
+        (entry("dial", classification="dialect", sum20=sum20("dial", "діал.")), "dial"),
+        (entry("hist", classification="historism", sum20=sum20("hist", "іст.")), "hist"),
+        (entry("борщ", classification="borrowing", attestations=_ESUM_BORROWING), "borr"),
         (entry("standard", classification="standard"), None),
     ]
 
@@ -465,16 +484,44 @@ def test_classification_code_precedence_and_standard_omit() -> None:
     ]
 
 
+def test_classification_code_never_trusts_unscoped_stored_fields() -> None:
+    """#9603 negative controls: stale severity, bare classifications, shadows."""
+    cases = [
+        entry("red", warning_severity="russianism_red"),
+        entry("shadow", classification="unknown", is_russianism=True),
+        entry("calque", warning_severity="calque_yellow"),
+        entry("arch", classification="authentic-archaism"),
+        entry("dial", classification="dialect"),
+        entry("hist", classification="historism"),
+        entry("borr", classification="borrowing"),
+        # The modern dictionary labels only one sense / leaves the headword unlabelled.
+        entry("диван", classification="historism", sum20="ДИВА́Н, у, ч. 1. іст. Рада. 2. Меблі."),
+        entry("город", classification="authentic-archaism", sum20="ГОРО́Д, а, ч. Ділянка землі."),
+        # A curated sense-restricted record is contextual; a bare one is unresolved.
+        entry("біля", classification="standard", curated_calque={"kind": "sense_restricted", "source": ["litvinova-7"]}),
+        entry("x", classification="calque", curated_calque={"kind": "lexical", "source": ["ua-gec"]}),
+    ]
+    assert [classification_code(row) for row in cases] == [None] * len(cases)
+
+
 def test_russianism_does_not_override_treasured_authentic_classifications() -> None:
+    card = sum20("другоє", "заст.")
     assert (
         classification_code(
-            entry("другоє", classification="authentic-archaism", is_russianism=True)
+            entry("другоє", classification="authentic-archaism", is_russianism=True, sum20=card)
         )
         == "arch"
     )
-    assert classification_code(entry("ґазда", classification="dialect", is_russianism=True)) == "dial"
     assert (
-        classification_code(entry("осавул", classification="historism", is_russianism=True))
+        classification_code(
+            entry("ґазда", classification="dialect", is_russianism=True, sum20=sum20("ґазда", "діал."))
+        )
+        == "dial"
+    )
+    assert (
+        classification_code(
+            entry("осавул", classification="historism", is_russianism=True, sum20=sum20("осавул", "іст."))
+        )
         == "hist"
     )
     # A stale/hand-edited row may carry BOTH an authentic classification AND
@@ -486,6 +533,7 @@ def test_russianism_does_not_override_treasured_authentic_classifications() -> N
                 "другоє",
                 classification="authentic-archaism",
                 warning_severity="russianism_red",
+                sum20=card,
             )
         )
         == "arch"
@@ -496,14 +544,14 @@ def test_browse_meta_counts_and_shards() -> None:
     rows = build_index(
         [
             entry("абетка", gloss="alphabet"),
-            entry("архаїзм", gloss="archaism", classification="authentic-archaism"),
-            entry("бета", gloss="beta", warning_severity="russianism_red"),
-            entry("борщ", gloss="borshch", classification="borrowing"),
+            entry("архаїзм", gloss="archaism", classification="authentic-archaism", sum20=sum20("архаїзм", "заст.")),
+            entry("бета", gloss="beta", classification="russianism", is_russianism=True, curated_calque=_NAMED_RUS),
+            entry("борщ", gloss="borshch", classification="borrowing", attestations=_ESUM_BORROWING),
             entry("всьо", gloss="avoid all", primary_source="surzhyk_to_avoid"),
-            entry("гетьман", gloss="hetman", classification="historism"),
-            entry("ґанок", gloss="porch", classification="dialect"),
-            entry("ґазда", gloss="host", classification="dialect"),
-            entry("калька", gloss="calque", warning_severity="calque_yellow"),
+            entry("гетьман", gloss="hetman", classification="historism", sum20=sum20("гетьман", "іст.")),
+            entry("ґанок", gloss="porch", classification="dialect", sum20=sum20("ґанок", "діал.")),
+            entry("ґазда", gloss="host", classification="dialect", sum20=sum20("ґазда", "діал.")),
+            entry("калька", gloss="calque", classification="calque", curated_calque=_NAMED_CALQ),
         ]
     )
 
@@ -751,3 +799,108 @@ def test_browse_staleness_guard_allows_refresh_when_browse_will_be_rewritten(tmp
     stale_meta.write_text(json.dumps({"total": 1}), encoding="utf-8")
 
     guard_browse_staleness(stale_meta, reviewed_article_count=5, will_refresh_browse=True)
+
+
+def _db_entry(
+    lemma: str,
+    heritage_status: dict[str, object],
+    *,
+    cards: list[dict[str, object]] | None = None,
+    primary_source: str = "built_vocabulary",
+) -> dict[str, object]:
+    row: dict[str, object] = {
+        "lemma": lemma,
+        "url_slug": lemma,
+        "gloss": "gloss",
+        "primary_source": primary_source,
+        "heritage_status": heritage_status,
+    }
+    if cards:
+        row["enrichment"] = {"definition_cards": cards}
+    return row
+
+
+def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> None:
+    """#9603: stored DB records keep source scope through the browse projection."""
+    entries = [
+        # Recommended replacement of «являтися» (reverse calque) with stale severity.
+        _db_entry(
+            "бути",
+            {
+                "classification": "standard",
+                "attestations": [{"source": "VESUM", "ref": "бути"}],
+                "warning_severity": "calque_yellow",
+                "reverse_calques": [{"calque": "являтися", "kind": "sense_restricted"}],
+            },
+        ),
+        # Reconciled Russianism with only a replacement suggestion.
+        _db_entry(
+            "вид",
+            {
+                "classification": "russianism",
+                "is_russianism": True,
+                "attestations": [{"source": "standard_alternative", "ref": "вигляд"}],
+                "calque_warning": {"standard_alternatives": ["вигляд"]},
+                "warning_severity": "russianism_red",
+            },
+        ),
+        # Historism marker on one СУМ-20 sense only.
+        _db_entry(
+            "диван",
+            {"classification": "historism", "warning_severity": "treasured"},
+            cards=[{"id": "sum20", "definitions": ["ДИВА́Н, у, ч. 1. іст. Рада. 2. Меблі."]}],
+        ),
+        # Positive controls: СУМ-20 headword label and a named lexical Russianism.
+        _db_entry(
+            "возний",
+            {"classification": "historism", "warning_severity": "treasured"},
+            cards=[{"id": "sum20", "definitions": ["ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець."]}],
+        ),
+        _db_entry(
+            "міроприємство",
+            {
+                "classification": "russianism",
+                "is_russianism": True,
+                "warning_severity": "russianism_red",
+                "curated_calque": {"kind": "lexical", "corrections": ["захід"], "source": ["antonenko-p044"]},
+            },
+        ),
+    ]
+    db = atlas_db_fixture(tmp_path, entries=entries)
+    flagged_out = tmp_path / "browse-flagged.json"
+    meta_out = tmp_path / "browse-meta.json"
+    assert (
+        main(
+            [
+                "--db",
+                str(db),
+                "--out",
+                str(tmp_path / "search.json"),
+                "--aliases-out",
+                str(tmp_path / "aliases.json"),
+                "--search-shards-out",
+                str(tmp_path / "search-shards.json"),
+                "--browse-meta-out",
+                str(meta_out),
+                "--browse-flagged-out",
+                str(flagged_out),
+                "--browse-dir",
+                str(tmp_path / "browse"),
+            ]
+        )
+        == 0
+    )
+    flagged = json.loads(flagged_out.read_text(encoding="utf-8"))
+    assert [(row["l"], row["cls"]) for row in flagged] == [("возний", "hist"), ("міроприємство", "rus")]
+    assert json.loads(meta_out.read_text(encoding="utf-8"))["chipCounts"] == {"rus": 1, "hist": 1}
+
+
+def test_committed_browse_flags_never_brand_named_regressions() -> None:
+    """#9603 regression seeds stay out of the committed browse filters."""
+    flagged = json.loads(
+        (PROJECT_ROOT / "site/src/data/lexicon-browse-flagged.json").read_text(encoding="utf-8")
+    )
+    flagged_lemmas = {row["l"] for row in flagged}
+    for lemma in ("бути", "є", "голова", "другий", "вид", "або", "диван", "город"):
+        assert lemma not in flagged_lemmas
+    assert all(row["cls"] in {"avoid", "rus", "calq", "arch", "dial", "hist", "borr"} for row in flagged)

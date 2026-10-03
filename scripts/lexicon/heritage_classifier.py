@@ -390,30 +390,253 @@ def _has_reverse_calque(heritage_status: dict[str, Any]) -> bool:
     return isinstance(reverse, list) and bool(reverse)
 
 
+# ---------------------------------------------------------------------------
+# Usage-label scope (#9603). Contract: docs/atlas/usage-label-scope.md.
+#
+# A public Word Atlas label («русизм», «калька», «архаїзм», «діалектизм»,
+# «історизм», «запозичення») may describe the whole headword only when the
+# record names an authority AND carries evidence that the authority's claim
+# covers the headword itself. Sense, phrase and reverse (replacement-word)
+# guidance stays contextual; anything else is unresolved — never a lexical
+# condemnation. ``site/src/lib/lexicon/heritage-severity.ts`` mirrors this.
+# ---------------------------------------------------------------------------
+
+USAGE_LABEL_CODES = {
+    "russianism": "rus",
+    "calque": "calq",
+    "authentic-archaism": "arch",
+    "archaism": "arch",
+    "dialect": "dial",
+    "historism": "hist",
+    "borrowing": "borr",
+}
+_CONTEXTUAL_CALQUE_SCOPES = {"sense_restricted": "sense", "phrasal": "phrase"}
+# Normative authorities for Russianism/calque judgments (rules P5): the
+# Антоненко-Давидович style guide (also served as slovnyk.me ``davydov``),
+# Караванський, Волощак and named school textbooks (author-grade ids).
+# UA-GEC annotations, Грінченко attestations, explanatory dictionaries (meaning,
+# not calque judgments), LanguageTool, Штепа's purist replacements,
+# classifier output and bare family names
+# ("state-standard", "slovnyk-dicts", "legacy-manifest") are not.
+_NORMATIVE_CITATION_FAMILIES = ("antonenko", "davydov", "karavansk", "voloshchak", "voloschak")
+_NORMATIVE_TEXTBOOK_RE = re.compile(r"^(?:avramenko|zabolotnyi|glazova|litvinova|voron)-(?:[1-9]|1[01])$")
+_CITATION_TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-_][a-z0-9]+)*")
+_LETTER_CLASS = "а-яіїєґa-z"
+_USAGE_MARKER_RES = {
+    "historism": re.compile(rf"(?<![{_LETTER_CLASS}])(?:іст|істор)\."),
+    "dialect": re.compile(rf"(?<![{_LETTER_CLASS}])діал\."),
+    "authentic-archaism": re.compile(rf"(?<![{_LETTER_CLASS}])(?:заст\.|застар|архаї)"),
+}
+_MODERN_DICTIONARY_CARDS = (("sum20", "СУМ-20"), ("vts", "ВТС"))
+_HOMONYM_INDEX_RE = re.compile(r"^(?:[¹²³⁴⁵⁶⁷⁸⁹]+|I|II|III|IV|V)[,.]?$")
+_SENSE_START_RE = re.compile(r"^(?:\d|[《◊/]|[А-ЯІЇЄҐA-Z])")
+
+
+def _citation_list(value: object) -> list[str]:
+    if isinstance(value, str):
+        return [value] if value.strip() else []
+    if isinstance(value, list):
+        return [str(item) for item in value if str(item or "").strip()]
+    return []
+
+
+def normative_citations(citations: object) -> list[str]:
+    """Return the citations that name a normative Russianism/calque authority."""
+    named: list[str] = []
+    for citation in _citation_list(citations):
+        tokens = _CITATION_TOKEN_RE.findall(citation.casefold())
+        if any(
+            token.startswith(_NORMATIVE_CITATION_FAMILIES) or _NORMATIVE_TEXTBOOK_RE.match(token)
+            for token in tokens
+        ):
+            named.append(citation)
+    return named
+
+
+def _curated_scope_record(status: dict[str, Any]) -> dict[str, Any] | None:
+    """The curated calque record whose explicit ``kind`` states its scope."""
+    for key in ("curated_calque", "calque_warning"):
+        record = status.get(key)
+        if isinstance(record, dict) and str(record.get("kind") or "").strip():
+            return record
+    return None
+
+
+def _usage_marker_classes(text: str) -> set[str]:
+    return {name for name, pattern in _USAGE_MARKER_RES.items() if pattern.search(text)}
+
+
+def _strip_accents(text: str) -> str:
+    return _ACUTE_RE.sub("", html.unescape(str(text or "")))
+
+
+def modern_headword_labels(definition: str) -> tuple[set[str], bool]:
+    """Usage-label classes in a СУМ-20/ВТС headword slot, plus an ambiguity flag.
+
+    The headword slot is the grammar/label run before the first sense
+    (a capitalised gloss, a sense number or ``《``). A homonym index (``²``,
+    ``II``) makes the card ambiguous for a single Atlas headword.
+    """
+    tokens = _strip_accents(definition).split()
+    slot: list[str] = []
+    ambiguous = False
+    for index, token in enumerate(tokens):
+        if _HOMONYM_INDEX_RE.match(token):
+            ambiguous = True
+            continue
+        if index == 0:
+            continue
+        if _SENSE_START_RE.match(token):
+            break
+        slot.append(token)
+    if re.search(r"(?<!\S)II(?!\S)", _strip_accents(definition)):
+        ambiguous = True
+    return _usage_marker_classes(_normalize_word(" ".join(slot))), ambiguous
+
+
+def _modern_dictionary_card(definition_cards: object) -> tuple[str, str] | None:
+    if not isinstance(definition_cards, list):
+        return None
+    for card_id, label in _MODERN_DICTIONARY_CARDS:
+        for card in definition_cards:
+            if not isinstance(card, dict) or card.get("id") != card_id:
+                continue
+            definitions = card.get("definitions")
+            if isinstance(definitions, list) and definitions and str(definitions[0] or "").strip():
+                return label, str(definitions[0])
+    return None
+
+
+def _treasured_label(
+    status: dict[str, Any],
+    classification: str,
+    *,
+    headword: str | None,
+    definition_cards: object,
+) -> dict[str, Any]:
+    if classification == "borrowing":
+        for attestation in status.get("attestations") or []:
+            if (
+                isinstance(attestation, dict)
+                and attestation.get("source") == "esum"
+                and headword
+                and _normalize_word(str(attestation.get("word") or "")) == _normalize_word(headword)
+                and "запозич" in _normalize_word(str(attestation.get("detail") or ""))
+            ):
+                return _usage_label("borr", "lemma", [f"ЕСУМ {attestation.get('ref')}"], attestation.get("detail"))
+        return _usage_label(None, "unresolved", [], None, reason="no_headword_etymology")
+    modern = _modern_dictionary_card(definition_cards)
+    code = USAGE_LABEL_CODES[classification]
+    marker_class = "authentic-archaism" if code == "arch" else classification
+    # Register labels describe modern usage, so only a modern explanatory
+    # dictionary binds them to the headword (rules P5). ЕСУМ, Грінченко and
+    # VESUM tags stay attestations: their labels may belong to one sense, a
+    # cognate, a quotation or an older homonym (#9603).
+    if modern is None:
+        return _usage_label(None, "unresolved", [], None, reason="no_modern_dictionary_label")
+    source_label, definition = modern
+    classes, ambiguous = modern_headword_labels(definition)
+    if not ambiguous and marker_class in classes:
+        return _usage_label(code, "lemma", [source_label], definition[:240])
+    return _usage_label(None, "unresolved", [], None, reason=f"{source_label}_headword_unlabelled")
+
+
+def _usage_label(
+    code: str | None,
+    scope: str,
+    authority: list[str],
+    evidence: object,
+    *,
+    reason: str = "",
+) -> dict[str, Any]:
+    return {
+        "code": code,
+        "scope": scope,
+        "authority": authority,
+        "evidence": str(evidence) if evidence else None,
+        "reason": reason or scope,
+    }
+
+
+def resolve_usage_label(
+    heritage_status: dict[str, Any] | None,
+    *,
+    headword: str | None = None,
+    definition_cards: object = None,
+) -> dict[str, Any]:
+    """Resolve the source-scoped Word Atlas usage label for one record.
+
+    Returns ``{"code", "scope", "authority", "evidence", "reason"}``. ``code``
+    is set only for ``scope == "lemma"``; ``sense``/``phrase`` are contextual
+    calque cautions on this headword, ``reverse`` marks a recommended
+    replacement, ``unresolved`` marks warnings or labels whose scope or
+    authority the record does not establish.
+    """
+    status = heritage_status or {}
+    classification = str(status.get("classification") or "unknown")
+
+    treasured: dict[str, Any] | None = None
+    if classification in USAGE_LABEL_CODES and USAGE_LABEL_CODES[classification] not in {"rus", "calq"}:
+        treasured = _treasured_label(
+            status,
+            classification,
+            headword=headword,
+            definition_cards=definition_cards,
+        )
+        if treasured["scope"] == "lemma":
+            return treasured
+
+    curated = _curated_scope_record(status)
+    if curated is not None:
+        kind = str(curated.get("kind")).strip()
+        authority = normative_citations(curated.get("source")) + normative_citations(curated.get("citations"))
+        contextual = _CONTEXTUAL_CALQUE_SCOPES.get(kind)
+        if contextual:
+            evidence = curated.get("calque_sense") or curated.get("calqueSense") or curated.get("note")
+            return _usage_label(None, contextual, authority, evidence)
+        if authority:
+            is_rus = bool(status.get("is_russianism")) and classification not in _AUTHENTIC_CLASSIFICATIONS
+            evidence = curated.get("noteUk") or curated.get("note")
+            return _usage_label("rus" if is_rus else "calq", "lemma", authority, evidence)
+        return _usage_label(None, "unresolved", [], None, reason="curated_record_without_named_authority")
+
+    if (
+        bool(status.get("is_russianism"))
+        or classification in {"russianism", "calque"}
+        or _has_calque_alternative(status)
+    ):
+        return _usage_label(None, "unresolved", [], None, reason="no_lemma_scoped_authority")
+    if treasured is not None:
+        return treasured
+    if _has_reverse_calque(status):
+        return _usage_label(None, "reverse", [], None)
+    return _usage_label(None, "none", [], None)
+
+
 def compute_warning_severity(
     heritage_status: dict[str, Any] | None,
     *,
     vesum_attested: bool,
     max_sovietization_risk: int = 0,
 ) -> str:
-    """Compute the Word Atlas warning severity from status data only."""
+    """Compute the Word Atlas warning severity from status data only.
+
+    Red and yellow follow :func:`resolve_usage_label`: red only for a
+    lemma-scoped Russianism with a named authority; yellow for a lemma-scoped
+    calque or a sense/phrase-scoped caution on this headword. A recommended
+    replacement (reverse calque), a bare replacement suggestion and a Russian
+    morphological shadow never raise a warning by themselves (#9603).
+    """
     status = heritage_status or {}
     classification = str(status.get("classification") or "unknown")
     positive_attestation = has_positive_attestation(status)
+    label = resolve_usage_label(status)
 
-    if bool(status.get("is_russianism")) and classification not in _AUTHENTIC_CLASSIFICATIONS:
+    if label["scope"] == "lemma" and label["code"] == "rus":
         return "russianism_red"
 
-    if _has_calque_alternative(status) or _has_reverse_calque(status):
+    if (label["scope"] == "lemma" and label["code"] == "calq") or label["scope"] in {"sense", "phrase"}:
         return "calque_yellow"
-
-    if (
-        bool(status.get("russian_shadow"))
-        and not vesum_attested
-        and classification == "unknown"
-        and not positive_attestation
-    ):
-        return "russianism_red"
 
     if classification in _TREASURED_CLASSIFICATIONS or (classification == "standard" and positive_attestation):
         return "treasured"

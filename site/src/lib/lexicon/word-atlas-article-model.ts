@@ -5,6 +5,8 @@
 
 import {
   resolveHeritageBoxes,
+  standardAlternatives,
+  type UsageLabel,
   type WarningSeverity,
 } from "./heritage-severity";
 import {
@@ -160,8 +162,9 @@ export interface CuratedCalque {
 
 export interface ReverseCalque {
   calque: string;
-  kind: "participle" | "phrasal" | "sense_restricted";
+  kind: "participle" | "phrasal" | "sense_restricted" | "lexical";
   note: string;
+  noteUk?: string;
   source: string[];
   calque_sense?: string;
 }
@@ -1159,7 +1162,7 @@ export function buildWordAtlasArticleView(
   );
   const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
   const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
-  const styleNotes = buildStyleNotes(heritage);
+  const styleNotes = buildStyleNotes(heritage, heritageBoxes.usageLabel, entry.gloss ?? null, entry.lemma);
   const statusBadges = buildStatusBadges({
     heritageBoxes,
     cefrLevel,
@@ -1318,7 +1321,8 @@ function buildStatusBadges(args: {
       className: "heritage-warn",
       label: heritageBoxes.inline?.label ?? "⚠ Потребує українського відповідника",
     });
-  } else if (heritageBoxes.yellow) {
+  } else if (heritageBoxes.yellow?.scope === "lemma") {
+    // #9603: a sense- or phrase-scoped caution never becomes a headword badge.
     badges.push({ className: "heritage-warn", label: "Калькове застереження" });
   } else if (heritageBoxes.green) {
     badges.push({
@@ -1334,18 +1338,21 @@ function buildStatusBadges(args: {
       label: `CEFR ${cefrLevel}${enrichment?.cefr?.source?.includes("estimated") ? " · орієнтовно" : ""}`,
     });
   }
-  if (
-    heritage?.classification === "historism" ||
-    heritage?.classification === "archaism" ||
-    heritage?.classification === "authentic-archaism"
-  ) {
+  // Register badges follow the source-scoped label, not the raw classification.
+  const usageCode = heritageBoxes.usageLabel.code;
+  if (usageCode === "hist" || usageCode === "arch") {
     badges.push({
       className: "archaic",
-      label: heritage.classification === "historism" ? "Історизм у сучасному вжитку" : "Архаїзм",
+      label: usageCode === "hist" ? "Історизм у сучасному вжитку" : "Архаїзм",
+      title: heritageBoxes.usageLabel.authority.join(", "),
     });
   }
-  if (heritage?.classification === "dialect") {
-    badges.push({ className: "dialect", label: "Регіонально-літературне" });
+  if (usageCode === "dial") {
+    badges.push({
+      className: "dialect",
+      label: "Регіонально-літературне",
+      title: heritageBoxes.usageLabel.authority.join(", "),
+    });
   }
   if (isFullyMarked && dominantRegisterLabel) {
     badges.push({
@@ -1376,7 +1383,28 @@ function buildEtymologyStages(etymology: SourcedText | undefined, lemma: string)
   ];
 }
 
-function buildStyleNotes(heritage: HeritageStatus | null) {
+const USAGE_CLASS_LABELS_UK: Record<string, string> = {
+  "authentic-archaism": "архаїзм",
+  archaism: "архаїзм",
+  dialect: "діалектизм",
+  historism: "історизм",
+  borrowing: "запозичення",
+};
+
+function reverseCalqueNote(item: ReverseCalque, headword: string): string {
+  const where =
+    item.kind === "sense_restricted"
+      ? item.calque_sense
+        ? ` (лише в значенні: ${item.calque_sense})`
+        : " (лише в окремому значенні)"
+      : item.kind === "phrasal"
+        ? " (у сполученні)"
+        : "";
+  const sources = item.source?.length ? ` Джерела: ${item.source.join(", ")}.` : "";
+  return `«${headword}» — рекомендований відповідник замість «${item.calque}»${where}. Застереження стосується «${item.calque}», а не цього слова.${sources}`;
+}
+
+function buildStyleNotes(heritage: HeritageStatus | null, usageLabel: UsageLabel, gloss: string | null, headword = "") {
   const notes: string[] = [];
   if (heritage?.russian_shadow) {
     notes.push(
@@ -1390,6 +1418,23 @@ function buildStyleNotes(heritage: HeritageStatus | null) {
     notes.push(
       `${heritage.curated_calque.note} Нейтральні відповідники: ${heritage.curated_calque.corrections.join(", ")}.`,
     );
+  }
+  // #9603: guidance whose scope the record does not establish stays a note.
+  if (usageLabel.scope === "unresolved") {
+    const alternatives = standardAlternatives(heritage, gloss);
+    const classLabel = USAGE_CLASS_LABELS_UK[heritage?.classification ?? ""];
+    if (alternatives.length > 0) {
+      notes.push(
+        `Довідкові джерела пропонують відповідники: ${alternatives.join(", ")}. Джерело не визначає, чи це стосується всього слова, окремого значення чи сполучення, тому слово не позначено як русизм або кальку.`,
+      );
+    } else if (classLabel) {
+      notes.push(
+        `Позначку «${classLabel}» у джерелах не прив'язано до слова загалом: вона може стосуватися окремого значення, спорідненої форми чи цитати, тому її не показано як ознаку слова.`,
+      );
+    }
+  }
+  for (const item of heritage?.reverse_calques ?? []) {
+    notes.push(reverseCalqueNote(item, headword));
   }
   return notes;
 }
