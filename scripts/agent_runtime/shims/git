@@ -245,36 +245,15 @@ real_git="$(_real_git)" || {
 
 # Pushes publish commit messages and ref and tag names (#9339). Git runs the
 # pre-push hook on the exact ref updates it is about to send, so every push
-# (also one an alias expands to) runs with core.hooksPath pinned to the scanner's
-# hooks directory. As the last command-line assignment the pin outranks every
-# other configuration source, and Git hands it to recursive submodule pushes.
-# A push that would skip the hook, or whose scanner is unusable, is refused, and
-# so is an alias the shim cannot follow to a command name. The pin is not added
-# to other commands: it would hide the caller's other hooks (pre-commit, ...).
-
-# Git's builtins (git --list-cmds=builtins, 2.53, push aside) need no alias lookup: Git ignores
-# aliases that hide them. Any other command is looked up as an alias.
-_OPSEC_BUILTINS="
-  add am annotate apply archive backfill bisect blame branch bugreport bundle cat-file check-attr
-  check-ignore check-mailmap check-ref-format checkout checkout--worker checkout-index cherry cherry-pick
-  clean clone column commit commit-graph commit-tree config count-objects credential credential-cache
-  credential-cache--daemon credential-store describe diagnose diff diff-files diff-index diff-pairs
-  diff-tree difftool fast-export fast-import fetch fetch-pack fmt-merge-msg for-each-ref for-each-repo
-  format-patch fsck fsck-objects fsmonitor--daemon gc get-tar-commit-id grep hash-object help hook
-  index-pack init init-db interpret-trailers last-modified log ls-files ls-remote ls-tree mailinfo mailsplit
-  maintenance merge merge-base merge-file merge-index merge-ours merge-recursive merge-recursive-ours
-  merge-recursive-theirs merge-subtree merge-tree mktag mktree multi-pack-index mv name-rev notes
-  pack-objects pack-redundant pack-refs patch-id pickaxe prune prune-packed pull range-diff read-tree rebase
-  receive-pack reflog refs remote remote-ext remote-fd repack replace replay repo rerere reset restore
-  rev-list rev-parse revert rm send-pack shortlog show show-branch show-index show-ref sparse-checkout stage
-  stash status stripspace submodule--helper switch symbolic-ref tag unpack-file unpack-objects update-index
-  update-ref update-server-info upload-archive upload-archive--writer upload-pack var verify-commit
-  verify-pack verify-tag version whatchanged worktree write-tree
-"
-
-_opsec_builtin() {
-  [[ " ${_OPSEC_BUILTINS//$'\n'/ } " == *" $1 "* ]]
-}
+# runs with core.hooksPath pinned to the scanner's hooks directory. As the last
+# command-line assignment the pin outranks every other configuration source, and
+# Git hands it to recursive submodule pushes. A push that would skip the hook, or
+# whose scanner is unusable, is refused. The pin is not added to other commands:
+# it would hide the caller's other hooks (pre-commit, ...).
+#
+# The shim forwards only Git's own commands, which Git runs without an alias
+# lookup. Aliases are refused, not parsed: a reading of an alias that differs
+# from Git's could reach push without the pin.
 
 _opsec_refuse() {
   echo "OPSEC: $1; push refused." >&2
@@ -312,59 +291,32 @@ done
 _opsec_globals=("${@:1:_opsec_index}")
 _opsec_command="${@:_opsec_index+1:1}"
 _opsec_push=0
-_opsec_external=0
-_opsec_expansion=()
-
-# The shim forwards only a command it has classified. An alias it cannot follow to a
-# command name could reach push without the hooks path, so it is refused whatever it
-# would run.
-_opsec_unresolved() {
-  echo "OPSEC: alias '$_opsec_command' $1, so the shim cannot tell whether it pushes; refused. Run the expanded command instead." >&2
-  exit 2
-}
 
 if [[ "$_opsec_command" == "push" ]]; then
   _opsec_push=1
 elif [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
-  # Follow aliases as Git does: an alias's first word names the next command. The
-  # lookup sees the caller's global options, as Git's does.
-  _opsec_name="$_opsec_command"
-  _opsec_depth=0
-  until [[ "$_opsec_name" == "push" ]] || _opsec_builtin "$_opsec_name"; do
-    _opsec_status=0
-    _opsec_value="$("$real_git" "${_opsec_globals[@]}" config --get "alias.$_opsec_name" 2>/dev/null)" || _opsec_status=$?
-    if [[ "$_opsec_status" == 1 ]]; then
-      # Not an alias: an external git-<name> command, run as Git runs it.
-      _opsec_external=1
-      break
-    fi
-    [[ "$_opsec_status" == 0 ]] || _opsec_unresolved "could not be read from the configuration"
-    [[ "$_opsec_depth" -lt 16 ]] || _opsec_unresolved "expands more than 16 times or loops"
-    _opsec_depth=$((_opsec_depth + 1))
-    # A shell alias runs commands this shim never sees.
-    [[ "$_opsec_value" == '!'* ]] && _opsec_unresolved "runs a shell command"
-    _opsec_words=()
-    read -r -d '' -a _opsec_words <<<"$_opsec_value" || true
-    [[ ${#_opsec_words[@]} -gt 0 ]] || _opsec_unresolved "is empty"
-    for _opsec_word in "${_opsec_words[@]}"; do
-      _opsec_expansion+=("${_opsec_word//[\'\"\\]/}")
-    done
-    _opsec_name="${_opsec_words[0]//[\'\"\\]/}"
-    # Git applies an alias's own global options (-c, --config-env, --exec-path, ...)
-    # after the shim's, so they could define the next alias or replace the hooks path.
-    [[ "$_opsec_name" == -* ]] && _opsec_unresolved "sets Git options before its command"
-    [[ -n "$_opsec_name" ]] || _opsec_unresolved "is empty"
-  done
-  [[ "$_opsec_name" == "push" ]] && _opsec_push=1
-fi
-
-if [[ "$_opsec_external" == 1 ]]; then
-  # A mistyped name must not be autocorrected into a command the shim did not classify.
-  exec "$real_git" "${_opsec_globals[@]}" -c help.autocorrect=never "${@:_opsec_index+1}"
+  # Git's own commands are its builtins and the git-<name> programs in its exec
+  # path; Git tries both before any alias. The Git that runs the command lists
+  # them under the caller's global options (--exec-path, -C) and environment
+  # (GIT_EXEC_PATH). Anything else (an alias, a git-<name> program elsewhere on
+  # PATH, a typo Git could autocorrect) is refused before Git runs.
+  _opsec_commands="$("$real_git" "${_opsec_globals[@]}" --list-cmds=builtins,main)" || {
+    echo "OPSEC: could not list Git's commands, so '$_opsec_command' was not run." >&2
+    exit 2
+  }
+  if [[ "$_opsec_command" == *$'\n'* || $'\n'"$_opsec_commands"$'\n' != *$'\n'"$_opsec_command"$'\n'* ]]; then
+    cat >&2 <<EOF
+OPSEC: '$_opsec_command' is not one of Git's own commands, so it was not run.
+       The agent git shim refuses every alias, git-<name> programs outside Git's
+       exec path and mistyped commands, because it cannot tell whether they push.
+       Run the Git command directly (for example 'git push ...', not an alias for it).
+EOF
+    exit 2
+  fi
 fi
 
 if [[ "$_opsec_push" == 1 ]]; then
-  if _opsec_skips_hook "${@:_opsec_index+2}" "${_opsec_expansion[@]}"; then
+  if _opsec_skips_hook "${@:_opsec_index+2}"; then
     _opsec_refuse "--no-verify would skip the push scan"
   fi
   if [[ "$_opsec_shallow" == 1 ]]; then

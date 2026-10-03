@@ -1242,17 +1242,6 @@ def test_each_hooks_path_route_really_redirects_plain_git(push_sandbox, permissi
     assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
 
 
-def test_alias_that_sets_the_hooks_path_is_refused(push_sandbox, permissive_hooks):
-    """An alias's own -c is applied after the shim's pin, so such an alias cannot push."""
-    push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    for spelling in (f"-c core.hooksPath={permissive_hooks} push", "--config-env=core.hooksPath=UNIT_HOOKS push"):
-        _git(push_sandbox.work, "config", "alias.publish", spelling)
-        result = push_sandbox.push("publish", "origin", "HEAD:refs/heads/feature", UNIT_HOOKS=str(permissive_hooks))
-        assert result.returncode == 2 and "sets Git options before its command" in result.stderr, result.stderr
-        assert push_sandbox.remote_refs() == before
-
-
 # --- Pushes that would skip the hook, or whose scanner is unusable, are refused ---
 
 NO_VERIFY = ["--no-verify", "--no-verif", "--no-veri"]
@@ -1298,131 +1287,76 @@ def test_options_that_keep_the_hook_are_not_refused(push_sandbox, args):
     assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
 
 
-@pytest.mark.parametrize(
-    "aliases",
-    [
-        {"publish": "push --no-verify"},
-        {"publish": "push '--no-'verify"},
-        {"publish": "quiet", "quiet": "push -q --no-veri"},
-    ],
-    ids=["direct", "quoted", "nested"],
-)
-@pytest.mark.parametrize("scope", ["repository", "command-line"])
-def test_alias_that_skips_the_hook_is_refused(push_sandbox, aliases, scope):
-    push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
+# --- Only Git's own commands run; every alias is refused before Git runs ---
+
+
+def _chain(length):
+    """publish -> a1 -> ... -> push: length expansions in all."""
+    names = ["publish", *(f"a{index}" for index in range(1, length))]
+    return {name: names[index + 1] if index + 1 < length else "push" for index, name in enumerate(names)}
+
+
+# Each alias reaches push in plain Git (control below), most of them past the hook.
+ALIASES = {
+    "ordinary": {"publish": "push"},
+    "carriage-return-no-verify": {"publish": "push\r--no-verify"},
+    "carriage-return-quiet": {"publish": "push\r--quiet"},
+    "no-verify": {"publish": "push --no-verify"},
+    "quoted-no-verify": {"publish": "push '--no-'verify"},
+    "nested": {"publish": "quiet", "quiet": "push -q --no-veri"},
+    "chain-of-17": _chain(17),
+    "alias-defined-alias": {"publish": "-c alias.send=push send"},
+    "config-env-alias": {"publish": "--config-env=alias.send=UNIT_ALIAS send"},
+    "hooks-path": {"publish": "--config-env=core.hooksPath=UNIT_HOOKS push"},
+    "shell": {"publish": "!git push"},
+    "loop": {"publish": "pong", "pong": "publish"},
+}
+
+
+def _configure(sandbox, aliases, scope):
+    """Global options that define aliases by the scope's configuration route."""
     options = []
     for name, value in aliases.items():
         if scope == "repository":
-            _git(push_sandbox.work, "config", f"alias.{name}", value)
+            _git(sandbox.work, "config", f"alias.{name}", value)
         else:
             options += ["-c", f"alias.{name}={value}"]
-    result = push_sandbox.push(*options, "publish", "origin", "HEAD:refs/heads/feature")
-    assert result.returncode == 2 and "--no-verify would skip the push scan" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before
+    return options
 
 
-def test_alias_that_pushes_runs_the_scanner(push_sandbox):
-    _git(push_sandbox.work, "config", "alias.publish", "send")
-    _git(push_sandbox.work, "config", "alias.send", "push --quiet")
+def _alias_environment(sandbox):
+    return {"UNIT_ALIAS": "push", "UNIT_HOOKS": str(sandbox.tmp / "no-hooks")}
+
+
+def assert_not_a_git_command(result, sandbox, before, sha, name):
+    assert result.returncode == 2, result.stderr
+    assert f"OPSEC: '{name}' is not one of Git's own commands, so it was not run." in result.stderr, result.stderr
+    assert "Run the Git command directly" in result.stderr, result.stderr
+    assert sandbox.remote_refs() == before and not _remote_has(sandbox, sha)
+
+
+@pytest.mark.parametrize("shape", ALIASES)
+@pytest.mark.parametrize("scope", ["repository", "command-line"])
+def test_every_alias_is_refused_with_nothing_sent(push_sandbox, shape, scope):
+    options = _configure(push_sandbox, ALIASES[shape], scope)
     sha = push_sandbox.commit("subject " + TOKEN)
     before = push_sandbox.remote_refs()
-    result = push_sandbox.push("publish", "origin", "HEAD:refs/heads/feature")
-    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
-    clean = push_sandbox.commit("clean follow-up")
-    (push_sandbox.tooling / "rules.json").write_text(json.dumps(synthetic_rules(pattern="NEVER-PRESENT")))
-    assert push_sandbox.push("publish", "origin", "HEAD:refs/heads/feature").returncode == 0
-    assert push_sandbox.remote_refs()["refs/heads/feature"] == clean
-
-
-def test_other_aliases_and_commands_run_unchanged(push_sandbox):
-    _git(push_sandbox.work, "config", "alias.where", "rev-parse --show-toplevel")
-    _git(push_sandbox.work, "config", "alias.status", "push --no-verify")  # Git ignores aliases hiding builtins.
-    assert push_sandbox.push("where").stdout.strip() == str(push_sandbox.work)
-    result = push_sandbox.push("status", "--short")
-    assert result.returncode == 0 and "--no-verify" not in result.stderr
-
-
-def test_ordinary_aliases_push_cleanly_through_the_scan(push_sandbox):
-    _git(push_sandbox.work, "config", "alias.p", "push")
-    _git(push_sandbox.work, "config", "alias.pp", "p origin")
-    clean = push_sandbox.commit("clean subject")
-    assert push_sandbox.push("p", "origin", "HEAD:refs/heads/one").returncode == 0
-    assert push_sandbox.push("pp", "HEAD:refs/heads/two").returncode == 0
-    assert push_sandbox.remote_refs()["refs/heads/one"] == clean == push_sandbox.remote_refs()["refs/heads/two"]
-    sha = push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    assert_blocked(push_sandbox.push("pp", "HEAD:refs/heads/two"), push_sandbox, before, f"commit[{sha[:12]}].message")
-
-
-def _chain(sandbox, length):
-    """alias.a0 -> a1 -> ... -> push: length expansions in all."""
-    for index in range(length):
-        _git(sandbox.work, "config", f"alias.a{index}", "push" if index == length - 1 else f"a{index + 1}")
-
-
-def test_alias_chain_of_sixteen_expansions_runs_the_scanner(push_sandbox):
-    _chain(push_sandbox, 16)
-    sha = push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    assert_blocked(
-        push_sandbox.push("a0", "origin", "HEAD:refs/heads/feature"),
-        push_sandbox,
-        before,
-        f"commit[{sha[:12]}].message",
+    result = push_sandbox.push(
+        *options, "publish", "origin", "HEAD:refs/heads/feature", **_alias_environment(push_sandbox)
     )
+    assert_not_a_git_command(result, push_sandbox, before, sha, "publish")
 
 
-@pytest.mark.parametrize("extra", [[], ["--no-verify"]], ids=["plain", "no-verify"])
-def test_alias_chain_past_the_bound_is_refused(push_sandbox, extra):
-    _chain(push_sandbox, 17)
-    sha = push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("a0", *extra, "origin", "HEAD:refs/heads/feature")
-    assert result.returncode == 2 and "expands more than 16 times or loops" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
-
-
-def test_alias_loop_is_refused(push_sandbox):
-    _git(push_sandbox.work, "config", "alias.ping", "pong")
-    _git(push_sandbox.work, "config", "alias.pong", "ping")
-    sha = push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("ping", "origin", "HEAD:refs/heads/feature")
-    assert result.returncode == 2 and "expands more than 16 times or loops" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
-
-
-DYNAMIC_ALIASES = [
-    "-c alias.send=push send",
-    "--config-env=alias.send=UNIT_ALIAS send",
-    "--config-env alias.send=UNIT_ALIAS send",
-    "'-c' alias.send=push send",
-    "--exec-path=. push",
-    "-p push",
-]
-
-
-@pytest.mark.parametrize("value", DYNAMIC_ALIASES)
-def test_alias_that_sets_options_is_refused(push_sandbox, value):
-    """Options in an alias apply after the shim's: it could define the alias it runs next."""
-    _git(push_sandbox.work, "config", "alias.publish", value)
-    sha = push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("publish", "origin", "HEAD:refs/heads/feature", UNIT_ALIAS="push")
-    assert result.returncode == 2 and "sets Git options before its command" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
-
-
-@pytest.mark.parametrize("value", DYNAMIC_ALIASES[:3])
-def test_alias_defined_alias_really_pushes_in_plain_git(push_sandbox, value):
-    """Control: without the shim the alias-defined alias pushes and the hit is sent."""
-    _git(push_sandbox.work, "config", "alias.publish", value)
+@pytest.mark.parametrize("shape", [shape for shape in ALIASES if shape != "loop"])
+@pytest.mark.parametrize("scope", ["repository", "command-line"])
+def test_each_alias_really_pushes_in_plain_git(push_sandbox, shape, scope):
+    """Control: without the shim Git expands the alias to a push and the hit is sent."""
+    options = _configure(push_sandbox, ALIASES[shape], scope)
     sha = push_sandbox.commit("subject " + TOKEN)
     result = subprocess.run(
-        [REAL_GIT, "publish", "origin", "HEAD:refs/heads/feature"],
+        [REAL_GIT, *options, "publish", "origin", "HEAD:refs/heads/feature"],
         cwd=push_sandbox.work,
-        env=_env(UNIT_ALIAS="push"),
+        env=_env(**_alias_environment(push_sandbox)),
         capture_output=True,
         text=True,
         timeout=60,
@@ -1431,28 +1365,99 @@ def test_alias_defined_alias_really_pushes_in_plain_git(push_sandbox, value):
     assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
 
 
-@pytest.mark.parametrize("value", ["!git push", "!pwd"])
-def test_shell_alias_is_refused(push_sandbox, value):
-    _git(push_sandbox.work, "config", "alias.publish", value)
+def test_alias_that_runs_no_push_is_refused_too(push_sandbox):
+    _git(push_sandbox.work, "config", "alias.where", "rev-parse --show-toplevel")
+    result = push_sandbox.push("where")
+    assert result.returncode == 2 and "'where' is not one of Git's own commands" in result.stderr, result.stderr
+    assert result.stdout == ""
+
+
+def test_git_commands_run_unchanged(push_sandbox):
+    sha = push_sandbox.commit("clean subject")
+    _git(push_sandbox.work, "config", "alias.status", "push --no-verify")  # Git ignores aliases hiding builtins.
+    status = push_sandbox.push("status", "--short")
+    assert status.returncode == 0 and status.stderr == "", status.stderr
+    log = push_sandbox.push("-c", "color.ui=never", "log", "--format=%H", "-1")
+    assert log.returncode == 0 and log.stdout.strip() == sha, log.stderr
+    # A git-<name> program in Git's exec path is one of Git's own commands.
+    submodule = push_sandbox.push("-c", "alias.submodule=push", "submodule", "status")
+    assert submodule.returncode == 0 and "OPSEC" not in submodule.stderr, submodule.stderr
+    assert "refs/heads/feature" not in push_sandbox.remote_refs()
+
+
+def test_direct_push_still_scans_and_delivers(push_sandbox):
     sha = push_sandbox.commit("subject " + TOKEN)
     before = push_sandbox.remote_refs()
-    result = push_sandbox.push("publish", "origin", "HEAD:refs/heads/feature")
-    assert result.returncode == 2 and "runs a shell command" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
+    assert_blocked(
+        push_sandbox.push("push", "origin", "HEAD:refs/heads/feature"),
+        push_sandbox,
+        before,
+        f"commit[{sha[:12]}].message",
+    )
+    (push_sandbox.tooling / "rules.json").write_text(json.dumps(synthetic_rules(pattern="NEVER-PRESENT")))
+    clean = push_sandbox.commit("clean follow-up")
+    assert push_sandbox.push("push", "origin", "HEAD:refs/heads/feature").returncode == 0
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == clean
 
 
-def test_other_alias_that_sets_options_is_refused_too(push_sandbox):
-    _git(push_sandbox.work, "config", "alias.lg", "-c color.ui=never log --oneline")
-    result = push_sandbox.push("lg")
-    assert result.returncode == 2 and "sets Git options before its command" in result.stderr, result.stderr
+def _program(directory, name, marker):
+    directory.mkdir(exist_ok=True)
+    program = directory / f"git-{name}"
+    program.write_text(f"#!/bin/sh\ntouch {marker}\n")
+    program.chmod(0o755)
 
 
-def test_mistyped_command_is_not_autocorrected_into_a_push(push_sandbox):
+def test_git_program_outside_the_exec_path_is_refused(push_sandbox):
+    marker = push_sandbox.tmp / "ran"
+    _program(push_sandbox.tmp / "bin", "publish", marker)
+    path = os.pathsep.join([str(push_sandbox.tmp / "bin"), _env()["PATH"]])
+    result = push_sandbox.push("publish", PATH=path)
+    assert result.returncode == 2 and "'publish' is not one of Git's own commands" in result.stderr, result.stderr
+    assert not marker.exists()
+    control = subprocess.run([REAL_GIT, "publish"], cwd=push_sandbox.work, env=_env(PATH=path), timeout=60)
+    assert control.returncode == 0 and marker.exists()
+
+
+@pytest.mark.parametrize("route", ["option", "environment"])
+def test_commands_are_listed_from_the_callers_exec_path(push_sandbox, route):
+    """Under another exec path git-submodule is gone and Git would expand alias.submodule instead."""
+    exec_path = push_sandbox.tmp / "exec-path"
+    marker = push_sandbox.tmp / "ran"
+    _program(exec_path, "unit", marker)
+    options, environment = (
+        ([f"--exec-path={exec_path}"], {}) if route == "option" else ([], {"GIT_EXEC_PATH": str(exec_path)})
+    )
+    assert push_sandbox.push(*options, "unit", **environment).returncode == 0 and marker.exists()
+    sha = push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    pushing = [*options, "-c", "alias.submodule=push", "submodule", "origin", "HEAD:refs/heads/feature"]
+    assert_not_a_git_command(push_sandbox.push(*pushing, **environment), push_sandbox, before, sha, "submodule")
+    control = subprocess.run(
+        [REAL_GIT, *pushing], cwd=push_sandbox.work, env=_env(**environment), capture_output=True, text=True, timeout=60
+    )
+    assert control.returncode == 0, control.stderr
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+
+
+def test_mistyped_command_is_refused_before_autocorrect(push_sandbox):
     sha = push_sandbox.commit("subject " + TOKEN)
     before = push_sandbox.remote_refs()
     result = push_sandbox.push("-c", "help.autocorrect=immediate", "psuh", "origin", "HEAD:refs/heads/feature")
-    assert result.returncode != 0 and "'psuh' is not a git command" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
+    assert_not_a_git_command(result, push_sandbox, before, sha, "psuh")
+
+
+def test_command_with_a_line_break_is_refused(push_sandbox):
+    """A name spanning two listed commands is no command."""
+    result = push_sandbox.push("add\nam")
+    assert result.returncode == 2 and "is not one of Git's own commands" in result.stderr, result.stderr
+
+
+def test_unlistable_commands_refuse(push_sandbox):
+    result = push_sandbox.push("-C", str(push_sandbox.tmp / "absent"), "status")
+    assert result.returncode == 2 and "could not list Git's commands" in result.stderr, result.stderr
+
+
+# --- A push whose scanner is unusable is refused ---
 
 
 @pytest.mark.parametrize("damage", ["remove-hook", "unexecutable-hook", "remove-chain", "remove-scanner"])

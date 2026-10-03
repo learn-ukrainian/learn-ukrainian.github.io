@@ -182,8 +182,8 @@ that moves during the scan changes nothing. Git also keeps its own semantics
 for everything else (refspecs, leases, `--follow-tags`, tracking refs,
 upstreams); the scanner does not predict or rebuild the push.
 
-The agent git shim makes that hook run. For `git push`, and for an ordinary
-alias that expands to it (below), the shim adds `-c core.hooksPath=<checkout>/scripts/opsec/push_hooks`
+The agent git shim makes that hook run. For `git push` the shim adds
+`-c core.hooksPath=<checkout>/scripts/opsec/push_hooks`
 as the last option before the command. A command-line assignment outranks
 configuration files, `GIT_CONFIG_COUNT`/`GIT_CONFIG_KEY_<n>`/`GIT_CONFIG_VALUE_<n>`
 and earlier `GIT_CONFIG_PARAMETERS`, and the last one wins over every earlier
@@ -196,24 +196,22 @@ the parent is sent. Recursion by configuration (`push.recurseSubmodules`,
 `--recurse-submodules` pushes only the first level, so deeper commits are not
 sent at all.
 
-**Aliases.** The shim forwards only a command it has classified. It follows an
-alias as Git does, looking it up with the caller's global options (so `git -c
-alias.x=push x` counts), and treats the alias's first word as the next command.
-An ordinary alias is one whose expansions, at most 16 of them, end in `push`, in
-another Git builtin, or in a name that is no alias (an external `git-<name>`
-command). Any other alias is refused before Git runs, whatever it would run,
-because the shim cannot tell whether it reaches `push`:
+**Aliases are refused.** Agents run Git commands directly. After the global
+options, the shim forwards a command only when its first word is one of Git's
+own commands: a builtin or a `git-<name>` program in Git's exec path, which Git
+runs without looking up an alias. The shim asks the Git it is about to run for
+that list on every call (`git --list-cmds=builtins,main`, with the caller's
+global options and environment, so `--exec-path` and `GIT_EXEC_PATH` count) and
+caches nothing. Anything else is refused before Git runs, with a message to run
+the Git command directly: every alias, wherever it is defined (`git -c
+alias.p=push p` included) and whatever it expands to; a `git-<name>` program
+found only on `PATH`; and a mistyped name, which Git could otherwise
+autocorrect. The shim does not read alias values at all, so no difference
+between its reading and Git's (quoting, separators such as a carriage return,
+nesting, options inside the alias) can reach push. An alias that hides a
+builtin is not a refusal: Git ignores it and runs the builtin.
 
-- a chain of more than 16 expansions, which includes every alias loop;
-- an expansion that starts with Git options (`-c`, `--config-env`,
-  `--exec-path`, `-p`, ...): Git applies them after the shim's options, so they
-  could define the next alias or replace the hooks path;
-- a shell alias (`!`), which runs commands the shim never sees;
-- an empty alias, or one the configuration lookup cannot read.
-
-A name that is neither a builtin nor an alias runs with `help.autocorrect=never`,
-so Git cannot autocorrect a typo into a command the shim did not classify. The
-shim does not pin the hooks path on commands other than push: that would hide
+The shim does not pin the hooks path on commands other than push: that would hide
 the caller's other hooks (pre-commit and the rest), and a wrapper for every hook
 would change Git's behaviour where a hook's mere presence matters
 (`push-to-checkout`, `proc-receive`). Refusing what it cannot classify is the
@@ -223,8 +221,7 @@ The shim refuses, before Git runs, a push that would skip the hook or could not
 scan:
 
 - `--no-verify` in any spelling Git accepts (`--no-verify`, `--no-verif`,
-  `--no-veri`) and the shorter ambiguous prefixes, in any argument position,
-  also when an alias supplies it;
+  `--no-veri`) and the shorter ambiguous prefixes, in any argument position;
 - `--shallow-file`, which swaps the shallow file Git walks;
 - a missing or non-executable hook, a missing scanner or a missing project
   interpreter. Git itself would silently skip a missing hook.
@@ -318,11 +315,12 @@ read and the hash check of the public history when the head is present; both
 grow with that history, and a clone without the head scans all of it.
 
 **Supported entry points and recorded gaps.** The scan covers `git push`
-through the agent git shim, directly or through an ordinary alias (above), including
-recursive submodule pushes; every other alias is refused. These publish without
+through the agent git shim, including recursive submodule pushes; the shim
+refuses every alias and every `git-<name>` program outside Git's exec path
+(above). These publish without
 it, and stay outside this boundary as for every other publisher: an absolute Git
-executable or a `PATH` without the shim; external commands and commands that
-run Git themselves (`git-<name>` programs, `git submodule foreach`,
+executable or a `PATH` without the shim; commands that run Git themselves
+(`git-<name>` programs in the exec path the caller chose, `git submodule foreach`,
 `rebase --exec`, `bisect run`), because
 Git puts its own executable first on their `PATH`, so they reach the real Git
 and not the shim; direct `git send-pack`, which runs no pre-push hook; other
