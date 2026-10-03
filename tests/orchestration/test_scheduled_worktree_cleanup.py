@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.common import task_scratch
+from scripts.maintenance.claude_session_scratch import ProcessEvidence, sweep_sessions
 from scripts.orchestration import scheduled_worktree_cleanup as cleanup
 
 
@@ -25,7 +26,68 @@ def _isolated_task_scratch_root(tmp_path_factory, monkeypatch) -> Path:
     """
     root = tmp_path_factory.mktemp("task-scratch-root")
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    session_root = root / f"claude-{os.getuid()}"
+    monkeypatch.setattr(cleanup, "sweep_sessions", lambda **kwargs: sweep_sessions(session_root, **kwargs))
+    real_tmp_sweep = cleanup.sweep_tmp_leaks
+    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda **kwargs: real_tmp_sweep(tmp_roots=[root], **kwargs))
     return root
+
+
+@pytest.mark.parametrize("apply", [False, True])
+def test_main_sweeps_sessions_once_and_reports_counts_only(tmp_path: Path, monkeypatch, capsys, apply: bool) -> None:
+    root = tmp_path / f"claude-{os.getuid()}"
+    session = root / "project" / "12345678-1234-1234-1234-123456789abc"
+    session.mkdir(parents=True)
+    (session / "payload").write_bytes(b"payload")
+    calls = []
+
+    def sweep(**kwargs):
+        calls.append(kwargs)
+        return sweep_sessions(root, probe=lambda: ProcessEvidence(complete=True), **kwargs)
+
+    monkeypatch.setattr(cleanup, "sweep_sessions", sweep)
+    monkeypatch.setattr(
+        cleanup,
+        "build_receipt",
+        lambda *_args, **_kwargs: {"observed_at": "2026-10-03T00:00:00Z", "summary": {"errors": 0}, "repositories": []},
+    )
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: {})
+    monkeypatch.setattr(cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
+    args = [
+        "--repo-root",
+        str(tmp_path / "first"),
+        "--repo-root",
+        str(tmp_path / "second"),
+        "--receipt-dir",
+        str(tmp_path / "receipts"),
+    ]
+    if apply:
+        args.append("--apply")
+    assert cleanup.main(args) == 0
+    assert len(calls) == 1 and calls[0]["apply"] == apply
+    assert calls[0]["rollover_roots"] == [
+        tmp_path / "first/.agent/thread-rollovers/claude",
+        tmp_path / "second/.agent/thread-rollovers/claude",
+    ]
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["claude_session_scratch"]["removed" if apply else "would_remove"] == 1
+    assert summary["claude_session_scratch"]["reclaimable_bytes"] == 7
+    assert str(root) not in json.dumps(summary) and session.name not in json.dumps(summary)
+    assert session.exists() is not apply
+
+
+def test_main_session_error_is_recorded_and_returns_failure(tmp_path: Path, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(
+        cleanup,
+        "build_receipt",
+        lambda *_args, **_kwargs: {"observed_at": "2026-10-03T00:00:00Z", "summary": {"errors": 0}, "repositories": []},
+    )
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: {})
+    monkeypatch.setattr(cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
+    monkeypatch.setattr(cleanup, "sweep_sessions", lambda **_kwargs: {"summary": {"errors": 2}})
+    assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(tmp_path / "receipts")]) == 1
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["summary"]["errors"] == 2
 
 
 def _git(cwd: Path, *args: str) -> str:

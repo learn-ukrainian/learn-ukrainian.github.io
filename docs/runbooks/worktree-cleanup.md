@@ -622,6 +622,35 @@ The managed `task-scratch` namespace, every scratch root (`/var/tmp/lu`, the
 `<tmp>/lu-scratch` fallback, `$LU_RUNTIME_TMP_BASE_ROOT`) and their ancestors are
 excluded from the scan even when a basename matches a pattern.
 
+## Claude session scratch and one-off reporting (#8783)
+
+The scheduled hygiene runner also handles Claude session scratch (#8783) once
+per host run. Its default is report-only; `--apply` enables removal. The sweep
+recognizes UUID session directories immediately under the per-user Claude temp
+root or under a project directory. It never follows directory symlinks, including
+root ancestors, and uses descriptor-relative, symlink-resistant removal. A
+positive live-process match always preserves the session. Removal requires either
+a confirmed v2 thread-handoff predecessor record or a complete process scan proving
+no owner. Inaccessible processes, unidentified live Claude processes and unknown
+entries are preserved and reported. Session age never authorizes deletion.
+
+To inspect session scratch independently:
+
+```bash
+.venv/bin/python -m scripts.maintenance.claude_session_scratch
+```
+
+Add `--rollover-root .agent/thread-rollovers/claude` to read confirmed lineage
+records, or `--apply` to remove proven-ended directories. The independent CLI
+prints counts and bytes only. Scheduled private receipts retain per-entry reasons;
+public summaries retain only aggregate counts, bytes and preservation reasons.
+
+The batch-state sweep lists regular files at least 100 MiB outside managed
+`tasks/` state in `one_off_artifacts`, including `manifest_*.json` outputs. Each
+entry has a batch-state-relative path, bytes, age in days and `report_only` action.
+Owners use this list to decide disposition; the one-off report never removes
+these files. Scheduled public summaries expose their count and total bytes.
+
 ## Task-owned scratch for large ad-hoc runs (#8738)
 
 Large one-off outputs (synthetic Atlas DBs, runtime-shard exports, delegated QA

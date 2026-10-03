@@ -1,0 +1,318 @@
+"""Ended-session proofs and scratch boundary tests for #8783."""
+
+from __future__ import annotations
+
+import errno
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from scripts.maintenance import claude_session_scratch as scratch
+
+SESSION = "12345678-1234-1234-1234-123456789abc"
+REPLACEMENT = "87654321-4321-4321-4321-cba987654321"
+DEAD = scratch.ProcessEvidence(complete=True)
+UNKNOWN = scratch.ProcessEvidence()
+LIVE = scratch.ProcessEvidence(frozenset({SESSION}), complete=True)
+
+
+def _session(tmp_path: Path, *, project: bool = True, session: str = SESSION) -> tuple[Path, Path]:
+    root = tmp_path / f"claude-{os.getuid()}"
+    directory = root / "project" / session if project else root / session
+    directory.mkdir(parents=True)
+    (directory / "scratchpad").mkdir()
+    (directory / "scratchpad" / "payload").write_bytes(b"keep every byte\x00\xff")
+    return root, directory
+
+
+def _confirmed(tmp_path: Path) -> Path:
+    root = tmp_path / "thread-rollovers" / "claude"
+    lineage = root / "lineage"
+    lineage.mkdir(parents=True)
+    (lineage / "lease.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "agent": "claude",
+                "active": {"thread_id": SESSION},
+                "replacement": {
+                    "thread_id": REPLACEMENT,
+                    "status": "started",
+                    "confirmed_at": "2026-10-03T00:00:00Z",
+                    "identity": {
+                        "predecessor_task_id": SESSION,
+                        "replacement_task_id": REPLACEMENT,
+                        "lifecycle_state": "confirmed",
+                    },
+                    "canary_proof": {"status": "PASS"},
+                    "strict_verdict": {"verdict": "PASS"},
+                },
+                "cleanup": {"old_automation_ready_to_delete": True, "confirmed_at": "2026-10-03T00:00:00Z"},
+            }
+        )
+    )
+    return root
+
+
+@pytest.mark.parametrize("project", [False, True])
+def test_process_gone_removes_even_fresh_session(tmp_path: Path, project: bool) -> None:
+    root, directory = _session(tmp_path, project=project)
+    result = scratch.sweep_sessions(root, apply=True, probe=lambda: DEAD)
+    assert not directory.exists()
+    assert result["summary"]["removed"] == 1
+    assert result["summary"]["bytes_freed"] == 17
+    assert result["entries"][0]["reason"] == "process_gone"
+
+
+def test_live_session_kept_despite_rollover_and_age(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+    os.utime(directory, (1, 1))
+    rollover = _confirmed(tmp_path)
+    result = scratch.sweep_sessions(root, rollover_roots=[rollover], apply=True, probe=lambda: LIVE)
+    assert directory.exists()
+    assert result["summary"]["kept_by_reason"] == {"live_session": 1}
+
+
+def test_confirmed_ended_session_removed_with_unknown_process_scan(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+    rollover = _confirmed(tmp_path)
+    result = scratch.sweep_sessions(root, rollover_roots=[rollover], apply=True, probe=lambda: UNKNOWN)
+    assert not directory.exists()
+    assert result["entries"][0]["reason"] == "confirmed_rollover"
+
+
+def test_unknown_kept_regardless_of_age(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+    os.utime(directory, (1, 1))
+    result = scratch.sweep_sessions(root, apply=True, probe=lambda: UNKNOWN)
+    assert (directory / "scratchpad/payload").read_bytes() == b"keep every byte\x00\xff"
+    assert result["summary"]["kept_by_reason"] == {"unknown_session": 1}
+
+
+def test_dry_run_byte_for_byte_unchanged(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+
+    def snapshot() -> dict:
+        return {
+            str(path.relative_to(root)): (
+                path.stat().st_mtime_ns,
+                path.stat().st_mode,
+                path.read_bytes() if path.is_file() else None,
+            )
+            for path in [root, *root.rglob("*")]
+        }
+
+    before = snapshot()
+    result = scratch.sweep_sessions(root, rollover_roots=[_confirmed(tmp_path)], probe=lambda: DEAD)
+    assert result["summary"]["would_remove"] == 1
+    assert result["summary"]["bytes_freed"] == 0
+    assert snapshot() == before
+    assert directory.exists()
+
+
+def test_symlinks_at_root_project_session_and_inside_not_followed(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "precious").write_bytes(b"outside")
+    (directory / "link").symlink_to(outside, target_is_directory=True)
+    (root / REPLACEMENT).symlink_to(outside, target_is_directory=True)
+    (root / "linked-project").symlink_to(outside, target_is_directory=True)
+    (root / "project" / REPLACEMENT).symlink_to(outside, target_is_directory=True)
+    report = scratch.sweep_sessions(root, apply=True, probe=lambda: DEAD)
+    assert report["summary"]["removed"] == 1
+    assert report["summary"]["kept_by_reason"] == {"symlink": 3}
+    assert (outside / "precious").read_bytes() == b"outside"
+    linked_root = tmp_path / "linked" / root.name
+    linked_root.parent.mkdir()
+    linked_root.symlink_to(root, target_is_directory=True)
+    assert scratch.sweep_sessions(linked_root, apply=True, probe=lambda: DEAD)["summary"]["errors"] == 1
+    ancestor = tmp_path / "linked-ancestor"
+    ancestor.symlink_to(root.parent, target_is_directory=True)
+    assert scratch.sweep_sessions(ancestor / root.name, apply=True, probe=lambda: DEAD)["summary"]["errors"] == 1
+
+
+def test_apply_rechecks_process_ownership(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+    scans = iter([DEAD, LIVE])
+    result = scratch.sweep_sessions(root, apply=True, probe=lambda: next(scans))
+    assert directory.exists()
+    assert result["summary"]["kept_by_reason"] == {"live_session": 1}
+
+
+def test_apply_rejects_directory_swap(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+    calls = 0
+
+    def probe() -> scratch.ProcessEvidence:
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            directory.rename(tmp_path / "original")
+            directory.mkdir()
+            (directory / "new-session").write_bytes(b"keep")
+        return DEAD
+
+    result = scratch.sweep_sessions(root, apply=True, probe=probe)
+    assert result["summary"]["kept_by_reason"] == {"entry_changed": 1}
+    assert (directory / "new-session").read_bytes() == b"keep"
+
+
+def test_one_entry_error_does_not_abort(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root, bad = _session(tmp_path)
+    _, good = _session(tmp_path, session=REPLACEMENT)
+    real = scratch.shutil.rmtree
+
+    def remove(name, *, dir_fd):
+        if name == SESSION:
+            raise PermissionError(errno.EACCES, "inaccessible")
+        real(name, dir_fd=dir_fd)
+
+    monkeypatch.setattr(scratch.shutil, "rmtree", remove)
+    remove.avoids_symlink_attacks = True
+    result = scratch.sweep_sessions(root, apply=True, probe=lambda: DEAD)
+    assert bad.exists() and not good.exists()
+    assert result["summary"]["errors"] == result["summary"]["removed"] == 1
+    assert result["entries"][0]["reason"] == "EACCES"
+
+
+def test_unknown_names_foreign_owner_and_unsafe_platform_kept(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root, directory = _session(tmp_path)
+    (root / "project" / "unidentified").mkdir()
+    monkeypatch.setattr(scratch.shutil.rmtree, "avoids_symlink_attacks", False)
+    report = scratch.sweep_sessions(root, apply=True, probe=lambda: DEAD)
+    assert report["summary"]["kept_by_reason"] == {"unknown_entry": 1, "unsafe_platform": 1}
+    assert directory.exists()
+    # Synthetic ownership proof: don't chown files on the host in a test.
+    real_stat = scratch.os.stat
+
+    def foreign(name, **kwargs):
+        info = real_stat(name, **kwargs)
+        if name == SESSION:
+            values = list(info)
+            values[4] = os.getuid() + 1
+            return os.stat_result(values)
+        return info
+
+    monkeypatch.setattr(scratch.os, "stat", foreign)
+    report = scratch.sweep_sessions(root, apply=True, probe=lambda: DEAD)
+    assert report["summary"]["kept_by_reason"]["foreign_owner"] == 1
+
+
+@pytest.mark.parametrize("field", ["status", "identity", "canary_proof", "strict_verdict", "confirmed_at", "thread_id"])
+def test_incomplete_rollover_is_not_confirmation(tmp_path: Path, field: str) -> None:
+    root = _confirmed(tmp_path)
+    lease = root / "lineage/lease.json"
+    record = json.loads(lease.read_text())
+    del record["replacement"][field]
+    lease.write_text(json.dumps(record))
+    assert scratch.confirmed_sessions([root]) == set()
+
+
+def test_rollover_symlink_malformed_and_missing_records_ignored(tmp_path: Path) -> None:
+    root = _confirmed(tmp_path)
+    assert scratch.confirmed_sessions([root]) == {SESSION}
+    (root / "lineage/lease.json").write_text("{")
+    (root / "bad").mkdir()
+    (root / "bad/lease.json").symlink_to(tmp_path / "absent")
+    (root / "linked").symlink_to(root / "lineage", target_is_directory=True)
+    assert scratch.confirmed_sessions([root, tmp_path / "absent"]) == set()
+
+
+class FakeProcess:
+    def __init__(self, *, args=None, env=None, uid=None, error=None, paths=(), status="running"):
+        self.args = args or ["other"]
+        self.env = env or {}
+        self.uid = os.getuid() if uid is None else uid
+        self.error = error
+        self.paths = paths
+        self.state = status
+
+    def uids(self):
+        if self.error:
+            raise self.error
+        return SimpleNamespace(real=self.uid)
+
+    def status(self):
+        return self.state
+
+    def name(self):
+        return "process"
+
+    def cmdline(self):
+        return self.args
+
+    def environ(self):
+        return self.env
+
+    def cwd(self):
+        return "/"
+
+    def open_files(self):
+        return [SimpleNamespace(path=path) for path in self.paths]
+
+
+@pytest.mark.parametrize(
+    "process,complete,live",
+    [
+        (FakeProcess(args=["claude", "--session-id", SESSION]), True, {SESSION}),
+        (FakeProcess(args=["claude", f"--resume={SESSION}"]), True, {SESSION}),
+        (FakeProcess(args=["claude"], env={"CLAUDE_SESSION_ID": SESSION}), True, {SESSION}),
+        (FakeProcess(args=["claude"], paths=[f"/tmp/claude-{os.getuid()}/project/{SESSION}/file"]), True, {SESSION}),
+        (FakeProcess(args=["claude"], env={"RANDOM_UUID": SESSION}), False, {SESSION}),
+        (FakeProcess(args=["claude"]), False, set()),
+        (FakeProcess(args=["node", "/package/claude-code/cli.js"]), False, set()),
+        (FakeProcess(error=scratch.psutil.AccessDenied(1)), False, set()),
+        (FakeProcess(error=scratch.psutil.NoSuchProcess(1)), True, set()),
+        (FakeProcess(uid=os.getuid() + 1), True, set()),
+        (FakeProcess(status=scratch.psutil.STATUS_ZOMBIE), True, set()),
+    ],
+)
+def test_process_scan_proves_positive_ownership_and_fails_closed(monkeypatch, process, complete, live) -> None:
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
+    assert scratch.process_evidence() == scratch.ProcessEvidence(frozenset(live), complete)
+
+
+def test_process_enumeration_failure_is_unknown(monkeypatch) -> None:
+    def fail():
+        raise OSError(errno.EACCES, "inaccessible")
+
+    monkeypatch.setattr(scratch.psutil, "process_iter", fail)
+    assert scratch.process_evidence() == UNKNOWN
+
+
+def test_partial_process_probe_keeps_positive_ownership(monkeypatch) -> None:
+    process = FakeProcess(args=["claude", "--session-id", SESSION])
+
+    def inaccessible():
+        raise scratch.psutil.AccessDenied(1)
+
+    monkeypatch.setattr(process, "environ", inaccessible)
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
+    assert scratch.process_evidence() == scratch.ProcessEvidence(frozenset({SESSION}), complete=False)
+
+
+def test_cli_counts_only_and_error_exit(tmp_path: Path, monkeypatch, capsys) -> None:
+    root, directory = _session(tmp_path)
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([]))
+    assert scratch.main(["--temp-root", str(root)]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["would_remove"] == 1
+    assert str(directory) not in json.dumps(report) and SESSION not in json.dumps(report)
+    assert scratch.main(["--temp-root", str(root), "--apply"]) == 0
+    assert not directory.exists()
+    assert scratch.main(["--temp-root", str(tmp_path)]) == 1
+    assert scratch.sweep_sessions(tmp_path / "missing", probe=lambda: DEAD)["summary"]["errors"] == 0
+    help_result = subprocess.run(
+        [sys.executable, "-m", "scripts.maintenance.claude_session_scratch", "--help"],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    assert all(text in help_result.stdout for text in ["Examples:", "Outputs:", "Exit codes:", "Related:", "--apply"])

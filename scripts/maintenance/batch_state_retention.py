@@ -43,6 +43,7 @@ DEFAULT_BATCH_STATE = REPO_ROOT / "batch_state"
 # A clean verdict already lives on the task record, so the full JSON has no
 # forensic value after a day. Seven days reclaimed nothing: the dirs are younger.
 DEFAULT_MIN_AGE_DAYS = 1.0
+DEFAULT_ONE_OFF_MIN_BYTES = 100 * 1024 * 1024
 _SNAPSHOT_SUFFIX = delegate._READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX
 # Only these directory globs may be rewritten. Everything else under batch_state
 # is measured and left alone.
@@ -268,6 +269,36 @@ def _names(dir_fd: int) -> list[str]:
         return sorted(os.listdir(dir_fd))
     except OSError:
         return []
+
+
+def _one_off_files_at(dir_fd: int, *, now: datetime, prefix: str = "") -> list[dict[str, Any]]:
+    """List large files for owner disposition, without following symlinks or deleting."""
+    rows: list[dict[str, Any]] = []
+    for name in _names(dir_fd):
+        if not prefix and name == "tasks":
+            # Managed task sidecars are retention inputs, not one-off outputs.
+            continue
+        info = _lstat_at(dir_fd, name)
+        if info is None:
+            continue
+        relative = f"{prefix}/{name}" if prefix else name
+        if stat.S_ISREG(info.st_mode) and info.st_size >= DEFAULT_ONE_OFF_MIN_BYTES:
+            rows.append(
+                {
+                    "path": relative,
+                    "bytes": info.st_size,
+                    "age_days": max(0.0, (now.timestamp() - info.st_mtime) / 86400),
+                    "action": "report_only",
+                }
+            )
+        elif stat.S_ISDIR(info.st_mode):
+            child = _open_dir(dir_fd, name)
+            if child is not None:
+                try:
+                    rows.extend(_one_off_files_at(child, now=now, prefix=relative))
+                finally:
+                    os.close(child)
+    return rows
 
 
 @contextlib.contextmanager
@@ -667,6 +698,8 @@ def _plan_open(
             "tasks/archive/*.snapshots",
         ],
         "subtrees": subtrees,
+        "one_off_artifacts": _one_off_files_at(root_fd, now=now),
+        "one_off_min_bytes": DEFAULT_ONE_OFF_MIN_BYTES,
         "totals": {
             "bytes": sum(row["bytes"] for row in subtrees),
             "reclaimable_bytes": sum(row["reclaimable_bytes"] for row in subtrees),
@@ -692,6 +725,8 @@ def _parser() -> argparse.ArgumentParser:
             "\n"
             "Outputs:\n"
             "  JSON on stdout: per-subtree bytes, reclaimable bytes, and selected snapshot dirs.\n"
+            "  one_off_artifacts lists regular files >=100 MiB with relative path, bytes and age_days;\n"
+            "  these owner-disposition candidates are report-only and never deleted by that report.\n"
             "  With --apply, eligible tasks/*.snapshots and tasks/archive/*.snapshots dirs lose\n"
             "  read_only_checkout_{pre,post}.json and gain digest.json. The task record's\n"
             '  read_only_snapshot_retention field becomes "digest".\n'
