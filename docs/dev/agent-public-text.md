@@ -71,10 +71,24 @@ rules or incompatible spans refuse recording without a fallback tokenizer.
 `LU_OPSEC_OVERRIDE=reason` permits a false-positive match only after a durable
 local log write. It cannot bypass missing or incompatible tooling. The log
 contains timestamp, repository identity, rule identifiers and reason, never
-payload text. The child receives no override; a parent-scoped reason can be
-consumed once. A clean, empty or private publish never uses up the override:
-it is claimed and logged only when a scan blocks, so one override covers
-exactly one flagged publish. Claim-file reclamation remains maintenance work.
+payload text. Transports and internal lookups receive no override; a reason
+can be consumed once per command. A clean, empty or private publish never uses
+up the override: it is claimed and logged only when a scan blocks, so one
+override covers exactly one flagged publish. Claim-file reclamation remains
+maintenance work.
+
+The claim belongs to the command, not to the process that publishes (#9681).
+The first process of a command to read the override names its parent, the
+shell that set it, in `LU_OPSEC_OVERRIDE_ANCHOR` (`<pid>:<reason>`): importing
+`scripts.opsec.prepublish` does this, and so does the agent git shim for a
+push. Child processes inherit that anchor, so an in-process publish and a
+child push (`dispatch_settle`, delegate auto-finalize) or a recursive
+submodule push share one use. An anchor names a process only for its own
+reason, and only an ancestor of the claiming process can be claimed for; any
+other anchor refuses the flagged publish. Setting the anchor to another of
+one's own ancestors does yield a new claim, as setting a new reason always
+has: the override is a cooperative agent's logged false-positive escape, and
+the threat model excludes a malicious local writer.
 
 ## Raw gh reads and private writes
 
@@ -294,8 +308,9 @@ object, including an embedded one, without a blank line after its headers, or
 whose headers open with a continuation line, refuses the push naming only the
 object. Refusals name the rule, class, field and line, never the matched text.
 The single-use, logged `LU_OPSEC_OVERRIDE` applies only to a flagged push and
-is claimed for the process that started it; the caller's own hook does not
-receive it. A clean push neither uses up the override nor looks up that process,
+is claimed for the command's anchor (see the override above), which the shim
+sets to the caller of the push unless a publisher above already carries one;
+the caller's own hook receives neither. A clean push neither uses up the override nor looks up that process,
 so a failed lookup refuses only a flagged push.
 File contents are not scanned.
 

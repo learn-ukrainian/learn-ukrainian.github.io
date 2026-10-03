@@ -393,6 +393,17 @@ if [[ "$_opsec_push" == 1 ]]; then
   [[ -f "$_opsec_root/scripts/opsec/git_push.py" ]] || _opsec_refuse "push scanner unavailable"
   [[ -n "$_opsec_python" && -x "$_opsec_python" ]] || _opsec_refuse "project interpreter unavailable"
   export LU_OPSEC_PUSH_PYTHON="$_opsec_python" LU_OPSEC_REAL_GIT="$real_git"
+  # One override covers one flagged publication per command (#9681). Every hook
+  # of this push, recursive submodule pushes included, claims for the command's
+  # anchor ("<pid>:<reason>"): the one a publisher above already carries for this
+  # reason, else the caller of this push, which set the override.
+  if [[ -n "${LU_OPSEC_OVERRIDE:-}" ]]; then
+    _opsec_anchor="${LU_OPSEC_OVERRIDE_ANCHOR:-}"
+    if [[ "$_opsec_anchor" != *:* || ! "${_opsec_anchor%%:*}" =~ ^[1-9][0-9]{0,9}$ ||
+      "${_opsec_anchor#*:}" != "$LU_OPSEC_OVERRIDE" ]]; then
+      export LU_OPSEC_OVERRIDE_ANCHOR="$PPID:$LU_OPSEC_OVERRIDE"
+    fi
+  fi
   exec "$real_git" "${_opsec_globals[@]}" -c "core.hooksPath=$_opsec_hooks" "${@:_opsec_index+1}"
 fi
 

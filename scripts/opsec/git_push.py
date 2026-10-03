@@ -134,7 +134,8 @@ def scan_environment(environment: dict[str, str]) -> dict[str, str]:
     scrubbed = {
         key: value
         for key, value in environment.items()
-        if key not in ("LU_OPSEC_OVERRIDE", "GIT_CONFIG", "GIT_CURL_VERBOSE") and not key.startswith("GIT_TRACE")
+        if key not in (gate.OVERRIDE, gate.OVERRIDE_ANCHOR, "GIT_CONFIG", "GIT_CURL_VERBOSE")
+        and not key.startswith("GIT_TRACE")
     }
     scrubbed.update(
         GIT_TRACE2="0",
@@ -293,7 +294,7 @@ class CanonicalPublicRepository:
 
     def __init__(self, repo: str, environment: dict[str, str], *, runner=None, timeout: int = API_TIMEOUT):
         self.repo = repo
-        self.environment = {key: value for key, value in environment.items() if key != "LU_OPSEC_OVERRIDE"}
+        self.environment = gate.internal_environment(environment)
         self.runner = runner
         self.timeout = timeout
         self.calls = 0
@@ -604,17 +605,27 @@ def isolate_scanner(repository: Repository) -> None:
         os.environ.pop(name, None)
 
 
-def claimant() -> int:
-    """The process an override is claimed for: the parent of the git running this hook.
+def claimant(environment: dict[str, str], reason: str) -> int:
+    """The process an override is claimed for: the command's carried anchor, else the caller of the push.
 
-    The hook runs as a child of git, and git as a child of the caller (the
-    shim execs git), so an override set in one shell is claimed once there,
-    as for every other publisher. A recursive submodule push claims for its
-    parent push.
+    The agent git shim names the caller of a push as its anchor unless a
+    publisher above it already named the command's, and Git hands the anchor
+    to recursive submodule pushes, so every publication of one command claims
+    the same single use (#9681). Without an anchor it is the parent of the git
+    running this hook: the hook runs as a child of git, and git as a child of
+    the caller (the shim execs git).
     """
+    anchor = gate.override_anchor(environment, reason)
+    if anchor is not None:
+        return anchor
     try:
         result = subprocess.run(
-            ["ps", "-o", "ppid=", "-p", str(os.getppid())], capture_output=True, text=True, check=True, timeout=5
+            ["ps", "-o", "ppid=", "-p", str(os.getppid())],
+            env=gate.internal_environment(),
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=5,
         )
         return int(result.stdout.strip())
     except Exception:
@@ -639,7 +650,7 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
     object_format = repository.object_format()
     updates = parse_updates(data, ID_LENGTH[object_format])
     isolate_scanner(repository)
-    reason = environment.get("LU_OPSEC_OVERRIDE", "")
+    reason = environment.get(gate.OVERRIDE, "")
     dest = destination(url)
     if gate.is_private(dest):
         if trusted_route(repository, remote, url):
@@ -697,9 +708,9 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
             gate.check_texts(
                 dest,
                 [texts[index] for index in flagged],
-                environment={"LU_OPSEC_OVERRIDE": reason},
+                environment={gate.OVERRIDE: reason},
                 field_names=[names[index] for index in flagged],
-                claimant=claimant(),
+                claimant=claimant(environment, reason),
             )
             return
         older = {owners[index - first] for index in error.indices if index >= first} - set(tips)
@@ -749,8 +760,7 @@ def main(argv: list[str] | None = None, *, stdin: bytes | None = None, public_re
     except Exception:
         print("OPSEC: push scan unavailable; push refused.", file=sys.stderr)
         return 1
-    environment.pop("LU_OPSEC_OVERRIDE", None)
-    return (chain or exec_caller_hook)(arguments, data, environment)
+    return (chain or exec_caller_hook)(arguments, data, gate.internal_environment(environment))
 
 
 if __name__ == "__main__":

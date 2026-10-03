@@ -16,7 +16,7 @@ import re
 import subprocess
 import sys
 import unicodedata
-from collections.abc import Mapping
+from collections.abc import Mapping, MutableMapping
 from datetime import UTC, datetime
 from functools import wraps
 from itertools import pairwise
@@ -26,6 +26,9 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 POLICY = Path(__file__).with_name("blocking.json")
+OVERRIDE = "LU_OPSEC_OVERRIDE"
+# "<pid>:<reason>": the process that set the override, carried to every child of the command (#9681).
+OVERRIDE_ANCHOR = "LU_OPSEC_OVERRIDE_ANCHOR"
 
 
 class PublishBlocked(RuntimeError):
@@ -70,10 +73,49 @@ def publication_cli(*error_types):
     return decorate
 
 
+def internal_environment(source: Mapping[str, str] | None = None) -> dict[str, str]:
+    """A copy for internal lookups, which publish nothing: no override and no carried anchor."""
+    return {
+        key: value
+        for key, value in (os.environ if source is None else source).items()
+        if key not in (OVERRIDE, OVERRIDE_ANCHOR)
+    }
+
+
+def override_anchor(environment: Mapping[str, str], reason: str) -> int | None:
+    """The process a carried anchor names for this reason, or None.
+
+    An anchor carried for another reason, or malformed, names nothing, so a
+    stale one inherited without its override never binds a later command.
+    """
+    pid, separator, bound = environment.get(OVERRIDE_ANCHOR, "").partition(":")
+    if separator and bound == reason and re.fullmatch(r"[1-9][0-9]{0,9}", pid):
+        return int(pid)
+    return None
+
+
+def carry_override_anchor(environment: MutableMapping[str, str] = os.environ) -> None:
+    """Name the command an override belongs to, once, for this process and its children.
+
+    The first process of a command to read an override (this module's import,
+    or the agent git shim for a push) names its parent, the shell that set the
+    override; children inherit that name. Every publication of the command, in
+    this process, a child push's hook or a recursive submodule push, then
+    claims the same single use.
+    """
+    reason = environment.get(OVERRIDE, "")
+    if reason and override_anchor(environment, reason) is None:
+        environment[OVERRIDE_ANCHOR] = f"{os.getppid()}:{reason}"
+
+
+carry_override_anchor()
+
+
 def primary_root(cwd: Path = ROOT) -> Path:
     result = subprocess.run(
         ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
         cwd=cwd,
+        env=internal_environment(),
         capture_output=True,
         text=True,
         check=False,
@@ -302,14 +344,17 @@ def check_texts(
 ) -> None:
     """Scan final fields; an override permits policy hits only after a durable log.
 
-    The override is dropped from environment on every call but claimed and
-    logged only when a scan blocks, so a clean, empty or private publish
-    leaves it for the one flagged publish it was set for. claimant is the
-    process whose override is claimed once; by default the caller's parent
-    (the shell that set it).
+    The override and its carried anchor are dropped from environment on every
+    call, but the override is claimed and logged only when a scan blocks, so a
+    clean, empty or private publish leaves it for the one flagged publish it
+    was set for. claimant is the process whose override is claimed once: by
+    default the command's carried anchor, else the caller's parent (the shell
+    that set it). It must be an ancestor of this process.
     """
     environment = os.environ if environment is None else environment
-    reason = environment.pop("LU_OPSEC_OVERRIDE", "")
+    reason = environment.pop(OVERRIDE, "")
+    anchor = override_anchor(environment, reason)
+    environment.pop(OVERRIDE_ANCHOR, None)
     if not texts or is_private(destination):
         return
     loaded = _load_matcher(tooling or private_tooling())
@@ -333,7 +378,7 @@ def check_texts(
     if not blocks:
         return
     if reason.strip():
-        _record_override(destination, blocks, reason, log_path, claimant)
+        _record_override(destination, blocks, reason, log_path, anchor if claimant is None else claimant)
         return
     error = PublishBlocked(
         f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "
@@ -350,7 +395,7 @@ def _record_override(
     log_path: Path | None,
     claimant: int | None = None,
 ) -> None:
-    """Claim one parent-shell override and durably log it before sending."""
+    """Claim the command's one override and durably log it before sending."""
     record = {
         "timestamp": datetime.now(UTC).isoformat(),
         "destination": destination,
@@ -362,11 +407,7 @@ def _record_override(
         target = log_path or primary_root() / "batch_state/opsec/overrides.jsonl"
         target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         parent = os.getppid() if claimant is None else claimant
-        started = subprocess.run(
-            ["ps", "-o", "lstart=", "-p", str(parent)], capture_output=True, text=True, check=True, timeout=5
-        ).stdout.strip()
-        if not started:
-            raise ValueError
+        started = _ancestor_start(parent)
         key = hashlib.sha256(f"{parent}:{started}:{reason}".encode()).hexdigest()
         claim = target.parent / ("consumed-" + key)
         fd = os.open(claim, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
@@ -376,12 +417,42 @@ def _record_override(
             stream.write(json.dumps(record, ensure_ascii=True) + "\n")
             stream.flush()
             os.fsync(stream.fileno())
+    except PublishBlocked:
+        raise
     except FileExistsError as exc:
         if claim is not None and exc.filename == str(claim):
             raise PublishBlocked("OPSEC: override already consumed; use a fresh command-scoped reason.") from None
         raise PublishBlocked("OPSEC: override log unavailable; write refused.") from None
     except Exception:
         raise PublishBlocked("OPSEC: override log unavailable; write refused.") from None
+
+
+def _ancestor_start(pid: int) -> str:
+    """The start time of pid, which must be an ancestor of this process.
+
+    A carried anchor is only a name, so a process outside this command's
+    ancestry (another command, a dead or reused pid) claims nothing.
+    """
+    table = subprocess.run(
+        ["ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "lstart="],
+        env=internal_environment(),
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=5,
+    ).stdout
+    rows = {}
+    for line in table.splitlines():
+        fields = line.split(None, 2)
+        if len(fields) == 3 and fields[0].isdigit() and fields[1].isdigit():
+            rows[int(fields[0])] = (int(fields[1]), fields[2].strip())
+    current, seen = rows.get(os.getpid(), (0, ""))[0], set()
+    while current in rows and current not in seen:
+        if current == pid and rows[current][1]:
+            return rows[current][1]
+        seen.add(current)
+        current = rows[current][0]
+    raise PublishBlocked("OPSEC: override anchor is not an ancestor of this process; write refused.")
 
 
 def real_gh(environment: Mapping[str, str]) -> str:
@@ -413,8 +484,7 @@ def real_gh(environment: Mapping[str, str]) -> str:
 
 def publish_environment(source: Mapping[str, str], *, root: Path = ROOT) -> dict[str, str]:
     """Keep the publishing shim first without propagating command-scoped overrides."""
-    env = dict(source)
-    env.pop("LU_OPSEC_OVERRIDE", None)
+    env = internal_environment(source)
     shim = str(root / "scripts/agent_runtime/shims")
     env["PATH"] = os.pathsep.join([shim, *[p for p in env.get("PATH", "").split(os.pathsep) if p and p != shim]])
     try:
@@ -431,8 +501,7 @@ def checked_run(args, *, runner=None, **kwargs):
         return runner(args, **kwargs)
     from scripts.opsec.gh_snapshot import admit
 
-    environment = dict(kwargs.get("env", os.environ))
+    environment = internal_environment(kwargs.get("env", os.environ))
     frozen = admit(list(args[1:]), cwd=Path(kwargs.get("cwd") or Path.cwd()), environment=environment, reader=runner)
-    environment.pop("LU_OPSEC_OVERRIDE", None)
     kwargs["env"] = environment
     return runner([args[0], *frozen.argv], **kwargs)

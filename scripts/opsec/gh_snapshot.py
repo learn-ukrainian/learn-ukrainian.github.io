@@ -10,7 +10,7 @@ import re
 import subprocess
 from dataclasses import dataclass
 
-from scripts.opsec.prepublish import PublishBlocked, is_private, normalize_repository
+from scripts.opsec.prepublish import PublishBlocked, internal_environment, is_private, normalize_repository
 
 # flag names -> whether a value is required. No abbreviation or short clusters.
 FORMAT = {"--json": True, "--jq": True, "-q": True, "--template": True, "-t": True}
@@ -469,7 +469,7 @@ def repository(cwd, environment, explicit=None, reader=subprocess.run):
         result = reader(
             ["git", "remote", "get-url", "origin"],
             cwd=cwd,
-            env=environment,
+            env=internal_environment(environment),
             capture_output=True,
             text=True,
             check=False,
@@ -562,7 +562,7 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
             root = reader(
                 ["git", "rev-parse", "--show-toplevel"],
                 cwd=cwd,
-                env=environment,
+                env=internal_environment(environment),
                 text=True,
                 capture_output=True,
                 check=False,

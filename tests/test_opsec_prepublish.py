@@ -267,6 +267,111 @@ def test_clean_publish_with_override_needs_no_log(synthetic_opsec, tmp_path):
     )
 
 
+# One override per command across processes (#9681); multi-process flows are in tests/opsec/.
+@pytest.mark.parametrize(
+    "value,reason,expected",
+    [
+        ("123:reason", "reason", 123),
+        ("123:reason:with:colons", "reason:with:colons", 123),
+        ("123:other", "reason", None),
+        ("123", "reason", None),
+        ("0:reason", "reason", None),
+        ("0123:reason", "reason", None),
+        ("-1:reason", "reason", None),
+        ("١٢٣:reason", "reason", None),
+        ("", "reason", None),
+    ],
+)
+def test_override_anchor_names_a_process_only_for_its_own_reason(value, reason, expected):
+    assert gate.override_anchor({gate.OVERRIDE_ANCHOR: value}, reason) == expected
+
+
+@pytest.mark.parametrize("inherited", [None, "1:another reason", "malformed"])
+def test_first_reader_names_its_parent_as_the_command(inherited):
+    env = {gate.OVERRIDE: "reason"} | ({gate.OVERRIDE_ANCHOR: inherited} if inherited else {})
+    gate.carry_override_anchor(env)
+    assert env[gate.OVERRIDE_ANCHOR] == f"{os.getppid()}:reason"
+
+
+def test_a_carried_anchor_is_kept_and_no_override_mints_none():
+    env = {gate.OVERRIDE: "reason", gate.OVERRIDE_ANCHOR: "1:reason"}
+    gate.carry_override_anchor(env)
+    assert env[gate.OVERRIDE_ANCHOR] == "1:reason"
+    env = {gate.OVERRIDE_ANCHOR: "1:reason"}
+    gate.carry_override_anchor(env)
+    assert env == {gate.OVERRIDE_ANCHOR: "1:reason"}
+
+
+def test_a_child_process_carries_the_anchor_its_parent_minted(tmp_path):
+    """Import mints the anchor once; a child process inheriting it keeps it."""
+    probe = (
+        "import os, subprocess, sys; sys.path.insert(0, sys.argv[1]); import scripts.opsec.prepublish; "
+        "child = subprocess.run([sys.executable, '-c', 'import os, sys; sys.path.insert(0, sys.argv[1]); "
+        'import scripts.opsec.prepublish; print(os.environ["LU_OPSEC_OVERRIDE_ANCHOR"])\', sys.argv[1]], '
+        "capture_output=True, text=True, check=True).stdout.strip(); "
+        "print(os.getppid(), os.environ['LU_OPSEC_OVERRIDE_ANCHOR'], child)"
+    )
+    env = {"PATH": os.defpath, "LU_OPSEC_OVERRIDE": "reason"}
+    result = subprocess.run(
+        [sys.executable, "-c", probe, str(ROOT)], env=env, capture_output=True, text=True, check=True, timeout=60
+    )
+    parent, minted, inherited = result.stdout.split()
+    assert minted == inherited == f"{parent}:reason"
+
+
+def test_a_carried_anchor_and_the_default_claim_the_same_use(synthetic_opsec, tmp_path):
+    reason = "synthetic false positive"
+    log = tmp_path / "state/overrides.jsonl"
+    env = {gate.OVERRIDE: reason, gate.OVERRIDE_ANCHOR: f"{os.getppid()}:{reason}"}
+    gate.check_texts("github.com/unit/public", [TOKEN], environment=env, log_path=log)
+    assert env == {}
+    with pytest.raises(gate.PublishBlocked, match="already consumed"):
+        gate.check_texts("github.com/unit/public", [TOKEN], environment={gate.OVERRIDE: reason}, log_path=log)
+
+
+def test_an_anchor_outside_this_process_ancestry_claims_nothing(synthetic_opsec, tmp_path):
+    reason = "synthetic false positive"
+    log = tmp_path / "state/overrides.jsonl"
+    with subprocess.Popen(["sleep", "60"]) as outsider:
+        try:
+            for pid in (outsider.pid, os.getpid(), 2**31 - 1):
+                env = {gate.OVERRIDE: reason, gate.OVERRIDE_ANCHOR: f"{pid}:{reason}"}
+                with pytest.raises(gate.PublishBlocked, match="override anchor is not an ancestor"):
+                    gate.check_texts("github.com/unit/public", [TOKEN], environment=env, log_path=log)
+        finally:
+            outsider.kill()
+    assert not log.exists() and not list(log.parent.glob("consumed-*"))
+
+
+def test_an_anchor_without_its_override_is_inert_for_a_clean_publish(synthetic_opsec, tmp_path):
+    env = {gate.OVERRIDE: "reason", gate.OVERRIDE_ANCHOR: f"{2**31 - 1}:reason"}
+    gate.check_texts("github.com/unit/public", ["clean"], environment=env, log_path=tmp_path / "log")
+    assert env == {}
+
+
+def test_internal_lookups_receive_neither_override_nor_anchor(monkeypatch, tmp_path):
+    from scripts.opsec import gh_snapshot
+
+    monkeypatch.setenv(gate.OVERRIDE, "reason")
+    monkeypatch.setenv(gate.OVERRIDE_ANCHOR, "1:reason")
+    seen = []
+
+    def reader(argv, **kwargs):
+        seen.append((argv[0], kwargs["env"]))
+        return subprocess.CompletedProcess(argv, 0, f"{tmp_path}/.git\n", "")
+
+    monkeypatch.setattr(gate.subprocess, "run", reader)
+    gate.primary_root(tmp_path)
+    gh_snapshot.repository(tmp_path, dict(os.environ), reader=reader)
+    gate.checked_run(["gh", "pr", "list", "--json", "number"], runner=reader, env=dict(os.environ))
+    with pytest.raises(gate.PublishBlocked):
+        gate._ancestor_start(1)
+    published = gate.publish_environment(dict(os.environ))
+    assert [name for name, _ in seen] == ["git", "git", "gh", "ps"]
+    for env in [*(env for _, env in seen), published]:
+        assert gate.OVERRIDE not in env and gate.OVERRIDE_ANCHOR not in env
+
+
 def test_nondefault_public_catalog_entry_is_not_private(monkeypatch):
     monkeypatch.setattr(
         gate, "catalog", lambda: {"unit": {"github": "unit/public", "default": False, "role": "public-monorepo"}}

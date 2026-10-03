@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import signal
 import subprocess
 import sys
@@ -11,7 +10,7 @@ from pathlib import Path
 # Executed by the shim as a file, so imports do not depend on caller cwd.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts.opsec.gh_snapshot import admit
-from scripts.opsec.prepublish import PublishBlocked, real_gh
+from scripts.opsec.prepublish import PublishBlocked, internal_environment, real_gh
 
 
 def execute(command, environment, stdin=None):
@@ -48,13 +47,12 @@ def guarded_command(real, shim, argv):
 
 def main() -> int:
     real, shim, *argv = sys.argv[1:]
-    environment = dict(os.environ)
+    environment = internal_environment()
     environment["AGENT_REAL_GH"] = real
     try:
         real = real_gh(environment)
         environment["AGENT_REAL_GH"] = real
         frozen = admit(argv, cwd=Path.cwd(), environment=environment)
-        environment.pop("LU_OPSEC_OVERRIDE", None)
         command = guarded_command(real, shim, frozen.argv)
         return execute(command, environment)
     except PublishBlocked as exc:
