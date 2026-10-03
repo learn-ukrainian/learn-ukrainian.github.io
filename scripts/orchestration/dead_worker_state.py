@@ -17,7 +17,12 @@ from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
 
 @contextmanager
 def task_state_lock(path: Path) -> Iterator[None]:
-    """Use a stable adjacent lock file; locking the replaced JSON inode is unsafe."""
+    """Use a stable adjacent lock file; locking the replaced JSON inode is unsafe.
+
+    Lock files (<task>.json.lock) are permanent stable anchors: deleting or moving
+    a lock file while a writer holds or waits on its descriptor breaks mutual exclusion
+    by letting subsequent callers open a new, distinct inode (#8659).
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor = os.open(path.with_suffix(path.suffix + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
     try:

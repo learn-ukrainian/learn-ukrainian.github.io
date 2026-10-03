@@ -1063,7 +1063,9 @@ dedicated `rescue/<agent>/<task>` branch before worktree reaping runs:
   commit still on origin, a local branch or ref still holding the work (even renamed), a
   dirty worktree, and commits with no recorded commit id.
 - `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
-  sidecars, into `batch_state/tasks/archive/`. A record stays hot while its checkout path or
+  sidecars, into `batch_state/tasks/archive/`. Adjacent `<task>.json.lock` files are intentionally
+  preserved as permanent stable lock anchors to ensure serialization across processes and prevent
+  split-brain inode acquisition (#8659). A record stays hot while its checkout path or
   an `acp_runtime_paths` entry still exists. Each move holds the record's lock, and it
   re-checks the record's mtime and status first.
 - `restore` moves an archived record back. No move ever replaces a file: if a writer

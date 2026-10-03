@@ -194,8 +194,9 @@ def settle_missing_worktree(
     if status not in TERMINAL_TASK_STATUSES:
         task_path = task_dir / f"{task_id}.json"
         _current, changed = mark_missing_worktree_failed(task_path, data, pid_alive=_pid_alive)
-        if changed:
-            actions.append("marked_failed_missing_worktree")
+        if not changed:
+            return actions
+        actions.append("marked_failed_missing_worktree")
     if ledger is not None:
         ledger.release(task_id)
         actions.append("released_ownership_claims")

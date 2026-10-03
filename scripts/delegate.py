@@ -740,10 +740,6 @@ def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[P
                 dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
             os.replace(snapshot_dir, dest)
             archived.append(dest)
-    lock_path = state_path.with_suffix(state_path.suffix + ".lock")
-    if lock_path.exists():
-        with contextlib.suppress(OSError):
-            lock_path.unlink()
     return archived
 
 

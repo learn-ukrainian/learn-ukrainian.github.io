@@ -489,6 +489,62 @@ def test_settle_task_worktree_present_path_unchanged(tmp_path: Path, monkeypatch
     assert state["status"] == "done"
 
 
+def test_settle_missing_worktree_stale_observation_rejected_preserves_claims(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "stale-race"
+    path = task_dir / f"{task_id}.json"
+
+    initial_data = {
+        "task_id": task_id,
+        "run_nonce": "run-1",
+        "started_at": "2026-01-01T00:00:00Z",
+        "status": "running",
+        "pid": 999_999_999,
+        "worktree_path": str(tmp_path / "missing"),
+    }
+    path.write_text(json.dumps(initial_data), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', 999_999_999, time.time() - 100),
+    )
+    conn.commit()
+    conn.close()
+
+    # Stale observation race: before locked transition, a new run replacement took over
+    replaced_data = {
+        "task_id": task_id,
+        "run_nonce": "run-2",
+        "started_at": "2026-01-01T01:00:00Z",
+        "status": "running",
+        "pid": os.getpid(),
+        "worktree_path": str(tmp_path / "missing"),
+    }
+    path.write_text(json.dumps(replaced_data), encoding="utf-8")
+
+    actions = ds.settle_missing_worktree(task_dir, task_id, ledger=ledger)
+    assert actions == []
+
+    current = json.loads(path.read_text(encoding="utf-8"))
+    assert current["status"] == "running"
+    assert current["run_nonce"] == "run-2"
+
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT task_id FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 1
+
+
 @pytest.fixture(autouse=True)
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""

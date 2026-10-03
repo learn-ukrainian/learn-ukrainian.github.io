@@ -87,7 +87,6 @@ report names; no failure leaves a file at its hidden staging name.
 from __future__ import annotations
 
 import argparse
-import contextlib
 import dataclasses
 import errno
 import json
@@ -1267,10 +1266,6 @@ def _archive_one(
                 row["action"] = "error" if problems else "archived"
                 if problems:
                     row["error"] = "record archived; " + "; ".join(problems)
-                lock_file = path.with_suffix(path.suffix + ".lock")
-                if lock_file.exists():
-                    with contextlib.suppress(OSError):
-                        lock_file.unlink()
     except worktree_claims.WorktreeLockError as exc:
         row["action"], row["skip_reason"] = "skipped", worktree_claims.lock_refusal(exc)
     except FileNotFoundError:
@@ -1344,11 +1339,6 @@ def archive_terminal(
                 before_move=before_move,
             )
         rows.append(row)
-    if apply:
-        for lock_path in tasks_dir.glob("*.json.lock"):
-            if not (tasks_dir / lock_path.stem).is_file():
-                with contextlib.suppress(OSError):
-                    lock_path.unlink()
     return {
         "command": "archive",
         "mode": "apply" if apply else "dry-run",

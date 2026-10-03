@@ -7,6 +7,7 @@ bare ``origin``, and a fake REST pull pager; nothing reads the real
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import subprocess
@@ -19,8 +20,8 @@ from typing import Any
 import pytest
 
 from scripts import delegate
+from scripts.orchestration import dead_worker_state, task_record_store, worktree_claims
 from scripts.orchestration import stale_task_records as str_mod
-from scripts.orchestration import task_record_store, worktree_claims
 
 SLUG = "owner/repo"
 NOW = datetime(2026, 9, 24, 12, 0, tzinfo=UTC)
@@ -827,7 +828,7 @@ def test_archive_round_trip_moves_record_with_sidecars(tasks_dir):
     assert task_record_store.locate_task_record(tasks_dir, "old-done") == tasks_dir / "old-done.json"
 
 
-def test_archive_cleans_adjacent_and_orphaned_lock_files(tasks_dir):
+def test_archive_preserves_stable_lock_anchors(tasks_dir):
     _terminal(tasks_dir, "old-done")
     (tasks_dir / "old-done.json.lock").write_text("")
     (tasks_dir / "orphan.json.lock").write_text("")
@@ -842,10 +843,35 @@ def test_archive_cleans_adjacent_and_orphaned_lock_files(tasks_dir):
 
     report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
     assert report["actions"] == {"archived": 1}
-    assert not (tasks_dir / "old-done.json.lock").exists()
-    assert not (tasks_dir / "orphan.json.lock").exists()
+    # Stable lock anchors must never be deleted to prevent flock split-brain (#8659)
+    assert (tasks_dir / "old-done.json.lock").exists()
+    assert (tasks_dir / "orphan.json.lock").exists()
     assert (tasks_dir / "active.json.lock").exists()
     assert (tasks_dir / "active.json").exists()
+
+
+def test_task_state_lock_preserves_stable_lock_anchor_against_split_brain(tmp_path):
+    record_path = tmp_path / "task-1.json"
+    lock_path = tmp_path / "task-1.json.lock"
+
+    # Acquire lock with task_state_lock
+    with dead_worker_state.task_state_lock(record_path):
+        assert lock_path.exists()
+        inode_first = lock_path.stat().st_ino
+
+        # Concurrent opener attempting to acquire non-blocking must block on the same anchor
+        second_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
+        try:
+            with pytest.raises(BlockingIOError):
+                fcntl.flock(second_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        finally:
+            os.close(second_fd)
+
+    # After releasing, next acquisition reuses the same inode
+    with dead_worker_state.task_state_lock(record_path):
+        inode_second = lock_path.stat().st_ino
+        assert inode_first == inode_second
+
 
 
 def test_archive_selects_only_old_terminal_records_without_a_live_worktree(tasks_dir, tmp_path):

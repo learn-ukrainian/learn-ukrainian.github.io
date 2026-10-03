@@ -12132,7 +12132,7 @@ def test_rescue_branch_namespacing_prevents_agent_collision(tmp_path, monkeypatc
     assert result_codex["rescue_ref"] != result_claude["rescue_ref"]
 
 
-def test_archive_task_artifacts_unlinks_lock_file(tmp_path, monkeypatch, tmp_tasks_dir):
+def test_archive_task_artifacts_preserves_stable_lock_anchor(tmp_path, monkeypatch, tmp_tasks_dir):
     state_path = delegate._state_path("task-with-lock")
     state_path.write_text("{}", encoding="utf-8")
     lock_path = state_path.with_suffix(state_path.suffix + ".lock")
@@ -12142,7 +12142,8 @@ def test_archive_task_artifacts_unlinks_lock_file(tmp_path, monkeypatch, tmp_tas
     archived = delegate._archive_task_artifacts("task-with-lock")
     assert any("task-with-lock" in str(p) for p in archived)
     assert not state_path.exists()
-    assert not lock_path.exists()
+    assert lock_path.exists()
+
 
 
 def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeypatch, tmp_tasks_dir):
