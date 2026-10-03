@@ -4,11 +4,11 @@
 > **Issue:** #7269
 > **Status:** Live inventory — source of truth for filing per-family sub-issues
 > **Generated:** 2026-08-25 (post-#7302 step 0; includes `core_router`)
-> **Corrected:** 2026-10-03 (#8522) — router counts, mount prefixes, route counts and line counts recomputed from `scripts/api/main.py` and the router modules; `batch_router` and `cluster_router` added; `tests/api/test_app_factory_doc_router_count.py` pins them
+> **Corrected:** 2026-10-03 (#8522, #9630) — seam tables re-derived from the live fixture; router counts, mount prefixes, route counts and line counts recomputed from `scripts/api/main.py` and the router modules; `batch_router` and `cluster_router` added; `tests/api/test_app_factory_doc_router_count.py` pins them
 
 This document records every router module `scripts/api/main.py` mounts via
 `create_app()` → `factory_app.include_router(...)`, the module-global roots/stores
-each reads, every OPSEC sweep monkeypatch seam attributed to it, and a proposed
+each reads, every OPSEC sweep fixture seam installed on it, and a proposed
 migration step grouping per §5.2 point 4 of the parent design.
 
 ---
@@ -154,65 +154,77 @@ print(FROZEN_WEBSOCKET_ROUTE_COUNT)
 # 1
 ```
 
-### Total OPSEC seam-count baseline — **198** unique logical seams
+### OPSEC fixture seams — **22** unique `setattr` targets
 
-> **Historical snapshot (2026-08-25).** The seam figures in this document (the 198 /
-> 194 / 4 baseline, the counting rules' line numbers and every per-router *Seams*
-> value) predate the step 5–13 migrations recorded below, which removed most of
-> the `path_loop`, `run_command_loop` and `default_plane_root_loop` seams from
-> `isolated_fixture`. #8522 did not re-derive them. Treat them as the original
-> migration baseline, not as the current fixture's count.
-
-**194** router-attributed unique `monkeypatch.setattr` targets installed by
-`isolated_fixture`, plus **4** global infrastructure backstops
-(`subprocess.run`, `subprocess.Popen`, `socket.create_connection`,
-`sqlite3.connect`) that are not owned by any single router.
-
-Reproduce by replaying the fixture's setattr invocations and deduplicating on
-`(module, attribute)`:
+The seams are what `isolated_fixture` in `tests/api/opsec_sweep/test_opsec_route_sweep.py`
+installs today. They were re-derived on 2026-10-03 (#9630) from the live fixture, not from a
+copied list: `docs/design/count_opsec_fixture_seams.py` runs the real fixture function against
+a recording `pytest.MonkeyPatch` in a fresh interpreter and prints every target. The 2026-08-25
+baseline of 198 targets predates the step 5–13 migrations, which deleted the `path_loop`,
+`run_command_loop` and `default_plane_root_loop` seams; the per-router sections below record
+those deletions.
 
 ```bash
-grep -c 'monkeypatch\.setattr' tests/api/opsec_sweep/test_opsec_route_sweep.py
-# 61   (static call sites in source; loops expand at runtime)
-
-.venv/bin/python docs/design/count_opsec_fixture_seams.py
-# unique_logical_seams: 198
-# router_attributed_unique: 194
-# global_backstops: 4
-# setattr_invocations_total: 205
-# router_attributed_invocations: 201
+.venv/bin/python docs/design/count_opsec_fixture_seams.py          # markdown table
+.venv/bin/python docs/design/count_opsec_fixture_seams.py --json   # raw records
 ```
 
-Counting rules (mechanical, matches `isolated_fixture` in
-`tests/api/opsec_sweep/test_opsec_route_sweep.py`):
+Counting rules:
 
-1. **Explicit setattr** — every `monkeypatch.setattr` in `isolated_fixture`
-   (including loop bodies).
-2. **`path_loop:`** — for each loaded `scripts.api.*` module, one seam per
-   module-global absolute `Path` repointed by the scan at lines 308–318.
-3. **`run_command_loop:`** — one seam per `scripts.api.*` module that defines
-   `_run_command` and receives the fixture replacement (lines 320–321).
-4. **`default_plane_root_loop:`** — one seam per `scripts.api.*` module whose
-   namespace contains `default_plane_root` when the loop at lines 560–564 runs
-   (currently `entire_context_router`, `fleet_router`, `runtime_router`), **plus**
-   the explicit `message_plane.default_plane_root` and
-   `cold_start_board.default_plane_root` setattr calls (those modules live under
-   `scripts.fleet_comms`, not `scripts.api`).
-5. **`external_store_loop:`** — for each loaded module under
-   `scripts.ai_agent_bridge`, `scripts.telemetry`, or `wiki`, one seam per
-   module-global absolute `Path` whose name contains `DB`, `PROGRESS`, or
-   `STATE` (lines 478–490).
-6. **Global backstops** — the four infrastructure setattr targets listed above
-   (counted separately, not router-attributed).
+1. A **seam** is a unique `(target, attribute)` that the fixture patches with
+   `monkeypatch.setattr`, or an environment variable it sets with `monkeypatch.setenv`.
+   A target patched twice (a loop and an explicit call) is one seam with two invocations.
+2. The recorder covers only the fixture body. Patches that individual tests or mutation
+   recipes add (for example `batch_router._run_dispatcher_scan`) are not counted.
+3. The fixture's loops walk `sys.modules`, so the result is for a fresh interpreter that has
+   imported only the sweep module; a long pytest session can load more modules.
+4. A seam is **owned by a router** when its target module is that router's module. That
+   is the **Seams** value in each per-router row below. Targets in other modules are totalled
+   by category and are not attributed to any single router.
 
-Duplicate setattr on the same `(module, attribute)` within one fixture run
-(e.g. `path_loop` then a later explicit repoint) counts as **one** logical seam.
-The **201** router-attributed setattr **invocations** (205 total − 4 global) is
-the invocation tally reviewers see when wrapping `monkeypatch.setattr`; the
-**198** baseline uses unique targets.
+| Target | Kind | Invocations |
+| --- | --- | ---: |
+| `os.environ.AGENT_NO_TELEMETRY_FOOTER` | env | 1 |
+| `os.environ.ATLAS_JOB_REGISTRY` | env | 1 |
+| `os.environ.FLEET_COMMS_ROOT` | env | 1 |
+| `os.environ.LU_MONITOR_HOST_ID` | env | 1 |
+| `os.environ.MONITOR_OCCUPANCY_HOST_IDS` | env | 1 |
+| `scripts.api.comms_router.default_plane_root` | setattr | 1 |
+| `scripts.api.issues_router._run_gh` | setattr | 1 |
+| `scripts.api.main.build_repository_authority` | setattr | 2 |
+| `scripts.api.repository_authority.build_repository_authority` | setattr | 1 |
+| `scripts.api.state_helpers._ttl_cache` | setattr | 1 |
+| `scripts.api.state_router.build_repository_authority` | setattr | 1 |
+| `scripts.api.state_router.probe_graphql_budget` | setattr | 1 |
+| `scripts.docs.catalogue.git` | setattr | 1 |
+| `scripts.orchestration.issue_stream_audit.read_cache` | setattr | 1 |
+| `scripts.orchestration.issue_stream_audit.read_refresh_state` | setattr | 1 |
+| `scripts.orchestration.issue_stream_audit.schedule_refresh` | setattr | 1 |
+| `scripts.orchestration.reap_worktrees._run` | setattr | 1 |
+| `scripts.telemetry.legacy_bridge._DB_PATH` | setattr | 1 |
+| `socket.create_connection` | setattr | 1 |
+| `sqlite3.connect` | setattr | 1 |
+| `starlette.datastructures.State.ctx` | setattr | 1 |
+| `subprocess.Popen` | setattr | 1 |
+| `subprocess.run` | setattr | 1 |
+| `wiki.config.WIKI_STATE_DIR` | setattr | 1 |
+| `wiki.quality_gate.PROGRESS_DB` | setattr | 1 |
+| `wiki.source_attribution.DEFAULT_DB_PATH` | setattr | 1 |
+| `wiki.state.WIKI_STATE_DIR` | setattr | 1 |
 
-Per-router tallies in the inventory table sum to **194**; adding the 4 global
-backstops yields **198**.
+| Category | Unique targets |
+| --- | ---: |
+| Router modules (the Seams column below) | 5 |
+| Shared API helpers (`scripts.api.*` modules that are not routers) | 2 |
+| Other repository modules (`scripts.*` outside `scripts.api`, `wiki.*`) | 10 |
+| Application state (`app.state`) | 1 |
+| Global backstops (`subprocess`, `socket`, `sqlite3`) | 4 |
+| **Unique `setattr` targets** | **22** |
+| `setattr` invocations | 23 |
+| Environment variables set | 5 |
+
+The four global backstops stay as defense-in-depth per §4.1 point 5 of the parent design
+until all routers read stores through `MonitorContext`.
 
 ### Per-step module tally — sums to **46**
 
@@ -260,29 +272,24 @@ Columns: **Module** · **Mount prefix(es)** · **Routes** · **Lines** ·
 **Config imports** (`scripts/api/config.py`) · **Module globals** ·
 **OPSEC seams** (count) · **Step**
 
-Seam lists name the patched target as it appears in
-`tests/api/opsec_sweep/test_opsec_route_sweep.py`. `path_loop:` entries are
-created by the fixture's `scripts.api` absolute-`Path` scan loop.
+The **Seams** value is the number of unique `setattr` targets `isolated_fixture`
+installs on that router's module; see *OPSEC fixture seams* above for the rules and the
+full target list. The tests in `tests/api/test_router_inventory_seams.py` re-derive it.
 
 ### Step 1 — session-streams cluster
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `session_streams_router.py` | `/api/session-streams` | 6 | 213 | — | `_repo_root()`, `_db_path()`, `_store()` | 9 | 1 |
-| `rollover_router.py` | `/api/rollovers` | 1 | 136 | — | — | 1 | 1 |
-| `session_router.py` | `/api/session` | 1 | 295 | — | `ORCHESTRATOR_HANDOFF_PATH`, `LEGACY_ORCHESTRATOR_HANDOFF_PATH`, `SESSION_ROUTER_PATH` | 1 | 1 |
-| `rules_router.py` | `/api/rules` | 1 | 268 | — | — | 1 | 1 |
-
-**`session_streams_router` seams (9):** `session_streams_router._repo_root`,
-`_db_path`, `_store`, `list_handoff_candidates`, `diagnose_handoff`,
-`list_projection_receipts`, `detect_projection_drift`; `path_loop:LIVE_REPO_ROOT`,
-`path_loop:PROJECT_ROOT`.
+| `session_streams_router.py` | `/api/session-streams` | 6 | 213 | — | `_repo_root()`, `_db_path()`, `_store()` | 0 | 1 |
+| `rollover_router.py` | `/api/rollovers` | 1 | 136 | — | — | 0 | 1 |
+| `session_router.py` | `/api/session` | 1 | 295 | — | `ORCHESTRATOR_HANDOFF_PATH`, `LEGACY_ORCHESTRATOR_HANDOFF_PATH`, `SESSION_ROUTER_PATH` | 0 | 1 |
+| `rules_router.py` | `/api/rules` | 1 | 268 | — | — | 0 | 1 |
 
 ### Step 2 — `state_router` (large)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `state_router.py` | `/api/state` | 28 | 3,096 | `LEVELS` | `BUDGET_CONFIG_PATH`, `TASKS_DIR` | 23 | 2 |
+| `state_router.py` | `/api/state` | 28 | 3,096 | `LEVELS` | `BUDGET_CONFIG_PATH`, `TASKS_DIR` | 2 | 2 |
 
 **Internal route groups** (may split 2a/2b if a single PR exceeds review size):
 
@@ -293,37 +300,24 @@ created by the fixture's `scripts.api` absolute-`Path` scan loop.
 | Build status / modules | 10 | `/build-status`, `/build-status/{track_id}`, `/module-range/{track_id}`, `/llm-qg/{track_id}`, `/build-stats`, `/build-stats/{track_id}`, `/module/{track_id}/{num}`, `/module/{track_id}/slug/{slug}`, `/final-reviews/{track_id}`, `/enrichment-status` |
 | Issues / manifest | 4 | `/track-health/{track_id}`, `/issues`, `/range/{track_id}`, `/manifest` |
 
-**`state_router` seams (23):** `state_helpers._ttl_cache`,
-`_content_file_index_cache`, `_curriculum_cache`, `_curriculum_mtime`;
-`repository_authority._git`, `classify_repo_path`; `entire_context_router.projection_path`,
-`load_provider_status`, `load_provider_capabilities`; `path_loop` entries for
-`state_router`, `state_helpers`, `state_build`, `state_compute`, `state_coverage`,
-`state_issues`, `repository_authority`, `entire_context_router`, and
-`config` module globals (`CURRICULUM_ROOT`, `LIVE_REPO_ROOT`, `PROJECT_ROOT`,
-`BUDGET_CONFIG_PATH`, `TASKS_DIR`, etc.).
+**`state_router` seams (2):** `build_repository_authority`, `probe_graphql_budget`.
 
 ### Step 3 — agent / occupancy / fleet-workers cluster
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `agent_router.py` | `/api/agent` | 5 | 219 | — | — | 3 | 3 |
-| `agent_monitor_router.py` | `/api/agent-monitor` | 6 | 419 | — | `DB_PATH` | 2 | 3 |
+| `agent_router.py` | `/api/agent` | 5 | 219 | — | — | 0 | 3 |
+| `agent_monitor_router.py` | `/api/agent-monitor` | 6 | 419 | — | `DB_PATH` | 0 | 3 |
 | `occupancy.py` | `/api/occupancy` | 1 | 836 | — | — (reads env + `occupancy_local._MARKERS_REL`) | 0 | 3 |
 | `observer_presence.py` | `/api/observer` | 1 | 331 | — | `_STORE`, `_STORE_LOCK` (in-memory presence) | 0 | 3 |
 | `fleet_workers_router.py` | `/api/fleet` + router `prefix=/workers/v1` | 1 | 41 | — | — (delegates to `fleet_workers_collect`) | 0 | 3 |
-| `project_state_router.py` | `/api/fleet` | 2 | 361 | — | — | 2 | 3 |
-
-**`agent_router` seams (3):** `path_loop:LIVE_REPO_ROOT`, `PROJECT_ROOT`;
-`run_command_loop:agent_router._run_command`.
-
-**`project_state_router` seams (2):** `allowed_reporter_host_ids`;
-`project_state_collect._git`.
+| `project_state_router.py` | `/api/fleet` | 2 | 361 | — | — | 0 | 3 |
 
 ### Step 4 — `fleet_router` (large)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `fleet_router.py` | `/api/fleet` | 27 | 2,677 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 7 | 4 |
+| `fleet_router.py` | `/api/fleet` | 27 | 2,677 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 0 | 4 |
 
 **Internal route groups:**
 
@@ -334,16 +328,11 @@ created by the fixture's `scripts.api` absolute-`Path` scan loop.
 | Messages / discussions / reviews | 8 | `/requests`, `/messages`, `/messages/{message_id}`, `/discussions`, `/discussions/{conversation_id}`, `/reviews`, `/reviews/{review_id}`, `/dead-letters` |
 | Authority / ACP / activity | 5 | `/authority/jobs`, `/migrations`, `/acp/conversations`, `/acp/conversations/{conversation_id}`, `/activity` |
 
-**`fleet_router` seams (7):** `cold_start_board._get_local_git_info`,
-`_resolve_session_streams_db`, `_probe_gh_pr_list`, `default_plane_root`;
-`fleet_router.build_cold_start_board` (seam-honesty test); `path_loop:LIVE_REPO_ROOT`,
-`PROJECT_ROOT`; `default_plane_root_loop:fleet_router`.
-
 ### Step 5 — `comms_router` (large)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `comms_router.py` | `/api/comms` | 26 | 2,119 | — | `LOG_DIR`, `PID_DIR` | 11 | 5 |
+| `comms_router.py` | `/api/comms` | 26 | 2,119 | — | `LOG_DIR`, `PID_DIR` | 1 | 5 |
 
 **Internal route groups:**
 
@@ -354,61 +343,39 @@ created by the fixture's `scripts.api` absolute-`Path` scan loop.
 | Channels | 8 | `/channels`, `/channels/{name}`, `/channels/{name}/messages`, `/channels/{name}/threads/{thread_id}`, `/channels/{name}/deliveries`, `/channels/{name}/post`, `/cleanup`, `/acknowledge/{message_id}` |
 | Inbox / v1 metrics | 6 | `/by-module/{track}/{slug}`, `/agent-activity`, `/inbox`, `/v1/backlog`, `/v1/dead-letters`, `/v1/metrics` |
 
-**`comms_router` seams (11):** `broker_report.main_checkout_root`;
-`message_plane.default_plane_root`; `path_loop` for `comms_router` globals;
-`external_store_loop` for `scripts.ai_agent_bridge.*` DB paths consumed by
-comms routes.
+**`comms_router` seams (1):** `default_plane_root`.
 
 ### Step 6 — `runtime_router` (large)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `runtime_router.py` | `/api/runtime` | 11 | 1,776 | — | `ADAPTERS_DIR`, `REGISTRY_PATH`, `USAGE_DIR` | 8 | 6 |
+| `runtime_router.py` | `/api/runtime` | 11 | 1,776 | — | `ADAPTERS_DIR`, `REGISTRY_PATH`, `USAGE_DIR` | 0 | 6 |
 
 **Internal route groups:** agents/usage (`/agents`, `/usage`, `/recent`);
 ACP (`/acpx`, `/acp/conversations/*`); routing/transport (`/headroom`,
 `/routing-assignments`, `/transport-health`, `/auth`).
 
-**`runtime_router` seams (8):** `path_loop:BATCH_STATE_DIR`, `PROJECT_ROOT`,
-`CODEX_TRANSPORT_CONFIG_PATH`, `CODEX_TRANSPORT_RECEIPT_PATH`, `ADAPTERS_DIR`,
-`REGISTRY_PATH`, `USAGE_DIR`; `default_plane_root_loop:runtime_router`.
-
 ### Step 7 — docs / artifacts / images
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `docs_router.py` | `/artifacts`, `/files` | 2 | 449 | — | `ALLOWED_ROOTS`, `DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS` | 5 | 7 |
-| `artifacts_router.py` | `/api/artifacts` | 7 | 879 | `LEVELS` | `PLANS_ROOT` | 3 | 7 |
-| `images_router.py` | `/api/images` | 9 | 754 | — | `IMAGES_DIR`, `TEXTBOOKS_DIR`, `ANNOTATIONS_FILE`, `_index`, `_pdf_pool`, `_page_cache`, `_pdf_page_count_cache` | 8 | 7 |
-
-**`docs_router` seams (5):** explicit `PROJECT_ROOT`, `ALLOWED_ROOTS`,
-`DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS`, `DASHBOARDS_DIR` repoints (derived roots,
-not individually listed as `path_loop` entries).
-
-**`images_router` seams (8):** explicit singleton resets for `IMAGES_DIR`,
-`TEXTBOOKS_DIR`, `ANNOTATIONS_FILE`, `_index`, `_pdf_pool`, `_page_cache`,
-`_pdf_page_count_cache`; plus `path_loop:PROJECT_ROOT`.
+| `docs_router.py` | `/artifacts`, `/files` | 2 | 449 | — | `ALLOWED_ROOTS`, `DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS` | 0 | 7 |
+| `artifacts_router.py` | `/api/artifacts` | 7 | 879 | `LEVELS` | `PLANS_ROOT` | 0 | 7 |
+| `images_router.py` | `/api/images` | 9 | 754 | — | `IMAGES_DIR`, `TEXTBOOKS_DIR`, `ANNOTATIONS_FILE`, `_index`, `_pdf_pool`, `_page_cache`, `_pdf_page_count_cache` | 0 | 7 |
 
 ### Step 8 — admin / ops / git
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `admin_router.py` | `/api/admin` | 8 | 402 | — | `BACKUP_DIR`, `DATA_DIR`, `IMAGE_DIR`, `LOGS_DIR`, `MCP_DIR` | 7 | 8 |
-| `ops_router.py` | `/api/ops` (+ nested `/entire-context`) | 4 | 74 | — | `DEFAULT_PLAN_DIR` | 8 | 8 |
-| `git_hygiene_router.py` | `/api/git` | 2 | 775 | — | `POLICY_DOC` | 5 | 8 |
-
-**`git_hygiene_router` seams (5):** `_run_git`; `worktree_containment.primary_checkout_dirty_status`;
-`path_loop:LIVE_REPO_ROOT`, `PROJECT_ROOT`, `POLICY_DOC`.
-
-**`ops_router` seams (8):** includes nested `entire_context_router` (`projection_path`,
-`load_provider_status`, `load_provider_capabilities`, `default_plane_root_loop`);
-`path_loop` for `ops_router` and `entire_context_router` module globals.
+| `admin_router.py` | `/api/admin` | 8 | 402 | — | `BACKUP_DIR`, `DATA_DIR`, `IMAGE_DIR`, `LOGS_DIR`, `MCP_DIR` | 0 | 8 |
+| `ops_router.py` | `/api/ops` (+ nested `/entire-context`) | 4 | 74 | — | `DEFAULT_PLAN_DIR` | 0 | 8 |
+| `git_hygiene_router.py` | `/api/git` | 2 | 775 | — | `POLICY_DOC` | 0 | 8 |
 
 ### Step 9 — `dashboard_router` (large)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `dashboard_router.py` | `/api/dashboard` | 11 | 1,061 | `LEVELS`, `SEMINAR_TRACK_IDS` | — | 10 | 9 |
+| `dashboard_router.py` | `/api/dashboard` | 11 | 1,061 | `LEVELS`, `SEMINAR_TRACK_IDS` | — | 0 | 9 |
 
 **Internal route groups:** overview/research/track (`/overview`, `/research`,
 `/track/*`, `/pipeline`, `/activity-config`); comms embed
@@ -419,11 +386,7 @@ not individually listed as `path_loop` entries).
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `sources_router.py` | `/api/sources` | 4 | 170 | — | — | 5 | 10 |
-
-**`sources_router` seams (5):** `sources_db.SOURCES_DB_PATH`, `_conn`, `_get_conn`;
-`rag_query.sources_db` mirror paths; `path_loop` for `sources_router` globals.
-The deprecated `/api/rag` second mount no longer exists.
+| `sources_router.py` | `/api/sources` | 4 | 170 | — | — | 0 | 10 |
 
 ### Step 11 — `contracts_router` / route contracts (large)
 
@@ -475,23 +438,17 @@ reviewer-ghosts, plus the `collect_adr_governance` fixture stub) are deleted.
 global. `LEVELS` is track-id config, not a filesystem root.
 
 **`cluster_router` seams (0):** added to the inventory by #8522 (mounted at
-`/api/cluster`, readiness probe from #7493). Seam count derived the way this
-document counts every router: unique `(module, attribute)` `monkeypatch.setattr`
-targets that `isolated_fixture` in
-`tests/api/opsec_sweep/test_opsec_route_sweep.py` attributes to the module.
-Searching the fixture (and `tests/api/opsec_sweep/*.py`) finds no target in
-`cluster_router`, and the module defines no `_run_command` and no absolute-`Path`
-global, so the loop-based seams produce none either. It reads stores through
-`Depends(get_ctx)` and `resolve_context` only.
+`/api/cluster`, readiness probe from #7493). `isolated_fixture` installs no target on
+`cluster_router`; it reads stores through `Depends(get_ctx)` and `resolve_context` only.
 
 ### Step 12d — site / wiki / worktrees / telemetry
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `site_router.py` | `/api/site` | 2 | 304 | — | — | 0 | 12d |
-| `wiki_router.py` | `/api/wiki` | 8 | 477 | `LEVELS` | — | 2 | 12d |
-| `worktrees_router.py` | `/api/worktrees` | 1 | 231 | — | — | 1 | 12d |
-| `telemetry_router.py` | (none — router defines own prefix) | 7 | 582 | — | — | 1 | 12d |
+| `wiki_router.py` | `/api/wiki` | 8 | 477 | `LEVELS` | — | 0 | 12d |
+| `worktrees_router.py` | `/api/worktrees` | 1 | 231 | — | — | 0 | 12d |
+| `telemetry_router.py` | (none — router defines own prefix) | 7 | 582 | — | — | 0 | 12d |
 
 **12d migrated (#7333):** path roots and database handles now come from
 `Depends(get_ctx)`. The 15 Path and router-local subprocess seams this row listed
@@ -518,18 +475,18 @@ fixture setattr, `epics_router._store` fixture setattr, and
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `batch_router.py` | (none — absolute paths) | 9 | 182 | — | `DISPATCHER_SCAN_TIMEOUT_S`, `_JSON_LOAD_ERRORS` (constants only) | 0 | 13 |
-| `main.py` (`core_router`) | (none — absolute paths) | 6 | 1,930 | `LEVELS` | — | 0 | 13 |
+| `main.py` (`core_router`) | (none — absolute paths) | 6 | 1,930 | `LEVELS` | — | 1 | 13 |
 
 **`batch_router` seams (0):** added to the inventory by #8522. It holds the nine
-batch routes that earlier revisions of this document counted under
-`core_router`. Seam count derived as for `cluster_router` above: `isolated_fixture`
-installs no setattr target on `batch_router`, and the module has no
-`_run_command` and no absolute-`Path` global. A per-recipe patch of
+batch routes that earlier revisions of this document counted under `core_router`.
+`isolated_fixture` installs no target on it. A per-recipe patch of
 `batch_router._run_dispatcher_scan` exists in
 `tests/api/opsec_sweep/mutation_recipes.py`, but that is a mutation-recipe
-fixture, not `isolated_fixture`, so it is not counted here.
+fixture, not `isolated_fixture`, so it is not counted.
 
-**13 migrated (#7335) & Residual Cleanup (#7269):** the inline routes and orient collectors read roots from `Depends(get_ctx)`. Measured unique logical seams at this head: **9** (base after #7413 was **21**, delta **−12**). The remaining `path_loop` rewrites (`scripts.api.config.{BATCH_STATE_DIR, CURRICULUM_ROOT, DASHBOARDS_DIR, LIVE_REPO_ROOT, MESSAGE_DB, PROJECT_ROOT}` and `scripts.api.resilience._REPO_ROOT`), `scripts.fleet_comms.legacy_broker_report.main_checkout_root`, and 4 unused `wiki.*` / RAG defaults are deleted.
+**`core_router` seams (1, module `main`):** `build_repository_authority`.
+
+**13 migrated (#7335) & Residual Cleanup (#7269):** the inline routes and orient collectors read roots from `Depends(get_ctx)`. The `path_loop` rewrites (`scripts.api.config.{BATCH_STATE_DIR, CURRICULUM_ROOT, DASHBOARDS_DIR, LIVE_REPO_ROOT, MESSAGE_DB, PROJECT_ROOT}` and `scripts.api.resilience._REPO_ROOT`), `scripts.fleet_comms.legacy_broker_report.main_checkout_root`, and 4 unused `wiki.*` / RAG defaults are deleted.
 
 **`batch_router` routes (9):** `/api/batch/dispatcher`, `/api/batch/active`,
 `/api/batch/failures`, `/api/batch/usage`, `/api/batch/checkpoints`,
@@ -548,20 +505,6 @@ beyond the config imports and module globals listed above.
 
 ---
 
-## Global OPSEC seams (not attributed to a single router)
-
-| Seam | Purpose | Count |
-| --- | --- | ---: |
-| `subprocess.run` / `subprocess.Popen` | Deny subprocess in sweep | 2 |
-| `socket.create_connection` | Deny network in sweep | 1 |
-| `sqlite3.connect` | #7284 outside-root DB deny backstop | 1 |
-| **Global total** | | **4** |
-
-These four stay as defense-in-depth per §4.1 point 5 of the parent design until
-all routers read stores through `MonitorContext`.
-
----
-
 ## Summary accounting
 
 | Metric | Value |
@@ -572,9 +515,7 @@ all routers read stores through `MonitorContext`.
 | Route handlers (decorator sum, nested included) | 271 |
 | OpenAPI HTTP operations (sweep denominator) | 272 |
 | WebSocket routes (separate denominator) | 1 |
-| OPSEC seams (router-attributed, unique) | 194 |
-| OPSEC seams (global backstops) | 4 |
-| **OPSEC seam baseline total (unique)** | **198** |
+| OPSEC fixture `setattr` targets (unique; see *OPSEC fixture seams*) | 22 |
 
 **Full step accounting:**
 
