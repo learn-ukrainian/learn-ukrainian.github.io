@@ -60,7 +60,7 @@ INVALID_HOSTS = [
 
 
 SOURCES = ["explicit", "explicit-host", "environment", "environment-host", "origin-https", "origin-http", "origin-ssh"]
-PATHS = ["publish-builtin", "publish-rest", "publish-graphql", "read-graphql", "read-rest"]
+PATHS = ["publish-builtin", "publish-rest", "publish-graphql", "publish-unlink", "read-graphql", "read-rest"]
 UNBOUND_OPERATIONS = ["identity", "budget", "merge-facts", "gist-create"]
 
 
@@ -122,9 +122,14 @@ def destination_transport(monkeypatch, synthetic_opsec):
             return pub.publish("issue-reopen", number=1, env=environment, runner=send, **fields)
         if path == "publish-rest":
             return pub.publish("issue-comment-json", number=1, body="clean", env=environment, runner=send, **fields)
-        if path == "publish-graphql":
+        if path in {"publish-graphql", "publish-unlink"}:
             return pub.publish(
-                "issue-link", parent_id="parent", child_id="child", env=environment, runner=send, **fields
+                "issue-unlink" if path == "publish-unlink" else "issue-link",
+                parent_id="parent",
+                child_id="child",
+                env=environment,
+                runner=send,
+                **fields,
             )
         if path == "read-graphql":
             return pub.read("membership", number=1, env=environment, runner=send, **fields)
@@ -207,8 +212,13 @@ def inherited_host_transport(monkeypatch, synthetic_opsec, tmp_path):
             return pub.publish("issue-reopen", number=1, **options)
         if operation == "publish-rest":
             return pub.publish("issue-comment-json", number=1, body="clean", **options)
-        if operation == "publish-graphql":
-            return pub.publish("issue-link", parent_id="parent", child_id="child", **options)
+        if operation in {"publish-graphql", "publish-unlink"}:
+            return pub.publish(
+                "issue-unlink" if operation == "publish-unlink" else "issue-link",
+                parent_id="parent",
+                child_id="child",
+                **options,
+            )
         if operation == "read-graphql":
             return pub.read("membership", number=1, **options)
         return pub.read("issue", number=1, **options)

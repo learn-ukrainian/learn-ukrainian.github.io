@@ -102,6 +102,7 @@ SCHEMAS = {
         {"parent_id", "child_id"},
         {**COMMON, "parent_id": "node", "child_id": "node", "replace_parent": "bool"},
     ),
+    "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
 WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}}
 
@@ -499,6 +500,11 @@ def publish(
                 elif verb == "issue-link":
                     payload = {
                         "query": "mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,subIssueId:$c}){issue{number}}}",
+                        "variables": {"p": fields["parent_id"], "c": fields["child_id"]},
+                    }
+                elif verb == "issue-unlink":
+                    payload = {
+                        "query": "mutation($p:ID!,$c:ID!){removeSubIssue(input:{issueId:$p,subIssueId:$c}){issue{number}}}",
                         "variables": {"p": fields["parent_id"], "c": fields["child_id"]},
                     }
                 elif verb == "pr-dequeue":
