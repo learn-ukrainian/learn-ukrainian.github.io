@@ -4,7 +4,7 @@ Approval: v3.4.2 (sha256 b1a39a78b262a3418fa8cba4019ed882991e802ab18b7ff25f2dc12
 rounds by GPT-6.1 Sol (review of record; round 3 APPROVE) and Claude Opus 5.5 (rounds 1-2). The operator approved v3.3 on
 2026-10-03 and ordered v3.4. v3.4.3 adds the operator's 2026-10-03 decisions on O4 and O5.
 Source sha256 of the body below (every line after this comment, verbatim):
-054333230b25d768eab4ad76fecef2bdabdf55545e5cc824a639060cdb8143c1
+f426823cfb2481543c6546f73e4a61c2fa5c60e6cbf18171fce75cd65452c24a
 Verify: sed '1,/^-->$/d' PLAN.md | sha256sum
 Landed by issue #9586 (step E0). Do not edit the body in place; changes need a new plan version.
 -->
@@ -205,8 +205,8 @@ lesson-note files, one private teacher file). A further 21 files carry `grade='u
 **O5 — UA-GEC translation submissions: DECIDED 2026-10-03 — keep, tagged by submission type and source language, metrics per
 stratum; the learner-side text is never a target.** (Measured: 940 of 1,706 train documents are translations — ru 581, en 321,
 de 21, pl 10, fr 7; test 55 of 166, ru 17.)
-**O6 — terminal outcome:** the epic ends release-ready (D6); public release is a separate follow-up. Driver default stated to the operator 2026-10-03; stands unless the operator overrides.
-**Still open:** O1 (must be decided before any component that quotes in-copyright or all-rights-reserved text is built, and before D6) and O2 (before E8). O3 uses the driver default stated to the operator (school textbooks outside this epic) unless overridden.
+**O6 — terminal outcome:** recommend the epic ends release-ready (D6) with public release as a separate follow-up. Open: awaiting operator confirmation (needed before E-final).
+**Still open:** O1 (before any component that quotes in-copyright or all-rights-reserved text is built, and before D6), O2 (before E8), O3 (before any decision to use school or university textbooks; until then they are not used) and O6 (before E-final).
 
 ## Change log v3.4 → v3.4.1
 - Sol B1 / Opus B1 (split leakage) → PA5, C1 binding, E9.
@@ -237,4 +237,4 @@ de 21, pl 10, fr 7; test 55 of 166, ru 17.)
 ## Change log v3.4.2 → v3.4.3 (operator decisions only)
 - O4 decided: all components C1–C8 required; rulers added for C3, C4, C6, C7; D4 per component; F3 = C1–C8.
 - O5 decided: UA-GEC translations kept, tagged, per-stratum metrics.
-- O3, O6: driver defaults stated to the operator, stand unless overridden. O1, O2 open with their deadlines.
+- O1, O2, O3, O6 remain open operator decisions, each with the step it must precede.
