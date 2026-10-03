@@ -30,9 +30,13 @@ classes included: ``obj.read(p)`` / ``Cls().read(p)`` / ``Outer.Cls().read(p)`` 
 ``self``, ``Cls.read(obj, p)`` / ``Outer.Cls.read(obj, p)`` pass it explicitly,
 ``@classmethod`` binds ``cls`` either way, ``@staticmethod`` binds nothing, and
 ``Cls(p)`` / ``Cls.__init__(self, p)`` / ``super().__init__(p)`` reach ``__init__``.
-A receiver that is not provably a class or an instance (an alias, an attribute chain
-into another object, a shadowed name) fails closed: the mapping is evaluated with
-``self`` bound and unbound, and an argument that reaches a writable open under
+A class path counts as proven only if no prefix of it is a binding target anywhere in
+the module (assignment, annotated or augmented assignment, ``del``, ``global`` /
+``nonlocal``, ``for`` / ``with`` / ``except`` / walrus / import / pattern targets,
+``setattr`` / ``delattr``, at module level or inside any function).  A receiver that
+is not provably a class or an instance (an alias, a rebound class path, an attribute
+chain into another object, a shadowed name) fails closed: the mapping is evaluated
+with ``self`` bound and unbound, and an argument that reaches a writable open under
 either mapping is reported.
 
 Known limits.  This is a lint backstop; the runtime defence is that the read paths
@@ -40,8 +44,10 @@ open the databases read-only.  Not followed: calls across modules (a path handed
 in from another module under a neutral name, into a module that never names a
 source database), arguments forwarded through ``*args`` / ``**kwargs``, callables
 wrapped in ``functools.partial``, callbacks and other first-class function
-values, and subclass constructors that inherit
-``__init__``.  Callers are matched by name, so unrelated same-named callables
+values, subclass constructors that inherit
+``__init__``, aliased constructors (``Alias = Reader; Alias("sources.db")``: the
+alias is a different callee name, so its arguments never reach ``Reader.__init__``)
+and rebinding through ``globals()`` / ``vars()`` / ``__dict__`` / ``exec``.  Callers are matched by name, so unrelated same-named callables
 add evidence (over-approximation, never a missed writer).
 
 Remaining writable sites are allowlisted by ``(path, stripped snippet,
@@ -375,6 +381,71 @@ def _target_names(target: ast.expr) -> Iterator[str]:
             yield from _target_names(element)
 
 
+def _target_paths(target: ast.expr) -> Iterator[str]:
+    """Dotted paths bound by an assignment target (``Name`` / pure ``Attribute`` chains, unpacked)."""
+    if isinstance(target, (ast.Tuple, ast.List)):
+        for element in target.elts:
+            yield from _target_paths(element)
+    elif isinstance(target, ast.Starred):
+        yield from _target_paths(target.value)
+    else:
+        path = _dotted_path(target)
+        if path is not None:
+            yield path
+
+
+def _bound_paths(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> Iterator[str]:
+    """Dotted paths that ``node`` (re)binds, wherever in the module it sits."""
+    if isinstance(node, ast.Assign):
+        for target in node.targets:
+            yield from _target_paths(target)
+    elif isinstance(node, (ast.AnnAssign, ast.AugAssign, ast.NamedExpr)):
+        yield from _target_paths(node.target)
+    elif isinstance(node, ast.Delete):
+        for target in node.targets:
+            yield from _target_paths(target)
+    elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+        yield from _target_paths(node.target)
+    elif isinstance(node, ast.withitem):
+        if node.optional_vars is not None:
+            yield from _target_paths(node.optional_vars)
+    elif isinstance(node, ast.ExceptHandler):
+        if node.name:
+            yield node.name
+    elif isinstance(node, (ast.Import, ast.ImportFrom)):
+        for alias in node.names:
+            yield alias.asname or alias.name.split(".")[0]
+    elif isinstance(node, (ast.Global, ast.Nonlocal)):
+        yield from node.names
+    elif isinstance(node, ast.arg):
+        yield node.arg
+    elif isinstance(node, (ast.MatchAs, ast.MatchStar)):
+        if node.name:
+            yield node.name
+    elif isinstance(node, ast.MatchMapping):
+        if node.rest:
+            yield node.rest
+    elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+        names = [node.name]
+        owner = parents.get(node)
+        while isinstance(owner, ast.ClassDef):
+            names.append(owner.name)
+            owner = parents.get(owner)
+        yield ".".join(reversed(names))
+
+
+def _setattr_path(node: ast.Call) -> tuple[str, str | None] | None:
+    """``(object path, attribute name or None when dynamic)`` of a ``setattr`` / ``delattr`` call."""
+    if not (isinstance(node.func, ast.Name) and node.func.id in {"setattr", "delattr"} and len(node.args) >= 2):
+        return None
+    owner = _dotted_path(node.args[0])
+    if owner is None:
+        return None
+    name = node.args[1]
+    literal = name.value if isinstance(name, ast.Constant) and isinstance(name.value, str) else None
+    return owner, literal
+
+
 def _collect_assignments(body: Iterable[ast.AST], into: dict[str, list[ast.expr]]) -> None:
     """Record ``name = value`` bindings of one scope, not of nested scopes."""
     stack = list(body)
@@ -441,6 +512,8 @@ class _ModuleAnalysis:
         self.module_names_source_db = bool(SOURCE_DB_TOKEN.search(source))
         self.functions: dict[str, list[_FunctionNode]] = {}
         self.class_paths: set[str] = set()  # qualified names: ``Reader``, ``Outer.Reader``
+        self.rebound_paths: set[str] = set()  # every dotted path bound anywhere in the module
+        self.dynamic_owners: set[str] = set()  # ``setattr(path, <non-literal>, ...)``: any attribute of ``path``
         self.class_attributes: dict[ast.ClassDef, dict[str, list[ast.expr]]] = {}
         self.parents: dict[ast.AST, ast.AST] = {}
         self.calls: list[ast.Call] = []
@@ -451,6 +524,13 @@ class _ModuleAnalysis:
         for parent in ast.walk(tree):
             for child in ast.iter_child_nodes(parent):
                 self.parents[child] = parent
+            self.rebound_paths.update(_bound_paths(parent, self.parents))
+            if isinstance(parent, ast.Call) and (dynamic := _setattr_path(parent)) is not None:
+                owner, attribute = dynamic
+                if attribute is None:
+                    self.dynamic_owners.add(owner)
+                else:
+                    self.rebound_paths.add(f"{owner}.{attribute}")
             if isinstance(parent, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 self.functions.setdefault(parent.name, []).append(parent)
             elif isinstance(parent, ast.ClassDef):
@@ -566,9 +646,23 @@ class _ModuleAnalysis:
             current = self.parents.get(current)
         return ".".join(reversed(names))
 
+    def _is_rebound(self, path: str) -> bool:
+        """Some prefix of ``path`` is a binding target somewhere in the module, or gets a dynamic attribute."""
+        parts = path.split(".")
+        prefixes = [".".join(parts[:end]) for end in range(1, len(parts) + 1)]
+        return any(prefix in self.rebound_paths for prefix in prefixes) or any(
+            prefix in self.dynamic_owners for prefix in prefixes[:-1]
+        )
+
     def _resolves_to_class(self, path: str) -> bool:
-        """``path`` names a class defined in this module (``Reader``, ``Outer.Reader``)."""
-        return any(known == path or known.endswith(f".{path}") for known in self.class_paths)
+        """``path`` provably names a class defined in this module (``Reader``, ``Outer.Reader``).
+
+        Proof needs the written path and the class path it matches to be free of
+        rebinding: if any prefix is ever a binding target, the name may no longer
+        hold the class and the path is unresolved.
+        """
+        matches = [known for known in self.class_paths if known == path or known.endswith(f".{path}")]
+        return bool(matches) and not self._is_rebound(path) and not any(self._is_rebound(known) for known in matches)
 
     @staticmethod
     def _binding_scope(name: str, scopes: list[_Scope]) -> _Scope | None:

@@ -292,6 +292,67 @@ WRITABLE_CASES = {
                 return self.read("sources.db")
         """
     ),
+    "rebound_nested_class_path_module_level": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        Outer.Reader = Outer.Reader()
+        Outer.Reader.read("sources.db")
+        """
+    ),
+    "rebound_nested_class_path_in_function": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        def setup():
+            Outer.Reader = Outer.Reader()
+        def main():
+            return Outer.Reader.read("sources.db")
+        """
+    ),
+    "rebound_class_name_in_function": textwrap.dedent(
+        """
+        import sqlite3
+        class Reader:
+            def read(self, path="cache.db"):
+                return sqlite3.connect(path)
+        def setup():
+            global Reader
+            Reader = Reader()
+        def main():
+            return Reader.read("sources.db")
+        """
+    ),
+    "rebound_class_path_with_setattr": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        setattr(Outer, "Reader", Outer.Reader())
+        Outer.Reader.read("sources.db")
+        """
+    ),
+    "rebound_class_path_with_dynamic_setattr": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        def patch(name):
+            setattr(Outer, name, Outer.Reader())
+        patch("Reader")
+        Outer.Reader.read("sources.db")
+        """
+    ),
     "public_helper_in_source_module": textwrap.dedent(
         """
         import sqlite3
@@ -385,6 +446,20 @@ READ_ONLY_OR_UNRELATED = {
                 return sqlite3.connect(path)
         def main(holder):
             return holder.klass.read(holder.obj, "other.db")
+        """
+    ),
+    "unrelated_class_attribute_assigned": textwrap.dedent(
+        """
+        import sqlite3
+        class Outer:
+            class Reader:
+                def read(self, path="cache.db"):
+                    return sqlite3.connect(path)
+        Outer.Reader.timeout = 5
+        setattr(Outer.Reader, "retries", 3)
+        Outer.label = "reader"
+        def main():
+            return Outer.Reader.read(Outer.Reader(), "other.db")
         """
     ),
     "other_database": 'import sqlite3\nconn = sqlite3.connect("data/atlas.db")\n',
