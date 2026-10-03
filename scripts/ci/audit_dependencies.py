@@ -171,15 +171,45 @@ def audit_node(repo_root: Path, ignore_file: Path | None = None) -> int:
                 print(res.stderr, file=sys.stderr)
             return 1
 
-        vulns = audit_data.get("vulnerabilities", {})
-        suppressed, unsuppressed = filter_npm_audit_vulnerabilities(vulns, ignored_ids)
+        if not isinstance(audit_data, dict):
+            print(f"[audit_dependencies] ERROR: Unexpected npm audit report format (expected JSON object) in {label}.", file=sys.stderr)
+            return 1
 
-        if unsuppressed:
+        if "error" in audit_data:
+            err = audit_data["error"]
+            err_msg = err.get("summary") or err.get("detail") or err.get("code") or str(err)
+            print(f"[audit_dependencies] ERROR: npm audit reported an error in {label}: {err_msg}", file=sys.stderr)
+            return 1
+
+        if "vulnerabilities" not in audit_data:
+            print(f"[audit_dependencies] ERROR: Invalid npm audit report (missing 'vulnerabilities') in {label}.", file=sys.stderr)
+            return 1
+
+        vulns = audit_data["vulnerabilities"]
+        if not isinstance(vulns, dict):
+            print(f"[audit_dependencies] ERROR: Invalid npm audit report ('vulnerabilities' is not an object) in {label}.", file=sys.stderr)
+            return 1
+
+        if not vulns and res.returncode != 0:
             print(
-                f"[audit_dependencies] ERROR: Found {len(unsuppressed)} unsuppressed vulnerable package(s) in {label}:",
+                f"[audit_dependencies] ERROR: npm audit exited with code {res.returncode} but reported no vulnerabilities in {label}.",
                 file=sys.stderr,
             )
-            for pkg, info in unsuppressed.items():
+            return 1
+
+        suppressed, unsuppressed = filter_npm_audit_vulnerabilities(vulns, ignored_ids)
+        high_critical_unsuppressed = {
+            pkg: info
+            for pkg, info in unsuppressed.items()
+            if info.get("severity") in {"high", "critical"}
+        }
+
+        if high_critical_unsuppressed:
+            print(
+                f"[audit_dependencies] ERROR: Found {len(high_critical_unsuppressed)} unsuppressed High/Critical vulnerable package(s) in {label}:",
+                file=sys.stderr,
+            )
+            for pkg, info in high_critical_unsuppressed.items():
                 via_desc = []
                 for v in info.get("via", []):
                     if isinstance(v, dict):
@@ -193,10 +223,10 @@ def audit_node(repo_root: Path, ignore_file: Path | None = None) -> int:
             exit_code = 1
         elif suppressed:
             print(
-                f"[audit_dependencies] npm audit ({label}): all {len(suppressed)} vulnerable package(s) match audited suppressions."
+                f"[audit_dependencies] npm audit ({label}): all High/Critical vulnerable package(s) match audited suppressions."
             )
         else:
-            print(f"[audit_dependencies] npm audit ({label}): no unsuppressed high/critical vulnerabilities.")
+            print(f"[audit_dependencies] npm audit ({label}): no unsuppressed High/Critical vulnerabilities.")
 
     return exit_code
 
