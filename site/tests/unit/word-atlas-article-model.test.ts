@@ -1628,7 +1628,68 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(html).toContain("діючий вулкан → активний вулкан");
   });
 
-  test("sense-restricted calque (біля) renders a scoped box with its projected citations and no headword badge", () => {
+  // b0 blocker 2: actual stored слідуючий shape; its avoid: gloss must not bypass the unresolved scope.
+  const SLIDUIUCHYI_STATUS = {
+    classification: "russianism",
+    is_russianism: true,
+    russian_shadow: true,
+    warning_severity: "russianism_red",
+    calque_warning: { standard_alternatives: ["наступний", "черговий", "дальший"] },
+    curated_calque: {
+      kind: "lexical",
+      corrections: ["наступний"],
+      note: "рос. следующий; use наступний for 'next'",
+      source: ["voron-9", "zabolotnyi-5"],
+      evidence: ["9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний"],
+    },
+  };
+  const SLIDUIUCHYI_NOTE = "примітка Атласу: радять «наступний»; обсяг застереження не встановлено";
+
+  test("an unresolved avoid: gloss (слідуючий) renders as a qualified Atlas note in the header and phrase gloss", () => {
+    const props = heritageEntry("слідуючий", SLIDUIUCHYI_STATUS, {
+      gloss: "avoid: наступний",
+      primary_source: "surzhyk_to_avoid",
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.usageLabel.scope).toBe("unresolved");
+    expect(view.glossDisplay).toEqual({ text: SLIDUIUCHYI_NOTE, note: true });
+    expect(view.entry.gloss).toBe("avoid: наступний");
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain(`<div class="word-pos">іменник · ${SLIDUIUCHYI_NOTE}</div>`);
+    expect(html).toContain(`<p>${SLIDUIUCHYI_NOTE}</p>`);
+    expect(html).not.toContain("avoid:");
+    expect(html).not.toContain("«примітка Атласу");
+  });
+
+  test("a form-of header with an editorial gloss is qualified the same way", () => {
+    const props = heritageEntry("слідуючі", {}, {
+      gloss: "avoid: наступні",
+      form_of: { url_slug: "слідуючий", lemma: "слідуючий" },
+    });
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("Лексикон · Форма слова");
+    expect(html).toContain("примітка Атласу: радять «наступні»; обсяг застереження не встановлено");
+    expect(html).not.toContain("avoid:");
+  });
+
+  test("a lemma-bound Russianism keeps its avoid: gloss and warning (міроприємство); ordinary glosses are quoted", () => {
+    const props = heritageEntry(
+      "міроприємство",
+      { classification: "russianism", is_russianism: true, curated_calque: { kind: "lexical", corrections: ["захід"] } },
+      { gloss: "avoid: захід", primary_source: "surzhyk_to_avoid" },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.usageLabel).toMatchObject({ scope: "lemma", code: "rus" });
+    expect(view.glossDisplay).toEqual({ text: "avoid: захід", note: false });
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("іменник · «avoid: захід»");
+    expect(html).toContain("⚠ Потребує українського відповідника");
+    const plain = renderWordAtlasArticle(heritageEntry("стіл", { classification: "standard" }));
+    expect(plain).toContain("іменник · «gloss»");
+  });
+
+  // b0 blocker 1: both cited 7-klas 2024 books are absent from sources.db.
+  test("sense-restricted calque (біля) keeps its scoped caution but never cites unverified books as a source", () => {
     const props = heritageEntry("біля", {
       classification: "standard",
       attestations: [{ source: "VESUM", ref: "біля" }],
@@ -1647,8 +1708,12 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(view.heritageBoxes.yellow?.title).toBe("Калькове застереження щодо окремого значення");
     expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
     const html = renderWordAtlasArticle(props);
+    expect(view.heritageBoxes.usageLabel.authority).toEqual([]);
     expect(html).toContain("а не слова загалом");
-    expect(html).toContain("Джерело: 7-klas-ukrmova-litvinova-2024_s0186, 7-klas-ukrmova-zabolotnyi-2024_s0229.");
+    expect(html).toContain("У цьому вжитку радять: близько.");
+    expect(html).toContain("Перевіреного витягу з нормативного джерела запис не містить.");
+    expect(html).toContain("Посилання запису Атласу, не звірені з джерелом: grinchenko, litvinova-7, zabolotnyi-7, ua-gec.");
+    expect(html).not.toMatch(/Джерело:[^<]*(litvinova|zabolotnyi)/u);
   });
 
   test("a sense-restricted record without current proof names its references, not an authority (рахувати)", () => {
@@ -1663,8 +1728,8 @@ describe("usage-label scope on entry pages (#9603)", () => {
       },
     });
     const html = renderWordAtlasArticle(props);
-    expect(html).toContain("Нормативного джерела, що прямо стосується цього слова, запис не містить.");
-    expect(html).toContain("Посилання запису (без витягу з джерела): grinchenko, grok-3098.");
+    expect(html).toContain("Перевіреного витягу з нормативного джерела запис не містить.");
+    expect(html).toContain("Посилання запису Атласу, не звірені з джерелом: grinchenko, grok-3098.");
   });
 
   // Round 3: the actual stored records of the four repaired controls.
@@ -1733,7 +1798,7 @@ describe("usage-label scope on entry pages (#9603)", () => {
       { gloss: "У Київській Русі … — господарський управитель князя, бояр..." },
     );
     const view = buildWordAtlasArticleView(props.record, "test", "test");
-    expect(view.statusBadges).toContainEqual({ className: "archaic", label: "Історизм у сучасному вжитку", title: "ЕСУМ, т. 5, с. 580" });
+    expect(view.statusBadges).toContainEqual({ className: "archaic", label: "Історизм · ЕСУМ, т. 5, с. 580", title: "ЕСУМ, т. 5, с. 580" });
     expect(view.styleNotes.join(" ")).not.toContain("історизм");
   });
 
@@ -1868,11 +1933,11 @@ describe("usage-label scope on entry pages (#9603)", () => {
       },
     );
     const dyvanView = buildWordAtlasArticleView(dyvan.record, "test", "test");
-    expect(dyvanView.statusBadges.map((badge) => badge.label)).not.toContain("Історизм у сучасному вжитку");
+    expect(dyvanView.statusBadges.map((badge) => badge.label).join(" ")).not.toContain("Історизм");
     expect(dyvanView.styleNotes.join(" ")).toContain(
       "Атлас не пов'язав класифікацію «історизм» з позначкою джерела саме для цього слова й цього значення",
     );
-    expect(renderWordAtlasArticle(dyvan)).not.toContain("Історизм у сучасному вжитку");
+    expect(renderWordAtlasArticle(dyvan)).not.toContain("Історизм ·");
 
     const voznyi = heritageEntry(
       "возний",
@@ -1886,7 +1951,7 @@ describe("usage-label scope on entry pages (#9603)", () => {
     const voznyiView = buildWordAtlasArticleView(voznyi.record, "test", "test");
     expect(voznyiView.statusBadges).toContainEqual({
       className: "archaic",
-      label: "Історизм у сучасному вжитку",
+      label: "Історизм · СУМ-20",
       title: "СУМ-20",
     });
   });
@@ -1928,7 +1993,7 @@ describe("usage-label scope on entry pages (#9603)", () => {
     const view = buildWordAtlasArticleView(props.record, "test", "test");
     expect(view.statusBadges).toContainEqual({
       className: "archaic",
-      label: "Історизм у сучасному вжитку",
+      label: "Історизм · ЕСУМ, т. 1, с. 592",
       title: "ЕСУМ, т. 1, с. 592",
     });
     expect(view.styleNotes.join(" ")).not.toContain("класифікацію «історизм»");

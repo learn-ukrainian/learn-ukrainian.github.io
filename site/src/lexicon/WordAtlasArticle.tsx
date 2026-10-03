@@ -260,6 +260,7 @@ function WordAtlasArticleBody({
     externalGroups,
     componentLinks,
     phraseHasGloss,
+    glossDisplay,
     shouldShowEditorialWarning,
     shouldShowHeritageDefense,
     styleNotes,
@@ -277,6 +278,8 @@ function WordAtlasArticleBody({
     stressDisplay,
   } = view;
 
+  // #9603: editorial gloss metadata outside its source scope renders as a qualified note.
+  const heroGloss = glossDisplay && (glossDisplay.note ? glossDisplay.text : `«${glossDisplay.text}»`);
   const contentId =
     currentHeteronymIdx > 0
       ? `word-${entry.url_slug}-${currentHeteronymIdx}`
@@ -291,7 +294,7 @@ function WordAtlasArticleBody({
                 <span className="lexicon-badge">Лексикон · Форма слова</span>
                 <h1 className="word-title" lang="uk">{entry.lemma}</h1>
                 <div className="word-pos">
-                  {[posLabel, headwordIpa, entry.gloss ? `«${entry.gloss}»` : null].filter(Boolean).join(" · ")}
+                  {[posLabel, headwordIpa, heroGloss].filter(Boolean).join(" · ")}
                 </div>
               </div>
             </div>
@@ -328,7 +331,7 @@ function WordAtlasArticleBody({
             </h1>
             <PronunciationPlayer lemma={entry.lemma} />
             <div className="word-pos">
-              {[posLabel, headwordIpa, entry.gloss ? `«${entry.gloss}»` : null].filter(Boolean).join(" · ")}
+              {[posLabel, headwordIpa, heroGloss].filter(Boolean).join(" · ")}
             </div>
             <div className="word-badges">
               {statusBadges.map((badge) => (
@@ -543,7 +546,7 @@ function WordAtlasArticleBody({
                     <span>курсова фраза / chunk</span>
                   </div>
                   <div className="def-text">
-                    <p>{entry.gloss}</p>
+                    <p>{glossDisplay?.text}</p>
                   </div>
                 </div>
               )}

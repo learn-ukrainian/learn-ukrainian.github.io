@@ -2,12 +2,14 @@ import { describe, expect, test } from 'vitest';
 import {
   atlasNoteDetail,
   cardHeadwordMatches,
+  displayGloss,
   modernHeadwordLabels,
   resolveHeritageBoxes,
   resolveUsageLabel,
   sharesReferent,
   usageSourceProof,
   type LexiconEntryForSeverity,
+  type UsageLabel,
   type UsageSourceProof,
 } from '@site/src/lib/lexicon/heritage-severity';
 
@@ -352,7 +354,7 @@ describe('resolveHeritageBoxes', () => {
     expect(boxes.yellow?.title).toBe('Калькове застереження щодо окремого значення');
     expect(boxes.yellow?.body).toContain('«столовий прибор»');
     expect(boxes.yellow?.body).toContain('а не слова загалом');
-    expect(boxes.yellow?.body).toContain('Нормативного джерела, що прямо стосується цього слова, запис не містить.');
+    expect(boxes.yellow?.body).toContain('Перевіреного витягу з нормативного джерела запис не містить.');
     expect(boxes.yellow?.alternatives).toEqual(['виделка']);
     // Stored Atlas prose is commentary, never a source excerpt.
     expect(boxes.yellow?.detail).toBe(
@@ -641,7 +643,7 @@ describe('scoped boxes: remaining branches', () => {
       },
     } as LexiconEntryForSeverity, null);
     expect(boxes.yellow?.title).toBe('Калькове застереження щодо сполучення');
-    expect(boxes.yellow?.body).toContain('Посилання запису (без витягу з джерела): antonenko-p091.');
+    expect(boxes.yellow?.body).toContain('Посилання запису Атласу, не звірені з джерелом: antonenko-p091.');
   });
 
   test('form_of entries get the label but no boxes', () => {
@@ -719,5 +721,47 @@ describe('scope helpers', () => {
     expect(sharesReferent('нижча верхівка княжої дружини', 'sofa')).toBe(false);
     expect(sharesReferent('у на до', 'у на до')).toBe(false);
     expect(sharesReferent('дружини', null)).toBe(false);
+  });
+});
+
+// #9603 b0 blocker 2: editorial gloss metadata must not bypass the resolved scope.
+describe('displayGloss', () => {
+  const label = (scope: UsageLabel['scope'], code: UsageLabel['code'] = null): UsageLabel => ({
+    code,
+    scope,
+    authority: [],
+    evidence: null,
+    reason: scope,
+  });
+  const NOTE = 'примітка Атласу: радять «наступний»; обсяг застереження не встановлено';
+
+  test('keeps a lemma-bound Russianism or calque gloss verbatim (міроприємство)', () => {
+    expect(displayGloss('avoid: захід', label('lemma', 'rus'))).toEqual({ text: 'avoid: захід', note: false });
+    expect(displayGloss('avoid: захід', label('lemma', 'calq'))).toEqual({ text: 'avoid: захід', note: false });
+  });
+
+  test.each(['unresolved', 'none', 'sense', 'phrase', 'reverse'] as const)('qualifies avoid: metadata under %s scope', (scope) => {
+    expect(displayGloss('avoid: наступний', label(scope))).toEqual({ text: NOTE, note: true });
+  });
+
+  test('a lemma register label is no licence for a word-wide avoid instruction', () => {
+    expect(displayGloss('avoid: наступний', label('lemma', 'hist'))).toEqual({ text: NOTE, note: true });
+  });
+
+  test('qualifies rus:/calque: metadata and preserves the stored suggestion', () => {
+    expect(displayGloss(' RUS:  інший ', label('unresolved'))?.text).toBe(
+      'примітка Атласу: русизм — «інший»; обсяг застереження не встановлено',
+    );
+    expect(displayGloss('calque: брати участь', label('none'))?.text).toBe(
+      'примітка Атласу: калька — «брати участь»; обсяг застереження не встановлено',
+    );
+  });
+
+  test('ordinary, prefixed-elsewhere and empty glosses are unchanged', () => {
+    expect(displayGloss('next', label('unresolved'))).toEqual({ text: 'next', note: false });
+    expect(displayGloss('to avoid: dodge', label('none'))).toEqual({ text: 'to avoid: dodge', note: false });
+    expect(displayGloss('avoid:', label('none'))).toEqual({ text: 'avoid:', note: false });
+    expect(displayGloss('', label('none'))).toBeNull();
+    expect(displayGloss(null, label('none'))).toBeNull();
   });
 });

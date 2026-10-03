@@ -66,6 +66,21 @@ sense-scoped soft note, never a blanket warn or auto-replace.
 
 from __future__ import annotations
 
+# #9603: evidence chunks a reviewer read in sources.db and found stating the
+# record's correction; value = SHA-256 of the chunk's ``textbooks.text``. Only
+# these may cite a sense or phrase caution as its source. Any other evidence
+# (books absent from sources.db, such as 7-klas litvinova/zabolotnyi 2024) is an
+# unverified Atlas reference.
+SOURCE_CHECKED_CHUNKS: dict[str, str] = {
+    "antonenko-davydovych-yak-my-hovorymo_p091": "a81c9ef3ae97b1af345bc5a3d19f6918ae992b5f14be8a699ddf0f92924c4665",
+    "5-klas-ukrmova-avramenko-2022_s0056": "a72bd4da92120ae51e32e61477a1738e886f1c024d77071130e3418a750d8ac5",
+    "7-klas-ukrmova-avramenko-2024_s0106": "390e014cf5a8dba60d88ff00e49d1e914eb29fd58e1b3c84ef5b6b9219a728f7",
+    "9-klas-ukrajinska-mova-avramenko-2017_s0159": "731029ed380aaab1ddb70a3b4945ffc75bfaf0bef034a920919fc1b84dbe1592",
+    "10-klas-ukrmova-glazova-2018_s0075": "cdcf2e4b6e721c488eb4e98f7f194a013c56e6e91bfb713ef617026d6c5c9f0c",
+    "11-klas-ukrajinska-mova-glazova-2019_s0071": "bba09424b574169608e5176873476211a016a3858c3e662fd541283806bde3ae",
+    "11-klas-ukrajinska-mova-glazova-2019_s0078": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+}
+
 # Confirmed active-participle calques → recommended Ukrainian replacement(s).
 # Each value: corrections (ordered, best-first), a short usage note, provenance
 # tags, direct source evidence, and the heritage false-positive guard result.

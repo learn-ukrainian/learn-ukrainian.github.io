@@ -576,10 +576,10 @@ function scopedCalqueTitle(scope: UsageLabelScope): string {
   return "Калькове застереження";
 }
 
-const NO_BOUND_AUTHORITY = " Нормативного джерела, що прямо стосується цього слова, запис не містить.";
+const NO_BOUND_AUTHORITY = " Перевіреного витягу з нормативного джерела запис не містить.";
 
 function referencesClause(references: string[]): string {
-  return references.length > 0 ? ` Посилання запису (без витягу з джерела): ${references.join(", ")}.` : "";
+  return references.length > 0 ? ` Посилання запису Атласу, не звірені з джерелом: ${references.join(", ")}.` : "";
 }
 
 function scopedCalqueBody(label: UsageLabel, alternatives: string[], references: string[]): string {
@@ -595,6 +595,24 @@ function scopedCalqueBody(label: UsageLabel, alternatives: string[], references:
   }
   const use = alternatives.length > 0 ? `Нейтральні відповідники: ${alternatives.join(", ")}.` : "Перевіряйте відповідники в джерелах.";
   return `${use}${authorityClause(label.authority)}`;
+}
+
+const EDITORIAL_GLOSS_RE = /^\s*(avoid|rus|calque)\s*:\s*(\S.*?)\s*$/isu;
+const EDITORIAL_GLOSS_LEADS: Record<string, string> = { avoid: "радять", rus: "русизм —", calque: "калька —" };
+
+/**
+ * The gloss as displayed (#9603; mirrors ``display_gloss`` in
+ * scripts/audit/generate_search_index.py). Editorial ``avoid:``/``rus:``/``calque:``
+ * metadata reads as a word-wide instruction, so it stays verbatim only for a
+ * lemma-bound Russianism or calque; otherwise it is a qualified Atlas note.
+ * ``note`` marks that text; the stored gloss is unchanged.
+ */
+export function displayGloss(gloss: string | null | undefined, label: UsageLabel): { text: string; note: boolean } | null {
+  if (!gloss) return null;
+  const match = gloss.match(EDITORIAL_GLOSS_RE);
+  if (!match || (label.scope === "lemma" && (label.code === "rus" || label.code === "calq"))) return { text: gloss, note: false };
+  const lead = EDITORIAL_GLOSS_LEADS[match[1].toLowerCase()];
+  return { text: `примітка Атласу: ${lead} «${match[2]}»; обсяг застереження не встановлено`, note: true };
 }
 
 /** Atlas prose stored with a record is commentary, never a source excerpt (#9603). */

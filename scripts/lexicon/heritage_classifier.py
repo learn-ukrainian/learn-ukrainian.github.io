@@ -575,6 +575,14 @@ def _evidence_items(record: dict[str, Any]) -> list[tuple[str, str]]:
     return items
 
 
+def _source_checked_chunks() -> dict[str, str]:
+    try:
+        from scripts.lexicon.calque_corrections import SOURCE_CHECKED_CHUNKS
+    except ImportError:  # loaded as a file: only scripts/ is on sys.path
+        from lexicon.calque_corrections import SOURCE_CHECKED_CHUNKS  # type: ignore[no-redef]
+    return SOURCE_CHECKED_CHUNKS
+
+
 def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any] | None:
     """The source proof a curated record carries for ``headword``, or ``None``.
 
@@ -582,9 +590,10 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
     rejected form is the headword, from a normative chunk; only they establish
     a whole-word Russianism or calque. ``citations`` cite a sense- or
     phrase-restricted caution: curated ``locator: excerpt`` evidence from a
-    normative chunk whose excerpt names the headword and one of the record's
-    corrections, i.e. both sides of its correction. A locator, a source name
-    or a headword occurrence alone admits nothing.
+    chunk a reviewer checked in sources.db (``SOURCE_CHECKED_CHUNKS``) whose
+    excerpt names the headword and one of the record's corrections. A
+    locator, a source name or a word occurrence in a curated excerpt alone
+    admits nothing: it stays an unverified Atlas reference.
     """
     head = _normalize_word(headword or "")
     if not head or not isinstance(record, dict):
@@ -602,7 +611,7 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
         {"locator": locator, "excerpt": excerpt}
         for locator, excerpt in _evidence_items(record)
         if kind in _CONTEXTUAL_CALQUE_SCOPES
-        and is_normative_locator(locator)
+        and locator in _source_checked_chunks()
         and names_headword(excerpt, head)
         and any(names_headword(excerpt, correction) for correction in corrections)
     ]

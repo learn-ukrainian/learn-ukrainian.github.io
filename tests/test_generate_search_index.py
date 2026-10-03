@@ -19,6 +19,7 @@ from scripts.audit.generate_search_index import (
     build_browse_outputs,
     build_index,
     classification_code,
+    display_gloss,
     guard_browse_staleness,
     main,
 )
@@ -932,6 +933,7 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
                 },
             },
             primary_source="surzhyk_to_avoid",
+            gloss="avoid: наступний",
         ),
         # Positive controls: СУМ-20 headword label, an ЕСУМ headword historism
         # with the article's referent (D02) and a lexical Russianism bound by a
@@ -973,6 +975,7 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
                 },
             },
             primary_source="surzhyk_to_avoid",
+            gloss="avoid: захід",
         ),
         # Round 3: ЕСУМ 5:580 marker followed by a parenthetical explanation.
         _db_entry(
@@ -1045,6 +1048,39 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
     assert [item["locator"] for item in usage["records"]["являтися"]["citations"]] == [
         "9-klas-ukrajinska-mova-avramenko-2017_s0159"
     ]
+    # Editorial gloss metadata: verbatim only on the lemma-bound warning, a
+    # qualified note in browse and search otherwise; ordinary glosses unchanged.
+    browse = {row["l"]: row for path in (tmp_path / "browse").glob("*.json") for row in json.loads(path.read_text(encoding="utf-8"))}
+    search = {row["l"]: row for row in json.loads((tmp_path / "search.json").read_text(encoding="utf-8"))}
+    note = "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"
+    assert (browse["слідуючий"]["g"], search["слідуючий"]["g"]) == (note, note)
+    assert "avoid:" not in browse["слідуючий"]["hay"]
+    assert (browse["міроприємство"]["g"], search["міроприємство"]["g"]) == ("avoid: захід", "avoid: захід")
+    assert (browse["тіун"]["g"], search["тіун"]["g"]) == ("У Київській Русі — господарський управитель князя, бояр.",) * 2
+
+
+def test_display_gloss_qualifies_editorial_metadata_outside_lemma_scope() -> None:
+    """#9603: an editorial gloss is a word-wide instruction only for a bound Russianism or calque."""
+    for code in ("avoid", "rus", "calq"):
+        assert display_gloss("avoid: захід", code) == "avoid: захід"
+    for code in (None, "hist", "arch"):
+        assert display_gloss("avoid: наступний", code) == "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"
+    assert display_gloss(" RUS:  інший ", None) == "примітка Атласу: русизм — «інший»; обсяг застереження не встановлено"
+    assert display_gloss("calque: брати участь", None) == "примітка Атласу: калька — «брати участь»; обсяг застереження не встановлено"
+    # Ordinary glosses, prefixes inside a gloss, empty and non-string values pass through.
+    for gloss in ("next", "to avoid: dodge", "avoid:", None, 3):
+        assert display_gloss(gloss, None) == gloss
+
+
+def test_committed_browse_and_search_show_scoped_editorial_glosses() -> None:
+    """#9603: committed artifacts carry the projected слідуючий/діюча glosses, not raw avoid: metadata."""
+    search = {row["s"]: row["g"] for row in json.loads((PROJECT_ROOT / "site/src/data/lexicon-search-index.json").read_text(encoding="utf-8"))}
+    shard = {row["s"]: row for row in json.loads((PROJECT_ROOT / "site/public/lexicon/browse/С.json").read_text(encoding="utf-8"))}
+    note = "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"
+    assert search["слідуючий"] == shard["слідуючий"]["g"] == note
+    assert search["діюча"] == "примітка Атласу: радять «чинна»; обсяг застереження не встановлено"
+    assert search["міроприємство"] == "avoid: захід"
+    assert not [slug for slug, gloss in search.items() if isinstance(gloss, str) and gloss.startswith(("avoid:", "rus:", "calque:")) and slug != "міроприємство"]
 
 
 def test_committed_usage_sources_are_bound_to_their_passages() -> None:

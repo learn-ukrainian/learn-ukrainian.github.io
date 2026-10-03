@@ -5,6 +5,7 @@ import pytest
 
 from scripts.audit.generate_search_index import classification_code
 from scripts.lexicon import heritage_classifier
+from scripts.lexicon.calque_corrections import SOURCE_CHECKED_CHUNKS
 from scripts.lexicon.enrich_manifest import _SLOVNYK_CACHE_SCHEMA_VERSION
 from scripts.lexicon.heritage_classifier import (
     _cached_slovnyk_hits,
@@ -642,13 +643,19 @@ def test_sense_restricted_calque_stays_contextual() -> None:
     assert label["authority"] == []
     assert label["evidence"] == "approximately before a quantity"
     assert classification_code({"lemma": "біля", "heritage_status": status}) is None
+    # Actual stored «біля» evidence: both books are absent from sources.db, so
+    # naming both sides of the correction stays an unverified Atlas reference.
     cited = {
         **status["curated_calque"],
-        "evidence": ["7-klas-ukrmova-litvinova-2024_s0010: Кажемо близько ста учнів, а не біля ста учнів."],
+        "evidence": [
+            "7-klas-ukrmova-litvinova-2024_s0186: БІЛЯ: біля школи, біля будинку; БЛИЗЬКО: близько третьої години",
+            "7-klas-ukrmova-zabolotnyi-2024_s0229: Правильно: близько двох років; НЕправильно: біля двох років",
+        ],
     }
     label = resolve_usage_label({**status, "curated_calque": cited}, headword="біля")
-    assert label["scope"] == "sense"
-    assert label["authority"] == ["7-klas-ukrmova-litvinova-2024_s0010"]
+    assert (label["scope"], label["authority"]) == ("sense", [])
+    assert compute_warning_severity({**status, "curated_calque": cited}, vesum_attested=True, headword="біля") == "calque_yellow"
+    assert "біля" not in usage_source_records()
 
 
 def test_stale_db_russianism_without_scope_is_unresolved() -> None:
@@ -1003,6 +1010,9 @@ def test_admitted_source_proof_needs_direction_bound_to_the_headword() -> None:
         ],
     }
     proof = admitted_source_proof(sense, "являтися")
+    # Only the chunk a reviewer checked in sources.db cites the caution.
+    assert "9-klas-ukrajinska-mova-avramenko-2017_s0159" in SOURCE_CHECKED_CHUNKS
+    assert "9-klas-ukrmova-zabolotnyi-2017_s0101" not in SOURCE_CHECKED_CHUNKS
     assert proof == {
         "kind": "sense_restricted",
         "corrections": ["бути", "є"],
@@ -1271,6 +1281,14 @@ def test_usage_source_records_from_actual_curated_inputs() -> None:
     assert all(item["passageSha256"] == source_text_digest(item["passage"]) for item in miro["judgments"])
     assert [item["locator"] for item in records["являтися"]["citations"]] == ["9-klas-ukrajinska-mova-avramenko-2017_s0159"]
     assert [item["locator"] for item in records["неділя"]["citations"]] == ["10-klas-ukrmova-glazova-2018_s0075"]
+    # Contextual records whose cited books are absent from sources.db keep no
+    # source proof; діючий keeps its two checked chunks, not zabolotnyi-7 s0124.
+    for headword in ("біля", "на протязі", "дякуючи", "в кінці кінців"):
+        assert headword not in records
+    assert [item["locator"] for item in records["діючий"]["citations"]] == [
+        "11-klas-ukrajinska-mova-glazova-2019_s0071",
+        "7-klas-ukrmova-avramenko-2024_s0106",
+    ]
     assert records["другий"]["kind"] == "sense_restricted"
     # Actual stored DB shape of «міроприємство»: its own excerpt binds nothing,
     # the current reviewed judgment does.
@@ -1295,3 +1313,11 @@ def test_esum_helpers_fail_closed() -> None:
     # A headword-slot marker of another class does not bind this classification.
     status = {"classification": "dialect", "attestations": [_ESUM_HRYD]}
     assert resolve_usage_label(status, headword="гридь", gloss=_HRYD_GLOSS)["code"] is None
+
+
+def test_source_checked_chunks_load_when_heritage_classifier_is_loaded_as_a_file(monkeypatch) -> None:
+    """generate_search_index loads the classifier as a file, with only scripts/ on sys.path."""
+    import sys
+
+    monkeypatch.setitem(sys.modules, "scripts.lexicon.calque_corrections", None)
+    assert heritage_classifier._source_checked_chunks() == SOURCE_CHECKED_CHUNKS

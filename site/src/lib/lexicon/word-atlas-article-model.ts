@@ -4,6 +4,7 @@
  */
 
 import {
+  displayGloss,
   resolveHeritageBoxes,
   standardAlternatives,
   SURZHYK_TO_AVOID_SOURCE,
@@ -1284,6 +1285,7 @@ export function buildWordAtlasArticleView(
     externalGroups,
     componentLinks,
     phraseHasGloss,
+    glossDisplay: displayGloss(entry.gloss, heritageBoxes.usageLabel),
     shouldShowEditorialWarning,
     shouldShowHeritageDefense,
     styleNotes,
@@ -1351,7 +1353,8 @@ function buildStatusBadges(args: {
   if (usageCode === "hist" || usageCode === "arch") {
     badges.push({
       className: "archaic",
-      label: usageCode === "hist" ? "Історизм у сучасному вжитку" : "Архаїзм",
+      // #9603: the badge attributes the source marker; no current-usage claim.
+      label: usageCode === "hist" ? `Історизм · ${heritageBoxes.usageLabel.authority.join(", ")}` : "Архаїзм",
       title: heritageBoxes.usageLabel.authority.join(", "),
     });
   }

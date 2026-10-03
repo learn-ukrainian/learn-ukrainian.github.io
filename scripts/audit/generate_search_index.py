@@ -390,6 +390,25 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
     return str(label["code"])
 
 
+_EDITORIAL_GLOSS_RE = re.compile(r"^\s*(avoid|rus|calque)\s*:\s*(\S.*?)\s*$", re.IGNORECASE | re.DOTALL)
+_EDITORIAL_GLOSS_LEADS = {"avoid": "радять", "rus": "русизм —", "calque": "калька —"}
+
+
+def display_gloss(gloss: object, code: str | None) -> object:
+    """Browse/search gloss for ``gloss`` under browse ``code`` (#9603).
+
+    Editorial ``avoid:``/``rus:``/``calque:`` metadata reads as a word-wide
+    instruction, so it stays verbatim only for a lemma-bound Russianism or
+    calque; otherwise it is a qualified Atlas note (``displayGloss`` in
+    site/src/lib/lexicon/heritage-severity.ts). The stored gloss is unchanged.
+    """
+    match = _EDITORIAL_GLOSS_RE.match(gloss) if isinstance(gloss, str) else None
+    if match is None or code in {"avoid", "rus", "calq"}:
+        return gloss
+    lead = _EDITORIAL_GLOSS_LEADS[match[1].lower()]
+    return f"примітка Атласу: {lead} «{match[2]}»; обсяг застереження не встановлено"
+
+
 def _translation_gloss(entry: Mapping[str, Any]) -> str | None:
     enrichment = entry.get("enrichment")
     if not isinstance(enrichment, Mapping):
@@ -706,8 +725,8 @@ def browse_rows_from_db_articles(
                 ),
                 "enrichment": {"definition_cards": _definition_cards_for_slug(conn, slug)},
             }
-            browse_row = dict(row)
             cls = classification_code(pseudo_entry)
+            browse_row = {**row, "g": display_gloss(row.get("g"), cls)}
             if cls:
                 browse_row["cls"] = cls
             browse_rows.append(browse_row)
@@ -1070,6 +1089,8 @@ def main(argv: list[str] | None = None) -> int:
             will_refresh_browse=True,
         )
         browse_rows = browse_rows_from_db_articles(rows, args.db)
+        # Search rows show the same scoped gloss as browse (#9603).
+        rows = [{**row, "g": browse_row["g"]} for row, browse_row in zip(rows, browse_rows, strict=True)]
         meta, browse_shards, flagged_rows = build_browse_outputs(browse_rows)
         search_shards, search_shard_rows = build_search_shards(rows)
         write_index(rows, args.out)

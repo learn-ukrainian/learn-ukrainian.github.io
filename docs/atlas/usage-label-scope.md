@@ -42,9 +42,12 @@ headword it is keyed by:
   (`docs/practice/heritage-pairs-growth.md`). The rejected form must be the
   headword, and the locator a normative chunk.
 - **citations**, for sense and phrase records only: a `locator: excerpt`
-  evidence item whose locator is a normative chunk and whose excerpt names the
-  headword and one of the record's corrections, i.e. both sides of the
-  record's correction (`являтися переможцем → бути переможцем`).
+  evidence item whose chunk a reviewer read in `sources.db` and found stating
+  the correction (`SOURCE_CHECKED_CHUNKS` in `calque_corrections.py`, with the
+  chunk text's SHA-256), and whose excerpt names the headword and one of the
+  record's corrections (`являтися переможцем → бути переможцем`). Evidence from
+  books absent from `sources.db` (`7-klas-ukrmova-litvinova-2024_s0186` on
+  `біля`) is an unverified Atlas reference, never a «Джерело».
 
 A normative chunk is a `sources.db` chunk id of Антоненко-Давидович «Як ми
 говоримо» (`antonenko-davydovych-yak-my-hovorymo_p031`), Караванський,
@@ -142,6 +145,12 @@ bound lexical calque.
   that no normative excerpt establishes the replacement or its extent.
 - Unresolved notes keep suggested replacements, the stored record's citations
   (marked as not checked against the source) and the Atlas note.
+- An editorial `avoid:`/`rus:`/`calque:` gloss (`слідуючий`: `avoid: наступний`)
+  is shown verbatim only with a lemma-bound Russianism or calque
+  (`міроприємство`). Otherwise the entry header, the course-phrase gloss,
+  browse and search show a qualified Atlas note (`displayGloss`,
+  `display_gloss`). A historism badge names its source marker
+  (`Історизм · ЕСУМ, т. 1, с. 592`) and claims nothing about current usage.
 - Atlas prose stored with a record (`noteUk`, `note`, `detail`) is
   commentary. Where a box shows it, it is marked as not confirmed by a source
   excerpt, so a scoped caution never carries a broader unsourced claim
