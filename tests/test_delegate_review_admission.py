@@ -237,6 +237,59 @@ def test_review_input_lock_includes_acp_runtime_without_allowing_reuse(tmp_path,
                 pass
 
 
+def test_rootless_isolated_contract_needs_no_input_lock(monkeypatch):
+    def unexpected():
+        pytest.fail("a rootless isolated contract must not inspect worktree registration")
+
+    monkeypatch.setattr(delegate, "_load_worktree_containment", unexpected)
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"prompt_sha256": "a" * 64}, locks, review_access="isolated")
+
+
+def test_manifest_prompt_admission_refuses_missing_input_root(tmp_path, monkeypatch):
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("manifest_schema: 1\n")
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.check_review_contract", lambda *_args, **_kwargs: {})
+    args = SimpleNamespace(review_attempt=str(manifest), prompt_file=None, review_access="isolated")
+    refusal, contract = delegate._review_attempt_prompt_admission(args, "prompt", "review", "attempt")
+    assert "review_input_root_invalid" in refusal
+    assert contract is None
+
+
+@pytest.mark.parametrize("access", ["full", "isolated"])
+@pytest.mark.parametrize("root", [None, "", " ", 7, "\x00"])
+def test_review_input_lock_refuses_invalid_explicit_root(access, root):
+    with contextlib.ExitStack() as locks, pytest.raises(ValueError, match="review_input_root_invalid"):
+        delegate._lock_review_input_root({"input_root": root}, locks, review_access=access)
+
+
+@pytest.mark.parametrize("access,contract", [("full", {}), ("isolated", {"render_checkout": "/render"})])
+def test_dispatch_refuses_missing_required_input_root_before_preparation(
+    tmp_path, monkeypatch, capsys, access, contract
+):
+    from tests.test_delegate import _write_args
+
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review_id: rev-test\nattempt_id: att-test\n")
+    monkeypatch.setattr(delegate, "_review_attempt_prompt_admission", lambda *_args: (None, contract))
+
+    def unexpected(**_kwargs):
+        pytest.fail("invalid input root must refuse before spending an attempt id")
+
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", unexpected)
+    args = _write_args(
+        agent="claude",
+        mode="read-only",
+        full_checkout=True,
+        review_access=access,
+        review_attempt=str(manifest),
+        review_id="rev-test",
+        attempt_id="att-test",
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "review_input_root_invalid" in capsys.readouterr().err
+
+
 def _args(*extra, verdict=True):
     return delegate.build_parser().parse_args(
         [

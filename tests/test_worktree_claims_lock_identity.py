@@ -147,6 +147,48 @@ def test_malformed_active_review_contract_fails_closed(tmp_path, contract):
     )
 
 
+@pytest.mark.parametrize("review_inputs_only", [False, True])
+def test_rootless_isolated_contract_preserves_worker_claim(tmp_path, review_inputs_only):
+    tree = tmp_path / "worker"
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "review.json").write_text(
+        json.dumps(
+            {
+                "task_id": "review",
+                "status": "running",
+                "worktree_path": str(tree),
+                "review_access": "isolated",
+                "review_contract": {"prompt_sha256": "a" * 64},
+            }
+        )
+    )
+    refusal = worktree_claims.active_worktree_claim_refusal(
+        tree,
+        tasks_dir=tasks,
+        repo_root=tmp_path,
+        review_inputs_only=review_inputs_only,
+    )
+    assert refusal == (None if review_inputs_only else "worktree claimed by active task review")
+
+
+def test_isolated_rendered_contract_missing_input_root_fails_closed(tmp_path):
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "review.json").write_text(
+        json.dumps(
+            {
+                "status": "running",
+                "review_access": "isolated",
+                "review_contract": {"render_checkout": str(tmp_path)},
+            }
+        )
+    )
+    assert worktree_claims.active_worktree_claim_refusal(tmp_path, tasks_dir=tasks, repo_root=tmp_path) == (
+        "task record review.json unreadable; refusing worktree removal"
+    )
+
+
 @pytest.mark.parametrize("unreadable", ["invalid-json", "permission"])
 def test_unreadable_review_record_fails_closed(tmp_path, monkeypatch, unreadable):
     tasks = tmp_path / "tasks"

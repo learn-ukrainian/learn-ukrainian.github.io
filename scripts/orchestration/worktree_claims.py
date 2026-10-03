@@ -268,6 +268,16 @@ def is_superseded_record(state_file: Path) -> bool:
     return _SUPERSEDED_RECORD_RE.search(state_file.name) is not None
 
 
+def review_contract_input_root(contract: dict[str, Any], *, review_access: str = "full") -> str | None:
+    """Validate input claims, allowing rootless isolated non-rendered contracts."""
+    if "input_root" not in contract and review_access == "isolated" and "render_checkout" not in contract:
+        return None
+    input_root = contract.get("input_root")
+    if not isinstance(input_root, str) or not input_root.strip() or "\x00" in input_root:
+        raise ValueError("review_input_root_invalid: review contract requires a non-empty input_root")
+    return input_root
+
+
 def review_input_worktree(input_root: Path, *, main_root: Path, registered: Iterable[Path]) -> Path | None:
     """Select the deepest registered linked checkout containing resolved inputs.
 
@@ -368,9 +378,13 @@ def active_worktree_claim_refusal(
         if contract is not None:
             if not isinstance(contract, dict):
                 return refused(state_file, "unreadable")
-            input_root = contract.get("input_root")
-            if not isinstance(input_root, str) or not input_root.strip():
+            try:
+                input_root = review_contract_input_root(contract, review_access=record.get("review_access", "full"))
+            except ValueError:
                 return refused(state_file, "unreadable")
+        else:
+            input_root = None
+        if input_root is not None:
             try:
                 inputs = resolve_claim_path(input_root, repo_root=repo_root)
             except (OSError, RuntimeError, ValueError):

@@ -10236,10 +10236,14 @@ def _review_attempt_prompt_admission(
         manifest = yaml.safe_load(Path(args.review_attempt).read_bytes())
         if isinstance(manifest, dict) and any(key in manifest for key in ("manifest_schema", "kind", "inputs")):
             contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
+            try:
+                input_root = worktree_claims.review_contract_input_root(contract)
+            except ValueError as err:
+                return f"❌ review attempt refused: {err}", None
             checked = check_prompt(
                 prompt,
                 Path(args.review_attempt),
-                repo_root=Path(contract["input_root"]),
+                repo_root=Path(input_root),
                 prompts_dir=Path(contract["server_checkout"]) / "scripts/review/prompts",
                 recorded_prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
                 files_read=contract["recorded_files_read"],
@@ -10296,6 +10300,7 @@ def _lock_review_input_root(
     locks: contextlib.ExitStack,
     *,
     locked_worktree: Path | None = None,
+    review_access: str = "full",
 ) -> None:
     """Protect input preparation until the task's persisted contract takes over (#9485).
 
@@ -10303,7 +10308,10 @@ def _lock_review_input_root(
     subdirectory's lock. The dispatch stack releases it on every early return or
     exception, and the kernel releases it on process exit; no git lock leaks.
     """
-    input_root = Path(contract["input_root"]).resolve()
+    root = worktree_claims.review_contract_input_root(contract, review_access=review_access)
+    if root is None:
+        return
+    input_root = Path(root).resolve()
     if not input_root.is_dir():
         raise ValueError("review input root disappeared before preparation")
     # Reuse eligibility excludes ACP runtime checkouts. Reading one still
@@ -10769,6 +10777,11 @@ def _dispatch(
         review_refusal, review_contract = _review_attempt_prompt_admission(args, early_prompt, review_id, attempt_id)
         if review_refusal:
             print(review_refusal, file=sys.stderr)
+            return 2
+        try:
+            worktree_claims.review_contract_input_root(review_contract, review_access=review_access)
+        except ValueError as exc:
+            print(f"❌ review attempt refused: {exc}", file=sys.stderr)
             return 2
 
     invalid_owned_paths = _owned_path_errors(getattr(args, "owned_path", None))
@@ -11735,7 +11748,9 @@ def _dispatch(
         from scripts.review.isolation import ReviewIsolationError
 
         try:
-            _lock_review_input_root(review_contract, worktree_locks, locked_worktree=worktree_path)
+            _lock_review_input_root(
+                review_contract, worktree_locks, locked_worktree=worktree_path, review_access=review_access
+            )
             # A refused tree must not reserve the attempt id or create its ledger.
             if review_access == "full":
                 verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
@@ -11750,6 +11765,9 @@ def _dispatch(
         except (ReviewIsolationError, ValueError, FileExistsError, WorktreeLockError) as exc:
             stdout_fd.close()
             stderr_fd.close()
+            # The remover takes the same lock; release dispatch's hold before
+            # asking the guarded cleanup path to remove an unpublished tree.
+            worktree_locks.close()
             if worktree_path is not None and worktree_telemetry.get("reused") is False:
                 cleanup = _settle_worktree_reap(worktree_path, created_by_this_dispatch=True, settling_task_id=task_id)
                 print(f"   review refusal cleanup: {cleanup}", file=sys.stderr)
