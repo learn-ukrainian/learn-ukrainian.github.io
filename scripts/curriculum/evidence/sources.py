@@ -302,9 +302,24 @@ class GlossSelection:
     candidates: tuple[dict, ...] = ()
 
 
-def _gloss_head(span: str) -> str:
-    """Remove balanced edge annotations; never shorten the lexical head."""
-    span = span.strip()
+_REGISTER_LABEL = re.compile(
+    r"\b(?:figurativ\w*|colloq\w*|dialect\w*|obsolet\w*|obsolesc\w*|archai\w*|dated|"
+    r"informal|rare(?:ly)?|historic(?:al(?:ly)?)?|non[- ]?standard|slang|vulgar|technical|"
+    r"formal|literary|poetic(?:al)?|derogatory|pejorative|offensive|euphemistic|humorous|"
+    r"regional|familiar|childish|endearing|endearment|ironic(?:ally)?|proscribed|uncommon|rude|taboo|jocular|polite|"
+    r"psychology|chemistry|anatomy|linguistics)\b",
+    re.I,
+)
+_GRAMMATICAL_LABEL = re.compile(
+    r"(?:preposition|prepositional phrase|conjunction|particle|interjection|determiner|"
+    r"(?:interrogative|relative|personal|possessive) pronoun|noun|verb|adjective|adverb)",
+    re.I,
+)
+
+
+def _gloss_head(span: str, *, keep_qualifiers: bool = False) -> str:
+    """Remove balanced edge labels; optionally retain meaning-bearing qualifiers."""
+    span = span.strip().rstrip("?!").rstrip()
     while span.startswith(("(", "[")):
         depth = 0
         for index, char in enumerate(span):
@@ -327,9 +342,14 @@ def _gloss_head(span: str) -> str:
                 depth -= 1
             if depth == 0:
                 # Numeric scale changes the quantity, not just its annotation.
-                if span[index:].casefold() in {"(short scale)", "(long scale)"}:
+                annotation = span[index + 1 : -1].strip()
+                if span[index:].casefold() in {"(short scale)", "(long scale)"} or (
+                    keep_qualifiers
+                    and not _GRAMMATICAL_LABEL.fullmatch(annotation)
+                    and not _REGISTER_LABEL.search(annotation)
+                ):
                     return span
-                span = span[:index].strip()
+                span = span[:index].strip().rstrip("?!").rstrip()
                 break
         else:
             return span
@@ -411,8 +431,9 @@ def select_gloss(
 
     Register-marked spans are fallback only. Without cross-source agreement,
     multiple unconnected heads remain unresolved, even if only one fits D2.
-    Returned text is a source span with edge annotations removed, never a
-    paraphrase. Every source row and its digest retain their original bytes.
+    Preposition qualifiers survive unless their head is corroborated. A mixed
+    Kaikki POS entry can only corroborate an identical qualified dmklinger
+    span, never supply a standalone gloss. Source rows retain their bytes.
     """
     lemma, pos = word["lemma"], word["pos"]
     if pronoun_entry is None:
@@ -457,22 +478,39 @@ def select_gloss(
         # A flat Kaikki list cannot bind to the selected ULIF homonym.
         senses = []
     groups: list[list[dict]] = []
-    restricted = re.compile(
-        r"\b(?:obsolete|archaic|dated|dialectal|colloquial|figurative|technical|slang|"
-        r"psychology|chemistry|anatomy|linguistics)\b",
-        re.I,
-    )
 
     def add_sense(sense: str, source: str, row: dict | None) -> None:
         annotations = re.findall(r"\([^()]*\)|\[[^\[\]]*\]", sense)
-        marked = any(restricted.search(label) for label in annotations)
+        # Person/formality distinctions on pronouns are grammatical, not
+        # restrictions on the register of the entire lexical sense.
+        annotations = [
+            re.sub(
+                r"\b(?:[123](?:st|nd|rd)|first|second|third)-person"
+                r"(?:\s+(?:singular|plural|or))*\s+(?:familiar|formal)\b",
+                "",
+                label,
+                flags=re.I,
+            )
+            for label in annotations
+        ]
+        marked = any(_REGISTER_LABEL.search(label) for label in annotations)
         group = []
         for span in _sense_spans(sense):
             head = _gloss_head(span)
             if not head or ";" in head:
                 continue
             compare = head[3:] if pos == "verb" and head.startswith("to ") else head
-            group.append({"span": head, "head": compare, "source": source, "row": row, "restricted": marked})
+            qualified = _gloss_head(span, keep_qualifiers=pos == "prep")
+            group.append(
+                {
+                    "span": head,
+                    "qualified": qualified,
+                    "head": compare,
+                    "source": source,
+                    "row": row,
+                    "restricted": marked,
+                }
+            )
         if group:
             groups.append(group)
 
@@ -488,20 +526,39 @@ def select_gloss(
                     add_sense(sense, "dmklinger_uk_en", row)
     for sense in senses:
         add_sense(sense, "kaikki_wiktionary", None)
+    if (
+        reason == "kaikki_multi_pos"
+        and pos == "prep"
+        and not collision
+        and payload
+        and isinstance(payload.get("pos"), list)
+        and len(payload["pos"]) > 1
+    ):
+        # The flat list cannot assign POS to a bare head. Exact qualified
+        # agreement with a POS-filtered row supplies that missing binding.
+        qualified = {c["qualified"] for group in groups for c in group if c["qualified"] != c["span"]}
+        corroborating, _ = aligned_kaikki_senses({**payload, "pos": ["prep"]}, pos, pronoun_entry)
+        if "prep" in payload.get("pos", []):
+            for sense in corroborating:
+                if _gloss_head(sense, keep_qualifiers=True) in qualified:
+                    add_sense(sense, "kaikki_wiktionary", None)
     candidates = [c for group in groups for c in group]
     if any(not c["restricted"] for c in candidates):
         groups = [[c for c in group if not c["restricted"]] for group in groups]
         candidates = [c for group in groups for c in group]
-    diagnostic = tuple(
-        {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
-    )
     if not candidates:
-        return GlossSelection(reason=reason or codes.GLOSS_MISSING, candidates=diagnostic)
+        return GlossSelection(reason=reason or codes.GLOSS_MISSING)
     support: dict[str, set[str]] = {}
     for candidate in candidates:
         support.setdefault(candidate["head"], set()).add(candidate["source"])
     agreed = {head for head, providers in support.items() if len(providers) > 1}
     eligible = agreed or set(support)
+    if not agreed:
+        for candidate in candidates:
+            candidate["span"] = candidate["qualified"]
+    diagnostic = tuple(
+        {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
+    )
     if not agreed:
         components = [{head} for head in eligible]
         for group in groups:

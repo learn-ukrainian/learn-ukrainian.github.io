@@ -214,15 +214,155 @@ def test_normalized_heads(dmk, kaikki, pos, expected):
 
 
 @pytest.mark.parametrize(
-    "label", ["obsolete", "archaic", "dated", "dialectal", "colloquial", "figurative", "technical"]
+    "label",
+    [
+        "obsolete",
+        "obsolescent",
+        "obsolescence",
+        "archaic",
+        "dated",
+        "dialectal",
+        "dialect",
+        "colloquial",
+        "colloquially",
+        "colloq.",
+        "colloqiual",
+        "colloqual",
+        "figurative",
+        "figuratively",
+        "technical",
+        "informal",
+        "rare",
+        "rarely",
+        "historic",
+        "historical",
+        "nonstandard",
+        "non-standard",
+        "slang",
+        "vulgar",
+        "formal",
+        "literary",
+        "poetic",
+        "poetical",
+        "derogatory",
+        "pejorative",
+        "offensive",
+        "euphemistic",
+        "humorous",
+        "regional",
+        "familiar",
+        "childish",
+        "endearing",
+        "endearment",
+        "ironic",
+        "ironically",
+        "proscribed",
+        "uncommon",
+        "rude",
+        "taboo",
+        "jocular",
+        "polite",
+        "psychology",
+        "chemistry",
+        "anatomy",
+        "linguistics",
+    ],
 )
-@pytest.mark.parametrize("edge", ["leading", "trailing"])
+@pytest.mark.parametrize("edge", ["leading", "trailing", "nested", "square"])
 def test_register_marked_spans_are_only_fallback(label, edge):
-    marked = f"({label}) old" if edge == "leading" else f"old ({label})"
+    marked = {
+        "leading": f"({label}) old",
+        "trailing": f"old ({label})",
+        "nested": f"old (sense ({label}))",
+        "square": f"[{label}] old",
+    }[edge]
     word = {"lemma": "synthetic", "pos": "noun"}
     result = sources.select_gloss(word, [row(1, [marked, "modern"])], payload([marked]))
     assert result.gloss == "modern"
     assert sources.select_gloss(word, [row(1, [marked])], None).gloss == "old"
+
+
+@pytest.mark.parametrize("qualifier", ["Beta vulgaris", "archaeology", "information"])
+def test_register_stems_do_not_match_unrelated_words(qualifier):
+    marked = f"old ({qualifier})"
+    result = sources.select_gloss({"lemma": "synthetic", "pos": "noun"}, [row(1, [marked, "modern"])], payload(["old"]))
+    assert result.gloss == "old"
+
+
+@pytest.mark.parametrize("label", ["2nd-person familiar, singular only", "second-person plural or formal"])
+def test_pronoun_person_labels_do_not_make_the_sense_restricted(label):
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "noun", "forms": [{"tags": "noun:pron"}]},
+        [row(1, ["your", "thy"], pos="pronoun")],
+        payload([f"your ({label})"], "pron"),
+    )
+    assert result.gloss == "your"
+
+
+def test_preposition_prefers_agreed_head_to_qualified_unagreed_head():
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "prep"},
+        [
+            row(
+                1,
+                ["about (in the immediate neighborhood of) (preposition)", "around (surrounding) (preposition)"],
+                pos="preposition",
+            )
+        ],
+        payload(["around (surrounding)"], "prep"),
+    )
+    assert result.gloss == "around"
+
+
+def test_preposition_keeps_qualifier_without_admissible_agreement():
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "prep"},
+        [row(1, ["about (in the immediate neighborhood of) (preposition)"], pos="preposition")],
+        None,
+    )
+    assert result.gloss == "about (in the immediate neighborhood of)"
+
+
+def test_preposition_qualifier_cannot_be_dropped_to_pass_the_length_gate():
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "prep"},
+        [row(1, ["about (in a particular place with a distinct and otherwise ambiguous meaning)"], pos="preposition")],
+        None,
+    )
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_MISSING
+
+
+@pytest.mark.parametrize(
+    "glosses,expected",
+    [
+        (["circle", "around (surrounding)"], "around"),
+        (["circle", "about"], "about (in the immediate neighborhood of)"),
+        (["circle", "about (concerning)"], "about (in the immediate neighborhood of)"),
+        (["around (surrounding)", "malformed)"], "about (in the immediate neighborhood of)"),
+    ],
+)
+def test_mixed_pos_can_only_corroborate_identical_qualified_preposition(glosses, expected):
+    mixed = {"pos": ["noun", "prep"], "glosses": glosses}
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "prep"},
+        [row(1, ["about (in the immediate neighborhood of), around (surrounding) (preposition)"], pos="preposition")],
+        mixed,
+    )
+    assert result.gloss == expected
+    assert result.source == "dmklinger_uk_en"
+    assert sources.select_gloss({"lemma": "synthetic", "pos": "prep"}, [], mixed).gloss is None
+
+
+@pytest.mark.parametrize("punctuation", ["?", "!", "?!"])
+def test_terminal_punctuation_does_not_create_distinct_heads(punctuation):
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "noun"},
+        [row(1, [f"who{punctuation} (interrogative pronoun)", "who (relative pronoun)"])],
+        None,
+    )
+    assert result.gloss == "who"
+    assert sources._gloss_head(f"who (interrogative pronoun){punctuation}") == "who"
 
 
 @pytest.mark.parametrize(
@@ -288,6 +428,16 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
         ("мільярд", "billion (short scale)"),
         ("їжа", "food"),
         ("чобіт", "boot"),
+        ("чай", "tea"),
+        ("коло", "around"),
+        ("хто", "who"),
+        ("що", None),
+        ("ґрунт", "ground"),
+        ("маля", "infant"),
+        ("мама", "mama"),
+        ("тато", None),
+        ("од", "from"),
+        ("зо", "with (in the company of)"),
         ("кувати", None),
         ("коса", None),
         ("сім'я", None),
