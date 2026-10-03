@@ -35,6 +35,7 @@ from typing import Any
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import main_checkout_root
+from scripts.guardrails import worktree_containment
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.task_record_store import task_record_path
 from scripts.path_safety import assert_delete_target
@@ -267,6 +268,19 @@ def is_superseded_record(state_file: Path) -> bool:
     return _SUPERSEDED_RECORD_RE.search(state_file.name) is not None
 
 
+def review_input_worktree(input_root: Path, *, main_root: Path, registered: Iterable[Path]) -> Path | None:
+    """Select the deepest registered linked checkout containing resolved inputs.
+
+    Callers supply canonical paths from the same repository's registration.
+    The primary checkout never claims removable worktrees beneath it.
+    """
+    return max(
+        (tree for tree in registered if tree != main_root and input_root.is_relative_to(tree)),
+        key=lambda tree: len(tree.parts),
+        default=None,
+    )
+
+
 def active_worktree_claim_refusal(
     worktree: Path,
     *,
@@ -281,8 +295,9 @@ def active_worktree_claim_refusal(
 
     A task record whose status is not in :data:`RELEASED_TASK_STATUSES` and
     whose ``worktree_path`` resolves to the same checkout blocks removal.
-    Its ``review_contract.input_root`` also claims every overlapping checkout,
-    including when the input root is a subdirectory or spelled through a symlink.
+    Its ``review_contract.input_root`` also claims the deepest registered linked
+    checkout containing it, including subdirectories and symlink spellings.
+    Inputs in the primary checkout claim no removable checkout.
     Review input claims are never exempted as owner or settled claims; only a
     terminal status releases them. ``review_inputs_only`` lets plan-time callers
     preserve these inputs without changing their existing dispatch-owner rules.
@@ -307,6 +322,7 @@ def active_worktree_claim_refusal(
     except (OSError, RuntimeError, ValueError) as exc:
         return f"worktree path unresolvable ({type(exc).__name__}); refusing worktree removal"
     needles = worktree_claim_needles(worktree, target)
+    review_registration: tuple[Path, list[Path]] | None = None
     owner_identity: tuple[Path, str] | None = None
     if owner_task_id is not None:
         owner_path = owner_state_file or task_record_path(tasks_dir, owner_task_id)
@@ -359,7 +375,17 @@ def active_worktree_claim_refusal(
                 inputs = resolve_claim_path(input_root, repo_root=repo_root)
             except (OSError, RuntimeError, ValueError):
                 return refused(state_file, "unreadable")
-            if inputs.is_relative_to(target) or target.is_relative_to(inputs):
+            if review_registration is None:
+                try:
+                    main_root = worktree_containment.resolve_main_root(repo_root)
+                    registered = worktree_containment.registered_worktrees(main_root)
+                    if not registered:
+                        raise ValueError("worktree registration unavailable")
+                    review_registration = (main_root, registered)
+                except (OSError, RuntimeError, ValueError):
+                    return refused(state_file, "review input worktree registration unavailable")
+            main_root, registered = review_registration
+            if review_input_worktree(inputs, main_root=main_root, registered=registered) == target:
                 return f"review input root claimed by active task {record.get('task_id') or state_file.stem}"
         if review_inputs_only:
             continue

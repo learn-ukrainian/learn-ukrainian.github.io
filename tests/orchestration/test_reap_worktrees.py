@@ -5664,6 +5664,20 @@ def test_review_inputs_preserved_at_plan_and_apply_then_terminal_reap(tmp_path, 
     )
 
 
+def test_primary_review_inputs_allow_unrelated_linked_tree_plan_and_reap(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {})
+    _write_task_record(repo, "reviewer", status="running", review_contract={"input_root": str(repo)})
+    plan = result_for(rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set(), safe_only=True), worktree)
+    assert plan.action == "would_remove"
+    assert worktree.exists()
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
 def test_review_input_claim_appearing_after_plan_is_refused_under_lock(tmp_path, monkeypatch):
     repo = init_repo(tmp_path)
     worktree = _detached_dispatch_worktree(repo)

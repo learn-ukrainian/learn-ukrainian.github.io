@@ -13,7 +13,16 @@ from pathlib import Path
 
 import pytest
 
+from scripts.guardrails import worktree_containment
 from scripts.orchestration import worktree_claims
+
+
+@pytest.fixture
+def registered_trees(tmp_path, monkeypatch):
+    trees = [tmp_path]
+    monkeypatch.setattr(worktree_containment, "resolve_main_root", lambda _path: tmp_path)
+    monkeypatch.setattr(worktree_containment, "registered_worktrees", lambda _path: trees)
+    return trees
 
 
 def test_holding_a_lock_in_one_dir_is_not_holding_it_in_another(tmp_path: Path) -> None:
@@ -40,9 +49,10 @@ def test_same_dir_through_another_spelling_is_a_reentry(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     "status", ["spawning", "running", "needs_finalize", "unknown", *sorted(worktree_claims.RELEASED_TASK_STATUSES)]
 )
-def test_review_input_claim_lifetime_and_real_paths(tmp_path, spelling, status):
+def test_review_input_claim_lifetime_and_real_paths(tmp_path, registered_trees, spelling, status):
     tree = tmp_path / "input-tree"
     tree.mkdir()
+    registered_trees.append(tree)
     alias = tmp_path / "different-alias"
     alias.symlink_to(tree, target_is_directory=True)
     inputs = {
@@ -75,8 +85,49 @@ def test_review_input_claim_lifetime_and_real_paths(tmp_path, spelling, status):
         settled_claim=lambda _record: True,
     )
     assert refusal == (
-        None if status in worktree_claims.RELEASED_TASK_STATUSES else "review input root claimed by active task review"
+        None
+        if spelling == "parent" or status in worktree_claims.RELEASED_TASK_STATUSES
+        else "review input root claimed by active task review"
     )
+
+
+@pytest.mark.parametrize("review_inputs_only", [False, True])
+def test_primary_review_input_does_not_claim_unrelated_linked_tree(tmp_path, registered_trees, review_inputs_only):
+    tree = tmp_path / ".worktrees/dispatch/codex/unrelated"
+    registered_trees.append(tree)
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "review.json").write_text(
+        json.dumps({"task_id": "review", "status": "running", "review_contract": {"input_root": str(tmp_path)}})
+    )
+    assert (
+        worktree_claims.active_worktree_claim_refusal(
+            tree, tasks_dir=tasks, repo_root=tmp_path, review_inputs_only=review_inputs_only
+        )
+        is None
+    )
+
+
+@pytest.mark.parametrize("inner_first", [False, True])
+@pytest.mark.parametrize("review_inputs_only", [False, True])
+def test_nested_review_input_claims_only_deepest_registered_tree(
+    tmp_path, registered_trees, inner_first, review_inputs_only
+):
+    outer = tmp_path / ".worktrees/dispatch/codex/outer"
+    inner = outer / ".worktrees/dispatch/codex/inner"
+    registered_trees.extend([inner, outer] if inner_first else [outer, inner])
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "review.json").write_text(
+        json.dumps({"task_id": "review", "status": "running", "review_contract": {"input_root": str(inner / "inputs")}})
+    )
+    for tree, expected in ((outer, None), (inner, "review input root claimed by active task review")):
+        assert (
+            worktree_claims.active_worktree_claim_refusal(
+                tree, tasks_dir=tasks, repo_root=tmp_path, review_inputs_only=review_inputs_only
+            )
+            == expected
+        )
 
 
 @pytest.mark.parametrize(
@@ -121,11 +172,12 @@ def test_unreadable_review_record_fails_closed(tmp_path, monkeypatch, unreadable
     )
 
 
-def test_shared_remover_preserves_review_inputs_then_releases(tmp_path):
+def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, registered_trees):
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     state = tasks / "review.json"
     tree = tmp_path / "inputs"
+    registered_trees.append(tree)
     record = {"status": "running", "task_id": "review", "review_contract": {"input_root": str(tree)}}
     calls = []
 

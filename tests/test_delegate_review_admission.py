@@ -133,6 +133,30 @@ def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_pat
     assert remove().action == "error"
 
 
+@pytest.mark.parametrize("inner_first", [False, True])
+def test_review_input_lock_selects_deepest_registered_tree(tmp_path, monkeypatch, inner_first):
+    from scripts.orchestration import worktree_claims
+
+    outer = tmp_path / "outer"
+    inner = outer / "inner"
+    inputs = inner / "inputs"
+    inputs.mkdir(parents=True)
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    trees = [tmp_path, *([inner, outer] if inner_first else [outer, inner])]
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: trees)
+    monkeypatch.setattr(delegate, "_worktree_lock_dir", lambda: tmp_path / "locks")
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"input_root": str(inputs)}, locks)
+        with pytest.raises(worktree_claims.WorktreeLockReentry):
+            with delegate.worktree_lock(inner):
+                pass
+        with delegate.worktree_lock(outer):
+            pass
+    with delegate.worktree_lock(inner):
+        pass
+
+
 def test_review_input_lock_refuses_tree_removed_while_waiting(tmp_path, monkeypatch):
     inputs = tmp_path / "inputs"
     inputs.mkdir()

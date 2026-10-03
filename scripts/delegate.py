@@ -10316,7 +10316,7 @@ def _lock_review_input_root(
     registered = wc.registered_worktrees(main_root)
     if not registered:
         raise ValueError("review input worktree registration unavailable")
-    input_worktree = next((tree for tree in registered if tree != main_root and input_root.is_relative_to(tree)), None)
+    input_worktree = worktree_claims.review_input_worktree(input_root, main_root=main_root, registered=registered)
     if input_worktree is None:
         return
     if locked_worktree is None or input_worktree != locked_worktree.resolve():
