@@ -17025,6 +17025,7 @@ def test_scope_worker_stops_the_cursor_worker_server_before_the_exit_scan(
             "cmdline": " ".join(argv)[: delegate.worker_leftovers.CMDLINE_MAX_CHARS],
             "signals": ["SIGTERM"],
             "stopped": True,
+            "left_scope": False,
         }
     ]
     assert "leftovers_excluded" not in state

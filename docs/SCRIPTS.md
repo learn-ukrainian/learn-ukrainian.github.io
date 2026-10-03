@@ -966,14 +966,19 @@ exits on its own 300 s after its last request. The Cursor adapter never stops it
 In scope mode the worker stops it after the CLI exits and before the exit scan: the server
 is inside this task's own scope cgroup, so it is this task's process, and the reaper would
 stop it with the scope anyway. Each process the scan would report gets a pidfd, and only
-when, read after that pidfd is open, it is still the scanned process (same start time),
-inside this task's scope cgroup, of this user's real uid, with its `/proc/<pid>/exe`
-directly in a version directory of the install the resolved `cursor-agent` links into
-(`<install>/versions/<version>/`) and argv exactly `<argv0> <that version dir>/index.js
-worker-server`, does it get SIGTERM through that pidfd, then SIGKILL after 3 s. A process
-that only looks like the server and passes those checks is in this task's own cgroup and
-is stopped the same way. The record lists what was signalled under `leftovers_terminated`
-(pid, command line, signals sent, whether it exited). The exit scan then runs unchanged:
+when, read after that pidfd is open, its `/proc/<pid>/exe` sits directly in a version
+directory of the install the resolved `cursor-agent` links into
+(`<install>/versions/<version>/`) with argv exactly `<argv0> <that version dir>/index.js
+worker-server`, and then, read last before each signal, it is still the scanned process
+(same start time), inside this task's scope cgroup, of this user's real uid, does it get
+SIGTERM through that pidfd, then SIGKILL after 3 s. A server that has left the task's scope
+cgroup by that last read is not signalled (SIGTERM or SIGKILL). A pidfd pins the process,
+not its cgroup, so one that migrates between that last read and the kernel's delivery is
+still signalled: no unprivileged call signals a process only while it is in a given cgroup
+(accepted residual). A process that only looks like the server and passes those checks is
+in this task's own cgroup and is stopped the same way. The record lists what was signalled,
+or skipped for leaving the scope, under `leftovers_terminated` (pid, command line, signals
+sent, whether it exited, `left_scope`). The exit scan then runs unchanged:
 anything still alive, the server included when stopping it failed (no pidfd support, a
 refused signal, a survivor), is reported as above and the scope is recorded for the
 reaper. A dispatch that falls back to `popen-fallback` because no user manager is
@@ -992,8 +997,9 @@ stopped or signalled (not even the scope unit) and removal is refused. Otherwise
 reaper is not inside is stopped with `systemctl --user stop`. Anything left gets SIGTERM,
 then SIGKILL, each sent through a pidfd opened on the process and re-verified (start time,
 scope membership and real uid) after opening, so a reused pid, or a process that changed
-its uid before that re-check, is never signalled. Where pidfds are unavailable nothing is
-signalled. If any process survives or cannot be signalled, removal is refused.
+its uid before that re-check, is never signalled; that re-check is the last read before
+each signal, and a process it finds outside the scope is skipped and reported under
+`left_scope`. Where pidfds are unavailable nothing is signalled. If any process survives or cannot be signalled, removal is refused.
 Guaranteed: a process seen with another user id at the UID scan blocks both the scope unit
 stop and every signal, and each pidfd target's user id is re-checked after its pidfd opens.
 Not guaranteed (accepted residual): a process that changes its identity after the UID scan
