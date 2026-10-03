@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
+import shutil
 import signal
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -198,6 +200,240 @@ def test_exit_scan_record_fields_for_each_outcome() -> None:
     assert wl.BACKGROUND_JOBS_REASON not in unknown.record_fields()
     for scan in (live, unknown):
         assert wl.WorkerScope.from_state(scan.record_fields()[wl.SCOPE_KEY]) == scope
+
+
+# --- the Cursor CLI's own worker-server (#9534) ---------------------------
+
+CURSOR_VERSIONS = Path("/opt/lu-test-cursor-agent/versions")
+CURSOR_VERSION_DIR = CURSOR_VERSIONS / "2026.10.01-e373342"
+CURSOR_NODE = CURSOR_VERSION_DIR / "node"
+WORKER_SERVER_ARGV = [str(CURSOR_NODE), str(CURSOR_VERSION_DIR / "index.js"), "worker-server"]
+PYTEST_JOB = FakeProc(cmd="python -m pytest tests/test_slow.py", exe=Path("/usr/bin/python3.12"))
+
+
+def _worker_server(**fields: object) -> FakeProc:
+    defaults: dict[str, object] = {"exe": CURSOR_NODE, "argv": WORKER_SERVER_ARGV, "cmd": " ".join(WORKER_SERVER_ARGV)}
+    return FakeProc(**{**defaults, **fields})  # type: ignore[arg-type]
+
+
+def _scope_exit_scan(
+    procs: dict[int, FakeProc], *, versions: Path | None = CURSOR_VERSIONS, **fake: object
+) -> wl.ExitScan:
+    """An exit scan of the default scope launch whose cgroup holds the caller and ``procs``."""
+    fake_procs = FakeProcs(procs=procs, cgroups={SCOPE_CGROUP: [os.getpid(), *procs]}, **fake)  # type: ignore[arg-type]
+    return wl.exit_scan(
+        scope_of(launch_mode="scope"), reader=fake_procs, settle_s=0.0, cursor_versions=lambda: versions
+    )
+
+
+def test_cursor_worker_server_in_the_tasks_scope_is_excluded_and_recorded() -> None:
+    scan = _scope_exit_scan({JOB: _worker_server()})
+
+    assert scan.status == wl.SCAN_CLEAR
+    assert scan.leftovers == ()
+    assert scan.record_fields() == {
+        "leftovers_scan": "clear",
+        "leftovers_excluded": [
+            {
+                "pid": JOB,
+                "cmdline": " ".join(WORKER_SERVER_ARGV),
+                "exe": str(CURSOR_NODE),
+                "reason": "cursor_worker_server_in_task_scope",
+            }
+        ],
+    }
+
+
+def test_a_different_process_beside_the_worker_server_is_still_reported() -> None:
+    scan = _scope_exit_scan({JOB: _worker_server(), OTHER: PYTEST_JOB})
+
+    assert scan.status == wl.SCAN_LIVE
+    assert [proc.pid for proc in scan.leftovers] == [OTHER]
+    fields = scan.record_fields()
+    assert fields["incomplete_run_reason"] == wl.BACKGROUND_JOBS_REASON
+    assert [proc["pid"] for proc in fields[wl.BACKGROUND_JOBS_REASON]["processes"]] == [OTHER]
+    assert [proc["pid"] for proc in fields[wl.EXCLUDED_KEY]] == [JOB]
+
+
+def test_a_different_process_alone_in_the_scope_is_reported_unchanged() -> None:
+    scan = _scope_exit_scan({OTHER: PYTEST_JOB})
+
+    assert scan.status == wl.SCAN_LIVE
+    assert wl.EXCLUDED_KEY not in scan.record_fields()
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        # Same name and argv, but not under the resolved install's versions directory.
+        {"exe": Path("/tmp/evil/versions/2026.10.01-e373342/node")},
+        # Directly in, or nested below, a version directory.
+        {"exe": CURSOR_VERSIONS / "node"},
+        {"exe": CURSOR_VERSION_DIR / "bin" / "node"},
+        # A binary deleted from under the process no longer resolves there.
+        {"exe": CURSOR_VERSION_DIR / "node (deleted)"},
+        {"exe": Path("relative/versions/v/node")},
+        # The install's node running some other script, or another subcommand.
+        {"argv": [str(CURSOR_NODE), "-e", "setInterval(()=>{},1e3)", "worker-server"]},
+        {"argv": [str(CURSOR_NODE), "-e", "setInterval(()=>{},1e3)", *WORKER_SERVER_ARGV[1:]]},
+        {"argv": [str(CURSOR_NODE), "--require=/tmp/x.js", *WORKER_SERVER_ARGV[1:]]},
+        {"argv": [str(CURSOR_NODE), str(CURSOR_VERSIONS / "2026.09.26-dd393fe" / "index.js"), "worker-server"]},
+        {"argv": [str(CURSOR_NODE), str(CURSOR_VERSION_DIR / "index.js"), "worker-server-x"]},
+        {"argv": [str(CURSOR_NODE), str(CURSOR_VERSION_DIR / "index.js"), "worker-server", "--keep"]},
+        {"argv": [str(CURSOR_VERSION_DIR / "index.js"), "worker-server"]},
+        # Another real uid.
+        {"uid": os.getuid() + 1},
+    ],
+)
+def test_a_worker_server_lookalike_is_reported(fields: dict) -> None:
+    scan = _scope_exit_scan({JOB: _worker_server(**fields)})
+
+    assert scan.status == wl.SCAN_LIVE
+    assert [proc.pid for proc in scan.leftovers] == [JOB]
+    assert scan.excluded == ()
+
+
+def test_the_worker_server_is_reported_without_a_resolved_cursor_install() -> None:
+    assert _scope_exit_scan({JOB: _worker_server()}, versions=None).status == wl.SCAN_LIVE
+
+
+def test_the_worker_server_outside_the_tasks_cgroup_is_not_excluded() -> None:
+    """The exclusion reads the cgroup from the kernel itself, not from the scan's candidate list."""
+    other_scope = dispatch_isolation.scope_cgroup(f"lu-worker-t2-{RUN_NONCE}-0123abcd", uid=os.getuid())
+    fake = FakeProcs(procs={JOB: _worker_server()}, cgroups={other_scope: [JOB]})
+    proc = wl.LeftoverProcess(pid=JOB, start_ticks=100, cmdline="")
+
+    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, proc, CURSOR_VERSIONS) is None
+    fake.cgroups = {SCOPE_CGROUP: [JOB]}
+    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, proc, CURSOR_VERSIONS) is not None
+    # A pid reused since the scan is another process.
+    reused = wl.LeftoverProcess(pid=JOB, start_ticks=99, cmdline="")
+    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, reused, CURSOR_VERSIONS) is None
+
+
+def test_the_worker_server_in_another_tasks_scope_is_not_this_tasks_and_not_excluded_anywhere() -> None:
+    other_scope = dispatch_isolation.scope_cgroup(f"lu-worker-t2-{RUN_NONCE}-0123abcd", uid=os.getuid())
+    fake = FakeProcs(procs={JOB: _worker_server()}, cgroups={SCOPE_CGROUP: [os.getpid()], other_scope: [JOB]})
+
+    scan = wl.exit_scan(
+        scope_of(launch_mode="scope"), reader=fake, settle_s=0.0, cursor_versions=lambda: CURSOR_VERSIONS
+    )
+
+    assert scan.status == wl.SCAN_CLEAR
+    assert scan.excluded == ()
+
+
+def test_popen_fallback_reports_the_worker_server() -> None:
+    """No cgroup proof without a scope: the fallback never excludes anything."""
+    fake = FakeProcs(procs={JOB: _worker_server(task=TASK_ID, start=500)})
+    asked: list[bool] = []
+
+    def versions() -> Path:
+        asked.append(True)
+        return CURSOR_VERSIONS
+
+    scan = wl.exit_scan(scope_of(worker_start_ticks=400), reader=fake, settle_s=0.0, cursor_versions=versions)
+
+    assert scan.status == wl.SCAN_LIVE
+    assert [proc.pid for proc in scan.leftovers] == [JOB]
+    assert scan.excluded == ()
+    assert asked == []
+    proc = wl.LeftoverProcess(pid=JOB, start_ticks=500, cmdline="")
+    assert wl._excluded_reason(scope_of(fallback_cgroup=SCOPE_CGROUP), fake, proc, CURSOR_VERSIONS) is None
+
+
+def test_an_unreadable_exe_reports_the_worker_server() -> None:
+    scan = _scope_exit_scan({JOB: _worker_server(exe_unreadable=True)})
+
+    assert scan.status == wl.SCAN_LIVE
+    assert [proc.pid for proc in scan.leftovers] == [JOB]
+
+
+def test_an_unreadable_cgroup_leaves_the_worker_server_scan_unknown() -> None:
+    assert _scope_exit_scan({JOB: _worker_server(cgroup_unreadable=True)}).status == wl.SCAN_UNKNOWN
+    proc = wl.LeftoverProcess(pid=JOB, start_ticks=100, cmdline="")
+    fake = FakeProcs(procs={JOB: _worker_server(cgroup_unreadable=True)}, cgroups={SCOPE_CGROUP: [JOB]})
+    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, proc, CURSOR_VERSIONS) is None
+
+
+def test_the_reaper_still_stops_an_excluded_worker_server_with_the_scope() -> None:
+    """Exclusion is the exit scan's verdict only; stopping still covers the whole scope."""
+    fake = FakeProcs(procs={JOB: _worker_server()}, cgroups={SCOPE_CGROUP: [JOB]})
+
+    result = wl.stop_leftovers(scope_of(launch_mode="scope"), reader=fake, **stop_kwargs(fake))
+
+    assert result.ok and result.unit_stopped
+    assert JOB not in fake.procs
+
+
+def test_live_process_shaped_like_the_worker_server_is_recognised_from_proc(tmp_path: Path) -> None:
+    """Real ``/proc`` exe and argv reads: a copied binary blocked on a FIFO named ``index.js``."""
+    cat = shutil.which("cat")
+    if cat is None or not hasattr(os, "mkfifo"):
+        pytest.skip("needs cat and mkfifo")
+    version_dir = tmp_path / "versions" / "2026.10.01-e373342"
+    version_dir.mkdir(parents=True)
+    node = version_dir / "node"
+    shutil.copy2(Path(cat).resolve(), node)
+    os.mkfifo(version_dir / "index.js")
+    child = subprocess.Popen([str(node), str(version_dir / "index.js"), "worker-server"])
+    try:
+
+        class InScope(wl.ProcFsReader):
+            def proc_cgroup(self, pid: int) -> str | None:
+                return SCOPE_CGROUP if pid == child.pid else super().proc_cgroup(pid)
+
+        reader = InScope()
+        info = None
+        for _ in range(200):  # until the child has exec'd the copied binary
+            info = reader.stat(child.pid)
+            if reader.exe(child.pid) == node.resolve():
+                break
+            time.sleep(0.01)
+        assert info is not None
+        proc = wl.LeftoverProcess(pid=child.pid, start_ticks=info.start_ticks, cmdline=reader.cmdline(child.pid))
+
+        verdict = wl._excluded_reason(scope_of(launch_mode="scope"), reader, proc, (tmp_path / "versions").resolve())
+        assert verdict == (wl.CURSOR_WORKER_SERVER_REASON, node.resolve())
+        assert wl._excluded_reason(scope_of(launch_mode="scope"), reader, proc, tmp_path.resolve()) is None
+    finally:
+        child.kill()
+        child.wait(timeout=10)
+
+
+@pytest.mark.parametrize(
+    ("resolved", "expected"),
+    [
+        (
+            "/home/u/.local/share/cursor-agent/versions/2026.10.01-e373342/cursor-agent",
+            "/home/u/.local/share/cursor-agent/versions",
+        ),
+        ("/usr/local/bin/cursor-agent", None),
+        (None, None),
+    ],
+)
+def test_cursor_versions_dir_follows_the_resolved_cursor_agent(
+    monkeypatch: pytest.MonkeyPatch, resolved: str | None, expected: str | None
+) -> None:
+    calls: list[str] = []
+
+    def fake_resolve(binary: str, *, path: str | None = None) -> str | None:
+        calls.append(binary)
+        return resolved
+
+    monkeypatch.setattr(wl, "resolve_agent_binary", fake_resolve)
+
+    assert wl.cursor_versions_dir() == (Path(expected) if expected else None)
+    assert calls == ["cursor-agent"]
+
+
+def test_cursor_versions_dir_is_none_when_resolution_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    def broken(binary: str, *, path: str | None = None) -> str | None:
+        raise RuntimeError("Symlink loop")
+
+    monkeypatch.setattr(wl, "resolve_agent_binary", broken)
+
+    assert wl.cursor_versions_dir() is None
 
 
 def test_worker_scope_records_the_cgroup_only_when_it_is_this_launch_unit() -> None:
@@ -536,11 +772,18 @@ def test_procfs_reader_maps_missing_to_gone_and_unreadable_to_unknown(tmp_path: 
     if os.access(environ, os.R_OK):
         pytest.skip("running with privileges that bypass file modes")
 
+    # Not a link: readlink fails with EINVAL, which is unreadable, not gone.
+    (proc_root / "42" / "exe").write_text("")
+
     assert reader.stat(43) is None
     assert reader.dispatch_task_id(43) is None
+    assert reader.exe(43) is None
+    assert reader.argv(43) is None
     assert reader.cgroup_procs("/gone.scope") is None
     with pytest.raises(wl.ScanUnknown):
         reader.dispatch_task_id(42)
+    with pytest.raises(wl.ScanUnknown):
+        reader.exe(42)
     with pytest.raises(wl.ScanUnknown):
         reader.cgroup_procs("/x.scope")
 
@@ -552,6 +795,10 @@ def test_procfs_reader_reads_this_process() -> None:
     assert info is not None and info.state in {"R", "S"}
     assert reader.real_uid(os.getpid()) == os.getuid()
     assert reader.proc_cgroup(os.getpid()) == reader.own_cgroup()
+    assert reader.exe(os.getpid()) == Path(os.readlink("/proc/self/exe"))
+    assert reader.argv(os.getpid()) == [
+        os.fsdecode(arg) for arg in Path("/proc/self/cmdline").read_bytes().split(b"\0")[:-1]
+    ]
 
 
 @pytest.mark.parametrize("provider", ["live", "syscall"])

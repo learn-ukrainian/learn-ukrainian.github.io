@@ -966,13 +966,21 @@ exits on its own 300 s after its last request. It is a shared daemon: a later cu
 for the same root, from any session, reuses its socket, and that can happen after any check
 the adapter could make, so no stop request can be proven safe. The adapter therefore never
 stops it (#9534). A run shorter than that idle window ends with the server in the worker's
-scope (scope mode) or carrying the worker's task marker in its session (`popen-fallback`),
-so the exit scan reports it as `live` and the run is `needs_finalize`. The derived user bus
-above lets headless dispatches use scope mode. A dispatch that still falls back to
-`popen-fallback` because no user manager is reachable keeps that fail-closed report for the
-Cursor server too: the fallback scan cannot tell a shared server from any other leftover,
-and reporting is the safe answer. Stopping it is the reaper's job at worktree removal, under
-the checks below, not the adapter's.
+scope (scope mode) or carrying the worker's task marker in its session (`popen-fallback`).
+In scope mode the exit scan does not count it as a leftover when every fact comes from the
+kernel: the process is in this task's own scope cgroup, has this user's real uid, its
+`/proc/<pid>/exe` sits directly in a version directory of the install the resolved
+`cursor-agent` links into (`<install>/versions/<version>/`), and its argv is exactly
+`<argv0> <that version dir>/index.js worker-server`. Anything unreadable, or any other
+shape, is still reported. Such a process is recorded under `leftovers_excluded` (pid,
+command line, executable, reason `cursor_worker_server_in_task_scope`), and a run that
+left nothing else is `done`; any other process alive in the scope still makes it `live`.
+The derived user bus above lets headless dispatches use scope mode. A dispatch that still
+falls back to `popen-fallback` because no user manager is reachable keeps the fail-closed
+report for the Cursor server too: the fallback scan has no cgroup proof and cannot tell a
+shared server from any other leftover, and reporting is the safe answer. Stopping it is the
+reaper's job at worktree removal, under the checks below, not the adapter's; an excluded
+server whose cwd is in the worktree holds removal back until it exits on its own.
 
 When that worktree is later removed (settle, `reap_worktrees.py`,
 `fleet/post_task_reap.py`), those processes are stopped first, and only inside the worker's

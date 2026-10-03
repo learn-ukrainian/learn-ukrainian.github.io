@@ -77,6 +77,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
         "leftovers_scope": {task_id, launch_mode, unit, cgroup, run_nonce, ...} | absent,
         "leftovers_scan_error": str | absent,       # why the scan was unknown
+        "leftovers_excluded": [{pid, cmdline, exe, reason}] | absent,  # alive but proven not a leftover (#9534)
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit

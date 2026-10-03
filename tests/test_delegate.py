@@ -16979,6 +16979,63 @@ def test_run_worker_without_background_jobs_settles_done_unchanged(tmp_tasks_dir
     assert "incomplete_run_reason" not in state
 
 
+@pytest.mark.parametrize("with_job", [False, True])
+def test_scope_worker_leaving_only_the_cursor_worker_server_settles_done(
+    tmp_tasks_dir, tmp_path, monkeypatch, with_job
+):
+    """#9534 AC-02: the Cursor CLI's own worker-server in the task's scope is not a leftover.
+
+    It is recorded as excluded with its reason; any other process alive in the
+    same scope still makes the run ``needs_finalize``.
+    """
+    from tests.worker_leftovers_fakes import FakeProc, FakeProcs
+
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = f"bg-cursor-ws-{with_job}"
+    unit = delegate.dispatch_isolation.scope_unit_name(task_id, "n0nce")
+    cgroup = delegate.dispatch_isolation.scope_cgroup(unit, uid=os.getuid())
+    version_dir = tmp_path / "cursor-agent" / "versions" / "2026.10.01-e373342"
+    argv = [str(version_dir / "node"), str(version_dir / "index.js"), "worker-server"]
+    procs = {_BG_JOB_PID: FakeProc(exe=version_dir / "node", argv=argv, cmd=" ".join(argv))}
+    if with_job:
+        procs[_BG_JOB_PID + 1] = FakeProc(cmd="python -m pytest tests/test_slow.py")
+    fake = FakeProcs(procs=procs, cgroups={cgroup: [os.getpid(), *procs]}, own=cgroup)
+    monkeypatch.setattr(
+        delegate.worker_leftovers, "resolve_agent_binary", lambda *_a, **_k: str(version_dir / "cursor-agent")
+    )
+
+    rc, state, _ = _run_bg_worker(
+        tmp_path,
+        monkeypatch,
+        task_id=task_id,
+        mode="danger",
+        fake=fake,
+        dirty=False,
+        extra_state={"launch_mode": "scope", "launch_unit": unit},
+    )
+
+    assert state["leftovers_excluded"] == [
+        {
+            "pid": _BG_JOB_PID,
+            "cmdline": " ".join(argv)[: delegate.worker_leftovers.CMDLINE_MAX_CHARS],
+            "exe": str(version_dir / "node"),
+            "reason": "cursor_worker_server_in_task_scope",
+        }
+    ]
+    if with_job:
+        assert rc == 1
+        assert state["status"] == "needs_finalize"
+        assert state["leftovers_scan"] == "live"
+        assert [proc["pid"] for proc in state["background_jobs_alive_at_exit"]["processes"]] == [_BG_JOB_PID + 1]
+    else:
+        assert state["status"] == "done", state.get("last_error")
+        assert rc == 0
+        assert state["leftovers_scan"] == "clear"
+        assert "incomplete_run_reason" not in state
+        assert "background_jobs_alive_at_exit" not in state
+    assert fake.signals == []
+
+
 def _bg_task_record(task_id: str, **overrides: Any) -> dict[str, Any]:
     return {
         "run_nonce": "n0nce",
