@@ -1,4 +1,5 @@
 """Shared helpers for Hermes-backed agent runtime adapters."""
+
 from __future__ import annotations
 
 import logging
@@ -11,6 +12,7 @@ from typing import Any
 
 import yaml
 
+from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..routes import (
     RUNTIME_ROUTE_TOOL_CONFIG_KEY,
     forbidden_glm_error,
@@ -19,10 +21,6 @@ from ..routes import (
 from .base import InvocationPlan
 
 _ANSI_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
-_RATE_LIMIT_RE = re.compile(
-    r"rate limit|rate_limit|quota exceeded|too many requests|\bHTTP 429\b|\b429\b",
-    re.IGNORECASE,
-)
 _FALLBACK_LOG_RE = re.compile(
     r"Fallback activated:\s*(?P<requested_model>.*?)\s*(?:\u2192|->)\s*"
     r"(?P<actual_model>[^\s(]+)\s*\((?P<actual_provider>[^)]+)\)",
@@ -86,6 +84,8 @@ class HermesParseFields:
     stderr_excerpt: str | None
     rate_limited: bool
     substitution: dict[str, Any] | None
+    failure_code: str | None = None
+    provider_error_text: str | None = None
 
 
 def strip_ansi(text: str) -> str:
@@ -342,10 +342,12 @@ def _fallback_match(text: str) -> tuple[str, str] | None:
     )
     for pattern in fallback_patterns:
         for match in pattern.finditer(text):
-            matches.append((
-                match.group("actual_provider").strip(),
-                match.group("actual_model").strip(),
-            ))
+            matches.append(
+                (
+                    match.group("actual_provider").strip(),
+                    match.group("actual_model").strip(),
+                )
+            )
     return matches[-1] if matches else None
 
 
@@ -384,12 +386,8 @@ def resolve_hermes_substitution(
         actual_provider, actual_model = output_match
         source = "captured-output"
 
-    substituted = (
-        bool(actual_provider or actual_model)
-        and (
-            actual_provider != requested_provider
-            or actual_model != requested_model
-        )
+    substituted = bool(actual_provider or actual_model) and (
+        actual_provider != requested_provider or actual_model != requested_model
     )
     return {
         "requested_provider": requested_provider,
@@ -465,7 +463,9 @@ def build_hermes_parse_fields(
     """Parse common Hermes stdout/stderr and attach substitution metadata."""
     response = strip_ansi(stdout)
     clean_stderr = strip_ansi(stderr)
-    rate_limited = returncode != 0 and bool(_RATE_LIMIT_RE.search(clean_stderr))
+    provider_error = provider_stderr_error(clean_stderr)
+    failure_code = provider_failure_code(provider_error) if returncode != 0 else None
+    rate_limited = failure_code == "rate_limited"
     substitution = resolve_hermes_substitution(
         stdout=stdout,
         stderr=stderr,
@@ -493,8 +493,10 @@ def build_hermes_parse_fields(
             ok=False,
             response="",
             stderr_excerpt=error_text[:500],
-            rate_limited=rate_limited or status == "429",
+            rate_limited=status == "429",
             substitution=substitution,
+            failure_code=provider_failure_code(error_text, status),
+            provider_error_text=error_text,
         )
 
     ok = returncode == 0 and bool(response) and not rate_limited
@@ -505,4 +507,6 @@ def build_hermes_parse_fields(
         stderr_excerpt=stderr_excerpt[:500] if stderr_excerpt else None,
         rate_limited=rate_limited,
         substitution=substitution,
+        failure_code=failure_code,
+        provider_error_text=provider_error,
     )

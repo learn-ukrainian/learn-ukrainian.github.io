@@ -45,24 +45,12 @@ from scripts.review.model_catalog import (
 
 from ..binary_resolve import resolve_agent_binary
 from ..errors import AgentRuntimeError
+from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
-
-# Stderr phrases that indicate the provider rate-limited a failed call.
-_RATE_LIMIT_PATTERNS = (
-    r"usage limit reached",
-    r"rate limit",
-    r"rate_limit",
-    r"quota exceeded",
-    r"too many requests",
-    r"\bHTTP 429\b",
-    r"\bstatus 429\b",
-    r"\b429\b",
-)
-_RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
 # This marker is emitted only by our GH shim after it has recognized a
 # GitHub-side secondary-limit response. It must not trip Cursor's provider
@@ -533,8 +521,18 @@ class CursorAdapter:
         # stderr diagnostic is rate-limited.
         usable_response = bool(response)
         failed_call = returncode != 0 or not usable_response
-        github_secondary_rate_limited = failed_call and _GITHUB_SECONDARY_RATE_LIMIT_MARKER in (stderr or "")
-        rate_limited = failed_call and not github_secondary_rate_limited and bool(_RATE_LIMIT_RE.search(stderr or ""))
+        github_secondary_rate_limited = failed_call and any(
+            line.strip().startswith(_GITHUB_SECONDARY_RATE_LIMIT_MARKER) for line in (stderr or "").split("\n")
+        )
+        provider_error = provider_stderr_error(stderr or "")
+        failure_code = None
+        if failed_call:
+            failure_code = (
+                "github_secondary_rate_limited"
+                if github_secondary_rate_limited
+                else provider_failure_code(provider_error)
+            )
+        rate_limited = failed_call and failure_code == "rate_limited"
 
         ok = returncode == 0 and bool(response) and not rate_limited
 
@@ -562,10 +560,11 @@ class CursorAdapter:
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=session_id,
             tool_calls=tool_calls,
             substitution=model_attribution,
-            failure_code=("github_secondary_rate_limited" if github_secondary_rate_limited else None),
         )
 
     def _read_session_transcript_events(

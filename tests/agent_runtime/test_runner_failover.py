@@ -552,18 +552,23 @@ def test_classifier_routes_hermes_credential_startup_failure_to_auth():
     assert trigger == "auth"
 
 
-def test_classifier_routes_inband_http_401_stdout_to_auth():
-    """Companion to the hermes_common in-band fix: once parse marks the
-    single-line 'HTTP 401: ...' stdout as not-ok, the classifier must see
-    auth in the excerpt."""
+def test_classifier_routes_hermes_inband_http_401_to_auth():
+    """The Hermes adapter, not a display excerpt, owns this captured error."""
+    from agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter
     from agent_runtime.failover import classify_failover_trigger
 
     excerpt = "HTTP 401: Authentication Fails, Your api key: ****robe is invalid"
+    parse = HermesDeepSeekAdapter().parse_response(
+        stdout=excerpt,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
     trigger = classify_failover_trigger(
-        parse=ParseResult(ok=False, response="", stderr_excerpt=excerpt),
+        parse=parse,
         returncode=0,
         kill_reason=None,
-        stdout_text="",
+        stdout_text=excerpt,
         stderr_text="",
     )
 

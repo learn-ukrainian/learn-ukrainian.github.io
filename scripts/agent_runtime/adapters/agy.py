@@ -99,22 +99,13 @@ from typing import Any, NamedTuple
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
 
+from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
-
-# Defensive defaults borrowed from Gemini CLI. Agy is new enough that these
-# may need adjustment once we see real Antigravity rate-limit errors.
-_RATE_LIMIT_PATTERNS = (
-    r"RESOURCE_EXHAUSTED",
-    r"usage limit reached",
-    r"quota exceeded",
-    r"daily.{0,10}limit.{0,10}exceeded",
-)
-_RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
 # Background-task handling (#8502/#8503). AGY's ``run_command`` tool caps
 # ``WaitMsBeforeAsync`` at 10000 ms, so any command running longer than ten
@@ -650,6 +641,18 @@ class AgyAdapter:
         )
         stderr_text = (stderr or "").strip()
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
+        # Only a failed terminal envelope owns error text. A SUCCESS result
+        # and malformed/duplicate streams cannot supply a provider failure.
+        provider_error = (
+            stream_error
+            if stream_result is not None
+            and stream_result.get("status") == "ERROR"
+            and stream_problem is not None
+            and stream_problem.startswith("agy_stream_result_error")
+            else provider_stderr_error(stderr_text)
+            if returncode != 0 or not stdout_response
+            else ""
+        )
         incomplete_reason = _incomplete_run_reason(stderr_text)
         language_warning: str | None = None
         if incomplete_reason is None and stream_result is not None and stream_problem is None:
@@ -670,7 +673,9 @@ class AgyAdapter:
                 ok=False,
                 response="",
                 stderr_excerpt=excerpt[:500],
-                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stream_error}\n{stderr_text}")),
+                rate_limited=provider_failure_code(provider_error) == "rate_limited",
+                failure_code=provider_failure_code(provider_error) if provider_error else "provider_stream_incomplete",
+                provider_error_text=provider_error,
                 tool_calls=_parse_transcript_tool_calls(plan)
                 or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
             )
@@ -695,17 +700,27 @@ class AgyAdapter:
             )
             if stream_problem is not None:
                 structured = dataclasses.replace(structured, stderr_excerpt=stream_problem)
-            if structured.ok:
-                structured = dataclasses.replace(structured, tokens=_stream_total_tokens(stream_result))
+            if not structured.ok:
+                failure_code = provider_failure_code(provider_error) if provider_error else structured.failure_code
+                structured = dataclasses.replace(
+                    structured,
+                    failure_code=failure_code,
+                    rate_limited=failure_code == "rate_limited",
+                    provider_error_text=provider_error,
+                )
+            else:
+                structured = dataclasses.replace(
+                    structured, tokens=_stream_total_tokens(stream_result), provider_error_text=""
+                )
             if structured.ok and language_warning is not None:
                 structured = dataclasses.replace(
                     structured, stderr_excerpt=_with_language_warning(language_warning, structured.stderr_excerpt)
                 )
             return structured
         combined = f"{stdout_response}\n{stream_error}\n{stderr_text}"
-        hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
         call_failed = returncode != 0 or not bool(stdout_response) or stream_problem is not None
-        rate_limited = hard_limit_hit and call_failed
+        failure_code = provider_failure_code(provider_error) if call_failed else None
+        rate_limited = call_failed and failure_code == "rate_limited"
 
         ok = returncode == 0 and bool(stdout_response) and not rate_limited and stream_problem is None
         response = stdout_response if ok else ""
@@ -733,6 +748,8 @@ class AgyAdapter:
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=stream_result.get("conversation_id") if stream_result else None,
             tokens=_stream_total_tokens(stream_result),
             tool_calls=tool_calls,
