@@ -1,0 +1,1909 @@
+{
+  "issues": [
+    9484,
+    9480,
+    9490
+  ],
+  "rows": [
+    {
+      "id": "if-000",
+      "family": "if",
+      "command": "if true; then gh pr merge 5; fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "if-001",
+      "family": "if",
+      "command": "if true; then gh pr merge 5 >file; fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "if-002",
+      "family": "if",
+      "command": "if true; then gh pr merge 5 --admin; fi",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "else-003",
+      "family": "else",
+      "command": "if false; then :; else gh pr merge 5; fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "else-004",
+      "family": "else",
+      "command": "if false; then :; else gh pr merge 5 >file; fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "else-005",
+      "family": "else",
+      "command": "if false; then :; else gh pr merge 5 --admin; fi",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "elif-006",
+      "family": "elif",
+      "command": "if false; then :; elif true; then gh pr merge 5; fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "elif-007",
+      "family": "elif",
+      "command": "if false; then :; elif true; then gh pr merge 5 >file; fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "elif-008",
+      "family": "elif",
+      "command": "if false; then :; elif true; then gh pr merge 5 --admin; fi",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "while-009",
+      "family": "while",
+      "command": "while true; do gh pr merge 5; break; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "while-010",
+      "family": "while",
+      "command": "while true; do gh pr merge 5 >file; break; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "while-011",
+      "family": "while",
+      "command": "while true; do gh pr merge 5 --admin; break; done",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "until-012",
+      "family": "until",
+      "command": "until false; do gh pr merge 5; break; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "until-013",
+      "family": "until",
+      "command": "until false; do gh pr merge 5 >file; break; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "until-014",
+      "family": "until",
+      "command": "until false; do gh pr merge 5 --admin; break; done",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "for-015",
+      "family": "for",
+      "command": "for x in once; do gh pr merge 5; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "for-016",
+      "family": "for",
+      "command": "for x in once; do gh pr merge 5 >file; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "for-017",
+      "family": "for",
+      "command": "for x in once; do gh pr merge 5 --admin; done",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "brace-018",
+      "family": "brace",
+      "command": "{ gh pr merge 5; }",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "brace-019",
+      "family": "brace",
+      "command": "{ gh pr merge 5 >file; }",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "brace-020",
+      "family": "brace",
+      "command": "{ gh pr merge 5 --admin; }",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "subshell-021",
+      "family": "subshell",
+      "command": "( gh pr merge 5 )",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "subshell-022",
+      "family": "subshell",
+      "command": "( gh pr merge 5 >file )",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "subshell-023",
+      "family": "subshell",
+      "command": "( gh pr merge 5 --admin )",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "function-024",
+      "family": "function",
+      "command": "f() { gh pr merge 5; }; f",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "function-025",
+      "family": "function",
+      "command": "f() { gh pr merge 5 >file; }; f",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "function-026",
+      "family": "function",
+      "command": "f() { gh pr merge 5 --admin; }; f",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "time-027",
+      "family": "time",
+      "command": "time gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "time-028",
+      "family": "time",
+      "command": "time gh pr merge 5 >file",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "time-029",
+      "family": "time",
+      "command": "time gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "coproc-030",
+      "family": "coproc",
+      "command": "coproc gh pr merge 5; wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "coproc-031",
+      "family": "coproc",
+      "command": "coproc gh pr merge 5 >file; wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "coproc-032",
+      "family": "coproc",
+      "command": "coproc gh pr merge 5 --admin; wait",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "coproc-name-033",
+      "family": "coproc-name",
+      "command": "coproc NAME { gh pr merge 5; }; wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "coproc-name-034",
+      "family": "coproc-name",
+      "command": "coproc NAME { gh pr merge 5 >file; }; wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "coproc-name-035",
+      "family": "coproc-name",
+      "command": "coproc NAME { gh pr merge 5 --admin; }; wait",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "negation-036",
+      "family": "negation",
+      "command": "! gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "negation-037",
+      "family": "negation",
+      "command": "! gh pr merge 5 >file",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "negation-038",
+      "family": "negation",
+      "command": "! gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "pipeline-039",
+      "family": "pipeline",
+      "command": "true | gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "pipeline-040",
+      "family": "pipeline",
+      "command": "true | gh pr merge 5 >file",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "pipeline-041",
+      "family": "pipeline",
+      "command": "true | gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "and-042",
+      "family": "and",
+      "command": "true && gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "and-043",
+      "family": "and",
+      "command": "true && gh pr merge 5 >file",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "and-044",
+      "family": "and",
+      "command": "true && gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "or-045",
+      "family": "or",
+      "command": "false || gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "or-046",
+      "family": "or",
+      "command": "false || gh pr merge 5 >file",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "or-047",
+      "family": "or",
+      "command": "false || gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "semicolon-048",
+      "family": "semicolon",
+      "command": "true; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "semicolon-049",
+      "family": "semicolon",
+      "command": "true; gh pr merge 5 >file",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "semicolon-050",
+      "family": "semicolon",
+      "command": "true; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "background-051",
+      "family": "background",
+      "command": "gh pr merge 5 & wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "background-052",
+      "family": "background",
+      "command": "gh pr merge 5 >file & wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "background-053",
+      "family": "background",
+      "command": "gh pr merge 5 --admin & wait",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "bash-heredoc-054",
+      "family": "bash-heredoc",
+      "command": "bash <<'EOF'\ngh pr merge 5\nEOF",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "bash-heredoc-055",
+      "family": "bash-heredoc",
+      "command": "bash <<'EOF'\ngh pr merge 5 >file\nEOF",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "bash-heredoc-056",
+      "family": "bash-heredoc",
+      "command": "bash <<'EOF'\ngh pr merge 5 --admin\nEOF",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "sh-heredoc-057",
+      "family": "sh-heredoc",
+      "command": "sh <<'EOF'\ngh pr merge 5\nEOF",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "sh-heredoc-058",
+      "family": "sh-heredoc",
+      "command": "sh <<'EOF'\ngh pr merge 5 >file\nEOF",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "sh-heredoc-059",
+      "family": "sh-heredoc",
+      "command": "sh <<'EOF'\ngh pr merge 5 --admin\nEOF",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "eval-060",
+      "family": "eval",
+      "command": "eval 'gh pr merge 5'",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "eval-061",
+      "family": "eval",
+      "command": "eval 'gh pr merge 5 >file'",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "eval-062",
+      "family": "eval",
+      "command": "eval 'gh pr merge 5 --admin'",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "bash-c-063",
+      "family": "bash-c",
+      "command": "bash -c 'gh pr merge 5'",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "bash-c-064",
+      "family": "bash-c",
+      "command": "bash -c 'gh pr merge 5 >file'",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "bash-c-065",
+      "family": "bash-c",
+      "command": "bash -c 'gh pr merge 5 --admin'",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "sh-c-066",
+      "family": "sh-c",
+      "command": "sh -c 'gh pr merge 5'",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "sh-c-067",
+      "family": "sh-c",
+      "command": "sh -c 'gh pr merge 5 >file'",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "sh-c-068",
+      "family": "sh-c",
+      "command": "sh -c 'gh pr merge 5 --admin'",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "substitution-069",
+      "family": "substitution",
+      "command": "echo $(gh pr merge 5)",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "substitution-070",
+      "family": "substitution",
+      "command": "echo $(gh pr merge 5 >file)",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "substitution-071",
+      "family": "substitution",
+      "command": "echo $(gh pr merge 5 --admin)",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "quoted-substitution-072",
+      "family": "quoted-substitution",
+      "command": "echo \"$(gh pr merge 5)\"",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "quoted-substitution-073",
+      "family": "quoted-substitution",
+      "command": "echo \"$(gh pr merge 5 >file)\"",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "quoted-substitution-074",
+      "family": "quoted-substitution",
+      "command": "echo \"$(gh pr merge 5 --admin)\"",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "assignment-substitution-075",
+      "family": "assignment-substitution",
+      "command": "x=\"$(gh pr merge 5)\"",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "assignment-substitution-076",
+      "family": "assignment-substitution",
+      "command": "x=\"$(gh pr merge 5 >file)\"",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "assignment-substitution-077",
+      "family": "assignment-substitution",
+      "command": "x=\"$(gh pr merge 5 --admin)\"",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "backtick-078",
+      "family": "backtick",
+      "command": "echo `gh pr merge 5`",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "backtick-079",
+      "family": "backtick",
+      "command": "echo `gh pr merge 5 >file`",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "backtick-080",
+      "family": "backtick",
+      "command": "echo `gh pr merge 5 --admin`",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "quoted-backtick-081",
+      "family": "quoted-backtick",
+      "command": "echo \"`gh pr merge 5`\"",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "quoted-backtick-082",
+      "family": "quoted-backtick",
+      "command": "echo \"`gh pr merge 5 >file`\"",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "quoted-backtick-083",
+      "family": "quoted-backtick",
+      "command": "echo \"`gh pr merge 5 --admin`\"",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "process-in-084",
+      "family": "process-in",
+      "command": "cat <(gh pr merge 5)",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "process-in-085",
+      "family": "process-in",
+      "command": "cat <(gh pr merge 5 >file)",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "process-in-086",
+      "family": "process-in",
+      "command": "cat <(gh pr merge 5 --admin)",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "process-out-087",
+      "family": "process-out",
+      "command": "echo fixture >(gh pr merge 5); wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "process-out-088",
+      "family": "process-out",
+      "command": "echo fixture >(gh pr merge 5 >file); wait",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "process-out-089",
+      "family": "process-out",
+      "command": "echo fixture >(gh pr merge 5 --admin); wait",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "case-090",
+      "family": "case",
+      "command": "case x in x) gh pr merge 5;; esac",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "case-091",
+      "family": "case",
+      "command": "case x in x) gh pr merge 5 >file;; esac",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "case-092",
+      "family": "case",
+      "command": "case x in x) gh pr merge 5 --admin;; esac",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "quoted-case-093",
+      "family": "quoted-case",
+      "command": "case x in x) echo \"$(gh pr merge 5)\";; esac",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "quoted-case-094",
+      "family": "quoted-case",
+      "command": "case x in x) echo \"$(gh pr merge 5 >file)\";; esac",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "quoted-case-095",
+      "family": "quoted-case",
+      "command": "case x in x) echo \"$(gh pr merge 5 --admin)\";; esac",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "if-096",
+      "family": "if",
+      "command": "if true; then git checkout -b fixture; fi",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "else-097",
+      "family": "else",
+      "command": "if false; then :; else git checkout -b fixture; fi",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "elif-098",
+      "family": "elif",
+      "command": "if false; then :; elif true; then git checkout -b fixture; fi",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "while-099",
+      "family": "while",
+      "command": "while true; do git checkout -b fixture; break; done",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "until-100",
+      "family": "until",
+      "command": "until false; do git checkout -b fixture; break; done",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "for-101",
+      "family": "for",
+      "command": "for x in once; do git checkout -b fixture; done",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "brace-102",
+      "family": "brace",
+      "command": "{ git checkout -b fixture; }",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "subshell-103",
+      "family": "subshell",
+      "command": "( git checkout -b fixture )",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "function-104",
+      "family": "function",
+      "command": "f() { git checkout -b fixture; }; f",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "time-105",
+      "family": "time",
+      "command": "time git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "coproc-106",
+      "family": "coproc",
+      "command": "coproc git checkout -b fixture; wait",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "coproc-name-107",
+      "family": "coproc-name",
+      "command": "coproc NAME { git checkout -b fixture; }; wait",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "negation-108",
+      "family": "negation",
+      "command": "! git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "pipeline-109",
+      "family": "pipeline",
+      "command": "true | git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "and-110",
+      "family": "and",
+      "command": "true && git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "or-111",
+      "family": "or",
+      "command": "false || git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "semicolon-112",
+      "family": "semicolon",
+      "command": "true; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "background-113",
+      "family": "background",
+      "command": "git checkout -b fixture & wait",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "bash-heredoc-114",
+      "family": "bash-heredoc",
+      "command": "bash <<'EOF'\ngit checkout -b fixture\nEOF",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "sh-heredoc-115",
+      "family": "sh-heredoc",
+      "command": "sh <<'EOF'\ngit checkout -b fixture\nEOF",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "eval-116",
+      "family": "eval",
+      "command": "eval 'git checkout -b fixture'",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "bash-c-117",
+      "family": "bash-c",
+      "command": "bash -c 'git checkout -b fixture'",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "sh-c-118",
+      "family": "sh-c",
+      "command": "sh -c 'git checkout -b fixture'",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "substitution-119",
+      "family": "substitution",
+      "command": "echo $(git checkout -b fixture)",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "quoted-substitution-120",
+      "family": "quoted-substitution",
+      "command": "echo \"$(git checkout -b fixture)\"",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "assignment-substitution-121",
+      "family": "assignment-substitution",
+      "command": "x=\"$(git checkout -b fixture)\"",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "backtick-122",
+      "family": "backtick",
+      "command": "echo `git checkout -b fixture`",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "quoted-backtick-123",
+      "family": "quoted-backtick",
+      "command": "echo \"`git checkout -b fixture`\"",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "process-in-124",
+      "family": "process-in",
+      "command": "cat <(git checkout -b fixture)",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "process-out-125",
+      "family": "process-out",
+      "command": "echo fixture >(git checkout -b fixture); wait",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "case-126",
+      "family": "case",
+      "command": "case x in x) git checkout -b fixture;; esac",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "quoted-case-127",
+      "family": "quoted-case",
+      "command": "case x in x) echo \"$(git checkout -b fixture)\";; esac",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9480-large-fd-128",
+      "family": "9480-large-fd",
+      "command": "gh pr merge 99999999999999999999>file 6",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-large-fd-129",
+      "family": "9480-large-fd",
+      "command": "gh pr merge 99999999999999999999>file 6 >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-large-fd-130",
+      "family": "9480-large-fd",
+      "command": "gh pr merge 99999999999999999999>file 6 | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-escaped-space-131",
+      "family": "9480-escaped-space",
+      "command": "gh pr merge \\ 5>file 6",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-escaped-space-132",
+      "family": "9480-escaped-space",
+      "command": "gh pr merge \\ 5>file 6 >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-escaped-space-133",
+      "family": "9480-escaped-space",
+      "command": "gh pr merge \\ 5>file 6 | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-hash-word-134",
+      "family": "9480-hash-word",
+      "command": "gh pr merge feat#x",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-hash-word-135",
+      "family": "9480-hash-word",
+      "command": "gh pr merge feat#x >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-hash-word-136",
+      "family": "9480-hash-word",
+      "command": "gh pr merge feat#x | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-consecutive-cd-137",
+      "family": "9480-consecutive-cd",
+      "command": "cd a; cd b; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-consecutive-cd-138",
+      "family": "9480-consecutive-cd",
+      "command": "cd a; cd b; gh pr merge 5 >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-consecutive-cd-139",
+      "family": "9480-consecutive-cd",
+      "command": "cd a; cd b; gh pr merge 5 | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-named-fd-140",
+      "family": "9480-named-fd",
+      "command": "gh pr merge 5 {fd}>file",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-named-fd-141",
+      "family": "9480-named-fd",
+      "command": "gh pr merge 5 {fd}>file >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-named-fd-142",
+      "family": "9480-named-fd",
+      "command": "gh pr merge 5 {fd}>file | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-escaped-merge-143",
+      "family": "9480-escaped-merge",
+      "command": "gh pr m\\erge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-escaped-merge-144",
+      "family": "9480-escaped-merge",
+      "command": "gh pr m\\erge 5 >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-escaped-merge-145",
+      "family": "9480-escaped-merge",
+      "command": "gh pr m\\erge 5 | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-quoted-merge-146",
+      "family": "9480-quoted-merge",
+      "command": "gh pr \"mer\"\"ge\" 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-quoted-merge-147",
+      "family": "9480-quoted-merge",
+      "command": "gh pr \"mer\"\"ge\" 5 >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-quoted-merge-148",
+      "family": "9480-quoted-merge",
+      "command": "gh pr \"mer\"\"ge\" 5 | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-process-149",
+      "family": "9480-read-process",
+      "command": "jq . <(gh pr view 5 --json mergeStateStatus)",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-process-150",
+      "family": "9480-read-process",
+      "command": "jq . <(gh pr view 5 --json mergeStateStatus) >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-process-151",
+      "family": "9480-read-process",
+      "command": "jq . <(gh pr view 5 --json mergeStateStatus) | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-redirect-152",
+      "family": "9480-read-redirect",
+      "command": "gh pr view 5 --json mergeable > $(mktemp)",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-redirect-153",
+      "family": "9480-read-redirect",
+      "command": "gh pr view 5 --json mergeable > $(mktemp) >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-redirect-154",
+      "family": "9480-read-redirect",
+      "command": "gh pr view 5 --json mergeable > $(mktemp) | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-diff-155",
+      "family": "9480-read-diff",
+      "command": "diff <(gh pr view 5 --json mergeable) <(gh pr view 6 --json mergeable)",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-diff-156",
+      "family": "9480-read-diff",
+      "command": "diff <(gh pr view 5 --json mergeable) <(gh pr view 6 --json mergeable) >tail",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-read-diff-157",
+      "family": "9480-read-diff",
+      "command": "diff <(gh pr view 5 --json mergeable) <(gh pr view 6 --json mergeable) | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-checkout-B-158",
+      "family": "9484-checkout-B",
+      "command": "git checkout -B fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-checkout-B-159",
+      "family": "9484-checkout-B",
+      "command": "git checkout -B fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-checkout-B-160",
+      "family": "9484-checkout-B",
+      "command": "git checkout -B fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-pipeline-cd-161",
+      "family": "9484-pipeline-cd",
+      "command": "true | cd primary/wt 2>file && git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-pipeline-cd-162",
+      "family": "9484-pipeline-cd",
+      "command": "true | cd primary/wt 2>file && git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-pipeline-cd-163",
+      "family": "9484-pipeline-cd",
+      "command": "true | cd primary/wt 2>file && git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-cdpath-164",
+      "family": "9484-cdpath",
+      "command": "CDPATH=.. cd primary 2>file && git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-cdpath-165",
+      "family": "9484-cdpath",
+      "command": "CDPATH=.. cd primary 2>file && git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-cdpath-166",
+      "family": "9484-cdpath",
+      "command": "CDPATH=.. cd primary 2>file && git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-symlink-parent-167",
+      "family": "9484-symlink-parent",
+      "command": "cd link/.. 2>file && git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-symlink-parent-168",
+      "family": "9484-symlink-parent",
+      "command": "cd link/.. 2>file && git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-symlink-parent-169",
+      "family": "9484-symlink-parent",
+      "command": "cd link/.. 2>file && git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-ansi-quote-170",
+      "family": "9484-ansi-quote",
+      "command": "echo $'text\\'text'; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-ansi-quote-171",
+      "family": "9484-ansi-quote",
+      "command": "echo $'text\\'text'; git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-ansi-quote-172",
+      "family": "9484-ansi-quote",
+      "command": "echo $'text\\'text'; git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-xargs-173",
+      "family": "9484-xargs",
+      "command": "printf fixture | xargs git checkout -b",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-xargs-174",
+      "family": "9484-xargs",
+      "command": "printf fixture | xargs git checkout -b >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-xargs-175",
+      "family": "9484-xargs",
+      "command": "printf fixture | xargs git checkout -b | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-dynamic-name-176",
+      "family": "9484-dynamic-name",
+      "command": "$(echo git) checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-dynamic-name-177",
+      "family": "9484-dynamic-name",
+      "command": "$(echo git) checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-dynamic-name-178",
+      "family": "9484-dynamic-name",
+      "command": "$(echo git) checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-parameter-name-179",
+      "family": "9484-parameter-name",
+      "command": "${G:-git} checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-parameter-name-180",
+      "family": "9484-parameter-name",
+      "command": "${G:-git} checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-parameter-name-181",
+      "family": "9484-parameter-name",
+      "command": "${G:-git} checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-pushd-182",
+      "family": "9484-pushd",
+      "command": "pushd primary && git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-pushd-183",
+      "family": "9484-pushd",
+      "command": "pushd primary && git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-pushd-184",
+      "family": "9484-pushd",
+      "command": "pushd primary && git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-env-C-185",
+      "family": "9484-env-C",
+      "command": "env -C primary git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-env-C-186",
+      "family": "9484-env-C",
+      "command": "env -C primary git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-env-C-187",
+      "family": "9484-env-C",
+      "command": "env -C primary git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-git-C-188",
+      "family": "9484-git-C",
+      "command": "git -C \"$P\" checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-git-C-189",
+      "family": "9484-git-C",
+      "command": "git -C \"$P\" checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-git-C-190",
+      "family": "9484-git-C",
+      "command": "git -C \"$P\" checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-GIT_DIR-191",
+      "family": "9484-GIT_DIR",
+      "command": "GIT_DIR=primary/.git git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-GIT_DIR-192",
+      "family": "9484-GIT_DIR",
+      "command": "GIT_DIR=primary/.git git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-GIT_DIR-193",
+      "family": "9484-GIT_DIR",
+      "command": "GIT_DIR=primary/.git git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-git-dir-194",
+      "family": "9484-git-dir",
+      "command": "git --git-dir=primary/.git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-git-dir-195",
+      "family": "9484-git-dir",
+      "command": "git --git-dir=primary/.git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-git-dir-196",
+      "family": "9484-git-dir",
+      "command": "git --git-dir=primary/.git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-subshell-cd-197",
+      "family": "9484-subshell-cd",
+      "command": "(cd primary/wt && true) && git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-subshell-cd-198",
+      "family": "9484-subshell-cd",
+      "command": "(cd primary/wt && true) && git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-subshell-cd-199",
+      "family": "9484-subshell-cd",
+      "command": "(cd primary/wt && true) && git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-unquoted-body-200",
+      "family": "9484-unquoted-body",
+      "command": "cd primary/wt && cat <<EOF\n$(cd ../..; git checkout -b fixture)\nEOF",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-unquoted-body-201",
+      "family": "9484-unquoted-body",
+      "command": "cd primary/wt && cat <<EOF\n$(cd ../..; git checkout -b fixture)\nEOF >file",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-unquoted-body-202",
+      "family": "9484-unquoted-body",
+      "command": "cd primary/wt && cat <<EOF\n$(cd ../..; git checkout -b fixture)\nEOF | cat",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-failing-cd-203",
+      "family": "9484-failing-cd",
+      "command": "cd missing; cd ../..; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-failing-cd-204",
+      "family": "9484-failing-cd",
+      "command": "cd missing; cd ../..; git checkout -b fixture >file",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-failing-cd-205",
+      "family": "9484-failing-cd",
+      "command": "cd missing; cd ../..; git checkout -b fixture | cat",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9490-prefix-206",
+      "family": "9490-prefix",
+      "command": "gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-207",
+      "family": "9490-prefix",
+      "command": "2>&1 gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-208",
+      "family": "9490-prefix",
+      "command": ">file gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-209",
+      "family": "9490-prefix",
+      "command": ">>file gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-210",
+      "family": "9490-prefix",
+      "command": "2>/dev/null gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-211",
+      "family": "9490-prefix",
+      "command": "&>file gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-212",
+      "family": "9490-prefix",
+      "command": "<file gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-213",
+      "family": "9490-prefix",
+      "command": "{fd}>file gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-214",
+      "family": "9490-prefix",
+      "command": "gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-215",
+      "family": "9490-prefix",
+      "command": "2>&1 gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-216",
+      "family": "9490-prefix",
+      "command": ">file gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-217",
+      "family": "9490-prefix",
+      "command": ">>file gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-218",
+      "family": "9490-prefix",
+      "command": "2>/dev/null gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-219",
+      "family": "9490-prefix",
+      "command": "&>file gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-220",
+      "family": "9490-prefix",
+      "command": "<file gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-221",
+      "family": "9490-prefix",
+      "command": "{fd}>file gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-222",
+      "family": "9490-prefix",
+      "command": "git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-223",
+      "family": "9490-prefix",
+      "command": "2>&1 git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-224",
+      "family": "9490-prefix",
+      "command": ">file git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-225",
+      "family": "9490-prefix",
+      "command": ">>file git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-226",
+      "family": "9490-prefix",
+      "command": "2>/dev/null git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-227",
+      "family": "9490-prefix",
+      "command": "&>file git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-228",
+      "family": "9490-prefix",
+      "command": "<file git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-229",
+      "family": "9490-prefix",
+      "command": "{fd}>file git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-230",
+      "family": "9490-prefix",
+      "command": "cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-231",
+      "family": "9490-prefix",
+      "command": "2>&1 cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-232",
+      "family": "9490-prefix",
+      "command": ">file cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-233",
+      "family": "9490-prefix",
+      "command": ">>file cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-234",
+      "family": "9490-prefix",
+      "command": "2>/dev/null cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-235",
+      "family": "9490-prefix",
+      "command": "&>file cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-236",
+      "family": "9490-prefix",
+      "command": "<file cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-237",
+      "family": "9490-prefix",
+      "command": "{fd}>file cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-238",
+      "family": "9490-prefix",
+      "command": "cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-239",
+      "family": "9490-prefix",
+      "command": "2>&1 cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-240",
+      "family": "9490-prefix",
+      "command": ">file cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-241",
+      "family": "9490-prefix",
+      "command": ">>file cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-242",
+      "family": "9490-prefix",
+      "command": "2>/dev/null cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-243",
+      "family": "9490-prefix",
+      "command": "&>file cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-244",
+      "family": "9490-prefix",
+      "command": "<file cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-245",
+      "family": "9490-prefix",
+      "command": "{fd}>file cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-246",
+      "family": "wrapper",
+      "command": "env -i gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-247",
+      "family": "wrapper",
+      "command": "command gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-248",
+      "family": "wrapper",
+      "command": "builtin gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-249",
+      "family": "wrapper",
+      "command": "exec gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-250",
+      "family": "wrapper",
+      "command": "nice -n 1 gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-251",
+      "family": "wrapper",
+      "command": "nohup gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-252",
+      "family": "wrapper",
+      "command": "timeout 2 gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-253",
+      "family": "wrapper",
+      "command": "stdbuf -oL gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-254",
+      "family": "wrapper",
+      "command": "sudo -u fixture gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "wrapper-255",
+      "family": "wrapper",
+      "command": "xargs -n 1 gh pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "accepted-residual-256",
+      "family": "accepted-residual",
+      "command": "eval \"$x\"",
+      "hook": "merge",
+      "accepted": true
+    },
+    {
+      "id": "accepted-residual-257",
+      "family": "accepted-residual",
+      "command": "source script",
+      "hook": "merge",
+      "accepted": true
+    },
+    {
+      "id": "accepted-residual-258",
+      "family": "accepted-residual",
+      "command": "gh api -X PUT repos/o/r/pulls/5/merge",
+      "hook": "merge",
+      "accepted": true
+    },
+    {
+      "id": "9490-prefix-259",
+      "family": "9490-prefix",
+      "command": "true&&>file gh issue create -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-260",
+      "family": "9490-prefix",
+      "command": "gh issue create -b x | cat",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-261",
+      "family": "9490-prefix",
+      "command": "true&&>file gh pr comment 5 -b x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-262",
+      "family": "9490-prefix",
+      "command": "gh pr comment 5 -b x | cat",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-263",
+      "family": "9490-prefix",
+      "command": "true&&>file git push origin x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-264",
+      "family": "9490-prefix",
+      "command": "git push origin x | cat",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-265",
+      "family": "9490-prefix",
+      "command": "true&&>file cat .env",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-266",
+      "family": "9490-prefix",
+      "command": "cat .env | cat",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-267",
+      "family": "9490-prefix",
+      "command": "true&&>file cd primary && touch x",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9490-prefix-268",
+      "family": "9490-prefix",
+      "command": "cd primary && touch x | cat",
+      "hook": "argv",
+      "accepted": false
+    },
+    {
+      "id": "9480-eval-pipe",
+      "family": "9480-eval-pipe",
+      "command": "eval 'gh pr merge 5 >file' | cat",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9480-negation-pipe",
+      "family": "9480-negation-pipe",
+      "command": "! gh pr merge 5 | cat",
+      "hook": "merge",
+      "accepted": false
+    }
+  ]
+}

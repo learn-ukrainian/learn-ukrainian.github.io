@@ -30,8 +30,8 @@ careless merge actually takes — direct, wrapper-prefixed, `bash -c` wrapped, a
 cannot stop an agent that sets out to evade it: `gh api -X PUT repos/{o}/{r}/pulls/{n}/merge`
 never says "gh pr merge" at all, and neither does a Python script hitting the REST API.
 Nothing matching on Bash commands can close that, so the job is to make the CARELESS path
-refuse, not the deliberate path impossible. A shell here-string (`sh <<< '<cmd>'`) is
-likewise unread — a deliberate-only shape, documented rather than papered over.
+refuse, not the deliberate path impossible. Literal shell payloads and here-documents are parsed recursively; dynamic
+payloads are refused whenever the raw command engages this guard.
 """
 
 from __future__ import annotations
@@ -43,7 +43,6 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import NamedTuple
 
 
 def _read_payload() -> dict | None:
@@ -86,20 +85,16 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import (
-        ShellPreprocessLimit,
-        skippable_heredoc_delimiters,
-        strip_skippable_heredoc_bodies,
+    from shell_bash import REPAIR, UNREADABLE, ShellParseError, invoked_start, read_commands
+except Exception as exc:
+    print(
+        f"guard dependency unavailable: shell_bash ({type(exc).__name__}); "
+        "repair: uv pip install --python <canonical-checkout>/.venv/bin/python "
+        "--require-hashes --only-binary=:all: -r requirements-hooks.txt; "
+        "npm run agents:deploy",
+        file=sys.stderr,
     )
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
-
-try:
-    from shell_redirects import scope_events
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
+    raise SystemExit(2) from None
 
 try:
     from scripts.publish.merge_guard import (
@@ -123,8 +118,11 @@ try:
     from scripts.publish.merge_guard import (
         _rollup_value as _rollup_value,
     )
-except ImportError:
-    print("guard dependency unavailable: merge readiness", file=sys.stderr)
+except Exception:
+    print(
+        "guard dependency unavailable: merge readiness; repair: git restore scripts/publish/merge_guard.py; npm run agents:deploy",
+        file=sys.stderr,
+    )
     raise SystemExit(2) from None
 
 
@@ -185,346 +183,34 @@ def _flag_enabled(args: list[str], name: str) -> bool:
     return enabled
 
 
-# Redirect tokenization is shared with the two sibling target guards.
+_UNREADABLE_MARKER = UNREADABLE
+_UNPARSED = ["gh", "pr", "merge", UNREADABLE]
+_MAX_SHELL_DEPTH = 8
+_invoked_start = invoked_start
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
-    """Keep only the shared parser's unambiguous here-doc delimiters."""
-    parsed = skippable_heredoc_delimiters(line)
-    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
+def _judged_segments(command: str, depth: int = 0, cwd: str | None = None, cwd_unreadable: bool = False):
+    try:
+        rows = read_commands(command, cwd=cwd, depth=depth)
+        if re.search(r"\bmerge\b", command, re.I) and ("<(" in command or ">(" in command):
+            from shell_bash import Invocation
 
+            rows.append(Invocation(list(_UNPARSED), None))
+        return rows
+    except ShellParseError:
+        from shell_bash import Invocation
 
-def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands.
-
-    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
-    opener must not make a trailing real `gh pr merge` vanish. Only a heredoc
-    that actually closes has its body + closer dropped.
-    """
-    return strip_skippable_heredoc_bodies(command)
-
-
-def _join_line_continuations(text: str) -> str:
-    r"""Fold `\<newline>` into one logical line, as the shell does — so a
-    `\`-continued `gh pr merge` is not split across physical lines and missed.
-    Over-folding a quoted literal `\` only merges argv text."""
-    return text.replace("\\\n", "")
-
-
-def _scope_events(command: str) -> list[tuple[str, list[str]]]:
-    """Preserve the PR guard's existing event and unreadability policy."""
-    return scope_events(
-        command,
-        mark_redirect_unreadable="merge" in command.lower(),
-        unreadable_marker=_UNREADABLE_MARKER,
-        unparsed=_UNPARSED,
-        may_match=_may_merge,
-    )
+        return [Invocation(list(_UNPARSED), None)] if _may_merge(command) else []
 
 
 def _segments(command: str) -> list[list[str]]:
-    """Just the argv segments of `command`, scope boundaries discarded."""
-    return [argv for kind, argv in _scope_events(command) if kind == "segment" and argv]
-
-
-def _is_env_assignment(tok: str) -> bool:
-    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
-
-
-_WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
-
-_WRAPPER_VALUE_OPTIONS = {
-    "env": frozenset({"-u", "--unset", "-C", "--chdir"}),
-    "sudo": frozenset(
-        {
-            "-u",
-            "--user",
-            "-g",
-            "--group",
-            "-r",
-            "--role",
-            "-t",
-            "--type",
-            "-C",
-            "--close-from",
-            "-c",
-            "--command-timeout",
-            "-T",
-        }
-    ),
-    "time": frozenset({"-f", "--format", "-o", "--output"}),
-    "nice": frozenset({"-n", "--adjustment"}),
-    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
-}
-
-
-def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
-    """Return the first command word after one transparent wrapper.
-
-    A missing operand for a recognised value-taking option cannot execute a
-    command, so the scan consumes to the end instead of guessing a verb.
-    """
-    value_options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
-    while i < len(seg):
-        tok = seg[i]
-        if tok == "--":
-            return i + 1
-        if not tok.startswith("-") or tok == "-":
-            return i
-        i += 1
-        if tok in value_options:
-            if i >= len(seg):
-                return len(seg)
-            i += 1
-    return i
-
-
-def _skip_command_prefix(seg: list[str], i: int) -> int:
-    """Advance past wrappers (and their flags), assignments, and ``{``.
-
-    Thus `nice -n 10 gh pr merge` reaches `gh`, rather than stopping on the
-    wrapper option (#4878).
-    """
-    while i < len(seg):
-        tok = seg[i]
-        if tok in _WRAPPERS:
-            i = _skip_wrapper_options(tok, seg, i + 1)
-        elif tok == "{" or _is_env_assignment(tok):
-            i += 1
-        else:
-            break
-    return i
-
-
-_SHELLS = {"bash", "sh", "zsh", "dash", "ksh", "fish", "busybox"}
-
-
-def _find_merge(seg: list[str], start: int) -> int | None:
-    """Index of the `gh pr merge` token run at or after `start`, else None."""
-    for j in range(start, len(seg) - 2):
-        if seg[j : j + 3] == ["gh", "pr", "merge"]:
-            return j
-    return None
-
-
-# xargs options that consume a value; everything else short is a switch.
-_XARGS_VALUE_OPTS = {
-    "-n",
-    "-P",
-    "-I",
-    "-i",
-    "-L",
-    "-l",
-    "-s",
-    "-d",
-    "-E",
-    "-e",
-    "-a",
-    "--max-args",
-    "--max-procs",
-    "--replace",
-    "--max-lines",
-    "--max-chars",
-    "--delimiter",
-    "--eof",
-    "--arg-file",
-}
-
-
-def _invoked_start(seg: list[str]) -> tuple[int, bool]:
-    """Index where the actually-executed command begins → (index, reached_via_xargs).
-
-    `xargs` is NOT a transparent prefix: it appends stdin items to the command it runs.
-    Its own options must be stepped over, and the command boundary respected — otherwise
-    `xargs echo gh pr merge 5` (which runs `echo`) reads as a merge, while
-    `printf '5' | xargs gh pr merge --squash` (which really does merge PR 5) hides its
-    selector on stdin.
-    """
-    i = _skip_command_prefix(seg, 0)
-    if i >= len(seg) or seg[i] != "xargs":
-        return i, False
-    i += 1
-    while i < len(seg):
-        tok = seg[i]
-        if not tok.startswith("-"):
-            break
-        if tok in _XARGS_VALUE_OPTS:
-            i += 2
-            continue
-        if "=" in tok and tok.startswith("--"):
-            i += 1
-            continue
-        i += 1
-    return _skip_command_prefix(seg, i), True
-
-
-def _strip_dollar_quote(payload: str) -> str:
-    """Drop the `$` that `$'...'` / `$"..."` leave glued to a payload after tokenizing."""
-    return payload[1:] if payload.startswith("$") else payload
-
-
-def _shell_c_payload(seg: list[str]) -> str | None:
-    """The command string of a `bash -c '<cmd>'` segment, else None.
-
-    `bash -c 'gh pr merge 5 --squash'` really does merge, but the segment starts with
-    `bash`, so a direct-command match alone never sees it. The payload is a command
-    string and must be parsed as one.
-
-    Bash's `$'...'` (ANSI-C) and `$"..."` (locale) quoting survive shlex as a literal
-    `$` glued to the front — `bash -c $'gh pr merge 5'` yields `$gh pr merge 5`, whose
-    first token is `$gh`, matching nothing. Bash runs that command for real (verified),
-    so the marker is stripped rather than left to hide the merge.
-    """
-    i, _ = _invoked_start(seg)
-    if i >= len(seg):
-        return None
-    if seg[i].rsplit("/", 1)[-1] not in _SHELLS:
-        return None
-    for j in range(i + 1, len(seg) - 1):
-        tok = seg[j]
-        # `-c`, and any short cluster CONTAINING c — `bash -cx 'cmd'` runs cmd just as
-        # `-c` does, so requiring c to be last would miss a real merge (verified:
-        # `bash -cx 'echo hi'` executes and exits 0).
-        if tok.startswith("-") and not tok.startswith("--") and "c" in tok[1:]:
-            return _strip_dollar_quote(seg[j + 1])
-        if tok == "--command":
-            return _strip_dollar_quote(seg[j + 1])
-        if tok.startswith("--command="):
-            return _strip_dollar_quote(tok.split("=", 1)[1])
-    return None
-
-
-_MAX_SHELL_DEPTH = 8
-
-# Stand-in segment for a shell payload left uninspected at the recursion cap. _judge()
-# recognizes the marker and refuses outright — the cap costs a refusal, never a free
-# pass. Bounding the work must not bound the guarantee.
-#
-# It must be matched EXPLICITLY: relying on "no PR selector → block" would be wrong,
-# because _pr_ref falls back to the CURRENT BRANCH's PR, so a green current branch would
-# silently approve the payload nobody read.
-_UNREADABLE_MARKER = "--__guard_unreadable__"
-_UNPARSED = ["gh", "pr", "merge", _UNREADABLE_MARKER]
-
-# Sentinel: a `cd` whose target the guard cannot statically read (`cd -`, `cd "$DIR"`,
-# `cd $(...)`). Distinct from None ("this segment is not a cd").
-_CD_UNREADABLE = object()
-
-
-# bash's `cd` options (`cd -LP@ /x` is one legal cluster), minus `-` which is a TARGET.
-_CD_FLAG_CHARS = set("LPe@")
-
-
-def _is_cd_flag(tok: str) -> bool:
-    return len(tok) >= 2 and tok[0] == "-" and set(tok[1:]) <= _CD_FLAG_CHARS
-
-
-def _cd_target(seg: list[str]):
-    """The literal directory a `cd` segment changes into, expanded.
-
-    Returns None when the segment is not a cd; _CD_UNREADABLE when it is a cd the
-    guard cannot statically resolve (variable/substitution/`cd -`). A bare `cd` goes
-    to $HOME, as the shell does. Relative paths resolve against the hook process's
-    cwd — the same base the real command's cd uses.
-
-    Options are stepped over rather than matched literally, and `--` ends them: reading
-    `cd -- /tmp`'s target as `--` (or `cd -LP /tmp`'s as `-LP`) would resolve a path that
-    does not exist, and a wrong path is not a safe one — gh would miss there and the
-    merge would fail closed on a command that is perfectly fine.
-
-    `--` does NOT demote `-` to a plain directory name, though it reads as if it should:
-    `cd -- -` still toggles to $OLDPWD (verified against bash with a real `./-` directory
-    in place, which only `cd -- ./-` reaches). So `-` stays unreadable in both spellings.
-    """
-    i = _skip_command_prefix(seg, 0)
-    if i >= len(seg) or seg[i] != "cd":
-        return None
-    if _UNREADABLE_MARKER in seg:
-        return _CD_UNREADABLE
-    rest: list[str] = []
-    options_done = False
-    for tok in seg[i + 1 :]:
-        if not options_done:
-            if tok == "--":
-                options_done = True
-                continue
-            if _is_cd_flag(tok):
-                continue
-        rest.append(tok)
-    if not rest:
-        return os.path.expanduser("~")
-    target = rest[0]
-    if target == "-" or "$" in target or "`" in target:
-        return _CD_UNREADABLE
-    return os.path.abspath(os.path.expanduser(target))
-
-
-class _JudgedSegment(NamedTuple):
-    """One argv segment, with the cwd it actually runs in already resolved."""
-
-    argv: list[str]
-    cwd: str | None
-    cwd_unreadable: bool
-
-
-def _judged_segments(
-    command: str,
-    depth: int = 0,
-    cwd: str | None = None,
-    cwd_unreadable: bool = False,
-) -> list[_JudgedSegment]:
-    """Every segment worth judging, each tagged with the cwd it runs in.
-
-    A `cd` is scoped to the shell level that runs it, so cwd is resolved HERE, during the
-    walk that knows the nesting — not by a caller reading a flattened list, which cannot
-    see where one shell ends and the next begins (#5333). Two boundaries close the leak:
-
-    * subshell `( ... )` — cwd is saved at `(` and restored at `)`.
-    * `bash -c '<payload>'` — the payload INHERITS the spawning shell's cwd (passed down),
-      but its own cds die with it (the recursion's final state is discarded).
-
-    Both leaked in both directions before: an inner `cd` was adopted by an outer merge
-    (`bash -c 'cd /inner && true' && gh pr merge 9` judged 9 in /inner), and an outer
-    merge inherited an inner one it never saw (`cd /outer && bash -c 'cd /inner &&
-    gh pr merge 1' && gh pr merge 2` judged BOTH in /inner, though 2 runs in /outer).
-    Judging a merge in the wrong repo is wrong in both directions, and the dangerous one
-    is the false ALLOW off a same-numbered green PR.
-
-    An unattributable boundary — a `)` with no `(` (a `case` arm, a stray paren) — desyncs
-    the model, so cwd is marked unreadable rather than guessed: the walk no longer knows
-    which shell it is standing in, and _judge never sees a cwd this function is unsure of.
-    """
-    out: list[_JudgedSegment] = []
-    stack: list[tuple[str | None, bool]] = []
-    for kind, argv in _scope_events(command):
-        if kind == "open":
-            stack.append((cwd, cwd_unreadable))
-            continue
-        if kind == "close":
-            if stack:
-                cwd, cwd_unreadable = stack.pop()
-            else:
-                cwd_unreadable = True
-            continue
-        if kind == "unreadable":
-            cwd_unreadable = True
-            continue
-        target = _cd_target(argv)
-        if target is _CD_UNREADABLE:
-            cwd_unreadable = True
-        elif target is not None:
-            # A literal cd RESOLVES the cwd — including after an unreadable one, whose
-            # target no longer matters now that a readable cd has overwritten it.
-            cwd, cwd_unreadable = target, False
-        out.append(_JudgedSegment(argv, cwd, cwd_unreadable))
-        payload = _shell_c_payload(argv)
-        if not payload:
-            continue
-        if depth >= _MAX_SHELL_DEPTH:
-            out.append(_JudgedSegment(list(_UNPARSED), cwd, cwd_unreadable))
-            continue
-        out.extend(_judged_segments(payload, depth + 1, cwd, cwd_unreadable))
-    return out
+    try:
+        rows = [segment.argv for segment in read_commands(command, include_payloads=False, diagnostic=True)]
+        if re.search(r"\bmerge\b", command, re.I) and ("<(" in command or ">(" in command):
+            rows.append(list(_UNPARSED))
+        return rows
+    except ShellParseError:
+        return []
 
 
 def _merge_args(seg: list[str]) -> list[str] | None:
@@ -563,17 +249,6 @@ def _merge_args(seg: list[str]) -> list[str] | None:
             j += 1
     elif seg[i : i + 3] == ["gh", "pr", "merge"]:
         args = seg[i + 3 :]
-    elif i > 0 and not via_xargs:
-        # A known wrapper brought its own options/operands (`sudo -u bot gh pr merge`,
-        # `env -i gh pr merge`), so the command does not begin at `i`. Find it instead of
-        # letting the merge through unjudged. Only wrapper-prefixed segments are scanned,
-        # so an unwrapped `echo gh pr merge 5` is still not treated as a merge — and the
-        # scan is skipped for xargs, whose trailing tokens are DATA for another command
-        # (`xargs echo gh pr merge 5` runs echo).
-        j = _find_merge(seg, i)
-        if j is None:
-            return None
-        args = seg[j + 3 :]
     else:
         return None
     if via_xargs and _pr_selector(args) is None:
@@ -1016,19 +691,33 @@ def main() -> int:
     # to its own shell level is _judged_segments' job: it is the only reader that knows
     # where a subshell or `bash -c` payload begins and ends.
     try:
-        segments = _judged_segments(command)
-    except ShellPreprocessLimit:
+        segments = read_commands(command, cwd=payload.get("cwd") or os.getcwd())
+    except Exception as exc:
         sys.stderr.write(
             _block_msg(
-                "nested shell command could not be parsed safely",
-                "Use a simpler literal merge command so the guard can check its target PR.",
+                f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}",
+                f"Use a literal merge command. Repair parser installation: {REPAIR}",
+            )
+        )
+        return 2
+    if re.search(r"\bmerge\b", command) and ("<(" in command or ">(" in command):
+        sys.stderr.write(
+            _block_msg(
+                "process-substitution merge scope cannot be read", f"Use a literal merge command; repair: {REPAIR}"
             )
         )
         return 2
     for seg in segments:
         args = _merge_args(seg.argv)
+        if args is not None and (any(row.redirect_unknown for row in segments) or "<(" in command or ">(" in command):
+            args = [*args, UNREADABLE]
         if args is None:
             continue
+        if UNREADABLE in args:
+            sys.stderr.write(
+                _block_msg("merge arguments cannot be read", f"Use literal arguments; repair parser: {REPAIR}")
+            )
+            return 2
         # `-R owner/repo` names the repo outright, so this merge does not depend on the cwd
         # it runs in — and an unreadable cwd has nothing left to fail closed about. Blocking
         # anyway made the escape hatch this very message advertises a no-op (#5333 r2).

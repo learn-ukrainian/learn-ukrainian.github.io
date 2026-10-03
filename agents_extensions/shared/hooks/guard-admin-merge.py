@@ -29,24 +29,38 @@ import re
 import subprocess
 import sys
 
+
+def _may_guard(command: str) -> bool:
+    probe = command.replace("\\", "").replace("'", "").replace('"', "")
+    return "gh" in probe and "--admin" in probe
+
+
+if __name__ == "__main__":
+    try:
+        _CLI_PAYLOAD = json.loads(sys.stdin.read() or "{}")
+        _CLI_COMMAND = (_CLI_PAYLOAD.get("tool_input") or {}).get("command", "")
+        if isinstance(_CLI_COMMAND, str) and not _may_guard(_CLI_COMMAND):
+            sys.exit(0)
+    except (ValueError, AttributeError):
+        print("BLOCKED: malformed hook payload; provide a literal Bash command", file=sys.stderr)
+        sys.exit(2)
+
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import (
-        ShellPreprocessLimit,
-        skippable_heredoc_delimiters,
-        strip_skippable_heredoc_bodies,
+    from shell_bash import REPAIR, UNREADABLE, ShellParseError, invoked_start, read_commands
+except Exception as exc:
+    print(
+        f"guard dependency unavailable: shell_bash ({type(exc).__name__}); "
+        "repair: uv pip install --python <canonical-checkout>/.venv/bin/python "
+        "--require-hashes --only-binary=:all: -r requirements-hooks.txt; "
+        "npm run agents:deploy",
+        file=sys.stderr,
     )
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
+    raise SystemExit(2) from None
 
-try:
-    from shell_redirects import segments_with_following_operator
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
 # `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> the guard reads
@@ -131,122 +145,18 @@ def _flag_enabled(args: list[str], name: str) -> bool:
     return enabled
 
 
-# --- Command segmentation hardened against glued shell operators (#4876). ---
-# Pattern lifted from guard-secret-print.py. Hooks are standalone by design,
-# so the helpers are copied, not imported. Keep the three active copies in
-# guard-branch-switch-in-main.py, guard-admin-merge.py, and guard-pr-merge.py
-# in sync.
+_UNREADABLE_MARKER = UNREADABLE
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
-    """Keep only the shared parser's unambiguous here-doc delimiters."""
-    parsed = skippable_heredoc_delimiters(line)
-    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
-
-
-def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands.
-
-    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
-    opener must not make trailing real `gh pr merge --admin` vanish. Only a
-    heredoc that actually closes has its body + closer dropped.
-    """
-    return strip_skippable_heredoc_bodies(command)
-
-
-def _join_line_continuations(text: str) -> str:
-    r"""Fold `\<newline>` into one logical line, as the shell does — so a
-    `\`-continued `gh pr merge --admin` is not split across physical lines
-    and missed. Over-folding a quoted literal `\` only merges argv text."""
-    return text.replace("\\\n", "")
-
-
-_UNREADABLE_MARKER = "--__guard_unreadable__"
+def _skip_command_prefix(seg, i):
+    return i + invoked_start(seg[i:])[0]
 
 
 def _segments(command: str) -> list[list[str]]:
-    """Read the argv Bash executes, removing redirects while quotes exist."""
-    return [argv for argv, _ in _segments_with_following_operator(command)]
-
-
-def _segments_with_following_operator(command: str) -> list[tuple[list[str], str | None]]:
-    """Keep command separators after removing redirect operators/operands."""
-    return segments_with_following_operator(
-        command,
-        mark_redirect_unreadable=True,
-        unreadable_marker=_UNREADABLE_MARKER,
-        unparsed=[_UNREADABLE_MARKER],
-        may_match=lambda line: False,
-    )
-
-
-def _is_env_assignment(tok: str) -> bool:
-    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
-
-
-_WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
-
-_WRAPPER_VALUE_OPTIONS = {
-    "env": frozenset({"-u", "--unset", "-C", "--chdir"}),
-    "sudo": frozenset(
-        {
-            "-u",
-            "--user",
-            "-g",
-            "--group",
-            "-r",
-            "--role",
-            "-t",
-            "--type",
-            "-C",
-            "--close-from",
-            "-c",
-            "--command-timeout",
-            "-T",
-        }
-    ),
-    "time": frozenset({"-f", "--format", "-o", "--output"}),
-    "nice": frozenset({"-n", "--adjustment"}),
-    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
-}
-
-
-def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
-    """Return the first command word after one transparent wrapper.
-
-    A missing operand for a recognised value-taking option cannot execute a
-    command, so the scan consumes to the end instead of guessing a verb.
-    """
-    value_options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
-    while i < len(seg):
-        tok = seg[i]
-        if tok == "--":
-            return i + 1
-        if not tok.startswith("-") or tok == "-":
-            return i
-        i += 1
-        if tok in value_options:
-            if i >= len(seg):
-                return len(seg)
-            i += 1
-    return i
-
-
-def _skip_command_prefix(seg: list[str], i: int) -> int:
-    """Advance past wrappers (and their flags), assignments, and ``{``.
-
-    Thus `sudo -u root gh pr merge --admin` reaches `gh`, rather than stopping
-    on the wrapper option (#4878).
-    """
-    while i < len(seg):
-        tok = seg[i]
-        if tok in _WRAPPERS:
-            i = _skip_wrapper_options(tok, seg, i + 1)
-        elif tok == "{" or _is_env_assignment(tok):
-            i += 1
-        else:
-            break
-    return i
+    try:
+        return [row.argv for row in read_commands(command, include_payloads=False, diagnostic=True)]
+    except ShellParseError:
+        return []
 
 
 def _admin_merge_args(seg: list[str]) -> list[str] | None:
@@ -268,12 +178,13 @@ def _pr_number(args: list[str]) -> str | None:
     return None
 
 
-def _failing_blocking_checks(pr: str) -> list[str] | None:
+def _failing_blocking_checks(pr: str, cwd: str | None = None) -> list[str] | None:
     """Failing non-advisory check names for the PR, or None if undeterminable (→ fail-closed)."""
     try:
         out = subprocess.run(
             ["gh", "pr", "checks", pr, "--json", "name,bucket,state"],
             capture_output=True,
+            cwd=cwd,
             env=_gh_env(),
             text=True,
             timeout=8,
@@ -316,26 +227,38 @@ def _block_msg(reason: str) -> str:
 
 
 def main() -> int:
-    payload = _read_payload()
+    payload = _CLI_PAYLOAD if __name__ == "__main__" else _read_payload()
     command = _command(payload)
     # Fast path: only engage on `gh ... --admin` (leave every other command untouched).
-    if not command or "--admin" not in command or "gh" not in command:
+    if not command or not _may_guard(command):
         return 0
     try:
-        segments = _segments(command)
-    except ShellPreprocessLimit:
-        sys.stderr.write(_block_msg("nested shell command could not be parsed safely"))
+        rows = read_commands(command, cwd=payload.get("cwd") or os.getcwd())
+        segments = [row.argv for row in rows]
+    except Exception as exc:
+        sys.stderr.write(
+            _block_msg(
+                f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}; repair: {REPAIR}"
+            )
+        )
         return 2
-    redirect_unreadable = any(_UNREADABLE_MARKER in seg for seg in segments)
-    for seg in segments:
-        args = _admin_merge_args(seg)
+    redirect_unreadable = any(row.redirect_unknown for row in rows) or any(
+        _UNREADABLE_MARKER in seg for seg in segments
+    )
+    for row in rows:
+        args = _admin_merge_args(row.argv)
         if args is None:
             continue
+        if row.cwd_unreadable:
+            sys.stderr.write(
+                _block_msg(f"merge working directory cannot be read; use a literal directory; repair: {REPAIR}")
+            )
+            return 2
         pr = None if redirect_unreadable else _pr_number(args)
         if not pr:
             sys.stderr.write(_block_msg("could not determine the target PR number"))
             return 2
-        failing = _failing_blocking_checks(pr)
+        failing = _failing_blocking_checks(pr, cwd=row.cwd)
         if failing is None:
             sys.stderr.write(_block_msg(f"could not verify PR #{pr} check states (gh error/timeout)"))
             return 2

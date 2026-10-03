@@ -65,7 +65,7 @@ _ISSUE_9461_SUFFIXES = [
 ]
 
 
-@pytest.mark.parametrize("dependency", ["scripts.publish.merge_guard", "shell_shlex"])
+@pytest.mark.parametrize("dependency", ["scripts.publish.merge_guard", "shell_bash"])
 @pytest.mark.parametrize(
     "command,expected", [("echo fixture", 0), ("", 0), ("gh pr checks 5", 0), ("gh pr merge 5", 2)]
 )
@@ -146,7 +146,7 @@ def test_issue_9115_escaped_nested_backtick_merge_is_visible(monkeypatch):
 
 
 def test_issue_9115_backtick_depth_limit_blocks_merge_hook(monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setattr(sys.modules["shell_bash"], "MAX_DEPTH", 2)
     body = "gh pr merge 5 --squash"
     for _ in range(3):
         body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
@@ -160,7 +160,7 @@ def test_issue_9115_malformed_merge_hook_input_blocks(monkeypatch, payload):
 
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
-    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+    assert ["echo", 'a " b'] in guard._segments(r'echo "a \" b" <<EOF' + "\nfixture\nEOF")
 
 
 @pytest.mark.parametrize(
@@ -173,7 +173,7 @@ def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     ],
 )
 def test_issue_9088_standard_heredoc_delimiters(opener, closer):
-    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
+    assert ["cat"] in guard._segments(f"cat {opener}\nfixture\n{closer}")
     assert not _any_judged_merge(f"cat {opener}\ngh pr merge 5 --squash\n{closer}")
     assert _any_judged_merge(f"cat {opener}\nnote\n{closer}\ngh pr merge 5 --squash")
 
@@ -190,7 +190,7 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer):
 )
 def test_issue_9088_here_strings_keep_pr_merge_visible(monkeypatch, first):
     command = f"{first}\ngh pr merge 5 --squash\nEOF"
-    assert guard._heredoc_delimiters(first) == []
+    assert ["true"] in guard._segments(first)
     assert _any_judged_merge(command)
     assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
 
@@ -223,7 +223,8 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
 )
 def test_issue_9088_exotic_heredoc_keeps_merge_visible(monkeypatch, opener, closer):
     command = f"cat {opener}\ngh pr merge 5 --admin\n{closer}"
-    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    with pytest.raises(guard.ShellParseError):
+        guard.read_commands(f"cat {opener}\nfixture\n{closer}")
     assert _any_judged_merge(command)
     assert _run(monkeypatch, command, checks=(["Test (pytest)"], [])) == 2
 
@@ -246,7 +247,7 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
         timeout=30,
     )
     assert result.returncode == 2
-    assert "guard dependency unavailable: shell_shlex" in result.stderr
+    assert "guard dependency unavailable: shell_bash" in result.stderr
 
 
 def _any_judged_merge(command: str) -> bool:
@@ -1168,8 +1169,8 @@ def test_dollar_quoted_shell_payload_is_judged(cmd):
 
 
 def test_strip_dollar_quote():
-    assert guard._strip_dollar_quote("$gh pr merge 5") == "gh pr merge 5"
-    assert guard._strip_dollar_quote("gh pr merge 5") == "gh pr merge 5"
+    assert guard._judged_segments("bash -c $'gh pr merge 5'")[1].argv == ["gh", "pr", "merge", "5"]
+    assert guard._judged_segments("bash -c 'gh pr merge 5'")[1].argv == ["gh", "pr", "merge", "5"]
 
 
 def test_valid_nested_shell_is_judged():
@@ -1592,15 +1593,15 @@ def test_colorized_empty_required_checks_still_unprotected(monkeypatch):
 
 
 def test_cd_target_literal_and_home():
-    assert guard._cd_target(["cd", "/tmp"]) == "/tmp"
-    assert guard._cd_target(["cd", "~/x"]) == os.path.expanduser("~/x")
-    assert guard._cd_target(["cd"]) == os.path.expanduser("~")
-    assert guard._cd_target(["ls", "-la"]) is None
+    assert sys.modules["shell_bash"].cd_target(["cd", "/tmp"], os.getcwd()) == "/tmp"
+    assert sys.modules["shell_bash"].cd_target(["cd", "~/x"], os.getcwd()) == os.path.expanduser("~/x")
+    assert sys.modules["shell_bash"].cd_target(["cd"], os.getcwd()) == os.path.expanduser("~")
+    assert sys.modules["shell_bash"].cd_target(["cd", guard.UNREADABLE], os.getcwd()) is None
 
 
 def test_cd_target_unreadable_forms():
-    assert guard._cd_target(["cd", "-"]) is guard._CD_UNREADABLE
-    assert guard._cd_target(["cd", "$DIR"]) is guard._CD_UNREADABLE
+    assert sys.modules["shell_bash"].cd_target(["cd", "-"], os.getcwd()) is None
+    assert sys.modules["shell_bash"].cd_target(["cd", guard.UNREADABLE], os.getcwd()) is None
 
 
 def test_cd_then_merge_threads_cwd(monkeypatch):
@@ -1637,7 +1638,7 @@ def test_plain_merge_has_no_cwd(monkeypatch):
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
     monkeypatch.setattr(guard, "_judge", fake_judge)
     assert guard.main() == 0
-    assert seen["cwd"] is None
+    assert seen["cwd"] == os.getcwd()
 
 
 def test_cd_target_skips_options():
@@ -1645,15 +1646,15 @@ def test_cd_target_skips_options():
 
     A wrong path is not a safe one: gh misses there, and a fine command fails closed.
     """
-    assert guard._cd_target(["cd", "--", "/tmp"]) == "/tmp"
-    assert guard._cd_target(["cd", "-LP", "/tmp"]) == "/tmp"
-    assert guard._cd_target(["cd", "-P", "-L", "/tmp"]) == "/tmp"
+    assert sys.modules["shell_bash"].cd_target(["cd", "--", "/tmp"], os.getcwd()) == "/tmp"
+    assert sys.modules["shell_bash"].cd_target(["cd", "-LP", "/tmp"], os.getcwd()) == "/tmp"
+    assert sys.modules["shell_bash"].cd_target(["cd", "-P", "-L", "/tmp"], os.getcwd()) == "/tmp"
     # `--` does NOT demote `-` to a literal directory: `cd -- -` still toggles to OLDPWD
     # (verified against bash with a real ./- directory in place — only `cd -- ./-` reaches
     # it). Unreadable either way, so the toggle keeps its meaning here too.
-    assert guard._cd_target(["cd", "--", "-"]) is guard._CD_UNREADABLE
-    assert guard._cd_target(["cd", "-"]) is guard._CD_UNREADABLE
-    assert guard._cd_target(["cd", "--", "./-"]) == os.path.abspath("./-")
+    assert sys.modules["shell_bash"].cd_target(["cd", "--", "-"], os.getcwd()) is None
+    assert sys.modules["shell_bash"].cd_target(["cd", "-"], os.getcwd()) is None
+    assert sys.modules["shell_bash"].cd_target(["cd", "--", "./-"], os.getcwd()) == os.path.abspath("./-")
 
 
 # --- #5333: `cd` scope must not leak across shell boundaries ------------------
@@ -1675,8 +1676,10 @@ def _judged_cwds(monkeypatch, command: str) -> list[tuple[str, str | None]]:
 
     monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
     monkeypatch.setattr(guard, "_judge", fake_judge)
-    assert guard.main() == 0
-    return seen
+    with monkeypatch.context() as scoped:
+        scoped.setattr(Path, "is_dir", lambda path: True)
+        assert guard.main() == 0
+    return [(pr, None if cwd == os.getcwd() else cwd) for pr, cwd in seen]
 
 
 def test_shell_c_cd_does_not_leak_out(monkeypatch):

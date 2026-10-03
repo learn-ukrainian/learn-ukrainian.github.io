@@ -9,8 +9,8 @@ Exit 0 in all other cases.
 Why Python and not bash? Distinguishing a literal `git checkout -b ...`
 INVOCATION from the SAME STRING appearing inside a quoted
 `git commit -m "..."` body requires shell-quote-aware tokenization.
-`shlex.split` handles single quotes, double quotes, escapes, and
-heredoc-like patterns (best effort) correctly; bash + grep does not.
+The shared pinned Bash AST reader keeps quoted data separate from executed
+commands and carries possible working directories through nested scopes.
 
 The hook is a no-op inside an added worktree (the worktree IS the
 right place to switch branches). Detection: `git rev-parse --git-dir`
@@ -44,29 +44,38 @@ import subprocess
 import sys
 from pathlib import Path
 
+
+def _may_guard(command: str) -> bool:
+    probe = command.replace("\\", "").replace("'", "").replace('"', "")
+    return ("git" in probe or "gh" in probe) and any(word in probe for word in ("checkout", "switch", "branch"))
+
+
+if __name__ == "__main__":
+    try:
+        _CLI_PAYLOAD = json.loads(sys.stdin.read() or "{}")
+        _CLI_COMMAND = (_CLI_PAYLOAD.get("tool_input") or {}).get("command", "")
+        if isinstance(_CLI_COMMAND, str) and not _may_guard(_CLI_COMMAND):
+            sys.exit(0)
+    except (ValueError, AttributeError):
+        print("BLOCKED: malformed hook payload; provide a literal Bash command", file=sys.stderr)
+        sys.exit(2)
+
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import (
-        skippable_heredoc_delimiters,
-        strip_skippable_heredoc_bodies,
-    )
+    from shell_bash import REPAIR, UNREADABLE, ShellParseError, invoked_start, read_commands
 except Exception as exc:
-    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
+    print(
+        f"guard dependency unavailable: shell_bash ({type(exc).__name__}); "
+        "repair: uv pip install --python <canonical-checkout>/.venv/bin/python "
+        "--require-hashes --only-binary=:all: -r requirements-hooks.txt; "
+        "npm run agents:deploy",
+        file=sys.stderr,
+    )
+    raise SystemExit(2) from None
 
-try:
-    from shell_redirects import (
-        command_repository_unknown,
-        preprocess_branch_command,
-        scope_events,
-        segments_with_following_operator,
-        unknown_repository_segments,
-    )
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
 
 # Words that, when seen as the FIRST token after `git`, indicate a branch
 # switch. Everything else is treated as a different git verb and ignored.
@@ -172,62 +181,18 @@ def _in_main_worktree(project_root: Path) -> bool:
     return abs_gd == abs_cd
 
 
-# --- Command segmentation hardened against glued shell operators (#4876). ---
-# Pattern lifted from guard-secret-print.py (the reference parser among the
-# Bash guards). Hooks are standalone by design, so the helpers are copied,
-# not imported. Keep the three active copies in guard-branch-switch-in-main.py,
-# guard-admin-merge.py, and guard-pr-merge.py in sync.
+_UNREADABLE_MARKER = UNREADABLE
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
-    """Keep only the shared parser's unambiguous here-doc delimiters."""
-    parsed = skippable_heredoc_delimiters(line)
-    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
-
-
-def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands.
-
-    Fail-CLOSED on an unclosed heredoc (#4877): if a delimiter never appears
-    before EOF, the buffered lines were NOT a real heredoc body — a crafted
-    or malformed opener (never-closing marker, mis-parsed ``<<-``) must not
-    make trailing REAL commands/writes vanish from the parsed view. Those
-    lines are kept and inspected; only a heredoc that actually closes has
-    its body + closer dropped.
-    """
-    return strip_skippable_heredoc_bodies(command)
-
-
-def _join_line_continuations(text: str) -> str:
-    r"""Fold `\<newline>` into a single logical line, as the shell does.
-
-    Without this, per-line parsing splits `git branch -D x \<newline>--extra`
-    into two physical lines; the first fails to tokenize (trailing escape)
-    and the dangerous verb rides through. The whole-command tokenizer this
-    replaced folded the continuation implicitly — preserve that. Over-folding
-    a literal `\` inside a quoted string can only merge argv text, never
-    create a false block (the guard matches specific verbs, not free text).
-    """
-    return text.replace("\\\n", "")
-
-
-_UNREADABLE_MARKER = "--__guard_unreadable__"
+def _skip_command_prefix(seg, i):
+    return i + invoked_start(seg[i:])[0]
 
 
 def _segments(command: str) -> list[list[str]]:
-    """Read the argv Bash executes, removing redirects while quotes exist."""
-    return [argv for argv, _ in _segments_with_following_operator(command)]
-
-
-def _segments_with_following_operator(command: str) -> list[tuple[list[str], str | None]]:
-    """Keep command separators after removing redirect operators/operands."""
-    return segments_with_following_operator(
-        command,
-        mark_redirect_unreadable=True,
-        unreadable_marker=_UNREADABLE_MARKER,
-        unparsed=[_UNREADABLE_MARKER],
-        may_match=lambda line: False,
-    )
+    try:
+        return [row.argv for row in read_commands(command, include_payloads=False, diagnostic=True)]
+    except ShellParseError:
+        return []
 
 
 def _branch_force_reason(args: list[str], current_branch: str | None) -> str | None:
@@ -269,81 +234,6 @@ def _branch_force_reason(args: list[str], current_branch: str | None) -> str | N
     return None
 
 
-def _is_env_assignment(tok: str) -> bool:
-    """`VAR=val` prefix (as before `env` or a bare command). Mirrors the
-    reference idiom in guard-primary-checkout-write._command_word."""
-    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
-
-
-_WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
-
-# Only options whose value is a separate token are listed. Attached values
-# (``-u root`` versus ``-uroot`` and ``--user=root``) deliberately need no
-# special treatment: the latter two already carry their operand in one token.
-_WRAPPER_VALUE_OPTIONS = {
-    "env": frozenset({"-u", "--unset", "-C", "--chdir"}),
-    "sudo": frozenset(
-        {
-            "-u",
-            "--user",
-            "-g",
-            "--group",
-            "-r",
-            "--role",
-            "-t",
-            "--type",
-            "-C",
-            "--close-from",
-            "-c",
-            "--command-timeout",
-            "-T",
-        }
-    ),
-    "time": frozenset({"-f", "--format", "-o", "--output"}),
-    "nice": frozenset({"-n", "--adjustment"}),
-    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
-}
-
-
-def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
-    """Return the first command word after one transparent wrapper.
-
-    A wrapper's flags are not the wrapped command: ``sudo -u root git`` and
-    ``nice -n 10 git`` both execute ``git``.  A recognised value-taking flag
-    without its operand cannot execute a command, so consume to the end rather
-    than guessing that a missing command is harmless.
-    """
-    value_options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
-    while i < len(seg):
-        tok = seg[i]
-        if tok == "--":
-            return i + 1
-        if not tok.startswith("-") or tok == "-":
-            return i
-        i += 1
-        if tok in value_options:
-            if i >= len(seg):
-                return len(seg)
-            i += 1
-    return i
-
-
-def _skip_command_prefix(seg: list[str], i: int) -> int:
-    """Advance past transparent leading tokens so we land on the real command
-    word: wrappers (including their flags), env assignments (`FOO=1`), and a
-    brace-group opener (`{`). Without this, `sudo -u root git branch -D x`
-    stops at `-u` and hides the verb (#4878)."""
-    while i < len(seg):
-        tok = seg[i]
-        if tok in _WRAPPERS:
-            i = _skip_wrapper_options(tok, seg, i + 1)
-        elif tok == "{" or _is_env_assignment(tok):
-            i += 1
-        else:
-            break
-    return i
-
-
 def _git_invocation(seg: list[str], effective_cwd: Path | None) -> tuple[str, list[str], Path | None] | None:
     """Return ``(verb, args, git_cwd)`` for a direct git invocation.
 
@@ -359,6 +249,10 @@ def _git_invocation(seg: list[str], effective_cwd: Path | None) -> tuple[str, li
     while i < len(seg) and seg[i].startswith("-"):
         option = seg[i]
         if option == "-C" and i + 1 < len(seg):
+            if seg[i + 1] == UNREADABLE:
+                git_cwd = None
+                i += 2
+                continue
             directory = Path(seg[i + 1]).expanduser()
             git_cwd = (
                 directory.resolve()
@@ -368,6 +262,9 @@ def _git_invocation(seg: list[str], effective_cwd: Path | None) -> tuple[str, li
                 else None
             )
             i += 2
+        elif option.startswith(("--git-dir=", "--work-tree=")):
+            git_cwd = None
+            i += 1
         elif option.startswith("-C") and len(option) > 2:
             directory = Path(option[2:]).expanduser()
             git_cwd = (
@@ -381,9 +278,9 @@ def _git_invocation(seg: list[str], effective_cwd: Path | None) -> tuple[str, li
         elif option in {"-c", "--git-dir", "--work-tree"} and i + 1 < len(seg):
             # These do not change the cwd. ``--git-dir``/``--work-tree``
             # override repository discovery, so do not infer a protected root
-            # from them; the guard remains deliberately non-blocking there.
+            # from them; the repository becomes unknown for guarded branch operations.
             if option in {"--git-dir", "--work-tree"}:
-                return None
+                git_cwd = None
             i += 2
         else:
             i += 1
@@ -425,20 +322,6 @@ def _checked_out_branch(repo_root: Path) -> str | None:
         return None
 
 
-def _cd_target(seg: list[str], effective_cwd: Path) -> Path | None:
-    """Return the directory from a simple leading ``cd`` command, if any."""
-    i = _skip_command_prefix(seg, 0)
-    if i >= len(seg) or seg[i] != "cd":
-        return None
-    args = [arg for arg in seg[i + 1 :] if arg != _UNREADABLE_MARKER]
-    if args[:1] == ["--"]:
-        args = args[1:]
-    if len(args) != 1 or args[0] == "-" or any(char in args[0] for char in "$`"):
-        return None
-    directory = Path(args[0]).expanduser()
-    return (directory if directory.is_absolute() else effective_cwd / directory).resolve()
-
-
 def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -> str | None:
     """Return a human-readable reason string if seg is a dangerous git op,
     else None."""
@@ -459,6 +342,9 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
     # Now we're on `git ... <checkout|switch> <args...>`. Decide if this
     # would switch the branch state of the current worktree.
 
+    if UNREADABLE in args:
+        return "branch-switch target cannot be read"
+
     # File-level checkout: `git checkout -- <path>`, `git checkout <treeish>
     # -- <path>`, and conflict resolution `checkout --ours/--theirs <path>`.
     if "--" in args or "--ours" in args or "--theirs" in args:
@@ -470,7 +356,7 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
         return f"git {verb} --detach/--orphan detaches HEAD in the main worktree (primary must stay attached to main)"
 
     # Flags we treat as "definitely creates / switches to a new branch":
-    if "-b" in args or "--create" in args:
+    if "-b" in args or "-B" in args or "--create" in args:
         return f"git {verb} -b creates and switches to a new branch in the main worktree"
     if "-c" in args or "-C" in args:
         # `-C` is `git switch --force-create`; equally a branch creation.
@@ -569,92 +455,34 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path | None) -> str | 
 
 def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str | None:
     """Return a block reason only for a command targeting a protected root."""
-    effective_cwd = (session_cwd or Path.cwd()).resolve()
-    protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
-    # Deliberate rare over-block: case or parameter-expansion parentheses make
-    # EVERY branch operation in this command unknown, even in a worktree, before
-    # the syntax or across newlines. No scope close or absolute -C restores trust.
-    if command_repository_unknown(command):
-        for segment in unknown_repository_segments(command):
-            if _segment_is_dangerous(segment) or _gh_pr_checkout_reason(segment, None):
-                return "branch-switch target could not be parsed safely"
+    if not _may_guard(command):
         return None
-    # Preprocess every heredoc before the line scope reader: quoted bodies are
-    # data, while real expansions in unquoted bodies remain executable syntax.
-    if "<<" in command:
-        command = preprocess_branch_command(command)
-    events = scope_events(
-        command,
-        mark_redirect_unreadable=True,
-        unreadable_marker=_UNREADABLE_MARKER,
-        unparsed=[_UNREADABLE_MARKER],
-        may_match=lambda line: False,
-        keep_separators=True,
-    )
-    cwd_unreadable = False
-    pending_cd: Path | None = None
-    # Same save/restore algorithm as guard-pr-merge._judged_segments (#5333):
-    # every open inherits cwd; every close restores it; an unmatched close
-    # makes cwd unknown. Keep pending cd in its owning frame as well: redirect
-    # substitutions execute BEFORE cd, and must not inherit its new cwd.
-    stack: list[tuple[Path, bool, Path | None]] = []
-    for kind, segment in events:
-        if kind == "open":
-            stack.append((effective_cwd, cwd_unreadable, pending_cd))
-            pending_cd = None
-            continue
-        if kind == "close":
-            if stack:
-                effective_cwd, cwd_unreadable, pending_cd = stack.pop()
-            else:
-                cwd_unreadable = True
-                pending_cd = None
-            continue
-        if kind == "unreadable":
-            cwd_unreadable = True
-            pending_cd = None
-            continue
-        if kind == "separator":
-            if segment == ["&&"] and pending_cd is not None:
-                effective_cwd = pending_cd
-            pending_cd = None
-            continue
-        # A new command in this frame ends any pending cd (including across
-        # a newline). Only && proves the literal cd succeeded, as before.
-        pending_cd = None
-        i = _skip_command_prefix(segment, 0)
-        cd_target = _cd_target(segment, effective_cwd)
-        if segment[i : i + 1] == ["cd"]:
-            if cd_target is None:
-                cwd_unreadable = True
-            else:
-                pending_cd = cd_target
-            continue
-
-        # Expansion alone does not make a known dispatch cwd protected. Only
-        # an unreadable cd or unmodeled syntax makes a later repo unknown.
-        if cwd_unreadable and segment[i : i + 3] == ["gh", "pr", "checkout"]:
-            return "branch-switch target could not be parsed safely"
-
+    protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
+    try:
+        rows = read_commands(command, cwd=str(session_cwd or Path.cwd()))
+    except Exception as exc:
+        return f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}; repair: {REPAIR}"
+    for row in rows:
+        segment = row.argv
+        effective_cwd = None if row.cwd_unreadable else Path(row.cwd)
         gh_reason = _gh_pr_checkout_reason(segment, effective_cwd)
         if gh_reason:
             return gh_reason
-
-        invocation = _git_invocation(segment, None if cwd_unreadable else effective_cwd)
+        if row.branch_scope_refusal and (_segment_is_dangerous(segment) or _gh_pr_checkout_reason(segment, None)):
+            return "branch-switch target could not be parsed safely (conservative case/parameter scope policy); use a literal command"
+        if row.repository_unknown and _segment_is_dangerous(segment):
+            return "repository environment cannot be read; use default Git repository discovery"
+        invocation = _git_invocation(segment, effective_cwd)
         if invocation is None:
             continue
         _, _, git_cwd = invocation
+        reason = _segment_is_dangerous(segment)
         if git_cwd is None:
-            if _segment_is_dangerous(segment):
-                return "branch-switch target could not be parsed safely"
+            if reason:
+                return "branch-switch target cannot be read; use a literal directory and repository"
             continue
         repo_root = _git_repo_root(git_cwd)
-        if repo_root is None or repo_root not in protected_roots:
-            continue
-        # A target under */.worktrees/* may share this repo's common git dir,
-        # but it is deliberately an added worktree where branch operations are
-        # allowed. Ask git rather than relying only on the path spelling.
-        if not _in_main_worktree(repo_root):
+        if repo_root is None or repo_root.resolve() not in protected_roots or not _in_main_worktree(repo_root):
             continue
         reason = _segment_is_dangerous(segment, _checked_out_branch(repo_root))
         if reason:
@@ -663,7 +491,7 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
 
 
 def main() -> int:
-    payload = _read_payload()
+    payload = _CLI_PAYLOAD if __name__ == "__main__" else _read_payload()
     command = _bash_command(payload)
     if not command:
         return 0

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 import shutil
 import subprocess
 import sys
@@ -30,12 +31,12 @@ def test_shell_shlex_importers_do_not_write_bytecode() -> None:
 
 
 @pytest.mark.parametrize("hook_name", ["guard-admin-merge.py", "guard-branch-switch-in-main.py", "guard-pr-merge.py"])
-@pytest.mark.parametrize("helper", ["shell_redirects", "shell_shlex"])
+@pytest.mark.parametrize("helper", ["shell_bash"])
 @pytest.mark.parametrize("failure", ["missing", "syntax", "raises"])
 def test_issue_9479_broken_helper_fails_closed(tmp_path, hook_name, helper, failure):
     hooks = tmp_path / ".claude" / "hooks"
     hooks.mkdir(parents=True)
-    for name in (hook_name, "shell_redirects.py", "shell_shlex.py"):
+    for name in (hook_name, "shell_bash.py"):
         if name == helper + ".py" and failure == "missing":
             continue
         shutil.copy2(HOOKS_ROOT / name, hooks / name)
@@ -52,7 +53,7 @@ def test_issue_9479_broken_helper_fails_closed(tmp_path, hook_name, helper, fail
         timeout=10,
     )
     assert result.returncode == 2, result.stderr
-    assert f"guard dependency unavailable: {helper}" in result.stderr
+    assert "guard dependency unavailable: shell_bash" in result.stderr
     assert "Traceback" not in result.stderr
     assert not (hooks / "__pycache__").exists()
 
@@ -60,7 +61,7 @@ def test_issue_9479_broken_helper_fails_closed(tmp_path, hook_name, helper, fail
 def _bash_python_hooks() -> tuple[str, ...]:
     settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
     names = {
-        Path(hook["command"]).name
+        Path(shlex.split(hook["command"])[-1]).name
         for group in settings["hooks"]["PreToolUse"]
         if group["matcher"] == "Bash"
         for hook in group["hooks"]
@@ -152,3 +153,27 @@ def test_heal_core_bare_silently_allows_missing_repo_marker(tmp_path: Path) -> N
         )
         assert result.returncode == 0
         assert result.stdout == result.stderr == ""
+
+
+@pytest.mark.parametrize("hook_name", ["guard-pr-merge.py", "guard-branch-switch-in-main.py", "guard-admin-merge.py"])
+def test_guard_wrapper_ignores_system_python_on_path(tmp_path, hook_name):
+    import os
+
+    fake = tmp_path / "python3"
+    fake.write_text("#!/bin/sh\nexit 99\n")
+    fake.chmod(0o755)
+    wrapper = HOOKS_ROOT / "run-project-python-hook.sh"
+    result = subprocess.run(
+        ["bash", str(wrapper), hook_name],
+        cwd=REPO_ROOT,
+        env={
+            **os.environ,
+            "CLAUDE_PROJECT_DIR": str(REPO_ROOT),
+            "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"],
+        },
+        input=json.dumps({"tool_input": {"command": "echo 'git checkout -b fixture; gh pr merge 5 --admin'"}}),
+        text=True,
+        capture_output=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
