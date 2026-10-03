@@ -36911,6 +36911,2353 @@
       },
       "supersedes": "freeze-review-executors-011",
       "oracle_pr": "5"
+    },
+    {
+      "id": "freeze-g-executor-option-completion-000",
+      "family": "executor-option-completion",
+      "command": "git ls-remote --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git ls-remote --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "ls-remote",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-001",
+      "family": "executor-option-completion",
+      "command": "git ls-remote --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git ls-remote --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "ls-remote",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-002",
+      "family": "executor-option-completion",
+      "command": "git ls-remote --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git ls-remote --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "ls-remote",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-003",
+      "family": "executor-option-completion",
+      "command": "git clone --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git clone --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "clone",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-004",
+      "family": "executor-option-completion",
+      "command": "git clone --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git clone --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "clone",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-005",
+      "family": "executor-option-completion",
+      "command": "git clone --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git clone --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "clone",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-006",
+      "family": "executor-option-completion",
+      "command": "git pull --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git pull --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "pull",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-007",
+      "family": "executor-option-completion",
+      "command": "git pull --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git pull --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "pull",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-008",
+      "family": "executor-option-completion",
+      "command": "git pull --upload-pack='git checkout -b evil; :' file:///missing",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git pull --upload-pack='git checkout -b evil; :' file:///missing",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "pull",
+              "--upload-pack=git checkout -b evil; :",
+              "file:///missing"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-009",
+      "family": "executor-option-completion",
+      "command": "git archive --remote=file:///missing --exec='git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git archive --remote=file:///missing --exec='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "archive",
+              "--remote=file:///missing",
+              "--exec=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-010",
+      "family": "executor-option-completion",
+      "command": "git archive --remote=file:///missing --exec='git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git archive --remote=file:///missing --exec='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "archive",
+              "--remote=file:///missing",
+              "--exec=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-011",
+      "family": "executor-option-completion",
+      "command": "git archive --remote=file:///missing --exec='git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git archive --remote=file:///missing --exec='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "archive",
+              "--remote=file:///missing",
+              "--exec=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-012",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --env-filter 'git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --env-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--env-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-013",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --env-filter 'git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --env-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--env-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-014",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --env-filter 'git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --env-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--env-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-015",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --tree-filter 'git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --tree-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--tree-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-016",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --tree-filter 'git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --tree-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--tree-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-017",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --tree-filter 'git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --tree-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--tree-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-018",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --index-filter 'git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --index-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--index-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-019",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --index-filter 'git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --index-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--index-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-020",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --index-filter 'git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --index-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--index-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-021",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --parent-filter 'git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --parent-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--parent-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-022",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --parent-filter 'git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --parent-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--parent-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-023",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --parent-filter 'git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --parent-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--parent-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-024",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --msg-filter 'git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --msg-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--msg-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-025",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --msg-filter 'git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --msg-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--msg-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-026",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --msg-filter 'git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --msg-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--msg-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-027",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --commit-filter 'git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --commit-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--commit-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-028",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --commit-filter 'git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --commit-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--commit-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-029",
+      "family": "executor-option-completion",
+      "command": "git filter-branch --commit-filter 'git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git filter-branch --commit-filter 'git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "filter-branch",
+              "--commit-filter",
+              "git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-030",
+      "family": "executor-option-completion",
+      "command": "git send-email --to-cmd='git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --to-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--to-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-031",
+      "family": "executor-option-completion",
+      "command": "git send-email --to-cmd='git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --to-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--to-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-032",
+      "family": "executor-option-completion",
+      "command": "git send-email --to-cmd='git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --to-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--to-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-033",
+      "family": "executor-option-completion",
+      "command": "git send-email --cc-cmd='git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --cc-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--cc-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-034",
+      "family": "executor-option-completion",
+      "command": "git send-email --cc-cmd='git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --cc-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--cc-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-035",
+      "family": "executor-option-completion",
+      "command": "git send-email --cc-cmd='git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --cc-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--cc-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-036",
+      "family": "executor-option-completion",
+      "command": "git send-email --bcc-cmd='git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --bcc-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--bcc-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-037",
+      "family": "executor-option-completion",
+      "command": "git send-email --bcc-cmd='git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --bcc-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--bcc-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-038",
+      "family": "executor-option-completion",
+      "command": "git send-email --bcc-cmd='git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --bcc-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--bcc-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-039",
+      "family": "executor-option-completion",
+      "command": "git send-email --header-cmd='git checkout -b evil; :' HEAD",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --header-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--header-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-040",
+      "family": "executor-option-completion",
+      "command": "git send-email --header-cmd='git checkout -b evil; :' HEAD",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --header-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--header-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-041",
+      "family": "executor-option-completion",
+      "command": "git send-email --header-cmd='git checkout -b evil; :' HEAD",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git send-email --header-cmd='git checkout -b evil; :' HEAD",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "send-email",
+              "--header-cmd=git checkout -b evil; :",
+              "HEAD"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-042",
+      "family": "executor-option-completion",
+      "command": "git mergetool --tool=custom",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git mergetool --tool=custom",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "mergetool",
+              "--tool=custom"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-043",
+      "family": "executor-option-completion",
+      "command": "git mergetool --tool=custom",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git mergetool --tool=custom",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "mergetool",
+              "--tool=custom"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-executor-option-completion-044",
+      "family": "executor-option-completion",
+      "command": "git mergetool --tool=custom",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "EXECUTOR_OPTION"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git mergetool --tool=custom",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "mergetool",
+              "--tool=custom"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-target-conflict-correction-000",
+      "family": "target-conflict-correction",
+      "command": "gh pr merge https://github.com/fixture/other/pull/5 -R fixture/wrong",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_REPOSITORY",
+        "targets": []
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "gh pr merge https://github.com/fixture/other/pull/5 -R fixture/wrong",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "https://github.com/fixture/other/pull/5",
+              "-R",
+              "fixture/wrong"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-b-target-conflict-000"
+    },
+    {
+      "id": "freeze-g-target-conflict-correction-001",
+      "family": "target-conflict-correction",
+      "command": "gh pr merge https://forge.example.invalid/fixture/other/pull/5 -R github.com/fixture/other",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_REPOSITORY",
+        "targets": []
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "gh pr merge https://forge.example.invalid/fixture/other/pull/5 -R github.com/fixture/other",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "https://forge.example.invalid/fixture/other/pull/5",
+              "-R",
+              "github.com/fixture/other"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-b-target-conflict-001"
+    },
+    {
+      "id": "freeze-g-target-conflict-correction-002",
+      "family": "target-conflict-correction",
+      "command": "gh pr merge https://github.com/fixture/other/pull/5 -R fixture/wrong --admin",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_REPOSITORY",
+        "targets": []
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "gh pr merge https://github.com/fixture/other/pull/5 -R fixture/wrong --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "https://github.com/fixture/other/pull/5",
+              "-R",
+              "fixture/wrong",
+              "--admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-b-target-conflict-002"
+    },
+    {
+      "id": "freeze-g-target-conflict-correction-003",
+      "family": "target-conflict-correction",
+      "command": "gh pr merge https://forge.example.invalid/fixture/other/pull/5 -R github.com/fixture/other --admin",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_REPOSITORY",
+        "targets": []
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "gh pr merge https://forge.example.invalid/fixture/other/pull/5 -R github.com/fixture/other --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "https://forge.example.invalid/fixture/other/pull/5",
+              "-R",
+              "github.com/fixture/other",
+              "--admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-b-target-conflict-003"
+    },
+    {
+      "id": "freeze-g-precedence-completion-000",
+      "family": "precedence-completion",
+      "command": "if cd .worktrees/wt; then :; fi; git checkout -b f",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "block",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "if cd .worktrees/wt; then :; fi; git checkout -b f",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "f"
+            ],
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-six-benign-002"
+    },
+    {
+      "id": "freeze-g-precedence-completion-001",
+      "family": "precedence-completion",
+      "command": "f(){ cd .worktrees/wt; }; f; git checkout -b f",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "block",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "f(){ cd .worktrees/wt; }; f; git checkout -b f",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "f"
+            ],
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-six-benign-004"
+    },
+    {
+      "id": "freeze-g-control-return-primary-000",
+      "family": "control-return-primary",
+      "command": "for d in .worktrees/wt ../..; do cd \"$d\"; done; git checkout -b evil",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_CONTEXT"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "for d in .worktrees/wt ../..; do cd \"$d\"; done; git checkout -b evil",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "evil"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-namespace-executable-000",
+      "family": "namespace-executable",
+      "command": "unshare -U sleep 3 & nsenter -U --preserve-credentials --target $! git checkout -b evil",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_EXECUTOR"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "unshare -U sleep 3 & nsenter -U --preserve-credentials --target $! git checkout -b evil",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "evil"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-b-namespace-correction-000"
+    },
+    {
+      "id": "freeze-g-control-return-primary-001",
+      "family": "control-return-primary",
+      "command": "for d in .worktrees/wt ../..; do cd \"$d\"; done; gh pr merge 5",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_CONTEXT"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "for d in .worktrees/wt ../..; do cd \"$d\"; done; gh pr merge 5",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-namespace-executable-001",
+      "family": "namespace-executable",
+      "command": "unshare -U sleep 3 & nsenter -U --preserve-credentials --target $! gh pr merge 5",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_EXECUTOR"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "unshare -U sleep 3 & nsenter -U --preserve-credentials --target $! gh pr merge 5",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-b-namespace-correction-001"
+    },
+    {
+      "id": "freeze-g-control-return-primary-002",
+      "family": "control-return-primary",
+      "command": "for d in .worktrees/wt ../..; do cd \"$d\"; done; gh pr merge 5 --admin",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_CONTEXT"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "for d in .worktrees/wt ../..; do cd \"$d\"; done; gh pr merge 5 --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5",
+              "--admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review."
+    },
+    {
+      "id": "freeze-g-namespace-executable-002",
+      "family": "namespace-executable",
+      "command": "unshare -U sleep 3 & nsenter -U --preserve-credentials --target $! gh pr merge 5 --admin",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "UNKNOWN_EXECUTOR"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "unshare -U sleep 3 & nsenter -U --preserve-credentials --target $! gh pr merge 5 --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5",
+              "--admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
+      "supersedes": "freeze-b-namespace-correction-002"
     }
   ],
   "freeze_schema": "guard-understood-forms.v1",

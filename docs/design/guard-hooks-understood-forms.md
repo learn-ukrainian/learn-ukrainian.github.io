@@ -114,7 +114,9 @@ push policy; these three hooks add no push-policy restriction. Commit
 `-m`/`--message`, `-F`/`--file`, trailers and merge messages are data.
 
 Executor semantics still bind: rebase `-x`/`--exec`, `bisect run`,
-`submodule foreach`, difftool `-x`/`--extcmd`, fetch `--upload-pack` and push
+`submodule foreach`, difftool `-x`/`--extcmd`, fetch/ls-remote/clone/pull `--upload-pack`, archive `--exec`, filter-branch
+filters (`--env-filter`, `--tree-filter`, `--index-filter`, `--parent-filter`,
+`--msg-filter`, `--commit-filter`, `--setup`), send-email `--*-cmd`, mergetool, and push
 `--receive-pack` consume code and refuse unless explicitly modeled. Pager,
 editor, signing, hooks, custom strategies, interactive/edit, external diff,
 textconv, executable configuration and alias options are never presumed data.
@@ -300,8 +302,9 @@ is a known violation; otherwise refuse when ANY state is unknown; otherwise
 allow. No sampled Bash outcome proves another failure edge unreachable.
 Append-only rows `freeze-b-precedence-correction-000/-001` supersede
 `freeze-six-benign-003/-005`, retaining the originals as history with a correction
-reason. The successful-cd 002/004 rows remain refused because the operation's
-primary-context binding is unknown on their failure edges. Block and refuse exit
+reason. Append-only `freeze-g-precedence-completion` rows supersede 002/004 as block:
+the failed-cd edge retains the known primary cwd. A known prohibited edge wins
+over other unknown edges; it does not require that cd actually fail in the probe. Block and refuse exit
 2, allow exits 0. Do not conflate them in acceptance scoring. Refusals carry a stable class and actionable repair:
 
 | Reason class | Meaning / repair |
@@ -448,3 +451,14 @@ References used for semantics: [Bash escape rules](https://www.gnu.org/software/
 [gh pr merge](https://cli.github.com/manual/gh_pr_merge).
 Installed Bash recording is the local execution evidence; documentation
 establishes option roles, not hook approval or real target CI status.
+
+## Implementation round 1 freeze amendments
+
+The operator ordered executor-option completion, zero-lookups URL/repository
+conflict refusals, the known-primary precedence corrections, a loop returning
+to primary, and executable namespace probes. New rows supply these amendments;
+all historical rows and labels remain immutable. The namespace command is
+`unshare -U sleep 3 & nsenter -U --preserve-credentials --target $! …`;
+its ground truth comes from recording fake binaries in temporary repositories.
+The three systemd-run probes remain an environment gap owned by claude-infra.
+Conflict corrections require `targets == []`, before any CI judgment.

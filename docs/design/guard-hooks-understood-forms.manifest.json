@@ -4,8 +4,8 @@
   "frozen_at": "2026-10-03T20:15:47Z",
   "implementation_head": "621fd45b34b183e3a1b30713aa92d5388c042d5f",
   "sha256": {
-    "docs/design/guard-hooks-understood-forms.md": "7cbe1d930bfb512532cdc3c096b3b0ef674e5d812dd08e56b20ace3d2428f924",
-    "tests/fixtures/guard_bash_oracle.json": "6cde8dbce62a73e6dad0d3a31249050dc9e7de6a758c17f469bd0fbdd00b0e0d",
+    "docs/design/guard-hooks-understood-forms.md": "8ee12312545cd1d08fe4a309cc9f3cd183cff1e4a0153374844dc628bea5cfb3",
+    "tests/fixtures/guard_bash_oracle.json": "9dbb5d4fe4c202975729dbd640683732460ad69810a2796b68ab7a0c64c1cb38",
     "tests/fixtures/guard_bash_traffic.json": "cb9fd3eaca8752c585dda62efc0210d99d349d2ef5ba7c08a6ec533611c25e57",
     "tests/fixtures/guard_bash_understood_traffic.json": "98caa660a1f163d7bdb38a7dcad929823bdffb6ce651a91289f766d4002c2d0b",
     "tests/fixtures/guard_bash_recording_setup.json": "e1b6c88530361a0b5655e37348ed9c1c666a810d129ba708f03b8b45db06900e",
@@ -23,9 +23,9 @@
     "legacy_non_residual_rows": 602,
     "accepted_residual_rows": 3,
     "legacy_prefix_argv_rows": 50,
-    "new_oracle_rows": 829,
-    "total_oracle_rows": 1434,
-    "new_unique_commands": 388,
+    "new_oracle_rows": 886,
+    "total_oracle_rows": 1491,
+    "new_unique_commands": 409,
     "legacy_traffic_subjects": 400,
     "legacy_traffic_cases": 1200,
     "inspection_distinct_commands": 60,
@@ -35,7 +35,8 @@
     "round2_distinct_commands": 198,
     "everyday_distinct_commands": 66,
     "everyday_hook_cases": 198,
-    "exact_target_rows": 53
+    "exact_target_rows": 53,
+    "implementation_round1_appended_rows": 57
   },
   "new_oracle_families": {
     "review-continuation": 5,
@@ -78,7 +79,12 @@
     "condition9-misparse": 21,
     "precedence-correction": 2,
     "benign-counterparts": 18,
-    "namespace-correction": 3
+    "namespace-correction": 3,
+    "executor-option-completion": 45,
+    "target-conflict-correction": 4,
+    "precedence-completion": 2,
+    "control-return-primary": 3,
+    "namespace-executable": 3
   },
   "legacy_oracle_families": {
     "if": 4,
@@ -191,14 +197,14 @@
     "9484-f-command-binding": 6
   },
   "new_expected_dispositions": {
-    "block": 119,
-    "refuse": 262,
+    "block": 121,
+    "refuse": 317,
     "allow": 448
   },
   "new_hook_counts": {
-    "branch": 284,
-    "merge": 272,
-    "admin": 273
+    "branch": 303,
+    "merge": 291,
+    "admin": 292
   },
   "acceptance": {
     "unsafe_allows": 0,
@@ -268,21 +274,28 @@
     "freeze-six-benign-005": "freeze-b-precedence-correction-001",
     "freeze-review-executors-009": "freeze-b-namespace-correction-000",
     "freeze-review-executors-010": "freeze-b-namespace-correction-001",
-    "freeze-review-executors-011": "freeze-b-namespace-correction-002"
+    "freeze-review-executors-011": "freeze-b-namespace-correction-002",
+    "freeze-b-target-conflict-000": "freeze-g-target-conflict-correction-000",
+    "freeze-b-target-conflict-001": "freeze-g-target-conflict-correction-001",
+    "freeze-b-target-conflict-002": "freeze-g-target-conflict-correction-002",
+    "freeze-b-target-conflict-003": "freeze-g-target-conflict-correction-003",
+    "freeze-six-benign-002": "freeze-g-precedence-completion-000",
+    "freeze-six-benign-004": "freeze-g-precedence-completion-001",
+    "freeze-b-namespace-correction-000": "freeze-g-namespace-executable-000",
+    "freeze-b-namespace-correction-001": "freeze-g-namespace-executable-001",
+    "freeze-b-namespace-correction-002": "freeze-g-namespace-executable-002"
   },
-  "correction_policy": "Historical rows are immutable. Named supersedes rows supply the current disposition/probe; original rows remain in the denominator and historical exit scoring. Corrected dispositions have the same exit code as their originals.",
+  "correction_policy": "Historical rows and denominators remain immutable; follow supersedes transitively for current disposition, target and probe proof while preserving historical measurements.",
   "target_scoring": "expected.target binds HOST/OWNER/REPO and PR; only that identity is red. A wrong or missing required lookup fails regardless of the exit code. Legacy no-target rows do not prove repository or PR identity.",
   "active_execution_limitations": [
     "freeze-review-executors-012",
     "freeze-review-executors-013",
-    "freeze-review-executors-014",
-    "freeze-b-namespace-correction-000",
-    "freeze-b-namespace-correction-001",
-    "freeze-b-namespace-correction-002"
+    "freeze-review-executors-014"
   ],
   "non_execution_policy_probes": [
     "freeze-intentional-refusal-009",
     "freeze-intentional-refusal-010",
     "freeze-intentional-refusal-011"
-  ]
+  ],
+  "implementation_round1_amendment": "Operator-ordered append-only amendments before hook changes."
 }
