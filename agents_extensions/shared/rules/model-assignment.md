@@ -15,6 +15,12 @@ substitution or retention) all refuse any other model with that stated reason, n
 review, and Sonnet is excluded from critical security review. Historical
 capability and transport descriptions below confer no routing permission.
 
+**Flash is not a planning, design or driver seat (operator decision 2026-10-03, #9584):** Gemini 3.8 Flash (AGY)
+is not used to plan, design, drive or orchestrate epics or large projects. The authoritative seats for planning,
+design input and driving are `gpt-6.1-sol` and `claude-opus-5-5`; Fable and Astra stay last resort. Flash remains a
+strong seat for bounded, well-specified tasks, including Ukrainian content review under a fixed brief. Task-level
+Flash rows below are unchanged. Gemini 4 is re-evaluated when it is generally available.
+
 **Resolver preference:** after hard gates, `review_scheduler.profile_risk_role_order`
 prefers primary seats before last resort, then ranks semantic suitability before quality tier; health and quota break ties
 within that suitability and tier. YAML rung order is a fallback inventory.
@@ -158,20 +164,20 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
   * **Top advisors**: Opus 5.5 / Sol 6.1 first; Fable 5.1 and the Astra seat
     last resort (#9394). This ordering applies to advice, critiques and design input.
-  * **Other advisors**: `gemini-3.8-flash-high` (default for routine and deep; `gemini-3.1-pro-high` only on explicit request) ·
-    `glm-5.3` @ `max` (advisory) · `grok-4.7` @ `high`. (Kimi: web, UI and backend coding only —
+  * **Other advisors**: `glm-5.3` @ `max` (advisory) · `grok-4.7` @ `high`. Gemini 3.8 Flash is not an advisor for
+    planning or design (operator decision 2026-10-03, #9584); its task-level uses stay as listed in the routing tables. (Kimi: web, UI and backend coding only —
     no Ukrainian-language content, no reviews, consults, design or rules.)
   * Legacy Terra qualification does not authorize a current Codex fallback; use
     the GPT-6 seat that fits the assigned role.
-  * `gemini-3.8-flash-high` is currently the strongest lane for Ukrainian.
+  * `gemini-3.8-flash-high` is currently the strongest lane for task-level Ukrainian content review
+    under a fixed brief; this does not extend to planning, design or driving (operator decision 2026-10-03, #9584).
     Flash 3.8 is the live AGY default (operator GO 2026-09-02). The language-lane
     claim is the lmarena 2026-09-02 Text Arena category jump vs Gemini 3.7 Flash
     High: Writing, Literature & Language #7→#3; Multi-Turn #9→#4; Longer Query
     #13→#5; Hard Prompts (English) #23→#6; Hard Prompts #13→#7; Instruction
     Following #11→#9. Text Arena overall #7 (1494) vs Opus 5 High #8 (1492) and
     3.7 Flash High #10 (1491). Agent Arena #14 (+5.94%) vs 3.7 at #32 (+0.84%)
-    is supporting agentic evidence, not the Ukrainian-lane reason. Until the
-    next 3.1 Pro ships, test Flash in advisor-adjacent roles.
+    is supporting agentic evidence, not the Ukrainian-lane reason.
     Operator 2026-09-22: 3.8 Flash High is better than 3.1 Pro; Flash is the deep default.
   * The **fresh-build lesson writer** defaults to **GPT-6.1 Sol @ high** (operator
     2026-09-27), confirmed or reversed by the measured writer selection in the
@@ -278,7 +284,8 @@ threshold. Further delegation requires authorization. Worktree and completion ga
 acceptance criteria stated up front. It does **not** self-decompose an open-ended objective
 into serial micro-PRs. The accountable orchestrator owns sequencing and fan-out; leaving Flash
 to invent its own merge cadence re-starves CI (2026-07-24 queue incident). Catalog membership
-in `orchestrator_seats` does not license Flash self-orchestration of implementation work —
+in `orchestrator_seats` does not license Flash to plan, design, drive or orchestrate epics or large projects
+(operator decision 2026-10-03, #9584), nor self-orchestration of implementation work —
 session cadence already notes AGY compaction loses orchestration state (not a daily driver).
 Brief shape: `workflow.md` § Dispatch brief unit.
 
@@ -364,7 +371,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Opus / Sol take advice and Ukrainian judgment first; Fable / Astra are last resort. Orchestration alone does not confer approval authority |
   | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and handles ordinary advice (Astra last resort; #9275 envelope unchanged). Luna @ high scouts. Never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Cursor **explicit** `grok-4.7` = availability fallback, not quality escalate |
-  | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Catalog seat only — **not** a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request) |
+  | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Catalog seat only — **not a planning, design or driver seat** (operator decision 2026-10-03, #9584; the catalog entry is kept, not deleted) and not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request) |
   | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; `composer-2.5` also allowed; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; unknown-Auto authors resolve to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
