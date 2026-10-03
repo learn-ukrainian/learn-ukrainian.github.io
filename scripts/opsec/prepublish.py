@@ -103,9 +103,17 @@ def normalize_repository(value: str, host: str = "github.com") -> str:
     value = re.sub(r"^https?://", "", value)
     parts = value.split("/")
     if len(parts) == 2:
-        parts.insert(0, host.lower())
-    if len(parts) == 3 and all(re.fullmatch(r"[A-Za-z0-9_.-]+", x) for x in parts[:3]):
-        return "/".join(parts[:3]).lower()
+        parts.insert(0, host)
+    if len(parts) != 3:
+        return "unknown"
+    # Check ASCII before lowercasing: Unicode look-alikes must not normalize in.
+    label = r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+    if (
+        parts[0].isascii()
+        and re.fullmatch(rf"{label}(?:\.{label})*", parts[0].lower())
+        and all(re.fullmatch(r"[A-Za-z0-9_.-]+", part) for part in parts[1:])
+    ):
+        return "/".join(parts).lower()
     return "unknown"
 
 
