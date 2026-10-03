@@ -399,31 +399,41 @@ def _task_still_active(
     clock = time.time() if now is None else now
     in_grace = created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
 
+    pid_is_alive = pid is not None and pid > 0 and _pid_alive(pid)
+    state_pid_is_alive = state_pid is not None and state_pid > 0 and _pid_alive(state_pid)
+
     # Within grace only: live ledger PID holds claim (admission→state-write race).
-    if in_grace and pid is not None and pid > 0 and _pid_alive(pid):
+    if in_grace and pid_is_alive:
         return True
 
+    # #8659 / CF r4 F1: A terminal status in the state file proves the claim is
+    # inactive ONLY if the state record belongs to this exact claim PID (state_pid == pid).
+    # If state_pid != pid (e.g. a dead worker was settled or a pid-less zombie was marked
+    # failed), and the claim's PID is alive, this claim belongs to a live replacement
+    # worker or concurrent run and must NOT be released by reconciliation.
     if status in TERMINAL_TASK_STATUSES:
-        return False
+        if state_pid is not None and pid is not None and state_pid == pid:
+            return False
+        return bool(pid_is_alive)
+
     # #8663/#8717: a pid-less worktree-prep record or admission hold whose
     # dispatcher died never gets a worker pid; it holds nothing.
     if orphaned_prep:
         return False
 
-    # Prefer state worker PID once present (long-lived).
-    check_pid = state_pid if state_pid is not None else (pid if in_grace else None)
-    if check_pid is not None and check_pid > 0 and not _pid_alive(check_pid):
+    # Outside grace without a state file, an unbacked claim cannot be proven active.
+    if status is None and not in_grace:
         return False
-    # No state file and no pid → treat as stale (cannot prove active).
-    if status is None and (check_pid is None or check_pid <= 0):
-        return False
+
     # spawning/running/needs_finalize/empty with live pid (or unknown pid) = active.
     # no_deliverable is terminal: there is no unfinished tree to protect.
     if status in ("running", "spawning", "needs_finalize", "", None):
-        if check_pid is None or check_pid <= 0:
+        if pid_is_alive or state_pid_is_alive:
+            return True
+        if state_pid is None and pid is None:
             # State says active but no pid — keep claim conservatively if status explicit.
             return status in ("running", "spawning", "needs_finalize")
-        return _pid_alive(check_pid)
+        return False
     return False
 
 

@@ -592,12 +592,12 @@ def test_settle_missing_worktree_replacement_after_transition_preserves_new_run_
     # Old dead run's claim
     conn.execute(
         "INSERT INTO write_claims VALUES (?,?,?,?)",
-        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', 999_999_999, time.time() - 100),
+        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', 999_999_999, time.time() - 300),
     )
-    # Replacement live run's claim for the same task_id
+    # Replacement live run's claim for the same task_id aged beyond the 180s grace window
     conn.execute(
         "INSERT INTO write_claims VALUES (?,?,?,?)",
-        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time()),
+        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time() - 200),
     )
     conn.commit()
     conn.close()
@@ -616,6 +616,25 @@ def test_settle_missing_worktree_replacement_after_transition_preserves_new_run_
     assert len(rows) == 1
     assert rows[0][0] == os.getpid()
     assert "scripts/bar.py" in rows[0][1]
+
+    # Beyond-grace reconciliation: overlapping challenger admission must not delete
+    # the live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
+    challenger = ledger.admit(
+        task_id="challenger-task",
+        mode="workspace-write",
+        owned_paths=["scripts/bar.py"],
+        pid=os.getpid(),
+    )
+    assert challenger.admitted is False
+    assert challenger.would_refuse is True
+    assert "path ownership conflict (REFUSE)" in (challenger.reason or "")
+
+    conn = sqlite3.connect(ledger_path)
+    rows_after = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows_after) == 1
+    assert rows_after[0][0] == os.getpid()
+    assert "scripts/bar.py" in rows_after[0][1]
 
 
 def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Path) -> None:
@@ -645,12 +664,12 @@ def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Pat
     # Stale/pidless claim
     conn.execute(
         "INSERT INTO write_claims VALUES (?,?,?,?)",
-        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', None, time.time() - 100),
+        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', None, time.time() - 300),
     )
-    # Replacement live run's claim for the same task_id
+    # Replacement live run's claim for the same task_id aged beyond the 180s grace window
     conn.execute(
         "INSERT INTO write_claims VALUES (?,?,?,?)",
-        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time()),
+        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time() - 200),
     )
     conn.commit()
     conn.close()
@@ -669,6 +688,25 @@ def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Pat
     assert len(rows) == 1
     assert rows[0][0] == os.getpid()
     assert "scripts/bar.py" in rows[0][1]
+
+    # Beyond-grace reconciliation: overlapping challenger admission must not delete
+    # the live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
+    challenger = ledger.admit(
+        task_id="challenger-task",
+        mode="workspace-write",
+        owned_paths=["scripts/bar.py"],
+        pid=os.getpid(),
+    )
+    assert challenger.admitted is False
+    assert challenger.would_refuse is True
+    assert "path ownership conflict (REFUSE)" in (challenger.reason or "")
+
+    conn = sqlite3.connect(ledger_path)
+    rows_after = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows_after) == 1
+    assert rows_after[0][0] == os.getpid()
+    assert "scripts/bar.py" in rows_after[0][1]
 
 
 @pytest.fixture(autouse=True)
