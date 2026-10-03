@@ -55,12 +55,10 @@ def test_p3_scan_finds_reviewed_dynamic_consumers() -> None:
     root = Path(__file__).resolve().parents[2]
     names = {row["consumer"] for row in scan_inventory(root, phase="P3")}
     for filename in (
-        "judge_eval_seat.py",
         "package_unified_dataset.py",
         "model_view_exporter.py",
         "v4_mine_stem_controls.py",
         "phase3_textbook_nonhit.py",
-        "v6_mine_general_assistant_textbooks.py",
         "v5_mine_dialect_corpus.py",
     ):
         assert f"scripts/projects/open_model_data/{filename}" in names

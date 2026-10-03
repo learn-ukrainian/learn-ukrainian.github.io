@@ -1310,6 +1310,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/secret_scan_local.py` | Offline local TruffleHog scan (`tree` or full-history `history` mirror); console shows only totals and per-detector counts (no path, commit, line or value); raw JSON report 0600 in a new 0700 temp directory outside the repo; triage only through its `show-keys` and `count` subcommands. Runbook: `docs/runbooks/secret-scanning.md` (#9416) | `.venv/bin/python scripts/audit/secret_scan_local.py tree` |
 | `scripts/ci/checks.sh` | Every lint/content-contract gate of ci.yml's Checks job; runs all, fails if any failed | `bash scripts/ci/checks.sh` |
 | `scripts/projects/open_model_data/v4_mine_stem_controls.py` | Phase 3.3 STEM `PRESERVE` miner + polysemy typing (#8007). Receipts are hash-only; shards stay local. | `python -m scripts.projects.open_model_data.v4_mine_stem_controls --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" --output-dir "$STEM_CONTROLS_OUT"` |
+| `scripts/projects/open_model_data/quarantine.py` | Build or verify the sealed inventory of old-plan open-model artifacts (path, bytes, SHA-256, reason; #9607). Loaders refuse those paths through `paths.refuse_quarantined`. | `.venv/bin/python scripts/projects/open_model_data/quarantine.py verify [--data-root <checkout-with-data>]` |
 
 ---
 

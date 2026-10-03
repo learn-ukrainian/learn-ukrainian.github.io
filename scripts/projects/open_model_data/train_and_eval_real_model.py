@@ -5,6 +5,9 @@ Trains a small open model (Qwen/Qwen2.5-0.5B-Instruct) on authentic Russianism
 trajectories from uldr_v1_production, records real step-by-step training logs,
 and generates predictions before and after training on both held-out evaluation
 suites (heldout_evaluation_suite_1000 and dialect_historical_protection_suite_600).
+
+torch, peft and transformers are imported lazily so the quarantine guard runs, and
+refuses, before the ML stack is needed (#9607).
 """
 
 from __future__ import annotations
@@ -16,12 +19,15 @@ import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import torch
-from peft import LoraConfig, get_peft_model
-from torch.utils.data import DataLoader, Dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer, get_cosine_schedule_with_warmup
+if TYPE_CHECKING:
+    import torch
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.paths import refuse_quarantined
 
 
 def sha256_file(path: Path) -> str:
@@ -32,8 +38,12 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-class SFTDataset(Dataset):
+class SFTDataset:
+    """Map-style dataset (``__len__``/``__getitem__``), the protocol ``DataLoader`` consumes."""
+
     def __init__(self, records: list[dict[str, Any]], tokenizer: Any, max_length: int = 512):
+        import torch
+
         self.tokenizer = tokenizer
         self.max_length = max_length
         self.samples = []
@@ -74,6 +84,8 @@ class SFTDataset(Dataset):
 
 
 def collate_sft(batch: list[dict[str, torch.Tensor]], pad_token_id: int) -> dict[str, torch.Tensor]:
+    import torch
+
     max_len = max(len(b["input_ids"]) for b in batch)
     input_ids = []
     attention_mask = []
@@ -109,6 +121,8 @@ def generate_predictions_batch(
     batch_size: int = 16,
     max_new_tokens: int = 120,
 ) -> list[dict[str, str]]:
+    import torch
+
     model.eval()
     tokenizer.padding_side = "left"
     if tokenizer.pad_token is None:
@@ -162,11 +176,22 @@ def main() -> int:
     parser.add_argument("--lr", type=float, default=2e-4)
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
-    parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--device", type=str, default=None, help="Torch device (default: cuda if available, else cpu)")
     args = parser.parse_args()
+    for label, path in (
+        ("train file", args.train_file),
+        ("held-out file", args.heldout_file),
+        ("protection file", args.protection_file),
+    ):
+        refuse_quarantined(path, f"training run {label}")
+
+    import torch
+    from peft import LoraConfig, get_peft_model
+    from torch.utils.data import DataLoader
+    from transformers import AutoModelForCausalLM, AutoTokenizer, get_cosine_schedule_with_warmup
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    device = args.device
+    device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
     # Check fingerprints

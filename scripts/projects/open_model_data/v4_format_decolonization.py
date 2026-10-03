@@ -21,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.paths import refuse_quarantined
 from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     classify_calque_type,
     scan_generated_files,
@@ -208,8 +209,10 @@ def format_consumer_datasets(
     max_shard_bytes: int = MAX_SHARD_BYTES,
 ) -> dict[str, Any]:
     """Read all generated ULDR shards, validate firewalls, and format them into consumer JSONL files."""
-    output_dir.mkdir(parents=True, exist_ok=True)
+    refuse_quarantined(input_dir, "consumer formatting input directory")
     manifest_path = input_dir / "decolonization_manifest.json"
+    refuse_quarantined(manifest_path, "consumer formatting manifest")
+    output_dir.mkdir(parents=True, exist_ok=True)
     if not manifest_path.is_file():
         raise FileNotFoundError(f"Missing manifest at {manifest_path}")
 
@@ -233,6 +236,8 @@ def format_consumer_datasets(
 
         traj_p = input_dir / shard_info["trajectories_file"]
         dpo_p = input_dir / shard_info["dpo_pairs_file"]
+        refuse_quarantined(traj_p, "consumer formatting trajectories shard")
+        refuse_quarantined(dpo_p, "consumer formatting DPO shard")
         if not traj_p.is_file():
             raise FileNotFoundError(f"Declared trajectories shard missing: {traj_p}")
         if not dpo_p.is_file():

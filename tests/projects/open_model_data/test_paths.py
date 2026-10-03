@@ -151,16 +151,21 @@ def test_is_archived_or_quarantined_path() -> None:
     assert is_archived_or_quarantined_path(ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft" / "shard_1.jsonl") is True
     assert is_archived_or_quarantined_path(REGISTRY_QUARANTINED_HISTORICAL_DIR) is True
 
-    assert is_archived_or_quarantined_path(REGISTRY_RELEASE_DIR) is False
-    assert is_archived_or_quarantined_path(REGISTRY_CORRECTION_PROTECTION_DIR) is False
-    assert is_archived_or_quarantined_path(REGISTRY_COMPONENTS_DIR) is False
+    # Old release sets and the directories holding them are quarantined too (#9607).
+    assert is_archived_or_quarantined_path(REGISTRY_RELEASE_DIR) is True
+    assert is_archived_or_quarantined_path(REGISTRY_CORRECTION_PROTECTION_DIR) is True
+    assert is_archived_or_quarantined_path(REGISTRY_COMPONENTS_DIR) is True
+    assert is_archived_or_quarantined_path(CONTRACTS_DIR) is False
+    assert is_archived_or_quarantined_path(REGISTRY_IDIOMS_DIR) is False
     assert is_archived_or_quarantined_path(None) is False
 
     with pytest.raises(ValueError, match="Prohibited"):
         assert_not_archived_path(ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft", context="test")
+    with pytest.raises(ValueError, match="Prohibited"):
+        assert_not_archived_path(REGISTRY_CORRECTION_PROTECTION_DIR, context="test")
 
     # Should not raise
-    assert_not_archived_path(REGISTRY_CORRECTION_PROTECTION_DIR, context="test")
+    assert_not_archived_path(CONTRACTS_DIR, context="test")
     assert_not_archived_path(None, context="test")
 
 

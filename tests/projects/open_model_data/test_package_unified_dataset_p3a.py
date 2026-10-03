@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts.projects.open_model_data import package_unified_dataset as package
-from scripts.storage.paths import MissingArtifactError
+from scripts.projects.open_model_data.paths import QuarantinedArtifactError
 
 
 def _repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
@@ -109,94 +109,18 @@ def test_cli_requires_external_output_and_rejects_alias(tmp_path: Path, monkeypa
     assert not (repo / "export").exists()
 
 
-@pytest.mark.parametrize("state", ["missing", "corrupt"])
-def test_managed_snapshot_failure_precedes_output_mutation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, state: str
+@pytest.mark.parametrize("source", ["managed", "external"])
+def test_quarantined_release_inputs_refuse_before_export(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, source: str
 ) -> None:
-    repo = _repo(tmp_path, monkeypatch)
-    member = package.MANAGED_RELEASE_DIR / "uldr_v03_dialect/sft_dialect_protection_500.jsonl"
-    if state == "missing":
-        member.unlink()
-    else:
-        member.write_text("changed")
-    output = tmp_path / "package"
-    with pytest.raises(MissingArtifactError, match="hydrate --group open_model_release_payload"):
-        package.build_unified_dataset(package.MANAGED_RELEASE_DIR, output)
-    assert not output.exists()
-
-
-@pytest.mark.parametrize(
-    "absent",
-    [
-        "uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
-        "uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
-    ],
-)
-def test_absent_required_committed_selector_fails_before_export(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, absent: str
-) -> None:
-    repo = _repo(tmp_path, monkeypatch)
-    manifest_path = repo / "registry/artifacts" / f"{package.RELEASE_GROUP}.manifest.json"
-    manifest = json.loads(manifest_path.read_text())
-    manifest["entries"] = [entry for entry in manifest["entries"] if not entry["path"].endswith(absent)]
-    manifest["set_descriptor"]["members"] = sorted(entry["path"][5:] for entry in manifest["entries"])
-    manifest_path.write_text(json.dumps(manifest))
-    output = tmp_path / "package"
-    with pytest.raises(MissingArtifactError, match="hydrate --group open_model_release_payload") as exc:
-        package.build_unified_dataset(package.MANAGED_RELEASE_DIR, output)
-    assert absent in str(exc.value)
-    assert not output.exists()
-
-
-def test_partial_optional_general_assistant_release_fails_when_included(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repo = _repo(tmp_path, monkeypatch)
-    source = package.MANAGED_RELEASE_DIR / "uldr_v06_general_assistant/sft/sft_shard_001_of_001.jsonl"
-    source.parent.mkdir(parents=True)
-    content = b'{"id":"optional"}\n'
-    source.write_bytes(content)
-    manifest_path = repo / "registry/artifacts" / f"{package.RELEASE_GROUP}.manifest.json"
-    manifest = json.loads(manifest_path.read_text())
-    sha = hashlib.sha256(content).hexdigest()
-    manifest["entries"].append(
-        {"path": source.relative_to(repo).as_posix(), "sha256": sha, "store": sha, "size": len(content)}
-    )
-    manifest["set_descriptor"]["members"] = sorted(entry["path"][5:] for entry in manifest["entries"])
-    manifest_path.write_text(json.dumps(manifest))
-    output = tmp_path / "package"
-    with pytest.raises(MissingArtifactError, match="uldr_v06_general_assistant/eval"):
-        package.build_unified_dataset(package.MANAGED_RELEASE_DIR, output)
-    assert not output.exists()
-    result = package.build_unified_dataset(package.MANAGED_RELEASE_DIR, output, include_general_assistant=False)
-    assert result["totals"]["sft_instructions"] == 2
-
-
-def test_managed_reader_uses_committed_members_and_exports_external(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repo = _repo(tmp_path, monkeypatch)
-    stray = package.MANAGED_RELEASE_DIR / "uldr_v03_dialect/extra.jsonl"
-    stray.write_text('{"id":"stray"}\n')
-    output = tmp_path / "package"
-    manifest = package.build_unified_dataset(package.MANAGED_RELEASE_DIR, output)
-    assert manifest["totals"] == {"sft_instructions": 2, "dpo_pairs": 0, "eval_cases": 2}
-    assert json.loads((output / "train.jsonl").read_text().splitlines()[0])["id"] == "one"
-    assert (output / "dpo.jsonl").read_bytes() == b""
-    assert len((output / "eval.jsonl").read_text().splitlines()) == 2
-    assert (output / "README.md").is_file()
-    assert (output / "manifest.json.sha256").read_text().startswith(package.sha256_file(output / "manifest.json"))
-    assert stray.is_file()
-    assert (repo / "data/projects/open_model_data/export").exists() is False
-
-
-def test_external_fixture_reader_still_builds(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Every release set the packager reads is sealed (#9607), managed snapshot or external copy alike."""
     _repo(tmp_path, monkeypatch)
-    release = tmp_path / "fixture-release"
-    source = release / "uldr_v03_dialect"
-    source.mkdir(parents=True)
-    (source / "sft_dialect_protection_500.jsonl").write_text('{"id":"fixture","query":"Q"}\n')
-    output = tmp_path / "fixture-package"
-    manifest = package.build_unified_dataset(release, output)
-    assert manifest["totals"]["sft_instructions"] == 1
-    assert json.loads((output / "train.jsonl").read_text())["id"] == "fixture"
+    release = package.MANAGED_RELEASE_DIR
+    if source == "external":
+        release = tmp_path / "fixture-release"
+        (release / "uldr_v03_dialect").mkdir(parents=True)
+        (release / "uldr_v03_dialect/sft_dialect_protection_500.jsonl").write_text('{"id":"fixture","query":"Q"}\n')
+    output = tmp_path / "package"
+    with pytest.raises(QuarantinedArtifactError, match="Refusing ULDR packaging"):
+        package.build_unified_dataset(release, output)
+    assert not output.exists()
