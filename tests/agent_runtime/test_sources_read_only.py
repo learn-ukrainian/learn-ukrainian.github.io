@@ -212,16 +212,20 @@ def test_unverified_formal_codex_boundary_never_plans_or_launches_bypass(tmp_pat
         runner.invoke("codex", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
 
 
-@pytest.mark.parametrize("flag", ["review_isolation"])
-def test_parent_sandbox_codex_keeps_bypass_with_writers_unexposed(tmp_path, flag):
+def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
+    from scripts.review.isolation import review_isolation_tool_config
+
     snapshot, write = tmp_path / "snapshot", tmp_path / "write"
     snapshot.mkdir(mode=0o700)
     write.mkdir(mode=0o700)
     for child in ("tmp", "exec", "home", "xdg", "state"):
         (write / child).mkdir()
-    tc = {flag: True, "review_write_root": str(write)}
-    if flag == "review_isolation":
-        tc.update(review_snapshot_root=str(snapshot), review_engine_binary="/bin/true")
+    tc = {
+        **review_isolation_tool_config("codex"),
+        "review_write_root": str(write),
+        "review_snapshot_root": str(snapshot),
+        "review_engine_binary": "/bin/true",
+    }
     plan = CodexAdapter().build_invocation(
         prompt="review",
         mode="read-only",
@@ -233,10 +237,78 @@ def test_parent_sandbox_codex_keeps_bypass_with_writers_unexposed(tmp_path, flag
     )
     try:
         assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
-        sources = _server_config(plan.cmd)
-        assert set(sources["enabled_tools"]) == set(SOURCES_READ_ONLY_TOOLS)
+        assert "--ignore-user-config" in plan.cmd
+        assert not any(arg.startswith("mcp_servers.sources.") for arg in plan.cmd)
+    finally:
+        plan.output_file.unlink()
+
+
+@pytest.mark.parametrize("session", [None, "resume-reader"])
+def test_ignore_user_config_without_sources_never_defines_partial_server(tmp_path, session):
+    plan = CodexAdapter().build_invocation(
+        prompt="review",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=session,
+        tool_config={"ignore_user_config": True},
+    )
+    try:
+        assert "--ignore-user-config" in plan.cmd
+        assert not any(arg.startswith("mcp_servers.sources.") for arg in plan.cmd)
+    finally:
+        plan.output_file.unlink()
+
+
+def test_ignore_user_config_with_explicit_sources_still_excludes_writers(tmp_path):
+    plan = CodexAdapter().build_invocation(
+        prompt="lookup",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "ignore_user_config": True,
+            "mcp_servers": {"sources": {"command": "/bin/true", "enabled_tools": list(SOURCES_PERSISTING_TOOLS)}},
+        },
+    )
+    try:
+        assert set(_server_config(plan.cmd)["enabled_tools"]) == set(SOURCES_READ_ONLY_TOOLS)
+    finally:
+        plan.output_file.unlink()
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+@pytest.mark.parametrize("session", [None, "resume-reader"])
+def test_scoped_codex_effective_exposure_matches_contract(tmp_path, access, session):
+    home = tmp_path / "scoped-home"
+    home.mkdir()
+    config = _render_codex_review_config(Path("/bin/python"), Path("/server.py"), {"LU_REVIEW_ACCESS": access})
+    (home / "config.toml").write_text(config)
+    plan = CodexAdapter().build_invocation(
+        prompt="use mcp__sources__verify_words",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=session,
+        tool_config={
+            "codex_home_override": str(home),
+            "mcp_config_path": str(tmp_path / "attempt.mcp.json"),
+            "strict_mcp_config": True,
+            "mcp_server_names": ["sources"],
+            "review_access": access,
+        },
+    )
+    try:
+        sources = tomllib.loads(config)["mcp_servers"]["sources"]
+        sources.update(_server_config(plan.cmd))
+        contract = REVIEW_TOOLS if access == "isolated" else FULL_REVIEW_TOOLS
+        assert set(sources["enabled_tools"]) == contract
+        assert set(sources["tools"]) == contract
         assert not set(SOURCES_PERSISTING_TOOLS) & set(sources["enabled_tools"])
-        assert sources["tools"]["verify_words"]["approval_mode"] == "approve"
     finally:
         plan.output_file.unlink()
 

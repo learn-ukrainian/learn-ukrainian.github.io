@@ -905,6 +905,7 @@ def prepare_review_attempt(
         adapter_options["allowed_tools"] = allowed_tools
     if codex_home is not None:
         adapter_options["codex_home_override"] = str(codex_home)
+        adapter_options["review_access"] = review_access
     if agy_home is not None:
         adapter_options["agy_home_override"] = str(agy_home)
 

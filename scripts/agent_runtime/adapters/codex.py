@@ -44,6 +44,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
+from scripts.review.receipts.ledger import review_tools
 
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
@@ -93,13 +94,13 @@ _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 # Exposure filtering remains effective even under parent-sandboxed bypass.
 
 
-def _sources_read_only_flags() -> list[str]:
-    """Replace inherited sources grants with audited readers, then approve each."""
-    tools = {name: {"approval_mode": "approve"} for name in SOURCES_READ_ONLY_TOOLS}
+def _sources_read_only_flags(tool_names: tuple[str, ...] = SOURCES_READ_ONLY_TOOLS) -> list[str]:
+    """Replace inherited sources grants with the route's readers, then approve each."""
+    tools = {name: {"approval_mode": "approve"} for name in tool_names}
     approvals = "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in tools) + "}"
     return [
         "-c",
-        "mcp_servers.sources.enabled_tools=" + _json.dumps(list(SOURCES_READ_ONLY_TOOLS)),
+        "mcp_servers.sources.enabled_tools=" + _json.dumps(list(tool_names)),
         "-c",
         'mcp_servers.sources.default_tools_approval_mode="prompt"',
         "-c",
@@ -114,7 +115,10 @@ def _prompt_names_sources_mcp(prompt: str) -> bool:
 def _argv_can_call_sources_mcp(argv: list[str]) -> bool:
     if "--dangerously-bypass-approvals-and-sandbox" in argv:
         return True
-    return all(flag in argv for flag in _sources_read_only_flags())
+    return any(
+        all(flag in argv for flag in _sources_read_only_flags(tools))
+        for tools in (SOURCES_READ_ONLY_TOOLS, tuple(sorted(review_tools())), tuple(sorted(review_tools("full"))))
+    )
 
 
 def _read_only_tmp_flags(root: Path) -> list[str]:
@@ -426,9 +430,17 @@ class CodexAdapter:
         # enables toggles.
         cmd.extend(["--disable", "apps"])
         cmd.extend(self._tool_config_flags(tool_config))
-        if mode == "read-only":
+        mcp_servers = tc.get("mcp_servers")
+        sources = mcp_servers.get("sources") if isinstance(mcp_servers, dict) else None
+        sources_defined = isinstance(sources, dict) and bool(sources.get("command") or sources.get("url"))
+        if mode == "read-only" and ("--ignore-user-config" not in cmd or sources_defined):
             # Last overrides win: caller/global config cannot re-expose writers.
-            cmd.extend(_sources_read_only_flags())
+            # Formal scoped homes use the receipt contract, including when the
+            # parent AttemptBoundary replaces their server with a stdio proxy.
+            tools = SOURCES_READ_ONLY_TOOLS
+            if tc.get("codex_home_override") and tc.get("mcp_config_path"):
+                tools = tuple(sorted(review_tools(tc.get("review_access", "isolated"))))
+            cmd.extend(_sources_read_only_flags(tools))
         if has_session_to_resume:
             cmd.append(session_id)
         cmd.append("-")  # Read prompt from stdin.

@@ -378,12 +378,18 @@ to be running" bugs.
 
 Sources access in review routes uses the tool set derived from the server's
 `readOnlyHint` annotations, checked by the behavioral side-effect audit. Formal
-receipt contracts are subsets of that set. Codex scoped review config and ad hoc
-read-only argv expose only those readers through `enabled_tools` and approve them
-individually; writers remain hidden even when a verified parent OS sandbox
-requires nested sandbox bypass. Claude's ordinary ad hoc reviewer profile denies
+receipt contracts are subsets of that set. Codex scoped review config lists the
+receipt contract's readers; the adapter's final argv overrides enforce that same
+contract for formal attempts, including the parent sandbox's stdio proxy. Ad hoc
+read-only argv instead expose all audited readers. Both approve each exposed tool
+individually and hide writers even when a verified parent OS sandbox requires
+nested sandbox bypass. Sealed Codex reviews ignore user config and use only the
+injected `sealed_review` server; the adapter adds no Sources settings unless a
+Sources transport is explicitly defined. Claude's ordinary ad hoc reviewer profile denies
 the persisting tools explicitly. Claude and AGY formal attempts enforce the
-receipt contract through the sources boundary and full-review allow rules.
+receipt contract through the sources boundary and full-review allow rules. The
+Sources server also filters listings and refuses calls outside the formal
+receipt contract, independently of CLI exposure controls.
 Claude still maintains local tool tuples, checked for parity with the shared
 module; other Claude read-only profiles and explicit caller allowlists do not
 add persisting-tool denies. Cache-writing ULIF and Wikipedia tools are excluded

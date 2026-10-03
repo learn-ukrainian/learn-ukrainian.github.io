@@ -557,12 +557,16 @@ def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path
 
 @pytest.mark.parametrize("agent", ["agy", "codex"])
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
-def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monkeypatch, agent, kind):
+@pytest.mark.parametrize("review_access", ["isolated", "full"])
+def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monkeypatch, agent, kind, review_access):
     from scripts.agent_runtime.adapters.agy import AgyAdapter
     from scripts.agent_runtime.adapters.codex import CodexAdapter
 
     root, home = world
-    tc = attempt_config(root, tmp_path, manifest_world(root, kind), agent)
+    tc = attempt_config(root, tmp_path, manifest_world(root, kind), agent, review_access=review_access)
+    if review_access == "full":
+        subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+        tc["review_cwd"] = str(root)
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
     try:
         adapter = {"agy": AgyAdapter, "codex": CodexAdapter}[agent]()
@@ -594,9 +598,16 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             assert plan.output_file.is_relative_to(boundary.write_root)
             assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
             from scripts.agent_runtime.sources_read_only import SOURCES_PERSISTING_TOOLS
+            from scripts.review.receipts.ledger import review_tools
             from tests.agent_runtime.test_sources_read_only import _server_config
 
-            exposed = _server_config(plan.cmd)["enabled_tools"]
+            sources = tomllib.loads((Path(plan.env_overrides["CODEX_HOME"]) / "config.toml").read_text())[
+                "mcp_servers"
+            ]["sources"]
+            sources.update(_server_config(plan.cmd))
+            exposed = sources["enabled_tools"]
+            assert set(exposed) == review_tools(review_access)
+            assert set(sources["tools"]) == review_tools(review_access)
             assert "verify_words" in exposed
             assert not set(SOURCES_PERSISTING_TOOLS) & set(exposed)
         # Probe the actual installed executable and its runtime closure inside

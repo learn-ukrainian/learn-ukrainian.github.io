@@ -193,11 +193,37 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         )
     if harness == "codex":
         expected_options["codex_home_override"] = str(plan.config_path.parent / f"{attempt_id}.codex-home")
+        expected_options["review_access"] = "isolated"
     if harness == "agy":
         expected_options["agy_home_override"] = str(plan.config_path.parent / f"{attempt_id}.agy-home")
     assert plan.adapter_options == expected_options
     assert plan.mcp_config_path == plan.config_path
     assert plan.strict_mcp_config is True
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_prepared_codex_contract_survives_adapter_overrides(manifest_file: Path, tmp_path: Path, access: str) -> None:
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.review.receipts.ledger import review_tools
+    from tests.agent_runtime.test_sources_read_only import _server_config
+
+    prepared = prepare_review_attempt(
+        "review", "attempt", manifest_file, "codex", receipts_root=tmp_path / "receipts", review_access=access
+    )
+    invocation = CodexAdapter().build_invocation(
+        prompt="use mcp__sources__verify_words",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=prepared.adapter_options,
+    )
+    try:
+        assert prepared.adapter_options["review_access"] == access
+        assert set(_server_config(invocation.cmd)["enabled_tools"]) == review_tools(access)
+    finally:
+        invocation.output_file.unlink()
 
 
 def test_prepare_review_attempt_files_mode_0o600(manifest_file: Path, tmp_path: Path) -> None:
