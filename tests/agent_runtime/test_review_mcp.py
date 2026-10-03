@@ -197,6 +197,7 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         expected_options["review_access"] = "isolated"
     if harness == "agy":
         expected_options["agy_home_override"] = str(plan.config_path.parent / f"{attempt_id}.agy-home")
+        expected_options["review_access"] = "isolated"
     assert plan.adapter_options == expected_options
     assert plan.mcp_config_path == plan.config_path
     assert plan.strict_mcp_config is True
@@ -1199,7 +1200,12 @@ def test_agy_home_layout_modes_and_single_source_config(
     token = app_data / "antigravity-oauth-token"
     assert token.is_symlink()
     assert Path(os.readlink(token)) == fake_agy_user_home / "antigravity-oauth-token"
-    assert sorted(entry.name for entry in app_data.iterdir()) == ["antigravity-oauth-token"]
+    assert sorted(entry.name for entry in app_data.iterdir()) == ["antigravity-oauth-token", "settings.json"]
+    from scripts.agent_runtime.review_mcp import agy_review_settings
+
+    settings = app_data / "settings.json"
+    assert json.loads(settings.read_text()) == agy_review_settings("isolated")
+    assert stat.S_IMODE(settings.stat().st_mode) == 0o600
 
 
 def test_agy_home_token_source_defaults_to_real_home_without_override(
