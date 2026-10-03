@@ -789,6 +789,15 @@ def test_cross_case(tmp_path: Path, case: CrossCase) -> None:
     # Schema/load failures return before activity policy checks; every valid fixture
     # here retains at least one undeclared quiz, so PR1 adds its missing-options note.
     policy_notes = {codes.OPTIONS_MISSING} if report.activity_report else set()
+    # These fixture words are literal lemma-NNN strings, absent from the reference.
+    # Only target plans with core/incidental introductions should produce C29 notes.
+    if "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml" in report.inputs:
+        target = next(plan for plan in case.plans if plan["slug"] == case.target)
+        if any(
+            lesson["inventory"]["vocabulary"]["core"] or lesson["inventory"]["vocabulary"]["incidental"]
+            for lesson in target["lessons"]
+        ):
+            policy_notes.add(codes.A1_REFERENCE_WORD_MISSING)
     assert {o.code for o in report.notes} == set(case.notes) | policy_notes, report.render_text()
     expected_not_checked = set(ALWAYS_NOT_CHECKED)
     if case.name == "rule4_waived_id_unverifiable_is_not_checked":

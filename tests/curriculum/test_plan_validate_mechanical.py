@@ -364,7 +364,7 @@ def test_case(tmp_path: Path, case: Case) -> None:
     report, _world = run(tmp_path, case.mutate)
     text = report.render_text()
     assert {o.code for o in report.failures} == set(case.failures), text
-    assert {o.code for o in report.notes} == set(case.notes) | {codes.OPTIONS_MISSING}, text
+    assert {o.code for o in report.notes} == set(case.notes) | {codes.OPTIONS_MISSING, codes.A1_REFERENCE_WORD_MISSING}, text
     assert {o.code for o in report.not_checked} == NOT_CHECKED | set(case.not_checked), text
     assert report.ok == (not case.failures)
     if case.says:

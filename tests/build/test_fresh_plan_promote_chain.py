@@ -335,3 +335,47 @@ def test_the_own_plan_is_never_excused_as_an_earlier_plan(reviewed: Env, capsys)
     report = env.state_dir / plan_manifest.VALIDATE_REPORT_NAME
     problems = plan_manifest.validate_report_problems(env.root, LEVEL, SLUG, report)
     assert problems == {OWN_REL: "changed since the plan-validate report read it"}
+
+
+def test_reference_input_uses_installed_bytes_and_detects_changes(tmp_path: Path, monkeypatch) -> None:
+    """C29 reads installed data even when the report describes a synthetic tree (#9582)."""
+    from scripts.curriculum.validate import a1_reference
+
+    env = build_env(tmp_path)
+    relative = a1_reference.INVENTORY_PATH.relative_to(plan_manifest.REPO_ROOT).as_posix()
+    assert not (env.root / relative).exists()
+    assert validate_provisional(env) == 0
+    report = env.state_dir / plan_manifest.VALIDATE_REPORT_NAME
+    document = json.loads(report.read_bytes())
+    assert document["inputs"][relative] == sha(a1_reference.INVENTORY_PATH)
+    assert plan_manifest.validate_report_problems(env.root, LEVEL, SLUG, report) == {}
+
+    # A different inventory in the curriculum tree must not override the installed one.
+    shadow = env.root / relative
+    shadow.parent.mkdir(parents=True)
+    shadow.write_bytes(b"different tree inventory\n")
+    assert plan_manifest.validate_report_problems(env.root, LEVEL, SLUG, report) == {}
+
+    # Simulate changed installed bytes without writing to the real repository.
+    read_bytes = Path.read_bytes
+
+    def changed_inventory(path: Path) -> bytes:
+        content = read_bytes(path)
+        return content + b"\n# installed inventory changed\n" if path == a1_reference.INVENTORY_PATH else content
+
+    monkeypatch.setattr(Path, "read_bytes", changed_inventory)
+    assert plan_manifest.validate_report_problems(env.root, LEVEL, SLUG, report) == {
+        relative: "changed since the plan-validate report read it"
+    }
+
+
+def test_unrelated_registry_input_uses_tree_root(tmp_path: Path, monkeypatch) -> None:
+    tree, installed = tmp_path / "tree", tmp_path / "installed"
+    relative = "registry/lexicon/unrelated.yaml"
+    for root, content in ((tree, b"tree data\n"), (installed, b"installed data\n")):
+        path = root / relative
+        path.parent.mkdir(parents=True)
+        path.write_bytes(content)
+    monkeypatch.setattr(plan_manifest, "REPO_ROOT", installed)
+    assert plan_manifest.current_sha(tree, relative) == sha(tree / relative)
+    assert plan_manifest.current_sha(tree, relative) != sha(installed / relative)
