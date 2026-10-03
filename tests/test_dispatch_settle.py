@@ -618,6 +618,59 @@ def test_settle_missing_worktree_replacement_after_transition_preserves_new_run_
     assert "scripts/bar.py" in rows[0][1]
 
 
+def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "pidless-zombie"
+    path = task_dir / f"{task_id}.json"
+
+    initial_data = {
+        "task_id": task_id,
+        "run_nonce": "run-1",
+        "started_at": "2026-01-01T00:00:00Z",
+        "status": "running",
+        "pid": None,
+    }
+    path.write_text(json.dumps(initial_data), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    # Stale/pidless claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', None, time.time() - 100),
+    )
+    # Replacement live run's claim for the same task_id
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time()),
+    )
+    conn.commit()
+    conn.close()
+
+    actions = ds.heal_zombie_task(task_dir, task_id, ledger=ledger)
+    assert "marked_failed_zombie_running" in actions
+    assert "released_ownership_claims" in actions
+
+    current = json.loads(path.read_text(encoding="utf-8"))
+    assert current["status"] == "failed"
+
+    # Verify that the stale claim was deleted but the replacement run's live claim was preserved
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 1
+    assert rows[0][0] == os.getpid()
+    assert "scripts/bar.py" in rows[0][1]
+
+
 @pytest.fixture(autouse=True)
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""

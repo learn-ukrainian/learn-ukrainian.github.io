@@ -510,7 +510,25 @@ class OwnershipLedger:
                     (task_id, int(pid)),
                 )
             else:
-                conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
+                # When pid is None (unknown/pid-less settlement), only delete claims
+                # with no recorded PID (pid IS NULL) or claims whose PID is dead,
+                # never claims belonging to a live process/replacement run (#8659).
+                rows = conn.execute(
+                    "SELECT DISTINCT pid FROM write_claims WHERE task_id = ?",
+                    (task_id,),
+                ).fetchall()
+                for row in rows:
+                    row_pid = row["pid"]
+                    if row_pid is None:
+                        conn.execute(
+                            "DELETE FROM write_claims WHERE task_id = ? AND pid IS NULL",
+                            (task_id,),
+                        )
+                    elif not _pid_alive(int(row_pid)):
+                        conn.execute(
+                            "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
+                            (task_id, int(row_pid)),
+                        )
             conn.execute("COMMIT")
 
     def update_claim_pid(self, task_id: str, new_pid: int) -> None:

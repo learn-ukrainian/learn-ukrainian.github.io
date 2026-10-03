@@ -835,3 +835,52 @@ def test_refusal_message_counts_peers_not_claim_rows():
     )
     assert conflict.count("one(pid 777)") == 1, conflict
     assert "(+2 more paths)" in conflict, conflict
+
+
+def test_ownership_ledger_release_pid_scoped_and_pidless_preserves_live(tmp_path: Path):
+    """#8659: release(pid=None) must preserve claims of a live replacement run."""
+    import sqlite3
+    import time
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(ledger_path)
+    task_id = "test-task"
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    # Stale/dead PID claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/a.py"}', 999_999_999, time.time() - 100),
+    )
+    # Stale/NULL PID claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/b.py"}', None, time.time() - 100),
+    )
+    # Live PID replacement claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/c.py"}', os.getpid(), time.time()),
+    )
+    conn.commit()
+    conn.close()
+
+    # PID-less release cleans NULL and dead PIDs, preserves live PID
+    ledger.release(task_id, pid=None)
+
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 1
+    assert rows[0][0] == os.getpid()
+    assert "scripts/c.py" in rows[0][1]
+
+    # Explicit PID release cleans only matching PID
+    ledger.release(task_id, pid=os.getpid())
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 0

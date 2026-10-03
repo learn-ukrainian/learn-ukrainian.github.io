@@ -49,6 +49,7 @@ def mark_dead_worker_terminal(
     allowed_statuses: tuple[str, ...],
     pid_alive: Callable[[int], bool],
     resolve_head: Callable[[Path], str | None],
+    ledger: OwnershipLedger | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Recheck a dead worker under the writer lock, then persist its final HEAD."""
     with task_state_lock(path):
@@ -87,6 +88,9 @@ def mark_dead_worker_terminal(
                 f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
             )
         write_state_unlocked(path, current)
+        if ledger is not None:
+            task_id = current.get("task_id") or path.stem
+            ledger.release(task_id, pid=pid)
         return current, True
 
 

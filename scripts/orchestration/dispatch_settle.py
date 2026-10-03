@@ -153,11 +153,11 @@ def heal_zombie_task(
             allowed_statuses=("running",),
             pid_alive=_pid_alive,
             resolve_head=lambda path: _run(["git", "rev-parse", "HEAD"], cwd=path).stdout.strip() or None,
+            ledger=ledger,
         )
         if changed:
             actions.append("marked_failed_zombie_running")
             if ledger is not None:
-                ledger.release(task_id, pid=pid)
                 actions.append("released_ownership_claims")
     return actions
 
