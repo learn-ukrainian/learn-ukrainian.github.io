@@ -8,12 +8,15 @@ sources:
   path: oho-ukrainian-grammar-workbook-a1.pdf
   notes: 'Words-only extraction per the 2026-07-10 IP boundary (issues #4851/#4223). Only glossary headwords
     and appendix infinitives are retained; no English, explanations, unit sentences or conjugation columns.
-    Printed pages 200–216 contain the glossary; 217–223 contain the verb table; 224–229 contain back matter.
-    Apostrophes use U+2019. PDF Latin lookalikes are transcribed as the printed Cyrillic glyphs; acute vowels
-    preserve their printed stress. Parenthetical pronoun subjects are omitted from conjugation variants. Unlabelled
-    headwords use VESUM POS where available; formulas use first-token POS with intj fallback; the unlabelled
-    unattested indeclinable headword такос uses noninfl. Appendix POS is verb. Missing means no VESUM form
-    attestation, never a lookup failure.'
+    Printed pages 200–216 contain the glossary; 217–223 contain the verb table; 224–229 contain back
+    matter. Apostrophes use U+2019. PDF Latin lookalikes are transcribed as the printed Cyrillic glyphs;
+    acute vowels preserve their printed stress. Parenthetical pronoun subjects are omitted from conjugation
+    variants. Book-labelled POS is preserved; entries without a printed abbreviation use unlabelled.
+    Single-word vesum_pos lists every sorted unique POS of lemma-bound analyses, not inflections of
+    other lemmas. Phrases retain per-token verification without vesum_pos. Proper-name vesum_tags retain
+    only lemma-bound analyses with the prop marker. Appendix POS is verb. Verification states attest
+    forms; an inflected form can be found with an empty lemma-bound vesum_pos. Missing means no VESUM
+    form analysis, never a lookup failure.'
   headwords:
   - lemma: вишиванка
     stressed: вишива́нка
@@ -59,7 +62,7 @@ sources:
     vesum: found
   - lemma: Мене звати...
     stressed: Мене́ зва́ти...
-    pos: noun
+    pos: unlabelled
     kind: phrase
     locator: p200 Словничок
     tokens:
@@ -69,7 +72,7 @@ sources:
       vesum: found
   - lemma: мій
     stressed: мій
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p200 Словничок
     variants:
@@ -77,9 +80,11 @@ sources:
     - моє
     - мої
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: Моє прізвище...
     stressed: Моє́ прі́звище...
-    pos: adj
+    pos: unlabelled
     kind: phrase
     locator: p200 Словничок
     tokens:
@@ -101,7 +106,7 @@ sources:
     vesum: found
   - lemma: Тарас Шевченко
     stressed: Тара́с Шевче́нко
-    pos: noun
+    pos: unlabelled
     kind: phrase
     locator: p200 Словничок
     tokens:
@@ -117,7 +122,7 @@ sources:
     vesum: found
   - lemma: Як вас звати?
     stressed: Як вас зва́ти?
-    pos: noun
+    pos: unlabelled
     kind: phrase
     locator: p200 Словничок
     tokens:
@@ -129,10 +134,12 @@ sources:
       vesum: found
   - lemma: або
     stressed: або́
-    pos: conj
+    pos: unlabelled
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_pos:
+    - conj
   - lemma: австралієць
     stressed: австралі́єць
     pos: noun
@@ -157,6 +164,8 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: березень
     stressed: бе́резень
     pos: noun
@@ -175,9 +184,11 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: ваш
     stressed: ваш
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p200 Словничок
     variants:
@@ -185,6 +196,8 @@ sources:
     - ваше
     - ваші
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: вимова
     stressed: вимо́ва
     pos: noun
@@ -209,6 +222,8 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: дата
     stressed: да́та
     pos: noun
@@ -221,6 +236,8 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: жити
     stressed: жи́ти
     pos: verb
@@ -244,6 +261,8 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: іспанський
     stressed: іспа́нський
     pos: adj
@@ -256,6 +275,8 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: канадець
     stressed: кана́дець
     pos: noun
@@ -280,6 +301,9 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: київський
     stressed: ки́ївський
     pos: adj
@@ -312,6 +336,9 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: любити
     stressed: люби́ти
     pos: verb
@@ -334,10 +361,12 @@ sources:
     vesum: found
   - lemma: ми
     stressed: ми
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: місто
     stressed: мі́сто
     pos: noun
@@ -384,6 +413,8 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: принц
     stressed: принц
     pos: noun
@@ -472,6 +503,9 @@ sources:
     kind: word
     locator: p200 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
+    - noun:inanim:f:v_naz:prop:geo:alt
   - lemma: українець
     stressed: украї́нець
     pos: noun
@@ -530,7 +564,7 @@ sources:
     vesum: found
   - lemma: Я люблю тебе
     stressed: Я люблю́ тебе́
-    pos: noun
+    pos: unlabelled
     kind: phrase
     locator: p200 Словничок
     tokens:
@@ -630,10 +664,11 @@ sources:
     vesum: found
   - lemma: вареники
     stressed: варе́ники
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: весна
     stressed: весна́
     pos: noun
@@ -654,10 +689,12 @@ sources:
     vesum: found
   - lemma: вісім
     stressed: ві́сім
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: ворог
     stressed: во́рог
     pos: noun
@@ -666,10 +703,12 @@ sources:
     vesum: found
   - lemma: двісті
     stressed: дві́сті
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: дерево
     stressed: де́рево
     pos: noun
@@ -678,10 +717,12 @@ sources:
     vesum: found
   - lemma: джинси
     stressed: джи́нси
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: дим
     stressed: дим
     pos: noun
@@ -1060,6 +1101,8 @@ sources:
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: вечеряти
     stressed: вече́ряти
     pos: verb
@@ -1070,10 +1113,11 @@ sources:
     vesum: found
   - lemma: деруни
     stressed: деруни́
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: дієта
     stressed: діє́та
     pos: noun
@@ -1088,10 +1132,11 @@ sources:
     vesum: found
   - lemma: дякую
     stressed: дя́кую
-    pos: verb
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: євро
     stressed: є́вро
     pos: noun
@@ -1124,10 +1169,12 @@ sources:
     vesum: found
   - lemma: її
     stressed: її́
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: їсти
     stressed: ї́сти
     pos: verb
@@ -1174,10 +1221,13 @@ sources:
     vesum: found
   - lemma: коли
     stressed: коли́
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos:
+    - adv
+    - conj
   - lemma: колір
     stressed: ко́лір
     pos: noun
@@ -1256,16 +1306,20 @@ sources:
     vesum: found
   - lemma: п’ятий
     stressed: п’я́тий
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: п’ять
     stressed: п’ять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p201 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: пити
     stressed: пи́ти
     pos: verb
@@ -1348,15 +1402,20 @@ sources:
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:n:v_kly:prop
+    - noun:inanim:n:v_naz:prop
+    - noun:inanim:n:v_zna:prop
   - lemma: такос
     stressed: та́кос
-    pos: noninfl
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: missing
+    vesum_pos: []
   - lemma: твій
     stressed: твій
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     variants:
@@ -1364,6 +1423,8 @@ sources:
     - твоє
     - твої
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: тихий
     stressed: ти́хий
     pos: adj
@@ -1388,12 +1449,17 @@ sources:
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: це
     stressed: це
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos:
+    - noun
+    - part
   - lemma: шум
     stressed: шум
     pos: noun
@@ -1406,6 +1472,10 @@ sources:
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_tags:
+    - noun:anim:m:v_naz:prop:fname
+    - noun:inanim:m:v_naz:prop
+    - noun:inanim:m:v_zna:prop
   - lemma: юрист
     stressed: юри́ст
     pos: noun
@@ -1450,7 +1520,7 @@ sources:
     vesum: found
   - lemma: який
     stressed: яки́й
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     variants:
@@ -1458,6 +1528,8 @@ sources:
     - яке
     - які
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: бджола
     stressed: бджола́
     pos: noun
@@ -1478,10 +1550,11 @@ sources:
     vesum: found
   - lemma: був
     stressed: був
-    pos: verb
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: валіза
     stressed: валі́за
     pos: noun
@@ -1508,10 +1581,12 @@ sources:
     vesum: found
   - lemma: гроші
     stressed: гро́ші
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: грушка
     stressed: гру́шка
     pos: noun
@@ -1560,10 +1635,12 @@ sources:
     vesum: found
   - lemma: джунглі
     stressed: джу́нглі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: дзвінок
     stressed: дзвіно́к
     pos: noun
@@ -1684,6 +1761,9 @@ sources:
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: піджак
     stressed: піджа́к
     pos: noun
@@ -1716,7 +1796,7 @@ sources:
     vesum: found
   - lemma: той
     stressed: той
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     variants:
@@ -1724,6 +1804,9 @@ sources:
     - те
     - ті
     vesum: found
+    vesum_pos:
+    - adj
+    - part
   - lemma: фото
     stressed: фо́то
     pos: noun
@@ -1738,7 +1821,7 @@ sources:
     vesum: found
   - lemma: цей
     stressed: цей
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     variants:
@@ -1746,6 +1829,8 @@ sources:
     - це
     - ці
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: час
     stressed: час
     pos: noun
@@ -1754,10 +1839,12 @@ sources:
     vesum: found
   - lemma: шахи
     stressed: ша́хи
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: шити
     stressed: ши́ти
     pos: verb
@@ -1772,16 +1859,24 @@ sources:
     vesum: found
   - lemma: що
     stressed: що
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos:
+    - conj
+    - noun
   - lemma: Азов
     stressed: Азо́в
     pos: noun
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo:xp1
+    - noun:inanim:m:v_naz:prop:geo:xp2
+    - noun:inanim:m:v_zna:prop:geo:xp1
+    - noun:inanim:m:v_zna:prop:geo:xp2
   - lemma: балет
     stressed: бале́т
     pos: noun
@@ -1808,7 +1903,7 @@ sources:
     vesum: found
   - lemma: будь ласка
     stressed: будь ла́ска
-    pos: verb
+    pos: unlabelled
     kind: phrase
     locator: p202 Словничок
     tokens:
@@ -1836,10 +1931,12 @@ sources:
     vesum: found
   - lemma: діти
     stressed: ді́ти
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos:
+    - verb
   - lemma: дядько
     stressed: дя́дько
     pos: noun
@@ -1926,7 +2023,7 @@ sources:
     vesum: found
   - lemma: наш
     stressed: на́ш
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     variants:
@@ -1934,6 +2031,8 @@ sources:
     - наше
     - наші
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: небо
     stressed: не́бо
     pos: noun
@@ -1948,10 +2047,12 @@ sources:
     vesum: found
   - lemma: ось
     stressed: ось
-    pos: part
+    pos: unlabelled
     kind: word
     locator: p202 Словничок
     vesum: found
+    vesum_pos:
+    - part
   - lemma: палац
     stressed: пала́ц
     pos: noun
@@ -2130,10 +2231,11 @@ sources:
     vesum: found
   - lemma: були
     stressed: були́
-    pos: verb
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: бульйон
     stressed: бульйо́н
     pos: noun
@@ -2142,7 +2244,7 @@ sources:
     vesum: found
   - lemma: весь
     stressed: весь
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     variants:
@@ -2150,6 +2252,8 @@ sources:
     - все
     - всі
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: вузький
     stressed: вузьки́й
     pos: adj
@@ -2218,40 +2322,53 @@ sources:
     vesum: found
   - lemma: двадцять
     stressed: два́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: дванадцять
     stressed: двана́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: дев’ять
     stressed: де́в’ять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: десять
     stressed: де́сять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: для
     stressed: для
-    pos: prep
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - prep
   - lemma: до
     stressed: до
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - noun
+    - prep
   - lemma: донька
     stressed: до́нька
     pos: noun
@@ -2260,10 +2377,12 @@ sources:
     vesum: found
   - lemma: з
     stressed: з
-    pos: prep
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - prep
   - lemma: їхати
     stressed: ї́хати
     pos: verb
@@ -2346,16 +2465,20 @@ sources:
     vesum: found
   - lemma: нуль
     stressed: нуль
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: одинадцять
     stressed: одина́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: олівець
     stressed: оліве́ць
     pos: noun
@@ -2424,10 +2547,13 @@ sources:
     vesum: found
   - lemma: скільки
     stressed: скі́льки
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - adv
+    - numr
   - lemma: склянка
     stressed: скля́нка
     pos: noun
@@ -2474,10 +2600,12 @@ sources:
     vesum: found
   - lemma: сьомий
     stressed: сьо́мий
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: тарілка
     stressed: тарі́лка
     pos: noun
@@ -2492,10 +2620,14 @@ sources:
     vesum: found
   - lemma: тільки
     stressed: ті́льки
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - adv
+    - conj
+    - part
   - lemma: тоненький
     stressed: тоне́нький
     pos: adj
@@ -2504,10 +2636,12 @@ sources:
     vesum: found
   - lemma: тридцять
     stressed: три́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: хлопець
     stressed: хло́пець
     pos: noun
@@ -2546,28 +2680,36 @@ sources:
     vesum: found
   - lemma: дев’яносто
     stressed: дев’яно́сто
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: дев’ятий
     stressed: дев’я́тий
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: дев’ятнадцять
     stressed: дев’ятна́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: дев’ятсот
     stressed: дев’ятсо́т
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: з’їсти
     stressed: з’ї́сти
     pos: verb
@@ -2588,10 +2730,12 @@ sources:
     vesum: found
   - lemma: його
     stressed: його́
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: кошеня
     stressed: кошеня́
     pos: noun
@@ -2616,6 +2760,8 @@ sources:
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: м’ясо
     stressed: м’я́со
     pos: noun
@@ -2660,16 +2806,20 @@ sources:
     vesum: found
   - lemma: п’ятдесят
     stressed: п’ятдеся́т
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: п’ятнадцять
     stressed: п’ятна́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: п’ятниця
     stressed: п’я́тниця
     pos: noun
@@ -2678,10 +2828,12 @@ sources:
     vesum: found
   - lemma: п’ятсот
     stressed: п’ятсо́т
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: пам’ять
     stressed: па́м’ять
     pos: noun
@@ -2724,6 +2876,9 @@ sources:
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: свято
     stressed: свя́то
     pos: noun
@@ -2744,10 +2899,12 @@ sources:
     vesum: found
   - lemma: батьки
     stressed: батьки́
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p203 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: ведмідь
     stressed: ведмі́дь
     pos: noun
@@ -2870,10 +3027,11 @@ sources:
     vesum: found
   - lemma: продукти
     stressed: проду́кти
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: серце
     stressed: се́рце
     pos: noun
@@ -2882,10 +3040,12 @@ sources:
     vesum: found
   - lemma: сімдесят
     stressed: сімдеся́т
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: слон
     stressed: слон
     pos: noun
@@ -2942,10 +3102,14 @@ sources:
     vesum: found
   - lemma: але
     stressed: але́
-    pos: conj
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - conj
+    - intj
+    - part
   - lemma: американо
     stressed: америка́но
     pos: noun
@@ -2960,10 +3124,11 @@ sources:
     vesum: found
   - lemma: буде
     stressed: бу́де
-    pos: verb
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: веселий
     stressed: весе́лий
     pos: adj
@@ -2984,10 +3149,12 @@ sources:
     vesum: found
   - lemma: вісімдесят
     stressed: вісімдеся́т
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: готувати
     stressed: готува́ти
     pos: verb
@@ -3004,10 +3171,12 @@ sources:
     vesum: found
   - lemma: двері
     stressed: две́рі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: довгий
     stressed: до́вгий
     pos: adj
@@ -3088,10 +3257,12 @@ sources:
     vesum: found
   - lemma: мабуть
     stressed: ма́бу́ть
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - adv
   - lemma: мозок
     stressed: мо́зок
     pos: noun
@@ -3142,10 +3313,12 @@ sources:
     vesum: found
   - lemma: про
     stressed: про
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - prep
   - lemma: програма
     stressed: програ́ма
     pos: noun
@@ -3196,16 +3369,20 @@ sources:
     vesum: found
   - lemma: тридцять
     stressed: три́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: чотири
     stressed: чоти́ри
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: укулеле
     stressed: укуле́ле
     pos: noun
@@ -3262,22 +3439,28 @@ sources:
     vesum: found
   - lemma: чотири
     stressed: чоти́ри
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: чотирнадцять
     stressed: чотирна́дцять
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: Швеція
     stressed: Шве́ція
     pos: noun
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: шоколад
     stressed: шокола́д
     pos: noun
@@ -3319,7 +3502,7 @@ sources:
     vesum: found
   - lemma: Добрий день!
     stressed: До́брий день!
-    pos: adj
+    pos: unlabelled
     kind: phrase
     locator: p204 Словничок
     tokens:
@@ -3341,10 +3524,12 @@ sources:
     vesum: found
   - lemma: звичайно
     stressed: звича́йно
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - adv
   - lemma: могти
     stressed: могти́
     pos: verb
@@ -3427,10 +3612,14 @@ sources:
     vesum: found
   - lemma: так
     stressed: так
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos:
+    - adv
+    - conj
+    - part
   - lemma: так собі
     stressed: так собі́
     pos: adv
@@ -3443,7 +3632,7 @@ sources:
       vesum: found
   - lemma: такий
     stressed: таки́й
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     variants:
@@ -3451,6 +3640,8 @@ sources:
     - таке
     - такі
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: теж
     stressed: теж
     pos: adv
@@ -3477,13 +3668,14 @@ sources:
     vesum: found
   - lemma: друзі
     stressed: дру́зі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p204 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: Дуже приємно!
     stressed: Ду́же приє́мно!
-    pos: adj
+    pos: unlabelled
     kind: phrase
     locator: p204 Словничок
     tokens:
@@ -3505,10 +3697,13 @@ sources:
     vesum: found
   - lemma: все
     stressed: все
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p205 Словничок
     vesum: found
+    vesum_pos:
+    - adv
+    - noun
   - lemma: гаразд
     stressed: гара́зд
     pos: adv
@@ -3559,10 +3754,12 @@ sources:
     vesum: found
   - lemma: немає
     stressed: нема́є
-    pos: noninfl
+    pos: unlabelled
     kind: word
     locator: p205 Словничок
     vesum: found
+    vesum_pos:
+    - noninfl
   - lemma: пароль
     stressed: паро́ль
     pos: noun
@@ -3617,10 +3814,11 @@ sources:
     vesum: found
   - lemma: вибачте
     stressed: ви́бачте
-    pos: verb
+    pos: unlabelled
     kind: word
     locator: p205 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: влада
     stressed: вла́да
     pos: noun
@@ -3755,10 +3953,12 @@ sources:
     vesum: found
   - lemma: хто
     stressed: хто
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p205 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: цукерка
     stressed: цуке́рка
     pos: noun
@@ -3833,7 +4033,7 @@ sources:
     vesum: found
   - lemma: на жаль
     stressed: на жаль
-    pos: prep
+    pos: unlabelled
     kind: phrase
     locator: p205 Словничок
     tokens:
@@ -4013,10 +4213,12 @@ sources:
     vesum: found
   - lemma: мюслі
     stressed: мю́слі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p205 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: огірок
     stressed: огіро́к
     pos: noun
@@ -4063,10 +4265,13 @@ sources:
     vesum: found
   - lemma: треба
     stressed: тре́ба
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p205 Словничок
     vesum: found
+    vesum_pos:
+    - noninfl
+    - noun
   - lemma: фрукт
     stressed: фрукт
     pos: noun
@@ -4093,10 +4298,12 @@ sources:
     vesum: found
   - lemma: два
     stressed: два
-    pos: numr
+    pos: unlabelled
     kind: word
     locator: p205 Словничок
     vesum: found
+    vesum_pos:
+    - numr
   - lemma: йога
     stressed: йо́га
     pos: noun
@@ -4186,10 +4393,11 @@ sources:
     vesum: found
   - lemma: була
     stressed: була́
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: взуття
     stressed: взуття́
     pos: noun
@@ -4258,6 +4466,8 @@ sources:
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop
   - lemma: зустріч
     stressed: зу́стріч
     pos: noun
@@ -4320,10 +4530,14 @@ sources:
     vesum: found
   - lemma: на
     stressed: на
-    pos: prep
+    pos: unlabelled
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_pos:
+    - intj
+    - part
+    - prep
   - lemma: надворі
     stressed: надво́рі
     pos: adv
@@ -4440,16 +4654,26 @@ sources:
     vesum: found
   - lemma: Черкаси
     stressed: Черка́си
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_pos:
+    - noun
+    vesum_tags:
+    - noun:inanim:p:v_kly:ns:prop:geo
+    - noun:inanim:p:v_naz:ns:prop:geo
+    - noun:inanim:p:v_zna:ns:prop:geo
   - lemma: Чорне
     stressed: Чо́рне
     pos: adj
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:n:v_kly:prop:geo
+    - noun:inanim:n:v_naz:prop:geo
+    - noun:inanim:n:v_zna:prop:geo
   - lemma: море
     stressed: мо́ре
     pos: noun
@@ -4586,6 +4810,8 @@ sources:
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: клас
     stressed: клас
     pos: noun
@@ -4810,10 +5036,12 @@ sources:
     vesum: found
   - lemma: третій
     stressed: тре́тій
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: фабрика
     stressed: фа́брика
     pos: noun
@@ -4878,7 +5106,7 @@ sources:
     vesum: found
   - lemma: йдуть дощі
     stressed: йдуть дощі́
-    pos: verb
+    pos: unlabelled
     kind: phrase
     locator: p206 Словничок
     tokens:
@@ -4938,10 +5166,12 @@ sources:
     vesum: found
   - lemma: окуляри
     stressed: окуля́ри
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p206 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: полуниця
     stressed: полуни́ця
     pos: noun
@@ -5052,16 +5282,20 @@ sources:
     vesum: found
   - lemma: шорти
     stressed: шо́рти
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p207 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: штани
     stressed: штани́
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p207 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: виделка
     stressed: виде́лка
     pos: noun
@@ -5686,10 +5920,12 @@ sources:
     vesum: found
   - lemma: перший
     stressed: пе́рший
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: повільний
     stressed: пові́льний
     pos: adj
@@ -5782,10 +6018,12 @@ sources:
     vesum: found
   - lemma: меблі
     stressed: ме́блі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: модний
     stressed: мо́дний
     pos: adj
@@ -5900,10 +6138,12 @@ sources:
     vesum: found
   - lemma: дітки
     stressed: ді́тки
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: дуб
     stressed: дуб
     pos: noun
@@ -5916,6 +6156,9 @@ sources:
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: завтра
     stressed: за́втра
     pos: adv
@@ -5978,10 +6221,12 @@ sources:
     vesum: found
   - lemma: солодощі
     stressed: со́лодощі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: сорт
     stressed: сорт
     pos: noun
@@ -6026,16 +6271,19 @@ sources:
     vesum: found
   - lemma: вуса
     stressed: ву́са
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: десятий
     stressed: деся́тий
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: дорослий
     stressed: доро́слий
     pos: adj
@@ -6062,7 +6310,7 @@ sources:
     vesum: found
   - lemma: карі очі
     stressed: ка́рі о́чі
-    pos: adj
+    pos: unlabelled
     kind: phrase
     locator: p208 Словничок
     tokens:
@@ -6240,7 +6488,7 @@ sources:
     vesum: found
   - lemma: тому що
     stressed: тому́ що
-    pos: adj
+    pos: unlabelled
     kind: phrase
     locator: p208 Словничок
     tokens:
@@ -6306,6 +6554,9 @@ sources:
     kind: word
     locator: p208 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: дорого
     stressed: до́рого
     pos: adv
@@ -6422,10 +6673,12 @@ sources:
     vesum: found
   - lemma: варто
     stressed: ва́рто
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p209 Словничок
     vesum: found
+    vesum_pos:
+    - noninfl
   - lemma: вивчати
     stressed: вивча́ти
     pos: verb
@@ -6440,10 +6693,12 @@ sources:
     vesum: found
   - lemma: двічі
     stressed: дві́чі
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p209 Словничок
     vesum: found
+    vesum_pos:
+    - adv
   - lemma: дізнатися
     stressed: дізна́тися
     pos: verb
@@ -6520,10 +6775,12 @@ sources:
     vesum: found
   - lemma: потрібно
     stressed: потрі́бно
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p209 Словничок
     vesum: found
+    vesum_pos:
+    - adv
   - lemma: пояснювати
     stressed: поя́снювати
     pos: verb
@@ -6556,10 +6813,13 @@ sources:
     vesum: found
   - lemma: щось
     stressed: щось
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p209 Словничок
     vesum: found
+    vesum_pos:
+    - adv
+    - noun
   - lemma: анекдот
     stressed: анекдо́т
     pos: noun
@@ -6693,7 +6953,7 @@ sources:
     vesum: found
   - lemma: котрий
     stressed: котри́й
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p209 Словничок
     variants:
@@ -6701,6 +6961,8 @@ sources:
     - котре
     - котрі
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: курити
     stressed: кури́ти
     pos: verb
@@ -6721,10 +6983,11 @@ sources:
     vesum: found
   - lemma: написано
     stressed: напи́сано
-    pos: verb
+    pos: unlabelled
     kind: word
     locator: p209 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: повільніше
     stressed: пові́льніше
     pos: adv
@@ -6841,10 +7104,11 @@ sources:
     vesum: found
   - lemma: вихідні
     stressed: вихідні́
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p209 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: вставати
     stressed: встава́ти
     pos: verb
@@ -6893,7 +7157,7 @@ sources:
     vesum: found
   - lemma: одне одному
     stressed: одне́ о́дному
-    pos: numr
+    pos: unlabelled
     kind: phrase
     locator: p209 Словничок
     tokens:
@@ -6957,7 +7221,7 @@ sources:
     vesum: found
   - lemma: із собою
     stressed: із собо́ю
-    pos: prep
+    pos: unlabelled
     kind: phrase
     locator: p209 Словничок
     tokens:
@@ -7039,10 +7303,12 @@ sources:
     vesum: found
   - lemma: нічого
     stressed: нічо́го
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p210 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: будній день
     stressed: бу́дній день
     pos: noun
@@ -7151,10 +7417,12 @@ sources:
     vesum: found
   - lemma: біля
     stressed: бі́ля
-    pos: prep
+    pos: unlabelled
     kind: word
     locator: p210 Словничок
     vesum: found
+    vesum_pos:
+    - prep
   - lemma: вид
     stressed: вид
     pos: noun
@@ -7241,10 +7509,13 @@ sources:
     vesum: found
   - lemma: хоча
     stressed: хоча́
-    pos: conj
+    pos: unlabelled
     kind: word
     locator: p210 Словничок
     vesum: found
+    vesum_pos:
+    - conj
+    - part
   - lemma: швидко
     stressed: шви́дко
     pos: adv
@@ -7303,10 +7574,13 @@ sources:
     vesum: found
   - lemma: кожний
     stressed: ко́жний
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p210 Словничок
     vesum: found
+    vesum_pos:
+    - adj
+    - noun
   - lemma: конференція
     stressed: конфере́нція
     pos: noun
@@ -7423,7 +7697,7 @@ sources:
     vesum: found
   - lemma: на краще
     stressed: на кра́ще
-    pos: prep
+    pos: unlabelled
     kind: phrase
     locator: p210 Словничок
     tokens:
@@ -7499,7 +7773,7 @@ sources:
     vesum: found
   - lemma: вранці, уранці
     stressed: вра́нці, ура́нці
-    pos: adv
+    pos: unlabelled
     kind: phrase
     locator: p210 Словничок
     tokens:
@@ -7515,10 +7789,12 @@ sources:
     vesum: found
   - lemma: двійнята
     stressed: двійня́та
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p210 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: зустрічати
     stressed: зустріча́ти
     pos: verb
@@ -7539,7 +7815,7 @@ sources:
     vesum: found
   - lemma: крім того
     stressed: крім то́го
-    pos: prep
+    pos: unlabelled
     kind: phrase
     locator: p210 Словничок
     tokens:
@@ -7591,10 +7867,13 @@ sources:
     vesum: found
   - lemma: після
     stressed: пі́сля
-    pos: adv
+    pos: unlabelled
     kind: word
     locator: p210 Словничок
     vesum: found
+    vesum_pos:
+    - adv
+    - prep
   - lemma: повільно
     stressed: пові́льно
     pos: adv
@@ -7679,10 +7958,12 @@ sources:
     vesum: found
   - lemma: алло
     stressed: алло́
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_pos:
+    - intj
   - lemma: декрет
     stressed: декре́т
     pos: noun
@@ -7777,42 +8058,58 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Будапешт
     stressed: Будапе́шт
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Варшава
     stressed: Варша́ва
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Відень
     stressed: Ві́день
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Вінниця
     stressed: Ві́нниця
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Галичина
     stressed: Галичина́
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Женева
     stressed: Жене́ва
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: замовляти
     stressed: замовля́ти
     pos: verb
@@ -7831,24 +8128,39 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:n:v_kly:prop:geo
+    - noun:inanim:n:v_naz:prop:geo
+    - noun:inanim:n:v_rod:prop:geo
+    - noun:inanim:n:v_zna:prop:geo
   - lemma: Лондон
     stressed: Ло́ндон
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:anim:m:v_naz:prop:lname
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Луцьк
     stressed: Луцьк
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Мадрид
     stressed: Мадри́д
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: найчастіше
     stressed: найчасті́ше
     pos: adv
@@ -7885,6 +8197,8 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: парасоля
     stressed: парасо́ля
     pos: noun
@@ -7909,6 +8223,8 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: приїжджати
     stressed: приїжджа́ти
     pos: verb
@@ -7927,18 +8243,26 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo:xp1
+    - noun:inanim:m:v_naz:prop:geo:xp2
+    - noun:inanim:m:v_zna:prop:geo:xp1
+    - noun:inanim:m:v_zna:prop:geo:xp2
   - lemma: родом
     stressed: ро́дом
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: з
     stressed: з
-    pos: prep
+    pos: unlabelled
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_pos:
+    - prep
   - lemma: розклад
     stressed: ро́зклад
     pos: noun
@@ -7957,18 +8281,26 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Ужгород
     stressed: У́жгород
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Флоренція
     stressed: Флоре́нція
     pos: noun
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: центр
     stressed: центр
     pos: noun
@@ -8355,10 +8687,11 @@ sources:
     vesum: found
   - lemma: новини
     stressed: нови́ни
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p211 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: ображатися
     stressed: обража́тися
     pos: verb
@@ -8451,7 +8784,7 @@ sources:
     vesum: found
   - lemma: якщо чесно
     stressed: якщо́ че́сно
-    pos: conj
+    pos: unlabelled
     kind: phrase
     locator: p212 Словничок
     tokens:
@@ -8465,6 +8798,8 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: гарно
     stressed: га́рно
     pos: adv
@@ -8473,7 +8808,7 @@ sources:
     vesum: found
   - lemma: дві тисячі перший
     stressed: дві ти́сячі пе́рший
-    pos: numr
+    pos: unlabelled
     kind: phrase
     locator: p212 Словничок
     tokens:
@@ -8489,6 +8824,9 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: кишеня
     stressed: кише́ня
     pos: noun
@@ -8501,12 +8839,17 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Колумбія
     stressed: Колу́мбія
     pos: noun
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: липень
     stressed: ли́пень
     pos: noun
@@ -8531,6 +8874,9 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: підвіконня
     stressed: підвіко́ння
     pos: noun
@@ -8555,12 +8901,23 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Токіо
     stressed: То́кіо
     pos: noun
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:n:v_dav:nv:prop:geo
+    - noun:inanim:n:v_kly:nv:prop:geo
+    - noun:inanim:n:v_mis:nv:prop:geo
+    - noun:inanim:n:v_naz:nv:prop:geo
+    - noun:inanim:n:v_oru:nv:prop:geo
+    - noun:inanim:n:v_rod:nv:prop:geo
+    - noun:inanim:n:v_zna:nv:prop:geo
   - lemma: трамвай
     stressed: трамва́й
     pos: noun
@@ -8591,6 +8948,8 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: брати участь
     stressed: бра́ти у́часть
     pos: verb
@@ -8637,6 +8996,9 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: журнал
     stressed: журна́л
     pos: noun
@@ -8655,6 +9017,9 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: літак
     stressed: літа́к
     pos: noun
@@ -8685,6 +9050,11 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo:xp1
+    - noun:inanim:m:v_naz:prop:geo:xp2
+    - noun:inanim:m:v_zna:prop:geo:xp1
+    - noun:inanim:m:v_zna:prop:geo:xp2
   - lemma: пасажир
     stressed: пасажи́р
     pos: noun
@@ -8745,6 +9115,8 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: берег
     stressed: бе́рег
     pos: noun
@@ -8763,12 +9135,17 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Гонконг
     stressed: Гонко́нг
     pos: noun
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: епоха
     stressed: епо́ха
     pos: noun
@@ -8793,18 +9170,26 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:anim:m:v_naz:prop:lname
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Малага
     stressed: Мала́га
     pos: noun
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Мексика
     stressed: Ме́ксика
     pos: noun
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: підлога
     stressed: підло́га
     pos: noun
@@ -8829,6 +9214,8 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: рух
     stressed: рух
     pos: noun
@@ -8917,6 +9304,9 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: мішок
     stressed: мішо́к
     pos: noun
@@ -8983,6 +9373,9 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: азійський
     stressed: азі́йський
     pos: adj
@@ -9035,6 +9428,8 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: затишно
     stressed: за́тишно
     pos: adv
@@ -9065,12 +9460,23 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:anim:m:v_kly:prop:lname
+    - noun:anim:m:v_naz:prop:lname
+    - noun:inanim:m:v_kly:prop:geo
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Лозова
     stressed: Лозова́
     pos: noun
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:anim:f:v_kly:prop:lname
+    - noun:anim:f:v_naz:prop:lname
+    - noun:inanim:f:v_kly:prop:geo
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: мовна школа
     stressed: мо́вна шко́ла
     pos: noun
@@ -9103,6 +9509,10 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:n:v_kly:prop:geo
+    - noun:inanim:n:v_naz:prop:geo
+    - noun:inanim:n:v_zna:prop:geo
   - lemma: сучасний
     stressed: суча́сний
     pos: adj
@@ -9127,6 +9537,12 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:anim:m:v_kly:prop:lname
+    - noun:anim:m:v_naz:prop:lname
+    - noun:inanim:m:v_kly:prop:geo
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: вчора, учора
     stressed: вчо́ра, учо́ра
     pos: adv
@@ -9149,18 +9565,30 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Івано-Франківськ
     stressed: Іва́но-Франкі́вськ
     pos: noun
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Карпати
     stressed: Карпа́ти
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_pos:
+    - noun
+    vesum_tags:
+    - noun:inanim:p:v_kly:ns:prop:geo
+    - noun:inanim:p:v_naz:ns:prop:geo
+    - noun:inanim:p:v_zna:ns:prop:geo
   - lemma: перукарня
     stressed: перука́рня
     pos: noun
@@ -9197,28 +9625,38 @@ sources:
       vesum: found
   - lemma: прибори
     stressed: прибо́ри
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p213 Словничок
-    vesum: found
+    vesum: missing
+    vesum_pos: []
   - lemma: Фастів
     stressed: Фа́стів
     pos: noun
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Франкфурт
     stressed: Фра́нкфурт
     pos: noun
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Чернігів
     stressed: Черні́гів
     pos: noun
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: шухляда
     stressed: шухля́да
     pos: noun
@@ -9279,6 +9717,9 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: книжковий
     stressed: книжко́вий
     pos: adj
@@ -9291,12 +9732,18 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Крит
     stressed: Крит
     pos: noun
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: лекція
     stressed: ле́кція
     pos: noun
@@ -9309,6 +9756,8 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: майдан
     stressed: майда́н
     pos: noun
@@ -9321,12 +9770,16 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Мальта
     stressed: Ма́льта
     pos: noun
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: менеджер
     stressed: ме́неджер
     pos: noun
@@ -9399,6 +9852,8 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: факультет
     stressed: факульте́т
     pos: noun
@@ -9587,16 +10042,19 @@ sources:
     vesum: found
   - lemma: сходи
     stressed: схо́ди
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: туфлі
     stressed: ту́флі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: хвилина
     stressed: хвили́на
     pos: noun
@@ -9707,6 +10165,8 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: каса
     stressed: ка́са
     pos: noun
@@ -9825,12 +10285,17 @@ sources:
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Коста-Рика
     stressed: Ко́ста-Ри́ка
     pos: noun
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: лягати
     stressed: ляга́ти
     pos: verb
@@ -9843,18 +10308,30 @@ sources:
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:n:v_dav:nv:prop:geo
+    - noun:inanim:n:v_kly:nv:prop:geo
+    - noun:inanim:n:v_mis:nv:prop:geo
+    - noun:inanim:n:v_naz:nv:prop:geo
+    - noun:inanim:n:v_oru:nv:prop:geo
+    - noun:inanim:n:v_rod:nv:prop:geo
+    - noun:inanim:n:v_zna:nv:prop:geo
   - lemma: Оттава
     stressed: Отта́ва
     pos: noun
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: Панама
     stressed: Пана́ма
     pos: noun
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: прокидатися
     stressed: прокида́тися
     pos: verb
@@ -9953,10 +10430,11 @@ sources:
     vesum: found
   - lemma: лижі
     stressed: ли́жі
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: лист
     stressed: лист
     pos: noun
@@ -9971,10 +10449,13 @@ sources:
     vesum: found
   - lemma: перед
     stressed: пе́ред
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_pos:
+    - noun
+    - prep
   - lemma: писати від руки
     stressed: писа́ти від руки́
     pos: verb
@@ -9995,10 +10476,13 @@ sources:
     vesum: found
   - lemma: аж
     stressed: аж
-    pos: conj
+    pos: unlabelled
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_pos:
+    - conj
+    - part
   - lemma: алкоголь
     stressed: алкого́ль
     pos: noun
@@ -10241,6 +10725,8 @@ sources:
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: раптом
     stressed: ра́птом
     pos: adv
@@ -10275,10 +10761,12 @@ sources:
     vesum: found
   - lemma: санки
     stressed: са́нки
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p214 Словничок
     vesum: found
+    vesum_pos:
+    - noun
   - lemma: щовечора
     stressed: щове́чора
     pos: adv
@@ -10337,12 +10825,17 @@ sources:
     kind: word
     locator: p215 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: Аргентина
     stressed: Аргенти́на
     pos: noun
     kind: word
     locator: p215 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:f:v_naz:prop:geo
   - lemma: вистава
     stressed: виста́ва
     pos: noun
@@ -10391,10 +10884,11 @@ sources:
     vesum: found
   - lemma: танці
     stressed: та́нці
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p215 Словничок
     vesum: found
+    vesum_pos: []
   - lemma: тренування
     stressed: тренува́ння
     pos: noun
@@ -10413,18 +10907,29 @@ sources:
     kind: word
     locator: p215 Словничок
     vesum: found
+    vesum_tags:
+    - noun:inanim:m:v_naz:prop:geo
+    - noun:inanim:m:v_zna:prop:geo
   - lemma: через
     stressed: че́рез
-    pos: prep
+    pos: unlabelled
     kind: word
     locator: p215 Словничок
     vesum: found
+    vesum_pos:
+    - prep
   - lemma: Чернівці
     stressed: Чернівці́
-    pos: noun
+    pos: unlabelled
     kind: word
     locator: p215 Словничок
     vesum: found
+    vesum_pos:
+    - noun
+    vesum_tags:
+    - noun:inanim:p:v_kly:ns:prop:geo
+    - noun:inanim:p:v_naz:ns:prop:geo
+    - noun:inanim:p:v_zna:ns:prop:geo
   - lemma: щоліта
     stressed: щолі́та
     pos: adv
@@ -10533,10 +11038,12 @@ sources:
     vesum: found
   - lemma: сам
     stressed: сам
-    pos: adj
+    pos: unlabelled
     kind: word
     locator: p215 Словничок
     vesum: found
+    vesum_pos:
+    - adj
   - lemma: соус
     stressed: со́ус
     pos: noun
@@ -10869,7 +11376,7 @@ sources:
     vesum: found
   - lemma: До завтра!
     stressed: До за́втра!
-    pos: noun
+    pos: unlabelled
     kind: phrase
     locator: p215 Словничок
     tokens:
@@ -10879,7 +11386,7 @@ sources:
       vesum: found
   - lemma: До побачення!
     stressed: До поба́чення!
-    pos: noun
+    pos: unlabelled
     kind: phrase
     locator: p215 Словничок
     tokens:
@@ -10931,7 +11438,7 @@ sources:
     vesum: found
   - lemma: Солодких снів!
     stressed: Соло́дких снів!
-    pos: adj
+    pos: unlabelled
     kind: phrase
     locator: p216 Словничок
     tokens:
@@ -10953,7 +11460,7 @@ sources:
     vesum: found
   - lemma: ще раз
     stressed: ще раз
-    pos: adv
+    pos: unlabelled
     kind: phrase
     locator: p216 Словничок
     tokens:
@@ -10963,7 +11470,7 @@ sources:
       vesum: found
   - lemma: Бувай! Бувайте!
     stressed: Бува́й! Бува́йте!
-    pos: verb
+    pos: unlabelled
     kind: phrase
     locator: p216 Словничок
     tokens:
@@ -10979,7 +11486,7 @@ sources:
     vesum: found
   - lemma: Вітаю!
     stressed: Віта́ю!
-    pos: verb
+    pos: unlabelled
     kind: phrase
     locator: p216 Словничок
     tokens:
@@ -10999,7 +11506,7 @@ sources:
       vesum: found
   - lemma: Гарного дня!
     stressed: Га́рного дня!
-    pos: adj
+    pos: unlabelled
     kind: phrase
     locator: p216 Словничок
     tokens:
@@ -11033,7 +11540,7 @@ sources:
     vesum: found
   - lemma: Па-па!
     stressed: Па-па!
-    pos: intj
+    pos: unlabelled
     kind: phrase
     locator: p216 Словничок
     tokens:
@@ -11059,7 +11566,7 @@ sources:
     vesum: found
   - lemma: Що  нового?
     stressed: Що  ново́го?
-    pos: noun
+    pos: unlabelled
     kind: phrase
     locator: p216 Словничок
     variants:

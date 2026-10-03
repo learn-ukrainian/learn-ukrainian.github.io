@@ -213,6 +213,9 @@ def produced_a1_reference_codes():
         g = gates("неінвентарне", exception)
         g.check_a1_reference()
         produced |= g.report.codes()
+    g = gates("не", tags="part")
+    g.check_a1_reference()
+    produced |= g.report.codes()
     with pytest.MonkeyPatch.context() as patch:
         patch.setattr(config, "A1_REFERENCE_ENFORCEMENT", "invalid")
         g = gates("мама")
@@ -224,6 +227,7 @@ def produced_a1_reference_codes():
 def test_produced_a1_reference_codes():
     assert produced_a1_reference_codes() == {
         codes.A1_REFERENCE_WORD_MISSING, codes.A1_REFERENCE_EXCEPTION_INVALID, codes.A1_REFERENCE_INVALID,
+        codes.A1_REFERENCE_CLOSED_CLASS_A1,
     }
 
 
@@ -265,3 +269,94 @@ def test_valid_exception_keeps_c10_c18_c21_failures(tmp_path, monkeypatch):
     assert {codes.STEP_WORD_NOT_DECODABLE, codes.CHOICE_OPTION_NOT_DECODABLE,
             codes.MODELED_PRINT_NOT_DECODABLE} <= failures
     assert codes.A1_REFERENCE_EXCEPTION_INVALID not in report.codes()
+
+
+@pytest.mark.parametrize("lemma,tags,eligible", [
+    ("я", "noun:anim:pron:pers", True), ("не", "part", True), ("а", "conj:coord", True),
+    ("а", "part", False), ("що", "noun:inanim:pron:int:rel", True), ("що", "conj:subord", False),
+    ("над", "prep", False), ("і", "conj:coord", True), ("й", "conj:coord", True),
+    ("в", "prep", True), ("у", "prep", True), ("ой", "intj", False),
+    ("я", "noun", False), ("мама", "noun", False), ("не", "adv", False),
+    ("два", "numr", False), ("аби", "conj", False),
+])
+@pytest.mark.parametrize("mode", ["advisory", "failure"])
+def test_closed_class_exemption_inventory_absent(monkeypatch, lemma, tags, eligible, mode):
+    monkeypatch.setattr(a1_reference, "reference_spellings", lambda *args: (frozenset(), frozenset()))
+    monkeypatch.setattr(config, "A1_REFERENCE_ENFORCEMENT", mode)
+    g = gates(lemma, tags=tags)
+    g.check_a1_reference()
+    assert (codes.A1_REFERENCE_CLOSED_CLASS_A1 in g.report.codes()) == eligible
+    assert (codes.A1_REFERENCE_WORD_MISSING in g.report.codes()) != eligible
+    assert bool(g.report.failures) == (mode == "failure" and not eligible)
+    assert a1_reference.CLOSED_CLASS_PATH.relative_to(REPO_ROOT).as_posix() in g.report.inputs
+
+
+@pytest.mark.parametrize("lemma,tags", [("що", "conj:subord"), ("та", "conj"), ("та", "part")])
+def test_membership_precedes_class_exemption(lemma, tags):
+    g = gates(lemma, tags=tags)  # membership (including той's variant та) still passes
+    g.check_a1_reference()
+    assert not g.report.notes and not g.report.failures
+
+
+def test_mixed_closed_class_record_requires_each_selected_class(monkeypatch):
+    monkeypatch.setattr(a1_reference, "reference_spellings", lambda *args: (frozenset(), frozenset()))
+    g = gates("що")
+    g.store.records["W-001"] = WordRecord("W-001", "що", frozenset({"conj:subord", "noun:pron"}))
+    g.check_a1_reference()
+    assert codes.A1_REFERENCE_WORD_MISSING in g.report.codes()
+    g.store.records["W-001"] = WordRecord("W-001", "що", frozenset({"noun:pron", "noun"}))
+    assert not a1_reference.eligible_closed_class("що", g.store.records["W-001"].form_tags, a1_reference.closed_class_a1())
+
+
+@pytest.mark.parametrize("row", [
+    {"lemma": "Ґданськ", "kind": "word"},
+    {"lemma": "ґданськ", "kind": "word", "vesum_tags": ["noun:inanim:m:v_naz:prop:geo"]},
+    {"lemma": "ґданськ тут", "kind": "phrase", "tokens": [{"form": "ґданськ", "vesum": "found"}]},
+])
+def test_proper_and_phrase_rows_members_but_never_alternatives(tmp_path, monkeypatch, row):
+    import yaml
+
+    path = tmp_path / "inventory.yaml"
+    path.write_text(yaml.safe_dump({"version": 1, "kind": "atlas_source_inventory", "sources": [
+        {"id": "fixture", "source_family": "ohoiko", "extraction_mode": "curated_key_word", "headwords": [row]}
+    ]}, allow_unicode=True))
+    members, alternatives = a1_reference.reference_spellings(path)
+    assert a1_reference.normalize(row["lemma"]) in members and not alternatives
+    monkeypatch.setattr(a1_reference, "reference_spellings", lambda *args: (members, alternatives))
+    g = gates("ґанок", {"class": "letter_example_no_a1_word", "letter": "ґ", "step": "s1"})
+    g.plan["lessons"][0]["steps"][0]["introduces"]["letters"] += list("данськтут")
+    g.check_a1_reference()
+    assert not g.report.notes  # even a decodable proper name cannot block this exception
+    g = gates(row["lemma"])
+    g.check_a1_reference()
+    assert not g.report.notes
+
+
+def test_closed_class_exemption_keeps_c10_c18_c21_failures(tmp_path, monkeypatch):
+    from scripts.curriculum.validate.validate import validate_plan
+    from tests.curriculum.test_plan_validate_review_gates import _quote
+
+    monkeypatch.setattr(a1_reference, "reference_spellings", lambda *args: (frozenset(), frozenset()))
+    monkeypatch.setattr(quote_bytes, "vesum_lookup", lambda words: set(words))
+    def mutate(plan, pack, words, prior):
+        item = plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]
+        item["lemma"] = "не"
+        record = next(w for w in words["words"] if w["id"] == item["evidence"])
+        record["lemma"] = "не"
+        for form in record["forms"]:
+            form.update(form="не", tags="part")
+        plan["lessons"][0]["activities"][0]["options"] = ["не"]
+        _quote("не", {"id": "b4", "type": "quiz", "placement": "workbook", "focus": "Read the source.",
+                       "learner_reads": ["T-002"]})(plan, pack, words, prior)
+    report = validate_plan(LEVEL, SLUG, plan_path=_world(tmp_path, mutate))
+    failures = {o.code for o in report.failures}
+    assert {codes.STEP_WORD_NOT_DECODABLE, codes.CHOICE_OPTION_NOT_DECODABLE,
+            codes.MODELED_PRINT_NOT_DECODABLE} <= failures
+    assert codes.A1_REFERENCE_CLOSED_CLASS_A1 in report.codes()
+
+
+def test_unavailable_closed_class_list_fails(monkeypatch):
+    monkeypatch.setattr(a1_reference, "CLOSED_CLASS_PATH", Path("missing-closed.yaml"))
+    g = gates("не", tags="part")
+    g.check_a1_reference()
+    assert g.report.failures[0].code == codes.A1_REFERENCE_INVALID

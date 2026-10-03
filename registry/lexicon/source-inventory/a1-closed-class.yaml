@@ -1,0 +1,334 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: puls-a1-closed-class
+  source_family: puls
+  extraction_mode: curated_key_word
+  title: PULS A1 closed-class words
+  path: puls_cefr
+  headwords:
+  - lemma: а
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: або
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: але
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: без
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: бо
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: біля
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: ваш
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: ви
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: вона
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: вони
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: воно
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: від
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: він
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: для
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: до
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: добре
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: з
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: за
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: зі
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: його
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: кожен
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: кожний
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: коли
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: котрий
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: ми
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: мій
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: на
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: наш
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: не
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: ну
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: ні
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: ніж
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: о
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: об
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: ось
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: про
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: скільки
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: так
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: такий
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: твій
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: те
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: ти
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: той
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: тільки
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: хто
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: це
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: це
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: цей
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: через
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: чи
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: чи
+    kind: word
+    class: part
+    level: A1
+    source: PULS
+  - lemma: чий
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: що
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: я
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: який
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: якщо
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
+  - lemma: із
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
+  - lemma: їхній
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+  - lemma: її
+    kind: word
+    class: pron
+    level: A1
+    source: PULS
+- id: ohoiko-a1-closed-class
+  source_family: ohoiko
+  extraction_mode: curated_key_word
+  title: A1 workbook closed-class grammar attestations
+  path: oho-ukrainian-grammar-workbook-a1.pdf
+  headwords:
+  - lemma: в
+    kind: word
+    class: prep
+    level: A1
+    source: reference_units
+    page: 41
+  - lemma: й
+    kind: word
+    class: conj
+    level: A1
+    source: reference_units
+    page: 47
+  - lemma: у
+    kind: word
+    class: prep
+    level: A1
+    source: reference_units
+    page: 41
+  - lemma: і
+    kind: word
+    class: conj
+    level: A1
+    source: reference_units
+    page: 47

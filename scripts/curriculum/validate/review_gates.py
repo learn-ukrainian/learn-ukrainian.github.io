@@ -63,7 +63,9 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
   C28 a word id a step's teach text names outside the lesson's inventory and the prior learner state (failure)
 
 C29 (#9582) checks A1 core/incidental vocabulary against the words-only reference,
-with typed exceptions; advisory until #9541 PR2 sets A1_REFERENCE_ENFORCEMENT to failure.
+with typed exceptions and class-specific A1 closed-class attestations for inventory-absent words;
+advisory until #9541 PR2 sets A1_REFERENCE_ENFORCEMENT to failure. Membership is spelling-based,
+so unlabelled reference POS never rejects an inventory member.
 
 Check 7 of #9487 is a learner-state fix (scripts/curriculum/learner_state/planned.py). Check 9 of the
 second round is in pack-verify (scripts/curriculum/evidence/sources.py, Standard line numbering).
@@ -2001,7 +2003,8 @@ class ReviewGates(Gates):
             return
         try:
             members, alternatives = a1_reference.reference_spellings(a1_reference.INVENTORY_PATH)
-            for path in (a1_reference.INVENTORY_PATH, Path(config.__file__)):
+            closed_class = a1_reference.closed_class_a1(a1_reference.CLOSED_CLASS_PATH)
+            for path in (a1_reference.INVENTORY_PATH, a1_reference.CLOSED_CLASS_PATH, Path(config.__file__)):
                 self.report.inputs[str(path.relative_to(Path(__file__).resolve().parents[3]))] = (
                     hashlib.sha256(path.read_bytes()).hexdigest()
                 )
@@ -2024,6 +2027,12 @@ class ReviewGates(Gates):
                 step_id = next(
                     (s["id"] for s in lesson["steps"] if record.id in (s.get("introduces") or {}).get("vocabulary", [])), None
                 )
+                if lemma not in members and exception is None and a1_reference.eligible_closed_class(
+                    record.lemma, record.form_tags, closed_class,
+                ):
+                    self.note(codes.A1_REFERENCE_CLOSED_CLASS_A1,
+                              f"C29: {record.id} {record.lemma}: closed_class_a1 source attestation", lesson["n"], step_id)
+                    continue
                 reason = "absent from the A1 reference inventory"
                 if exception is not None:
                     kind = exception["class"]

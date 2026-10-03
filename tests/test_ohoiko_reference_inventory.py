@@ -27,16 +27,16 @@ def test_committed_inventory_ip_fields_and_counts():
     assert len({r["lemma"] for r in rows}) == 1904
     assert Counter(r["kind"] for r in rows) == {"word": 1695, "phrase": 74, "verb_pair_member": 299}
     for row in rows:
-        assert set(row) <= {"lemma", "stressed", "pos", "kind", "locator", "variants", "pair", "vesum", "tokens"}
+        assert set(row) <= {"lemma", "stressed", "pos", "kind", "locator", "variants", "pair", "vesum", "tokens", "vesum_pos", "vesum_tags"}
         assert {"lemma", "stressed", "pos", "kind", "locator"} <= set(row)
         for text in [row["lemma"], row["stressed"], *row.get("variants", [])]:
             assert LEXICAL.fullmatch(text), text
         assert row["lemma"] == unicodedata.normalize("NFC", row["lemma"]) and "\u0301" not in row["lemma"]
         assert re.fullmatch(r"p(?:20[0-9]|21[0-6]) Словничок|p(?:21[7-9]|22[0-3]) Додаток", row["locator"])
-        assert row["pos"] in {"noun", "adj", "verb", "adv", "numr", "prep", "conj", "part", "intj", "noninfl"}
+        assert row["pos"] in {"noun", "adj", "verb", "adv", "numr", "prep", "conj", "part", "intj", "noninfl", "unlabelled"}
         assert row["kind"] in {"word", "phrase", "verb_pair_member"}
         if row["kind"] == "phrase":
-            assert "vesum" not in row and row["tokens"]
+            assert "vesum" not in row and "vesum_pos" not in row and "vesum_tags" not in row and row["tokens"]
             for token in row["tokens"]:
                 assert set(token) == {"form", "vesum"}
                 assert LEXICAL.fullmatch(token["form"])
@@ -44,6 +44,13 @@ def test_committed_inventory_ip_fields_and_counts():
         else:
             assert "tokens" not in row
             assert row["vesum"] in {"found", "missing", "lookup_error"}
+            if row["pos"] == "unlabelled":
+                assert row["vesum_pos"] == sorted(set(row["vesum_pos"]))
+                if row["vesum"] != "found":
+                    assert row["vesum_pos"] == []
+                assert set(row["vesum_pos"]) <= {"noun", "adj", "verb", "adv", "numr", "prep", "conj", "part", "intj", "noninfl"}
+        for tags in row.get("vesum_tags", []):
+            assert re.fullmatch(r"[a-z0-9_]+(?::[a-z0-9_]+)*", tags) and "prop" in tags.split(":")
         if row["kind"] == "verb_pair_member":
             assert re.fullmatch(r"vp-\d{3,4}", row["pair"])
         else:
@@ -71,6 +78,10 @@ def test_stressed_phrase_variants_and_two_perfectives_roundtrip():
     ("tokens", [{"form": "word", "vesum": "found"}]),
     ("tokens", [{"form": "слово", "vesum": "failed"}]),
     ("tokens", [{"form": "слово"}]),
+    ("vesum_pos", "noun"), ("vesum_pos", ["gloss"]), ("vesum_pos", ["noun", "conj"]),
+    ("vesum_pos", ["noun", "noun"]), ("vesum_pos", [{"pos": "noun"}]),
+    ("vesum_tags", ["proper name"]), ("vesum_tags", ["noun:prop", "noun:prop"]),
+    ("class", "intj"), ("class", []), ("source", "unattested"), ("page", 47),
 ])
 def test_reader_rejects_invalid_metadata(tmp_path, field, value):
     source = {"id": "test", "source_family": "ohoiko", "extraction_mode": "curated_key_word",
@@ -123,3 +134,57 @@ def test_phrase_conjugation_variant_keeps_its_object_and_verifies_optional_token
     optional = next(r for r in records if r.lemma.startswith("Що "))
     assert {"form": "в", "vesum": "found"} in optional.tokens
     assert {"form": "тебе", "vesum": "found"} in optional.tokens
+
+
+@pytest.mark.parametrize("lemma,positions", [
+    ("ми", ("noun",)), ("що", ("conj", "noun")), ("хто", ("noun",)), ("це", ("noun", "part")),
+])
+def test_committed_unlabelled_lemma_bound_pos(lemma, positions):
+    record = next(r for r in read_source_inventory(INVENTORY) if r.lemma == lemma)
+    assert record.pos == "unlabelled" and record.vesum_pos == positions
+    assert record.provenance_payload()["vesum_pos"] == list(positions)
+
+
+@pytest.mark.parametrize("lemma,positions", [
+    ("ми", ("noun",)), ("що", ("conj", "noun")), ("хто", ("noun",)),
+    ("це", ("noun", "part")), ("та", ("conj", "part")),
+])
+def test_unlabelled_candidates_augment_each_compatible_pos(lemma, positions):
+    from dataclasses import replace
+
+    from scripts.audit.source_inventory_intake import SourceInventoryRecord, source_inventory_candidates
+
+    legacy = [SourceInventoryRecord(lemma, "fixture", "headword", "fixture", "row", pos=p, kind="word") for p in positions]
+    unrelated = replace(legacy[0], pos="verb")
+    reference = replace(legacy[0], kind="word", pos="unlabelled", vesum_pos=positions)
+    candidates = source_inventory_candidates([*legacy, unrelated, reference])
+    assert {c.pos: c.source_count for c in candidates} == {**{p: 2 for p in positions}, "verb": 1}
+    for original in legacy:
+        merged, = source_inventory_candidates([replace(original, kind=None), reference])
+        assert merged.pos == original.pos and merged.source_count == 2
+    standalone, = source_inventory_candidates([reference, reference])
+    assert standalone.pos == "unlabelled" and standalone.source_count == 2
+
+
+@pytest.mark.parametrize("state", ["found", "missing", "lookup_error"])
+def test_unlabelled_pos_nested_roundtrip(tmp_path, state):
+    positions = ["conj", "part"] if state == "found" else []
+    row = {"lemma": "та", "kind": "word", "pos": "unlabelled", "vesum": state, "vesum_pos": positions}
+    path = tmp_path / "inventory.yaml"
+    path.write_text(yaml.safe_dump({"version": 1, "kind": "atlas_source_inventory", "sources": [
+        {"id": "test", "source_family": "ohoiko", "extraction_mode": "curated_key_word", "headwords": [row]}
+    ]}, allow_unicode=True))
+    record, = read_source_inventory(path)
+    assert record.vesum_pos == tuple(positions)
+    assert record.provenance_payload()["vesum_pos"] == positions
+    row.update(kind="phrase", tokens=[{"form": "та", "vesum": state}])
+    path.write_text(yaml.safe_dump({"version": 1, "kind": "atlas_source_inventory", "sources": [
+        {"id": "test", "source_family": "ohoiko", "extraction_mode": "curated_key_word", "headwords": [row]}
+    ]}))
+    with pytest.raises(SourceInventoryError, match="vesum_pos"):
+        read_source_inventory(path)
+
+
+def test_attested_inflection_does_not_borrow_its_lemma_pos():
+    record = next(r for r in read_source_inventory(INVENTORY) if r.lemma == "був")
+    assert record.pos == "unlabelled" and record.vesum == "found" and record.vesum_pos == ()

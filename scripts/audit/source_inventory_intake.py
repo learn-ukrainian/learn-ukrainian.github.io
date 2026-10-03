@@ -38,7 +38,8 @@ _SOURCE_FIELDS = {
     "headwords",
 }
 _HEADWORD_FIELDS = {
-    "stressed", "kind", "variants", "pair", "vesum", "tokens",
+    "stressed", "kind", "variants", "pair", "vesum", "tokens", "vesum_pos", "vesum_tags",
+    "class", "level", "source", "page",
     "lemma",
     "headword",
     "word",
@@ -114,6 +115,12 @@ class SourceInventoryRecord:
     pair: str | None = None
     vesum: str | None = None
     tokens: tuple[dict[str, str], ...] = ()
+    vesum_pos: tuple[str, ...] | None = None
+    vesum_tags: tuple[str, ...] = ()
+    word_class: str | None = None
+    cefr_level: str | None = None
+    attestation_source: str | None = None
+    printed_page: int | None = None
 
     def provenance_payload(self) -> dict[str, Any]:
         """Return JSON-ready provenance for a candidate entry."""
@@ -130,6 +137,11 @@ class SourceInventoryRecord:
             "pair": self.pair,
             "vesum": self.vesum,
             "tokens": list(self.tokens) if self.tokens else None,
+            "vesum_tags": list(self.vesum_tags) if self.vesum_tags else None,
+            "class": self.word_class,
+            "level": self.cefr_level,
+            "source": self.attestation_source,
+            "page": self.printed_page,
             "source_id": self.source_id,
             "source_title": self.source_title,
             "source_url": self.source_url,
@@ -140,6 +152,8 @@ class SourceInventoryRecord:
             "count": self.count if self.count != 1 else None,
         }
         payload.update({key: value for key, value in optional.items() if value})
+        if self.vesum_pos is not None:
+            payload["vesum_pos"] = list(self.vesum_pos)
         return payload
 
 
@@ -260,21 +274,28 @@ def _lexical_reference_candidates(records: Sequence[SourceInventoryRecord]) -> l
     for record in records:
         if record.kind is None:
             continue
-        key = (_lemma_key(record.lemma), aliases.get(record.pos, record.pos))
-        candidate = grouped.get(key)
-        if candidate is None:
+        lemma_key = _lemma_key(record.lemma)
+        compatible_pos = record.vesum_pos if record.pos == "unlabelled" else (record.pos,)
+        keys = [(lemma_key, aliases.get(pos, pos)) for pos in compatible_pos or ()]
+        matches = [key for key in keys if key in grouped]
+        key = (lemma_key, aliases.get(record.pos, record.pos))
+        if not matches and key in grouped:
+            matches = [key]
+        if not matches:
             # Strip only the discriminator while constructing the existing candidate shape.
             candidate, = source_inventory_candidates([replace(record, kind=None)])
             grouped[key] = replace(candidate, source_provenance=(record.provenance_payload(),))
         else:
-            if record.gloss and candidate.gloss and record.gloss != candidate.gloss:
-                raise SourceInventoryError(f"conflicting gloss for {record.lemma!r}")
-            grouped[key] = replace(
-                candidate,
-                source_provenance=(*candidate.source_provenance, record.provenance_payload()),
-                source_count=candidate.source_count + 1,
-                frequency=candidate.frequency + record.count,
-            )
+            for key in matches:
+                candidate = grouped[key]
+                if record.gloss and candidate.gloss and record.gloss != candidate.gloss:
+                    raise SourceInventoryError(f"conflicting gloss for {record.lemma!r}")
+                grouped[key] = replace(
+                    candidate,
+                    source_provenance=(*candidate.source_provenance, record.provenance_payload()),
+                    source_count=candidate.source_count + 1,
+                    frequency=candidate.frequency + record.count,
+                )
     return sorted(grouped.values(), key=lambda item: (_lemma_key(item.lemma), item.pos or ""))
 
 
@@ -398,7 +419,7 @@ def _record_from_structured_headword(
         source_path=_optional_text(source.get("path")),
         source_locator=_optional_text(_first_present(row, ("locator",))) or _optional_text(source.get("locator")),
         context=_optional_text(row.get("context")),
-        pos=_optional_slug(row.get("pos"), "pos", inventory_path, inventory_locator),
+        pos=_optional_slug(row.get("pos", row.get("class")), "pos", inventory_path, inventory_locator),
         gloss=_optional_text(row.get("gloss")),
         notes=_optional_text(row.get("notes")) or _optional_text(source.get("notes")),
         count=_positive_int(
@@ -412,11 +433,39 @@ def _record_from_structured_headword(
 
 _LEXICAL = re.compile(r"^[А-Яа-яІіЇїЄєҐґ’\- \u0301!?,.]+$")
 _VESUM_STATES = {"found", "missing", "lookup_error"}
+_VESUM_POS = {"noun", "adj", "verb", "adv", "advp", "numr", "prep", "conj", "part", "intj", "noninfl", "pred"}
 
 
 def _reference_fields(row: Mapping[str, object], context: str) -> dict[str, Any]:
     """Validate and retain optional lexical metadata, including nested phrase tokens."""
     result: dict[str, Any] = {}
+    if {"class", "level", "source", "page"} & row.keys():
+        if (not all(isinstance(row.get(k), str) for k in ("class", "level", "source"))
+                or row["class"] not in {"pron", "conj", "prep", "part"}
+                or row["level"] != "A1" or row["source"] not in {"PULS", "reference_units"}):
+            raise SourceInventoryError(f"{context}: invalid closed-class attestation")
+        if row["source"] == "reference_units":
+            if type(row.get("page")) is not int or not 1 <= row["page"] <= 229:
+                raise SourceInventoryError(f"{context}: invalid closed-class page")
+        elif "page" in row:
+            raise SourceInventoryError(f"{context}: PULS attestation has no printed page")
+        result.update(word_class=row["class"], cefr_level=row["level"], attestation_source=row["source"], printed_page=row.get("page"))
+    for key in ("vesum_pos", "vesum_tags"):
+        if key not in row:
+            continue
+        values = row[key]
+        if (
+            row.get("kind") == "phrase"
+            or not isinstance(values, list)
+            or not all(isinstance(v, str) and (
+                v in _VESUM_POS if key == "vesum_pos" else bool(re.fullmatch(r"[a-z0-9_]+(?::[a-z0-9_]+)*", v))
+            ) for v in values)
+            or values != sorted(set(values))
+        ):
+            raise SourceInventoryError(f"{context}: invalid {key}; expected sorted unique VESUM values on a word")
+        result[key] = tuple(values)
+    if row.get("pos") == "unlabelled" and row.get("kind") != "phrase" and "vesum_pos" not in row:
+        raise SourceInventoryError(f"{context}: unlabelled word requires vesum_pos")
     for key in ("stressed", "kind", "pair", "vesum"):
         if key not in row:
             continue
