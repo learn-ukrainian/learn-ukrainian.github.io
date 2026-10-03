@@ -550,7 +550,7 @@ def test_rendered_prompt_contains_all_required_rules_and_sections(tmp_path: Path
     assert "inspect_word" in rendered
     assert "inspect_words" in rendered
     assert "query_sum20" in rendered
-    assert "query_ulif" in rendered
+    assert "`query_ulif`" not in rendered
     assert "verify_stress" in rendered
 
     for tool in REVIEW_TOOLS:

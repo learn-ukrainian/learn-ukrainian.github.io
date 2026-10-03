@@ -30,6 +30,7 @@ Cleanup is fail-closed. A worktree is preserved when any of these is true:
   is `MERGED` and the origin branch is gone, or it lacks merge proof (`unmerged`);
 - its task is active or non-terminal, a live process has a working directory inside it,
   or an active task lease, rollover lease, write-ownership claim, or reap reservation exists (`active_dispatch`);
+- a non-terminal review task's `review_contract.input_root` overlaps it; dispatch holds the shared removal lock during input preparation until that claim is published, and terminal status releases the claim;
 - it is the repository's primary checkout (`primary`);
 - it has uncommitted changes or untracked files (`dirty`), which are retained as exceptions and never force-deleted;
 - it is in a detached HEAD or unresolvable state and does not meet the

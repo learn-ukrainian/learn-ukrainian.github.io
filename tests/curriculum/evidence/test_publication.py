@@ -113,7 +113,7 @@ def test_year_checks_cover_candidates_without_inventing_missing_imprints():
 def test_denied_and_unregistered_sources(file):
     rec = record(file)
     rec["source"]["publish"] = {"allowed": True, "limit_chars": 9999, "attribution": "Fake"}
-    with pytest.raises(ValueError, match=r"^publication_right:"):
+    with pytest.raises(ValueError, match=r"^owned_quote_refused:" if file in PRIVATE else r"^publication_right:"):
         publication.quote_attribution(rec)
 
 
@@ -279,7 +279,7 @@ def test_private_credits_are_registry_owned_and_never_quote_rights(file):
     assert citation["url"] == entries[file]["resource_credit"]["url"]
     assert citation["description"] == ""
     assert "PRIVATE" not in str(citation)
-    with pytest.raises(ValueError, match="publication_right"):
+    with pytest.raises(ValueError, match="owned_quote_refused"):
         publication.quote_attribution(rec)
 
 
@@ -346,3 +346,99 @@ def test_textbook_resource_credit_never_publishes_author_supports():
     citation = publication.resource_citation(rec)
     assert citation == {"title": publication.source_attribution(rec), "url": "", "description": ""}
     assert "ZZ" not in str(citation)
+
+
+@pytest.mark.parametrize("slug,policy", list(publication.load_owned_rights().items()))
+def test_every_owned_identity_denies_quotes_before_injected_registry(slug, policy):
+    rec = record(slug)
+    injected = {
+        slug: {
+            "file": slug,
+            "kind": "textbook",
+            "publish": {"allowed": True, "limit_chars": 800},
+            "resource_credit": {"title": "Injected credit", "url": "https://example.com/"},
+        }
+    }
+    with pytest.raises(ValueError, match=r"^owned_quote_refused:"):
+        publication.quote_attribution(rec, injected)
+    if policy["rights"] == "private_permission":
+        with pytest.raises(ValueError, match=r"^private_citation_refused:"):
+            publication.resource_citation(rec, injected)
+        with pytest.raises(ValueError, match=r"^private_citation_refused:"):
+            publication.source_attribution(rec, injected)
+    else:
+        assert publication.resource_citation(rec, {})["title"]
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "[]",
+        "schema: 1\nsources: {}",
+        "schema: 2\nsources: {x: {rights: owned_cite_only}}",
+        "schema: 1\nsources: {x: {rights: unrestricted}}",
+        "schema: 1\nsources: [",
+        "schema: 1\nsources: {x: {rights: owned_cite_only, publish: true}}",
+        "schema: 1\nsources: {x: {rights: private_permission, title: secret}}",
+        "schema: 1\nsources: {x: {rights: owned_cite_only, title: null}}",
+        "schema: 1\nsources: {x: {rights: owned_cite_only, author: []}}",
+        "schema: 1\nsources:\n  x: {rights: private_permission}\n  x: {rights: owned_cite_only}",
+    ],
+)
+def test_malformed_owned_rights_fail_closed_even_for_injected_grants(tmp_path, monkeypatch, content):
+    path = tmp_path / "rights.yaml"
+    monkeypatch.setattr(publication, "OWNED_RIGHTS_PATH", path)
+    for operation in (publication.quote_attribution, publication.resource_citation, publication.source_attribution):
+        with pytest.raises(ValueError, match=r"^owned_rights_unreadable:"):
+            operation(record(), publication.load_registry())
+    path.write_text(content)
+    for operation in (publication.quote_attribution, publication.resource_citation, publication.source_attribution):
+        with pytest.raises(ValueError, match=r"^owned_rights_unreadable:"):
+            operation(record(), publication.load_registry())
+
+
+def test_owned_rights_withdrawal_is_immediate(tmp_path, monkeypatch):
+    path = tmp_path / "rights.yaml"
+    monkeypatch.setattr(publication, "OWNED_RIGHTS_PATH", path)
+    path.write_text("schema: 1\nsources: {synthetic: {rights: owned_cite_only, title: Synthetic work}}")
+    rec = record("synthetic")
+    assert publication.resource_citation(rec, {})["title"] == "Synthetic work"
+    path.write_text("schema: 1\nsources: {synthetic: {rights: private_permission}}")
+    with pytest.raises(ValueError, match="private_citation_refused"):
+        publication.resource_citation(rec, {})
+
+
+def test_protected_denominator_includes_skips_legacy_works_and_ulp_seasons():
+    new_ids = {
+        "oho-a1-workbook",
+        "oho-a1-transcripts",
+        "oho-a1-unit-audio",
+        "yak-inozemtsi-kozaka-riatuvaly",
+        "yak-inozemtsi-kozaka-riatuvaly-audio",
+        "ulp-premium-audio-anki",
+        "fmu-1-premium",
+        "ulp-charts",
+        "yabluko-advanced",
+        "chytanka-chomuchka",
+        "dyvovyzhni-pryhody-zvychainykh",
+        "lehendy-pro-kozakiv",
+        "unikalni-ukrainski-rechi",
+        "vydatni-ukrainky",
+        "paska",
+        "hto-bachyv-khomiaka",
+        "teacher-a-slides",
+        "teacher-b-notes",
+        "operator-study-files",
+    }
+    existing = {
+        "anna-ohoiko-1000-words-2nd-ed",
+        "anna-ohoiko-500-verbs",
+        "pohribnyi-ukrainska-literaturna-vymova-1992",
+        *(f"ulp-{i}-00-lesson-notes" for i in range(1, 7)),
+    }
+    entries = publication.load_owned_rights()
+    assert set(entries) == {*(f"owned-{ident}" for ident in new_ids), *existing}
+    assert "owned-ulp-premium-s1-s6" not in entries
+    private = {slug for slug, policy in entries.items() if policy["rights"] == "private_permission"}
+    assert private == {"owned-teacher-a-slides", "owned-teacher-b-notes", "owned-operator-study-files"}
+    assert all(set(entries[slug]) == {"rights"} for slug in private)

@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from types import SimpleNamespace
+
+import pytest
+import yaml
 
 from scripts.agent_runtime import lane_probe
 from scripts.agent_runtime.adapters.base import InvocationPlan
@@ -170,7 +174,54 @@ def test_session_start_wires_the_active_lane_probe() -> None:
     hook = Path("agents_extensions/shared/hooks/session-setup.sh").read_text(encoding="utf-8")
 
     assert "scripts.agent_runtime.lane_probe" in hook
-    assert 'codex-*) LANE_PROBE_AGENT="codex" ;;' in hook
-    assert '--agent "$LANE_PROBE_AGENT"' in hook
+    assert '--handoff-agent "$HANDOFF_AGENT"' in hook
     assert 'HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"' in hook
     assert "--timeout 2" in hook
+
+
+def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch):
+    areas = yaml.safe_load(Path("scripts/config/area_assignments.yaml").read_text())["assignments"]
+    slots = {slot for area in areas.values() for slot in area["slots"]}
+    for slot in slots:
+        provider = slot.split("-", 1)[0]
+        assert provider in lane_probe.AGENTS
+        assert lane_probe.resolve_handoff_agent(slot) == provider
+    for provider in lane_probe.AGENTS:
+        if "-" not in provider:
+            for area, assignment in areas.items():
+                if assignment["slots"]:
+                    continue
+                assert lane_probe.resolve_handoff_agent(f"{provider}-{area}") == provider
+    _registered_lane(monkeypatch, "new-provider")
+    assert lane_probe.resolve_handoff_agent("new-provider-monitor") == "new-provider"
+    assert lane_probe.resolve_handoff_agent("new-provider-new-lane") == "new-provider-new-lane"
+    assert lane_probe.resolve_handoff_agent("unknown-lane") == "unknown-lane"
+    assert lane_probe.resolve_handoff_agent("claude") == "claude"
+
+
+@pytest.mark.parametrize("identity", ["claude-", "claude-typo-lane", "CLAUDE-infra", "claudex-infra", "kimi-folk"])
+def test_handoff_cli_rejects_unmintable_identity(monkeypatch, tmp_path, capsys, identity):
+    def unexpected_adapter(_agent):
+        pytest.fail("an unmintable identity must not probe a provider")
+
+    monkeypatch.setattr(lane_probe, "_load_adapter", unexpected_adapter)
+    assert lane_probe.main(["--handoff-agent", identity, "--cwd", str(tmp_path)]) == 1
+    probe = json.loads(capsys.readouterr().out)["probes"][0]
+    assert probe["agent"] == identity
+    assert probe["status"] == "unhealthy"
+    assert probe["reason"] == "agent is not registered"
+
+
+@pytest.mark.parametrize("returncode", [0, 23])
+def test_handoff_cli_probes_provider_and_preserves_broken_lane(monkeypatch, tmp_path, capsys, returncode):
+    adapter = _FakeAdapter(["fake-claude"])
+    loaded = []
+    monkeypatch.setattr(lane_probe, "_load_adapter", lambda agent: loaded.append(agent) or adapter)
+    monkeypatch.setattr(lane_probe.subprocess, "run", lambda *_args, **_kwargs: SimpleNamespace(returncode=returncode))
+    assert lane_probe.main(["--handoff-agent", "claude-open-model-data", "--cwd", str(tmp_path)]) == bool(returncode)
+    probe = json.loads(capsys.readouterr().out)["probes"][0]
+    assert loaded == ["claude"]
+    assert probe["agent"] == "claude"
+    assert probe["status"] == ("unhealthy" if returncode else "healthy")
+    if returncode:
+        assert probe["reason"] == "version command exited 23"

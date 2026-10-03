@@ -73,6 +73,7 @@ from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
+from .adapters.codex_events import mcp_tool_event
 from .attribution import InvocationAttribution, resolve_invocation_attribution
 from .binary_resolve import augment_path_for_login_bins, resolve_agent_binary
 from .env_sanitize import build_agent_env
@@ -94,6 +95,7 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
+from .failure_codes import RUNTIME_FAILURE_CODES
 from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
@@ -127,10 +129,6 @@ _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
 # checkout's own file tree can be its protected primary checkout.
 _RUNNER_REPO_TREE = Path(__file__).resolve().parents[2]
 _MCP_RUNTIME_INIT_TIMEOUT_S = 30.0
-_MCP_TOOL_EVENT_RE = re.compile(
-    r"\bmcp:\s+(?P<server>[A-Za-z0-9_.-]+)/(?P<tool>[A-Za-z0-9_.-]+)\s+"
-    r"(?:started|\(completed\))"
-)
 _MCP_TRANSPORT_FAILURE_RE = re.compile(r"ERROR\s+rmcp::transport::worker:")
 _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
@@ -155,33 +153,7 @@ _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
 # bounded diagnostic prefix of those ignored events, then keep draining (rather
 # than killing) so the final answer and terminal receipt can still arrive.
 _ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES = 256 * 1024
-_SAFE_ACP_FAILURE_CODES = frozenset(
-    {
-        "acp_adapter_incompatible",
-        "acp_adapter_missing",
-        "acp_agent_disconnected",
-        "acp_agent_startup",
-        "acp_auth_required",
-        "acp_permission_denied",
-        "acp_permission_unavailable",
-        "acp_review_evidence_invalid",
-        "acp_review_evidence_too_large",
-        "acp_session_create_timeout",
-        "acp_turn_limit",
-        "github_secondary_rate_limited",
-        "adapter_refused",
-        "cwd_unpinned",
-        "primary_tree_write",
-        "protocol_output_limit",
-        "provider_unavailable",
-        "provider_error",
-        "rate_limited",
-        "result_invalid",
-        "timeout",
-        "transport_error",
-        "unknown",
-    }
-)
+_SAFE_ACP_FAILURE_CODES = RUNTIME_FAILURE_CODES
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
@@ -1260,16 +1232,12 @@ class _McpRuntimeObserver:
         return len(lines)
 
     def observe_line(self, line: str, *, stream: str) -> None:
-        tool_match = _MCP_TOOL_EVENT_RE.search(line)
-        if tool_match:
-            server = tool_match.group("server")
-            if server in self.configured_servers:
-                self._emit_ready(
-                    server,
-                    tool=tool_match.group("tool"),
-                    stream=stream,
-                    line=line,
-                )
+        if stream == "stdout":
+            # ``codex exec --json`` stdout: only a typed MCP call item shows
+            # the server initialized; text inside items never does (#9532).
+            tool_event = mcp_tool_event(line)
+            if tool_event is not None and tool_event[0] in self.configured_servers:
+                self._emit_ready(tool_event[0], tool=tool_event[1], stream=stream, line=line)
             return
 
         failure_match = _MCP_TRANSPORT_FAILURE_RE.search(line)
@@ -1733,7 +1701,7 @@ def _execute_invocation_plan(
 
             if early_reap_check is not None:
                 try:
-                    if early_reap_check(plan, call_start_time=start_time):
+                    if early_reap_check(plan, call_start_time=start_time, stdout_lines=watchdog_state.stdout_lines):
                         returncode = proc.poll()
                         if returncode is not None:
                             kill_reason = None
@@ -1851,19 +1819,15 @@ def _execute_invocation_plan(
             and not stdout_text.strip()
             and not stderr_text.strip()
         ):
-            parse = ParseResult(
-                ok=False,
-                response="",
+            # Only the excerpt is runner-authored; the adapter's typed failure
+            # fields stay authoritative for failover and usage (#9532).
+            parse = replace(
+                parse,
                 stderr_excerpt=(
                     f"{agent_name} subprocess exited rc={final_returncode} in "
                     f"{duration_s:.2f}s with no captured stdout/stderr "
                     f"(stdin_bytes={len(plan.stdin_payload or '')})"
                 )[:500],
-                rate_limited=parse.rate_limited,
-                session_id=parse.session_id,
-                tokens=parse.tokens,
-                tool_calls=parse.tool_calls,
-                substitution=parse.substitution,
             )
         if fleet_capture is not None:
             actual_model, route_metadata = resolved_route(
@@ -2952,6 +2916,7 @@ def _invoke_with_runner_failover(
             rate_limited=parse.rate_limited,
             stalled=False,
             returncode=execution.returncode,
+            failure_code=parse.failure_code,
             usage_record=record,
             model_identity=record.get("model_identity"),
             tool_calls=list(parse.tool_calls),
@@ -3312,6 +3277,7 @@ def _invoke_impl(
         rate_limited=parse.rate_limited,
         stalled=False,
         returncode=execution.returncode,
+        failure_code=parse.failure_code,
         usage_record=record,
         model_identity=record.get("model_identity"),
         tool_calls=list(parse.tool_calls),
@@ -3458,9 +3424,14 @@ def _validate_catalog_model(
     participant: str,
     model: str,
 ) -> None:
-    """Require a current active catalog model on the adapter's real route."""
+    """Require a current active catalog model on the adapter's real route that may consult (#9583)."""
     try:
-        from scripts.review.model_catalog import load_model_catalog, model_aliases
+        from scripts.review.model_catalog import (
+            CONSULT_ACTIVITY,
+            activity_role_refusal,
+            load_model_catalog,
+            model_aliases,
+        )
 
         catalog = load_model_catalog()
     except (ImportError, OSError, ValueError) as exc:
@@ -3482,6 +3453,9 @@ def _validate_catalog_model(
             f"ACP participant {participant!r} does not implement catalog transport "
             f"{catalog_transport!r} for model {model!r}"
         )
+    # ACP carries asks, consults, discussions and sealed reviews only.
+    if refusal := activity_role_refusal(model, CONSULT_ACTIVITY, catalog):
+        raise InterAgentTransportError(f"ACP participant {participant!r} refuses {refusal}")
 
 
 def resolve_inter_agent_route(

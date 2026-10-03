@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# A push updates remote-tracking refs: run the caller's own hook, as Git would
+# without the pinned hooks path (#9339).
+exec "$(dirname "${BASH_SOURCE[0]}")/chain" reference-transaction "$@"

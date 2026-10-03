@@ -243,4 +243,157 @@ real_git="$(_real_git)" || {
   exit 127
 }
 
+# Pushes publish commit messages and ref and tag names (#9339). Git runs the
+# pre-push hook on the exact ref updates it is about to send, so every push
+# runs with core.hooksPath pinned to the scanner's hooks directory. As the last
+# command-line assignment the pin outranks every other configuration source, and
+# Git hands it to recursive submodule pushes. A push that would skip the hook, or
+# whose scanner is unusable, is refused. The pin is not added to other commands:
+# it would hide the caller's other hooks (pre-commit, ...).
+#
+# The shim forwards only Git's own commands, and only when Git has no alias of
+# that name. Aliases are refused, not parsed: a reading of an alias that differs
+# from Git's could reach push without the pin.
+
+_opsec_refuse() {
+  echo "OPSEC: $1; push refused." >&2
+  exit 2
+}
+
+# git push accepts --no-verify and its unique abbreviations; shorter prefixes are
+# ambiguous today and refused too, wherever they appear.
+_opsec_skips_hook() {
+  local arg name
+  for arg in "$@"; do
+    name="${arg%%=*}"
+    if [[ ${#name} -ge 3 && "--no-verify" == "$name"* ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Global options as git.c reads them; those listed take the next argument.
+_opsec_index=0
+_opsec_shallow=0
+_opsec_informational=0
+while [[ $_opsec_index -lt $# ]]; do
+  _opsec_arg="${@:_opsec_index+1:1}"
+  case "$_opsec_arg" in
+    -C | -c | --git-dir | --work-tree | --namespace | --config-env | --attr-source) _opsec_index=$((_opsec_index + 2)) ;;
+    --shallow-file) _opsec_shallow=1 && _opsec_index=$((_opsec_index + 2)) ;;
+    -h | --help | -v | --version | --exec-path | --html-path | --man-path | --info-path)
+      _opsec_informational=1 && _opsec_index=$((_opsec_index + 1)) ;;
+    -*) _opsec_index=$((_opsec_index + 1)) ;;
+    *) break ;;
+  esac
+done
+_opsec_globals=("${@:1:_opsec_index}")
+_opsec_command="${@:_opsec_index+1:1}"
+_opsec_push=0
+
+if [[ "$_opsec_command" == "push" ]]; then
+  _opsec_push=1
+elif [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
+  # Git's own commands are its builtins and the git-<name> programs in its exec
+  # path; Git tries both before any alias. The Git that runs the command lists
+  # them under the caller's global options (--exec-path, -C) and environment
+  # (GIT_EXEC_PATH). Anything else (an alias, a git-<name> program elsewhere on
+  # PATH, a typo Git could autocorrect) is refused before Git runs.
+  _opsec_commands="$("$real_git" "${_opsec_globals[@]}" --list-cmds=builtins,main)" || {
+    echo "OPSEC: could not list Git's commands, so '$_opsec_command' was not run." >&2
+    exit 2
+  }
+  if [[ "$_opsec_command" == *$'\n'* || $'\n'"$_opsec_commands"$'\n' != *$'\n'"$_opsec_command"$'\n'* ]]; then
+    cat >&2 <<EOF
+OPSEC: '$_opsec_command' is not one of Git's own commands, so it was not run.
+       The agent git shim refuses every alias, git-<name> programs outside Git's
+       exec path and mistyped commands, because it cannot tell whether they push.
+       Run the Git command directly (for example 'git push ...', not an alias for it).
+EOF
+    exit 2
+  fi
+fi
+
+# A listed name can still run as an alias: Git looks an alias up before a
+# deprecated builtin (whatchanged) and after a git-<name> program fails to
+# start. So the shim asks Git whether an alias of that name is defined, under
+# the caller's global options and environment, and refuses if one is, whatever
+# it expands to. Git matches alias names without regard to case. The probe key
+# proves Git read the configuration: a lookup that does not return it, fails
+# or times out refuses. GIT_CONFIG is unset because it narrows `git config` to
+# one file while Git's alias lookup ignores it. The time limit is bash's own
+# read timeout (some timeout(1) builds poll and add 0.1 s to every call).
+_opsec_probe="lu-opsec.alias-probe"
+_opsec_aliased() {
+  local fd pid names="" name rest word="${_opsec_command,,}" read_status=0 git_status=0
+  exec {fd}< <(exec env -u GIT_CONFIG "$real_git" "${_opsec_globals[@]}" -c "$_opsec_probe=1" \
+    config --name-only --get-regexp "^(alias\\..*|${_opsec_probe//./\\.})\$")
+  pid=$!
+  IFS= read -r -d '' -t 10 -u "$fd" names || read_status=$?
+  exec {fd}<&-
+  if [[ "$read_status" != 1 ]]; then
+    # Over time (above 128), or a NUL where Git writes none (0).
+    kill "$pid" 2>/dev/null || true
+    return 2
+  fi
+  wait "$pid" || git_status=$?
+  [[ "$git_status" == 0 && $'\n'"$names" == *$'\n'"$_opsec_probe"$'\n'* ]] || return 2
+  while IFS= read -r name; do
+    [[ "$name" == alias.* ]] || continue
+    rest="${name#alias.}"
+    rest="${rest,,}"
+    [[ "$rest" == "$word" || "$rest" == "$word".* ]] && return 0
+  done <<< "$names"
+  return 1
+}
+
+if [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
+  _opsec_alias_status=0
+  _opsec_aliased || _opsec_alias_status=$?
+  if [[ "$_opsec_alias_status" == 2 ]]; then
+    echo "OPSEC: could not check Git's aliases for '$_opsec_command', so it was not run." >&2
+    exit 2
+  elif [[ "$_opsec_alias_status" == 0 ]]; then
+    cat >&2 <<EOF
+OPSEC: an alias named '$_opsec_command' is defined, so '$_opsec_command' was not run.
+       Git can run such an alias in place of its own command, so the agent git
+       shim refuses the command while the alias exists. Remove the alias or run
+       Git without the configuration that defines it.
+EOF
+    exit 2
+  fi
+fi
+
+if [[ "$_opsec_push" == 1 ]]; then
+  # GIT_CONFIG changes what `git config` reports, not the configuration Git
+  # pushes with (core.sshCommand, core.hooksPath, ...), so the scanner and the
+  # caller-hook chain could read a different configuration than the push uses.
+  if [[ -n "${GIT_CONFIG+set}" ]]; then
+    _opsec_refuse "GIT_CONFIG is set, which changes what 'git config' reports but not the configuration Git pushes with (unset it)"
+  fi
+  if _opsec_skips_hook "${@:_opsec_index+2}"; then
+    _opsec_refuse "--no-verify would skip the push scan"
+  fi
+  if [[ "$_opsec_shallow" == 1 ]]; then
+    _opsec_refuse "--shallow-file is not supported for a scanned push"
+  fi
+  _opsec_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd -P)"
+  _opsec_hooks="$_opsec_root/scripts/opsec/push_hooks"
+  _opsec_python="$_opsec_root/.venv/bin/python"
+  if [[ ! -x "$_opsec_python" ]]; then
+    # A linked worktree has no interpreter of its own: use the main checkout's.
+    _opsec_common="$(env -u GIT_DIR -u GIT_COMMON_DIR -u GIT_WORK_TREE "$real_git" -C "$_opsec_root" \
+      rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    _opsec_python="${_opsec_common:+$(dirname "$_opsec_common")/.venv/bin/python}"
+  fi
+  for _opsec_hook in pre-push reference-transaction chain; do
+    [[ -f "$_opsec_hooks/$_opsec_hook" && -x "$_opsec_hooks/$_opsec_hook" ]] || _opsec_refuse "push scanner hooks unavailable"
+  done
+  [[ -f "$_opsec_root/scripts/opsec/git_push.py" ]] || _opsec_refuse "push scanner unavailable"
+  [[ -n "$_opsec_python" && -x "$_opsec_python" ]] || _opsec_refuse "project interpreter unavailable"
+  export LU_OPSEC_PUSH_PYTHON="$_opsec_python" LU_OPSEC_REAL_GIT="$real_git"
+  exec "$real_git" "${_opsec_globals[@]}" -c "core.hooksPath=$_opsec_hooks" "${@:_opsec_index+1}"
+fi
+
 exec "$real_git" "$@"

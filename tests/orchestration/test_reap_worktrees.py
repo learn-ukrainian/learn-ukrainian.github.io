@@ -290,9 +290,7 @@ def test_superseded_archived_record_no_longer_claims_the_finished_tasks_worktree
     (tasks / "impl-ci-r4.20260930T022833947211Z.7.archived.json").write_text(
         json.dumps({**old_run, "status": "failed"}), encoding="utf-8"
     )
-    _write_task_record(
-        repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid()
-    )
+    _write_task_record(repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid())
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -421,7 +419,9 @@ def test_needs_finalize_claim_proof_keeps_the_claim_without_a_valid_positive_dea
     bad_pid: object,
 ) -> None:
     """A merged PR alone never releases the claim: the worker must be proven absent by its recorded PID."""
-    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None))
+    monkeypatch.setattr(
+        rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None)
+    )
     record: dict[str, Any] = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc"}
     if bad_pid != "missing":
         record["pid"] = bad_pid
@@ -2661,12 +2661,16 @@ def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -
         monkeypatch,
         rest=_gh_stdout(
             json.dumps(
-                [[{
-                    "number": 8536,
-                    "state": "closed",
-                    "merged_at": "2026-09-22T10:00:00Z",
-                    "head": {"sha": "rest-sha"},
-                }]]
+                [
+                    [
+                        {
+                            "number": 8536,
+                            "state": "closed",
+                            "merged_at": "2026-09-22T10:00:00Z",
+                            "head": {"sha": "rest-sha"},
+                        }
+                    ]
+                ]
             )
         ),
         graphql=_gh_stdout("GraphQL: API rate limit exceeded", returncode=1),
@@ -2686,7 +2690,9 @@ def test_query_pr_states_rest_pages_preserve_later_closed_head(monkeypatch) -> N
     ]
     later = [{"number": 101, "state": "closed", "merged_at": None, "head": {"sha": "held-head"}}]
     calls = _patch_gh_transports(
-        monkeypatch, rest=_gh_stdout(json.dumps([first, later])), graphql=_gh_stdout("down", returncode=1),
+        monkeypatch,
+        rest=_gh_stdout(json.dumps([first, later])),
+        graphql=_gh_stdout("down", returncode=1),
     )
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
@@ -5621,6 +5627,113 @@ def test_detached_clean_contained_reaps_when_bound_task_is_terminal(
     assert result_for(_reap_contained(repo, monkeypatch), worktree).action == "removed"
 
 
+@pytest.mark.parametrize("kind", ["detached-contained", "merged-pr"])
+def test_review_inputs_preserved_at_plan_and_apply_then_terminal_reap(tmp_path, monkeypatch, kind):
+    repo = init_repo(tmp_path)
+    worktree = (
+        _detached_dispatch_worktree(repo)
+        if kind == "detached-contained"
+        else add_worktree(repo, "codex/input-tree", path=repo / ".worktrees/dispatch/codex/input-tree")
+    )
+    head = git(worktree, "rev-parse", "HEAD")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(
+        monkeypatch,
+        {}
+        if kind == "detached-contained"
+        else {
+            "codex/input-tree": [{"number": 9485, "state": "MERGED", "headRefOid": head}],
+        },
+    )
+    _write_task_record(
+        repo,
+        "reviewer",
+        status="running",
+        worktree_path=str(repo / ".worktrees/dispatch/claude/reviewer"),
+        review_contract={"input_root": str(worktree / "inputs")},
+    )
+    for apply in (False, True):
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set(), safe_only=True), worktree)
+        assert result.action == "skipped"
+        assert result.reason == "review input root claimed by active task reviewer"
+        assert worktree.exists()
+    _write_task_record(repo, "reviewer", status="done", review_contract={"input_root": str(worktree / "inputs")})
+    assert (
+        result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree).action
+        == "removed"
+    )
+
+
+def test_primary_review_inputs_allow_unrelated_linked_tree_plan_and_reap(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {})
+    _write_task_record(repo, "reviewer", status="running", review_contract={"input_root": str(repo)})
+    plan = result_for(rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set(), safe_only=True), worktree)
+    assert plan.action == "would_remove"
+    assert worktree.exists()
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_review_input_claim_appearing_after_plan_is_refused_under_lock(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    original = rw._enter_dispatch_worktree_guard
+    held = []
+
+    def inject(stack, **kwargs):
+        _write_task_record(repo, "reviewer", status="running", review_contract={"input_root": str(worktree)})
+        refusal = original(stack, **kwargs)
+        held.append(bool(worktree_claims._HELD_LOCKS))
+        return refusal
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", inject)
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+    assert result.action == "skipped"
+    assert "review input root claimed by active task reviewer" in result.reason
+    assert held == [True]
+    assert worktree.exists()
+
+
+def test_unreadable_review_claim_preserves_reaper_plan(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    _write_task_record(repo, "reviewer", status="running")
+    (repo / "batch_state/tasks/reviewer.json").write_text('{"status": "running",')
+    result = result_for(_reap_contained(repo, monkeypatch, apply=False), worktree)
+    assert result.action == "skipped"
+    assert result.reason == "task record reviewer.json unreadable; refusing worktree removal"
+
+
+def test_input_preparation_lock_preserves_plan_before_task_publication(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    ready, release = threading.Event(), threading.Event()
+
+    def preparing():
+        with worktree_claims.worktree_lock(worktree, lock_dir=repo / ".git" / worktree_claims.LOCK_DIR_NAME):
+            ready.set()
+            assert release.wait(10)
+
+    thread = threading.Thread(target=preparing)
+    thread.start()
+    try:
+        assert ready.wait(5)
+        result = result_for(_reap_contained(repo, monkeypatch, apply=False), worktree)
+        assert result.action == "skipped"
+        assert worktree_claims.LOCK_BUSY in result.reason
+        assert rw.classify_preservation(result) == "active_dispatch"
+        assert worktree.exists()
+    finally:
+        release.set()
+        thread.join(timeout=5)
+    assert not thread.is_alive()
+    assert result_for(_reap_contained(repo, monkeypatch, apply=False), worktree).action == "would_remove"
+
+
 def test_detached_clean_contained_ignores_non_dispatch_and_branch_checkouts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -6464,10 +6577,13 @@ def test_review_checkout_classes_reap_provisioned_links_without_following_them(
     if kind == "superseded":
         assert result.reason.startswith(f"superseded PR #{_OLD_PR} head ")
     else:
-        assert result.reason == {
-            "unrecorded": "unrecorded detached checkout",
-            "foreign": "foreign registered checkout",
-        }[kind]
+        assert (
+            result.reason
+            == {
+                "unrecorded": "unrecorded detached checkout",
+                "foreign": "foreign registered checkout",
+            }[kind]
+        )
     assert not worktree.exists()
     assert target.exists()
     assert payload.read_bytes() == b"primary content\n"

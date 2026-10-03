@@ -91,12 +91,14 @@ import json
 import logging
 import os
 import re
+import shlex
 import shutil
 import subprocess
 from functools import cache
 from pathlib import Path
 from typing import Any
 
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
@@ -322,29 +324,74 @@ def _reviewer_mcp_config() -> str:
     return json.dumps(isolated_sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
 
 
+_DEPLOYED_HOOKS_PREFIX = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
+_PROJECT_PYTHON_HOOK_WRAPPER = "run-project-python-hook.sh"
+# Guards that need the project interpreter (their parser dependency is not in
+# the system Python). Only these may appear in the wrapper form.
+PROJECT_PYTHON_GUARDS = frozenset({"guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py"})
+# A command whose raw text or shell words contain any of these is a fleet guard
+# and must take one of the two supported forms.
+_FLEET_GUARD_MARKERS = (".claude/hooks/", _PROJECT_PYTHON_HOOK_WRAPPER, *sorted(PROJECT_PYTHON_GUARDS))
+
+
+def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
+    """Translate one deployed hook command into a tracked-source invocation.
+
+    The command is split into shell words first, so quoting and escaping never
+    change its classification; an unreadable command raises. The single word
+    ``$CLAUDE_PROJECT_DIR/.claude/hooks/<guard>`` becomes the tracked guard
+    path. The words ``bash $CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh
+    <guard>`` become the project interpreter plus the tracked guard, for the
+    guards in ``PROJECT_PYTHON_GUARDS`` only. Any other command naming the hooks
+    directory, the wrapper or one of those guards raises, so a guard is never
+    silently dropped. Commands naming none of them are not fleet guards and
+    return ``None``.
+    """
+    try:
+        argv = shlex.split(command)
+    except ValueError as exc:
+        raise RuntimeError(f"Claude worker hook command is unreadable: {command}") from exc
+    if not any(marker in text for text in (command, *argv) for marker in _FLEET_GUARD_MARKERS):
+        return None
+    hooks_dir = source_root / "agents_extensions/shared/hooks"
+    wrapper = _DEPLOYED_HOOKS_PREFIX + _PROJECT_PYTHON_HOOK_WRAPPER
+    if len(argv) == 3 and argv[:2] == ["bash", wrapper] and argv[2] in PROJECT_PYTHON_GUARDS:
+        tracked = hooks_dir / argv[2]
+        if not tracked.is_file():
+            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+        from scripts.common.repo_root import project_interpreter
+
+        return shlex.join([str(project_interpreter(source_root)), str(tracked)])
+    plain = len(argv) == 1 and argv[0].startswith(_DEPLOYED_HOOKS_PREFIX)
+    name = argv[0].removeprefix(_DEPLOYED_HOOKS_PREFIX) if plain else ""
+    if name not in {"", ".", "..", _PROJECT_PYTHON_HOOK_WRAPPER} and "/" not in name:
+        tracked = hooks_dir / name
+        if not tracked.is_file():
+            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+        return shlex.quote(str(tracked))
+    raise RuntimeError(f"Claude worker guard has an unsupported form: {command}")
+
+
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
     """Build hook settings from tracked sources in this checkout."""
     source_root = Path(__file__).resolve().parents[3]
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
-    prefix = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
     for group in source["hooks"]["PreToolUse"]:
         hooks = []
         for hook in group["hooks"]:
-            command = hook.get("command", "")
-            if not command.startswith(prefix):
-                continue
-            tracked = source_root / "agents_extensions/shared/hooks" / command.removeprefix(prefix)
-            if not tracked.is_file():
-                raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
-            hooks.append({**hook, "command": str(tracked)})
+            invocation = _worker_guard_invocation(hook.get("command", ""), source_root)
+            if invocation is not None:
+                hooks.append({**hook, "command": invocation})
         if hooks:
             groups.append({"matcher": group["matcher"], "hooks": hooks})
     if publish_guard:
         guard = source_root / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
         if not guard.is_file():
             raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
-        groups.append({"matcher": "Bash", "hooks": [{"type": "command", "command": str(guard), "timeout": 5}]})
+        groups.append(
+            {"matcher": "Bash", "hooks": [{"type": "command", "command": shlex.quote(str(guard)), "timeout": 5}]}
+        )
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
     return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
@@ -783,7 +830,7 @@ class ClaudeAdapter:
 
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
-            strict_events = [json_value(line) for line in stdout.splitlines() if line.strip()]
+            strict_events = [json_value(line) for line in jsonl_lines(stdout) if line.strip()]
             intact = bool(strict_events) and all(isinstance(event, dict) for event in strict_events)
             terminal = strict_events[-1] if intact else {}
             return structured_result(
@@ -889,7 +936,7 @@ def _claude_session_jsonl_path(
 
 def _tool_calls_from_claude_session_jsonl(path: Path) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
-    for raw_line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+    for raw_line in jsonl_lines(path.read_text(encoding="utf-8", errors="replace")):
         line = raw_line.strip()
         if not line:
             continue

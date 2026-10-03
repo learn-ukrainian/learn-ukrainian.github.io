@@ -30,18 +30,11 @@ _FIXTURE_ENV_KEYS = ("PATH", "HOME", "TMPDIR", "LANG")
 
 
 def _fixture_environment() -> dict[str, str]:
-    return {
-        name: os.environ[name]
-        for name in _FIXTURE_ENV_KEYS
-        if name in os.environ
-    }
+    return {name: os.environ[name] for name in _FIXTURE_ENV_KEYS if name in os.environ}
 
 
 def _fixture_allowlist() -> list[str]:
-    return [
-        f"{name}={value}"
-        for name, value in _fixture_environment().items()
-    ]
+    return [f"{name}={value}" for name, value in _fixture_environment().items()]
 
 
 def _canonical_python() -> str:
@@ -49,9 +42,7 @@ def _canonical_python() -> str:
 
 
 def _stream_id_from_registry(stream_key: str) -> str:
-    registry = yaml.safe_load(
-        (_REPO_ROOT / "scripts/config/issue_streams.yaml").read_text(encoding="utf-8")
-    )
+    registry = yaml.safe_load((_REPO_ROOT / "scripts/config/issue_streams.yaml").read_text(encoding="utf-8"))
     epic = registry["streams"][stream_key]["epics"][0]
     return f"epic:{epic}"
 
@@ -74,12 +65,74 @@ def test_session_setup_hook_handoff_fixtures() -> None:
     assert "ok - session setup hook handoff fixtures passed" in result.stdout
 
 
+@pytest.mark.parametrize("broken", [False, True])
+def test_alias_lane_self_test_reports_only_a_broken_probe(tmp_path: Path, broken: bool) -> None:
+    hook = (_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh").read_text()
+    block = hook[hook.index("LANE_PROBE_SCRIPT=") : hook.index("unset LANE_PROBE_SCRIPT")]
+    (tmp_path / "scripts/agent_runtime").mkdir(parents=True)
+    (tmp_path / "scripts/agent_runtime/lane_probe.py").touch()
+    probe = {"probes": [{"agent": "claude", "reason": "version command exited 23"}]}
+    script = (
+        r"""
+ISSUES=()
+run_bounded() {
+  case "$*" in
+    *'--handoff-agent claude-open-model-data'*) ;;
+    *) exit 99 ;;
+  esac
+  printf '%s' "$PROBE_JSON"
+  return "$PROBE_RC"
+}
+_hook_deadline() { shift; "$@"; }
+"""
+        + block
+        + '\nprintf "%s\\n" "${ISSUES[@]}"\n'
+    )
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+        env={
+            **_fixture_environment(),
+            "PROJECT_DIR": str(tmp_path),
+            "BOUNDED_PYTHON": _canonical_python(),
+            "HANDOFF_AGENT": "claude-open-model-data",
+            "PROBE_JSON": json.dumps(probe),
+            "PROBE_RC": "1" if broken else "0",
+        },
+    )
+    if broken:
+        assert "DISPATCH LANE SELF-TEST FAILED for claude (handoff identity claude-open-model-data)" in result.stdout
+        assert "version command exited 23" in result.stdout
+    else:
+        assert "SELF-TEST FAILED" not in result.stdout
+
+
+def test_hook_passes_stream_and_task_family_to_gate_and_fallback(tmp_path: Path) -> None:
+    hook = (_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh").read_text()
+    block = hook[hook.index("ROLLOVER_BUNDLE_STREAM=") : hook.index("GATE_RC=0")]
+    stream_id = "epic:1001"
+    result = subprocess.run(
+        ["bash", "-c", "GATE_ARGS=(); " + block + '\nprintf "%s\\n" "${GATE_ARGS[@]}"'],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+        env={**_fixture_environment(), "SESSION_STREAM_ID": stream_id},
+    )
+    assert result.stdout.splitlines() == ["--stream", stream_id, "--import-bundle"]
+    fallback = hook[hook.index("if ! HANDOFF_CONTEXT=$(run_bounded") :]
+    assert '"${TASK_FAMILY_ARGS[@]}"' in fallback
+    assert '"${ROLLOVER_STREAM_ARGS[@]}"' in fallback
+    assert 'TASK_FAMILY_ARGS=(--task-family "$SESSION_EPIC")' in hook
+    assert "SESSION_TASK_FAMILY" not in hook
+
+
 def test_legacy_table_parser_avoids_gnu_sed_anchor_escape() -> None:
     hook = _REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh"
-    parser_line = next(
-        line for line in hook.read_text(encoding="utf-8").splitlines()
-        if "TABLE_BRIEF=$(sed -n" in line
-    )
+    parser_line = next(line for line in hook.read_text(encoding="utf-8").splitlines() if "TABLE_BRIEF=$(sed -n" in line)
 
     assert "\\`" not in parser_line
 
@@ -323,7 +376,11 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     venv_bin.mkdir(parents=True)
     # The gate runs through the real bounded-runner interpreter below. Give
     # this fixture its exact version instead of coupling it to the local pin.
-    version = subprocess.check_output([_canonical_python(), "--version"], text=True, timeout=30).strip().removeprefix("Python ")
+    version = (
+        subprocess.check_output([_canonical_python(), "--version"], text=True, timeout=30)
+        .strip()
+        .removeprefix("Python ")
+    )
     (venv_bin / "python").write_text(f"#!/bin/sh\necho 'Python {version}'", encoding="utf-8")
     (venv_bin / "python").chmod(0o755)
     (canonical_dir / ".python-version").write_text(f"{version}\n", encoding="utf-8")
@@ -354,20 +411,12 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
         "PATH": f"{venv_bin}:{_fixture_environment().get('PATH', '')}",
         "CODEX_CANONICAL_REPO_ROOT": str(canonical_dir),
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
-        "CLAUDE_PROFILE_RESOLVER_SH": str(
-            _REPO_ROOT / "scripts/lib/profile_resolver.sh"
-        ),
-        "CLAUDE_PROFILE_RESOLVER_PY": str(
-            _REPO_ROOT / "scripts/lib/context_profiles.py"
-        ),
+        "CLAUDE_PROFILE_RESOLVER_SH": str(_REPO_ROOT / "scripts/lib/profile_resolver.sh"),
+        "CLAUDE_PROFILE_RESOLVER_PY": str(_REPO_ROOT / "scripts/lib/context_profiles.py"),
         "CLAUDE_PROFILE_RESOLVER_PYTHON": str(_canonical_python()),
-        "CLAUDE_SESSION_RECORD_SCRIPT": str(
-            _REPO_ROOT / "scripts/lib/session_record.py"
-        ),
+        "CLAUDE_SESSION_RECORD_SCRIPT": str(_REPO_ROOT / "scripts/lib/session_record.py"),
         "CLAUDE_SESSION_RECORD_PYTHON": str(_canonical_python()),
-        "SESSION_BOUNDED_RUNNER": str(
-            _REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"
-        ),
+        "SESSION_BOUNDED_RUNNER": str(_REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"),
     }
 
     result = subprocess.run(

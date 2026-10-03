@@ -2458,7 +2458,7 @@ def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, mo
             prompt="advise on the next infrastructure priority",
             mode="read-only",
             cwd=tmp_path,
-            model="claude-fable-5-1",
+            model="claude-opus-5-5",
             task_id="t-claude-advisory",
             session_id=None,
             tool_config={
@@ -2473,7 +2473,55 @@ def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, mo
     assert ("--max-turns", "8") in pairs
 
 
-@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-fable-5-1"])
+def test_claude_acp_refuses_a_fable_pin(tmp_path, monkeypatch):
+    """#9583: Fable holds no advisory or review role; Opus 5.5 is the Claude authority pin."""
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    with acpx_module.active_discussion_scope(), pytest.raises(AcpxShadowRefusalError, match="allowed pins"):
+        AcpxClaudeShadowAdapter().build_invocation(
+            prompt="advise on the next infrastructure priority",
+            mode="read-only",
+            cwd=tmp_path,
+            model="claude-fable-5-1",
+            task_id="t-claude-fable",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "claude",
+                "correlation_id": "corr-claude-fable",
+                "idempotency_key": "idem-claude-fable",
+            },
+        )
+
+
+@pytest.mark.parametrize(
+    "participant,model",
+    [
+        ("claude", "claude-fable-5-1"),
+        ("claude", "claude-fable-5-1-thinking-high"),
+        ("cursor", "claude-fable-5-1-thinking-high"),
+        ("cursor", "claude-fable-5-1"),
+    ],
+)
+def test_acp_consult_route_refuses_a_fable_pin_from_the_catalog_roles(participant, model):
+    """#9583: ACP admission reads the catalog roles, before any adapter allowlist or spawn."""
+    from scripts.agent_runtime import runner
+
+    with pytest.raises(runner.InterAgentTransportError, match="holds no ACP ask, consult or discussion role"):
+        runner.resolve_inter_agent_route(participant, model=model)
+
+
+@pytest.mark.parametrize(
+    "participant,model",
+    [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("codex", "gpt-6-luna"), ("cursor", "grok-4.7")],
+)
+def test_acp_consult_route_still_admits_opus_sol_and_recon_pins(participant, model):
+    from scripts.agent_runtime import runner
+
+    assert runner.resolve_inter_agent_route(participant, model=model).model == model
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-opus-5-5"])
 def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch, model):
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")

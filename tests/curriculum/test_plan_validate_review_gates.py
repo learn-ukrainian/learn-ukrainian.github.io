@@ -1212,7 +1212,7 @@ def test_case(tmp_path: Path, case: Case) -> None:
     report = run(tmp_path, case.mutate)
     text = report.render_text()
     assert {o.code for o in report.failures} == set(case.failures), text
-    assert {o.code for o in report.notes} == set(case.notes) | {codes.OPTIONS_MISSING}, text
+    assert {o.code for o in report.notes} == set(case.notes) | {codes.OPTIONS_MISSING, codes.A1_REFERENCE_WORD_MISSING}, text
     assert {o.code for o in report.not_checked} == NOT_CHECKED | set(case.not_checked), text
     if case.says:
         assert any(case.says in o.message for o in report.failures + report.notes + report.not_checked), text

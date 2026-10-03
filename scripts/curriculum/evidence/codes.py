@@ -33,6 +33,9 @@ PUBLICATION_LIMIT = "publication_limit"
 PUBLICATION_ATTRIBUTION = "publication_attribution"
 PUBLICATION_PLAN_UNRESOLVED = "publication_plan_unresolved"
 PUBLICATION_REGISTRY_UNREADABLE = "publication_registry_unreadable"
+OWNED_QUOTE_REFUSED = "owned_quote_refused"
+PRIVATE_CITATION_REFUSED = "private_citation_refused"
+OWNED_RIGHTS_UNREADABLE = "owned_rights_unreadable"
 ERROR_MISMATCH = "error_mismatch"
 STANDARD_MISMATCH = "standard_mismatch"
 WORDS_FIELD_FORBIDDEN = "words_field_forbidden"
@@ -74,6 +77,9 @@ DESCRIPTIONS = {
     PUBLICATION_ATTRIBUTION: "gap: quote lacks the required source attribution",
     PUBLICATION_PLAN_UNRESOLVED: "failure: cannot resolve the plan for publication checks",
     PUBLICATION_REGISTRY_UNREADABLE: "failure: cannot read or parse the publication registry",
+    OWNED_QUOTE_REFUSED: "failure: owned reference text cannot be published",
+    PRIVATE_CITATION_REFUSED: "failure: private-permission sources cannot be cited",
+    OWNED_RIGHTS_UNREADABLE: "failure: cannot read or validate the owned-source rights record",
     ERROR_MISMATCH: "failure: error row differs from source",
     STANDARD_MISMATCH: "failure: standard text or file hash differs from source",
     WORDS_FIELD_FORBIDDEN: "failure: pack contains forbidden words field",

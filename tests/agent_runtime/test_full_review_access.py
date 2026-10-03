@@ -425,7 +425,7 @@ def test_native_codex_full_review_keeps_read_only_sandbox(tmp_path, monkeypatch)
     try:
         assert 'sandbox_mode="read-only"' in plan.cmd
         assert "--dangerously-bypass-approvals-and-sandbox" not in plan.cmd
-        assert 'mcp_servers.sources.default_tools_approval_mode="approve"' in plan.cmd
+        assert 'mcp_servers.sources.default_tools_approval_mode="prompt"' in plan.cmd
     finally:
         Path(plan.output_file).unlink()
 

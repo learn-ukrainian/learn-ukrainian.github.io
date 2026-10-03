@@ -1106,7 +1106,6 @@ TOOL_NO_RESULT_FIXTURES: list[tuple[str, str]] = [
     ),
     ("verify_stress", "неслово — not_found"),
     ("query_grac", "**неслово**: frequency = 0, relative = 0.00 per million"),
-    ("query_ulif", "No ULIF paradigm found for: 'кицяневідома'"),
     ("query_r2u", "No r2u translation found for: 'неслово'"),
     (
         "query_sum20",
@@ -1119,8 +1118,8 @@ TOOL_NO_RESULT_FIXTURES: list[tuple[str, str]] = [
 ]
 
 
-def test_all_16_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
-    assert len(TOOL_NO_RESULT_FIXTURES) == 16
+def test_all_15_read_only_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
+    assert len(TOOL_NO_RESULT_FIXTURES) == 15
     for i, (tool_name, no_res_text) in enumerate(TOOL_NO_RESULT_FIXTURES):
         case_dir = tmp_path / f"tool_{i}_{tool_name}"
         case_dir.mkdir()

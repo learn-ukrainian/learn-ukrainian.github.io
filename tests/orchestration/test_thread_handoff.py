@@ -526,9 +526,7 @@ def test_handoff_policy_uses_recorded_actual_window_and_profile_tier(
             "session_id": session_id,
             "effective_profile_id": "sol_lead",
             "actual_context_window_tokens": 360_000,
-            "actual_context_window_provenance": (
-                "statusline.context_window.context_window_size"
-            ),
+            "actual_context_window_provenance": ("statusline.context_window.context_window_size"),
             "rollover_warning_percentages": [75.0, 85.0, 92.0],
         },
     )
@@ -743,9 +741,7 @@ def test_live_owner_fresh_clock_conflicts(tmp_path: Path, monkeypatch: pytest.Mo
     assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner"
 
 
-def test_live_owner_beyond_old_clock_window_still_conflicts_not_stolen(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
+def test_live_owner_beyond_old_clock_window_still_conflicts_not_stolen(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """Matrix 3: today's opposite bug — a live owner working >12h must not be stolen from."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
     lease = _v2_lease(heartbeat_at="2026-07-22T08:00:00Z")  # 26h old: reclaimable under the old clock-only design
@@ -1345,7 +1341,9 @@ def test_force_release_bare_is_refused(tmp_path: Path):
     lease = _v2_lease(owner_thread_id="somebody-else", generation=5)
     lease_path = _write_lease(tmp_path, "claude-infra", lease)
 
-    result = th.release_thread_lease(state_root=tmp_path, agent="claude-infra", current_thread_id="", now=now, force=True)
+    result = th.release_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="", now=now, force=True
+    )
 
     assert result["status"] == "refused"
     assert result["error_code"] == "THREAD_LEASE_FORCE_UNSCOPED"
@@ -1586,17 +1584,20 @@ def test_claim_thread_lease_command_reports_structured_lock_timeout(
 
     monkeypatch.setattr(th, "task_family_advisory_lock", raise_timeout)
 
-    assert th.main(
-        [
-            "--repo-root",
-            str(tmp_path),
-            "claim-thread-lease",
-            "--agent",
-            "claude-infra",
-            "--current-thread-id",
-            "session-under-lock",
-        ]
-    ) == 124
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--current-thread-id",
+                "session-under-lock",
+            ]
+        )
+        == 124
+    )
     payload = json.loads(capsys.readouterr().out)
     assert payload == {
         "error_code": "LOCK_TIMEOUT",
@@ -1609,13 +1610,38 @@ def test_release_thread_lease_command_end_to_end(tmp_path: Path, capsys):
     Release now writes a tombstone (item 3) rather than deleting the lease file."""
     repo_args = ["--repo-root", str(tmp_path)]
 
-    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
-                     "--current-thread-id", "cli-session"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "cli-session",
+            ]
+        )
+        == 0
+    )
     claim_payload = json.loads(capsys.readouterr().out)
 
-    assert th.main([*repo_args, "release-thread-lease", "--agent", "claude-infra",
-                     "--current-thread-id", "cli-session",
-                     "--generation", str(claim_payload["generation"])]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "release-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--current-thread-id",
+                "cli-session",
+                "--generation",
+                str(claim_payload["generation"]),
+            ]
+        )
+        == 0
+    )
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "released"
     tombstone = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
@@ -1630,12 +1656,27 @@ def test_release_thread_lease_command_without_generation_or_proof_is_a_noop(tmp_
     fail closed as an explicit no-op (exit 0, status noop) rather than releasing or raising."""
     repo_args = ["--repo-root", str(tmp_path)]
 
-    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
-                     "--current-thread-id", "cli-session"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "cli-session",
+            ]
+        )
+        == 0
+    )
     capsys.readouterr()
 
-    assert th.main([*repo_args, "release-thread-lease", "--agent", "claude-infra",
-                     "--current-thread-id", "cli-session"]) == 0
+    assert (
+        th.main([*repo_args, "release-thread-lease", "--agent", "claude-infra", "--current-thread-id", "cli-session"])
+        == 0
+    )
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "noop"
     assert "generation" in payload["reason"]
@@ -1648,13 +1689,40 @@ def test_release_thread_lease_command_without_generation_or_proof_is_a_noop(tmp_
 def test_refresh_thread_lease_heartbeat_command_is_noop_for_a_different_owner(tmp_path: Path, capsys):
     """Rule G: the Stop-hook heartbeat refresh must never take over — only ever refresh its own lease."""
     repo_args = ["--repo-root", str(tmp_path)]
-    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
-                     "--current-thread-id", "owner-session"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "owner-session",
+            ]
+        )
+        == 0
+    )
     capsys.readouterr()
 
-    assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
-                     "--current-thread-id", "someone-else", "--starting-pid", "1",
-                     "--generation", "1"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "refresh-thread-lease-heartbeat",
+                "--agent",
+                "claude-infra",
+                "--current-thread-id",
+                "someone-else",
+                "--starting-pid",
+                "1",
+                "--generation",
+                "1",
+            ]
+        )
+        == 0
+    )
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "noop"
     assert json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text())["owner_thread_id"] == (
@@ -1803,19 +1871,45 @@ def test_throttled_heartbeat_refresh_writes_once_the_interval_has_elapsed(
     assert json.loads(lease_path.read_text(encoding="utf-8"))["heartbeat_at"] == "2026-07-23T10:00:00Z"
 
 
-def test_refresh_thread_lease_heartbeat_command_throttles_via_min_refresh_interval_seconds(
-    tmp_path: Path, capsys
-):
+def test_refresh_thread_lease_heartbeat_command_throttles_via_min_refresh_interval_seconds(tmp_path: Path, capsys):
     """CLI-level: --min-refresh-interval-seconds is the flag the PostToolUse hook actually passes."""
     repo_args = ["--repo-root", str(tmp_path)]
-    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
-                     "--current-thread-id", "owner-session"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "owner-session",
+            ]
+        )
+        == 0
+    )
     capsys.readouterr()
 
-    assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
-                     "--current-thread-id", "owner-session", "--starting-pid", "1",
-                     "--generation", "1",
-                     "--min-refresh-interval-seconds", "3600"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "refresh-thread-lease-heartbeat",
+                "--agent",
+                "claude-infra",
+                "--current-thread-id",
+                "owner-session",
+                "--starting-pid",
+                "1",
+                "--generation",
+                "1",
+                "--min-refresh-interval-seconds",
+                "3600",
+            ]
+        )
+        == 0
+    )
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "throttled"  # fresh claim heartbeat is well within the 3600s window
 
@@ -1878,12 +1972,36 @@ def test_refresh_thread_lease_heartbeat_command_without_generation_flag(tmp_path
     """CLI-level: --generation is optional on refresh-thread-lease-heartbeat (item 1) — the
     updated hook scripts no longer pass it at all."""
     repo_args = ["--repo-root", str(tmp_path)]
-    assert th.main([*repo_args, "claim-thread-lease", "--agent", "claude-infra", "--starting-pid", "1",
-                     "--current-thread-id", "owner-session"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "owner-session",
+            ]
+        )
+        == 0
+    )
     capsys.readouterr()
 
-    assert th.main([*repo_args, "refresh-thread-lease-heartbeat", "--agent", "claude-infra",
-                     "--current-thread-id", "owner-session"]) == 0
+    assert (
+        th.main(
+            [
+                *repo_args,
+                "refresh-thread-lease-heartbeat",
+                "--agent",
+                "claude-infra",
+                "--current-thread-id",
+                "owner-session",
+            ]
+        )
+        == 0
+    )
     payload = json.loads(capsys.readouterr().out)
     # --starting-pid 1 is never a known harness ancestor (matches the double-launch-conflict
     # test's convention), so identity cannot be reconfirmed here either — this is the
@@ -2019,8 +2137,7 @@ def test_prepare_releases_the_slot_lease_on_successful_seal_for_claude_agent(
     lease_path = _write_lease(tmp_path, "claude", lease)
 
     assert (
-        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "claude", "--active-thread-id", "old-thread"])
-        == 0
+        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "claude", "--active-thread-id", "old-thread"]) == 0
     )
     capsys.readouterr()
 
@@ -2059,8 +2176,7 @@ def test_prepare_does_not_release_a_non_claude_agent_slot(tmp_path: Path, monkey
     original = lease_path.read_text(encoding="utf-8")
 
     assert (
-        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"])
-        == 0
+        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"]) == 0
     )
     capsys.readouterr()
 
@@ -2165,8 +2281,6 @@ def test_absent_state_migration_compatibility(tmp_path: Path):
     assert res["status"] == "released"
     on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
     assert on_disk["state"] == "released"
-
-
 
 
 def test_checkout_continuity_requires_clean_source_binding_and_same_clean_head():
@@ -2401,7 +2515,9 @@ def test_already_migrated_fallback_lease_still_retires_orphan_native_plan():
 def test_native_capable_packet_is_never_retired_and_resume_stays_gated():
     state = prepared(agent="codex")  # current prepare: codex-app harness, native-capable
 
-    normalized, changed = th.normalize_identity_state(state, agent="codex", now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC))
+    normalized, changed = th.normalize_identity_state(
+        state, agent="codex", now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC)
+    )
 
     assert changed is False
     replacement = normalized["replacement"]
@@ -2421,15 +2537,15 @@ def test_touched_legacy_native_plan_is_never_retired():
     state = _legacy_lease_with_unconditional_native_plan(agent="claude-infra")
     state["replacement"]["native_lifecycle"]["status"] = "supersession_pending"
 
-    normalized, _ = th.normalize_identity_state(state, agent="claude-infra", now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC))
+    normalized, _ = th.normalize_identity_state(
+        state, agent="claude-infra", now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC)
+    )
 
     assert normalized["replacement"]["native_lifecycle"]["status"] == "supersession_pending"
     assert "native_lifecycle_retired" not in normalized["replacement"]
 
 
-def test_repair_refuses_retired_native_plan_with_clear_error_and_persists_retirement(
-    tmp_path: Path, capsys
-) -> None:
+def test_repair_refuses_retired_native_plan_with_clear_error_and_persists_retirement(tmp_path: Path, capsys) -> None:
     state = _legacy_lease_with_unconditional_native_plan(agent="claude-infra")
     lineage_id = state["lineage_id"]
     rollover_id = state["replacement"]["rollover_id"]
@@ -2498,9 +2614,7 @@ def test_supervised_claudex_prepare_emits_one_typed_request(
     request_path = cs._request_path(tmp_path, supervisor.run_id)
     request = json.loads(request_path.read_text(encoding="utf-8"))
 
-    assert payload["lineage_id"] == th.lineage_id_for(
-        "claude-infra", "official-session-5265"
-    )
+    assert payload["lineage_id"] == th.lineage_id_for("claude-infra", "official-session-5265")
     assert payload["claudex_rollover_request"] == {
         "request_id": request["request_id"],
         "rollover_id": payload["rollover_id"],
@@ -2900,8 +3014,9 @@ def test_legacy_receipt_collision_repairs_current_packet_and_never_creates_from_
     assert repaired_state["replacement"]["bootstrap_prompt_path"] == current_bootstrap
     identity_receipt = tmp_path / repaired_state["replacement"]["identity_receipt_path"]
     assert identity_receipt.exists()
-    assert json.loads(identity_receipt.read_text(encoding="utf-8"))["identity"] == (
-        repaired_state["replacement"]["identity"]
+    assert (
+        json.loads(identity_receipt.read_text(encoding="utf-8"))["identity"]
+        == (repaired_state["replacement"]["identity"])
     )
     assert legacy_storage.load_state()["details"]["status"] == "superseded_before_native_create"
     current_storage = TaskFamilyStorage(tmp_path, expected_family, expected_operation)
@@ -3632,9 +3747,16 @@ def test_default_runtime_root_is_shared_by_real_linked_worktree(tmp_path: Path, 
     ):
         subprocess.run(command, cwd=primary, check=True, capture_output=True, text=True, env=git_env, timeout=30)
     (primary / "README.md").write_text("fixture\n", encoding="utf-8")
-    subprocess.run(["git", "add", "README.md"], cwd=primary, check=True, capture_output=True, text=True, env=git_env, timeout=30)
     subprocess.run(
-        ["git", "commit", "-m", "fixture"], cwd=primary, check=True, capture_output=True, text=True, env=git_env,
+        ["git", "add", "README.md"], cwd=primary, check=True, capture_output=True, text=True, env=git_env, timeout=30
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "fixture"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=git_env,
         timeout=30,
     )
     subprocess.run(
@@ -3736,7 +3858,22 @@ def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                "old",
+            ]
+        )
+        == 0
+    )
     packet = json.loads(capsys.readouterr().out)
     command = [
         "--repo-root",
@@ -3761,7 +3898,12 @@ def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
         "semantic-snapshot.template.json"
     )
     template = json.loads(template_path.read_text(encoding="utf-8"))
-    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [3, 3, 2, 2]
+    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [
+        3,
+        3,
+        2,
+        2,
+    ]
     assert all(not record["statement"] for record in template["goals"])
     assert all(not record["decision"] for record in template["decision_records"])
     assert all(not record["prohibition"] for record in template["constraint_records"])
@@ -3782,7 +3924,9 @@ def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
         )
         for record in records
     )
-    assert th.context_canary.main(["mint", "--snapshot", str(template_path), "--out", str(tmp_path / "probe.json")]) == 1
+    assert (
+        th.context_canary.main(["mint", "--snapshot", str(template_path), "--out", str(tmp_path / "probe.json")]) == 1
+    )
 
     state_bytes = state_path.read_bytes()
     template_bytes = template_path.read_bytes()
@@ -3798,7 +3942,22 @@ def test_confirm_replacement_composes_strict_flow_and_reruns_idempotently(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                "old",
+            ]
+        )
+        == 0
+    )
     packet = json.loads(capsys.readouterr().out)
     bootstrap = [
         "--repo-root",
@@ -3839,7 +3998,12 @@ def test_confirm_replacement_composes_strict_flow_and_reruns_idempotently(
         "--rollover-id",
         packet["rollover_id"],
     ]
-    assert th.context_canary.main(["mint", "--snapshot", str(tmp_path / replacement["semantic_snapshot_path"]), "--out", str(probe_path)]) == 0
+    assert (
+        th.context_canary.main(
+            ["mint", "--snapshot", str(tmp_path / replacement["semantic_snapshot_path"]), "--out", str(probe_path)]
+        )
+        == 0
+    )
     probe = json.loads(probe_path.read_text(encoding="utf-8"))
     th.write_json_atomic(answers_path, {anchor["id"]: anchor["a"] for anchor in probe["anchors"]})
     probe_path.unlink()
@@ -3860,7 +4024,22 @@ def test_confirm_replacement_failed_or_skipped_score_leaves_confirmation_locked(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                "old",
+            ]
+        )
+        == 0
+    )
     packet = json.loads(capsys.readouterr().out)
     bootstrap = [
         "--repo-root",
@@ -3960,7 +4139,9 @@ def test_confirm_replacement_canary_failure_prints_questions_and_keeps_lock(
     template_path = (tmp_path / replacement["semantic_snapshot_path"]).with_name("semantic-snapshot.template.json")
     snapshot_path = tmp_path / replacement["semantic_snapshot_path"]
     probe_path = tmp_path / replacement["strict_probe_path"]
-    th.write_json_atomic(snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))))
+    th.write_json_atomic(
+        snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8")))
+    )
     assert th.context_canary.main(["mint", "--snapshot", str(snapshot_path), "--out", str(probe_path)]) == 0
     probe = json.loads(probe_path.read_text(encoding="utf-8"))
     th.write_json_atomic(
@@ -3995,7 +4176,22 @@ def test_bootstrap_replacement_wrong_id_fails_closed_without_overwriting_templat
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                "old",
+            ]
+        )
+        == 0
+    )
     packet = json.loads(capsys.readouterr().out)
     command = [
         "--repo-root",
@@ -4262,6 +4458,8 @@ def test_detect_task_family_filter_selects_one_of_many(tmp_path: Path, capsys, m
                     thread_id,
                     "--task-family",
                     family,
+                    "--stream-epic",
+                    "1001",
                     "--semantic-title",
                     title,
                     "--terminal-goal",
@@ -4310,6 +4508,8 @@ def test_detect_task_family_filter_selects_one_of_many(tmp_path: Path, capsys, m
                 "detect",
                 "--agent",
                 "claude-hramatka",
+                "--stream",
+                "epic:1001",
                 "--task-family",
                 "hramatka",
             ]
@@ -4319,6 +4519,307 @@ def test_detect_task_family_filter_selects_one_of_many(tmp_path: Path, capsys, m
     epic_slot = json.loads(capsys.readouterr().out)
     assert epic_slot["status"] == "pending_start"
     assert epic_slot.get("packet_agent") == "claude"
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex"])
+@pytest.mark.parametrize("own_directory", [False, True])
+@pytest.mark.parametrize("packet_has_stream", [False, True])
+def test_alias_lane_without_stream_only_offers_own_directory_packet(
+    tmp_path: Path, capsys, monkeypatch, provider: str, own_directory: bool, packet_has_stream: bool
+) -> None:
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    alias = f"{provider}-open-model-data"
+    owner = alias if own_directory else provider
+    prepare_args = [
+        "--repo-root",
+        str(tmp_path),
+        "prepare",
+        "--agent",
+        owner,
+        "--active-thread-id",
+        "old-thread",
+        "--task-family",
+        "open-model-data",
+        "--semantic-title",
+        "Repair alias lane handoff",
+        "--terminal-goal",
+        "merge",
+    ]
+    if packet_has_stream:
+        prepare_args += ["--stream-epic", "1001"]
+    assert th.main(prepare_args) == 0
+    packet = json.loads(capsys.readouterr().out)
+    packet_dir = (tmp_path / packet["state_file"]).parent
+    before = {p: p.read_bytes() for p in packet_dir.rglob("*") if p.is_file()}
+    args = ["--repo-root", str(tmp_path), "detect", "--agent", alias, "--task-family", "open-model-data"]
+    assert th.main(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert th.main([*args, "--format", "session-start"]) == 0
+    context = capsys.readouterr().out
+    if own_directory:
+        assert result["status"] == "pending_start"
+        assert result["packet_agent"] == alias
+        assert "bootstrap-replacement" in context and "confirm-replacement" in context
+        assert "skipped_foreign" not in result
+    else:
+        assert result["status"] == "none"
+        candidate = result["skipped_foreign"][0]
+        assert candidate["agent"] == provider
+        assert candidate["lineage_id"] == packet["lineage_id"]
+        assert candidate["rollover_id"] == packet["rollover_id"]
+        assert candidate["mismatches"] == ["session stream unknown for provider fallback"]
+        assert f"Skipped foreign candidate: owner={provider}" in context
+        assert packet["lineage_id"] in context and packet["rollover_id"] in context
+        assert "bootstrap-replacement" not in context and "confirm-replacement" not in context
+    assert before == {p: p.read_bytes() for p in packet_dir.rglob("*") if p.is_file()}
+
+
+@pytest.mark.parametrize("stream", ["epic:1001", "EPIC:1001", " EpIc:1001 "])
+@pytest.mark.parametrize("use_environment", [False, True])
+@pytest.mark.parametrize("owner", ["claude", "claude-open-model-data"])
+def test_alias_lane_detect_compares_stream_without_regard_to_case(
+    tmp_path: Path, capsys, monkeypatch, stream: str, use_environment: bool, owner: str
+) -> None:
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                owner,
+                "--active-thread-id",
+                "old-thread",
+                "--stream-epic",
+                "1001",
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    args = ["--repo-root", str(tmp_path), "detect", "--agent", "claude-open-model-data"]
+    if use_environment:
+        monkeypatch.setenv("SESSION_STREAM_ID", stream)
+    else:
+        args += ["--stream", stream]
+    assert th.main(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "pending_start"
+    assert result["packet_agent"] == owner
+    assert "skipped_foreign" not in result
+    assert th.main([*args, "--format", "session-start"]) == 0
+    context = capsys.readouterr().out
+    assert "bootstrap-replacement" in context and "confirm-replacement" in context
+    assert "Skipped foreign candidate" not in context
+
+
+@pytest.mark.parametrize(
+    ("stream_match", "family_match", "use_environment"),
+    [(False, True, False), (True, False, False), (False, False, True), (True, True, False)],
+)
+def test_alias_lane_detect_skips_foreign_packet_without_mutation(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+    stream_match: bool,
+    family_match: bool,
+    use_environment: bool,
+) -> None:
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    session_epic = 1001
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude",
+                "--active-thread-id",
+                "old-thread",
+                "--stream-epic",
+                str(session_epic if stream_match else session_epic + 1),
+                "--task-family",
+                "open-model-data" if family_match else "foreign-family",
+                "--semantic-title",
+                "Repair alias lane handoff",
+                "--terminal-goal",
+                "merge",
+            ]
+        )
+        == 0
+    )
+    packet = json.loads(capsys.readouterr().out)
+    packet_dir = (tmp_path / packet["state_file"]).parent
+    before = {p: p.read_bytes() for p in packet_dir.rglob("*") if p.is_file()}
+    args = ["--repo-root", str(tmp_path), "detect", "--agent", "claude-open-model-data"]
+    if use_environment:
+        monkeypatch.setenv("SESSION_STREAM_ID", f"epic:{session_epic}")
+    else:
+        args += ["--stream", f"epic:{session_epic}", "--task-family", "open-model-data"]
+    assert th.main(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert th.main([*args, "--format", "session-start"]) == 0
+    context = capsys.readouterr().out
+    if stream_match:
+        assert result["status"] == "pending_start"
+        assert "bootstrap-replacement" in context and "confirm-replacement" in context
+        assert "Skipped foreign candidate" not in context
+    else:
+        assert result["status"] == "none"
+        assert result["skipped_foreign"][0]["agent"] == "claude"
+        assert result["skipped_foreign"][0]["lineage_id"] == packet["lineage_id"]
+        assert "Skipped foreign candidate: owner=claude" in context
+        assert packet["lineage_id"] in context
+        assert "bootstrap-replacement" not in context and "confirm-replacement" not in context
+    assert before == {p: p.read_bytes() for p in packet_dir.rglob("*") if p.is_file()}
+
+
+def test_detect_matching_packets_stay_ambiguous_with_foreign_candidate(tmp_path: Path, capsys, monkeypatch):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    for index, family in enumerate(("open-model-data", "open-model-data", "foreign-family")):
+        assert (
+            th.main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "prepare",
+                    "--agent",
+                    "claude",
+                    "--active-thread-id",
+                    f"old-thread-{index}",
+                    "--stream-epic",
+                    str(1001 if index < 2 else 1002),
+                    "--task-family",
+                    family,
+                    "--semantic-title",
+                    "Repair alias lane handoff",
+                    "--terminal-goal",
+                    "merge",
+                ]
+            )
+            == 0
+        )
+        capsys.readouterr()
+    args = [
+        "--repo-root",
+        str(tmp_path),
+        "detect",
+        "--agent",
+        "claude-open-model-data",
+        "--stream",
+        "epic:1001",
+        "--task-family",
+        "open-model-data",
+    ]
+    assert th.main(args) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert result["candidate_count"] == 2
+    assert len(result["skipped_foreign"]) == 1
+    assert th.main([*args, "--format", "session-start"]) == 2
+    context = capsys.readouterr().out
+    foreign = result["skipped_foreign"][0]["lineage_id"]
+    assert "MULTIPLE LIVE PENDING ROLLOVERS" in context
+    assert "Skipped foreign candidate" in context
+    assert not any("bind:" in line and foreign in line for line in context.splitlines())
+
+
+@pytest.mark.parametrize(
+    "families", [("infra", "infra-driver"), ("thread-rollover", "infra-driver"), ("infra-driver",)]
+)
+def test_same_stream_family_hint_preserves_candidates(tmp_path: Path, capsys, monkeypatch, families):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    # Model the launcher (--epic infra) and the two different families observed
+    # on its stream, without pinning the registry's succession-sensitive epic.
+    import yaml
+
+    registry = yaml.safe_load((_REPO_ROOT / "scripts/config/issue_streams.yaml").read_text())
+    epic = registry["streams"]["infra-harness"]["epics"][0]
+    packets = []
+    for index, family in enumerate(families):
+        assert (
+            th.main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "prepare",
+                    "--agent",
+                    "claude-infra",
+                    "--active-thread-id",
+                    f"old-infra-{index}",
+                    "--stream-epic",
+                    str(epic),
+                    "--task-family",
+                    family,
+                    "--semantic-title",
+                    "Repair infra session routing",
+                    "--terminal-goal",
+                    "merge",
+                ]
+            )
+            == 0
+        )
+        packets.append(json.loads(capsys.readouterr().out))
+    # The infra launcher does not pass a family hint. Also exercise a hint
+    # that matches nothing, which must retain the same exact-ID stop.
+    for hint in ([], ["--task-family", "unmatched-epic-name"]):
+        args = [
+            "--repo-root",
+            str(tmp_path),
+            "detect",
+            "--agent",
+            "claude-infra",
+            "--stream",
+            f"epic:{epic}",
+            *hint,
+            "--format",
+            "session-start",
+        ]
+        assert th.main(args) == (2 if len(families) > 1 else 0)
+        context = capsys.readouterr().out
+        assert "COLD START" not in context
+        assert "Skipped foreign candidate" not in context
+        if len(families) > 1:
+            assert "MULTIPLE LIVE PENDING ROLLOVERS" in context
+            assert "Do NOT cold-start" in context
+            for packet in packets:
+                bind = next(line for line in context.splitlines() if "bind:" in line and packet["lineage_id"] in line)
+                assert packet["rollover_id"] in bind
+                assert "--lineage-id" in bind and "--rollover-id" in bind
+        else:
+            assert "PENDING THREAD ROLLOVER DETECTED" in context
+            assert "bootstrap-replacement" in context
+
+
+@pytest.mark.parametrize("packet_agent", ["claude-open-model-data", "claude"])
+def test_detect_missing_stream_is_candidate_only_in_own_directory(tmp_path: Path, capsys, monkeypatch, packet_agent):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            ["--repo-root", str(tmp_path), "prepare", "--agent", packet_agent, "--active-thread-id", "legacy-thread"]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    assert (
+        th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude-open-model-data", "--stream", "epic:1001"])
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    if packet_agent == "claude":
+        assert result["status"] == "none"
+        assert result["skipped_foreign"][0]["stream"] == ""
+    else:
+        assert result["status"] == "pending_start"
+        assert "skipped_foreign" not in result
+
+
+def test_detect_ignores_unset_by_launcher_task_family_environment(monkeypatch):
+    monkeypatch.setenv("SESSION_TASK_FAMILY", "infra")
+    assert th.build_parser().parse_args(["detect"]).task_family == ""
 
 
 def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:
@@ -4802,9 +5303,7 @@ def test_bundle_monitor_url_accepts_loopback_only() -> None:
 
 
 @pytest.mark.parametrize("status", [400, 403, 409, 422])
-def test_bundle_api_4xx_is_semantic_refusal_not_unavailable(
-    monkeypatch: pytest.MonkeyPatch, status: int
-) -> None:
+def test_bundle_api_4xx_is_semantic_refusal_not_unavailable(monkeypatch: pytest.MonkeyPatch, status: int) -> None:
     """GH #7489: 4xx answers are semantic refusals, never transient 'unavailable'."""
     calls: list[str] = []
 
@@ -4932,7 +5431,17 @@ def test_confirm_replacement_stream_uploads_with_parser_monitor_base_url(
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
     assert (
         th.main(
-            ["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                "old",
+            ]
         )
         == 0
     )
@@ -4959,12 +5468,12 @@ def test_confirm_replacement_stream_uploads_with_parser_monitor_base_url(
     replacement = state["replacement"]
     snapshot_path = tmp_path / replacement["semantic_snapshot_path"]
     template_path = snapshot_path.with_name("semantic-snapshot.template.json")
-    th.write_json_atomic(snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))))
+    th.write_json_atomic(
+        snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8")))
+    )
     probe_path = tmp_path / replacement["strict_probe_path"]
     answers_path = tmp_path / replacement["strict_answers_path"]
-    assert (
-        th.context_canary.main(["mint", "--snapshot", str(snapshot_path), "--out", str(probe_path)]) == 0
-    )
+    assert th.context_canary.main(["mint", "--snapshot", str(snapshot_path), "--out", str(probe_path)]) == 0
     probe = json.loads(probe_path.read_text(encoding="utf-8"))
     th.write_json_atomic(answers_path, {anchor["id"]: anchor["a"] for anchor in probe["anchors"]})
     probe_path.unlink()
@@ -5017,11 +5526,45 @@ def test_confirm_replacement_stream_uploads_with_parser_monitor_base_url(
 @pytest.mark.parametrize("damage", ["missing", "empty"])
 def test_successor_refuses_missing_durable_handoff(tmp_path, capsys, monkeypatch, command, damage):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                "old",
+            ]
+        )
+        == 0
+    )
     packet = json.loads(capsys.readouterr().out)
     state_path = tmp_path / packet["state_file"]
     if command == "resume":
-        assert th.main(["--repo-root", str(tmp_path), "bind-replacement", "--agent", "codex", "--lineage-id", packet["lineage_id"], "--rollover-id", packet["rollover_id"], "--replacement-task-id", "new", "--evidence", "synthetic binding"]) == 0
+        assert (
+            th.main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "bind-replacement",
+                    "--agent",
+                    "codex",
+                    "--lineage-id",
+                    packet["lineage_id"],
+                    "--rollover-id",
+                    packet["rollover_id"],
+                    "--replacement-task-id",
+                    "new",
+                    "--evidence",
+                    "synthetic binding",
+                ]
+            )
+            == 0
+        )
         capsys.readouterr()
     handoff = tmp_path / packet["handoff_file"]
     if damage == "missing":
@@ -5029,7 +5572,19 @@ def test_successor_refuses_missing_durable_handoff(tmp_path, capsys, monkeypatch
     else:
         handoff.write_text("")
     before = state_path.read_bytes()
-    args = ["--repo-root", str(tmp_path), command, "--agent", "codex", "--lineage-id", packet["lineage_id"], "--rollover-id", packet["rollover_id"], "--replacement-thread-id", "new"]
+    args = [
+        "--repo-root",
+        str(tmp_path),
+        command,
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new",
+    ]
     if command == "bootstrap-replacement":
         args += ["--evidence", "synthetic binding"]
     assert th.main(args) == 2

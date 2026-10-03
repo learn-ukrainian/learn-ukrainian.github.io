@@ -32,6 +32,70 @@
 
 ## 3. Gate 1 — pilot inventory, then the A1–B1 vertical slice (before C1 touches the full store)
 
+### Foundation preparation (#9293)
+
+Use the shared project interpreter with `-m scripts.atlas.word_card_foundation`.
+The public operations remain `freeze`, `allocate`, and `verify`; all paths and versions are explicit. `freeze` requires one sibling
+`*source-admission-receipt.json` binding selection bytes and the independent
+source report. Selection JSON is UTF-8, two-space indented, newline ended; retain its field order.
+`verify --manifest registry/atlas/pilot/pilot-v1.json --registry
+registry/atlas/identity/registry.json` reads committed inputs without writes.
+The initial inventory keeps 150 source-local units, 272 verbatim selected rows,
+114 legacy allocation metadata projections and 140 legacy aliases separately.
+Legacy full literal-row hashes label omitted-row integrity; metadata hashes protect the projection. Unused legacy glosses are excluded. Source-backed POS
+metadata preserves reviewed anchor/VESUM provenance without promoting identity.
+The 22 source-only card mappings and supplementary correspondence stay unresolved.
+Main-file and WAL digests are separate file provenance; selected-row digests identify literal captures, not logical whole-DB snapshots. DBs open read-only.
+Live-row and freeze-replay checks also compare canonical digests: `2.0` or `true` never equals a captured `2` or `1`.
+The whole permissions-register pin remains binding: a register change requires re-admission and re-freeze; reuse then refuses pending approved correspondence.
+Locators contain local row IDs only. ULIF aliases use `ulif:register:`, actual
+`ulif:content:` digests, and `ulif:record:<query>#<headword>#<label>`; PULS uses
+`puls:record:<word>/<pos>/<level>`; phraseology uses `frazeolohichnyi:record:<word>`.
+Its `<word>` is the literal `word` column byte for byte, import residue such as markup
+included; this weak key may repeat, and each row keeps its own record and alias.
+The approved bounded tuple clarification adds `table_row` evidence keys:
+`ukrainian_word_stress:record:stress:v1:sha256:<digest>` hashes exactly parsed
+`{form,source}`; source must agree with the outer stress row.
+`ulif:record:paradigm:v1:sha256:<digest>` hashes `{parent,kind,payload}`. The parent
+contains its literal content digest, query, headword, grammatical label and
+homonym index, joined through an admitted parent locator. Paradigm payload keeps
+exactly rows, raw HTML, response reference, group discriminator and source order.
+Tuple JSON is UTF-8, sorted, compact, without newline or string normalization.
+Local IDs/timestamps are excluded; accents, case, spaces and raw HTML remain.
+Duplicate tuples/digest collisions refuse; null source content stays null.
+Weak alias collisions are evidence, never lexical equivalence. Replay conserves
+IDs, aliases and history byte-for-byte; changed/new inputs require correspondence.
+Aliases under this freeze's snapshot ids must equal the bound row's exactly; other snapshots stay history.
+`verify` binds only this build's identities; other builds' events are retained, unverified history
+counted in `foreign_build_events`. Admission pins the reviewing family used for this immutable freeze
+(`google`) and fails closed; another family needs an author-family field and a re-freeze.
+Per-output lock files stay in the ignored lock directory and are never unlinked.
+Immutable output conflicts and source/WAL mutation refuse before writing.
+Optional membership is `{"heldout":["source:key"],"replay":[]}`. Keys must resolve;
+conservative unit/locator/card/alias/paradigm-parent closure must remain disjoint from replay.
+Provenance prose (mint evidence, alias/source-key notes, `matched_by`, `hold`) links only through known
+keys it cites literally, delimited, or inside wholly JSON strings (object keys too); plain prose never
+links or resolves membership. Mid-prose escaped JSON and case/normalisation variants are not recognised.
+Every non-mint registry event counts as adjudication, with or without `overlay_id`.
+Mint `from` endpoints and legacy `pos_review` anchors also link. Every object forming a closure group is an owner;
+a recognised marker at any depth, native or decoded, marks every enclosing owner (itself included), which refuses
+when its closure touches held-out keys or it cites one anywhere. Then every object enclosing the marker up to its
+input root, its own included, must cite no held-out key, skipping only the six inventory arrays at exact paths (manifest
+`selection.units`, `selection.source_records`, `legacy_articles`; registry `entries`, `source_records`, `events`).
+Keys there are text unless an admitting validator fixes the object's whole field set at that position: the manifest
+root, `admission` and its `denominator`, `counts`, both DB fingerprint maps, `selection.denominator`, each `row_key`,
+each legacy article and its `metadata`; every registry or register object; the receipt `denominator`. CLI operations
+name every input's role; a first input without `selection` is the selection; a role-less input reads no native key and
+skips nothing. A weak held alias equal to an open object's field name fails closed. Designated residuals, not universal
+protection: lifecycle `state` alone is no marker; raw-row columns never become keys. The one cross-record relation, a
+paradigm's validated `raw_row.entry_id` parent, is a typed source dependency in the closure only, never an alias or
+identity: holding either row holds the other whatever their units, and a held/replay split of the pair is overlap.
+An object matching several owner shapes contributes all their keys and notes; no later shape erases an earlier one.
+Expected/adjudicated answers are excluded from all inputs even without membership.
+Absent real membership, isolation remains unverified. `--for-evaluation` refuses
+until authenticated operator authority and thresholds have an approved contract.
+Exit 0 proves foundation preparation only, never full pilot or 220-case certification.
+
 - **Denominator, first pilot:** the frozen pilot manifest (~150 lexemes with their MWEs and aspect pairs, including ordinary controls and cards that must stay ineligible). **Later coverage obligation, not a first-pilot gate:** all 4,512 PULS A1–B1 rows (962 + 1,386 + 2,164 in `puls_cefr`; 3,274 of today's articles carry a PULS A1–B1 level). VESUM accounting (Q-I5): every VESUM entry in scope is reported as *covered by a card*, *merged variant*, or *unresolved mapping*; source entries and cards are many-to-many and are counted separately.
 - **Pass criteria:** every pilot card renders; **every applicable mode works and every ineligible combination stays excluded** (not "every card produces practice in every live mode"): an ineligible field never yields an item, an ambiguous spelling-level assertion never satisfies a level rule (`mapping_evidenced`), a `medium`-identity card never feeds meaning practice; each exercise records `card_version` and generator version; withdrawal, changed-snapshot reimport and rollback (M8) behave as specified with current suppressions enforced; redirect/split checks (M9) pass; rebuild is byte-identical; language-lane sample review of generated items passes; zero model-written Ukrainian.
 - **Cut from the first pilot (kept as later obligations):** the full PULS slice before the first end-to-end proof; full proper-name/MWE expansion; dependencies on unrelated feature completion. **Not cut:** withdrawal, rollback, redirect/progress checks, semantic review, held-out evaluation.

@@ -72,7 +72,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Cross-family CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6.1-sol` @ high** (cross-family) | yes (`ask-claude --type review`; Sonnet default, Fable explicit) |
+| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6.1-sol` @ high** (cross-family) | yes (`ask-claude --type review`; Sonnet default, Opus 5.5 escalation) |
 | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | yes (`ask-codex --type review`) |
 | **grok** | `grok-4.7` @ high | same SKU (Cursor = avail. fallback) | yes (`ask-grok --type review`) |
 | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | no until #5555 — still *requests* CF |
@@ -136,7 +136,7 @@ Near-cap and open-circuit buckets receive no automatic work.
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
 
-Practical seats @ **high** — not Sol/Fable on routine PRs:
+Practical seats @ **high** — not Sol on routine PRs:
 
 ```bash
 # Direct ask-* cross-family review (replaces removed review-pr):
@@ -151,7 +151,7 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 # Exceptional pin: still passes every hard gate and uses the same reservation ledger.
 .venv/bin/python scripts/delegate.py dispatch \
   --agent claude --mode read-only --worktree --branch <branch> \
-  --task-id review-<N> --model claude-fable-5-1 --effort high \
+  --task-id review-<N> --model claude-opus-5-5 --effort high \
   --prompt-file prompt.md
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
@@ -214,7 +214,7 @@ not erase routing evidence.
 
 Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
 
-- Resolve-reviewer: use the live `scripts/config/model_catalog.yaml` ladders. **Critical** keeps Sol/Fable authority first, with Sonnet 5.5 as the Anthropic practical fallback; **high** holds only Sol and Opus 5.5 (#9538), and returns no reviewer when neither is eligible; **medium/low** walk Sol → Opus 5.5 → Sonnet 5.5 before later practical and volume rungs.
+- Resolve-reviewer: use the live `scripts/config/model_catalog.yaml` ladders. **Critical** keeps Sol and Opus 5.5 authority first and excludes Sonnet 5.5; Fable holds no review role at any risk (#9583); **high** holds only Sol and Opus 5.5 (#9538), and returns no reviewer when neither is eligible; **medium/low** walk Sol → Opus 5.5 → Sonnet 5.5 before later practical and volume rungs.
 - Grok uses the proven exact-head source-blind ACP path. Kimi is not a review or ACP seat (web, UI and backend coding only); its adapter is refused by `kimi_admission`. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 

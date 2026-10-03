@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-119 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+121 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -211,6 +211,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `resources-scraped-catalogs` | resource_catalogue | current | `docs/resources/dobraforma/**`, `docs/resources/talkukrainian/**`, `docs/resources/verba/**`, `docs/resources/podcasts/*.json`, `docs/resources/podcasts/raw_lists/**`, `docs/resources/ukrainianlessons/*.json` | Scraped catalogs of learning resources - Ukrainian Lessons Podcast episode lists and database, ULP blog, Dobra Forma, TalkUkrainian and Verba - with module relevance scores. |
 | `resources-mapping-reports` | evidence | historical | `docs/resources/podcasts/*.md`, `docs/resources/ukrainianlessons/*.md` | January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic |
 | `atlas-word-cards` | doc_family | current | `docs/atlas/word-cards/**` | Word Atlas word-card schema, identity rules, migration, ULIF source-record notes and worked example cards. |
+| `registry-atlas-word-cards` | registry | current | `registry/atlas/identity/registry.json`, `registry/atlas/pilot/pilot-v1.json` | Word Atlas word-card foundation data - the identity registry (card entries with keys at creation, source records and lineage events) and the frozen pilot manifest (selection, admission record, database fingerprints, counts and manifest hash). |
 | `atlas-evidence` | evidence | current | `docs/atlas/*` | Atlas point-in-time reports - Tatoeba cloze yield, lesson-link removals and curated-membership reconciliation. |
 | `practice-specs` | doc_family | current | `docs/practice/*` | Practice hub specifications and operator policy - imperative practice, K3 build, curated membership, teacher deck, layout UX and difficulty calibration. |
 | `practice-residual-evidence` | evidence | current | `docs/practice/*-residual*.md`, `docs/practice/IMPERATIVE-HELD-OUT-AUDIT-200.md`, `docs/practice/synonym-withdrawal-8714.md` | Tool-backed practice residual taxonomies (cloze, paronym, relation, calque), the synonym withdrawal record and an imperative held-out audit. |
@@ -232,6 +233,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `registry-lexicon-curation` | registry | current | `registry/lexicon/**` | Curated lexicon pairs (heritage, paronym, homonym, synonym, antonym), aliases, anchor worksheets, cohort lists, grow-triage ledgers and intake decisions. |
 | `registry-lexicon-source-inventory` | registry | current | `registry/lexicon/source-inventory/**`, `registry/lexicon/source-inventory-review-decisions/**` | Tracked per-grade textbook source inventories and review decisions for textbook-derived lexicon admission. |
 | `registry-practice` | registry | current | `registry/practice/**` | Part-of-speech mechanics decks, error-correction evidence and withheld lists, textbook error corrections and ZNO markup overlay. |
+| `registry-sources` | registry | current | `registry/sources/**` | Publication-rights records for owned corpus sources (owned_cite_only / private_permission), read by scripts/curriculum/evidence/publication.py. |
 | `registry-miyklas` | registry | current | `registry/miyklas/**` | Miyklas grammar topic index read by build enrichment. |
 | `registry-open-model-data` | registry | current | `registry/projects/open_model_data/**` | Open-model-data contracts, decolonization components and reviews, admission, evidence, release and other program records. |
 | `registry-open-model-data-archive` | registry | historical | `registry/projects/open_model_data/archive/**` | Quarantined historical and v1-production archive records of the open-model-data program. |

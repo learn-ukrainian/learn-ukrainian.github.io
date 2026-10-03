@@ -19,7 +19,13 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.gh_merge_queue_status import extract_pr_number
-from scripts.opsec.prepublish import publication_boundary, publication_cli
+from scripts.opsec.prepublish import (
+    PublishBlocked,
+    check_texts,
+    normalize_repository,
+    publication_boundary,
+    publication_cli,
+)
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
 from scripts.publish.github import Request, request_run
 
@@ -154,6 +160,37 @@ class GitHub:
         if not isinstance(node, dict) or not isinstance(node.get("isInMergeQueue"), bool):
             raise KeeperError("queue membership unknown")
         return node["isInMergeQueue"]
+
+    def squash_blocked(self, number: int, head: str) -> bool | None:
+        """Whether the squash text a queued PR will publish has a blocking finding; None when unverified.
+
+        The enqueue mutation takes no commit text: GitHub composes the queued
+        squash from the PR's current title and body. pr-merge scanned that text
+        at enqueue, and every agent title or body edit is scanned by the
+        publisher; this re-reads the current default text, and the message of
+        the queue entry's head commit once GitHub reports one, so an edit made
+        any other way after enqueue is caught at the next run.
+        """
+        try:
+            data = self.json(Request("read-squash-text", repo=self.repository, number=number))
+            pull = data["data"]["repository"]["pullRequest"]
+            texts = [pull["viewerMergeHeadlineText"], pull["viewerMergeBodyText"]]
+            names = ["default_subject", "default_body"]
+            commit = (pull.get("mergeQueueEntry") or {}).get("headCommit")
+            if commit is not None:
+                texts.append(commit["message"])
+                names.append("queue_entry_commit.message")
+            if data.get("errors") or pull["headRefOid"] != head or not all(isinstance(text, str) for text in texts):
+                return None
+        except (KeeperError, KeyError, TypeError, AttributeError):
+            return None
+        try:
+            check_texts(normalize_repository(self.repository), texts, environment={}, field_names=names)
+        except PublishBlocked as error:
+            return True if error.indices else None
+        except Exception:
+            return None
+        return False
 
     def enqueue(self, number: int, head: str) -> None:
         self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
@@ -500,14 +537,23 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     else "fresh-evidence-unknown"
                 )
             if queued is True or armed:
-                revoke = (
-                    _revoke_reason(current, current_verdict, current_checks, approved_before, verdict_lookup_ok)
-                    if current
+                fresh = bool(
+                    current
                     and current_head == head
                     and current.get("state") == "OPEN"
                     and current.get("baseRefName") == pr.get("baseRefName")
+                )
+                revoke = (
+                    _revoke_reason(current, current_verdict, current_checks, approved_before, verdict_lookup_ok)
+                    if fresh
                     else None
                 )
+                if revoke is None and fresh and queued is True:
+                    blocked = gh.squash_blocked(number, head)
+                    if blocked:
+                        revoke = "squash-text-blocked"
+                    elif blocked is None:
+                        lines.append(f"#{number} squash text unverified")
                 if revoke is not None:
                     if queued is True:
                         gh.dequeue(node_id)

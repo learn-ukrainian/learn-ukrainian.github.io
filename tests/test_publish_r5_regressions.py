@@ -86,7 +86,7 @@ def test_auth_token_flag_spellings_refused(flag, tmp_path):
 
 @pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
 @pytest.mark.parametrize("state", ["draft", "red", "pending", "unknown", "ready"])
-def test_merge_readiness_applies_to_public_and_private(repo, state):
+def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, state):
     writes = []
     reads = []
     def spy(args, **kwargs):
@@ -96,6 +96,11 @@ def test_merge_readiness_applies_to_public_and_private(repo, state):
         elif args[1:3] == ["pr", "checks"]:
             reads.append(args)
             body = [{"name": "CI Gate", "bucket": {"red": "fail", "pending": "pending", "unknown": "unrecognised"}.get(state, "pass")}]
+        elif args[1:5] == ["api", "--method", "POST", "graphql"]:
+            reads.append(args)
+            body = {"data": {"repository": {"pullRequest": {
+                "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
+                "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "clean"}}}}
         else:
             writes.append(args)
             return subprocess.CompletedProcess(args, 0, "", "")
@@ -107,7 +112,8 @@ def test_merge_readiness_applies_to_public_and_private(repo, state):
         with pytest.raises(gate.PublishBlocked):
             pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={})
         assert writes == []
-    assert len(reads) == 2
+    # Ready merges also read GitHub's default squash text before the write.
+    assert len(reads) == (3 if state == "ready" else 2)
 
 
 def test_worker_merge_guard_and_changed_head_refuse_before_write():

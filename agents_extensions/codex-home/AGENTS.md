@@ -54,12 +54,14 @@
 - Use `luna_coder_high` for bounded implementation with explicit owned paths
   and scope ceilings. Use `sol_coder_high` for broader implementation.
 - Use `sol_red_team_high` for adversarial code review and
-  `astra_advisor_high` (GPT-6.1 Sol in the former Astra seat) for
-  consequential architecture and technical advice.
+  `sol_advisor_high` for consequential architecture and technical advice.
   Both roles are read-only; the driver retains final judgment.
+- Advice and designated approval come from Opus 5.5 and Sol 6.1. Approval
+  needs both, and neither may be the author; if they disagree, the operator
+  decides. `sol_advisor_high` supplies only the Sol half.
 - Use `sol_ukrainian_content_high` for source-grounded Ukrainian authoring.
   Escalate difficult linguistic or pedagogical judgments to
-  `astra_advisor_high`, and
+  `sol_advisor_high`, and
   verify word validity, stress, and morphology with VESUM and sources.
 - Resolve exact model identifiers from the live catalog and installed profiles.
   Luna is explicitly permitted for exploration and scouting. Do not silently

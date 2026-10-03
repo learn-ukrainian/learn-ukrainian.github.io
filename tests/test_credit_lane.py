@@ -317,7 +317,7 @@ def test_reset_advice_is_held_for_exhausted_credits_near_reset():
 def _rate_limits(monkeypatch, count: int, last: str | None = "2026-10-02T16:40:00Z") -> list:
     calls: list = []
 
-    def read(lane, window_s, *, now=None):
+    def read(lane, window_s, *, now=None, usage_dir=None):
         calls.append((lane, window_s, now))
         return {"count": count, "last_rate_limited_at": last if count else None}
 
@@ -1308,3 +1308,135 @@ def test_dispatch_of_luna_passes_the_credit_gate(dispatch_env, capsys):
     assert "CREDIT_PERIOD_MODEL_REFUSED" not in err
     assert "BOUNDED_ENVELOPE_REQUIRED" in err and rc == 2
     assert dispatch_env.snapshot["reads"] == 0
+
+
+# --- #9517: explicit usage directory and published-state re-check -----------
+
+
+def test_explicit_usage_dir_is_read_instead_of_the_shared_one(monkeypatch, tmp_path):
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    shared = tmp_path / "shared"
+    explicit = tmp_path / "explicit"
+    shared.mkdir()
+    explicit.mkdir()
+    monkeypatch.setattr(usage, "_usage_dir", lambda: shared)
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
+    (explicit / "usage_codex-delegate_2026-10-02.jsonl").write_text(
+        json.dumps({"ts": "2026-10-02T16:40:00Z", "outcome": "rate_limited"}) + "\n", encoding="utf-8"
+    )
+    assert credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW)["state"] == _PRESENT
+    state = credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW, usage_dir=explicit)
+    assert state["state"] == credit_lane.CREDIT_USE_UNCONFIRMED
+
+
+def _published(**overrides) -> dict:
+    return {**credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW), **overrides}
+
+
+def test_published_credit_relief_receipt_for_a_fresh_present_state():
+    receipt = credit_lane.published_credit_relief("codex", _published(), "gpt-6.1-sol", policy=POLICY, now=NOW)
+    assert receipt["state"] == _PRESENT
+    assert receipt["model_allowed"] is True
+    assert receipt["allowed_models"] == ["gpt-6.1-sol", "gpt-6-luna"]
+    assert receipt["draw"] == credit_lane.DRAW_NOT_VERIFIED
+    assert receipt["evidence"]["credit_fetched_at"] == "2026-10-02T16:59:00Z"
+    off = credit_lane.published_credit_relief("codex", _published(), "gpt-5.5", policy=POLICY, now=NOW)
+    assert off["model_allowed"] is False
+
+
+@pytest.mark.parametrize(
+    "published",
+    [
+        None,
+        "credit_balance_present",
+        {"state": credit_lane.CREDIT_USE_UNCONFIRMED},
+        {"state": credit_lane.CREDITS_UNVERIFIED},
+        {"state": credit_lane.CREDITS_EXHAUSTED},
+        {"state": credit_lane.POLICY_ERROR},
+        {"state": credit_lane.PLAN_UNKNOWN},
+        {"state": credit_lane.PLAN_HEALTHY},
+        {"state": credit_lane.NOT_CONFIGURED},
+    ],
+)
+def test_published_credit_relief_is_none_unless_present(published):
+    assert credit_lane.published_credit_relief("codex", published, "gpt-6.1-sol", policy=POLICY, now=NOW) is None
+
+
+def test_published_credit_relief_is_none_for_an_unconfigured_lane_or_unreadable_policy(monkeypatch):
+    assert credit_lane.published_credit_relief("claude", _published(), "gpt-6.1-sol", policy=POLICY, now=NOW) is None
+
+    def broken(path=None):
+        raise ValueError("unreadable")
+
+    monkeypatch.setattr(credit_lane, "load_policy", broken)
+    assert credit_lane.published_credit_relief("codex", _published(), "gpt-6.1-sol", now=NOW) is None
+
+
+@pytest.mark.parametrize(
+    "fetched_at",
+    [None, "2026-10-02T16:59:00", "2026-10-02T15:00:00Z", "2026-10-02T17:30:00Z"],
+    ids=["missing", "naive", "too-old", "future"],
+)
+def test_published_credit_relief_rechecks_freshness_now(fetched_at):
+    published = _published()
+    published["evidence"] = {**published["evidence"], "credit_fetched_at": fetched_at}
+    receipt = credit_lane.published_credit_relief("codex", published, "gpt-6.1-sol", policy=POLICY, now=NOW)
+    assert receipt["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert receipt["reason"].startswith("published credit balance fetch time") and "900s" in receipt["reason"]
+
+
+def test_published_credit_relief_rechecks_current_rate_limits_in_the_shared_log(monkeypatch, tmp_path):
+    """A snapshot published before a rate limit no longer grants relief (real reader, shared log)."""
+    from scripts.agent_runtime import usage
+
+    published = _published()  # conftest reader: no rate limits when the snapshot was published
+    assert published["state"] == _PRESENT
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
+    (tmp_path / "usage_codex-delegate_2026-10-02.jsonl").write_text(
+        json.dumps({"ts": "2026-10-02T16:55:00Z", "outcome": "rate_limited"}) + "\n", encoding="utf-8"
+    )
+    canonical = credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW)
+    receipt = credit_lane.published_credit_relief("codex", published, "gpt-6.1-sol", policy=POLICY, now=NOW)
+    assert canonical["state"] == receipt["state"] == credit_lane.CREDIT_USE_UNCONFIRMED
+    assert receipt["reason"] == credit_lane.RATE_LIMIT_REASON
+    assert receipt["evidence"]["rate_limited_count"] == 1
+    assert receipt["evidence"]["last_rate_limited_at"] == "2026-10-02T16:55:00Z"
+
+
+def test_published_credit_relief_records_the_current_rate_limit_check():
+    receipt = credit_lane.published_credit_relief("codex", _published(), "gpt-6.1-sol", policy=POLICY, now=NOW)
+    assert receipt["state"] == _PRESENT
+    assert receipt["evidence"]["rate_limited_count"] == 0
+    assert receipt["evidence"]["rate_limits_checked_at"] == "2026-10-02T17:00:00Z"
+
+
+def test_published_credit_relief_denies_relief_when_the_reader_fails(monkeypatch):
+    def broken(*_args, **_kwargs):
+        raise OSError("usage dir unreadable")
+
+    published = _published()
+    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", broken)
+    receipt = credit_lane.published_credit_relief("codex", published, "gpt-6.1-sol", policy=POLICY, now=NOW)
+    assert receipt["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert receipt["reason"].startswith("runtime usage records unreadable now")
+    assert receipt["evidence"]["rate_limited_count"] is None
+
+
+def test_published_credit_relief_denies_relief_for_unreadable_records(monkeypatch):
+    published = _published()
+    monkeypatch.setattr(
+        credit_lane,
+        "read_recent_rate_limits",
+        lambda *_a, **_k: {
+            "count": 0,
+            "last_rate_limited_at": None,
+            "unreadable": {"files": 1, "lines": 0, "records": 0, "total": 1},
+        },
+    )
+    receipt = credit_lane.published_credit_relief("codex", published, "gpt-6.1-sol", policy=POLICY, now=NOW)
+    assert receipt["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert receipt["evidence"]["unreadable_records"] == {"files": 1}

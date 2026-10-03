@@ -1,5 +1,7 @@
 """Rendered quote rights, verbatim excerpt, and visible attribution regressions."""
 
+import html
+
 import pytest
 
 from scripts.build.fresh.assemble import (
@@ -9,6 +11,7 @@ from scripts.build.fresh.assemble import (
     build_resursy_entries,
     build_resursy_tab,
 )
+from scripts.curriculum.evidence import publication
 from scripts.curriculum.resolver.classify import classify_unit
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument
 
@@ -32,10 +35,10 @@ def test_rendered_quote_is_verbatim_and_attributed():
 @pytest.mark.parametrize(
     "file,quote,page,code",
     [
-        ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "publication_right"),
+        ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "owned_quote_refused"),
         ("not-registered", "Synthetic excerpt", 39, "publication_right"),
         ("9-klas-tekhnolohiyi-bilenko-2026", "Synthetic excerpt", 39, "publication_right"),
-        ("anna-ohoiko-500-verbs", "Synthetic excerpt", 39, "publication_right"),
+        ("anna-ohoiko-500-verbs", "Synthetic excerpt", 39, "owned_quote_refused"),
         (BOOK, "x" * 801, 39, "publication_limit"),
         (BOOK, "Synthetic excerpt", None, "publication_attribution"),
     ],
@@ -98,7 +101,10 @@ def test_resources_omit_unconfirmed_title_with_warning(file):
 def test_bibliography_is_metadata_while_quote_prose_stays_checked():
     draft = {"status": "ok", "steps": [{"id": "s1", "blocks": [{"kind": "quote", "ref": "T-001"}]}]}
     pack = {"texts": [{"id": "T-001", "quote": "Цитата", "source": {"kind": "textbook", "file": BOOK, "page": 12}}]}
-    plan = {"arc_ref": {"level": "a1", "position": 1}, "lessons": [{"n": 1, "steps": [{"id": "s1", "evidence": ["T-001"]}]}]}
+    plan = {
+        "arc_ref": {"level": "a1", "position": 1},
+        "lessons": [{"n": 1, "steps": [{"id": "s1", "evidence": ["T-001"]}]}],
+    }
     expanded, provenance = assemble_expanded_document(draft, plan, pack, {"words": []}, "a1", "fixture", 1)
     document = ExpandedDocument.from_data(expanded)
     allowlist = Allowlist.from_records([])
@@ -140,3 +146,46 @@ def test_missing_resource_record_and_registry_still_fail(tmp_path, monkeypatch):
             {"steps": [{"explains": ["T-001"]}]},
             {"texts": [{"id": "T-001", "source": {"kind": "textbook", "file": BOOK, "page": 12}}]},
         )
+
+
+@pytest.mark.parametrize("slug,policy", list(publication.load_owned_rights().items()))
+def test_rendered_owned_quote_and_resources_for_every_protected_slug(slug, policy):
+    from scripts.generate_mdx.resources import format_resources_for_mdx
+
+    with pytest.raises(AssemblerError) as caught:
+        render_quote(file=slug)
+    assert caught.value.code == "owned_quote_refused"
+    lesson = {"steps": [{"explains": ["T-001"]}]}
+    pack = {
+        "texts": [
+            {
+                "id": "T-001",
+                "quote": "PRIVATE_SENTINEL",
+                "supports": "PRIVATE_SENTINEL",
+                "source": {"kind": "textbook", "file": slug, "page": 1, "work": "PRIVATE_SENTINEL"},
+            }
+        ]
+    }
+    if policy["rights"] == "private_permission":
+        with pytest.raises(AssemblerError) as caught:
+            build_resursy_tab(lesson, pack)
+        assert caught.value.code == "private_citation_refused"
+    else:
+        resources = build_resursy_tab(lesson, pack)
+        rendered = format_resources_for_mdx(resources, True)
+        assert resources["books"][0]["title"] in html.unescape(rendered)
+        assert "PRIVATE_SENTINEL" not in rendered
+
+
+@pytest.mark.parametrize("operation", ["quote", "resource"])
+def test_rendering_fails_when_owned_rights_are_unreadable(tmp_path, monkeypatch, operation):
+    monkeypatch.setattr(publication, "OWNED_RIGHTS_PATH", tmp_path / "absent")
+    with pytest.raises(AssemblerError) as caught:
+        if operation == "quote":
+            render_quote()
+        else:
+            build_resursy_tab(
+                {"steps": [{"evidence": ["T-001"]}]},
+                {"texts": [{"id": "T-001", "source": {"file": BOOK, "kind": "textbook"}}]},
+            )
+    assert caught.value.code == "owned_rights_unreadable"
