@@ -337,5 +337,14 @@ lists (`gpt-6.1-sol`, `claude-opus-5-5`) are eligible (#9538), so Sonnet is
 excluded with that stated reason. Critical security review excludes every Sonnet
 model.
 
+Activity admission reads the catalog roles (#9583). A review, critique or
+approval of record — a review-typed `delegate.py dispatch` of any profile, an
+`ask-* --review`, the review worker, and `record_cf_verdict` — refuses a model
+pin with no `review_scheduler.activity_roles.review` role; an ACP ask, consult
+or discussion refuses one with neither a `review` nor a `consult` role. The
+refusal applies on every seat and transport, including the Cursor slug, so
+`claude-fable-5-1` (coding and orchestration roles only) and retired models
+such as `gpt-6-astra` are refused rather than substituted.
+
 Read `status`, `reason`, `suitability_rank`, and `selection_score` for every
 candidate; do not infer provider health or review eligibility from selection.

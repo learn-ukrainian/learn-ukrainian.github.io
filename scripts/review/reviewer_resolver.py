@@ -15,7 +15,7 @@ The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
 ``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
-Fable is last resort, routine ladders keep practical seats, native Grok never
+Fable holds no review role (#9583), routine ladders keep practical seats, native Grok never
 judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
 below critical (#9488). A formal review at high risk is performed only by the
 models ``review_scheduler.risk_reviewer_models`` lists (#9538); that is an

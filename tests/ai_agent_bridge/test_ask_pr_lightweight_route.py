@@ -338,3 +338,23 @@ def test_ask_pr_names_deleted_origin_branch(
     message = str(exc_info.value)
     assert _HEAD_BRANCH in message
     assert "merged or deleted" in message
+
+
+@pytest.mark.parametrize("target,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
+def test_ask_review_refuses_a_fable_pin_before_any_dispatch(monkeypatch, target, model):
+    """#9583: an ask-* review reads the catalog roles and exits with the refusal, before a prompt is written."""
+    monkeypatch.setattr(
+        _dispatch_wrappers, "build_ask_review_dispatch_command", lambda *_a, **_k: pytest.fail("refused review dispatched")
+    )
+    with pytest.raises(SystemExit, match="holds no review, critique or approval role"):
+        _cli._dispatch_headless_review(
+            target,
+            "Review the branch.",
+            data=None,
+            task_id="review-9583",
+            model=model,
+            effort=None,
+            output_path=None,
+            stdout_only=False,
+            hard_timeout=None,
+        )

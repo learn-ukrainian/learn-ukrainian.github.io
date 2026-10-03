@@ -172,7 +172,9 @@ _HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
 )
 AGY_ACP_MODEL = "gemini-3.8-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
-CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5-1"})
+# Opus 5.5 is the Claude authority pin for advice and review; Fable holds no
+# advisory or review role (operator decision 2026-10-03, #9583).
+CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-opus-5-5"})
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
 CURSOR_ACP_MODEL = "grok-4.7"

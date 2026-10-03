@@ -34,6 +34,7 @@ from typing import Any
 
 from .kimi_admission import (
     BRIDGE_MODE,
+    REVIEW_MODE,
     KimiAdmissionRefused,
     effective_request_targets,
     refuse_kimi_if_disallowed,
@@ -201,6 +202,9 @@ def resolve_and_admit(
     no name the first run did not already gate. Raises ``KimiAdmissionRefused``
     before returning; writes nothing.
 
+    A review activity (``review_dispatch``, ``REVIEW_MODE`` or the gate's
+    ``review`` flag) refuses, with ``ReviewAdmissionRefused``, every requested
+    and final model whose catalog roles admit no review (#9583).
     Review dispatches additionally constrain routes to ``review_select``'s
     admitted identities. Budget substitutions require both ``review_author_model``
     and ``review_risk``; review attempts never change identity. Retired aliases
@@ -214,6 +218,9 @@ def resolve_and_admit(
     models.extend(item for item in also_models if item)
     requested = _gate_names(seats, models)
     refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
+    review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
+    if review_activity:
+        _refuse_non_review_models(requested[1])
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:
@@ -312,8 +319,19 @@ def resolve_and_admit(
     )
     if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
         refuse_kimi_if_disallowed(*final, mode=mode, **gate)
+    if review_activity:
+        _refuse_non_review_models(target_model for _, target_model, _ in resolved)
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
+
+
+def _refuse_non_review_models(models: Iterable[str | None]) -> None:
+    """Raise ``ReviewAdmissionRefused`` for a model the catalog gives no review role (#9583)."""
+    from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
+
+    for model in models:
+        if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
+            raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {refusal}")
 
 
 def _resolve_review_target(
@@ -358,6 +376,8 @@ def _resolve_review_target(
     requested_model = model or _default_model_for(seat) or ""
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
+    # The seat's registered pin reviews too when no model is named (#9583).
+    _refuse_non_review_models((requested_model,))
     # Composer/Kimi never review. Grok is admitted only as the resolver's
     # runtime-attested Cursor seat (#9488); native Grok is excluded there.
     forbidden = {"moonshot"}

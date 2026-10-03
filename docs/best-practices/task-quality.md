@@ -127,7 +127,7 @@ Record pass/fail with timestamp + receipt for each command above.
 ## Task definition (while open)
 
 Keep the DoR fields current. Material scope change → re-DoR + comment.
-Mission-shrinking non-goals need operator/advisor approval (Fable / Astra;
+Mission-shrinking non-goals need operator/advisor approval (Opus 5.5 and Sol 6.1 jointly, neither the author;
 Kimi: web, UI and backend coding only).
 Re-run **dispatch preflight immediately before each dispatch wave and before
 each CF request** (not only when conditions “might” have moved).
