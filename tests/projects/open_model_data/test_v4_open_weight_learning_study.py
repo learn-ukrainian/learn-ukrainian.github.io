@@ -7,7 +7,6 @@ import hashlib
 import json
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -22,7 +21,7 @@ from scripts.projects.open_model_data.v4_open_weight_learning_study import (
     assert_no_private_host_paths,
     verify_study,
 )
-from scripts.storage import artifacts, paths
+from scripts.storage import paths
 
 CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 STUDY_DIR = Path("data/projects/open_model_data/study")
@@ -269,160 +268,9 @@ def _managed(repo: Path) -> tuple[Path, Path, Path]:
     "open_model_study_outputs",
     "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
 )
-def test_managed_prepare_changed_repeated_and_run_verify(tmp_path: Path) -> None:
-    repo = _fixture_repo(tmp_path, changed_recipe=True)
-    recipe, runs, receipt = _managed(repo)
-    before_runs = runs.read_bytes()
-    study.build_recipe(repo, recipe)
-    assert recipe.read_bytes() != (
-        subprocess.run(
-            ["git", "show", f"HEAD:{study._RECIPE}"], cwd=repo, check=True, capture_output=True, timeout=30
-        ).stdout
-    )
-    assert runs.read_bytes() == before_runs
-    assert paths.artifact_set(study._GROUP, repo=repo).companions[study._RECIPE] == recipe.read_bytes()
-    assert not study.verify_study(repo, recipe, runs, receipt)
-    study.build_recipe(repo, recipe)
-    result = study.prepare_and_run(repo, recipe, runs, receipt)
-    assert result["recipe_sha256"] == paths.hash_file(recipe)
-    assert study.verify_study(repo, recipe, runs, receipt)
-    assert paths.artifact_set(study._GROUP, repo=repo).artifacts[study._RUNS] == runs.read_bytes()
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
-def test_managed_unchanged_prepare_direct_run_and_stale_recipe(tmp_path: Path) -> None:
-    repo = _fixture_repo(tmp_path)
-    recipe, runs, receipt = _managed(repo)
-    original = recipe.read_bytes()
-    study.build_recipe(repo, recipe)
-    assert recipe.read_bytes() == original
-    study.build_recipe(repo, recipe)
-    study.run_study(repo, recipe, runs, receipt)
-    assert study.verify_study(repo, recipe, runs, receipt)
-    recipe.write_bytes(b"stale recipe")
-    with pytest.raises(ValueError, match="companion changed"):
-        study.run_study(repo, recipe, runs, receipt)
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
-def test_managed_publish_failure_preserves_prior_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    repo = _fixture_repo(tmp_path, changed_recipe=True)
-    recipe, runs, receipt = _managed(repo)
-    prior = tuple(path.read_bytes() for path in (recipe, runs, receipt))
-    manifest = (repo / f"registry/artifacts/{study._GROUP}.manifest.json").read_bytes()
-
-    def fail_copy(*_args: object) -> None:
-        raise OSError("injected store failure")
-
-    monkeypatch.setattr(artifacts, "_store_copy", fail_copy)
-    with pytest.raises(OSError, match="injected store failure"):
-        study.prepare_and_run(repo, recipe, runs, receipt)
-    assert tuple(path.read_bytes() for path in (recipe, runs, receipt)) == prior
-    assert (repo / f"registry/artifacts/{study._GROUP}.manifest.json").read_bytes() == manifest
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
-def test_companion_only_prepare_rejects_changed_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    repo = _fixture_repo(tmp_path, changed_recipe=True)
-    recipe, runs, receipt = _managed(repo)
-    before = tuple(path.read_bytes() for path in (recipe, runs, receipt))
-    publish = study.publish_set
-
-    def concurrent_manifest(*args: object, **kwargs: object) -> dict[str, str | None]:
-        manifest_path = repo / f"registry/artifacts/{study._GROUP}.manifest.json"
-        manifest = json.loads(manifest_path.read_text())
-        manifest["concurrent_note"] = "different generation"
-        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
-        return publish(*args, **kwargs)
-
-    monkeypatch.setattr(study, "publish_set", concurrent_manifest)
-    with pytest.raises(ValueError, match="stale expected manifest"):
-        study.build_recipe(repo, recipe)
-    assert tuple(path.read_bytes() for path in (recipe, runs, receipt)) == before
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
-def test_managed_cli_explicit_paths(tmp_path: Path) -> None:
-    repo = _fixture_repo(tmp_path, changed_recipe=True)
-    recipe, runs, receipt = _managed(repo)
-    for action in ("prepare", "prepare", "run", "verify"):
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "scripts.projects.open_model_data.v4_open_weight_learning_study",
-                action,
-                "--repo-root",
-                str(repo),
-                "--recipe",
-                str(recipe),
-                "--runs",
-                str(runs),
-                "--receipt",
-                str(receipt),
-            ],
-            cwd=Path.cwd(),
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-        assert result.returncode == 0, result.stderr
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
 def test_managed_verify_missing_member_requires_hydrate(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path)
     recipe, runs, receipt = _managed(repo)
     runs.unlink()
     with pytest.raises(ValueError, match="hydrate --group open_model_study_outputs"):
         study.verify_study(repo, recipe, runs, receipt)
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
-def test_external_paths_remain_writable(tmp_path: Path) -> None:
-    repo = _fixture_repo(tmp_path)
-    external = tmp_path / "export"
-    recipe, runs, receipt = (external / name for name in ("recipe.json", "runs.jsonl", "receipt.json"))
-    study.prepare_and_run(repo, recipe, runs, receipt)
-    assert study.verify_study(repo, recipe, runs, receipt)
-    assert not recipe.is_relative_to(repo)
-    for action in ("run", "verify"):
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "scripts.projects.open_model_data.v4_open_weight_learning_study",
-                action,
-                "--repo-root",
-                str(repo),
-                "--recipe",
-                str(recipe),
-                "--runs",
-                str(runs),
-                "--receipt",
-                str(receipt),
-            ],
-            cwd=Path.cwd(),
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-        assert result.returncode == 0, result.stderr

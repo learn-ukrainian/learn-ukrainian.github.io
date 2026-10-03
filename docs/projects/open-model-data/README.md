@@ -3,6 +3,14 @@
 > [!WARNING]
 > **Withdrawn 2026-09-25: this Hugging Face dataset is private. The pilot data failed the dataset acceptance check and must not be used (epic #6321).**
 
+> [!CAUTION]
+> **Quarantined 2026-10-03 (#9607, plan v3.4.3 gate PA1).** Every old trainable artifact described below is sealed and kept:
+> `registry/projects/open_model_data/quarantine/inventory_v1.json` lists each one with its SHA-256 and reason, and the sealed
+> sets carry a `TOMBSTONE.md`. Every loader, packager and uploader refuses them through `refuse_quarantined` in
+> `scripts/projects/open_model_data/paths.py`; the Colab notebooks refuse to run and cannot push to a hub. The old-plan
+> generators are archived under `archive/code/open_model_data/`. Check the seal with
+> `.venv/bin/python scripts/projects/open_model_data/quarantine.py verify`.
+
 > **Parent Epics:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (ULDR Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423) (Human-Source Dataset Delivery)
 > **Stream Registry:** `open-model-data` (in `scripts/config/issue_streams.yaml`)
 > **Hub Dataset (withdrawn, private):** [`krisztiankoos/uldr-v0.1-pilot`](https://huggingface.co/datasets/krisztiankoos/uldr-v0.1-pilot) *(Exploratory Pilot Canary v0.1; v1.0 Production Release in Phase 5.5)*

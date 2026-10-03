@@ -25,6 +25,7 @@ from typing import Any
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import refuse_quarantined
 from scripts.storage import paths as storage_paths
 from scripts.storage.artifacts import ArtifactChange, CompanionChange, publish_set
 
@@ -179,6 +180,7 @@ def _build_recipe_into(repo_root: Path, recipe_out: Path) -> dict[str, Any]:
         repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
     )
     dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
+    refuse_quarantined(dataset_records_path, "learning study training records")
     dataset_receipt_path = (
         repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
     )
@@ -284,6 +286,9 @@ def run_study(
 
 def _run_study_into(repo_root: Path, recipe_path: Path, runs_out: Path, receipt_out: Path) -> dict[str, Any]:
     recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+    refuse_quarantined(
+        repo_root / recipe.get("dataset_target", {}).get("records_path", ""), "learning study training records"
+    )
     recipe_sha = sha256_file(recipe_path)
 
     runs_schema_path = (

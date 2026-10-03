@@ -224,6 +224,10 @@ def write_atomic_bytes(path: Path, payload: bytes) -> None:
 
 def _assert_artifact(binding: Mapping[str, Any]) -> Path:
     path = _bound_path(str(binding["logical_path"]))
+    # Host-side only (the remote worker never validates bindings); fails closed without the inventory.
+    from scripts.projects.open_model_data.paths import refuse_quarantined
+
+    refuse_quarantined(path, "hardware-probe bound artifact")
     if not path.is_file():
         raise HardwareProbeError(f"missing bound artifact: {binding['logical_path']}")
     if not _payload_matches_binding(path.read_bytes(), binding):

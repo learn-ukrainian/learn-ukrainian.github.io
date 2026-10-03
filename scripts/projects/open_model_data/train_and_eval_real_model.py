@@ -23,6 +23,11 @@ from peft import LoraConfig, get_peft_model
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_cosine_schedule_with_warmup
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.paths import refuse_quarantined
+
 
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
@@ -164,6 +169,12 @@ def main() -> int:
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
+    for label, path in (
+        ("train file", args.train_file),
+        ("held-out file", args.heldout_file),
+        ("protection file", args.protection_file),
+    ):
+        refuse_quarantined(path, f"training run {label}")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     device = args.device

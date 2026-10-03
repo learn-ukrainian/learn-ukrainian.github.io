@@ -7,9 +7,37 @@ Pass the external directory created by package_unified_dataset.py explicitly.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.paths import QuarantinedArtifactError, refuse_quarantined
+
+# Every package with this name was assembled from the sealed old-plan release sets (#9607).
+QUARANTINED_PACKAGE_NAME = "Ukrainian Linguistic Decolonization & Reasoning (ULDR)"
+
+
+def refuse_quarantined_package(dataset_dir: Path) -> None:
+    """Refuse a package directory that is, holds, or was built from quarantined artifacts."""
+    refuse_quarantined(dataset_dir, "Hugging Face upload directory")
+    for path in sorted(dataset_dir.rglob("*")):
+        if path.is_file():
+            refuse_quarantined(path, "Hugging Face upload file")
+    manifest = dataset_dir / "manifest.json"
+    if manifest.is_file():
+        try:
+            name = json.loads(manifest.read_text(encoding="utf-8")).get("dataset_name")
+        except (json.JSONDecodeError, AttributeError) as exc:
+            raise QuarantinedArtifactError(f"unreadable package manifest {manifest}; refusing upload") from exc
+        if name == QUARANTINED_PACKAGE_NAME:
+            raise QuarantinedArtifactError(
+                f"Refusing Hugging Face upload of {dataset_dir}: a ULDR package is built only from the "
+                "quarantined old-plan release sets (#9607, plan PA1)."
+            )
 
 
 def main() -> int:
@@ -23,8 +51,9 @@ def main() -> int:
             "scripts/projects/open_model_data/upload_to_huggingface.py "
             "--dataset-dir /tmp/uldr-v02 --repo-id owner/uldr --private\n"
             "Outputs: a dataset repository commit on Hugging Face; no local package files.\n"
-            "Exit codes: 0 on upload; nonzero on invalid input, authentication, or upload failure.\n"
-            "Related: package_unified_dataset.py and issue #8809."
+            "Exit codes: 0 on upload; nonzero on invalid input, a quarantined package (#9607), authentication, "
+            "or upload failure.\n"
+            "Related: package_unified_dataset.py, paths.refuse_quarantined, issues #8809 and #9607."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -53,6 +82,17 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    dataset_dir = args.dataset_dir
+    if not dataset_dir.exists():
+        print(f"ERROR: Dataset directory does not exist: {dataset_dir}")
+        print("Run package_unified_dataset.py first!")
+        return 1
+    try:
+        refuse_quarantined_package(dataset_dir)
+    except QuarantinedArtifactError as exc:
+        print(f"ERROR: {exc}")
+        return 1
+
     token = args.token or os.environ.get("HF_TOKEN")
 
     try:
@@ -74,12 +114,6 @@ def main() -> int:
         print("\nPlease provide a valid Hugging Face token:")
         print("  export HF_TOKEN='hf_...'")
         print("  or pass --token 'hf_...'")
-        return 1
-
-    dataset_dir = args.dataset_dir
-    if not dataset_dir.exists():
-        print(f"ERROR: Dataset directory does not exist: {dataset_dir}")
-        print("Run package_unified_dataset.py first!")
         return 1
 
     print(f"Ensuring Hugging Face dataset repository exists: {args.repo_id}...")
