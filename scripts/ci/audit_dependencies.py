@@ -38,7 +38,9 @@ def audit_python(repo_root: Path, ignore_file: Path) -> int:
     """Run pip-audit on requirements-lock.txt with suppressions."""
     req_file = repo_root / "requirements-lock.txt"
     if not req_file.exists():
-        print(f"[audit_dependencies] Error: {req_file} not found; missing required inputs fail closed.", file=sys.stderr)
+        print(
+            f"[audit_dependencies] Error: {req_file} not found; missing required inputs fail closed.", file=sys.stderr
+        )
         return 1
 
     ignored_ids = load_pip_audit_ignores(ignore_file)
@@ -64,6 +66,23 @@ def audit_python(repo_root: Path, ignore_file: Path) -> int:
     return res.returncode
 
 
+SEVERITY_ORDER: dict[str, int] = {
+    "info": 1,
+    "low": 2,
+    "moderate": 3,
+    "medium": 3,
+    "high": 4,
+    "critical": 5,
+}
+SEVERITY_BY_RANK: dict[int, str] = {
+    1: "info",
+    2: "low",
+    3: "moderate",
+    4: "high",
+    5: "critical",
+}
+
+
 def load_npm_audit_ignores(ignore_file: Path | None) -> list[str]:
     """Load list of suppressed vulnerability IDs / package names from YAML config."""
     if not ignore_file or not ignore_file.exists():
@@ -74,64 +93,115 @@ def load_npm_audit_ignores(ignore_file: Path | None) -> list[str]:
     ignore_ids: list[str] = []
     for item in vulns:
         if isinstance(item, dict):
-            if "id" in item:
+            has_id = bool(item.get("id") and str(item["id"]).strip())
+            has_cve = bool(item.get("cve") and str(item["cve"]).strip())
+            if has_id:
                 ignore_ids.append(str(item["id"]).strip().upper())
-            if "cve" in item:
+            if has_cve:
                 ignore_ids.append(str(item["cve"]).strip().upper())
-            if "package" in item and not item.get("id"):
+            if not has_id and not has_cve and item.get("package") and str(item["package"]).strip():
                 ignore_ids.append(str(item["package"]).strip().lower())
         elif isinstance(item, str):
-            ignore_ids.append(item.strip().upper())
+            val = item.strip()
+            if val:
+                ignore_ids.append(val)
     return [i for i in ignore_ids if i]
 
 
-def filter_npm_audit_vulnerabilities(
-    vulns: dict, ignored_list: list[str]
-) -> tuple[set[str], dict]:
+def is_advisory_suppressed(
+    item: dict,
+    ignored_set: set[str],
+    ignored_pkgs: set[str],
+) -> bool:
+    """Check if an advisory dict is suppressed by ID, CVE, or package fallback."""
+    for field in ("url", "title", "id", "name", "source"):
+        val = str(item.get(field, ""))
+        if not val:
+            continue
+        ghsa = re.search(r"GHSA-[a-z0-9-]+", val, re.IGNORECASE)
+        if ghsa and ghsa.group(0).upper() in ignored_set:
+            return True
+        cve = re.search(r"CVE-\d{4}-\d+", val, re.IGNORECASE)
+        if cve and cve.group(0).upper() in ignored_set:
+            return True
+        if val.upper() in ignored_set:
+            return True
+
+    dep = str(item.get("dependency", item.get("name", ""))).lower()
+    return bool(dep and dep in ignored_pkgs)
+
+
+def filter_npm_audit_vulnerabilities(vulns: dict, ignored_list: list[str]) -> tuple[set[str], dict]:
     """Filter npm audit v2 vulnerabilities against audited suppression IDs.
 
     Returns (suppressed_packages, unsuppressed_vulnerabilities).
     """
     ignored_set = {i.upper() for i in ignored_list}
-    ignored_pkgs = {i.lower() for i in ignored_list}
+    ignored_pkgs = {
+        i.lower() for i in ignored_list if not (i.upper().startswith(("GHSA-", "CVE-", "PYSEC-")) or i.isdigit())
+    }
 
-    suppressed_pkgs: set[str] = set()
+    direct_rank: dict[str, int] = {}
+    unsuppressed_direct: dict[str, list[dict]] = {}
+
+    for pkg_name, details in vulns.items():
+        via_items = details.get("via", [])
+        direct_advisories = [v for v in via_items if isinstance(v, dict)]
+        transitive_deps = [v for v in via_items if isinstance(v, str)]
+
+        unsuppressed_adv: list[dict] = []
+        max_rank = 0
+
+        for adv in direct_advisories:
+            if is_advisory_suppressed(adv, ignored_set, ignored_pkgs):
+                continue
+            unsuppressed_adv.append(adv)
+            sev = SEVERITY_ORDER.get(str(adv.get("severity", "")).lower(), 0)
+            if sev == 0:
+                sev = SEVERITY_ORDER.get(str(details.get("severity", "")).lower(), SEVERITY_ORDER["high"])
+            if sev > max_rank:
+                max_rank = sev
+
+        if not direct_advisories and not transitive_deps:
+            if pkg_name.lower() in ignored_pkgs:
+                max_rank = 0
+            else:
+                max_rank = SEVERITY_ORDER.get(str(details.get("severity", "")).lower(), 0)
+
+        direct_rank[pkg_name] = max_rank
+        unsuppressed_direct[pkg_name] = unsuppressed_adv
+
+    effective_rank = dict(direct_rank)
     changed = True
     while changed:
         changed = False
         for pkg_name, details in vulns.items():
-            if pkg_name in suppressed_pkgs:
-                continue
-            via_items = details.get("via", [])
-            all_via_suppressed = True
-            for item in via_items:
-                if isinstance(item, dict):
-                    url = str(item.get("url", ""))
-                    ghsa = re.search(r"GHSA-[a-z0-9-]+", url, re.IGNORECASE)
-                    cve = re.search(r"CVE-\d{4}-\d+", url, re.IGNORECASE)
-                    dep = str(item.get("dependency", item.get("name", ""))).lower()
-
-                    matched = (
-                        bool(ghsa and ghsa.group(0).upper() in ignored_set)
-                        or bool(cve and cve.group(0).upper() in ignored_set)
-                        or bool(dep and (dep in ignored_pkgs or dep.upper() in ignored_set))
-                    )
-
-                    if not matched:
-                        all_via_suppressed = False
-                        break
-                elif isinstance(item, str):
-                    if item not in suppressed_pkgs:
-                        all_via_suppressed = False
-                        break
-                else:
-                    all_via_suppressed = False
-                    break
-            if all_via_suppressed and via_items:
-                suppressed_pkgs.add(pkg_name)
+            transitive_deps = [v for v in details.get("via", []) if isinstance(v, str)]
+            current_rank = effective_rank[pkg_name]
+            for dep in transitive_deps:
+                dep_rank = effective_rank.get(dep, 0)
+                if dep_rank > current_rank:
+                    current_rank = dep_rank
+            if current_rank > effective_rank[pkg_name]:
+                effective_rank[pkg_name] = current_rank
                 changed = True
 
-    unsuppressed = {k: v for k, v in vulns.items() if k not in suppressed_pkgs}
+    suppressed_pkgs: set[str] = set()
+    unsuppressed: dict[str, dict] = {}
+
+    for pkg_name, details in vulns.items():
+        if effective_rank[pkg_name] == 0:
+            suppressed_pkgs.add(pkg_name)
+        else:
+            transitive_deps = [v for v in details.get("via", []) if isinstance(v, str)]
+            remaining_via = list(unsuppressed_direct[pkg_name]) + [
+                dep for dep in transitive_deps if effective_rank.get(dep, 0) > 0
+            ]
+            info = dict(details)
+            info["severity"] = SEVERITY_BY_RANK.get(effective_rank[pkg_name], details.get("severity", "high"))
+            info["via"] = remaining_via
+            unsuppressed[pkg_name] = info
+
     return suppressed_pkgs, unsuppressed
 
 
@@ -172,7 +242,10 @@ def audit_node(repo_root: Path, ignore_file: Path | None = None) -> int:
             return 1
 
         if not isinstance(audit_data, dict):
-            print(f"[audit_dependencies] ERROR: Unexpected npm audit report format (expected JSON object) in {label}.", file=sys.stderr)
+            print(
+                f"[audit_dependencies] ERROR: Unexpected npm audit report format (expected JSON object) in {label}.",
+                file=sys.stderr,
+            )
             return 1
 
         if "error" in audit_data:
@@ -182,12 +255,18 @@ def audit_node(repo_root: Path, ignore_file: Path | None = None) -> int:
             return 1
 
         if "vulnerabilities" not in audit_data:
-            print(f"[audit_dependencies] ERROR: Invalid npm audit report (missing 'vulnerabilities') in {label}.", file=sys.stderr)
+            print(
+                f"[audit_dependencies] ERROR: Invalid npm audit report (missing 'vulnerabilities') in {label}.",
+                file=sys.stderr,
+            )
             return 1
 
         vulns = audit_data["vulnerabilities"]
         if not isinstance(vulns, dict):
-            print(f"[audit_dependencies] ERROR: Invalid npm audit report ('vulnerabilities' is not an object) in {label}.", file=sys.stderr)
+            print(
+                f"[audit_dependencies] ERROR: Invalid npm audit report ('vulnerabilities' is not an object) in {label}.",
+                file=sys.stderr,
+            )
             return 1
 
         if not vulns and res.returncode != 0:
@@ -199,9 +278,7 @@ def audit_node(repo_root: Path, ignore_file: Path | None = None) -> int:
 
         suppressed, unsuppressed = filter_npm_audit_vulnerabilities(vulns, ignored_ids)
         high_critical_unsuppressed = {
-            pkg: info
-            for pkg, info in unsuppressed.items()
-            if info.get("severity") in {"high", "critical"}
+            pkg: info for pkg, info in unsuppressed.items() if info.get("severity") in {"high", "critical"}
         }
 
         if high_critical_unsuppressed:

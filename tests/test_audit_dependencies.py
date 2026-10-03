@@ -58,6 +58,8 @@ def test_load_npm_audit_ignores(tmp_path: Path):
     assert "CVE-2026-9999" in ignores
     assert "bar" in ignores
     assert "GHSA-1111-2222-3333" in ignores
+    assert "http-cache-semantics" not in ignores
+    assert "foo" not in ignores
 
 
 def test_load_npm_audit_ignores_missing_and_empty(tmp_path: Path):
@@ -210,21 +212,23 @@ def test_audit_node_suppressed(mock_run: MagicMock, tmp_path: Path):
         encoding="utf-8",
     )
 
-    audit_json = json.dumps({
-        "vulnerabilities": {
-            "http-cache-semantics": {
-                "name": "http-cache-semantics",
-                "severity": "high",
-                "via": [
-                    {
-                        "name": "http-cache-semantics",
-                        "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
-                        "severity": "high",
-                    }
-                ],
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "high",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        }
+                    ],
+                }
             }
         }
-    })
+    )
 
     mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
 
@@ -243,21 +247,23 @@ def test_audit_node_unsuppressed_fails(mock_run: MagicMock, tmp_path: Path):
     (site_dir / "package.json").write_text("{}", encoding="utf-8")
     (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
 
-    audit_json = json.dumps({
-        "vulnerabilities": {
-            "unsuppressed-pkg": {
-                "name": "unsuppressed-pkg",
-                "severity": "high",
-                "via": [
-                    {
-                        "name": "unsuppressed-pkg",
-                        "url": "https://github.com/advisories/GHSA-xxxx-yyyy-zzzz",
-                        "severity": "high",
-                    }
-                ],
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "unsuppressed-pkg": {
+                    "name": "unsuppressed-pkg",
+                    "severity": "high",
+                    "via": [
+                        {
+                            "name": "unsuppressed-pkg",
+                            "url": "https://github.com/advisories/GHSA-xxxx-yyyy-zzzz",
+                            "severity": "high",
+                        }
+                    ],
+                }
             }
         }
-    })
+    )
 
     mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
 
@@ -378,32 +384,34 @@ def test_audit_node_suppressed_high_with_unrelated_moderate_passes(mock_run: Mag
         encoding="utf-8",
     )
 
-    audit_json = json.dumps({
-        "vulnerabilities": {
-            "http-cache-semantics": {
-                "name": "http-cache-semantics",
-                "severity": "high",
-                "via": [
-                    {
-                        "name": "http-cache-semantics",
-                        "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
-                        "severity": "high",
-                    }
-                ],
-            },
-            "unrelated-moderate": {
-                "name": "unrelated-moderate",
-                "severity": "moderate",
-                "via": [
-                    {
-                        "name": "unrelated-moderate",
-                        "url": "https://github.com/advisories/GHSA-moderate-advisory",
-                        "severity": "moderate",
-                    }
-                ],
-            },
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "high",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        }
+                    ],
+                },
+                "unrelated-moderate": {
+                    "name": "unrelated-moderate",
+                    "severity": "moderate",
+                    "via": [
+                        {
+                            "name": "unrelated-moderate",
+                            "url": "https://github.com/advisories/GHSA-moderate-advisory",
+                            "severity": "moderate",
+                        }
+                    ],
+                },
+            }
         }
-    })
+    )
 
     mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
 
@@ -428,34 +436,220 @@ def test_audit_node_suppressed_high_with_unrelated_critical_fails(mock_run: Magi
         encoding="utf-8",
     )
 
-    audit_json = json.dumps({
-        "vulnerabilities": {
-            "http-cache-semantics": {
-                "name": "http-cache-semantics",
-                "severity": "high",
-                "via": [
-                    {
-                        "name": "http-cache-semantics",
-                        "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
-                        "severity": "high",
-                    }
-                ],
-            },
-            "unrelated-critical": {
-                "name": "unrelated-critical",
-                "severity": "critical",
-                "via": [
-                    {
-                        "name": "unrelated-critical",
-                        "url": "https://github.com/advisories/GHSA-critical-advisory",
-                        "severity": "critical",
-                    }
-                ],
-            },
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "high",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        }
+                    ],
+                },
+                "unrelated-critical": {
+                    "name": "unrelated-critical",
+                    "severity": "critical",
+                    "via": [
+                        {
+                            "name": "unrelated-critical",
+                            "url": "https://github.com/advisories/GHSA-critical-advisory",
+                            "severity": "critical",
+                        }
+                    ],
+                },
+            }
         }
-    })
+    )
 
     mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
 
     res = audit_node(tmp_path, ignore_file)
     assert res == 1
+
+
+@patch("subprocess.run")
+def test_audit_node_cve_suppression_does_not_suppress_unrelated_critical(mock_run: MagicMock, tmp_path: Path):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    ignore_file.write_text(
+        "vulnerabilities:\n  - cve: CVE-2026-9999\n    package: foo-pkg\n",
+        encoding="utf-8",
+    )
+
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "foo-pkg": {
+                    "name": "foo-pkg",
+                    "severity": "critical",
+                    "via": [
+                        {
+                            "name": "foo-pkg",
+                            "url": "https://github.com/advisories/GHSA-unrelated-critical",
+                            "severity": "critical",
+                        }
+                    ],
+                }
+            }
+        }
+    )
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path, ignore_file)
+    assert res == 1
+
+
+@patch("subprocess.run")
+def test_audit_node_same_package_suppressed_high_with_unsuppressed_moderate_passes(mock_run: MagicMock, tmp_path: Path):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    ignore_file.write_text(
+        "vulnerabilities:\n  - id: GHSA-ch52-4w7c-c8xp\n    package: http-cache-semantics\n",
+        encoding="utf-8",
+    )
+
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "high",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        },
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-moderate-in-same-pkg",
+                            "severity": "moderate",
+                        },
+                    ],
+                }
+            }
+        }
+    )
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path, ignore_file)
+    assert res == 0
+
+
+@patch("subprocess.run")
+def test_audit_node_same_package_suppressed_high_with_unsuppressed_critical_fails(mock_run: MagicMock, tmp_path: Path):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    ignore_file.write_text(
+        "vulnerabilities:\n  - id: GHSA-ch52-4w7c-c8xp\n    package: http-cache-semantics\n",
+        encoding="utf-8",
+    )
+
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "critical",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        },
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-critical-in-same-pkg",
+                            "severity": "critical",
+                        },
+                    ],
+                }
+            }
+        }
+    )
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path, ignore_file)
+    assert res == 1
+
+
+@patch("subprocess.run")
+def test_audit_node_transitive_suppressed_high_with_unsuppressed_moderate_passes(mock_run: MagicMock, tmp_path: Path):
+    import json
+
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    site_dir = tmp_path / "site"
+    site_dir.mkdir()
+    (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
+
+    ignore_file = tmp_path / "npm-audit-ignore.yaml"
+    ignore_file.write_text(
+        "vulnerabilities:\n  - id: GHSA-ch52-4w7c-c8xp\n    package: http-cache-semantics\n",
+        encoding="utf-8",
+    )
+
+    audit_json = json.dumps(
+        {
+            "vulnerabilities": {
+                "http-cache-semantics": {
+                    "name": "http-cache-semantics",
+                    "severity": "high",
+                    "via": [
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+                            "severity": "high",
+                        },
+                        {
+                            "name": "http-cache-semantics",
+                            "url": "https://github.com/advisories/GHSA-moderate-advisory",
+                            "severity": "moderate",
+                        },
+                    ],
+                },
+                "astro": {
+                    "name": "astro",
+                    "severity": "high",
+                    "via": ["http-cache-semantics"],
+                },
+            }
+        }
+    )
+
+    mock_run.return_value = MagicMock(returncode=1, stdout=audit_json, stderr="")
+
+    res = audit_node(tmp_path, ignore_file)
+    assert res == 0
