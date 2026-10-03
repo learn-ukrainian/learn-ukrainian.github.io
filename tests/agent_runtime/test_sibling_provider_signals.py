@@ -337,6 +337,19 @@ def test_failed_turn_plain_stderr_mentions_are_not_provider_diagnostics(adapter)
     )
 
 
+@pytest.mark.parametrize("adapter", ADAPTERS)
+@pytest.mark.parametrize("body", ["test_rate_limit.py::test_x FAILED", "... see provider.rate_limit docs"])
+def test_failed_turn_generic_error_tool_text_never_triggers_provider_failover(adapter, body):
+    stderr = f"error: {body}"
+    result = ADAPTERS[adapter]().parse_response(stdout="", stderr=stderr, returncode=1, output_file=None)
+    assert result.ok is False
+    assert result.rate_limited is False
+    assert (
+        classify_failover_trigger(parse=result, returncode=1, kill_reason=None, stdout_text="", stderr_text=stderr)
+        is None
+    )
+
+
 def test_provider_rate_limit_error_class_is_authoritative():
     from agent_runtime.failure_codes import provider_failure_code, provider_stderr_error
 
