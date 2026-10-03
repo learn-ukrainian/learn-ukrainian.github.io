@@ -291,6 +291,25 @@ def _valid_review_input_path(value: object) -> TypeGuard[str]:
     return isinstance(value, str) and bool(value.strip()) and "\x00" not in value
 
 
+def repository_registration(repo_root: Path) -> tuple[Path, list[Path]]:
+    """Return ``repo_root``'s primary checkout and every worktree registered with it.
+
+    The list is read from the primary checkout's common git dir, never
+    discovered from the path being judged, so a nested repository inside a
+    linked checkout cannot mask the checkout around it (#9597). The removal
+    guard and dispatch's review-input lock and scratch check share this source.
+    Raises :class:`ValueError` when the registration cannot be read.
+    """
+    try:
+        main_root = worktree_containment.resolve_main_root(repo_root)
+    except (OSError, RuntimeError) as exc:
+        raise ValueError(f"worktree registration unavailable ({type(exc).__name__})") from exc
+    registered = worktree_containment.registered_worktrees(main_root)
+    if not registered:
+        raise ValueError("worktree registration unavailable")
+    return main_root, registered
+
+
 def review_input_worktree(input_root: Path, *, main_root: Path, registered: Iterable[Path]) -> Path | None:
     """Select the deepest registered linked checkout containing resolved inputs.
 
@@ -410,12 +429,8 @@ def active_worktree_claim_refusal(
                 return refused(state_file, "unreadable")
             if review_registration is None:
                 try:
-                    main_root = worktree_containment.resolve_main_root(repo_root)
-                    registered = worktree_containment.registered_worktrees(main_root)
-                    if not registered:
-                        raise ValueError("worktree registration unavailable")
-                    review_registration = (main_root, registered)
-                except (OSError, RuntimeError, ValueError):
+                    review_registration = repository_registration(repo_root)
+                except ValueError:
                     return refused(state_file, "review input worktree registration unavailable")
             main_root, registered = review_registration
             if review_input_worktree(inputs, main_root=main_root, registered=registered) == target:

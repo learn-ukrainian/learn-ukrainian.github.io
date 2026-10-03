@@ -10323,27 +10323,24 @@ def _lock_review_input_root(
             raise ValueError("review attempt input disappeared before preparation")
         paths.append(resolved)
     # Reuse eligibility excludes ACP runtime checkouts. Reading one still
-    # requires its removal lock, so consult registration directly here.
+    # requires its removal lock, so consult registration directly here: the
+    # primary's, exactly as the removal guard does, never a repository
+    # discovered from an input path.
     wc = _load_worktree_containment()
-    registrations: dict[Path, list[Path]] = {}
-    selected: dict[Path, Path] = {}
-    for path in paths:
-        try:
-            main_root = wc.resolve_main_root(path if path.is_dir() else path.parent)
-        except wc.NotAGitRepositoryError:
-            continue
-        if main_root not in registrations:
-            registrations[main_root] = wc.registered_worktrees(main_root)
-            if not registrations[main_root]:
-                raise ValueError("review input worktree registration unavailable")
-        tree = worktree_claims.review_input_worktree(path, main_root=main_root, registered=registrations[main_root])
-        if tree is not None:
-            selected.setdefault(tree, main_root)
+    try:
+        main_root, registered = worktree_claims.repository_registration(_REPO_ROOT)
+    except ValueError as exc:
+        raise ValueError(f"review input {exc}") from exc
+    selected = {
+        tree
+        for path in paths
+        if (tree := worktree_claims.review_input_worktree(path, main_root=main_root, registered=registered)) is not None
+    }
     for tree in sorted(selected):
         if locked_worktree is None or tree != locked_worktree.resolve():
             locks.enter_context(worktree_lock(tree))
-    current = {main_root: wc.registered_worktrees(main_root) for main_root in set(selected.values())}
-    if any(not path.exists() for path in paths) or any(tree not in current[root] for tree, root in selected.items()):
+    current = wc.registered_worktrees(main_root)
+    if any(not path.exists() for path in paths) or any(tree not in current for tree in selected):
         raise ValueError("review input worktree disappeared while dispatch waited for its lock")
 
 
@@ -10364,19 +10361,17 @@ def _refuse_review_scratch_in_worktree() -> None:
     """Refuse an attempt whose runtime scratch would sit in a removable checkout (#9597).
 
     The worker's tmp lease lives under the fleet scratch root for the whole
-    attempt and no task record claims it, so a scratch root inside a registered
-    linked checkout is refused before the attempt id is reserved.
+    attempt and no task record claims it, so a scratch root whose real path is
+    inside a registered linked checkout is refused before the attempt id is
+    reserved. The registration is the primary's, the removal guard's source;
+    discovering a repository from the scratch path would let a nested one mask
+    the checkout around it.
     """
     scratch = resolve_scratch_root().resolve()
-    existing = next(path for path in (scratch, *scratch.parents) if path.exists())
-    wc = _load_worktree_containment()
     try:
-        main_root = wc.resolve_main_root(existing)
-    except wc.NotAGitRepositoryError:
-        return
-    registered = wc.registered_worktrees(main_root)
-    if not registered:
-        raise ValueError("review_scratch_root_unverifiable: worktree registration unavailable")
+        main_root, registered = worktree_claims.repository_registration(_REPO_ROOT)
+    except ValueError as exc:
+        raise ValueError(f"review_scratch_root_unverifiable: {exc}") from exc
     tree = worktree_claims.review_input_worktree(scratch, main_root=main_root, registered=registered)
     if tree is not None:
         raise ValueError(

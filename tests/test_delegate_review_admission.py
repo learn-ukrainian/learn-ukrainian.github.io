@@ -398,18 +398,93 @@ def test_review_dispatch_refuses_scratch_in_a_linked_checkout_before_reservation
 def test_review_scratch_guard_allows_outside_git_and_fails_closed_without_registration(tmp_path, monkeypatch):
     wc = delegate._load_worktree_containment()
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path])
+    delegate._refuse_review_scratch_in_worktree()  # the primary checkout is not removable
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path.parent / "outside-every-tree"))
+    delegate._refuse_review_scratch_in_worktree()
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [])
+    with pytest.raises(ValueError, match="review_scratch_root_unverifiable"):
+        delegate._refuse_review_scratch_in_worktree()
 
     def outside_git(_path):
         raise wc.NotAGitRepositoryError("fixture outside git")
 
+    # Registration is read from the primary checkout, so an unreadable one refuses wherever scratch sits.
     monkeypatch.setattr(wc, "resolve_main_root", outside_git)
-    delegate._refuse_review_scratch_in_worktree()
-    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
-    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path])
-    delegate._refuse_review_scratch_in_worktree()  # the primary checkout is not removable
-    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [])
     with pytest.raises(ValueError, match="review_scratch_root_unverifiable"):
         delegate._refuse_review_scratch_in_worktree()
+
+
+def _registered_scratch_fixture(tmp_path, monkeypatch) -> tuple[Path, Path]:
+    """A real primary plus one registered linked checkout whose ignored ``scratch/`` holds its own repo."""
+    from tests.test_delegate import _init_repo_with_worktree, _sanitize_git_env_for_test
+
+    main, code_checkout = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", code_checkout)
+    tree = main / ".worktrees/dispatch/codex/scratch-host"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(tree), "main"],
+        cwd=main,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    scratch = tree / "scratch"
+    subprocess.run(["git", "init", "-q", str(scratch)], check=True, capture_output=True, timeout=30)
+    return main, scratch
+
+
+@pytest.mark.parametrize("spelling", ["nested-repo", "nested-repo-subdir", "symlink", "symlink-not-yet"])
+def test_review_scratch_guard_ignores_nested_repositories_and_symlinks(tmp_path, monkeypatch, spelling):
+    """#9597 R2: a repository inside a linked checkout must not mask the checkout around it."""
+    _main, scratch = _registered_scratch_fixture(tmp_path, monkeypatch)
+    alias = tmp_path / "scratch-alias"
+    alias.symlink_to(scratch, target_is_directory=True)
+    (scratch / "sub").mkdir()
+    root = {
+        "nested-repo": scratch,
+        "nested-repo-subdir": scratch / "sub",
+        "symlink": alias,
+        "symlink-not-yet": alias / "not-yet",
+    }[spelling]
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    with pytest.raises(ValueError, match="review_scratch_root_in_worktree") as refused:
+        delegate._refuse_review_scratch_in_worktree()
+    assert str(scratch.parent) in str(refused.value)
+
+
+@pytest.mark.parametrize("place", ["primary", "primary-nested-repo", "outside", "outside-symlink-to-primary"])
+def test_review_scratch_guard_allows_primary_and_unregistered_paths(tmp_path, monkeypatch, place):
+    main, _scratch = _registered_scratch_fixture(tmp_path, monkeypatch)
+    nested = main / "scratch"
+    subprocess.run(["git", "init", "-q", str(nested)], check=True, capture_output=True, timeout=30)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "alias").symlink_to(main / "tmp", target_is_directory=True)
+    root = {
+        "primary": main / "tmp",
+        "primary-nested-repo": nested,
+        "outside": outside / "scratch",
+        "outside-symlink-to-primary": outside / "alias",
+    }[place]
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    delegate._refuse_review_scratch_in_worktree()
+
+
+def test_review_input_lock_covers_input_inside_a_nested_repository(tmp_path, monkeypatch):
+    """#9597 R2: the input lock uses the same registration as the removal guard, not discovery."""
+    from scripts.orchestration import worktree_claims
+
+    _main, scratch = _registered_scratch_fixture(tmp_path, monkeypatch)
+    monkeypatch.setattr(delegate, "_worktree_lock_dir", lambda: tmp_path / "locks")
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"input_root": str(scratch)}, locks)
+        with pytest.raises(worktree_claims.WorktreeLockReentry):
+            with delegate.worktree_lock(scratch.parent):
+                pass
 
 
 def test_review_attempt_input_paths_cover_manifest_and_code(tmp_path, monkeypatch):
@@ -517,14 +592,22 @@ def test_review_input_lock_fails_closed_on_unavailable_registration(tmp_path, mo
         delegate._lock_review_input_root({"input_root": str(tmp_path)}, locks)
 
 
-def test_review_input_lock_allows_inputs_outside_git(tmp_path, monkeypatch):
+def test_review_input_lock_allows_inputs_outside_every_registered_tree(tmp_path, monkeypatch):
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path / "primary")
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path / "primary"])
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"input_root": str(tmp_path)}, locks)
+
+
+def test_review_input_lock_refuses_unreadable_primary_registration(tmp_path, monkeypatch):
     wc = delegate._load_worktree_containment()
 
     def outside_git(_path):
         raise wc.NotAGitRepositoryError("fixture outside git")
 
     monkeypatch.setattr(wc, "resolve_main_root", outside_git)
-    with contextlib.ExitStack() as locks:
+    with contextlib.ExitStack() as locks, pytest.raises(ValueError, match="registration unavailable"):
         delegate._lock_review_input_root({"input_root": str(tmp_path)}, locks)
 
 

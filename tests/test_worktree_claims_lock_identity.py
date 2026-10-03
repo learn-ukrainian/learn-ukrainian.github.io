@@ -331,3 +331,23 @@ def test_plan_lock_probe_fails_closed_on_unreadable_lock(tmp_path, monkeypatch, 
     else:
         monkeypatch.setattr(worktree_claims.fcntl, "flock", denied)
     assert worktree_claims.existing_worktree_lock_refusal(tree, lock_dir=locks) == worktree_claims.LOCK_UNAVAILABLE
+
+
+def test_repository_registration_reads_the_primary_and_fails_closed(tmp_path, monkeypatch):
+    # #9597: one registration source for the removal guard and dispatch's input and scratch checks.
+    seen = []
+    trees = [tmp_path, tmp_path / "linked"]
+    monkeypatch.setattr(worktree_containment, "resolve_main_root", lambda path: seen.append(path) or tmp_path)
+    monkeypatch.setattr(worktree_containment, "registered_worktrees", lambda _path: trees)
+    assert worktree_claims.repository_registration(tmp_path / "repo") == (tmp_path, trees)
+    assert seen == [tmp_path / "repo"]
+    monkeypatch.setattr(worktree_containment, "registered_worktrees", lambda _path: [])
+    with pytest.raises(ValueError, match="worktree registration unavailable"):
+        worktree_claims.repository_registration(tmp_path)
+
+    def outside_git(_path):
+        raise worktree_containment.NotAGitRepositoryError("fixture outside git")
+
+    monkeypatch.setattr(worktree_containment, "resolve_main_root", outside_git)
+    with pytest.raises(ValueError, match="worktree registration unavailable"):
+        worktree_claims.repository_registration(tmp_path)
