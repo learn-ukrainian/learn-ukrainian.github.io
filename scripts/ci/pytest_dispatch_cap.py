@@ -5,7 +5,8 @@ concurrent full suites. It is not a sandbox against deliberate evasion; parts
 A (memory admission) and C (per-worker cgroup) are the hard limits.
 
 When ``LEARN_UKRAINIAN_DISPATCH_TASK_ID`` is set, a worker never starts more
-than two xdist processes, and a full-suite run takes one host-wide lock.
+than two xdist processes, and a full-suite run takes one host-wide lock. A
+``--collect-only`` run executes no test, so it never takes the lock (#9434).
 ``delegate.py`` sets ``PYTEST_PLUGINS``, and ``build_agent_env`` forwards only
 ``ci.pytest_dispatch_cap`` while the dispatch marker is set, so the cap still
 loads when a worker copies CI's ``--override-ini addopts=-v`` and drops the
@@ -139,6 +140,17 @@ def is_full_suite(config: pytest.Config) -> bool:
         return True
     invocation_dir = Path(config.invocation_params.dir)
     return any(path_covers_full_suite(path, invocation_dir=invocation_dir) for path in paths)
+
+
+def collection_only(config: pytest.Config) -> bool:
+    """True for ``--collect-only``: pytest collects and reports, and runs no test.
+
+    pytest's ``pytest_runtestloop`` returns before the first test, and xdist
+    starts no workers, so such a run is outside what the full-suite lock guards.
+    A repository check that collects the tree in a child process while its own
+    parent run holds the lock relies on this (#9434).
+    """
+    return bool(getattr(config.option, "collectonly", False))
 
 
 def configured_lock_path(environ: Mapping[str, str] | None = None) -> Path:
@@ -279,13 +291,13 @@ def pytest_cmdline_main(config: pytest.Config) -> object:
     ``pytest_cmdline_main`` runs the session and ``pytest_unconfigure`` before
     it returns, so a lock taken after ``yield`` does not cover execution.
     xdist workers already have ``workerinput`` and ``PYTEST_XDIST_WORKER`` set
-    and must not take the host lock.
+    and must not take the host lock; neither does a ``--collect-only`` run.
     """
     armed = not _is_xdist_worker(config) and dispatch_marker_set()
     cap_armed = armed and xdist_available()
     if cap_armed:
         _arm_maxprocesses(config)
-    if armed and is_full_suite(config):
+    if armed and is_full_suite(config) and not collection_only(config):
         _acquire_for_config(config)
     outcome = yield
     outcome.get_result()
