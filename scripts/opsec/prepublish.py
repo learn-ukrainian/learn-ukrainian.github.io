@@ -96,6 +96,15 @@ def catalog() -> dict:
         raise PublishBlocked("OPSEC: repository allowlist unavailable; write refused.") from None
 
 
+def normalize_hostname(value: str) -> str | None:
+    """Return a lowercase ASCII hostname, or None for malformed labels."""
+    # Check ASCII before lowercasing: Unicode look-alikes must not normalize in.
+    label = r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+    if value.isascii() and re.fullmatch(rf"{label}(?:\.{label})*", value.lower()):
+        return value.lower()
+    return None
+
+
 def normalize_repository(value: str, host: str = "github.com") -> str:
     """Return a canonical host/owner/name, or unknown (never private by default)."""
     value = value.strip().removesuffix(".git")
@@ -106,14 +115,9 @@ def normalize_repository(value: str, host: str = "github.com") -> str:
         parts.insert(0, host)
     if len(parts) != 3:
         return "unknown"
-    # Check ASCII before lowercasing: Unicode look-alikes must not normalize in.
-    label = r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-    if (
-        parts[0].isascii()
-        and re.fullmatch(rf"{label}(?:\.{label})*", parts[0].lower())
-        and all(re.fullmatch(r"[A-Za-z0-9_.-]+", part) for part in parts[1:])
-    ):
-        return "/".join(parts).lower()
+    hostname = normalize_hostname(parts[0])
+    if hostname is not None and all(re.fullmatch(r"[A-Za-z0-9_.-]+", part) for part in parts[1:]):
+        return "/".join([hostname, *parts[1:]]).lower()
     return "unknown"
 
 

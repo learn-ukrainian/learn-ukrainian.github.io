@@ -121,6 +121,17 @@ PATTERNS = {
 }
 
 
+def _validated_environment(env) -> dict[str, str]:
+    """Copy the environment and refuse malformed GH_HOST even without a repo."""
+    environment = dict(os.environ if env is None else env)
+    if "GH_HOST" in environment:
+        hostname = gate.normalize_hostname(environment["GH_HOST"])
+        if hostname is None:
+            raise gate.PublishBlocked("OPSEC: invalid publisher hostname.")
+        environment["GH_HOST"] = hostname
+    return environment
+
+
 def _hostname_flag(dest: str) -> list[str]:
     """Select an API host from a destination already validated by the resolver."""
     if dest == "unknown":
@@ -306,7 +317,7 @@ def publish(
     }
     if verb in {"issue-edit", "pr-edit", "release-edit"} and not (set(fields) - {"number", "tag", "repo"}):
         raise gate.PublishBlocked("OPSEC: edit requires explicit fields; interactive publishing refused.")
-    environment = dict(os.environ if env is None else env)
+    environment = _validated_environment(env)
     cwd = Path(cwd or Path.cwd())
     dest = "unknown" if verb == "gist-create" else repository(cwd, environment, fields.get("repo"))
     if dest == "unknown" and verb != "gist-create":
@@ -650,7 +661,7 @@ def read(
     **fields,
 ):
     """Specific API reads with fixed GET endpoints or internally built query documents."""
-    environment = dict(os.environ if env is None else env)
+    environment = _validated_environment(env)
     cwd = Path(cwd or Path.cwd())
     dest = "unknown" if operation == "budget" else repository(cwd, environment, repo)
     if dest == "unknown" and operation not in {"identity", "budget", "merge-facts"}:
