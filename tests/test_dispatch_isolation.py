@@ -1334,7 +1334,8 @@ def test_real_nested_scope_without_bus_variables(monkeypatch: pytest.MonkeyPatch
         "0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-driver.slice/lu-driver-test.scope/tools\n",
     ],
 )
-def test_driver_scope_refuses_fallback_even_without_launcher_env(monkeypatch, cgroup):
+def test_driver_scope_refuses_fallback_even_without_launcher_env(monkeypatch, cgroup, driver_scope_detection):
+    monkeypatch.setattr(iso, "_caller_in_driver_scope", driver_scope_detection)
     original = Path.read_text
 
     def read(path, *args, **kwargs):
@@ -1352,7 +1353,8 @@ def test_driver_scope_refuses_fallback_even_without_launcher_env(monkeypatch, cg
     assert calls == []
 
 
-def test_fallback_refuses_unknown_caller_cgroup(monkeypatch):
+def test_fallback_refuses_unknown_caller_cgroup(monkeypatch, driver_scope_detection):
+    monkeypatch.setattr(iso, "_caller_in_driver_scope", driver_scope_detection)
     original = Path.read_text
 
     def read(path, *args, **kwargs):
@@ -1414,7 +1416,8 @@ def test_slice_usage_missing_counters_is_unknown(monkeypatch):
     assert iso.slice_usage_clause() is None
 
 
-def test_fallback_refuses_empty_cgroup_evidence(monkeypatch):
+def test_fallback_refuses_empty_cgroup_evidence(monkeypatch, driver_scope_detection):
+    monkeypatch.setattr(iso, "_caller_in_driver_scope", driver_scope_detection)
     original = Path.read_text
 
     def read(path, *args, **kwargs):
@@ -1426,3 +1429,47 @@ def test_fallback_refuses_empty_cgroup_evidence(monkeypatch):
     monkeypatch.setattr(iso, "probe_isolation", lambda *a, **kw: iso.ProbeResult(False, "bus unavailable"))
     with pytest.raises(iso.DispatchIsolationError, match="caller-cgroup-unverifiable"):
         iso.spawn_detached_worker(["worker"], task_id="t", run_nonce="n", env={})
+
+
+@pytest.mark.parametrize("inside", [True, False], ids=["inside-driver-scope", "outside-driver-scope"])
+def test_fallback_uses_injected_driver_scope_detection(monkeypatch, inside):
+    monkeypatch.setattr(iso, "_caller_in_driver_scope", lambda: inside)
+    monkeypatch.setattr(iso, "probe_isolation", lambda *a, **kw: iso.ProbeResult(False, "bus unavailable"))
+    calls = []
+    process = object()
+
+    def popen(argv, **kwargs):
+        calls.append((argv, kwargs))
+        return process
+
+    def spawn():
+        return iso.spawn_detached_worker(["worker"], task_id="t", run_nonce="n", env={}, popen=popen)
+
+    if inside:
+        with pytest.raises(iso.DispatchIsolationError, match="fallback-refused: inside-driver-scope"):
+            spawn()
+        assert calls == []
+    else:
+        proc, launch = spawn()
+        assert proc is process
+        assert launch.mode == iso.LAUNCH_FALLBACK
+        assert launch.fallback_reason == "bus unavailable"
+        assert len(calls) == 1
+        assert calls[0][0] == ["worker"]
+        assert calls[0][1]["start_new_session"] is True
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/test/outside.scope", "/test/not-lu-driver.slice/outside.scope", "/test/lu-driver.slice-other/outside.scope"],
+)
+def test_production_driver_scope_detection_outside(monkeypatch, driver_scope_detection, path):
+    original = Path.read_text
+
+    def read(cgroup_path, *args, **kwargs):
+        if str(cgroup_path) == "/proc/self/cgroup":
+            return f"0::{path}\n"
+        return original(cgroup_path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read)
+    assert driver_scope_detection() is False

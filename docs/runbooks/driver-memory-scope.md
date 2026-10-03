@@ -40,10 +40,13 @@ High=5 GiB minus 40 KiB, Max=5 GiB, swap=0. Its cgroup `memory.peak` was
 measurement includes the pytest coordinator, two xdist workers and descendants
 remaining in that scope; launched drivers enter their own bounded sibling
 scopes and are accounted separately. The measurement scope accidentally used
-the production driver namespace, triggering 80 expected fallback refusals in
-tests whose caller must be outside a driver scope. That run is sizing evidence,
-not a passing validation run. Use a neutral scope name/slice for test-suite
-measurements so the enclosing scope does not alter admission semantics.
+the production driver namespace, triggering 80 fallback refusals in
+tests that inherited the caller's ambient cgroup. That run is sizing evidence,
+not a passing validation run. Tests now inject caller-scope detection through
+the shared autouse fixture, with explicit inside/outside fallback cases and
+production cgroup-reading coverage. Production still reads the real caller's
+cgroup and refuses fallback inside a driver scope; the test selection can run
+inside the production driver namespace without changing those semantics.
 
 The final neutral-scope rerun, after the fixture and ceiling changes, passed
 **2,291 tests**, with eight skips (the opt-in OOM soak and seven sparse-tree

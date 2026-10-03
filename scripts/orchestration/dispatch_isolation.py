@@ -452,6 +452,20 @@ def format_slice_show(text: str) -> str | None:
     return clause
 
 
+def _caller_in_driver_scope() -> bool:
+    """Read the real caller cgroup; tests may replace this detection seam."""
+    try:
+        cgroup = Path("/proc/self/cgroup").read_text(encoding="utf-8")
+    except OSError as exc:
+        raise DispatchIsolationError("fallback-refused: caller-cgroup-unavailable") from exc
+    # Read the caller, not worker env: sandboxes remove launcher variables.
+    # No harness currently has a validated bounded fallback exemption.
+    paths = [line[3:] for line in cgroup.splitlines() if line.startswith("0::")]
+    if len(paths) != 1 or not paths[0].startswith("/"):
+        raise DispatchIsolationError("fallback-refused: caller-cgroup-unverifiable")
+    return "lu-driver.slice" in paths[0].split("/")
+
+
 def _fallback(
     cmd: Sequence[str],
     *,
@@ -464,16 +478,7 @@ def _fallback(
     allow_fallback: bool,
     user_bus: UserBus,
 ) -> tuple[subprocess.Popen[Any], WorkerLaunch]:
-    try:
-        cgroup = Path("/proc/self/cgroup").read_text(encoding="utf-8")
-    except OSError as exc:
-        raise DispatchIsolationError("fallback-refused: caller-cgroup-unavailable") from exc
-    # Read the caller, not worker env: sandboxes remove launcher variables.
-    # No harness currently has a validated bounded fallback exemption.
-    paths = [line[3:] for line in cgroup.splitlines() if line.startswith("0::")]
-    if len(paths) != 1 or not paths[0].startswith("/"):
-        raise DispatchIsolationError("fallback-refused: caller-cgroup-unverifiable")
-    if "lu-driver.slice" in paths[0].split("/"):
+    if _caller_in_driver_scope():
         raise DispatchIsolationError("fallback-refused: inside-driver-scope; " + reason)
     if not allow_fallback:
         raise DispatchIsolationError(reason)
