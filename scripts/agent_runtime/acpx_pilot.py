@@ -135,11 +135,7 @@ def _comparison_record(
     native_duration = round(native.duration_s, 3) if native is not None else None
     shadow_duration = round(shadow.duration_s, 3) if shadow is not None else None
     duration = sum(value for value in (native_duration, shadow_duration) if value is not None)
-    parity = (
-        native_outcome == shadow_outcome
-        if native_outcome is not None and shadow_outcome is not None
-        else None
-    )
+    parity = native_outcome == shadow_outcome if native_outcome is not None and shadow_outcome is not None else None
     return {
         "ts": datetime.now(UTC).isoformat(),
         "agent": PILOT_AGENT,
@@ -246,17 +242,10 @@ def run_pilot(
     resolved_cwd = cwd.resolve()
     path_class = classify_repo_path(resolved_cwd, cwd=resolved_cwd)
     if path_class not in {"dispatch_worktree", "other_worktree"}:
-        raise ValueError(
-            "ACPX comparison cwd must be a registered or dispatch worktree; "
-            f"observed {path_class!r}"
-        )
+        raise ValueError(f"ACPX comparison cwd must be a registered or dispatch worktree; observed {path_class!r}")
     validated_task = _require_local_metadata_field("task_id", task_id, adapter_label="AcpxPilot")
-    validated_correlation = _require_local_metadata_field(
-        "correlation_id", correlation_id, adapter_label="AcpxPilot"
-    )
-    validated_idempotency = _require_local_metadata_field(
-        "idempotency_key", idempotency_key, adapter_label="AcpxPilot"
-    )
+    validated_correlation = _require_local_metadata_field("correlation_id", correlation_id, adapter_label="AcpxPilot")
+    validated_idempotency = _require_local_metadata_field("idempotency_key", idempotency_key, adapter_label="AcpxPilot")
     idempotency_digest = _digest(validated_idempotency)
     correlation_digest = _digest(validated_correlation)
     evidence_root = evidence_dir or _usage_dir()

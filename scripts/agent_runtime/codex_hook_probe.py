@@ -158,7 +158,9 @@ PROBE_CASES = (
 )
 
 
-def _run(command: list[str], cwd: Path, env: dict[str, str] | None = None, timeout: int = 30) -> subprocess.CompletedProcess[str]:
+def _run(
+    command: list[str], cwd: Path, env: dict[str, str] | None = None, timeout: int = 30
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         command,
         cwd=cwd,
@@ -181,8 +183,7 @@ def _prepare_probe_repo(parent: Path) -> Path:
     venv_bin.mkdir(parents=True)
     python_wrapper = venv_bin / "python"
     python_wrapper.write_text(
-        "#!/usr/bin/env bash\n"
-        f"exec {shlex.quote(str(PROJECT_PYTHON))} \"$@\"\n",
+        f'#!/usr/bin/env bash\nexec {shlex.quote(str(PROJECT_PYTHON))} "$@"\n',
         encoding="utf-8",
     )
     python_wrapper.chmod(0o755)
@@ -221,19 +222,11 @@ def _prepare_probe_repo(parent: Path) -> Path:
 def _load_events(log_path: Path) -> list[dict[str, Any]]:
     if not log_path.exists():
         return []
-    return [
-        json.loads(line)
-        for line in jsonl_lines(log_path.read_text(encoding="utf-8"))
-        if line.strip()
-    ]
+    return [json.loads(line) for line in jsonl_lines(log_path.read_text(encoding="utf-8")) if line.strip()]
 
 
 def _tool_names(events: list[dict[str, Any]]) -> list[str]:
-    return [
-        str(event.get("tool_name") or "")
-        for event in events
-        if event.get("tool_name")
-    ]
+    return [str(event.get("tool_name") or "") for event in events if event.get("tool_name")]
 
 
 def _run_case(repo: Path, case: ProbeCase, model: str | None, timeout: int) -> dict[str, Any]:
