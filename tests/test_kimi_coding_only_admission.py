@@ -3121,3 +3121,129 @@ def test_the_live_consumption_backfill_leaves_a_stored_kimi_message_as_it_is(tmp
     finally:
         check.close()
     assert consumed == {1: 0, 2: 0, 3: 1}
+
+
+# --- #9577: the recorded reviewer exception -------------------------------------------
+
+
+def _exception_receipt(**overrides):
+    from scripts.review.reviewer_resolver import review_exception_receipt
+
+    inputs = {
+        "seat": "cursor",
+        "model": "kimi-k3-high",
+        "mode": "read-only",
+        "author_model": "claude-opus-5-5",
+        "risk": "high",
+        "subject_seats": frozenset({"codex"}),
+    }
+    inputs.update(overrides)
+    return review_exception_receipt(**inputs)
+
+
+def _exception_refusal(receipt, *, participants=("cursor",), models=("kimi-k3-high",), **overrides):
+    kwargs = {"mode": "read-only", "paths": (), "review": True, "review_exception": receipt}
+    kwargs.update(overrides)
+    return _refusal(participants=participants, models=models, **kwargs)
+
+
+def test_9577_the_recorded_exception_admits_a_read_only_cursor_kimi_review():
+    receipt = _exception_receipt()
+    assert receipt is not None
+    assert _exception_refusal(receipt) is None
+    assert _exception_refusal(receipt, tool_config={"review_verdict_required": True}) is None
+
+
+def test_9577_a_kimi_review_without_the_exception_keeps_the_existing_refusal():
+    message = _exception_refusal(None)
+    assert message.startswith(f"ROUTING REFUSED: {_TOKEN}")
+    assert "--mode read-only" in message and "review dispatches" in message
+
+
+@pytest.mark.parametrize(
+    ("overrides", "reason"),
+    [
+        pytest.param({"mode": kimi_admission.ACP_MODE}, "ACP asks, consults", id="consult"),
+        pytest.param({"mode": "workspace-write", "paths": _BACKEND_OWNED}, "does not match", id="write"),
+        pytest.param({"participants": ("kimi",)}, "exact Cursor seat and slug", id="native-kimi-seat"),
+        pytest.param({"models": ("kimi-k3-max",)}, "exact Cursor seat and slug", id="other-slug"),
+        pytest.param({"participants": ("claude",)}, "is not the addressed seat", id="other-seat"),
+        pytest.param({"language_lane": True}, "Ukrainian-language work", id="language-lane"),
+        pytest.param({"research_track": "core"}, "curriculum track", id="curriculum-track"),
+        pytest.param({"repo": "private-infra"}, "private repository", id="private-repo"),
+    ],
+)
+def test_9577_the_exception_never_widens_to_other_kimi_activity(overrides, reason):
+    message = _exception_refusal(_exception_receipt(), **overrides)
+    assert message and _TOKEN in message and reason in message, message
+
+
+@pytest.mark.parametrize(
+    "receipt",
+    [
+        pytest.param({"id": "forged"}, id="forged-mapping"),
+        pytest.param("subject-seat-exhausted-kimi-k3-cursor", id="not-a-mapping"),
+    ],
+)
+def test_9577_a_forged_receipt_is_refused(receipt):
+    message = _exception_refusal(receipt)
+    assert message and _TOKEN in message and "review dispatches" in message
+
+
+@pytest.mark.parametrize(
+    "inputs",
+    [
+        pytest.param({"risk": "critical"}, id="critical"),
+        pytest.param({"subject_seats": frozenset()}, id="sol-eligible"),
+        pytest.param({"author_model": "composer-2.5", "subject_seats": frozenset({"codex", "claude"})}, id="moonshot"),
+    ],
+)
+def test_9577_no_receipt_exists_outside_the_trigger(inputs):
+    assert _exception_receipt(**inputs) is None
+
+
+def test_9577_runner_recheck_reads_the_receipt_from_tool_config(tmp_path):
+    receipt = _exception_receipt()
+    kimi_admission.refuse_kimi_execution(
+        ("cursor",),
+        ("kimi-k3-high",),
+        mode="read-only",
+        cwd=tmp_path,
+        tool_config={"review_verdict_required": True, kimi_admission.REVIEW_EXCEPTION_KEY: receipt},
+    )
+    with pytest.raises(kimi_admission.KimiAdmissionRefused, match="review dispatches"):
+        kimi_admission.refuse_kimi_execution(
+            ("cursor",),
+            ("kimi-k3-high",),
+            mode="read-only",
+            cwd=tmp_path,
+            tool_config={"review_verdict_required": True},
+        )
+
+
+@pytest.mark.parametrize("review", [True, False])
+def test_9577_worker_admits_the_exception_from_its_task_record_without_a_boundary(tmp_path, monkeypatch, review):
+    """A review typed only by --review-author-model/--review-risk reaches the worker with review=False."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr("scripts.agent_runtime.kimi_boundary.install", _fail)
+    task_id = "kimi-exception-review"
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, "review_exception": _exception_receipt()}
+    )
+    refusal, target = delegate._kimi_worker_refusal(
+        task_id, agent="cursor", model="kimi-k3-high", mode="read-only", cwd=tmp_path, review=review
+    )
+    assert refusal is None and (target.recipient, target.model) == ("cursor", "kimi-k3-high")
+    refusal, target = delegate._kimi_worker_refusal(
+        task_id, agent="cursor", model="kimi-k3-high", mode="workspace-write", cwd=tmp_path, review=True
+    )
+    assert target is None and _TOKEN in refusal
+
+
+def test_9577_worker_without_a_receipt_still_refuses_the_kimi_review(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    refusal, target = delegate._kimi_worker_refusal(
+        "kimi-plain-review", agent="cursor", model="kimi-k3-high", mode="read-only", cwd=tmp_path, review=True
+    )
+    assert target is None and _TOKEN in refusal and "review dispatches" in refusal
+    assert not (tmp_path / "tasks").exists()

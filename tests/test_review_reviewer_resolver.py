@@ -1642,3 +1642,174 @@ def test_high_risk_opus_pin_is_still_admitted(profile):
 def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="high", formal_review=False)
     assert not (evaluate_candidate(SONNET_5_5, inputs).reason or "").startswith(_HIGH_RISK_RULE)
+
+
+# --- #9577: recorded exception when independence alone exhausts the high ladder ---
+
+from scripts.review.reviewer_resolver import (
+    SUBJECT_SEAT_EXCEPTION,
+    SUBJECT_SEAT_EXCEPTION_CANDIDATE,
+    review_exception_receipt,
+    verify_review_exception_receipt,
+)
+
+_EXCEPTION_ID = "subject-seat-exhausted-kimi-k3-cursor"
+_AUTHORS = {"openai": "gpt-6.1-sol", "anthropic": "claude-opus-5-5", "moonshot": "composer-2.5"}
+_SUBJECTS = {"none": (), "codex": ("codex",), "claude": ("claude",), "both": ("codex", "claude")}
+# The issue's denominator at high risk: author family x subject seats.
+_HIGH_MATRIX = {
+    ("openai", "none"): "claude-opus-5-5",
+    ("openai", "codex"): "claude-opus-5-5",
+    ("openai", "claude"): _EXCEPTION_ID,
+    ("openai", "both"): _EXCEPTION_ID,
+    ("anthropic", "none"): "openai_frontier",
+    ("anthropic", "codex"): _EXCEPTION_ID,
+    ("anthropic", "claude"): "openai_frontier",
+    ("anthropic", "both"): _EXCEPTION_ID,
+    ("moonshot", "none"): "openai_frontier",
+    ("moonshot", "codex"): "claude-opus-5-5",
+    ("moonshot", "claude"): "openai_frontier",
+    ("moonshot", "both"): None,
+}
+
+
+def _inputs(author: str, subject: str, risk: str = "high", **extra) -> ResolverInputs:
+    return ResolverInputs(
+        author_model=_AUTHORS[author], risk=risk, subject_seats=frozenset(_SUBJECTS[subject]), **extra
+    )
+
+
+@pytest.mark.parametrize(("author", "subject"), sorted(_HIGH_MATRIX))
+def test_9577_high_risk_matrix_selects_the_exception_only_when_independence_exhausts_the_ladder(author, subject):
+    resolution = resolve_reviewer(_inputs(author, subject))
+    expected = _HIGH_MATRIX[(author, subject)]
+    assert (resolution.selected.name if resolution.selected else None) == expected
+    if expected == _EXCEPTION_ID:
+        assert resolution.selected.concrete_model == "kimi-code/k3"
+        assert resolution.selected.route == "cursor" and resolution.selected.family == "moonshot"
+        assert resolution.recorded_exception["id"] == _EXCEPTION_ID
+        assert resolution.recorded_exception["decision"] == "#9532"
+        assert resolution.recorded_exception["issue"] == "#9577"
+        assert resolution.recorded_exception["mode"] == "read-only"
+        assert "recorded exception" in resolution.substitution_note and "#9532" in resolution.substitution_note
+    elif (author, subject) == ("moonshot", "both"):
+        # The trigger holds, but a Kimi/Composer author is the exception seat's own family.
+        assert resolution.recorded_exception is None
+        excluded = {entry.name: entry for entry in resolution.trace}[_EXCEPTION_ID]
+        assert excluded.status == "excluded" and "same family as author (moonshot)" in excluded.reason
+    else:
+        assert resolution.recorded_exception is None
+        assert all(entry.name != _EXCEPTION_ID for entry in resolution.trace)
+
+
+@pytest.mark.parametrize("risk", ["critical", "medium", "low"])
+@pytest.mark.parametrize("author", sorted(_AUTHORS))
+@pytest.mark.parametrize("subject", sorted(_SUBJECTS))
+def test_9577_controls_other_risks_never_use_the_exception(risk, author, subject):
+    resolution = resolve_reviewer(_inputs(author, subject, risk=risk))
+    assert resolution.recorded_exception is None
+    assert all(entry.name != _EXCEPTION_ID for entry in resolution.trace)
+
+
+@pytest.mark.parametrize(
+    ("author", "snapshot"),
+    [
+        ("anthropic", {"codex": "unhealthy"}),
+        ("openai", {"claude": "unhealthy", "cursor": "unhealthy"}),
+        ("anthropic", {"codex": "near_cap"}),
+    ],
+)
+def test_9577_sol_or_opus_unavailability_never_triggers_the_exception(author, snapshot):
+    resolution = resolve_reviewer(_inputs(author, "none", routing_snapshot=snapshot))
+    assert resolution.selected is None
+    assert resolution.recorded_exception is None
+
+
+def test_9577_exception_seat_obeys_its_own_health_gate():
+    resolution = resolve_reviewer(_inputs("anthropic", "codex", routing_snapshot={"cursor": "unhealthy"}))
+    assert resolution.selected is None and resolution.recorded_exception is None
+    excluded = {entry.name: entry for entry in resolution.trace}[_EXCEPTION_ID]
+    assert excluded.status == "excluded" and "unhealthy" in excluded.reason
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        pytest.param({"subject_seats": frozenset({"codex", "cursor"})}, id="cursor-is-a-subject-seat"),
+        pytest.param({"changed_paths": ("curriculum/l2-uk-en/a1/plan.yaml",)}, id="ukrainian-content"),
+        pytest.param({"language_lane": True}, id="language-lane"),
+        pytest.param({"formal_review": False}, id="advisory"),
+    ],
+)
+def test_9577_exception_keeps_every_other_gate(extra):
+    resolution = resolve_reviewer(replace(_inputs("anthropic", "codex"), **extra))
+    assert resolution.recorded_exception is None
+    assert resolution.selected is None or resolution.selected.name != _EXCEPTION_ID
+
+
+def test_9577_exception_needs_the_default_ladder_and_is_never_pinnable():
+    inputs = _inputs("anthropic", "codex")
+    assert resolve_reviewer(inputs, ladder=REVIEW_LADDERS["high"]).recorded_exception is None
+    pinned = resolve_reviewer(replace(inputs, pinned_candidate=_EXCEPTION_ID, pressure_override_reason="probe"))
+    assert pinned.selected is None and pinned.fail_closed_reason == f"unknown explicit reviewer pin {_EXCEPTION_ID!r}"
+
+
+@pytest.mark.parametrize("risk", ["high", "medium", "critical"])
+def test_9577_direct_evaluation_of_the_exception_seat_is_always_excluded(risk):
+    result = evaluate_candidate(SUBJECT_SEAT_EXCEPTION_CANDIDATE, _inputs("anthropic", "codex", risk=risk))
+    assert result.status == "excluded" and "recorded exception seat" in result.reason
+    assert _EXCEPTION_ID not in REVIEW_CANDIDATES
+    assert all(
+        candidate.name != _EXCEPTION_ID for rungs in REVIEW_LADDERS.values() for rung in rungs for candidate in rung
+    )
+
+
+def test_9577_receipt_is_derived_only_for_the_exact_seat_slug_and_mode():
+    base = dict(
+        seat="cursor",
+        model="kimi-k3-high",
+        mode="read-only",
+        author_model="claude-opus-5-5",
+        risk="high",
+        subject_seats=frozenset({"codex"}),
+    )
+    receipt = review_exception_receipt(**base)
+    assert receipt["id"] == SUBJECT_SEAT_EXCEPTION["id"] and receipt["author_family"] == "anthropic"
+    assert receipt["subject_seats"] == ["codex"] and receipt["risk"] == "high"
+    assert verify_review_exception_receipt(receipt, mode="read-only") is None
+    for change in (
+        {"model": "kimi-k3-max"},
+        {"model": "kimi-k3-high-fast"},
+        {"seat": "kimi"},
+        {"mode": "workspace-write"},
+        {"risk": "critical"},
+        {"subject_seats": frozenset()},
+        {"author_model": "composer-2.5"},
+        {"author_model": None},
+    ):
+        assert review_exception_receipt(**{**base, **change}) is None, change
+
+
+@pytest.mark.parametrize(
+    "tamper",
+    [
+        {"author_model": "gpt-6.1-sol"},
+        {"author_family": "openai"},
+        {"subject_seats": []},
+        {"risk": "critical"},
+        {"id": "another-exception"},
+        {"subject_seats": "codex"},
+    ],
+)
+def test_9577_a_tampered_receipt_is_refused(tamper):
+    receipt = review_exception_receipt(
+        seat="cursor",
+        model="kimi-k3-high",
+        mode="read-only",
+        author_model="claude-opus-5-5",
+        risk="high",
+        subject_seats=frozenset({"codex"}),
+    )
+    assert verify_review_exception_receipt({**receipt, **tamper}, mode="read-only")
+    assert verify_review_exception_receipt(receipt, mode="acp")
+    assert verify_review_exception_receipt(None, mode="read-only")

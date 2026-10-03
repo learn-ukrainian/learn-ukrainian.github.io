@@ -65,7 +65,8 @@ policy:
       consult, advisor, or ACP-discussion role and are absent from
       review_candidates and review_ladders; dispatch, the runtime, ACP and the
       fleet-comms authority refuse everything else before any side effect
-      (scripts/agent_runtime/kimi_admission.py).
+      (scripts/agent_runtime/kimi_admission.py). The one exception is
+      review_scheduler.subject_seat_review_exception (#9532, #9577).
     - >-
       EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION
       still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer /
@@ -121,6 +122,25 @@ review_scheduler:
   # pins, custom ladders and delegate review admission all apply it.
   risk_reviewer_models:
     high: [gpt-6.1-sol, claude-opus-5-5]
+  # Operator decision 2026-10-03 (#9532), implemented in #9577: when every
+  # review_ladders.<risk> seat is excluded as the change's subject seat or the
+  # author's family (never health or capacity), this seat reviews read-only.
+  # The resolver, delegate review/Kimi admission and record_cf_verdict all read
+  # this block. Critical risk is never listed. A Moonshot author (Kimi or
+  # Composer) is same-family, so it never gets this seat.
+  # Read-only `cursor-agent --list-models` 2026-10-03: "kimi-k3-high - Kimi K3 High".
+  subject_seat_review_exception:
+    id: subject-seat-exhausted-kimi-k3-cursor
+    decision: "#9532"
+    issue: "#9577"
+    risks: [high]
+    model_id: kimi-code/k3
+    route: cursor
+    transport: cursor
+    dispatch_model: kimi-k3-high
+    mode: read-only
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   endpoints:
     claude:
       formal_review_eligible: true

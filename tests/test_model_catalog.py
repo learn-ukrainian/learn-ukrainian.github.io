@@ -33,6 +33,7 @@ from scripts.review.model_catalog import (
     resolve_kimi_model,
     retired_model_refusal,
     risk_reviewer_refusal,
+    subject_seat_review_exception,
     validate_catalog,
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
@@ -550,6 +551,57 @@ def test_catalog_rejects_malformed_risk_reviewer_models(value, match):
     broken = deepcopy(load_model_catalog())
     broken["review_scheduler"]["risk_reviewer_models"] = value
     with pytest.raises(ModelCatalogError, match=match):
+        validate_catalog(broken)
+
+
+def test_subject_seat_review_exception_is_one_recorded_high_risk_block():
+    """#9577: the one catalog definition the resolver, admission and recorder read."""
+    exception = subject_seat_review_exception()
+    assert exception == {
+        "id": "subject-seat-exhausted-kimi-k3-cursor",
+        "decision": "#9532",
+        "issue": "#9577",
+        "risks": ["high"],
+        "model_id": "kimi-code/k3",
+        "route": "cursor",
+        "transport": "cursor",
+        "dispatch_model": "kimi-k3-high",
+        "mode": "read-only",
+        "review_profiles": ["code", "infra"],
+        "capabilities": ["code_review"],
+    }
+    assert canonical_model_id(exception["dispatch_model"]) == exception["model_id"]
+    assert subject_seat_review_exception({"review_scheduler": {}}) is None
+
+
+@pytest.mark.parametrize(
+    "field,value,match",
+    [
+        ("risks", ["high", "critical"], "non-critical risks"),
+        ("risks", ["urgent"], "non-critical risks"),
+        ("mode", "workspace-write", "must be read-only"),
+        ("dispatch_model", "grok-4.7-high", "must resolve to 'kimi-code/k3'"),
+        ("decision", "operator said so", "issue reference"),
+        ("route", "kimi", "catalog_transport is its transport"),
+        ("review_profiles", ["ukrainian"], "review_profiles must be within"),
+        ("model_id", "no-such-model", "unknown model"),
+    ],
+)
+def test_catalog_rejects_a_malformed_subject_seat_review_exception(field, value, match):
+    broken = deepcopy(load_model_catalog())
+    broken["review_scheduler"]["subject_seat_review_exception"][field] = value
+    with pytest.raises(ModelCatalogError, match=match):
+        validate_catalog(broken)
+
+
+def test_catalog_rejects_an_exception_block_with_extra_or_missing_keys():
+    broken = deepcopy(load_model_catalog())
+    broken["review_scheduler"]["subject_seat_review_exception"]["consults"] = True
+    with pytest.raises(ModelCatalogError, match="must define exactly"):
+        validate_catalog(broken)
+    del broken["review_scheduler"]["subject_seat_review_exception"]["consults"]
+    del broken["review_scheduler"]["subject_seat_review_exception"]["issue"]
+    with pytest.raises(ModelCatalogError, match="must define exactly"):
         validate_catalog(broken)
 
 

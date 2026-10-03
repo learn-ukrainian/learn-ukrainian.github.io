@@ -231,6 +231,9 @@ or count as a formal review.
   `refuse_kimi_if_disallowed`, runs first at every entry point on the effective seats and models,
   before any side effect (`scripts/agent_runtime/kimi_admission.py`); a Kimi launch whose
   credential isolation cannot be established is refused.
+  The one recorded exception (operator decision #9532, implemented in #9577; catalog
+  `review_scheduler.subject_seat_review_exception`): Cursor `kimi-k3-high` reviews read-only
+  when every high-risk ladder seat is excluded as the change's subject seat or the author's family.
   Native `kimi` CLI only — never OpenRouter (Wave 1 fold + #7142).
 * **glm / Z.AI** (operator 2026-08-08 / #6468; **Flash workhorse 2026-08-26**): **keep and use**
   — **`glm-5.3-flash` is the GLM workhorse** (`--agent glm`, default Flash, OpenCode

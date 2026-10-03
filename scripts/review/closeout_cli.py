@@ -385,6 +385,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "advisory": [asdict(a) for a in resolution.advisory],
         "trace": [asdict(t) for t in resolution.trace],
         "substitution_note": resolution.substitution_note,
+        "recorded_exception": dict(resolution.recorded_exception) if resolution.recorded_exception else None,
         "policy_version": resolution.policy_version,
         "catalog_reviewed_on": resolution.catalog_reviewed_on,
         "resolved_risk": resolution.resolved_risk,

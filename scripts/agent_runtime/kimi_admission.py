@@ -18,6 +18,10 @@ re-checks (``refuse_kimi_execution``) gate exactly the seat, model and tree
 being run. A refusal raises ``KimiAdmissionRefused`` to the caller and records
 nothing.
 
+One recorded exception is admitted: the read-only Cursor review seat of the
+catalog's ``review_scheduler.subject_seat_review_exception`` (#9532, #9577),
+only with a ``review_exception`` receipt the reviewer resolver re-derives.
+
 Content is admitted only as plain text: valid UTF-8 with no control
 characters other than tab, LF and CR, and no Cyrillic character (Ukrainian
 content is recognised by content, not by path). Anything else — UTF-16 with or
@@ -54,6 +58,9 @@ ADMITTED_MODE = "workspace-write"
 # ``tool_config`` key carrying the task's declared owned paths from dispatch to the
 # runner and the adapters, which hand them to the same gate.
 OWNED_PATHS_KEY = "kimi_owned_paths"
+# Task-record and ``tool_config`` key carrying the recorded reviewer exception
+# receipt (#9577) from dispatch to the worker, the runner and the recorder.
+REVIEW_EXCEPTION_KEY = "review_exception"
 ACP_MODE = "acp"
 REVIEW_MODE = "review"
 BRIDGE_MODE = "bridge"
@@ -617,8 +624,16 @@ def refuse_kimi_if_disallowed(
     repo_root: Path | None = None,
     trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]] = (),
     declared_paths: Iterable[str] | None = None,
+    review_exception: Mapping[str, Any] | None = None,
 ) -> None:
     """Raise ``KimiAdmissionRefused`` when any effective seat or model is Kimi and the work is not admitted.
+
+    The one admitted non-coding activity is the recorded reviewer exception
+    (catalog ``review_scheduler.subject_seat_review_exception``, #9532/#9577):
+    a read-only review on exactly the exception's seat and Cursor slug, whose
+    ``review_exception`` receipt the reviewer resolver re-derives. It replaces
+    only the mode, review and write-ownership checks; the language, track,
+    prompt-file and repository checks still apply.
 
     ``effective_participants`` and ``effective_models`` are the seats and
     models after every override, pin and substitution. ``mode`` is the
@@ -636,21 +651,30 @@ def refuse_kimi_if_disallowed(
     that raises, or owned paths with no tree to read, refuse. Never writes.
     Returns None for every non-Kimi call.
     """
-    seat = _kimi_seat_name(tuple(effective_participants), tuple(effective_models))
+    participants, models = tuple(effective_participants), tuple(effective_models)
+    seat = _kimi_seat_name(participants, models)
     if seat is None:
         return
     owned = tuple(paths)
     declared = owned if declared_paths is None else tuple(declared_paths)
     reasons: list[str] = []
-    if mode != ADMITTED_MODE:
+    exception_problem = (
+        None if review_exception is None else _review_exception_problem(review_exception, participants, models, mode)
+    )
+    review_exception_admitted = review_exception is not None and exception_problem is None
+    if review_exception_admitted:
+        owned = ()
+    elif mode != ADMITTED_MODE:
         reasons.append(_MODE_ACTIVITIES.get(mode) or f"--mode {mode} (only {ADMITTED_MODE} implementation is admitted)")
     elif not declared:
         reasons.append(
             f"{ADMITTED_MODE} without an owned path (declare at least one allowlisted owned file or directory)"
         )
     config = tool_config or {}
-    if review or any(config.get(key) for key in _REVIEW_TOOL_CONFIG_KEYS):
+    if not review_exception_admitted and (review or any(config.get(key) for key in _REVIEW_TOOL_CONFIG_KEYS)):
         reasons.append("review dispatches")
+    if exception_problem:
+        reasons.append(exception_problem)
     if language_lane:
         reasons.append("Ukrainian-language work (--language-lane, a Ukrainian review profile or curriculum path)")
     track_reason = curriculum_track_reason(research_track, repo_root=repo_root)
@@ -665,6 +689,29 @@ def refuse_kimi_if_disallowed(
         reasons.extend(_content_reasons(owned, trees))
     if reasons:
         raise KimiAdmissionRefused(format_refusal(seat, reasons))
+
+
+def _review_exception_problem(
+    receipt: object, participants: Sequence[str | None], models: Sequence[str | None], mode: str
+) -> str | None:
+    """Why ``receipt`` does not admit this request as the recorded reviewer exception, or None when it does.
+
+    No seat may be a Kimi seat, every Kimi model named must be the receipt's
+    exact Cursor slug, the receipt's seat must be addressed, and the resolver
+    must re-derive the receipt for this mode.
+    """
+    if not isinstance(receipt, Mapping):
+        return "the recorded reviewer exception receipt is malformed"
+    slug = str(receipt.get("dispatch_model") or "")
+    named = {str(model).strip() for model in models if is_kimi_model(model)}
+    addressed = {str(participant or "").strip() for participant in participants}
+    if any(is_kimi_seat(participant) for participant in participants) or named != {slug}:
+        return "the recorded reviewer exception covers only its exact Cursor seat and slug"
+    if str(receipt.get("seat") or "") not in addressed:
+        return "the recorded reviewer exception's seat is not the addressed seat"
+    from scripts.review.reviewer_resolver import verify_review_exception_receipt
+
+    return verify_review_exception_receipt(receipt, mode=mode)
 
 
 def _git_env() -> dict[str, str]:
@@ -730,6 +777,7 @@ def refuse_kimi_execution(
             raise RuntimeError("no execution tree (no cwd)")
         return worktree_trees(Path(cwd))
 
+    receipt = (tool_config or {}).get(REVIEW_EXCEPTION_KEY)
     refuse_kimi_if_disallowed(
         participants,
         models,
@@ -737,6 +785,7 @@ def refuse_kimi_execution(
         paths=owned_paths_from_config(tool_config),
         tool_config=tool_config,
         trees=trees,
+        review_exception=receipt,
     )
 
 

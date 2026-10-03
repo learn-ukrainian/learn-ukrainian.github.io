@@ -402,6 +402,62 @@ def _validate_review_scheduler(raw: Any, models: dict[str, Any]) -> None:
             raise ModelCatalogError(f"{label} must be a non-empty list of model ids")
         for model_id in allowed:
             _require_routable_model(models, model_id, label)
+    if "subject_seat_review_exception" in scheduler:
+        _validate_subject_seat_review_exception(scheduler["subject_seat_review_exception"], models, endpoints)
+
+
+SUBJECT_SEAT_REVIEW_EXCEPTION_KEYS = frozenset(
+    {
+        "id",
+        "decision",
+        "issue",
+        "risks",
+        "model_id",
+        "route",
+        "transport",
+        "dispatch_model",
+        "mode",
+        "review_profiles",
+        "capabilities",
+    }
+)
+
+
+def _validate_subject_seat_review_exception(raw: Any, models: dict[str, Any], endpoints: dict[str, Any]) -> None:
+    """The recorded reviewer for a risk whose ladder is exhausted by independence alone (#9577).
+
+    It never covers critical risk, reviews read-only, and dispatches an exact
+    slug that resolves to its catalog model on its own catalogued endpoint.
+    """
+    label = "review_scheduler.subject_seat_review_exception"
+    entry = _require_mapping(raw, label)
+    _require_exact_keys(entry, SUBJECT_SEAT_REVIEW_EXCEPTION_KEYS, label)
+    for field in ("id", "decision", "issue", "route", "transport", "dispatch_model", "mode"):
+        _require_string(entry[field], f"{label}.{field}")
+    for field in ("decision", "issue"):
+        if not entry[field].startswith("#") or not entry[field][1:].isdigit():
+            raise ModelCatalogError(f"{label}.{field} must be an issue reference such as '#9532'")
+    risks = _require_string_list(entry["risks"], f"{label}.risks")
+    if not set(risks) <= VALID_RISKS or "critical" in risks:
+        raise ModelCatalogError(f"{label}.risks must name non-critical risks from {sorted(VALID_RISKS)}")
+    model_id = _require_active_execution_model(models, entry["model_id"], f"{label}.model_id")
+    if resolve_catalog_model_id(entry["dispatch_model"], {"models": models}) != model_id:
+        raise ModelCatalogError(f"{label}.dispatch_model must resolve to {model_id!r}")
+    endpoint = endpoints.get(entry["route"])
+    if not isinstance(endpoint, dict) or endpoint.get("catalog_transport") != entry["transport"]:
+        raise ModelCatalogError(f"{label}.route must name an endpoint whose catalog_transport is its transport")
+    if entry["mode"] != "read-only":
+        raise ModelCatalogError(f"{label}.mode must be read-only")
+    profiles = _require_string_list(entry["review_profiles"], f"{label}.review_profiles")
+    if not set(profiles) <= VALID_REVIEW_PROFILES:
+        raise ModelCatalogError(f"{label}.review_profiles must be within {sorted(VALID_REVIEW_PROFILES)}")
+    _require_string_list(entry["capabilities"], f"{label}.capabilities")
+
+
+def subject_seat_review_exception(catalog: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """The validated ``review_scheduler.subject_seat_review_exception`` block, or None when absent."""
+    entry = ((catalog or load_model_catalog()).get("review_scheduler") or {}).get("subject_seat_review_exception")
+    return entry if isinstance(entry, dict) else None
 
 
 def invocation_model(invocation: str) -> str | None:

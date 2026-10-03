@@ -5781,6 +5781,7 @@ def _kimi_worker_refusal(
     from scripts.agent_runtime import kimi_boundary
     from scripts.agent_runtime.kimi_admission import (
         ADMITTED_MODE,
+        REVIEW_EXCEPTION_KEY,
         KimiAdmissionRefused,
         format_refusal,
         is_kimi_seat,
@@ -5797,6 +5798,14 @@ def _kimi_worker_refusal(
         (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
         return None, target
     try:
+        # The recorded reviewer exception (#9577): a read-only review whose task
+        # record carries the receipt dispatch admitted. It owns and writes nothing,
+        # so no worktree boundary is installed.
+        # The gate re-derives the receipt, so it is read whatever review flags the worker argv carries.
+        receipt = (_read_state_json(_state_path_no_create(task_id)) or {}).get(REVIEW_EXCEPTION_KEY)
+        if receipt is not None:
+            (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review, review_exception=receipt)
+            return None, target
         if mode != ADMITTED_MODE or review:
             # Refused by mode or review alone: no need to read the task record (or create its directory).
             resolve_and_admit((agent,), model=model, mode=mode, review=review)
@@ -8751,7 +8760,7 @@ def _run_worker(
         print(f"❌ {advisory_refusal}", file=sys.stderr)
         return 1
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
-    from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
+    from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, REVIEW_EXCEPTION_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
     # through the runtime's finally block (see handler docstring).
@@ -9004,6 +9013,8 @@ def _run_worker(
             if is_kimi_seat(agent, model=model):
                 # The runner and the adapters run the same gate on these paths and this tree.
                 tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
+                if state.get(REVIEW_EXCEPTION_KEY) is not None:
+                    tool_config[REVIEW_EXCEPTION_KEY] = state[REVIEW_EXCEPTION_KEY]
             # #9275: the provider handoff. The admission is re-verified on the
             # exact prompt object submitted below, after every transformation.
             advisory_prompt_sha256 = _verify_bounded_worker(
@@ -11891,6 +11902,10 @@ def _dispatch(
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
+        review_exception = _dispatch_review_exception(args, agent=dispatch_agent)
+        if review_exception is not None:
+            # The receipt the worker, the runner and record_cf_verdict re-derive (#9577).
+            initial_state["review_exception"] = review_exception
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -12797,6 +12812,33 @@ def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
         or bool(getattr(args, "review_author_model", None))
         or bool(getattr(args, "review_risk", None))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+    )
+
+
+def _dispatch_review_exception(args: argparse.Namespace, *, agent: str) -> dict[str, Any] | None:
+    """The recorded reviewer exception receipt (#9577) for an admitted review launch, else None.
+
+    Computed by the reviewer resolver from the same flags dispatch admission
+    read; the worker, the runner and ``record_cf_verdict`` re-derive it.
+    """
+    if not _dispatch_is_review_typed(args):
+        return None
+    from scripts.review.reviewer_resolver import review_exception_receipt
+
+    def flag_values(attr: str) -> list[str]:
+        value = getattr(args, attr, None) or []
+        return [value] if isinstance(value, str) else list(value)
+
+    return review_exception_receipt(
+        seat=agent,
+        model=getattr(args, "model", None),
+        mode=str(getattr(args, "mode", "") or ""),
+        author_model=getattr(args, "review_author_model", None),
+        risk=getattr(args, "review_risk", None),
+        profile=getattr(args, "review_profile", None) or "code",
+        owned_paths=tuple(flag_values("owned_path")),
+        subject_seats=frozenset(flag_values("subject_seat")),
+        subject_families=frozenset(flag_values("subject_family")),
     )
 
 

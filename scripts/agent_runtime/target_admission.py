@@ -213,6 +213,24 @@ def resolve_and_admit(
     seats, models = effective_request_targets(raw, explicit_model, *attachments)
     models.extend(item for item in also_models if item)
     requested = _gate_names(seats, models)
+    if review_dispatch and len(raw) == 1 and gate.get("review_exception") is None:
+        # The recorded reviewer exception (#9577) is decided by the resolver from
+        # the same trusted review inputs the review route uses below.
+        from scripts.review.reviewer_resolver import review_exception_receipt
+
+        receipt = review_exception_receipt(
+            seat=raw[0],
+            model=explicit_model,
+            mode=mode,
+            author_model=review_author_model,
+            risk=review_risk,
+            profile=review_profile or "code",
+            owned_paths=review_owned_paths,
+            subject_seats=review_subject_seats,
+            subject_families=review_subject_families,
+        )
+        if receipt is not None:
+            gate = {**gate, "review_exception": receipt}
     refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
 
     fallbacks: Mapping[str, str] = {}
@@ -267,6 +285,7 @@ def resolve_and_admit(
                 owned_paths=review_owned_paths,
                 subject_seats=review_subject_seats,
                 subject_families=review_subject_families,
+                mode=mode,
             )
             approved.add(selected)
             return selected
@@ -330,13 +349,16 @@ def _resolve_review_target(
     owned_paths: tuple[str, ...] = (),
     subject_seats: frozenset[str] = frozenset(),
     subject_families: frozenset[str] = frozenset(),
+    mode: str | None = None,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
     A snapshot means the budget guard requires a substitute. Without both trusted
     inputs, only intrinsic eligibility can be proven and the requested identity is
     retained. This does not attest cross-family independence for those legacy calls.
-    An existing attempt's seat AND model are immutable.
+    An existing attempt's seat AND model are immutable. The recorded reviewer
+    exception (#9577) is eligible only when the resolver selects it for these
+    trusted inputs and ``mode``; it is never a budget substitute.
     """
     from scripts.review.model_catalog import risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
@@ -350,6 +372,7 @@ def _resolve_review_target(
         resolve_author_family,
         resolve_family,
         resolve_reviewer,
+        review_exception_receipt,
     )
     from scripts.review.subject_seat import prepare_subject_exclusion
 
@@ -397,7 +420,24 @@ def _resolve_review_target(
     author_family = resolve_author_family(author_model or "") if trusted else UNKNOWN_AUTHOR_FAMILY
     if trusted and author_family in UNRESOLVED_AUTHOR_FAMILIES:
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: author's concrete model family cannot be resolved")
-    if profile == "ukrainian":
+    recorded_exception = (
+        review_exception_receipt(
+            seat=seat,
+            model=requested_model,
+            mode=mode,
+            author_model=author_model,
+            risk=risk,
+            profile=profile,
+            owned_paths=owned_paths,
+            subject_seats=subject_seats,
+            subject_families=subject_families,
+        )
+        if trusted and profile == "code"
+        else None
+    )
+    if recorded_exception is not None:
+        eligible = True
+    elif profile == "ukrainian":
         eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
     else:
         # A Cursor seat is admitted only at its exact pinned slug: the adapter

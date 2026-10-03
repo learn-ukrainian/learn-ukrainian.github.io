@@ -187,6 +187,31 @@ def test_resolve_reviewer_merges_into_existing_state_file(tmp_path):
     assert state["resolved_reviewer"]["selected"]["concrete_model"] == "gpt-6.1-sol"
 
 
+def test_resolve_reviewer_receipt_names_the_recorded_exception(tmp_path):
+    """#9577: the persisted route receipt names the exception and its decision reference."""
+    state_file = tmp_path / "state.json"
+    proc = _run_cli(
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "claude-opus-5-5",
+        "--risk",
+        "high",
+        "--subject-seat",
+        "codex",
+    )
+    assert proc.returncode == 0, proc.stderr
+    resolution = json.loads(state_file.read_text(encoding="utf-8"))["resolved_reviewer"]
+    assert resolution["selected"]["concrete_model"] == "kimi-code/k3"
+    assert resolution["recorded_exception"]["id"] == "subject-seat-exhausted-kimi-k3-cursor"
+    assert resolution["recorded_exception"]["decision"] == "#9532"
+    assert "#9577" in resolution["substitution_note"]
+    ordinary = _run_cli(
+        tmp_path / "plain.json", "resolve-reviewer", "--author-model", "claude-opus-5-5", "--risk", "high"
+    )
+    assert json.loads(ordinary.stdout)["recorded_exception"] is None
+
+
 def test_resolve_reviewer_persists_fail_closed_resolution(tmp_path):
     state_file = tmp_path / "state.json"
     proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "unknown-seat")

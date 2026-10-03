@@ -228,6 +228,21 @@ def test_other_grok_display_names_are_not_rewritten(display: str) -> None:
     assert model_families.canonical_cursor_model(display) == display
 
 
+@pytest.mark.parametrize("display", ["Kimi K3 High", "kimi k3 high", "Kimi K3 262K High", " Kimi\tK3  High "])
+def test_cursor_kimi_k3_high_display_name_maps_to_the_catalog_model(display: str) -> None:
+    """#9577: the recorded exception seat's Cursor report names the catalog model."""
+    assert model_families.canonical_cursor_model(display) == "kimi-code/k3"
+    assert model_families.normalize_family(display) is model_families.Family.MOONSHOT
+
+
+@pytest.mark.parametrize(
+    "display",
+    ["Kimi K3", "Kimi K3 Low", "Kimi K3 High Fast", "Kimi K3 Max", "Kimi K2.7 Code", "Kimi K3 High", "Kimi K3 High\n"],
+)
+def test_other_kimi_display_names_are_not_rewritten(display: str) -> None:
+    assert model_families.canonical_cursor_model(display) == display
+
+
 @pytest.mark.parametrize(
     "display,expected",
     [

@@ -38,9 +38,11 @@ from scripts.publish.github import Request, request_run
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_MODELS,
+    SUBJECT_SEAT_EXCEPTION,
     UNRESOLVED_AUTHOR_FAMILIES,
     resolve_author_family,
     resolve_family,
+    verify_review_exception_receipt,
 )
 
 VERDICT_LINE = re.compile(r"(?im)^\s*VERDICT:\s*(APPROVE|APPROVED|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)\b")
@@ -309,17 +311,33 @@ def sha_lock(repository: str, sha: str, lock_root: Path):
             fcntl.flock(lock_file, fcntl.LOCK_UN)
 
 
-def build_comment(*, sha: str, task_id: str, started: str, verdict: str, model: str, family: str, reply: str) -> str:
+def build_comment(
+    *,
+    sha: str,
+    task_id: str,
+    started: str,
+    verdict: str,
+    model: str,
+    family: str,
+    reply: str,
+    exception: dict[str, Any] | None = None,
+) -> str:
     if MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
     marker = f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} model={model} family={family} -->"
+    exception_line = (
+        f"Recorded exception: {exception['id']} (operator decision {exception['decision']}, {exception['issue']})\n"
+        if exception
+        else ""
+    )
     prefix = (
         "### Cross-family review\n"
         f"head: {sha}\n"
         f"Reviewer family: {family}\n"
         f"VERDICT: {verdict}\n"
         f"Reviewer model: {model}\n"
-        f"Task id: {task_id}\n\n"
+        f"Task id: {task_id}\n"
+        f"{exception_line}\n"
         "<details><summary>Reviewer's reply</summary>\n\n"
     )
     suffix = f"\n\n</details>\n\n{marker}"
@@ -443,7 +461,9 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
-def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, family: str) -> None:
+def _require_formal_reviewer(
+    *, cursor: bool, reported: object, model: str, family: str, task: dict[str, Any]
+) -> dict[str, Any] | None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
 
     Through Cursor only a pinned formal seat counts, and only when the runtime
@@ -451,12 +471,26 @@ def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, fami
     slug (``grok-4.7``, ``grok-4.7-high-fast``) attests no variant, and Composer,
     Auto and Cursor-routed Claude are unpinned. Through any other harness Grok
     never judges and Kimi never reviews.
+
+    The recorded exception seat (#9577) counts only with the ``review_exception``
+    receipt its dispatch stored, re-derived here by the reviewer resolver for
+    the task's slug and mode; the receipt is returned so the caller can bind it
+    to the PR's author families.
     """
+    exception = SUBJECT_SEAT_EXCEPTION
+    if cursor and exception is not None and model == exception["model_id"] and reported != model:
+        receipt = task.get("review_exception")
+        problem = verify_review_exception_receipt(receipt, mode=task.get("mode"))
+        if problem is None and task.get("model") != exception["dispatch_model"]:
+            problem = "the review did not run the recorded exception's Cursor slug"
+        if problem:
+            raise RecordError(f"reviewer model {model!r} is a recorded exception seat: {problem}")
+        return dict(receipt)
     if cursor:
         if model in FORMAL_CURSOR_REVIEW_MODELS and reported != model:
-            return
+            return None
     elif family not in NATIVE_NON_REVIEWER_FAMILIES:
-        return
+        return None
     raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
 
 
@@ -489,7 +523,9 @@ def record(
     family = resolve_family(model)
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
-    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family)
+    exception_receipt = _require_formal_reviewer(
+        cursor=cursor, reported=reported, model=model, family=family, task=task
+    )
     verdict = normalize_verdict(reply)
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:
@@ -506,11 +542,20 @@ def record(
     families = author_families(repository, number, task_root)
     if family in families:
         raise RecordError("reviewer family equals an author family")
+    if exception_receipt is not None and families != {exception_receipt.get("author_family")}:
+        raise RecordError("recorded-exception receipt names a different author family than the PR's commits")
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
     comment = build_comment(
-        sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply
+        sha=sha,
+        task_id=task_id,
+        started=started,
+        verdict=verdict,
+        model=model,
+        family=family,
+        reply=reply,
+        exception=exception_receipt,
     )
     posted = False
     with sha_lock(repository, sha, lock_root):

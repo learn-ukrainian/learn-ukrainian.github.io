@@ -121,19 +121,25 @@ _CONCRETE_CURSOR_MODEL_PATTERN = re.compile(r"(?:^|[^a-z0-9])composer-2\.5(?:$|[
 # ``"Grok 4.7 256K High"`` is what Cursor reports for the review seat's pinned
 # slug ``grok-4.7-high`` (#9488); the bare slug runs the ``High Fast`` variant,
 # which stays unmapped so a verdict from it is refused.
+# ``"Kimi K3 High"`` is Cursor's listed name for the recorded exception seat's
+# slug ``kimi-k3-high`` (#9577); an optional ``<N>K`` context token covers the
+# runtime form Grok shows (list ``Grok 4.7 High``, runtime ``Grok 4.7 256K
+# High``). Low, Max and Fast variants stay unmapped.
 _CURSOR_DISPLAY_NAME_SLUGS: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"[ \t]*composer[ \t]+2\.5[ \t]*", re.ASCII | re.IGNORECASE), "composer-2.5"),
     (re.compile(r"[ \t]*grok[ \t]+4\.7[ \t]+256k[ \t]+high[ \t]*", re.ASCII | re.IGNORECASE), "grok-4.7"),
+    (re.compile(r"[ \t]*kimi[ \t]+k3(?:[ \t]+[0-9]+k)?[ \t]+high[ \t]*", re.ASCII | re.IGNORECASE), "kimi-code/k3"),
 )
 
 
 def canonical_cursor_model(value: Any) -> str:
     """Return the concrete slug for a Cursor display name, else ``value`` as text.
 
-    ``"Composer 2.5"`` becomes ``"composer-2.5"`` and ``"Grok 4.7 256K High"``
-    becomes ``"grok-4.7"`` (ASCII letters in any case, a run of ASCII spaces
-    or tabs between the words). Nothing else is rewritten: ``"Composer 2"``,
-    ``"Composer 2.5 Fast"``, ``"Grok 4.7 256K High Fast"``, ``"auto"``, other
+    ``"Composer 2.5"`` becomes ``"composer-2.5"``, ``"Grok 4.7 256K High"``
+    becomes ``"grok-4.7"`` and ``"Kimi K3 High"`` becomes ``"kimi-code/k3"``
+    (ASCII letters in any case, a run of ASCII spaces or tabs between the
+    words). Nothing else is rewritten: ``"Composer 2"``, ``"Composer 2.5 Fast"``,
+    ``"Grok 4.7 256K High Fast"``, ``"Kimi K3"``, ``"auto"``, other
     display names, any non-ASCII look-alike and empty values are returned
     unchanged (``None`` becomes ``""``).
     """

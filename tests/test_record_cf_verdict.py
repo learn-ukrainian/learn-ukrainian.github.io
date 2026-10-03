@@ -1557,3 +1557,89 @@ def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tm
     with pytest.raises(recorder.RecordError, match="absolute-path rule unavailable/incompatible"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+# --- #9577: the recorded reviewer exception ---------------------------------------------
+
+
+def _exception_receipt():
+    from scripts.review.reviewer_resolver import review_exception_receipt
+
+    return review_exception_receipt(
+        seat="cursor",
+        model="kimi-k3-high",
+        mode="read-only",
+        author_model="claude-opus-5-5",
+        risk="high",
+        subject_seats=frozenset({"codex"}),
+    )
+
+
+def kimi_exception_task(tasks, **updates):
+    write_task(
+        tasks,
+        **{
+            "agent": "cursor",
+            "model": "kimi-k3-high",
+            "mode": "read-only",
+            "resolved_model": "Kimi K3 High",
+            "resolved_model_known": True,
+            "resolved_model_source": "cursor-stream-json",
+            "review_exception": _exception_receipt(),
+            **updates,
+        },
+    )
+
+
+@pytest.mark.parametrize("reported", ["Kimi K3 High", "Kimi K3 262K High"])
+def test_9577_recorder_accepts_the_exception_seat_with_its_receipt(monkeypatch, tmp_path, reported):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
+    kimi_exception_task(tasks, resolved_model=reported)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    body = comments[0]["body"]
+    assert "Reviewer model: kimi-code/k3" in body and "Reviewer family: moonshot" in body
+    assert "Recorded exception: subject-seat-exhausted-kimi-k3-cursor (operator decision #9532, #9577)" in body
+    assert recorder.parse_marker(body)["model"] == "kimi-code/k3"
+
+
+@pytest.mark.parametrize(
+    ("updates", "families", "reason"),
+    [
+        pytest.param({"review_exception": None}, {"anthropic"}, "no recorded-exception receipt", id="no-receipt"),
+        pytest.param({"__tamper__": {"author_model": "gpt-6.1-sol"}}, {"anthropic"}, "does not match", id="tampered"),
+        pytest.param({"mode": "workspace-write"}, {"anthropic"}, "does not match", id="write-mode"),
+        pytest.param({"model": "kimi-k3-max"}, {"anthropic"}, "Cursor slug", id="other-slug"),
+        pytest.param({}, {"openai"}, "different author family", id="other-author-family"),
+        pytest.param({}, {"anthropic", "openai"}, "different author family", id="mixed-authors"),
+        pytest.param({}, {"moonshot"}, "equals an author family", id="moonshot-author"),
+    ],
+)
+def test_9577_recorder_refuses_the_exception_seat_without_a_matching_receipt(
+    monkeypatch, tmp_path, updates, families, reason
+):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families=families)
+    tamper = updates.pop("__tamper__", None)
+    if tamper:
+        updates["review_exception"] = {**_exception_receipt(), **tamper}
+    kimi_exception_task(tasks, **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize("reported", ["Kimi K3", "Kimi K3 Low", "Kimi K3 High Fast", "kimi-k3-high"])
+def test_9577_other_kimi_variants_attest_no_exception_seat(monkeypatch, tmp_path, reported):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
+    kimi_exception_task(tasks, resolved_model=reported)
+    with pytest.raises(recorder.RecordError, match=r"reviewer model unknown|reviewer family unknown"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+def test_9577_native_kimi_review_is_still_refused(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
+    write_task(tasks, agent="kimi", model="kimi-code/k3", review_exception=_exception_receipt())
+    with pytest.raises(recorder.RecordError, match="not a formal reviewer on this harness"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []

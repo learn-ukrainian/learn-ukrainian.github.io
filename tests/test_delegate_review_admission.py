@@ -819,3 +819,96 @@ def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
     assert routing.substitution is None
+
+
+# --- #9577: the recorded reviewer exception ---------------------------------------------
+
+_KIMI_TOKEN = "KIMI CODING-ONLY"
+_EXCEPTION_FLAGS = ("--review-author-model", "claude-opus-5-5", "--review-risk", "high", "--subject-seat", "codex")
+
+
+def _kimi_review(*extra, verdict=True):
+    return _args("--agent", "cursor", "--model", "kimi-k3-high", *extra, verdict=verdict)
+
+
+@pytest.mark.parametrize("verdict", [True, False])
+def test_9577_dispatch_admits_the_cursor_kimi_review_of_9557(monkeypatch, verdict):
+    """A Claude-authored change to the Codex adapter leaves no high-risk seat; the recorded exception reviews it."""
+    args = _kimi_review(*_EXCEPTION_FLAGS, verdict=verdict)
+    (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert refusal is None
+    assert (target.recipient, target.model) == ("cursor", "kimi-k3-high")
+    assert routing.substitution is None
+    receipt = delegate._dispatch_review_exception(args, agent="cursor")
+    assert receipt["id"] == "subject-seat-exhausted-kimi-k3-cursor"
+    assert receipt["decision"] == "#9532" and receipt["issue"] == "#9577"
+    assert receipt["author_family"] == "anthropic" and receipt["subject_seats"] == ["codex"]
+
+
+def test_9577_owned_path_classification_also_triggers_the_exception(monkeypatch):
+    args = _kimi_review(
+        "--review-author-model",
+        "claude-opus-5-5",
+        "--review-risk",
+        "high",
+        "--owned-path",
+        "scripts/agent_runtime/adapters/codex.py",
+    )
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert refusal is None and (target.recipient, target.model) == ("cursor", "kimi-k3-high")
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        pytest.param(("--review-author-model", "claude-opus-5-5", "--review-risk", "high"), id="sol-eligible"),
+        pytest.param(
+            ("--review-author-model", "claude-opus-5-5", "--review-risk", "critical", "--subject-seat", "codex"),
+            id="critical",
+        ),
+        pytest.param(
+            ("--review-author-model", "claude-opus-5-5", "--review-risk", "medium", "--subject-seat", "codex"),
+            id="medium",
+        ),
+        pytest.param(
+            (
+                "--review-author-model",
+                "composer-2.5",
+                "--review-risk",
+                "high",
+                "--subject-seat",
+                "codex",
+                "--subject-seat",
+                "claude",
+            ),
+            id="moonshot-author",
+        ),
+        pytest.param((*_EXCEPTION_FLAGS, "--mode", "workspace-write", "--owned-path", "scripts/ci/x.py"), id="write"),
+        pytest.param(("--review-risk", "high", "--subject-seat", "codex"), id="no-author"),
+    ],
+)
+def test_9577_every_other_kimi_review_is_still_refused(monkeypatch, extra):
+    (refusal, target), _ = _admit(_kimi_review(*extra), monkeypatch, _budget(codex="cool"))
+    assert target is None
+    assert refusal and _KIMI_TOKEN in refusal
+
+
+def test_9577_a_non_review_read_only_kimi_dispatch_is_refused(monkeypatch):
+    args = _kimi_review(verdict=False)
+    assert not delegate._dispatch_is_review_typed(args)
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None and _KIMI_TOKEN in refusal and "--mode read-only" in refusal
+    assert delegate._dispatch_review_exception(args, agent="cursor") is None
+
+
+@pytest.mark.parametrize("slug", ["kimi-k3-max", "kimi-k3-low", "kimi-k3-high-fast"])
+def test_9577_only_the_recorded_cursor_slug_is_admitted(monkeypatch, slug):
+    args = _args("--agent", "cursor", "--model", slug, *_EXCEPTION_FLAGS)
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None and _KIMI_TOKEN in refusal
+
+
+def test_9577_native_kimi_seats_never_take_the_exception(monkeypatch):
+    args = _args("--agent", "kimi", "--model", "kimi-k3-high", *_EXCEPTION_FLAGS)
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None and _KIMI_TOKEN in refusal
