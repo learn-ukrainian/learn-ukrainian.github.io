@@ -56,7 +56,7 @@ def test_normalization_closed_grammar(value, expected):
         (["target"], "tar", "reference_no_match"),
         (["targets"], "target", "reference_no_match"),
         (["target (one), goal (two)"], "target", "reference_no_match"),
-        (["target (noun)", "target"], "target", "reference_ambiguous"),
+        (["TARGET", "target"], "target", "reference_ambiguous"),
         (["target", "other"], "target / absent", "reference_multi_head"),
     ],
 )
@@ -70,11 +70,8 @@ def test_same_visible_span_tie_and_multihead_one_span():
     result = matcher.select(WORD, [row(["target"], 7), row(["target"], 3)], "TARGET.")
     assert result.ref["id"] == 3
     assert result.ref["span_index"] == 0
-    assert matcher.select(WORD, [row(["target / goal"])], "target, goal").gloss == "target / goal"
-    assert (
-        matcher.select(WORD, [row(["target / goal (mechanical)"])], "target (mechanical)").gloss
-        == "target / goal (mechanical)"
-    )
+    assert matcher.select(WORD, [row(["target / goal"])], "target, goal").reason == "reference_multi_head"
+    assert matcher.select(WORD, [row(["target / goal (mechanical)"])], "target (mechanical)").gloss == "target"
 
 
 def test_lemma_pos_homonym_and_kaikki_gates():
@@ -85,7 +82,7 @@ def test_lemma_pos_homonym_and_kaikki_gates():
     ]
     assert matcher.select(WORD, [row(["other", "target"])], "target", ulif_entries=entries).ref["span_index"] == 1
     assert (
-        matcher.select(WORD, [row(["target", "target (noun)"])], "target", ulif_entries=entries).reason
+        matcher.select(WORD, [row(["target", "TARGET (noun)"])], "target", ulif_entries=entries).reason
         == "reference_ambiguous"
     )
     assert (
@@ -94,7 +91,7 @@ def test_lemma_pos_homonym_and_kaikki_gates():
 
 
 def test_span_indexes_follow_existing_parser():
-    r = row(["one, two; three (qualifier)", "four"])
+    r = row(["one, two; three (a definition)", "four"])
     pool = matcher.candidates(WORD, [r])
     expected = [
         span
@@ -102,7 +99,9 @@ def test_span_indexes_follow_existing_parser():
         for part in sources._sub_senses(s)
         for span in sources._sense_spans(part)
     ]
-    assert [c["span"] for c in pool] == expected
+    assert [span for span, _ in matcher.row_spans(r)] == expected
+    assert [c["span"] for c in pool] == ["one", "two", "three", "four"]
+    assert all(c["atom_index"] == 0 for c in pool)
     assert [c["span_index"] for c in pool] == list(range(len(expected)))
 
 
@@ -124,7 +123,8 @@ def bound(tmp_path, monkeypatch, synthetic_sources, synthetic_vesum):
 
 
 @pytest.mark.parametrize(
-    "field,value", [("row_sha256", "0" * 64), ("span_index", 0), ("span", "invented"), ("locator", "p999#1")]
+    "field,value",
+    [("row_sha256", "0" * 64), ("span_index", 0), ("span", "invented"), ("atom_index", 1), ("locator", "p999#1")],
 )
 def test_public_binding_mutations_withhold(bound, field, value):
     root, api, b = bound
@@ -287,7 +287,14 @@ def test_measurement_is_sanitized_and_uses_all_reference_entries(bound):
     )
     assert selected["W-001"]["id"] == b["id"]
     assert decisions == [
-        {"word": "W-001", "id": 2, "span_index": 1},
+        {
+            "word": "W-001",
+            "id": 2,
+            "span_index": 1,
+            "atom_index": 0,
+            "unknown_label_spans": 0,
+            "uncertain_scope_spans": 0,
+        },
         {"word": "W-002", "reason": "reference_non_member"},
     ]
     assert "TARGET" not in json.dumps(decisions)
@@ -468,6 +475,7 @@ def test_reviewed_binding_derives_identity_and_approving_subject(review_dispatch
         "word",
         "row",
         "span_index",
+        "atom_index",
         "span",
         "candidates",
         "verdict",
@@ -585,12 +593,13 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
         assert bindings.verify_receipt(receipt, payload, KEY)
 
 
-def test_bind_cli_candidate_list_and_review(bound, review_dispatch, monkeypatch, capsys):
+@pytest.mark.parametrize("atom_index", [0, 1])
+def test_bind_cli_candidate_list_and_review(bound, review_dispatch, monkeypatch, capsys, atom_index):
     root, api, _b = bound
     # The approving subject must match the API's complete current list.
     tasks, _pool, record, result, task, verdict = review_dispatch
     pool = bindings.candidate_list(WORD, api.gloss_rows([("synthetic", "noun")]).raw[("synthetic", "noun")])
-    selected = next(c for c in pool if c["span"] == "target")
+    selected = next(c for c in pool if c["span"] == ("target" if atom_index == 0 else "goal"))
     verdict["subject"] = {"word": "W-001", "candidates_sha256": bindings.digest(pool), **selected}
     result.write_text(json.dumps(verdict))
     task["result_sha256"] = hashlib.sha256(result.read_bytes()).hexdigest()
@@ -609,6 +618,8 @@ def test_bind_cli_candidate_list_and_review(bound, review_dispatch, monkeypatch,
                 "2",
                 "--span-index",
                 "1",
+                "--atom-index",
+                str(atom_index),
                 "--review-task",
                 "review-test",
                 "--author-model",
@@ -819,3 +830,168 @@ def test_partial_build_revalidates_carried_reference_gloss(bound, monkeypatch, s
         assert any(d["word_id"] == "W-001" and d["reason"] == "reference_binding_invalid" for d in result["unglossed"])
     else:
         assert carried["gloss_en"] == carried["gloss_ref"]["span"] == b["span"]
+
+
+@pytest.mark.parametrize(
+    "dictionary,meaning,display,index",
+    [
+        ("stadium (venue where sporting events are held)", "stadium", "stadium", 0),
+        ("egg (an oval object laid by a bird)", "egg", "egg", 0),
+        ("fox (Vulpes)", "fox", "fox", 0),
+        ("page (one side of a leaf of a book)", "page", "page", 0),
+        ("(possessive) our, ours", "our", "our", 0),
+        ("(possessive) our, ours", "ours", "ours", 0),
+        ("to go (transitive)", "go", "to go", 0),
+        ("Target / Goal (an intended destination)", "goal", "Goal", 1),
+        ("target (countable), goal", "goal", "goal", 0),
+    ],
+)
+def test_definition_grammar_and_exact_source_atom(dictionary, meaning, display, index):
+    word = {**WORD, "pos": "verb"} if dictionary.startswith("to ") else WORD
+    result = matcher.select(word, [row([dictionary], pos=word["pos"])], meaning)
+    assert result.gloss == result.ref["span"] == display
+    assert result.ref["atom_index"] == index
+    assert display in dictionary
+
+
+@pytest.mark.parametrize("label", sorted(matcher.GRAMMATICAL_ANNOTATIONS))
+@pytest.mark.parametrize("shape", ["({label}) target, goal", "target ({label}), goal", "target / goal ({label})"])
+def test_grammatical_labels_ignored_at_every_position(label, shape):
+    text = shape.format(label=label)
+    assert matcher.select(WORD, [row([text])], "target").gloss == "target"
+    assert matcher.select(WORD, [row([text])], "goal").gloss == "goal"
+
+
+@pytest.mark.parametrize("labels", [matcher.RESTRICTING_LABELS, matcher.TOPIC_LABELS])
+def test_closed_restricting_and_domain_labels_require_reference_label(labels):
+    for label, canonical in labels.items():
+        for text in (f"({label}) target", f"target ({label})", f"target (({label}) an intended destination)"):
+            assert matcher.select(WORD, [row([text])], "target").reason == "reference_no_match"
+            selected = matcher.select(WORD, [row([text])], f"target ({canonical})")
+            assert selected.gloss == "target", (label, text)
+            assert selected.candidates[0]["labels"] == (canonical,)
+
+
+@pytest.mark.parametrize(
+    "dictionary,meaning",
+    [
+        ("(historical) circus (in ancient Rome)", "circus"),
+        ("venom ((figurative) malice)", "malice"),
+        ("venom ((figurative) malice)", "venom"),
+        ("(mechanics) tooth (of a gear)", "tooth"),
+        ("(historical) target, goal (old usage)", "target"),
+        ("(historical) target, goal (old usage)", "goal"),
+        ("(historical) target; goal (old usage)", "goal"),
+        ("target / goal (mechanical)", "target"),
+        ("target (anatomical)", "target (mechanical)"),
+        ("billion (short scale)", "billion"),
+        ("billion (long scale)", "billion (short scale)"),
+        ("target (sports)", "target (music)"),
+    ],
+)
+def test_driver_observed_restrictions_cannot_escape_group(dictionary, meaning):
+    assert matcher.select(WORD, [row([dictionary])], meaning).reason == "reference_no_match"
+
+
+def test_unrestricted_definition_wins_over_historical_circus():
+    result = matcher.select(
+        WORD, [row(["(historical) circus (in ancient Rome)", "circus (company that performs acrobatics)"])], "circus"
+    )
+    assert result.gloss == "circus"
+    assert result.ref["span_index"] == 1
+    assert result.candidates[0]["definitions"] == ("company that performs acrobatics",)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "(unknown label) target",
+        "(possessive, invented-label) target",
+        "target (rare, invented-label)",
+        "target ((rare, invented-label) a destination)",
+        "target ((unknown label) a destination)",
+    ],
+)
+def test_unknown_labels_excluded_and_counted(text):
+    report = {}
+    assert matcher.candidates(WORD, [row([text])], report=report) == []
+    assert report == {"unknown_label_spans": 1}
+    assert matcher.select(WORD, [row([text])], "target").reason == "reference_no_match"
+
+
+@pytest.mark.parametrize(
+    "text", ["target (one), goal (two)", "target (historical), goal", "target (broken", "((rare) target"]
+)
+def test_uncertain_scope_is_not_split(text):
+    assert matcher.atoms(text, "noun") == ()
+    assert not matcher.candidates(WORD, [row([text])])
+
+
+def test_atom_provenance_rederived_and_missing_index_refused():
+    dictionary = row(["target / Goal (an intended destination)"])
+    result = matcher.select(WORD, [dictionary], "goal")
+    b = bindings.reference_binding(WORD, result.ref, FIXTURE["private"], KEY, "test-key")
+    context = bindings.Context("a1", {"W-001": b}, [{"lemma": "synthetic", "locator": b["locator"]}])
+    assert context.select(WORD, [dictionary], None).gloss == "Goal"
+    b["atom_index"] = 0
+    assert context.select(WORD, [dictionary], None).reason == "reference_binding_invalid"
+    b.pop("atom_index")
+    assert context.select(WORD, [dictionary], None).reason == "reference_binding_invalid"
+
+
+def test_definitions_are_evidence_but_same_display_and_labels_collapse():
+    result = matcher.select(
+        WORD, [row(["target (first definition)"], 7), row(["target (second definition)"], 3)], "target"
+    )
+    assert result.ref["id"] == 3
+    assert result.gloss == "target"
+    assert result.candidates[0]["definitions"] == ("second definition",)
+    assert matcher.select(WORD, [row(["Target", "target"])], "target").reason == "reference_ambiguous"
+
+
+def test_atoms_only_split_documented_separators():
+    assert matcher.source_atoms("target / goal, aim; object") == ("target", "goal", "aim", "object")
+    assert matcher.atoms("target or goal", "noun") == ("target or goal",)
+    assert matcher.select(WORD, [row(["target or goal"])], "target").reason == "reference_no_match"
+
+
+def test_row_parsing_invalid_and_non_string_entries():
+    assert matcher.row_spans(row("not-json")) == []
+    assert matcher.row_spans({"translations": "bad JSON"}) == []
+    assert matcher.row_spans(row([None, "target"])) == [("target", "target")]
+    assert matcher.classify("(rare)").reason == "uncertain_scope"
+
+
+def test_definition_part_of_sense_signature():
+    pool = matcher.candidates(WORD, [row(["target (first definition)", "target (second definition)"])])
+    assert matcher.signature(pool[0]) != matcher.signature(pool[1])
+    assert matcher.display_signature(pool[0]) == matcher.display_signature(pool[1])
+
+
+def test_unknown_label_counts_in_store_diagnostics(bound):
+    _root, api, _b = bound
+    api.close()
+    with sqlite3.connect(api.sources_db) as db:
+        db.execute("UPDATE dmklinger_uk_en SET translations=? WHERE id=2", (json.dumps(["(unknown label) target"]),))
+    _selected, decisions = sense_cli.select_store(
+        {"level": "a1", "words": [WORD]},
+        bindings.public_entries(a1_reference.INVENTORY_PATH),
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        api,
+    )
+    assert decisions[0]["unknown_label_spans"] == 1
+    assert decisions[0]["reason"] == "reference_no_match"
+    assert "TARGET" not in json.dumps(decisions)
+
+
+def test_reviewed_binding_requires_exact_atom_index(review_dispatch):
+    tasks, _pool, record, result, task, verdict = review_dispatch
+    pool = bindings.candidate_list(WORD, [row(["target / Goal (an intended destination)"])])
+    verdict["subject"] = {"word": "W-001", "candidates_sha256": bindings.digest(pool), **pool[1]}
+    result.write_text(json.dumps(verdict))
+    task["result_sha256"] = hashlib.sha256(result.read_bytes()).hexdigest()
+    record.write_text(json.dumps(task))
+    b = bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, atom_index=1)
+    assert b["span"] == "Goal" and b["atom_index"] == 1
+    with pytest.raises(ValueError, match="review_subject_stale_or_unapproved"):
+        bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, atom_index=0)

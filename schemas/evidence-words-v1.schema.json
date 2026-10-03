@@ -49,6 +49,10 @@
         "span": {
           "type": "string",
           "minLength": 1
+        },
+        "atom_index": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "required": [

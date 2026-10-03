@@ -112,6 +112,10 @@
               "author_model"
             ],
             "additionalProperties": false
+          },
+          "atom_index": {
+            "type": "integer",
+            "minimum": 0
           }
         },
         "required": [
@@ -121,7 +125,8 @@
           "id",
           "row_sha256",
           "span_index",
-          "span"
+          "span",
+          "atom_index"
         ],
         "additionalProperties": false,
         "allOf": [

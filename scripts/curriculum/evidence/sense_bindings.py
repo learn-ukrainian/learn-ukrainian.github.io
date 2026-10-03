@@ -125,11 +125,7 @@ class Context:
         if binding:
             candidates = matcher.candidates(word, rows, pronoun_entry=kwargs.get("pronoun_entry"))
             selected = next(
-                (
-                    c
-                    for c in candidates
-                    if all(c[k] == binding[k] for k in ("table", "id", "row_sha256", "span_index", "span"))
-                ),
+                (c for c in candidates if all(c[k] == binding.get(k) for k in matcher.REF_FIELDS)),
                 None,
             )
             if binding["method"] == matcher.METHOD and (
@@ -142,7 +138,7 @@ class Context:
             return sources.GlossSelection(
                 binding["span"],
                 "dmklinger_uk_en",
-                {k: binding[k] for k in ("table", "id", "row_sha256", "span_index", "span")},
+                {k: binding[k] for k in matcher.REF_FIELDS},
             )
         if member:
             return sources.GlossSelection(reason="reference_binding_missing")
@@ -170,7 +166,8 @@ def reference_binding(word: dict, ref: dict, private: dict, key: bytes, key_id: 
 def candidate_list(word: dict, rows: list[dict]) -> list[dict]:
     """Reviewable public values only; their digest is the review's exact subject."""
     return [
-        {k: c[k] for k in ("table", "id", "row_sha256", "span_index", "span")} for c in matcher.candidates(word, rows)
+        {**{k: c[k] for k in matcher.REF_FIELDS}, "labels": list(c["labels"]), "definitions": list(c["definitions"])}
+        for c in matcher.candidates(word, rows)
     ]
 
 
@@ -182,6 +179,8 @@ def reviewed_binding(
     task_id: str,
     tasks_dir: Path,
     author_model: str | None = None,
+    *,
+    atom_index: int = 0,
 ) -> dict:
     """Derive reviewer identity from a sealed terminal dispatch and MCP ledger."""
     if not re.fullmatch(r"[a-zA-Z0-9_-]+", task_id):
@@ -219,7 +218,9 @@ def reviewed_binding(
     if hashlib.sha256(result).hexdigest() != task.get("result_sha256"):
         raise ValueError("review_result_changed")
     verdict = json.loads(result)
-    chosen = next((c for c in pool if c["id"] == row_id and c["span_index"] == span_index), None)
+    chosen = next(
+        (c for c in pool if c["id"] == row_id and c["span_index"] == span_index and c["atom_index"] == atom_index), None
+    )
     subject = {"word": word["id"], "candidates_sha256": digest(pool), **(chosen or {})}
     if chosen is None or verdict.get("verdict") != "APPROVE" or verdict.get("subject") != subject:
         raise ValueError("review_subject_stale_or_unapproved")
@@ -263,7 +264,7 @@ def reviewed_binding(
     return {
         "word": word["id"],
         "method": "reviewed.v1",
-        **chosen,
+        **{k: chosen[k] for k in matcher.REF_FIELDS},
         "reviewer": {
             "task_id": task_id,
             "model": model,

@@ -37,6 +37,7 @@ def select_store(
         if not members:
             decisions.append({"word": word["id"], "reason": "reference_non_member"})
             continue
+        report = {"unknown_label_spans": 0, "uncertain_scope_spans": 0}
         results = [
             (
                 member,
@@ -46,23 +47,32 @@ def select_store(
                     private[member["locator"]]["meaning"],
                     kaikki.get(word["lemma"]),
                     ulif_entries=ulif.get(word["lemma"], []),
+                    report=report,
                 ),
             )
             for member in members
         ]
         successful = [r for _, r in results if r.ref]
-        if len(successful) == len(results) and len({r.gloss for r in successful}) == 1:
+        if len(successful) == len(results) and len({matcher.signature(r.candidates[0]) for r in successful}) == 1:
             member, result = min(
-                results, key=lambda pair: (pair[1].ref["id"], pair[1].ref["span_index"], pair[0]["locator"])
+                results,
+                key=lambda pair: (
+                    pair[1].ref["id"],
+                    pair[1].ref["span_index"],
+                    pair[1].ref["atom_index"],
+                    pair[0]["locator"],
+                ),
             )
-            decisions.append({"word": word["id"], "id": result.ref["id"], "span_index": result.ref["span_index"]})
+            decisions.append(
+                {"word": word["id"], **{k: result.ref[k] for k in ("id", "span_index", "atom_index")}, **report}
+            )
             if key is not None and key_id:
                 selected[word["id"]] = bindings.reference_binding(
                     word, result.ref, private[member["locator"]], key, key_id
                 )
         else:
             reason = results[0][1].reason if len(results) == 1 else "reference_ambiguous"
-            decisions.append({"word": word["id"], "reason": reason or "reference_ambiguous"})
+            decisions.append({"word": word["id"], "reason": reason or "reference_ambiguous", **report})
     return selected, decisions
 
 
@@ -192,7 +202,7 @@ def parser(command: str) -> argparse.ArgumentParser:
             "Examples:\n  .venv/bin/python -m scripts.curriculum.evidence sense-select a1 --private-input PRIVATE_JSONL\n"
             "  .venv/bin/python -m scripts.curriculum.evidence sense-select a1 --private-input PRIVATE_JSONL --write --key-file KEY --key-id build1\n"
             "  .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --candidates\n"
-            "  .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --row-id 1 --span-index 0 --review-task REVIEW --author-model gpt-6.1-sol\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence sense-bind a1 --word W-001 --row-id 1 --span-index 0 --atom-index 0 --review-task REVIEW --author-model gpt-6.1-sol\n"
             "Outputs: public JSON decisions/candidates; --write updates bindings + lock; --check verifies and seals a clean head.\n"
             "Exit codes: 0 success; 1 invalid/stale evidence or suspected leak; 2 usage.\n"
             "Related: build-words, words-verify, pack-verify; docs/runbooks/reference-sense-bindings.md"
@@ -220,6 +230,7 @@ def parser(command: str) -> argparse.ArgumentParser:
         p.add_argument("--candidates", action="store_true", help="List public dictionary candidates without writing")
         p.add_argument("--row-id", type=int, help="Dictionary row id from candidate list")
         p.add_argument("--span-index", type=int, help="Parser position from candidate list")
+        p.add_argument("--atom-index", type=int, default=0, help="Atom position from candidate list (default: 0)")
         p.add_argument("--review-task", help="Terminal Ukrainian review dispatch id")
         p.add_argument(
             "--author-model", help="Optional author consistency check; identity is derived from the dispatch"
@@ -263,11 +274,26 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                 if None in (args.row_id, args.span_index, args.review_task):
                     raise ValueError("review_arguments_required")
                 context.entries[args.word] = bindings.reviewed_binding(
-                    word, pool, args.row_id, args.span_index, args.review_task, tasks_dir(), args.author_model
+                    word,
+                    pool,
+                    args.row_id,
+                    args.span_index,
+                    args.review_task,
+                    tasks_dir(),
+                    args.author_model,
+                    atom_index=args.atom_index,
                 )
                 bindings.write(path, args.level, context.entries)
                 print(
-                    json.dumps({"word": args.word, "id": args.row_id, "span_index": args.span_index, "status": "bound"})
+                    json.dumps(
+                        {
+                            "word": args.word,
+                            "id": args.row_id,
+                            "span_index": args.span_index,
+                            "atom_index": args.atom_index,
+                            "status": "bound",
+                        }
+                    )
                 )
                 return 0
             private = bindings.private_entries(args.private_input, context.inventory)
@@ -290,7 +316,13 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                     rows = api.gloss_rows([(word["lemma"], word["pos"])]).raw.get((word["lemma"], word["pos"]), [])
                     pool = bindings.candidate_list(word, rows)
                     current = bindings.reviewed_binding(
-                        word, pool, binding["id"], binding["span_index"], binding["reviewer"]["task_id"], tasks_dir()
+                        word,
+                        pool,
+                        binding["id"],
+                        binding["span_index"],
+                        binding["reviewer"]["task_id"],
+                        tasks_dir(),
+                        atom_index=binding["atom_index"],
                     )
                     if current != binding:
                         raise ValueError("review_subject_stale_or_unapproved")
@@ -332,7 +364,13 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                     bindings.write_receipt(args.receipt, payload, key)
             print(
                 json.dumps(
-                    {"decisions": decisions, "resolved": sum("id" in d for d in decisions), "total": len(decisions)},
+                    {
+                        "decisions": decisions,
+                        "resolved": sum("id" in d for d in decisions),
+                        "total": len(decisions),
+                        "unknown_label_spans": sum(d.get("unknown_label_spans", 0) for d in decisions),
+                        "uncertain_scope_spans": sum(d.get("uncertain_scope_spans", 0) for d in decisions),
+                    },
                     ensure_ascii=False,
                 )
             )
