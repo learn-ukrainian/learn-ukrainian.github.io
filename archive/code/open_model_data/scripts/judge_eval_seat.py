@@ -6,6 +6,12 @@ Fulfills Phase 6.1 (#8139) requirement for Round 16:
  and publish its disagreements with the regex audit.'
 """
 
+# Archived old-plan code (#9607): refuse even file-based loading (spec_from_file_location + exec_module).
+raise ImportError(
+    "archive/code/open_model_data holds archived old-plan generators (#9607, plan v3.4.3 PA1); "
+    "this module must not be imported or run. See archive/code/open_model_data/README.md."
+)
+
 import json
 import logging
 import re
@@ -21,14 +27,15 @@ VESUM_DB = REPO_ROOT / "data/vesum.db"
 
 # Import regex audit function
 sys.path.insert(0, str(REPO_ROOT))
-from scripts.projects.open_model_data.audit_assistant_quality import (
-    audit_definitional_alignment,
-)
-from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
     get_vesum_cursor,
     is_definitional_for_concept,
 )
+
+from scripts.projects.open_model_data.audit_assistant_quality import (
+    audit_definitional_alignment,
+)
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 CLAUDE_VERDICTS = resolve_open_model_path(RELEASE_DIR / "eval_claude_verdicts.json")
 SEAT_JUDGMENT = resolve_open_model_path(RELEASE_DIR / "EVAL_INDEPENDENT_SEAT_JUDGMENT.md")

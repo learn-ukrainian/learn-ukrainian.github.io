@@ -28,6 +28,7 @@ from scripts.projects.open_model_data.paths import (
     REGISTRY_OPEN_MODEL_DATA_DIR,
     REGISTRY_OPEN_MODEL_PREFIX,
     REPO_ROOT,
+    STRAY_STORAGE,
     TOMBSTONE_NAME,
 )
 
@@ -138,6 +139,17 @@ QUARANTINE_SETS: tuple[QuarantineSet, ...] = (
     ),
 )
 
+# Sealed files outside the open-model tree, by repo-relative path. They are git-ignored, so `build`
+# reads them from --data-root; the guard matches them by path in any checkout and by bytes anywhere.
+STRAY_SETS: tuple[QuarantineSet, ...] = (
+    QuarantineSet(
+        "stray-ulif-dump",
+        ("data/ulif_dump.db",),
+        "Stray 16 KB ULIF crawl dump outside the open-model tree: one ULIF entry that duplicates the canonical "
+        "ULIF data in data/sources.db (ulif_dictua_entries). Sealed and kept so no loader trains on it.",
+    ),
+)
+
 # Tracked record files: every file under these registry directories, plus single files.
 TRACKED_SEALED_DIRECTORIES: tuple[str, ...] = (
     "archive",
@@ -172,6 +184,16 @@ def set_for(tail: str) -> QuarantineSet:
     if not matches:
         raise InventoryError(f"no quarantine set covers {tail}; add one with its reason")
     return max(matches, key=lambda match: match[0])[1]
+
+
+def set_for_path(path: str) -> QuarantineSet:
+    """Return the set of an inventory path: open-model sets by tail, stray sets by repo-relative path."""
+    if "/open_model_data/" in path:
+        return set_for(path.split("/open_model_data/", 1)[1])
+    for item in STRAY_SETS:
+        if path in item.prefixes:
+            return item
+    raise InventoryError(f"no quarantine set covers {path}; add one with its reason")
 
 
 def ignored_manifest_entries(repo: Path = REPO_ROOT) -> list[dict[str, Any]]:
@@ -226,6 +248,11 @@ def build_inventory(*, data_root: Path, repo: Path = REPO_ROOT) -> dict[str, Any
     for relative in tracked_record_paths(repo):
         path = repo / relative
         artifacts.append(_artifact(relative, "tracked", path.stat().st_size, sha256_file(path)))
+    for relative in stray_paths():
+        path = data_root / relative
+        if not path.is_file():
+            raise InventoryError(f"{relative}: stray sealed file missing under {data_root}")
+        artifacts.append(_artifact(relative, STRAY_STORAGE, path.stat().st_size, sha256_file(path)))
     return {
         "schema": QUARANTINE_INVENTORY_SCHEMA,
         "issue": 9607,
@@ -233,16 +260,21 @@ def build_inventory(*, data_root: Path, repo: Path = REPO_ROOT) -> dict[str, Any
         "policy": "Sealed and kept. No loader, packager or uploader may open these artifacts; nothing is deleted.",
         "totals": _totals(artifacts),
         "sets": [
-            {"id": item.set_id, "prefixes": list(item.prefixes), "reason": item.reason} for item in QUARANTINE_SETS
+            {"id": item.set_id, "prefixes": list(item.prefixes), "reason": item.reason}
+            for item in (*QUARANTINE_SETS, *STRAY_SETS)
         ],
         "tombstoned_directories": [f"{REGISTRY_OPEN_MODEL_PREFIX}/{item}" for item in TOMBSTONED_DIRECTORIES],
         "artifacts": artifacts,
     }
 
 
+def stray_paths() -> list[str]:
+    """Return the repo-relative paths of every sealed file outside the open-model tree."""
+    return sorted(prefix for item in STRAY_SETS for prefix in item.prefixes)
+
+
 def _artifact(path: str, storage: str, size: int, digest: str) -> dict[str, Any]:
-    tail = path.split("/open_model_data/", 1)[1]
-    sealed = set_for(tail)
+    sealed = set_for_path(path)
     return {
         "path": path,
         "storage": storage,
@@ -255,7 +287,7 @@ def _artifact(path: str, storage: str, size: int, digest: str) -> dict[str, Any]
 
 def _totals(artifacts: list[dict[str, Any]]) -> dict[str, int]:
     totals: dict[str, int] = {}
-    for storage in ("ignored", "tracked"):
+    for storage in ("ignored", "tracked", STRAY_STORAGE):
         selected = [item for item in artifacts if item["storage"] == storage]
         totals[f"{storage}_files"] = len(selected)
         totals[f"{storage}_bytes"] = sum(item["bytes"] for item in selected)
@@ -272,24 +304,28 @@ def verify_inventory(
     artifacts = inventory["artifacts"]
     if inventory["totals"] != _totals(artifacts):
         problems.append("inventory totals do not match its artifacts")
-    sets = {item.set_id: item.reason for item in QUARANTINE_SETS}
-    checked = {"tracked": 0, "ignored": 0, "ignored_absent": 0}
+    sets = {item.set_id: item.reason for item in (*QUARANTINE_SETS, *STRAY_SETS)}
+    checked = {"tracked": 0, "ignored": 0, STRAY_STORAGE: 0, "ignored_absent": 0, f"{STRAY_STORAGE}_absent": 0}
     for entry in artifacts:
-        tail = entry["path"].split("/open_model_data/", 1)[1]
-        if set_for(tail).set_id != entry["set"] or sets.get(entry["set"]) != entry["reason"]:
+        try:
+            sealed = set_for_path(entry["path"])
+        except InventoryError as exc:
+            problems.append(str(exc))
+            continue
+        if sealed.set_id != entry["set"] or sets.get(entry["set"]) != entry["reason"]:
             problems.append(f"{entry['path']}: set or reason drift")
         if entry["storage"] == "tracked":
             path = repo / entry["path"]
         elif data_root is not None:
             path = data_root / entry["path"]
         else:
-            checked["ignored_absent"] += 1
+            checked[f"{entry['storage']}_absent"] += 1
             continue
         if not path.is_file():
             if entry["storage"] == "tracked":
                 problems.append(f"{entry['path']}: tracked artifact missing")
             else:
-                checked["ignored_absent"] += 1
+                checked[f"{entry['storage']}_absent"] += 1
             continue
         if path.stat().st_size != entry["bytes"] or sha256_file(path) != entry["sha256"]:
             problems.append(f"{entry['path']}: hash drift")
@@ -301,6 +337,8 @@ def verify_inventory(
     ignored = {entry["path"] for entry in artifacts if entry["storage"] == "ignored"}
     if ignored != {entry["path"] for entry in ignored_manifest_entries(repo)}:
         problems.append("ignored artifacts differ from the artifact manifests")
+    if {entry["path"] for entry in artifacts if entry["storage"] == STRAY_STORAGE} != set(stray_paths()):
+        problems.append("stray sealed files differ from the inventory")
     for directory in TOMBSTONED_DIRECTORIES:
         if not (REGISTRY_OPEN_MODEL_DATA_DIR / directory / TOMBSTONE_NAME).is_file():
             problems.append(f"{REGISTRY_OPEN_MODEL_PREFIX}/{directory}: tombstone missing")
@@ -340,7 +378,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--data-root",
         type=Path,
         required=True,
-        help="Checkout whose data/projects/open_model_data holds the git-ignored artifacts (read only).",
+        help="Checkout holding the git-ignored artifacts (data/projects/open_model_data and the stray sealed files); read only.",
     )
     verify = sub.add_parser("verify", help="Re-hash the inventory against the artifacts; read only.")
     verify.add_argument(

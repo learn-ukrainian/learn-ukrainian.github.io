@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import posixpath
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -47,6 +48,8 @@ TOMBSTONE_NAME = "TOMBSTONE.md"
 QUARANTINE_INVENTORY_RELATIVE = "quarantine/inventory_v1.json"
 QUARANTINE_INVENTORY_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / QUARANTINE_INVENTORY_RELATIVE
 QUARANTINE_INVENTORY_SCHEMA = "open_model_quarantine_inventory_v1"
+# Inventory storage of sealed files that lie outside the open-model tree.
+STRAY_STORAGE = "stray"
 # Successor of the pre-migration gemma probe runner. Filled after the routed
 # file is frozen for this commit; tests require these to match the file bytes.
 GEMMA_PROBE_RUNNER_BYTES = 63112
@@ -85,14 +88,24 @@ def quarantine_inventory() -> dict[str, Any]:
 
 @lru_cache(maxsize=1)
 def _quarantined_tails() -> frozenset[str]:
-    """Open-model relative paths of every inventoried artifact."""
+    """Open-model relative paths of every inventoried artifact inside the open-model tree."""
     tails = set()
     for entry in quarantine_inventory()["artifacts"]:
+        if entry["storage"] == STRAY_STORAGE:
+            continue
         tail = _open_model_tail(entry["path"])
         if tail is None:
             raise QuarantinedArtifactError(f"inventory path outside the open-model tree: {entry['path']}")
         tails.add(tail)
     return frozenset(tails)
+
+
+@lru_cache(maxsize=1)
+def _quarantined_stray_paths() -> frozenset[str]:
+    """Repo-relative paths of inventoried files outside the open-model tree."""
+    return frozenset(
+        entry["path"] for entry in quarantine_inventory()["artifacts"] if entry["storage"] == STRAY_STORAGE
+    )
 
 
 @lru_cache(maxsize=1)
@@ -122,17 +135,17 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _path_rule_reason(candidate: Path, resolved: Path) -> str | None:
-    """Apply the archive, tombstone and inventory-path rules without reading file bytes."""
-    for base in (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR):
-        if resolved == base.resolve() or base.resolve() in resolved.parents:
-            return "archived"
-    tail = _open_model_tail(candidate)
-    if tail is None:
-        tail = _open_model_tail(resolved)
-    if tail is None:
-        return None
+def _path_forms(candidate: Path, resolved: Path) -> tuple[str, ...]:
+    """The lexically normalized and the resolved form of a path; ``..`` and symlinks cannot hide a seal."""
+    forms = (posixpath.normpath(candidate.as_posix()), resolved.as_posix())
+    return tuple(dict.fromkeys(forms))
+
+
+def _tail_rule_reason(tail: str) -> str | None:
+    """Apply the archive, tombstone and inventory-path rules to one open-model relative path."""
     parts = [part for part in tail.split("/") if part]
+    if parts[:1] == ["archive"]:
+        return "archived"
     for depth in range(1, len(parts) + 1):
         prefix = "/".join(parts[:depth])
         for base, label in (
@@ -150,6 +163,29 @@ def _path_rule_reason(candidate: Path, resolved: Path) -> str | None:
     return None
 
 
+def _path_rule_reason(candidate: Path, resolved: Path) -> str | None:
+    """Apply the archive, tombstone and inventory-path rules to every form of a path, without reading bytes."""
+    for base in (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR):
+        if resolved == base.resolve() or base.resolve() in resolved.parents:
+            return "archived"
+    for form in _path_forms(candidate, resolved):
+        tail = _open_model_tail(form)
+        if tail is not None:
+            reason = _tail_rule_reason(tail)
+            if reason is not None:
+                return reason
+    return None
+
+
+def _stray_rule_reason(candidate: Path, resolved: Path) -> str | None:
+    """Match inventoried files outside the open-model tree by their repo-relative path in any checkout."""
+    for form in _path_forms(candidate, resolved):
+        for stray in _quarantined_stray_paths():
+            if form == stray or form.endswith("/" + stray):
+                return f"inventoried at {stray}"
+    return None
+
+
 def _resolved(candidate: Path) -> Path:
     try:
         return candidate.resolve()
@@ -162,15 +198,18 @@ def quarantine_reason(path: Path | str | None) -> str | None:
 
     A path is quarantined when it lies in either archive base, under a directory
     sealed by a ``TOMBSTONE.md`` in either storage base, at or above an inventoried
-    artifact, or when it is a file whose bytes match an inventoried artifact (a copy
-    outside the tree). A missing inventory raises whenever these rules need it, so the
-    guard fails closed rather than open.
+    artifact (outside-tree inventoried files included), or when it is a file whose
+    bytes match an inventoried artifact (a copy outside the tree). Each rule is
+    applied to the lexically normalized and to the resolved path. The inventory is
+    loaded first for every path, so a missing inventory raises whatever the input
+    is: the guard fails closed rather than open.
     """
     if path is None:
         return None
+    quarantine_inventory()
     candidate = Path(path)
     resolved = _resolved(candidate)
-    reason = _path_rule_reason(candidate, resolved)
+    reason = _path_rule_reason(candidate, resolved) or _stray_rule_reason(candidate, resolved)
     if reason is not None:
         return reason
     if resolved.is_file() and resolved.stat().st_size > 0:

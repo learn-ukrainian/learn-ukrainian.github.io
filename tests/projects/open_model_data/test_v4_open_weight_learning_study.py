@@ -2,26 +2,19 @@
 
 from __future__ import annotations
 
-import csv
-import hashlib
 import json
-import shutil
-import subprocess
 from pathlib import Path
 from typing import Any
 
 import jsonschema
 import pytest
 
-from scripts.projects.open_model_data import v4_open_weight_learning_study as study
 from scripts.projects.open_model_data.v4_open_weight_learning_study import (
     MODEL_IDENTIFIER,
     MODEL_REVISION,
     OPERATOR_EXCLUDED_RESIDUALS,
     assert_no_private_host_paths,
-    verify_study,
 )
-from scripts.storage import paths
 
 CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 STUDY_DIR = Path("data/projects/open_model_data/study")
@@ -142,15 +135,6 @@ def test_train4_metrics_uncertainty_and_preservation() -> None:
 
 @pytest.mark.needs_artifact(
     "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
-def test_train5_reproducibility_and_verification() -> None:
-    """Verify that verify_study passes and fails on tampered receipts (TRAIN-5)."""
-    assert verify_study(Path.cwd(), RECIPE_PATH, RUNS_PATH, RECEIPT_PATH) is True
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
     "projects/open_model_data/study/v4_learning_study_receipt_v1.json",
 )
 def test_privacy_host_paths_clean() -> None:
@@ -168,109 +152,3 @@ def test_privacy_host_paths_clean() -> None:
 
     with pytest.raises(ValueError, match="Prohibited host path detected"):
         assert_no_private_host_paths({"test": "/home/ops/secret"})
-
-
-def _git(repo: Path, *args: str) -> None:
-    subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, timeout=30)
-
-
-def _fixture_repo(tmp_path: Path, *, changed_recipe: bool = False) -> Path:
-    """Commit K baselines and keep only the three A fixture members on disk."""
-    repo = tmp_path / "study-repo"
-    repo.mkdir()
-    _git(repo, "init", "-q")
-    _git(repo, "config", "user.email", "test@example.invalid")
-    _git(repo, "config", "user.name", "Test")
-    root = Path.cwd()
-    registry_files = [
-        study._RECIPE,
-        "registry/projects/open_model_data/study/uldr_v1_acceptance_sample.signoff_template.json",
-        "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
-        "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
-        *(
-            f"registry/projects/open_model_data/contracts/{name}"
-            for name in (
-                "v4_learning_study_recipe_v1.schema.json",
-                "v4_learning_study_execution_v1.schema.json",
-                "v4_learning_study_receipt_v1.schema.json",
-            )
-        ),
-    ]
-    for relative in registry_files:
-        target = repo / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(root / relative, target)
-    if changed_recipe:
-        recipe = json.loads((repo / study._RECIPE).read_text())
-        recipe["recipe_id"] = "prior.recipe"
-        (repo / study._RECIPE).write_text(json.dumps(recipe) + "\n")
-    data_files = {
-        study._RUNS: (root / f"data/{study._RUNS}").read_bytes(),
-        study._RECEIPT: (root / f"data/{study._RECEIPT}").read_bytes(),
-        "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl": b"{}\n",
-    }
-    if changed_recipe:
-        old_receipt = json.loads(data_files[study._RECEIPT])
-        old_receipt["recipe_sha256"] = paths.hash_file(repo / study._RECIPE)
-        data_files[study._RECEIPT] = (json.dumps(old_receipt, indent=2) + "\n").encode()
-    for relative, content in data_files.items():
-        target = repo / "data" / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(content)
-    table = repo / "registry/artifacts/classification-v1.tsv"
-    table.parent.mkdir(parents=True, exist_ok=True)
-    with table.open("w", newline="") as stream:
-        writer = csv.writer(stream, delimiter="\t")
-        writer.writerow(("path", "mode", "blob", "size", "class", "group", "reason", "judgment"))
-        for relative, content in data_files.items():
-            group = study._DATASET_GROUP if "/dataset/" in relative else study._GROUP
-            writer.writerow((f"data/{relative}", "100644", "", len(content), "A", group, "fixture", "test"))
-    companions = {
-        study._GROUP: [
-            study._RECIPE,
-            "registry/projects/open_model_data/study/uldr_v1_acceptance_sample.signoff_template.json",
-        ],
-        study._DATASET_GROUP: [
-            "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
-            "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
-        ],
-    }
-    for group, bound in companions.items():
-        entries = []
-        for relative, content in data_files.items():
-            if (study._DATASET_GROUP if "/dataset/" in relative else study._GROUP) == group:
-                sha = hashlib.sha256(content).hexdigest()
-                entries.append(
-                    {"path": f"data/{relative}", "mode": "100644", "size": len(content), "sha256": sha, "store": sha}
-                )
-        manifest = {
-            "schema": 1,
-            "group": group,
-            "entries": entries,
-            "set_descriptor": {
-                "members": sorted(entry["path"][5:] for entry in entries),
-                "companions": {relative: paths.hash_file(repo / relative) for relative in bound},
-            },
-        }
-        (repo / f"registry/artifacts/{group}.manifest.json").write_text(
-            json.dumps(manifest, indent=2, sort_keys=True) + "\n"
-        )
-    _git(repo, "add", "registry")
-    _git(repo, "commit", "-qm", "committed K fixture baseline")
-    return repo
-
-
-def _managed(repo: Path) -> tuple[Path, Path, Path]:
-    return repo / study._RECIPE, repo / "data" / study._RUNS, repo / "data" / study._RECEIPT
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
-)
-def test_managed_verify_missing_member_requires_hydrate(tmp_path: Path) -> None:
-    repo = _fixture_repo(tmp_path)
-    recipe, runs, receipt = _managed(repo)
-    runs.unlink()
-    with pytest.raises(ValueError, match="hydrate --group open_model_study_outputs"):
-        study.verify_study(repo, recipe, runs, receipt)

@@ -8,7 +8,8 @@
 > `registry/projects/open_model_data/quarantine/inventory_v1.json` lists each one with its SHA-256 and reason, and the sealed
 > sets carry a `TOMBSTONE.md`. Every loader, packager and uploader refuses them through `refuse_quarantined` in
 > `scripts/projects/open_model_data/paths.py`; the Colab notebooks refuse to run and cannot push to a hub. The old-plan
-> generators are archived under `archive/code/open_model_data/`. Check the seal with
+> generators are archived under `archive/code/open_model_data/`. The stray `data/ulif_dump.db` (one ULIF entry duplicating
+> the ULIF data in `data/sources.db`) is sealed in the same inventory and kept. Check the seal with
 > `.venv/bin/python scripts/projects/open_model_data/quarantine.py verify`.
 
 > **Parent Epics:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (ULDR Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423) (Human-Source Dataset Delivery)

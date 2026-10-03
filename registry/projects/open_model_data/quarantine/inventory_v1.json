@@ -7,7 +7,9 @@
   "ignored_files": 412,
   "ignored_bytes": 637987720,
   "tracked_files": 305,
-  "tracked_bytes": 7976683
+  "tracked_bytes": 7976683,
+  "stray_files": 1,
+  "stray_bytes": 16384
  },
  "sets": [
   {
@@ -113,6 +115,13 @@
     "trajectories/"
    ],
    "reason": "Records and indexes of the withdrawn v4 and phase-3 dataset pipeline; their provenance under the restart plan is not established, so the PA1 residual policy quarantines them."
+  },
+  {
+   "id": "stray-ulif-dump",
+   "prefixes": [
+    "data/ulif_dump.db"
+   ],
+   "reason": "Stray 16 KB ULIF crawl dump outside the open-model tree: one ULIF entry that duplicates the canonical ULIF data in data/sources.db (ulif_dictua_entries). Sealed and kept so no loader trains on it."
   }
  ],
  "tombstoned_directories": [
@@ -5860,6 +5869,14 @@
    "sha256": "626f66003f3f6d22ea35e6b7bb98f93ab02d4772067204ec260b2bb8988d18d7",
    "set": "study-8338",
    "reason": "#8338 learning study, acceptance-sample template and real-run outputs; plan PA7 quarantines the old evaluator and suites rather than reusing them."
+  },
+  {
+   "path": "data/ulif_dump.db",
+   "storage": "stray",
+   "bytes": 16384,
+   "sha256": "468ab9de032f1fa379f8501ecaf68d461737cd17868bdc5bad9aa273045ae00b",
+   "set": "stray-ulif-dump",
+   "reason": "Stray 16 KB ULIF crawl dump outside the open-model tree: one ULIF entry that duplicates the canonical ULIF data in data/sources.db (ulif_dictua_entries). Sealed and kept so no loader trains on it."
   }
  ]
 }

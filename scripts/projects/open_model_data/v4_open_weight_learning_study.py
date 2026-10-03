@@ -34,6 +34,7 @@ _DATASET_GROUP = "open_model_other_indexes"
 _RECIPE = "registry/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
 _RUNS = "projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
 _RECEIPT = "projects/open_model_data/study/v4_learning_study_receipt_v1.json"
+_DATASET_RECORDS = "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
 
 DATASET_VERSION = "v4.0.0-human-pilot-scale"
 MODEL_IDENTIFIER = "google/gemma-4-31B-it"
@@ -117,6 +118,21 @@ def _verified_set(repo: Path, group: str) -> storage_paths.ArtifactSet:
         ) from exc
 
 
+def _refuse_quarantined_study(repo: Path, paths: tuple[Path, ...], *, managed: bool, trains: bool) -> None:
+    """Refuse at a public entry point, before any artifact-set or snapshot read (#9607).
+
+    Every given path is checked. A managed invocation reads the study set, whose outputs
+    are sealed; building or running trains on the sealed v4 dataset records.
+    """
+    for path in paths:
+        refuse_quarantined(path, "learning study input or output")
+    if managed:
+        for relative in (_RUNS, _RECEIPT):
+            refuse_quarantined(repo / "data" / relative, "learning study managed set")
+    if trains:
+        refuse_quarantined(repo / _DATASET_RECORDS, "learning study training records")
+
+
 def _study_snapshot(repo: Path) -> storage_paths.ArtifactSet:
     snapshot = _verified_set(repo, _GROUP)
     if _RECIPE not in snapshot.companions or _RUNS not in snapshot.artifacts or _RECEIPT not in snapshot.artifacts:
@@ -165,7 +181,9 @@ def build_recipe(
 ) -> dict[str, Any]:
     """Build the controlled learning study recipe (TRAIN-1 & TRAIN-2)."""
     recipe_out = _from_repo(repo_root, recipe_out)
-    if _destination(repo_root, recipe_out, _RECIPE):
+    managed = _destination(repo_root, recipe_out, _RECIPE)
+    _refuse_quarantined_study(repo_root, (recipe_out,), managed=managed, trains=True)
+    if managed:
         snapshot = _study_snapshot(repo_root)
         with tempfile.TemporaryDirectory(prefix="learning-study-") as directory:
             staged = Path(directory) / "recipe.json"
@@ -179,7 +197,7 @@ def _build_recipe_into(repo_root: Path, recipe_out: Path) -> dict[str, Any]:
     dataset_manifest_path = (
         repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
     )
-    dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
+    dataset_records_path = repo_root / _DATASET_RECORDS
     refuse_quarantined(dataset_records_path, "learning study training records")
     dataset_receipt_path = (
         repo_root / "registry/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
@@ -260,6 +278,9 @@ def run_study(
     managed_runs = _destination(repo_root, runs_out, f"data/{_RUNS}")
     managed_receipt = _destination(repo_root, receipt_out, f"data/{_RECEIPT}")
     managed_recipe = _destination(repo_root, recipe_path, _RECIPE)
+    _refuse_quarantined_study(
+        repo_root, (recipe_path, runs_out, receipt_out), managed=managed_recipe or managed_runs, trains=managed_recipe
+    )
     if managed_runs != managed_receipt:
         raise ValueError("study runs and receipt must share a managed or external destination")
     if managed_runs:
@@ -520,7 +541,9 @@ def verify_study(
     managed_recipe = _destination(repo_root, recipe_path, _RECIPE)
     managed_runs = _destination(repo_root, runs_path, f"data/{_RUNS}")
     managed_receipt = _destination(repo_root, receipt_path, f"data/{_RECEIPT}")
-    if managed_recipe or managed_runs or managed_receipt:
+    managed = managed_recipe or managed_runs or managed_receipt
+    _refuse_quarantined_study(repo_root, (recipe_path, runs_path, receipt_path), managed=managed, trains=False)
+    if managed:
         snapshot = _study_snapshot(repo_root)
         with tempfile.TemporaryDirectory(prefix="learning-study-verify-") as directory:
             stage = Path(directory)
@@ -586,6 +609,12 @@ def prepare_and_run(repo_root: Path, recipe_path: Path, runs_path: Path, receipt
     managed_recipe = _destination(repo_root, recipe_path, _RECIPE)
     managed_runs = _destination(repo_root, runs_path, f"data/{_RUNS}")
     managed_receipt = _destination(repo_root, receipt_path, f"data/{_RECEIPT}")
+    _refuse_quarantined_study(
+        repo_root,
+        (recipe_path, runs_path, receipt_path),
+        managed=managed_recipe or managed_runs or managed_receipt,
+        trains=True,
+    )
     if managed_runs != managed_receipt:
         raise ValueError("study runs and receipt must share a managed or external destination")
     if managed_runs and not managed_recipe:

@@ -15,14 +15,25 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.projects.open_model_data.paths import QuarantinedArtifactError, refuse_quarantined
+from scripts.projects.open_model_data.paths import (
+    QuarantinedArtifactError,
+    quarantine_inventory,
+    refuse_quarantined,
+)
 
 # Every package with this name was assembled from the sealed old-plan release sets (#9607).
 QUARANTINED_PACKAGE_NAME = "Ukrainian Linguistic Decolonization & Reasoning (ULDR)"
 
 
 def refuse_quarantined_package(dataset_dir: Path) -> None:
-    """Refuse a package directory that is, holds, or was built from quarantined artifacts."""
+    """Refuse a package directory that is, holds, or was built from quarantined artifacts.
+
+    The sealed inventory is loaded first, whatever the package holds (even nothing), so a
+    missing or invalid inventory refuses every upload before any hub call.
+    """
+    quarantine_inventory()
+    if not dataset_dir.is_dir():
+        raise QuarantinedArtifactError(f"Hugging Face upload input is not a package directory: {dataset_dir}")
     refuse_quarantined(dataset_dir, "Hugging Face upload directory")
     for path in sorted(dataset_dir.rglob("*")):
         if path.is_file():
