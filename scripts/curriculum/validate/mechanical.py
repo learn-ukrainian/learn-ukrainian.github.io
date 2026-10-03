@@ -89,7 +89,10 @@ def syllable_shaped(token: str, taught: set[str]) -> bool:
 
 
 @dataclass
-class _Gates:
+class Gates:
+    """The gates' shared state (word index, taught letters, allowed ids) and reporting;
+    review_gates.py (#9487) builds on the same state."""
+
     report: Report
     plan: dict
     level: str
@@ -328,7 +331,7 @@ def check_mechanical(
     words_path: Path,
 ) -> None:
     """Run gates M1, M3 and M5 on a plan that already passed the schema."""
-    gates = _Gates(report, plan, level, store, arc, level_plans, words_path)
+    gates = Gates(report, plan, level, store, arc, level_plans, words_path)
     gates.check_step_letters()
     gates.check_tokens()
     gates.check_cefr()
