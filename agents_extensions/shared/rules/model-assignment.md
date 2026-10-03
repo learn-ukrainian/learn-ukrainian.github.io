@@ -153,7 +153,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
   * **Claude seat**: `claude-sonnet-5-5` (preserves frontier window; fast & efficient). For security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125.
   * **Codex seat**: `gpt-6.1-sol` @ `high` (standard review)
   * **GLM seat**: `glm-5.3` @ `high` (local-only; advisory `max`)
-  * **Gemini seat**: `gemini-3.8-flash-high`
+  * **Gemini seat** (Ukrainian language/content review only; Gemini/AGY never reviews code, infra, tooling, CI, tests, hooks or skills): `gemini-3.8-flash-high`
 * **Complex tasks, deep reviews, and Anthropic advisory consultations**:
   * **Execution**: `claude-opus-5-5` for architecture, hard coding, and deep code review.
   * **Non-binding advisory consultation**: `claude-opus-5-5`. Operator directive 2026-07-31: when requesting
