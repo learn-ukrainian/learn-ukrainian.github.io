@@ -34,7 +34,7 @@ _REDIRECTED_WORKTREE_RE = re.compile(
     re.IGNORECASE,
 )
 _DANGEROUS_CONFIG_RE = re.compile(
-    r"\b(clean|smudge|process|command|textconv|fsmonitor|hookspath|sshcommand|askpass|editor|pager|helper|driver|cmd)\s*=",
+    r"(\b(clean|smudge|process|command|textconv|fsmonitor|hookspath|sshcommand|askpass|editor|pager|helper|driver|cmd|promisor|partialclone|uploadpack|receivepack)\s*=|\bext::|\bprotocol\.[^.\s]+\.allow\s*=)",
     re.IGNORECASE,
 )
 
@@ -42,7 +42,21 @@ _DANGEROUS_CONFIG_RE = re.compile(
 def _git_paths(worktree: Path, *args: str) -> list[str]:
     """Read NUL-delimited paths, refusing an unavailable inventory."""
     result = subprocess.run(
-        ["git", "ls-files", "-z", *args],
+        [
+            "git",
+            "--no-lazy-fetch",
+            "-c",
+            "core.fsmonitor=",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "-c",
+            "protocol.ext.allow=never",
+            "-c",
+            "core.alternateRefsCommand=",
+            "ls-files",
+            "-z",
+            *args,
+        ],
         cwd=worktree,
         env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
         capture_output=True,
@@ -404,7 +418,18 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
             )
 
         env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-        git_cmd = ["git", "-c", "core.fsmonitor=", "-c", "core.hooksPath=/dev/null"]
+        git_cmd = [
+            "git",
+            "--no-lazy-fetch",
+            "-c",
+            "core.fsmonitor=",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "-c",
+            "protocol.ext.allow=never",
+            "-c",
+            "core.alternateRefsCommand=",
+        ]
         try:
             toplevel_proc = subprocess.run(
                 [*git_cmd, "rev-parse", "--show-toplevel"],
@@ -467,15 +492,18 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     timeout=15,
                     check=False,
                 )
-                if tree_proc.returncode == 0:
-                    for raw_line in tree_proc.stdout.decode("utf-8", "replace").splitlines():
-                        line = raw_line.strip()
-                        if line.startswith("160000 "):
-                            raise ValueError(
-                                f"artifact is a nested git repository with unverified submodules "
-                                f"({file_count} files, {total_size} bytes): {name}; "
-                                f"submodules must not be discarded without independent verification"
-                            )
+                if tree_proc.returncode != 0:
+                    err = tree_proc.stderr.decode("utf-8", "replace").strip()
+                    raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
+
+                for raw_line in tree_proc.stdout.decode("utf-8", "replace").splitlines():
+                    line = raw_line.strip()
+                    if line.startswith("160000 "):
+                        raise ValueError(
+                            f"artifact is a nested git repository with unverified submodules "
+                            f"({file_count} files, {total_size} bytes): {name}; "
+                            f"submodules must not be discarded without independent verification"
+                        )
 
             ls_proc = subprocess.run(
                 [*git_cmd, "ls-files", "-v"],

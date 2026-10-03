@@ -1071,3 +1071,44 @@ def test_ignored_artifact_nested_repo_unregistered_gitlink_no_child_gitdir_rejec
     assert not ok and metadata is None
     assert "unverified submodules" in reason
     assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_promisor_ext_helper_rejected_without_execution(checkout, tmp_path):
+    """P1: nested repo with promisor ext:: transport helper is rejected without helper execution."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/promisor_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "file.txt").write_text("content\n")
+    subprocess.run(["git", "add", "file.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    marker = tmp_path / "helper_executed.marker"
+    helper = tmp_path / "helper.sh"
+    helper.write_text(f"#!/bin/sh\ntouch '{marker}'\nexit 1\n")
+    helper.chmod(0o755)
+
+    # Configure partial clone with ext:: remote helper
+    subprocess.run(["git", "config", "core.repositoryformatversion", "1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "extensions.partialclone", "origin"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "remote.origin.promisor", "true"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "remote.origin.url", f"ext::{helper}"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "protocol.ext.allow", "always"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    # Delete tree object to trigger lazy fetch if not disabled
+    tree_sha = subprocess.run(["git", "rev-parse", "HEAD^{tree}"], cwd=repo_dir, check=True, capture_output=True, text=True, env=_GIT_ENV, timeout=30).stdout.strip()
+    tree_obj = repo_dir / ".git/objects" / tree_sha[:2] / tree_sha[2:]
+    if tree_obj.exists():
+        tree_obj.unlink()
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert not marker.exists(), "promisor ext:: transport helper was executed!"
+    assert (
+        "executable or filter configuration" in reason
+        or "invalid nested git repository" in reason
+    )
+    assert "clear with: rm -rf" not in reason
