@@ -18,12 +18,16 @@ import pytest
 from scripts.agent_runtime.adapters import codex
 
 
-def write_config_probe_binary(path):
+def write_config_probe_binary(path, *, signed_in_layer=None, refresh_auth=False, unavailable_when_signed_in=False):
     """Model Codex's config/read protocol without running an installed engine."""
     path.write_text(
         f"#!{sys.executable}\n"
         "import json, os, sys\n"
+        "from pathlib import Path\n"
         "assert sys.argv[1:] == ['app-server']\n"
+        "assert 'UNRELATED_SECRET' not in os.environ\n"
+        "assert 'ANTHROPIC_API_KEY' not in os.environ\n"
+        "assert 'NODE_OPTIONS' not in os.environ\n"
         "for line in sys.stdin:\n"
         "    request = json.loads(line)\n"
         "    if request.get('method') == 'config/read':\n"
@@ -31,6 +35,17 @@ def write_config_probe_binary(path):
         "        assert request['params']['includeLayers'] is True\n"
         "        layers = [{'name': {'type': 'user', 'file': os.path.join(os.environ['CODEX_HOME'], 'config.toml')},"
         " 'config': {}}]\n"
+        "        auth = Path(os.environ['CODEX_HOME']) / 'auth.json'\n"
+        "        if auth.exists():\n"
+        f"            if {signed_in_layer!r}:\n"
+        f"                layers.append({{'name': {{'type': {signed_in_layer!r}}},"
+        " 'config': {'mcp_servers': {'cloud_only': {'command': 'foreign'}}}})\n"
+        f"            if {refresh_auth!r}:\n"
+        "                refreshed = auth.with_suffix('.refresh')\n"
+        '                refreshed.write_text(\'{"session":"refreshed-fixture"}\')\n'
+        "                refreshed.replace(auth)\n"
+        f"            if {unavailable_when_signed_in!r}:\n"
+        "                layers = None\n"
         "        print(json.dumps({'id': request['id'], 'result': {'layers': layers}}), flush=True)\n"
     )
     path.chmod(0o755)
@@ -41,7 +56,19 @@ def layer(kind, servers, **source):
     return {"name": {"type": kind, **source}, "config": {"mcp_servers": servers}, "version": "fixture"}
 
 
-@pytest.mark.parametrize("kind", ["project", "system", "enterpriseManaged", "mdm", "user", "packagedDefaults"])
+@pytest.mark.parametrize(
+    "kind",
+    [
+        "project",
+        "system",
+        "enterpriseManaged",
+        "mdm",
+        "user",
+        "packagedDefaults",
+        "cloudManagedConfig",
+        "cloudRequirements",
+    ],
+)
 @pytest.mark.parametrize("name", ["sources", "other"])
 def test_foreign_layer_refuses_even_when_shadowed(kind, name, tmp_path):
     expected = {"sources": {"command": "trusted"}}
@@ -134,14 +161,13 @@ def test_native_probe_failure_is_typed(tmp_path):
         codex._codex_config_layers("/nonexistent/codex", tmp_path, str(tmp_path))
 
 
-@pytest.mark.parametrize("native", [False, True], ids=["unavailable-refuses", "native-prepares"])
-def test_sealed_adapter_requires_readable_native_layers(tmp_path, native):
+def test_sealed_adapter_defers_config_layer_probe_until_auth_staging(tmp_path, monkeypatch):
     from scripts.review.isolation import review_isolation_tool_config
     from tests.test_review_isolation import _private_review_roots
 
-    binary = shutil.which("codex") if native else "/bin/true"
-    if binary is None:
-        pytest.skip("installed Codex CLI unavailable")
+    monkeypatch.setattr(
+        codex, "_codex_config_layers", lambda *_args, **_kwargs: pytest.fail("signed-out adapter reached probe")
+    )
     snapshot = tmp_path / "snapshot"
     snapshot.mkdir()
     write, execution = _private_review_roots(tmp_path, "sealed-config-layers")
@@ -149,27 +175,35 @@ def test_sealed_adapter_requires_readable_native_layers(tmp_path, native):
     assert not home.exists()
     config = {
         **review_isolation_tool_config("codex"),
-        "review_engine_binary": binary,
+        "review_engine_binary": "/bin/true",
         "review_snapshot_root": str(snapshot),
         "review_reject_root": str(snapshot),
         "review_reject_roots": [str(snapshot)],
         "review_write_root": str(write),
         "review_exec_root": str(execution),
     }
-    if not native:
-        with pytest.raises(codex.CodexReviewConfigError, match="review_mcp_config_layers_unavailable"):
-            build(snapshot, config)
-        assert list((write / "tmp").iterdir()) == []
-    else:
-        plan = build(snapshot, config)
-        try:
-            assert home.is_dir() and not home.is_symlink()
-            assert plan.cwd == write / "exec"
-            assert "--ignore-user-config" in plan.cmd
-            assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
-            assert not any(arg.startswith("mcp_servers.sources.") for arg in plan.cmd)
-        finally:
-            plan.output_file.unlink()
+    plan = build(snapshot, config)
+    try:
+        assert home.is_dir() and not home.is_symlink()
+        assert not (home / "auth.json").exists()
+        assert plan.cwd == write / "exec"
+        assert "--ignore-user-config" in plan.cmd
+        assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
+        assert not any(arg.startswith("mcp_servers.sources.") for arg in plan.cmd)
+    finally:
+        plan.output_file.unlink()
+
+
+def test_config_layer_probe_forwards_only_codex_environment(tmp_path, monkeypatch):
+    monkeypatch.setenv("UNRELATED_SECRET", "fixture")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "fixture")
+    monkeypatch.setenv("NODE_OPTIONS", "fixture")
+    monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
+    binary = write_config_probe_binary(tmp_path / "codex")
+    home = tmp_path / "home"
+    home.mkdir()
+    layers = codex._codex_config_layers(str(binary), tmp_path, str(home))
+    codex._validate_review_mcp_layers(layers, {}, str(home))
 
 
 def test_sealed_adapter_refuses_a_symlinked_scoped_home_before_probing(tmp_path, monkeypatch):

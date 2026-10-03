@@ -45,7 +45,7 @@ import time
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.review.receipts.ledger import review_tools
@@ -64,6 +64,9 @@ from .codex_events import (
     tool_calls_from_items,
 )
 
+if TYPE_CHECKING:
+    from scripts.review.isolation import SandboxCapability
+
 _logger = logging.getLogger(__name__)
 
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
@@ -74,7 +77,9 @@ class CodexReviewConfigError(ValueError):
     """A review's config provenance cannot establish its MCP boundary."""
 
 
-def _codex_config_layers(binary: str, cwd: Path, home: str) -> list[dict]:
+def _codex_config_layers(
+    binary: str, cwd: Path, home: str, *, env: dict[str, str] | None = None, sandbox: SandboxCapability | None = None
+) -> list[dict]:
     """Read native layer provenance without starting a model turn.
 
     Installed ``codex exec --help``: ``--ignore-user-config`` means
@@ -83,7 +88,18 @@ def _codex_config_layers(binary: str, cwd: Path, home: str) -> list[dict]:
     https://learn.chatgpt.com/docs/config-file/config-basic
     ``config/read`` with ``includeLayers`` also exposes shadowed definitions;
     checking only ``mcp list`` would lose their provenance.
+
+    Sealed reviews supply the final allowlisted launch environment and sandbox
+    after auth staging, so signed-in cloud layers and auth refreshes are shared
+    with launch. Other callers use the same environment allowlist.
     """
+    from scripts.review.isolation import build_reviewer_env, wrap_argv_with_sandbox
+
+    probe_env = dict(env) if env is not None else build_reviewer_env(engine="codex", reject_root=cwd)
+    probe_env["CODEX_HOME"] = home
+    argv = [binary, "app-server"]
+    if sandbox is not None:
+        argv = wrap_argv_with_sandbox(argv, sandbox)
     messages = [
         {"id": 1, "method": "initialize", "params": {"clientInfo": {"name": "review-config-gate", "version": "1"}}},
         {"method": "initialized"},
@@ -94,9 +110,9 @@ def _codex_config_layers(binary: str, cwd: Path, home: str) -> list[dict]:
             # app-server has no ignore-user-config flag. Read original layers
             # without CLI MCP overrides: an ignored user URL must not merge
             # into the launch's stdio command during this provenance probe.
-            [binary, "app-server"],
+            argv,
             cwd=cwd,
-            env={**os.environ, "CODEX_HOME": home},
+            env=probe_env,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
@@ -334,9 +350,8 @@ class CodexAdapter:
         effective_codex_home = tc_early.get("codex_home_override")
         if not effective_codex_home and review_write_root is not None:
             private_home = review_write_root / "home" / ".codex"
-            # app-server exits without layer provenance when CODEX_HOME does
-            # not exist. Sandbox auth staging creates this same directory
-            # later; the provenance probe needs it now, before reserving output.
+            # Reserve the launch home now. Isolation stages auth once and
+            # probes its layers there before permitting the model launch.
             try:
                 private_home.mkdir(mode=0o700, exist_ok=True)
             except OSError as exc:
@@ -404,9 +419,11 @@ class CodexAdapter:
             for server in servers.values():
                 if not isinstance(server, dict) or not (server.get("command") or server.get("url")):
                     raise CodexReviewConfigError("review_mcp_sources_definition_mismatch")
-            # No output file is reserved until provenance is proven.
-            layers = _codex_config_layers(codex_bin, execution_cwd, self._codex_home_scope)
-            _validate_review_mcp_layers(layers, servers, self._codex_home_scope)
+            if not tc_early.get("review_isolation"):
+                # Sealed reviews must wait for the final auth staging in
+                # prepare_isolated_review_launch to see signed-in cloud layers.
+                layers = _codex_config_layers(codex_bin, execution_cwd, self._codex_home_scope)
+                _validate_review_mcp_layers(layers, servers, self._codex_home_scope)
         if (tc_early.get("review_isolation") or tc_early.get("attempt_os_sandbox")) and write_root is not None:
             out_dir = write_root / "tmp"
             output_path = out_dir / f"codex-runtime{safe_suffix}-{os.getpid()}.txt"
