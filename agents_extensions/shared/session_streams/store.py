@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
 import sqlite3
+import unicodedata
 import uuid
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager, suppress
 from datetime import datetime, timedelta
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -103,61 +106,94 @@ _FILE_EXTENSIONS = frozenset(
 _TLD_FILE_EXTENSIONS = frozenset({"md", "py", "sh", "rs"})
 # Vendored rules-only Public Suffix List snapshot; no runtime network or Git.
 PUBLIC_SUFFIX_LIST_PATH = Path(__file__).with_name("public_suffix_list.dat")
+# Content pin for the vendored snapshot: any edit, truncation or removed rule
+# fails closed at import. Refreshing the snapshot updates this digest.
+PUBLIC_SUFFIX_LIST_SHA256 = "19caa7fcbe926596a4c6d33734a184e99641bf48983a44885edc2ae8864a4014"
 _PUBLIC_SUFFIX_SECTION_MARKERS = (
     "// ===BEGIN ICANN DOMAINS===",
     "// ===END ICANN DOMAINS===",
     "// ===BEGIN PRIVATE DOMAINS===",
     "// ===END PRIVATE DOMAINS===",
 )
+# Combining diacritics (U+0300-U+036F) never occur in a suffix-list label;
+# stripping them keeps a stress mark (U+0301) from hiding a Cyrillic suffix.
+_COMBINING_DIACRITICS_RE = re.compile("[\u0300-\u036f]")
+# Ideographic and fullwidth full stops separate labels like "." (RFC 3490 section 3.1).
+_IDNA_FULL_STOPS = str.maketrans("\u3002\uff0e\uff61", "...")
 
 
-def _ascii_label(label: str) -> str:
-    """Spell a lowercase NFC suffix-list label as the host token scanner sees it."""
-    return label if label.isascii() else "xn--" + label.encode("punycode").decode("ascii")
+@lru_cache(maxsize=4096)
+def _idna_label(label: str) -> str:
+    """Spell one label as DNS sees it: ASCII lowercased, Unicode IDNA ToASCII.
 
-
-def load_public_suffix_labels(path: Path) -> tuple[frozenset[str], dict[str, frozenset[str]]]:
-    """Return every rule's top-level label and the labels directly below each one.
-
-    A truncated snapshot fails closed: all four section markers must be present.
-    A wildcard rule contributes ``*`` below its parent, meaning any label.
+    A Unicode label that IDNA cannot encode is returned unchanged; it can then
+    match neither a suffix nor the ASCII host-label pattern.
     """
-    lines = path.read_text(encoding="utf-8").splitlines()
+    if label.isascii():
+        return label.lower()
+    label = _COMBINING_DIACRITICS_RE.sub("", unicodedata.normalize("NFC", label))
+    try:
+        return label.encode("idna").decode("ascii").lower()
+    except UnicodeError:
+        return label
+
+
+def load_public_suffix_labels(path: Path, *, sha256: str = PUBLIC_SUFFIX_LIST_SHA256) -> frozenset[str]:
+    """Return every rule's top-level label in its IDNA ASCII spelling.
+
+    The snapshot fails closed unless its bytes match the pinned SHA-256 and all
+    four section markers are present.
+    """
+    data = path.read_bytes()
+    if hashlib.sha256(data).hexdigest() != sha256:
+        raise RuntimeError(f"public suffix snapshot {path.name} does not match its pinned SHA-256")
+    lines = data.decode("utf-8").splitlines()
     missing = [marker for marker in _PUBLIC_SUFFIX_SECTION_MARKERS if marker not in lines]
     if missing:
         raise RuntimeError(f"public suffix snapshot {path.name} lacks section markers: {missing}")
-    top_level: set[str] = set()
-    below: dict[str, set[str]] = {}
-    for line in lines:
-        if not line or line.startswith("//"):
-            continue
-        labels = [_ascii_label(label) for label in line.lstrip("!").split(".")]
-        top_level.add(labels[-1])
-        if len(labels) > 1:
-            below.setdefault(labels[-1], set()).add(labels[-2])
-    return frozenset(top_level), {label: frozenset(children) for label, children in below.items()}
+    return frozenset(
+        _idna_label(line.lstrip("!").rpartition(".")[2]) for line in lines if line and not line.startswith("//")
+    )
 
 
-_PUBLIC_SUFFIX_TLDS, _PUBLIC_SUFFIX_SECOND_LEVELS = load_public_suffix_labels(PUBLIC_SUFFIX_LIST_PATH)
+_PUBLIC_SUFFIX_TLDS = load_public_suffix_labels(PUBLIC_SUFFIX_LIST_PATH)
 # Special-use and private-network labels the public list does not carry.
 _PRIVATE_HOST_SUFFIXES = frozenset({"local", "internal", "lan", "corp", "home", "intranet", "private"})
 # Host-suffix labels checked immediately before a file extension: every
 # top-level label of the public suffix list plus the private labels above.
 _EMBEDDED_HOST_SUFFIXES = _PUBLIC_SUFFIX_TLDS | _PRIVATE_HOST_SUFFIXES
-# Suffix labels that tracked naming conventions put before one extension
-# (*.uk.md localizations, *.review.json and *.report.json records). The
-# exemption covers only that extension and never a public second level below
-# the label (co.uk, sch.uk). The repo-wide guards require each exemption to
-# match a tracked basename.
-_EMBEDDED_HOST_LABEL_EXEMPTIONS = {
-    "uk": frozenset({"md"}),
-    "review": frozenset({"json"}),
-    "report": frozenset({"json"}),
-}
-# Exact tracked basenames whose stem ends in a suffix label (archived .py.txt
-# evidence). Any other name under the same label stays a host.
+# Every character a Unicode suffix label uses that ``\w`` does not match (Indic
+# and Thai vowel signs), so each such suffix stays inside one token.
+_SUFFIX_LABEL_MARKS = sorted(
+    {
+        char
+        for label in _EMBEDDED_HOST_SUFFIXES
+        if label.startswith("xn--")
+        for char in label.encode("ascii").decode("idna")
+        if re.fullmatch(r"\w", char) is None
+    }
+)
+_UNICODE_HOST_TOKEN_RE = re.compile(
+    "[\\w.\\-\u0300-\u036f\u3002\uff0e\uff61" + "".join(re.escape(char) for char in _SUFFIX_LABEL_MARKS) + "]+"
+)
+# Exact tracked basenames whose stem ends in a suffix label (localized .uk.md
+# docs, .report.json gate evidence, decolonization .review.json records and
+# archived .py.txt evidence). A label is never exempt as such: any other name
+# under it stays a host. The repo-wide guards require each name to be tracked
+# and to need its exemption.
 _EMBEDDED_HOST_EXEMPT_FILENAMES = frozenset(
-    {"run_codex_baseline.py.txt", "verify_release_freeze.py.txt", "verify_release_freeze_v011.py.txt"}
+    {
+        *("DATA_CARD.uk.md", "README.uk.md", "PHASE2_COMPLEMENTS.uk.md", "PHASE3_CONTRACTS.uk.md"),
+        *("PHASE3_CORRECTION_PROTECTION.uk.md", "PHASE3_SOURCE_DATASHEETS.uk.md"),
+        *("pack-verify.report.json", "plan-validate.report.json", "fixture-rules.report.json"),
+        *("gpt-5.6-terra.report.json", "identity.report.json", "gemma-4-31b-it.report.json"),
+        *(
+            f"decol_{kind}_{number:03d}.review.json"
+            for kind, count in (("lex", 60), ("prep", 50), ("prot", 75), ("syn", 65))
+            for number in range(1, count + 1)
+        ),
+        *("run_codex_baseline.py.txt", "verify_release_freeze.py.txt", "verify_release_freeze_v011.py.txt"),
+    }
 )
 # Explicit repository basenames, never a runtime filesystem/Git lookup. Unknown
 # collision names need a directory prefix; multi-label collision names remain
@@ -203,26 +239,31 @@ def process_exists(process_id: int) -> bool:
 
 def _filename_contains_hostname(filename: str) -> bool:
     """Check the final stem label against the public and private host suffixes."""
-    labels = filename.strip(".").rsplit(".", 3)
+    labels = filename.strip(".").rsplit(".", 2)
     if len(labels) < 3 or labels[-1].lower() not in _FILE_EXTENSIONS:
         return False
     if filename.replace("\\", "/").rpartition("/")[2] in _EMBEDDED_HOST_EXEMPT_FILENAMES:
         return False
-    extension, suffix = labels[-1].lower(), labels[-2].lower()
-    if suffix not in _EMBEDDED_HOST_SUFFIXES:
-        return False
-    if extension not in _EMBEDDED_HOST_LABEL_EXEMPTIONS.get(suffix, frozenset()):
-        return True
-    second_levels = _PUBLIC_SUFFIX_SECOND_LEVELS.get(suffix, frozenset())
-    return "*" in second_levels or labels[-3].lower() in second_levels
+    return labels[-2].lower() in _EMBEDDED_HOST_SUFFIXES
 
 
-def _contains_hostname(body: str) -> bool:
-    """Reject host-shaped tokens without rescanning overlapping dotted suffixes."""
-    # Preserve an ordinary directory separator for non-network namespaces so
-    # drive/device filenames retain their existing exemption. Network roots
-    # become a double separator regardless of case or slash spelling.
-    body = _WINDOWS_NAMESPACE_RE.sub(lambda match: "\\\\" if match["network"] else "\\", body)
+def _token_context(body: str, start: int, end: int, token: str) -> tuple[bool, bool]:
+    """Return whether a dotted token sits in host context and after a directory."""
+    following = body[end : end + 2]
+    preceding = body[max(0, start - 2) : start]
+    # A following separator marks a directory or host, never a final file.
+    # Conservatively reject host-shaped local directories in either spelling.
+    host_context = (
+        token.endswith(".")
+        or preceding.endswith(("//", "\\\\", "/\\", "\\/", ":/", ":\\", "@"))
+        or following.startswith(("/", "\\", "?", "#"))
+        or (following.startswith(":") and following[1:].isdigit())
+    )
+    return host_context, preceding.endswith(("/", "\\")) and not host_context
+
+
+def _contains_ascii_hostname(body: str) -> bool:
+    """Reject ASCII host-shaped tokens; any label shaped like a suffix counts."""
     for match in _HOST_TOKEN_RE.finditer(body):
         token = match.group()
         if "." not in token:
@@ -230,20 +271,10 @@ def _contains_hostname(body: str) -> bool:
         labels = token.strip(".").split(".")
         if len(labels) < 2:
             continue
-        following = body[match.end() : match.end() + 2]
-        preceding = body[max(0, match.start() - 2) : match.start()]
-        # A following separator marks a directory or host, never a final file.
-        # Conservatively reject host-shaped local directories in either spelling.
-        host_context = (
-            token.endswith(".")
-            or preceding.endswith(("//", "\\\\", "/\\", "\\/", ":/", ":\\", "@"))
-            or following.startswith(("/", "\\", "?", "#"))
-            or (following.startswith(":") and following[1:].isdigit())
-        )
+        host_context, directory_prefix = _token_context(body, match.start(), match.end(), token)
         extension = labels[-1].lower()
         if _filename_contains_hostname(token):
             return True
-        directory_prefix = preceding.endswith(("/", "\\")) and not host_context
         collision_file = len(labels) == 2 and (token in _REPOSITORY_FILENAMES or directory_prefix)
         if (
             not host_context
@@ -263,6 +294,54 @@ def _contains_hostname(body: str) -> bool:
                 return True
             previous_valid = valid
     return False
+
+
+def _contains_unicode_hostname(body: str) -> bool:
+    """Reject internationalized host names the ASCII-only tokens cannot see.
+
+    Only tokens with non-ASCII text are scanned, in their IDNA spelling. Unlike
+    the ASCII rule, a label counts as a suffix only when it is a public or
+    private suffix label, so Ukrainian prose and abbreviations (т.д., т.ін.)
+    pass. Pairs of ASCII labels stay with the ASCII rule.
+    """
+    for match in _UNICODE_HOST_TOKEN_RE.finditer(body):
+        token = match.group()
+        if token.isascii():
+            continue
+        token = token.translate(_IDNA_FULL_STOPS)
+        raw_labels = token.strip(".").split(".")
+        if len(raw_labels) < 2:
+            continue
+        labels = [_idna_label(label) for label in raw_labels]
+        if _filename_contains_hostname(".".join(labels)):
+            return True
+        host_context, directory_prefix = _token_context(body, match.start(), match.end(), token)
+        extension = labels[-1]
+        if (
+            not host_context
+            and extension in _FILE_EXTENSIONS
+            and (extension not in _TLD_FILE_EXTENSIONS or (len(labels) == 2 and directory_prefix))
+        ):
+            continue
+        for index in range(1, len(labels)):
+            previous, label = labels[index - 1], labels[index]
+            if (
+                not (raw_labels[index - 1].isascii() and raw_labels[index].isascii())
+                and label in _EMBEDDED_HOST_SUFFIXES
+                and _HOST_LABEL_RE.fullmatch(previous) is not None
+                and _HOST_LABEL_RE.fullmatch(label) is not None
+            ):
+                return True
+    return False
+
+
+def _contains_hostname(body: str) -> bool:
+    """Reject host-shaped tokens without rescanning overlapping dotted suffixes."""
+    # Preserve an ordinary directory separator for non-network namespaces so
+    # drive/device filenames retain their existing exemption. Network roots
+    # become a double separator regardless of case or slash spelling.
+    body = _WINDOWS_NAMESPACE_RE.sub(lambda match: "\\\\" if match["network"] else "\\", body)
+    return _contains_ascii_hostname(body) or _contains_unicode_hostname(body)
 
 
 def validate_entry_body(body: str) -> None:

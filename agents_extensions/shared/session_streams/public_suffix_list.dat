@@ -8,7 +8,8 @@
 // COMMIT: 6cd82aff889e3d64e5e03bc5c1f43da1934a960a
 // Derived by keeping only rule lines and the four section markers:
 //   grep -E '^(// ===(BEGIN|END) (ICANN|PRIVATE) DOMAINS===$|[^/[:space:]])'
-// Refresh by replacing VERSION/COMMIT and the rules, then run
+// Refresh by replacing VERSION/COMMIT and the rules, set
+// PUBLIC_SUFFIX_LIST_SHA256 in store.py to this file's SHA-256, then run
 // tests/test_session_streams.py (it checks every tracked basename).
 //
 // ===BEGIN ICANN DOMAINS===
