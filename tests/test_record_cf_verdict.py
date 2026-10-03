@@ -233,6 +233,45 @@ def test_status_failure_keeps_comment_and_reports_partial(monkeypatch, tmp_path)
     assert len(comments) == 1
 
 
+def test_override_for_flagged_comment_still_posts_clean_status(monkeypatch, tmp_path, synthetic_opsec):
+    """Both publications pass the real gate; the override covers only the flagged comment (#9678)."""
+    from scripts.fleet_comms import review_publisher
+    from scripts.opsec import prepublish as gate
+    from tests.opsec_fixtures import TOKEN, synthetic_rules
+
+    rules = json.loads((synthetic_opsec / "rules.json").read_text())
+    rules.update({k: v for k, v in synthetic_rules().items() if k == "1"})
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    monkeypatch.setattr(gate, "primary_root", lambda cwd=None: tmp_path)
+    monkeypatch.setenv("LU_OPSEC_OVERRIDE", "synthetic false positive")
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, reply="VERDICT: APPROVE\n" + TOKEN)
+    sent = []
+
+    def transport(argv, **kwargs):
+        sent.append(argv)
+        return subprocess.CompletedProcess(argv, 0, stdout="{}", stderr="")
+
+    bookkeeping = recorder._run_json
+
+    def comment_through_gate(args, *, input_text=None):
+        if getattr(args, "verb", None) == "issue-comment-json":
+            assert recorder.request_run(args, runner=transport, capture_output=True, text=True).returncode == 0
+        return bookkeeping(args, input_text=input_text)
+
+    monkeypatch.setattr(recorder, "_run_json", comment_through_gate)
+    monkeypatch.setattr(
+        recorder,
+        "post_commit_status",
+        lambda **kwargs: review_publisher.post_commit_status(**kwargs, runner=transport),
+    )
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted" and result["status"] == "posted"
+    assert len(sent) == 2 and TOKEN in comments[0]["body"]
+    (row,) = [json.loads(line) for line in (tmp_path / "batch_state/opsec/overrides.jsonl").read_text().splitlines()]
+    assert row["rule_ids"] == ["synthetic-rule"] and row["destination"] == "github.com/" + REPOSITORY
+
+
 def test_concurrent_recorders_for_same_sha_serialize(monkeypatch, tmp_path):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     with ThreadPoolExecutor(max_workers=2) as executor:
