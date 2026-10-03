@@ -64,7 +64,7 @@ _PROVIDER_MARKERS = (
         "rate_limited",
         re.compile(
             r"RateLimitError|TerminalQuotaError|rate[_ ]limit|usage limit|quota exceeded|"
-            r"resource_exhausted|quota_exhausted|too many requests|exhausted your daily quota|"
+            r"resource_exhausted|quota_exhausted|too many requests|(?:You have )?exhausted your daily quota|"
             r"daily\s+limit\s+exceeded",
             re.IGNORECASE,
         ),
@@ -112,11 +112,25 @@ def provider_failure_code(message: str, status: object = None) -> str:
             return "provider_overloaded"
         return "provider_error"
 
+    # Provider names (e.g. provider.openrouter) are not typed failure codes.
     typed_codes = {
-        _KIMI_PROVIDER_CODES.get(match, "provider_error") for match in re.findall(r"\bprovider\.([a-z_]+)\b", message)
+        _KIMI_PROVIDER_CODES[match]
+        for match in re.findall(r"\bprovider\.([a-z_]+)\b", message)
+        if match in _KIMI_PROVIDER_CODES
     }
     if typed_codes:
         return typed_codes.pop() if len(typed_codes) == 1 else "provider_error"
+    # Cursor wraps HTTP statuses and connect-es labels in Error:; Kimi's
+    # startup formatter wraps its typed provider titles in error:.
+    diagnostic = message.strip()
+    generic_prefix = _STDERR_GENERIC_PREFIX.match(diagnostic)
+    marker_text = diagnostic[generic_prefix.end() :] if generic_prefix else diagnostic
+    typed_marker = _STDERR_TYPED_MARKER.match(marker_text)
+    if typed_marker:
+        status = typed_marker["status"] or typed_marker["connect"]
+        if status:
+            return provider_failure_code("", status.upper())
+        return _KIMI_PROVIDER_TITLES[typed_marker["title"].lower()]
     status_match = _PROVIDER_STATUS_RE.search(message)
     if status_match:
         return provider_failure_code("", status_match[1] or status_match[2])
@@ -128,9 +142,25 @@ def provider_failure_code(message: str, status: object = None) -> str:
 # Kimi wraps typed errors in "error: failed to run prompt: provider.*";
 # Gemini prints quota errors / Gaxios errors and an [API Error: ...] wrapper;
 # Cursor's auth diagnostic begins "Error: Authentication required.".
+_STDERR_GENERIC_PREFIX = re.compile(
+    r"^(?:error:|(?:opencode|kimi|grok|agy|gemini|cursor|provider|acp transport):)\s*"
+    r"(?:failed to run prompt:\s*(?=provider\.[a-z_]+\b))?",
+    re.IGNORECASE,
+)
+_KIMI_PROVIDER_TITLES = {
+    "rate limit": "rate_limited",
+    "authentication error": "provider_auth",
+    "overloaded": "provider_overloaded",
+    "connection error": "transport_error",
+}
+_STDERR_TYPED_MARKER = re.compile(
+    r"^(?:(?P<status>[45]\d{2})\b|"
+    r"\[(?P<connect>resource_exhausted|unauthenticated|permission_denied|unavailable)\]|"
+    r"Provider (?P<title>rate limit|authentication error|overloaded|connection error)\b)",
+    re.IGNORECASE,
+)
 _STDERR_DIAGNOSTIC_PREFIX = re.compile(
-    r"^(?:error:|(?:opencode|kimi|grok|agy|gemini|cursor|provider|acp transport):|"
-    r"hermes -z: agent failed:|provider\.[a-z_]+:|"
+    r"^(?:hermes -z: agent failed:|provider\.[a-z_]+:|"
     r"HTTP\s+[45]\d{2}\b|[45]\d{2}\s+(?:RESOURCE_EXHAUSTED|quota|too many|unauthorized)\b|"
     r"(?:RateLimitError|APIError|TerminalQuotaError|RetryableQuotaError|GaxiosError|"
     r"APIConnectionError|APIConnectionTimeoutError):|(?:✕\s+)?\[API Error:|"
@@ -153,7 +183,17 @@ def provider_stderr_error(stderr: str) -> str:
     offset = 0
     for line in stderr.splitlines(keepends=True):
         diagnostic = line.strip()
-        if _STDERR_DIAGNOSTIC_PREFIX.match(diagnostic):
+        generic_prefix = _STDERR_GENERIC_PREFIX.match(diagnostic)
+        # A generic CLI prefix cannot attribute later tool/test text. Only
+        # an immediate marker (or Kimi's explicit typed wrapper) admits it.
+        marker_text = diagnostic[generic_prefix.end() :] if generic_prefix else diagnostic
+        if _STDERR_DIAGNOSTIC_PREFIX.match(marker_text) or (
+            generic_prefix
+            and (
+                _STDERR_TYPED_MARKER.match(marker_text)
+                or any(pattern.match(marker_text) for _, pattern in _PROVIDER_MARKERS)
+            )
+        ):
             # Gemini's API Error wrapper may pretty-print its JSON payload.
             # Decode exactly that payload; adjacent tool/log text is excluded.
             if diagnostic.startswith(("[API Error:", "✕ [API Error:")):
