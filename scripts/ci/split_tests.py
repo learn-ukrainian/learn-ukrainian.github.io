@@ -36,7 +36,9 @@ import re
 import statistics
 import subprocess
 import sys
+import tempfile
 import zipfile
+import zlib
 from collections import defaultdict
 from collections.abc import Sequence
 from pathlib import Path
@@ -46,6 +48,8 @@ DEFAULT_DURATIONS = Path(__file__).with_name("pytest-file-durations.json")
 DEFAULT_HISTORY = Path(__file__).with_name("history-tests.txt")
 HISTORY_SHARD = 1  # ci.yml: the one pytest shard with a full-history checkout
 TIMING_ARTIFACT = "pytest-file-durations"
+MAX_ARCHIVE_BYTES = 2 * 1024 * 1024
+MAX_MEMBER_BYTES = 1024 * 1024
 
 
 def validate_durations(value: object) -> dict[str, float]:
@@ -76,7 +80,30 @@ def median_durations(samples: Sequence[dict[str, float]]) -> dict[str, float]:
 
 def github_api(endpoint: str) -> bytes:
     """Read GitHub with the runner's scoped token; never emit token or response bodies."""
+    if endpoint.endswith("/zip"):
+        # Spool stdout instead of buffering an untrusted download in memory.
+        with tempfile.TemporaryFile() as download:
+            subprocess.run(["gh", "api", endpoint], check=True, stdout=download, stderr=subprocess.PIPE, timeout=30)
+            if download.tell() > MAX_ARCHIVE_BYTES:
+                raise ValueError("timing archive exceeds size limit")
+            download.seek(0)
+            return download.read(MAX_ARCHIVE_BYTES + 1)
     return subprocess.run(["gh", "api", endpoint], check=True, capture_output=True, timeout=30).stdout
+
+
+def archive_durations(payload: bytes) -> dict[str, float]:
+    """Read one bounded JSON member; never extract an archive to the checkout."""
+    if len(payload) > MAX_ARCHIVE_BYTES:
+        raise ValueError("timing archive exceeds size limit")
+    with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+        members = [info for info in archive.infolist() if info.filename == "pytest-file-durations.json"]
+        if len(members) != 1 or members[0].file_size > MAX_MEMBER_BYTES:
+            raise ValueError("expected one bounded timing member")
+        with archive.open(members[0]) as member:
+            data = member.read(MAX_MEMBER_BYTES + 1)
+        if len(data) > MAX_MEMBER_BYTES:
+            raise ValueError("timing member exceeds size limit")
+    return validate_durations(json.loads(data))
 
 
 def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) -> int:
@@ -99,7 +126,14 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
         for artifact in listing["artifacts"]:
             if artifact["name"] == TIMING_ARTIFACT and not artifact["expired"]:
                 by_run[artifact["workflow_run"]["id"]].append(artifact)
-        for run in runs:
+    except (subprocess.SubprocessError, OSError, ValueError, KeyError, TypeError):
+        print("duration lookup unavailable; retaining committed fallback", file=sys.stderr)
+        runs = []
+        by_run = defaultdict(list)
+    for run in runs:
+        try:
+            if not isinstance(run, dict):
+                continue
             if (
                 run.get("event") != "merge_group"
                 or run.get("status") != "completed"
@@ -112,12 +146,21 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
             if len(artifacts) != 1:
                 continue
             payload = github_api(f"repos/{repo}/actions/artifacts/{int(artifacts[0]['id'])}/zip")
-            with zipfile.ZipFile(io.BytesIO(payload)) as archive:
-                samples.append(validate_durations(json.loads(archive.read("pytest-file-durations.json"))))
+            samples.append(archive_durations(payload))
             if len(samples) == limit:
                 break
-    except (subprocess.SubprocessError, OSError, ValueError, KeyError, TypeError, zipfile.BadZipFile):
-        print("duration lookup unavailable; retaining valid timings and committed fallback", file=sys.stderr)
+        except (
+            subprocess.SubprocessError,
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            zipfile.BadZipFile,
+            RuntimeError,
+            EOFError,
+            zlib.error,
+        ):
+            print("duration sample unavailable or invalid; skipping sample", file=sys.stderr)
     # Preserve older measurements for files absent from the sampled runs.
     snapshot = {**recorded, **median_durations(samples)}
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -185,6 +228,7 @@ def main(argv: list[str] | None = None) -> int:
   .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16 < files.txt
   .venv/bin/python -m scripts.ci.split_tests durations junit/*.xml > durations.json
   .venv/bin/python -m scripts.ci.split_tests refresh --repo owner/repo --output snapshot.json
+  .venv/bin/python -m scripts.ci.split_tests validate snapshot.json
 Outputs: file paths or timing JSON on stdout; refresh writes one immutable timing snapshot.
 Exit codes: 0 = success (including refresh fallback); 1 = invalid data; 2 = CLI usage error.
 Related: .github/workflows/ci.yml; issue #9065.
@@ -200,6 +244,8 @@ Related: .github/workflows/ci.yml; issue #9065.
     split.add_argument("--history", type=Path, default=DEFAULT_HISTORY, help="files pinned to the history shard")
     durations = commands.add_parser("durations", help="print per-file seconds from JUnit XML")
     durations.add_argument("junit", nargs="+", type=Path, help="all shard JUnit XML files from one full run")
+    validate = commands.add_parser("validate", help="check a snapshot against the shared timing schema")
+    validate.add_argument("snapshot", type=Path, help="timing JSON to validate, e.g. snapshot.json")
     refresh = commands.add_parser("refresh", help="freeze median weights from recent successful merge-group artifacts")
     refresh.add_argument("--repo", required=True, help="GitHub owner/repo; uses GH_TOKEN with actions:read")
     refresh.add_argument("--output", required=True, type=Path, help="immutable snapshot JSON shared by all shards")
@@ -210,8 +256,15 @@ Related: .github/workflows/ci.yml; issue #9065.
     args = parser.parse_args(argv)
 
     if args.command == "durations":
-        json.dump(junit_file_seconds(args.junit), sys.stdout, indent=2)
+        json.dump(validate_durations(junit_file_seconds(args.junit)), sys.stdout, indent=2)
         sys.stdout.write("\n")
+        return 0
+    if args.command == "validate":
+        try:
+            validate_durations(json.loads(args.snapshot.read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            print("duration snapshot unavailable or invalid", file=sys.stderr)
+            return 1
         return 0
     if args.command == "refresh":
         refresh_durations(args.repo, args.fallback, args.output, args.limit)

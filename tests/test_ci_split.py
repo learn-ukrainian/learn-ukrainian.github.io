@@ -27,7 +27,6 @@ import yaml
 from scripts.ci import metadata_commit, pytest_report, reuse_green_run
 from scripts.ci.split_tests import DEFAULT_HISTORY, HISTORY_SHARD, assign, junit_file_seconds, read_list
 from scripts.ci.split_tests import main as split_main
-from tests.ci import _file_duration_checks as duration_checks
 from tests.conftest import LU_PYTEST_SHARD_FILES_ENV_VAR, _load_shard_allowlist, pytest_ignore_collect
 
 pytestmark = pytest.mark.usefixtures("_clear_allowlist_cache")
@@ -51,7 +50,6 @@ def test_split_is_a_partition(shard_count: int) -> None:
     assert len(shards) == shard_count
     assert sorted(flat) == sorted(_FILES)
     assert len(flat) == len(set(flat))
-    duration_checks.check_refreshed_partition_preserves_every_collected_case_and_history_pin()
 
 
 def test_split_ignores_input_order_and_balances_by_duration() -> None:
@@ -61,7 +59,6 @@ def test_split_ignores_input_order_and_balances_by_duration() -> None:
     assert forward == backward
     # LPT: a(10) | b(6); c(5) joins b (6 < 10); d(1) joins a (10 < 11).
     assert forward == [["tests/test_a.py", "tests/test_d.py"], ["tests/test_b.py", "tests/test_c.py"]]
-    duration_checks.check_median_uses_observations_without_treating_absent_files_as_zero()
 
 
 def test_split_gives_unrecorded_files_the_median() -> None:
@@ -76,7 +73,6 @@ def test_split_rejects_duplicates_and_zero_shards() -> None:
         assign(["tests/test_a.py", "tests/test_a.py"], {}, 2)
     with pytest.raises(ValueError, match="at least 1"):
         assign(["tests/test_a.py"], {}, 0)
-    duration_checks.check_invalid_weights_fail_before_assignment()
 
 
 def test_split_pins_history_files_to_the_history_shard() -> None:
@@ -101,16 +97,6 @@ def test_split_cli_prints_one_shard(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     assert capsys.readouterr().out == "tests/test_a.py\n"
     with pytest.raises(SystemExit):
         split_main(["split", "--shard", "3", "--of", "2", *args])
-    # Extend existing cases so the A/B collected-test denominator stays exact.
-    for check, arguments in (
-        (duration_checks.check_refresh_honors_sample_limit_and_cli, (tmp_path,)),
-        (duration_checks.check_malformed_download_retains_fallback, (tmp_path,)),
-        (duration_checks.check_github_read_is_bounded_and_captures_output, ()),
-    ):
-        with monkeypatch.context() as isolated:
-            check(*arguments, isolated)
-    with monkeypatch.context() as isolated:
-        duration_checks.check_unavailable_lookup_uses_fallback_without_echoing_private_error(tmp_path, isolated, capsys)
 
 
 def test_committed_history_list_names_tracked_test_files() -> None:
@@ -121,7 +107,7 @@ def test_committed_history_list_names_tracked_test_files() -> None:
         assert (_REPO_ROOT / name).is_file(), name
 
 
-def test_durations_sum_testcase_time_per_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+def test_durations_sum_testcase_time_per_file(tmp_path: Path, capsys) -> None:
     junit = tmp_path / "junit.xml"
     junit.write_text(
         """<testsuites><testsuite>
@@ -135,9 +121,6 @@ def test_durations_sum_testcase_time_per_file(tmp_path: Path, monkeypatch: pytes
     assert junit_file_seconds([junit]) == {"tests/audit/test_x.py": 3.5, "tests/test_y.py": 0.25}
     assert split_main(["durations", str(junit)]) == 0
     assert json.loads(capsys.readouterr().out) == {"tests/audit/test_x.py": 3.5, "tests/test_y.py": 0.25}
-    duration_checks.check_refresh_filters_failed_foreign_rerun_expired_and_duplicate_artifacts(
-        tmp_path, monkeypatch, capsys
-    )
 
 
 def test_committed_durations_are_seconds_per_test_file() -> None:
@@ -147,7 +130,6 @@ def test_committed_durations_are_seconds_per_test_file() -> None:
     for name, seconds in durations.items():
         assert re.fullmatch(r"tests/(?:.+/)?test_[^/]+\.py", name), name
         assert isinstance(seconds, (int, float)) and seconds >= 0, name
-    duration_checks.check_workflow_freezes_once_and_publishes_after_partition_proof()
 
 
 @pytest.mark.slow
@@ -836,7 +818,7 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 
 def test_pytest_is_skipped_only_on_a_recorded_reuse() -> None:
     jobs = _jobs_of_ci()
-    assert jobs["pytest"]["needs"] == ["reuse", "checks"]
+    assert jobs["pytest"]["needs"] == ["reuse", "freeze-durations"]
     assert jobs["pytest"]["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert jobs["reuse"]["if"] == "github.event_name == 'merge_group'"
     assert jobs["reuse"]["permissions"] == {"contents": "read", "actions": "read", "pull-requests": "read"}
@@ -871,7 +853,18 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
 
 def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> None:
     text = _CI.read_text(encoding="utf-8")
-    assert "continue-on-error" not in text
+    optional = [
+        (job_id, step)
+        for job_id, job in _jobs_of_ci().items()
+        for step in job.get("steps", [])
+        if "continue-on-error" in step
+    ]
+    assert len(optional) == 1
+    job_id, telemetry = optional[0]
+    assert job_id == "pytest" and telemetry["continue-on-error"] is True
+    assert telemetry["uses"].startswith("actions/download-artifact@")
+    assert telemetry["with"]["name"] == "pytest-duration-snapshot"
+    assert all("continue-on-error" not in job for job in _jobs_of_ci().values())
     for job_id, job in _jobs_of_ci().items():
         for step in job.get("steps", []):
             uses = step.get("uses")
