@@ -1112,3 +1112,37 @@ def test_ignored_artifact_nested_repo_promisor_ext_helper_rejected_without_execu
         or "invalid nested git repository" in reason
     )
     assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_global_clean_filter_rejected_without_execution(checkout, tmp_path, monkeypatch):
+    """P1: global clean filter configuration is ignored during inspection and never executed."""
+    fake_home = tmp_path / "fake_home"
+    fake_home.mkdir()
+    marker = tmp_path / "global_filter_executed.marker"
+    script = tmp_path / "global_filter.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+
+    (fake_home / ".gitconfig").write_text(
+        f"[user]\n  name = Tester\n  email = test@example.com\n[filter \"probe\"]\n  clean = \"{script}\"\n"
+    )
+
+    repo_dir = checkout[0] / "batch_state/reports/global_filter_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
+    (repo_dir / "tracked.txt").write_text("initial content\n")
+    subprocess.run(["git", "add", ".gitattributes", "tracked.txt"], cwd=repo_dir, check=True, env={**os.environ, "HOME": str(fake_home)}, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env={**os.environ, "HOME": str(fake_home)}, timeout=30)
+    if marker.exists():
+        marker.unlink()
+
+    # Modify tracked file with same length to ensure git status evaluates filter if active
+    (repo_dir / "tracked.txt").write_text("updated content\n")
+
+    monkeypatch.setenv("HOME", str(fake_home))
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "uncommitted or ignored changes" in reason
+    assert not marker.exists(), "global clean filter was executed!"
+    assert "clear with: rm -rf" not in reason

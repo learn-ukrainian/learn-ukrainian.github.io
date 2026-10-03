@@ -39,12 +39,24 @@ _DANGEROUS_CONFIG_RE = re.compile(
 )
 
 
+def _safe_git_env() -> dict[str, str]:
+    """Return an isolated Git environment with global and system configuration disabled."""
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env["GIT_CONFIG_GLOBAL"] = os.devnull
+    env["GIT_CONFIG_SYSTEM"] = os.devnull
+    env["GIT_CONFIG_NOSYSTEM"] = "1"
+    env["GIT_OPTIONAL_LOCKS"] = "0"
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    env["GIT_NO_REPLACE_OBJECTS"] = "1"
+    return env
+
+
 def _git_paths(worktree: Path, *args: str) -> list[str]:
     """Read NUL-delimited paths, refusing an unavailable inventory."""
     result = subprocess.run(
         ["git", "ls-files", "-z", *args],
         cwd=worktree,
-        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        env=_safe_git_env(),
         capture_output=True,
         check=True,
         timeout=30,
@@ -403,7 +415,7 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 f"submodules must not be discarded without independent verification"
             )
 
-        env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        env = _safe_git_env()
         git_cmd = [
             "git",
             "--no-lazy-fetch",
@@ -415,6 +427,8 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
             "protocol.ext.allow=never",
             "-c",
             "core.alternateRefsCommand=",
+            "-c",
+            "core.attributesFile=/dev/null",
         ]
         try:
             toplevel_proc = subprocess.run(
