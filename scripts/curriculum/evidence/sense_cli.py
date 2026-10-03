@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+import subprocess
 import unicodedata
 from collections import Counter
 from pathlib import Path
@@ -71,7 +73,13 @@ def select_store(
                     word, result.ref, private[member["locator"]], key, key_id
                 )
         else:
-            reason = results[0][1].reason if len(results) == 1 else "reference_ambiguous"
+            reason = (
+                "reference_no_match"
+                if all(r.reason == "reference_no_match" for _, r in results)
+                else results[0][1].reason
+                if len(results) == 1
+                else "reference_ambiguous"
+            )
             decisions.append({"word": word["id"], "reason": reason or "reference_ambiguous", **report})
     return selected, decisions
 
@@ -136,6 +144,95 @@ def _redact_validated_locations(
         return content
 
 
+def _scan_normalize(text: str) -> str:
+    """Literal scan normalization, without changing words or annotations."""
+    return " ".join(unicodedata.normalize("NFC", text).casefold().split())
+
+
+def _scan_pattern(terms: set[str]) -> tuple[re.Pattern, dict[str, list[str]]]:
+    """Compile a prefix trie once; retain overlapping shorter literal matches."""
+    trie = {}
+    prefixes = {}
+    for term in sorted(terms):
+        node = trie
+        for char in term:
+            node = node.setdefault(char, {})
+        node[""] = {}
+        prefixes[term] = [
+            term[:i]
+            for i in range(1, len(term) + 1)
+            if term[:i] in terms and (i == len(term) or (not term[i].isalnum() and term[i] != "_"))
+        ]
+
+    def expression(node: dict) -> str:
+        branches = [re.escape(char) + expression(child) for char, child in node.items() if char]
+        value = "(?:" + "|".join(branches) + ")" if len(branches) > 1 else "".join(branches)
+        return "(?:" + value + ")?" if "" in node and branches else value
+
+    # Lookahead allows a second term to start inside a previously matched phrase.
+    return re.compile(r"(?<!\w)(?=(" + (expression(trie) if terms else r"(?!)") + r")(?!\w))"), prefixes
+
+
+def _record_texts(value: object, ancestors: frozenset[int] = frozenset()):
+    """Yield individual YAML/JSON mappings, never aggregate sibling records."""
+    if id(value) in ancestors:
+        return
+    ancestors = ancestors | {id(value)}
+    if isinstance(value, list):
+        for item in value:
+            yield from _record_texts(item, ancestors)
+    elif isinstance(value, dict):
+        parts = []
+        for key, child in value.items():
+            if isinstance(child, (str, int, float, bool)):
+                parts.extend([str(key), str(child)])
+            elif isinstance(child, dict):
+                # Nested scalar fields (e.g. gloss_ref) belong to this record.
+                parts.extend(str(v) for v in child.values() if isinstance(v, (str, int, float, bool)))
+            elif isinstance(child, list):
+                parts.extend(str(v) for v in child if isinstance(v, (str, int, float, bool)))
+                if key == "forms":
+                    parts.extend(str(v.get("form", "")) for v in child if isinstance(v, dict))
+            yield from _record_texts(child, ancestors)
+        if parts:
+            yield "\n".join(parts)
+
+
+def _head_blobs(repo: Path):
+    """Read committed blobs through one cat-file stream, including binary files."""
+    entries = bindings.git(repo, "ls-tree", "-r", "-z", "HEAD").split(b"\0")
+    with subprocess.Popen(
+        ["git", "cat-file", "--batch"],
+        cwd=repo,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    ) as process:
+        try:
+            for entry in entries:
+                if not entry:
+                    continue
+                metadata, path = entry.split(b"\t", 1)
+                _mode, kind, oid = metadata.split()
+                if kind != b"blob":
+                    continue
+                process.stdin.write(oid + b"\n")
+                process.stdin.flush()
+                header = process.stdout.readline().split()
+                if len(header) != 3 or header[1] != b"blob":
+                    raise ValueError("tracked_blob_unreadable")
+                size = int(header[2])
+                content = process.stdout.read(size)
+                if len(content) != size or process.stdout.read(1) != b"\n":
+                    raise ValueError("tracked_blob_unreadable")
+                yield path.decode("utf-8"), content
+        finally:
+            process.stdin.close()
+            process.wait(timeout=30)
+        if process.returncode:
+            raise ValueError("tracked_blob_unreadable")
+
+
 def leak_scan(
     repo: Path,
     private: dict,
@@ -146,45 +243,118 @@ def leak_scan(
     base: str = "origin/main",
     pr_text: str | None = None,
 ) -> dict:
-    """Scan tracked HEAD files and new commit messages; never emit matched text.
-
-    Exemptions are scalar locations, not a global dictionary-text allowlist. A same value
-    in a comment, note or unrelated file still counts as a possible leak.
-    """
-    import re
-
+    """Scan distinctive private wording and non-public mappings; ids/counts only."""
     words = {w["id"]: w for w in store["words"]}
-    meanings = {" ".join(unicodedata.normalize("NFC", row["meaning"]).casefold().split()) for row in private.values()}
-    pattern = (
-        re.compile(
-            r"(?<!\w)(?:" + "|".join(re.escape(m) for m in sorted(meanings, key=lambda m: (-len(m), m))) + r")(?!\w)"
+    entries = {row["locator"]: row for row in context.inventory}
+    lemmas = {sources.unstressed_headword(row["lemma"]) for row in entries.values()}
+    public_atoms, public_spans = {}, {}
+    positions = {sources.unstressed_headword(row["lemma"]): row.get("pos", "noun") for row in entries.values()}
+
+    def remember(lemma: str, span: str, whole: str):
+        pos = positions[lemma]
+        public_spans.setdefault(lemma, set()).update((matcher.normalize(span, pos), matcher.normalize(whole, pos)))
+        public_atoms.setdefault(lemma, set()).update(
+            matcher.normalize(a, pos) for a in matcher.source_atoms(sources._gloss_head(span))
         )
-        if meanings
-        else None
-    )
-    leaks = Counter()
+        group = matcher.classify(span)
+        if not group.reason:
+            public_atoms[lemma].update(matcher.normalize(a, pos) for a in matcher.source_atoms(group.head))
 
-    def counts(content: bytes) -> Counter:
-        value = " ".join(unicodedata.normalize("NFC", content.decode("utf-8", errors="replace")).casefold().split())
-        return Counter(match[0] for match in pattern.finditer(value)) if pattern else Counter()
-
-    paths = bindings.git(repo, "ls-tree", "-r", "--name-only", "-z", "HEAD").split(b"\0")
-    for raw_path in paths:
-        if not raw_path:
+    # Leak exemptions consider every open row for the lemma, including senses
+    # that the learner selector would withhold for POS or annotation reasons.
+    for raw in api._db().execute("SELECT * FROM dmklinger_uk_en"):
+        row = dict(raw)
+        lemma = sources.unstressed_headword(row["word"])
+        if lemma not in lemmas:
             continue
-        path = raw_path.decode()
-        content = bindings.git(repo, "show", f"HEAD:{path}")
+        for span, whole in matcher.row_spans(row):
+            remember(lemma, span, whole)
+    for lemma, payload in api.kaikki_rows(row["lemma"] for row in entries.values()).raw.items():
+        lemma = sources.unstressed_headword(lemma)
+        for whole in (payload or {}).get("glosses", []):
+            if isinstance(whole, str):
+                for part in sources._sub_senses(whole):
+                    for span in sources._sense_spans(part):
+                        remember(lemma, span, whole)
+    forms = {}
+    for word in words.values():
+        forms.setdefault(sources.unstressed_headword(word["lemma"]), set()).update(
+            _scan_normalize(variant)
+            for v in (word["lemma"], *(f["form"] for f in word.get("forms", []) if f.get("form")))
+            for variant in (v, sources.unstressed_headword(v))
+        )
+    distinctive, mapping_meanings, mapping_forms = {}, {}, {}
+    for locator, row in private.items():
+        entry = entries[locator]
+        lemma = sources.unstressed_headword(entry["lemma"])
+        meaning = matcher.normalize(row["meaning"], entry.get("pos", "noun"))
+        if meaning in public_atoms.get(lemma, set()):
+            continue
+        mapping_meanings.setdefault(meaning, set()).add(locator)
+        for form in {_scan_normalize(lemma), _scan_normalize(entry.get("stressed", lemma)), *forms.get(lemma, set())}:
+            mapping_forms.setdefault(form, set()).add(locator)
+        if len(re.findall(r"\b\w+\b", meaning)) >= 3 and meaning not in public_spans.get(lemma, set()):
+            distinctive.setdefault(meaning, set()).add(locator)
+    wording_pattern, wording_prefixes = _scan_pattern(set(distinctive))
+    mapping_pattern, mapping_prefixes = _scan_pattern(set(mapping_meanings) | set(mapping_forms))
+    leaks = Counter(committed_files=0, commit_messages=0, pr_text=0)
+    signals = Counter(distinctive_wording=0, mapping_copy=0)
+    suspects = []
+    files, byte_count = 0, 0
+
+    def mapping_ids(text: str) -> set[str]:
+        meanings, forms = set(), set()
+        for match in mapping_pattern.finditer(_scan_normalize(text)):
+            for term in mapping_prefixes[match[1]]:
+                meanings.update(mapping_meanings.get(term, ()))
+                forms.update(mapping_forms.get(term, ()))
+        return meanings & forms
+
+    def scan(content: bytes, path: str, category: str):
+        text = content.decode("utf-8", errors="replace")
+        wording = Counter()
+        for match in wording_pattern.finditer(_scan_normalize(text)):
+            for term in wording_prefixes[match[1]]:
+                wording.update(distinctive[term])
+        pairs = set().union(*(mapping_ids(line) for line in text.splitlines()))
+        # Parse only structured files with a possible cross-line pair. Sibling
+        # YAML/JSON records cannot lend each other a lemma or a meaning.
+        if Path(path).suffix in {".yaml", ".yml", ".json", ".jsonl"} and (
+            mapping_ids(text) - pairs or any(escape in text for escape in (r"\u", r"\U", r"\x", r"\N"))
+        ):
+            try:
+                for doc in yaml.load_all(text, Loader=getattr(yaml, "CBaseLoader", yaml.BaseLoader)):
+                    for record in _record_texts(doc):
+                        pairs.update(mapping_ids(record))
+            except yaml.YAMLError:
+                # Invalid structured data still receives the literal line scan.
+                pass
+        for signal, matches in (("distinctive_wording", wording), ("mapping_copy", Counter({p: 1 for p in pairs}))):
+            count = sum(matches.values())
+            if count:
+                leaks[category] += count
+                signals[signal] += count
+                suspects.append({"path": path, "signal": signal, "locators": sorted(matches), "count": count})
+
+    for path, content in _head_blobs(repo):
+        files += 1
+        byte_count += len(content)
         prefix = f"curriculum/l2-uk-en/evidence/{context.level}/"
         kind = (
             "bindings" if path == prefix + bindings.BINDINGS else "words" if path == prefix + "_words.yaml" else "other"
         )
-        current = counts(_redact_validated_locations(content, context, words, api, kind=kind))
-        leaks["committed_files"] += sum(current.values())
+        scan(_redact_validated_locations(content, context, words, api, kind=kind), path, "committed_files")
     messages = bindings.git(repo, "log", "--format=%B", f"{base}..HEAD")
-    leaks["commit_messages"] = sum(counts(messages).values())
-    leaks["pr_text"] = sum(counts(pr_text.encode()).values()) if pr_text is not None else 0
+    scan(messages, "commit_messages", "commit_messages")
+    if pr_text is not None:
+        scan(pr_text.encode(), "pr_text", "pr_text")
     return {
         "counts": dict(leaks),
+        "signals": dict(signals),
+        "suspects": suspects,
+        "tracked_files": files,
+        "tracked_bytes": byte_count,
+        "patterns": {"distinctive_wording": len(distinctive), "mapping_copy": len(mapping_meanings)},
         "pr_text": "unverified" if pr_text is None else "scanned",
         "status": "failed" if sum(leaks.values()) else "checked",
     }

@@ -58,7 +58,8 @@ with leading `to` removed only for verbs. Display preserves source spelling.
 
 Classification happens on the complete translation group **before** either the
 existing parser or atom splitting can discard annotations. Closed constants in
-`scripts/curriculum/evidence/reference_sense_v1.py` document every admitted label:
+`scripts/curriculum/evidence/reference_sense_v1.py` and the shared
+`sources.REGISTER_LABELS` constant document every admitted label:
 
 - `GRAMMATICAL_ANNOTATIONS`: grammatical labels, including possessive,
   countability, reflexive, proper noun and explicit `+ CASE` notes. Ignored
@@ -67,11 +68,17 @@ existing parser or atom splitting can discard annotations. Closed constants in
   paganism and short/long scale. Exact aliases have one canonical label.
 - `TOPIC_LABELS`: domains, including sports, medicine, music, furniture,
   anatomy/anatomical and mechanics/mechanical. These also restrict matching.
+  A leading `label:` prefix is a topic label and restricts the complete group.
+  `ukraine`, `us` and `uk` restrict only as whole edge or nested parenthetical
+  labels; they do not restrict when mentioned inside a definition.
 
 A trailing parenthetical with no recognised label is a definition (including
 Latin taxonomic names). It is kept in the source sense signature and candidate
 list, but is neither matched nor displayed. Recognised labels inside a trailing
-or nested definition still restrict the whole group. Every restricting/domain
+or nested definition still restrict the whole group, subject to the region rule
+above. A binding certifies the **displayed atom**, not equivalence of trailing
+definitions; those definitions are not compared with the reference meaning.
+Every restricting/domain
 label must equal the reference's label set; a topic-labelled sense cannot match
 a bare reference head. Leading unknown labels, partly recognised label lists
 and uncertain internal scope are withheld. Unknown labels and uncertain scope
@@ -80,8 +87,10 @@ record with multiple inventory entries can evaluate a row more than once.
 
 After classification, top-level `,`, `;` and `/` delimit atoms. Each inherits its
 group's labels and definition. A complete atom must match exactly, with no fuzzy,
-substring, stemming, synonym or model selection. Multiple heads must resolve to
-the same source sense signature. Candidates with identical displayed atom text
+substring, stemming, synonym or model selection. **Multi-head references are
+never accepted under v1:** the source sense signature includes the atom, so
+distinct heads cannot share it. They remain a documented limitation and go to
+the reviewed remainder. Candidates with identical displayed atom text
 and labels collapse to the lowest row id, then span/atom index, even when their
 definitions differ; different visible text or labels is ambiguous. Lemma, POS
 and homonym compatibility bind before selection. Kaikki-only matches remain
@@ -131,9 +140,17 @@ After committing the public bindings, on a clean head:
 `--check` reselects and recomputes commitments, scans committed files and new
 commit messages and scans PR title/body/comments when
 available. All committed HEAD files are scanned; `origin/main` bounds commit messages.
-Only exact, current source-validated values at binding `span` and store `gloss_en`
-locations are exempted; the same text in another location remains a suspected
-leak. An unavailable PR is explicitly `unverified`. Resolve every suspected leak
+The scan distinguishes two signals after NFC, casefold and whitespace
+normalization: distinctive private wording (at least three word tokens, equal
+to no open-dictionary atom or span for that lemma), and a non-public private
+lemma–meaning mapping appearing on one line or in one YAML/JSON record. Store
+forms also identify the lemma. A meaning equal to an open-dictionary atom for
+that lemma is public data and never counts; an unrelated common one-word
+meaning alone never counts. Validated binding `span` and store `gloss_en`
+locations retain their scalar exemptions. Tracked HEAD blobs are read through
+one `git cat-file --batch` stream; patterns are compiled once. Diagnostics
+contain only paths, public locators and counts. An unavailable PR is explicitly
+`unverified`. Resolve every suspected leak
 before issuing the receipt. Never publish scan matches or private text in reports.
 Any changed head, bindings, private input, key or matcher invalidates replay.
 
@@ -144,8 +161,10 @@ and bindings before use. Never reuse an old receipt or invent a replacement key
 with the old id.
 
 CI verifies public row hashes, parser/atom positions, exact atom text, learner bounds and
-inventory locators, without the private file. It reports private commitments as
+inventory locators, without the private file or local review receipt. It reports
+private commitments **and reviewed-binding provenance** as
 **unverifiable in CI (local receipt required)**. That warning is not verification
-of the commitment; review of record requires the local receipt. Builder,
+of the commitment or reviewer block; both verifiers record the unchecked proof.
+Review of record requires the local receipt. Builder,
 word-store verifier and pack gloss gate use bindings first. Rendering and
 immersion counting both consume the selected `gloss_en`, never `sense_gloss`.

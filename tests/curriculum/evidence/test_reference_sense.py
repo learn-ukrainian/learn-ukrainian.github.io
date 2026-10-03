@@ -151,8 +151,27 @@ def test_missing_invalid_and_nonmember_fallback(bound):
     assert bindings.Context.read("a1", root).invalid
 
 
-def test_builder_verifier_pack_gate_render_and_immersion_same_string(bound, monkeypatch):
+@pytest.mark.parametrize("method", ["a1_reference_meaning.v1", "reviewed.v1"])
+def test_builder_verifier_pack_gate_render_and_immersion_same_string(bound, monkeypatch, capsys, method):
     root, api, b = bound
+    if method == "reviewed.v1":
+        # A plausible but fabricated reviewer block passes only the public row
+        # checks. CI must never imply it verified the nonexistent local review.
+        b = {k: v for k, v in b.items() if k not in {"inventory", "locator", "commitment", "key_id"}}
+        b.update(
+            method=method,
+            reviewer={
+                "task_id": "fabricated-review",
+                "model": "claude-opus-5-5",
+                "family": "anthropic",
+                "harness": "claude",
+                "author_model": "gpt-6.1-sol",
+                "date": "2026-10-03",
+                "candidates_sha256": "a" * 64,
+                "result_sha256": "b" * 64,
+            },
+        )
+        bindings.write(root / bindings.BINDINGS, "a1", {WORD["id"]: b})
     # Synthetic forms use a deterministic synthetic stress oracle, as the
     # existing builder/verifier fixtures do. This asserts no linguistic fact.
     monkeypatch.setattr(
@@ -192,6 +211,8 @@ def test_builder_verifier_pack_gate_render_and_immersion_same_string(bound, monk
     result = verify.verify_words_store("a1", evidence_dir=root, plans_dir=root, sources_instance=api)
     assert not result["errors"], result
     assert any(bindings.CI_NOTICE in w for w in result["warnings"])
+    unchecked = "W-001:private_commitment" if method == matcher.METHOD else "W-001:review_provenance"
+    assert unchecked in result["not_checked"]
     plan = {"vocabulary": {"core": ["W-001"]}}
     context = bindings.Context.read("a1", root)
     assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context) == []
@@ -205,7 +226,33 @@ def test_builder_verifier_pack_gate_render_and_immersion_same_string(bound, monk
         "a1", "synthetic", evidence_dir=root, plans_dir=plans_dir, sources_instance=api, offline=True
     )
     assert not verified_pack["errors"], verified_pack
-    assert "W-001:private_commitment" in verified_pack["not_checked"]
+    assert unchecked in verified_pack["not_checked"]
+    assert any(bindings.CI_NOTICE in w for w in verified_pack["warnings"])
+    if method == "reviewed.v1":
+        with monkeypatch.context() as patched:
+            patched.setattr(sources, "Sources", lambda **kw: api)
+            assert verify.main(["a1", "--evidence-dir", str(root), "--plans-dir", str(root), "--json"]) == 0
+            cli_words = json.loads(capsys.readouterr().out)
+            assert unchecked in cli_words["not_checked"]
+            assert any(bindings.CI_NOTICE in w for w in cli_words["warnings"])
+            assert (
+                verify.main_pack(
+                    [
+                        "a1",
+                        "synthetic",
+                        "--evidence-dir",
+                        str(root),
+                        "--plans-dir",
+                        str(plans_dir),
+                        "--offline",
+                        "--json",
+                    ]
+                )
+                == 0
+            )
+            cli_pack = json.loads(capsys.readouterr().out)
+            assert unchecked in cli_pack["not_checked"]
+            assert any(bindings.CI_NOTICE in w for w in cli_pack["warnings"])
     record["sense_gloss"] = "unchecked override must be ignored"
     rendered = assemble.render_unit_piece("{{gloss:W-001}}", assemble.gloss_replacer(store))
     assert rendered == "synthetic (target)"
@@ -322,16 +369,17 @@ def test_leak_scan_validated_location_only_and_commit_messages(bound, tmp_path):
     git(repo, "commit", "-qm", "public binding")
     context = bindings.Context.read("a1", root)
     store = {"words": [WORD]}
-    private = {"case": {**FIXTURE["private"], "meaning": "target"}}
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "invented private destination"}}
     result = sense_cli.leak_scan(repo, private, context, store, api, base=base)
     assert result["status"] == "checked", result
     assert result["pr_text"] == "unverified"
-    (repo / "leak.txt").write_text("target\n")
+    (repo / "leak.txt").write_text("invented private destination\n")
     git(repo, "add", ".")
-    git(repo, "commit", "-qm", "target")
-    result = sense_cli.leak_scan(repo, private, context, store, api, base=base, pr_text="target")
+    git(repo, "commit", "-qm", "invented private destination")
+    result = sense_cli.leak_scan(repo, private, context, store, api, base=base, pr_text="invented private destination")
     assert result["counts"] == {"committed_files": 1, "commit_messages": 1, "pr_text": 1}
-    assert "target" not in json.dumps(result)
+    assert "invented private destination" not in json.dumps(result)
+    assert result["signals"] == {"distinctive_wording": 3, "mapping_copy": 0}
     payload = bindings.receipt_payload(root / bindings.BINDINGS, private, KEY, "test", repo)
     (repo / "leak.txt").write_text("dirty")
     with pytest.raises(ValueError, match="clean_head"):
@@ -352,6 +400,132 @@ def test_privacy_exemptions_use_scalar_locations_not_occurrence_counts(bound):
     content = content.replace(b"span: target # target", b"span: *value")
     content = b"note: &value target\n" + content
     assert sense_cli._redact_validated_locations(content, context, store, api, kind="bindings") == content
+
+
+@pytest.mark.parametrize(
+    "meaning,content,name,expected",
+    [
+        ("confidential", "An unrelated confidential note", "note.txt", False),
+        ("confidential", "synthetic: confidential", "note.txt", True),
+        ("confidential", "form-alias: confidential", "note.txt", True),
+        ("confidential", "lemma: synthetic\nmeaning: confidential\n", "note.yaml", True),
+        ("confidential", '{"lemma": "synthetic",\n"meaning": "confidential"}', "note.json", True),
+        ("confidential", r'{"lemma": "\u0073ynthetic", "meaning": "\u0063onfidential"}', "note.json", True),
+        ("confidential", "- lemma: synthetic\n- meaning: confidential\n", "note.yaml", False),
+        ("target", "synthetic: target", "note.txt", False),
+        ("invented private destination", "INVENTED  PRIVATE\nDESTINATION", "note.txt", True),
+        ("open dictionary destination", "open dictionary destination", "note.txt", False),
+        ("target (an intended destination)", "target (an intended destination)", "note.txt", False),
+    ],
+)
+def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, meaning, content, name, expected):
+    root, api, _b = bound
+    api.close()
+    with sqlite3.connect(api.sources_db) as db:
+        db.execute(
+            "UPDATE dmklinger_uk_en SET translations=? WHERE id=1",
+            (json.dumps(["open dictionary destination", "target (an intended destination)"]),),
+        )
+    repo = tmp_path / "scan-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    (repo / name).write_text(content)
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    context = bindings.Context.read("a1", root)
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": meaning}}
+    store = {"words": [{**WORD, "forms": [{"form": "form-alias"}]}]}
+    result = sense_cli.leak_scan(repo, private, context, store, api, base="HEAD")
+    assert (result["status"] == "failed") == expected, result
+    assert result["tracked_files"] == 1
+    assert result["tracked_bytes"] == len(content.encode())
+    assert meaning not in json.dumps(result)
+    assert result["pr_text"] == "unverified"
+
+
+def test_scan_pattern_overlapping_prefixes_boundaries_and_unicode():
+    pattern, prefixes = sense_cli._scan_pattern({"cat", "cat food", "food", "é"})
+    hits = [term for m in pattern.finditer("cat food cats é") for term in prefixes[m[1]]]
+    assert hits == ["cat", "cat food", "food", "é"]
+    assert sense_cli._scan_normalize(" E\u0301 \n Cat ") == "é cat"
+    empty, _ = sense_cli._scan_pattern(set())
+    assert not list(empty.finditer("anything"))
+
+
+@pytest.mark.parametrize(
+    "dictionary,meaning,pos",
+    [
+        ("kaikki dictionary destination", "kaikki dictionary destination", "noun"),
+        ("target", "To TARGET (verb).", "verb"),
+    ],
+)
+def test_leak_scan_public_kaikki_atoms_and_matcher_normalization(
+    bound, tmp_path, monkeypatch, dictionary, meaning, pos
+):
+    root, api, _b = bound
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(
+        api, "kaikki_rows", lambda lemmas: SimpleNamespace(raw={"synthetic": {"glosses": [dictionary]}})
+    )
+    repo = tmp_path / "public-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    (repo / "note.txt").write_text(f"synthetic: {meaning}")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    context = bindings.Context.read("a1", root)
+    context.inventory[0]["pos"] = pos
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": meaning}}
+    result = sense_cli.leak_scan(repo, private, context, {"words": [WORD]}, api, base="HEAD")
+    assert result["status"] == "checked"
+    assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 0}
+
+
+def test_record_texts_preserve_nested_fields_but_not_siblings():
+    records = list(
+        sense_cli._record_texts(
+            {
+                "words": [
+                    {"lemma": "synthetic", "forms": [{"form": "alias"}], "gloss_ref": {"span": "target"}},
+                    {"lemma": "other", "meaning": "confidential"},
+                ]
+            }
+        )
+    )
+    assert any(all(term in r for term in ("synthetic", "alias", "target")) for r in records)
+    assert not any("synthetic" in r and "confidential" in r for r in records)
+    cyclic = {"lemma": "synthetic", "meaning": "confidential"}
+    cyclic["self"] = cyclic
+    assert len(list(sense_cli._record_texts(cyclic))) == 1
+
+
+def test_head_blobs_uses_one_batch_process_and_committed_bytes(tmp_path, monkeypatch):
+    repo = tmp_path / "blob-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    (repo / "one.txt").write_bytes(b"committed\x00binary")
+    (repo / "two.txt").write_text("second")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    (repo / "one.txt").write_text("uncommitted")
+    original = subprocess.Popen
+    calls = []
+
+    def process(command, **kwargs):
+        if command[:2] == ["git", "cat-file"]:
+            calls.append(command)
+        return original(command, **kwargs)
+
+    monkeypatch.setattr(subprocess, "Popen", process)
+    assert dict(sense_cli._head_blobs(repo)) == {"one.txt": b"committed\x00binary", "two.txt": b"second"}
+    assert calls == [["git", "cat-file", "--batch"]]
 
 
 def span(text, font="ArialMT", size=9, x=50, y=100):
@@ -982,6 +1156,64 @@ def test_unknown_label_counts_in_store_diagnostics(bound):
     assert decisions[0]["unknown_label_spans"] == 1
     assert decisions[0]["reason"] == "reference_no_match"
     assert "TARGET" not in json.dumps(decisions)
+
+
+@pytest.mark.parametrize(
+    "label",
+    [
+        "familiar",
+        "childish",
+        "endearing",
+        "endearment",
+        "proscribed",
+        "jocular",
+        "technical",
+        "colloq",
+        "colloquial",
+        "colloquially",
+        "obsolescent",
+        "uncommon",
+        "rude",
+        "taboo",
+        "polite",
+        "non standard",
+        "figuratively",
+        "archaically",
+        "dialectally",
+    ],
+)
+def test_shared_register_vocabulary_restricts_reference_selection(label):
+    assert sources._REGISTER_LABEL.fullmatch(label)
+    assert sources._register_note(label)
+    assert matcher.select(WORD, [row([f"target ({label} address)"])], "target").reason == "reference_no_match"
+    assert matcher.select(WORD, [row([f"target ({label})"])], f"target ({label})").gloss == "target"
+
+
+@pytest.mark.parametrize("label", sorted(matcher.TOPIC_LABELS))
+def test_topic_colon_prefix_must_match_reference_labels(label):
+    assert matcher.select(WORD, [row([f"{label}: target"])], "target").reason == "reference_no_match"
+    result = matcher.select(WORD, [row([f"{label}: target"])], f"target ({label})")
+    assert result.gloss == "target"
+    assert matcher.classify("unknown-topic: target").reason == "unknown_label"
+
+
+@pytest.mark.parametrize("label", ["ukraine", "us", "uk"])
+def test_region_names_only_restrict_whole_edge_or_nested_labels(label):
+    assert matcher.classify(f"target (capital city of {label})").labels == ()
+    assert matcher.select(WORD, [row([f"target (capital city of {label})"])], "target").gloss == "target"
+    for text in (f"({label}) target", f"target ({label})", f"target (({label}) a destination)"):
+        assert matcher.select(WORD, [row([text])], "target").reason == "reference_no_match"
+        assert matcher.select(WORD, [row([text])], f"target ({label})").gloss == "target"
+
+
+@pytest.mark.parametrize("ambiguous", [False, True])
+def test_multiple_inventory_entries_distinguish_no_match_from_ambiguity(bound, ambiguous):
+    _root, api, _b = bound
+    inventory = [{"lemma": "synthetic", "locator": str(i)} for i in range(2)]
+    meanings = ("TARGET.", "goal") if ambiguous else ("absent", "missing")
+    private = {str(i): {"meaning": value} for i, value in enumerate(meanings)}
+    _selected, decisions = sense_cli.select_store({"level": "a1", "words": [WORD]}, inventory, private, api)
+    assert decisions[0]["reason"] == ("reference_ambiguous" if ambiguous else "reference_no_match")
 
 
 def test_reviewed_binding_requires_exact_atom_index(review_dispatch):

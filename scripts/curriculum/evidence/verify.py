@@ -74,6 +74,7 @@ def verify_words_store(
 
     errors: list[str] = []
     warnings: list[str] = []
+    not_checked: list[str] = []
 
     if not store_path.is_file():
         return {
@@ -270,8 +271,11 @@ def verify_words_store(
                 warnings.append(f"{word_id}: reference_binding_missing")
             if word.get("gloss_basis") != binding_context.basis(word_id):
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: binding_basis_mismatch")
-            if binding_context.entries.get(word_id, {}).get("method") == "a1_reference_meaning.v1":
+            method = binding_context.entries.get(word_id, {}).get("method")
+            if method in {"a1_reference_meaning.v1", "reviewed.v1"}:
                 warnings.append(f"{word_id}: {sense_bindings.CI_NOTICE}")
+                unchecked = "private_commitment" if method == "a1_reference_meaning.v1" else "review_provenance"
+                not_checked.append(f"{word_id}:{unchecked}")
             expected_gloss = selection.gloss
             expected_gloss_source = selection.source
             expected_gloss_ref = selection.ref
@@ -514,6 +518,7 @@ def verify_words_store(
             "private_commitments": {"status": "unverifiable_in_ci", "local_receipt_required": True}
             if any(w.get("gloss_basis", {}).get("method") == "a1_reference_meaning.v1" for w in words_list)
             else {"status": "not_applicable"},
+            "not_checked": not_checked,
             "snapshot": sources_instance.snapshot_report(),
             "errors": errors,
             "warnings": warnings,
@@ -915,9 +920,13 @@ def verify_pack(
                         raise ValueError("word store must be a mapping")
                     context = sense_bindings.Context.read(level, evidence_base)
                     for wid in sorted(cited_gloss_ids(plan_doc)):
-                        if context.entries.get(wid, {}).get("method") == "a1_reference_meaning.v1":
+                        method = context.entries.get(wid, {}).get("method")
+                        if method in {"a1_reference_meaning.v1", "reviewed.v1"}:
                             warnings.append(f"{level}/{slug} {wid}: {sense_bindings.CI_NOTICE}")
-                            not_checked.append(f"{wid}:private_commitment")
+                            unchecked = (
+                                "private_commitment" if method == "a1_reference_meaning.v1" else "review_provenance"
+                            )
+                            not_checked.append(f"{wid}:{unchecked}")
                     errors.extend(
                         verify_plan_glosses(
                             plan_doc,

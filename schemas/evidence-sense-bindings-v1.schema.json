@@ -45,7 +45,8 @@
           },
           "span": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "description": "The binding certifies the displayed open-dictionary atom and matching restricting labels. A trailing definition is retained in the source signature but is not compared to the reference meaning. Multi-head references are never accepted under v1 because that signature includes the atom."
           },
           "inventory": {
             "const": "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml"

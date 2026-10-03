@@ -58,38 +58,9 @@ GRAMMATICAL_ANNOTATIONS = frozenset(
         "+ vocative",
     }
 )
-# Exact aliases canonicalise equivalent labels; no wildcard label inference.
+# Canonical register names come from the existing selector's shared vocabulary.
 RESTRICTING_LABELS = {
-    "figurative": "figurative",
-    "figuratively": "figurative",
-    "historical": "historical",
-    "historically": "historical",
-    "historic": "historical",
-    "archaic": "archaic",
-    "obsolete": "obsolete",
-    "dated": "dated",
-    "colloquial": "colloquial",
-    "slang": "slang",
-    "vulgar": "vulgar",
-    "derogatory": "derogatory",
-    "pejorative": "pejorative",
-    "offensive": "offensive",
-    "dialectal": "dialectal",
-    "dialect": "dialectal",
-    "rare": "rare",
-    "rarely": "rare",
-    "regional": "regional",
-    "informal": "informal",
-    "formal": "formal",
-    "literary": "literary",
-    "poetic": "poetic",
-    "poetical": "poetic",
-    "humorous": "humorous",
-    "ironic": "ironic",
-    "ironically": "ironic",
-    "euphemistic": "euphemistic",
-    "nonstandard": "nonstandard",
-    "non-standard": "nonstandard",
+    **{label: label for label in sources.REGISTER_LABELS.values()},
     "paganism": "paganism",
     "short scale": "short scale",
     "long scale": "long scale",
@@ -146,8 +117,14 @@ TOPIC_LABELS = {
     "technology": "technology",
 }
 LABELS = {**{label: None for label in GRAMMATICAL_ANNOTATIONS}, **RESTRICTING_LABELS, **TOPIC_LABELS}
+_REGION_EDGE_LABELS = frozenset({"ukraine", "us", "uk"})
+_REGISTER_PATTERNS = [
+    (re.compile(r"^(?:" + pattern + r")$"), label) for pattern, label in sources.REGISTER_LABELS.items()
+]
 _LABEL_PATTERN = re.compile(
-    r"(?<!\w)(?:" + "|".join(re.escape(s) for s in sorted(LABELS, key=lambda s: (-len(s), s))) + r")(?!\w)"
+    r"(?<!\w)(?:"
+    + "|".join([*sources.REGISTER_LABELS, *(re.escape(s) for s in sorted(LABELS, key=lambda s: (-len(s), s)))])
+    + r")(?!\w)"
 )
 
 
@@ -180,6 +157,13 @@ def classify(text: str) -> Group:
     """
     if not sources._well_formed_kaikki_gloss(text):
         return Group(reason="uncertain_scope")
+    prefix = re.match(r"^\s*([\w -]+):\s*(.+)$", text, re.DOTALL)
+    if prefix:
+        label = normalize(prefix[1], "noun")
+        if label not in TOPIC_LABELS:
+            return Group(reason="unknown_label")
+        group = classify(prefix[2])
+        return Group(group.head, tuple(sorted({*group.labels, TOPIC_LABELS[label]})), group.definitions, group.reason)
     notes, stack, start = [], [], 0
     for index, char in enumerate(text):
         if char in "([":
@@ -221,8 +205,24 @@ def classify(text: str) -> Group:
         if value.startswith(("(", "[")) and classify(value).reason:
             return Group(reason="unknown_label")
         matches = list(_LABEL_PATTERN.finditer(value))
-        labels.update(LABELS[m[0]] for m in matches if LABELS[m[0]] is not None)
-        remainder = _LABEL_PATTERN.sub("", value).strip(" ()[],;/+.!:")
+        # Country abbreviations/names inside prose are definition text. Only a
+        # whole edge note or nested parenthetical is a region label.
+        matches = [
+            m
+            for m in matches
+            if m[0] not in _REGION_EDGE_LABELS
+            or (value.strip(" .") == m[0] or re.search(r"[\[(]\s*" + re.escape(m[0]) + r"\s*[\])]", value))
+        ]
+        for match in matches:
+            canonical = LABELS.get(match[0])
+            if match[0] not in LABELS:
+                canonical = next(label for pattern, label in _REGISTER_PATTERNS if pattern.fullmatch(match[0]))
+            if canonical is not None:
+                labels.add(canonical)
+        remainder = value
+        for match in reversed(matches):
+            remainder = remainder[: match.start()] + remainder[match.end() :]
+        remainder = remainder.strip(" ()[],;/+.!:")
         if note in leading and remainder:
             return Group(reason="unknown_label")
         if not remainder:
