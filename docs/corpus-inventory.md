@@ -111,6 +111,12 @@ Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
    `scripts/wiki/sources.py::build_literary_row`, then `literary_fts('rebuild')`, commit.
 4. Verify via the MCP: `mcp__sources__search_literary` / `verify_quote`.
 
+Only ingest code (`scripts/ingest/`, or an allowlisted writer with a stated reason) opens
+`sources.db` or `vesum.db` writable. Everything else opens a read-only URI
+(`f"{path.resolve().as_uri()}?mode=ro", uri=True`).
+`scripts/hygiene/lint_source_db_writable_connects.py` enforces this repo-wide, through
+`tests/test_readonly_source_db_connects.py` (#9609).
+
 ### Reclaiming local disk — symlink a Drive-duplicated FILE (verify identity per file)
 
 Some files in `data/` are byte-identical copies of what already sits on the Drive mount but were
@@ -241,7 +247,7 @@ tool returns `status: error`, `error_code: resource_catalogue_missing`.
 | `grinchenko` | 67,275 | `search_grinchenko_1907` | Грінченко 1907 historical dict (pre-Soviet attestation). |
 | `wiktionary` | 50,278 | (via `search_sources`) | Wiktionary entries (+ `wiktionary_etymology` 4). |
 | `dmklinger_uk_en` | 30,111 | (UK→EN) | dmklinger UK→EN dictionary. |
-| `frazeolohichnyi` | 24,683 | `search_idioms` | Фразеологічний — idioms & set expressions. |
+| `frazeolohichnyi` | 24,683 | `search_idioms` | «Словник фразеологізмів української мови» (Наукова думка, 2003; edition verified in `registry/projects/open_model_data/sources/frazeolohichnyi_edition.yaml`) — idioms & set expressions. |
 | `ua_gec_errors` / `_fts` | 8,937 | `search_ua_gec_errors` | UA-GEC human-annotated error→correction pairs (calques/cases/gender). |
 | `puls_cefr` | 5,939 | `query_cefr_level` | PULS CEFR vocabulary (A1–C1). |
 | `style_guide` | 342 | `search_style_guide` | Антоненко-Давидович structured entries (Russianism/calque authority). |
@@ -394,6 +400,11 @@ restart and MCP verification; rehearsal on a copy does not establish live delive
 - **Folk genre primaries are thin** — standalone folk texts are only the 35 narod chunks; the rest of
   folk is embedded in scholarly works. Expanding the narod scrape further (more genres: байки, вертеп)
   or ingesting Грушевський/Драгоманов folk anthologies as tagged primaries would deepen #3162.
+- **СУМ-20 quarantine (#9609):** 11 `sum20_articles` rows of unestablished provenance (parser
+  `v1-official-codification`) carry a non-empty `quarantine_reason`. They are kept, but every reader skips them
+  (`scripts/wiki/sum20_official.py::live_article_predicate`). 89 official articles remain live.
+- **Holdings manifest (#9609):** per-component counts, row hashes and provenance for the open-model-data plan live in
+  `registry/projects/open_model_data/sources/holdings_manifest.yaml`.
 - **СУМ-11 Sovietization** (~5.6% flagged) and **ukrajinet auto-translation** — see the
   `mcp-sources-and-dictionaries` rule for the per-tool caveats.
 - **Dir mismatch** (scraper-local vs builder-GDrive) — see

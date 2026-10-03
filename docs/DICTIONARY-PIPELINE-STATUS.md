@@ -13,7 +13,7 @@
 | grinchenko_dict | 67,275 | Грінченко — Historical dictionary (1907) |
 | wiktionary_uk | 50,278 | Вікісловник — definitions, synonyms, antonyms |
 | dmklinger_uk_en | 30,111 | dmklinger — Ukrainian→English dictionary |
-| frazeolohichnyi | 24,683 | Фразеологічний — Ukrainian idioms |
+| frazeolohichnyi | 24,683 | «Словник фразеологізмів української мови» (Наукова думка, 2003) — Ukrainian idioms |
 | textbook_chunks | 23,398 | Textbooks — Grades 1-11 |
 | textbook_images | 14,119 | Textbook images |
 | style_guide | 279 | Антоненко-Давидович — style guide |

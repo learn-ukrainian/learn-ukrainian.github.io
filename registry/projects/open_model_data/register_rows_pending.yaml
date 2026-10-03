@@ -1,0 +1,166 @@
+# Register rows #9609 adds to docs/sources/permissions-register.{yaml,md}. They are held here because the Atlas pilot
+# freeze (#9643) pins the whole register file. To apply once #9643 lands: append each `add` row to `sources`, apply each
+# `amend` (field path -> new value) to the named row, mirror both in the .md twin, and run
+# tests/validate/test_permissions_register.py. tests/projects/open_model_data/test_register_rows_pending.py validates
+# every row against schemas/permissions-register.schema.json ($defs/source) now.
+schema_version: 1
+issue: '#9609'
+blocked_by: '#9643'
+evidence:
+  holdings: registry/projects/open_model_data/sources/holdings_manifest.yaml
+  frazeolohichnyi_edition: registry/projects/open_model_data/sources/frazeolohichnyi_edition.yaml
+add:
+- id: zno_nmt
+  name: ЗНО (2010–2021) and НМТ (2022–2025) Ukrainian-language tests with official answer keys
+  organisation: Український центр оцінювання якості освіти (test author); copies published by osvita.ua,
+    zno.osvita.ua and lv.testportal.gov.ua
+  role: Exam-task ruler (1,616 keyed tasks; the 30 own-statement essay tasks have no key and are excluded). Never
+    training data (plan PA7).
+  fields_used:
+  - task_stem
+  - task_options
+  - answer_key
+  appears_in:
+  - internal
+  appears_note: Ruler only. Sealed by the evaluation steward (E9); a released ruler, if any, is decided at E-final.
+  stored_in:
+  - data/sources.db zno_documents (33 booklets), zno_tasks (1,646 rows; 1,616 keyed), zno_tasks_fts
+  provenance:
+    urls:
+    - https://zno.osvita.ua/ukrainian/<test_id>/ and https://zno.osvita.ua/ukrmova/<test_id>/ (online tests, one per
+      session; ids in scripts/ingest/zno_ingest.py ONLINE_TEST_MAPPING)
+    - https://osvita.ua/doc/files/news/ (booklet PDFs; per-session URLs in zno_documents.url)
+    - https://lv.testportal.gov.ua/ (booklet mirror)
+    retrieved: null
+    retrieved_evidence: Retrieval dates are not recorded. zno_documents.sha256 is empty for all 33 booklets, and the
+      fetched online-test pages (the tmp/zno_cache ingest cache) were not kept. The rows were ingested by
+      scripts/ingest/zno_ingest.py, added in 775d1ad40f (2026-07-07). Fixity is the row hash in the holdings manifest
+      (zno_keyed_tasks, zno_documents).
+  terms:
+    found: false
+    licence:
+      name: No licence text recorded
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+    quotes: []
+    searched: []
+  citation:
+    form: 'Український центр оцінювання якості освіти. <ЗНО|НМТ> <рік>, <сесія>: українська мова, завдання <№>.'
+    shown_label: null
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: the exam-task ruler and any export carrying these tasks; the stored copies listed in stored_in (deleted
+      only with the operator's authorisation).
+  open_questions:
+  - 'Origin fixity: the booklets and online-test pages were not hashed when fetched. Either re-fetch and hash them, or
+    record the row hash as the only fixity.'
+  - 61 tasks belong to a booklet marked fetch_status 'dead' and 61 to one marked 'wrong-content'. Their tasks come from
+    the online test pages, so the booklet status does not void them, but the link should be re-checked.
+- id: pravopys_2019
+  name: «Український правопис» (2019), authorised edition, official PDF
+  organisation: Інститут мовознавства ім. О. О. Потебні НАН України, Інститут української мови НАН України and
+    Український мовно-інформаційний фонд НАН України (copyright holders per the imprint page); publisher Наукова думка
+  role: Spelling norm (plan P2). Component C5 uses only the examples printed inside each paragraph, paired with that
+    paragraph (§ locator).
+  fields_used:
+  - paragraph_text
+  - section_path
+  - page_locator
+  appears_in:
+  - internal
+  - site
+  - dataset
+  appears_note: Served offline by query_pravopys from the stored text (#9610); C5 records will carry § locators.
+  stored_in:
+  - data/sources.db pravopys_sources (1), pravopys_sections (44), pravopys_paragraphs (168)
+  provenance:
+    urls:
+    - https://www.ulif.org.ua/system/files/pravopus-new.pdf
+    - https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf
+    - https://zakon.rada.gov.ua/laws/show/437-2019-%D0%BF
+    retrieved: '2026-10-03'
+    retrieved_evidence: pravopys_sources.retrieved_at 2026-10-03T15:53:24Z; file sha256
+      0d2fd75a2e9b2a412d4c8e072f6a8cac06d075a297a770fd037312054b0e501a (392 pp.), pinned in
+      scripts/wiki/pravopys_official.py OFFICIAL_FILES; choice and approvals documented in
+      docs/sources/pravopys-2019-official-source.md.
+  terms:
+    found: false
+    licence:
+      name: No licence text recorded
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+    quotes: []
+    searched: []
+  citation:
+    form: 'Український правопис. Київ: Наукова думка, 2019. 392 с. ISBN 978-966-00-1728-3. § <номер>.'
+    shown_label: null
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: the C5 records and any site or export field carrying § text; the stored copies listed in stored_in (deleted
+      only with the operator's authorisation).
+  open_questions: []
+- id: pohribnyi_1992
+  name: Погрібний М. І. «Українська літературна вимова» (1992), booklet
+  organisation: Author М. І. Погрібний; published by агентство «TRANSFORM», Дніпропетровськ (per the ingest record)
+  role: Literary-pronunciation norm (component C8). The current rows are OCR. Records will use only the adjudicated
+    transcription from E3c.
+  fields_used:
+  - transcription
+  - rule_paragraph
+  - page_locator
+  appears_in:
+  - internal
+  - dataset
+  appears_note: Not a record source until E3c replaces the 28 OCR page rows with the adjudicated transcription.
+  stored_in:
+  - data/sources.db textbooks (28 page rows, source_file pohribnyi-ukrainska-literaturna-vymova-1992)
+  - private data mirror (scan PDF, 28 pp., sha256 5ea396063526800ebe095d0e8dc99477caf56964bf0ecbe13f14995c750e1555)
+  provenance:
+    urls:
+    - https://www.youtube.com/playlist?list=PLKTBLqy7kMugWc9_dOpw18zaIlhuBVtgz (the companion 1992 recording; not the
+      booklet's download origin)
+    retrieved: null
+    retrieved_evidence: The scan's download origin and date are not recorded. Its sha256 is pinned in
+      scripts/ingest/pohribnyi_tooling.py PDF_SHA256. The OCR rows were ingested by
+      scripts/ingest/pohribnyi_pronunciation_ingest.py in 3567e46745 (2026-05-14).
+  terms:
+    found: false
+    licence:
+      name: No licence text recorded
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+    quotes: []
+    searched: []
+  citation:
+    form: 'Погрібний М. І. Українська літературна вимова. Дніпропетровськ: TRANSFORM, 1992. С. <сторінка>.'
+    shown_label: null
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: the C8 records; the stored copies listed in stored_in (deleted only with the operator's authorisation).
+  open_questions:
+  - The publisher and place come from the ingest record only. Check them against the scan's imprint during E3c.
+amend:
+- id: frazeolohichnyi
+  set:
+    name: «Словник фразеологізмів української мови» (Наукова думка, 2003), aggregator copy «Український Фразелогічний
+      Словник»
+    organisation: Compilers В. М. Білоноженко, І. С. Гнатюк, В. В. Дятчук, Неровня, Т. О. Федоренко; responsible
+      editor В. О. Винник; publisher Наукова думка; Український мовно-інформаційний фонд НАН України
+    citation.form: 'Словник фразеологізмів української мови / уклад. В. М. Білоноженко та ін.; відп. ред. В. О. Винник.
+      Київ: Наукова думка, 2003. ISBN 966-00-0797-3.'
+    open_questions: []
+  append:
+    terms.searched:
+    - https://archive.org/metadata/slov557/metadata (title, 2003, Наукова думка, compilers; edition verified
+      2026-10-03, registry/projects/open_model_data/sources/frazeolohichnyi_edition.yaml)
+  reason: Edition verified from the data and its source files (#9609). The two-volume book named before is the 1993
+    edition, which the 2003 one-volume dictionary is built on.
