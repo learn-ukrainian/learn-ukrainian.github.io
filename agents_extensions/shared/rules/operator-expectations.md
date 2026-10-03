@@ -244,7 +244,9 @@ tie-breakers.
     education system). No agent or reviewer, in any lane, raises rights as an objection, gate,
     hold or open question. What stays with agents is provenance: a register entry per source, a
     locator per quoted item, licence notices on released files, and takedown requests handled
-    through GitHub issues. Public release still needs the operator's present-tense go.
+    through GitHub issues. Public release still needs the operator's present-tense go. The one
+    exception is methodology, not rights: the private pedagogy references (register id
+    `ulp_private`) stay grounding-only per their register entry.
 
 ## Precedence
 
