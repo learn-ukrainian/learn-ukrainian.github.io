@@ -35,6 +35,7 @@ import pytest
 
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.helpers.python import project_python
+from tests.opsec_fixtures import TOKEN
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -4616,7 +4617,9 @@ def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sand
     assert proc.stdout.startswith("real-gh pr comment 1234 --repo unit/public --body-file ")
 
 
-@pytest.mark.parametrize("readiness", ["ready", "draft", "failing", "unverifiable"])
+@pytest.mark.parametrize(
+    "readiness", ["ready", "draft", "failing", "unverifiable", "squash-hit", "squash-unverifiable"]
+)
 def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, readiness):
     root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
@@ -4624,19 +4627,39 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     head = "a" * 40
     metadata = {"number": 1234, "isDraft": readiness == "draft", "headRefOid": head}
     checks = [{"name": "CI Gate", "bucket": "fail" if readiness == "failing" else "pass"}]
+    # Real gh answers the squash-text GraphQL read with GitHub's default squash subject and body.
+    pull = {
+        "headRefOid": head,
+        "isMergeQueueEnabled": False,
+        "viewerMergeHeadlineText": "clean (#1234)",
+        "viewerMergeBodyText": "* " + TOKEN if readiness == "squash-hit" else "* clean",
+    }
+    squash = (
+        "invalid-json"
+        if readiness == "squash-unverifiable"
+        else json.dumps({"data": {"repository": {"pullRequest": pull}}})
+    )
     fake_gh.write_text(
         f"#!{sys.executable}\n"
         "import json, sys\n"
         "from pathlib import Path\n"
         "args = sys.argv[1:]\n"
-        f"with Path({str(calls)!r}).open('a') as out: out.write(json.dumps(args) + '\\n')\n"
+        "record = {'argv': args}\n"
+        "for flag in ('--input', '--body-file'):\n"
+        "    if flag in args: record[flag] = Path(args[args.index(flag) + 1]).read_text()\n"
+        f"with Path({str(calls)!r}).open('a') as out: out.write(json.dumps(record) + '\\n')\n"
         "if args[:2] == ['pr', 'view']:\n"
         f"    print(json.dumps({metadata!r}))\n"
         "elif args[:2] == ['pr', 'checks']:\n"
         f"    print('invalid-json' if {readiness == 'unverifiable'!r} else "
         f"json.dumps({checks!r}))\n"
+        "elif args[:4] == ['api', '--method', 'POST', 'graphql'] and "
+        "'viewerMergeBodyText(mergeType:SQUASH)' in record.get('--input', ''):\n"
+        f"    print({squash!r})\n"
+        "elif args[:2] == ['pr', 'merge']:\n"
+        "    print('real-gh ' + ' '.join(args[:args.index('--body-file')]))\n"
         "else:\n"
-        "    print('real-gh ' + ' '.join(args))\n"
+        "    sys.exit('unexpected gh call')\n"
     )
     fake_gh.chmod(0o755)
 
@@ -4655,11 +4678,23 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     )
 
     sent = [json.loads(line) for line in calls.read_text().splitlines()]
-    assert [args[:2] for args in sent[:2]] == [["pr", "view"], ["pr", "checks"]]
+    assert [record["argv"][:2] for record in sent[:2]] == [["pr", "view"], ["pr", "checks"]]
     if readiness == "ready":
         assert proc.returncode == 0
-        assert proc.stdout.strip() == f"real-gh pr merge 1234 --repo unit/public --squash --match-head-commit={head}"
-        assert len(sent) == 3 and sent[-1][:2] == ["pr", "merge"]
+        # The scanned default squash text is sent explicitly, so GitHub publishes exactly it.
+        assert proc.stdout.strip() == (
+            f"real-gh pr merge 1234 --repo unit/public --squash --subject=clean (#1234) --match-head-commit={head}"
+        )
+        assert [record["argv"][:2] for record in sent[2:]] == [["api", "--method"], ["pr", "merge"]]
+        assert sent[-1]["--body-file"] == "* clean"
+    elif readiness.startswith("squash-"):
+        assert proc.returncode != 0
+        assert proc.stderr.startswith("OPSEC") and TOKEN not in proc.stderr
+        if readiness == "squash-hit":
+            assert "rule=synthetic-rule class=1 field=body line=1" in proc.stderr
+        else:
+            assert "squash text unverifiable" in proc.stderr
+        assert len(sent) == 3 and sent[-1]["argv"][:4] == ["api", "--method", "POST", "graphql"]
     else:
         assert proc.returncode != 0
         assert "OPSEC: merge" in proc.stderr
