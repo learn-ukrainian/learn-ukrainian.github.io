@@ -488,14 +488,29 @@ class OwnershipLedger:
             pid_i = int(pid) if pid is not None else None
             created = float(row["created_at"]) if row["created_at"] is not None else None
             if not _task_still_active(task_id, pid_i, self.task_state_dir, created_at=created):
-                conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
+                if pid_i is not None:
+                    conn.execute(
+                        "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
+                        (task_id, pid_i),
+                    )
+                else:
+                    conn.execute(
+                        "DELETE FROM write_claims WHERE task_id = ? AND pid IS NULL",
+                        (task_id,),
+                    )
                 released.append(task_id)
         return released
 
-    def release(self, task_id: str) -> None:
+    def release(self, task_id: str, *, pid: int | None = None) -> None:
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
-            conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
+            if pid is not None:
+                conn.execute(
+                    "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
+                    (task_id, int(pid)),
+                )
+            else:
+                conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
             conn.execute("COMMIT")
 
     def update_claim_pid(self, task_id: str, new_pid: int) -> None:

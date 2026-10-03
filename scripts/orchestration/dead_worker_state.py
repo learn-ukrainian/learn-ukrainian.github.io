@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
+from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
 from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
 
 
@@ -177,8 +177,12 @@ def mark_missing_worktree_failed(
     observed: dict[str, Any],
     *,
     pid_alive: Callable[[int], bool],
+    ledger: OwnershipLedger | None = None,
 ) -> tuple[dict[str, Any], bool]:
-    """Recheck a dead worker whose worktree is missing under the writer lock, then mark it failed."""
+    """Recheck a dead worker whose worktree is missing under the writer lock, then mark it failed.
+
+    If ledger is provided, releases write claims bound to the observed PID before releasing the lock (#8659).
+    """
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text(encoding="utf-8"))
@@ -211,4 +215,7 @@ def mark_missing_worktree_failed(
             or "dispatch_settle: recorded worktree is missing and PID is dead; settling as pure history"
         )
         write_state_unlocked(path, current)
+        if ledger is not None:
+            task_id = current.get("task_id") or path.stem
+            ledger.release(task_id, pid=pid)
         return current, True
