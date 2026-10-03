@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.verification import antonenko_patterns as patterns
 from scripts.verification.antonenko_patterns import BOOK, PATTERNS, find_book_calques
 from scripts.verification.check_text import _is_closed_class_token, check_text
 from scripts.verification.vesum import verify_words
@@ -37,7 +38,7 @@ def hermetic_check(monkeypatch, tmp_path):
 
 
 @pytest.mark.parametrize("pattern", PATTERNS, ids=lambda p: p.id)
-def test_each_pattern_positive_and_sense_negative(pattern):
+def test_each_pattern_positive_and_sense_negative(pattern, hermetic_check):
     findings = find_book_calques(pattern.positive, tokenize(pattern.positive), MORPHOLOGY)
     hit = next(f for f in findings if f["detail"]["pattern_id"] == pattern.id)
     assert hit["detail"]["evidence"] == {
@@ -46,6 +47,16 @@ def test_each_pattern_positive_and_sense_negative(pattern):
         "chunk_id": pattern.chunk_id,
     }
     assert pattern.positive[hit["start"] : hit["end"]] == hit["form"]
+    expected_status = patterns.TEMPORAL_PROTIAH_STATUS if pattern.id == "temporal-protiah" else "documented_calque"
+    assert hit["detail"]["status"] == expected_status
+    result = hermetic_check.check_text(text=pattern.positive, checks=["russian_shadow"])
+    destination, empty = ("suspicions", "problems") if expected_status == "suspicion" else ("problems", "suspicions")
+    public_hit = next(f for f in result[destination] if f["detail"]["pattern_id"] == pattern.id)
+    assert public_hit["detail"]["status"] == expected_status
+    assert public_hit["detail"]["evidence"] == hit["detail"]["evidence"]
+    assert not any(f["detail"].get("pattern_id") == pattern.id for f in result[empty])
+    if expected_status == "suspicion":
+        assert public_hit["detail"]["label"] == "suspicion, not a verdict"
     assert not find_book_calques(pattern.negative, tokenize(pattern.negative), MORPHOLOGY)
 
 

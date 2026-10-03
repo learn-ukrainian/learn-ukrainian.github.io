@@ -32,7 +32,25 @@
     "На протязі тижня всі працювали.",
     "На протязі дня нові гості приходили."
   ],
+  "stopping_rule_cases": [
+    "Він простояв на протязі хвилин з десяток.",
+    "Він стояв на протязі години так зо дві.",
+    "Вона сиділа на протязі хвилин десь із п'ять.",
+    "Він простояв на протязі хвилин, може, десять.",
+    "Він стояв на протязі години, мабуть, дві.",
+    "На протязі години минають повільно."
+  ],
   "morphology": {
+    "вона": [{"lemma": "вона", "pos": "noun", "tags": "noun:unanim:f:v_naz:pron:pers:3"}],
+    "десь": [{"lemma": "десь", "pos": "adv", "tags": "adv:pron:ind"}, {"lemma": "десь", "pos": "part", "tags": "part"}],
+    "десяток": [{"lemma": "десятка", "pos": "noun", "tags": "noun:inanim:p:v_rod"}, {"lemma": "десяток", "pos": "noun", "tags": "noun:inanim:m:v_naz"}, {"lemma": "десяток", "pos": "noun", "tags": "noun:inanim:m:v_zna"}],
+    "мабуть": [{"lemma": "мабуть", "pos": "adv", "tags": "adv:insert"}],
+    "минають": [{"lemma": "минати", "pos": "verb", "tags": "verb:imperf:pres:p:3"}],
+    "може": [{"lemma": "могти", "pos": "verb", "tags": "verb:imperf:pres:s:3:insert"}],
+    "повільно": [{"lemma": "повільно", "pos": "adv", "tags": "adv:compb"}],
+    "так": [{"lemma": "так", "pos": "adv", "tags": "adv:pron:dem"}, {"lemma": "так", "pos": "conj", "tags": "conj:coord"}, {"lemma": "так", "pos": "conj", "tags": "conj:subord"}, {"lemma": "так", "pos": "part", "tags": "part"}],
+    "приймаємо": [{"lemma": "приймати", "pos": "verb", "tags": "verb:imperf:pres:p:1"}],
+    "участь": [{"lemma": "участь", "pos": "noun", "tags": "noun:inanim:f:v_naz"}, {"lemma": "участь", "pos": "noun", "tags": "noun:inanim:f:v_zna"}],
     "багато": [{"lemma": "багато", "pos": "adv", "tags": "adv:compb:predic"}, {"lemma": "багато", "pos": "numr", "tags": "numr:p:v_naz:pron:ind"}, {"lemma": "багато", "pos": "numr", "tags": "numr:p:v_zna:pron:ind"}],
     "брат": [{"lemma": "брат", "pos": "noun", "tags": "noun:anim:m:v_naz"}],
     "вартовий": [{"lemma": "вартовий", "pos": "adj", "tags": "adj:m:v_naz"}, {"lemma": "вартовий", "pos": "adj", "tags": "adj:m:v_zna:rinanim"}, {"lemma": "вартовий", "pos": "adj", "tags": "adj:m:v_kly"}, {"lemma": "вартовий", "pos": "noun", "tags": "noun:anim:m:v_naz"}, {"lemma": "вартовий", "pos": "noun", "tags": "noun:anim:m:v_kly"}],

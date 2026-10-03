@@ -17,9 +17,9 @@ from scripts.verification.antonenko_data import PATTERN_ROWS
 
 BOOK = "Антоненко-Давидович «Як ми говоримо»"
 SOURCE_FILE = "antonenko-davydovych-yak-my-hovorymo"
-# Last-round stopping rule: change only this value to "suspicion" on a new
-# independently confirmed class of temporal-protiah false positive.
-TEMPORAL_PROTIAH_STATUS = "documented_calque"
+# Round-3 stopping rule applied: surface matching cannot disambiguate draught
+# durations. Firm status requires parser evidence; see antonenko_residuals.md.
+TEMPORAL_PROTIAH_STATUS = "suspicion"
 
 
 @dataclass(frozen=True)

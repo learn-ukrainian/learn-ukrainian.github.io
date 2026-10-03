@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.verification import antonenko_patterns as patterns
 from scripts.verification.antonenko_patterns import _duration_case, _genitive_modifier, find_book_calques
 
 FIXTURE_DATA = json.loads(Path(__file__).with_name("antonenko_round3_fixtures.json").read_text())
@@ -21,12 +22,13 @@ def test_correct_draught_durations_have_no_book_finding(text):
 
 
 @pytest.mark.parametrize("text", FIXTURE_DATA["regressions"] + FIXTURE_DATA["incorrect"])
-def test_temporal_calques_remain_firm(text):
+def test_temporal_calques_follow_status_switch(text):
     findings = find_book_calques(text, tokenize(text), MORPHOLOGY)
     assert len(findings) == 1
     finding = findings[0]
     assert finding["detail"]["pattern_id"] == "temporal-protiah"
-    assert finding["detail"]["status"] == "documented_calque"
+    assert finding["detail"]["status"] == patterns.TEMPORAL_PROTIAH_STATUS
+    assert finding["detail"]["evidence"]["chunk_id"].endswith("_p131")
     assert text[finding["start"] : finding["end"]] == finding["form"]
 
 
@@ -36,7 +38,7 @@ def test_animate_accusative_alternatives_do_not_erase_genitives(modifier):
 
 
 @pytest.mark.parametrize("modifier", ["двох", "кількох"])
-def test_postposed_genitive_numerals_remain_firm(modifier):
+def test_postposed_genitive_numerals_remain_matched(modifier):
     text = f"На протязі годин {modifier} ми працювали."
     assert len(find_book_calques(text, tokenize(text), MORPHOLOGY)) == 1
 
@@ -93,7 +95,7 @@ def test_missing_morphology_does_not_manufacture_duration():
 
 
 def test_all_new_sentence_words_have_frozen_vesum_evidence():
-    for text in FIXTURE_DATA["correct"] + FIXTURE_DATA["incorrect"]:
+    for text in FIXTURE_DATA["correct"] + FIXTURE_DATA["incorrect"] + FIXTURE_DATA["stopping_rule_cases"]:
         for token in tokenize(text):
             # Range spellings are absent as a whole; both numeral parts attest.
             assert all(MORPHOLOGY.get(part.lower()) for part in token.parts)
@@ -122,8 +124,34 @@ def hermetic_checker(monkeypatch, tmp_path):
 )
 def test_review_cases_through_public_checker(text, expected, hermetic_checker):
     result = hermetic_checker.check_text(text=text, checks=["russian_shadow"])
-    assert result["suspicions"] == []
-    assert len(result["problems"]) == int(expected)
+    destination, empty = (
+        ("suspicions", "problems")
+        if patterns.TEMPORAL_PROTIAH_STATUS == "suspicion"
+        else ("problems", "suspicions")
+    )
+    assert result[empty] == []
+    assert len(result[destination]) == int(expected)
+    if expected:
+        finding = result[destination][0]
+        assert finding["detail"]["status"] == patterns.TEMPORAL_PROTIAH_STATUS
+        assert finding["detail"]["evidence"]["chunk_id"].endswith("_p131")
+        if destination == "suspicions":
+            assert finding["detail"]["label"] == "suspicion, not a verdict"
+
+
+@pytest.mark.parametrize("text", FIXTURE_DATA["stopping_rule_cases"])
+def test_stopping_rule_counterexamples_are_at_most_suspicions(text, hermetic_checker):
+    assert patterns.TEMPORAL_PROTIAH_STATUS == "suspicion"
+    findings = find_book_calques(text, tokenize(text), MORPHOLOGY)
+    assert all(f["detail"]["status"] == "suspicion" for f in findings)
+    result = hermetic_checker.check_text(text=text, checks=["russian_shadow"])
+    assert result["problems"] == []
+    assert len(result["suspicions"]) == len(findings)
+    for finding in result["suspicions"]:
+        assert finding["detail"]["pattern_id"] == "temporal-protiah"
+        assert finding["detail"]["status"] == "suspicion"
+        assert finding["detail"]["label"] == "suspicion, not a verdict"
+        assert finding["detail"]["evidence"]["chunk_id"].endswith("_p131")
 
 
 @pytest.mark.parametrize("checks", [["russian_shadow"], ["vesum", "russian_shadow"]])
@@ -136,8 +164,7 @@ def test_range_parts_do_not_change_whole_token_diagnostics(checks, hermetic_chec
 
 
 @pytest.mark.parametrize("status", ["documented_calque", "suspicion"])
-def test_one_line_downgrade_routes_through_public_checker(status, monkeypatch, hermetic_checker):
-    patterns = importlib.import_module("scripts.verification.antonenko_patterns")
+def test_status_switch_routes_through_public_checker(status, monkeypatch, hermetic_checker):
     monkeypatch.setattr(patterns, "TEMPORAL_PROTIAH_STATUS", status)
     checker = hermetic_checker
     result = checker.check_text(
@@ -155,6 +182,8 @@ def test_one_line_downgrade_routes_through_public_checker(status, monkeypatch, h
     assert finding["form"] == "На протязі року"
     assert finding["locations"] == [["a", 0, 15], ["b", 0, 15]]
     assert finding["detail"]["evidence"]["chunk_id"].endswith("_p131")
+    if status == "suspicion":
+        assert finding["detail"]["label"] == "suspicion, not a verdict"
     other = next(p for p in patterns.PATTERNS if p.id == "dependence")
     assert (
         patterns.find_book_calques(other.positive, tokenize(other.positive), {})[0]["detail"]["status"]

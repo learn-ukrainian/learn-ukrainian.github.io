@@ -16,15 +16,18 @@ improvements and quotations that the author expressly defends.
 positive and negative. Inflections use VESUM lemma/POS readings. The participation
 rule covers the clean VESUM verb paradigms of both `приймати` and `прийняти`,
 including analytic futures and intervening adjectives. Temporal `на протязі`
-requires a genitive duration with VESUM-attested genitive modifiers. Indeclinable,
+is a suspicion, not a firm finding. Its unchanged surface matcher requires a
+genitive duration with VESUM-attested genitive modifiers. Indeclinable,
 nominative and plain inanimate-accusative modifiers before the time word withhold
 the match; animate-only accusatives do not. After the time word, only numerals
 (including `зо` / `з` / `із` + numeral) enter that check. An unattested hyphenated
 range with attested nominative/accusative numeral parts also withholds the match.
 Following adjectives, pronouns and adverb homographs such as `багато людей` can
-start another phrase and do not erase the temporal finding. Literal
-draughts, proper names, borrowing suggestions and ordinary function words do not
-constitute pattern evidence. Recommendations are guidance, not inflection-aware
+start another phrase and do not erase the temporal suspicion. Literal draughts
+do not constitute calque evidence, but duration attachment remains ambiguous
+in the surface matcher (see the stopping-rule cases below). Proper names,
+borrowing suggestions and ordinary function words do not constitute pattern
+evidence. Recommendations are guidance, not inflection-aware
 automatic rewrites.
 
 The following **55 residual entries** lack a safe, general surface decision in
@@ -116,16 +119,31 @@ VESUM-attested `утратити`/`утрачати` reuse that same guard. A fi
 supersedes a shadow heuristic only on the identical item/span; unmatched
 occurrences retain their own evidence.
 
-Round-3 stopping rule: this is the final author round for `temporal-protiah`.
-If the next independent review finds any further class of firm false positive
-for that pattern, change `TEMPORAL_PROTIAH_STATUS` in `antonenko_patterns.py`
-from `documented_calque` to `suspicion` (one line). The public checker routes
-that status to `suspicions`, retaining source provenance and item offsets;
-other book patterns remain firm. The six review blockers and three regressions
-are fixed cases; eight additional correct and eight incorrect sentences use
-live `verify_words` readings (64/64 component words attested; the two whole
-range spellings are absent). These are author regression tests, not independent
-held-out proof. The driver owns the next review and all 55 residual entries;
+Round-3 stopping rule applied: `TEMPORAL_PROTIAH_STATUS` is now `suspicion`.
+Independent review of `014a26d6c6` found six further firm false positives in four
+classes, so there is no further matcher round:
+
+- Approximation with a noun: «Він простояв на протязі хвилин з десяток.»
+- An adverb or particle before a numeral: «Він стояв на протязі години так зо
+  дві.» and «Вона сиділа на протязі хвилин десь із п'ять.»
+- A comma-separated aside: «Він простояв на протязі хвилин, може, десять.» and
+  «Він стояв на протязі години, мабуть, дві.»
+- A plural subject: «На протязі години минають повільно.»
+
+The public checker routes matches to `suspicions`, retaining p131 book evidence,
+item offsets and the label `suspicion, not a verdict`; every other book pattern
+keeps its firm status. The matcher logic is unchanged. Restoring firm status
+requires a parser able to distinguish the draught-duration reading from the
+temporal reading, including duration attachment and plural-subject ambiguity.
+The infra lane owns this parser residual.
+
+The downgrade is not a one-line delivery: the switch changes one value, but the
+status assertions and public-checker routing tests also need updates, together
+with six fixed counterexamples and this residual note. Earlier blockers,
+regressions and positive cases remain tested with their frozen VESUM readings;
+the six new counterexamples also use live-verified, frozen readings. The
+independent counterexamples are now regression cases, not fresh held-out proof.
+The #9640 driver owns exact-head review and the 55 source/sense residual entries;
 this pushed author revision does not certify issue completion.
 
 Separate existing checker behavior: stress can be ambiguous for an otherwise
