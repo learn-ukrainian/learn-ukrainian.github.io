@@ -518,8 +518,9 @@ models:
       Operator 2026-09-22: default Claude model and the Claude orchestrator seat.
       Opus 5.5 executes architecture, hard coding, deep code review and
       Ukrainian-specific linguistic work. start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
-      Opus 5.5 / Sol 6.1 take review, critique and design input and jointly hold
-      designated approval (#9583). Effort: API default is medium (not high); medium on
+      Opus 5.5 / Sol 6.1 take review, critique and design input and hold
+      designated approval: the non-author's approval when one of them authored the
+      proposal, both for any other author (#9583, #9616). Effort: API default is medium (not high); medium on
       Opus 5.5 beats Opus 5 @ high on coding and knowledge work. Orchestrating runs
       at high; medium/low for routine turns; xhigh for hard debugging and the
       curriculum/linguistic review skills that pin effort: xhigh; max almost never.
@@ -540,7 +541,7 @@ models:
     notes: >-
       Anthropic authority-tier seat. Operator 2026-08-06: formal CF eligible when pinned
       on the sealed claude endpoint (sealed review-pr was removed in #8520).
-      Advisory consultations remain non-binding for designated approval authority (Opus 5.5 + Sol 6.1, #9583).
+      Advisory consultations remain non-binding for designated approval authority (Opus 5.5 + Sol 6.1, #9583, #9616).
       Kimi: web, UI and backend coding only — no Ukrainian-language content, no
       reviews, consults, design or rules.
       Effort ladder low..max; use high for advisory and xhigh only for a documented hard turn.
@@ -1145,8 +1146,9 @@ orchestrator_seats:
       advanced non-linguistic work (architecture, hard coding, deep code review).
       start-claude-driver.sh pins claude-opus-5-5[1m] @ high unless --model /
       --effort (or LAUNCHER_MODEL / LAUNCHER_EFFORT) override it. Opus 5.5 /
-      Sol 6.1 take review, critique, design input and Ukrainian work and jointly
-      hold designated approval (#9583). Orchestration alone does not
+      Sol 6.1 take review, critique, design input and Ukrainian work and hold
+      designated approval: the non-author's approval when one of them authored the
+      proposal, both for any other author (#9583, #9616). Orchestration alone does not
       confer approval authority. grok-4.7 owns the daily epic
       loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
       Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ high; Claude is an escalation TARGET,

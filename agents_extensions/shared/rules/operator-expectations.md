@@ -184,10 +184,11 @@ tie-breakers.
     contract.
 12. **Advisor / operator approval gate (binding) — new decisions only.** Agents must **not**
     invent or unilaterally adopt **new** architecture, local layout, process, or policy
-    without **present-tense approval** from the **operator** or **designated approval**: both
-    designated advisors, **Opus 5.5** (`claude-opus-5-5`) and **Sol 6.1** (`gpt-6.1-sol`),
-    approve, neither being the proposal's author; if they disagree, the operator decides
-    (#9583; roster may change — confirm via `/api/rules` / `model-assignment.md` when unsure;
+    without **present-tense approval** from the **operator** or **designated approval**: two
+    frontier families agree through the designated advisors, **Opus 5.5** (`claude-opus-5-5`)
+    and **Sol 6.1** (`gpt-6.1-sol`). When one of them authored the proposal, the other's
+    approval completes it; a proposal by any other agent (Gemini, Grok, Kimi or another seat)
+    needs both; if they disagree, the operator decides (#9583, #9616; roster may change — confirm via `/api/rules` / `model-assignment.md` when unsure;
     do not treat stale digests as roster). Fable and the former Astra seat hold no advisory,
     approval or review role.
     **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,

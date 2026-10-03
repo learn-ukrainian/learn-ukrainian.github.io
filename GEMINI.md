@@ -23,7 +23,7 @@ canary + explicit success/stop criteria; transport/shape/cost are not outcome pr
 word/stress/morphology facts VESUM/`sources`-verified, never guessed · clean code + current docs ·
 **max UA immersion EXCEPT A1** (its
 English scaffolding is by design; from A2 never raise English) · drive within approved scope ·
-**no NEW architecture/layout/process decisions without operator or advisor approval (both Opus 5.5 and Sol 6.1, neither the author; if they disagree, the operator decides;
+**no NEW architecture/layout/process decisions without operator or advisor approval (Opus 5.5 and Sol 6.1 agreeing; when one of them authored the proposal, the other's approval completes it; any other author needs both; if they disagree, the operator decides;
 Kimi: web, UI and backend coding only; roster may change); already-ordered work is item 10 (do not slice one outcome)** · **pre-dispatch outcome adequacy**: before presentation or dispatch,
 substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map, independent held-out evaluation,
 stop/residual policy, and completion terms; live-routed critics re-review material drift. Prompt
