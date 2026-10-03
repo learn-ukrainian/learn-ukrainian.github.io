@@ -302,6 +302,107 @@ def test_startup_failure_before_any_event_is_incomplete_with_diagnostics(tmp_pat
     assert _trigger(result, stdout="", stderr=stderr, kill_reason="initial_response_timeout") == "transport"
 
 
+# --- Records end at physical LF only ------------------------------------------
+
+# serde_json, like ``json.dumps(ensure_ascii=False)``, leaves these unescaped
+# inside strings; ``str.splitlines()`` would break a record at each of them.
+UNICODE_LINE_BREAKS = pytest.mark.parametrize("sep", ["\u0085", " ", " "], ids=["NEL", "LS", "PS"])
+
+
+def _items_with(sep: str) -> tuple[dict, ...]:
+    return (
+        reasoning(f"plan{sep}step", item_id="item_0"),
+        command(f"printf 'a{sep}b'", f"a{sep}b", item_id="item_1"),
+        mcp_call("sources", "search_text", {"query": f"x{sep}y"}, text=f"hit{sep}hit", item_id="item_2"),
+        agent_message(f"done{sep}ok", item_id="item_3"),
+    )
+
+
+@UNICODE_LINE_BREAKS
+def test_unicode_line_breaks_inside_strings_keep_a_completed_turn(tmp_path, sep):
+    stdout = jsonl(
+        thread_started(),
+        turn_started(),
+        error_notice(f"Reconnecting... 1/5{sep}stream disconnected"),
+        *_items_with(sep),
+        turn_completed(),
+    )
+    assert sep in stdout and stdout.count("\n") == 8
+    result = _parse(tmp_path, stdout, returncode=0, output=f"final{sep}answer")
+
+    assert result.ok is True and result.response == f"final{sep}answer"
+    assert result.failure_code is None and result.rate_limited is False
+    assert result.session_id == THREAD_ID
+    assert [call["name"] for call in result.tool_calls] == ["exec_command", "mcp__sources__search_text"]
+
+
+@UNICODE_LINE_BREAKS
+def test_unicode_line_breaks_inside_strings_keep_a_rate_limit(tmp_path, sep):
+    message = f"rate limit exceeded: request budget reached{sep}retry after 60s"
+    stdout = failed_stream(message, *_items_with(sep))
+    assert stdout.count(sep) == 7
+    result = _parse(tmp_path, stdout, returncode=1)
+
+    assert result.ok is False and result.response == ""
+    assert result.failure_code == "rate_limited" and result.rate_limited is True
+    assert result.session_id == THREAD_ID
+    assert _trigger(result, stdout=stdout) == "rate_limited"
+
+
+def test_crlf_record_endings_are_tolerated(tmp_path):
+    stdout = failed_stream("Quota exceeded. Check your plan and billing details.").replace("\n", "\r\n")
+    result = _parse(tmp_path, stdout, returncode=1)
+
+    assert result.failure_code == "rate_limited" and result.rate_limited is True
+
+
+@UNICODE_LINE_BREAKS
+def test_unicode_line_breaks_never_delimit_records(tmp_path, sep):
+    """Events joined by a Unicode line break instead of LF are one malformed line."""
+    events = (thread_started(), turn_started(), turn_failed("Quota exceeded. Check your plan and billing details."))
+    stdout = sep.join(json.dumps(event) for event in events) + "\n"
+    result = _parse(tmp_path, stdout, returncode=1)
+
+    assert result.failure_code == "provider_stream_incomplete" and result.rate_limited is False
+    assert "malformed_event" in result.stderr_excerpt
+    assert _trigger(result, stdout=stdout) is None
+
+
+@pytest.mark.parametrize(
+    "bad_line",
+    ['{"type": "item.completed", "item": {"text": "a\nb"}}', " ", '{"type":"turn.started"} '],
+    ids=["raw-lf-in-string", "bare-separator", "trailing-separator"],
+)
+def test_genuinely_malformed_lines_stay_incomplete(tmp_path, bad_line):
+    stdout = jsonl(thread_started(), turn_started()) + bad_line + "\n" + jsonl(turn_completed())
+    result = _parse(tmp_path, stdout, returncode=0, output="final answer")
+
+    assert result.ok is False and result.failure_code == "provider_stream_incomplete"
+    assert "malformed_event" in result.stderr_excerpt
+
+
+@UNICODE_LINE_BREAKS
+def test_early_reap_reads_watchdog_lines_containing_unicode_line_breaks(tmp_path, monkeypatch, sep):
+    import time
+
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="prompt", mode="read-only", cwd=tmp_path, model=None, task_id=None, session_id=None, tool_config=None
+    )
+    # The watchdog splits captured stdout at LF bytes only.
+    lines = [f"{line}\n" for line in completed_stream(*_items_with(sep)).split("\n")[:-1]]
+
+    def check(now: float) -> bool:
+        monkeypatch.setattr(time, "monotonic", lambda: now)
+        return adapter.check_early_reap(plan, call_start_time=0.0, stdout_lines=lines)
+
+    try:
+        plan.output_file.write_text("final answer")
+        assert [check(t) for t in (10.0, 12.0)] == [False, True]
+    finally:
+        plan.output_file.unlink(missing_ok=True)
+
+
 # --- Invocation binding: resumes and other turns -------------------------------
 
 

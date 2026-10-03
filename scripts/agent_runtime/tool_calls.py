@@ -14,6 +14,8 @@ from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
 from typing import Any
 
+from .jsonl import jsonl_lines
+
 OUTPUT_SUMMARY_LIMIT = 500
 TRUNCATION_SUFFIX = "[...truncated]"
 ARGUMENT_ITEM_LIMIT = 50
@@ -61,7 +63,7 @@ def parse_json_events(text: str, *, source: str, logger: logging.Logger) -> list
             return [item for item in parsed if isinstance(item, dict)]
 
     events: list[dict[str, Any]] = []
-    for lineno, raw_line in enumerate(text.splitlines(), start=1):
+    for lineno, raw_line in enumerate(jsonl_lines(text), start=1):
         line = raw_line.strip()
         if not line:
             continue

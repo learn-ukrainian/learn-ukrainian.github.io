@@ -91,6 +91,7 @@ except ImportError:
     from common.repo_root import project_interpreter  # agent_runtime loaded with scripts/ on path
 
 from ..binary_resolve import resolve_agent_binary
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
 from .base import InvocationPlan
@@ -2090,7 +2091,7 @@ class AcpxAdapter:
         malformed token fields in such an update also fail closed.
         """
         _ = output_file, plan, call_start_time
-        lines = [line for line in stdout.splitlines() if line.strip()]
+        lines = [line for line in jsonl_lines(stdout) if line.strip()]
 
         if not lines:
             return self._closed(f"acpx exec produced no NDJSON output (rc={returncode})", stderr)

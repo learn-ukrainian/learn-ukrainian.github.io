@@ -24,6 +24,7 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+from scripts.agent_runtime.jsonl import jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
 PROJECT_PYTHON = project_interpreter()
@@ -222,7 +223,7 @@ def _load_events(log_path: Path) -> list[dict[str, Any]]:
         return []
     return [
         json.loads(line)
-        for line in log_path.read_text(encoding="utf-8").splitlines()
+        for line in jsonl_lines(log_path.read_text(encoding="utf-8"))
         if line.strip()
     ]
 

@@ -37,6 +37,7 @@ from .adapters.acpx import (
     _require_local_metadata_field,
 )
 from .errors import AgentStalledError, AgentTimeoutError, RateLimitedError
+from .jsonl import jsonl_lines
 from .result import Result
 from .runner import _invoke_direct_only, _invoke_native_once
 from .usage import _usage_dir, write_record
@@ -167,7 +168,7 @@ def _comparison_record(
 def _has_executed_digest(evidence_dir: Path, digest: str) -> bool:
     for path in evidence_dir.glob(f"usage_{PILOT_AGENT}-{PILOT_ENTRYPOINT}_*.jsonl"):
         try:
-            lines = path.read_text(encoding="utf-8").splitlines()
+            lines = jsonl_lines(path.read_text(encoding="utf-8"))
         except OSError:
             continue
         for raw in lines:

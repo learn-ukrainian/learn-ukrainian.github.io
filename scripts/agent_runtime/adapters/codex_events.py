@@ -25,6 +25,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any, Literal
 
+from ..jsonl import jsonl_lines
 from ..tool_calls import tool_call_record
 
 _SESSION_ID_VALUE_RE = re.compile(
@@ -100,16 +101,16 @@ class CodexExecStream:
 
 
 def parse_exec_stream(stdout: str) -> CodexExecStream:
-    """Parse ``codex exec --json`` stdout; every non-empty line must be one event."""
+    """Parse ``codex exec --json`` stdout; every non-blank LF-delimited line must be one event."""
     thread_ids: list[str] = []
     terminals: list[tuple[str, str | None]] = []
     notices: list[str] = []
     items: list[Mapping[str, Any]] = []
     usage: Mapping[str, Any] | None = None
     turns_started = malformed = after_terminal = 0
-    for raw_line in (stdout or "").splitlines():
-        line = raw_line.strip()
-        if not line:
+    for line in jsonl_lines(stdout or ""):
+        # Only JSON whitespace makes a line blank; json.loads rejects the rest.
+        if not line.strip(" \t\r"):
             continue
         try:
             event = json.loads(line)
