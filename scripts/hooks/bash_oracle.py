@@ -58,6 +58,7 @@ def run_oracle(rows=None, traffic=None):
     families = {}
     failures = []
     overblock_ids = []
+    observations = []
     with tempfile.TemporaryDirectory(prefix="guard-bash-oracle-") as temporary:
         base = Path(temporary)
         primary = base / "primary"
@@ -82,7 +83,14 @@ def run_oracle(rows=None, traffic=None):
         environment.write_text(
             '#!/bin/bash\nif [[ "$1" == -i ]]; then shift; exec /usr/bin/env -i '
             + shlex.quote("PATH=" + str(binaries) + ":/usr/bin:/bin")
-            + ' "$@"; fi\nexec /usr/bin/env "$@"\n'
+            + ' "$@"; fi\n'
+            # Canonical attached -S form also works on hosts whose env only
+            # splits attached option values. The real utility performs splitting.
+            + 'if [[ "$1" == -S || "$1" == --split-string ]]; then\n'
+            + '  payload="$2"; shift 2; exec /usr/bin/env "-S$payload" "$@"; fi\n'
+            + 'if [[ "$1" == --split-string=* ]]; then\n'
+            + '  payload="${1#*=}"; shift; exec /usr/bin/env "-S$payload" "$@"; fi\n'
+            + 'exec /usr/bin/env "$@"\n'
         )
         environment.chmod(0o755)
         for utility in ("git", "gh", "sudo", "jq", "cat", "touch"):
@@ -90,7 +98,12 @@ def run_oracle(rows=None, traffic=None):
             recorder.write_text(
                 "#!/bin/bash\n"
                 "name=${0##*/}\n"
-                'if [[ "$name" == sudo ]]; then shift 2; exec "$@"; fi\n'
+                'if [[ "$name" == sudo ]]; then\n'
+                '  while [[ "$1" == -* ]]; do\n'
+                '    case "$1" in -D|--chdir) cd "$2" || exit; shift 2;;\n'
+                "      -u|-g|-p|--user|--group|--prompt) shift 2;;\n"
+                "      --) shift; break;; *) shift;; esac\n"
+                '  done; exec "$@"; fi\n'
                 'if [[ "$name" == jq ]]; then /bin/cat "${@: -1}"; exit; fi\n'
                 'if [[ "$name" == git ]]; then\n'
                 '  while [[ "$1" == -C* ]]; do\n'
@@ -147,7 +160,11 @@ def run_oracle(rows=None, traffic=None):
                     ):
                         blocked = merge.main() == 2
                 elif kind == "admin":
-                    with patch.object(admin, "_failing_blocking_checks", lambda pr, cwd=None: ["CI Gate"]):
+                    with patch.object(
+                        admin,
+                        "_failing_blocking_checks",
+                        lambda pr, cwd=None, seen=judged: seen.append(([str(pr)], cwd)) or ["CI Gate"],
+                    ):
                         blocked = admin.main() == 2
                 elif kind == "branch":
                     with (
@@ -174,6 +191,9 @@ def run_oracle(rows=None, traffic=None):
             # A branch operation in a worktree is allowed by existing policy.
             if kind == "branch":
                 executed = any(guarded(argv, kind) and protected(cwd) for argv, cwd in actual)
+            # Required visible-operation cases must observe an operation. A
+            # missing utility or invalid probe never satisfies acceptance.
+            oracle_missing |= row["id"].startswith("9484-f-") and row["id"].endswith("-guarded") and not executed
             mismatch = False
             if kind == "merge" and judged:
                 for argv, cwd in actual:
@@ -183,8 +203,34 @@ def run_oracle(rows=None, traffic=None):
                             args == expected and Path(directory or primary).resolve() == Path(cwd).resolve()
                             for args, directory in judged
                         )
+            if kind == "admin" and judged:
+                # Targets are gold corpus metadata, not inferred by the helper
+                # under test. The frozen admin corpus invokes PR 5.
+                for argv, cwd in actual:
+                    if guarded(argv, kind):
+                        mismatch |= not any(
+                            args == [row.get("oracle_pr")]
+                            and Path(directory or primary).resolve() == Path(cwd).resolve()
+                            for args, directory in judged
+                        )
             miss = (executed and not blocked) or mismatch or oracle_missing
             over = blocked and not executed and kind != "argv"
+
+            def relative(value):
+                return str(value).replace(str(base), "<oracle>")
+
+            observations.append(
+                {
+                    "id": row["id"],
+                    "hook": kind,
+                    "accepted": row["accepted"],
+                    "executed": [{"argv": [relative(a) for a in argv], "cwd": relative(cwd)} for argv, cwd in actual],
+                    "judged": [{"args": [relative(a) for a in args], "cwd": relative(cwd)} for args, cwd in judged],
+                    "blocked": blocked,
+                    "miss": miss,
+                    "overblock": over,
+                }
+            )
             if row["accepted"]:
                 counts["accepted_residuals"] += 1
             else:
@@ -245,6 +291,7 @@ def run_oracle(rows=None, traffic=None):
         "families": {key: dict(value) for key, value in sorted(families.items())},
         "failures": failures,
         "overblock_ids": overblock_ids,
+        "observations": observations,
     }
 
 

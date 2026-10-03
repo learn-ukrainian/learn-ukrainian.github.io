@@ -37,11 +37,28 @@ retains its refusal of dynamic redirects on an actual merge and its existing
 raw-text process-substitution refusal. Queued heredocs on ordinary readers are
 repaired using AST-identified openers; queued shell stdin is explicitly refused.
 
-`diagnostic=True` exists only for the private `_segments` extraction seams used
-by historical tests. It extracts recoverable commands from incomplete syntax
-and does not recurse into literal shell payloads in those seams. Enforcement
-calls the strict reader directly; diagnostic output is never an admission
-receipt. The unchanged benign fixture checks those extraction contracts.
+Shell alias and command-hash bindings refuse guarded candidates. Function
+definitions are inert. Calls to functions containing visible guarded
+operations, dynamic command names, indirect execution, or directory changes
+(including through another function) are refused. Trap payloads are refused
+because their execution time and directory are not established by registration.
+Shell stdin from pipelines or process substitution is refused; literal
+here-strings, here-documents and `-c` payloads remain recursively parsed.
+
+`xargs` never acts as a removable prefix. Guarded candidates involving its input
+or executable arguments are refused; fixed `echo`/`printf` logging commands remain
+inert. Dynamic traps and traps calling guarded functions also refuse. `find`
+execution actions, `setsid`, `flock`, `ionice` and other indirect
+executors with visible operations are refused. `nice`, `timeout` and ordinary
+`sudo` are read through explicit argument semantics, including `sudo -p` values.
+`sudo -D`, login/remote modes, and `env -S` refuse guarded candidates rather than
+guessing a target. Wrapper options remain scoped to their own utility.
+
+Conditional and loop directory states remain conservative, including later loop
+iterations. Shell option changes invalidate directory certainty. Redirected `cd`
+retains its possible failure directory except where `&&` requires success before
+the following command runs. Missing repository or worktree-probe evidence never
+establishes safety. Depth and walk-work limits fail closed on guarded commands.
 
 Any parser or grammar bump requires the complete oracle:
 
@@ -63,8 +80,9 @@ utilities never perform publication, branch changes, secret reads or writes.
 Asynchronous recorders are awaited. The failing-`cd` rows start in a nested
 worktree and return to the primary; primary subdirectories remain protected.
 The sourced-script residual uses an oracle-owned PATH entry to avoid sourcing
-the host's unrelated `script` utility. Reports expose executed and observed
-row counts alongside decisions, and tests mutate both command extraction and
+the host's unrelated `script` utility. Reports expose sanitized executed argv/cwd
+and judged targets, as well as executed and observed row counts alongside
+decisions, and tests mutate both command extraction and
 judged directories to prove that omitted or mis-scoped operations fail.
 
 Acceptance is zero missed in-scope operations, at most four over-blocks, and
@@ -75,3 +93,15 @@ No oracle result replaces exact-head independent critical review or CI.
 
 API references: [Python bindings](https://tree-sitter.github.io/py-tree-sitter/)
 and [Bash grammar](https://github.com/tree-sitter/tree-sitter-bash).
+
+The oracle's `sudo` recorder models value options and directory changes without
+using credentials. Its `env` instrumentation maps separated/long split-string
+options to the equivalent attached `-S` spelling; the installed utility performs
+the actual split. Every deferred-execution family has benign counterparts and
+checks observed guarded execution. Refusal is acceptable; a wrong judged target
+is a miss. Admin selectors are checked against gold corpus targets independently
+of the hook's selector helper. No new residual class is admitted.
+
+Shell semantics references: [functions](https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html),
+[execution environments](https://www.gnu.org/software/bash/manual/html_node/Command-Execution-Environment.html),
+and [env split-string](https://www.gnu.org/software/coreutils/manual/html_node/env-invocation.html).

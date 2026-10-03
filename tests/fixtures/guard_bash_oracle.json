@@ -24,7 +24,8 @@
       "family": "if",
       "command": "if true; then gh pr merge 5 --admin; fi",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "else-003",
@@ -45,7 +46,8 @@
       "family": "else",
       "command": "if false; then :; else gh pr merge 5 --admin; fi",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "elif-006",
@@ -66,7 +68,8 @@
       "family": "elif",
       "command": "if false; then :; elif true; then gh pr merge 5 --admin; fi",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "while-009",
@@ -87,7 +90,8 @@
       "family": "while",
       "command": "while true; do gh pr merge 5 --admin; break; done",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "until-012",
@@ -108,7 +112,8 @@
       "family": "until",
       "command": "until false; do gh pr merge 5 --admin; break; done",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "for-015",
@@ -129,7 +134,8 @@
       "family": "for",
       "command": "for x in once; do gh pr merge 5 --admin; done",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "brace-018",
@@ -150,7 +156,8 @@
       "family": "brace",
       "command": "{ gh pr merge 5 --admin; }",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "subshell-021",
@@ -171,7 +178,8 @@
       "family": "subshell",
       "command": "( gh pr merge 5 --admin )",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "function-024",
@@ -192,7 +200,8 @@
       "family": "function",
       "command": "f() { gh pr merge 5 --admin; }; f",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "time-027",
@@ -213,7 +222,8 @@
       "family": "time",
       "command": "time gh pr merge 5 --admin",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "coproc-030",
@@ -234,7 +244,8 @@
       "family": "coproc",
       "command": "coproc gh pr merge 5 --admin; wait",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "coproc-name-033",
@@ -255,7 +266,8 @@
       "family": "coproc-name",
       "command": "coproc NAME { gh pr merge 5 --admin; }; wait",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "negation-036",
@@ -276,7 +288,8 @@
       "family": "negation",
       "command": "! gh pr merge 5 --admin",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "pipeline-039",
@@ -297,7 +310,8 @@
       "family": "pipeline",
       "command": "true | gh pr merge 5 --admin",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "and-042",
@@ -318,7 +332,8 @@
       "family": "and",
       "command": "true && gh pr merge 5 --admin",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "or-045",
@@ -339,7 +354,8 @@
       "family": "or",
       "command": "false || gh pr merge 5 --admin",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "semicolon-048",
@@ -360,7 +376,8 @@
       "family": "semicolon",
       "command": "true; gh pr merge 5 --admin",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "background-051",
@@ -381,7 +398,8 @@
       "family": "background",
       "command": "gh pr merge 5 --admin & wait",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "bash-heredoc-054",
@@ -402,7 +420,8 @@
       "family": "bash-heredoc",
       "command": "bash <<'EOF'\ngh pr merge 5 --admin\nEOF",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "sh-heredoc-057",
@@ -423,7 +442,8 @@
       "family": "sh-heredoc",
       "command": "sh <<'EOF'\ngh pr merge 5 --admin\nEOF",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "eval-060",
@@ -444,7 +464,8 @@
       "family": "eval",
       "command": "eval 'gh pr merge 5 --admin'",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "bash-c-063",
@@ -465,7 +486,8 @@
       "family": "bash-c",
       "command": "bash -c 'gh pr merge 5 --admin'",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "sh-c-066",
@@ -486,7 +508,8 @@
       "family": "sh-c",
       "command": "sh -c 'gh pr merge 5 --admin'",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "substitution-069",
@@ -507,7 +530,8 @@
       "family": "substitution",
       "command": "echo $(gh pr merge 5 --admin)",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "quoted-substitution-072",
@@ -528,7 +552,8 @@
       "family": "quoted-substitution",
       "command": "echo \"$(gh pr merge 5 --admin)\"",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "assignment-substitution-075",
@@ -549,7 +574,8 @@
       "family": "assignment-substitution",
       "command": "x=\"$(gh pr merge 5 --admin)\"",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "backtick-078",
@@ -570,7 +596,8 @@
       "family": "backtick",
       "command": "echo `gh pr merge 5 --admin`",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "quoted-backtick-081",
@@ -591,7 +618,8 @@
       "family": "quoted-backtick",
       "command": "echo \"`gh pr merge 5 --admin`\"",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "process-in-084",
@@ -612,7 +640,8 @@
       "family": "process-in",
       "command": "cat <(gh pr merge 5 --admin)",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "process-out-087",
@@ -633,7 +662,8 @@
       "family": "process-out",
       "command": "echo fixture >(gh pr merge 5 --admin); wait",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "case-090",
@@ -654,7 +684,8 @@
       "family": "case",
       "command": "case x in x) gh pr merge 5 --admin;; esac",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "quoted-case-093",
@@ -675,7 +706,8 @@
       "family": "quoted-case",
       "command": "case x in x) echo \"$(gh pr merge 5 --admin)\";; esac",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "if-096",
@@ -1917,7 +1949,8 @@
       "family": "9484-coproc-compound",
       "command": "coproc N if true; then gh pr merge 5 --admin; fi",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-coproc-compound-273",
@@ -1938,7 +1971,8 @@
       "family": "9484-coproc-compound",
       "command": "coproc N for i in 1; do gh pr merge 5 --admin; done",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-coproc-compound-276",
@@ -1959,7 +1993,8 @@
       "family": "9484-coproc-compound",
       "command": "coproc N while true; do gh pr merge 5 --admin; break; done",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-coproc-compound-279",
@@ -1980,7 +2015,8 @@
       "family": "9484-coproc-compound",
       "command": "coproc N until false; do gh pr merge 5 --admin; break; done",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-coproc-compound-282",
@@ -2001,7 +2037,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin then",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-285",
@@ -2022,7 +2059,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin do",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-288",
@@ -2043,7 +2081,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin done",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-291",
@@ -2064,7 +2103,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin fi",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-294",
@@ -2085,7 +2125,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin elif",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-297",
@@ -2106,7 +2147,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin else",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-300",
@@ -2127,7 +2169,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin esac",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-303",
@@ -2148,7 +2191,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin while",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-306",
@@ -2169,7 +2213,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin until",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-309",
@@ -2190,7 +2235,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin if",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-312",
@@ -2211,7 +2257,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin for",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-315",
@@ -2232,7 +2279,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin select",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-318",
@@ -2253,7 +2301,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin case",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-321",
@@ -2274,7 +2323,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin [[",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-324",
@@ -2295,7 +2345,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin ((",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-327",
@@ -2316,7 +2367,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin {",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-330",
@@ -2337,7 +2389,8 @@
       "family": "9484-reserved-word",
       "command": "gh pr merge 5 --admin }",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-reserved-word-333",
@@ -2386,21 +2439,24 @@
       "family": "9484-dollar-quote",
       "command": "gh pr merge 5 --$'admin'",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-dollar-quote-340",
       "family": "9484-dollar-quote",
       "command": "gh pr merge 5 --$\"admin\"",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-dollar-quote-341",
       "family": "9484-dollar-quote",
       "command": "$'\\x67\\x68' pr merge 5 --$'admin'",
       "hook": "admin",
-      "accepted": false
+      "accepted": false,
+      "oracle_pr": "5"
     },
     {
       "id": "9484-dollar-quote-342",
@@ -2518,6 +2574,2020 @@
       "id": "9484-branch-flags-358",
       "family": "9484-branch-flags",
       "command": "git switch --orphan=x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-function-call-cwd-merge-guarded",
+      "family": "9484-f-function-call-cwd",
+      "command": "f(){ cd ../..; }; f; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-function-call-cwd-merge-benign",
+      "family": "9484-f-function-call-cwd",
+      "command": "f(){ printf benign; }; f; gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-function-call-cwd-admin-guarded",
+      "family": "9484-f-function-call-cwd",
+      "command": "f(){ cd ../..; }; f; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-call-cwd-admin-benign",
+      "family": "9484-f-function-call-cwd",
+      "command": "f(){ printf benign; }; f; gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-call-cwd-branch-guarded",
+      "family": "9484-f-function-call-cwd",
+      "command": "f(){ cd ../..; }; f; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-function-call-cwd-branch-benign",
+      "family": "9484-f-function-call-cwd",
+      "command": "f(){ printf benign; }; f; git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-function-body-merge-guarded",
+      "family": "9484-f-function-body",
+      "command": "f(){ gh pr merge 5; }; f",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-body-merge-benign",
+      "family": "9484-f-function-body",
+      "command": "f(){ gh pr view 5; }; f",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-body-admin-guarded",
+      "family": "9484-f-function-body",
+      "command": "f(){ gh pr merge 5 --admin; }; f",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-body-admin-benign",
+      "family": "9484-f-function-body",
+      "command": "f(){ gh pr view 5; }; f",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-body-branch-guarded",
+      "family": "9484-f-function-body",
+      "command": "f(){ git checkout -b fixture; }; f",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-body-branch-benign",
+      "family": "9484-f-function-body",
+      "command": "f(){ git status; }; f",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-arguments-merge-guarded",
+      "family": "9484-f-function-arguments",
+      "command": "f(){ gh pr merge \"$1\"; }; f 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-arguments-merge-benign",
+      "family": "9484-f-function-arguments",
+      "command": "f(){ gh pr view 5; }; f 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-arguments-admin-guarded",
+      "family": "9484-f-function-arguments",
+      "command": "f(){ gh pr merge \"$1\" --admin; }; f 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-arguments-admin-benign",
+      "family": "9484-f-function-arguments",
+      "command": "f(){ gh pr view 5; }; f 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-arguments-branch-guarded",
+      "family": "9484-f-function-arguments",
+      "command": "f(){ git checkout -b \"$1\"; }; f 5",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-arguments-branch-benign",
+      "family": "9484-f-function-arguments",
+      "command": "f(){ git status; }; f 5",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-nested-merge-guarded",
+      "family": "9484-f-function-nested",
+      "command": "inner(){ gh pr merge 5; }; outer(){ inner; }; outer",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-nested-merge-benign",
+      "family": "9484-f-function-nested",
+      "command": "inner(){ gh pr view 5; }; outer(){ inner; }; outer",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-nested-admin-guarded",
+      "family": "9484-f-function-nested",
+      "command": "inner(){ gh pr merge 5 --admin; }; outer(){ inner; }; outer",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-nested-admin-benign",
+      "family": "9484-f-function-nested",
+      "command": "inner(){ gh pr view 5; }; outer(){ inner; }; outer",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-function-nested-branch-guarded",
+      "family": "9484-f-function-nested",
+      "command": "inner(){ git checkout -b fixture; }; outer(){ inner; }; outer",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-function-nested-branch-benign",
+      "family": "9484-f-function-nested",
+      "command": "inner(){ git status; }; outer(){ inner; }; outer",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-failed-cd-merge-guarded",
+      "family": "9484-f-failed-cd",
+      "command": "cd missing; cd ../..; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-failed-cd-merge-benign",
+      "family": "9484-f-failed-cd",
+      "command": "cd missing; gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-failed-cd-admin-guarded",
+      "family": "9484-f-failed-cd",
+      "command": "cd missing; cd ../..; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-failed-cd-admin-benign",
+      "family": "9484-f-failed-cd",
+      "command": "cd missing; gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-failed-cd-branch-guarded",
+      "family": "9484-f-failed-cd",
+      "command": "cd missing; cd ../..; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-failed-cd-branch-benign",
+      "family": "9484-f-failed-cd",
+      "command": "cd missing; git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-failed-cd-redirect-merge-guarded",
+      "family": "9484-f-failed-cd-redirect",
+      "command": "cd .worktrees/wt > missing/out; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-failed-cd-redirect-merge-benign",
+      "family": "9484-f-failed-cd-redirect",
+      "command": "cd .worktrees/wt > missing/out; gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-failed-cd-redirect-admin-guarded",
+      "family": "9484-f-failed-cd-redirect",
+      "command": "cd .worktrees/wt > missing/out; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-failed-cd-redirect-admin-benign",
+      "family": "9484-f-failed-cd-redirect",
+      "command": "cd .worktrees/wt > missing/out; gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-failed-cd-redirect-branch-guarded",
+      "family": "9484-f-failed-cd-redirect",
+      "command": "cd .worktrees/wt > missing/out; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-failed-cd-redirect-branch-benign",
+      "family": "9484-f-failed-cd-redirect",
+      "command": "cd .worktrees/wt > missing/out; git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-conditional-cd-merge-guarded",
+      "family": "9484-f-conditional-cd",
+      "command": "if false; then cd .worktrees/wt; fi; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-conditional-cd-merge-benign",
+      "family": "9484-f-conditional-cd",
+      "command": "if false; then cd .worktrees/wt; fi; gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-conditional-cd-admin-guarded",
+      "family": "9484-f-conditional-cd",
+      "command": "if false; then cd .worktrees/wt; fi; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-conditional-cd-admin-benign",
+      "family": "9484-f-conditional-cd",
+      "command": "if false; then cd .worktrees/wt; fi; gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-conditional-cd-branch-guarded",
+      "family": "9484-f-conditional-cd",
+      "command": "if false; then cd .worktrees/wt; fi; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-conditional-cd-branch-benign",
+      "family": "9484-f-conditional-cd",
+      "command": "if false; then cd .worktrees/wt; fi; git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-loop-cwd-merge-guarded",
+      "family": "9484-f-loop-cwd",
+      "command": "for i in 1 2; do gh pr merge 5; cd ../..; done",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-loop-cwd-merge-benign",
+      "family": "9484-f-loop-cwd",
+      "command": "for i in 1 2; do gh pr view 5; cd ../..; done",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-loop-cwd-admin-guarded",
+      "family": "9484-f-loop-cwd",
+      "command": "for i in 1 2; do gh pr merge 5 --admin; cd ../..; done",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-loop-cwd-admin-benign",
+      "family": "9484-f-loop-cwd",
+      "command": "for i in 1 2; do gh pr view 5; cd ../..; done",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-loop-cwd-branch-guarded",
+      "family": "9484-f-loop-cwd",
+      "command": "for i in 1 2; do git checkout -b fixture; cd ../..; done",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-loop-cwd-branch-benign",
+      "family": "9484-f-loop-cwd",
+      "command": "for i in 1 2; do git status; cd ../..; done",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-while-cwd-merge-guarded",
+      "family": "9484-f-while-cwd",
+      "command": "n=0; while ((n++ < 2)); do gh pr merge 5; cd ../..; done",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-while-cwd-merge-benign",
+      "family": "9484-f-while-cwd",
+      "command": "n=0; while ((n++ < 2)); do gh pr view 5; cd ../..; done",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-while-cwd-admin-guarded",
+      "family": "9484-f-while-cwd",
+      "command": "n=0; while ((n++ < 2)); do gh pr merge 5 --admin; cd ../..; done",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-while-cwd-admin-benign",
+      "family": "9484-f-while-cwd",
+      "command": "n=0; while ((n++ < 2)); do gh pr view 5; cd ../..; done",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-while-cwd-branch-guarded",
+      "family": "9484-f-while-cwd",
+      "command": "n=0; while ((n++ < 2)); do git checkout -b fixture; cd ../..; done",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-while-cwd-branch-benign",
+      "family": "9484-f-while-cwd",
+      "command": "n=0; while ((n++ < 2)); do git status; cd ../..; done",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-pipeline-isolation-merge-guarded",
+      "family": "9484-f-pipeline-isolation",
+      "command": "true | cd .worktrees/wt; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipeline-isolation-merge-benign",
+      "family": "9484-f-pipeline-isolation",
+      "command": "true | cd .worktrees/wt; gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipeline-isolation-admin-guarded",
+      "family": "9484-f-pipeline-isolation",
+      "command": "true | cd .worktrees/wt; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-pipeline-isolation-admin-benign",
+      "family": "9484-f-pipeline-isolation",
+      "command": "true | cd .worktrees/wt; gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-pipeline-isolation-branch-guarded",
+      "family": "9484-f-pipeline-isolation",
+      "command": "true | cd .worktrees/wt; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipeline-isolation-branch-benign",
+      "family": "9484-f-pipeline-isolation",
+      "command": "true | cd .worktrees/wt; git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-subshell-isolation-merge-guarded",
+      "family": "9484-f-subshell-isolation",
+      "command": "(cd .worktrees/wt); gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-subshell-isolation-merge-benign",
+      "family": "9484-f-subshell-isolation",
+      "command": "(cd .worktrees/wt); gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-subshell-isolation-admin-guarded",
+      "family": "9484-f-subshell-isolation",
+      "command": "(cd .worktrees/wt); gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-subshell-isolation-admin-benign",
+      "family": "9484-f-subshell-isolation",
+      "command": "(cd .worktrees/wt); gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-subshell-isolation-branch-guarded",
+      "family": "9484-f-subshell-isolation",
+      "command": "(cd .worktrees/wt); git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-subshell-isolation-branch-benign",
+      "family": "9484-f-subshell-isolation",
+      "command": "(cd .worktrees/wt); git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-lastpipe-merge-guarded",
+      "family": "9484-f-lastpipe",
+      "command": "shopt -s lastpipe; true | cd ../..; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-lastpipe-merge-benign",
+      "family": "9484-f-lastpipe",
+      "command": "shopt -s lastpipe; true | cd ../..; gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-lastpipe-admin-guarded",
+      "family": "9484-f-lastpipe",
+      "command": "shopt -s lastpipe; true | cd ../..; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-lastpipe-admin-benign",
+      "family": "9484-f-lastpipe",
+      "command": "shopt -s lastpipe; true | cd ../..; gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-lastpipe-branch-guarded",
+      "family": "9484-f-lastpipe",
+      "command": "shopt -s lastpipe; true | cd ../..; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-lastpipe-branch-benign",
+      "family": "9484-f-lastpipe",
+      "command": "shopt -s lastpipe; true | cd ../..; git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-physical-cd-merge-guarded",
+      "family": "9484-f-physical-cd",
+      "command": "set -P; cd link/..; gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-physical-cd-merge-benign",
+      "family": "9484-f-physical-cd",
+      "command": "set -P; cd link/..; gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-physical-cd-admin-guarded",
+      "family": "9484-f-physical-cd",
+      "command": "set -P; cd link/..; gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-physical-cd-admin-benign",
+      "family": "9484-f-physical-cd",
+      "command": "set -P; cd link/..; gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-physical-cd-branch-guarded",
+      "family": "9484-f-physical-cd",
+      "command": "set -P; cd link/..; git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-physical-cd-branch-benign",
+      "family": "9484-f-physical-cd",
+      "command": "set -P; cd link/..; git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-trap-merge-guarded",
+      "family": "9484-f-trap",
+      "command": "trap 'gh pr merge 5' EXIT; true",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-trap-merge-benign",
+      "family": "9484-f-trap",
+      "command": "trap 'gh pr view 5' EXIT; true",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-trap-admin-guarded",
+      "family": "9484-f-trap",
+      "command": "trap 'gh pr merge 5 --admin' EXIT; true",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-admin-benign",
+      "family": "9484-f-trap",
+      "command": "trap 'gh pr view 5' EXIT; true",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-branch-guarded",
+      "family": "9484-f-trap",
+      "command": "trap 'git checkout -b fixture' EXIT; true",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-trap-branch-benign",
+      "family": "9484-f-trap",
+      "command": "trap 'git status' EXIT; true",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-trap-cwd-merge-guarded",
+      "family": "9484-f-trap-cwd",
+      "command": "trap 'gh pr merge 5' EXIT; cd ../..",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-trap-cwd-merge-benign",
+      "family": "9484-f-trap-cwd",
+      "command": "trap 'gh pr view 5' EXIT; cd ../..",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-trap-cwd-admin-guarded",
+      "family": "9484-f-trap-cwd",
+      "command": "trap 'gh pr merge 5 --admin' EXIT; cd ../..",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-cwd-admin-benign",
+      "family": "9484-f-trap-cwd",
+      "command": "trap 'gh pr view 5' EXIT; cd ../..",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-cwd-branch-guarded",
+      "family": "9484-f-trap-cwd",
+      "command": "trap 'git checkout -b fixture' EXIT; cd ../..",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-trap-cwd-branch-benign",
+      "family": "9484-f-trap-cwd",
+      "command": "trap 'git status' EXIT; cd ../..",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-pipe-sh-merge-guarded",
+      "family": "9484-f-pipe-sh",
+      "command": "printf '%s\\n' 'gh pr merge 5' | sh",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipe-sh-merge-benign",
+      "family": "9484-f-pipe-sh",
+      "command": "printf '%s\\n' 'gh pr view 5' | sh",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipe-sh-admin-guarded",
+      "family": "9484-f-pipe-sh",
+      "command": "printf '%s\\n' 'gh pr merge 5 --admin' | sh",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-pipe-sh-admin-benign",
+      "family": "9484-f-pipe-sh",
+      "command": "printf '%s\\n' 'gh pr view 5' | sh",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-pipe-sh-branch-guarded",
+      "family": "9484-f-pipe-sh",
+      "command": "printf '%s\\n' 'git checkout -b fixture' | sh",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipe-sh-branch-benign",
+      "family": "9484-f-pipe-sh",
+      "command": "printf '%s\\n' 'git status' | sh",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipe-bash-merge-guarded",
+      "family": "9484-f-pipe-bash",
+      "command": "printf '%s\\n' 'gh pr merge 5' | bash",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipe-bash-merge-benign",
+      "family": "9484-f-pipe-bash",
+      "command": "printf '%s\\n' 'gh pr view 5' | bash",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipe-bash-admin-guarded",
+      "family": "9484-f-pipe-bash",
+      "command": "printf '%s\\n' 'gh pr merge 5 --admin' | bash",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-pipe-bash-admin-benign",
+      "family": "9484-f-pipe-bash",
+      "command": "printf '%s\\n' 'gh pr view 5' | bash",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-pipe-bash-branch-guarded",
+      "family": "9484-f-pipe-bash",
+      "command": "printf '%s\\n' 'git checkout -b fixture' | bash",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-pipe-bash-branch-benign",
+      "family": "9484-f-pipe-bash",
+      "command": "printf '%s\\n' 'git status' | bash",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-herestring-merge-guarded",
+      "family": "9484-f-herestring",
+      "command": "bash <<< 'gh pr merge 5'",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-herestring-merge-benign",
+      "family": "9484-f-herestring",
+      "command": "bash <<< 'gh pr view 5'",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-herestring-admin-guarded",
+      "family": "9484-f-herestring",
+      "command": "bash <<< 'gh pr merge 5 --admin'",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-herestring-admin-benign",
+      "family": "9484-f-herestring",
+      "command": "bash <<< 'gh pr view 5'",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-herestring-branch-guarded",
+      "family": "9484-f-herestring",
+      "command": "bash <<< 'git checkout -b fixture'",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-herestring-branch-benign",
+      "family": "9484-f-herestring",
+      "command": "bash <<< 'git status'",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-heredoc-merge-guarded",
+      "family": "9484-f-heredoc",
+      "command": "sh <<'EOF'\ngh pr merge 5\nEOF",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-heredoc-merge-benign",
+      "family": "9484-f-heredoc",
+      "command": "sh <<'EOF'\ngh pr view 5\nEOF",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-heredoc-admin-guarded",
+      "family": "9484-f-heredoc",
+      "command": "sh <<'EOF'\ngh pr merge 5 --admin\nEOF",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-heredoc-admin-benign",
+      "family": "9484-f-heredoc",
+      "command": "sh <<'EOF'\ngh pr view 5\nEOF",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-heredoc-branch-guarded",
+      "family": "9484-f-heredoc",
+      "command": "sh <<'EOF'\ngit checkout -b fixture\nEOF",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-heredoc-branch-benign",
+      "family": "9484-f-heredoc",
+      "command": "sh <<'EOF'\ngit status\nEOF",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-exec-merge-guarded",
+      "family": "9484-f-find-exec",
+      "command": "find file -exec gh pr merge 5 \\;",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-exec-merge-benign",
+      "family": "9484-f-find-exec",
+      "command": "find file -exec gh pr view 5 \\;",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-exec-admin-guarded",
+      "family": "9484-f-find-exec",
+      "command": "find file -exec gh pr merge 5 --admin \\;",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-exec-admin-benign",
+      "family": "9484-f-find-exec",
+      "command": "find file -exec gh pr view 5 \\;",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-exec-branch-guarded",
+      "family": "9484-f-find-exec",
+      "command": "find file -exec git checkout -b fixture \\;",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-exec-branch-benign",
+      "family": "9484-f-find-exec",
+      "command": "find file -exec git status \\;",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-execdir-merge-guarded",
+      "family": "9484-f-find-execdir",
+      "command": "find file -execdir gh pr merge 5 \\;",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-execdir-merge-benign",
+      "family": "9484-f-find-execdir",
+      "command": "find file -execdir gh pr view 5 \\;",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-execdir-admin-guarded",
+      "family": "9484-f-find-execdir",
+      "command": "find file -execdir gh pr merge 5 --admin \\;",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-execdir-admin-benign",
+      "family": "9484-f-find-execdir",
+      "command": "find file -execdir gh pr view 5 \\;",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-execdir-branch-guarded",
+      "family": "9484-f-find-execdir",
+      "command": "find file -execdir git checkout -b fixture \\;",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-execdir-branch-benign",
+      "family": "9484-f-find-execdir",
+      "command": "find file -execdir git status \\;",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-ok-merge-guarded",
+      "family": "9484-f-find-ok",
+      "command": "printf 'y\\n' | find file -ok gh pr merge 5 \\;",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-ok-merge-benign",
+      "family": "9484-f-find-ok",
+      "command": "printf 'y\\n' | find file -ok gh pr view 5 \\;",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-ok-admin-guarded",
+      "family": "9484-f-find-ok",
+      "command": "printf 'y\\n' | find file -ok gh pr merge 5 --admin \\;",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-ok-admin-benign",
+      "family": "9484-f-find-ok",
+      "command": "printf 'y\\n' | find file -ok gh pr view 5 \\;",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-ok-branch-guarded",
+      "family": "9484-f-find-ok",
+      "command": "printf 'y\\n' | find file -ok git checkout -b fixture \\;",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-find-ok-branch-benign",
+      "family": "9484-f-find-ok",
+      "command": "printf 'y\\n' | find file -ok git status \\;",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-input-merge-guarded",
+      "family": "9484-f-xargs-input",
+      "command": "printf '%s\\n' 'pr merge 5' | xargs gh",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-input-merge-benign",
+      "family": "9484-f-xargs-input",
+      "command": "printf '%s\\n' 'pr view 5' | xargs gh",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-input-admin-guarded",
+      "family": "9484-f-xargs-input",
+      "command": "printf '%s\\n' 'pr merge 5 --admin' | xargs gh",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-xargs-input-admin-benign",
+      "family": "9484-f-xargs-input",
+      "command": "printf '%s\\n' 'pr view 5' | xargs gh",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-xargs-input-branch-guarded",
+      "family": "9484-f-xargs-input",
+      "command": "printf '%s\\n' 'checkout -b fixture' | xargs git",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-input-branch-benign",
+      "family": "9484-f-xargs-input",
+      "command": "printf '%s\\n' status | xargs git",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-args-merge-guarded",
+      "family": "9484-f-xargs-args",
+      "command": "printf '' | xargs gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-args-merge-benign",
+      "family": "9484-f-xargs-args",
+      "command": "printf '' | xargs gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-args-admin-guarded",
+      "family": "9484-f-xargs-args",
+      "command": "printf '' | xargs gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-xargs-args-admin-benign",
+      "family": "9484-f-xargs-args",
+      "command": "printf '' | xargs gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-xargs-args-branch-guarded",
+      "family": "9484-f-xargs-args",
+      "command": "printf '' | xargs git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-args-branch-benign",
+      "family": "9484-f-xargs-args",
+      "command": "printf '' | xargs git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-replace-merge-guarded",
+      "family": "9484-f-xargs-replace",
+      "command": "printf '5\\n' | xargs -I@ gh pr merge @",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-replace-merge-benign",
+      "family": "9484-f-xargs-replace",
+      "command": "printf '5\\n' | xargs -I@ gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-replace-admin-guarded",
+      "family": "9484-f-xargs-replace",
+      "command": "printf '5\\n' | xargs -I@ gh pr merge --admin @",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-xargs-replace-admin-benign",
+      "family": "9484-f-xargs-replace",
+      "command": "printf '5\\n' | xargs -I@ gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-xargs-replace-branch-guarded",
+      "family": "9484-f-xargs-replace",
+      "command": "printf '5\\n' | xargs -I@ git checkout -b @",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-xargs-replace-branch-benign",
+      "family": "9484-f-xargs-replace",
+      "command": "printf '5\\n' | xargs -I@ git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-setsid-merge-guarded",
+      "family": "9484-f-setsid",
+      "command": "setsid --wait gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-setsid-merge-benign",
+      "family": "9484-f-setsid",
+      "command": "setsid --wait gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-setsid-admin-guarded",
+      "family": "9484-f-setsid",
+      "command": "setsid --wait gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-setsid-admin-benign",
+      "family": "9484-f-setsid",
+      "command": "setsid --wait gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-setsid-branch-guarded",
+      "family": "9484-f-setsid",
+      "command": "setsid --wait git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-setsid-branch-benign",
+      "family": "9484-f-setsid",
+      "command": "setsid --wait git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-flock-merge-guarded",
+      "family": "9484-f-flock",
+      "command": "flock lock gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-flock-merge-benign",
+      "family": "9484-f-flock",
+      "command": "flock lock gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-flock-admin-guarded",
+      "family": "9484-f-flock",
+      "command": "flock lock gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-flock-admin-benign",
+      "family": "9484-f-flock",
+      "command": "flock lock gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-flock-branch-guarded",
+      "family": "9484-f-flock",
+      "command": "flock lock git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-flock-branch-benign",
+      "family": "9484-f-flock",
+      "command": "flock lock git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-ionice-merge-guarded",
+      "family": "9484-f-ionice",
+      "command": "ionice -c 3 gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-ionice-merge-benign",
+      "family": "9484-f-ionice",
+      "command": "ionice -c 3 gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-ionice-admin-guarded",
+      "family": "9484-f-ionice",
+      "command": "ionice -c 3 gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-ionice-admin-benign",
+      "family": "9484-f-ionice",
+      "command": "ionice -c 3 gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-ionice-branch-guarded",
+      "family": "9484-f-ionice",
+      "command": "ionice -c 3 git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-ionice-branch-benign",
+      "family": "9484-f-ionice",
+      "command": "ionice -c 3 git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-nice-merge-guarded",
+      "family": "9484-f-nice",
+      "command": "nice -n 1 gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-nice-merge-benign",
+      "family": "9484-f-nice",
+      "command": "nice -n 1 gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-nice-admin-guarded",
+      "family": "9484-f-nice",
+      "command": "nice -n 1 gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-nice-admin-benign",
+      "family": "9484-f-nice",
+      "command": "nice -n 1 gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-nice-branch-guarded",
+      "family": "9484-f-nice",
+      "command": "nice -n 1 git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-nice-branch-benign",
+      "family": "9484-f-nice",
+      "command": "nice -n 1 git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-timeout-merge-guarded",
+      "family": "9484-f-timeout",
+      "command": "timeout --signal TERM 5 gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-timeout-merge-benign",
+      "family": "9484-f-timeout",
+      "command": "timeout --signal TERM 5 gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-timeout-admin-guarded",
+      "family": "9484-f-timeout",
+      "command": "timeout --signal TERM 5 gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-timeout-admin-benign",
+      "family": "9484-f-timeout",
+      "command": "timeout --signal TERM 5 gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-timeout-branch-guarded",
+      "family": "9484-f-timeout",
+      "command": "timeout --signal TERM 5 git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-timeout-branch-benign",
+      "family": "9484-f-timeout",
+      "command": "timeout --signal TERM 5 git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-merge-guarded",
+      "family": "9484-f-env-split",
+      "command": "env -S 'gh pr merge 5'",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-merge-benign",
+      "family": "9484-f-env-split",
+      "command": "env -S 'gh pr view 5'",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-admin-guarded",
+      "family": "9484-f-env-split",
+      "command": "env -S 'gh pr merge 5 --admin'",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-env-split-admin-benign",
+      "family": "9484-f-env-split",
+      "command": "env -S 'gh pr view 5'",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-env-split-branch-guarded",
+      "family": "9484-f-env-split",
+      "command": "env -S 'git checkout -b fixture'",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-branch-benign",
+      "family": "9484-f-env-split",
+      "command": "env -S 'git status'",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-joined-merge-guarded",
+      "family": "9484-f-env-split-joined",
+      "command": "env --split-string='gh pr merge 5'",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-joined-merge-benign",
+      "family": "9484-f-env-split-joined",
+      "command": "env --split-string='gh pr view 5'",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-joined-admin-guarded",
+      "family": "9484-f-env-split-joined",
+      "command": "env --split-string='gh pr merge 5 --admin'",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-env-split-joined-admin-benign",
+      "family": "9484-f-env-split-joined",
+      "command": "env --split-string='gh pr view 5'",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-env-split-joined-branch-guarded",
+      "family": "9484-f-env-split-joined",
+      "command": "env --split-string='git checkout -b fixture'",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-env-split-joined-branch-benign",
+      "family": "9484-f-env-split-joined",
+      "command": "env --split-string='git status'",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-sudo-prompt-merge-guarded",
+      "family": "9484-f-sudo-prompt",
+      "command": "sudo -p fixture gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-sudo-prompt-merge-benign",
+      "family": "9484-f-sudo-prompt",
+      "command": "sudo -p fixture gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-sudo-prompt-admin-guarded",
+      "family": "9484-f-sudo-prompt",
+      "command": "sudo -p fixture gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-sudo-prompt-admin-benign",
+      "family": "9484-f-sudo-prompt",
+      "command": "sudo -p fixture gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-sudo-prompt-branch-guarded",
+      "family": "9484-f-sudo-prompt",
+      "command": "sudo -p fixture git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-sudo-prompt-branch-benign",
+      "family": "9484-f-sudo-prompt",
+      "command": "sudo -p fixture git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-sudo-directory-merge-guarded",
+      "family": "9484-f-sudo-directory",
+      "command": "sudo -p fixture -D ../.. gh pr merge 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-sudo-directory-merge-benign",
+      "family": "9484-f-sudo-directory",
+      "command": "sudo -p fixture -D ../.. gh pr view 5",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-sudo-directory-admin-guarded",
+      "family": "9484-f-sudo-directory",
+      "command": "sudo -p fixture -D ../.. gh pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-sudo-directory-admin-benign",
+      "family": "9484-f-sudo-directory",
+      "command": "sudo -p fixture -D ../.. gh pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "worktree",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-sudo-directory-branch-guarded",
+      "family": "9484-f-sudo-directory",
+      "command": "sudo -p fixture -D ../.. git checkout -b fixture",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-sudo-directory-branch-benign",
+      "family": "9484-f-sudo-directory",
+      "command": "sudo -p fixture -D ../.. git status",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "worktree"
+    },
+    {
+      "id": "9484-f-shell-process-input-merge-guarded",
+      "family": "9484-f-shell-process-input",
+      "command": "sh < <(printf '%s\\n' 'gh pr merge 5')",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-shell-process-input-merge-benign",
+      "family": "9484-f-shell-process-input",
+      "command": "sh < <(printf '%s\\n' 'gh pr view 5')",
+      "hook": "merge",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-shell-process-input-admin-guarded",
+      "family": "9484-f-shell-process-input",
+      "command": "sh < <(printf '%s\\n' 'gh pr merge 5 --admin')",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-shell-process-input-admin-benign",
+      "family": "9484-f-shell-process-input",
+      "command": "sh < <(printf '%s\\n' 'gh pr view 5')",
+      "hook": "admin",
+      "accepted": false,
+      "cwd": "primary",
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-shell-process-input-branch-guarded",
+      "family": "9484-f-shell-process-input",
+      "command": "sh < <(printf '%s\\n' 'git checkout -b fixture')",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-shell-process-input-branch-benign",
+      "family": "9484-f-shell-process-input",
+      "command": "sh < <(printf '%s\\n' 'git status')",
+      "hook": "branch",
+      "accepted": false,
+      "cwd": "primary"
+    },
+    {
+      "id": "9484-f-trap-dynamic-merge-guarded",
+      "family": "9484-f-trap-dynamic",
+      "command": "x='gh pr merge 5'; trap \"$x\" EXIT",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-trap-dynamic-merge-benign",
+      "family": "9484-f-trap-dynamic",
+      "command": "x='gh pr view 5'; trap \"$x\" EXIT",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-trap-dynamic-admin-guarded",
+      "family": "9484-f-trap-dynamic",
+      "command": "x='gh pr merge 5 --admin'; trap \"$x\" EXIT",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-dynamic-admin-benign",
+      "family": "9484-f-trap-dynamic",
+      "command": "x='gh pr view 5'; trap \"$x\" EXIT",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-dynamic-branch-guarded",
+      "family": "9484-f-trap-dynamic",
+      "command": "x='git checkout -b fixture'; trap \"$x\" EXIT",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-trap-dynamic-branch-benign",
+      "family": "9484-f-trap-dynamic",
+      "command": "x='git status'; trap \"$x\" EXIT",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-trap-function-merge-guarded",
+      "family": "9484-f-trap-function",
+      "command": "f(){ gh pr merge 5; }; trap f EXIT",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-trap-function-merge-benign",
+      "family": "9484-f-trap-function",
+      "command": "f(){ gh pr view 5; }; trap f EXIT",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-trap-function-admin-guarded",
+      "family": "9484-f-trap-function",
+      "command": "f(){ gh pr merge 5 --admin; }; trap f EXIT",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-function-admin-benign",
+      "family": "9484-f-trap-function",
+      "command": "f(){ gh pr view 5; }; trap f EXIT",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-trap-function-branch-guarded",
+      "family": "9484-f-trap-function",
+      "command": "f(){ git checkout -b fixture; }; trap f EXIT",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-trap-function-branch-benign",
+      "family": "9484-f-trap-function",
+      "command": "f(){ git status; }; trap f EXIT",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-find-dynamic-merge-guarded",
+      "family": "9484-f-find-dynamic",
+      "command": "x='gh pr merge 5'; find file -exec bash -c \"$x\" \\;",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-find-dynamic-merge-benign",
+      "family": "9484-f-find-dynamic",
+      "command": "x='gh pr view 5'; find file -exec bash -c \"$x\" \\;",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-find-dynamic-admin-guarded",
+      "family": "9484-f-find-dynamic",
+      "command": "x='gh pr merge 5 --admin'; find file -exec bash -c \"$x\" \\;",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-dynamic-admin-benign",
+      "family": "9484-f-find-dynamic",
+      "command": "x='gh pr view 5'; find file -exec bash -c \"$x\" \\;",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-find-dynamic-branch-guarded",
+      "family": "9484-f-find-dynamic",
+      "command": "x='git checkout -b fixture'; find file -exec bash -c \"$x\" \\;",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-find-dynamic-branch-benign",
+      "family": "9484-f-find-dynamic",
+      "command": "x='git status'; find file -exec bash -c \"$x\" \\;",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-alias-merge-guarded",
+      "family": "9484-f-alias",
+      "command": "shopt -s expand_aliases\nalias f='gh pr merge 5'\nf",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-alias-merge-benign",
+      "family": "9484-f-alias",
+      "command": "shopt -s expand_aliases\nalias f='gh pr view 5'\nf",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-alias-admin-guarded",
+      "family": "9484-f-alias",
+      "command": "shopt -s expand_aliases\nalias f='gh pr merge 5 --admin'\nf",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-alias-admin-benign",
+      "family": "9484-f-alias",
+      "command": "shopt -s expand_aliases\nalias f='gh pr view 5'\nf",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-alias-branch-guarded",
+      "family": "9484-f-alias",
+      "command": "shopt -s expand_aliases\nalias f='git checkout -b fixture'\nf",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-alias-branch-benign",
+      "family": "9484-f-alias",
+      "command": "shopt -s expand_aliases\nalias f='git status'\nf",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-hash-merge-guarded",
+      "family": "9484-f-hash",
+      "command": "hash -p \"$(command -v gh)\" f; f pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-hash-merge-benign",
+      "family": "9484-f-hash",
+      "command": "hash -p \"$(command -v gh)\" f; f pr view 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-hash-admin-guarded",
+      "family": "9484-f-hash",
+      "command": "hash -p \"$(command -v gh)\" f; f pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-hash-admin-benign",
+      "family": "9484-f-hash",
+      "command": "hash -p \"$(command -v gh)\" f; f pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-hash-branch-guarded",
+      "family": "9484-f-hash",
+      "command": "hash -p \"$(command -v git)\" f; f checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-hash-branch-benign",
+      "family": "9484-f-hash",
+      "command": "hash -p \"$(command -v git)\" f; f status",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-command-binding-merge-guarded",
+      "family": "9484-f-command-binding",
+      "command": "BASH_CMDS[f]=$(command -v gh); f pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-command-binding-merge-benign",
+      "family": "9484-f-command-binding",
+      "command": "BASH_CMDS[f]=$(command -v gh); f pr view 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-command-binding-admin-guarded",
+      "family": "9484-f-command-binding",
+      "command": "BASH_CMDS[f]=$(command -v gh); f pr merge 5 --admin",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-command-binding-admin-benign",
+      "family": "9484-f-command-binding",
+      "command": "BASH_CMDS[f]=$(command -v gh); f pr view 5",
+      "hook": "admin",
+      "accepted": false,
+      "oracle_pr": "5"
+    },
+    {
+      "id": "9484-f-command-binding-branch-guarded",
+      "family": "9484-f-command-binding",
+      "command": "BASH_CMDS[f]=$(command -v git); f checkout -b fixture",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-f-command-binding-branch-benign",
+      "family": "9484-f-command-binding",
+      "command": "BASH_CMDS[f]=$(command -v git); f status",
       "hook": "branch",
       "accepted": false
     }

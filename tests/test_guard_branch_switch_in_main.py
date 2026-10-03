@@ -802,7 +802,7 @@ def test_issue_9479_r2_unreadable_respects_repository(repos, tmp_path, command, 
     cwd = tmp_path / "non-repo" if location == "non_repo" else repos[location]
     cwd.mkdir(exist_ok=True)
     # An unreadable cd can change the repository even from an unprotected cwd.
-    expected_block = location == "public" or command.startswith("cd $(")
+    expected_block = location in {"public", "non_repo"} or command.startswith("cd $(")
     assert (guard._command_danger_reason(command, cwd) is not None) == expected_block
 
 
@@ -1433,3 +1433,32 @@ def test_issue_9484_reserved_arguments_are_refused_only_after_raw_gate(repos, wo
         guard.read_commands(bare, cwd=str(cwd))
     quoted = f"echo '{word}'; git branch -d merged-ok"
     assert guard._command_danger_reason(quoted, cwd) is None
+
+
+@pytest.mark.parametrize("command", ["git switch -c fixture", "gh pr checkout 5", "git branch -M fixture"])
+def test_unknown_repository_never_proves_safe(monkeypatch, repos, command):
+    monkeypatch.setattr(guard, "_git_repo_root", lambda cwd: None)
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+    assert guard._command_danger_reason("git status", repos["public"]) is None
+
+
+def test_failed_worktree_probe_cannot_allow_branch_operation(monkeypatch, repos):
+    def failure(*args, **kwargs):
+        raise FileNotFoundError("fixture git unavailable")
+    monkeypatch.setattr(guard.subprocess, "run", failure)
+    with pytest.raises(RuntimeError, match="worktree probe unavailable"):
+        guard._in_main_worktree(repos["public"])
+
+
+def test_unknown_current_branch_cannot_allow_force_rename(monkeypatch, repos):
+    monkeypatch.setattr(guard, "_checked_out_branch", lambda cwd: None)
+    assert guard._command_danger_reason("git branch -M fixture", repos["public"]) is not None
+
+
+def test_payload_directory_is_used_at_actual_hook_entry(monkeypatch, repos):
+    import io
+    import json
+    monkeypatch.setattr(guard.sys, "stdin", io.StringIO(json.dumps({
+        "cwd": str(repos["public"]), "tool_input": {"command": "git switch -c fixture"},
+    })))
+    assert guard.main() == 2

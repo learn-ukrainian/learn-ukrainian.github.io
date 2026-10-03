@@ -197,3 +197,196 @@ def test_nested_cd_is_sequential_but_not_exported(tmp_path, prefix, suffix):
 def test_dynamic_wrapper_directory_refuses():
     with pytest.raises(ShellParseError, match="dynamic wrapper argument"):
         read_commands('env -C "$P" gh pr merge 5')
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "f(){ cd ..; }; f; gh pr merge 5",
+        "f(){ gh pr merge 5; }; f",
+        'f(){ "$@"; }; f gh pr merge 5',
+        "inner(){ cd ..; }; outer(){ inner; }; outer; gh pr merge 5",
+        "f(){ f; }; f; gh pr merge 5",
+    ],
+)
+def test_called_functions_are_refused_at_execution_site(command):
+    with pytest.raises(ShellParseError, match="called function"):
+        read_commands(command)
+
+
+def test_uncalled_function_definition_is_inert():
+    rows = read_commands("f(){ gh pr merge 5; }; printf benign")
+    assert [row.argv for row in rows] == [["printf", "benign"]]
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "trap 'gh pr merge 5' EXIT",
+        "printf 'gh pr merge 5' | sh",
+        "sh <<< 'gh pr merge 5'",
+        "find . -exec gh pr merge 5 \\;",
+        "xargs gh pr merge 5",
+        "setsid gh pr merge 5",
+        "flock lock gh pr merge 5",
+        "ionice gh pr merge 5",
+        "env -S 'gh pr merge 5'",
+        "sudo -D /tmp gh pr merge 5",
+    ],
+)
+def test_visible_deferred_payload_is_judged_or_refused(command):
+    try:
+        rows = read_commands(command)
+    except ShellParseError as exc:
+        assert str(exc)
+    else:
+        assert any(row.argv[:3] == ["gh", "pr", "merge"] for row in rows)
+
+
+def test_shell_option_and_loop_state_are_unknown_before_operation(tmp_path):
+    (tmp_path / "a").mkdir()
+    for command in [
+        "set -P; gh pr merge 5",
+        "shopt -s lastpipe; true | cd a; gh pr merge 5",
+        "for i in 1 2; do gh pr merge 5; cd a; done",
+    ]:
+        rows = read_commands(command, cwd=str(tmp_path))
+        assert any(row.cwd_unreadable for row in rows if row.argv[:3] == ["gh", "pr", "merge"])
+
+
+def test_work_limit_is_an_explicit_refusal(monkeypatch):
+    import shell_bash
+
+    monkeypatch.setattr(shell_bash, "MAX_WORK", 2)
+    with pytest.raises(ShellParseError, match="work limit"):
+        read_commands("true; gh pr merge 5")
+
+
+@pytest.mark.parametrize("text", ["gh pr merge 5", r"gh pr m\erge 5", "g'h' pr 'merge' 5", r"gh pr $'\x6d\x65rge' 5"])
+def test_visible_payload_gate_preserves_shell_spellings(text):
+    from shell_bash import operation_candidate
+
+    assert operation_candidate(text)
+    assert not operation_candidate("git status")
+
+
+@pytest.mark.parametrize("option", ["set -P", "shopt -s cdspell"])
+def test_absolute_cd_cannot_reset_unknown_shell_option_semantics(tmp_path, option):
+    rows = read_commands(f"{option}; cd {tmp_path}; gh pr merge 5")
+    assert rows[-1].cwd_unreadable
+
+
+def test_ambiguous_merge_directory_never_selects_one_target(tmp_path):
+    (tmp_path / "a").mkdir()
+    rows = read_commands("if false; then cd a; fi; gh pr merge 5", cwd=str(tmp_path))
+    merges = [row for row in rows if row.argv[:3] == ["gh", "pr", "merge"]]
+    assert len(merges) == 1 and merges[0].cwd_unreadable
+
+
+def test_oracle_rejects_wrong_pr_target_even_when_blocking():
+    from dataclasses import replace
+
+    oracle = _oracle_module()
+    original_load = oracle.load_hook
+
+    def mutant(name):
+        module = original_load(name)
+        if name == "guard-pr-merge":
+            original_read = module.read_commands
+            module.read_commands = lambda command, cwd=None: [
+                replace(inv, argv=["gh", "pr", "merge", "6"]) for inv in original_read(command, cwd=cwd)
+            ]
+        return module
+
+    row = dict(id="wrong-target", family="held-out-mutation", command="gh pr merge 5", hook="merge", accepted=False)
+    with patch.object(oracle, "load_hook", mutant):
+        report = oracle.run_oracle(rows=[row], traffic=[])
+    assert report["totals"]["misses"] == 1
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env sudo -C 3 gh pr merge 5",
+        "env -u -C gh pr merge 5",
+        "sudo -p env gh pr merge 5",
+    ],
+)
+def test_wrapper_option_values_cannot_change_another_wrappers_directory(command, tmp_path):
+    rows = read_commands(command, cwd=str(tmp_path))
+    assert rows[-1].cwd == str(tmp_path)
+
+
+def test_wrapper_scopes_are_explicit_and_xargs_stops_unwrapping():
+    from shell_bash import wrapper_scopes
+
+    assert wrapper_scopes(["env", "-C", "a", "sudo", "-C", "3", "gh"]) == (
+        6,
+        [("env", ["-C", "a"]), ("sudo", ["-C", "3"])],
+    )
+    assert wrapper_scopes(["xargs", "gh", "pr", "merge", "5"]) == (0, [])
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'x="gh pr merge 5"; trap "$x" EXIT',
+        "f(){ gh pr merge 5; }; trap f EXIT",
+        'x="gh pr merge 5"; find file -exec bash -c "$x" \\;',
+        "shopt -s expand_aliases\nalias f='gh pr merge 5'\nf",
+        "hash -p /fixture/gh f; f pr merge 5",
+        "BASH_CMDS[f]=/fixture/gh; f pr merge 5",
+    ],
+)
+def test_visible_payload_cannot_hide_behind_deferred_binding(command):
+    with pytest.raises(ShellParseError):
+        read_commands(command)
+
+
+@pytest.mark.parametrize("utility", ["python", "python3", "python3.12"])
+def test_publisher_name_as_data_does_not_exempt_indirect_code(utility):
+    with pytest.raises(ShellParseError, match="indirect execution"):
+        read_commands(utility + " -c 'execute(gh, pr, merge, 5)' scripts.publish")
+
+
+def test_inherited_lastpipe_cannot_prove_parent_directory(monkeypatch):
+    monkeypatch.setenv("BASHOPTS", "lastpipe")
+    rows = read_commands("true | cd ..; gh pr merge 5")
+    assert rows[-1].cwd_unreadable
+
+
+def test_filesystem_mutation_invalidates_absolute_repository_probe(tmp_path):
+    rows = read_commands(f"ln -sfn primary alias; git -C {tmp_path} checkout -b fixture")
+    assert rows[-1].repository_unknown
+
+
+@pytest.mark.parametrize("fault", ["selector", "directory"])
+def test_oracle_admin_judgments_must_match_gold_target_and_actual_directory(fault):
+    from dataclasses import replace
+
+    oracle = _oracle_module()
+    original_load = oracle.load_hook
+
+    def mutant(name):
+        module = original_load(name)
+        if name == "guard-admin-merge":
+            if fault == "selector":
+                module._pr_number = lambda args: "6"
+            else:
+                original_read = module.read_commands
+                module.read_commands = lambda command, cwd=None: [
+                    replace(inv, cwd=str(Path(cwd) / ".worktrees/wt")) for inv in original_read(command, cwd=cwd)
+                ]
+        return module
+
+    row = dict(
+        id="admin-wrong-target",
+        family="held-out-mutation",
+        command="gh pr merge 5 --admin",
+        hook="admin",
+        accepted=False,
+        oracle_pr="5",
+    )
+    with patch.object(oracle, "load_hook", mutant):
+        report = oracle.run_oracle(rows=[row], traffic=[])
+    assert report["totals"]["misses"] == 1

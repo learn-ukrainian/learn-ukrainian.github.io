@@ -1427,9 +1427,9 @@ def test_xargs_fed_selector_fails_closed(monkeypatch):
     assert _run(monkeypatch, "printf '5' | xargs gh pr merge --squash", checks=([], [])) == 2
 
 
-def test_xargs_with_explicit_selector_is_judged_normally(monkeypatch):
+def test_xargs_with_explicit_selector_cannot_establish_execution_arguments(monkeypatch):
     assert _run(monkeypatch, "printf '' | xargs gh pr merge 5 --squash", checks=(["boundary-and-tests"], [])) == 2
-    assert _run(monkeypatch, "printf '' | xargs gh pr merge 5 --squash", checks=([], [])) == 0
+    assert _run(monkeypatch, "printf '' | xargs gh pr merge 5 --squash", checks=([], [])) == 2
 
 
 def test_xargs_options_are_stepped_over(monkeypatch):
@@ -1453,9 +1453,9 @@ def test_xargs_operands_are_not_a_merge(monkeypatch, cmd):
 
 def test_invoked_start():
     assert guard._invoked_start(["gh", "pr", "merge", "5"]) == (0, False)
-    assert guard._invoked_start(["xargs", "gh", "pr", "merge"]) == (1, True)
-    assert guard._invoked_start(["xargs", "-n", "1", "gh", "pr", "merge"]) == (3, True)
-    assert guard._invoked_start(["xargs", "-t", "gh", "pr", "merge"]) == (2, True)
+    assert guard._invoked_start(["xargs", "gh", "pr", "merge"]) == (0, False)
+    assert guard._invoked_start(["xargs", "-n", "1", "gh", "pr", "merge"]) == (0, False)
+    assert guard._invoked_start(["xargs", "-t", "gh", "pr", "merge"]) == (0, False)
     assert guard._invoked_start(["sudo", "gh", "pr", "merge"]) == (1, False)
 
 

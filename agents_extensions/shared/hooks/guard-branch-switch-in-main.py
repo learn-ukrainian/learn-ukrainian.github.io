@@ -182,9 +182,10 @@ def _in_main_worktree(project_root: Path) -> bool:
             env=_git_probe_env(),
         ).stdout.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
-        # Not a git repo or git missing → nothing to enforce.
-        return False
+        raise RuntimeError("repository worktree probe unavailable") from None
 
+    if not gd or not cd:
+        raise RuntimeError("repository worktree probe returned no state")
     # Normalize to absolute paths so a relative `.git` matches an absolute
     # equivalent. resolve() handles `..` in the path too.
     abs_gd = (project_root / gd).resolve()
@@ -238,6 +239,8 @@ def _branch_force_reason(args: list[str], current_branch: str | None) -> str | N
         elif not a.startswith("-"):
             positions.append(a)
 
+    if current_branch is None and (force_delete or force_rename):
+        return "checked-out branch unknown for force-delete or force-rename"
     if force_delete and current_branch and current_branch in positions:
         return "git branch -D force-deletes the checked-out branch in the main worktree"
     if force_rename and current_branch and (len(positions) == 1 or positions[0] == current_branch):
@@ -313,7 +316,7 @@ def _git_repo_root(git_cwd: Path) -> Path | None:
         ).stdout.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
         return None
-    return Path(root).resolve()
+    return Path(root).resolve() if root else None
 
 
 def _checked_out_branch(repo_root: Path) -> str | None:
@@ -456,7 +459,7 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path | None) -> str | 
             return "branch-switch target could not be parsed safely"
         repo_root = _git_repo_root(effective_cwd)
         if repo_root is None:
-            return None
+            return "repository state unknown; repair Git discovery before branch checkout"
         protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
         if repo_root.resolve() not in protected_roots:
             return None
@@ -489,15 +492,22 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         if invocation is None:
             continue
         _, _, git_cwd = invocation
-        reason = _segment_is_dangerous(segment)
+        reason = _segment_is_dangerous(segment, None if git_cwd is None else "main")
         if git_cwd is None:
             if reason:
                 return "branch-switch target cannot be read; use a literal directory and repository"
             continue
         repo_root = _git_repo_root(git_cwd)
-        if repo_root is None or repo_root.resolve() not in protected_roots or not _in_main_worktree(repo_root):
+        if repo_root is None:
+            if reason or invocation[0] in SWITCH_VERBS | {"branch"}:
+                return "repository state unknown; repair Git discovery before branch operations"
             continue
-        reason = _segment_is_dangerous(segment, _checked_out_branch(repo_root))
+        if repo_root.resolve() not in protected_roots or not _in_main_worktree(repo_root):
+            continue
+        current_branch = _checked_out_branch(repo_root)
+        if current_branch is None and invocation[0] == "branch":
+            return "checked-out branch unknown; repair Git discovery before branch operations"
+        reason = _segment_is_dangerous(segment, current_branch)
         if reason:
             return reason
     return None
@@ -510,7 +520,8 @@ def main() -> int:
         return 0
 
     try:
-        reason = _command_danger_reason(command)
+        supplied_cwd = payload.get("cwd")
+        reason = _command_danger_reason(command, Path(supplied_cwd) if isinstance(supplied_cwd, str) else None)
     except Exception:
         reason = "nested shell command could not be parsed safely"
     if reason:

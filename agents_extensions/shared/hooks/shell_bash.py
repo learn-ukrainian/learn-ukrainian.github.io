@@ -29,6 +29,7 @@ REPAIR = (
 )
 UNREADABLE = "--__guard_unreadable__"
 MAX_DEPTH = 8
+MAX_WORK = 20000
 _LANGUAGE = Language(tree_sitter_bash.language())
 _WRAPPERS = {
     "env",
@@ -42,10 +43,9 @@ _WRAPPERS = {
     "stdbuf",
     "sudo",
     "coproc",
-    "xargs",
 }
 _VALUE_OPTIONS = {
-    "env": {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"},
+    "env": {"-u", "--unset", "-C", "--chdir", "-S", "--split-string", "-a", "--argv0"},
     "sudo": {
         "-u",
         "--user",
@@ -60,29 +60,19 @@ _VALUE_OPTIONS = {
         "-c",
         "--command-timeout",
         "-T",
+        "-p",
+        "--prompt",
+        "-D",
+        "--chdir",
+        "-h",
+        "--host",
+        "-R",
+        "--chroot",
     },
     "time": {"-f", "--format", "-o", "--output"},
     "nice": {"-n", "--adjustment"},
     "timeout": {"-k", "--kill-after", "-s", "--signal"},
     "stdbuf": {"-i", "--input", "-o", "--output", "-e", "--error"},
-    "xargs": {
-        "-n",
-        "--max-args",
-        "-L",
-        "--max-lines",
-        "-I",
-        "--replace",
-        "-P",
-        "--max-procs",
-        "-d",
-        "--delimiter",
-        "-E",
-        "--eof",
-        "-a",
-        "--arg-file",
-        "-s",
-        "--max-chars",
-    },
     "exec": {"-a"},
 }
 # Grammar 0.25 can silently flatten named coproc compound statements into
@@ -110,6 +100,30 @@ _RESERVED_WORDS = frozenset(
     ]
 )
 _SHELLS = {"bash", "sh", "dash", "zsh", "ksh", "fish"}
+_INDIRECT_EXECUTORS = {
+    "find",
+    "setsid",
+    "flock",
+    "ionice",
+    "chrt",
+    "taskset",
+    "prlimit",
+    "chroot",
+    "runuser",
+    "su",
+    "watch",
+    "parallel",
+    "ssh",
+    "at",
+    "batch",
+    "python",
+    "python3",
+    "perl",
+    "ruby",
+    "node",
+    "awk",
+}
+_STATE_MUTATORS = {"mkdir", "rmdir", "mv", "rm", "ln", "chmod", "install", "set", "shopt"}
 
 
 class ShellParseError(ValueError):
@@ -168,9 +182,10 @@ def literal(node) -> str | None:
         return None
 
 
-def invoked_start(argv: list[str]) -> tuple[int, bool]:
-    """Skip transparent utility wrappers, including their value options."""
-    i, xargs = 0, False
+def wrapper_scopes(argv: list[str]) -> tuple[int, list[tuple[str, list[str]]]]:
+    """Keep each transparent utility's options in its own semantic scope."""
+    i = 0
+    scopes = []
     while i < len(argv):
         name = Path(argv[i]).name
         if re.match(r"^[A-Za-z_][A-Za-z_0-9]*=", argv[i]) or argv[i] in {"!", "{"}:
@@ -178,8 +193,8 @@ def invoked_start(argv: list[str]) -> tuple[int, bool]:
             continue
         if name not in _WRAPPERS:
             break
-        xargs |= name == "xargs"
         i += 1
+        begin = i
         while i < len(argv) and argv[i].startswith("-") and argv[i] != "-":
             option = argv[i]
             i += 1
@@ -188,8 +203,30 @@ def invoked_start(argv: list[str]) -> tuple[int, bool]:
             if option in _VALUE_OPTIONS.get(name, set()):
                 i += 1
         if name == "timeout":
-            i += 1  # duration
-    return min(i, len(argv)), xargs
+            i += 1
+        scopes.append((name, argv[begin:i]))
+    return min(i, len(argv)), scopes
+
+
+def invoked_start(argv: list[str]) -> tuple[int, bool]:
+    """Locate a utility through explicit wrapper options; xargs is never a prefix."""
+    return wrapper_scopes(argv)[0], False
+
+
+def operation_candidate(text: str) -> bool:
+    """Conservative visible-operation gate for execution payload refusals."""
+    try:
+        text = re.sub(
+            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            text,
+        )
+    except ValueError:
+        return True
+    text = text.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
+    return any(name in text for name in ("git", "gh", "scripts.publish")) and any(
+        word in text for word in ("checkout", "switch", "branch", "merge")
+    )
 
 
 def cd_target(argv: list[str], cwd: str | None) -> str | None:
@@ -226,6 +263,58 @@ def read_commands(
     repo_names = {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}
     inherited_repo_override = any(name in os.environ for name in repo_names)
     cdpath_unknown = bool(os.environ.get("CDPATH"))
+    directory_options_unknown = bool(
+        {"physical"} & set(os.environ.get("SHELLOPTS", "").split(":"))
+        or {"lastpipe", "cdable_vars", "cdspell"} & set(os.environ.get("BASHOPTS", "").split(":"))
+    )
+    if directory_options_unknown:
+        initial = {None}
+    guarded_source = operation_candidate(command)
+    functions = {}
+    work = 0
+
+    def charge():
+        nonlocal work
+        work += 1
+        if work > MAX_WORK:
+            raise ShellParseError("shell walk work limit")
+
+    def function_sensitive(name, seen=None):
+        seen = set() if seen is None else seen
+        if name in seen or len(seen) > MAX_DEPTH:
+            return True
+        seen = seen | {name}
+        bodies = functions.get(name, [])
+        for body in bodies:
+            if operation_candidate(body.text.decode()):
+                return True
+            pending = [body]
+            while pending:
+                charge()
+                node = pending.pop()
+                if node.type == "command_name":
+                    called = literal(node)
+                    if called is None or called in {
+                        "cd",
+                        "pushd",
+                        "popd",
+                        "eval",
+                        "source",
+                        ".",
+                        "trap",
+                        "exec",
+                        "xargs",
+                        "find",
+                        *_SHELLS,
+                        *_INDIRECT_EXECUTORS,
+                        *_WRAPPERS,
+                        *_STATE_MUTATORS,
+                    }:
+                        return True
+                    if called in functions and function_sensitive(called, seen):
+                        return True
+                pending.extend(node.named_children)
+        return False
 
     def parse(source: str, states: set[str | None], level: int) -> set[str | None]:
         nonlocal branch_scope_refusal, inherited_repo_override, cdpath_unknown
@@ -337,6 +426,8 @@ def read_commands(
             ):
                 branch_scope_refusal = True
             if candidate.type == "variable_assignment":
+                if guarded_source and candidate.text.startswith((b"BASH_CMDS[", b"BASH_ALIASES[")):
+                    raise ShellParseError("shell executable binding cannot establish command identity")
                 name = candidate.child_by_field_name("name")
                 if name is not None:
                     inherited_repo_override |= name.text.decode() in repo_names
@@ -368,6 +459,19 @@ def read_commands(
             tree = Parser(_LANGUAGE).parse(encoded)
         if tree.root_node.has_error:
             raise ShellParseError("Bash parse error")
+        # Definitions are inert until called. Include all potential definitions
+        # conservatively: conditional definitions and nested scopes cannot license
+        # a safe call based on source order alone.
+        pending = [tree.root_node]
+        while pending:
+            charge()
+            node = pending.pop()
+            if node.type == "function_definition":
+                name = node.child_by_field_name("name")
+                body = node.child_by_field_name("body")
+                if name is not None and body is not None:
+                    functions.setdefault(name.text.decode(), []).append(body)
+            pending.extend(node.named_children)
         return walk(tree.root_node, states, level)
 
     def substitutions(node, states, level):
@@ -384,6 +488,7 @@ def read_commands(
                 substitutions(child, states, level)
 
     def simple(node, redirects, states, level):
+        nonlocal directory_options_unknown, inherited_repo_override
         substitutions(node, states, level)
         words = [
             c
@@ -452,24 +557,123 @@ def read_commands(
         if any(word.text in _RESERVED_WORDS for word in words):
             raise ShellParseError("reserved word parsed as an argument")
         argv = [UNREADABLE if arg is None else arg for arg in argv]
-        start, xargs = invoked_start(argv)
+        start, scopes = wrapper_scopes(argv)
+        xargs = False
         selected = argv[start:]
         if UNREADABLE in argv[:start]:
             raise ShellParseError("dynamic wrapper argument")
+        if (
+            any(name == "env" for name, _ in scopes)
+            and any(
+                arg in {"-S", "--split-string"} or arg.startswith(("--split-string=", "-S"))
+                for name, options in scopes
+                if name == "env"
+                for arg in options
+            )
+            and guarded_source
+        ):
+            raise ShellParseError("env split-string execution payload cannot establish argv")
         if not selected:
             return states
         if selected[0] == UNREADABLE:
             raise ShellParseError("dynamic command name")
         utility = Path(selected[0]).name
+        typed_publisher = re.fullmatch(r"python(?:3(?:\.\d+)?)?", utility) and selected[1:4] == [
+            "-m",
+            "scripts.publish",
+            "pr-merge",
+        ]
+        if guarded_source:
+            if selected[0] in functions and function_sensitive(selected[0]):
+                raise ShellParseError("called function has guarded operation or directory effects")
+            if utility in {"alias", "hash"}:
+                raise ShellParseError("shell executable binding cannot establish command identity")
+            if utility == "trap" and any(
+                arg == UNREADABLE
+                or operation_candidate(arg)
+                or re.search(r"\b(?:cd|pushd|popd)\b", arg)
+                or any(
+                    re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", arg) and function_sensitive(name)
+                    for name in functions
+                )
+                for arg in selected[1:]
+            ):
+                raise ShellParseError("deferred trap payload cannot establish argv or directory")
+            if utility == "xargs":
+                # Only fixed logging utilities are inert regardless of stdin.
+                # Replacement options can rewrite even the executable name.
+                operands = selected[1:]
+                while operands and operands[0].startswith("-"):
+                    option, *operands = operands
+                    if option == "--":
+                        break
+                    if option in {"-n", "-L", "-P", "-d", "-E", "-s", "-a"}:
+                        operands = operands[1:]
+                    elif option not in {"-t", "-r", "-0", "-x"} and not re.fullmatch(r"-[nLP]\d+", option):
+                        operands = []
+                        break
+                if not operands or operands[0] not in {"echo", "printf", "/bin/echo", "/usr/bin/printf"}:
+                    raise ShellParseError("xargs input or argument execution cannot establish argv")
+            if (
+                (utility in _INDIRECT_EXECUTORS or re.fullmatch(r"python(?:3(?:\.\d+)?)?", utility))
+                and not typed_publisher
+                and (utility != "find" or any(a in {"-exec", "-execdir", "-ok", "-okdir"} for a in selected))
+            ):
+                raise ShellParseError(f"{utility} indirect execution payload cannot establish argv or directory")
+            if any(
+                arg in {"-D", "--chdir", "-i", "--login", "-s", "--shell", "-h", "--host", "-R", "--chroot"}
+                or arg.startswith(("--chdir=", "-D", "--host=", "--chroot="))
+                for name, options in scopes
+                if name == "sudo"
+                for arg in options
+            ):
+                raise ShellParseError("sudo directory option cannot establish repository")
+            if utility in {"set", "shopt"}:
+                # physical cd, lastpipe, cdable_vars and cdspell change state;
+                # shell option mutations are not transparent.
+                directory_options_unknown = True
+                return {None}
+            if utility in {"mkdir", "rmdir", "mv", "rm", "ln", "chmod", "install"}:
+                # Filesystem changes invalidate earlier existence/access probes,
+                # including explicit absolute Git/env directories.
+                inherited_repo_override = True
+                return {None}
+        if (
+            guarded_source
+            and start
+            and operation_candidate(node.text.decode())
+            and utility
+            not in {
+                "git",
+                "gh",
+                "eval",
+                "cd",
+                "pushd",
+                "popd",
+                "echo",
+                "printf",
+                "true",
+                "false",
+                *_SHELLS,
+            }
+            and not typed_publisher
+        ):
+            raise ShellParseError("unsupported wrapper execution semantics")
         if utility in {"git", "gh"}:
             argv[start] = utility
-        execution_states = set(states)
+        # Multiple possible locations cannot license judging only whichever
+        # set element happens to be visited first. Refuse the unresolved target.
+        execution_states = set(states) if not guarded_source or len(states) == 1 else {None}
         # env -C affects the wrapped utility, never its parent shell.
-        if "env" in argv[:start]:
-            for i, arg in enumerate(argv[:start]):
+        for wrapper, options in scopes:
+            if wrapper != "env":
+                continue
+            i = 0
+            while i < len(options):
+                arg = options[i]
                 target = (
-                    argv[i + 1]
-                    if arg in {"-C", "--chdir"} and i + 1 < start
+                    options[i + 1]
+                    if arg in {"-C", "--chdir"} and i + 1 < len(options)
                     else arg.partition("=")[2]
                     if arg.startswith("--chdir=")
                     else arg[2:]
@@ -478,8 +682,7 @@ def read_commands(
                 )
                 if target is not None:
                     execution_states = {cd_target(["cd", "-P", target], state) for state in execution_states}
-                if arg in {"-S", "--split-string"} or arg.startswith("--split-string="):
-                    raise ShellParseError("dynamic env split-string payload")
+                i += 2 if arg in _VALUE_OPTIONS["env"] else 1
         unknown_repo = any(
             re.match(r"(?:GIT_DIR|GIT_WORK_TREE|GIT_COMMON_DIR)=", arg) for arg in [*assignments, *argv[:start]]
         )
@@ -517,6 +720,11 @@ def read_commands(
                         here_strings = [r for r in all_redirects if r.type == "herestring_redirect"]
                         if here_strings:
                             payload = literal(here_strings[-1].named_children[-1]) or UNREADABLE
+            if payload is None and guarded_source:
+                raise ShellParseError("opaque shell input cannot establish execution payload")
+            if utility in _SHELLS and any(a in {"-P", "-O", "+O", "-o", "+o"} for a in selected[1:]):
+                directory_options_unknown = True
+                execution_states = {None}
             if payload is not None:
                 if UNREADABLE in payload:
                     raise ShellParseError("dynamic shell payload")
@@ -535,6 +743,7 @@ def read_commands(
                 or utility == "popd"
                 or any(a.startswith("CDPATH=") for a in assignments)
                 or cdpath_unknown
+                or directory_options_unknown
             ):
                 return {None}
             # Non-existent literal targets leave PWD untouched. Unknown can succeed anywhere.
@@ -542,10 +751,21 @@ def read_commands(
             for state in states:
                 target = cd_target(["cd", *selected[1:]], state)
                 targets.add(target if target is None or Path(target).is_dir() else state)
-            return targets
+            # Redirection can fail before cd runs. Keep its failure state for
+            # sequential execution; && also remains conservative.
+            holder = node.parent if node.parent and node.parent.type == "redirected_statement" else node
+            parent = holder.parent
+            success_only = (
+                parent is not None
+                and parent.type == "list"
+                and parent.named_children[0] == holder
+                and any(c.type == "&&" for c in parent.children)
+            )
+            return targets | states if all_redirects and not success_only else targets
         return states
 
     def walk(node, states, level, attached=()):
+        charge()
         kind = node.type
         if level > MAX_DEPTH:
             raise ShellParseError("nested shell depth limit")
@@ -565,6 +785,30 @@ def read_commands(
                 return after
             return walk(body, states, level, redirects) if body else states
         if kind == "pipeline":
+            if guarded_source:
+                pending = list(node.named_children)
+                while pending:
+                    charge()
+                    child = pending.pop()
+                    if child.type == "command":
+                        name = child.child_by_field_name("name")
+                        if name is not None and literal(name) is not None:
+                            args = [
+                                literal(c) or UNREADABLE
+                                for c in child.named_children
+                                if c.type not in {"variable_assignment", "file_redirect"}
+                            ]
+                            start, _ = invoked_start(args)
+                            selected = args[start:]
+                            # A -c payload is independent of pipe input; every
+                            # other shell reader can execute bytes on stdin.
+                            if (
+                                selected
+                                and Path(selected[0]).name in _SHELLS
+                                and not any(re.fullmatch(r"-[^-]*c[^-]*", a) for a in selected[1:])
+                            ):
+                                raise ShellParseError("piped shell input cannot establish execution payload")
+                    pending.extend(child.named_children)
             for index, child in enumerate(node.named_children):
                 walk(child, set(states), level + 1, attached if index == len(node.named_children) - 1 else ())
             return states
@@ -575,6 +819,16 @@ def read_commands(
             return current if kind == "negated_command" else states
         if kind in {"if_statement", "case_statement", "while_statement", "for_statement", "c_style_for_statement"}:
             possible = set(states)
+            if kind in {"while_statement", "for_statement", "c_style_for_statement"}:
+                # Later iterations can start in any directory reached by a
+                # previous body. Refuse unknown state before judging the body.
+                pending = list(node.named_children)
+                while pending:
+                    charge()
+                    child = pending.pop()
+                    if child.type == "command_name" and literal(child) in {"cd", "pushd", "popd"}:
+                        possible.add(None)
+                    pending.extend(child.named_children)
             for child in node.named_children:
                 possible |= walk(child, set(possible), level + 1)
             if kind in {"while_statement", "for_statement", "c_style_for_statement"} and possible != states:
@@ -583,8 +837,6 @@ def read_commands(
                 possible.add(None)
             return possible
         if kind == "function_definition":
-            for child in node.named_children:
-                walk(child, set(states), level + 1)
             return states
         if kind == "list":
             children = [c for c in node.named_children if c.type != "ERROR"]
