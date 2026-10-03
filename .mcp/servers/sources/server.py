@@ -71,8 +71,13 @@ server: Server
 
 # Codex exec treats a tool with no readOnlyHint as approval-required.
 # Under approval_policy=never that call is cancelled instead of run.
-# Every sources tool is a lookup: it does not mutate the checkout.
+# A sources tool is read-only unless a lookup persists what it fetched.
 _READ_ONLY_TOOL = ToolAnnotations(readOnlyHint=True, destructiveHint=False)
+# Persists a live fetch: query_wikipedia writes data/wiki_cache.db (creates its table,
+# evicts expired rows, inserts results); the DictUA tools store a cache miss in
+# sources.db. Additive cache writes, so not destructive, but not read-only (#9551).
+# tests/mcp/test_sources_tool_side_effects.py checks this against observed writes.
+_PERSISTING_LOOKUP_TOOL = ToolAnnotations(readOnlyHint=False, destructiveHint=False)
 SUM11_AUTHORITY_NOTICE = (
     "Soviet-occupation СУМ-11 (1970–1980) is for Sovietization contrast only; "
     "NEVER use it for meaning, stress, part of speech, or word validity. "
@@ -706,6 +711,7 @@ async def list_tools() -> list[Tool]:
         # ── Live source query tools ──────────────────────────────
         _tool(
             name="query_wikipedia",
+            annotations=_PERSISTING_LOOKUP_TOOL,
             description=(
                 "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: "
                 "'summary' — article intro paragraph; "
@@ -806,6 +812,7 @@ async def list_tools() -> list[Tool]:
         ),
         _tool(
             name="query_ulif",
+            annotations=_PERSISTING_LOOKUP_TOOL,
             description=(
                 "Query official DictUA data from ULIF. Omit sections for the legacy plain paradigm "
                 "table or no-result text; pass sections explicitly for structured source-attributed JSON."
@@ -841,6 +848,7 @@ async def list_tools() -> list[Tool]:
         ),
         _tool(
             name="query_ulif_synonyms",
+            annotations=_PERSISTING_LOOKUP_TOOL,
             description="Return official DictUA synonym groups as structured, source-attributed JSON.",
             inputSchema={
                 "type": "object",
@@ -850,6 +858,7 @@ async def list_tools() -> list[Tool]:
         ),
         _tool(
             name="query_ulif_antonyms",
+            annotations=_PERSISTING_LOOKUP_TOOL,
             description="Return official DictUA antonym groups as structured, source-attributed JSON.",
             inputSchema={
                 "type": "object",
@@ -859,6 +868,7 @@ async def list_tools() -> list[Tool]:
         ),
         _tool(
             name="query_ulif_phraseology",
+            annotations=_PERSISTING_LOOKUP_TOOL,
             description="Return official DictUA phraseology groups as structured, source-attributed JSON.",
             inputSchema={
                 "type": "object",

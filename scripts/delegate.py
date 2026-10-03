@@ -71,11 +71,13 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
         "launch_fallback_reason": str | null,
+        "launch_user_bus": {source: "caller" | "derived" | "unavailable", variables?, reason?},  # #9534
         "peak_rss_mib": float | null,               # terminal records; largest reaped child
         "owned_paths": [str] | absent,              # the --owned-path values: auto-finalize scope (#8991)
         "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
         "leftovers_scope": {task_id, launch_mode, unit, cgroup, run_nonce, ...} | absent,
         "leftovers_scan_error": str | absent,       # why the scan was unknown
+        "leftovers_terminated": [{pid, cmdline, signals, stopped, left_scope}] | absent,  # Cursor worker-server stopped before the scan (#9534)
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
@@ -178,7 +180,7 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.agent_runtime import bounded_advisory
 from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
-from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
+from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
@@ -4787,7 +4789,12 @@ def _run_count_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
     except (OSError, subprocess.TimeoutExpired):
         return None, False
     if proc.returncode != 0:
-        return None, True
+        # Permit fallback only on confirmed absence (exit 1 from rev-parse).
+        # Unavailable verification (None), operational error (!= 1), or ref present (0) fails closed.
+        ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
+        if ref_check is not None and ref_check[0] == 1:
+            return None, True
+        return None, False
     try:
         return int((proc.stdout or "").strip()), False
     except ValueError:
@@ -4879,15 +4886,7 @@ def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_
     for the lost base and may already hold the work, so its commits count only
     when merging ``HEAD`` into it would change it (``_count_real_changes_ahead``).
     """
-    candidates: list[tuple[str, bool]] = []
-    if base_sha and _is_ancestor_of_head(worktree, base_sha):
-        candidates.append((base_sha, True))
-    default_refs = ["origin/main"]
-    tracking_remote = _tracking_remote_for_current_branch(worktree)
-    if tracking_remote:
-        default_refs.append(f"{tracking_remote}/main")
-    candidates.extend((ref, False) for ref in dict.fromkeys(default_refs))
-    for candidate, exact in candidates:
+    for candidate, exact in _fallback_base_candidates(worktree, base_sha):
         count_ahead = _run_count_ahead if exact else _count_real_changes_ahead
         count, base_missing = count_ahead(worktree, candidate)
         if count is not None:
@@ -4898,6 +4897,98 @@ def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_
             return count
         if not base_missing:
             return None
+    return None
+
+
+def _fallback_base_candidates(worktree: Path, base_sha: str | None) -> list[tuple[str, bool]]:
+    """Return ordered ``(ref_or_sha, is_exact_recorded_commit)`` candidates when the named base is gone (#9451, #9489).
+
+    1. The recorded commit the worktree was branched from (``base_sha``), when
+       it is reachable and an ancestor of ``HEAD``;
+    2. The default branch (``origin/main``, then the upstream remote's ``main``).
+
+    The recorded commit is exact. The default branch is only a proxy for the lost
+    base: when the base was squash-merged, the default branch's merge-base
+    predates the base branch, so diffs and commit counts can include the base
+    branch's own commits (an overcount). Testing the recorded commit first avoids
+    this whenever ``worktree_base_sha`` was preserved.
+    """
+    candidates: list[tuple[str, bool]] = []
+    if base_sha and _is_ancestor_of_head(worktree, base_sha):
+        candidates.append((base_sha, True))
+    default_refs = ["origin/main"]
+    tracking_remote = _tracking_remote_for_current_branch(worktree)
+    if tracking_remote:
+        default_refs.append(f"{tracking_remote}/main")
+    candidates.extend((ref, False) for ref in dict.fromkeys(default_refs))
+    return candidates
+
+
+def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
+    """``(merge_base_sha, base_missing)`` for ``git merge-base <base> HEAD`` (#9489).
+
+    ``base_missing`` is True only when git ran and rejected ``base`` (the ref or
+    SHA does not resolve): the one case where trying another base candidate is
+    sound. A present base that has no common ancestor with HEAD or whose
+    computation failed fails closed ((None, False)).
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "merge-base", base, "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None, False
+    if proc.returncode == 0:
+        sha = (proc.stdout or "").strip()
+        return (sha or None), False
+    ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
+    if ref_check is not None and ref_check[0] == 1:
+        # Confirmed absence: git rev-parse ran and confirmed the ref does not exist (exit 1).
+        return None, True
+    # Either ref exists (0), verification was unavailable (None), or failed operationally (!= 1).
+    # Fail closed in all these cases: do NOT treat as missing and do NOT fall back.
+    return None, False
+
+
+def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = None) -> str | None:
+    """Return the merge-base SHA between base_ref and HEAD, or a fallback if base_ref was deleted (#9489).
+
+    First tries eligible candidates for base_ref (_commit_count_refs).
+    When all candidates for base_ref are missing (the base branch was deleted
+    after merging), falls back to:
+    1. the recorded base commit (base_sha) when reachable and an ancestor of HEAD;
+    2. the default-branch merge-base (origin/main).
+
+    When the base was squash-merged, the default branch fallback can overcount
+    changes because the merge base with main is older than the task's starting
+    point; the recorded base commit avoids this whenever available.
+
+    Returns None if no merge base can be resolved (failing closed).
+    """
+    for candidate in _commit_count_refs(worktree, base_ref):
+        sha, base_missing = _run_merge_base(worktree, candidate)
+        if sha is not None:
+            return sha
+        if not base_missing:
+            return None
+
+    for candidate, _exact in _fallback_base_candidates(worktree, base_sha):
+        sha, base_missing = _run_merge_base(worktree, candidate)
+        if sha is not None:
+            print(
+                f"⚠️  base {base_ref!r} is gone; resolved merge-base against {candidate!r} instead",
+                file=sys.stderr,
+            )
+            return sha
+        if not base_missing:
+            return None
+
     return None
 
 
@@ -5734,33 +5825,22 @@ def _kimi_worker_refusal(
     return None, target
 
 
-def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
+def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str, *, base_sha: str | None = None) -> str | None:
     """The refusal when a Kimi worker's changed files are not plain UTF-8 text or hold Cyrillic text; None otherwise.
 
     The changes run from the merge base with ``base_ref`` to the working tree,
     so they cover the worker's own commits and its uncommitted and untracked
     files. Each changed path's post-image is read in full, so git's binary
-    classification cannot hide text. Fails closed: changes that cannot be
-    read are a refusal.
+    classification cannot hide text. When ``base_ref`` was deleted after
+    merging, falls back to the recorded ``base_sha`` and then the default-branch
+    merge base (#9489). Fails closed: changes that cannot be read are a refusal.
     """
     from scripts.agent_runtime import kimi_boundary
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_kimi_changes
 
     unreadable = format_refusal(agent, ["the finalized changes could not be read for Ukrainian content"])
-    try:
-        base_proc = subprocess.run(
-            ["git", "merge-base", base_ref, "HEAD"],
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return unreadable
-    merge_base = (base_proc.stdout or "").strip()
-    if base_proc.returncode != 0 or not merge_base:
+    merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
+    if not merge_base:
         return unreadable
     name_status = _worktree_diff_output(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
     if name_status is None:
@@ -5777,18 +5857,24 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
     return None
 
 
-def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: Mapping[str, Any]) -> dict[str, Any]:
+def _advisory_ceiling_check(
+    worktree: Path | None, base_branch: str, envelope: Mapping[str, Any], *, base_sha: str | None = None
+) -> dict[str, Any]:
     """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
 
     Changes run from the merge base with the base branch to the working tree:
-    the worker's commits plus its uncommitted and untracked files.
+    the worker's commits plus its uncommitted and untracked files. When the base
+    branch was deleted after merging, falls back to the recorded ``base_sha``
+    and then the default branch (#9489).
     """
     try:
         max_files = int(envelope["max_changed_files"])
         max_loc = int(envelope["max_non_test_loc"])
     except (KeyError, TypeError, ValueError):
         return {"measured": False, "error": "the task record's envelope has no ceilings"}
-    numstat, error = _advisory_worker_diff(worktree, base_branch, ["--numstat", "-z", "--no-renames"])
+    numstat, error = _advisory_worker_diff(
+        worktree, base_branch, ["--numstat", "-z", "--no-renames"], base_sha=base_sha
+    )
     if numstat is None:
         return {"measured": False, "error": error}
     try:
@@ -5799,30 +5885,26 @@ def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: M
 
 
 def _advisory_worker_diff(
-    worktree: Path | None, base_branch: str, diff_args: Sequence[str], *, committed_only: bool = False
+    worktree: Path | None,
+    base_branch: str,
+    diff_args: Sequence[str],
+    *,
+    committed_only: bool = False,
+    base_sha: str | None = None,
 ) -> tuple[str | None, str | None]:
     """``(git diff <diff_args> <merge-base>, None)`` over the worker's changes, or ``(None, why)`` when unreadable.
 
     Changes run from the merge base with the base branch to the working tree:
     the worker's commits plus its uncommitted and untracked files; with
-    ``committed_only``, to ``HEAD``: its commits alone.
+    ``committed_only``, to ``HEAD``: its commits alone. When the base branch was
+    deleted after merging, falls back to the recorded ``base_sha`` and then the
+    default branch (#9489).
     """
     if worktree is None or not worktree.is_dir():
         return None, "no worktree to measure"
-    try:
-        base_proc = subprocess.run(
-            ["git", "merge-base", _commit_count_base_ref(worktree, base_branch), "HEAD"],
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        return None, f"merge-base: {exc}"
-    merge_base = (base_proc.stdout or "").strip()
-    if base_proc.returncode != 0 or not merge_base:
+    base_ref = _commit_count_base_ref(worktree, base_branch)
+    merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
+    if not merge_base:
         return None, "merge-base with the base branch is unknown"
     if committed_only:
         try:
@@ -5859,9 +5941,10 @@ def _advisory_completion_gate(
     Ukrainian content exemption. Unmeasurable changes fail.
     """
     base_branch = str(record.get("worktree_base") or "main")
+    base_sha = _recorded_base_sha(record)
     envelope = record.get("advisory_envelope")
     if isinstance(envelope, dict):
-        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope)
+        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope, base_sha=base_sha)
         failure = (
             bounded_advisory.CEILING_UNMEASURED
             if not ceiling.get("measured")
@@ -5870,7 +5953,7 @@ def _advisory_completion_gate(
         detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
         return "advisory_ceiling_check", ceiling, failure, detail
     if isinstance(record.get("advisory_exemption"), dict):
-        check = _exempt_change_check(worktree, base_branch)
+        check = _exempt_change_check(worktree, base_branch, base_sha=base_sha)
         failure = (
             bounded_advisory.EXEMPT_CHANGES_UNMEASURED
             if not check.get("measured")
@@ -6078,16 +6161,20 @@ def _advisory_completion_gate_fails(record: Mapping[str, Any], worktree: Path) -
     return gate is not None and gate[2] is not None
 
 
-def _exempt_change_check(worktree: Path | None, base_branch: str) -> dict[str, Any]:
+def _exempt_change_check(worktree: Path | None, base_branch: str, *, base_sha: str | None = None) -> dict[str, Any]:
     """Classify every path a content-exempt worker changed (#9275); unmeasurable is reported as such.
 
     Every committed path is classified, and every uncommitted one except the
     scratch residue auto-finalize never publishes (``_is_disposable_auto_finalize_path``),
-    which is listed as ``ignored_residue``.
+    which is listed as ``ignored_residue``. When the base branch was deleted
+    after merging, falls back to the recorded ``base_sha`` and then the default
+    branch (#9489).
     """
     name_args = ["--name-only", "-z", "--no-renames"]
-    names, error = _advisory_worker_diff(worktree, base_branch, name_args)
-    committed, committed_error = _advisory_worker_diff(worktree, base_branch, name_args, committed_only=True)
+    names, error = _advisory_worker_diff(worktree, base_branch, name_args, base_sha=base_sha)
+    committed, committed_error = _advisory_worker_diff(
+        worktree, base_branch, name_args, committed_only=True, base_sha=base_sha
+    )
     if names is None or committed is None:
         return {"measured": False, "error": error or committed_error}
     assert worktree is not None
@@ -6565,7 +6652,9 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 return row
             current_branch = _current_branch(worktree)
             recorded_branch = state.get("worktree_branch")
-            branch = f"rescue/{_x_agent_task_id(str(state.get('agent') or 'agent'), str(task_id))}"
+            agent = str(state.get("agent") or "agent")
+            safe_task = _x_agent_task_id(agent, str(task_id))
+            branch = f"rescue/{agent}/{safe_task}"
             if current_branch not in {recorded_branch, branch}:
                 row["reason"] = "worktree branch differs from task record"
                 return row
@@ -6643,7 +6732,8 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                     f"X-Agent: {state.get('agent') or 'agent'}/{task_id}",
                 )
                 if proc.returncode != 0:
-                    raise RuntimeError("cannot commit rescue work")
+                    detail = (proc.stderr or proc.stdout or "").strip()
+                    raise RuntimeError(f"cannot commit rescue work: {detail or f'exit {proc.returncode}'}")
                 head = _resolve_sha(worktree)
                 if head is None:
                     raise RuntimeError("rescue commit HEAD unavailable")
@@ -8013,6 +8103,31 @@ def _ensure_worktree(
     return worktree_path, worktree_branch, telemetry
 
 
+def _resolve_primary_root_for_worktree(cwd_or_worktree: Path) -> Path:
+    """Resolve the primary checkout root for a worktree or arbitrary cwd."""
+    primary_root = _main_checkout_root(cwd_or_worktree)
+    if primary_root == cwd_or_worktree and cwd_or_worktree != _REPO_ROOT:
+        primary_root = _main_checkout_root(_REPO_ROOT)
+    return primary_root
+
+
+def _primary_database_path(primary_root: Path, name: str) -> Path:
+    """Resolve the canonical primary path for data/sources.db or data/vesum.db (#9122)."""
+    if name == "sources.db":
+        override = os.environ.get("LU_SOURCES_DB")
+        if override:
+            p = Path(override).expanduser()
+            return p.resolve() if p.is_absolute() else (primary_root / p).resolve()
+        return (primary_root / "data" / "sources.db").resolve()
+    return (primary_root / "data" / "vesum.db").resolve()
+
+
+def _primary_database_connect_code(target: Path) -> str:
+    """Return Python connect code opening target read-only via RFC file URI (#9122)."""
+    uri = f"{target.resolve().as_uri()}?mode=ro"
+    return f"sqlite3.connect({uri!r}, uri=True)"
+
+
 def _augment_prompt_with_worktree(
     prompt: str,
     worktree_path: Path | None,
@@ -8058,6 +8173,9 @@ def _augment_prompt_with_worktree(
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
+            "Keep scratch git repositories and probes outside `batch_state/reports/` "
+            "(use a temp directory outside the worktree or clean them up before exit); "
+            "`batch_state/` is reserved for report files and logs.\n"
             "Do not open or merge PRs unless the brief says so; "
             "report the pushed head SHA and clean status.\n"
             "\n[optional delivery signal]\n"
@@ -8092,6 +8210,22 @@ def _augment_prompt_with_worktree(
             "Run at most the specific tests that reproduce a finding you are checking.\n"
             "Cite CI run ids for suite results.\n"
         )
+    db_note = ""
+    if worktree_path is not None:
+        primary_root = _resolve_primary_root_for_worktree(worktree_path)
+        primary_sources = _primary_database_path(primary_root, "sources.db")
+        primary_vesum = _primary_database_path(primary_root, "vesum.db")
+        sources_code = _primary_database_connect_code(primary_sources)
+        vesum_code = _primary_database_connect_code(primary_vesum)
+        db_note = (
+            "\n[database access in worktrees]\n"
+            "Primary databases (data/sources.db, data/vesum.db) reside in the primary checkout, "
+            "not in this worktree. Prefer MCP tools (`sources` server: `verify_words`, `search_text`, etc.) "
+            "which resolve databases automatically. If running ad-hoc Python/SQLite queries, NEVER use a relative "
+            "path like `data/sources.db` or `data/vesum.db` (which creates an empty file in the worktree and triggers "
+            "read-only checkout mutation failure); connect to the primary database using its absolute path read-only: "
+            f"`{sources_code}` or `{vesum_code}`.\n"
+        )
     # #8775: the path is data. ASCII JSON quoting keeps it one quoted line even
     # if an unvalidated path ever reaches this block.
     return (
@@ -8112,7 +8246,7 @@ def _augment_prompt_with_worktree(
         "(the absolute primary interpreter), never `python`, `.venv/bin/python`, or "
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
-        f"{sparse_note}{test_scope}{delivery_note}\n"
+        f"{sparse_note}{test_scope}{delivery_note}{db_note}\n"
         f"{prompt}"
     )
 
@@ -8390,6 +8524,11 @@ def _worker_process_reader() -> worker_leftovers.ProcessReader:
     return worker_leftovers.ProcFsReader()
 
 
+def _worker_pidfd_ops() -> worker_leftovers.PidfdOps:
+    """Seam for tests: the live pidfd calls the exit scan signals through."""
+    return worker_leftovers.live_pidfd_ops()
+
+
 def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> worker_leftovers.ExitScan | None:
     """Whether processes of this worker outlived its CLI (#8991); None when not checked.
 
@@ -8400,7 +8539,9 @@ def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> worke
     session) bound the scan. A headless session cannot be woken by a
     background-task notification, so whatever is still running is unfinished
     work, and a scan that could not read everything it needed is ``unknown``,
-    never ``clear``. Never raises.
+    never ``clear``. A scope launch first stops the Cursor CLI's own
+    ``worker-server`` in its cgroup (#9534); anything that survives is still
+    reported. Never raises.
     """
     launch_mode = state.get("launch_mode")
     if launch_mode not in {dispatch_isolation.LAUNCH_SCOPE, dispatch_isolation.LAUNCH_FALLBACK}:
@@ -8425,7 +8566,9 @@ def _background_jobs_at_exit(state: Mapping[str, Any], *, task_id: str) -> worke
             run_nonce=recorded("run_nonce"),
             reader=reader,
         )
-        scan = worker_leftovers.exit_scan(scope, reader=reader, settle_s=_BACKGROUND_JOBS_SETTLE_S)
+        scan = worker_leftovers.exit_scan(
+            scope, reader=reader, settle_s=_BACKGROUND_JOBS_SETTLE_S, pidfd=_worker_pidfd_ops()
+        )
     except Exception as exc:
         scan = worker_leftovers.ExitScan(
             status=worker_leftovers.SCAN_UNKNOWN, scope=scope, error=f"{type(exc).__name__}: {exc}"[:300]
@@ -9156,7 +9299,12 @@ def _run_worker(
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
                 if kimi_worker:
-                    kimi_content_refusal = _kimi_diff_refusal(Path(worktree_path), base_ref, agent)
+                    kimi_content_refusal = _kimi_diff_refusal(
+                        Path(worktree_path),
+                        base_ref,
+                        agent,
+                        base_sha=_recorded_base_sha(final_state),
+                    )
                 # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
                 #
                 # ``_count_commits_ahead`` returns None when it cannot count, and
@@ -9355,6 +9503,18 @@ def _run_worker(
             last_error = f"{reason}; {last_error}" if last_error else reason
         if read_only_mutation_paths:
             mutation_diagnostic = "read-only checkout mutation detected: " + ", ".join(read_only_mutation_paths)
+            db_mutations = [p for p in read_only_mutation_paths if p in ("data/sources.db", "data/vesum.db")]
+            if db_mutations:
+                primary_root = _resolve_primary_root_for_worktree(Path(cwd))
+                remedies = []
+                for p in db_mutations:
+                    name = "sources.db" if p == "data/sources.db" else "vesum.db"
+                    target = _primary_database_path(primary_root, name)
+                    remedies.append(_primary_database_connect_code(target))
+                mutation_diagnostic += (
+                    f" (databases do not reside in sparse worktrees; ad-hoc queries must open the "
+                    f"primary database read-only by absolute path: {'; '.join(remedies)})"
+                )
             # Never REPLACE a real failure with the guard diagnostic (#7124):
             # overwriting it hid the actual cause (e.g. a SIGKILLed worker's
             # stderr) behind the mutation list. The paths stay independently
@@ -12624,12 +12784,18 @@ CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
 
 
 def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
-    """True when any review flag types this dispatch as a review."""
+    """True when any review flag types this dispatch as a review.
+
+    ``--review-author-model`` and ``--review-risk`` exist only for reviewer
+    resolution, so either one types the dispatch as a (code-profile) review.
+    """
     return (
         bool(getattr(args, "review", False))
         or bool(getattr(args, "review_attempt", None))
         or bool(getattr(args, "require_review_verdict", False))
         or bool(getattr(args, "review_profile", None))
+        or bool(getattr(args, "review_author_model", None))
+        or bool(getattr(args, "review_risk", None))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review"
     )
 
@@ -13006,9 +13172,8 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
-            review_dispatch=bool(
-                getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)
-            ),
+            # Every review-typed dispatch passes reviewer admission, not only verdict-gated ones (#9538).
+            review_dispatch=_dispatch_is_review_typed(args),
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
@@ -14236,7 +14401,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     rescue = sub.add_parser(
         "rescue",
-        help="Inspect or preserve terminal dispatch work on rescue/<task>.",
+        help="Inspect or preserve terminal dispatch work on rescue/<agent>/<task>.",
         description=(
             "Preserve terminal non-success dispatch work on a verified rescue branch.\n"
             "Use after a worker exits; --all-stale previews candidates unless --apply is set."

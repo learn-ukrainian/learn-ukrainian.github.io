@@ -240,6 +240,9 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
 def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monkeypatch, injected_grok):
     from scripts.review import reviewer_resolver
 
+    # The high ladder holds only Sol and Opus (#9538), so the attested Cursor
+    # Grok seat is traced only at medium; the injected variant still pins high.
+    risk = "high" if injected_grok else "medium"
     if injected_grok:
         # Subject exclusion must still refuse a caller-supplied Grok ladder;
         # automatic ladders list only the attested Cursor Grok seat (#9488).
@@ -263,7 +266,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
         "--domain",
         "infra",
         "--risk",
-        "high",
+        risk,
         "--owned-path",
         "scripts/agent_runtime/adapters/grok_build.py",
         "--routing-snapshot-file",

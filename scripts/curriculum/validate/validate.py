@@ -14,6 +14,10 @@ waiver can never be built or merged as buildable.
 The mechanical gates M1, M3 and M5 (mechanical.py, issue #9138) are structural checks over the
 plan, the arc and the word store that plan reviewers had to make by hand;
 what reads a proxy is reported as a note or not_checked, never as a failure.
+The review gates C1–C20 (review_gates.py, issue #9487) decide the plan defects plan
+reviewers marked checkable: C1–C4, C7–C15 and C17–C20 fail; C5, C6, C16 and the form-dependent
+cases of C4, C10 and C13 (and an odd-one-out feature C11 cannot compute, a recalled repeat
+display in C15, a sentence C19 finds decodable earlier) are notes.
 
 --provisional-pack is the plan-review mode (docs/epics/fresh-build-review-contracts.md
 "Contract 1"): the plan still points at a pack whose sha256 it does not carry yet,
@@ -31,6 +35,7 @@ import hashlib
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 import yaml
@@ -39,6 +44,7 @@ from jsonschema import Draft202012Validator
 from ..arc.loader import SCHEMA_PATH as ARC_SCHEMA_PATH
 from ..evidence import lock as evidence_lock
 from . import codes
+from .activity_report import UNSCORED_ACTIVITY_TYPES
 from .activity_report import plan_report as build_plan_report
 from .cross import check_arc, check_rule4, load_level_plans
 from .loader import (
@@ -57,6 +63,7 @@ from .pack import load_pack, load_words, lock_digest
 from .placement_table import PLACEMENT_TABLE_REL, PlacementTableError, load_placement_table
 from .registry import check_append_only, check_plan_against_registry, load_registry, registry_path_for
 from .report import Outcome, Report
+from .review_gates import check_review_gates
 from .scope import check_scope_sidecar, check_title, scope_sidecar_path, title_quantities_outcome
 
 _CYRILLIC = re.compile(r"[А-Яа-яЇїІіЄєҐґЬь]")
@@ -97,6 +104,11 @@ def _cyrillic_allowed(path: tuple) -> bool:
     if len(rest) >= 2 and rest[0] == "steps" and rest[2:] == ("teach",):
         return True
     if len(rest) >= 2 and rest[0] == "activities" and rest[2:] == ("focus",):
+        return True
+    if rest[0] == "activities" and (
+        (len(rest) == 4 and rest[2] == "options")
+        or (len(rest) == 6 and rest[2] == "learner_reads" and rest[4] == "words")
+    ):
         return True
     if len(rest) >= 2 and rest[0] == "videos" and rest[2:] == ("use",):
         return True
@@ -446,6 +458,31 @@ def _check_activities(report: Report, plan: dict, allowlist: set[str] | None) ->
                     f"activity {activity_id} has type {activity['type']!r}, not in the level allowlist (rule 6)",
                     lesson=n,
                 )
+            if activity["type"] in {"quiz", "fill-in"} and "options" not in activity:
+                report.notes.append(
+                    Outcome(codes.OPTIONS_MISSING, f"activity {activity_id} requires options (PR1 advisory)", n)
+                )
+            if activity["type"] in UNSCORED_ACTIVITY_TYPES and "options" in activity:
+                report.notes.append(
+                    Outcome(
+                        codes.OPTIONS_FORBIDDEN, f"unscored activity {activity_id} forbids options (PR1 advisory)", n
+                    )
+                )
+            for option in activity.get("options", []):
+                if unicodedata.normalize("NFC", option) != option:
+                    _fail(
+                        report, codes.OPTIONS_NOT_NFC, f"activity {activity_id} option {option!r} is not NFC", lesson=n
+                    )
+            for selection in activity.get("learner_reads", []):
+                if isinstance(selection, dict):
+                    for word in selection["words"]:
+                        if unicodedata.normalize("NFC", word) != word:
+                            _fail(
+                                report,
+                                codes.LEARNER_READ_WORD_NOT_NFC,
+                                f"activity {activity_id} learner_reads {selection['ref']} word {word!r} is not NFC",
+                                lesson=n,
+                            )
             error_refs = activity.get("error_refs")
             if activity["type"] == "error-correction" and not error_refs:
                 _fail(
@@ -896,6 +933,7 @@ def validate_plan(
     write_scope: bool = False,
     provisional_pack: bool = False,
     plan_bytes: bytes | None = None,
+    vesum_declared_unavailable: bool = False,
 ) -> Report:
     """Validate one module plan: the complete §6 gate of §2/§2a.
 
@@ -913,7 +951,11 @@ def validate_plan(
     item pending_promotion and runs the append-only registry check that strict
     adds; nothing else is relaxed. plan_bytes replaces the plan file's bytes (the
     plan still lives at plan_path, and every sibling file is read from there):
-    plan-promote validates the bytes it is about to publish in memory. Never raises
+    plan-promote validates the bytes it is about to publish in memory.
+    vesum_declared_unavailable declares an environment without VESUM (the CI
+    runner): a gate whose VESUM lookup is undecided stays a not_checked
+    vesum_unavailable line under strict too, instead of failing; every other
+    strict failure is unchanged. Never raises
     for plan content problems — they come back as failures in the Report. The
     report's ``inputs`` records the hash of every file the run read.
     """
@@ -935,6 +977,7 @@ def validate_plan(
             write_scope=write_scope,
             provisional_pack=provisional_pack,
             plan_bytes=plan_bytes,
+            vesum_declared_unavailable=vesum_declared_unavailable,
         )
     finally:
         report.inputs = _collect_inputs(context)
@@ -1016,6 +1059,7 @@ def _validate_plan_run(
     write_scope: bool,
     provisional_pack: bool,
     plan_bytes: bytes | None,
+    vesum_declared_unavailable: bool,
 ) -> Report:
     _always_not_checked(report)
     try:
@@ -1159,6 +1203,19 @@ def _validate_plan_run(
         check_mechanical(
             report, plan, level=level, store=store, arc=arc, level_plans=level_plans, words_path=words_path
         )
+    if store is not None and pack is not None:
+        check_review_gates(
+            report,
+            plan,
+            level=level,
+            store=store,
+            pack=pack,
+            arc=arc,
+            level_plans=level_plans,
+            words_path=words_path,
+            strict=strict,
+            vesum_declared_unavailable=vesum_declared_unavailable,
+        )
     registry_path = registry_path_for(plan_path)
     registry_failures: list[Outcome] = []
     registry = load_registry(registry_path, level, registry_failures)
@@ -1178,11 +1235,13 @@ def validate_level(
     allow_missing_prior: bool = False,
     strict: bool = False,
     write_scope: bool = False,
+    vesum_declared_unavailable: bool = False,
 ) -> list[Report]:
     """Whole-level mode: every plan of the level, in position order (§6).
 
     level_dir overrides the level directory (tests only; production runs use
     the conventional curriculum/l2-uk-en/lesson-plans/<level>/).
+    vesum_declared_unavailable is validate_plan's, for every plan.
     """
     level_dir = level_dir or REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}"
     plans = load_level_plans(level_dir)
@@ -1194,6 +1253,7 @@ def validate_level(
             allow_missing_prior=allow_missing_prior,
             strict=strict,
             write_scope=write_scope,
+            vesum_declared_unavailable=vesum_declared_unavailable,
         )
         for _position, (plan_slug, _plan, path) in sorted(plans.by_position.items())
     ]
@@ -1252,6 +1312,14 @@ def main(argv: list[str] | None = None) -> int:
             "build preflight and CI run --strict, so a plan that needs a waiver can never be\n"
             "built or merged as buildable.\n"
             "\n"
+            "VESUM: gates C12 and C23 look words up in VESUM; when it cannot be read the gate\n"
+            "is undecided ('not_checked: vesum_unavailable'), and --strict fails it, since an\n"
+            "undecided gate never passes. --not-checked-when-unavailable vesum declares an\n"
+            "environment without VESUM (the CI runner has none): the undecided gates stay\n"
+            "not_checked under --strict too, each printed with its gate id and reason, and do\n"
+            "not fail the run. Every other --strict failure still fails. plan-promote never\n"
+            "declares it, so a plan is promoted only with every VESUM lookup decided.\n"
+            "\n"
             "Plan review: --provisional-pack validates a plan whose evidence_ref.sha256 is not\n"
             "the pack's yet (the pack builder's provisional pack, before plan-promote). Every\n"
             "rule runs against the pack at evidence_ref.path; the single change is that the\n"
@@ -1294,7 +1362,8 @@ def main(argv: list[str] | None = None) -> int:
             "Examples:\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 sounds-letters-and-hello\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 sounds-letters-and-hello --json\n"
-            "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict   (CI)\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict --not-checked-when-unavailable vesum   (CI)\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --allow-missing-prior\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --write-scope\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --provisional-pack --write-report\n"
@@ -1310,6 +1379,15 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="refuse every waiver flag and verify the grammar registry is append-only against "
         "git merge-base HEAD origin/main (the build preflight and CI mode)",
+    )
+    parser.add_argument(
+        "--not-checked-when-unavailable",
+        action="append",
+        choices=["vesum"],
+        default=[],
+        metavar="SOURCE",
+        help="declare an environment without SOURCE (only 'vesum'): a gate whose lookup is undecided because "
+        "the source cannot be read stays a printed not_checked line under --strict instead of failing (CI)",
     )
     parser.add_argument(
         "--allow-missing-prior",
@@ -1383,6 +1461,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.all and not args.slug:
         parser.error("a slug is required unless --all is given")
 
+    vesum_declared_unavailable = "vesum" in args.not_checked_when_unavailable
     if args.all:
         reports = validate_level(
             args.level,
@@ -1390,6 +1469,7 @@ def main(argv: list[str] | None = None) -> int:
             allow_missing_prior=args.allow_missing_prior,
             strict=args.strict,
             write_scope=args.write_scope,
+            vesum_declared_unavailable=vesum_declared_unavailable,
         )
         if args.json:
             payload = {
@@ -1410,6 +1490,10 @@ def main(argv: list[str] | None = None) -> int:
                 if report.failures:
                     summary += f" ({len(report.failures)} failures)"
                 print(f"{report.level}/{report.slug}: {summary}")
+                if report.status == "pass":  # a passing plan's report is not printed; its undecided gates are
+                    for outcome in report.not_checked:
+                        if outcome.code == codes.VESUM_UNAVAILABLE:
+                            print(f"{report.level}/{report.slug}: NOT_CHECKED {outcome.render()}")
             for report in reports:
                 if report.status != "pass":
                     print()
@@ -1431,6 +1515,7 @@ def main(argv: list[str] | None = None) -> int:
         strict=args.strict,
         write_scope=args.write_scope,
         provisional_pack=args.provisional_pack,
+        vesum_declared_unavailable=vesum_declared_unavailable,
     )
     if args.write_report:
         try:

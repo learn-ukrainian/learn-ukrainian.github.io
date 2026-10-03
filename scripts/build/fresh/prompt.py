@@ -223,6 +223,9 @@ def extract_plan_citations(plan_entry: dict[str, Any]) -> set[str]:
     for act in plan_entry.get("activities", []):
         for eref in act.get("error_refs") or []:
             cited.add(str(eref))
+        cited.update(act.get("targets") or [])
+        for selection in act.get("learner_reads") or []:
+            cited.add(selection if isinstance(selection, str) else selection["ref"])
         if act.get("model"):
             cited.add(str(act["model"]))
 
@@ -435,6 +438,11 @@ def _unrendered_record_kind(record_id: str, kind: str) -> str:
     raise ValueError(f"cited_record_invalid: no rendering for {kind} record {record_id!r}")
 
 
+def _literal_json(value: Any) -> str:
+    """JSON for Markdown writer prompts, preserving Ukrainian and apostrophes verbatim."""
+    return json.dumps(value, ensure_ascii=False)
+
+
 def _environment(prompts_dir: Path | None) -> Environment:
     env = Environment(
         loader=FileSystemLoader(str(prompts_dir or PROMPTS_DIR)),
@@ -444,6 +452,7 @@ def _environment(prompts_dir: Path | None) -> Environment:
         ),
     )
     env.filters["fenced"] = _fenced
+    env.filters["literal_json"] = _literal_json
     env.globals["unrendered_record_kind"] = _unrendered_record_kind
     return env
 

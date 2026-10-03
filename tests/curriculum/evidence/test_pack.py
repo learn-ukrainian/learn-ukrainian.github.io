@@ -1038,6 +1038,38 @@ def _texts_only_request(tmp_path) -> Path:
     return req_file
 
 
+@pytest.mark.parametrize("location", ["core", "incidental", "recycled", "uses"])
+@pytest.mark.parametrize("proper_name", [False, True])
+def test_pack_verify_gloss_gate_names_record_and_exempts_proper_names(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, location, proper_name
+):
+    plan_path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/test-mod.yaml"
+    plan_path.write_text(yaml.safe_dump({location: ["W-001"]}))
+    if proper_name:
+        store_path = synthetic_word_store / "_words.yaml"
+        doc = yaml.safe_load(store_path.read_text())
+        doc["words"][0]["forms"][0]["tags"] += ":prop"
+        lock.write(store_path, lock.yaml_bytes(doc))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as api:
+        pack.build_pack(
+            "a1",
+            "test-mod",
+            _texts_only_request(tmp_path),
+            evidence_dir=synthetic_word_store,
+            sources_instance=api,
+            offline=True,
+        )
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, sources_instance=api, offline=True
+        )
+    if proper_name:
+        assert result["errors"] == []
+        assert result["status"] == "ok"
+    else:
+        assert result["status"] == "failed"
+        assert any(f"{codes.GLOSS_MISSING}: a1/test-mod W-001 (synthetic)" in error for error in result["errors"])
+
+
 def test_texts_only_build_without_vesum_records_null(
     synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
 ):
@@ -1213,6 +1245,7 @@ def test_publication_quote_and_listening_models_verify_and_assemble_together(
     pack_doc = built["pack"]
     words = yaml.safe_load((synthetic_word_store / "_words.yaml").read_text())
     plan = {
+        "arc_ref": {"level": "a1", "position": 1},
         "lessons": [
             {
                 "n": 1,
@@ -1296,3 +1329,45 @@ def test_strict_timeout_is_unverifiable(
     assert result["status"] == "failed"
     assert result["url_checks"] == [{"id": "V-001", "outcome": "unverifiable"}]
     assert any(error.startswith("unverifiable:") for error in result["errors"])
+
+
+@pytest.mark.parametrize("bad_store", ["null", "words: [", "unavailable"])
+def test_gloss_gate_word_store_load_failure_is_one_infrastructure_error(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, bad_store, monkeypatch
+):
+    plan_path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/test-mod.yaml"
+    plan_path.write_text(yaml.safe_dump({"core": ["W-001", "W-002"]}))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as api:
+        pack.build_pack(
+            "a1",
+            "test-mod",
+            _texts_only_request(tmp_path),
+            evidence_dir=synthetic_word_store,
+            sources_instance=api,
+            offline=True,
+        )
+        store_path = synthetic_word_store / "_words.yaml"
+        if bad_store == "unavailable":
+            original_read = Path.read_text
+
+            def unreadable(path, *args, **kwargs):
+                if path == store_path:
+                    raise OSError("synthetic unreadable store")
+                return original_read(path, *args, **kwargs)
+
+            monkeypatch.setattr(Path, "read_text", unreadable)
+        else:
+            store_path.write_text(bad_store)
+        result = verify.verify_pack(
+            "a1",
+            "test-mod",
+            evidence_dir=synthetic_word_store,
+            plans_dir=plan_path.parent,
+            sources_instance=api,
+            offline=True,
+        )
+    assert result["status"] == "failed"
+    assert len(result["errors"]) == 1
+    assert result["errors"][0].startswith(codes.SOURCE_UNAVAILABLE + ":")
+    assert "word-store gloss gate" in result["errors"][0]
+    assert not any(codes.GLOSS_MISSING in error for error in result["errors"])

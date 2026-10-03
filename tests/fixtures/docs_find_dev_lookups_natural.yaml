@@ -26,20 +26,23 @@
 # At the gate's limit of 50 (read pool 150) the round-4 head scores 64 / 58, and after round 5
 # (the read pool counts text candidates, a family hit lists only the entry points the query
 # names, the storage-topology topic carries a short layout question) 64 / 58; after round 6 (inflections
-# and closed compounds in path names, exact relevance before line evidence) 64 / 59.
+# and closed compounds in path names, exact relevance before line evidence) 64 / 59; after #9531
+# (a silent e before -ing and a y's i before its inflections, a data store's purpose as its
+# description, the State Standard index as an entry point) 64 / 60. #9531's first round also met
+# flaky with flake and reviewer with review (65 / 61), but no spelling rule tells those from story
+# and store or corner and corn, so N35 and N38 are limits again.
 version: 1
 top_n: {query: 20, question: 20}
 known_misses:
-  N22: {query: null, question: null, reason: 'Vocabulary gap: the guard says accidental disclosure, the question says leak and infrastructure details.'}
-  N28: {question: null, reason: 'Not diagnosed in round 3.'}
-  N30: {query: 59, question: null, reason: 'Not diagnosed in round 3.'}
-  N35: {question: null, reason: 'Not diagnosed in round 3.'}
-  N38: {query: 51, reason: 'Not diagnosed in round 3.'}
-  N40: {query: 84, question: 36, reason: 'Vocabulary gap: the step says it sets the evidence digest, the question says updates.'}
-  N43: {question: 175, reason: 'Not diagnosed in round 3.'}
-  N54: {question: 24, reason: 'Four places outside: the store record names few of the question''s words about messages.'}
-  N59: {question: 71, reason: 'The common words of the long question are held by prose; the short query ranks .gitattributes first.'}
-  N64: {question: 28, reason: 'Not diagnosed in round 3.'}
+  N22: {query: 180, question: null, reason: 'Vocabulary gap: the guard says accidental disclosure, the question says leak and infrastructure details.'}
+  N28: {question: null, reason: 'Vocabulary gap (#9531): the linter and its workflow say reject, negated, closing reference and PR body; the question says catch, accidentally, saying and description, the rarest four of its nine words, so prose about issues and PRs outranks both.'}
+  N30: {query: 49, question: 123, reason: 'Vocabulary gap (#9531): the hook records committed ref updates in the primary checkout; the query says log, branch and main, the question also straight onto and example. Of seven query words the hook holds update, checkout and commit; documents holding all seven in prose share its relevance band and rank first as entry points.'}
+  N35: {question: null, reason: 'Vocabulary gap (#9531): the question says flaky and expiry, the quarantine says flake and expires; flaky meets flake and expiry meets expires only through a dictionary (story is no store), so documents holding list, tests, owners, expiry and dates in prose rank first.'}
+  N38: {query: 54, reason: 'Vocabulary gap (#9531): the query says reviewer, the deciding function says reviews; an -er word may be no agent noun (corner, proper, brother), so reviewer meets review only through a dictionary. The function holds seven of the eight words, not reviewer, and ranks below documents holding reviewer beside most of the others.'}
+  N40: {query: 83, question: 36, reason: 'Vocabulary gap: the step says it sets the evidence digest, the question says updates.'}
+  N43: {question: null, reason: 'Vocabulary gap (#9531): roughly six hundred, half the question''s weight, is a count no tracked file states, and the runner says data-gated tests where the question says real local databases; only nightly and tests meet.'}
+  N54: {question: 26, reason: 'Six places outside: the store record holds six of the question''s ten words (comms, data, empty, file, fleet, stored) but not agent, messages, database or folder, so 25 files about the fleet, its messages and its stores rank first, 14 of them holding seven or more of the words.'}
+  N59: {question: 67, reason: 'The common words of the long question are held by prose; the short query ranks .gitattributes first.'}
 lookups:
 
   # ---------------------------------------------------------------- status: is it still current, used or valid, what replaced it

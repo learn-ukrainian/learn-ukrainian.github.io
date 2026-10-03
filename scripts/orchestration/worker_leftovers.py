@@ -34,22 +34,42 @@ alive. When any process in the boundary has another real uid, nothing is
 stopped or signalled (not even the scope unit, whose stop would reach it) and
 the reap is refused. Individual processes are signalled only through a pidfd
 whose target (start time, boundary membership, real uid) is re-verified after
-it is opened; without pidfd support nothing is signalled.
+it is opened and after every other read, immediately before each signal;
+without pidfd support nothing is signalled.
 
 Guaranteed: a process seen with another real uid at scan time blocks both the
 scope unit stop and every per-process signal, and a pidfd target's uid is
-checked again after the pidfd is opened. Not guaranteed (accepted residual,
-#8991): a process that changes its identity (uid, or its boundary membership)
-after the uid scan and before the scope unit stop (``own_cgroup()`` /
-``systemctl --user stop``) or the pidfd signal is delivered. A unit stop cannot
-be made atomic with a membership scan; closing that window needs a privileged
-helper running inside the worker's own scope, which an unprivileged reaper
-outside it cannot provide. Also not guaranteed (accepted residual, #9514): in
+checked again after the pidfd is opened. A process seen outside the
+boundary by the last read before a signal is skipped and reported
+(``left_scope``), for SIGTERM and SIGKILL alike. Not guaranteed (accepted
+residual, #8991, #9534): a process that changes its identity (uid, or its
+boundary membership) after the uid scan and before the scope unit stop
+(``own_cgroup()`` / ``systemctl --user stop``), or after that last read and
+before the pidfd signal is delivered. Neither window can be closed from here:
+a unit stop cannot be made atomic with a membership scan, and no call signals
+a process only while it is in a given cgroup (``cgroup.kill`` kills the whole
+cgroup, never one member). Closing them needs a privileged helper running
+inside the worker's own scope, which an unprivileged reaper outside it cannot
+provide. Also not guaranteed (accepted residual, #9514): in
 ``popen-fallback``, a job of our own uid that both hides its environment
 (non-dumpable) and moves itself out of the worker's cgroup is taken for an
 unrelated process.
 The caller and its ancestors are never reported or signalled, and zombies are
 not processes that can still do work.
+
+The Cursor CLI's own ``worker-server`` (#9534), which cursor-agent starts and
+never stops, is stopped before the exit scan, never exempted from it. In a
+scope launch only, each process the scan would report is signalled through a
+pidfd when, read through that pinned pidfd, its ``/proc/<pid>/exe`` sits
+directly in a version directory of the install the resolved ``cursor-agent``
+lives in with argv exactly ``<argv0> <that version dir>/index.js
+worker-server`` and then, immediately before each signal, it is still the
+scanned process, inside this task's own scope cgroup, of this user's real uid:
+SIGTERM, a bounded wait, then SIGKILL. A server that has left the scope by then
+is skipped and recorded with ``left_scope``. A lookalike that passes is in this task's own cgroup, so it is this task's to
+stop. The scan then runs unchanged and reports anything still alive, the
+server included when stopping it failed. The popen fallback has no cgroup
+proof and signals nothing at exit.
 """
 
 from __future__ import annotations
@@ -67,6 +87,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
+from scripts.agent_runtime.binary_resolve import resolve_agent_binary
 from scripts.orchestration import dispatch_isolation
 
 BACKGROUND_JOBS_REASON = "background_jobs_alive_at_exit"
@@ -79,6 +100,7 @@ LAUNCH_FALLBACK = dispatch_isolation.LAUNCH_FALLBACK
 SCAN_KEY = "leftovers_scan"
 SCOPE_KEY = "leftovers_scope"
 SCAN_ERROR_KEY = "leftovers_scan_error"
+TERMINATED_KEY = "leftovers_terminated"
 SCAN_CLEAR = "clear"
 SCAN_LIVE = "live"
 SCAN_UNKNOWN = "unknown"
@@ -86,6 +108,16 @@ SCAN_UNKNOWN = "unknown"
 # Bounds for the task record: enough to name the jobs, never the whole table.
 MAX_RECORDED_PROCESSES = 20
 CMDLINE_MAX_CHARS = 200
+
+# The Cursor CLI's own helper (#9534): ``<install>/versions/<version>/node
+# <install>/versions/<version>/index.js worker-server``.
+CURSOR_AGENT_EXECUTABLE = "cursor-agent"
+CURSOR_VERSIONS_DIR = "versions"
+CURSOR_WORKER_SERVER_SCRIPT = "index.js"
+CURSOR_WORKER_SERVER_ARG = "worker-server"
+# How long the stopped worker-server gets after SIGTERM, then after SIGKILL.
+_TERMINATE_GRACE_S = 3.0
+_KILL_GRACE_S = 1.0
 
 _STOP_UNIT_TIMEOUT_S = 30.0
 _POLL_S = 0.1
@@ -116,6 +148,10 @@ class ProcessReader(Protocol):
     def proc_cgroup(self, pid: int) -> str | None: ...
 
     def cmdline(self, pid: int) -> str: ...
+
+    def argv(self, pid: int) -> list[str] | None: ...
+
+    def exe(self, pid: int) -> Path | None: ...
 
     def cwd(self, pid: int) -> Path | None: ...
 
@@ -249,6 +285,30 @@ class LeftoverProcess:
 
 
 @dataclass(frozen=True)
+class TerminatedProcess:
+    """A Cursor ``worker-server`` signalled before the exit scan (#9534), and whether it exited.
+
+    ``left_scope``: a later signal was skipped because, read just before it,
+    the server was no longer in the task's scope cgroup.
+    """
+
+    pid: int
+    cmdline: str
+    signals: tuple[str, ...]
+    stopped: bool
+    left_scope: bool = False
+
+    def as_state(self) -> dict[str, Any]:
+        return {
+            "pid": self.pid,
+            "cmdline": self.cmdline[:CMDLINE_MAX_CHARS],
+            "signals": list(self.signals),
+            "stopped": self.stopped,
+            "left_scope": self.left_scope,
+        }
+
+
+@dataclass(frozen=True)
 class ExitScan:
     """What the worker's exit scan found: ``clear``, ``live`` or ``unknown``."""
 
@@ -256,6 +316,8 @@ class ExitScan:
     scope: WorkerScope
     leftovers: tuple[LeftoverProcess, ...] = ()
     error: str | None = None
+    # Signalled before the scan (#9534); recorded whatever the status.
+    terminated: tuple[TerminatedProcess, ...] = ()
 
     @property
     def unconfirmed(self) -> bool:
@@ -272,6 +334,8 @@ class ExitScan:
     def record_fields(self) -> dict[str, Any]:
         """Task-record fields; the scope is kept whenever jobs may be alive."""
         fields: dict[str, Any] = {SCAN_KEY: self.status}
+        if self.terminated:
+            fields[TERMINATED_KEY] = [proc.as_state() for proc in self.terminated[:MAX_RECORDED_PROCESSES]]
         if not self.unconfirmed:
             return fields
         fields[SCOPE_KEY] = self.scope.as_state()
@@ -292,6 +356,8 @@ class StopResult:
     unsignalled: list[int] = field(default_factory=list)
     unit_stopped: bool = False
     error: str | None = None
+    # Processes skipped because, read just before a signal, they had left the scope.
+    left_scope: list[int] = field(default_factory=list)
 
     def as_state(self) -> dict[str, Any]:
         return {
@@ -299,6 +365,7 @@ class StopResult:
             "signalled": list(self.signalled),
             "survivors": [proc.as_state() for proc in self.survivors[:MAX_RECORDED_PROCESSES]],
             "unsignalled": list(self.unsignalled),
+            "left_scope": list(self.left_scope),
             "unit_stopped": self.unit_stopped,
             "error": self.error,
         }
@@ -425,6 +492,22 @@ class ProcFsReader:
         except OSError:
             return ""
         return raw.replace(b"\0", b" ").decode("utf-8", errors="replace").strip()[:CMDLINE_MAX_CHARS]
+
+    def argv(self, pid: int) -> list[str] | None:
+        raw = self._read(pid, "cmdline")
+        if raw is None:
+            return None
+        return [os.fsdecode(item) for item in raw.removesuffix(b"\0").split(b"\0")] if raw else []
+
+    def exe(self, pid: int) -> Path | None:
+        """The kernel's resolved executable path, as-is (a replaced binary keeps its `` (deleted)`` suffix)."""
+        path = self.proc_root / str(pid) / "exe"
+        try:
+            return Path(os.readlink(path))
+        except _GONE:
+            return None
+        except OSError as exc:
+            raise ScanUnknown(f"{path}: {exc.strerror or exc}") from exc
 
     def cwd(self, pid: int) -> Path | None:
         try:
@@ -592,32 +675,79 @@ def find_leftovers(
     return found
 
 
+def cursor_versions_dir() -> Path | None:
+    """The ``versions`` directory of the install the resolved ``cursor-agent`` runs from; None without one.
+
+    The installer links ``cursor-agent`` to ``<install>/versions/<version>/cursor-agent``.
+    """
+    try:
+        found = resolve_agent_binary(CURSOR_AGENT_EXECUTABLE, path=os.environ.get("PATH", ""))
+    except (OSError, RuntimeError, ValueError):  # a symlink loop raises RuntimeError before Python 3.13
+        return None
+    if not found:
+        return None
+    versions = Path(found).parent.parent
+    return versions if versions.name == CURSOR_VERSIONS_DIR else None
+
+
+def is_cursor_worker_server(reader: ProcessReader, pid: int, versions: Path) -> bool:
+    """Whether ``pid`` has the Cursor CLI's ``worker-server`` shape; raises :class:`ScanUnknown`.
+
+    Its ``/proc/<pid>/exe`` sits directly in a version directory under
+    ``versions`` and its argv is exactly ``<argv0> <that version
+    dir>/index.js worker-server``. This only selects what to stop inside a
+    task's own scope; it proves nothing about what the process does.
+    """
+    exe = reader.exe(pid)
+    argv = reader.argv(pid)
+    if exe is None or argv is None or not exe.is_absolute() or exe.name.endswith(" (deleted)"):
+        return False
+    if exe.parent.parent != versions:
+        return False
+    return len(argv) == 3 and argv[1:] == [str(exe.parent / CURSOR_WORKER_SERVER_SCRIPT), CURSOR_WORKER_SERVER_ARG]
+
+
 def exit_scan(
     scope: WorkerScope,
     *,
     reader: ProcessReader,
     settle_s: float,
     exclude: Collection[int] = (),
+    pidfd: PidfdOps | None = None,
     sleep: Callable[[float], None] = time.sleep,
     clock: Callable[[], float] = time.monotonic,
+    cursor_versions: Callable[[], Path | None] = cursor_versions_dir,
 ) -> ExitScan:
     """Scan until nothing is left or ``settle_s`` passes.
 
-    The grace covers children that exit on their own right after the CLI,
-    such as a stdio MCP server reading EOF, and a transient unreadable
-    process. What is still alive, or still unreadable, at the deadline is the
-    answer.
+    A scope launch first stops the Cursor CLI's ``worker-server`` in its own
+    cgroup (:func:`terminate_cursor_worker_servers`); the scan itself is the
+    same for every process. The grace covers children that exit on their own
+    right after the CLI, such as a stdio MCP server reading EOF, and a
+    transient unreadable process. What is still alive, or still unreadable,
+    at the deadline is the answer.
     """
+    terminated: tuple[TerminatedProcess, ...] = ()
+    if scope.launch_mode == LAUNCH_SCOPE:
+        terminated = terminate_cursor_worker_servers(
+            scope,
+            reader=reader,
+            versions=cursor_versions(),
+            exclude=exclude,
+            pidfd=live_pidfd_ops() if pidfd is None else pidfd,
+            sleep=sleep,
+            clock=clock,
+        )
     deadline = clock() + settle_s
     while True:
         try:
             found = find_leftovers(scope, reader=reader, exclude=exclude)
         except ScanUnknown as exc:
-            result = ExitScan(status=SCAN_UNKNOWN, scope=scope, error=str(exc)[:300])
+            result = ExitScan(status=SCAN_UNKNOWN, scope=scope, error=str(exc)[:300], terminated=terminated)
         else:
             if not found:
-                return ExitScan(status=SCAN_CLEAR, scope=scope)
-            result = ExitScan(status=SCAN_LIVE, scope=scope, leftovers=tuple(found))
+                return ExitScan(status=SCAN_CLEAR, scope=scope, terminated=terminated)
+            result = ExitScan(status=SCAN_LIVE, scope=scope, leftovers=tuple(found), terminated=terminated)
         if clock() >= deadline:
             return result
         sleep(_POLL_S)
@@ -649,36 +779,55 @@ def _systemctl_stop(unit: str) -> bool:
 
 
 def _identity(scope: WorkerScope, reader: ProcessReader, proc: LeftoverProcess) -> str:
-    """``same``, ``gone`` or ``refused`` for ``proc.pid`` right now; raises :class:`ScanUnknown`.
+    """``same``, ``gone``, ``left_scope`` or ``refused`` for ``proc.pid`` right now; raises :class:`ScanUnknown`.
 
     ``same`` means the pid still names the scanned process (same start time),
-    inside ``scope``, with this user's real uid.
+    inside ``scope``, with this user's real uid. ``left_scope`` means it is
+    still the scanned process but no longer inside ``scope``.
     """
     info = reader.stat(proc.pid)
     if info is None or info.start_ticks != proc.start_ticks or info.state == "Z":
         return "gone"
     if not _in_boundary(scope, reader, proc.pid, info):
-        return "gone"
+        return "left_scope"
     uid = reader.real_uid(proc.pid)
     if uid is None:
         return "gone"
     return "same" if uid == os.getuid() else "refused"
 
 
-def _signal_via_pidfd(scope: WorkerScope, reader: ProcessReader, proc: LeftoverProcess, sig: int, ops: PidfdOps) -> str:
-    """Signal one process through a pidfd: ``signalled``, ``gone``, ``unavailable`` or ``refused``.
+def _signal_via_pidfd(
+    scope: WorkerScope,
+    reader: ProcessReader,
+    proc: LeftoverProcess,
+    sig: int,
+    ops: PidfdOps,
+    *,
+    selected: Callable[[int], bool] | None = None,
+) -> str:
+    """Signal one process through a pidfd.
 
-    A process of another real uid (a job that changed it) is refused: it may
-    not be ours to signal. The whole identity check (start time, boundary
-    membership, real uid) runs again after the pidfd is open. From then on the
-    fd names one process: if the pid was reused, or the process changed its
-    uid, before that re-check, the re-check fails; if the process exits after
-    it, the signal hits the dead pidfd (``ESRCH``), never the pid's next owner.
+    Returns ``signalled``, ``gone``, ``left_scope``, ``unavailable``,
+    ``refused`` or ``unselected``. A process of another real uid (a job that
+    changed it) is refused: it may not be ours to signal. After the pidfd is
+    open, ``selected`` (when given) inspects the process, then the whole
+    identity check (start time, boundary membership, real uid) runs again as
+    the last read before the signal, so a process that left ``scope`` while it
+    was being inspected is skipped (``left_scope``). From the open on the fd
+    names one process: if the pid was reused, or the process changed its uid,
+    before that last check, the check fails; if the process exits after it, the
+    signal hits the dead pidfd (``ESRCH``), never the pid's next owner. So a
+    delivered signal reaches the very process every post-open read described.
+    A pidfd pins the process, not its cgroup: a process that migrates between
+    that last read and the kernel's delivery is still signalled, and no
+    unprivileged call closes that window (module docstring).
     """
     if ops.open is None or ops.send is None:
         return "unavailable"
     try:
         identity = _identity(scope, reader, proc)
+        if identity == "left_scope" and selected is not None and not selected(proc.pid):
+            return "unselected"
         if identity != "same":
             return identity
         fd = ops.open(proc.pid)
@@ -689,6 +838,9 @@ def _signal_via_pidfd(scope: WorkerScope, reader: ProcessReader, proc: LeftoverP
     except OSError as exc:
         return "unavailable" if exc.errno == errno.ENOSYS else "refused"
     try:
+        if selected is not None and not selected(proc.pid):
+            return "unselected"
+        # The last read before the signal: membership can change during any read before it.
         identity = _identity(scope, reader, proc)
         if identity != "same":
             return identity
@@ -700,6 +852,83 @@ def _signal_via_pidfd(scope: WorkerScope, reader: ProcessReader, proc: LeftoverP
     finally:
         ops.close(fd)
     return "signalled"
+
+
+def _exited(reader: ProcessReader, proc: LeftoverProcess) -> bool:
+    """Whether the scanned process is gone (pid free or reused, or a zombie); unreadable is not proof."""
+    try:
+        info = reader.stat(proc.pid)
+    except ScanUnknown:
+        return False
+    return info is None or info.start_ticks != proc.start_ticks or info.state == "Z"
+
+
+def terminate_cursor_worker_servers(
+    scope: WorkerScope,
+    *,
+    reader: ProcessReader,
+    versions: Path | None,
+    pidfd: PidfdOps,
+    exclude: Collection[int] = (),
+    term_grace_s: float = _TERMINATE_GRACE_S,
+    kill_grace_s: float = _KILL_GRACE_S,
+    sleep: Callable[[float], None] = time.sleep,
+    clock: Callable[[], float] = time.monotonic,
+) -> tuple[TerminatedProcess, ...]:
+    """Stop the Cursor CLI's ``worker-server`` in a scope launch's own cgroup (#9534).
+
+    cursor-agent starts it and never stops it, so without this every short
+    Cursor run would leave it alive. Only a scope launch whose cgroup passes
+    :func:`scope_identity_error` is touched. Each process the exit scan would
+    report gets SIGTERM, then SIGKILL after ``term_grace_s``, through
+    :func:`_signal_via_pidfd` and only when, read after its pidfd is open, it
+    is :func:`is_cursor_worker_server` and then, immediately before each
+    signal, still the scanned process, in this task's own cgroup, of this
+    user's real uid. A server found outside the cgroup at that point is not
+    signalled and is returned with ``left_scope``. Nothing here decides the
+    scan's verdict: a server that could not be stopped is still reported.
+    Returns what was signalled or skipped for leaving the scope; never raises
+    :class:`ScanUnknown`.
+    """
+    if scope.launch_mode != LAUNCH_SCOPE or versions is None or scope_identity_error(scope) is not None:
+        return ()
+    try:
+        found = find_leftovers(scope, reader=reader, exclude=exclude)
+    except ScanUnknown:
+        return ()
+
+    def selected(pid: int) -> bool:
+        return is_cursor_worker_server(reader, pid, versions)
+
+    signals: dict[int, list[str]] = {}
+    left: set[int] = set()
+    pending = found
+    for sig, grace_s in ((signal.SIGTERM, term_grace_s), (signal.SIGKILL, kill_grace_s)):
+        delivered = []
+        for proc in pending:
+            outcome = _signal_via_pidfd(scope, reader, proc, sig, pidfd, selected=selected)
+            if outcome == "signalled":
+                delivered.append(proc)
+                signals.setdefault(proc.pid, []).append(sig.name)
+            elif outcome == "left_scope":
+                left.add(proc.pid)
+        deadline = clock() + grace_s
+        while True:
+            pending = [proc for proc in delivered if not _exited(reader, proc)]
+            if not pending or clock() >= deadline:
+                break
+            sleep(_POLL_S)
+    return tuple(
+        TerminatedProcess(
+            pid=proc.pid,
+            cmdline=proc.cmdline,
+            signals=tuple(signals.get(proc.pid, ())),
+            stopped=_exited(reader, proc),
+            left_scope=proc.pid in left,
+        )
+        for proc in found
+        if proc.pid in signals or proc.pid in left
+    )
 
 
 def stop_leftovers(
@@ -736,6 +965,7 @@ def stop_leftovers(
     unit_stopped = False
     signalled: list[int] = []
     unsignalled: list[int] = []
+    left_scope: list[int] = []
 
     def unreadable(exc: ScanUnknown) -> StopResult:
         return StopResult(
@@ -743,6 +973,7 @@ def stop_leftovers(
             signalled=signalled,
             unsignalled=unsignalled,
             unit_stopped=unit_stopped,
+            left_scope=left_scope,
             error=f"worker scope unreadable: {exc}",
         )
 
@@ -780,6 +1011,8 @@ def stop_leftovers(
                     signalled.append(proc.pid)
             elif outcome in {"unavailable", "refused"} and proc.pid not in unsignalled:
                 unsignalled.append(proc.pid)
+            elif outcome == "left_scope" and proc.pid not in left_scope:
+                left_scope.append(proc.pid)
         deadline = clock() + (grace_s if delivered else 0.0)
         while True:
             try:
@@ -790,7 +1023,13 @@ def stop_leftovers(
                 break
             sleep(_POLL_S)
         if not leftovers:
-            return StopResult(ok=True, signalled=signalled, unsignalled=unsignalled, unit_stopped=unit_stopped)
+            return StopResult(
+                ok=True,
+                signalled=signalled,
+                unsignalled=unsignalled,
+                unit_stopped=unit_stopped,
+                left_scope=left_scope,
+            )
     if ops.open is None or ops.send is None:
         error = f"pidfd unavailable; {len(leftovers)} process(es) not signalled"
     elif refused := [proc.pid for proc in leftovers if proc.pid in unsignalled]:
@@ -803,6 +1042,7 @@ def stop_leftovers(
         survivors=leftovers,
         unsignalled=unsignalled,
         unit_stopped=unit_stopped,
+        left_scope=left_scope,
         error=error,
     )
 

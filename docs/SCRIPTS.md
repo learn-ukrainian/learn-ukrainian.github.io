@@ -924,6 +924,11 @@ thresholds.
 is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
 arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
 is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
+A dispatcher started without `XDG_RUNTIME_DIR` (a headless shell, or a worker's sanitized
+environment) still reaches the user manager: `systemd-run` and the probe get
+`XDG_RUNTIME_DIR=/run/user/<uid>` and its `bus` socket when that directory is the
+caller's own and the socket exists. The worker never receives them. `launch_user_bus`
+records `caller`, `derived` (with the variable names), or `unavailable` (with the reason).
 Fallback is the supported path when no user manager is reachable, linger is off, cgroup
 v2 memory is not delegated, or the slice is missing or does not have those limits:
 dispatch prints one warning and uses plain `Popen`. The same fallback is used when
@@ -952,7 +957,34 @@ process started after the worker that is of this user or shares the worker's cgr
 treated as clear. Both set `incomplete_run_reason` (`background_jobs_alive_at_exit` or
 `leftovers_scan_unknown`), record the worker's scope as `leftovers_scope`, and make the run
 `needs_finalize`, never `done`, in every mode, read-only included. Such a run is never
-auto-finalized. Detection does not kill anything.
+auto-finalized. Apart from the Cursor server below, detection does not kill anything.
+
+A Cursor dispatch usually leaves one such process: cursor-agent (checked in 2026.09.26 to
+2026.10.01) starts a `worker-server` for the workspace's Git root, inside the CLI's process
+group and with the CLI's environment, and does not stop it when the CLI exits. The server
+exits on its own 300 s after its last request. The Cursor adapter never stops it (#9534).
+In scope mode the worker stops it after the CLI exits and before the exit scan: the server
+is inside this task's own scope cgroup, so it is this task's process, and the reaper would
+stop it with the scope anyway. Each process the scan would report gets a pidfd, and only
+when, read after that pidfd is open, its `/proc/<pid>/exe` sits directly in a version
+directory of the install the resolved `cursor-agent` links into
+(`<install>/versions/<version>/`) with argv exactly `<argv0> <that version dir>/index.js
+worker-server`, and then, read last before each signal, it is still the scanned process
+(same start time), inside this task's scope cgroup, of this user's real uid, does it get
+SIGTERM through that pidfd, then SIGKILL after 3 s. A server that has left the task's scope
+cgroup by that last read is not signalled (SIGTERM or SIGKILL). A pidfd pins the process,
+not its cgroup, so one that migrates between that last read and the kernel's delivery is
+still signalled: no unprivileged call signals a process only while it is in a given cgroup
+(accepted residual). A process that only looks like the server and passes those checks is
+in this task's own cgroup and is stopped the same way. The record lists what was signalled,
+or skipped for leaving the scope, under `leftovers_terminated` (pid, command line, signals
+sent, whether it exited, `left_scope`). The exit scan then runs unchanged:
+anything still alive, the server included when stopping it failed (no pidfd support, a
+refused signal, a survivor), is reported as above and the scope is recorded for the
+reaper. A dispatch that falls back to `popen-fallback` because no user manager is
+reachable signals nothing at exit: the fallback has no cgroup proof, so the server is
+reported as `live` and stopping it is the reaper's job at worktree removal, under the
+checks below. The derived user bus above lets headless dispatches use scope mode.
 
 When that worktree is later removed (settle, `reap_worktrees.py`,
 `fleet/post_task_reap.py`), those processes are stopped first, and only inside the worker's
@@ -965,8 +997,9 @@ stopped or signalled (not even the scope unit) and removal is refused. Otherwise
 reaper is not inside is stopped with `systemctl --user stop`. Anything left gets SIGTERM,
 then SIGKILL, each sent through a pidfd opened on the process and re-verified (start time,
 scope membership and real uid) after opening, so a reused pid, or a process that changed
-its uid before that re-check, is never signalled. Where pidfds are unavailable nothing is
-signalled. If any process survives or cannot be signalled, removal is refused.
+its uid before that re-check, is never signalled; that re-check is the last read before
+each signal, and a process it finds outside the scope is skipped and reported under
+`left_scope`. Where pidfds are unavailable nothing is signalled. If any process survives or cannot be signalled, removal is refused.
 Guaranteed: a process seen with another user id at the UID scan blocks both the scope unit
 stop and every signal, and each pidfd target's user id is re-checked after its pidfd opens.
 Not guaranteed (accepted residual): a process that changes its identity after the UID scan
@@ -1000,12 +1033,24 @@ file is added, no owned deletion is. Those paths are listed in
 `needs_finalize`, not `done`. When no change falls under the owned paths, nothing is
 committed (`no_changes_under_owned_paths`).
 
+**Explicit auto-finalize PRs (#8508, #8658):** Auto-finalize pushes the branch and
+records `final_branch_head_commit`, but it never opens a pull request implicitly. To
+open a draft PR automatically after a successful dirty-worktree auto-finalize push, pass
+`--finalize-open-pr` at dispatch.
+
+**Dispatch rescue (#8508, #8658):** `delegate.py rescue` inspects or preserves unpushed
+terminal non-success work (crashed, timeout, failed, no_deliverable, needs_finalize) on a
+dedicated `rescue/<agent>/<task>` branch before worktree reaping runs:
+- `python scripts/delegate.py rescue <task_id>` preserves a single task's work immediately.
+- `python scripts/delegate.py rescue --all-stale --older-than 6h` previews candidate tasks without modifying git state.
+- `python scripts/delegate.py rescue --all-stale --older-than 6h --apply` cleans disposable residue, commits uncommitted changes, pushes to `rescue/<agent>/<task>`, and records the rescue ref.
+
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
 
 - `settle-stale` settles `needs_finalize` records older than 7 days once their worktree,
   local branch, remote branch **and work** are gone. The work counts as gone only when the
-  record names a commit (`auto_finalize.commit_sha`) that no ref holds under any name, or
+  record names a commit (preferring `final_branch_head_commit`, falling back to `auto_finalize.commit_sha`) that no ref holds under any name, or
   when the task exited clean with no commits. Each run (dry runs too) first does one
   `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
   that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
@@ -1018,7 +1063,9 @@ committed (`no_changes_under_owned_paths`).
   commit still on origin, a local branch or ref still holding the work (even renamed), a
   dirty worktree, and commits with no recorded commit id.
 - `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
-  sidecars, into `batch_state/tasks/archive/`. A record stays hot while its checkout path or
+  sidecars, into `batch_state/tasks/archive/`. Adjacent `<task>.json.lock` files are intentionally
+  preserved as permanent stable lock anchors to ensure serialization across processes and prevent
+  split-brain inode acquisition (#8659). A record stays hot while its checkout path or
   an `acp_runtime_paths` entry still exists. Each move holds the record's lock, and it
   re-checks the record's mtime and status first.
 - `restore` moves an archived record back. No move ever replaces a file: if a writer

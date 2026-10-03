@@ -911,10 +911,110 @@ def test_a_term_meets_another_inflection_of_its_word(term, word):
 @pytest.mark.parametrize('term, word', [
     ('pack', 'packages'), ('reading', 'readiness'), ('worked', 'worktree'), ('pro', 'projects'),
     ('state', 'status'), ('generated', 'general'), ('com', 'command'), ('invented', 'inventory'),
-    ('ci', 'city'),
+    ('ci', 'city'), ('ready', 'reader'), ('ready', 'reading'), ('store', 'story'), ('state', 'station'),
+    ('header', 'heading'),
+    # A y never becomes e (#9531): story is no store, and a y-plural's stem meets only the y word.
+    ('story', 'store'), ('story', 'stores'), ('story', 'stored'), ('stories', 'store'), ('stories', 'stored'),
+    ('parties', 'parts'), ('policies', 'police'), ('flaky', 'flake'), ('expiry', 'expires'),
+    # An -er word may be no agent noun, so none meets a word inside it.
+    ('corner', 'corn'), ('proper', 'prop'), ('brother', 'broth'), ('reviewer', 'review'), ('shower', 'show'),
 ])
 def test_a_term_never_meets_a_word_that_only_begins_like_it(term, word):
     assert find_module._prefix_hits([term], [word]) == set()
+
+
+# An ending that changes the term's last letter (#9531): a silent e drops before -ing, a y after a
+# consonant becomes i before the inflections that change it (Porter's steps 1b and 1c).
+@pytest.mark.parametrize('term, word', [
+    ('close', 'closing'), ('parse', 'parsing'), ('name', 'naming'), ('cache', 'caching'), ('entry', 'entries'),
+    ('policy', 'policies'), ('retry', 'retried'), ('registry', 'registries'), ('early', 'earlier'),
+    ('story', 'stories'), ('stories', 'story'), ('stories', 'storied'), ('cookies', 'cookie'),
+])
+def test_an_ending_that_changes_the_last_letter_meets_the_word(term, word):
+    assert find_module._prefix_hits([term], [word]) == {term}
+
+
+@pytest.mark.parametrize('term, prefixes', [
+    ('close', ('close', 'closing')),
+    ('flaky', ('flaky', 'flakies', 'flakied', 'flakier')),
+    ('entries', ('entry', 'entri')), ('stories', ('story', 'stori')),
+    ('deck', ('deck',)), ('use', ('use',)), ('issue', ('issue',)), ('copy', ('copy',)), ('key', ('key',)),
+    ('parsing', ('pars',)), ('reviewer', ('reviewer',)), ('series', ('seri',)),
+])
+def test_term_prefixes_begin_every_word_the_term_meets(term, prefixes):
+    assert find_module.term_prefixes(term) == prefixes
+
+
+def test_the_file_search_looks_for_every_prefix_of_a_term():
+    args = find_module._files_args(('close', 'closing'), [':(literal)docs'])
+    assert args[args.index('-i'):] == ['-i', '-e', 'close', '-e', 'closing', '--', ':(literal)docs']
+    assert find_module._files_args('close', ['docs']) == find_module._files_args(('close',), ['docs'])
+    non_ascii = find_module._files_args(('йод',), ['docs'])
+    assert '-i' not in non_ascii and {'йод', 'ЙОД', 'Йод'} <= set(non_ascii)
+
+
+def test_every_grep_runs_a_bounded_number_of_threads(monkeypatch):
+    seen = []
+    monkeypatch.setattr(find_module, '_run_git', lambda repo, argv, deadline, cap: seen.append(argv))
+    find_module._git_grep(Path('.'), ['-l', '-e', 'x'], 0.0, 1)
+    assert seen == [['grep', '--cached', f'--threads={find_module.GREP_THREADS}', '-l', '-e', 'x']]
+    assert 1 <= find_module.GREP_THREADS <= 2
+
+
+def _repo_with(tmp_path, files):
+    root = make_repo(tmp_path / 'repo')
+    for rel, text in files.items():
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_text(text, encoding='utf-8')
+    git(root, 'add', '.')
+    return root
+
+
+def test_text_names_and_code_summaries_holding_only_a_changed_form_are_found(tmp_path):
+    files = {'docs/guide/notes.md': '# Notes\nThe retention policies are kept here.\n',
+             'scripts/quarantine.py': '"""Validate the bounded retention policies."""\n\nLIMIT = 1\n',
+             'docs/guide/policies-ledger.md': '# Ledger\nOwners.\n'}
+    root = _repo_with(tmp_path, files)
+    result = find('policy', repo=root, limit=50)
+    found = {hit['path']: hit for hit in result['hits']}
+    assert set(files) <= set(found), paths_of(result)
+    assert found['scripts/quarantine.py']['match'] == 'symbol'
+    assert found['docs/guide/policies-ledger.md']['matched'] == ['policy']
+
+
+# A y never becomes e, in either direction (#9531): "story" once ranked store code first.
+@pytest.mark.parametrize('query', ['story', 'stories', 'user story'])
+def test_a_y_word_never_selects_or_credits_a_word_with_an_e(tmp_path, query):
+    root = _repo_with(tmp_path, {
+        'docs/guide/stories.md': '# Backlog\nEach user story names its reader.\n',
+        'docs/guide/store-layout.md': '# Layout\nThe store keeps stored records for the user.\n',
+        'scripts/store_reader.py': '"""Read the store and its stored records."""\n\nSTORE = 1\n',
+        'docs/guide/police.md': '# Police\nThe policies of the user story store.\n'})
+    result = find(query, repo=root, limit=50)
+    found = {hit['path']: hit for hit in result['hits']}
+    assert paths_of(result)[0] == 'docs/guide/stories.md', paths_of(result)
+    for decoy in ('docs/guide/store-layout.md', 'scripts/store_reader.py'):
+        assert 'story' not in found.get(decoy, {}).get('matched', []) and query not in found.get(decoy, {}).get(
+            'matched', []), found.get(decoy)
+
+
+# An -er word may be no agent noun (#9531): a file another query word selects gains no credit for a
+# word inside the -er word, so it never ranks with the file holding both words.
+@pytest.mark.parametrize('query, decoy, answer', [
+    ('proper nouns', 'docs/guide/prop-nouns.md', 'docs/guide/naming.md'),
+    ('corner cases', 'docs/guide/corn-cases.md', 'docs/guide/edges.md'),
+    ('brother rules', 'docs/guide/broth-rules.md', 'docs/guide/family.md'),
+])
+def test_an_er_word_never_credits_a_word_inside_it(tmp_path, query, decoy, answer):
+    first, second = query.split()
+    root = _repo_with(tmp_path, {
+        decoy: f'# Notes\nA {decoy.split("/")[-1].split("-")[0]} holds {second} here.\n',
+        answer: f'# Notes\nEvery {first} {second} entry is listed here.\n'})
+    result = find(query, repo=root, limit=50)
+    paths = paths_of(result)
+    assert answer in paths and (decoy not in paths or paths.index(answer) < paths.index(decoy)), paths
+    if decoy in paths:
+        assert first not in hit_for(result, decoy)['matched'], hit_for(result, decoy)
 
 
 def test_two_query_words_meet_a_closed_compound_path_word():
@@ -1435,6 +1535,15 @@ def test_a_family_keyword_naming_one_entry_point_credits_that_entry_point_only(t
     find_module._catalogue_evidence(state, ['storage', 'runbook'], None, candidates)
     assert candidates['docs/guide/storage-layout.md'].catalogue_terms == {'storage', 'runbook'}
     assert candidates['docs/guide/ci-gate.md'].catalogue_terms == {'runbook'}  # a family-wide keyword only
+
+
+def test_a_data_store_purpose_is_the_store_s_own_description(repo):
+    # A store has no text (#9531): the words of its record's purpose count like its keywords.
+    candidates: dict = {}
+    find_module._catalogue_evidence(_state(repo, fixture_catalogue()), ['fixture', 'main'], None, candidates)
+    store = candidates['data/main.db']
+    assert (store.catalogue_terms, store.purpose_terms) == ({'fixture', 'main'}, set())
+    assert store.store['id'] == 'data-main' and store.authority
 
 
 def test_a_family_hit_lists_only_the_entry_points_the_query_names(tmp_path):

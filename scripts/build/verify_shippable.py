@@ -21,16 +21,16 @@ Usage:
     python -m scripts.build.verify_shippable folk dumy --module-dir DIR --plan PLAN
     python -m scripts.build.verify_shippable folk kalendarna-obriadovist-zvychai --astro-build
 
-Default render check is the fast, always-on Node island gate
-(``scripts.build.mdx_render_gate``) which catches the #3137 class deterministically
-without touching ``site/``. ``--astro-build`` additionally runs the full astro
-build (what CI does) as the catch-all for non-island render breaks.
+Default render check compiles the page with the site's Astro MDX toolchain and
+evaluates JSON islands in Node (``scripts.build.mdx_render_gate``).
+``--astro-build`` also verifies import resolution and the full site render.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -38,6 +38,8 @@ import sys
 import tempfile
 import urllib.parse
 from pathlib import Path
+
+from scripts.common.repo_root import project_interpreter
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -272,21 +274,56 @@ def _astro_build(log_path: Path) -> bool:
     """
     site = PROJECT_ROOT / "site"
     try:
+        interpreter = project_interpreter(PROJECT_ROOT).absolute()
+        if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
+            raise FileNotFoundError("project interpreter unavailable")
         proc = subprocess.run(
             ["npm", "run", "build"],
             cwd=site,
             capture_output=True,
             text=True,
             timeout=900,
+            env={**os.environ, "PYTHON": str(interpreter)},
         )
-    except FileNotFoundError:
-        log_path.write_text("npm not found — cannot run astro build\n", encoding="utf-8")
+    except OSError:
+        log_path.write_text("build environment unavailable — cannot run astro build\n", encoding="utf-8")
         return False
     except subprocess.TimeoutExpired:
         log_path.write_text("astro build timed out (>900s)\n", encoding="utf-8")
         return False
     log_path.write_text(proc.stdout + proc.stderr, encoding="utf-8")
     return proc.returncode == 0
+
+
+def _astro_build_step(log_path: Path, *, fresh_pages: list[Path] | None = None) -> dict:
+    """Keep environment failures distinct from MDX compilation failures."""
+    ok = _astro_build(log_path)
+    output = log_path.read_text(encoding="utf-8") if log_path.is_file() else ""
+    # Only a positively identified page/compiler defect is attributable to the
+    # engine. Hydration, dependencies, process death and timeouts are harness.
+    filenames = re.findall(r"[^\s\"'():]+\.mdx(?=:\d+:\d+)", output)
+    owned = {page.resolve() for page in (fresh_pages or [])}
+    resolved = [
+        Path(name).resolve() if Path(name).is_absolute() else (PROJECT_ROOT / "site" / name).resolve()
+        for name in filenames
+    ]
+    page_failure = any(page in owned for page in resolved)
+    foreign = [
+        page.relative_to(PROJECT_ROOT).as_posix() if page.is_relative_to(PROJECT_ROOT) else page.name
+        for page in resolved
+        if page not in owned
+    ]
+    return {
+        "step": "astro_build",
+        "passed": ok,
+        "layer": None if ok else "engine" if page_failure else "harness",
+        "detail": "astro build green"
+        if ok
+        else (
+            f"astro build FAILED — full log: {log_path}"
+            + (f"; foreign MDX page(s): {', '.join(foreign)}" if foreign else "")
+        ),
+    }
 
 
 def verify(
@@ -351,24 +388,35 @@ def verify(
             add("inputs", False, f"no MDX files found in {module_dir}")
             return _finalize(level, slug, steps)
 
-        all_render_pass = True
+        render_results = []
         for mdx_file in mdx_files:
             mdx_text = mdx_file.read_text(encoding="utf-8")
             render = run_mdx_render_gate(mdx_text)
-            if render.get("passed") is not True:
-                all_render_pass = False
+            render_results.append(render.get("passed"))
+            steps.append(
+                {
+                    "step": f"mdx_compile.{mdx_file.stem}",
+                    "passed": render.get("passed"),
+                    "layer": render.get("layer") or ("harness" if render.get("passed") is None else None),
+                    "detail": render.get("message", ""),
+                }
+            )
             for f in render.get("failures", []):
                 steps.append(
                     {"step": f"mdx_render.{mdx_file.stem}", "passed": False, "detail": f"{f['snippet']} → {f['error']}"}
                 )
 
-        add("mdx_render", all_render_pass, f"verified {len(mdx_files)} fresh MDX pages (including landing if present)")
+        all_render_pass = False if False in render_results else None if None in render_results else True
+        add(
+            "mdx_render",
+            all_render_pass,
+            f"compiled and evaluated {sum(result is True for result in render_results)}/{len(mdx_files)} fresh MDX pages",
+        )
 
         if astro_build:
             log_path = PROJECT_ROOT / "batch_state" / "verify_shippable" / f"{level}-{slug}.astro-build.log"
             log_path.parent.mkdir(parents=True, exist_ok=True)
-            ok = _astro_build(log_path)
-            add("astro_build", ok, "astro build green" if ok else f"astro build FAILED — full log: {log_path}")
+            steps.append(_astro_build_step(log_path, fresh_pages=mdx_files))
 
         return _finalize(level, slug, steps)
 
@@ -453,13 +501,14 @@ def _finalize(level: str, slug: str, steps: list[dict]) -> dict:
     # (Node unavailable) does not certify render, so it must not count as shippable.
     island_render_ok = by_step.get("mdx_render") is True
     full_render_ok = by_step.get("astro_build") is True
-    shippable = no_failures and any_pass and (island_render_ok or full_render_ok)
+    fresh_pages_checked = all(s["passed"] is True for s in steps if s["step"].startswith("mdx_compile."))
+    shippable = no_failures and any_pass and fresh_pages_checked and (island_render_ok or full_render_ok)
     return {
         "level": level,
         "slug": slug,
         "shippable": shippable,
-        # The island gate is necessary-not-sufficient: it catches the #3137 class
-        # but not non-island JSX/render breaks. Only --astro-build is the full check.
+        # Compilation and island evaluation do not resolve imports or render SSR.
+        # Only --astro-build proves the full site build.
         "render_fully_validated": full_render_ok,
         "steps": steps,
         "corpus_hammer_required": True,
@@ -475,7 +524,7 @@ def _print_human(report: dict) -> None:
     if report["shippable"]:
         print("  ✅ SHIPPABLE (machine checks green)")
         if not report.get("render_fully_validated"):
-            print("  ⚠️  island-render only — re-run with --astro-build for full render")
+            print("  ⚠️  page compilation and island checks only — re-run with --astro-build for full render")
             print("     validation (the island gate does not catch non-island JSX breaks).")
         print("  ⚠️  STILL REQUIRED before ship: corpus-hammer (#M-11) — read the")
         print("     content + independently verify_quote every embedded fragment.")

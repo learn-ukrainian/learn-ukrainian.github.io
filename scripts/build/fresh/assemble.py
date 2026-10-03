@@ -177,6 +177,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts import config
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
@@ -193,6 +194,7 @@ from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_PAYLOAD_PREFIX,
     DIALOGUE_BOX_PAYLOAD_SUFFIX,
     dialogue_box_header_lines,
+    mdx_safe_text,
 )
 from scripts.generate_mdx.core import generate_mdx
 from scripts.generate_mdx.unit_map import (
@@ -220,6 +222,7 @@ FORM_NOT_FOUND = "form_not_found"
 VIDEO_NOT_FOUND = "video_not_found"
 ACTIVITY_NOT_FOUND = "activity_not_found"
 DRAFT_STATUS_NOT_OK = "draft_status_not_ok"
+PLAN_ARC_REF_INVALID = "plan_arc_ref_invalid"
 PRIOR_PLANS_MISSING = "prior_plans_missing"
 LOCK_CHECK_FAILED = "lock_check_failed"
 LESSON_LOCK_ENTRY_MISSING = "lesson_lock_entry_missing"
@@ -347,7 +350,93 @@ def string_key_answer(act_type: str, item: dict[str, Any]) -> str | None:
     return answer if plain.count(answer) == 1 else None
 
 
-def gloss_replacer(words_store: dict[str, Any]) -> Any:
+# Closed learner-text surface for plan/pack metadata. Unknown prose is author-only.
+# Bindings (ids, selectors, kinds) are separate and grant no sibling prose rights.
+LEARNER_TEXT_ALLOWLIST = {
+    "plan.lessons.*.title": "Learner lesson title.",
+    "plan.lessons.*.job": "Learner outcome in lesson frontmatter.",
+    "plan.lessons.*.reading_passages.*.title": "Hosted reading title.",
+    "plan.lessons.*.reading_passages.*.genre": "Hosted reading genre label.",
+    "pack.examples.*.text": "Example bytes explicitly selected by the draft.",
+    "pack.examples.*.translation_en": "Example translation with A1 scaffolding.",
+    "pack.videos.*.title": "Public video title.",
+    "pack.videos.*.channel": "Public media attribution.",
+    "pack.videos.*.url": "Public media link.",
+    "pack.texts.*.episode_url": "Registry-permitted public episode link.",
+    "pack.texts.*.url": "Registry-permitted public episode link.",
+    "pack.texts.*.quote": "Only selected quotes with publication-registry permission.",
+}
+
+# Every explicitly English input channel must be classified here. The page
+# invariant discovers field reads independently, then probes every channel.
+# Writer-controlled bilingual prose is separate from assembler additions;
+# classification records that boundary and grants no new publication rights.
+ENGLISH_CHANNELS = {
+    "pack.examples.*.translation_en": "body_support",
+    "draft.dialogue.translation_en.*": "body_support",
+    "draft.steps.*.blocks.*.en.*": "writer_bilingual",
+    "words.words.*.gloss_en": "vocabulary_and_inline_support",
+    "words.words.*.sense_gloss": "vocabulary_and_inline_support",
+}
+
+
+# Resolver candidates are source metadata, never learner text.
+ENGLISH_METADATA_FIELDS = frozenset({"words.words.*.candidates.*.sense_gloss"})
+
+def plan_arc_position(plan: dict[str, Any]) -> int:
+    """Read the schema's positive integer position, never coerce malformed plans."""
+    arc_ref = plan.get("arc_ref")
+    position = arc_ref.get("position") if isinstance(arc_ref, dict) else None
+    if type(position) is not int or position < 1:
+        raise AssemblerError(
+            PLAN_ARC_REF_INVALID, "arc_ref.position must be a positive integer", layer="plan"
+        )
+    return position
+
+
+def learner_text_permission(path: str, record: dict[str, Any]) -> str | dict[str, str] | None:
+    """Use registry-owned permission for both excerpts and resource URLs.
+
+    Quote rights and episode-link rights are distinct registry permissions:
+    linking a no-copy source never grants permission to publish its excerpt.
+    """
+    if path not in LEARNER_TEXT_ALLOWLIST:
+        raise AssemblerError("learner_text_not_allowed", f"unclassified learner text: {path}", layer="engine")
+    try:
+        if path == "pack.texts.*.quote":
+            return publication.quote_attribution(record)
+        if path in {"pack.texts.*.episode_url", "pack.texts.*.url"}:
+            return publication.resource_citation(record)
+    except ValueError as exc:
+        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+    return None
+
+
+def learner_text_allowed(path: str, record: dict[str, Any] | None = None) -> bool:
+    """Admission for a metadata leaf; unknown paths and unpermitted URLs fail closed."""
+    if path not in LEARNER_TEXT_ALLOWLIST:
+        return False
+    if path.startswith("pack.texts."):
+        if record is None:
+            return False
+        permission = learner_text_permission(path, record)
+        if path.endswith(".quote"):
+            return bool(permission)
+        url = record.get(path.rsplit(".", 1)[-1])
+        return bool(isinstance(permission, dict) and url and permission.get("description") == f"<{url}>")
+    return True
+
+
+def body_english_support_allowed(level: str, module_num: int = 1) -> bool:
+    """Only A1 bands permit mirrored examples/dialogues and inline English scaffolding.
+
+    A2 bands keep examples and dialogues Ukrainian; B1+ restricts English to
+    Slovnyk. Vocabulary-tab translations are independent of this body policy.
+    """
+    return config.compute_immersion_band(level, module_num)["key"].startswith("a1-")
+
+
+def gloss_replacer(words_store: dict[str, Any], *, include_english: bool = True) -> Any:
     """Return the renderer's `{{gloss:W-n}}` -> "lemma (gloss)" substitution for one word store.
 
     The returned callable takes a `_GLOSS_INLINE_RE` match (group 1 is the W- id) and prints the
@@ -361,7 +450,7 @@ def gloss_replacer(words_store: dict[str, Any]) -> Any:
         if w_rec:
             lem = w_rec.get("lemma", "")
             gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
-            return f"{lem} ({gl})" if gl else lem
+            return f"{lem} ({gl})" if gl and include_english else lem
         return wid
 
     return replace_gloss
@@ -408,7 +497,7 @@ def component_props_from_jsx(jsx: str) -> dict[str, Any]:
         elif json_str is not None:
             props[name] = json.loads(json_str)
         else:
-            props[name] = jsx_str.replace("&quot;", '"')
+            props[name] = html.unescape(jsx_str)
     return props
 
 
@@ -811,6 +900,8 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
+    include_english = body_english_support_allowed(level, plan_arc_position(plan))
+
     words_by_id: dict[str, dict[str, Any]] = {}
     for w in words_store.get("words", []):
         if isinstance(w, dict) and "id" in w:
@@ -1072,7 +1163,7 @@ def assemble_expanded_document(
                                 span_text,
                                 source="writer_prose",
                             )
-                for line_idx, line in enumerate(dial.get("translation_en") or []):
+                for line_idx, line in enumerate((dial.get("translation_en") or []) if include_english else []):
                     add_unit(
                         "urok",
                         step_id,
@@ -1638,7 +1729,10 @@ def finalize_provenance_from_stressed_units(
             f"provenance span count ({len(spans)}) does not match stressed unit count ({len(stressed_units)})",
             layer="engine",
         )
-    replace_gloss = gloss_replacer(words_store or {})
+    replace_gloss = gloss_replacer(
+        words_store or {},
+        include_english=body_english_support_allowed(stressed_doc.get("lesson", {}).get("level", "a1")),
+    )
 
     unit_offsets: dict[tuple[Any, ...], int] = {}
     unit_span_counts: dict[tuple[Any, ...], int] = {}
@@ -1954,40 +2048,30 @@ def build_resursy_entries(
         t_rec = texts_by_id.get(cid)
         if t_rec is None:
             raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
-        try:
-            citation = publication.resource_citation(t_rec)
-        except ValueError as exc:
-            raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+        citation = learner_text_permission("pack.texts.*.url", t_rec)
         if citation is None:
             if warnings is not None:
                 warnings.append(
                     {"code": "resource_citation_omitted", "record": cid, "reason": "citable_metadata_missing"}
                 )
             continue
-        entries.append((cid, "books", {**citation, "author": "", "pages": "", "source": cid}))
-
-    plan_video_uses: dict[str, str] = {}
-    for v_entry in lesson_plan.get("videos", []):
-        if isinstance(v_entry, dict):
-            ev = v_entry.get("evidence")
-            if isinstance(ev, str):
-                plan_video_uses[ev] = str(v_entry.get("use") or "")
+        entries.append((cid, "books", {**citation, "author": "", "pages": ""}))
 
     for vid_id in cited_video_ids:
         vid = videos_by_id.get(vid_id)
         if vid is None:
             raise AssemblerError(VIDEO_NOT_FOUND, f"cited video record {vid_id} not found in pack")
         if vid:
-            chan = str(vid.get("channel") or vid_id)
+            chan = str(vid.get("channel") or "")
             entries.append(
                 (
                     vid_id,
                     "youtube",
                     {
-                        "title": chan,
+                        "title": str(vid.get("title") or chan),
                         "url": str(vid.get("url") or ""),
                         "channel": chan,
-                        "description": plan_video_uses.get(vid_id) or str(vid.get("use") or ""),
+                        "description": chan if vid.get("title") else "",
                     },
                 )
             )
@@ -2034,9 +2118,14 @@ class _UrokWriter:
         for fragment in fragments:
             if isinstance(fragment, _UnitFragment):
                 encoded = (
-                    encode_js_json_string(fragment.piece) if fragment.codec == CODEC_JS_JSON_STRING else fragment.piece
+                    encode_js_json_string(fragment.piece)
+                    if fragment.codec == CODEC_JS_JSON_STRING
+                    else mdx_safe_text(fragment.piece, preserve_heading_markup=True)
                 )
-                self._ranges.append((fragment.index, position, position + len(encoded), fragment.piece, fragment.codec))
+                # Plain units track their source entities; check 9 decodes them
+                # only after verifying their exact location in the final page.
+                mapped_piece = fragment.piece if fragment.codec == CODEC_JS_JSON_STRING else encoded
+                self._ranges.append((fragment.index, position, position + len(encoded), mapped_piece, fragment.codec))
                 parts.append(encoded)
                 position += len(encoded)
             else:
@@ -2063,6 +2152,8 @@ def _render_urok_markdown(
     stressed_doc: dict[str, Any],
     pack: dict[str, Any],
     words_store: dict[str, Any],
+    *,
+    include_english: bool | None = None,
 ) -> tuple[str, LessonUnitMap]:
     """Render Tab 1 (Urok) markdown from draft and stressed units.
 
@@ -2072,7 +2163,9 @@ def _render_urok_markdown(
     DialogueBox component; their units live in the `exchanges` payload (`CODEC_JS_JSON_STRING`).
     """
     stressed_units = stressed_doc.get("units", [])
-    replace_gloss = gloss_replacer(words_store)
+    if include_english is None:
+        include_english = body_english_support_allowed(stressed_doc.get("lesson", {}).get("level", "a1"))
+    replace_gloss = gloss_replacer(words_store, include_english=include_english)
 
     unit_indices_by_block: dict[tuple[str | None, str | None, int | str], list[int]] = {}
     for i, u in enumerate(stressed_units):
@@ -2104,7 +2197,11 @@ def _render_urok_markdown(
         if indices:
             return unit_fragments(indices, codec)
         piece = render_unit_piece(fallback, replace_gloss)
-        return [encode_js_json_string(piece) if codec == CODEC_JS_JSON_STRING else piece]
+        return [
+            encode_js_json_string(piece)
+            if codec == CODEC_JS_JSON_STRING
+            else mdx_safe_text(piece, preserve_heading_markup=True)
+        ]
 
     def joined(cells: list[list[str | _UnitFragment]], separator: str) -> list[str | _UnitFragment]:
         out: list[str | _UnitFragment] = []
@@ -2139,25 +2236,22 @@ def _render_urok_markdown(
                 ref_id = block.get("ref", "")
                 ex_rec = examples_by_id.get(ref_id)
                 if ex_rec:
-                    en = str(ex_rec.get("translation_en") or "")
+                    en = str(ex_rec.get("translation_en") or "") if include_english else ""
                     w.line("> ", *block_fragments(step_id, block_idx, str(ex_rec.get("text", ""))))
                     if en:
                         w.line(">")
-                        w.line("> *", en, "*")
+                        w.line("> *", mdx_safe_text(en), "*")
                     w.blank()
 
             elif kind == "quote":
                 ref_id = block.get("ref", "")
                 t_rec = texts_by_id.get(ref_id)
                 if t_rec:
-                    try:
-                        attr = publication.quote_attribution(t_rec)
-                    except ValueError as exc:
-                        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+                    attr = learner_text_permission("pack.texts.*.quote", t_rec)
                     w.line("> ", *block_fragments(step_id, block_idx, str(t_rec.get("quote", ""))))
                     if attr:
                         w.line(">")
-                        w.line("> — *", attr, "*")
+                        w.line("> — *", mdx_safe_text(attr), "*")
                     w.blank()
 
             elif kind == "paradigm":
@@ -2235,7 +2329,7 @@ def _render_urok_markdown(
                 if vid_rec:
                     chan = str(vid_rec.get("channel") or "")
                     url = str(vid_rec.get("url") or "")
-                    w.line("> [", chan, "](", url, ")")
+                    w.line("> [", mdx_safe_text(chan), "](", mdx_safe_text(url), ")")
                     w.blank()
 
             elif kind == "dialogue":
@@ -2259,7 +2353,7 @@ def _render_urok_markdown(
                 for header_line in dialogue_box_header_lines(DIALOGUE_BOX_DEFAULT_TITLE):
                     w.line(header_line)
                 w.line(*payload)
-                translations = dial.get("translation_en") or []
+                translations = (dial.get("translation_en") or []) if include_english else []
                 if translations:
                     # Reuse DialogueBox's English support prop, after all Ukrainian
                     # exchanges. Each translation keeps its own unit location.
@@ -2294,6 +2388,17 @@ def _render_urok_markdown(
     # Only the renderer's own trailing block separators are dropped; a unit's bytes (including
     # edge whitespace) are emitted exactly as mapped, so the mapping describes the output.
     return w.finish()
+
+
+def expand_payload_text(value: Any, replace_gloss: Any) -> Any:
+    """Expand print markup in every nested payload field, including non-units."""
+    if isinstance(value, str):
+        return render_unit_piece(value, replace_gloss)
+    if isinstance(value, list):
+        return [expand_payload_text(item, replace_gloss) for item in value]
+    if isinstance(value, dict):
+        return {key: expand_payload_text(item, replace_gloss) for key, item in value.items()}
+    return value
 
 
 def apply_stress_to_activities(
@@ -2435,7 +2540,7 @@ def apply_stress_to_activities(
                         for right_key in ("right", "answer"):
                             if right_key in pair:
                                 pair[right_key] = format_act_text(act_id, item_idx, f"pair_r_{p_idx}", pair[right_key])
-    return stressed_activities, rendered_by_unit
+    return expand_payload_text(stressed_activities, replace_gloss_fn), rendered_by_unit
 
 
 def _page_unit_label(key: Any, stressed_doc: dict[str, Any]) -> str:
@@ -2471,6 +2576,10 @@ def check_9_stress_and_render(
     evidence_dir: Path | None = None,
 ) -> CheckResult:
     """Check 9: Apply stress, build Slovnyk and Resursy, verify locks, render MDX."""
+    try:
+        arc_position = plan_arc_position(plan)
+    except AssemblerError as exc:
+        return CheckResult(check=9, passed=False, reason=str(exc), layer=exc.layer)
     try:
         stressed_doc = apply_stress(expanded_doc, stream)
     except Exception as exc:
@@ -2568,12 +2677,7 @@ def check_9_stress_and_render(
             layer="writer",
         )
 
-    # Immersion band computation
-    arc_ref = plan.get("arc_ref")
-    if not isinstance(arc_ref, dict) or "position" not in arc_ref:
-        return CheckResult(check=9, passed=False, reason="plan missing arc_ref.position", layer="plan")
-    arc_position = int(arc_ref["position"])
-
+    # Immersion band computation (arc position validated before any reads).
     p_root = plans_dir or (repo_root / f"curriculum/l2-uk-en/lesson-plans/{level}")
     e_root = evidence_dir or (repo_root / f"curriculum/l2-uk-en/evidence/{level}")
     try:
@@ -2620,7 +2724,8 @@ def check_9_stress_and_render(
 
     meta_data = {
         "title": str(lesson_entry.get("title", "")),
-        "subtitle": str(lesson_entry.get("rationale") or ""),
+        # Rationale is authoring guidance, not a learner description.
+        "subtitle": "",
         "evidence": {
             "lessons_lock_sha256": lessons_lock_sha256,
             "lesson_entry_sha256": lesson_entry_sha256,
@@ -2633,11 +2738,23 @@ def check_9_stress_and_render(
         "module_slug": slug,
         # Plan reading passages that name a hosted reading (`title` + `reading_slug`) print as
         # the Lesson tab's reading list, the contract `generate_mdx` already has for `readings`.
-        "readings": [entry for entry in lesson_entry.get("reading_passages") or [] if isinstance(entry, dict)],
+        "readings": [
+            {key: entry[key] for key in ("title", "genre", "reading_slug") if key in entry}
+            for entry in lesson_entry.get("reading_passages") or []
+            if isinstance(entry, dict)
+        ],
     }
+    include_english = body_english_support_allowed(level, arc_position)
+    replace_gloss = gloss_replacer(words_store, include_english=include_english)
+    meta_data = expand_payload_text(meta_data, replace_gloss)
+    for reading in meta_data["readings"]:
+        for field_name in ("title", "genre"):
+            if field_name in reading:
+                reading[field_name] = mdx_safe_text(reading[field_name])
 
-    urok_md, unit_map = _render_urok_markdown(draft, stressed_doc, pack, words_store)
-    replace_gloss = gloss_replacer(words_store)
+    urok_md, unit_map = _render_urok_markdown(
+        draft, stressed_doc, pack, words_store, include_english=include_english
+    )
 
     plan_acts_by_id = {
         act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act
@@ -2680,10 +2797,14 @@ def check_9_stress_and_render(
         act_payload = copy.deepcopy(act_dict)
         act_payload["type"] = plan_act.get("type")
         act_payload["placement"] = plan_act.get("placement")
-        if not act_payload.get("title") and plan_act.get("focus"):
-            act_payload["title"] = plan_act.get("focus")
+        # Components with an instruction prop own its display. Never promote
+        # that same text to a title/heading; title-only legacy components are
+        # handled by the explicit page-field contract below.
+        if not act_payload.get("title") or act_payload.get("title") == act_payload.get("instruction"):
+            act_payload["title"] = ""
         if act_payload.get("type") in _PAGE_INSTRUCTION_FIELD and act_payload.get("instruction"):
             act_payload["title"] = act_payload["instruction"]
+        act_payload["title"] = mdx_safe_text(act_payload["title"])
         # The parser already preserves host metadata in each quiz question. Resolve
         # media here from the locked pack rather than accepting a writer-supplied URL.
         for item in act_payload.get("items") or []:
@@ -2739,6 +2860,13 @@ def check_9_stress_and_render(
     except Exception as exc:
         return CheckResult(check=9, passed=False, reason=f"MDX rendering failed: {exc}", layer="writer")
 
+    # Inspect the source before entities/JSON can conceal a missed print marker.
+    payloads = [stressed_activities, meta_data, vocab_items, external_resources]
+    if re.search(r"\{\{(?:gloss|uk):", html.unescape(mdx_content)) or any(
+        re.search(r"\{\{(?:gloss|uk):", json.dumps(payload, ensure_ascii=False)) for payload in payloads
+    ):
+        return CheckResult(check=9, passed=False, reason="unexpanded_print_placeholder", layer="engine")
+
     # Provenance is verified against what the page receives. Every urok unit is read back at
     # its own location in the final MDX (the renderer's mapping carried through every
     # `generate_mdx` transform); vpravy units are located in the props of the component JSX
@@ -2753,7 +2881,14 @@ def check_9_stress_and_render(
             reason=f"{code}: {_page_unit_label(exc.key, stressed_doc)}: {exc.message}",
             layer="engine",
         )
-    rendered_by_unit: dict[int, str] = {key: text for key, text in page_units.items() if isinstance(key, int)}
+    rendered_by_unit: dict[int, str] = {
+        key: html.unescape(text)
+        if stressed_doc["units"][key].get("tab") == "urok"
+        and not str(stressed_doc["units"][key].get("block", "")).startswith("dialogue_")
+        else text
+        for key, text in page_units.items()
+        if isinstance(key, int)
+    }
     page_jsx: dict[str, list[str]] = {}
     for key, text in page_units.items():
         if isinstance(key, tuple) and key[0] == "activity":
@@ -2842,11 +2977,13 @@ def check_11_render(
         through_lesson=through_lesson,
     )
     passed = bool(rep.get("shippable"))
+    failures = [step for step in rep.get("steps", []) if step.get("passed") is not True]
+    harness_failure = any(step.get("layer") == "harness" for step in failures)
     return CheckResult(
         check=11,
         passed=passed,
         reason=None if passed else "verify_shippable check 11 reported not shippable",
-        layer=None if passed else "render",
+        layer=None if passed else "harness" if harness_failure else "engine",
         artifacts={"verify_shippable": rep},
     )
 

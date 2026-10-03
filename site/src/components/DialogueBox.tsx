@@ -31,7 +31,7 @@ interface DialogueBoxProps {
    */
   uk?: string;
   /**
-   * @schemaDescription Legacy English gloss consumed by generated MDX.
+   * @schemaDescription English support for a legacy line or structured dialogue, where the immersion band permits it.
    * @ukrainianText false
    */
   en?: string;

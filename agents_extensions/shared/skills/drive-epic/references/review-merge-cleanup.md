@@ -58,6 +58,8 @@ questions. After launching any `ask-*`, confirm `batch_state/tasks/<id>.json` ex
 Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself.
 
+Review briefs must ask reviewers to cite files with repository-relative paths, including line suffixes.
+
 Reviewers do not re-run test suites that the PR's CI runs: review the diff, run at
 most the specific tests that reproduce a finding you are checking, and cite CI run
 ids for suite results.

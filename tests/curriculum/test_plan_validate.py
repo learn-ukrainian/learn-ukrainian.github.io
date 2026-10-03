@@ -142,7 +142,7 @@ def base_plan() -> dict:
                 "videos": [{"evidence": "V-001", "use": "After step two."}],
                 "dialogue": {
                     "step": "s3",
-                    "situation": "At a table.",
+                    "situation": "At a table; the incidental W-002 comes up in passing (#9487 C16).",
                     "setting": "A room with a table.",
                     "speakers": [
                         {"name": "Name One", "role": "host", "gender": "f", "evidence": "W-004"},
@@ -174,9 +174,24 @@ def base_plan() -> dict:
                     }
                 ],
                 "activities": [
-                    {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Review quiz."},
+                    {
+                        "id": "a1",
+                        "type": "quiz",
+                        "placement": "inline",
+                        "focus": "Review quiz. kind: comprehension; host: {kind: dialogue}.",
+                    },
                     {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Review workbook quiz."},
                 ],
+                # The recap's first-person story (A1 arc D4; #9487 C7): a dialogue block with one narrator.
+                "dialogue": {
+                    "step": "s1",
+                    "situation": "The narrator retells the module.",
+                    "setting": "One short story.",
+                    "speakers": [{"name": "Name One", "role": "narrator", "gender": "f", "evidence": "W-004"}],
+                    "register": "informal",
+                    "target_grammar": "Retells the first point.",
+                    "evidence": ["T-001"],
+                },
             },
         ],
     }
@@ -190,7 +205,8 @@ def base_pack() -> dict:
         "exercises": [{"id": "X-001"}],
         "examples": [{"id": "EX-001"}],
         "errors": [{"id": "E-001"}],
-        "videos": [{"id": "V-001"}],
+        # The lesson's letter recording models the letters it introduces (#9487 C27).
+        "videos": [{"id": "V-001", "models": {"letters": [LETTER_A, LETTER_O], "words": [], "segment": None}}],
         "standard": [{"id": "S-001"}],
     }
 
@@ -381,6 +397,16 @@ def build_cyrillic_lemma() -> tuple[dict, dict, dict]:
     plan, pack, words = build_base()
     plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["lemma"] = LEMMA_MAMA
     words["words"][0]["lemma"] = LEMMA_MAMA
+    # М is not among the lesson's letters, so the lesson's recording models the word (#9487 C10).
+    # A word model binds its timed segment (#9487 C20).
+    # The same recording keeps modelling the letters the lesson introduces (#9487 C27).
+    pack["videos"][0]["models"] = {
+        "letters": [LETTER_A, LETTER_O],
+        "words": [words["words"][0]["id"]],
+        "segment": "0:00–0:05",
+    }
+    plan["lessons"][1]["videos"] = [{"evidence": "V-001", "use": "Recap whole-word model."}]
+    plan["lessons"][1]["steps"][0]["evidence"].append("V-001")
     return plan, pack, words
 
 
@@ -490,7 +516,7 @@ def _post_write_plan(new_plan_path: Path) -> Post:
 
 def _define_true_false(plan: dict, activity_id: str) -> None:
     plan["lessons"][0]["activities"].append(
-        {"id": activity_id, "type": "true-false", "placement": "inline", "focus": "Check the text."}
+        {"id": activity_id, "type": "true-false", "placement": "inline", "focus": f"Check the text ({activity_id})."}
     )
 
 
@@ -1060,7 +1086,10 @@ def run_case(root: Path, case: Case) -> Report:
 def test_case(tmp_path: Path, case: Case) -> None:
     report = run_case(tmp_path, case)
     assert {o.code for o in report.failures} == set(case.expected), report.render_text()
-    assert {o.code for o in report.notes} == set(case.notes), report.render_text()
+    # Schema/load failures return before activity policy checks; every valid fixture
+    # here retains at least one undeclared quiz, so PR1 adds its missing-options note.
+    policy_notes = {codes.OPTIONS_MISSING} if report.activity_report.get("lessons") else set()
+    assert {o.code for o in report.notes} == set(case.notes) | policy_notes, report.render_text()
     assert {o.code for o in report.not_checked} == NOT_CHECKED
     assert report.ok == (not case.expected)
 
@@ -1154,6 +1183,12 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_validate_mechanical import produced_mechanical_codes
 
     produced |= produced_mechanical_codes(tmp_path / "mechanical")
+    from tests.curriculum.test_plan_validate_review_gates import produced_review_gate_codes
+
+    produced |= produced_review_gate_codes(tmp_path / "review-gates")
+    from tests.curriculum.test_plan_validate_structured_activities import produced_structured_codes
+
+    produced |= produced_structured_codes(tmp_path / "structured")
     assert produced == set(codes.DESCRIPTIONS)
 
 

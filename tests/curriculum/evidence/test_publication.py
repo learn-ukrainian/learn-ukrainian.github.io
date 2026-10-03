@@ -337,3 +337,12 @@ def test_invalid_episode_url_does_not_reach_resource_description(url):
     rec = record(PRIVATE[0])
     rec["episode_url"] = url
     assert publication.resource_citation(rec)["description"] == ""
+
+
+def test_textbook_resource_credit_never_publishes_author_supports():
+    rec = record()
+    rec["supports"] = "ZZauthor_supportsZZ"
+    rec["source"]["author"] = "ZZuntrusted_authorZZ"
+    citation = publication.resource_citation(rec)
+    assert citation == {"title": publication.source_attribution(rec), "url": "", "description": ""}
+    assert "ZZ" not in str(citation)

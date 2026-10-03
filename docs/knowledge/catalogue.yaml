@@ -1082,12 +1082,13 @@ entries:
   - id: state-standard-2024
     kind: resource_catalogue
     paths: [docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt, docs/l2-uk-en/UKRAINIAN-STANDARD-INDEX.md]
-    purpose: Full text of the Ukrainian State Standard 2024 and an index mapping topics to line ranges.
+    purpose: Full text of the Ukrainian State Standard 2024 and an index mapping curriculum modules to the line ranges that define their required competencies.
     keywords: [State Standard 2024, Державний стандарт, CEFR standard text, standard line index]
     lifecycle: active
     owner: curriculum-upgrade
     entrypoints:
-      - {topic: State Standard 2024 full text, path: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt}
+      - {topic: 'State Standard 2024 full text, the official edition (Ukrainian as a foreign language, levels A1 to C2)', path: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt}
+      - {topic: 'State Standard 2024 index: the line ranges of the standard each curriculum module covers', path: docs/l2-uk-en/UKRAINIAN-STANDARD-INDEX.md}
     query:
       - {surface: git_grep, how: "git grep -n -i -F '<topic>' -- docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt"}
     content_searchable: true
@@ -1740,8 +1741,8 @@ entries:
     store: [data/sources.db]
     producer: [scripts/wiki/build_sources_db.py, scripts/lexicon/runner/fetch_ulif_homonyms.py]
     local_only: true
-    purpose: Main SQLite and FTS5 corpus behind the sources MCP - literary texts, textbooks, dictionaries (SUM-20, SUM-11, Hrinchenko, ESUM, ULIF, slovnyk.me), Ukrainian Wikipedia, external articles and UA-GEC errors.
-    keywords: [sources.db, RAG corpus, textbooks, literary texts, dictionaries, FTS5, sources MCP]
+    purpose: Main SQLite database and FTS5 full-text corpus behind the sources MCP - literary texts, textbooks, dictionaries (SUM-20, SUM-11, Hrinchenko, ESUM, ULIF, slovnyk.me), Ukrainian Wikipedia, external articles and UA-GEC errors.
+    keywords: [sources.db, sources database, RAG corpus, textbooks, literary texts, dictionaries, FTS5, sources MCP]
     lifecycle: active
     owner: corpus-channels
     entrypoints:

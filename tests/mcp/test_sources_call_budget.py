@@ -279,13 +279,18 @@ def test_query_sum20_missing_word_is_a_structured_error(server_module):
     assert json.loads(blank[0].text)["error_code"] == "invalid_input"
 
 
-def test_every_sources_tool_advertises_read_only(server_module):
+# Tools that persist a live fetch (#9551); tests/mcp/test_sources_tool_side_effects.py
+# proves each attempts a write and every other tool attempts none.
+PERSISTING_TOOLS = {"query_wikipedia", "query_ulif", "query_ulif_synonyms", "query_ulif_antonyms", "query_ulif_phraseology"}
+
+
+def test_every_sources_tool_advertises_its_read_only_hint(server_module):
     tools = _run(server_module.list_tools())
     assert tools
     for tool in tools:
         annotations = tool.annotations
         assert annotations is not None, tool.name
-        assert annotations.read_only_hint is True, tool.name
+        assert annotations.read_only_hint is (tool.name not in PERSISTING_TOOLS), tool.name
         assert annotations.destructive_hint is False, tool.name
 
 

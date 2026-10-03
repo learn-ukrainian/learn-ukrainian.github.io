@@ -23,6 +23,7 @@ from .converters import (
     edit_process_dialogues,
     edit_process_story_sections,
     edit_resolve_slug_links,
+    fresh_activity_mdx,
     yaml_activity_mdx_parts,
 )
 from .reading_links import reading_href_for, reading_title_for
@@ -248,6 +249,9 @@ def _inject_inline_activities(
     log: EditLog,
     yaml_activities: list[Activity] | None,
     is_ukrainian_forced: bool,
+    *,
+    fresh: bool = False,
+    level: str = "a1",
 ) -> tuple[set[str], set[int], set[str], dict[str, str], list[tuple[str, int, int]]]:
     """Replace Tab 1 INJECT_ACTIVITY markers in `log` with matching component JSX.
 
@@ -283,6 +287,8 @@ def _inject_inline_activities(
         injected_positions.add(index)
         injected_fingerprints.add(activity_identity_key(activity))
         jsx = parser._activity_to_mdx(activity, is_ukrainian_forced)
+        if fresh:
+            jsx = fresh_activity_mdx(activity, jsx, level=level)
         edits.append(Edit(match.start(), match.end(), jsx))
         start = match.start() + delta
         injected_blocks.append((activity_id, start, start + len(jsx)))
@@ -499,6 +505,7 @@ def generate_mdx(
         lvl in SEMINAR_LEVELS
         or any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit'])
         or is_a2_2_preview
+        or (fresh and lvl.startswith('a2'))
         or lvl.startswith('b1')
     ):
         is_ukrainian_forced = True
@@ -513,6 +520,7 @@ def generate_mdx(
         "MotifFormula": "import MotifFormula from '@site/src/components/MotifFormula';",
         "MythBuster": "import MythBuster from '@site/src/components/MythBuster';",
         "PrimaryReading": "import PrimaryReading from '@site/src/components/PrimaryReading';",
+        "PhraseTable": "import PhraseTable from '@site/src/components/PhraseTable';",
         "PerformanceActivity": "import PerformanceActivity from '@site/src/components/PerformanceActivity';",
         "HighCultureBridge": "import HighCultureBridge from '@site/src/components/HighCultureBridge';",
     }
@@ -562,14 +570,22 @@ def generate_mdx(
     if level.lower() in SEMINAR_LEVELS and re.search(r"[A-Za-z]", description):
         description = f"Матеріал до теми «{title}»"
 
-    frontmatter = f'''---
-title: "{escape_jsx(title)}"
-description: "{escape_jsx(description)}"
+    # Frontmatter is YAML, so JSX/template escaping (e.g. \`) is invalid.
+    title_yaml = json.dumps(title, ensure_ascii=False) if fresh else f'"{escape_jsx(title)}"'
+    description_yaml = json.dumps(description, ensure_ascii=False) if fresh else f'"{escape_jsx(description)}"'
+    label_yaml = (
+        json.dumps(f"{str(module_num).zfill(2)}. {title}", ensure_ascii=False)
+        if fresh
+        else f'"{str(module_num).zfill(2)}. {escape_jsx(title)}"'
+    )
+    frontmatter = f"""---
+title: {title_yaml}
+description: {description_yaml}
 sidebar:
   order: {module_num}
-  label: "{str(module_num).zfill(2)}. {escape_jsx(title)}"{extra_fm_lines}
+  label: {label_yaml}{extra_fm_lines}
 ---
-'''
+"""
 
     # 1. Clean up body: Remove existing Vocabulary, Activities, and Resources placeholders
     log = edit(body)
@@ -601,7 +617,7 @@ sidebar:
         _injected_activity_fingerprints,
         _injected_activity_section_titles,
         injected_activity_blocks,
-    ) = _inject_inline_activities(log, yaml_activities, activity_chrome_ukrainian)
+    ) = _inject_inline_activities(log, yaml_activities, activity_chrome_ukrainian, fresh=fresh, level=level)
     lesson_content = carry("inject_inline_activities", log)
     if unit_map is not None:
         for occurrence, (activity_id, start, end) in enumerate(injected_activity_blocks):
@@ -633,6 +649,8 @@ sidebar:
             inline_cross_ref_positions=_injected_activity_positions,
             inline_cross_ref_fingerprints=_injected_activity_fingerprints,
             inline_cross_ref_section_titles=_injected_activity_section_titles,
+            fresh=fresh,
+            level=level,
         )
         activities_content = '\n\n'.join(mdx for _activity_id_or_none, mdx in activity_parts)
         if not activities_content.strip() and injected_activity_ids:
@@ -794,7 +812,7 @@ sidebar:
         "import HighlightMorphemes from '@site/src/components/HighlightMorphemes';",
         "import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';",
     ]
-    for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity", "PrimaryReading"):
+    for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity", "PrimaryReading", "PhraseTable"):
         if re.search(rf"<{component}\b", tabbed):
             import_lines.append(optional_imports[component])
     import_lines.extend([

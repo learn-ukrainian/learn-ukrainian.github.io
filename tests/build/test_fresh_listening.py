@@ -317,6 +317,7 @@ def test_unlisted_video_is_typed_before_generic_evidence_arithmetic():
 
 
 @pytest.mark.parametrize("channel", [True, False])
+@pytest.mark.site_toolchain
 def test_listening_renderer_keeps_host_beside_options_and_is_shippable(tmp_path: Path, monkeypatch, channel):
     draft, plan, pack, words = _listening_fixture()
     if not channel:
@@ -336,7 +337,9 @@ def test_listening_renderer_keeps_host_beside_options_and_is_shippable(tmp_path:
     if channel:
         assert '<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=g4Bh-lqzd48"' in mdx
     else:
-        assert "[V-1](https://www.youtube.com/watch?v=g4Bh-lqzd48)" in mdx
+        assert "[https://www.youtube.com/watch?v=g4Bh-lqzd48](https://www.youtube.com/watch?v=g4Bh-lqzd48)" in mdx
+        assert "[Unknown]" not in mdx
+        assert "[V-1]" not in mdx
     assert '"host": {"kind": "video", "ref": "V-1", "url": "https://www.youtube.com/watch?v=g4Bh-lqzd48"' in mdx
     assert '"target_record": "W-1"' in mdx
 

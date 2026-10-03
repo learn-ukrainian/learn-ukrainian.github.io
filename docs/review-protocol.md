@@ -326,14 +326,16 @@ Multi-finding validation order is deterministic: sort by
 followed by quality tier and deterministic resource-pressure scoring within
 that fit and tier. An earlier YAML rung does not override a better role match.
 
-For a `gpt-6.1-sol` author with profile `code` and risk `high`, native
-`claude-opus-5-5` is eligible but matches `critical_review` at suitability
-rank 3; `claude-sonnet-5-5` matches `strong_review` at rank 0. Sonnet therefore
-wins before `selection_score` breaks ties. This is the configured suitability
-rule, rather than an Opus health or quota exclusion. Both may report unknown
-health when no routing snapshot is supplied. When an explicit requested role
-fits both equally, Opus's authority tier wins. Critical security review
-excludes every Sonnet model and uses the Fable 5.1 authority route.
+For a `gpt-6.1-sol` author with profile `code` and risk `medium` or `low`,
+native `claude-opus-5-5` is eligible, but `claude-sonnet-5-5` matches a role
+earlier in that profile's role order, so Sonnet wins before `selection_score`
+breaks ties. This is the configured suitability rule, rather than an Opus health
+or quota exclusion. Both may report unknown health when no routing snapshot is
+supplied. When an explicit requested role fits both equally, Opus's authority
+tier wins. At risk `high`, only the models `review_scheduler.risk_reviewer_models`
+lists (`gpt-6.1-sol`, `claude-opus-5-5`) are eligible (#9538), so Sonnet is
+excluded with that stated reason. Critical security review excludes every Sonnet
+model.
 
 Read `status`, `reason`, `suitability_rank`, and `selection_score` for every
 candidate; do not infer provider health or review eligibility from selection.

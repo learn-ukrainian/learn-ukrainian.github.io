@@ -113,7 +113,7 @@ def resource_citation(record: dict, registry: dict | None = None) -> dict[str, s
         return {
             "title": source_attribution(record, entries),
             "url": "",
-            "description": str(record.get("supports") or ""),
+            "description": "",
         }
     except ValueError:
         return None

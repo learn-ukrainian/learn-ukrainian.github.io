@@ -1859,6 +1859,14 @@ def pytest_configure(config: pytest.Config) -> None:
 
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
+    if item.get_closest_marker("site_toolchain"):
+        site_modules = Path(__file__).resolve().parents[1] / "site" / "node_modules"
+        if not site_modules.is_dir():
+            pytest.fail(
+                "site_toolchain requires site/node_modules; run npm ci in site/ "
+                "or explicitly deselect with -m 'not site_toolchain'",
+                pytrace=False,
+            )
     if item.get_closest_marker("live_network"):
         _set_live_network_allowed(True)
     marker = item.get_closest_marker("needs_artifact")

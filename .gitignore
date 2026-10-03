@@ -239,6 +239,9 @@ docs/damage-report-*.csv
 !jest.config.js
 !eslint.config.mjs
 
+# Fresh lesson transaction mutexes are local runtime files, not evidence.
+/curriculum/l2-uk-en/evidence/**/lesson-*.mutex
+
 # Batch runner state (generated at runtime). Allow schema-capped atlas-job
 # git receipts only — registry/result/pull trees stay ignored.
 batch_state/*

@@ -626,6 +626,30 @@ def test_check_11_failure_is_engine_layer_and_ledger_check_11(tmp_path, monkeypa
     assert not (state / "lesson-1.manifest.yaml").exists()
 
 
+def test_check11_harness_failure_preserves_layer_without_regeneration(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    report, state, _ = _run_contract(
+        tmp_path,
+        monkeypatch,
+        draft,
+        plan,
+        pack,
+        words,
+        render_check=lambda *a, **kw: assemble.CheckResult(
+            check=11,
+            passed=False,
+            reason="interpreter unavailable",
+            layer="harness",
+            artifacts={"verify_shippable": {"shippable": False}},
+        ),
+    )
+    failed = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (failed["check"], failed["layer"]) == (11, "harness")
+    ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
+    assert ledger["attempts"] == [] and ledger["regenerations"] == 0
+    assert (state / "lesson-1.writer-harness.yaml").is_file()
+
+
 def test_check_12_failure_has_error_file_and_no_current_manifest(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
 

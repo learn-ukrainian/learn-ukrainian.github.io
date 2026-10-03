@@ -357,6 +357,115 @@ def _pid_alive(pid: int) -> bool:
         return True
 
 
+def _pid_matches_task(
+    pid: int,
+    task_id: str,
+    *,
+    proc_root: Path = Path("/proc"),
+    worktree_path: str | Path | None = None,
+) -> bool | None:
+    """Return True if pid belongs to task_id, False if confirmed mismatch, or None if unknown.
+
+    Distinguishes a real live worker / dispatcher for task_id from an
+    unrelated process that inherited a recycled PID (#8659 / CF r5 F1, CF r6 F1 & F2, CF r7 F1).
+
+    Returns:
+        True: Confirmed match (environ, cmdline, or cwd positively verified).
+        False: Confirmed mismatch (all probes inspected without error/denial,
+               and no task identity marker matched; or process is dead).
+        None: Unknown identity (inspection unavailable, probe missing, or denied,
+              e.g. /proc missing, FileNotFoundError, PermissionError, or cwd
+              resolution failure while process remains alive).
+              Callers must preserve claim protection when identity is unknown.
+    """
+    if pid <= 0:
+        return False
+
+    if not _pid_alive(pid):
+        return False
+
+    try:
+        if not proc_root.is_dir():
+            return None
+    except OSError:
+        return None
+
+    proc_dir = proc_root / str(pid)
+    try:
+        if not proc_dir.is_dir():
+            if not _pid_alive(pid):
+                return False
+            return None
+    except OSError:
+        if not _pid_alive(pid):
+            return False
+        return None
+
+    evidence_unavailable = False
+    task_bytes = task_id.encode("utf-8")
+    safe_task_id = _safe_task_state_name(task_id)
+
+    # 1. Check environ: worker processes carry LEARN_UKRAINIAN_DISPATCH_TASK_ID
+    try:
+        env_raw = (proc_dir / "environ").read_bytes()
+        expected_env = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_bytes
+        if expected_env in env_raw.split(b"\0"):
+            return True
+    except OSError:
+        if not _pid_alive(pid):
+            return False
+        evidence_unavailable = True
+
+    # 2. Check cmdline: dispatchers and workers receive --task-id <task_id>
+    try:
+        cmd_raw = (proc_dir / "cmdline").read_bytes()
+        parts = [p for p in cmd_raw.split(b"\0") if p]
+        for i, part in enumerate(parts):
+            if part == b"--task-id" and i + 1 < len(parts) and parts[i + 1] == task_bytes:
+                return True
+            if part.startswith(b"--task-id=") and part[len(b"--task-id=") :] == task_bytes:
+                return True
+    except OSError:
+        if not _pid_alive(pid):
+            return False
+        evidence_unavailable = True
+
+    # 3. Check cwd: dispatch worktrees contain the exact task_id directory component
+    try:
+        raw_cwd = os.readlink(proc_dir / "cwd")
+        if raw_cwd.endswith(" (deleted)"):
+            # Linux kernel appends " (deleted)" to /proc/<pid>/cwd if the working directory was unlinked.
+            # While the process is alive, deleted cwd evidence is unavailable.
+            if not _pid_alive(pid):
+                return False
+            evidence_unavailable = True
+        else:
+            cwd_path = Path(raw_cwd)
+            # Require the directory to actually exist on disk; if deleted/inaccessible, resolve raises OSError
+            resolved_cwd = cwd_path.resolve(strict=True)
+
+            cwd_parts = cwd_path.parts
+            resolved_parts = resolved_cwd.parts
+            if task_id in cwd_parts or safe_task_id in cwd_parts:
+                return True
+            if task_id in resolved_parts or safe_task_id in resolved_parts:
+                return True
+
+            if worktree_path is not None:
+                resolved_wt = Path(worktree_path).resolve(strict=True)
+                if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
+                    return True
+    except OSError:
+        if not _pid_alive(pid):
+            return False
+        evidence_unavailable = True
+
+    if evidence_unavailable:
+        return None
+
+    return False
+
+
 def _safe_task_state_name(task_id: str) -> str:
     """Match scripts/delegate.py::_state_path sanitization for slashful task ids."""
     return task_id.replace("/", "_").replace("\\", "_")
@@ -369,6 +478,7 @@ def _task_still_active(
     *,
     created_at: float | None = None,
     now: float | None = None,
+    process_matches_task: Callable[..., bool | None] | None = None,
 ) -> bool:
     """True if the ownership claim should still be considered held.
 
@@ -382,6 +492,7 @@ def _task_still_active(
     status = None
     state_pid: int | None = None
     orphaned_prep = False
+    worktree_path: str | Path | None = None
     if state_path.is_file():
         try:
             data = json.loads(state_path.read_text(encoding="utf-8"))
@@ -395,35 +506,67 @@ def _task_still_active(
                 state_pid = raw_pid
             elif isinstance(raw_pid, str) and raw_pid.isdigit():
                 state_pid = int(raw_pid)
+            worktree_path = data.get("worktree_path") or data.get("cwd")
 
     clock = time.time() if now is None else now
     in_grace = created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
 
+    pid_is_alive = pid is not None and pid > 0 and _pid_alive(pid)
+    state_pid_is_alive = state_pid is not None and state_pid > 0 and _pid_alive(state_pid)
+    matcher = process_matches_task or _pid_matches_task
+
+    def _check_match(candidate_pid: int) -> bool | None:
+        if not matcher:
+            return None
+        try:
+            return matcher(candidate_pid, task_id, worktree_path=worktree_path)
+        except TypeError:
+            return matcher(candidate_pid, task_id)
+
     # Within grace only: live ledger PID holds claim (admission→state-write race).
-    if in_grace and pid is not None and pid > 0 and _pid_alive(pid):
+    if in_grace and pid_is_alive:
         return True
 
+    # #8659 / CF r4 F1, CF r5 F1, CF r6 F1 & F2: A terminal status in the state file proves
+    # the claim is inactive if the state record belongs to this exact claim PID (state_pid == pid).
+    # If state_pid != pid (e.g. following zombie healing or missing-worktree settlement),
+    # the claim is only preserved if the live PID is verified to genuinely belong to
+    # this task (verified replacement run), OR if process identity inspection is unknown /
+    # denied (preserving protection against false eviction). If the PID is verified to be a
+    # confirmed mismatch (recycled PID), the stale claim must be released.
     if status in TERMINAL_TASK_STATUSES:
-        return False
+        if state_pid is not None and pid is not None and state_pid == pid:
+            return False
+        if not pid_is_alive or pid is None:
+            return False
+        # Confirmed mismatch (match_result is False) releases stale claim;
+        # True (verified match) or None (unknown/denied inspection) preserves protection.
+        return _check_match(pid) is not False
+
     # #8663/#8717: a pid-less worktree-prep record or admission hold whose
     # dispatcher died never gets a worker pid; it holds nothing.
     if orphaned_prep:
         return False
 
-    # Prefer state worker PID once present (long-lived).
-    check_pid = state_pid if state_pid is not None else (pid if in_grace else None)
-    if check_pid is not None and check_pid > 0 and not _pid_alive(check_pid):
+    # Outside grace without a state file, an unbacked claim cannot be proven active.
+    if status is None and not in_grace:
         return False
-    # No state file and no pid → treat as stale (cannot prove active).
-    if status is None and (check_pid is None or check_pid <= 0):
-        return False
+
     # spawning/running/needs_finalize/empty with live pid (or unknown pid) = active.
     # no_deliverable is terminal: there is no unfinished tree to protect.
     if status in ("running", "spawning", "needs_finalize", "", None):
-        if check_pid is None or check_pid <= 0:
+        if pid_is_alive and pid is not None:
+            if in_grace or (state_pid is not None and state_pid == pid):
+                return True
+            match_result = _check_match(pid)
+            if match_result is not False:
+                return True
+        if state_pid_is_alive:
+            return True
+        if state_pid is None and pid is None:
             # State says active but no pid — keep claim conservatively if status explicit.
             return status in ("running", "spawning", "needs_finalize")
-        return _pid_alive(check_pid)
+        return False
     return False
 
 
@@ -434,11 +577,13 @@ class OwnershipLedger:
         *,
         task_state_dir: Path | None = None,
         mode: GuardMode | None = None,
+        process_matches_task: Callable[..., bool | None] | None = None,
     ) -> None:
         self.path = Path(path) if path is not None else default_ledger_path()
         self.task_state_dir = Path(task_state_dir) if task_state_dir is not None else default_task_state_dir()
         # Default follows env (REFUSE after #5645 soak). Explicit mode still wins.
         self.mode = mode if mode is not None else env_guard_mode()
+        self.process_matches_task = process_matches_task
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
     def _connect(self, *, read_only: bool = False) -> sqlite3.Connection:
@@ -487,15 +632,54 @@ class OwnershipLedger:
             pid = row["pid"]
             pid_i = int(pid) if pid is not None else None
             created = float(row["created_at"]) if row["created_at"] is not None else None
-            if not _task_still_active(task_id, pid_i, self.task_state_dir, created_at=created):
-                conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
+            if not _task_still_active(
+                task_id,
+                pid_i,
+                self.task_state_dir,
+                created_at=created,
+                process_matches_task=self.process_matches_task,
+            ):
+                if pid_i is not None:
+                    conn.execute(
+                        "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
+                        (task_id, pid_i),
+                    )
+                else:
+                    conn.execute(
+                        "DELETE FROM write_claims WHERE task_id = ? AND pid IS NULL",
+                        (task_id,),
+                    )
                 released.append(task_id)
         return released
 
-    def release(self, task_id: str) -> None:
+    def release(self, task_id: str, *, pid: int | None = None) -> None:
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
-            conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
+            if pid is not None:
+                conn.execute(
+                    "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
+                    (task_id, int(pid)),
+                )
+            else:
+                # When pid is None (unknown/pid-less settlement), only delete claims
+                # with no recorded PID (pid IS NULL) or claims whose PID is dead,
+                # never claims belonging to a live process/replacement run (#8659).
+                rows = conn.execute(
+                    "SELECT DISTINCT pid FROM write_claims WHERE task_id = ?",
+                    (task_id,),
+                ).fetchall()
+                for row in rows:
+                    row_pid = row["pid"]
+                    if row_pid is None:
+                        conn.execute(
+                            "DELETE FROM write_claims WHERE task_id = ? AND pid IS NULL",
+                            (task_id,),
+                        )
+                    elif not _pid_alive(int(row_pid)):
+                        conn.execute(
+                            "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
+                            (task_id, int(row_pid)),
+                        )
             conn.execute("COMMIT")
 
     def update_claim_pid(self, task_id: str, new_pid: int) -> None:
@@ -771,6 +955,7 @@ def admit_write_paths(
     ledger_path: Path | None = None,
     task_state_dir: Path | None = None,
     guard_mode: GuardMode | str | None = None,
+    process_matches_task: Callable[..., bool | None] | None = None,
 ) -> AdmissionResult:
     """Admit writable paths. ``guard_mode=None`` → :func:`env_guard_mode` (default REFUSE)."""
     if guard_mode is None:
@@ -779,7 +964,12 @@ def admit_write_paths(
         gm = guard_mode
     else:
         gm = GuardMode(guard_mode)
-    ledger = OwnershipLedger(ledger_path, task_state_dir=task_state_dir, mode=gm)
+    ledger = OwnershipLedger(
+        ledger_path,
+        task_state_dir=task_state_dir,
+        mode=gm,
+        process_matches_task=process_matches_task,
+    )
     return ledger.admit(
         task_id=task_id,
         mode=mode,

@@ -17,6 +17,27 @@ BRANCH = "codex/42"
 REPOSITORY = "owner/repo"
 
 
+@pytest.fixture(autouse=True)
+def recorder_matcher(synthetic_opsec):
+    from tests.opsec_fixtures import synthetic_rules
+
+    rules = synthetic_rules(rule="3-absolute-path", level=3, pattern=r"(?<![<\w:])/[A-Za-z][^\s`'\"<>),;\]}|*]*")
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+
+
+@pytest.fixture
+def citation_checkout(tmp_path):
+    root = tmp_path / "checkout"
+    worktree = root / ".worktrees/dispatch/cursor/review"
+    for checkout in (root, worktree):
+        for name in ("scripts/unit.py", "tests/test_unit.py", "scripts/before.py", "scripts/after.py"):
+            path = checkout / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("# citation fixture\n" * 20)
+        (checkout / "a").mkdir()
+    return root, worktree
+
+
 def task(**updates):
     data = {
         "repository": REPOSITORY,
@@ -359,6 +380,301 @@ def test_missing_task_record_fails_closed_for_multifamily_harnesses(monkeypatch,
         recorder.author_families(REPOSITORY, 42, tmp_path)
 
 
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py", "scripts/unit.py"),
+        ("/checkout/scripts/unit.py:12:3", "scripts/unit.py:12:3"),
+        ("`/checkout/scripts/unit.py:12`", "`scripts/unit.py:12`"),
+        ("```\n/checkout/scripts/unit.py:12\n```", "```\nscripts/unit.py:12\n```"),
+        ("[source](/checkout/scripts/unit.py:12)", "[source](scripts/unit.py:12)"),
+        ("/checkout, then /checkout/scripts/unit.py.", "., then /checkout/scripts/unit.py."),
+        ("/checkout/.worktrees/dispatch/cursor/review", "."),
+        ("/checkout/scripts", "scripts"),
+        ("/checkout/missing.py:12", "/checkout/missing.py:12"),
+        ("No paths; scripts/unit.py:12", "No paths; scripts/unit.py:12"),
+        ("/outside/private.py:12", "/outside/private.py:12"),
+        ("/checkout-other/private.py", "/checkout-other/private.py"),
+        ("/else/checkout/scripts/unit.py", "/else/checkout/scripts/unit.py"),
+        ("/checkout/../private.py", "/checkout/../private.py"),
+        ("/checkout/scripts/cafe\u0301.py", "/checkout/scripts/cafe\u0301.py"),
+        ("https://example.test/checkout/scripts/unit.py", "https://example.test/checkout/scripts/unit.py"),
+    ],
+)
+def test_repository_relative_reply_preserves_citations_and_outside_text(text, expected, citation_checkout):
+    root, worktree = citation_checkout
+    text, expected = (value.replace("/checkout", str(root)) for value in (text, expected))
+    review = {"worktree_path": str(worktree)}
+    assert recorder.repository_relative_reply(text, task=review, primary_root=root) == expected
+
+
+@pytest.mark.parametrize(
+    "checkout",
+    [
+        {"worktree_path": "/checkout/.worktrees/dispatch/cursor/review"},
+        {"worktree_path": "/checkout/.worktrees/dispatch/cursor/review", "cwd": "/review/scripts"},
+        {"worktree_path": "/checkout/.worktrees/dispatch/cursor/review", "cwd": "/"},
+        {"worktree_path": "/checkout"},
+    ],
+)
+def test_repository_relative_reply_uses_recorded_checkout(checkout, citation_checkout):
+    root, _ = citation_checkout
+    checkout = {key: value.replace("/checkout", str(root)) for key, value in checkout.items()}
+    assert (
+        recorder.repository_relative_reply(
+            f"{checkout['worktree_path']}/scripts/unit.py:12", task=checkout, primary_root=root
+        )
+        == "scripts/unit.py:12"
+    )
+
+
+@pytest.mark.parametrize("checkout", ["/review", "/checkout-other", "/else/checkout"])
+def test_repository_relative_reply_refuses_roots_outside_primary(checkout, citation_checkout):
+    root, _ = citation_checkout
+    text = f"{checkout}/scripts/unit.py {root}/scripts/unit.py"
+    assert recorder.repository_relative_reply(text, task={"worktree_path": checkout}, primary_root=root) == (
+        f"{checkout}/scripts/unit.py scripts/unit.py"
+    )
+
+
+def test_repository_relative_reply_refuses_worktree_root_resolving_outside_primary(tmp_path, citation_checkout):
+    root, _ = citation_checkout
+    worktree = root / ".worktrees" / "review"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    outside = tmp_path / "outside/scripts/unit.py"
+    outside.parent.mkdir(parents=True)
+    outside.write_text("# outside\n")
+    worktree.symlink_to(tmp_path / "outside", target_is_directory=True)
+    text = f"{worktree}/scripts/unit.py {root}/scripts/unit.py"
+    assert recorder.repository_relative_reply(text, task={"worktree_path": str(worktree)}, primary_root=root) == (
+        f"{worktree}/scripts/unit.py scripts/unit.py"
+    )
+
+
+@pytest.mark.parametrize("checkout", ["primary", "worktree"])
+@pytest.mark.parametrize(
+    "suffix",
+    [
+        pytest.param("/\uff0e\uff0e/private/unit.py", id="fullwidth-dots"),
+        pytest.param("/.\u200b./private/unit.py", id="zero-width-dots"),
+        pytest.param("/\u2024\u2024/private/unit.py", id="one-dot-leaders"),
+        pytest.param("/\u2025/private/unit.py", id="two-dot-leader"),
+        pytest.param("/a.py\uff0fsrv\uff0fdata\uff0fx", id="fullwidth-slashes"),
+        pytest.param("/a.py\uff3csrv\uff3cdata\uff3cx", id="fullwidth-backslashes"),
+        pytest.param("/a.py\uff5c/srv/data/x", id="fullwidth-pipe"),
+        pytest.param("/a.py\ufe54/srv/data/x", id="small-semicolon"),
+        *[
+            pytest.param(
+                f"/a{separator}{ignorable}\u0338/../../private/unit.py",
+                id=f"composing-{name}{'-zero-width' if ignorable else ''}",
+            )
+            for separator, name in [("<", "less-than"), (">", "greater-than"), ("=", "equals")]
+            for ignorable in ["", "\u200b"]
+        ],
+    ],
+)
+def test_repository_relative_reply_unicode_paths_still_refuse_real_scanner(checkout, suffix, monkeypatch):
+    from scripts.opsec import prepublish as gate
+    from tests.test_opsec_prepublish import real_tooling
+
+    tooling = real_tooling()
+    monkeypatch.setattr(gate, "private_tooling", lambda: tooling)
+    primary = gate.primary_root()
+    worktree = primary / ".worktrees/dispatch/cursor/review"
+    root = primary if checkout == "primary" else worktree
+    reply = f"VERDICT: APPROVE\n`{root}{suffix}:12`"
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=primary)
+    for text in (reply, rewritten):
+        with pytest.raises(gate.PublishBlocked, match="OPSEC blocked"):
+            gate.check_texts("github.com/unit/public", [text], tooling=tooling, environment={})
+    assert rewritten == reply
+
+
+@pytest.mark.parametrize(
+    "changed_text",
+    ["\u2026", "\u00a0", "\u200b", "\uff0f", "\u0661", "cafe\u0301", "<\u0338", ">\u200b\u0338", "=\u0338"],
+)
+@pytest.mark.parametrize("position", ["before", "between", "after"])
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r", "\u2028", ""])
+def test_repository_relative_reply_preserves_whole_normalization_changed_line(
+    changed_text, position, ending, citation_checkout
+):
+    root, _ = citation_checkout
+    paths = "/checkout/scripts/unit.py /checkout/tests/test_unit.py"
+    changed_line = {
+        "before": f"{changed_text} {paths}",
+        "between": f"/checkout/scripts/unit.py {changed_text} /checkout/tests/test_unit.py",
+        "after": f"{paths} {changed_text}",
+    }[position] + ending
+    assert recorder.normalize_for_scan(changed_line) != changed_line
+    # Stable neighboring lines still rewrite; preserve all text and line endings
+    # on the altered line, even when the change is outside both path tokens.
+    text = f"/checkout/scripts/before.py\n{changed_line}"
+    expected = f"scripts/before.py\n{changed_line}"
+    if ending:
+        text += "/checkout/scripts/after.py"
+        expected += "scripts/after.py"
+    assert recorder.repository_relative_reply(
+        text.replace("/checkout", str(root)), task={}, primary_root=root
+    ) == expected.replace("/checkout", str(root))
+
+
+@pytest.mark.parametrize(
+    "checkout", [{"cwd": "/"}, {"cwd": "/review"}, {"worktree_path": "/"}, {"worktree_path": "/repo"}]
+)
+def test_repository_relative_reply_refuses_cwd_and_ancestor_roots(checkout, citation_checkout):
+    root, _ = citation_checkout
+    text = "/review/unit.py /repo/outside/unit.py /repo/checkout/scripts/unit.py"
+    assert recorder.repository_relative_reply(
+        text.replace("/repo/checkout", str(root)), task=checkout, primary_root=root
+    ) == ("/review/unit.py /repo/outside/unit.py scripts/unit.py")
+
+
+def test_repository_relative_reply_refuses_filesystem_root_as_primary():
+    text = "/outside/unit.py"
+    assert recorder.repository_relative_reply(text, task={}, primary_root=Path("/")) == text
+
+
+def test_repository_relative_reply_refuses_resolved_ancestor_root(tmp_path, citation_checkout):
+    root, _ = citation_checkout
+    alias = tmp_path / "alias"
+    alias.symlink_to(tmp_path, target_is_directory=True)
+    text = f"{alias}/outside/unit.py {root}/scripts/unit.py"
+    assert recorder.repository_relative_reply(text, task={"worktree_path": str(alias)}, primary_root=root) == (
+        f"{alias}/outside/unit.py scripts/unit.py"
+    )
+
+
+@pytest.mark.parametrize("separator", list("|=\\*;&<>\"'()[]{},"))
+def test_repository_relative_reply_uses_scanner_boundaries(separator, citation_checkout):
+    root, worktree = citation_checkout
+    for outside in ("/outside/x", "/outside/../x"):
+        text = f"{worktree}/a{separator}{outside}"
+        expected = text if separator in "=\\&([{" else f"a{separator}{outside}"
+        assert (
+            recorder.repository_relative_reply(text, task={"worktree_path": str(worktree)}, primary_root=root)
+            == expected
+        )
+
+
+@pytest.mark.parametrize("checkout", [None, "relative", 123])
+def test_repository_relative_reply_ignores_invalid_checkout(checkout, citation_checkout):
+    root, _ = citation_checkout
+    assert (
+        recorder.repository_relative_reply(
+            f"/outside/unit.py {root}/scripts/unit.py",
+            task={"worktree_path": checkout},
+            primary_root=root,
+        )
+        == "/outside/unit.py scripts/unit.py"
+    )
+
+
+def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path, citation_checkout):
+    root, _ = citation_checkout
+    outside = tmp_path / "private/unit.py"
+    outside.parent.mkdir()
+    outside.write_text("# outside\n" * 20)
+    (root / "escape").symlink_to(tmp_path / "private")
+    text = f"`{root}/escape/unit.py:12`"
+    assert recorder.repository_relative_reply(text, task={}, primary_root=root) == text
+    (root / "inside").symlink_to(root / "scripts")
+    assert recorder.repository_relative_reply(f"{root}/inside/unit.py", task={}, primary_root=root) == "inside/unit.py"
+
+    def unavailable(*args, **kwargs):
+        raise OSError("private diagnostic")
+
+    monkeypatch.setattr(Path, "resolve", unavailable)
+    assert recorder.repository_relative_reply(text, task={}, primary_root=root) == text
+
+
+@pytest.mark.parametrize(
+    "reply,refused",
+    [
+        (
+            "VERDICT: APPROVE\n`/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py:12`\n"
+            "```\n/checkout/tests/test_unit.py:3\n```",
+            False,
+        ),
+        ("VERDICT: APPROVE", False),
+        ("VERDICT: APPROVE\n/checkout/scripts/unit.py /outside/private.py:12", True),
+        ("VERDICT: APPROVE\n/checkout-other/private.py", True),
+        ("VERDICT: APPROVE\n/checkout/../private.py", True),
+        ("VERDICT: APPROVE\n/checkout/\uff0e\uff0e/private.py", True),
+        ("VERDICT: APPROVE\n/checkout/.\u200b./private.py", True),
+        ("VERDICT: APPROVE\n/checkout/a.py\uff0fsrv\uff0fdata\uff0fx", True),
+        ("VERDICT: APPROVE\n/checkout/scripts/unit.py\nSENTINEL-HOST-TOKEN", True),
+        *[
+            (f"VERDICT: APPROVE\n/checkout/scripts/unit.py{separator}/outside/x", True)
+            for separator in "|=\\*;&<>\"'()[]{}"
+        ],
+    ],
+)
+def test_record_fixture_dry_run_through_publication_scanner(
+    monkeypatch, tmp_path, synthetic_opsec, capsys, reply, refused, citation_checkout
+):
+    """Run the recorder and typed publisher with only the GitHub transport faked."""
+    from scripts.publish import github
+
+    root, worktree = citation_checkout
+    reply = reply.replace("/checkout", str(root))
+    rules = json.loads((synthetic_opsec / "rules.json").read_text())
+    rules["1"] = {"patterns": [{"id": "synthetic-rule", "regex": "SENTINEL-HOST-TOKEN"}]}
+    rules["1"]["patterns"].append({"id": "synthetic-host-path", "regex": r"(?<![<\w:])/[A-Za-z][^\s`]*"})
+    # Cover an outside path after '<' without mistaking the comment's HTML
+    # closing tags for filesystem paths.
+    rules["1"]["patterns"].append({"id": "synthetic-markup-path", "regex": r"(?<=<)/outside/[^\s`]*"})
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    real_json = recorder._run_json
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    fake_json = recorder._run_json
+    write_task(tasks, reply=reply, worktree_path=str(worktree))
+    monkeypatch.setattr(recorder, "_repo_root", lambda: root)
+
+    def route(args, **kwargs):
+        if isinstance(args, github.Request) and args.verb == "issue-comment-json":
+            return real_json(args, **kwargs)
+        return fake_json(args, **kwargs)
+
+    def transport(argv, **kwargs):
+        payload = json.loads(Path(argv[argv.index("--input") + 1]).read_text())
+        posted = fake_json(github.Request("issue-comment-json", repo=REPOSITORY, number=42, body=payload["body"]))
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(posted), stderr="")
+
+    monkeypatch.setattr(recorder, "_run_json", route)
+    monkeypatch.setattr(github, "_send", transport)
+    if refused:
+        with pytest.raises(recorder.RecordError) as error:
+            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        diagnostic = str(error.value)
+        assert "publish_blocked" in diagnostic and "class=" in diagnostic
+        assert reply not in diagnostic
+        assert (
+            "/outside" not in diagnostic and "/checkout" not in diagnostic and "SENTINEL-HOST-TOKEN" not in diagnostic
+        )
+        assert calls == {"posts": 0, "statuses": 0}
+        record = recorder.record
+        monkeypatch.setattr(
+            recorder,
+            "record",
+            lambda task_id, **kwargs: record(task_id, task_root=tasks, lock_root=tmp_path / "locks", **kwargs),
+        )
+        assert recorder.main(["--task-id", "review-one", "--pr", "42"]) == 1
+        output = capsys.readouterr()
+        assert "class=" in output.out
+        assert "/checkout" not in output.out + output.err
+        assert "/outside" not in output.out + output.err and "SENTINEL-HOST-TOKEN" not in output.out + output.err
+        assert calls == {"posts": 0, "statuses": 0}
+    else:
+        receipt = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert receipt["comment"] == "posted" and receipt["status"] == "posted"
+        assert calls == {"posts": 1, "statuses": 1}
+        body = comments[0]["body"]
+        assert "/checkout" not in body
+        if "unit.py" in reply:
+            assert "`scripts/unit.py:12`" in body and "```\ntests/test_unit.py:3\n```" in body
+
+
 def test_task_record_agent_conflict_is_checked_for_agy(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
     write_task(tasks, task_id="author-task", model="claude-opus-5", agent="claude")
@@ -485,3 +801,176 @@ def test_cursor_receipt_with_a_non_ascii_look_alike_name_is_refused(monkeypatch,
     with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
+
+
+@pytest.fixture
+def real_recorder_matcher(monkeypatch):
+    from scripts.opsec import prepublish as gate
+    from tests.test_opsec_prepublish import real_tooling
+
+    tooling = real_tooling()
+    monkeypatch.setattr(gate, "private_tooling", lambda: tooling)
+    return tooling
+
+
+def assert_rendered_path_refusal(reply, rewritten, tooling):
+    from scripts.opsec import prepublish as gate
+
+    for text in (reply, rewritten):
+        comment = recorder.build_comment(
+            sha=SHA,
+            task_id="review-one",
+            started="2026-10-02T00:00:00+00:00",
+            verdict="APPROVED",
+            model="gpt-6.1-sol",
+            family="openai",
+            reply=text,
+        )
+        with pytest.raises(gate.PublishBlocked, match="rule=3-absolute-path"):
+            gate.check_texts("github.com/unit/public", [comment], tooling=tooling, environment={})
+
+
+@pytest.mark.parametrize("checkout", ["primary", "worktree"])
+@pytest.mark.parametrize("separator", ["=", "\\", "&", "(", "[", "{"])
+@pytest.mark.parametrize("traversal", ["/../../", "../../"])
+def test_scanner_span_preserves_ascii_traversal(
+    citation_checkout, tmp_path, real_recorder_matcher, checkout, separator, traversal
+):
+    root, worktree = citation_checkout
+    cited_root = root if checkout == "primary" else worktree
+    # Materialize the safe prefix and separator-bearing component so strict
+    # resolution alone cannot hide the tokenizer disagreement from earlier rounds.
+    (cited_root / f"a{separator}").mkdir()
+    (tmp_path / "sibling/tools").mkdir(parents=True)
+    reply = f"VERDICT: APPROVE\n{cited_root}/a{separator}{traversal}sibling/tools"
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+    assert rewritten == reply
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+@pytest.mark.parametrize("suffix", [":12", ":12:3"])
+@pytest.mark.parametrize("checkout", ["primary", "worktree"])
+def test_suffixed_file_symlink_outside_refuses(citation_checkout, tmp_path, real_recorder_matcher, suffix, checkout):
+    root, worktree = citation_checkout
+    outside = tmp_path / "outside.py"
+    outside.write_text("# outside\n" * 20)
+    cited_root = root if checkout == "primary" else worktree
+    (cited_root / "link.py").symlink_to(outside)
+    reply = f"VERDICT: APPROVE\n`{cited_root}/link.py{suffix}`"
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+    assert rewritten == reply
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+@pytest.mark.parametrize("outside_first", [True, False])
+def test_neighboring_outside_span_survives_real_scanner(citation_checkout, real_recorder_matcher, outside_first):
+    root, worktree = citation_checkout
+    inside = f"`{worktree}/scripts/unit.py:12:3`"
+    outside = f"`{root.parent}/outside/private.py:12`"
+    citations = [outside, inside] if outside_first else [inside, outside]
+    reply = "VERDICT: APPROVE\n" + " ".join(citations)
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+    assert rewritten == reply.replace(inside, "`scripts/unit.py:12:3`")
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+@pytest.mark.parametrize("prefix", ["<", ">", "="])
+def test_rewrite_reverts_normalization_unstable_line(citation_checkout, real_recorder_matcher, prefix):
+    root, _ = citation_checkout
+    path = root / "\u0338unit.py"
+    path.write_text("# fixture\n")
+    line = f"{prefix}{path}"
+    assert recorder.normalize_for_scan(line) == line
+    assert recorder.normalize_for_scan(f"{prefix}{path.name}") != f"{prefix}{path.name}"
+    reply = f"{root}/scripts/before.py\n{line}\n{root}/scripts/after.py"
+    rewritten = recorder.repository_relative_reply(reply, task={}, primary_root=root)
+    assert rewritten == f"scripts/before.py\n{line}\nscripts/after.py"
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+def test_ordinary_denominator_real_scanner(citation_checkout, real_recorder_matcher):
+    from scripts.opsec import prepublish as gate
+
+    root, worktree = citation_checkout
+    reply = (
+        f"VERDICT: APPROVE\n{worktree}\n{root}\n{root}/scripts\n"
+        f"`{worktree}/scripts/unit.py:12:3`\n"
+        f"```\n{root}/tests/test_unit.py:3\n```\n"
+        f"[source]({root}/scripts/unit.py:12)"
+    )
+    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
+    assert rewritten == (
+        "VERDICT: APPROVE\n.\n.\nscripts\n`scripts/unit.py:12:3`\n"
+        "```\ntests/test_unit.py:3\n```\n[source](scripts/unit.py:12)"
+    )
+    gate.check_texts("github.com/unit/public", [rewritten], tooling=real_recorder_matcher, environment={})
+
+
+@pytest.mark.parametrize(
+    "citation", ["missing.py", "missing.py:12", "scripts:12", "scripts/unit.py:0", "scripts/unit.py:12:x"]
+)
+def test_ambiguous_or_nonexistent_citation_refuses(citation_checkout, real_recorder_matcher, citation):
+    root, _ = citation_checkout
+    reply = f"VERDICT: APPROVE\n`{root}/{citation}`"
+    rewritten = recorder.repository_relative_reply(reply, task={}, primary_root=root)
+    assert rewritten == reply
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+def test_existing_suffixed_filename_is_ambiguous(citation_checkout, real_recorder_matcher):
+    root, _ = citation_checkout
+    (root / "scripts/unit.py:12").write_text("# different file\n")
+    reply = f"VERDICT: APPROVE\n`{root}/scripts/unit.py:12`"
+    rewritten = recorder.repository_relative_reply(reply, task={}, primary_root=root)
+    assert rewritten == reply
+    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
+
+
+def test_matcher_refusal_prevents_record_transport(monkeypatch, tmp_path, synthetic_opsec):
+    tasks, _, calls = setup_record(monkeypatch, tmp_path)
+    (synthetic_opsec / "rules.json").write_text("invalid")
+    with pytest.raises(recorder.RecordError, match="publish_blocked"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("separator", ["=", "\\", "&", "(", "[", "{"])
+def test_complete_separator_filename_can_rewrite(citation_checkout, real_recorder_matcher, separator):
+    from scripts.opsec import prepublish as gate
+
+    root, _ = citation_checkout
+    path = root / f"a{separator}b.py"
+    path.write_text("# fixture\n")
+    reply = f"`{path}:12:3`"
+    rewritten = recorder.repository_relative_reply(reply, task={}, primary_root=root)
+    assert rewritten == f"`{path.name}:12:3`"
+    gate.check_texts("github.com/unit/public", [rewritten], tooling=real_recorder_matcher, environment={})
+
+
+@pytest.mark.parametrize("kind", ["dangling-suffix", "file-root", "special-file"])
+def test_ambiguous_filesystem_identity_stays_verbatim(citation_checkout, kind):
+    import os
+
+    root, _ = citation_checkout
+    if kind == "dangling-suffix":
+        (root / "scripts/unit.py:12").symlink_to(root / "missing")
+        reply = f"`{root}/scripts/unit.py:12`"
+    elif kind == "file-root":
+        root = root / "scripts/unit.py"
+        reply = f"`{root}`"
+    else:
+        path = root / "fifo"
+        os.mkfifo(path)
+        reply = f"`{path}`"
+    assert recorder.repository_relative_reply(reply, task={}, primary_root=root) == reply
+
+
+def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tmp_path, synthetic_opsec):
+    from tests.opsec_fixtures import synthetic_rules
+
+    tasks, _, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, reply="\u00a0VERDICT: APPROVE\n\u200b/checkout/scripts/unit.py")
+    (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules()))
+    with pytest.raises(recorder.RecordError, match="absolute-path rule unavailable/incompatible"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}

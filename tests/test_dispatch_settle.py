@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -105,6 +106,7 @@ def test_settle_missing_worktree_review_names_reason(tmp_path: Path) -> None:
     healed = json.loads(path.read_text(encoding="utf-8"))
     assert healed["status"] == "failed"
     assert healed["failure_reason"] == "worktree_missing_at_settle"
+    assert healed.get("finished_at")
 
 
 def test_settle_task_reports_closeout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -486,6 +488,287 @@ def test_settle_task_worktree_present_path_unchanged(tmp_path: Path, monkeypatch
     assert report.closeout["blocker"] == "none"
     state = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
     assert state["status"] == "done"
+
+
+def test_settle_missing_worktree_stale_observation_rejected_preserves_claims(tmp_path: Path, monkeypatch) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "stale-race"
+    path = task_dir / f"{task_id}.json"
+
+    initial_data = {
+        "task_id": task_id,
+        "run_nonce": "run-1",
+        "started_at": "2026-01-01T00:00:00Z",
+        "status": "running",
+        "pid": 999_999_999,
+        "worktree_path": str(tmp_path / "missing"),
+    }
+    path.write_text(json.dumps(initial_data), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', 999_999_999, time.time() - 100),
+    )
+    conn.commit()
+    conn.close()
+
+    # Inject replacement after initial read, so mark_missing_worktree_failed is exercised and rejects
+    real_load = ds._load_task
+    helper_called: list[bool] = []
+
+    def load_and_replace(tdir: Path, tid: str) -> dict[str, Any]:
+        loaded = real_load(tdir, tid)
+        if tid == task_id and loaded.get("run_nonce") == "run-1":
+            replaced_data = {
+                "task_id": task_id,
+                "run_nonce": "run-2",
+                "started_at": "2026-01-01T01:00:00Z",
+                "status": "running",
+                "pid": os.getpid(),
+                "worktree_path": str(tmp_path / "missing"),
+            }
+            path.write_text(json.dumps(replaced_data), encoding="utf-8")
+        return loaded
+
+    monkeypatch.setattr(ds, "_load_task", load_and_replace)
+
+    real_helper = ds.mark_missing_worktree_failed
+
+    def spy_helper(*args: Any, **kwargs: Any) -> tuple[dict[str, Any], bool]:
+        helper_called.append(True)
+        return real_helper(*args, **kwargs)
+
+    monkeypatch.setattr(ds, "mark_missing_worktree_failed", spy_helper)
+
+    actions = ds.settle_missing_worktree(task_dir, task_id, ledger=ledger)
+    assert helper_called == [True], "mark_missing_worktree_failed must be called under lock"
+    assert actions == []
+
+    current = json.loads(path.read_text(encoding="utf-8"))
+    assert current["status"] == "running"
+    assert current["run_nonce"] == "run-2"
+
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT task_id FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 1
+
+
+def test_settle_missing_worktree_replacement_after_transition_preserves_new_run_claims(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "reuse-race"
+    path = task_dir / f"{task_id}.json"
+
+    initial_data = {
+        "task_id": task_id,
+        "run_nonce": "run-1",
+        "started_at": "2026-01-01T00:00:00Z",
+        "status": "running",
+        "pid": 999_999_999,
+        "worktree_path": str(tmp_path / "missing"),
+    }
+    path.write_text(json.dumps(initial_data), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(
+        ledger_path,
+        task_state_dir=task_dir,
+        process_matches_task=lambda p, tid: p == os.getpid() and tid == task_id,
+    )
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    # Old dead run's claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', 999_999_999, time.time() - 300),
+    )
+    # Replacement live run's claim for the same task_id aged beyond the 180s grace window
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    actions = ds.settle_missing_worktree(task_dir, task_id, ledger=ledger)
+    assert "marked_failed_missing_worktree" in actions
+    assert "released_ownership_claims" in actions
+
+    current = json.loads(path.read_text(encoding="utf-8"))
+    assert current["status"] == "failed"
+
+    # Verify that the dead run's claim was deleted but the replacement run's claim was preserved
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 1
+    assert rows[0][0] == os.getpid()
+    assert "scripts/bar.py" in rows[0][1]
+
+    # Beyond-grace reconciliation: overlapping challenger admission must not delete
+    # the verified live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
+    challenger = ledger.admit(
+        task_id="challenger-task",
+        mode="workspace-write",
+        owned_paths=["scripts/bar.py"],
+        pid=os.getpid(),
+    )
+    assert challenger.admitted is False
+    assert challenger.would_refuse is True
+    assert "path ownership conflict (REFUSE)" in (challenger.reason or "")
+
+    conn = sqlite3.connect(ledger_path)
+    rows_after = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows_after) == 1
+    assert rows_after[0][0] == os.getpid()
+    assert "scripts/bar.py" in rows_after[0][1]
+
+
+def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "pidless-zombie"
+    path = task_dir / f"{task_id}.json"
+
+    initial_data = {
+        "task_id": task_id,
+        "run_nonce": "run-1",
+        "started_at": "2026-01-01T00:00:00Z",
+        "status": "running",
+        "pid": None,
+    }
+    path.write_text(json.dumps(initial_data), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(
+        ledger_path,
+        task_state_dir=task_dir,
+        process_matches_task=lambda p, tid: p == os.getpid() and tid == task_id,
+    )
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    # Stale/pidless claim
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/foo.py"}', None, time.time() - 300),
+    )
+    # Replacement live run's claim for the same task_id aged beyond the 180s grace window
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    actions = ds.heal_zombie_task(task_dir, task_id, ledger=ledger)
+    assert "marked_failed_zombie_running" in actions
+    assert "released_ownership_claims" in actions
+
+    current = json.loads(path.read_text(encoding="utf-8"))
+    assert current["status"] == "failed"
+
+    # Verify that the stale claim was deleted but the replacement run's live claim was preserved
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 1
+    assert rows[0][0] == os.getpid()
+    assert "scripts/bar.py" in rows[0][1]
+
+    # Beyond-grace reconciliation: overlapping challenger admission must not delete
+    # the verified live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
+    challenger = ledger.admit(
+        task_id="challenger-task",
+        mode="workspace-write",
+        owned_paths=["scripts/bar.py"],
+        pid=os.getpid(),
+    )
+    assert challenger.admitted is False
+    assert challenger.would_refuse is True
+    assert "path ownership conflict (REFUSE)" in (challenger.reason or "")
+
+    conn = sqlite3.connect(ledger_path)
+    rows_after = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows_after) == 1
+    assert rows_after[0][0] == os.getpid()
+    assert "scripts/bar.py" in rows_after[0][1]
+
+
+def test_reconciliation_cleans_recycled_pid_after_settlement(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "recycled-pid-task"
+    path = task_dir / f"{task_id}.json"
+
+    initial_data = {
+        "task_id": task_id,
+        "run_nonce": "run-1",
+        "started_at": "2026-01-01T00:00:00Z",
+        "status": "failed",
+        "pid": None,
+    }
+    path.write_text(json.dumps(initial_data), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    # Process matcher returns False for the recycled PID (unrelated process)
+    ledger = OwnershipLedger(
+        ledger_path,
+        task_state_dir=task_dir,
+        process_matches_task=lambda _p, _tid: False,
+    )
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    # Stale claim whose PID is alive (e.g. os.getpid()) but belongs to an unrelated process (reused PID)
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    # Beyond-grace reconciliation must detect that the live PID is unrelated and release the claim,
+    # allowing overlapping challenger admission (#8659 / CF r5 F1).
+    challenger = ledger.admit(
+        task_id="challenger-task",
+        mode="workspace-write",
+        owned_paths=["scripts/bar.py"],
+        pid=os.getpid(),
+    )
+    assert challenger.admitted is True
+    assert challenger.would_refuse is False
+
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 0
 
 
 @pytest.fixture(autouse=True)

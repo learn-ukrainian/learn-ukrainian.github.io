@@ -78,7 +78,9 @@
     "peer_review_guidelines": [
       "essay response peer_review_guidelines 0"
     ],
-    "rubric": {}
+    "rubric": [
+      {"criteria": "Criterion", "description": "Rubric description."}
+    ]
   },
   "fill-in": {
     "id": "a6",

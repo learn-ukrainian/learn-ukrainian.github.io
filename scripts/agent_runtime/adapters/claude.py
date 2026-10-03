@@ -28,8 +28,18 @@ Mode handling:
 - ``read-only`` with ``reviewer_tools=True`` and no explicit ``allowed_tools``:
   ``dontAsk`` permits
   read/search and shell execution (including tests and Python) while denying
-  edits and common Git/GitHub mutations. Explicit caller tool lists pass
-  through unchanged and do not receive reviewer-only restrictions.
+  edits and common Git/GitHub mutations. The reviewer's MCP servers never come
+  from the reviewed checkout: ``--strict-mcp-config`` loads only a
+  harness-built ``sources`` server, started over stdio from the primary
+  checkout's interpreter and server script under ``env -i`` and ``python -I``
+  (``review_mcp.isolated_sources_mcp_config``), so neither a branch's
+  ``.mcp.json`` nor the environment its project settings set can add a
+  server, point ``sources`` elsewhere, or run code in the server before it
+  starts. Each read-only ``sources`` tool is allowed by name; the tools
+  that persist a live fetch are denied. An ``mcp_config_path`` is accepted
+  only for a formal full-access attempt, whose harness-written config and
+  tool contract are unchanged. Explicit caller tool
+  lists pass through unchanged and do not receive reviewer-only restrictions.
   Prefix Bash denies are advisory; the repository PreToolUse guards are the
   primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
   a primary-checkout write in a live probe, so it is not that backstop.
@@ -50,6 +60,14 @@ Mode handling:
   what skips hooks. An allow glob ``mcp__*`` is ignored, so each configured
   server is named. The reviewer deny list does not apply. An explicit
   ``allowed_tools`` value stays the sole allow list.
+  Threat model: read-only is not a sandbox against the reviewed branch. The
+  reviewer runs branch code through its own Bash tool (its tests, for
+  example), and that code can write wherever the user can. The reviewer's MCP
+  grant must not add a write path beyond that one: the ``sources`` server it
+  loads is launched by the harness, not the branch, and every tool it is
+  granted is read-only in behavior (``tests/mcp/test_sources_tool_side_effects.py``).
+  Whatever the session applies to every process it starts (Bash and hooks
+  included) is reviewer-sandbox hardening, outside this grant.
 - ``danger``: Appends ``--dangerously-skip-permissions``. Reserved for
   cases where the caller explicitly needs sandbox bypass.
 Every headless invocation receives shared PreToolUse guard settings from the
@@ -132,13 +150,72 @@ _WORKSPACE_WRITE_TOOLS = (
 )
 _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 
+# The sources MCP server's tools, split by their annotation in
+# .mcp/servers/sources/server.py. Tests keep both tuples equal to the server's
+# annotations, and the annotations equal to the writes each tool is observed
+# to attempt, so a new or write-capable tool fails CI before a reviewer can be
+# granted it.
+SOURCES_MCP_SERVER = "sources"
+# readOnlyHint=True: lookups with no persistent write beyond the request log.
+SOURCES_READ_ONLY_TOOLS = (
+    "check_modern_form",
+    "check_russian_shadow",
+    "check_text",
+    "collection_stats",
+    "get_chunk_context",
+    "get_full_text",
+    "inspect_lemma",
+    "inspect_word",
+    "inspect_words",
+    "mcp_server_identity",
+    "query_cefr_level",
+    "query_e2u",
+    "query_grac",
+    "query_pravopys",
+    "query_r2u",
+    "query_slovnyk_me",
+    "query_sum20",
+    "query_ulif_records",
+    "search_definitions",
+    "search_esum",
+    "search_external",
+    "search_grinchenko_1907",
+    "search_heritage",
+    "search_idioms",
+    "search_literary",
+    "search_resources",
+    "search_slovnyk_me",
+    "search_sources",
+    "search_style_guide",
+    "search_synonyms",
+    "search_text",
+    "search_ua_gec_errors",
+    "translate_en_uk",
+    "verify_lemma",
+    "verify_quote",
+    "verify_source_attribution",
+    "verify_stress",
+    "verify_stresses",
+    "verify_word",
+    "verify_words",
+    "vet_vocabulary",
+)
+# readOnlyHint=False: query_wikipedia writes data/wiki_cache.db and the DictUA
+# tools store a cache miss in sources.db. Reviewers are denied these.
+SOURCES_PERSISTING_TOOLS = (
+    "query_ulif",
+    "query_ulif_antonyms",
+    "query_ulif_phraseology",
+    "query_ulif_synonyms",
+    "query_wikipedia",
+)
+
 # Ordinary Claude reviewers need a non-interactive shell. Claude Bash deny
 # patterns match prefixes only: git -C, wrappers, and interpreters can bypass
 # them. The shared PreToolUse guards below provide the checkout backstop.
 REVIEWER_PERMISSION_PROFILE = {
     "mode": "dontAsk",
     "allow": ("Read", "Grep", "Glob", "LS", "Bash", "WebFetch", "WebSearch"),
-    "mcp_allow": ("mcp__sources__*",),
     "deny": (
         "Edit",
         "Write",
@@ -227,6 +304,22 @@ def _workspace_write_allows(cwd: Path, tool_config: dict[str, Any]) -> tuple[str
     for server in _mcp_server_names(_mcp_config_path(cwd, tool_config)):
         names.append(f"mcp__{server}__*")
     return tuple(dict.fromkeys(names))
+
+
+def _sources_rules(tools: tuple[str, ...]) -> list[str]:
+    return [f"mcp__{SOURCES_MCP_SERVER}__{name}" for name in tools]
+
+
+def _reviewer_mcp_config() -> str:
+    """The ordinary reviewer's only MCP configuration: the trusted stdio sources server.
+
+    Built by the harness from the primary checkout, never read from the
+    reviewed checkout, and passed inline with ``--strict-mcp-config``. The
+    server starts with a pinned environment and isolated Python startup.
+    """
+    from scripts.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
+
+    return json.dumps(isolated_sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
@@ -579,15 +672,23 @@ class ClaudeAdapter:
             profile = REVIEWER_PERMISSION_PROFILE
             cmd.extend(["--permission-mode", profile["mode"]])
             granted = [*profile["allow"]]
-            if tc.get("mcp_config_path"):
-                if tc.get("review_access") == "full":
-                    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+            denied = [*profile["deny"]]
+            if tc.get("mcp_config_path") and tc.get("review_access") == "full":
+                from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
-                    granted.extend(review_tools_allowed_csv("claude", "full").split(","))
-                else:
-                    granted.extend(profile["mcp_allow"])
+                granted.extend(review_tools_allowed_csv("claude", "full").split(","))
+            elif tc.get("mcp_config_path"):
+                raise ValueError(
+                    "ClaudeAdapter: an ordinary reviewer's MCP config is built by the harness; "
+                    "mcp_config_path is accepted only for a formal full-access review attempt"
+                )
+            else:
+                cmd.extend(["--strict-mcp-config", "--mcp-config", _reviewer_mcp_config()])
+                granted.extend(_sources_rules(SOURCES_READ_ONLY_TOOLS))
+                # Deny wins over any allow rule the reviewed checkout's settings add.
+                denied.extend(_sources_rules(SOURCES_PERSISTING_TOOLS))
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
-            cmd.extend(["--disallowedTools", ",".join(profile["deny"])])
+            cmd.extend(["--disallowedTools", ",".join(denied)])
         elif mode == "workspace-write" and not review_isolation:
             cmd.extend(["--permission-mode", WORKSPACE_WRITE_PERMISSION_MODE])
             if not explicit_allowed_tools:
@@ -803,7 +904,7 @@ def _tool_calls_from_claude_session_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
     """Extract assistant text from Claude ``--output-format stream-json`` events."""
-    result_text = ""
+    results: list[str] = []
     structured_output: dict[str, Any] | None = None
     text_parts: list[str] = []
     for event in events:
@@ -812,7 +913,9 @@ def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
             structured_output = structured
         result = event.get("result")
         if isinstance(result, str) and result.strip():
-            result_text = result.strip()
+            text = result.strip()
+            if not results or results[-1] != text:
+                results.append(text)
         message = event.get("message")
         if isinstance(message, dict):
             content = message.get("content")
@@ -831,6 +934,6 @@ def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
             text_parts.append(content)
     if structured_output is not None:
         return json.dumps(structured_output, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
-    if result_text:
-        return result_text
+    if results:
+        return "\n\n".join(results)
     return "\n".join(part.strip() for part in text_parts if part.strip()).strip()
