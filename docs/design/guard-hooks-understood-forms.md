@@ -462,3 +462,15 @@ all historical rows and labels remain immutable. The namespace command is
 its ground truth comes from recording fake binaries in temporary repositories.
 The three systemd-run probes remain an environment gap owned by claude-infra.
 Conflict corrections require `targets == []`, before any CI judgment.
+
+## Designated clarification 2026-10-03: amendment 6 applies per hook
+
+Amendment 6’s operation-shape trigger and `DYNAMIC_COMMAND` refusal apply per hook: merge handles literal `pr merge`; admin handles an enabled or indeterminate admin-merge shape; branch handles branch-operation shapes when a protected-primary context remains possible. A proven worktree does not acquire a branch prohibition from this trigger alone. Other accounting and refusal rules remain binding.
+
+The earlier blanket dynamic-name sentence is superseded by this clarification.
+New `per-hook-clarification` rows supersede every affected historical row,
+including merge rows 001/004/007/010. `per-hook-table` records all five
+commands in the approved table, plus the verified-worktree switch counterpart,
+using recording fake binaries in temporary repositories. If guard-pr-merge
+is absent or disabled, ordinary merges lose their responsible guard; sibling
+hooks do not replace its readiness enforcement.

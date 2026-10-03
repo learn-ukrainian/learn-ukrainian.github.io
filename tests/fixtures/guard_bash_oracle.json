@@ -39258,6 +39258,1238 @@
       },
       "addition_reason": "Operator-ordered append-only amendment after the approved freeze review.",
       "supersedes": "freeze-b-namespace-correction-002"
+    },
+    {
+      "id": "freeze-h-per-hook-001",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t checkout -b evil",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t checkout -b evil",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "evil"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-001",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-002",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t checkout -b evil",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "oracle_pr": "5",
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t checkout -b evil",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "evil"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-002",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-004",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t switch -c evil",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch -c evil",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "switch",
+              "-c",
+              "evil"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-004",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-005",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t switch -c evil",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "oracle_pr": "5",
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch -c evil",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "switch",
+              "-c",
+              "evil"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-005",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-007",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t branch -D main",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t branch -D main",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "branch",
+              "-D",
+              "main"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-007",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-008",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t branch -D main",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "oracle_pr": "5",
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t branch -D main",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "branch",
+              "-D",
+              "main"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-008",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-010",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t worktree add .worktrees/new",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t worktree add .worktrees/new",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "worktree",
+              "add",
+              ".worktrees/new"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-010",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-011",
+      "family": "per-hook-clarification",
+      "command": "G=gi; ${G}t worktree add .worktrees/new",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "oracle_pr": "5",
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t worktree add .worktrees/new",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "worktree",
+              "add",
+              ".worktrees/new"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-011",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-012",
+      "family": "per-hook-clarification",
+      "command": "G=g; ${G}h pr merge 5",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=g; ${G}h pr merge 5",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-012",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-014",
+      "family": "per-hook-clarification",
+      "command": "G=g; ${G}h pr merge 5",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "oracle_pr": "5",
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=g; ${G}h pr merge 5",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-014",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-per-hook-015",
+      "family": "per-hook-clarification",
+      "command": "G=g; ${G}h pr merge 5 --admin",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=g; ${G}h pr merge 5 --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5",
+              "--admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      },
+      "supersedes": "freeze-amendment-dynamic-name-015",
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required."
+    },
+    {
+      "id": "freeze-h-table-000-merge",
+      "family": "per-hook-table",
+      "command": "$gh pr merge 5",
+      "cwd": "primary",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "DYNAMIC_COMMAND"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$gh pr merge 5",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-000-admin",
+      "family": "per-hook-table",
+      "command": "$gh pr merge 5",
+      "cwd": "primary",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$gh pr merge 5",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-000-branch",
+      "family": "per-hook-table",
+      "command": "$gh pr merge 5",
+      "cwd": "primary",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$gh pr merge 5",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-001-merge",
+      "family": "per-hook-table",
+      "command": "$gh pr merge 5 --admin",
+      "cwd": "primary",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "DYNAMIC_COMMAND"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$gh pr merge 5 --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5",
+              "--admin"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-001-admin",
+      "family": "per-hook-table",
+      "command": "$gh pr merge 5 --admin",
+      "cwd": "primary",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "DYNAMIC_COMMAND"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$gh pr merge 5 --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5",
+              "--admin"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-001-branch",
+      "family": "per-hook-table",
+      "command": "$gh pr merge 5 --admin",
+      "cwd": "primary",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$gh pr merge 5 --admin",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "gh",
+              "pr",
+              "merge",
+              "5",
+              "--admin"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-002-merge",
+      "family": "per-hook-table",
+      "command": "$git checkout -b x",
+      "cwd": "primary",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$git checkout -b x",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "x"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-002-admin",
+      "family": "per-hook-table",
+      "command": "$git checkout -b x",
+      "cwd": "primary",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$git checkout -b x",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "x"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-002-branch",
+      "family": "per-hook-table",
+      "command": "$git checkout -b x",
+      "cwd": "primary",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "DYNAMIC_COMMAND"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$git checkout -b x",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "x"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-003-merge",
+      "family": "per-hook-table",
+      "command": "$git checkout -b x",
+      "cwd": "worktree",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$git checkout -b x",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "x"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-003-admin",
+      "family": "per-hook-table",
+      "command": "$git checkout -b x",
+      "cwd": "worktree",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$git checkout -b x",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "x"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-003-branch",
+      "family": "per-hook-table",
+      "command": "$git checkout -b x",
+      "cwd": "worktree",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "$git checkout -b x",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "argv": [
+              "git",
+              "checkout",
+              "-b",
+              "x"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-004-merge",
+      "family": "per-hook-table",
+      "command": "G=gi; ${G}t switch main",
+      "cwd": "primary",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch main",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "git",
+              "switch",
+              "main"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-004-admin",
+      "family": "per-hook-table",
+      "command": "G=gi; ${G}t switch main",
+      "cwd": "primary",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch main",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "git",
+              "switch",
+              "main"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-004-branch",
+      "family": "per-hook-table",
+      "command": "G=gi; ${G}t switch main",
+      "cwd": "primary",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "refuse",
+        "reason_class": "DYNAMIC_COMMAND"
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch main",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary",
+            "argv": [
+              "git",
+              "switch",
+              "main"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-005-merge",
+      "family": "per-hook-table",
+      "command": "G=gi; ${G}t switch main",
+      "cwd": "worktree",
+      "hook": "merge",
+      "hooks": [
+        "merge"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch main",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "argv": [
+              "git",
+              "switch",
+              "main"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-005-admin",
+      "family": "per-hook-table",
+      "command": "G=gi; ${G}t switch main",
+      "cwd": "worktree",
+      "hook": "admin",
+      "hooks": [
+        "admin"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch main",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "argv": [
+              "git",
+              "switch",
+              "main"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
+    },
+    {
+      "id": "freeze-h-table-005-branch",
+      "family": "per-hook-table",
+      "command": "G=gi; ${G}t switch main",
+      "cwd": "worktree",
+      "hook": "branch",
+      "hooks": [
+        "branch"
+      ],
+      "accepted": false,
+      "addition_reason": "Designated clarification 2026-10-03: amendment 6 applies per hook; responsible merge coverage remains required.",
+      "oracle_pr": "5",
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "G=gi; ${G}t switch main",
+        "returncode": 0,
+        "records": [
+          {
+            "cwd": "<probe>/primary/.worktrees/wt",
+            "argv": [
+              "git",
+              "switch",
+              "main"
+            ],
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": true,
+        "operation_contexts": [
+          "<probe>/primary/.worktrees/wt"
+        ],
+        "limitation": null,
+        "probe_error": null
+      }
     }
   ],
   "freeze_schema": "guard-understood-forms.v1",
