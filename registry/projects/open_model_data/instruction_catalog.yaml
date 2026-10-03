@@ -1,0 +1,790 @@
+---
+# Draft only; PA6 still requires independent reviews and the E5-backed checker.
+schema_version: "instruction-catalog.v1"
+version: "0.1.0-draft"
+status: "draft"
+training_eligible: false
+issue: 9611
+plan:
+  path: "docs/projects/open-model-data/PLAN.md"
+  version: "3.4.4"
+  body_sha256: "2d5db0ae7d15336b61c361c1dacdf89c3c9811cfd0109acc8f156f16149e94e1"
+interpolation:
+  mode: "verbatim_source_fields_only"
+  missing_field: "withhold"
+  transformations: "none"
+  recursive_interpolation: false
+  scope: >-
+    Only instructions[].template is project-authored training text. All other catalog fields are control
+    metadata and must not be exported as instructions or answers.
+  field_mapping: >-
+    Slots name binding roles from PLAN.md, not guessed physical database columns. E4 must authenticate the exact
+    source adapter and row/field locators before any rendering.
+prefix_metric:
+  id: "instruction-prefix.v1-draft"
+  status: "proposed"
+  scope: >-
+    Per component, operation and exported split; additionally the whole split for visibility. C7 remains opt-in
+    and separate.
+  prefix_lengths:
+    - 1
+    - 4
+  top1_max: 0.15
+  top5_max: 0.65
+  small_denominator: >-
+    N<8 is insufficient evidence, never PASS. For N>=8 use exact shares without rounding allowances; if integer
+    counts cannot meet both bounds, withhold the build.
+  specification: "docs/projects/open-model-data/instruction-catalog.md"
+components:
+  C1:
+    binding: "Learner sentence ↔ aligned human-corrected sentence; same document and annotator."
+    source_fields:
+      sentence: "UA-GEC learner sentence; same document and annotator as the human correction"
+    required_context:
+      - "same_document"
+      - "same_annotator"
+      - "both_annotation_layers"
+      - "source_locator"
+    target_policy: "Target is the verbatim aligned human-corrected sentence, never a model correction."
+    exclusions:
+      - "Dev/final documents and authors; unaligned pairs."
+    line_count: 8
+    line_count_rationale: >-
+      Eight distinct lexical starts for one operation: uniform use gives top1=1/8 and top5=5/8. This is a
+      compact, reviewable baseline, not a claim of semantic or model-level diversity.
+    instructions:
+      -
+        id: "C1.sentence_correction.01"
+        operation: "sentence_correction"
+        template: "Виправ помилки в реченні: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C1.sentence_correction.02"
+        operation: "sentence_correction"
+        template: "Подай виправлене речення: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C1.sentence_correction.03"
+        operation: "sentence_correction"
+        template: "Запиши речення без помилок: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C1.sentence_correction.04"
+        operation: "sentence_correction"
+        template: "Відредагуй наведене речення: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C1.sentence_correction.05"
+        operation: "sentence_correction"
+        template: "Усунь помилки в наведеному реченні: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C1.sentence_correction.06"
+        operation: "sentence_correction"
+        template: "Наведи виправлений варіант речення: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C1.sentence_correction.07"
+        operation: "sentence_correction"
+        template: "Речення «{sentence}» запиши без помилок."
+        slots:
+          - "sentence"
+      -
+        id: "C1.sentence_correction.08"
+        operation: "sentence_correction"
+        template: "Як правильно записати речення «{sentence}»?"
+        slots:
+          - "sentence"
+  C2:
+    binding: "Lemma + homonym/sense + grammatical slot + variant → form agreed by VESUM and ULIF; stress from ULIF."
+    source_fields:
+      lemma: "P3 tuple lemma"
+      homonym: "P3 tuple homonym/sense identifier (lossless source value)"
+      slot: "P3 grammatical slot (lossless source label; no authored grammatical expansion)"
+    required_context:
+      - "homonym_sense"
+      - "variant"
+      - "vesum_ulif_agreement"
+      - "source_locator"
+    target_policy: "Target is the agreed form with ULIF stress; tuple identity remains in lossless input metadata."
+    exclusions:
+      - "Asterisks, preposition-bound forms, unmapped labels, failed entries and single-source forms."
+    line_count: 8
+    line_count_rationale: >-
+      Eight distinct lexical starts for one operation: uniform use gives top1=1/8 and top5=5/8. This is a
+      compact, reviewable baseline, not a claim of semantic or model-level diversity.
+    instructions:
+      -
+        id: "C2.agreed_form.01"
+        operation: "agreed_form"
+        template: "Подай форму слова «{lemma}»: {slot}; {homonym}."
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+      -
+        id: "C2.agreed_form.02"
+        operation: "agreed_form"
+        template: "Запиши слово «{lemma}» у формі: {slot}; {homonym}."
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+      -
+        id: "C2.agreed_form.03"
+        operation: "agreed_form"
+        template: "Наведи форму для слова «{lemma}»: {slot}; {homonym}."
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+      -
+        id: "C2.agreed_form.04"
+        operation: "agreed_form"
+        template: "Утвори форму слова «{lemma}»: {slot}; {homonym}."
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+      -
+        id: "C2.agreed_form.05"
+        operation: "agreed_form"
+        template: "Добери форму слова «{lemma}»: {slot}; {homonym}."
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+      -
+        id: "C2.agreed_form.06"
+        operation: "agreed_form"
+        template: "Вкажи форму слова «{lemma}»: {slot}; {homonym}."
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+      -
+        id: "C2.agreed_form.07"
+        operation: "agreed_form"
+        template: "Слово «{lemma}» постав у форму: {slot}; {homonym}."
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+      -
+        id: "C2.agreed_form.08"
+        operation: "agreed_form"
+        template: "Яка форма слова «{lemma}» відповідає позначенню: {slot}; {homonym}?"
+        slots:
+          - "lemma"
+          - "slot"
+          - "homonym"
+  C3:
+    binding: "Headword sense ↔ ULIF synonym/antonym group for that same sense."
+    source_fields:
+      headword: "ULIF headword of the selected sense"
+      sense: "ULIF sense label/text from the selected sense; never an authored gloss"
+    required_context:
+      - "sense_identity"
+      - "ulif_group_identity"
+      - "source_locator"
+    target_policy: "Target is the verbatim ULIF group for the selected headword sense and operation."
+    exclusions:
+      - "Wrong-sense groups; invented glosses; a sense with no source-readable label is withheld for this draft."
+    line_count: 16
+    line_count_rationale: >-
+      Eight lexical starts per distinct operation. Two operations need separate sets so their eligibility cannot
+      mask concentration. Uniform use gives top1=1/8 and top5=5/8 within each operation.
+    instructions:
+      -
+        id: "C3.synonyms.01"
+        operation: "synonyms"
+        template: "Подай синоніми до слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.synonyms.02"
+        operation: "synonyms"
+        template: "Запиши синоніми слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.synonyms.03"
+        operation: "synonyms"
+        template: "Наведи синоніми для слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.synonyms.04"
+        operation: "synonyms"
+        template: "Добери синоніми до слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.synonyms.05"
+        operation: "synonyms"
+        template: "Вкажи синоніми слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.synonyms.06"
+        operation: "synonyms"
+        template: "Назви синоніми до слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.synonyms.07"
+        operation: "synonyms"
+        template: "Слово «{headword}» у значенні «{sense}»: які його синоніми?"
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.synonyms.08"
+        operation: "synonyms"
+        template: "Які синоніми має слово «{headword}» у значенні «{sense}»?"
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.01"
+        operation: "antonyms"
+        template: "Подай антоніми до слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.02"
+        operation: "antonyms"
+        template: "Запиши антоніми слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.03"
+        operation: "antonyms"
+        template: "Наведи антоніми для слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.04"
+        operation: "antonyms"
+        template: "Добери антоніми до слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.05"
+        operation: "antonyms"
+        template: "Вкажи антоніми слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.06"
+        operation: "antonyms"
+        template: "Назви антоніми до слова «{headword}» у значенні «{sense}»."
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.07"
+        operation: "antonyms"
+        template: "Слово «{headword}» у значенні «{sense}»: які його антоніми?"
+        slots:
+          - "headword"
+          - "sense"
+      -
+        id: "C3.antonyms.08"
+        operation: "antonyms"
+        template: "Які антоніми має слово «{headword}» у значенні «{sense}»?"
+        slots:
+          - "headword"
+          - "sense"
+  C4:
+    binding: "Idiom ↔ definition ↔ citation in the same dictionary entry."
+    source_fields:
+      idiom: "Idiom printed in the dictionary entry"
+    required_context:
+      - "same_entry_definition"
+      - "same_entry_citation"
+      - "source_locator"
+    target_policy: "Target definition and supporting citation are verbatim fields from one dictionary entry."
+    exclusions:
+      - "Citation overlap with exam/protection rulers; unresolved dictionary edition."
+    line_count: 8
+    line_count_rationale: >-
+      Eight distinct lexical starts for one operation: uniform use gives top1=1/8 and top5=5/8. This is a
+      compact, reviewable baseline, not a claim of semantic or model-level diversity.
+    instructions:
+      -
+        id: "C4.idiom_definition.01"
+        operation: "idiom_definition"
+        template: "Подай словникове значення вислову «{idiom}»."
+        slots:
+          - "idiom"
+      -
+        id: "C4.idiom_definition.02"
+        operation: "idiom_definition"
+        template: "Запиши значення вислову «{idiom}» за словником."
+        slots:
+          - "idiom"
+      -
+        id: "C4.idiom_definition.03"
+        operation: "idiom_definition"
+        template: "Наведи словникове тлумачення вислову «{idiom}»."
+        slots:
+          - "idiom"
+      -
+        id: "C4.idiom_definition.04"
+        operation: "idiom_definition"
+        template: "Вкажи значення вислову «{idiom}» за словником."
+        slots:
+          - "idiom"
+      -
+        id: "C4.idiom_definition.05"
+        operation: "idiom_definition"
+        template: "Відтвори словникове тлумачення вислову «{idiom}»."
+        slots:
+          - "idiom"
+      -
+        id: "C4.idiom_definition.06"
+        operation: "idiom_definition"
+        template: "Вислів «{idiom}»: яке його словникове значення?"
+        slots:
+          - "idiom"
+      -
+        id: "C4.idiom_definition.07"
+        operation: "idiom_definition"
+        template: "Яке значення вислову «{idiom}» подає словник?"
+        slots:
+          - "idiom"
+      -
+        id: "C4.idiom_definition.08"
+        operation: "idiom_definition"
+        template: "Як словник тлумачить вислів «{idiom}»?"
+        slots:
+          - "idiom"
+  C5:
+    binding: "Printed paragraph example ↔ that same paragraph; never an outside example."
+    source_fields:
+      example: "Example printed inside the cited Правопис 2019 paragraph"
+    required_context:
+      - "same_paragraph_example"
+      - "paragraph_locator"
+    target_policy: >-
+      Target is the cited paragraph's verbatim rule text; this operation requests a rule, not an invented
+      spelling correction.
+    exclusions:
+      - "External examples; outside-case rule selection; examples whose paragraph identity is ambiguous."
+    line_count: 8
+    line_count_rationale: >-
+      Eight distinct lexical starts for one operation: uniform use gives top1=1/8 and top5=5/8. This is a
+      compact, reviewable baseline, not a claim of semantic or model-level diversity.
+    instructions:
+      -
+        id: "C5.printed_spelling_rule.01"
+        operation: "printed_spelling_rule"
+        template: "Подай правило правопису для наведеного в ньому прикладу «{example}»."
+        slots:
+          - "example"
+      -
+        id: "C5.printed_spelling_rule.02"
+        operation: "printed_spelling_rule"
+        template: "Наведи правило, у якому подано приклад «{example}»."
+        slots:
+          - "example"
+      -
+        id: "C5.printed_spelling_rule.03"
+        operation: "printed_spelling_rule"
+        template: "Запиши правило правопису, що містить приклад «{example}»."
+        slots:
+          - "example"
+      -
+        id: "C5.printed_spelling_rule.04"
+        operation: "printed_spelling_rule"
+        template: "Вкажи правило правопису з прикладом «{example}»."
+        slots:
+          - "example"
+      -
+        id: "C5.printed_spelling_rule.05"
+        operation: "printed_spelling_rule"
+        template: "Відтвори правило правопису, у якому наведено «{example}»."
+        slots:
+          - "example"
+      -
+        id: "C5.printed_spelling_rule.06"
+        operation: "printed_spelling_rule"
+        template: "Приклад «{example}»: яке правило правопису його містить?"
+        slots:
+          - "example"
+      -
+        id: "C5.printed_spelling_rule.07"
+        operation: "printed_spelling_rule"
+        template: "Яке правило правопису наведено разом із прикладом «{example}»?"
+        slots:
+          - "example"
+      -
+        id: "C5.printed_spelling_rule.08"
+        operation: "printed_spelling_rule"
+        template: "Правопис містить приклад «{example}»: наведи відповідне правило."
+        slots:
+          - "example"
+  C6:
+    binding: >-
+      UA-GEC F/Calque human correction edit; same document/annotator, with split isolation. Book pairs only
+      where the book names both forms in the same cited passage, individually signed off by Sol and Opus.
+    source_fields:
+      sentence: "UA-GEC learner sentence containing the aligned F/Calque edit"
+      expression: >-
+        Original expression explicitly named in the same Антоненко-Давидович passage as its replacement; each
+        pair requires Sol and Opus sign-off.
+    required_context:
+      - "same_document_annotator_or_signed_book_pair"
+      - "aligned_calque_edit_or_explicit_pair"
+      - "source_locator"
+    target_policy: >-
+      Sentence targets are aligned human-corrected sentences; book targets are replacements explicitly printed
+      in the same passage.
+    exclusions:
+      - "Dev/final documents; book pairs without both forms or without individual Sol and Opus sign-off."
+    line_count: 16
+    line_count_rationale: >-
+      Eight lexical starts per distinct operation. Two operations need separate sets so their eligibility cannot
+      mask concentration. Uniform use gives top1=1/8 and top5=5/8 within each operation.
+    instructions:
+      -
+        id: "C6.calque_correction.01"
+        operation: "calque_correction"
+        template: "Виправ кальку в реченні: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C6.calque_correction.02"
+        operation: "calque_correction"
+        template: "Подай речення без кальки: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C6.calque_correction.03"
+        operation: "calque_correction"
+        template: "Запиши наведене речення без кальки: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C6.calque_correction.04"
+        operation: "calque_correction"
+        template: "Усунь кальку в наведеному реченні: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C6.calque_correction.05"
+        operation: "calque_correction"
+        template: "Заміни калькований вислів у реченні: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C6.calque_correction.06"
+        operation: "calque_correction"
+        template: "Наведи виправлений варіант речення з калькою: «{sentence}»."
+        slots:
+          - "sentence"
+      -
+        id: "C6.calque_correction.07"
+        operation: "calque_correction"
+        template: "Речення «{sentence}» запиши без кальки."
+        slots:
+          - "sentence"
+      -
+        id: "C6.calque_correction.08"
+        operation: "calque_correction"
+        template: "Як записати речення «{sentence}» без кальки?"
+        slots:
+          - "sentence"
+      -
+        id: "C6.book_calque_replacement.01"
+        operation: "book_calque_replacement"
+        template: "Подай заміну вислову «{expression}» за книжкою."
+        slots:
+          - "expression"
+      -
+        id: "C6.book_calque_replacement.02"
+        operation: "book_calque_replacement"
+        template: "Наведи заміну вислову «{expression}» за книжкою."
+        slots:
+          - "expression"
+      -
+        id: "C6.book_calque_replacement.03"
+        operation: "book_calque_replacement"
+        template: "Запиши заміну вислову «{expression}» за книжкою."
+        slots:
+          - "expression"
+      -
+        id: "C6.book_calque_replacement.04"
+        operation: "book_calque_replacement"
+        template: "Вкажи заміну вислову «{expression}» за книжкою."
+        slots:
+          - "expression"
+      -
+        id: "C6.book_calque_replacement.05"
+        operation: "book_calque_replacement"
+        template: "Відтвори заміну вислову «{expression}» за книжкою."
+        slots:
+          - "expression"
+      -
+        id: "C6.book_calque_replacement.06"
+        operation: "book_calque_replacement"
+        template: "Вислів «{expression}»: яку заміну пропонує книжка?"
+        slots:
+          - "expression"
+      -
+        id: "C6.book_calque_replacement.07"
+        operation: "book_calque_replacement"
+        template: "Яку заміну вислову «{expression}» пропонує книжка?"
+        slots:
+          - "expression"
+      -
+        id: "C6.book_calque_replacement.08"
+        operation: "book_calque_replacement"
+        template: "Як книжка пропонує замінити вислів «{expression}»?"
+        slots:
+          - "expression"
+  C7:
+    binding: >-
+      Opt-in #8982 contrast: source-attested modern ULIF/VESUM form versus SUM-11 Soviet colonization context;
+      never SUM-11 as norm.
+    source_fields: {}
+    required_context:
+      - "modern_source_attestation"
+      - "soviet_colonization_context"
+      - "admitted_contrast_pair"
+      - "source_locator"
+    target_policy: >-
+      Target is the modern ULIF/VESUM-attested side of an admitted #8982 pair, verbatim; SUM-11 is contrastive
+      context only.
+    exclusions:
+      - "Default training split; pretraining; unadjudicated contrasts; SUM-11 as norm."
+    line_count: 8
+    line_count_rationale: >-
+      Eight distinct lexical starts for one operation: uniform use gives top1=1/8 and top5=5/8. This is a
+      compact, reviewable baseline, not a claim of semantic or model-level diversity.
+    instructions:
+      -
+        id: "C7.modern_norm_selection.01"
+        operation: "modern_norm_selection"
+        template: "Обери сучасну нормативну форму з наведеної пари."
+        slots: []
+      -
+        id: "C7.modern_norm_selection.02"
+        operation: "modern_norm_selection"
+        template: "Вкажи сучасну нормативну форму в наведеній парі."
+        slots: []
+      -
+        id: "C7.modern_norm_selection.03"
+        operation: "modern_norm_selection"
+        template: "Назви сучасну нормативну форму з поданої пари."
+        slots: []
+      -
+        id: "C7.modern_norm_selection.04"
+        operation: "modern_norm_selection"
+        template: "Подай сучасну нормативну форму з наведеної пари."
+        slots: []
+      -
+        id: "C7.modern_norm_selection.05"
+        operation: "modern_norm_selection"
+        template: "Запиши сучасну нормативну форму з поданої пари."
+        slots: []
+      -
+        id: "C7.modern_norm_selection.06"
+        operation: "modern_norm_selection"
+        template: "Виділи сучасну нормативну форму в наведеній парі."
+        slots: []
+      -
+        id: "C7.modern_norm_selection.07"
+        operation: "modern_norm_selection"
+        template: "Яка форма в наведеній парі відповідає сучасній нормі?"
+        slots: []
+      -
+        id: "C7.modern_norm_selection.08"
+        operation: "modern_norm_selection"
+        template: "Котра з поданих форм відповідає сучасній нормі?"
+        slots: []
+  C8:
+    binding: >-
+      Printed word + phonetic context ↔ printed transcription ↔ supporting paragraph span ↔ same-paragraph
+      quoted book verdict ↔ rule/page.
+    source_fields:
+      word: "Printed word in Погрібний 1992"
+      context: "Phonetic context printed with that word"
+    required_context:
+      - "phonetic_context"
+      - "supporting_paragraph_span"
+      - "quoted_book_verdict"
+      - "rule_paragraph"
+      - "page"
+      - "ulif_stress_crosscheck"
+    target_policy: >-
+      Target contains only the book's normative/admissible transcription and its verbatim same-paragraph
+      verdict. A non-norm transcription may occur only on a serialized rejected side, never as the requested
+      target.
+    exclusions:
+      - >-
+        Non-norm-only paragraphs with no printed normative/admissible contrast; ambiguous verdicts; stress
+        mismatches; illegible notation.
+    line_count: 8
+    line_count_rationale: >-
+      Eight distinct lexical starts for one operation: uniform use gives top1=1/8 and top5=5/8. This is a
+      compact, reviewable baseline, not a claim of semantic or model-level diversity.
+    instructions:
+      -
+        id: "C8.supported_pronunciation.01"
+        operation: "supported_pronunciation"
+        template: >-
+          Подай нормативну або допустиму вимову слова «{word}» в контексті «{context}» за книжкою. Наведи також
+          оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+      -
+        id: "C8.supported_pronunciation.02"
+        operation: "supported_pronunciation"
+        template: >-
+          Запиши нормативну або допустиму вимову слова «{word}» в контексті «{context}» за книжкою. Наведи також
+          оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+      -
+        id: "C8.supported_pronunciation.03"
+        operation: "supported_pronunciation"
+        template: >-
+          Наведи нормативну або допустиму вимову слова «{word}» в контексті «{context}» за книжкою. Наведи також
+          оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+      -
+        id: "C8.supported_pronunciation.04"
+        operation: "supported_pronunciation"
+        template: >-
+          Вкажи нормативну або допустиму вимову слова «{word}» в контексті «{context}» за книжкою. Наведи також
+          оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+      -
+        id: "C8.supported_pronunciation.05"
+        operation: "supported_pronunciation"
+        template: >-
+          Відтвори нормативну або допустиму вимову слова «{word}» в контексті «{context}» за книжкою. Наведи
+          також оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+      -
+        id: "C8.supported_pronunciation.06"
+        operation: "supported_pronunciation"
+        template: >-
+          Слово «{word}» у контексті «{context}»: яку вимову книжка визнає нормативною або допустимою? Наведи
+          також оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+      -
+        id: "C8.supported_pronunciation.07"
+        operation: "supported_pronunciation"
+        template: >-
+          Яку вимову слова «{word}» в контексті «{context}» книжка визнає нормативною або допустимою? Наведи
+          також оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+      -
+        id: "C8.supported_pronunciation.08"
+        operation: "supported_pronunciation"
+        template: >-
+          Як за книжкою нормативно або допустимо вимовляти слово «{word}» в контексті «{context}»? Наведи також
+          оцінку цієї вимови з того самого абзацу.
+        slots:
+          - "word"
+          - "context"
+  C9:
+    binding: "Book's own section title ↔ verbatim headed section; book/grade/section/page locator."
+    source_fields:
+      section_title: "Textbook's own section title; section text must be the exact section it heads"
+    required_context:
+      - "book_identity"
+      - "grade_or_university_level"
+      - "section_identity"
+      - "page_locator"
+    target_policy: >-
+      Target is the complete verbatim section headed by the source title; never a summary or authored answer.
+    exclusions:
+      - >-
+        Exercises without printed answers; tables of contents; OCR-damaged sections. The
+        printed-question/printed-answer route uses source text directly, not invented catalog questions.
+    line_count: 8
+    line_count_rationale: >-
+      Eight distinct lexical starts for one operation: uniform use gives top1=1/8 and top5=5/8. This is a
+      compact, reviewable baseline, not a claim of semantic or model-level diversity.
+    instructions:
+      -
+        id: "C9.verbatim_section.01"
+        operation: "verbatim_section"
+        template: "Подай текст розділу «{section_title}» з підручника."
+        slots:
+          - "section_title"
+      -
+        id: "C9.verbatim_section.02"
+        operation: "verbatim_section"
+        template: "Наведи текст розділу «{section_title}» з підручника."
+        slots:
+          - "section_title"
+      -
+        id: "C9.verbatim_section.03"
+        operation: "verbatim_section"
+        template: "Відтвори текст розділу «{section_title}» з підручника."
+        slots:
+          - "section_title"
+      -
+        id: "C9.verbatim_section.04"
+        operation: "verbatim_section"
+        template: "Запиши текст розділу «{section_title}» з підручника."
+        slots:
+          - "section_title"
+      -
+        id: "C9.verbatim_section.05"
+        operation: "verbatim_section"
+        template: "Процитуй розділ «{section_title}» з підручника."
+        slots:
+          - "section_title"
+      -
+        id: "C9.verbatim_section.06"
+        operation: "verbatim_section"
+        template: "Розділ «{section_title}»: подай його текст із підручника."
+        slots:
+          - "section_title"
+      -
+        id: "C9.verbatim_section.07"
+        operation: "verbatim_section"
+        template: "Який текст містить розділ «{section_title}» у підручнику?"
+        slots:
+          - "section_title"
+      -
+        id: "C9.verbatim_section.08"
+        operation: "verbatim_section"
+        template: "Що написано в розділі «{section_title}» підручника?"
+        slots:
+          - "section_title"
