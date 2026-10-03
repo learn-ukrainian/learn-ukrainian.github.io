@@ -48,7 +48,6 @@ from __future__ import annotations
 
 import ast
 import fcntl
-import io
 import itertools
 import json
 import os
@@ -58,7 +57,6 @@ import subprocess
 import sys
 import tempfile
 import textwrap
-import tokenize
 import tomllib
 from collections.abc import Collection, Iterator
 from functools import lru_cache
@@ -878,20 +876,41 @@ def _child_env() -> dict[str, str]:
 
 
 def _names_the_marker(source: str) -> bool:
-    """True when code (an identifier or string literal, not a comment) names the marker.
+    """True when code can author or register the marker, rather than just name it.
 
-    The marker's name has to be spelled out in the code that applies it. A name
-    computed at run time (``"repo" + "_wide"``) is outside this check.
+    Identifiers cover decorators, pytestmark, aliases and re-exports. String
+    arguments count only in marker lookup, application, construction or
+    registration calls; allowlists, docstrings and embedded fixture code do
+    not apply marks. Indirect or computed marker names remain outside this
+    approximation; the exact nightly collection is the correctness anchor.
     """
-    if _MARK_NAME not in source:
+    if _MARK_NAME not in source and not ("repo" in source and "_wide" in source):
         return False
     try:
-        return any(
-            token.type != tokenize.COMMENT and _MARK_NAME in token.string
-            for token in tokenize.generate_tokens(io.StringIO(source).readline)
-        )
-    except (tokenize.TokenError, SyntaxError):
+        tree = ast.parse(source)
+    except SyntaxError:
+        # Unknown syntax must not silently exclude a potential mark source.
         return True
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and node.id == _MARK_NAME:
+            return True
+        if isinstance(node, ast.Attribute) and node.attr == _MARK_NAME:
+            return True
+        if isinstance(node, ast.alias) and node.name == _MARK_NAME:
+            return True
+        if not isinstance(node, ast.Call):
+            continue
+        call = _call_name(node).rsplit(".", 1)[-1]
+        if call not in {"getattr", "add_marker", "Mark", "addinivalue_line"}:
+            continue
+        values = [*node.args, *(keyword.value for keyword in node.keywords)]
+        for value in values:
+            if not isinstance(value, ast.Constant) or not isinstance(value.value, str):
+                continue
+            name = value.value.partition(":")[0].strip() if call == "addinivalue_line" else value.value
+            if name == _MARK_NAME:
+                return True
+    return False
 
 
 # Calls that load a module named by a string or a file path at run time.
@@ -972,8 +991,8 @@ def _candidate_test_files(
 ) -> frozenset[Path]:
     """Test files whose collection can run code that applies a ``repo_wide`` mark.
 
-    A mark source is a module that names the marker, or one that imports or
-    dynamically loads a mark source (a re-exported mark, a marked base class).
+    A mark source can author or register the marker, or import or dynamically
+    load a mark source (a re-exported mark, a marked base class).
     A test file's collection runs the mark sources it is, a ``conftest.py`` or
     package ``__init__.py`` above it that is one, and every global plugin.
     Conftest hooks act by location, not import, so a directory never joins the
@@ -982,7 +1001,7 @@ def _candidate_test_files(
     This is a fast approximation, not a proof (#9434 review). It misses a
     conftest hook that marks tests outside its own directory, a mark source
     loaded through an aliased loader (``import_module as load``), and a marker
-    name built at run time, including adjacent literals (``"repo" "_wide"``).
+    name passed indirectly or built at run time (``"repo" + "_wide"``).
     The ``slow`` exact check collects without this filter and catches them.
     """
     texts = {path: path.read_text(encoding="utf-8", errors="replace") for path in sources}
@@ -1412,7 +1431,7 @@ def test_completeness_follows_pytest_effective_marks(tmp_path: Path) -> None:
     assert _collect_repo_wide_marks(tmp_path, test_files) == marked
     relative = {path.relative_to(tmp_path).as_posix() for path in candidates}
     assert "tests/test_unrelated.py" not in relative
-    assert "tests/test_mention_only.py" in relative  # its docstring names the marker; collected, unmarked
+    assert "tests/test_mention_only.py" not in relative  # its docstring cannot apply a marker
     # A module row does not stand in for a function row, or the reverse.
     assert _unregistered_repo_wide_nodes(
         marked, ["tests/test_alias.py"], ["tests/test_module_marked.py::test_also_decorated"]
@@ -1455,12 +1474,12 @@ _PREFILTER_BLIND_SPOTS = {
         },
         (frozenset(), frozenset({"tests/test_inherit.py::TestScan.test_inherited"})),
     ),
-    "marker name from adjacent string literals": (
+    "marker name from a runtime expression": (
         {
             "tests/test_plain.py": """
                 import pytest
 
-                pytestmark = getattr(pytest.mark, "repo" "_wide")
+                pytestmark = getattr(pytest.mark, "repo" + "_wide")
 
                 def test_plain():
                     ...
@@ -1510,11 +1529,63 @@ def test_prefilter_follows_imports_conftests_packages_and_global_plugins(tmp_pat
     assert _candidate_test_files(tmp_path, sources, test_files, {"global_marks"}) == frozenset(test_files)
 
 
-def test_marker_naming_ignores_comments_only() -> None:
-    assert not _names_the_marker("# repo_wide\nx = 1\n")
-    assert _names_the_marker("import pytest as pt\nmark = pt.mark.repo_wide\n")
-    assert _names_the_marker('mark = getattr(pytest.mark, "repo_wide")\n')
-    assert not _names_the_marker("x = 1\n")
+@pytest.mark.parametrize(
+    "source",
+    [
+        "# repo_wide\nx = 1\n",
+        '"""pytest.mark.repo_wide is described here."""\n',
+        'BOUNDED_MARKERS = frozenset({"repo_wide"})\n',
+        'def test_allowlist():\n    assert "repo_wide" in BOUNDED_MARKERS\n',
+        'MARKERS = ["repo_wide", "slow"]\n',
+        'SOURCE = "@pytest.mark.repo_wide\\ndef test_fixture(): pass"\n',
+        "x = 1\n",
+    ],
+)
+def test_marker_naming_ignores_inert_strings(source: str) -> None:
+    assert not _names_the_marker(source)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "import pytest as pt\nmark = pt.mark.repo_wide\n",
+        "from pytest.mark import repo_wide\n",
+        "@pytest.mark.repo_wide\ndef test_planted(): pass\n",
+        "pytestmark = [pytest.mark.repo_wide]\n",
+        'mark = getattr(pytest.mark, "repo_wide")\n',
+        'mark = getattr(pytest.mark, "repo" "_wide")\n',
+        'item.add_marker("repo_wide")\n',
+        'item.add_marker(marker="repo_wide")\n',
+        'mark = pytest.Mark(name="repo_wide", args=(), kwargs={})\n',
+        'config.addinivalue_line("markers", "repo_wide: whole-tree scanner")\n',
+        "@pytest.mark.repo_wide\ndef test_broken(\n",
+    ],
+)
+def test_marker_naming_keeps_authoring_and_registration(source: str) -> None:
+    assert _names_the_marker(source)
+
+
+def test_prefilter_allowlist_plugin_does_not_hide_a_planted_marker(tmp_path: Path) -> None:
+    """A global plugin's inert marker name must not widen collection to all tests."""
+    sources, test_files = _write_synthetic_tree(tmp_path)
+    plugin = tmp_path / "plugins" / "dispatch_cap.py"
+    plugin.parent.mkdir()
+    plugin.write_text('BOUNDED_MARKERS = frozenset({"repo_wide"})\n', encoding="utf-8")
+    planted = tmp_path / "tests" / "test_planted.py"
+    planted.write_text("import pytest\n@pytest.mark.repo_wide\ndef test_planted(): pass\n", encoding="utf-8")
+    candidates = _candidate_test_files(tmp_path, [*sources, plugin, planted], [*test_files, planted], {plugin.stem})
+    assert planted in candidates
+    assert tmp_path / "tests" / "test_unrelated.py" not in candidates
+    assert tmp_path / "tests" / "test_mention_only.py" not in candidates
+    marked = _collect_repo_wide_marks(tmp_path, candidates)
+    assert "tests/test_planted.py::test_planted" in marked[1]
+    assert "tests/test_planted.py::test_planted" in _unregistered_repo_wide_nodes(marked, (), ())
+
+
+@pytest.mark.parametrize("relative", ["scripts/ci/pytest_dispatch_cap.py", "tests/ci/test_pytest_dispatch_cap.py"])
+def test_dispatch_cap_allowlist_is_not_a_marker_source(relative: str) -> None:
+    source = (_REPO_ROOT / relative).read_text(encoding="utf-8")
+    assert not _names_the_marker(source)
 
 
 def test_not_repo_wide_entries_are_justified() -> None:
