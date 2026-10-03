@@ -133,6 +133,33 @@ def test_current_a1_selection_and_source_span_property(a1_source_capture):
         assert sources.select_gloss(word, rows[lemma, pos], kaikki[lemma]).gloss == expected
 
 
+def test_all_187_records_mixed_corroboration_never_selects_a_nonfirst_sense(a1_source_capture):
+    records, captured = a1_source_capture
+    assert len(records) == len(captured) == 187
+    mixed_checked = corroborated = 0
+    for word in records:
+        c = captured[word["id"]]
+        result = sources.select_gloss(word, c["rows"], c["kaikki"], ulif_entries=c["ulif_entries"])
+        mixed = c["kaikki"]
+        if word["pos"] != "prep" or not mixed or len(mixed["pos"]) < 2 or not mixed["glosses"]:
+            continue
+        mixed_checked += 1
+        if result.gloss is None:
+            assert result.reason == codes.GLOSS_SENSE_UNRESOLVED, word["id"]
+            continue
+        # Independent corpus oracle: every applicable captured first sense is
+        # unrestricted. Read its first head directly, without selector helpers
+        # or searching later senses for a matching candidate.
+        first_sense = json.loads(c["rows"][0]["translations"])[0]
+        assert not first_sense.startswith(("(", "[")), word["id"]
+        first_head = first_sense.split(" (", 1)[0].split(", ", 1)[0]
+        assert result.gloss == first_head, (word["id"], first_sense, result)
+        assert result.source == "dmklinger_uk_en"
+        assert result.ref["id"] == c["rows"][0]["id"]
+        corroborated += 1
+    assert mixed_checked > corroborated > 0
+
+
 def test_cited_ids_exclude_incidental_mentions_and_include_uses():
     plan = {
         "note": "W-999",
@@ -278,8 +305,59 @@ def test_register_marked_spans_are_only_fallback(label, edge):
     }[edge]
     word = {"lemma": "synthetic", "pos": "noun"}
     result = sources.select_gloss(word, [row(1, [marked, "modern"])], payload([marked]))
-    assert result.gloss == "modern"
+    # Preserve the complete label matrix: nested descriptive notes now keep
+    # their agreed head; outer register-only notes remain fallback.
+    assert result.gloss == ("old" if edge == "nested" else "modern")
     assert sources.select_gloss(word, [row(1, [marked])], None).gloss == "old"
+
+
+@pytest.mark.parametrize(
+    "note",
+    ["figuratively", "nonstandard", "rare", "intransitive, colloquial", "formal, transitive", "colloq."],
+)
+def test_register_note_requires_whole_labels(note):
+    assert sources._register_note(note)
+
+
+@pytest.mark.parametrize(
+    "sense,expected",
+    [
+        ("dad (informal: a father)", "dad"),
+        ("mum (mother (informal, familiar))", "mum"),
+        ("kid (child (colloq.))", "kid"),
+        ("thanks (a polite reaction to help)", "thanks"),
+        ("old (sense (rare))", "old"),
+    ],
+)
+def test_descriptive_and_nested_register_notes_do_not_restrict(sense, expected):
+    assert not any(sources._register_note(note) for note in sources._outer_notes(sense))
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "noun"}, [row(1, [sense, "modern"])], payload([expected])
+    )
+    assert result.gloss == expected
+    assert sources._gloss_head(sense, keep_qualifiers=True) == sense
+
+
+def test_babtsia_shaped_descriptive_note_is_not_a_register_label():
+    result = sources.select_gloss(
+        {"lemma": "бабця", "pos": "noun"},
+        [row(1, ["granny (informal: a grandmother)", "grandmother"], word="бабця")],
+        payload(["granny"]),
+    )
+    assert result.gloss == "granny"
+
+
+@pytest.mark.parametrize("note", ["+ instrumental", "+ genitive", "+ instrumental or more rarely genitive"])
+def test_government_note_is_grammar_and_does_not_restrict(note):
+    assert not sources._register_note(note)
+    assert sources._GRAMMATICAL_LABEL.fullmatch(note)
+    assert sources._gloss_head(f"between ({note})", keep_qualifiers=True) == "between"
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "prep"},
+        [row(1, [f"between ({note})", "elsewhere"], pos="preposition")],
+        payload(["between"], "prep"),
+    )
+    assert result.gloss == "between"
 
 
 @pytest.mark.parametrize("qualifier", ["Beta vulgaris", "archaeology", "information"])
@@ -336,13 +414,14 @@ def test_preposition_qualifier_cannot_be_dropped_to_pass_the_length_gate():
 @pytest.mark.parametrize(
     "glosses,expected",
     [
-        (["circle", "around (surrounding)"], "around"),
-        (["circle", "about"], "about (in the immediate neighborhood of)"),
-        (["circle", "about (concerning)"], "about (in the immediate neighborhood of)"),
-        (["around (surrounding)", "malformed)"], "about (in the immediate neighborhood of)"),
+        (["circle", "about (in the immediate neighborhood of)"], "about"),
+        (["circle", "around (surrounding)"], None),
+        (["circle", "about"], None),
+        (["circle", "about (concerning)"], None),
+        (["around (surrounding)", "malformed)"], None),
     ],
 )
-def test_mixed_pos_can_only_corroborate_identical_qualified_preposition(glosses, expected):
+def test_mixed_pos_can_only_corroborate_first_head_with_identical_qualifiers(glosses, expected):
     mixed = {"pos": ["noun", "prep"], "glosses": glosses}
     result = sources.select_gloss(
         {"lemma": "synthetic", "pos": "prep"},
@@ -350,8 +429,42 @@ def test_mixed_pos_can_only_corroborate_identical_qualified_preposition(glosses,
         mixed,
     )
     assert result.gloss == expected
-    assert result.source == "dmklinger_uk_en"
+    if expected:
+        assert result.source == "dmklinger_uk_en"
+    else:
+        assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
     assert sources.select_gloss({"lemma": "synthetic", "pos": "prep"}, [], mixed).gloss is None
+
+
+@pytest.mark.parametrize(
+    "dmk,kaikki,expected",
+    [
+        (["(rare) secondary", "primary (+ genitive)", "minority"], ["primary (+ genitive)"], "primary"),
+        (["(rare) secondary", "primary (+ genitive)", "minority"], ["minority"], None),
+        (["primary", "minority"], ["minority"], None),
+        (["alternative form of primary", "minority"], ["minority"], None),
+        (["(rare) minority"], ["minority"], None),
+    ],
+)
+def test_mixed_pos_corroboration_cannot_promote_a_later_sense(dmk, kaikki, expected):
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "prep"},
+        [row(1, dmk, pos="preposition")],
+        {"pos": ["noun", "prep"], "glosses": kaikki},
+    )
+    assert result.gloss == expected
+    if expected is None:
+        assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
+
+
+def test_mixed_pos_corroboration_cannot_promote_a_later_row():
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "prep"},
+        [row(1, ["primary"], pos="preposition"), row(2, ["minority"], pos="preposition")],
+        {"pos": ["noun", "prep"], "glosses": ["minority"]},
+    )
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
 
 
 @pytest.mark.parametrize("punctuation", ["?", "!", "?!"])
@@ -429,13 +542,16 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
         ("їжа", "food"),
         ("чобіт", "boot"),
         ("чай", "tea"),
-        ("коло", "around"),
+        ("коло", None),
+        ("до", None),
+        ("перед", None),
+        ("між", "between"),
         ("хто", "who"),
         ("що", None),
         ("ґрунт", "ground"),
         ("маля", "infant"),
         ("мама", "mama"),
-        ("тато", None),
+        ("тато", "dad"),
         ("од", "from"),
         ("зо", "with (in the company of)"),
         ("кувати", None),

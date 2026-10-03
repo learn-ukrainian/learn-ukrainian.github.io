@@ -197,7 +197,12 @@ def test_kaikki_exact_readonly_and_alignment(synthetic_kaikki_side_db):
         None,
         codes.GLOSS_SENSE_UNRESOLVED,
     )
-    assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (None, "kaikki_multi_pos")
+    # A mixed preposition cannot resolve without a corroborated primary
+    # dmklinger sense; the shared selector reports the record-level gap.
+    assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (
+        None,
+        codes.GLOSS_SENSE_UNRESOLVED,
+    )
     assert sources.aligned_kaikki_gloss(result.raw["вона"], "verb", False) == (None, "kaikki_pos_mismatch")
     assert sources.aligned_kaikki_gloss(result.raw["synthetic-absent"], "noun", True) == (None, "kaikki_absent")
 

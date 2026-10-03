@@ -312,9 +312,35 @@ _REGISTER_LABEL = re.compile(
 )
 _GRAMMATICAL_LABEL = re.compile(
     r"(?:preposition|prepositional phrase|conjunction|particle|interjection|determiner|"
-    r"(?:interrogative|relative|personal|possessive) pronoun|noun|verb|adjective|adverb)",
+    r"(?:interrogative|relative|personal|possessive) pronoun|noun|verb|adjective|adverb|"
+    r"(?:in)?transitive|\+\s*(?:nominative|genitive|dative|accusative|instrumental|locative|vocative)"
+    r"(?:\s+or(?:\s+more rarely)?\s+(?:nominative|genitive|dative|accusative|instrumental|locative|vocative))*)",
     re.I,
 )
+
+
+def _outer_notes(sense: str) -> list[str]:
+    """Read whole outer bracket notes, without promoting nested annotations."""
+    notes, depth, start = [], 0, 0
+    for index, char in enumerate(sense):
+        if char in "([":
+            if depth == 0:
+                start = index + 1
+            depth += 1
+        elif char in ")]":
+            depth -= 1
+            if depth == 0:
+                notes.append(sense[start:index].strip())
+    return notes
+
+
+def _register_note(note: str) -> bool:
+    """Only complete register labels, optionally mixed with grammar, restrict."""
+    labels = re.split(r"\s*[,;]\s*", note)
+    register = [bool(_REGISTER_LABEL.fullmatch(label.rstrip("."))) for label in labels]
+    return any(register) and all(
+        marked or _GRAMMATICAL_LABEL.fullmatch(label) for label, marked in zip(labels, register, strict=True)
+    )
 
 
 def _gloss_head(span: str, *, keep_qualifiers: bool = False) -> str:
@@ -346,7 +372,7 @@ def _gloss_head(span: str, *, keep_qualifiers: bool = False) -> str:
                 if span[index:].casefold() in {"(short scale)", "(long scale)"} or (
                     keep_qualifiers
                     and not _GRAMMATICAL_LABEL.fullmatch(annotation)
-                    and not _REGISTER_LABEL.search(annotation)
+                    and not _register_note(annotation)
                 ):
                     return span
                 span = span[:index].strip().rstrip("?!").rstrip()
@@ -432,8 +458,9 @@ def select_gloss(
     Register-marked spans are fallback only. Without cross-source agreement,
     multiple unconnected heads remain unresolved, even if only one fits D2.
     Preposition qualifiers survive unless their head is corroborated. A mixed
-    Kaikki POS entry can only corroborate an identical qualified dmklinger
-    span, never supply a standalone gloss. Source rows retain their bytes.
+    Kaikki POS entry can only corroborate the first head of the first
+    unrestricted dmklinger sense, with identical meaning qualifiers. Otherwise
+    that mixed entry remains unresolved. Source rows retain their bytes.
     """
     lemma, pos = word["lemma"], word["pos"]
     if pronoun_entry is None:
@@ -479,21 +506,8 @@ def select_gloss(
         senses = []
     groups: list[list[dict]] = []
 
-    def add_sense(sense: str, source: str, row: dict | None) -> None:
-        annotations = re.findall(r"\([^()]*\)|\[[^\[\]]*\]", sense)
-        # Person/formality distinctions on pronouns are grammatical, not
-        # restrictions on the register of the entire lexical sense.
-        annotations = [
-            re.sub(
-                r"\b(?:[123](?:st|nd|rd)|first|second|third)-person"
-                r"(?:\s+(?:singular|plural|or))*\s+(?:familiar|formal)\b",
-                "",
-                label,
-                flags=re.I,
-            )
-            for label in annotations
-        ]
-        marked = any(_REGISTER_LABEL.search(label) for label in annotations)
+    def add_sense(sense: str, source: str, row: dict | None) -> list[dict]:
+        marked = any(_register_note(note) for note in _outer_notes(sense))
         group = []
         for span in _sense_spans(sense):
             head = _gloss_head(span)
@@ -513,7 +527,10 @@ def select_gloss(
             )
         if group:
             groups.append(group)
+        return group
 
+    primary = None
+    primary_seen = False
     for row in rows:
         raw = row.get("translations") or []
         try:
@@ -523,31 +540,37 @@ def select_gloss(
         if isinstance(translations, list):
             for sense in translations:
                 if isinstance(sense, str):
-                    add_sense(sense, "dmklinger_uk_en", row)
+                    group = add_sense(sense, "dmklinger_uk_en", row)
+                    if not primary_seen and not any(_register_note(note) for note in _outer_notes(sense)):
+                        # An unparseable first sense cannot authorize a later
+                        # sense either. Comma alternatives do not move its head.
+                        primary_seen = True
+                        primary = group[0] if group else None
     for sense in senses:
         add_sense(sense, "kaikki_wiktionary", None)
-    if (
+    mixed_preposition = (
         reason == "kaikki_multi_pos"
         and pos == "prep"
         and not collision
         and payload
+        and payload.get("glosses")
         and isinstance(payload.get("pos"), list)
         and len(payload["pos"]) > 1
-    ):
-        # The flat list cannot assign POS to a bare head. Exact qualified
-        # agreement with a POS-filtered row supplies that missing binding.
-        qualified = {c["qualified"] for group in groups for c in group if c["qualified"] != c["span"]}
+    )
+    if mixed_preposition:
+        # A minority sense cannot become primary through flat mixed-POS
+        # agreement. Government notes are grammar, not meaning qualifiers.
         corroborating, _ = aligned_kaikki_senses({**payload, "pos": ["prep"]}, pos, pronoun_entry)
-        if "prep" in payload.get("pos", []):
+        if primary and "prep" in payload.get("pos", []):
             for sense in corroborating:
-                if _gloss_head(sense, keep_qualifiers=True) in qualified:
+                if _gloss_head(sense, keep_qualifiers=True) == primary["qualified"]:
                     add_sense(sense, "kaikki_wiktionary", None)
     candidates = [c for group in groups for c in group]
     if any(not c["restricted"] for c in candidates):
         groups = [[c for c in group if not c["restricted"]] for group in groups]
         candidates = [c for group in groups for c in group]
     if not candidates:
-        return GlossSelection(reason=reason or codes.GLOSS_MISSING)
+        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED if mixed_preposition else reason or codes.GLOSS_MISSING)
     support: dict[str, set[str]] = {}
     for candidate in candidates:
         support.setdefault(candidate["head"], set()).add(candidate["source"])
@@ -559,6 +582,8 @@ def select_gloss(
     diagnostic = tuple(
         {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
     )
+    if mixed_preposition and not agreed:
+        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
     if not agreed:
         components = [{head} for head in eligible]
         for group in groups:
