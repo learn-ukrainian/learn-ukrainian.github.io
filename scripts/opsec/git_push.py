@@ -639,13 +639,11 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
     object_format = repository.object_format()
     updates = parse_updates(data, ID_LENGTH[object_format])
     isolate_scanner(repository)
-    overrides = dict(environment)
-    claim = claimant() if overrides.get("LU_OPSEC_OVERRIDE", "").strip() else None
+    reason = environment.get("LU_OPSEC_OVERRIDE", "")
     dest = destination(url)
     if gate.is_private(dest):
         if trusted_route(repository, remote, url):
-            gate.check_texts(dest, [], environment=overrides, claimant=claim)  # Records a supplied override.
-            return
+            return  # Nothing public is sent, so the override is neither used nor claimed.
         dest += "#untrusted-route"  # Never private: scanned as public.
     texts, names, tips = published_refs(repository, updates)
     owners: list[str] = []  # The commit each commit text belongs to, from texts[first] on.
@@ -688,8 +686,22 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
         )
     first = len(texts) - len(owners)
     try:
-        gate.check_texts(dest, texts, environment=overrides, field_names=names, claimant=claim)
+        gate.check_texts(dest, texts, environment={}, field_names=names)
     except gate.PublishBlocked as error:
+        if reason.strip() and error.indices:
+            # Only a flagged push uses the override: its claimant is looked up
+            # here, and the blocked texts are checked again with the reason so
+            # the override is claimed once and logged before anything is sent.
+            # A clean push never reaches this, so a failed lookup cannot refuse it.
+            flagged = sorted(error.indices)
+            gate.check_texts(
+                dest,
+                [texts[index] for index in flagged],
+                environment={"LU_OPSEC_OVERRIDE": reason},
+                field_names=[names[index] for index in flagged],
+                claimant=claimant(),
+            )
+            return
         older = {owners[index - first] for index in error.indices if index >= first} - set(tips)
         if state == "absent here" and older:
             raise gate.PublishBlocked(

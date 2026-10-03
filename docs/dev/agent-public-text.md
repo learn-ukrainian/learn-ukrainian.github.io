@@ -72,7 +72,9 @@ rules or incompatible spans refuse recording without a fallback tokenizer.
 local log write. It cannot bypass missing or incompatible tooling. The log
 contains timestamp, repository identity, rule identifiers and reason, never
 payload text. The child receives no override; a parent-scoped reason can be
-consumed once. Claim-file reclamation remains maintenance work.
+consumed once. A clean, empty or private publish never uses up the override:
+it is claimed and logged only when a scan blocks, so one override covers
+exactly one flagged publish. Claim-file reclamation remains maintenance work.
 
 ## Raw gh reads and private writes
 
@@ -291,8 +293,10 @@ fields are reported as `commit[<id>].mergetag[<n>].tagname` and `.message`. An
 object, including an embedded one, without a blank line after its headers, or
 whose headers open with a continuation line, refuses the push naming only the
 object. Refusals name the rule, class, field and line, never the matched text.
-The single-use, logged `LU_OPSEC_OVERRIDE` applies and is claimed for the
-process that started the push; the caller's own hook does not receive it.
+The single-use, logged `LU_OPSEC_OVERRIDE` applies only to a flagged push and
+is claimed for the process that started it; the caller's own hook does not
+receive it. A clean push neither uses up the override nor looks up that process,
+so a failed lookup refuses only a flagged push.
 File contents are not scanned.
 
 **History already on the public default branch.** Nothing the destination
