@@ -6140,7 +6140,10 @@ def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
 
 
 def test_run_worker_codex_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, tmp_path, monkeypatch):
+    import tomllib
+
     from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.review.receipts.ledger import REVIEW_TOOLS
 
     plan, log = _prepare_codex_review(tmp_path, monkeypatch)
     task_id = "worker-codex-review"
@@ -6180,7 +6183,15 @@ def test_run_worker_codex_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir,
     assert len(gate_calls) == 1
     logged_home, logged_args = gate_calls[0]
     assert logged_home == str(plan.codex_home)
-    assert 'mcp_servers.sources.default_tools_approval_mode="approve"' in logged_args
+    # The fake CLI logs "$*", preserving the TOML values (including spaces).
+    sources = {}
+    for config in logged_args.split(" -c ")[1:]:
+        config = config.split(" --disable ", 1)[0]
+        if config.startswith("mcp_servers.sources."):
+            sources.update(tomllib.loads(config)["mcp_servers"]["sources"])
+    assert set(sources["enabled_tools"]) == REVIEW_TOOLS
+    assert sources["default_tools_approval_mode"] == "prompt"
+    assert sources["tools"] == {tool: {"approval_mode": "approve"} for tool in REVIEW_TOOLS}
     # Final launch argv/env: scoped CODEX_HOME, no daemon sources URL override.
     invocation = CodexAdapter().build_invocation(
         prompt="review with mcp__sources__verify_word",

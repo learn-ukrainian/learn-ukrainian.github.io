@@ -539,8 +539,6 @@ def test_codex_adapter_mode_flags_read_only():
     assert CodexAdapter._mode_flags("read-only") == [
         "-s",
         "read-only",
-        "-c",
-        'mcp_servers.sources.default_tools_approval_mode="approve"',
     ]
 
 
@@ -598,13 +596,11 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert plan.stdin_payload == "hello"
     assert plan.output_file is not None
     assert "test-task" in plan.output_file.name
-    # Read-only keeps the lane-default effort and auto-approves the
-    # sources server so stdio MCP calls are not cancelled.
+    # Read-only keeps lane effort and grants only individually approved readers.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    assert config_values == [
-        "model_reasoning_effort=high",
-        'mcp_servers.sources.default_tools_approval_mode="approve"',
-    ]
+    from scripts.agent_runtime.adapters.codex import _sources_read_only_flags
+
+    assert config_values == ["model_reasoning_effort=high", *_sources_read_only_flags()[1::2]]
     # Liveness paths should include the output file
     assert plan.output_file in plan.liveness_paths
 
@@ -2611,35 +2607,57 @@ def test_invoke_gemini_runtime_reports_actual_agy_fallback_model(tmp_path, monke
     from ai_llm.fallback import AGY_GEMINI_MODEL, PRIMARY_GEMINI_MODEL
 
     attempts = []
-    adapter = SimpleNamespace(build_invocation=lambda **kwargs: InvocationPlan(
-        cmd=["fixture", "--model", kwargs["model"]], cwd=tmp_path,
-    ))
+    adapter = SimpleNamespace(
+        build_invocation=lambda **kwargs: InvocationPlan(
+            cmd=["fixture", "--model", kwargs["model"]],
+            cwd=tmp_path,
+        )
+    )
 
     def execute(**kwargs):
         attempts.append((kwargs["agent_name"], kwargs["model"]))
         is_agy = kwargs["agent_name"] == "agy"
         return SimpleNamespace(
             parse=ParseResult(
-                ok=is_agy, response="AGY model answer" if is_agy else "",
-                rate_limited=not is_agy, stderr_excerpt=None if is_agy else "429 quota",
+                ok=is_agy,
+                response="AGY model answer" if is_agy else "",
+                rate_limited=not is_agy,
+                stderr_excerpt=None if is_agy else "429 quota",
             ),
-            duration_s=0.1, returncode=0 if is_agy else 1,
-            kill_reason=None, stderr_text="", liveness_paths=[],
+            duration_s=0.1,
+            returncode=0 if is_agy else 1,
+            kill_reason=None,
+            stderr_text="",
+            liveness_paths=[],
         )
 
     monkeypatch.setattr(runner, "_load_adapter", lambda name: adapter)
     monkeypatch.setattr(runner, "has_headroom", lambda *args: (True, ""))
     monkeypatch.setattr(runner, "_execute_invocation_plan", execute)
-    monkeypatch.setattr(runner, "_resolve_plan_telemetry", lambda **kwargs: SimpleNamespace(
-        model=kwargs["requested_model"], effort="high", cli_version="fixture",
-    ))
+    monkeypatch.setattr(
+        runner,
+        "_resolve_plan_telemetry",
+        lambda **kwargs: SimpleNamespace(
+            model=kwargs["requested_model"],
+            effort="high",
+            cli_version="fixture",
+        ),
+    )
     monkeypatch.setattr(runner, "_resolve_gemini_ladder_auth_modes", lambda config: ("oauth",))
     with patch("agent_runtime.runner.write_record") as write_record:
         result = runner._invoke_gemini_with_fallback(
-            agent_name="gemini", adapter=adapter, prompt="hello", mode="workspace-write",
-            cwd=tmp_path, model=PRIMARY_GEMINI_MODEL, task_id="gemini-model-fallback",
-            session_id=None, tool_config=None, entrypoint="runtime",
-            hard_timeout=300, stall_timeout=60,
+            agent_name="gemini",
+            adapter=adapter,
+            prompt="hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=PRIMARY_GEMINI_MODEL,
+            task_id="gemini-model-fallback",
+            session_id=None,
+            tool_config=None,
+            entrypoint="runtime",
+            hard_timeout=300,
+            stall_timeout=60,
         )
 
     assert result.ok is True
