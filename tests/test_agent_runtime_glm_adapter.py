@@ -176,6 +176,10 @@ def test_glm_adapter_parse_response_failure():
     assert result.response == ""
     assert "connection failed" in result.stderr_excerpt
     assert result.rate_limited is False
+    # The adapter forwards stderr unchanged; no installed CLI evidence
+    # supports this nested-prefix fixture. Pin the unclassified outcome.
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.provider_error_text == ""
 
 
 def test_glm_adapter_parse_response_rate_limit():

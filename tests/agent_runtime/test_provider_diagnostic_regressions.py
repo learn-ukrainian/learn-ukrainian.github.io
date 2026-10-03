@@ -41,6 +41,90 @@ LIMIT_DIAGNOSTICS = [
     "HTTP 429: Too Many Requests",
 ]
 
+# Cursor's Error: ${e.message} catch block and connect-es ConnectError
+# formatter ([<code>] <message>); Kimi's formatStartupError title registry.
+# Status inputs are substituted, not captured live provider failures.
+PREFIXED_TYPED_DIAGNOSTICS = [
+    ("400 Bad Request", "provider_error", None),
+    ("401 Unauthorized", "provider_auth", "auth"),
+    ("403 Forbidden", "provider_auth", "auth"),
+    ("429 Too Many Requests", "rate_limited", "rate_limited"),
+    ("500 Internal Server Error", "provider_overloaded", "overloaded"),
+    ("502 Bad Gateway", "provider_overloaded", "overloaded"),
+    ("503 Service Unavailable", "provider_overloaded", "overloaded"),
+    ("504 Gateway Timeout", "provider_overloaded", "overloaded"),
+    ("[resource_exhausted] You have hit your usage limit", "rate_limited", "rate_limited"),
+    ("[unauthenticated] invalid token", "provider_auth", "auth"),
+    ("[permission_denied] access denied", "provider_auth", "auth"),
+    ("[unavailable] server busy", "provider_overloaded", "overloaded"),
+    ("Provider rate limit", "rate_limited", "rate_limited"),
+    ("Provider authentication error", "provider_auth", "auth"),
+    ("Provider overloaded", "provider_overloaded", "overloaded"),
+    ("Provider connection error", "transport_error", "transport"),
+]
+
+
+@pytest.mark.parametrize(
+    "prefix", ["Error", "opencode", "kimi", "grok", "agy", "gemini", "cursor", "provider", "acp transport"]
+)
+@pytest.mark.parametrize("body,expected,trigger", PREFIXED_TYPED_DIAGNOSTICS)
+def test_generic_prefix_admits_immediate_status_label_or_title(prefix, body, expected, trigger):
+    diagnostic = f"{prefix}: {body}"
+    assert provider_stderr_error(diagnostic) == diagnostic
+    assert provider_failure_code(diagnostic) == expected
+
+
+@pytest.mark.parametrize("adapter", ADAPTERS)
+@pytest.mark.parametrize("body,expected,trigger", PREFIXED_TYPED_DIAGNOSTICS)
+def test_prefixed_typed_diagnostic_reaches_adapter_failover(adapter, body, expected, trigger):
+    diagnostic = f"error: {body}"
+    result = ADAPTERS[adapter]().parse_response(stdout="", stderr=diagnostic, returncode=1, output_file=None)
+    assert result.ok is False
+    assert result.provider_error_text == diagnostic
+    assert result.failure_code == expected
+    assert result.rate_limited is (expected == "rate_limited")
+    assert (
+        classify_failover_trigger(
+            parse=result, returncode=1, kill_reason=None, stdout_text=CONTENT, stderr_text=diagnostic
+        )
+        == trigger
+    )
+
+
+@pytest.mark.parametrize(
+    "body,expected",
+    [
+        ("400 invalid rate limit configuration", "provider_error"),
+        ("403 rate limit configuration forbidden", "provider_auth"),
+        ("503 rate limit service unavailable", "provider_overloaded"),
+        ("[unauthenticated] rate limit configuration", "provider_auth"),
+        ("[permission_denied] rate limit configuration", "provider_auth"),
+        ("[unavailable] rate limit configuration", "provider_overloaded"),
+        ("Provider authentication error: rate limit configuration", "provider_auth"),
+        ("Provider connection error: rate limit configuration", "transport_error"),
+    ],
+)
+def test_immediate_typed_marker_outranks_message_words(body, expected):
+    assert provider_failure_code(provider_stderr_error(f"error: {body}")) == expected
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "see 429 Too Many Requests docs",
+        "test_[resource_exhausted].py FAILED",
+        "see [unauthenticated] docs",
+        "see Provider rate limit docs",
+        "error: rate limit exceeded",
+        "error: error: 429 Too Many Requests",
+        "429_test.py FAILED",
+        "[resource_exhausted_test] FAILED",
+        "Provider connection error_test.py FAILED",
+    ],
+)
+def test_generic_prefix_does_not_search_for_typed_markers_or_peel_nested_prefixes(body):
+    assert provider_stderr_error(f"opencode: {body}") == ""
+
 
 @pytest.mark.parametrize("diagnostic", LIMIT_DIAGNOSTICS)
 def test_gemini_real_terminal_limit_sets_api_cooldown(diagnostic, tmp_path, monkeypatch):
@@ -229,6 +313,7 @@ def test_generic_prefix_cannot_attribute_later_provider_mentions(prefix, body):
         ("Authentication required", "provider_auth"),
         ("Service unavailable", "provider_overloaded"),
         ("connection refused", "transport_error"),
+        ("You have exhausted your daily quota. Please try again tomorrow.", "rate_limited"),
     ],
 )
 def test_generic_prefix_keeps_immediate_provider_marker(prefix, body, expected):
