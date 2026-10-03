@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-120 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+121 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
