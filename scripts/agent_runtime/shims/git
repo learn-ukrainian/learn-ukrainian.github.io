@@ -248,7 +248,9 @@ real_git="$(_real_git)" || {
 # (also one an alias expands to) runs with core.hooksPath pinned to the scanner's
 # hooks directory. As the last command-line assignment the pin outranks every
 # other configuration source, and Git hands it to recursive submodule pushes.
-# A push that would skip the hook, or whose scanner is unusable, is refused.
+# A push that would skip the hook, or whose scanner is unusable, is refused, and
+# so is an alias the shim cannot follow to a command name. The pin is not added
+# to other commands: it would hide the caller's other hooks (pre-commit, ...).
 
 # Git's builtins (git --list-cmds=builtins, 2.53, push aside) need no alias lookup: Git ignores
 # aliases that hide them. Any other command is looked up as an alias.
@@ -310,50 +312,58 @@ done
 _opsec_globals=("${@:1:_opsec_index}")
 _opsec_command="${@:_opsec_index+1:1}"
 _opsec_push=0
-_opsec_alias_options=0
+_opsec_external=0
 _opsec_expansion=()
+
+# The shim forwards only a command it has classified. An alias it cannot follow to a
+# command name could reach push without the hooks path, so it is refused whatever it
+# would run.
+_opsec_unresolved() {
+  echo "OPSEC: alias '$_opsec_command' $1, so the shim cannot tell whether it pushes; refused. Run the expanded command instead." >&2
+  exit 2
+}
+
 if [[ "$_opsec_command" == "push" ]]; then
   _opsec_push=1
 elif [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
-  # Follow aliases as Git does: the first word after any options names the next command.
+  # Follow aliases as Git does: an alias's first word names the next command. The
+  # lookup sees the caller's global options, as Git's does.
   _opsec_name="$_opsec_command"
-  for _opsec_depth in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16; do
-    _opsec_builtin "$_opsec_name" && break
-    _opsec_value="$("$real_git" "${_opsec_globals[@]}" config --get "alias.$_opsec_name" 2>/dev/null)" || break
-    # A shell alias runs its commands outside this shim (a recorded gap, like absolute git).
-    [[ "$_opsec_value" == '!'* ]] && break
-    _opsec_words=()
-    read -r -d '' -a _opsec_words <<<"$_opsec_value" || true
-    _opsec_next=""
-    _opsec_skip=0
-    for _opsec_word in "${_opsec_words[@]}"; do
-      _opsec_word="${_opsec_word//[\'\"\\]/}"
-      _opsec_expansion+=("$_opsec_word")
-      if [[ -n "$_opsec_next" ]]; then
-        continue
-      elif [[ "$_opsec_skip" == 1 ]]; then
-        _opsec_skip=0
-      elif [[ "$_opsec_word" == -* ]]; then
-        # An option in an alias (-c, --config-env) is applied after the pin and could replace it.
-        _opsec_alias_options=1
-        [[ "$_opsec_word" == -c || "$_opsec_word" == --config-env ]] && _opsec_skip=1
-      else
-        _opsec_next="$_opsec_word"
-      fi
-    done
-    [[ -z "$_opsec_next" ]] && break
-    if [[ "$_opsec_next" == "push" ]]; then
-      _opsec_push=1
+  _opsec_depth=0
+  until [[ "$_opsec_name" == "push" ]] || _opsec_builtin "$_opsec_name"; do
+    _opsec_status=0
+    _opsec_value="$("$real_git" "${_opsec_globals[@]}" config --get "alias.$_opsec_name" 2>/dev/null)" || _opsec_status=$?
+    if [[ "$_opsec_status" == 1 ]]; then
+      # Not an alias: an external git-<name> command, run as Git runs it.
+      _opsec_external=1
       break
     fi
-    _opsec_name="$_opsec_next"
+    [[ "$_opsec_status" == 0 ]] || _opsec_unresolved "could not be read from the configuration"
+    [[ "$_opsec_depth" -lt 16 ]] || _opsec_unresolved "expands more than 16 times or loops"
+    _opsec_depth=$((_opsec_depth + 1))
+    # A shell alias runs commands this shim never sees.
+    [[ "$_opsec_value" == '!'* ]] && _opsec_unresolved "runs a shell command"
+    _opsec_words=()
+    read -r -d '' -a _opsec_words <<<"$_opsec_value" || true
+    [[ ${#_opsec_words[@]} -gt 0 ]] || _opsec_unresolved "is empty"
+    for _opsec_word in "${_opsec_words[@]}"; do
+      _opsec_expansion+=("${_opsec_word//[\'\"\\]/}")
+    done
+    _opsec_name="${_opsec_words[0]//[\'\"\\]/}"
+    # Git applies an alias's own global options (-c, --config-env, --exec-path, ...)
+    # after the shim's, so they could define the next alias or replace the hooks path.
+    [[ "$_opsec_name" == -* ]] && _opsec_unresolved "sets Git options before its command"
+    [[ -n "$_opsec_name" ]] || _opsec_unresolved "is empty"
   done
+  [[ "$_opsec_name" == "push" ]] && _opsec_push=1
+fi
+
+if [[ "$_opsec_external" == 1 ]]; then
+  # A mistyped name must not be autocorrected into a command the shim did not classify.
+  exec "$real_git" "${_opsec_globals[@]}" -c help.autocorrect=never "${@:_opsec_index+1}"
 fi
 
 if [[ "$_opsec_push" == 1 ]]; then
-  if [[ "$_opsec_alias_options" == 1 ]]; then
-    _opsec_refuse "an alias that sets Git options before push could replace the scan's hooks path"
-  fi
   if _opsec_skips_hook "${@:_opsec_index+2}" "${_opsec_expansion[@]}"; then
     _opsec_refuse "--no-verify would skip the push scan"
   fi
