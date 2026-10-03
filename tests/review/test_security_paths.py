@@ -42,6 +42,19 @@ def test_every_security_glob_matches_a_tracked_file(pattern):
         (("docs/readme.md", "scripts/ocr/_credentials.py"), ("site/src/app.ts",), True),
         (("site/src/app.ts",), ("scripts/ocr/_credentials.py",), True),
         (("scripts/ocr/_credentials.py",), ("!scripts/ocr/_credentials.py",), True),
+        (("./scripts/delegate.py",), (), True),
+        ((), ("./scripts/delegate.py",), True),
+        ((), ("scripts/agent_runtime",), True),
+        ((), ("scripts/agent_runtime/",), True),
+        ((), ("scripts/hooks",), True),
+        ((), ("scripts",), True),
+        ((), ("scripts/",), True),
+        ((), ("././scripts/",), True),
+        ((), ("agents_extensions/shared",), True),
+        ((), ("scripts/lib/nested",), True),
+        ((), ("scripts/launchers-other",), False),
+        ((), ("scripts/reviewer",), False),
+        ((), ("docs/",), False),
     ],
 )
 def test_classifier_and_risk_are_additive(paths, owned, expected):
@@ -103,6 +116,16 @@ def test_git_and_cli_classify_both_rename_names_and_deletions(repo, capsys, oper
 def test_git_collection_failure_is_a_refusal(repo):
     with pytest.raises(TargetResolutionError, match="changed-path collection failed"):
         git_changed_paths(repo, "f" * 40, "e" * 40)
+
+
+@pytest.mark.parametrize("base,head", [("HEAD", None), ("f" * 39, "e" * 40), ("f" * 40, "--option"), (None, "e" * 40)])
+def test_invalid_sha_refuses_before_git(repo, monkeypatch, base, head):
+    def unexpected(*_args):
+        pytest.fail("invalid state-file endpoints must never reach git")
+
+    monkeypatch.setattr("scripts.review.security_paths._run_git", unexpected)
+    with pytest.raises(TargetResolutionError, match="target_sha_invalid"):
+        git_changed_paths(repo, base, head)
 
 
 @pytest.mark.parametrize("error", [OSError("unavailable"), subprocess.TimeoutExpired("git", 30)])

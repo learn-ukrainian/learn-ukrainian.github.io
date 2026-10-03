@@ -165,7 +165,7 @@ def resolve_and_admit(
     review_attempt: bool = False,
     review_alias_model_resolver: Callable[[str, str | None], tuple[str, str]] | None = None,
     review_owned_paths: tuple[str, ...] = (),
-    review_changed_paths: tuple[str, ...] = (),
+    review_changed_paths: tuple[str, ...] | Callable[[], tuple[str, ...]] = (),
     review_subject_seats: frozenset[str] = frozenset(),
     review_subject_families: frozenset[str] = frozenset(),
     **gate: Any,
@@ -212,6 +212,8 @@ def resolve_and_admit(
     use ``review_alias_model_resolver`` once before selection and carry that
     model resolution into the launch route. Review owned paths and explicit
     subject seats/families use the canonical resolver's exclusion semantics.
+    ``review_changed_paths`` may collect paths lazily after original-request
+    gates; its result is shared by every subsequent reviewer evaluation.
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -222,6 +224,10 @@ def resolve_and_admit(
     review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
     if review_activity:
         _refuse_non_review_models(requested[1])
+    # Target reads follow the original-request gates, but precede every
+    # candidate evaluation, route probe and substitution.
+    if callable(review_changed_paths):
+        review_changed_paths = review_changed_paths()
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:

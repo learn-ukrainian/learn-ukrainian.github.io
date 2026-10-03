@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from dataclasses import asdict
 from pathlib import Path
@@ -83,7 +84,10 @@ def _target_from_dict(data: object) -> ReviewTarget:
     description = data.get("description")
     if mode not in {"local", "commit", "branch", "pr"}:
         raise CloseoutStateError("target_mode_invalid")
-    if not all(value is None or isinstance(value, str) for value in (base_sha, head_sha)):
+    if not all(
+        value is None or (isinstance(value, str) and re.fullmatch(r"[0-9a-fA-F]{40}", value))
+        for value in (base_sha, head_sha)
+    ):
         raise CloseoutStateError("target_sha_invalid")
     if not isinstance(changed_paths, list) or not all(isinstance(path, str) and path for path in changed_paths):
         raise CloseoutStateError("target_changed_paths_invalid")
@@ -362,6 +366,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         routing_snapshot = json.loads(Path(args.routing_snapshot_file).read_text(encoding="utf-8"))
     state = _load_state(args.state_file)
     target = _target_from_dict(state["target"]) if state.get("target") is not None else None
+    if args.review_profile == "code" and target is None and not args.owned_path:
+        raise CloseoutStateError("review_target_required: resolve the target first or supply --owned-path")
     changed_paths = target.changed_paths if target else ()
     if target:
         # numstat display paths compact renames (a/{old => new}/file). Read
@@ -373,7 +379,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             raise CloseoutStateError("target_repo_root_missing")
         repo_root = Path(repo_root_value)
         try:
-            literal_paths = git_changed_paths(repo_root, target.base_sha or "HEAD", target.head_sha)
+            base_sha = rev_parse(repo_root, "HEAD") if target.mode == "local" else target.base_sha
+            literal_paths = git_changed_paths(repo_root, base_sha, target.head_sha)
         except TargetResolutionError as exc:
             raise CloseoutStateError(str(exc)) from exc
         changed_paths = tuple(dict.fromkeys((*changed_paths, *literal_paths)))
@@ -407,8 +414,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "fail_closed_reason": resolution.fail_closed_reason,
     }
     # Persist the durable receipt: drivers downstream expect the resolution on
-    # disk, not just on stdout. Merge with any prior state (a state file does
-    # not need to exist yet — resolve-reviewer is a valid first step).
+    # disk, not just on stdout. Merge with any prior state; without a target,
+    # code-profile resolution needs explicit owned paths.
     state["resolved_reviewer"] = payload
     _save_state(args.state_file, state)
     print(json.dumps(payload, indent=2))
@@ -666,6 +673,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Resolve the cross-family reviewer for this author",
         description=(
             "Pick the formal cross-family reviewer for one author.\n"
+            "Resolve the target first in the same state file, or supply --owned-path. "
             "Use it after the author model is known. Pass --subject-seat, "
             "--subject-family, or --owned-path when the change governs a seat's "
             "adapter or reviewer hooks. Do not use it to hand-pick a lane, and do "
@@ -683,8 +691,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "\n"
             "Outputs:\n"
             "  stdout JSON (selected, quorum, advisory, trace, fail_closed_reason) and the\n"
-            "  same object stored at resolved_reviewer in --state-file. With no subject\n"
-            "  flags and no owned paths, selection matches the author-family ladder.\n"
+            "  same object stored at resolved_reviewer in --state-file. Code-profile\n"
+            "  resolution requires a target or owned path; security paths raise risk to critical.\n"
             "  A governed seat is excluded and the trace records why.\n"
             "\n"
             "Exit codes:\n"

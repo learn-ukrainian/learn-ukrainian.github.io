@@ -6,6 +6,7 @@ Git collection disables rename compaction so both names and deletions survive.
 
 from __future__ import annotations
 
+import re
 import subprocess
 from collections.abc import Iterable
 from fnmatch import fnmatchcase
@@ -59,13 +60,32 @@ SECURITY_SENSITIVE_PATHS = (
 
 
 def is_security_sensitive_change(changed_paths: Iterable[str], owned_paths: Iterable[str] = ()) -> bool:
-    """True when any changed or owned repository-relative path matches."""
-    return any(
-        fnmatchcase(path, pattern)
-        for paths in (changed_paths, owned_paths)
-        for path in paths
-        for pattern in SECURITY_SENSITIVE_PATHS
-    )
+    """Match literal changes plus owned files or directories containing security paths."""
+
+    def normalized(path: str) -> str:
+        while path.startswith("./"):
+            path = path[2:]
+        return path
+
+    if any(fnmatchcase(normalized(path), pattern) for path in changed_paths for pattern in SECURITY_SENSITIVE_PATHS):
+        return True
+    for path in owned_paths:
+        path = normalized(path).rstrip("/")
+        if path in {"", "."}:
+            return True
+        directory = path + "/"
+        for pattern in SECURITY_SENSITIVE_PATHS:
+            # The inventory's first wildcard is always '*'. fnmatch lets it
+            # cross '/', so it can absorb any descendant prefix before the
+            # remaining literal suffix (e.g. scripts/lib/nested/run.sh).
+            literal_prefix, wildcard, _suffix = pattern.partition("*")
+            if (
+                fnmatchcase(path, pattern)
+                or pattern.startswith(directory)
+                or (wildcard and directory.startswith(literal_prefix))
+            ):
+                return True
+    return False
 
 
 def effective_review_risk(requested: str, changed_paths: Iterable[str], owned_paths: Iterable[str] = ()) -> str:
@@ -80,6 +100,8 @@ def git_changed_paths(repo_root: Path, base_sha: str, head_sha: str | None = Non
     paths are already supplied by the local target and are unioned by the caller.
     """
     endpoints = [base_sha, head_sha] if head_sha is not None else [base_sha]
+    if any(not isinstance(sha, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", sha) for sha in endpoints):
+        raise TargetResolutionError("security review target_sha_invalid: expected full commit SHAs")
     try:
         proc = _run_git(["diff", "--no-renames", "--name-only", "-z", *endpoints, "--"], repo_root)
     except (OSError, subprocess.TimeoutExpired) as exc:
