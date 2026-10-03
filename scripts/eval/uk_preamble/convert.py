@@ -14,6 +14,7 @@ set that the harness loader rejects is still written and reported as invalid, by
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -45,6 +46,10 @@ ERROR_TYPE_MAP: dict[str, str] = {
 # The harness writing task has no topic, genre or register field, so they are appended to the
 # instruction in one short Ukrainian sentence: "Тема: …; жанр: …; регістр: …."
 _WRITING_META = (("topic", "Тема"), ("genre", "жанр"), ("register", "регістр"))
+
+# A protection kind becomes a key of the report's counts, so it must be a short identifier-like label;
+# anything else (an object, free text) is refused by rule and never echoed.
+_KIND_LABEL = re.compile(r"^[A-Za-z][A-Za-z0-9_.-]{0,39}$")
 
 _ERROR_KEYS = ("span", "type", "corrections", "origin", "start", "end")
 _CORRECT_KEYS = ("span", "stratum", "start", "end")
@@ -118,6 +123,9 @@ def _convert_review(src: dict[str, Any], item_id: str, line: int, problems: list
         if not isinstance(span, dict) or any(key not in span for key in _CORRECT_KEYS):
             refuse("correct-span-fields")
             continue
+        if not isinstance(span["stratum"], str) or not _KIND_LABEL.match(span["stratum"]):
+            refuse("correct-span-stratum")
+            continue
         protected.append(
             {
                 "id": f"{item_id}-p{n}",
@@ -139,19 +147,26 @@ def _list(src: dict[str, Any], key: str, refuse) -> list[Any]:
 
 
 def _convert_writing(src: dict[str, Any], item_id: str, line: int, problems: list[SourceProblem]) -> dict[str, Any]:
+    def refuse(rule: str) -> None:
+        problems.append(SourceProblem(line, item_id, rule))
+
     task = src.get("task")
     bounds = src.get("length_words")
-    if not isinstance(task, str):
-        problems.append(SourceProblem(line, item_id, "writing-task"))
+    if not isinstance(task, str) or not task.strip():
+        refuse("writing-task")
         task = ""
     if not isinstance(bounds, dict) or bounds.get("min") is None or bounds.get("max") is None:
-        problems.append(SourceProblem(line, item_id, "writing-length-words"))
+        refuse("writing-length-words")
         bounds = {}
-    parts = [
-        f"{label}: {value.strip()}"
-        for key, label in _WRITING_META
-        if isinstance(value := src.get(key), str) and value.strip()
-    ]
+    parts = []
+    for key, label in _WRITING_META:
+        if key not in src:
+            continue
+        value = src[key]
+        if not isinstance(value, str):
+            refuse(f"writing-{key}")
+        elif value.strip():
+            parts.append(f"{label}: {value.strip()}")
     instruction = f"{task.rstrip()} {'; '.join(parts)}." if parts else task
     return {
         "id": item_id,
@@ -190,7 +205,8 @@ def convert_source(raw: bytes, set_id: str) -> Conversion:
 
 
 def _count_by(items: list[dict[str, Any]], key: str) -> dict[str, int]:
-    return dict(sorted(Counter(str(entry.get(key)) for entry in items).items()))
+    """Counts of ``entry[key]``; only the validated labels (``ERROR_TYPE_MAP`` values, ``_KIND_LABEL`` kinds) get here."""
+    return dict(sorted(Counter(entry[key] for entry in items).items()))
 
 
 def validate_converted(path: Path, data: dict[str, Any]) -> tuple[list[SetProblem], list[str]]:

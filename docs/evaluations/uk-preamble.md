@@ -61,10 +61,13 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   `why_tricky` have no harness field and are dropped.
 - The harness writing task has no topic, genre or register field, so those are
   appended to the task in one short sentence (`Тема: …; жанр: …; регістр: ….`);
-  parts that are absent or blank are skipped. `length_words` gives
-  `min_words`/`max_words`.
-- An unknown error type, a missing field or a malformed line is refused with its
-  line number, item id and rule (never text); nothing is written.
+  they are part of each task in the frozen set and every variant sees the same
+  instruction. A metadata field that is absent or blank is skipped. `length_words`
+  gives `min_words`/`max_words`.
+- An unknown error type, a missing field, a malformed line, an empty `task`, a
+  topic, genre or register that is present but not text, or a protection
+  `stratum` that is not a short label (letters, digits, `_`, `.`, `-`) is refused
+  with its line number, item id and rule (never text); nothing is written.
 - The output must resolve outside every Git work tree (the `--results` check)
   and differ from the input. It is written owner-only (`0600`).
 - The written file then goes through `load_set`, `review_geometry` and the

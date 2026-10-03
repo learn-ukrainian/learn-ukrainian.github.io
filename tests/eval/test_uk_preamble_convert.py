@@ -184,6 +184,58 @@ def test_malformed_source_error_is_refused(mutate, rule):
     assert [p.rule for p in convert([line]).problems] == [rule]
 
 
+CANARY = "СЕКРЕТНИЙ КАНАРКА"  # free text: never a valid label, so any echo of it is a leak
+
+
+@pytest.mark.parametrize(
+    "stratum",
+    [{"x": CANARY}, [CANARY], CANARY, "", 7, None, True, "a" * 41],
+    ids=["object", "list", "text", "empty", "int", "null", "bool", "too-long"],
+)
+def test_invalid_stratum_is_refused_by_rule_and_never_reaches_the_counts(stratum):
+    line = v2_review("R1")
+    line["correct_spans"][0]["stratum"] = stratum
+    result = convert([line])
+    assert result.data is None
+    assert [(p.line, p.item, p.rule) for p in result.problems] == [(1, "R1", "correct-span-stratum")]
+    assert CANARY not in repr(result.problems)
+
+
+def test_text_canary_in_every_field_never_reaches_stdout_stderr_or_the_report(outside_dir: Path, capsys):
+    # Valid conversion: the free text sits in every copied field; the report must hold labels and counts only.
+    lines = full_v2()
+    for line in lines:
+        if line["kind"] == "review":
+            line["text"] = line["text"] + " " + CANARY
+            line["errors"][0]["origin"] = CANARY
+            line["errors"][0]["corrections"] = [CANARY + " 1", "брав участь"]
+            line["errors"][0]["subtype"] = line["errors"][0]["stratum"] = CANARY
+            line["correct_spans"][0].update(why_tricky=CANARY, evidence=[CANARY])
+            line["level"] = CANARY
+        else:
+            line["task"] = CANARY
+            line["topic"] = line["genre"] = line["register"] = CANARY
+    code, captured, _, _ = run_cli(outside_dir, lines, capsys)
+    assert code == 0, captured
+    assert CANARY not in captured.out + captured.err
+
+    # Refused conversion: every invalid field, each carrying the canary, in one source.
+    refused = [
+        v2_review("R1", **{"correct_spans": [{**v2_review("x")["correct_spans"][0], "stratum": {"k": CANARY}}]}),
+        v2_review("R2", **{"errors": [{**v2_review("x")["errors"][0], "type": {"k": CANARY}}]}),
+        v2_review("R3", **{"errors": [{**v2_review("x")["errors"][0], "corrections": {"k": CANARY}}]}),
+        v2_review("R4", text={"k": CANARY}),
+        v2_writing("W1", "B1", task={"k": CANARY}, topic={"k": CANARY}, genre=[CANARY], register=CANARY.encode().hex()),
+        v2_writing("W2", "B1", length_words={"min": CANARY}),
+        {"id": "X1", "kind": {"k": CANARY}},
+        {"id": {"k": CANARY}, "kind": "review"},
+    ]
+    code, captured, _, output = run_cli(outside_dir, refused, capsys, "refused.json")
+    assert code == 2 and not output.exists()
+    assert CANARY not in captured.out + captured.err
+    assert "R1: correct-span-stratum" in captured.err
+
+
 def test_other_malformed_source_lines_are_refused():
     bad_span = v2_review("R3")
     del bad_span["correct_spans"][0]["stratum"]
@@ -282,6 +334,49 @@ def test_writing_with_only_some_metadata_appends_only_those():
     line = v2_writing("W1", "A2")
     del line["topic"], line["genre"]
     assert convert([line]).data["writing"][0]["instruction"].endswith("день. регістр: неформальний.")
+
+
+@pytest.mark.parametrize(
+    ("changes", "rules"),
+    [
+        ({"task": ""}, ["writing-task"]),
+        ({"task": " \n\t"}, ["writing-task"]),
+        ({"task": None}, ["writing-task"]),
+        ({"task": 5}, ["writing-task"]),
+        ({"topic": {"x": 1}}, ["writing-topic"]),
+        ({"genre": 3}, ["writing-genre"]),
+        ({"register": ["неформальний"]}, ["writing-register"]),
+        ({"topic": None}, ["writing-topic"]),
+        ({"topic": 1, "genre": 2, "register": 3}, ["writing-topic", "writing-genre", "writing-register"]),
+        (
+            {"task": "", "topic": None, "genre": None, "register": None},
+            ["writing-task", "writing-topic", "writing-genre", "writing-register"],
+        ),
+    ],
+)
+def test_invalid_writing_task_or_metadata_is_refused_not_silently_changed(changes, rules):
+    line = v2_writing("W1", "B1")
+    line.update(changes)
+    result = convert([line])
+    assert result.data is None
+    assert [(p.line, p.item) for p in result.problems] == [(1, "W1")] * len(rules)
+    assert [p.rule for p in result.problems] == rules
+
+
+def test_empty_task_with_metadata_is_not_turned_into_a_valid_instruction(outside_dir: Path, capsys):
+    lines = full_v2()
+    lines[-1]["task"] = ""
+    code, captured, _, output = run_cli(outside_dir, lines, capsys)
+    assert code != 0 and not output.exists()
+    assert "item W-C1: writing-task" in captured.err
+
+
+def test_non_text_metadata_exits_nonzero_and_writes_nothing(outside_dir: Path, capsys):
+    lines = full_v2()
+    lines[-1]["genre"] = {"x": 1}
+    code, captured, _, output = run_cli(outside_dir, lines, capsys)
+    assert code != 0 and not output.exists()
+    assert "item W-C1: writing-genre" in captured.err
 
 
 # ---------------------------------------------------------------- end to end
@@ -391,3 +486,40 @@ def test_missing_arguments_exit_2_and_help_documents_the_command(capsys):
     help_text = capsys.readouterr().out
     for needle in ("--input", "--output", "--set-id", "Examples:", "Exit codes:", "convert-set"):
         assert needle in help_text
+
+
+# ---------------------------------------------------------------- loader and collector share the set-level checks
+
+
+def _harness_set(**changes: Any) -> dict[str, Any]:
+    item = convert([v2_review("R1")]).data["review"][0]
+    task = convert([v2_writing("W1", "B1")]).data["writing"][0]
+    return {"set_id": "s", "review": [item], "writing": [task], **changes}
+
+
+@pytest.mark.parametrize(
+    ("changes", "rule", "message", "item"),
+    [
+        ({"review": [], "writing": []}, "set-empty", "no review items and no writing tasks", None),
+        ({"set_id": " "}, "set-id", "set_id: expected a non-empty string", None),
+        ({"set_id": 3}, "set-id", "set_id: expected a non-empty string", None),
+        ({"writing": [{**_harness_set()["writing"][0], "id": "R1-e1"}]}, "duplicate-id", "ids must be unique", "R1-e1"),
+    ],
+)
+def test_load_set_and_set_problems_agree_on_set_level_defects(tmp_path: Path, changes, rule, message, item):
+    from scripts.eval.uk_preamble.dataset import SetError, set_problems
+
+    raw = _harness_set(**changes)
+    path = tmp_path / "set.json"
+    path.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(SetError, match=message) as exc:
+        load_set(path)
+    assert exc.value.rule == rule
+    assert [(p.item, p.rule) for p in set_problems(raw)] == [(item, rule)]
+
+
+def test_set_problems_collects_every_set_level_defect_in_loader_order():
+    from scripts.eval.uk_preamble.dataset import set_problems
+
+    raw = _harness_set(set_id="", review=[], writing=[])
+    assert [(p.item, p.rule) for p in set_problems(raw)] == [(None, "set-empty"), (None, "set-id")]

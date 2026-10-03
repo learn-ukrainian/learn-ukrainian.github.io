@@ -31,6 +31,7 @@ import functools
 import itertools
 import re
 import unicodedata
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -333,6 +334,33 @@ def _item_id(raw: Any) -> str | None:
     return value if isinstance(value, str) else None
 
 
+def _item_ids(item: ReviewItem | WritingTask) -> list[str]:
+    """The ids ``item`` claims in the set-wide namespace: itself and, for a review item, its spans."""
+    if isinstance(item, ReviewItem):
+        return [item.id, *(span.id for span in (*item.errors, *item.protected))]
+    return [item.id]
+
+
+def _set_defects(raw: dict[str, Any], ids: list[str]) -> list[tuple[str | None, SetError]]:
+    """Set-level defects, in check order: emptiness, duplicate ids (one per id), ``set_id``.
+
+    The one implementation behind ``load_set`` (raises the first) and ``set_problems`` (collects all).
+    """
+    defects: list[tuple[str | None, SetError]] = []
+    if not (raw.get("review") or raw.get("writing")):
+        defects.append((None, SetError("evaluation set: no review items and no writing tasks", "set-empty")))
+    counts = Counter(ids)
+    defects += [
+        (dup, SetError("evaluation set: ids must be unique across items, errors and protected spans", "duplicate-id"))
+        for dup in sorted(i for i, n in counts.items() if n > 1)
+    ]
+    try:
+        _str(raw.get("set_id"), "set_id", "set-id")
+    except SetError as exc:
+        defects.append((None, exc))
+    return defects
+
+
 def set_problems(raw: Any) -> list[SetProblem]:
     """Every defect ``load_set`` would refuse, one per item (its first), by item id and rule; no set text.
 
@@ -351,14 +379,8 @@ def set_problems(raw: Any) -> list[SetProblem]:
             except SetError as exc:
                 problems.append(SetProblem(_item_id(item), exc.rule))
                 continue
-            ids.append(built.id)
-            if isinstance(built, ReviewItem):
-                ids += [span.id for span in (*built.errors, *built.protected)]
-    if not (raw.get("review") or raw.get("writing")):
-        problems.append(SetProblem(None, "set-empty"))
-    problems += [SetProblem(dup, "duplicate-id") for dup in sorted({i for i in ids if ids.count(i) > 1})]
-    if not isinstance(raw.get("set_id"), str) or not raw["set_id"].strip():
-        problems.append(SetProblem(None, "set-id"))
+            ids += _item_ids(built)
+    problems += [SetProblem(item, exc.rule) for item, exc in _set_defects(raw, ids)]
     return problems
 
 
@@ -371,15 +393,10 @@ def load_set(path: Path) -> EvalSet:
     _require(isinstance(raw, dict), "evaluation set: expected a JSON object", "set-not-object")
     review = tuple(_review_item(item, i) for i, item in enumerate(raw.get("review") or []))
     writing = tuple(_writing_task(task, i) for i, task in enumerate(raw.get("writing") or []))
-    _require(bool(review or writing), "evaluation set: no review items and no writing tasks", "set-empty")
-    ids = [item.id for item in review] + [task.id for task in writing]
-    ids += [span.id for item in review for span in (*item.errors, *item.protected)]
-    _require(
-        len(ids) == len(set(ids)),
-        "evaluation set: ids must be unique across items, errors and protected spans",
-        "duplicate-id",
-    )
-    return EvalSet(_str(raw.get("set_id"), "set_id", "set-id"), sha256_file(path), review, writing)
+    defects = _set_defects(raw, [i for item in (*review, *writing) for i in _item_ids(item)])
+    if defects:
+        raise defects[0][1]
+    return EvalSet(raw["set_id"], sha256_file(path), review, writing)
 
 
 def protocol_shortfalls(eval_set: EvalSet) -> list[str]:
