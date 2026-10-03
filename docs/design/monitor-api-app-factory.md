@@ -164,12 +164,12 @@ that family, confirm the sweep stays green with **fewer** seams than before, run
 **v1 named families by concept ("session-streams / orient / authority") without checking them
 against the actual router set — codex's review caught that this is not filing-ready. v2 then
 undercounted the router set itself (said 33; the actual count, re-verified by grepping every
-`app.include_router(...)` call in `main.py`, is 44 — see the exact list below) and silently dropped
+`app.include_router(...)` call in `main.py`, is 43 — see the exact list below) and silently dropped
 `build_events_router` from the step table. Both errors are fixed here; the count below is generated
 from `grep -oE 'app\.include_router\(\s*\n?\s*[a-zA-Z_]+' scripts/api/main.py`, not hand-counted, so
-any future reader can re-derive it. `main.py` makes 47 `include_router` calls mounting **44 unique
+any future reader can re-derive it. `main.py` makes 47 `include_router` calls mounting **43 unique
 router modules** (`cost_router`, `docs_router`, and `sources_router` are each mounted at two
-prefixes — one module, two routes-tables-worth of paths); 6 of those 44 are the largest and mix
+prefixes — one module, two routes-tables-worth of paths); 6 of those 43 are the largest and mix
 several concerns internally (`fleet_router.py` 2,637 lines, `state_router.py` 2,433,
 `comms_router.py` 1,898, `runtime_router.py` 1,729, `route_contracts.py` 1,356, `dashboard_router.py`
 996 — together roughly half of all router code by line count). Naming one of these a "family"
@@ -180,10 +180,10 @@ the same ambiguity to a smaller-looking table.**
 ### 5.1 Step 0 — Core (revised after the v2 through v8 reviews — see §10)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No behavior
-change to any of the 44 separately-defined routers** — every router still reads its own module
+change to any of the 43 separately-defined routers** — every router still reads its own module
 globals directly, exactly as today; none of their route/handler code moves or changes. **This claim
 does not cover 15 routes and 3 exception handlers that today live inline, decorated directly on the
-module-level `app` object inside `main.py` itself** (not in any of the 44 router files) — see point 5
+module-level `app` object inside `main.py` itself** (not in any of the 43 router files) — see point 5
 below, a real structural change step 0 cannot avoid. This matters for what step 0 can and cannot
 claim:
 
@@ -285,7 +285,7 @@ claim:
      through a running app): `fixture_context(tmp_path)` resolves every configured root/store path
      under `tmp_path`, and a path crafted to escape via a symlink is rejected (§4.1 point 3). This is
      testable today, standalone, without any router depending on the context yet.
-  5. **New in v8: `main.py` has 15 routes and 3 exception handlers that are not part of any of the 44
+  5. **New in v8: `main.py` has 15 routes and 3 exception handlers that are not part of any of the 43
      routers — they are decorated directly on the module-level `app` object, inside `main.py` itself**
      (verified live, `grep -n '^@app\.\(get\|post\|put\|delete\|patch\|websocket\|exception_handler\)'
      scripts/api/main.py`): `@app.exception_handler(...)` ×3 at lines 226/238/253, and `@app.get`/
@@ -297,12 +297,12 @@ claim:
      `@app.get(...)` needs `app` to already exist at the point in the file where it executes, and
      Python evaluates a module top-to-bottom — if `app` is only constructed at the *bottom* of the
      file, every decorator physically *above* that point (which is all of them, today) has no `app`
-     to bind to. **Fixed:** convert these into a proper router, exactly like the other 44 — add
+     to bind to. **Fixed:** convert these into a proper router, exactly like the other 43 — add
      `core_router = APIRouter()` near the top of `main.py` (after imports, before any route
      definitions), change `@app.get(...)` / `@app.post(...)` / `@app.websocket(...)` to
      `@core_router.get(...)` / etc. for the 15 routes (same functions, same paths, same bodies — no
      behavior change), and have `create_app()` call `app.include_router(core_router)` as the **last**
-     router registration (after all 44 others), preserving today's route-matching order for the
+     router registration (after all 43 others), preserving today's route-matching order for the
      catch-all. For the 3 exception handlers: drop the `@app.exception_handler(...)` decorator syntax
      (same `app`-must-exist-first problem) and keep `http_exception_handler`,
      `request_validation_exception_handler`, and `global_exception_handler` as plain module-level
@@ -311,7 +311,7 @@ claim:
      documented FastAPI sugar for exactly this call, so this is a syntax change with no behavior
      change. This is a genuine, unavoidable structural change inside `main.py` for step 0 — the
      amendment to the "no behavior change" claim above reflects that: no *behavior* changes (same
-     routes, same handlers, same responses), but this specific file's code, unlike the 44 router
+     routes, same handlers, same responses), but this specific file's code, unlike the 43 router
      files, cannot stay untouched.
 
      **Two of the 15 route bodies reference the module-global `app` variable directly, not just via
@@ -327,7 +327,7 @@ claim:
      FastAPI's documented, standard way for a handler to reach the specific app instance serving the
      current request, not a new mechanism invented for this migration. Because `main.py` currently has
      15 inline routes reviewed one-by-one for this migration, this is the only such reference found;
-     §5.2's inventory step should still grep the other 44 router files for any bare `app.` reference
+     §5.2's inventory step should still grep the other 43 router files for any bare `app.` reference
      (as opposed to `request.app.` or a context-supplied value) before assuming none exist there
      either.
 - The grep-based call-site lint from §4.1 point 4 (all three DB-access patterns, not just
