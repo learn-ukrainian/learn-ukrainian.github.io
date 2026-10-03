@@ -34,6 +34,7 @@ FROZEN_PRECOMPOSED = "ўЎйЙѐЀѝЍѓЃќЌ"
 FROZEN_LETTERS = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяыАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯЫўЎ"
 WITHHELD_MARKER = "\ufffc"
 WITHHELD_MARKERS = {WITHHELD_MARKER, "\ufffd"}
+INPUT_PROBLEM = "\x00input_problem"  # Internal comparison unit, never written into seat text.
 FROZEN_SYMBOL_POINTS = set(CANONICAL_MARK_ORDER) | {
     f"U+{ord(c):04X}" for c in set(RAISED) | SEPARATORS | set("ʹʼːўґыйѐѝ")
 }
@@ -325,7 +326,7 @@ def validate_text(text: str, table: dict, *, printed_anomaly: bool = False, allo
     return spans
 
 
-def transcription_rows(data: dict | list) -> list[dict]:
+def transcription_rows(data: dict | list, *, for_diff: bool = False) -> list[dict]:
     """Adapt a page packet, packet array or legacy row array without mutating input."""
     items = [data] if isinstance(data, dict) else data
     if not isinstance(items, list) or not items:
@@ -346,9 +347,10 @@ def transcription_rows(data: dict | list) -> list[dict]:
             if not isinstance(paragraph, dict):
                 raise ValueError("Paragraph must be an object")
             underlines = paragraph.get("underlines")
-            if not isinstance(underlines, list) or any(
+            valid_underlines = isinstance(underlines, list) and not any(
                 not isinstance(pair, list) or len(pair) != 2 for pair in underlines
-            ):
+            )
+            if not valid_underlines and not for_diff:
                 raise ValueError("Packet underlines must be [start, end] pairs")
             rows.append(
                 {
@@ -356,7 +358,9 @@ def transcription_rows(data: dict | list) -> list[dict]:
                     "page": item.get("page"),
                     "seat": seat,
                     "paragraph": paragraph.get("n"),
-                    "underlining": [{"start": pair[0], "end": pair[1]} for pair in underlines],
+                    "underlining": (
+                        [{"start": pair[0], "end": pair[1]} for pair in underlines] if valid_underlines else underlines
+                    ),
                 }
             )
     return rows
@@ -386,10 +390,10 @@ def _masked_text(row: dict) -> str:
     return "".join(parts) + row["text"][end:]
 
 
-def validate_rows(rows: dict | list, table: dict, *, adjudicated: bool = False, normalizing: bool = False) -> None:
-    """Validate both input formats, layout and exceptions; ingest requires adjudication."""
+def _validate_locators(rows: list[dict]) -> None:
+    """Require unambiguous page/paragraph identity in both strict and diff paths."""
     seen, seats = set(), {}
-    for row in transcription_rows(rows):
+    for row in rows:
         page, paragraph = row.get("page"), row.get("paragraph")
         if type(page) is not int or not 1 <= page <= 28 or type(paragraph) is not int or paragraph < 1:
             raise ValueError("Invalid page/paragraph locator")
@@ -402,6 +406,13 @@ def validate_rows(rows: dict | list, table: dict, *, adjudicated: bool = False, 
         if page in seats and seats[page] != seat:
             raise ValueError("Mixed seats on one page")
         seats[page] = seat
+
+
+def validate_rows(rows: dict | list, table: dict, *, adjudicated: bool = False, normalizing: bool = False) -> None:
+    """Validate both input formats, layout and exceptions; ingest requires adjudication."""
+    rows = transcription_rows(rows)
+    _validate_locators(rows)
+    for row in rows:
         text = row.get("text")
         if not isinstance(text, str) or not text.strip():
             raise ValueError("Paragraph text must be nonempty")
@@ -454,6 +465,151 @@ def validate_rows(rows: dict | list, table: dict, *, adjudicated: bool = False, 
             raise ValueError("Adjudication status and adjudicated_by are required")
 
 
+def _diff_row(row: dict, table: dict) -> tuple[dict, list[dict], list[dict]]:
+    """Recover individual seat spans without changing the authoritative input."""
+    text, problems = row["text"], []
+    safe = {**row, "underlining": [], "withheld": [], "line_breaks": [], "unknown_underlining": []}
+    anomaly = row.get("printed_anomaly", False)
+
+    def problem(start: int, end: int, error: str, **details) -> None:
+        problems.append({"start": start, "end": end, "error": error, **details})
+        if details.get("field") == "underlining":
+            safe["unknown_underlining"].append({"start": start, "end": end})
+
+    if type(anomaly) is not bool:
+        problem(0, len(text), "printed_anomaly must be a boolean")
+        anomaly = False
+    safe["printed_anomaly"] = anomaly
+    boundaries = {0, len(text)} | {
+        i for i, c in enumerate(text) if not unicodedata.combining(c) or (anomaly and i > 0 and text[i - 1] == "[")
+    }
+    for field in ("underlining", "withheld"):
+        ranges = row.get(field, [] if field == "withheld" else None)
+        if not isinstance(ranges, list):
+            problem(0, len(text), f"Explicit {field} field required (empty list if absent)", field=field)
+            continue
+        for span in ranges:
+            try:
+                _ranges([span], text, field)
+            except ValueError as exc:
+                problem(0, len(text), str(exc), field=field)
+                continue
+            start, end = span["start"], span["end"]
+            if safe[field] and start < safe[field][-1]["end"]:
+                problem(start, end, f"Invalid or overlapping {field} range", field=field)
+                continue
+            if start not in boundaries or end not in boundaries:
+                problem(start, end, "Range boundary splits a combining sequence", field=field)
+                if field == "underlining":
+                    continue
+                # Uncertain text must stay uncertain, including the whole cluster.
+                start = max(b for b in boundaries if b <= start)
+                end = min(b for b in boundaries if b >= end)
+            if field == "withheld" and (not isinstance(span.get("reason"), str) or not span["reason"].strip()):
+                problem(start, end, "Withheld span requires a reason", field=field)
+            safe[field].append({**span, "start": start, "end": end})
+
+    # Prefer an overlapping entry; for displaced offsets, choose the nearest
+    # interval with deterministic ties. Preserve the original entry in evidence.
+    entries = safe["withheld"]
+    matched, effective = set(), []
+    for offset, char in enumerate(text):
+        if char not in WITHHELD_MARKERS:
+            continue
+        entry = min(
+            entries,
+            key=lambda s: (max(s["start"] - offset, offset + 1 - s["end"], 0), abs(s["start"] - offset), s["start"]),
+            default=None,
+        )
+        if entry is None:
+            problem(offset, offset + 1, "Withheld marker requires a withheld entry")
+            effective.append({"start": offset, "end": offset + 1, "reason": None})
+            continue
+        matched.add(id(entry))
+        if entry["start"] != offset or entry["end"] != offset + 1:
+            problem(offset, offset + 1, "withheld_offset_mismatch", withheld_entry=dict(entry))
+        overlaps = entry["start"] <= offset < entry["end"]
+        effective.append({
+            **entry,
+            "start": min(offset, entry["start"]) if overlaps else offset,
+            "end": max(offset + 1, entry["end"]) if overlaps else offset + 1,
+            "original_entry": dict(entry),
+        })
+    effective.extend(s for s in entries if id(s) not in matched)
+    safe["withheld"] = []
+    for span in sorted(effective, key=lambda s: (s["start"], s["end"])):
+        if safe["withheld"] and span["start"] < safe["withheld"][-1]["end"]:
+            safe["withheld"][-1]["end"] = max(safe["withheld"][-1]["end"], span["end"])
+        else:
+            safe["withheld"].append(dict(span))
+
+    breaks = row.get("line_breaks", [])
+    if not isinstance(breaks, list):
+        problem(0, len(text), "line_breaks must be a list")
+        breaks = []
+    previous = -1
+    for line in breaks:
+        offset = line.get("offset") if isinstance(line, dict) else None
+        error = None
+        if type(offset) is not int or not previous < offset <= len(text):
+            error = "Invalid or duplicate line break offset"
+        elif type(line.get("printed_hyphen")) is not bool or type(line.get("lexical", False)) is not bool:
+            error = "Line break requires boolean printed_hyphen and optional lexical"
+        elif offset not in boundaries:
+            error = "Line break splits a combining sequence"
+        elif "‐" in text[max(0, offset - 1):offset + 1] and not line.get("lexical", False):
+            error = "Line-end U+2010 must be layout metadata unless marked lexical"
+        if error:
+            start = offset if type(offset) is int and 0 <= offset < len(text) else 0
+            problem(start, min(start + 1, len(text)), error, field="line_breaks")
+        else:
+            safe["line_breaks"].append(line)
+            previous = offset
+
+    masked = _masked_text(safe)
+    mapping, cursor = [], 0
+    for span in safe["withheld"]:
+        mapping.extend((i, i + 1) for i in range(cursor, span["start"]))
+        mapping.append((span["start"], span["end"]))
+        cursor = span["end"]
+    mapping.extend((i, i + 1) for i in range(cursor, len(text)))
+    spans, start = [], None
+
+    def token(first: int, last: int, error: str | None = None) -> None:
+        raw_start, raw_end = mapping[first][0], mapping[last - 1][1]
+        value = masked[first:last]
+        key = INPUT_PROBLEM
+        if error is None:
+            try:
+                key = normalize_transcription(value, table, printed_anomaly=anomaly)
+                validate_text(key, table, printed_anomaly=anomaly, allow_withheld=True)
+            except ValueError as exc:
+                error = str(exc)
+        if error:
+            problem(raw_start, raw_end, error, excluded=True)
+        spans.append({"start": raw_start, "end": raw_end, "key": key if not error else INPUT_PROBLEM})
+
+    for offset, char in enumerate(masked):
+        if char == "[":
+            if start is not None:
+                token(start, offset, "Unclosed transcription bracket")
+            start = offset
+        elif char == "]":
+            if start is None:
+                token(offset, offset + 1, "Unmatched closing bracket")
+            else:
+                token(start, offset + 1)
+            start = None
+        elif char == "\n" and start is not None:
+            token(start, offset, "Unclosed transcription bracket")
+            start = None
+        elif start is None and unicodedata.category(char) == "Cn":
+            token(offset, offset + 1, "Unassigned codepoint in text")
+    if start is not None:
+        token(start, len(masked), None if anomaly else "Unclosed transcription bracket")
+    return safe, spans, problems
+
+
 def _page_view(rows: list[dict], table: dict) -> dict:
     """Build token/prose streams with offsets into original paragraphs joined by LF."""
     view = {
@@ -466,6 +622,7 @@ def _page_view(rows: list[dict], table: dict) -> dict:
         "line_breaks": [],
         "withheld": [],
         "printed_anomalies": [],
+        "input_problems": [],
     }
     for row in sorted(rows, key=lambda r: r["paragraph"]):
         if view["text"]:
@@ -475,38 +632,55 @@ def _page_view(rows: list[dict], table: dict) -> dict:
             # Paragraph and prose whitespace are identical comparison units.
             _append_unit(view["prose"], " ", len(view["text"]) - 1, len(view["text"]), False)
             _append_unit(view["characters"], " ", len(view["text"]) - 1, len(view["text"]), False)
+        row, spans, problems = _diff_row(row, table)
         base, text = len(view["text"]), row["text"]
         view["text"] += text
+        view["input_problems"].extend(
+            {
+                **problem,
+                "start": base + problem["start"],
+                "end": base + problem["end"],
+                "offset": base + problem["start"],
+                "paragraph": row["paragraph"],
+                "paragraph_offset": problem["start"],
+                "seat": row.get("seat"),
+                "raw_span": text[problem["start"]:problem["end"]],
+            }
+            for problem in problems
+        )
         view["withheld"].extend(
             {**span, "start": base + span["start"], "end": base + span["end"]} for span in row.get("withheld", [])
         )
         if row.get("printed_anomaly", False):
             view["printed_anomalies"].append({"start": base, "end": base + len(text)})
-        spans = bracketed_spans(_masked_text(row), printed_anomaly=row.get("printed_anomaly", False))
-        # Remap masked offsets to raw offsets, including multi-character withheld ranges.
-        mapping, cursor = [], 0
-        for withheld in row.get("withheld", []):
-            mapping.extend((i, i + 1) for i in range(cursor, withheld["start"]))
-            mapping.append((withheld["start"], withheld["end"]))
-            cursor = withheld["end"]
-        mapping.extend((i, i + 1) for i in range(cursor, len(text)))
         tokens = {}
         for span in spans:
-            start, end = mapping[span["start"]][0], mapping[span["end"] - 1][1]
+            start, end = span["start"], span["end"]
             raw = {"start": base + start, "end": base + end, "text": text[start:end]}
-            missing = WITHHELD_MARKER in span["text"]
-            key = (
-                WITHHELD_MARKER
-                if missing
-                else normalize_transcription(span["text"], table, printed_anomaly=row.get("printed_anomaly", False))
-            )
-            view["tokens"].append({**raw, "key": key, "withheld": missing})
-            tokens[start] = end
+            missing = WITHHELD_MARKER in span["key"]
+            key = WITHHELD_MARKER if missing else span["key"]
+            if key != INPUT_PROBLEM:
+                view["tokens"].append({**raw, "key": key, "withheld": missing})
+            tokens[start] = span
         withheld_at = {s["start"]: s for s in row.get("withheld", [])}
         index, token_end = 0, 0
         while index < len(text):
             if index in tokens:
-                token_end = tokens[index]
+                token_end = tokens[index]["end"]
+                if tokens[index]["key"] == INPUT_PROBLEM:
+                    # Raw anchors locate the opposing span; excluded units never
+                    # establish a reading or underlining disagreement. Keeping
+                    # anchors also preserves prose following a missing bracket.
+                    while index < token_end:
+                        end = index + 1
+                        while end < token_end and unicodedata.combining(text[end]):
+                            end += 1
+                        _append_unit(
+                            view["characters"], unicodedata.normalize("NFC", text[index:end]),
+                            base + index, base + end, False, excluded=True,
+                        )
+                        index = end
+                    continue
             missing = index in withheld_at
             end = withheld_at[index]["end"] if missing else index + 1
             if not missing and text[index] not in "[]":
@@ -516,6 +690,8 @@ def _page_view(rows: list[dict], table: dict) -> dict:
             if not missing and index < token_end:
                 key = normalize_transcription("[" + text[index:end] + "]", table)[1:-1] if key not in "[]" else key
             underlined = any(s["start"] <= index < s["end"] for s in row["underlining"])
+            if any(s["start"] < end and index < s["end"] for s in row["unknown_underlining"]):
+                underlined = None
             _append_unit(view["characters"], key, base + index, base + end, underlined)
             if index >= token_end:
                 _append_unit(view["prose"], key, base + index, base + end, underlined)
@@ -528,14 +704,17 @@ def _page_view(rows: list[dict], table: dict) -> dict:
     return view
 
 
-def _append_unit(units: list[dict], key: str, start: int, end: int, underlined: bool) -> None:
+def _append_unit(
+    units: list[dict], key: str, start: int, end: int, underlined: bool | None, *, excluded: bool = False
+) -> None:
     """Collapse layout whitespace while preserving its original offset range."""
     key = " " if key.isspace() else key
-    if units and key == units[-1]["key"] == " ":
+    if units and key == units[-1]["key"] == " " and units[-1].get("excluded", False) == excluded:
         units[-1]["end"] = end
-        units[-1]["underlined"] |= underlined
+        previous = units[-1]["underlined"]
+        units[-1]["underlined"] = None if previous is None or underlined is None else previous or underlined
     else:
-        units.append({"key": key, "start": start, "end": end, "underlined": underlined})
+        units.append({"key": key, "start": start, "end": end, "underlined": underlined, "excluded": excluded})
 
 
 def _reading(view: dict, units: list[dict]) -> dict | None:
@@ -551,7 +730,7 @@ def _reading(view: dict, units: list[dict]) -> dict | None:
 
 
 def _withheld_diff(left: dict, right: dict) -> list[tuple]:
-    """Align uncertainty against raw reading ranges before either reading diff.
+    """Exclude invalid and withheld gaps before comparing known readings.
 
     Full character anchors allow a placeholder to cover either prose or brackets,
     including a whole bracket span missing from one seat. The aligned gap is
@@ -563,10 +742,11 @@ def _withheld_diff(left: dict, right: dict) -> list[tuple]:
     for tag, i, j, k, l in matcher.get_opcodes():
         pairs = [([x], [y]) for x, y in zip(a[i:j], b[k:l], strict=True)] if tag == "equal" else [(a[i:j], b[k:l])]
         for xs, ys in pairs:
-            if not any(u["key"] == WITHHELD_MARKER for u in xs + ys):
+            if not any(u["key"] == WITHHELD_MARKER or u.get("excluded") for u in xs + ys):
                 continue
             readings = [_reading(view, units) for view, units in ((left, xs), (right, ys))]
-            differences.append(("withheld", *readings))
+            if any(u["key"] == WITHHELD_MARKER for u in xs + ys):
+                differences.append(("withheld", *readings))
             for ranges, reading in zip(covered, readings, strict=True):
                 if reading:
                     ranges.append((reading["start"], reading["end"]))
@@ -615,10 +795,14 @@ def _stream_diff(left: dict, right: dict, stream: str) -> list[tuple]:
 
 
 def diff_transcriptions(left: dict | list, right: dict | list, table: dict) -> dict:
-    """Align whole pages; paragraph splitting never drives reading disagreements."""
-    left, right = transcription_rows(left), transcription_rows(right)
-    validate_rows(left, table, normalizing=True)
-    validate_rows(right, table, normalizing=True)
+    """Align whole pages, reporting seat defects before adjudication rather than aborting."""
+    left, right = transcription_rows(left, for_diff=True), transcription_rows(right, for_diff=True)
+    for side in (left, right):
+        if any(not isinstance(r.get("text"), str) or not r["text"].strip() for r in side):
+            raise ValueError("Paragraph text must be nonempty")
+        # Only packet identity is a run-level gate. All content and span metadata
+        # are checked individually in _diff_row, preserving the raw seat inputs.
+        _validate_locators(side)
     disagreements, pages = [], []
     for page in sorted({r["page"] for r in left + right}):
         rows = [[r for r in side if r["page"] == page] for side in (left, right)]
@@ -636,6 +820,19 @@ def diff_transcriptions(left: dict | list, right: dict | list, table: dict) -> d
                 }
             )
         pages.append(summary)
+        for label, view in (("left", a), ("right", b)):
+            for problem in view["input_problems"]:
+                reading = {"start": problem["start"], "end": problem["end"], "text": problem["raw_span"]}
+                disagreements.append({
+                    **problem,
+                    "page": page,
+                    "kind": "input_problem",
+                    "side": label,
+                    "left": reading if label == "left" else None,
+                    "right": reading if label == "right" else None,
+                    "resolution": None,
+                    "resolved_by": None,
+                })
         differences = []
         if not all(rows):
             differences.append(("missing_page", _reading(a, a["characters"]), _reading(b, b["characters"])))
@@ -650,12 +847,21 @@ def diff_transcriptions(left: dict | list, right: dict | list, table: dict) -> d
             if tag == "equal":
                 mapped_boundaries.update(k + pos - i for pos in a["boundaries"] if i <= pos <= j)
                 for x, y in zip(a["characters"][i:j], b["characters"][k:l], strict=True):
-                    if x["key"] != WITHHELD_MARKER and x["underlined"] != y["underlined"]:
+                    if (
+                        x["key"] != WITHHELD_MARKER and not x.get("excluded") and not y.get("excluded")
+                        and x["underlined"] is not None and y["underlined"] is not None
+                        and x["underlined"] != y["underlined"]
+                    ):
                         underline_a.append(_reading(a, [x]))
                         underline_b.append(_reading(b, [y]))
             else:
-                xs = [u for u in a["characters"][i:j] if u["underlined"] and u["key"] != WITHHELD_MARKER]
-                ys = [u for u in b["characters"][k:l] if u["underlined"] and u["key"] != WITHHELD_MARKER]
+                if any(
+                    u["key"] == WITHHELD_MARKER or u.get("excluded") or u["underlined"] is None
+                    for u in a["characters"][i:j] + b["characters"][k:l]
+                ):
+                    continue
+                xs = [u for u in a["characters"][i:j] if u["underlined"]]
+                ys = [u for u in b["characters"][k:l] if u["underlined"]]
                 if xs or ys:
                     underline_a.append(_reading(a, xs))
                     underline_b.append(_reading(b, ys))
@@ -726,14 +932,14 @@ def render_pages(
     return manifest
 
 
-def load_transcriptions(path: Path, *, directory: bool = False) -> list[dict]:
+def load_transcriptions(path: Path, *, directory: bool = False, for_diff: bool = False) -> list[dict]:
     """Read one JSON input or all direct *.json children in deterministic order."""
     files = sorted(path.glob("*.json")) if directory else [path]
     if not files:
         raise ValueError("Transcription directory contains no JSON files")
     rows = []
     for file in files:
-        rows.extend(transcription_rows(json.loads(file.read_text(encoding="utf-8"))))
+        rows.extend(transcription_rows(json.loads(file.read_text(encoding="utf-8")), for_diff=for_diff))
     return rows
 
 
@@ -748,7 +954,8 @@ def main(argv: list[str] | None = None) -> int:
         "--right .cache/b.json --output .cache/diff.json\n"
         "  Folder mode: diff --left-dir .cache/seat-a --right-dir .cache/seat-b --output .cache/diff.json\n"
         "Outputs: ignored PNGs/manifest or private JSON diff; no database writes.\n"
-        "Exit codes: 0 success (diff may contain disagreements); 1 invalid data; 2 invalid CLI invocation.\n"
+        "Exit codes: 0 success (diff may contain disagreements/input_problem items); "
+        "1 invalid packet/file or failed strict validation; 2 invalid CLI invocation.\n"
         "Related: #9604; pohribnyi_notation.json; docs/projects/open-model-data/PLAN.md.",
     )
     parser.add_argument(
@@ -770,7 +977,12 @@ def main(argv: list[str] | None = None) -> int:
         required=True,
         help="Page-packet object/array or paragraph-array JSON, e.g. .cache/seat-a.json.",
     )
-    diff = sub.add_parser("diff", help="Align whole pages and list unresolved token, prose and metadata differences.")
+    validate.add_argument(
+        "--adjudicated", action="store_true", help="Require adjudication status and adjudicated_by (default: false)."
+    )
+    diff = sub.add_parser(
+        "diff", help="Align whole pages, retaining seat span defects as unresolved input_problem items."
+    )
     left = diff.add_mutually_exclusive_group(required=True)
     left.add_argument("--left", type=Path, help="First seat JSON file, e.g. .cache/a.json; no default.")
     left.add_argument("--left-dir", type=Path, help="First seat folder of *.json page packets; no default.")
@@ -795,12 +1007,12 @@ def main(argv: list[str] | None = None) -> int:
             table = load_notation(args.notation)
             if args.command == "validate":
                 rows = load_transcriptions(args.input)
-                validate_rows(rows, table)
+                validate_rows(rows, table, adjudicated=args.adjudicated)
                 print(json.dumps({"valid_rows": len(rows), "provisional_notation": table["provisional"]}))
             else:
                 report = diff_transcriptions(
-                    load_transcriptions(args.left_dir or args.left, directory=bool(args.left_dir)),
-                    load_transcriptions(args.right_dir or args.right, directory=bool(args.right_dir)),
+                    load_transcriptions(args.left_dir or args.left, directory=bool(args.left_dir), for_diff=True),
+                    load_transcriptions(args.right_dir or args.right, directory=bool(args.right_dir), for_diff=True),
                     table,
                 )
                 args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

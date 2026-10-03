@@ -110,6 +110,8 @@
   closing brackets, Latin glyphs and duplicate marks on a base remain errors.
   These exceptions are represented as original text and flagged metadata;
   the strict structured parser continues to require complete base-led clusters.
+  `validate --adjudicated` additionally requires adjudication status and an
+  adjudicator identity; ingest always applies strict adjudicated validation.
 
   The schema-version 2 diff aligns bracket-token sequences and prose separately
   **per page**, using deterministic
@@ -129,6 +131,25 @@
   list original paragraph-end offsets before the joining LF. Inserted/deleted
   readings use null on the absent side. Alignment is not adjudication; every
   entry starts with null `resolution` and `resolved_by`.
+
+  Diff runs before adjudication: it validates individual spans and emits
+  unresolved `input_problem` items instead of aborting on invalid notation or
+  span metadata. Each item records the page, seat, side, paragraph, page-relative
+  `offset`/`start`/`end`, paragraph-relative `paragraph_offset`, error and
+  `raw_span`. Invalid text spans and their aligned opposing gaps are excluded
+  from reading and underlining comparisons. Invalid metadata is reported and
+  omitted from the comparison metadata; valid text still aligns. An unclosed
+  bracket is reported once, with recovery at the next opening bracket, LF or
+  paragraph end, so subsequent spans remain comparable.
+
+  Withheld markers first match an overlapping entry, then the nearest entry
+  by interval distance, start distance and start offset. A noncoincident match
+  emits `input_problem` with `error: "withheld_offset_mismatch"` and the
+  original paragraph-relative `withheld_entry`. Overlapping ranges remain
+  uncertain; displaced entries with markers use the actual marker's span so
+  unrelated readable text at the claimed offset is preserved. A marker without
+  an entry emits an input problem and remains withheld. Comparison ranges can
+  retain `original_entry`; raw seat text and supplied metadata are never changed.
 
   Folder mode reads all direct `*.json` children in sorted order, supports both
   formats, and validates their combined locators:

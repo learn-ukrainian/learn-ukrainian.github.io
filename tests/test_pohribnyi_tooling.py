@@ -613,7 +613,10 @@ def test_diff_remaps_underlining_after_composition(table):
     assert a == before
     a["underlining"] = [{"start": 1, "end": 2}]
     with pytest.raises(ValueError, match="splits"):
-        tooling.diff_transcriptions([a], [b], table)
+        tooling.validate_rows([a], table, normalizing=True)
+    report = tooling.diff_transcriptions([a], [b], table)
+    assert [d["kind"] for d in report["disagreements"]] == ["input_problem"]
+    assert "splits" in report["disagreements"][0]["error"]
 
 
 @pytest.mark.parametrize("census", [{}, {"10": 2}, {"10": True}, None])
@@ -1063,3 +1066,195 @@ def test_withheld_does_not_hide_neighboring_real_prose_difference(reading, table
     assert [d["kind"] for d in report["disagreements"]] == ["withheld", "paragraph_text"]
     assert report["disagreements"][1]["left"]["text"] == "foo"
     assert report["disagreements"][1]["right"]["text"] == "bar"
+
+
+@pytest.fixture(params=[5, 13, 15, 20, 24], ids=["p05-bare-mark", "p13-unclosed", "p15-overlap", "p20-displaced", "p24-marker-span"])
+def seat_input_problem(request):
+    """Five synthetic shapes from the driver report, without any source text."""
+    page = request.param
+    text, other, withheld = "", "", []
+    if page == 5:
+        text, other = "prefix [\u0301] next [а] tail [в]", "prefix [б] next [г] tail [в]"
+    elif page == 13:
+        text, other = "prefix [а bridge [б] tail [в]", "prefix [а] bridge [г] tail [в]"
+    else:
+        marker = "\ufffd" if page == 20 else "\ufffc"
+        raw = f"[{marker}\ufffd]" if page == 24 else f"[{marker}]"
+        text, other = f"prefix {raw} next [а] tail [в]", "prefix [б] next [г] tail [в]"
+        offset = text.index(marker)
+        start, end = {15: (offset - 1, offset + 2), 20: (offset + 3, offset + 4), 24: (offset, offset + 2)}[page]
+        withheld = [{"start": start, "end": end, "reason": "uncertain fixture glyph"}]
+    a, b = page_packet("earlier [д]", text, page=page, seat="left"), page_packet("earlier [д]", other, page=page, seat="right")
+    a["paragraphs"][1]["withheld"] = withheld
+    return a, b
+
+
+@pytest.mark.parametrize("swap", [False, True])
+def test_diff_recovers_reported_seat_shapes_with_raw_offsets(seat_input_problem, swap, table):
+    bad, good = seat_input_problem
+    a, b = (good, bad) if swap else (bad, good)
+    before = copy.deepcopy((a, b))
+    report = tooling.diff_transcriptions(a, b, table)
+    assert report == tooling.diff_transcriptions(a, b, table)
+    assert (a, b) == before
+    problems = [d for d in report["disagreements"] if d["kind"] == "input_problem"]
+    assert problems
+    side = "right" if swap else "left"
+    raw_page = report["pages"][0][f"{side}_text"]
+    for problem in problems:
+        assert problem["page"] == bad["page"]
+        assert problem["seat"] == "left" and problem["side"] == side
+        assert problem["offset"] == problem["start"]
+        assert problem["raw_span"] == raw_page[problem["start"]:problem["end"]]
+        assert problem["paragraph"] == 2
+        assert problem["paragraph_offset"] == problem["offset"] - len("earlier [д]\n")
+        assert problem["resolution"] is None and problem["resolved_by"] is None
+    if bad["page"] in {15, 20, 24}:
+        assert all(p["error"] == "withheld_offset_mismatch" for p in problems)
+        assert all(p["withheld_entry"]["reason"] == "uncertain fixture glyph" for p in problems)
+        assert any(d["kind"] == "withheld" for d in report["disagreements"])
+    else:
+        assert len(problems) == 1
+        assert problems[0]["error"] == (
+            "Expected base letter before notation marks" if bad["page"] == 5 else "Unclosed transcription bracket"
+        )
+    edits = [d for d in report["disagreements"] if d["kind"] == "bracketed_span"]
+    assert len(edits) == 1
+    assert edits[0][side]["text"] == ("[б]" if bad["page"] == 13 else "[а]")
+    assert edits[0]["left" if swap else "right"]["text"] == "[г]"
+    assert not any(d["kind"] == "paragraph_text" for d in report["disagreements"])
+
+
+def test_reported_seat_shapes_remain_invalid_for_adjudication_and_ingest(seat_input_problem, table):
+    bad, _ = seat_input_problem
+    rows = tooling.transcription_rows(bad)
+    for item in rows:
+        item.update(status="adjudicated", adjudicated_by="fixture")
+    with pytest.raises(ValueError):
+        tooling.validate_rows(rows, table, adjudicated=True)
+    with pytest.raises(ValueError):
+        ingest.validate_adjudicated_packet(packet(*rows), table, census_counts={str(bad["page"]): 2})
+
+
+@pytest.mark.parametrize("text", ["[a]", "[аʹʹ]", "[]", "[еꙵⷷ]", "[\u0378]", "\u0378", "]", "["])
+def test_diff_quarantines_invalid_spans_without_losing_valid_neighbors(text, table):
+    a = page_packet(f"prefix {text}\nnext [а] suffix")
+    b = page_packet("prefix [б]\nnext [г] suffix")
+    report = tooling.diff_transcriptions(a, b, table)
+    assert sum(d["kind"] == "input_problem" for d in report["disagreements"]) == 1
+    edits = [d for d in report["disagreements"] if d["kind"] == "bracketed_span"]
+    assert [(d["left"]["text"], d["right"]["text"]) for d in edits] == [("[а]", "[г]")]
+
+
+def test_diff_recovers_multiple_bad_spans_and_unclosed_at_paragraph_end(table):
+    a = page_packet("[\u0301] prose [a] tail [а", "known [б] end")
+    b = page_packet("[в] prose [г] tail [а]", "known [г] end")
+    report = tooling.diff_transcriptions(a, b, table)
+    assert sum(d["kind"] == "input_problem" for d in report["disagreements"]) == 3
+    assert [(d["left"]["text"], d["right"]["text"]) for d in report["disagreements"] if d["kind"] == "bracketed_span"] == [("[б]", "[г]")]
+
+
+def test_diff_withheld_matching_prefers_overlap_and_does_not_mask_displaced_text(table):
+    a = page_packet("pre \ufffc next [а] end \ufffd tail [б]")
+    first, second = a["paragraphs"][0]["text"].index("\ufffc"), a["paragraphs"][0]["text"].index("\ufffd")
+    a["paragraphs"][0]["withheld"] = [
+        {"start": first + 3, "end": first + 4, "reason": "first"},
+        {"start": second - 1, "end": second + 2, "reason": "second"},
+    ]
+    b = page_packet("pre readable next [г] end readable tail [в]")
+    report = tooling.diff_transcriptions(a, b, table)
+    problems = [d for d in report["disagreements"] if d["kind"] == "input_problem"]
+    assert [p["withheld_entry"]["reason"] for p in problems] == ["first", "second"]
+    assert not any(d["kind"] == "paragraph_text" for d in report["disagreements"])
+    assert [(d["left"]["text"], d["right"]["text"]) for d in report["disagreements"] if d["kind"] == "bracketed_span"] == [("[а]", "[г]"), ("[б]", "[в]")]
+
+
+@pytest.mark.parametrize("marker", ["\ufffc", "\ufffd"])
+def test_diff_unannotated_withheld_marker_remains_uncertain(marker, table):
+    report = tooling.diff_transcriptions(page_packet(f"[{marker}] [а]"), page_packet("[б] [г]"), table)
+    assert [d["kind"] for d in report["disagreements"]] == ["input_problem", "withheld", "bracketed_span"]
+
+
+@pytest.mark.parametrize("metadata", [
+    {"underlining": None},
+    {"underlining": [{"start": 0, "end": 99}]},
+    {"underlining": [{"start": 0, "end": 2}, {"start": 1, "end": 3}]},
+    {"withheld": None},
+    {"withheld": [{"start": 1, "end": 2, "reason": ""}]},
+    {"withheld": [{"start": 1, "end": 2, "reason": "uncertain"}], "text": "[а́]"},
+    {"printed_anomaly": "true"},
+    {"line_breaks": None},
+    {"line_breaks": [3]},
+    {"line_breaks": [{"offset": 99, "printed_hyphen": False}]},
+    {"line_breaks": [{"offset": 1, "printed_hyphen": "true"}]},
+    {"line_breaks": [{"offset": 2, "printed_hyphen": False}], "text": "[а́]"},
+    {"line_breaks": [{"offset": 2, "printed_hyphen": True}], "text": "[а‐б]"},
+])
+def test_diff_reports_invalid_metadata_and_keeps_valid_text(metadata, table):
+    a = {**row("[а]"), **metadata}
+    report = tooling.diff_transcriptions([a], [row(a["text"])], table)
+    assert any(d["kind"] == "input_problem" for d in report["disagreements"])
+    assert not any(d["kind"] in {"bracketed_span", "paragraph_text"} for d in report["disagreements"])
+    with pytest.raises(ValueError):
+        tooling.validate_rows([a], table, adjudicated=True)
+
+
+def test_cli_recovers_defects_in_all_28_page_folder_run(tmp_path, capsys):
+    left, right = tmp_path / "left", tmp_path / "right"
+    left.mkdir()
+    right.mkdir()
+    bad_pages = {5: "[\u0301]", 13: "[а next [б]", 15: "[\ufffc]", 20: "[\ufffd]", 24: "[\ufffc\ufffd]"}
+    for page in range(1, 29):
+        a = page_packet(f"prefix {bad_pages.get(page, '[а]')} tail [в]", page=page, seat="left")
+        b = page_packet("prefix [а] tail [г]", page=page, seat="right")
+        if page in {15, 20, 24}:
+            a["paragraphs"][0]["withheld"] = [{"start": 7, "end": 10, "reason": "uncertain fixture"}]
+        for directory, data in ((left, a), (right, b)):
+            (directory / f"{page:02d}.json").write_text(json.dumps(data))
+    output = tmp_path / "report.json"
+    assert tooling.main(["diff", "--left-dir", str(left), "--right-dir", str(right), "--output", str(output)]) == 0
+    assert "input_problem" not in capsys.readouterr().err
+    report = json.loads(output.read_text())
+    assert [p["page"] for p in report["pages"]] == list(range(1, 29))
+    assert {d["page"] for d in report["disagreements"] if d["kind"] == "input_problem"} == set(bad_pages)
+    edits = [d for d in report["disagreements"] if d["kind"] == "bracketed_span"]
+    assert {d["page"] for d in edits} == set(range(1, 29))
+    assert all(d["left"]["text"] == "[в]" and d["right"]["text"] == "[г]" for d in edits)
+
+
+def test_cli_adjudicated_validation_is_strict(tmp_path, capsys):
+    source = tmp_path / "seat.json"
+    for item, error in ((row("[\u0301]"), "Expected base"), ({**row(), "status": "transcribed"}, "Adjudication")):
+        source.write_text(json.dumps([item]))
+        with pytest.raises(SystemExit) as exc:
+            tooling.main(["validate", "--adjudicated", "--input", str(source)])
+        assert exc.value.code == 1
+        assert error in capsys.readouterr().err
+    source.write_text(json.dumps([row()]))
+    assert tooling.main(["validate", "--adjudicated", "--input", str(source)]) == 0
+    assert json.loads(capsys.readouterr().out)["valid_rows"] == 1
+
+
+@pytest.mark.parametrize("underlines", [None, [1], [[0]], [[0, 99]]])
+def test_diff_packet_adapter_recovers_malformed_underlines(underlines, table, tmp_path):
+    a = page_packet("prefix [а] suffix")
+    a["paragraphs"][0]["underlines"] = underlines
+    b = page_packet("prefix [б] suffix")
+    source, target, output = tmp_path / "a.json", tmp_path / "b.json", tmp_path / "out.json"
+    source.write_text(json.dumps(a))
+    target.write_text(json.dumps(b))
+    with pytest.raises(ValueError):
+        tooling.validate_rows(a, table)
+    report = tooling.diff_transcriptions(a, b, table)
+    assert [d["kind"] for d in report["disagreements"]] == ["input_problem", "bracketed_span"]
+    assert tooling.main(["diff", "--left", str(source), "--right", str(target), "--output", str(output)]) == 0
+    assert json.loads(output.read_text()) == report
+
+
+@pytest.mark.parametrize("swap", [False, True])
+def test_diff_invalid_token_underlining_is_excluded_on_both_sides(swap, table):
+    a, b = row("[\u0301] next [а]"), row("[б] next [г]")
+    a["underlining"] = [{"start": 0, "end": 3}]
+    b["underlining"] = [{"start": 0, "end": 3}]
+    report = tooling.diff_transcriptions([b], [a], table) if swap else tooling.diff_transcriptions([a], [b], table)
+    assert [d["kind"] for d in report["disagreements"]] == ["input_problem", "bracketed_span"]
