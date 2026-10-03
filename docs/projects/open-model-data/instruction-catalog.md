@@ -1,8 +1,10 @@
-# E10 instruction catalog — draft 0.2.0
+# E10 instruction catalog — draft 0.3.0
 
 Issue #9611; parent #6321. Author: GPT-6.1 Sol, Codex.
-This is a **draft**, with `training_eligible: false`. Round 2 resolves the
-findings on `45a16f67e714e15c665f370a07e48d6f1c12e3e6`; it does not certify PA6.
+This is a **draft**, with `training_eligible: false`. Round 3 addresses the
+Opus and Flash findings on `e3eed1e5989b7683c16dffe8fbc8b819effaa3ff`;
+it does not certify PA6. The driver adopts the stricter numerical bounds
+**top1 ≤ 0.15, top5 ≤ 0.60**; the round-2 brief's 0.65 is superseded.
 
 [Catalog](../../../registry/projects/open_model_data/instruction_catalog.yaml) ·
 [Versioned structural schema](../../../registry/projects/open_model_data/instruction_catalog.schema.json) ·
@@ -17,7 +19,7 @@ No answer text, explanation or worked solution is authored here.
 | Component | Lines | Operations and source units |
 | --- | ---: | --- |
 | C1 | 12 | Sentence correction including unchanged no-edit pairs. |
-| C2 | 12 | Agreed form; printable grammatical label only in instructions. |
+| C2 | 12 | All agreed variants; fixed source-header serialization and visible sense. |
 | C3 | 24 | 12 synonym and 12 antonym lines; source-readable sense labels. |
 | C4 | 12 | Dictionary definition **and citation from the same entry**. |
 | C5 | 12 | Full Правопис § containing its printed example. |
@@ -37,26 +39,33 @@ Counts establish scheduling capacity, not semantic variety or model quality.
 Slots are binding roles, never guessed physical database columns. E4 must
 authenticate source adapters and exact row/field/span locators. Interpolation
 is single-pass and verbatim: no inflection, paraphrase, truncation, added stress,
-replacement or recursive expansion. Braces in source values remain literal.
+replacement or recursive expansion. The sole serialization exception is the
+fixed C2 header/target JSON specified below (PLAN P1(c)); no free-form joining.
+Braces in source values remain literal.
 Missing, ambiguous or inapplicable fields withhold the record. E4/E5 supplies
-source context and target serialization; this catalog creates no new context
-or answer format.
+source context and authenticated fields; C2 fixes its lossless header and
+variant serialization below, rather than guessing a single printed label.
 
 Sentences, printed examples and phonetic contexts follow a colon without outer
 quotes or added terminal punctuation. A source sentence's own punctuation and
 internal quotes remain intact. Other quoted slots withhold values containing
 guillemets, preventing nested same-form quotes without transforming the source.
-This policy is explicit in `interpolation.quoted_slot_policy`.
+All `{sense}` slots are final fields after `Значення:`, without outer quotes
+or added terminal punctuation. Parentheses and terminal `. , ; :` stay
+verbatim; there is no `«(…)»` wrapper or doubled full stop. This policy is
+explicit in `interpolation.quoted_slot_policy` and enforced in the C2/C3
+template patterns, with six source-value fixtures and quotation mutations.
 
 - **C1:** same-document/annotator aligned pairs; all annotations and both
   UA-GEC layers stay together. Unchanged no-edit pairs remain eligible and
   target the unchanged sentence. Every line allows preservation, without
   presupposing an error or asking for an explanation.
-- **C2:** only lemma and a **printable source grammatical label** appear in
-  instructions. Homonym identifiers, sense, grammatical tags and variant
-  identity remain lossless context. Integers and code lists are never labels.
-  Withhold if no printable source label exists; do not author a label or
-  expand tags. P3 exclusions and VESUM/ULIF agreement still bind.
+- **C2:** lemma, fixed source-header serialization and verbatim `sense_gloss`
+  are model-visible in every line. Numeric homonym identifiers and code tags
+  stay in lossless metadata, never substitutes for printable cells. Where
+  homonym forms differ, withhold missing or non-discriminating source senses.
+  One target contains all agreed variants. P3 exclusions and VESUM/ULIF
+  tuple agreement still bind; incomplete agreement withholds the whole record.
 - **C3:** the group must belong to the selected headword sense. Withhold if no
   source-readable sense label exists; a numeric sense ID cannot become a gloss.
   Both .03 lines use `до слова`, not `для слова`.
@@ -71,7 +80,9 @@ This policy is explicit in `interpolation.quoted_slot_policy`.
   F/Calque edits**. Mixed units belong to C1; no-edit units cannot enter C6.
   The full aligned human correction is then a calque-only target. Book pairs
   require both forms printed in the same cited passage and individual Sol
-  and Opus sign-off. `автор` refers to authenticated author context; no
+  and Opus sign-off. Every book line admits one or several replacements,
+  using `заміну (заміни)` or neutral `замінити` wording. `автор` refers to
+  authenticated author context; no
   dangling book reference or invented sentence bridge remains.
 - **C7:** no interpolation slots. The admitted #8982 pair is mandatory context,
   with modern-source and Soviet-context roles. SUM-11 never supplies the norm;
@@ -101,9 +112,162 @@ Component/operation and source-role constraints remain closed. Every declared
 slot must occur in its template (schema lookaheads and committed mutation tests);
 the committed test also requires placeholder order to match `slots` exactly.
 
+## C2 fixed header cells and variant target
+
+`c2-header-cells.v1` is UTF-8 JSON, emitted with
+`json.dumps(value, ensure_ascii=False, separators=(",", ":"))`. Key order is
+exactly `section_headers`, `row_header`, `column_headers`. All values are
+**verbatim source strings**, never code expansions:
+
+- `section_headers`: zero, one or two cells, parent tense/mood followed by
+  the active verb-form subsection, in source order. An absent level contributes
+  no array element; changing the parent clears the prior subsection.
+- `row_header`: the source row-label cell, or the empty string if absent.
+- `column_headers`: all active stacked column-header cells above the selected
+  form cell, in source order, or an empty array if absent.
+
+At least one header string must be nonempty. Read the same physical cells as
+`scripts/lexicon/runner/ulif_dictua_parse.py::_paradigm_form_rows`: resolve
+rowspan/colspan on `payload_json.raw_html`, retain parent/subsection headers,
+row labels and stacked column headers. The parser's header recognition selects
+cells; it must not rewrite their text into a synthetic grammatical label.
+Cross-check the printed strings against `payload_json.rows`; preserve section
+id, table coordinates and header-cell span locators in metadata. A missing,
+unknown, unmapped or conflicting header association withholds the record.
+No string concatenation, translated labels or arbitrary joining is permitted.
+JSON escaping is reversible structural serialization, not source rewriting.
+
+The `{lemma}` slot copies `ulif_dictua_entries.canonical_headword` verbatim;
+E4 authenticates its link to the P3 lemma without rewriting the visible
+source headword. The input also contains `ulif_dictua_entries.sense_gloss`
+verbatim after the last colon. Empty senses are permitted only if homonym forms do not differ
+for the same headword and grammatical slot. Compare **complete ordered variant
+targets**, not one selected form: if different targets remain possible for the
+same visible lemma/header/sense, withhold. A missing gloss in a differing
+homonym group or one gloss shared by conflicting targets cannot discriminate
+it. Source sense labels, not `homonym_index`, must resolve that ambiguity.
+
+The target is a single JSON array of all agreed `ulif_forms.form_stressed`
+values for that entry/slot, ordered by `(variant_order, id)`; retain duplicates
+and every variant's locator/identity. Every variant must satisfy P3 agreement
+and exclusions, otherwise withhold the **whole** record. Never silently pick
+a preferred variant. This uses the same fixed JSON encoding as the header slot.
+The schema's `c2HeaderCells` and `c2SourceRecord` definitions supply admission
+**shape** fixtures, not proof of authenticity, completeness, or cross-record
+uniqueness; those remain E4/E5 gates.
+
+## C2 source-field eligibility census
+
+Read-only snapshot on 2026-10-03; reproduction uses the task-prescribed project
+interpreter and canonical ULIF store with SQLite URI `mode=ro`. The query below
+starts one read transaction and writes only connection-local TEMP tables.
+This is a **conservative lower bound on ULIF field eligibility**, measured in
+entry×grammatical-slot records, not exported training records or completed
+VESUM agreement. It covers only full three-column noun tables with all seven
+printed case rows; verb, adjective, invariable and other table shapes are not
+counted. There is no promise that every counted record passes E4 authentication,
+P3 VESUM/sense agreement, held-out exclusions or E5 export admission.
+
+Baseline queries and raw outputs:
+
+```sql
+SELECT count(*) FROM ulif_forms; -- 4742272
+SELECT count(*) FROM ulif_dictua_entries
+WHERE homonym_checked=1 AND status='ok'; -- 262735
+SELECT count(DISTINCT entry_id) FROM ulif_forms
+WHERE unmapped_labels!='[]'; -- 81984
+```
+
+The field rule leaves **644,515 records across 93,299 entries**, containing
+673,969 source variant rows, eligible in this slice. This includes 29,432
+multi-variant records and 13,924 records from differing-homonym groups with
+discriminating visible glosses. It withholds 15,653 candidates for sense
+ambiguity. Thus the source-field rule does not reduce C2 to near zero; final
+training-admitted counts remain E4/E5's responsibility.
+
+Set `LU_SOURCES_DB` to the canonical store's absolute path and run this exact
+query/selection with `"$LU_PROJECT_PYTHON"` from the assigned worktree:
+
+```python
+import json, os, sqlite3
+c=sqlite3.connect('file:'+os.environ['LU_SOURCES_DB']+'?mode=ro',uri=True)
+c.execute('BEGIN')
+q='''CREATE TEMP TABLE form_sets AS
+SELECT e.id entry_id,e.normalized_query headword,e.sense_gloss,f.grammatical_tags,
+       group_concat(f.form_stressed,char(31)) forms,count(*) variants,
+       max(f.marked_asterisk) asterisk,max(f.preposition!='') bound
+FROM (SELECT * FROM ulif_forms WHERE is_lemma=0 ORDER BY entry_id,grammatical_tags,variant_order,id) f
+JOIN ulif_dictua_entries e ON e.id=f.entry_id
+WHERE e.status='ok' AND e.homonym_checked=1
+GROUP BY e.id,f.grammatical_tags'''
+c.execute(q)
+c.execute('CREATE INDEX temp.set_key ON form_sets(headword,grammatical_tags)')
+c.execute('''CREATE TEMP TABLE conflicts AS SELECT headword,grammatical_tags
+FROM form_sets GROUP BY headword,grammatical_tags HAVING count(DISTINCT forms)>1''')
+c.execute('CREATE INDEX temp.conflict_key ON conflicts(headword,grammatical_tags)')
+q2='''SELECT e.id,s.payload_json FROM ulif_dictua_sections s
+JOIN ulif_dictua_entries e ON e.id=s.entry_id
+WHERE s.kind='paradigm' AND e.status='ok' AND e.homonym_checked=1
+AND json_extract(s.payload_json,'$.rows[0]')='["відмінок","однина","множина"]'
+AND json_array_length(s.payload_json,'$.rows')=8
+AND NOT EXISTS (SELECT 1 FROM json_each(s.payload_json,'$.rows') r WHERE json_array_length(r.value)!=3)
+AND NOT EXISTS (SELECT 1 FROM ulif_forms f WHERE f.entry_id=e.id AND f.unmapped_labels!='[]')
+AND NOT EXISTS (SELECT 1 FROM ulif_forms_failures x WHERE x.entry_id=e.id)'''
+c.execute('CREATE TEMP TABLE noun_entries(entry_id INTEGER PRIMARY KEY)')
+cases=['називний','родовий','давальний','знахідний','орудний','місцевий','кличний']
+for entry,payload in c.execute(q2).fetchall():
+ rows=json.loads(payload)['rows']
+ if [r[0] for r in rows[1:]]==cases:
+  c.execute('INSERT OR IGNORE INTO noun_entries VALUES(?)',(entry,))
+q3='''CREATE TEMP TABLE candidates AS SELECT a.* FROM form_sets a JOIN noun_entries n USING(entry_id)
+WHERE a.asterisk=0 AND a.bound=0
+AND json_array_length(a.grammatical_tags)=2
+AND json_extract(a.grammatical_tags,'$[0]') IN ('v_naz','v_rod','v_dav','v_zna','v_oru','v_mis','v_kly')
+AND json_extract(a.grammatical_tags,'$[1]') IN ('s','p')'''
+c.execute(q3)
+q4='''CREATE TEMP TABLE eligible AS SELECT a.* FROM candidates a
+WHERE NOT EXISTS(SELECT 1 FROM conflicts k WHERE k.headword=a.headword AND k.grammatical_tags=a.grammatical_tags)
+OR (trim(a.sense_gloss)!='' AND NOT EXISTS (
+ SELECT 1 FROM form_sets b WHERE b.headword=a.headword AND b.grammatical_tags=a.grammatical_tags
+ AND (trim(b.sense_gloss)='' OR (b.sense_gloss=a.sense_gloss AND b.forms!=a.forms))))'''
+c.execute(q4)
+for name,q in {
+ 'complete_mapped_noun_entries':'SELECT count(*) FROM noun_entries',
+ 'noun_entry_tag_candidates':'SELECT count(*) FROM candidates',
+ 'noun_entry_tag_field_eligible':'SELECT count(*) FROM eligible',
+ 'noun_entries_field_eligible':'SELECT count(DISTINCT entry_id) FROM eligible',
+ 'noun_variant_rows_field_eligible':'SELECT sum(variants) FROM eligible',
+ 'noun_multivariant_records':'SELECT count(*) FROM eligible WHERE variants>1',
+ 'noun_sense_withheld':'SELECT (SELECT count(*) FROM candidates)-(SELECT count(*) FROM eligible)',
+ 'noun_differing_homonym_records':'SELECT count(*) FROM eligible a JOIN conflicts k USING(headword,grammatical_tags)',
+}.items(): print(name,c.execute(q).fetchone()[0],flush=True)
+```
+
+Raw result:
+
+```text
+complete_mapped_noun_entries 95200
+noun_entry_tag_candidates 660168
+noun_entry_tag_field_eligible 644515
+noun_entries_field_eligible 93299
+noun_variant_rows_field_eligible 673969
+noun_multivariant_records 29432
+noun_sense_withheld 15653
+noun_differing_homonym_records 13924
+```
+
+The census excludes entire entries with any unmapped labels or recorded forms
+failure and entire slot groups with any asterisk/preposition-bound variant.
+It counts only non-lemma form rows under authenticated-entry status. Missing
+source senses in any differing homonym group conservatively withhold that
+group; equal glosses with different complete targets are also withheld. The
+header locator/byte proof is still E4's gate, not supplied by these SQL counts.
+
 ## Proposed concentration measures
 
-These remain **proposals**. The accountable driver freezes catalog bytes/hash,
+The driver adopts **0.15/0.60** for prefix, ID and whole-template bounds in
+this round. Metric protocol/version and export enforcement remain draft.
+The accountable driver freezes catalog bytes/hash,
 metric version and thresholds after non-author reviews and before E12. Prior
 art: `check_2_form_letters` in
 `scripts/projects/open_model_data/audit_dataset_acceptance.py` measures
@@ -159,6 +323,55 @@ under the frozen version. Never rewrite, duplicate or rebind sources to pass.
 Infeasible integer counts or fewer than ten eligible lines withhold the bucket
 and return it to the driver; dropping a disputed line never licenses relaxation.
 
+## Round 3 concentration diagnostics
+
+Recomputed with `tokens`, `shares` and `repetition` in the committed test,
+loaded with the task-prescribed interpreter via `importlib.util.spec_from_file_location`.
+For **each of the 11 operations**, N=12: one-token prefix, four-token prefix,
+whole template and ID frequencies are all **top1=1/12, top5=5/12**
+(0.083333…/0.416666…). They remain below **0.15/0.60**. After dropping the
+last two lines, the committed arithmetic test requires **0.10/0.50**.
+
+The following are maximum **record prevalence**, with grams counted once per
+record. The 4-, 5- and 6-gram columns are **diagnostics only**, never gates;
+necessary binding vocabulary can concentrate. Eight-gram and suffix bounds
+remain 0.60. No source value or slot name contributes token diversity.
+
+| Component.operation | 4-gram | 5-gram | 6-gram | 8-gram | 8-token suffix top1 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| C1.sentence_correction | 3/12 | 2/12 | 1/12 | 1/12 | 1/12 |
+| C2.agreed_form | 4/12 | 4/12 | 4/12 | 1/12 | 1/12 |
+| C3.synonyms | 9/12 | 5/12 | 5/12 | 1/12 | 1/12 |
+| C3.antonyms | 9/12 | 5/12 | 5/12 | 1/12 | 1/12 |
+| C4.idiom_definition | 4/12 | 4/12 | 1/12 | 1/12 | 1/12 |
+| C5.printed_spelling_rule | 3/12 | 1/12 | 1/12 | 1/12 | 1/12 |
+| C6.calque_correction | 2/12 | 1/12 | 1/12 | 1/12 | 1/12 |
+| C6.book_calque_replacement | 7/12 | 6/12 | 6/12 | 1/12 | 1/12 |
+| C7.modern_norm_selection | 5/12 | 3/12 | 3/12 | 1/12 | 1/12 |
+| C8.supported_pronunciation | 9/12 | 8/12 | 8/12 | 2/12 | 1/12 |
+| C9.verbatim_section | 12/12 | 8/12 | 5/12 | 2/12 | 2/12 |
+
+Reproduction (inside the assigned worktree):
+
+```python
+import importlib.util
+spec = importlib.util.spec_from_file_location(
+    "catalog_test", "tests/projects/open_model_data/test_instruction_catalog.py"
+)
+m = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(m)
+for component, entry in m.CATALOG["components"].items():
+    for operation in sorted({line["operation"] for line in entry["instructions"]}):
+        seqs = [m.tokens(line["template"]) for line in entry["instructions"]
+                if line["operation"] == operation]
+        print(component, operation,
+              "prefix1", m.shares([seq[:1] for seq in seqs]),
+              "prefix4", m.shares([seq[:4] for seq in seqs]),
+              "whole", m.shares(seqs),
+              "suffix8/ngram8", m.repetition(seqs),
+              "grams4/5/6", [m.repetition(seqs, n)[1] for n in (4, 5, 6)])
+```
+
 ## Committed checks and remaining production proof
 
 `tests/projects/open_model_data/test_instruction_catalog.py` checks schema/plan hash, counts/IDs,
@@ -183,7 +396,7 @@ D4 remains the evaluation steward's independent sealed proof; this author did
 not inspect the sealed ruler. Real source-field applicability and relationship
 verification remain E4/E5 responsibilities.
 
-## Round 2 finding disposition
+## Historical round 2 finding disposition
 
 | Review finding | Change |
 | --- | --- |
@@ -201,7 +414,7 @@ verification remain E4/E5 responsibilities.
 | Flash C2.agreed_form.03 | `форму слова`; no `для` and no visible homonym ID. |
 | Flash C5.printed_spelling_rule.01 | Full paragraph containing its printed example; no `для` or unresolved pronoun. |
 
-## Sources evidence for every changed/new line
+## Historical round 2 Sources evidence
 
 Tool checkpoint: `2026-10-03T19:19:01Z` (`date -u`). Sources batch started `2026-10-03T19:12:33Z`.
 Catalog SHA-256: `b0a8f16e6ccedff3f4222882ec1993d6fa135d711d65d67d95a7dc64af0fcbb7`.
@@ -505,27 +718,109 @@ Ruff check returned `All checks passed!`; Ruff format check returned
 output. No other importing consumer was found by the scoped Python-source
 search for `instruction_catalog`; no full test suite was collected.
 
+## Round 3 finding disposition and source evidence
+
+| Finding | Resolution and line IDs |
+| --- | --- |
+| B1 | C2.agreed_form.01–12: fixed `c2-header-cells.v1`; explicit source fields/locators; visible `{sense}`; conflicting or missing sense withheld; all variants in one target. Conservative ULIF field census above. |
+| S1 / Flash FIX | C2.agreed_form.08: `?` follows `{slot}` before the final sense block. |
+| S2 | C2 .01–12 and both C3 operations .01–12: final unquoted `Значення: {sense}`; six punctuation/parenthesis fixtures and quotation mutations. |
+| S3 | C6.book_calque_replacement.01–12: one/multiple replacements or neutral `замінити`; .08/.10 already neutral. |
+| N1 | C8.supported_pronunciation.05: `та авторову оцінку`. |
+| N2 | Per-operation 4-/5-/6-gram prevalence above, diagnostic only; stricter 0.15/0.60 retained. |
+| N3 | C1.sentence_correction.10/.12: final conditional `якщо воно правильне`. |
+
+Sources MCP calls in this round (source roles differ):
+
+- `verify_words` on the 81 distinct authored words from the 49 changed lines:
+  **`Found: 81/81`**. Follow-up for `врахуй`, `і`: **`Found: 2/2`**.
+  These attest morphology, not whole-sentence naturalness.
+- `query_pravopys(topic="156")`, official authorized edition, §156 pp.199–201:
+  **`1. У кінці питального речення`**. This is punctuation authority for S1.
+- `query_pravopys(topic="164")`, §164 pp.246–248, Примітка 1:
+  **`двокрапка й тире, ніколи не ставимо перед закритими лапками`**.
+  S2 avoids wrapping source glosses instead of rewriting their punctuation.
+- `search_style_guide(query="вірний", limit=1)`:
+  **`Found 1 results in **Антоненко-Давидович** for: "вірний"`**.
+  Structured source hit explicitly lists several context-bound replacements;
+  full hit includes `на певну загибель`, `правдивий шлях` and
+  `слушно робить син`. It supports replacement multiplicity, not every
+  authored instruction's naturalness.
+- `search_text(query="вірний", source_file="antonenko-davydovych-yak-my-hovorymo", limit=1)`:
+  **`Found 1 results for: "вірний"`**, chunk
+  `antonenko-davydovych-yak-my-hovorymo_p051`, independently supplies the
+  book passage with those replacements.
+- `search_style_guide(query="орудний", limit=1)`:
+  **`Found 1 results in **Антоненко-Давидович** for: "орудний"`**,
+  headword `Орудний відмінок дійової особи й знаряддя`.
+  `search_text(query="орудний", source_file="antonenko-davydovych-yak-my-hovorymo", limit=1)`:
+  **`Found 1 results for: "орудний"`**, chunk `_p014` (time, not agent usage).
+  A narrower full-book query, `search_text(query="Енеєм",
+  source_file="antonenko-davydovych-yak-my-hovorymo", limit=1)`, returned
+  **`Found 1 results for: "Енеєм"`**, chunk `_p013`: the relevant agent-case
+  paragraph says **`але не треба й надуживати ним`**. This supports N1's
+  stylistic simplification; VESUM attests `авторову`.
+  `search_style_guide(query="авторову", limit=1)` returned
+  **`No results in Антоненко-Давидович for: "авторову"`**; absence is not approval.
+- `check_russian_shadow(word="авторову")` and `check_russian_shadow(word="заміни")`:
+  **`"matches_russian": false`**, **`"confidence": 0.0`** each.
+  These are suspicion checks, not calque verdicts. No Russianism judgment is
+  inferred from them.
+
+Earlier evidence above is historical round-2 evidence for the previous
+catalog revision; it does not approve the round-3 head. No independent
+held-out or fresh exact-head reviewer proof is claimed by these author checks.
+
+## Round 3 scoped validation
+
+Executed from the assigned dispatch worktree with the shared project
+interpreter. Only the owned test file imports this catalog, per
+`rg -n 'instruction_catalog' tests -g '*.py'`; no full suite was collected.
+
+```bash
+"$LU_PROJECT_PYTHON" -m pytest tests/projects/open_model_data/test_instruction_catalog.py -q
+# 367 passed in 13.97s
+"$LU_PROJECT_RUFF" check tests/projects/open_model_data/test_instruction_catalog.py
+# All checks passed!
+"$LU_PROJECT_PYTHON" -m yamllint registry/projects/open_model_data/instruction_catalog.yaml
+# exit 0, no output
+git diff --check
+# exit 0, no output
+```
+
+New cases retain all prior slot mutations and add missing serializer/sense,
+metadata-only sense, free-form joins, first-variant targets, ambiguous empty
+senses, empty/code-only headers, noun/verb header shapes and complete-variant
+JSON round trips. For each of six punctuation/parenthesis values, every sense
+line is rendered and its quoted-slot mutation rejected. These are local
+schema/interpolation/arithmetic fixtures, **not** independent held-out proof.
+The production relationship checker remains E5's deliverable.
+
 ## Driver handback and stopping rule
 
 The worker milestone is a pushed review-fix branch with clean status, not issue
-closure. The live #9611 body now names C1–C9 (9 components); no denominator
-reconciliation remains. The accountable `claude-open-model-data` driver owns:
+closure. The catalog denominator remains C1–C9 (9 components, 132 lines).
+The accountable `claude-open-model-data` driver owns:
 
 1. Fresh exact-head non-author language/semantic reviews and code CF where
-   applicable. Prior reviews of 45a16f67 do not approve this revision.
-2. Freeze or revise the proposed metrics/thresholds before E12 after those
-   reviews; verify scheduling feasibility in each source eligibility stratum.
-3. E4 source-field authentication: C2 printable labels, C3 sense labels, C8
+   applicable. Prior reviews of e3eed1e5 do not approve this revision.
+2. Freeze catalog bytes/hash and the metric protocol before E12 after those
+   reviews; retain the adopted 0.15/0.60 bounds and verify scheduling feasibility
+   in each source eligibility stratum.
+3. E4 source-field authentication: C2 header-cell locators/visible senses and
+   complete variant agreement, C3 sense labels, C8
    context/author identity and C9 printed headings/position from #8341.
    Sparse label availability means withholding, never inferred labels.
 4. E5-backed production checker with independently executed negative fixtures;
    the local arithmetic test cannot satisfy that production gate or D4.
 5. PR, CI, merge, issue closeout and cleanup via the existing driver flow.
 
-After this second fix round, unresolved source/meaning/grammar findings block
-acceptance. If reviewers still disagree after tool-backed resolution, drop the
+This is the last authoring round before the PR. B1/S1/S2/S3 have concrete
+resolutions above; missing exact-head review remains the driver's gate.
+Unresolved source/meaning/grammar findings block acceptance. If reviewers still disagree after tool-backed resolution, drop the
 line per the issue policy; recheck 10–12 lines/operation, source eligibility and
 metric feasibility. A missing required component, infeasible bucket or missing
 source field is withheld and stays open with the driver as owner. New finding
 classes require a changed approach, never a lowered bar. No two-seat approval,
-threshold freeze, production checker or independent held-out proof is claimed.
+final catalog/protocol freeze, production checker or independent held-out proof is claimed. The driver owns these residual gates;
+this worker stops at the pushed clean branch, without opening a PR.

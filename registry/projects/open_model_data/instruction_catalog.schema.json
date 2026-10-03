@@ -85,7 +85,7 @@
         },
         "transformations": {
           "enum": [
-            "none"
+            "fixed_lossless_serialization_only"
           ]
         },
         "recursive_interpolation": {
@@ -400,7 +400,8 @@
         "exclusions",
         "line_count",
         "line_count_rationale",
-        "instructions"
+        "instructions",
+        "serialization"
       ],
       "properties": {
         "binding": {
@@ -412,7 +413,8 @@
           "additionalProperties": false,
           "required": [
             "lemma",
-            "slot"
+            "slot",
+            "sense"
           ],
           "properties": {
             "lemma": {
@@ -420,6 +422,10 @@
               "minLength": 1
             },
             "slot": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sense": {
               "type": "string",
               "minLength": 1
             }
@@ -482,17 +488,18 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?=[\\s\\S]*\\{lemma\\})(?=[\\s\\S]*\\{slot\\})(?:[^{}]|\\{(?:lemma|slot)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{lemma\\})(?=[\\s\\S]*\\{slot\\})(?:[^{}]|\\{(?:lemma|slot|sense)\\})+\\nЗначення: \\{sense\\}$"
                   },
                   "slots": {
                     "type": "array",
                     "uniqueItems": true,
-                    "minItems": 2,
-                    "maxItems": 2,
+                    "minItems": 3,
+                    "maxItems": 3,
                     "items": {
                       "enum": [
                         "lemma",
-                        "slot"
+                        "slot",
+                        "sense"
                       ]
                     }
                   }
@@ -517,6 +524,15 @@
               "maxContains": 12
             }
           ]
+        },
+        "serialization": {
+          "const": {
+            "header_slot": "c2-header-cells.v1",
+            "target": "ordered_json_array_all_agreed_variants",
+            "sense_visibility": "every_instruction",
+            "ambiguous_sense": "withhold_missing_or_non_discriminating",
+            "specification": "docs/projects/open-model-data/instruction-catalog.md"
+          }
         }
       }
     },
@@ -613,7 +629,7 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?=[\\s\\S]*\\{sense\\})(?=[\\s\\S]*\\{headword\\})(?:[^{}]|\\{(?:sense|headword)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{headword\\})(?:[^{}]|\\{(?:headword|sense)\\})+ Значення: \\{sense\\}$"
                   },
                   "slots": {
                     "type": "array",
@@ -649,7 +665,7 @@
                   "template": {
                     "type": "string",
                     "minLength": 1,
-                    "pattern": "^(?=[\\s\\S]*\\{sense\\})(?=[\\s\\S]*\\{headword\\})(?:[^{}]|\\{(?:sense|headword)\\})+$"
+                    "pattern": "^(?=[\\s\\S]*\\{headword\\})(?:[^{}]|\\{(?:headword|sense)\\})+ Значення: \\{sense\\}$"
                   },
                   "slots": {
                     "type": "array",
@@ -1510,6 +1526,112 @@
           ]
         }
       }
+    },
+    "c2HeaderCells": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "section_headers",
+        "row_header",
+        "column_headers"
+      ],
+      "properties": {
+        "section_headers": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "row_header": {
+          "type": "string"
+        },
+        "column_headers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "section_headers": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "row_header": {
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "column_headers": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "c2SourceRecord": {
+      "description": "Admission shape fixture, not source-authentication or agreement proof. E4/E5 verifies these assertions.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lemma",
+        "slot",
+        "sense",
+        "homonym_forms_differ",
+        "agreed_forms"
+      ],
+      "properties": {
+        "lemma": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slot": {
+          "$ref": "#/$defs/c2HeaderCells"
+        },
+        "sense": {
+          "type": "string"
+        },
+        "homonym_forms_differ": {
+          "type": "boolean"
+        },
+        "agreed_forms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "homonym_forms_differ": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "sense": {
+                "type": "string",
+                "pattern": "\\S"
+              }
+            }
+          }
+        }
+      ]
     }
   },
   "allOf": [

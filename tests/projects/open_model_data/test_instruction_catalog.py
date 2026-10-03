@@ -22,6 +22,14 @@ SCHEMA = json.loads((ASSETS / "instruction_catalog.schema.json").read_text())
 VALIDATOR = Draft202012Validator(SCHEMA)
 LINES = [line for entry in CATALOG["components"].values() for line in entry["instructions"]]
 SLOT_CASES = [(line, slot) for line in LINES for slot in line["slots"]]
+C2_RECORD_VALIDATOR = Draft202012Validator({"$ref": "#/$defs/c2SourceRecord", "$defs": SCHEMA["$defs"]})
+C2_RECORD = {
+    "lemma": "SOURCE_LEMMA",
+    "slot": {"section_headers": [], "row_header": "SOURCE_CASE", "column_headers": ["SOURCE_NUMBER"]},
+    "sense": "(SOURCE_SENSE)",
+    "homonym_forms_differ": True,
+    "agreed_forms": ["SOURCE_FORM_1", "SOURCE_FORM_2"],
+}
 
 
 def tokens(template: str) -> tuple[str, ...]:
@@ -110,6 +118,96 @@ def test_sentence_and_printed_example_slots_follow_a_colon_without_outer_quotes(
         set(line["slots"]) == {"book_title", "grade", "section_title"}
         for line in CATALOG["components"]["C9"]["instructions"]
     )
+
+
+@pytest.mark.parametrize("sense", ["SOURCE.", "SOURCE,", "SOURCE;", "SOURCE:", "(SOURCE)", "(SOURCE)."])
+def test_sense_punctuation_and_parentheses_are_verbatim_final_unquoted_fields(sense: str) -> None:
+    for line in LINES:
+        if "sense" not in line["slots"]:
+            continue
+        values = dict.fromkeys(line["slots"], "SOURCE")
+        values["sense"] = sense
+        rendered = line["template"].format_map(values)
+        assert rendered.endswith(": " + sense)
+        assert "«" + sense + "»" not in rendered
+        assert ".." not in rendered
+        bad = copy.deepcopy(CATALOG)
+        component = line["id"].split(".")[0]
+        target = next(item for item in bad["components"][component]["instructions"] if item["id"] == line["id"])
+        target["template"] = target["template"].replace(": {sense}", ": «{sense}».")
+        assert list(VALIDATOR.iter_errors(bad))
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "serialization",
+        "sense_visibility",
+        "ambiguous_sense",
+        "target_subset",
+        "authored_join",
+        "missing_sense",
+        "empty_headers",
+        "codes",
+    ],
+)
+def test_c2_refuses_missing_serialization_or_model_visible_source_context(mutation: str) -> None:
+    bad = copy.deepcopy(CATALOG)
+    c2 = bad["components"]["C2"]
+    if mutation == "serialization":
+        del c2["serialization"]
+    elif mutation == "sense_visibility":
+        c2["serialization"]["sense_visibility"] = "metadata_only"
+    elif mutation == "ambiguous_sense":
+        c2["serialization"]["ambiguous_sense"] = "allow_conflicting_targets"
+    elif mutation == "target_subset":
+        c2["serialization"]["target"] = "first_variant_only"
+    elif mutation == "authored_join":
+        c2["serialization"]["header_slot"] = "free_form_join"
+    elif mutation == "missing_sense":
+        del c2["source_fields"]["sense"]
+    else:
+        record = copy.deepcopy(C2_RECORD)
+        record["slot"] = (
+            {"section_headers": [], "row_header": "", "column_headers": []}
+            if mutation == "empty_headers"
+            else ["v_rod", "p"]
+        )
+        assert list(C2_RECORD_VALIDATOR.iter_errors(record))
+        return
+    assert list(VALIDATOR.iter_errors(bad))
+
+
+@pytest.mark.parametrize("sense", ["", " ", "\n"])
+def test_c2_ambiguous_homonyms_require_a_printable_source_sense(sense: str) -> None:
+    record = copy.deepcopy(C2_RECORD)
+    record["sense"] = sense
+    assert list(C2_RECORD_VALIDATOR.iter_errors(record))
+    record.update(homonym_forms_differ=False, sense="")
+    C2_RECORD_VALIDATOR.validate(record)
+
+
+def test_c2_header_serialization_and_all_variants_round_trip_without_joining() -> None:
+    for headers in (
+        C2_RECORD["slot"],
+        {"section_headers": ["SOURCE_TENSE", "SOURCE_VERBFORM"], "row_header": "", "column_headers": []},
+        {"section_headers": ["SOURCE_TENSE"], "row_header": "SOURCE_PERSON", "column_headers": ["SOURCE_NUMBER"]},
+    ):
+        record = copy.deepcopy(C2_RECORD)
+        record["slot"] = headers
+        C2_RECORD_VALIDATOR.validate(record)
+        slot = json.dumps(headers, ensure_ascii=False, separators=(",", ":"))
+        target = json.dumps(record["agreed_forms"], ensure_ascii=False, separators=(",", ":"))
+        assert json.loads(slot) == headers
+        assert json.loads(target) == record["agreed_forms"]
+        for line in CATALOG["components"]["C2"]["instructions"]:
+            rendered = line["template"].format(lemma=record["lemma"], slot=slot, sense=record["sense"])
+            assert slot in rendered
+            assert rendered.endswith(": " + record["sense"])
+    record["agreed_forms"] = []
+    assert list(C2_RECORD_VALIDATOR.iter_errors(record))
+    question = next(line for line in LINES if line["id"] == "C2.agreed_form.08")
+    assert "{slot}?\n" in question["template"]
 
 
 def test_tokens_normalize_metric_only_and_mask_all_source_roles() -> None:

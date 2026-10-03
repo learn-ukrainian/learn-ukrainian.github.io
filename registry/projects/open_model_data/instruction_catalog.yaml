@@ -1,7 +1,7 @@
 ---
 # Draft only; PA6 still requires non-author reviews and the E5-backed checker.
 schema_version: instruction-catalog.v1
-version: 0.2.0-draft
+version: 0.3.0-draft
 status: draft
 training_eligible: false
 issue: 9611
@@ -12,7 +12,7 @@ plan:
 interpolation:
   mode: verbatim_source_fields_only
   missing_field: withhold
-  transformations: none
+  transformations: fixed_lossless_serialization_only
   recursive_interpolation: false
   scope: Only instructions[].template is project-authored training text. All other catalog fields are control
     metadata and must not be exported as instructions or answers.
@@ -20,7 +20,8 @@ interpolation:
     the exact source adapter and row/field locators before any rendering.
   quoted_slot_policy: Withhold values containing guillemets when their slot is enclosed in guillemets;
     never escape, rewrite or nest same-form quotes. Sentence, example, context and printed-heading slots
-    follow a colon without enclosing quotes; their source punctuation stays intact.
+    follow a colon without enclosing quotes; their source punctuation stays intact. Sense slots are final,
+    unquoted fields after a colon, with no added terminal punctuation; parentheses remain verbatim.
 prefix_metric:
   id: instruction-prefix.v1-draft
   status: proposed
@@ -101,7 +102,7 @@ components:
           - sentence
       - id: C1.sentence_correction.10
         operation: sentence_correction
-        template: 'Виправ лише наявні помилки й подай речення; правильне збережи: {sentence}'
+        template: 'Виправ лише наявні помилки й подай речення; збережи його, якщо воно правильне: {sentence}'
         slots:
           - sentence
       - id: C1.sentence_correction.11
@@ -111,16 +112,23 @@ components:
           - sentence
       - id: C1.sentence_correction.12
         operation: sentence_correction
-        template: 'За потреби виправ помилки, а правильне речення залиш без змін: {sentence}'
+        template: 'За потреби виправ помилки, а речення залиш без змін, якщо воно правильне: {sentence}'
         slots:
           - sentence
   C2:
-    binding: Lemma + homonym/sense + grammatical slot + variant → form agreed by VESUM and ULIF; stress from
-      ULIF.
+    binding: Lemma + model-visible source sense + fixed header-cell serialization → all agreed variant forms;
+      VESUM/ULIF agreement and ULIF stress remain mandatory.
     source_fields:
-      lemma: P3 tuple lemma
-      slot: Printable grammatical label verbatim from the source, never a numeric identifier, grammatical_tags
-        code list or authored expansion; withhold if unavailable.
+      lemma: Verbatim ulif_dictua_entries.canonical_headword, authenticated as the P3 tuple headword
+      slot: c2-header-cells.v1 JSON serialization of verbatim ULIF paradigm header cells; source is
+        ulif_dictua_sections.payload_json.raw_html with rows cross-check and exact cell locators.
+      sense: Verbatim ulif_dictua_entries.sense_gloss; empty only when homonym forms do not differ.
+    serialization:
+      header_slot: c2-header-cells.v1
+      target: ordered_json_array_all_agreed_variants
+      sense_visibility: every_instruction
+      ambiguous_sense: withhold_missing_or_non_discriminating
+      specification: docs/projects/open-model-data/instruction-catalog.md
     required_context:
       - homonym_sense
       - variant
@@ -128,11 +136,17 @@ components:
       - source_locator
       - grammatical_tags
       - lossless_homonym_identifier
-    target_policy: Target is the agreed form with ULIF stress; tuple identity remains in lossless input metadata.
+      - header_cell_locators
+      - complete_variant_agreement
+      - model_visible_sense
+    target_policy: Target is one JSON array containing every agreed form_stressed for the entry and grammatical slot,
+      ordered by variant_order then form id. Never select one variant or discard a disagreed variant; withhold
+      the entire record if agreement is incomplete. Tuple identity and per-variant locators stay in metadata.
     exclusions:
       - Asterisks, preposition-bound forms, unmapped labels, failed entries and single-source forms.
-      - No printable source grammatical label; identifier/code-list labels; homonym or tags interpolated into
-        instruction text.
+      - No authenticated header cells; numeric identifiers or code-list labels used as printable headers.
+      - Differing homonym forms with missing sense_gloss or the same gloss mapping to conflicting targets.
+      - Missing variant agreement, variant locators or source ordering; never silently select one variant.
     line_count: 12
     line_count_rationale: Twelve lines per operation give balanced top1=1/12 and top5=5/12. After two disputed
       lines are dropped, ten distinct starts give 0.10/0.50, retaining slack under proposed 0.15/0.60 bounds.
@@ -140,76 +154,88 @@ components:
     instructions:
       - id: C2.agreed_form.01
         operation: agreed_form
-        template: 'Подай форму слова «{lemma}» за граматичним позначенням: {slot}'
+        template: "Подай форму слова «{lemma}» за граматичним позначенням: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.02
         operation: agreed_form
-        template: 'Запиши слово «{lemma}» у формі: {slot}'
+        template: "Запиши слово «{lemma}» у формі: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.03
         operation: agreed_form
-        template: 'Наведи форму слова «{lemma}»: {slot}'
+        template: "Наведи форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.04
         operation: agreed_form
-        template: 'Утвори форму слова «{lemma}»: {slot}'
+        template: "Утвори форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.05
         operation: agreed_form
-        template: 'Добери форму слова «{lemma}»: {slot}'
+        template: "Добери форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.06
         operation: agreed_form
-        template: 'Вкажи форму слова «{lemma}»: {slot}'
+        template: "Вкажи форму слова «{lemma}»: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.07
         operation: agreed_form
-        template: 'Слово «{lemma}» постав у форму: {slot}'
+        template: "Слово «{lemma}» постав у форму: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.08
         operation: agreed_form
-        template: 'Яка форма слова «{lemma}» відповідає позначенню: {slot}'
+        template: "Яка форма слова «{lemma}» відповідає позначенню: {slot}?\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.09
         operation: agreed_form
-        template: 'Назви форму слова «{lemma}» з таким граматичним позначенням: {slot}'
+        template: "Назви форму слова «{lemma}» з таким граматичним позначенням: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.10
         operation: agreed_form
-        template: 'Відтвори форму слова «{lemma}» за позначенням: {slot}'
+        template: "Відтвори форму слова «{lemma}» за позначенням: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.11
         operation: agreed_form
-        template: 'Постав слово «{lemma}» у форму: {slot}'
+        template: "Постав слово «{lemma}» у форму: {slot}\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
       - id: C2.agreed_form.12
         operation: agreed_form
-        template: 'Граматичне позначення потрібної форми слова «{lemma}»: {slot}. Подай цю форму.'
+        template: "Граматичне позначення потрібної форми слова «{lemma}»: {slot}. Подай цю форму.\nЗначення: {sense}"
         slots:
           - lemma
           - slot
+          - sense
   C3:
     binding: Headword sense ↔ ULIF synonym/antonym group for that same sense.
     source_fields:
@@ -229,148 +255,148 @@ components:
     instructions:
       - id: C3.synonyms.01
         operation: synonyms
-        template: Подай синоніми до слова «{headword}» у значенні «{sense}».
+        template: "Подай синоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.02
         operation: synonyms
-        template: Запиши синоніми слова «{headword}» у значенні «{sense}».
+        template: "Запиши синоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.03
         operation: synonyms
-        template: Наведи синоніми до слова «{headword}» у значенні «{sense}».
+        template: "Наведи синоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.04
         operation: synonyms
-        template: Добери синоніми до слова «{headword}» у значенні «{sense}».
+        template: "Добери синоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.05
         operation: synonyms
-        template: Вкажи синоніми слова «{headword}» у значенні «{sense}».
+        template: "Вкажи синоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.06
         operation: synonyms
-        template: Назви синоніми до слова «{headword}» у значенні «{sense}».
+        template: "Назви синоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.07
         operation: synonyms
-        template: 'Слово «{headword}» у значенні «{sense}»: які його синоніми?'
+        template: "Слово «{headword}»: які його синоніми? Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.08
         operation: synonyms
-        template: Які синоніми має слово «{headword}» у значенні «{sense}»?
+        template: "Які синоніми має слово «{headword}»? Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.09
         operation: synonyms
-        template: Відтвори синоніми слова «{headword}» у значенні «{sense}».
+        template: "Відтвори синоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.10
         operation: synonyms
-        template: Перелічи синоніми до слова «{headword}» у значенні «{sense}».
+        template: "Перелічи синоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.11
         operation: synonyms
-        template: 'Значення слова «{headword}»: «{sense}». Наведи його синоніми.'
+        template: "Значення врахуй і наведи синоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.synonyms.12
         operation: synonyms
-        template: У значенні «{sense}» слово «{headword}» має синоніми. Назви їх.
+        template: "У цьому значенні слово «{headword}» має синоніми. Назви їх. Значення: {sense}"
         slots:
-          - sense
           - headword
+          - sense
       - id: C3.antonyms.01
         operation: antonyms
-        template: Подай антоніми до слова «{headword}» у значенні «{sense}».
+        template: "Подай антоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.02
         operation: antonyms
-        template: Запиши антоніми слова «{headword}» у значенні «{sense}».
+        template: "Запиши антоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.03
         operation: antonyms
-        template: Наведи антоніми до слова «{headword}» у значенні «{sense}».
+        template: "Наведи антоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.04
         operation: antonyms
-        template: Добери антоніми до слова «{headword}» у значенні «{sense}».
+        template: "Добери антоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.05
         operation: antonyms
-        template: Вкажи антоніми слова «{headword}» у значенні «{sense}».
+        template: "Вкажи антоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.06
         operation: antonyms
-        template: Назви антоніми до слова «{headword}» у значенні «{sense}».
+        template: "Назви антоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.07
         operation: antonyms
-        template: 'Слово «{headword}» у значенні «{sense}»: які його антоніми?'
+        template: "Слово «{headword}»: які його антоніми? Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.08
         operation: antonyms
-        template: Які антоніми має слово «{headword}» у значенні «{sense}»?
+        template: "Які антоніми має слово «{headword}»? Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.09
         operation: antonyms
-        template: Відтвори антоніми слова «{headword}» у значенні «{sense}».
+        template: "Відтвори антоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.10
         operation: antonyms
-        template: Перелічи антоніми до слова «{headword}» у значенні «{sense}».
+        template: "Перелічи антоніми до слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.11
         operation: antonyms
-        template: 'Значення слова «{headword}»: «{sense}». Наведи його антоніми.'
+        template: "Значення врахуй і наведи антоніми слова «{headword}». Значення: {sense}"
         slots:
           - headword
           - sense
       - id: C3.antonyms.12
         operation: antonyms
-        template: У значенні «{sense}» слово «{headword}» має антоніми. Назви їх.
+        template: "У цьому значенні слово «{headword}» має антоніми. Назви їх. Значення: {sense}"
         slots:
-          - sense
           - headword
+          - sense
   C4:
     binding: Idiom ↔ definition ↔ citation in the same dictionary entry.
     source_fields:
@@ -613,37 +639,37 @@ components:
           - sentence
       - id: C6.book_calque_replacement.01
         operation: book_calque_replacement
-        template: Подай заміну вислову «{expression}», яку пропонує автор.
+        template: Подай заміну (заміни) вислову «{expression}» за автором.
         slots:
           - expression
       - id: C6.book_calque_replacement.02
         operation: book_calque_replacement
-        template: Наведи авторову заміну вислову «{expression}».
+        template: Наведи заміну (заміни) вислову «{expression}» за автором.
         slots:
           - expression
       - id: C6.book_calque_replacement.03
         operation: book_calque_replacement
-        template: Запиши заміну вислову «{expression}» за автором.
+        template: Запиши заміну (заміни) вислову «{expression}» за автором.
         slots:
           - expression
       - id: C6.book_calque_replacement.04
         operation: book_calque_replacement
-        template: Вкажи заміну вислову «{expression}», наведену автором.
+        template: Вкажи заміну (заміни) вислову «{expression}» за автором.
         slots:
           - expression
       - id: C6.book_calque_replacement.05
         operation: book_calque_replacement
-        template: Відтвори заміну вислову «{expression}», яку подає автор.
+        template: Відтвори заміну (заміни) вислову «{expression}» за автором.
         slots:
           - expression
       - id: C6.book_calque_replacement.06
         operation: book_calque_replacement
-        template: 'Вислів «{expression}»: яку заміну пропонує автор?'
+        template: 'Вислів «{expression}»: як автор пропонує замінити його?'
         slots:
           - expression
       - id: C6.book_calque_replacement.07
         operation: book_calque_replacement
-        template: Яку заміну вислову «{expression}» подає автор?
+        template: Яку заміну (які заміни) вислову «{expression}» подає автор?
         slots:
           - expression
       - id: C6.book_calque_replacement.08
@@ -653,7 +679,7 @@ components:
           - expression
       - id: C6.book_calque_replacement.09
         operation: book_calque_replacement
-        template: Процитуй авторову заміну вислову «{expression}».
+        template: Процитуй заміну (заміни) вислову «{expression}» за автором.
         slots:
           - expression
       - id: C6.book_calque_replacement.10
@@ -663,12 +689,12 @@ components:
           - expression
       - id: C6.book_calque_replacement.11
         operation: book_calque_replacement
-        template: Заміна вислову «{expression}» є в автора. Наведи її дослівно.
+        template: Заміна (заміни) вислову «{expression}» є в автора. Наведи її (їх) дослівно.
         slots:
           - expression
       - id: C6.book_calque_replacement.12
         operation: book_calque_replacement
-        template: Автор подає заміну вислову «{expression}». Відтвори її.
+        template: Автор подає заміну (заміни) вислову «{expression}». Відтвори її (їх).
         slots:
           - expression
   C7:
@@ -792,7 +818,7 @@ components:
           - context
       - id: C8.supported_pronunciation.05
         operation: supported_pronunciation
-        template: 'Відтвори нормативну або допустиму вимову слова «{word}» та її оцінку автором у наведеному
+        template: 'Відтвори нормативну або допустиму вимову слова «{word}» та авторову оцінку в наведеному
           контексті: {context}'
         slots:
           - word
