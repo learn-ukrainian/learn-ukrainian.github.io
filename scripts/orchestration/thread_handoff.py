@@ -568,7 +568,9 @@ def _bundle_order(manifest: Mapping[str, Any]) -> tuple[int, int, datetime, str,
     return generation, ROLLOVER_BUNDLE_STATUS_RANK[status], prepared_at, rollover_id, upload_seq
 
 
-def _bundle_state_manifest(state: Mapping[str, Any], *, stream_id: str, upload_seq: int | None = None) -> dict[str, Any]:
+def _bundle_state_manifest(
+    state: Mapping[str, Any], *, stream_id: str, upload_seq: int | None = None
+) -> dict[str, Any]:
     replacement = state.get("replacement")
     if not isinstance(replacement, dict):
         raise ValueError("rollover state has no replacement")
@@ -636,9 +638,7 @@ def _select_bundle_state(
         return candidates[0]
     ranked = sorted(
         candidates,
-        key=lambda item: _bundle_order(
-            _bundle_state_manifest(item[1], stream_id="shared:rollover")
-        ),
+        key=lambda item: _bundle_order(_bundle_state_manifest(item[1], stream_id="shared:rollover")),
         reverse=True,
     )
     return ranked[0]
@@ -675,9 +675,16 @@ def _bundle_source_members(
         raise ValueError(f"rollover lineage directory is missing: {lineage_id}")
     members: dict[str, bytes] = {}
     for path in sorted(lineage_root.rglob("*")):
-        if not path.is_file() or path.is_symlink() or path.name == ".native-intent.lock" or path.name.endswith(".bundle.tgz"):
+        if (
+            not path.is_file()
+            or path.is_symlink()
+            or path.name == ".native-intent.lock"
+            or path.name.endswith(".bundle.tgz")
+        ):
             continue
-        member_name = (Path(".agent") / "thread-rollovers" / agent / lineage_id / path.relative_to(lineage_root)).as_posix()
+        member_name = (
+            Path(".agent") / "thread-rollovers" / agent / lineage_id / path.relative_to(lineage_root)
+        ).as_posix()
         payload = path.read_bytes()
         if _bundle_text_member(member_name):
             payload = _bundle_tokenize(payload, repo_root=repo_root, state_root=state_root)
@@ -729,7 +736,14 @@ def _build_rollover_bundle(
         tokenized = _bundle_text_member(name)
         if tokenized:
             tokenized_members.append(name)
-        files.append({"path": name, "sha256": hashlib.sha256(members[name]).hexdigest(), "bytes": len(members[name]), "tokenized": tokenized})
+        files.append(
+            {
+                "path": name,
+                "sha256": hashlib.sha256(members[name]).hexdigest(),
+                "bytes": len(members[name]),
+                "tokenized": tokenized,
+            }
+        )
     manifest["files"] = files
     manifest["tokenized_members"] = tokenized_members
     manifest["bundle_sha256"] = _bundle_digest(members, manifest)
@@ -739,7 +753,9 @@ def _build_rollover_bundle(
     return manifest, archive, _bundle_secret_hits(members)
 
 
-def _bundle_extract(blob: bytes, *, manifest_override: Mapping[str, Any] | None = None) -> tuple[dict[str, Any], dict[str, bytes]]:
+def _bundle_extract(
+    blob: bytes, *, manifest_override: Mapping[str, Any] | None = None
+) -> tuple[dict[str, Any], dict[str, bytes]]:
     if len(blob) > ROLLOVER_BUNDLE_MAX_BYTES:
         raise ValueError("rollover bundle exceeds the 4 MiB cap")
     members: dict[str, bytes] = {}
@@ -812,7 +828,9 @@ def _bundle_extract(blob: bytes, *, manifest_override: Mapping[str, Any] | None 
     return manifest, members
 
 
-def _bundle_local_members(repo_root: Path, state_root: Path, *, agent: str, lineage_id: str, stream_id: str) -> dict[str, bytes]:
+def _bundle_local_members(
+    repo_root: Path, state_root: Path, *, agent: str, lineage_id: str, stream_id: str
+) -> dict[str, bytes]:
     state_path = state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json"
     state = load_state(state_path)
     return _bundle_source_members(repo_root, state_root, agent=agent, state=state, stream_id=stream_id)
@@ -832,7 +850,9 @@ def _bundle_archive_local_lineage(
     archive_root = state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}"
     suffix = 1
     while archive_root.exists():
-        archive_root = state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}-{suffix}"
+        archive_root = (
+            state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}-{suffix}"
+        )
         suffix += 1
     archive_root.parent.mkdir(parents=True, exist_ok=True)
     original_lease = (lineage_root / "lease.json").read_bytes()
@@ -1147,9 +1167,7 @@ def _bundle_raise_for_status(status: int, value: Any, *, method: str, path: str)
     """
     detail = value.get("detail", "request refused") if isinstance(value, dict) else "request refused"
     clean = path.split("?", 1)[0]
-    if method == "GET" and status == 404 and (
-        clean.endswith("/bundles/latest") or "/bundles/" in clean
-    ):
+    if method == "GET" and status == 404 and (clean.endswith("/bundles/latest") or "/bundles/" in clean):
         raise RolloverBundleNotFound(f"bundle API has no matching bundle: {detail}")
     if 400 <= status < 500:
         raise RolloverBundleRefused(f"bundle API refused request ({status}): {detail}")
@@ -1202,7 +1220,9 @@ def _bundle_api_request(
     return value
 
 
-def _bundle_api_upload(args: argparse.Namespace, *, stream_id: str, manifest: Mapping[str, Any], blob: bytes) -> dict[str, Any]:
+def _bundle_api_upload(
+    args: argparse.Namespace, *, stream_id: str, manifest: Mapping[str, Any], blob: bytes
+) -> dict[str, Any]:
     """Upload one bundle through :class:`MonitorClient` (#603 Phase 0b adoption).
 
     Bundles already dedupe by ``bundle_sha256`` server-side (see
@@ -2035,7 +2055,9 @@ def _same_owner_identity_confirmed(
         return False
     if new_fields["owner_pid"] != existing_raw.get("owner_pid"):
         return False
-    return _epoch_seconds(new_fields["owner_pid_started_at"]) == _epoch_seconds(existing_raw.get("owner_pid_started_at"))
+    return _epoch_seconds(new_fields["owner_pid_started_at"]) == _epoch_seconds(
+        existing_raw.get("owner_pid_started_at")
+    )
 
 
 def _identity_changed_reacquire_result(
@@ -2674,9 +2696,7 @@ def _retire_unsatisfiable_native_plan(state: dict[str, Any], *, now: datetime) -
     return True
 
 
-def normalize_identity_state(
-    state: dict[str, Any], *, agent: str, now: datetime
-) -> tuple[dict[str, Any], bool]:
+def normalize_identity_state(state: dict[str, Any], *, agent: str, now: datetime) -> tuple[dict[str, Any], bool]:
     """Return a validated identity-aware lease, deterministically backfilling legacy v2 packets."""
     normalized, migrated = task_identity.backfill_legacy_identity(
         state,
@@ -2751,24 +2771,16 @@ def request_claudex_rollover(
     if not run_id:
         return None
 
-    launch_generation_raw = os.environ.get(
-        "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION"
-    )
+    launch_generation_raw = os.environ.get("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION")
     session_id = os.environ.get("LEARN_UKRAINIAN_SESSION_ID")
     if not launch_generation_raw or not session_id:
-        raise ValueError(
-            "supervised Claudex rollover requires launch generation and official session identity"
-        )
+        raise ValueError("supervised Claudex rollover requires launch generation and official session identity")
     try:
         launch_generation = int(launch_generation_raw)
     except ValueError as exc:
-        raise ValueError(
-            "supervised Claudex launch generation must be an integer"
-        ) from exc
+        raise ValueError("supervised Claudex launch generation must be an integer") from exc
     if launch_generation < 0:
-        raise ValueError(
-            "supervised Claudex launch generation must be non-negative"
-        )
+        raise ValueError("supervised Claudex launch generation must be non-negative")
 
     rollover_generation = replacement.get("generation")
     rollover_id = replacement.get("rollover_id")
@@ -2887,7 +2899,9 @@ def prepare_state(
     if state.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("schema v2 state is required; migrate v1 explicitly before preparing")
     if not active_thread_id:
-        raise ValueError("--active-thread-id (or LEARN_UKRAINIAN_SESSION_ID/CODEX_THREAD_ID) is required for a v2 rollover")
+        raise ValueError(
+            "--active-thread-id (or LEARN_UKRAINIAN_SESSION_ID/CODEX_THREAD_ID) is required for a v2 rollover"
+        )
 
     prepared = dict(state)
     prepared["schema_version"] = SCHEMA_VERSION
@@ -3239,9 +3253,7 @@ def confirm_started(
         if isinstance(native, dict) and native.get("replacement_thread_id") != new_thread_id.strip():
             raise ValueError("--new-thread-id does not match the exact native-created replacement")
     identity = task_identity.validate_identity(replacement.get("identity") or {})
-    transition = task_identity.validate_title_transition(
-        replacement.get("title_transition") or {}, identity
-    )
+    transition = task_identity.validate_title_transition(replacement.get("title_transition") or {}, identity)
     task_identity.assert_title_ready(
         identity,
         transition,
@@ -3325,9 +3337,7 @@ def resume_state(
         if bound_thread_id != thread_id:
             raise ValueError("--replacement-thread-id does not match the exact native-created replacement")
     identity = task_identity.validate_identity(replacement.get("identity") or {})
-    transition = task_identity.validate_title_transition(
-        replacement.get("title_transition") or {}, identity
-    )
+    transition = task_identity.validate_title_transition(replacement.get("title_transition") or {}, identity)
     task_identity.assert_title_ready(identity, transition, replacement_task_id=thread_id)
     existing = replacement.get("resumed_thread_id")
     if existing and existing != thread_id:
@@ -3496,26 +3506,18 @@ def resolve_handoff_policy(context_threshold: float) -> tuple[float, int, str, s
         window = window_raw if isinstance(window_raw, int) and window_raw > 0 else 0
         active_profile_id = str(record.get("effective_profile_id") or "fallback")
         percentages = record.get("rollover_warning_percentages")
-        provenance = str(
-            record.get("actual_context_window_provenance") or "unavailable"
-        )
+        provenance = str(record.get("actual_context_window_provenance") or "unavailable")
     else:
-        requested_profile_id = (
-            os.environ.get("LEARN_UKRAINIAN_REQUESTED_PROFILE_ID")
-            or os.environ.get("LEARN_UKRAINIAN_PROFILE_ID")
+        requested_profile_id = os.environ.get("LEARN_UKRAINIAN_REQUESTED_PROFILE_ID") or os.environ.get(
+            "LEARN_UKRAINIAN_PROFILE_ID"
         )
-        observed_model_id = (
-            os.environ.get("LEARN_UKRAINIAN_OBSERVED_MODEL_ID")
-            or os.environ.get("LEARN_UKRAINIAN_MAIN_MODEL_ID")
+        observed_model_id = os.environ.get("LEARN_UKRAINIAN_OBSERVED_MODEL_ID") or os.environ.get(
+            "LEARN_UKRAINIAN_MAIN_MODEL_ID"
         )
         profile = resolve_profile(requested_profile_id, observed_model_id)
         trusted_window = profile.get("main_context_window_tokens")
         window = (
-            trusted_window
-            if profile.get("trusted")
-            and isinstance(trusted_window, int)
-            and trusted_window > 0
-            else 0
+            trusted_window if profile.get("trusted") and isinstance(trusted_window, int) and trusted_window > 0 else 0
         )
         active_profile_id = str(profile.get("profile_id") or "fallback")
         percentages = profile.get("rollover_warning_percentages")
@@ -3529,11 +3531,7 @@ def resolve_handoff_policy(context_threshold: float) -> tuple[float, int, str, s
         else [75.0, 85.0, 90.0]
     )
     derived_threshold = float(valid_percentages[1])
-    active_threshold = (
-        derived_threshold
-        if context_threshold == DEFAULT_CONTEXT_THRESHOLD
-        else context_threshold
-    )
+    active_threshold = derived_threshold if context_threshold == DEFAULT_CONTEXT_THRESHOLD else context_threshold
     return active_threshold, window, active_profile_id, provenance
 
 
@@ -4598,9 +4596,7 @@ def _record_identity_title_ack(
     state["replacement"] = replacement
 
 
-def _record_identity_title_readback(
-    state: dict[str, Any], *, succeeded: bool, evidence: str, error: str
-) -> None:
+def _record_identity_title_readback(state: dict[str, Any], *, succeeded: bool, evidence: str, error: str) -> None:
     replacement = dict(state["replacement"])
     identity = task_identity.validate_identity(replacement["identity"])
     replacement_task_id = identity.get("replacement_task_id")
@@ -4634,9 +4630,7 @@ def _cmd_bind_replacement_locked(args: argparse.Namespace) -> int:
     try:
         _, state_root, _, state_path, state, replacement = _identity_command_context(args)
         identity = task_identity.validate_identity(replacement.get("identity") or {})
-        transition = task_identity.validate_title_transition(
-            replacement.get("title_transition") or {}, identity
-        )
+        transition = task_identity.validate_title_transition(replacement.get("title_transition") or {}, identity)
         if transition["native_title_supported"]:
             raise ValueError("native title adapter requires register-created and exact title readback")
         bound_identity, bound_transition = task_identity.bind_replacement(
@@ -4978,13 +4972,17 @@ def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
     write_rollover_state(state_path, state_root, confirmed, already_locked=True)
-    bundle_upload = _maybe_auto_upload_bundle(
-        args,
-        repo_root=repo_root,
-        state_root=state_root,
-        agent=agent,
-        state=confirmed,
-    ) if getattr(args, "stream", None) else {"status": "not-requested"}
+    bundle_upload = (
+        _maybe_auto_upload_bundle(
+            args,
+            repo_root=repo_root,
+            state_root=state_root,
+            agent=agent,
+            state=confirmed,
+        )
+        if getattr(args, "stream", None)
+        else {"status": "not-requested"}
+    )
     print(
         json.dumps(
             {
@@ -5247,18 +5245,28 @@ def cmd_confirm_replacement(args: argparse.Namespace) -> int:
     if replacement.get("status") not in {"resumed", "started"}:
         print(json.dumps({"error": "bootstrap-replacement must resume this packet before confirmation"}, indent=2))
         return 2
-    replacement_thread_id = args.replacement_thread_id or replacement.get("resumed_thread_id") or replacement.get("thread_id")
+    replacement_thread_id = (
+        args.replacement_thread_id or replacement.get("resumed_thread_id") or replacement.get("thread_id")
+    )
     if not isinstance(replacement_thread_id, str) or not replacement_thread_id.strip():
         print(json.dumps({"error": "bootstrap-replacement must resume this packet before confirmation"}, indent=2))
         return 2
     replacement_thread_id = replacement_thread_id.strip()
     resumed_thread_id = replacement.get("resumed_thread_id")
     if isinstance(resumed_thread_id, str) and resumed_thread_id != replacement_thread_id:
-        print(json.dumps({"error": "--replacement-thread-id does not match the thread that resumed this rollover"}, indent=2))
+        print(
+            json.dumps(
+                {"error": "--replacement-thread-id does not match the thread that resumed this rollover"}, indent=2
+            )
+        )
         return 2
     if replacement.get("status") == "started":
         if replacement.get("thread_id") != replacement_thread_id:
-            print(json.dumps({"error": "--replacement-thread-id does not match the already confirmed replacement"}, indent=2))
+            print(
+                json.dumps(
+                    {"error": "--replacement-thread-id does not match the already confirmed replacement"}, indent=2
+                )
+            )
             return 2
         print(
             json.dumps(
@@ -5390,17 +5398,12 @@ def cmd_audit(args: argparse.Namespace) -> int:
     return 0
 
 
-def _bundle_output_path(state_root: Path, *, agent: str, lineage_id: str, rollover_id: str, supplied: Path | None) -> Path:
+def _bundle_output_path(
+    state_root: Path, *, agent: str, lineage_id: str, rollover_id: str, supplied: Path | None
+) -> Path:
     if supplied is not None:
         return supplied.expanduser().resolve()
-    return (
-        state_root
-        / ".agent"
-        / "thread-rollovers"
-        / agent
-        / lineage_id
-        / f"{rollover_id}.bundle.tgz"
-    )
+    return state_root / ".agent" / "thread-rollovers" / agent / lineage_id / f"{rollover_id}.bundle.tgz"
 
 
 def cmd_export_bundle(args: argparse.Namespace) -> int:
@@ -5630,14 +5633,10 @@ def _bundle_import_candidate(
         if local_order == remote_order and not force:
             handoff_names = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
             remote_compare = {
-                name: payload
-                for name, payload in members.items()
-                if install_handoff or name not in handoff_names
+                name: payload for name, payload in members.items() if install_handoff or name not in handoff_names
             }
             local_compare = {
-                name: payload
-                for name, payload in local_members.items()
-                if install_handoff or name not in handoff_names
+                name: payload for name, payload in local_members.items() if install_handoff or name not in handoff_names
             }
             if local_compare == remote_compare and local_manifest.get("generation") == manifest.get("generation"):
                 return {
@@ -5723,11 +5722,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
 
             own_row = next((row for row in listed if row_agent(row) == agent), None)
             handoff_row = max(listed, key=upload_seq)
-            selected_sequences = {
-                upload_seq(row)
-                for row in (own_row, handoff_row)
-                if row is not None
-            }
+            selected_sequences = {upload_seq(row) for row in (own_row, handoff_row) if row is not None}
             for row in listed:
                 sequence = upload_seq(row)
                 if sequence not in selected_sequences:
@@ -5756,7 +5751,9 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except (OSError, ValueError, KeyError, TypeError) as exc:
         return _bundle_import_error(str(exc))
 
-    handoff_winner = max(candidates, key=lambda item: int(item[0].get("upload_seq", 0))) if len(candidates) > 1 else None
+    handoff_winner = (
+        max(candidates, key=lambda item: int(item[0].get("upload_seq", 0))) if len(candidates) > 1 else None
+    )
     results: list[dict[str, Any]] = []
     try:
         for candidate in candidates:
@@ -5849,6 +5846,15 @@ def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> di
     return out
 
 
+def _skipped_foreign_lines(candidates: list[dict[str, Any]]) -> list[str]:
+    """Render foreign packet diagnostics without executable adoption commands."""
+    return [
+        f"Skipped foreign candidate: owner={item['agent']} lineage_id={item['lineage_id']} "
+        f"rollover_id={item['rollover_id']} stream={item['stream'] or 'unknown'} "
+        f"task_family={item['task_family'] or 'unknown'} ({', '.join(item['mismatches'])})"
+        for item in candidates
+    ]
+
 
 def render_session_start_context(
     candidate: dict[str, Any] | None,
@@ -5869,6 +5875,7 @@ def render_session_start_context(
             "Keep the primary checkout read-only and use a dispatch worktree for implementation.",
         ]
         if isinstance(candidate, dict):
+            lines.extend(_skipped_foreign_lines(candidate.get("skipped_foreign", [])))
             if candidate.get("excluded_terminal"):
                 lines.append(
                     "Excluded terminal rollover: "
@@ -5912,6 +5919,7 @@ def render_session_start_context(
     if candidate.get("registry_errors"):
         for err in candidate["registry_errors"]:
             lines.append(f"Registry error: {err}")
+    lines.extend(_skipped_foreign_lines(candidate.get("skipped_foreign", [])))
     return "\n".join(lines)
 
 
@@ -5938,6 +5946,7 @@ def _render_multiple_pending_session_start(
     task_family_filter: str,
     excluded_terminal: list[dict[str, str]] | None = None,
     registry_errors: list[str] | None = None,
+    skipped_foreign: list[dict[str, Any]] | None = None,
 ) -> str:
     lines = [
         f"MULTIPLE LIVE PENDING ROLLOVERS for agent `{agent}` (#5398 class).",
@@ -5973,12 +5982,12 @@ def _render_multiple_pending_session_start(
     if registry_errors:
         for err in registry_errors:
             lines.append(f"Registry error: {err}")
+    lines.extend(_skipped_foreign_lines(skipped_foreign or []))
     lines.append(
         "Resolution: bind the exact candidate for THIS lane (or re-run detect with "
         "`--task-family <family>` / launch with `--epic <name>`)."
     )
     return "\n".join(lines)
-
 
 
 def cmd_detect(args: argparse.Namespace) -> int:
@@ -5989,6 +5998,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         return 2
     agent = normalize_agent_name(args.agent)
     task_family_filter = str(getattr(args, "task_family", "") or "").strip().lower()
+    stream_filter = str(getattr(args, "stream", "") or "").strip()
 
     # Agent directories to scan. Epic slots like claude-hramatka often have packets
     # prepared under the bare `claude` namespace (#5398 / hramatka interim).
@@ -6003,6 +6013,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
     live_leases: list[tuple[Path, dict[str, Any], dict[str, Any], str]] = []
     excluded_terminal: list[dict[str, str]] = []
     registry_errors: list[str] = []
+    skipped_foreign: list[dict[str, Any]] = []
 
     for scan_agent in scan_agents:
         agent_dir = state_root / ".agent" / "thread-rollovers" / scan_agent
@@ -6039,12 +6050,37 @@ def cmd_detect(args: argparse.Namespace) -> int:
                                 )
                                 continue
 
-
                     except Exception as exc:
                         registry_errors.append(
                             f"registry record corrupt or unreadable for {candidate_agent}/{lineage_id}/{rollover_id}: {exc}"
                         )
+                identity = replacement.get("identity") or state.get("identity") or {}
+                stream_epic = identity.get("stream_epic")
+                packet_stream = f"epic:{stream_epic}" if stream_epic is not None else ""
+                packet_family = _candidate_task_family(state, replacement)
+                mismatches = []
+                if stream_filter and packet_stream != stream_filter and (packet_stream or scan_agent != agent):
+                    mismatches.append("stream differs from session")
+                if mismatches:
+                    skipped_foreign.append(
+                        {
+                            "agent": candidate_agent,
+                            "lineage_id": lineage_id,
+                            "rollover_id": rollover_id,
+                            "stream": packet_stream,
+                            "task_family": packet_family,
+                            "mismatches": mismatches,
+                        }
+                    )
+                    continue
                 live_leases.append((path, state, replacement, scan_agent))
+
+    # A family is a disambiguation hint, not stream identity. If it matches no
+    # live packet, retain the full candidate set and require exact-ID binding.
+    if len(live_leases) > 1 and task_family_filter:
+        matching = [lease for lease in live_leases if _candidate_task_family(lease[1], lease[2]) == task_family_filter]
+        if matching:
+            live_leases = matching
 
     if not live_leases:
         output: dict[str, Any] = {"agent": agent, "status": "none"}
@@ -6052,6 +6088,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             output["excluded_terminal"] = excluded_terminal
         if registry_errors:
             output["registry_errors"] = registry_errors
+        if skipped_foreign:
+            output["skipped_foreign"] = skipped_foreign
         print(
             render_session_start_context(
                 output,
@@ -6063,21 +6101,6 @@ def cmd_detect(args: argparse.Namespace) -> int:
             else json.dumps(output, indent=2)
         )
         return 0
-
-    # Narrow multi-packet sets by task family when the launcher knows the epic (#5398).
-    if task_family_filter and len(live_leases) > 1:
-        filtered = [
-            item
-            for item in live_leases
-            if _candidate_task_family(item[1], item[2]) == task_family_filter
-            or (
-                # Epic name often matches task_family (hramatka, folk, atlas, …).
-                task_family_filter in str(item[2].get("role") or "").lower()
-            )
-        ]
-        if len(filtered) == 1 or len(filtered) > 1:
-            live_leases = filtered
-        # If filter matches zero, keep full list so the operator sees everything.
 
     if len(live_leases) > 1:
         candidates = [
@@ -6106,6 +6129,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             payload["excluded_terminal"] = excluded_terminal
         if registry_errors:
             payload["registry_errors"] = registry_errors
+        if skipped_foreign:
+            payload["skipped_foreign"] = skipped_foreign
 
         if args.format == "session-start":
             print(
@@ -6115,6 +6140,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
                     task_family_filter=task_family_filter,
                     excluded_terminal=excluded_terminal,
                     registry_errors=registry_errors,
+                    skipped_foreign=skipped_foreign,
                 )
             )
         else:
@@ -6167,6 +6193,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
         output["excluded_terminal"] = excluded_terminal
     if registry_errors:
         output["registry_errors"] = registry_errors
+    if skipped_foreign:
+        output["skipped_foreign"] = skipped_foreign
 
     print(
         render_session_start_context(
@@ -6179,7 +6207,6 @@ def cmd_detect(args: argparse.Namespace) -> int:
         else json.dumps(output, indent=2)
     )
     return 0
-
 
 
 def _lock_timeout_exit(exc: TimeoutError) -> int:
@@ -6571,9 +6598,7 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--context-threshold", type=float, default=DEFAULT_CONTEXT_THRESHOLD)
     check.set_defaults(func=cmd_check)
 
-    audit = subparsers.add_parser(
-        "audit", help="Inspect local task identity plus Codex thread/automation metadata."
-    )
+    audit = subparsers.add_parser("audit", help="Inspect local task identity plus Codex thread/automation metadata.")
     audit.add_argument("--codex-home", default=os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))
     audit.add_argument("--include-monitor", action="store_true")
     audit.set_defaults(func=cmd_audit)
@@ -6583,14 +6608,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     detect.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
     detect.add_argument("--current-thread-id", default="")
-    detect.add_argument("--stream", help="Explicit launcher-derived stream id for the confirm/upload card.")
+    detect.add_argument(
+        "--stream",
+        default=os.environ.get("SESSION_STREAM_ID", ""),
+        help="Session stream (e.g. epic:6321; default: SESSION_STREAM_ID); skip packets from other streams.",
+    )
     detect.add_argument(
         "--task-family",
         default="",
         help=(
-            "When multiple live packets exist, keep only candidates whose task_family "
-            "matches this value (e.g. hramatka). Prefer launching with --epic so "
-            "SessionStart can pass SESSION_EPIC here (#5398)."
+            "Narrow multiple live packets by task_family (e.g. hramatka; default: no hint). "
+            "A single packet or a set with no matching family remains eligible."
         ),
     )
     detect.add_argument("--format", choices=("json", "session-start"), default="json")
@@ -6661,8 +6689,7 @@ def build_parser() -> argparse.ArgumentParser:
     refresh_heartbeat_parser = subparsers.add_parser(
         "refresh-thread-lease-heartbeat",
         help=(
-            "Best-effort heartbeat refresh for the lease this exact thread already owns "
-            "(Stop and PostToolUse hooks)."
+            "Best-effort heartbeat refresh for the lease this exact thread already owns (Stop and PostToolUse hooks)."
         ),
     )
     refresh_heartbeat_parser.add_argument("--agent", type=argparse_agent_name, required=True)
