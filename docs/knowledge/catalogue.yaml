@@ -1666,6 +1666,17 @@ entries:
       - {surface: git_grep, how: "git grep -n -F '<term>' -- registry/practice"}
     content_searchable: true
 
+  - id: registry-sources
+    kind: registry
+    paths: [registry/sources/**]
+    purpose: Publication-rights records for owned corpus sources (owned_cite_only / private_permission), read by scripts/curriculum/evidence/publication.py.
+    keywords: [publication rights, owned corpus sources, owned_cite_only, private_permission]
+    lifecycle: active
+    owner: curriculum-upgrade
+    query:
+      - {surface: git_grep, how: "git grep -n -F '<source>' -- registry/sources"}
+    content_searchable: true
+
   - id: registry-miyklas
     kind: registry
     paths: [registry/miyklas/**]
