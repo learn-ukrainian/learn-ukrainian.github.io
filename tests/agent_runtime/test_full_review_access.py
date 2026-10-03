@@ -63,12 +63,6 @@ def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_
                 "head",
                 "tail",
                 "wc",
-                "rg",
-                "git status",
-                "git diff",
-                "git log",
-                "git show",
-                "git ls-files",
             ]
         ]
 
@@ -285,9 +279,7 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
     kw = dict(prompt="review", mode="read-only", cwd=tmp_path, model=None, task_id="review", session_id=None)
     home = tmp_path / "scoped-home"
     (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
-    plan = AgyAdapter().build_invocation(
-        **kw, tool_config={"review_access": "full", "agy_review_sandbox": False, "agy_home_override": str(home)}
-    )
+    plan = AgyAdapter().build_invocation(**kw, tool_config={"review_access": "full", "agy_home_override": str(home)})
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd
     with pytest.raises(ValueError, match="forbids"):
@@ -318,6 +310,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
         )
         settings = Path(plan.env_overrides["AGY_APP_DATA_DIR"]) / "settings.json"
         assert json.loads(settings.read_bytes()) == agy_review_settings(access)
+        assert settings.stat().st_mode & 0o777 == 0o600
         assert "--sandbox" in plan.cmd
         assert "--dangerously-skip-permissions" not in plan.cmd
     finally:

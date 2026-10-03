@@ -354,8 +354,9 @@ class AttemptBoundary:
                 mcp.parent.mkdir(parents=True, exist_ok=True)
                 mcp.write_bytes(proxy_config.read_bytes())
                 settings = target.parent / "settings.json"
-                settings.write_text(json.dumps(agy_review_settings(access)))
-                settings.chmod(0o600)
+                fd = os.open(settings, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+                with os.fdopen(fd, "w") as handle:
+                    handle.write(json.dumps(agy_review_settings(access)))
                 self.tool_config["agy_home_override"] = str(home)
                 self.env["AGY_APP_DATA_DIR"] = str(target.parent)
             else:

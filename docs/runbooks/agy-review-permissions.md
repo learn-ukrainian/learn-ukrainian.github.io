@@ -8,14 +8,19 @@ The adapter writes or verifies this file under the attempt's scoped
 
 | Route | Sources grants | Command grants |
 | --- | --- | --- |
-| Full content review | `review_tools("full")`, individually named | `cat`, `head`, `tail`, `wc`, `rg`, `git status`, `git diff`, `git log`, `git show`, `git ls-files` |
-| Isolated content review | `review_tools("isolated")`, individually named | `cat`, `head`, `tail`, `wc`, `rg` |
+| Full content review | `review_tools("full")`, individually named | `cat`, `head`, `tail`, `wc` |
+| Isolated content review | `review_tools("isolated")`, individually named | `cat`, `head`, `tail`, `wc` |
 | Scoped ad hoc review | Same isolated contract | Same isolated commands |
 
 The shared review contract checks the behavior-audited Sources reader set;
 writer tools remain outside both the exposed review catalog and the allow set.
-`search_resources` is full-only. The common commands read and search evidence;
-Git inspection is admitted only for the full checkout route. Shells,
+`search_resources` is full-only. The four command grants only read evidence.
+Their documented flag surfaces and rejection of execute-program flags are tested for every granted binary.
+Use AGY’s built-in search tool; `rg --pre` can execute a program. No Git
+command is granted: `log`, `diff` and `show` accept `--output`, which can
+overwrite scoped settings in the writable runtime directory; inspection can
+also invoke Git helpers. Dropping the grants avoids relying on settings reload
+behavior or introducing another sandbox bind. Shells,
 interpreters, unrestricted Git, MCP wildcards, and the permission bypass are
 never granted. Command grants are permission prefixes, **not a replacement for
 the existing OS review boundary**; flags on a reader can have side effects.
@@ -28,8 +33,27 @@ A resource outside the route's allow set raises `AgyReviewPermissionError` with
 provider execution. Requested servers and `allowed_tools` are checked too.
 Missing scoped homes, resumed sessions, and changed settings also refuse with
 body-free reasons. An undeclared action chosen by the model cannot be predicted
-at dispatch; native permissions and the OS boundary still govern it. Do not
+at dispatch; native permissions and the OS boundary still govern it. The production
+response parser recognizes the native `jetski: no output produced` headless
+auto-denial notice before the transcript completion gate. It returns
+`failure_code="provider_policy_refusal"`, with
+`agy_headless_permission_denied` leading the diagnostic and JSON
+`permission_kind` / `permission_target` details. An absent target is null; the
+CLI’s literal `<target>` example is never an observed target. Do not
 claim that construction tests prove every future model-selected command.
+
+## Recorded denial evidence
+
+The retained stderr logs for `plan-review-a1-p2-r3` and
+`plan-review-a1-p3-r3` report kind `command`; `plan-review-a1-p2-full-2`
+reports `mcp`. Each has empty stdout and only the literal `<target>` example.
+Their runtime directories and temporary AGY logs are no longer retained;
+the matching scoped review homes contain no conversation JSONL transcripts.
+Neither denied command could be recovered. The allow set remains the four
+simple readers above, with no guessed additions. These logs establish the
+refusal shape, not successful recovery of the historical reviews. The earlier
+MCP failures predate the per-tool grants from #9493; live success still needs
+a driver canary.
 
 ## Driver canaries after independent implementation review
 
@@ -58,11 +82,14 @@ import yaml
 
 from scripts.agent_runtime.runner import invoke
 from scripts.agent_runtime.review_mcp import prepare_review_attempt
+from scripts.review.prompts.render import render_prompt
+from scripts.review.receipts.ledger import records
+from scripts.review.validate import validate_review
 
 route, manifest_arg, root_arg = sys.argv[1:]
-assert route in {"full", "isolated", "ad-hoc"}
+assert route in {"full", "isolated", "ad-hoc", "plan-template"}
 manifest, root = Path(manifest_arg).resolve(), Path(root_arg).resolve()
-access = "full" if route == "full" else "isolated"
+access = "full" if route in {"full", "plan-template"} else "isolated"
 plan_path = yaml.safe_load(manifest.read_text())["inputs"]["plan"]["path"]
 first_line = next(line for line in (root / plan_path).read_text().splitlines() if line.strip())
 prompt = (
@@ -77,12 +104,20 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
     prepared = prepare_review_attempt(
         "canary-9625", route, manifest, "agy", receipts_root=Path(temp), review_access=access,
     )
+    if route == "plan-template":
+        # Exact production template, without a forced first command or tool.
+        prompt, prompt_sha, _ = render_prompt(
+            manifest, "plan-review.md.j2", repo_root=root,
+            review_id=prepared.review_id, attempt_id=prepared.attempt_id,
+            review_access=access,
+        )
     tc = {
         **prepared.adapter_options,
         "review_id": "canary-9625", "attempt_id": route,
         "review_manifest": str(manifest), "review_input_root": str(root),
-        "agy_required_permissions": ["command(cat)", "mcp(sources/verify_words)"],
     }
+    if route != "plan-template":
+        tc["agy_required_permissions"] = ["command(cat)", "mcp(sources/verify_words)"]
     if route == "ad-hoc":
         tc.pop("review_access")  # Legacy/ad hoc callers use the isolated default.
     result = invoke(
@@ -90,8 +125,21 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
         effort="high", task_id=f"canary-9625-{route}", tool_config=tc,
         initiator=os.environ["CANARY_INITIATOR"], hard_timeout=180, stall_timeout=60, entrypoint="runtime",
     )
-    calls = [c for c in result.tool_calls if c["name"] == "mcp__sources__verify_words"]
     assert result.ok, result.stderr_excerpt
+    if route == "plan-template":
+        returned = Path(temp) / "plan-review.yaml"
+        returned.write_text(result.response)
+        checked = validate_review(
+            returned, manifest_path=manifest, ledger_path=prepared.ledger_path,
+            repo_root=root, review_access=access,
+        )
+        assert checked.ok, checked.rejections
+        successful = [r for r in records(prepared.ledger_path) if r.get("status") == "ok"]
+        assert successful, "No successful Sources receipt; permission success unproven"
+        print(json.dumps({"route": route, "ok": result.ok, "prompt_sha256": prompt_sha,
+                          "successful_receipts": len(successful), "return_valid": True}))
+        sys.exit(0)
+    calls = [c for c in result.tool_calls if c["name"] == "mcp__sources__verify_words"]
     assert "CANARY_READ:" + first_line in result.response.replace("CANARY_READ: ", "CANARY_READ:")
     assert any(c.get("arguments") == {"words": ["стіл"]}
                and "Found: 1/1" in json.dumps(c.get("result", []), ensure_ascii=False) for c in calls)
@@ -106,6 +154,8 @@ agy_review_canary full
 agy_review_canary isolated
 # Scoped ad hoc read-only review using the same isolated boundary:
 agy_review_canary ad-hoc
+# Full review using the production plan prompt; no forced command choice:
+agy_review_canary plan-template
 ```
 
 A passing canary needs a structurally complete native transcript, the actual
@@ -113,8 +163,14 @@ plan line in the reply, a successful Sources tool result, and the driver's
 inspection of the one-sentence review and command result. Exit zero or the final
 marker alone is insufficient. Confirm the transcript contains the requested
 `cat` invocation and a successful result, and no permission auto-denial. Keep
-any full transcript local. A permission failure remains a blocker owned by the
-driver; do not widen the allow set to make an unapproved operation pass.
+any full transcript local. For `agy_review_canary plan-template`, the actual
+`plan-review.md.j2` return must pass `validate_review`, contain successful
+Sources receipts, and match the driver’s independently established expected
+judgment and evidence for the pinned plan. A schema-valid verdict alone is
+insufficient; record prompt hash, reviewed head, receipt identities and semantic
+judgment without publishing input content. This run does not require `cat`
+or `CANARY_READ`, and supplies no `agy_required_permissions` declaration.
+A permission failure remains a blocker owned by the driver; do not widen the allow set to make an unapproved operation pass.
 
 ## Local verification
 

@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import re
+import shutil
+import subprocess
 
 import pytest
 
@@ -42,9 +45,7 @@ def test_exact_review_grants(tmp_path, scoped, route):
         config["strict_mcp_config"] = True
     plan = build(tmp_path, config)
     tools = review_tools("full" if route == "full" else "isolated")
-    commands = ["cat", "head", "tail", "wc", "rg"]
-    if route == "full":
-        commands += ["git status", "git diff", "git log", "git show", "git ls-files"]
+    commands = ["cat", "head", "tail", "wc"]
     settings = scoped / ".gemini" / "antigravity-cli" / "settings.json"
     assert json.loads(settings.read_text()) == {
         "permissions": {
@@ -201,3 +202,151 @@ def test_settings_directory_symlink_is_refused(tmp_path, scoped):
 def test_ad_hoc_reviewer_marker_requires_scoped_home(tmp_path):
     with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permissions_require_scoped_home"):
         build(tmp_path, {"reviewer_tools": True})
+
+
+# Audit every granted executable's documented flag surface. An added executable
+# or newly documented option needs inspection, rather than silently inheriting
+# an unbounded prefix grant (as rg --pre did).
+READER_LONG_OPTIONS = {
+    "cat": {"show-all", "number-nonblank", "show-ends", "number", "squeeze-blank", "show-tabs", "show-nonprinting"},
+    "head": {"bytes", "lines", "quiet", "silent", "verbose", "zero-terminated"},
+    "tail": {
+        "bytes",
+        "follow",
+        "lines",
+        "pid",
+        "quiet",
+        "silent",
+        "sleep-interval",
+        "max-unchanged-stats",
+        "verbose",
+        "zero-terminated",
+        "use-polling",
+        "retry",
+        "debug",
+    },
+    "wc": {"bytes", "chars", "files0-from", "lines", "max-line-length", "total", "words"},
+}
+
+
+@pytest.mark.parametrize("access", ["full", "isolated"])
+def test_every_command_grant_has_audited_nonexecuting_flags(access):
+    from scripts.agent_runtime.review_mcp import agy_review_settings
+
+    commands = [
+        rule[8:-1] for rule in agy_review_settings(access)["permissions"]["allow"] if rule.startswith("command(")
+    ]
+    assert set(commands) == set(READER_LONG_OPTIONS)
+    for command in commands:
+        binary = shutil.which(command)
+        assert binary, command
+        help_result = subprocess.run([binary, "--help"], capture_output=True, text=True, check=True, timeout=5)
+        documented = set(re.findall(r"--([a-z][a-z0-9-]*)", help_result.stdout))
+        assert documented <= READER_LONG_OPTIONS[command] | {"help", "version"}, (command, documented)
+        assert not documented & {"pre", "pre-glob", "exec", "to-command", "output"}
+
+
+@pytest.mark.parametrize("binary", READER_LONG_OPTIONS)
+@pytest.mark.parametrize("flag", ["--pre", "--exec", "--to-command", "--output"])
+def test_granted_readers_reject_program_and_output_flags(tmp_path, binary, flag):
+    marker = tmp_path / "executed"
+    program = tmp_path / "program"
+    program.write_text(f"#!/bin/sh\ntouch '{marker}'\n")
+    program.chmod(0o700)
+    result = subprocess.run(
+        [binary, f"{flag}={program}"], input="evidence\n", capture_output=True, text=True, timeout=5
+    )
+    assert result.returncode != 0
+    assert not marker.exists()
+    assert program.read_text().startswith("#!/bin/sh")
+
+
+@pytest.mark.parametrize("access", ["full", "isolated"])
+@pytest.mark.parametrize(
+    "command",
+    [
+        "rg",
+        "rg --pre bash",
+        "rg --pre-glob *",
+        "git status",
+        "git ls-files",
+        "git log --output=settings.json",
+        "git diff --output=settings.json",
+        "git show --output=settings.json",
+    ],
+)
+def test_executing_and_settings_writing_commands_have_no_grant(tmp_path, scoped, access, command):
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permission_outside_allow_set"):
+        build(
+            tmp_path,
+            {
+                "review_access": access,
+                "agy_home_override": str(scoped),
+                "agy_required_permissions": [f"command({command})"],
+            },
+        )
+
+
+def auto_denial(kind, target="<target>"):
+    # Verbatim CLI line retained in the three named tasks' stderr.log files;
+    # the logs had command, command and mcp respectively, with no real target.
+    return (
+        f'jetski: no output produced — a tool required the "{kind}" permission that headless mode cannot prompt for, '
+        f"so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. {kind}({target})). "
+        "Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools."
+    )
+
+
+@pytest.mark.parametrize(
+    "task,kind",
+    [("plan-review-a1-p2-r3", "command"), ("plan-review-a1-p3-r3", "command"), ("plan-review-a1-p2-full-2", "mcp")],
+)
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_recorded_headless_auto_denial_is_typed_before_completion(task, kind, returncode, monkeypatch):
+    monkeypatch.setattr(agy, "_completion_gap", lambda *a: pytest.fail("denial must precede transcript gate"))
+    parsed = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr="agy_background_task_unconfirmed\n" + auto_denial(kind),
+        returncode=returncode,
+        output_file=None,
+    )
+    assert not parsed.ok and not parsed.response and not parsed.rate_limited, task
+    assert parsed.failure_code == "provider_policy_refusal"
+    assert parsed.provider_error_text == ""
+    reason, details = parsed.stderr_excerpt.split("\n", 1)
+    assert reason == agy.AGY_HEADLESS_PERMISSION_DENIED
+    assert reason in agy.AGY_INCOMPLETE_RUN_REASONS
+    assert json.loads(details) == {"permission_kind": kind, "permission_target": None}
+    assert "skip-permissions" not in parsed.stderr_excerpt
+
+
+@pytest.mark.parametrize("kind,target", [("command", "rg --pre bash"), ("mcp", "sources/query_ulif")])
+def test_auto_denial_preserves_concrete_resource(kind, target):
+    parsed = agy.AgyAdapter().parse_response(
+        stdout="", stderr=auto_denial(f"{kind}({target})"), returncode=0, output_file=None
+    )
+    assert json.loads(parsed.stderr_excerpt.split("\n", 1)[1]) == {"permission_kind": kind, "permission_target": target}
+    assert agy._headless_permission_denial(auto_denial(f"{kind}({target})")) == (kind, target)
+
+
+def test_permission_help_example_is_not_an_observed_target():
+    assert agy._headless_permission_denial(auto_denial("command", "cat example.txt")) == ("command", None)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "",
+        'required the "command" permission',
+        "agent: " + auto_denial("command"),
+        auto_denial("command").replace("auto-denied", "approved"),
+    ],
+)
+def test_non_cli_notices_are_not_permission_failures(text):
+    assert agy._headless_permission_denial(text) is None
+
+
+def test_model_response_cannot_supply_permission_denial(monkeypatch):
+    monkeypatch.setattr(agy, "_completion_gap", lambda *a: (None, None))
+    parsed = agy.AgyAdapter().parse_response(stdout=auto_denial("command"), stderr="", returncode=0, output_file=None)
+    assert parsed.ok

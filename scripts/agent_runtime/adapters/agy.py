@@ -149,6 +149,7 @@ AGY_BACKGROUND_TASK_CANCELED = "agy_background_task_canceled"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
 AGY_TRANSCRIPT_UNBOUND = "agy_transcript_unbound"
 AGY_TRANSCRIPT_UNREADABLE = "agy_transcript_unreadable"
+AGY_HEADLESS_PERMISSION_DENIED = "agy_headless_permission_denied"
 AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_BACKGROUND_TASK_ABANDONED,
     AGY_BACKGROUND_TASK_UNCONFIRMED,
@@ -156,6 +157,7 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_PRINT_TIMEOUT_PARTIAL,
     AGY_TRANSCRIPT_UNBOUND,
     AGY_TRANSCRIPT_UNREADABLE,
+    AGY_HEADLESS_PERMISSION_DENIED,
 )
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
@@ -641,6 +643,17 @@ class AgyAdapter:
             else ("" if stream_mode else (stdout or "").strip())
         )
         stderr_text = (stderr or "").strip()
+        if denial := _headless_permission_denial(stderr_text):
+            # Native headless refusal outranks missing output/transcript proof.
+            # Preserve the runtime's closed classification; put permission
+            # details in the diagnostic, without repeating bypass advice.
+            return ParseResult(
+                ok=False,
+                response="",
+                failure_code="provider_policy_refusal",
+                provider_error_text="",
+                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED + "\n" + json.dumps(denial._asdict()),
+            )
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
         # Only a failed terminal envelope owns error text. A SUCCESS result
         # and malformed/duplicate streams cannot supply a provider failure.
@@ -778,6 +791,35 @@ class AgyReviewPermissionError(ValueError):
     def __init__(self, reason: str) -> None:
         self.reason = reason
         super().__init__(reason)
+
+
+class AgyHeadlessPermissionDenial(NamedTuple):
+    """Native auto-denial details, with no inferred target."""
+
+    permission_kind: str
+    permission_target: str | None
+
+
+def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial | None:
+    """Recognize the CLI's notice, not a model reply or generic denial text.
+
+    Recorded notices give only the kind and an ``<target>`` example. Accept a
+    concrete resource if the CLI supplies it, but never promote its placeholder
+    into an observed command or tool name.
+    """
+    notice = re.search(
+        r'^jetski: no output produced — a tool required the "(?P<kind>[a-z][a-z0-9_]*)'
+        r'(?:\((?P<target>[^"\r\n]*)\))?" permission that headless mode cannot prompt for, '
+        r"so it was auto-denied\.(?P<advice>[^\r\n]*)$",
+        stderr_text,
+        re.MULTILINE,
+    )
+    if notice is None:
+        return None
+    kind, target = notice.group("kind", "target")
+    if not target or "<target>" in target:
+        target = None
+    return AgyHeadlessPermissionDenial(kind, target)
 
 
 def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None) -> None:

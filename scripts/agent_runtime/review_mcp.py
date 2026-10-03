@@ -555,9 +555,10 @@ def agy_review_settings(review_access: str = "isolated") -> dict[str, Any]:
     Never grant a shell, interpreter, arbitrary Git command or MCP wildcard.
     """
     tools = review_tools(review_access)
-    commands = ["cat", "head", "tail", "wc", "rg"]
-    if review_access == "full":
-        commands += ["git status", "git diff", "git log", "git show", "git ls-files"]
+    # Only readers with no execute-program or output-file options. Search uses
+    # AGY's built-in tool: rg --pre executes programs. Git's --output can
+    # overwrite the scoped settings, and even inspection can run helpers.
+    commands = ["cat", "head", "tail", "wc"]
     return {
         "permissions": {
             "allow": [
@@ -1201,16 +1202,15 @@ def verify_agy_review_effective_mcp(
         # Name the variables, never their values: the launch environment is not log-safe.
         raise refuse("the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR")
     access = ("full" if boundary.full else "isolated") if boundary else expected["env"]["LU_REVIEW_ACCESS"]
-    if boundary or expected.get("env", {}).get("LU_REVIEW_ACCESS"):
-        settings = app_data / "settings.json"
-        try:
-            permissions = _strict_json_object(
-                _read_attempt_file(agy_home.parent, *settings.relative_to(agy_home.parent).parts)
-            )
-        except (OSError, ValueError):
-            raise refuse("AGY review requires the scoped permission rules") from None
-        if permissions != agy_review_settings(access):
-            raise refuse("AGY review requires exactly the sources review tool and command permission rules")
+    settings = app_data / "settings.json"
+    try:
+        permissions = _strict_json_object(
+            _read_attempt_file(agy_home.parent, *settings.relative_to(agy_home.parent).parts)
+        )
+    except (OSError, ValueError):
+        raise refuse("AGY review requires the scoped permission rules") from None
+    if permissions != agy_review_settings(access):
+        raise refuse("AGY review requires exactly the sources review tool and command permission rules")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
         raise refuse("the scoped AGY_APP_DATA_DIR holds an unexpected mcp_config.json")
 
