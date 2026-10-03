@@ -22,26 +22,26 @@ future isolation engineering). For **fleet-comms v1 (#5512)**, AGY remains a liv
 # expect: ReviewIsolationError agy_isolated_review_unsupported
 ```
 
-## Orchestrator vs formal reviewer (do not conflate)
+## Catalog seat vs formal reviewer (do not conflate)
 
-AGY **is** an orchestrator seat for fleet-comms (#5512):
+AGY is a catalog seat (`orchestrator_seats.agy`) for bounded work and Ukrainian content review. It is **not** a planning, design or driver seat (operator decision 2026-10-03, #9584):
 
 | Role | Model | Status |
 | --- | --- | --- |
-| Orchestrator loop | `gemini-3.8-flash-high` @ high | **Live** (`orchestrator_seats.agy`) |
+| Bounded worker / content review | `gemini-3.8-flash-high` @ high | **Live** (`orchestrator_seats.agy`); never a driver |
 | Deep escalate | `gemini-3.8-flash-high` @ high | Same SKU escalation (`orchestrator_seats.agy`) |
 | Sealed formal CF *reviewer* | — | **Blocked** until isolation proof (#5555) |
 
-When AGY orchestrates, it **requests** CF via direct `ask-<lane> --type review`
-(codex|claude|glm|grok; sealed `review-pr` removed in #8520). It must not treat `ask-agy --review` as sealed formal CF.
+Formal CF for AGY-authored work is requested by the driver of record via direct `ask-<lane> --type review`
+(codex|claude|glm|grok; sealed `review-pr` removed in #8520). Nobody may treat `ask-agy --review` as sealed formal CF.
 
-## Live lane (non-formal / orchestrator)
+## Live lane (non-formal / bounded work)
 
 ```bash
 .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high \
   --mode danger --worktree --task-id <task> --prompt-file BRIEF
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
-  --task-id agy-orch --to-model gemini-3.8-flash-high
+  --task-id agy-bounded --to-model gemini-3.8-flash-high
 ```
 
 ## Substitute formal CF

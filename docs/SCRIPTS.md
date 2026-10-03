@@ -44,7 +44,6 @@ Project-local wrappers for interactive agent sessions:
 ./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
 ./start-codex-driver.sh --epic devops
-./start-gemini-driver.sh --epic devops
 ./start-grok-driver.sh --epic devops
 ```
 

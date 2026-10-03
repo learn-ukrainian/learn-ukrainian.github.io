@@ -17,13 +17,11 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
-| **harness / infra** | Gemini (AGY) | `./start-gemini-driver.sh --epic infra` |
-| **harness / infra** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic infra` |
-| **devops** | Gemini (AGY) | `./start-gemini-driver.sh --epic devops` |
-| **devops** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic devops` |
-| **ops-api** (Operator API + UI; stream key `monitor`) | Cursor or Gemini (AGY); **Kimi for UI implementation only** | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
-| **ops-api** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic ops-api` |
-| **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
+| **harness / infra** | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic infra` |
+| **devops** | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic devops` |
+| **ops-api** (Operator API + UI; stream key `monitor`) | Cursor; **Kimi for UI implementation only** | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
+| **ops-api** (named alternate) | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic ops-api` |
+| **corpus** (acquisition & ingestion) | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 | `./start-grok-driver.sh --epic hramatka` |
 | **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` (slot `grok-core`; file handoff `.claude/curriculum-upgrade-epic/`) |
@@ -172,14 +170,17 @@ Every strong long-context model is load-bearing somewhere, so every orchestrator
 "bites a hand." This routing bites the **least** — it keeps the scarce authority +
 language + review lanes free and puts the loop on the most replaceable capacity:
 
-- **Gemini** → infra: 1M window, MCP-leading tool use, cheap; never claims content lanes.
+- **Codex / Sol 6.1** → infra and devops only: drives those streams as the named alternate (Opus 5.5 is the other
+  driver and advisor seat, and drives corpus and every other stream outside infra/devops). **Gemini (AGY, Flash) is not a planning, design or driver seat**
+  (operator decision 2026-10-03, #9584): it takes bounded, fully specified work and Ukrainian
+  content review, never a stream.
 - **Grok** → product/track coordination: best-on-board agentic tool use, on its **own**
   subscription window, so driving it doesn't steal review or writing capacity.
 - **Sonnet 5.5** → well-scoped routine work and bug fixes on practical Anthropic capacity;
   it does **not** consume the Opus review-of-record seat.
 - **HydrationCapsuleV1** supplies the score-and-hydrate path for the authorized Codex alternate.
   Use the selected runtime's validated context profile; a historical model's window is not
-  a current capability or permission grant. The alternate never co-owns Gemini's stream lease.
+  a current capability or permission grant. The alternate never co-owns a stream lease.
   Infra (`epic:6943`) and DevOps (`epic:5703`) are independent streams: one live driver does
   not block the other, while a second driver on either same stream still fails closed.
 
