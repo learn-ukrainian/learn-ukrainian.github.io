@@ -88,8 +88,12 @@ def is_security_sensitive_change(changed_paths: Iterable[str], owned_paths: Iter
     return False
 
 
-def effective_review_risk(requested: str, changed_paths: Iterable[str], owned_paths: Iterable[str] = ()) -> str:
-    """Raise security-sensitive targets to critical; preserve ordinary risk."""
+def effective_review_risk(
+    requested: str, changed_paths: Iterable[str], owned_paths: Iterable[str] = (), *, profile: str = "code"
+) -> str:
+    """Raise security-sensitive code/infra targets to critical; preserve other risk."""
+    if profile.strip().casefold() not in {"code", "infra"}:
+        return requested
     return "critical" if is_security_sensitive_change(changed_paths, owned_paths) else requested
 
 

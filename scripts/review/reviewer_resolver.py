@@ -553,7 +553,8 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
     if (
-        is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
+        inputs.review_profile.strip().casefold() in {"code", "infra"}
+        and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
         and "critical_review" not in candidate.model_roles
     ):
         return "security-sensitive target requires the catalog critical_review role"
@@ -662,7 +663,12 @@ def evaluate_candidate(
     """
     # Direct dispatch admission calls this without walking a ladder. The floor
     # must bind here too, before suitability or explicit-pin evaluation.
-    inputs = replace(inputs, risk=effective_review_risk(inputs.risk, inputs.changed_paths, inputs.owned_paths))
+    inputs = replace(
+        inputs,
+        risk=effective_review_risk(
+            inputs.risk, inputs.changed_paths, inputs.owned_paths, profile=inputs.review_profile
+        ),
+    )
     family = (
         author_family if author_family is not None else resolve_author_family(inputs.author_model, inputs.author_family)
     )
@@ -1074,7 +1080,12 @@ def resolve_reviewer(
         # The state owner injects a transaction-consistent snapshot. This
         # module never reads a database or service to fill it in.
         inputs = replace(inputs, routing_snapshot=runtime_state)
-    inputs = replace(inputs, risk=effective_review_risk(inputs.risk, inputs.changed_paths, inputs.owned_paths))
+    inputs = replace(
+        inputs,
+        risk=effective_review_risk(
+            inputs.risk, inputs.changed_paths, inputs.owned_paths, profile=inputs.review_profile
+        ),
+    )
     risk = (inputs.risk or "").strip().lower()
     review_profile = (inputs.review_profile or "").strip().casefold()
     if review_profile not in VALID_REVIEW_PROFILES:

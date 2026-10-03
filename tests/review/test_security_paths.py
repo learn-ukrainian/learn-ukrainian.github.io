@@ -63,6 +63,16 @@ def test_classifier_and_risk_are_additive(paths, owned, expected):
         assert effective_review_risk(risk, paths, owned) == ("critical" if expected else risk)
 
 
+@pytest.mark.parametrize("profile", ["code", "infra", "ukrainian"])
+def test_security_floor_is_scoped_to_code_and_infra(profile):
+    assert effective_review_risk("low", ("scripts/delegate.py",), profile=profile) == (
+        "low" if profile == "ukrainian" else "critical"
+    )
+    assert effective_review_risk("medium", (), ("scripts/agent_runtime",), profile=profile) == (
+        "medium" if profile == "ukrainian" else "critical"
+    )
+
+
 @pytest.fixture
 def repo(tmp_path):
     repo = tmp_path / "git-probe"

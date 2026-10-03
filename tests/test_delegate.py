@@ -45,6 +45,8 @@ from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
+from tests.test_ask_review_admission_floor import write_code_review_manifest
 
 
 @pytest.fixture
@@ -7308,8 +7310,10 @@ def test_dispatch_admits_cursor_auto_for_a_green_dor_write_implementation(tmp_ta
     ],
 )
 def test_dispatch_refuses_cursor_auto_before_any_side_effect(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys, overrides, dor_record, refusal
+    ordinary_review_scope, tmp_tasks_dir, tmp_path, monkeypatch, capsys, overrides, dor_record, refusal
 ):
+    if overrides.get("require_review_verdict"):
+        overrides = {**overrides, "branch": "review-target"}
     rc, popen_calls = _cursor_dispatch(tmp_path, monkeypatch, dor_record=dor_record, **overrides)
     assert rc == 2
     assert popen_calls == []
@@ -10054,6 +10058,9 @@ def _write_args(**overrides):
         "allow_merge": False,
     }
     base.update(overrides)
+    if base.get("review_attempt"):
+        # These attempt fixtures render lesson-review prompts, like the content producer.
+        base.setdefault("review_profile", "ukrainian")
     return argparse.Namespace(**base)
 
 
@@ -17818,7 +17825,10 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
         assert state["preserved_artifacts"]["count"] == 1
 
 
-def test_full_review_default_requires_full_checkout_before_provisioning(tmp_tasks_dir, tmp_path, capsys):
+def test_full_review_default_requires_full_checkout_before_provisioning(
+    ordinary_review_scope, tmp_tasks_dir, tmp_path, capsys
+):
+    manifest = write_code_review_manifest(ordinary_review_scope, tmp_path / "code-review.json")
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -17833,7 +17843,7 @@ def test_full_review_default_requires_full_checkout_before_provisioning(tmp_task
             "--prompt",
             "review",
             "--review-attempt",
-            str(tmp_path / "missing"),
+            str(manifest),
             "--review-id",
             "full",
             "--attempt-id",

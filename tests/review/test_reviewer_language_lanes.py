@@ -223,7 +223,19 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
 
     state_file.write_text("{}", encoding="utf-8")
     assert (
-        main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex", "--language-lane"]) == 0
+        main(
+            [
+                "--state-file",
+                str(state_file),
+                "resolve-reviewer",
+                "--author-model",
+                "codex",
+                "--language-lane",
+                "--owned-path",
+                "curriculum/A1/lesson.mdx",
+            ]
+        )
+        == 0
     )
     payload = json.loads(capsys.readouterr().out)
     assert payload["selected"]["family"] == "anthropic"

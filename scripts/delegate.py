@@ -13359,7 +13359,11 @@ def _admit_dispatch_target(
             review_attempt=bool(getattr(args, "review_attempt", None)),
             review_alias_model_resolver=_resolve_substitution_model,
             review_owned_paths=tuple(declared),
-            review_changed_paths=collect_review_paths if review_dispatch else (),
+            review_changed_paths=(
+                collect_review_paths
+                if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
+                else ()
+            ),
             review_subject_seats=frozenset(flag_paths("subject_seat")),
             review_subject_families=frozenset(flag_paths("subject_family")),
             paths=owned,
@@ -14862,10 +14866,10 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--review-profile",
         default=None,
-        choices=("code", "ukrainian"),
+        choices=("code", "infra", "ukrainian"),
         help=(
             "Required with --require-review-verdict when --agent is agy or gemini. "
-            "code is refused (Gemini reviews Ukrainian only, never code — "
+            "code and infra are refused (Gemini reviews Ukrainian only, never code — "
             "operator 2026-09-25). Ukrainian content review must pass ukrainian."
         ),
     )
@@ -14916,7 +14920,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="MANIFEST",
         help=(
             "Path to manifest YAML file for formal review attempt recording (#8517). "
-            "Review admission requires the record's frozen target.changed_paths list. "
+            "Code/infra review admission requires the record's frozen target.changed_paths list; "
+            "Ukrainian content attempts do not require that target for the security floor. "
             "Used together with --review-id and --attempt-id to launch a per-attempt "
             "stdio sources MCP server with ledger receipts. Default: None. "
             "Example: --review-attempt batch_state/manifests/rev-1.yaml"

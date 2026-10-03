@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from dataclasses import asdict
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -19,8 +21,7 @@ def _git(repo, *args):
     return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30).strip()
 
 
-@pytest.fixture
-def review_repo(tmp_path, monkeypatch):
+def _init_review_repo(tmp_path, monkeypatch):
     repo = tmp_path / "target"
     repo.mkdir()
     _git(repo, "init", "-q", "-b", "main")
@@ -36,6 +37,11 @@ def review_repo(tmp_path, monkeypatch):
     return repo, base
 
 
+@pytest.fixture
+def review_repo(tmp_path, monkeypatch):
+    return _init_review_repo(tmp_path, monkeypatch)
+
+
 def _change(repo, path):
     file = repo / path
     file.parent.mkdir(parents=True, exist_ok=True)
@@ -45,6 +51,34 @@ def _change(repo, path):
     head = _git(repo, "rev-parse", "HEAD")
     _git(repo, "update-ref", "refs/remotes/origin/review-target", head)
     return head
+
+
+@pytest.fixture
+def ordinary_review_scope(tmp_path, monkeypatch):
+    """Real ordinary Git scope, even when a dispatch test stubs process spawning."""
+    from scripts.review import security_paths, target_resolution
+
+    repo, _base = _init_review_repo(tmp_path, monkeypatch)
+    _change(repo, "ordinary.py")
+    run_git = target_resolution._run_git
+    real_run, real_popen = subprocess.run, subprocess.Popen
+
+    def fixture_git(args, cwd, *, timeout=30.0):
+        with patch.object(subprocess, "run", real_run), patch.object(subprocess, "Popen", real_popen):
+            return run_git(args, cwd, timeout=timeout)
+
+    monkeypatch.setattr(target_resolution, "_run_git", fixture_git)
+    monkeypatch.setattr(security_paths, "_run_git", fixture_git)
+    return repo
+
+
+def write_code_review_manifest(repo, path):
+    """Freeze a real code target in the same target shape admission reads."""
+    from scripts.review.target_resolution import resolve_branch_target
+
+    target = resolve_branch_target(repo, "refs/remotes/origin/review-target", "refs/remotes/origin/main")
+    path.write_text(json.dumps({"target": asdict(target)}))
+    return path
 
 
 def _args(*flags):
@@ -111,12 +145,11 @@ def test_ask_review_command_reaches_delegate_floor(review_repo, tmp_path):
     assert "REVIEW_ROUTE_REFUSED" in refusal and "ineligible" in refusal
 
 
-def test_attempt_record_paths_reach_immutable_review_admission(tmp_path):
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_attempt_record_paths_reach_immutable_review_admission(tmp_path, profile):
     attempt = tmp_path / "attempt.json"
     attempt.write_text(json.dumps({"target": {"changed_paths": ["scripts/delegate.py"]}}))
-    refusal, target = _admit(
-        _args("--review-attempt", str(attempt), "--review-risk", "low", "--review-author-model", "gpt-6.1-sol")
-    )
+    refusal, target = _admit(_args("--review-attempt", str(attempt), "--review-profile", profile))
     assert target is None
     assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in refusal
 
@@ -166,11 +199,46 @@ def test_unresolvable_target_refuses_before_route(review_repo, flags, monkeypatc
     "record",
     [{}, {"target": {}}, {"target": {"changed_paths": "scripts/delegate.py"}}, {"target": {"changed_paths": [None]}}],
 )
-def test_unresolved_attempt_refuses(tmp_path, record):
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_unresolved_attempt_refuses(tmp_path, record, profile):
     path = tmp_path / "attempt.json"
     path.write_text(json.dumps(record))
-    refusal, target = _admit(_args("--review-attempt", str(path)))
+    refusal, target = _admit(_args("--review-attempt", str(path), "--review-profile", profile))
     assert target is None and "REVIEW_TARGET_UNRESOLVED" in refusal
+
+
+@pytest.mark.parametrize("attempt", [False, True])
+def test_ukrainian_review_never_collects_floor_paths(tmp_path, monkeypatch, attempt):
+    def unexpected_paths(_args):
+        raise AssertionError("Ukrainian review must not collect code/infra floor paths")
+
+    monkeypatch.setattr(delegate, "_dispatch_review_changed_paths", unexpected_paths)
+    manifest = tmp_path / "lesson.yaml"
+    manifest.write_text("kind: lesson\ninputs: {}\n")
+    flags = ["--review-profile", "ukrainian"]
+    if attempt:
+        flags += ["--review-attempt", str(manifest)]
+    refusal, target = _admit(_args(*flags))
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
+
+
+def test_admission_does_not_call_a_ukrainian_path_collector():
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+
+    def unexpected_paths():
+        raise AssertionError("Ukrainian admission must not read code/infra scope")
+
+    (target,) = resolve_and_admit(
+        ("claude",),
+        model="claude-sonnet-5-5",
+        mode="read-only",
+        review_dispatch=True,
+        review_profile="ukrainian",
+        review_attempt=True,
+        review_changed_paths=unexpected_paths,
+    )
+    assert (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
 
 
 def test_ordinary_diff_keeps_sonnet(review_repo):
