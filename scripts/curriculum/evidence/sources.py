@@ -29,6 +29,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
@@ -246,26 +247,352 @@ def _well_formed_kaikki_gloss(gloss: str) -> bool:
     return not brackets and not curly_open and straight_quotes % 2 == 0
 
 
-def aligned_kaikki_gloss(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[str | None, str | None]:
+def aligned_kaikki_senses(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[list[str], str | None]:
     """Only a single source POS can align with a VESUM store record."""
     if payload is None:
-        return None, "kaikki_absent"
+        return [], "kaikki_absent"
     source_pos = payload.get("pos")
     if not isinstance(source_pos, list) or len(source_pos) != 1:
-        return None, "kaikki_multi_pos"
+        return [], "kaikki_multi_pos"
     expected = STORE_POS.get(pos, set()).copy()
     if pos == "noun" and pronoun_entry:
         expected = {"PRON"}
     elif pos == "adj" and pronoun_entry:
         expected = {"PRON", "DET"}
     if KAIKKI_POS.get(source_pos[0]) not in expected:
-        return None, "kaikki_pos_mismatch"
+        return [], "kaikki_pos_mismatch"
     glosses = payload.get("glosses")
     if not isinstance(glosses, list) or not glosses or not all(isinstance(g, str) and g for g in glosses):
-        return None, "kaikki_no_gloss"
+        return [], "kaikki_no_gloss"
     if not all(_well_formed_kaikki_gloss(gloss) for gloss in glosses):
-        return None, "kaikki_malformed"
-    return "; ".join(glosses), None
+        return [], "kaikki_malformed"
+    return glosses, None
+
+
+def aligned_kaikki_gloss(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[str | None, str | None]:
+    """Compatibility accessor: never return a joined sense dump."""
+    result = select_gloss({"lemma": "", "pos": pos}, [], payload, pronoun_entry=pronoun_entry)
+    return result.gloss, result.reason
+
+
+def unstressed_headword(text: str) -> str:
+    """An exact spelling index key; remove stress, preserving all other letters."""
+    nfd = unicodedata.normalize("NFD", normalize_spelling(text))
+    return unicodedata.normalize("NFC", nfd.replace("\u0301", "").replace("\u0300", ""))
+
+
+def is_learner_gloss(gloss: Any) -> bool:
+    """The shared D2 bound, applied to source spans and stored learner values."""
+    return bool(
+        isinstance(gloss, str)
+        and gloss.strip()
+        and ";" not in gloss
+        and len(gloss) <= 60
+        and len(gloss.split()) <= 8
+        and _well_formed_kaikki_gloss(gloss)
+    )
+
+
+@dataclass(frozen=True)
+class GlossSelection:
+    gloss: str | None = None
+    source: str | None = None
+    ref: dict | None = None
+    reason: str | None = None
+    candidates: tuple[dict, ...] = ()
+
+
+_REGISTER_LABEL = re.compile(
+    r"\b(?:figurativ\w*|colloq\w*|dialect\w*|obsolet\w*|obsolesc\w*|archai\w*|dated|"
+    r"informal|rare(?:ly)?|historic(?:al(?:ly)?)?|non[- ]?standard|slang|vulgar|technical|"
+    r"formal|literary|poetic(?:al)?|derogatory|pejorative|offensive|euphemistic|humorous|"
+    r"regional|familiar|childish|endearing|endearment|ironic(?:ally)?|proscribed|uncommon|rude|taboo|jocular|polite|"
+    r"psychology|chemistry|anatomy|linguistics)\b",
+    re.I,
+)
+_GRAMMATICAL_LABEL = re.compile(
+    r"(?:preposition|prepositional phrase|conjunction|particle|interjection|determiner|"
+    r"(?:interrogative|relative|personal|possessive) pronoun|noun|verb|adjective|adverb|"
+    r"(?:in)?transitive|\+\s*(?:nominative|genitive|dative|accusative|instrumental|locative|vocative)"
+    r"(?:\s+or(?:\s+more rarely)?\s+(?:nominative|genitive|dative|accusative|instrumental|locative|vocative))*)",
+    re.I,
+)
+
+
+def _outer_notes(sense: str) -> list[str]:
+    """Read whole outer bracket notes, without promoting nested annotations."""
+    notes, depth, start = [], 0, 0
+    for index, char in enumerate(sense):
+        if char in "([":
+            if depth == 0:
+                start = index + 1
+            depth += 1
+        elif char in ")]":
+            depth -= 1
+            if depth == 0:
+                notes.append(sense[start:index].strip())
+    return notes
+
+
+def _register_note(note: str) -> bool:
+    """Only complete register labels, optionally mixed with grammar, restrict."""
+    labels = re.split(r"\s*[,;]\s*", note)
+    register = [bool(_REGISTER_LABEL.fullmatch(label.rstrip("."))) for label in labels]
+    return any(register) and all(
+        marked or _GRAMMATICAL_LABEL.fullmatch(label) for label, marked in zip(labels, register, strict=True)
+    )
+
+
+def _gloss_head(span: str, *, keep_qualifiers: bool = False) -> str:
+    """Remove balanced edge labels; optionally retain meaning-bearing qualifiers."""
+    span = span.strip().rstrip("?!").rstrip()
+    while span.startswith(("(", "[")):
+        depth = 0
+        for index, char in enumerate(span):
+            if char in "([":
+                depth += 1
+            elif char in ")]":
+                depth -= 1
+            if depth == 0:
+                span = span[index + 1 :].strip()
+                break
+        else:
+            return span
+    while span.endswith((")", "]")):
+        depth = 0
+        for index in range(len(span) - 1, -1, -1):
+            char = span[index]
+            if char in ")]":
+                depth += 1
+            elif char in "([":
+                depth -= 1
+            if depth == 0:
+                # Numeric scale changes the quantity, not just its annotation.
+                annotation = span[index + 1 : -1].strip()
+                if span[index:].casefold() in {"(short scale)", "(long scale)"} or (
+                    keep_qualifiers and not _GRAMMATICAL_LABEL.fullmatch(annotation) and not _register_note(annotation)
+                ):
+                    return span
+                span = span[:index].strip().rstrip("?!").rstrip()
+                break
+        else:
+            return span
+    return span
+
+
+def _sub_senses(sense: str) -> list[str]:
+    """Split semicolons outside balanced notes, preserving source order."""
+    if not _well_formed_kaikki_gloss(sense):
+        return []
+    parts, start, depth = [], 0, 0
+    for index, char in enumerate(sense):
+        if char in "([":
+            depth += 1
+        elif char in ")]":
+            depth -= 1
+        elif char == ";" and depth == 0:
+            parts.append(sense[start:index].strip())
+            start = index + 1
+    parts.append(sense[start:].strip())
+    return parts
+
+
+def _sense_spans(sense: str) -> list[str]:
+    """Split sub-senses and short alternatives; keep definition commas."""
+    parts = _sub_senses(sense)
+    if len(parts) != 1:
+        return [span for part in parts for span in _sense_spans(part)]
+    head = _gloss_head(sense)
+    if re.match(
+        r"(?:verbal noun of|alternative form|alternative spelling|a |an |the |augmentative particle|expressing )",
+        head,
+        re.I,
+    ):
+        return []
+    spans, start, depth = [], 0, 0
+    for index, char in enumerate(sense):
+        if char in "([":
+            depth += 1
+        elif char in ")]":
+            depth -= 1
+        elif char == "," and depth == 0:
+            spans.append(sense[start:index].strip())
+            start = index + 1
+    spans.append(sense[start:].strip())
+    definition = re.search(r"\b(?:used to|which|whose|covering|extending|typically|often|etc|et cetera)\b", head, re.I)
+    if definition or not all(is_learner_gloss(_gloss_head(span)) for span in spans):
+        spans = [sense.strip()]
+    return [
+        span
+        for span in spans
+        if span
+        and not re.match(
+            r"(?:verbal noun of|alternative form|alternative spelling|a |an |the |augmentative particle|expressing )",
+            _gloss_head(span),
+            re.I,
+        )
+    ]
+
+
+def _gloss_homonyms(word: dict, entries: Iterable[dict], pronoun_entry: bool) -> list[dict]:
+    """Match spelling and coarse POS only; gender never binds a learner sense."""
+    matched = []
+    extra_labels = {
+        "займенник": {"noun", "adj"} if pronoun_entry else set(),
+        "сполучник": {"conj"},
+        "частка": {"part"},
+        "вигук": {"intj"},
+        "прийменник": {"prep"},
+        "числівник": {"numr"},
+        "множинний іменник": {"noun"},
+    }
+    for entry in entries:
+        if unstressed_headword(entry.get("canonical_headword", "")) != unstressed_headword(word["lemma"]):
+            continue
+        label = entry.get("grammatical_label", "").split(",", 1)[0].strip()
+        grammar = lookup_ulif_label(label)
+        positions = set(grammar.tags) if grammar else extra_labels.get(label, {label})
+        # Mixed-gender ULIF noun labels still establish noun POS. The gender
+        # itself must never select one homonym over another.
+        if label.startswith("іменник "):
+            positions.add("noun")
+        if word["pos"] in positions:
+            matched.append(entry)
+    return matched
+
+
+def select_gloss(
+    word: dict,
+    rows: list[dict],
+    payload: dict | None,
+    *,
+    pronoun_entry: bool | None = None,
+    ulif_entries: Iterable[dict] = (),
+) -> GlossSelection:
+    """Emit only unanimous primary heads or an unambiguous sole-source sense.
+
+    Compare the first head of each source's first unrestricted sub-sense.
+    Later senses remain diagnostics only. A sole source must have exactly one
+    sense and one head, including restricted and unparseable alternatives in
+    that count. Preserve qualifiers for uncorroborated prepositions and require
+    identical primary qualifiers for mixed-POS Kaikki entries.
+    """
+    lemma, pos = word["lemma"], word["pos"]
+    if pronoun_entry is None:
+        pronoun_entry = any("pron" in form.get("tags", "").split(":") for form in word.get("forms", []))
+    rows = filter_pronominal_gloss_rows(rows, lemma, pos, pronoun_entry)
+    homonyms = _gloss_homonyms(word, ulif_entries, pronoun_entry)
+    collision = len(homonyms) > 1 or len({row["word"] for row in rows}) > 1
+    if collision:
+        ulif = word.get("ulif")
+        key = ulif.get("key", []) if isinstance(ulif, dict) else []
+        bound = [e for e in homonyms if key == [e["canonical_headword"], e["homonym_index"]]]
+        unique_head = (
+            bool(bound)
+            and sum(normalize_spelling(e["canonical_headword"]) == normalize_spelling(key[0]) for e in homonyms) == 1
+        )
+        selected = [r for r in rows if key and normalize_spelling(r["word"]) == normalize_spelling(key[0])]
+        if not selected or (len(homonyms) > 1 and not unique_head):
+            return GlossSelection(
+                reason=codes.GLOSS_SENSE_UNRESOLVED,
+                candidates=tuple(
+                    {
+                        "source": "ulif",
+                        "id": e["id"],
+                        "headword": e["canonical_headword"],
+                        "homonym_index": e["homonym_index"],
+                    }
+                    for e in homonyms
+                )
+                or tuple(
+                    {
+                        "source": "dmklinger_uk_en",
+                        "id": r["id"],
+                        "headword": r["word"],
+                        "translations": r["translations"],
+                    }
+                    for r in rows
+                ),
+            )
+        rows = selected
+    senses, reason = aligned_kaikki_senses(payload, pos, pronoun_entry)
+    mixed_preposition = (
+        reason == "kaikki_multi_pos"
+        and pos == "prep"
+        and payload
+        and isinstance(payload.get("pos"), list)
+        and "prep" in payload["pos"]
+    )
+    if mixed_preposition:
+        senses, _ = aligned_kaikki_senses({**payload, "pos": ["prep"]}, pos, pronoun_entry)
+    groups: dict[str, list[list[dict]]] = {"dmklinger_uk_en": [], "kaikki_wiktionary": []}
+    primaries: dict[str, dict | None] = {}
+
+    def add_sense(sense: str, source: str, row: dict | None) -> None:
+        # Count every sub-sense, even empty/meta/restricted ones, so parsing
+        # cannot turn a polysemous sole source into an unambiguous one.
+        for part in _sub_senses(sense) or [sense]:
+            marked = any(_register_note(note) for note in _outer_notes(part))
+            group = []
+            for span in _sense_spans(part):
+                head = _gloss_head(span)
+                if not head or ";" in head:
+                    continue
+                group.append(
+                    {
+                        "span": head,
+                        "qualified": _gloss_head(span, keep_qualifiers=pos == "prep"),
+                        "head": head.removeprefix("to ") if pos == "verb" else head,
+                        "source": source,
+                        "row": row,
+                    }
+                )
+            groups[source].append(group)
+            if not marked and source not in primaries:
+                # An unparseable first unrestricted sense blocks promotion.
+                primaries[source] = group[0] if group else None
+
+    for row in rows:
+        raw = row.get("translations") or []
+        try:
+            translations = json.loads(raw) if isinstance(raw, str) else raw
+        except (ValueError, TypeError):
+            translations = [raw]
+        if isinstance(translations, list):
+            for sense in translations:
+                add_sense(sense if isinstance(sense, str) else "", "dmklinger_uk_en", row)
+    for sense in senses:
+        add_sense(sense, "kaikki_wiktionary", None)
+    candidates = [c for source_groups in groups.values() for group in source_groups for c in group]
+    diagnostic = tuple(
+        {"gloss": c["qualified"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
+    )
+    if not candidates and not rows and not senses:
+        return GlossSelection(reason=reason or codes.GLOSS_MISSING)
+    dmk, kaikki = primaries.get("dmklinger_uk_en"), primaries.get("kaikki_wiktionary")
+    chosen = None
+    if not collision and dmk and kaikki and dmk["head"] == kaikki["head"]:
+        if not mixed_preposition or dmk["qualified"] == kaikki["qualified"]:
+            chosen = dmk
+            if pos == "verb" and not dmk["span"].startswith("to ") and kaikki["span"].startswith("to "):
+                chosen = kaikki
+    elif bool(rows) != (payload is not None):
+        sole = "dmklinger_uk_en" if rows else "kaikki_wiktionary"
+        source_groups = groups[sole]
+        if len(source_groups) == 1 and len(source_groups[0]) == 1:
+            chosen = primaries.get(sole)
+            if chosen:
+                chosen = {**chosen, "span": chosen["qualified"]}
+    if chosen is None:
+        return GlossSelection(
+            reason=codes.GLOSS_SENSE_UNRESOLVED if rows or payload is not None else reason or codes.GLOSS_MISSING,
+            candidates=diagnostic,
+        )
+    if not is_learner_gloss(chosen["span"]):
+        return GlossSelection(reason=codes.GLOSS_MISSING, candidates=diagnostic)
+    row = chosen["row"]
+    ref = {"table": "dmklinger_uk_en", "id": row["id"], "row_sha256": row_digest(row)} if row else None
+    return GlossSelection(chosen["span"], chosen["source"], ref, candidates=diagnostic)
 
 
 def filter_pronominal_gloss_rows(rows: list[dict], lemma: str, pos: str, pronoun_entry: bool) -> list[dict]:
@@ -280,9 +607,13 @@ def filter_pronominal_gloss_rows(rows: list[dict], lemma: str, pos: str, pronoun
     if pronoun_entry:
         selected = [row for row in selected if not is_alphabet_letter_gloss(row)]
     if pronoun_entry and pos == "adj":
-        # The reflexive possessive pronoun takes its broad pronoun row first.
+        # Preserve the existing grammatical alignment: attributive determiners
+        # vs independent pronouns. This cannot choose among lexical meanings
+        # within that POS class; select_gloss still refuses those ambiguities.
         preferred = "pronoun" if lemma == "свій" else "particle"
-        selected.sort(key=lambda row: row["pos"] != preferred)
+        preferred_rows = [row for row in selected if row["pos"] == preferred]
+        if preferred_rows:
+            selected = preferred_rows
     return selected
 
 
@@ -379,6 +710,7 @@ class Sources:
         self._receipt_identities: dict[str, Any] = {}
         self._receipt_words: dict[str, list[dict]] = {}
         self._receipt_paradigms: dict[str, list[dict]] = {}
+        self._gloss_index: dict[str, list[dict]] | None = None
 
     def __enter__(self):
         return self
@@ -392,6 +724,7 @@ class Sources:
         self._receipt_identities.clear()
         self._receipt_words.clear()
         self._receipt_paradigms.clear()
+        self._gloss_index = None
         if self._kaikki_conn is not None:
             side, self._kaikki_conn = self._kaikki_conn, None
             with closing(side), suppress(sqlite3.Error):
@@ -862,30 +1195,33 @@ class Sources:
         return bool(entries) and all(row.get("homonym_checked") == 1 and row.get("status") == "ok" for row in entries)
 
     def gloss_rows(self, requests: Iterable[tuple[str, str]]) -> SourceResult[dict[tuple[str, str], list[dict]]]:
-        """Exact lemma + explicit POS equivalents, ordered by stable row id.
+        """Stress-free spelling index + explicit POS, retaining original rows.
 
-        No accent stripping or prefix/fuzzy fallback: a stressed-only headword
-        that differs from the requested spelling is absent under brief rule 6.
+        The index belongs to this pinned read snapshot; collisions survive for
+        select_gloss to bind against the record's ULIF stressed key.
         """
         conn = self._db()
+        if self._gloss_index is None:
+            self._gloss_index = {}
+            for row in conn.execute("SELECT * FROM dmklinger_uk_en ORDER BY id"):
+                self._gloss_index.setdefault(unstressed_headword(row["word"]), []).append(dict(row))
         requested = list(dict.fromkeys((normalize_spelling(lemma), pos) for lemma, pos in requests))
         result = {key: [] for key in requested}
         for start in range(0, len(requested), BATCH_SIZE):
             batch = requested[start : start + BATCH_SIZE]
             words = list(dict.fromkeys(lemma for lemma, _ in batch))
-            slots = ",".join("?" for _ in words)
-            rows = conn.execute(f"SELECT * FROM dmklinger_uk_en WHERE word IN ({slots}) ORDER BY id", words).fetchall()
+            rows = [row for word in words for row in self._gloss_index.get(unstressed_headword(word), [])]
             for key in batch:
                 labelled = [
                     row
                     for row in rows
-                    if row["word"] == key[0]
+                    if unstressed_headword(row["word"]) == unstressed_headword(key[0])
                     and row["pos"] == {"prep": "preposition", "conj": "conjunction"}.get(key[1])
                 ]
                 result[key] = [
                     dict(row)
                     for row in rows
-                    if row["word"] == key[0]
+                    if unstressed_headword(row["word"]) == unstressed_headword(key[0])
                     and row["pos"] in GLOSS_POS.get(key[1], (key[1],))
                     and not (key[1] in ALPHABET_GUARD_POS and is_alphabet_letter_gloss(dict(row)))
                     and not has_incompatible_function_label(dict(row), key[1])

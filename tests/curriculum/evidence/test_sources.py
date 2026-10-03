@@ -194,10 +194,15 @@ def test_kaikki_exact_readonly_and_alignment(synthetic_kaikki_side_db):
         with pytest.raises(sqlite3.OperationalError, match="readonly"):
             api._kaikki_conn.execute("DELETE FROM kaikki")
     assert sources.aligned_kaikki_gloss(result.raw["вона"], "noun", True) == (
-        "she (person); it (feminine gender)",
         None,
+        codes.GLOSS_SENSE_UNRESOLVED,
     )
-    assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (None, "kaikki_multi_pos")
+    # A mixed preposition cannot resolve without a corroborated primary
+    # dmklinger sense; the shared selector reports the record-level gap.
+    assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (
+        None,
+        codes.GLOSS_SENSE_UNRESOLVED,
+    )
     assert sources.aligned_kaikki_gloss(result.raw["вона"], "verb", False) == (None, "kaikki_pos_mismatch")
     assert sources.aligned_kaikki_gloss(result.raw["synthetic-absent"], "noun", True) == (None, "kaikki_absent")
 
@@ -237,10 +242,9 @@ def test_kaikki_refuses_entire_entry_if_one_gloss_is_malformed():
     payload = {"pos": ["prep"], "glosses": ["under", "bad)"]}
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
     payload["glosses"] = ["under (a roof)", 'beneath "something" [figurative]']
-    assert sources.aligned_kaikki_gloss(payload, "prep", False) == (
-        'under (a roof); beneath "something" [figurative]',
-        None,
-    )
+    # A second sense, even restricted, prevents sole-source emission.
+    # Malformed siblings above still invalidate the whole source payload.
+    assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, codes.GLOSS_SENSE_UNRESOLVED)
 
 
 def test_missing_kaikki_fails_closed_with_named_code(tmp_path):

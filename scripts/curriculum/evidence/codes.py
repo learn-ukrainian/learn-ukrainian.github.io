@@ -20,6 +20,9 @@ BOT_BLOCKED = "bot_blocked"
 DEAD_LINK = "dead_link"
 UNVERIFIABLE = "unverifiable"
 GLOSS_MISMATCH = "gloss_mismatch"
+GLOSS_MISSING = "gloss_missing"
+GLOSS_SENSE_UNRESOLVED = "gloss_sense_unresolved"
+GLOSS_NOT_LEARNER_SENSE = "gloss_not_learner_sense"
 CEFR_MISMATCH = "cefr_mismatch"
 SPAN_MISMATCH = "span_mismatch"
 UNSUPPORTED_DROPPED = "unsupported_dropped"
@@ -58,6 +61,9 @@ DESCRIPTIONS = {
     DEAD_LINK: "failure: the link returned HTTP 404/410",
     UNVERIFIABLE: "failure: link liveness could not be verified after bounded retries",
     GLOSS_MISMATCH: "failure: stored gloss differs from the source",
+    GLOSS_MISSING: "failure: a cited learner word has no gloss",
+    GLOSS_SENSE_UNRESOLVED: "failure: source candidates do not settle the learner meaning",
+    GLOSS_NOT_LEARNER_SENSE: "failure: stored gloss exceeds the learner-sense bound",
     CEFR_MISMATCH: "failure: stored CEFR level differs from the source",
     SPAN_MISMATCH: "failure: span does not match source chunk exactly once",
     UNSUPPORTED_DROPPED: "failure: unsupported id from previous build dropped",

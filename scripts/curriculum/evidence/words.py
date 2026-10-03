@@ -503,37 +503,28 @@ def build_words(
             if exact_cefr and exact_cefr.get("level") in {"A1", "A2", "B1", "B2", "C1", "C2"}:
                 word_doc["cefr"] = cefr_field(exact_cefr)
 
-            # Gloss: first translation of matching row
-            gloss_rows = sources.filter_pronominal_gloss_rows(
-                gloss_batch.get((lemma, pos), []), lemma, pos, pronoun_entry
+            selection = sources.select_gloss(
+                word_doc,
+                gloss_batch.get((lemma, pos), []),
+                kaikki_batch.get(lemma),
+                pronoun_entry=pronoun_entry,
+                ulif_entries=ulif_batch.get(lemma, []),
             )
-            if gloss_rows:
-                first_row = gloss_rows[0]
-                raw_trans = first_row.get("translations", "")
-                if isinstance(raw_trans, str):
-                    try:
-                        parsed_trans = json.loads(raw_trans)
-                    except Exception:
-                        parsed_trans = [raw_trans]
-                else:
-                    parsed_trans = raw_trans
-                if parsed_trans and isinstance(parsed_trans, list) and len(parsed_trans) > 0:
-                    first_str = str(parsed_trans[0])
-                    if first_str:
-                        word_doc["gloss_en"] = first_str
-                        word_doc["gloss_source"] = "dmklinger_uk_en"
-                        word_doc["gloss_ref"] = {
-                            "table": "dmklinger_uk_en",
-                            "id": first_row["id"],
-                            "row_sha256": sources.row_digest(first_row),
-                        }
-            if "gloss_en" not in word_doc:
-                kaikki_gloss, reason = sources.aligned_kaikki_gloss(kaikki_batch.get(lemma), pos, pronoun_entry)
-                if kaikki_gloss is not None:
-                    word_doc["gloss_en"] = kaikki_gloss
-                    word_doc["gloss_source"] = "kaikki_wiktionary"
-                else:
-                    unglossed.append({"lemma": lemma, "pos": pos, "reason": reason})
+            if selection.gloss is not None:
+                word_doc["gloss_en"] = selection.gloss
+                word_doc["gloss_source"] = selection.source
+                if selection.ref is not None:
+                    word_doc["gloss_ref"] = selection.ref
+            else:
+                unglossed.append(
+                    {
+                        "lemma": lemma,
+                        "pos": pos,
+                        "reason": selection.reason,
+                        "word_id": word_id,
+                        "candidates": list(selection.candidates),
+                    }
+                )
 
             # Russian shadow & heritage
             pat = ru_patterns_raw.get(lemma, {})
