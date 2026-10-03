@@ -175,6 +175,31 @@ def lock_refusal(exc: WorktreeLockError) -> str:
     return LOCK_UNAVAILABLE
 
 
+def existing_worktree_lock_refusal(path: Path, *, lock_dir: Path) -> str | None:
+    """Observe a preparation/attachment lock without creating any plan-time files.
+
+    Dispatch's lock files are never unlinked, so a missing file means there is
+    no holder at this instant. Apply still acquires the full lock and rechecks.
+    """
+    try:
+        _, lock_file = lock_path(path, lock_dir=lock_dir)
+        fd = os.open(lock_file, os.O_RDONLY | os.O_CLOEXEC)
+    except FileNotFoundError:
+        return None
+    except (OSError, WorktreeLockError):
+        return LOCK_UNAVAILABLE
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return LOCK_BUSY
+        except OSError:
+            return LOCK_UNAVAILABLE
+        return None
+    finally:
+        os.close(fd)
+
+
 def resolve_claim_path(raw_path: str, *, repo_root: Path) -> Path:
     """Resolve a recorded ``worktree_path`` the way dispatch resolves ``--worktree``."""
     path = Path(raw_path).expanduser()
@@ -250,11 +275,17 @@ def active_worktree_claim_refusal(
     owner_task_id: str | None = None,
     owner_state_file: Path | None = None,
     settled_claim: Callable[[dict[str, Any]], bool] | None = None,
+    review_inputs_only: bool = False,
 ) -> str | None:
     """Return a skip reason when an unfinished task record still claims ``worktree``.
 
     A task record whose status is not in :data:`RELEASED_TASK_STATUSES` and
     whose ``worktree_path`` resolves to the same checkout blocks removal.
+    Its ``review_contract.input_root`` also claims every overlapping checkout,
+    including when the input root is a subdirectory or spelled through a symlink.
+    Review input claims are never exempted as owner or settled claims; only a
+    terminal status releases them. ``review_inputs_only`` lets plan-time callers
+    preserve these inputs without changing their existing dispatch-owner rules.
     Claims are resolved relative to ``repo_root``, exactly as dispatch
     resolves ``--worktree``. The owner's canonical record is exempt only after
     its embedded task ID and non-empty run nonce establish the run identity.
@@ -314,6 +345,24 @@ def active_worktree_claim_refusal(
         claimed_path = record.get("worktree_path") if isinstance(record, dict) else None
         if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
             return refused(state_file, "unreadable")
+        status = record.get("status")
+        if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
+            continue
+        contract = record.get("review_contract")
+        if contract is not None:
+            if not isinstance(contract, dict):
+                return refused(state_file, "unreadable")
+            input_root = contract.get("input_root")
+            if not isinstance(input_root, str) or not input_root.strip():
+                return refused(state_file, "unreadable")
+            try:
+                inputs = resolve_claim_path(input_root, repo_root=repo_root)
+            except (OSError, RuntimeError, ValueError):
+                return refused(state_file, "unreadable")
+            if inputs.is_relative_to(target) or target.is_relative_to(inputs):
+                return f"review input root claimed by active task {record.get('task_id') or state_file.stem}"
+        if review_inputs_only:
+            continue
         if (
             owner_identity is not None
             and state_file == owner_identity[0]
@@ -322,9 +371,6 @@ def active_worktree_claim_refusal(
         ):
             continue
         if not claimed_path:
-            continue
-        status = record.get("status")
-        if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
             continue
         try:
             claimed = resolve_claim_path(claimed_path, repo_root=repo_root)
@@ -499,14 +545,18 @@ def git_worktree_remove(
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
-        proc = git_runner(repo_root, argv[1:]) if git_runner is not None else subprocess.run(
-            argv,
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=sanitized_git_env(),
-            timeout=bound,
+        proc = (
+            git_runner(repo_root, argv[1:])
+            if git_runner is not None
+            else subprocess.run(
+                argv,
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=sanitized_git_env(),
+                timeout=bound,
+            )
         )
     except subprocess.TimeoutExpired:
         return f"git worktree remove timed out after {bound:g}s"

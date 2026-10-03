@@ -10291,6 +10291,40 @@ def _review_attempt_prompt_admission(
         return f"❌ review attempt refused: prompt_render_invalid: {type(err).__name__}", None
 
 
+def _lock_review_input_root(
+    contract: dict[str, Any],
+    locks: contextlib.ExitStack,
+    *,
+    locked_worktree: Path | None = None,
+) -> None:
+    """Protect input preparation until the task's persisted contract takes over (#9485).
+
+    Use the containing registered checkout's removal lock, rather than an input
+    subdirectory's lock. The dispatch stack releases it on every early return or
+    exception, and the kernel releases it on process exit; no git lock leaks.
+    """
+    input_root = Path(contract["input_root"]).resolve()
+    if not input_root.is_dir():
+        raise ValueError("review input root disappeared before preparation")
+    # Reuse eligibility excludes ACP runtime checkouts. Reading one still
+    # requires its removal lock, so consult registration directly here.
+    wc = _load_worktree_containment()
+    try:
+        main_root = wc.resolve_main_root(input_root)
+    except wc.NotAGitRepositoryError:
+        return
+    registered = wc.registered_worktrees(main_root)
+    if not registered:
+        raise ValueError("review input worktree registration unavailable")
+    input_worktree = next((tree for tree in registered if tree != main_root and input_root.is_relative_to(tree)), None)
+    if input_worktree is None:
+        return
+    if locked_worktree is None or input_worktree != locked_worktree.resolve():
+        locks.enter_context(worktree_lock(input_worktree))
+    if not input_root.is_dir() or input_worktree not in wc.registered_worktrees(main_root):
+        raise ValueError("review input worktree disappeared while dispatch waited for its lock")
+
+
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     # The stack owns the worktree lock taken before create-or-attach. Dispatch
@@ -11497,24 +11531,6 @@ def _dispatch(
             print(f"❌ {admission_refusal}", file=sys.stderr)
             return _ADMISSION_REFUSED_EXIT
 
-    if review_attempt and review_access != "full":
-        from scripts.agent_runtime.review_mcp import prepare_review_attempt
-
-        effective_harness = requested_harness or dispatch_agent
-        try:
-            review_plan = prepare_review_attempt(
-                review_id=review_id,
-                attempt_id=attempt_id,
-                manifest_path=Path(review_attempt),
-                harness=effective_harness,
-                review_access=review_access,
-                # Launch-time check (#9163): the primary may have changed since admission.
-                review_contract=review_contract,
-            )
-        except (ValueError, FileExistsError) as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
@@ -11713,14 +11729,16 @@ def _dispatch(
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
 
-    if review_attempt and review_access == "full":
+    if review_attempt:
         from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
         from scripts.agent_runtime.review_mcp import prepare_review_attempt
         from scripts.review.isolation import ReviewIsolationError
 
         try:
+            _lock_review_input_root(review_contract, worktree_locks, locked_worktree=worktree_path)
             # A refused tree must not reserve the attempt id or create its ledger.
-            verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
+            if review_access == "full":
+                verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
             review_plan = prepare_review_attempt(
                 review_id=review_id,
                 attempt_id=attempt_id,
@@ -11729,7 +11747,7 @@ def _dispatch(
                 review_access=review_access,
                 review_contract=review_contract,
             )
-        except (ReviewIsolationError, ValueError, FileExistsError) as exc:
+        except (ReviewIsolationError, ValueError, FileExistsError, WorktreeLockError) as exc:
             stdout_fd.close()
             stderr_fd.close()
             if worktree_path is not None and worktree_telemetry.get("reused") is False:
