@@ -34,7 +34,7 @@ _REDIRECTED_WORKTREE_RE = re.compile(
     re.IGNORECASE,
 )
 _DANGEROUS_CONFIG_RE = re.compile(
-    r"(\b(clean|smudge|process|command|textconv|fsmonitor|hookspath|sshcommand|askpass|editor|pager|helper|driver|cmd|promisor|partialclone|uploadpack|receivepack)\s*=|\bext::|\bprotocol\.[^.\s]+\.allow\s*=)",
+    r"(\b(clean|smudge|process|command|textconv|fsmonitor|hookspath|sshcommand|askpass|editor|pager|helper|driver|cmd|promisor|partialclone|uploadpack|receivepack|trustctime|checkstat)\s*=|\bext::|\bprotocol\.[^.\s]+\.allow\s*=)",
     re.IGNORECASE,
 )
 
@@ -429,6 +429,10 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
             "core.alternateRefsCommand=",
             "-c",
             "core.attributesFile=/dev/null",
+            "-c",
+            "core.trustctime=true",
+            "-c",
+            "core.checkStat=default",
         ]
         try:
             toplevel_proc = subprocess.run(
@@ -453,9 +457,9 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     f"expected directory ({source.resolve()}): {name}; refusing removal"
                 )
 
-            # Check for gitlinks (mode 160000) in the index before running git status
+            # Check for gitlinks (mode 160000) and verify tracked file contents independently
             stage_proc = subprocess.run(
-                [*git_cmd, "ls-files", "--stage"],
+                [*git_cmd, "ls-files", "--stage", "-z"],
                 cwd=source,
                 capture_output=True,
                 env=env,
@@ -466,14 +470,19 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 err = stage_proc.stderr.decode("utf-8", "replace").strip()
                 raise ValueError(f"artifact is an invalid nested git repository ({err}): {name}")
 
-            for raw_line in stage_proc.stdout.decode("utf-8", "replace").splitlines():
-                line = raw_line.strip()
-                if line.startswith("160000 "):
+            stage_entries: list[tuple[bytes, bytes, bytes]] = []
+            for entry in stage_proc.stdout.split(b"\0"):
+                if not entry:
+                    continue
+                meta, path_b = entry.split(b"\t", 1)
+                mode_b, sha_b, _stage_b = meta.split(b" ")
+                if mode_b == b"160000":
                     raise ValueError(
                         f"artifact is a nested git repository with unverified submodules "
                         f"({file_count} files, {total_size} bytes): {name}; "
                         f"submodules must not be discarded without independent verification"
                     )
+                stage_entries.append((mode_b, sha_b, path_b))
 
             head_proc = subprocess.run(
                 [*git_cmd, "rev-parse", "--verify", "HEAD"],
@@ -548,16 +557,15 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
 
             dirty_lines: list[str] = []
             for raw_line in status_proc.stdout.decode("utf-8", "replace").splitlines():
-                line = raw_line.strip()
-                if not line:
+                if not raw_line or len(raw_line) < 3:
                     continue
-                code = line[:2]
-                path_str = line[3:].strip()
+                code = raw_line[:2]
+                path_str = raw_line[3:].strip()
                 if code == "!!":
                     parts = Path(path_str).parts
                     if any(part in _DISPOSABLE_DIRECTORIES for part in parts):
                         continue
-                dirty_lines.append(line)
+                dirty_lines.append(raw_line.strip())
 
             if dirty_lines:
                 dirty_summary = ", ".join(dirty_lines[:3]) + ("..." if len(dirty_lines) > 3 else "")
@@ -566,6 +574,52 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                     f"({file_count} files, {total_size} bytes; uncommitted: {dirty_summary}): {name}; "
                     f"uncommitted work must not be discarded"
                 )
+
+            for mode_b, sha_b, path_b in stage_entries:
+                rel_path = os.fsdecode(path_b)
+                target_path = source / path_b.decode("utf-8", "surrogateescape")
+                if mode_b in (b"100644", b"100755"):
+                    if not target_path.is_file() or target_path.is_symlink():
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted or missing tracked files "
+                            f"({file_count} files, {total_size} bytes; missing: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
+                    try:
+                        content = target_path.read_bytes()
+                    except OSError as exc:
+                        raise ValueError(f"artifact tracked file unreadable ({exc}): {name}") from exc
+                    header = f"blob {len(content)}\0".encode("ascii")
+                    hasher = hashlib.sha256() if len(sha_b) == 64 else hashlib.sha1()
+                    hasher.update(header)
+                    hasher.update(content)
+                    if hasher.hexdigest().encode("ascii") != sha_b:
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted tracked changes "
+                            f"({file_count} files, {total_size} bytes; modified: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
+                elif mode_b == b"120000":
+                    if not target_path.is_symlink():
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted tracked changes "
+                            f"({file_count} files, {total_size} bytes; modified symlink: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
+                    try:
+                        target = os.readlink(target_path).encode("utf-8", "surrogateescape")
+                    except OSError as exc:
+                        raise ValueError(f"artifact tracked symlink unreadable ({exc}): {name}") from exc
+                    header = f"blob {len(target)}\0".encode("ascii")
+                    hasher = hashlib.sha256() if len(sha_b) == 64 else hashlib.sha1()
+                    hasher.update(header)
+                    hasher.update(target)
+                    if hasher.hexdigest().encode("ascii") != sha_b:
+                        raise ValueError(
+                            f"artifact is a nested git repository with uncommitted tracked changes "
+                            f"({file_count} files, {total_size} bytes; modified symlink: {rel_path}): {name}; "
+                            f"uncommitted work must not be discarded"
+                        )
 
             rev_list_args = [*git_cmd, "rev-list", "--all", "--reflog"]
             if head_proc.returncode == 0:

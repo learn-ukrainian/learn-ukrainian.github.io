@@ -1146,3 +1146,52 @@ def test_ignored_artifact_nested_repo_global_clean_filter_rejected_without_execu
     assert "uncommitted or ignored changes" in reason
     assert not marker.exists(), "global clean filter was executed!"
     assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_trustctime_config_rejected(checkout):
+    """P1: nested repository with core.trustctime configured is rejected before deletion advice."""
+    repo_dir = checkout[0] / "batch_state/reports/trustctime_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "config", "core.trustctime", "false"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "file.txt").write_text("hello\n")
+    subprocess.run(["git", "add", "file.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "executable or filter configuration" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_same_mtime_modified_bytes_rejected_without_deletion_advice(checkout, tmp_path):
+    """P1: modified tracked bytes with restored mtime are verified independently and never recommended for deletion."""
+    import time
+
+    upstream = tmp_path / "upstream_same_mtime"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/stat_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    probe = repo_dir / "probe.txt"
+    probe.write_text("original bytes\n")
+    # Set mtime in past so it is non-racy with index timestamp
+    past = time.time() - 100
+    os.utime(probe, (past, past))
+    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    st = probe.stat()
+    with open(probe, "r+b") as fp:
+        fp.write(b"modified bytes\n")
+    os.utime(probe, ns=(st.st_atime_ns, st.st_mtime_ns))
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert (
+        "uncommitted tracked changes" in reason
+        or "uncommitted or ignored changes" in reason
+    )
+    assert "clear with: rm -rf" not in reason
