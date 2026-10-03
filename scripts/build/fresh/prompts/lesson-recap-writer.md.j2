@@ -65,7 +65,10 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 
 ### Activities
 {% for act in plan_entry.activities %}
-- `{{ act.id }}`: type: `{{ act.type }}`, placement: `{{ act.placement }}`, focus: {{ act.focus }}{% if act.error_refs is defined and act.error_refs %}, error_refs: {{ act.error_refs | join(', ') }}{% endif %}{% if act.model is defined and act.model %}, model: {{ act.model }}{% endif %}
+- `{{ act.id }}`: type: `{{ act.type }}`, placement: `{{ act.placement }}`, focus: {{ act.focus }}{% if act.error_refs is defined and act.error_refs %}, error_refs: {{ act.error_refs | join(', ') }}{% endif %}{% if act.model is defined and act.model %}, model: {{ act.model }}{% endif %}{% if act.targets is defined %}
+  - Binding targets: {{ act.targets | tojson }}. Scored keys and word target_record values come from these records; unscored presentations use these words. Distractors and excluded words are not targets. An empty list has no word targets; focus cannot override this declaration.{% endif %}{% if act.options is defined %}
+  - Binding options: {{ act.options | tojson }}. Use only this closed pool for Cyrillic printed choices, preserving NFC and exact case; item subsets and permutations are allowed. Focus and recordings cannot expand the pool.{% endif %}{% if act.learner_reads is defined %}
+  - Binding learner_reads: {{ act.learner_reads | tojson }}. The learner reads only this declared pack print (the complete record for an id, or its selected words); teacher framing and focus cannot expand it.{% endif %}
 {% endfor %}
 
 ### Inventory

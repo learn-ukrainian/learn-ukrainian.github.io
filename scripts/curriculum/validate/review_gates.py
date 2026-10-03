@@ -7,8 +7,8 @@ URLs, quote bytes), the level word store, the arc and the earlier plans — so a
 plan with the defect fails before a reviewer is spent. C1–C6 come from the
 first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 from the fourth.
 
-  C1  a word id named in a dialogue's target_grammar, or in the focus of an activity in a
-      step's practice, that is introduced after that step or is outside the lesson's allowed set (note)
+  C1  a declared activity target unknown, introduced after its earliest linking step (else lesson end),
+      or outside the lesson's allowed set (failure); dialogue target_grammar and legacy focus candidates (note)
   C2  two or more activities of one lesson carry the same focus text (failure)
   C3  a listening activity whose cited videos model exactly one target, so every item has
       the same key (failure)
@@ -40,12 +40,13 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
   C16 an incidental record named by no step, activity or dialogue of its lesson (note)
   C17 a lesson video whose printed Ресурси description carries pipeline wording, or names a step that does not
       cite the video (failure)
-  C18 in a letter-stage module, a word in a fill-in or quiz focus with a letter not taught through its lesson and
-      modelled by no recording the lesson cites (note)
+  C18 in a letter-stage module, a declared option with an untaught letter at the activity step (failure,
+      no recording exemption); legacy fill-in/quiz focus candidates (note)
   C19 in a letter-stage module, an example sentence cited in a lesson that cannot read it (failure); one first
       cited later than the lesson that could read it (note)
   C20 a cited video that models words but binds no segment (failure)
-  C21 in a letter-stage module, a step (or an activity focus) that sends the learner to the exact print of a record
+  C21 non-printable learner_reads refs or absent word selectors (failure); declared learner print with
+      untaught letters at the activity step (failure); legacy step/activity directives to the exact print of a record
       holding words with letters not taught by that step (failure); the same when the text says the teacher reads
       the instruction without naming its words and does not bound what the learner reads (note)
   C22 three or more choice activities of one lesson on the same two-member key set (failure); two (note)
@@ -54,7 +55,7 @@ first reviews, C7–C14 from the second, C15–C20 from the third, C21–C28 fro
       word (note)
   C24 a rationale or job that says the lesson recycles a category of word records none of which it recycles (failure)
   C25 a practice step with no practice, need, dialogue or paradigm (failure)
-  C26 a comprehension activity naming a W- id the word store lacks (failure), or a word its quote and recording
+  C26 a declared comprehension target (else a legacy focus W- id) the word store lacks (failure), or a word its quote and recording
       hosts do not hold (failure); the same when a host holds a transcription that may show it, or when the plan
       does not decide it: an ambiguous sentence, an unresolvable or sibling's host (note)
   C27 in a letter-stage module, a letter a step introduces that no recording the lesson cites models (failure); the
@@ -66,20 +67,16 @@ second round is in pack-verify (scripts/curriculum/evidence/sources.py, Standard
 
 How exact each gate is:
 
-A gate fails only on input the plan states structurally. A plan activity is ``id``, ``type``, ``placement``,
-``model`` (the pack exercise whose shape it follows, not its items) and free-text ``focus``; a dialogue's
-``target_grammar`` is free text too. So which word an activity scores (C1) and which words it prints as options
-(C18) are stated only in English prose, and reading them from it failed review after review: each phrasing the
-parser learned ("do not score W-201", "the options are …") had a neighbour it misread ("Checks W-201 and do not
-give hints", "The printed options: …", "The teacher never prints the options …"). These two gates therefore report
-every candidate as a note carrying its evidence span (the sentence, quoted «…»), and the plan review decides it;
-making them failures needs structured target and option fields, which is a plan-schema change.
+Activities optionally declare ``targets``, ``options`` and ``learner_reads`` (#9541).
+Presence (including an empty array) makes the corresponding field authoritative;
+C1/C18/C21/C26 never infer that field from focus prose. Legacy absence keeps the
+existing prose path until the PR2 migration. Required/forbidden option policy is
+advisory in PR1. Each structured activity is checked at its earliest linking step,
+otherwise at lesson end; options have no recording exemption.
 
-- C1 reads word ids (``W-<digits>``) in the text; it does not read what the prose does with them. The step a
-  dialogue is presented in is ``dialogue.step``; the activities a step scores are its ``practice`` list. An id that
-  a later step of the same lesson introduces is noted; so is an id that no step up to this one introduces and that
-  is outside the lesson's allowed set (earlier lessons and positions, the base layer, the lesson's incidental,
-  recycled and dialogue-name records). No C1 input is structurally a target, so C1 has no failure.
+- C1 fails unknown, out-of-set or later-introduced ``targets``, for scored and unscored
+  types alike. Without ``targets``, focus candidates and dialogue ``target_grammar``
+  stay notes with their evidence spans, as in #9487.
 - C2 compares focus text after collapsing whitespace.
 - C3 applies to an activity whose focus declares its item kind as ``kind: listening``.
   The keys such an activity can have are the targets its cited videos model
@@ -156,12 +153,15 @@ making them failures needs structured target and option fields, which is a plan-
   taught letter (before it nothing is read). A word a recording the lesson cites models (a store record in its
   models.words) is heard, so it passes. Any other word with an untaught letter is a note: the plan has no option
   field, so whether the word is printed option text, a key, a teacher's spoken translation or a word the focus says
-  is never printed is not read from the prose. No C18 input is structurally an option, so C18 has no failure.
+  is never printed is not read from the prose. Without ``options`` these candidates stay notes.
+  Declared options fail on every untaught letter at the activity step, without recording exemptions.
 - C19 applies to example records (EX-) a step cites: the host is the first lesson citing one. The letters
   taught through a lesson are the arc's earlier positions plus this plan's introductions so far (as C4).
 - C20 reads the pack: a video whose models.words is not empty and whose models.segment is null. A letter
   video may be a whole resource; a word or phrase model inside a whole episode needs the timed segment.
-- C21 reads the sentences that direct modelling or reading a record's exact print ("demonstrates the exact print
+- C21 fails non-printable ``learner_reads`` refs, selections absent from exact print, and
+  untaught letters in declared print at its step. Without the field, C21 reads the sentences that direct
+  modelling or reading a record's exact print ("demonstrates the exact print
   in T-…", "models its exact printed source", "models the exact cited T-… forms"); "read the exact T-036 Ко-ло"
   names words of the record, not its print, so it is not read. The print is the record's printable text in the pack
   (quote, text, items_sample); every Cyrillic word of it must be readable with the letters taught by the step (as
@@ -193,7 +193,8 @@ making them failures needs structured target and option fields, which is a plan-
   claim fails when no record of the category is in the lesson's recycled list, inventory or step vocabulary.
 - C25: a ``practice`` step whose practice list is empty and which has no needs, hosts no dialogue and carries no
   paradigm leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
-- C26 gives every W- id of a comprehension focus exactly one outcome; the outcomes are a total mapping over the
+- C26 gives every declared ``targets`` id (otherwise every W- id of a comprehension focus) exactly one outcome;
+  the outcomes are a total mapping over the
   ids, so no id can pass unseen. An id the word store lacks fails. A word is held when a spelling of its record is a
   token of a resolvable host quote of the activity (also read with spaces removed, for letter-spaced print) or a
   resolvable host video models it; a held word has no finding. The activity's hosts are those declared outside
@@ -245,6 +246,7 @@ _ODD_ONE_OUT = re.compile(r"\bodd\b|\bdiffers?\s+from\b", re.IGNORECASE)
 _ROW_WORD = f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*"
 _ROW = re.compile(rf"\s*{_ROW_WORD}(?:[\s,;]+{_ROW_WORD}){{2,}}[\s,;.]*")
 _ROW_TOKEN = re.compile(_ROW_WORD)
+_PRINT_TOKEN = re.compile(r"[^\W_]+(?:['’ʼ-][^\W_]+)*")
 _SENTENCE_BREAK = re.compile(r"[.;!?](?=\s|$)")
 #: The evidence span of a prose-read finding is its sentence, kept with its closing punctuation.
 _SPAN_BREAK = re.compile(r"(?<=[.;!?])\s+")
@@ -477,8 +479,7 @@ class _C26Context:
     sentences: list[tuple[str, str]]
     #: The activity's own declared hosts, as a message names them.
     where: str
-    #: Spellings the activity's resolvable quote hosts print, and words its resolvable recordings model.
-    printed: set[str]
+    #: Word ids the activity's resolvable recordings model.
     modelled: set[str]
     #: The text of the activity's resolvable quote hosts.
     quotes: list[str]
@@ -506,7 +507,7 @@ _C26_REPORTS: tuple[tuple[str, str], ...] = (
     ),
     (
         codes.COMPREHENSION_TARGET_UNVERIFIED,
-        ", which no host ({where}) prints or models{gaps}; whether this activity's items ask about the word, or what "
+        ", whose presence in the host ({where}) is unverified{gaps}; whether this activity's items ask about the word, or what "
         "its host holds, is not read from the plan, so the plan review confirms every word the items ask about is in "
         "the host",
     ),
@@ -569,6 +570,27 @@ def _strings(value: object) -> list[str]:
     return []
 
 
+def _print_holds(text: str, spelling: str, *, exact: bool = False) -> bool:
+    """Match a complete word or formula as a contiguous token run in printed text.
+
+    Selectors preserve NFC spelling and case; word-record host matching folds case,
+    apostrophes and syllable hyphens, and also accepts letter-spaced host print.
+    Whitespace, including line wrapping, separates tokens without breaking a run.
+    """
+    normalize = (lambda value: value) if exact else _spelling
+    # Latin text/numbers interrupt a run too; they cannot disappear between Cyrillic words.
+    wanted = [normalize(token) for token in _PRINT_TOKEN.findall(_nfc(spelling))]
+    if not wanted:
+        return False
+    text = _nfc(text)
+    variants = (text,) if exact else (text, _LETTER_SPACED.sub(lambda match: match.group(0).replace(" ", ""), text))
+    for variant in variants:
+        tokens = [normalize(token) for token in _PRINT_TOKEN.findall(variant)]
+        if any(tokens[i : i + len(wanted)] == wanted for i in range(len(tokens) - len(wanted) + 1)):
+            return True
+    return False
+
+
 def _spelling(text: str) -> str:
     """A spelling as C16 compares it: case-folded, one apostrophe, syllable hyphens removed."""
     return text.translate(_APOSTROPHES).casefold().replace("-", "")
@@ -599,6 +621,14 @@ class ReviewGates(Gates):
         failing = self.strict and not self.vesum_declared_unavailable
         (self.report.failures if failing else self.report.not_checked).append(outcome)
 
+    @staticmethod
+    def _activity_step(lesson: dict, activity_id: str) -> str | None:
+        """Earliest linking step, otherwise the lesson end, including unlinked activities."""
+        return next(
+            (step["id"] for step in lesson["steps"] if activity_id in (step.get("practice") or [])),
+            lesson["steps"][-1]["id"] if lesson["steps"] else None,
+        )
+
     # -- C1 -------------------------------------------------------------------
 
     def check_named_before_introduction(self) -> None:
@@ -625,7 +655,7 @@ class ReviewGates(Gates):
                 )
             for position, step in enumerate(steps):
                 for activity_id in step.get("practice") or []:
-                    if activity_id in activities:
+                    if activity_id in activities and "targets" not in activities[activity_id]:
                         sources.append(
                             (
                                 f"activity {activity_id} focus (practice of step {step['id']})",
@@ -635,6 +665,29 @@ class ReviewGates(Gates):
                         )
 
             allowed: set[str] | None = None
+            for activity in activities.values():
+                if "targets" not in activity:
+                    continue
+                step_id = self._activity_step(lesson, activity["id"])
+                position = order.get(step_id, len(steps))
+                for item in activity["targets"]:
+                    reason = None
+                    if item not in self.store.records:
+                        reason = "the level word store does not hold it"
+                    elif introduced_at.get(item, -1) > position:
+                        reason = f"step {steps[introduced_at[item]]['id']} introduces it later"
+                    else:
+                        if allowed is None:
+                            allowed = self.allowed_ids(index, "C1")
+                        if allowed is not None and item not in allowed:
+                            reason = "it is outside the lesson's allowed set"
+                    if reason:
+                        self.fail(
+                            codes.TARGET_NOT_AVAILABLE,
+                            f"activity {activity['id']} targets {item}: {reason} (#9541 C1)",
+                            lesson["n"],
+                            step_id,
+                        )
             for where, position, text in sources:
                 later, unknown = [], []
                 for item in _ids(_WORD_ID, text):
@@ -1315,8 +1368,11 @@ class ReviewGates(Gates):
             lesson
             for lesson in self.plan["lessons"]
             if any(
-                activity["type"] in _CHOICE_TYPES
-                and any(len(_word_letters(token)) >= 2 for token in _ROW_TOKEN.findall(activity["focus"]))
+                "options" in activity
+                or (
+                    activity["type"] in _CHOICE_TYPES
+                    and any(len(_word_letters(token)) >= 2 for token in _ROW_TOKEN.findall(activity["focus"]))
+                )
                 for activity in lesson.get("activities") or []
             )
         ]
@@ -1324,13 +1380,25 @@ class ReviewGates(Gates):
             return  # no choice focus prints a word, or not a letter stage (or its arc is unavailable)
         for lesson in lessons:
             taught = self.taught_through[lesson["n"]]
-            if not taught:
-                continue  # before the first taught letter nothing is read
             videos = [entry["evidence"] for entry in lesson.get("videos") or []]
             videos += [item for step in lesson["steps"] for item in step.get("evidence") or [] if item.startswith("V-")]
             modelled = self._modelled(videos)
+            taught_at = self._taught_at_steps(lesson)
             for activity in lesson.get("activities") or []:
-                if activity["type"] not in _CHOICE_TYPES:
+                if "options" in activity:
+                    step_id = self._activity_step(lesson, activity["id"])
+                    at = taught_at.get(step_id, taught)
+                    missing = [option for option in activity["options"] if not self._readable(option, at)]
+                    if missing:
+                        self.fail(
+                            codes.CHOICE_OPTION_NOT_DECODABLE,
+                            f"activity {activity['id']} options {self._needs(missing, at)} need untaught "
+                            f"letters at step {step_id}; recordings do not exempt print (#9541 C18)",
+                            lesson["n"],
+                            step_id,
+                        )
+                    continue
+                if not taught or activity["type"] not in _CHOICE_TYPES:
                     continue
                 focus = _nfc(activity["focus"])
                 words = [
@@ -1432,23 +1500,64 @@ class ReviewGates(Gates):
     # -- C21 ------------------------------------------------------------------
 
     def check_modeled_print_decodable(self) -> None:
+        declared: list[tuple[dict, dict, str, list[str]]] = []
+        for lesson in self.plan["lessons"]:
+            for activity in lesson.get("activities") or []:
+                for selection in activity.get("learner_reads", []):
+                    ref = selection if isinstance(selection, str) else selection["ref"]
+                    step_id = self._activity_step(lesson, activity["id"])
+                    if ref not in self.pack.record_texts:
+                        self.fail(
+                            codes.LEARNER_READ_REF_NOT_PRINTABLE,
+                            f"activity {activity['id']} learner_reads {ref}: no printable pack text (#9541 C21)",
+                            lesson["n"],
+                            step_id,
+                        )
+                        continue
+                    text = _STRESS_MARKS.sub("", _nfc(self.pack.record_texts[ref]))
+                    words = _ROW_TOKEN.findall(text) if isinstance(selection, str) else selection["words"]
+                    if isinstance(selection, dict):
+                        for word in words:
+                            if not _print_holds(text, word, exact=True):
+                                self.fail(
+                                    codes.LEARNER_READ_WORD_NOT_IN_PRINT,
+                                    f"activity {activity['id']} learner_reads {ref}: {word!r} is not in its "
+                                    "exact print (#9541 C21)",
+                                    lesson["n"],
+                                    step_id,
+                                )
+                    declared.append((lesson, activity, ref, words))
         directed = any(
             _MODELED_PRINT.search(text)
             for lesson in self.plan["lessons"]
-            for text in [*(step.get("teach") or "" for step in lesson["steps"]), *_focuses(lesson)]
+            for text in [
+                *(step.get("teach") or "" for step in lesson["steps"]),
+                *(activity["focus"] for activity in lesson.get("activities", []) if "learner_reads" not in activity),
+            ]
         )
-        if not directed or self.letter_state_or_skip("C21", True) is None or self.taught_before is None:
+        if not (directed or declared) or self.letter_state_or_skip("C21", True) is None or self.taught_before is None:
             return
+        for lesson, activity, ref, words in declared:
+            step_id = self._activity_step(lesson, activity["id"])
+            taught = self._taught_at_steps(lesson).get(step_id, self.taught_through[lesson["n"]])
+            missing = [word for word in words if not self._readable(word, taught)]
+            if missing:
+                self.fail(
+                    codes.MODELED_PRINT_NOT_DECODABLE,
+                    f"activity {activity['id']} learner_reads {ref}: {self._needs(missing, taught)} needs "
+                    f"untaught letters at step {step_id} (#9541 C21)",
+                    lesson["n"],
+                    step_id,
+                )
         for lesson in self.plan["lessons"]:
             taught_at = self._taught_at_steps(lesson)
-            linked_at = {item: step["id"] for step in lesson["steps"] for item in step.get("practice") or []}
-            last = lesson["steps"][-1]["id"] if lesson["steps"] else None
             sources = [
                 (f"step {step['id']} teach text", step["id"], step.get("teach") or "") for step in lesson["steps"]
             ]
             sources += [
-                (f"activity {activity['id']} focus", linked_at.get(activity["id"], last), activity["focus"])
+                (f"activity {activity['id']} focus", self._activity_step(lesson, activity["id"]), activity["focus"])
                 for activity in lesson.get("activities") or []
+                if "learner_reads" not in activity
             ]
             reported: set[tuple[str, str]] = set()  # (step, record): an activity repeating its step's list adds nothing
             for where, step_id, text in sources:
@@ -1696,7 +1805,11 @@ class ReviewGates(Gates):
         for lesson in self.plan["lessons"]:
             for activity in self._comprehension(lesson):
                 context = self._comprehension_context(lesson, activity)
-                outcomes = self._comprehension_target_outcomes(context)
+                outcomes = (
+                    {item: self._comprehension_target(item, context, structured=True) for item in activity["targets"]}
+                    if "targets" in activity
+                    else self._comprehension_target_outcomes(context)
+                )
                 gaps = "".join(f"; {gap}" for gap in context.host_gaps)
                 for code, ending in _C26_REPORTS:
                     entries = [entry for item_code, entry in outcomes.values() if item_code == code]
@@ -1736,13 +1849,6 @@ class ReviewGates(Gates):
             if (kind == "quote" and ref in self.pack.quotes) or (kind == "video" and ref in self.pack.video_models)
         ]
         quotes = [_STRESS_MARKS.sub("", _nfc(self.pack.quotes[ref])) for kind, ref in resolvable if kind == "quote"]
-        # A letter-spaced word ("л ю п и н") is read with its spaces removed as well.
-        printed = {
-            _spelling(token)
-            for text in quotes
-            for variant in (text, _LETTER_SPACED.sub(lambda match: match.group(0).replace(" ", ""), text))
-            for token in _ROW_TOKEN.findall(variant)
-        }
         modelled = self._modelled([ref for kind, ref in resolvable if kind == "video"])
         host_gaps = []
         if unresolved := [host for host in own if host not in resolvable]:
@@ -1758,7 +1864,11 @@ class ReviewGates(Gates):
                 "activity, so whether it is this activity's host is not read from prose"
             )
         where = ", ".join(_host_label(host) for host in own) or "none"
-        return _C26Context(focus, sentences, where, printed, modelled, quotes, host_gaps)
+        if "targets" in activity:
+            # Only drafted dialogue content is undecidable for declared targets. Unresolvable,
+            # absent or sibling-only hosts cannot shelter a structured declaration.
+            host_gaps = ["the dialogue is drafted by the writer"] if any(kind == "dialogue" for kind, _ in own) else []
+        return _C26Context(focus, sentences, where, modelled, quotes, host_gaps)
 
     def _comprehension_target_outcomes(self, context: _C26Context) -> dict[str, tuple[str | None, str]]:
         """W- id -> (its C26 outcome code, None when a host holds the word; its entry in the message) for every W- id
@@ -1768,20 +1878,27 @@ class ReviewGates(Gates):
         which returns an outcome on every path, so no id can end without one."""
         return {item: self._comprehension_target(item, context) for item in _ids(_WORD_ID, context.focus)}
 
-    def _comprehension_target(self, item: str, context: _C26Context) -> tuple[str | None, str]:
+    def _comprehension_target(
+        self, item: str, context: _C26Context, *, structured: bool = False
+    ) -> tuple[str | None, str]:
         """The C26 outcome of one W- id of a comprehension focus: never absent."""
-        holding = [(sentence, why) for sentence, why in context.sentences if item in _WORD_ID.findall(sentence)]
-        plain = [sentence for sentence, why in holding if not why]
-        # Splitting at sentence ends never splits an id, so holding is never empty; were it, the id would only note.
-        sentence, why = (plain[0], "") if plain else holding[0] if holding else ("", "is not one sentence")
-        span = _span(sentence, item, _WORD_ID)
+        if structured:
+            why, span = "", "targets declaration"
+        else:
+            holding = [(sentence, why) for sentence, why in context.sentences if item in _WORD_ID.findall(sentence)]
+            plain = [sentence for sentence, why in holding if not why]
+            # Sentence splitting never splits an id, so each prose-read id has a holding sentence.
+            sentence, why = (plain[0], "") if plain else holding[0] if holding else ("", "is not one sentence")
+            span = _span(sentence, item, _WORD_ID)
         record = self.store.records.get(item)
         if record is None:
             return codes.COMPREHENSION_TARGET_UNKNOWN, f"{item} in {span}"
         named = f"{item} {record.lemma!r}"
-        if (
-            item in context.modelled
-            or {_spelling(text) for text in (record.lemma, *record.form_texts)} & context.printed
+        if item in context.modelled or any(
+            _print_holds(fragment, spelling)
+            for quote in context.quotes
+            for fragment in re.split(r"\[[^\]]*\]", quote)
+            for spelling in (record.lemma, *record.form_texts)
         ):
             return None, named
         if why or context.host_gaps:

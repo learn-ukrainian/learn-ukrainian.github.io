@@ -1236,3 +1236,180 @@ def test_recap_without_consolidation_renders(sample_plan_entry, sample_learner_s
     prompt = _render(plan, sample_learner_state, ALL_KINDS, recap=True)
     assert "### Consolidation" not in prompt
     assert _check(prompt, plan, sample_learner_state, recap=True).errors == []
+
+
+# Captured from the original templates at 3a26ba5691e0416184e64473b8a38266447722b4.
+# Both templates for all 20 lessons of the promoted A1 plans, with complete cited
+# records, actual plan SHA and planned learner state (40 prompt byte streams).
+LEGACY_A1_PROMPT_SHA256 = {
+    "sounds-letters-and-hello": [
+        "1e74518d429de322aa23c9dfdc395ee4b69ad09e446b866f04208f3f31bb5363",
+        "ec822a0cf270507eb21d25da1da1e6758de72b5a8fa4388b737f38fa6b0d5066",
+        "5e51ec8a0c26a9063ff89756b7f7aa429655cd5b61546ee1c14208ea43080f6d",
+        "b0ff5a00d60dd0462c729398691d602dbce9f5e45bfa8270dfa12d7073047d8d",
+        "6930782aac6a31d68e98076a1b6fe2dd6c4b35150d3c8433cd382f70d4daf108",
+        "ae418e264b77c18a0d6e2b42bc8ba3d5ab7560d8c4a6e9f1be68c4ff3f2e46ee",
+        "5264c1e13ac51f67085e92a118c7fa0aa2170a30b606ff6337c9efd7f1b461b1",
+        "9d179ed0b227f68aeb70bfcce5954b637eb428bbf8e95f4aae04ce44c045febf",
+        "d52400809d01f53c0af5a5d5598f581add43ce90fa9e33495e4cc327721f49d0",
+        "3c9f7d449b2c2f2505fdf724885c8ab60be9692ba62de81b2dc3975c4f4906d1",
+        "324abe2140d2618b8808584d3bac5fdd56006b937e3a13a9a9ba957f59a72971",
+        "0253e71c4a052e25961628cc6c0c480144b18b7e191a323c330f2f9ad38c0429",
+    ],
+    "reading-ukrainian": [
+        "f8cc0af1986fd87208158b778effaf35a9c5b24d31e5fd36e31c510601a3550f",
+        "5d2cf561dac1bdcd96082ecb5c3f8652ab7e06ee074e3d18402f82472a113106",
+        "b4840672bd286a9fc9f153a704fed18406af8afbd06e47de9dd5f55db886c661",
+        "6fb9101517e90a766c0885fe3bcc7c12e3b9927b8f81e0dba72db358b2eac855",
+        "402d25710d6c1821b71557e9980250406b945d99827eb5525ffcf4cf5b10bf65",
+        "275a7a34eb7418e6e73d2d67c5d3c37e73f3b4089e3ef8c3d41d8acc1d418631",
+        "d507c9d0c8ff12d0293dc356fc675a96f8fbcbf46df3cdcbc31bd57b3db56d87",
+        "dfe50fa339c47ff6b1a00f6ec7b62573f6e4e210f589876640abfa4992f41619",
+        "4604d595806c8cdea5184df23971f1616da846a117c8a9097d937f097e4a6401",
+        "2ea5cb082c9178b027eeea708f01744c825b5243c7a3dc4ee021f12c52df110e",
+        "eabac43c16f9fe57550984730d70cb752ca714d6ef9f4cb390b3ce5b410336de",
+        "b393a61e76e8f1824460043e97fc55b53f4497ad5135099ea9e303275ae5bd57",
+    ],
+    "special-signs": [
+        "c458bf25667844a5988fbc6d1c58fefabbc79ba6e6d49cb5d9d22149e832a10e",
+        "e8223fd075b51004e6c1de9dbf984e57bc76fb488d97561eccad86d1aa9be01a",
+        "afc64d7bb0ca66a6208a405c93533c2cf6bd0c2a658a1f8869b64c71a8fdb0d1",
+        "4537bba88be4b4bd1f53c7c5a39ed126c2a0df54f5b68dab78e17291e7c83f4f",
+        "2fcae3a5e2a1a50ad9f9c6175ebaea97f5a993674e0a772c616f215cf0d16ca6",
+        "acb67fad5ccfeeb62918375d5231e66c20fe7fd37fa8e0e47cae1834b0cf53d5",
+        "a23c72b9179cfc5189e6dd6556e92e02616b87917e7562276e6cc8315ffeeea1",
+        "868ead223b9b629f05e5260386e522b8c7ff3dc128a844b5f1b7080b518f556c",
+        "b07cf377f719bd0d1a431a0d314db8e1e9573d1f8d0404c755944003f7a188e9",
+        "70b58a5f985a1c22b61d181775407b73ad4418d6f1bbc29391665a977810fad0",
+        "9b5998d4788501225330a6efbe06483baba872ad05513f7ae241bdfe7095a468",
+        "461441f02aa3f9d5806b96ba47c8fc402eec7e6ab3b73a4efa3f0c18b788793e",
+        "fee77763043b962248d6ca908e1f28a216476d630085c9d4ba59830c5545b49c",
+        "3c1105acea6900a369dbffa4657871ea330bb1a9b64f39e5e419962e34e86f52",
+        "556d4f729e29ebd62981b1506c76f02d0c9ae36084099c0a057c1869717e49bc",
+        "99296cc484b1b1209a6d8ba3dd5a5b2572b1b379c2d1d5894982cb5451095113",
+    ],
+}
+
+
+@pytest.mark.parametrize("slug", LEGACY_A1_PROMPT_SHA256)
+def test_promoted_a1_prompt_bytes_unchanged(slug):
+    from scripts.build.fresh.cli import _load_cited_records
+    from scripts.curriculum.learner_state.planned import planned_state
+
+    plans = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1"
+    plan_path = plans / f"{slug}.yaml"
+    plan = yaml.safe_load(plan_path.read_text())
+    pack = yaml.safe_load((REPO_ROOT / f"curriculum/l2-uk-en/evidence/a1/{slug}.yaml").read_text())
+    words = yaml.safe_load((REPO_ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml").read_text())
+    grammar = grammar_points(plans / "_grammar.yaml", "a1")
+    position = plan["arc_ref"]["position"]
+    hashes = []
+    for lesson in plan["lessons"]:
+        n = lesson["n"]
+        state = planned_state("a1", position, n)
+        common = dict(
+            plan_entry=lesson,
+            cited_records=_load_cited_records(lesson, pack, words),
+            learner_state=state,
+            word_store=words,
+            grammar_registry=grammar,
+            immersion=compute_immersion_payload(
+                "a1", arc_position=position, lesson_n=n, cumulative_core_count=state.cumulative_core_count
+            ),
+            level="a1",
+            slug=slug,
+            lesson_n=n,
+            plan_sha256=hashlib.sha256(plan_path.read_bytes()).hexdigest(),
+        )
+        for recap in (False, True):
+            prompt = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
+            hashes.append(hashlib.sha256(prompt.encode("utf-8")).hexdigest())
+    assert hashes == LEGACY_A1_PROMPT_SHA256[slug]
+
+
+@pytest.mark.parametrize("recap", [False, True])
+def test_structured_activity_constraints_render_even_when_empty(
+    sample_plan_entry, sample_learner_state, sample_cited_records, recap
+):
+    from scripts.build.fresh.prompt import extract_plan_citations
+
+    activity = sample_plan_entry["activities"][0]
+    activity.update(targets=[], options=[], learner_reads=[])
+    common = dict(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=sample_learner_state,
+        word_store=SAMPLE_WORD_STORE,
+        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+    )
+    prompt = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
+    for field in ("targets", "options", "learner_reads"):
+        assert f"Binding {field}: []" in prompt
+    activity.update(targets=["W-123"], options=["М"], learner_reads=["T-123", {"ref": "X-123", "words": ["М"]}])
+    assert {"W-123", "T-123", "X-123"} <= extract_plan_citations(sample_plan_entry)
+    prompt = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
+    assert 'Binding targets: ["W-123"]' in prompt
+    assert "Binding options:" in prompt and "exact case" in prompt
+    assert json.loads(re.search(r"Binding options: (\[.*?\])", prompt).group(1)) == ["М"]
+    assert "Binding learner_reads:" in prompt and "T-123" in prompt and "X-123" in prompt
+
+
+def test_structured_citations_reach_the_writer_record_loader():
+    from scripts.build.fresh.cli import _load_cited_records
+
+    target = {"id": "W-123", "lemma": "fixture"}
+    quote = {"id": "T-123", "quote": "fixture"}
+    exercise = {"id": "X-123", "items_sample": ["fixture"]}
+    entry = {"activities": [{"targets": ["W-123"], "learner_reads": ["T-123", {"ref": "X-123", "words": []}]}]}
+    assert _load_cited_records(entry, {"texts": [quote], "exercises": [exercise]}, {"words": [target]}) == {
+        "W-123": target,
+        "T-123": quote,
+        "X-123": exercise,
+    }
+
+
+def test_structured_citation_discovery_preserves_existing_sources_and_ignores_prose():
+    from scripts.build.fresh.prompt import extract_plan_citations
+
+    entry = {
+        "steps": [{"explains": ["T-1"], "evidence": ["EX-1"], "ref": "T-2", "paradigm": {"id": "P-1", "word": "W-1"}}],
+        "activities": [
+            {
+                "error_refs": ["E-1"],
+                "targets": ["W-2"],
+                "options": ["W-999 text"],
+                "learner_reads": ["T-3", {"ref": "X-1", "words": ["W-998"]}],
+                "model": "X-2",
+                "focus": "W-997",
+            }
+        ],
+        "dialogue": {"evidence": ["T-4"], "speakers": [{"evidence": "W-3"}], "places": [{"evidence": "W-4"}]},
+        "inventory": {
+            "vocabulary": {"core": [{"evidence": "W-5"}], "incidental": [{"evidence": "W-6"}], "recycled": ["W-7"]},
+            "grammar": [{"id": "G-a1-001"}],
+        },
+        "videos": [{"evidence": "V-1"}],
+    }
+    assert extract_plan_citations(entry) == {
+        "T-1",
+        "EX-1",
+        "T-2",
+        "P-1",
+        "W-1",
+        "E-1",
+        "W-2",
+        "T-3",
+        "X-1",
+        "X-2",
+        "T-4",
+        "W-3",
+        "W-4",
+        "W-5",
+        "W-6",
+        "W-7",
+        "G-a1-001",
+        "V-1",
+    }

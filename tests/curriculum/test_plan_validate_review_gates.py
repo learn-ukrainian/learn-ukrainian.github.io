@@ -975,7 +975,7 @@ CASES = [
         "c26_unhosted_id_in_a_sentence_about_another_activity_is_a_note",
         _comprehension_on_quote("он м а м а", f"Answer about {MAMA}. Inline b2 uses {MANA}."),
         notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
-        says=f"names {MANA} 'мана' in «Inline b2 uses {MANA}» (the sentence names activity b2), which no host",
+        says=f"names {MANA} 'мана' in «Inline b2 uses {MANA}» (the sentence names activity b2), whose presence in the host",
     ),
     # Exclusion wording in prose does not say which id it excludes, so an unhosted id there notes, never vanishes.
     Case(
@@ -984,7 +984,7 @@ CASES = [
         notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
         says=(
             f"names {NONA} 'нона' in «Asks about {NONA} and do not give hints» (the sentence says something is "
-            "excluded), which no host (T-002) prints"
+            "excluded), whose presence in the host (T-002) is unverified"
         ),
     ),
     # round 10 of the cross-family review (#9487): the reviewer's fixtures, which passed silently.
@@ -1049,7 +1049,7 @@ CASES = [
         ),
         notes=frozenset({codes.COMPREHENSION_TARGET_UNVERIFIED}),
         says=(
-            f"names {NONA} 'нона' in «Answer about {NONA}», which no host (dialogue) prints or models; host dialogue "
+            f"names {NONA} 'нона' in «Answer about {NONA}», whose presence in the host (dialogue) is unverified; host dialogue "
             "is not a pack quote or a recording with models"
         ),
     ),
@@ -1212,7 +1212,7 @@ def test_case(tmp_path: Path, case: Case) -> None:
     report = run(tmp_path, case.mutate)
     text = report.render_text()
     assert {o.code for o in report.failures} == set(case.failures), text
-    assert {o.code for o in report.notes} == set(case.notes), text
+    assert {o.code for o in report.notes} == set(case.notes) | {codes.OPTIONS_MISSING}, text
     assert {o.code for o in report.not_checked} == NOT_CHECKED | set(case.not_checked), text
     if case.says:
         assert any(case.says in o.message for o in report.failures + report.notes + report.not_checked), text
@@ -1220,7 +1220,7 @@ def test_case(tmp_path: Path, case: Case) -> None:
 
 def test_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
     report = run(tmp_path, next(c for c in CASES if c.name.startswith("c1_dialogue_target")).mutate)
-    outcome = report.notes[0]
+    outcome = next(o for o in report.notes if o.code != codes.OPTIONS_MISSING)
     assert (outcome.code, outcome.lesson, outcome.step) == (codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED, 1, "s1")
 
 

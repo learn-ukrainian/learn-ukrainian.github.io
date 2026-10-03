@@ -113,7 +113,10 @@ lessons:
       - id: a1
         type: quiz
         placement: inline                   # inline | workbook
-        focus: "What it checks."
+        focus: "Pedagogical guidance; declared fields below bind the corresponding facts."
+        targets: [W-012]                    # optional in PR1; scored keys or unscored presented words, never distractors
+        options: [мама]                     # closed Cyrillic printed pool, NFC and exact case (quiz/fill-in)
+        learner_reads: [T-003, {ref: X-004, words: [мама]}]  # full pack print or source-attested selected words
         model: X-004                        # optional: textbook exercise it is modelled on
         error_refs: [E-001, E-002]          # r9, required when type is error-correction: the E- records its items may draw on (writer contract §1c)
     videos:
@@ -249,6 +252,39 @@ passes silently and never invents a value.
 - **`word_target`** is a required positive integer per lesson. Its calibrated per-level minimum
   does not exist until the first pilot is built; until then the validator checks presence and type
   and reports `not_checked: word_target_not_calibrated`.
+- **Structured activity declarations (#9541, decision #9540).** The schema gives optional shape,
+  just as for `error_refs`; the validator owns requiredness. Presence, including `[]`, is authoritative
+  for that field. `focus` remains writer/reviewer guidance and cannot override a declaration; gates
+  do not infer targets, options or learner-read words from it when the corresponding field is present.
+  - `targets`: unique word-store ids `[W-…]`. On scored types they are keys/word targets; on
+    `letter-grid`, `observe`, `phrase-table` and `watch-and-repeat` they are presented words.
+    Distractors and excluded words are omitted. `[]` declares no word targets (letters/sounds/numbers
+    can still be tested). C1 fails an unknown, out-of-set or later-introduced target at the earliest
+    step linking the activity in `practice`, otherwise at lesson end, even for unlinked activities.
+  - `options`: strings forming the complete permitted pool of Cyrillic printed choices, including
+    distractors; English labels allowed at A1 are not listed. Preserve NFC and exact case; phrases
+    and the empty-completion string are allowed. Item subsets/permutations are permitted, not a
+    fixed item sequence. `quiz` and `fill-in` require the field; unscored types forbid it, even `[]`.
+    These two policy checks are notes in PR1 so legacy plans keep passing `--strict`; PR2 promotes
+    them to failures. Non-NFC strings already fail. In letter-stage modules C18 checks every letter
+    of every declared option at its activity's step; a recording never exempts printed options.
+  - `learner_reads`: pack ids or `{ref, words: [...]}` selectors. An id means all printable text
+    of that pack record; a selector means only its listed source-attested words/formulas. Each
+    selection must occur as a contiguous token run in the record's print (line wrapping is
+    whitespace), with NFC spelling and exact case. Non-printable/unknown refs and absent selections fail even outside letter-stage
+    modules. In a letter-stage module C21 also fails untaught letters in declared print at the
+    activity's step. Teacher-read framing is excluded from the declaration, not inferred from focus.
+  - C26 reads a comprehension activity's `targets`, not W-ids mentioned in its focus. Host bindings
+    retain the writer contract's `kind: comprehension` and `host: {kind, ref}` syntax (no new host
+    field). Unknown targets fail; a known target absent from resolvable quote/video hosts fails.
+    Word/formula spellings match contiguous token runs, not unordered token membership. Drafted
+    dialogue hosts and transcription-only evidence remain notes. Sibling host declarations do not
+    shelter declared targets. Dialogue `target_grammar` and step teach-text directives retain their
+    legacy advisory/print checks because these fields do not declare those facts.
+  - Absent fields retain existing prose-derived outcomes until PR2 migration. The writer templates
+    expose declared fields as binding constraints only when defined; undeclared-plan prompts retain
+    identical bytes. These checks prove the plan; verbatim option rendering and automated comparison
+    of the draft with its plan are a separate follow-up owned by the curriculum-upgrade driver.
 - **Activity count minimums** at lesson grain are uncalibrated (§4): reported as
   `not_checked: lesson_activity_minimums_not_calibrated`. The type allowlist is the set of
   definitions in `schemas/activities-<level>.schema.json`, read at run time.
@@ -263,7 +299,7 @@ passes silently and never invents a value.
   validator fails a `forms` list on an incidental entry, so that nobody reads it as a restriction. Everywhere else —
   `recycled`, a step's `introduces` and `uses`, `practice.stress` — a word is a bare `W-…` id. Cyrillic text is otherwise allowed only in the prose fields a reviewer
   reads (module `title`, `subtitle`, `focus` and `objectives`; lesson `title`, `job`, `rationale`,
-  `teach`, activity `focus`, video `use`, the `dialogue` text fields and speaker names) and as single letters in `phonetics.letters` and `introduces.letters`. `connects_to` and
+  `teach`, activity `focus`, structured `options` and `learner_reads[].words`, video `use`, the `dialogue` text fields and speaker names) and as single letters in `phonetics.letters` and `introduces.letters`. `connects_to` and
   `prerequisites` hold slugs and are ASCII.
   A combining acute or grave accent (U+0301, U+0300) anywhere in a plan fails: stress lives in the
   word store. Word forms quoted inside prose fields are not machine-checked; they are in scope for
@@ -278,7 +314,10 @@ passes silently and never invents a value.
 ### 2b. A1 activity planning and report (#8889, A1 phase)
 
 Choose activities from the pack's textbook models (`model: X-…`) first. The plan fixes type,
-placement, focus and order before the lesson writer runs. Give every non-recap lesson workbook
+placement, focus and order before the lesson writer runs. Declare `targets` for scored word keys
+or unscored presented words (empty for glyph-only work), `options` for the quiz/fill-in Cyrillic
+choice pool, and `learner_reads` for exact learner-decoded pack print (§2a). These fields describe
+an activity's permitted content; they do not prescribe items or permit `focus` to expand the pool. Give every non-recap lesson workbook
 practice that serves its teaching points. A recap is one short first-person story side by side in
 Ukrainian and English, Ukrainian-only questions about that story, and one production task (R-03;
 A1 arc D4); it has no separate workbook exercise set. Do not use `classify` in a new plan;

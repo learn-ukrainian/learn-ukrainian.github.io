@@ -364,7 +364,7 @@ def test_case(tmp_path: Path, case: Case) -> None:
     report, _world = run(tmp_path, case.mutate)
     text = report.render_text()
     assert {o.code for o in report.failures} == set(case.failures), text
-    assert {o.code for o in report.notes} == set(case.notes), text
+    assert {o.code for o in report.notes} == set(case.notes) | {codes.OPTIONS_MISSING}, text
     assert {o.code for o in report.not_checked} == NOT_CHECKED | set(case.not_checked), text
     assert report.ok == (not case.failures)
     if case.says:
@@ -373,10 +373,10 @@ def test_case(tmp_path: Path, case: Case) -> None:
 
 def test_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
     report, _world = run(tmp_path, CASES[1].mutate)
-    outcome = report.notes[0]
+    outcome = next(o for o in report.notes if o.code != codes.OPTIONS_MISSING)
     assert (outcome.code, outcome.lesson, outcome.step) == (codes.STEP_LETTER_NOT_PRACTISED, 1, "s2")
     report, _world = run(tmp_path / "teach", next(c for c in CASES if c.name.startswith("m3_teach")).mutate)
-    outcome = report.notes[0]
+    outcome = next(o for o in report.notes if o.code != codes.OPTIONS_MISSING)
     assert (outcome.code, outcome.lesson, outcome.step) == (codes.TOKEN_NOT_ALLOWED, 1, "s1")
 
 

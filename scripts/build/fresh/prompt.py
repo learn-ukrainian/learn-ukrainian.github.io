@@ -223,6 +223,9 @@ def extract_plan_citations(plan_entry: dict[str, Any]) -> set[str]:
     for act in plan_entry.get("activities", []):
         for eref in act.get("error_refs") or []:
             cited.add(str(eref))
+        cited.update(act.get("targets") or [])
+        for selection in act.get("learner_reads") or []:
+            cited.add(selection if isinstance(selection, str) else selection["ref"])
         if act.get("model"):
             cited.add(str(act["model"]))
 

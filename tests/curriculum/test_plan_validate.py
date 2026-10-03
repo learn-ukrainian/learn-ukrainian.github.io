@@ -1086,7 +1086,10 @@ def run_case(root: Path, case: Case) -> Report:
 def test_case(tmp_path: Path, case: Case) -> None:
     report = run_case(tmp_path, case)
     assert {o.code for o in report.failures} == set(case.expected), report.render_text()
-    assert {o.code for o in report.notes} == set(case.notes), report.render_text()
+    # Schema/load failures return before activity policy checks; every valid fixture
+    # here retains at least one undeclared quiz, so PR1 adds its missing-options note.
+    policy_notes = {codes.OPTIONS_MISSING} if report.activity_report.get("lessons") else set()
+    assert {o.code for o in report.notes} == set(case.notes) | policy_notes, report.render_text()
     assert {o.code for o in report.not_checked} == NOT_CHECKED
     assert report.ok == (not case.expected)
 
@@ -1183,6 +1186,9 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_validate_review_gates import produced_review_gate_codes
 
     produced |= produced_review_gate_codes(tmp_path / "review-gates")
+    from tests.curriculum.test_plan_validate_structured_activities import produced_structured_codes
+
+    produced |= produced_structured_codes(tmp_path / "structured")
     assert produced == set(codes.DESCRIPTIONS)
 
 
