@@ -3,7 +3,7 @@
 > [!WARNING]
 > **Withdrawn 2026-09-25: this Hugging Face dataset is private. The pilot data failed the dataset acceptance check and must not be used (epic #6321).**
 
-> **Current plan:** [`PLAN.md`](PLAN.md) (v3.4.3, canonical plan for epic #6321).
+> **Current plan:** [`PLAN.md`](PLAN.md) (v3.4.4, canonical plan for epic #6321).
 
 > **Parent Epics:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (ULDR Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423) (Human-Source Dataset Delivery)
 > **Stream Registry:** `open-model-data` (in `scripts/config/issue_streams.yaml`)
@@ -93,7 +93,7 @@ flowchart LR
 ### Authoritative Plans & Architecture (Active)
 | Document | Purpose |
 | :--- | :--- |
-| [`PLAN.md`](PLAN.md) | Canonical plan for Epic #6321 (v3.4.3). |
+| [`PLAN.md`](PLAN.md) | Canonical plan for Epic #6321 (v3.4.4). |
 | [`ROADMAP_250K_SOVEREIGN_UKRAINIAN.md`](ROADMAP_250K_SOVEREIGN_UKRAINIAN.md) | Withdrawn 2026-09-20 roadmap; now a pointer to `PLAN.md` (filename kept for old links). |
 | [`GRAMMAR_DATASET_SPEC_8342.md`](GRAMMAR_DATASET_SPEC_8342.md) | Grammar dataset redo specification, mixture ratios, and #8339/#8338 acceptance gates (#8342). |
 | [`CORPUS_GROUNDED_DECOLONIZATION_DATASET_PLAN.md`](CORPUS_GROUNDED_DECOLONIZATION_DATASET_PLAN.md) | Operational plan for the 6K SFT + 3K DPO production dataset and miner pipeline. |

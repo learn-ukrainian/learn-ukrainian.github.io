@@ -1,16 +1,17 @@
 <!--
-Canonical plan for epic #6321 (open-model-data). Version: v3.4.3 (2026-10-03).
+Canonical plan for epic #6321 (open-model-data). Version: v3.4.4 (2026-10-03).
 Approval: v3.4.2 (sha256 b1a39a78b262a3418fa8cba4019ed882991e802ab18b7ff25f2dc12673ec4ed2) was reviewed over three
 rounds by GPT-6.1 Sol (review of record; round 3 APPROVE) and Claude Opus 5.5 (rounds 1-2). The operator approved v3.3 on
-2026-10-03 and ordered v3.4. v3.4.3 adds the operator's 2026-10-03 decisions on O4 and O5.
+2026-10-03 and ordered v3.4. v3.4.3 adds the operator's 2026-10-03 decisions on O4 and O5. v3.4.4 adds the operator's
+2026-10-03 decisions on O1, O2, O3 and O6 and component C9 (textbooks).
 Source sha256 of the body below (every line after this comment, verbatim):
-f426823cfb2481543c6546f73e4a61c2fa5c60e6cbf18171fce75cd65452c24a
+2d5db0ae7d15336b61c361c1dacdf89c3c9811cfd0109acc8f156f16149e94e1
 Verify: sed '1,/^-->$/d' PLAN.md | sha256sum
 Landed by issue #9586 (step E0). Do not edit the body in place; changes need a new plan version.
 -->
-# Epic #6321 — plan v3.4.3 (working plan), 2026-10-03
+# Epic #6321 — plan v3.4.4 (working plan), 2026-10-03
 
-Status: APPROVED. v3.4.2 (sha256 b1a39a78…) passed review (GPT-6.1 Sol round 3 APPROVE, review of record). v3.4.3 adds only the operator's decisions of 2026-10-03 on O4 and O5 and their direct consequences (change log at the end). v3.4 (sha256 2d98a49d…) was reviewed by GPT-6.1 Sol (`plan-review-6321-v34-sol`,
+Status: APPROVED. v3.4.2 (sha256 b1a39a78…) passed review (GPT-6.1 Sol round 3 APPROVE, review of record). v3.4.3 added the operator's decisions on O4 and O5; v3.4.4 records the operator's decisions on O1, O2, O3 and O6 (all 2026-10-03) and adds component C9 (textbooks) that O3 requires (change logs at the end). v3.4 (sha256 2d98a49d…) was reviewed by GPT-6.1 Sol (`plan-review-6321-v34-sol`,
 CHANGES_REQUESTED, 4 blockers) and Claude Opus 5.5 (`plan-review-6321-v34-opus`, CHANGES_REQUESTED, 2 blockers).
 Both passed the sources-MCP canary (verify_word, ULIF, query_pravopys). Every finding is adopted below; the
 change log at the end maps each one. Also added: component C8 (literary pronunciation, Погрібний 1992 — operator:
@@ -68,10 +69,13 @@ follow-up issue filed at E-final; the epic ends release-ready).
   (lemma, homonym/sense, grammatical slot, variant). Single-source forms are **omitted**, not queued for review. ULIF
   forms with `marked_asterisk`, preposition-bound forms (на/у), entries with `unmapped_labels`, and the 59 failed
   entries are omitted until a rule for each is written and reviewed.
-- **P4 Provenance and licence (O1).** Every source has a register entry and every record a locator. The register is a
-  provenance and takedown record (operator decision 2026-09-27). Which in-copyright sources may appear verbatim in the
-  dataset is the operator's per-component decision (O1). Each licence-distinct input is packaged in its own file set
-  with its own licence notice (register line 77: BY-SA inputs separate; VESUM-derived data under CC BY-NC-SA 4.0).
+- **P4 Rights are decided — not a blocker in this epic.** The operator decided (O1, O3, 2026-10-03; consistent with the
+  2026-09-27 decision on #8977) that authentic Ukrainian sources — textbooks, dictionaries, ULIF, Правопис, Погрібний,
+  Антоненко-Давидович, literature — are used verbatim to teach a model proper Ukrainian, as the operator's IP responsibility.
+  The dataset is for UNLP and the Ukrainian education system; UNLP reviews it first and decides on release. Agents and
+  reviewers do not raise copyright or permission as an objection, gate, hold or open question in this epic. What remains is
+  provenance only: every source has a register entry, every record a locator, each licence-distinct input ships with its own
+  licence notice, and takedown requests arrive as GitHub issues.
 - **P5 Relationship, not only quotation.** A record must be right about what it pairs: the answer belongs to the
   question's lemma, sense, slot or case. Every component defines its source-supported binding (table below) and the
   gate tests it with must-fail fixtures of genuine quotations attached to the wrong sense or question.
@@ -104,6 +108,7 @@ follow-up issue filed at E-final; the epic ends release-ready).
 | C3 | **Required** | Synonyms, antonyms | ULIF sections via word cards (#8988) | headword sense ↔ ULIF group for that sense | #8981, E4 E5 E10, O1 |
 | C4 | **Required** | Phraseology | ULIF phraseology + Фразеологічний словник (edition to verify, register: probably Білоноженко та ін., 2003) via word cards | idiom ↔ its definition ↔ its citation, same dictionary entry | #8981, E3 edition, E4 E5 E10, O1 |
 | C7 | **Required** | Russification contrast | ULIF/VESUM vs СУМ-11 via #8982 | opt-in subset, excluded from default split, never pre-training (#8989) | #8982 |
+| C9 | **Required** | Subject knowledge from Ukrainian textbooks | School textbooks (grades 1–11) and university textbooks in `textbooks` / `textbook_sections` (40,151 sections; 209 source files incl. 21 university) | a catalog question whose slot is the textbook's own section title (or the book's own printed question with its printed answer) ↔ the verbatim section text that the title heads, with book, grade, section and page locator; exercises without printed answers, tables of contents and OCR-damaged text are withheld; no rewriting of any kind | E1 E3 E4 E5 E10 |
 Every source unit a component considers is accounted for as accepted, rejected (positive evidence of error, cited)
 or unresolved (withheld, not called wrong).
 Rulers only, never training: UA-GEC test split; 1,616 keyed exam tasks (30 `own-statement` essay tasks with empty keys
@@ -118,7 +123,7 @@ excluded); protection cases from authentic literary/regional text.
 | PA4 | **Acceptance check extended:** PA3 gate; instruction-prefix concentration measured separately (PA6); reasoning-text refusal; one approved-authority list replacing the three in code (33 in `audit_dataset_acceptance.py`; 22 + 21 in `v5_evaluation_harness.py`), generated from the §4 table and the register. Every old set fails for its named defect. | Checker runs on old sets + clean fixture |
 | PA5 | **Split isolation.** Before any extraction: dev carved from UA-GEC gec-only train by **author-disjoint (hence document-disjoint)** selection on `author_id`, keeping all annotations and both layers of each document together (mirrors the official split, which shares 0 authors; train has 752 authors, the largest with 102 docs; only 2 annotator ids exist, so annotator-disjointness is impossible); dev doc ids excluded from both layers (gec-only and gec-fluency share 2,976 matching edit pairs in train) and from C1 and C6; multi-reference scoring (M2 against all available references; translation submissions kept and tagged by source language per O5, with per-stratum reporting; only 43 train docs have a second reference, so dev is mostly single-reference while test has 332 annotation files for 166 docs — dev and final scores are reported with their reference counts and never compared as equals). Exam and protection material frozen by source group (`work_id` / document) and excluded from C4 citations. A sentence-hash and n-gram overlap gate runs between every component and both rulers. | Split manifest + overlap-refusal fixtures |
 | PA6 | **Instruction catalog** drafted (parallel to PA3–PA4) and reviewed by Sol and Opus (neither its author); prefix-concentration threshold fixed before builds. | Catalog + two reviews + checker test |
-| PA7 | **Rulers sealed** by the evaluation steward: dev and final per required component (C1 UA-GEC; C2 forms from held-out lemmas; C5 Правопис examples held out by paragraph; C8 Погрібний items held out **stratified by rule paragraph** (every rule seen in training, held-out examples per rule; the overlap gate applies); C3 held-out headword senses; C4 held-out idioms; C6 held-out calque edits (UA-GEC test `F/Calque`) and book pairs held out by row; C7 held-out contrast pairs (the model tells the imposed form from the norm)), plus 1,616 keyed exam tasks and protection cases. Evaluator canaries: gold high; **echo low on correction, echo high on preservation**; empty low everywhere; response-integrity check (lesson of #6273). Metrics from each benchmark's own definition; greedy decoding; evaluator robust to reasoning tags. Old #8338 evaluator and suites quarantined, not reused. | Canary receipts + sealed hashes |
+| PA7 | **Rulers sealed** by the evaluation steward: dev and final per required component (C1 UA-GEC; C2 forms from held-out lemmas; C5 Правопис examples held out by paragraph; C9 held out by whole textbook (book-disjoint); C8 Погрібний items held out **stratified by rule paragraph** (every rule seen in training, held-out examples per rule; the overlap gate applies); C3 held-out headword senses; C4 held-out idioms; C6 held-out calque edits (UA-GEC test `F/Calque`) and book pairs held out by row; C7 held-out contrast pairs (the model tells the imposed form from the norm)), plus 1,616 keyed exam tasks and protection cases. Evaluator canaries: gold high; **echo low on correction, echo high on preservation**; empty low everywhere; response-integrity check (lesson of #6273). Metrics from each benchmark's own definition; greedy decoding; evaluator robust to reasoning tags. Old #8338 evaluator and suites quarantined, not reused. | Canary receipts + sealed hashes |
 | PA8 | **Seat canaries** recorded (Sol, Opus headless — both passed 2026-10-03 in the v3.4 reviews; Gemini Flash; Gemini 4 at GA) and the operator's seat decision recorded in `model-assignment.md` (E-R). | Receipts + merged rules PR |
 Each child issue keeps its own task card and live dispatch preflight; PA gates do not replace them.
 
@@ -128,7 +133,7 @@ Each child issue keeps its own task card and live dispatch preflight; PA gates d
 | D1 | Every shipped component passes the extended check on its final files (0 records without locator, 0 unresolved quotes, 0 copies, 0 non-source text outside catalog/serialization, 0 relationship-gate failures, prefix threshold met, register entry per source). | Checker report |
 | D2 | Facet tool checks per the escalation rule; rejections only on positive evidence; unresolved withheld and counted. | Per-record receipts + accounting |
 | D3 | Per component: if ≥ 300 records, stratified random sample N = 300 reviewed by Sol and Opus (OK / MINOR / WRONG / UNSUPPORTED), WRONG ≤ 2% with Wilson 95% upper bound ≤ 5%; if < 300 records, **census** with 0 WRONG after fixes. UNSUPPORTED records are withheld unless resolved. | Review files + counts |
-| D4 | On the sealed final set, the proof model trained on accepted data beats its baseline by the pre-registered margin **on each component's ruler** (C1–C8) with protection non-inferiority (greedy). A failed final evaluation leaves D4 unmet; further development needs a fresh independent final set. | Scorecard (model id, data version, set hashes) |
+| D4 | On the sealed final set, the proof model trained on accepted data beats its baseline by the pre-registered margin **on each component's ruler** (C1–C9) with protection non-inferiority (greedy). A failed final evaluation leaves D4 unmet; further development needs a fresh independent final set. | Scorecard (model id, data version, set hashes) |
 | D5 | Deterministic rebuild gives identical hashes. | Two rebuilds compared |
 | D6 | Release-ready (not released): per-component licence notices (P4), dataset card, takedown path; public-release follow-up issue filed. | Card + notices + issue |
 | D7 | Zero trainable residue: quarantined artifacts unreachable by any loader; old issues closed with pointers; old code archived; quarantine, loader and rebuild tests retained in CI; docs current. | Tests + inventory |
@@ -136,7 +141,7 @@ Each child issue keeps its own task card and live dispatch preflight; PA gates d
 
 **Stop rule (dev ruler only).** A *trial* = one data mix trained once on the fast-loop model with the pre-registered
 recipe. *Gain* = dev improvement ≥ the pre-registered margin on every required component present in the mix, with
-protection non-inferiority. Mix families are frozen before any training: F1 = C1; F2 = C1 + C2; F3 = C1–C8 (C7 only in its opt-in split). A trial = one weighting of one family. Aggregate budget: at most 3 trials per family and 9 trials in total on the fast-loop model, never reset by renaming a family or switching model; 3 consecutive trials without gain in a family, or the total budget spent without a passing F3, → stop and report with a new plan version. The final set is never used for these decisions.
+protection non-inferiority. Mix families are frozen before any training: F1 = C1; F2 = C1 + C2; F3 = C1–C9 (C7 only in its opt-in split). A trial = one weighting of one family. Aggregate budget: at most 3 trials per family and 9 trials in total on the fast-loop model, never reset by renaming a family or switching model; 3 consecutive trials without gain in a family, or the total budget spent without a passing F3, → stop and report with a new plan version. The final set is never used for these decisions.
 **E13 pass bar (pilot).** C1-only mix shows gain on the C1 dev ruler with protection non-inferiority within 3 trials;
 otherwise stop and propose a plan version before E14+.
 
@@ -172,41 +177,20 @@ otherwise stop and propose a plan version before E14+.
 | Issue | Disposition at E0 |
 | --- | --- |
 | #8140 ULIF idioms | Close with pointer: generator archived (E1), idioms re-enter as C4 (E18) |
-| #8341 school subjects | Close with pointer: approach stopped; textbooks per O3 |
+| #8341 school subjects | Re-scoped to C9 (verbatim textbook sections; the rewriting approach stays stopped) |
 | #8330 release assembly | Close with pointer: superseded by D6 + E-final |
 | #8331 held-out benchmark | Close with pointer: superseded by E9 |
 | #8988 / #8989 | Kept → E18 / E19 |
 | #8791 | Kept → E7 |
 | #8141 | Closed 2026-10-03 (not planned) |
 
-## Operator decisions
-**O1 — verbatim in-copyright sources in the dataset.** Register status (`docs/sources/permissions-register.yaml`):
-| Source | Component | Register licence entry |
-| --- | --- | --- |
-| UA-GEC | C1, C6 | CC BY 4.0 |
-| VESUM | C2 | CC BY-NC-SA 4.0 |
-| ULIF (forms, stress, synonyms, antonyms, phraseology) | C2, C3, C4 | All rights reserved (© ULIF); no open licence found |
-| Фразеологічний словник | C4 | In copyright (co-authored, 2003); no licence found |
-| Антоненко-Давидович «Як ми говоримо» | C6 | In copyright until 31 Dec 2054; rights with the heirs |
-| Правопис 2019 | C5 | no register row yet (E3) |
-| Погрібний 1992 | C8 | no register row yet (E3) |
-| ZNO/NMT tasks | rulers | no register row yet (E3) |
-Question: under the 2026-09-27 decision (register = provenance, not a gate), may verbatim text from the in-copyright
-and all-rights-reserved sources appear in the dataset? Recommend: yes for the required components, as the operator's
-IP responsibility, with per-component licence notices and the takedown path; C4/C6 book quotations limited to what a
-record needs.
-**O2 — training venue.** Free Colab T4 (variable availability; fit for E2B/E4B unproven — 5.1B/8B total parameters incl.
-embeddings), HF Jobs (paid; used in #6273), or an operator machine. Recommend: decide after E8 measures fit; Colab only
-with the measured fit and the bounded stop.
-**O3 — school textbooks.** The `textbooks` table has 195 source files; 11 carry no school grade and are not school
-textbooks (measured: Антоненко-Давидович «Як ми говоримо», Погрібний 1992, Ohoiko «1000 words» and «500 verbs», six ULP
-lesson-note files, one private teacher file). A further 21 files carry `grade='university'` (e.g. `uni-ukrmova-orthography-strokal-2021`, `uni-ukrmova-phonetics-komarova-2015`). Recommend: school textbooks outside this epic; university textbooks not used as record sources in the first wave but available to reviewers as reference for C5/C8; the named non-school sources decided individually (Антоненко-Давидович in O1, Погрібний as C8).
-**O4 — required component scope: DECIDED 2026-10-03 — all components C1–C8 required.**
-**O5 — UA-GEC translation submissions: DECIDED 2026-10-03 — keep, tagged by submission type and source language, metrics per
-stratum; the learner-side text is never a target.** (Measured: 940 of 1,706 train documents are translations — ru 581, en 321,
-de 21, pl 10, fr 7; test 55 of 166, ru 17.)
-**O6 — terminal outcome:** recommend the epic ends release-ready (D6) with public release as a separate follow-up. Open: awaiting operator confirmation (needed before E-final).
-**Still open:** O1 (before any component that quotes in-copyright or all-rights-reserved text is built, and before D6), O2 (before E8), O3 (before any decision to use school or university textbooks; until then they are not used) and O6 (before E-final).
+## Operator decisions (all decided 2026-10-03)
+- **O1 — verbatim use of in-copyright sources: YES** (operator's IP responsibility; see P4).
+- **O2 — training venue: measure first.** E8 measures fit on free Colab and brings a measured recommendation, including any paid
+  option, to the operator before training.
+- **O3 — school and university textbooks: USED as record sources** → component C9.
+- **O4 — all components required.** **O5 — UA-GEC translations kept, tagged, per-stratum metrics.**
+- **O6 — the epic ends release-ready;** public release is a separate follow-up after UNLP review.
 
 ## Change log v3.4 → v3.4.1
 - Sol B1 / Opus B1 (split leakage) → PA5, C1 binding, E9.
@@ -238,3 +222,6 @@ de 21, pl 10, fr 7; test 55 of 166, ru 17.)
 - O4 decided: all components C1–C8 required; rulers added for C3, C4, C6, C7; D4 per component; F3 = C1–C8.
 - O5 decided: UA-GEC translations kept, tagged, per-stratum metrics.
 - O1, O2, O3, O6 remain open operator decisions, each with the step it must precede.
+
+## Change log v3.4.3 → v3.4.4 (operator decisions)
+- O1 yes; O2 measure first; O3 textbooks used → required component C9 (verbatim sections, book-disjoint ruler); O6 release-ready, UNLP review first. P4 rewritten: rights are decided and not a blocker in this epic.
