@@ -20,9 +20,12 @@ Two checks keep the marker honest:
    collection-only child run. The PR-tier checks collect only the test files a
    source prefilter says can carry the mark; that is an early warning, and
    ``_candidate_test_files`` names the shapes it misses. The exact check,
-   ``test_registry_matches_every_collected_repo_wide_mark``, is ``slow`` (the
-   nightly lane): it collects every test file CI collects, with no prefilter,
-   and compares the registry with the collected marks both ways.
+   ``test_registry_matches_every_collected_repo_wide_mark`` in
+   ``tests/test_repo_wide_registry_exact.py``, is ``slow`` (the nightly lane):
+   it collects every test file CI collects, with no prefilter, and compares the
+   registry with the collected marks both ways. It lives in its own module,
+   without ``repo_wide``, so a worker's ``pytest -m repo_wide`` never runs a
+   whole-suite collection.
 2. **The heuristic is a best-effort net.** It parses each test module's AST and
    flags test functions that walk a repository source tree (a repo-root path
    expression joined to ``.rglob()``/``.glob()``, ``os.walk``/``os.scandir``,
@@ -44,6 +47,7 @@ word does not count, and decorator order is irrelevant.
 from __future__ import annotations
 
 import ast
+import fcntl
 import io
 import itertools
 import json
@@ -61,6 +65,8 @@ from functools import lru_cache
 from pathlib import Path
 
 import pytest
+
+from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, FULL_SUITE_BUSY, LOCK_ENV
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
@@ -786,6 +792,8 @@ def test_repo_tree_scanners_carry_the_marker() -> None:
 # child interpreter collects (never runs) the candidate files with the
 # repository's own config; ``pytest_itemcollected`` keeps the tests that ``-m``
 # later deselects, and the marks are read after every modifyitems hook ran.
+# The child is ``--collect-only``, which the dispatch cap exempts from the
+# full-suite lock that a worker's serial ``pytest -m repo_wide`` parent holds.
 _COLLECT_SCRIPT = textwrap.dedent(
     """
     import json
@@ -840,15 +848,31 @@ _COLLECT_SCRIPT = textwrap.dedent(
 
 # The child must see every test file and the plain repository config, as CI
 # does: a shard allowlist would hide files, and a parent's addopts, plugin list
-# (a dispatch worker sets one) or artifact list would leak into it.
+# (a dispatch worker sets one) or artifact list would leak into it. It is its
+# own session, not an xdist worker of the parent, so xdist's worker variables
+# go too (the dispatch cap reads them to skip the full-suite lock).
 _CHILD_ENV_DROP = frozenset(
-    {"LU_PYTEST_SHARD_FILES", "LU_PYTEST_NEEDS_ARTIFACT_COLLECTED", "PYTEST_ADDOPTS", "PYTEST_PLUGINS"}
+    {
+        "LU_PYTEST_SHARD_FILES",
+        "LU_PYTEST_NEEDS_ARTIFACT_COLLECTED",
+        "PYTEST_ADDOPTS",
+        "PYTEST_PLUGINS",
+        "PYTEST_XDIST_TESTRUNUID",
+        "PYTEST_XDIST_WORKER",
+        "PYTEST_XDIST_WORKER_COUNT",
+    }
 )
 _COLLECT_TIMEOUT_S = 90
 # Collecting the whole suite took 178s on a loaded 16-core host (2026-10-03).
 # One child must collect it all: a modifyitems hook sees only its own run's items.
 _EXACT_COLLECT_TIMEOUT_S = 1200
 _MARK_NAME = "repo_wide"
+_EXACT_CHECK_MODULE = "tests/test_repo_wide_registry_exact.py"
+_EXACT_CHECK = f"{_EXACT_CHECK_MODULE}::test_registry_matches_every_collected_repo_wide_mark"
+
+
+def _child_env() -> dict[str, str]:
+    return {name: value for name, value in os.environ.items() if name not in _CHILD_ENV_DROP}
 
 
 def _names_the_marker(source: str) -> bool:
@@ -1038,7 +1062,6 @@ def _collect_repo_wide_marks(
     """
     if not test_files:
         return frozenset(), frozenset()
-    env = {name: value for name, value in os.environ.items() if name not in _CHILD_ENV_DROP}
     with tempfile.TemporaryDirectory() as scratch:
         output = Path(scratch) / "marks.json"
         allowed = Path(scratch) / "allowed.json"
@@ -1057,7 +1080,7 @@ def _collect_repo_wide_marks(
                 *sorted({path.relative_to(root).parts[0] for path in test_files}),
             ],
             cwd=root,
-            env=env,
+            env=_child_env(),
             capture_output=True,
             text=True,
             timeout=timeout,
@@ -1171,17 +1194,73 @@ def _drift_report(unregistered: list[str], stale: list[str]) -> str:
     return "\n\n".join(sections)
 
 
-@pytest.mark.slow
-@pytest.mark.timeout(_EXACT_COLLECT_TIMEOUT_S + 60)
-def test_registry_matches_every_collected_repo_wide_mark() -> None:
-    """Exact completeness (#9434): collect every CI test file, no prefilter, compare both ways.
+def _selected_node_ids(marker: str, module: str) -> list[str]:
+    """Node ids ``pytest -m <marker> <module>`` selects, from a collection-only child.
 
-    The PR-tier checks above collect a prefiltered subset; this one does not
-    depend on how a mark is spelled or where the code applying it lives.
+    ``--verbosity=-1`` overrides the config's ``-v``, so pytest lists one node id per line.
     """
-    marked = _collect_repo_wide_marks(_REPO_ROOT, _ci_test_files(), timeout=_EXACT_COLLECT_TIMEOUT_S)
-    unregistered, stale = _registry_drift(marked, KNOWN_REPO_WIDE_MODULES, KNOWN_REPO_WIDE_FUNCTIONS)
-    assert not unregistered and not stale, _drift_report(unregistered, stale)
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "--collect-only",
+            "--verbosity=-1",
+            "-p",
+            "no:cacheprovider",
+            "-m",
+            marker,
+            module,
+        ],
+        cwd=_REPO_ROOT,
+        env=_child_env(),
+        capture_output=True,
+        text=True,
+        timeout=_COLLECT_TIMEOUT_S,
+    )
+    selected = [line for line in result.stdout.splitlines() if line.startswith(f"{module}::")]
+    # Exit 5 is "no tests collected", here because ``-m`` deselected all of them.
+    assert result.returncode == (0 if selected else 5), (result.stdout + result.stderr)[-4000:]
+    return selected
+
+
+def test_exact_check_is_outside_the_repo_wide_selection() -> None:
+    """``pytest -m repo_wide`` (worker pre-push) never selects the whole-suite collection (#9434)."""
+    assert _selected_node_ids(_MARK_NAME, _EXACT_CHECK_MODULE) == []
+    assert _selected_node_ids("slow", _EXACT_CHECK_MODULE) == [_EXACT_CHECK]
+    assert _EXACT_CHECK_MODULE not in KNOWN_REPO_WIDE_MODULES
+
+
+def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """A dispatch worker's serial ``pytest -m repo_wide`` holds the full-suite lock (#9434).
+
+    The child collects the ``tests`` directory, which the cap counts as the full
+    suite, so it must not need the lock its parent holds. The control run shows
+    the lock is held and the cap is armed in the child: a run that is not
+    collection-only is still refused.
+    """
+    lock = tmp_path / "pytest-full-suite.lock"
+    monkeypatch.setenv(DISPATCH_TASK_ENV, "repo-wide-lock-regression")
+    monkeypatch.setenv(LOCK_ENV, str(lock))
+    fd = os.open(lock, os.O_CREAT | os.O_RDWR, 0o600)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        marked = _collect_repo_wide_marks(_REPO_ROOT, [_REPO_ROOT / "tests/test_hooks_executable.py"])
+        refused = subprocess.run(
+            [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"],
+            cwd=_REPO_ROOT,
+            env=_child_env(),
+            capture_output=True,
+            text=True,
+            timeout=_COLLECT_TIMEOUT_S,
+        )
+    finally:
+        os.close(fd)
+    assert marked == (frozenset({"tests/test_hooks_executable.py"}), frozenset())
+    assert refused.returncode != 0
+    assert FULL_SUITE_BUSY in refused.stdout + refused.stderr
 
 
 def test_registry_drift_names_each_missing_and_stale_row() -> None:
