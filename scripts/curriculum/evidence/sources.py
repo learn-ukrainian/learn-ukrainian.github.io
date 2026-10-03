@@ -370,9 +370,7 @@ def _gloss_head(span: str, *, keep_qualifiers: bool = False) -> str:
                 # Numeric scale changes the quantity, not just its annotation.
                 annotation = span[index + 1 : -1].strip()
                 if span[index:].casefold() in {"(short scale)", "(long scale)"} or (
-                    keep_qualifiers
-                    and not _GRAMMATICAL_LABEL.fullmatch(annotation)
-                    and not _register_note(annotation)
+                    keep_qualifiers and not _GRAMMATICAL_LABEL.fullmatch(annotation) and not _register_note(annotation)
                 ):
                     return span
                 span = span[:index].strip().rstrip("?!").rstrip()
@@ -382,12 +380,30 @@ def _gloss_head(span: str, *, keep_qualifiers: bool = False) -> str:
     return span
 
 
-def _sense_spans(sense: str) -> list[str]:
-    """Split short alternatives only; keep commas in definition sentences."""
+def _sub_senses(sense: str) -> list[str]:
+    """Split semicolons outside balanced notes, preserving source order."""
     if not _well_formed_kaikki_gloss(sense):
         return []
+    parts, start, depth = [], 0, 0
+    for index, char in enumerate(sense):
+        if char in "([":
+            depth += 1
+        elif char in ")]":
+            depth -= 1
+        elif char == ";" and depth == 0:
+            parts.append(sense[start:index].strip())
+            start = index + 1
+    parts.append(sense[start:].strip())
+    return parts
+
+
+def _sense_spans(sense: str) -> list[str]:
+    """Split sub-senses and short alternatives; keep definition commas."""
+    parts = _sub_senses(sense)
+    if len(parts) != 1:
+        return [span for part in parts for span in _sense_spans(part)]
     head = _gloss_head(sense)
-    if ";" in head or re.match(
+    if re.match(
         r"(?:verbal noun of|alternative form|alternative spelling|a |an |the |augmentative particle|expressing )",
         head,
         re.I,
@@ -453,10 +469,10 @@ def select_gloss(
     pronoun_entry: bool | None = None,
     ulif_entries: Iterable[dict] = (),
 ) -> GlossSelection:
-    """Select the first agreed learner head; withhold unbound homonyms.
+    """Select a corroborated first unrestricted head; withhold unbound senses.
 
-    Register-marked spans are fallback only. Without cross-source agreement,
-    multiple unconnected heads remain unresolved, even if only one fits D2.
+    Agreement must include the first unrestricted sub-sense head of at least
+    one source. A sole source can stand alone only with one distinct head.
     Preposition qualifiers survive unless their head is corroborated. A mixed
     Kaikki POS entry can only corroborate the first head of the first
     unrestricted dmklinger sense, with identical meaning qualifiers. Otherwise
@@ -505,8 +521,9 @@ def select_gloss(
         # A flat Kaikki list cannot bind to the selected ULIF homonym.
         senses = []
     groups: list[list[dict]] = []
+    primaries: dict[str, dict | None] = {}
 
-    def add_sense(sense: str, source: str, row: dict | None) -> list[dict]:
+    def add_sense(sense: str, source: str, row: dict | None, *, anchor: bool = True) -> list[dict]:
         marked = any(_register_note(note) for note in _outer_notes(sense))
         group = []
         for span in _sense_spans(sense):
@@ -527,10 +544,11 @@ def select_gloss(
             )
         if group:
             groups.append(group)
+        if anchor and not marked and source not in primaries:
+            # An unparseable first sense cannot authorize a later sense.
+            primaries[source] = group[0] if group else None
         return group
 
-    primary = None
-    primary_seen = False
     for row in rows:
         raw = row.get("translations") or []
         try:
@@ -540,14 +558,11 @@ def select_gloss(
         if isinstance(translations, list):
             for sense in translations:
                 if isinstance(sense, str):
-                    group = add_sense(sense, "dmklinger_uk_en", row)
-                    if not primary_seen and not any(_register_note(note) for note in _outer_notes(sense)):
-                        # An unparseable first sense cannot authorize a later
-                        # sense either. Comma alternatives do not move its head.
-                        primary_seen = True
-                        primary = group[0] if group else None
+                    for part in _sub_senses(sense) or [sense]:
+                        add_sense(part, "dmklinger_uk_en", row)
     for sense in senses:
-        add_sense(sense, "kaikki_wiktionary", None)
+        for part in _sub_senses(sense):
+            add_sense(part, "kaikki_wiktionary", None)
     mixed_preposition = (
         reason == "kaikki_multi_pos"
         and pos == "prep"
@@ -561,39 +576,40 @@ def select_gloss(
         # A minority sense cannot become primary through flat mixed-POS
         # agreement. Government notes are grammar, not meaning qualifiers.
         corroborating, _ = aligned_kaikki_senses({**payload, "pos": ["prep"]}, pos, pronoun_entry)
+        primary = primaries.get("dmklinger_uk_en")
         if primary and "prep" in payload.get("pos", []):
             for sense in corroborating:
-                if _gloss_head(sense, keep_qualifiers=True) == primary["qualified"]:
-                    add_sense(sense, "kaikki_wiktionary", None)
+                for part in _sub_senses(sense):
+                    if _gloss_head(part, keep_qualifiers=True) == primary["qualified"]:
+                        add_sense(part, "kaikki_wiktionary", None, anchor=False)
     candidates = [c for group in groups for c in group]
     if any(not c["restricted"] for c in candidates):
         groups = [[c for c in group if not c["restricted"]] for group in groups]
         candidates = [c for group in groups for c in group]
     if not candidates:
-        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED if mixed_preposition else reason or codes.GLOSS_MISSING)
+        return GlossSelection(
+            reason=codes.GLOSS_SENSE_UNRESOLVED if mixed_preposition else reason or codes.GLOSS_MISSING
+        )
     support: dict[str, set[str]] = {}
     for candidate in candidates:
         support.setdefault(candidate["head"], set()).add(candidate["source"])
     agreed = {head for head, providers in support.items() if len(providers) > 1}
-    eligible = agreed or set(support)
+    anchors = {c["head"] for c in primaries.values() if c is not None}
+    eligible = agreed & anchors
     if not agreed:
         for candidate in candidates:
             candidate["span"] = candidate["qualified"]
     diagnostic = tuple(
         {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
     )
-    if mixed_preposition and not agreed:
-        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
     if not agreed:
-        components = [{head} for head in eligible]
-        for group in groups:
-            alternatives = {c["head"] for c in group} & eligible
-            overlapping = [component for component in components if component & alternatives]
-            if overlapping:
-                components = [component for component in components if not component & alternatives]
-                components.append(set.union(*overlapping))
-        if len(components) != 1:
-            return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
+        # Restricted or unparseable senses still establish source presence;
+        # filtering them cannot authorize an uncorroborated standalone head.
+        providers = ({"dmklinger_uk_en"} if rows else set()) | ({"kaikki_wiktionary"} if senses else set())
+        if not mixed_preposition and len(providers) == 1 and len(support) == 1:
+            eligible = set(support) & anchors
+    if not eligible:
+        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
     chosen = next((c for c in candidates if c["head"] in eligible and is_learner_gloss(c["span"])), None)
     if chosen is None:
         return GlossSelection(reason=codes.GLOSS_MISSING, candidates=diagnostic)

@@ -58,6 +58,70 @@ def test_first_polysemous_agreement_wins(glosses):
     assert result.reason is None
 
 
+@pytest.mark.parametrize("pos", ["noun", "verb", "adj", "adv", "numr", "part", "prep", "conj"])
+@pytest.mark.parametrize("dmk", [["primary", "shared"], ["primary, shared"], ["primary; shared"]])
+def test_agreement_cannot_promote_a_head_that_is_first_in_neither_source(pos, dmk):
+    source_pos = {"numr": "num", "part": "particle"}.get(pos, pos)
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": pos},
+        [row(1, dmk, pos="adjective" if pos == "adj" else pos)],
+        payload(["other", "shared"], source_pos),
+    )
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
+
+
+@pytest.mark.parametrize(
+    "dmk,kaikki,expected",
+    [
+        (["primary", "shared"], ["shared"], "shared"),
+        (["primary", "shared"], ["other", "primary", "shared"], "primary"),
+        (["(rare) old; primary", "shared"], ["other", "primary"], "primary"),
+        (["alternative form of primary", "shared"], ["alternative form of other", "shared"], None),
+        (["malformed)", "shared"], ["other", "shared"], None),
+        (["primary; shared"], [], None),
+        (["primary, shared"], [], None),
+        (["primary; primary"], [], "primary"),
+        (["primary"], ["other"], None),
+        (["primary"], ["alternative form of other"], None),
+    ],
+)
+def test_anchor_agreement_and_single_source_rules(dmk, kaikki, expected):
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "noun"}, [row(1, dmk)], payload(kaikki) if kaikki else None
+    )
+    assert result.gloss == expected
+    if expected is None:
+        assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
+
+
+@pytest.mark.parametrize(
+    "sense,parts,spans",
+    [
+        (
+            "so that, in order that; in order to",
+            ["so that, in order that", "in order to"],
+            ["so that", "in order that", "in order to"],
+        ),
+        ("your (singular; one owner)", ["your (singular; one owner)"], ["your (singular; one owner)"]),
+        (
+            "first [note (nested; note)]; second",
+            ["first [note (nested; note)]", "second"],
+            ["first [note (nested; note)]", "second"],
+        ),
+        ("bad); second", [], []),
+        (
+            "boot; sturdy footwear covering the foot, often for winter use",
+            ["boot", "sturdy footwear covering the foot, often for winter use"],
+            ["boot", "sturdy footwear covering the foot, often for winter use"],
+        ),
+    ],
+)
+def test_sub_senses_split_only_outer_semicolons(sense, parts, spans):
+    assert sources._sub_senses(sense) == parts
+    assert sources._sense_spans(sense) == spans
+
+
 def test_synonym_group_can_agree_without_treating_shortness_as_meaning():
     result = sources.select_gloss(
         {"lemma": "synthetic", "pos": "noun"},
@@ -76,7 +140,7 @@ def test_disambiguating_qualifier_is_kept_and_meta_glosses_refused():
     assert result.gloss is None
 
 
-@pytest.mark.parametrize("value", ["a; b", "x" * 61, "one two three four five six seven eight nine", "bad)", ""])
+@pytest.mark.parametrize("value", ["x" * 61, "one two three four five six seven eight nine", "bad)", ""])
 def test_bound_is_not_a_truncator(value):
     assert not sources.is_learner_gloss(value)
     result = sources.select_gloss({"lemma": "synthetic", "pos": "noun"}, [row(1, [value])], None)
@@ -133,19 +197,84 @@ def test_current_a1_selection_and_source_span_property(a1_source_capture):
         assert sources.select_gloss(word, rows[lemma, pos], kaikki[lemma]).gloss == expected
 
 
-def test_all_187_records_mixed_corroboration_never_selects_a_nonfirst_sense(a1_source_capture):
+def test_all_187_records_corroboration_never_selects_a_nonfirst_sense(a1_source_capture):
     records, captured = a1_source_capture
     assert len(records) == len(captured) == 187
-    mixed_checked = corroborated = 0
+    glossed = mixed_checked = corroborated = 0
+
+    def first_raw_head(raw_senses, pos):
+        # Independent oracle for the captured corpus: strip balanced notes
+        # with plain strings and split only at outer commas/semicolons. Never
+        # search later senses for the emitted value or use selector helpers.
+        register_labels = {
+            "archaic",
+            "colloquial",
+            "dated",
+            "dialectal",
+            "figurative",
+            "formal",
+            "historical",
+            "informal",
+            "obsolete",
+            "nonstandard",
+            "non-standard",
+            "rare",
+            "slang",
+            "technical",
+        }
+        for raw in raw_senses:
+            parts, notes, note, depth, head = [], [], "", 0, ""
+            for char in raw:
+                if char in "([":
+                    depth += 1
+                    if depth > 1:
+                        note += char
+                elif char in ")]":
+                    depth -= 1
+                    if depth:
+                        note += char
+                    else:
+                        notes.append(note.strip())
+                        if note.strip() in {"short scale", "long scale"}:
+                            head += f"({note.strip()})"
+                        note = ""
+                elif depth:
+                    note += char
+                elif char == ";":
+                    parts.append((head, notes))
+                    head, notes = "", []
+                elif char == ",":
+                    # Keep the first alternative only, but finish reading
+                    # notes to determine register restriction of the sense.
+                    if "\0" not in head:
+                        head += "\0"
+                else:
+                    head += char
+            parts.append((head, notes))
+            for head, notes in parts:
+                if any(n.casefold() in register_labels for n in notes):
+                    continue
+                head = head.split("\0", 1)[0].strip().rstrip("?!").rstrip()
+                return head.removeprefix("to ") if pos == "verb" else head
+        return None
+
     for word in records:
         c = captured[word["id"]]
         result = sources.select_gloss(word, c["rows"], c["kaikki"], ulif_entries=c["ulif_entries"])
         mixed = c["kaikki"]
-        if word["pos"] != "prep" or not mixed or len(mixed["pos"]) < 2 or not mixed["glosses"]:
-            continue
-        mixed_checked += 1
+        is_mixed = word["pos"] == "prep" and mixed and len(mixed["pos"]) > 1 and mixed["glosses"]
+        mixed_checked += bool(is_mixed)
         if result.gloss is None:
-            assert result.reason == codes.GLOSS_SENSE_UNRESOLVED, word["id"]
+            if is_mixed:
+                assert result.reason == codes.GLOSS_SENSE_UNRESOLVED, word["id"]
+            continue
+        glossed += 1
+        raw_dmk = [s for r in c["rows"] for s in json.loads(r["translations"])]
+        raw_kaikki = mixed["glosses"] if mixed else []
+        first_heads = {first_raw_head(raw_dmk, word["pos"]), first_raw_head(raw_kaikki, word["pos"])}
+        emitted_head = first_raw_head([result.gloss], word["pos"])
+        assert emitted_head in first_heads, (word["id"], result, first_heads)
+        if not is_mixed:
             continue
         # Independent corpus oracle: every applicable captured first sense is
         # unrestricted. Read its first head directly, without selector helpers
@@ -158,6 +287,7 @@ def test_all_187_records_mixed_corroboration_never_selects_a_nonfirst_sense(a1_s
         assert result.ref["id"] == c["rows"][0]["id"]
         corroborated += 1
     assert mixed_checked > corroborated > 0
+    assert glossed > 100
 
 
 def test_cited_ids_exclude_incidental_mentions_and_include_uses():
@@ -217,6 +347,22 @@ def test_unresolved_gap_is_reported_once(synthetic_sources, stored):
     assert errors[0].startswith(codes.GLOSS_SENSE_UNRESOLVED + ":")
 
 
+@pytest.mark.parametrize("stored", [None, "shared"])
+def test_plan_gate_refuses_nonfirst_agreement_even_when_stored(synthetic_sources, synthetic_kaikki_side_db, stored):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE dmklinger_uk_en SET translations=? WHERE pos='noun'", (json.dumps(["primary", "shared"]),))
+    with sqlite3.connect(synthetic_kaikki_side_db) as conn:
+        conn.execute("INSERT INTO kaikki VALUES (?, ?)", ("synthetic", json.dumps(payload(["other", "shared"]))))
+        conn.execute("UPDATE meta SET value='3' WHERE key='row_count'")
+    word = {"id": "W-001", "lemma": "synthetic", "pos": "noun"}
+    if stored:
+        word["gloss_en"] = stored
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        errors = verify.verify_plan_glosses({"uses": ["W-001"]}, {"words": [word]}, "a1/test-mod", api)
+    assert len(errors) == 1
+    assert errors[0].startswith(codes.GLOSS_SENSE_UNRESOLVED + ":")
+
+
 @pytest.mark.parametrize(
     "dmk,kaikki,pos,expected",
     [
@@ -227,7 +373,7 @@ def test_unresolved_gap_is_reported_once(synthetic_sources, stored):
             ["fence made out of vines and branches; wattle", "fence (barrier)"],
             ["fence made out of vines and branches; wattle"],
             "noun",
-            "fence",
+            "fence made out of vines and branches",
         ),
     ],
 )
@@ -296,7 +442,7 @@ def test_normalized_heads(dmk, kaikki, pos, expected):
     ],
 )
 @pytest.mark.parametrize("edge", ["leading", "trailing", "nested", "square"])
-def test_register_marked_spans_are_only_fallback(label, edge):
+def test_register_marked_spans_cannot_anchor(label, edge):
     marked = {
         "leading": f"({label}) old",
         "trailing": f"old ({label})",
@@ -306,9 +452,14 @@ def test_register_marked_spans_are_only_fallback(label, edge):
     word = {"lemma": "synthetic", "pos": "noun"}
     result = sources.select_gloss(word, [row(1, [marked, "modern"])], payload([marked]))
     # Preserve the complete label matrix: nested descriptive notes now keep
-    # their agreed head; outer register-only notes remain fallback.
-    assert result.gloss == ("old" if edge == "nested" else "modern")
-    assert sources.select_gloss(word, [row(1, [marked])], None).gloss == "old"
+    # their agreed head; outer register-only notes cannot anchor a gloss.
+    assert result.gloss == ("old" if edge == "nested" else None)
+    if edge != "nested":
+        assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
+    sole = sources.select_gloss(word, [row(1, [marked])], None)
+    assert sole.gloss == ("old" if edge == "nested" else None)
+    if edge != "nested":
+        assert sole.reason == codes.GLOSS_SENSE_UNRESOLVED
 
 
 @pytest.mark.parametrize(
@@ -444,6 +595,7 @@ def test_mixed_pos_can_only_corroborate_first_head_with_identical_qualifiers(glo
         (["primary", "minority"], ["minority"], None),
         (["alternative form of primary", "minority"], ["minority"], None),
         (["(rare) minority"], ["minority"], None),
+        (["primary; minority"], ["primary; other"], "primary"),
     ],
 )
 def test_mixed_pos_corroboration_cannot_promote_a_later_sense(dmk, kaikki, expected):
@@ -483,7 +635,6 @@ def test_terminal_punctuation_does_not_create_distinct_heads(punctuation):
     [
         "a shoe, which covers the foot and extends above the ankle",
         "Expressing pain, fear, surprise, joy, disappointment, anger, hatred, etc (interjection)",
-        "boot; sturdy footwear covering the foot and extending above the ankle, often for winter use",
     ],
 )
 def test_definition_commas_do_not_create_learner_fragments(sense):
@@ -527,7 +678,7 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
         ("малина", "raspberry"),
         ("я", "I"),
         ("вона", "she"),
-        ("і", "and"),
+        ("і", None),
         ("читати", "to read"),
         ("пити", "to drink"),
         ("бачити", "to see"),
@@ -537,7 +688,7 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
         ("дах", "roof"),
         ("алфавіт", "alphabet"),
         ("люпин", "lupin"),
-        ("тин", "fence"),
+        ("тин", "fence made out of vines and branches"),
         ("мільярд", "billion (short scale)"),
         ("їжа", "food"),
         ("чобіт", "boot"),
@@ -552,7 +703,10 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
         ("маля", "infant"),
         ("мама", "mama"),
         ("тато", "dad"),
-        ("од", "from"),
+        ("од", None),
+        ("щоб", "so that"),
+        ("щоби", "so that"),
+        ("день", "day"),
         ("зо", "with (in the company of)"),
         ("кувати", None),
         ("коса", None),
