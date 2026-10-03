@@ -15,6 +15,12 @@ Verifies:
 
 from __future__ import annotations
 
+# Archived old-plan code (#9607): refuse even file-based loading (spec_from_file_location + exec_module).
+raise ImportError(
+    "archive/code/open_model_data holds archived old-plan generators (#9607, plan v3.4.3 PA1); "
+    "this module must not be imported or run. See archive/code/open_model_data/README.md."
+)
+
 import hashlib
 import json
 import re
@@ -23,8 +29,6 @@ from pathlib import Path
 
 import jsonschema
 import pytest
-
-from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
     DANGLING_STARTER_RE,
     DEFAULT_OUTPUT_DIR,
@@ -83,6 +87,8 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     verify_zero_inflected_concepts,
     verify_zero_train_eval_leakage,
 )
+
+from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 
 def _has_textbooks() -> bool:

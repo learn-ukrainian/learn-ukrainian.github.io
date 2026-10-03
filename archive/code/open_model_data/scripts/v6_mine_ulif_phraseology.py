@@ -14,6 +14,12 @@ Produces:
 
 from __future__ import annotations
 
+# Archived old-plan code (#9607): refuse even file-based loading (spec_from_file_location + exec_module).
+raise ImportError(
+    "archive/code/open_model_data holds archived old-plan generators (#9607, plan v3.4.3 PA1); "
+    "this module must not be imported or run. See archive/code/open_model_data/README.md."
+)
+
 import argparse
 import datetime
 import hashlib

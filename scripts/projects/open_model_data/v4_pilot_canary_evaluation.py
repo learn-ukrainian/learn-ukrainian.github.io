@@ -41,7 +41,7 @@ import safetensors.numpy
 from safetensors import safe_open
 from scipy.stats import beta
 
-from scripts.projects.open_model_data.paths import resolve_open_model_path
+from scripts.projects.open_model_data.paths import refuse_quarantined, resolve_open_model_path
 
 try:
     import safetensors.torch
@@ -1418,6 +1418,12 @@ def select_pilot_canary_dataset(
     vesum_db_path: Path | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Assemble the balanced 200-item pilot canary dataset (140 CORRECT + 60 PRESERVE)."""
+    for label, path in (
+        ("gold seeds", gold_seeds_path),
+        ("STEM controls", stem_controls_path),
+        ("held-out suite", heldout_path),
+    ):
+        refuse_quarantined(path, f"pilot canary {label}")
     heldout_keys = load_heldout_target_keys(heldout_path)
     heldout_contexts = load_heldout_contexts(heldout_path)
 
@@ -1585,6 +1591,8 @@ def generate_or_load_adapter(
     force_regenerate: bool = False,
 ) -> dict[str, Any]:
     """Execute fine-tuning optimization or load verifiable pilot canary LoRA adapter weights."""
+    for label, path in (("adapter", adapter_path), ("training dataset", dataset_path), ("replay buffer", replay_path)):
+        refuse_quarantined(path, f"pilot canary {label}")
     dataset_hash = sha256_file(dataset_path)
     replay_hash = sha256_file(replay_path)
 
@@ -2506,6 +2514,7 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
 
 def load_and_evaluate_cases(eval_cases_path: Path) -> list[dict[str, Any]]:
     """Load and dynamically evaluate recorded evaluation cases against rigorous scorers."""
+    refuse_quarantined(eval_cases_path, "pilot canary evaluation cases")
     if not eval_cases_path.exists():
         raise FileNotFoundError(f"Evaluation cases missing: {eval_cases_path}")
 
@@ -2943,6 +2952,15 @@ def verify_pilot_canary(
         training_log_path = DEFAULT_TRAINING_LOG_OUTPUT
     if adapter_path is None:
         adapter_path = DEFAULT_ADAPTER_OUTPUT
+    for label, path in (
+        ("dataset", dataset_path),
+        ("held-out suite", heldout_path),
+        ("replay buffer", replay_path),
+        ("evaluation cases", eval_cases_path),
+        ("training log", training_log_path),
+        ("adapter", adapter_path),
+    ):
+        refuse_quarantined(path, f"pilot canary verification {label}")
 
     if not dataset_path.exists():
         raise FileNotFoundError(f"Canary dataset missing: {dataset_path}")
