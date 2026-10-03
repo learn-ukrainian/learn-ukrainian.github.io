@@ -708,7 +708,7 @@ def edit_process_story_sections(log: EditLog) -> None:
     i = 0
 
     # Pattern to detect story section headers
-    story_header_pattern = re.compile(r"^###\s+(Story|Dialogue|Reading|Conversation|Text|Passage)", re.IGNORECASE)
+    story_header_pattern = re.compile(r"^###\s+(Story|Dialogue|Reading|Conversation|Text|Passage)\b", re.IGNORECASE)
     # Pattern to detect any header (to know when story section ends)
     any_header_pattern = re.compile(r"^#{1,4}\s+")
 
@@ -717,7 +717,11 @@ def edit_process_story_sections(log: EditLog) -> None:
         stripped = line.strip()
 
         # Check if this is a story section header
-        if story_header_pattern.match(stripped):
+        # Activity instruction headings precede JSX, whose internal line layout
+        # belongs to the component serializer, never the story paragraph parser.
+        is_story_header = bool(story_header_pattern.match(stripped))
+        next_content = next((s.strip() for s in lines[i + 1:] if s.strip()), "") if is_story_header else ""
+        if is_story_header and not next_content.startswith("<"):
             out.keep(i)
             # Preserve an existing separator: activity unit maps include their
             # heading and JSX, so an extra blank rewrites a valid rendered unit.

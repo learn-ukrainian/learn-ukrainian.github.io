@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 946e6b102bba070df497d872f85b6ffb36d730df801c8ebf61bb996ec320c280
+  components_sha256: bb3ee0ce7c7056fcc48d1c4517394149dc18121846f3e9b9dab600429894256d
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -560,7 +560,7 @@ components:
         ukrainian_text: 'true'
       - name: en
         type: string
-        description: Legacy English gloss consumed by generated MDX.
+        description: English support for a legacy line or structured dialogue, where the immersion band permits it.
         ukrainian_text: 'false'
       - name: title
         type: string

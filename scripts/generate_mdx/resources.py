@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -416,6 +417,24 @@ def _is_internal_ref_path(ref: str) -> bool:
     return bool(_INTERNAL_REF_PATH_RE.match(r)) or r.lower().endswith(('.txt', '.md', '.yaml', '.yml'))
 
 
+def _public_resource_url(item: dict) -> str:
+    """Return a cleaned public web/reader URL before it can become a label."""
+    url = validate_and_clean_url(str(item.get('url') or ''), _public_resource_text(item.get('title')))
+    if not url or re.search(r'[\s<>"\x00-\x1f\x7f]', url):
+        return ''
+    try:
+        parts = urlsplit(url)
+        if parts.username or parts.password:
+            return ''
+        if parts.scheme in ('http', 'https') and parts.hostname:
+            return url
+        if not parts.scheme and not parts.netloc and url.startswith('/') and not url.startswith('//'):
+            return url
+    except ValueError:
+        pass
+    return ''
+
+
 def _format_textbook_resource(item: dict) -> list[str]:
     title = _public_resource_text(item.get('title'))
     author = _public_resource_text(item.get('author'))
@@ -425,10 +444,11 @@ def _format_textbook_resource(item: dict) -> list[str]:
     # Display the human title. `source_ref` is internal provenance (usually a repo path)
     # and must never reach a learner surface — fall back to it only when it is a citation
     # string, never an internal repo path.
+    url = _public_resource_url(item)
     display_title = title
     if not display_title:
         ref = _public_resource_text(item.get('source_ref'))
-        display_title = ref if (ref and not _is_internal_ref_path(ref)) else str(item.get('url') or '—')
+        display_title = ref if (ref and not _is_internal_ref_path(ref)) else (url or '—')
 
     if pages and str(pages) not in display_title:
         display_title = f"{display_title}, p. {pages}"
@@ -437,7 +457,6 @@ def _format_textbook_resource(item: dict) -> list[str]:
 
     # Render a clickable link when a public URL is present (e.g. an online edition or
     # the on-site reader); otherwise a plain bold citation.
-    url = validate_and_clean_url(str(item.get('url') or ''), display_title)
     display_title = mdx_safe_text(display_title)
     label = f"[{display_title}]({mdx_safe_text(url)})" if url else f"**{display_title}**"
     lines = [f"> - 📚 {label}"]
@@ -456,8 +475,8 @@ def _format_textbook_resource(item: dict) -> list[str]:
 def _format_linked_resource(item: dict) -> str:
     role = _resource_role(item)
     icon = RESOURCE_ROLE_ICONS.get(role, '🔗')
-    title = _public_resource_text(item.get('title')) or str(item.get('url') or '—')
-    url = validate_and_clean_url(str(item.get('url') or ''), title)
+    url = _public_resource_url(item)
+    title = _public_resource_text(item.get('title')) or url or '—'
     desc = _public_resource_description(item)
     title = mdx_safe_text(title)
     label = f"[{title}]({mdx_safe_text(url)})" if url else f"**{title}**"

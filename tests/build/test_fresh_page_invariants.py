@@ -13,6 +13,7 @@ import subprocess
 
 import pytest
 
+from scripts import config
 from scripts.build.fresh import assemble
 from tests.build.test_fresh_page_safety import FIXTURE, reassemble_attempt5
 from tests.build.test_fresh_render_coverage import LEVELS, ROOT, check_render, maximal_draft
@@ -175,6 +176,55 @@ def assert_unique_workbook_pointers(page):
     return pointers
 
 
+def visible_type_ids(lines, types):
+    """Match complete engine ids even inside a longer visible line."""
+    return {typ for typ in types if any(re.search(r"\b" + re.escape(typ) + r"\b", line) for line in lines)}
+
+
+@pytest.mark.parametrize("line", ["quiz", "§quiz", "Here is quiz:", "A fill-in exercise"])
+def test_type_id_invariant_catches_ids_inside_longer_lines(line):
+    assert visible_type_ids([line], {"quiz", "fill-in"})
+
+
+def test_type_id_invariant_keeps_word_boundaries():
+    assert not visible_type_ids(["quizzes filling-in"], {"quiz", "fill-in"})
+
+
+@pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.parametrize("module_num", [1, 4, 21, 51])
+def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num, render_environment):
+    inputs = maximal_draft(level)
+    draft, plan, pack, words = inputs
+    plan["arc_ref"]["position"] = module_num
+    example = "ExampleEnglishProbe"
+    dialogue = ["DialogueEnglishProbeOne", "DialogueEnglishProbeTwo"]
+    gloss = "InlineEnglishProbe"
+    pack["examples"][0]["translation_en"] = example
+    draft["dialogue"]["translation_en"] = dialogue
+    words["words"][0]["gloss_en"] = gloss
+    result, expanded = check_render(inputs, level)
+    assert result.passed, result.to_dict()
+    tabs = re.findall(r'<TabItem label="[^"]+">(.*?)</TabItem>', html.unescape(result.artifacts["mdx"]), re.DOTALL)
+    assert len(tabs) == 4
+    body = "\n".join(tabs[i] for i in (0, 2, 3))
+    counts = {probe: body.count(probe) for probe in [example, *dialogue, gloss]}
+    # Independent expectation from the config's level policies: A1's designed
+    # scaffold survives; A2 examples/dialogues stay Ukrainian; B1+ English is
+    # confined to Tab 2. This measures additions, not synthetic fixture prose.
+    policy = config.compute_immersion_band(level, module_num)
+    if level == "a1":
+        assert policy["advisory_pct_max"] < 75
+        assert all(count > 0 for count in counts.values()), counts
+    else:
+        assert policy["advisory_pct_min"] >= 75
+        assert counts == dict.fromkeys(counts, 0), counts
+        assert "isUkrainian={false}" not in body, "A2+ widgets must use Ukrainian UI"
+        assert re.findall(r'<TabItem label="([^"]+)">', result.artifacts["mdx"]) == ["Урок", "Словник", "Вправи", "Ресурси"]
+    assert gloss in tabs[1], "Vocabulary support must survive at every level"
+    translations = [u for u in expanded["units"] if str(u["block"]).startswith("dialogue_translation_")]
+    assert len(translations) == (len(dialogue) if level == "a1" else 0)
+
+
 @pytest.mark.parametrize("level", LEVELS)
 @pytest.mark.parametrize("placement", ["inline", "workbook"])
 @pytest.mark.site_toolchain
@@ -187,6 +237,21 @@ def test_no_activity_type_id_is_visible_on_any_page(level, placement, render_env
     assert set(types_by_id.values()) == types
     for activity in draft["activities"]:
         activity.pop("title", None)
+        # Payload prefixes name engine types only to distinguish transport
+        # fixtures. Replace that synthetic prose so longer-line matching can
+        # detect actual engine leaks without exempting any visible fields.
+        typ = types_by_id[activity["id"]]
+
+        def replace_prefix(value, typ=typ):
+            if isinstance(value, str):
+                return re.sub(r"\b" + re.escape(typ) + r"\b", "Probe", value)
+            if isinstance(value, list):
+                return [replace_prefix(child) for child in value]
+            if isinstance(value, dict):
+                return {key: replace_prefix(child) for key, child in value.items()}
+            return value
+
+        activity.update(replace_prefix(activity))
         # The maximal transport fixture prefixes every payload with its type.
         # Anagram splits "anagram items ..." into visible tiles; independent
         # letter data ensures a tile cannot masquerade as an engine leak.
@@ -227,12 +292,14 @@ def test_no_activity_type_id_is_visible_on_any_page(level, placement, render_env
     rendered = render_activity_blocks(blocks, tmp_path)
     # Check surrounding Markdown across all tabs and actual component text;
     # engine ids inside JSX/JSON props are bindings, not visible prose.
-    markdown_lines = {re.sub(r"^#{1,6}\s+", "", line.strip()) for line in page.splitlines()}
+    markdown = re.sub(r"<[A-Z]\w*\b[^>]*?/>", "", page).split("---", 2)[-1]
+    markdown_lines = {re.sub(r"^#{1,6}\s+", "", line.strip()) for line in markdown.splitlines()}
     visible_lines = {
         line.strip()
         for line in html.unescape(re.sub(r"<[^>]+>", "\n", "\n".join(rendered))).splitlines()
     }
-    assert not (types & (markdown_lines | visible_lines)), f"Visible activity type ids: {types & (markdown_lines | visible_lines)}"
+    leaks = visible_type_ids(markdown_lines | visible_lines, types)
+    assert not leaks, f"Visible activity type ids: {leaks}; lines: {[line for line in markdown_lines | visible_lines if visible_type_ids([line], leaks)]}"
 
 
 def test_attempt5_has_no_activity_type_heading(render_environment):
@@ -243,7 +310,12 @@ def test_attempt5_has_no_activity_type_heading(render_environment):
         for level in LEVELS
     ))
     lines = {re.sub(r"^#{1,6}\s+", "", line.strip()) for line in html.unescape(page).splitlines()}
-    assert not types & lines, f"Visible activity type ids: {types & lines}"
+    # Preserve the whole-line guard everywhere. Broaden label surfaces with
+    # word boundaries: ordinary A1 prose can legitimately say "reading" or
+    # "order", while labels such as §quiz must never expose an engine id.
+    labels = [line for line in html.unescape(page).splitlines() if re.match(r"^(?:#{1,6}\s|\*\()", line)]
+    leaks = (types & lines) | visible_type_ids(labels, types)
+    assert not leaks, f"Visible activity type ids: {leaks}"
 
 
 @pytest.mark.parametrize("as_dict", [False, True])

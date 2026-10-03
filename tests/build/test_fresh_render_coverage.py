@@ -10,6 +10,7 @@ import ast
 import copy
 import inspect
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -209,13 +210,36 @@ def fixture_leaves(value, path=()):
 
 
 def expansion_fields():
-    """Read the actual expansion and prompt precedence; no hand-maintained unit list."""
-    tree = ast.parse(
-        inspect.getsource(assemble.assemble_expanded_document) + "\n" + inspect.getsource(receipts.requirement_sentence)
-    )
-    # Literal dictionary keys, including keys in alias loops, are a conservative
-    # superset: metadata references may be checked too, never fewer unit fields.
-    return {n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+    """Walk the expansion's reachable helpers as well as prompt precedence.
+
+    Literal keys conservatively overcount fields; helpers cannot hide a new
+    unit-producing key. Inspect repository functions without executing them.
+    """
+    pending = [assemble.assemble_expanded_document, receipts.requirement_sentence]
+    seen, fields = set(), set()
+    while pending:
+        function = pending.pop()
+        if function in seen:
+            continue
+        seen.add(function)
+        tree = ast.parse(inspect.getsource(function))
+        fields.update(n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            target = node.func
+            names = []
+            while isinstance(target, ast.Attribute):
+                names.append(target.attr)
+                target = target.value
+            if not isinstance(target, ast.Name):
+                continue
+            candidate = function.__globals__.get(target.id)
+            for name in reversed(names):
+                candidate = getattr(candidate, name, None)
+            if inspect.isfunction(candidate) and candidate.__module__ in {assemble.__name__, receipts.__name__}:
+                pending.append(candidate)
+    return fields
 
 
 @pytest.mark.parametrize("level", LEVELS)
@@ -334,6 +358,145 @@ def test_fresh_schema_walk_rejects_an_unexercised_block_field(kind):
     key = "lead_in" if kind == "video" else "text"
     block.pop(key)
     assert f"block_{kind}.{key}" in document_coverage_gaps("a1", draft)
+
+
+def test_coverage_walk_follows_transitive_helpers(monkeypatch):
+    # Add a field exclusively in a helper reached through another helper, not
+    # in the expansion function or in a manually maintained helper allowlist.
+    from scripts.build.fresh import assemble as module
+
+    monkeypatch.setattr(coverage_probe_helper, "__module__", module.__name__)
+    monkeypatch.setattr(coverage_probe_leaf, "__module__", module.__name__)
+    monkeypatch.setattr(module, "string_key_answer", coverage_probe_helper)
+    monkeypatch.setattr(module, "derive_record_kind", coverage_probe_leaf)
+    assert "helper_only_coverage_field" in expansion_fields()
+
+
+def coverage_probe_helper(*args):
+    return assemble.derive_record_kind(*args)
+
+
+def coverage_probe_leaf(*args):
+    return {"helper_only_coverage_field": args}
+
+
+@pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.parametrize("blank", [" ", "\t", "\n", "\t\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000"])
+def test_translate_whitespace_choice_fails_live_activity_and_draft_schema(level, blank):
+    from scripts.build.fresh.draft_schema import validate_draft
+
+    inputs = maximal_draft(level)
+    draft, plan, *_ = inputs
+    types = {a["id"]: a["type"] for a in plan["lessons"][0]["activities"]}
+    act = next(a for a in draft["activities"] if types[a["id"]] == "translate")
+    definition = json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"][f"translate-{level}"]
+    payload = {key: value for key, value in {**act, "type": "translate", "title": "Learner title"}.items() if key in definition["properties"]}
+    jsonschema.Draft7Validator(definition).validate(payload)
+    act["items"][0]["options"][0]["text"] = blank
+    payload["items"] = act["items"]
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.Draft7Validator(definition).validate(payload)
+    with pytest.raises(jsonschema.ValidationError):
+        draft_validator(level).validate(draft)
+    assert any("pattern" in e.reason or "match" in e.reason for e in validate_draft(draft, level, activity_types=types))
+
+
+def choice_text_schemas(filename):
+    def choices(node):
+        if isinstance(node, dict):
+            for key, child in node.items():
+                if key in {"options", "choices", "words", "letters", "syllables"} and isinstance(child, dict) and child.get("type") == "array":
+                    yield child["items"]
+                yield from choices(child)
+        elif isinstance(node, list):
+            for child in node:
+                yield from choices(child)
+
+    def texts(node):
+        if node.get("type") == "string":
+            yield node
+        elif node.get("type") == "object" and "text" in node.get("properties", {}):
+            yield node["properties"]["text"]
+        for variant in node.get("oneOf", []) + node.get("anyOf", []):
+            yield from texts(variant)
+
+    return [text for choice in choices(json.loads((ROOT / "schemas" / filename).read_text())) for text in texts(choice)]
+
+
+@pytest.mark.parametrize("filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]])
+def test_every_choice_schema_preserves_empty_but_rejects_whitespace(filename):
+    schemas = choice_text_schemas(filename)
+    assert schemas
+    assert any(schema.get("minLength", 0) == 0 for schema in schemas)
+    for schema in schemas:
+        validator = jsonschema.Draft7Validator(schema)
+        # Exact empty is the documented "no letter" orthography token.
+        # Preserve each field's pre-existing minLength contract separately.
+        jsonschema.Draft7Validator({"type": "string", "pattern": schema["pattern"]}).validate("")
+        if schema.get("minLength", 0) == 0:
+            validator.validate("")
+        else:
+            assert not validator.is_valid("")
+        # A newline alone must fail too: ^$ would accept it in Python.
+        for blank in (" ", "\t", "\n", "\n\t", "\r\n", "\u00a0", "\u2003", "\u2028", "\u202f", "\u3000"):
+            assert not validator.is_valid(blank), schema
+        validator.validate("Learner choice")
+        validator.validate("  Learner choice  ")
+
+
+@pytest.mark.site_toolchain
+@pytest.mark.parametrize("filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]])
+def test_choice_patterns_preserve_empty_and_reject_unicode_whitespace_in_ecmascript(filename):
+    schemas = choice_text_schemas(filename)
+    assert schemas
+    # JSON Schema specifies ECMA regexes; exercise the actual runtime as well
+    # as Python jsonschema, especially NBSP and the exact-empty alternative.
+    script = r"""
+const fs = require('node:fs');
+const patterns = JSON.parse(fs.readFileSync(0, 'utf8'));
+const whitespace = [' ', '\t', '\n', '\r\n', '\u00a0', '\u2003',
+                    '\u2028', '\u2029', '\u202f', '\u3000', '\ufeff'];
+for (const pattern of patterns) {
+    const regex = new RegExp(pattern);
+    for (const text of ['', 'Learner choice', '  Learner choice  ']) {
+        if (!regex.test(text)) throw new Error(`Rejected ${JSON.stringify(text)}: ${pattern}`);
+    }
+    for (const text of whitespace) {
+        if (regex.test(text)) throw new Error(`Accepted ${JSON.stringify(text)}: ${pattern}`);
+    }
+}
+"""
+    result = subprocess.run(
+        ["node", "-e", script],
+        input=json.dumps([schema["pattern"] for schema in schemas]),
+        text=True,
+        capture_output=True,
+        cwd=ROOT,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("level", ["a2", "b1", "b2"])
+@pytest.mark.parametrize("prefix", ["Story", "Text", "Reading", "Dialogue", "Conversation", "Passage"])
+def test_instruction_heading_is_never_processed_as_story(level, prefix, render_environment):
+    inputs = maximal_draft(level)
+    types = {a["id"]: a["type"] for a in inputs[1]["lessons"][0]["activities"]}
+    count = 0
+    for activity in inputs[0]["activities"]:
+        if types[activity["id"]] in assemble._PAGE_INSTRUCTION_FIELD:
+            activity["instruction"] = f"{prefix} learner instruction."
+            count += 1
+    assert count > 0
+    result, _ = check_render(inputs, level)
+    assert result.passed, result.to_dict()
+    assert result.artifacts["mdx"].count(f"{prefix} learner instruction.") == count
+
+
+@pytest.mark.parametrize("prefix", ["Story", "Text", "Reading", "Dialogue", "Conversation", "Passage"])
+def test_story_parser_keeps_a_multiline_activity_payload_byte_for_byte(prefix):
+    mdx = f'### {prefix} instruction\n\n<Cloze\n  text="First line"\n  instruction="Second line"\n/>\n'
+    assert process_story_sections(mdx) == mdx
 
 
 @pytest.mark.parametrize(
