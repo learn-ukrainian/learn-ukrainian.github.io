@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import importlib
+import importlib.abc
 import importlib.util
 import json
 import shutil
@@ -296,16 +297,54 @@ def _load_script(name: str, relative: str) -> types.ModuleType:
     return module
 
 
+GUARDED_LOADERS = (
+    "scripts/projects/open_model_data/train_and_eval_real_model.py",
+    "scripts/projects/open_model_data/gemma_hardware_probe.py",
+    "scripts/projects/open_model_data/package_unified_dataset.py",
+    "scripts/projects/open_model_data/upload_to_huggingface.py",
+    "scripts/projects/open_model_data/v4_format_decolonization.py",
+    "scripts/projects/open_model_data/v4_open_weight_learning_study.py",
+    "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
+    "scripts/dataset/train_gemma_huggingface.py",
+)
+# The ML stack a slim CI shard lacks; a loader must refuse before it needs any of it.
+ML_STACK_MODULES = frozenset({"accelerate", "bitsandbytes", "datasets", "peft", "torch", "transformers", "trl"})
+
+
+class _MlStackBlocker(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname: str, path: object = None, target: object = None) -> None:
+        if fullname.partition(".")[0] in ML_STACK_MODULES:
+            raise ModuleNotFoundError(f"No module named {fullname!r}", name=fullname)
+        return None
+
+
+@pytest.fixture
+def without_ml_stack(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Make the ML stack absent, as on a CI shard where it is not installed."""
+    # Absent rather than None in sys.modules: libraries such as scipy probe sys.modules for torch.
+    for name in list(sys.modules):
+        if name.partition(".")[0] in ML_STACK_MODULES:
+            monkeypatch.delitem(sys.modules, name)
+    monkeypatch.setattr(sys, "meta_path", [_MlStackBlocker(), *sys.meta_path])
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("torch.utils.data")
+
+
+@pytest.mark.parametrize("relative", GUARDED_LOADERS)
+def test_loader_imports_without_ml_stack(relative: str, without_ml_stack: None) -> None:
+    _load_script(f"no_ml_stack_{Path(relative).stem}", relative)
+
+
 def test_loader_train_and_eval_real_model_refuses(
-    tmp_path: Path, sealed_copy: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, sealed_copy: Path, monkeypatch: pytest.MonkeyPatch, without_ml_stack: None
 ) -> None:
-    module = importlib.import_module("scripts.projects.open_model_data.train_and_eval_real_model")
+    module = _load_script("quarantine_train_and_eval", "scripts/projects/open_model_data/train_and_eval_real_model.py")
     fresh = tmp_path / "fresh.jsonl"
     fresh.write_text("{}\n", encoding="utf-8")
     output = tmp_path / "out"
     for train, heldout in ((sealed_copy, fresh), (fresh, RELEASE_TOMBSTONE_PATH)):
         argv = ["x", "--train-file", str(train), "--heldout-file", str(heldout), "--protection-file", str(fresh)]
-        monkeypatch.setattr(sys, "argv", [*argv, "--output-dir", str(output), "--device", "cpu"])
+        monkeypatch.setattr(sys, "argv", [*argv, "--output-dir", str(output)])
         with pytest.raises(QuarantinedArtifactError):
             module.main()
     assert not output.exists()
@@ -495,19 +534,7 @@ def test_loader_train_gemma_huggingface_refuses(sealed_copy: Path) -> None:
             module.refuse_rebuild_required_candidate(dataset)
 
 
-@pytest.mark.parametrize(
-    "relative",
-    [
-        "scripts/projects/open_model_data/train_and_eval_real_model.py",
-        "scripts/projects/open_model_data/gemma_hardware_probe.py",
-        "scripts/projects/open_model_data/package_unified_dataset.py",
-        "scripts/projects/open_model_data/upload_to_huggingface.py",
-        "scripts/projects/open_model_data/v4_format_decolonization.py",
-        "scripts/projects/open_model_data/v4_open_weight_learning_study.py",
-        "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
-        "scripts/dataset/train_gemma_huggingface.py",
-    ],
-)
+@pytest.mark.parametrize("relative", GUARDED_LOADERS)
 def test_loader_calls_the_quarantine_guard(relative: str) -> None:
     tree = ast.parse((REPO_ROOT / relative).read_text(encoding="utf-8"))
     calls = {node.func.id for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)}
