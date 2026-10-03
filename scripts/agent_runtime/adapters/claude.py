@@ -28,8 +28,12 @@ Mode handling:
 - ``read-only`` with ``reviewer_tools=True`` and no explicit ``allowed_tools``:
   ``dontAsk`` permits
   read/search and shell execution (including tests and Python) while denying
-  edits and common Git/GitHub mutations. Explicit caller tool lists pass
-  through unchanged and do not receive reviewer-only restrictions.
+  edits and common Git/GitHub mutations. When the worker checkout
+  ``.mcp.json`` (or an explicit ``mcp_config_path``) lists ``sources``, every
+  ``sources`` tool is named in the allow list: that server is read-only by
+  contract. Other configured servers stay denied. Config parsing and its
+  fail-closed rules are the workspace-write ones below. Explicit caller tool
+  lists pass through unchanged and do not receive reviewer-only restrictions.
   Prefix Bash denies are advisory; the repository PreToolUse guards are the
   primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
   a primary-checkout write in a live probe, so it is not that backstop.
@@ -132,13 +136,66 @@ _WORKSPACE_WRITE_TOOLS = (
 )
 _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 
+# Every tool the sources MCP server lists. Each is a lookup annotated
+# readOnlyHint=True, destructiveHint=False in .mcp/servers/sources/server.py.
+# A test keeps this tuple equal to the server's list and annotations, so a new
+# or write-capable tool fails CI before a reviewer can be granted it.
+SOURCES_MCP_SERVER = "sources"
+SOURCES_READ_ONLY_TOOLS = (
+    "check_modern_form",
+    "check_russian_shadow",
+    "check_text",
+    "collection_stats",
+    "get_chunk_context",
+    "get_full_text",
+    "inspect_lemma",
+    "inspect_word",
+    "inspect_words",
+    "mcp_server_identity",
+    "query_cefr_level",
+    "query_e2u",
+    "query_grac",
+    "query_pravopys",
+    "query_r2u",
+    "query_slovnyk_me",
+    "query_sum20",
+    "query_ulif",
+    "query_ulif_antonyms",
+    "query_ulif_phraseology",
+    "query_ulif_records",
+    "query_ulif_synonyms",
+    "query_wikipedia",
+    "search_definitions",
+    "search_esum",
+    "search_external",
+    "search_grinchenko_1907",
+    "search_heritage",
+    "search_idioms",
+    "search_literary",
+    "search_resources",
+    "search_slovnyk_me",
+    "search_sources",
+    "search_style_guide",
+    "search_synonyms",
+    "search_text",
+    "search_ua_gec_errors",
+    "translate_en_uk",
+    "verify_lemma",
+    "verify_quote",
+    "verify_source_attribution",
+    "verify_stress",
+    "verify_stresses",
+    "verify_word",
+    "verify_words",
+    "vet_vocabulary",
+)
+
 # Ordinary Claude reviewers need a non-interactive shell. Claude Bash deny
 # patterns match prefixes only: git -C, wrappers, and interpreters can bypass
 # them. The shared PreToolUse guards below provide the checkout backstop.
 REVIEWER_PERMISSION_PROFILE = {
     "mode": "dontAsk",
     "allow": ("Read", "Grep", "Glob", "LS", "Bash", "WebFetch", "WebSearch"),
-    "mcp_allow": ("mcp__sources__*",),
     "deny": (
         "Edit",
         "Write",
@@ -176,7 +233,7 @@ REVIEWER_PERMISSION_PROFILE = {
 
 
 def _mcp_config_path(cwd: Path, tool_config: dict[str, Any]) -> Path:
-    """Return the MCP config a write worker's allow list is built from.
+    """Return the MCP config a write worker's or reviewer's allow list is built from.
 
     An explicit ``mcp_config_path`` wins. Otherwise the file is the worker
     checkout's ``.mcp.json`` (the dispatch ``cwd``), not the checkout that
@@ -227,6 +284,17 @@ def _workspace_write_allows(cwd: Path, tool_config: dict[str, Any]) -> tuple[str
     for server in _mcp_server_names(_mcp_config_path(cwd, tool_config)):
         names.append(f"mcp__{server}__*")
     return tuple(dict.fromkeys(names))
+
+
+def _reviewer_mcp_allows(cwd: Path, tool_config: dict[str, Any]) -> tuple[str, ...]:
+    """Read-only MCP tools an ordinary reviewer may call without a prompt.
+
+    Only the sources server is read-only by contract, so only its tools are
+    named, one rule each; other configured servers stay denied under dontAsk.
+    """
+    if SOURCES_MCP_SERVER not in _mcp_server_names(_mcp_config_path(cwd, tool_config)):
+        return ()
+    return tuple(f"mcp__{SOURCES_MCP_SERVER}__{name}" for name in SOURCES_READ_ONLY_TOOLS)
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
@@ -579,13 +647,12 @@ class ClaudeAdapter:
             profile = REVIEWER_PERMISSION_PROFILE
             cmd.extend(["--permission-mode", profile["mode"]])
             granted = [*profile["allow"]]
-            if tc.get("mcp_config_path"):
-                if tc.get("review_access") == "full":
-                    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+            if tc.get("mcp_config_path") and tc.get("review_access") == "full":
+                from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
-                    granted.extend(review_tools_allowed_csv("claude", "full").split(","))
-                else:
-                    granted.extend(profile["mcp_allow"])
+                granted.extend(review_tools_allowed_csv("claude", "full").split(","))
+            else:
+                granted.extend(_reviewer_mcp_allows(cwd, tc))
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(profile["deny"])])
         elif mode == "workspace-write" and not review_isolation:

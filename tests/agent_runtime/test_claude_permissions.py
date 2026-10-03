@@ -1,5 +1,7 @@
 """Command and deployed-hook coverage for headless Claude workers."""
 
+import asyncio
+import importlib.util
 import io
 import json
 import subprocess
@@ -9,7 +11,11 @@ from pathlib import Path
 
 import pytest
 
-from scripts.agent_runtime.adapters.claude import REVIEWER_PERMISSION_PROFILE, ClaudeAdapter
+from scripts.agent_runtime.adapters.claude import (
+    REVIEWER_PERMISSION_PROFILE,
+    SOURCES_READ_ONLY_TOOLS,
+    ClaudeAdapter,
+)
 from scripts.agent_runtime.env_sanitize import build_agent_env
 
 
@@ -333,18 +339,145 @@ def test_reviewer_publish_hook(command: str, blocked: bool) -> None:
     assert (result.returncode == 2) is blocked, (command, result.stderr)
 
 
-def test_sources_allowance_only_when_mcp_config_is_passed(tmp_path: Path) -> None:
-    def plan(config: dict) -> list[str]:
-        return ClaudeAdapter().build_invocation(
-            prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
-            task_id=None, session_id=None, tool_config=config,
-        ).cmd
+SOURCES_RULES = [f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS]
+SOURCES_SERVER_PATH = Path(__file__).resolve().parents[2] / ".mcp/servers/sources/server.py"
 
-    ordinary = plan({"reviewer_tools": True})
-    with_mcp = plan({"reviewer_tools": True, "mcp_config_path": "/tmp/sources.json"})
-    assert "mcp__sources__*" not in ordinary[ordinary.index("--allowedTools") + 1]
-    assert "mcp__sources__*" in with_mcp[with_mcp.index("--allowedTools") + 1]
-    assert with_mcp.count("--allowedTools") == 1
+
+def _reviewer_plan(cwd: Path, **extra) -> list[str]:
+    return (
+        ClaudeAdapter()
+        .build_invocation(
+            prompt="inspect",
+            mode="read-only",
+            cwd=cwd,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={"reviewer_tools": True, **extra},
+        )
+        .cmd
+    )
+
+
+def _granted(cmd: list[str]) -> list[str]:
+    assert cmd.count("--allowedTools") == 1
+    return cmd[cmd.index("--allowedTools") + 1].split(",")
+
+
+def test_sources_read_only_tools_match_server_contract() -> None:
+    """The granted names are exactly the server's tools, each read-only and non-destructive (#9551)."""
+    spec = importlib.util.spec_from_file_location("sources_server_contract", SOURCES_SERVER_PATH)
+    server = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(server)
+    tools = asyncio.run(server.list_tools())
+    assert sorted(tool.name for tool in tools) == list(SOURCES_READ_ONLY_TOOLS)
+    for tool in tools:
+        assert tool.annotations.read_only_hint is True, tool.name
+        assert tool.annotations.destructive_hint is False, tool.name
+
+
+def test_reviewer_grants_every_sources_tool_from_worker_mcp_config(tmp_path: Path) -> None:
+    (tmp_path / ".mcp.json").write_text(
+        json.dumps({"mcpServers": {"sources": {}, "other_tool": {}}}),
+        encoding="utf-8",
+    )
+    cmd = _reviewer_plan(tmp_path)
+    granted = _granted(cmd)
+    assert granted == [*REVIEWER_PERMISSION_PROFILE["allow"], *SOURCES_RULES]
+    # Only the read-only-by-contract server is granted, by exact tool name.
+    assert not any(name.startswith("mcp__other_tool") for name in granted)
+    assert "mcp__sources__*" not in granted
+    # No write-capable tool: the reviewer deny list and guards are unchanged.
+    assert not {"Edit", "Write", "NotebookEdit", "MultiEdit"} & set(granted)
+    assert set(cmd[cmd.index("--disallowedTools") + 1].split(",")) == set(REVIEWER_PERMISSION_PROFILE["deny"])
+    assert cmd[cmd.index("--permission-mode") + 1] == "dontAsk"
+    settings = json.loads(cmd[cmd.index("--settings") + 1])
+    commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
+    assert any(command.endswith("guard-reviewer-publish.py") for command in commands)
+    assert any(command.endswith("guard-primary-checkout-write.py") for command in commands)
+
+
+def test_reviewer_explicit_mcp_config_path_wins_over_worker_cwd(tmp_path: Path) -> None:
+    (tmp_path / ".mcp.json").write_text(json.dumps({"mcpServers": {"sources": {}}}), encoding="utf-8")
+    explicit = tmp_path / "explicit.json"
+    explicit.write_text(json.dumps({"mcpServers": {"other_tool": {}}}), encoding="utf-8")
+    granted = _granted(_reviewer_plan(tmp_path, mcp_config_path=str(explicit)))
+    assert not any(name.startswith("mcp__") for name in granted)
+
+    explicit.write_text(json.dumps({"mcpServers": {"sources": {}}}), encoding="utf-8")
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    granted = _granted(_reviewer_plan(empty, mcp_config_path=str(explicit)))
+    assert [name for name in granted if name.startswith("mcp__")] == SOURCES_RULES
+
+
+def test_reviewer_missing_mcp_config_grants_no_mcp_tools(tmp_path: Path) -> None:
+    for cmd in (
+        _reviewer_plan(tmp_path),
+        _reviewer_plan(tmp_path, mcp_config_path=str(tmp_path / "absent.json")),
+    ):
+        assert _granted(cmd) == list(REVIEWER_PERMISSION_PROFILE["allow"])
+
+
+@pytest.mark.parametrize(
+    ("content", "match"),
+    [("{", "invalid JSON"), ("[]", "mcpServers"), ('{"mcpServers": {"bad,name": {}}}', "cannot be expressed")],
+)
+def test_reviewer_rejects_unusable_mcp_config(tmp_path: Path, content: str, match: str) -> None:
+    (tmp_path / ".mcp.json").write_text(content, encoding="utf-8")
+    with pytest.raises(ValueError, match=match):
+        _reviewer_plan(tmp_path)
+
+
+def test_reviewer_rejects_unreadable_mcp_config(tmp_path: Path) -> None:
+    config = tmp_path / ".mcp.json"
+    config.write_text('{"mcpServers": {"sources": {}}}\n', encoding="utf-8")
+    config.chmod(0)
+    try:
+        with pytest.raises(ValueError, match="unreadable"):
+            _reviewer_plan(tmp_path)
+    finally:
+        config.chmod(0o644)
+
+
+def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
+    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+    (tmp_path / ".mcp.json").write_text("{", encoding="utf-8")  # never read for formal attempts
+    granted = _granted(_reviewer_plan(tmp_path, mcp_config_path=str(tmp_path / "attempt.json"), review_access="full"))
+    assert granted == [*REVIEWER_PERMISSION_PROFILE["allow"], *review_tools_allowed_csv("claude", "full").split(",")]
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_sources_config_leaves_write_and_danger_argv_unchanged(tmp_path: Path, mode: str) -> None:
+    (tmp_path / ".mcp.json").write_text(json.dumps({"mcpServers": {"sources": {}}}), encoding="utf-8")
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode=mode,
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"reviewer_tools": True},
+    )
+    assert "--disallowedTools" not in plan.cmd
+    assert not any(rule in plan.cmd for rule in SOURCES_RULES)
+    if mode == "workspace-write":
+        assert _granted(plan.cmd) == [
+            "Bash",
+            "Read",
+            "Edit",
+            "Write",
+            "Grep",
+            "Glob",
+            "LS",
+            "WebFetch",
+            "WebSearch",
+            "mcp__sources__*",
+        ]
+    else:
+        assert "--allowedTools" not in plan.cmd
+        assert "--dangerously-skip-permissions" in plan.cmd
 
 
 @pytest.mark.parametrize("allowed_tools", ["mcp__sources__*", "Read,Bash(git push *)", ""])
