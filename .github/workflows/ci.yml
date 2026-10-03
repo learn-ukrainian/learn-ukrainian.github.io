@@ -137,6 +137,9 @@ jobs:
     if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -160,6 +163,19 @@ jobs:
         run: |
           npm ci
           PATH="$PWD/.venv/bin:$PATH" bash scripts/ci/checks.sh
+      # Freeze once: independent per-shard lookups could produce different
+      # assignments if another merge-group run finishes during this matrix.
+      - name: Freeze pytest durations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: .venv/bin/python -m scripts.ci.split_tests refresh --repo "$REPO" --output ci-artifacts/pytest-file-durations.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-duration-snapshot
+          path: ci-artifacts/pytest-file-durations.json
+          if-no-files-found: error
+          retention-days: 14
 
   frontend:
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
@@ -212,7 +228,7 @@ jobs:
 
   pytest:
     name: pytest (${{ matrix.shard }})
-    needs: [reuse]
+    needs: [reuse, checks]
     if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -246,6 +262,10 @@ jobs:
         uses: ./.github/actions/python-ci-env
       - run: bash scripts/ci/test_env.sh wait
         timeout-minutes: 5
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: pytest-duration-snapshot
+          path: ci-artifacts
       - name: Run pytest
         env:
           SHARD: ${{ matrix.shard }}
@@ -260,7 +280,8 @@ jobs:
           # quietly downloading history (scripts/ci/history-tests.txt).
           [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
-            | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" > "$LU_PYTEST_SHARD_FILES"
+            | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
+              --durations ci-artifacts/pytest-file-durations.json > "$LU_PYTEST_SHARD_FILES"
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
             --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
@@ -310,6 +331,16 @@ jobs:
       - env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: python3 -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json
+      # Future runs learn only from a full, successful partition. The refresher
+      # further requires the entire merge-group workflow to have passed.
+      - name: Record pytest durations
+        run: python3 -m scripts.ci.split_tests durations ci-artifacts/shards/*/pytest-shard-*.xml > ci-artifacts/pytest-file-durations.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-file-durations
+          path: ci-artifacts/pytest-file-durations.json
+          if-no-files-found: error
+          retention-days: 14
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ci-tested-tree

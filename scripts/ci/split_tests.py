@@ -17,15 +17,26 @@ the split, so the list cannot go stale silently.
 
     python -m scripts.ci.split_tests durations junit/*.xml > scripts/ci/pytest-file-durations.json
 
+``refresh`` freezes median weights from the last 20 available successful
+merge-group timing artifacts, retaining committed weights where observations
+are absent. ci.yml publishes those artifacts only after its full partition
+audit, and distributes one snapshot to the whole matrix. Unavailable telemetry
+falls back to committed weights with a diagnostic; it never changes selection.
+
 Stdlib only, so it runs before the project environment is installed.
 """
 
 from __future__ import annotations
 
 import argparse
+import io
 import json
+import math
+import re
 import statistics
+import subprocess
 import sys
+import zipfile
 from collections import defaultdict
 from collections.abc import Sequence
 from pathlib import Path
@@ -34,6 +45,85 @@ from xml.etree import ElementTree
 DEFAULT_DURATIONS = Path(__file__).with_name("pytest-file-durations.json")
 DEFAULT_HISTORY = Path(__file__).with_name("history-tests.txt")
 HISTORY_SHARD = 1  # ci.yml: the one pytest shard with a full-history checkout
+TIMING_ARTIFACT = "pytest-file-durations"
+
+
+def validate_durations(value: object) -> dict[str, float]:
+    """Reject malformed timing data; weights must never affect test selection."""
+    if not isinstance(value, dict) or not value:
+        raise ValueError("duration data must be a nonempty object")
+    for name, seconds in value.items():
+        if (
+            not isinstance(name, str)
+            or not re.fullmatch(r"tests/(?:[^/]+/)*test_[^/]+\.py", name)
+            or not isinstance(seconds, (int, float))
+            or isinstance(seconds, bool)
+            or not math.isfinite(seconds)
+            or seconds < 0
+        ):
+            raise ValueError("invalid test file duration")
+    return value
+
+
+def median_durations(samples: Sequence[dict[str, float]]) -> dict[str, float]:
+    """Median per file across observed runs; an absent file is not a zero."""
+    observations: dict[str, list[float]] = defaultdict(list)
+    for sample in samples:
+        for name, seconds in validate_durations(sample).items():
+            observations[name].append(seconds)
+    return {name: round(statistics.median(values), 3) for name, values in sorted(observations.items())}
+
+
+def github_api(endpoint: str) -> bytes:
+    """Read GitHub with the runner's scoped token; never emit token or response bodies."""
+    return subprocess.run(["gh", "api", endpoint], check=True, capture_output=True, timeout=30).stdout
+
+
+def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) -> int:
+    """Freeze recent successful merge-group timings once, with an offline fallback.
+
+    Only timing artifacts published after the full partition report passes are
+    consumed. A lookup failure costs balance, never coverage. All matrix jobs
+    download this single immutable snapshot instead of querying independently.
+    """
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*", repo) or not 1 <= limit <= 20:
+        raise ValueError("expected owner/repo and a sample limit in 1..20")
+    recorded = validate_durations(json.loads(fallback.read_text(encoding="utf-8")))
+    samples = []
+    try:
+        runs = json.loads(
+            github_api(f"repos/{repo}/actions/workflows/ci.yml/runs?event=merge_group&status=success&per_page=100")
+        )["workflow_runs"]
+        listing = json.loads(github_api(f"repos/{repo}/actions/artifacts?name={TIMING_ARTIFACT}&per_page=100"))
+        by_run: dict[int, list[dict]] = defaultdict(list)
+        for artifact in listing["artifacts"]:
+            if artifact["name"] == TIMING_ARTIFACT and not artifact["expired"]:
+                by_run[artifact["workflow_run"]["id"]].append(artifact)
+        for run in runs:
+            if (
+                run.get("event") != "merge_group"
+                or run.get("status") != "completed"
+                or run.get("conclusion") != "success"
+                or run.get("run_attempt") != 1
+                or run.get("path") != ".github/workflows/ci.yml"
+            ):
+                continue
+            artifacts = by_run[run["id"]]
+            if len(artifacts) != 1:
+                continue
+            payload = github_api(f"repos/{repo}/actions/artifacts/{int(artifacts[0]['id'])}/zip")
+            with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+                samples.append(validate_durations(json.loads(archive.read("pytest-file-durations.json"))))
+            if len(samples) == limit:
+                break
+    except (subprocess.SubprocessError, OSError, ValueError, KeyError, TypeError, zipfile.BadZipFile):
+        print("duration lookup unavailable; retaining valid timings and committed fallback", file=sys.stderr)
+    # Preserve older measurements for files absent from the sampled runs.
+    snapshot = {**recorded, **median_durations(samples)}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(snapshot, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"duration snapshot: {len(samples)} successful merge-group samples, {len(snapshot)} file weights")
+    return len(samples)
 
 
 def read_list(path: Path) -> list[str]:
@@ -88,27 +178,50 @@ def junit_file_seconds(paths: list[Path]) -> dict[str, float]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16 < files.txt
+  .venv/bin/python -m scripts.ci.split_tests durations junit/*.xml > durations.json
+  .venv/bin/python -m scripts.ci.split_tests refresh --repo owner/repo --output snapshot.json
+Outputs: file paths or timing JSON on stdout; refresh writes one immutable timing snapshot.
+Exit codes: 0 = success (including refresh fallback); 1 = invalid data; 2 = CLI usage error.
+Related: .github/workflows/ci.yml; issue #9065.
+""",
+    )
     commands = parser.add_subparsers(dest="command", required=True)
     split = commands.add_parser("split", help="print one shard's files (input: file paths on stdin)")
     split.add_argument("--shard", type=int, required=True, help="1-based shard number")
-    split.add_argument("--of", type=int, required=True, dest="shard_count")
-    split.add_argument("--durations", type=Path, default=DEFAULT_DURATIONS)
+    split.add_argument("--of", type=int, required=True, dest="shard_count", help="total shards, e.g. 16")
+    split.add_argument(
+        "--durations", type=Path, default=DEFAULT_DURATIONS, help="file weights (default: committed JSON)"
+    )
     split.add_argument("--history", type=Path, default=DEFAULT_HISTORY, help="files pinned to the history shard")
     durations = commands.add_parser("durations", help="print per-file seconds from JUnit XML")
-    durations.add_argument("junit", nargs="+", type=Path)
+    durations.add_argument("junit", nargs="+", type=Path, help="all shard JUnit XML files from one full run")
+    refresh = commands.add_parser("refresh", help="freeze median weights from recent successful merge-group artifacts")
+    refresh.add_argument("--repo", required=True, help="GitHub owner/repo; uses GH_TOKEN with actions:read")
+    refresh.add_argument("--output", required=True, type=Path, help="immutable snapshot JSON shared by all shards")
+    refresh.add_argument(
+        "--fallback", type=Path, default=DEFAULT_DURATIONS, help="offline weights (default: committed JSON)"
+    )
+    refresh.add_argument("--limit", type=int, default=20, help="successful timing samples, 1..20 (default: 20)")
     args = parser.parse_args(argv)
 
     if args.command == "durations":
         json.dump(junit_file_seconds(args.junit), sys.stdout, indent=2)
         sys.stdout.write("\n")
         return 0
+    if args.command == "refresh":
+        refresh_durations(args.repo, args.fallback, args.output, args.limit)
+        return 0
     if not 1 <= args.shard <= args.shard_count:
         parser.error(f"--shard {args.shard} is outside 1..{args.shard_count}")
     files = [line.strip() for line in sys.stdin if line.strip()]
     if not files:
         parser.error("no test files on stdin")
-    recorded = json.loads(args.durations.read_text(encoding="utf-8"))
+    recorded = validate_durations(json.loads(args.durations.read_text(encoding="utf-8")))
     shard = assign(files, recorded, args.shard_count, read_list(args.history))[args.shard - 1]
     sys.stdout.write("".join(f"{name}\n" for name in shard))
     return 0
