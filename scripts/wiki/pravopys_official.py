@@ -13,10 +13,13 @@ The PDF text layer mixes Unicode fonts with legacy fonts:
 * fonts named ``1251TimesNew…`` hold the stressed vowels (и́, у́, я́, ю́, є́, ї́, …)
   at the Windows-1251 position of the plain vowel;
 * the Unicode Times fonts write stressed а, е, і, о, у, и as the Latin letters
-  á, é, í, ó, ý, ú inside Cyrillic words.
+  á, é, í, ó, ý, ú inside Cyrillic words (also in endings set off by a hyphen);
+* a few words encode a letter with its lookalike from the other script
+  («Cкладені» with a Latin C, «Мicrosóft» with a Cyrillic М).
 
-``decode_span_text`` and ``restore_cyrillic_stress`` undo those three encodings;
-every rule was checked against rendered glyphs of the official PDF.  Nothing here
+``decode_span_text`` undoes the first two encodings per span; ``restore_scripts``
+undoes the other two word by word, reading hyphenated words across line breaks.
+Every rule was checked against rendered glyphs of the official PDF.  Nothing here
 edits the rules text: stored ``text`` is the printed text line by line, and
 ``text_normalized`` only joins lines and resolves line-end hyphenation.
 
@@ -32,14 +35,14 @@ import re
 import sqlite3
 import unicodedata
 from collections.abc import Callable, Iterable, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
 PRAVOPYS_SOURCE_ID = "pravopys_2019_official"
-PARSER_VERSION = "pravopys_2019_pdf_v1"
+PARSER_VERSION = "pravopys_2019_pdf_v2"
 PRAVOPYS_TITLE = "Український правопис"
 PRAVOPYS_EDITION = (
     "Авторизоване видання 2019 р. — Київ: Наукова думка, 2019. 392 с. ISBN 978-966-00-1728-3"
@@ -125,8 +128,14 @@ _LATIN_STRESSED = {
     "Ú": "И" + ACUTE,
 }
 _WORD_CHARS = rf"\w{ACUTE}’'"
-_WORD_RE = re.compile(f"[{_WORD_CHARS}]+")
-_CYRILLIC_RE = re.compile(f"[{chr(0x0400)}-{chr(0x04FF)}]")
+# A hyphenated word, also when the printed line breaks after one of its hyphens («пліч-\nó-пліч»).
+_COMPOUND_RE = re.compile(f"[{_WORD_CHARS}]+(?:-\n?[{_WORD_CHARS}]+)*")
+_COMPOUND_JOINER_RE = re.compile("(-\n?)")
+# Letters whose Latin and Cyrillic glyphs are identical in the edition's fonts.
+_LATIN_TO_CYRILLIC_HOMOGLYPH = dict(zip("ABCEHIKMOPTXaceiopxyÏï", "АВСЕНІКМОРТХасеіорхуЇї", strict=True))
+_CYRILLIC_TO_LATIN_HOMOGLYPH = {cyr: lat for lat, cyr in _LATIN_TO_CYRILLIC_HOMOGLYPH.items()}
+_ROMAN_NUMERAL_RE = re.compile(r"M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
+CYRILLIC, LATIN, MIXED = "cyrillic", "latin", "mixed"
 
 
 def font_base_name(font: str) -> str:
@@ -146,7 +155,7 @@ def decode_span_text(font: str, text: str) -> str:
 
     ``1251…`` fonts are re-read as Windows-1251; in ``1251TimesNew…`` fonts every
     vowel glyph is the stressed form, so the acute accent is restored after it.
-    Unicode fonts are returned unchanged (see ``restore_cyrillic_stress``).
+    Unicode fonts are returned unchanged (see ``restore_scripts``).
     """
     base = font_base_name(font)
     if not base.startswith("1251"):
@@ -161,19 +170,131 @@ def decode_span_text(font: str, text: str) -> str:
     return "".join(out)
 
 
-def restore_cyrillic_stress(text: str) -> str:
-    """Replace Latin stressed vowels inside Cyrillic words with Cyrillic vowel + acute.
+def _is_cyrillic_letter(char: str) -> bool:
+    return "Ѐ" <= char <= "ӿ" and char.isalpha()
 
-    Words with no Cyrillic letter (Latin-script examples) are left as printed.
+
+def _is_latin_letter(char: str) -> bool:
+    return char.isalpha() and unicodedata.name(char, "").startswith("LATIN")
+
+
+def _part_script(part: str) -> str | None:
+    """Script of one hyphen-free word part, judged by the letters that differ between the scripts.
+
+    The stressed Latin vowels of the Unicode fonts are neutral.  A part spelled
+    only with letters whose glyphs both scripts share takes the script it is
+    encoded in; when it mixes the two, only a Roman numeral is decidable (Latin).
+    Returns ``CYRILLIC``, ``LATIN``, ``MIXED`` or None (no letter decides).
     """
+    distinct: set[str] = set()
+    shared: set[str] = set()
+    for char in part:
+        if _is_cyrillic_letter(char):
+            (shared if char in _CYRILLIC_TO_LATIN_HOMOGLYPH else distinct).add(CYRILLIC)
+        elif _is_latin_letter(char) and char not in _LATIN_STRESSED:
+            (shared if char in _LATIN_TO_CYRILLIC_HOMOGLYPH else distinct).add(LATIN)
+    letters = distinct or shared
+    if len(letters) == 1:
+        return letters.pop()
+    if not letters:
+        return None
+    if not distinct and _ROMAN_NUMERAL_RE.fullmatch(_in_script(part, LATIN, own=True)):
+        return LATIN
+    return MIXED
 
-    def fix(match: re.Match[str]) -> str:
+
+def _in_script(part: str, script: str, *, own: bool) -> str:
+    """Rewrite ``part`` in ``script``.
+
+    A part whose own letters decide its script also has its lookalike letters
+    re-read («Cкладені» with a Latin C); a part that only inherits a script from
+    its word or line changes nothing but the stressed vowels.
+    """
+    if script == CYRILLIC:
+        table = {**_LATIN_TO_CYRILLIC_HOMOGLYPH, **_LATIN_STRESSED} if own else _LATIN_STRESSED
+    elif script == LATIN and own:
+        table = _CYRILLIC_TO_LATIN_HOMOGLYPH
+    else:
+        return part
+    return "".join(table.get(char, char) for char in part)
+
+
+def restore_scripts(text: str) -> str:
+    """Write every word of ``text`` in one script, as printed.
+
+    The Unicode fonts encode stressed Cyrillic vowels as the Latin letters
+    á é í ó ý ú, and the text layer sometimes encodes a Cyrillic letter with its
+    Latin lookalike or the reverse («Cкладені», «Мicrosóft»).  Each part of a
+    hyphenated word (also across a line break: «пліч-\\nó-пліч») takes the
+    script its own letters decide; a part made only of stressed vowels
+    («душ-á») takes the script of its word, and a lone ending («(-о́ві, -í)»)
+    that of the preceding word on its line.  Parts that mix distinct letters of
+    both scripts, and a lone letter cited without a hyphen («Польське ó»), are
+    left as printed.
+    """
+    out: list[str] = []
+    last = 0
+    line_script: str | None = None
+    for match in _COMPOUND_RE.finditer(text):
+        gap = text[last:match.start()]
+        if "\n" in gap:
+            line_script = None
+        out.append(gap)
+        pieces = _COMPOUND_JOINER_RE.split(match.group(0))
+        scripts = [_part_script(part) for part in pieces[::2]]
+        decided = {script for script in scripts if script in (CYRILLIC, LATIN)}
+        word_script = next(iter(decided)) if len(decided) == 1 else None
+        is_ending = text[match.start() - 1:match.start()] == "-"
+        inherited = word_script or (line_script if is_ending else None)
+        for index, script in enumerate(scripts):
+            if script in (CYRILLIC, LATIN):
+                pieces[2 * index] = _in_script(pieces[2 * index], script, own=True)
+            elif script is None and inherited:
+                pieces[2 * index] = _in_script(pieces[2 * index], inherited, own=False)
+        out.append("".join(pieces))
+        line_script = next((s for s in reversed(scripts) if s in (CYRILLIC, LATIN)), line_script)
+        last = match.end()
+    out.append(text[last:])
+    return unicodedata.normalize("NFC", "".join(out))
+
+
+def script_anomalies(text: str) -> list[str]:
+    """Hyphenated words of ``text`` that mix Latin and Cyrillic letters, or that carry a
+    stressed Latin vowel (á é í ó ý ú) without any other Latin letter that only Latin has.
+
+    After ``restore_scripts`` these are the printed Latin examples inside Ukrainian
+    words («PIN-код») and the cases it leaves as printed; any other hit is a decoding defect.
+    """
+    found: list[str] = []
+    for match in _COMPOUND_RE.finditer(text):
         word = match.group(0)
-        if not any(ch in _LATIN_STRESSED for ch in word) or not _CYRILLIC_RE.search(word):
-            return word
-        return "".join(_LATIN_STRESSED.get(ch, ch) for ch in word)
+        has_cyrillic = any(_is_cyrillic_letter(char) for char in word)
+        latin = [char for char in word if _is_latin_letter(char)]
+        bare_stress = any(char in _LATIN_STRESSED for char in latin) and all(
+            char in _LATIN_STRESSED or char in _LATIN_TO_CYRILLIC_HOMOGLYPH for char in latin
+        )
+        if (has_cyrillic and latin) or bare_stress:
+            found.append(word)
+    return found
 
-    return unicodedata.normalize("NFC", _WORD_RE.sub(fix, text))
+
+def restore_page_scripts(pages: Sequence[PageLayout]) -> list[PageLayout]:
+    """Apply ``restore_scripts`` to the rows of ``pages`` read as one text, so words split across lines stay whole."""
+    rows = [row for page in pages for row in page.rows]
+    if any("\n" in row.text for row in rows):
+        raise PravopysParseError("a PDF row contains a line break")
+    restored = iter(restore_scripts("\n".join(row.text for row in rows)).split("\n"))
+    result: list[PageLayout] = []
+    for page in pages:
+        result.append(
+            PageLayout(
+                page=page.page,
+                rows=[replace(row, text=next(restored)) for row in page.rows],
+                margin_labels=[replace(label, text=restore_scripts(label.text)) for label in page.margin_labels],
+                printed_number=page.printed_number,
+            )
+        )
+    return result
 
 
 # ── Layout ───────────────────────────────────────────────────────
@@ -242,7 +363,11 @@ class PageLayout:
 
 
 def lines_from_pdf(pdf_path: Path, official: OfficialFile, first_page: int, last_page: int) -> list[PdfLine]:
-    """Read decoded lines for printed pages ``first_page``..``last_page`` (PyMuPDF)."""
+    """Read font-decoded lines for printed pages ``first_page``..``last_page`` (PyMuPDF).
+
+    Script restoration needs the neighbouring lines and runs on the laid-out
+    pages (``restore_page_scripts``).
+    """
     import pymupdf
 
     lines: list[PdfLine] = []
@@ -272,7 +397,7 @@ def lines_from_pdf(pdf_path: Path, official: OfficialFile, first_page: int, last
                             y0=float(y0 + dy),
                             x1=float(x1 + dx),
                             size=float(max(span["size"] for span in spans)),
-                            text=restore_cyrillic_stress(text),
+                            text=text,
                         )
                     )
     return lines
@@ -644,18 +769,20 @@ def fold_for_lookup(value: str) -> str:
     return folded.replace("'", "’").replace("ʼ", "’").casefold()
 
 
-def normalized_text(rows: Sequence[Row], is_word: LexiconPredicate | None = None) -> tuple[str, int]:
+def normalized_text(rows: Sequence[Row], is_word: LexiconPredicate | None = None) -> tuple[str, list[str]]:
     """Join printed rows into running text and resolve line-end hyphens.
 
-    Line-end hyphens are decided by ``_line_end_hyphen``; the decisions the
-    lexicon does not back are counted as unresolved.  A row indented beyond the
-    previous one, a note or numbered point, a table row and a heading start a new
-    line.  This is a derived reading aid; the printed text is ``layout_text``.
-    Returns ``(text, unresolved_hyphen_count)``.
+    Line-end hyphens are decided by ``_line_end_hyphen``.  A row indented beyond
+    the previous one, a note or numbered point, a table row and a heading start a
+    new line.  This is a derived reading aid; the printed text is ``layout_text``.
+    Returns ``(text, alternatives)``: for every hyphen the lexicon does not
+    decide, the reading the rules did not choose (``Бе́рклі-сквер`` when
+    «Бе́рклі-/сквер» was joined, ``НьюЙорк`` when «Нью-/Йорк» kept its hyphen), so
+    that search finds the word either way.  Their number is the unresolved count.
     """
     if not rows:
-        return "", 0
-    unresolved = 0
+        return "", []
+    alternatives: list[str] = []
     out = rows[0].text
     for previous, row in pairwise(rows):
         new_line = (
@@ -669,13 +796,14 @@ def normalized_text(rows: Sequence[Row], is_word: LexiconPredicate | None = None
         hyphen = _HYPHEN_END_RE.search(out)
         start = _WORD_START_RE.match(row.text)
         if hyphen and start and not new_line:
-            decision, attested = _line_end_hyphen(out[: hyphen.start()], hyphen.group(1), start.group(1), is_word)
+            left, right = hyphen.group(1), start.group(1)
+            decision, attested = _line_end_hyphen(out[: hyphen.start()], left, right, is_word)
             if not attested:
-                unresolved += 1
+                alternatives.append(f"{left}-{right}" if decision == "join" else f"{left}{right}")
             out = (out[:-1] if decision == "join" else out + (" " if decision == "space" else "")) + row.text
             continue
         out += ("\n" if new_line else " ") + row.text
-    return out, unresolved
+    return out, alternatives
 
 
 def _line_end_hyphen(before: str, left: str, right: str, is_word: LexiconPredicate | None) -> tuple[str, bool]:
@@ -735,8 +863,10 @@ def vesum_word_predicate(vesum_db: Path) -> LexiconPredicate:
 
 def parse_edition(pdf_path: Path, official: OfficialFile) -> ParsedEdition:
     """Parse body (front matter to § 168) and contents of the official PDF."""
-    body_pages = layout_pages(lines_from_pdf(pdf_path, official, FRONT_MATTER_FIRST_PAGE, BODY_LAST_PAGE))
-    toc_pages = layout_pages(lines_from_pdf(pdf_path, official, TOC_FIRST_PAGE, TOC_LAST_PAGE))
+    body_pages = restore_page_scripts(
+        layout_pages(lines_from_pdf(pdf_path, official, FRONT_MATTER_FIRST_PAGE, BODY_LAST_PAGE))
+    )
+    toc_pages = restore_page_scripts(layout_pages(lines_from_pdf(pdf_path, official, TOC_FIRST_PAGE, TOC_LAST_PAGE)))
     mismatches = [(page.page, page.printed_number) for page in body_pages if page.printed_number != str(page.page)]
     toc = parse_toc(row for page in toc_pages for row in page.rows)
     sections, paragraphs = segment_body(body_pages, toc)
@@ -816,6 +946,7 @@ CREATE TABLE IF NOT EXISTS pravopys_paragraphs (
     margin_labels TEXT NOT NULL,
     text TEXT NOT NULL,
     text_normalized TEXT NOT NULL,
+    hyphen_alternatives TEXT NOT NULL DEFAULT '[]',
     text_sha256 TEXT NOT NULL,
     unresolved_hyphenations INTEGER NOT NULL,
     locator TEXT NOT NULL,
@@ -827,6 +958,9 @@ CREATE TABLE IF NOT EXISTS pravopys_paragraphs (
 def ensure_pravopys_schema(conn: sqlite3.Connection) -> None:
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(PRAVOPYS_SCHEMA_SQL)
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(pravopys_paragraphs)")}
+    if "hyphen_alternatives" not in columns:  # tables written by parser v1
+        conn.execute("ALTER TABLE pravopys_paragraphs ADD COLUMN hyphen_alternatives TEXT NOT NULL DEFAULT '[]'")
 
 
 def utc_now() -> str:
@@ -909,8 +1043,8 @@ def store_edition(
         )
         for section in parsed.sections:
             intro = layout_text(section.rows)
-            intro_normalized, unresolved = normalized_text(section.rows, is_word)
-            unresolved_total += unresolved
+            intro_normalized, intro_alternatives = normalized_text(section.rows, is_word)
+            unresolved_total += len(intro_alternatives)
             conn.execute(
                 """
                 INSERT INTO pravopys_sections (
@@ -932,16 +1066,16 @@ def store_edition(
             )
         for paragraph in parsed.paragraphs:
             text = layout_text(paragraph.rows)
-            text_norm, unresolved = normalized_text(paragraph.rows, is_word)
-            unresolved_total += unresolved
+            text_norm, alternatives = normalized_text(paragraph.rows, is_word)
+            unresolved_total += len(alternatives)
             title = toc[paragraph.number].title
             conn.execute(
                 """
                 INSERT INTO pravopys_paragraphs (
                     source_id, number, title, toc_page, page_start, page_end, section_ordinal,
-                    section_path, margin_labels, text, text_normalized, text_sha256,
+                    section_path, margin_labels, text, text_normalized, hyphen_alternatives, text_sha256,
                     unresolved_hyphenations, locator
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     PRAVOPYS_SOURCE_ID,
@@ -958,8 +1092,9 @@ def store_edition(
                     ),
                     text,
                     text_norm,
+                    json.dumps(alternatives, ensure_ascii=False),
                     sha256_text(text),
-                    unresolved,
+                    len(alternatives),
                     paragraph_locator(paragraph.number, paragraph.page_start, paragraph.page_end),
                 ),
             )
@@ -1065,7 +1200,9 @@ def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> l
     )):
         title_words = _TOKEN_RE.findall(fold_for_lookup(record["title"]))
         path_words = _TOKEN_RE.findall(fold_for_lookup(" ".join(json.loads(record["section_path"]))))
-        text_words = _TOKEN_RE.findall(fold_for_lookup(record["text_normalized"]))
+        # Unresolved line-end hyphens are indexed in both readings (``normalized_text``).
+        alternatives = " ".join(json.loads(record.get("hyphen_alternatives") or "[]"))
+        text_words = _TOKEN_RE.findall(fold_for_lookup(f"{record['text_normalized']}\n{alternatives}"))
         title_hits = _word_hits(title_words, stems)
         path_hits = _word_hits(path_words, stems)
         text_occurrences = sum(1 for word in text_words for stem in stems if _matches(word, stem))

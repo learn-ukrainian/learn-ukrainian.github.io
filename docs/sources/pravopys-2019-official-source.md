@@ -69,7 +69,8 @@ ingest refuses any other file.
 - `pravopys_paragraphs`: one row per § (1–168): title from the printed contents, the
   contents page, start and end page, heading path, margin labels, `text` (the printed text
   line by line, stress marks included), `text_normalized` (lines joined, line-end hyphens
-  resolved), `text_sha256` of `text`, and a locator such as «Український правопис. Київ:
+  resolved), `hyphen_alternatives` (for each hyphen the lexicon did not decide, the reading
+  not chosen, indexed by search), `text_sha256` of `text`, and a locator such as «Український правопис. Київ:
   Наукова думка, 2019, § 7, с. 13–14».
 - `pravopys_sections`: the printed headings (parts I–V, group headings, subheadings) with
   their introductory text, and the foreword (ПЕРЕДМОВА).
@@ -85,7 +86,16 @@ The text layer uses three encodings, decoded in `scripts/wiki/pravopys_official.
 checked against rendered page images: `1251…` fonts carry Windows-1251 bytes; `1251TimesNew…`
 fonts hold the stressed vowels (и́, у́, я́, ю́, є́, ї́, І́, Я́…) at the position of the plain
 letter; the Unicode fonts write stressed а, е, і, о, у, и as Latin á, é, í, ó, ý, ú inside
-Cyrillic words. `section_path` follows the printed heading sizes, so a 10.5 pt heading such as
+Cyrillic words, including endings set off by a hyphen («душ-á») or on the next line
+(«пліч-/ó-пліч»). A few words also encode a letter with its lookalike from the other script
+(«Cкладені» with a Latin C, «Мicrosóft» with a Cyrillic М, «ХVІ»). Each part of a hyphenated
+word, read across line breaks, is written in the script its distinct letters decide; a part
+of stressed vowels only takes the script of its word, and a lone ending «(-о́ві, -í)» that of
+the preceding word. Left as encoded: printed Latin inside Ukrainian compounds («PIN-код»),
+the Polish letter «ó» cited in § 150, and two words spelled only with letters both scripts
+share whose script the glyphs cannot decide (§ 129 «-іa», the § 34 margin label «-IР-»).
+`tests/fixtures/pravopys_2019_script_allowlist.json` lists these, and the PDF regression test
+fails on any other word that mixes scripts. `section_path` follows the printed heading sizes, so a 10.5 pt heading such as
 «ЧЕРГУВАННЯ ГОЛОСНИХ» nests under the preceding 12.5 pt heading even where the contents treat
 both as one level.
 

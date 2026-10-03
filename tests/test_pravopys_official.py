@@ -2,7 +2,8 @@
 
 The book's text is never committed: unit tests use synthetic rows, and the check
 against the real PDF runs only when ``LU_PRAVOPYS_2019_PDF`` points at a pinned
-official copy (it compares counts and SHA-256 digests, not text).
+official copy (it compares counts and SHA-256 digests, plus the short reviewed list
+of words that keep both scripts).
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ import json
 import os
 import sqlite3
 import sys
+import unicodedata
 from pathlib import Path
 from unittest.mock import patch
 
@@ -59,14 +61,61 @@ def test_unicode_fonts_are_left_for_the_word_level_pass() -> None:
 
 
 def test_latin_stressed_vowels_inside_cyrillic_words_become_cyrillic() -> None:
-    assert po.restore_cyrillic_stress("далéко, вèсоко") == f"дале{A}ко, вèсоко"
-    assert po.restore_cyrillic_stress("Íгор") == f"І{A}гор"
-    assert po.restore_cyrillic_stress("однúм однá") == f"одни{A}м одна{A}"
-    assert po.restore_cyrillic_stress("Сýми") == f"Су{A}ми"
+    assert po.restore_scripts("далéко, вèсоко") == f"дале{A}ко, вèсоко"
+    assert po.restore_scripts("Íгор") == f"І{A}гор"
+    assert po.restore_scripts("однúм однá") == f"одни{A}м одна{A}"
+    assert po.restore_scripts("Сýми") == f"Су{A}ми"
+    assert po.restore_scripts("осá") == f"оса{A}"
 
 
-def test_latin_script_words_keep_their_letters() -> None:
-    assert po.restore_cyrillic_stress("Gómez і café") == "Gómez і café"
+@pytest.mark.parametrize(
+    ("printed", "expected"),
+    [
+        # Endings set off by hyphens (§ 68, § 115, § 97).
+        ("душ-á, душ-í, ім-ен-á", f"душ-а{A}, душ-і{A}, ім-ен-а{A}"),
+        ("Дністр-у́ (-о́ві, -í)", f"Дністр-у{A} (-о{A}ві, -і{A})"),
+        ("(-ю, -і) (-у́, -í)", f"(-ю, -і) (-у{A}, -і{A})"),
+        # A hyphenated word broken after a hyphen (§ 41).
+        ("пліч-\nó-пліч, хоч-не-хо́ч", f"пліч-\nо{A}-пліч, хоч-не-хо{A}ч"),
+        # Lookalike letters of the other script inside a word (§§ 54, 121, 158, 161, 66).
+        ("«Мicrosóft»", "«Microsóft»"),
+        ("Cкладені", "Складені"),
+        ("[lе]", "[le]"),
+        ("ХVІ—ХVІІІ ст.", "XVI—XVIII ст."),
+        ("IІІ відміна; ІV відміна", "III відміна; IV відміна"),
+    ],
+)
+def test_every_word_is_restored_to_one_script(printed: str, expected: str) -> None:
+    assert po.restore_scripts(printed) == expected
+
+
+@pytest.mark.parametrize(
+    "printed",
+    [
+        "Gómez і café",
+        "PIN-код, веб-API, флеш-BIOS",
+        "Польське ó, наявне в суфіксі -ów",  # a cited Latin letter keeps its script
+        "-sk-(-i), -ck-(-у́)",
+        "-Ø (нульове закінчення)",
+        "І відміна",  # one-script words are never touched
+    ],
+)
+def test_printed_latin_and_one_script_words_stay_as_printed(printed: str) -> None:
+    assert po.restore_scripts(printed) == unicodedata.normalize("NFC", printed)
+
+
+def test_endings_on_the_next_row_take_the_script_of_their_word() -> None:
+    page = po.PageLayout(page=50, rows=[_row("душ-", page=50, y0=10), _row("á, пліч-", page=50, y0=23),
+                                        _row("ó-пліч", page=50, y0=36)],
+                         margin_labels=[po.MarginLabel(50, 10, "Cкладені")])
+    (restored,) = po.restore_page_scripts([page])
+    assert [row.text for row in restored.rows] == ["душ-", f"а{A}, пліч-", f"о{A}-пліч"]
+    assert [label.text for label in restored.margin_labels] == ["Складені"]
+
+
+def test_script_anomalies_report_mixed_words_and_bare_latin_stress() -> None:
+    assert po.script_anomalies("душ-á і PIN-код, Польське ó; Gómez, café, душ-а́") == ["душ-á", "PIN-код", "ó"]
+    assert po.script_anomalies(f"пліч-\nо{A}-пліч, Microsóft, XVI") == []
 
 
 # ── Layout ───────────────────────────────────────────────────────
@@ -217,20 +266,22 @@ def _is_word(form: str) -> bool:
 
 
 @pytest.mark.parametrize(
-    ("rows", "expected", "unresolved"),
+    ("rows", "expected", "alternatives"),
     [
-        (["голосні ви-", "разні."], "голосні виразні.", 0),
-        (["жити по-", "сусідському"], "жити по-сусідському", 0),
-        (["у Нью-", "Йорку"], "у Нью-Йорку", 1),
-        (["суфікс -шк-", "змінюємо"], "суфікс -шк- змінюємо", 1),
-        (["година-", "дві"], "година-дві", 1),
-        (["свердлильно-", "шліфувальний"], "свердлильно-шліфувальний", 1),
-        (["місто Хар-", "ків"], "місто Харків", 1),
+        (["голосні ви-", "разні."], "голосні виразні.", []),
+        (["жити по-", "сусідському"], "жити по-сусідському", []),
+        (["у Нью-", "Йорку"], "у Нью-Йорку", ["НьюЙорку"]),
+        (["суфікс -шк-", "змінюємо"], "суфікс -шк- змінюємо", ["шкзмінюємо"]),
+        (["година-", "дві"], "година-дві", ["годинадві"]),
+        (["свердлильно-", "шліфувальний"], "свердлильно-шліфувальний", ["свердлильношліфувальний"]),
+        (["місто Хар-", "ків"], "місто Харків", ["Хар-ків"]),
+        ([f"Бе{A}рклі-", "сквер"], f"Бе{A}рклісквер", [f"Бе{A}рклі-сквер"]),
     ],
 )
-def test_line_end_hyphens(rows: list[str], expected: str, unresolved: int) -> None:
+def test_line_end_hyphens(rows: list[str], expected: str, alternatives: list[str]) -> None:
+    """Every hyphen the lexicon does not decide keeps the reading the rules did not choose."""
     built = [_row(text, x0=150, y0=13.0 * index) for index, text in enumerate(rows)]
-    assert po.normalized_text(built, _is_word) == (expected, unresolved)
+    assert po.normalized_text(built, _is_word) == (expected, alternatives)
 
 
 def test_indented_rows_notes_and_points_start_new_lines() -> None:
@@ -348,6 +399,31 @@ def test_offline_lookup_answers_topics_and_numbers(stored_db: Path, topic: str, 
     assert f"§ {number}," in result["locator"]
 
 
+def test_search_finds_both_readings_of_an_unresolved_line_end_hyphen(tmp_path: Path) -> None:
+    parsed = _synthetic_edition()
+    parsed.paragraphs[49].rows[1:2] = [_row(f"Бе{A}рклі-", page=60, y0=63), _row("сквер.", page=60, y0=76)]
+    conn = sqlite3.connect(tmp_path / "sources.db")
+    po.store_edition(conn, parsed, ULIF, retrieved_at="2026-10-03T15:05:00Z")
+    stored = conn.execute("SELECT text, text_normalized, hyphen_alternatives FROM pravopys_paragraphs "
+                          "WHERE number = 50").fetchone()
+    assert f"Бе{A}рклі-\nсквер." in stored[0]  # the printed text is unchanged
+    assert f"Бе{A}рклісквер." in stored[1]
+    assert f"Бе{A}рклі-сквер" in json.loads(stored[2])
+    assert [hit["section"] for hit in po.search_paragraphs(conn, "сквер")] == [50]
+    assert [hit["section"] for hit in po.search_paragraphs(conn, "берклісквер")] == [50]
+    conn.close()
+
+
+def test_storing_over_parser_v1_tables_adds_the_alternatives_column(tmp_path: Path) -> None:
+    conn = sqlite3.connect(tmp_path / "sources.db")
+    conn.executescript(po.PRAVOPYS_SCHEMA_SQL.replace("    hyphen_alternatives TEXT NOT NULL DEFAULT '[]',\n", ""))
+    assert "hyphen_alternatives" not in {row[1] for row in conn.execute("PRAGMA table_info(pravopys_paragraphs)")}
+    po.store_edition(conn, _synthetic_edition(), ULIF, retrieved_at="2026-10-03T15:05:00Z")
+    assert conn.execute("SELECT COUNT(*) FROM pravopys_paragraphs WHERE hyphen_alternatives != '[]'").fetchone()[0]
+    assert conn.execute("SELECT parser_version FROM pravopys_sources").fetchone()[0] == po.PARSER_VERSION
+    conn.close()
+
+
 def test_offline_lookup_misses_and_unavailable_store(stored_db: Path, tmp_path: Path) -> None:
     assert source_query.pravopys_offline("169", db_path=str(stored_db)) is None
     assert source_query.pravopys_offline("ґрунтовщина", db_path=str(stored_db)) is None
@@ -462,6 +538,8 @@ def test_fetch_discards_a_download_with_the_wrong_hash(tmp_path: Path) -> None:
 REAL_PDF = os.environ.get("LU_PRAVOPYS_2019_PDF")
 # SHA-256 of each §'s printed text as parsed from the pinned PDF (hashes only, no text).
 LAYOUT_MANIFEST = Path(__file__).parent / "fixtures" / "pravopys_2019_layout_sha256.json"
+# The reviewed words that keep both scripts (or a bare Latin stressed vowel), per §.
+SCRIPT_ALLOWLIST = Path(__file__).parent / "fixtures" / "pravopys_2019_script_allowlist.json"
 
 
 @pytest.mark.skipif(not REAL_PDF, reason="set LU_PRAVOPYS_2019_PDF to a pinned official copy")
@@ -475,3 +553,22 @@ def test_real_pdf_yields_every_paragraph_of_the_contents() -> None:
     manifest = json.loads(LAYOUT_MANIFEST.read_text(encoding="utf-8"))
     assert manifest["parser_version"] == po.PARSER_VERSION
     assert receipt == {int(k): v for k, v in manifest["paragraphs"].items()}
+
+
+@pytest.mark.skipif(not REAL_PDF, reason="set LU_PRAVOPYS_2019_PDF to a pinned official copy")
+def test_real_pdf_words_are_in_one_script_except_reviewed_printed_latin() -> None:
+    pdf = Path(REAL_PDF)
+    parsed = po.parse_edition(pdf, pravopys_2019_ingest.official_file_for(pdf))
+    allowlist = json.loads(SCRIPT_ALLOWLIST.read_text(encoding="utf-8"))
+    assert allowlist["parser_version"] == po.PARSER_VERSION
+
+    def found(texts_by_key: dict[str, list[str]]) -> dict[str, list[str]]:
+        hits = {key: sorted(w for text in texts for w in po.script_anomalies(text)) for key, texts in texts_by_key.items()}
+        return {key: words for key, words in hits.items() if words}
+
+    paragraphs = found({str(p.number): [po.layout_text(p.rows)] for p in parsed.paragraphs})
+    labels = found({str(p.number): [label.text for label in p.margin_labels] for p in parsed.paragraphs})
+    sections = found({str(s.ordinal): [s.title, po.layout_text(s.rows)] for s in parsed.sections})
+    assert paragraphs == {key: sorted(words) for key, words in allowlist["paragraphs"].items()}
+    assert labels == {key: sorted(words) for key, words in allowlist["margin_labels"].items()}
+    assert sections == {}
