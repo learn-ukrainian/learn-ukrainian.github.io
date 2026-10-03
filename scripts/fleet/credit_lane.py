@@ -33,7 +33,7 @@ import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -299,11 +299,13 @@ def lane_credit_state(
     now: datetime | None = None,
     snapshot_stale: bool = False,
     usage_dir: Path | None = None,
+    for_pace_deficit: bool = False,
 ) -> dict[str, Any]:
     """Credit state of one routing-budget lane record; see the module docstring for fail-closed rules.
 
     ``usage_dir`` is the runtime usage directory the rate-limit evidence is read
-    from (default: the shared one).
+    from (default: the shared one). ``for_pace_deficit`` checks reserves even
+    above the plan cap; it does not extend the credit-period admission gate.
     """
     models = policy.lane_models(lane)
     if models is None:
@@ -328,7 +330,7 @@ def lane_credit_state(
     }
     if remaining is None:
         return {**result, "state": PLAN_UNKNOWN, "reason": "plan allowance unknown"}
-    if remaining > policy.near_cap_remaining_pct:
+    if remaining > policy.near_cap_remaining_pct and not for_pace_deficit:
         return {
             **result,
             "state": PLAN_HEALTHY,
@@ -360,7 +362,7 @@ def lane_credit_state(
         evidence["unreadable_records"] = unreadable
     # A fresh positive balance exists from here on: the admission allowlist applies
     # whatever the router's recommendation state says about the rate-limit evidence.
-    result["allowlist_applies"] = True
+    result["allowlist_applies"] = remaining <= policy.near_cap_remaining_pct
     if unreadable is not None:
         parts = ", ".join(f"{n} {kind}" for kind, n in unreadable.items())
         return {
@@ -375,11 +377,114 @@ def lane_credit_state(
     return {
         **result,
         "state": CREDIT_BALANCE_PRESENT,
-        "reason": f"plan remaining {remaining:g}% at or below {policy.near_cap_remaining_pct:g}%; "
-        f"fresh credit balance {balance:g}; no rate limit in the last {policy.rate_limit_window_s:g}s; "
+        "reason": f"plan remaining {remaining:g}%"
+        + ("; " if for_pace_deficit else f" at or below {policy.near_cap_remaining_pct:g}%; ")
+        + f"fresh credit balance {balance:g}; no rate limit in the last {policy.rate_limit_window_s:g}s; "
         "draw not verified by the router",
         "coverage": {"dispatches": None, "basis": COVERAGE_BASIS},
     }
+
+
+def pace_deficit_state(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    pace: dict[str, Any] | None = None,
+    model: str | None = None,
+    policy: CreditPolicy | None = None,
+    now: datetime | None = None,
+    snapshot_stale: bool = False,
+    usage_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Shared uncovered-pace decision for routing, admission and review (#9615).
+
+    A fresh positive balance covers pace only for credit-allowlisted models;
+    a fresh full reset that outlasts projected run-out covers any model. Both require readable,
+    rate-limit-free runtime evidence. Nothing is consumed. Raw pace remains
+    visible, and a runtime hot label or near_cap status is never relaxed here.
+
+    Below the cap, visible allowance lasting to reset or a covering reserve
+    is cool, regardless of used-percent. Warm means at least half the allowance
+    is used and either visible pace projects a shortfall within the on-pace
+    band or pace is unavailable. The existing low-use on-pace tolerance stays
+    cool. Only hot labels identified by the producer as weekly pace may be relaxed.
+    Missing lane identity or run-out projection leaves reset coverage unverified.
+    """
+    from scripts.api.subscription_usage import _expected_pct_from_reset, _pace_number, pace_is_deficit, pace_is_visible
+
+    record = info if isinstance(info, dict) else {}
+    if pace is None:
+        pace = record.get("codexbar") or record.get("pace") or record
+    current = (now or datetime.now(UTC)).astimezone(UTC)
+    raw = pace_is_deficit(pace, now=current)
+    status = record.get("status") or (record.get("interactive") or {}).get("status")
+    result: dict[str, Any] = {
+        "raw_deficit": raw,
+        "uncovered": raw,
+        "covered_by": [],
+        "status": status,
+        "reason": "pace deficit uncovered" if raw is True else "no confirmed pace deficit",
+    }
+    remaining = plan_remaining_pct(record)
+    runtime = record.get("runtime") if isinstance(record.get("runtime"), dict) else {}
+    if raw is not True:
+        if not isinstance(pace, dict) or status not in {"cool", "warm"} or runtime.get("headroom_blocked"):
+            return result
+        expected = _pace_number(pace, "expected_pct", "expectedUsedPercent", "weekly_expected_pct")
+        if expected is None:
+            expected = _expected_pct_from_reset(pace, now=current)
+        if not pace_is_visible({"expected_pct": expected}) or remaining is None or remaining <= 10:
+            return result
+        will_last = pace.get("will_last_to_reset", pace.get("willLastToReset"))
+        if will_last is True:
+            result["status"] = "cool"
+            result["reason"] = "allowance lasts to reset at visible pace"
+            return result
+        if raw is not False or will_last is not False:
+            return result
+    if raw is True and status in {"cool", "warm", "hot"} and remaining is not None and remaining > 10:
+        result["status"] = "hot"
+    if not lane.strip():
+        return {**result, "reason": result["reason"] + ": lane identity missing"}
+    if status == "hot" and record.get("status_source") != "weekly_pace":
+        return {**result, "reason": result["reason"] + ": hot source is not weekly pace"}
+    if policy is None:
+        try:
+            policy = load_policy()
+        except ValueError:
+            return {**result, "reason": result["reason"] + ": reserve policy unreadable"}
+    credit = lane_credit_state(
+        lane,
+        record,
+        policy,
+        now=current,
+        snapshot_stale=snapshot_stale,
+        usage_dir=usage_dir,
+        for_pace_deficit=True,
+    )
+    if credit["state"] == CREDIT_BALANCE_PRESENT and (model is None or model_allowed(policy, lane, model)):
+        result["covered_by"].append("credits")
+    live = _verified_inventory(record, policy, current, snapshot_stale=snapshot_stale)
+    runout = _projected_runout(record, pace, current)
+    if live and runout is not None and any(expiry is None or expiry > runout for expiry in live):
+        count, _, _ = _rate_limit_evidence(lane, record, policy, current, usage_dir)
+        if count == 0:
+            result["covered_by"].append("free full reset")
+    if result["covered_by"]:
+        result["uncovered"] = False
+        result["reason"] = (
+            ("pace deficit" if raw is True else "projected shortfall")
+            + " covered by "
+            + " and ".join(result["covered_by"])
+        )
+        if (
+            status in {"cool", "warm", "hot"}
+            and not runtime.get("headroom_blocked")
+            and remaining is not None
+            and remaining > 10
+        ):
+            result["status"] = "cool"
+    return result
 
 
 def allowlist_applies(state: dict[str, Any]) -> bool:
@@ -404,6 +509,41 @@ def _natural_reset(info: dict[str, Any]) -> datetime | None:
         if parsed is not None:
             return parsed
     return None
+
+
+def _projected_runout(info: dict[str, Any], pace: dict[str, Any] | None, now: datetime) -> datetime | None:
+    """Recompute linear run-out from the current clock, using the existing pace window math."""
+    from scripts.api.subscription_usage import _expected_pct_from_reset
+
+    if not isinstance(pace, dict):
+        return None
+    natural = _natural_reset(info)
+    if natural is None:
+        for key in ("weekly_resets_at", "resets_at", "resetsAt"):
+            natural = _reset_time(pace.get(key))
+            if natural is not None:
+                break
+    if natural is None or natural <= now:
+        return None
+    try:
+        expected = _expected_pct_from_reset({**pace, "weekly_resets_at": natural.isoformat()}, now=now)
+    except (ValueError, OverflowError):
+        return None
+    used = next(
+        (
+            value
+            for key in ("weekly_used_pct", "actual_pct", "used_pct")
+            if (value := _number(pace.get(key))) is not None
+        ),
+        None,
+    )
+    if expected is None or not 0 < expected < 100 or used is None or not 0 < used <= 100:
+        return None
+    elapsed_s = (natural - now).total_seconds() * expected / (100 - expected)
+    try:
+        return now + timedelta(seconds=elapsed_s * (100 - used) / used)
+    except OverflowError:
+        return None
 
 
 def _verified_inventory(

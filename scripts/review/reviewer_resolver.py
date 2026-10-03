@@ -659,6 +659,31 @@ def evaluate_candidate(
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
+    snapshot = inputs.routing_snapshot
+    agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
+    record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
+    if (
+        isinstance(record, dict)
+        and (record.get("status") == "hot" or isinstance(record.get("pace_deficit"), dict))
+        and health
+        in {
+            "healthy",
+            "degraded",
+            "near_cap",
+            None,
+        }
+    ):
+        diagnostics = snapshot.get("diagnostics") or {}
+        deficit = credit_lane.pace_deficit_state(
+            candidate.route,
+            record,
+            model=candidate.concrete_model,
+            snapshot_stale=bool(diagnostics.get("stale")),
+        )
+        if deficit["uncovered"] is True:
+            health = "near_cap"
+        elif deficit["status"] in {"cool", "warm"}:
+            health = _normalize_health_status(deficit["status"], label=candidate.route)
 
     # Catalog validation protects the installed ladders; this independent gate
     # also protects explicit pins and custom candidates before any quality prior.

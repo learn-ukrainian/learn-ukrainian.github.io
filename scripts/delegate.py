@@ -180,7 +180,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
-from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
+from scripts.api.subscription_usage import pace_is_visible
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
@@ -196,6 +196,7 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_STALL_S,
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
+from scripts.fleet import credit_lane
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
@@ -12388,9 +12389,9 @@ def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
         lane_l = str(lane).strip().lower()
         if lane_l == exclude:
             continue
-        status = _budget_lane_status(lane_l, info)
-        cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
-        if status in {"hot", "near_cap"} or pace_is_deficit(cb) is True:
+        deficit = credit_lane.pace_deficit_state(lane_l, info)
+        status = deficit["status"] or _budget_lane_status(lane_l, info)
+        if status in {"hot", "near_cap"} or deficit["uncovered"] is True:
             continue
         if status in {"cool", "warm"}:
             cool.append(lane_l)
@@ -12426,13 +12427,16 @@ def _budget_needs_hard_capacity_action(
     records_loaded: int,
     pace: dict[str, Any] | None = None,
     headroom_blocked: bool = False,
+    lane: str = "",
+    info: dict[str, Any] | None = None,
+    model: str | None = None,
 ) -> tuple[bool, str]:
     """Return (needs_action, reason) for near_cap / hot / a real pace deficit.
 
     ``near_cap`` is unchanged. ``status=hot`` still hard-acts, except when the
     hot label is the early-window or on-pace false positive: a pace reading is
-    present and :func:`pace_is_deficit` is not true, and runtime headroom did
-    not set the hot label. A bare ``will_last`` with no pace record still
+    present and the deficit is covered, hidden or within the on-pace band,
+    and runtime headroom did not set the hot label. A bare ``will_last`` with no pace record still
     counts only when no pace dict was supplied.
     """
     if is_stale:
@@ -12442,11 +12446,20 @@ def _budget_needs_hard_capacity_action(
         return True, "near_cap (>90% on FRESH snapshot)"
     if status == "hot" and headroom_blocked:
         return True, "status=hot"
-    deficit = pace_is_deficit(pace) if pace else None
+    decision = credit_lane.pace_deficit_state(
+        lane,
+        info,
+        pace=pace,
+        model=model if model is not None else (_lane_default_model(lane) or ""),
+        snapshot_stale=is_stale,
+    )
+    deficit = decision["uncovered"] if pace else None
+    if decision["covered_by"]:
+        print(f"⚠ lane {lane}: {decision['reason']}", file=sys.stderr)
     expected = _pace_expected_pct(pace)
     hidden = expected is not None and not pace_is_visible({"expected_pct": expected})
-    # Hot that the pace rule does not support is the freshly-reset / on-pace
-    # false positive. Runtime headroom hot was returned above.
+    # Clear a pace-only hot label when the deficit is covered or the pace is
+    # hidden/on pace. Runtime headroom hot was returned above.
     if status == "hot" and pace and deficit is not True and (deficit is False or hidden):
         return False, ""
     if deficit is True:
@@ -13620,6 +13633,9 @@ def _resolve_agent_with_budget_guard(
             records_loaded=records_loaded,
             pace=_budget_pace(agent_dict),
             headroom_blocked=_budget_headroom_blocked(agent_dict),
+            lane=requested,
+            info=agent_dict,
+            model=requested_model,
         )
     )
     if not needs_action:
@@ -13653,6 +13669,9 @@ def _resolve_agent_with_budget_guard(
             records_loaded=records_loaded,
             pace=_budget_pace(sub_dict),
             headroom_blocked=_budget_headroom_blocked(sub_dict),
+            lane=sub,
+            info=sub_dict,
+            model=chosen,
         )
         if sub_blocked:
             raise BudgetGuardRefuseError(
@@ -13766,6 +13785,9 @@ def _language_lane_substitute(
                 records_loaded=records_loaded,
                 pace=_budget_pace(info_dict),
                 headroom_blocked=_budget_headroom_blocked(info_dict),
+                lane=seat,
+                info=info_dict,
+                model=current_model,
             )
         )
         if not needs:

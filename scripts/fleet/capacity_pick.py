@@ -16,7 +16,7 @@ import os
 import sys
 import urllib.error
 import urllib.request
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -40,7 +40,6 @@ try:
 except ImportError:  # pragma: no cover - script path fallback
     from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES  # type: ignore
 
-from scripts.api.subscription_usage import pace_is_deficit
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import credit_lane
 from scripts.orchestration import dispatch_admission
@@ -119,15 +118,20 @@ def _is_hard_avoid(agent_info: dict[str, Any] | None, *, lane: str | None = None
     return info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN"
 
 
-def is_avoid_lane(agent_info: dict[str, Any] | None, *, lane: str | None = None) -> bool:
+def is_avoid_lane(
+    agent_info: dict[str, Any] | None,
+    *,
+    lane: str | None = None,
+    deficit: dict[str, Any] | None = None,
+) -> bool:
     """True when hot/near_cap/need_login, CodexBar deficit, or ``lane`` is retired."""
     if _is_hard_avoid(agent_info, lane=lane):
         return True
-    status = lane_status(agent_info)
+    deficit = deficit if deficit is not None else credit_lane.pace_deficit_state(lane or "", agent_info)
+    status = lane_status({**(agent_info or {}), "status": deficit["status"]})
     if status in _AVOID_STATUSES:
         return True
-    cb = (agent_info or {}).get("codexbar")
-    return pace_is_deficit(cb if isinstance(cb, dict) else None) is True
+    return deficit["uncovered"] is True
 
 
 def remaining_pct(agent_info: dict[str, Any] | None) -> float | None:
@@ -310,14 +314,25 @@ def build_lane_rows(
             else credit_lane.policy_error_state(lane, policy_error or "unknown error")
         )
         credit_relaxes = credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT and not _is_hard_avoid(info, lane=lane)
-        status = credit_lane.CREDIT_BALANCE_PRESENT if credit_relaxes else lane_status(info)
+        deficit = credit_lane.pace_deficit_state(
+            lane,
+            info,
+            policy=policy,
+            now=now,
+            snapshot_stale=snapshot_stale,
+        )
+        status = (
+            credit_lane.CREDIT_BALANCE_PRESENT if credit_relaxes else lane_status({**info, "status": deficit["status"]})
+        )
         will_last = will_last_to_reset(info)
         cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
-        pace_deficit = pace_is_deficit(cb) is True
+        pace_deficit = deficit["uncovered"] is True
         retired_target = RETIRED_AGENT_ALIASES.get(lane)
-        avoid = is_avoid_lane(info, lane=lane) and not reserve_relaxes and not credit_relaxes
+        avoid = is_avoid_lane(info, lane=lane, deficit=deficit) and not reserve_relaxes and not credit_relaxes
         in_flight = int(active.get(lane, budget_flight.get(lane, 0) or 0) or 0)
         notes: list[str] = []
+        if deficit["covered_by"]:
+            notes.append(deficit["reason"])
         if quota_source:
             notes.append(f"quota:{quota_source}")
         if credit_relaxes:
@@ -327,26 +342,14 @@ def build_lane_rows(
             )
         elif credit["state"] in _CREDIT_NOTE_STATES:
             notes.append(f"{credit['state']}: {credit['reason']}")
-        # Inventory is informational: only the separately asserted operator
-        # reserve above can relax admission. Never derive that assertion here.
-        if lane == "codex" and codex_is_threatened(info) and info.get("freshness") == "fresh":
-            from scripts.api.subscription_usage import _parse_resets_at_any
-
-            inventory = info.get("reset_credits") or (cb or {}).get("reset_credits") or {}
-            count = inventory.get("available_count")
-            expirations = inventory.get("expires_at")
-            current = now or datetime.now(UTC)
-            available = (
-                sum(
-                    1
-                    for value in expirations
-                    if value is None or ((expiry := _parse_resets_at_any(value)) is not None and expiry > current)
-                )
-                if isinstance(expirations, list)
-                else 0
-            )
-            if isinstance(count, int) and not isinstance(count, bool) and min(count, available) > 0:
-                notes.append(f"free full reset available ({min(count, available)}; operator decision)")
+        # Reuse the verified inventory for display; near-cap reset admission
+        # still requires the separately asserted operator reserve above.
+        # An unreadable policy cannot supply inventory freshness bounds, so
+        # policy_error deliberately suppresses this informational note too.
+        if lane == "codex" and codex_is_threatened(info):
+            available = (credit.get("reset_advice") or {}).get("free_resets_available")
+            if isinstance(available, int) and available > 0:
+                notes.append(f"free full reset available ({available}; operator decision)")
         if reserve_relaxes:
             notes.append(f"reset reserve eligible ({reserve.get('remaining_resets')} remaining)")
         if avoid:
@@ -382,6 +385,27 @@ def build_lane_rows(
                 "reset_reserve_eligible": reserve_relaxes,
                 "notes": "; ".join(notes) if notes else "",
                 "credit": credit,
+                **(
+                    {
+                        "pace_deficit": deficit,
+                        "codexbar": cb,
+                        **{
+                            key: info[key]
+                            for key in (
+                                "freshness",
+                                "age_s",
+                                "fetched_at",
+                                "reset_credits",
+                                "credit_balance",
+                                "runtime",
+                                "status_source",
+                            )
+                            if key in info
+                        },
+                    }
+                    if deficit["raw_deficit"] is True
+                    else {}
+                ),
             }
         )
     return rows
@@ -657,9 +681,12 @@ def main(argv: list[str] | None = None) -> int:
             "policy (`policy_error`), keeps near_cap/AVOID. JSON rows carry `credit` with state, evidence,\n"
             "coverage and `reset_advice` (use_reset_now | hold_reset | not_applicable). Nothing consumes\n"
             "credits or resets.\n"
+            "Weekly pace deficits covered by fresh credits (allowlisted models) or an unexpired free\n"
+            "full reset are not hot. Reserve evidence must be fresh and free of recent rate limits.\n"
+            "JSON rows keep the raw pace and say which reserve covers it; near_cap is unchanged.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
-            "issues #7812, #8645, #9518."
+            "issues #7812, #8645, #9518, #9615."
         ),
     )
     parser.add_argument(
