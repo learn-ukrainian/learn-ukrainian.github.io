@@ -26,7 +26,7 @@ Issue #8339 establishes a mandatory, automated, fail-closed acceptance tool:
 
 * **Fail Closed:** The tool exits non-zero (`exit 1`) whenever any acceptance threshold is breached. It exits `exit 2` if required dictionary dependencies (e.g. `vesum.db`) are missing or unreadable. It **never passes by default**.
 * **Plain Numbers:** Output presents exact counts, ratios, and percentages; no vague qualitative hand-waving.
-* **Reproduce Human Discoveries:** The tool must deterministically reproduce the exact findings recorded in `ROADMAP_250K_SOVEREIGN_UKRAINIAN.md` §2 on the baseline datasets.
+* **Reproduce Human Discoveries:** The tool must deterministically reproduce the exact findings behind the rules in `PLAN.md` (Principles, PA4) on the baseline datasets.
 * **Separation of Concerns:** Infrastructure audits check repeatability, concentration, contradictions, and source rules. Linguistic correctness is audited by human language reviewers using an un-cherry-picked sample drawn deterministically by this tool.
 * **Enforceable Human Audit Lifecycle (M2):** Automated checks passing produces `PASSED_AUTOMATED_CHECKS`. Final dataset acceptance requires a signed human language review report bound to the dataset SHA-256.
 
@@ -294,9 +294,9 @@ To achieve final `ACCEPTED` state:
 
 ## 4. Empirical Baseline Reproduction
 
-Running the checker against the four earlier datasets reproduces the findings from `ROADMAP_250K_SOVEREIGN_UKRAINIAN.md` §2:
+Running the checker against the four earlier datasets reproduces the findings behind the rules in `PLAN.md` (Principles, PA4):
 
-| Dataset | Metric / Phenomenon | Recorded in Roadmap §2 | Check Number | Acceptance Status |
+| Dataset | Metric / Phenomenon | Recorded finding (`PLAN.md` Principles / PA4) | Check Number | Acceptance Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **`uldr_v06_general_assistant`** | Total Rows | 75,000 | Baseline | — |
 | | Distinct QA Pairs | **4,220** | Check 1 (Repeats) | **FAIL** (94.4% dups) |

@@ -45,10 +45,41 @@ def test_shared_tool_set_equals_wire_annotations():
     assert REVIEW_TOOLS <= FULL_REVIEW_TOOLS <= set(SOURCES_READ_ONLY_TOOLS)
 
 
-def test_claude_tool_sets_equal_shared_tool_sets():
-    """Keep Claude's local declarations aligned until it adopts the shared module."""
-    assert set(claude.SOURCES_READ_ONLY_TOOLS) == set(SOURCES_READ_ONLY_TOOLS)
-    assert set(claude.SOURCES_PERSISTING_TOOLS) == set(SOURCES_PERSISTING_TOOLS)
+def test_claude_adapter_keeps_no_tool_list_of_its_own():
+    assert claude.sources_tool_sets is sources_tool_sets
+    assert not hasattr(claude, "SOURCES_READ_ONLY_TOOLS")
+    assert not hasattr(claude, "SOURCES_PERSISTING_TOOLS")
+
+
+@pytest.mark.parametrize(
+    "tool_config",
+    [{"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}, {"discussion_readonly": True}, None],
+    ids=["reviewer", "explicit", "discussion", "ad-hoc"],
+)
+def test_claude_annotation_change_denies_new_writer_without_updating_a_list(tmp_path, monkeypatch, tool_config):
+    path = tmp_path / "server.py"
+    path.write_text(
+        SERVER_PATH.read_text().replace(
+            'name="verify_word",', 'name="verify_word", annotations=_PERSISTING_LOOKUP_TOOL,'
+        )
+    )
+    monkeypatch.setattr(claude, "sources_tool_sets", lambda: sources_tool_sets(path))
+    plan = claude.ClaudeAdapter().build_invocation(
+        prompt="review",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    denies = plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",")
+    assert "mcp__sources__verify_word" in denies
+    assert "mcp__sources__verify_words" not in denies
+    if "--allowedTools" in plan.cmd and tool_config == {"reviewer_tools": True}:
+        allows = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+        assert "mcp__sources__verify_word" not in allows
+        assert "mcp__sources__verify_words" in allows
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])

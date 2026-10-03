@@ -69,4 +69,4 @@ Use `scripts.fleet.usage show` to verify credits, quota windows, and availabilit
 
 ## Advisor Approval Gate
 
-All architecture, file layout, and process decisions require designated approval: the operator, or both designated advisors (**Opus 5.5** `claude-opus-5-5` and **Sol 6.1** `gpt-6.1-sol`), neither being the proposal's author; if they disagree, the operator decides. Gemini orchestrators manage task breakdown, fleet routing, and verification, but must consult advisors for structural decisions.
+All architecture, file layout, and process decisions require designated approval: the operator, or the designated advisors (**Opus 5.5** `claude-opus-5-5` and **Sol 6.1** `gpt-6.1-sol`) agreeing; when one of them authored the proposal, the other's approval completes it; a proposal by any other agent, Gemini included, needs both; if they disagree, the operator decides. Gemini orchestrators manage task breakdown, fleet routing, and verification, but must consult advisors for structural decisions.
