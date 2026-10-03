@@ -905,6 +905,17 @@ headroom blocks, login and health gates retain their existing behavior. This doe
 a reset, verify provider credit draw, or extend the credit-period admission allowlist gate
 to healthy plan windows.
 
+Below `near_cap`, visible allowance lasting to the reset at current pace, including
+a verified covering reserve, is `cool` regardless of weekly used-percent. `warm`
+means at least 50% used with a projected shortfall inside the on-pace band
+(absolute pace delta <= 2 points), or at least 50% used with pace unavailable
+(the fail-safe fallback). Low-use on-pace readings retain their existing `cool`
+tolerance; an uncovered deficit outside the band is still `hot`.
+The reviewer resolver maps `cool` to `healthy` and `warm` to `degraded`;
+`capacity_pick` orders `cool` before `warm`, and routing recommendations prefer
+cool plan-backed lanes before warm ones. These consumers use the shared decision,
+so a covered high-use lane is no longer degraded solely by weekly used-percent.
+
 **Credit lanes in routing-budget, the reviewer resolver and `usage show` (#9517):**
 `/api/state/routing-budget` publishes each subscription lane's `credit_lane.lane_credit_state` as the
 additive `agents.<lane>.credit` field; the raw quota `status` keeps its vocabulary (a near-cap Codex

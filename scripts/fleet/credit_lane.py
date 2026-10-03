@@ -402,8 +402,14 @@ def pace_deficit_state(
     a fresh unexpired full reset covers any model. Both require readable,
     rate-limit-free runtime evidence. Nothing is consumed. Raw pace remains
     visible, and a runtime hot label or near_cap status is never relaxed here.
+
+    Below the cap, visible allowance lasting to reset or a covering reserve
+    is cool, regardless of used-percent. Warm means at least half the allowance
+    is used and either visible pace projects a shortfall within the on-pace
+    band or pace is unavailable. The existing low-use on-pace tolerance stays
+    cool. Runtime hot labels are relaxed only for confirmed covered deficits.
     """
-    from scripts.api.subscription_usage import pace_is_deficit
+    from scripts.api.subscription_usage import _expected_pct_from_reset, _pace_number, pace_is_deficit, pace_is_visible
 
     record = info if isinstance(info, dict) else {}
     if pace is None:
@@ -418,16 +424,30 @@ def pace_deficit_state(
         "status": status,
         "reason": "pace deficit uncovered" if raw is True else "no confirmed pace deficit",
     }
-    if raw is not True:
-        return result
     remaining = plan_remaining_pct(record)
-    if status in {"cool", "warm", "hot"} and remaining is not None and remaining > 10:
+    runtime = record.get("runtime") if isinstance(record.get("runtime"), dict) else {}
+    if raw is not True:
+        if not isinstance(pace, dict) or status not in {"cool", "warm"} or runtime.get("headroom_blocked"):
+            return result
+        expected = _pace_number(pace, "expected_pct", "expectedUsedPercent", "weekly_expected_pct")
+        if expected is None:
+            expected = _expected_pct_from_reset(pace, now=current)
+        if not pace_is_visible({"expected_pct": expected}) or remaining is None or remaining <= 10:
+            return result
+        will_last = pace.get("will_last_to_reset", pace.get("willLastToReset"))
+        if will_last is True:
+            result["status"] = "cool"
+            result["reason"] = "allowance lasts to reset at visible pace"
+            return result
+        if raw is not False or will_last is not False:
+            return result
+    if raw is True and status in {"cool", "warm", "hot"} and remaining is not None and remaining > 10:
         result["status"] = "hot"
     if policy is None:
         try:
             policy = load_policy()
         except ValueError:
-            return {**result, "reason": "pace deficit uncovered: reserve policy unreadable"}
+            return {**result, "reason": result["reason"] + ": reserve policy unreadable"}
     credit = lane_credit_state(
         lane,
         record,
@@ -446,15 +466,18 @@ def pace_deficit_state(
             result["covered_by"].append("free full reset")
     if result["covered_by"]:
         result["uncovered"] = False
-        result["reason"] = "pace deficit covered by " + " and ".join(result["covered_by"])
-        runtime = record.get("runtime") if isinstance(record.get("runtime"), dict) else {}
+        result["reason"] = (
+            ("pace deficit" if raw is True else "projected shortfall")
+            + " covered by "
+            + " and ".join(result["covered_by"])
+        )
         if (
             status in {"cool", "warm", "hot"}
             and not runtime.get("headroom_blocked")
             and remaining is not None
             and remaining > 10
         ):
-            result["status"] = "cool" if remaining > 50 else "warm"
+            result["status"] = "cool"
     return result
 
 

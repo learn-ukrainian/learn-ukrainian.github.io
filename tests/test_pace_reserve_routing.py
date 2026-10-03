@@ -16,6 +16,118 @@ from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, ev
 from tests.api.test_routing_budget import _configure_base
 
 
+@pytest.mark.parametrize(
+    ("used", "expected", "delta", "will_last", "status"),
+    [
+        (68.0, 76.0, -8.0, True, "cool"),
+        (80.0, 79.0, 1.0, False, "warm"),
+        (41.0, 40.0, 1.0, False, "cool"),
+        (68.0, None, None, None, "warm"),
+        (68.0, None, -8.0, True, "warm"),
+        (68.0, 0.5, -8.0, True, "warm"),
+        (20.0, None, None, None, "cool"),
+        (68.0, 60.0, 8.0, False, "hot"),
+        (90.0, 98.0, -8.0, True, "near_cap"),
+    ],
+)
+def test_weekly_status_follows_visible_headroom(used, expected, delta, will_last, status):
+    pace = {
+        "weekly_expected_pct": expected,
+        "weekly_pace_delta_pct": delta,
+        "will_last_to_reset": will_last,
+    }
+    info = {
+        "status": "near_cap" if used >= 90 else "warm" if used >= 50 else "cool",
+        "remaining_pct": 100 - used,
+        "codexbar": pace,
+    }
+    assert state_router._status_from_weekly_used(used, pace, lane="claude", info=info) == status
+    assert credit_lane.pace_deficit_state("claude", info)["status"] == status
+
+
+@pytest.mark.parametrize("reserve", ["credits", "resets"])
+@pytest.mark.parametrize("delta", [1.0, 10.0])
+def test_high_usage_covered_deficit_is_cool(reserve, delta, monkeypatch):
+    now = datetime.now(UTC)
+    info = {
+        "status": "warm",
+        "remaining_pct": 20.0,
+        "freshness": "fresh",
+        "age_s": 0,
+        "fetched_at": now.isoformat(),
+        "credit_balance": 62500.0 if reserve == "credits" else 0.0,
+        "reset_credits": {
+            "available_count": 1,
+            "expires_at": [(now + timedelta(days=1)).isoformat()],
+            "fetched_at": now.isoformat(),
+        }
+        if reserve == "resets"
+        else None,
+        "codexbar": {
+            "weekly_expected_pct": 80.0 - delta,
+            "weekly_pace_delta_pct": delta,
+            "will_last_to_reset": False,
+        },
+    }
+    monkeypatch.setattr(
+        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 0, "last_rate_limited_at": None}
+    )
+    assert credit_lane.pace_deficit_state("codex", info, now=now)["status"] == "cool"
+    assert state_router._status_from_weekly_used(80.0, info["codexbar"], lane="codex", info=info, now=now) == "cool"
+
+
+@pytest.mark.parametrize("visible", [True, False])
+def test_claude_headroom_reaches_routing_consumers(visible, monkeypatch, tmp_path):
+    now = datetime(2026, 10, 3, 15, 12, tzinfo=UTC)
+    budget_path = _configure_base(monkeypatch, tmp_path)
+    native = {
+        "status": "healthy",
+        "weekly_used_pct": 68.0,
+        "weekly_remaining_pct": 32.0,
+        "weekly_expected_pct": 76.0 if visible else None,
+        "weekly_pace_delta_pct": -8.0 if visible else None,
+        "will_last_to_reset": True if visible else None,
+        "weekly_resets_at": "2026-10-05T07:00:00Z" if visible else None,
+        "freshness": "fresh",
+        "age_s": 0,
+        "fetched_at": now.isoformat(),
+    }
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda lane: native if lane == "claude" else {})
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda: {})
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *_a, **_k: {"windows": {}})
+    data = state_router.compute_routing_budget(
+        now,
+        budget_config_path=budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+    expected_status = "cool" if visible else "warm"
+    assert data["agents"]["claude"]["status"] == expected_status
+    assert data["agents"]["claude"]["interactive"]["status"] == expected_status
+    rows = capacity_pick.build_lane_rows(data, now=now, reset_reserve=unavailable_reserve())
+    claude = next(row for row in rows if row["lane"] == "claude")
+    assert claude["status"] == expected_status
+    # Hold burn and in-flight constant: cool Claude outranks warm Codex;
+    # otherwise Codex's lane priority wins between equally warm seats.
+    competing = {**claude, "lane": "codex", "status": "warm"}
+    assert capacity_pick.build_pick_order([claude, competing])[0]["lane"] == ("claude" if visible else "codex")
+    recommendation = state_router._recommend_agent(
+        {"claude": data["agents"]["claude"], "codex": {"status": "warm", "burn_pct_7d": 10.0}},
+        [],
+        current_time=now,
+        authoritative_data_available=True,
+    )
+    assert recommendation["primary_agent_for_code"] == ("claude" if visible else "codex")
+    result = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", review_profile="code", risk="critical", routing_snapshot=data)
+    )
+    assert result.selected is not None
+    assert result.selected.route == "claude"
+    assert result.selected.health == ("healthy" if visible else "degraded")
+
+
 @pytest.fixture(
     params=[
         "both",

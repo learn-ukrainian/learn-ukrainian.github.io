@@ -342,7 +342,7 @@ def test_api_projects_sanitized_reserve_and_can_recommend_codex(monkeypatch, tmp
         "confirmed_at": "2026-05-13T20:00:00Z",
         "expires_at": "2026-05-14T20:00:00Z",
     }
-    assert data["agents"]["codex"]["status"] == "warm"
+    assert data["agents"]["codex"]["status"] == "cool"
     assert data["agents"]["codex"]["pace_deficit"]["covered_by"] == ["free full reset"]
     assert data["recommendation"]["primary_agent_for_code"] == "codex"
 
@@ -411,7 +411,7 @@ def test_fresh_refresh_evaluates_reserve_from_response_inventory(
 
     assert before["reset_reserve"] == reset_reserve.unavailable_reserve()
     assert data["agents"]["codex"]["reset_credits"] == refreshed["reset_credits"]
-    assert data["agents"]["codex"]["status"] == ("warm" if available else "hot")
+    assert data["agents"]["codex"]["status"] == ("cool" if available else "hot")
     assert data["agents"]["codex"]["pace_deficit"]["uncovered"] is (not available)
     if available:
         assert data["reset_reserve"] == {

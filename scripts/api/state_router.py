@@ -963,28 +963,31 @@ def _status_from_weekly_used(
     snapshot_stale: bool = False,
     usage_dir: Path | None = None,
 ) -> str:
-    """Map weekly used-percent to a routing status.
+    """Map allowance headroom to reset to a routing status.
 
     ``near_cap`` stays at >= 90% used. Below that, ``hot`` requires a visible
     pace deficit outside the on-pace band with no verified covering reserve.
+    Visible allowance lasting to reset or a covering reserve is ``cool`` at
+    any used-percent below the cap. ``warm`` means >= 50% used with a projected
+    shortfall inside the on-pace band, or with unavailable pace as a fail-safe.
+    Low-use readings inside that band retain their existing ``cool`` tolerance.
     """
     if weekly_used >= 90.0:
         return "near_cap"
-    if (
-        credit_lane.pace_deficit_state(
-            lane,
-            info,
-            pace=pace,
-            now=now,
-            snapshot_stale=snapshot_stale,
-            usage_dir=usage_dir,
-        )["uncovered"]
-        is True
-    ):
+    record = dict(info or {})
+    record["status"] = "cool" if weekly_used < 50.0 else "warm"
+    record.setdefault("remaining_pct", 100.0 - weekly_used)
+    decision = credit_lane.pace_deficit_state(
+        lane,
+        record,
+        pace=pace,
+        now=now,
+        snapshot_stale=snapshot_stale,
+        usage_dir=usage_dir,
+    )
+    if decision["uncovered"] is True:
         return "hot"
-    if weekly_used < 50.0:
-        return "cool"
-    return "warm"
+    return decision["status"]
 
 
 def _overlay_notebook_lane_usage(
