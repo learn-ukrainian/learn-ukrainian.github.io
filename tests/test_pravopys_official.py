@@ -13,6 +13,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import sqlite3
 import sys
 import unicodedata
@@ -116,6 +117,39 @@ def test_endings_on_the_next_row_take_the_script_of_their_word() -> None:
 def test_script_anomalies_report_mixed_words_and_bare_latin_stress() -> None:
     assert po.script_anomalies("душ-á і PIN-код, Польське ó; Gómez, café, душ-а́") == ["душ-á", "PIN-код", "ó"]
     assert po.script_anomalies(f"пліч-\nо{A}-пліч, Microsóft, XVI") == []
+
+
+def test_context_readings_rewrite_whole_printed_tokens_only() -> None:
+    paragraph = po.Paragraph(
+        66, 96, None,
+        rows=[_row("І відміна: і так", page=96), _row("ІІ відміна", page=96), _row("ІІІ відміна", page=97)],
+        margin_labels=[po.MarginLabel(96, 10, "-IР-, -ИР-")],
+    )
+    readings = [
+        po.ContextReading(66, "rows", "І відміна", "I відміна", 1, "test"),
+        po.ContextReading(66, "rows", "ІІ відміна", "II відміна", 1, "test"),
+        po.ContextReading(66, "margin_labels", "-IР-", "-ІР-", 1, "test"),
+    ]
+    (read,) = po.apply_context_readings([paragraph], readings)
+    assert [row.text for row in read.rows] == ["I відміна: і так", "II відміна", "ІІІ відміна"]
+    assert [label.text for label in read.margin_labels] == ["-ІР-, -ИР-"]
+    assert paragraph.rows[0].text == "І відміна: і так"  # the input is not modified
+
+
+@pytest.mark.parametrize(
+    "reading",
+    [po.ContextReading(66, "rows", "І відміна", "I відміна", 2, "test"), po.ContextReading(7, "rows", "x", "y", 1, "test")],
+)
+def test_context_readings_refuse_a_drifted_parse(reading: po.ContextReading) -> None:
+    paragraph = po.Paragraph(66, 96, None, rows=[_row("І відміна", page=96)])
+    with pytest.raises(po.PravopysParseError):
+        po.apply_context_readings([paragraph], [reading])
+
+
+def test_context_readings_are_single_script() -> None:
+    for reading in po.CONTEXT_READINGS:
+        assert po.script_anomalies(reading.reading) == [], reading
+        assert po.restore_scripts(reading.reading) == reading.reading, reading
 
 
 # ── Layout ───────────────────────────────────────────────────────
@@ -572,3 +606,36 @@ def test_real_pdf_words_are_in_one_script_except_reviewed_printed_latin() -> Non
     assert paragraphs == {key: sorted(words) for key, words in allowlist["paragraphs"].items()}
     assert labels == {key: sorted(words) for key, words in allowlist["margin_labels"].items()}
     assert sections == {}
+
+
+@pytest.mark.skipif(not REAL_PDF, reason="set LU_PRAVOPYS_2019_PDF to a pinned official copy")
+def test_real_pdf_context_readings_are_stored_and_found(tmp_path: Path) -> None:
+    pdf = Path(REAL_PDF)
+    official = pravopys_2019_ingest.official_file_for(pdf)
+    parsed = po.parse_edition(pdf, official)
+    by_number = {p.number: p for p in parsed.paragraphs}
+
+    def tokens(texts: list[str], pattern: str) -> list[list[str]]:
+        found = [m.group(0) for text in texts for m in re.finditer(pattern, text)]
+        return [[unicodedata.name(char) for char in token] for token in found]
+
+    latin_i, latin_v = "LATIN CAPITAL LETTER I", "LATIN CAPITAL LETTER V"
+    # § 129: the foreign ending -ia, both letters Latin.
+    assert tokens([row.text for row in by_number[129].rows], r"-\w+(?= передаємо)") == [
+        ["HYPHEN-MINUS", "LATIN SMALL LETTER I", "LATIN SMALL LETTER A"]
+    ]
+    # § 34: the margin label -ІР- beside -ИР-, both letters Cyrillic.
+    assert tokens([label.text for label in by_number[34].margin_labels], r"\w+Р(?=-)") == [
+        ["CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I", "CYRILLIC CAPITAL LETTER ER"],
+        ["CYRILLIC CAPITAL LETTER I", "CYRILLIC CAPITAL LETTER ER"],
+    ]
+    # § 66: the four declensions numbered I, II, III, IV in Latin capitals.
+    assert tokens([row.text for row in by_number[66].rows], r"^\w+(?= відміна)") == [
+        [latin_i], [latin_i] * 2, [latin_i] * 3, [latin_i, latin_v]
+    ]
+
+    conn = sqlite3.connect(tmp_path / "sources.db")
+    po.store_edition(conn, parsed, official, retrieved_at="2026-10-03T15:05:00Z")
+    for topic, number in (("ia", 129), ("I", 66), ("II", 66), ("III", 66), ("IV", 66)):
+        assert number in [hit["section"] for hit in po.search_paragraphs(conn, topic, po.TOC_PARAGRAPH_COUNT)], topic
+    conn.close()

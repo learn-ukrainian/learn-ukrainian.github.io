@@ -1,5 +1,5 @@
 {
- "parser_version": "pravopys_2019_pdf_v2",
+ "parser_version": "pravopys_2019_pdf_v3",
  "about": "Words of the official PDF that script_anomalies() reports after decoding, each reviewed against the rendered page. Every other word of every § must be in one script.",
  "paragraphs": {
   "35": {
@@ -8,16 +8,9 @@
    "веб-API": "printed Latin abbreviation in a Ukrainian compound",
    "флеш-BIOS": "printed Latin abbreviation in a Ukrainian compound"
   },
-  "129": {
-   "іa": "foreign ending -ia; encoded as Cyrillic і + Latin a, both glyphs shared by the scripts, so the print cannot decide"
-  },
   "150": {
    "ó": "the Polish letter ó cited by the rule (Польське ó, наявне в суфіксі -ów)"
   }
  },
- "margin_labels": {
-  "34": {
-   "IР": "margin label -ІР- (beside -ИР-); encoded as Latin I + Cyrillic Р, both glyphs shared by the scripts, so the print cannot decide"
-  }
- }
+ "margin_labels": {}
 }

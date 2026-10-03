@@ -42,7 +42,7 @@ from pathlib import Path
 from typing import Any
 
 PRAVOPYS_SOURCE_ID = "pravopys_2019_official"
-PARSER_VERSION = "pravopys_2019_pdf_v2"
+PARSER_VERSION = "pravopys_2019_pdf_v3"
 PRAVOPYS_TITLE = "Український правопис"
 PRAVOPYS_EDITION = (
     "Авторизоване видання 2019 р. — Київ: Наукова думка, 2019. 392 с. ISBN 978-966-00-1728-3"
@@ -858,6 +858,56 @@ def vesum_word_predicate(vesum_db: Path) -> LexiconPredicate:
     return is_word
 
 
+# ── Context readings ─────────────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class ContextReading:
+    """A printed token spelled only with letters both scripts share, re-read in the script its § decides.
+
+    ``restore_scripts`` cannot decide such a token from its glyphs; the
+    surrounding text of the § can.  ``count`` is the number of occurrences the
+    pinned PDF prints, so a parse that drifts fails instead of missing one.
+    """
+
+    paragraph: int
+    where: str  # "rows" or "margin_labels"
+    printed: str
+    reading: str
+    count: int
+    context: str
+
+
+CONTEXT_READINGS: tuple[ContextReading, ...] = (
+    ContextReading(129, "rows", "-іa", "-ia", 1, "p. 159: the rule cites the foreign (Latin) ending -ia, rendered as -ія"),
+    ContextReading(34, "margin_labels", "-IР-", "-ІР-", 1, "pp. 45–46: the label names the Cyrillic suffix -ір- of the body"),
+    # pp. 96–97 number the four declensions I, II, III, IV; III and IV are encoded in Latin.
+    ContextReading(66, "rows", "І відміна", "I відміна", 1, "pp. 96–97: Roman numeral of the I declension"),
+    ContextReading(66, "rows", "ІІ відміна", "II відміна", 1, "pp. 96–97: Roman numeral of the II declension"),
+)
+
+
+def apply_context_readings(
+    paragraphs: Sequence[Paragraph], readings: Sequence[ContextReading] = CONTEXT_READINGS
+) -> list[Paragraph]:
+    """Return ``paragraphs`` with every reading applied to the whole-word occurrences of its printed token."""
+    by_number = {paragraph.number: paragraph for paragraph in paragraphs}
+    for reading in readings:
+        paragraph = by_number.get(reading.paragraph)
+        if paragraph is None:
+            raise PravopysParseError(f"context reading for missing § {reading.paragraph}")
+        pattern = re.compile(rf"(?<!\w){re.escape(reading.printed)}(?!\w)")
+        items = getattr(paragraph, reading.where)
+        found = sum(len(pattern.findall(item.text)) for item in items)
+        if found != reading.count:
+            raise PravopysParseError(
+                f"§ {reading.paragraph}: {reading.printed!r} printed {found} times, expected {reading.count}"
+            )
+        updated = [replace(item, text=pattern.sub(lambda _match, new=reading.reading: new, item.text)) for item in items]
+        by_number[reading.paragraph] = replace(paragraph, **{reading.where: updated})
+    return [by_number[paragraph.number] for paragraph in paragraphs]
+
+
 # ── Parse driver ─────────────────────────────────────────────────
 
 
@@ -870,7 +920,7 @@ def parse_edition(pdf_path: Path, official: OfficialFile) -> ParsedEdition:
     mismatches = [(page.page, page.printed_number) for page in body_pages if page.printed_number != str(page.page)]
     toc = parse_toc(row for page in toc_pages for row in page.rows)
     sections, paragraphs = segment_body(body_pages, toc)
-    return ParsedEdition(sections, paragraphs, toc, mismatches)
+    return ParsedEdition(sections, apply_context_readings(paragraphs), toc, mismatches)
 
 
 def toc_paragraphs(toc: Iterable[TocEntry]) -> dict[int, TocEntry]:

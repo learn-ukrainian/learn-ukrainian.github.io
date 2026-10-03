@@ -92,10 +92,13 @@ Cyrillic words, including endings set off by a hyphen («душ-á») or on the 
 word, read across line breaks, is written in the script its distinct letters decide; a part
 of stressed vowels only takes the script of its word, and a lone ending «(-о́ві, -í)» that of
 the preceding word. Left as encoded: printed Latin inside Ukrainian compounds («PIN-код»),
-the Polish letter «ó» cited in § 150, and two words spelled only with letters both scripts
-share whose script the glyphs cannot decide (§ 129 «-іa», the § 34 margin label «-IР-»).
-`tests/fixtures/pravopys_2019_script_allowlist.json` lists these, and the PDF regression test
-fails on any other word that mixes scripts. `section_path` follows the printed heading sizes, so a 10.5 pt heading such as
+and the Polish letter «ó» cited in § 150. `tests/fixtures/pravopys_2019_script_allowlist.json`
+lists these, and the PDF regression test fails on any other word that mixes scripts. Tokens
+spelled only with letters both scripts share keep the script they are encoded in, except
+where the text of their § decides it (`CONTEXT_READINGS`): the foreign ending «-ia» of
+§ 129 is stored in Latin, the § 34 margin label «-ІР-» (beside «-ИР-») in Cyrillic, and the
+Roman numerals I, II, III, IV of the declensions in § 66 in Latin capitals. Roman numerals
+elsewhere stay as encoded (mostly Cyrillic «І»). `section_path` follows the printed heading sizes, so a 10.5 pt heading such as
 «ЧЕРГУВАННЯ ГОЛОСНИХ» nests under the preceding 12.5 pt heading even where the contents treat
 both as one level.
 
