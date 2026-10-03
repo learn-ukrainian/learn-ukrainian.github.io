@@ -186,19 +186,21 @@ def yaml_activity_mdx_parts(
     cross_referencing = bool(inline_ids or inline_positions or inline_fingerprints)
 
     parts: list[tuple[str | None, str]] = []
+    emitted_pointers: set[str] = set()
     for index, activity in enumerate(activities):
         activity_id = _activity_id(activity)
         if cross_referencing and (index in inline_positions or activity_id in inline_ids):
-            parts.append(
-                (
-                    None,
-                    _inline_activity_cross_ref_to_mdx(
-                        activity,
-                        section_titles.get(activity_id, ""),
-                        is_ukrainian_forced,
-                    ),
-                )
+            pointer = _inline_activity_cross_ref_to_mdx(
+                activity,
+                section_titles.get(activity_id, ""),
+                is_ukrainian_forced,
             )
+            # Repeated references add no learner context. Distinct sections
+            # and explicit activity titles remain distinct pointers, in order.
+            if pointer in emitted_pointers:
+                continue
+            emitted_pointers.add(pointer)
+            parts.append((None, pointer))
             continue
         if cross_referencing and activity_identity_key(activity) in inline_fingerprints:
             continue

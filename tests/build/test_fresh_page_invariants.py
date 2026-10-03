@@ -163,6 +163,18 @@ def render_activity_blocks(blocks, tmp_path):
     return json.loads(rendered.stdout)
 
 
+def assert_unique_workbook_pointers(page):
+    """Check complete visible pointers, including any learner heading, on tab 3."""
+    tabs = re.findall(r'<TabItem label="[^"]+">(.*?)</TabItem>', page, re.DOTALL)
+    assert len(tabs) == 4
+    pointers = re.findall(
+        r"(?:^### [^\n]+\n\n)?^\*\((?:див\. |see lesson).*\)\*$",
+        html.unescape(tabs[2]), re.MULTILINE,
+    )
+    assert len(pointers) == len(set(pointers)), f"Repeated workbook pointers: {pointers}"
+    return pointers
+
+
 @pytest.mark.parametrize("level", LEVELS)
 @pytest.mark.parametrize("placement", ["inline", "workbook"])
 @pytest.mark.site_toolchain
@@ -208,6 +220,8 @@ def test_no_activity_type_id_is_visible_on_any_page(level, placement, render_env
     assert result.passed, result.to_dict()
     assert len(blocks) == len(types)
     page = html.unescape(result.artifacts["mdx"])
+    pointers = assert_unique_workbook_pointers(page)
+    assert bool(pointers) == (placement == "inline")
     lesson_end = page.index("</TabItem>")
     assert all((page.index(html.unescape(block)) < lesson_end) == (placement == "inline") for block in blocks)
     rendered = render_activity_blocks(blocks, tmp_path)
@@ -223,6 +237,7 @@ def test_no_activity_type_id_is_visible_on_any_page(level, placement, render_env
 
 def test_attempt5_has_no_activity_type_heading(render_environment):
     page, _ = reassemble_attempt5()
+    assert assert_unique_workbook_pointers(page) == ['*(див. вкладку «Урок»)*']
     types = set().union(*(
         {name.removesuffix("-" + level) for name in json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"]}
         for level in LEVELS
@@ -245,6 +260,38 @@ def test_inline_pointer_uses_only_an_explicit_learner_title(as_dict, title, ukra
     heading = f"### {title.strip()}\n\n" if title.strip() else ""
     reference = "див. вкладку «Урок»" if ukrainian else "see lesson tab"
     assert pointer == f"{heading}*({reference})*"
+
+
+@pytest.mark.parametrize("as_dict", [False, True])
+@pytest.mark.parametrize("ukrainian", [False, True])
+@pytest.mark.parametrize("selector", ["ids", "positions"])
+def test_headingless_pointers_are_unique_and_distinct_targets_stay(as_dict, ukrainian, selector):
+    from types import SimpleNamespace
+
+    from scripts.generate_mdx.converters import yaml_activity_mdx_parts
+
+    fields = [
+        {"id": str(i), "type": "quiz", "title": "Learner title" if i >= 6 else ""}
+        for i in range(8)
+    ]
+    activities = fields if as_dict else [SimpleNamespace(**item) for item in fields]
+    selectors = (
+        {"inline_cross_ref_ids": {str(i) for i in range(8)}}
+        if selector == "ids" else {"inline_cross_ref_positions": set(range(8))}
+    )
+    parts = yaml_activity_mdx_parts(
+        activities, is_ukrainian_forced=ukrainian,
+        inline_cross_ref_section_titles={"2": "One", "3": "One", "4": "Two", "5": "Two"},
+        **selectors,
+    )
+    tab = "див. вкладку «Урок»" if ukrainian else "see lesson tab"
+    section = "див. розділ, §" if ukrainian else "see lesson, §"
+    assert parts == [
+        (None, f"*({tab})*"),
+        (None, f"*({section}One)*"),
+        (None, f"*({section}Two)*"),
+        (None, f"### Learner title\n\n*({tab})*"),
+    ]
 
 
 @pytest.mark.parametrize("level", LEVELS)
