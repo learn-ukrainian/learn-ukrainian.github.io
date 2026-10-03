@@ -4,13 +4,22 @@ lifecycle: active
 
 # Reference sense bindings
 
-This procedure implements #9582 AC-04 and the approved #9546 design. A private
-reference meaning selects an exact **open dictionary** atom. Only that atom is
-published. An exact binding wins; A1 reference members without one, like every
-other word, take the plain first meaning (`select_gloss`, operator decision on
-#9543, 2026-10-03), and the cross-family lesson review catches a wrong gloss.
-An invalid binding still withholds. This runbook does not change plans, source
-decisions, or publication eligibility.
+This procedure implements #9582 AC-04 and the approved #9546 design, with the
+operator's order for A1 glosses (#9543, 2026-10-03). A learner gets one plain
+meaning, chosen in this order (`sources.select_gloss`):
+
+1. the request's `meaning` (the lesson's sense, checked against ULIF/VESUM
+   before it is written; an open-dictionary candidate spelled the same is
+   cited, otherwise the meaning itself is the gloss with source
+   `request_meaning`), then the candidate a request note's lead clause names;
+2. the open-dictionary row of the pinned ULIF/VESUM entry, when it excludes
+   other rows;
+3. Anna Ohoiko's A1 dictionary (`ohoiko_reference` bindings below);
+4. the plain first meaning; the cross-family lesson review catches a wrong gloss.
+
+A reviewed (`reviewed.v1`) or exact (`a1_reference_meaning.v1`) binding still
+wins outright. An invalid binding still withholds. This runbook does not change
+plans, source decisions, or publication eligibility.
 
 ## Private extraction
 
@@ -42,12 +51,30 @@ extractor, and reports counts and mismatch locators only.
   --write --key-file PRIVATE_KEY --key-id build1
 ```
 
-The first command only measures; diagnostics contain W-ids, row ids, span indexes
-and reason codes. The second writes `_sense_bindings.yaml` and its integrity
-lock in the level evidence directory. Schema:
-`schemas/evidence-sense-bindings-v1.schema.json`. No real A1 bindings are committed
-in the tooling PR; their publication belongs to the plan revision.
+The first command only measures; diagnostics contain W-ids, the match kind,
+public locators and reason codes. The second writes `_sense_bindings.yaml` and
+its integrity lock in the level evidence directory. Schema:
+`schemas/evidence-sense-bindings-v1.schema.json`.
 
+`sense-select` writes `ohoiko_reference` bindings. A word is a member when an
+entry's printed label (stress marks and terminal punctuation removed) and the
+public inventory headword both equal its lemma, with a compatible POS (her noun,
+verb and adjective labels must equal the word's; adverb and unlabelled entries
+cover the closed classes). Her meanings, compared as `reference_sense_v1`
+normalises, choose the English: the first open-dictionary learner candidate
+(inside the ULIF-pinned row when ULIF decides the homonym) equal to one of them
+is the gloss (`match: dictionary`). If none equals and ULIF pinned no row, her
+first meaning's head is the gloss when it passes `is_learner_gloss`
+(`match: book`; verbs take `to`). That short gloss is the only private text a
+binding or store record may carry; the binding records her public `locator`
+and a keyed `commitment`, and the store records
+`gloss_basis: {method: ohoiko_reference, binding, locator}`. A dictionary match
+the rows no longer contain, a book gloss under a ULIF pin, or a locator outside
+the lemma's printed entries is `reference_binding_invalid`. A request meaning or
+named note lead precedes the binding and then no basis is recorded.
+
+`sense-select` no longer writes `a1_reference_meaning.v1`; the builder and
+verifiers still read an existing binding of that method exactly as below.
 `a1_reference_meaning.v1` uses `reference_sense_v1` and the existing parser.
 `span_index` enumerates `_sense_spans` over `_sub_senses`, across the row's
 translation list in source order, **before** learner filtering. `atom_index`

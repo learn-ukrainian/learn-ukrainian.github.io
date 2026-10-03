@@ -265,12 +265,12 @@ def verify_words_store(
             )
             if selection.reason == "reference_binding_invalid":
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: {selection.reason}")
-            if word.get("gloss_basis") != binding_context.basis(word_id):
+            if word.get("gloss_basis") != selection.basis:
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: binding_basis_mismatch")
             method = binding_context.entries.get(word_id, {}).get("method")
-            if method in {"a1_reference_meaning.v1", "reviewed.v1"}:
+            if method in sense_bindings.LOCAL_PROOF_METHODS:
                 warnings.append(f"{word_id}: {sense_bindings.CI_NOTICE}")
-                unchecked = "private_commitment" if method == "a1_reference_meaning.v1" else "review_provenance"
+                unchecked = sense_bindings.LOCAL_PROOF_METHODS[method]
                 not_checked.append(f"{word_id}:{unchecked}")
             expected_gloss = selection.gloss
             expected_gloss_source = selection.source
@@ -512,7 +512,10 @@ def verify_words_store(
             "sources_db_scheme": scheme,
             "cited_rows_drifted_words": rows_drifted_total,
             "private_commitments": {"status": "unverifiable_in_ci", "local_receipt_required": True}
-            if any(w.get("gloss_basis", {}).get("method") == "a1_reference_meaning.v1" for w in words_list)
+            if any(
+                sense_bindings.LOCAL_PROOF_METHODS.get(w.get("gloss_basis", {}).get("method")) == "private_commitment"
+                for w in words_list
+            )
             else {"status": "not_applicable"},
             "not_checked": not_checked,
             "snapshot": sources_instance.snapshot_report(),
@@ -687,7 +690,7 @@ def verify_plan_glosses(
             and stored
             and (
                 stored != selection.gloss
-                or word.get("gloss_basis") != binding_context.basis(wid)
+                or word.get("gloss_basis") != selection.basis
                 or (selection.ref and selection.ref.get("span") and word.get("gloss_ref") != selection.ref)
             )
         ):
@@ -917,11 +920,9 @@ def verify_pack(
                     context = sense_bindings.Context.read(level, evidence_base)
                     for wid in sorted(cited_gloss_ids(plan_doc)):
                         method = context.entries.get(wid, {}).get("method")
-                        if method in {"a1_reference_meaning.v1", "reviewed.v1"}:
+                        if method in sense_bindings.LOCAL_PROOF_METHODS:
                             warnings.append(f"{level}/{slug} {wid}: {sense_bindings.CI_NOTICE}")
-                            unchecked = (
-                                "private_commitment" if method == "a1_reference_meaning.v1" else "review_provenance"
-                            )
+                            unchecked = sense_bindings.LOCAL_PROOF_METHODS[method]
                             not_checked.append(f"{wid}:{unchecked}")
                     errors.extend(
                         verify_plan_glosses(

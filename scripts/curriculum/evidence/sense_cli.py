@@ -27,60 +27,36 @@ def select_store(
     key: bytes | None = None,
     key_id: str | None = None,
 ) -> tuple[dict[str, dict], list[dict]]:
-    """Measure without publishing private input, including repeated reference entries."""
+    """Anna's dictionary chooses the English of each word it prints; diagnostics carry ids and public locators only."""
     words = store["words"]
     rows = api.gloss_rows((w["lemma"], w["pos"]) for w in words).raw
     kaikki = api.kaikki_rows(w["lemma"] for w in words).raw
-    ulif = api.ulif_entries(w["lemma"] for w in words).raw
     context = bindings.Context(store["level"], {}, inventory)
     selected, decisions = {}, []
     for word in words:
-        members = context.members(word)
+        # The private printed label and the public inventory headword must both be the lemma.
+        members = [
+            m
+            for m in context.labelled(word)
+            if bindings.printed_headword(private[m["locator"]]["printed_label"]) == word["lemma"]
+        ]
         if not members:
             decisions.append({"word": word["id"], "reason": "reference_non_member"})
             continue
-        report = {"unknown_label_spans": 0, "uncertain_scope_spans": 0}
-        results = [
-            (
-                member,
-                matcher.select(
-                    word,
-                    rows.get((word["lemma"], word["pos"]), []),
-                    private[member["locator"]]["meaning"],
-                    kaikki.get(word["lemma"]),
-                    ulif_entries=ulif.get(word["lemma"], []),
-                    report=report,
-                ),
-            )
-            for member in members
-        ]
-        successful = [r for _, r in results if r.ref]
-        if len(successful) == len(results) and len({matcher.signature(r.candidates[0]) for r in successful}) == 1:
-            member, result = min(
-                results,
-                key=lambda pair: (
-                    pair[1].ref["id"],
-                    pair[1].ref["span_index"],
-                    pair[1].ref["atom_index"],
-                    pair[0]["locator"],
-                ),
-            )
-            decisions.append(
-                {"word": word["id"], **{k: result.ref[k] for k in ("id", "span_index", "atom_index")}, **report}
-            )
-            if key is not None and key_id:
-                selected[word["id"]] = bindings.reference_binding(
-                    word, result.ref, private[member["locator"]], key, key_id
-                )
-        else:
-            reason = (
-                "reference_no_match"
-                if all(r.reason == "reference_no_match" for _, r in results)
-                else results[0][1].reason
-                if len(results) == 1
-                else "reference_ambiguous"
-            )
-            decisions.append({"word": word["id"], "reason": reason or "reference_ambiguous", **report})
+        result = bindings.book_choice(
+            word,
+            rows.get((word["lemma"], word["pos"]), []),
+            kaikki.get(word["lemma"]),
+            [private[m["locator"]]["meaning"] for m in members],
+        )
+        if result is None:
+            decisions.append({"word": word["id"], "reason": "reference_no_gloss"})
+            continue
+        choice, index = result
+        member = members[index]
+        decisions.append({"word": word["id"], "match": choice["match"], "locator": member["locator"]})
+        if key is not None and key_id:
+            selected[word["id"]] = bindings.book_binding(word, choice, private[member["locator"]], key, key_id)
     return selected, decisions
 
 
@@ -120,21 +96,27 @@ def _redact_validated_locations(
             if not word or not binding:
                 continue
             row = api.gloss_rows([(word["lemma"], word["pos"])]).raw.get((word["lemma"], word["pos"]), [])
-            selection = context.select(word, row, None)
+            payload_row = api.kaikki_rows([word["lemma"]]).raw.get(word["lemma"])
+            selection = context.select(word, row, payload_row)
             if selection.gloss is None:
                 continue
+            # A dictionary binding shows its atom (``span``); Anna's binding shows its ``gloss``.
+            shown_field = "span" if "span" in binding else "gloss"
             allowed = []
             if kind == "bindings" and entry == binding:
-                allowed.append(fields["span"])
+                allowed.append(fields[shown_field])
             elif (
                 kind == "words"
-                and entry.get("gloss_en") == binding["span"]
+                and entry.get("gloss_en") == binding[shown_field] == selection.gloss
                 and entry.get("gloss_ref") == selection.ref
-                and entry.get("gloss_basis") == context.basis(wid)
+                and selection.basis is not None
+                and entry.get("gloss_basis") == selection.basis
             ):
-                allowed.extend([fields["gloss_en"], mapping(fields["gloss_ref"])["span"]])
+                allowed.append(fields["gloss_en"])
+                if isinstance(selection.ref, dict) and "span" in selection.ref:
+                    allowed.append(mapping(fields["gloss_ref"])["span"])
             for scalar in allowed:
-                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != binding["span"]:
+                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != binding[shown_field]:
                     return content
                 ranges.append((scalar.start_mark.index, scalar.end_mark.index))
         for start, end in sorted(ranges, reverse=True):
@@ -562,7 +544,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                     if current != binding:
                         raise ValueError("review_subject_stale_or_unapproved")
                     selected.pop(wid, None)
-                expected = {k: v for k, v in context.entries.items() if v["method"] == matcher.METHOD}
+                expected = {k: v for k, v in context.entries.items() if v["method"] == bindings.BOOK_METHOD}
                 if selected != expected:
                     raise ValueError("reference_binding_reselection_failed")
                 pr_text = None
@@ -611,10 +593,9 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                 json.dumps(
                     {
                         "decisions": decisions,
-                        "resolved": sum("id" in d for d in decisions),
+                        "resolved": sum("match" in d for d in decisions),
+                        "book_glosses": sum(d.get("match") == "book" for d in decisions),
                         "total": len(decisions),
-                        "unknown_label_spans": sum(d.get("unknown_label_spans", 0) for d in decisions),
-                        "uncertain_scope_spans": sum(d.get("uncertain_scope_spans", 0) for d in decisions),
                     },
                     ensure_ascii=False,
                 )

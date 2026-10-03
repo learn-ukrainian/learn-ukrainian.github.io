@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 6aa5fe11c8cfe2fd44b14dde40efe8a7197b4445
+  mcp_commit: d4d194d38805382ce1c1675cd942ee4ce373b246
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 5ef2f082ebc972f7d9d576b6429cf76fa6b93cc40b62a07546d331b6a7fa7862
+  sources_db: cbc67dffe8492612fa52e2e4a421a9456d74ac2cec0cf508f040e8df78ab5404
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -83,6 +83,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-001
   lemma: я
+  meaning: I
   note: 'closed class: personal pronoun (1st pers sing); basic speaker reference'
   pos: noun
   shadow:
@@ -163,7 +164,7 @@ words:
     stress_source: none
     stressed: тя
     tags: noun:anim:s:v_zna:pron:pers:2:arch
-  gloss_en: thou
+  gloss_en: you
   gloss_ref:
     id: 269
     row_sha256: c26798fbeaf218a1cf49750532cf0a6c7fd106ff2417ce5e66d23ccdc4099783
@@ -171,6 +172,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-002
   lemma: ти
+  meaning: you
   note: 'closed class: personal pronoun (2nd pers sing); base-layer item (position 43 please-do-this teaches imperative contrast
     in ти/ви forms, not the pronoun)'
   pos: noun
@@ -280,14 +282,11 @@ words:
       origin: tag
     stress_source: pending
     tags: noun:unanim:m:v_zna:pron:pers:3:arch
-  gloss_en: personal pronoun "he"
-  gloss_ref:
-    id: 14269
-    row_sha256: 05e8d3ca79e889bdf8a1fe8102d2054fce5b10fbdaeb223be47d2171bc633b93
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_en: he
+  gloss_source: kaikki_wiktionary
   id: W-003
   lemma: він
+  meaning: he
   note: 'closed class: personal pronoun (3rd pers masc sing); taught at position 8 (things-have-gender)'
   pos: noun
   shadow:
@@ -379,6 +378,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-004
   lemma: вона
+  meaning: she
   note: 'closed class: personal pronoun (3rd pers fem sing); taught at position 8 (things-have-gender)'
   pos: noun
   shadow:
@@ -444,6 +444,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-005
   lemma: воно
+  meaning: it
   note: 'closed class: personal pronoun (3rd pers neut sing); taught at position 8 (things-have-gender)'
   pos: noun
   shadow:
@@ -502,6 +503,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-006
   lemma: ми
+  meaning: we
   note: 'closed class: personal pronoun (1st pers plur); basic plural reference'
   pos: noun
   shadow:
@@ -566,6 +568,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-007
   lemma: ви
+  meaning: you
   note: 'closed class: personal pronoun (2nd pers plur/polite); base-layer item (position 43 please-do-this teaches imperative
     contrast in ти/ви forms, not the pronoun)'
   pos: noun
@@ -645,6 +648,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-008
   lemma: вони
+  meaning: they
   note: 'closed class: personal pronoun (3rd pers plur); taught at position 13 (many-things)'
   pos: noun
   shadow:
@@ -2938,7 +2942,7 @@ words:
     stress_source: none
     stressed: у
     tags: prep
-  gloss_en: contained by
+  gloss_en: in
   gloss_ref:
     id: 3
     row_sha256: 8f4fa83f7c9f63eab2aa3da78770d3fa2d70dfceccea13658e473227c2458509
@@ -2946,6 +2950,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-018
   lemma: у
+  meaning: in
   note: 'closed class: preposition; taught at position 28 (euphony) and position 29 (where-is-it)'
   pos: prep
   shadow:
@@ -2962,7 +2967,7 @@ words:
     stress_source: none
     stressed: в
     tags: prep
-  gloss_en: contained by
+  gloss_en: in
   gloss_ref:
     id: 2
     row_sha256: cfe093c0d8ce2c59086caecd90f22897f83f8d7d95e1a2bb66fdfd6f57093222
@@ -2970,6 +2975,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-019
   lemma: в
+  meaning: in
   note: 'closed class: preposition, euphonic partner of у; taught at position 28 (euphony) and position 29 (where-is-it)'
   pos: prep
   shadow:
@@ -2991,7 +2997,7 @@ words:
     stress_source: ulif
     stressed: уві́
     tags: prep
-  gloss_en: contained by
+  gloss_en: in
   gloss_ref:
     id: 19477
     row_sha256: b14ac493c86daf086db899f4b5777eba67b8391f748dd5706f05e06c54242f28
@@ -2999,6 +3005,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-020
   lemma: уві
+  meaning: in
   note: 'closed class: preposition, euphonic partner of у'
   pos: prep
   shadow:
@@ -3020,7 +3027,11 @@ words:
     stress_source: none
     stressed: з
     tags: prep
-  gloss_en: of
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-021
+    locator: p203 Словничок#357
+    method: ohoiko_reference
+  gloss_en: from
   gloss_ref:
     id: 5
     row_sha256: 3850cfb33c989ccdb02c7b3b162bc1e2e03ddd229b5c3fef337ab00efd7de8b5
@@ -3141,12 +3152,12 @@ words:
     stress_source: none
     stressed: на
     tags: prep
-  gloss_en: positioned at the upper surface of
-  gloss_ref:
-    id: 1
-    row_sha256: 074e5a052cd3e000a40e1e0b6973b87763d7a1f74f92fb87fe9a21c239f7e5df
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-025
+    locator: p206 Словничок#686
+    method: ohoiko_reference
+  gloss_en: 'on'
+  gloss_source: ohoiko_reference
   id: W-025
   lemma: на
   note: 'closed class: preposition; taught at position 29 (where-is-it)'
@@ -3170,7 +3181,11 @@ words:
     stress_source: none
     stressed: до
     tags: prep
-  gloss_en: before
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-026
+    locator: p203 Словничок#355
+    method: ohoiko_reference
+  gloss_en: to
   gloss_ref:
     id: 7
     row_sha256: 091b64439e9a908d49f07bca46955d1558d1aff99ca2c518e4e6b2108a9ac04f
@@ -3262,6 +3277,10 @@ words:
     stress_source: none
     stressed: для
     tags: prep
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-029
+    locator: p203 Словничок#354
+    method: ohoiko_reference
   gloss_en: for
   gloss_ref:
     id: 12
@@ -3503,6 +3522,10 @@ words:
     stress_source: ulif
     stressed: пе́ред
     tags: prep
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-038
+    locator: p214 Словничок#1576
+    method: ohoiko_reference
   gloss_en: before
   gloss_ref:
     id: 20412
@@ -3575,6 +3598,10 @@ words:
     stress_source: ulif
     stressed: пі́сля
     tags: prep
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-041
+    locator: p210 Словничок#1204
+    method: ohoiko_reference
   gloss_en: after
   gloss_ref:
     id: 54
@@ -3662,6 +3689,10 @@ words:
     stress_source: ulif
     stressed: бі́ля
     tags: prep
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-044
+    locator: p210 Словничок#1136
+    method: ohoiko_reference
   gloss_en: near
   gloss_ref:
     id: 860
@@ -3696,7 +3727,11 @@ words:
     stress_source: ulif
     stressed: че́рез
     tags: prep
-  gloss_en: across
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-045
+    locator: p215 Словничок#1645
+    method: ohoiko_reference
+  gloss_en: through
   gloss_ref:
     id: 60
     row_sha256: 01dd531997f0dd2243be8f88287bcdb80bb281a27bbd96878e421ef05e57f982
@@ -3730,6 +3765,10 @@ words:
     stress_source: none
     stressed: про
     tags: prep
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-046
+    locator: p204 Словничок#502
+    method: ohoiko_reference
   gloss_en: about
   gloss_ref:
     id: 10
@@ -3798,7 +3837,7 @@ words:
     stress_source: none
     stressed: о
     tags: prep
-  gloss_en: indicating time
+  gloss_en: at
   gloss_ref:
     id: 7431
     row_sha256: bd5092d22556c9779ad6f11b962652ca551657b7a3c04e950831447690e69bc9
@@ -3806,6 +3845,7 @@ words:
   gloss_source: dmklinger_uk_en
   id: W-048
   lemma: о
+  meaning: at
   note: 'closed class: preposition; taught at position 22 (what-time) for clock time'
   pos: prep
   shadow:
@@ -3972,6 +4012,10 @@ words:
     stress_source: ulif
     stressed: але́
     tags: conj:coord
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-054
+    locator: p204 Словничок#469
+    method: ohoiko_reference
   gloss_en: but
   gloss_ref:
     id: 14961
@@ -4030,6 +4074,10 @@ words:
     stress_source: ulif
     stressed: або́
     tags: conj:coord
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-056
+    locator: p200 Словничок#16
+    method: ohoiko_reference
   gloss_en: or
   gloss_ref:
     id: 19365
@@ -4298,12 +4346,12 @@ words:
     stress_source: none
     stressed: ось
     tags: part
-  gloss_en: here
-  gloss_ref:
-    id: 395
-    row_sha256: a935eb12ccf0472d63a649a569a95be42dd78417787555681493b4cb7e943c44
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-065
+    locator: p202 Словничок#307
+    method: ohoiko_reference
+  gloss_en: here it is
+  gloss_source: ohoiko_reference
   id: W-065
   lemma: ось
   note: 'closed class: deictic/demonstrative particle'
@@ -4332,6 +4380,10 @@ words:
     stress_source: none
     stressed: ще
     tags: adv
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-066
+    locator: p213 Словничок#1492
+    method: ohoiko_reference
   gloss_en: yet
   gloss_ref:
     id: 29
@@ -4395,6 +4447,10 @@ words:
     stress_source: none
     stressed: вже
     tags: adv
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-068
+    locator: p206 Словничок#710
+    method: ohoiko_reference
   gloss_en: already
   gloss_ref:
     id: 33
@@ -4458,12 +4514,12 @@ words:
     stress_source: ulif
     stressed: лише́
     tags: part
-  gloss_en: mere
-  gloss_ref:
-    id: 19662
-    row_sha256: 16f21a3fb4786d3d9426d5ba7fccb292f306de4716d010ed9fad46d5e259c5f1
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-070
+    locator: p213 Словничок#1506
+    method: ohoiko_reference
+  gloss_en: only
+  gloss_source: ohoiko_reference
   id: W-070
   lemma: лише
   note: 'closed class: restrictive particle'
@@ -4510,6 +4566,12 @@ words:
     stress_source: ulif
     stressed: ті́льки
     tags: part
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-072
+    locator: p203 Словничок#394
+    method: ohoiko_reference
+  gloss_en: only
+  gloss_source: ohoiko_reference
   id: W-072
   lemma: тільки
   note: 'closed class: restrictive particle'
@@ -5046,6 +5108,10 @@ words:
     stress_source: none
     stressed: дні
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-076
+    locator: p200 Словничок#4
+    method: ohoiko_reference
   gloss_en: day
   gloss_ref:
     id: 10903
@@ -5518,8 +5584,11 @@ words:
     stress_source: trie
     stressed: при́голосні
     tags: noun:inanim:p:v_zna
+  gloss_en: consonant
+  gloss_source: request_meaning
   id: W-080
   lemma: приголосний
+  meaning: consonant
   note: Consonant as a sound category, not the adjective; primer part 1 p. 13.
   pos: noun
   shadow:
@@ -5717,7 +5786,11 @@ words:
     markers: []
     stress_source: pending
     tags: noun:anim:p:v_zna:rare
-  gloss_en: mama
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-081
+    locator: p200 Словничок#47
+    method: ohoiko_reference
+  gloss_en: mom
   gloss_ref:
     id: 1466
     row_sha256: d5f9de7f1117c7fc09e215226baa3687441d7908fce2cb941885b973e0523fb0
@@ -5938,6 +6011,10 @@ words:
     stress_source: ulif
     stressed: сли́ви
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-083
+    locator: p202 Словничок#269
+    method: ohoiko_reference
   gloss_en: plum
   gloss_ref:
     id: 18812
@@ -6050,6 +6127,10 @@ words:
     stress_source: ulif
     stressed: ру́ки
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-084
+    locator: p201 Словничок#145
+    method: ohoiko_reference
   gloss_en: hand
   gloss_ref:
     id: 301
@@ -7496,6 +7577,10 @@ words:
     stress_source: none
     stressed: так
     tags: part
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-096
+    locator: p204 Словничок#547
+    method: ohoiko_reference
   gloss_en: 'yes'
   gloss_ref:
     id: 129
@@ -8096,6 +8181,10 @@ words:
     stress_source: trie
     stressed: та́ти
     tags: noun:anim:p:v_zna:rare
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-101
+    locator: p205 Словничок#644
+    method: ohoiko_reference
   gloss_en: dad
   gloss_ref:
     id: 4949
@@ -8320,6 +8409,10 @@ words:
     stress_source: ulif
     stressed: дахи́
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-103
+    locator: p212 Словничок#1364
+    method: ohoiko_reference
   gloss_en: roof
   gloss_ref:
     id: 3029
@@ -8432,6 +8525,10 @@ words:
     stress_source: ulif
     stressed: зими́
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-104
+    locator: p201 Словничок#109
+    method: ohoiko_reference
   gloss_en: winter
   gloss_ref:
     id: 3625
@@ -8545,6 +8642,10 @@ words:
     stress_source: ulif
     stressed: бі́лок
     tags: noun:anim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-105
+    locator: p214 Словничок#1582
+    method: ohoiko_reference
   gloss_en: squirrel
   gloss_ref:
     id: 14198
@@ -9087,6 +9188,10 @@ words:
     stress_source: ulif
     stressed: чаї́
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-109
+    locator: p204 Словничок#519
+    method: ohoiko_reference
   gloss_en: tea
   gloss_ref:
     id: 5698
@@ -9229,6 +9334,10 @@ words:
     stress_source: ulif
     stressed: хліби́
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-110
+    locator: p204 Словничок#515
+    method: ohoiko_reference
   gloss_en: bread
   gloss_ref:
     id: 1805
@@ -9705,8 +9814,11 @@ words:
     stress_source: ulif
     stressed: жа́бок
     tags: noun:anim:p:v_zna
+  gloss_en: little frog
+  gloss_source: request_meaning
   id: W-115
   lemma: жабка
+  meaning: little frog
   note: Animal sense in whole sourced reading question on primer part 2 printed page 30.
   pos: noun
   shadow:
@@ -10036,6 +10148,10 @@ words:
     stress_source: ulif
     stressed: зу́би
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-118
+    locator: p202 Словничок#255
+    method: ohoiko_reference
   gloss_en: tooth
   gloss_ref:
     id: 5364
@@ -10161,12 +10277,12 @@ words:
     stress_source: ulif
     stressed: тини́
     tags: noun:inanim:p:v_zna
-  gloss_en: fence made out of vines and branches
-  gloss_ref:
-    id: 12824
-    row_sha256: 1531990b13104cf868e9dd9960ee1465e59af221034fce7c5de41adbc7223ac8
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-119
+    locator: p202 Словничок#324
+    method: ohoiko_reference
+  gloss_en: wattle fence
+  gloss_source: ohoiko_reference
   id: W-119
   lemma: тин
   note: T-001/X-001 hard member of sourced minimal pair; decoding only.
@@ -10300,6 +10416,10 @@ words:
     stress_source: trie
     stressed: тіни́
     tags: noun:inanim:p:v_zna:arch
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-120
+    locator: p201 Словничок#155
+    method: ohoiko_reference
   gloss_en: shadow
   gloss_ref:
     id: 2830
@@ -10370,6 +10490,10 @@ words:
     stress_source: ulif
     stressed: ї́жу
     tags: noun:inanim:f:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-121
+    locator: p201 Словничок#175
+    method: ohoiko_reference
   gloss_en: food
   gloss_ref:
     id: 2698
@@ -10595,7 +10719,11 @@ words:
     stress_source: trie
     stressed: маля́та
     tags: noun:anim:p:v_zna:rare
-  gloss_en: infant
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-123
+    locator: p201 Словничок#192
+    method: ohoiko_reference
+  gloss_en: baby
   gloss_ref:
     id: 7639
     row_sha256: 188a542adfd3b2239b523c0ed32336d4de61e99fd956ff321a992f9af20ff56d
@@ -11116,12 +11244,12 @@ words:
     markers: []
     stress_source: pending
     tags: adj:p:v_zna:rinanim:compb:long
-  gloss_en: deep blue
-  gloss_ref:
-    id: 5289
-    row_sha256: 539782ce5748705678b1a90d0b0092a840425d571f94d85f5eb9610c4f4f8a74
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-126
+    locator: p202 Словничок#210
+    method: ohoiko_reference
+  gloss_en: blue
+  gloss_source: ohoiko_reference
   id: W-126
   lemma: синій
   note: T-005 post-consonant Є model; source form is neuter, no agreement teaching.
@@ -11247,6 +11375,10 @@ words:
     stress_source: ulif
     stressed: єно́тів
     tags: noun:anim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-127
+    locator: p201 Словничок#172
+    method: ohoiko_reference
   gloss_en: raccoon
   gloss_ref:
     id: 19833
@@ -11566,6 +11698,10 @@ words:
     stress_source: ulif
     stressed: дощі́
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-130
+    locator: p202 Словничок#251
+    method: ohoiko_reference
   gloss_en: rain
   gloss_ref:
     id: 3919
@@ -11678,6 +11814,10 @@ words:
     stress_source: ulif
     stressed: фе́рми
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-131
+    locator: p213 Словничок#1486
+    method: ohoiko_reference
   gloss_en: farm
   gloss_ref:
     id: 5823
@@ -12487,6 +12627,10 @@ words:
     stress_source: none
     stressed: п'є
     tags: verb:imperf:pres:s:3
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-137
+    locator: p221 Додаток#1930
+    method: ohoiko_reference
   gloss_en: to drink
   gloss_ref:
     id: 3478
@@ -12595,6 +12739,10 @@ words:
     stress_source: ulif
     stressed: сі́м'ї
     tags: noun:inanim:p:v_zna:xp1
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-138
+    locator: p200 Словничок#63
+    method: ohoiko_reference
   gloss_en: family
   gloss_ref:
     id: 7145
@@ -12721,6 +12869,10 @@ words:
     stress_source: ulif
     stressed: м'ячі́
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-139
+    locator: p203 Словничок#417
+    method: ohoiko_reference
   gloss_en: ball
   gloss_ref:
     id: 6763
@@ -12888,6 +13040,10 @@ words:
     stress_source: ulif
     stressed: раді́є
     tags: verb:imperf:pres:s:3
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-140
+    locator: p210 Словничок#1132
+    method: ohoiko_reference
   gloss_en: to rejoice
   gloss_ref:
     id: 3497
@@ -13237,7 +13393,11 @@ words:
     stress_source: ulif
     stressed: пюре́
     tags: noun:inanim:p:v_zna:nv
-  gloss_en: puree
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-143
+    locator: p201 Словничок#206
+    method: ohoiko_reference
+  gloss_en: purée
   gloss_ref:
     id: 16830
     row_sha256: 0fee34ad28623b7e916e595d2a902f09756e4712090a7fd9250ad2c896fcb473
@@ -13344,8 +13504,11 @@ words:
     stress_source: ulif
     stressed: пір'ї́ни
     tags: noun:inanim:p:v_zna
+  gloss_en: feather
+  gloss_source: request_meaning
   id: W-144
   lemma: пір'їна
+  meaning: feather
   note: Avramenko printed p. 131, apostrophe before Ї, source decoding only.
   pos: noun
   shadow:
@@ -13871,6 +14034,10 @@ words:
     stress_source: ulif
     stressed: бу́ки
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-148
+    locator: p201 Словничок#91
+    method: ohoiko_reference
   gloss_en: beech
   gloss_ref:
     id: 13571
@@ -14041,7 +14208,11 @@ words:
     stress_source: ulif
     stressed: гра́є
     tags: verb:imperf:pres:s:3
-  gloss_en: to act
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-149
+    locator: p204 Словничок#478
+    method: ohoiko_reference
+  gloss_en: to play
   gloss_ref:
     id: 982
     row_sha256: 5361a504d176ac18f4a42e89e6a520dc7e355f3ccfa325863654a0ee4f38801a
@@ -14518,14 +14689,11 @@ words:
     stress_source: ulif
     stressed: ко́ло
     tags: prep
-  gloss_en: about
-  gloss_ref:
-    id: 5944
-    row_sha256: ab107be128d05216e5274a3875b1cce05c7af05e0999ed413e6ca2d764bc7b44
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_en: near
+  gloss_source: request_meaning
   id: W-154
   lemma: коло
+  meaning: near
   note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact
     forms in revise-a1-p1-p3.md.
   pos: prep
@@ -15016,6 +15184,10 @@ words:
     stress_source: trie
     stressed: сини́
     tags: noun:anim:p:v_zna:rare
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-158
+    locator: p201 Словничок#147
+    method: ohoiko_reference
   gloss_en: son
   gloss_ref:
     id: 1064
@@ -15243,6 +15415,10 @@ words:
     stress_source: ulif
     stressed: ве́сни
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-160
+    locator: p201 Словничок#95
+    method: ohoiko_reference
   gloss_en: spring
   gloss_ref:
     id: 3547
@@ -15448,6 +15624,10 @@ words:
     stress_source: trie
     stressed: кого́
     tags: noun:anim:m:v_zna:pron:int:rel
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-162
+    locator: p205 Словничок#596
+    method: ohoiko_reference
   gloss_en: who
   gloss_ref:
     id: 48
@@ -15478,6 +15658,10 @@ words:
     stress_source: none
     stressed: де
     tags: adv:pron:int:rel
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-163
+    locator: p202 Словничок#240
+    method: ohoiko_reference
   gloss_en: where
   gloss_ref:
     id: 71
@@ -15566,6 +15750,10 @@ words:
     stress_source: trie
     stressed: ві́що
     tags: noun:inanim:n:v_zna:pron:int:rel:rare
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-164
+    locator: p202 Словничок#279
+    method: ohoiko_reference
   gloss_en: what
   gloss_ref:
     id: 13
@@ -15747,6 +15935,10 @@ words:
     stress_source: ulif
     stressed: лю́бить
     tags: verb:imperf:pres:s:3
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-165
+    locator: p220 Додаток#1875
+    method: ohoiko_reference
   gloss_en: to love
   gloss_ref:
     id: 805
@@ -16690,6 +16882,10 @@ words:
     stress_source: ulif
     stressed: часи́
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-170
+    locator: p202 Словничок#275
+    method: ohoiko_reference
   gloss_en: time
   gloss_ref:
     id: 20
@@ -16810,6 +17006,10 @@ words:
     stress_source: ulif
     stressed: бу́кви
     tags: noun:inanim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-171
+    locator: p201 Словничок#92
+    method: ohoiko_reference
   gloss_en: letter
   gloss_ref:
     id: 4390
@@ -17843,6 +18043,12 @@ words:
     stress_source: none
     stressed: синь
     tags: noun:inanim:f:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-176
+    locator: p202 Словничок#316
+    method: ohoiko_reference
+  gloss_en: blueness
+  gloss_source: ohoiko_reference
   id: W-176
   lemma: синь
   note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
@@ -17926,6 +18132,10 @@ words:
     stress_source: none
     stressed: рис
     tags: noun:inanim:m:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-177
+    locator: p202 Словничок#314
+    method: ohoiko_reference
   gloss_en: rice
   gloss_ref:
     id: 18667
@@ -18045,6 +18255,10 @@ words:
     stress_source: ulif
     stressed: ри́сі
     tags: noun:anim:p:v_zna
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-178
+    locator: p202 Словничок#315
+    method: ohoiko_reference
   gloss_en: lynx
   gloss_ref:
     id: 14763
@@ -18329,6 +18543,10 @@ words:
     stress_source: none
     stressed: б'є
     tags: verb:imperf:pres:s:3
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-180
+    locator: p202 Словничок#230
+    method: ohoiko_reference
   gloss_en: to beat
   gloss_ref:
     id: 2241
@@ -18553,7 +18771,11 @@ words:
       - 4
     stress_source: pending
     tags: noun:inanim:p:v_zna
-  gloss_en: festival
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-181
+    locator: p203 Словничок#433
+    method: ohoiko_reference
+  gloss_en: holiday
   gloss_ref:
     id: 1139
     row_sha256: c16eb731756b681bb1dcdb2001603939386f8744dbd1d93595d1a721353d48f0
@@ -19219,6 +19441,10 @@ words:
     stress_source: trie
     stressed: Украї́ни
     tags: noun:inanim:p:v_zna:prop:geo
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-183
+    locator: p200 Словничок#69
+    method: ohoiko_reference
   gloss_en: Ukraine
   gloss_ref:
     id: 9
@@ -19315,6 +19541,10 @@ words:
     stress_source: ulif
     stressed: Ки́їв
     tags: noun:inanim:m:v_zna:prop:geo
+  gloss_basis:
+    binding: _sense_bindings.yaml#W-184
+    locator: p200 Словничок#39
+    method: ohoiko_reference
   gloss_en: Kyiv
   gloss_ref:
     id: 134
@@ -19644,8 +19874,11 @@ words:
     stress_source: ulif
     stressed: квіту́є
     tags: verb:imperf:pres:s:3
+  gloss_en: to bloom
+  gloss_source: request_meaning
   id: W-186
   lemma: квітувати
+  meaning: to bloom
   note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation
     drill.'
   pos: verb

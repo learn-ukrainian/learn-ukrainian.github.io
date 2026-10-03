@@ -183,6 +183,7 @@ words:
     entry_id: 282993
   want: W-144
   note: Avramenko printed p. 131, apostrophe before Ї, source decoding only.
+  meaning: feather
 - lemma: що
   pos: noun
   entry:
@@ -344,6 +345,7 @@ words:
   entry: {source: vesum, entry_id: 163732}
   want: W-186
   note: 'P3 review F-6: exact T-045 present source form for post-vowel reading; incidental decoding, no meaning or conjugation drill.'
+  meaning: to bloom
 - lemma: м'який
   pos: adj
   entry:

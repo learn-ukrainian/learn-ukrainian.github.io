@@ -334,29 +334,25 @@ def test_receipt_replay_refused(tmp_path, change):
     assert not bindings.verify_receipt(p, payload, KEY)
 
 
-def test_measurement_is_sanitized_and_uses_all_reference_entries(bound):
-    _root, api, b = bound
+def test_book_selection_is_sanitized_and_binds_the_choosing_entry(bound):
+    _root, api, _b = bound
     store = {"level": "a1", "words": [WORD, {**WORD, "id": "W-002", "lemma": "outsider"}]}
-    selected, decisions = sense_cli.select_store(
-        store,
-        bindings.public_entries(a1_reference.INVENTORY_PATH),
-        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
-        api,
-        KEY,
-        "test-key",
-    )
-    assert selected["W-001"]["id"] == b["id"]
+    inventory = bindings.public_entries(a1_reference.INVENTORY_PATH)
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "Unrelated."}}
+    selected, decisions = sense_cli.select_store(store, inventory, private, api, KEY, "test-key")
     assert decisions == [
-        {
-            "word": "W-001",
-            "id": 2,
-            "span_index": 1,
-            "atom_index": 0,
-            "unknown_label_spans": 0,
-            "uncertain_scope_spans": 0,
-        },
+        {"word": "W-001", "match": "dictionary", "locator": FIXTURE["private"]["locator"]},
         {"word": "W-002", "reason": "reference_non_member"},
     ]
+    binding = selected["W-001"]
+    assert (binding["method"], binding["gloss"], binding["match"]) == ("ohoiko_reference", "unrelated", "dictionary")
+    assert binding["commitment"] == bindings.keyed(private[FIXTURE["private"]["locator"]], KEY)
+    # Without an equal candidate her own first meaning is the gloss; diagnostics never carry it.
+    selected, decisions = sense_cli.select_store(
+        store, inventory, {FIXTURE["private"]["locator"]: FIXTURE["private"]}, api, KEY, "test-key"
+    )
+    assert decisions[0] == {"word": "W-001", "match": "book", "locator": FIXTURE["private"]["locator"]}
+    assert (selected["W-001"]["gloss"], selected["W-001"]["match"]) == ("TARGET", "book")
     assert "TARGET" not in json.dumps(decisions)
 
 
@@ -801,7 +797,7 @@ def test_cli_help_exits(command, capsys):
     ],
 )
 def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
-    root, api, b = bound
+    root, api, _b = bound
     (root / "_words.yaml").write_text(yaml.safe_dump({"level": "a1", "words": [WORD]}))
     private = root / "private.jsonl"
     private.write_text(json.dumps(FIXTURE["private"]) + "\n")
@@ -857,8 +853,17 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
             args += ["--key-file", str(key), "--key-id", "test-key"]
         if mode not in {"write", "missing_receipt"}:
             args += ["--receipt", str(receipt)]
+    book, _decisions = sense_cli.select_store(
+        {"level": "a1", "words": [WORD]},
+        bindings.public_entries(a1_reference.INVENTORY_PATH),
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        api,
+        KEY,
+        "test-key",
+    )
+    bindings.write(root / bindings.BINDINGS, "a1", book)
     if mode == "commitment":
-        bindings.write(root / bindings.BINDINGS, "a1", {"W-001": {**b, "commitment": "0" * 64}})
+        bindings.write(root / bindings.BINDINGS, "a1", {"W-001": {**book["W-001"], "commitment": "0" * 64}})
     if mode == "replay":
         bindings.write_receipt(receipt, {"head": "stale"}, KEY)
         args += ["--verify-receipt"]
@@ -1271,20 +1276,13 @@ def test_definition_part_of_sense_signature():
     assert matcher.display_signature(pool[0]) == matcher.display_signature(pool[1])
 
 
-def test_unknown_label_counts_in_store_diagnostics(bound):
+def test_unreadable_book_meaning_takes_the_plain_first_meaning(bound):
     _root, api, _b = bound
-    api.close()
-    with sqlite3.connect(api.sources_db) as db:
-        db.execute("UPDATE dmklinger_uk_en SET translations=? WHERE id=2", (json.dumps(["(unknown label) target"]),))
-    _selected, decisions = sense_cli.select_store(
-        {"level": "a1", "words": [WORD]},
-        bindings.public_entries(a1_reference.INVENTORY_PATH),
-        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
-        api,
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "(unknown label) target"}}
+    selected, decisions = sense_cli.select_store(
+        {"level": "a1", "words": [WORD]}, bindings.public_entries(a1_reference.INVENTORY_PATH), private, api
     )
-    assert decisions[0]["unknown_label_spans"] == 1
-    assert decisions[0]["reason"] == "reference_no_match"
-    assert "TARGET" not in json.dumps(decisions)
+    assert (selected, decisions) == ({}, [{"word": "W-001", "reason": "reference_no_gloss"}])
 
 
 @pytest.mark.parametrize(
@@ -1355,14 +1353,21 @@ def test_region_names_only_restrict_whole_edge_or_nested_labels(label):
         assert matcher.select(WORD, [row([text])], f"target ({label})").gloss == "target"
 
 
-@pytest.mark.parametrize("ambiguous", [False, True])
-def test_multiple_inventory_entries_distinguish_no_match_from_ambiguity(bound, ambiguous):
+@pytest.mark.parametrize("second", [False, True])
+def test_multiple_book_entries_first_equal_candidate_wins(bound, second):
     _root, api, _b = bound
-    inventory = [{"lemma": "synthetic", "locator": str(i)} for i in range(2)]
-    meanings = ("TARGET.", "goal") if ambiguous else ("absent", "missing")
-    private = {str(i): {"meaning": value} for i, value in enumerate(meanings)}
-    _selected, decisions = sense_cli.select_store({"level": "a1", "words": [WORD]}, inventory, private, api)
-    assert decisions[0]["reason"] == ("reference_ambiguous" if ambiguous else "reference_no_match")
+    entry = {"lemma": "synthetic", "stressed": "synthetic", "pos": "noun"}
+    inventory = [{**entry, "locator": str(i)} for i in range(2)]
+    meanings = ("absent", "unrelated") if second else ("absent", "missing")
+    private = {str(i): {"locator": str(i), "printed_label": "synthetic", "meaning": m} for i, m in enumerate(meanings)}
+    selected, decisions = sense_cli.select_store({"level": "a1", "words": [WORD]}, inventory, private, api, KEY, "k")
+    if second:
+        assert decisions == [{"word": "W-001", "match": "dictionary", "locator": "1"}]
+        assert selected["W-001"]["gloss"] == "unrelated"
+    else:
+        # No meaning equals a candidate: the first entry's own meaning is the gloss.
+        assert decisions == [{"word": "W-001", "match": "book", "locator": "0"}]
+        assert selected["W-001"]["gloss"] == "absent"
 
 
 def test_reviewed_binding_requires_exact_atom_index(review_dispatch):
@@ -1376,3 +1381,143 @@ def test_reviewed_binding_requires_exact_atom_index(review_dispatch):
     assert b["span"] == "Goal" and b["atom_index"] == 1
     with pytest.raises(ValueError, match="review_subject_stale_or_unapproved"):
         bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, atom_index=0)
+
+
+@pytest.fixture
+def book_bound(bound):
+    """The committed ohoiko_reference binding for the synthetic member (her own gloss, no equal candidate)."""
+    root, api, _b = bound
+    selected, _decisions = sense_cli.select_store(
+        {"level": "a1", "words": [WORD]},
+        bindings.public_entries(a1_reference.INVENTORY_PATH),
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        api,
+        KEY,
+        "test-key",
+    )
+    bindings.write(root / bindings.BINDINGS, "a1", selected)
+    return root, api, selected["W-001"]
+
+
+def test_book_binding_records_basis_and_public_locator(book_bound):
+    root, api, binding = book_bound
+    pool = api.gloss_rows([("synthetic", "noun")]).raw[("synthetic", "noun")]
+    context = bindings.Context.read("a1", root)
+    result = context.select(WORD, pool, None)
+    assert (result.gloss, result.source, result.ref) == ("TARGET", "ohoiko_reference", None)
+    assert result.basis == {
+        "method": "ohoiko_reference",
+        "binding": "_sense_bindings.yaml#W-001",
+        "locator": binding["locator"],
+    }
+    # The request's meaning and the note's lead precede the book; then no basis is recorded.
+    for word in ({**WORD, "meaning": "goal"}, {**WORD, "note": "Unrelated: synthetic"}):
+        first = context.select(word, pool, None)
+        assert first.basis is None and first.gloss in {"goal", "unrelated"}
+    # A locator outside the lemma's printed entries is a stale binding.
+    bindings.write(root / bindings.BINDINGS, "a1", {"W-001": {**binding, "locator": "p999 other#1"}})
+    assert bindings.Context.read("a1", root).select(WORD, pool, None).reason == "reference_binding_invalid"
+
+
+def test_book_choice_verbs_ulif_pins_and_pos_compatibility():
+    verb = {"id": "W-002", "lemma": "synthetic", "pos": "verb"}
+    rows = [row(["act (to perform a role)", "to play a musical instrument"], pos="verb")]
+    assert bindings.book_choice(verb, rows, None, ["to sing"]) == ({"gloss": "to sing", "match": "book"}, 0)
+    assert bindings.book_choice(verb, rows, None, ["to sing", "to act"]) == (
+        {"gloss": "to act", "match": "dictionary"},
+        1,
+    )
+    pinned = {"lemma": "замок", "pos": "noun", "ulif": {"key": ["замо́к", 2]}}
+    homonyms = [row(["castle"], 1, word="за́мок"), row(["lock"], 2, word="замо́к")]
+    assert bindings.book_choice(pinned, homonyms, None, ["castle"]) is None
+    assert bindings.book_choice(pinned, homonyms, None, ["lock"]) == ({"gloss": "lock", "match": "dictionary"}, 0)
+    assert bindings.book_choice(WORD, [], None, []) is None
+    assert bindings.printed_headword("лише́.") == "лише"
+    assert bindings.compatible_pos("adv", "part") and bindings.compatible_pos("unlabelled", "noun")
+    assert not bindings.compatible_pos("verb", "noun") and not bindings.compatible_pos("adv", "noun")
+
+
+def test_book_gloss_location_is_exempt_only_where_validated(book_bound):
+    root, api, _binding = book_bound
+    context = bindings.Context.read("a1", root)
+    content = (root / bindings.BINDINGS).read_bytes()
+    redacted = sense_cli._redact_validated_locations(content, context, {"W-001": WORD}, api, kind="bindings")
+    assert b"gloss: TARGET" in content and b"TARGET" not in redacted
+    pool = api.gloss_rows([("synthetic", "noun")]).raw[("synthetic", "noun")]
+    selection = context.select(WORD, pool, None)
+    record = {**WORD, "gloss_en": selection.gloss, "gloss_source": selection.source, "gloss_basis": selection.basis}
+    store = yaml.safe_dump({"words": [record]}).encode()
+    assert b"TARGET" not in sense_cli._redact_validated_locations(store, context, {"W-001": WORD}, api, kind="words")
+    unbased = yaml.safe_dump({"words": [{**record, "gloss_basis": None}]}).encode()
+    assert sense_cli._redact_validated_locations(unbased, context, {"W-001": WORD}, api, kind="words") == unbased
+
+
+def test_book_binding_and_store_schema_shapes(book_bound):
+    root, _api, binding = book_bound
+    schema = json.loads((Path(bindings.ROOT) / "schemas/evidence-sense-bindings-v1.schema.json").read_text())
+    from jsonschema import Draft202012Validator
+
+    check = Draft202012Validator(schema)
+    document = yaml.safe_load((root / bindings.BINDINGS).read_text())
+    assert not list(check.iter_errors(document))
+    for mutated in (
+        {**binding, "id": 1},
+        {k: v for k, v in binding.items() if k != "locator"},
+        {**binding, "match": "x"},
+    ):
+        assert list(check.iter_errors({**document, "bindings": [mutated]}))
+    words_schema = json.loads((Path(bindings.ROOT) / "schemas/evidence-words-v1.schema.json").read_text())
+    word_check = Draft202012Validator({**words_schema["$defs"]["word"], "$defs": words_schema["$defs"]})
+    base = {"id": "W-001", "lemma": "synthetic", "pos": "noun", "entry": "unresolved", "ulif": "pending", "forms": []}
+    base["candidates"] = []
+    book = {
+        **base,
+        "gloss_en": "TARGET",
+        "gloss_source": "ohoiko_reference",
+        "gloss_basis": {"method": "ohoiko_reference", "binding": "_sense_bindings.yaml#W-001", "locator": "p1#1"},
+    }
+    meaning = {**base, "meaning": "near", "gloss_en": "near", "gloss_source": "request_meaning"}
+    assert not list(word_check.iter_errors(book)) and not list(word_check.iter_errors(meaning))
+    assert list(word_check.iter_errors({**book, "gloss_basis": {**book["gloss_basis"], "locator": None}}))
+    assert list(word_check.iter_errors({k: v for k, v in meaning.items() if k != "meaning"}))
+    assert list(
+        word_check.iter_errors({**base, "gloss_basis": {"method": "reviewed.v1", "binding": "x", "locator": "p1"}})
+    )
+
+
+def test_book_gloss_builds_verifies_and_gates_plans(book_bound, monkeypatch):
+    root, api, binding = book_bound
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {
+            "status": "ok",
+            "matches": [{"stressed_form": w, "unstressed_form": w, "vowel_indices": [0], "override_applied": False}],
+            "source": {"digest": "t" * 64},
+        },
+    )
+    req = root / "request.yaml"
+    req.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {"lemma": "synthetic", "pos": "noun", "want": "new", "entry": {"source": "vesum", "entry_id": 10}}
+                ],
+            }
+        )
+    )
+    store = words.build_words("a1", req, evidence_dir=root, sources_instance=api, mcp_commit="a" * 40)["store"]
+    record = store["words"][0]
+    assert (record["gloss_en"], record["gloss_source"]) == ("TARGET", "ohoiko_reference")
+    assert record["gloss_basis"]["locator"] == binding["locator"] and "gloss_ref" not in record
+    result = verify.verify_words_store("a1", evidence_dir=root, plans_dir=root, sources_instance=api)
+    assert not result["errors"], result
+    assert "W-001:private_commitment" in result["not_checked"]
+    assert result["private_commitments"]["status"] == "unverifiable_in_ci"
+    context = bindings.Context.read("a1", root)
+    plan = {"vocabulary": {"core": ["W-001"]}}
+    assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context) == []
+    record["gloss_en"] = "target"
+    assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context)

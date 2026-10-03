@@ -690,7 +690,9 @@
             {
               "enum": [
                 "dmklinger_uk_en",
-                "kaikki_wiktionary"
+                "kaikki_wiktionary",
+                "ohoiko_reference",
+                "request_meaning"
               ]
             },
             {
@@ -738,6 +740,12 @@
         "note": {
           "type": "string"
         },
+        "meaning": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Copied from the request: The lesson's sense as a short English learner gloss (at most 8 words, 60 characters), checked against ULIF/VESUM before it is written. It precedes every other gloss source; an open-dictionary candidate spelled the same is cited, otherwise the meaning itself is the gloss."
+        },
         "first_introduced": {
           "type": "object",
           "properties": {
@@ -762,19 +770,44 @@
             "method": {
               "enum": [
                 "a1_reference_meaning.v1",
-                "reviewed.v1"
+                "reviewed.v1",
+                "ohoiko_reference"
               ]
             },
             "binding": {
               "type": "string",
               "pattern": "^_sense_bindings\\.yaml#W-[0-9]+$"
+            },
+            "locator": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The public page locator of the A1 reference dictionary entry that chose the gloss."
             }
           },
           "required": [
             "method",
             "binding"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "if": {
+            "properties": {
+              "method": {
+                "const": "ohoiko_reference"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "locator"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "locator"
+              ]
+            }
+          }
         }
       },
       "required": [
@@ -816,6 +849,68 @@
             "required": [
               "gloss_ref"
             ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "gloss_source": {
+                "const": "ohoiko_reference"
+              }
+            },
+            "required": [
+              "gloss_source"
+            ]
+          },
+          "then": {
+            "required": [
+              "gloss_basis"
+            ],
+            "properties": {
+              "gloss_basis": {
+                "properties": {
+                  "method": {
+                    "const": "ohoiko_reference"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "gloss_ref"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "gloss_source": {
+                "const": "request_meaning"
+              }
+            },
+            "required": [
+              "gloss_source"
+            ]
+          },
+          "then": {
+            "required": [
+              "meaning"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "gloss_ref"
+                  ]
+                },
+                {
+                  "required": [
+                    "gloss_basis"
+                  ]
+                }
+              ]
+            }
           }
         },
         {

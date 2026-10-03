@@ -7,7 +7,7 @@ import hmac
 import json
 import re
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import yaml
@@ -23,6 +23,14 @@ from . import reference_sense_v1 as matcher
 ROOT = Path(__file__).resolve().parents[3]
 INVENTORY = "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml"
 BINDINGS = "_sense_bindings.yaml"
+# Anna Ohoiko's A1 dictionary chooses the English after the request note and ULIF (operator, 2026-10-03).
+BOOK_METHOD = sources.REFERENCE_SOURCE
+# What CI cannot check for each binding method without the local receipt.
+LOCAL_PROOF_METHODS = {
+    matcher.METHOD: "private_commitment",
+    BOOK_METHOD: "private_commitment",
+    "reviewed.v1": "review_provenance",
+}
 CI_NOTICE = "unverifiable in CI (local receipt required)"
 
 
@@ -116,11 +124,29 @@ class Context:
             in {a1_reference.normalize(v) for v in (r["lemma"], *r.get("variants", []))}
         ]
 
+    def labelled(self, word: dict) -> list[dict]:
+        """POS-compatible entries whose printed headword, stress and terminal punctuation removed, is the lemma."""
+        return [
+            r
+            for r in self.inventory
+            if printed_headword(r["stressed"]) == word["lemma"] and compatible_pos(r["pos"], word["pos"])
+        ]
+
     def select(self, word: dict, rows: list[dict], payload: dict | None, **kwargs) -> sources.GlossSelection:
-        """An exact binding wins; any other word, reference member or not, takes the plain first meaning."""
+        """An exact or reviewed binding wins; Anna's dictionary follows the note and ULIF; else the plain first meaning."""
         binding = self.entries.get(word["id"])
         if self.invalid:
             return sources.GlossSelection(reason="reference_binding_invalid")
+        if binding and binding["method"] == BOOK_METHOD:
+            if binding["inventory"] != INVENTORY or binding["locator"] not in {
+                r["locator"] for r in self.labelled(word)
+            }:
+                return sources.GlossSelection(reason="reference_binding_invalid")
+            selection = sources.select_gloss(word, rows, payload, reference=binding, **kwargs)
+            if not selection.by_reference:
+                return selection
+            basis = {"method": BOOK_METHOD, "binding": f"{BINDINGS}#{word['id']}", "locator": binding["locator"]}
+            return replace(selection, basis=basis)
         if binding:
             candidates = matcher.candidates(word, rows, pronoun_entry=kwargs.get("pronoun_entry"))
             selected = next(
@@ -138,14 +164,65 @@ class Context:
                 binding["span"],
                 "dmklinger_uk_en",
                 {k: binding[k] for k in matcher.REF_FIELDS},
+                basis={"method": binding["method"], "binding": f"{BINDINGS}#{word['id']}"},
             )
         if word.get("gloss_basis"):
             return sources.GlossSelection(reason="reference_binding_invalid")
         return sources.select_gloss(word, rows, payload, **kwargs)
 
-    def basis(self, word_id: str) -> dict | None:
-        binding = self.entries.get(word_id)
-        return {"method": binding["method"], "binding": f"{BINDINGS}#{word_id}"} if binding else None
+
+def printed_headword(label: str) -> str:
+    """A printed dictionary label as a lemma: stress marks and terminal punctuation removed."""
+    return sources.unstressed_headword(label).strip().rstrip(".,;:!?…").strip()
+
+
+def book_choice(
+    word: dict, rows: list[dict], payload: dict | None, meanings: list[str], *, pronoun_entry: bool | None = None
+) -> tuple[dict, int] | None:
+    """Anna Ohoiko's A1 dictionary chooses the English for a word it prints.
+
+    The first open-dictionary learner candidate (inside a ULIF-pinned row
+    when ULIF decides the homonym) equal to one of her meanings, compared as
+    ``reference_sense_v1`` normalises, is the gloss. If none equals and ULIF
+    pinned no row, her first meaning's head is the gloss when it is a learner
+    gloss (verbs with ``to``). Returns the choice and the index of the meaning
+    that made it, or ``None``: the plain first meaning.
+    """
+    pos = word["pos"]
+    pool, ulif_pinned = sources.reference_pool(word, rows, payload, pronoun_entry=pronoun_entry)
+    keys = [set(matcher.atoms(meaning, pos)) for meaning in meanings]
+    for candidate in pool:
+        key = matcher.normalize(candidate["head"], pos)
+        index = next((i for i, atoms in enumerate(keys) if key in atoms), None)
+        if index is not None:
+            return {"gloss": candidate["span"], "match": "dictionary"}, index
+    if ulif_pinned or not meanings:
+        return None
+    group = matcher.classify(meanings[0])
+    heads = () if group.reason else matcher.source_atoms(group.head)
+    if not heads:
+        return None
+    head = sources._gloss_head(heads[0])
+    gloss = "to " + head.removeprefix("to ") if pos == "verb" else head
+    return ({"gloss": gloss, "match": "book"}, 0) if sources.is_learner_gloss(gloss) else None
+
+
+def compatible_pos(book_pos: str, pos: str) -> bool:
+    """Her noun, verb and adjective labels bind a POS; adverb or unlabelled entries cover the closed classes."""
+    open_class = {"noun", "verb", "adj"}
+    return book_pos == pos or book_pos == "unlabelled" or (book_pos not in open_class and pos not in open_class)
+
+
+def book_binding(word: dict, choice: dict, private: dict, key: bytes, key_id: str) -> dict:
+    return {
+        "word": word["id"],
+        "method": BOOK_METHOD,
+        **choice,
+        "inventory": INVENTORY,
+        "locator": private["locator"],
+        "commitment": keyed(private, key),
+        "key_id": key_id,
+    }
 
 
 def reference_binding(word: dict, ref: dict, private: dict, key: bytes, key_id: str) -> dict:

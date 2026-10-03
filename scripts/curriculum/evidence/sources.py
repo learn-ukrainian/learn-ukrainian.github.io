@@ -300,6 +300,14 @@ class GlossSelection:
     ref: dict | None = None
     reason: str | None = None
     candidates: tuple[dict, ...] = ()
+    by_reference: bool = False
+    basis: dict | None = None
+
+
+# Anna Ohoiko's A1 dictionary, when it supplies the English itself.
+REFERENCE_SOURCE = "ohoiko_reference"
+# A request's ``meaning`` (the lesson's sense) that no open-dictionary candidate spells.
+MEANING_SOURCE = "request_meaning"
 
 
 # Shared closed patterns and canonical names for both selectors.
@@ -528,31 +536,8 @@ def _pinned_rows(word: dict, rows: list[dict]) -> list[dict]:
     return [row for row in rows if normalize_spelling(row["word"]) in spellings]
 
 
-def select_gloss(
-    word: dict,
-    rows: list[dict],
-    payload: dict | None,
-    *,
-    pronoun_entry: bool | None = None,
-    ulif_entries: Iterable[dict] = (),
-) -> GlossSelection:
-    """One plain learner meaning: the sense the lesson uses, as a primer would give it.
-
-    The request note and the record's pinned ULIF/VESUM entry decide the sense
-    (cached DictUA entries carry homonyms, not definitions); the open bilingual
-    dictionaries only supply its English word. A homonym or a second meaning
-    never withholds. Choose (a) the candidate the note's lead clause (before
-    the first colon) names, (b) the row of the pinned ULIF key or VESUM
-    stressed lemma, (c) the first row with an unrestricted sense (Kaikki when
-    no dmklinger row has one; a mixed-POS Kaikki entry gives none). The gloss
-    is the first head of that row's first unrestricted sub-sense. Only when
-    Kaikki lists no variant of that head at all, and Kaikki's first
-    unrestricted head is another unrestricted head of the same row, that
-    shared head is the plain meaning ("generic we" → "we"). Trailing notes
-    are not shown; verbs keep a leading ``to``. Withhold only when no source
-    row exists or no head is a learner gloss. ``ulif_entries`` is accepted
-    for callers; ULIF binds through ``word["ulif"]["key"]``.
-    """
+def _gloss_pools(word: dict, rows: list[dict], payload: dict | None, pronoun_entry: bool | None) -> dict:
+    """Every parsed candidate, in source order, and the pools a selection reads."""
     lemma, pos = word["lemma"], word["pos"]
     if pronoun_entry is None:
         pronoun_entry = any("pron" in form.get("tags", "").split(":") for form in word.get("forms", []))
@@ -593,20 +578,97 @@ def select_gloss(
     by_row = [(row, row_candidates(row)) for row in rows]
     kaikki = [c for sense in senses for c in sense_candidates(sense, "kaikki_wiktionary", None)]
     every = [c for _, found in by_row for c in found] + kaikki
+    pinned = _pinned_rows(word, rows)
+    # ULIF decides the homonym only when its pinned entry excludes some rows.
+    ordered = pinned if pinned and len(pinned) < len(rows) else rows
+    pools = [[c for c in found if is_learner_gloss(c["span"])] for row, found in by_row if row in ordered]
+    pools.append([c for c in kaikki if is_learner_gloss(c["span"])])
+    return {
+        "rows": rows,
+        "senses": senses,
+        "reason": reason,
+        "every": every,
+        "kaikki": kaikki,
+        "pools": pools,
+        "ulif_pinned": ordered is not rows,
+    }
+
+
+def reference_pool(
+    word: dict, rows: list[dict], payload: dict | None, *, pronoun_entry: bool | None = None
+) -> tuple[list[dict], bool]:
+    """Learner candidates a reference meaning may choose, in source order, and whether ULIF pinned the rows."""
+    found = _gloss_pools(word, rows, payload, pronoun_entry)
+    return [c for pool in found["pools"] for c in pool], found["ulif_pinned"]
+
+
+def select_gloss(
+    word: dict,
+    rows: list[dict],
+    payload: dict | None,
+    *,
+    pronoun_entry: bool | None = None,
+    ulif_entries: Iterable[dict] = (),
+    reference: Mapping[str, str] | None = None,
+) -> GlossSelection:
+    """One plain learner meaning: the sense the lesson uses, as a primer would give it.
+
+    The request note and the record's pinned ULIF/VESUM entry decide the sense
+    (cached DictUA entries carry homonyms, not definitions); the open bilingual
+    dictionaries only supply its English word. A homonym or a second meaning
+    never withholds. Choose (a) the request's ``meaning`` (the candidate
+    spelled the same, else the meaning itself), otherwise the candidate the
+    note's lead clause (before the first colon) names, (b) the row of the pinned ULIF key or VESUM
+    stressed lemma, (c) the ``reference`` (Anna Ohoiko's A1 dictionary, as a
+    ``sense_bindings`` binding: ``match`` ``dictionary`` names a candidate's
+    displayed gloss, ``book`` her own short gloss when no candidate equals
+    it), (d) the first row with an unrestricted sense (Kaikki when no
+    dmklinger row has one; a mixed-POS Kaikki entry gives none). The gloss
+    is the first head of that row's first unrestricted sub-sense. Only when
+    Kaikki lists no variant of that head at all, and Kaikki's first
+    unrestricted head is another unrestricted head of the same row, that
+    shared head is the plain meaning ("generic we" → "we"). Trailing notes
+    are not shown; verbs keep a leading ``to``. Withhold only when no source
+    row or reference exists or no head is a learner gloss; a reference that
+    no longer applies is ``reference_binding_invalid``. ``ulif_entries`` is
+    accepted for callers; ULIF binds through ``word["ulif"]["key"]``.
+    """
+    found = _gloss_pools(word, rows, payload, pronoun_entry)
+    rows, every, kaikki, pools = found["rows"], found["every"], found["kaikki"], found["pools"]
     diagnostic = tuple(
         {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in every
     )
-    if not rows and not senses:
-        return GlossSelection(reason=reason or codes.GLOSS_MISSING, candidates=diagnostic)
+
+    def book_gloss() -> GlossSelection:
+        """Her own gloss stands only where no open-dictionary candidate equals it and ULIF pinned no row."""
+        if reference["match"] != "book" or found["ulif_pinned"] or not is_learner_gloss(reference["gloss"]):
+            return GlossSelection(reason="reference_binding_invalid", candidates=diagnostic)
+        return GlossSelection(reference["gloss"], REFERENCE_SOURCE, candidates=diagnostic, by_reference=True)
+
     learner = [c for c in every if is_learner_gloss(c["span"])]
-    lead = _note_lead(word.get("note"))
-    named = [c for c in learner if lead and re.search(r"(?<!\w)" + re.escape(c["head"]) + r"(?!\w)", lead, re.I)]
+    meaning = word.get("meaning")
+    if meaning is not None:
+        # The request's meaning is the lesson's sense; a dictionary candidate spelled the same is cited.
+        named = [c for c in learner if c["span"].casefold() == meaning.casefold()]
+        if not named:
+            if not is_learner_gloss(meaning):
+                return GlossSelection(reason=codes.GLOSS_NOT_LEARNER_SENSE, candidates=diagnostic)
+            return GlossSelection(meaning, MEANING_SOURCE, candidates=diagnostic)
+    elif not rows and not found["senses"]:
+        if reference is not None:
+            return book_gloss()
+        return GlossSelection(reason=found["reason"] or codes.GLOSS_MISSING, candidates=diagnostic)
+    else:
+        lead = _note_lead(word.get("note"))
+        named = [c for c in learner if lead and re.search(r"(?<!\w)" + re.escape(c["head"]) + r"(?!\w)", lead, re.I)]
     chosen = named[0] if named else None
+    by_reference = False
+    if chosen is None and reference is not None:
+        chosen = next((c for pool in pools for c in pool if c["span"] == reference["gloss"]), None)
+        if chosen is None:
+            return book_gloss()
+        by_reference = True
     if chosen is None:
-        pinned = _pinned_rows(word, rows)
-        ordered = pinned if pinned and len(pinned) < len(rows) else rows
-        pools = [[c for c in found if is_learner_gloss(c["span"])] for row, found in by_row if row in ordered]
-        pools.append([c for c in kaikki if is_learner_gloss(c["span"])])
         # A row with only dialectal or archaic senses has no plain meaning to give.
         pool = next((p for p in pools if any(not c["restricted"] for c in p)), next((p for p in pools if p), []))
         plain = [c for c in pool if not c["restricted"]] or pool
@@ -619,7 +681,7 @@ def select_gloss(
         return GlossSelection(reason=codes.GLOSS_MISSING, candidates=diagnostic)
     row = chosen["row"]
     ref = {"table": "dmklinger_uk_en", "id": row["id"], "row_sha256": row_digest(row)} if row else None
-    return GlossSelection(chosen["span"], chosen["source"], ref, candidates=diagnostic)
+    return GlossSelection(chosen["span"], chosen["source"], ref, candidates=diagnostic, by_reference=by_reference)
 
 
 def filter_pronominal_gloss_rows(rows: list[dict], lemma: str, pos: str, pronoun_entry: bool) -> list[dict]:

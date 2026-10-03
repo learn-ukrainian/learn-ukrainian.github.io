@@ -195,6 +195,10 @@ def test_current_a1_selection_and_source_span_property(a1_source_capture):
             assert builder.reason
             continue
         assert sources.is_learner_gloss(builder.gloss), word["id"]
+        if builder.source == sources.MEANING_SOURCE:
+            # The request's ULIF/VESUM-checked meaning names a sense no open dictionary spells.
+            assert builder.gloss == word["meaning"], word["id"]
+            continue
         if builder.ref:
             cited = next(r for r in matched if r["id"] == builder.ref["id"])
             assert builder.ref["row_sha256"] == sources.row_digest(cited)
@@ -624,7 +628,8 @@ def test_stressed_homonym_key_binds_its_row_even_against_kaikki():
 @pytest.mark.parametrize(
     "lemma,expected",
     [
-        ("ти", "thou"),
+        # The request's meaning is the lesson's sense (ULIF займенник; "thou" is the archaic row head).
+        ("ти", "you"),
         ("поки", "as"),
         ("писати", "to write"),
         ("твій", "your"),
@@ -648,7 +653,8 @@ def test_stressed_homonym_key_binds_its_row_even_against_kaikki():
         ("їжа", "food"),
         ("чобіт", "boot"),
         ("чай", "tea"),
-        ("коло", "about"),
+        # ULIF коло 2 (прийменник) is «біля» first; no open dictionary spells "near".
+        ("коло", "near"),
         ("до", "before"),
         ("перед", "before"),
         ("між", "between"),
@@ -846,3 +852,115 @@ def test_plural_variants_are_one_head(left, right, same):
 def test_no_dictionary_row_is_the_only_withholding():
     result = sources.select_gloss({"lemma": "synthetic", "pos": "noun"}, [], None)
     assert (result.gloss, result.reason) == (None, "kaikki_absent")
+
+
+def test_request_meaning_cites_the_candidate_spelled_the_same():
+    word = {"lemma": "synthetic", "pos": "noun", "meaning": "you"}
+    result = sources.select_gloss(word, [row(1, ["thou", "you"])], None)
+    assert (result.gloss, result.source, result.ref["id"], result.reason) == ("you", "dmklinger_uk_en", 1, None)
+
+
+def test_request_meaning_no_dictionary_spells_is_the_gloss():
+    word = {"lemma": "synthetic", "pos": "prep", "meaning": "near"}
+    result = sources.select_gloss(word, [row(1, ["about", "around"], pos="preposition")], None)
+    assert (result.gloss, result.source, result.ref) == ("near", sources.MEANING_SOURCE, None)
+    # A word no open dictionary has at all still takes its request meaning.
+    assert sources.select_gloss({**word, "meaning": "feather"}, [], None).gloss == "feather"
+
+
+def test_request_meaning_precedes_note_and_reference_and_must_be_a_learner_gloss():
+    word = {"lemma": "synthetic", "pos": "noun", "meaning": "plait", "note": "Braid: primer picture"}
+    rows = [row(1, ["braid", "scythe"])]
+    reference = {"gloss": "scythe", "match": "dictionary"}
+    result = sources.select_gloss(word, rows, None, reference=reference)
+    assert (result.gloss, result.by_reference) == ("plait", False)
+    too_long = sources.select_gloss({**word, "meaning": "one two three four five six seven eight nine"}, rows, None)
+    assert (too_long.gloss, too_long.reason) == (None, codes.GLOSS_NOT_LEARNER_SENSE)
+
+
+def test_reference_dictionary_match_chooses_the_candidate():
+    rows = [row(1, ["positioned at the upper surface of", "to, toward"], pos="preposition")]
+    word = {"lemma": "synthetic", "pos": "prep"}
+    plain = sources.select_gloss(word, rows, None)
+    assert plain.gloss == "positioned at the upper surface of"
+    result = sources.select_gloss(word, rows, None, reference={"gloss": "to", "match": "dictionary"})
+    assert (result.gloss, result.ref["id"], result.by_reference) == ("to", 1, True)
+    # A dictionary match the rows no longer contain is a stale binding, never a silent fallback.
+    stale = sources.select_gloss(word, rows, None, reference={"gloss": "onto", "match": "dictionary"})
+    assert (stale.gloss, stale.reason) == (None, "reference_binding_invalid")
+
+
+def test_reference_book_gloss_stands_only_without_an_equal_candidate_or_ulif_pin():
+    word = {"lemma": "synthetic", "pos": "prep"}
+    rows = [row(1, ["upon"], pos="preposition")]
+    book = {"gloss": "on", "match": "book"}
+    result = sources.select_gloss(word, rows, None, reference=book)
+    assert (result.gloss, result.source, result.ref, result.by_reference) == ("on", "ohoiko_reference", None, True)
+    assert sources.select_gloss(word, [], None, reference=book).gloss == "on"
+    # Her gloss equal to a candidate cites the candidate.
+    cited = sources.select_gloss(word, [row(1, ["upon", "on"], pos="preposition")], None, reference=book)
+    assert (cited.gloss, cited.source, cited.ref["id"]) == ("on", "dmklinger_uk_en", 1)
+    assert sources.select_gloss(word, rows, None, reference={"gloss": "x" * 61, "match": "book"}).reason == (
+        "reference_binding_invalid"
+    )
+    pinned = {"lemma": "замок", "pos": "noun", "ulif": {"key": ["замо́к", 2]}}
+    homonyms = [row(1, ["castle"], "за́мок"), row(2, ["lock"], "замо́к")]
+    pool, ulif_pinned = sources.reference_pool(pinned, homonyms, None)
+    assert ([c["span"] for c in pool], ulif_pinned) == (["lock"], True)
+    assert sources.select_gloss(pinned, homonyms, None, reference={"gloss": "fort", "match": "book"}).reason == (
+        "reference_binding_invalid"
+    )
+    assert sources.select_gloss(
+        pinned, homonyms, None, reference={"gloss": "castle", "match": "dictionary"}
+    ).reason == ("reference_binding_invalid")
+
+
+def test_note_lead_precedes_the_reference():
+    word = {"lemma": "коса", "pos": "noun", "note": "Braid (hair): primer picture"}
+    rows = [row(1, ["scythe (farm tool)", "braid (hairstyle)"], "коса́")]
+    result = sources.select_gloss(word, rows, None, reference={"gloss": "scythe", "match": "dictionary"})
+    assert (result.gloss, result.by_reference) == ("braid", False)
+
+
+def test_request_meaning_is_copied_to_the_store_and_verified(synthetic_sources, synthetic_vesum, tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {
+            "status": "ok",
+            "matches": [{"stressed_form": w, "unstressed_form": w, "vowel_indices": [0], "override_applied": False}],
+            "source": {"digest": "t" * 64},
+        },
+    )
+    request = tmp_path / "request.yaml"
+    request.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {"lemma": "synthetic", "pos": "verb", "want": "new", "meaning": "to synthesize"},
+                ],
+            }
+        )
+    )
+    evidence = tmp_path / "evidence"
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        words.build_words(
+            "a1", request, evidence_dir=evidence, plans_dir=tmp_path, sources_instance=api, mcp_commit="a" * 40
+        )
+        store = yaml.safe_load((evidence / "_words.yaml").read_text())
+        record = store["words"][0]
+        assert (record["meaning"], record["gloss_en"], record["gloss_source"]) == (
+            "to synthesize",
+            "to synthesize",
+            sources.MEANING_SOURCE,
+        )
+        assert "gloss_ref" not in record
+        result = verify.verify_words_store("a1", evidence_dir=evidence, plans_dir=tmp_path, sources_instance=api)
+        assert not result["errors"], result["errors"]
+        # A changed meaning is a gloss mismatch, not a silently accepted value.
+        record["meaning"] = "to make"
+        lock.write(evidence / "_words.yaml", lock.yaml_bytes(store))
+        checked = verify.verify_words_store("a1", evidence_dir=evidence, plans_dir=tmp_path, sources_instance=api)
+        assert any(codes.GLOSS_MISMATCH in error for error in checked["errors"])

@@ -6,34 +6,42 @@ words:
     pos: noun
     want: new
     note: "closed class: personal pronoun (1st pers sing); basic speaker reference"
+    meaning: "I"
   - lemma: ти
     pos: noun
     want: new
     note: "closed class: personal pronoun (2nd pers sing); base-layer item (position 43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)"
+    meaning: "you"
   - lemma: він
     pos: noun
     want: new
     note: "closed class: personal pronoun (3rd pers masc sing); taught at position 8 (things-have-gender)"
+    meaning: "he"
   - lemma: вона
     pos: noun
     want: new
     note: "closed class: personal pronoun (3rd pers fem sing); taught at position 8 (things-have-gender)"
+    meaning: "she"
   - lemma: воно
     pos: noun
     want: new
     note: "closed class: personal pronoun (3rd pers neut sing); taught at position 8 (things-have-gender)"
+    meaning: "it"
   - lemma: ми
     pos: noun
     want: new
     note: "closed class: personal pronoun (1st pers plur); basic plural reference"
+    meaning: "we"
   - lemma: ви
     pos: noun
     want: new
     note: "closed class: personal pronoun (2nd pers plur/polite); base-layer item (position 43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)"
+    meaning: "you"
   - lemma: вони
     pos: noun
     want: new
     note: "closed class: personal pronoun (3rd pers plur); taught at position 13 (many-things)"
+    meaning: "they"
   - lemma: себе
     pos: noun
     want: new
@@ -82,14 +90,17 @@ words:
     pos: prep
     want: new
     note: "closed class: preposition; taught at position 28 (euphony) and position 29 (where-is-it)"
+    meaning: "in"
   - lemma: в
     pos: prep
     want: new
     note: "closed class: preposition, euphonic partner of у; taught at position 28 (euphony) and position 29 (where-is-it)"
+    meaning: "in"
   - lemma: уві
     pos: prep
     want: new
     note: "closed class: preposition, euphonic partner of у"
+    meaning: "in"
   - lemma: з
     pos: prep
     want: new
@@ -202,6 +213,7 @@ words:
     pos: prep
     want: new
     note: "closed class: preposition; taught at position 22 (what-time) for clock time"
+    meaning: "at"
   - lemma: об
     pos: prep
     want: new

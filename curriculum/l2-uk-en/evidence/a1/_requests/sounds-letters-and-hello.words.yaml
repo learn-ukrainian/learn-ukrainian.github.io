@@ -11,7 +11,7 @@ words:
 - {lemma: голосний, pos: noun, entry: {source: vesum, entry_id: 80479}, want: W-079, note: 'Vowel as a sound category, not
     the adjective; primer part 1 p. 13.'}
 - {lemma: приголосний, pos: noun, entry: {source: vesum, entry_id: 311385}, want: W-080, note: 'Consonant as a sound category,
-    not the adjective; primer part 1 p. 13.'}
+    not the adjective; primer part 1 p. 13.', meaning: consonant}
 - {lemma: мама, pos: noun, want: W-081, note: 'First decodable CVCV word on primer letter pages.'}
 - {lemma: малина, pos: noun, want: W-082, note: 'Decodable word from primer reading practice.'}
 - {lemma: слива, pos: noun, want: W-083, note: 'Decodable word from primer reading practice.'}
@@ -53,6 +53,7 @@ words:
   want: W-154
   note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
     exact forms in revise-a1-p1-p3.md.
+  meaning: near
 - lemma: он
   pos: part
   entry:
