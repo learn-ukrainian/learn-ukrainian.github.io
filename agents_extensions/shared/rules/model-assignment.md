@@ -7,18 +7,22 @@
 2026-10-02 (#9488): Grok reviews code and infra only as the Cursor seat `grok-4.7-cursor-fallback`
 (`--agent cursor --model grok-4.7-high`), the Sol-spared last resort below critical risk (it has no
 `critical_review` role), never on a Grok-authored change, and its verdict counts only when the Cursor
-runtime reports the model itself. DeepSeek is excluded from every dispatch and
+runtime reports the model itself. Operator decision 2026-10-02 (#9538): a formal code or infra review at
+`high` risk is performed only by `claude-opus-5-5` (native or Cursor transport) or `gpt-6.1-sol` (Codex).
+`review_scheduler.risk_reviewer_models` is the one definition; it is an eligibility gate, so automatic
+ladders, explicit pins, custom ladders and delegate review admission (including `--force-agent` and budget
+substitution or retention) all refuse any other model with that stated reason, never another model. DeepSeek is excluded from every dispatch and
 review, and Sonnet is excluded from critical security review. Historical
 capability and transport descriptions below confer no routing permission.
 
 **Resolver preference:** after hard gates, `review_scheduler.profile_risk_role_order`
 prefers primary seats before last resort, then ranks semantic suitability before quality tier; health and quota break ties
 within that suitability and tier. YAML rung order is a fallback inventory.
-For `code/high`, Opus 5.5 currently matches `critical_review` at rank 3;
-Sonnet 5.5 matches `strong_review` at rank 0. Thus an eligible Opus seat can
-lose to Sonnet on this profile. When both match the requested role equally,
-Opus's authority tier wins. Inspect the returned suitability and selection
-trace rather than inferring eligibility or priority from rung position.
+At `medium` and `low`, an eligible Opus seat can lose to Sonnet 5.5, because
+Sonnet's roles match earlier in that profile's role order; when both match the
+requested role equally, Opus's authority tier wins. The resolver's returned
+`suitability_rank` and selection trace are the authority: inspect them rather than
+inferring eligibility or priority from rung position or from this text.
 
 Match the EXACT command — not a principle. Memory does not enforce; the dispatch tool does. Established 2026-05-06 after repeated drift on cost discipline.
 
@@ -56,7 +60,9 @@ Composer is eligible only with its concrete `composer-2.5` model identity. The C
 formal only for the models it pins (`grok-4.7` today); other third-party non-Anthropic models Cursor
 exposes may be added under the same runtime attestation rules (#9488).
 
-Review-typed dispatches judge an explicitly requested reviewer by the resolver's
+A dispatch is review-typed when it passes any of `--require-review-verdict`,
+`--review-attempt`, `--review-profile`, `--review-author-model` or `--review-risk`
+(#9538). Review-typed dispatches judge an explicitly requested reviewer by the resolver's
 per-candidate eligibility gates; ladder membership is not an allowlist. For the
 code profile only, supply `--review-author-model` and `--review-risk` to allow
 canonical reviewer substitution when admission or the budget guard requires it.
@@ -615,13 +621,13 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
 | **Coding / impl / fixtures** | **Codex Sol @ `high`** for accountable coding and broader integration; **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Use **Luna @ `high`** for routine bounded work, always under a complete Sol advisory envelope (`--advisory-task`, #9275). Cursor `grok-4.7-high` is a supported mechanical/ordinary code alternative when live capacity and fit favor it; pin the model (`auto` only for a well-defined coding dispatch) | **agy** `gemini-3.8-flash-high` for well-defined work (bounded fallback: Sol advisory envelope required) · **kimi** `k3-256k` · Cursor when fit allows | grok | LANGUAGE-LANES / advisor / authority never on Cursor; `cursor:auto` never CF identity; when Codex near_cap, shed mechanical work unless a verified operator reset reserve applies; claude seat = only ≤5-LOC CI-fix-I-caused; Workers never sole authority; retired Pro pins are historical only |
-| **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus ↔ Sol; Fable/Astra last resort | **high/medium/low formal CF defaults:** `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` · GLM-5.3 · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 | For security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125. **Operator rule (2026-09-25): Gemini-family seats review Ukrainian language/content only; never code, infra, tooling, CI, tests, hooks, or skills, whether reviewer of record, second dissent, or panel CF.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
+| **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus ↔ Sol; Fable/Astra last resort | **high:** only `gpt-6.1-sol` or `claude-opus-5-5`, per the #9538 review admission rule at the top of this file · **medium/low formal CF defaults:** `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` · GLM-5.3 · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 | For security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125. **Operator rule (2026-09-25): Gemini-family seats review Ukrainian language/content only; never code, infra, tooling, CI, tests, hooks, or skills, whether reviewer of record, second dissent, or panel CF.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
 | **UK content authoring** (author immersion-first, never translate) | **fresh-build lesson writer: codex Sol @ high** (operator default 2026-09-27, pending the pilot's measured writer selection, #8425) · **agy** (A1–A2 voice) ≈ **codex Sol @ high** | **claude** (B1–C2, sparingly — save the window) | — | **LANGUAGE-LANES RULE below binds**: only claude, codex (GPT), agy (Gemini); every other model family excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex Sol @ high** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; Grok is excluded from every Ukrainian review and judge seat; FOLK stays cross-family GPT↔Claude per the folk rubric |
 | **Research / recon / triage** | **Luna @ `high`** under a complete Sol advisory envelope — always required, never only when the boundaries need judgment (operator decision 2026-09-30) | Sol @ `high` for broader work and ordinary advice; Astra last resort | agy (bounded fallback: envelope required) | Workers never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | eligible opencode models — pool (FREE) · glm (LOCAL); DeepSeek is excluded from dispatch and review (`ask-deepseek` is consult-only for non-language work) | — | — | browsing = harness property, not a model trait |
 
-**Gemini code-review gate — accepted residuals (operator 2026-09-25).** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` without `--require-review-verdict` is an implementation dispatch and is not gated. A copy of code into a content path is out of scope: the gate exists so Gemini never reviews code, and a file under a content path is content by definition and is not executed.
+**Gemini code-review gate — accepted residuals (operator 2026-09-25).** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` with no review-typing flag is an implementation dispatch and is not gated; a code-profile review-typed dispatch to agy is refused at reviewer admission. A copy of code into a content path is out of scope: the gate exists so Gemini never reviews code, and a file under a content path is content by definition and is not executed.
 
 **LANGUAGE-LANES RULE (HARD, operator order 2026-09-27): “only claude, gpt and gemini should be invlved in ukrainina content. no other models allowed if it is about ukrainina lang. culture, heritage.” Every seat that authors, reviews, critiques, settles, or judges Ukrainian language, culture, or heritage content — including linguistic/content review and CEFR/russicism analysis — routes ONLY to claude, codex (GPT), or agy (Gemini).** Grok, deepseek, glm, kimi, cursor, pool, gemma, and every other model family are excluded from every language seat (deepseek's former VESUM-gated content-review default is retired; gemma's surface-review slice applies to non-language work only). Standing carve-outs still bind on top: NO deepseek for folk (moot under this rule, kept for history), folk review pairing stays GPT↔Claude. Grok remains available for code, infra, and non-language work.
 

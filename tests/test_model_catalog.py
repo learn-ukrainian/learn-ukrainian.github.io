@@ -32,6 +32,7 @@ from scripts.review.model_catalog import (
     resolve_glm_model,
     resolve_kimi_model,
     retired_model_refusal,
+    risk_reviewer_refusal,
     validate_catalog,
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
@@ -113,7 +114,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     assert models["claude-sonnet-5"]["lifecycle"] == "retired"
     for risk, ladder in load_model_catalog()["review_ladders"].items():
         names = {candidate for rung in ladder for candidate in rung}
-        assert ("claude-sonnet-5-5" in names) == (risk != "critical")
+        assert ("claude-sonnet-5-5" in names) == (risk in {"medium", "low"})
         assert "claude-sonnet-5" not in names
     assert models["poolside/laguna-s-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
@@ -377,8 +378,8 @@ def test_poolside_laguna_family_exact_ids_and_roles():
         "poolside/laguna-xs-2.1",
         "poolside/laguna-m.1",
     ]
-    # Ladder includes both gen-2 seats.
-    for risk in ("high", "medium", "low", "critical"):
+    # Ladder includes both gen-2 seats (high holds only Sol and Opus, #9538).
+    for risk in ("medium", "low", "critical"):
         names = {n for rung in catalog["review_ladders"][risk] for n in rung}
         assert "pool" in names
         assert "pool-xs" in names
@@ -503,9 +504,58 @@ def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     assert fc["claude"]["escalate_model_id"] == "claude-opus-5-5"
 
 
+def test_high_ladder_is_sol_and_opus_only():
+    """#9538: high-risk review resolves only to Sol or Opus; medium and low stay practical."""
+    ladders = load_model_catalog()["review_ladders"]
+    assert ladders["high"] == [
+        ["openai_frontier"],
+        ["claude-opus-5-5"],
+        ["claude-opus-5-5-cursor-fallback"],
+    ]
+    assert ladders["medium"] == ladders["low"]
+    assert ladders["medium"][:3] == ladders["high"]
+    assert len(ladders["medium"]) > len(ladders["high"])
+
+
+@pytest.mark.parametrize("candidate", ["claude-sonnet-5-5", "grok-4.7-cursor-fallback", "claude-fable-5-1"])
+def test_catalog_rejects_a_high_ladder_seat_outside_risk_reviewer_models(candidate):
+    """#9538: the high ladder can list only the models risk_reviewer_models.high names."""
+    broken = deepcopy(load_model_catalog())
+    broken["review_ladders"]["high"].append([candidate])
+    with pytest.raises(ModelCatalogError, match=r"review_ladders\.high candidate .*performed only by gpt-6\.1-sol, claude-opus-5-5"):
+        validate_catalog(broken)
+
+
+def test_risk_reviewer_models_names_sol_and_opus_at_high_only():
+    """#9538: one catalogue definition; the other risks stay unrestricted by it."""
+    catalog = load_model_catalog()
+    assert catalog["review_scheduler"]["risk_reviewer_models"] == {"high": ["gpt-6.1-sol", "claude-opus-5-5"]}
+    assert risk_reviewer_refusal("claude-opus-5-5-high", "high", catalog) is None
+    assert risk_reviewer_refusal("gpt-6.1-sol", "HIGH", catalog) is None
+    assert "performed only by" in risk_reviewer_refusal("claude-sonnet-5-5", "high", catalog)
+    for risk in ("critical", "medium", "low"):
+        assert risk_reviewer_refusal("claude-sonnet-5-5", risk, catalog) is None
+
+
+@pytest.mark.parametrize(
+    "value,match",
+    [
+        ({"urgent": ["gpt-6.1-sol"]}, "unknown risk"),
+        ({"high": []}, "non-empty list"),
+        ({"high": ["no-such-model"]}, "unknown model"),
+        ({"high": ["deepseek-v4-pro"]}, "retired model|DeepSeek"),
+    ],
+)
+def test_catalog_rejects_malformed_risk_reviewer_models(value, match):
+    broken = deepcopy(load_model_catalog())
+    broken["review_scheduler"]["risk_reviewer_models"] = value
+    with pytest.raises(ModelCatalogError, match=match):
+        validate_catalog(broken)
+
+
 def test_practical_ladders_exclude_advisory_roles():
     ladders = load_model_catalog()["review_ladders"]
-    for risk in ("high", "medium", "low"):
+    for risk in ("medium", "low"):
         names = {name for rung in ladders[risk] for name in rung}
         assert "openai_frontier" in names
         assert "claude-fable-5-1" not in names
@@ -800,7 +850,7 @@ def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
 
 def test_catalog_enforces_quality_floor_and_homogeneous_rungs():
     broken = deepcopy(load_model_catalog())
-    broken["review_ladders"]["high"][0].append("pool-xs")
+    broken["review_ladders"]["medium"][0].append("pool-xs")
     with pytest.raises(ModelCatalogError, match="mixes quality tiers"):
         validate_catalog(broken)
 
