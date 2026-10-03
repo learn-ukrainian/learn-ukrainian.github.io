@@ -66,6 +66,8 @@ Re-OCR (only if source PDF replaced or OCR output lost):
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import sqlite3
 import sys
 from dataclasses import dataclass
@@ -75,6 +77,12 @@ from scripts.ingest._section_coverage import (
     LessonSection,
     ensure_section_schema,
     link_lesson_sections,
+)
+from scripts.ingest.pohribnyi_tooling import (
+    NOTATION_PATH,
+    load_notation,
+    validate_notation,
+    validate_rows,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -244,6 +252,160 @@ def ingest_pages(
 # ---------------------------------------------------------------------------
 
 
+def validate_adjudicated_packet(packet: dict, table: dict) -> list[dict]:
+    """Require frozen notation, adjudication and a complete declared paragraph census."""
+    validate_notation(table)
+    if table["provisional"]:
+        raise ValueError("Cannot ingest under a provisional notation table")
+    if not isinstance(packet, dict):
+        raise ValueError("Expected adjudicated packet object")
+    rows = packet.get("rows")
+    validate_rows(rows, table, adjudicated=True)
+    counts = packet.get("paragraph_counts")
+    pages = {r["page"] for r in rows}
+    if not isinstance(counts, dict) or set(counts) != {str(p) for p in pages}:
+        raise ValueError("Paragraph census must cover exactly the ingested pages")
+    for page in pages:
+        count = counts[str(page)]
+        if (
+            type(count) is not int
+            or count < 1
+            or {r["paragraph"] for r in rows if r["page"] == page} != set(range(1, count + 1))
+        ):
+            raise ValueError("Incomplete page paragraph census")
+    return rows
+
+
+def ingest_adjudicated(
+    conn: sqlite3.Connection,
+    packet: dict,
+    table: dict,
+) -> tuple[int, int]:
+    """Append complete adjudicated pages; preserve OCR text and mark it superseded.
+
+    ``paragraph_counts`` binds the supplied paragraph census to each page.
+    A savepoint rolls back schema, inserts and supersession together on failure.
+    No commit is performed; the caller owns the outer transaction.
+    """
+    rows = validate_adjudicated_packet(packet, table)
+    pages = {r["page"] for r in rows}
+    notation_digest = hashlib.sha256(json.dumps(table, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
+    inserted = skipped = 0
+    # Keep an outer transaction open even when the caller has not started one.
+    # Releasing our nested savepoint must not commit the caller's ingest.
+    if not conn.in_transaction:
+        conn.execute("BEGIN")
+    conn.execute("SAVEPOINT pohribnyi_adjudicated")
+    try:
+        for page in pages:
+            ocr_id = f"{SOURCE_FILE}_p{page:02d}"
+            if (
+                conn.execute(
+                    "SELECT count(*) FROM textbooks WHERE source_file=? AND chunk_id=?",
+                    (SOURCE_FILE, ocr_id),
+                ).fetchone()[0]
+                != 1
+            ):
+                raise ValueError("Expected exactly one retained OCR row per ingested page")
+        ensure_section_schema(conn)
+        for name in ("textbooks", "textbook_sections"):
+            columns = {r[1] for r in conn.execute(f"PRAGMA table_info({name})")}
+            if "transcription_status" not in columns:
+                conn.execute(f"ALTER TABLE {name} ADD COLUMN transcription_status TEXT")
+        columns = {r[1] for r in conn.execute("PRAGMA table_info(textbooks)")}
+        for name, kind in (
+            ("page_number", "INTEGER"),
+            ("paragraph_number", "INTEGER"),
+            ("underlining_json", "TEXT"),
+            ("notation_sha256", "TEXT"),
+            ("adjudicated_by", "TEXT"),
+        ):
+            if name not in columns:
+                conn.execute(f"ALTER TABLE textbooks ADD COLUMN {name} {kind}")
+        for row in sorted(rows, key=lambda r: (r["page"], r["paragraph"])):
+            page, paragraph = row["page"], row["paragraph"]
+            chunk_id = f"{SOURCE_FILE}_p{page:02d}_para{paragraph:03d}_adjudicated"
+            underlining = json.dumps(row["underlining"], sort_keys=True)
+            expected = (
+                row["text"],
+                page,
+                paragraph,
+                underlining,
+                notation_digest,
+                row["adjudicated_by"],
+                "adjudicated",
+            )
+            existing = conn.execute(
+                "SELECT text, page_number, paragraph_number, underlining_json, "
+                "notation_sha256, adjudicated_by, transcription_status "
+                "FROM textbooks WHERE chunk_id=? AND source_file=?",
+                (chunk_id, SOURCE_FILE),
+            ).fetchall()
+            if existing:
+                if existing != [expected]:
+                    raise ValueError("Conflicting adjudicated row; refusing overwrite")
+                skipped += 1
+                continue
+            title = f"Pohribnyi 1992 adjudicated, p. {page}, para. {paragraph}"
+            conn.execute(
+                "INSERT INTO textbooks (chunk_id,title,text,source_file,grade,author,author_uk,"
+                "char_count,page_number,paragraph_number,underlining_json,notation_sha256,"
+                "adjudicated_by,transcription_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (
+                    chunk_id,
+                    title,
+                    row["text"],
+                    SOURCE_FILE,
+                    "",
+                    AUTHOR,
+                    AUTHOR_UK,
+                    len(row["text"]),
+                    page,
+                    paragraph,
+                    underlining,
+                    notation_digest,
+                    row["adjudicated_by"],
+                    "adjudicated",
+                ),
+            )
+            link_lesson_sections(
+                conn,
+                source_file=SOURCE_FILE,
+                sections=[
+                    LessonSection(
+                        chunk_id=chunk_id,
+                        section_title=title,
+                        section_number=f"{page}.{paragraph}",
+                        full_text=row["text"],
+                    )
+                ],
+            )
+            conn.execute(
+                "UPDATE textbook_sections SET page_start=?,page_end=?,transcription_status='adjudicated' "
+                "WHERE section_id=(SELECT parent_section_id FROM textbooks WHERE chunk_id=? AND source_file=?)",
+                (page, page, chunk_id, SOURCE_FILE),
+            )
+            inserted += 1
+        for page in pages:
+            ocr_id = f"{SOURCE_FILE}_p{page:02d}"
+            conn.execute(
+                "UPDATE textbook_sections SET transcription_status='superseded' WHERE section_id IN "
+                "(SELECT parent_section_id FROM textbooks WHERE source_file=? AND chunk_id=?)",
+                (SOURCE_FILE, ocr_id),
+            )
+            conn.execute(
+                "UPDATE textbooks SET transcription_status='superseded',page_number=? "
+                "WHERE source_file=? AND chunk_id=?",
+                (page, SOURCE_FILE, ocr_id),
+            )
+    except Exception:
+        conn.execute("ROLLBACK TO pohribnyi_adjudicated")
+        conn.execute("RELEASE pohribnyi_adjudicated")
+        raise
+    conn.execute("RELEASE pohribnyi_adjudicated")
+    return inserted, skipped
+
+
 def _run(*, db_path: Path, dry_run: bool, force: bool) -> int:
     txt_path = REFERENCES_DIR / TXT_FILENAME
     if not txt_path.exists():
@@ -344,9 +506,18 @@ def _run(*, db_path: Path, dry_run: bool, force: bool) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Ingest Mykola Pohribnyi 1992 'Ukrainian Literary Pronunciation' "
-            "into data/sources.db (28 pages → 28 chunks → 28 sections)."
+            "Ingest Pohribnyi OCR pages or append adjudicated paragraphs.\n"
+            "Use adjudicated mode only after inventory freeze and image adjudication; "
+            "legacy OCR mode is not a clean transcription."
         ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --dry-run\n"
+        "  .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest "
+        "--adjudicated .cache/final.json --notation frozen.json --db copy.db\n"
+        "Outputs: adjudicated mode appends paragraphs and marks OCR superseded without deleting text; "
+        "legacy --force replaces OCR rows.\n"
+        "Exit codes: 0 success; 1 invalid adjudication input; 2 missing OCR input.\n"
+        "Related: #9604; pohribnyi_tooling; pohribnyi_notation.json.",
     )
     parser.add_argument(
         "--dry-run",
@@ -362,10 +533,38 @@ def main(argv: list[str] | None = None) -> int:
         "--db",
         type=Path,
         default=DB_PATH,
-        help="Override target DB path (testing only).",
+        help="Target existing local SQLite DB path (default: data/sources.db); use a temp schema copy for tests.",
+    )
+    parser.add_argument(
+        "--adjudicated",
+        type=Path,
+        help="Private packet JSON with rows and paragraph_counts, e.g. .cache/final.json (default: OCR mode).",
+    )
+    parser.add_argument(
+        "--notation",
+        type=Path,
+        default=NOTATION_PATH,
+        help="Notation table JSON (default: bundled provisional table; ingest requires a frozen table).",
     )
     args = parser.parse_args(argv)
 
+    if args.adjudicated:
+        if args.force:
+            parser.error("--force cannot be combined with --adjudicated")
+        try:
+            table = load_notation(args.notation)
+            packet = json.loads(args.adjudicated.read_text(encoding="utf-8"))
+            if args.dry_run:
+                rows = validate_adjudicated_packet(packet, table)
+                print(f"Validated {len(rows)} adjudicated paragraphs; no database writes")
+            else:
+                # mode=rw refuses accidental creation of an empty sources.db.
+                with sqlite3.connect(args.db.resolve().as_uri() + "?mode=rw", uri=True) as conn:
+                    inserted, skipped = ingest_adjudicated(conn, packet, table)
+                print(f"Adjudicated paragraphs: inserted={inserted}, skipped={skipped}")
+        except (ValueError, OSError, sqlite3.Error) as exc:
+            parser.exit(1, f"Error: {exc}\n")
+        return 0
     return _run(db_path=args.db, dry_run=args.dry_run, force=args.force)
 
 

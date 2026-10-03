@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "provisional": true,
+  "normalization": "NFC",
+  "inventory_source_pages": [4, 5],
+  "freeze_reviewers": [],
+  "letters": "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯўЎ",
+  "symbols": [
+    {"role": "primary_stress", "codepoint": "U+0301", "provisional": true},
+    {"role": "approximation_i", "codepoint": "U+A675", "provisional": true},
+    {"role": "approximation_e", "codepoint": "U+2DF7", "provisional": true},
+    {"role": "non_syllabic_breve", "codepoint": "U+0306", "provisional": true},
+    {"role": "affricate_tie", "codepoint": "U+0361", "provisional": true},
+    {"role": "softness", "codepoint": "U+02BC", "provisional": true},
+    {"role": "span_space", "codepoint": "U+0020", "provisional": true}
+  ],
+  "pending_classes": ["secondary_stress", "length", "devoicing", "complete_softening_inventory"],
+  "underlining": {"field": "underlining", "unit": "Unicode codepoints", "interval": "half-open", "scope": "paragraph text"}
+}
