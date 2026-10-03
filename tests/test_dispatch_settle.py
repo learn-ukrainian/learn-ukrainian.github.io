@@ -105,6 +105,7 @@ def test_settle_missing_worktree_review_names_reason(tmp_path: Path) -> None:
     healed = json.loads(path.read_text(encoding="utf-8"))
     assert healed["status"] == "failed"
     assert healed["failure_reason"] == "worktree_missing_at_settle"
+    assert healed.get("finished_at")
 
 
 def test_settle_task_reports_closeout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

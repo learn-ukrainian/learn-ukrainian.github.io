@@ -740,6 +740,10 @@ def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[P
                 dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
             os.replace(snapshot_dir, dest)
             archived.append(dest)
+    lock_path = state_path.with_suffix(state_path.suffix + ".lock")
+    if lock_path.exists():
+        with contextlib.suppress(OSError):
+            lock_path.unlink()
     return archived
 
 
@@ -6652,7 +6656,9 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 return row
             current_branch = _current_branch(worktree)
             recorded_branch = state.get("worktree_branch")
-            branch = f"rescue/{_x_agent_task_id(str(state.get('agent') or 'agent'), str(task_id))}"
+            agent = str(state.get("agent") or "agent")
+            safe_task = _x_agent_task_id(agent, str(task_id))
+            branch = f"rescue/{agent}/{safe_task}"
             if current_branch not in {recorded_branch, branch}:
                 row["reason"] = "worktree branch differs from task record"
                 return row
@@ -6730,7 +6736,8 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                     f"X-Agent: {state.get('agent') or 'agent'}/{task_id}",
                 )
                 if proc.returncode != 0:
-                    raise RuntimeError("cannot commit rescue work")
+                    detail = (proc.stderr or proc.stdout or "").strip()
+                    raise RuntimeError(f"cannot commit rescue work: {detail or f'exit {proc.returncode}'}")
                 head = _resolve_sha(worktree)
                 if head is None:
                     raise RuntimeError("rescue commit HEAD unavailable")
@@ -14398,7 +14405,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     rescue = sub.add_parser(
         "rescue",
-        help="Inspect or preserve terminal dispatch work on rescue/<task>.",
+        help="Inspect or preserve terminal dispatch work on rescue/<agent>/<task>.",
         description=(
             "Preserve terminal non-success dispatch work on a verified rescue branch.\n"
             "Use after a worker exits; --all-stale previews candidates unless --apply is set."

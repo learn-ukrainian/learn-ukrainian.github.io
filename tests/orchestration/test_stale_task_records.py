@@ -827,6 +827,27 @@ def test_archive_round_trip_moves_record_with_sidecars(tasks_dir):
     assert task_record_store.locate_task_record(tasks_dir, "old-done") == tasks_dir / "old-done.json"
 
 
+def test_archive_cleans_adjacent_and_orphaned_lock_files(tasks_dir):
+    _terminal(tasks_dir, "old-done")
+    (tasks_dir / "old-done.json.lock").write_text("")
+    (tasks_dir / "orphan.json.lock").write_text("")
+    _terminal(tasks_dir, "active", status="running")
+    (tasks_dir / "active.json.lock").write_text("")
+
+    dry = str_mod.archive_terminal(tasks_dir, now=NOW, apply=False)
+    assert dry["actions"] == {"would_archive": 1}
+    assert (tasks_dir / "old-done.json.lock").exists()
+    assert (tasks_dir / "orphan.json.lock").exists()
+    assert (tasks_dir / "active.json.lock").exists()
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert report["actions"] == {"archived": 1}
+    assert not (tasks_dir / "old-done.json.lock").exists()
+    assert not (tasks_dir / "orphan.json.lock").exists()
+    assert (tasks_dir / "active.json.lock").exists()
+    assert (tasks_dir / "active.json").exists()
+
+
 def test_archive_selects_only_old_terminal_records_without_a_live_worktree(tasks_dir, tmp_path):
     linked = tmp_path / "linked-wt"
     linked.mkdir()

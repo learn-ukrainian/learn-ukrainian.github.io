@@ -11933,10 +11933,10 @@ def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tas
     result = delegate._rescue_task(state_path, apply=True)
     assert result["action"] == "rescued", result
     state = delegate._read_state(state_path)
-    assert state["rescue_ref"] == "rescue/rescue-test"
+    assert state["rescue_ref"] == "rescue/cursor/rescue-test"
     assert state["rescue_head_commit"] == result["head"]
     remote = subprocess.run(
-        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
         check=True,
         capture_output=True,
         text=True,
@@ -12001,7 +12001,7 @@ def test_rescue_cleans_junk_only_without_publishing(tmp_path, monkeypatch, tmp_t
     assert delegate._worktree_is_dirty(worktree) is False
     assert not junk.exists()
     assert not subprocess.run(
-        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
         check=True,
         capture_output=True,
         text=True,
@@ -12050,7 +12050,7 @@ def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, 
     report = json.loads(capsys.readouterr().out)
     assert report["summary"]["candidate"] == 1
     assert not subprocess.run(
-        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
         check=True,
         capture_output=True,
         text=True,
@@ -12097,6 +12097,52 @@ def test_rescue_all_stale_reports_unaged_terminal_record(tmp_tasks_dir, capsys):
         {"task_id": "no-finish", "action": "skipped", "reason": "no finished_at"},
         {"task_id": "unreadable", "action": "skipped", "reason": "unreadable task state"},
     ]
+
+
+def test_rescue_commit_failure_surfaces_stderr(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=True)
+    original = delegate._rescue_git
+
+    def fail_commit(path, *args, **kwargs):
+        if len(args) > 0 and args[0] == "commit":
+            return subprocess.CompletedProcess(["git", *args], 1, "", "fatal: hook rejected commit")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_rescue_git", fail_commit)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "error"
+    assert "fatal: hook rejected commit" in result["reason"]
+    assert worktree.exists()
+
+
+def test_rescue_branch_namespacing_prevents_agent_collision(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=True)
+    state = delegate._read_state(state_path)
+
+    state["agent"] = "codex"
+    delegate._write_state_atomic(state_path, state)
+    result_codex = delegate._rescue_task(state_path, apply=False)
+
+    state["agent"] = "claude"
+    delegate._write_state_atomic(state_path, state)
+    result_claude = delegate._rescue_task(state_path, apply=False)
+
+    assert result_codex["rescue_ref"] == "rescue/codex/rescue-test"
+    assert result_claude["rescue_ref"] == "rescue/claude/rescue-test"
+    assert result_codex["rescue_ref"] != result_claude["rescue_ref"]
+
+
+def test_archive_task_artifacts_unlinks_lock_file(tmp_path, monkeypatch, tmp_tasks_dir):
+    state_path = delegate._state_path("task-with-lock")
+    state_path.write_text("{}", encoding="utf-8")
+    lock_path = state_path.with_suffix(state_path.suffix + ".lock")
+    lock_path.write_text("", encoding="utf-8")
+
+    assert lock_path.exists()
+    archived = delegate._archive_task_artifacts("task-with-lock")
+    assert any("task-with-lock" in str(p) for p in archived)
+    assert not state_path.exists()
+    assert not lock_path.exists()
 
 
 def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -14649,22 +14695,22 @@ def test_interrupt_fallback_records_rescue_status_after_unpushed_telemetry(
             "cli_version": "0.131.0",
         },
     )()
-    real_write = delegate._write_state_atomic
+    real_core = delegate._core_terminal_fields
     interrupted = False
 
-    def interrupt_checkpoint(path, state):
+    def interrupt_core(*args, **kwargs):
         nonlocal interrupted
-        if not interrupted and "duration_s" in state:
+        if not interrupted:
             interrupted = True
-            raise KeyboardInterrupt("SIGTERM at the checkpoint")
-        return real_write(path, state)
+            raise KeyboardInterrupt("SIGTERM during finalize core fields")
+        return real_core(*args, **kwargs)
 
     with (
         patch("agent_runtime.runner.invoke", return_value=mock_result),
         patch.object(delegate, "_worktree_is_dirty", return_value=False),
         patch.object(delegate, "_count_commits_ahead", return_value=1),
         patch.object(delegate, "_count_unpushed_commits", return_value=1),
-        patch.object(delegate, "_write_state_atomic", side_effect=interrupt_checkpoint),
+        patch.object(delegate, "_core_terminal_fields", side_effect=interrupt_core),
     ):
         with pytest.raises(KeyboardInterrupt):
             delegate._run_worker(
