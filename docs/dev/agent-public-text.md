@@ -54,10 +54,12 @@ Diagnostics contain only rule/class identifiers, field and line.
 
 The verdict recorder uses the scanner's validated absolute-path spans to make
 checkout citations repository-relative. It rewrites only complete spans on
-normalization-stable lines, with strict resolution of existing files or
-directories inside the primary checkout or recorded worktree. A terminal
-`:line[:column]` annotation must identify an actual file and have no competing
-suffixed filename. Outside, nonexistent or ambiguous citations stay verbatim;
+normalization-stable lines, for existing files, directories or symlinks lexically
+inside the primary checkout or recorded worktree. Parent directories must resolve
+inside the allowed root; the final component is checked without following its
+symlink, so an interpreter symlink can be cited. A terminal `:line[:column]`
+annotation must identify a regular file and have no competing suffixed filename.
+Outside, nonexistent or ambiguous citations stay verbatim;
 lines made normalization-unstable by editing are restored. The typed publisher
 still scans the complete rendered comment before sending it. Missing path
 rules or incompatible spans refuse recording without a fallback tokenizer.
