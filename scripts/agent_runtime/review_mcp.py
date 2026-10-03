@@ -657,6 +657,23 @@ def review_server_checkout() -> Path:
     return resolve_repo_root(Path(__file__), 2)
 
 
+def sources_server_launch() -> tuple[Path, Path]:
+    """The interpreter and server script a trusted ``sources`` server runs: the primary checkout's."""
+    return project_interpreter(), review_server_checkout() / ".mcp" / "servers" / "sources" / "server.py"
+
+
+def sources_mcp_config(python_bin: Path, sources_server: Path, env: Mapping[str, str] | None = None) -> dict[str, Any]:
+    """An MCP configuration defining only a stdio ``sources`` server started from ``python_bin`` and ``sources_server``.
+
+    Formal attempts pass their recording ``env``. An ordinary Claude reviewer passes none and loads this as its
+    only MCP configuration, so the reviewed checkout's ``.mcp.json`` cannot add or replace a server (#9551).
+    """
+    server: dict[str, Any] = {"command": str(python_bin), "args": [str(sources_server)]}
+    if env is not None:
+        server["env"] = dict(env)
+    return {"mcpServers": {"sources": server}}
+
+
 def check_review_contract(
     prompt_file: Path | None,
     prompt_text: str,
@@ -738,8 +755,7 @@ def prepare_review_attempt(
 
     # Primary checkout root: resolved via repository helper scripts.common.repo_root
     primary_root = review_server_checkout()
-    python_bin = project_interpreter()
-    sources_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
+    python_bin, sources_server = sources_server_launch()
 
     # The receipts root (default or explicit) is the trust anchor: verified itself, with
     # everything below it walked no-follow. Its ancestors are followed by design.
@@ -769,20 +785,16 @@ def prepare_review_attempt(
         check_launch_contract(review_contract, primary_root, python_bin)
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
-    config_payload = {
-        "mcpServers": {
-            "sources": {
-                "command": str(python_bin),
-                "args": [str(sources_server)],
-                "env": {
-                    ENV_ATTEMPT_ID: attempt_id,
-                    ENV_MANIFEST_SHA256: manifest_sha256,
-                    ENV_LEDGER_PATH: str(ledger_path),
-                    "LU_REVIEW_ACCESS": review_access,
-                },
-            }
-        }
-    }
+    config_payload = sources_mcp_config(
+        python_bin,
+        sources_server,
+        {
+            ENV_ATTEMPT_ID: attempt_id,
+            ENV_MANIFEST_SHA256: manifest_sha256,
+            ENV_LEDGER_PATH: str(ledger_path),
+            "LU_REVIEW_ACCESS": review_access,
+        },
+    )
     config_bytes = (json.dumps(config_payload, indent=2) + "\n").encode("utf-8")
 
     # Create or open each runtime directory without following symlinks (refusing any that is a
