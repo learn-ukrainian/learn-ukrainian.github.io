@@ -38,6 +38,16 @@ _DEFAULT_TIMEOUT_SECONDS = 3
 _MAX_TIMEOUT_SECONDS = 30
 
 
+def resolve_handoff_agent(identity: str) -> str:
+    """Map a launcher provider/lane identity to its registered runtime key.
+
+    Registry keys are the authority for provider prefixes; area lanes (including
+    empty-slot aliases) do not create separate executable adapters.
+    """
+    providers = [key for key in AGENTS if identity.startswith(f"{key}-")]
+    return max(providers, key=len) if providers else identity
+
+
 def _mode_for_probe(adapter: Any) -> str:
     """Choose a supported mode without executing an agent request."""
     supported = getattr(adapter, "supported_modes", frozenset())
@@ -176,9 +186,23 @@ def probe_lanes(agents: list[str], *, cwd: Path, timeout_seconds: int) -> dict[s
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.agent_runtime.lane_probe --agent claude\n"
+            "  .venv/bin/python -m scripts.agent_runtime.lane_probe --handoff-agent claude-open-model-data\n"
+            "Outputs: JSON health results; no provider requests or persistent writes.\n"
+            "Exit codes: 0 healthy/disabled, 1 unhealthy, 2 invalid arguments.\n"
+            "Related: session-setup.sh; issues #4879, #9580."
+        ),
+    )
     selection = parser.add_mutually_exclusive_group(required=True)
-    selection.add_argument("--agent", help="One registered runtime lane to probe")
+    selection.add_argument("--agent", help="One registered runtime lane to probe (e.g. claude)")
+    selection.add_argument(
+        "--handoff-agent", help="Launcher identity resolved to its provider runtime key (e.g. claude-open-model-data)"
+    )
     selection.add_argument("--all", action="store_true", help="Probe every runtime registry lane")
     parser.add_argument(
         "--cwd",
@@ -204,7 +228,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: --timeout must be between 1 and {_MAX_TIMEOUT_SECONDS}", file=sys.stderr)
         return 2
 
-    agents = list(AGENTS) if args.all else [args.agent]
+    agents = (
+        list(AGENTS) if args.all else [resolve_handoff_agent(args.handoff_agent) if args.handoff_agent else args.agent]
+    )
     payload = probe_lanes(agents, cwd=args.cwd.resolve(), timeout_seconds=args.timeout)
     json.dump(payload, sys.stdout, sort_keys=True)
     sys.stdout.write("\n")

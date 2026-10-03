@@ -310,17 +310,15 @@ fi
 # never prevent a SessionStart response from reaching the operator.
 LANE_PROBE_SCRIPT="$PROJECT_DIR/scripts/agent_runtime/lane_probe.py"
 if [ -f "$LANE_PROBE_SCRIPT" ]; then
-  # codex-* is a stream/handoff identity, not a runtime registry key. Probe
-  # the Codex executable lane while preserving HANDOFF_AGENT for all identity,
-  # inbox, and rollover operations below.
+  # Resolve provider/lane identities through the runtime registry, preserving
+  # HANDOFF_AGENT for identity, inbox, and rollover operations below (#9580).
   LANE_PROBE_AGENT="$HANDOFF_AGENT"
-  case "$HANDOFF_AGENT" in
-    codex-*) LANE_PROBE_AGENT="codex" ;;
-  esac
   LANE_PROBE_RC=0
   LANE_PROBE_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
-    -m scripts.agent_runtime.lane_probe --agent "$LANE_PROBE_AGENT" --cwd "$PROJECT_DIR" --timeout 2 2>/dev/null) || LANE_PROBE_RC=$?
+    -m scripts.agent_runtime.lane_probe --handoff-agent "$HANDOFF_AGENT" --cwd "$PROJECT_DIR" --timeout 2 2>/dev/null) || LANE_PROBE_RC=$?
   if [ "$LANE_PROBE_RC" -ne 0 ]; then
+    LANE_PROBE_AGENT=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].agent // empty' 2>/dev/null || true)
+    LANE_PROBE_AGENT="${LANE_PROBE_AGENT:-$HANDOFF_AGENT}"
     LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
     ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $LANE_PROBE_AGENT (handoff identity $HANDOFF_AGENT): $LANE_PROBE_REASON")
   fi
@@ -580,7 +578,9 @@ fi
 # Optional task-family filter from launcher epic (#5398). SESSION_EPIC is the
 # epic name (hramatka, atlas, harness); task_family on packets usually matches.
 TASK_FAMILY_ARGS=()
-if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
+if [ -n "${SESSION_TASK_FAMILY:-}" ]; then
+  TASK_FAMILY_ARGS=(--task-family "$SESSION_TASK_FAMILY")
+elif [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
   case "${SESSION_EPIC}" in
     harness|infra) : ;; # do not over-filter infra packets
     *) TASK_FAMILY_ARGS=(--task-family "$SESSION_EPIC") ;;
@@ -696,15 +696,19 @@ if [ "$CODEX_NORMAL_TASK" = "0" ] && [ -z "$HANDOFF_CONTEXT" ]; then
   GATE_ARGS+=(--detect)
 fi
 if [ ${#TASK_FAMILY_ARGS[@]} -gt 0 ]; then
-  GATE_ARGS+=(--task-family "$SESSION_EPIC")
+  GATE_ARGS+=("${TASK_FAMILY_ARGS[@]}")
 fi
-ROLLOVER_BUNDLE_STREAM=""
-if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] \
+ROLLOVER_BUNDLE_STREAM="${SESSION_STREAM_ID:-}"
+if [ -z "$ROLLOVER_BUNDLE_STREAM" ] && [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] \
   && declare -f launcher_selector_stream >/dev/null 2>&1; then
   ROLLOVER_BUNDLE_STREAM="$(launcher_selector_stream "$SESSION_EPIC" 2>/dev/null || true)"
+fi
+ROLLOVER_STREAM_ARGS=()
+if [ -n "$ROLLOVER_BUNDLE_STREAM" ]; then
+  ROLLOVER_STREAM_ARGS=(--stream "$ROLLOVER_BUNDLE_STREAM")
+  GATE_ARGS+=("${ROLLOVER_STREAM_ARGS[@]}")
   case "$ROLLOVER_BUNDLE_STREAM" in
-    epic:*) GATE_ARGS+=(--import-bundle --stream "$ROLLOVER_BUNDLE_STREAM") ;;
-    *) ROLLOVER_BUNDLE_STREAM="" ;;
+    epic:*) GATE_ARGS+=(--import-bundle) ;;
   esac
 fi
 
@@ -776,7 +780,10 @@ else
       ;;
   esac
   case "${GATE_FIELDS[10]}" in
-    ok|skipped) GATE_DETECT_STATUS="${GATE_FIELDS[12]}" ;;
+    ok|skipped)
+      GATE_DETECT_STATUS="${GATE_FIELDS[12]}"
+      [ -n "${GATE_FIELDS[11]}" ] && INFO+=("${GATE_FIELDS[11]}")
+      ;;
     *)
       if [ -z "$HANDOFF_CONTEXT" ]; then
         HANDOFF_CONTEXT="${GATE_FIELDS[11]:-ERROR: thread_handoff.py detect crashed. Stop.}"
@@ -875,7 +882,8 @@ if [ -z "$HANDOFF_CONTEXT" ] && [ "$GATE_DETECT_STATUS" = "none" ]; then
   if [ -z "$HANDOFF_CONTEXT" ]; then
     if ! HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
       --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-      --current-thread-id "$CURRENT_THREAD_ID" --format session-start 2>&1); then
+      --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \
+      "${ROLLOVER_STREAM_ARGS[@]}" --format session-start 2>&1); then
       HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
 Output:
 $HANDOFF_CONTEXT"

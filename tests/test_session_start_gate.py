@@ -72,9 +72,7 @@ def test_session_record_uses_record_session_id_not_thread_id(monkeypatch: pytest
 
     monkeypatch.delenv("CLAUDE_ENV_FILE", raising=False)
     monkeypatch.setattr(session_record, "update_session", _fake_update_session)
-    result = gate.phase_session_record(
-        _args(session_id="thread-lease-id", record_session_id="hook-session-id")
-    )
+    result = gate.phase_session_record(_args(session_id="thread-lease-id", record_session_id="hook-session-id"))
     assert captured["session_id"] == "hook-session-id"
     assert result["status"] == "ok"
 
@@ -304,9 +302,7 @@ def _clear_dispatch_markers(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_AGENT", raising=False)
 
 
-def test_dispatch_worker_marker_skips_lease_evaluation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dispatch_worker_marker_skips_lease_evaluation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """(a) Held live lease + dispatch marker: no claim, no conflict — one
     informational line and the lease file left byte-for-byte untouched."""
     lease_path = _write_held_live_lease(tmp_path)
@@ -325,9 +321,7 @@ def test_dispatch_worker_marker_skips_lease_evaluation(
     assert lease_path.read_bytes() == before
 
 
-def test_dispatch_worktree_layout_skips_lease_without_marker(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dispatch_worktree_layout_skips_lease_without_marker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """(b) Held live lease + project dir under .worktrees/dispatch/ with NO
     marker env: layout A alone is sufficient for the exemption."""
     _write_held_live_lease(tmp_path)
@@ -358,9 +352,7 @@ def test_live_owner_conflict_preserved_outside_dispatch_context(
     assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
 
 
-def test_marker_with_empty_value_does_not_exempt(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_marker_with_empty_value_does_not_exempt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A set-but-empty marker is not a dispatch context (the hook exports the
     variable unconditionally in some test harnesses)."""
     _write_held_live_lease(tmp_path)
@@ -392,6 +384,43 @@ def test_detect_none_is_ok(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
     result = gate.phase_rollover_detect(_args())
     assert result == {"status": "ok", "detect_status": "none"}
+
+
+def test_detect_foreign_only_preserves_diagnostics_and_session_filters(monkeypatch):
+    invocations = []
+    stream_id = "epic:1001"
+
+    def fake_main(argv):
+        invocations.append(argv)
+        if argv[-1] == "json":
+            print(json.dumps({"status": "none", "skipped_foreign": [{"agent": "claude"}]}))
+        else:
+            print("Skipped foreign candidate: owner=claude lineage_id=lineage-foreign")
+        return 0
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: type("TH", (), {"main": staticmethod(fake_main)}))
+    result = gate.phase_rollover_detect(_args(stream=stream_id, task_family="open-model-data"))
+    assert result["status"] == "ok"
+    assert result["detect_status"] == "none"
+    assert "Skipped foreign candidate" in result["context"]
+    assert len(invocations) == 2
+    for argv in invocations:
+        assert argv[argv.index("--stream") + 1] == stream_id
+        assert argv[argv.index("--task-family") + 1] == "open-model-data"
+
+
+def test_detect_foreign_diagnostic_format_failure_is_not_ok(monkeypatch):
+    def fake_main(argv):
+        if argv[-1] == "json":
+            print(json.dumps({"status": "none", "skipped_foreign": [{"agent": "claude"}]}))
+            return 0
+        print("format failed")
+        return 2
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: type("TH", (), {"main": staticmethod(fake_main)}))
+    result = gate.phase_rollover_detect(_args())
+    assert result["status"] == "crashed"
+    assert result["error"] == "detect --format session-start rc=2"
 
 
 def test_detect_ambiguous_on_stderr_still_formats_stop(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -560,7 +589,7 @@ def test_lease_verdict_is_authoritative_over_detect(
 
 # --- shell-level verdict mapping ---------------------------------------------
 
-FAKE_RUNNER = '''
+FAKE_RUNNER = """
 import json, os, sys
 joined = " ".join(sys.argv)
 if "session_start_gate" in joined:
@@ -569,7 +598,7 @@ if "session_start_gate" in joined:
         sys.stdout.write(os.environ.get("FAKE_GATE_JSON", "{}"))
     sys.exit(rc)
 sys.exit(0)
-'''
+"""
 
 BASE_GATE_RESULT = {
     "session_record": {"status": "ok"},
