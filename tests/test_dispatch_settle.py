@@ -581,7 +581,11 @@ def test_settle_missing_worktree_replacement_after_transition_preserves_new_run_
     path.write_text(json.dumps(initial_data), encoding="utf-8")
 
     ledger_path = tmp_path / "own.sqlite3"
-    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
+    ledger = OwnershipLedger(
+        ledger_path,
+        task_state_dir=task_dir,
+        process_matches_task=lambda p, tid: p == os.getpid() and tid == task_id,
+    )
     import sqlite3
     import time
 
@@ -618,7 +622,7 @@ def test_settle_missing_worktree_replacement_after_transition_preserves_new_run_
     assert "scripts/bar.py" in rows[0][1]
 
     # Beyond-grace reconciliation: overlapping challenger admission must not delete
-    # the live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
+    # the verified live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
     challenger = ledger.admit(
         task_id="challenger-task",
         mode="workspace-write",
@@ -653,7 +657,11 @@ def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Pat
     path.write_text(json.dumps(initial_data), encoding="utf-8")
 
     ledger_path = tmp_path / "own.sqlite3"
-    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
+    ledger = OwnershipLedger(
+        ledger_path,
+        task_state_dir=task_dir,
+        process_matches_task=lambda p, tid: p == os.getpid() and tid == task_id,
+    )
     import sqlite3
     import time
 
@@ -690,7 +698,7 @@ def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Pat
     assert "scripts/bar.py" in rows[0][1]
 
     # Beyond-grace reconciliation: overlapping challenger admission must not delete
-    # the live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
+    # the verified live replacement claim, and challenger must remain refused (#8659 / CF r4 F1).
     challenger = ledger.admit(
         task_id="challenger-task",
         mode="workspace-write",
@@ -707,6 +715,60 @@ def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Pat
     assert len(rows_after) == 1
     assert rows_after[0][0] == os.getpid()
     assert "scripts/bar.py" in rows_after[0][1]
+
+
+def test_reconciliation_cleans_recycled_pid_after_settlement(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "recycled-pid-task"
+    path = task_dir / f"{task_id}.json"
+
+    initial_data = {
+        "task_id": task_id,
+        "run_nonce": "run-1",
+        "started_at": "2026-01-01T00:00:00Z",
+        "status": "failed",
+        "pid": None,
+    }
+    path.write_text(json.dumps(initial_data), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    # Process matcher returns False for the recycled PID (unrelated process)
+    ledger = OwnershipLedger(
+        ledger_path,
+        task_state_dir=task_dir,
+        process_matches_task=lambda _p, _tid: False,
+    )
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    # Stale claim whose PID is alive (e.g. os.getpid()) but belongs to an unrelated process (reused PID)
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/bar.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    # Beyond-grace reconciliation must detect that the live PID is unrelated and release the claim,
+    # allowing overlapping challenger admission (#8659 / CF r5 F1).
+    challenger = ledger.admit(
+        task_id="challenger-task",
+        mode="workspace-write",
+        owned_paths=["scripts/bar.py"],
+        pid=os.getpid(),
+    )
+    assert challenger.admitted is True
+    assert challenger.would_refuse is False
+
+    conn = sqlite3.connect(ledger_path)
+    rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows) == 0
 
 
 @pytest.fixture(autouse=True)

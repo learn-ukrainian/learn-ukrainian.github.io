@@ -884,3 +884,158 @@ def test_ownership_ledger_release_pid_scoped_and_pidless_preserves_live(tmp_path
     rows = conn.execute("SELECT pid, claim_json FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
     conn.close()
     assert len(rows) == 0
+
+
+def test_reconciliation_distinguishes_verified_replacement_from_recycled_pid(tmp_path: Path):
+    """#8659 / CF r5 F1: Beyond-grace reconciliation preserves verified replacement runs and cleans recycled PIDs."""
+    import sqlite3
+    import time
+
+    state_dir = tmp_path / "tasks"
+    state_dir.mkdir()
+    task_id = "test-task"
+    (state_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
+    )
+
+    # 1. Verified replacement run: matcher confirms process identity
+    ledger_path_1 = tmp_path / "own1.sqlite3"
+    ledger_1 = OwnershipLedger(
+        ledger_path_1,
+        task_state_dir=state_dir,
+        process_matches_task=lambda p, tid: p == os.getpid() and tid == task_id,
+    )
+    conn = sqlite3.connect(ledger_path_1)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/c.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    res1 = ledger_1.admit(
+        task_id="challenger",
+        mode="workspace-write",
+        owned_paths=["scripts/c.py"],
+        pid=os.getpid(),
+    )
+    assert res1.admitted is False
+    assert res1.would_refuse is True
+
+    conn = sqlite3.connect(ledger_path_1)
+    rows1 = conn.execute("SELECT pid FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows1) == 1
+
+    # 2. Recycled PID: process is alive (e.g. os.getpid()) but matcher rejects (unrelated process)
+    ledger_path_2 = tmp_path / "own2.sqlite3"
+    ledger_2 = OwnershipLedger(
+        ledger_path_2,
+        task_state_dir=state_dir,
+        process_matches_task=lambda _p, _tid: False,
+    )
+    conn = sqlite3.connect(ledger_path_2)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/c.py"}', os.getpid(), time.time() - 200),
+    )
+    conn.commit()
+    conn.close()
+
+    res2 = ledger_2.admit(
+        task_id="challenger",
+        mode="workspace-write",
+        owned_paths=["scripts/c.py"],
+        pid=os.getpid(),
+    )
+    assert res2.admitted is True
+    assert res2.would_refuse is False
+
+    conn = sqlite3.connect(ledger_path_2)
+    rows2 = conn.execute("SELECT pid FROM write_claims WHERE task_id = ?", (task_id,)).fetchall()
+    conn.close()
+    assert len(rows2) == 0
+
+
+def test_pid_matches_task_real_process_identity(tmp_path: Path):
+    """#8659 / CF r5 F1: Verify _pid_matches_task using real subprocesses with environ/cmdline."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "real-worker-task"
+
+    # Spawn real worker subprocess carrying task identity in environ
+    worker = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
+    )
+    # Spawn dummy subprocess carrying no task identity
+    dummy = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        env={k: v for k, v in os.environ.items() if "TASK_ID" not in k},
+    )
+
+    try:
+        assert _pid_matches_task(worker.pid, task_id) is True
+        assert _pid_matches_task(worker.pid, "other-task") is False
+        assert _pid_matches_task(dummy.pid, task_id) is False
+
+        # Now test OwnershipLedger default matcher with real processes
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir()
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
+        )
+
+        ledger_path = tmp_path / "own_real.sqlite3"
+        ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+        conn = sqlite3.connect(ledger_path)
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        # 1. Test recycled PID cleanup with dummy process
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/c.py"}', dummy.pid, time.time() - 200),
+        )
+        conn.commit()
+
+        challenger = ledger.admit(
+            task_id="challenger-1",
+            mode="workspace-write",
+            owned_paths=["scripts/c.py"],
+            pid=worker.pid,
+        )
+        assert challenger.admitted is True
+
+        # 2. Test verified replacement worker preservation
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/d.py"}', worker.pid, time.time() - 200),
+        )
+        conn.commit()
+        conn.close()
+
+        challenger_blocked = ledger.admit(
+            task_id="challenger-2",
+            mode="workspace-write",
+            owned_paths=["scripts/d.py"],
+            pid=dummy.pid,
+        )
+        assert challenger_blocked.admitted is False
+        assert challenger_blocked.would_refuse is True
+    finally:
+        worker.terminate()
+        worker.wait()
+        dummy.terminate()
+        dummy.wait()
