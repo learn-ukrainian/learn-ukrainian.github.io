@@ -122,16 +122,19 @@ sources:
   - id: pravopys
     name: Ukrainian Pravopys (2019)
     type: reference
-    url: https://2019.pravopys.net
+    url: https://www.ulif.org.ua/system/files/pravopus-new.pdf
     description: >
-      Official Ukrainian orthography rules approved by Cabinet of Ministers
-      Resolution #437, May 22, 2019. 61 sections covering spelling,
-      capitalization. No server-side search — uses topic-to-section mapping.
-    coverage: Spelling rules (sections 1-44), capitalization (sections 45-61)
+      Official Ukrainian orthography approved by Cabinet of Ministers Resolution
+      #437 (22 May 2019), in the authorized edition (Наукова думка, 2019,
+      ISBN 978-966-00-1728-3) distributed by MON and ULIF. All 168 §§ are stored
+      offline in sources.db (pravopys_paragraphs, pravopys_sections) with page
+      locators and hashes; provenance in docs/sources/pravopys-2019-official-source.md.
+    coverage: Parts I-V (§ 1-168) plus the foreword; the word index (pp. 257-382) is not stored
     limitations: >
-      Categories III-V (foreign words, proper names, punctuation) not yet
-      published on the site. Client-side JS search only.
-    query_function: pravopys_lookup, pravopys_section
+      2019.pravopys.net (unofficial copy) is only a live fallback when the
+      offline tables are missing. text_normalized joins lines and resolves
+      line-end hyphens; the printed text is the text column.
+    query_function: pravopys_offline (fallback pravopys_lookup, pravopys_section)
     mcp_tool: query_pravopys
 
   - id: sum20

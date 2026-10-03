@@ -8,7 +8,8 @@ Sources:
   - GRAC (uacorpus.org) — corpus frequency, concordance, collocations
   - ULIF (lcorp.ulif.org.ua) — declension/conjugation paradigms
   - r2u (r2u.org.ua) — Russian→Ukrainian translation dictionary
-  - pravopys (2019.pravopys.net) — official orthography rules (2019)
+  - pravopys (2019.pravopys.net) — unofficial copy of the 2019 orthography; the official
+    text is stored offline (``pravopys_offline``, #9610) and this site is only the fallback
   - slovnyk.me — multi-dictionary aggregator (СУМ-20, СУМ-11, Antonenko-
     Davydovych, Karavansky synonyms, paronyms, phraseology, orthography,
     orthoepy, foreign-words, bilinguals)
@@ -32,6 +33,7 @@ import enum
 import re
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
@@ -1383,12 +1385,14 @@ def wikidata_get_entities(
 
 
 # ══════════════════════════════════════════════════════════════════
-# pravopys (2019.pravopys.net) — Ukrainian orthography rules
+# pravopys — official 2019 text offline (#9610); 2019.pravopys.net live fallback
 # ══════════════════════════════════════════════════════════════════
 
 PRAVOPYS_BASE = "https://2019.pravopys.net"
+# The site numbers its sections by the official § numbers (§ 1–168).
+PRAVOPYS_PARAGRAPH_COUNT = 168
 
-# Static mapping of topics to section numbers (1-61)
+# Static mapping of legacy topic keys to § numbers (live fallback only)
 # Search is client-side JS only — no server API
 PRAVOPYS_SECTIONS = {
     "е-и": 1, "і-и": 2, "ї-йі": 3, "я-ю-є": 4,
@@ -1446,7 +1450,7 @@ def _extract_pravopys_text(html: str) -> str:
 
 
 def pravopys_section(section_num: int, *, report_unavailable: bool = False) -> dict[str, Any] | None:
-    """Fetch an orthography rule section by number (1-61).
+    """Fetch an orthography rule section (§ 1–168) from the unofficial live site.
 
     Returns dict with keys: section, url, text
     or None on failure. With ``report_unavailable``, a request that failed
@@ -1454,7 +1458,7 @@ def pravopys_section(section_num: int, *, report_unavailable: bool = False) -> d
     ``{"status": "unavailable", "section", "url", "reason"}`` instead of None,
     so a caller never reads an outage as "no section" (#9005).
     """
-    if not 1 <= section_num <= 61:
+    if not 1 <= section_num <= PRAVOPYS_PARAGRAPH_COUNT:
         return None
     url = f"{PRAVOPYS_BASE}/sections/{section_num}/"
     try:
@@ -1478,6 +1482,27 @@ def pravopys_section(section_num: int, *, report_unavailable: bool = False) -> d
             "url": url,
             "reason": f"HTTP {status}" if status else type(exc).__name__,
         }
+
+
+def pravopys_offline(topic: str, *, db_path: str | None = None) -> dict[str, Any] | None:
+    """Answer a topic or § number from the official 2019 text stored in sources.db (#9610).
+
+    Returns the matched § (``"source": "offline"``), ``{"status":
+    "store_unavailable", "reason"}`` when no complete official edition is stored
+    (callers then fall back to the live site), or None for a real miss.
+    """
+    try:
+        from wiki import sources_db
+        from wiki.pravopys_official import lookup_offline
+    except ImportError:  # pragma: no cover - direct package import fallback
+        from scripts.wiki import sources_db
+        from scripts.wiki.pravopys_official import lookup_offline
+
+    try:
+        path = Path(db_path) if db_path else sources_db._read_db_path()
+    except (OSError, RuntimeError, ValueError) as exc:
+        return {"status": "store_unavailable", "reason": type(exc).__name__}
+    return lookup_offline(topic, db_path=path)
 
 
 def pravopys_lookup(topic: str, *, report_unavailable: bool = False) -> dict[str, Any] | None:
