@@ -4,6 +4,7 @@ Current operational reference for repo-local scripts and agent workflows.
 
 - Main build entry point: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree`
 - Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
+- Typed sub-issue removal: `.venv/bin/python -m scripts.publish issue-unlink --repo owner/repo --parent-id PARENT_NODE_ID --child-id CHILD_NODE_ID` (#9647)
 - This document intentionally omits retired pipelines and legacy script paths
 - **Seat onboarding (ownership matrix, ACPX boundary, Kimi native vs KimiCC, Buzz deferral):**
   [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md)
