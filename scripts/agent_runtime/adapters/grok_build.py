@@ -597,6 +597,10 @@ class GrokBuildAdapter:
         provider_failed = obj is not None and obj.get("type") == "error"
         if provider_failed:
             error = obj.get("error")
+            # Native Grok documents type=error with a top-level message;
+            # retain the older error field without reading reply/text fields.
+            if not isinstance(error, str):
+                error = obj.get("message")
             provider_error = error if isinstance(error, str) else ""
         if provider_failed or (returncode != 0 and provider_error):
             failure_code = provider_failure_code(provider_error)

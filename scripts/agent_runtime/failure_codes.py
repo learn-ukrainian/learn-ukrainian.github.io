@@ -23,6 +23,7 @@ RUNTIME_FAILURE_CODES = frozenset(
         "acp_session_create_timeout",
         "acp_turn_limit",
         "github_secondary_rate_limited",
+        "github_auth_required",
         "adapter_refused",
         "cwd_unpinned",
         "primary_tree_write",
@@ -42,81 +43,131 @@ RUNTIME_FAILURE_CODES = frozenset(
 )
 
 
-# These recognizers apply only to provider error fields or whole CLI error
-# lines, never to response/tool text. Unknown errors keep provider_error.
-_PROVIDER_DIAGNOSTIC_RE = re.compile(
-    r"^(?:(?:opencode|kimi|grok|agy|gemini|cursor|provider|acp transport):\s*)?(?:error:\s*)?"
-    r"(?:(?:HTTP\s+|unexpected status\s+|status\s+)[45]\d{2}\b|[45]\d{2}\s+(?:RESOURCE_EXHAUSTED|quota|too many|unauthorized)\b|"
-    r"(?:RateLimitError|APIError):|RESOURCE_EXHAUSTED\b|"
-    r"rate[_ ]limit(?:ed| exceeded| reached)?\b|usage limit reached\b|quota exceeded\b|"
-    r"no capacity available\b|daily\s+limit\s+exceeded\b)",
-    re.IGNORECASE,
+# Only callers that have isolated provider error fields may use this search.
+# Raw streams must first pass provider_stderr_error's terminal-line boundary.
+_KIMI_PROVIDER_CODES = {
+    "rate_limit": "rate_limited",
+    "auth_error": "provider_auth",
+    "overloaded": "provider_overloaded",
+    "connection_error": "transport_error",
+    "filtered": "provider_policy_refusal",
+    "api_error": "provider_error",
+}
+_PROVIDER_STATUS_RE = re.compile(
+    r"(?:\bHTTP\s+|\bunexpected status\s+|\bstatus(?: code)?[\s:=]+|"
+    r"\bError code:[ ]*|\bgoogleapi: Error[ ]*|\bfailed with[ ]*|[\"']code[\"']\s*:\s*)([45]\d{2})\b|"
+    r"^\s*([45]\d{2})\b",
+    re.IGNORECASE | re.MULTILINE,
+)
+_PROVIDER_MARKERS = (
+    (
+        "rate_limited",
+        re.compile(
+            r"RateLimitError|TerminalQuotaError|rate[_ ]limit|usage limit|quota exceeded|"
+            r"resource_exhausted|quota_exhausted|too many requests|exhausted your daily quota|"
+            r"daily\s+limit\s+exceeded",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "provider_auth",
+        re.compile(
+            r"unauthorized|unauthenticated|forbidden|invalid api key|authentication (?:failed|required)|"
+            r"auth(?:orization)? failed|no api key(?: was)? (?:found|set|configured)|missing api key|"
+            r"no credentials? (?:found|set|configured|available)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "provider_overloaded",
+        re.compile(
+            r"no capacity available|server error|service unavailable|bad gateway|gateway timeout|"
+            r"overloaded|over capacity|upstream error",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "transport_error",
+        re.compile(
+            r"connection refused|connection reset|connection aborted|econnrefused|econnreset|etimedout|"
+            r"network is unreachable|read timeout|timed out|timeout while connecting|"
+            r"temporarily unavailable|APIConnection(?:Timeout)?Error",
+            re.IGNORECASE,
+        ),
+    ),
 )
 
 
 def provider_failure_code(message: str, status: object = None) -> str:
-    """Classify a caller-attributed provider error, before display truncation."""
-    if status in (429, "429", "RESOURCE_EXHAUSTED"):
-        return "rate_limited"
-    if status in (401, "401", "UNAUTHENTICATED"):
-        return "provider_auth"
-    if status in (503, "503", "UNAVAILABLE"):
-        return "provider_overloaded"
-    codes: set[str] = set()
-    for line in message.split("\n"):
-        line = line.strip()
-        if not _PROVIDER_DIAGNOSTIC_RE.match(line):
-            codes.add("provider_error")
-            continue
-        # Numeric provider status takes precedence over words quoted in its
-        # error body (e.g. HTTP 400 explaining a rate-limit parameter).
-        match = re.match(
-            r"^(?:(?:opencode|kimi|grok|agy|gemini|cursor|provider|acp transport):\s*)?"
-            r"(?:error:\s*)?(?:(?:HTTP|unexpected status|status)\s+)?(?P<status>[45]\d{2})\b",
-            line,
-            re.IGNORECASE,
-        )
-        if match:
-            codes.add(
-                {"429": "rate_limited", "401": "provider_auth", "503": "provider_overloaded"}.get(
-                    match["status"], "provider_error"
-                )
-            )
-        elif re.search(r"no capacity available", line, re.IGNORECASE):
-            codes.add("provider_overloaded")
-        elif re.search(
-            r"RateLimitError|rate[_ ]limit|usage limit|quota exceeded|resource_exhausted|"
-            r"daily\s+limit\s+exceeded",
-            line,
-            re.IGNORECASE,
-        ):
-            codes.add("rate_limited")
-        else:
-            codes.add("provider_error")
-    if len(codes) == 1:
-        return codes.pop()
-    return "provider_error"
+    """Classify attributed provider diagnostics; explicit codes outrank prose."""
+    if status is not None:
+        # An explicit non-retryable status must never fall through to body
+        # words (e.g. a 400 discussing rate-limit configuration).
+        value = str(status)
+        if value in {"429", "RESOURCE_EXHAUSTED"}:
+            return "rate_limited"
+        if value in {"401", "403", "UNAUTHENTICATED", "PERMISSION_DENIED"}:
+            return "provider_auth"
+        if value == "UNAVAILABLE" or re.fullmatch(r"5\d{2}", value):
+            return "provider_overloaded"
+        return "provider_error"
+
+    typed_codes = {
+        _KIMI_PROVIDER_CODES.get(match, "provider_error") for match in re.findall(r"\bprovider\.([a-z_]+)\b", message)
+    }
+    if typed_codes:
+        return typed_codes.pop() if len(typed_codes) == 1 else "provider_error"
+    status_match = _PROVIDER_STATUS_RE.search(message)
+    if status_match:
+        return provider_failure_code("", status_match[1] or status_match[2])
+    codes = {code for code, pattern in _PROVIDER_MARKERS if pattern.search(message)}
+    return codes.pop() if len(codes) == 1 else "provider_error"
+
+
+# These are CLI terminal formats, not generic mentions of status words.
+# Kimi wraps typed errors in "error: failed to run prompt: provider.*";
+# Gemini prints quota errors / Gaxios errors and an [API Error: ...] wrapper;
+# Cursor's auth diagnostic begins "Error: Authentication required.".
+_STDERR_DIAGNOSTIC_PREFIX = re.compile(
+    r"^(?:error:|(?:opencode|kimi|grok|agy|gemini|cursor|provider|acp transport):|"
+    r"hermes -z: agent failed:|provider\.[a-z_]+:|"
+    r"HTTP\s+[45]\d{2}\b|[45]\d{2}\s+(?:RESOURCE_EXHAUSTED|quota|too many|unauthorized)\b|"
+    r"(?:RateLimitError|APIError|TerminalQuotaError|RetryableQuotaError|GaxiosError|"
+    r"APIConnectionError|APIConnectionTimeoutError):|(?:✕\s+)?\[API Error:|"
+    r"Attempt \d+ failed(?: with status [45]\d{2})?[.:]|"
+    r"Attempt \d+ failed with (?:429|5xx) error\b|"
+    r"RESOURCE_EXHAUSTED\b|no capacity available\b|quota exceeded\b|"
+    r"connection (?:refused|reset|aborted)\b|(?:econnrefused|econnreset|etimedout)\b|"
+    r"network is unreachable\b|read timeout\b|"
+    r"rate limit exceeded\b|The model is overloaded\b|"
+    r"unexpected status\s+[45]\d{2}\b|status(?: code)?\s+[45]\d{2}\b|"
+    r"Error code:\s*[45]\d{2}\b|Request failed with status code\s+[45]\d{2}\b|"
+    r"googleapi: Error\s+[45]\d{2}\b)",
+    re.IGNORECASE,
+)
 
 
 def provider_stderr_error(stderr: str) -> str:
-    """Select only CLI provider diagnostic lines; skip JSON/tool/log prose."""
-    # A bare mention such as "rate limit regression test returned 429" is
-    # not a diagnostic. Error/provider prefixes, HTTP status lines and the
-    # CLI's gRPC/capacity markers are the unstructured fallback boundary.
-    diagnostic_prefix = re.compile(
-        r"^(?:error:|(?:opencode|kimi|grok|agy|gemini|cursor|provider|acp transport):|"
-        r"HTTP\s+[45]\d{2}\b|[45]\d{2}\s+(?:RESOURCE_EXHAUSTED|quota|too many|unauthorized)\b|"
-        r"(?:RateLimitError|APIError):|RESOURCE_EXHAUSTED\b|no capacity available\b|"
-        r"quota exceeded for (?:project|this account)\b|"
-        r"unexpected status\s+[45]\d{2}\b|status\s+[45]\d{2}\b)",
-        re.IGNORECASE,
-    )
-    lines = [
-        line.strip()
-        for line in stderr.split("\n")
-        if diagnostic_prefix.match(line.strip()) and _PROVIDER_DIAGNOSTIC_RE.match(line.strip())
-    ]
-    return "\n".join(lines)
+    """Select CLI terminal diagnostics, never JSON tool envelopes or log prose."""
+    diagnostics: list[str] = []
+    offset = 0
+    for line in stderr.splitlines(keepends=True):
+        diagnostic = line.strip()
+        if _STDERR_DIAGNOSTIC_PREFIX.match(diagnostic):
+            # Gemini's API Error wrapper may pretty-print its JSON payload.
+            # Decode exactly that payload; adjacent tool/log text is excluded.
+            if diagnostic.startswith(("[API Error:", "✕ [API Error:")):
+                start = offset + line.index("[API Error:") + len("[API Error:")
+                payload = stderr[start:].lstrip()
+                try:
+                    _, end = json.JSONDecoder().raw_decode(payload)
+                except (ValueError, RecursionError):
+                    pass
+                else:
+                    diagnostic = "[API Error: " + payload[:end] + "]"
+            diagnostics.append(diagnostic)
+        offset += len(line)
+    return "\n".join(diagnostics)
 
 
 def opencode_provider_error(stdout: str) -> tuple[str, str | None]:

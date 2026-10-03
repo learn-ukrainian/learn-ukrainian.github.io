@@ -201,7 +201,7 @@ class KimiAdapter:
         failure_code = None
         if call_failed:
             failure_code = (
-                "provider_auth"
+                "github_auth_required"
                 if gh_auth_failure
                 else provider_failure_code(provider_error)
                 if provider_error

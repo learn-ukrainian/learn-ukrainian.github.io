@@ -89,6 +89,8 @@ _STRUCTURED_PROVIDER_TRIGGERS: dict[str, str | None] = {
     "provider_policy_refusal": None,
     "provider_overloaded": "overloaded",
     "provider_auth": "auth",
+    "github_auth_required": "auth",
+    "transport_error": "transport",
     "rate_limited": "rate_limited",
 }
 _REQUEST_FORMAT_RE = re.compile(
