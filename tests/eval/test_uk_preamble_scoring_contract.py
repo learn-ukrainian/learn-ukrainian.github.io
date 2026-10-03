@@ -208,6 +208,60 @@ def test_probe_wrong_correction_confined_to_seed_is_a_miss_not_a_false_alarm():
     assert counts(item, "x worse y") == (0, 0, 0, 0, 1)
 
 
+PAIR_TEXT = "p badone badtwo q"
+PAIR_ERRORS = [("badone", ["goodone"]), ("badtwo", ["goodtwo"])]
+
+
+def test_probe_wrong_correction_confined_to_cluster_is_a_miss_not_a_false_alarm():
+    """The conformance review's reproduction. The alignment substitutes both seeds and inserts ``extra`` between them.
+
+    Everything changed lies inside the cluster, so (Opus amendment 3) it is a miss
+    without a false alarm, exactly as if ``badone badtwo`` were one seed.
+    """
+    item = make_item(PAIR_TEXT, PAIR_ERRORS)
+    assert counts(item, "p worseone extra worsetwo q") == (0, 0, 0, 0, 2)
+
+
+def test_insertion_between_correctly_fixed_adjacent_seeds_makes_the_cluster_a_miss():
+    """Both seeds fixed, plus an insertion between them: 0 hits, 0 false alarms, 2 wrong.
+
+    The window ``goodone extra goodtwo`` is not the original window with each seed
+    given an accepted form or left as it was, so the exact cluster match fails.
+    The insertion lies on the boundary between the seeds, which belongs to the
+    cluster: neither seed's match needs it as an edge insertion, so it is part of
+    the cluster's change, and a cluster whose change is not an accepted
+    assignment is a miss. Represented as one seed ``badone badtwo`` with the
+    accepted form ``goodone goodtwo``, the same text is one wrong correction; the
+    cluster gives the same verdict for each of its two seeds. Crediting both
+    seeds instead would let any text be inserted between adjacent seeds for free.
+    """
+    item = make_item(PAIR_TEXT, PAIR_ERRORS)
+    assert counts(item, "p goodone extra goodtwo q") == (0, 0, 0, 0, 2)
+
+
+def test_insertion_between_untouched_adjacent_seeds_is_a_miss():
+    """Only the insertion between the seeds changes: still a change confined to the cluster, so 2 wrong, 0 false alarms."""
+    item = make_item(PAIR_TEXT, PAIR_ERRORS)
+    assert counts(item, "p badone extra badtwo q") == (0, 0, 0, 0, 2)
+
+
+@pytest.mark.parametrize("corrected", ["p very goodone goodtwo q", "p goodone goodtwo very q"], ids=["left", "right"])
+def test_insertion_at_a_cluster_outer_edge_keeps_the_edge_rule(corrected):
+    """Unchanged behaviour: neither seed's match needs the outer-edge insertion, so it is collateral (C9a)."""
+    item = make_item(PAIR_TEXT, PAIR_ERRORS)
+    assert counts(item, corrected) == (2, 0, 0, 1, 0)
+
+
+def test_insertion_between_adjacent_seeds_still_serves_as_an_edge_insertion():
+    """Unchanged behaviour: after the cluster match fails (yyy is wrong), aax's accepted form uses the inner insertion.
+
+    The alignment is aax -> aaa, insert bbb between the seeds, yyy -> zzz; aax's
+    slice plus its right edge is ``aaa bbb``, a hit, and the insertion is used.
+    """
+    item = make_item("p aax yyy q", [("aax", ["aaa bbb"]), ("yyy", ["ccc"])])
+    assert counts(item, "p aaa bbb zzz q") == (1, 0, 0, 0, 1)
+
+
 def test_probe_joining_two_words_is_a_real_change():
     """Writing words together or apart is its own normative domain: не має -> немає counts both tokens."""
     item = make_item("Він не має часу.")
@@ -295,6 +349,7 @@ INVARIANCE = [
     ("Я знаю що він прийде.", [(6, [","])], [], [(6, 6, ","), (10, 14, "")], (1, 0, 1, 0, 0)),
     ("X Y", [("X", ["A"]), ("Y", ["C D"])], [], [(0, 1, "A"), (2, 3, "C D")], (2, 0, 0, 0, 0)),
     ("x bad y", [("bad", ["good"])], [], [(2, 2, "very "), (2, 5, "good")], (1, 0, 0, 1, 0)),
+    (PAIR_TEXT, PAIR_ERRORS, [], [(2, 8, "worseone"), (9, 9, "extra "), (9, 15, "worsetwo")], (0, 0, 0, 0, 2)),
 ]
 
 

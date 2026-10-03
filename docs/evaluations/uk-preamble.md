@@ -129,13 +129,19 @@ Frozen by the designated decision of 2026-10-03 on #9623 (an alternative by
   Otherwise a seed is a hit when its slice (target tokens aligned to it plus
   insertions strictly inside it; for an empty seed, the insertions at its point)
   equals an accepted form, trying no edge insertion, then the left one, the
-  right one, then both. An edge insertion the match does not need is collateral.
-  A seed changed but not hit is a wrong correction: a miss, never a false alarm.
+  right one, then both. An edge insertion the match does not need is collateral,
+  except between two adjacent seeds: that insertion belongs to their cluster, so
+  when no seed's match uses it the seeds on both sides of it are not hits, and
+  it is never a false alarm (a wrong correction confined to a cluster is a miss,
+  as it would be if the cluster were one seed).
+  A seed changed but not hit, or next to such an unused insertion, is a wrong
+  correction: a miss, never a false alarm.
   No alignment or assignment is chosen to maximise hits.
 - **False alarms (primary units).** Each protected span affected once (a token
   changed or an insertion strictly inside it); each changed correct token
   outside protected spans once; each other insertion site once. An insertion at
-  a protected span's edge is an ordinary insertion site. The rule's false-alarm
+  a protected span's edge is an ordinary insertion site; one between adjacent
+  seeds never counts. The rule's false-alarm
   rate is all false alarms per 100 protected spans.
 - **Logging diagnostics, outside adoption.** Changed units some claim covers;
   claims applied (the corrected text realises the claimed replacement over the

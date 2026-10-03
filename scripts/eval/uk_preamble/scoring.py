@@ -19,12 +19,15 @@ answer's ``corrected_text`` is the only evidence of what the model changed. Its
   plus insertions strictly inside it; for an empty seed, the insertions at its
   point) equals an accepted form, trying no edge insertion, then the left one,
   the right one, then both; an edge insertion is used only when that match
-  needs it. A seed changed but not hit is a wrong correction: a miss, never a
-  false alarm.
+  needs it. An insertion between two adjacent seeds belongs to their cluster:
+  a seed's match may use it as an edge insertion, and when none does, the seeds
+  on both sides of it are not hits. A seed changed but not hit, or next to such
+  an unused insertion, is a wrong correction: a miss, never a false alarm.
 - False alarms (the primary units): each protected span affected once (one of
   its tokens changed or an insertion strictly inside it); each changed correct
   token outside protected spans once; each other insertion site once (an
-  insertion at a protected span's edge is an ordinary site).
+  insertion at a protected span's edge is an ordinary site; one between
+  adjacent seeds never is).
 - Logging diagnostics, never part of adoption: changed units some claim covers,
   claims the corrected text applies, unapplied, no-op and unanchored claims,
   protected spans a claim accuses that stay unchanged, and the tokens inserted
@@ -279,6 +282,8 @@ def review_counts(item: ReviewItem, corrected_text: str) -> ReviewCounts:
     seed_tokens = {t for seed in geo.seeds for t in range(seed.i1, seed.i2)}
     # Insertion points that belong to a seed: strictly inside it, or an empty seed's own point.
     owned = {k for seed in geo.seeds for k in (range(seed.i1 + 1, seed.i2) if seed.i1 < seed.i2 else (seed.i1,))}
+    # Points that belong to a cluster: the boundaries between its adjacent seeds.
+    inner = {k for cluster in geo.clusters for k in range(cluster[0].i1 + 1, max(s.i2 for s in cluster))} - owned
     anchors = [t for t in range(n) if alignment.equal[t] and t not in seed_tokens]
 
     windows: dict[tuple[int, int], list[TokenSpan]] = {}
@@ -304,12 +309,24 @@ def review_counts(item: ReviewItem, corrected_text: str) -> ReviewCounts:
         explained_points.update(range(left + 1, right + 1))
 
     consumed: set[int] = set()
+    matched: dict[str, tuple[int, ...]] = {}
     for seed in sorted(unmatched, key=lambda s: (s.i1, s.i2)):
         edges = {k for k in (seed.i1, seed.i2) if k in alignment.runs and k not in owned | consumed}
         used = alignment.realise(seed.i1, seed.i2, geo.accepted[seed.span.id], edges)
         if used is not None:
-            hits.add(seed.span.id)
+            matched[seed.span.id] = used
             consumed.update(used)
+    # An insertion between adjacent seeds that no seed's match uses is part of the cluster's
+    # change: the seeds on both sides of it are wrong corrections, and it is never a false alarm.
+    stray = (inner & alignment.runs.keys()) - consumed
+    credited_edges: set[int] = set()
+    for seed in unmatched:
+        used = matched.get(seed.span.id)
+        if seed.i1 in stray or seed.i2 in stray:
+            wrong.add(seed.span.id)
+        elif used is not None:
+            hits.add(seed.span.id)
+            credited_edges.update(used)
         elif alignment.slice(seed.i1, seed.i2) != geo.keys[seed.i1 : seed.i2]:
             wrong.add(seed.span.id)
 
@@ -326,7 +343,7 @@ def review_counts(item: ReviewItem, corrected_text: str) -> ReviewCounts:
         else:
             tokens.add(t)
     for k, run in alignment.runs.items():
-        if k in owned or k in consumed or k in explained_points:
+        if k in owned or k in inner or k in credited_edges or k in explained_points:
             continue
         spans = {p.span.id for p in geo.protected if p.i1 < k < p.i2}
         if spans:
