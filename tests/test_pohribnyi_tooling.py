@@ -236,7 +236,6 @@ def test_notation_rejects_inconsistent_status(table):
         tooling.validate_notation(table)
 
 
-
 @pytest.mark.parametrize("point", ["U+02B9", "U+02D0", "U+1E034", "U+2010"])
 def test_frozen_table_cannot_omit_a_symbol_class(point, table):
     table["symbols"] = [s for s in table["symbols"] if s["codepoint"] != point]
@@ -339,7 +338,8 @@ def test_diff_lists_replacement_insert_and_missing_page(table):
     assert spans[0]["left"]["text"] == "[а́]" and spans[0]["right"]["text"] == "[а]"
     assert spans[1]["left"] is None and spans[1]["right"]["text"] == "[ґ]"
     assert spans[2]["page"] == 11 and spans[2]["right"] is None
-    assert report["pages"] == [
+    count_keys = {"page", "left_paragraphs", "right_paragraphs", "left_bracketed_spans", "right_bracketed_spans"}
+    assert [{k: v for k, v in page.items() if k in count_keys} for page in report["pages"]] == [
         {
             "page": 10,
             "left_paragraphs": 1,
@@ -355,7 +355,7 @@ def test_diff_lists_replacement_insert_and_missing_page(table):
             "right_bracketed_spans": 0,
         },
     ]
-    assert any(r["kind"] == "missing_paragraph" and r["page"] == 11 for r in report["disagreements"])
+    assert any(r["kind"] == "missing_page" and r["page"] == 11 for r in report["disagreements"])
     assert all(r["resolution"] is None and r["resolved_by"] is None for r in report["disagreements"])
     assert tooling.diff_transcriptions(left, left, table)["disagreement_count"] == 0
 
@@ -491,7 +491,7 @@ def test_tooling_cli_validate_diff_and_invalid_input(tmp_path, capsys):
     b.write_text(json.dumps([row("[а]")]), encoding="utf-8")
     assert tooling.main(["validate", "--input", str(a)]) == 0
     assert tooling.main(["diff", "--left", str(a), "--right", str(b), "--output", str(output)]) == 0
-    assert json.loads(output.read_text())["disagreement_count"] == 2
+    assert json.loads(output.read_text())["disagreement_count"] == 1
     a.write_text(json.dumps([row("[a]")]), encoding="utf-8")
     with pytest.raises(SystemExit) as exc:
         tooling.main(["validate", "--input", str(a)])
@@ -709,3 +709,357 @@ def test_legacy_cli_reports_missing_input(schema_copy, tmp_path, monkeypatch):
     db, _ = schema_copy
     monkeypatch.setattr(ingest, "REFERENCES_DIR", tmp_path)
     assert ingest.main(["--db", str(db), "--dry-run"]) == 2
+
+
+def page_packet(*texts, page=15, seat="fixture-seat"):
+    return {
+        "page": page,
+        "seat": seat,
+        "paragraphs": [
+            {"n": n, "text": text, "underlines": [], "line_breaks": [], "withheld": []}
+            for n, text in enumerate(texts, 1)
+        ],
+    }
+
+
+def test_page_alignment_does_not_cascade_from_different_splits(table):
+    a = page_packet("first [а]", "second [б]", "third [в]", seat="left")
+    b = page_packet("first [а] second [б] third [в]", seat="right")
+    before = copy.deepcopy((a, b))
+    report = tooling.diff_transcriptions(a, b, table)
+    assert [d["kind"] for d in report["disagreements"]] == ["paragraph_boundary"]
+    assert report["pages"][0]["left_text"] == "first [а]\nsecond [б]\nthird [в]"
+    assert report["pages"][0]["left_seat"] == "left"
+    assert report["pages"][0]["right_seat"] == "right"
+    assert (a, b) == before
+
+
+def test_page_alignment_reports_changed_boundary_even_with_equal_counts(table):
+    a = page_packet("one [а]", "two [б] three [в]")
+    b = page_packet("one [а] two [б]", "three [в]")
+    assert [d["kind"] for d in tooling.diff_transcriptions(a, b, table)["disagreements"]] == ["paragraph_boundary"]
+
+
+def test_page_alignment_reports_only_real_token_and_prose_edits_with_raw_offsets(table):
+    a = page_packet("prefix [к\u0301]", "next [б] suffix", seat="left")
+    b = page_packet("prefix [ќ] next [в] suffex", seat="right")
+    report = tooling.diff_transcriptions(a, b, table)
+    edits = report["disagreements"]
+    assert [d["kind"] for d in edits].count("bracketed_span") == 1
+    assert [d["kind"] for d in edits].count("paragraph_text") == 1
+    assert [d["kind"] for d in edits].count("paragraph_boundary") == 1
+    page = report["pages"][0]
+    for edit in edits:
+        if edit["kind"] == "paragraph_boundary":
+            continue
+        assert edit["page"] == 15
+        for label in ("left", "right"):
+            reading = edit[label]
+            assert page[f"{label}_text"][reading["start"] : reading["end"]] == reading["text"]
+    bracket = next(d for d in edits if d["kind"] == "bracketed_span")
+    assert bracket["left"]["text"] == "[б]" and bracket["right"]["text"] == "[в]"
+
+
+def test_page_alignment_is_stable_for_repeated_tokens_and_insertion(table):
+    a = page_packet(" ".join(["[а]"] * 220 + ["[б]", "[в]"]))
+    b = page_packet(" ".join(["[а]"] * 220 + ["[г]", "[б]", "[в]"]))
+    report = tooling.diff_transcriptions(a, b, table)
+    assert report == tooling.diff_transcriptions(a, b, table)
+    assert len(report["disagreements"]) == 1
+    edit = report["disagreements"][0]
+    assert edit["kind"] == "bracketed_span" and edit["left"] is None
+    assert edit["right"]["text"] == "[г]"
+
+
+def test_page_alignment_underlining_is_relative_to_matched_text(table):
+    a = page_packet("one [а]", "two [б]")
+    b = page_packet("one [а] two [б]")
+    a["paragraphs"][1]["underlines"] = [[0, 3]]
+    b["paragraphs"][0]["underlines"] = [[8, 11]]
+    assert [d["kind"] for d in tooling.diff_transcriptions(a, b, table)["disagreements"]] == ["paragraph_boundary"]
+    b["paragraphs"][0]["underlines"] = []
+    assert {d["kind"] for d in tooling.diff_transcriptions(a, b, table)["disagreements"]} == {
+        "paragraph_boundary",
+        "underlining",
+    }
+
+
+@pytest.mark.parametrize("marker", ["\ufffc", "\ufffd"])
+@pytest.mark.parametrize("bracketed", [True, False])
+@pytest.mark.parametrize("swap", [True, False])
+def test_withheld_marker_is_not_a_reading_disagreement(marker, bracketed, swap, table):
+    text = f"prefix [{marker}] suffix" if bracketed else f"prefix {marker} suffix"
+    a = page_packet(text)
+    offset = text.index(marker)
+    a["paragraphs"][0]["withheld"] = [{"start": offset, "end": offset + 1, "reason": "unreadable glyph"}]
+    b = page_packet("prefix [а] suffix" if bracketed else "prefix readable suffix")
+    report = tooling.diff_transcriptions(b, a, table) if swap else tooling.diff_transcriptions(a, b, table)
+    assert [d["kind"] for d in report["disagreements"]] == ["withheld"]
+    edit = report["disagreements"][0]
+    withheld = edit["right" if swap else "left"]
+    assert withheld["placeholder"] == "\ufffc"
+    assert withheld["withheld"][0]["reason"] == "unreadable glyph"
+
+
+def test_equal_withheld_markers_remain_unresolved(table):
+    a = page_packet("[\ufffc]")
+    b = page_packet("[\ufffd]")
+    for packet in (a, b):
+        packet["paragraphs"][0]["withheld"] = [{"start": 1, "end": 2, "reason": "uncertain"}]
+    report = tooling.diff_transcriptions(a, b, table)
+    assert [d["kind"] for d in report["disagreements"]] == ["withheld"]
+    assert report["disagreements"][0]["resolution"] is None
+
+
+def test_withheld_does_not_hide_neighboring_real_token_difference(table):
+    a = page_packet("[\ufffc] [а] [в]")
+    a["paragraphs"][0]["withheld"] = [{"start": 1, "end": 2, "reason": "uncertain"}]
+    b = page_packet("[б] [г] [в]")
+    report = tooling.diff_transcriptions(a, b, table)
+    assert [d["kind"] for d in report["disagreements"]] == ["withheld", "bracketed_span"]
+    assert report["disagreements"][1]["left"]["text"] == "[а]"
+
+
+def test_withheld_range_can_cover_unknown_text_and_preserve_raw_offsets(table):
+    a = row("prefix [unknown] next [а]")
+    a["withheld"] = [{"start": 7, "end": 16, "reason": "unreadable span"}]
+    b = row("prefix reading next [б]")
+    report = tooling.diff_transcriptions([a], [b], table)
+    assert {d["kind"] for d in report["disagreements"]} == {"withheld", "bracketed_span"}
+    edit = next(d for d in report["disagreements"] if d["kind"] == "bracketed_span")
+    assert edit["left"] == {"start": 22, "end": 25, "text": "[а]"}
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"withheld": []},
+        {"withheld": [{"start": 0, "end": 2, "reason": "uncertain"}]},
+        {"withheld": [{"start": 1, "end": 2, "reason": ""}]},
+        {"withheld": [{"start": 1, "end": 20, "reason": "uncertain"}]},
+        {"withheld": None},
+    ],
+)
+def test_withheld_metadata_validation(change, table):
+    a = row("[\ufffc]")
+    a.update(change)
+    with pytest.raises(ValueError):
+        tooling.validate_rows([a], table)
+
+
+@pytest.mark.parametrize("text", ["[\ufffc]", "outside \ufffd"])
+def test_unannotated_markers_are_rejected_in_rows_and_text(text, table):
+    with pytest.raises(ValueError, match="Withheld"):
+        tooling.validate_rows([row(text)], table)
+    with pytest.raises(ValueError, match="Withheld"):
+        tooling.validate_text(text, table)
+
+
+def test_layout_hyphen_is_metadata_not_text(table):
+    a = row("[аб]")
+    a["line_breaks"] = [{"offset": 2, "printed_hyphen": True}]
+    tooling.validate_rows([a], table)
+    assert tooling.diff_transcriptions([a], [row("[аб]")], table)["disagreement_count"] == 0
+    for offset in (2, 3):
+        a["text"] = "[а‐б]"
+        a["line_breaks"] = [{"offset": offset, "printed_hyphen": True}]
+        with pytest.raises(ValueError, match=r"U\+2010"):
+            tooling.validate_rows([a], table)
+        a["line_breaks"][0]["lexical"] = True
+        tooling.validate_rows([a], table)
+
+
+@pytest.mark.parametrize(
+    "breaks",
+    [
+        None,
+        [3],
+        [{"offset": True, "printed_hyphen": False}],
+        [{"offset": 99, "printed_hyphen": False}],
+        [{"offset": 1}],
+        [{"offset": 1, "printed_hyphen": "true"}],
+        [{"offset": 1, "printed_hyphen": False, "lexical": 1}],
+        [{"offset": 1, "printed_hyphen": False}, {"offset": 1, "printed_hyphen": True}],
+    ],
+)
+def test_line_break_validation(breaks, table):
+    a = row()
+    a["line_breaks"] = breaks
+    with pytest.raises(ValueError):
+        tooling.validate_rows([a], table)
+
+
+@pytest.mark.parametrize("text", ["[а", "[\u0301]", "[ʹ]", "[ꙵ]"])
+def test_printed_anomaly_flag_is_required_and_lossless(text, table):
+    with pytest.raises(ValueError):
+        tooling.validate_rows([row(text)], table)
+    a = row(text)
+    a["printed_anomaly"] = True
+    tooling.validate_rows([a], table)
+    report = tooling.diff_transcriptions([a], [a], table)
+    assert report["disagreement_count"] == 0
+    assert report["pages"][0]["left_text"] == text
+    assert report["pages"][0]["left_printed_anomalies"] == [{"start": 0, "end": len(text)}]
+
+
+@pytest.mark.parametrize("text", ["[a]", "[a", "[[а]]", "а]", "[]", "[", "[аʹʹ]", "[еꙵⷷ]"])
+def test_printed_anomaly_does_not_allow_unrelated_invalid_notation(text, table):
+    a = row(text)
+    a["printed_anomaly"] = True
+    with pytest.raises(ValueError):
+        tooling.validate_rows([a], table)
+
+
+@pytest.mark.parametrize("flag", ["true", 1, None])
+def test_printed_anomaly_flag_requires_boolean(flag, table):
+    a = row()
+    a["printed_anomaly"] = flag
+    with pytest.raises(ValueError, match="boolean"):
+        tooling.validate_rows([a], table)
+
+
+@pytest.mark.parametrize("field", ["letters", "precomposed_letters"])
+def test_frozen_letters_cannot_be_extended_or_removed(field, table):
+    table[field] = table[field][:-1]
+    with pytest.raises(ValueError, match="Frozen letter inventory"):
+        tooling.validate_notation(table)
+
+
+def test_cli_page_packets_and_folder_inputs(tmp_path, table, capsys):
+    left, right = tmp_path / "left", tmp_path / "right"
+    left.mkdir()
+    right.mkdir()
+    for directory, seat in ((left, "a"), (right, "b")):
+        for page in (16, 15):
+            (directory / f"{page}.json").write_text(json.dumps(page_packet("synthetic [а]", page=page, seat=seat)))
+    output = tmp_path / "diff.json"
+    assert tooling.main(["validate", "--input", str(left / "15.json")]) == 0
+    assert tooling.main(["diff", "--left-dir", str(left), "--right-dir", str(right), "--output", str(output)]) == 0
+    report = json.loads(output.read_text())
+    assert report["disagreement_count"] == 0
+    assert [p["page"] for p in report["pages"]] == [15, 16]
+    (left / "duplicate.json").write_text((left / "15.json").read_text())
+    with pytest.raises(SystemExit) as exc:
+        tooling.main(["diff", "--left-dir", str(left), "--right-dir", str(right), "--output", str(output)])
+    assert exc.value.code == 1
+    assert "Duplicate" in capsys.readouterr().err
+
+
+def test_folder_inputs_reject_empty_and_invalid_json(tmp_path, capsys):
+    left, right = tmp_path / "left", tmp_path / "right"
+    left.mkdir()
+    right.mkdir()
+    args = ["diff", "--left-dir", str(left), "--right-dir", str(right), "--output", str(tmp_path / "out.json")]
+    with pytest.raises(SystemExit) as exc:
+        tooling.main(args)
+    assert exc.value.code == 1
+    assert "no JSON" in capsys.readouterr().err
+    (left / "bad.json").write_text("not JSON")
+    with pytest.raises(SystemExit) as exc:
+        tooling.main(args)
+    assert exc.value.code == 1
+
+
+def test_cli_rejects_mixed_file_folder_mode(tmp_path):
+    with pytest.raises(SystemExit) as exc:
+        tooling.main(["diff", "--left", "a.json", "--right-dir", "b", "--output", str(tmp_path / "out.json")])
+    assert exc.value.code == 2
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        None,
+        [],
+        1,
+        [1],
+        {"page": 15, "seat": "a", "paragraphs": []},
+        {"page": 15, "seat": "", "paragraphs": [{}]},
+        {"page": 15, "seat": "a", "paragraphs": [1]},
+        {"page": 15, "seat": "a", "paragraphs": [{"underlines": [1]}]},
+    ],
+)
+def test_invalid_input_adapters(data, table):
+    with pytest.raises(ValueError):
+        tooling.validate_rows(data, table)
+
+
+def test_page_packet_array_and_legacy_rows_are_equivalent(table):
+    data = [page_packet("[а]", page=15), page_packet("[б]", page=16)]
+    rows = [row("[а]", page=15), row("[б]", page=16)]
+    assert tooling.diff_transcriptions(data, rows, table)["disagreement_count"] == 0
+
+
+def test_mixed_seats_on_one_page_are_rejected(table):
+    data = [page_packet("[а]", seat="a"), page_packet("[б]", seat="b")]
+    data[1]["paragraphs"][0]["n"] = 2
+    with pytest.raises(ValueError, match="Mixed seats"):
+        tooling.validate_rows(data, table)
+
+
+def test_layout_and_withheld_boundaries_cannot_split_combining_sequences(table):
+    for metadata in (
+        {"line_breaks": [{"offset": 2, "printed_hyphen": False}]},
+        {"withheld": [{"start": 1, "end": 2, "reason": "uncertain"}]},
+    ):
+        a = row("[а́]")
+        a.update(metadata)
+        with pytest.raises(ValueError, match="splits"):
+            tooling.validate_rows([a], table)
+
+
+@pytest.mark.parametrize("text", ["[а]", "[а] [б]"])
+def test_whole_withheld_range_covers_opposing_bracket_readings(text, table):
+    a = row("prefix \ufffc suffix")
+    a["withheld"] = [{"start": 7, "end": 8, "reason": "uncertain region"}]
+    b = row(f"prefix {text} suffix")
+    assert [d["kind"] for d in tooling.diff_transcriptions([a], [b], table)["disagreements"]] == ["withheld"]
+
+
+def test_printed_key_mark_can_have_its_own_underlining(table):
+    a = row("[\u0301]")
+    a.update(printed_anomaly=True, underlining=[{"start": 1, "end": 2}])
+    tooling.validate_rows([a], table)
+    b = {**a, "underlining": []}
+    assert [d["kind"] for d in tooling.diff_transcriptions([a], [b], table)["disagreements"]] == ["underlining"]
+
+
+def test_underlining_on_a_replaced_reading_is_reported(table):
+    a, b = row("[а]"), row("[б]")
+    a["underlining"] = [{"start": 1, "end": 2}]
+    report = tooling.diff_transcriptions([a], [b], table)
+    assert {d["kind"] for d in report["disagreements"]} == {"bracketed_span", "underlining"}
+
+
+def test_tooling_help_documents_folder_mode_and_frozen_notation(capsys):
+    for args in (["--help"], ["diff", "--help"]):
+        with pytest.raises(SystemExit) as exc:
+            tooling.main(args)
+        assert exc.value.code == 0
+        help_text = capsys.readouterr().out
+        assert "--left-dir" in help_text and "--right-dir" in help_text
+        if args == ["--help"]:
+            assert "bundled frozen" in help_text
+
+
+def test_fourteen_page_five_vs_six_paragraph_regression(table):
+    left, right = [], []
+    for page in range(15, 29):
+        texts = [f"synthetic item {n} [а] [б]" for n in range(6)]
+        left.append(page_packet(texts[0] + " " + texts[1], *texts[2:], page=page, seat="left"))
+        right.append(page_packet(*texts, page=page, seat="right"))
+    report = tooling.diff_transcriptions(left, right, table)
+    assert report["disagreement_count"] == 14
+    assert [d["page"] for d in report["disagreements"]] == list(range(15, 29))
+    assert all(d["kind"] == "paragraph_boundary" for d in report["disagreements"])
+
+
+@pytest.mark.parametrize("reading", ["readable", "[а]"])
+def test_withheld_does_not_hide_neighboring_real_prose_difference(reading, table):
+    a = row("pre \ufffc foo end")
+    a["withheld"] = [{"start": 4, "end": 5, "reason": "uncertain"}]
+    b = row(f"pre {reading} bar end")
+    report = tooling.diff_transcriptions([a], [b], table)
+    assert [d["kind"] for d in report["disagreements"]] == ["withheld", "paragraph_text"]
+    assert report["disagreements"][1]["left"]["text"] == "foo"
+    assert report["disagreements"][1]["right"]["text"] == "bar"

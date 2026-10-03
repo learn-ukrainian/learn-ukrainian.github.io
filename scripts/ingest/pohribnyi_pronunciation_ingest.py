@@ -81,6 +81,7 @@ from scripts.ingest._section_coverage import (
 from scripts.ingest.pohribnyi_tooling import (
     NOTATION_PATH,
     load_notation,
+    transcription_rows,
     validate_notation,
     validate_rows,
 )
@@ -260,7 +261,7 @@ def validate_adjudicated_packet(
         raise ValueError("Cannot ingest under a provisional notation table")
     if not isinstance(packet, dict):
         raise ValueError("Expected adjudicated packet object")
-    rows = packet.get("rows")
+    rows = transcription_rows(packet.get("rows"))
     validate_rows(rows, table, adjudicated=True)
     counts = packet.get("paragraph_counts")
     pages = {r["page"] for r in rows}
@@ -326,6 +327,9 @@ def ingest_adjudicated(
             ("page_number", "INTEGER"),
             ("paragraph_number", "INTEGER"),
             ("underlining_json", "TEXT"),
+            ("line_breaks_json", "TEXT"),
+            ("withheld_json", "TEXT"),
+            ("printed_anomaly", "INTEGER"),
             ("notation_sha256", "TEXT"),
             ("adjudicated_by", "TEXT"),
         ):
@@ -335,17 +339,24 @@ def ingest_adjudicated(
             page, paragraph = row["page"], row["paragraph"]
             chunk_id = f"{SOURCE_FILE}_p{page:02d}_para{paragraph:03d}_adjudicated"
             underlining = json.dumps(row["underlining"], sort_keys=True)
+            line_breaks = json.dumps(row.get("line_breaks", []), sort_keys=True)
+            withheld = json.dumps(row.get("withheld", []), sort_keys=True)
+            printed_anomaly = int(row.get("printed_anomaly", False))
             expected = (
                 row["text"],
                 page,
                 paragraph,
                 underlining,
+                line_breaks,
+                withheld,
+                printed_anomaly,
                 notation_digest,
                 row["adjudicated_by"],
                 "adjudicated",
             )
             existing = conn.execute(
-                "SELECT text, page_number, paragraph_number, underlining_json, "
+                "SELECT text, page_number, paragraph_number, underlining_json, COALESCE(line_breaks_json, '[]'), "
+                "COALESCE(withheld_json, '[]'), COALESCE(printed_anomaly, 0), "
                 "notation_sha256, adjudicated_by, transcription_status "
                 "FROM textbooks WHERE chunk_id=? AND source_file=?",
                 (chunk_id, SOURCE_FILE),
@@ -358,8 +369,9 @@ def ingest_adjudicated(
             title = f"Pohribnyi 1992 adjudicated, p. {page}, para. {paragraph}"
             conn.execute(
                 "INSERT INTO textbooks (chunk_id,title,text,source_file,grade,author,author_uk,"
-                "char_count,page_number,paragraph_number,underlining_json,notation_sha256,"
-                "adjudicated_by,transcription_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "char_count,page_number,paragraph_number,underlining_json,line_breaks_json,withheld_json,"
+                "printed_anomaly,notation_sha256,"
+                "adjudicated_by,transcription_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (
                     chunk_id,
                     title,
@@ -372,6 +384,9 @@ def ingest_adjudicated(
                     page,
                     paragraph,
                     underlining,
+                    line_breaks,
+                    withheld,
+                    printed_anomaly,
                     notation_digest,
                     row["adjudicated_by"],
                     "adjudicated",
@@ -398,16 +413,12 @@ def ingest_adjudicated(
         for page in pages:
             ocr_id = f"{SOURCE_FILE}_p{page:02d}"
             current_ids = [
-                f"{SOURCE_FILE}_p{page:02d}_para{r['paragraph']:03d}_adjudicated"
-                for r in rows if r["page"] == page
+                f"{SOURCE_FILE}_p{page:02d}_para{r['paragraph']:03d}_adjudicated" for r in rows if r["page"] == page
             ]
             placeholders = ",".join("?" * len(current_ids))
             # Retain only this complete packet's rows as active, including on a
             # shorter replacement. No OCR or previous paragraph text is deleted.
-            prior_where = (
-                f"source_file=? AND (chunk_id=? OR page_number=?) "
-                f"AND chunk_id NOT IN ({placeholders})"
-            )
+            prior_where = f"source_file=? AND (chunk_id=? OR page_number=?) AND chunk_id NOT IN ({placeholders})"
             params = (SOURCE_FILE, ocr_id, page, *current_ids)
             conn.execute(
                 "UPDATE textbook_sections SET transcription_status='superseded' WHERE section_id IN "
@@ -565,15 +576,17 @@ def main(argv: list[str] | None = None) -> int:
         "--notation",
         type=Path,
         default=NOTATION_PATH,
-        help="Notation table JSON (default: bundled provisional table; ingest requires a frozen table).",
+        help="Notation table JSON (default: bundled frozen table; ingest requires a frozen table).",
     )
     parser.add_argument(
-        "--apply", action="store_true",
+        "--apply",
+        action="store_true",
         help="Authorize database writes (default: refused without --apply or --dry-run).",
     )
     parser.add_argument(
-        "--census", type=Path,
-        help="Independent page-image census JSON: string page keys to paragraph counts, e.g. {\"10\": 2}; required for adjudicated mode.",
+        "--census",
+        type=Path,
+        help='Independent page-image census JSON: string page keys to paragraph counts, e.g. {"10": 2}; required for adjudicated mode.',
     )
     args = parser.parse_args(argv)
     if args.apply == args.dry_run:

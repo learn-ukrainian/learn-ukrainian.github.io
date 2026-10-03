@@ -68,20 +68,84 @@
   normalizes text after offsets are assigned. Uncertain source glyphs listed in
   the reconciliation remain withheld; the inventory does not adjudicate tokens.
 
-  Independent transcription files are JSON arrays of paragraph objects with
-  `page` (1-based PDF page, 1–28), `paragraph` (1-based within page), `text`, and
-  `underlining` (an explicit list, empty when absent). Each underlining interval
-  has `start` and `end`, zero-based Unicode-codepoint offsets into the paragraph,
-  with the end excluded. Offset ranges must be ordered and non-overlapping.
-  The diff lists changed prose, underlining, missing paragraphs and every changed,
-  inserted or removed bracketed span with page/paragraph and span offsets.
-  Repeated spans are aligned deterministically; alignment is not adjudication.
-  Every disagreement starts with null `resolution` and `resolved_by` fields.
-  Keep inputs and diff reports in ignored private storage: they contain source text.
+  Independent inputs may be a per-page packet, an array of page packets, or
+  the existing array of paragraph rows. A packet has this shape (synthetic):
+
+  ```json
+  {"page":15,"seat":"seat-a","paragraphs":[
+    {"n":1,"text":"synthetic [а]","underlines":[[0,9]],
+     "line_breaks":[{"offset":9,"printed_hyphen":false}],"withheld":[]}
+  ]}
+  ```
+
+  Legacy rows have `page` (1-based PDF page, 1–28), `paragraph` (1-based within
+  page), `text`, and explicit `underlining` intervals `{"start":0,"end":9}`.
+  Packet `underlines` pairs adapt to those intervals. All offsets are zero-based
+  Unicode codepoints with the end excluded, ordered and non-overlapping. Legacy
+  rows may also carry `seat`, `line_breaks`, `withheld` and `printed_anomaly`;
+  missing layout/withholding fields mean empty lists. Duplicate locators or
+  mixed seats on one page fail validation. Inputs remain unchanged.
+
+  `line_breaks` entries record an offset *between* characters and a boolean
+  `printed_hyphen`. Remove a printed line-end hyphen from `text`, recording it
+  only here. U+2010 immediately before or after that offset is rejected unless
+  the entry explicitly has `lexical: true`, identifying a genuine compound
+  hyphen. Breaks and metadata ranges cannot split a combining sequence.
+
+  `withheld` entries have `start`, `end` and a nonempty `reason`. The canonical
+  comparison placeholder is U+FFFC. U+FFFD is accepted as an input alias; either
+  marker must have an entry covering exactly that one codepoint. Unannotated
+  markers fail validation. A range can also withhold uncertain raw text; its
+  comparison view collapses to the same placeholder. Unknown glyphs inside a
+  declared withheld range cannot establish a reading. Every aligned uncertainty,
+  including identical placeholders in both seats, is reported as `withheld`
+  with original offsets, reasons and the canonical `placeholder`, never silently
+  resolved or counted as a reading disagreement.
+
+  An explicit boolean `printed_anomaly: true` on a paragraph permits a final
+  unclosed bracket or a bracket containing notation marks without a base letter
+  (a printed key-table example). The validator still enforces the frozen
+  allowlist, NFC, mark order and all other structure. The missing bracket/base
+  is never inserted into the authoritative text. Nested, empty or unmatched
+  closing brackets, Latin glyphs and duplicate marks on a base remain errors.
+  These exceptions are represented as original text and flagged metadata;
+  the strict structured parser continues to require complete base-led clusters.
+
+  The schema-version 2 diff aligns bracket-token sequences and prose separately
+  **per page**, using deterministic
+  [SequenceMatcher](https://docs.python.org/3/library/difflib.html#difflib.SequenceMatcher)
+  with `autojunk=False` so repeated tokens remain eligible anchors. Comparison
+  copies normalize notation and collapse prose whitespace; bracket edits are
+  reported once as `bracketed_span`, not repeated as whole-paragraph changes.
+  Prose edits retain the `paragraph_text` kind. A page's split differences yield
+  one `paragraph_boundary` entry; missing pages yield `missing_page`.
+  Underlining is compared on aligned characters, so changed offsets from
+  paragraph splits or NFC composition do not imply changed underlining.
+
+  Page summaries contain each seat's original `left_text`/`right_text`, formed
+  by joining paragraphs in paragraph-number order with one LF, plus seat and
+  layout/anomaly metadata. Reading entries' `start`/`end` offsets index those
+  original strings, even when normalization changes length. Boundary entries
+  list original paragraph-end offsets before the joining LF. Inserted/deleted
+  readings use null on the absent side. Alignment is not adjudication; every
+  entry starts with null `resolution` and `resolved_by`.
+
+  Folder mode reads all direct `*.json` children in sorted order, supports both
+  formats, and validates their combined locators:
+
+  ```bash
+  .venv/bin/python -m scripts.ingest.pohribnyi_tooling diff \
+    --left-dir .cache/seat-a --right-dir .cache/seat-b --output .cache/diff.json
+  ```
+
+  Use paired `--left`/`--right` files or paired folder flags; empty folders,
+  malformed JSON and duplicate page/paragraph locators are errors. Keep inputs
+  and diff reports in ignored private storage: they contain source text. Frozen
+  tables pin both the base-letter and precomposed-letter inventories.
 
 - `pohribnyi_pronunciation_ingest.py --adjudicated` appends new paragraph chunks
   to an **existing local** SQLite database. The packet is an object with `rows`
-  (the paragraph array) and `paragraph_counts` (string page keys mapped to the
+  (a paragraph-row array or page-packet input) and `paragraph_counts` (string page keys mapped to the
   complete declared paragraph count for each supplied page). Every row must also
   have `status: "adjudicated"` and a nonempty `adjudicated_by` identity. Ingest
   rejects provisional notation overrides, incomplete declared pages, invalid
@@ -103,7 +167,10 @@
   the existing target database read-only and requires a retained OCR row for
   each adjudicated page. Tests use
   temporary schema copies, never the live corpus. The new chunks retain source,
-  page/paragraph locators, underlining, adjudicator and notation SHA-256. Each
+  page/paragraph locators, underlining, line breaks, withheld reasons, printed
+  anomaly flags, adjudicator and notation SHA-256. Layout/exception metadata
+  participates in idempotency: conflicting metadata is refused, and legacy
+  rows without these fields use empty lists and a false anomaly flag. Each
   links to a section with page bounds and paragraph locator. The matching OCR
   page and section, and all prior rows outside the current complete packet on
   that page, remain intact with `transcription_status: "superseded"`. This also
