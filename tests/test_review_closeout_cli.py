@@ -240,17 +240,17 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
 def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monkeypatch, injected_grok):
     from scripts.review import reviewer_resolver
 
-    # The high ladder holds only Sol and Opus (#9538), so the attested Cursor
-    # Grok seat is traced only at medium; the injected variant still pins high.
+    # The adapter path raises either requested risk to critical, so inject
+    # Grok into the effective ladder that the resolver actually walks.
     risk = "high" if injected_grok else "medium"
     if injected_grok:
         # Subject exclusion must still refuse a caller-supplied Grok ladder;
         # automatic ladders list only the attested Cursor Grok seat (#9488).
         monkeypatch.setitem(
             reviewer_resolver.REVIEW_LADDERS,
-            "high",
+            "critical",
             (
-                *reviewer_resolver.REVIEW_LADDERS["high"],
+                *reviewer_resolver.REVIEW_LADDERS["critical"],
                 (
                     reviewer_resolver.GROK_4_7,
                     reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,
@@ -273,6 +273,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
         str(_write_claude_unhealthy_snapshot(tmp_path)),
     )
     payload = json.loads(proc.stdout)
+    assert payload["resolved_risk"] == "critical"
     grok_entries = [entry for entry in payload["trace"] if entry["family"] == "xai"]
     if injected_grok:
         assert {entry["name"] for entry in grok_entries} == {"grok-4.7", "grok-4.7-cursor-fallback"}
