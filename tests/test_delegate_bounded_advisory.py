@@ -513,7 +513,6 @@ def test_m15_read_only_gemini_flash_recon_without_envelope_is_refused(env, capsy
 @pytest.mark.parametrize(
     "extra",
     [
-        ["--research-task-family", "ukrainian-authoring", "--review-profile", "code"],
         ["--research-task-family", "code-review", "--review-profile", "ukrainian"],
         ["--research-task-family", "ukrainian-review", "--research-owned-path", "scripts/delegate.py"],
         ["--research-task-family", "ukrainian-authoring", "--owned-path", "tests/test_delegate.py"],
@@ -521,7 +520,6 @@ def test_m15_read_only_gemini_flash_recon_without_envelope_is_refused(env, capsy
         ["--research-task-family", "ukrainian-review", "--research-owned-path", "./scripts/delegate.py"],
     ],
     ids=[
-        "ukr-family-code-profile",
         "code-family-ukr-profile",
         "ukr-family-code-research-path",
         "ukr-family-code-owned",
@@ -535,6 +533,24 @@ def test_m16_gemini_flash_with_conflicting_classification_is_refused(env, capsys
     assert rc == 2, err
     assert bounded_advisory.ENVELOPE_REQUIRED in err and "ambiguous classification" in err
     assert env.spawned == [] and _worker_record(env.tasks) is None
+
+
+def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(env, capsys):
+    """#9538: --review-profile code types the dispatch as a code review, which Gemini never performs."""
+    rc = _dispatch(_argv("--research-task-family", "ukrainian-authoring", "--review-profile", "code", agent="agy", model=None))
+    _assert_refused(env, capsys, rc, "REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile code")
+
+
+def test_m16_ukrainian_family_with_code_review_profile_is_an_ambiguous_classification():
+    """The envelope rule still treats this classification as conflicting when reached directly."""
+    reason = bounded_advisory.bounded_requirement(
+        bounded_advisory.bounded_execution_policy().bounded_fallback_model_id,
+        mode="read-only",
+        task_family="ukrainian-authoring",
+        review_profile="code",
+        repo_root=REPO_ROOT,
+    )
+    assert reason and "ambiguous classification" in reason and "with --review-profile code" in reason
 
 
 def test_m16_ukrainian_review_profile_in_write_mode_without_family_is_refused(env, capsys):

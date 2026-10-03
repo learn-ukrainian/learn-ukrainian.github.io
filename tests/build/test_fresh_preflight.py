@@ -536,3 +536,82 @@ def test_failed_preflight_writes_gap_report_atomically(tmp_path, clean_word_stor
     assert len(content["gaps"]) == 1
     assert content["gaps"][0]["step"] == "s2"
     assert content["gaps"][0]["need"] == "example"
+
+
+def _publishable_quote(pack: dict, quote: str) -> dict:
+    """A quote need on T-002 whose source the registry permits, carrying quote bytes (#9487 C12)."""
+    record = pack["texts"][1]
+    record["source"].update(file="1-klas-bukvar-zaharijchuk-2025-1", page=39)
+    record["quote"] = quote
+    return {"steps": [{"id": "s1", "needs": ["quote"], "ref": "T-002"}]}
+
+
+@pytest.mark.parametrize(
+    "quote,detail",
+    [
+        ("слово  слова", "private_use: quote T-002 U+F0FC"),
+        ("слово [сло¾во]", "transcription_symbol: quote T-002 '[сло¾во]' holds"),
+        ("слово Pidruchnyk.com.ua", "watermark: quote T-002 'Pidruchnyk.com.ua'"),
+        ("слово еркало", "not_in_vesum: quote T-002 prints 'еркало'"),
+    ],
+)
+def test_preflight_rejects_damaged_quote_bytes(clean_word_store, clean_pack, quote, detail):
+    lesson = _publishable_quote(clean_pack, quote)
+    result = preflight_lesson(
+        lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=lambda words: set()
+    )
+    assert not result.passed
+    assert [gap.need for gap in result.gaps] == ["quote_bytes"]
+    assert result.gaps[0].detail.startswith(detail), result.gaps[0].detail
+
+
+def test_preflight_accepts_clean_quote_bytes_without_a_lookup_for_store_words(clean_word_store, clean_pack):
+    def lookup(words: list[str]) -> set[str]:
+        raise AssertionError(f"store words and syllables need no lookup: {words}")
+
+    lesson = _publishable_quote(clean_pack, "Сло-во, слова [ = • – ] [сло′во] сло-\nво ма")
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=lookup)
+    assert result.passed, result.gaps
+
+
+def test_preflight_unreadable_vesum_is_a_gap_not_a_pass(clean_word_store, clean_pack):
+    from scripts.curriculum.validate import quote_bytes
+
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    lesson = _publishable_quote(clean_pack, "слово мамою")
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=unavailable)
+    assert not result.passed
+    assert result.gaps[0].need == "quote_bytes"
+    assert result.gaps[0].detail.startswith("vesum_unavailable: no database")
+
+
+def _activity_hosted_quote(pack: dict, quote: str) -> dict:
+    """T-002 is printed only as an activity's quote host: no step needs a quote (#9487 C12, review round 8)."""
+    pack["texts"][1]["quote"] = quote
+    return {
+        "steps": [{"id": "s1", "practice": []}, {"id": "s2", "practice": ["a1"]}],
+        "activities": [{"id": "a1", "focus": "kind: comprehension; host: {kind: quote, ref: T-002}."}],
+    }
+
+
+def test_preflight_unreadable_vesum_for_an_activity_hosted_quote_is_a_gap(clean_word_store, clean_pack):
+    from scripts.curriculum.validate import quote_bytes
+
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    lesson = _activity_hosted_quote(clean_pack, "слово мамою")
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=unavailable)
+    assert not result.passed
+    assert [(gap.step, gap.need) for gap in result.gaps] == [("s2", "quote_bytes")]
+    assert result.gaps[0].detail.startswith("vesum_unavailable: no database")
+
+
+def test_preflight_checks_the_bytes_of_an_activity_hosted_quote(clean_word_store, clean_pack):
+    lesson = _activity_hosted_quote(clean_pack, "слово ")
+    result = preflight_lesson(
+        lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=lambda words: set()
+    )
+    assert [(gap.step, gap.detail) for gap in result.gaps] == [("s2", "private_use: quote T-002 U+F0FC")]

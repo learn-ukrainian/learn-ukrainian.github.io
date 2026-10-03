@@ -2,21 +2,49 @@
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
 from datetime import UTC, datetime
+from functools import wraps
 from pathlib import Path
 from typing import Any
 
 import yaml
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lock
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-regeneration-ledger-v1.schema.json"
+HARNESS_SCHEMA = SCHEMA.with_name("fresh-writer-harness-v1.schema.json")
+# Same bound as the fresh ledger: one initial attempt plus two retries.
+MAX_HARNESS_FAILURES = 3
+HARNESS_EXHAUSTED = "writer_harness_exhausted"
 INPUT_KEYS = ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")
+
+
+@contextmanager
+def lesson_mutex(path: Path) -> Iterator[None]:
+    """Serialize a whole transaction; the .lock file remains a digest, never a mutex."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with Path(f"{path}.mutex").open("a") as stream:
+        fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+
+
+def _serialized(function):
+    @wraps(function)
+    def transaction(path, *args, **kwargs):
+        with lesson_mutex(path):
+            return function(path, *args, **kwargs)
+
+    return transaction
 
 
 def inputs_digest(inputs: Mapping[str, str]) -> str:
@@ -53,7 +81,7 @@ def _validate(doc: dict[str, Any]) -> None:
     Draft202012Validator(schema).validate(doc)
 
 
-def load_ledger(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None) -> dict[str, Any]:
+def _load_ledger(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None) -> dict[str, Any]:
     if not path.exists():
         return {"slug": slug, "n": n, "attempts": [], "regenerations": 0, "terminal_layer": None}
     lock.require(path)
@@ -70,13 +98,20 @@ def load_ledger(path: Path, slug: str, n: int, inputs: dict[str, str] | None = N
     return doc
 
 
+@_serialized
+def load_ledger(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None) -> dict[str, Any]:
+    """Read a consistent data/digest pair under the lesson transaction mutex."""
+    return _load_ledger(path, slug, n, inputs)
+
+
+@_serialized
 def record_writer_call(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None) -> dict[str, Any]:
     """Count delivered retries by completed failures, so re-harvesting a done reply is idempotent.
 
     Dispatch/harness failures never call this. An interrupted check can harvest the same
     successful task again without consuming another regeneration.
     """
-    doc = load_ledger(path, slug, n, inputs)
+    doc = _load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc
     if doc.get("last_success") or not doc["attempts"]:
@@ -91,32 +126,85 @@ def record_writer_call(path: Path, slug: str, n: int, inputs: dict[str, str] | N
     return doc
 
 
+def _record_harness_failure(
+    path: Path, slug: str, n: int, reason: str, inputs: dict[str, str], *, at: str | None = None
+) -> dict[str, Any]:
+    """Bound harness failures separately, without spending the content budget."""
+    evidence_path = path.with_name(f"lesson-{n}.writer-harness.yaml")
+    evidence = _load_harness(path, slug, n)
+    if evidence["terminal_state"] is None:
+        evidence["failures"].append(
+            {
+                "reason": reason,
+                "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
+                "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+            }
+        )
+        if len(evidence["failures"]) >= MAX_HARNESS_FAILURES:
+            evidence["terminal_state"] = HARNESS_EXHAUSTED
+        _validate_harness(evidence)
+        lock.write(evidence_path, lock.yaml_bytes(evidence))
+    doc = _load_ledger(path, slug, n, inputs)
+    if evidence["terminal_state"] is not None:
+        doc["terminal_layer"] = "driver"
+    return doc
+
+
+@_serialized
 def record_harness_failure(
     path: Path, slug: str, n: int, reason: str, inputs: dict[str, str], *, at: str | None = None
 ) -> dict[str, Any]:
-    """Keep harness evidence separately, without changing the content regeneration ledger."""
-    evidence_path = path.with_name(f"lesson-{n}.writer-harness.yaml")
-    if evidence_path.exists():
-        lock.require(evidence_path)
-        evidence = yaml.safe_load(evidence_path.read_text(encoding="utf-8"))
-        if (evidence["slug"], evidence["n"]) != (slug, n):
-            raise ValueError("writer harness evidence belongs to another lesson")
-    else:
-        evidence = {"slug": slug, "n": n, "layer": "harness", "failures": []}
-    evidence["failures"].append(
-        {"reason": reason, "inputs": dict(inputs), "at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z")}
+    """Record one harness failure under the shared lesson accounting mutex."""
+    return _record_harness_failure(path, slug, n, reason, inputs, at=at)
+
+
+def _validate_harness(doc: dict[str, Any]) -> None:
+    schema = json.loads(
+        checked_existing_path(HARNESS_SCHEMA.parents[1], HARNESS_SCHEMA, "schemas").read_text(encoding="utf-8")
     )
-    lock.write(evidence_path, lock.yaml_bytes(evidence))
-    return load_ledger(path, slug, n, inputs)
+    try:
+        Draft202012Validator(schema, format_checker=Draft202012Validator.FORMAT_CHECKER).validate(doc)
+    except ValidationError as err:
+        raise ValueError(f"writer harness schema invalid: {err.message}") from err
+    # jsonschema's date-time checker is optional and absent in some installs.
+    # Validate timestamps with the standard library instead of silently skipping it.
+    for row in doc["failures"]:
+        moment = datetime.fromisoformat(row["at"])
+        if moment.tzinfo is None or "t" not in row["at"].lower():
+            raise ValueError("writer harness timestamp must include time and timezone")
+    state = doc.get("terminal_state")
+    if state is not None and len(doc["failures"]) < MAX_HARNESS_FAILURES:
+        raise ValueError("writer harness terminal state precedes its failure cap")
 
 
+def _load_harness(path: Path, slug: str, n: int) -> dict[str, Any]:
+    evidence_path = path.with_name(f"lesson-{n}.writer-harness.yaml")
+    if not evidence_path.exists():
+        return {"slug": slug, "n": n, "layer": "harness", "failures": [], "terminal_state": None}
+    lock.require(evidence_path)
+    evidence = yaml.safe_load(evidence_path.read_text(encoding="utf-8"))
+    _validate_harness(evidence)
+    if (evidence["slug"], evidence["n"]) != (slug, n):
+        raise ValueError("writer harness evidence belongs to another lesson")
+    # Valid pre-schema sidecars are retained; derive the stop state from their history.
+    evidence["terminal_state"] = HARNESS_EXHAUSTED if len(evidence["failures"]) >= MAX_HARNESS_FAILURES else None
+    return evidence
+
+
+@_serialized
+def load_harness(path: Path, slug: str, n: int) -> dict[str, Any]:
+    """Validate and read harness history, including compatible pre-schema records."""
+    return _load_harness(path, slug, n)
+
+
+@_serialized
 def record_failure(
     path: Path, slug: str, n: int, failure: dict[str, Any], inputs: dict[str, str], *, at: str | None = None
 ) -> dict[str, Any]:
-    """Record a failed attempt; repeated checks and the third failure are terminal."""
+    """Stop non-writer failures; account for harness failures outside the writer budget."""
     if failure["layer"] == "harness":
-        return record_harness_failure(path, slug, n, failure["reason"], inputs, at=at)
-    doc = load_ledger(path, slug, n, inputs)
+        return _record_harness_failure(path, slug, n, failure["reason"], inputs, at=at)
+    doc = _load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc
     if doc.get("last_success") or not doc["attempts"]:
@@ -127,8 +215,10 @@ def record_failure(
     if layer not in {"writer", "plan", "pack", "word_store", "engine", "driver"}:
         raise ValueError(f"unknown failure layer {layer!r}")
     previous_same = any(row["failed_check"] == failure["check"] for row in previous)
-    # Both delivered writer replies and direct runner failures use the completed-attempt count.
-    doc["regenerations"] = max(doc["regenerations"], min(2, len(previous)))
+    # Only writer failures can infer a content retry from prior failed attempts.
+    # A non-writer check never spends regeneration budget on its own.
+    if layer == "writer":
+        doc["regenerations"] = max(doc["regenerations"], min(2, len(previous)))
     previous.append(
         {
             "attempt": len(previous) + 1,
@@ -139,15 +229,10 @@ def record_failure(
             "inputs": {key: inputs.get(key, "0" * 64) for key in INPUT_KEYS},
         }
     )
-    if previous_same:
-        doc["terminal_layer"] = {
-            "writer": "plan",
-            "plan": "plan",
-            "pack": "pack",
-            "word_store": "pack",
-            "engine": "driver",
-            "driver": "driver",
-        }[layer]
+    if layer != "writer":
+        doc["terminal_layer"] = layer
+    elif previous_same:
+        doc["terminal_layer"] = "plan"
     elif doc["regenerations"] >= 2:
         doc["terminal_layer"] = "driver"
     _validate(doc)
@@ -155,11 +240,12 @@ def record_failure(
     return doc
 
 
+@_serialized
 def record_success(
     path: Path, slug: str, n: int, inputs: dict[str, str] | None = None, *, at: str | None = None
 ) -> dict[str, Any]:
     """Count a regeneration that succeeded without another failure row."""
-    doc = load_ledger(path, slug, n, inputs)
+    doc = _load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is None:
         if not doc.get("last_success"):
             doc["regenerations"] = min(2, max(doc["regenerations"], len(doc["attempts"])))

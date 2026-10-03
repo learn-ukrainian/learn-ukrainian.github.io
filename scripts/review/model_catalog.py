@@ -392,6 +392,16 @@ def _validate_review_scheduler(raw: Any, models: dict[str, Any]) -> None:
                         f"review_scheduler.endpoints.cursor.models cannot pin {m!r}: "
                         f"{family} models are not formal reviewers through Cursor"
                     )
+    risk_models = scheduler.get("risk_reviewer_models", {})
+    _require_mapping(risk_models, "review_scheduler.risk_reviewer_models")
+    for risk, allowed in risk_models.items():
+        label = f"review_scheduler.risk_reviewer_models.{risk}"
+        if risk not in VALID_RISKS:
+            raise ModelCatalogError(f"{label}: unknown risk; expected one of {sorted(VALID_RISKS)}")
+        if not isinstance(allowed, list) or not allowed:
+            raise ModelCatalogError(f"{label} must be a non-empty list of model ids")
+        for model_id in allowed:
+            _require_routable_model(models, model_id, label)
 
 
 def invocation_model(invocation: str) -> str | None:
@@ -783,6 +793,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(
                         f"review_ladders.{risk}: Sonnet is excluded from security review by core.md P2"
                     )
+                if refusal := risk_reviewer_refusal(model_id, risk, catalog):
+                    raise ModelCatalogError(f"review_ladders.{risk} candidate {candidate_name!r}: {refusal}")
                 if models[model_id]["lifecycle"] != "active":
                     raise ModelCatalogError(
                         f"review_ladders.{risk} candidate {candidate_name!r} must reference an active model"
@@ -961,6 +973,25 @@ def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> 
     replacement = models[model_id].get("replaced_by")
     advice = f"use {replacement}" if replacement else "use an active catalog model"
     return f"model {text!r} is retired in the model catalog ({model_id}); {advice}"
+
+
+def risk_reviewer_refusal(model: Any, risk: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """Refuse a formal reviewer outside ``review_scheduler.risk_reviewer_models`` for ``risk`` (#9538).
+
+    A risk with no listed models admits every model; this gate only narrows.
+    """
+    catalog = catalog or load_model_catalog()
+    risk_key = str(risk or "").strip().casefold()
+    allowed = ((catalog.get("review_scheduler") or {}).get("risk_reviewer_models") or {}).get(risk_key)
+    if not allowed:
+        return None
+    model_id = resolve_catalog_model_id(str(model or "").strip(), catalog)
+    if model_id in allowed:
+        return None
+    return (
+        f"a formal review at {risk_key} risk is performed only by {', '.join(allowed)} "
+        f"(operator decision 2026-10-02, #9538); got {model_id or model!r}"
+    )
 
 
 def require_execution_model(

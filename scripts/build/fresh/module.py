@@ -1,10 +1,20 @@
-"""Ordered fresh module build, prompt freshness, and bounded regeneration."""
+"""Ordered fresh module build, prompt freshness, and bounded regeneration.
+
+Only writer-layer check failures can trigger another writer attempt. Cross-run paid
+calls are bounded by stable input/seat/effort/attempt IDs in the durable task store:
+with identical inputs and a readable result, dispatch reuses a ``done`` attempt.
+A fresh per-run state directory therefore needs no persisted regeneration ledger
+to avoid paying again for those completed attempts. Harness recovery has its own
+bounded sidecar; unreadable results and terminal non-done tasks can require retries.
+See ``docs/runbooks/fresh-build-writer-harness.md`` for safe harness recovery.
+"""
 
 from __future__ import annotations
 
 import hashlib
 import json
 from collections.abc import Callable
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +35,8 @@ from scripts.build.fresh.prompt import (
     render_recap_prompt,
 )
 from scripts.build.fresh.regeneration import (
+    HARNESS_EXHAUSTED,
+    load_harness,
     load_ledger,
     record_failure,
     record_harness_failure,
@@ -48,6 +60,22 @@ def draft_is_current(ledger: dict[str, Any], draft_path: Path, current_hashes: d
         **current_hashes,
         "draft_sha256": hashlib.sha256(draft_path.read_bytes()).hexdigest(),
     }
+
+
+def draft_matches_writer(draft_path: Path, writer_seat: str, effort: str | None = None) -> bool:
+    """A completed draft cannot bypass seat binding before dispatch gets called."""
+    agent, _, model = writer_seat.partition(":")
+    meta_path = draft_path.with_name(draft_path.name.replace(".draft.yaml", ".writer.yaml"))
+    try:
+        meta = yaml.safe_load(meta_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, yaml.YAMLError):
+        return False
+    return (
+        isinstance(meta, dict)
+        and meta.get("writer") == agent
+        and meta.get("model") == model
+        and (effort is None or meta.get("effort") == effort)
+    )
 
 
 def _stop(n: int, reason: str, *, check: int = 0, layer: str = "driver") -> dict[str, Any]:
@@ -179,6 +207,9 @@ def build_module(
             current = writer_inputs(expected, card_sha, prompt_sha)
             ledger = load_ledger(ledger_path, slug, n, current)
             fresh = draft_is_current(ledger, draft_path, current)
+            if fresh and writer_seat:
+                effort = writer_dispatch.keywords.get("effort") if isinstance(writer_dispatch, partial) else None
+                fresh = draft_matches_writer(draft_path, writer_seat, effort)
             if ledger["terminal_layer"] is not None:
                 last = ledger["attempts"][-1] if ledger["attempts"] else {}
                 result = _stop(
@@ -192,6 +223,12 @@ def build_module(
                 results.append(result)
                 break
             while True:
+                harness = load_harness(ledger_path, slug, n)
+                if harness["terminal_state"] is not None:
+                    stopped = _stop(n, HARNESS_EXHAUSTED, check=1, layer="engine" if not fresh else "harness")
+                    stopped.update(regenerations=ledger["regenerations"], terminal_layer="driver")
+                    results.append(stopped)
+                    break
                 if not fresh:
                     if not writer_seat:
                         results.append(_stop(n, "writer_seat_required"))
@@ -242,14 +279,23 @@ def build_module(
                                 ledger_path, slug, n, {"check": 1, "layer": "writer", "reason": str(err)}, current
                             )
                         else:
-                            ledger = record_harness_failure(ledger_path, slug, n, str(err), current)
-                        stopped = _stop(n, str(err), check=1, layer="writer" if content_error else "engine")
+                            if not getattr(err, "harness_recorded", False) and getattr(err, "harness_chargeable", True):
+                                ledger = record_harness_failure(ledger_path, slug, n, str(err), current)
+                            if load_harness(ledger_path, slug, n)["terminal_state"] is not None:
+                                ledger["terminal_layer"] = "driver"
+                        reason = (
+                            HARNESS_EXHAUSTED
+                            if not content_error and ledger["terminal_layer"] == "driver"
+                            else str(err)
+                        )
+                        stopped = _stop(n, reason, check=1, layer="writer" if content_error else "engine")
                         stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
                         results.append(stopped)
                         break
                     # Only a delivered reply can spend the content-regeneration budget.
                     ledger = record_writer_call(ledger_path, slug, n, current)
                 draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
+                harness_failures_before = len(load_harness(ledger_path, slug, n)["failures"])
                 report = runner(
                     level,
                     slug,
@@ -288,13 +334,30 @@ def build_module(
                 bad = next((row for row in report.get("checks", []) if row["status"] == "failed"), None)
                 check = report.get("stopping_check") or (bad["check"] if bad else report.get("passed_through", 0))
                 reason = report.get("reason") or (bad["reason"] if bad else "build_failed")
-                if bad and bad["layer"] == "harness":
-                    stopped = _stop(n, reason, check=check, layer="harness")
-                    stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
+                layer = bad["layer"] if bad else (report.get("layer") or "engine")
+                if layer == "harness":
+                    # The real runner records its failure. Report-only runners need
+                    # accounting here, but the same failure must never count twice.
+                    harness = load_harness(ledger_path, slug, n)
+                    if len(harness["failures"]) == harness_failures_before:
+                        record_harness_failure(ledger_path, slug, n, reason, current)
+                        harness = load_harness(ledger_path, slug, n)
+                    exhausted = harness["terminal_state"] is not None
+                    stopped = _stop(n, HARNESS_EXHAUSTED if exhausted else reason, check=check, layer="harness")
+                    stopped.update(
+                        regenerations=ledger["regenerations"],
+                        terminal_layer="driver" if exhausted else ledger["terminal_layer"],
+                    )
                     results.append(stopped)
                     break
+                if layer != "writer" and ledger["terminal_layer"] is None:
+                    # The real runner records failures itself. Injected runners and
+                    # check-12 reports without a failed gate row must stop as well.
+                    ledger = record_failure(
+                        ledger_path, slug, n, {"check": check, "layer": layer, "reason": reason}, current
+                    )
                 if ledger["terminal_layer"] is not None:
-                    stopped = _stop(n, reason, check=check, layer=bad["layer"] if bad else "engine")
+                    stopped = _stop(n, reason, check=check, layer=layer)
                     stopped["regenerations"] = ledger["regenerations"]
                     stopped["terminal_layer"] = ledger["terminal_layer"]
                     results.append(stopped)
@@ -312,7 +375,9 @@ def build_module(
     # Every exit (including preflight/seat failures on resume) reports the persisted call count.
     for result in results:
         ledger = load_ledger(state_dir / f"lesson-{result['n']}.regeneration.yaml", slug, result["n"])
-        result.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
+        result.update(regenerations=ledger["regenerations"])
+        if result["reason"] != HARNESS_EXHAUSTED:
+            result["terminal_layer"] = ledger["terminal_layer"]
     report = {
         "level": level,
         "slug": slug,

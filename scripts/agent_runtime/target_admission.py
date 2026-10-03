@@ -338,6 +338,7 @@ def _resolve_review_target(
     retained. This does not attest cross-family independence for those legacy calls.
     An existing attempt's seat AND model are immutable.
     """
+    from scripts.review.model_catalog import risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
         REVIEW_CANDIDATES,
         REVIEW_LADDERS,
@@ -409,6 +410,9 @@ def _resolve_review_target(
             and evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
             for candidate in REVIEW_CANDIDATES.values()
         )
+    # #9538: name the high-risk reviewer rule when it is why the request fails.
+    risk_note = "" if eligible or profile == "ukrainian" else risk_reviewer_refusal(concrete, inputs.risk) or ""
+    risk_note = f" ({risk_note})" if risk_note else ""
     if attempt and not eligible:
         from .review_mcp import UNSUPPORTED_HARNESS_REASONS
 
@@ -418,7 +422,7 @@ def _resolve_review_target(
             "attempt identities cannot be substituted",
         )
         raise ReviewAdmissionRefused(
-            f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail} (#8517)"
+            f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail}{risk_note} (#8517)"
         )
     if eligible and (snapshot is None or not trusted):
         return seat, model
@@ -429,7 +433,7 @@ def _resolve_review_target(
             else "code profile substitution requires --review-author-model and --review-risk"
         )
         raise ReviewAdmissionRefused(
-            f"REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile {profile}; "
+            f"REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile {profile}{risk_note}; "
             f"{hint}"
         )
     # Dispatch prohibitions constrain the ladder, rather than masquerading as
@@ -470,7 +474,7 @@ def _resolve_review_target(
             return retained.route, candidate_dispatch_model(REVIEW_CANDIDATES[retained.name])
     if selected is None or selected.family in forbidden:
         raise ReviewAdmissionRefused(
-            f"REVIEW_ROUTE_REFUSED: no resolver-selected eligible substitute for --review-profile {profile}"
+            f"REVIEW_ROUTE_REFUSED: no resolver-selected eligible substitute for --review-profile {profile}{risk_note}"
         )
     return selected.route, candidate_dispatch_model(REVIEW_CANDIDATES[selected.name])
 

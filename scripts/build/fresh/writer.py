@@ -19,22 +19,32 @@ The writer call:
 from __future__ import annotations
 
 import datetime
+import hashlib
 import json
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
+from functools import wraps
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+from scripts.agent_runtime.registry import AGENTS
 from scripts.build.fresh.draft_schema import (
     DraftError,
     DraftValidationError,
     validate_draft,
 )
 from scripts.build.fresh.preflight import PreflightResult
-from scripts.build.fresh.regeneration import INPUT_KEYS, writer_task_id
+from scripts.build.fresh.regeneration import (
+    HARNESS_EXHAUSTED,
+    INPUT_KEYS,
+    lesson_mutex,
+    load_harness,
+    record_harness_failure,
+    writer_task_id,
+)
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.orchestration.task_record_store import locate_task_record
@@ -56,12 +66,18 @@ class WriterCallError(Exception):
 class WriterHarnessError(WriterCallError):
     """Dispatch, execution, or harvesting failed before a writer reply was available."""
 
+    def __init__(self, message: str, *, status: str | None = None) -> None:
+        super().__init__(message)
+        # Capacity failures remain failures, but cannot permanently wedge a lesson.
+        self.harness_chargeable = status not in ("rate_limited", "timeout")
 
-def _available_task_id(base_id: str) -> tuple[str, bool]:
+
+def _available_task_id(base_id: str, *, writer: str, model: str | None, effort: str | None) -> tuple[str, bool]:
     """Reuse done/live tasks; advance only past terminal failures, preserving their records.
 
-    Stable retry IDs also make a done retry reusable across builds. Never give a live or
-    unreadable record a new ID: that could dispatch the same paid work twice.
+    Preserve legacy IDs for the same verified seat/model. Other seats use a stable
+    namespace; only terminal failures or unreadable done results advance retries.
+    Unreadable task records and live tasks never advance.
     """
     terminal_failures = {
         "failed",
@@ -74,6 +90,8 @@ def _available_task_id(base_id: str) -> tuple[str, bool]:
         "no_deliverable",
     }
     retry = 0
+    original_base = base_id
+    model = model or AGENTS.get(writer, {}).get("default_model")
     while True:
         task_id = base_id if retry == 0 else f"{base_id}-retry-{retry}"
         record_path = locate_task_record(tasks_dir(), task_id)
@@ -89,6 +107,32 @@ def _available_task_id(base_id: str) -> tuple[str, bool]:
         if status in terminal_failures:
             retry += 1
         elif status in {"done", "spawning", "running"}:
+            recorded_model = record.get("resolved_model") or record.get("model")
+            if not record.get("agent") or not recorded_model or recorded_model == "unknown" or model is None:
+                raise WriterHarnessError(
+                    f"Writer task {task_id} has unverified writer identity; explicit model required"
+                )
+            if record["agent"] != writer or recorded_model != model:
+                if base_id != original_base:
+                    raise WriterHarnessError(f"Writer task {task_id} has conflicting seat identity")
+                identity = json.dumps([writer, model], separators=(",", ":")).encode("utf-8")
+                base_id = f"{original_base}-seat-{hashlib.sha256(identity).hexdigest()[:10]}"
+                retry = 0
+                continue
+            if effort is not None and (record.get("resolved_effort") or record.get("effort")) != effort:
+                raise WriterHarnessError(f"Writer task {task_id} has unverified or conflicting effort")
+            if status == "done":
+                result = record.get("result_file")
+                try:
+                    if not isinstance(result, str) or not result:
+                        raise OSError("missing result_file")
+                    if not Path(result).is_file():
+                        raise OSError("result is not a regular file")
+                    Path(result).read_text(encoding="utf-8")
+                except (OSError, UnicodeError):
+                    # Preserve the done record, but never reuse unharvestable output.
+                    retry += 1
+                    continue
             return task_id, True
         else:
             raise WriterHarnessError(f"Writer task {task_id} has unknown status: {status!r}")
@@ -98,6 +142,8 @@ def _run_harness(cmd: list[str], *, timeout: int) -> subprocess.CompletedProcess
     """Turn subprocess launch/timeout failures into an engine-layer error."""
     try:
         return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
+    except subprocess.TimeoutExpired as err:
+        raise WriterHarnessError(f"Writer harness execution failed: {err}", status="timeout") from err
     except (OSError, subprocess.SubprocessError, UnicodeError) as err:
         raise WriterHarnessError(f"Writer harness execution failed: {err}") from err
 
@@ -144,6 +190,52 @@ def parse_and_validate_reply(
     return draft
 
 
+def _track_harness_failures(function):
+    @wraps(function)
+    def tracked(**kwargs):
+        attempted = False
+
+        def dispatch_started():
+            nonlocal attempted
+            attempted = True
+
+        # Invalid input snapshots are caller errors, not paid harness attempts.
+        inputs = kwargs["inputs"]
+        if any(key not in inputs for key in INPUT_KEYS) or inputs["prompt_sha256"] != kwargs["prompt_sha256"]:
+            return function(**kwargs)
+        output_dir = Path(kwargs["output_dir"])
+        n, slug = kwargs["lesson_n"], kwargs["slug"]
+        ledger_path = output_dir / f"lesson-{n}.regeneration.yaml"
+        # Serialize paid calls as well as accounting: concurrent builds cannot pass
+        # the last remaining slot together. Other lessons keep independent mutexes.
+        with lesson_mutex(output_dir / f"lesson-{n}.writer-dispatch"):
+            evidence = load_harness(ledger_path, slug, n)
+            if evidence["terminal_state"] is not None:
+                error = WriterHarnessError(HARNESS_EXHAUSTED)
+                error.harness_recorded = True
+                raise error
+            try:
+                return function(**kwargs, _on_dispatch=dispatch_started)
+            except DraftValidationError:
+                raise
+            except (OSError, ValueError, KeyError, TypeError, WriterCallError) as err:
+                if isinstance(err, WriterCallError) and not isinstance(err, WriterHarnessError):
+                    raise
+                if not attempted or not getattr(err, "harness_chargeable", True):
+                    err.harness_chargeable = False
+                    raise
+                record_harness_failure(ledger_path, slug, n, str(err), dict(kwargs["inputs"]))
+                if load_harness(ledger_path, slug, n)["terminal_state"] is not None:
+                    error = WriterHarnessError(HARNESS_EXHAUSTED)
+                    error.harness_recorded = True
+                    raise error from err
+                err.harness_recorded = True
+                raise
+
+    return tracked
+
+
+@_track_harness_failures
 def dispatch_writer(
     *,
     writer: str,
@@ -164,6 +256,7 @@ def dispatch_writer(
     model: str | None = None,
     effort: str | None = None,
     inputs: Mapping[str, str],
+    _on_dispatch: Callable[[], None] | None = None,
 ) -> dict[str, Any]:
     """Execute the writer call, wait for completion, parse and validate the draft.
 
@@ -207,11 +300,16 @@ def dispatch_writer(
     if fake_seat is not None:
         result_file = root / f"batch_state/tasks/{task_id}.result"
         result_file.parent.mkdir(parents=True, exist_ok=True)
+        if _on_dispatch is not None:
+            _on_dispatch()
         if callable(fake_seat):
             try:
                 fake_seat(task_id, prompt_file, result_file)
             except (OSError, subprocess.SubprocessError) as err:
-                raise WriterHarnessError(f"Fake seat execution failed: {err}") from err
+                raise WriterHarnessError(
+                    f"Fake seat execution failed: {err}",
+                    status="timeout" if isinstance(err, subprocess.TimeoutExpired) else None,
+                ) from err
         else:
             seat_path = Path(fake_seat)
             cmd = [
@@ -239,9 +337,11 @@ def dispatch_writer(
             if isinstance(record, dict):
                 wait_state = record
                 if "status" in record and record["status"] != "done":
-                    raise WriterHarnessError(f"Fake seat completed with non-done status: {record['status']!r}")
+                    raise WriterHarnessError(
+                        f"Fake seat completed with non-done status: {record['status']!r}", status=record["status"]
+                    )
     else:
-        task_id, reuse = _available_task_id(task_id)
+        task_id, reuse = _available_task_id(task_id, writer=writer, model=model, effort=effort)
         # Real delegate dispatch (#8431 §1, Finding 7)
         dispatch_cmd = [
             sys.executable,
@@ -264,6 +364,8 @@ def dispatch_writer(
         if effort is not None:
             dispatch_cmd.extend(("--effort", effort))
         if not reuse:
+            if _on_dispatch is not None:
+                _on_dispatch()
             disp_proc = _run_harness(dispatch_cmd, timeout=60)
             if disp_proc.returncode != 0:
                 raise WriterHarnessError(
@@ -280,25 +382,31 @@ def dispatch_writer(
             str(timeout),
         ]
         wait_proc = _run_harness(wait_cmd, timeout=timeout + 30)
-        if wait_proc.returncode != 0:
-            raise WriterHarnessError(
-                f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr or wait_proc.stdout}"
-            )
-
         # Parse JSON printed by delegate.py wait <task-id> (MAJOR D)
         try:
             wait_state = json.loads(wait_proc.stdout)
         except Exception as err:
+            if wait_proc.returncode != 0:
+                raise WriterHarnessError(
+                    f"delegate.py wait failed with exit code {wait_proc.returncode}: "
+                    f"{wait_proc.stderr or wait_proc.stdout}"
+                ) from err
             raise WriterHarnessError(
                 f"delegate.py wait output was not valid JSON: {err}; stdout={wait_proc.stdout!r}"
             ) from err
+
+        if wait_proc.returncode != 0:
+            raise WriterHarnessError(
+                f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr or wait_proc.stdout}",
+                status=wait_state.get("status") if isinstance(wait_state, dict) else None,
+            )
 
         if not isinstance(wait_state, dict):
             raise WriterHarnessError(f"delegate.py wait output must be a JSON object, got {type(wait_state).__name__}")
 
         status = wait_state.get("status")
         if not isinstance(status, str) or status != "done":
-            raise WriterHarnessError(f"Task {task_id} completed with non-done status: {status!r}")
+            raise WriterHarnessError(f"Task {task_id} completed with non-done status: {status!r}", status=status)
 
         result_path_str = wait_state.get("result_file")
         if not isinstance(result_path_str, str) or not result_path_str:

@@ -12,7 +12,7 @@
         "manifest_sha256": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}]},
         "stopping_check": {"type": ["integer", "null"]}, "reason": {"type": ["string", "null"]},
         "regenerations": {"type": "integer", "minimum": 0},
-        "terminal_layer": {"enum": [null, "plan", "pack", "driver"]},
+        "terminal_layer": {"enum": [null, "plan", "pack", "word_store", "engine", "driver"]},
         "layer": {"enum": [null, "writer", "plan", "pack", "word_store", "engine", "driver", "harness"]}}}}
   }
 }
