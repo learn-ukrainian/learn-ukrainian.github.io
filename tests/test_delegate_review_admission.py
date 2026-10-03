@@ -910,13 +910,31 @@ def test_9577_an_unrelated_change_declaring_codex_is_refused(monkeypatch, review
     assert "codex are not supported by the changed files" in refusal
 
 
+_CODE_DATA_FILES = {
+    "tests/agent_runtime/test_codex_exec_stream.py": "MESSAGE = 'ліміт'  # Ukrainian sample\n",
+    "scripts/agent_runtime/tool_calls.py": "WORD = 'кіт'\n",
+}
+
+
+def test_9577_dispatch_admits_cyrillic_strings_in_python_code_as_code_data(monkeypatch, reviewed_pr):
+    """#9557's shape: Cyrillic sample strings in Python code and tests are code data for the exception."""
+    reviewed_pr({_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES})
+    (refusal, target), _ = _admit(_kimi_review(*_EXCEPTION_FLAGS), monkeypatch, _budget(codex="cool"))
+    assert refusal is None and (target.recipient, target.model) == ("cursor", "kimi-k3-high"), refusal
+
+
 @pytest.mark.parametrize(
     ("files", "reason"),
     [
         pytest.param(
-            {_CODEX_ADAPTER: "VALUE = 1\n", "scripts/ci/labels.py": "LABEL = 'Урок'\n"},
-            "reviewed change: owned file holds Ukrainian content (Cyrillic text in 'scripts/ci/labels.py'",
+            {_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES, "tests/ci/fixture.yaml": "label: Урок\n"},
+            "reviewed change: owned file holds Ukrainian content (Cyrillic text in 'tests/ci/fixture.yaml'",
             id="cyrillic-content",
+        ),
+        pytest.param(
+            {_CODEX_ADAPTER: "VALUE = 1\n", "scripts/ci/labels.py": "Урок = 1\n"},
+            "reviewed change: owned file holds Ukrainian content (Cyrillic text in 'scripts/ci/labels.py'",
+            id="cyrillic-identifier",
         ),
         pytest.param(
             {_CODEX_ADAPTER: "VALUE = 1\n", "curriculum/l2-uk-en/a1/plan.yaml": "slug: x\n"},

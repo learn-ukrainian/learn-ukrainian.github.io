@@ -22,7 +22,9 @@ One recorded exception is admitted: the read-only Cursor review seat of the
 catalog's ``review_scheduler.subject_seat_review_exception`` (#9532, #9577),
 only with a ``review_exception`` receipt the reviewer resolver re-derives for
 the exact reviewed change. That change's files stay under the content rule
-below.
+below, except that Cyrillic in the string literals and comments of Python
+files under ``scripts/`` and ``tests/`` is read as code data there
+(``review_code_data_cyrillic``).
 
 Content is admitted only as plain text: valid UTF-8 with no control
 characters other than tab, LF and CR, and no Cyrillic character (Ukrainian
@@ -38,11 +40,13 @@ live in ``kimi_boundary``.
 from __future__ import annotations
 
 import fnmatch
+import io
 import json
 import os
 import posixpath
 import re
 import subprocess
+import tokenize
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -409,14 +413,74 @@ def content_problem(data: bytes | None) -> str | None:
     return None
 
 
-def owned_scope_reasons(path: str, tree: ContentTree) -> list[str]:
+# Token kinds that hold string-literal text or comments (3.12+ splits f-strings).
+_PYTHON_DATA_TOKENS = frozenset(
+    kind
+    for kind in (
+        tokenize.STRING,
+        tokenize.COMMENT,
+        getattr(tokenize, "FSTRING_MIDDLE", None),
+        getattr(tokenize, "TSTRING_MIDDLE", None),
+    )
+    if kind is not None
+)
+_CODE_DATA_ROOTS = ("scripts/", "tests/")
+# Corpus and wiki trees: Ukrainian-language data a recorded-exception review never reads (#9577).
+_REVIEW_LANGUAGE_ROOTS = ("data/", "wiki/")
+
+
+def _review_language_path(rel: str) -> bool:
+    """True when a recorded-exception review's changed path is a Ukrainian-language surface (#9577).
+
+    Kimi's language exclusions, the reviewer resolver's ``UKRAINIAN_CONTENT_PATHS``
+    (curriculum, lexicon, prompts...), and the corpus and wiki trees.
+    """
+    from scripts.review.reviewer_resolver import is_ukrainian_content_path
+
+    folded = rel.casefold()
+    return (
+        any(folded.startswith(prefix) for prefix in KIMI_LANGUAGE_EXCLUDED_PATHS)
+        or folded.startswith(_REVIEW_LANGUAGE_ROOTS)
+        or is_ukrainian_content_path(rel)
+    )
+
+
+def review_code_data_cyrillic(path: str, data: bytes) -> bool:
+    """True when the recorded reviewer exception reads ``path``'s Cyrillic as code data, not Ukrainian content (#9577).
+
+    Only for the files of a recorded-exception review (``review_change_reasons``);
+    every other Kimi check keeps the full content boundary. Admitted: a Python
+    source or test file (``.py``) under ``scripts/`` or ``tests/`` that is not a
+    Ukrainian-language surface (``_review_language_path``), whose name has
+    no Cyrillic, which is otherwise plain text, and whose Cyrillic characters all
+    sit inside string literals or comments. A Cyrillic identifier, a file Python
+    cannot tokenize, and any other file type (YAML, JSON, Markdown fixtures) are
+    not code data.
+    """
+    rel = normalize_owned_path(path)
+    if rel is None or not rel.startswith(_CODE_DATA_ROOTS) or not rel.endswith(".py") or CYRILLIC.search(rel):
+        return False
+    if _review_language_path(rel) or content_problem(data) != _CYRILLIC_TEXT:
+        return False
+    try:
+        tokens = list(tokenize.generate_tokens(io.StringIO(data.decode("utf-8")).readline))
+    except (tokenize.TokenError, SyntaxError):
+        return False
+    return not any(token.type not in _PYTHON_DATA_TOKENS and CYRILLIC.search(token.string) for token in tokens)
+
+
+def owned_scope_reasons(
+    path: str, tree: ContentTree, *, code_data: Callable[[str, bytes], bool] | None = None
+) -> list[str]:
     """Why an allowlisted owned path is still refused for its content or its descendants in ``tree``.
 
     Every owned file, and every file under an owned directory or glob, must be
     plain UTF-8 text without Cyrillic text or a Cyrillic file name. A directory
     or glob scope that also covers an excluded or off-allowlist file must be
     narrowed to specific files or clean subdirectories. Fails closed when the
-    tree cannot be read.
+    tree cannot be read. ``code_data`` is passed only by the recorded reviewer
+    exception (``review_code_data_cyrillic``); it admits a file's Cyrillic text
+    when it returns True.
     """
     normalized = normalize_owned_path(path)
     if normalized is None:
@@ -437,6 +501,8 @@ def owned_scope_reasons(path: str, tree: ContentTree) -> list[str]:
     not_text: list[str] = []
     for rel, data in files.items():
         problem = content_problem(data)
+        if problem == _CYRILLIC_TEXT and code_data is not None and data is not None and code_data(rel, data):
+            problem = None
         if CYRILLIC.search(rel) or problem == _CYRILLIC_TEXT:
             cyrillic.append(rel)
         elif problem:
@@ -734,9 +800,12 @@ def review_change_reasons(
     The exception relaxes only the no-reviews rule and write ownership, never
     the language and content boundary. A changed path is refused when it is
     not repository-relative, names a Ukrainian-language surface
-    (``KIMI_LANGUAGE_EXCLUDED_PATHS``) or has a Cyrillic name; every changed
+    (``_review_language_path``) or has a Cyrillic name; every changed
     file present in ``trees`` goes through the owned-file content check
-    (``_content_reasons``). The resolver's own Ukrainian-content path rule
+    (``_content_reasons``), except that Cyrillic in the string literals and
+    comments of Python files under ``scripts/`` and ``tests/`` is code data
+    (``review_code_data_cyrillic``, a driver decision on #9577 for this
+    read-only exception only). The resolver's own Ukrainian-content path rule
     applies through the receipt.
     """
     normalized: list[str] = []
@@ -747,15 +816,16 @@ def review_change_reasons(
             reasons.append(f"reviewed change path {path!r} is not a repository-relative path")
             continue
         normalized.append(rel)
-    language = [
-        rel for rel in normalized if any(rel.casefold().startswith(prefix) for prefix in KIMI_LANGUAGE_EXCLUDED_PATHS)
-    ]
+    language = [rel for rel in normalized if _review_language_path(rel)]
     if language:
         reasons.append(f"the reviewed change touches Ukrainian-language surfaces ({_sample(language)})")
     named = [rel for rel in normalized if CYRILLIC.search(rel)]
     if named:
         reasons.append(f"the reviewed change has Cyrillic file names ({_sample(named)})")
-    reasons.extend(f"reviewed change: {reason}" for reason in _content_reasons(tuple(normalized), trees))
+    reasons.extend(
+        f"reviewed change: {reason}"
+        for reason in _content_reasons(tuple(normalized), trees, code_data=review_code_data_cyrillic)
+    )
     return reasons
 
 
@@ -911,7 +981,10 @@ def refuse_kimi_execution(
 
 
 def _content_reasons(
-    owned: Sequence[str], trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]]
+    owned: Sequence[str],
+    trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]],
+    *,
+    code_data: Callable[[str, bytes], bool] | None = None,
 ) -> list[str]:
     try:
         resolved = trees() if callable(trees) else trees
@@ -919,7 +992,9 @@ def _content_reasons(
         return [f"the tree the worker starts from cannot be read for Ukrainian content ({exc})"]
     if not resolved:
         return ["owned paths cannot be checked for Ukrainian content (no tree to read)"]
-    reasons = [reason for tree in resolved for path in owned for reason in owned_scope_reasons(path, tree)]
+    reasons = [
+        reason for tree in resolved for path in owned for reason in owned_scope_reasons(path, tree, code_data=code_data)
+    ]
     return list(dict.fromkeys(reasons))
 
 

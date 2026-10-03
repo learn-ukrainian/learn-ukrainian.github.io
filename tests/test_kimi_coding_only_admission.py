@@ -3199,12 +3199,96 @@ def test_9577_a_kimi_review_without_the_exception_keeps_the_existing_refusal(rev
     assert "--mode read-only" in message and "review dispatches" in message
 
 
+# The shape of #9557: Cyrillic sample strings and comments in Python code and tests.
+_CODE_DATA_FILES = {
+    "tests/agent_runtime/test_codex_exec_stream.py": "MESSAGE = 'ліміт'  # Ukrainian sample: ліміт\n",
+    "scripts/agent_runtime/tool_calls.py": 'WORD = "кіт"\nTEXT = f"{WORD} — кіт"\nDOC = """кіт"""\n',
+}
+
+
+def test_9577_cyrillic_strings_in_python_code_are_code_data_for_the_exception(reviewed_change):
+    """Driver decision on #9577: #9557's Python string literals and comments are code data for this review."""
+    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES})
+    receipt = _exception_receipt(change)
+    assert receipt is not None
+    assert _exception_refusal(receipt, repo, change) is None
+    assert _exception_refusal(receipt, repo, change, review_trees=lambda: kimi_admission.worktree_trees(repo)) is None
+
+
+@pytest.mark.parametrize(
+    ("path", "text", "admitted"),
+    [
+        pytest.param("tests/ci/test_x.py", "WORD = 'кіт'\n", True, id="test-string"),
+        pytest.param("scripts/ci/x.py", "# кіт\nX = 1\n", True, id="comment"),
+        pytest.param("scripts/ci/x.py", "X = f'{1} кіт'\n", True, id="fstring-text"),
+        pytest.param("scripts/ci/x.py", "кіт = 1\n", False, id="identifier"),
+        pytest.param("scripts/ci/x.py", "X = f'{кіт}'\n", False, id="fstring-expression"),
+        pytest.param("scripts/ci/x.py", "X = 'кіт\n", False, id="untokenizable"),
+        pytest.param("scripts/ci/x.py", "X = 'кіт\x01'\n", False, id="control-character"),
+        pytest.param("scripts/ci/x.yaml", "word: кіт\n", False, id="yaml"),
+        pytest.param("tests/fixtures/x.json", '{"word": "кіт"}\n', False, id="json"),
+        pytest.param("tests/fixtures/x.md", "кіт\n", False, id="markdown"),
+        pytest.param("scripts/ci/Урок.py", "X = 'кіт'\n", False, id="cyrillic-name"),
+        pytest.param("curriculum/l2-uk-en/a1/x.py", "X = 'кіт'\n", False, id="curriculum"),
+        pytest.param("data/x.py", "X = 'кіт'\n", False, id="data"),
+        pytest.param("wiki/x.py", "X = 'кіт'\n", False, id="wiki"),
+        pytest.param("scripts/lexicon/x.py", "X = 'кіт'\n", False, id="lexicon"),
+        pytest.param("scripts/curriculum/x.py", "X = 'кіт'\n", False, id="scripts-curriculum"),
+        pytest.param("scripts/api/hramatka_x.py", "X = 'кіт'\n", False, id="hramatka"),
+        pytest.param("tests/api/test_sources_router.py", "X = 'кіт'\n", False, id="sources-router"),
+    ],
+)
+def test_9577_review_code_data_predicate(path, text, admitted):
+    assert kimi_admission.review_code_data_cyrillic(path, text.encode("utf-8")) is admitted
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        pytest.param({"curriculum/l2-uk-en/a1/x.py": "X = 'кіт'\n"}, id="curriculum"),
+        pytest.param({"scripts/lexicon/x.py": "X = 'кіт'\n"}, id="lexicon"),
+        pytest.param({"curriculum/l2-uk-en/a1/plan.yaml": "slug: x\n"}, id="ascii-curriculum"),
+        pytest.param({"data/x.py": "X = 1\n"}, id="ascii-data"),
+        pytest.param({"wiki/x.md": "x\n"}, id="ascii-wiki"),
+        pytest.param({"tests/ci/Урок.py": "X = 'кіт'\n"}, id="cyrillic-name"),
+        pytest.param({"tests/fixtures/x.yaml": "word: кіт\n"}, id="yaml"),
+        pytest.param({"tests/fixtures/x.json": '{"word": "кіт"}\n'}, id="json"),
+        pytest.param({"tests/fixtures/x.md": "кіт\n"}, id="markdown"),
+        pytest.param({"scripts/ci/x.py": "кіт = 1\n"}, id="identifier"),
+    ],
+)
+def test_9577_review_change_reasons_still_refuse_ukrainian_content_beside_code_data(reviewed_change, files):
+    """The gate itself refuses these even beside admitted code data; the receipt is not the only guard."""
+    repo, change = reviewed_change({**_CODE_DATA_FILES, **files})
+    reasons = kimi_admission.review_change_reasons(
+        change.changed_paths, (kimi_admission.CommitTree(repo, change.head_sha),)
+    )
+    assert reasons and all("test_codex_exec_stream" not in r and "tool_calls" not in r for r in reasons), reasons
+
+
+def test_9577_write_mode_kimi_keeps_the_full_boundary_for_code_data(reviewed_change):
+    """A write-mode Kimi dispatch owning the same Python files is refused, with or without the receipt."""
+    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES})
+    owned = tuple(_CODE_DATA_FILES)
+    tree = (kimi_admission.CommitTree(repo, change.head_sha),)
+    message = _refusal(paths=owned, trees=tree, repo_root=repo)
+    assert message and "Cyrillic text in 'tests/agent_runtime/test_codex_exec_stream.py'" in message, message
+    message = _exception_refusal(
+        _exception_receipt(change), repo, change, mode="workspace-write", paths=owned, trees=tree
+    )
+    assert message and _TOKEN in message, message
+    reasons = kimi_admission.change_reasons(
+        kimi_admission.FileChange(path, text.encode("utf-8")) for path, text in _CODE_DATA_FILES.items()
+    )
+    assert reasons and "Ukrainian content" in reasons[0], reasons
+
+
 @pytest.mark.parametrize(
     ("files", "reason"),
     [
         pytest.param(
-            {"scripts/ci/labels.py": "LABEL = 'Урок'\n"},
-            "reviewed change: owned file holds Ukrainian content (Cyrillic text in 'scripts/ci/labels.py'",
+            {"tests/ci/fixture.yaml": "label: Урок\n"},
+            "reviewed change: owned file holds Ukrainian content (Cyrillic text in 'tests/ci/fixture.yaml'",
             id="cyrillic-text",
         ),
         pytest.param({"tests/ci/Урок.py": "VALUE = 1\n"}, "Cyrillic file names", id="cyrillic-name"),
@@ -3337,10 +3421,24 @@ def test_9577_runner_recheck_binds_the_receipt_to_its_task_and_checkout(reviewed
         )
 
 
+def test_9577_runner_recheck_admits_python_code_data(reviewed_change):
+    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES})
+    kimi_admission.refuse_kimi_execution(
+        ("cursor",),
+        ("kimi-k3-high",),
+        mode="read-only",
+        cwd=repo,
+        tool_config=_runner_config(_exception_receipt(change)),
+        task_id=_REVIEW_TASK,
+    )
+
+
 def test_9577_runner_recheck_reads_the_reviewed_files_for_ukrainian_content(reviewed_change):
-    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", "tests/ci/test_x.py": "WORD = 'кіт'\n"})
+    repo, change = reviewed_change(
+        {_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES, "tests/ci/fixture.json": '{"word": "кіт"}\n'}
+    )
     receipt = _exception_receipt(change)
-    with pytest.raises(kimi_admission.KimiAdmissionRefused, match=r"Cyrillic text in 'tests/ci/test_x\.py'"):
+    with pytest.raises(kimi_admission.KimiAdmissionRefused, match=r"Cyrillic text in 'tests/ci/fixture\.json'"):
         kimi_admission.refuse_kimi_execution(
             ("cursor",),
             ("kimi-k3-high",),
@@ -3415,13 +3513,22 @@ def test_9577_worker_refuses_a_receipt_from_another_task(tmp_path, monkeypatch, 
     assert target is None and "task_id" in refusal, refusal
 
 
-def test_9577_worker_refuses_a_change_holding_cyrillic(tmp_path, monkeypatch, reviewed_change):
-    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", "tests/ci/test_x.py": "WORD = 'кіт'\n"})
+def test_9577_worker_admits_python_code_data(tmp_path, monkeypatch, reviewed_change):
+    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", **_CODE_DATA_FILES})
     _seed_exception_task(tmp_path, monkeypatch, _exception_receipt(change))
     refusal, target = delegate._kimi_worker_refusal(
         _REVIEW_TASK, agent="cursor", model="kimi-k3-high", mode="read-only", cwd=repo, review=True
     )
-    assert target is None and "Cyrillic text in 'tests/ci/test_x.py'" in refusal, refusal
+    assert refusal is None and (target.recipient, target.model) == ("cursor", "kimi-k3-high")
+
+
+def test_9577_worker_refuses_a_change_holding_cyrillic(tmp_path, monkeypatch, reviewed_change):
+    repo, change = reviewed_change({_CODEX_ADAPTER: "VALUE = 1\n", "tests/ci/fixture.md": "кіт\n"})
+    _seed_exception_task(tmp_path, monkeypatch, _exception_receipt(change))
+    refusal, target = delegate._kimi_worker_refusal(
+        _REVIEW_TASK, agent="cursor", model="kimi-k3-high", mode="read-only", cwd=repo, review=True
+    )
+    assert target is None and "Cyrillic text in 'tests/ci/fixture.md'" in refusal, refusal
 
 
 def test_9577_worker_without_a_receipt_still_refuses_the_kimi_review(tmp_path, monkeypatch):

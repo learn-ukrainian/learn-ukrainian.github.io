@@ -84,9 +84,13 @@ def is_ukrainian_content_change(inputs: ResolverInputs) -> bool:
     """Classify a review from its paths or explicit language routing signal."""
     if inputs.language_lane or inputs.review_profile.strip().casefold() == "ukrainian":
         return True
+    return any(is_ukrainian_content_path(path) for path in (*inputs.changed_paths, *inputs.owned_paths))
+
+
+def is_ukrainian_content_path(path: str) -> bool:
+    """True when ``path`` matches ``UKRAINIAN_CONTENT_PATHS``."""
     return any(
         path == pattern or (pattern.endswith("/") and path.startswith(pattern)) or fnmatchcase(path, pattern)
-        for path in (*inputs.changed_paths, *inputs.owned_paths)
         for pattern in UKRAINIAN_CONTENT_PATHS
     )
 
