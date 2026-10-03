@@ -307,7 +307,7 @@ def _astro_build_step(log_path: Path, *, fresh_pages: list[Path] | None = None) 
         Path(name).resolve() if Path(name).is_absolute() else (PROJECT_ROOT / "site" / name).resolve()
         for name in filenames
     ]
-    page_failure = bool(resolved) and all(page in owned for page in resolved)
+    page_failure = any(page in owned for page in resolved)
     foreign = [
         page.relative_to(PROJECT_ROOT).as_posix() if page.is_relative_to(PROJECT_ROOT) else page.name
         for page in resolved

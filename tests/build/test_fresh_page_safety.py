@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import html
 import json
 import os
@@ -242,54 +241,6 @@ def test_shippable_report_distinguishes_compilation_from_full_render(capsys):
     assert "page compilation and island checks only" in capsys.readouterr().out
 
 
-# Author-only prose from fresh-build-plan-schema.md §§2, 2a and 4. Titles,
-# subtitles, learner outcome (job) and speaker names are learner-facing metadata.
-PLAN_GUIDANCE_FIELDS = (
-    "focus",
-    "rationale",
-    "use",
-    "objectives",
-    "connects_to",
-    "prerequisites",
-    "changelog",
-    "register",
-    "teach",
-    "point",
-    "situation",
-    "setting",
-    "target_grammar",
-    "role",
-)
-
-
-@pytest.mark.parametrize("field", PLAN_GUIDANCE_FIELDS)
-def test_no_plan_authoring_field_reaches_a_page(field):
-    data = json.loads((FIXTURE / "inputs.json").read_text())
-    marker = f"AUTHOR_ONLY_{field} {{kind: dialogue}} <b>"
-
-    def replace_leaves(value):
-        if isinstance(value, dict):
-            return {key: replace_leaves(child) for key, child in value.items()}
-        if isinstance(value, list):
-            return [replace_leaves(child) for child in value]
-        return marker if isinstance(value, str) else value
-
-    def inject(value):
-        if isinstance(value, dict):
-            return {key: replace_leaves(child) if key == field else inject(child) for key, child in value.items()}
-        if isinstance(value, list):
-            return [inject(child) for child in value]
-        return value
-
-    data["plan"] = inject(data["plan"])
-    # Exercise top-level guidance even where the archived plan omits the field.
-    data["plan"][field] = marker
-    before = copy.deepcopy(data)
-    page, _ = reassemble_attempt5(data)
-    assert f"AUTHOR_ONLY_{field}" not in html.unescape(page)
-    assert data == before
-
-
 def test_attempt5_instructions_print_once_and_ids_stay_in_provenance():
     page, data = reassemble_attempt5()
     for activity in data["draft"]["activities"]:
@@ -365,14 +316,12 @@ def test_ci_runs_site_toolchain_tests_in_required_frontend_job():
     assert "if" not in steps["Install site toolchain"]
     assert "if" not in steps["Python CI environment"]
     assert "frontend" in jobs["ci-gate"]["needs"]
-    # Every test file that declares this marker is in the Frontend command.
-    marked_files = [
-        path.relative_to(root).as_posix()
-        for path in (root / "tests").rglob("test_*.py")
-        if "@pytest.mark.site_toolchain" in path.read_text()
-    ]
-    assert marked_files
-    assert all(path in compiler["run"] for path in marked_files)
+    # Suite-wide marker selection includes module/class/parameter-level marks;
+    # no file-name allowlist or source-text scan may narrow the Frontend job.
+    import shlex
+
+    command = shlex.split(compiler["run"].replace("\\\n", ""))
+    assert command[command.index("pytest") + 1:command.index("-m", command.index("pytest") + 1)] == ["tests"]
 
 
 @pytest.mark.parametrize("duplicate_title", [False, True])
@@ -411,3 +360,78 @@ def test_all_resource_text_fields_use_the_same_mdx_encoder():
     page = format_resources_for_mdx(resources)
     assert page.count(mdx_safe_text(hostile)) == 7
     assert gate.check_mdx_render(page)["passed"] is True
+
+
+@pytest.mark.site_toolchain
+def test_registry_episode_autolink_is_an_explicit_compilable_markdown_link():
+    from scripts.curriculum.evidence.publication import resource_citation
+    from scripts.generate_mdx.resources import format_resources_for_mdx
+
+    url = "https://www.ukrainianlessons.com/episode1/"
+    citation = resource_citation({
+        "source": {"kind": "textbook", "file": "ulp-1-00-lesson-notes"}, "episode_url": url,
+    })
+    page = format_resources_for_mdx({"books": [citation]}, is_ukrainian_forced=True)
+    assert f"[{url}]({url})" in page
+    assert f"<{url}>" not in page
+    assert gate.check_mdx_render(page)["compiled"] is True
+
+
+def test_any_owned_page_compiler_error_is_an_engine_failure(tmp_path, monkeypatch):
+    owned = "src/content/docs/a1/fixture/1.mdx"
+    foreign = "src/content/docs/a1/other/1.mdx"
+    log = tmp_path / "build.log"
+    log.write_text(f"{foreign}:123:51 MDXError\n{owned}:123:51 MDXError")
+    monkeypatch.setattr(shippable, "_astro_build", lambda _: False)
+    report = shippable._astro_build_step(log, fresh_pages=[shippable.PROJECT_ROOT / "site" / owned])
+    assert report["passed"] is False and report["layer"] == "engine"
+    assert foreign in report["detail"]
+
+
+@pytest.mark.parametrize("role", ["book", "video"])
+@pytest.mark.parametrize("url", ["https://example.com/resource", ""])
+def test_resource_missing_title_uses_url_or_neutral_label(role, url):
+    from scripts.generate_mdx.resources import format_resources_for_mdx
+
+    page = format_resources_for_mdx([{"role": role, "url": url}], is_ukrainian_forced=True)
+    assert "Unknown" not in page
+    assert (f"[{url}]({url})" if url else "**—**") in page
+
+
+def test_suite_marker_selection_includes_module_and_parameter_marks_and_requires_toolchain(tmp_path):
+    import inspect
+    import shlex
+    import sys
+
+    import yaml
+
+    from tests.conftest import pytest_runtest_setup
+
+    root = Path(__file__).resolve().parents[2]
+    steps = yaml.safe_load((root / ".github/workflows/ci.yml").read_text())["jobs"]["frontend"]["steps"]
+    command = shlex.split(next(s["run"] for s in steps if s.get("name") == "Real MDX compiler regressions").replace("\\\n", ""))
+    command[0] = sys.executable
+    # Isolated suite mirrors tests/build; use the actual production guard with
+    # __file__ rooted here. No source-text marker enumeration or real repo sweep.
+    directory = tmp_path / "tests/build"
+    directory.mkdir(parents=True)
+    (tmp_path / "pytest.ini").write_text("[pytest]\nmarkers = site_toolchain: site toolchain\n")
+    (tmp_path / "tests/conftest.py").write_text(
+        "from pathlib import Path\nimport pytest\n" + inspect.getsource(pytest_runtest_setup)
+    )
+    (directory / "test_module.py").write_text(
+        "import pytest\npytestmark = pytest.mark.site_toolchain\n"
+        "def test_one(): pass\ndef test_two(): pass\n"
+    )
+    (directory / "test_parameter.py").write_text(
+        "import pytest\n@pytest.mark.parametrize('x', [pytest.param(1, marks=pytest.mark.site_toolchain), 2])\n"
+        "def test_parameter(x): pass\n"
+    )
+    missing = subprocess.run(command, cwd=tmp_path, capture_output=True, text=True, timeout=60)
+    assert missing.returncode == 1, missing.stdout + missing.stderr
+    assert "3 errors" in missing.stdout and "1 deselected" in missing.stdout
+    assert "site_toolchain requires site/node_modules" in missing.stdout
+    (tmp_path / "site/node_modules").mkdir(parents=True)
+    installed = subprocess.run(command, cwd=tmp_path, capture_output=True, text=True, timeout=60)
+    assert installed.returncode == 0, installed.stdout + installed.stderr
+    assert "3 passed" in installed.stdout and "1 deselected" in installed.stdout

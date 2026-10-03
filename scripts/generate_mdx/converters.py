@@ -126,6 +126,50 @@ def yaml_activities_to_jsx(
     )
 
 
+# Display owners read from the site TSX implementations (including activity-kit
+# shims). Cloze's serializer supplies no instruction/title prop, so MDX owns it.
+# Runtime tests render every live A1-B2 activity to catch component/serializer drift.
+_FRESH_COMPONENT_LABEL_FIELDS = {
+    **dict.fromkeys((
+        "Anagram", "CountSyllables", "DivideWords", "ErrorCorrection", "FillIn",
+        "GroupSort", "LetterGrid", "MarkTheWords", "MatchUp", "Observe", "OddOneOut",
+        "Order", "PickSyllables", "Quiz", "Select", "Translate", "TrueFalse", "Unjumble",
+    ), ("instruction",)),
+    **dict.fromkeys(("Classify", "ImageToLetter", "PhraseTable", "WatchAndRepeat"), ("title", "instruction")),
+    **dict.fromkeys(("EssayResponse", "ReadingActivity", "CriticalAnalysis", "ComparativeStudy", "AuthorialIntent"), ("title",)),
+    "Cloze": (),
+}
+
+
+def fresh_activity_mdx(activity: Activity, mdx: str, *, level: str = "a1") -> str:
+    """Keep each component-owned label out of the surrounding MDX heading.
+
+    All fresh components receiving an instruction print it; title-only legacy
+    components print their title. Cloze receives neither and keeps its heading.
+    Compare the actual serializer's bytes before insertion and range tracking.
+    """
+    heading = re.search(r"^### ([^\n]*)\n\n", mdx, re.MULTILINE)
+    if heading is None:
+        return mdx
+    component = mdx[heading.end():]
+    name = re.match(r"<([A-Z]\w*)\b", component)
+    if name is None or name.group(1) not in _FRESH_COMPONENT_LABEL_FIELDS:
+        raise ValueError("Fresh activity has no component display contract")
+    fields = _FRESH_COMPONENT_LABEL_FIELDS[name.group(1)]
+    # A1 retains its established English scaffold. Above A1, with no learner
+    # title, use the component's localized header instead of an English fallback.
+    if not heading.group(1).strip() or (
+        level.lower() != "a1" and not getattr(activity, "title", "") and "instruction" in fields
+    ):
+        return mdx[:heading.start()] + component
+    parser = ActivityParser()
+    for field in fields:
+        value = getattr(activity, field, "")
+        if value and heading.group(1) == parser._escape_jsx(value):
+            return mdx[:heading.start()] + component
+    return mdx
+
+
 def yaml_activity_mdx_parts(
     activities: list[Activity],
     is_ukrainian_forced: bool = False,
@@ -133,6 +177,8 @@ def yaml_activity_mdx_parts(
     inline_cross_ref_positions: set[int] | None = None,
     inline_cross_ref_fingerprints: set[str] | None = None,
     inline_cross_ref_section_titles: dict[str, str] | None = None,
+    fresh: bool = False,
+    level: str = "a1",
 ) -> list[tuple[str | None, str]]:
     """The workbook tab's parts in order: `(activity id, component JSX)` for a full activity,
     `(None, mdx)` for an inline cross-reference. `yaml_activities_to_jsx` joins them."""
@@ -163,6 +209,8 @@ def yaml_activity_mdx_parts(
         if cross_referencing and activity_identity_key(activity) in inline_fingerprints:
             continue
         mdx = parser._activity_to_mdx(activity, is_ukrainian_forced)
+        if fresh:
+            mdx = fresh_activity_mdx(activity, mdx, level=level)
         if not mdx:
             continue
         parts.append((activity_id or None, mdx))

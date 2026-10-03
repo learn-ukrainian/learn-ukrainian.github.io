@@ -124,7 +124,8 @@ def test_ulp_resource_renders_homepage_and_episode_without_private_text():
     resources = build_resursy_tab({"steps": [{"explains": ["T-001"]}]}, {"texts": [record]})
     rendered = format_resources_for_mdx(resources, True)
     assert "[Ukrainian Lessons Podcast — Анна Огойко](https://www.ukrainianlessons.com/)" in rendered
-    assert "<https://www.ukrainianlessons.com/episode1/>" in rendered
+    assert "[https://www.ukrainianlessons.com/episode1/](https://www.ukrainianlessons.com/episode1/)" in rendered
+    assert "<https://www.ukrainianlessons.com/episode1/>" not in rendered
     assert "PRIVATE" not in rendered
 
 

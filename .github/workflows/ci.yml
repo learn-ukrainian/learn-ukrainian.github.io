@@ -188,11 +188,11 @@ jobs:
         working-directory: site
         run: npm ci
       # Required even when the full frontend build is outside the changed-path scope.
+      # Include tests/build/, normally excluded by pytest default traversal.
       - name: Real MDX compiler regressions
         run: |
-          .venv/bin/python -m pytest tests/build/test_fresh_page_safety.py tests/build/test_fresh_render_coverage.py \
-            tests/build/test_lesson_assembler.py tests/build/test_fresh_listening.py \
-            -m site_toolchain --strict-markers --override-ini addopts=-q --timeout=120
+          .venv/bin/python -m pytest tests -m site_toolchain --strict-markers --override-ini addopts=-q \
+            --override-ini 'norecursedirs=.* node_modules' --timeout=120
       - id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}

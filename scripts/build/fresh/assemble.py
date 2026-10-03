@@ -2648,7 +2648,11 @@ def check_9_stress_and_render(
         "module_slug": slug,
         # Plan reading passages that name a hosted reading (`title` + `reading_slug`) print as
         # the Lesson tab's reading list, the contract `generate_mdx` already has for `readings`.
-        "readings": [entry for entry in lesson_entry.get("reading_passages") or [] if isinstance(entry, dict)],
+        "readings": [
+            {key: entry[key] for key in ("title", "genre", "reading_slug") if key in entry}
+            for entry in lesson_entry.get("reading_passages") or []
+            if isinstance(entry, dict)
+        ],
     }
     replace_gloss = gloss_replacer(words_store)
     meta_data = expand_payload_text(meta_data, replace_gloss)
@@ -2700,13 +2704,11 @@ def check_9_stress_and_render(
         act_payload = copy.deepcopy(act_dict)
         act_payload["type"] = plan_act.get("type")
         act_payload["placement"] = plan_act.get("placement")
-        # Quiz and WatchAndRepeat display the instruction prop once. Their
-        # renderer supplies a component heading when there is no separate title.
-        if act_payload.get("type") in {"quiz", "watch-and-repeat"}:
-            if not act_payload.get("title") or act_payload.get("title") == act_payload.get("instruction"):
-                act_payload["title"] = ""
-        elif not act_payload.get("title"):
-            act_payload["title"] = act_payload.get("instruction") or ""
+        # Components with an instruction prop own its display. Never promote
+        # that same text to a title/heading; title-only legacy components are
+        # handled by the explicit page-field contract below.
+        if not act_payload.get("title") or act_payload.get("title") == act_payload.get("instruction"):
+            act_payload["title"] = ""
         if act_payload.get("type") in _PAGE_INSTRUCTION_FIELD and act_payload.get("instruction"):
             act_payload["title"] = act_payload["instruction"]
         act_payload["title"] = mdx_safe_text(act_payload["title"])

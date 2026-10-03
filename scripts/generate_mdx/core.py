@@ -23,6 +23,7 @@ from .converters import (
     edit_process_dialogues,
     edit_process_story_sections,
     edit_resolve_slug_links,
+    fresh_activity_mdx,
     yaml_activity_mdx_parts,
 )
 from .reading_links import reading_href_for, reading_title_for
@@ -248,6 +249,9 @@ def _inject_inline_activities(
     log: EditLog,
     yaml_activities: list[Activity] | None,
     is_ukrainian_forced: bool,
+    *,
+    fresh: bool = False,
+    level: str = "a1",
 ) -> tuple[set[str], set[int], set[str], dict[str, str], list[tuple[str, int, int]]]:
     """Replace Tab 1 INJECT_ACTIVITY markers in `log` with matching component JSX.
 
@@ -283,6 +287,8 @@ def _inject_inline_activities(
         injected_positions.add(index)
         injected_fingerprints.add(activity_identity_key(activity))
         jsx = parser._activity_to_mdx(activity, is_ukrainian_forced)
+        if fresh:
+            jsx = fresh_activity_mdx(activity, jsx, level=level)
         edits.append(Edit(match.start(), match.end(), jsx))
         start = match.start() + delta
         injected_blocks.append((activity_id, start, start + len(jsx)))
@@ -610,7 +616,7 @@ sidebar:
         _injected_activity_fingerprints,
         _injected_activity_section_titles,
         injected_activity_blocks,
-    ) = _inject_inline_activities(log, yaml_activities, activity_chrome_ukrainian)
+    ) = _inject_inline_activities(log, yaml_activities, activity_chrome_ukrainian, fresh=fresh, level=level)
     lesson_content = carry("inject_inline_activities", log)
     if unit_map is not None:
         for occurrence, (activity_id, start, end) in enumerate(injected_activity_blocks):
@@ -642,6 +648,8 @@ sidebar:
             inline_cross_ref_positions=_injected_activity_positions,
             inline_cross_ref_fingerprints=_injected_activity_fingerprints,
             inline_cross_ref_section_titles=_injected_activity_section_titles,
+            fresh=fresh,
+            level=level,
         )
         activities_content = '\n\n'.join(mdx for _activity_id_or_none, mdx in activity_parts)
         if not activities_content.strip() and injected_activity_ids:

@@ -428,7 +428,7 @@ def _format_textbook_resource(item: dict) -> list[str]:
     display_title = title
     if not display_title:
         ref = _public_resource_text(item.get('source_ref'))
-        display_title = ref if (ref and not _is_internal_ref_path(ref)) else 'Unknown'
+        display_title = ref if (ref and not _is_internal_ref_path(ref)) else str(item.get('url') or '—')
 
     if pages and str(pages) not in display_title:
         display_title = f"{display_title}, p. {pages}"
@@ -442,10 +442,10 @@ def _format_textbook_resource(item: dict) -> list[str]:
     label = f"[{display_title}]({mdx_safe_text(url)})" if url else f"**{display_title}**"
     lines = [f"> - 📚 {label}"]
     if desc:
-        # A registry-owned public episode URL keeps its existing clickable
-        # autolink wrapper; all source text still passes through the encoder.
+        # MDX treats angle autolinks as JSX. Use an explicit Markdown link
+        # for registry-owned episode URLs; encode other description text.
         safe_desc = (
-            f"<{mdx_safe_text(desc[1:-1])}>"
+            f"[{mdx_safe_text(desc[1:-1])}]({mdx_safe_text(desc[1:-1])})"
             if re.fullmatch(r"<https?://[^\s<>]*>", desc)
             else mdx_safe_text(desc)
         )
@@ -456,7 +456,7 @@ def _format_textbook_resource(item: dict) -> list[str]:
 def _format_linked_resource(item: dict) -> str:
     role = _resource_role(item)
     icon = RESOURCE_ROLE_ICONS.get(role, '🔗')
-    title = _public_resource_text(item.get('title')) or 'Unknown'
+    title = _public_resource_text(item.get('title')) or str(item.get('url') or '—')
     url = validate_and_clean_url(str(item.get('url') or ''), title)
     desc = _public_resource_description(item)
     title = mdx_safe_text(title)
