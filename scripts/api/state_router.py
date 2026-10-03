@@ -1020,7 +1020,8 @@ def _overlay_notebook_lane_usage(
         # Status uses the visibility + on-pace rule. The stored delta stays the
         # clamp-style number (unchanged when the window is open).
         pace = compute_usage_pace(weekly_used, resets_at, now=current_time)
-        cb_status = _status_from_weekly_used(weekly_used, pace)
+        cb_status = _status_from_weekly_used(weekly_used, pace, lane=lane, now=current_time)
+        agents[lane]["status_source"] = "weekly_pace"
         agents[lane]["notebook_report"] = {
             "source": "notebook-report",
             "age_s": freshest.age_s,
@@ -1398,6 +1399,7 @@ def _compute_dispatch_routing_budget(
         "weekly_cap_usd": _round_money(claude_cap),
         "burn_pct_7d": claude_burn,
         "status": claude_status,
+        "status_source": "ledger_burn",
         "resets_at": resets_at,
         "remaining_pct": (100.0 - claude_burn) if claude_burn is not None else None,
     }
@@ -1418,6 +1420,7 @@ def _compute_dispatch_routing_budget(
             "weekly_cap_usd": _round_money(cap) if has_cap else None,
             "burn_pct_7d": burn,
             "status": st,
+            "status_source": "ledger_burn",
             "resets_at": resets_at,
             "remaining_pct": (100.0 - burn) if burn is not None else None,
         }
@@ -1483,6 +1486,9 @@ def _compute_dispatch_routing_budget(
                 now=current_time,
                 snapshot_stale=bool(cb_data.get("stale")),
                 usage_dir=usage_dir,
+            )
+            agents[lane]["status_source"] = (
+                "cursor_auto" if lane == "cursor" and cb_data.get("status") else "weekly_pace"
             )
 
             # Check if stale

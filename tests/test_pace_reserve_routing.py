@@ -14,6 +14,7 @@ from scripts.fleet import capacity_pick, credit_lane, idle_settle
 from scripts.fleet.reset_reserve import unavailable_reserve
 from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate, resolve_reviewer
 from tests.api.test_routing_budget import _configure_base
+from tests.api.test_routing_budget_endpoint import _record
 
 
 @pytest.mark.parametrize(
@@ -58,12 +59,14 @@ def test_high_usage_covered_deficit_is_cool(reserve, delta, monkeypatch):
         "credit_balance": 62500.0 if reserve == "credits" else 0.0,
         "reset_credits": {
             "available_count": 1,
-            "expires_at": [(now + timedelta(days=1)).isoformat()],
+            "expires_at": [(now + timedelta(days=7)).isoformat()],
             "fetched_at": now.isoformat(),
         }
         if reserve == "resets"
         else None,
         "codexbar": {
+            "weekly_used_pct": 80.0,
+            "weekly_resets_at": (now + timedelta(days=7 * (1 - (80.0 - delta) / 100))).isoformat(),
             "weekly_expected_pct": 80.0 - delta,
             "weekly_pace_delta_pct": delta,
             "will_last_to_reset": False,
@@ -147,6 +150,7 @@ def reserve_case(request, monkeypatch):
     fetched = (now - timedelta(seconds=60)).isoformat()
     info = {
         "status": "hot",
+        "status_source": "weekly_pace",
         "remaining_pct": 87.0,
         "burn_pct_7d": 13.0,
         "freshness": "fresh",
@@ -161,6 +165,7 @@ def reserve_case(request, monkeypatch):
         "runtime": {"headroom_blocked": False, "window_s": 300, "rate_limited": 0},
         "codexbar": {
             "weekly_used_pct": 13.0,
+            "weekly_resets_at": (now + timedelta(days=7 * (1 - 0.105))).isoformat(),
             "weekly_remaining_pct": 87.0,
             "weekly_pace_delta_pct": 2.5,
             "weekly_expected_pct": 10.5,
@@ -384,6 +389,137 @@ def test_coverage_claim_is_rechecked(reserve_case, monkeypatch):
     info["credit_balance"] = 0.0
     info["reset_credits"] = None
     assert credit_lane.pace_deficit_state("codex", info, now=now)["uncovered"] is True
+
+
+@pytest.mark.parametrize("lane", ["", " "])
+def test_missing_lane_never_covers_deficit(reserve_case, lane):
+    info, _, now = reserve_case
+    decision = credit_lane.pace_deficit_state(lane, info, now=now)
+    assert decision["uncovered"] is True
+    assert decision["covered_by"] == []
+    assert capacity_pick.is_avoid_lane(info, lane=lane)
+    assert state_router._status_from_weekly_used(13.0, info["codexbar"], info=info, now=now) == "hot"
+    needs_action, _ = delegate._budget_needs_hard_capacity_action(
+        status="hot", will_last=False, is_stale=False, records_loaded=1, pace=info["codexbar"], info=info
+    )
+    assert needs_action
+
+
+@pytest.mark.parametrize("source", ["ledger_burn", "cursor_auto", None])
+def test_cover_never_relaxes_hot_from_other_sources(reserve_case, source):
+    info, _, now = reserve_case
+    info = copy.deepcopy(info)
+    info["status_source"] = source
+    decision = credit_lane.pace_deficit_state("codex", info, now=now)
+    assert decision["status"] == "hot"
+    assert decision["uncovered"] is True
+    assert capacity_pick.is_avoid_lane(info, lane="codex")
+    result = evaluate_candidate(
+        OPENAI_FRONTIER,
+        ResolverInputs(author_model="claude-opus-5-5", routing_snapshot={"agents": {"codex": info}}),
+    )
+    assert result.status == "excluded"
+
+
+@pytest.mark.parametrize(
+    "expiry", ["before", "equal", "after", "no_expiry", "missing_projection", "invalid_window", "overflow_projection"]
+)
+def test_reset_must_outlast_projected_runout(monkeypatch, expiry):
+    now = datetime(2026, 10, 3, 12, tzinfo=UTC)
+    # Halfway through a seven-day window, 70% used runs out in 1.5 days.
+    runout = now + timedelta(days=1.5)
+    expirations = {
+        "before": (runout - timedelta(seconds=1)).isoformat(),
+        "equal": runout.isoformat(),
+        "after": (runout + timedelta(seconds=1)).isoformat(),
+        "no_expiry": None,
+        "missing_projection": (runout + timedelta(days=1)).isoformat(),
+        "invalid_window": (runout + timedelta(days=1)).isoformat(),
+        "overflow_projection": None,
+    }
+    info = {
+        "status": "hot",
+        "status_source": "weekly_pace",
+        "remaining_pct": 30.0,
+        "freshness": "fresh",
+        "age_s": 0,
+        "credit_balance": 0,
+        "reset_credits": {
+            "available_count": 1,
+            "expires_at": [expirations[expiry]],
+            "fetched_at": now.isoformat(),
+        },
+        "codexbar": {
+            "weekly_used_pct": 70.0,
+            "weekly_expected_pct": 50.0,
+            "weekly_pace_delta_pct": 20.0,
+            "will_last_to_reset": False,
+            "weekly_resets_at": (now + timedelta(days=3.5)).isoformat() if expiry != "missing_projection" else None,
+        },
+    }
+    monkeypatch.setattr(
+        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 0, "last_rate_limited_at": None}
+    )
+    if expiry == "invalid_window":
+        info["codexbar"]["window_minutes"] = float("inf")
+    elif expiry == "overflow_projection":
+        info["codexbar"]["weekly_used_pct"] = 1e-300
+    covered = expiry in {"after", "no_expiry"}
+    decision = credit_lane.pace_deficit_state("codex", info, now=now)
+    assert decision["uncovered"] is (not covered)
+    assert decision["status"] == ("cool" if covered else "hot")
+
+
+@pytest.mark.parametrize("source", ["ledger_burn", "cursor_auto"])
+@pytest.mark.parametrize("used", [75.0, 80.0, 89.0])
+def test_routing_budget_preserves_hot_sources(monkeypatch, tmp_path, source, used):
+    now = datetime(2026, 10, 3, 12, tzinfo=UTC)
+    _configure_base(monkeypatch, tmp_path)
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *_a, **_k: {"windows": {}})
+    native = {
+        "status": "hot",
+        "weekly_used_pct": used,
+        "weekly_expected_pct": 50.0,
+        "weekly_pace_delta_pct": used - 50.0,
+        "will_last_to_reset": False,
+        "weekly_resets_at": (now + timedelta(days=3.5)).isoformat(),
+        "weekly_remaining_pct": 100 - used,
+        "freshness": "fresh",
+        "age_s": 0,
+        "fetched_at": now.isoformat(),
+        "credit_balance": 62500.0,
+        "reset_credits": {
+            "available_count": 1,
+            "expires_at": [None],
+            "fetched_at": now.isoformat(),
+        },
+    }
+    lane = "cursor" if source == "cursor_auto" else "codex"
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda: native if lane == "cursor" else {})
+    if source == "ledger_burn":
+        monkeypatch.setattr(state_router, "load_cost_records", lambda **_k: [_record(lane, used * 10, now)])
+    else:
+        policy = credit_lane.load_policy()
+        # Exercise the adapter's hot source even if a future policy admits
+        # Cursor credits. Current shipping policy remains untouched.
+        monkeypatch.setattr(
+            credit_lane, "load_policy", lambda: replace(policy, allowed_models={"cursor": ("gpt-6.1-sol",)})
+        )
+    data = state_router.compute_routing_budget(
+        now,
+        budget_config_path=tmp_path / "agent_budgets.yaml",
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+    assert data["agents"][lane]["status_source"] == source
+    assert data["agents"][lane]["status"] == "hot"
+    assert data["agents"][lane]["pace_deficit"]["status"] == "hot"
+    if source == "cursor_auto":
+        row = next(row for row in capacity_pick.build_lane_rows(data, now=now) if row["lane"] == lane)
+        assert row["status"] == "hot"
+        assert row["avoid"] is True
 
 
 @pytest.mark.parametrize("default_model", ["gpt-6.1-sol", "gpt-5-codex", None])

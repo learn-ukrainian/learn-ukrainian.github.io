@@ -752,13 +752,9 @@ def evaluate_candidate(
         candidate.transport == "cursor" and candidate.route == "cursor"
     ):
         return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
+            name=candidate.name, concrete_model=candidate.concrete_model,
+            family=candidate.family, route=candidate.route, transport=candidate.transport,
+            invocation=candidate.invocation, quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
             reason=(
@@ -1108,7 +1104,11 @@ def resolve_reviewer(
                 resolved_risk=risk,
                 fail_closed_reason=f"unknown explicit reviewer pin {inputs.pinned_candidate!r}",
             )
-        if all(candidate.name != pinned_definition.name for rung in active_ladder for candidate in rung):
+        if all(
+            candidate.name != pinned_definition.name
+            for rung in active_ladder
+            for candidate in rung
+        ):
             # Ladders express automatic preference, not an allowlist.  An
             # operator-requested canonical pin may name another catalogued
             # candidate, but it still goes through every hard eligibility,
@@ -1221,7 +1221,8 @@ def resolve_reviewer(
         tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
     ] = {}
     tier_for_candidate = {
-        name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier] for name, candidate in REVIEW_CANDIDATES.items()
+        name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
+        for name, candidate in REVIEW_CANDIDATES.items()
     }
 
     for rung_index, rung in enumerate(active_ladder):
@@ -1231,7 +1232,9 @@ def resolve_reviewer(
                 result = replace(
                     result,
                     status="excluded",
-                    reason=(f"quota bucket {candidate.quota_bucket!r} is already reserved by an active formal review"),
+                    reason=(
+                        f"quota bucket {candidate.quota_bucket!r} is already reserved by an active formal review"
+                    ),
                 )
             if result.status == "eligible":
                 result = replace(
@@ -1259,18 +1262,15 @@ def resolve_reviewer(
         first = _best_eligible(eligible_by_fit_and_tier)
         if first is None:
             quorum_failure = (
-                "dual-family quorum unsatisfiable: no eligible formal-review candidate for an unattested-harness author"
+                "dual-family quorum unsatisfiable: no eligible formal-review candidate "
+                "for an unattested-harness author"
             )
         else:
             second = _best_eligible(eligible_by_fit_and_tier, exclude_families=frozenset({first[0].family}))
             quorum_failure = (
-                (
-                    f"dual-family quorum unsatisfiable: only one eligible family ({first[0].family!r}) — "
-                    "two distinct attested, formal-review-eligible families are required"
-                )
-                if second is None
-                else None
-            )
+                f"dual-family quorum unsatisfiable: only one eligible family ({first[0].family!r}) — "
+                "two distinct attested, formal-review-eligible families are required"
+            ) if second is None else None
         if quorum_failure is not None:
             return ReviewerResolution(
                 selected=None,
@@ -1304,10 +1304,7 @@ def resolve_reviewer(
 
     if inputs.pinned_candidate:
         pinned = [
-            item
-            for entries in eligible_by_fit_and_tier.values()
-            for item in entries
-            if item[0].name == inputs.pinned_candidate
+            item for entries in eligible_by_fit_and_tier.values() for item in entries if item[0].name == inputs.pinned_candidate
         ]
         if not pinned:
             return ReviewerResolution(
@@ -1351,9 +1348,7 @@ def resolve_reviewer(
 
     substitution_notes: list[str] = []
     if selected is not None and candidate.last_resort:
-        substitution_notes.append(
-            f"last resort selected {selected.name}: no eligible primary remained or an explicit pin was requested"
-        )
+        substitution_notes.append(f"last resort selected {selected.name}: no eligible primary remained or an explicit pin was requested")
     if selected is not None and selected_rung_index is not None:
         higher_quality_tier_exists = any(
             _suitability_rank(candidate, inputs) == selected.suitability_rank
@@ -1364,7 +1359,8 @@ def resolve_reviewer(
         )
         if higher_quality_tier_exists:
             substitution_notes.append(
-                f"fell back to {selected.name}: no eligible candidate remained in a higher-quality tier"
+                f"fell back to {selected.name}: no eligible candidate remained in "
+                "a higher-quality tier"
             )
         selected_tier = _MODEL_CATALOG["quality_tiers"][selected.quality_tier]
         selected_rung_names = {

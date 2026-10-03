@@ -33,7 +33,7 @@ import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -399,7 +399,7 @@ def pace_deficit_state(
     """Shared uncovered-pace decision for routing, admission and review (#9615).
 
     A fresh positive balance covers pace only for credit-allowlisted models;
-    a fresh unexpired full reset covers any model. Both require readable,
+    a fresh full reset that outlasts projected run-out covers any model. Both require readable,
     rate-limit-free runtime evidence. Nothing is consumed. Raw pace remains
     visible, and a runtime hot label or near_cap status is never relaxed here.
 
@@ -407,7 +407,8 @@ def pace_deficit_state(
     is cool, regardless of used-percent. Warm means at least half the allowance
     is used and either visible pace projects a shortfall within the on-pace
     band or pace is unavailable. The existing low-use on-pace tolerance stays
-    cool. Runtime hot labels are relaxed only for confirmed covered deficits.
+    cool. Only hot labels identified by the producer as weekly pace may be relaxed.
+    Missing lane identity or run-out projection leaves reset coverage unverified.
     """
     from scripts.api.subscription_usage import _expected_pct_from_reset, _pace_number, pace_is_deficit, pace_is_visible
 
@@ -443,6 +444,10 @@ def pace_deficit_state(
             return result
     if raw is True and status in {"cool", "warm", "hot"} and remaining is not None and remaining > 10:
         result["status"] = "hot"
+    if not lane.strip():
+        return {**result, "reason": result["reason"] + ": lane identity missing"}
+    if status == "hot" and record.get("status_source") != "weekly_pace":
+        return {**result, "reason": result["reason"] + ": hot source is not weekly pace"}
     if policy is None:
         try:
             policy = load_policy()
@@ -460,7 +465,8 @@ def pace_deficit_state(
     if credit["state"] == CREDIT_BALANCE_PRESENT and (model is None or model_allowed(policy, lane, model)):
         result["covered_by"].append("credits")
     live = _verified_inventory(record, policy, current, snapshot_stale=snapshot_stale)
-    if live:
+    runout = _projected_runout(record, pace, current)
+    if live and runout is not None and any(expiry is None or expiry > runout for expiry in live):
         count, _, _ = _rate_limit_evidence(lane, record, policy, current, usage_dir)
         if count == 0:
             result["covered_by"].append("free full reset")
@@ -503,6 +509,41 @@ def _natural_reset(info: dict[str, Any]) -> datetime | None:
         if parsed is not None:
             return parsed
     return None
+
+
+def _projected_runout(info: dict[str, Any], pace: dict[str, Any] | None, now: datetime) -> datetime | None:
+    """Recompute linear run-out from the current clock, using the existing pace window math."""
+    from scripts.api.subscription_usage import _expected_pct_from_reset
+
+    if not isinstance(pace, dict):
+        return None
+    natural = _natural_reset(info)
+    if natural is None:
+        for key in ("weekly_resets_at", "resets_at", "resetsAt"):
+            natural = _reset_time(pace.get(key))
+            if natural is not None:
+                break
+    if natural is None or natural <= now:
+        return None
+    try:
+        expected = _expected_pct_from_reset({**pace, "weekly_resets_at": natural.isoformat()}, now=now)
+    except (ValueError, OverflowError):
+        return None
+    used = next(
+        (
+            value
+            for key in ("weekly_used_pct", "actual_pct", "used_pct")
+            if (value := _number(pace.get(key))) is not None
+        ),
+        None,
+    )
+    if expected is None or not 0 < expected < 100 or used is None or not 0 < used <= 100:
+        return None
+    elapsed_s = (natural - now).total_seconds() * expected / (100 - expected)
+    try:
+        return now + timedelta(seconds=elapsed_s * (100 - used) / used)
+    except OverflowError:
+        return None
 
 
 def _verified_inventory(

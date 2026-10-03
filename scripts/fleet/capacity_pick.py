@@ -344,6 +344,8 @@ def build_lane_rows(
             notes.append(f"{credit['state']}: {credit['reason']}")
         # Reuse the verified inventory for display; near-cap reset admission
         # still requires the separately asserted operator reserve above.
+        # An unreadable policy cannot supply inventory freshness bounds, so
+        # policy_error deliberately suppresses this informational note too.
         if lane == "codex" and codex_is_threatened(info):
             available = (credit.get("reset_advice") or {}).get("free_resets_available")
             if isinstance(available, int) and available > 0:
@@ -396,6 +398,7 @@ def build_lane_rows(
                                 "reset_credits",
                                 "credit_balance",
                                 "runtime",
+                                "status_source",
                             )
                             if key in info
                         },
