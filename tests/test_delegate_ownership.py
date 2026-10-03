@@ -1114,8 +1114,7 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
 
         # 5. Cwd resolution failure (cwd_path.resolve() raises OSError) -> returns None
         with patch.object(Path, "resolve", side_effect=OSError("Resolution error")):
-            with patch.object(Path, "read_bytes", side_effect=FileNotFoundError("No such file")):
-                assert _pid_matches_task(worker.pid, task_id) is None
+            assert _pid_matches_task(worker.pid, "other-task") is None
 
         # 6. Confirmed death: if process is dead, FileNotFoundError on probe returns False
         with patch("scripts.guardrails.delegate_ownership._pid_alive", return_value=False):
@@ -1303,6 +1302,114 @@ def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
         rows = conn.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
         assert rows[0] == 1
         conn.close()
+    finally:
+        p.terminate()
+        p.wait()
+
+
+def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Path):
+    """#8659 / CF r9 F1: Unavailable worktree_path resolution (FileNotFoundError/PermissionError) preserves claims."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+    from unittest.mock import patch
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "wt-res-task"
+    cwd_dir = tmp_path / "generic_cwd"
+    cwd_dir.mkdir()
+
+    # Marker-free environment and command line: environ and cmdline read cleanly without matching
+    clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
+    p = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(cwd_dir),
+        env=clean_env,
+    )
+
+    try:
+        # 1. worktree_path resolution raises FileNotFoundError
+        missing_wt = tmp_path / "missing_worktree"
+        assert _pid_matches_task(p.pid, task_id, worktree_path=missing_wt) is None
+
+        # 2. worktree_path resolution raises PermissionError
+        with patch.object(Path, "resolve", side_effect=PermissionError("Permission denied on worktree")):
+            assert _pid_matches_task(p.pid, task_id, worktree_path=tmp_path / "denied_wt") is None
+
+        # 3. OwnershipLedger integration with FileNotFoundError on worktree_path
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir(exist_ok=True)
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(missing_wt)}),
+            encoding="utf-8",
+        )
+
+        ledger_path_fnf = tmp_path / "own_wt_fnf.sqlite3"
+        ledger_fnf = OwnershipLedger(ledger_path_fnf, task_state_dir=state_dir)
+        conn_fnf = sqlite3.connect(ledger_path_fnf)
+        conn_fnf.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn_fnf.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/wt_fnf.py"}', p.pid, time.time() - 200),
+        )
+        conn_fnf.commit()
+
+        ch_fnf = ledger_fnf.admit(
+            task_id="challenger-wt-fnf",
+            mode="workspace-write",
+            owned_paths=["scripts/wt_fnf.py"],
+            pid=os.getpid(),
+        )
+        assert ch_fnf.admitted is False
+        assert ch_fnf.would_refuse is True
+        rows_fnf = conn_fnf.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+        assert rows_fnf[0] == 1
+        conn_fnf.close()
+
+        # 4. OwnershipLedger integration with PermissionError on worktree_path
+        state_dir_perm = tmp_path / "tasks_perm"
+        state_dir_perm.mkdir(exist_ok=True)
+        denied_wt = tmp_path / "denied_worktree"
+        (state_dir_perm / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(denied_wt)}),
+            encoding="utf-8",
+        )
+
+        ledger_path_perm = tmp_path / "own_wt_perm.sqlite3"
+        ledger_perm = OwnershipLedger(ledger_path_perm, task_state_dir=state_dir_perm)
+        conn_perm = sqlite3.connect(ledger_path_perm)
+        conn_perm.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn_perm.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/wt_perm.py"}', p.pid, time.time() - 200),
+        )
+        conn_perm.commit()
+
+        orig_resolve = Path.resolve
+
+        def mock_resolve_perm(self: Path, strict: bool = False) -> Path:
+            if "denied_worktree" in str(self) or "denied_wt" in str(self):
+                raise PermissionError(f"Permission denied: {self}")
+            return orig_resolve(self, strict=strict)
+
+        with patch.object(Path, "resolve", autospec=True, side_effect=mock_resolve_perm):
+            ch_perm = ledger_perm.admit(
+                task_id="challenger-wt-perm",
+                mode="workspace-write",
+                owned_paths=["scripts/wt_perm.py"],
+                pid=os.getpid(),
+            )
+            assert ch_perm.admitted is False
+            assert ch_perm.would_refuse is True
+            rows_perm = conn_perm.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+            assert rows_perm[0] == 1
+            conn_perm.close()
     finally:
         p.terminate()
         p.wait()

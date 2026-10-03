@@ -452,12 +452,9 @@ def _pid_matches_task(
                 return True
 
             if worktree_path is not None:
-                try:
-                    resolved_wt = Path(worktree_path).resolve(strict=True)
-                    if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
-                        return True
-                except OSError:
-                    pass
+                resolved_wt = Path(worktree_path).resolve(strict=True)
+                if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
+                    return True
     except OSError:
         if not _pid_alive(pid):
             return False
