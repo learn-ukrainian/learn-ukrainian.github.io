@@ -622,6 +622,56 @@ The managed `task-scratch` namespace, every scratch root (`/var/tmp/lu`, the
 `<tmp>/lu-scratch` fallback, `$LU_RUNTIME_TMP_BASE_ROOT`) and their ancestors are
 excluded from the scan even when a basename matches a pattern.
 
+## Claude session scratch and one-off reporting (#8783)
+
+The scheduled hygiene runner also handles Claude session scratch (#8783) once
+per host run. Its default is report-only; `--apply` enables removal. The sweep
+recognizes UUID session directories immediately under the per-user Claude temp
+root or under a project directory. It never follows directory symlinks, including
+root ancestors, and uses descriptor-relative, symlink-resistant removal. A
+positive live-process match always preserves the session. The sweep reads Claude
+Code's per-process `sessions/<pid>.json` registry under `CLAUDE_CONFIG_DIR`
+(default: the user's Claude config directory). A registry PID with a matching
+kernel start time (`procStart`) protects its `sessionId`, even when process
+enumeration omits it or the executable has another name. PID reuse with a different
+start time does not establish liveness.
+
+Removal requires readable registry evidence whose `pidDomain` matches the
+sweeper's machine identity and PID namespace, plus no unidentified Claude process.
+A missing, empty, malformed or inaccessible registry, a mismatched domain, or a
+Claude executable/first argument, native executable under `claude/versions/`, or
+Node running Claude Code's `claude-code/cli.js` entrypoint without a matching
+registry entry prevents absence proof, including for confirmed v2 thread-handoff
+predecessors. Access denied on unrelated processes and later data argument paths
+containing `claude` do not block absence proof. Unknown entries remain preserved; session age never
+authorizes deletion. Deep-tree recursion errors are reported per entry and do
+not abort the remaining hygiene run. Registry JSON parse failures, including
+excessive nesting, prevent absence proof. Lease JSON parse failures are recorded
+as errors and preserve sessions without a positive live match as `unknown_session`;
+an unreadable lease cannot safely identify which predecessor it affects.
+
+Apply rechecks liveness immediately before removal, but this is not an atomic
+transaction with Claude's session startup. A `claude --resume <id>` starting
+after that recheck can race with removal and lose scratch. Avoid starting or
+resuming sessions during an apply run; use dry-run when that cannot be ensured.
+
+To inspect session scratch independently:
+
+```bash
+.venv/bin/python -m scripts.maintenance.claude_session_scratch
+```
+
+Add `--rollover-root .agent/thread-rollovers/claude` to read confirmed lineage
+records, or `--apply` to remove proven-ended directories. The independent CLI
+prints counts and bytes only. Scheduled private receipts retain per-entry reasons;
+public summaries retain only aggregate counts, bytes and preservation reasons.
+
+The batch-state sweep lists regular files at least 100 MiB outside managed
+`tasks/` state in `one_off_artifacts`, including `manifest_*.json` outputs. Each
+entry has a batch-state-relative path, bytes, age in days and `report_only` action.
+Owners use this list to decide disposition; the one-off report never removes
+these files. Scheduled public summaries expose their count and total bytes.
+
 ## Task-owned scratch for large ad-hoc runs (#8738)
 
 Large one-off outputs (synthetic Atlas DBs, runtime-shard exports, delegated QA
