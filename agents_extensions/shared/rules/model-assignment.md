@@ -357,8 +357,9 @@ refine its implementation ordering.
 Standing role assignment for orchestrated sessions (names rotate; route by the role, not the label).
 Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_seats` + `formal_cf_defaults`.
 
-- **Orchestrator seats (fleet-comms stream #5512 / #4707)** — any of these may own a cold-start /
-  drive-board loop (prioritize → delegate → request CF → merge-in-lane). Do **not** run worker-level
+- **Orchestrator seats (fleet-comms stream #5512 / #4707)** — any of these except `agy` may own a cold-start /
+  drive-board loop (prioritize → delegate → request CF → merge-in-lane); `agy` is a catalog seat only
+  (operator decision 2026-10-03, #9584). Do **not** run worker-level
   implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical, fixtures, or
   anything parallelizable → a worker). **Codex was re-added as a driver seat** (user 2026-07-23),
   reversing the 2026-07-22 removal: HydrationCapsuleV1 makes its rollover cost acceptable. Machine
@@ -676,7 +677,7 @@ seats rotate — operator wording; the catalog-refresh contract §above owns nam
 | Code & infrastructure review | GLM-5.3 · GPT-6.1 Sol | Historical Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
 | Security-sensitive changes | Sol · Opus; Astra last resort | ambient-Anthropic-token→z.ai leak caught pre-merge (#5931 arc) |
 | Debugging & forensics | Grok · GLM-5.3 | Grok: #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
-| Long-context sweeps & harness infra | Gemini | model catalog §above (window/tooling) |
+| Long-context sweeps & harness infra | Gemini (sweeps and recon only; not planning or design input, operator decision 2026-10-03, #9584) | model catalog §above (window/tooling) |
 
 Historical Terra findings support the evidence record, not a current routing choice.
 The ordinary Codex advisor-panel participant is GPT-6.1 Sol; Astra is last resort. Routine Codex code review
