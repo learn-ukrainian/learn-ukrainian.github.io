@@ -776,13 +776,14 @@ def test_gloss_absent_when_no_row_and_present_when_matching(synthetic_vesum, syn
     w_verb = next(w for w in res["store"]["words"] if w["lemma"] == "synthetic")
     w_none = next(w for w in res["store"]["words"] if w["lemma"] == "synthetic-no-gloss")
 
-    assert w_verb["gloss_en"] == "wrong POS"
-    assert w_verb["gloss_source"] == "dmklinger_uk_en"
-    assert w_verb["gloss_ref"]["id"] == 3
-    with sqlite3.connect(synthetic_sources) as conn:
-        conn.row_factory = sqlite3.Row
-        row = dict(conn.execute("SELECT * FROM dmklinger_uk_en WHERE id = 3").fetchone())
-    assert w_verb["gloss_ref"]["row_sha256"] == sources.row_digest(row)
+    # The noun Kaikki entry establishes a second source's presence but
+    # cannot corroborate the verb; it must not authorize sole-source fallback.
+    assert "gloss_en" not in w_verb
+    assert "gloss_source" not in w_verb
+    assert "gloss_ref" not in w_verb
+    gap = next(g for g in res["unglossed"] if g["lemma"] == "synthetic")
+    assert gap["reason"] == codes.GLOSS_SENSE_UNRESOLVED
+    assert gap["candidates"] == [{"gloss": "wrong POS", "source": "dmklinger_uk_en", "id": 3}]
 
     assert "gloss_en" not in w_none
     assert "gloss_source" not in w_none

@@ -11,9 +11,11 @@ import pytest
 def synthetic_kaikki_side_db(tmp_path_factory, monkeypatch):
     """Give evidence tests a valid side-db-v1 snapshot without host data."""
     path = tmp_path_factory.mktemp("kaikki-side-db") / "synthetic-kaikki.sqlite"
-    # POS and gloss arrays copied from Kaikki side-db-v1 content_sha256
+    # Real-lemma POS/gloss arrays copied from Kaikki side-db-v1 content_sha256
+    # (the synthetic primary below supplies controlled corroboration).
     # 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5.
     rows = {
+        "synthetic": {"pos": ["noun"], "glosses": ["first translation"]},
         "вона": {"pos": ["pron"], "glosses": ["she (person)", "it (feminine gender)"]},
         "після": {"pos": ["adv", "prep"], "glosses": ["after (in time)", "later, afterwards"]},
     }
@@ -113,8 +115,8 @@ def synthetic_sources(tmp_path):
             "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
             [
                 (3, "synthetic", "verb", '["wrong POS"]', "", "synthetic"),
-                # Same attested sense in two rows: provenance tests need a
-                # selectable gloss. Distinct-sense refusal has its own tests.
+                # Duplicate candidates exercise provenance: the matching Kaikki
+                # primary permits emission under the unanimity rule.
                 (2, "synthetic", "noun", '["first translation"]', "", "synthetic"),
                 (1, "synthetic", "noun", '["first translation"]', "", "synthetic"),
                 (4, "synthetic-adj", "adjective", '["adjective translation"]', "", "synthetic"),

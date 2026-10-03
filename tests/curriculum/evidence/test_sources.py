@@ -242,9 +242,9 @@ def test_kaikki_refuses_entire_entry_if_one_gloss_is_malformed():
     payload = {"pos": ["prep"], "glosses": ["under", "bad)"]}
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
     payload["glosses"] = ["under (a roof)", 'beneath "something" [figurative]']
-    # A well-formed figurative sibling is fallback only; malformed siblings
-    # above still invalidate the whole source payload.
-    assert sources.aligned_kaikki_gloss(payload, "prep", False) == ("under (a roof)", None)
+    # A second sense, even restricted, prevents sole-source emission.
+    # Malformed siblings above still invalidate the whole source payload.
+    assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, codes.GLOSS_SENSE_UNRESOLVED)
 
 
 def test_missing_kaikki_fails_closed_with_named_code(tmp_path):

@@ -469,14 +469,13 @@ def select_gloss(
     pronoun_entry: bool | None = None,
     ulif_entries: Iterable[dict] = (),
 ) -> GlossSelection:
-    """Select a corroborated first unrestricted head; withhold unbound senses.
+    """Emit only unanimous primary heads or an unambiguous sole-source sense.
 
-    Agreement must include the first unrestricted sub-sense head of at least
-    one source. A sole source can stand alone only with one distinct head.
-    Preposition qualifiers survive unless their head is corroborated. A mixed
-    Kaikki POS entry can only corroborate the first head of the first
-    unrestricted dmklinger sense, with identical meaning qualifiers. Otherwise
-    that mixed entry remains unresolved. Source rows retain their bytes.
+    Compare the first head of each source's first unrestricted sub-sense.
+    Later senses remain diagnostics only. A sole source must have exactly one
+    sense and one head, including restricted and unparseable alternatives in
+    that count. Preserve qualifiers for uncorroborated prepositions and require
+    identical primary qualifiers for mixed-POS Kaikki entries.
     """
     lemma, pos = word["lemma"], word["pos"]
     if pronoun_entry is None:
@@ -517,37 +516,41 @@ def select_gloss(
             )
         rows = selected
     senses, reason = aligned_kaikki_senses(payload, pos, pronoun_entry)
-    if collision:
-        # A flat Kaikki list cannot bind to the selected ULIF homonym.
-        senses = []
-    groups: list[list[dict]] = []
+    mixed_preposition = (
+        reason == "kaikki_multi_pos"
+        and pos == "prep"
+        and payload
+        and isinstance(payload.get("pos"), list)
+        and "prep" in payload["pos"]
+    )
+    if mixed_preposition:
+        senses, _ = aligned_kaikki_senses({**payload, "pos": ["prep"]}, pos, pronoun_entry)
+    groups: dict[str, list[list[dict]]] = {"dmklinger_uk_en": [], "kaikki_wiktionary": []}
     primaries: dict[str, dict | None] = {}
 
-    def add_sense(sense: str, source: str, row: dict | None, *, anchor: bool = True) -> list[dict]:
-        marked = any(_register_note(note) for note in _outer_notes(sense))
-        group = []
-        for span in _sense_spans(sense):
-            head = _gloss_head(span)
-            if not head or ";" in head:
-                continue
-            compare = head[3:] if pos == "verb" and head.startswith("to ") else head
-            qualified = _gloss_head(span, keep_qualifiers=pos == "prep")
-            group.append(
-                {
-                    "span": head,
-                    "qualified": qualified,
-                    "head": compare,
-                    "source": source,
-                    "row": row,
-                    "restricted": marked,
-                }
-            )
-        if group:
-            groups.append(group)
-        if anchor and not marked and source not in primaries:
-            # An unparseable first sense cannot authorize a later sense.
-            primaries[source] = group[0] if group else None
-        return group
+    def add_sense(sense: str, source: str, row: dict | None) -> None:
+        # Count every sub-sense, even empty/meta/restricted ones, so parsing
+        # cannot turn a polysemous sole source into an unambiguous one.
+        for part in _sub_senses(sense) or [sense]:
+            marked = any(_register_note(note) for note in _outer_notes(part))
+            group = []
+            for span in _sense_spans(part):
+                head = _gloss_head(span)
+                if not head or ";" in head:
+                    continue
+                group.append(
+                    {
+                        "span": head,
+                        "qualified": _gloss_head(span, keep_qualifiers=pos == "prep"),
+                        "head": head.removeprefix("to ") if pos == "verb" else head,
+                        "source": source,
+                        "row": row,
+                    }
+                )
+            groups[source].append(group)
+            if not marked and source not in primaries:
+                # An unparseable first unrestricted sense blocks promotion.
+                primaries[source] = group[0] if group else None
 
     for row in rows:
         raw = row.get("translations") or []
@@ -557,74 +560,36 @@ def select_gloss(
             translations = [raw]
         if isinstance(translations, list):
             for sense in translations:
-                if isinstance(sense, str):
-                    for part in _sub_senses(sense) or [sense]:
-                        add_sense(part, "dmklinger_uk_en", row)
+                add_sense(sense if isinstance(sense, str) else "", "dmklinger_uk_en", row)
     for sense in senses:
-        for part in _sub_senses(sense):
-            add_sense(part, "kaikki_wiktionary", None)
-    mixed_preposition = (
-        reason == "kaikki_multi_pos"
-        and pos == "prep"
-        and not collision
-        and payload
-        and payload.get("glosses")
-        and isinstance(payload.get("pos"), list)
-        and len(payload["pos"]) > 1
-    )
-    if mixed_preposition:
-        # A minority sense cannot become primary through flat mixed-POS
-        # agreement. Government notes are grammar, not meaning qualifiers.
-        corroborating, _ = aligned_kaikki_senses({**payload, "pos": ["prep"]}, pos, pronoun_entry)
-        primary = primaries.get("dmklinger_uk_en")
-        if primary and "prep" in payload.get("pos", []):
-            for sense in corroborating:
-                for part in _sub_senses(sense):
-                    if _gloss_head(part, keep_qualifiers=True) == primary["qualified"]:
-                        add_sense(part, "kaikki_wiktionary", None, anchor=False)
-    candidates = [c for group in groups for c in group]
-    if any(not c["restricted"] for c in candidates):
-        groups = [[c for c in group if not c["restricted"]] for group in groups]
-        candidates = [c for group in groups for c in group]
-    if not candidates:
-        return GlossSelection(
-            reason=codes.GLOSS_SENSE_UNRESOLVED if mixed_preposition else reason or codes.GLOSS_MISSING
-        )
-    support: dict[str, set[str]] = {}
-    for candidate in candidates:
-        support.setdefault(candidate["head"], set()).add(candidate["source"])
-    agreed = {head for head, providers in support.items() if len(providers) > 1}
-    anchors = {c["head"] for c in primaries.values() if c is not None}
-    eligible = agreed & anchors
-    if not agreed:
-        for candidate in candidates:
-            candidate["span"] = candidate["qualified"]
+        add_sense(sense, "kaikki_wiktionary", None)
+    candidates = [c for source_groups in groups.values() for group in source_groups for c in group]
     diagnostic = tuple(
-        {"gloss": c["span"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
+        {"gloss": c["qualified"], "source": c["source"], "id": c["row"]["id"] if c["row"] else None} for c in candidates
     )
-    if not agreed:
-        # Restricted or unparseable senses still establish source presence;
-        # filtering them cannot authorize an uncorroborated standalone head.
-        providers = ({"dmklinger_uk_en"} if rows else set()) | ({"kaikki_wiktionary"} if senses else set())
-        if not mixed_preposition and len(providers) == 1 and len(support) == 1:
-            eligible = set(support) & anchors
-    if not eligible:
-        return GlossSelection(reason=codes.GLOSS_SENSE_UNRESOLVED, candidates=diagnostic)
-    chosen = next((c for c in candidates if c["head"] in eligible and is_learner_gloss(c["span"])), None)
+    if not candidates and not rows and not senses:
+        return GlossSelection(reason=reason or codes.GLOSS_MISSING)
+    dmk, kaikki = primaries.get("dmklinger_uk_en"), primaries.get("kaikki_wiktionary")
+    chosen = None
+    if not collision and dmk and kaikki and dmk["head"] == kaikki["head"]:
+        if not mixed_preposition or dmk["qualified"] == kaikki["qualified"]:
+            chosen = dmk
+            if pos == "verb" and not dmk["span"].startswith("to ") and kaikki["span"].startswith("to "):
+                chosen = kaikki
+    elif bool(rows) != (payload is not None):
+        sole = "dmklinger_uk_en" if rows else "kaikki_wiktionary"
+        source_groups = groups[sole]
+        if len(source_groups) == 1 and len(source_groups[0]) == 1:
+            chosen = primaries.get(sole)
+            if chosen:
+                chosen = {**chosen, "span": chosen["qualified"]}
     if chosen is None:
-        return GlossSelection(reason=codes.GLOSS_MISSING, candidates=diagnostic)
-    if pos == "verb":
-        chosen = next(
-            (
-                c
-                for c in candidates
-                if c["head"] == chosen["head"]
-                and c["source"] == chosen["source"]
-                and c["span"].startswith("to ")
-                and is_learner_gloss(c["span"])
-            ),
-            chosen,
+        return GlossSelection(
+            reason=codes.GLOSS_SENSE_UNRESOLVED if rows or payload is not None else reason or codes.GLOSS_MISSING,
+            candidates=diagnostic,
         )
+    if not is_learner_gloss(chosen["span"]):
+        return GlossSelection(reason=codes.GLOSS_MISSING, candidates=diagnostic)
     row = chosen["row"]
     ref = {"table": "dmklinger_uk_en", "id": row["id"], "row_sha256": row_digest(row)} if row else None
     return GlossSelection(chosen["span"], chosen["source"], ref, candidates=diagnostic)

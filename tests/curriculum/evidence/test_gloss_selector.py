@@ -47,8 +47,8 @@ def test_collision_requires_exact_ulif_key_and_does_not_fall_back():
     assert len(missing.candidates) == 2
     word["ulif"] = {"key": ["замо́к", 2]}
     result = sources.select_gloss(word, rows, payload(["castle"]))
-    assert (result.gloss, result.ref["id"]) == ("lock", 2)
-    assert result.ref["row_sha256"] == sources.row_digest(rows[1])
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
 
 
 @pytest.mark.parametrize("glosses", [["family", "seed"], ["to forge", "to cuckoo"], ["bond", "communication"]])
@@ -74,14 +74,14 @@ def test_agreement_cannot_promote_a_head_that_is_first_in_neither_source(pos, dm
 @pytest.mark.parametrize(
     "dmk,kaikki,expected",
     [
-        (["primary", "shared"], ["shared"], "shared"),
-        (["primary", "shared"], ["other", "primary", "shared"], "primary"),
-        (["(rare) old; primary", "shared"], ["other", "primary"], "primary"),
+        (["primary", "shared"], ["shared"], None),
+        (["primary", "shared"], ["other", "primary", "shared"], None),
+        (["(rare) old; primary", "shared"], ["other", "primary"], None),
         (["alternative form of primary", "shared"], ["alternative form of other", "shared"], None),
         (["malformed)", "shared"], ["other", "shared"], None),
         (["primary; shared"], [], None),
         (["primary, shared"], [], None),
-        (["primary; primary"], [], "primary"),
+        (["primary; primary"], [], None),
         (["primary"], ["other"], None),
         (["primary"], ["alternative form of other"], None),
     ],
@@ -128,8 +128,8 @@ def test_synonym_group_can_agree_without_treating_shortness_as_meaning():
         [row(1, ["daylight (between sunrise and sunset)", "day (24 hours)"])],
         payload(["day"]),
     )
-    assert result.gloss == "day"
-    assert result.ref["id"] == 1
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
 
 
 def test_disambiguating_qualifier_is_kept_and_meta_glosses_refused():
@@ -192,102 +192,160 @@ def test_current_a1_selection_and_source_span_property(a1_source_capture):
         else:
             spans = kaikki[word["lemma"]]["glosses"]
         assert any(builder.gloss in span for span in spans), word["id"]
-    for lemma, pos, expected in [("добрий", "adj", "good"), ("день", "noun", "day")]:
+    for lemma, pos, expected in [("добрий", "adj", None), ("день", "noun", None)]:
         word = next(w for w in records if (w["lemma"], w["pos"]) == (lemma, pos))
         assert sources.select_gloss(word, rows[lemma, pos], kaikki[lemma]).gloss == expected
 
 
-def test_all_187_records_corroboration_never_selects_a_nonfirst_sense(a1_source_capture):
-    records, captured = a1_source_capture
-    assert len(records) == len(captured) == 187
-    glossed = mixed_checked = corroborated = 0
+def assert_primary_unanimity(records, captured, selector):
+    """Oracle reads raw strings; it never consumes selector candidates/helpers."""
+    # Complete register labels represented by the capture. Descriptive and
+    # nested notes are not labels; government notes do not restrict a sense.
+    labels = {
+        "archaic",
+        "colloquial",
+        "dated",
+        "dialectal",
+        "figurative",
+        "formal",
+        "historical",
+        "informal",
+        "obsolete",
+        "nonstandard",
+        "non-standard",
+        "rare",
+        "slang",
+        "technical",
+        "psychology",
+        "literary",
+        "poetic",
+        "vulgar",
+        "colloq.",
+        "rarely",
+        "figuratively",
+        "intransitive",
+    }
 
-    def first_raw_head(raw_senses, pos):
-        # Independent oracle for the captured corpus: strip balanced notes
-        # with plain strings and split only at outer commas/semicolons. Never
-        # search later senses for the emitted value or use selector helpers.
-        register_labels = {
-            "archaic",
-            "colloquial",
-            "dated",
-            "dialectal",
-            "figurative",
-            "formal",
-            "historical",
-            "informal",
-            "obsolete",
-            "nonstandard",
-            "non-standard",
-            "rare",
-            "slang",
-            "technical",
-        }
-        for raw in raw_senses:
-            parts, notes, note, depth, head = [], [], "", 0, ""
-            for char in raw:
-                if char in "([":
-                    depth += 1
-                    if depth > 1:
-                        note += char
-                elif char in ")]":
-                    depth -= 1
-                    if depth:
-                        note += char
-                    else:
-                        notes.append(note.strip())
-                        if note.strip() in {"short scale", "long scale"}:
-                            head += f"({note.strip()})"
-                        note = ""
-                elif depth:
+    def raw_parts(raw):
+        parts, text, notes, note, brackets = [], "", [], "", []
+        for char in raw:
+            if char in "([":
+                if brackets:
                     note += char
-                elif char == ";":
-                    parts.append((head, notes))
-                    head, notes = "", []
-                elif char == ",":
-                    # Keep the first alternative only, but finish reading
-                    # notes to determine register restriction of the sense.
-                    if "\0" not in head:
-                        head += "\0"
+                brackets.append(char)
+            elif char in ")]":
+                if not brackets or brackets.pop() != {")": "(", "]": "["}[char]:
+                    return [(None, [])]
+                if brackets:
+                    note += char
                 else:
-                    head += char
-            parts.append((head, notes))
-            for head, notes in parts:
-                if any(n.casefold() in register_labels for n in notes):
-                    continue
-                head = head.split("\0", 1)[0].strip().rstrip("?!").rstrip()
-                return head.removeprefix("to ") if pos == "verb" else head
-        return None
+                    notes.append(note.strip())
+                    if note.strip() in {"short scale", "long scale"}:
+                        text += f"({note.strip()})"
+                    note = ""
+            elif brackets:
+                note += char
+            elif char == ";":
+                parts.append((text, notes))
+                text, notes = "", []
+            else:
+                text += char
+        if brackets:
+            return [(None, [])]
+        parts.append((text, notes))
+        return parts
 
+    def raw_primary(raw_senses, pos):
+        parts = [part for raw in raw_senses for part in raw_parts(raw)]
+        for text, notes in parts:
+            restricted = False
+            for note in notes:
+                tokens = [x.strip().casefold() for x in note.replace(";", ",").split(",")]
+                if any(x in labels - {"intransitive"} for x in tokens) and all(x in labels for x in tokens):
+                    restricted = True
+            if restricted:
+                continue
+            head = text.split(",", 1)[0].strip().rstrip("?!").rstrip() if text is not None else None
+            return head.removeprefix("to ") if head and pos == "verb" else head, parts
+        return None, parts
+
+    emitted = 0
     for word in records:
         c = captured[word["id"]]
-        result = sources.select_gloss(word, c["rows"], c["kaikki"], ulif_entries=c["ulif_entries"])
-        mixed = c["kaikki"]
-        is_mixed = word["pos"] == "prep" and mixed and len(mixed["pos"]) > 1 and mixed["glosses"]
-        mixed_checked += bool(is_mixed)
+        result = selector(word, c["rows"], c["kaikki"], ulif_entries=c["ulif_entries"])
         if result.gloss is None:
-            if is_mixed:
-                assert result.reason == codes.GLOSS_SENSE_UNRESOLVED, word["id"]
             continue
-        glossed += 1
-        raw_dmk = [s for r in c["rows"] for s in json.loads(r["translations"])]
-        raw_kaikki = mixed["glosses"] if mixed else []
-        first_heads = {first_raw_head(raw_dmk, word["pos"]), first_raw_head(raw_kaikki, word["pos"])}
-        emitted_head = first_raw_head([result.gloss], word["pos"])
-        assert emitted_head in first_heads, (word["id"], result, first_heads)
-        if not is_mixed:
-            continue
-        # Independent corpus oracle: every applicable captured first sense is
-        # unrestricted. Read its first head directly, without selector helpers
-        # or searching later senses for a matching candidate.
-        first_sense = json.loads(c["rows"][0]["translations"])[0]
-        assert not first_sense.startswith(("(", "[")), word["id"]
-        first_head = first_sense.split(" (", 1)[0].split(", ", 1)[0]
-        assert result.gloss == first_head, (word["id"], first_sense, result)
-        assert result.source == "dmklinger_uk_en"
-        assert result.ref["id"] == c["rows"][0]["id"]
-        corroborated += 1
-    assert mixed_checked > corroborated > 0
-    assert glossed > 100
+        emitted += 1
+        # Read row POS directly; ignore alphabet-letter rows in pronoun captures.
+        pronoun = any("pron" in f.get("tags", "").split(":") for f in word.get("forms", []))
+        rows = c["rows"]
+        if word["pos"] in {"noun", "adj"}:
+            allowed = (
+                ({"pronoun"} if word["pos"] == "noun" else {"pronoun", "particle"})
+                if pronoun
+                else ({"noun"} if word["pos"] == "noun" else {"adjective", "adj"})
+            )
+            rows = [r for r in rows if r["pos"] in allowed]
+            if pronoun and word["pos"] == "adj":
+                preferred = "pronoun" if word["lemma"] == "свій" else "particle"
+                rows = [r for r in rows if r["pos"] == preferred] or rows
+        raw_dmk = [g for r in rows for g in json.loads(r["translations"])]
+        raw_kaikki = c["kaikki"]["glosses"] if c["kaikki"] else []
+        dmk, dmk_parts = raw_primary(raw_dmk, word["pos"])
+        kaikki, kaikki_parts = raw_primary(raw_kaikki, word["pos"])
+        emitted_head, _ = raw_primary([result.gloss], word["pos"])
+        unanimous = bool(rows and c["kaikki"] and dmk == kaikki == emitted_head)
+        sole_parts = dmk_parts if rows else kaikki_parts
+        sole_head = dmk if rows else kaikki
+        sole = (
+            bool(rows) != (c["kaikki"] is not None)
+            and len(sole_parts) == 1
+            and sole_parts[0][0] is not None
+            and len(sole_parts[0][0].split(",")) == 1
+            and sole_head == emitted_head
+        )
+        assert unanimous or sole, (word["id"], result.gloss, dmk, kaikki, sole_parts)
+    return emitted
+
+
+def test_all_187_records_require_primary_unanimity_or_one_sole_sense(a1_source_capture):
+    records, captured = a1_source_capture
+    assert len(records) == len(captured) == 187
+    assert assert_primary_unanimity(records, captured, sources.select_gloss) >= 78
+
+
+def test_universal_oracle_rejects_later_sense_agreement_mutant(a1_source_capture):
+    records, captured = a1_source_capture
+
+    def mutant(word, rows, payload, **kwargs):
+        result = sources.select_gloss(word, rows, payload, **kwargs)
+        # Re-enable later dmklinger agreement with Kaikki's primary, as the
+        # previous rule did. Selection uses real raw rows, not a fixed gloss.
+        if result.gloss is None and payload and payload["pos"] == ["noun"]:
+            primary = payload["glosses"][0].split(" (", 1)[0]
+            for row in rows:
+                for sense in json.loads(row["translations"])[1:]:
+                    if sense.split(" (", 1)[0] == primary:
+                        return sources.GlossSelection(gloss=primary, source="dmklinger_uk_en")
+        return result
+
+    day = next(w for w in records if w["lemma"] == "день")
+    c = captured[day["id"]]
+    assert mutant(day, c["rows"], c["kaikki"], ulif_entries=c["ulif_entries"]).gloss == "day"
+    with pytest.raises(AssertionError):
+        assert_primary_unanimity(records, captured, mutant)
+
+
+@pytest.mark.parametrize("provider", ["dmk", "kaikki"])
+@pytest.mark.parametrize("glosses", [["one", "one"], ["one; one"], ["one, one"], ["one", "(rare) two"]])
+def test_sole_source_requires_one_sense_and_one_head(provider, glosses):
+    result = sources.select_gloss(
+        {"lemma": "synthetic", "pos": "noun"},
+        [row(1, glosses)] if provider == "dmk" else [],
+        payload(glosses) if provider == "kaikki" else None,
+    )
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
 
 
 def test_cited_ids_exclude_incidental_mentions_and_include_uses():
@@ -352,7 +410,9 @@ def test_plan_gate_refuses_nonfirst_agreement_even_when_stored(synthetic_sources
     with sqlite3.connect(synthetic_sources) as conn:
         conn.execute("UPDATE dmklinger_uk_en SET translations=? WHERE pos='noun'", (json.dumps(["primary", "shared"]),))
     with sqlite3.connect(synthetic_kaikki_side_db) as conn:
-        conn.execute("INSERT INTO kaikki VALUES (?, ?)", ("synthetic", json.dumps(payload(["other", "shared"]))))
+        conn.execute(
+            "INSERT OR REPLACE INTO kaikki VALUES (?, ?)", ("synthetic", json.dumps(payload(["other", "shared"])))
+        )
         conn.execute("UPDATE meta SET value='3' WHERE key='row_count'")
     word = {"id": "W-001", "lemma": "synthetic", "pos": "noun"}
     if stored:
@@ -540,7 +600,8 @@ def test_preposition_prefers_agreed_head_to_qualified_unagreed_head():
         ],
         payload(["around (surrounding)"], "prep"),
     )
-    assert result.gloss == "around"
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
 
 
 def test_preposition_keeps_qualifier_without_admissible_agreement():
@@ -565,7 +626,7 @@ def test_preposition_qualifier_cannot_be_dropped_to_pass_the_length_gate():
 @pytest.mark.parametrize(
     "glosses,expected",
     [
-        (["circle", "about (in the immediate neighborhood of)"], "about"),
+        (["circle", "about (in the immediate neighborhood of)"], None),
         (["circle", "around (surrounding)"], None),
         (["circle", "about"], None),
         (["circle", "about (concerning)"], None),
@@ -626,7 +687,8 @@ def test_terminal_punctuation_does_not_create_distinct_heads(punctuation):
         [row(1, [f"who{punctuation} (interrogative pronoun)", "who (relative pronoun)"])],
         None,
     )
-    assert result.gloss == "who"
+    assert result.gloss is None
+    assert result.reason == codes.GLOSS_SENSE_UNRESOLVED
     assert sources._gloss_head(f"who (interrogative pronoun){punctuation}") == "who"
 
 
@@ -663,7 +725,8 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
     word = {"lemma": "замок", "pos": "noun", "ulif": {"key": ["замо́к", 2]}}
     entries = [homonym(1, "за́мок"), homonym(2, "замо́к"), homonym(3, "замо́к", "verb")]
     rows = [row(1, ["castle"], "за́мок"), row(2, ["lock"], "замо́к")]
-    assert sources.select_gloss(word, rows, payload(["castle"]), ulif_entries=entries).gloss == "lock"
+    assert sources.select_gloss(word, rows, payload(["castle"]), ulif_entries=entries).gloss is None
+    assert sources.select_gloss(word, rows, None, ulif_entries=entries).gloss == "lock"
     word["ulif"]["key"][1] = 99
     assert sources.select_gloss(word, rows, None, ulif_entries=entries).reason == codes.GLOSS_SENSE_UNRESOLVED
 
@@ -671,12 +734,14 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
 @pytest.mark.parametrize(
     "lemma,expected",
     [
+        ("ти", None),
+        ("поки", None),
         ("писати", "to write"),
         ("твій", "your"),
         ("радіти", "to rejoice"),
         ("додому", "home"),
-        ("малина", "raspberry"),
-        ("я", "I"),
+        ("малина", None),
+        ("я", None),
         ("вона", "she"),
         ("і", None),
         ("читати", "to read"),
@@ -684,30 +749,30 @@ def test_stressed_homonym_binding_is_unique_and_pos_scoped():
         ("бачити", "to see"),
         ("чути", "to hear"),
         ("рука", "hand"),
-        ("єнот", "raccoon"),
+        ("єнот", None),
         ("дах", "roof"),
         ("алфавіт", "alphabet"),
         ("люпин", "lupin"),
-        ("тин", "fence made out of vines and branches"),
+        ("тин", None),
         ("мільярд", "billion (short scale)"),
         ("їжа", "food"),
         ("чобіт", "boot"),
-        ("чай", "tea"),
+        ("чай", None),
         ("коло", None),
         ("до", None),
         ("перед", None),
-        ("між", "between"),
-        ("хто", "who"),
+        ("між", None),
+        ("хто", None),
         ("що", None),
-        ("ґрунт", "ground"),
-        ("маля", "infant"),
-        ("мама", "mama"),
-        ("тато", "dad"),
+        ("ґрунт", None),
+        ("маля", None),
+        ("мама", None),
+        ("тато", None),
         ("од", None),
-        ("щоб", "so that"),
+        ("щоб", None),
         ("щоби", "so that"),
-        ("день", "day"),
-        ("зо", "with (in the company of)"),
+        ("день", None),
+        ("зо", None),
         ("кувати", None),
         ("коса", None),
         ("сім'я", None),
