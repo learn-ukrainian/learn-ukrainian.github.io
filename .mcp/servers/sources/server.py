@@ -176,6 +176,10 @@ async def list_tools() -> list[Tool]:
                         ),
                         "enum": list(CANONICAL_TEXTBOOK_SUBJECTS),
                     },
+                    "include_superseded": {
+                        "type": "boolean", "default": False,
+                        "description": "Explicitly include retained superseded transcriptions (default false).",
+                    },
                     "source_file": {
                         "type": "string",
                         "description": "Optional exact textbook source file to scope the search.",
@@ -334,6 +338,10 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
+                    "include_superseded": {
+                        "type": "boolean", "default": False,
+                        "description": "Explicitly retrieve a superseded historical chunk (default false).",
+                    },
                     "chunk_id": {"type": "string", "description": "Chunk ID from search results"},
                 },
                 "required": ["chunk_id"],
@@ -2028,12 +2036,13 @@ async def handle_search_text(args: dict):
     limit = min(args.get("limit", 5), 20)
     subject = args.get("subject")
     source_file = args.get("source_file")
-    query_obj = {"query": query, "limit": limit, "subject": subject, "source_file": source_file}
+    include_superseded = args.get("include_superseded", False) is True
+    query_obj = {"query": query, "limit": limit, "subject": subject, "source_file": source_file, "include_superseded": include_superseded}
 
     from wiki.sources_db import search_textbooks
 
     keywords, dropped = split_fts_keywords(query)
-    hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject, source_file=source_file)
+    hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject, source_file=source_file, include_superseded=include_superseded)
 
     if not hits:
         prose = "No results found."
@@ -2279,10 +2288,11 @@ async def handle_get_full_text(args: dict) -> list[TextContent]:
 
 async def handle_get_chunk_context(args: dict):
     chunk_id = args["chunk_id"]
-    query_obj = {"chunk_id": chunk_id}
+    include_superseded = args.get("include_superseded", False) is True
+    query_obj = {"chunk_id": chunk_id, "include_superseded": include_superseded}
 
     from scripts.storage.topology import ActiveDatabaseNetworkError
-    from wiki.sources_db import _get_conn
+    from wiki.sources_db import _get_conn, _transcription_filter
 
     try:
         conn = _get_conn()
@@ -2300,7 +2310,8 @@ async def handle_get_chunk_context(args: dict):
 
     # Search all tables for the chunk_id
     for table in ("textbooks", "literary_texts"):
-        row = conn.execute(f"SELECT * FROM {table} WHERE chunk_id = ?", (chunk_id,)).fetchone()
+        status_filter = _transcription_filter(conn, table, alias=table, include_superseded=include_superseded)
+        row = conn.execute(f"SELECT * FROM {table} WHERE chunk_id = ? {status_filter}", (chunk_id,)).fetchone()
         if row:
             row_dict = dict(row)
             prose = f"**[{chunk_id}]** — {row_dict.get('title', '')}\n\n{row_dict.get('text', '')}"

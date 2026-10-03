@@ -7,6 +7,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.pohribnyi_schema import open_schema_copy
+
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 
 
@@ -182,3 +184,41 @@ class TestSearchTextbooksSourceFilter:
             mock_fts.return_value = []
             results = search_textbooks({"query"}, source_file="antonenko-davydovych-yak-my-hovorymo")
             assert results == []
+
+
+@pytest.mark.parametrize("include", [False, True, "false"])
+def test_mcp_retained_transcriptions_require_explicit_request(server_module, tmp_path, monkeypatch, include):
+    import sqlite3
+
+    from wiki import sources_db
+
+    conn = open_schema_copy(tmp_path / "sources.db")
+    conn.row_factory = sqlite3.Row
+    conn.execute("ALTER TABLE textbooks ADD COLUMN transcription_status TEXT")
+    conn.executemany(
+        "INSERT INTO textbooks(chunk_id,title,text,source_file,transcription_status) VALUES (?,?,?,?,?)",
+        [("old", "fixture", "fixture " * 50, "fixture", "superseded"),
+         ("clean", "fixture", "fixture " * 50, "fixture", "adjudicated")],
+    )
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    try:
+        tools = _run(server_module.list_tools())
+        for name in ("search_text", "get_chunk_context"):
+            schema = next(t for t in tools if t.name == name).input_schema
+            assert schema["properties"]["include_superseded"] == {
+                "type": "boolean", "default": False,
+                "description": schema["properties"]["include_superseded"]["description"],
+            }
+        args = {"query": "fixture"}
+        if include is not False:
+            args["include_superseded"] = include
+        content, _ = _run(server_module.handle_search_text(args))
+        assert ("**Chunk ID**: `old`" in content[0].text) == (include is True)
+        assert "**Chunk ID**: `clean`" in content[0].text
+        args = {"chunk_id": "old"}
+        if include is not False:
+            args["include_superseded"] = include
+        content, _ = _run(server_module.handle_get_chunk_context(args))
+        assert ("fixture" in content[0].text) == (include is True)
+    finally:
+        conn.close()

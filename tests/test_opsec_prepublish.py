@@ -22,6 +22,31 @@ def fake_catalog(monkeypatch):
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
 
 
+@pytest.mark.parametrize(
+    "value,host,expected",
+    [
+        ("unit/public", "github.com", "github.com/unit/public"),
+        ("Unit/Repo_Name.git", "GIT.Example.test", "git.example.test/unit/repo_name"),
+        (" git@GIT.Example.test:Unit/Repo_Name.git \n", "ignored.test", "git.example.test/unit/repo_name"),
+        ("https://GIT.Example.test/Unit/Repo_Name.git", "ignored.test", "git.example.test/unit/repo_name"),
+        ("http://GIT.Example.test/Unit/Repo_Name", "ignored.test", "git.example.test/unit/repo_name"),
+        ("GIT.Example.test/Unit/Repo_Name", "bad_host", "git.example.test/unit/repo_name"),
+        ("unit/public", "git_hub.com", "unknown"),
+        ("unit/public", "Kithub.com", "unknown"),
+        ("unit/public", "", "unknown"),
+        ("unit/public", "git.example.test\n", "unknown"),
+        ("unit/public", ".github.com", "unknown"),
+        ("https://git_hub.com/unit/public", "github.com", "unknown"),
+        ("git@github..com:unit/public.git", "github.com", "unknown"),
+        ("github.com/unit/bad name", "github.com", "unknown"),
+        ("github.com/unit/public/extra", "github.com", "unknown"),
+        ("unknown", "github.com", "unknown"),
+    ],
+)
+def test_repository_normalization_validates_host_at_resolution(value, host, expected):
+    assert gate.normalize_repository(value, host) == expected
+
+
 @pytest.mark.parametrize("level", range(1, 6))
 def test_classes_block_with_masked_diagnostics(synthetic_opsec, level):
     (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(level=level)))
