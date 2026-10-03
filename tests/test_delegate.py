@@ -16869,6 +16869,9 @@ def _run_bg_worker(tmp_path, monkeypatch, *, task_id, mode, fake, dirty, extra_s
         },
     )
     monkeypatch.setattr(delegate, "_worker_process_reader", reader or (lambda: fake))
+    # Never a real signal: the exit scan's pidfd calls go to the fake table.
+    if fake is not None:
+        monkeypatch.setattr(delegate, "_worker_pidfd_ops", fake.pidfd_ops)
     monkeypatch.setattr(delegate, "_BACKGROUND_JOBS_SETTLE_S", 0.0)
     publish_calls: list[str] = []
     monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: publish_calls.append("push"))
@@ -16980,13 +16983,14 @@ def test_run_worker_without_background_jobs_settles_done_unchanged(tmp_tasks_dir
 
 
 @pytest.mark.parametrize("with_job", [False, True])
-def test_scope_worker_leaving_only_the_cursor_worker_server_settles_done(
+def test_scope_worker_stops_the_cursor_worker_server_before_the_exit_scan(
     tmp_tasks_dir, tmp_path, monkeypatch, with_job
 ):
-    """#9534 AC-02: the Cursor CLI's own worker-server in the task's scope is not a leftover.
+    """#9534 AC-02: the Cursor CLI's own worker-server in the task's scope is stopped, not exempted.
 
-    It is recorded as excluded with its reason; any other process alive in the
-    same scope still makes the run ``needs_finalize``.
+    It gets SIGTERM through a pidfd and is recorded under ``leftovers_terminated``;
+    any other process alive in the same scope is not signalled and still makes
+    the run ``needs_finalize``.
     """
     from tests.worker_leftovers_fakes import FakeProc, FakeProcs
 
@@ -17014,26 +17018,28 @@ def test_scope_worker_leaving_only_the_cursor_worker_server_settles_done(
         extra_state={"launch_mode": "scope", "launch_unit": unit},
     )
 
-    assert state["leftovers_excluded"] == [
+    assert fake.signals == [(_BG_JOB_PID, signal.SIGTERM)]
+    assert state["leftovers_terminated"] == [
         {
             "pid": _BG_JOB_PID,
             "cmdline": " ".join(argv)[: delegate.worker_leftovers.CMDLINE_MAX_CHARS],
-            "exe": str(version_dir / "node"),
-            "reason": "cursor_worker_server_in_task_scope",
+            "signals": ["SIGTERM"],
+            "stopped": True,
         }
     ]
+    assert "leftovers_excluded" not in state
     if with_job:
         assert rc == 1
         assert state["status"] == "needs_finalize"
         assert state["leftovers_scan"] == "live"
         assert [proc["pid"] for proc in state["background_jobs_alive_at_exit"]["processes"]] == [_BG_JOB_PID + 1]
+        assert state["leftovers_scope"]["cgroup"] == cgroup
     else:
         assert state["status"] == "done", state.get("last_error")
         assert rc == 0
         assert state["leftovers_scan"] == "clear"
         assert "incomplete_run_reason" not in state
         assert "background_jobs_alive_at_exit" not in state
-    assert fake.signals == []
 
 
 def _bg_task_record(task_id: str, **overrides: Any) -> dict[str, Any]:

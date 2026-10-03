@@ -209,6 +209,7 @@ CURSOR_VERSION_DIR = CURSOR_VERSIONS / "2026.10.01-e373342"
 CURSOR_NODE = CURSOR_VERSION_DIR / "node"
 WORKER_SERVER_ARGV = [str(CURSOR_NODE), str(CURSOR_VERSION_DIR / "index.js"), "worker-server"]
 PYTEST_JOB = FakeProc(cmd="python -m pytest tests/test_slow.py", exe=Path("/usr/bin/python3.12"))
+OTHER_TASK_CGROUP = dispatch_isolation.scope_cgroup(f"lu-worker-t2-{RUN_NONCE}-0123abcd", uid=os.getuid())
 
 
 def _worker_server(**fields: object) -> FakeProc:
@@ -216,50 +217,101 @@ def _worker_server(**fields: object) -> FakeProc:
     return FakeProc(**{**defaults, **fields})  # type: ignore[arg-type]
 
 
+def _scope_fake(procs: dict[int, FakeProc]) -> FakeProcs:
+    """The default scope launch's cgroup holding the caller and ``procs``."""
+    return FakeProcs(procs=procs, cgroups={SCOPE_CGROUP: [os.getpid(), *procs]})
+
+
 def _scope_exit_scan(
-    procs: dict[int, FakeProc], *, versions: Path | None = CURSOR_VERSIONS, **fake: object
+    fake: FakeProcs, *, versions: Path | None = CURSOR_VERSIONS, pidfd: wl.PidfdOps | None = None
 ) -> wl.ExitScan:
-    """An exit scan of the default scope launch whose cgroup holds the caller and ``procs``."""
-    fake_procs = FakeProcs(procs=procs, cgroups={SCOPE_CGROUP: [os.getpid(), *procs]}, **fake)  # type: ignore[arg-type]
     return wl.exit_scan(
-        scope_of(launch_mode="scope"), reader=fake_procs, settle_s=0.0, cursor_versions=lambda: versions
+        scope_of(launch_mode="scope"),
+        reader=fake,
+        settle_s=0.0,
+        pidfd=fake.pidfd_ops() if pidfd is None else pidfd,
+        sleep=lambda _s: None,
+        clock=fake.clock,
+        cursor_versions=lambda: versions,
     )
 
 
-def test_cursor_worker_server_in_the_tasks_scope_is_excluded_and_recorded() -> None:
-    scan = _scope_exit_scan({JOB: _worker_server()})
+def test_the_worker_server_in_the_tasks_scope_is_terminated_before_the_scan() -> None:
+    fake = _scope_fake({JOB: _worker_server()})
 
+    scan = _scope_exit_scan(fake)
+
+    assert fake.signals == [(JOB, signal.SIGTERM)]
     assert scan.status == wl.SCAN_CLEAR
-    assert scan.leftovers == ()
     assert scan.record_fields() == {
         "leftovers_scan": "clear",
-        "leftovers_excluded": [
-            {
-                "pid": JOB,
-                "cmdline": " ".join(WORKER_SERVER_ARGV),
-                "exe": str(CURSOR_NODE),
-                "reason": "cursor_worker_server_in_task_scope",
-            }
+        "leftovers_terminated": [
+            {"pid": JOB, "cmdline": " ".join(WORKER_SERVER_ARGV), "signals": ["SIGTERM"], "stopped": True}
         ],
     }
 
 
-def test_a_different_process_beside_the_worker_server_is_still_reported() -> None:
-    scan = _scope_exit_scan({JOB: _worker_server(), OTHER: PYTEST_JOB})
+def test_a_worker_server_ignoring_sigterm_gets_sigkill() -> None:
+    fake = _scope_fake({JOB: _worker_server(ignores=frozenset({signal.SIGTERM}))})
 
+    scan = _scope_exit_scan(fake)
+
+    assert fake.signals == [(JOB, signal.SIGTERM), (JOB, signal.SIGKILL)]
+    assert scan.status == wl.SCAN_CLEAR
+    assert [proc.as_state()["signals"] for proc in scan.terminated] == [["SIGTERM", "SIGKILL"]]
+
+
+def test_a_worker_server_that_survives_is_reported_and_the_reaper_keeps_its_scope() -> None:
+    """Termination failure changes nothing about the verdict: live, scope recorded, reapable."""
+    fake = _scope_fake({JOB: _worker_server(ignores=UNKILLABLE)})
+
+    scan = _scope_exit_scan(fake)
+
+    assert scan.status == wl.SCAN_LIVE
+    assert [proc.pid for proc in scan.leftovers] == [JOB]
+    fields = scan.record_fields()
+    assert fields["incomplete_run_reason"] == wl.BACKGROUND_JOBS_REASON
+    assert fields[wl.TERMINATED_KEY] == [
+        {"pid": JOB, "cmdline": " ".join(WORKER_SERVER_ARGV), "signals": ["SIGTERM", "SIGKILL"], "stopped": False}
+    ]
+    record = {**fields, "run_nonce": RUN_NONCE, "launch_mode": "scope", "launch_unit": UNIT}
+    scope, refusal = wl.scope_from_record(record, task_id=TASK_ID)
+    assert refusal is None and scope == scope_of(launch_mode="scope")
+
+
+def test_without_pidfd_support_the_worker_server_is_reported_unsignalled() -> None:
+    fake = _scope_fake({JOB: _worker_server()})
+
+    scan = _scope_exit_scan(fake, pidfd=wl.PidfdOps(open=None, send=None))
+
+    assert fake.signals == []
+    assert scan.status == wl.SCAN_LIVE
+    assert [proc.pid for proc in scan.leftovers] == [JOB]
+    assert wl.TERMINATED_KEY not in scan.record_fields()
+
+
+def test_a_different_process_beside_the_worker_server_is_still_reported() -> None:
+    fake = _scope_fake({JOB: _worker_server(), OTHER: PYTEST_JOB})
+
+    scan = _scope_exit_scan(fake)
+
+    assert fake.signals == [(JOB, signal.SIGTERM)]
     assert scan.status == wl.SCAN_LIVE
     assert [proc.pid for proc in scan.leftovers] == [OTHER]
     fields = scan.record_fields()
-    assert fields["incomplete_run_reason"] == wl.BACKGROUND_JOBS_REASON
     assert [proc["pid"] for proc in fields[wl.BACKGROUND_JOBS_REASON]["processes"]] == [OTHER]
-    assert [proc["pid"] for proc in fields[wl.EXCLUDED_KEY]] == [JOB]
+    assert [proc["pid"] for proc in fields[wl.TERMINATED_KEY]] == [JOB]
+    assert wl.SCOPE_KEY in fields
 
 
 def test_a_different_process_alone_in_the_scope_is_reported_unchanged() -> None:
-    scan = _scope_exit_scan({OTHER: PYTEST_JOB})
+    fake = _scope_fake({OTHER: PYTEST_JOB})
 
+    scan = _scope_exit_scan(fake)
+
+    assert fake.signals == []
     assert scan.status == wl.SCAN_LIVE
-    assert wl.EXCLUDED_KEY not in scan.record_fields()
+    assert wl.TERMINATED_KEY not in scan.record_fields()
 
 
 @pytest.mark.parametrize(
@@ -270,61 +322,115 @@ def test_a_different_process_alone_in_the_scope_is_reported_unchanged() -> None:
         # Directly in, or nested below, a version directory.
         {"exe": CURSOR_VERSIONS / "node"},
         {"exe": CURSOR_VERSION_DIR / "bin" / "node"},
-        # A binary deleted from under the process no longer resolves there.
         {"exe": CURSOR_VERSION_DIR / "node (deleted)"},
         {"exe": Path("relative/versions/v/node")},
         # The install's node running some other script, or another subcommand.
-        {"argv": [str(CURSOR_NODE), "-e", "setInterval(()=>{},1e3)", "worker-server"]},
         {"argv": [str(CURSOR_NODE), "-e", "setInterval(()=>{},1e3)", *WORKER_SERVER_ARGV[1:]]},
-        {"argv": [str(CURSOR_NODE), "--require=/tmp/x.js", *WORKER_SERVER_ARGV[1:]]},
         {"argv": [str(CURSOR_NODE), str(CURSOR_VERSIONS / "2026.09.26-dd393fe" / "index.js"), "worker-server"]},
         {"argv": [str(CURSOR_NODE), str(CURSOR_VERSION_DIR / "index.js"), "worker-server-x"]},
         {"argv": [str(CURSOR_NODE), str(CURSOR_VERSION_DIR / "index.js"), "worker-server", "--keep"]},
-        {"argv": [str(CURSOR_VERSION_DIR / "index.js"), "worker-server"]},
-        # Another real uid.
+        # Unreadable exe: not selected, so not signalled.
+        {"exe_unreadable": True},
+        # Another real uid: never ours to signal.
         {"uid": os.getuid() + 1},
     ],
 )
-def test_a_worker_server_lookalike_is_reported(fields: dict) -> None:
-    scan = _scope_exit_scan({JOB: _worker_server(**fields)})
+def test_a_process_outside_the_signature_is_not_signalled_and_is_reported(fields: dict) -> None:
+    fake = _scope_fake({JOB: _worker_server(**fields)})
 
+    scan = _scope_exit_scan(fake)
+
+    assert fake.signals == []
     assert scan.status == wl.SCAN_LIVE
     assert [proc.pid for proc in scan.leftovers] == [JOB]
-    assert scan.excluded == ()
+    assert scan.terminated == ()
 
 
-def test_the_worker_server_is_reported_without_a_resolved_cursor_install() -> None:
-    assert _scope_exit_scan({JOB: _worker_server()}, versions=None).status == wl.SCAN_LIVE
+def test_nothing_is_signalled_without_a_resolved_cursor_install() -> None:
+    fake = _scope_fake({JOB: _worker_server()})
+
+    assert _scope_exit_scan(fake, versions=None).status == wl.SCAN_LIVE
+    assert fake.signals == []
 
 
-def test_the_worker_server_outside_the_tasks_cgroup_is_not_excluded() -> None:
-    """The exclusion reads the cgroup from the kernel itself, not from the scan's candidate list."""
-    other_scope = dispatch_isolation.scope_cgroup(f"lu-worker-t2-{RUN_NONCE}-0123abcd", uid=os.getuid())
-    fake = FakeProcs(procs={JOB: _worker_server()}, cgroups={other_scope: [JOB]})
-    proc = wl.LeftoverProcess(pid=JOB, start_ticks=100, cmdline="")
+def test_the_worker_server_in_another_tasks_scope_is_not_signalled() -> None:
+    fake = FakeProcs(procs={JOB: _worker_server()}, cgroups={SCOPE_CGROUP: [os.getpid()], OTHER_TASK_CGROUP: [JOB]})
 
-    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, proc, CURSOR_VERSIONS) is None
-    fake.cgroups = {SCOPE_CGROUP: [JOB]}
-    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, proc, CURSOR_VERSIONS) is not None
-    # A pid reused since the scan is another process.
-    reused = wl.LeftoverProcess(pid=JOB, start_ticks=99, cmdline="")
-    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, reused, CURSOR_VERSIONS) is None
+    scan = _scope_exit_scan(fake)
 
-
-def test_the_worker_server_in_another_tasks_scope_is_not_this_tasks_and_not_excluded_anywhere() -> None:
-    other_scope = dispatch_isolation.scope_cgroup(f"lu-worker-t2-{RUN_NONCE}-0123abcd", uid=os.getuid())
-    fake = FakeProcs(procs={JOB: _worker_server()}, cgroups={SCOPE_CGROUP: [os.getpid()], other_scope: [JOB]})
-
-    scan = wl.exit_scan(
-        scope_of(launch_mode="scope"), reader=fake, settle_s=0.0, cursor_versions=lambda: CURSOR_VERSIONS
-    )
-
+    assert fake.signals == []
     assert scan.status == wl.SCAN_CLEAR
-    assert scan.excluded == ()
+    assert scan.terminated == ()
 
 
-def test_popen_fallback_reports_the_worker_server() -> None:
-    """No cgroup proof without a scope: the fallback never excludes anything."""
+def _pidfd_with_hooks(fake: FakeProcs, *, after_open=None, before_send=None) -> wl.PidfdOps:
+    def open_(pid: int) -> int:
+        fd = fake.pidfd_open(pid)
+        if after_open is not None:
+            after_open(pid)
+        return fd
+
+    def send(fd: int, sig: int) -> None:
+        if before_send is not None:
+            before_send(fd)
+        fake.pidfd_send(fd, sig)
+
+    return wl.PidfdOps(open=open_, send=send, close=lambda _fd: None)
+
+
+def test_cgroup_membership_is_rechecked_through_the_pinned_pidfd() -> None:
+    """A server that leaves the task's cgroup after its pidfd opens is not signalled, and is gone from the scope."""
+    fake = _scope_fake({JOB: _worker_server()})
+
+    def moved_out(_pid: int) -> None:
+        fake.cgroups[SCOPE_CGROUP].remove(JOB)
+        fake.cgroups[OTHER_TASK_CGROUP] = [JOB]
+
+    scan = _scope_exit_scan(fake, pidfd=_pidfd_with_hooks(fake, after_open=moved_out))
+
+    assert fake.signals == []
+    assert scan.terminated == ()
+    assert JOB in fake.procs
+
+
+def test_a_pid_reused_before_the_pidfd_opens_is_not_signalled() -> None:
+    """The pidfd pins the replacement; its start time differs from the scanned server's, so no signal."""
+    fake = _scope_fake({JOB: _worker_server()})
+    replacement = _worker_server(start=200)
+
+    def reused(_pid: int) -> None:
+        fake.procs[JOB] = replacement
+
+    def open_(pid: int) -> int:
+        reused(pid)
+        return fake.pidfd_open(pid)
+
+    scan = _scope_exit_scan(fake, pidfd=wl.PidfdOps(open=open_, send=fake.pidfd_send, close=lambda _fd: None))
+
+    assert fake.signals == []
+    assert scan.terminated == ()
+    assert fake.procs[JOB] is replacement
+    assert scan.status == wl.SCAN_LIVE  # the replacement is in the scope and still reported
+
+
+def test_a_pid_reused_after_inspection_is_never_signalled() -> None:
+    """The server inspected through its pidfd exits and its pid is reused before the signal: the dead pidfd refuses it."""
+    fake = _scope_fake({JOB: _worker_server()})
+    replacement = _worker_server(start=200)
+
+    def reused(_fd: int) -> None:
+        fake.procs[JOB] = replacement
+
+    scan = _scope_exit_scan(fake, pidfd=_pidfd_with_hooks(fake, before_send=reused))
+
+    assert fake.signals == []
+    assert scan.terminated == ()
+    assert fake.procs[JOB] is replacement
+    assert [proc.pid for proc in scan.leftovers] == [JOB]
+
+
+def test_popen_fallback_never_signals_the_worker_server() -> None:
+    """No cgroup proof without a scope: the fallback scan reports and signals nothing."""
     fake = FakeProcs(procs={JOB: _worker_server(task=TASK_ID, start=500)})
     asked: list[bool] = []
 
@@ -332,45 +438,56 @@ def test_popen_fallback_reports_the_worker_server() -> None:
         asked.append(True)
         return CURSOR_VERSIONS
 
-    scan = wl.exit_scan(scope_of(worker_start_ticks=400), reader=fake, settle_s=0.0, cursor_versions=versions)
+    scan = wl.exit_scan(
+        scope_of(worker_start_ticks=400),
+        reader=fake,
+        settle_s=0.0,
+        pidfd=fake.pidfd_ops(),
+        sleep=lambda _s: None,
+        clock=fake.clock,
+        cursor_versions=versions,
+    )
 
     assert scan.status == wl.SCAN_LIVE
     assert [proc.pid for proc in scan.leftovers] == [JOB]
-    assert scan.excluded == ()
+    assert scan.terminated == ()
+    assert fake.signals == []
     assert asked == []
-    proc = wl.LeftoverProcess(pid=JOB, start_ticks=500, cmdline="")
-    assert wl._excluded_reason(scope_of(fallback_cgroup=SCOPE_CGROUP), fake, proc, CURSOR_VERSIONS) is None
+    direct = wl.terminate_cursor_worker_servers(
+        scope_of(fallback_cgroup=SCOPE_CGROUP), reader=fake, versions=CURSOR_VERSIONS, pidfd=fake.pidfd_ops()
+    )
+    assert direct == () and fake.signals == []
 
 
-def test_an_unreadable_exe_reports_the_worker_server() -> None:
-    scan = _scope_exit_scan({JOB: _worker_server(exe_unreadable=True)})
+def test_a_scope_without_its_cgroup_signals_nothing() -> None:
+    fake = _scope_fake({JOB: _worker_server()})
+    scope = scope_of(launch_mode="scope", cgroup=None)
 
-    assert scan.status == wl.SCAN_LIVE
-    assert [proc.pid for proc in scan.leftovers] == [JOB]
+    terminated = wl.terminate_cursor_worker_servers(
+        scope, reader=fake, versions=CURSOR_VERSIONS, pidfd=fake.pidfd_ops()
+    )
 
-
-def test_an_unreadable_cgroup_leaves_the_worker_server_scan_unknown() -> None:
-    assert _scope_exit_scan({JOB: _worker_server(cgroup_unreadable=True)}).status == wl.SCAN_UNKNOWN
-    proc = wl.LeftoverProcess(pid=JOB, start_ticks=100, cmdline="")
-    fake = FakeProcs(procs={JOB: _worker_server(cgroup_unreadable=True)}, cgroups={SCOPE_CGROUP: [JOB]})
-    assert wl._excluded_reason(scope_of(launch_mode="scope"), fake, proc, CURSOR_VERSIONS) is None
+    assert terminated == () and fake.signals == []
 
 
-def test_the_reaper_still_stops_an_excluded_worker_server_with_the_scope() -> None:
-    """Exclusion is the exit scan's verdict only; stopping still covers the whole scope."""
-    fake = FakeProcs(procs={JOB: _worker_server()}, cgroups={SCOPE_CGROUP: [JOB]})
+def test_an_unreadable_scope_signals_nothing_and_the_scan_is_unknown() -> None:
+    fake = _scope_fake({JOB: _worker_server()})
+    fake.unreadable_cgroups = {SCOPE_CGROUP}
 
-    result = wl.stop_leftovers(scope_of(launch_mode="scope"), reader=fake, **stop_kwargs(fake))
+    scan = _scope_exit_scan(fake)
 
-    assert result.ok and result.unit_stopped
-    assert JOB not in fake.procs
+    assert fake.signals == []
+    assert scan.status == wl.SCAN_UNKNOWN
 
 
-def test_live_process_shaped_like_the_worker_server_is_recognised_from_proc(tmp_path: Path) -> None:
-    """Real ``/proc`` exe and argv reads: a copied binary blocked on a FIFO named ``index.js``."""
+def test_live_worker_server_shaped_process_is_selected_and_terminated_through_proc(tmp_path: Path) -> None:
+    """Real ``/proc`` reads and a real pidfd: a copied binary blocked on a FIFO named ``index.js``."""
     cat = shutil.which("cat")
     if cat is None or not hasattr(os, "mkfifo"):
         pytest.skip("needs cat and mkfifo")
+    ops = wl.live_pidfd_ops()
+    if ops.open is None or ops.send is None:
+        pytest.skip("needs pidfd support")
     version_dir = tmp_path / "versions" / "2026.10.01-e373342"
     version_dir.mkdir(parents=True)
     node = version_dir / "node"
@@ -380,25 +497,34 @@ def test_live_process_shaped_like_the_worker_server_is_recognised_from_proc(tmp_
     try:
 
         class InScope(wl.ProcFsReader):
+            """The child stands in for this task's scope cgroup; every other read is the kernel's."""
+
             def proc_cgroup(self, pid: int) -> str | None:
-                return SCOPE_CGROUP if pid == child.pid else super().proc_cgroup(pid)
+                return SCOPE_CGROUP if pid == child.pid and self.stat(pid) is not None else super().proc_cgroup(pid)
+
+            def cgroup_procs(self, cgroup: str) -> list[int] | None:
+                return [child.pid] if cgroup == SCOPE_CGROUP else super().cgroup_procs(cgroup)
 
         reader = InScope()
-        info = None
         for _ in range(200):  # until the child has exec'd the copied binary
-            info = reader.stat(child.pid)
             if reader.exe(child.pid) == node.resolve():
                 break
             time.sleep(0.01)
-        assert info is not None
-        proc = wl.LeftoverProcess(pid=child.pid, start_ticks=info.start_ticks, cmdline=reader.cmdline(child.pid))
+        versions = (tmp_path / "versions").resolve()
+        assert wl.is_cursor_worker_server(reader, child.pid, versions)
+        assert not wl.is_cursor_worker_server(reader, child.pid, tmp_path.resolve())
+        assert not wl.is_cursor_worker_server(reader, os.getpid(), versions)
 
-        verdict = wl._excluded_reason(scope_of(launch_mode="scope"), reader, proc, (tmp_path / "versions").resolve())
-        assert verdict == (wl.CURSOR_WORKER_SERVER_REASON, node.resolve())
-        assert wl._excluded_reason(scope_of(launch_mode="scope"), reader, proc, tmp_path.resolve()) is None
+        terminated = wl.terminate_cursor_worker_servers(
+            scope_of(launch_mode="scope"), reader=reader, versions=versions, pidfd=ops
+        )
+
+        assert [(proc.pid, proc.signals, proc.stopped) for proc in terminated] == [(child.pid, ("SIGTERM",), True)]
+        assert child.wait(timeout=10) == -signal.SIGTERM
     finally:
-        child.kill()
-        child.wait(timeout=10)
+        if child.poll() is None:
+            child.kill()
+            child.wait(timeout=10)
 
 
 @pytest.mark.parametrize(
