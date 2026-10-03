@@ -110,13 +110,29 @@ class Variant:
     sha256: str | None  # of ``preamble``, the exact text placed in the prompt
 
 
-def _require(condition: bool, message: str) -> None:
+class SetError(HarnessError):
+    """A set defect; ``rule`` names the violated rule and never carries set text (reports print it)."""
+
+    def __init__(self, message: str, rule: str) -> None:
+        super().__init__(message)
+        self.rule = rule
+
+
+@dataclass(frozen=True)
+class SetProblem:
+    item: str | None  # item id; None for a defect of the set as a whole
+    rule: str
+
+
+def _require(condition: bool, message: str, rule: str) -> None:
     if not condition:
-        raise HarnessError(message)
+        raise SetError(message, rule)
 
 
-def _str(value: Any, where: str, *, allow_empty: bool = False) -> str:
-    _require(isinstance(value, str) and (allow_empty or value.strip() != ""), f"{where}: expected a non-empty string")
+def _str(value: Any, where: str, rule: str, *, allow_empty: bool = False) -> str:
+    _require(
+        isinstance(value, str) and (allow_empty or value.strip() != ""), f"{where}: expected a non-empty string", rule
+    )
     return value
 
 
@@ -125,10 +141,17 @@ def _offsets(raw: dict[str, Any], text: str, where: str) -> tuple[int, int, str]
     _require(
         isinstance(start, int) and isinstance(end, int) and not isinstance(start, bool) and not isinstance(end, bool),
         f"{where}: start/end must be integers",
+        "offsets-not-integers",
     )
-    _require(0 <= start <= end <= len(text), f"{where}: offsets {start}:{end} outside the paragraph")
+    _require(
+        0 <= start <= end <= len(text), f"{where}: offsets {start}:{end} outside the paragraph", "offsets-out-of-range"
+    )
     span = raw.get("span")
-    _require(isinstance(span, str) and span == text[start:end], f"{where}: span does not equal text[{start}:{end}]")
+    _require(
+        isinstance(span, str) and span == text[start:end],
+        f"{where}: span does not equal text[{start}:{end}]",
+        "span-text-mismatch",
+    )
     return start, end, span
 
 
@@ -168,14 +191,19 @@ def _token_span(tokens: tuple[Token, ...], span: Span, where: str) -> TokenSpan:
     for pos in sorted({span.start, span.end}):
         inside = next((t for t in tokens if t.start < pos < t.end), None)
         if inside is not None:
-            raise HarnessError(
+            raise SetError(
                 f"{where}: span {span.id} does not start and end on token boundaries "
-                f"(offset {pos} falls inside {inside.key!r})"
+                f"(offset {pos} falls inside {inside.key!r})",
+                "span-not-on-token-boundary",
             )
     starts = [t.start for t in tokens]
     i1 = bisect.bisect_left(starts, span.start)
     i2 = bisect.bisect_left(starts, span.end) if span.end > span.start else i1
-    _require(span.start == span.end or i2 > i1, f"{where}: span {span.id} contains no token (whitespace only)")
+    _require(
+        span.start == span.end or i2 > i1,
+        f"{where}: span {span.id} contains no token (whitespace only)",
+        "span-holds-no-token",
+    )
     return TokenSpan(span, i1, i2)
 
 
@@ -206,12 +234,14 @@ def review_geometry(item: ReviewItem, where: str | None = None) -> Geometry:
         _require(
             not _overlap(a.span, b.span) and not _token_overlap(a, b),
             f"{where}: seeds {a.span.id} and {b.span.id} overlap",
+            "seeds-overlap",
         )
     for seed in seeds:
         for prot in protected:
             _require(
                 not _overlap(seed.span, prot.span) and not _token_overlap(seed, prot),
                 f"{where}: error {seed.span.id} overlaps protected span {prot.span.id}",
+                "error-overlaps-protected",
             )
     accepted: dict[str, tuple[tuple[str, ...], ...]] = {}
     for seed in seeds:
@@ -220,6 +250,7 @@ def review_geometry(item: ReviewItem, where: str | None = None) -> Geometry:
         _require(
             own not in forms,
             f"{where}: an accepted form of {seed.span.id} tokenises to the seed's own tokens {list(own)}",
+            "accepted-form-equals-seed",
         )
         accepted[seed.span.id] = forms
     clusters: list[list[TokenSpan]] = []
@@ -233,30 +264,43 @@ def review_geometry(item: ReviewItem, where: str | None = None) -> Geometry:
 
 def _review_item(raw: Any, index: int) -> ReviewItem:
     where = f"review[{index}]"
-    _require(isinstance(raw, dict), f"{where}: expected an object")
-    item_id = _str(raw.get("id"), f"{where}.id")
-    text = _str(raw.get("text"), f"{where}.text")
-    _require(unicodedata.normalize("NFC", text) == text, f"{where}: text must be NFC-normalised")
+    _require(isinstance(raw, dict), f"{where}: expected an object", "item-not-object")
+    item_id = _str(raw.get("id"), f"{where}.id", "item-id")
+    text = _str(raw.get("text"), f"{where}.text", "item-text")
+    _require(unicodedata.normalize("NFC", text) == text, f"{where}: text must be NFC-normalised", "text-not-nfc")
     errors: list[Span] = []
     for j, err in enumerate(raw.get("errors") or []):
         ew = f"{where}.errors[{j}]"
-        _require(isinstance(err, dict), f"{ew}: expected an object")
+        _require(isinstance(err, dict), f"{ew}: expected an object", "error-not-object")
         start, end, span = _offsets(err, text, ew)
-        error_type = _str(err.get("error_type"), f"{ew}.error_type")
-        _require(error_type in ERROR_TYPES, f"{ew}.error_type {error_type!r} is not one of {', '.join(ERROR_TYPES)}")
+        error_type = _str(err.get("error_type"), f"{ew}.error_type", "error-type")
+        _require(
+            error_type in ERROR_TYPES,
+            f"{ew}.error_type {error_type!r} is not one of {', '.join(ERROR_TYPES)}",
+            "error-type-unknown",
+        )
         accepted = err.get("accepted")
         _require(
             isinstance(accepted, list) and accepted and all(isinstance(a, str) for a in accepted),
             f"{ew}.accepted: expected a non-empty list of strings",
+            "accepted-forms",
         )
-        errors.append(Span(_str(err.get("id"), f"{ew}.id"), start, end, span, error_type, tuple(accepted)))
+        errors.append(Span(_str(err.get("id"), f"{ew}.id", "error-id"), start, end, span, error_type, tuple(accepted)))
     protected: list[Span] = []
     for j, prot in enumerate(raw.get("protected") or []):
         pw = f"{where}.protected[{j}]"
-        _require(isinstance(prot, dict), f"{pw}: expected an object")
+        _require(isinstance(prot, dict), f"{pw}: expected an object", "protected-not-object")
         start, end, span = _offsets(prot, text, pw)
-        _require(start < end, f"{pw}: protected spans must be non-empty")
-        protected.append(Span(_str(prot.get("id"), f"{pw}.id"), start, end, span, _str(prot.get("kind"), f"{pw}.kind")))
+        _require(start < end, f"{pw}: protected spans must be non-empty", "protected-empty")
+        protected.append(
+            Span(
+                _str(prot.get("id"), f"{pw}.id", "protected-id"),
+                start,
+                end,
+                span,
+                _str(prot.get("kind"), f"{pw}.kind", "protected-kind"),
+            )
+        )
     item = ReviewItem(item_id, text, tuple(errors), tuple(protected))
     review_geometry(item, where)
     return item
@@ -264,17 +308,58 @@ def _review_item(raw: Any, index: int) -> ReviewItem:
 
 def _writing_task(raw: Any, index: int) -> WritingTask:
     where = f"writing[{index}]"
-    _require(isinstance(raw, dict), f"{where}: expected an object")
+    _require(isinstance(raw, dict), f"{where}: expected an object", "item-not-object")
     level = raw.get("level")
-    _require(level in CEFR_LEVELS, f"{where}.level must be one of {', '.join(CEFR_LEVELS)}")
+    _require(level in CEFR_LEVELS, f"{where}.level must be one of {', '.join(CEFR_LEVELS)}", "writing-level")
     bounds: list[int | None] = []
     for key in ("min_words", "max_words"):
         value = raw.get(key)
-        _require(value is None or (isinstance(value, int) and value > 0), f"{where}.{key} must be a positive integer")
+        _require(
+            value is None or (isinstance(value, int) and value > 0),
+            f"{where}.{key} must be a positive integer",
+            "writing-word-bound",
+        )
         bounds.append(value)
     return WritingTask(
-        _str(raw.get("id"), f"{where}.id"), level, _str(raw.get("instruction"), f"{where}.instruction"), *bounds
+        _str(raw.get("id"), f"{where}.id", "item-id"),
+        level,
+        _str(raw.get("instruction"), f"{where}.instruction", "writing-instruction"),
+        *bounds,
     )
+
+
+def _item_id(raw: Any) -> str | None:
+    value = raw.get("id") if isinstance(raw, dict) else None
+    return value if isinstance(value, str) else None
+
+
+def set_problems(raw: Any) -> list[SetProblem]:
+    """Every defect ``load_set`` would refuse, one per item (its first), by item id and rule; no set text.
+
+    Runs the loader's own per-item validation (including ``review_geometry``) and its set-level
+    checks, but collects instead of stopping at the first defect. The Protocol v2 minimums are
+    separate (``protocol_shortfalls``).
+    """
+    if not isinstance(raw, dict):
+        return [SetProblem(None, "set-not-object")]
+    problems: list[SetProblem] = []
+    ids: list[str] = []
+    for key, build in (("review", _review_item), ("writing", _writing_task)):
+        for index, item in enumerate(raw.get(key) or []):
+            try:
+                built = build(item, index)
+            except SetError as exc:
+                problems.append(SetProblem(_item_id(item), exc.rule))
+                continue
+            ids.append(built.id)
+            if isinstance(built, ReviewItem):
+                ids += [span.id for span in (*built.errors, *built.protected)]
+    if not (raw.get("review") or raw.get("writing")):
+        problems.append(SetProblem(None, "set-empty"))
+    problems += [SetProblem(dup, "duplicate-id") for dup in sorted({i for i in ids if ids.count(i) > 1})]
+    if not isinstance(raw.get("set_id"), str) or not raw["set_id"].strip():
+        problems.append(SetProblem(None, "set-id"))
+    return problems
 
 
 def load_set(path: Path) -> EvalSet:
@@ -283,14 +368,18 @@ def load_set(path: Path) -> EvalSet:
         raw = read_json(path)
     except (OSError, ValueError) as exc:
         raise HarnessError(f"cannot read evaluation set {path}: {exc}") from exc
-    _require(isinstance(raw, dict), "evaluation set: expected a JSON object")
+    _require(isinstance(raw, dict), "evaluation set: expected a JSON object", "set-not-object")
     review = tuple(_review_item(item, i) for i, item in enumerate(raw.get("review") or []))
     writing = tuple(_writing_task(task, i) for i, task in enumerate(raw.get("writing") or []))
-    _require(bool(review or writing), "evaluation set: no review items and no writing tasks")
+    _require(bool(review or writing), "evaluation set: no review items and no writing tasks", "set-empty")
     ids = [item.id for item in review] + [task.id for task in writing]
     ids += [span.id for item in review for span in (*item.errors, *item.protected)]
-    _require(len(ids) == len(set(ids)), "evaluation set: ids must be unique across items, errors and protected spans")
-    return EvalSet(_str(raw.get("set_id"), "set_id"), sha256_file(path), review, writing)
+    _require(
+        len(ids) == len(set(ids)),
+        "evaluation set: ids must be unique across items, errors and protected spans",
+        "duplicate-id",
+    )
+    return EvalSet(_str(raw.get("set_id"), "set_id", "set-id"), sha256_file(path), review, writing)
 
 
 def protocol_shortfalls(eval_set: EvalSet) -> list[str]:

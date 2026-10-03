@@ -43,6 +43,37 @@ refuses a plan below Protocol v2 (60 errors, 40 protected spans, writing at A2,
 B1, B2 and C1, three repeats, both task kinds) unless `--smoke` is given; a
 smoke plan is reported as incomplete and never authorises adoption.
 
+## Converting the v2 set
+
+The frozen set was built as JSON Lines (one item per line). `convert-set`
+re-labels it as the harness set object; nothing is normalised or repaired.
+
+```bash
+.venv/bin/python -m scripts.eval.uk_preamble convert-set --input PRIVATE/set-v2.jsonl \
+    --output PRIVATE/set-v1.json --set-id uk-preamble-v1
+```
+
+- Errors become `<item id>-e<n>` (source order) with `error_type` from the fixed
+  mapping (`lexical_calque` maps to `other`), `accepted` from `corrections` and
+  `origin` kept; `correct_spans` become protected spans `<item id>-p<n>` with
+  `kind` set to the source `stratum`. `start`, `end`, `span` and `text` are
+  copied verbatim. Source `level`, `subtype`, `stratum` on errors, `evidence` and
+  `why_tricky` have no harness field and are dropped.
+- The harness writing task has no topic, genre or register field, so those are
+  appended to the task in one short sentence (`Тема: …; жанр: …; регістр: ….`);
+  parts that are absent or blank are skipped. `length_words` gives
+  `min_words`/`max_words`.
+- An unknown error type, a missing field or a malformed line is refused with its
+  line number, item id and rule (never text); nothing is written.
+- The output must resolve outside every Git work tree (the `--results` check)
+  and differ from the input. It is written owner-only (`0600`).
+- The written file then goes through `load_set`, `review_geometry` and the
+  Protocol v2 minimums. The JSON report on stdout holds counts per error type
+  and protection kind, each validation problem as item id plus rule, Protocol v2
+  shortfalls, and the SHA-256 of the input and the output.
+- Exit codes: 0 valid; 1 written but invalid (`"valid": false`); 2 usage error or
+  refused input.
+
 ## Execution
 
 - The harness renders the complete prompt the worker receives: the rules core
