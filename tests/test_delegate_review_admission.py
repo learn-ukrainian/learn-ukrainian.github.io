@@ -991,6 +991,73 @@ def test_the_exact_cursor_grok_slug_is_kept_as_requested():
     assert _review_target("grok-4.7-high", attempt=True) == ("cursor", "grok-4.7-high")
 
 
+@pytest.mark.parametrize("risk", ["low", "medium", "high"])
+@pytest.mark.parametrize("attempt", [False, True])
+def test_security_owned_path_direct_admission_applies_floor(risk, attempt):
+    kwargs = dict(
+        author_model="gpt-6.1-sol",
+        risk=risk,
+        profile="code",
+        attempt=attempt,
+        snapshot=None,
+        budget_seat="claude",
+        owned_paths=("scripts/delegate.py",),
+    )
+    if attempt:
+        with pytest.raises(ReviewAdmissionRefused, match="ineligible"):
+            target_admission._resolve_review_target("claude", "claude-sonnet-5-5", **kwargs)
+    else:
+        assert target_admission._resolve_review_target("claude", "claude-sonnet-5-5", **kwargs) == (
+            "claude",
+            "claude-opus-5-5",
+        )
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high"])
+def test_security_dispatch_public_admission_refuses_weak_attempt(risk):
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        resolve_and_admit(
+            ("claude",),
+            mode="read-only",
+            model="claude-sonnet-5-5",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk=risk,
+            review_attempt=True,
+            review_owned_paths=("scripts/delegate.py",),
+        )
+
+
+def test_security_changed_paths_cannot_be_hidden_by_ordinary_owned_paths():
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        resolve_and_admit(
+            ("claude",),
+            mode="read-only",
+            model="claude-sonnet-5-5",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk="low",
+            review_attempt=True,
+            review_owned_paths=("ordinary.py",),
+            review_changed_paths=("scripts/ocr/_credentials.py",),
+        )
+
+
+def test_security_direct_admission_without_author_refuses_weak_reviewer():
+    with pytest.raises(ReviewAdmissionRefused, match="requires --review-author-model"):
+        target_admission._resolve_review_target(
+            "claude",
+            "claude-sonnet-5-5",
+            author_model=None,
+            risk=None,
+            profile="code",
+            attempt=False,
+            snapshot=None,
+            budget_seat="claude",
+            owned_paths=("scripts/delegate.py",),
+        )
+
+
 def test_a_native_seat_keeps_its_context_suffix():
     """Bracket suffixes on native seats (context windows) keep their pre-#9488 admission."""
     assert _review_target("claude-opus-5-5[1m]", seat="claude", author="gpt-6.1-sol") == (

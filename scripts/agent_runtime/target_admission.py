@@ -165,6 +165,7 @@ def resolve_and_admit(
     review_attempt: bool = False,
     review_alias_model_resolver: Callable[[str, str | None], tuple[str, str]] | None = None,
     review_owned_paths: tuple[str, ...] = (),
+    review_changed_paths: tuple[str, ...] = (),
     review_subject_seats: frozenset[str] = frozenset(),
     review_subject_families: frozenset[str] = frozenset(),
     **gate: Any,
@@ -272,6 +273,7 @@ def resolve_and_admit(
                 budget_seat=budget_seat,
                 budget_substitute=fallbacks.get(budget_seat),
                 owned_paths=review_owned_paths,
+                changed_paths=review_changed_paths,
                 subject_seats=review_subject_seats,
                 subject_families=review_subject_families,
             )
@@ -346,6 +348,7 @@ def _resolve_review_target(
     budget_seat: str,
     budget_substitute: str | None = None,
     owned_paths: tuple[str, ...] = (),
+    changed_paths: tuple[str, ...] = (),
     subject_seats: frozenset[str] = frozenset(),
     subject_families: frozenset[str] = frozenset(),
 ) -> tuple[str, str | None]:
@@ -369,6 +372,7 @@ def _resolve_review_target(
         resolve_family,
         resolve_reviewer,
     )
+    from scripts.review.security_paths import effective_review_risk
     from scripts.review.subject_seat import prepare_subject_exclusion
 
     from .telemetry import _default_model_for
@@ -396,7 +400,9 @@ def _resolve_review_target(
                 "(budget guard) is not allowed"
             )
         else:
-            detail = f"review attempt refused for {seat}: budget guard requires substitution; attempt identity is immutable"
+            detail = (
+                f"review attempt refused for {seat}: budget guard requires substitution; attempt identity is immutable"
+            )
         raise ReviewAdmissionRefused(f"REVIEW_ATTEMPT_IDENTITY_REFUSED: {detail} (#8517)")
     subject = prepare_subject_exclusion(
         owned_paths=owned_paths, subject_seats=subject_seats, subject_families=subject_families
@@ -407,9 +413,10 @@ def _resolve_review_target(
         author_model=author_model or "",
         review_profile=profile,
         domain=profile,
-        risk=risk or "medium",
+        risk=effective_review_risk(risk or "medium", changed_paths, owned_paths),
         routing_snapshot=snapshot if trusted else None,
         owned_paths=owned_paths,
+        changed_paths=changed_paths,
         subject_seats=subject.seats,
         subject_families=subject.families,
         subject_evidence=subject.evidence,
@@ -453,8 +460,7 @@ def _resolve_review_target(
             else "code profile substitution requires --review-author-model and --review-risk"
         )
         raise ReviewAdmissionRefused(
-            f"REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile {profile}{risk_note}; "
-            f"{hint}"
+            f"REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile {profile}{risk_note}; {hint}"
         )
     # Dispatch prohibitions constrain the ladder, rather than masquerading as
     # subject-boundary exclusions. Per-candidate eligibility above is independent
@@ -478,10 +484,12 @@ def _resolve_review_target(
     lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
     lane_status = (
         (lane_info.get("interactive") or {}).get("status") or lane_info.get("status")
-        if budget_seat == "claude" else lane_info.get("status")
+        if budget_seat == "claude"
+        else lane_info.get("status")
     )
     if (
-        selected is None and snapshot is not None
+        selected is None
+        and snapshot is not None
         and lane_status in {"cool", "warm"}
         and not (lane_info.get("runtime") or {}).get("headroom_blocked")
     ):

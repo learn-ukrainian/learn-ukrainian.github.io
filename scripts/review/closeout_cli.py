@@ -28,6 +28,7 @@ from scripts.review.scope_baseline import (
     check_cycle_convergence_breaker,
     check_expansion_breaker,
 )
+from scripts.review.security_paths import git_changed_paths
 from scripts.review.target_resolution import (
     ReviewTarget,
     TargetResolutionError,
@@ -361,12 +362,27 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         routing_snapshot = json.loads(Path(args.routing_snapshot_file).read_text(encoding="utf-8"))
     state = _load_state(args.state_file)
     target = _target_from_dict(state["target"]) if state.get("target") is not None else None
+    changed_paths = target.changed_paths if target else ()
+    if target:
+        # numstat display paths compact renames (a/{old => new}/file). Read
+        # literal filenames from the frozen endpoints instead of parsing that
+        # presentation; --no-renames exposes both names, including deletions.
+        target_args = _target_args_from_state(state)
+        repo_root_value = target_args.get("repo_root")
+        if not isinstance(repo_root_value, str) or not repo_root_value:
+            raise CloseoutStateError("target_repo_root_missing")
+        repo_root = Path(repo_root_value)
+        try:
+            literal_paths = git_changed_paths(repo_root, target.base_sha or "HEAD", target.head_sha)
+        except TargetResolutionError as exc:
+            raise CloseoutStateError(str(exc)) from exc
+        changed_paths = tuple(dict.fromkeys((*changed_paths, *literal_paths)))
     inputs = ResolverInputs(
         author_model=args.author_model,
         review_profile=args.review_profile,
         risk=args.risk,
         domain=args.domain,
-        changed_paths=target.changed_paths if target else (),
+        changed_paths=changed_paths,
         language_lane=args.language_lane,
         required_capabilities=frozenset(args.required_capability or []),
         data_egress_policy=args.data_egress_policy,
@@ -592,7 +608,9 @@ def _build_parser() -> argparse.ArgumentParser:
     p_target.set_defaults(func=_cmd_target)
 
     p_freeze = sub.add_parser("freeze", help="Freeze the scope baseline from the resolved target")
-    p_freeze.add_argument("--issue", required=True, help="Issue or request reference stored on the baseline. Example: #8946")
+    p_freeze.add_argument(
+        "--issue", required=True, help="Issue or request reference stored on the baseline. Example: #8946"
+    )
     p_freeze.add_argument(
         "--intended-behavior",
         required=True,
@@ -831,14 +849,20 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Proof status. Example: pass. n/a requires --reason.",
     )
     command_or_step = behavior_record.add_mutually_exclusive_group()
-    command_or_step.add_argument("--command", help="Command that was run. Example: .venv/bin/python -m scripts.review.closeout_cli --help")
-    command_or_step.add_argument("--step", help="Non-command step that was exercised. Example: clicked the submit control")
+    command_or_step.add_argument(
+        "--command", help="Command that was run. Example: .venv/bin/python -m scripts.review.closeout_cli --help"
+    )
+    command_or_step.add_argument(
+        "--step", help="Non-command step that was exercised. Example: clicked the submit control"
+    )
     behavior_record.add_argument("--cwd", help="Working directory for --command. Example: .")
     result = behavior_record.add_mutually_exclusive_group()
     result.add_argument("--exit-code", type=int, help="Exit code of --command. Example: 0")
     result.add_argument("--result", help="Non-exit result when there is no exit code. Example: rendered")
     behavior_record.add_argument("--observation", help="What was observed. Example: help text listed --subject-seat")
-    behavior_record.add_argument("--evidence-ref", help="Durable pointer to the evidence. Example: test:closeout-cli-help")
+    behavior_record.add_argument(
+        "--evidence-ref", help="Durable pointer to the evidence. Example: test:closeout-cli-help"
+    )
     behavior_record.add_argument("--reason", help="Why status is n/a or fail. Example: no runtime surface")
     behavior_record.add_argument(
         "--blind-enforced",
