@@ -22,6 +22,7 @@ from .common import (
     write_private_json,
     write_private_text,
 )
+from .convert import convert_file
 from .dataset import load_set, parse_variants
 from .dispatch import DelegateDispatcher, Dispatcher, workspace_probe
 from .report import build_report, render_markdown
@@ -52,16 +53,23 @@ Examples:
       --variant original=~/private/uk-preamble/original.md --variant adapted-v2=~/private/uk-preamble/adapted-v2.md
   .venv/bin/python -m scripts.eval.uk_preamble score --results ~/private/uk-preamble/results --judge
   .venv/bin/python -m scripts.eval.uk_preamble report --results ~/private/uk-preamble/results
+  .venv/bin/python -m scripts.eval.uk_preamble convert-set --input ~/private/uk-preamble/set-v2.jsonl \\
+      --output ~/private/uk-preamble/set-v1.json --set-id uk-preamble-v1
 
 Outputs (all under --results, owner-only files; never commit them):
   manifest.json, prompts/<task>.md, raw/<task>.json (run and score --judge);
   scores.json (score); report.json and report.md (report, also printed to stdout).
   --results must resolve outside every Git work tree; it is refused before anything is written.
+  convert-set writes one owner-only set file (--output, also refused inside a Git work tree) and prints a
+  JSON report: counts per error type and protection kind, validation problems by item id and rule (never
+  text), Protocol v2 shortfalls, and the SHA-256 of the input and the output.
   Dispatches create delegate task records under batch_state/tasks/.
 
 Exit codes:
-  0 success (run: every planned task accepted); 1 run finished with failed or unrun tasks;
-  2 invalid input, results directory inside a Git work tree, frozen-plan mismatch or harness error.
+  0 success (run: every planned task accepted; convert-set: the converted set is valid);
+  1 run finished with failed or unrun tasks (convert-set: written but the set fails validation);
+  2 invalid input, results or output inside a Git work tree, frozen-plan mismatch or harness error
+  (convert-set: an unmappable source line is refused and nothing is written).
 
 Related:
   Protocol v2 on issue #9623; docs/evaluations/uk-preamble.md; scripts/delegate.py.
@@ -269,7 +277,31 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--results", type=Path, required=True, help="Results directory holding scores.json.")
     report.add_argument("--bootstrap", type=_positive, default=10_000, help="Bootstrap iterations. Default: 10000.")
     report.add_argument("--seed", type=int, default=9623, help="Bootstrap seed. Default: 9623.")
+
+    convert = commands.add_parser(
+        "convert-set",
+        help="Convert the frozen v2 JSON Lines set into the harness set format",
+        description="Re-label a v2 evaluation set (JSON Lines) as the harness set object, copying offsets, spans "
+        "and forms verbatim; write it owner-only, then run the harness loader, review geometry and Protocol v2 "
+        "minimums on the result. Problems are reported, never repaired.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=EPILOG,
+    )
+    convert.add_argument("--input", type=Path, required=True, help="Private v2 set, JSON Lines (one item per line).")
+    convert.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="Converted set JSON, written owner-only; must resolve outside every Git work tree.",
+    )
+    convert.add_argument("--set-id", required=True, help="set_id of the converted set, e.g. uk-preamble-v1.")
     return parser
+
+
+def _cmd_convert_set(args: argparse.Namespace) -> int:
+    code, report = convert_file(args.input, args.output, args.set_id)
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    return code
 
 
 def _worker_cwd(path: Path | None) -> Path:
@@ -426,7 +458,7 @@ def _cmd_report(args: argparse.Namespace) -> int:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    handlers = {"run": _cmd_run, "score": _cmd_score, "report": _cmd_report}
+    handlers = {"run": _cmd_run, "score": _cmd_score, "report": _cmd_report, "convert-set": _cmd_convert_set}
     try:
         return handlers[args.command](args)
     except HarnessError as exc:
