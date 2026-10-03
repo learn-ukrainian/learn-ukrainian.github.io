@@ -26,16 +26,22 @@ from agents_extensions.shared.session_streams.model import (
     isoformat_z,
 )
 from agents_extensions.shared.session_streams.store import (
+    _EMBEDDED_HOST_EXEMPT_FILENAMES,
+    _EMBEDDED_HOST_LABEL_EXEMPTIONS,
     _EMBEDDED_HOST_SUFFIXES,
     _FILE_EXTENSIONS,
+    _PUBLIC_SUFFIX_TLDS,
     _REPOSITORY_FILENAMES,
+    _TLD_FILE_EXTENSIONS,
     MAX_ENTRY_BYTES,
+    PUBLIC_SUFFIX_LIST_PATH,
     ContentRejectedError,
     LeaseConflictError,
     LifecycleError,
     SessionStreamStore,
     _contains_hostname,
     _filename_contains_hostname,
+    load_public_suffix_labels,
     validate_entry_body,
 )
 
@@ -1004,7 +1010,29 @@ def test_embedded_host_filter_accepts_every_tracked_basename() -> None:
     tracked = [path for path in result.stdout.split("\0") if path]
     assert tracked, "the guard must inspect the tracked Git index"
     rejected = [path for path in tracked if _filename_contains_hostname(Path(path).name)]
-    assert rejected == [], "remove conflicting labels from _EMBEDDED_HOST_SUFFIXES: " + repr(rejected)
+    assert rejected == [], (
+        "exempt the exact basename (_EMBEDDED_HOST_EXEMPT_FILENAMES) or the label for one extension "
+        "(_EMBEDDED_HOST_LABEL_EXEMPTIONS): " + repr(rejected)
+    )
+
+
+@pytest.mark.repo_wide
+def test_embedded_host_exemptions_are_required_by_tracked_basenames() -> None:
+    # Every exemption names its tracked collisions; a stale one must be removed.
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
+    )
+    basenames = {Path(path).name for path in result.stdout.split("\0") if path}
+    assert basenames, "the guard must inspect the tracked Git index"
+    assert basenames >= _EMBEDDED_HOST_EXEMPT_FILENAMES
+    for filename in _EMBEDDED_HOST_EXEMPT_FILENAMES:
+        assert filename.rsplit(".", 2)[-2] in _EMBEDDED_HOST_SUFFIXES, filename
+    for label, extensions in _EMBEDDED_HOST_LABEL_EXEMPTIONS.items():
+        assert label in _EMBEDDED_HOST_SUFFIXES, label
+        for extension in extensions:
+            ending = f".{label}.{extension}"
+            assert any(name.lower().endswith(ending) for name in basenames), ending
 
 
 @pytest.mark.repo_wide
@@ -1034,12 +1062,128 @@ def test_backslash_tracked_paths_add_no_hostname_rejections() -> None:
     assert rejected_directories == [], repr(rejected_directories)
 
 
-@pytest.mark.parametrize("suffix", sorted(_EMBEDDED_HOST_SUFFIXES))
+# The closed label list used before #9430; the suffix list must keep it all.
+_LEGACY_EMBEDDED_HOST_SUFFIXES = (
+    *("com", "net", "org", "io", "dev", "app", "cloud", "local", "internal", "lan", "corp", "home"),
+    *("arpa", "intranet", "private", "edu", "gov", "ru", "ua", "de", "nl", "fr", "us", "uk"),
+)
+
+
+@pytest.mark.parametrize("suffix", _LEGACY_EMBEDDED_HOST_SUFFIXES)
 def test_closed_host_suffixes_cannot_be_hidden_in_filenames(suffix: str) -> None:
+    assert suffix in _EMBEDDED_HOST_SUFFIXES
     for filename in (f"example.{suffix}.json", f"host_vars/example.{suffix.upper()}.YML"):
         assert _filename_contains_hostname(filename)
         with pytest.raises(ContentRejectedError, match="hostname rule"):
             validate_entry_body(filename)
+
+
+def test_every_public_suffix_label_is_a_host_before_every_extension() -> None:
+    # Denominator: every top-level label of the vendored snapshot, every extension.
+    assert {"com", "info", "xyz", "ai", "me", "jp", "xn--p1ai"} <= _PUBLIC_SUFFIX_TLDS
+    missed = [
+        filename
+        for label in sorted(_EMBEDDED_HOST_SUFFIXES)
+        for extension in sorted(_FILE_EXTENSIONS)
+        if extension not in _EMBEDDED_HOST_LABEL_EXEMPTIONS.get(label, frozenset())
+        for filename in (f"example.{label}.{extension}", f"host_vars/WEB01.{label.upper()}.{extension.upper()}")
+        if not _filename_contains_hostname(filename)
+    ]
+    assert missed == []
+    passed = []
+    for label in sorted(_EMBEDDED_HOST_SUFFIXES):
+        try:
+            validate_entry_body(f"Changed `host_vars/web01.example.{label}.yaml`.")
+        except ContentRejectedError:
+            continue
+        passed.append(label)
+    assert passed == []
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "example.info.json",
+        "host.biz.yaml",
+        "example.xyz.md",
+        "model.ai.py",
+        "about.me.txt",
+        "host_vars/web01.example.co.jp.yml",
+        r"`host_vars\WEB01.EXAMPLE.ONLINE.YML`",
+        "example.xn--p1ai.json",
+        "host.org.uk.md",
+        "school.sch.uk.md",
+        "nhs.uk.md",
+        "host.review.yaml",
+        "host.review.md",
+        "host.report.md",
+        "other.py.txt",
+        "run_codex_baseline.py.json",
+    ],
+)
+def test_hosts_under_public_suffix_labels_are_rejected(body: str) -> None:
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        validate_entry_body(body)
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "x.review.json",
+        "decol_lex_001.review.json",
+        "plan-validate.report.json",
+        "run_codex_baseline.py.txt",
+        "archive/evidence/ua-eval-v0.1.0/run_codex_baseline.py.txt",
+    ],
+)
+def test_tracked_suffix_label_conventions_remain_files(body: str) -> None:
+    assert not _filename_contains_hostname(body)
+    validate_entry_body(body)
+
+
+def test_exempt_label_with_wildcard_children_rejects_every_child(monkeypatch: pytest.MonkeyPatch) -> None:
+    # The snapshot's `*.ck` rule makes every label below ck public; an exemption
+    # for ck must therefore still reject any three-label stem ending in ck.
+    monkeypatch.setitem(_EMBEDDED_HOST_LABEL_EXEMPTIONS, "ck", frozenset({"md"}))
+    assert _filename_contains_hostname("readme.ck.md")
+    assert not _filename_contains_hostname("ck.md")
+
+
+def test_public_suffix_loader_reads_rules_wildcards_and_idn_labels(tmp_path: Path) -> None:
+    snapshot = tmp_path / "psl.dat"
+    snapshot.write_text(
+        "// ===BEGIN ICANN DOMAINS===\nac\ncom.ac\n*.ck\n!www.ck\n*.sch.uk\nрф\n// ===END ICANN DOMAINS===\n"
+        "// ===BEGIN PRIVATE DOMAINS===\nexample.github.io\n// ===END PRIVATE DOMAINS===\n",
+        encoding="utf-8",
+    )
+    top_level, second_levels = load_public_suffix_labels(snapshot)
+    assert top_level == {"ac", "ck", "uk", "xn--p1ai", "io"}
+    assert second_levels == {
+        "ac": frozenset({"com"}),
+        "ck": frozenset({"*", "www"}),
+        "uk": frozenset({"sch"}),
+        "io": frozenset({"github"}),
+    }
+
+
+def test_public_suffix_loader_fails_closed_on_truncated_snapshot(tmp_path: Path) -> None:
+    snapshot = tmp_path / "psl.dat"
+    lines = PUBLIC_SUFFIX_LIST_PATH.read_text(encoding="utf-8").splitlines()
+    snapshot.write_text("\n".join(lines[: len(lines) // 2]) + "\n", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="lacks section markers"):
+        load_public_suffix_labels(snapshot)
+    with pytest.raises(FileNotFoundError):
+        load_public_suffix_labels(tmp_path / "absent.dat")
+
+
+def test_vendored_public_suffix_snapshot_is_pinned_and_rules_only() -> None:
+    lines = PUBLIC_SUFFIX_LIST_PATH.read_text(encoding="utf-8").splitlines()
+    assert any(line.startswith("// VERSION: ") for line in lines)
+    assert any(line.startswith("// COMMIT: ") and len(line.split()[-1]) == 40 for line in lines)
+    rules = [line for line in lines if not line.startswith("//")]
+    assert rules and all(rule and not any(char.isspace() for char in rule) for rule in rules)
+    # Keep the hand-written TLD/extension intersection true for this snapshot.
+    assert _FILE_EXTENSIONS & _PUBLIC_SUFFIX_TLDS == _TLD_FILE_EXTENSIONS
 
 
 @pytest.mark.parametrize(

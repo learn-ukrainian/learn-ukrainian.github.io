@@ -10,6 +10,7 @@ import uuid
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager, suppress
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Any
 
 from .app_lifecycle import VerifiedAppLifecycleProof
@@ -100,39 +101,63 @@ _FILE_EXTENSIONS = frozenset(
 )
 # Intersection of the closed extension list with IANA's root-zone TLD list.
 _TLD_FILE_EXTENSIONS = frozenset({"md", "py", "sh", "rs"})
-# Closed host-suffix labels checked immediately before a file extension. This
-# protects host-named files without treating repository labels such as schema,
-# sources, review or test as host suffixes. The repo-wide basename guard checks
-# this list; uk is exempt only for Markdown localization filenames, except co.uk.
-# Other country labels (S2) remain outside the closed list by driver decision;
-# broader coverage belongs to the existing follow-up issue.
-_EMBEDDED_HOST_SUFFIXES = frozenset(
-    {
-        "com",
-        "net",
-        "org",
-        "io",
-        "dev",
-        "app",
-        "cloud",
-        "local",
-        "internal",
-        "lan",
-        "corp",
-        "home",
-        "arpa",
-        "intranet",
-        "private",
-        "edu",
-        "gov",
-        "ru",
-        "ua",
-        "de",
-        "nl",
-        "fr",
-        "us",
-        "uk",
-    }
+# Vendored rules-only Public Suffix List snapshot; no runtime network or Git.
+PUBLIC_SUFFIX_LIST_PATH = Path(__file__).with_name("public_suffix_list.dat")
+_PUBLIC_SUFFIX_SECTION_MARKERS = (
+    "// ===BEGIN ICANN DOMAINS===",
+    "// ===END ICANN DOMAINS===",
+    "// ===BEGIN PRIVATE DOMAINS===",
+    "// ===END PRIVATE DOMAINS===",
+)
+
+
+def _ascii_label(label: str) -> str:
+    """Spell a lowercase NFC suffix-list label as the host token scanner sees it."""
+    return label if label.isascii() else "xn--" + label.encode("punycode").decode("ascii")
+
+
+def load_public_suffix_labels(path: Path) -> tuple[frozenset[str], dict[str, frozenset[str]]]:
+    """Return every rule's top-level label and the labels directly below each one.
+
+    A truncated snapshot fails closed: all four section markers must be present.
+    A wildcard rule contributes ``*`` below its parent, meaning any label.
+    """
+    lines = path.read_text(encoding="utf-8").splitlines()
+    missing = [marker for marker in _PUBLIC_SUFFIX_SECTION_MARKERS if marker not in lines]
+    if missing:
+        raise RuntimeError(f"public suffix snapshot {path.name} lacks section markers: {missing}")
+    top_level: set[str] = set()
+    below: dict[str, set[str]] = {}
+    for line in lines:
+        if not line or line.startswith("//"):
+            continue
+        labels = [_ascii_label(label) for label in line.lstrip("!").split(".")]
+        top_level.add(labels[-1])
+        if len(labels) > 1:
+            below.setdefault(labels[-1], set()).add(labels[-2])
+    return frozenset(top_level), {label: frozenset(children) for label, children in below.items()}
+
+
+_PUBLIC_SUFFIX_TLDS, _PUBLIC_SUFFIX_SECOND_LEVELS = load_public_suffix_labels(PUBLIC_SUFFIX_LIST_PATH)
+# Special-use and private-network labels the public list does not carry.
+_PRIVATE_HOST_SUFFIXES = frozenset({"local", "internal", "lan", "corp", "home", "intranet", "private"})
+# Host-suffix labels checked immediately before a file extension: every
+# top-level label of the public suffix list plus the private labels above.
+_EMBEDDED_HOST_SUFFIXES = _PUBLIC_SUFFIX_TLDS | _PRIVATE_HOST_SUFFIXES
+# Suffix labels that tracked naming conventions put before one extension
+# (*.uk.md localizations, *.review.json and *.report.json records). The
+# exemption covers only that extension and never a public second level below
+# the label (co.uk, sch.uk). The repo-wide guards require each exemption to
+# match a tracked basename.
+_EMBEDDED_HOST_LABEL_EXEMPTIONS = {
+    "uk": frozenset({"md"}),
+    "review": frozenset({"json"}),
+    "report": frozenset({"json"}),
+}
+# Exact tracked basenames whose stem ends in a suffix label (archived .py.txt
+# evidence). Any other name under the same label stays a host.
+_EMBEDDED_HOST_EXEMPT_FILENAMES = frozenset(
+    {"run_codex_baseline.py.txt", "verify_release_freeze.py.txt", "verify_release_freeze_v011.py.txt"}
 )
 # Explicit repository basenames, never a runtime filesystem/Git lookup. Unknown
 # collision names need a directory prefix; multi-label collision names remain
@@ -177,14 +202,19 @@ def process_exists(process_id: int) -> bool:
 
 
 def _filename_contains_hostname(filename: str) -> bool:
-    """Check the final stem label against the closed embedded-host suffix list."""
+    """Check the final stem label against the public and private host suffixes."""
     labels = filename.strip(".").rsplit(".", 3)
     if len(labels) < 3 or labels[-1].lower() not in _FILE_EXTENSIONS:
         return False
-    suffix = labels[-2].lower()
-    if suffix == "uk" and labels[-1].lower() == "md":
-        return labels[-3].lower() == "co"
-    return suffix in _EMBEDDED_HOST_SUFFIXES
+    if filename.replace("\\", "/").rpartition("/")[2] in _EMBEDDED_HOST_EXEMPT_FILENAMES:
+        return False
+    extension, suffix = labels[-1].lower(), labels[-2].lower()
+    if suffix not in _EMBEDDED_HOST_SUFFIXES:
+        return False
+    if extension not in _EMBEDDED_HOST_LABEL_EXEMPTIONS.get(suffix, frozenset()):
+        return True
+    second_levels = _PUBLIC_SUFFIX_SECOND_LEVELS.get(suffix, frozenset())
+    return "*" in second_levels or labels[-3].lower() in second_levels
 
 
 def _contains_hostname(body: str) -> bool:
