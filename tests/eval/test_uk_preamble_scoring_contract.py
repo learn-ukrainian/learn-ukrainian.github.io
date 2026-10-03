@@ -210,56 +210,70 @@ def test_probe_wrong_correction_confined_to_seed_is_a_miss_not_a_false_alarm():
 
 PAIR_TEXT = "p badone badtwo q"
 PAIR_ERRORS = [("badone", ["goodone"]), ("badtwo", ["goodtwo"])]
+PAIR = make_item(PAIR_TEXT, PAIR_ERRORS)
+TRIPLE = make_item(
+    "p badone badtwo badthree q", [("badone", ["goodone"]), ("badtwo", ["goodtwo"]), ("badthree", ["goodthree"])]
+)
+# The second seed's accepted form needs the insertion between the seeds (like ``відповідно до``).
+NEEDS_INNER = make_item("p badfirst badsecond q", [("badfirst", ["goodfirst"]), ("badsecond", ["до goodsecond"])])
+
+# Designated decision 2026-10-03 (2) on #9623 (rule by gpt-6.1-sol, approved with amendments by
+# claude-opus-5-5): a wrong correction is a miss, never a false alarm, for a seed's own tokens and
+# the insertions strictly inside it; an insertion at a seed's edge, including between two seeds, is
+# collateral unless an accepted form needs it. Every row is the decision's hand count.
+CLUSTER_ORACLE = {
+    "pair-both-correct": (PAIR, "p goodone goodtwo q", (2, 0, 0, 0, 0)),
+    "pair-both-correct-inner-insertion": (PAIR, "p goodone extra goodtwo q", (2, 0, 0, 1, 0)),
+    # The conformance review's reproduction: making both fixes worse never removes the insertion's false alarm.
+    "pair-both-wrong-inner-insertion": (PAIR, "p worseone extra worsetwo q", (0, 0, 0, 1, 2)),
+    "pair-correct-wrong-inner-insertion": (PAIR, "p goodone extra worsetwo q", (1, 0, 0, 1, 1)),
+    "pair-wrong-correct-inner-insertion": (PAIR, "p worseone extra goodtwo q", (1, 0, 0, 1, 1)),
+    "pair-both-untouched-inner-insertion": (PAIR, "p badone extra badtwo q", (0, 0, 0, 1, 0)),
+    "pair-both-correct-outer-left-insertion": (PAIR, "p very goodone goodtwo q", (2, 0, 0, 1, 0)),
+    "pair-both-correct-outer-right-insertion": (PAIR, "p goodone goodtwo very q", (2, 0, 0, 1, 0)),
+    # aax -> aaa, insert bbb between the seeds, yyy -> zzz: aax's slice plus its right edge is its
+    # accepted form "aaa bbb", so the insertion is used and earns no false alarm.
+    "inner-insertion-used-as-edge": (
+        make_item("p aax yyy q", [("aax", ["aaa bbb"]), ("yyy", ["ccc"])]),
+        "p aaa bbb zzz q",
+        (1, 0, 0, 0, 1),
+    ),
+    # Opus: the inner "до" is consumed by the second seed's accepted form ...
+    "inner-insertion-needed-by-accepted-form": (NEEDS_INNER, "p worsefirst до goodsecond q", (1, 0, 0, 0, 1)),
+    # ... and is collateral when no accepted form uses it (documented edge case), as for one seed:
+    "inner-insertion-not-needed-next-to-wrong": (NEEDS_INNER, "p worsefirst до worsesecond q", (0, 0, 0, 1, 2)),
+    "single-seed-wrong-with-edge-insertion": (
+        make_item("x bad y", [("bad", ["good"])]),
+        "x worse extra y",
+        (0, 0, 0, 1, 1),
+    ),
+    # Opus: both seeds want the shared B; the first seed in edge-use order takes it, the second cannot reuse it.
+    "shared-insertion-first-seed-takes-it": (
+        make_item("p X Y q", [("X", ["A B"]), ("Y", ["B C"])]),
+        "p A B C q",
+        (1, 0, 0, 0, 1),
+    ),
+    # Documented edge case: text fused into a seed's own token is a wrong correction, not a false alarm.
+    "text-fused-into-seed-token": (PAIR, "p goodoneextra goodtwo q", (1, 0, 0, 0, 1)),
+    # Three adjacent seeds with unused insertions in both gaps: h/0/2/0/(3-h) in the decision's order.
+    "triple-correct-correct-correct": (TRIPLE, "p goodone extra goodtwo more goodthree q", (3, 0, 0, 2, 0)),
+    "triple-correct-correct-wrong": (TRIPLE, "p goodone extra goodtwo more worsethree q", (2, 0, 0, 2, 1)),
+    "triple-correct-wrong-correct": (TRIPLE, "p goodone extra worsetwo more goodthree q", (2, 0, 0, 2, 1)),
+    "triple-correct-wrong-wrong": (TRIPLE, "p goodone extra worsetwo more worsethree q", (1, 0, 0, 2, 2)),
+    "triple-wrong-correct-correct": (TRIPLE, "p worseone extra goodtwo more goodthree q", (2, 0, 0, 2, 1)),
+    "triple-wrong-correct-wrong": (TRIPLE, "p worseone extra goodtwo more worsethree q", (1, 0, 0, 2, 2)),
+    "triple-wrong-wrong-correct": (TRIPLE, "p worseone extra worsetwo more goodthree q", (1, 0, 0, 2, 2)),
+    "triple-wrong-wrong-wrong": (TRIPLE, "p worseone extra worsetwo more worsethree q", (0, 0, 0, 2, 3)),
+}
 
 
-def test_probe_wrong_correction_confined_to_cluster_is_a_miss_not_a_false_alarm():
-    """The conformance review's reproduction. The alignment substitutes both seeds and inserts ``extra`` between them.
-
-    Everything changed lies inside the cluster, so (Opus amendment 3) it is a miss
-    without a false alarm, exactly as if ``badone badtwo`` were one seed.
-    """
-    item = make_item(PAIR_TEXT, PAIR_ERRORS)
-    assert counts(item, "p worseone extra worsetwo q") == (0, 0, 0, 0, 2)
-
-
-def test_insertion_between_correctly_fixed_adjacent_seeds_makes_the_cluster_a_miss():
-    """Both seeds fixed, plus an insertion between them: 0 hits, 0 false alarms, 2 wrong.
-
-    The window ``goodone extra goodtwo`` is not the original window with each seed
-    given an accepted form or left as it was, so the exact cluster match fails.
-    The insertion lies on the boundary between the seeds, which belongs to the
-    cluster: neither seed's match needs it as an edge insertion, so it is part of
-    the cluster's change, and a cluster whose change is not an accepted
-    assignment is a miss. Represented as one seed ``badone badtwo`` with the
-    accepted form ``goodone goodtwo``, the same text is one wrong correction; the
-    cluster gives the same verdict for each of its two seeds. Crediting both
-    seeds instead would let any text be inserted between adjacent seeds for free.
-    """
-    item = make_item(PAIR_TEXT, PAIR_ERRORS)
-    assert counts(item, "p goodone extra goodtwo q") == (0, 0, 0, 0, 2)
-
-
-def test_insertion_between_untouched_adjacent_seeds_is_a_miss():
-    """Only the insertion between the seeds changes: still a change confined to the cluster, so 2 wrong, 0 false alarms."""
-    item = make_item(PAIR_TEXT, PAIR_ERRORS)
-    assert counts(item, "p badone extra badtwo q") == (0, 0, 0, 0, 2)
-
-
-@pytest.mark.parametrize("corrected", ["p very goodone goodtwo q", "p goodone goodtwo very q"], ids=["left", "right"])
-def test_insertion_at_a_cluster_outer_edge_keeps_the_edge_rule(corrected):
-    """Unchanged behaviour: neither seed's match needs the outer-edge insertion, so it is collateral (C9a)."""
-    item = make_item(PAIR_TEXT, PAIR_ERRORS)
-    assert counts(item, corrected) == (2, 0, 0, 1, 0)
-
-
-def test_insertion_between_adjacent_seeds_still_serves_as_an_edge_insertion():
-    """Unchanged behaviour: after the cluster match fails (yyy is wrong), aax's accepted form uses the inner insertion.
-
-    The alignment is aax -> aaa, insert bbb between the seeds, yyy -> zzz; aax's
-    slice plus its right edge is ``aaa bbb``, a hit, and the insertion is used.
-    """
-    item = make_item("p aax yyy q", [("aax", ["aaa bbb"]), ("yyy", ["ccc"])])
-    assert counts(item, "p aaa bbb zzz q") == (1, 0, 0, 0, 1)
+@pytest.mark.parametrize("case", list(CLUSTER_ORACLE))
+def test_insertions_between_and_around_adjacent_seeds(case):
+    """The decision's worked cases; with no claims the unapplied diagnostic (its fourth column) is 0."""
+    item, corrected, expected = CLUSTER_ORACLE[case]
+    assert counts(item, corrected) == expected
+    record = score_review_item(item, schema_valid(item.text, corrected, []))
+    assert record["logging"]["unapplied_claims"] == 0
 
 
 def test_probe_joining_two_words_is_a_real_change():
@@ -349,7 +363,7 @@ INVARIANCE = [
     ("Я знаю що він прийде.", [(6, [","])], [], [(6, 6, ","), (10, 14, "")], (1, 0, 1, 0, 0)),
     ("X Y", [("X", ["A"]), ("Y", ["C D"])], [], [(0, 1, "A"), (2, 3, "C D")], (2, 0, 0, 0, 0)),
     ("x bad y", [("bad", ["good"])], [], [(2, 2, "very "), (2, 5, "good")], (1, 0, 0, 1, 0)),
-    (PAIR_TEXT, PAIR_ERRORS, [], [(2, 8, "worseone"), (9, 9, "extra "), (9, 15, "worsetwo")], (0, 0, 0, 0, 2)),
+    (PAIR_TEXT, PAIR_ERRORS, [], [(2, 8, "worseone"), (9, 9, "extra "), (9, 15, "worsetwo")], (0, 0, 0, 1, 2)),
 ]
 
 

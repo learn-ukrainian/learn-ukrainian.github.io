@@ -129,19 +129,17 @@ Frozen by the designated decision of 2026-10-03 on #9623 (an alternative by
   Otherwise a seed is a hit when its slice (target tokens aligned to it plus
   insertions strictly inside it; for an empty seed, the insertions at its point)
   equals an accepted form, trying no edge insertion, then the left one, the
-  right one, then both. An edge insertion the match does not need is collateral,
-  except between two adjacent seeds: that insertion belongs to their cluster, so
-  when no seed's match uses it the seeds on both sides of it are not hits, and
-  it is never a false alarm (a wrong correction confined to a cluster is a miss,
-  as it would be if the cluster were one seed).
-  A seed changed but not hit, or next to such an unused insertion, is a wrong
-  correction: a miss, never a false alarm.
+  right one, then both. Seeds try their edges in source order, so an insertion
+  one seed's match uses is not available to the next seed.
+  A seed changed but not hit is a wrong correction. A wrong correction is a
+  miss, never a false alarm, for a seed's own tokens and the insertions
+  strictly inside it. An insertion at a seed's edge, including between two
+  seeds, is collateral unless an accepted form needs it.
   No alignment or assignment is chosen to maximise hits.
 - **False alarms (primary units).** Each protected span affected once (a token
   changed or an insertion strictly inside it); each changed correct token
   outside protected spans once; each other insertion site once. An insertion at
-  a protected span's edge is an ordinary insertion site; one between adjacent
-  seeds never counts. The rule's false-alarm
+  a protected span's edge is an ordinary insertion site. The rule's false-alarm
   rate is all false alarms per 100 protected spans.
 - **Logging diagnostics, outside adoption.** Changed units some claim covers;
   claims applied (the corrected text realises the claimed replacement over the
@@ -153,13 +151,23 @@ Frozen by the designated decision of 2026-10-03 on #9623 (an alternative by
   token differently, the tie order decides. For `p A x A q` → `p B A q` with the
   seed on the first `A`, the seed counts as a miss and `x` as a changed token,
   although the writer may have meant the opposite. Oracle case C8b pins this.
+- **Known edge cases** (designated decision 2026-10-03 (2) on #9623).
+  - An unused inserted word that would complete a correct fix next to a wrong
+    one counts as one false alarm. For `p badfirst badsecond q`, where the
+    second seed's accepted form is `до goodsecond`, the output
+    `p worsefirst до worsesecond q` scores the `до` as collateral, as the
+    single-seed edge rule does for `x worse extra y`.
+  - Text fused into a seed's own token (`goodoneextra`) counts as a wrong
+    correction, not a false alarm: it lies in the seed's own span and costs the
+    hit.
 - Style suggestions are tallied separately (total, on protected spans, on
   error spans) and never count as hits or false alarms. VESUM-invalid forms the
   corrected text introduces are reported.
 - A failed item (no answer, malformed JSON, schema violation, task not run or
   not accepted) stays in the denominator with all its errors missed.
 
-The worked oracle cases (R1–R3, C5–C10 of the decision) are tests with literal
+The worked oracle cases (R1–R3, C5–C10 of the decision, and the adjacent-seed
+cases of decision (2)) are tests with literal
 expected counts in `tests/eval/test_uk_preamble_scoring_contract.py`, with a
 seeded exhaustive check that every schema-valid claim list scores identically.
 
@@ -169,7 +177,10 @@ scoring version, including manifests written before scoring was versioned
 (`uk-preamble-scoring/1`, the per-correction diffing): results are never
 compared across scoring versions. The contract changed before any evaluation
 was paid for: no adoption-run result exists under version 1, so the change
-cannot have been tuned to a viewed result.
+cannot have been tuned to a viewed result. No adoption-run result exists under
+version 2 either, including the rule for insertions between adjacent seeds
+(designated decision 2026-10-03 (2)); if one is viewed before a further
+contract change, that change must bump the version.
 
 ### Writing and judging
 
