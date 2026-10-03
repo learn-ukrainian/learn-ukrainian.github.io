@@ -7442,7 +7442,15 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
     assert recorded["env"]["PYTEST_PLUGINS"] == "already.loaded,ci.pytest_dispatch_cap"
 
 
-def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(tmp_tasks_dir, monkeypatch):
+@pytest.mark.parametrize(
+    "inherited_entries", [[], ["/some/other/path", "/another/import/root"]], ids=["empty", "inherited"]
+)
+def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    inherited_entries,
+):
     """#8795: PYTHONPATH must carry the cap plugin's real scripts dir.
 
     ``ci.pytest_dispatch_cap`` only resolves via pyproject.toml's
@@ -7470,9 +7478,11 @@ def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(tmp_
         recorded["env"] = kwargs.get("env", {})
         return _FakeProc()
 
-    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.delenv("PYTEST_PLUGINS", raising=False)
-    monkeypatch.delenv("PYTHONPATH", raising=False)
+    if inherited_entries:
+        monkeypatch.setenv("PYTHONPATH", os.pathsep.join(inherited_entries))
+    else:
+        monkeypatch.delenv("PYTHONPATH", raising=False)
 
     args = argparse.Namespace(
         agent="codex",
@@ -7487,21 +7497,43 @@ def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(tmp_
         allow_merge=False,
     )
 
-    rc = delegate.cmd_dispatch(args)
+    with monkeypatch.context() as dispatch_patch:
+        dispatch_patch.setattr(delegate.subprocess, "Popen", fake_popen)
+        rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     env = recorded["env"]
-    scripts_dir = Path(env["PYTHONPATH"])
+    entries = env["PYTHONPATH"].split(os.pathsep)
+    scripts_dir = Path(entries[0])
     assert scripts_dir.is_absolute()
+    assert scripts_dir == delegate._REPO_ROOT / "scripts"
     assert (scripts_dir / "ci" / "pytest_dispatch_cap.py").is_file()
+    if inherited_entries:
+        assert entries[-len(inherited_entries) :] == inherited_entries
 
-    monkeypatch.setenv("PYTHONPATH", "/some/other/path")
-    args.task_id = "dispatch-marker-pythonpath-append"
-    rc = delegate.cmd_dispatch(args)
-    assert rc == 0
-    entries = recorded["env"]["PYTHONPATH"].split(os.pathsep)
-    assert entries[0] == str(scripts_dir)
-    assert "/some/other/path" in entries
+    # #9536: prove resolution outside rootdir using the composed path list,
+    # including the nested execution guard installed through sitecustomize.
+    probe_cwd = tmp_path / "plugin-import"
+    probe_cwd.mkdir()
+    assert not probe_cwd.is_relative_to(delegate._REPO_ROOT)
+    probe = """
+import os
+import ci.pytest_dispatch_cap as plugin
+import cursor_exec_tripwire as guard
+assert guard.active and not guard.allow_real
+assert guard.session_token == os.environ[guard.SESSION_TOKEN_ENV]
+print(plugin.__file__)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", probe],
+        cwd=probe_cwd,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert Path(result.stdout.strip()).resolve() == (scripts_dir / "ci" / "pytest_dispatch_cap.py").resolve()
 
 
 def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
@@ -12143,7 +12175,6 @@ def test_archive_task_artifacts_preserves_stable_lock_anchor(tmp_path, monkeypat
     assert any("task-with-lock" in str(p) for p in archived)
     assert not state_path.exists()
     assert lock_path.exists()
-
 
 
 def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeypatch, tmp_tasks_dir):
