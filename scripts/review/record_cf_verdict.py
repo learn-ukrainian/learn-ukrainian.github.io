@@ -7,12 +7,14 @@ import argparse
 import fcntl
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Any
 
 if __package__ in (None, ""):
@@ -107,17 +109,136 @@ def _hot_or_archived(task_root: Path, name: str) -> Path:
     return archived if not hot.exists() and archived.exists() else hot
 
 
+def _merge_proof_object_store() -> Path:
+    """Find the checkout's shared objects without running Git or reading config."""
+    cwd = Path.cwd()
+    for root in (cwd, *cwd.parents):
+        marker = root / ".git"
+        if marker.is_dir():
+            git_dir = marker
+        elif marker.is_file():
+            text = marker.read_text(encoding="utf-8").strip()
+            if not text.startswith("gitdir: ") or "\n" in text:
+                raise OSError("invalid Git directory pointer")
+            git_dir = (root / text[8:]).resolve(strict=True)
+        else:
+            continue
+        common_file = git_dir / "commondir"
+        if common_file.is_file():
+            git_dir = git_dir / common_file.read_text(encoding="utf-8").strip()
+        objects = (git_dir / "objects").resolve(strict=True)
+        if not objects.is_dir():
+            raise OSError("Git object store unavailable")
+        return objects
+    raise OSError("Git checkout unavailable")
+
+
+def _is_clean_base_merge(entry: dict[str, Any], base_sha: str) -> bool:
+    """Bind a conflict-free base merge to GitHub metadata and raw local objects."""
+    commit_sha = entry.get("sha")
+    commit_data = entry.get("commit")
+    tree_data = commit_data.get("tree") if isinstance(commit_data, dict) else None
+    tree = tree_data.get("sha") if isinstance(tree_data, dict) else None
+    parent_data = entry.get("parents")
+    if not isinstance(parent_data, list) or len(parent_data) != 2:
+        return False
+    parents = [parent.get("sha") if isinstance(parent, dict) else None for parent in parent_data]
+    if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in [commit_sha, base_sha, tree, *parents]):
+        return False
+    git = ["git"]
+    try:
+        objects = _merge_proof_object_store()
+        with TemporaryDirectory(prefix="cf-merge-") as isolated:
+            # Construct a bare repository without importing init templates, config,
+            # refs, grafts, attributes, or an index from the writable shared Git dir.
+            proof_dir = Path(isolated)
+            (proof_dir / "objects/info").mkdir(parents=True)
+            (proof_dir / "refs").mkdir()
+            (proof_dir / "HEAD").write_text("ref: refs/heads/proof\n", encoding="utf-8")
+            (proof_dir / "config").write_text(
+                "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
+                # Commit graphs can also be read from the alternate object store.
+                f"\tcommitGraph = false\n\tattributesFile = {os.devnull}\n",
+                encoding="utf-8",
+            )
+            (proof_dir / "objects/info/alternates").write_text(
+                json.dumps(str(objects), ensure_ascii=False) + "\n", encoding="utf-8"
+            )
+            env = {
+                **{key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+                "GIT_DIR": isolated,
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": str(proof_dir / "no-global-config"),
+                "GIT_ATTR_NOSYSTEM": "1",
+                "GIT_NO_LAZY_FETCH": "1",
+            }
+            commit = subprocess.run(
+                [*git, "cat-file", "commit", commit_sha],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=30,
+            )
+            headers = commit.stdout.partition("\n\n")[0].splitlines()
+            if [line[5:] for line in headers if line.startswith("tree ")] != [tree]:
+                return False
+            if [line[7:] for line in headers if line.startswith("parent ")] != parents:
+                return False
+            base = subprocess.run(
+                [*git, "cat-file", "-e", f"{base_sha}^{{commit}}"],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=30,
+            )
+            if base.returncode:
+                raise RecordError("base object not available locally; fetch and retry")
+            subprocess.run(
+                [*git, "merge-base", "--is-ancestor", parents[1], base_sha],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=30,
+            )
+            merged = subprocess.run(
+                [*git, "merge-tree", "--write-tree", "--no-messages", *parents],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=30,
+            )
+    except (OSError, subprocess.SubprocessError, UnicodeError):
+        # Missing objects, conflicts, unsupported Git, and timeouts prove no exemption.
+        return False
+    return merged.stdout.strip() == tree
+
+
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
-    """Resolve every base..head commit from explicit model attribution, fail closed."""
+    """Resolve authored commits; exempt only Git-proven clean base merges, fail closed."""
     commits = _pages(Request("read-commits", repo=repository, number=pr_number))
     if not commits:
         raise RecordError("PR commit set unavailable")
     families = set()
+    base_sha = None
     for entry in commits:
         message = (entry.get("commit") or {}).get("message")
         if not isinstance(message, str):
             raise RecordError("commit message unavailable")
         trailers = re.findall(r"(?m)^X-Agent:\s*([^\s]+)\s*$", message)
+        if not trailers and not re.search(r"(?m)^X-Agent:", message):
+            commit_sha = entry.get("sha")
+            if isinstance(commit_sha, str) and SHA.fullmatch(commit_sha):
+                if base_sha is None:
+                    pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid"])
+                    base_sha = pr.get("baseRefOid") if isinstance(pr, dict) else None
+                    if not isinstance(base_sha, str) or not SHA.fullmatch(base_sha):
+                        raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
+                if _is_clean_base_merge(entry, base_sha):
+                    continue
         if len(trailers) != 1 or "/" not in trailers[0]:
             raise RecordError("author model unknown: missing explicit X-Agent model trailer")
         harness, model = trailers[0].split("/", 1)
@@ -159,6 +280,8 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         if family == CURSOR_AUTO_UNION_FAMILY:
             raise RecordError("author family mixed or unknown")
         families.add(family)
+    if not families:
+        raise RecordError("PR has no attributed author commits")
     return families
 
 
