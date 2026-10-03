@@ -765,7 +765,7 @@ def prepare_review_attempt(
     if not isinstance(attempt_id, str) or not _TOKEN_RE.match(attempt_id):
         raise ValueError(f"invalid attempt_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(attempt_id)})")
 
-    review_tools(review_access)  # Validate before reserving files or an attempt id.
+    python_bin, sources_server = sources_server_launch()
     canonical_harness = (harness or "").lower().strip()
     if canonical_harness in UNSUPPORTED_HARNESS_REASONS:
         raise ValueError(
@@ -786,7 +786,6 @@ def prepare_review_attempt(
 
     # Primary checkout root: resolved via repository helper scripts.common.repo_root
     primary_root = review_server_checkout()
-    python_bin, sources_server = sources_server_launch()
 
     # The receipts root (default or explicit) is the trust anchor: verified itself, with
     # everything below it walked no-follow. Its ancestors are followed by design.
@@ -814,6 +813,11 @@ def prepare_review_attempt(
     if review_contract is not None:
         # Admission checked the primary earlier in the dispatch; the seat launches what is on disk now (#9163).
         check_launch_contract(review_contract, primary_root, python_bin)
+
+    # Preserve the admission-drift refusal first, then bind validation and
+    # configuration to one launch resolution before creating any artifacts.
+    # A worktree's declarations cannot authorize another checkout's server.
+    review_tools(review_access, server_path=sources_server)
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = sources_mcp_config(

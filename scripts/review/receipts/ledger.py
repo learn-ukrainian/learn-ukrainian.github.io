@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.sources_read_only import sources_tool_sets
+from scripts.agent_runtime.sources_read_only import SERVER_PATH, sources_tool_sets
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.curriculum.evidence.lock import atomic_write
 
@@ -65,10 +65,29 @@ REVIEW_TOOLS = frozenset(
 FULL_REVIEW_TOOLS = REVIEW_TOOLS | {"search_resources"}
 
 
-def review_tools(review_access: str = "isolated") -> frozenset[str]:
-    """Keep the original isolated tool contract; catalogue evidence is full-only."""
+def review_tools(review_access: str = "isolated", *, server_path: Path | None = None) -> frozenset[str]:
+    """Validate the contract against the server a formal attempt will launch.
+
+    A bound launch must be readable and byte-identical to this runtime's server.
+    The unbound contract remains usable by scripts-only receipt consumers; it
+    cannot authorize a launch. ``prepare_review_attempt`` always binds a path.
+    """
     if review_access not in {"isolated", "full"}:
         raise ValueError("review_access_invalid")
+    if server_path is not None:
+        try:
+            launched = server_path.read_bytes()
+            imported = SERVER_PATH.read_bytes()
+        except OSError as exc:
+            raise ValueError("review_launched_sources_server_unreadable") from exc
+        if launched != imported:
+            raise ValueError("review_launched_sources_server_mismatch")
+        # Launch validation must not reuse declarations cached before a file
+        # changed or became unreadable. Parse the exact path afresh.
+        readers = frozenset(sources_tool_sets.__wrapped__(server_path)[0])
+        if not readers >= FULL_REVIEW_TOOLS:
+            raise ValueError("review_contract_contains_non_read_only_sources_tool")
+        return FULL_REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS
     try:
         readers = frozenset(sources_tool_sets()[0])
     except FileNotFoundError:
