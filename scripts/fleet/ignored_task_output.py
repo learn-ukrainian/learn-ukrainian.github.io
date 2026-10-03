@@ -8,6 +8,8 @@ import json
 import re
 import stat
 import subprocess
+import sys
+import uuid
 from collections.abc import Mapping
 from datetime import datetime
 from pathlib import Path
@@ -22,7 +24,7 @@ MAX_PRESERVED_BYTES = 256 * 1024 * 1024
 
 
 def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, Any]) -> list[str]:
-    """Inventory ignored regular files, excluding caches and pre-task output."""
+    """Inventory output, including unignored files when no index was checked out."""
     started_at = record.get("started_at")
     cutoff = None
     if started_at is not None:
@@ -34,13 +36,17 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
     # Retain the existing named-link safety checks and nested-repository gates.
     named = artifacts._named_artifact_files(worktree, record, primary=primary)
     names = artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard")
+    if not artifacts._git_paths(worktree, "--cached"):
+        # --no-checkout leaves an empty index and no on-disk .gitignore.
+        # Unignored scratch can be task output too; inventory both classes.
+        names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
     files: set[str] = set()
     root = worktree.resolve(strict=True)
     for name in names:
         relative = Path(name)
         if relative.is_absolute() or ".." in relative.parts:
             raise ValueError("ignored output inventory escaped worktree")
-        if artifacts._DISPOSABLE_DIRECTORIES.intersection(relative.parts):
+        if artifacts._is_disposable_path(relative):
             continue
         source = worktree / relative
         status = source.lstat()
@@ -65,8 +71,8 @@ def _ignored_output_files(worktree: Path, primary: Path, record: Mapping[str, An
     return sorted(
         name
         for name in files
-        if not artifacts._DISPOSABLE_DIRECTORIES.intersection(Path(name).parts)
-        and (cutoff is None or (worktree / name).stat().st_mtime >= cutoff)
+        if not artifacts._is_disposable_path(Path(name))
+        and (cutoff is None or max((worktree / name).stat().st_mtime, (worktree / name).stat().st_ctime) >= cutoff)
     )
 
 
@@ -81,11 +87,16 @@ def preserve_worktree_artifacts(
     """Copy all ignored output before removal, independent of terminal status.
 
     Call under the remover's existing ownership/liveness lock. Missing task
-    start conservatively includes all non-cache ignored files. No task identity
-    uses a deterministic worktree identity, with metadata in the reap/closeout
-    receipt. Inventory, cap, copy, verification and record errors retain the
+    start conservatively includes all non-cache ignored files. An absent task
+    identity is derived from the dispatch path, or uses a worktree path digest. Each
+    preservation has its own destination, keeping earlier attempts intact.
+    Inventory, cap, copy, verification and record errors retain the
     checkout. Existing preservation layout and verified-copy mechanics are reused.
     """
+    if task_id is None:
+        from scripts.orchestration.reap_worktrees import _dispatch_task_id_for_path
+
+        task_id = _dispatch_task_id_for_path(primary, worktree)
     record_path = task_record_path(tasks_dir, task_id) if task_id else None
     record = dict(task_record or {})
     metadata = None
@@ -105,7 +116,7 @@ def preserve_worktree_artifacts(
         total_bytes = sum((worktree / name).stat().st_size for name in files)
         if total_bytes > MAX_PRESERVED_BYTES:
             raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {MAX_PRESERVED_BYTES} bytes)")
-        location = primary / "batch_state" / "preserved" / identity
+        location = primary / "batch_state" / "preserved" / identity / uuid.uuid4().hex
         if location.is_relative_to(worktree.resolve()):
             raise ValueError("preservation destination is inside the worktree")
         for name in files:
@@ -125,6 +136,14 @@ def preserve_worktree_artifacts(
             record_path, {"preserved_artifacts": metadata}, clear=("artifact_preservation_error",)
         ):
             metadata["record_update"] = "skipped_missing_record"
+            receipt_path = location.with_suffix(".receipt.json")
+            metadata["receipt_path"] = str(receipt_path)
+            with receipt_path.open("x", encoding="utf-8") as receipt_file:
+                json.dump(metadata, receipt_file, sort_keys=True)
+                receipt_file.write("\n")
+            print(f"Preserved {len(files)} files ({total_bytes} bytes) at {location}; receipt: {receipt_path}", file=sys.stderr)
+        else:
+            print(f"Preserved {len(files)} files ({total_bytes} bytes) at {location}", file=sys.stderr)
         if isinstance(task_record, dict):
             task_record["preserved_artifacts"] = metadata
             task_record.pop("artifact_preservation_error", None)

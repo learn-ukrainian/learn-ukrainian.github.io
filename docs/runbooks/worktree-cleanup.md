@@ -48,7 +48,7 @@ retain their existing scratch-cleanup behavior.
 | `worktree_claims.git_worktree_remove`: raw Git argv | Preserves once before deletion; failures return a refusal. |
 | `delegate._remove_dispatch_worktree`: settle, stale holder and superseded review cleanup | Shared locked remover, then guarded raw Git. |
 | `post_task_reap._remove_acp_runtime_worktree` | Shared locked remover; regular dispatches use the common reaper. |
-| `_acp_execution._remove_runtime_worktree`: context teardown and dead-runtime sweep | Shared locked remover; ownership and dirty probes still bind. |
+| `_acp_execution._remove_runtime_worktree`: context teardown and dead-runtime sweep | Shared locked remover; no-checkout teardown inventories all untracked non-cache files, even without ignore rules. Dead-runtime sweep retains unexpected files. |
 | `data_tier.remove_test_worktree`: stale and final cleanup | Shared locked remover. |
 | `sibling_git.worktree_remove` | Shared locked remover; preservation uses the public control plane. |
 | `task_family.git_safety.remove_unclaimed_worktree`: executor cleanup | Shared locked remover. |
@@ -66,16 +66,22 @@ They are not registered worktree-root removers. In particular,
 `review/snapshot.py` only calls `rmdir` on an empty extracted overlay member.
 
 The guard inventories all Git-ignored regular files, including `.cache/`
-outputs never named in a response. Files with mtime at or after the task's
+outputs never named in a response. No-checkout runtimes have an empty index and
+no on-disk ignore rules, so the guard inventories all untracked non-cache files.
+Files with `max(st_mtime, st_ctime)` at or after the task's
 recorded `started_at` are copied, retaining their relative paths under
-`batch_state/preserved/<task-id>/`. An absent start conservatively includes all
+`batch_state/preserved/<task-id>/<attempt-nonce>/`. Every preservation uses a
+unique attempt directory, so retries keep earlier copies intact.
+An absent start conservatively includes all
 ignored non-cache files; a malformed start refuses removal. Closeout without a
-task identity uses `worktree-<path-digest>` at the same destination. Empty files
+task identity derives it from the dispatch path, or uses `worktree-<path-digest>`
+at the same destination. Empty files
 are included. Existing copy verification checks size and SHA-256, refuses
 conflicting evidence, and rechecks inventory and copied bytes before removal.
 
 Known tool directories (`__pycache__`, `.pytest_cache`, `.ruff_cache`,
-`.mypy_cache`, `.venv`, `node_modules`, and Git metadata) are excluded. `.cache`
+`.mypy_cache`, `.venv`, `node_modules`, `.pytest_breadcrumbs`, `.astro`,
+`.hypothesis`, `.tox`, `.nox`, `.entire/logs`, and Git metadata) are excluded. `.cache`
 itself is deliberately not a tool-cache exemption. Shared state and verified
 provisioned database links survive outside the worktree and are never copied.
 Task output placed in an excluded cache remains disposable.
@@ -86,9 +92,11 @@ no partial copy is attempted and the worktree is retained for its owner's
 disposition. Inventory, copy, byte-verification, or task-record write failures
 also retain it. Task terminal status never changes preservation eligibility.
 Existing task records and reap/closeout receipts report `preserved_artifacts`
-with `count`, `bytes`, and `location`; missing task records are reported in the
-receipt rather than synthesized. Owners must recover the preserved outputs
-before separately deciding retention; automatic reaping does not delete them.
+with `count`, `bytes`, and `location`. Each copy's location is printed. If no task
+record exists, a `<attempt-nonce>.receipt.json` file beside the copy stores that
+metadata and its path is printed; no task record is synthesized. The infra lane
+owns retention of `batch_state/preserved/`. Output owners must recover their
+files before retention is decided; this change adds no automatic deletion policy.
 
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
 

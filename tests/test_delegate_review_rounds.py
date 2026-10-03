@@ -14,6 +14,7 @@ covered in ``tests/test_delegate.py``.
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 from pathlib import Path
@@ -23,6 +24,53 @@ import pytest
 
 import scripts.delegate as delegate
 from scripts.orchestration import worktree_claims
+
+
+@pytest.mark.parametrize("caller", ["superseded-review", "stale-holder"])
+@pytest.mark.parametrize("record_exists", [True, False])
+def test_cleanup_derives_dispatch_identity_and_reports_preserved_location(
+    tmp_path, monkeypatch, capsys, caller, record_exists
+):
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    tasks = primary / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    task_id = "review-output-r1"
+    branch = f"codex/{task_id}"
+    worktree = _linked(primary, branch)
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/answer.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"review output")
+    record_path = tasks / f"{task_id}.json"
+    if record_exists:
+        record_path.write_text(json.dumps({"task_id": task_id, "status": "done", "worktree_path": str(worktree)}))
+    if caller == "superseded-review":
+        monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(worktree, task_id)])
+        monkeypatch.setattr(delegate, "_superseded_review_release_proof", lambda _path: (True, "clean+contained"))
+        released = delegate._release_superseded_review_worktrees("review-output-r2", dry_run=False)
+    else:
+        monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda *_args: (True, "clean+contained"))
+        released = delegate._release_stale_branch_holders(branch=branch, holders=[worktree], dry_run=False)
+    assert released == [worktree] and not worktree.exists()
+    if record_exists:
+        receipt = json.loads(record_path.read_text())["preserved_artifacts"]
+    else:
+        receipts = list((primary / "batch_state/preserved" / task_id).glob("*.receipt.json"))
+        assert len(receipts) == 1 and not record_path.exists()
+        receipt = json.loads(receipts[0].read_text())
+    assert receipt["count"] == 1 and receipt["bytes"] == len(b"review output")
+    location = Path(receipt["location"])
+    assert location.parent.name == task_id
+    assert (location / ".cache/out/answer.txt").read_bytes() == b"review output"
+    diagnostic = capsys.readouterr().err
+    assert str(location) in diagnostic
+    if not record_exists:
+        assert receipt["receipt_path"] in diagnostic
 
 
 @pytest.fixture(autouse=True)

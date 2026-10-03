@@ -12,11 +12,14 @@ Tests exercise the hard guards without touching the real checkout:
 
 from __future__ import annotations
 
+import io
 import json
 import os
 import re
 import subprocess
 import sys
+import tarfile
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +30,40 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from scripts.fleet import post_task_reap
 from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import half_built_prep, leave_half_built
+
+
+def test_s3_post_task_reap_preserves_tar_member_with_restored_old_mtime(hermetic_reap, tmp_path):
+    repo, tasks = hermetic_reap
+    task_id = "tar-output-9645"
+    worktree = _add_dispatch_worktree(repo, "kimi", task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    payload = b"archived task output"
+    archive = tmp_path / "fixture.tar"
+    with tarfile.open(archive, "w") as bundle:
+        member = tarfile.TarInfo(".cache/dl/archive_member.txt")
+        member.mtime = 946684800
+        member.size = len(payload)
+        bundle.addfile(member, io.BytesIO(payload))
+    started = datetime.now(UTC)
+    subprocess.run(["tar", "-xf", str(archive), "-C", str(worktree)], check=True, timeout=30)
+    source = worktree / ".cache/dl/archive_member.txt"
+    assert source.stat().st_mtime < started.timestamp() <= source.stat().st_ctime
+    recent = source.parent / "recent.txt"
+    recent.write_bytes(b"recent")
+    _write_task_state(tasks, task_id, "done", worktree)
+    record_path = tasks / f"{task_id}.json"
+    record = json.loads(record_path.read_text())
+    record["started_at"] = started.isoformat()
+    record_path.write_text(json.dumps(record))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] == "removed", report
+    assert not worktree.exists()
+    receipt = json.loads(record_path.read_text())["preserved_artifacts"]
+    assert receipt["count"] == 2 and receipt["bytes"] == len(payload) + 6
+    location = Path(receipt["location"])
+    assert (location / ".cache/dl/archive_member.txt").read_bytes() == payload
+    assert (location / ".cache/dl/recent.txt").read_bytes() == b"recent"
 
 
 def _safe_label(task_id: str) -> str:
@@ -854,7 +891,7 @@ def test_post_task_reap_result_named_file_scope(hermetic_reap, runtime, referenc
     row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
     assert row["action"] == "removed", row
     assert not worktree.exists()
-    location = repo / "batch_state/preserved" / task_id
+    location = Path(json.loads(path.read_text())["preserved_artifacts"]["location"])
     assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
     assert not (location / ".pytest_cache/cache.txt").exists()
     assert json.loads(path.read_text())["preserved_artifacts"]["count"] == 1
@@ -905,7 +942,7 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     state = json.loads(path.read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = repo / "batch_state/preserved" / task_id
+    location = Path(state.get("preserved_artifacts", {}).get("location", repo / "batch_state/preserved" / task_id))
     if scenario in links.REFUSALS:
         assert row["action"] == ("retained" if runtime else "skipped"), row
         assert links.REFUSALS[scenario] in row["reason"], row

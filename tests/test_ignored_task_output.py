@@ -3,6 +3,7 @@
 import json
 import os
 import subprocess
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -37,14 +38,15 @@ def test_all_ignored_output_preserved_without_response_names(checkout, status):
     assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
 
 
-def test_start_boundary_includes_modified_and_equal_mtime_only(checkout):
+def test_start_boundary_includes_modified_and_equal_timestamps_only(checkout):
     old = artifact(checkout, "ignored/old.txt")
+    cutoff = int(old.stat().st_ctime) + 2
     equal = artifact(checkout, "ignored/equal.txt")
     modified = artifact(checkout, "ignored/modified.txt", b"new version")
     os.utime(old, (946684799, 946684799))
-    os.utime(equal, (946684800, 946684800))
-    os.utime(modified, (946684801, 946684801))
-    ok, _, receipt = preserve(checkout, {"started_at": "2000-01-01T00:00:00+00:00"})
+    os.utime(equal, (cutoff, cutoff))
+    os.utime(modified, (cutoff + 1, cutoff + 1))
+    ok, _, receipt = preserve(checkout, {"started_at": datetime.fromtimestamp(cutoff, UTC).isoformat()})
     assert ok and receipt["count"] == 2
     location = Path(receipt["location"])
     assert not (location / "ignored/old.txt").exists()
@@ -101,7 +103,8 @@ def test_missing_record_uses_receipt_identity_and_all_ignored_files(checkout):
     ok, _, receipt = preserve(checkout, task_id=None)
     assert ok and receipt["count"] == 1
     assert receipt["record_update"] == "skipped_missing_record"
-    assert Path(receipt["location"]).name.startswith("worktree-")
+    assert Path(receipt["location"]).parent.name.startswith("worktree-")
+    assert json.loads(Path(receipt["receipt_path"]).read_text()) == receipt
 
 
 def test_cap_is_inclusive_and_existing_copies_are_verified(checkout, monkeypatch):
@@ -109,3 +112,69 @@ def test_cap_is_inclusive_and_existing_copies_are_verified(checkout, monkeypatch
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 10)
     assert preserve(checkout, {"status": "done"})[0]
     assert preserve(checkout)[0]
+
+
+def test_touch_old_mtime_during_task_is_preserved(checkout):
+    started = datetime.now(UTC)
+    source = artifact(checkout, "ignored/touched.txt", b"new task output")
+    subprocess.run(["touch", "-d", "2000-01-01 UTC", str(source)], check=True, timeout=30)
+    assert source.stat().st_mtime < started.timestamp() <= source.stat().st_ctime
+    ok, _, receipt = preserve(checkout, {"started_at": started.isoformat()})
+    assert ok and receipt["count"] == 1
+    assert (Path(receipt["location"]) / "ignored/touched.txt").read_bytes() == b"new task output"
+
+
+def test_retry_preserves_different_bytes_without_overwriting_first_attempt(checkout):
+    source = artifact(checkout, "ignored/report.txt", b"first attempt")
+    ok, _, first = preserve(checkout, {"status": "done"})
+    assert ok
+    source.write_bytes(b"second attempt")
+    ok, _, second = preserve(checkout)
+    assert ok and first["location"] != second["location"]
+    assert (Path(first["location"]) / "ignored/report.txt").read_bytes() == b"first attempt"
+    assert (Path(second["location"]) / "ignored/report.txt").read_bytes() == b"second attempt"
+    assert json.loads((checkout[2] / "output-task.json").read_text())["preserved_artifacts"] == second
+
+
+def test_missing_record_receipt_write_failure_retains_sources(checkout, monkeypatch):
+    source = artifact(checkout, "ignored/report.txt", b"task output")
+    original_open = Path.open
+
+    def fail_receipt(path, *args, **kwargs):
+        if path.name.endswith(".receipt.json"):
+            raise OSError("receipt denied")
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", fail_receipt)
+    ok, reason, _ = preserve(checkout, task_id=None)
+    assert not ok and "receipt denied" in reason and "refusing worktree removal" in reason
+    assert source.read_bytes() == b"task output"
+
+
+def test_entire_exclusion_is_limited_to_logs(checkout):
+    (checkout[0] / ".gitignore").write_text(".entire/\n")
+    artifact(checkout, ".entire/logs/diagnostic.log", b"tool state")
+    artifact(checkout, ".entire/report.txt", b"task output")
+    ok, _, receipt = preserve(checkout)
+    assert ok and receipt["count"] == 1
+    assert (Path(receipt["location"]) / ".entire/report.txt").read_bytes() == b"task output"
+
+
+def test_directory_inventory_prunes_entire_logs_but_keeps_output(checkout):
+    repo = checkout[0]
+    artifact(checkout, ".entire/logs/diagnostic.log", b"tool state")
+    artifact(checkout, ".entire/report.txt", b"task output")
+    assert output.artifacts._inspect_directory_artifact(repo / ".entire", ".entire", worktree=repo) == [
+        ".entire/report.txt"
+    ]
+
+
+@pytest.mark.parametrize("cache", [".pytest_breadcrumbs", "site/.astro", ".entire/logs", ".hypothesis", ".tox", ".nox"])
+def test_tool_state_excluded_but_cache_output_survives(checkout, cache):
+    (checkout[0] / ".gitignore").write_text(".cache/\n" + cache + "/\n")
+    artifact(checkout, f"{cache}/tool.bin", b"regenerable")
+    artifact(checkout, ".cache/out/answer.txt", b"task output")
+    ok, _, receipt = preserve(checkout, {"response": f"Tool state: `{cache}/tool.bin`."})
+    assert ok and receipt["count"] == 1 and receipt["bytes"] == len(b"task output")
+    assert (Path(receipt["location"]) / ".cache/out/answer.txt").read_bytes() == b"task output"
+    assert not (Path(receipt["location"]) / cache).exists()

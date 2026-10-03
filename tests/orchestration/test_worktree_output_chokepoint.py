@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -76,7 +77,7 @@ def remove(caller, primary, checkout, capsys, monkeypatch):
     captured = capsys.readouterr()
     result = json.loads(captured.out)
     if code == worktree_claims.EXIT_REMOVED:
-        assert not captured.err
+        assert "Preserved " in captured.err
     else:
         assert "artifact preservation failed:" in captured.err
     if code != worktree_claims.EXIT_REMOVED:
@@ -126,7 +127,7 @@ def test_all_removers_preserve_output_or_retain_checkout(tmp_path, monkeypatch, 
         return
     assert removed and not checkout.exists()
     destination = primary.parent / "public" if caller == "sibling" else primary
-    copies = list((destination / "batch_state/preserved").glob("*/.cache/transcriptions/page.txt"))
+    copies = list((destination / "batch_state/preserved").glob("*/*/.cache/transcriptions/page.txt"))
     assert len(copies) == 1
     assert copies[0].read_bytes() == payload
     assert hashlib.sha256(copies[0].read_bytes()).digest() == hashlib.sha256(payload).digest()
@@ -169,3 +170,27 @@ def test_raw_removal_checks_preservation_without_adapter(tmp_path, monkeypatch):
     assert error is None and not checkout.exists()
     assert (Path(receipt["location"]) / ".cache/report.txt").read_bytes() == b"raw remover output"
     assert receipt["record_update"] == "skipped_missing_record"
+
+
+def test_retry_after_git_refusal_preserves_both_versions_and_removes(tmp_path):
+    primary = _primary(tmp_path)
+    checkout = _linked(primary, "codex/retry-9645")
+    (primary / ".git/info/exclude").write_text(".cache/\n")
+    source = checkout / ".cache/report.txt"
+    source.parent.mkdir()
+    source.write_bytes(b"first")
+    first, second = {}, {}
+    with worktree_claims.worktree_lock(checkout, lock_dir=worktree_claims.repository_lock_dir(primary)):
+        error = worktree_claims.git_worktree_remove(
+            primary, checkout, force=False, preservation_receipt=first,
+            git_runner=lambda _root, argv: subprocess.CompletedProcess(argv, 1, "", "injected Git refusal"),
+        )
+        assert error and checkout.exists()
+        source.write_bytes(b"second")
+        error = worktree_claims.git_worktree_remove(
+            primary, checkout, force=False, preservation_receipt=second,
+        )
+    assert error is None and not checkout.exists()
+    assert first["location"] != second["location"]
+    assert (Path(first["location"]) / ".cache/report.txt").read_bytes() == b"first"
+    assert (Path(second["location"]) / ".cache/report.txt").read_bytes() == b"second"

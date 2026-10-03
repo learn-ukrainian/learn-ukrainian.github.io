@@ -12474,7 +12474,7 @@ def test_settle_preserves_ignored_artifacts_before_removal(
     else:
         assert out["action"] == "removed", out
         assert not worktree.exists()
-        location = primary / "batch_state" / "preserved" / task_id
+        location = Path(state["preserved_artifacts"]["location"])
         assert (location / artifact_name).read_bytes() == payload
         assert (
             state["preserved_artifacts"]
@@ -12508,7 +12508,7 @@ def test_settle_final_state_keeps_preservation_receipt(tmp_tasks_dir, tmp_path, 
     )
     assert state["worktree_reap"]["action"] == "removed", state["worktree_reap"]
     assert state["preserved_artifacts"]["count"] == 1
-    assert Path(state["preserved_artifacts"]["location"]) == primary / "batch_state/preserved/reap-receipt"
+    assert Path(state["preserved_artifacts"]["location"]).parent == primary / "batch_state/preserved/reap-receipt"
     assert not worktree.exists()
 
 
@@ -12524,11 +12524,13 @@ def test_settle_ignored_output_mtime_and_cap(tmp_tasks_dir, tmp_path, monkeypatc
     old.parent.mkdir()
     old.write_bytes(b"pre-existing")
     os.utime(old, (946684799, 946684799))
+    cutoff = datetime.now(UTC).timestamp() + 1
     recent = old.parent / "recent.txt"
     recent.write_bytes(b"task output")
+    os.utime(recent, (cutoff, cutoff))
     if over_cap:
         monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    record = {"task_id": task_id, "status": "done", "started_at": "2000-01-01T00:00:00Z"}
+    record = {"task_id": task_id, "status": "done", "started_at": datetime.fromtimestamp(cutoff, UTC).isoformat()}
     delegate._write_state_atomic(delegate._state_path(task_id), record)
 
     result = delegate._settle_worktree_reap(
@@ -17854,7 +17856,7 @@ def test_settle_result_named_file_scope(tmp_tasks_dir, tmp_path, monkeypatch, re
     )
     assert result["action"] == "removed", result
     assert not worktree.exists()
-    location = primary / "batch_state/preserved" / task_id
+    location = Path(record["preserved_artifacts"]["location"])
     assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
     assert not (location / ".pytest_cache/cache.txt").exists()
     assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
@@ -17877,7 +17879,7 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     state = delegate._read_state(delegate._state_path(task_id))
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = primary / "batch_state/preserved" / task_id
+    location = Path(state.get("preserved_artifacts", {}).get("location", primary / "batch_state/preserved" / task_id))
     if scenario in links.REFUSALS:
         assert result["action"] == "skipped" and links.REFUSALS[scenario] in result["reason"], result
         assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
