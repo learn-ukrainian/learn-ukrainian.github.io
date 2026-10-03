@@ -163,14 +163,14 @@ def test_unknown_auto_author_excludes_xai_and_moonshot_candidates():
 def test_cursor_as_reviewer_excluded_against_xai_and_moonshot_authors():
     # Moonshot-family author: Cursor-transport candidates must be excluded
     kimi_inputs = ResolverInputs(author_model="kimi-code/k3")
-    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-fable-5-1-cursor-fallback"):
+    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-opus-5-5-cursor-fallback"):
         cand = REVIEW_CANDIDATES[cand_name]
         res = evaluate_candidate(cand, kimi_inputs)
         assert res.status == "excluded", (cand_name, res.status)
 
     # xAI-family author: Cursor-transport candidates must be excluded
     grok_inputs = ResolverInputs(author_model="grok-4.6")
-    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-fable-5-1-cursor-fallback"):
+    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-opus-5-5-cursor-fallback"):
         cand = REVIEW_CANDIDATES[cand_name]
         res = evaluate_candidate(cand, grok_inputs)
         assert res.status == "excluded", (cand_name, res.status)
@@ -304,23 +304,29 @@ def test_qualified_sonnet_pin_cannot_bypass_security_filter(model):
     assert "Sonnet is excluded" in result.reason
 
 
-def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
+@pytest.mark.parametrize("author", ["gpt-6.1-sol", "claude-opus-5-5"])
+def test_critical_review_never_falls_back_to_fable(author):
+    """#9583: Fable is no reviewer at any risk, even when every primary seat is unhealthy."""
+    assert not any(candidate.concrete_model.startswith("claude-fable") for candidate in REVIEW_CANDIDATES.values())
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="gpt-5.6-terra",
+            author_model=author,
             risk="critical",
-            routing_snapshot={"claude": "unhealthy", "cursor": "healthy"},
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "cursor": "healthy"},
         )
     )
-
     assert resolution.selected is None
-    fallback = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-1-cursor-fallback")
-    assert fallback.status == "excluded"
-    # The Cursor endpoint is formal only for the models it pins (#9488); Fable is not one.
-    assert fallback.reason == "sealed endpoint 'cursor' is not pinned for model 'claude-fable-5-1'"
-    native = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-1")
-    assert native.status == "excluded"
-    assert "unhealthy" in native.reason
+    assert not any(entry.name.startswith("claude-fable") for entry in resolution.trace)
+    pinned = resolve_reviewer(
+        ResolverInputs(
+            author_model=author,
+            risk="critical",
+            pinned_candidate="claude-fable-5-1",
+            pressure_override_reason="test explicit Fable pin",
+        )
+    )
+    assert pinned.selected is None
+    assert pinned.fail_closed_reason == "unknown explicit reviewer pin 'claude-fable-5-1'"
 
 
 def test_opus_keeps_native_claude_when_native_health_is_degraded():
@@ -956,18 +962,19 @@ def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(pr
 
 
 def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
-    fable = REVIEW_CANDIDATES["claude-fable-5-1"]
+    # At medium the ladder prefers Sonnet for an OpenAI author; the pin overrides that.
+    pin = REVIEW_CANDIDATES["claude-opus-5-5"]
     selected = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-5.6-terra",
             author_family="openai",
             risk="medium",
-            pinned_candidate=fable.name,
-            pressure_override_reason="operator requested Fable dissent",
+            pinned_candidate=pin.name,
+            pressure_override_reason="operator requested Opus dissent",
         )
     )
     assert selected.selected is not None
-    assert selected.selected.name == "claude-fable-5-1"
+    assert selected.selected.name == "claude-opus-5-5"
     assert "explicit pressure override" in selected.substitution_note
 
     same_family = resolve_reviewer(
@@ -975,13 +982,13 @@ def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
             author_model="claude-sonnet-5-5",
             author_family="anthropic",
             risk="medium",
-            pinned_candidate=fable.name,
-            pressure_override_reason="operator requested Fable dissent",
+            pinned_candidate=pin.name,
+            pressure_override_reason="operator requested Opus dissent",
         )
     )
     assert same_family.selected is None
     assert "hard eligibility" in same_family.fail_closed_reason
-    assert next(item for item in same_family.trace if item.name == fable.name).status == "excluded"
+    assert next(item for item in same_family.trace if item.name == pin.name).status == "excluded"
 
 
 def test_unknown_explicit_pin_fails_closed_before_candidate_walk():
@@ -1073,7 +1080,7 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 
 def test_critical_ladder_keeps_authority_before_practical():
     critical = REVIEW_LADDERS["critical"]
-    # #9394: Opus/Sol precede practical seats; Fable follows all primary seats.
+    # #9394: Opus/Sol precede practical seats; #9583: Fable is not on the ladder.
     assert [rung[0].name for rung in critical[:4]] == [
         "openai_frontier",
         "claude-opus-5-5",
@@ -1512,10 +1519,10 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("primary", ["openai_frontier", "claude-opus-5-5"])
-def test_fable_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
-    fallback = REVIEW_CANDIDATES["claude-fable-5-1"]
+def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
+    fallback = GROK_4_7_CURSOR_FALLBACK
     first = REVIEW_CANDIDATES[primary]
-    inputs = ResolverInputs(author_model="gemini-3.8-flash-high", risk="critical", review_profile=profile)
+    inputs = ResolverInputs(author_model="gemini-3.8-flash-high", risk="medium", review_profile=profile)
     # Higher load and a reversed ladder must not put the last resort first.
     snapshot = {"agents": {first.route: {"status": "healthy", "scheduler": {"completed_input_bytes": 999999}}}}
     resolution = resolve_reviewer(inputs, ladder=((fallback,), (first,)), runtime_state=snapshot)
@@ -1523,7 +1530,7 @@ def test_fable_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
     # Only the first model is unhealthy; the shared provider remains available.
     resolution = resolve_reviewer(replace(inputs, routing_snapshot={primary: "unhealthy"}),
                                   ladder=((first,), (fallback,)))
-    assert resolution.selected.name == "claude-fable-5-1"
+    assert resolution.selected.name == fallback.name
     assert "last resort" in resolution.substitution_note
 
 
@@ -1614,7 +1621,7 @@ _HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
-@pytest.mark.parametrize("name", ["claude-sonnet-5-5", "claude-fable-5-1", "grok-4.7-cursor-fallback"])
+@pytest.mark.parametrize("name", ["claude-sonnet-5-5", "grok-4.7-cursor-fallback"])
 def test_high_risk_pin_and_custom_ladder_refuse_seats_outside_sol_and_opus(profile, name):
     """#9538: the rule is an eligibility gate, so neither a pin nor a caller ladder bypasses it."""
     author = "claude-opus-5-5" if name.startswith("grok") else "gpt-6.1-sol"

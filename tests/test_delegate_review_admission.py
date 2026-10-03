@@ -302,23 +302,23 @@ def test_same_family_requested_reviewer_takes_resolvers_eligible_seat(monkeypatc
     assert routing.substitution["source"] == "reviewer-resolver"
 
 
-@pytest.mark.parametrize("risk,model", [("medium", "claude-fable-5-1")])
+@pytest.mark.parametrize("risk", ["critical", "medium", "low"])
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
-def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk, model, flags):
-    # Fable stays off every routine ladder; an explicit eligible pin is still admitted.
+def test_fable_reviewer_pin_is_never_admitted(monkeypatch, capsys, risk, flags):
+    """#9583: Fable holds no review role, so an explicit Fable pin is substituted, never kept."""
+    model = "claude-fable-5-1"
     args = _args(
         "--agent", "claude", "--model", model,
         "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, *flags,
     )
-    assert all(
-        candidate.concrete_model != args.model
-        for rung in reviewer_resolver.REVIEW_LADDERS[risk] for candidate in rung
-    )
+    assert all(candidate.concrete_model != model for candidate in reviewer_resolver.REVIEW_CANDIDATES.values())
     (refusal, target), routing = _admit(args, monkeypatch)
     assert refusal is None
-    assert (target.recipient, target.model) == ("claude", model)
-    assert routing.substitution is None
-    assert "SUBSTITUT" not in capsys.readouterr().err
+    assert target.model != model
+    assert reviewer_resolver.resolve_family(target.model) == "anthropic"
+    assert routing.substitution["requested_model"] == model
+    assert routing.substitution["source"] == "reviewer-resolver"
+    assert "REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err
 
 
 HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol, claude-opus-5-5"
@@ -407,14 +407,10 @@ def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monke
     assert "NOTE: REVIEW_BUDGET_RETAINED" in capsys.readouterr().err
 
 
-def test_off_ladder_reviewer_is_substituted_when_budget_requires_it(monkeypatch, capsys):
+def test_eligible_reviewer_is_substituted_when_budget_requires_it(monkeypatch, capsys):
     args = _args(
-        "--agent", "claude", "--model", "claude-fable-5-1", "--check-budget",
+        "--agent", "claude", "--model", "claude-sonnet-5-5", "--check-budget",
         "--review-author-model", "composer-2.5", "--review-risk", "medium",
-    )
-    assert all(
-        candidate.concrete_model != args.model
-        for rung in reviewer_resolver.REVIEW_LADDERS[args.review_risk] for candidate in rung
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
