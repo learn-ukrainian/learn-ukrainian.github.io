@@ -5,7 +5,8 @@ anthropic, google, openai, moonshot, zhipu, xai, deepseek.
 
 Counts only seats eligible for automatic routing; it does not dispatch
 or change routing policy. Prints a table of eligible seats per family and
-exits 1 if any family has fewer than 2 eligible reviewers.
+exits 1 if any family falls below its required minimum. Two seats are required
+except for explicitly accepted single-seat benches at high/critical risk.
 """
 
 from __future__ import annotations
@@ -34,6 +35,19 @@ AUTHOR_FAMILIES = (
 )
 
 MIN_ELIGIBLE_SEATS = 2
+
+# #9423 AC-02 accepts Sol alone for Anthropic authors at high/critical risk.
+# #9538 / #9583 limit these reviews to Sol and Opus, leaving the symmetric
+# OpenAI-author bench with Opus alone. Only these family/risk pairs accept one
+# automatic seat; zero seats still fails and resolver eligibility never changes.
+ACCEPTED_SINGLE_SEAT_BENCHES = frozenset(
+    {
+        ("anthropic", "high"),
+        ("anthropic", "critical"),
+        ("openai", "high"),
+        ("openai", "critical"),
+    }
+)
 
 
 def check_bench_health(
@@ -112,10 +126,13 @@ def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] |
             "Examples:\n"
             "  .venv/bin/python -m scripts.review.bench_health\n"
             "  .venv/bin/python -m scripts.review.bench_health --profile infra --risk critical\n"
-            "Outputs: stdout automatic seat counts; stderr JSON shortfall findings with exclusion reasons.\n"
+            "Outputs: stdout automatic seat counts and expected single-seat labels;\n"
+            "stderr JSON shortfall findings with exclusion reasons.\n"
             "Read-only, no files written or reviewers dispatched.\n"
-            "Exit codes: 0 = every family has >= 2 eligible seats; 1 = insufficient bench capacity.\n"
-            "Related: scripts/config/model_catalog.yaml; scripts.review.closeout_cli resolve-reviewer; #9394."
+            "Exit codes: 0 = every family meets its required minimum; 1 = insufficient bench capacity.\n"
+            "Minimum: 2 eligible seats, except Anthropic/OpenAI authors at high/critical risk\n"
+            "accept 1 eligible seat (#9423, #9538, #9583). Zero seats always fails.\n"
+            "Related: scripts/config/model_catalog.yaml; scripts.review.closeout_cli resolve-reviewer; #9394; #9423."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -154,29 +171,33 @@ def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] |
         seats = results.get(family, [])
         count = len(seats)
         seats_str = ", ".join(seats) if seats else "NONE"
-        status_flag = "" if count >= MIN_ELIGIBLE_SEATS else " [FAIL < 2]"
-        if count < MIN_ELIGIBLE_SEATS:
+        minimum = 1 if (family, args.risk) in ACCEPTED_SINGLE_SEAT_BENCHES else MIN_ELIGIBLE_SEATS
+        status_flag = ""
+        if count < minimum:
+            status_flag = f" [FAIL < {minimum}]"
             failing = True
             print(
                 json.dumps(
                     {
                         "type": "insufficient_bench_capacity",
                         "author_family": family,
-                        "minimum": MIN_ELIGIBLE_SEATS,
+                        "minimum": minimum,
                         "counted_seats": seats,
                         "excluded_seats": excluded[family],
                     }
                 ),
                 file=sys.stderr,
             )
+        elif count == 1:
+            status_flag = " [EXPECTED single seat]"
         print(f"{family:<15} | {count:<5} | {seats_str}{status_flag}")
 
     print("-" * 60)
     if failing:
-        print("BENCH HEALTH FAIL: At least one author family has < 2 eligible reviewers.", file=sys.stderr)
+        print("BENCH HEALTH FAIL: At least one author family is below its required reviewer minimum.", file=sys.stderr)
         return 1
 
-    print("BENCH HEALTH PASS: All author families have >= 2 eligible reviewers.")
+    print("BENCH HEALTH PASS: All author families meet their required reviewer minimum.")
     return 0
 
 
