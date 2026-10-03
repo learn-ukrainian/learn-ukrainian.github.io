@@ -299,7 +299,7 @@ def load_calque_candidates(
 
     # 2. UA-GEC F/Calque human-annotated errors
     if sources_db_path.is_file():
-        conn = sqlite3.connect(str(sources_db_path))
+        conn = sqlite3.connect(f"{Path(sources_db_path).resolve().as_uri()}?mode=ro", uri=True)
         try:
             cur = conn.cursor()
             rows = cur.execute(

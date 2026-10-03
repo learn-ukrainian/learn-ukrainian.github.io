@@ -390,7 +390,7 @@ def main(argv: list[str] | None = None) -> int:
     attempted = payload["attempted"]
 
     sources_db = resolve_sources_db(args.sources_db)
-    conn = sqlite3.connect(str(sources_db))
+    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     try:
         dmklinger_index = load_dmklinger_index(conn)
     finally:

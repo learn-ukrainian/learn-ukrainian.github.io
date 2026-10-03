@@ -385,7 +385,7 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
     if not db_path.exists() or db_path.stat().st_size == 0:
         raise FileNotFoundError(f"Database missing or empty: {db_path}")
 
-    con = sqlite3.connect(db_path)
+    con = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     cur = con.cursor()
 
     candidates: list[MinedSentence] = []
@@ -915,7 +915,7 @@ def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, in
     if not vesum_db.is_file() or vesum_db.stat().st_size == 0:
         return None
 
-    con_ves = sqlite3.connect(vesum_db)
+    con_ves = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     cur = con_ves.cursor()
 
     patterns = [
@@ -1008,7 +1008,7 @@ def build_sft_dialect_dataset(
     if V02_SFT_SHARDS_DIR is not None:
         assert_not_archived_path(V02_SFT_SHARDS_DIR, context="dialect replay shards")
 
-    con_ves = sqlite3.connect(vesum_db)
+    con_ves = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     cur_ves = con_ves.cursor()
 
     sft_trajectories: list[dict[str, Any]] = []

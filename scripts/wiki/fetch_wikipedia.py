@@ -358,7 +358,7 @@ def show_status() -> None:
         print("Database not found. Run build_sources_db.py first.")
         return
 
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(f"{Path(DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
     try:
         count = conn.execute("SELECT COUNT(*) FROM wikipedia").fetchone()[0]
         total_chars = conn.execute("SELECT SUM(char_count) FROM wikipedia").fetchone()[0] or 0

@@ -1907,7 +1907,7 @@ def verify_deck_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | Non
             "missing_forms": [],
         }
 
-    conn = sqlite3.connect(resolved_path)
+    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
     cur = conn.cursor()
 
     missing_forms: list[dict[str, str]] = []
@@ -1968,7 +1968,7 @@ def verify_distractors_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Pat
         AdjectiveInterferenceType.FALSE_DERIVATION_MISSING_MUTATION,
     }
 
-    conn = sqlite3.connect(resolved_path)
+    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
     cur = conn.cursor()
 
     invalid_distractors: list[dict[str, Any]] = []

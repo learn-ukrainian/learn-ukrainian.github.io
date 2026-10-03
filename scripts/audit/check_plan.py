@@ -521,7 +521,7 @@ def _known_textbooks(sources_db: Path) -> list[dict[str, object]]:
             f"sources_db not found at {sources_db}. "
             "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(str(sources_db))
+    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     try:
         rows = conn.execute(
             "SELECT DISTINCT source_file, grade, author FROM textbooks ORDER BY source_file"

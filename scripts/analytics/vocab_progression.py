@@ -182,7 +182,7 @@ class VesumLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"VESUM database not found at {db_path}")
-        self._conn = sqlite3.connect(str(db_path))
+        self._conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:
@@ -237,7 +237,7 @@ class PulsLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"Sources database not found at {db_path}")
-        self._conn = sqlite3.connect(str(db_path))
+        self._conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:

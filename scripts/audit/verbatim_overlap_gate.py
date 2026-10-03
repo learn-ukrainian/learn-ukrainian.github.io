@@ -961,7 +961,8 @@ def _chained_run_len(tokens: list[str], hit_start_positions: set[int], k: int) -
 
 
 def open_sources(db_path: Path | str) -> sqlite3.Connection:
-    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+    uri = "file::memory:?mode=ro" if str(db_path) == ":memory:" else f"{Path(db_path).resolve().as_uri()}?mode=ro"
+    conn = sqlite3.connect(uri, uri=True, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 

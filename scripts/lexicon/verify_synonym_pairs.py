@@ -163,7 +163,7 @@ def main() -> int:
     sources_db_path = PROJECT_ROOT / "data" / "sources.db"
     if sources_db_path.exists():
         try:
-            conn = sqlite3.connect(sources_db_path)
+            conn = sqlite3.connect(f"{Path(sources_db_path).resolve().as_uri()}?mode=ro", uri=True)
             cursor = conn.cursor()
             cursor.execute("SELECT word, synonyms, antonyms FROM wiktionary")
             for word, syns, ants in cursor.fetchall():

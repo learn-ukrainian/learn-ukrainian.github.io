@@ -397,7 +397,10 @@ def _fill_local(
     slug: str | None = None,
     refresh: bool = False,
 ) -> FillResult:
-    with _connect(db_path) as atlas_conn, sqlite3.connect(sources_db_path) as sources_conn:
+    with (
+        _connect(db_path) as atlas_conn,
+        sqlite3.connect(f"{Path(sources_db_path).resolve().as_uri()}?mode=ro", uri=True) as sources_conn,
+    ):
         articles = _article_rows(atlas_conn, slug)
         if slug and not articles:
             raise ValueError(f"slug not found in atlas DB: {slug}")

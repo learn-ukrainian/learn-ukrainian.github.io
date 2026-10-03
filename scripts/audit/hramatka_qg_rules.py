@@ -788,7 +788,7 @@ def _sources_conn():
     db = _SOURCES_DB_OVERRIDE or (PROJECT_ROOT / "data" / "sources.db")
     if not db.exists():
         return None
-    conn = sqlite3.connect(str(db))
+    conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn
 

@@ -746,7 +746,7 @@ def main() -> int:
     if args.scan:
         sources_db = _resolve_sources_db()
         print(f"Scanning {sources_db}...")
-        conn = sqlite3.connect(sources_db)
+        conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
         cur = conn.cursor()
         rows = cur.execute("SELECT word, definition FROM sum11").fetchall()
         heteronym_count = 0

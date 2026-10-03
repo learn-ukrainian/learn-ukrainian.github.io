@@ -56,7 +56,7 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
     if not _VESUM_DB.exists():
         return "", ""
     try:
-        db = sqlite3.connect(str(_VESUM_DB))
+        db = sqlite3.connect(f"{Path(_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
         row = db.execute(
             "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
             (word.lower(),),
@@ -393,7 +393,7 @@ def _resolve_textbook_url(title: str) -> str:
         if not db_path.exists():
             return ""
 
-        conn = sqlite3.connect(str(db_path))
+        conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
         # Find source_file matching author + grade, prefer ukrmova over ukrlit
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks "

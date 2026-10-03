@@ -494,7 +494,7 @@ def is_held_out_chunk(chunk: MiddleUkrainianChunk) -> bool:
 
 def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]:
     """Load, filter, and stratify Middle Ukrainian chunks from sources.db."""
-    conn = sqlite3.connect(sources_db)
+    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     cur = conn.cursor()
     query = """
     SELECT id, chunk_id, work_id, work, author, year, genre, text, char_count

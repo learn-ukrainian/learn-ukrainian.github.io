@@ -652,7 +652,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     findings: list[Finding] = []
-    with sqlite3.connect(str(args.db)) as conn:
+    with sqlite3.connect(f"{Path(args.db).resolve().as_uri()}?mode=ro", uri=True) as conn:
         conn.row_factory = sqlite3.Row
         for cite in all_cites:
             f = _audit_citation(

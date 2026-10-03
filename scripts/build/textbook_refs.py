@@ -159,7 +159,7 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
         return _refs_from_plan(level, slug)
 
     # Resolve chunk_ids to PDF URLs
-    conn = sqlite3.connect(str(SOURCES_DB))
+    conn = sqlite3.connect(f"{Path(SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     seen_books: dict[str, dict] = {}  # source_file → best ref
 

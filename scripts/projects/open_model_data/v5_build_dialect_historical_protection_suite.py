@@ -1098,7 +1098,7 @@ def build_suite() -> None:
     conn: sqlite3.Connection | None = None
     if DEFAULT_SOURCES_DB.exists() and DEFAULT_SOURCES_DB.stat().st_size > 0:
         print("Connecting to database at:", DEFAULT_SOURCES_DB)
-        conn = sqlite3.connect(DEFAULT_SOURCES_DB)
+        conn = sqlite3.connect(f"{Path(DEFAULT_SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True)
     else:
         print("sources.db unavailable; using git-grounded seeds + existing non-replaced strata")
 

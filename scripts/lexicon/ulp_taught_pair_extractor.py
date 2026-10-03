@@ -315,7 +315,7 @@ def measure_taught_pairs_from_sources(
         return {"error": f"sources.db not found at {db_file}"}
 
     atlas_keys = load_atlas_lemma_keys(manifest_path)
-    conn = sqlite3.connect(str(db_file))
+    conn = sqlite3.connect(f"{Path(db_file).resolve().as_uri()}?mode=ro", uri=True)
     cur = conn.cursor()
 
     per_season = {}

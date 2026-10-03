@@ -169,7 +169,7 @@ class CalqueReconciliationEngine:
     @property
     def sources_conn(self) -> sqlite3.Connection:
         if self._sources_conn is None:
-            self._sources_conn = sqlite3.connect(self.sources_db_path)
+            self._sources_conn = sqlite3.connect(f"{Path(self.sources_db_path).resolve().as_uri()}?mode=ro", uri=True)
             self._sources_conn.row_factory = sqlite3.Row
         return self._sources_conn
 

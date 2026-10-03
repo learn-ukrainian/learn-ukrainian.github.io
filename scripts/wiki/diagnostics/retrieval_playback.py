@@ -731,7 +731,7 @@ def run_diagnostic(track: str, slug: str, strategy: str = STRATEGY_LEGACY) -> di
     concept_results = match_returned_concepts(returned_chunks)
     collect_returned_grade_samples(returned_chunks, concept_results)
 
-    with sqlite3.connect(str(SOURCES_DB_PATH)) as conn:
+    with sqlite3.connect(f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro", uri=True) as conn:
         for concept, result in concept_results.items():
             if result["present_in_returned_41"]:
                 result["present_in_full_corpus"] = True

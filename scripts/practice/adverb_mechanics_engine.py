@@ -2601,7 +2601,7 @@ def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | 
             "message": f"VESUM database not found or incomplete at {resolved_path}",
         }
 
-    conn = sqlite3.connect(str(resolved_path))
+    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='forms_all'")
     if not cursor.fetchone():

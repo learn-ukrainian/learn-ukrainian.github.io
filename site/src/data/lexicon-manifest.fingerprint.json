@@ -19,7 +19,7 @@
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",
-        "sha256": "3440772ded4e1ee7c6334a22fbf8dc05e709aa4ca3b9a79d754547a8ca103415"
+        "sha256": "c75f11f8a3ead9ca3bd2e42f5f1096700872376a9b2a97f60399bda7fe08f175"
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
@@ -175,7 +175,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
-        "sha256": "1f05c812d9c7eb63d10ee5173eca2544e5cd57917fe87748a92a8328e9966bdc"
+        "sha256": "65024861456bce720530d86e978835f5899d61db4b4040cf10e35ec42d91f1ef"
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
@@ -227,7 +227,7 @@
       },
       {
         "path": "scripts/lexicon/generate_vesum_form_shards.py",
-        "sha256": "69eb198d99c3e7931cfb69c598d3ed994521b7e888dc8bd49b337e7cd2480ecf"
+        "sha256": "7f2371bcebd12000af980098c0d46ffc4befe67d31813fb3000c6561a33fd087"
       },
       {
         "path": "scripts/lexicon/grow_lexicon_from_content.py",
@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_calque_wave.py",
-        "sha256": "89f647a2944b07e96b127aead4b42bf5f6fed403658264ba5123ce45643d6bcb"
+        "sha256": "c4965880329bddbc2b1b4d25aa3b8dcc31c559406c85aa0785952286aaf16d29"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
@@ -303,7 +303,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
-        "sha256": "c41d97e706b6bc98f650518c1b8f29ce2398043043f8ff6a0d64928a42c0e1a6"
+        "sha256": "fe75f2d14be0ae8e7368295547fe082e041bcbc04b7b31aa5655479fb7d41ed4"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",
@@ -327,7 +327,7 @@
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
-        "sha256": "868ba05ed8d81d2c8dd7e4eb5af2f430e3d298582d6597a010a8f6fd030ca473"
+        "sha256": "feb917d18620be3e986d5bc84f6a59c5e931cc0eb1e395b1a5de368c8552402b"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
@@ -343,7 +343,7 @@
       },
       {
         "path": "scripts/lexicon/repair_plural_noun_aliases.py",
-        "sha256": "50cfa3253ee18b3a99b6af972c89af97890882eefde4c8031932f1633f97e701"
+        "sha256": "b0c78bc6ceed173ef616af7b61df71f9ddd02fa13772e062a25cebd80e8339e1"
       },
       {
         "path": "scripts/lexicon/repair_truncated_definition_cards.py",
@@ -387,7 +387,7 @@
       },
       {
         "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
-        "sha256": "ef6213afdbed7b6a106041a203b6c107f743b715174f44aee24da4ae14c322b8"
+        "sha256": "53df3a3022ad0bb6ca683e87ee2f88790446d08dde1821555de90cc5e6d16319"
       },
       {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",
@@ -399,7 +399,7 @@
       },
       {
         "path": "scripts/lexicon/verify_synonym_pairs.py",
-        "sha256": "540ed6067e6e2f234f4bfaab1779c130859f592885a7d49e7a9ee6c5d0ab0560"
+        "sha256": "8f31c0fd39897375038e79484ff8aca43ff6878ab03cc49d7967d559b762f43b"
       },
       {
         "path": "scripts/lexicon/vesum_form_key.py",

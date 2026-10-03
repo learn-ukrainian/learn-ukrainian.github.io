@@ -417,7 +417,7 @@ def load_candidates(db_path: Path, *, tags: Sequence[str] = TARGET_TAGS) -> list
         raise FileNotFoundError(f"UA-GEC sources database not found: {db_path}")
 
     placeholders = ",".join("?" for _ in tags)
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(

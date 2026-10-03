@@ -346,7 +346,7 @@ def load_epigraphy_records(sources_db: Path) -> list[EpigraphyRecord]:
     """Load and diplomatically clean Saint Sophia Cathedral inscriptions."""
     import sqlite3
 
-    conn = sqlite3.connect(sources_db)
+    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     cur = conn.cursor()
     query = """
     SELECT id, source_record_id, title, original_transcription, interpretative_edition,
@@ -413,7 +413,7 @@ def load_chronicle_records(sources_db: Path) -> list[ChronicleRecord]:
     excluded_files = tuple(EXCLUDED_CHRONICLE_SOURCE_FILES)
     placeholders = ",".join("?" for _ in excluded_files)
 
-    conn = sqlite3.connect(sources_db)
+    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     cur = conn.cursor()
     query = f"""
     SELECT chunk_id, work, author, year, text, source_file
@@ -657,7 +657,7 @@ def build_sft_dataset(
             if norm:
                 eval_normalized_snippets.add(norm)
 
-    con_ves = sqlite3.connect(vesum_db)
+    con_ves = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     cur_ves = con_ves.cursor()
 
     # 1. Training graffiti (strictly excluding held-out rooms 121, 110 and all eval normalized texts)

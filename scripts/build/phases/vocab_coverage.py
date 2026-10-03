@@ -71,7 +71,7 @@ def _vesum_lemma_lookup(term: str, db_path: Path = VESUM_DB_PATH) -> str | None:
         return None
 
     try:
-        with sqlite3.connect(str(db_path)) as db:
+        with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as db:
             # Current contract for this validator: data/vesum.db exposes
             # vesum(form, lemma). Older local imports used forms(word_form, lemma),
             # so keep that fallback to avoid making the validator environment-fragile.

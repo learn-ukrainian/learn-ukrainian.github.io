@@ -215,7 +215,7 @@ def build_vesum_vocab_lemmas(
     direct_manifest_matches = 0
     ambiguous_or_missing = 0
 
-    conn = sqlite3.connect(vesum_db)
+    conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     try:
         for word in sorted(words, key=normalize_lemma):
             normalized_word = normalize_lemma(word)

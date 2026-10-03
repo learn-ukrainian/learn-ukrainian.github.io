@@ -105,7 +105,7 @@ def source_file_category(source_file: str) -> str | None:
 
 def load_source_files(db_path: Path) -> list[str]:
     """Load the distinct textbook source_file IDs from SQLite."""
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks ORDER BY source_file"

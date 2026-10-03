@@ -327,7 +327,7 @@ def get_db_connection() -> sqlite3.Connection:
             f"Sources database not found at {SOURCES_DB_PATH}. "
             "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(str(SOURCES_DB_PATH))
+    conn = sqlite3.connect(f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn
 

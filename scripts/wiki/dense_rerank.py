@@ -946,7 +946,7 @@ def load_corpus_units(corpus: str, *, db_path: Path = DEFAULT_DB_PATH) -> list[C
     policy = policy_for(corpus)
     tokenizer = _get_tokenizer()
 
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         units: list[CorpusUnit] = []
         for raw_unit in loader(conn):

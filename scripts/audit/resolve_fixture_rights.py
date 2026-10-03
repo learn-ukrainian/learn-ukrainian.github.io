@@ -746,8 +746,8 @@ def resolve_rows(
     license_entries = load_license_map(license_map)
     replace_entries = load_replace_list(replace_list)
     connections: dict[str, sqlite3.Connection] = {
-        "sources": sqlite3.connect(sources_db),
-        "vesum": sqlite3.connect(vesum_db),
+        "sources": sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True),
+        "vesum": sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True),
     }
     for conn in connections.values():
         conn.row_factory = sqlite3.Row

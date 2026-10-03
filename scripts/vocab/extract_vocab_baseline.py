@@ -185,7 +185,7 @@ def main():
         sys.exit(1)
 
     vocab_dir = level_dir / "vocabulary"
-    conn = sqlite3.connect(str(VESUM_DB))
+    conn = sqlite3.connect(f"{Path(VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
 
     wrote = 0
     skipped = 0

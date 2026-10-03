@@ -1413,7 +1413,7 @@ def build_coverage_map(
     total_concepts = 0
     absent_concepts = 0
 
-    with sqlite3.connect(str(SOURCES_DB_PATH)) as conn:
+    with sqlite3.connect(f"{Path(SOURCES_DB_PATH).resolve().as_uri()}?mode=ro", uri=True) as conn:
         for key in sorted(article_concepts.get("articles", {})):
             if allowed_keys is not None and key not in allowed_keys:
                 continue

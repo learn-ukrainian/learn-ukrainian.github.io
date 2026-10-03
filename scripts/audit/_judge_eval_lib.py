@@ -138,11 +138,11 @@ def retrieve_antonenko(text: str, k: int = 8, *, db_path: Path = DB) -> list[dic
     Ported from ``scripts/audit/russianism_judge.py`` on ``origin/pr-2006``.
     It grounds the judge prompt in canonical evidence from the local sources DB.
     """
-    conn = sqlite3.connect(db_path)
+    words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
+    if not words:
+        return []
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
-        words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
-        if not words:
-            return []
         placeholders = ",".join("?" * len(words))
         rows = conn.execute(
             f"""
@@ -200,7 +200,7 @@ def _heritage_check(text: str, *, db_path: Path = DB) -> list[dict[str, Any]]:
     tokens = _text_tokens(text)
     if not tokens:
         return []
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         placeholders = ",".join("?" * len(tokens))
         grinchenko = {
@@ -288,7 +288,7 @@ def _vesum_unknown(text: str, *, db_path: Path = VESUM_DB) -> list[str]:
     candidate_tokens = [t for t in tokens if t not in proper_nouns]
     if not candidate_tokens:
         return []
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         placeholders = ",".join("?" * len(candidate_tokens))
         known = {
@@ -356,7 +356,7 @@ def _antonenko_fulltext_search(
     narrowed_query = f"({prefix_or}) AND ({marker_or})"
 
     def _run_query(fts_query: str) -> list[tuple[str, str]]:
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
         try:
             return conn.execute(
                 """
@@ -536,7 +536,11 @@ def retrieve_ua_gec(text: str, k: int = 8, *, db_path: Path = DB) -> list[dict[s
     G/Case, G/Gender). Densest evidence source for phraseological and
     register calques that don't have Antonenko-Davydovych headword entries.
     """
-    conn = sqlite3.connect(db_path)
+    try:
+        conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    except sqlite3.OperationalError:
+        # A checkout without the sources DB fails soft, like a missing table.
+        return []
     conn.row_factory = sqlite3.Row
     try:
         words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))

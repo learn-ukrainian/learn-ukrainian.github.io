@@ -81,11 +81,11 @@ def retrieve_antonenko(text: str, k: int = 8) -> list[dict]:
     Used to ground the judge prompt in the canonical Russianism reference
     rather than relying on the judge's pre-training memory of Antonenko.
     """
-    conn = sqlite3.connect(DB)
+    words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
+    if not words:
+        return []
+    conn = sqlite3.connect(f"{Path(DB).resolve().as_uri()}?mode=ro", uri=True)
     try:
-        words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
-        if not words:
-            return []
         placeholders = ",".join("?" * len(words))
         rows = conn.execute(
             f"""

@@ -226,7 +226,7 @@ def main(argv: list[str] | None = None) -> int:
     manifest = _load_json(manifest_path)
     kaikki_lookup = _load_kaikki_lookup(kaikki_path)
     if args.refresh_enrichment:
-        with sqlite3.connect(sources_db) as conn:
+        with sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True) as conn:
             summary = repair_plural_noun_aliases(
                 manifest,
                 conn=conn,

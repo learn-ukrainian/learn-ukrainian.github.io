@@ -73,7 +73,7 @@ def _read_forms(db_path: Path) -> dict[str, set[str]]:
     """``form_key -> {lemma, ...}`` from the VESUM ``forms`` table."""
     if not db_path.exists():
         raise FileNotFoundError(f"VESUM database not found at {db_path}")
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         by_key: dict[str, set[str]] = defaultdict(set)
         for word_form, lemma in conn.execute("SELECT word_form, lemma FROM forms"):

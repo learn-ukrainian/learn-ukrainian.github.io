@@ -431,7 +431,7 @@ class CorpusLookup:
     ) -> CorpusText | None:
         if not self.db_path.exists():
             return None
-        with sqlite3.connect(self.db_path) as conn:
+        with sqlite3.connect(f"{Path(self.db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
             conn.row_factory = sqlite3.Row
             for hint in _matching_hints(candidate, hints):
                 if hint.packet_chunk_id:
@@ -802,7 +802,7 @@ def _ordered_unique(values: Iterable[str]) -> list[str]:
 
 def _load_corpus_chunk_rows(db_path: Path) -> dict[str, sqlite3.Row]:
     rows_by_chunk_id: dict[str, sqlite3.Row] = {}
-    with sqlite3.connect(db_path) as conn:
+    with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             """

@@ -599,7 +599,7 @@ def _db_is_populated(db: Path) -> tuple[bool, int]:
         # display, but do NOT let a sqlite error flip the verdict.
         total = 0
         try:
-            conn = sqlite3.connect(str(db))
+            conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
             for tbl in ("textbooks", "literary_texts", "external_articles"):
                 with contextlib.suppress(sqlite3.OperationalError):
                     total += conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
@@ -613,7 +613,7 @@ def _db_is_populated(db: Path) -> tuple[bool, int]:
     # File too small to plausibly hold real corpora. Trust the count and
     # treat any sqlite error as "not populated" (legacy behavior).
     try:
-        conn = sqlite3.connect(str(db))
+        conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
         total = 0
         for tbl in ("textbooks", "literary_texts", "external_articles"):
             with contextlib.suppress(sqlite3.OperationalError):
@@ -632,7 +632,7 @@ def _extract_wikipedia_snapshot(db: Path) -> tuple[list[tuple], list[tuple]]:
     if not db.exists():
         return [], []
     try:
-        conn = sqlite3.connect(str(db))
+        conn = sqlite3.connect(f"{Path(db).resolve().as_uri()}?mode=ro", uri=True)
         wiki_rows: list[tuple] = []
         neg_rows: list[tuple] = []
         with contextlib.suppress(sqlite3.OperationalError):

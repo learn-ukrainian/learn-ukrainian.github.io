@@ -816,7 +816,7 @@ def run_smoke_queries(
     limit: int = 5,
     db_path: Path = DEFAULT_DB_PATH,
 ) -> list[SmokeQueryResult]:
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     smoke_results: list[SmokeQueryResult] = []
     try:

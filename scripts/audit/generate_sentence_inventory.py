@@ -395,7 +395,7 @@ class VesumSentenceVerifier:
     """Small cached VESUM lookup used only for sentence-shape screening."""
 
     def __init__(self, path: Path) -> None:
-        self.conn = sqlite3.connect(path)
+        self.conn = sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True)
         self.cache: dict[str, bool] = {}
         self.imperative_cache: dict[str, bool] = {}
 
@@ -758,7 +758,7 @@ def build_inventory(
         raise ValueError("max_per_lemma must be positive")
     if textbook_search_limit < 1:
         raise ValueError("textbook search limit must be positive")
-    conn = sqlite3.connect(sources_db)
+    conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     vesum = VesumSentenceVerifier(vesum_db) if vesum_db is not None and vesum_db.exists() else None
     try:

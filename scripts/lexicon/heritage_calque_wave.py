@@ -114,7 +114,7 @@ class GecPair:
 
 def load_gec_calque_pairs(sources_db: Path) -> list[GecPair]:
     """Load, normalize, and dedupe UA-GEC ``F/Calque`` (error, correct) pairs."""
-    con = sqlite3.connect(sources_db)
+    con = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     try:
         rows = con.execute("SELECT error, correct, doc_id FROM ua_gec_errors WHERE error_type = 'F/Calque'").fetchall()
     finally:
@@ -497,7 +497,7 @@ def run_wave(
         ),
     )
 
-    con = sqlite3.connect(sources_db)
+    con = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
     overlay_pairs: list[dict[str, Any]] = []
     total_emitted = 0
 

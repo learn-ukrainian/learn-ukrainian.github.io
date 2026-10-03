@@ -95,7 +95,7 @@ def vesum_enrich_entry(entry: dict) -> dict:
 
     if VESUM_DB.exists():
         try:
-            db = sqlite3.connect(str(VESUM_DB))
+            db = sqlite3.connect(f"{Path(VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
             try:
                 row = db.execute(
                     "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",

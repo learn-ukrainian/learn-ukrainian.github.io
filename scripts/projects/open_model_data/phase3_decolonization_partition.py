@@ -312,9 +312,9 @@ class DecolonizationPartitionFirewall:
         if not self.vesum_db.is_file():
             raise FileNotFoundError(f"Missing VESUM database at {self.vesum_db}")
 
-        s_conn = sqlite3.connect(self.sources_db)
+        s_conn = sqlite3.connect(f"{Path(self.sources_db).resolve().as_uri()}?mode=ro", uri=True)
         sc = s_conn.cursor()
-        v_conn = sqlite3.connect(self.vesum_db)
+        v_conn = sqlite3.connect(f"{Path(self.vesum_db).resolve().as_uri()}?mode=ro", uri=True)
         vc = v_conn.cursor()
 
         # 1. Source Custody: UA-GEC

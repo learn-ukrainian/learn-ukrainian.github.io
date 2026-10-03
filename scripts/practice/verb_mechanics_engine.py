@@ -2847,7 +2847,7 @@ def verify_deck_with_vesum(
             "checked_word_count": 0,
         }
 
-    conn = sqlite3.connect(str(resolved_path))
+    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
     cursor = conn.cursor()
     missing: list[dict[str, str]] = []
     checked = 0
@@ -2901,7 +2901,7 @@ def verify_distractors_with_vesum(
         VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
     }
 
-    conn = sqlite3.connect(str(resolved_path))
+    conn = sqlite3.connect(f"{Path(resolved_path).resolve().as_uri()}?mode=ro", uri=True)
     cursor = conn.cursor()
     invalid_distractors: list[dict[str, Any]] = []
     checked = 0

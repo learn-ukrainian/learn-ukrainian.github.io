@@ -978,7 +978,7 @@ def main(argv: list[str] | None = None) -> int:
     from scripts.lexicon.manifest_io import load_manifest, write_manifest
 
     manifest = load_manifest(args.manifest)
-    conn = sqlite3.connect(args.db)
+    conn = sqlite3.connect(f"{Path(args.db).resolve().as_uri()}?mode=ro", uri=True)
     try:
         stats = apply_ohoiko_quality_enrichment(manifest, conn)
     finally:

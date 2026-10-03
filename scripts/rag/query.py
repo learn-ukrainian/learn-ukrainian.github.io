@@ -188,7 +188,7 @@ def get_chunk_context(chunk_id: str, window: int = 2) -> list[dict[str, Any]]:
     db_path = sources_db.SOURCES_DB_PATH
     if not db_path.exists():
         return []
-    with sqlite3.connect(db_path) as conn:
+    with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
         conn.row_factory = sqlite3.Row
         row = conn.execute(
             "SELECT source_file, chunk_id FROM textbooks WHERE chunk_id = ?",

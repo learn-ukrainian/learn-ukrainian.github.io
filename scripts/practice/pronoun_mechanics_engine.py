@@ -2737,7 +2737,7 @@ def verify_deck_with_vesum(cards: list[PronounCard], db_path: Path | None = None
             "missing_forms": [],
         }
 
-    conn = sqlite3.connect(vesum_db)
+    conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     cursor = conn.cursor()
 
     missing_forms: list[dict[str, Any]] = []
@@ -2794,7 +2794,7 @@ def verify_distractors_with_vesum(cards: list[PronounCard], db_path: Path | None
             "invalid_distractors": [],
         }
 
-    conn = sqlite3.connect(vesum_db)
+    conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
     cursor = conn.cursor()
 
     corruption_types = {
