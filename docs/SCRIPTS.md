@@ -19,24 +19,15 @@ counts only reviewers eligible for automatic routing. It exits 0 when every auth
 family meets its required minimum and 1 for any shortfall, with JSON exclusion
 reasons on stderr. The default minimum is two seats. The documented
 `ACCEPTED_SINGLE_SEAT_BENCHES` constant accepts one seat for Anthropic and OpenAI
-authors at high/critical risk (#9423 AC-02, #9538, #9583): those reviews admit only
-Sol and Opus, leaving the other family as the single cross-family seat. Such rows
+authors at high/critical risk (#9423 AC-02). High is limited to Sol/Opus by #9538;
+critical by the catalog's `critical_review` role (#9583). OpenAI authors have
+Opus alone because Cursor-routed Claude stays unpinned (#9488). Such rows
 display `[EXPECTED single seat]`; zero seats always fails. The summaries are
 `BENCH HEALTH PASS: All author families meet their required reviewer minimum.` or
 `BENCH HEALTH FAIL: At least one author family is below its required reviewer minimum.`
 This diagnostic exception changes neither eligibility nor routing policy.
 
-**#9423 AC-01:** Composer and pool exclusions are resolver gates, rather than a
-bench snapshot artifact. `scripts/config/model_catalog.yaml` pins only Grok on
-the formal Cursor endpoint; `_catalog_candidate()` in
-`scripts/review/reviewer_resolver.py` therefore excludes Composer with
-`sealed endpoint 'cursor' is not pinned for model 'composer-2.5'`. The pool
-endpoint is not formal-review eligible, with reason
-`ACP participant does not yet pin and attest the concrete Laguna model` for
-both pool seats. `tests/review/test_bench_health.py` compares bench reasons with
-`evaluate_candidate()` across all risk levels under empty and healthy snapshots,
-and with automatic resolver traces where the seats appear. High's automatic
-ladder contains only Sol and Opus, so Composer and pool are never attempted there.
+For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9423).
 
 ## Git hooks
 
