@@ -197,19 +197,36 @@ the parent is sent. Recursion by configuration (`push.recurseSubmodules`,
 sent at all.
 
 **Aliases are refused.** Agents run Git commands directly. After the global
-options, the shim forwards a command only when its first word is one of Git's
-own commands: a builtin or a `git-<name>` program in Git's exec path, which Git
-runs without looking up an alias. The shim asks the Git it is about to run for
-that list on every call (`git --list-cmds=builtins,main`, with the caller's
-global options and environment, so `--exec-path` and `GIT_EXEC_PATH` count) and
-caches nothing. Anything else is refused before Git runs, with a message to run
-the Git command directly: every alias, wherever it is defined (`git -c
-alias.p=push p` included) and whatever it expands to; a `git-<name>` program
-found only on `PATH`; and a mistyped name, which Git could otherwise
-autocorrect. The shim does not read alias values at all, so no difference
-between its reading and Git's (quoting, separators such as a carriage return,
-nesting, options inside the alias) can reach push. An alias that hides a
-builtin is not a refusal: Git ignores it and runs the builtin.
+options, the shim forwards a command only when its first word passes two
+checks, both answered by the Git it is about to run, with the caller's global
+options and environment, on every call and with nothing cached:
+
+1. The word is one of Git's own commands: a builtin or a `git-<name>` program
+   in Git's exec path (`git --list-cmds=builtins,main`, so `--exec-path` and
+   `GIT_EXEC_PATH` count). Anything else is refused: every alias of another
+   name (`git -c alias.p=push p` included), a `git-<name>` program found only
+   on `PATH`, and a mistyped name, which Git could otherwise autocorrect.
+2. No alias of that name is defined. A listed name can still run as an alias:
+   Git looks an alias up before a deprecated builtin (`alias.whatchanged`), and
+   falls back to the alias when a `git-<name>` program fails to start. So the
+   shim asks Git for its alias names (`git config --name-only --get-regexp`,
+   compared without regard to case, as Git does) and refuses the command when
+   one matches, over any builtin (`alias.status`, `alias.push`) or program.
+   The lookup sees every source Git reads aliases from: system, global,
+   repository and worktree files, include files, `-c`, `--config-env`,
+   `GIT_CONFIG_PARAMETERS` and `GIT_CONFIG_COUNT`/`GIT_CONFIG_KEY_<n>`/
+   `GIT_CONFIG_VALUE_<n>`. It runs with `GIT_CONFIG` unset, because that
+   variable narrows `git config` to one file while Git's alias lookup ignores
+   it, under a ten-second limit. A probe key it adds itself must come back, so
+   a lookup that fails, times out or reads no configuration refuses. Git 2.53
+   does not read aliases from a worktree file; the shim refuses them anyway.
+
+Refusals come before Git runs, with a message saying what to do instead. The
+shim never reads alias values, so no difference between its reading and Git's
+(quoting, separators such as a carriage return, nesting, options inside the
+alias) can reach push. The lookup is one more `git config` call: a `git status`
+in a small repository took 0.021 seconds through the shim against 0.016 seconds
+before the lookup and 0.002 seconds with plain Git (median of 41).
 
 The shim does not pin the hooks path on commands other than push: that would hide
 the caller's other hooks (pre-commit and the rest), and a wrapper for every hook
@@ -316,8 +333,8 @@ grow with that history, and a clone without the head scans all of it.
 
 **Supported entry points and recorded gaps.** The scan covers `git push`
 through the agent git shim, including recursive submodule pushes; the shim
-refuses every alias and every `git-<name>` program outside Git's exec path
-(above). These publish without
+refuses every alias, every command whose name an alias also defines, and every
+`git-<name>` program outside Git's exec path (above). These publish without
 it, and stay outside this boundary as for every other publisher: an absolute Git
 executable or a `PATH` without the shim; commands that run Git themselves
 (`git-<name>` programs in the exec path the caller chose, `git submodule foreach`,

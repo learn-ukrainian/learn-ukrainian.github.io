@@ -251,8 +251,8 @@ real_git="$(_real_git)" || {
 # whose scanner is unusable, is refused. The pin is not added to other commands:
 # it would hide the caller's other hooks (pre-commit, ...).
 #
-# The shim forwards only Git's own commands, which Git runs without an alias
-# lookup. Aliases are refused, not parsed: a reading of an alias that differs
+# The shim forwards only Git's own commands, and only when Git has no alias of
+# that name. Aliases are refused, not parsed: a reading of an alias that differs
 # from Git's could reach push without the pin.
 
 _opsec_refuse() {
@@ -310,6 +310,56 @@ OPSEC: '$_opsec_command' is not one of Git's own commands, so it was not run.
        The agent git shim refuses every alias, git-<name> programs outside Git's
        exec path and mistyped commands, because it cannot tell whether they push.
        Run the Git command directly (for example 'git push ...', not an alias for it).
+EOF
+    exit 2
+  fi
+fi
+
+# A listed name can still run as an alias: Git looks an alias up before a
+# deprecated builtin (whatchanged) and after a git-<name> program fails to
+# start. So the shim asks Git whether an alias of that name is defined, under
+# the caller's global options and environment, and refuses if one is, whatever
+# it expands to. Git matches alias names without regard to case. The probe key
+# proves Git read the configuration: a lookup that does not return it, fails
+# or times out refuses. GIT_CONFIG is unset because it narrows `git config` to
+# one file while Git's alias lookup ignores it. The time limit is bash's own
+# read timeout (some timeout(1) builds poll and add 0.1 s to every call).
+_opsec_probe="lu-opsec.alias-probe"
+_opsec_aliased() {
+  local fd pid names="" name rest word="${_opsec_command,,}" read_status=0 git_status=0
+  exec {fd}< <(exec env -u GIT_CONFIG "$real_git" "${_opsec_globals[@]}" -c "$_opsec_probe=1" \
+    config --name-only --get-regexp "^(alias\\..*|${_opsec_probe//./\\.})\$")
+  pid=$!
+  IFS= read -r -d '' -t 10 -u "$fd" names || read_status=$?
+  exec {fd}<&-
+  if [[ "$read_status" != 1 ]]; then
+    # Over time (above 128), or a NUL where Git writes none (0).
+    kill "$pid" 2>/dev/null || true
+    return 2
+  fi
+  wait "$pid" || git_status=$?
+  [[ "$git_status" == 0 && $'\n'"$names" == *$'\n'"$_opsec_probe"$'\n'* ]] || return 2
+  while IFS= read -r name; do
+    [[ "$name" == alias.* ]] || continue
+    rest="${name#alias.}"
+    rest="${rest,,}"
+    [[ "$rest" == "$word" || "$rest" == "$word".* ]] && return 0
+  done <<< "$names"
+  return 1
+}
+
+if [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
+  _opsec_alias_status=0
+  _opsec_aliased || _opsec_alias_status=$?
+  if [[ "$_opsec_alias_status" == 2 ]]; then
+    echo "OPSEC: could not check Git's aliases for '$_opsec_command', so it was not run." >&2
+    exit 2
+  elif [[ "$_opsec_alias_status" == 0 ]]; then
+    cat >&2 <<EOF
+OPSEC: an alias named '$_opsec_command' is defined, so '$_opsec_command' was not run.
+       Git can run such an alias in place of its own command, so the agent git
+       shim refuses the command while the alias exists. Remove the alias or run
+       Git without the configuration that defines it.
 EOF
     exit 2
   fi

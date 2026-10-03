@@ -1374,15 +1374,184 @@ def test_alias_that_runs_no_push_is_refused_too(push_sandbox):
 
 def test_git_commands_run_unchanged(push_sandbox):
     sha = push_sandbox.commit("clean subject")
-    _git(push_sandbox.work, "config", "alias.status", "push --no-verify")  # Git ignores aliases hiding builtins.
+    _git(push_sandbox.work, "config", "alias.where", "rev-parse")  # Aliases of other names do not matter.
     status = push_sandbox.push("status", "--short")
     assert status.returncode == 0 and status.stderr == "", status.stderr
     log = push_sandbox.push("-c", "color.ui=never", "log", "--format=%H", "-1")
     assert log.returncode == 0 and log.stdout.strip() == sha, log.stderr
     # A git-<name> program in Git's exec path is one of Git's own commands.
-    submodule = push_sandbox.push("-c", "alias.submodule=push", "submodule", "status")
+    submodule = push_sandbox.push("submodule", "status")
     assert submodule.returncode == 0 and "OPSEC" not in submodule.stderr, submodule.stderr
     assert "refs/heads/feature" not in push_sandbox.remote_refs()
+
+
+# --- A listed command is refused while an alias of its name exists ---
+
+
+def assert_alias_refused(result, sandbox, before, sha, name):
+    assert result.returncode == 2, result.stderr
+    assert f"OPSEC: an alias named '{name}' is defined, so '{name}' was not run." in result.stderr, result.stderr
+    assert sandbox.remote_refs() == before and not _remote_has(sandbox, sha)
+
+
+def _plain(sandbox, *args, **extra):
+    return subprocess.run(
+        [REAL_GIT, *args], cwd=sandbox.work, env=_env(**extra), capture_output=True, text=True, timeout=60
+    )
+
+
+PUSH_ALIASES = ["push --no-verify", "push --quiet"]
+
+
+@pytest.mark.parametrize("value", PUSH_ALIASES)
+@pytest.mark.parametrize("scope", ["repository", "command-line"])
+def test_alias_over_a_deprecated_builtin_is_refused(push_sandbox, value, scope):
+    """Git looks an alias up before a deprecated builtin, so the alias pushes in place of whatchanged."""
+    assert "whatchanged" in _git(push_sandbox.work, "--list-cmds=builtins,main").split()
+    options = _configure(push_sandbox, {"whatchanged": value}, scope)
+    pushing = [*options, "whatchanged", "origin", "HEAD:refs/heads/feature"]
+    sha = push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    assert_alias_refused(push_sandbox.push(*pushing), push_sandbox, before, sha, "whatchanged")
+    control = _plain(push_sandbox, *pushing)
+    assert control.returncode == 0, control.stderr
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+
+
+@pytest.mark.parametrize("route", ["option", "environment"])
+@pytest.mark.parametrize("value", PUSH_ALIASES)
+@pytest.mark.parametrize("scope", ["repository", "command-line"])
+def test_alias_behind_a_program_that_cannot_start_is_refused(push_sandbox, route, value, scope):
+    """A listed git-publish whose interpreter is missing fails to start; Git then expands alias.publish."""
+    exec_path = push_sandbox.tmp / "exec-path"
+    marker = push_sandbox.tmp / "ran"
+    _program(exec_path, "publish", marker, interpreter=push_sandbox.tmp / "absent-interpreter")
+    paths, environment = (
+        ([f"--exec-path={exec_path}"], {}) if route == "option" else ([], {"GIT_EXEC_PATH": str(exec_path)})
+    )
+    assert "publish" in _git(push_sandbox.work, *paths, "--list-cmds=builtins,main", env=_env(**environment)).split()
+    options = _configure(push_sandbox, {"publish": value}, scope)
+    pushing = [*paths, *options, "publish", "origin", "HEAD:refs/heads/feature"]
+    sha = push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    assert_alias_refused(push_sandbox.push(*pushing, **environment), push_sandbox, before, sha, "publish")
+    control = _plain(push_sandbox, *pushing, **environment)
+    assert control.returncode == 0, control.stderr
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha and not marker.exists()
+
+
+def _alias_source(sandbox, source, value):
+    """Defines alias.whatchanged by one configuration route; returns (global options, environment)."""
+    defining = sandbox.tmp / "aliases.gitconfig"
+    _git(sandbox.tmp, "config", "--file", str(defining), "alias.whatchanged", value)
+    if source == "system":
+        return [], {"GIT_CONFIG_NOSYSTEM": "0", "GIT_CONFIG_SYSTEM": str(defining)}
+    if source == "global":
+        return [], {"GIT_CONFIG_GLOBAL": str(defining)}
+    if source == "worktree":
+        _git(sandbox.work, "config", "extensions.worktreeConfig", "true")
+        _git(sandbox.work, "config", "--worktree", "alias.whatchanged", value)
+        return [], {}
+    if source == "include":
+        _git(sandbox.work, "config", "include.path", str(defining))
+        return [], {}
+    if source == "conditional include":
+        _git(sandbox.work, "config", f"includeIf.gitdir:{sandbox.work}/.git.path", str(defining))
+        return [], {}
+    if source == "upper-case command line":
+        return ["-c", f"alias.WhatChanged={value}"], {}
+    if source == "config-env":
+        return ["--config-env=alias.whatchanged=UNIT_ALIAS"], {"UNIT_ALIAS": value}
+    if source == "GIT_CONFIG_PARAMETERS":
+        return [], {"GIT_CONFIG_PARAMETERS": f"'alias.whatchanged'='{value}'"}
+    if source == "GIT_CONFIG_COUNT":
+        return [], {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "alias.whatchanged", "GIT_CONFIG_VALUE_0": value}
+    assert source == "GIT_CONFIG narrowing", source  # GIT_CONFIG narrows `git config`, not Git's alias lookup.
+    _git(sandbox.work, "config", "alias.whatchanged", value)
+    return [], {"GIT_CONFIG": os.devnull}
+
+
+ALIAS_SOURCES = [
+    "system",
+    "global",
+    "worktree",
+    "include",
+    "conditional include",
+    "upper-case command line",
+    "config-env",
+    "GIT_CONFIG_PARAMETERS",
+    "GIT_CONFIG_COUNT",
+    "GIT_CONFIG narrowing",
+]
+
+
+@pytest.mark.parametrize("source", ALIAS_SOURCES)
+def test_alias_is_found_in_every_configuration_source(push_sandbox, source):
+    options, environment = _alias_source(push_sandbox, source, "push --no-verify")
+    pushing = [*options, "whatchanged", "origin", "HEAD:refs/heads/feature"]
+    sha = push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    assert_alias_refused(push_sandbox.push(*pushing, **environment), push_sandbox, before, sha, "whatchanged")
+    if source == "worktree":
+        return  # Git 2.53 looks aliases up without the worktree file; the shim refuses them all the same.
+    control = _plain(push_sandbox, *pushing, **environment)
+    assert control.returncode == 0, control.stderr
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+
+
+@pytest.mark.parametrize(
+    ("options", "name"),
+    [
+        (["-c", "alias.status=push"], "status"),  # Git runs the builtin here, but the alias is refused all the same.
+        (["-c", "alias.push=status"], "push"),
+        (["-c", "alias.submodule=push"], "submodule"),  # over a git-<name> program in Git's exec path
+    ],
+)
+def test_alias_over_any_listed_name_is_refused(push_sandbox, options, name):
+    sha = push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push(*options, name, "origin", "HEAD:refs/heads/feature")
+    assert_alias_refused(result, push_sandbox, before, sha, name)
+
+
+def test_failed_alias_lookup_refuses(push_sandbox):
+    """A configuration Git cannot read leaves the aliases unknown (push skips the command list)."""
+    (push_sandbox.tmp / "broken.gitconfig").write_text("[alias\n")
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    pushing = ["push", "origin", "HEAD:refs/heads/feature"]
+    result = push_sandbox.push(*pushing, GIT_CONFIG_GLOBAL=str(push_sandbox.tmp / "broken.gitconfig"))
+    assert result.returncode == 2, result.stderr
+    assert "OPSEC: could not check Git's aliases for 'push', so it was not run." in result.stderr, result.stderr
+    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
+
+
+def test_alias_lookup_that_hangs_refuses_after_its_time_limit(push_sandbox):
+    """An include file that never delivers (a FIFO with no writer) holds Git's read open."""
+    fifo = push_sandbox.tmp / "never-written"
+    os.mkfifo(fifo)
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    started = time.perf_counter()
+    result = push_sandbox.push("-c", f"include.path={fifo}", "push", "origin", "HEAD:refs/heads/feature")
+    assert 9 < time.perf_counter() - started < 60
+    assert result.returncode == 2, result.stderr
+    assert "OPSEC: could not check Git's aliases for 'push', so it was not run." in result.stderr, result.stderr
+    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
+
+
+def test_alias_lookup_latency_is_reported(push_sandbox):
+    """Prints the added time of one `git status` through the shim (median of seven)."""
+    times = {"shim": [], "plain": []}
+    for _ in range(7):
+        for kind in times:
+            argv = [str(push_sandbox.shim) if kind == "shim" else REAL_GIT, "status", "--short"]
+            started = time.perf_counter()
+            subprocess.run(argv, cwd=push_sandbox.work, env=_env(), check=True, capture_output=True, timeout=60)
+            times[kind].append(time.perf_counter() - started)
+    shim, plain = (sorted(values)[3] for values in times.values())
+    print(f"git status: plain git {plain:.3f}s, through the shim {shim:.3f}s, added {shim - plain:.3f}s")
+    assert shim - plain < 5
 
 
 def test_direct_push_still_scans_and_delivers(push_sandbox):
@@ -1400,10 +1569,10 @@ def test_direct_push_still_scans_and_delivers(push_sandbox):
     assert push_sandbox.remote_refs()["refs/heads/feature"] == clean
 
 
-def _program(directory, name, marker):
+def _program(directory, name, marker, interpreter="/bin/sh"):
     directory.mkdir(exist_ok=True)
     program = directory / f"git-{name}"
-    program.write_text(f"#!/bin/sh\ntouch {marker}\n")
+    program.write_text(f"#!{interpreter}\ntouch {marker}\n")
     program.chmod(0o755)
 
 
