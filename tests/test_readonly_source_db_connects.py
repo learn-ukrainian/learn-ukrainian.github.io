@@ -28,6 +28,7 @@ def _sparse_excluded(rel_paths: list[str]) -> set[str]:
     return {line[2:] for line in listed if line.startswith("S ")}
 
 
+@pytest.mark.repo_wide
 def test_repo_has_no_unallowlisted_writable_source_db_connect():
     violations, unreadable = lint.find_violations()
     assert violations == [], "\n".join(violations)

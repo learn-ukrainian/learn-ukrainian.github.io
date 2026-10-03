@@ -177,6 +177,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_operator_contract_wiring.py::test_epic_driver_and_v2_template_keep_prompt_adequacy_gate",
     "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens",
     "tests/test_review_reviewer_resolver.py::test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook",
+    "tests/test_readonly_source_db_connects.py::test_repo_has_no_unallowlisted_writable_source_db_connect",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
     "tests/test_session_streams.py::test_backslash_tracked_paths_add_no_hostname_rejections",
     "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
