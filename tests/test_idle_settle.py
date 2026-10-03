@@ -477,3 +477,11 @@ def test_cli_admission_json_exit_codes(tmp_path: Path, capsys: pytest.CaptureFix
     assert idle.main(["admission", "--snapshot-json", str(blocked), "--json"]) == 2
     refused = json.loads(capsys.readouterr().out)
     assert refused["reason_codes"] == ["worktree_wip_cap"]
+
+
+@pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_load_events_preserves_unicode_separators(tmp_path, sep):
+    events = [{"note": f"a{sep}b", "event": "settle"}, {"event": "other"}]
+    path = tmp_path / "events.jsonl"
+    path.write_text("\n".join(json.dumps(row, ensure_ascii=False) for row in events) + "\n", encoding="utf-8")
+    assert idle.load_events(path) == events

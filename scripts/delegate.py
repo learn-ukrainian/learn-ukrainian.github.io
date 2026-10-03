@@ -182,6 +182,7 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.agent_runtime import bounded_advisory
 from scripts.api.subscription_usage import pace_is_visible
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
@@ -2750,7 +2751,7 @@ def _parse_delivery_declaration(response: str) -> dict[str, Any] | None:
     after the declaration does not void it while a mid-report example of the
     format is not mistaken for the worker's own declaration.
     """
-    lines = [line.strip() for line in response.splitlines() if line.strip()]
+    lines = [line.strip() for line in jsonl_lines(response) if line.strip()]
     line = next(
         (
             candidate
