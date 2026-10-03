@@ -13,11 +13,15 @@ import pytest
 
 from scripts.agent_runtime.adapters.claude import (
     REVIEWER_PERMISSION_PROFILE,
-    SOURCES_PERSISTING_TOOLS,
-    SOURCES_READ_ONLY_TOOLS,
     ClaudeAdapter,
 )
 from scripts.agent_runtime.env_sanitize import build_agent_env
+from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+from scripts.agent_runtime.sources_read_only import sources_tool_sets
+
+SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
+SOURCES_RULES = [f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS]
+PERSISTING_RULES = [f"mcp__sources__{name}" for name in SOURCES_PERSISTING_TOOLS]
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
@@ -50,7 +54,11 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     assert all(Path(command).is_file() for command in commands)
     assert str(tracked_hooks / "guard-reviewer-publish.py") not in commands
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
-    assert "--disallowedTools" not in plan.cmd
+    if mode == "read-only":
+        assert plan.cmd.count("--disallowedTools") == 1
+        assert plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",") == PERSISTING_RULES
+    else:
+        assert "--disallowedTools" not in plan.cmd
     if mode == "workspace-write":
         # Headless print mode denies approval-requiring tools. dontAsk plus the
         # worker allow list is the documented non-interactive mode. Danger keeps
@@ -276,7 +284,8 @@ def test_discussion_readonly_keeps_separate_permissions(tmp_path: Path) -> None:
     )
     assert "--settings" in plan.cmd
     assert "--permission-mode" not in plan.cmd
-    assert "--disallowedTools" not in plan.cmd
+    assert "--allowedTools" not in plan.cmd
+    assert _denied(plan.cmd) == PERSISTING_RULES
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
@@ -308,7 +317,8 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
     assert "--settings" in plan.cmd
     assert "--safe-mode" in plan.cmd
     assert "--permission-mode" not in plan.cmd
-    assert "--disallowedTools" not in plan.cmd
+    assert "--allowedTools" not in plan.cmd
+    assert _denied(plan.cmd) == PERSISTING_RULES
     assert plan.cmd[plan.cmd.index("--tools") + 1] == ""
 
 
@@ -453,8 +463,6 @@ def test_reviewer_publish_hook(command: str, blocked: bool) -> None:
     assert (result.returncode == 2) is blocked, (command, result.stderr)
 
 
-SOURCES_RULES = [f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS]
-PERSISTING_RULES = [f"mcp__sources__{name}" for name in SOURCES_PERSISTING_TOOLS]
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[2] / ".mcp/servers/sources/server.py"
 
 
@@ -598,7 +606,8 @@ def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
         *REVIEWER_PERMISSION_PROFILE["allow"],
         *review_tools_allowed_csv("claude", "full").split(","),
     ]
-    assert _denied(cmd) == list(REVIEWER_PERMISSION_PROFILE["deny"])
+    # Deny wins over the formal allow list: a writer added to it stays denied.
+    assert _denied(cmd) == [*REVIEWER_PERMISSION_PROFILE["deny"], *PERSISTING_RULES]
     # The formal attempt's own harness-written config is the only one loaded.
     assert cmd.count("--mcp-config") == 1
     assert cmd[cmd.index("--mcp-config") + 1] == str(attempt)
@@ -661,14 +670,15 @@ def test_explicit_allowed_tools_are_not_widened_or_narrowed(
     assert plan.cmd.count("--allowedTools") == 1
     assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == allowed_tools
     assert "--permission-mode" not in plan.cmd
-    assert "--disallowedTools" not in plan.cmd
+    # Only the sources writers are added; the reviewer deny list is not.
+    assert _denied(plan.cmd) == PERSISTING_RULES
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
     assert not any(command.endswith("guard-reviewer-publish.py") for command in commands)
 
 
-def test_readonly_content_writer_keeps_legacy_cli_permissions(tmp_path: Path) -> None:
+def test_readonly_without_profile_keeps_legacy_permissions_and_denies_writers(tmp_path: Path) -> None:
     plan = ClaudeAdapter().build_invocation(
         prompt="write content",
         mode="read-only",
@@ -680,5 +690,170 @@ def test_readonly_content_writer_keeps_legacy_cli_permissions(tmp_path: Path) ->
     )
     assert "--allowedTools" not in plan.cmd
     assert "--permission-mode" not in plan.cmd
-    assert "--disallowedTools" not in plan.cmd
+    assert _denied(plan.cmd) == PERSISTING_RULES
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
+
+
+def _isolated_review_config(tmp_path: Path, monkeypatch) -> dict:
+    from scripts.agent_runtime.adapters import claude
+    from scripts.review import isolation
+
+    mcp = tmp_path / "empty.json"
+    mcp.write_text('{"mcpServers":{}}\n', encoding="utf-8")
+    monkeypatch.setattr(isolation, "validated_review_write_root", lambda _: tmp_path)
+    monkeypatch.setattr(claude, "_isolated_review_response_schema", lambda _: "{}")
+    return {
+        "review_isolation": True,
+        "review_engine_binary": "/bin/true",
+        "strict_mcp_config": True,
+        "mcp_config_path": str(mcp),
+        "setting_sources": "",
+        "allowed_tools": "Read,Grep,Glob",
+    }
+
+
+# Every read-only route a caller can reach, as a tool_config builder.
+READ_ONLY_PATHS = {
+    "ordinary-reviewer": lambda tmp, _mp: {"reviewer_tools": True},
+    "formal-full-review": lambda tmp, _mp: {
+        "reviewer_tools": True,
+        "mcp_config_path": str(tmp / "attempt.json"),
+        "strict_mcp_config": True,
+        "review_access": "full",
+    },
+    "formal-isolated-review": lambda tmp, _mp: {
+        "allowed_tools": review_tools_allowed_csv("claude"),
+        "mcp_config_path": str(tmp / "attempt.json"),
+        "strict_mcp_config": True,
+        "review_access": "isolated",
+    },
+    "explicit-sources-glob": lambda tmp, _mp: {"allowed_tools": "mcp__sources__*"},
+    "explicit-writer-grant": lambda tmp, _mp: {"allowed_tools": ",".join(["Read", *PERSISTING_RULES])},
+    "explicit-with-reviewer-tools": lambda tmp, _mp: {
+        "reviewer_tools": True,
+        "allowed_tools": "mcp__sources__*",
+        "mcp_config_path": str(tmp / "sources.json"),
+        "strict_mcp_config": True,
+    },
+    "ad-hoc-none": lambda tmp, _mp: None,
+    "ad-hoc-empty": lambda tmp, _mp: {},
+    "ad-hoc-mcp-config": lambda tmp, _mp: {"mcp_config_path": str(tmp / "sources.json")},
+    "discussion-readonly": lambda tmp, _mp: {"discussion_readonly": True},
+    "discussion-with-reviewer-tools": lambda tmp, _mp: {"discussion_readonly": True, "reviewer_tools": True},
+    "review-isolation": _isolated_review_config,
+}
+
+
+@pytest.mark.parametrize("session_id", [None, "00000000-0000-4000-8000-000000000000"])
+@pytest.mark.parametrize("path", sorted(READ_ONLY_PATHS))
+def test_every_read_only_path_denies_every_sources_writer(
+    tmp_path: Path, monkeypatch, path: str, session_id: str | None
+) -> None:
+    """AC-01 (#9560): deny is a single list on every read-only argv; Claude applies deny before allow."""
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=session_id,
+        tool_config=READ_ONLY_PATHS[path](tmp_path, monkeypatch),
+    )
+    denied = _denied(plan.cmd)
+    assert set(PERSISTING_RULES) <= set(denied)
+    # Readers are never denied: ordinary lookups keep working.
+    assert not set(SOURCES_RULES) & set(denied)
+    if "--allowedTools" in plan.cmd and path != "explicit-writer-grant":
+        # The adapter itself never grants a writer; only a caller's own list can name one.
+        assert not set(PERSISTING_RULES) & set(_granted(plan.cmd))
+
+
+def test_ad_hoc_discuss_env_denies_every_sources_writer(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("AB_DISCUSS_READONLY", "1")
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert _denied(plan.cmd) == PERSISTING_RULES
+
+
+def test_readers_stay_allowed_where_they_were(tmp_path: Path) -> None:
+    """AC-02 (#9560): the ordinary reviewer keeps every reader; the formal full reviewer keeps its contract."""
+    from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS
+
+    ordinary = _reviewer_plan(tmp_path)
+    assert set(SOURCES_RULES) <= set(_granted(ordinary))
+    assert "mcp__sources__verify_word" in _granted(ordinary)
+    full = _reviewer_plan(
+        tmp_path,
+        mcp_config_path=str(tmp_path / "attempt.json"),
+        strict_mcp_config=True,
+        review_access="full",
+    )
+    full_rules = {f"mcp__sources__{name}" for name in FULL_REVIEW_TOOLS}
+    assert full_rules <= set(_granted(full))
+    assert not full_rules & set(_denied(full))
+
+
+@pytest.mark.parametrize(
+    "tool_config",
+    [
+        None,
+        {"reviewer_tools": True},
+        {"allowed_tools": "mcp__sources__*"},
+        {"allowed_tools": ",".join(PERSISTING_RULES)},
+    ],
+    ids=["none", "reviewer-tools", "explicit-glob", "explicit-writers"],
+)
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_write_and_danger_modes_never_deny_sources_writers(tmp_path: Path, mode: str, tool_config) -> None:
+    """AC-02 (#9560): builds and writers keep their cache access."""
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode=mode,
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert "--disallowedTools" not in plan.cmd
+    if tool_config and "allowed_tools" in tool_config:
+        assert _granted(plan.cmd) == tool_config["allowed_tools"].split(",")
+    elif mode == "danger":
+        assert "--allowedTools" not in plan.cmd
+    else:
+        assert "Bash" in _granted(plan.cmd)
+
+
+@pytest.mark.parametrize("tool_config", [None, {"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}])
+def test_unreadable_server_declarations_refuse_read_only_launch(tmp_path: Path, monkeypatch, tool_config) -> None:
+    from scripts.agent_runtime.adapters import claude
+
+    monkeypatch.setattr(claude, "sources_tool_sets", lambda: sources_tool_sets(tmp_path / "missing.py"))
+    with pytest.raises(FileNotFoundError):
+        ClaudeAdapter().build_invocation(
+            prompt="inspect",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=tool_config,
+        )
+    # Write mode never reads the declarations, so it is unaffected.
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--disallowedTools" not in plan.cmd
