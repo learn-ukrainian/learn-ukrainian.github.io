@@ -175,6 +175,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_session_streams.py::test_backslash_tracked_paths_add_no_hostname_rejections",
     "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
     "tests/test_session_streams.py::test_embedded_host_filter_accepts_every_tracked_basename",
+    "tests/test_session_streams.py::test_embedded_host_exemptions_are_required_by_tracked_basenames",
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",

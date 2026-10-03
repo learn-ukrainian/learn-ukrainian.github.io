@@ -15980,7 +15980,10 @@ def test_review_attempt_refuses_a_prompt_that_prints_no_ids(tmp_tasks_dir, tmp_p
 def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         "scripts.agent_runtime.review_mcp.check_review_contract",
-        lambda _prompt_file, text, **_ids: {"prompt_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()},
+        lambda _prompt_file, text, **_ids: {
+            "prompt_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            "input_root": str(tmp_path),  # a real contract always names one (#9597)
+        },
     )
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")

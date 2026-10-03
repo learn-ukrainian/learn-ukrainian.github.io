@@ -103,13 +103,24 @@ def test_cursor_logout_surfaces_need_login_without_substitution(monkeypatch, tmp
             },
         },
     )
-    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
-        "source": "agent_runtime_jsonl",
-        "agent": agent,
-        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
-    })
+    monkeypatch.setattr(
+        state_router,
+        "summarize_fleet_burn",
+        lambda agent, **kwargs: {
+            "source": "agent_runtime_jsonl",
+            "agent": agent,
+            "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+        },
+    )
 
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
+    data = state_router.compute_routing_budget(
+        datetime(2026, 8, 26, 12, 0, tzinfo=UTC),
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
     cursor = data["agents"]["cursor"]
     assert cursor["status"] == "need_login"
     assert cursor["login_state"] == "NEED_LOGIN"
@@ -161,7 +172,14 @@ def test_authenticated_cursor_with_fleet_burn_and_empty_codexbar(monkeypatch, tm
 
     monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
 
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
+    data = state_router.compute_routing_budget(
+        datetime(2026, 8, 26, 12, 0, tzinfo=UTC),
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
     cursor = data["agents"]["cursor"]
     assert cursor["fleet_burn"]["windows"]["7d"]["counts"]["total"] == 3
     assert cursor["provider_windows"]["auto"]["window"] == "monthly"
@@ -198,7 +216,14 @@ def test_need_probe_with_fleet_burn_still_picks_cursor(monkeypatch, tmp_path):
         }
 
     monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
+    data = state_router.compute_routing_budget(
+        datetime(2026, 8, 26, 12, 0, tzinfo=UTC),
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
     cursor = data["agents"]["cursor"]
     assert cursor["status"] == "cool"
     assert cursor["probe_state"] == "NEED_PROBE"
@@ -299,9 +324,19 @@ def test_prepaid_in_flight_and_ranked_entries(monkeypatch, tmp_path):
     assert counts["deepseek"] == 2
     assert counts["pool"] == 1
     assert counts["grok"] == 1
-    ranked = state_router._ranked_api_entries({"deepseek": {
-        "probe_state": "ok", "freshness": "fresh", "age_s": 0, "currency": "USD", "total_balance": 30,
-    }}, {}, counts)
+    ranked = state_router._ranked_api_entries(
+        {
+            "deepseek": {
+                "probe_state": "ok",
+                "freshness": "fresh",
+                "age_s": 0,
+                "currency": "USD",
+                "total_balance": 30,
+            }
+        },
+        {},
+        counts,
+    )
     row = next(row for row in ranked if row["lane"] == "deepseek")
     assert row["in_flight"] == 2
     assert row["remaining_pct"] is None and row["burn_pct_7d"] is None
@@ -309,12 +344,21 @@ def test_prepaid_in_flight_and_ranked_entries(monkeypatch, tmp_path):
 
 def test_subscription_need_login_reaches_capacity_pick(monkeypatch, tmp_path):
     config = _configure_base(monkeypatch, tmp_path)
-    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda lane: {
-        "freshness": "unavailable", "error_kind": "need_login", "status": "unavailable",
-    })
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda lane: {
+            "freshness": "unavailable",
+            "error_kind": "need_login",
+            "status": "unavailable",
+        },
+    )
     budget = state_router.compute_routing_budget(
-        budget_config_path=config, tasks_dir=tmp_path / "tasks",
-        project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path,
+        budget_config_path=config,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
     )
     rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget)}
     for lane in ("claude", "codex", "kimi", "grok"):

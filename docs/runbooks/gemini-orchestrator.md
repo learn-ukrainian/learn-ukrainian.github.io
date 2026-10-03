@@ -1,4 +1,11 @@
-# Gemini Orchestrator Runbook
+# Gemini Launcher Runbook
+
+> **Gemini 3.8 Flash (AGY) is not a planning, design or driver seat** (operator decision
+> 2026-10-03, #9584). Epic driving belongs to `gpt-6.1-sol` and `claude-opus-5-5`
+> (see `docs/runbooks/epic-orchestrator-roster.md`). Use Gemini for bounded, fully specified
+> work and Ukrainian content review. The driver entrypoint below remains in the launcher
+> estate only for existing operator tooling; it is not a routing recommendation. Gemini 4 is
+> re-evaluated at general availability.
 
 ## Launcher
 
@@ -39,14 +46,14 @@ All positional prompt arguments are passed to `agy -i <prompt>` for interactive 
 2. Launcher calls the common session supervisor (`scripts.session_supervisor open --role driver`) with agent `gemini` / harness `agy`.
 3. Launcher sources `SESSION_STREAM_*` from supervisor output.
 4. Launcher writes a capsule to `.agent/session-capsules/<stream>/`.
-5. Launcher injects an auto-continue prompt for Gemini Orchestrator if no prompt was supplied.
+5. Launcher injects an auto-continue prompt if no prompt was supplied.
 6. Launcher execs `agy -i <prompt> --model <model> --dangerously-skip-permissions`.
 
 The cold-start prompt explicitly tells Gemini **not** to open or resume the lease — the launcher has already claimed it.
 
-## Gemini Model Selection for Orchestration
+## Gemini Model Selection
 
-- **`gemini-3.8-flash-high`** (Default): Extremely fast, high throughput; default for routine AND deep work (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro).
+- **`gemini-3.8-flash-high`** (Default): Extremely fast, high throughput; default for routine AND deep bounded work (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro).
 - **`gemini-3.1-pro-high`** (`--model pro`): Deep reasoning (1M-2M context window); superseded as deep default by 3.8 Flash High; only on explicit request.
 
 ## Handoff Identity
@@ -59,7 +66,7 @@ The cold-start prompt explicitly tells Gemini **not** to open or resume the leas
 
 ## Fleet Management & Rate Limits
 
-Gemini orchestrators monitor usage across the fleet using the native fleet probes:
+The driver of record (Opus 5.5 or Sol 6.1) monitors usage across the fleet using the native fleet probes:
 
 ```bash
 .venv/bin/python -m scripts.fleet.usage show --fresh
@@ -69,4 +76,4 @@ Use `scripts.fleet.usage show` to verify credits, quota windows, and availabilit
 
 ## Advisor Approval Gate
 
-All architecture, file layout, and process decisions require designated approval: the operator, or the designated advisors (**Opus 5.5** `claude-opus-5-5` and **Sol 6.1** `gpt-6.1-sol`) agreeing; when one of them authored the proposal, the other's approval completes it; a proposal by any other agent, Gemini included, needs both; if they disagree, the operator decides. Gemini orchestrators manage task breakdown, fleet routing, and verification, but must consult advisors for structural decisions.
+All architecture, file layout, and process decisions require designated approval: the operator, or the designated advisors (**Opus 5.5** `claude-opus-5-5` and **Sol 6.1** `gpt-6.1-sol`) agreeing; when one of them authored the proposal, the other's approval completes it; a proposal by any other agent, Gemini included, needs both; if they disagree, the operator decides. Gemini does not own task breakdown, fleet routing or structural decisions; those stay with the driver of record and the advisors.

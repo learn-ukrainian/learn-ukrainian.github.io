@@ -163,27 +163,29 @@ that family, confirm the sweep stays green with **fewer** seams than before, run
 
 **v1 named families by concept ("session-streams / orient / authority") without checking them
 against the actual router set — codex's review caught that this is not filing-ready. v2 then
-undercounted the router set itself (said 33; the actual count, re-verified by grepping every
-`app.include_router(...)` call in `main.py`, is 44 — see the exact list below) and silently dropped
-`build_events_router` from the step table. Both errors are fixed here; the count below is generated
-from `grep -oE 'app\.include_router\(\s*\n?\s*[a-zA-Z_]+' scripts/api/main.py`, not hand-counted, so
-any future reader can re-derive it. `main.py` makes 47 `include_router` calls mounting **44 unique
-router modules** (`cost_router`, `docs_router`, and `sources_router` are each mounted at two
-prefixes — one module, two routes-tables-worth of paths); 6 of those 44 are the largest and mix
-several concerns internally (`fleet_router.py` 2,637 lines, `state_router.py` 2,433,
-`comms_router.py` 1,898, `runtime_router.py` 1,729, `route_contracts.py` 1,356, `dashboard_router.py`
-996 — together roughly half of all router code by line count). Naming one of these a "family"
-by itself is not precise enough to file a bounded sub-issue from, and lumping several together is
-worse. Guessing a finer split without reading what's actually inside those six files would just move
-the same ambiguity to a smaller-looking table.**
+undercounted the router set itself (said 33) and silently dropped `build_events_router` from the
+step table. Later revisions still miscounted (43, then a table that omitted `batch_router` and
+`cluster_router`). The numbers below come from an AST walk of `scripts/api/main.py`, not from
+`grep` and not by hand, and `tests/test_monitor_api_app_factory_doc.py` recomputes them on every
+run and compares them with this document, so they cannot drift again. `main.py` makes 47
+`include_router` calls registering **46 distinct router objects**: 45 imported router modules
+plus `core_router`, which is defined in `main.py` itself. Only `docs_router` is registered twice
+(at `/artifacts` and `/files`); every other router is registered once. Six of the 45 imported
+modules are the largest and mix several concerns internally (`fleet_router.py` 2,677 lines,
+`state_router.py` 3,096, `comms_router.py` 2,119, `runtime_router.py` 1,776, `route_contracts.py`
+1,400, `dashboard_router.py` 1,061 — together roughly 46% of the 26,547 lines in the 45 router
+modules). Naming one of these a "family" by itself is not precise enough to file a bounded
+sub-issue from, and lumping several together is worse. Guessing a finer split without reading
+what's actually inside those six files would just move the same ambiguity to a smaller-looking
+table.**
 
 ### 5.1 Step 0 — Core (revised after the v2 through v8 reviews — see §10)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No behavior
-change to any of the 44 separately-defined routers** — every router still reads its own module
+change to any of the 45 separately-defined routers** — every router still reads its own module
 globals directly, exactly as today; none of their route/handler code moves or changes. **This claim
 does not cover 15 routes and 3 exception handlers that today live inline, decorated directly on the
-module-level `app` object inside `main.py` itself** (not in any of the 44 router files) — see point 5
+module-level `app` object inside `main.py` itself** (not in any of the 45 router files) — see point 5
 below, a real structural change step 0 cannot avoid. This matters for what step 0 can and cannot
 claim:
 
@@ -285,7 +287,7 @@ claim:
      through a running app): `fixture_context(tmp_path)` resolves every configured root/store path
      under `tmp_path`, and a path crafted to escape via a symlink is rejected (§4.1 point 3). This is
      testable today, standalone, without any router depending on the context yet.
-  5. **New in v8: `main.py` has 15 routes and 3 exception handlers that are not part of any of the 44
+  5. **New in v8: `main.py` has 15 routes and 3 exception handlers that are not part of any of the 45
      routers — they are decorated directly on the module-level `app` object, inside `main.py` itself**
      (verified live, `grep -n '^@app\.\(get\|post\|put\|delete\|patch\|websocket\|exception_handler\)'
      scripts/api/main.py`): `@app.exception_handler(...)` ×3 at lines 226/238/253, and `@app.get`/
@@ -297,12 +299,12 @@ claim:
      `@app.get(...)` needs `app` to already exist at the point in the file where it executes, and
      Python evaluates a module top-to-bottom — if `app` is only constructed at the *bottom* of the
      file, every decorator physically *above* that point (which is all of them, today) has no `app`
-     to bind to. **Fixed:** convert these into a proper router, exactly like the other 44 — add
+     to bind to. **Fixed:** convert these into a proper router, exactly like the other 45 — add
      `core_router = APIRouter()` near the top of `main.py` (after imports, before any route
      definitions), change `@app.get(...)` / `@app.post(...)` / `@app.websocket(...)` to
      `@core_router.get(...)` / etc. for the 15 routes (same functions, same paths, same bodies — no
      behavior change), and have `create_app()` call `app.include_router(core_router)` as the **last**
-     router registration (after all 44 others), preserving today's route-matching order for the
+     router registration (after all 45 others), preserving today's route-matching order for the
      catch-all. For the 3 exception handlers: drop the `@app.exception_handler(...)` decorator syntax
      (same `app`-must-exist-first problem) and keep `http_exception_handler`,
      `request_validation_exception_handler`, and `global_exception_handler` as plain module-level
@@ -311,7 +313,7 @@ claim:
      documented FastAPI sugar for exactly this call, so this is a syntax change with no behavior
      change. This is a genuine, unavoidable structural change inside `main.py` for step 0 — the
      amendment to the "no behavior change" claim above reflects that: no *behavior* changes (same
-     routes, same handlers, same responses), but this specific file's code, unlike the 44 router
+     routes, same handlers, same responses), but this specific file's code, unlike the 45 router
      files, cannot stay untouched.
 
      **Two of the 15 route bodies reference the module-global `app` variable directly, not just via
@@ -327,7 +329,7 @@ claim:
      FastAPI's documented, standard way for a handler to reach the specific app instance serving the
      current request, not a new mechanism invented for this migration. Because `main.py` currently has
      15 inline routes reviewed one-by-one for this migration, this is the only such reference found;
-     §5.2's inventory step should still grep the other 44 router files for any bare `app.` reference
+     §5.2's inventory step should still grep the other 45 router files for any bare `app.` reference
      (as opposed to `request.app.` or a context-supplied value) before assuming none exist there
      either.
 - The grep-based call-site lint from §4.1 point 4 (all three DB-access patterns, not just
@@ -372,13 +374,14 @@ the source of truth that confirms or corrects this, not this doc**):
 | 7 | `docs_router.py`, `artifacts_router.py`, `images_router.py` | small/medium batch |
 | 8 | `admin_router.py`, `ops_router.py`, `git_hygiene_router.py` | small/medium batch |
 | 9 | `dashboard_router.py` (own step; inventory decides if it splits) | large, own step |
-| 10 | `rag_router.py` (mounted as `/api/sources` + deprecated `/api/rag`) | small — folds the #7284 connect-deny guard into the context per §4.1 |
+| 10 | `sources_router.py` (mounted once, as `/api/sources`) | small — folds the #7284 connect-deny guard into the context per §4.1 |
 | 11 | `route_contracts.py` (own step; inventory decides if it splits) | large, own step |
-| 12 | Everything else the inventory had not yet placed: `atlas_jobs_router.py`, `blue_router.py`, `build_events_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `gold_router.py`, `governance_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` (20 modules; the Hermes cron router has since been removed) — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
+| 12 | Everything else the inventory had not yet placed: `atlas_jobs_router.py`, `batch_router.py`, `blue_router.py`, `build_events_router.py`, `cluster_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `gold_router.py`, `governance_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` (22 modules; the Hermes cron router has since been removed) — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
 
 Full accounting: step 1 (4) + step 2 (1) + step 3 (6) + step 4 (1) + step 5 (1) + step 6 (1) +
-step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (20) = **43 modules**,
-matching the live count above with none dropped.
+step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (22) = **45 modules**,
+matching the live count above with none dropped (`core_router` lives in `main.py`, is mounted last,
+and is not a module of its own).
 
 Sub-issues under #7269 are filed **from the inventory's actual output**, not from the provisional
 table above — if the inventory contradicts a row here, the inventory wins and this doc gets a new
@@ -529,6 +532,7 @@ table above — if the inventory contradicts a row here, the inventory wins and 
   3. **Router-count precision**: claimed "44 router modules" without distinguishing that from the 47
      actual `include_router` calls (3 modules mounted twice). **Fixed:** §5 now states both numbers
      and names the 3 double-mounted modules (`cost_router`, `docs_router`, `sources_router`).
+     *(Superseded: an AST count later showed only `docs_router` is double-mounted; see §5.)*
      *However*, the reviewer's specific sub-claim that "the stated grep returns 46 because it misses
      the multiline `reviewer_ghosts_router` call" **did not hold up under independent re-verification**
      — running the exact grep command stated in the doc returns 44 and does catch

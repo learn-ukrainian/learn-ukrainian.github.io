@@ -3,7 +3,7 @@
 <critical>
 
 **Cutover issue:** #6159 · **Stream:** #4707 (infra-harness) · **Operator GO:** 2026-08-01
-**Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, AGY/Gemini, Kimi, Cursor, wrappers) — not only agents that load a skill.
+**Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, Kimi, Cursor, wrappers; AGY/Gemini only as a standalone TUI seat, never an epic-driver seat) — not only agents that load a skill.
 
 This is the **shared-context SSOT** for coordination after the fleet-comms authority cutover. It is
 served in `GET /api/rules`. Launchers inject a short pointer; the **`drive-epic` skill**
@@ -39,7 +39,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Caveman | Optional output-style compression (lite default); never persisted GitHub/curriculum text |
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
-- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode/agy; Kimi takes web, UI and backend coding only, never plan, review or design).
+- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi takes web, UI and backend coding only, never plan, review or design).
 - Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = toolful seat + verdict posted on the PR.
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
@@ -178,11 +178,10 @@ Every epic driver session (any harness) MUST:
 ## Operator launch surface (#5632)
 
 - Driver entrypoints: `./start-grok-driver.sh --epic <epic>`,
-  `./start-gemini-driver.sh --epic <epic>`,
   `./start-claude-driver.sh --epic <epic> [--model claude-fable-5-1|claude-sonnet-5-5]`,
   and `./start-codex-driver.sh --epic <epic>`. Interactive launchers reject `--epic`.
-- Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Gemini→harness/corpus,
-  Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
+- Gemini/AGY (Flash) is not an epic-driver seat (operator decision 2026-10-03, #9584).
+- Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
   spends the cross-family review-of-record seat). **Live policy** is still
   `model_catalog.orchestrator_seats` + `/api/rules`.
 - **Codex is the named alternate for the harness / infra and DevOps streams** (re-added

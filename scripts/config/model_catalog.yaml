@@ -1187,7 +1187,7 @@ orchestrator_seats:
     escalate_model_id: gemini-3.8-flash-high
     escalate_effort: high
     escalate_when: n/a_same_sku
-    note: "Google-family seat; Flash default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only when explicitly requested)"
+    note: "Google-family seat; Flash default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only when explicitly requested). Operator decision 2026-10-03 (#9584): not a planning, design or driver seat; entry kept for catalog and task-level use, and Gemini 4 is re-evaluated at general availability"
   cursor:
     model_id: grok-4.7
     effort: high

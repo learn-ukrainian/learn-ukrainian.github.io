@@ -36,6 +36,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
+from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
@@ -1280,19 +1281,35 @@ def write_receipt(receipt: dict[str, Any], receipt_dir: Path) -> Path:
 
 def build_parser() -> argparse.ArgumentParser:
     public_repo = default_public_repo()
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py
+  .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --repo-root . --apply
+Outputs:
+  Private JSON receipt and aggregate JSON on stdout. Dry-run is the default.
+  --apply reaps eligible worktrees/refs, snapshots and proven-ended Claude scratch.
+  Large batch_state files are reported for their owners; they are never auto-deleted.
+Exit codes:
+  0 report written without errors; 1 cleanup errors; 2 invalid arguments.
+Related:
+  docs/runbooks/worktree-cleanup.md; #8783; thread_handoff.py
+""",
+    )
     parser.add_argument(
         "--repo-root",
         action="append",
         type=Path,
         default=None,
-        help="Repository root to sweep. Repeatable.",
+        help="Repository root to sweep. Repeatable; default: configured public and private repositories. Example: .",
     )
-    parser.add_argument("--apply", action="store_true", help="Apply safe cleanup candidates.")
+    parser.add_argument("--apply", action="store_true", help="Apply safe cleanup candidates. Default: dry-run.")
     parser.add_argument(
         "--receipt-dir",
         type=Path,
         default=default_state_dir() / "receipts" / "v2",
+        help="Private receipt directory. Default: configured hygiene state receipts/v2. Example: /tmp/hygiene-receipts",
     )
     parser.set_defaults(default_repo_roots=[public_repo, default_private_repo(public_repo)])
     return parser
@@ -1366,6 +1383,8 @@ def build_public_summary(
     }
     if "home_session_retention" in receipt:
         public_payload["home_session_retention"] = receipt["home_session_retention"]
+    if "claude_session_scratch" in receipt:
+        public_payload["claude_session_scratch"] = receipt["claude_session_scratch"]["summary"]
     if "batch_state_retention" in receipt:
         public_payload["batch_state_retention"] = [
             {
@@ -1374,6 +1393,14 @@ def build_public_summary(
                 "selected": len((row.get("dry_run") or {}).get("selected", [])),
                 "allowlist": (row.get("dry_run") or {}).get("allowlist"),
                 "errors": _apply_error_counts(row),
+                **(
+                    {
+                        "one_off_artifacts": len(row["dry_run"]["one_off_artifacts"]),
+                        "one_off_bytes": sum(item["bytes"] for item in row["dry_run"]["one_off_artifacts"]),
+                    }
+                    if "one_off_artifacts" in (row.get("dry_run") or {})
+                    else {}
+                ),
             }
             for row in receipt["batch_state_retention"]
         ]
@@ -1386,7 +1413,8 @@ def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> lis
     """Dry-run the snapshot allowlist, then apply it when this hygiene run applies.
 
     The sweep rewrites only ``tasks/*.snapshots`` and ``tasks/archive/*.snapshots``.
-    Ended-session scratch is a separate cleanup and is not run here.
+    Large files are reported for owner disposition. The run also performs a
+    separate once-per-host ended-session sweep in main().
     """
     from scripts.maintenance.batch_state_retention import plan_retention
 
@@ -1414,6 +1442,11 @@ def main(argv: list[str] | None = None) -> int:
     home_session_retention = home_session_retention_check.build_report()
     receipt["home_session_retention"] = home_session_retention
     receipt["batch_state_retention"] = batch_state_retention_reports(repo_roots, apply=bool(args.apply))
+    receipt["claude_session_scratch"] = sweep_sessions(
+        rollover_roots=[Path(root) / ".agent/thread-rollovers/claude" for root in repo_roots],
+        apply=bool(args.apply),
+    )
+    receipt["summary"]["errors"] += receipt["claude_session_scratch"]["summary"]["errors"]
     for line in home_session_retention_check.warning_lines(home_session_retention):
         sys.stderr.write(f"{line}\n")
     receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())

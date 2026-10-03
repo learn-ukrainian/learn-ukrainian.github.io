@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import json
+import posixpath
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_OPEN_MODEL_DATA_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data"
@@ -38,10 +42,18 @@ REGISTRY_QUARANTINED_HISTORICAL_DIR = REGISTRY_ARCHIVE_DIR / "quarantined_histor
 ARTIFACT_QUARANTINED_HISTORICAL_DIR = ARTIFACT_ARCHIVE_DIR / "quarantined_historical"
 
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+
+# Quarantine of every old-plan trainable artifact (#9607, plan v3.4.3 PA1).
+TOMBSTONE_NAME = "TOMBSTONE.md"
+QUARANTINE_INVENTORY_RELATIVE = "quarantine/inventory_v1.json"
+QUARANTINE_INVENTORY_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / QUARANTINE_INVENTORY_RELATIVE
+QUARANTINE_INVENTORY_SCHEMA = "open_model_quarantine_inventory_v1"
+# Inventory storage of sealed files that lie outside the open-model tree.
+STRAY_STORAGE = "stray"
 # Successor of the pre-migration gemma probe runner. Filled after the routed
 # file is frozen for this commit; tests require these to match the file bytes.
-GEMMA_PROBE_RUNNER_BYTES = 62872
-GEMMA_PROBE_RUNNER_SHA256 = "617daf6dadcbbd6831e019ade8e6393a85fbdf2d9ca6af7c7ec92cf5b763ff57"
+GEMMA_PROBE_RUNNER_BYTES = 63112
+GEMMA_PROBE_RUNNER_SHA256 = "7d3e12dfb114ce96f14a195c8d8515964c77e125df4b649b9b31989b2e5c8ab6"
 
 
 def ensure_component_directories() -> None:
@@ -56,18 +68,173 @@ def ensure_component_directories() -> None:
         path.mkdir(parents=True, exist_ok=True)
 
 
+class QuarantinedArtifactError(ValueError):
+    """A loader, packager or uploader was handed a quarantined old-plan artifact (#9607)."""
+
+
+@lru_cache(maxsize=1)
+def quarantine_inventory() -> dict[str, Any]:
+    """Load the sealed inventory; when the guard needs it and it is missing, the guard refuses."""
+    if not QUARANTINE_INVENTORY_PATH.is_file():
+        raise QuarantinedArtifactError(
+            f"quarantine inventory missing at {QUARANTINE_INVENTORY_PATH}; refusing every open-model input "
+            "(materialize registry/projects with `git sparse-checkout add registry/projects`)"
+        )
+    inventory = json.loads(QUARANTINE_INVENTORY_PATH.read_text(encoding="utf-8"))
+    if inventory.get("schema") != QUARANTINE_INVENTORY_SCHEMA:
+        raise QuarantinedArtifactError(f"unexpected quarantine inventory schema in {QUARANTINE_INVENTORY_PATH}")
+    return inventory
+
+
+@lru_cache(maxsize=1)
+def _quarantined_tails() -> frozenset[str]:
+    """Open-model relative paths of every inventoried artifact inside the open-model tree."""
+    tails = set()
+    for entry in quarantine_inventory()["artifacts"]:
+        if entry["storage"] == STRAY_STORAGE:
+            continue
+        tail = _open_model_tail(entry["path"])
+        if tail is None:
+            raise QuarantinedArtifactError(f"inventory path outside the open-model tree: {entry['path']}")
+        tails.add(tail)
+    return frozenset(tails)
+
+
+@lru_cache(maxsize=1)
+def _quarantined_stray_paths() -> frozenset[str]:
+    """Repo-relative paths of inventoried files outside the open-model tree."""
+    return frozenset(
+        entry["path"] for entry in quarantine_inventory()["artifacts"] if entry["storage"] == STRAY_STORAGE
+    )
+
+
+@lru_cache(maxsize=1)
+def _quarantined_hashes() -> dict[str, str]:
+    """Content digest of every inventoried artifact mapped to its inventory path."""
+    return {entry["sha256"]: entry["path"] for entry in quarantine_inventory()["artifacts"] if entry["bytes"] > 0}
+
+
+def _open_model_tail(path: Path | str) -> str | None:
+    """Return the path relative to either open-model base, or None outside both trees."""
+    text = Path(path).as_posix()
+    for marker in (LOGICAL_OPEN_MODEL_PREFIX, REGISTRY_OPEN_MODEL_PREFIX):
+        token = marker + "/"
+        index = text.find(token)
+        if index != -1:
+            return text[index + len(token) :].strip("/")
+        if text == marker or text.endswith("/" + marker):
+            return ""
+    return None
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while chunk := handle.read(1 << 20):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _path_forms(candidate: Path, resolved: Path) -> tuple[str, ...]:
+    """The lexically normalized and the resolved form of a path; ``..`` and symlinks cannot hide a seal."""
+    forms = (posixpath.normpath(candidate.as_posix()), resolved.as_posix())
+    return tuple(dict.fromkeys(forms))
+
+
+def _tail_rule_reason(tail: str) -> str | None:
+    """Apply the archive, tombstone and inventory-path rules to one open-model relative path."""
+    parts = [part for part in tail.split("/") if part]
+    if parts[:1] == ["archive"]:
+        return "archived"
+    for depth in range(1, len(parts) + 1):
+        prefix = "/".join(parts[:depth])
+        for base, label in (
+            (REGISTRY_OPEN_MODEL_DATA_DIR, REGISTRY_OPEN_MODEL_PREFIX),
+            (ARTIFACT_OPEN_MODEL_DATA_DIR, LOGICAL_OPEN_MODEL_PREFIX),
+        ):
+            if (base / prefix / TOMBSTONE_NAME).is_file():
+                return f"sealed by {label}/{prefix}/{TOMBSTONE_NAME}"
+    tails = _quarantined_tails()
+    if tail in tails:
+        return f"inventoried at {LOGICAL_OPEN_MODEL_PREFIX}/{tail}"
+    prefix = tail + "/" if tail else ""
+    if any(item.startswith(prefix) for item in tails):
+        return f"directory holds inventoried artifacts: {tail or '.'}"
+    return None
+
+
+def _path_rule_reason(candidate: Path, resolved: Path) -> str | None:
+    """Apply the archive, tombstone and inventory-path rules to every form of a path, without reading bytes."""
+    for base in (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR):
+        if resolved == base.resolve() or base.resolve() in resolved.parents:
+            return "archived"
+    for form in _path_forms(candidate, resolved):
+        tail = _open_model_tail(form)
+        if tail is not None:
+            reason = _tail_rule_reason(tail)
+            if reason is not None:
+                return reason
+    return None
+
+
+def _stray_rule_reason(candidate: Path, resolved: Path) -> str | None:
+    """Match inventoried files outside the open-model tree by their repo-relative path in any checkout."""
+    for form in _path_forms(candidate, resolved):
+        for stray in _quarantined_stray_paths():
+            if form == stray or form.endswith("/" + stray):
+                return f"inventoried at {stray}"
+    return None
+
+
+def _resolved(candidate: Path) -> Path:
+    try:
+        return candidate.resolve()
+    except (OSError, RuntimeError):
+        return candidate
+
+
+def quarantine_reason(path: Path | str | None) -> str | None:
+    """Return why a path is quarantined, or None when it may be read.
+
+    A path is quarantined when it lies in either archive base, under a directory
+    sealed by a ``TOMBSTONE.md`` in either storage base, at or above an inventoried
+    artifact (outside-tree inventoried files included), or when it is a file whose
+    bytes match an inventoried artifact (a copy outside the tree). Each rule is
+    applied to the lexically normalized and to the resolved path. The inventory is
+    loaded first for every path, so a missing inventory raises whatever the input
+    is: the guard fails closed rather than open.
+    """
+    if path is None:
+        return None
+    quarantine_inventory()
+    candidate = Path(path)
+    resolved = _resolved(candidate)
+    reason = _path_rule_reason(candidate, resolved) or _stray_rule_reason(candidate, resolved)
+    if reason is not None:
+        return reason
+    if resolved.is_file() and resolved.stat().st_size > 0:
+        match = _quarantined_hashes().get(_sha256_file(resolved))
+        if match is not None:
+            return f"bytes match quarantined {match}"
+    return None
+
+
+def refuse_quarantined(path: Path | str | None, context: str) -> None:
+    """Raise before a loader opens a quarantined artifact; see ``quarantine_reason``."""
+    reason = quarantine_reason(path)
+    if reason is not None:
+        raise QuarantinedArtifactError(
+            f"Refusing {context} on quarantined path {path}: {reason}. Old-plan trainable artifacts are sealed "
+            f"(#9607, plan PA1); see {REGISTRY_OPEN_MODEL_PREFIX}/{QUARANTINE_INVENTORY_RELATIVE}."
+        )
+
+
 def is_archived_or_quarantined_path(path: Path | str | None) -> bool:
-    """Return whether a path is inside either archive base."""
+    """Return whether a path is archived, tombstoned or inventoried (path rules only, no hashing)."""
     if path is None:
         return False
-    try:
-        resolved = Path(path).resolve()
-        return any(
-            resolved == base.resolve() or base.resolve() in resolved.parents
-            for base in (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR)
-        )
-    except (ValueError, RuntimeError):
-        return False
+    candidate = Path(path)
+    return _path_rule_reason(candidate, _resolved(candidate)) is not None
 
 
 @lru_cache(maxsize=1)

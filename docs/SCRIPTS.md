@@ -4,6 +4,7 @@ Current operational reference for repo-local scripts and agent workflows.
 
 - Main build entry point: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree`
 - Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
+- Typed sub-issue removal: `.venv/bin/python -m scripts.publish issue-unlink --repo owner/repo --parent-id PARENT_NODE_ID --child-id CHILD_NODE_ID` (#9647)
 - This document intentionally omits retired pipelines and legacy script paths
 - **Seat onboarding (ownership matrix, ACPX boundary, Kimi native vs KimiCC, Buzz deferral):**
   [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md)
@@ -44,7 +45,6 @@ Project-local wrappers for interactive agent sessions:
 ./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
 ./start-codex-driver.sh --epic devops
-./start-gemini-driver.sh --epic devops
 ./start-grok-driver.sh --epic devops
 ```
 
@@ -891,6 +891,31 @@ lane, marks Codex `credit.state: policy_error` in its plan state and adds a warn
 admission refuses only off-allowlist Codex dispatches (`allowlist_applies` true), with a stderr warning; every other lane is
 admitted as before. Nothing consumes credits or resets.
 
+**Covered weekly pace deficits (#9615):** `credit_lane.pace_deficit_state` is the shared decision
+for routing-budget, `capacity_pick`, the delegate budget guard, idle-settle and the reviewer
+resolver. A visible pace deficit is uncovered only when neither a fresh positive balance for
+the lane's credit-allowlisted model nor a fresh unexpired free full reset is available. Both
+reserves require readable runtime evidence with no recent rate limits; stale or unreadable
+reserve evidence and expired resets give no relief. Routing-budget publishes `pace_deficit`
+with `raw_deficit`, `uncovered`, `covered_by` and a reason; the raw pace delta stays visible,
+and routing warnings and capacity rows say “pace deficit covered by credits”, “free full reset”,
+or both. Consumers re-check reserve freshness and runtime evidence rather than trusting a
+published coverage flag. Only pace pressure is relaxed: `near_cap` (90% used), runtime
+headroom blocks, login and health gates retain their existing behavior. This does not consume
+a reset, verify provider credit draw, or extend the credit-period admission allowlist gate
+to healthy plan windows.
+
+Below `near_cap`, visible allowance lasting to the reset at current pace, including
+a verified covering reserve, is `cool` regardless of weekly used-percent. `warm`
+means at least 50% used with a projected shortfall inside the on-pace band
+(absolute pace delta <= 2 points), or at least 50% used with pace unavailable
+(the fail-safe fallback). Low-use on-pace readings retain their existing `cool`
+tolerance; an uncovered deficit outside the band is still `hot`.
+The reviewer resolver maps `cool` to `healthy` and `warm` to `degraded`;
+`capacity_pick` orders `cool` before `warm`, and routing recommendations prefer
+cool plan-backed lanes before warm ones. These consumers use the shared decision,
+so a covered high-use lane is no longer degraded solely by weekly used-percent.
+
 **Credit lanes in routing-budget, the reviewer resolver and `usage show` (#9517):**
 `/api/state/routing-budget` publishes each subscription lane's `credit_lane.lane_credit_state` as the
 additive `agents.<lane>.credit` field; the raw quota `status` keeps its vocabulary (a near-cap Codex
@@ -1311,6 +1336,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/secret_scan_local.py` | Offline local TruffleHog scan (`tree` or full-history `history` mirror); console shows only totals and per-detector counts (no path, commit, line or value); raw JSON report 0600 in a new 0700 temp directory outside the repo; triage only through its `show-keys` and `count` subcommands. Runbook: `docs/runbooks/secret-scanning.md` (#9416) | `.venv/bin/python scripts/audit/secret_scan_local.py tree` |
 | `scripts/ci/checks.sh` | Every lint/content-contract gate of ci.yml's Checks job; runs all, fails if any failed | `bash scripts/ci/checks.sh` |
 | `scripts/projects/open_model_data/v4_mine_stem_controls.py` | Phase 3.3 STEM `PRESERVE` miner + polysemy typing (#8007). Receipts are hash-only; shards stay local. | `python -m scripts.projects.open_model_data.v4_mine_stem_controls --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" --output-dir "$STEM_CONTROLS_OUT"` |
+| `scripts/projects/open_model_data/quarantine.py` | Build or verify the sealed inventory of old-plan open-model artifacts (path, bytes, SHA-256, reason; #9607). Loaders refuse those paths through `paths.refuse_quarantined`. | `.venv/bin/python scripts/projects/open_model_data/quarantine.py verify [--data-root <checkout-with-data>]` |
 
 ---
 

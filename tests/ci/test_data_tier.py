@@ -21,10 +21,12 @@ def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
     selection = data_tier.load_selection()
     assert selection["source_run"] == 36611889906
     assert selection["source_sha"] == "410da34bb875aca2acfc960da4d8c9b87ae7867b"
-    assert selection["class_c_merge_group"] == 614
+    # 614 audited ids less 72 removed by #9607: 28 from the two test files archived with their
+    # generators and 44 that read the quarantined artifacts through loaders that now refuse them.
+    assert selection["class_c_merge_group"] == 542
     assert selection["class_c_nightly"] == 1
-    assert len(selection["nodeids"]) == 614
-    assert len(selection["files"]) == 104
+    assert len(selection["nodeids"]) == 542
+    assert len(selection["files"]) == 102
     assert "tests/test_citation_resolution_invariant.py" in selection["nodeids"]
     assert "tests/test_site_links.py::TestCurriculumSync::test_manifest_modules_have_mdx[a1]" in selection["nodeids"]
     assert len([nodeid for nodeid in selection["nodeids"] if nodeid.startswith("sha256:")]) == 5

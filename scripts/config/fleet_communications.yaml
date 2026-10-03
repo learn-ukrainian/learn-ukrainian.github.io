@@ -26,7 +26,8 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 #   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
 #   grok → daily driver only; native Grok never reviews or judges (Grok reviews code/infra
 #          only as the attested cursor grok-4.7-high seat below critical, #9488)
-#   agy → gemini-3.8-flash-high @ high (orchestrator seat; text-only ACP wrapper is not a formal-review route)
+#   agy → gemini-3.8-flash-high @ high (catalog seat for bounded work and Ukrainian content review;
+#         not a planning, design or driver seat, #9584; text-only ACP wrapper is not a formal-review route)
 # Codex advisory escalation: gpt-6.1-sol @ high; routine reviewer stays high.
 # Automatic authority Opus 5.5/Sol 6.1 selection stays on the critical ladder;
 # Fable and Astra hold no review role (#9583). An explicit operator pin at another risk keeps every
@@ -35,11 +36,15 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 #
 # Orchestrator seats for this stream (model_catalog.orchestrator_seats):
 #   claude(claude-opus-5-5 @ high)
-#   · codex(gpt-6.1-sol @ high) · grok(daily driver) · agy(gemini-3.8-flash-high @ high)
+#   · codex(gpt-6.1-sol @ high) · grok(daily driver)
 #   (codex was dropped as a driver on 2026-07-22, then re-added on 2026-07-23 because
 #    HydrationCapsuleV1 reduces rollover overhead; formal-CF eligibility is unchanged.)
-# Each may own cold-start / drive-board loops. Sealed formal CF (review-pr) was
-# removed in #8520; eligible routes are projected below from model_catalog.
+# Each of these may own cold-start / drive-board loops. agy(gemini-3.8-flash-high @ high)
+# is a catalog seat only: Flash is not a planning, design or driver seat (operator
+# decision 2026-10-03, #9584). The `agy` endpoint below is an ACP messaging and
+# dispatch endpoint for bounded work; this registry does not read seat or driver
+# fields. Sealed formal CF (review-pr) was removed in #8520; eligible routes are
+# projected below from model_catalog.
 endpoints:
   - name: claude
     aliases: [claude]
@@ -70,10 +75,11 @@ endpoints:
     retry_class: standard
     concurrency_limit: 2
     # Seat pin: gemini-3.8-flash-high @ high; prefer Ukrainian and well-defined work.
-    # It remains a peer cold-start / drive-board driver alongside claude|grok|codex
-    # (Codex re-added 2026-07-23).
+    # Not a cold-start / drive-board driver and not a planning or design seat
+    # (operator decision 2026-10-03, #9584); the endpoint carries bounded work and
+    # Ukrainian content review only.
     # The source-blind AGY wrapper is text-only and cannot consume the
-    # parent-owned sealed MCP. When AGY orchestrates, request formal CF through
+    # parent-owned sealed MCP. Formal CF for AGY-authored work is requested through
     # an eligible cross-family route (sealed review-pr removed in #8520); AGY itself stays advisory.
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
