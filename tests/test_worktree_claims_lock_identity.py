@@ -274,10 +274,13 @@ def test_unreadable_review_record_fails_closed(tmp_path, monkeypatch, unreadable
 
 
 def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, registered_trees):
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     state = tasks / "review.json"
-    tree = tmp_path / "inputs"
+    tree = _linked(primary, "codex/inputs", tmp_path / "inputs")
     registered_trees.append(tree)
     record = {"status": "running", "task_id": "review", "review_contract": {"input_root": str(tree)}}
     calls = []
@@ -289,7 +292,8 @@ def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, register
     def remove():
         return worktree_claims.remove_unclaimed_worktree(
             tree,
-            repo_root=tmp_path,
+            repo_root=primary,
+            control_root=primary,
             tasks_dir=tasks,
             lock_dir=tmp_path / "locks",
             owner_task_id=None,

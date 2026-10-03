@@ -23,21 +23,46 @@ environment residue.
 
 ## Safety contract
 
-Before automatic removal, the dispatch exit reaper, post-task reaper (including
-ACP runtimes), and common P0 reaper share the ignored-output preservation guard
-in `scripts/fleet/ignored_task_output.py`. `merge_closeout` and the scheduled
-worktree cleanup invoke the common reaper; `branch_sweep` deletes branch refs
-only and never removes worktrees. The common reaper's separate husk removal
-accepts only unregistered directories with no files or symlinks.
+Every Git-based worktree removal preserves ignored output at the sole raw
+`git worktree remove` boundary in `scripts/orchestration/worktree_claims.py`,
+using `scripts/fleet/ignored_task_output.py`. The dispatch exit and post-task
+reapers, ACP execution teardown, data-tier cleanup, sibling Git maintenance,
+task-family cleanup, and removal CLI all inherit this guard. The common P0
+reaper calls the same boundary under its own ownership/liveness lock;
+`merge_closeout` and scheduled cleanup invoke that reaper. Preservation runs
+once, after ownership/claim checks and before deletion. A preservation failure
+returns a typed skipped/refusal result and leaves the directory intact.
+`branch_sweep` deletes branch refs only. The separate husk removal accepts
+only unregistered directories with no files or symlinks. The legacy temp leak
+sweep refuses a candidate containing a linked worktree's `.git` file or a
+symlinked `.git` anywhere in its directory tree (or an unreadable scan).
+Matching scratch names do not permit removing linked worktrees outside the
+shared guard; ordinary disposable clones with their own `.git` directory
+retain their existing scratch-cleanup behavior.
 
-Direct removers outside that reap chain still call
-`scripts/orchestration/worktree_claims.py`: ACP execution teardown,
-data-tier cleanup, sibling Git maintenance, task-family cleanup, and the
-guarded removal CLI. They do not yet call this preservation guard. Git's
-unforced removal also discards ignored files, so their existing clean-tree
-checks do not establish ignored-output preservation. Extending the guard to
-that common boundary remains owned by the infra driver; do not treat the
-task-reap fix as proof for those separate removal paths.
+### Removal path audit (#9645)
+
+| Entry point / primitive | Disposition |
+| --- | --- |
+| `worktree_claims.git_worktree_remove`: raw Git argv | Preserves once before deletion; failures return a refusal. |
+| `delegate._remove_dispatch_worktree`: settle, stale holder and superseded review cleanup | Shared locked remover, then guarded raw Git. |
+| `post_task_reap._remove_acp_runtime_worktree` | Shared locked remover; regular dispatches use the common reaper. |
+| `_acp_execution._remove_runtime_worktree`: context teardown and dead-runtime sweep | Shared locked remover; ownership and dirty probes still bind. |
+| `data_tier.remove_test_worktree`: stale and final cleanup | Shared locked remover. |
+| `sibling_git.worktree_remove` | Shared locked remover; preservation uses the public control plane. |
+| `task_family.git_safety.remove_unclaimed_worktree`: executor cleanup | Shared locked remover. |
+| `worktree_claims remove`, `wt.sh`, RB2 failed-dispatch cleanup | Guarded CLI, then shared locked remover. |
+| `reap_worktrees._reap_qualified_worktree`; `merge_closeout`; scheduled cleanup | Locked reaper pipeline, then guarded raw Git. |
+| `reap_worktrees._remove_dispatch_husk_locked`: `shutil.rmtree` | Only unregistered, file-free and symlink-free husks; rechecked under the shared lock. |
+| `tmp_leak_sweep._remove_path`: `shutil.rmtree` | Refuses linked worktree markers, including nested checkouts and unreadable scans. |
+| `review.isolation._remove_review_temp_tree`: `shutil.rmtree` | **Residual:** legacy review-name cleanup can remove a linked worktree. Infra driver owns the additional guard and tests before #9645 closes. |
+
+The remaining recursive deletion and `rmdir` hits operate on runtime leases,
+review snapshot/neutral metadata, capture records, generated staging/output,
+owned hook metadata, empty deployed mirror directories, or audit fixtures.
+They are not registered worktree-root removers. In particular,
+`audit/test_handoff_identity.sh` removes a mock rollover directory, and
+`review/snapshot.py` only calls `rmdir` on an empty extracted overlay member.
 
 The guard inventories all Git-ignored regular files, including `.cache/`
 outputs never named in a response. Files with mtime at or after the task's

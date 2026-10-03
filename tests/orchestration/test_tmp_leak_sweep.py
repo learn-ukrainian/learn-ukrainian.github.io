@@ -666,3 +666,62 @@ def test_legacy_exact_name_held_open_is_preserved(tmp_path: Path, monkeypatch) -
     assert report["roots_reaped"] == 0
     assert report["skipped_live"] == 1
     assert target.exists()
+
+
+@pytest.mark.parametrize("nested", [False, True])
+def test_temp_sweep_retains_linked_worktree_and_ignored_output(tmp_path, monkeypatch, nested):
+    from tests.orchestration.test_worktree_claims_cli import _git, _linked, _primary
+
+    primary = _primary(tmp_path)
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    candidate = scratch / "review-9645"
+    checkout = _linked(primary, "codex/ignored", candidate / "checkout" if nested else candidate)
+    (primary / ".git/info/exclude").write_text(".cache/\n")
+    source = checkout / ".cache/report.txt"
+    source.parent.mkdir()
+    source.write_bytes(b"ignored temp checkout output")
+    assert _git(checkout, "status", "--porcelain") == ""
+    past = time.time() - 10_000
+    os.utime(candidate, (past, past))
+    monkeypatch.setattr(tls, "path_liveness", lambda _path: tls.LIVENESS_CLEAR)
+    report = tls.sweep_tmp_leaks(
+        apply=True, tmp_roots=[scratch], min_age_s=3600, min_free_gb=0.0, repo_root=primary,
+    )
+    assert report["roots_reaped"] == 0 and report["errors"] == 1
+    assert report["skipped"] == [{"path": str(candidate), "reason": "delete_guard_refused"}]
+    assert source.read_bytes() == b"ignored temp checkout output"
+    assert str(checkout) in _git(primary, "worktree", "list", "--porcelain")
+
+
+def test_unreadable_temp_tree_scan_refuses_removal(tmp_path, monkeypatch):
+    target = tmp_path / "review-9645"
+    target.mkdir()
+    source = target / "evidence.txt"
+    source.write_bytes(b"evidence")
+
+    def unreadable(_target, *, onerror, followlinks):
+        onerror(PermissionError("scan denied"))
+        yield
+
+    monkeypatch.setattr(tls.os, "walk", unreadable)
+    with pytest.raises(PermissionError, match="scan denied"):
+        tls._remove_path(target, repo_root=tmp_path, approved_temp_roots=(tmp_path,))
+    assert source.read_bytes() == b"evidence"
+
+
+@pytest.mark.parametrize("marker", ["ordinary_metadata_directory", "broken_link"])
+def test_scratch_git_marker_disposition(tmp_path, marker):
+    target = tmp_path / "review-9645"
+    target.mkdir()
+    metadata = target / ".git"
+    if marker == "broken_link":
+        metadata.symlink_to(tmp_path / "absent")
+        with pytest.raises(ValueError, match="linked Git worktree metadata"):
+            tls._remove_path(target, repo_root=tmp_path, approved_temp_roots=(tmp_path,))
+        assert target.exists()
+    else:
+        metadata.mkdir()
+        (metadata / "object").write_bytes(b"disposable clone metadata")
+        tls._remove_path(target, repo_root=tmp_path, approved_temp_roots=(tmp_path,))
+        assert not target.exists()

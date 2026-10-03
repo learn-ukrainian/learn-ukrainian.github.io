@@ -27,7 +27,6 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import pr_identity
-from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
 from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -266,19 +265,11 @@ def _remove_acp_runtime_worktree(
     then lifts the runtime's git lock and removes it.
     """
     reason = "task terminal, path clean, and process gone"
-    preserved_artifacts = None
 
     def releasable() -> tuple[bool, str]:
-        nonlocal preserved_artifacts
         if not _is_under_acp_runtime_root(path, repo_root):
             return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
-        ok, refusal, preserved_artifacts = preserve_worktree_artifacts(
-            path,
-            primary=worktree_claims.control_plane_root(repo_root),
-            task_id=task_id,
-            tasks_dir=tasks_dir,
-        )
-        return ok, refusal
+        return True, ""
 
     removal = worktree_claims.remove_unclaimed_worktree(
         path,
@@ -305,7 +296,7 @@ def _remove_acp_runtime_worktree(
         "action": removal.action,
         "reason": reason,
         "error": removal.error,
-        "preserved_artifacts": preserved_artifacts,
+        "preserved_artifacts": removal.preserved_artifacts,
     }
 
 

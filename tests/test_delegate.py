@@ -8839,8 +8839,14 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(tmp_path, mon
     """#5340: clean + synced + terminal-task holder is released, not a bounce."""
     target = tmp_path / "target"
     # Layout matches .worktrees/dispatch/<agent>/<task>/
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "deepseek" / "review-5338-deepseek"
     branch = "grok-build/atlas-slice3-vendoring-retry"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(
         status_porcelain="",
         rev_parse_head_sha="same-sha",
@@ -8849,6 +8855,8 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(tmp_path, mon
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -8938,13 +8946,21 @@ def test_branch_reuse_refuses_clean_holder_with_active_task(tmp_path, monkeypatc
 def test_branch_reuse_releases_clean_holder_with_absent_task_record(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340: legacy holder without state releases after empty activity probes."""
     target = tmp_path / "target"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "foo"
     branch = "codex/foo"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -9086,13 +9102,21 @@ def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeyp
 def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340 CF F001: state key codex_foo vs path component foo still finds owner."""
     target = tmp_path / "target"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "foo"
     branch = "codex/foo-followup"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -11962,7 +11986,7 @@ def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_
     """A step that raises inside the shared chokepoint is an ``error`` record, never an exception."""
     _init_git_repo_for_test(tmp_path, monkeypatch)
 
-    def raising_remove(_repo_root, _worktree, *, force):
+    def raising_remove(_repo_root, _worktree, *, force, **_preservation_options):
         raise RuntimeError("simulated removal crash")
 
     monkeypatch.setattr(worktree_claims, "worktree_is_dirty", lambda _path: False)
@@ -16552,13 +16576,21 @@ def test_branch_reuse_releases_terminal_clean_holder_and_attaches(tmp_path, monk
     from scripts.orchestration import reap_worktrees
 
     target = tmp_path / "target"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "task-7236-prior"
     branch = "cursor/feature-7236"
+    _linked(primary, branch, occupied)
+    real_run = subprocess.run
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1

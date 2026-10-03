@@ -196,7 +196,12 @@ def test_detached_review_dependency_refusal_remedy_requires_a_separate_retained_
 
 
 def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Path) -> None:
-    earlier = tmp_path / "codex" / "review-topic-r2"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    earlier = _linked(primary, "codex/review-topic-r2")
+    real_run = subprocess.run
     same = tmp_path / "agy" / "review-topic-r4"
     other = tmp_path / "codex" / "review-other-r1"
     removed: list[str] = []
@@ -210,7 +215,7 @@ def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Pa
 
     def fake_run(cmd, **_kwargs):
         if cmd[:2] == ["git", "ls-files"]:
-            return subprocess.CompletedProcess(cmd, 0, b"", b"")
+            return real_run(cmd, **_kwargs)
         if "worktree" in cmd and "remove" in cmd:
             removed.append(cmd[-1])
 
@@ -324,12 +329,19 @@ def test_review_round_containment_git_error_is_kept(monkeypatch, tmp_path: Path)
 
 
 def test_contained_review_round_deletes_scratch_branch(monkeypatch, tmp_path: Path) -> None:
-    earlier = tmp_path / "codex" / "review-topic-r2"
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    primary = _primary(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    earlier = _linked(primary, "codex/review-topic-r2")
+    real_run = subprocess.run
     commands: list[list[str]] = []
     monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(earlier, "review-topic-r2")])
     monkeypatch.setattr(delegate, "_superseded_review_releasable", lambda _path: (True, "clean; task status=done"))
 
     def fake_run(cmd, **_kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return real_run(cmd, **_kwargs)
         commands.append(list(cmd))
         return _git_reply(list(cmd), contained=True)
 

@@ -564,6 +564,7 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         target,
         repo_root=repo.checkout,
         reason="closed sibling maintenance",
+        control_root=primary,
         owner_task_id=None,
         force=False,
         releasable=releasable,

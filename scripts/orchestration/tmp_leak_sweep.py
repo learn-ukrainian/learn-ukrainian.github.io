@@ -460,6 +460,23 @@ def discover_candidates(
     return found
 
 
+def refuse_git_checkout_removal(target: Path) -> None:
+    """Keep linked Git worktrees out of scratch-only recursive removal (#9645)."""
+    # This legacy scratch sweep has no worktree ownership/claim proof. Do
+    # not let a matching basename bypass the shared worktree remover (#9645),
+    # including a parent scratch directory containing a linked checkout.
+    def scan_failed(error: OSError) -> None:
+        raise error
+
+    for root, directories, files in os.walk(target, onerror=scan_failed, followlinks=False):
+        if ".git" in files or (".git" in directories and (Path(root) / ".git").is_symlink()):
+            raise ValueError("linked Git worktree metadata found; use guarded worktree cleanup")
+        if ".git" in directories:
+            # Ordinary disposable clones own a metadata directory; linked
+            # worktrees point to external metadata with a .git file instead.
+            directories.remove(".git")
+
+
 def _remove_path(path: Path, *, repo_root: Path, approved_temp_roots: tuple[Path, ...]) -> None:
     target = assert_delete_target(
         path,
@@ -469,6 +486,7 @@ def _remove_path(path: Path, *, repo_root: Path, approved_temp_roots: tuple[Path
     if target.is_symlink() or target.is_file():
         target.unlink(missing_ok=True)
         return
+    refuse_git_checkout_removal(target)
     shutil.rmtree(target, ignore_errors=True)
 
 

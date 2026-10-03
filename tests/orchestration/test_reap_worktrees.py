@@ -3226,7 +3226,9 @@ def test_permission_error_retained_as_exception(tmp_path: Path, monkeypatch: pyt
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {branch: []})
 
-    def fake_remove(repo_root: Path, worktree: Path, *, force: bool, timeout: float | None = None) -> str:
+    def fake_remove(
+        repo_root: Path, worktree: Path, *, force: bool, timeout: float | None = None, **_preservation_options
+    ) -> str:
         return "permission denied removing worktree: [Errno 13] Permission denied"
 
     monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", fake_remove)

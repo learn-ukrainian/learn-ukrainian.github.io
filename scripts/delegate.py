@@ -6913,24 +6913,6 @@ def _remove_dispatch_worktree(
     Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
     ``skipped``, or ``error``; this never raises.
     """
-    from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
-
-    preserved_artifacts = None
-
-    def preserve_before_remove() -> tuple[bool, str]:
-        nonlocal preserved_artifacts
-        ok, detail = releasable()
-        if not ok:
-            return ok, detail
-        ok, refusal, preserved_artifacts = preserve_worktree_artifacts(
-            worktree,
-            primary=_REPO_ROOT,
-            task_id=owner_task_id,
-            tasks_dir=tasks_dir(),
-            task_record=task_record,
-        )
-        return (True, detail) if ok else (False, refusal)
-
     removal = worktree_claims.remove_unclaimed_worktree(
         worktree,
         # A ``--repo`` sibling worktree is git-operated in its own repository,
@@ -6939,15 +6921,14 @@ def _remove_dispatch_worktree(
         control_root=_REPO_ROOT,
         reason=reason,
         owner_task_id=owner_task_id,
-        releasable=preserve_before_remove,
+        releasable=releasable,
+        task_record=task_record,
         force=force,
         tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
     record = {**removal.as_record(), "pr": None}
-    if preserved_artifacts is not None:
-        record["preserved_artifacts"] = preserved_artifacts
     return record
 
 

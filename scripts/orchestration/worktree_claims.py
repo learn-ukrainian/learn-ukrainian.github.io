@@ -29,7 +29,7 @@ import subprocess
 import sys
 import threading
 import time
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any, TypeGuard
 
@@ -482,10 +482,14 @@ class WorktreeRemoval:
     branch: str | None = None
     dirty: bool | None = None
     error: str | None = None
+    preserved_artifacts: dict[str, Any] | None = None
 
     def as_record(self) -> dict[str, Any]:
         """Return the outcome as a JSON-ready dict."""
-        return dataclasses.asdict(self)
+        record = dataclasses.asdict(self)
+        if self.preserved_artifacts is None:
+            record.pop("preserved_artifacts")
+        return record
 
 
 def _git_probe(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str] | None:
@@ -589,6 +593,11 @@ def git_worktree_remove(
     timeout: float | None = None,
     approved_temp_roots: Iterable[Path] = (),
     git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    control_root: Path | None = None,
+    tasks_dir: Path | None = None,
+    task_id: str | None = None,
+    task_record: Mapping[str, Any] | None = None,
+    preservation_receipt: dict[str, Any] | None = None,
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -605,6 +614,9 @@ def git_worktree_remove(
     removal, since the killed git may leave a half-deleted checkout behind.
     A caller may supply ``git_runner`` to preserve its fixed executable,
     environment and execution-safe configuration inside this chokepoint.
+    Ignored non-cache output is verified and preserved here for every caller
+    (#9645). Failure returns a refusal without invoking destructive Git.
+    ``preservation_receipt`` receives copy metadata when output is found.
     """
     target = worktree
     if force:
@@ -616,6 +628,25 @@ def git_worktree_remove(
             )
         except ValueError as exc:
             return f"delete guard refused worktree target: {exc}"
+    # Both locked removal pipelines meet here. Preserve exactly once, after
+    # their ownership/claim checks and immediately before destructive Git.
+    from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
+
+    try:
+        primary = control_root if control_root is not None else control_plane_root(repo_root)
+        ok, refusal, metadata = preserve_worktree_artifacts(
+            target,
+            primary=primary,
+            task_id=task_id,
+            tasks_dir=tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks",
+            task_record=task_record,
+        )
+    except (ControlPlaneError, OSError, ValueError) as exc:
+        return f"artifact preservation failed: {exc}; refusing worktree removal"
+    if metadata is not None and preservation_receipt is not None:
+        preservation_receipt.update(metadata)
+    if not ok:
+        return refusal
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
@@ -662,6 +693,7 @@ def remove_unclaimed_worktree(
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
     git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    task_record: Mapping[str, Any] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -694,9 +726,13 @@ def remove_unclaimed_worktree(
     """
     branch: str | None = None
     dirty: bool | None = None
+    preservation_receipt: dict[str, Any] = {}
 
     def outcome(action: str, why: str, *, error: str | None = None) -> WorktreeRemoval:
-        return WorktreeRemoval(action=action, path=str(worktree), reason=why, branch=branch, dirty=dirty, error=error)
+        return WorktreeRemoval(
+            action=action, path=str(worktree), reason=why, branch=branch, dirty=dirty,
+            error=error, preserved_artifacts=preservation_receipt or None,
+        )
 
     with contextlib.ExitStack() as locks:
         try:
@@ -738,10 +774,16 @@ def remove_unclaimed_worktree(
                 # which reports git's own error.
                 _git_probe(["worktree", "unlock", str(worktree)], cwd=repo_root)
             runner_options = {} if git_runner is None else {"git_runner": git_runner}
-            error = git_worktree_remove(repo_root, worktree, force=force, **runner_options)
+            error = git_worktree_remove(
+                repo_root, worktree, force=force, control_root=control_root,
+                tasks_dir=tasks_dir, task_id=owner_task_id, task_record=task_record,
+                preservation_receipt=preservation_receipt, **runner_options,
+            )
         except Exception as exc:
             return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
         if error is not None:
+            if error.startswith("artifact preservation failed:"):
+                return outcome("skipped", error)
             return outcome("error", "worktree removal failed", error=error)
         return outcome("removed", f"{reason} ({detail})" if detail else reason)
 
