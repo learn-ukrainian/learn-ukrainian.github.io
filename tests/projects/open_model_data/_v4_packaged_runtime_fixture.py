@@ -145,7 +145,9 @@ def _get_shared_base_files() -> list[dict[str, str]]:
         for path in sorted(dynload.glob("*.so*")):
             if path.is_file():
                 resolved = path.resolve()
-                selected[resolved] = f"/runtime/py/lib/python{sys.version_info.major}.{sys.version_info.minor}/lib-dynload/{path.name}"
+                selected[resolved] = (
+                    f"/runtime/py/lib/python{sys.version_info.major}.{sys.version_info.minor}/lib-dynload/{path.name}"
+                )
                 extension_sources.append(resolved)
 
         for binary in [Path(sys.executable).resolve(), libpython, *extension_sources]:
@@ -175,13 +177,16 @@ def _get_shared_base_files() -> list[dict[str, str]]:
     return _SHARED_BASE_FILES
 
 
-def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, reviewer_negative=False,
-                   reviewer_invalid=False):
+def pinned_profile(
+    root, *, sources_url, defect=False, reviewer_sources=True, reviewer_negative=False, reviewer_invalid=False
+):
     """Pin the fixture and a compact, portable CPython runtime closure."""
     executable = root / "fixture-cli"
     executable.write_text(
-        CHILD.replace("DEFECT", repr(defect)).replace("REVIEWER_SOURCES", repr(reviewer_sources))
-        .replace("REVIEWER_NEGATIVE", repr(reviewer_negative)).replace("REVIEWER_INVALID", repr(reviewer_invalid))
+        CHILD.replace("DEFECT", repr(defect))
+        .replace("REVIEWER_SOURCES", repr(reviewer_sources))
+        .replace("REVIEWER_NEGATIVE", repr(reviewer_negative))
+        .replace("REVIEWER_INVALID", repr(reviewer_invalid))
     )
     executable.chmod(0o700)
     base_files = _get_shared_base_files()
@@ -208,8 +213,17 @@ def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, re
                 "provider_env": env,
                 "files": [
                     *files,
-                    *([{"source": str(executable.resolve()), "destination": "/runtime/codex-code-mode-host",
-                        "sha256": digest(executable.read_bytes())}] if name == "codex" else []),
+                    *(
+                        [
+                            {
+                                "source": str(executable.resolve()),
+                                "destination": "/runtime/codex-code-mode-host",
+                                "sha256": digest(executable.read_bytes()),
+                            }
+                        ]
+                        if name == "codex"
+                        else []
+                    ),
                 ],
             }
             for name, env in [("claude", "ANTHROPIC_API_KEY"), ("codex", "OPENAI_API_KEY")]
@@ -280,8 +294,18 @@ def shutdown_shared_sources_server():
 
 
 class RuntimeResources:
-    def __init__(self, root, pg, monkeypatch, *, defect=False, reviewer_sources=True, reviewer_negative=False,
-                 reviewer_invalid=False, dedicated_server=False):
+    def __init__(
+        self,
+        root,
+        pg,
+        monkeypatch,
+        *,
+        defect=False,
+        reviewer_sources=True,
+        reviewer_negative=False,
+        reviewer_invalid=False,
+        dedicated_server=False,
+    ):
         self.root = root
         self.dedicated_server = dedicated_server
         # LOGIN applies only to this owned ephemeral cluster. Production roles,
@@ -319,8 +343,14 @@ class RuntimeResources:
             self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
         else:
             self.server, self.url = get_shared_sources_server()
-        path = pinned_profile(root, sources_url=self.url, defect=defect, reviewer_sources=reviewer_sources,
-                              reviewer_negative=reviewer_negative, reviewer_invalid=reviewer_invalid)
+        path = pinned_profile(
+            root,
+            sources_url=self.url,
+            defect=defect,
+            reviewer_sources=reviewer_sources,
+            reviewer_negative=reviewer_negative,
+            reviewer_invalid=reviewer_invalid,
+        )
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
         monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(path.read_bytes()))
 
@@ -335,6 +365,7 @@ def produce_author_record(root, pg, monkeypatch, wheel):
     """Produce a record through the public parent, never through a fixture writer."""
     from dataclasses import replace
 
+    from _v4_shared_runtime_fixtures import assert_authorized_request
     from learn_ukrainian_v4_runtime import semantic_inputs
     from learn_ukrainian_v4_runtime import v4_canonical_authority_store as authority
     from learn_ukrainian_v4_runtime import v4_trust_authority as trust
@@ -367,11 +398,15 @@ def produce_author_record(root, pg, monkeypatch, wheel):
                 raw=canonical_bytes({"schema": "hramatka-v4-operation-authorize.v1"}),
                 policy_digest=policy,
             )
+            assert_authorized_request(conn, identifier, request.request_id)
             owned = store.claim(
                 principal=replace(auth, jti=request.request_id + "-execute"),
                 raw=canonical_bytes({"schema": "hramatka-v4-operation-execute.v1", "authorization_id": identifier}),
                 authorization_id=identifier,
                 policy_digest=policy,
+            )
+            assert owned["request_id"] == request.request_id, (
+                f"claim request mismatch: expected {request.request_id}, got {owned['request_id']}"
             )
             runtime = service_runtime.V4ServiceRuntime(store=store, verifier=None, release_provider=WheelRelease(wheel))
             result = runtime._execute_owned_claim(owned)
