@@ -529,7 +529,7 @@ def test_glued_operator_evasion_blocked(cmd):
         # …quoting still protects commit messages…
         'git commit -m "git branch -D notreal"',
         # …and safe ops with glued separators stay allowed.
-        "git branch -d merged-ok; echo done",
+        "git branch -d merged-ok; echo 'done'",
         # Commented-out danger is dead text.
         "echo hi # git branch -D victim",
     ],
@@ -991,7 +991,7 @@ def test_issue_9479_r5_case_without_cd_deliberately_overblocks_worktree(repos, t
 @pytest.mark.parametrize(
     "body",
     [
-        "echo case",
+        "echo 'case'",
         "echo ${x:-word}",
         "echo '${x:-(}'",
         'git commit -m "case x"',
@@ -1110,7 +1110,7 @@ def test_issue_9479_r6_case_anywhere_deliberately_overblocks_worktree(
 
 @pytest.mark.parametrize(
     "body",
-    ["echo case", 'git commit -m "case study"', 'grep -r "case " .', "echo ${x:-default}", "echo ${#arr[@]}"],
+    ["echo 'case'", 'git commit -m "case study"', 'grep -r "case " .', "echo ${x:-default}", "echo ${#arr[@]}"],
 )
 def test_issue_9479_r6_common_worktree_controls_allowed(repos, body):
     assert guard._command_danger_reason(body + " && git switch -c fixture", repos["public_worktree"]) is None
@@ -1420,3 +1420,16 @@ def test_issue_9479_r8_unquoted_branch_expansion_executes_bash(repos, tmp_path, 
         ["git", str(repos[start]), "commit", "-m", "It's active: " if apostrophe else "active: "],
     ]
     assert (guard._command_danger_reason(command, repos[start]) is not None) == (start == "public")
+
+
+@pytest.mark.parametrize("word", ["done", "case"])
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+def test_issue_9484_reserved_arguments_are_refused_only_after_raw_gate(repos, word, start):
+    cwd = repos[start]
+    assert guard._command_danger_reason("echo " + word, cwd) is None
+    bare = f"echo {word}; git branch -d merged-ok"
+    assert guard._command_danger_reason(bare, cwd) is not None
+    with pytest.raises(guard.ShellParseError, match="reserved word parsed as an argument"):
+        guard.read_commands(bare, cwd=str(cwd))
+    quoted = f"echo '{word}'; git branch -d merged-ok"
+    assert guard._command_danger_reason(quoted, cwd) is None

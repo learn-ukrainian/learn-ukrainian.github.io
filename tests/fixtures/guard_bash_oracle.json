@@ -1904,6 +1904,622 @@
       "command": "! gh pr merge 5 | cat",
       "hook": "merge",
       "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-271",
+      "family": "9484-coproc-compound",
+      "command": "coproc N if true; then gh pr merge 5; fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-272",
+      "family": "9484-coproc-compound",
+      "command": "coproc N if true; then gh pr merge 5 --admin; fi",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-273",
+      "family": "9484-coproc-compound",
+      "command": "coproc N if true; then git checkout -b evil; fi",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-274",
+      "family": "9484-coproc-compound",
+      "command": "coproc N for i in 1; do gh pr merge 5; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-275",
+      "family": "9484-coproc-compound",
+      "command": "coproc N for i in 1; do gh pr merge 5 --admin; done",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-276",
+      "family": "9484-coproc-compound",
+      "command": "coproc N for i in 1; do git checkout -b evil; done",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-277",
+      "family": "9484-coproc-compound",
+      "command": "coproc N while true; do gh pr merge 5; break; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-278",
+      "family": "9484-coproc-compound",
+      "command": "coproc N while true; do gh pr merge 5 --admin; break; done",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-279",
+      "family": "9484-coproc-compound",
+      "command": "coproc N while true; do git checkout -b evil; break; done",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-280",
+      "family": "9484-coproc-compound",
+      "command": "coproc N until false; do gh pr merge 5; break; done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-281",
+      "family": "9484-coproc-compound",
+      "command": "coproc N until false; do gh pr merge 5 --admin; break; done",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-coproc-compound-282",
+      "family": "9484-coproc-compound",
+      "command": "coproc N until false; do git checkout -b evil; break; done",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-283",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 then",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-284",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin then",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-285",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil then",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-286",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 do",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-287",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin do",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-288",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil do",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-289",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 done",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-290",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin done",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-291",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil done",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-292",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 fi",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-293",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin fi",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-294",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil fi",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-295",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 elif",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-296",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin elif",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-297",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil elif",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-298",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 else",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-299",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin else",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-300",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil else",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-301",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 esac",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-302",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin esac",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-303",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil esac",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-304",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 while",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-305",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin while",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-306",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil while",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-307",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 until",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-308",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin until",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-309",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil until",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-310",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 if",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-311",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin if",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-312",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil if",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-313",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 for",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-314",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin for",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-315",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil for",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-316",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 select",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-317",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin select",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-318",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil select",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-319",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 case",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-320",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin case",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-321",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil case",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-322",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 [[",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-323",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin [[",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-324",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil [[",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-325",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 ((",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-326",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin ((",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-327",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil ((",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-328",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 {",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-329",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin {",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-330",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil {",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-331",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 }",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-332",
+      "family": "9484-reserved-word",
+      "command": "gh pr merge 5 --admin }",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-reserved-word-333",
+      "family": "9484-reserved-word",
+      "command": "git checkout -b evil }",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-334",
+      "family": "9484-dollar-quote",
+      "command": "g$'h' pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-335",
+      "family": "9484-dollar-quote",
+      "command": "$\"gh\" pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-336",
+      "family": "9484-dollar-quote",
+      "command": "$'\\x67\\x68' pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-337",
+      "family": "9484-dollar-quote",
+      "command": "$'\\147\\150' pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-338",
+      "family": "9484-dollar-quote",
+      "command": "$'\\u0067\\u0068' pr merge 5",
+      "hook": "merge",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-339",
+      "family": "9484-dollar-quote",
+      "command": "gh pr merge 5 --$'admin'",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-340",
+      "family": "9484-dollar-quote",
+      "command": "gh pr merge 5 --$\"admin\"",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-341",
+      "family": "9484-dollar-quote",
+      "command": "$'\\x67\\x68' pr merge 5 --$'admin'",
+      "hook": "admin",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-342",
+      "family": "9484-dollar-quote",
+      "command": "g$'it' checkout -b evil",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-343",
+      "family": "9484-dollar-quote",
+      "command": "$\"git\" checkout -b evil",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-dollar-quote-344",
+      "family": "9484-dollar-quote",
+      "command": "$'\\x67\\x69\\x74' checkout -b evil",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-345",
+      "family": "9484-branch-flags",
+      "command": "git checkout --track origin/x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-346",
+      "family": "9484-branch-flags",
+      "command": "git checkout -t origin/x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-347",
+      "family": "9484-branch-flags",
+      "command": "git checkout --track=direct origin/x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-348",
+      "family": "9484-branch-flags",
+      "command": "git checkout -bx",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-349",
+      "family": "9484-branch-flags",
+      "command": "git checkout -Bx",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-350",
+      "family": "9484-branch-flags",
+      "command": "git checkout --orphan=x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-351",
+      "family": "9484-branch-flags",
+      "command": "git switch --track origin/x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-352",
+      "family": "9484-branch-flags",
+      "command": "git switch -t origin/x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-353",
+      "family": "9484-branch-flags",
+      "command": "git switch --track=inherit origin/x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-354",
+      "family": "9484-branch-flags",
+      "command": "git switch -cx",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-355",
+      "family": "9484-branch-flags",
+      "command": "git switch -Cx",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-356",
+      "family": "9484-branch-flags",
+      "command": "git switch --create=x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-357",
+      "family": "9484-branch-flags",
+      "command": "git switch --force-create=x",
+      "hook": "branch",
+      "accepted": false
+    },
+    {
+      "id": "9484-branch-flags-358",
+      "family": "9484-branch-flags",
+      "command": "git switch --orphan=x",
+      "hook": "branch",
+      "accepted": false
     }
   ]
 }

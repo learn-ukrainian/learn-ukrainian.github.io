@@ -31,7 +31,18 @@ import sys
 
 
 def _may_guard(command: str) -> bool:
-    probe = command.replace("\\", "").replace("'", "").replace('"', "")
+    # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
+    # This is only a conservative prefilter; the pinned AST decides execution.
+    probe = re.sub(r"\$(['\"])", r"\1", command)
+    try:
+        probe = re.sub(
+            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            probe,
+        )
+    except ValueError:
+        return True  # unreadable escape: let the full parser refuse it
+    probe = probe.replace("\\", "").replace("'", "").replace('"', "")
     return "gh" in probe and "--admin" in probe
 
 
@@ -154,9 +165,9 @@ def _skip_command_prefix(seg, i):
 
 def _segments(command: str) -> list[list[str]]:
     try:
-        return [row.argv for row in read_commands(command, include_payloads=False, diagnostic=True)]
+        return [row.argv for row in read_commands(command, include_payloads=False)]
     except ShellParseError:
-        return []
+        return [["gh", "pr", "merge", "--admin", UNREADABLE]] if _may_guard(command) else []
 
 
 def _admin_merge_args(seg: list[str]) -> list[str] | None:

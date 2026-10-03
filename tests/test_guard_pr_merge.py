@@ -252,7 +252,12 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
 
 def _any_judged_merge(command: str) -> bool:
     """Whether any segment of `command` — `bash -c` payloads included — is a judged merge."""
-    return any(guard._merge_args(s.argv) is not None for s in guard._judged_segments(command))
+    if not guard._may_merge(command):
+        return False
+    try:
+        return any(guard._merge_args(s.argv) is not None for s in guard.read_commands(command))
+    except guard.ShellParseError:
+        return True  # the production hook refuses unreadable guarded commands
 
 
 def _run(
@@ -424,10 +429,15 @@ def test_issue_9461_merge_text_redirects_stay_unreadable(monkeypatch, capsys, co
 
 @pytest.mark.parametrize("mention", ["merge", "MERGE", "MeRgE"])
 @pytest.mark.parametrize("separator", ["; ", "\n"])
-def test_issue_9461_redirect_marker_uses_entire_raw_command(mention, separator):
+def test_issue_9461_process_substitution_refusal_respects_raw_gate(monkeypatch, mention, separator):
     command = f"cat <(cmd){separator}echo {mention}"
-    assert _any_judged_merge(command)
-    assert any(guard._UNREADABLE_MARKER in segment for segment in guard._segments(command))
+    assert not _any_judged_merge(command)
+    assert _run(monkeypatch, command) == 0
+    guarded = command + "; gh pr merge 5"
+    assert _any_judged_merge(guarded)
+    assert any(guard._UNREADABLE_MARKER in segment for segment in guard._segments(guarded))
+    monkeypatch.setattr(guard, "_judge", lambda *a, **kw: pytest.fail("unreadable scope reached PR lookup"))
+    assert _run(monkeypatch, guarded) == 2
 
 
 @pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
@@ -1169,8 +1179,8 @@ def test_dollar_quoted_shell_payload_is_judged(cmd):
 
 
 def test_strip_dollar_quote():
-    assert guard._judged_segments("bash -c $'gh pr merge 5'")[1].argv == ["gh", "pr", "merge", "5"]
-    assert guard._judged_segments("bash -c 'gh pr merge 5'")[1].argv == ["gh", "pr", "merge", "5"]
+    assert guard.read_commands("bash -c $'gh pr merge 5'")[1].argv == ["gh", "pr", "merge", "5"]
+    assert guard.read_commands("bash -c 'gh pr merge 5'")[1].argv == ["gh", "pr", "merge", "5"]
 
 
 def test_valid_nested_shell_is_judged():
@@ -1190,9 +1200,9 @@ def test_recursion_cap_fails_closed(monkeypatch):
     assert guard._judge([guard._UNREADABLE_MARKER]) is not None
 
 
-def test_deep_nesting_emits_unparsed_marker():
-    segs = guard._judged_segments("bash -c 'gh pr merge 5 --squash'", guard._MAX_SHELL_DEPTH)
-    assert guard._UNPARSED in [s.argv for s in segs]
+def test_deep_nesting_is_explicitly_refused():
+    with pytest.raises(guard.ShellParseError, match="nested shell depth limit"):
+        guard.read_commands("bash -c 'gh pr merge 5 --squash'", depth=sys.modules["shell_bash"].MAX_DEPTH)
 
 
 @pytest.mark.parametrize(

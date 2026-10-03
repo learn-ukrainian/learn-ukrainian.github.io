@@ -59,7 +59,18 @@ def _command(payload: dict) -> str:
 
 def _may_merge(command: str) -> bool:
     # The shell drops quotes and backslashes before executing a command.
-    probe = command.replace("\\", "").replace("'", "").replace('"', "")
+    # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
+    # This is only a conservative prefilter; the pinned AST decides execution.
+    probe = re.sub(r"\$(['\"])", r"\1", command)
+    try:
+        probe = re.sub(
+            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            probe,
+        )
+    except ValueError:
+        return True  # unreadable escape: let the full parser refuse it
+    probe = probe.replace("\\", "").replace("'", "").replace('"', "")
     return ("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe
 
 
@@ -185,32 +196,17 @@ def _flag_enabled(args: list[str], name: str) -> bool:
 
 _UNREADABLE_MARKER = UNREADABLE
 _UNPARSED = ["gh", "pr", "merge", UNREADABLE]
-_MAX_SHELL_DEPTH = 8
 _invoked_start = invoked_start
-
-
-def _judged_segments(command: str, depth: int = 0, cwd: str | None = None, cwd_unreadable: bool = False):
-    try:
-        rows = read_commands(command, cwd=cwd, depth=depth)
-        if re.search(r"\bmerge\b", command, re.I) and ("<(" in command or ">(" in command):
-            from shell_bash import Invocation
-
-            rows.append(Invocation(list(_UNPARSED), None))
-        return rows
-    except ShellParseError:
-        from shell_bash import Invocation
-
-        return [Invocation(list(_UNPARSED), None)] if _may_merge(command) else []
 
 
 def _segments(command: str) -> list[list[str]]:
     try:
-        rows = [segment.argv for segment in read_commands(command, include_payloads=False, diagnostic=True)]
+        rows = [segment.argv for segment in read_commands(command, include_payloads=False)]
         if re.search(r"\bmerge\b", command, re.I) and ("<(" in command or ">(" in command):
             rows.append(list(_UNPARSED))
         return rows
     except ShellParseError:
-        return []
+        return [list(_UNPARSED)] if _may_merge(command) else []
 
 
 def _merge_args(seg: list[str]) -> list[str] | None:
@@ -684,12 +680,8 @@ def main() -> int:
     # ever sends MORE commands to the full parse — never fewer.
     if not _may_merge(command):
         return 0
-    # Each segment arrives carrying the cwd it runs in, so a PR number is judged in the
-    # repo the MERGE runs in, not the session's repo — `cd private-repo && gh pr merge 203`
-    # judged from the public repo resolves a DIFFERENT PR #203, wrong in BOTH directions
-    # (false block, or worse: false allow off a same-numbered green PR). Scoping that cwd
-    # to its own shell level is _judged_segments' job: it is the only reader that knows
-    # where a subshell or `bash -c` payload begins and ends.
+    # The AST reader carries each invocation's shell-scoped cwd, including
+    # subshells and literal shell payloads, so PR selectors use that repository.
     try:
         segments = read_commands(command, cwd=payload.get("cwd") or os.getcwd())
     except Exception as exc:

@@ -46,7 +46,18 @@ from pathlib import Path
 
 
 def _may_guard(command: str) -> bool:
-    probe = command.replace("\\", "").replace("'", "").replace('"', "")
+    # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
+    # This is only a conservative prefilter; the pinned AST decides execution.
+    probe = re.sub(r"\$(['\"])", r"\1", command)
+    try:
+        probe = re.sub(
+            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            probe,
+        )
+    except ValueError:
+        return True  # unreadable escape: let the full parser refuse it
+    probe = probe.replace("\\", "").replace("'", "").replace('"', "")
     return ("git" in probe or "gh" in probe) and any(word in probe for word in ("checkout", "switch", "branch"))
 
 
@@ -190,9 +201,9 @@ def _skip_command_prefix(seg, i):
 
 def _segments(command: str) -> list[list[str]]:
     try:
-        return [row.argv for row in read_commands(command, include_payloads=False, diagnostic=True)]
+        return [row.argv for row in read_commands(command, include_payloads=False)]
     except ShellParseError:
-        return []
+        return [["git", "checkout", UNREADABLE]] if _may_guard(command) else []
 
 
 def _branch_force_reason(args: list[str], current_branch: str | None) -> str | None:
@@ -352,13 +363,13 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
 
     # Detach / orphan always forbidden on primary (#4857 recurrence: agents
     # leave the tree on a raw SHA and every service silently reads wrong code).
-    if "--detach" in args or "--orphan" in args:
+    if "--detach" in args or any(a == "--orphan" or a.startswith("--orphan=") for a in args):
         return f"git {verb} --detach/--orphan detaches HEAD in the main worktree (primary must stay attached to main)"
 
     # Flags we treat as "definitely creates / switches to a new branch":
-    if "-b" in args or "-B" in args or "--create" in args:
+    if any(a.startswith(("-b", "-B")) or a == "--create" or a.startswith("--create=") for a in args):
         return f"git {verb} -b creates and switches to a new branch in the main worktree"
-    if "-c" in args or "-C" in args:
+    if any(a.startswith(("-c", "-C")) or a == "--force-create" or a.startswith("--force-create=") for a in args):
         # `-C` is `git switch --force-create`; equally a branch creation.
         return f"git {verb} -c creates and switches to a new branch in the main worktree"
 
@@ -371,7 +382,7 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
             skip_next = False
             continue
         if a.startswith("-"):
-            # Switches like `--track` take no value here; `-t` takes one.
+            # Both --track[=direct|inherit] and -t leave the branch positional intact.
             # ``--detach`` / ``--orphan`` already blocked above.
             if a in {
                 "--quiet",
@@ -379,6 +390,8 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
                 "--force",
                 "-f",
                 "--no-track",
+                "--track",
+                "-t",
                 "--guess",
                 "--no-guess",
                 "--progress",
@@ -397,7 +410,7 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
             }:
                 continue
             # Two-arg flags: skip their value too.
-            if a in {"-t", "--track", "-B", "--start-point", "--conflict", "--pathspec-from-file"}:
+            if a in {"--start-point", "--conflict", "--pathspec-from-file"}:
                 skip_next = True
             continue
         target = a

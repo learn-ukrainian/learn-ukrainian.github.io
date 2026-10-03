@@ -85,6 +85,30 @@ _VALUE_OPTIONS = {
     },
     "exec": {"-a"},
 }
+# Grammar 0.25 can silently flatten named coproc compound statements into
+# simple commands. Refuse their bare reserved words instead of losing argv.
+_RESERVED_WORDS = frozenset(
+    word.encode()
+    for word in [
+        "then",
+        "do",
+        "done",
+        "fi",
+        "elif",
+        "else",
+        "esac",
+        "while",
+        "until",
+        "if",
+        "for",
+        "select",
+        "case",
+        "[[",
+        "((",
+        "{",
+        "}",
+    ]
+)
 _SHELLS = {"bash", "sh", "dash", "zsh", "ksh", "fish"}
 
 
@@ -193,12 +217,11 @@ def cd_target(argv: list[str], cwd: str | None) -> str | None:
 
 
 def read_commands(
-    command: str, cwd: str | None = None, *, depth: int = 0, include_payloads: bool = True, diagnostic: bool = False
+    command: str, cwd: str | None = None, *, depth: int = 0, include_payloads: bool = True
 ) -> list[Invocation]:
     """Walk simple commands with conservative sets of Bash working directories."""
     out: list[Invocation] = []
     initial = {os.getcwd() if cwd is None else cwd}
-    tainted_bodies = False
     branch_scope_refusal = False
     repo_names = {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}
     inherited_repo_override = any(name in os.environ for name in repo_names)
@@ -210,11 +233,6 @@ def read_commands(
             raise ShellParseError("nested shell depth limit")
         encoded = source.encode()
         tree = Parser(_LANGUAGE).parse(encoded)
-        if diagnostic and tree.root_node.has_error and b"``" in encoded:
-            # Historical extraction also probes Markdown prose. Normalise
-            # doubled code ticks only in this non-admitting diagnostic mode.
-            encoded = encoded.replace(b"``", b"`")
-            tree = Parser(_LANGUAGE).parse(encoded)
         # Grammar 0.25 cannot queue multiple heredocs: its second opener is
         # an ERROR '<' plus a file_redirect. Reparse it as a separate inert
         # reader, preserving each body's expansion and quoting semantics.
@@ -348,7 +366,7 @@ def read_commands(
             for start, end in edits:
                 encoded = encoded[:start] + b" " * (end - start - 1) + b"9" + encoded[end:]
             tree = Parser(_LANGUAGE).parse(encoded)
-        if tree.root_node.has_error and not diagnostic:
+        if tree.root_node.has_error:
             raise ShellParseError("Bash parse error")
         return walk(tree.root_node, states, level)
 
@@ -396,23 +414,9 @@ def read_commands(
             substitutions(redirect, states, level)
             if redirect.type == "heredoc_redirect":
                 opener = next(c for c in redirect.named_children if c.type == "heredoc_start").text
-                if not diagnostic and not re.fullmatch(
-                    rb"(?:[A-Za-z_0-9]+|'[A-Za-z_0-9]+'|\"[A-Za-z_0-9]+\"|\\[A-Za-z_0-9]+)", opener
-                ):
+                if not re.fullmatch(rb"(?:[A-Za-z_0-9]+|'[A-Za-z_0-9]+'|\"[A-Za-z_0-9]+\"|\\[A-Za-z_0-9]+)", opener):
                     raise ShellParseError("ambiguous heredoc delimiter")
                 body = next((c for c in redirect.named_children if c.type == "heredoc_body"), None)
-                if (
-                    diagnostic
-                    and body is not None
-                    and (
-                        tainted_bodies
-                        or redirect.has_error
-                        or not re.fullmatch(
-                            rb"(?:[A-Za-z_0-9]+|'[A-Za-z_0-9]+'|\"[A-Za-z_0-9]+\"|\\[A-Za-z_0-9]+)", opener
-                        )
-                    )
-                ):
-                    parse(body.text.decode(), set(states), level + 1)
                 if body is not None and not any(q in opener for q in (b"'", b'"', b"\\")):
                     # Grammar 0.25 omits old-style substitutions in heredoc bodies.
                     for match in re.finditer(r"(?<!\\)`(?:\\.|[^`])*`", body.text.decode()):
@@ -444,10 +448,8 @@ def read_commands(
         if not argv:
             return states
         if argv[0] is None:
-            if diagnostic:
-                return states
             raise ShellParseError("dynamic command name")
-        if not diagnostic and any(word.type == "word" and word.text in {b"{", b"}"} for word in words):
+        if any(word.text in _RESERVED_WORDS for word in words):
             raise ShellParseError("reserved word parsed as an argument")
         argv = [UNREADABLE if arg is None else arg for arg in argv]
         start, xargs = invoked_start(argv)
@@ -456,7 +458,7 @@ def read_commands(
             raise ShellParseError("dynamic wrapper argument")
         if not selected:
             return states
-        if selected[0] == UNREADABLE and not diagnostic:
+        if selected[0] == UNREADABLE:
             raise ShellParseError("dynamic command name")
         utility = Path(selected[0]).name
         if utility in {"git", "gh"}:
@@ -544,20 +546,9 @@ def read_commands(
         return states
 
     def walk(node, states, level, attached=()):
-        nonlocal tainted_bodies
         kind = node.type
         if level > MAX_DEPTH:
             raise ShellParseError("nested shell depth limit")
-        if diagnostic and kind == "ERROR" and any(c.type == "heredoc_start" for c in node.named_children):
-            # Diagnostic extraction only: unreadable bodies remain visible to
-            # legacy detection tests. Enforcement always refuses this parse.
-            remainder = node.text.decode().partition("\n")[2]
-            previous = tainted_bodies
-            tainted_bodies = True
-            try:
-                return parse(remainder, states, level + 1) if remainder else states
-            finally:
-                tainted_bodies = previous
         if kind == "command":
             return simple(node, list(attached), states, level)
         if kind == "redirected_statement":

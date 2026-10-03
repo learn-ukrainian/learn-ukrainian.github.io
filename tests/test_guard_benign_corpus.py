@@ -52,6 +52,45 @@ EXPECTED_PROSE_FLIPS = {
     for row in BASELINE_FIXTURE["expected_prose_flips"]
 }
 
+# These are security decisions exposed by measuring real admission rather than
+# legacy extraction. Keep exact expectations for every literal in the fixture;
+# none of the genuinely benign quoted/comment commands may acquire a block.
+EXPECTED_ADMISSION_FLIPS = {
+    **EXPECTED_PROSE_FLIPS,
+    ("admin_merge", BASELINE_COMMANDS[378]): (False, True),  # invalid Markdown prose
+    **{
+        ("pr_merge", command): (False, True)
+        for command in (
+            "$gh pr merge 5",  # dynamic executable is explicitly unreadable
+            "/bin/bash -c 'gh pr merge 5 --squash'",
+            "bash -c \"bash -c 'gh pr merge 5 --squash'\"",
+            'bash -c "cd /inner && gh pr merge 5"',
+            'bash -c $"gh pr merge 5"',
+            "bash -c $'gh pr merge 5 --squash'",
+            "bash -c 'bash -c \"gh pr merge 5 --squash\"'",
+            "bash -c 'cd $D && gh pr merge 7'",
+            "bash -c 'gh pr merge 5 --squash'",
+            "bash -cx 'gh pr merge 5 --squash'",
+            "bash -lc 'gh pr merge 5 --squash'",
+            "printf '' | xargs sh -c 'gh pr merge 5 --auto'",
+            'sh -c "gh pr merge 5 --auto"',
+            'sh -cx "gh pr merge 5"',
+            "zsh -c 'true; gh pr merge 5 --squash'",
+        )
+    },
+    **{
+        ("branch_switch_in_main", command): (False, True)
+        for command in (
+            " && git branch -D stale-branch",  # invalid Bash
+            BASELINE_COMMANDS[370],  # invalid Markdown prose
+            "gh pr checkout",  # real admission guards gh checkout as well
+            "gh pr checkout 4849",
+            "git branch -d merged-ok; echo done",  # reserved-word refusal (#9484)
+            BASELINE_COMMANDS[1416],  # usage text, not executable Bash
+        )
+    },
+}
+
 
 def _literal_corpus() -> list[str]:
     return [command for command in BASELINE_COMMANDS if command not in HEAD_ONLY_BENIGN_COMMANDS]
@@ -90,7 +129,7 @@ def test_baseline_fixture_covers_all_guards_and_commands() -> None:
     assert set(BENIGN_COMMANDS) | set(HEAD_ONLY_BENIGN_COMMANDS) <= set(BASELINE_COMMANDS)
 
 
-def test_all_literal_commands_have_no_new_guard_blocks() -> None:
+def test_all_literal_commands_match_real_admission_expectations() -> None:
     commands = _literal_corpus()
     baseline = _baseline_decisions(commands)
     head = _probe(HOOK_DIR, commands)
@@ -100,7 +139,7 @@ def test_all_literal_commands_have_no_new_guard_blocks() -> None:
         for command, was_blocked, is_blocked in zip(commands, baseline[guard], head[guard], strict=True)
         if was_blocked != is_blocked
     }
-    assert changed == EXPECTED_PROSE_FLIPS, f"{len(commands)} baseline literals; changed decisions: {changed!r}"
+    assert changed == EXPECTED_ADMISSION_FLIPS, f"{len(commands)} baseline literals; changed decisions: {changed!r}"
 
 
 def test_head_only_benign_literals_have_no_new_blocks() -> None:
@@ -118,6 +157,9 @@ def test_head_only_benign_literals_have_no_new_blocks() -> None:
 
 def _probe_child(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:
     import importlib.util
+    import io
+    from contextlib import redirect_stderr
+    from unittest.mock import patch
 
     sys.path.insert(0, str(hook_dir))
     modules = {}
@@ -130,17 +172,26 @@ def _probe_child(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:
         modules[name] = module
 
     verdicts: dict[str, list[bool]] = {name: [] for name in GUARDS}
+    primary = Path("/guard-corpus-primary")
     for command in commands:
+        payload = {"cwd": str(primary), "tool_input": {"command": command}}
         admin = modules["admin_merge"]
-        verdicts["admin_merge"].append(
-            any(admin._admin_merge_args(segment) is not None for segment in admin._segments(command))
-        )
         pr = modules["pr_merge"]
-        verdicts["pr_merge"].append(any(pr._merge_args(segment) is not None for segment in pr._segments(command)))
         branch = modules["branch_switch_in_main"]
-        verdicts["branch_switch_in_main"].append(
-            any(branch._segment_is_dangerous(segment) is not None for segment in branch._segments(command))
-        )
+        # Exercise real admission with deterministic red CI and protected-primary
+        # discovery. No network or host repository mutations are possible.
+        with (
+            redirect_stderr(io.StringIO()),
+            patch.object(pr, "_judge", return_value="fixture red CI"),
+            patch.object(admin, "_failing_blocking_checks", return_value=["CI Gate"]),
+            patch.object(branch, "PROTECTED_ROOTS", {primary}),
+            patch.object(branch, "_git_repo_root", return_value=primary),
+            patch.object(branch, "_in_main_worktree", return_value=True),
+            patch.object(branch, "_checked_out_branch", return_value="main"),
+        ):
+            for name in ("admin_merge", "pr_merge", "branch_switch_in_main"):
+                with patch.object(sys, "stdin", io.StringIO(json.dumps(payload))):
+                    verdicts[name].append(modules[name].main() == 2)
         secret = modules["secret_print"]
         verdicts["secret_print"].append(bool(secret._scan_command(command, set())))
         write = modules["primary_checkout_write"]
