@@ -27,7 +27,11 @@ def claim(conn, prepared, **overrides):
         policy_digest=prepared["policy"],
     )
     fields.update(overrides)
-    return OperationStore(conn).claim(**fields)
+    owned = OperationStore(conn).claim(**fields)
+    assert owned["request_id"] == prepared["request_id"], (
+        f"claim request mismatch: expected {prepared['request_id']}, got {owned['request_id']}"
+    )
+    return owned
 
 
 def test_actual_claim_binds_semantic_input_and_deadlines(pg_cluster, prepared):
