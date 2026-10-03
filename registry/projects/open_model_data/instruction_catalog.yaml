@@ -7,8 +7,8 @@ training_eligible: false
 issue: 9611
 plan:
   path: docs/projects/open-model-data/PLAN.md
-  version: 3.4.4
-  body_sha256: 2d5db0ae7d15336b61c361c1dacdf89c3c9811cfd0109acc8f156f16149e94e1
+  version: 3.5.0
+  body_sha256: d8aaf46bea650d4a3331e7ebe4d90dccf2aae9c9bc9eefb270a41760d71acbeb
 interpolation:
   mode: verbatim_source_fields_only
   missing_field: withhold
@@ -23,7 +23,7 @@ interpolation:
   field_mapping: Slots name binding roles from PLAN.md, not guessed physical database columns. E4 must authenticate
     the exact source adapter and row/field locators before any rendering.
   quoted_slot_policy: Withhold values containing guillemets when their slot is enclosed in guillemets;
-    never escape, rewrite or nest same-form quotes. Sentence, example, context and printed-heading slots
+    never escape, rewrite or nest same-form quotes. Sentence, example and printed-heading slots
     follow a colon without enclosing quotes; their source punctuation stays intact. Sense slots are final,
     unquoted fields after a colon, with no added terminal punctuation; parentheses remain verbatim.
 prefix_metric:
@@ -869,115 +869,6 @@ components:
         operation: modern_norm_selection
         template: Із поданих форм назви ту, що відповідає сучасній нормі.
         slots: []
-  C8:
-    binding: Printed word + phonetic context ↔ printed transcription ↔ supporting paragraph span ↔ same-paragraph
-      quoted book verdict ↔ rule/page.
-    source_fields:
-      word: Printed word in Погрібний 1992
-      context: Phonetic context printed with that word
-    required_context:
-      - phonetic_context
-      - supporting_paragraph_span
-      - quoted_book_verdict
-      - rule_paragraph
-      - page
-      - ulif_stress_crosscheck
-      - author_identity
-    target_policy: Target contains only the book's normative/admissible transcription and its verbatim same-paragraph
-      verdict. A non-norm transcription may occur only on a serialized rejected side, never as the requested
-      target.
-    exclusions:
-      - Non-norm-only paragraphs with no printed normative/admissible contrast; ambiguous verdicts; stress
-        mismatches; illegible notation.
-    line_count: 12
-    line_count_rationale: Twelve lines per operation give balanced top1=1/12 and top5=5/12. After two disputed
-      lines are dropped, ten distinct starts give 0.10/0.50, retaining slack under proposed 0.15/0.60 bounds.
-      Repetition is measured separately; counts do not prove semantic diversity.
-    instructions:
-      - id: C8.supported_pronunciation.01
-        operation: supported_pronunciation
-        template: 'Подай нормативну або допустиму вимову слова «{word}» та оцінку, яку дає автор. Фонетичний
-          контекст: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.02
-        operation: supported_pronunciation
-        template: 'Запиши нормативну або допустиму вимову слова «{word}» разом з авторовою оцінкою. Контекст
-          вимови: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.03
-        operation: supported_pronunciation
-        template: 'Наведи авторову оцінку й нормативну або допустиму вимову слова «{word}» в такому контексті:
-          {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.04
-        operation: supported_pronunciation
-        template: 'Вкажи нормативну або допустиму вимову слова «{word}» і процитуй оцінку автора. Контекст:
-          {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.05
-        operation: supported_pronunciation
-        template: 'Відтвори нормативну або допустиму вимову слова «{word}» та авторову оцінку в наведеному
-          контексті: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.06
-        operation: supported_pronunciation
-        template: 'Слово «{word}» має нормативну або допустиму вимову. Подай її та оцінку автора. Фонетичний
-          контекст: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.07
-        operation: supported_pronunciation
-        template: 'Яку вимову слова «{word}» автор визнає нормативною або допустимою? Наведи її та авторову
-          оцінку. Контекст: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.08
-        operation: supported_pronunciation
-        template: 'Як нормативно або допустимо вимовляти слово «{word}»? Подай вимову й оцінку, яку дає автор.
-          Контекст вимови: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.09
-        operation: supported_pronunciation
-        template: 'Процитуй оцінку автора й запиши нормативну або допустиму вимову слова «{word}». Фонетичний
-          контекст: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.10
-        operation: supported_pronunciation
-        template: 'Дослівно відтвори нормативну або допустиму вимову слова «{word}» разом з оцінкою автора.
-          Контекст: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.11
-        operation: supported_pronunciation
-        template: 'Нормативну або допустиму вимову слова «{word}» наведи з авторовою оцінкою в такому фонетичному
-          контексті: {context}'
-        slots:
-          - word
-          - context
-      - id: C8.supported_pronunciation.12
-        operation: supported_pronunciation
-        template: 'Оцінку автора подай разом із нормативною або допустимою вимовою слова «{word}». Контекст
-          вимови: {context}'
-        slots:
-          - word
-          - context
   C9:
     binding: 'Heading printed in the textbook text, extracted verbatim with its position by #8341, keyed by
       book title, grade/level, headed-unit identity and page. Never an ingester section label.'
