@@ -61,9 +61,21 @@ def select_store(
 
 
 def _redact_validated_locations(
-    content: bytes, context: bindings.Context, words: dict, api: sources.Sources, *, kind: str
+    content: bytes,
+    context: bindings.Context,
+    words: dict,
+    api: sources.Sources,
+    *,
+    kind: str,
+    public: dict[str, set[str]] | None = None,
 ) -> bytes:
-    """Redact validated scalar nodes only, preserving every other occurrence."""
+    """Redact validated scalar nodes only, preserving every other occurrence.
+
+    ``public`` maps a word id to the open-dictionary atoms and spans of that
+    record's own lemma. A store gloss equal to one of them, at the location the
+    selector validates, is public even when another lemma's private entry shares
+    the English.
+    """
     if kind not in {"bindings", "words"}:
         return content
     try:
@@ -108,34 +120,35 @@ def _redact_validated_locations(
             wid = entry.get("word" if kind == "bindings" else "id")
             word = words.get(wid)
             binding = context.entries.get(wid)
-            if not word or not binding:
+            own_public = (public or {}).get(wid, set())
+            if not word or not (binding or (kind == "words" and own_public)):
                 continue
             row = api.gloss_rows([(word["lemma"], word["pos"])]).raw.get((word["lemma"], word["pos"]), [])
             payload_row = api.kaikki_rows([word["lemma"]]).raw.get(word["lemma"])
             selection = context.select(word, row, payload_row)
             if selection.gloss is None:
                 continue
-            # A dictionary binding shows its atom (``span``); Anna's binding shows its ``gloss``.
-            shown_field = "span" if "span" in binding else "gloss"
-            allowed = []
-            if kind == "bindings" and entry == binding:
-                allowed.append(fields[shown_field])
-            elif (
+            validated = (
                 kind == "words"
-                and entry.get("gloss_en") == binding[shown_field] == selection.gloss
+                and entry.get("gloss_en") == selection.gloss
                 and entry.get("gloss_ref") == selection.ref
-                and selection.basis is not None
                 and entry.get("gloss_basis") == selection.basis
-            ):
-                allowed.append(fields["gloss_en"])
-                if isinstance(selection.ref, dict) and "span" in selection.ref:
-                    allowed.append(mapping(fields["gloss_ref"])["span"])
-            for scalar in allowed:
-                if (
-                    not isinstance(scalar, yaml.ScalarNode)
-                    or scalar.value != binding[shown_field]
-                    or reached[id(scalar)] != 1
-                ):
+            )
+            # (scalar node, the only value it may hold)
+            allowed = []
+            if binding:
+                # A dictionary binding shows its atom (``span``); Anna's binding shows its ``gloss``.
+                shown_field = "span" if "span" in binding else "gloss"
+                if kind == "bindings" and entry == binding:
+                    allowed.append((fields[shown_field], binding[shown_field]))
+                elif validated and binding[shown_field] == selection.gloss and selection.basis is not None:
+                    allowed.append((fields["gloss_en"], binding[shown_field]))
+            if not allowed and validated and matcher.normalize(selection.gloss, word["pos"]) in own_public:
+                allowed.append((fields["gloss_en"], selection.gloss))
+            if allowed and kind == "words" and isinstance(selection.ref, dict) and "span" in selection.ref:
+                allowed.append((mapping(fields["gloss_ref"])["span"], allowed[0][1]))
+            for scalar, value in allowed:
+                if not isinstance(scalar, yaml.ScalarNode) or scalar.value != value or reached[id(scalar)] != 1:
                     return content
                 ranges.append((scalar.start_mark.index, scalar.end_mark.index))
         for start, end in sorted(ranges, reverse=True):
@@ -270,36 +283,45 @@ def leak_scan(
     }
     words = {w["id"]: w for w in store["words"]}
     entries = {row["locator"]: row for row in context.inventory}
+    record_lemmas = {sources.unstressed_headword(w["lemma"]): w["lemma"] for w in words.values()}
     lemmas = {sources.unstressed_headword(row["lemma"]) for row in entries.values()}
-    public_atoms, public_spans = {}, {}
+    open_spans = {}
     positions = {sources.unstressed_headword(row["lemma"]): row.get("pos", "noun") for row in entries.values()}
-
-    def remember(lemma: str, span: str, whole: str):
-        pos = positions[lemma]
-        public_spans.setdefault(lemma, set()).update((matcher.normalize(span, pos), matcher.normalize(whole, pos)))
-        public_atoms.setdefault(lemma, set()).update(
-            matcher.normalize(a, pos) for a in matcher.source_atoms(sources._gloss_head(span))
-        )
-        group = matcher.classify(span)
-        if not group.reason:
-            public_atoms[lemma].update(matcher.normalize(a, pos) for a in matcher.source_atoms(group.head))
 
     # Leak exemptions consider every open row for the lemma, including senses
     # that the learner selector would withhold for POS or annotation reasons.
     for raw in api._db().execute("SELECT * FROM dmklinger_uk_en"):
         row = dict(raw)
         lemma = sources.unstressed_headword(row["word"])
-        if lemma not in lemmas:
+        if lemma not in lemmas and lemma not in record_lemmas:
             continue
-        for span, whole in matcher.row_spans(row):
-            remember(lemma, span, whole)
-    for lemma, payload in api.kaikki_rows(row["lemma"] for row in entries.values()).raw.items():
+        open_spans.setdefault(lemma, []).extend(matcher.row_spans(row))
+    kaikki_lemmas = [row["lemma"] for row in entries.values()] + list(record_lemmas.values())
+    for lemma, payload in api.kaikki_rows(dict.fromkeys(kaikki_lemmas)).raw.items():
         lemma = sources.unstressed_headword(lemma)
         for whole in (payload or {}).get("glosses", []):
             if isinstance(whole, str):
                 for part in sources._sub_senses(whole):
-                    for span in sources._sense_spans(part):
-                        remember(lemma, span, whole)
+                    open_spans.setdefault(lemma, []).extend((span, whole) for span in sources._sense_spans(part))
+
+    def public(lemma: str, pos: str) -> tuple[set[str], set[str]]:
+        """Normalized open-dictionary atoms and spans of one lemma."""
+        atoms, spans = set(), set()
+        for span, whole in open_spans.get(lemma, ()):
+            spans.update((matcher.normalize(span, pos), matcher.normalize(whole, pos)))
+            atoms.update(matcher.normalize(a, pos) for a in matcher.source_atoms(sources._gloss_head(span)))
+            group = matcher.classify(span)
+            if not group.reason:
+                atoms.update(matcher.normalize(a, pos) for a in matcher.source_atoms(group.head))
+        return atoms, spans
+
+    public_atoms, public_spans = {}, {}
+    for lemma in lemmas:
+        public_atoms[lemma], public_spans[lemma] = public(lemma, positions[lemma])
+    # A store gloss is public when it is an open atom or span of its own record's lemma.
+    record_public = {
+        wid: set().union(*public(sources.unstressed_headword(w["lemma"]), w["pos"])) for wid, w in words.items()
+    }
     forms = {}
     for word in words.values():
         forms.setdefault(sources.unstressed_headword(word["lemma"]), set()).update(
@@ -380,7 +402,7 @@ def leak_scan(
             "bindings" if path == prefix + bindings.BINDINGS else "words" if path == prefix + "_words.yaml" else "other"
         )
         scan(
-            _redact_validated_locations(content, context, words, api, kind=kind),
+            _redact_validated_locations(content, context, words, api, kind=kind, public=record_public),
             path,
             "committed_files",
             gate=path in gate_paths,

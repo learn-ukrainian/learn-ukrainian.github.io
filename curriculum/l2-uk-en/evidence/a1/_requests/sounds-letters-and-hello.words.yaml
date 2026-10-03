@@ -1,7 +1,8 @@
 request_schema: 1
 level: a1
 words:
-- {lemma: привіт, pos: noun, want: W-074, note: 'Greeting formula learned by ear, informal; ULP S1 lesson 1.'}
+- {lemma: привіт, pos: noun, want: W-074, note: 'Greeting formula learned by ear, informal; ULP S1 lesson 1.',
+  meaning: hi}
 - {lemma: добрий, pos: adj, want: W-075, note: 'Part of the fixed formal greeting chunk, not adjective grammar; ULP S1 lesson
     2.'}
 - {lemma: день, pos: noun, want: W-076, note: 'Part of the fixed formal greeting chunk, not noun grammar; ULP S1 lesson 2.'}

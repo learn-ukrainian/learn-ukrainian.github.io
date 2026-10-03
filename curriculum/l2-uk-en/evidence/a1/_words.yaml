@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: d4d194d38805382ce1c1675cd942ee4ce373b246
+  mcp_commit: f55d41f7228de1ab2e82a83bedd5a937fa9b4c23
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: cbc67dffe8492612fa52e2e4a421a9456d74ac2cec0cf508f040e8df78ab5404
+  sources_db: ec6764811a4f5a7c0411a01f47f7faf3a14164ca8cd11635ef72f7d85213302f
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -4715,14 +4715,11 @@ words:
     stress_source: ulif
     stressed: приві́ти
     tags: noun:inanim:p:v_zna
-  gloss_en: regards
-  gloss_ref:
-    id: 8228
-    row_sha256: 156b2c7ba895d06085b29dcf9a8ad4977fb20dd9ddf5f2f82459cfe4d6b7477e
-    table: dmklinger_uk_en
-  gloss_source: dmklinger_uk_en
+  gloss_en: hi
+  gloss_source: request_meaning
   id: W-074
   lemma: привіт
+  meaning: hi
   note: Greeting formula learned by ear, informal; ULP S1 lesson 1.
   pos: noun
   shadow:

@@ -1549,3 +1549,54 @@ def lock_yaml(data):
     from scripts.curriculum.evidence import lock
 
     return lock.yaml_bytes(data)
+
+
+@pytest.mark.parametrize(
+    "case,expected",
+    [
+        ("own_lemma_atom", "checked"),
+        ("unvalidated_location", "failed"),
+        ("other_lemma", "failed"),
+        ("private_only", "failed"),
+    ],
+)
+def test_store_gloss_is_public_only_as_an_open_atom_of_its_own_lemma(bound, tmp_path, case, expected):
+    """добрий/добре (#9543): another lemma's private entry sharing the English is no leak."""
+    _root, api, _b = bound
+    neighbour = {"lemma": "neighbour", "stressed": "neighbour", "pos": "adv", "kind": "word", "locator": "p201 n#2"}
+    context = bindings.Context("a1", {}, [*bindings.public_entries(a1_reference.INVENTORY_PATH), neighbour])
+    # The neighbouring lemma's private meaning is the synthetic lemma's plain first meaning.
+    meaning = "neighbourly secret" if case == "private_only" else "first translation"
+    private = {
+        FIXTURE["private"]["locator"]: FIXTURE["private"],
+        neighbour["locator"]: {"locator": neighbour["locator"], "printed_label": "neighbour", "meaning": meaning},
+    }
+    word = {**WORD, "forms": [{"form": "neighbour"}]}
+    if case == "other_lemma":
+        word = {**word, "id": "W-002", "lemma": "outsider", "meaning": meaning}
+    elif case == "private_only":
+        word = {**word, "meaning": meaning}
+    lemma_rows = api.gloss_rows([(word["lemma"], word["pos"])]).raw.get((word["lemma"], word["pos"]), [])
+    selection = context.select(word, lemma_rows, None)
+    assert selection.gloss == meaning
+    record = {**word, "gloss_en": selection.gloss, "gloss_source": selection.source}
+    if selection.ref is not None and case != "unvalidated_location":
+        record["gloss_ref"] = selection.ref
+    # Only the synthetic lemma's plain first meaning comes from its open dictionary row.
+    assert (selection.source == "dmklinger_uk_en") == (case in {"own_lemma_atom", "unvalidated_location"})
+    repo = tmp_path / "own-lemma-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
+    level = repo / "curriculum/l2-uk-en/evidence/a1"
+    level.mkdir(parents=True)
+    (level / "_words.yaml").write_bytes(lock_yaml({"words": [record]}))
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "store")
+    result = sense_cli.leak_scan(repo, private, context, {"words": [record]}, api, base="HEAD^")
+    assert result["status"] == expected, result
+    if expected == "failed":
+        assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 1}
+    assert meaning not in json.dumps(result)
