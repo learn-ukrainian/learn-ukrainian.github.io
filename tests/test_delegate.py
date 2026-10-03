@@ -18066,3 +18066,10 @@ def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_pat
     assert tc["review_access"] == "full" and tc["review_cwd"] == str(tmp_path)
     assert tc["reviewer_tools"] is True and "allowed_tools" not in tc
     assert tc["strict_mcp_config"] is True
+
+
+@pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_delivery_declaration_preserves_unicode_separators(sep):
+    declaration = {"outcome": "no_change", "reason": f"a{sep}b"}
+    response = "Report\nDELIVERABLE: " + json.dumps(declaration, ensure_ascii=False) + "\n"
+    assert delegate._parse_delivery_declaration(response) == declaration
