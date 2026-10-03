@@ -203,7 +203,9 @@ def test_read_only_sparse_dispatch_flags_a_relative_database_open(
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [f"data/{name}"]
-    assert state["last_error"] == f"read-only checkout mutation detected: data/{name}"
+    assert f"read-only checkout mutation detected: data/{name}" in state["last_error"]
+    assert str(primary / "data" / name) in state["last_error"]
+    assert "mode=ro" in state["last_error"]
     # The open created a separate file in the worktree; nothing reached the primary.
     created = worktree / "data" / name
     assert created.is_file() and not created.is_symlink()
@@ -301,3 +303,16 @@ def test_read_only_database_openers_never_create_a_missing_file(tmp_path: Path, 
 
     assert not missing.exists()
     assert list(missing.parent.iterdir()) == []
+
+
+def test_augment_prompt_with_worktree_teaches_primary_database_access(primary: Path) -> None:
+    """_augment_prompt_with_worktree teaches primary database paths and MCP preference."""
+    worktree = primary / ".worktrees" / "dispatch" / "agy" / "task-1"
+    prompt = delegate._augment_prompt_with_worktree(
+        "Review sentences.", worktree, mode="read-only"
+    )
+    assert "[database access in worktrees]" in prompt
+    assert str(primary / "data" / "sources.db") in prompt
+    assert str(primary / "data" / "vesum.db") in prompt
+    assert "mode=ro" in prompt
+    assert "Prefer MCP tools (`sources` server: `verify_words`, `search_text`, etc.)" in prompt

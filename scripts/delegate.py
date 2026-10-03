@@ -180,7 +180,7 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.agent_runtime import bounded_advisory
 from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
-from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
+from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
@@ -8182,6 +8182,28 @@ def _augment_prompt_with_worktree(
             "Run at most the specific tests that reproduce a finding you are checking.\n"
             "Cite CI run ids for suite results.\n"
         )
+    db_note = ""
+    if worktree_path is not None:
+        primary_root = _main_checkout_root(worktree_path)
+        if primary_root == worktree_path and worktree_path != _REPO_ROOT:
+            primary_root = _main_checkout_root(_REPO_ROOT)
+        sources_override = os.environ.get("LU_SOURCES_DB")
+        primary_sources = (
+            Path(sources_override).resolve()
+            if sources_override
+            else (primary_root / "data" / "sources.db")
+        )
+        primary_vesum = primary_root / "data" / "vesum.db"
+        db_note = (
+            "\n[database access in worktrees]\n"
+            "Primary databases (data/sources.db, data/vesum.db) reside in the primary checkout, "
+            "not in this worktree. Prefer MCP tools (`sources` server: `verify_words`, `search_text`, etc.) "
+            "which resolve databases automatically. If running ad-hoc Python/SQLite queries, NEVER use a relative "
+            "path like `data/sources.db` or `data/vesum.db` (which creates an empty file in the worktree and triggers "
+            "read-only checkout mutation failure); connect to the primary database using its absolute path read-only: "
+            f"`sqlite3.connect('file:{primary_sources}?mode=ro', uri=True)` or "
+            f"`sqlite3.connect('file:{primary_vesum}?mode=ro', uri=True)`.\n"
+        )
     # #8775: the path is data. ASCII JSON quoting keeps it one quoted line even
     # if an unvalidated path ever reaches this block.
     return (
@@ -8202,7 +8224,7 @@ def _augment_prompt_with_worktree(
         "(the absolute primary interpreter), never `python`, `.venv/bin/python`, or "
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
-        f"{sparse_note}{test_scope}{delivery_note}\n"
+        f"{sparse_note}{test_scope}{delivery_note}{db_note}\n"
         f"{prompt}"
     )
 
@@ -9459,6 +9481,26 @@ def _run_worker(
             last_error = f"{reason}; {last_error}" if last_error else reason
         if read_only_mutation_paths:
             mutation_diagnostic = "read-only checkout mutation detected: " + ", ".join(read_only_mutation_paths)
+            db_mutations = [p for p in read_only_mutation_paths if p in ("data/sources.db", "data/vesum.db")]
+            if db_mutations:
+                primary_root = _main_checkout_root(Path(cwd))
+                if primary_root == Path(cwd) and Path(cwd) != _REPO_ROOT:
+                    primary_root = _main_checkout_root(_REPO_ROOT)
+                sources_override = os.environ.get("LU_SOURCES_DB")
+                primary_sources = (
+                    Path(sources_override).resolve()
+                    if sources_override
+                    else (primary_root / "data" / "sources.db")
+                )
+                primary_vesum = primary_root / "data" / "vesum.db"
+                remedies = []
+                for p in db_mutations:
+                    target = primary_sources if p == "data/sources.db" else primary_vesum
+                    remedies.append(f"sqlite3.connect('file:{target}?mode=ro', uri=True)")
+                mutation_diagnostic += (
+                    f" (databases do not reside in sparse worktrees; ad-hoc queries must open the "
+                    f"primary database read-only by absolute path: {'; '.join(remedies)})"
+                )
             # Never REPLACE a real failure with the guard diagnostic (#7124):
             # overwriting it hid the actual cause (e.g. a SIGKILLed worker's
             # stderr) behind the mutation list. The paths stay independently
