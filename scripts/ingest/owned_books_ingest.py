@@ -198,7 +198,9 @@ def package_text(payload: bytes, extension: str) -> list[tuple[int, str]]:
         return result
 
 
-def extract(payload: bytes, extension: str) -> tuple[list[tuple[int, str]], list[dict], str]:
+def extract(
+    payload: bytes, extension: str, *, file_accounting: dict | None = None
+) -> tuple[list[tuple[int, str]], list[dict], str]:
     """Extract content and page accounting; exceptions have class-only messages."""
     try:
         page_errors = set()
@@ -214,6 +216,8 @@ def extract(payload: bytes, extension: str) -> tuple[list[tuple[int, str]], list
                     with pymupdf.open(stream=payload, filetype=extension[1:]) as document:
                         if document.is_encrypted:
                             raise IngestError("encrypted")
+                        if extension == ".pdf" and document.authenticate("") == 2 and file_accounting is not None:
+                            file_accounting["owner_restricted"] = True
                         units = []
                         for i in range(len(document)):
                             try:
@@ -277,12 +281,17 @@ def extract(payload: bytes, extension: str) -> tuple[list[tuple[int, str]], list
 def collect(row: dict, files: list[Path]) -> tuple[list[tuple[str, int, str]], list[dict]]:
     """Account for every matched file and archive leaf without disclosing names."""
     units, accounting = [], []
+    retained = []
+    digests = {}
 
     def visit(payload: bytes | None, name: str, index: str, depth: int, path: Path | None = None) -> None:
         entry = {"file_index": index}
         accounting.append(entry)
         extension = Path(name).suffix.lower()
         try:
+            if Path(name).name == ".DS_Store" or Path(name).name.startswith("._"):
+                entry["status"] = "skipped:ignored_metadata"
+                return
             if extension == ".zip":
                 if depth > 1:
                     entry["status"] = "skipped:nested_archive_depth"
@@ -330,8 +339,25 @@ def collect(row: dict, files: list[Path]) -> tuple[list[tuple[str, int, str]], l
             if extension in {".mp3", ".m4b", ".wav", ".m4a", ".apkg"}:
                 entry["status"] = "skipped:audio_or_deck"
                 return
-            extracted, pages, status = extract(path.read_bytes() if path is not None else payload, extension)
+            extracted, pages, status = extract(
+                path.read_bytes() if path is not None else payload, extension, file_accounting=entry
+            )
             entry.update(status=status, pages=pages)
+            normalised = " ".join(unicodedata.normalize("NFC", "\n".join(text for _, text in extracted)).split())
+            if normalised and status == "extracted":
+                digest = hashlib.sha256(normalised.encode("utf-8")).hexdigest()
+                entry["text_sha256"] = digest
+                exact_donor = digests.get(digest)
+                donor = (
+                    exact_donor
+                    if exact_donor is not None
+                    else next((i for i, text in retained if normalised in text), None)
+                )
+                if donor is not None:
+                    entry["status"] = f"duplicate_of:f{donor}"
+                    return
+                retained.append((index, normalised))
+                digests[digest] = index
             units.extend((index, page, text) for page, text in extracted)
         except IngestError as exc:
             entry["status"] = f"skipped:{exc}" if str(exc) == "member_too_large" else f"error:{exc}"
@@ -516,6 +542,14 @@ def process_work(
             report["status"] = "error:missing_file"
         return report
     slug = source_identities(row)[0]
+    try:
+        rights = load_owned_rights()
+    except ValueError:
+        raise IngestError("owned_rights_unreadable") from None
+    if slug not in rights:
+        raise IngestError("owned_source_rights_missing")
+    if rights[slug]["rights"] != row["rights"]:
+        raise IngestError("owned_source_rights_mismatch")
     digest = input_digest(row, files, root)
     receipt_path, jsonl = out_dir / f"{slug}.manifest.json", out_dir / f"{slug}.jsonl"
     saved = None

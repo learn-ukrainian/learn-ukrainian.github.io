@@ -37,7 +37,12 @@ def load_owned_rights() -> dict[str, dict]:
     try:
         document = yaml.load(OWNED_RIGHTS_PATH.read_text(encoding="utf-8"), Loader=_UniqueRightsLoader)
         entries = document.get("sources") if isinstance(document, dict) else None
-        if type(document.get("schema")) is not int or document["schema"] != 1 or not isinstance(entries, dict) or not entries:
+        if (
+            type(document.get("schema")) is not int
+            or document["schema"] != 1
+            or not isinstance(entries, dict)
+            or not entries
+        ):
             raise ValueError("invalid rights document")
         for slug, entry in entries.items():
             if (

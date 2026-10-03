@@ -98,7 +98,10 @@ def pptx():
 
 
 @pytest.fixture
-def env(tmp_path):
+def env(tmp_path, monkeypatch):
+    rights = owned.load_owned_rights()
+    rights["owned-synthetic-work"] = {"rights": "owned_cite_only"}
+    monkeypatch.setattr(owned, "load_owned_rights", lambda: rights)
     db = tmp_path / "corpus.db"
     with sqlite3.connect(db) as conn:
         conn.executescript(SCHEMA)
@@ -707,3 +710,161 @@ def test_directory_inventory_accounts_csv_images_and_scanned_pdf(env):
     ]
     request.check = True
     assert owned.run(request)[1] == 0
+
+
+@pytest.mark.parametrize("packed", [False, True])
+def test_exact_pdf_duplicates_across_disk_and_archive_ingest_once(env, packed):
+    db, root, _inventory, _out = env
+    payload = pdf("Distinctiveword shared page.", "Secondword shared page.")
+    (root / "a.pdf").write_bytes(payload)
+    (root / ("b.zip" if packed else "b.pdf")).write_bytes(
+        archive([("member.pdf", payload)]) if packed else pdf("Distinctiveword shared page.", "Secondword shared page.")
+    )
+    report, code = owned.run(args(env, [row(files=["**/*"])]))
+    assert code == 0 and report["rows"][0]["chunks"] == 2
+    entries = report["rows"][0]["files"]
+    assert entries[-1]["file_index"] == ("2.1" if packed else "2")
+    assert entries[-1]["status"] == "duplicate_of:f1"
+    assert entries[-1]["text_sha256"] == entries[0]["text_sha256"]
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 2
+
+
+@pytest.mark.parametrize(
+    "texts,expected",
+    [
+        (["Prefixword middleword suffixword", "middleword"], ["extracted", "duplicate_of:f1"]),
+        (
+            ["Firstword middleword lastword", "Otherword middleword endword", "middleword"],
+            ["extracted", "extracted", "duplicate_of:f1"],
+        ),
+        (["Alpha beta gamma", "gamma delta epsilon"], ["extracted", "extracted"]),
+        # Matching separated regions is a partial overlap, not a substring.
+        (["Firstword sharedword insertedword Lastword", "Firstword sharedword Lastword"], ["extracted", "extracted"]),
+        (["Caf\u00e9 word", "Cafe\u0301\n\t word"], ["extracted", "duplicate_of:f1"]),
+        (["Earlierword middleword", "middleword", "Earlierword"], ["extracted", "duplicate_of:f1", "duplicate_of:f1"]),
+        # A later larger file is retained; only earlier retained files donate.
+        (["middleword", "Prefixword middleword suffixword"], ["extracted", "extracted"]),
+        # Whole-file containment remains independent of page and chunk boundaries.
+        (["Prefixword " + "a" * (owned.CHUNK_SIZE + 10) + " Suffixword", "a" * 40], ["extracted", "duplicate_of:f1"]),
+    ],
+)
+def test_normalised_whole_file_containment_earliest_donor_and_partial_overlap(env, texts, expected):
+    _db, root, _inventory, _out = env
+    for i, text in enumerate(texts):
+        (root / f"{i}.csv").write_text(text)
+    units, accounting = owned.collect(row(), sorted(root.glob("*.csv")))
+    assert [f["status"] for f in accounting] == expected
+    assert len(units) == expected.count("extracted")
+
+
+def test_empty_text_files_keep_no_text_accounting_and_are_not_deduplicated(env):
+    _db, root, _inventory, _out = env
+    for name in ("a.pdf", "b.pdf"):
+        (root / name).write_bytes(pdf(""))
+    units, accounting = owned.collect(row(), sorted(root.glob("*.pdf")))
+    assert not units
+    assert all(f["status"] == "skipped:scanned_needs_ocr" for f in accounting)
+    assert all("text_sha256" not in f for f in accounting)
+    assert all(f["pages"][0]["status"] == "page_no_text" for f in accounting)
+
+
+@pytest.mark.parametrize(
+    "policy,expected", [({}, "missing"), ({"owned-synthetic-work": {"rights": "private_permission"}}, "mismatch")]
+)
+@pytest.mark.parametrize("mode", ["ingest", "check", "dry_run"])
+def test_new_source_requires_matching_rights_before_any_writes(env, monkeypatch, policy, expected, mode):
+    db, root, _inventory, out = env
+    (root / "a.pdf").write_bytes(pdf("Readableword content."))
+    request = args(env, **({mode: True} if mode != "ingest" else {}))
+    before = db.read_bytes()
+    monkeypatch.setattr(owned, "load_owned_rights", lambda: policy)
+    report, code = owned.run(request)
+    assert code == 1 and report["rows"][0]["status"] == f"error:owned_source_rights_{expected}"
+    assert db.read_bytes() == before and not out.exists()
+
+
+def test_private_inventory_cannot_use_cite_only_rights(env):
+    db, root, _inventory, out = env
+    (root / "a.pdf").write_bytes(pdf("Readableword content."))
+    before = db.read_bytes()
+    report, code = owned.run(args(env, [row(rights="private_permission")]))
+    assert code == 1 and report["rows"][0]["status"] == "error:owned_source_rights_mismatch"
+    assert db.read_bytes() == before and not out.exists()
+
+
+@pytest.mark.parametrize("change", ["removed", "changed", "unreadable"])
+@pytest.mark.parametrize("mode", ["rerun", "check", "cached_load", "force"])
+def test_rights_withdrawal_blocks_valid_cached_artifacts_without_writes(env, monkeypatch, change, mode):
+    db, root, _inventory, out = env
+    (root / "a.pdf").write_bytes(pdf("Readableword content."))
+    request = args(env)
+    assert owned.run(request)[1] == 0
+    if mode == "cached_load":
+        target = db.with_name("fresh.db")
+        with sqlite3.connect(target) as conn:
+            conn.executescript(SCHEMA)
+        request.db = target
+    request.check = mode == "check"
+    request.force = mode == "force"
+    before = request.db.read_bytes(), {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in out.iterdir()}
+    if change == "unreadable":
+
+        def unreadable():
+            raise ValueError("SENSITIVE_SENTINEL")
+
+        monkeypatch.setattr(owned, "load_owned_rights", unreadable)
+        error = "owned_rights_unreadable"
+    else:
+        monkeypatch.setattr(
+            owned,
+            "load_owned_rights",
+            lambda: {} if change == "removed" else {"owned-synthetic-work": {"rights": "private_permission"}},
+        )
+        error = f"owned_source_rights_{'missing' if change == 'removed' else 'mismatch'}"
+    report, code = owned.run(request)
+    assert code == 1 and report["rows"][0]["status"] == f"error:{error}"
+    assert before == (request.db.read_bytes(), {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in out.iterdir()})
+
+
+def test_disk_metadata_files_are_ignored_and_check_passes(env):
+    _db, root, _inventory, _out = env
+    (root / "a.pdf").write_bytes(pdf("Readableword content."))
+    for name in (".DS_Store", "._x.pdf"):
+        (root / name).write_bytes(b"not valid documents")
+    request = args(env, [row(files=["**/*"])])
+    report, code = owned.run(request)
+    assert code == 0 and report["rows"][0]["chunks"] == 1
+    assert [f["status"] for f in report["rows"][0]["files"]] == [
+        "skipped:ignored_metadata",
+        "skipped:ignored_metadata",
+        "extracted",
+    ]
+    request.check = True
+    assert owned.run(request)[1] == 0
+
+
+@pytest.mark.parametrize("packed", [False, True])
+@pytest.mark.parametrize("user_password", ["", "synthetic-user"])
+def test_owner_password_is_accounted_but_user_password_is_refused(env, packed, user_password):
+    _db, root, _inventory, _out = env
+    with pymupdf.open(stream=pdf("Readableword restricted content."), filetype="pdf") as doc:
+        payload = doc.tobytes(
+            encryption=pymupdf.PDF_ENCRYPT_AES_256,
+            owner_pw="synthetic-owner",
+            user_pw=user_password,
+            permissions=pymupdf.PDF_PERM_PRINT,
+        )
+    (root / ("a.zip" if packed else "a.pdf")).write_bytes(archive([("member.pdf", payload)]) if packed else payload)
+    request = args(env, [row(files=["**/*"])])
+    report, code = owned.run(request)
+    entry = report["rows"][0]["files"][-1]
+    if user_password:
+        assert code == 1 and entry["status"] == "error:encrypted"
+        assert "owner_restricted" not in entry
+    else:
+        assert code == 0 and entry["status"] == "extracted"
+        assert entry["owner_restricted"] is True
+        assert report["rows"][0]["chunks"] == 1
+        request.check = True
+        assert owned.run(request)[1] == 0

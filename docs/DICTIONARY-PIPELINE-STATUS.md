@@ -68,6 +68,11 @@ clean pages remain ingestable. Directory inventories also support UTF-8 CSV
 reference text and account for JPEG pages as OCR residuals. Existing works keep their identities; ULP premium
 packs list the six already-ingested season identities, each validated against the
 corpus and rights record. No sentence-overlap deduplication is used.
+New works require matching inventory and registry rights before extraction or
+cached JSONL reuse. Exact normalised whole-file duplicates and text wholly
+contained in an earlier retained file are accounted as `duplicate_of` without
+new chunks; partial overlaps remain. Disk and archive metadata are ignored, and
+owner-only password PDFs are extracted with restriction accounting.
 `registry/sources/owned-rights.yaml` denies all owned quotes and denies citations
 of private-permission material. See the [private-reference regeneration
 recipe](corpus-inventory.md#private-reference-sources-textbooks). Apply to a local

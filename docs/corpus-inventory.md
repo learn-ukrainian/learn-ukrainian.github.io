@@ -291,9 +291,18 @@ extracted slides and other text units. Zero-letter pages count as
 `page_no_text`. Garbled pages are excluded from the scanned-PDF threshold.
 An `already_ingested` row supplies either `source_file` or a nonempty, unique
 `source_files` list. Every identity must exist in the corpus and rights record.
+Before extraction or cached-artifact reuse, each new identity must have a rights
+record matching the inventory's class; missing or mismatched records fail closed.
 ULP premium packs map to the six existing season identities without new extraction.
 Unknown ingest modes fail with `unknown_ingest`. Terminal `/**` globs select all
-regular files recursively; AppleDouble archive members (`._*`) are ignored. CSV
+regular files recursively; `.DS_Store` and AppleDouble (`._*`) metadata are ignored
+on disk and in archives. Owner-only password PDFs remain extractable and carry
+`owner_restricted: true` accounting; user-password PDFs are refused as `encrypted`.
+Within each work, NFC-normalised, whitespace-collapsed file text is hashed with
+SHA-256 before chunking. Identical files and files wholly contained in an earlier
+retained file add no chunks and point to the earliest donor as `duplicate_of:f<index>`
+(including archive-member indexes). Empty text retains its no-text accounting;
+partially overlapping files remain ingestable. CSV
 text retains serialized rows, separators and quotes without guessing its dialect.
 
 Unchanged reruns make no writes. A changed input digest is `stale_input` until
