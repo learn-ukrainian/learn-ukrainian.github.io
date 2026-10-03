@@ -204,14 +204,21 @@ def _assert_under_root(full_path: Path, root_path: Path) -> None:
     # codeql[py/path-injection] -- this IS the path-traversal validator; full_path
     # has already been validated by safe_join (commonpath) upstream. See #1860.
     try:
-        full_path.resolve().relative_to(root_path.resolve())
+        _relative_to_root(full_path.resolve(), root_path.resolve())
     except ValueError as e:
         raise HTTPException(status_code=403, detail="Path traversal not allowed") from e
 
 
 def _relative_to_root(path: Path, root: Path) -> str:
     """Return a stable root-relative path across symlinked checkout roots."""
-    return path.relative_to(root).as_posix()
+    # Compare complete lexical components, without constructing every ancestor
+    # of root (Path.relative_to does that on Python 3.12, even without walk_up).
+    # Resolved containment remains the responsibility of _assert_under_root.
+    root_parts = root.parts
+    path_parts = path.parts
+    if path_parts[:len(root_parts)] != root_parts:
+        raise ValueError(f"{str(path)!r} is not in the subpath of {str(root)!r}")
+    return "/".join(path_parts[len(root_parts):]) or "."
 
 
 def _directory_listing(path: str, root_key: str, root_path: Path, remainder: str) -> dict:
