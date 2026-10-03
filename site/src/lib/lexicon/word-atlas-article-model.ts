@@ -6,6 +6,7 @@
 import {
   resolveHeritageBoxes,
   standardAlternatives,
+  SURZHYK_TO_AVOID_SOURCE,
   type UsageLabel,
   type WarningSeverity,
 } from "./heritage-severity";
@@ -152,9 +153,11 @@ export interface HeritageAttestation {
 }
 
 export interface CuratedCalque {
-  kind: "participle" | "phrasal" | "sense_restricted";
+  kind: "participle" | "phrasal" | "sense_restricted" | "lexical";
   corrections: string[];
   note: string;
+  noteUk?: string;
+  evidence?: string[];
   source: string[];
   calque_sense?: string;
   authentic_sense?: string;
@@ -181,6 +184,7 @@ export interface HeritageStatus {
   "§6_note"?: {
     corrections: string[];
     note: string;
+    noteUk?: string;
     source: string[];
     citation?: string;
   } | null;
@@ -1162,7 +1166,11 @@ export function buildWordAtlasArticleView(
   );
   const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
   const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
-  const styleNotes = buildStyleNotes(heritage, heritageBoxes.usageLabel, entry.gloss ?? null, entry.lemma);
+  const styleNotes = buildStyleNotes(heritage, heritageBoxes.usageLabel, {
+    gloss: entry.gloss ?? null,
+    headword: entry.lemma,
+    avoidListed: entry.primary_source === SURZHYK_TO_AVOID_SOURCE,
+  });
   const statusBadges = buildStatusBadges({
     heritageBoxes,
     cefrLevel,
@@ -1327,7 +1335,7 @@ function buildStatusBadges(args: {
   } else if (heritageBoxes.green) {
     badges.push({
       className: "heritage-ok",
-      label: heritageBoxes.inline?.label ?? "✓ Питома українська лексика",
+      label: heritageBoxes.inline?.label ?? "✓ Засвідчена українська форма",
     });
   } else if (heritageBoxes.blue) {
     badges.push({ className: "heritage-warn", label: "СУМ-11: редакторський прапорець" });
@@ -1391,6 +1399,14 @@ const USAGE_CLASS_LABELS_UK: Record<string, string> = {
   borrowing: "запозичення",
 };
 
+function asSentence(text: string): string {
+  const trimmed = text.trim();
+  return /[.!?…]$/u.test(trimmed) ? trimmed : `${trimmed}.`;
+}
+
+// #9603: the reverse record names the warned form (``calque``), the
+// replacement (this headword) and its own scope note. Its citations are
+// references, not an excerpt establishing the replacement.
 function reverseCalqueNote(item: ReverseCalque, headword: string): string {
   const where =
     item.kind === "sense_restricted"
@@ -1400,11 +1416,55 @@ function reverseCalqueNote(item: ReverseCalque, headword: string): string {
       : item.kind === "phrasal"
         ? " (у сполученні)"
         : "";
-  const sources = item.source?.length ? ` Джерела: ${item.source.join(", ")}.` : "";
-  return `«${headword}» — рекомендований відповідник замість «${item.calque}»${where}. Застереження стосується «${item.calque}», а не цього слова.${sources}`;
+  const context = (item.noteUk || item.note || "").trim();
+  const contextClause = context ? ` Примітка запису: ${asSentence(context)}` : "";
+  const sources = item.source?.length ? ` Посилання запису: ${item.source.join(", ")}.` : "";
+  return (
+    `Запис Атласу подає «${headword}» як заміну для «${item.calque}»${where}.${contextClause}` +
+    ` Застереження стосується «${item.calque}», а не цього слова.` +
+    ` Витягу з нормативного джерела, який установлював би цю заміну та її обсяг, запис не містить.${sources}`
+  );
 }
 
-function buildStyleNotes(heritage: HeritageStatus | null, usageLabel: UsageLabel, gloss: string | null, headword = "") {
+const MAX_EVIDENCE_NOTES = 2;
+
+function avoidListNote(usageLabel: UsageLabel, alternatives: string[]): string {
+  const offered =
+    usageLabel.scope !== "unresolved" && alternatives.length > 0
+      ? ` Атлас пропонує відповідники: ${alternatives.join(", ")}; чи стосується це всього слова, окремого значення чи сполучення, запис не визначає.`
+      : "";
+  return `Слово внесено до переліку Атласу «суржик, якого слід уникати». Витягу з джерела, який стосувався б усього слова, запис не містить, тому слово не позначено як ненормативне.${offered}`;
+}
+
+function unresolvedNotes(heritage: HeritageStatus | null, gloss: string | null): string[] {
+  const notes: string[] = [];
+  const alternatives = standardAlternatives(heritage, gloss);
+  const classLabel = USAGE_CLASS_LABELS_UK[heritage?.classification ?? ""];
+  if (alternatives.length > 0) {
+    notes.push(
+      `Довідкові джерела пропонують відповідники: ${alternatives.join(", ")}. Джерело не визначає, чи це стосується всього слова, окремого значення чи сполучення, тому слово не позначено як русизм або кальку.`,
+    );
+  } else if (classLabel) {
+    notes.push(
+      `Класифікацію «${classLabel}» не підтверджено позначкою в заголовку словникової статті про це слово, тому її не показано як ознаку слова.`,
+    );
+  }
+  for (const item of (heritage?.curated_calque?.evidence ?? []).slice(0, MAX_EVIDENCE_NOTES)) {
+    const separator = item.indexOf(":");
+    if (separator > 0) {
+      notes.push(`Витяг із джерела (${item.slice(0, separator).trim()}): ${asSentence(item.slice(separator + 1))}`);
+    }
+  }
+  const atlasNote = heritage?.curated_calque?.noteUk ?? heritage?.["§6_note"]?.noteUk;
+  if (atlasNote) notes.push(`Примітка Атласу, не підтверджена витягом із джерела: ${asSentence(atlasNote)}`);
+  return notes;
+}
+
+function buildStyleNotes(
+  heritage: HeritageStatus | null,
+  usageLabel: UsageLabel,
+  context: { gloss: string | null; headword?: string; avoidListed: boolean },
+) {
   const notes: string[] = [];
   if (heritage?.russian_shadow) {
     notes.push(
@@ -1419,22 +1479,17 @@ function buildStyleNotes(heritage: HeritageStatus | null, usageLabel: UsageLabel
       `${heritage.curated_calque.note} Нейтральні відповідники: ${heritage.curated_calque.corrections.join(", ")}.`,
     );
   }
-  // #9603: guidance whose scope the record does not establish stays a note.
+  // #9603: the avoid list is provenance; without bound evidence it stays a note.
+  const boundCondemnation = usageLabel.scope === "lemma" && (usageLabel.code === "rus" || usageLabel.code === "calq");
+  if (context.avoidListed && !boundCondemnation) {
+    notes.push(avoidListNote(usageLabel, standardAlternatives(heritage, context.gloss)));
+  }
+  // Guidance whose scope the record does not establish stays a note.
   if (usageLabel.scope === "unresolved") {
-    const alternatives = standardAlternatives(heritage, gloss);
-    const classLabel = USAGE_CLASS_LABELS_UK[heritage?.classification ?? ""];
-    if (alternatives.length > 0) {
-      notes.push(
-        `Довідкові джерела пропонують відповідники: ${alternatives.join(", ")}. Джерело не визначає, чи це стосується всього слова, окремого значення чи сполучення, тому слово не позначено як русизм або кальку.`,
-      );
-    } else if (classLabel) {
-      notes.push(
-        `Позначку «${classLabel}» у джерелах не прив'язано до слова загалом: вона може стосуватися окремого значення, спорідненої форми чи цитати, тому її не показано як ознаку слова.`,
-      );
-    }
+    notes.push(...unresolvedNotes(heritage, context.gloss));
   }
   for (const item of heritage?.reverse_calques ?? []) {
-    notes.push(reverseCalqueNote(item, headword));
+    notes.push(reverseCalqueNote(item, context.headword ?? ""));
   }
   return notes;
 }

@@ -4,15 +4,22 @@ from pathlib import Path
 import pytest
 
 from scripts.audit.generate_search_index import classification_code
+from scripts.lexicon import heritage_classifier
 from scripts.lexicon.enrich_manifest import _SLOVNYK_CACHE_SCHEMA_VERSION
 from scripts.lexicon.heritage_classifier import (
     _cached_slovnyk_hits,
+    bound_evidence,
+    card_headword_matches,
     classify_lemma,
     classify_surface_form,
     compute_warning_severity,
+    is_normative_locator,
     modern_headword_labels,
+    names_headword,
     normative_citations,
     resolve_usage_label,
+    shares_referent,
+    support_passages,
 )
 
 DB = Path(__file__).resolve().parent / "fixtures" / "heritage_sample.db"
@@ -100,13 +107,13 @@ def test_atlas_heritage_labels_use_source_backed_evidence() -> None:
 
         assert status["classification"] == classification
         assert status["is_russianism"] is False
-        # #9603: ЕСУМ/Грінченко attestations are preserved, but their markers
-        # may belong to a sense, cognate or quotation, so they never label the
-        # headword by themselves. «глагол» keeps «калька» only through its
-        # curated lexical record naming Антоненко-Давидович.
-        assert classification_code({"primary_source": "built_vocabulary", "heritage_status": status}) == (
-            "calq" if lemma == "глагол" else None
-        )
+        # #9603: attestations are preserved; without the article headword and
+        # its dictionary card nothing binds a public label. «глагол» cites only
+        # the book title of Антоненко-Давидович, with no excerpt naming the
+        # word, so its calque record stays unresolved.
+        assert classification_code({"primary_source": "built_vocabulary", "heritage_status": status}) is None
+        if lemma == "глагол":
+            assert resolve_usage_label(status, headword=lemma)["reason"] == "no_headword_bound_evidence"
         assert any(
             attestation["source"] in {"grinchenko_1907", "esum"}
             for attestation in status["attestations"]
@@ -303,7 +310,7 @@ _NAMED_LEXICAL_CALQUE = {
             0,
             "treasured",
         ),
-        # Positive control: a curated lexical calque naming Антоненко-Давидович.
+        # #9603 D05: a citation is not evidence; ``participle`` is not a scope.
         (
             {
                 "classification": "unknown",
@@ -314,9 +321,8 @@ _NAMED_LEXICAL_CALQUE = {
             },
             False,
             0,
-            "calque_yellow",
+            "none",
         ),
-        # Positive control: a named lexical Russianism stays red.
         (
             {
                 "classification": "russianism",
@@ -326,7 +332,7 @@ _NAMED_LEXICAL_CALQUE = {
             },
             False,
             0,
-            "russianism_red",
+            "none",
         ),
         # A curated record without a named normative authority is unresolved.
         (
@@ -337,6 +343,17 @@ _NAMED_LEXICAL_CALQUE = {
                 "curated_calque": {"kind": "lexical", "corrections": ["чинний"], "source": ["ua-gec"]},
             },
             False,
+            0,
+            "none",
+        ),
+        # #7982: an unresolved calque claim on an archaism is neutral, not green.
+        (
+            {
+                "classification": "authentic-archaism",
+                "attestations": [{"source": "grinchenko_1907", "ref": "9370"}],
+                "calque_warning": {"kind": "lexical", "citations": ["antonenko:Як ми говоримо"]},
+            },
+            True,
             0,
             "none",
         ),
@@ -492,11 +509,18 @@ def test_source_db_path_has_no_hardcoded_absolute_path() -> None:
 
 
 def test_convergence_calques_receive_yellow_severity_and_alternatives() -> None:
-    """Pre-Soviet attestation or VESUM membership must not create false-positive green badges for convergence calques (#7982)."""
+    """Pre-Soviet attestation or VESUM membership must not create false-positive green badges for convergence calques (#7982).
+
+    #9603: their curated records cite only the book title «Як ми говоримо»,
+    with no excerpt naming the headword, so the claim is unresolved: neutral
+    (neither a lemma warning nor a green defence), with the replacement and
+    gate fields preserved.
+    """
     # 1. Lexical calque with historical attestation: мисль -> думка
     mysl = classify_lemma("мисль", db_path=DB, vesum_db_path=VESUM_DB)
     assert mysl["classification"] == "calque"
-    assert mysl["warning_severity"] == "calque_yellow"
+    assert mysl["warning_severity"] == "none"
+    assert resolve_usage_label(mysl, headword="мисль")["reason"] == "no_headword_bound_evidence"
     assert mysl["is_russianism"] is False
     assert mysl.get("calque_warning") is not None
     assert mysl["calque_warning"]["standard_alternatives"] == ["думка"]
@@ -504,14 +528,14 @@ def test_convergence_calques_receive_yellow_severity_and_alternatives() -> None:
     # Surface form must also inherit calque warning and yellow severity
     mysli = classify_surface_form("мислі", db_path=DB, vesum_db_path=VESUM_DB)
     assert mysli["classification"] == "calque"
-    assert mysli["warning_severity"] == "calque_yellow"
+    assert mysli["warning_severity"] == "none"
     assert mysli.get("calque_warning") is not None
     assert mysli["calque_warning"]["standard_alternatives"] == ["думка"]
 
     # 2. Authentic archaism with calque warning: глагол -> дієслово, слово
     hlahol = classify_lemma("глагол", db_path=DB, vesum_db_path=VESUM_DB)
     assert hlahol["classification"] == "authentic-archaism"
-    assert hlahol["warning_severity"] == "calque_yellow"
+    assert hlahol["warning_severity"] == "none"
     assert hlahol["is_russianism"] is False
     assert hlahol.get("calque_warning") is not None
     assert hlahol["calque_warning"]["standard_alternatives"] == ["дієслово", "слово"]
@@ -631,9 +655,17 @@ def test_sense_restricted_calque_stays_contextual() -> None:
     label = resolve_usage_label(status, headword="біля")
     assert label["scope"] == "sense"
     assert label["code"] is None
-    assert label["authority"] == ["litvinova-7"]
+    # A citation names where to look; only an excerpt binds an authority.
+    assert label["authority"] == []
     assert label["evidence"] == "approximately before a quantity"
     assert classification_code({"lemma": "біля", "heritage_status": status}) is None
+    bound = {
+        **status["curated_calque"],
+        "evidence": ["7-klas-ukrmova-litvinova-2024_s0010: Кажемо близько ста учнів, а не біля ста учнів."],
+    }
+    label = resolve_usage_label({**status, "curated_calque": bound}, headword="біля")
+    assert label["scope"] == "sense"
+    assert label["authority"] == ["7-klas-ukrmova-litvinova-2024_s0010"]
 
 
 def test_stale_db_russianism_without_scope_is_unresolved() -> None:
@@ -664,34 +696,90 @@ def test_stale_severity_alone_never_labels() -> None:
         assert classification_code({"lemma": "слово", "heritage_status": status}) is None
 
 
+_SUM20_ATTACHED_HOMONYM = "ДИВА́Н², у, ч., іст. Дорадчий орган у султанській Туреччині."
+_ESUM_HRYD = {
+    "source": "esum",
+    "ref": "гридь:1:592",
+    "word": "гридь",
+    "detail": "гридь (іст.) «нижча верхівка княжої дружини», грйдень «охоронець князя» Ж; — р. (іст.) гридь",
+}
+_HRYD_GLOSS = "У стародавній Русі — нижча верства княжої дружини."
+# Real excerpts: sources MCP style_guide id 44 / antonenko p031; calque_corrections evidence.
+_MIRO_SUPPORT = {
+    "locator": "antonenko-davydovych-yak-my-hovorymo_p031",
+    "passage": '"У нас провели такі міроприємства" і под. Такого слова не було й нема в українській мові.',
+}
+_MIRO_STORED_EVIDENCE = "Антоненко-Давидович: Відповідником до російських мера, мероприятие є захід, а в множині — заходи"
+_SLID_STORED_EVIDENCE = (
+    "9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; "
+    "Як правильно перекласти ... следующий? ... наступний"
+)
+_BAZH_EVIDENCE = "antonenko-davydovych-yak-my-hovorymo_p099: Бажаючий – що (котрий, який) бажає – охочий"
+
+
 @pytest.mark.parametrize(
-    ("status", "cards", "expected_code", "expected_reason"),
+    ("headword", "status", "cards", "expected_code", "expected_reason"),
     [
         # СУМ-20 headword label binds the historism.
-        ({"classification": "historism"}, [_card("sum20", _SUM20_VOZNYI)], "hist", "lemma"),
+        ("возний", {"classification": "historism"}, [_card("sum20", _SUM20_VOZNYI)], "hist", "lemma"),
         # The label belongs to sense 1 only (диван): no word-level label.
-        ({"classification": "historism"}, [_card("sum20", _SUM20_DYVAN_SENSE)], None, "СУМ-20_headword_unlabelled"),
+        (
+            "диван",
+            {"classification": "historism"},
+            [_card("sum20", _SUM20_DYVAN_SENSE)],
+            None,
+            "СУМ-20_headword_unlabelled",
+        ),
         # A homonym-indexed card cannot label one Atlas headword.
-        ({"classification": "historism"}, [_card("sum20", _SUM20_HOMONYM)], None, "СУМ-20_headword_unlabelled"),
+        ("диван", {"classification": "historism"}, [_card("sum20", _SUM20_HOMONYM)], None, "СУМ-20_headword_unlabelled"),
+        (
+            "диван",
+            {"classification": "historism"},
+            [_card("sum20", _SUM20_ATTACHED_HOMONYM)],
+            None,
+            "СУМ-20_headword_unlabelled",
+        ),
         # The modern dictionary has the headword unlabelled (город).
-        ({"classification": "authentic-archaism"}, [_card("sum20", _SUM20_HOROD)], None, "СУМ-20_headword_unlabelled"),
+        (
+            "город",
+            {"classification": "authentic-archaism"},
+            [_card("sum20", _SUM20_HOROD)],
+            None,
+            "СУМ-20_headword_unlabelled",
+        ),
         # ВТС is the modern fallback when СУМ-20 is absent.
-        ({"classification": "authentic-archaism"}, [_card("vts", _VTS_KRYN)], "arch", "lemma"),
+        ("крин", {"classification": "authentic-archaism"}, [_card("vts", _VTS_KRYN)], "arch", "lemma"),
+        # D04: a card for another headword or malformed text authorises nothing.
+        (
+            "живий",
+            {"classification": "historism"},
+            [_card("sum20", "ВОЗНИЙ, ного, ч., іст. Судовий урядовець.")],
+            None,
+            "no_headword_bound_label",
+        ),
+        ("слово", {"classification": "dialect"}, [_card("sum20", "garbage діал.")], None, "no_headword_bound_label"),
+        (None, {"classification": "historism"}, [_card("sum20", _SUM20_VOZNYI)], None, "no_headword_bound_label"),
         # ЕСУМ cognate marker (або: «п. діал.») never labels the headword.
         (
+            "або",
             {
                 "classification": "dialect",
-                "attestations": [{"source": "esum", "ref": "або:1:37", "word": "або", "detail": "або «чи»; — п. діал. «елементарний»"}],
+                "attestations": [
+                    {"source": "esum", "ref": "або:1:37", "word": "або", "detail": "або «чи»; — п. діал. «елементарний»"}
+                ],
             },
             None,
             None,
-            "no_modern_dictionary_label",
+            "no_headword_bound_label",
         ),
         # Грінченко quotation substring (хвіст.) never labels the headword.
         (
+            "зловити",
             {
                 "classification": "historism",
-                "attestations": [{"source": "grinchenko_1907", "ref": "1", "word": "зловити", "detail": "Зловив зайця за хвіст."}],
+                "attestations": [
+                    {"source": "grinchenko_1907", "ref": "1", "word": "зловити", "detail": "Зловив зайця за хвіст."}
+                ],
             },
             [_card("sum20", "ЗЛОВИ́ТИ, влю́, ви́ш, док. Схопити.")],
             None,
@@ -699,15 +787,24 @@ def test_stale_severity_alone_never_labels() -> None:
         ),
         # Borrowing is an etymological claim: ЕСУМ on the headword binds it.
         (
+            "диван",
             {
                 "classification": "borrowing",
-                "attestations": [{"source": "esum", "ref": "диван:2:63", "word": "диван", "detail": "диван «канапа» — запозичення з турецької"}],
+                "attestations": [
+                    {
+                        "source": "esum",
+                        "ref": "диван:2:63",
+                        "word": "диван",
+                        "detail": "диван «канапа» — запозичення з турецької",
+                    }
+                ],
             },
             None,
             "borr",
             "lemma",
         ),
         (
+            "диван",
             {
                 "classification": "borrowing",
                 "attestations": [{"source": "esum", "ref": "x:1:1", "word": "канапа", "detail": "канапа — запозичення"}],
@@ -718,8 +815,7 @@ def test_stale_severity_alone_never_labels() -> None:
         ),
     ],
 )
-def test_treasured_labels_need_headword_bound_modern_evidence(status, cards, expected_code, expected_reason) -> None:
-    headword = "диван" if status["classification"] == "borrowing" else "слово"
+def test_register_labels_need_headword_bound_evidence(headword, status, cards, expected_code, expected_reason) -> None:
     label = resolve_usage_label(status, headword=headword, definition_cards=cards)
     assert label["code"] == expected_code
     assert label["reason"] == expected_reason
@@ -728,18 +824,62 @@ def test_treasured_labels_need_headword_bound_modern_evidence(status, cards, exp
         assert label["authority"]
 
 
+def test_esum_headword_marker_binds_historical_witness() -> None:
+    """D02: гридь (іст.) in the ЕСУМ headword slot with the article's referent."""
+    status = {"classification": "historism", "attestations": [_ESUM_HRYD]}
+    label = resolve_usage_label(status, headword="гридь", gloss=_HRYD_GLOSS)
+    assert label == {
+        "code": "hist",
+        "scope": "lemma",
+        "authority": ["ЕСУМ, т. 1, с. 592"],
+        "evidence": "гридь (іст.) «нижча верхівка княжої дружини»",
+        "reason": "lemma",
+    }
+    assert compute_warning_severity(status, vesum_attested=True, headword="гридь") == "treasured"
+    entry = {"lemma": "гридь", "gloss": _HRYD_GLOSS, "heritage_status": status}
+    assert classification_code(entry) == "hist"
+
+
+@pytest.mark.parametrize(
+    ("headword", "gloss", "attestations", "cards"),
+    [
+        ("гридь", "sofa; couch", [_ESUM_HRYD], None),
+        ("гридь", None, [_ESUM_HRYD], None),
+        (
+            "гридь",
+            _HRYD_GLOSS,
+            [{**_ESUM_HRYD, "detail": "гридь «нижча верхівка княжої дружини», гридниця (іст.) «приміщення»"}],
+            None,
+        ),
+        ("гридня", _HRYD_GLOSS, [_ESUM_HRYD], None),
+        ("гридь", _HRYD_GLOSS, [{**_ESUM_HRYD, "source": "grinchenko_1907"}], None),
+        # A modern card for the headword decides modern register.
+        ("гридь", _HRYD_GLOSS, [_ESUM_HRYD], [_card("vts", "гридь -і, ж., збірн. Нижча верства княжої дружини.")]),
+    ],
+)
+def test_esum_marker_outside_headword_slot_or_referent_does_not_bind(headword, gloss, attestations, cards) -> None:
+    label = resolve_usage_label(
+        {"classification": "historism", "attestations": attestations},
+        headword=headword,
+        definition_cards=cards,
+        gloss=gloss,
+    )
+    assert label["code"] is None
+    assert label["scope"] == "unresolved"
+
+
 def test_bound_treasured_label_precedes_curated_russianism() -> None:
     status = {
         "classification": "authentic-archaism",
         "is_russianism": True,
-        "curated_calque": {**_NAMED_LEXICAL_CALQUE, "kind": "lexical"},
+        "curated_calque": {"kind": "lexical", "evidence": [_BAZH_EVIDENCE]},
     }
-    assert resolve_usage_label(status, definition_cards=[_card("vts", _VTS_KRYN)])["code"] == "arch"
-    # Unbound archaism does not hide a named lexical calque.
-    assert resolve_usage_label(status)["code"] == "calq"
+    assert resolve_usage_label(status, headword="крин", definition_cards=[_card("vts", _VTS_KRYN)])["code"] == "arch"
+    # An unbound archaism does not hide a headword-bound lexical calque.
+    assert resolve_usage_label(status, headword="бажаючий")["code"] == "calq"
 
 
-def test_curated_lexical_russianism_with_named_authority_is_retained() -> None:
+def test_curated_lexical_russianism_bound_by_a_passage_is_retained() -> None:
     status = {
         "classification": "russianism",
         "is_russianism": True,
@@ -748,19 +888,233 @@ def test_curated_lexical_russianism_with_named_authority_is_retained() -> None:
             "corrections": ["захід"],
             "note": "рос. мероприятие; use захід / заходи",
             "source": ["antonenko-p044", "glazova-10"],
+            "evidence": [_MIRO_STORED_EVIDENCE],
+            "normative_support": [_MIRO_SUPPORT],
         },
     }
     label = resolve_usage_label(status, headword="міроприємство")
     assert label["code"] == "rus"
     assert label["scope"] == "lemma"
-    assert label["authority"] == ["antonenko-p044", "glazova-10"]
-    assert classification_code({"lemma": "міроприємство", "heritage_status": status}) == "rus"
+    assert label["authority"] == ["antonenko-davydovych-yak-my-hovorymo_p031"]
+    assert "Такого слова не було" in label["evidence"]
+    assert compute_warning_severity(status, vesum_attested=False, headword="міроприємство") == "russianism_red"
+    entry = {"lemma": "міроприємство", "heritage_status": status}
+    assert classification_code(entry) == "rus"
+    assert classification_code({**entry, "primary_source": "surzhyk_to_avoid"}) == "avoid"
+
+
+@pytest.mark.parametrize(
+    ("headword", "record", "reason"),
+    [
+        # Actual stored DB evidence names the Russian etymon and the replacement only.
+        (
+            "міроприємство",
+            {"kind": "lexical", "source": ["antonenko-p044"], "evidence": [_MIRO_STORED_EVIDENCE]},
+            "no_headword_bound_evidence",
+        ),
+        # D01: a translation drill about «следующий» does not bind «слідуючий».
+        (
+            "слідуючий",
+            {"kind": "lexical", "source": ["voron-9", "zabolotnyi-5"], "evidence": [_SLID_STORED_EVIDENCE]},
+            "no_headword_bound_evidence",
+        ),
+        # D05: unrecognised kind, null evidence, bare citations, wrong source, wrong headword.
+        ("слово", {"kind": "unspecified", "source": ["antonenko-p001"]}, "curated_kind_without_scope"),
+        (
+            "слово",
+            {"kind": "participle", "evidence": ["antonenko-p001: слово тут ужито неправильно"]},
+            "curated_kind_without_scope",
+        ),
+        ("слово", {"kind": "lexical", "source": ["antonenko-p001"], "evidence": None}, "no_headword_bound_evidence"),
+        (
+            "бажаючий",
+            {"kind": "lexical", "evidence": ["antonenko:Бажаючий", "antonenko:153 Крокувати, простувати, іти"]},
+            "no_headword_bound_evidence",
+        ),
+        (
+            "бажаючий",
+            {"kind": "lexical", "evidence": ["ua-gec-annotation: тут слово бажаючий виправлено на охочий"]},
+            "no_headword_bound_evidence",
+        ),
+        ("бажаний", {"kind": "lexical", "evidence": [_BAZH_EVIDENCE]}, "no_headword_bound_evidence"),
+        (None, {"kind": "lexical", "evidence": [_BAZH_EVIDENCE]}, "no_headword_bound_evidence"),
+    ],
+)
+def test_curated_record_without_headword_bound_evidence_is_unresolved(headword, record, reason) -> None:
+    status = {"classification": "russianism", "is_russianism": True, "curated_calque": record}
+    label = resolve_usage_label(status, headword=headword)
+    assert label == {"code": None, "scope": "unresolved", "authority": [], "evidence": None, "reason": reason}
+    assert compute_warning_severity(status, vesum_attested=False, headword=headword) == "none"
+    entry = {"lemma": headword, "primary_source": "surzhyk_to_avoid", "heritage_status": status}
+    assert classification_code(entry) is None
+
+
+def test_actual_db_avoid_row_without_bound_evidence_gets_no_browse_code() -> None:
+    """D01: «діюча» has only avoid provenance and a Russian shadow."""
+    status = {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": False,
+        "russian_shadow": True,
+        "vesum_attested": False,
+        "calque_warning": None,
+        "warning_severity": "russianism_red",
+    }
+    entry = {"lemma": "діюча", "primary_source": "surzhyk_to_avoid", "heritage_status": status}
+    assert classification_code(entry) is None
 
 
 def test_phrasal_calque_and_unattested_curated_record() -> None:
     phrase = {"classification": "unknown", "calque_warning": {"kind": "phrasal", "citations": ["antonenko-p091"]}}
     assert resolve_usage_label(phrase)["scope"] == "phrase"
+    assert resolve_usage_label(phrase)["authority"] == []
     bare = {"classification": "calque", "curated_calque": {"kind": "lexical", "corrections": ["x"]}}
-    assert resolve_usage_label(bare)["reason"] == "curated_record_without_named_authority"
+    assert resolve_usage_label(bare, headword="слово")["reason"] == "no_headword_bound_evidence"
     assert resolve_usage_label({})["scope"] == "none"
     assert resolve_usage_label(None)["scope"] == "none"
+
+
+def test_scope_helpers() -> None:
+    assert card_headword_matches(_SUM20_VOZNYI, "возний")
+    assert not card_headword_matches(_SUM20_VOZNYI, "живий")
+    assert card_headword_matches(_SUM20_ATTACHED_HOMONYM, "диван")
+    assert card_headword_matches(_VTS_KRYN, "крин")
+    assert card_headword_matches("БРА́ТИ УЧА́СТЬ, у чому. Бути учасником.", "брати участь")
+    assert not card_headword_matches("garbage діал.", "слово")
+    assert not card_headword_matches(_SUM20_VOZNYI, None)
+    assert modern_headword_labels(_SUM20_ATTACHED_HOMONYM) == ({"historism"}, True)
+
+    assert names_headword(_MIRO_SUPPORT["passage"], "міроприємство")
+    assert not names_headword(_SLID_STORED_EVIDENCE, "слідуючий")
+    assert names_headword("Вид — це не тип.", "вид")
+    assert not names_headword("Види бувають різні.", "вид")
+    assert names_headword("Тут треба брати участь у грі.", "брати участь")
+    assert not names_headword("Тут треба брати у грі участь.", "брати участь")
+    assert not names_headword("будь-що", None)
+
+    assert is_normative_locator("antonenko-davydovych-yak-my-hovorymo_p031")
+    assert is_normative_locator("Антоненко-Давидович")
+    assert is_normative_locator("11-klas-ukrajinska-mova-avramenko-2019_s0074")
+    assert not is_normative_locator("voron-9")
+    assert not is_normative_locator("ua-gec")
+    assert not is_normative_locator("5-klas-istoriya-hisem-2022_s0001")
+
+    assert bound_evidence({"evidence": [_BAZH_EVIDENCE, _MIRO_STORED_EVIDENCE]}, "бажаючий") == [
+        ("antonenko-davydovych-yak-my-hovorymo_p099", "Бажаючий – що (котрий, який) бажає – охочий")
+    ]
+    support = {"normativeSupport": [_MIRO_SUPPORT, {"locator": "", "passage": "x"}]}
+    assert len(bound_evidence(support, "міроприємство")) == 1
+    assert bound_evidence({}, "слово") == []
+
+    assert shares_referent("нижча верхівка княжої дружини", _HRYD_GLOSS)
+    assert not shares_referent("нижча верхівка княжої дружини", "sofa")
+    assert not shares_referent("у на до", "у на до")
+
+    glazova = {"locator": "11-klas-ukrajinska-mova-glazova-2019_s0263", "passage": "міроприємство — захід"}
+    assert support_passages({"normativeSupport": [_MIRO_SUPPORT, {"locator": "x"}], "currentNormSupport": [glazova]}) == [
+        _MIRO_SUPPORT,
+        glazova,
+    ]
+
+
+def test_curated_map_carries_evidence_and_pair_passages(monkeypatch, tmp_path) -> None:
+    """Producer: excerpts reach the record; the stored ``participle`` kind still states no scope."""
+    pairs = tmp_path / "heritage_pairs.yaml"
+    pairs.write_text(
+        "pairs:\n"
+        "  - calqueLabel: бажаючий\n"
+        "    kind: lexical\n"
+        "    corrections: [охочий]\n"
+        "    citations: ['antonenko:Бажаючий']\n"
+        "    normativeSupport:\n"
+        "      - locator: antonenko-davydovych-yak-my-hovorymo_p099\n"
+        "        passage: 'висловити автори оголошення незграбним утвором бажаючий'\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(heritage_classifier, "HERITAGE_PAIRS_YAML", pairs)
+    monkeypatch.setattr(heritage_classifier, "_CURATED_CALQUE_MAP", None)
+    record = heritage_classifier._curated_calque_map()["бажаючий"]
+    assert record["kind"] == "participle"
+    assert record["evidence"]
+    assert record["normative_support"][0]["locator"] == "antonenko-davydovych-yak-my-hovorymo_p099"
+    warning = {"kind": record["kind"], "evidence": record["evidence"], "normative_support": record["normative_support"]}
+    assert resolve_usage_label({"classification": "calque", "calque_warning": warning}, headword="бажаючий")["reason"] == (
+        "curated_kind_without_scope"
+    )
+    lexical = {**warning, "kind": "lexical"}
+    label = resolve_usage_label({"classification": "calque", "calque_warning": lexical}, headword="бажаючий")
+    assert label["scope"] == "lemma"
+    assert "antonenko-davydovych-yak-my-hovorymo_p099" in label["authority"]
+    monkeypatch.setattr(heritage_classifier, "_CURATED_CALQUE_MAP", None)
+
+
+def test_manifest_curated_record_carries_pair_passages(monkeypatch) -> None:
+    """Producer (enrich_manifest): the stored record gets the excerpts that may bind it (#9603)."""
+    from scripts.lexicon import enrich_manifest as em
+
+    def pair(calque: str, passage: str) -> dict:
+        return {
+            "calque": calque,
+            "kind": "lexical",
+            "corrections": ["інше"],
+            "note": "",
+            "source": [f"antonenko:{calque}"],
+            "evidence": [f"antonenko:{calque}"],
+            "normative_support": [{"locator": "antonenko-fixture_p000", "passage": passage}],
+        }
+
+    participle = pair("бажаючий", "незграбним утвором бажаючий автори хотіли")
+    lexical = pair("фіктивнослово", "слово фіктивнослово у мові вживати не слід")
+    monkeypatch.setattr(
+        em, "_HERITAGE_PAIRS_DATA_CACHE", ({"бажаючий": participle, "фіктивнослово": lexical}, {}, {})
+    )
+    monkeypatch.setattr(
+        em,
+        "CURATED_CALQUES",
+        {"бажаючий": {"corrections": ["охочий"], "note": "усі бажаючі → усі охочі", "source": ["antonenko-p099"]}},
+    )
+    # A calque_corrections row keeps its stored ``participle`` kind; passages travel with it.
+    record = em._curated_calque("бажаючий", "бажаючий")
+    assert record["kind"] == "participle"
+    assert record["normative_support"] == participle["normative_support"]
+    status = {"classification": "calque", "curated_calque": record}
+    assert resolve_usage_label(status, headword="бажаючий")["reason"] == "curated_kind_without_scope"
+    assert em._finalize_heritage_status(status, morphology=None, definition_cards=[], headword="бажаючий")[
+        "warning_severity"
+    ] == "none"
+
+    # A heritage-pair lexical record binds through its passage, given the headword.
+    record = em._curated_calque("фіктивнослово", "фіктивнослово")
+    assert record["normative_support"] == lexical["normative_support"]
+    status = {"classification": "calque", "curated_calque": record}
+    assert em._finalize_heritage_status(status, morphology=None, definition_cards=[], headword="фіктивнослово")[
+        "warning_severity"
+    ] == "calque_yellow"
+    assert em._finalize_heritage_status(status, morphology=None, definition_cards=[])["warning_severity"] == "none"
+
+
+def test_classifier_stores_scope_from_headword_bound_excerpts() -> None:
+    """Producer (classify_lemma): severity follows the excerpts carried into the record."""
+    # Heritage-pair passage names «міроприємства»: a lemma-scoped calque.
+    miro = classify_lemma("міроприємство", db_path=DB, vesum_db_path=VESUM_DB)
+    assert miro["calque_warning"]["kind"] == "lexical"
+    assert miro["calque_warning"]["normative_support"]
+    assert miro["warning_severity"] == "calque_yellow"
+    # The stored excerpt is about «следующий», not «слідуючий»: neutral.
+    slid = classify_lemma("слідуючий", db_path=DB, vesum_db_path=VESUM_DB)
+    assert slid["calque_warning"]["evidence"]
+    assert slid["warning_severity"] == "none"
+    # ``participle`` states no scope even with bound excerpts.
+    bazh = classify_lemma("бажаючий", db_path=DB, vesum_db_path=VESUM_DB)
+    assert bazh["calque_warning"]["kind"] == "participle"
+    assert bazh["warning_severity"] == "none"
+
+
+def test_esum_helpers_fail_closed() -> None:
+    from scripts.lexicon.heritage_classifier import _esum_locator
+
+    assert _esum_locator("гридь:1:592") == "ЕСУМ, т. 1, с. 592"
+    assert _esum_locator("malformed") == "ЕСУМ"
+    # A headword-slot marker of another class does not bind this classification.
+    status = {"classification": "dialect", "attestations": [_ESUM_HRYD]}
+    assert resolve_usage_label(status, headword="гридь", gloss=_HRYD_GLOSS)["code"] is None

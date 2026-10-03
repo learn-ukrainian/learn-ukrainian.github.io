@@ -1572,7 +1572,7 @@ describe("usage-label scope on entry pages (#9603)", () => {
     } as never);
   }
 
-  test("reverse calque (бути) renders a replacement note, not a calque badge", () => {
+  test("reverse calque (бути) renders the record's direction and scope note, not a calque badge", () => {
     const props = heritageEntry("бути", {
       classification: "standard",
       attestations: [{ source: "VESUM", ref: "бути" }],
@@ -1593,14 +1593,42 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(view.heritageBoxes.yellow).toBeUndefined();
     expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
     expect(view.styleNotes).toContain(
-      "«бути» — рекомендований відповідник замість «являтися» (лише в значенні: to be / constitute). Застереження стосується «являтися», а не цього слова. Джерела: avramenko-9, zabolotnyi-9.",
+      "Запис Атласу подає «бути» як заміну для «являтися» (лише в значенні: to be / constitute). Примітка запису: calque only in copular use. Застереження стосується «являтися», а не цього слова. Витягу з нормативного джерела, який установлював би цю заміну та її обсяг, запис не містить. Посилання запису: avramenko-9, zabolotnyi-9.",
     );
     const html = renderWordAtlasArticle(props);
     expect(html).not.toContain('data-severity="yellow"');
-    expect(html).toContain("рекомендований відповідник замість «являтися»");
+    expect(html).toContain("як заміну для «являтися»");
   });
 
-  test("sense-restricted calque (біля) renders a scoped box and no headword badge", () => {
+  // D03: the stored sense split (law vs volcano) must survive on the replacement's page.
+  test("reverse note for чинний keeps the law/volcano distinction and unknown normative support", () => {
+    const props = heritageEntry("чинний", {
+      classification: "standard",
+      attestations: [{ source: "VESUM", ref: "чинний", detail: "lemma match (32 forms)" }],
+      is_russianism: false,
+      russian_shadow: false,
+      warning_severity: "calque_yellow",
+      reverse_calques: [
+        {
+          calque: "діючий",
+          kind: "participle",
+          note: "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)",
+          source: ["glazova-11", "avramenko-11", "avramenko-7", "zabolotnyi-7"],
+        },
+      ],
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    const notes = view.styleNotes.join(" ");
+    expect(notes).toContain("діючий закон → чинний закон");
+    expect(notes).toContain("діючий вулкан → активний вулкан");
+    expect(notes).toContain("Витягу з нормативного джерела, який установлював би цю заміну та її обсяг, запис не містить.");
+    expect(notes).not.toContain("рекомендований відповідник");
+    expect(view.heritageBoxes.yellow).toBeUndefined();
+    const html = renderWordAtlasArticle(props);
+    expect(html).toContain("діючий вулкан → активний вулкан");
+  });
+
+  test("sense-restricted calque (біля) renders a scoped box, its references and no headword badge", () => {
     const props = heritageEntry("біля", {
       classification: "standard",
       attestations: [{ source: "VESUM", ref: "біля" }],
@@ -1620,7 +1648,8 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(view.statusBadges.map((badge) => badge.label)).not.toContain("Калькове застереження");
     const html = renderWordAtlasArticle(props);
     expect(html).toContain("а не слова загалом");
-    expect(html).toContain("litvinova-7, zabolotnyi-7");
+    expect(html).toContain("Нормативного джерела, що прямо стосується цього слова, запис не містить.");
+    expect(html).toContain("grinchenko, litvinova-7, zabolotnyi-7, ua-gec");
   });
 
   test("unresolved replacement suggestion (вид) renders a neutral note, no red box", () => {
@@ -1643,6 +1672,74 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(html).not.toContain('data-editorial-warn="russianism_red"');
   });
 
+  // D01: the actual stored слідуючий record; the avoid list and the stored note are not authority.
+  test("avoid-listed слідуючий without headword-bound evidence keeps its guidance as qualified notes", () => {
+    const props = heritageEntry(
+      "слідуючий",
+      {
+        classification: "russianism",
+        attestations: [{ source: "standard_alternative", ref: "наступний", detail: "Ukrainian standard alternative for слідуючий" }],
+        is_russianism: true,
+        russian_shadow: true,
+        vesum_attested: false,
+        calque_warning: { standard_alternatives: ["наступний", "черговий", "дальший"] },
+        warning_severity: "russianism_red",
+        curated_calque: {
+          kind: "lexical",
+          corrections: ["наступний"],
+          note: "рос. следующий; use наступний for 'next'",
+          source: ["voron-9", "zabolotnyi-5"],
+          evidence: [
+            "9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; Як правильно перекласти ... следующий? ... наступний",
+          ],
+          noteUk: "У значенні \"наступний по черзі\" слід уживати \"наступний\" (наступний крок, наступний урок).",
+        },
+      },
+      { primary_source: "surzhyk_to_avoid" },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.red).toBeUndefined();
+    expect(view.heritageBoxes.usageLabel).toMatchObject({ scope: "unresolved", reason: "no_headword_bound_evidence" });
+    expect(view.statusBadges.map((badge) => badge.className)).not.toContain("heritage-warn");
+    const notes = view.styleNotes.join(" ");
+    expect(notes).toContain("Слово внесено до переліку Атласу «суржик, якого слід уникати».");
+    expect(notes).toContain("Довідкові джерела пропонують відповідники: наступний, черговий, дальший.");
+    expect(notes).toContain("Витяг із джерела (9-klas-ukrajinska-mova-voron-2017_s0232): следующий — тут: наступний");
+    expect(notes).toContain("Примітка Атласу, не підтверджена витягом із джерела: У значенні");
+    const html = renderWordAtlasArticle(props);
+    expect(html).not.toContain('data-severity="red"');
+    expect(html).not.toContain("ненормативну");
+  });
+
+  test("avoid-listed word with a bound normative excerpt keeps the red warning (міроприємство)", () => {
+    const props = heritageEntry(
+      "міроприємство",
+      {
+        classification: "russianism",
+        attestations: [],
+        is_russianism: true,
+        russian_shadow: true,
+        curated_calque: {
+          kind: "lexical",
+          corrections: ["захід", "заходи"],
+          note: "рос. мероприятие; use захід / заходи",
+          source: ["antonenko-p044"],
+          normative_support: [
+            {
+              locator: "antonenko-davydovych-yak-my-hovorymo_p031",
+              passage: "\"У нас провели такі міроприємства\" і под. Такого слова не було й нема в українській мові.",
+            },
+          ],
+        },
+      },
+      { primary_source: "surzhyk_to_avoid" },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.red?.body).toContain("antonenko-davydovych-yak-my-hovorymo_p031");
+    expect(view.styleNotes.join(" ")).not.toContain("Слово внесено до переліку Атласу");
+    expect(renderWordAtlasArticle(props)).toContain('data-severity="red"');
+  });
+
   test("historism on one СУМ-20 sense (диван) gets no register badge; headword label (возний) keeps it", () => {
     const dyvan = heritageEntry(
       "диван",
@@ -1659,7 +1756,9 @@ describe("usage-label scope on entry pages (#9603)", () => {
     );
     const dyvanView = buildWordAtlasArticleView(dyvan.record, "test", "test");
     expect(dyvanView.statusBadges.map((badge) => badge.label)).not.toContain("Історизм у сучасному вжитку");
-    expect(dyvanView.styleNotes.join(" ")).toContain("Позначку «історизм» у джерелах не прив'язано до слова загалом");
+    expect(dyvanView.styleNotes.join(" ")).toContain(
+      "Класифікацію «історизм» не підтверджено позначкою в заголовку словникової статті про це слово",
+    );
     expect(renderWordAtlasArticle(dyvan)).not.toContain("Історизм у сучасному вжитку");
 
     const voznyi = heritageEntry(
@@ -1677,5 +1776,75 @@ describe("usage-label scope on entry pages (#9603)", () => {
       label: "Історизм у сучасному вжитку",
       title: "СУМ-20",
     });
+  });
+
+  // D04: a card for another headword never authorises this article's label.
+  test("a СУМ-20 card for another headword (ВОЗНИЙ on живий) gives no register badge", () => {
+    const props = heritageEntry(
+      "живий",
+      { classification: "historism", attestations: [], warning_severity: "treasured" },
+      {
+        enrichment: {
+          definition_cards: [{ id: "sum20", source: "СУМ-20", definitions: ["ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець."] }],
+        },
+      },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.usageLabel.code).toBeNull();
+    expect(view.statusBadges.map((badge) => badge.className)).not.toContain("archaic");
+  });
+
+  // D02: an ЕСУМ headword marker with the article's referent is a historical witness.
+  test("гридь keeps its ЕСУМ historism label with locator", () => {
+    const props = heritageEntry(
+      "гридь",
+      {
+        classification: "historism",
+        attestations: [
+          {
+            source: "esum",
+            ref: "гридь:1:592",
+            word: "гридь",
+            detail: "гридь (іст.) «нижча верхівка княжої дружини», грйдень «охоронець князя» Ж",
+          },
+        ],
+        warning_severity: "treasured",
+      },
+      { gloss: "У стародавній Русі — нижча верства княжої дружини." },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.statusBadges).toContainEqual({
+      className: "archaic",
+      label: "Історизм у сучасному вжитку",
+      title: "ЕСУМ, т. 1, с. 592",
+    });
+    expect(view.styleNotes.join(" ")).not.toContain("Класифікацію «історизм»");
+    expect(renderWordAtlasArticle(props)).toContain("гридь (іст.) «нижча верхівка княжої дружини»");
+  });
+
+  test("a СУМ-20 headword dialect label renders the dialect badge with its authority", () => {
+    const props = heritageEntry(
+      "ґазда",
+      { classification: "dialect", attestations: [], warning_severity: "treasured" },
+      { enrichment: { definition_cards: [{ id: "sum20", source: "СУМ-20", definitions: ["ҐАЗДА́, и́, ч., діал. Господар."] }] } },
+    );
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.statusBadges).toContainEqual({ className: "dialect", label: "Регіонально-літературне", title: "СУМ-20" });
+  });
+
+  // D06: VESUM attests morphology only.
+  test("a VESUM-only standard entry never renders a native-origin claim", () => {
+    const props = heritageEntry("стіл", {
+      classification: "standard",
+      attestations: [{ source: "VESUM", ref: "стіл", detail: "lemma match" }],
+      is_russianism: false,
+      russian_shadow: false,
+      vesum_attested: true,
+      warning_severity: "treasured",
+    });
+    const html = renderWordAtlasArticle(props);
+    expect(html).not.toMatch(/[Пп]итома/u);
+    expect(html).toContain("Засвідчена українська форма");
+    expect(html).toContain("VESUM (морфологічна фіксація форми)");
   });
 });

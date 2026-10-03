@@ -346,23 +346,24 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
     """Return compact Atlas browse classification code, if any.
 
     Stored ``warning_severity``/``classification`` fields are never trusted on
-    their own: a code is emitted only for a lemma-scoped label with a named
-    authority (``resolve_usage_label``). Sense, phrase, reverse-calque and
-    unresolved records stay unlabelled in browse (#9603).
+    their own: a code is emitted only for a lemma-scoped label bound to the
+    headword by source evidence (``resolve_usage_label``). Sense, phrase,
+    reverse-calque and unresolved records stay unlabelled in browse. The
+    ``surzhyk_to_avoid`` list is provenance, not authority: it upgrades a
+    bound Russianism/calque to ``avoid`` and never labels a word alone (#9603).
     """
-
-    kind = kind_for_source(entry.get("primary_source"))
-    if kind == "avoid":
-        return "avoid"
 
     label = resolve_usage_label(
         dict(_heritage_status(entry)),
         headword=_clean_text(entry.get("lemma")),
         definition_cards=_definition_cards(entry),
+        gloss=_clean_text(entry.get("gloss")),
     )
-    if label["scope"] == "lemma" and label["code"] in CLASSIFICATION_CODES:
-        return str(label["code"])
-    return None
+    if label["scope"] != "lemma" or label["code"] not in CLASSIFICATION_CODES:
+        return None
+    if label["code"] in {"rus", "calq"} and kind_for_source(entry.get("primary_source")) == "avoid":
+        return "avoid"
+    return str(label["code"])
 
 
 def _translation_gloss(entry: Mapping[str, Any]) -> str | None:
@@ -661,17 +662,18 @@ def browse_rows_from_db_articles(
     conn = sqlite3.connect(db_path)
     try:
         article_meta = {
-            slug: (heritage_classification, lemma)
-            for slug, heritage_classification, lemma in conn.execute(
-                "SELECT slug, heritage_classification, lemma FROM articles"
+            slug: (heritage_classification, lemma, gloss)
+            for slug, heritage_classification, lemma, gloss in conn.execute(
+                "SELECT slug, heritage_classification, lemma, gloss FROM articles"
             )
         }
         browse_rows: list[dict[str, Any]] = []
         for row in articles:
             slug = str(row["s"])
-            heritage_classification, lemma = article_meta.get(slug, (None, None))
+            heritage_classification, lemma, gloss = article_meta.get(slug, (None, None, None))
             pseudo_entry = {
                 "lemma": lemma or row.get("l"),
+                "gloss": gloss or row.get("g"),
                 "primary_source": _primary_source_for_slug(conn, slug),
                 "heritage_status": _heritage_status_for_slug(
                     conn,

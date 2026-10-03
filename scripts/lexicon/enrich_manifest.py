@@ -81,7 +81,7 @@ from scripts.lexicon.calque_corrections import (
     PHRASAL_CALQUES,
     SENSE_RESTRICTED_CALQUES,
 )
-from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity
+from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity, support_passages
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.load_relation_candidates import load_approved_synonym_verdicts
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
@@ -3541,6 +3541,7 @@ def _get_heritage_pairs_data() -> tuple[dict[str, dict[str, Any]], dict[str, lis
                     "authentic_sense": str(p.get("authenticSense", "")) if p.get("authenticSense") else None,
                     "source": list(p.get("citations") or []),
                     "evidence": list(p.get("citations") or []),
+                    "normative_support": support_passages(p),
                     "heritage_guard": "data/lexicon/heritage_pairs.yaml",
                 }
 
@@ -3584,6 +3585,7 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
     for key in (lemma, base):
         if key in CURATED_CALQUES:
             row = CURATED_CALQUES[key]
+            pair = by_calque.get(key) or {}
             res = {
                 "kind": str(row.get("kind", "participle")),
                 "corrections": list(row["corrections"]),
@@ -3592,6 +3594,9 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
                 "evidence": list(row.get("evidence", [])),
                 "heritage_guard": str(row.get("heritage_guard", "")),
             }
+            # #9603: the heritage pair's source excerpts may bind the claim.
+            if pair.get("normative_support"):
+                res["normative_support"] = list(pair["normative_support"])
             rat_uk = rationale_uk_map.get(key)
             if rat_uk:
                 res["noteUk"] = rat_uk
@@ -3643,6 +3648,8 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
             }
             if row.get("noteUk"):
                 res["noteUk"] = row["noteUk"]
+            if row.get("normative_support"):
+                res["normative_support"] = list(row["normative_support"])
             if row.get("calque_sense"):
                 res["calque_sense"] = row["calque_sense"]
             if row.get("authentic_sense"):
@@ -3729,6 +3736,7 @@ def _finalize_heritage_status(
     *,
     morphology: dict[str, Any] | None,
     definition_cards: list[dict[str, Any]],
+    headword: str | None = None,
 ) -> dict[str, Any]:
     finalized = dict(status)
     vesum_attested = bool(finalized.get("vesum_attested")) or _vesum_attested_from_morphology(morphology)
@@ -3738,6 +3746,7 @@ def _finalize_heritage_status(
         finalized,
         vesum_attested=vesum_attested,
         max_sovietization_risk=max_sovietization_risk,
+        headword=headword,
     )
     return finalized
 
@@ -8254,6 +8263,7 @@ def enrich_entry(
         entry["heritage_status"],
         morphology=morph,
         definition_cards=definition_cards,
+        headword=lemma,
     )
     meaning = _meaning(conn, lemma, kaikki_lookup=kaikki_lookup)
     if not meaning and fallback_base:

@@ -68,8 +68,26 @@ def entry(
     return row
 
 
-_NAMED_RUS = {"kind": "lexical", "corrections": ["захід"], "source": ["antonenko-p044"]}
-_NAMED_CALQ = {"kind": "participle", "corrections": ["чинний"], "source": ["antonenko-p144"]}
+def _named(lemma: str) -> dict[str, object]:
+    """A lexical record bound to ``lemma`` by a (fixture) normative excerpt naming it."""
+    return {
+        "kind": "lexical",
+        "corrections": ["інше"],
+        "evidence": [f"antonenko-fixture_p000: слово {lemma} уживати не слід, кажіть інакше"],
+    }
+
+
+def _avoid_entry(lemma: str, gloss: str) -> dict[str, object]:
+    return entry(
+        lemma,
+        gloss=gloss,
+        primary_source="surzhyk_to_avoid",
+        classification="russianism",
+        is_russianism=True,
+        curated_calque=_named(lemma),
+    )
+
+
 _ESUM_BORROWING = [{"source": "esum", "ref": "борщ:1:1", "word": "борщ", "detail": "борщ «страва» — запозичення"}]
 
 
@@ -80,7 +98,7 @@ def sum20(head: str, label: str) -> str:
 def fixture_entries() -> list[dict[str, object]]:
     return [
         entry("офіс", gloss="office"),
-        entry("всьо", gloss="avoid: все", primary_source="surzhyk_to_avoid"),
+        _avoid_entry("всьо", "avoid: все"),
         entry("дім", gloss="house", primary_source="plan_required", cefr="A1"),
         entry("кава", gloss="coffee", primary_source="plan_recommended", cefr={"level": "b1"}),
         entry("баба", slug="baba", gloss=7, primary_source="remainder"),
@@ -461,6 +479,8 @@ def test_build_index_sanitizes_mashed_voyevoda_gloss_for_typeahead() -> None:
 
 def test_classification_code_precedence_and_standard_omit() -> None:
     cases = [
+        # #9603 D01: avoid-list provenance strengthens a bound Russianism only.
+        (_avoid_entry("avoid", "avoid: x"), "avoid"),
         (
             entry(
                 "avoid",
@@ -468,10 +488,11 @@ def test_classification_code_precedence_and_standard_omit() -> None:
                 warning_severity="russianism_red",
                 classification="borrowing",
             ),
-            "avoid",
+            None,
         ),
-        (entry("red", classification="russianism", is_russianism=True, curated_calque=_NAMED_RUS), "rus"),
-        (entry("calque", classification="calque", curated_calque=_NAMED_CALQ), "calq"),
+        (entry("avoid", primary_source="surzhyk_to_avoid", classification="russianism", is_russianism=True), None),
+        (entry("red", classification="russianism", is_russianism=True, curated_calque=_named("red")), "rus"),
+        (entry("calque", classification="calque", curated_calque=_named("calque")), "calq"),
         (entry("arch", classification="authentic-archaism", sum20=sum20("arch", "заст.")), "arch"),
         (entry("dial", classification="dialect", sum20=sum20("dial", "діал.")), "dial"),
         (entry("hist", classification="historism", sum20=sum20("hist", "іст.")), "hist"),
@@ -500,6 +521,14 @@ def test_classification_code_never_trusts_unscoped_stored_fields() -> None:
         # A curated sense-restricted record is contextual; a bare one is unresolved.
         entry("біля", classification="standard", curated_calque={"kind": "sense_restricted", "source": ["litvinova-7"]}),
         entry("x", classification="calque", curated_calque={"kind": "lexical", "source": ["ua-gec"]}),
+        # D05: a citation is not evidence; ``participle`` and unknown kinds state no scope.
+        entry("x", classification="calque", curated_calque={"kind": "lexical", "source": ["antonenko-p044"]}),
+        entry("x", classification="calque", curated_calque={**_named("x"), "kind": "participle"}),
+        entry("x", classification="calque", curated_calque={**_named("x"), "kind": "unspecified"}),
+        # The excerpt must name this headword.
+        entry("y", classification="russianism", is_russianism=True, curated_calque=_named("x")),
+        # D04: a card for another headword binds nothing.
+        entry("живий", classification="historism", sum20="ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець."),
     ]
     assert [classification_code(row) for row in cases] == [None] * len(cases)
 
@@ -545,13 +574,13 @@ def test_browse_meta_counts_and_shards() -> None:
         [
             entry("абетка", gloss="alphabet"),
             entry("архаїзм", gloss="archaism", classification="authentic-archaism", sum20=sum20("архаїзм", "заст.")),
-            entry("бета", gloss="beta", classification="russianism", is_russianism=True, curated_calque=_NAMED_RUS),
+            entry("бета", gloss="beta", classification="russianism", is_russianism=True, curated_calque=_named("бета")),
             entry("борщ", gloss="borshch", classification="borrowing", attestations=_ESUM_BORROWING),
-            entry("всьо", gloss="avoid all", primary_source="surzhyk_to_avoid"),
+            _avoid_entry("всьо", "avoid all"),
             entry("гетьман", gloss="hetman", classification="historism", sum20=sum20("гетьман", "іст.")),
             entry("ґанок", gloss="porch", classification="dialect", sum20=sum20("ґанок", "діал.")),
             entry("ґазда", gloss="host", classification="dialect", sum20=sum20("ґазда", "діал.")),
-            entry("калька", gloss="calque", classification="calque", curated_calque=_NAMED_CALQ),
+            entry("калька", gloss="calque", classification="calque", curated_calque=_named("калька")),
         ]
     )
 
@@ -615,7 +644,7 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
             {
                 "entries": [
                     entry("арка", gloss="arch"),
-                    entry("всьо", gloss="avoid all", primary_source="surzhyk_to_avoid"),
+                    _avoid_entry("всьо", "avoid all"),
                 ]
             },
             ensure_ascii=False,
@@ -807,11 +836,12 @@ def _db_entry(
     *,
     cards: list[dict[str, object]] | None = None,
     primary_source: str = "built_vocabulary",
+    gloss: str = "gloss",
 ) -> dict[str, object]:
     row: dict[str, object] = {
         "lemma": lemma,
         "url_slug": lemma,
-        "gloss": "gloss",
+        "gloss": gloss,
         "primary_source": primary_source,
         "heritage_status": heritage_status,
     }
@@ -850,11 +880,51 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
             {"classification": "historism", "warning_severity": "treasured"},
             cards=[{"id": "sum20", "definitions": ["ДИВА́Н, у, ч. 1. іст. Рада. 2. Меблі."]}],
         ),
-        # Positive controls: СУМ-20 headword label and a named lexical Russianism.
+        # D04: a СУМ-20 card for another headword.
+        _db_entry(
+            "живий",
+            {"classification": "historism", "warning_severity": "treasured"},
+            cards=[{"id": "sum20", "definitions": ["ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець."]}],
+        ),
+        # D01: actual stored слідуючий shape; the avoid list and a drill about «следующий» bind nothing.
+        _db_entry(
+            "слідуючий",
+            {
+                "classification": "russianism",
+                "is_russianism": True,
+                "warning_severity": "russianism_red",
+                "curated_calque": {
+                    "kind": "lexical",
+                    "corrections": ["наступний"],
+                    "source": ["voron-9", "zabolotnyi-5"],
+                    "evidence": ["9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; ... наступний"],
+                },
+            },
+            primary_source="surzhyk_to_avoid",
+        ),
+        # Positive controls: СУМ-20 headword label, an ЕСУМ headword historism
+        # with the article's referent (D02) and a lexical Russianism bound by a
+        # passage naming the headword (sources MCP: style_guide id 44).
         _db_entry(
             "возний",
             {"classification": "historism", "warning_severity": "treasured"},
             cards=[{"id": "sum20", "definitions": ["ВО́ЗНИЙ, ного, ч., іст. Судовий урядовець."]}],
+        ),
+        _db_entry(
+            "гридь",
+            {
+                "classification": "historism",
+                "warning_severity": "treasured",
+                "attestations": [
+                    {
+                        "source": "esum",
+                        "ref": "гридь:1:592",
+                        "word": "гридь",
+                        "detail": "гридь (іст.) «нижча верхівка княжої дружини», грйдень «охоронець князя»",
+                    }
+                ],
+            },
+            gloss="У стародавній Русі — нижча верства княжої дружини.",
         ),
         _db_entry(
             "міроприємство",
@@ -862,8 +932,19 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
                 "classification": "russianism",
                 "is_russianism": True,
                 "warning_severity": "russianism_red",
-                "curated_calque": {"kind": "lexical", "corrections": ["захід"], "source": ["antonenko-p044"]},
+                "curated_calque": {
+                    "kind": "lexical",
+                    "corrections": ["захід"],
+                    "source": ["antonenko-p044"],
+                    "normative_support": [
+                        {
+                            "locator": "antonenko-davydovych-yak-my-hovorymo_p031",
+                            "passage": "У нас провели такі міроприємства. Такого слова не було й нема в українській мові.",
+                        }
+                    ],
+                },
             },
+            primary_source="surzhyk_to_avoid",
         ),
     ]
     db = atlas_db_fixture(tmp_path, entries=entries)
@@ -891,8 +972,12 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
         == 0
     )
     flagged = json.loads(flagged_out.read_text(encoding="utf-8"))
-    assert [(row["l"], row["cls"]) for row in flagged] == [("возний", "hist"), ("міроприємство", "rus")]
-    assert json.loads(meta_out.read_text(encoding="utf-8"))["chipCounts"] == {"rus": 1, "hist": 1}
+    assert [(row["l"], row["cls"]) for row in flagged] == [
+        ("возний", "hist"),
+        ("гридь", "hist"),
+        ("міроприємство", "avoid"),
+    ]
+    assert json.loads(meta_out.read_text(encoding="utf-8"))["chipCounts"] == {"avoid": 1, "hist": 2}
 
 
 def test_committed_browse_flags_never_brand_named_regressions() -> None:
@@ -904,3 +989,17 @@ def test_committed_browse_flags_never_brand_named_regressions() -> None:
     for lemma in ("бути", "є", "голова", "другий", "вид", "або", "диван", "город"):
         assert lemma not in flagged_lemmas
     assert all(row["cls"] in {"avoid", "rus", "calq", "arch", "dial", "hist", "borr"} for row in flagged)
+
+
+def test_definition_cards_for_slug_reads_payload_or_fails_closed() -> None:
+    import sqlite3
+
+    from scripts.audit.generate_search_index import _definition_cards_for_slug
+
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE enrichment (slug TEXT, section TEXT, payload_json TEXT)")
+    conn.execute("INSERT INTO enrichment VALUES ('a', 'definition_cards', '[{\"id\": \"sum20\"}]')")
+    conn.execute("INSERT INTO enrichment VALUES ('b', 'definition_cards', 'not json')")
+    assert _definition_cards_for_slug(conn, "a") == [{"id": "sum20"}]
+    assert _definition_cards_for_slug(conn, "b") is None
+    assert _definition_cards_for_slug(conn, "missing") is None

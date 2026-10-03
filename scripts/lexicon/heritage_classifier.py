@@ -163,7 +163,8 @@ def classify_lemma(
                 vesum_db_path=vesum_db_path,
             )
             for variant in variants
-        ]
+        ],
+        headword=lemma,
     )
 
 
@@ -231,6 +232,11 @@ def _classify(
             )
         if curated_calque.get("citations"):
             built_calque_warning["citations"] = list(curated_calque["citations"])
+        # #9603: the excerpts that may bind the claim to this headword.
+        if curated_calque.get("evidence"):
+            built_calque_warning["evidence"] = list(curated_calque["evidence"])
+        if curated_calque.get("normative_support"):
+            built_calque_warning["normative_support"] = list(curated_calque["normative_support"])
 
     russianism = (
         None
@@ -298,6 +304,7 @@ def _classify(
             vesum_attested=bool(vesum),
             sovietization_risk=sovietization_risk,
             calque_warning=built_calque_warning,
+            headword=term,
         )
 
     if russianism:
@@ -315,6 +322,7 @@ def _classify(
             vesum_attested=True,
             sovietization_risk=sovietization_risk,
             calque_warning=built_calque_warning,
+            headword=term,
         )
 
     calque_warning = built_calque_warning or _calque_warning(term, russian_shadow_detail)
@@ -326,6 +334,7 @@ def _classify(
         russian_shadow=russian_shadow,
         vesum_attested=False,
         calque_warning=calque_warning,
+        headword=term,
     )
 
 
@@ -338,6 +347,7 @@ def _status(
     vesum_attested: bool = False,
     sovietization_risk: int = 0,
     calque_warning: dict[str, Any] | None = None,
+    headword: str | None = None,
 ) -> dict[str, Any]:
     status = {
         "classification": classification,
@@ -352,6 +362,7 @@ def _status(
         status,
         vesum_attested=vesum_attested,
         max_sovietization_risk=sovietization_risk,
+        headword=headword,
     )
     return status
 
@@ -395,8 +406,8 @@ def _has_reverse_calque(heritage_status: dict[str, Any]) -> bool:
 #
 # A public Word Atlas label («русизм», «калька», «архаїзм», «діалектизм»,
 # «історизм», «запозичення») may describe the whole headword only when the
-# record names an authority AND carries evidence that the authority's claim
-# covers the headword itself. Sense, phrase and reverse (replacement-word)
+# record carries a source locator AND an excerpt from that source that binds
+# the claim to this headword. Sense, phrase and reverse (replacement-word)
 # guidance stays contextual; anything else is unresolved — never a lexical
 # condemnation. ``site/src/lib/lexicon/heritage-severity.ts`` mirrors this.
 # ---------------------------------------------------------------------------
@@ -411,16 +422,34 @@ USAGE_LABEL_CODES = {
     "borrowing": "borr",
 }
 _CONTEXTUAL_CALQUE_SCOPES = {"sense_restricted": "sense", "phrasal": "phrase"}
-# Normative authorities for Russianism/calque judgments (rules P5): the
-# Антоненко-Давидович style guide (also served as slovnyk.me ``davydov``),
-# Караванський, Волощак and named school textbooks (author-grade ids).
-# UA-GEC annotations, Грінченко attestations, explanatory dictionaries (meaning,
-# not calque judgments), LanguageTool, Штепа's purist replacements,
-# classifier output and bare family names
-# ("state-standard", "slovnyk-dicts", "legacy-manifest") are not.
-_NORMATIVE_CITATION_FAMILIES = ("antonenko", "davydov", "karavansk", "voloshchak", "voloschak")
+# An unresolved Russianism/calque claim is neutral: neither a warning nor a
+# heritage defence (#7982: no green badge for convergence calques).
+UNRESOLVED_CLAIM_REASONS = frozenset(
+    {"no_lemma_scoped_authority", "no_headword_bound_evidence", "curated_kind_without_scope"}
+)
+# The only curated kind that claims the whole word. ``participle`` names a
+# word-formation type, not a scope (the діючий record is sense-split), and any
+# other or missing kind states no scope at all.
+_LEMMA_CALQUE_KINDS = {"lexical"}
+# Normative Russianism/calque authorities (rules P5): Антоненко-Давидович (also
+# slovnyk.me ``davydov``), Караванський, Волощак and named school textbooks.
+_NORMATIVE_CITATION_FAMILIES = (
+    "antonenko",
+    "davydov",
+    "karavansk",
+    "voloshchak",
+    "voloschak",
+    "антоненко",
+    "караванськ",
+    "волощак",
+)
+_NORMATIVE_TEXTBOOK_AUTHORS = {"avramenko", "zabolotnyi", "glazova", "litvinova", "voron"}
 _NORMATIVE_TEXTBOOK_RE = re.compile(r"^(?:avramenko|zabolotnyi|glazova|litvinova|voron)-(?:[1-9]|1[01])$")
 _CITATION_TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-_][a-z0-9]+)*")
+_LOCATOR_PART_RE = re.compile(r"[^\W_]+", re.UNICODE)
+_WORD_RE = re.compile(r"[а-яіїєґʼ'a-z]+(?:-[а-яіїєґʼ'a-z]+)*")
+# A bare citation ("antonenko:Бажаючий") is a locator, not an excerpt.
+_MIN_EXCERPT_WORDS = 4
 _LETTER_CLASS = "а-яіїєґa-z"
 _USAGE_MARKER_RES = {
     "historism": re.compile(rf"(?<![{_LETTER_CLASS}])(?:іст|істор)\."),
@@ -428,8 +457,14 @@ _USAGE_MARKER_RES = {
     "authentic-archaism": re.compile(rf"(?<![{_LETTER_CLASS}])(?:заст\.|застар|архаї)"),
 }
 _MODERN_DICTIONARY_CARDS = (("sum20", "СУМ-20"), ("vts", "ВТС"))
-_HOMONYM_INDEX_RE = re.compile(r"^(?:[¹²³⁴⁵⁶⁷⁸⁹]+|I|II|III|IV|V)[,.]?$")
+_SUPERSCRIPT_DIGITS = "¹²³⁴⁵⁶⁷⁸⁹⁰"
+_HOMONYM_INDEX_RE = re.compile(rf"^(?:[{_SUPERSCRIPT_DIGITS}]+|I|II|III|IV|V)[,.]?$")
 _SENSE_START_RE = re.compile(r"^(?:\d|[《◊/]|[А-ЯІЇЄҐA-Z])")
+_EDGE_PUNCT = ",.;:!?«»\"'()[]"
+_ESUM_HEADWORD_SLOT_RE = re.compile(r"^\s*(?P<word>[^\s(«]+)\s*\((?P<marker>[^)]{1,40})\)\s*«(?P<gloss>[^»]{1,200})»")
+_ESUM_REF_RE = re.compile(r"^[^:]*:(?P<volume>\d+):(?P<page>\d+)$")
+# Referent comparison ignores short function words.
+_MIN_REFERENT_TOKEN_LEN = 5
 
 
 def _citation_list(value: object) -> list[str]:
@@ -441,16 +476,86 @@ def _citation_list(value: object) -> list[str]:
 
 
 def normative_citations(citations: object) -> list[str]:
-    """Return the citations that name a normative Russianism/calque authority."""
+    """Return the citations that name a normative Russianism/calque authority.
+
+    A matching citation only names where to look; it is never evidence by
+    itself (see :func:`bound_evidence`).
+    """
     named: list[str] = []
     for citation in _citation_list(citations):
         tokens = _CITATION_TOKEN_RE.findall(citation.casefold())
         if any(
-            token.startswith(_NORMATIVE_CITATION_FAMILIES) or _NORMATIVE_TEXTBOOK_RE.match(token)
-            for token in tokens
-        ):
+            token.startswith(_NORMATIVE_CITATION_FAMILIES) or _NORMATIVE_TEXTBOOK_RE.match(token) for token in tokens
+        ) or is_normative_locator(citation):
             named.append(citation)
     return named
+
+
+def is_normative_locator(locator: str) -> bool:
+    """True when a source locator names a normative style authority or textbook.
+
+    Accepts style-guide ids (``antonenko-davydovych-yak-my-hovorymo_p031``),
+    attributions (``Антоненко-Давидович``) and textbook chunk ids
+    (``11-klas-ukrajinska-mova-avramenko-2019_s0074``).
+    """
+    parts = _LOCATOR_PART_RE.findall(str(locator or "").casefold())
+    if any(part.startswith(_NORMATIVE_CITATION_FAMILIES) for part in parts):
+        return True
+    return "klas" in parts and any(part in _NORMATIVE_TEXTBOOK_AUTHORS for part in parts)
+
+
+def _words(text: str) -> list[str]:
+    return _WORD_RE.findall(_normalize_word(text).replace("ʼ", "'"))
+
+
+def names_headword(text: str, headword: str | None) -> bool:
+    """True when ``text`` contains ``headword`` as a word (inflected forms allowed).
+
+    Single words of six or more letters also match a form that keeps all but
+    the last two letters (``міроприємства`` for ``міроприємство``); shorter
+    words and multiword headwords must match exactly.
+    """
+    head = _words(headword or "")
+    if not head:
+        return False
+    words = _words(text)
+    if len(head) > 1:
+        return any(words[index : index + len(head)] == head for index in range(len(words)))
+    target = head[0]
+    if len(target) < 6:
+        return target in words
+    stem = target[:-2]
+    return any(word == target or (word.startswith(stem) and abs(len(word) - len(target)) <= 3) for word in words)
+
+
+def _evidence_items(record: dict[str, Any]) -> list[tuple[str, str]]:
+    """``(locator, excerpt)`` pairs stored on a curated record."""
+    items: list[tuple[str, str]] = []
+    for key in ("normative_support", "normativeSupport", "current_norm_support", "currentNormSupport"):
+        for item in record.get(key) or []:
+            if isinstance(item, dict) and str(item.get("locator") or "").strip():
+                items.append((str(item["locator"]).strip(), str(item.get("passage") or "")))
+    for item in _citation_list(record.get("evidence")):
+        locator, separator, excerpt = item.partition(":")
+        if separator:
+            items.append((locator.strip(), excerpt.strip()))
+    return items
+
+
+def bound_evidence(record: dict[str, Any], headword: str | None) -> list[tuple[str, str]]:
+    """Evidence items that bind a curated claim to ``headword``.
+
+    Each item needs a normative locator and an excerpt from that source that
+    names the headword itself. A bare citation, an excerpt about another form
+    (the Russian etymon, the replacement) or a missing headword binds nothing.
+    """
+    return [
+        (locator, excerpt)
+        for locator, excerpt in _evidence_items(record)
+        if is_normative_locator(locator)
+        and len(_words(excerpt)) >= _MIN_EXCERPT_WORDS
+        and names_headword(excerpt, headword)
+    ]
 
 
 def _curated_scope_record(status: dict[str, Any]) -> dict[str, Any] | None:
@@ -470,16 +575,29 @@ def _strip_accents(text: str) -> str:
     return _ACUTE_RE.sub("", html.unescape(str(text or "")))
 
 
+def card_headword_matches(definition: str, headword: str | None) -> bool:
+    """True when a dictionary card's leading headword is ``headword``."""
+    head = _normalize_word(headword or "").split()
+    tokens = _strip_accents(definition).split()
+    if not head or len(tokens) < len(head):
+        return False
+    # A homonym index (``ДИВАН²``) still names this headword; the card is then
+    # ambiguous (see :func:`modern_headword_labels`), never another word's.
+    leading = [_normalize_word(token.strip(_EDGE_PUNCT + _SUPERSCRIPT_DIGITS)) for token in tokens[: len(head)]]
+    return leading == head
+
+
 def modern_headword_labels(definition: str) -> tuple[set[str], bool]:
     """Usage-label classes in a СУМ-20/ВТС headword slot, plus an ambiguity flag.
 
     The headword slot is the grammar/label run before the first sense
     (a capitalised gloss, a sense number or ``《``). A homonym index (``²``,
-    ``II``) makes the card ambiguous for a single Atlas headword.
+    ``ДИВАН²``, ``II``) makes the card ambiguous for a single Atlas headword.
     """
-    tokens = _strip_accents(definition).split()
+    plain = _strip_accents(definition)
+    tokens = plain.split()
     slot: list[str] = []
-    ambiguous = False
+    ambiguous = bool(tokens) and any(char in _SUPERSCRIPT_DIGITS for char in tokens[0])
     for index, token in enumerate(tokens):
         if _HOMONYM_INDEX_RE.match(token):
             ambiguous = True
@@ -489,21 +607,77 @@ def modern_headword_labels(definition: str) -> tuple[set[str], bool]:
         if _SENSE_START_RE.match(token):
             break
         slot.append(token)
-    if re.search(r"(?<!\S)II(?!\S)", _strip_accents(definition)):
+    if re.search(r"(?<!\S)II(?!\S)", plain):
         ambiguous = True
     return _usage_marker_classes(_normalize_word(" ".join(slot))), ambiguous
 
 
-def _modern_dictionary_card(definition_cards: object) -> tuple[str, str] | None:
+def _modern_dictionary_card(definition_cards: object, headword: str | None) -> tuple[str, str] | None:
+    """The first СУМ-20 (else ВТС) definition whose headword is the article's."""
     if not isinstance(definition_cards, list):
         return None
     for card_id, label in _MODERN_DICTIONARY_CARDS:
         for card in definition_cards:
             if not isinstance(card, dict) or card.get("id") != card_id:
                 continue
-            definitions = card.get("definitions")
-            if isinstance(definitions, list) and definitions and str(definitions[0] or "").strip():
-                return label, str(definitions[0])
+            for definition in card.get("definitions") or []:
+                if str(definition or "").strip() and card_headword_matches(str(definition), headword):
+                    return label, str(definition)
+    return None
+
+
+def _esum_locator(ref: object) -> str:
+    match = _ESUM_REF_RE.match(str(ref or ""))
+    if match:
+        return f"ЕСУМ, т. {match['volume']}, с. {match['page']}"
+    return "ЕСУМ"
+
+
+def shares_referent(source_gloss: str, article_gloss: str | None) -> bool:
+    """True when two glosses share a content word (five letters or more)."""
+    source = {word for word in _words(source_gloss) if len(word) >= _MIN_REFERENT_TOKEN_LEN}
+    article = {word for word in _words(article_gloss or "") if len(word) >= _MIN_REFERENT_TOKEN_LEN}
+    return bool(source & article)
+
+
+def _esum_headword_marker(
+    status: dict[str, Any],
+    marker_class: str,
+    *,
+    headword: str | None,
+    gloss: str | None,
+) -> dict[str, Any] | None:
+    """An ЕСУМ marker in the headword slot of the same headword and referent.
+
+    ЕСУМ is a historical witness: ``гридь (іст.) «нижча верхівка княжої
+    дружини»`` binds «історизм» to the article whose gloss names the same
+    referent. Markers on cognates, later derivatives, quotations, homonyms or
+    another sense never reach the headword slot or fail the referent check.
+    """
+    head = _normalize_word(headword or "")
+    if not head:
+        return None
+    for attestation in status.get("attestations") or []:
+        if not isinstance(attestation, dict) or str(attestation.get("source") or "").casefold() not in {
+            "esum",
+            "есум",
+        }:
+            continue
+        if _normalize_word(str(attestation.get("word") or "")) != head:
+            continue
+        match = _ESUM_HEADWORD_SLOT_RE.match(_strip_accents(str(attestation.get("detail") or "")))
+        if not match or _normalize_word(match["word"]) != head:
+            continue
+        if marker_class not in _usage_marker_classes(_normalize_word(match["marker"])):
+            continue
+        if not shares_referent(match["gloss"], gloss):
+            continue
+        return _usage_label(
+            USAGE_LABEL_CODES[marker_class],
+            "lemma",
+            [_esum_locator(attestation.get("ref"))],
+            match.group(0).strip(),
+        )
     return None
 
 
@@ -513,6 +687,7 @@ def _treasured_label(
     *,
     headword: str | None,
     definition_cards: object,
+    gloss: str | None,
 ) -> dict[str, Any]:
     if classification == "borrowing":
         for attestation in status.get("attestations") or []:
@@ -523,22 +698,28 @@ def _treasured_label(
                 and _normalize_word(str(attestation.get("word") or "")) == _normalize_word(headword)
                 and "запозич" in _normalize_word(str(attestation.get("detail") or ""))
             ):
-                return _usage_label("borr", "lemma", [f"ЕСУМ {attestation.get('ref')}"], attestation.get("detail"))
+                return _usage_label("borr", "lemma", [_esum_locator(attestation.get("ref"))], attestation.get("detail"))
         return _usage_label(None, "unresolved", [], None, reason="no_headword_etymology")
-    modern = _modern_dictionary_card(definition_cards)
     code = USAGE_LABEL_CODES[classification]
     marker_class = "authentic-archaism" if code == "arch" else classification
-    # Register labels describe modern usage, so only a modern explanatory
-    # dictionary binds them to the headword (rules P5). ЕСУМ, Грінченко and
-    # VESUM tags stay attestations: their labels may belong to one sense, a
-    # cognate, a quotation or an older homonym (#9603).
-    if modern is None:
-        return _usage_label(None, "unresolved", [], None, reason="no_modern_dictionary_label")
-    source_label, definition = modern
-    classes, ambiguous = modern_headword_labels(definition)
-    if not ambiguous and marker_class in classes:
-        return _usage_label(code, "lemma", [source_label], definition[:240])
-    return _usage_label(None, "unresolved", [], None, reason=f"{source_label}_headword_unlabelled")
+    # Each source keeps its evidential role (rules P5). The article's modern
+    # explanatory card for the same headword is the evidence on modern register:
+    # a label in its headword slot binds; a label on one numbered sense, a
+    # homonym-indexed card or an unlabelled headword does not. Without such a
+    # card, an ЕСУМ marker in the headword slot of the same headword and
+    # referent is a historical witness. Грінченко and VESUM tags stay
+    # attestations.
+    modern = _modern_dictionary_card(definition_cards, headword)
+    if modern is not None:
+        source_label, definition = modern
+        classes, ambiguous = modern_headword_labels(definition)
+        if not ambiguous and marker_class in classes:
+            return _usage_label(code, "lemma", [source_label], definition[:240])
+        return _usage_label(None, "unresolved", [], None, reason=f"{source_label}_headword_unlabelled")
+    witness = _esum_headword_marker(status, marker_class, headword=headword, gloss=gloss)
+    if witness is not None:
+        return witness
+    return _usage_label(None, "unresolved", [], None, reason="no_headword_bound_label")
 
 
 def _usage_label(
@@ -563,6 +744,7 @@ def resolve_usage_label(
     *,
     headword: str | None = None,
     definition_cards: object = None,
+    gloss: str | None = None,
 ) -> dict[str, Any]:
     """Resolve the source-scoped Word Atlas usage label for one record.
 
@@ -570,7 +752,8 @@ def resolve_usage_label(
     is set only for ``scope == "lemma"``; ``sense``/``phrase`` are contextual
     calque cautions on this headword, ``reverse`` marks a recommended
     replacement, ``unresolved`` marks warnings or labels whose scope or
-    authority the record does not establish.
+    authority the record does not establish. Without ``headword`` nothing can
+    bind to the word, so no lemma label is returned.
     """
     status = heritage_status or {}
     classification = str(status.get("classification") or "unknown")
@@ -582,6 +765,7 @@ def resolve_usage_label(
             classification,
             headword=headword,
             definition_cards=definition_cards,
+            gloss=gloss,
         )
         if treasured["scope"] == "lemma":
             return treasured
@@ -589,16 +773,18 @@ def resolve_usage_label(
     curated = _curated_scope_record(status)
     if curated is not None:
         kind = str(curated.get("kind")).strip()
-        authority = normative_citations(curated.get("source")) + normative_citations(curated.get("citations"))
+        evidence = bound_evidence(curated, headword)
+        authority = list(dict.fromkeys(locator for locator, _ in evidence))
         contextual = _CONTEXTUAL_CALQUE_SCOPES.get(kind)
         if contextual:
-            evidence = curated.get("calque_sense") or curated.get("calqueSense") or curated.get("note")
-            return _usage_label(None, contextual, authority, evidence)
-        if authority:
-            is_rus = bool(status.get("is_russianism")) and classification not in _AUTHENTIC_CLASSIFICATIONS
-            evidence = curated.get("noteUk") or curated.get("note")
-            return _usage_label("rus" if is_rus else "calq", "lemma", authority, evidence)
-        return _usage_label(None, "unresolved", [], None, reason="curated_record_without_named_authority")
+            scope_text = curated.get("calque_sense") or curated.get("calqueSense") or curated.get("note")
+            return _usage_label(None, contextual, authority, scope_text)
+        if kind not in _LEMMA_CALQUE_KINDS:
+            return _usage_label(None, "unresolved", [], None, reason="curated_kind_without_scope")
+        if not evidence:
+            return _usage_label(None, "unresolved", [], None, reason="no_headword_bound_evidence")
+        is_rus = bool(status.get("is_russianism")) and classification not in _AUTHENTIC_CLASSIFICATIONS
+        return _usage_label("rus" if is_rus else "calq", "lemma", authority, evidence[0][1][:240])
 
     if (
         bool(status.get("is_russianism"))
@@ -618,19 +804,21 @@ def compute_warning_severity(
     *,
     vesum_attested: bool,
     max_sovietization_risk: int = 0,
+    headword: str | None = None,
 ) -> str:
     """Compute the Word Atlas warning severity from status data only.
 
     Red and yellow follow :func:`resolve_usage_label`: red only for a
-    lemma-scoped Russianism with a named authority; yellow for a lemma-scoped
-    calque or a sense/phrase-scoped caution on this headword. A recommended
-    replacement (reverse calque), a bare replacement suggestion and a Russian
-    morphological shadow never raise a warning by themselves (#9603).
+    lemma-scoped Russianism bound to ``headword`` by normative evidence;
+    yellow for a lemma-scoped calque or a sense/phrase-scoped caution on this
+    headword. A recommended replacement (reverse calque), a bare replacement
+    suggestion and a Russian morphological shadow never raise a warning by
+    themselves (#9603).
     """
     status = heritage_status or {}
     classification = str(status.get("classification") or "unknown")
     positive_attestation = has_positive_attestation(status)
-    label = resolve_usage_label(status)
+    label = resolve_usage_label(status, headword=headword)
 
     if label["scope"] == "lemma" and label["code"] == "rus":
         return "russianism_red"
@@ -638,7 +826,10 @@ def compute_warning_severity(
     if (label["scope"] == "lemma" and label["code"] == "calq") or label["scope"] in {"sense", "phrase"}:
         return "calque_yellow"
 
-    if classification in _TREASURED_CLASSIFICATIONS or (classification == "standard" and positive_attestation):
+    unresolved_claim = label["scope"] == "unresolved" and label["reason"] in UNRESOLVED_CLAIM_REASONS
+    if not unresolved_claim and (
+        classification in _TREASURED_CLASSIFICATIONS or (classification == "standard" and positive_attestation)
+    ):
         return "treasured"
 
     if max_sovietization_risk > 0:
@@ -784,6 +975,16 @@ def _apostrophe_variants(term: str) -> tuple[str, ...]:
 _CURATED_CALQUE_MAP: dict[str, dict[str, Any]] | None = None
 
 
+def support_passages(pair: dict[str, Any]) -> list[dict[str, str]]:
+    """``{locator, passage}`` excerpts a heritage pair quotes from its sources."""
+    passages: list[dict[str, str]] = []
+    for key in ("normativeSupport", "currentNormSupport"):
+        for item in pair.get(key) or []:
+            if isinstance(item, dict) and item.get("locator") and item.get("passage"):
+                passages.append({"locator": str(item["locator"]), "passage": str(item["passage"])})
+    return passages
+
+
 def _curated_calque_map() -> dict[str, dict[str, Any]]:
     global _CURATED_CALQUE_MAP
     if _CURATED_CALQUE_MAP is not None:
@@ -807,6 +1008,7 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                     "corrections": list(data.get("corrections") or []),
                     "note": data.get("note", ""),
                     "citations": list(data.get("source") or []),
+                    "evidence": list(data.get("evidence") or []),
                     "source": "calque_corrections",
                 }
         for term, data in SENSE_RESTRICTED_CALQUES.items():
@@ -819,6 +1021,7 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                     "authentic_sense": data.get("authentic_sense", ""),
                     "note": data.get("note", ""),
                     "citations": list(data.get("source") or []),
+                    "evidence": list(data.get("evidence") or []),
                     "source": "calque_corrections",
                 }
         for term, data in PHRASAL_CALQUES.items():
@@ -829,6 +1032,7 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                     "corrections": list(data.get("corrections") or []),
                     "note": data.get("note", ""),
                     "citations": list(data.get("source") or []),
+                    "evidence": list(data.get("evidence") or []),
                     "source": "calque_corrections",
                 }
     except ImportError:
@@ -855,6 +1059,7 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                     "calqueSense": p.get("calqueSense"),
                     "authenticSense": p.get("authenticSense"),
                     "citations": list(p.get("citations") or []),
+                    "normative_support": support_passages(p),
                     "source": "heritage_pairs",
                     "severity": p.get("severity", "calque_yellow"),
                     "curator": p.get("curator", ""),
@@ -902,6 +1107,11 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                             )
                         if not merged.get("rationaleUk"):
                             merged["rationaleUk"] = existing.get("rationaleUk") or entry.get("rationaleUk") or ""
+                        merged["normative_support"] = list(existing.get("normative_support") or []) + [
+                            item
+                            for item in entry.get("normative_support") or []
+                            if item not in (existing.get("normative_support") or [])
+                        ]
                         calque_map[norm_k] = merged
                     else:
                         calque_map[norm_k] = entry
@@ -1721,6 +1931,7 @@ def _russianism_status(
         russian_shadow=russian_shadow,
         vesum_attested=vesum_attested,
         calque_warning={"standard_alternatives": alternatives},
+        headword=term,
     )
 
 
@@ -1773,7 +1984,7 @@ def _prefer_classification(current: str, candidate: str) -> str:
     return candidate if priority.get(candidate, 0) > priority.get(current, 0) else current
 
 
-def _merge_variant_statuses(statuses: list[dict[str, Any]]) -> dict[str, Any]:
+def _merge_variant_statuses(statuses: list[dict[str, Any]], *, headword: str | None = None) -> dict[str, Any]:
     classification = "unknown"
     attestations: list[dict[str, Any]] = []
     calque_warning = None
@@ -1795,6 +2006,7 @@ def _merge_variant_statuses(statuses: list[dict[str, Any]]) -> dict[str, Any]:
         vesum_attested=any(bool(status.get("vesum_attested")) for status in statuses),
         sovietization_risk=max(int(status.get("sovietization_risk") or 0) for status in statuses),
         calque_warning=calque_warning,
+        headword=headword,
     )
 
 
