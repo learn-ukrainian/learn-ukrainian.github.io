@@ -361,6 +361,18 @@ def check_text(
             unit_sentences.append((item_idx, item_id, item_text, current_sentence))
 
     unique_forms = list(tokens_by_form.keys())
+    # Unattested duration ranges (три-чотири) need numeral-part morphology
+    # for the book guard. Keep the input token and all diagnostic spans whole.
+    book_range_parts = (
+        [
+            part.lower()
+            for occurrences in tokens_by_form.values()
+            for part in occurrences[0][2].parts
+            if occurrences[0][2].hyphenated
+        ]
+        if "russian_shadow" in active_checks
+        else []
+    )
 
     raw_problems: list[dict[str, Any]] = []
     raw_suspicions: list[dict[str, Any]] = []
@@ -386,7 +398,7 @@ def check_text(
                     sent_init_caps.add(form)
                     break
 
-        query_words = list(dict.fromkeys(unique_forms + [f.lower() for f in unique_forms]))
+        query_words = list(dict.fromkeys(unique_forms + [f.lower() for f in unique_forms] + book_range_parts))
         try:
             vesum_map = verify_words(query_words, db_path=vesum_path)
         except FileNotFoundError as err:
@@ -416,7 +428,7 @@ def check_text(
                 )
     elif "russian_shadow" in active_checks and unique_forms:
         # If vesum was not requested in checks, but russian_shadow needs verified set:
-        query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms]))
+        query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms] + book_range_parts))
         try:
             vesum_map = verify_words(query_words, db_path=vesum_path)
         except FileNotFoundError as err:
@@ -565,6 +577,10 @@ def check_text(
                     finding.update(check="russian_shadow", locations=[loc], _first_loc=(item_idx, start, end))
                     book_findings[key] = finding
         for finding in book_findings.values():
+            if finding["detail"]["status"] == "suspicion":
+                finding["detail"]["label"] = "suspicion, not a verdict"
+                raw_suspicions.append(finding)
+                continue
             # Firm book evidence supersedes a heuristic on the same span,
             # including only the covered occurrences of a repeated form.
             covered = {tuple(loc) for loc in finding["locations"]}

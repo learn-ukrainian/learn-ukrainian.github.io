@@ -17,6 +17,9 @@ from scripts.verification.antonenko_data import PATTERN_ROWS
 
 BOOK = "Антоненко-Давидович «Як ми говоримо»"
 SOURCE_FILE = "antonenko-davydovych-yak-my-hovorymo"
+# Last-round stopping rule: change only this value to "suspicion" on a new
+# independently confirmed class of temporal-protiah false positive.
+TEMPORAL_PROTIAH_STATUS = "documented_calque"
 
 
 @dataclass(frozen=True)
@@ -67,29 +70,70 @@ def _matches(atom: str, token: Token, morphology: dict[str, list[dict[str, Any]]
     return any(r.get("pos") == pos and r.get("lemma") in lemmas.split("|") for r in readings)
 
 
+def _duration_case(readings: list[dict[str, Any]]) -> bool:
+    """Whether modifier readings permit an ordinary draught-duration phrase."""
+    # VESUM numerals omit ranim: their genitive-shaped accusative (двох,
+    # кількох) is animate-only. Plain numeral accusatives share the nominative
+    # surface; an explicit rinanim reading still counts independently.
+    genitive_numerals = {
+        r.get("lemma") for r in readings if r.get("pos") == "numr" and "v_rod" in r.get("tags", "").split(":")
+    }
+    for reading in readings:
+        tags = set(reading.get("tags", "").split(":"))
+        if tags & {"nv", "v_naz"}:
+            return True
+        if "v_zna" in tags and "ranim" not in tags:
+            if reading.get("pos") == "numr" and reading.get("lemma") in genitive_numerals and "rinanim" not in tags:
+                continue
+            return True
+    return False
+
+
+def _genitive_modifier(readings: list[dict[str, Any]]) -> bool:
+    """Require genitive evidence without an indeclinable or duration reading."""
+    return any("v_rod" in r.get("tags", "").split(":") for r in readings) and not _duration_case(readings)
+
+
 def _temporal_end(text: str, tokens: list[Token], end: int, morphology: dict[str, list[dict[str, Any]]]) -> int | None:
-    """Require genitive modifiers and a duration, rejecting postposed non-genitives."""
+    """Require a genitive duration; withhold ambiguous or approximate durations."""
     for i in range(end, len(tokens)):
         readings = _analyses(tokens[i], morphology)
         if any(r.get("lemma") in _TIME_UNITS and "v_rod" in r.get("tags", "").split(":") for r in readings):
-            # A postposed nominative/accusative modifier (години дві) signals
-            # a possible literal draught duration, rather than a genitive phrase.
+            # Only numerals belong to the postposed duration check. Adjectives,
+            # pronouns and adverb homographs (багато людей) can open a clause.
             previous = tokens[i]
-            for following in tokens[i + 1 :]:
+            for j in range(i + 1, len(tokens)):
+                following = tokens[j]
                 if not text[previous.end : following.start].isspace():
                     break
                 previous = following
                 if following.kind == "digits":
                     return None
-                modifiers = [r for r in _analyses(following, morphology) if r.get("pos") in {"adj", "numr"}]
+                following_readings = _analyses(following, morphology)
+                if (
+                    not following_readings
+                    and following.hyphenated
+                    and all(
+                        _duration_case([r for r in morphology.get(part.lower(), []) if r.get("pos") == "numr"])
+                        for part in following.parts
+                    )
+                ):
+                    return None
+                if following.lookup.lower() in {"зо", "з", "із"}:
+                    if j + 1 < len(tokens) and text[following.end : tokens[j + 1].start].isspace():
+                        numerals = [r for r in _analyses(tokens[j + 1], morphology) if r.get("pos") == "numr"]
+                        if _duration_case(numerals):
+                            return None
+                    break
+                if any(r.get("pos") == "adv" for r in following_readings):
+                    break
+                modifiers = [r for r in following_readings if r.get("pos") == "numr"]
                 if not modifiers:
                     break
-                if not any("v_rod" in r.get("tags", "").split(":") for r in modifiers):
+                if not _genitive_modifier(modifiers):
                     return None
             return i + 1
-        if not any(
-            r.get("pos") in {"adj", "numr"} and "v_rod" in r.get("tags", "").split(":") for r in readings
-        ):
+        if not _genitive_modifier([r for r in readings if r.get("pos") in {"adj", "numr"}]):
             return None
     return None
 
@@ -160,7 +204,9 @@ def find_book_calques(
                         "start": span[0].start,
                         "end": span[-1].end,
                         "detail": {
-                            "status": "documented_calque",
+                            "status": TEMPORAL_PROTIAH_STATUS
+                            if pattern.id == "temporal-protiah"
+                            else "documented_calque",
                             "pattern_id": pattern.id,
                             "ukrainian_alternative": pattern.recommended,
                             "evidence": {"source": BOOK, "source_file": SOURCE_FILE, "chunk_id": pattern.chunk_id},
