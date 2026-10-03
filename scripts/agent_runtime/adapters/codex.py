@@ -333,7 +333,17 @@ class CodexAdapter:
         # sessions/ directory the subprocess actually writes to.
         effective_codex_home = tc_early.get("codex_home_override")
         if not effective_codex_home and review_write_root is not None:
-            effective_codex_home = str(review_write_root / "home" / ".codex")
+            private_home = review_write_root / "home" / ".codex"
+            # app-server exits without layer provenance when CODEX_HOME does
+            # not exist. Sandbox auth staging creates this same directory
+            # later; the provenance probe needs it now, before reserving output.
+            try:
+                private_home.mkdir(mode=0o700, exist_ok=True)
+            except OSError as exc:
+                raise CodexReviewConfigError("review_mcp_config_layers_unavailable") from exc
+            if private_home.is_symlink():
+                raise CodexReviewConfigError("review_mcp_config_home_unsafe")
+            effective_codex_home = str(private_home)
         self._codex_home_scope = str(
             Path(effective_codex_home or os.environ.get("CODEX_HOME") or Path.home() / ".codex").resolve()
         )

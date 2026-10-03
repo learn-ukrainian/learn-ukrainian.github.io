@@ -94,3 +94,53 @@ def test_attempt_launch_resolution_is_shared_by_validation_and_config(tmp_path, 
 
     assert launches == [server]
     assert json.loads(plan.config_path.read_text())["mcpServers"]["sources"]["args"] == [str(server)]
+
+
+@pytest.mark.parametrize("problem", ["unreadable", "mismatch"])
+def test_invalid_launch_creates_no_files_in_existing_attempt_directory(tmp_path, monkeypatch, problem):
+    server = tmp_path / "server.py"
+    if problem == "mismatch":
+        server.write_text("# a different server\n")
+    monkeypatch.setattr(review_mcp, "sources_server_launch", lambda: (Path("/unused/python"), server))
+    receipts = tmp_path / "receipts"
+    attempt = receipts / "rev-9628"
+    attempt.mkdir(parents=True)
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review_id: rev-9628\nattempt_id: att-9628\n")
+    with pytest.raises(ValueError, match=f"review_launched_sources_server_{problem}"):
+        review_mcp.prepare_review_attempt(
+            review_id="rev-9628",
+            attempt_id="att-9628",
+            manifest_path=manifest,
+            harness="claude",
+            receipts_root=receipts,
+        )
+    assert list(attempt.iterdir()) == []
+
+
+def test_attempt_created_during_server_validation_is_still_refused(tmp_path, monkeypatch):
+    server = tmp_path / "server.py"
+    server.write_bytes(SERVER_PATH.read_bytes())
+    monkeypatch.setattr(review_mcp, "sources_server_launch", lambda: (Path("/unused/python"), server))
+    receipts = tmp_path / "receipts"
+    attempt = receipts / "rev-9628"
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review_id: rev-9628\nattempt_id: att-9628\n")
+    original = review_mcp.review_tools
+
+    def concurrent_attempt(*args, **kwargs):
+        attempt.mkdir(parents=True)
+        (attempt / "att-9628.jsonl").write_bytes(b"prior-receipts\n")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(review_mcp, "review_tools", concurrent_attempt)
+    with pytest.raises(FileExistsError, match="review attempt 'att-9628' already exists for review 'rev-9628'"):
+        review_mcp.prepare_review_attempt(
+            review_id="rev-9628",
+            attempt_id="att-9628",
+            manifest_path=manifest,
+            harness="claude",
+            receipts_root=receipts,
+        )
+    assert sorted(path.name for path in attempt.iterdir()) == ["att-9628.jsonl"]
+    assert (attempt / "att-9628.jsonl").read_bytes() == b"prior-receipts\n"

@@ -11,10 +11,30 @@ These tests never start a model turn.
 
 import json
 import shutil
+import sys
 
 import pytest
 
 from scripts.agent_runtime.adapters import codex
+
+
+def write_config_probe_binary(path):
+    """Model Codex's config/read protocol without running an installed engine."""
+    path.write_text(
+        f"#!{sys.executable}\n"
+        "import json, os, sys\n"
+        "assert sys.argv[1:] == ['app-server']\n"
+        "for line in sys.stdin:\n"
+        "    request = json.loads(line)\n"
+        "    if request.get('method') == 'config/read':\n"
+        "        assert request['params']['cwd'] == os.getcwd()\n"
+        "        assert request['params']['includeLayers'] is True\n"
+        "        layers = [{'name': {'type': 'user', 'file': os.path.join(os.environ['CODEX_HOME'], 'config.toml')},"
+        " 'config': {}}]\n"
+        "        print(json.dumps({'id': request['id'], 'result': {'layers': layers}}), flush=True)\n"
+    )
+    path.chmod(0o755)
+    return path
 
 
 def layer(kind, servers, **source):
@@ -112,6 +132,68 @@ def test_native_config_layer_probe_without_model_call(tmp_path, monkeypatch):
 def test_native_probe_failure_is_typed(tmp_path):
     with pytest.raises(codex.CodexReviewConfigError, match="review_mcp_config_layers_unavailable"):
         codex._codex_config_layers("/nonexistent/codex", tmp_path, str(tmp_path))
+
+
+@pytest.mark.parametrize("native", [False, True], ids=["unavailable-refuses", "native-prepares"])
+def test_sealed_adapter_requires_readable_native_layers(tmp_path, native):
+    from scripts.review.isolation import review_isolation_tool_config
+    from tests.test_review_isolation import _private_review_roots
+
+    binary = shutil.which("codex") if native else "/bin/true"
+    if binary is None:
+        pytest.skip("installed Codex CLI unavailable")
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    write, execution = _private_review_roots(tmp_path, "sealed-config-layers")
+    home = write / "home" / ".codex"
+    assert not home.exists()
+    config = {
+        **review_isolation_tool_config("codex"),
+        "review_engine_binary": binary,
+        "review_snapshot_root": str(snapshot),
+        "review_reject_root": str(snapshot),
+        "review_reject_roots": [str(snapshot)],
+        "review_write_root": str(write),
+        "review_exec_root": str(execution),
+    }
+    if not native:
+        with pytest.raises(codex.CodexReviewConfigError, match="review_mcp_config_layers_unavailable"):
+            build(snapshot, config)
+        assert list((write / "tmp").iterdir()) == []
+    else:
+        plan = build(snapshot, config)
+        try:
+            assert home.is_dir() and not home.is_symlink()
+            assert plan.cwd == write / "exec"
+            assert "--ignore-user-config" in plan.cmd
+            assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
+            assert not any(arg.startswith("mcp_servers.sources.") for arg in plan.cmd)
+        finally:
+            plan.output_file.unlink()
+
+
+def test_sealed_adapter_refuses_a_symlinked_scoped_home_before_probing(tmp_path, monkeypatch):
+    from scripts.review.isolation import review_isolation_tool_config
+    from tests.test_review_isolation import _private_review_roots
+
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    write, execution = _private_review_roots(tmp_path, "symlinked-home")
+    (write / "home" / ".codex").symlink_to(snapshot, target_is_directory=True)
+    monkeypatch.setattr(codex, "_codex_config_layers", lambda *_args: pytest.fail("unsafe home reached probe"))
+    with pytest.raises(codex.CodexReviewConfigError, match="review_mcp_config_home_unsafe"):
+        build(
+            snapshot,
+            {
+                **review_isolation_tool_config("codex"),
+                "review_engine_binary": "/bin/true",
+                "review_snapshot_root": str(snapshot),
+                "review_write_root": str(write),
+                "review_exec_root": str(execution),
+            },
+        )
+    assert list(snapshot.iterdir()) == []
+    assert list((write / "tmp").iterdir()) == []
 
 
 def test_unowned_session_definition_refuses_even_when_equal_to_authored_definition(tmp_path):

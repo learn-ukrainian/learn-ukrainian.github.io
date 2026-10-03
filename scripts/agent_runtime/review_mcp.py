@@ -814,9 +814,29 @@ def prepare_review_attempt(
         # Admission checked the primary earlier in the dispatch; the seat launches what is on disk now (#9163).
         check_launch_contract(review_contract, primary_root, python_bin)
 
-    # Preserve the admission-drift refusal first, then bind validation and
-    # configuration to one launch resolution before creating any artifacts.
-    # A worktree's declarations cannot authorize another checkout's server.
+    def _already_exists() -> FileExistsError:
+        return FileExistsError(
+            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
+        )
+
+    existing = [ledger_name, sidecar_name, config_name]
+    existing += [home.name for home in (codex_home, agy_home) if home is not None]
+    # Preserve specific directory and duplicate-attempt refusals before server
+    # validation, without provisioning anything for an invalid launch. The
+    # creation pass below repeats these checks to handle concurrent attempts.
+    try:
+        existing_fd = _open_attempt_dir(review_dir)
+    except FileNotFoundError:
+        pass
+    else:
+        try:
+            if any(_lexists(name, existing_fd) for name in existing):
+                raise _already_exists()
+        finally:
+            os.close(existing_fd)
+
+    # Bind validation and configuration to one launch resolution before
+    # creating artifacts. Worktree declarations cannot authorize another server.
     review_tools(review_access, server_path=sources_server)
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
@@ -846,15 +866,8 @@ def prepare_review_attempt(
                 else:
                     os.unlink(name, dir_fd=review_fd)
 
-    def _already_exists() -> FileExistsError:
-        return FileExistsError(
-            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
-        )
-
     try:
         # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
-        existing = [ledger_name, sidecar_name, config_name]
-        existing += [home.name for home in (codex_home, agy_home) if home is not None]
         if any(_lexists(name, review_fd) for name in existing):
             raise _already_exists()
 

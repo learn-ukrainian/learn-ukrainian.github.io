@@ -350,7 +350,9 @@ def test_unverified_formal_codex_boundary_never_plans_or_launches_bypass(tmp_pat
 
 def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
     from scripts.review.isolation import review_isolation_tool_config
+    from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
 
+    fake = write_config_probe_binary(tmp_path / "codex")
     snapshot, write = tmp_path / "snapshot", tmp_path / "write"
     snapshot.mkdir(mode=0o700)
     write.mkdir(mode=0o700)
@@ -360,7 +362,7 @@ def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
         **review_isolation_tool_config("codex"),
         "review_write_root": str(write),
         "review_snapshot_root": str(snapshot),
-        "review_engine_binary": "/bin/true",
+        "review_engine_binary": str(fake),
     }
     plan = CodexAdapter().build_invocation(
         prompt="review",
