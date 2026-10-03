@@ -20,8 +20,8 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **harness / infra** | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic infra` |
 | **devops** | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic devops` |
 | **ops-api** (Operator API + UI; stream key `monitor`) | Cursor; **Kimi for UI implementation only** | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
-| **ops-api** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic ops-api` |
-| **corpus** (acquisition & ingestion) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic corpus` |
+| **ops-api** (named alternate) | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic ops-api` |
+| **corpus** (acquisition & ingestion) | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 | `./start-grok-driver.sh --epic hramatka` |
 | **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` (slot `grok-core`; file handoff `.claude/curriculum-upgrade-epic/`) |
@@ -170,8 +170,8 @@ Every strong long-context model is load-bearing somewhere, so every orchestrator
 "bites a hand." This routing bites the **least** — it keeps the scarce authority +
 language + review lanes free and puts the loop on the most replaceable capacity:
 
-- **Codex / Sol 6.1** → infra, devops and corpus: drives the stream (Opus 5.5 is the other
-  driver and advisor seat). **Gemini (AGY, Flash) is not a planning, design or driver seat**
+- **Codex / Sol 6.1** → infra and devops only: drives those streams as the named alternate (Opus 5.5 is the other
+  driver and advisor seat, and drives corpus and every other stream outside infra/devops). **Gemini (AGY, Flash) is not a planning, design or driver seat**
   (operator decision 2026-10-03, #9584): it takes bounded, fully specified work and Ukrainian
   content review, never a stream.
 - **Grok** → product/track coordination: best-on-board agentic tool use, on its **own**
