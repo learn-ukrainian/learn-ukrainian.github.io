@@ -8,5 +8,4 @@ LC_ROOT="$ROOT"
 LC_PROVIDER=gemini
 LC_MODE=driver
 launcher_defaults
-launcher_parse "$@"
 launcher_refuse_gemini_driver

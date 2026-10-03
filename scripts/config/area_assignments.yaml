@@ -2,8 +2,10 @@
 # Replaces .agent/lane-assignments.md as machine authority (in later step).
 # See #5281 / #5279 design decisions.
 #
-# Derivation rule: slots = provider identity functions × launcher_selector_resolve lanes;
-# see scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
+# Derivation rule: slots = eligible driver provider identity functions ×
+# launcher_selector_resolve lanes. Gemini's lookup function is retained for
+# compatibility, but Gemini is not a driver and has no roster slots (#9633).
+# See scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
 # Both directions are enforced by tests/test_handoff_slot_registry.py, and the launcher
 # refuses a selector whose <provider>-<lane> slot is not listed here (#8303).
 

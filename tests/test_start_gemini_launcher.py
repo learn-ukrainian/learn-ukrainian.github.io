@@ -19,7 +19,19 @@ DRIVER_REFUSAL = (
 
 
 @pytest.mark.parametrize("dry_run", (True, False))
-@pytest.mark.parametrize("arguments", ((), ("--epic", "devops"), ("--epic", "atlas", "--force")))
+@pytest.mark.parametrize(
+    "arguments",
+    (
+        (),
+        ("--epic", "devops"),
+        ("--epic", "atlas", "--force"),
+        ("--help",),
+        ("--unknown-launcher-flag",),
+        ("--unknown-launcher-flag", "--epic", "devops"),
+        ("--model",),
+        ("--", "--help"),
+    ),
+)
 def test_gemini_driver_refused_before_lifecycle(arguments: tuple[str, ...], dry_run: bool) -> None:
     result = run_launcher("start-gemini-driver.sh", *arguments, dry_run=dry_run)
     assert result.returncode == 4
@@ -68,6 +80,33 @@ def test_shared_core_refuses_gemini_driver_before_any_startup(
 _DRIVE_EPIC_NEEDLE = "agents_extensions/shared/skills/drive-epic/SKILL.md"
 _AGY_PROMPT_FLAG = re.compile(r"(?:^|\s)(-i|--prompt-interactive)(?:\s|$)")
 _AGY_SKIP_PERMISSIONS = "--dangerously-skip-permissions"
+
+
+@pytest.mark.parametrize("mode", ("interactive", "driver"))
+def test_gemini_adapter_never_emits_skip_permissions(mode: str) -> None:
+    """Even bypassing the entrypoint refusal cannot enable permission skipping."""
+    adapter = Path(__file__).resolve().parents[1] / "scripts/launchers/gemini.sh"
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; LC_MODE="$2"; LC_MODEL=gemini-3.8-flash-high; '
+            'LC_DRY_RUN=1; LC_AUTH_SOURCE=agy-managed-auth; LC_RULES_CORE=""; '
+            'LC_DRIVER_PROMPT=""; LC_FORWARD_ARGS=(--sandbox read-only); '
+            'launcher_print_argv() { printf "%s " "$@"; }; launcher_adapter_exec',
+            "bash",
+            str(adapter),
+            mode,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "would exec agy --model gemini-3.8-flash-high --sandbox read-only" in result.stdout
+    assert _AGY_SKIP_PERMISSIONS not in result.stdout
+    assert result.stderr == ""
 
 
 def _would_exec_line(stdout: str) -> str:

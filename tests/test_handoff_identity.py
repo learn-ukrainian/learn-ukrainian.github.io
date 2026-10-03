@@ -298,6 +298,11 @@ def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None
         text=True,
         timeout=60,
     )
+    if launcher == "start-gemini-driver.sh":
+        assert result.returncode == 4
+        assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
+        assert result.stdout == ""
+        return
     assert result.returncode == 0, result.stderr
     assert "Valid lane selectors:" in result.stdout
     assert "infra.fleet-comms" in result.stdout
