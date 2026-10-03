@@ -5,6 +5,7 @@ from __future__ import annotations
 import errno
 import json
 import os
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -78,10 +79,17 @@ def test_live_session_kept_despite_rollover_and_age(tmp_path: Path) -> None:
     assert result["summary"]["kept_by_reason"] == {"live_session": 1}
 
 
-def test_confirmed_ended_session_removed_with_unknown_process_scan(tmp_path: Path) -> None:
+def test_confirmed_rollover_cannot_override_unknown_pid_view(tmp_path: Path) -> None:
     root, directory = _session(tmp_path)
     rollover = _confirmed(tmp_path)
     result = scratch.sweep_sessions(root, rollover_roots=[rollover], apply=True, probe=lambda: UNKNOWN)
+    assert directory.exists()
+    assert result["entries"][0]["reason"] == "unknown_session"
+
+
+def test_confirmed_ended_session_removed_with_complete_registry(tmp_path: Path) -> None:
+    root, directory = _session(tmp_path)
+    result = scratch.sweep_sessions(root, rollover_roots=[_confirmed(tmp_path)], apply=True, probe=lambda: DEAD)
     assert not directory.exists()
     assert result["entries"][0]["reason"] == "confirmed_rollover"
 
@@ -225,13 +233,17 @@ def test_rollover_symlink_malformed_and_missing_records_ignored(tmp_path: Path) 
 
 
 class FakeProcess:
-    def __init__(self, *, args=None, env=None, uid=None, error=None, paths=(), status="running"):
+    def __init__(
+        self, *, args=None, env=None, uid=None, error=None, paths=(), status="running", pid=999, exe="/bin/other"
+    ):
         self.args = args or ["other"]
         self.env = env or {}
         self.uid = os.getuid() if uid is None else uid
         self.error = error
         self.paths = paths
         self.state = status
+        self.pid = pid
+        self.executable = exe
 
     def uids(self):
         if self.error:
@@ -241,8 +253,8 @@ class FakeProcess:
     def status(self):
         return self.state
 
-    def name(self):
-        return "process"
+    def exe(self):
+        return self.executable
 
     def cmdline(self):
         return self.args
@@ -257,28 +269,59 @@ class FakeProcess:
         return [SimpleNamespace(path=path) for path in self.paths]
 
 
+@pytest.fixture
+def registry(tmp_path, monkeypatch):
+    config = tmp_path / "config"
+    root = config / "sessions"
+    root.mkdir(parents=True)
+    (root / "123.json").write_text(
+        json.dumps(
+            {
+                "pid": 123,
+                "sessionId": SESSION,
+                "procStart": "100",
+                "pidDomain": "linux:test:pid:[1]",
+            }
+        )
+    )
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(config))
+    monkeypatch.setattr(scratch, "_pid_domain", lambda: "linux:test:pid:[1]")
+
+    def gone(_pid):
+        raise FileNotFoundError
+
+    monkeypatch.setattr(scratch, "_kernel_start", gone)
+    return root
+
+
 @pytest.mark.parametrize(
     "process,complete,live",
     [
-        (FakeProcess(args=["claude", "--session-id", SESSION]), True, {SESSION}),
-        (FakeProcess(args=["claude", f"--resume={SESSION}"]), True, {SESSION}),
-        (FakeProcess(args=["claude"], env={"CLAUDE_SESSION_ID": SESSION}), True, {SESSION}),
-        (FakeProcess(args=["claude"], paths=[f"/tmp/claude-{os.getuid()}/project/{SESSION}/file"]), True, {SESSION}),
+        (FakeProcess(args=["claude", "--session-id", SESSION]), False, {SESSION}),
+        (FakeProcess(args=["claude", f"--resume={SESSION}"]), False, {SESSION}),
+        (FakeProcess(args=["claude"], env={"CLAUDE_SESSION_ID": SESSION}), False, {SESSION}),
+        (FakeProcess(args=["claude"], env={"CLAUDE_CODE_SESSION_ID": SESSION}), False, {SESSION}),
+        (FakeProcess(args=["claude"], paths=[f"/tmp/claude-{os.getuid()}/project/{SESSION}/file"]), False, {SESSION}),
         (FakeProcess(args=["claude"], env={"RANDOM_UUID": SESSION}), False, {SESSION}),
         (FakeProcess(args=["claude"]), False, set()),
-        (FakeProcess(args=["node", "/package/claude-code/cli.js"]), False, set()),
-        (FakeProcess(error=scratch.psutil.AccessDenied(1)), False, set()),
+        (FakeProcess(args=["node", "/package/claude-code/cli.js"]), True, set()),
+        (FakeProcess(args=["bash", "/worktrees/claude/task"]), True, set()),
+        (FakeProcess(exe="/bin/claude", args=["renamed"]), False, set()),
+        (FakeProcess(error=scratch.psutil.AccessDenied(1)), True, set()),
+        (FakeProcess(args=["claude"], error=scratch.psutil.AccessDenied(1)), False, set()),
         (FakeProcess(error=scratch.psutil.NoSuchProcess(1)), True, set()),
         (FakeProcess(uid=os.getuid() + 1), True, set()),
         (FakeProcess(status=scratch.psutil.STATUS_ZOMBIE), True, set()),
     ],
 )
-def test_process_scan_proves_positive_ownership_and_fails_closed(monkeypatch, process, complete, live) -> None:
+def test_process_scan_proves_positive_ownership_and_fails_closed(
+    registry, monkeypatch, process, complete, live
+) -> None:
     monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
     assert scratch.process_evidence() == scratch.ProcessEvidence(frozenset(live), complete)
 
 
-def test_process_enumeration_failure_is_unknown(monkeypatch) -> None:
+def test_process_enumeration_failure_is_unknown(registry, monkeypatch) -> None:
     def fail():
         raise OSError(errno.EACCES, "inaccessible")
 
@@ -286,7 +329,7 @@ def test_process_enumeration_failure_is_unknown(monkeypatch) -> None:
     assert scratch.process_evidence() == UNKNOWN
 
 
-def test_partial_process_probe_keeps_positive_ownership(monkeypatch) -> None:
+def test_partial_process_probe_keeps_positive_ownership(registry, monkeypatch) -> None:
     process = FakeProcess(args=["claude", "--session-id", SESSION])
 
     def inaccessible():
@@ -297,7 +340,146 @@ def test_partial_process_probe_keeps_positive_ownership(monkeypatch) -> None:
     assert scratch.process_evidence() == scratch.ProcessEvidence(frozenset({SESSION}), complete=False)
 
 
-def test_cli_counts_only_and_error_exit(tmp_path: Path, monkeypatch, capsys) -> None:
+def test_narrowed_enumeration_keeps_registry_session_with_renamed_binary(registry, tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(scratch, "_kernel_start", lambda _pid: "100")
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([]))
+    root, directory = _session(tmp_path)
+    result = scratch.sweep_sessions(root)
+    assert directory.exists()
+    assert result["summary"]["kept_by_reason"] == {"live_session": 1}
+    assert scratch.process_evidence() == LIVE
+
+
+def test_mismatched_pid_domain_refuses_absence_even_with_rollover(registry, tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(scratch, "_pid_domain", lambda: "linux:test:pid:[2]")
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([]))
+    root, directory = _session(tmp_path)
+    result = scratch.sweep_sessions(root, rollover_roots=[_confirmed(tmp_path)])
+    assert directory.exists()
+    assert result["summary"]["kept_by_reason"] == {"unknown_session": 1}
+    assert scratch.process_evidence() == UNKNOWN
+
+
+def test_pid_reuse_with_different_start_is_not_live(registry, tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(scratch, "_kernel_start", lambda _pid: "200")
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([FakeProcess(pid=123)]))
+    root, directory = _session(tmp_path)
+    result = scratch.sweep_sessions(root)
+    assert directory.exists()  # Dry-run only.
+    assert result["entries"][0]["reason"] == "process_gone"
+    assert result["summary"]["would_remove"] == 1
+
+
+def test_pid_reuse_as_unregistered_claude_blocks(registry, monkeypatch) -> None:
+    monkeypatch.setattr(scratch, "_kernel_start", lambda _pid: "200")
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([FakeProcess(pid=123, args=["claude"])]))
+    assert scratch.process_evidence() == UNKNOWN
+
+
+@pytest.mark.parametrize("accessor", ["environ", "cmdline", "exe", "cwd", "open_files"])
+def test_unrelated_access_denied_does_not_block_absence(registry, monkeypatch, accessor) -> None:
+    process = FakeProcess()
+
+    def denied():
+        raise scratch.psutil.AccessDenied(999)
+
+    monkeypatch.setattr(process, accessor, denied)
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
+    assert scratch.process_evidence() == DEAD
+
+
+def test_registered_claude_without_id_or_environment_is_complete(registry, monkeypatch) -> None:
+    process = FakeProcess(pid=123, args=["claude"])
+
+    def denied():
+        raise scratch.psutil.AccessDenied(123)
+
+    monkeypatch.setattr(process, "environ", denied)
+    monkeypatch.setattr(scratch, "_kernel_start", lambda _pid: "100")
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
+    assert scratch.process_evidence() == LIVE
+
+
+@pytest.mark.parametrize("kind", ["missing", "empty", "malformed", "symlink", "inaccessible", "foreign_owner"])
+def test_unverified_registry_refuses_absence(registry, monkeypatch, kind) -> None:
+    record = registry / "123.json"
+    if kind == "missing":
+        monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(registry / "absent"))
+    elif kind == "empty":
+        record.unlink()
+    elif kind == "malformed":
+        record.write_text("{")
+    elif kind == "symlink":
+        saved = registry.parent / "saved.json"
+        record.rename(saved)
+        record.symlink_to(saved)
+    elif kind == "inaccessible":
+
+        def denied(_pid):
+            raise PermissionError(errno.EACCES, "denied")
+
+        monkeypatch.setattr(scratch, "_kernel_start", denied)
+    else:
+        real_fstat = scratch.os.fstat
+
+        def foreign(fd):
+            info = real_fstat(fd)
+            if stat.S_ISREG(info.st_mode):
+                values = list(info)
+                values[4] = os.getuid() + 1
+                return os.stat_result(values)
+            return info
+
+        monkeypatch.setattr(scratch.os, "fstat", foreign)
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([]))
+    assert scratch.process_evidence() == UNKNOWN
+
+
+def test_kernel_start_reads_ticks_with_parentheses_in_comm(tmp_path, monkeypatch) -> None:
+    sample = tmp_path / "stat"
+    sample.write_text("123 (odd ) process) S " + "0 " * 18 + "100 0 0")
+    monkeypatch.setattr(scratch, "Path", lambda _path: sample)
+    assert scratch._kernel_start(123) == "100"
+
+
+def test_pid_domain_matches_registry_format(tmp_path, monkeypatch) -> None:
+    machine = tmp_path / "machine-id"
+    machine.write_text("a" * 32 + "\n")
+    monkeypatch.setattr(scratch, "Path", lambda _path: machine)
+    monkeypatch.setattr(scratch.os, "readlink", lambda _path: "pid:[123]")
+    assert scratch._pid_domain() == "linux:" + "a" * 32 + ":pid:[123]"
+    machine.write_text("")
+    with pytest.raises(ValueError, match="unknown PID domain"):
+        scratch._pid_domain()
+
+
+def test_deep_tree_error_does_not_abort_other_entries(tmp_path) -> None:
+    root, deep = _session(tmp_path)
+    _session(tmp_path, session=REPLACEMENT)
+    nested = deep
+    for _ in range(130):
+        nested /= "d"
+        nested.mkdir()
+    report = scratch.sweep_sessions(root, probe=lambda: DEAD)
+    assert report["summary"]["errors"] == report["summary"]["would_remove"] == 1
+    assert report["entries"][0]["reason"] == "ELOOP"
+    assert deep.exists()
+
+
+def test_recursion_error_is_per_entry(tmp_path, monkeypatch) -> None:
+    root, directory = _session(tmp_path)
+
+    def fail(_fd):
+        raise RecursionError
+
+    monkeypatch.setattr(scratch, "_tree_bytes", fail)
+    report = scratch.sweep_sessions(root, probe=lambda: DEAD)
+    assert report["summary"]["errors"] == 1
+    assert report["entries"][0]["reason"] == "RecursionError"
+    assert directory.exists()
+
+
+def test_cli_counts_only_and_error_exit(registry, tmp_path: Path, monkeypatch, capsys) -> None:
     root, directory = _session(tmp_path)
     monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([]))
     assert scratch.main(["--temp-root", str(root)]) == 0

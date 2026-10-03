@@ -629,10 +629,27 @@ per host run. Its default is report-only; `--apply` enables removal. The sweep
 recognizes UUID session directories immediately under the per-user Claude temp
 root or under a project directory. It never follows directory symlinks, including
 root ancestors, and uses descriptor-relative, symlink-resistant removal. A
-positive live-process match always preserves the session. Removal requires either
-a confirmed v2 thread-handoff predecessor record or a complete process scan proving
-no owner. Inaccessible processes, unidentified live Claude processes and unknown
-entries are preserved and reported. Session age never authorizes deletion.
+positive live-process match always preserves the session. The sweep reads Claude
+Code's per-process `sessions/<pid>.json` registry under `CLAUDE_CONFIG_DIR`
+(default: the user's Claude config directory). A registry PID with a matching
+kernel start time (`procStart`) protects its `sessionId`, even when process
+enumeration omits it or the executable has another name. PID reuse with a different
+start time does not establish liveness.
+
+Removal requires readable registry evidence whose `pidDomain` matches the
+sweeper's machine identity and PID namespace, plus no unidentified Claude process.
+A missing, empty, malformed or inaccessible registry, a mismatched domain, or a
+real Claude executable/first argument without a matching registry entry prevents
+absence proof, including for confirmed v2 thread-handoff predecessors. Access
+denied on unrelated processes and later argument paths containing `claude` do not
+block absence proof. Unknown entries remain preserved; session age never
+authorizes deletion. Deep-tree recursion errors are reported per entry and do
+not abort the remaining hygiene run.
+
+Apply rechecks liveness immediately before removal, but this is not an atomic
+transaction with Claude's session startup. A `claude --resume <id>` starting
+after that recheck can race with removal and lose scratch. Avoid starting or
+resuming sessions during an apply run; use dry-run when that cannot be ensured.
 
 To inspect session scratch independently:
 

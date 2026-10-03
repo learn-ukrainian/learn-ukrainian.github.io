@@ -11,6 +11,7 @@ import shutil
 import stat
 from collections import Counter
 from collections.abc import Callable, Iterable
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -26,49 +27,123 @@ class ProcessEvidence:
     complete: bool = False
 
 
-def process_evidence() -> ProcessEvidence:
-    """Scan this user's processes without publishing arguments or environment.
+def _pid_domain() -> str:
+    """Match Claude Code's Linux machine/namespace identity, kept private."""
+    machine = Path("/etc/machine-id").read_text().strip()
+    namespace = os.readlink("/proc/self/ns/pid")
+    if not re.fullmatch(r"[0-9a-f]{32}", machine) or not re.fullmatch(r"pid:\[\d+\]", namespace):
+        raise ValueError("unknown PID domain")
+    return f"linux:{machine}:{namespace}"
 
-    Inaccessible processes and Claude processes with no observable session ID
-    prevent a negative ownership proof. Positive ownership always wins, even
-    over a confirmed rollover. A disappearing process is not a live owner.
+
+def _kernel_start(pid: int) -> str:
+    """Read field 22 as ticks, without psutil's wall-clock conversion.
+
+    The parenthesized comm field may itself contain spaces and parentheses.
+    """
+    fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+    start = fields[19]
+    if not start.isdecimal():
+        raise ValueError("unknown kernel start time")
+    return start
+
+
+def _registry_evidence(root: Path) -> tuple[set[str], set[int], bool]:
+    """Validate registry identities directly, independently of process enumeration.
+
+    An empty or unreadable registry cannot establish its PID domain. Every
+    record must be readable and share our domain before absence is provable.
     """
     sessions: set[str] = set()
+    registered: set[int] = set()
     complete = True
+    seen = False
+    try:
+        domain = _pid_domain()
+        root_fd = _open_path(root)
+    except (OSError, ValueError):
+        return sessions, registered, False
+    try:
+        for name in os.listdir(root_fd):
+            if not name.endswith(".json"):
+                continue
+            seen = True
+            try:
+                fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=root_fd)
+                with os.fdopen(fd, "rb") as source:
+                    info = os.fstat(source.fileno())
+                    if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid():
+                        raise ValueError("invalid registry file")
+                    record = json.load(source)
+                if not isinstance(record, dict):
+                    raise ValueError("invalid registry record")
+                pid = record.get("pid")
+                session = record.get("sessionId")
+                start = record.get("procStart")
+                if (
+                    type(pid) is not int
+                    or pid <= 0
+                    or name != f"{pid}.json"
+                    or not isinstance(session, str)
+                    or not _SESSION_RE.fullmatch(session)
+                    or not isinstance(start, str)
+                    or not start.isdecimal()
+                    or record.get("pidDomain") != domain
+                ):
+                    raise ValueError("unverified registry identity")
+                try:
+                    current_start = _kernel_start(pid)
+                except FileNotFoundError:
+                    continue
+                if current_start == start:
+                    sessions.add(session.lower())
+                    registered.add(pid)
+            except (OSError, ValueError, UnicodeError, IndexError):
+                complete = False
+    except OSError:
+        complete = False
+    finally:
+        os.close(root_fd)
+    return sessions, registered, complete and seen
+
+
+def process_evidence() -> ProcessEvidence:
+    """Combine Claude's registry with positive process session-ID matches.
+
+    Only real Claude executables/argv[0] without a verified registry identity
+    make enumeration incomplete; unrelated access-denied processes do not.
+    Arguments and environment are never published.
+    """
+    config = Path(os.environ.get("CLAUDE_CONFIG_DIR", str(Path.home() / ".claude")))
+    sessions, registered, complete = _registry_evidence(config / "sessions")
     try:
         for process in psutil.process_iter():
+            args: list[str] = []
+            executable = ""
+            with suppress(psutil.Error, OSError):
+                args = process.cmdline()
+            with suppress(psutil.Error, OSError):
+                executable = process.exe()
+            is_claude = any(Path(value).name in {"claude", "claude-code"} for value in [executable, *args[:1]])
             try:
                 if process.uids().real != os.getuid() or process.status() == psutil.STATUS_ZOMBIE:
                     continue
-                args = process.cmdline()
-                sessions.update(match.lower() for value in args for match in _SESSION_RE.findall(value))
-                environment = process.environ()
-                sessions.update(match.lower() for value in environment.values() for match in _SESSION_RE.findall(value))
-                paths = [process.cwd(), *(item.path for item in process.open_files())]
-                sessions.update(match.lower() for value in paths for match in _SESSION_RE.findall(value))
-                is_claude = process.name() in {"claude", "claude-code"} or any(
-                    {"claude", "claude-code"}.intersection(Path(arg).parts) for arg in args
-                )
-                # Other UUIDs in an environment are not a Claude session identity.
-                identity_values = [
-                    value
-                    for key, value in environment.items()
-                    if key in {"CLAUDE_SESSION_ID", "LEARN_UKRAINIAN_SESSION_ID", "SESSION_STREAM_SESSION_ID"}
-                ]
-                for index, arg in enumerate(args):
-                    if arg in {"--session-id", "--resume", "-r"} and index + 1 < len(args):
-                        identity_values.append(args[index + 1])
-                    elif arg.startswith(("--session-id=", "--resume=")):
-                        identity_values.append(arg.split("=", 1)[1])
-                identity_values.extend(
-                    path for path in paths if f"/claude-{os.getuid()}/" in path or path.endswith(".jsonl")
-                )
-                if is_claude and not any(_SESSION_RE.search(value) for value in identity_values):
-                    complete = False
             except psutil.NoSuchProcess:
                 continue
             except (psutil.Error, OSError):
+                if not is_claude:
+                    continue
+            if is_claude and process.pid not in registered:
                 complete = False
+            sessions.update(match.lower() for value in args for match in _SESSION_RE.findall(value))
+            # Optional positive matches cannot invalidate unrelated processes.
+            for read in (
+                lambda process=process: process.environ().values(),
+                lambda process=process: [process.cwd()],
+                lambda process=process: [item.path for item in process.open_files()],
+            ):
+                with suppress(psutil.Error, OSError):
+                    sessions.update(match.lower() for value in read() for match in _SESSION_RE.findall(value))
     except (psutil.Error, OSError):
         complete = False
     return ProcessEvidence(frozenset(sessions), complete)
@@ -157,7 +232,9 @@ def confirmed_sessions(roots: Iterable[Path]) -> set[str]:
     return sessions
 
 
-def _tree_bytes(fd: int) -> int:
+def _tree_bytes(fd: int, depth: int = 0) -> int:
+    if depth >= 128:
+        raise OSError(errno.ELOOP, "scratch tree exceeds traversal depth")
     total = 0
     for name in os.listdir(fd):
         info = os.stat(name, dir_fd=fd, follow_symlinks=False)
@@ -166,7 +243,7 @@ def _tree_bytes(fd: int) -> int:
         elif stat.S_ISDIR(info.st_mode):
             child = os.open(name, _DIR_FLAGS, dir_fd=fd)
             try:
-                total += _tree_bytes(child)
+                total += _tree_bytes(child, depth + 1)
             finally:
                 os.close(child)
     return total
@@ -175,9 +252,11 @@ def _tree_bytes(fd: int) -> int:
 def _reason(session: str, evidence: ProcessEvidence, confirmed: set[str]) -> str:
     if session in evidence.live_sessions:
         return "live_session"
+    if not evidence.complete:
+        return "unknown_session"
     if session in confirmed:
         return "confirmed_rollover"
-    return "process_gone" if evidence.complete else "unknown_session"
+    return "process_gone"
 
 
 def sweep_sessions(
@@ -238,6 +317,8 @@ def sweep_sessions(
                     os.close(fd)
         except OSError as exc:
             row.update(action="error", reason=errno.errorcode.get(exc.errno or 0, "OSError"))
+        except RecursionError:
+            row.update(action="error", reason="RecursionError")
         rows.append(row)
 
     try:
