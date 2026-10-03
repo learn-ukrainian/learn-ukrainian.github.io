@@ -46,9 +46,9 @@ sample rows per call. Mirrors the evidence convention required by the
 ``docs/best-practices/deterministic-over-hallucination.md``).
 
 Usage:
-    .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest
-    .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --dry-run
-    .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --force
+    .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --db copy.db --apply
+    .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --db copy.db --dry-run
+    .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --db copy.db --apply --force
 
 Source file (gitignored, in ``docs/references/private/``):
     ``pohribnyi-ukrainska-literaturna-vymova-1992.txt`` (OCR output)
@@ -86,7 +86,6 @@ from scripts.ingest.pohribnyi_tooling import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 
 SOURCE_FILE = "pohribnyi-ukrainska-literaturna-vymova-1992"
@@ -252,7 +251,9 @@ def ingest_pages(
 # ---------------------------------------------------------------------------
 
 
-def validate_adjudicated_packet(packet: dict, table: dict) -> list[dict]:
+def validate_adjudicated_packet(
+    packet: dict, table: dict, *, census_counts: dict[str, int]
+) -> list[dict]:
     """Require frozen notation, adjudication and a complete declared paragraph census."""
     validate_notation(table)
     if table["provisional"]:
@@ -273,21 +274,38 @@ def validate_adjudicated_packet(packet: dict, table: dict) -> list[dict]:
             or {r["paragraph"] for r in rows if r["page"] == page} != set(range(1, count + 1))
         ):
             raise ValueError("Incomplete page paragraph census")
+    if not isinstance(census_counts, dict) or any(
+        type(census_counts.get(str(page))) is not int
+        or census_counts[str(page)] != counts[str(page)] for page in pages
+    ):
+        raise ValueError("Packet paragraph counts do not match independent census")
     return rows
+
+
+def check_retained_ocr(conn: sqlite3.Connection, pages: set[int]) -> None:
+    """Read-only prerequisite shared by dry-run and write mode."""
+    for page in pages:
+        if conn.execute(
+            "SELECT count(*) FROM textbooks WHERE source_file=? AND chunk_id=?",
+            (SOURCE_FILE, f"{SOURCE_FILE}_p{page:02d}"),
+        ).fetchone()[0] != 1:
+            raise ValueError("Expected exactly one retained OCR row per ingested page")
 
 
 def ingest_adjudicated(
     conn: sqlite3.Connection,
     packet: dict,
     table: dict,
+    *,
+    census_counts: dict[str, int],
 ) -> tuple[int, int]:
     """Append complete adjudicated pages; preserve OCR text and mark it superseded.
 
-    ``paragraph_counts`` binds the supplied paragraph census to each page.
+    ``census_counts`` is provided separately from the transcription packet.
     A savepoint rolls back schema, inserts and supersession together on failure.
     No commit is performed; the caller owns the outer transaction.
     """
-    rows = validate_adjudicated_packet(packet, table)
+    rows = validate_adjudicated_packet(packet, table, census_counts=census_counts)
     pages = {r["page"] for r in rows}
     notation_digest = hashlib.sha256(json.dumps(table, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
     inserted = skipped = 0
@@ -297,16 +315,7 @@ def ingest_adjudicated(
         conn.execute("BEGIN")
     conn.execute("SAVEPOINT pohribnyi_adjudicated")
     try:
-        for page in pages:
-            ocr_id = f"{SOURCE_FILE}_p{page:02d}"
-            if (
-                conn.execute(
-                    "SELECT count(*) FROM textbooks WHERE source_file=? AND chunk_id=?",
-                    (SOURCE_FILE, ocr_id),
-                ).fetchone()[0]
-                != 1
-            ):
-                raise ValueError("Expected exactly one retained OCR row per ingested page")
+        check_retained_ocr(conn, pages)
         ensure_section_schema(conn)
         for name in ("textbooks", "textbook_sections"):
             columns = {r[1] for r in conn.execute(f"PRAGMA table_info({name})")}
@@ -388,15 +397,26 @@ def ingest_adjudicated(
             inserted += 1
         for page in pages:
             ocr_id = f"{SOURCE_FILE}_p{page:02d}"
+            current_ids = [
+                f"{SOURCE_FILE}_p{page:02d}_para{r['paragraph']:03d}_adjudicated"
+                for r in rows if r["page"] == page
+            ]
+            placeholders = ",".join("?" * len(current_ids))
+            # Retain only this complete packet's rows as active, including on a
+            # shorter replacement. No OCR or previous paragraph text is deleted.
+            prior_where = (
+                f"source_file=? AND (chunk_id=? OR page_number=?) "
+                f"AND chunk_id NOT IN ({placeholders})"
+            )
+            params = (SOURCE_FILE, ocr_id, page, *current_ids)
             conn.execute(
                 "UPDATE textbook_sections SET transcription_status='superseded' WHERE section_id IN "
-                "(SELECT parent_section_id FROM textbooks WHERE source_file=? AND chunk_id=?)",
-                (SOURCE_FILE, ocr_id),
+                f"(SELECT parent_section_id FROM textbooks WHERE {prior_where})",
+                params,
             )
             conn.execute(
-                "UPDATE textbooks SET transcription_status='superseded',page_number=? "
-                "WHERE source_file=? AND chunk_id=?",
-                (page, SOURCE_FILE, ocr_id),
+                f"UPDATE textbooks SET transcription_status='superseded',page_number=? WHERE {prior_where}",
+                (page, *params),
             )
     except Exception:
         conn.execute("ROLLBACK TO pohribnyi_adjudicated")
@@ -445,7 +465,7 @@ def _run(*, db_path: Path, dry_run: bool, force: bool) -> int:
         return 0
 
     print(f"\n🗃️  Writing to {db_path}")
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(db_path.resolve().as_uri() + "?mode=rw", uri=True)
     try:
         before = conn.execute(
             "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
@@ -511,10 +531,11 @@ def main(argv: list[str] | None = None) -> int:
             "legacy OCR mode is not a clean transcription."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --dry-run\n"
+        epilog="Examples:\n  .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest --db copy.db --dry-run\n"
         "  .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest "
-        "--adjudicated .cache/final.json --notation frozen.json --db copy.db\n"
-        "Outputs: adjudicated mode appends paragraphs and marks OCR superseded without deleting text; "
+        "--adjudicated .cache/final.json --notation frozen.json --census .cache/census.json "
+        "--db copy.db --apply\n"
+        "Outputs: adjudicated mode appends paragraphs and supersedes OCR and prior page transcriptions without deleting text; "
         "legacy --force replaces OCR rows.\n"
         "Exit codes: 0 success; 1 invalid adjudication input; 2 missing OCR input.\n"
         "Related: #9604; pohribnyi_tooling; pohribnyi_notation.json.",
@@ -532,8 +553,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--db",
         type=Path,
-        default=DB_PATH,
-        help="Target existing local SQLite DB path (default: data/sources.db); use a temp schema copy for tests.",
+        required=True,
+        help="Explicit existing SQLite DB path (required), e.g. copy.db; no default or automatic DB creation.",
     )
     parser.add_argument(
         "--adjudicated",
@@ -546,21 +567,36 @@ def main(argv: list[str] | None = None) -> int:
         default=NOTATION_PATH,
         help="Notation table JSON (default: bundled provisional table; ingest requires a frozen table).",
     )
+    parser.add_argument(
+        "--apply", action="store_true",
+        help="Authorize database writes (default: refused without --apply or --dry-run).",
+    )
+    parser.add_argument(
+        "--census", type=Path,
+        help="Independent page-image census JSON: string page keys to paragraph counts, e.g. {\"10\": 2}; required for adjudicated mode.",
+    )
     args = parser.parse_args(argv)
+    if args.apply == args.dry_run:
+        parser.error("Select exactly one of --apply or --dry-run")
 
     if args.adjudicated:
+        if not args.census:
+            parser.error("--adjudicated requires an independent --census file")
         if args.force:
             parser.error("--force cannot be combined with --adjudicated")
         try:
             table = load_notation(args.notation)
             packet = json.loads(args.adjudicated.read_text(encoding="utf-8"))
+            census_counts = json.loads(args.census.read_text(encoding="utf-8"))
             if args.dry_run:
-                rows = validate_adjudicated_packet(packet, table)
+                rows = validate_adjudicated_packet(packet, table, census_counts=census_counts)
+                with sqlite3.connect(args.db.resolve().as_uri() + "?mode=ro", uri=True) as conn:
+                    check_retained_ocr(conn, {r["page"] for r in rows})
                 print(f"Validated {len(rows)} adjudicated paragraphs; no database writes")
             else:
                 # mode=rw refuses accidental creation of an empty sources.db.
                 with sqlite3.connect(args.db.resolve().as_uri() + "?mode=rw", uri=True) as conn:
-                    inserted, skipped = ingest_adjudicated(conn, packet, table)
+                    inserted, skipped = ingest_adjudicated(conn, packet, table, census_counts=census_counts)
                 print(f"Adjudicated paragraphs: inserted={inserted}, skipped={skipped}")
         except (ValueError, OSError, sqlite3.Error) as exc:
             parser.exit(1, f"Error: {exc}\n")

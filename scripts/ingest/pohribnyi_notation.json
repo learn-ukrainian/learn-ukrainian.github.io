@@ -2,6 +2,8 @@
   "schema_version": 1,
   "provisional": true,
   "normalization": "NFC",
+  "combining_mark_order": ["U+0306", "U+0301", "U+A675", "U+2DF7", "U+0361"],
+  "precomposed_letters": "ЃЌѓќӁӂӐӑӖӗ",
   "inventory_source_pages": [4, 5],
   "freeze_reviewers": [],
   "letters": "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯўЎ",

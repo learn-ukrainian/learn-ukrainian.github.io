@@ -13,6 +13,7 @@ import pytest
 
 from scripts.ingest import pohribnyi_pronunciation_ingest as ingest
 from scripts.ingest import pohribnyi_tooling as tooling
+from tests.pohribnyi_schema import open_schema_copy
 
 
 @pytest.fixture
@@ -102,6 +103,9 @@ def test_latin_prose_allowed_and_offsets_stable(table):
         {"symbols": []},
         {"unknown_field": True},
         {"underlining": {}},
+        {"combining_mark_order": []},
+        {"combining_mark_order": ["U+0301"]},
+        {"precomposed_letters": "é"},
         {"provisional": False},
     ],
 )
@@ -185,28 +189,8 @@ def test_diff_detects_prose_underlining_and_deleted_span(table):
 
 @pytest.fixture
 def schema_copy(tmp_path):
-    # Schema snapshot from read-only sqlite_master inspection, no live data.
-    source = sqlite3.connect(tmp_path / "schema.db")
-    source.executescript("""
-        CREATE TABLE textbooks (
-            id INTEGER PRIMARY KEY, chunk_id TEXT NOT NULL DEFAULT '',
-            title TEXT NOT NULL DEFAULT '', text TEXT NOT NULL DEFAULT '',
-            source_file TEXT NOT NULL DEFAULT '', grade TEXT DEFAULT '',
-            author TEXT DEFAULT '', char_count INTEGER DEFAULT 0,
-            parent_section_id INTEGER REFERENCES textbook_sections(section_id),
-            author_uk TEXT DEFAULT '', subject TEXT
-        );
-        CREATE TABLE textbook_sections (
-            section_id INTEGER PRIMARY KEY, source_file TEXT NOT NULL,
-            grade INTEGER NOT NULL, section_title TEXT NOT NULL, section_number TEXT,
-            page_start INTEGER, page_end INTEGER, chunk_count INTEGER NOT NULL,
-            full_text TEXT NOT NULL, UNIQUE (source_file, section_title)
-        );
-    """)
     db = tmp_path / "copy.db"
-    conn = sqlite3.connect(db)
-    source.backup(conn)
-    source.close()
+    conn = open_schema_copy(db)
     ingest.ingest_pages(conn, [ingest.Page(10, "fixture OCR"), ingest.Page(11, "other OCR")])
     conn.commit()
     yield db, conn
@@ -219,8 +203,8 @@ def test_ingest_preserves_ocr_and_locators_and_is_idempotent(schema_copy, frozen
     r = row("fixture [а́]")
     r["underlining"] = [{"start": 0, "end": 7}]
     data = packet(r, row("[ў]", paragraph=2))
-    assert ingest.ingest_adjudicated(conn, data, frozen) == (2, 0)
-    assert ingest.ingest_adjudicated(conn, data, frozen) == (0, 2)
+    assert ingest.ingest_adjudicated(conn, data, frozen, census_counts={"10": 2}) == (2, 0)
+    assert ingest.ingest_adjudicated(conn, data, frozen, census_counts={"10": 2}) == (0, 2)
     assert conn.execute("SELECT chunk_id,text FROM textbooks WHERE id<=2 ORDER BY id").fetchall() == before
     assert conn.execute("SELECT transcription_status FROM textbooks ORDER BY id").fetchall() == [
         ("superseded",),
@@ -248,11 +232,11 @@ def test_ingest_refuses_provisional_and_incomplete_without_schema_changes(schema
     _, conn = schema_copy
     before = conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall()
     with pytest.raises(ValueError, match="provisional"):
-        ingest.ingest_adjudicated(conn, packet(row()), table)
+        ingest.ingest_adjudicated(conn, packet(row()), table, census_counts={"10": 1})
     data = packet(row())
     data["paragraph_counts"]["10"] = 2
     with pytest.raises(ValueError, match="Incomplete"):
-        ingest.ingest_adjudicated(conn, data, frozen)
+        ingest.ingest_adjudicated(conn, data, frozen, census_counts={"10": 2})
     assert conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall() == before
 
 
@@ -262,16 +246,16 @@ def test_ingest_requires_valid_adjudication(schema_copy, frozen, change):
     r = row()
     r.update(change)
     with pytest.raises(ValueError):
-        ingest.ingest_adjudicated(conn, packet(r), frozen)
+        ingest.ingest_adjudicated(conn, packet(r), frozen, census_counts={"10": 1})
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 2
 
 
 def test_conflicting_ingest_rolls_back_earlier_insert(schema_copy, frozen):
     _, conn = schema_copy
-    ingest.ingest_adjudicated(conn, packet(row(page=11)), frozen)
+    ingest.ingest_adjudicated(conn, packet(row(page=11)), frozen, census_counts={"11": 1})
     conn.commit()
     with pytest.raises(ValueError, match="Conflicting"):
-        ingest.ingest_adjudicated(conn, packet(row(), row("[ў]", page=11)), frozen)
+        ingest.ingest_adjudicated(conn, packet(row(), row("[ў]", page=11)), frozen, census_counts={"10": 1, "11": 1})
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 3
     assert (
         conn.execute(
@@ -286,7 +270,7 @@ def test_sql_failure_rolls_back_migration_and_supersession(schema_copy, frozen):
     conn.execute("CREATE TRIGGER refuse_insert BEFORE INSERT ON textbooks BEGIN SELECT RAISE(ABORT,'fixture'); END")
     conn.commit()
     with pytest.raises(sqlite3.IntegrityError, match="fixture"):
-        ingest.ingest_adjudicated(conn, packet(row()), frozen)
+        ingest.ingest_adjudicated(conn, packet(row()), frozen, census_counts={"10": 1})
     assert "transcription_status" not in {r[1] for r in conn.execute("PRAGMA table_info(textbooks)")}
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 2
 
@@ -297,8 +281,13 @@ def test_render_300dpi_hash_and_ignore_guard(tmp_path, monkeypatch):
         doc.new_page(width=72, height=72)
         doc.save(pdf)
     digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
-    # Use the real worktree Git ignore rules; generated image remains private.
-    cache = Path(".cache") / tmp_path.name
+    # A disposable Git repository exercises the real ignore guard without residue.
+    import subprocess
+
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    (tmp_path / ".gitignore").write_text(".cache/\n")
+    monkeypatch.chdir(tmp_path)
+    cache = tmp_path / ".cache"
     manifest = tooling.render_pages(pdf, cache, expected_sha256=digest, expected_pages=1)
     assert manifest["page_count"] == 1 and manifest["dpi"] == 300
     image = pymupdf.Pixmap(cache / "page-01.png")
@@ -311,7 +300,7 @@ def test_render_300dpi_hash_and_ignore_guard(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="Git-ignored"):
         tooling.render_pages(pdf, Path("public-images"), expected_sha256=digest, expected_pages=1)
     with pytest.raises(ValueError, match="inside"):
-        tooling.render_pages(pdf, tmp_path, expected_sha256=digest, expected_pages=1)
+        tooling.render_pages(pdf, tmp_path.parent, expected_sha256=digest, expected_pages=1)
 
 
 def test_tooling_cli_validate_diff_and_invalid_input(tmp_path, capsys):
@@ -333,23 +322,25 @@ def test_ingest_cli_private_packet_and_dry_run(schema_copy, frozen, tmp_path, ca
     data, notation = tmp_path / "rows.json", tmp_path / "notation.json"
     data.write_text(json.dumps(packet(row())), encoding="utf-8")
     notation.write_text(json.dumps(frozen), encoding="utf-8")
-    args = ["--adjudicated", str(data), "--notation", str(notation), "--db", str(db)]
+    census = tmp_path / "census.json"
+    census.write_text(json.dumps({"10": 1}))
+    args = ["--adjudicated", str(data), "--notation", str(notation), "--db", str(db), "--census", str(census)]
     assert ingest.main([*args, "--dry-run"]) == 0
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 2
-    assert ingest.main(args) == 0
+    assert ingest.main([*args, "--apply"]) == 0
     assert "inserted=1, skipped=0" in capsys.readouterr().out
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 3
     with pytest.raises(SystemExit):
-        ingest.main([*args, "--force"])
+        ingest.main([*args, "--apply", "--force"])
     with pytest.raises(SystemExit) as exc:
-        ingest.main(["--adjudicated", str(data), "--db", str(db)])
+        ingest.main(["--adjudicated", str(data), "--db", str(db), "--census", str(census), "--dry-run"])
     assert exc.value.code == 1
 
 
 def test_ingest_transaction_is_owned_by_caller(schema_copy, frozen):
     _, conn = schema_copy
     assert not conn.in_transaction
-    ingest.ingest_adjudicated(conn, packet(row()), frozen)
+    ingest.ingest_adjudicated(conn, packet(row()), frozen, census_counts={"10": 1})
     assert conn.in_transaction
     conn.rollback()
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 2
@@ -359,7 +350,7 @@ def test_ingest_transaction_is_owned_by_caller(schema_copy, frozen):
 def test_ingest_requires_retained_ocr_page(schema_copy, frozen):
     _, conn = schema_copy
     with pytest.raises(ValueError, match="retained OCR"):
-        ingest.ingest_adjudicated(conn, packet(row(page=12)), frozen)
+        ingest.ingest_adjudicated(conn, packet(row(page=12)), frozen, census_counts={"12": 1})
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 2
 
 
@@ -375,7 +366,7 @@ def test_ingest_requires_retained_ocr_page(schema_copy, frozen):
 )
 def test_invalid_adjudicated_packets(data, frozen):
     with pytest.raises(ValueError):
-        ingest.validate_adjudicated_packet(data, frozen)
+        ingest.validate_adjudicated_packet(data, frozen, census_counts={"10": 1})
 
 
 def test_freeze_requires_complete_nonprovisional_table(frozen):
@@ -405,7 +396,136 @@ def test_ingest_cli_refuses_missing_db_without_creating_it(tmp_path, frozen):
     data, notation, missing = tmp_path / "rows.json", tmp_path / "table.json", tmp_path / "missing.db"
     data.write_text(json.dumps(packet(row())), encoding="utf-8")
     notation.write_text(json.dumps(frozen), encoding="utf-8")
+    census = tmp_path / "census.json"
+    census.write_text(json.dumps({"10": 1}))
     with pytest.raises(SystemExit) as exc:
-        ingest.main(["--adjudicated", str(data), "--notation", str(notation), "--db", str(missing)])
+        ingest.main(["--adjudicated", str(data), "--notation", str(notation), "--db", str(missing), "--census", str(census), "--apply"])
     assert exc.value.code == 1
     assert not missing.exists()
+
+
+@pytest.mark.parametrize("marks", ["\u0301\u2df7", "\u0301\ua675\u2df7", "\u0306\u0301\ua675\u2df7"])
+def test_equal_class_order_is_pinned_and_diff_normalizes(marks, table):
+    canonical = tooling.normalize_transcription(f"[е{marks}]", table)
+    reversed_text = f"[е{marks[::-1]}]"
+    tooling.validate_text(canonical, table)
+    with pytest.raises(ValueError, match="combining mark order"):
+        tooling.validate_text(reversed_text, table)
+    assert tooling.diff_transcriptions([row(canonical)], [row(reversed_text)], table)["disagreement_count"] == 0
+    assert tooling.normalize_transcription(canonical, table) == canonical
+
+
+@pytest.mark.parametrize("base, composed", [("к", "ќ"), ("К", "Ќ"), ("г", "ѓ"), ("Г", "Ѓ")])
+def test_listed_nfc_precomposed_accent_letters(base, composed, table):
+    with pytest.raises(ValueError, match="NFC"):
+        tooling.validate_text(f"[{base}\u0301]", table)
+    assert tooling.normalize_transcription(f"[{base}\u0301]", table) == f"[{composed}]"
+    assert tooling.validate_text(f"[{composed}]", table)[0]["text"] == f"[{composed}]"
+    assert tooling.diff_transcriptions([row(f"[{base}\u0301]")], [row(f"[{composed}]")], table)["disagreement_count"] == 0
+
+
+def test_diff_remaps_underlining_after_composition(table):
+    a, b = row("[к\u0301]"), row("[ќ]")
+    a["underlining"] = [{"start": 1, "end": 3}]
+    b["underlining"] = [{"start": 1, "end": 2}]
+    before = copy.deepcopy(a)
+    assert tooling.diff_transcriptions([a], [b], table)["disagreement_count"] == 0
+    assert a == before
+    a["underlining"] = [{"start": 1, "end": 2}]
+    with pytest.raises(ValueError, match="splits"):
+        tooling.diff_transcriptions([a], [b], table)
+
+
+@pytest.mark.parametrize("census", [{}, {"10": 2}, {"10": True}, None])
+def test_ingest_refuses_independent_census_mismatch(schema_copy, frozen, census):
+    _, conn = schema_copy
+    before = conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall()
+    with pytest.raises(ValueError, match="independent census"):
+        ingest.ingest_adjudicated(conn, packet(row()), frozen, census_counts=census)
+    assert conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall() == before
+    assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 2
+
+
+def test_shorter_packet_supersedes_all_previous_page_rows(schema_copy, frozen):
+    _, conn = schema_copy
+    ingest.ingest_adjudicated(conn, packet(row(), row("[ў]", paragraph=2)), frozen, census_counts={"10": 2})
+    conn.commit()
+    before = conn.execute("SELECT id,text FROM textbooks ORDER BY id").fetchall()
+    # A separate corrected image census permits the shorter packet.
+    assert ingest.ingest_adjudicated(conn, packet(row()), frozen, census_counts={"10": 1}) == (0, 1)
+    assert conn.execute("SELECT id,text FROM textbooks ORDER BY id").fetchall() == before
+    assert conn.execute("SELECT paragraph_number FROM textbooks WHERE transcription_status='adjudicated'").fetchall() == [(1,)]
+    assert conn.execute("SELECT section_number FROM textbook_sections WHERE transcription_status='adjudicated'").fetchall() == [("10.1",)]
+    assert conn.execute("SELECT count(*) FROM textbooks WHERE transcription_status='superseded'").fetchone()[0] == 2
+    assert conn.execute("SELECT transcription_status FROM textbooks WHERE chunk_id=?", (f"{ingest.SOURCE_FILE}_p11",)).fetchone()[0] is None
+
+
+def test_default_retrieval_excludes_retained_rows_and_explicit_request_includes_them(schema_copy, frozen, monkeypatch):
+    from wiki import sources_db
+
+    _, conn = schema_copy
+    text = "fixture " * 50 + "[а́]"
+    conn.execute("UPDATE textbooks SET text=? WHERE chunk_id=?", (text, f"{ingest.SOURCE_FILE}_p10"))
+    # The live schema's trigger indexes new rows. Rebuild only this fixture's
+    # index after the synthetic OCR update (the live DDL has no update trigger).
+    conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES ('rebuild')")
+    ingest.ingest_adjudicated(conn, packet(row(text)), frozen, census_counts={"10": 1})
+    conn.row_factory = sqlite3.Row
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    assert [r["transcription_status"] for r in sources_db.search_textbooks({"fixture"})] == ["adjudicated"]
+    assert {r["transcription_status"] for r in sources_db.search_textbooks({"fixture"}, include_superseded=True)} == {"adjudicated", "superseded"}
+    results = sources_db._search_sections_fts5([], {"fixture"}, track="a1", max_chunk_candidates=1)
+    assert len(results) == 1 and "adjudicated" in results[0]["section_title"]
+    assert len(sources_db._search_sections_fts5([], {"fixture"}, track="a1", include_superseded=True)) == 2
+
+
+def test_write_cli_requires_explicit_db_and_apply(tmp_path):
+    with pytest.raises(SystemExit) as exc:
+        ingest.main(["--apply"])
+    assert exc.value.code == 2
+    with pytest.raises(SystemExit) as exc:
+        ingest.main(["--db", str(tmp_path / "copy.db")])
+    assert exc.value.code == 2
+    with pytest.raises(SystemExit) as exc:
+        ingest.main(["--db", str(tmp_path / "copy.db"), "--apply", "--dry-run"])
+    assert exc.value.code == 2
+
+
+def test_dry_run_requires_existing_ocr_and_does_not_migrate(schema_copy, frozen, tmp_path):
+    db, conn = schema_copy
+    data, notation, census = (tmp_path / name for name in ("rows.json", "table.json", "census.json"))
+    notation.write_text(json.dumps(frozen))
+    args = ["--adjudicated", str(data), "--notation", str(notation), "--db", str(db), "--census", str(census), "--dry-run"]
+    before = db.read_bytes()
+    data.write_text(json.dumps(packet(row())))
+    census.write_text(json.dumps({"10": 1}))
+    assert ingest.main(args) == 0
+    assert db.read_bytes() == before
+    data.write_text(json.dumps(packet(row(page=12))))
+    census.write_text(json.dumps({"12": 1}))
+    with pytest.raises(SystemExit) as exc:
+        ingest.main(args)
+    assert exc.value.code == 1
+    assert db.read_bytes() == before
+    assert "transcription_status" not in {r[1] for r in conn.execute("PRAGMA table_info(textbooks)")}
+
+
+def test_legacy_cli_also_requires_apply_and_existing_db(schema_copy, tmp_path, monkeypatch):
+    db, conn = schema_copy
+    monkeypatch.setattr(ingest, "REFERENCES_DIR", tmp_path)
+    (tmp_path / ingest.TXT_FILENAME).write_text("\ffixture OCR", encoding="utf-8")
+    before = db.read_bytes()
+    assert ingest.main(["--db", str(db), "--dry-run"]) == 0
+    assert db.read_bytes() == before
+    assert ingest.main(["--db", str(db), "--apply"]) == 0
+    assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 3
+    missing = tmp_path / "missing.db"
+    with pytest.raises(sqlite3.OperationalError):
+        ingest.main(["--db", str(missing), "--apply"])
+    assert not missing.exists()
+
+
+def test_legacy_cli_reports_missing_input(schema_copy, tmp_path, monkeypatch):
+    db, _ = schema_copy
+    monkeypatch.setattr(ingest, "REFERENCES_DIR", tmp_path)
+    assert ingest.main(["--db", str(db), "--dry-run"]) == 2

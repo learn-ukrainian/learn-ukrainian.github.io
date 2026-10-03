@@ -55,6 +55,66 @@ def validate_notation(table: dict) -> None:
     ):
         raise ValueError("Frozen notation needs two reviewers and no pending classes")
 
+    marks = {point for point in points if unicodedata.combining(chr(int(point[2:], 16)))}
+    if set(table["combining_mark_order"]) != marks:
+        raise ValueError("Combining mark order must list every combining symbol exactly once")
+    allowed = set(letters) | {chr(int(point[2:], 16)) for point in points}
+    for char in table["precomposed_letters"]:
+        decomposed = unicodedata.normalize("NFD", char)
+        if (len(decomposed) < 2 or not set(decomposed) <= allowed
+                or unicodedata.normalize("NFC", decomposed) != char):
+            raise ValueError("Precomposed letters must be NFC compositions of listed letters and symbols")
+
+
+def normalize_transcription(text: str, table: dict) -> str:
+    """Apply the notation's equal-class mark order inside brackets, then NFC.
+
+    This is a notation convention beyond Unicode canonical equivalence (UAX #15).
+    Validation never silently changes input; the diff calls this before comparing.
+    """
+    rank = {chr(int(point[2:], 16)): i for i, point in enumerate(table["combining_mark_order"])}
+    result, end = [], 0
+    for span in bracketed_spans(text):
+        result.append(text[end:span["start"]])
+        ordered, marks = [], []
+        for char in unicodedata.normalize("NFD", span["text"]):
+            if unicodedata.combining(char):
+                marks.append(char)
+            else:
+                ordered.extend(sorted(marks, key=lambda c: (unicodedata.combining(c), rank.get(c, -1))))
+                marks = []
+                ordered.append(char)
+        ordered.extend(sorted(marks, key=lambda c: (unicodedata.combining(c), rank.get(c, -1))))
+        result.append("".join(ordered))
+        end = span["end"]
+    result.append(text[end:])
+    return unicodedata.normalize("NFC", "".join(result))
+
+
+def _normalize_diff_rows(rows: list[dict], table: dict) -> list[dict]:
+    """Normalize copies and remap underlining offsets without splitting combining sequences."""
+    validate_rows(rows, table, normalizing=True)
+    normalized = []
+    for row in rows:
+        text = row["text"]
+        offsets = {0, len(text)} | {i for i, c in enumerate(text) if not unicodedata.combining(c)}
+        underlining = []
+        for interval in row["underlining"]:
+            if interval["start"] not in offsets or interval["end"] not in offsets:
+                raise ValueError("Underlining boundary splits a combining sequence")
+            mapped = {}
+            for key in ("start", "end"):
+                pos = interval[key]
+                # Add a synthetic base when the prefix ends with an open bracket
+                # so the parser sees a complete, nonempty span. Remove it again.
+                prefix = text[:pos]
+                suffix = "а]" if prefix.count("[") > prefix.count("]") else ""
+                mapped[key] = len(normalize_transcription(prefix + suffix, table)) - len(suffix)
+            underlining.append(mapped)
+        normalized.append({**row, "text": normalize_transcription(text, table), "underlining": underlining})
+    validate_rows(normalized, table)
+    return normalized
+
 
 def bracketed_spans(text: str) -> list[dict]:
     """Return every bracketed span with codepoint offsets; refuse malformed brackets."""
@@ -82,7 +142,7 @@ def validate_text(text: str, table: dict) -> list[dict]:
         raise ValueError("Paragraph text must be nonempty")
     if unicodedata.normalize("NFC", text) != text:
         raise ValueError("Text is not NFC; normalization must precede offset assignment")
-    allowed = set(table["letters"]) | {chr(int(s["codepoint"][2:], 16)) for s in table["symbols"]}
+    allowed = set(table["letters"] + table["precomposed_letters"]) | {chr(int(s["codepoint"][2:], 16)) for s in table["symbols"]}
     spans = bracketed_spans(text)
     for span in spans:
         for char in span["text"][1:-1]:
@@ -90,10 +150,12 @@ def validate_text(text: str, table: dict) -> list[dict]:
                 raise ValueError(f"Latin codepoint U+{ord(char):04X} inside transcription")
             if char not in allowed:
                 raise ValueError(f"Unknown transcription symbol U+{ord(char):04X}")
+    if normalize_transcription(text, table) != text:
+        raise ValueError("Noncanonical combining mark order")
     return spans
 
 
-def validate_rows(rows: list[dict], table: dict, *, adjudicated: bool = False) -> None:
+def validate_rows(rows: list[dict], table: dict, *, adjudicated: bool = False, normalizing: bool = False) -> None:
     """Validate locators, text and underlining; ingestion also requires adjudication."""
     if not isinstance(rows, list) or not rows:
         raise ValueError("Expected nonempty paragraph rows")
@@ -107,7 +169,10 @@ def validate_rows(rows: list[dict], table: dict, *, adjudicated: bool = False) -
         if (page, paragraph) in seen:
             raise ValueError("Duplicate page/paragraph locator")
         seen.add((page, paragraph))
-        validate_text(row.get("text"), table)
+        text = row.get("text")
+        if not isinstance(text, str) or not text.strip():
+            raise ValueError("Paragraph text must be nonempty")
+        validate_text(normalize_transcription(text, table) if normalizing else text, table)
         underlining = row.get("underlining")
         if not isinstance(underlining, list):
             raise ValueError("Explicit underlining field required (empty list if absent)")
@@ -129,8 +194,8 @@ def validate_rows(rows: list[dict], table: dict, *, adjudicated: bool = False) -
 
 def diff_transcriptions(left: list[dict], right: list[dict], table: dict) -> dict:
     """Compare paragraph prose, underlining and aligned bracket spans; never resolve by guess."""
-    validate_rows(left, table)
-    validate_rows(right, table)
+    left = _normalize_diff_rows(left, table)
+    right = _normalize_diff_rows(right, table)
     a = {(r["page"], r["paragraph"]): r for r in left}
     b = {(r["page"], r["paragraph"]): r for r in right}
     disagreements = []

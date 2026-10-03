@@ -30,7 +30,15 @@
   from pp. 4–5 before transcription or ingest. Freezing requires clearing all
   provisional flags and pending classes and recording both reviewer identities;
   those fields record a review, and do not prove that the review happened.
-  NFC input is required, never silently normalized after offsets are assigned.
+  The validator requires NFC input and the table's fixed mark order (ascending
+  combining class, then `combining_mark_order` for ties). For class 230, breve
+  precedes acute, approximation-i, then approximation-e. This is a notation
+  convention beyond Unicode canonical equivalence ([UAX #15](https://www.unicode.org/reports/tr15/)).
+  The diff normalizes copies before comparison and remaps underlining offsets;
+  boundaries splitting a combining sequence are refused. Ingest never silently
+  normalizes text after offsets are assigned. `precomposed_letters` explicitly
+  lists NFC compositions of allowed bases and marks, including U+045C for
+  Cyrillic k plus acute. These are encodings of marked bases, not new phonemes.
   Latin and unlisted symbols inside brackets are refused. NFC composes
   U+045E from Cyrillic U+0443 + U+0306; both the combining starter and its
   NFC letter are represented. Underlining is metadata, never inline markup.
@@ -53,22 +61,34 @@
   have `status: "adjudicated"` and a nonempty `adjudicated_by` identity. Ingest
   rejects the bundled provisional notation, incomplete declared pages, invalid
   text/underlining and conflicting existing clean rows. It is idempotent for an
-  identical packet and never overwrites a conflicting adjudicated row.
+  identical active packet and never overwrites a conflicting adjudicated row.
+  A separate `--census` JSON file maps page strings to independently counted
+  paragraph totals from the page images. Every supplied page must match this
+  independent count; the packet's own declaration cannot authorize supersession.
+  Library callers must likewise pass independent `census_counts`.
 
   ```bash
   .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest \
     --adjudicated .cache/final.json --notation .cache/frozen-notation.json \
-    --db /path/to/schema-copy.db --dry-run
+    --census .cache/page-image-census.json --db /path/to/schema-copy.db --dry-run
   ```
 
-  Remove `--dry-run` to ingest into the explicitly selected database. Tests use
+  Replace `--dry-run` with `--apply` to ingest. Both an explicit `--db` and
+  `--apply` are required for writes, including legacy OCR mode. Dry-run checks
+  the existing target database read-only and requires a retained OCR row for
+  each adjudicated page. Tests use
   temporary schema copies, never the live corpus. The new chunks retain source,
   page/paragraph locators, underlining, adjudicator and notation SHA-256. Each
   links to a section with page bounds and paragraph locator. The matching OCR
-  page and section remain intact with `transcription_status: "superseded"`;
-  untouched pages remain unchanged. Inserts, metadata additions and supersession
+  page and section, and all prior rows outside the current complete packet on
+  that page, remain intact with `transcription_status: "superseded"`. This also
+  retires extra paragraphs from an earlier longer packet. Untouched pages remain
+  unchanged. Default chunk/section searches and MCP chunk context exclude
+  superseded rows; `search_textbooks`, MCP `search_text` and MCP
+  `get_chunk_context` accept `include_superseded=True` for explicit historical
+  retrieval. Inserts, metadata additions and supersession
   roll back together on failure. Callers of `ingest_adjudicated` own commit/rollback.
   `--force` is refused in adjudicated mode; it belongs to the legacy OCR path.
-  Retrieval filtering, live ingest, page-image census, inventory freeze,
+  Live ingest, page-image census, inventory freeze,
   transcriptions, adjudication and custody/register updates belong to later #9604
   steps. These tools and synthetic tests do not establish those acceptance criteria.
