@@ -360,3 +360,40 @@ def test_unavailable_closed_class_list_fails(monkeypatch):
     g = gates("не", tags="part")
     g.check_a1_reference()
     assert g.report.failures[0].code == codes.A1_REFERENCE_INVALID
+
+
+def test_teaching_replacements_same_pos_open_class_readable_and_both_outcomes(tmp_path):
+    import yaml
+
+    rows = [
+        {"lemma": "мама", "kind": "word", "pos": "noun"},
+        {"lemma": "тато", "kind": "word", "pos": "unlabelled", "vesum_pos": ["noun"]},
+        {"lemma": "читати", "kind": "word", "pos": "verb"},
+        {"lemma": "Іван", "kind": "word", "pos": "noun"},
+        {"lemma": "іван", "kind": "word", "pos": "noun", "vesum_tags": ["noun:prop"]},
+        {"lemma": "дві мами", "kind": "phrase", "pos": "unlabelled"},
+        {"lemma": "я", "kind": "word", "pos": "noun"},
+        {"lemma": "вона", "kind": "word", "pos": "unlabelled", "vesum_pos": ["noun"]},
+        {"lemma": "сам", "kind": "word", "pos": "unlabelled", "vesum_pos": ["adj"]},
+        {"lemma": "де", "kind": "word", "pos": "adv"},
+        {"lemma": "аж", "kind": "word", "pos": "part"},
+        {"lemma": "з", "kind": "word", "pos": "prep"},
+    ]
+    path = tmp_path / "inventory.yaml"
+    path.write_text(yaml.safe_dump({"version": 1, "kind": "atlas_source_inventory", "sources": [
+        {"id": "fixture", "source_family": "ohoiko", "extraction_mode": "curated_key_word", "headwords": rows}
+    ]}, allow_unicode=True))
+    def tags(w):
+        return {"adj:pron"} if w == "сам" else {"verb:inf"} if w == "читати" else {"noun"}
+
+    def suggest(selected, readable, path):
+        return a1_reference.teaching_replacements(selected, readable, tags, path)
+    assert suggest(frozenset({"noun:inanim"}), lambda w: w == "мама", path) == ("мама",)
+    assert suggest(frozenset({"noun"}), lambda w: True, path) == ("мама", "тато")
+    assert suggest(frozenset({"verb:inf"}), lambda w: True, path) == ("читати",)
+    assert suggest(frozenset({"adv"}), lambda w: True, path) == ()  # report: no replacement found
+    assert suggest(frozenset({"noun"}), lambda w: False, path) == ()
+
+    assert a1_reference.teaching_replacement_text(frozenset({"noun"}), lambda w: True, tags, path) == "мама, тато"
+    assert a1_reference.teaching_replacement_text(frozenset({"adv"}), lambda w: True, tags, path) == "no replacement found"
+    assert suggest(frozenset({"adj"}), lambda w: True, path) == ()  # VESUM pronoun, even absent from A1 PULS

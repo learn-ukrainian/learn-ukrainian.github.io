@@ -37,6 +37,11 @@ sources:
     class: prep
     level: A1
     source: PULS
+  - lemma: в
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
   - lemma: ваш
     kind: word
     class: pron
@@ -100,6 +105,11 @@ sources:
   - lemma: зі
     kind: word
     class: prep
+    level: A1
+    source: PULS
+  - lemma: й
+    kind: word
+    class: conj
     level: A1
     source: PULS
   - lemma: його
@@ -227,6 +237,11 @@ sources:
     class: part
     level: A1
     source: PULS
+  - lemma: у
+    kind: word
+    class: prep
+    level: A1
+    source: PULS
   - lemma: хто
     kind: word
     class: pron
@@ -287,6 +302,11 @@ sources:
     class: conj
     level: A1
     source: PULS
+  - lemma: і
+    kind: word
+    class: conj
+    level: A1
+    source: PULS
   - lemma: із
     kind: word
     class: prep
@@ -302,33 +322,3 @@ sources:
     class: pron
     level: A1
     source: PULS
-- id: ohoiko-a1-closed-class
-  source_family: ohoiko
-  extraction_mode: curated_key_word
-  title: A1 workbook closed-class grammar attestations
-  path: oho-ukrainian-grammar-workbook-a1.pdf
-  headwords:
-  - lemma: в
-    kind: word
-    class: prep
-    level: A1
-    source: reference_units
-    page: 41
-  - lemma: й
-    kind: word
-    class: conj
-    level: A1
-    source: reference_units
-    page: 47
-  - lemma: у
-    kind: word
-    class: prep
-    level: A1
-    source: reference_units
-    page: 41
-  - lemma: і
-    kind: word
-    class: conj
-    level: A1
-    source: reference_units
-    page: 47

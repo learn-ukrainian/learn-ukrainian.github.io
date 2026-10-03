@@ -12,9 +12,7 @@ import yaml
 from scripts.curriculum.validate.a1_reference import CLOSED_CLASS_PATH, _closed_class_from_bytes, normalize
 
 CLASSES = {"займенник": "pron", "сполучник": "conj", "прийменник": "prep", "частка": "part"}
-# Printed pages of the first dedicated grammar units in the owned A1 workbook.
-# PULS groups these spellings in comma rows rather than attesting them individually.
-REFERENCE_UNITS = {("і", "conj"): 47, ("й", "conj"): 47, ("в", "prep"): 41, ("у", "prep"): 41}
+# PULS comma-separated rows attest each spelling with the row's class and level.
 
 
 def build_inventory(db_path: Path) -> dict:
@@ -30,18 +28,11 @@ def build_inventory(db_path: Path) -> dict:
             if not re.fullmatch(r"[а-яіїєґ’\-]+", lemma):
                 raise ValueError("PULS A1 closed-class row is not words-only")
             cls = CLASSES[pos]
-            if (lemma, cls) in REFERENCE_UNITS:
-                continue
             words[lemma, cls] = {"lemma": lemma, "kind": "word", "class": cls, "level": level, "source": "PULS"}
-    for (lemma, cls), page in REFERENCE_UNITS.items():
-        words[lemma, cls] = {"lemma": lemma, "kind": "word", "class": cls, "level": "A1", "source": "reference_units", "page": page}
     payload = {"version": 1, "kind": "atlas_source_inventory", "sources": [
         {"id": "puls-a1-closed-class", "source_family": "puls", "extraction_mode": "curated_key_word",
          "title": "PULS A1 closed-class words", "path": "puls_cefr",
-         "headwords": [words[key] for key in sorted(words) if words[key]["source"] == "PULS"]},
-        {"id": "ohoiko-a1-closed-class", "source_family": "ohoiko", "extraction_mode": "curated_key_word",
-         "title": "A1 workbook closed-class grammar attestations", "path": "oho-ukrainian-grammar-workbook-a1.pdf",
-         "headwords": [words[key] for key in sorted(words) if words[key]["source"] == "reference_units"]},
+         "headwords": [words[key] for key in sorted(words)]},
     ]}
     _closed_class_from_bytes(yaml.safe_dump(payload, allow_unicode=True).encode())
     return payload
@@ -61,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--db", type=Path, required=True, help="Existing sources SQLite database (read-only), e.g. data/sources.db")
     parser.add_argument("--output", type=Path, default=CLOSED_CLASS_PATH,
-                        help="Output YAML path (default: registry/lexicon/source-inventory/a1-closed-class.yaml)")
+                        help="Output YAML path (default: scripts/curriculum/validate/data/a1-closed-class.yaml)")
     args = parser.parse_args(argv)
     try:
         payload = build_inventory(args.db)

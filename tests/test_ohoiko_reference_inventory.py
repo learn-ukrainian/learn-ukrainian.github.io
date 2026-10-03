@@ -1,5 +1,6 @@
 """The committed lexical inventory cannot contain workbook prose or glosses."""
 
+import hashlib
 import re
 import unicodedata
 from collections import Counter
@@ -23,9 +24,20 @@ def test_committed_inventory_ip_fields_and_counts():
     source, = payload["sources"]
     assert set(source) == {"id", "source_family", "extraction_mode", "title", "path", "notes", "headwords"}
     rows = source["headwords"]
-    assert len(rows) == 2068
-    assert len({r["lemma"] for r in rows}) == 1904
-    assert Counter(r["kind"] for r in rows) == {"word": 1695, "phrase": 74, "verb_pair_member": 299}
+    assert len(rows) == 2043
+    assert len({r["lemma"] for r in rows}) == 1897
+    assert Counter(r["kind"] for r in rows) == {"word": 1652, "phrase": 92, "verb_pair_member": 299}
+    assert_ip_fields(payload)
+    assert len({r["pair"] for r in rows if "pair" in r}) == 147
+    assert len(read_source_inventory(INVENTORY)) == len(rows)
+
+
+def assert_ip_fields(payload):
+    source, = payload["sources"]
+    rows = source["headwords"]
+    assert source["title"] == "A1 reference workbook lexical inventory"
+    assert source["notes"] == 'Words-only extraction per the 2026-07-10 IP boundary (issues #4851/#4223). Only glossary headwords and appendix infinitives are retained; no English, explanations, unit sentences or conjugation columns. Printed pages 200–216 contain the glossary; 217–223 contain the verb table; 224–229 contain back matter. Apostrophes use U+2019. PDF Latin lookalikes are transcribed as the printed Cyrillic glyphs; acute vowels preserve their printed stress. Parenthetical pronoun subjects are omitted from conjugation variants. Book-labelled POS is preserved; entries without a printed abbreviation use unlabelled. Single-word vesum_pos lists every sorted unique POS of lemma-bound analyses, not inflections of other lemmas. Phrases retain per-token verification without vesum_pos. Proper-name vesum_tags retain only lemma-bound analyses with the prop marker. Appendix POS is verb. Verification states attest forms; an inflected form can be found with an empty lemma-bound vesum_pos. Missing means no VESUM form analysis, never a lookup failure.'
+    assert hashlib.sha256("\n".join(sorted(r["lemma"] for r in rows if r["kind"] == "phrase")).encode()).hexdigest() == "4af46cb21aa3c8f4024bcea1a26e71f71025c46361cb111377b3244a5f35b239"
     for row in rows:
         assert set(row) <= {"lemma", "stressed", "pos", "kind", "locator", "variants", "pair", "vesum", "tokens", "vesum_pos", "vesum_tags"}
         assert {"lemma", "stressed", "pos", "kind", "locator"} <= set(row)
@@ -42,6 +54,7 @@ def test_committed_inventory_ip_fields_and_counts():
                 assert LEXICAL.fullmatch(token["form"])
                 assert token["vesum"] in {"found", "missing", "lookup_error"}
         else:
+            assert " " not in row["lemma"]
             assert "tokens" not in row
             assert row["vesum"] in {"found", "missing", "lookup_error"}
             if row["pos"] == "unlabelled":
@@ -55,9 +68,6 @@ def test_committed_inventory_ip_fields_and_counts():
             assert re.fullmatch(r"vp-\d{3,4}", row["pair"])
         else:
             assert "pair" not in row
-    assert len({r["pair"] for r in rows if "pair" in r}) == 147
-    records = read_source_inventory(INVENTORY)
-    assert len(records) == len(rows)
 
 
 def test_stressed_phrase_variants_and_two_perfectives_roundtrip():
@@ -188,3 +198,31 @@ def test_unlabelled_pos_nested_roundtrip(tmp_path, state):
 def test_attested_inflection_does_not_borrow_its_lemma_pos():
     record = next(r for r in read_source_inventory(INVENTORY) if r.lemma == "був")
     assert record.pos == "unlabelled" and record.vesum == "found" and record.vesum_pos == ()
+
+
+@pytest.mark.parametrize("mutation", ["phrase_sentence", "word_space", "title", "notes"])
+def test_ip_scan_rejects_prose_and_metadata_drift(mutation):
+    payload = yaml.safe_load(INVENTORY.read_text())
+    source = payload["sources"][0]
+    if mutation == "phrase_sentence":
+        source["headwords"].append({"lemma": "Це коротке речення.", "kind": "phrase"})
+    elif mutation == "word_space":
+        next(r for r in source["headwords"] if r["kind"] == "word")["lemma"] = "два слова"
+    else:
+        source[mutation] += " copied prose"
+    with pytest.raises(AssertionError):
+        assert_ip_fields(payload)
+
+
+def test_committed_phrase_segmentation_and_spelling_variants():
+    from scripts.curriculum.validate.a1_reference import reference_spellings
+
+    members, _ = reference_spellings()
+    assert {"швидка допомога", "цього разу", "вчора", "учора", "бувай", "бувайте"} <= members
+    assert not {"разу", "готівку", "речі", "вибачення", "цього"} & members
+    rows = read_source_inventory(INVENTORY)
+    assert next(r for r in rows if r.lemma == "швидка допомога").kind == "phrase"
+    assert next(r for r in rows if r.lemma == "цього разу").kind == "phrase"
+    farewell = next(r for r in rows if r.lemma == "бувай")
+    assert (farewell.kind, farewell.pos, farewell.stressed, farewell.variants) == ("word", "intj", "Бува́й!", ("бувайте",))
+    assert next(r for r in rows if r.lemma == "Що нового?").stressed == "Що ново́го?"

@@ -1,4 +1,4 @@
-"""Words-only PULS generation, fixed supplemental pages and class-specific lookup."""
+"""Words-only PULS generation, combined spelling rows and class-specific lookup."""
 
 import sqlite3
 
@@ -7,7 +7,7 @@ import yaml
 
 from scripts.audit.source_inventory_intake import read_source_inventory
 from scripts.curriculum.validate.a1_reference import CLOSED_CLASS_PATH, _closed_class_from_bytes, closed_class_a1
-from scripts.ingest.build_a1_closed_class import REFERENCE_UNITS, build_inventory, main
+from scripts.ingest.build_a1_closed_class import build_inventory, main
 
 
 def all_rows(payload):
@@ -34,8 +34,9 @@ def test_generator_covers_a1_rows_and_comma_variants_read_only(tmp_path):
     assert path.read_bytes() == before
     puls = {(r["lemma"], r["class"]) for r in all_rows(payload) if r["source"] == "PULS"}
     assert puls == {("я", "pron"), ("а", "conj"), ("не", "part"), ("з", "prep"), ("із", "prep"),
-                    ("зі", "prep"), ("кожний", "pron"), ("кожен", "pron")}
-    assert {(r["lemma"], r["class"]): r["page"] for r in all_rows(payload) if r["source"] == "reference_units"} == REFERENCE_UNITS
+                    ("зі", "prep"), ("кожний", "pron"), ("кожен", "pron"),
+                    ("і", "conj"), ("й", "conj"), ("у", "prep"), ("в", "prep")}
+    assert all(r["source"] == "PULS" and "page" not in r for r in all_rows(payload))
     output = tmp_path / "result.yaml"
     assert main(["--db", str(path), "--output", str(output)]) == 0
     assert yaml.safe_load(output.read_text()) == payload
@@ -63,8 +64,7 @@ def test_committed_words_only_closed_class_inventory():
         provenance = record.provenance_payload()
         assert record.pos == row["class"]
         assert {k: provenance[k] for k in ("class", "level", "source")} == {k: row[k] for k in ("class", "level", "source")}
-        if row["source"] == "reference_units":
-            assert provenance["page"] == row["page"]
+        assert row["source"] == "PULS" and "page" not in provenance
 
 
 @pytest.mark.parametrize("mutate", [
@@ -75,8 +75,8 @@ def test_committed_words_only_closed_class_inventory():
     lambda p: p["sources"][0]["headwords"][0].update(**{"class": "intj"}),
     lambda p: p["sources"][0]["headwords"].append(dict(p["sources"][0]["headwords"][0])),
     lambda p: p["sources"][0]["headwords"].append({"lemma": "а", "class": "conj", "level": "A1", "source": "reference_units", "page": 47}),
-    lambda p: p["sources"][1]["headwords"][0].update(page=40),
-    lambda p: p["sources"][1]["headwords"][0].update(page=True),
+    lambda p: p["sources"][0]["headwords"][0].update(page=40),
+    lambda p: p["sources"][0]["headwords"][0].update(page=True),
     lambda p: p["sources"][0]["headwords"][0].update(page=47),
     lambda p: p["sources"][0]["headwords"][0].update(source=[]),
     lambda p: p["sources"].pop(),
@@ -97,3 +97,10 @@ def test_closed_class_cache_tracks_exact_bytes(tmp_path):
     payload["sources"][0]["headwords"] = [r for r in payload["sources"][0]["headwords"] if r["lemma"] != "не"]
     path.write_text(yaml.safe_dump(payload, allow_unicode=True))
     assert ("не", "part") not in closed_class_a1(path) and ("не", "part") in original
+
+
+def test_validator_data_is_not_discovered_by_atlas_census():
+    from scripts.audit.atlas_intake_census import discover_inventory_paths
+
+    assert CLOSED_CLASS_PATH not in discover_inventory_paths()
+    assert CLOSED_CLASS_PATH.parent.name == "data"

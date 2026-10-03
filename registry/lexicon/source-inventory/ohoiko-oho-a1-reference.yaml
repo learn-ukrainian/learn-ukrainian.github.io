@@ -6,17 +6,17 @@ sources:
   extraction_mode: curated_key_word
   title: A1 reference workbook lexical inventory
   path: oho-ukrainian-grammar-workbook-a1.pdf
-  notes: 'Words-only extraction per the 2026-07-10 IP boundary (issues #4851/#4223). Only glossary headwords
-    and appendix infinitives are retained; no English, explanations, unit sentences or conjugation columns.
-    Printed pages 200–216 contain the glossary; 217–223 contain the verb table; 224–229 contain back
-    matter. Apostrophes use U+2019. PDF Latin lookalikes are transcribed as the printed Cyrillic glyphs;
-    acute vowels preserve their printed stress. Parenthetical pronoun subjects are omitted from conjugation
-    variants. Book-labelled POS is preserved; entries without a printed abbreviation use unlabelled.
-    Single-word vesum_pos lists every sorted unique POS of lemma-bound analyses, not inflections of
-    other lemmas. Phrases retain per-token verification without vesum_pos. Proper-name vesum_tags retain
-    only lemma-bound analyses with the prop marker. Appendix POS is verb. Verification states attest
-    forms; an inflected form can be found with an empty lemma-bound vesum_pos. Missing means no VESUM
-    form analysis, never a lookup failure.'
+  notes: 'Words-only extraction per the 2026-07-10 IP boundary (issues #4851/#4223). Only glossary
+    headwords and appendix infinitives are retained; no English, explanations, unit sentences or conjugation
+    columns. Printed pages 200–216 contain the glossary; 217–223 contain the verb table; 224–229 contain
+    back matter. Apostrophes use U+2019. PDF Latin lookalikes are transcribed as the printed Cyrillic
+    glyphs; acute vowels preserve their printed stress. Parenthetical pronoun subjects are omitted
+    from conjugation variants. Book-labelled POS is preserved; entries without a printed abbreviation
+    use unlabelled. Single-word vesum_pos lists every sorted unique POS of lemma-bound analyses, not
+    inflections of other lemmas. Phrases retain per-token verification without vesum_pos. Proper-name
+    vesum_tags retain only lemma-bound analyses with the prop marker. Appendix POS is verb. Verification
+    states attest forms; an inflected form can be found with an empty lemma-bound vesum_pos. Missing
+    means no VESUM form analysis, never a lookup failure.'
   headwords:
   - lemma: вишиванка
     stressed: вишива́нка
@@ -2538,12 +2538,8 @@ sources:
     pos: noun
     kind: word
     locator: p203 Словничок
-    vesum: found
-  - lemma: сільничка
-    stressed: сільни́чка
-    pos: noun
-    kind: word
-    locator: p203 Словничок
+    variants:
+    - сільничка
     vesum: found
   - lemma: скільки
     stressed: скі́льки
@@ -3367,22 +3363,16 @@ sources:
     kind: word
     locator: p204 Словничок
     vesum: found
-  - lemma: тридцять
-    stressed: три́дцять
+  - lemma: тридцять чотири
+    stressed: три́дцять чоти́ри
     pos: unlabelled
-    kind: word
+    kind: phrase
     locator: p204 Словничок
-    vesum: found
-    vesum_pos:
-    - numr
-  - lemma: чотири
-    stressed: чоти́ри
-    pos: unlabelled
-    kind: word
-    locator: p204 Словничок
-    vesum: found
-    vesum_pos:
-    - numr
+    tokens:
+    - form: тридцять
+      vesum: found
+    - form: чотири
+      vesum: found
   - lemma: укулеле
     stressed: укуле́ле
     pos: noun
@@ -3710,18 +3700,16 @@ sources:
     kind: word
     locator: p205 Словничок
     vesum: found
-  - lemma: домашня
-    stressed: дома́шня
-    pos: adj
-    kind: word
-    locator: p205 Словничок
-    vesum: found
-  - lemma: тварина
-    stressed: твари́на
+  - lemma: домашня тварина
+    stressed: дома́шня твари́на
     pos: noun
-    kind: word
+    kind: phrase
     locator: p205 Словничок
-    vesum: found
+    tokens:
+    - form: домашня
+      vesum: found
+    - form: тварина
+      vesum: found
   - lemma: дружина
     stressed: дружи́на
     pos: noun
@@ -3965,18 +3953,16 @@ sources:
     kind: word
     locator: p205 Словничок
     vesum: found
-  - lemma: швидка
-    stressed: швидка́
-    pos: adj
-    kind: word
-    locator: p205 Словничок
-    vesum: found
-  - lemma: допомога
-    stressed: допомо́га
+  - lemma: швидка допомога
+    stressed: швидка́ допомо́га
     pos: noun
-    kind: word
+    kind: phrase
     locator: p205 Словничок
-    vesum: found
+    tokens:
+    - form: швидка
+      vesum: found
+    - form: допомога
+      vesum: found
   - lemma: школа
     stressed: шко́ла
     pos: noun
@@ -4424,18 +4410,16 @@ sources:
     variants:
     - гріє
     vesum: found
-  - lemma: електронна
-    stressed: електро́нна
-    pos: adj
-    kind: word
-    locator: p206 Словничок
-    vesum: found
-  - lemma: пошта
-    stressed: по́шта
+  - lemma: електронна пошта
+    stressed: електро́нна по́шта
     pos: noun
-    kind: word
+    kind: phrase
     locator: p206 Словничок
-    vesum: found
+    tokens:
+    - form: електронна
+      vesum: found
+    - form: пошта
+      vesum: found
   - lemma: живіт
     stressed: живі́т
     pos: noun
@@ -4664,22 +4648,16 @@ sources:
     - noun:inanim:p:v_kly:ns:prop:geo
     - noun:inanim:p:v_naz:ns:prop:geo
     - noun:inanim:p:v_zna:ns:prop:geo
-  - lemma: Чорне
-    stressed: Чо́рне
-    pos: adj
-    kind: word
-    locator: p206 Словничок
-    vesum: found
-    vesum_tags:
-    - noun:inanim:n:v_kly:prop:geo
-    - noun:inanim:n:v_naz:prop:geo
-    - noun:inanim:n:v_zna:prop:geo
-  - lemma: море
-    stressed: мо́ре
+  - lemma: Чорне море
+    stressed: Чо́рне мо́ре
     pos: noun
-    kind: word
+    kind: phrase
     locator: p206 Словничок
-    vesum: found
+    tokens:
+    - form: Чорне
+      vesum: found
+    - form: море
+      vesum: found
   - lemma: бізнесмен
     stressed: бізнесме́н
     pos: noun
@@ -5732,18 +5710,16 @@ sources:
     kind: word
     locator: p207 Словничок
     vesum: found
-  - lemma: дитячий
-    stressed: дитя́чий
-    pos: adj
-    kind: word
-    locator: p207 Словничок
-    vesum: found
-  - lemma: майданчик
-    stressed: майда́нчик
+  - lemma: дитячий майданчик
+    stressed: дитя́чий майда́нчик
     pos: noun
-    kind: word
+    kind: phrase
     locator: p207 Словничок
-    vesum: found
+    tokens:
+    - form: дитячий
+      vesum: found
+    - form: майданчик
+      vesum: found
   - lemma: домашній
     stressed: дома́шній
     pos: adj
@@ -6195,18 +6171,16 @@ sources:
     kind: word
     locator: p208 Словничок
     vesum: found
-  - lemma: розчинна
-    stressed: розчи́нна
-    pos: adj
-    kind: word
-    locator: p208 Словничок
-    vesum: found
-  - lemma: кава
-    stressed: ка́ва
+  - lemma: розчинна кава
+    stressed: розчи́нна ка́ва
     pos: noun
-    kind: word
+    kind: phrase
     locator: p208 Словничок
-    vesum: found
+    tokens:
+    - form: розчинна
+      vesum: found
+    - form: кава
+      vesum: found
   - lemma: сильний
     stressed: си́льний
     pos: adj
@@ -6257,18 +6231,16 @@ sources:
     kind: word
     locator: p208 Словничок
     vesum: found
-  - lemma: вільний
-    stressed: ві́льний
-    pos: adj
-    kind: word
-    locator: p208 Словничок
-    vesum: found
-  - lemma: час
-    stressed: час
+  - lemma: вільний час
+    stressed: ві́льний час
     pos: noun
-    kind: word
+    kind: phrase
     locator: p208 Словничок
-    vesum: found
+    tokens:
+    - form: вільний
+      vesum: found
+    - form: час
+      vesum: found
   - lemma: вуса
     stressed: ву́са
     pos: unlabelled
@@ -6378,18 +6350,16 @@ sources:
     kind: word
     locator: p208 Словничок
     vesum: found
-  - lemma: русяве
-    stressed: руся́ве
-    pos: adj
-    kind: word
-    locator: p208 Словничок
-    vesum: found
-  - lemma: волосся
-    stressed: воло́сся
+  - lemma: русяве волосся
+    stressed: руся́ве воло́сся
     pos: noun
-    kind: word
+    kind: phrase
     locator: p208 Словничок
-    vesum: found
+    tokens:
+    - form: русяве
+      vesum: found
+    - form: волосся
+      vesum: found
   - lemma: світлий
     stressed: сві́тлий
     pos: adj
@@ -6755,18 +6725,16 @@ sources:
     kind: word
     locator: p209 Словничок
     vesum: found
-  - lemma: попросити
-    stressed: попроси́ти
+  - lemma: попросити вибачення
+    stressed: попроси́ти ви́бачення
     pos: verb
-    kind: word
+    kind: phrase
     locator: p209 Словничок
-    vesum: found
-  - lemma: вибачення
-    stressed: ви́бачення
-    pos: verb
-    kind: word
-    locator: p209 Словничок
-    vesum: found
+    tokens:
+    - form: попросити
+      vesum: found
+    - form: вибачення
+      vesum: found
   - lemma: послухати
     stressed: послу́хати
     pos: verb
@@ -6893,16 +6861,14 @@ sources:
     kind: word
     locator: p209 Словничок
     vesum: found
-  - lemma: ввечері, увечері
-    stressed: вве́чері, уве́чері
+  - lemma: ввечері
+    stressed: вве́чері
     pos: adv
-    kind: phrase
+    kind: word
     locator: p209 Словничок
-    tokens:
-    - form: ввечері
-      vesum: found
-    - form: увечері
-      vesum: found
+    variants:
+    - увечері
+    vesum: found
   - lemma: вирощувати
     stressed: виро́щувати
     pos: verb
@@ -7447,36 +7413,32 @@ sources:
     kind: word
     locator: p210 Словничок
     vesum: found
-  - lemma: збирати
-    stressed: збира́ти
+  - lemma: збирати речі
+    stressed: збира́ти ре́чі
     pos: verb
-    kind: word
+    kind: phrase
     locator: p210 Словничок
-    vesum: found
-  - lemma: речі
-    stressed: ре́чі
-    pos: verb
-    kind: word
-    locator: p210 Словничок
-    vesum: found
+    tokens:
+    - form: збирати
+      vesum: found
+    - form: речі
+      vesum: found
   - lemma: злетіти
     stressed: злеті́ти
     pos: verb
     kind: word
     locator: p210 Словничок
     vesum: found
-  - lemma: знімати
-    stressed: зніма́ти
+  - lemma: знімати готівку
+    stressed: зніма́ти готі́вку
     pos: verb
-    kind: word
+    kind: phrase
     locator: p210 Словничок
-    vesum: found
-  - lemma: готівку
-    stressed: готі́вку
-    pos: verb
-    kind: word
-    locator: p210 Словничок
-    vesum: found
+    tokens:
+    - form: знімати
+      vesum: found
+    - form: готівку
+      vesum: found
   - lemma: зранку
     stressed: зра́нку
     pos: adv
@@ -7605,18 +7567,16 @@ sources:
     kind: word
     locator: p210 Словничок
     vesum: found
-  - lemma: цього
-    stressed: цього́
-    pos: adj
-    kind: word
-    locator: p210 Словничок
-    vesum: found
-  - lemma: разу
-    stressed: ра́зу
+  - lemma: цього разу
+    stressed: цього́ ра́зу
     pos: adv
-    kind: word
+    kind: phrase
     locator: p210 Словничок
-    vesum: found
+    tokens:
+    - form: цього
+      vesum: found
+    - form: разу
+      vesum: found
   - lemma: щомісяця
     stressed: щомі́сяця
     pos: adv
@@ -7771,16 +7731,16 @@ sources:
     kind: word
     locator: p210 Словничок
     vesum: found
-  - lemma: вранці, уранці
-    stressed: вра́нці, ура́нці
+  - lemma: вранці
+    stressed: вра́нці
     pos: unlabelled
-    kind: phrase
+    kind: word
     locator: p210 Словничок
-    tokens:
-    - form: вранці
-      vesum: found
-    - form: уранці
-      vesum: found
+    variants:
+    - уранці
+    vesum: found
+    vesum_pos:
+    - adv
   - lemma: гараж
     stressed: гара́ж
     pos: noun
@@ -7892,18 +7852,16 @@ sources:
     kind: word
     locator: p210 Словничок
     vesum: found
-  - lemma: робочий
-    stressed: робо́чий
-    pos: adj
-    kind: word
-    locator: p210 Словничок
-    vesum: found
-  - lemma: день
-    stressed: день
+  - lemma: робочий день
+    stressed: робо́чий день
     pos: noun
-    kind: word
+    kind: phrase
     locator: p210 Словничок
-    vesum: found
+    tokens:
+    - form: робочий
+      vesum: found
+    - form: день
+      vesum: found
   - lemma: скоро
     stressed: ско́ро
     pos: adv
@@ -7922,16 +7880,14 @@ sources:
     kind: word
     locator: p210 Словничок
     vesum: found
-  - lemma: удень, вдень
-    stressed: уде́нь, вдень
+  - lemma: удень
+    stressed: уде́нь
     pos: adv
-    kind: phrase
+    kind: word
     locator: p210 Словничок
-    tokens:
-    - form: удень
-      vesum: found
-    - form: вдень
-      vesum: found
+    variants:
+    - вдень
+    vesum: found
   - lemma: цілий
     stressed: ці́лий
     pos: adj
@@ -8167,18 +8123,16 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
-  - lemma: настільна
-    stressed: насті́льна
-    pos: adj
-    kind: word
-    locator: p211 Словничок
-    vesum: found
-  - lemma: гра
-    stressed: гра
+  - lemma: настільна гра
+    stressed: насті́льна гра
     pos: noun
-    kind: word
+    kind: phrase
     locator: p211 Словничок
-    vesum: found
+    tokens:
+    - form: настільна
+      vesum: found
+    - form: гра
+      vesum: found
   - lemma: обирати
     stressed: обира́ти
     pos: verb
@@ -8248,21 +8202,16 @@ sources:
     - noun:inanim:m:v_naz:prop:geo:xp2
     - noun:inanim:m:v_zna:prop:geo:xp1
     - noun:inanim:m:v_zna:prop:geo:xp2
-  - lemma: родом
-    stressed: ро́дом
+  - lemma: родом з
+    stressed: ро́дом з
     pos: unlabelled
-    kind: word
+    kind: phrase
     locator: p211 Словничок
-    vesum: found
-    vesum_pos: []
-  - lemma: з
-    stressed: з
-    pos: unlabelled
-    kind: word
-    locator: p211 Словничок
-    vesum: found
-    vesum_pos:
-    - prep
+    tokens:
+    - form: родом
+      vesum: found
+    - form: з
+      vesum: found
   - lemma: розклад
     stressed: ро́зклад
     pos: noun
@@ -8469,18 +8418,16 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
-  - lemma: верхній
-    stressed: ве́рхній
-    pos: adj
-    kind: word
-    locator: p211 Словничок
-    vesum: found
-  - lemma: одяг
-    stressed: о́дяг
+  - lemma: верхній одяг
+    stressed: ве́рхній о́дяг
     pos: noun
-    kind: word
+    kind: phrase
     locator: p211 Словничок
-    vesum: found
+    tokens:
+    - form: верхній
+      vesum: found
+    - form: одяг
+      vesum: found
   - lemma: виконувати
     stressed: вико́нувати
     pos: verb
@@ -8499,18 +8446,16 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
-  - lemma: домашній
-    stressed: дома́шній
-    pos: adj
-    kind: word
-    locator: p211 Словничок
-    vesum: found
-  - lemma: улюбленець
-    stressed: улю́бленець
+  - lemma: домашній улюбленець
+    stressed: дома́шній улю́бленець
     pos: noun
-    kind: word
+    kind: phrase
     locator: p211 Словничок
-    vesum: found
+    tokens:
+    - form: домашній
+      vesum: found
+    - form: улюбленець
+      vesum: found
   - lemma: досвідчений
     stressed: досві́дчений
     pos: adj
@@ -8589,18 +8534,16 @@ sources:
     kind: word
     locator: p211 Словничок
     vesum: found
-  - lemma: особисте
-    stressed: особи́сте
-    pos: adj
-    kind: word
-    locator: p211 Словничок
-    vesum: found
-  - lemma: життя
-    stressed: життя́
+  - lemma: особисте життя
+    stressed: особи́сте життя́
     pos: noun
-    kind: word
+    kind: phrase
     locator: p211 Словничок
-    vesum: found
+    tokens:
+    - form: особисте
+      vesum: found
+    - form: життя
+      vesum: found
   - lemma: переїжджати
     stressed: переїжджа́ти
     pos: verb
@@ -8722,18 +8665,16 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
-  - lemma: повномасштабна
-    stressed: повномасшта́бна
-    pos: adj
-    kind: word
-    locator: p212 Словничок
-    vesum: found
-  - lemma: війна
-    stressed: війна́
+  - lemma: повномасштабна війна
+    stressed: повномасшта́бна війна́
     pos: noun
-    kind: word
+    kind: phrase
     locator: p212 Словничок
-    vesum: found
+    tokens:
+    - form: повномасштабна
+      vesum: found
+    - form: війна
+      vesum: found
   - lemma: політик
     stressed: полі́тик
     pos: noun
@@ -9234,16 +9175,14 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
-  - lemma: вночі, уночі
-    stressed: вночі́, уночі́
+  - lemma: вночі
+    stressed: вночі́
     pos: adv
-    kind: phrase
+    kind: word
     locator: p212 Словничок
-    tokens:
-    - form: вночі
-      vesum: found
-    - form: уночі
-      vesum: found
+    variants:
+    - уночі
+    vesum: found
   - lemma: День святого Валентина
     stressed: День свято́го Валенти́на
     pos: noun
@@ -9410,18 +9349,16 @@ sources:
     kind: word
     locator: p212 Словничок
     vesum: found
-  - lemma: гірський
-    stressed: гірськи́й
-    pos: adj
-    kind: word
-    locator: p212 Словничок
-    vesum: found
-  - lemma: курорт
-    stressed: куро́рт
+  - lemma: гірський курорт
+    stressed: гірськи́й куро́рт
     pos: noun
-    kind: word
+    kind: phrase
     locator: p212 Словничок
-    vesum: found
+    tokens:
+    - form: гірський
+      vesum: found
+    - form: курорт
+      vesum: found
   - lemma: Дарниця
     stressed: Да́рниця
     pos: noun
@@ -9519,18 +9456,16 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
-  - lemma: торговий
-    stressed: торго́вий
-    pos: adj
-    kind: word
-    locator: p213 Словничок
-    vesum: found
-  - lemma: центр
-    stressed: центр
+  - lemma: торговий центр
+    stressed: торго́вий центр
     pos: noun
-    kind: word
+    kind: phrase
     locator: p213 Словничок
-    vesum: found
+    tokens:
+    - form: торговий
+      vesum: found
+    - form: центр
+      vesum: found
   - lemma: Хмельницький
     stressed: Хмельни́цький
     pos: noun
@@ -9543,16 +9478,14 @@ sources:
     - noun:inanim:m:v_kly:prop:geo
     - noun:inanim:m:v_naz:prop:geo
     - noun:inanim:m:v_zna:prop:geo
-  - lemma: вчора, учора
-    stressed: вчо́ра, учо́ра
+  - lemma: вчора
+    stressed: вчо́ра
     pos: adv
-    kind: phrase
+    kind: word
     locator: p213 Словничок
-    tokens:
-    - form: вчора
-      vesum: found
-    - form: учора
-      vesum: found
+    variants:
+    - учора
+    vesum: found
   - lemma: газета
     stressed: газе́та
     pos: noun
@@ -9601,18 +9534,16 @@ sources:
     kind: word
     locator: p213 Словничок
     vesum: found
-  - lemma: поштова
-    stressed: пошто́ва
-    pos: adj
-    kind: word
-    locator: p213 Словничок
-    vesum: found
-  - lemma: скринька
-    stressed: скри́нька
+  - lemma: поштова скринька
+    stressed: пошто́ва скри́нька
     pos: noun
-    kind: word
+    kind: phrase
     locator: p213 Словничок
-    vesum: found
+    tokens:
+    - form: поштова
+      vesum: found
+    - form: скринька
+      vesum: found
   - lemma: пральна машина
     stressed: пра́льна маши́на
     pos: noun
@@ -10595,18 +10526,16 @@ sources:
     kind: word
     locator: p214 Словничок
     vesum: found
-  - lemma: електронний
-    stressed: електро́нний
-    pos: adj
-    kind: word
-    locator: p214 Словничок
-    vesum: found
-  - lemma: лист
-    stressed: лист
+  - lemma: електронний лист
+    stressed: електро́нний лист
     pos: noun
-    kind: word
+    kind: phrase
     locator: p214 Словничок
-    vesum: found
+    tokens:
+    - form: електронний
+      vesum: found
+    - form: лист
+      vesum: found
   - lemma: колишній
     stressed: коли́шній
     pos: adj
@@ -11468,16 +11397,14 @@ sources:
       vesum: found
     - form: раз
       vesum: found
-  - lemma: Бувай! Бувайте!
-    stressed: Бува́й! Бува́йте!
-    pos: unlabelled
-    kind: phrase
+  - lemma: бувай
+    stressed: Бува́й!
+    pos: intj
+    kind: word
     locator: p216 Словничок
-    tokens:
-    - form: Бувай
-      vesum: found
-    - form: Бувайте
-      vesum: found
+    variants:
+    - бувайте
+    vesum: found
   - lemma: вибачати
     stressed: вибача́ти
     pos: verb
@@ -11564,8 +11491,8 @@ sources:
     kind: word
     locator: p216 Словничок
     vesum: found
-  - lemma: Що  нового?
-    stressed: Що  ново́го?
+  - lemma: Що нового?
+    stressed: Що ново́го?
     pos: unlabelled
     kind: phrase
     locator: p216 Словничок
