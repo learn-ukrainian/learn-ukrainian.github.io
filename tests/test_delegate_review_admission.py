@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import contextlib
+import json
+import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -13,6 +18,276 @@ import delegate
 from scripts.agent_runtime import target_admission
 from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 from scripts.review import reviewer_resolver
+
+
+@pytest.mark.parametrize("outcome", ["published", "refused", "crashed", "spawn-failed"])
+@pytest.mark.parametrize("access", ["full", "isolated"])
+def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_path, monkeypatch, outcome, access):
+    from scripts.orchestration import worktree_claims
+    from tests.test_delegate import (
+        _init_repo_with_worktree,
+        _patch_worker_popen,
+        _rendered_attempt_prompt,
+        _review_code,
+        _sanitize_git_env_for_test,
+        _write_args,
+    )
+
+    main, reviewer = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", reviewer)
+    tasks = main / "batch_state/tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    _patch_worker_popen(monkeypatch)
+    if outcome == "spawn-failed":
+        popen = delegate.subprocess.Popen
+
+        def fail_worker(argv, *args, **kwargs):
+            if "_worker" in argv:
+                raise OSError("fixture spawn failure")
+            return popen(argv, *args, **kwargs)
+
+        monkeypatch.setattr(delegate.subprocess, "Popen", fail_worker)
+    inputs = main / ".worktrees/dispatch/codex/render-inputs"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(inputs), "main"],
+        cwd=main,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    (inputs / "inputs").mkdir()
+    input_root = inputs / "inputs"
+    _review_code(main)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.verify_full_review_tree", lambda *_args: None)
+    prompt_file = _rendered_attempt_prompt(main, tmp_path / "prompt.md", input_root=input_root)
+    manifest = input_root / "review.yaml"
+    manifest.write_text("review: test\n")
+    removals = []
+
+    def remove():
+        return worktree_claims.remove_unclaimed_worktree(
+            inputs,
+            repo_root=main,
+            tasks_dir=tasks,
+            lock_dir=delegate._worktree_lock_dir(),
+            lock_timeout_s=0.1,
+            owner_task_id=None,
+            reason="race probe",
+        )
+
+    def prepare(**_kwargs):
+        # Another thread reaches the real shared removal guard at the first
+        # input read, before any review task record has been published.
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            removals.append(executor.submit(remove).result(timeout=5))
+        assert removals[-1].reason == worktree_claims.LOCK_BUSY
+        assert manifest.read_text() == "review: test\n"
+        if outcome == "refused":
+            raise ValueError("fixture refusal")
+        if outcome == "crashed":
+            raise RuntimeError("fixture crash")
+        return SimpleNamespace(config_path=tmp_path / "config.json", manifest_sha256="a" * 64)
+
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", prepare)
+    args = _write_args(
+        agent="claude",
+        model="claude-opus-5-5",
+        task_id="review-race",
+        mode="read-only",
+        prompt=None,
+        prompt_file=str(prompt_file),
+        cwd=str(reviewer),
+        full_checkout=True,
+        review_access=access,
+        review_attempt=str(manifest),
+        review_id="rev-test",
+        attempt_id="att-test",
+    )
+    if outcome == "crashed":
+        with pytest.raises(RuntimeError, match="fixture crash"):
+            delegate.cmd_dispatch(args)
+    else:
+        assert delegate.cmd_dispatch(args) == {"published": 0, "refused": 2, "spawn-failed": 1}[outcome]
+    assert len(removals) == 1
+    # Every exit releases the transient lock; publication hands protection
+    # over to the existing contract, not a new persistent lock field.
+    with worktree_claims.worktree_lock(inputs, lock_dir=delegate._worktree_lock_dir(), timeout_s=0):
+        pass
+    if outcome == "published":
+        state_path = delegate._state_path("review-race")
+        record = json.loads(state_path.read_bytes())
+        assert record["review_contract"]["input_root"] == str(input_root)
+        assert remove().reason == "review input root claimed by active task review-race"
+        record["status"] = "done"
+        state_path.write_text(json.dumps(record))
+    elif outcome == "spawn-failed":
+        record = json.loads(delegate._state_path("review-race").read_bytes())
+        assert record["status"] == "failed"
+    else:
+        assert not delegate._state_path("review-race").exists()
+    # The nested untracked manifest intentionally uses git's cleanliness guard;
+    # deletion is now attempted and refused by git, not a leaked input claim.
+    assert remove().action == "error"
+
+
+@pytest.mark.parametrize("inner_first", [False, True])
+def test_review_input_lock_selects_deepest_registered_tree(tmp_path, monkeypatch, inner_first):
+    from scripts.orchestration import worktree_claims
+
+    outer = tmp_path / "outer"
+    inner = outer / "inner"
+    inputs = inner / "inputs"
+    inputs.mkdir(parents=True)
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    trees = [tmp_path, *([inner, outer] if inner_first else [outer, inner])]
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: trees)
+    monkeypatch.setattr(delegate, "_worktree_lock_dir", lambda: tmp_path / "locks")
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"input_root": str(inputs)}, locks)
+        with pytest.raises(worktree_claims.WorktreeLockReentry):
+            with delegate.worktree_lock(inner):
+                pass
+        with delegate.worktree_lock(outer):
+            pass
+    with delegate.worktree_lock(inner):
+        pass
+
+
+def test_review_input_lock_refuses_tree_removed_while_waiting(tmp_path, monkeypatch):
+    inputs = tmp_path / "inputs"
+    inputs.mkdir()
+    lookups = iter([[tmp_path, inputs], [tmp_path]])
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: next(lookups))
+    monkeypatch.setattr(delegate, "_worktree_lock_dir", lambda: tmp_path / "locks")
+    with contextlib.ExitStack() as locks, pytest.raises(ValueError, match="disappeared while dispatch waited"):
+        delegate._lock_review_input_root({"input_root": str(inputs)}, locks)
+
+
+def test_review_input_lock_reuses_own_dispatch_lock_and_releases_on_refusal(tmp_path, monkeypatch):
+    from scripts.orchestration import worktree_claims
+
+    inputs = tmp_path / "inputs"
+    inputs.mkdir()
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path, inputs])
+    monkeypatch.setattr(delegate, "_worktree_lock_dir", lambda: tmp_path / "locks")
+    with contextlib.ExitStack() as locks:
+        locks.enter_context(delegate.worktree_lock(inputs))
+        delegate._lock_review_input_root({"input_root": str(inputs)}, locks, locked_worktree=inputs)
+    with worktree_claims.worktree_lock(inputs, lock_dir=tmp_path / "locks", timeout_s=0):
+        pass
+
+
+def test_review_input_lock_allows_non_worktree_and_refuses_missing_root(tmp_path, monkeypatch):
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path])
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"input_root": str(tmp_path)}, locks)
+        with pytest.raises(ValueError, match="disappeared before preparation"):
+            delegate._lock_review_input_root({"input_root": str(tmp_path / "gone")}, locks)
+
+
+def test_review_input_lock_fails_closed_on_unavailable_registration(tmp_path, monkeypatch):
+    wc = delegate._load_worktree_containment()
+    monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
+    monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [])
+    with contextlib.ExitStack() as locks, pytest.raises(ValueError, match="registration unavailable"):
+        delegate._lock_review_input_root({"input_root": str(tmp_path)}, locks)
+
+
+def test_review_input_lock_allows_inputs_outside_git(tmp_path, monkeypatch):
+    wc = delegate._load_worktree_containment()
+
+    def outside_git(_path):
+        raise wc.NotAGitRepositoryError("fixture outside git")
+
+    monkeypatch.setattr(wc, "resolve_main_root", outside_git)
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"input_root": str(tmp_path)}, locks)
+
+
+def test_review_input_lock_includes_acp_runtime_without_allowing_reuse(tmp_path, monkeypatch):
+    from scripts.orchestration import worktree_claims
+    from tests.test_delegate import _init_repo_with_worktree, _sanitize_git_env_for_test
+
+    main, _reviewer = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    runtime = main / ".worktrees/dispatch/acp/input-runtime"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(runtime), "main"],
+        cwd=main,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    assert delegate._resolve_verified_worktree_path(runtime) is None
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"input_root": str(runtime)}, locks)
+        with pytest.raises(worktree_claims.WorktreeLockReentry):
+            with delegate.worktree_lock(runtime):
+                pass
+
+
+def test_rootless_isolated_contract_needs_no_input_lock(monkeypatch):
+    def unexpected():
+        pytest.fail("a rootless isolated contract must not inspect worktree registration")
+
+    monkeypatch.setattr(delegate, "_load_worktree_containment", unexpected)
+    with contextlib.ExitStack() as locks:
+        delegate._lock_review_input_root({"prompt_sha256": "a" * 64}, locks, review_access="isolated")
+
+
+def test_manifest_prompt_admission_refuses_missing_input_root(tmp_path, monkeypatch):
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("manifest_schema: 1\n")
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.check_review_contract", lambda *_args, **_kwargs: {})
+    args = SimpleNamespace(review_attempt=str(manifest), prompt_file=None, review_access="isolated")
+    refusal, contract = delegate._review_attempt_prompt_admission(args, "prompt", "review", "attempt")
+    assert "review_input_root_invalid" in refusal
+    assert contract is None
+
+
+@pytest.mark.parametrize("access", ["full", "isolated"])
+@pytest.mark.parametrize("root", [None, "", " ", 7, "\x00"])
+def test_review_input_lock_refuses_invalid_explicit_root(access, root):
+    with contextlib.ExitStack() as locks, pytest.raises(ValueError, match="review_input_root_invalid"):
+        delegate._lock_review_input_root({"input_root": root}, locks, review_access=access)
+
+
+@pytest.mark.parametrize("access,contract", [("full", {}), ("isolated", {"render_checkout": "/render"})])
+def test_dispatch_refuses_missing_required_input_root_before_preparation(
+    tmp_path, monkeypatch, capsys, access, contract
+):
+    from tests.test_delegate import _write_args
+
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review_id: rev-test\nattempt_id: att-test\n")
+    monkeypatch.setattr(delegate, "_review_attempt_prompt_admission", lambda *_args: (None, contract))
+
+    def unexpected(**_kwargs):
+        pytest.fail("invalid input root must refuse before spending an attempt id")
+
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", unexpected)
+    args = _write_args(
+        agent="claude",
+        mode="read-only",
+        full_checkout=True,
+        review_access=access,
+        review_attempt=str(manifest),
+        review_id="rev-test",
+        attempt_id="att-test",
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "review_input_root_invalid" in capsys.readouterr().err
 
 
 def _args(*extra, verdict=True):
@@ -88,8 +363,15 @@ def test_9312_budget_substitute_is_checked_for_its_own_deficit(monkeypatch, caps
         "weekly_expected_pct": 40.0,
     }
     args = _args(
-        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
-        "--review-author-model", "composer-2.5", "--review-risk", "critical",
+        "--agent",
+        "claude",
+        "--model",
+        "claude-opus-5-5",
+        "--check-budget",
+        "--review-author-model",
+        "composer-2.5",
+        "--review-risk",
+        "critical",
     )
     (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal and "REVIEW_ROUTE_REFUSED" in refusal and "deficit" in refusal
@@ -97,15 +379,26 @@ def test_9312_budget_substitute_is_checked_for_its_own_deficit(monkeypatch, caps
     assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("subject", [
-    ("--owned-path", "scripts/agent_runtime/adapters/codex.py"),
-    ("--subject-seat", "codex"),
-    ("--subject-family", "openai"),
-])
+@pytest.mark.parametrize(
+    "subject",
+    [
+        ("--owned-path", "scripts/agent_runtime/adapters/codex.py"),
+        ("--subject-seat", "codex"),
+        ("--subject-family", "openai"),
+    ],
+)
 def test_9312_budget_substitute_excludes_governed_seat(monkeypatch, subject):
     args = _args(
-        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
-        "--review-author-model", "composer-2.5", "--review-risk", "critical", *subject,
+        "--agent",
+        "claude",
+        "--model",
+        "claude-opus-5-5",
+        "--check-budget",
+        "--review-author-model",
+        "composer-2.5",
+        "--review-risk",
+        "critical",
+        *subject,
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
     assert refusal and "REVIEW_ROUTE_REFUSED" in refusal
@@ -114,18 +407,25 @@ def test_9312_budget_substitute_excludes_governed_seat(monkeypatch, subject):
 
 def test_requested_reviewer_is_also_subject_excluded_before_budget(monkeypatch):
     args = _args(
-        "--owned-path", "scripts/agent_runtime/adapters/codex.py",
-        "--review-author-model", "composer-2.5", "--review-risk", "critical",
+        "--owned-path",
+        "scripts/agent_runtime/adapters/codex.py",
+        "--review-author-model",
+        "composer-2.5",
+        "--review-risk",
+        "critical",
     )
     (refusal, target), _ = _admit(args, monkeypatch)
     assert refusal is None and target.recipient == "claude"
 
 
-@pytest.mark.parametrize("subject", [
-    ("--owned-path", "scripts/agent_runtime/adapters/base.py"),
-    ("--subject-seat", "unknown-seat"),
-    ("--subject-family", "unknown-family"),
-])
+@pytest.mark.parametrize(
+    "subject",
+    [
+        ("--owned-path", "scripts/agent_runtime/adapters/base.py"),
+        ("--subject-seat", "unknown-seat"),
+        ("--subject-family", "unknown-family"),
+    ],
+)
 def test_review_subject_ambiguity_or_invalid_identity_refuses_before_budget(monkeypatch, subject):
     def fail():
         pytest.fail("invalid subject must refuse before budget probe")
@@ -133,7 +433,9 @@ def test_review_subject_ambiguity_or_invalid_identity_refuses_before_budget(monk
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
     args = _args("--check-budget", *subject)
     refusal, target = delegate._admit_dispatch_target(
-        args, agent=args.agent, trees=None,
+        args,
+        agent=args.agent,
+        trees=None,
         route=delegate._dispatch_route(args, delegate._DispatchRouting(), language_lane=False, review_attempt=None),
     )
     assert refusal and "REVIEW_ROUTE_REFUSED" in refusal and target is None
@@ -257,7 +559,6 @@ def test_review_dispatch_replaces_a_cursor_grok_request_outside_policy(model, au
     assert reviewer_resolver.resolve_family(target.model) != reviewer_resolver.resolve_author_family(author)
     assert routing.substitution["source"] == "reviewer-resolver"
     assert routing.substitution["requested_model"] == model
-
 
 
 def _review_target(model, *, attempt=False, seat="cursor", author="claude-opus-5-5", risk="medium"):
@@ -403,9 +704,7 @@ HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol,
         ("cursor", "grok-4.7-high", "claude-opus-5-5", ("codex", "gpt-6.1-sol")),
     ],
 )
-@pytest.mark.parametrize(
-    "flags", [(), ("--check-budget",), ("--force-agent",), ("--check-budget", "--force-agent")]
-)
+@pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--force-agent",), ("--check-budget", "--force-agent")])
 @pytest.mark.parametrize(
     "typing",
     [
@@ -419,8 +718,17 @@ def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(
 ):
     """#9538: every review-typed dispatch, not only a verdict-gated one, applies the high-risk reviewer rule."""
     args = _args(
-        "--agent", seat, "--model", model, "--review-author-model", author, "--review-risk", "high",
-        *typing, *flags, verdict=False,
+        "--agent",
+        seat,
+        "--model",
+        model,
+        "--review-author-model",
+        author,
+        "--review-risk",
+        "high",
+        *typing,
+        *flags,
+        verdict=False,
     )
     assert delegate._dispatch_is_review_typed(args)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
@@ -434,8 +742,15 @@ def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
 def test_medium_risk_review_keeps_the_requested_sonnet_seat(monkeypatch, capsys, flags):
     args = _args(
-        "--agent", "claude", "--model", "claude-sonnet-5-5",
-        "--review-author-model", "gpt-6.1-sol", "--review-risk", "medium", *flags,
+        "--agent",
+        "claude",
+        "--model",
+        "claude-sonnet-5-5",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "medium",
+        *flags,
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
@@ -456,7 +771,9 @@ def test_high_risk_review_without_an_author_refuses_with_the_rule(monkeypatch, v
 @pytest.mark.parametrize("seat,model", [("claude", "claude-sonnet-5-5"), ("cursor", "grok-4.7-high")])
 def test_high_risk_review_attempt_refuses_with_the_rule(seat, model):
     with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED") as refused:
-        _review_target(model, attempt=True, seat=seat, author="gpt-6.1-sol" if seat == "claude" else "claude-opus-5-5", risk="high")
+        _review_target(
+            model, attempt=True, seat=seat, author="gpt-6.1-sol" if seat == "claude" else "claude-opus-5-5", risk="high"
+        )
     assert HIGH_RISK_RULE in str(refused.value)
 
 
@@ -469,8 +786,16 @@ def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monke
         "weekly_expected_pct": 40.0,
     }
     args = _args(
-        "--agent", "claude", "--model", "claude-sonnet-5-5", "--check-budget",
-        "--review-author-model", "gpt-6.1-sol", "--review-risk", "high", "--dry-run",
+        "--agent",
+        "claude",
+        "--model",
+        "claude-sonnet-5-5",
+        "--check-budget",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "high",
+        "--dry-run",
     )
     (refusal, target), _ = _admit(args, monkeypatch, budget)
     assert refusal is None
@@ -493,8 +818,15 @@ def test_eligible_reviewer_is_substituted_when_budget_requires_it(monkeypatch, c
 @pytest.mark.parametrize("seat,model", [("codex", "gpt-6.1-sol"), ("grok", "grok-4.7")])
 def test_admission_identity_swap_always_prints_typed_note(monkeypatch, capsys, flags, seat, model):
     args = _args(
-        "--agent", seat, "--model", model,
-        "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical", *flags,
+        "--agent",
+        seat,
+        "--model",
+        model,
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "critical",
+        *flags,
     )
     (refusal, target), routing = _admit(args, monkeypatch)
     assert refusal is None and target.recipient == "claude"
@@ -513,8 +845,12 @@ def test_gemini_alias_keeps_ukrainian_review_admission(monkeypatch, capsys):
 
 
 @pytest.mark.parametrize(
-    "flags", [("--review-author-model", "gpt-6.1-sol"), ("--review-risk", "medium"),
-              ("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical")],
+    "flags",
+    [
+        ("--review-author-model", "gpt-6.1-sol"),
+        ("--review-risk", "medium"),
+        ("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical"),
+    ],
 )
 def test_ukrainian_review_resolver_flags_refuse_with_code_only_guidance(monkeypatch, flags):
     (refusal, target), _ = _admit(_args("--review-profile", "ukrainian", *flags), monkeypatch)
@@ -587,12 +923,15 @@ def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsy
     assert "NOTE: REVIEW_BUDGET_RETAINED" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("inputs", [
-    (),
-    ("--review-author-model", "gpt-6.1-sol"),
-    ("--review-risk", "critical"),
-    ("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical"),
-])
+@pytest.mark.parametrize(
+    "inputs",
+    [
+        (),
+        ("--review-author-model", "gpt-6.1-sol"),
+        ("--review-risk", "critical"),
+        ("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical"),
+    ],
+)
 def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, capsys, inputs):
     budget = _budget()
     budget["agents"]["claude"]["codexbar"] = {
@@ -651,13 +990,10 @@ def test_review_attempt_refuses_budget_substitution_separately(monkeypatch, caps
     assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
 
 
-
 @pytest.mark.parametrize("fallbacks", [{}, {"codex": "codex"}])
 def test_review_attempt_budget_refusal_without_substitute_names_seat_and_cause(monkeypatch, fallbacks):
     monkeypatch.setattr("scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: fallbacks)
-    (refusal, target), routing = _admit(
-        _args("--check-budget", "--review-attempt", "attempt.yaml"), monkeypatch
-    )
+    (refusal, target), routing = _admit(_args("--check-budget", "--review-attempt", "attempt.yaml"), monkeypatch)
     assert target is None and routing.substitution is None
     assert refusal == (
         "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for codex: "
@@ -671,9 +1007,7 @@ def test_retired_review_attempt_refuses_before_route_and_budget_probe(monkeypatc
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
     with pytest.raises(ReviewAdmissionRefused) as refused:
-        resolve_and_admit(
-            ("gemini",), mode="read-only", review_dispatch=True, review_attempt=True, route=fail
-        )
+        resolve_and_admit(("gemini",), mode="read-only", review_dispatch=True, review_attempt=True, route=fail)
     assert str(refused.value) == (
         "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused: "
         "agent substitution from gemini to agy (retired CLI) is not allowed (#8517)"
@@ -740,19 +1074,38 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
         assert delegate._resolve_worktree_base_sha(**kwargs) == "a" * 40
 
 
-@pytest.mark.parametrize("lane", [
-    {"status": "near_cap"}, {"status": "hot"},
-    {"status": "cool", "health": {"healthy": False}},
-    {"status": "cool", "runtime": {"headroom_blocked": True}},
-    {"status": "cool", "scheduler": {"circuit_open": True}},
-])
+@pytest.mark.parametrize(
+    "lane",
+    [
+        {"status": "near_cap"},
+        {"status": "hot"},
+        {"status": "cool", "health": {"healthy": False}},
+        {"status": "cool", "runtime": {"headroom_blocked": True}},
+        {"status": "cool", "scheduler": {"circuit_open": True}},
+    ],
+)
 def test_pace_exception_never_overrides_hard_capacity_or_health(monkeypatch, lane):
     budget = _budget(codex="cool")
-    budget["agents"]["claude"] = dict(lane, codexbar={
-        "will_last_to_reset": False, "weekly_pace_delta_pct": 12.0, "weekly_expected_pct": 40.0,
-    })
-    args = _args("--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
-                 "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical", "--dry-run")
+    budget["agents"]["claude"] = dict(
+        lane,
+        codexbar={
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 12.0,
+            "weekly_expected_pct": 40.0,
+        },
+    )
+    args = _args(
+        "--agent",
+        "claude",
+        "--model",
+        "claude-opus-5-5",
+        "--check-budget",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "critical",
+        "--dry-run",
+    )
     (refusal, target), _ = _admit(args, monkeypatch, budget)
     assert refusal and "REVIEW_ROUTE_REFUSED" in refusal
     assert target is None
@@ -761,10 +1114,21 @@ def test_pace_exception_never_overrides_hard_capacity_or_health(monkeypatch, lan
 def test_pace_deficit_prefers_available_cross_family_alternative(monkeypatch):
     budget = _budget(codex="cool")
     budget["agents"]["claude"]["codexbar"] = {
-        "will_last_to_reset": False, "weekly_pace_delta_pct": 12.0, "weekly_expected_pct": 40.0,
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
     }
-    args = _args("--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
-                 "--review-author-model", "composer-2.5", "--review-risk", "critical")
+    args = _args(
+        "--agent",
+        "claude",
+        "--model",
+        "claude-opus-5-5",
+        "--check-budget",
+        "--review-author-model",
+        "composer-2.5",
+        "--review-risk",
+        "critical",
+    )
     (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal is None
     assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
@@ -842,8 +1206,15 @@ def test_review_substitution_disabled_with_trusted_inputs_via_admit(monkeypatch,
         lambda *args, **kwargs: ("claude", "claude-opus-5-5"),
     )
     args = _args(
-        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
-        "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical",
+        "--agent",
+        "claude",
+        "--model",
+        "claude-opus-5-5",
+        "--check-budget",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "critical",
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
     assert refusal is None
@@ -880,8 +1251,18 @@ def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_
 def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_seat(monkeypatch):
     """Medium risk is unchanged: the practical ladder still admits Sonnet without the verdict flag."""
     args = _args(
-        "--agent", "claude", "--model", "claude-sonnet-5-5", "--review-profile", "code",
-        "--review-author-model", "gpt-6.1-sol", "--review-risk", "medium", "--force-agent", verdict=False,
+        "--agent",
+        "claude",
+        "--model",
+        "claude-sonnet-5-5",
+        "--review-profile",
+        "code",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "medium",
+        "--force-agent",
+        verdict=False,
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")

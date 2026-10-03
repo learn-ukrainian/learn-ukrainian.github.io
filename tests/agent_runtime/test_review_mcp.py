@@ -606,8 +606,16 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
 
 
 def test_delegate_dispatch_refuses_reused_attempt_id(
-    manifest_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    manifest_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    from tests.test_delegate import _add_local_bare_origin, _init_repo_with_worktree, _sanitize_git_env_for_test
+
+    main, reviewer = _init_repo_with_worktree(tmp_path)
+    _add_local_bare_origin(main)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate_cli, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate_cli, "_local_repo_root", reviewer)
+    monkeypatch.setattr(delegate_cli, "_resolve_invocation_git_root", lambda *_args: main)
     receipts_root = tmp_path / "batch_state" / "review-receipts"
     attempt_dir = receipts_root / "rev-dup-001"
     attempt_dir.mkdir(parents=True, exist_ok=True)
@@ -642,6 +650,9 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
     assert rc == 2
     captured = capsys.readouterr()
     assert "review attempt 'att-dup-001' already exists for review 'rev-dup-001'" in captured.err
+    assert "'action': 'removed'" in captured.err
+    assert not (main / ".worktrees/dispatch/claude" / task_id).exists()
+    assert (attempt_dir / "att-dup-001.jsonl").read_bytes() == b"prior-receipts\n"
 
 
 def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path) -> None:

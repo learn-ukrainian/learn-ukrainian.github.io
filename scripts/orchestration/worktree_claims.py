@@ -35,6 +35,7 @@ from typing import Any
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import main_checkout_root
+from scripts.guardrails import worktree_containment
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.task_record_store import task_record_path
 from scripts.path_safety import assert_delete_target
@@ -175,6 +176,31 @@ def lock_refusal(exc: WorktreeLockError) -> str:
     return LOCK_UNAVAILABLE
 
 
+def existing_worktree_lock_refusal(path: Path, *, lock_dir: Path) -> str | None:
+    """Observe a preparation/attachment lock without creating any plan-time files.
+
+    Dispatch's lock files are never unlinked, so a missing file means there is
+    no holder at this instant. Apply still acquires the full lock and rechecks.
+    """
+    try:
+        _, lock_file = lock_path(path, lock_dir=lock_dir)
+        fd = os.open(lock_file, os.O_RDONLY | os.O_CLOEXEC)
+    except FileNotFoundError:
+        return None
+    except (OSError, WorktreeLockError):
+        return LOCK_UNAVAILABLE
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return LOCK_BUSY
+        except OSError:
+            return LOCK_UNAVAILABLE
+        return None
+    finally:
+        os.close(fd)
+
+
 def resolve_claim_path(raw_path: str, *, repo_root: Path) -> Path:
     """Resolve a recorded ``worktree_path`` the way dispatch resolves ``--worktree``."""
     path = Path(raw_path).expanduser()
@@ -242,6 +268,29 @@ def is_superseded_record(state_file: Path) -> bool:
     return _SUPERSEDED_RECORD_RE.search(state_file.name) is not None
 
 
+def review_contract_input_root(contract: dict[str, Any], *, review_access: str = "full") -> str | None:
+    """Validate input claims, allowing rootless isolated non-rendered contracts."""
+    if "input_root" not in contract and review_access == "isolated" and "render_checkout" not in contract:
+        return None
+    input_root = contract.get("input_root")
+    if not isinstance(input_root, str) or not input_root.strip() or "\x00" in input_root:
+        raise ValueError("review_input_root_invalid: review contract requires a non-empty input_root")
+    return input_root
+
+
+def review_input_worktree(input_root: Path, *, main_root: Path, registered: Iterable[Path]) -> Path | None:
+    """Select the deepest registered linked checkout containing resolved inputs.
+
+    Callers supply canonical paths from the same repository's registration.
+    The primary checkout never claims removable worktrees beneath it.
+    """
+    return max(
+        (tree for tree in registered if tree != main_root and input_root.is_relative_to(tree)),
+        key=lambda tree: len(tree.parts),
+        default=None,
+    )
+
+
 def active_worktree_claim_refusal(
     worktree: Path,
     *,
@@ -250,11 +299,18 @@ def active_worktree_claim_refusal(
     owner_task_id: str | None = None,
     owner_state_file: Path | None = None,
     settled_claim: Callable[[dict[str, Any]], bool] | None = None,
+    review_inputs_only: bool = False,
 ) -> str | None:
     """Return a skip reason when an unfinished task record still claims ``worktree``.
 
     A task record whose status is not in :data:`RELEASED_TASK_STATUSES` and
     whose ``worktree_path`` resolves to the same checkout blocks removal.
+    Its ``review_contract.input_root`` also claims the deepest registered linked
+    checkout containing it, including subdirectories and symlink spellings.
+    Inputs in the primary checkout claim no removable checkout.
+    Review input claims are never exempted as owner or settled claims; only a
+    terminal status releases them. ``review_inputs_only`` lets plan-time callers
+    preserve these inputs without changing their existing dispatch-owner rules.
     Claims are resolved relative to ``repo_root``, exactly as dispatch
     resolves ``--worktree``. The owner's canonical record is exempt only after
     its embedded task ID and non-empty run nonce establish the run identity.
@@ -276,6 +332,7 @@ def active_worktree_claim_refusal(
     except (OSError, RuntimeError, ValueError) as exc:
         return f"worktree path unresolvable ({type(exc).__name__}); refusing worktree removal"
     needles = worktree_claim_needles(worktree, target)
+    review_registration: tuple[Path, list[Path]] | None = None
     owner_identity: tuple[Path, str] | None = None
     if owner_task_id is not None:
         owner_path = owner_state_file or task_record_path(tasks_dir, owner_task_id)
@@ -314,6 +371,38 @@ def active_worktree_claim_refusal(
         claimed_path = record.get("worktree_path") if isinstance(record, dict) else None
         if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
             return refused(state_file, "unreadable")
+        status = record.get("status")
+        if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
+            continue
+        contract = record.get("review_contract")
+        if contract is not None:
+            if not isinstance(contract, dict):
+                return refused(state_file, "unreadable")
+            try:
+                input_root = review_contract_input_root(contract, review_access=record.get("review_access", "full"))
+            except ValueError:
+                return refused(state_file, "unreadable")
+        else:
+            input_root = None
+        if input_root is not None:
+            try:
+                inputs = resolve_claim_path(input_root, repo_root=repo_root)
+            except (OSError, RuntimeError, ValueError):
+                return refused(state_file, "unreadable")
+            if review_registration is None:
+                try:
+                    main_root = worktree_containment.resolve_main_root(repo_root)
+                    registered = worktree_containment.registered_worktrees(main_root)
+                    if not registered:
+                        raise ValueError("worktree registration unavailable")
+                    review_registration = (main_root, registered)
+                except (OSError, RuntimeError, ValueError):
+                    return refused(state_file, "review input worktree registration unavailable")
+            main_root, registered = review_registration
+            if review_input_worktree(inputs, main_root=main_root, registered=registered) == target:
+                return f"review input root claimed by active task {record.get('task_id') or state_file.stem}"
+        if review_inputs_only:
+            continue
         if (
             owner_identity is not None
             and state_file == owner_identity[0]
@@ -322,9 +411,6 @@ def active_worktree_claim_refusal(
         ):
             continue
         if not claimed_path:
-            continue
-        status = record.get("status")
-        if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
             continue
         try:
             claimed = resolve_claim_path(claimed_path, repo_root=repo_root)
@@ -499,14 +585,18 @@ def git_worktree_remove(
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
-        proc = git_runner(repo_root, argv[1:]) if git_runner is not None else subprocess.run(
-            argv,
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=sanitized_git_env(),
-            timeout=bound,
+        proc = (
+            git_runner(repo_root, argv[1:])
+            if git_runner is not None
+            else subprocess.run(
+                argv,
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=sanitized_git_env(),
+                timeout=bound,
+            )
         )
     except subprocess.TimeoutExpired:
         return f"git worktree remove timed out after {bound:g}s"
