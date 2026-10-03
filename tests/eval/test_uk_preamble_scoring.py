@@ -273,6 +273,112 @@ def test_counts_do_not_depend_on_how_corrections_are_grouped(corrected, packagin
         assert tuple(result[k] for k in _KEYS) == expected, packaging
 
 
+def _loggings(text: str, edits: list[tuple[int, int, str]]) -> list[list[dict[str, Any]]]:
+    """Every schema-valid way of logging ``edits`` (disjoint, in source order) as corrections that apply them.
+
+    Unlogged; each edit alone in every span that reaches into its neighbours' gaps
+    (the others logged minimally); and one correction over every span covering all edits.
+    """
+
+    def entry(start: int, end: int, replacement: str) -> dict[str, Any]:
+        return {
+            "span": text[start:end],
+            "start": start,
+            "end": end,
+            "correction": replacement,
+            "error_type": "other",
+            "evidence": "test",
+        }
+
+    def minimal(i: int) -> dict[str, Any]:
+        return entry(*edits[i])
+
+    loggings: list[list[dict[str, Any]]] = [[], [minimal(i) for i in range(len(edits))]]
+    for i, (e_start, e_end, replacement) in enumerate(edits):
+        left = edits[i - 1][1] if i else 0
+        right = edits[i + 1][0] if i + 1 < len(edits) else len(text)
+        for start in range(left, e_start + 1):
+            for end in range(e_end, right + 1):
+                wide = entry(start, end, text[start:e_start] + replacement + text[e_end:end])
+                loggings.append([wide if j == i else minimal(j) for j in range(len(edits))])
+    corrected = _apply(text, edits)
+    for start in range(edits[0][0] + 1):
+        for end in range(edits[-1][1], len(text) + 1):
+            loggings.append([entry(start, end, corrected[start : len(corrected) - (len(text) - end)])])
+    return loggings
+
+
+def _apply(text: str, edits: list[tuple[int, int, str]]) -> str:
+    for start, end, replacement in reversed(edits):
+        text = text[:start] + replacement + text[end:]
+    return text
+
+
+def _span_item(text: str, errors: list[tuple[str, list[str]]], protected: list[str]) -> ReviewItem:
+    def span(fragment: str, ident: str, kind: str, accepted=()) -> Span:
+        start = text.index(fragment)
+        return Span(ident, start, start + len(fragment), fragment, kind, tuple(accepted))
+
+    return ReviewItem(
+        "Q",
+        text,
+        tuple(span(fragment, f"e{i}", "lexical-russianism", accepted) for i, (fragment, accepted) in enumerate(errors)),
+        tuple(span(fragment, f"p{i}", "regional") for i, fragment in enumerate(protected)),
+    )
+
+
+_SCORE_KEYS = ("hits", "fa_protected", "fa_other", "fa_unanchored", "false_alarms", "wrong_corrections")
+
+
+def test_reviewer_probe_safe_to_safer_scores_the_same_as_an_insertion():
+    """Round 2: ``bad safe`` -> ``good safer`` gave 1 false alarm as ``safe -> safer`` and 2 as an insertion."""
+    item = _span_item("bad safe", [("bad", ["good"])], [])
+    fix_bad = fix("bad safe", "bad", "good")
+    as_word = [fix_bad, fix("bad safe", "safe", "safer")]
+    as_insertion = [fix_bad, {**fix("bad safe", "safe", "r"), "span": "", "start": 8, "end": 8}]
+    for corrections in (as_word, as_insertion):
+        result = score_review_item(item, answer("bad safe", corrections, corrected="good safer"))
+        assert (result["hits"], result["false_alarms"], result["fa_other"]) == (1, 1, 1), corrections
+        assert (result["unlogged_change_units"], result["unapplied_logged_units"]) == (0, 0)
+
+
+@pytest.mark.parametrize(
+    ("text", "errors", "protected", "edits", "expected"),
+    [
+        # The reviewer's probe: an error fix plus a suffix insertion on a correct word.
+        ("bad safe", [("bad", ["good"])], [], [(0, 3, "good"), (8, 8, "r")], (1, 0, 1, 0, 1, 0)),
+        # Error fix, a comma inserted between correct words, and a suffix grown inside protected text.
+        (
+            "Цей пункт являється без сумніву слідуючим кроком.",
+            [("являється", ["є"]), ("слідуючим", ["наступним"])],
+            ["без сумніву"],
+            [(10, 19, "є"), (31, 31, "в"), (32, 41, "наступним")],
+            (2, 1, 0, 0, 1, 0),
+        ),
+        # A comma error fixed by insertion and a correct word deleted.
+        ("Я знаю що він прийде.", [], [], [(6, 6, ","), (9, 13, "")], (0, 0, 2, 0, 2, 0)),
+        # A wrong correction of an error (a miss, not a false alarm) and a punctuation swap.
+        (
+            "Цей пункт являється кроком.",
+            [("являється", ["є"])],
+            [],
+            [(10, 19, "буде"), (26, 27, "!")],
+            (0, 0, 1, 0, 1, 1),
+        ),
+    ],
+)
+def test_every_way_of_logging_an_applied_edit_scores_the_same(text, errors, protected, edits, expected):
+    item = _span_item(text, errors, protected)
+    corrected = _apply(text, edits)
+    loggings = _loggings(text, edits)
+    assert len(loggings) > len(edits) + 2
+    for corrections in loggings:
+        result = score_review_item(item, answer(text, corrections, corrected=corrected))
+        assert tuple(result[k] for k in _SCORE_KEYS) == expected, corrections
+        if corrections:
+            assert result["unapplied_logged_units"] == 0, corrections
+
+
 def test_unapplied_accusation_of_correct_text_counts_once_however_grouped():
     item = _packaged_item()
     one = [fix(PACKAGED, "пункт являється", "розділ являється")]

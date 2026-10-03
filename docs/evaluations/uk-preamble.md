@@ -48,26 +48,43 @@ smoke plan is reported as incomplete and never authorises adoption.
   in the preamble.
 - Every task goes through `scripts/delegate.py dispatch --mode read-only
   --language-lane --rules-seat core --cwd <worker cwd>`, without `--worktree`,
-  `--lifecycle-file` or `--research-*` flags, so delegate appends nothing.
-  Research pointers are deliberately not requested: they are resolved per
-  dispatch from a changing registry and would add context outside the hashed
-  prompt.
+  `--lifecycle-file` or `--research-*` flags. Research pointers are
+  deliberately not requested: they are resolved per dispatch from a changing
+  registry and would add context outside the hashed prompt.
+- Delegate still wraps the prompt. When the worker cwd lies in a registered
+  Git worktree (the default cwd is this checkout, which is one when the
+  harness runs from a dispatch worktree), delegate adds its worktree block
+  (paths, interpreter, sparse-checkout note, test scope) and then the rules
+  core again in front of it, and applies its sparse checkout to that
+  worktree. The sparse-checkout note depends on paths the prompt names. The
+  harness computes this composition with delegate's own functions, without
+  spawning anything: the effective prompt, its prompt blocks, the recorded
+  cwd and the worktree path for every prompt.
+- `run` freezes the frame delegate puts around the prompts (cwd, worktree
+  path, prompt blocks and the hashes of the text before and after the
+  prompt) in `manifest.json`. A plan whose prompts would be framed
+  differently is refused before anything is dispatched, for example a
+  preamble naming `curriculum/`, because its arm would then differ in more
+  than the preamble. A task whose frame has changed since the freeze is not
+  dispatched, and a resumed run whose frame changed is refused.
 - An answer is accepted only when the task record shows the planned agent and
-  model, no substitution, the rendered prompt as both source and effective
-  prompt, no appended blocks, no research context, read-only mode, the frozen
-  cwd, and the `dispatch_args_sha256` of the arguments the harness built; and
-  when the worker checkout's fingerprint (commit, tracked changes, instruction
-  and tool-configuration files) is the same at dispatch and at collection.
+  model, no substitution, the rendered prompt as source prompt, delegate's
+  expected composition of it (effective prompt hash, prompt blocks, cwd and
+  worktree path), no research context, read-only mode and the
+  `dispatch_args_sha256` of the arguments the harness built; and when the
+  worker checkout's fingerprint (commit, tracked changes, instruction and
+  tool-configuration files) is the same at dispatch and at collection.
 - Paired arms (same seat, repeat, kind and chunk) must also share every
-  recorded condition (CLI version, effort, harness, resolved model, cwd, worker
-  checkout) and prompts that differ only by the frozen preamble; `score`
-  records every pair and why it is invalid.
+  recorded condition (CLI version, effort, harness, resolved model, cwd,
+  worktree, prompt blocks, worker checkout), the frozen frame, and prompts
+  that differ only by the frozen preamble; `score` records every pair and why
+  it is invalid.
 - Resume: accepted tasks are never re-run; a dispatched task with a pending
   marker is waited on, not re-dispatched; a task found without its marker is
   collected but not accepted (its dispatch-time checkout is unknown); failed or
   unaccepted tasks are re-dispatched only with `--retry-failed`. The complete
   plan (set, variants, templates, rules core, seats, repeats, kinds, item ids,
-  chunking, run tag, worker cwd, protocol shortfalls) is frozen in
+  chunking, run tag, worker cwd, delegate's frame, protocol shortfalls) is frozen in
   `manifest.json`; a resumed run with any different term is refused, and
   `score` and `report` read the plan from the manifest.
 
@@ -87,8 +104,10 @@ Review, from the answer's `corrected_text` (the evidence) and its
 - False alarms are counted in packaging-independent units: each protected span
   changed or accused (including inside paragraphs with errors), and each other
   correct word or insertion point changed or accused, collateral changes
-  included. An accusation is a logged correction's own token difference, so
-  quoted unchanged context is never accused. Corrections that cannot be
+  included. An accusation is the token difference a logged correction makes
+  when applied alone to the whole paragraph, so quoted unchanged context is
+  never accused and one edit accuses the same units however it is logged (for
+  example `safe → safer` and an insertion of `r` after `safe`). Corrections that cannot be
   anchored are unsupported accusations, one each. The rule's false-alarm rate
   is all false alarms per 100 protected spans.
 - Style suggestions are tallied separately (total, on protected spans, on
@@ -116,8 +135,10 @@ least `--judge-length-ratio` (default 0.8) of the longer text's words; pairs
 outside the bound, or missing a text, are recorded with their word counts as
 exclusions and reported. The word counts of every judged pair are stored with
 its verdict. The seed, chunking, length bound and rules core of the judges are
-frozen in the manifest at first use. Judge outputs are stored like any other
-task.
+frozen in the manifest by the first `score --judge`, before any pair is judged
+or excluded, even when every pair is excluded; a later call with different
+terms is refused. Judge tasks are attested against delegate's composition of
+their own prompts. Judge outputs are stored like any other task.
 
 ## Report and adoption rule
 

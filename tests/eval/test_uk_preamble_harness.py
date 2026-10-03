@@ -11,10 +11,17 @@ import pytest
 
 import scripts.eval.uk_preamble.__main__ as cli
 from scripts.eval.uk_preamble.common import SEATS, HarnessError, ResultsDir, judge_seats, read_json, sha256_text
-from scripts.eval.uk_preamble.dataset import load_set
-from scripts.eval.uk_preamble.dispatch import DispatchError, TaskOutcome
+from scripts.eval.uk_preamble.dataset import load_set, parse_variants
+from scripts.eval.uk_preamble.dispatch import DispatchError, TaskOutcome, composition_of
 from scripts.eval.uk_preamble.report import build_report, render_markdown
-from scripts.eval.uk_preamble.runner import Executor, candidate_slots, pair_checks, plan_judge_tasks, rules_block
+from scripts.eval.uk_preamble.runner import (
+    Executor,
+    candidate_slots,
+    pair_checks,
+    plan_candidate_tasks,
+    plan_judge_tasks,
+    rules_block,
+)
 from scripts.eval.uk_preamble.scoring import score_judgements
 
 PREAMBLE = "Ти — досвідчений редактор української мови."
@@ -27,7 +34,11 @@ def _inputs(prompt: str) -> list[dict[str, Any]]:
 
 
 class FakeDispatcher:
-    """Answers instantly: the preamble variant corrects every seeded error, the baseline none."""
+    """Answers instantly: the preamble variant corrects every seeded error, the baseline none.
+
+    Composes like delegate in a registered worktree: a rules core and worktree block lead
+    the prompt, and the worktree block's sparse note depends on paths the prompt names.
+    """
 
     def __init__(self, eval_set: dict[str, Any], cwd: Path) -> None:
         self.accepted = {item["id"]: item for item in eval_set["review"]}
@@ -43,6 +54,20 @@ class FakeDispatcher:
         self.foreign_prompt: set[str] = set()
         self.conditions_for: dict[str, dict[str, Any]] = {}
         self.writing_for: dict[tuple[bool, str], str] = {}  # (has preamble, item id) -> text
+        self.core = "[rules core]\n\n"
+
+    def _composed(self, prompt: str) -> str:
+        sparse = "" if "curriculum/" in prompt else "Sparse-checkout is active: curriculum.\n"
+        return f"{self.core}[delegate worktree] {self.cwd}\n{sparse}\n{prompt}"
+
+    def compose(self, prompt: str) -> dict[str, Any]:
+        return composition_of(
+            self._composed(prompt),
+            prompt,
+            cwd=str(self.cwd),
+            worktree_path=str(self.cwd),
+            blocks=["rules_core", "worktree"],
+        )
 
     def _review(self, prompt: str) -> dict[str, Any]:
         items = []
@@ -104,12 +129,12 @@ class FakeDispatcher:
         response = "I could not do it." if task_id in self.garbage_for else self._respond(kind, prompt)
         prompt_sha = sha256_text("another prompt" if task_id in self.foreign_prompt else prompt)
         conditions = {
-            "effective_prompt_sha256": prompt_sha,
-            "prompt_blocks": [],
+            "effective_prompt_sha256": sha256_text(self._composed(prompt)),
+            "prompt_blocks": ["rules_core", "worktree"],
             "dispatch_args_sha256": self.expected_args_sha256(task_id, seat, prompt_path),
             "cwd": str(self.cwd),
             "mode": "read-only",
-            "worktree_path": None,
+            "worktree_path": str(self.cwd),
             "research": None,
             "effort": seat.effort,
             "cli_version": "1.0",
@@ -156,7 +181,9 @@ class FakeSources:
         }
 
 
-def _make_env(tmp_path: Path, set_dict: dict[str, Any], monkeypatch: pytest.MonkeyPatch, *extra: str):
+def _make_env(
+    tmp_path: Path, outside_dir: Path, set_dict: dict[str, Any], monkeypatch: pytest.MonkeyPatch, *extra: str
+):
     set_path = tmp_path / "set.json"
     set_path.write_text(json.dumps(set_dict, ensure_ascii=False), encoding="utf-8")
     preamble = tmp_path / "adapted.md"
@@ -168,7 +195,7 @@ def _make_env(tmp_path: Path, set_dict: dict[str, Any], monkeypatch: pytest.Monk
     monkeypatch.setattr(cli, "make_dispatcher", lambda args, cwd: fake)
     monkeypatch.setattr(cli, "make_workspace", lambda cwd: lambda: dict(workspace))
     monkeypatch.setattr(cli, "make_sources", FakeSources)
-    results = tmp_path / "results"
+    results = outside_dir / "results"
     run_args = [
         "run",
         "--set",
@@ -200,13 +227,13 @@ def _make_env(tmp_path: Path, set_dict: dict[str, Any], monkeypatch: pytest.Monk
 
 
 @pytest.fixture
-def env(tmp_path: Path, mini_set_dict: dict[str, Any], monkeypatch: pytest.MonkeyPatch):
-    return _make_env(tmp_path, mini_set_dict, monkeypatch, "--repeats", "2", "--smoke")
+def env(tmp_path: Path, outside_dir: Path, mini_set_dict: dict[str, Any], monkeypatch: pytest.MonkeyPatch):
+    return _make_env(tmp_path, outside_dir, mini_set_dict, monkeypatch, "--repeats", "2", "--smoke")
 
 
 @pytest.fixture
-def full_env(tmp_path: Path, full_set_dict: dict[str, Any], monkeypatch: pytest.MonkeyPatch):
-    return _make_env(tmp_path, full_set_dict, monkeypatch, "--chunk-size", "30")
+def full_env(tmp_path: Path, outside_dir: Path, full_set_dict: dict[str, Any], monkeypatch: pytest.MonkeyPatch):
+    return _make_env(tmp_path, outside_dir, full_set_dict, monkeypatch, "--chunk-size", "30")
 
 
 def tid(env, code: str, label: str, repeat: int, kind: str, chunk: int = 0) -> str:
@@ -369,20 +396,20 @@ def test_results_inside_any_work_tree_or_symlinked_into_one_refused(env, tmp_pat
     assert not (other / "results").exists() and env["fake"].dispatched == []
 
 
-@pytest.mark.parametrize("tag", ["../../docs/evaluations/x", "Upper", "a" * 33, "-lead", "a/b"])
+@pytest.mark.parametrize("tag", ["../../docs/evaluations/x", "Upper", "a" * 33, "-lead", "a/b", "safe\n"])
 def test_unsafe_run_tag_refused_before_anything_is_written(env, tag, capsys):
     assert cli.main([*env["run"], f"--run-tag={tag}"]) == 2
     assert "--run-tag" in capsys.readouterr().err
     assert not env["results"].exists()
 
 
-def test_results_paths_stay_inside_the_results_directory(tmp_path: Path):
-    results = ResultsDir(tmp_path / "results")
+def test_results_paths_stay_inside_the_results_directory(outside_dir: Path):
+    results = ResultsDir(outside_dir / "results")
     assert results.path("raw", "uk9623-x.json") == results.root / "raw" / "uk9623-x.json"
-    for parts in (("..", "x"), ("raw", "../../x"), (".hidden",), ("raw/x",)):
+    for parts in (("..", "x"), ("raw", "../../x"), (".hidden",), ("raw/x",), ("x.json\n",)):
         with pytest.raises(HarnessError):
             results.path(*parts)
-    outside = tmp_path / "elsewhere"
+    outside = outside_dir / "elsewhere"
     outside.mkdir()
     (results.root).mkdir()
     (results.root / "raw").symlink_to(outside)
@@ -476,6 +503,8 @@ def test_report_refuses_scores_from_another_plan(env, capsys):
         ({"dispatch_args_sha256": "y" * 64}, "dispatch arguments"),
         ({"cwd": "/somewhere/else"}, "cwd"),
         ({"mode": "workspace-write"}, "mode"),
+        ({"worktree_path": None}, "worker worktree"),
+        ({"prompt_blocks": ["rules_core", "worktree", "research"]}, "prompt blocks"),
     ],
 )
 def test_task_with_different_effective_context_is_not_accepted(env, override, expected):
@@ -484,6 +513,47 @@ def test_task_with_different_effective_context_is_not_accepted(env, override, ex
     assert cli.main(env["run"]) == 1
     raw = read_json(env["results"] / "raw" / f"{victim}.json")
     assert raw["accepted"] is False and expected in raw["condition_problem"]
+
+
+def test_run_freezes_delegates_frame_and_accepts_wrapped_prompts(env):
+    """Round 2: delegate wraps a worktree dispatch in rules-core and worktree blocks; the harness expects that."""
+    assert cli.main(env["run"]) == 0
+    manifest = read_json(env["results"] / "manifest.json")
+    composition = manifest["frozen"]["composition"]
+    assert composition["prompt_blocks"] == ["rules_core", "worktree"]
+    assert composition["worktree_path"] == str(env["fake"].cwd)
+    raw = read_json(env["results"] / "raw" / f"{tid(env, 'sol', 'adapted-v2', 1, 'review')}.json")
+    assert raw["accepted"] is True and raw["conditions"]["effective_prompt_sha256"] != raw["prompt_sha256"]
+    assert raw["composition"]["effective_prompt_sha256"] == raw["conditions"]["effective_prompt_sha256"]
+
+
+def test_preamble_that_changes_delegates_frame_is_refused_before_dispatch(env, capsys):
+    env["preamble"].write_text(PREAMBLE + " Див. curriculum/a1.\n", encoding="utf-8")
+    assert cli.main(env["run"]) == 2
+    err = capsys.readouterr().err
+    assert "differently" in err and "prefix_sha256" in err and "more than the preamble" in err
+    assert env["fake"].dispatched == [] and not (env["results"] / "manifest.json").exists()
+
+
+def test_changed_composition_refuses_resume_and_mid_run_drift_is_not_dispatched(env, capsys):
+    assert cli.main(env["run"]) == 0
+    env["fake"].core = "[changed rules core]\n\n"
+    capsys.readouterr()
+    assert cli.main(env["run"]) == 2
+    assert "composition" in capsys.readouterr().err
+    # A frame that changes after the plan froze stops the dispatch (no paid run under other conditions).
+    plan = read_json(env["results"] / "manifest.json")["frozen"]
+    results = ResultsDir(env["results"])
+    fake = env["fake"]
+    executor = Executor(
+        fake, results, worker_cwd=fake.cwd, workspace=lambda: {"head": "commit-a"}, frame=plan["composition"]
+    )
+    variants = parse_variants(["none", f"adapted-v2={env['preamble']}"])
+    task = plan_candidate_tasks(load_set(env["set"]), variants, plan, rules_block())[0]
+    (results.root / "raw" / f"{task.task_id}.json").unlink()
+    del fake.records[task.task_id]  # never dispatched: the next run dispatches it afresh
+    summary = executor.run([task])
+    assert summary.not_run == [task.task_id] and len(fake.dispatched) == PLANNED
 
 
 def test_worker_checkout_change_during_a_task_is_not_accepted(env):
@@ -529,6 +599,11 @@ def test_pair_check_catches_checkout_and_prompt_differences(full_env):
     path.write_text(json.dumps({**raw, "workspace": {"head": "commit-b"}}), encoding="utf-8")
     problems = {p["variant_task"]: p["problem"] for p in pair_checks(results, plan, slots) if p["problem"]}
     assert problems == {victim: "arms ran under different conditions: worker checkout"}
+    # An arm framed differently by delegate (its record attests another prefix).
+    reframed = {**raw["composition"], "prefix_sha256": "f" * 64}
+    path.write_text(json.dumps({**raw, "composition": reframed}), encoding="utf-8")
+    problems = {p["variant_task"]: p["problem"] for p in pair_checks(results, plan, slots) if p["problem"]}
+    assert problems == {victim: "delegate framed the arms differently or not as frozen"}
     # A prompt that differs in more than the preamble (attested, so the stored file matches the record).
     path.write_text(json.dumps(raw), encoding="utf-8")
     prompt_file = full_env["results"] / "prompts" / f"{victim}.md"
@@ -572,6 +647,22 @@ def test_judge_ratio_exactly_at_the_bound_is_judged_and_terms_are_frozen(env, ca
     capsys.readouterr()
     assert _score(env, "--judge-length-ratio", "0.5") == 2
     assert "judge terms were frozen" in capsys.readouterr().err
+
+
+def test_judge_terms_freeze_on_the_first_judging_call_even_when_every_pair_is_excluded(env, capsys):
+    """Round 2: an all-excluded first ``score --judge`` froze nothing, so ratio 0.005 was accepted later."""
+    long_text = " ".join(["слово"] * 300)
+    for item_id in ("W1", "W2"):
+        env["fake"].writing_for[(True, item_id)] = long_text  # 300 words against 6: every pair excluded
+    assert cli.main(env["run"]) == 0
+    assert _score(env, "--judge") == 0
+    scores = read_json(env["results"] / "scores.json")
+    assert scores["judge"] == [] and len(scores["judge_exclusions"]) == 3 * 2 * 2
+    assert read_json(env["results"] / "manifest.json")["judge"]["length_ratio_min"] == 0.8
+    capsys.readouterr()
+    assert _score(env, "--judge", "--judge-length-ratio", "0.005") == 2
+    assert "judge terms were frozen" in capsys.readouterr().err
+    assert not any("judge" in p.name for p in (env["results"] / "prompts").iterdir())
 
 
 def test_judge_order_is_randomised_blind_and_mapped_back(env):

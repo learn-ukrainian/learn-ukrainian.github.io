@@ -12,13 +12,18 @@ import pytest
 
 import scripts.delegate as delegate
 from scripts.eval.uk_preamble import dispatch as dispatch_module
-from scripts.eval.uk_preamble.common import SEATS, sha256_text
+from scripts.eval.uk_preamble.common import SEATS, ResultsDir, read_json, sha256_text
 from scripts.eval.uk_preamble.dispatch import (
+    DelegateComposer,
     DelegateDispatcher,
     DispatchError,
+    TaskOutcome,
     condition_problems,
+    frame,
     workspace_fingerprint,
+    workspace_probe,
 )
+from scripts.eval.uk_preamble.runner import Executor, TaskSpec, composition_frame, raw_path, render, rules_block
 
 FAKE_DELEGATE = textwrap.dedent(
     """
@@ -120,30 +125,195 @@ def test_expected_args_hash_is_the_delegate_parser_hash_of_the_built_dispatch(fa
 
 
 def test_condition_problems_name_every_departure(tmp_path: Path):
-    cwd = tmp_path
+    expected = {
+        "effective_prompt_sha256": "p",
+        "prompt_blocks": ["rules_core", "worktree"],
+        "cwd": str(tmp_path),
+        "worktree_path": str(tmp_path),
+    }
     good = {
         "effective_prompt_sha256": "p",
-        "prompt_blocks": [],
+        "prompt_blocks": ["rules_core", "worktree"],
         "research": None,
         "mode": "read-only",
-        "worktree_path": None,
-        "cwd": str(cwd),
+        "worktree_path": str(tmp_path),
+        "cwd": str(tmp_path),
         "dispatch_args_sha256": "a",
     }
-    assert condition_problems(good, prompt_sha256="p", cwd=cwd, args_sha256="a") == []
+    assert condition_problems(good, expected=expected, args_sha256="a") == []
     bad = {
         **good,
         "effective_prompt_sha256": "q",
-        "prompt_blocks": ["rules_core", "research"],
+        "prompt_blocks": ["rules_core", "worktree", "research"],
         "research": {"pointer_ids": ["r"]},
         "mode": "danger",
-        "worktree_path": "/w",
+        "worktree_path": None,
         "cwd": "/elsewhere",
         "dispatch_args_sha256": "b",
     }
-    assert len(condition_problems(bad, prompt_sha256="p", cwd=cwd, args_sha256="a")) == 7
-    missing = condition_problems({}, prompt_sha256="p", cwd=cwd, args_sha256="a")
-    assert len(missing) == 5  # an old record without the fields is never accepted
+    assert len(condition_problems(bad, expected=expected, args_sha256="a")) == 7
+    missing = condition_problems({}, expected=expected, args_sha256="a")
+    assert len(missing) == 6  # an old record without the fields is never accepted
+    unwrapped = {**expected, "prompt_blocks": [], "worktree_path": None}
+    assert len(condition_problems(good, expected=unwrapped, args_sha256="a")) == 2
+
+
+# --------------------------------------------------------------------------- delegate's real composition
+
+
+def _git(repo: Path, *args: str) -> None:
+    base = ["git", "-C", str(repo), "-c", "user.email=t@example.invalid", "-c", "user.name=t"]
+    subprocess.run([*base, *args], check=True, timeout=60, capture_output=True)
+
+
+@pytest.fixture
+def linked_worktree(tmp_path: Path) -> Path:
+    """A registered linked worktree whose tree has the trees delegate's sparse profile excludes."""
+    main = tmp_path / "main"
+    for rel in (
+        "scripts/a.py",
+        "curriculum/l2-uk-en/x.md",
+        "wiki/y.md",
+        "data/projects/p.txt",
+        "data/other/o.txt",
+        "registry/projects/r.txt",
+        "registry/lexicon/l.txt",
+    ):
+        (main / rel).parent.mkdir(parents=True, exist_ok=True)
+        (main / rel).write_text("x\n", encoding="utf-8")
+    _git(main.parent, "init", "-q", str(main))
+    _git(main, "add", "-A")
+    _git(main, "commit", "-q", "-m", "init")
+    linked = tmp_path / "linked"
+    _git(main, "worktree", "add", "-q", "-b", "eval", str(linked))
+    return linked.resolve()
+
+
+def _delegate_record(cwd: Path, prompt: str, args_sha256: str) -> dict[str, object]:
+    """The task-record conditions delegate's read-only ``--cwd`` dispatch writes, built step by step as
+    ``cmd_dispatch`` does: cwd validation, the registered-worktree lookup, the sparse checkout really applied,
+    then ``_compose_dispatch_prompt`` (no provider is called)."""
+    validated, error = delegate._validate_caller_path("--cwd", str(cwd), resolve=delegate._resolve_cwd_path)
+    assert error is None
+    worktree = delegate._resolve_verified_worktree_path(validated)
+    sparse = None
+    if worktree is not None:
+        includes = delegate._infer_sparse_include(None, owned_paths=None, prompt_text=prompt)
+        sparse = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=False, sparse_include=includes)
+    blocks: list[str] = []
+    composed = delegate._compose_dispatch_prompt(
+        prompt,
+        worktree_path=worktree,
+        mode="read-only",
+        sparse_telemetry=sparse,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat="core",
+        blocks=blocks,
+    )
+    return {
+        "effective_prompt_sha256": sha256_text(composed),
+        "prompt_blocks": blocks,
+        "cwd": str(worktree or validated),
+        "worktree_path": str(worktree) if worktree else None,
+        "mode": "read-only",
+        "dispatch_args_sha256": args_sha256,
+        "worktree_sparse": sparse,
+    }
+
+
+PROMPT = render("# Task: proofreading\nЗавдання.\n", rules_block())
+
+
+def test_reviewer_probe_real_worktree_dispatch_is_wrapped_and_the_harness_expects_it(linked_worktree: Path):
+    """Round 2 probe: a real ``--cwd`` worktree dispatch gave source != effective, blocks rules_core+worktree."""
+    expected = DelegateComposer(delegate, linked_worktree).compose(PROMPT)
+    assert expected["effective_prompt_sha256"] != sha256_text(PROMPT)
+    assert expected["prompt_blocks"] == ["rules_core", "worktree"]
+    assert expected["worktree_path"] == str(linked_worktree) and expected["cwd"] == str(linked_worktree)
+    record = _delegate_record(linked_worktree, PROMPT, "a")
+    assert record["worktree_sparse"]["excluded"] == ["curriculum", "data/projects", "registry/projects", "wiki"]
+    assert condition_problems(record, expected=expected, args_sha256="a") == []
+    # A prompt naming an excluded tree is framed differently (its sparse note changes): never paired.
+    named = render("# Task: proofreading\nДив. curriculum/l2-uk-en.\n", rules_block())
+    assert frame(DelegateComposer(delegate, linked_worktree).compose(named)) != frame(expected)
+    assert condition_problems(_delegate_record(linked_worktree, named, "a"), expected=expected, args_sha256="a")
+
+
+def test_real_composition_outside_a_worktree_adds_no_block(tmp_path: Path):
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    expected = DelegateComposer(delegate, plain).compose(PROMPT)
+    assert expected["prompt_blocks"] == [] and expected["worktree_path"] is None
+    assert expected["effective_prompt_sha256"] == sha256_text(PROMPT)  # the rendered core is not repeated
+    assert condition_problems(_delegate_record(plain, PROMPT, "a"), expected=expected, args_sha256="a") == []
+    bare = DelegateComposer(delegate, plain).compose("Завдання без ядра.\n")
+    assert bare["prompt_blocks"] == ["rules_core"]
+
+
+class SimulatedDelegate(DelegateDispatcher):
+    """DelegateDispatcher whose dispatch writes the record delegate's real composition path produces."""
+
+    def __init__(self, cwd: Path) -> None:
+        super().__init__(python=sys.executable, delegate=Path(delegate.__file__), cwd=cwd)
+        self.outcomes: dict[str, TaskOutcome] = {}
+
+    def known(self, task_id: str) -> bool:
+        return task_id in self.outcomes
+
+    def dispatch(self, task_id, seat, kind, prompt_path: Path, *, force_new: bool) -> str:
+        prompt = prompt_path.read_text(encoding="utf-8")
+        record = _delegate_record(self.cwd, prompt, self.expected_args_sha256(task_id, seat, prompt_path))
+        response = json.dumps({"items": [{"id": "W1", "text": "Текст."}]}, ensure_ascii=False)
+        conditions = {key: record.get(key) for key in dispatch_module.CONDITION_FIELDS}
+        self.outcomes[task_id] = TaskOutcome(
+            task_id,
+            "done",
+            seat.agent,
+            seat.model,
+            None,
+            response,
+            sha256_text(response),
+            "n",
+            sha256_text(prompt),
+            conditions=conditions,
+        )
+        return "n"
+
+    def wait(self, task_id: str, run_nonce: str | None) -> TaskOutcome:
+        return self.outcomes[task_id]
+
+
+def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: Path, outside_dir: Path):
+    dispatcher = SimulatedDelegate(linked_worktree)
+    seat = SEATS["gpt-6.1-sol"]
+    tasks = [
+        TaskSpec(f"uk9623-t-sol-{label}-r1-writing-00", seat, "writing", label, 1, ("W1",), prompt)
+        for label, prompt in (
+            ("none", PROMPT),
+            ("adapted-v2", render("Преамбула.\n\n" + PROMPT[len(rules_block()) + 2 :], rules_block())),
+        )
+    ]
+    plan_frame = composition_frame(dispatcher, tasks)
+    assert plan_frame["prompt_blocks"] == ["rules_core", "worktree"]
+    results = ResultsDir(outside_dir / "results")
+    executor = Executor(
+        dispatcher,
+        results,
+        worker_cwd=linked_worktree,
+        workspace=workspace_probe(linked_worktree),
+        frame=plan_frame,
+        max_parallel=1,  # delegate serialises dispatches into one worktree with its worktree lock
+        spawn_interval=0,
+    )
+    summary = executor.run(tasks)
+    assert summary.accepted == 2 and summary.complete
+    for task in tasks:
+        raw = read_json(raw_path(results, task.task_id))
+        assert raw["accepted"] is True and raw["condition_problem"] is None
+        assert frame(raw["composition"]) == plan_frame
 
 
 def test_workspace_fingerprint_tracks_commit_changes_and_instruction_files(tmp_path: Path):

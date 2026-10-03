@@ -2,9 +2,15 @@
 
 from __future__ import annotations
 
+import shutil
+import tempfile
+from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 
 import pytest
+
+from scripts.eval.uk_preamble.common import enclosing_work_tree
 
 
 def _span(text: str, fragment: str, ident: str, occurrence: int = 0, **extra: Any) -> dict[str, Any]:
@@ -116,3 +122,32 @@ def mini_set_dict() -> dict[str, Any]:
 @pytest.fixture
 def full_set_dict() -> dict[str, Any]:
     return build_full_set()
+
+
+@pytest.fixture
+def outside_dir(tmp_path: Path) -> Iterator[Path]:
+    """A fresh directory outside every Git work tree (results directories are refused inside one).
+
+    ``tmp_path`` when it qualifies; otherwise a new directory under the first
+    system temporary root that does. Skips, naming the reason, when none does.
+    """
+    if enclosing_work_tree(tmp_path.resolve()) is None:
+        yield tmp_path
+        return
+    for root in (tempfile.gettempdir(), "/tmp", "/var/tmp", "/dev/shm"):
+        base = Path(root).resolve()
+        if not base.is_dir() or enclosing_work_tree(base) is not None:
+            continue
+        try:
+            made = Path(tempfile.mkdtemp(prefix="uk9623-test-", dir=base)).resolve()
+        except OSError:
+            continue
+        try:
+            yield made
+        finally:
+            shutil.rmtree(made, ignore_errors=True)
+        return
+    pytest.skip(
+        f"no temporary directory outside a Git work tree: {tmp_path} is inside "
+        f"{enclosing_work_tree(tmp_path.resolve())} and no system temporary root qualifies"
+    )

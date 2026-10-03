@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-HARNESS_VERSION = "uk-preamble-harness/2"
+HARNESS_VERSION = "uk-preamble-harness/3"
 BASELINE_VARIANT = "none"
 # Pre-registered adoption order (Protocol v2, #9623): adapted-v2 is the candidate, original the alternative.
 CANDIDATE_ORDER = ("adapted-v2", "original")
@@ -122,13 +122,14 @@ def read_json(path: Path) -> Any:
 
 # --------------------------------------------------------------------------- private results directory
 
-_RUN_TAG = re.compile(r"^[a-z0-9][a-z0-9-]{0,31}$")
-_SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$")
+# Matched whole (``fullmatch``): ``$`` would also accept a trailing newline.
+_RUN_TAG = re.compile(r"[a-z0-9][a-z0-9-]{0,31}")
+_SAFE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,199}")
 
 
 def validate_run_tag(tag: str) -> str:
     """A run tag enters task ids and file names: lowercase letters, digits and '-', at most 32 characters."""
-    if not _RUN_TAG.match(tag):
+    if not _RUN_TAG.fullmatch(tag):
         raise HarnessError(f"--run-tag {tag!r}: expected lowercase letters, digits and '-' (1-32, alphanumeric first)")
     return tag
 
@@ -162,7 +163,7 @@ class ResultsDir:
     def path(self, *parts: str) -> Path:
         """``root/part/...`` after checking each part is a plain file name and the result stays inside root."""
         for part in parts:
-            if not _SAFE_NAME.match(part):
+            if not _SAFE_NAME.fullmatch(part):
                 raise HarnessError(f"unsafe results file name {part!r}")
         candidate = self.root.joinpath(*parts)
         resolved = candidate.resolve()

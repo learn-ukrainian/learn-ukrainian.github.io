@@ -3,15 +3,18 @@
 Results directory layout (private, outside every Git work tree, given on the command line)::
 
     manifest.json              the frozen plan (set, variants, templates, rules core, seats,
-                               repeats, kinds, item ids, chunking, run tag, worker cwd, protocol
-                               shortfalls) and, once judging starts, the frozen judge terms
+                               repeats, kinds, item ids, chunking, run tag, worker cwd, delegate's
+                               composition frame, protocol shortfalls) and, from the first
+                               ``score --judge``, the frozen judge terms
     prompts/<task_id>.md       exact prompt the worker received (rules core included)
     raw/<task_id>.json         attributed outcome, executed conditions and raw response
-    raw/<task_id>.pending.json dispatched, outcome not collected yet (holds the dispatch-time workspace)
+    raw/<task_id>.pending.json dispatched, outcome not collected yet (holds the dispatch-time
+                               workspace and the expected composition)
 
 A task is accepted only when its record attests the planned seat, the rendered
-prompt as the effective prompt, and the frozen conditions (see ``dispatch.py``),
-and the worker checkout was the same at dispatch and at collection.
+prompt, delegate's expected composition of it (effective prompt hash, prompt
+blocks, cwd, worktree; see ``dispatch.py``) and the other frozen conditions, and
+the worker checkout was the same at dispatch and at collection.
 """
 
 from __future__ import annotations
@@ -47,7 +50,7 @@ from .common import (
     write_private_text,
 )
 from .dataset import EvalSet, Variant, protocol_shortfalls
-from .dispatch import PAIRED_FIELDS, Dispatcher, DispatchError, TaskOutcome, condition_problems
+from .dispatch import PAIRED_FIELDS, Dispatcher, DispatchError, TaskOutcome, condition_problems, frame
 from .prompts import build_prompt, review_payload, template_fingerprint, validate_response, writing_payload
 
 KINDS = PROTOCOL_KINDS
@@ -139,7 +142,11 @@ def frozen_plan(
     worker_cwd: Path,
     block: str,
 ) -> dict[str, Any]:
-    """Every term that defines the run and its denominator; frozen in the manifest, read by score and report."""
+    """Every term that defines the run and its denominator; frozen in the manifest, read by score and report.
+
+    ``composition`` (delegate's frame around the prompts, see ``composition_frame``) is added once the
+    candidate prompts are rendered.
+    """
     return {
         "harness": HARNESS_VERSION,
         "set_id": eval_set.set_id,
@@ -185,6 +192,35 @@ def load_manifest(results: ResultsDir) -> dict[str, Any]:
     if manifest.get("frozen", {}).get("harness") != HARNESS_VERSION:
         raise HarnessError(f"{path} was written by another harness version; start a new results directory")
     return manifest
+
+
+def composition_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec]) -> dict[str, Any]:
+    """The frame delegate puts around every candidate prompt; refused unless it is the same for all of them.
+
+    Delegate's worktree block depends on paths the prompt names (its sparse-checkout
+    note), so a preamble or item naming such a path would frame its arm differently
+    and the arms would differ in more than the preamble.
+    """
+    seen: dict[str, dict[str, Any]] = {}
+    first: tuple[str, dict[str, Any]] | None = None
+    for task in tasks:
+        if task.prompt_sha256 not in seen:
+            try:
+                seen[task.prompt_sha256] = frame(dispatcher.compose(task.prompt))
+            except DispatchError as exc:
+                raise HarnessError(f"{task.task_id}: {exc}") from exc
+        current = seen[task.prompt_sha256]
+        if first is None:
+            first = (task.task_id, current)
+        elif current != first[1]:
+            fields = ", ".join(sorted(key for key in current if current[key] != first[1][key]))
+            raise HarnessError(
+                f"delegate would frame {task.task_id} differently from {first[0]} ({fields}); "
+                "the arms would differ in more than the preamble"
+            )
+    if first is None:
+        raise HarnessError("the plan has no candidate tasks")
+    return first[1]
 
 
 def candidate_slots(plan: dict[str, Any]) -> list[Slot]:
@@ -261,6 +297,7 @@ class Executor:
         *,
         worker_cwd: Path,
         workspace: Callable[[], dict[str, Any]],
+        frame: dict[str, Any] | None = None,
         max_parallel: int = 3,
         spawn_interval: float = 10.0,
         retry_failed: bool = False,
@@ -271,6 +308,7 @@ class Executor:
         self.results = results
         self.worker_cwd = worker_cwd
         self.workspace = workspace
+        self.frame = frame
         self.max_parallel = max(1, max_parallel)
         self.spawn_interval = spawn_interval
         self.retry_failed = retry_failed
@@ -289,16 +327,36 @@ class Executor:
                     self.sleep(wait)
             self._last_spawn = time.monotonic()
 
-    def _record(self, task: TaskSpec, outcome: TaskOutcome, workspace: dict[str, Any] | None) -> dict[str, Any]:
+    def _expected(self, task: TaskSpec) -> dict[str, Any]:
+        """Delegate's composition of the task's prompt; refused when it departs from the frozen frame."""
+        expected = self.dispatcher.compose(task.prompt)
+        if self.frame is not None and frame(expected) != self.frame:
+            fields = ", ".join(sorted(key for key in self.frame if self.frame[key] != expected.get(key)))
+            raise DispatchError(f"delegate would frame the prompt differently from the frozen plan ({fields})")
+        return expected
+
+    def _record(
+        self,
+        task: TaskSpec,
+        outcome: TaskOutcome,
+        workspace: dict[str, Any] | None,
+        expected: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         workspace_after = self.workspace()
-        problems = condition_problems(
-            outcome.conditions,
-            prompt_sha256=task.prompt_sha256,
-            cwd=self.worker_cwd,
-            args_sha256=self.dispatcher.expected_args_sha256(
-                task.task_id, task.seat, prompt_path(self.results, task.task_id)
-            ),
-        )
+        problems = []
+        if expected is None:  # no pending marker: recompute (the task is refused below anyway)
+            try:
+                expected = self._expected(task)
+            except DispatchError as exc:
+                problems.append(str(exc))
+        if expected is not None:
+            problems += condition_problems(
+                outcome.conditions,
+                expected=expected,
+                args_sha256=self.dispatcher.expected_args_sha256(
+                    task.task_id, task.seat, prompt_path(self.results, task.task_id)
+                ),
+            )
         if workspace is None:
             problems.append("worker checkout at dispatch is unknown (no pending marker)")
         elif workspace != workspace_after:
@@ -318,6 +376,7 @@ class Executor:
             "model": outcome.model,
             "substitution": outcome.substitution,
             "conditions": outcome.conditions,
+            "composition": expected,
             "workspace": workspace,
             "workspace_after": workspace_after,
             "identity_problem": identity,
@@ -347,16 +406,18 @@ class Executor:
         pending = _pending_path(self.results, task.task_id)
         nonce: str | None = None
         workspace: dict[str, Any] | None = None
+        expected: dict[str, Any] | None = None
         try:
             if pending.is_file() and existing is None:
                 stored = read_json(pending)
                 if stored.get("prompt_sha256") != task.prompt_sha256:
                     raise HarnessError(f"{task.task_id}: pending prompt hash differs from the re-planned prompt")
-                nonce, workspace = stored.get("run_nonce"), stored.get("workspace")
+                nonce, workspace, expected = stored.get("run_nonce"), stored.get("workspace"), stored.get("expected")
                 self.log(f"resume-wait {task.task_id}")
             elif existing is None and self.dispatcher.known(task.task_id):
                 self.log(f"resume-wait {task.task_id} (record exists, no pending marker)")
             else:
+                expected = self._expected(task)
                 path = prompt_path(self.results, task.task_id)
                 write_private_text(path, task.prompt)
                 self._stagger()
@@ -365,7 +426,13 @@ class Executor:
                     task.task_id, task.seat, task.kind, path, force_new=existing is not None
                 )
                 write_private_json(
-                    pending, {"run_nonce": nonce, "prompt_sha256": task.prompt_sha256, "workspace": workspace}
+                    pending,
+                    {
+                        "run_nonce": nonce,
+                        "prompt_sha256": task.prompt_sha256,
+                        "workspace": workspace,
+                        "expected": expected,
+                    },
                 )
                 self.log(f"dispatched {task.task_id}")
             outcome = self.dispatcher.wait(task.task_id, nonce)
@@ -374,7 +441,7 @@ class Executor:
             with self._summary_lock:
                 summary.not_run.append(task.task_id)
             return
-        raw = self._record(task, outcome, workspace)
+        raw = self._record(task, outcome, workspace, expected)
         with self._summary_lock:
             if raw["accepted"]:
                 summary.accepted += 1
@@ -392,7 +459,7 @@ class Executor:
     def preflight(self, tasks: Sequence[TaskSpec]) -> RunSummary:
         """Write prompts and validate each dispatch with the delegate's dry run; nothing is spawned.
 
-        The dry run leaves a terminal ``dry_run`` record, so it uses a distinct ``-preflight``
+        Each prompt's composition is computed and checked against the frozen frame first. The dry run leaves a terminal ``dry_run`` record, so it uses a distinct ``-preflight``
         task id that never collides with the real task the next run resumes.
         """
         summary = RunSummary()
@@ -400,6 +467,7 @@ class Executor:
             path = prompt_path(self.results, task.task_id)
             write_private_text(path, task.prompt)
             try:
+                self._expected(task)
                 self.dispatcher.preflight(f"{task.task_id}-preflight", task.seat, task.kind, path)
                 summary.preflighted += 1
             except DispatchError as exc:
@@ -442,6 +510,9 @@ def pair_problem(
         differing.append("worker checkout")
     if differing:
         return "arms ran under different conditions: " + ", ".join(differing)
+    frames = [frame(raw.get("composition") or {}) for raw in (base, cand)]
+    if frames[0] != frames[1] or frames[0] != plan.get("composition"):
+        return "delegate framed the arms differently or not as frozen"
     base_prompt, cand_prompt = _stored_prompt(results, base), _stored_prompt(results, cand)
     if base_prompt is None or cand_prompt is None:
         return "stored prompt missing or not the attested prompt"

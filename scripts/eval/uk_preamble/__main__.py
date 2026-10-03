@@ -29,6 +29,7 @@ from .runner import (
     KINDS,
     Executor,
     candidate_slots,
+    composition_frame,
     ensure_manifest,
     frozen_plan,
     load_manifest,
@@ -98,12 +99,19 @@ def make_sources() -> SourcesClient:
     return LocalSources()
 
 
-def make_executor(args: argparse.Namespace, results: ResultsDir, worker_cwd: Path) -> Executor:
+def make_executor(
+    args: argparse.Namespace,
+    results: ResultsDir,
+    worker_cwd: Path,
+    dispatcher: Dispatcher | None = None,
+    frame: dict[str, Any] | None = None,
+) -> Executor:
     return Executor(
-        make_dispatcher(args, worker_cwd),
+        dispatcher or make_dispatcher(args, worker_cwd),
         results,
         worker_cwd=worker_cwd,
         workspace=make_workspace(worker_cwd),
+        frame=frame,
         max_parallel=args.max_parallel,
         spawn_interval=args.spawn_interval,
         retry_failed=args.retry_failed,
@@ -297,9 +305,11 @@ def _cmd_run(args: argparse.Namespace) -> int:
     )
     if plan["protocol_shortfalls"] and not args.smoke:
         raise HarnessError("plan below Protocol v2: " + "; ".join(plan["protocol_shortfalls"]) + " (--smoke to test)")
-    ensure_manifest(results, plan, args.set.resolve())
     tasks = plan_candidate_tasks(eval_set, variants, plan, block)
-    executor = make_executor(args, results, worker_cwd)
+    dispatcher = make_dispatcher(args, worker_cwd)
+    plan["composition"] = composition_frame(dispatcher, tasks)
+    ensure_manifest(results, plan, args.set.resolve())
+    executor = make_executor(args, results, worker_cwd, dispatcher, frame=plan["composition"])
     if args.dry_run:
         summary = executor.preflight(tasks)
         print(json.dumps({"planned": len(tasks), "preflighted": summary.preflighted, "refused": summary.not_run}))
@@ -356,11 +366,13 @@ def _cmd_score(args: argparse.Namespace) -> int:
     if "writing" in plan["kinds"] and (args.judge or terms is not None):
         block = rules_block()
         terms = _judge_terms(args, manifest, block)
+        if args.judge and manifest.get("judge") is None:
+            # Frozen on the first judging call, before exclusions are known: the bound must not
+            # be re-chosen after seeing which pairs it excludes.
+            manifest["judge"] = terms
+            write_private_json(results.path("manifest.json"), manifest)
         judge_tasks, exclusions = plan_judge_tasks(eval_set, results, plan, terms, block)
         if args.judge and judge_tasks:
-            if manifest.get("judge") is None:
-                manifest["judge"] = terms
-                write_private_json(results.path("manifest.json"), manifest)
             summary = make_executor(args, results, Path(plan["worker_cwd"])).run(judge_tasks)
             exit_code = 0 if summary.complete else 1
     sources = make_sources()

@@ -4,16 +4,20 @@ Going through the delegate keeps every answer attributable: the task record
 holds the launched agent and model, any substitution, and the result digest.
 Tests substitute a fake that implements the same ``Dispatcher`` protocol.
 
-Executed conditions. Only the preamble may differ between paired arms, so the
-worker must receive exactly the prompt the harness rendered. The harness
-renders the rules core itself and dispatches read-only with a fixed ``--cwd``,
-``--rules-seat core`` and no ``--worktree``, ``--lifecycle-file`` or
-``--research-*`` flags, so delegate appends no block (the pattern of
-``scripts/review/seeds/adjudicate.py``). Research pointers are deliberately
-not requested: they are resolved per dispatch from a changing registry and
-would add context outside the hashed prompt. The task record then attests the
-effective prompt hash, the appended blocks (none), cwd, mode and the hash of
-the parsed dispatch arguments; ``condition_problems`` checks them.
+Executed conditions. Only the preamble may differ between paired arms. The
+harness renders the rules core into every prompt and dispatches read-only
+with a fixed ``--cwd``, ``--rules-seat core`` and no ``--worktree``,
+``--lifecycle-file`` or ``--research-*`` flags (research pointers are resolved
+per dispatch from a changing registry, so they are never requested). Delegate
+still wraps the prompt: when ``--cwd`` lies in a registered worktree it adds
+its worktree block (whose sparse-checkout note depends on paths the prompt
+names) and then the rules core again in front of it. ``DelegateComposer``
+computes that composition with delegate's own functions, without spawning
+anything, so every task has an expected effective prompt hash, prompt
+blocks, cwd and worktree path. ``condition_problems`` accepts a task record
+only when it matches; the run freezes the frame around the prompt (see
+``composition_frame``) and refuses a plan whose arms would be framed
+differently.
 """
 
 from __future__ import annotations
@@ -25,6 +29,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
+
+from scripts.lib.rules_core import RulesCoreError
 
 from .common import Seat, sha256_bytes, sha256_text
 
@@ -62,7 +68,9 @@ CONDITION_FIELDS = (
     "resolved_model",
     "output_schema_sha256",
 )
-# Of those, the ones paired arms must share (the rest are per task by construction).
+# The parts of a composition that do not depend on the prompt: equal across a frozen plan's tasks.
+FRAME_FIELDS = ("cwd", "worktree_path", "prompt_blocks", "prefix_sha256", "suffix_sha256")
+# Of the condition fields, the ones paired arms must share (the rest are per task by construction).
 PAIRED_FIELDS = tuple(f for f in CONDITION_FIELDS if f not in {"effective_prompt_sha256", "dispatch_args_sha256"})
 # Instruction and tool-configuration files a seat reads from its working directory.
 WORKSPACE_FILES = (
@@ -105,27 +113,115 @@ class TaskOutcome:
         return None
 
 
-def condition_problems(conditions: dict[str, Any], *, prompt_sha256: str, cwd: Path, args_sha256: str) -> list[str]:
-    """Why the recorded conditions are not the planned ones: the worker must have received exactly the prompt."""
+class DispatchError(Exception):
+    """The dispatcher refused or failed to start a task."""
+
+
+def frame(composition: dict[str, Any]) -> dict[str, Any]:
+    """The prompt-independent part of an expected composition."""
+    return {key: composition.get(key) for key in FRAME_FIELDS}
+
+
+def _same_path(recorded: Any, expected: str | None) -> bool:
+    if expected is None or recorded is None:
+        return recorded is None and expected is None
+    return isinstance(recorded, str) and Path(recorded).resolve() == Path(expected).resolve()
+
+
+def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], args_sha256: str) -> list[str]:
+    """Why the recorded conditions are not the expected composition of the rendered prompt (empty when they are)."""
     problems = []
-    if conditions.get("effective_prompt_sha256") != prompt_sha256:
+    if conditions.get("effective_prompt_sha256") != expected["effective_prompt_sha256"]:
         problems.append(
-            f"worker received effective prompt {conditions.get('effective_prompt_sha256')!r}, not the rendered prompt"
+            f"worker received effective prompt {conditions.get('effective_prompt_sha256')!r}, "
+            "not delegate's composition of the rendered prompt"
         )
-    if conditions.get("prompt_blocks") != []:
-        problems.append(f"delegate appended prompt blocks {conditions.get('prompt_blocks')!r}")
+    if conditions.get("prompt_blocks") != list(expected["prompt_blocks"]):
+        problems.append(
+            f"delegate appended prompt blocks {conditions.get('prompt_blocks')!r}, "
+            f"not the expected {list(expected['prompt_blocks'])!r}"
+        )
     if conditions.get("research") is not None:
         problems.append("research context was injected")
     if conditions.get("mode") != READ_ONLY:
         problems.append(f"mode {conditions.get('mode')!r} is not {READ_ONLY!r}")
-    if conditions.get("worktree_path") is not None:
-        problems.append(f"worker ran in worktree {conditions.get('worktree_path')!r}")
-    recorded_cwd = conditions.get("cwd")
-    if not isinstance(recorded_cwd, str) or Path(recorded_cwd).resolve() != cwd.resolve():
-        problems.append(f"worker cwd {recorded_cwd!r} is not the frozen {str(cwd)!r}")
+    if not _same_path(conditions.get("worktree_path"), expected["worktree_path"]):
+        problems.append(
+            f"worker worktree {conditions.get('worktree_path')!r} is not the expected {expected['worktree_path']!r}"
+        )
+    if not _same_path(conditions.get("cwd"), expected["cwd"]):
+        problems.append(f"worker cwd {conditions.get('cwd')!r} is not the expected {expected['cwd']!r}")
     if conditions.get("dispatch_args_sha256") != args_sha256:
         problems.append("dispatch arguments differ from the ones the harness built")
     return problems
+
+
+def composition_of(composed: str, prompt: str, *, cwd: str, worktree_path: str | None, blocks: list[str]) -> dict:
+    """An expected composition: the record fields delegate would write and the frame around ``prompt``."""
+    at = composed.find(prompt)
+    if at < 0:
+        raise DispatchError("delegate's composition does not contain the rendered prompt")
+    return {
+        "cwd": cwd,
+        "worktree_path": worktree_path,
+        "prompt_blocks": list(blocks),
+        "prefix_sha256": sha256_text(composed[:at]),
+        "suffix_sha256": sha256_text(composed[at + len(prompt) :]),
+        "effective_prompt_sha256": sha256_text(composed),
+    }
+
+
+class DelegateComposer:
+    """Delegate's composition of a read-only ``--cwd`` dispatch, computed in-process without spawning anything.
+
+    Mirrors ``cmd_dispatch`` for this harness's flags: the cwd is validated and
+    resolved as delegate does; a cwd inside a registered worktree gets the
+    worktree block, with the sparse-checkout exclusions delegate would apply
+    there (computed from ``git ls-tree`` without changing the checkout); then
+    ``_compose_dispatch_prompt`` builds the final prompt. A record that departs
+    from this is refused, so any drift fails closed.
+    """
+
+    def __init__(self, delegate: Any, cwd: Path, rules_seat: str = RULES_SEAT) -> None:
+        validated, error = delegate._validate_caller_path("--cwd", str(cwd), resolve=delegate._resolve_cwd_path)
+        if validated is None:
+            raise DispatchError(error or f"--cwd {cwd} refused")
+        self.delegate = delegate
+        self.rules_seat = rules_seat
+        self.worktree: Path | None = delegate._resolve_verified_worktree_path(validated)
+        self.cwd = str(self.worktree or validated)
+
+    def _sparse(self, prompt: str) -> dict[str, Any]:
+        """The sparse-checkout telemetry delegate's worktree block reads (exclusions only; nothing applied)."""
+        d, worktree = self.delegate, self.worktree
+        includes = d._infer_sparse_include(None, owned_paths=None, prompt_text=prompt)
+        exclude = set(d._DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(d._normalize_sparse_include(includes))
+        top = d._list_worktree_top_dirs(worktree)
+        data = d._list_worktree_dirs(worktree, "data/") if "data" in top else []
+        registry = d._list_worktree_dirs(worktree, "registry/") if "registry" in top else []
+        _, excluded = d._dispatch_sparse_cone_dirs(top, data, exclude, registry)
+        return {"full_checkout": False, "excluded": excluded}
+
+    def compose(self, prompt: str) -> dict[str, Any]:
+        d = self.delegate
+        blocks: list[str] = []
+        try:
+            composed = d._compose_dispatch_prompt(
+                prompt,
+                worktree_path=self.worktree,
+                mode=READ_ONLY,
+                sparse_telemetry=self._sparse(prompt) if self.worktree is not None else None,
+                delegate_commits=False,  # only read by write modes
+                research_block="",
+                advisory_block="",
+                advisory_block_kind=None,
+                rules_seat=self.rules_seat,
+                blocks=blocks,
+            )
+        except (OSError, RuntimeError, ValueError, RulesCoreError) as exc:
+            raise DispatchError(f"cannot compute delegate's composition: {exc}") from exc
+        worktree = str(self.worktree) if self.worktree is not None else None
+        return composition_of(composed, prompt, cwd=self.cwd, worktree_path=worktree, blocks=blocks)
 
 
 def _git(cwd: Path, *args: str) -> str | None:
@@ -155,10 +251,6 @@ def workspace_probe(cwd: Path) -> Callable[[], dict[str, Any]]:
     return lambda: workspace_fingerprint(cwd)
 
 
-class DispatchError(Exception):
-    """The dispatcher refused or failed to start a task."""
-
-
 class Dispatcher(Protocol):
     def known(self, task_id: str) -> bool:
         """True when a task record with this id already exists."""
@@ -168,6 +260,9 @@ class Dispatcher(Protocol):
 
     def expected_args_sha256(self, task_id: str, seat: Seat, prompt_path: Path) -> str:
         """The ``dispatch_args_sha256`` the task record must carry for the dispatch this dispatcher builds."""
+
+    def compose(self, prompt: str) -> dict[str, Any]:
+        """The expected composition of ``prompt`` (see ``composition_of``); raises ``DispatchError``."""
 
     def preflight(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> None:
         """Validate a dispatch without spawning a worker."""
@@ -192,6 +287,7 @@ class DelegateDispatcher:
         self.cwd = cwd
         self.hard_timeout = hard_timeout
         self.wait_timeout = hard_timeout + WAIT_MARGIN
+        self._composer: DelegateComposer | None = None
 
     def _run(self, *args: str, timeout: int = CONTROL_TIMEOUT) -> subprocess.CompletedProcess[str]:
         """Run one delegate subcommand; a timeout is a DispatchError (pending markers survive for resume)."""
@@ -217,6 +313,11 @@ class DelegateDispatcher:
         delegate = _delegate_module(self.delegate)
         parsed = delegate.build_parser().parse_args(self._dispatch_args(task_id, seat, prompt_path))
         return delegate.dispatch_args_sha256(parsed)
+
+    def compose(self, prompt: str) -> dict[str, Any]:
+        if self._composer is None:
+            self._composer = DelegateComposer(_delegate_module(self.delegate), self.cwd)
+        return self._composer.compose(prompt)
 
     def known(self, task_id: str) -> bool:
         return self._run("status", task_id).returncode == 0

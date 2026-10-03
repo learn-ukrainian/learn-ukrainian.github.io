@@ -19,9 +19,10 @@ evidence of what the model changed; the ``corrections`` list is what it claims.
   change counts like a logged one.
 - False alarms are counted in units that do not depend on packaging: each
   protected span that is changed or accused, and each other correct word
-  (or insertion point) that is changed or accused. An accusation is a logged
-  correction's own token-level difference, so quoted context is never
-  accused. Corrections that cannot be anchored are unsupported accusations,
+  (or insertion point) that is changed or accused. An accusation is the
+  token-level difference a logged correction makes when applied alone to the
+  whole paragraph, so quoted context is never accused and every way of
+  logging one edit accuses the same units as the edit itself. Corrections that cannot be anchored are unsupported accusations,
   counted one each. A remaining difference on an error span is a wrong
   correction (a miss), not a false alarm.
 - Diagnostics: changed units that no correction claims (unlogged) and claimed
@@ -360,11 +361,17 @@ def actual_changes(item: ReviewItem, corrected_text: str) -> tuple[set[str], set
 
 
 def _accused(para: _Paragraph, start: int, end: int, replacement: str) -> Units:
-    """Units a logged correction claims: its own token-level difference, mapped to the original."""
-    rewritten, origin = para.rewrite(start, end, [])
-    return para.classify(
-        rewritten, origin, unicodedata.normalize("NFC", replacement), list(para.item.errors), (start, end)
-    )
+    """Units a logged correction claims: the token-level difference it makes to the whole paragraph.
+
+    The correction is applied to the original and the result is diffed like
+    ``corrected_text``, so an edit claims the same units however its span is
+    drawn: ``safe → safer`` and an insertion of ``r`` after ``safe`` both
+    claim the word ``safe``.
+    """
+    applied = para.text[:start] + unicodedata.normalize("NFC", replacement) + para.text[end:]
+    whole = (0, len(para.text))
+    rewritten, origin = para.rewrite(*whole, [])
+    return para.classify(rewritten, origin, applied, list(para.item.errors), whole)
 
 
 def score_review_item(
