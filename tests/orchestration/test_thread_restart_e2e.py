@@ -1299,7 +1299,7 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
     ("first_provider", "second_provider", "first_model", "second_model"),
     (
         ("grok", "codex", "grok-4.7", "gpt-6.1-sol"),
-        ("claude", "gemini", "claude-fable-5-1", "gemini-3.1-pro-high"),
+        ("claude", "codex", "claude-fable-5-1", "gpt-6.1-sol"),
     ),
 )
 def test_real_cross_family_driver_launchers_refuse_before_second_provider_executes(
