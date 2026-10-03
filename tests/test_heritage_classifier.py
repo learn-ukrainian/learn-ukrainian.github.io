@@ -16,7 +16,6 @@ from scripts.lexicon.heritage_classifier import (
     compute_warning_severity,
     is_normative_locator,
     modern_headword_labels,
-    names_headword,
     resolve_usage_label,
     reviewed_judgments,
     shares_referent,
@@ -715,6 +714,11 @@ _SLID_STORED_EVIDENCE = (
     "9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; "
     "Як правильно перекласти ... следующий? ... наступний"
 )
+# Actual reviewed passages (sources.db p091 and s0159; SOURCE_CHECKED_CHUNKS).
+_P091 = "antonenko-davydovych-yak-my-hovorymo_p091"
+_P091_PASSAGE = "Приймати участь – брати участь … Тут треба було написати взяли участь"
+_S0159 = "9-klas-ukrajinska-mova-avramenko-2017_s0159"
+_S0159_PASSAGE = "Запам’ятайте правильний варіант слововживання. НЕПРАВИЛЬНО ПРАВИЛЬНО … являтися переможцем бути переможцем"
 # The repair-input counterexample: a normative locator, enough words and the
 # headword, but no correction at all.
 _GENERIC_PARAGRAPH = (
@@ -997,31 +1001,63 @@ def test_admitted_source_proof_needs_direction_bound_to_the_headword() -> None:
     # A generic paragraph naming the headword (normative locator, enough words) is no proof.
     assert admitted_source_proof({"kind": "lexical", "corrections": ["захід"], "evidence": [_GENERIC_PARAGRAPH]}, "міроприємство") is None
     assert admitted_source_proof({"kind": "sense_restricted", "corrections": ["захід"], "evidence": [_GENERIC_PARAGRAPH]}, "міроприємство") is None
-    # A contextual citation must name the headword and one of its corrections.
+    # A contextual citation must be the reviewed passage of a chunk bound to this correction.
     sense = {
         "kind": "sense_restricted",
         "corrections": ["бути", "є"],
         "calque_sense": "to be / constitute",
         "evidence": [
-            "9-klas-ukrajinska-mova-avramenko-2017_s0159: Неправильно: являтися переможцем; Правильно: бути переможцем",
+            f"{_S0159}: {_S0159_PASSAGE}",
             "9-klas-ukrmova-zabolotnyi-2017_s0101: Правильно: він є студентом",
             "Антоненко-Давидович: являтися переможцем — бути переможцем",
             "UA-GEC 0301: Error: являється; Correction: є; Type: F/Calque",
         ],
     }
     proof = admitted_source_proof(sense, "являтися")
-    # Only the chunk a reviewer checked in sources.db cites the caution.
-    assert "9-klas-ukrajinska-mova-avramenko-2017_s0159" in SOURCE_CHECKED_CHUNKS
+    # Only the chunk a reviewer checked in sources.db cites the caution, and only its endorsed form.
+    assert _S0159 in SOURCE_CHECKED_CHUNKS
     assert "9-klas-ukrmova-zabolotnyi-2017_s0101" not in SOURCE_CHECKED_CHUNKS
     assert proof == {
         "kind": "sense_restricted",
-        "corrections": ["бути", "є"],
+        "corrections": ["бути"],
         "sense": "to be / constitute",
         "judgments": [],
-        "citations": [
-            {"locator": "9-klas-ukrajinska-mova-avramenko-2017_s0159", "excerpt": "Неправильно: являтися переможцем; Правильно: бути переможцем"}
-        ],
+        "citations": [{"locator": _S0159, "excerpt": _S0159_PASSAGE}],
     }
+
+
+def test_contextual_citation_binds_passage_scope_and_direction(monkeypatch) -> None:
+    """#9603 F1: a checked locator plus both words, or a digest alone, admits nothing."""
+    phrase = {"kind": "phrasal", "corrections": ["брати участь"], "evidence": [f"{_P091}: {_P091_PASSAGE}"]}
+    proof = admitted_source_proof(phrase, "приймати участь")
+    assert (proof["corrections"], proof["citations"]) == (
+        ["брати участь"],
+        [{"locator": _P091, "excerpt": _P091_PASSAGE}],
+    )
+    # The review probe: checked p091 with a fabricated, non-corrective paragraph naming both words.
+    fabricated = "Учні обговорили міроприємство, а потім захід у школі."
+    probe = {"kind": "sense_restricted", "corrections": ["захід"], "evidence": [f"{_P091}: {fabricated}"]}
+    assert admitted_source_proof(probe, "міроприємство") is None
+    non_corrective = "Приймати участь і брати участь — обидва вислови нормативні"
+    assert admitted_source_proof({**phrase, "evidence": [f"{_P091}: {non_corrective}"]}, "приймати участь") is None
+    # A changed passage, or a changed reviewed digest.
+    changed = _P091_PASSAGE.replace("брати", "взяти", 1)
+    assert admitted_source_proof({**phrase, "evidence": [f"{_P091}: {changed}"]}, "приймати участь") is None
+    scope, rejected, endorsed, _digest = SOURCE_CHECKED_CHUNKS[_P091]
+    with monkeypatch.context() as patched:
+        patched.setitem(SOURCE_CHECKED_CHUNKS, _P091, (scope, rejected, endorsed, "0" * 64))
+        assert admitted_source_proof(phrase, "приймати участь") is None
+    # Wrong scope: the chunk binds a phrase, not a sense or the whole word.
+    assert admitted_source_proof({**phrase, "kind": "sense_restricted"}, "приймати участь") is None
+    assert admitted_source_proof({**phrase, "kind": "lexical"}, "приймати участь") is None
+    # Reversed direction: the endorsed form is never the rejected headword.
+    reverse = {**phrase, "corrections": ["приймати участь"]}
+    assert admitted_source_proof(reverse, "брати участь") is None
+    # An endorsed form the record does not offer binds nothing.
+    assert admitted_source_proof({**phrase, "corrections": ["взяти участь"]}, "приймати участь") is None
+    # A reviewed judgment whose passage no longer matches its digest is dropped.
+    stale = {**_judgment("міроприємство", "захід"), "passage": "Інший текст"}
+    assert admitted_source_proof({"kind": "lexical", "corrections": ["захід"], "judgments": [stale]}, "міроприємство") is None
 
 
 def test_consumers_take_authority_from_current_source_proof_only() -> None:
@@ -1166,14 +1202,6 @@ def test_scope_helpers() -> None:
     assert not card_headword_matches(_SUM20_VOZNYI, None)
     assert modern_headword_labels(_SUM20_ATTACHED_HOMONYM) == ({"historism"}, True)
 
-    assert names_headword(_MIRO_PASSAGE, "міроприємство")
-    assert not names_headword(_SLID_STORED_EVIDENCE, "слідуючий")
-    assert names_headword("Вид — це не тип.", "вид")
-    assert not names_headword("Види бувають різні.", "вид")
-    assert names_headword("Тут треба брати участь у грі.", "брати участь")
-    assert not names_headword("Тут треба брати у грі участь.", "брати участь")
-    assert not names_headword("будь-що", None)
-
     assert is_normative_locator("antonenko-davydovych-yak-my-hovorymo_p031")
     assert is_normative_locator("11-klas-ukrajinska-mova-avramenko-2019_s0074")
     # A source name, an author-grade citation or another source names no passage.
@@ -1281,6 +1309,14 @@ def test_usage_source_records_from_actual_curated_inputs() -> None:
     assert all(item["passageSha256"] == source_text_digest(item["passage"]) for item in miro["judgments"])
     assert [item["locator"] for item in records["являтися"]["citations"]] == ["9-klas-ukrajinska-mova-avramenko-2017_s0159"]
     assert [item["locator"] for item in records["неділя"]["citations"]] == ["10-klas-ukrmova-glazova-2018_s0075"]
+    # Every actual contextual control keeps its caution, offering only the endorsed forms.
+    assert {key: records[key]["corrections"] for key in ("на рахунок", "являтися", "при допомозі", "приймати участь")} == {
+        "на рахунок": ["щодо"],
+        "являтися": ["бути"],
+        "при допомозі": ["за допомогою"],
+        "приймати участь": ["брати участь"],
+    }
+    assert records["діючий"]["corrections"] == ["чинний", "активний"]
     # Contextual records whose cited books are absent from sources.db keep no
     # source proof; діючий keeps its two checked chunks, not zabolotnyi-7 s0124.
     for headword in ("біля", "на протязі", "дякуючи", "в кінці кінців"):

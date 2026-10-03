@@ -498,26 +498,6 @@ def _words(text: str) -> list[str]:
     return _WORD_RE.findall(_normalize_word(text).replace("ʼ", "'"))
 
 
-def names_headword(text: str, headword: str | None) -> bool:
-    """True when ``text`` contains ``headword`` as a word (inflected forms allowed).
-
-    Single words of six or more letters also match a form that keeps all but
-    the last two letters (``міроприємства`` for ``міроприємство``); shorter
-    words and multiword headwords must match exactly.
-    """
-    head = _words(headword or "")
-    if not head:
-        return False
-    words = _words(text)
-    if len(head) > 1:
-        return any(words[index : index + len(head)] == head for index in range(len(words)))
-    target = head[0]
-    if len(target) < 6:
-        return target in words
-    stem = target[:-2]
-    return any(word == target or (word.startswith(stem) and abs(len(word) - len(target)) <= 3) for word in words)
-
-
 def source_text_digest(text: str) -> str:
     """SHA-256 of a source passage, normalised as for a heritage pair's ``passageSha256``."""
     text = re.sub(r"(?<=[а-яіїєґ'’ʼ])[-­]\s*\n\s*(?=[а-яіїєґ])", "", str(text).replace("́", ""))
@@ -575,7 +555,7 @@ def _evidence_items(record: dict[str, Any]) -> list[tuple[str, str]]:
     return items
 
 
-def _source_checked_chunks() -> dict[str, str]:
+def _source_checked_chunks() -> dict[str, tuple[str, str, tuple[str, ...], str]]:
     try:
         from scripts.lexicon.calque_corrections import SOURCE_CHECKED_CHUNKS
     except ImportError:  # loaded as a file: only scripts/ is on sys.path
@@ -587,13 +567,15 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
     """The source proof a curated record carries for ``headword``, or ``None``.
 
     ``judgments`` are reviewed judgments (:func:`reviewed_judgments`) whose
-    rejected form is the headword, from a normative chunk; only they establish
-    a whole-word Russianism or calque. ``citations`` cite a sense- or
-    phrase-restricted caution: curated ``locator: excerpt`` evidence from a
-    chunk a reviewer checked in sources.db (``SOURCE_CHECKED_CHUNKS``) whose
-    excerpt names the headword and one of the record's corrections. A
-    locator, a source name or a word occurrence in a curated excerpt alone
-    admits nothing: it stays an unverified Atlas reference.
+    rejected form is the headword, from a normative chunk, with the passage
+    still matching its digest; only they establish a whole-word Russianism or
+    calque. ``citations`` cite a sense- or phrase-restricted caution: curated
+    ``locator: excerpt`` evidence whose chunk a reviewer checked in sources.db
+    and bound to one correction (``SOURCE_CHECKED_CHUNKS``). The excerpt must
+    be that reviewed passage (by digest), and the binding's scope, rejected
+    form (the headword) and an endorsed form among the record's corrections
+    must match. A locator, a source name or words co-occurring in an excerpt
+    admit nothing: they stay an unverified Atlas reference.
     """
     head = _normalize_word(headword or "")
     if not head or not isinstance(record, dict):
@@ -605,21 +587,26 @@ def admitted_source_proof(record: object, headword: str | None) -> dict[str, Any
         if isinstance(item, dict)
         and _normalize_word(str(item.get("rejectedForm") or "")) == head
         and is_normative_locator(str(item.get("locator") or ""))
+        and source_text_digest(str(item.get("passage") or "")) == item.get("passageSha256")
     ]
     corrections = [str(item) for item in record.get("corrections") or [] if str(item or "").strip()]
-    citations = [
-        {"locator": locator, "excerpt": excerpt}
-        for locator, excerpt in _evidence_items(record)
-        if kind in _CONTEXTUAL_CALQUE_SCOPES
-        and locator in _source_checked_chunks()
-        and names_headword(excerpt, head)
-        and any(names_headword(excerpt, correction) for correction in corrections)
-    ]
+    citations, endorsed = [], [item["endorsedForm"] for item in judgments]
+    for locator, excerpt in _evidence_items(record):
+        scope, rejected, forms, digest = _source_checked_chunks().get(locator, ("", "", (), ""))
+        supported = [form for form in forms if form in corrections]
+        if (
+            scope == _CONTEXTUAL_CALQUE_SCOPES.get(kind)
+            and _normalize_word(rejected) == head
+            and supported
+            and source_text_digest(excerpt) == digest
+        ):
+            citations.append({"locator": locator, "excerpt": excerpt})
+            endorsed += supported
     if not judgments and not citations:
         return None
     return {
         "kind": kind,
-        "corrections": list(dict.fromkeys(item["endorsedForm"] for item in judgments)) or corrections,
+        "corrections": list(dict.fromkeys(endorsed)),
         "sense": judgments[0]["sense"]
         if judgments
         else str(record.get("calque_sense") or record.get("calqueSense") or ""),
@@ -819,12 +806,7 @@ def _treasured_label(
 
 
 def _usage_label(
-    code: str | None,
-    scope: str,
-    authority: list[str],
-    evidence: object,
-    *,
-    reason: str = "",
+    code: str | None, scope: str, authority: list[str], evidence: object, *, reason: str = ""
 ) -> dict[str, Any]:
     return {
         "code": code,
@@ -895,11 +877,7 @@ def resolve_usage_label(
         excerpt = f"{passage[:240]}…" if len(passage) > 240 else passage
         return _usage_label("rus" if is_rus else "calq", "lemma", authority, excerpt)
 
-    if (
-        bool(status.get("is_russianism"))
-        or classification in {"russianism", "calque"}
-        or _has_calque_alternative(status)
-    ):
+    if status.get("is_russianism") or classification in {"russianism", "calque"} or _has_calque_alternative(status):
         return _usage_label(None, "unresolved", [], None, reason="no_lemma_scoped_authority")
     if treasured is not None:
         return treasured

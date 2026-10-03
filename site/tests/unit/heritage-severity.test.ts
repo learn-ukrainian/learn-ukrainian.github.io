@@ -358,6 +358,7 @@ describe('resolveHeritageBoxes', () => {
     expect(boxes.yellow?.body).toContain('а не слова загалом');
     expect(boxes.yellow?.body).toContain('Перевіреного витягу з нормативного джерела запис не містить.');
     expect(boxes.yellow?.alternatives).toEqual(['виделка']);
+    expect(boxes.yellow?.body).toContain('У цьому вжитку Атлас пропонує (без звірки з джерелом): виделка.');
     // Stored Atlas prose is commentary, never a source excerpt.
     expect(boxes.yellow?.detail).toBe(
       'Примітка Атласу, не підтверджена витягом із джерела: Столовий прибор для їжі в українській мові називається винятково «виделка».',
@@ -381,7 +382,8 @@ describe('resolveHeritageBoxes', () => {
       },
     } as LexiconEntryForSeverity);
     expect(boxes.usageLabel).toMatchObject({ scope: 'sense', authority: ['9-klas-ukrajinska-mova-avramenko-2017_s0159'] });
-    expect(boxes.yellow?.body).toContain('Джерело: 9-klas-ukrajinska-mova-avramenko-2017_s0159.');
+    expect(boxes.yellow?.body).toContain('У цьому вжитку джерело радить: бути. Джерело: 9-klas-ukrajinska-mova-avramenko-2017_s0159.');
+    expect(boxes.yellow?.alternatives).toEqual(['бути']);
     expect(boxes.yellow?.body).not.toContain('s0162');
     expect(boxes.inline).toBeUndefined();
   });
@@ -634,6 +636,27 @@ describe('scoped boxes: remaining branches', () => {
     expect(boxes.red?.body).toContain('antonenko-davydovych-yak-my-hovorymo_p031');
     expect(boxes.red?.body).not.toContain('перелік суржику');
     expect(boxes.red?.body).toContain('Перевіряйте рекомендовані відповідники');
+  });
+
+  test('a lemma-bound calque offers the source-recommended forms, never «neutral» ones', () => {
+    const entry = {
+      lemma: 'міроприємство',
+      heritage_status: { classification: 'calque', is_russianism: false, curated_calque: { kind: 'lexical' } },
+    } as LexiconEntryForSeverity;
+    const boxes = resolveHeritageBoxes(entry, MIRO_PROOF);
+    expect(boxes.yellow?.scope).toBe('lemma');
+    expect(boxes.yellow?.body).toBe('Рекомендовані відповідники: захід. Джерело: antonenko-davydovych-yak-my-hovorymo_p031.');
+    expect(resolveHeritageBoxes(entry, { ...MIRO_PROOF, corrections: [] }).yellow?.body).toContain('Перевіряйте відповідники в джерелах.');
+  });
+
+  test('a contextual caution without alternatives names no adviser', () => {
+    const boxes = resolveHeritageBoxes({
+      lemma: 'вилка',
+      heritage_status: { classification: 'standard', calque_warning: { kind: 'sense_restricted', calque_sense: 'столовий прибор' } },
+    } as LexiconEntryForSeverity, null);
+    expect(boxes.yellow?.body).toBe(
+      'Застереження стосується окремого значення («столовий прибор»), а не слова загалом. Перевіреного витягу з нормативного джерела запис не містить.',
+    );
   });
 
   test('a phrasal caution is titled for the collocation and lists record references', () => {

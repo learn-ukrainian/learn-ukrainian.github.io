@@ -275,22 +275,30 @@ def test_yavlyatysia_cites_the_chunk_that_holds_its_correction():
     assert "9-klas-ukrajinska-mova-avramenko-2017_s0162" not in locators
 
 
-def test_source_checked_chunks_are_cited_evidence_with_chunk_digests():
-    """#9603: each reviewer-checked chunk is cited by a curated record and carries its text digest.
+def test_source_checked_chunks_bind_each_cited_excerpt_to_its_correction():
+    """#9603: each reviewer-checked chunk binds the verbatim excerpt its record cites.
 
-    The digests were taken from the read-only primary sources.db (receipt:
-    batch_state/reports/atlas-9603-display-proof/source-checked-chunks.json).
+    The excerpts were re-read with sources MCP get_chunk_context and checked as
+    verbatim (``…``-joined) spans of the read-only primary sources.db chunk
+    (receipt: batch_state/reports/atlas-9603-final-review-repair/source-passages.json).
     The 7-klas litvinova/zabolotnyi 2024 and 9-klas zabolotnyi 2017 books are
     absent there, so their locators must stay unchecked references.
     """
+    from scripts.lexicon.heritage_classifier import _curated_calque_map, source_text_digest
+
+    kinds = {"sense": "sense_restricted", "phrase": "phrasal"}
+    for locator, (scope, rejected, endorsed, digest) in SOURCE_CHECKED_CHUNKS.items():
+        row = _curated_calque_map()[rejected]
+        assert row["kind"] == kinds[scope], locator
+        assert set(endorsed) <= set(row["corrections"]), locator
+        excerpts = [item.partition(":")[2].strip() for item in row["evidence"] if item.partition(":")[0] == locator]
+        assert [source_text_digest(item) for item in excerpts] == [digest], locator
     cited = {
         item.partition(":")[0]
         for bucket in (CURATED_CALQUES, PHRASAL_CALQUES, SENSE_RESTRICTED_CALQUES)
         for row in bucket.values()
         for item in row.get("evidence", [])
     }
-    assert set(SOURCE_CHECKED_CHUNKS) <= cited
-    assert all(len(digest) == 64 and int(digest, 16) >= 0 for digest in SOURCE_CHECKED_CHUNKS.values())
     for absent in (
         "7-klas-ukrmova-litvinova-2024_s0186",
         "7-klas-ukrmova-zabolotnyi-2024_s0229",

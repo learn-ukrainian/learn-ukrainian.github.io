@@ -1557,6 +1557,10 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
 // #9603: entry pages keep source scope — phrase/sense/reverse guidance never
 // becomes a whole-headword Russianism/calque/register badge.
 describe("usage-label scope on entry pages (#9603)", () => {
+  function styleNotesHtml(html: string): string {
+    return html.match(/<h2>Стилістичні нотатки<\/h2>[\s\S]*?<\/section>/u)?.[0] ?? "";
+  }
+
   function heritageEntry(lemma: string, heritage_status: Record<string, unknown>, extra: Record<string, unknown> = {}) {
     return articleProps({
       lemma,
@@ -1718,13 +1722,92 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(html).toContain(`<div class="word-pos">іменник · ${PEREKLIUCHYTY_SHOWN}</div>`);
     expect(html).toContain(`<p>${PEREKLIUCHYTY_SHOWN}</p>`);
     expect(html).toContain(`<span class="en-term">${PEREKLIUCHYTY_SHOWN}</span><span class="en-term">to switch</span>`);
-    expect(html).toContain("Довідкові джерела пропонують відповідники: перемкнути, перемикнути.");
+    // #9603 F3: unresolved alternatives without source proof are Atlas suggestions, never a reference source's.
+    expect(styleNotesHtml(html)).toContain(
+      "<p>Атлас пропонує відповідники, не звірені з джерелом: перемкнути, перемикнути. Перевіреного витягу з джерела запис не містить, тому слово не позначено як русизм або кальку.</p>",
+    );
+    expect(html).not.toContain("Довідкові джерела");
+    expect(html).not.toContain("Джерело не визначає");
     expect(html).not.toContain("(Russian calque");
     const form = renderWordAtlasArticle(
       heritageEntry("переключив", {}, { gloss: PEREKLIUCHYTY_GLOSS, form_of: { url_slug: "переключити", lemma: "переключити" } }),
     );
     expect(form).toContain(`іменник · ${PEREKLIUCHYTY_SHOWN}`);
     expect(form).not.toContain("(Russian calque");
+  });
+
+  // #9603 F2: actual DB-backed виглядати (sense scope, no admitted source proof).
+  const VYHLIADATY_STATUS = {
+    classification: "standard",
+    attestations: [{ source: "VESUM", ref: "виглядати", detail: "lemma match (25 forms)" }],
+    is_russianism: false,
+    russian_shadow: false,
+    vesum_attested: true,
+    calque_warning: null,
+    warning_severity: "calque_yellow",
+    curated_calque: {
+      kind: "sense_restricted",
+      corrections: ["здаватися", "видаватися"],
+      calque_sense: "to seem / appear that (рос. выглядит = 'it seems')",
+      authentic_sense: "to look (well/ill); to peer out (гарно виглядати; виглядати у вікно)",
+      note: "Грінченко/СУМ-20 attest 'look; peer out'; calque only when 'виглядає' replaces 'здається' (= it seems).",
+      source: ["grinchenko", "sum-20", "grok-3098"],
+      evidence: [],
+      heritage_guard: "",
+      noteUk: "Уживання \"виглядає, що...\" у значенні \"здається, що...\" є калькою (рос. выглядит, как...).",
+    },
+  };
+
+  test("виглядати Style Notes qualify the stored note and offer alternatives as Atlas suggestions", () => {
+    const props = heritageEntry("виглядати", VYHLIADATY_STATUS, { gloss: "to look, to appear" });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.usageLabel).toMatchObject({ scope: "sense", authority: [] });
+    expect(view.styleNotes).toEqual([
+      "Примітка Атласу, не підтверджена витягом із джерела: Грінченко/СУМ-20 attest 'look; peer out'; calque only when 'виглядає' replaces 'здається' (= it seems). Атлас пропонує відповідники, не звірені з джерелом: здаватися, видаватися.",
+    ]);
+    const notes = styleNotesHtml(renderWordAtlasArticle(props));
+    expect(notes).toContain("<p>Примітка Атласу, не підтверджена витягом із джерела: Грінченко/СУМ-20 attest");
+    expect(notes).not.toMatch(/<p>Грінченко|Нейтральні відповідники|радить/u);
+  });
+
+  test("a stored calque_warning.detail is Atlas commentary in Style Notes (no actual DB row carries one)", () => {
+    const view = buildWordAtlasArticleView(
+      heritageEntry("синтетичний", {
+        classification: "standard",
+        calque_warning: { detail: "калька з російської в усіх значеннях" },
+      }).record,
+      "test",
+      "test",
+    );
+    expect(view.styleNotes).toEqual([
+      "Примітка Атласу, не підтверджена витягом із джерела: калька з російської в усіх значеннях.",
+    ]);
+  });
+
+  test("source proof with unresolved scope is attributed to its source, distinct from no proof (бажаючий)", () => {
+    const props = heritageEntry("бажаючий", {
+      classification: "calque",
+      curated_calque: { kind: "participle", corrections: ["охочий"], note: "use охочий" },
+    });
+    const view = buildWordAtlasArticleView(props.record, "test", "test");
+    expect(view.heritageBoxes.usageLabel).toMatchObject({ scope: "unresolved", reason: "curated_kind_without_scope" });
+    const proof = "Джерело (antonenko-davydovych-yak-my-hovorymo_p099, 11-klas-ukrajinska-mova-avramenko-2019_s0074) радить: охочий.";
+    expect(view.styleNotes).toContain(`Примітка Атласу, не підтверджена витягом із джерела: use охочий. ${proof}`);
+    expect(view.styleNotes).toContain(
+      `${proof} Запис Атласу не встановлює, чи це стосується всього слова, окремого значення чи сполучення, тому слово не позначено як русизм або кальку.`,
+    );
+    // A sense caution with admitted proof offers only the checked chunk's endorsed form.
+    const sense = buildWordAtlasArticleView(
+      heritageEntry("являтися", {
+        classification: "standard",
+        curated_calque: { kind: "sense_restricted", corrections: ["бути", "є"], note: "copular use" },
+      }).record,
+      "test",
+      "test",
+    );
+    expect(sense.styleNotes).toEqual([
+      "Примітка Атласу, не підтверджена витягом із джерела: copular use. Джерело (9-klas-ukrajinska-mova-avramenko-2017_s0159) радить: бути.",
+    ]);
   });
 
   // b0 blocker 1: both cited 7-klas 2024 books are absent from sources.db.
@@ -1749,7 +1832,10 @@ describe("usage-label scope on entry pages (#9603)", () => {
     const html = renderWordAtlasArticle(props);
     expect(view.heritageBoxes.usageLabel.authority).toEqual([]);
     expect(html).toContain("а не слова загалом");
-    expect(html).toContain("У цьому вжитку радять: близько.");
+    expect(html).toContain("У цьому вжитку Атлас пропонує (без звірки з джерелом): близько.");
+    expect(styleNotesHtml(html)).toContain(
+      "<p>Примітка Атласу, не підтверджена витягом із джерела: calque only before approximate quantities. Атлас пропонує відповідники, не звірені з джерелом: близько.</p>",
+    );
     expect(html).toContain("Перевіреного витягу з нормативного джерела запис не містить.");
     expect(html).toContain("Посилання запису Атласу, не звірені з джерелом: grinchenko, litvinova-7, zabolotnyi-7, ua-gec.");
     expect(html).not.toMatch(/Джерело:[^<]*(litvinova|zabolotnyi)/u);
@@ -1918,7 +2004,11 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(view.statusBadges.map((badge) => badge.className)).not.toContain("heritage-warn");
     const notes = view.styleNotes.join(" ");
     expect(notes).toContain("Слово внесено до переліку Атласу «суржик, якого слід уникати».");
-    expect(notes).toContain("Довідкові джерела пропонують відповідники: наступний, черговий, дальший.");
+    expect(notes).toContain(
+      "Атлас пропонує відповідники, не звірені з джерелом: наступний, черговий, дальший. Перевіреного витягу з джерела запис не містить",
+    );
+    expect(notes).toContain("Примітка Атласу, не підтверджена витягом із джерела: рос. следующий; use наступний for 'next'.");
+    expect(notes).not.toContain("Нейтральні відповідники");
     expect(notes).toContain(
       "Посилання запису Атласу, не звірене з джерелом (9-klas-ukrajinska-mova-voron-2017_s0232): следующий — тут: наступний",
     );

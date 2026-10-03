@@ -169,10 +169,7 @@ const USAGE_LABEL_CODES: Record<string, UsageLabel["code"]> = {
   historism: "hist",
   borrowing: "borr",
 };
-const CONTEXTUAL_CALQUE_SCOPES: Record<string, UsageLabelScope> = {
-  sense_restricted: "sense",
-  phrasal: "phrase",
-};
+const CONTEXTUAL_CALQUE_SCOPES: Record<string, UsageLabelScope> = { sense_restricted: "sense", phrasal: "phrase" };
 // The only curated kind that claims the whole word; ``participle`` is a
 // word-formation type, not a scope.
 const LEMMA_CALQUE_KINDS = new Set(["lexical"]);
@@ -189,10 +186,7 @@ const USAGE_MARKER_RES: Record<string, RegExp> = {
   dialect: new RegExp(`(?<![${LETTER_CLASS}])діал\\.`, "u"),
   "authentic-archaism": new RegExp(`(?<![${LETTER_CLASS}])(?:заст\\.|застар|архаї)`, "u"),
 };
-const MODERN_DICTIONARY_CARDS: Array<[string, string]> = [
-  ["sum20", "СУМ-20"],
-  ["vts", "ВТС"],
-];
+const MODERN_DICTIONARY_CARDS: Array<[string, string]> = [["sum20", "СУМ-20"], ["vts", "ВТС"]];
 const SUPERSCRIPT_DIGITS = "¹²³⁴⁵⁶⁷⁸⁹⁰";
 const HOMONYM_INDEX_RE = /^(?:[¹²³⁴⁵⁶⁷⁸⁹⁰]+|I|II|III|IV|V)[,.]?$/u;
 const SENSE_START_RE = /^(?:\d|[《◊/]|[А-ЯІЇЄҐA-Z])/u;
@@ -226,11 +220,7 @@ function words(text: string): string[] {
 }
 
 function usageMarkerClasses(text: string): Set<string> {
-  return new Set(
-    Object.entries(USAGE_MARKER_RES)
-      .filter(([, pattern]) => pattern.test(text))
-      .map(([name]) => name),
-  );
+  return new Set(Object.keys(USAGE_MARKER_RES).filter((name) => USAGE_MARKER_RES[name].test(text)));
 }
 
 function stripEdges(token: string): string {
@@ -588,12 +578,13 @@ function scopedCalqueBody(label: UsageLabel, alternatives: string[], references:
       label.scope === "sense"
         ? `окремого значення${label.evidence ? ` («${label.evidence}»)` : ""}`
         : `сполучення${label.evidence ? ` («${label.evidence}»)` : ""}`;
-    const use = alternatives.length > 0 ? ` У цьому вжитку радять: ${alternatives.join(", ")}.` : "";
+    const who = label.authority.length > 0 ? "джерело радить" : "Атлас пропонує (без звірки з джерелом)";
+    const use = alternatives.length > 0 ? ` У цьому вжитку ${who}: ${alternatives.join(", ")}.` : "";
     const authority =
       label.authority.length > 0 ? authorityClause(label.authority) : `${NO_BOUND_AUTHORITY}${referencesClause(references)}`;
     return `Застереження стосується ${where}, а не слова загалом.${use}${authority}`;
   }
-  const use = alternatives.length > 0 ? `Нейтральні відповідники: ${alternatives.join(", ")}.` : "Перевіряйте відповідники в джерелах.";
+  const use = alternatives.length > 0 ? `Рекомендовані відповідники: ${alternatives.join(", ")}.` : "Перевіряйте відповідники в джерелах.";
   return `${use}${authorityClause(label.authority)}`;
 }
 

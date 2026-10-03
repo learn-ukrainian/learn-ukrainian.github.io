@@ -66,19 +66,19 @@ sense-scoped soft note, never a blanket warn or auto-replace.
 
 from __future__ import annotations
 
-# #9603: evidence chunks a reviewer read in sources.db and found stating the
-# record's correction; value = SHA-256 of the chunk's ``textbooks.text``. Only
-# these may cite a sense or phrase caution as its source. Any other evidence
-# (books absent from sources.db, such as 7-klas litvinova/zabolotnyi 2024) is an
-# unverified Atlas reference.
-SOURCE_CHECKED_CHUNKS: dict[str, str] = {
-    "antonenko-davydovych-yak-my-hovorymo_p091": "a81c9ef3ae97b1af345bc5a3d19f6918ae992b5f14be8a699ddf0f92924c4665",
-    "5-klas-ukrmova-avramenko-2022_s0056": "a72bd4da92120ae51e32e61477a1738e886f1c024d77071130e3418a750d8ac5",
-    "7-klas-ukrmova-avramenko-2024_s0106": "390e014cf5a8dba60d88ff00e49d1e914eb29fd58e1b3c84ef5b6b9219a728f7",
-    "9-klas-ukrajinska-mova-avramenko-2017_s0159": "731029ed380aaab1ddb70a3b4945ffc75bfaf0bef034a920919fc1b84dbe1592",
-    "10-klas-ukrmova-glazova-2018_s0075": "cdcf2e4b6e721c488eb4e98f7f194a013c56e6e91bfb713ef617026d6c5c9f0c",
-    "11-klas-ukrajinska-mova-glazova-2019_s0071": "bba09424b574169608e5176873476211a016a3858c3e662fd541283806bde3ae",
-    "11-klas-ukrajinska-mova-glazova-2019_s0078": "df7fee5d62bf2c0b7eeac25088044b2e49fe25dad45908b88868738623b11c8b",
+# #9603: evidence chunks a reviewer read in sources.db, each bound to the one
+# correction it states: (scope, rejected form, endorsed forms, source_text_digest
+# of the record's verbatim excerpt). Only that excerpt may cite a sense or phrase
+# caution as its source; other evidence (books absent from sources.db, such as
+# 7-klas litvinova/zabolotnyi 2024) is an unverified Atlas reference.
+SOURCE_CHECKED_CHUNKS: dict[str, tuple[str, str, tuple[str, ...], str]] = {
+    "antonenko-davydovych-yak-my-hovorymo_p091": ("phrase", "приймати участь", ("брати участь",), "2d04add57db343c0e3449df53cb3f692f9ba65e981379d33670ea597d9b21655"),
+    "5-klas-ukrmova-avramenko-2022_s0056": ("sense", "на рахунок", ("щодо",), "34b6f9ae420fe1f06c32309607a6fed659160d02c96e0e60c57c4b1fbb6fba58"),
+    "7-klas-ukrmova-avramenko-2024_s0106": ("sense", "діючий", ("чинний", "активний"), "754d213821645d79516846e025d962715bb5a37b69ed4162badc600d8f52353d"),
+    "9-klas-ukrajinska-mova-avramenko-2017_s0159": ("sense", "являтися", ("бути",), "c437d36c0c3beab3a697dc1bc6b126b8a3ecf5a595032c8772ad2bbf0fc3babf"),
+    "10-klas-ukrmova-glazova-2018_s0075": ("sense", "неділя", ("тиждень",), "fab2108c6c08df5d904b21e04e4753d8bb30bce5a87d2b530ae294e3f5a4f47f"),
+    "11-klas-ukrajinska-mova-glazova-2019_s0071": ("sense", "діючий", ("чинний",), "971b0f054d0644ff03975a71fd511f74574bb138ef0c9415ae87958bf1488bfd"),
+    "11-klas-ukrajinska-mova-glazova-2019_s0078": ("phrase", "при допомозі", ("за допомогою",), "2ba4469f4ba178a3ff07c9a20e1237a41761f850573000cba2f426bf8a8d2692"),
 }
 
 # Confirmed active-participle calques → recommended Ukrainian replacement(s).
@@ -175,8 +175,8 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "note": "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)",
         "source": ["glazova-11", "avramenko-11", "avramenko-7", "zabolotnyi-7"],
         "evidence": [
-            "11-klas-ukrajinska-mova-glazova-2019_s0071: чинний (а не діючий) закон",
-            "7-klas-ukrmova-avramenko-2024_s0106: синоніми ... діючий — чинний (закон) або активний (вулкан)",
+            "11-klas-ukrajinska-mova-glazova-2019_s0071: Сучасній українській мові активні дієприкметники теперішнього часу не властиві, тому їх заміщують: … синонімами: зворушливий (а не хвилюючий) спогад; чинний (а не діючий) закон",
+            "7-klas-ukrmova-avramenko-2024_s0106: Замість активних дієприкметників уживаємо: … синоніми: хвилюючий — зворушливий, діючий — чинний (закон) або активний (вулкан)",
             "7-klas-ukrmova-zabolotnyi-2024_s0124: чинний закон / діючий закон",
         ],
         "heritage_guard": "search_heritage(діючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is the діянка family row and does not clear діючий закон.",
@@ -344,7 +344,7 @@ PHRASAL_CALQUES: dict[str, dict[str, object]] = {
         "note": "рос. принимать участие",
         "source": ["antonenko-p091", "zabolotnyi-10"],
         "evidence": [
-            "antonenko-davydovych-yak-my-hovorymo_p091: Приймати участь – брати участь",
+            "antonenko-davydovych-yak-my-hovorymo_p091: Приймати участь – брати участь … Тут треба було написати взяли участь",
             "10-klas-ukrmova-zabolotnyi-2018_s0027: У змаганнях треба брати участь, а не приймати.",
         ],
         "heritage_guard": "search_heritage(приймати участь, include_live_slovnyk=false): phrase guard not lexical; no heritage headword can clear the collocation.",
@@ -370,7 +370,7 @@ PHRASAL_CALQUES: dict[str, dict[str, object]] = {
         "note": "syntactic calque; use the instrumental phrase за допомогою",
         "source": ["glazova-11"],
         "evidence": [
-            "11-klas-ukrajinska-mova-glazova-2019_s0078: Неправильно: при допомозі; Правильно: за допомогою",
+            "11-klas-ukrajinska-mova-glazova-2019_s0078: Неправильно Правильно … при допомозі … за допомогою",
         ],
         "heritage_guard": "search_heritage(при допомозі, include_live_slovnyk=false): No heritage evidence found.",
     },
@@ -455,7 +455,7 @@ SENSE_RESTRICTED_CALQUES: dict[str, dict[str, object]] = {
         "note": "Грінченко attests являтися as 'show/appear'; calque only in copular use: являтися переможцем → бути переможцем.",
         "source": ["grinchenko", "avramenko-9", "zabolotnyi-9", "ua-gec"],
         "evidence": [
-            "9-klas-ukrajinska-mova-avramenko-2017_s0159: Неправильно: являтися переможцем; Правильно: бути переможцем",
+            "9-klas-ukrajinska-mova-avramenko-2017_s0159: Запам’ятайте правильний варіант слововживання. НЕПРАВИЛЬНО ПРАВИЛЬНО … являтися переможцем бути переможцем",
             "9-klas-ukrmova-zabolotnyi-2017_s0101: Правильно: він є студентом; НЕПРАВИЛЬНО: він являється студентом",
             "UA-GEC 0301: Error: являється; Correction: є; Type: F/Calque",
             "Грінченко: Являтися ... Являться, явиться, показываться, показаться.",
@@ -521,7 +521,7 @@ SENSE_RESTRICTED_CALQUES: dict[str, dict[str, object]] = {
         "note": "Calque only in 'regarding' use: на рахунок цього → щодо цього; keep literal account/bank uses.",
         "source": ["avramenko-5", "zabolotnyi-9", "grinchenko", "ua-gec"],
         "evidence": [
-            "5-klas-ukrmova-avramenko-2022_s0056: Неправильно: на рахунок цього; Правильно: щодо цього",
+            "5-klas-ukrmova-avramenko-2022_s0056: НЕПРАВИЛЬНО ПРАВИЛЬНО на рахунок цього щодо цього",
             "9-klas-ukrmova-zabolotnyi-2017_s0031: Правильно: рахунок у банку; НЕПРАВИЛЬНО: счьот у банку",
             "UA-GEC 1296: Error: на рахунок; Correction: щодо; Type: F/Calque",
             "Грінченко: Рахунок ... Счет, разсчет. В рахунку помилився.",
@@ -546,7 +546,7 @@ SENSE_RESTRICTED_CALQUES: dict[str, dict[str, object]] = {
         "note": "Грінченко attests неділя as Sunday; calque only when it means a week-long period → тиждень.",
         "source": ["glazova-10", "grinchenko"],
         "evidence": [
-            "10-klas-ukrmova-glazova-2018_s0075: Прем’єра ... через дві неділі ... Довідка. Тиждень",
+            "10-klas-ukrmova-glazova-2018_s0075: Укажіть українські слова, ужиті в невластивому їм лексичному значенні. 1. Прем’єра вистави відбудеться через дві неділі. … Довідка. Тиждень",
         ],
         "heritage_guard": "search_heritage(неділя, include_live_slovnyk=false): Грінченко authentic for Sunday; therefore sense-restricted, not blanket.",
     },

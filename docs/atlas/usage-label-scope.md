@@ -40,14 +40,14 @@ headword it is keyed by:
   same locator. The digest normalisation is the one
   `scripts/audit/generate_practice_deck.py` defines
   (`docs/practice/heritage-pairs-growth.md`). The rejected form must be the
-  headword, and the locator a normative chunk.
-- **citations**, for sense and phrase records only: a `locator: excerpt`
-  evidence item whose chunk a reviewer read in `sources.db` and found stating
-  the correction (`SOURCE_CHECKED_CHUNKS` in `calque_corrections.py`, with the
-  chunk text's SHA-256), and whose excerpt names the headword and one of the
-  record's corrections (`являтися переможцем → бути переможцем`). Evidence from
-  books absent from `sources.db` (`7-klas-ukrmova-litvinova-2024_s0186` on
-  `біля`) is an unverified Atlas reference, never a «Джерело».
+  headword, the locator a normative chunk, and the passage still its digest.
+- **citations**, for sense and phrase records only: a `locator: excerpt` item
+  whose chunk a reviewer read in `sources.db` and bound to one correction
+  (`SOURCE_CHECKED_CHUNKS` in `calque_corrections.py`: scope, rejected form,
+  endorsed forms, digest of the verbatim excerpt). Excerpt digest, scope and
+  rejected form (the headword) must match, and only endorsed forms among the
+  record's corrections are offered (`являтися` → `бути`). Words co-occurring in
+  an excerpt or another book's locator are an unverified Atlas reference.
 
 A normative chunk is a `sources.db` chunk id of Антоненко-Давидович «Як ми
 говоримо» (`antonenko-davydovych-yak-my-hovorymo_p031`), Караванський,
@@ -143,15 +143,15 @@ bound lexical calque.
 - Reverse notes keep the record's direction (`X` as replacement for `Y`), its
   scope note (the `чинний` law/volcano split) and its references. They state
   that no normative excerpt establishes the replacement or its extent.
-- Unresolved notes keep suggested replacements, the stored record's citations
-  (marked as not checked against the source) and the Atlas note.
+- Unresolved notes keep replacements (a source's only with source proof, else
+  Atlas suggestions), the record's unchecked citations and the Atlas note.
 - An editorial `avoid:` gloss (`слідуючий`) or an embedded `(Russian calque; standard Ukrainian: …)`
   clause (`переключити`) is verbatim only with a lemma-bound Russianism or calque (`міроприємство`).
   Otherwise the entry header, translation, page description, course-phrase gloss, browse and search
   show the meaning with a qualified Atlas note (`displayGloss`). A historism badge names its source marker
   (`Історизм · ЕСУМ, т. 1, с. 592`) and claims nothing about current usage.
 - Atlas prose stored with a record (`noteUk`, `note`, `detail`) is
-  commentary. Where a box shows it, it is marked as not confirmed by a source
+  commentary. Every box and style note marks it as not confirmed by a source
   excerpt, so a scoped caution never carries a broader unsourced claim
   (`неділя`: the duration caution is sourced, the stored «лише сьомий день»
   wording is not).

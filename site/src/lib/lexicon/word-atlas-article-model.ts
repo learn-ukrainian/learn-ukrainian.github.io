@@ -4,11 +4,14 @@
  */
 
 import {
+  atlasNoteDetail,
   displayGloss,
   resolveHeritageBoxes,
   standardAlternatives,
   SURZHYK_TO_AVOID_SOURCE,
+  usageSourceProof,
   type UsageLabel,
+  type UsageSourceProof,
   type WarningSeverity,
 } from "./heritage-severity";
 import {
@@ -1171,6 +1174,7 @@ export function buildWordAtlasArticleView(
     gloss: entry.gloss ?? null,
     headword: entry.lemma,
     avoidListed: entry.primary_source === SURZHYK_TO_AVOID_SOURCE,
+    sourceProof: usageSourceProof(entry.lemma),
   });
   const statusBadges = buildStatusBadges({
     heritageBoxes,
@@ -1439,14 +1443,25 @@ function avoidListNote(usageLabel: UsageLabel, alternatives: string[]): string {
   return `Слово внесено до переліку Атласу «суржик, якого слід уникати». Витягу з джерела, який стосувався б усього слова, запис не містить, тому слово не позначено як ненормативне.${offered}`;
 }
 
-function unresolvedNotes(heritage: HeritageStatus | null, gloss: string | null, usageLabel: UsageLabel): string[] {
+// #9603: alternatives are a source's only with admitted source proof for the headword; otherwise they are Atlas's.
+function alternativesClause(proof: UsageSourceProof | null, alternatives: string[]): string {
+  if (proof?.corrections.length) {
+    const locators = Array.from(new Set([...proof.judgments, ...proof.citations].map((item) => item.locator)));
+    return `Джерело (${locators.join(", ")}) радить: ${proof.corrections.join(", ")}.`;
+  }
+  return alternatives.length > 0 ? `Атлас пропонує відповідники, не звірені з джерелом: ${alternatives.join(", ")}.` : "";
+}
+
+type StyleNoteContext = { gloss: string | null; headword?: string; avoidListed: boolean; sourceProof: UsageSourceProof | null };
+
+function unresolvedNotes(heritage: HeritageStatus | null, usageLabel: UsageLabel, context: StyleNoteContext): string[] {
   const notes: string[] = [];
-  const alternatives = standardAlternatives(heritage, gloss);
+  const alternatives = standardAlternatives(heritage, context.gloss);
   const classLabel = USAGE_CLASS_LABELS_UK[heritage?.classification ?? ""];
   if (alternatives.length > 0) {
-    notes.push(
-      `Довідкові джерела пропонують відповідники: ${alternatives.join(", ")}. Джерело не визначає, чи це стосується всього слова, окремого значення чи сполучення, тому слово не позначено як русизм або кальку.`,
-    );
+    // Source proof whose scope the record leaves open differs from no source proof at all.
+    const why = context.sourceProof?.corrections.length ? "Запис Атласу не встановлює, чи це стосується всього слова, окремого значення чи сполучення" : "Перевіреного витягу з джерела запис не містить";
+    notes.push(`${alternativesClause(context.sourceProof, alternatives)} ${why}, тому слово не позначено як русизм або кальку.`);
   } else if (classLabel && usageLabel.evidence) {
     // A source headword-slot marker that the modern card does not confirm for the whole word.
     notes.push(
@@ -1466,29 +1481,25 @@ function unresolvedNotes(heritage: HeritageStatus | null, gloss: string | null, 
       );
     }
   }
-  const atlasNote = heritage?.curated_calque?.noteUk ?? heritage?.["§6_note"]?.noteUk;
-  if (atlasNote) notes.push(`Примітка Атласу, не підтверджена витягом із джерела: ${asSentence(atlasNote)}`);
+  const atlasNote = atlasNoteDetail(heritage?.curated_calque?.noteUk ?? heritage?.["§6_note"]?.noteUk);
+  if (atlasNote) notes.push(asSentence(atlasNote));
   return notes;
 }
 
-function buildStyleNotes(
-  heritage: HeritageStatus | null,
-  usageLabel: UsageLabel,
-  context: { gloss: string | null; headword?: string; avoidListed: boolean },
-) {
+function buildStyleNotes(heritage: HeritageStatus | null, usageLabel: UsageLabel, context: StyleNoteContext) {
   const notes: string[] = [];
   if (heritage?.russian_shadow) {
     notes.push(
       "Морфологічна тінь російської форми: перевіряйте відмінювання за VESUM та Правописом 2019.",
     );
   }
-  if (heritage?.calque_warning?.detail) {
-    notes.push(`Калькове застереження: ${heritage.calque_warning.detail}`);
-  }
+  // #9603: stored Atlas prose is commentary, never a source excerpt, in every reader.
+  const detail = atlasNoteDetail(heritage?.calque_warning?.detail);
+  if (detail) notes.push(asSentence(detail));
   if (heritage?.curated_calque) {
-    notes.push(
-      `${heritage.curated_calque.note} Нейтральні відповідники: ${heritage.curated_calque.corrections.join(", ")}.`,
-    );
+    const note = atlasNoteDetail(heritage.curated_calque.note);
+    const offered = alternativesClause(context.sourceProof, heritage.curated_calque.corrections);
+    notes.push([note && asSentence(note), offered].filter(Boolean).join(" "));
   }
   // #9603: the avoid list is provenance; without bound evidence it stays a note.
   const boundCondemnation = usageLabel.scope === "lemma" && (usageLabel.code === "rus" || usageLabel.code === "calq");
@@ -1497,7 +1508,7 @@ function buildStyleNotes(
   }
   // Guidance whose scope the record does not establish stays a note.
   if (usageLabel.scope === "unresolved") {
-    notes.push(...unresolvedNotes(heritage, context.gloss, usageLabel));
+    notes.push(...unresolvedNotes(heritage, usageLabel, context));
   }
   for (const item of heritage?.reverse_calques ?? []) {
     notes.push(reverseCalqueNote(item, context.headword ?? ""));
