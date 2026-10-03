@@ -43,8 +43,8 @@ printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=lu-driver
     exe = bindir / "cat"
     exe.write_text("""#!/usr/bin/env bash
 case "$1" in
- */memory.high) printf '%s\\n' "${LU_DRIVER_MEMORY_HIGH:-3221225472}" ;;
- */memory.max) printf '%s\\n' "${LU_DRIVER_MEMORY_MAX:-5368709120}" ;;
+ */memory.high) printf '%s\\n' "${LU_DRIVER_MEMORY_HIGH:-6442450944}" ;;
+ */memory.max) printf '%s\\n' "${LU_DRIVER_MEMORY_MAX:-9663676416}" ;;
  */memory.swap.max) printf '%s\\n' "${LU_DRIVER_MEMORY_SWAP_MAX:-1073741824}" ;;
  */memory.current) printf '123456\\n' ;;
  */memory.swap.current) printf '654321\\n' ;;
@@ -138,6 +138,7 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
     assert result.returncode == 0, result.stderr
     assert Path(env["FAKE_STARTS"]).read_text().splitlines() == ["start"]
     assert "PROVIDER:stdin survives" in result.stdout
+    assert "high=6442450944 max=9663676416 swap=1073741824 oom=continue" in result.stderr
     assert "DRIVER_SCOPE_VERIFIED" in result.stderr
     assert "parent_memory_current=123456 parent_swap_current=654321" in result.stderr
 
@@ -156,6 +157,9 @@ def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
         ({"FAKE_OOM_POLICY": "stop"}, "unit-properties-mismatch"),
         ({"LU_DRIVER_MEMORY_MAX": "max"}, "invalid-limits"),
         ({"LU_DRIVER_MEMORY_HIGH": "5", "LU_DRIVER_MEMORY_MAX": "5"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_HIGH": "6442450945"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_MAX": "9663676417"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_SWAP_MAX": "1073741825"}, "invalid-limits"),
     ],
 )
 def test_refuse_before_preparation(tmp_path: Path, extra: dict[str, str], reason: str) -> None:
@@ -165,6 +169,20 @@ def test_refuse_before_preparation(tmp_path: Path, extra: dict[str, str], reason
     assert reason in result.stderr
     assert "PREPARED" not in result.stdout
     assert "LEASE" not in result.stdout
+
+
+def test_lower_test_limits_are_preserved(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    result = _run(
+        launcher,
+        env,
+        LU_DRIVER_MEMORY_HIGH="3221225472",
+        LU_DRIVER_MEMORY_MAX="5368709120",
+        LU_DRIVER_MEMORY_SWAP_MAX="0",
+    )
+    assert result.returncode == 0, result.stderr
+    assert "high=3221225472 max=5368709120 swap=0 oom=continue" in result.stderr
+    assert "PROVIDER:stdin survives" in result.stdout
 
 
 def test_inherited_identity_is_not_reentry(tmp_path: Path) -> None:

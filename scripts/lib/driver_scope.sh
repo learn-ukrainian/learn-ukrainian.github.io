@@ -8,14 +8,14 @@ driver_scope_refuse() {
 
 driver_scope_config() {
   # One configuration point, byte values; overrides may only lower limits.
-  DS_HIGH="${LU_DRIVER_MEMORY_HIGH:-3221225472}"
-  DS_MAX="${LU_DRIVER_MEMORY_MAX:-5368709120}"
+  DS_HIGH="${LU_DRIVER_MEMORY_HIGH:-6442450944}"
+  DS_MAX="${LU_DRIVER_MEMORY_MAX:-9663676416}"
   DS_SWAP="${LU_DRIVER_MEMORY_SWAP_MAX:-1073741824}"
   local value
   for value in "$DS_HIGH" "$DS_MAX" "$DS_SWAP"; do
     [[ "$value" =~ ^[0-9]{1,12}$ ]] || { driver_scope_refuse invalid-limits; return 6; }
   done
-  if (( 10#$DS_HIGH <= 0 || 10#$DS_HIGH >= 10#$DS_MAX || 10#$DS_HIGH > 3221225472 || 10#$DS_MAX > 5368709120 || 10#$DS_SWAP > 1073741824 )); then
+  if (( 10#$DS_HIGH <= 0 || 10#$DS_HIGH >= 10#$DS_MAX || 10#$DS_HIGH > 6442450944 || 10#$DS_MAX > 9663676416 || 10#$DS_SWAP > 1073741824 )); then
     driver_scope_refuse invalid-limits; return 6
   fi
   DS_HIGH=$((10#$DS_HIGH)); DS_MAX=$((10#$DS_MAX)); DS_SWAP=$((10#$DS_SWAP))

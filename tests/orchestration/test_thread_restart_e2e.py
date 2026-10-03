@@ -24,6 +24,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_libraries import launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry
 from tests.project_python import project_python
 from tests.rules_core_view import install_loader_bypass
@@ -141,21 +142,12 @@ def init_repo(
                 # The consolidated launchers source the shared core + provider
                 # adapter (PR #5958); fixture repos must ship them or the staged
                 # driver dies at `source` before any behavior under test runs.
-                "scripts/lib/launcher_core.sh",
                 "scripts/launchers/codex.sh",
                 "scripts/launchers/claude.sh",
                 "scripts/launchers/gemini.sh",
                 "scripts/launchers/grok.sh",
-                "scripts/lib/codex_cc_route.sh",
-                "scripts/lib/fleet_comms_cold_start.sh",
                 "scripts/orchestration/codex_transport_health.py",
                 "scripts/agent_runtime/bounded_command.py",
-                "scripts/lib/thread_rollover_link.sh",
-                "scripts/lib/deploy_extensions.sh",
-                "scripts/lib/project_interpreter.sh",
-                "scripts/lib/handoff_identity.sh",
-                "scripts/lib/profile_resolver.sh",
-                "scripts/lib/session_supervisor.sh",
                 "scripts/config/issue_streams.yaml",
                 "scripts/config/launcher_stream_aliases.tsv",
                 "agents_extensions/codex/hooks.json",
@@ -167,6 +159,7 @@ def init_repo(
                 "scripts/deploy/agent_directory.py",
             ]
         )
+        sources.extend(str(path) for path in launcher_library_files(REPO_ROOT))
         # Whole packages, as Git tracks them: package data (migrations, the
         # vendored public suffix list the session-stream store loads at import)
         # ships with the code, and no suffix filter can silently drop it.

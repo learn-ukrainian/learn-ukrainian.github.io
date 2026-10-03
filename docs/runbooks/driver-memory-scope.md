@@ -6,7 +6,7 @@ deploy, rollover import or lease acquisition. Normal, untrusted and governor
 routes share this boundary. Help and dry-run do not contact the manager.
 
 `scripts/lib/driver_scope.sh` is the single per-session configuration point:
-`MemoryHigh=3 GiB`, `MemoryMax=5 GiB`, `MemorySwapMax=1 GiB`, with explicit
+`MemoryHigh=6 GiB`, `MemoryMax=9 GiB`, `MemorySwapMax=1 GiB`, with explicit
 `OOMPolicy=continue`. Limits are read back from the actual cgroup; unit ID,
 ControlGroup, Slice, ActiveState and OOMPolicy must agree. Re-entry requires the
 same launcher PID and verified unit. A nested driver gets a new UUID and scope.
@@ -23,23 +23,53 @@ have access to that user's manager; an inaccessible manager is a refusal.
 
 ## Sizing evidence and rule
 
-A read-only measurement on 2026-10-03 followed the process trees of five live
-`start-*-driver.sh` launchers, retaining descendants in the launcher's cgroup
-and excluding dispatched workers in other cgroups. Summed `/proc/<pid>/status`
-`VmHWM` values were **877608, 601660, 673512, 1559928 and 707568 KiB**.
-One-process heartbeat subshells (3444–3644 KiB) were not counted as separate
-sessions. The largest measured living-tree high-water envelope is
-1559928 KiB = about 1.488 GiB.
+The original 3/5 GiB defaults used summed living-process `VmHWM` samples
+whose largest envelope was about 1.488 GiB. Those samples exclude exited
+children, page cache and persistent charges. They do not establish a safe
+ceiling for drivers that run local pytest or builds. The observed session-tree
+range supplied for sizing is 0.4–4.5 GiB, including existing children; retain
+4.5 GiB as a conservative session envelope and reserve another child workload
+in addition. This can double-count existing tools, deliberately leaving room
+for a new local command.
 
-Use `MemoryHigh = ceil(2 × envelope / GiB) GiB`, `MemoryMax =
-ceil(3 × envelope / GiB) GiB`; this gives 3/5 GiB. The swap budget is one third
-of MemoryHigh (1 GiB). This rule gives reclaim headroom and a larger emergency
-ceiling without copying the contaminated terminal-scope peaks. These are
-process high-water measurements, **not complete session cgroup peaks**: exited
-tools, page cache and persistent shared-memory charges are not captured. A
-healthy-session soak must measure the new cgroups' `memory.peak` and
-`memory.swap.peak` before claiming production sizing validated. Ownership of
-that sizing confirmation remains with the DevOps driver.
+On 2026-10-03, a foreground `pytest -n 2` run of 34 explicit launcher and
+isolation test files (2,295 items) ran under a verified finite user scope:
+High=5 GiB minus 40 KiB, Max=5 GiB, swap=0. Its cgroup `memory.peak` was
+**906801152 bytes (0.845 GiB)**, `memory.swap.peak` was **0**, and every
+`memory.events` counter was **0**, including High, Max and OOM events. The
+measurement includes the pytest coordinator, two xdist workers and descendants
+remaining in that scope; launched drivers enter their own bounded sibling
+scopes and are accounted separately. The measurement scope accidentally used
+the production driver namespace, triggering 80 expected fallback refusals in
+tests whose caller must be outside a driver scope. That run is sizing evidence,
+not a passing validation run. Use a neutral scope name/slice for test-suite
+measurements so the enclosing scope does not alter admission semantics.
+
+The final neutral-scope rerun, after the fixture and ceiling changes, passed
+**2,291 tests**, with eight skips (the opt-in OOM soak and seven sparse-tree
+dependencies). It collected 2,299 items and peaked at **799076352 bytes
+(0.744 GiB)**, with zero swap and zero memory-event counters. Keep the larger
+0.845 GiB diagnostic peak for the reserve. The bounded live OOM soak and
+launcher-death renewal regression were then run explicitly: **2 passed**.
+The tracked project tree was materialized for a targeted follow-up (three
+passed, seven skipped); the remaining content guards also require the
+untracked lexicon-data directory, which Git cannot materialize. They remain
+for the full-checkout CI run; no empty directory or fabricated data was used.
+
+Use `envelope = session upper bound + measured child-workload cgroup peak`,
+`MemoryHigh = ceil(envelope / GiB) GiB`, and
+`MemoryMax = ceil(1.5 × envelope / GiB) GiB`. Here the combined envelope is
+5.345 GiB, giving **6/9 GiB**. Keep the swap ceiling at **1 GiB**; do not use
+swap to make the resident-memory budget appear sufficient. These finite
+ceilings reserve local-command space and retain emergency headroom, but do
+not guarantee that every large selection or build fits.
+
+A successful representative V7 build and a healthy full driver-session cgroup
+soak remain required before claiming general production sizing validated.
+Measure `memory.peak`, `memory.swap.peak` and `memory.events` for each new
+workload; update the envelope if it exceeds this sample. The DevOps driver
+owns that confirmation and aggregate admission/capacity review. Raising a
+per-driver ceiling does not establish safe concurrency or a shared-pool cap.
 
 `LU_DRIVER_MEMORY_HIGH`, `LU_DRIVER_MEMORY_MAX` and
 `LU_DRIVER_MEMORY_SWAP_MAX` accept decimal byte values to **lower** the limits
@@ -106,5 +136,6 @@ uncontained. The operator owns that residual. Per-driver containment does not
 complete the whole issue denominator.
 
 References: [systemd-run](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd-run.xml),
+[memory controls](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.resource-control.xml),
 [scope OOM policy](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.scope.xml),
 [kernel memory accounting](https://docs.kernel.org/admin-guide/cgroup-v2.html#memory-interface-files).
