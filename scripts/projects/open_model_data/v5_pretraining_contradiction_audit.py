@@ -32,6 +32,10 @@ if __package__ in {None, ""}:
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.wiki.sum20_official import live_article_predicate_for
 
 
 def resolve_data_path(rel_path: str | Path) -> Path:
@@ -109,7 +113,8 @@ def verify_replacement_attestation(
             (w, w),
         ).fetchone()
         in_sum20 = sources_conn.execute(
-            "SELECT 1 FROM sum20_articles WHERE headword = ? OR normalized_lookup_key = ? LIMIT 1",
+            "SELECT 1 FROM sum20_articles WHERE (headword = ? OR normalized_lookup_key = ?)"
+            f" AND {live_article_predicate_for(sources_conn)} LIMIT 1",
             (w, w),
         ).fetchone()
         in_grinchenko = sources_conn.execute(

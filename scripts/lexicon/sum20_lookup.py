@@ -24,13 +24,16 @@ from bs4 import BeautifulSoup
 
 from scripts.wiki.sum20_official import (
     ensure_sum20_official_schema,
+    live_article_predicate,
     normalize_sum20_lookup,
     parse_sum20_article,
     upsert_sum20_article,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 
 
 @lru_cache(maxsize=1)
@@ -61,7 +64,8 @@ def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite
         conn = sqlite3.connect(db_path, uri=True)
     else:
         target = Path(db_path) if db_path else _resolve_sources_db()
-        conn = sqlite3.connect(target)
+        read_only_uri = f"{target.resolve().as_uri()}?mode=ro"
+        conn = sqlite3.connect(target) if write else sqlite3.connect(read_only_uri, uri=True)
     conn.row_factory = sqlite3.Row
     if not write:
         with contextlib.suppress(sqlite3.OperationalError):
@@ -79,11 +83,13 @@ def lookup_sum20_cached(lemma: str, conn: sqlite3.Connection) -> list[dict[str, 
         cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum20_articles'")
         if not cur.fetchone():
             return []
+        columns = [str(row[1]) for row in cur.execute("PRAGMA table_info(sum20_articles)").fetchall()]
         cur.execute(
-            """
+            f"""
             SELECT a.id, a.wordid, a.headword, a.stressed_headword, a.pos, a.grammar, a.definition_text, a.official_url
             FROM sum20_articles a
-            WHERE a.normalized_lookup_key = ? OR a.normalized_lookup_key LIKE ?
+            WHERE (a.normalized_lookup_key = ? OR a.normalized_lookup_key LIKE ?)
+              AND {live_article_predicate(columns, "a")}
             ORDER BY a.wordid
             """,
             (norm, f"{norm} %"),
@@ -186,13 +192,17 @@ def lookup_sum20_articles(
     enforcing PRAGMA query_only = ON and never attempting schema creation or cache writes.
     To allow network fetching and caching on miss, pass write=True.
     """
-    conn = _get_db(db_path, write=False)
     try:
-        cached = lookup_sum20_cached(lemma, conn)
-        if cached or not write:
-            return cached
-    finally:
-        conn.close()
+        conn = _get_db(db_path, write=False)
+    except sqlite3.OperationalError:  # no database file yet: nothing cached
+        cached: list[dict[str, Any]] = []
+    else:
+        try:
+            cached = lookup_sum20_cached(lemma, conn)
+        finally:
+            conn.close()
+    if cached or not write:
+        return cached
 
     try:
         write_conn = _get_db(db_path, write=True)

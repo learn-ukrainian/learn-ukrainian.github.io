@@ -34,6 +34,7 @@ from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
 from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connection
+from scripts.wiki.sum20_official import live_article_predicate_for
 
 from . import codes, config, db_identity, tags
 
@@ -1071,6 +1072,8 @@ class Sources:
                 "ulif": ("ulif_dictua_entries", "id"),
             }[kind]
             condition = " AND dictionary_slug = 'vts'" if kind == "vts" else ""
+            if kind == "sum20":  # a quarantined СУМ-20 row is never evidence (#9609)
+                condition = f" AND {live_article_predicate_for(self._db())}"
             rows = self._db().execute(f"SELECT * FROM {table} WHERE {column} = ?{condition} ORDER BY id", (key,))
             self._receipt_evidence[eid] = [dict(row) for row in rows]
             self._receipt_identities["sources_db"] = {"scheme": SOURCES_DB_SCHEME}

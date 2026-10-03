@@ -62,6 +62,7 @@ from scripts.lexicon.enrich_manifest import (
     _load_current_slovnyk_cache_file,
     _phrase_contains_lemma,
 )
+from scripts.wiki.sum20_official import live_article_predicate_for
 
 DEFAULT_ATLAS_DB = PROJECT_ROOT / "data" / "atlas.db"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
@@ -117,7 +118,8 @@ FRAZEOLOHICHNYI_PAGE_SIZE = 80
 # source name -> (SQL producing normalizable keys, sections it can fill).
 SOURCES_DB_PROBES: dict[str, tuple[str, tuple[str, ...]]] = {
     "sources.db:sum20": (
-        "SELECT normalized_lookup_key FROM sum20_articles WHERE definition_text IS NOT NULL AND definition_text != ''",
+        "SELECT normalized_lookup_key FROM sum20_articles WHERE definition_text IS NOT NULL AND definition_text != ''"
+        " AND {sum20_live}",
         ("meaning", "definition_cards"),
     ),
     "sources.db:grinchenko": (
@@ -348,6 +350,8 @@ def sources_db_capabilities(sources_db: Path) -> dict[str, dict[str, set[str]]]:
         for source, (sql, sections) in SOURCES_DB_PROBES.items():
             keys: dict[str, set[str]] = {}
             try:
+                if "{sum20_live}" in sql:  # quarantined СУМ-20 rows are never evidence (#9609)
+                    sql = sql.replace("{sum20_live}", live_article_predicate_for(conn))
                 rows = conn.execute(sql)
             except sqlite3.OperationalError:
                 continue  # table absent in this sources.db build

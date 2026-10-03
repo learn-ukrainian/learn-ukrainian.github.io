@@ -486,6 +486,19 @@ def test_sum20_stressed_headword_is_a_real_witness(request):
         receipts.validate_requirement_receipts(document(IDS["sum20"]), sources=api)
 
 
+def test_quarantined_sum20_row_is_never_evidence(request):
+    sources_db, _ = request.getfixturevalue("receipt_sources")
+    with sqlite3.connect(sources_db) as writer:
+        writer.execute("ALTER TABLE sum20_articles ADD COLUMN quarantine_reason TEXT NOT NULL DEFAULT ''")
+    with Sources() as api:
+        receipts.validate_requirement_receipts(document(IDS["sum20"]), sources=api)
+    with sqlite3.connect(sources_db) as writer:
+        writer.execute("UPDATE sum20_articles SET quarantine_reason = 'unverified provenance' WHERE wordid = 2319")
+    with Sources() as api, pytest.raises(ResolverError) as caught:
+        receipts.validate_requirement_receipts(document(IDS["sum20"]), sources=api)
+    assert caught.value.code == codes.EVIDENCE_ID_UNRESOLVED
+
+
 @pytest.mark.parametrize("paradigm", [False, True])
 def test_indexed_vesum_lookup_filters_candidates_and_fails_closed_on_mixed_case(request, monkeypatch, paradigm):
     from scripts.curriculum.evidence import sources as module

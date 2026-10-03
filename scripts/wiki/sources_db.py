@@ -70,6 +70,7 @@ from .sum20_official import (
 from .sum20_official import (
     SUM20_ATTRIBUTION_LABEL,
     SUM20_SOURCE_ID,
+    live_article_predicate,
     normalize_sum20_lookup,
 )
 from .textbook_subjects import normalize_subject_slug
@@ -4225,18 +4226,20 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
 
     The collection is populated only by ``sum20_official_ingest.py``.  This
     reader deliberately has no live fallback, so its returned provenance is
-    always the official stored ``wordid`` record.
+    always the official stored ``wordid`` record.  Quarantined articles
+    (non-empty ``quarantine_reason``, #9609) are never returned.
     """
     normalized_lookup_key = normalize_sum20_lookup(query)
-    if not normalized_lookup_key or not _table_columns("sum20_articles", db_path):
+    columns = _table_columns("sum20_articles", db_path)
+    if not normalized_lookup_key or not columns:
         return []
     conn = _get_conn_for(db_path)
     try:
         articles = conn.execute(
-            """
+            f"""
             SELECT *
             FROM sum20_articles
-            WHERE normalized_lookup_key = ?
+            WHERE normalized_lookup_key = ? AND {live_article_predicate(columns)}
             ORDER BY wordid
             """,
             (normalized_lookup_key,),

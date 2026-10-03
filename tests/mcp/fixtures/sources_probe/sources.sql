@@ -328,7 +328,8 @@ CREATE TABLE sum20_articles (
     official_url TEXT NOT NULL,
     fetched_at TEXT NOT NULL,
     content_sha256 TEXT NOT NULL,
-    parser_version TEXT NOT NULL
+    parser_version TEXT NOT NULL,
+    quarantine_reason TEXT NOT NULL DEFAULT ''
 );
 
 CREATE VIRTUAL TABLE sum20_articles_fts USING fts5(
