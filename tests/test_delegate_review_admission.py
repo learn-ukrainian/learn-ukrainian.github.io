@@ -823,8 +823,61 @@ def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_
 
 # --- #9577: the recorded reviewer exception ---------------------------------------------
 
+import os
+import subprocess
+
+from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+from scripts.ai_agent_bridge import _agy
+
 _KIMI_TOKEN = "KIMI CODING-ONLY"
-_EXCEPTION_FLAGS = ("--review-author-model", "claude-opus-5-5", "--review-risk", "high", "--subject-seat", "codex")
+_CODEX_ADAPTER = "scripts/agent_runtime/adapters/codex.py"
+_EXCEPTION_FLAGS = ("--review-author-model", "claude-opus-5-5", "--review-risk", "high", "--pr", "9557")
+
+
+def _git(repo, *args):
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    return subprocess.run(
+        ["git", "-c", "user.email=t@example.com", "-c", "user.name=t", *args],
+        cwd=repo,
+        env=env,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout.strip()
+
+
+@pytest.fixture
+def reviewed_pr(tmp_path, monkeypatch):
+    """A primary checkout whose PR #9557 head changes the files given; GitHub and fetch are local git."""
+
+    def build(files):
+        repo = tmp_path / "primary"
+        repo.mkdir()
+        _git(repo, "init", "-q", "--initial-branch=main")
+        _git(repo, "remote", "add", "origin", "https://github.com/owner/repo.git")
+        (repo / "README.md").write_text("base\n", encoding="utf-8")
+        _git(repo, "add", "-A")
+        _git(repo, "commit", "-q", "-m", "base")
+        _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+        for path, text in files.items():
+            (repo / path).parent.mkdir(parents=True, exist_ok=True)
+            (repo / path).write_text(text, encoding="utf-8")
+        _git(repo, "add", "-A")
+        _git(repo, "commit", "-q", "-m", "change")
+        head = _git(repo, "rev-parse", "HEAD")
+        monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+        monkeypatch.setattr(_agy, "resolve_same_repo_pr_head", lambda number, *, repo_root: ("claude/impl-9532", head))
+        monkeypatch.setattr(
+            _agy,
+            "list_commit_changed_paths",
+            lambda sha, *, repo_root: _git(
+                repo_root, "diff", "--name-only", "--no-renames", f"origin/main...{sha}"
+            ).splitlines(),
+        )
+        return head
+
+    return build
 
 
 def _kimi_review(*extra, verdict=True):
@@ -832,83 +885,116 @@ def _kimi_review(*extra, verdict=True):
 
 
 @pytest.mark.parametrize("verdict", [True, False])
-def test_9577_dispatch_admits_the_cursor_kimi_review_of_9557(monkeypatch, verdict):
+def test_9577_dispatch_admits_the_cursor_kimi_review_of_a_codex_adapter_change(monkeypatch, reviewed_pr, verdict):
     """A Claude-authored change to the Codex adapter leaves no high-risk seat; the recorded exception reviews it."""
+    head = reviewed_pr({_CODEX_ADAPTER: "VALUE = 1\n"})
     args = _kimi_review(*_EXCEPTION_FLAGS, verdict=verdict)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None
     assert (target.recipient, target.model) == ("cursor", "kimi-k3-high")
     assert routing.substitution is None
-    receipt = delegate._dispatch_review_exception(args, agent="cursor")
+    receipt = target.review_exception
     assert receipt["id"] == "subject-seat-exhausted-kimi-k3-cursor"
     assert receipt["decision"] == "#9532" and receipt["issue"] == "#9577"
     assert receipt["author_family"] == "anthropic" and receipt["subject_seats"] == ["codex"]
+    assert receipt["repository"] == "owner/repo" and receipt["task_id"] == "review-9272"
+    assert receipt["head_sha"] == head and receipt["risk"] == "high"
 
 
-def test_9577_owned_path_classification_also_triggers_the_exception(monkeypatch):
-    args = _kimi_review(
-        "--review-author-model",
-        "claude-opus-5-5",
-        "--review-risk",
-        "high",
-        "--owned-path",
-        "scripts/agent_runtime/adapters/codex.py",
-    )
+def test_9577_an_unrelated_change_declaring_codex_is_refused(monkeypatch, reviewed_pr):
+    """Blocker 1: the subject seat comes from the change, not the caller."""
+    reviewed_pr({"scripts/ci/x.py": "VALUE = 1\n"})
+    args = _kimi_review(*_EXCEPTION_FLAGS, "--subject-seat", "codex")
     (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
-    assert refusal is None and (target.recipient, target.model) == ("cursor", "kimi-k3-high")
+    assert target is None and _KIMI_TOKEN in refusal
+    assert "codex are not supported by the changed files" in refusal
 
 
 @pytest.mark.parametrize(
-    "extra",
+    ("files", "reason"),
     [
-        pytest.param(("--review-author-model", "claude-opus-5-5", "--review-risk", "high"), id="sol-eligible"),
         pytest.param(
-            ("--review-author-model", "claude-opus-5-5", "--review-risk", "critical", "--subject-seat", "codex"),
-            id="critical",
+            {_CODEX_ADAPTER: "VALUE = 1\n", "scripts/ci/labels.py": "LABEL = 'Урок'\n"},
+            "reviewed change: owned file holds Ukrainian content (Cyrillic text in 'scripts/ci/labels.py'",
+            id="cyrillic-content",
         ),
         pytest.param(
-            ("--review-author-model", "claude-opus-5-5", "--review-risk", "medium", "--subject-seat", "codex"),
-            id="medium",
+            {_CODEX_ADAPTER: "VALUE = 1\n", "curriculum/l2-uk-en/a1/plan.yaml": "slug: x\n"},
+            "the resolver does not select the recorded exception",
+            id="curriculum-path",
         ),
         pytest.param(
-            (
-                "--review-author-model",
-                "composer-2.5",
-                "--review-risk",
-                "high",
-                "--subject-seat",
-                "codex",
-                "--subject-seat",
-                "claude",
-            ),
-            id="moonshot-author",
+            {_CODEX_ADAPTER: "VALUE = 1\n", "scripts/api/hramatka_lesson.py": "VALUE = 2\n"},
+            "the reviewed change touches Ukrainian-language surfaces",
+            id="ukrainian-language-surface",
         ),
-        pytest.param((*_EXCEPTION_FLAGS, "--mode", "workspace-write", "--owned-path", "scripts/ci/x.py"), id="write"),
-        pytest.param(("--review-risk", "high", "--subject-seat", "codex"), id="no-author"),
     ],
 )
-def test_9577_every_other_kimi_review_is_still_refused(monkeypatch, extra):
+def test_9577_dispatch_keeps_kimis_content_boundary_for_the_reviewed_change(monkeypatch, reviewed_pr, files, reason):
+    """Blocker 3: the exception relaxes the no-reviews rule and write ownership only."""
+    reviewed_pr(files)
+    (refusal, target), _ = _admit(_kimi_review(*_EXCEPTION_FLAGS), monkeypatch, _budget(codex="cool"))
+    assert target is None and _KIMI_TOKEN in refusal and reason in refusal, refusal
+
+
+_UNRELATED_FILES = {"scripts/ci/x.py": "VALUE = 1\n"}
+_CODEX_FILES = {_CODEX_ADAPTER: "VALUE = 1\n"}
+
+
+@pytest.mark.parametrize(
+    ("files", "extra"),
+    [
+        pytest.param(_UNRELATED_FILES, _EXCEPTION_FLAGS, id="sol-eligible"),
+        pytest.param(_CODEX_FILES, (*_EXCEPTION_FLAGS[:3], "critical", "--pr", "9557"), id="critical"),
+        pytest.param(_CODEX_FILES, (*_EXCEPTION_FLAGS[:3], "medium", "--pr", "9557"), id="medium"),
+        pytest.param(
+            _CODEX_FILES, ("--review-author-model", "composer-2.5", *_EXCEPTION_FLAGS[2:]), id="moonshot-author"
+        ),
+        pytest.param(
+            _CODEX_FILES,
+            (*_EXCEPTION_FLAGS, "--mode", "workspace-write", "--owned-path", "scripts/ci/x.py"),
+            id="write",
+        ),
+        pytest.param(_CODEX_FILES, _EXCEPTION_FLAGS[2:], id="no-author"),
+        pytest.param(_CODEX_FILES, _EXCEPTION_FLAGS[:4], id="no-exact-head"),
+    ],
+)
+def test_9577_every_other_kimi_review_is_still_refused(monkeypatch, reviewed_pr, files, extra):
+    reviewed_pr(files)
     (refusal, target), _ = _admit(_kimi_review(*extra), monkeypatch, _budget(codex="cool"))
     assert target is None
     assert refusal and _KIMI_TOKEN in refusal
 
 
-def test_9577_a_non_review_read_only_kimi_dispatch_is_refused(monkeypatch):
-    args = _kimi_review(verdict=False)
+def test_9577_a_read_only_kimi_dispatch_typed_as_no_review_is_refused_without_reading_the_change(monkeypatch):
+    def unread(*_args, **_kwargs):
+        pytest.fail("a non-review Kimi request must not read the reviewed change")
+
+    monkeypatch.setattr(_agy, "list_commit_changed_paths", unread)
+    args = _kimi_review("--pr", "9557", verdict=False)
     assert not delegate._dispatch_is_review_typed(args)
     (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
     assert target is None and _KIMI_TOKEN in refusal and "--mode read-only" in refusal
-    assert delegate._dispatch_review_exception(args, agent="cursor") is None
 
 
 @pytest.mark.parametrize("slug", ["kimi-k3-max", "kimi-k3-low", "kimi-k3-high-fast"])
-def test_9577_only_the_recorded_cursor_slug_is_admitted(monkeypatch, slug):
+def test_9577_only_the_recorded_cursor_slug_is_admitted(monkeypatch, reviewed_pr, slug):
+    reviewed_pr(_CODEX_FILES)
     args = _args("--agent", "cursor", "--model", slug, *_EXCEPTION_FLAGS)
     (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
     assert target is None and _KIMI_TOKEN in refusal
 
 
-def test_9577_native_kimi_seats_never_take_the_exception(monkeypatch):
+def test_9577_native_kimi_seats_never_take_the_exception(monkeypatch, reviewed_pr):
+    reviewed_pr(_CODEX_FILES)
     args = _args("--agent", "kimi", "--model", "kimi-k3-high", *_EXCEPTION_FLAGS)
     (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
     assert target is None and _KIMI_TOKEN in refusal
+
+
+def test_9577_a_receipt_is_never_accepted_from_the_caller():
+    """Blocker 2: admission computes the receipt from a review-typed request with trusted inputs."""
+    with pytest.raises(TypeError, match="computes the recorded-exception receipt itself"):
+        resolve_and_admit(("cursor",), model="kimi-k3-high", mode="read-only", review_exception={"id": "x"})
+    with pytest.raises(KimiAdmissionRefused, match="admitted only on a review dispatch"):
+        resolve_and_admit(("cursor",), model="kimi-k3-high", mode="read-only", expected_review_exception={"id": "x"})

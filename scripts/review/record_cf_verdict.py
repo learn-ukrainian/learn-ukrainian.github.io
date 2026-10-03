@@ -40,6 +40,7 @@ from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
     SUBJECT_SEAT_EXCEPTION,
     UNRESOLVED_AUTHOR_FAMILIES,
+    ReviewChange,
     resolve_author_family,
     resolve_family,
     verify_review_exception_receipt,
@@ -461,9 +462,7 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
-def _require_formal_reviewer(
-    *, cursor: bool, reported: object, model: str, family: str, task: dict[str, Any]
-) -> dict[str, Any] | None:
+def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, family: str, task: dict[str, Any]) -> bool:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
 
     Through Cursor only a pinned formal seat counts, and only when the runtime
@@ -472,26 +471,69 @@ def _require_formal_reviewer(
     Auto and Cursor-routed Claude are unpinned. Through any other harness Grok
     never judges and Kimi never reviews.
 
-    The recorded exception seat (#9577) counts only with the ``review_exception``
-    receipt its dispatch stored, re-derived here by the reviewer resolver for
-    the task's slug and mode; the receipt is returned so the caller can bind it
-    to the PR's author families.
+    Returns True for the recorded exception seat (#9577), runtime-attested
+    and run at the exception's Cursor slug; the caller then binds its
+    ``review_exception`` receipt to the PR (``_require_exception_receipt``).
     """
     exception = SUBJECT_SEAT_EXCEPTION
     if cursor and exception is not None and model == exception["model_id"] and reported != model:
-        receipt = task.get("review_exception")
-        problem = verify_review_exception_receipt(receipt, mode=task.get("mode"))
-        if problem is None and task.get("model") != exception["dispatch_model"]:
-            problem = "the review did not run the recorded exception's Cursor slug"
-        if problem:
-            raise RecordError(f"reviewer model {model!r} is a recorded exception seat: {problem}")
-        return dict(receipt)
+        if task.get("model") != exception["dispatch_model"]:
+            raise RecordError(
+                f"reviewer model {model!r} is a recorded exception seat: "
+                "the review did not run the recorded exception's Cursor slug"
+            )
+        return True
     if cursor:
         if model in FORMAL_CURSOR_REVIEW_MODELS and reported != model:
-            return None
+            return False
     elif family not in NATIVE_NON_REVIEWER_FAMILIES:
-        return None
+        return False
     raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
+
+
+def pr_changed_paths(repository: str, number: int) -> tuple[str, ...]:
+    """Every path the PR's files touch, a rename's old and new path both (``git diff --no-renames``)."""
+    paths: list[str] = []
+    for entry in _pages(Request("read-files", repo=repository, number=number)):
+        for key in ("filename", "previous_filename"):
+            value = entry.get(key)
+            if key == "filename" and not (isinstance(value, str) and value):
+                raise RecordError("PR file list malformed")
+            if isinstance(value, str) and value:
+                paths.append(value)
+    if not paths:
+        raise RecordError("PR file list unavailable")
+    return tuple(dict.fromkeys(paths))
+
+
+def _require_exception_receipt(
+    task: dict[str, Any], *, task_id: str, repository: str, sha: str, number: int, families: set[str]
+) -> dict[str, Any]:
+    """The stored receipt, bound to this review and this PR, or ``RecordError`` (#9577).
+
+    It is recomputed by the reviewer resolver from this task's id, mode and
+    trusted review inputs (``review_author_model``, ``review_risk``,
+    ``review_profile``) and the PR's repository, exact head and files, so its
+    subject seats are re-derived from the PR's own changed files; any
+    difference refuses. Its author family must be the PR's only author family.
+    """
+    receipt = task.get("review_exception")
+    change = ReviewChange(
+        repository=repository, task_id=task_id, head_sha=sha, changed_paths=pr_changed_paths(repository, number)
+    )
+    problem = verify_review_exception_receipt(
+        receipt,
+        mode=task.get("mode"),
+        change=change,
+        author_model=task.get("review_author_model"),
+        risk=task.get("review_risk"),
+        profile=task.get("review_profile") or "code",
+    )
+    if problem:
+        raise RecordError(f"reviewer model is a recorded exception seat: {problem}")
+    if families != {receipt.get("author_family")}:
+        raise RecordError("recorded-exception receipt names a different author family than the PR's commits")
+    return dict(receipt)
 
 
 @publication_boundary(RecordError)
@@ -523,9 +565,7 @@ def record(
     family = resolve_family(model)
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
-    exception_receipt = _require_formal_reviewer(
-        cursor=cursor, reported=reported, model=model, family=family, task=task
-    )
+    exception_seat = _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, task=task)
     verdict = normalize_verdict(reply)
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:
@@ -542,8 +582,13 @@ def record(
     families = author_families(repository, number, task_root)
     if family in families:
         raise RecordError("reviewer family equals an author family")
-    if exception_receipt is not None and families != {exception_receipt.get("author_family")}:
-        raise RecordError("recorded-exception receipt names a different author family than the PR's commits")
+    exception_receipt = (
+        _require_exception_receipt(
+            task, task_id=task_id, repository=repository, sha=sha, number=number, families=families
+        )
+        if exception_seat
+        else None
+    )
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())

@@ -320,6 +320,35 @@ def prepare_subject_exclusion(
     return SubjectExclusion(frozenset(seats), frozenset(families), tuple(sorted(set(evidence))))
 
 
+def change_supported_seats(
+    changed_paths: tuple[str, ...], declared_seats: frozenset[str] = frozenset()
+) -> frozenset[str]:
+    """Subject seats the changed files themselves support (#9577).
+
+    An unambiguous adapter or hook path supports its one seat. An ambiguous
+    path supports a declared seat only when its classification lists that
+    seat (a shared adapter that seat runs on); a shared surface that lists no
+    seat supports none. A declared seat no changed path supports is a claim,
+    not evidence, and is left out. Unknown declared tokens are left out too;
+    ``prepare_subject_exclusion`` refuses them.
+    """
+    supported: set[str] = set()
+    listed: set[str] = set()
+    for raw_path in changed_paths:
+        classification = classify_owned_path(raw_path)
+        if classification.kind == "seat":
+            supported.update(classification.seats)
+        elif classification.kind == "ambiguous":
+            listed.update(classification.seats)
+    declared: set[str] = set()
+    for seat in declared_seats:
+        try:
+            declared.add(normalize_subject_seat(seat))
+        except ValueError:
+            continue
+    return frozenset(supported | (declared & listed))
+
+
 def candidate_matches_subject_seat(candidate: _SeatCandidate, seat: str) -> bool:
     matcher = _MATCHERS.get(seat)
     if matcher is None:

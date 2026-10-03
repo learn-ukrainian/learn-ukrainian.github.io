@@ -197,15 +197,31 @@ def test_resolve_reviewer_receipt_names_the_recorded_exception(tmp_path):
         "claude-opus-5-5",
         "--risk",
         "high",
-        "--subject-seat",
-        "codex",
+        "--owned-path",
+        "scripts/agent_runtime/adapters/codex.py",
     )
     assert proc.returncode == 0, proc.stderr
     resolution = json.loads(state_file.read_text(encoding="utf-8"))["resolved_reviewer"]
     assert resolution["selected"]["concrete_model"] == "kimi-code/k3"
     assert resolution["recorded_exception"]["id"] == "subject-seat-exhausted-kimi-k3-cursor"
     assert resolution["recorded_exception"]["decision"] == "#9532"
+    assert resolution["recorded_exception"]["subject_seats"] == ["codex"]
     assert "#9577" in resolution["substitution_note"]
+    # A declared seat the changed files do not support never triggers it (#9577 review blocker 1).
+    declared = _run_cli(
+        tmp_path / "declared.json",
+        "resolve-reviewer",
+        "--author-model",
+        "claude-opus-5-5",
+        "--risk",
+        "high",
+        "--owned-path",
+        "scripts/ci/x.py",
+        "--subject-seat",
+        "codex",
+    )
+    assert json.loads(declared.stdout)["recorded_exception"] is None
+    assert json.loads(declared.stdout)["selected"] is None
     ordinary = _run_cli(
         tmp_path / "plain.json", "resolve-reviewer", "--author-model", "claude-opus-5-5", "--risk", "high"
     )

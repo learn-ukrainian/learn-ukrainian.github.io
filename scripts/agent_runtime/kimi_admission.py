@@ -20,7 +20,9 @@ nothing.
 
 One recorded exception is admitted: the read-only Cursor review seat of the
 catalog's ``review_scheduler.subject_seat_review_exception`` (#9532, #9577),
-only with a ``review_exception`` receipt the reviewer resolver re-derives.
+only with a ``review_exception`` receipt the reviewer resolver re-derives for
+the exact reviewed change. That change's files stay under the content rule
+below.
 
 Content is admitted only as plain text: valid UTF-8 with no control
 characters other than tab, LF and CR, and no Cyrillic character (Ukrainian
@@ -61,6 +63,9 @@ OWNED_PATHS_KEY = "kimi_owned_paths"
 # Task-record and ``tool_config`` key carrying the recorded reviewer exception
 # receipt (#9577) from dispatch to the worker, the runner and the recorder.
 REVIEW_EXCEPTION_KEY = "review_exception"
+# ``tool_config`` key carrying the repository the worker resolved from its own
+# checkout, which the runner binds the receipt to (#9577).
+REVIEW_REPOSITORY_KEY = "review_repository"
 ACP_MODE = "acp"
 REVIEW_MODE = "review"
 BRIDGE_MODE = "bridge"
@@ -109,7 +114,8 @@ _SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
 
 # Paths inside an allowlisted root that are still refused. Keys match as
 # prefixes, so ``scripts/api/hramatka_`` covers every Hramatka module.
-KIMI_EXCLUDED_PATHS: dict[str, str] = {
+# Routing policy: refused as write ownership only.
+KIMI_POLICY_EXCLUDED_PATHS: dict[str, str] = {
     "scripts/agent_runtime/kimi_admission.py": "the Kimi admission gate is routing policy",
     "scripts/agent_runtime/kimi_boundary.py": "the Kimi worktree boundary is routing policy",
     "scripts/agent_runtime/target_admission.py": "target resolution and admission is routing policy",
@@ -121,6 +127,10 @@ KIMI_EXCLUDED_PATHS: dict[str, str] = {
     "tests/agent_runtime/adapters/test_kimi_adapter.py": "tests of Kimi's routing policy",
     "tests/agent_runtime/adapters/test_kimicc_headless.py": "tests of Kimi's routing policy",
     "scripts/agent_runtime/profiles/": "reviewer prompt profiles",
+}
+# Ukrainian-language and curriculum surfaces: refused for ownership and, for
+# the recorded reviewer exception, as any file of the reviewed change.
+KIMI_LANGUAGE_EXCLUDED_PATHS: dict[str, str] = {
     "scripts/api/hramatka_": "Hramatka lesson generation and grammar quality gates",
     "tests/api/test_hramatka_": "Hramatka lesson generation and grammar quality gates",
     "scripts/api/sources_router.py": "Ukrainian dictionary and corpus lookups",
@@ -131,6 +141,7 @@ KIMI_EXCLUDED_PATHS: dict[str, str] = {
     "tests/orchestration/test_prompt_contracts.py": "curriculum phase prompt contracts",
     "scripts/orchestration/preparation_evidence.py": "curriculum preparation evidence",
 }
+KIMI_EXCLUDED_PATHS: dict[str, str] = {**KIMI_POLICY_EXCLUDED_PATHS, **KIMI_LANGUAGE_EXCLUDED_PATHS}
 
 # Fleet repository roles a Kimi seat may target (scripts/config/fleet_repos.yaml).
 CODING_REPO_ROLES = frozenset({"public-monorepo"})
@@ -625,15 +636,23 @@ def refuse_kimi_if_disallowed(
     trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]] = (),
     declared_paths: Iterable[str] | None = None,
     review_exception: Mapping[str, Any] | None = None,
+    review_change: Any = None,
+    review_trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]] = (),
 ) -> None:
     """Raise ``KimiAdmissionRefused`` when any effective seat or model is Kimi and the work is not admitted.
 
     The one admitted non-coding activity is the recorded reviewer exception
     (catalog ``review_scheduler.subject_seat_review_exception``, #9532/#9577):
     a read-only review on exactly the exception's seat and Cursor slug, whose
-    ``review_exception`` receipt the reviewer resolver re-derives. It replaces
-    only the mode, review and write-ownership checks; the language, track,
-    prompt-file and repository checks still apply.
+    ``review_exception`` receipt the reviewer resolver re-derives for
+    ``review_change`` (a ``ReviewChange``, or a callable returning one, built
+    by the caller from its own context: task id, reviewed head, changed files
+    and repository). It relaxes only the mode, review and write-ownership
+    checks. The language, track, prompt-file and repository checks still
+    apply, and so does the content boundary: every file of the reviewed
+    change is checked like an owned file in ``review_trees`` (the reviewed
+    commit, or the review worktree) and refused for Cyrillic text or name,
+    non-text content, or a Ukrainian-language path (``review_change_reasons``).
 
     ``effective_participants`` and ``effective_models`` are the seats and
     models after every override, pin and substitution. ``mode`` is the
@@ -658,9 +677,12 @@ def refuse_kimi_if_disallowed(
     owned = tuple(paths)
     declared = owned if declared_paths is None else tuple(declared_paths)
     reasons: list[str] = []
-    exception_problem = (
-        None if review_exception is None else _review_exception_problem(review_exception, participants, models, mode)
-    )
+    change, exception_problem = None, None
+    if review_exception is not None:
+        change, exception_problem = resolve_review_change(review_change)
+        exception_problem = exception_problem or _review_exception_problem(
+            review_exception, participants, models, mode, change
+        )
     review_exception_admitted = review_exception is not None and exception_problem is None
     if review_exception_admitted:
         owned = ()
@@ -687,18 +709,95 @@ def refuse_kimi_if_disallowed(
         reasons.append(f"--repo role {repo!r} is a private repository")
     if not reasons and owned:
         reasons.extend(_content_reasons(owned, trees))
+    if not reasons and review_exception_admitted:
+        reasons.extend(review_change_reasons(change.changed_paths, review_trees))
     if reasons:
         raise KimiAdmissionRefused(format_refusal(seat, reasons))
 
 
+def resolve_review_change(review_change: Any) -> tuple[Any, str | None]:
+    """``(change, None)``, or ``(None, why)`` when the reviewed change cannot be read."""
+    try:
+        change = review_change() if callable(review_change) else review_change
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+        return None, f"the recorded reviewer exception cannot read the reviewed change ({exc})"
+    if change is None:
+        return None, "the recorded reviewer exception has no reviewed change to bind its receipt to"
+    return change, None
+
+
+def review_change_reasons(
+    changed_paths: Sequence[str], trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]]
+) -> list[str]:
+    """Why the change a recorded-exception review reads is outside Kimi's content boundary (#9577).
+
+    The exception relaxes only the no-reviews rule and write ownership, never
+    the language and content boundary. A changed path is refused when it is
+    not repository-relative, names a Ukrainian-language surface
+    (``KIMI_LANGUAGE_EXCLUDED_PATHS``) or has a Cyrillic name; every changed
+    file present in ``trees`` goes through the owned-file content check
+    (``_content_reasons``). The resolver's own Ukrainian-content path rule
+    applies through the receipt.
+    """
+    normalized: list[str] = []
+    reasons: list[str] = []
+    for path in changed_paths:
+        rel = normalize_owned_path(path)
+        if rel is None:
+            reasons.append(f"reviewed change path {path!r} is not a repository-relative path")
+            continue
+        normalized.append(rel)
+    language = [
+        rel for rel in normalized if any(rel.casefold().startswith(prefix) for prefix in KIMI_LANGUAGE_EXCLUDED_PATHS)
+    ]
+    if language:
+        reasons.append(f"the reviewed change touches Ukrainian-language surfaces ({_sample(language)})")
+    named = [rel for rel in normalized if CYRILLIC.search(rel)]
+    if named:
+        reasons.append(f"the reviewed change has Cyrillic file names ({_sample(named)})")
+    reasons.extend(f"reviewed change: {reason}" for reason in _content_reasons(tuple(normalized), trees))
+    return reasons
+
+
+def worktree_review_change(worktree: Path, *, task_id: str | None, repository: str | None) -> Any:
+    """The ``ReviewChange`` checked out in ``worktree``: its HEAD and the files it changes against ``origin/main``.
+
+    The diff is the merge-base diff ``origin/main...HEAD`` with renames split
+    (``--no-renames``), the form dispatch lists for a pinned head. Raises
+    ``RuntimeError`` when either cannot be read.
+    """
+    from scripts.review.reviewer_resolver import ReviewChange
+
+    env = _git_env()
+
+    def git(*args: str) -> bytes:
+        try:
+            proc = subprocess.run(
+                ["git", *args], cwd=worktree, capture_output=True, check=False, env=env, timeout=_GIT_TIMEOUT_S
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise RuntimeError(f"git {args[0]} in {worktree} failed ({exc})") from exc
+        if proc.returncode != 0:
+            detail = proc.stderr.decode("utf-8", "replace").strip() or f"exit {proc.returncode}"
+            raise RuntimeError(f"git {args[0]} in {worktree} failed: {detail}")
+        return proc.stdout
+
+    head = git("rev-parse", "--verify", "HEAD^{commit}").decode("ascii", "replace").strip()
+    raw = git("diff", "--name-only", "--no-renames", "-z", f"origin/main...{head}", "--")
+    paths = tuple(item.decode("utf-8", "surrogateescape") for item in raw.split(b"\0") if item)
+    return ReviewChange(repository=repository or "", task_id=task_id or "", head_sha=head, changed_paths=paths)
+
+
 def _review_exception_problem(
-    receipt: object, participants: Sequence[str | None], models: Sequence[str | None], mode: str
+    receipt: object, participants: Sequence[str | None], models: Sequence[str | None], mode: str, change: Any
 ) -> str | None:
     """Why ``receipt`` does not admit this request as the recorded reviewer exception, or None when it does.
 
     No seat may be a Kimi seat, every Kimi model named must be the receipt's
     exact Cursor slug, the receipt's seat must be addressed, and the resolver
-    must re-derive the receipt for this mode.
+    must re-derive the receipt for this mode and ``change``. Risk, profile and
+    author are the receipt's own here: dispatch admission and the worker
+    computed or compared them from the task's trusted review inputs first.
     """
     if not isinstance(receipt, Mapping):
         return "the recorded reviewer exception receipt is malformed"
@@ -711,7 +810,14 @@ def _review_exception_problem(
         return "the recorded reviewer exception's seat is not the addressed seat"
     from scripts.review.reviewer_resolver import verify_review_exception_receipt
 
-    return verify_review_exception_receipt(receipt, mode=mode)
+    return verify_review_exception_receipt(
+        receipt,
+        mode=mode,
+        change=change,
+        author_model=str(receipt.get("author_model") or ""),
+        risk=str(receipt.get("risk") or ""),
+        profile=str(receipt.get("review_profile") or ""),
+    )
 
 
 def _git_env() -> dict[str, str]:
@@ -764,18 +870,31 @@ def refuse_kimi_execution(
     mode: str,
     cwd: Path | None,
     tool_config: Mapping[str, Any] | None,
+    task_id: str | None = None,
 ) -> None:
     """The runtime and adapter form of the gate: ownership from ``tool_config``, content read in ``cwd``.
 
     Calls ``refuse_kimi_if_disallowed`` with the declared owned paths and the
     execution tree (``cwd`` on disk and at its checked-out commit); no cwd is
-    a refusal. Runs before any launch plan, attribution or provisioning.
+    a refusal. A recorded reviewer exception receipt is bound to this run:
+    ``task_id``, the commit checked out in ``cwd`` and the files it changes,
+    and the repository the worker resolved from that checkout
+    (``REVIEW_REPOSITORY_KEY``); the change's files are content-checked in
+    the same trees. Runs before any launch plan, attribution or provisioning.
     """
 
     def trees() -> list[ContentTree]:
         if cwd is None:
             raise RuntimeError("no execution tree (no cwd)")
         return worktree_trees(Path(cwd))
+
+    def review_change() -> Any:
+        if cwd is None:
+            raise RuntimeError("no execution tree (no cwd)")
+        repository = (tool_config or {}).get(REVIEW_REPOSITORY_KEY)
+        return worktree_review_change(
+            Path(cwd), task_id=task_id, repository=repository if isinstance(repository, str) else None
+        )
 
     receipt = (tool_config or {}).get(REVIEW_EXCEPTION_KEY)
     refuse_kimi_if_disallowed(
@@ -786,6 +905,8 @@ def refuse_kimi_execution(
         tool_config=tool_config,
         trees=trees,
         review_exception=receipt,
+        review_change=review_change,
+        review_trees=trees,
     )
 
 

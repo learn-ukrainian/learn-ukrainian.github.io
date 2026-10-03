@@ -27,7 +27,7 @@ import sys
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -36,7 +36,10 @@ from .kimi_admission import (
     BRIDGE_MODE,
     KimiAdmissionRefused,
     effective_request_targets,
+    format_refusal,
+    is_kimi_seat,
     refuse_kimi_if_disallowed,
+    resolve_review_change,
 )
 
 # Legacy ``ask-<name>`` command names and the ACP participant each one selects.
@@ -110,12 +113,15 @@ class AdmittedTarget:
     registered pin applies); ``reason`` records how the recipient was reached
     (``explicit``, ``compat:<name>``, ``slot:<slot>``,
     ``substitute:<seat>:<reason>``, or the reason a launch route gives).
+    ``review_exception`` is the recorded reviewer exception receipt (#9577)
+    the target was admitted under, else None.
     Only ``resolve_and_admit`` constructs one.
     """
 
     recipient: str
     model: str | None
     reason: str
+    review_exception: Mapping[str, Any] | None = field(default=None, compare=False, hash=False)
 
     def __post_init__(self) -> None:
         if not _MINTING.get():
@@ -166,6 +172,9 @@ def resolve_and_admit(
     review_owned_paths: tuple[str, ...] = (),
     review_subject_seats: frozenset[str] = frozenset(),
     review_subject_families: frozenset[str] = frozenset(),
+    review_change: Any = None,
+    review_trees: Any = (),
+    expected_review_exception: Mapping[str, Any] | None = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -207,30 +216,48 @@ def resolve_and_admit(
     use ``review_alias_model_resolver`` once before selection and carry that
     model resolution into the launch route. Review owned paths and explicit
     subject seats/families use the canonical resolver's exclusion semantics.
+
+    The recorded reviewer exception (#9577) is decided here and nowhere else
+    on this path: only a review dispatch naming exactly the exception's seat,
+    slug and mode, with trusted author and risk inputs, gets a receipt, which
+    the resolver computes from ``review_change`` (a ``ReviewChange``, or a
+    callable returning one, read only for such a request) and whose files the
+    Kimi gate content-checks in ``review_trees``. ``expected_review_exception``
+    is a stored receipt (the worker's task record) that must equal the one
+    computed now. A caller never passes a receipt to the gate directly.
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
     seats, models = effective_request_targets(raw, explicit_model, *attachments)
     models.extend(item for item in also_models if item)
     requested = _gate_names(seats, models)
-    if review_dispatch and len(raw) == 1 and gate.get("review_exception") is None:
-        # The recorded reviewer exception (#9577) is decided by the resolver from
-        # the same trusted review inputs the review route uses below.
-        from scripts.review.reviewer_resolver import review_exception_receipt
-
-        receipt = review_exception_receipt(
-            seat=raw[0],
-            model=explicit_model,
+    if "review_exception" in gate or "review_change" in gate:
+        raise TypeError("resolve_and_admit computes the recorded-exception receipt itself (#9577)")
+    exception_receipt: dict[str, Any] | None = None
+    if review_dispatch and len(raw) == 1 and _names_review_exception(raw[0], explicit_model, mode):
+        exception_receipt, change = _review_exception(
+            raw[0],
+            explicit_model,
             mode=mode,
             author_model=review_author_model,
             risk=review_risk,
             profile=review_profile or "code",
-            owned_paths=review_owned_paths,
+            change=review_change,
             subject_seats=review_subject_seats,
             subject_families=review_subject_families,
+            expected=expected_review_exception,
         )
-        if receipt is not None:
-            gate = {**gate, "review_exception": receipt}
+        gate = {**gate, "review_exception": exception_receipt, "review_change": change, "review_trees": review_trees}
+    elif expected_review_exception is not None:
+        raise KimiAdmissionRefused(
+            format_refusal(
+                explicit_model or raw[0] if raw else "kimi",
+                [
+                    "a recorded reviewer exception receipt is admitted only on a review dispatch of its exact "
+                    "seat, slug and mode (#9577)"
+                ],
+            )
+        )
     refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
 
     fallbacks: Mapping[str, str] = {}
@@ -285,7 +312,7 @@ def resolve_and_admit(
                 owned_paths=review_owned_paths,
                 subject_seats=review_subject_seats,
                 subject_families=review_subject_families,
-                mode=mode,
+                exception_receipt=exception_receipt,
             )
             approved.add(selected)
             return selected
@@ -332,7 +359,60 @@ def resolve_and_admit(
     if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
         refuse_kimi_if_disallowed(*final, mode=mode, **gate)
     with _minting():
-        return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
+        return tuple(
+            AdmittedTarget(recipient, target_model, reason, review_exception=exception_receipt)
+            for recipient, target_model, reason in resolved
+        )
+
+
+def _names_review_exception(seat: str, model: str | None, mode: str) -> bool:
+    """True when a request names exactly the recorded exception's seat, Kimi slug and mode (#9577)."""
+    if not is_kimi_seat(seat, model=model):
+        return False
+    from scripts.review.reviewer_resolver import SUBJECT_SEAT_EXCEPTION
+
+    policy = SUBJECT_SEAT_EXCEPTION
+    return policy is not None and (seat, model, mode) == (policy["route"], policy["dispatch_model"], policy["mode"])
+
+
+def _review_exception(
+    seat: str,
+    model: str | None,
+    *,
+    mode: str,
+    author_model: str | None,
+    risk: str | None,
+    profile: str,
+    change: Any,
+    subject_seats: frozenset[str],
+    subject_families: frozenset[str],
+    expected: Mapping[str, Any] | None,
+) -> tuple[dict[str, Any], Any]:
+    """The recorded-exception receipt and the change it binds, or ``KimiAdmissionRefused`` saying why not."""
+    from scripts.review.reviewer_resolver import review_exception_decision
+
+    resolved, problem = resolve_review_change(change)
+    receipt = None
+    if problem is None:
+        receipt, problem = review_exception_decision(
+            seat=seat,
+            model=model,
+            mode=mode,
+            author_model=author_model,
+            risk=risk,
+            profile=profile,
+            change=resolved,
+            subject_seats=subject_seats,
+            subject_families=subject_families,
+        )
+    if problem is None and expected is not None and dict(expected) != receipt:
+        differing = sorted(
+            key for key in {*expected, *(receipt or {})} if expected.get(key) != (receipt or {}).get(key)
+        )
+        problem = f"the stored recorded-exception receipt does not match this review ({', '.join(differing)})"
+    if problem is not None or receipt is None:
+        raise KimiAdmissionRefused(format_refusal(str(model or seat), ["review dispatches", str(problem)]))
+    return receipt, resolved
 
 
 def _resolve_review_target(
@@ -349,7 +429,7 @@ def _resolve_review_target(
     owned_paths: tuple[str, ...] = (),
     subject_seats: frozenset[str] = frozenset(),
     subject_families: frozenset[str] = frozenset(),
-    mode: str | None = None,
+    exception_receipt: Mapping[str, Any] | None = None,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
@@ -357,8 +437,9 @@ def _resolve_review_target(
     inputs, only intrinsic eligibility can be proven and the requested identity is
     retained. This does not attest cross-family independence for those legacy calls.
     An existing attempt's seat AND model are immutable. The recorded reviewer
-    exception (#9577) is eligible only when the resolver selects it for these
-    trusted inputs and ``mode``; it is never a budget substitute.
+    exception (#9577) is eligible only with the ``exception_receipt``
+    ``resolve_and_admit`` computed for this exact seat and slug; it is never a
+    budget substitute.
     """
     from scripts.review.model_catalog import risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
@@ -372,7 +453,6 @@ def _resolve_review_target(
         resolve_author_family,
         resolve_family,
         resolve_reviewer,
-        review_exception_receipt,
     )
     from scripts.review.subject_seat import prepare_subject_exclusion
 
@@ -420,22 +500,11 @@ def _resolve_review_target(
     author_family = resolve_author_family(author_model or "") if trusted else UNKNOWN_AUTHOR_FAMILY
     if trusted and author_family in UNRESOLVED_AUTHOR_FAMILIES:
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: author's concrete model family cannot be resolved")
-    recorded_exception = (
-        review_exception_receipt(
-            seat=seat,
-            model=requested_model,
-            mode=mode,
-            author_model=author_model,
-            risk=risk,
-            profile=profile,
-            owned_paths=owned_paths,
-            subject_seats=subject_seats,
-            subject_families=subject_families,
-        )
-        if trusted and profile == "code"
-        else None
-    )
-    if recorded_exception is not None:
+    if (
+        trusted
+        and exception_receipt is not None
+        and (seat, requested_model) == (exception_receipt.get("seat"), exception_receipt.get("dispatch_model"))
+    ):
         eligible = True
     elif profile == "ukrainian":
         eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}

@@ -3361,7 +3361,7 @@ def invoke(
     files read in ``cwd``; anything else raises ``KimiAdmissionRefused``
     before attribution, trail provisioning, or adapter planning.
     """
-    refuse_kimi_execution((agent_name,), (model,), mode=mode, cwd=cwd, tool_config=tool_config)
+    refuse_kimi_execution((agent_name,), (model,), mode=mode, cwd=cwd, tool_config=tool_config, task_id=task_id)
     attribution = resolve_invocation_attribution(
         explicit=initiator,
         task_id=task_id,

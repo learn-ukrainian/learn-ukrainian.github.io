@@ -22,7 +22,8 @@ models ``review_scheduler.risk_reviewer_models`` lists (#9538); that is an
 eligibility gate, so it binds explicit pins and custom ladders too. Its one
 recorded exception (catalog ``review_scheduler.subject_seat_review_exception``,
 #9532/#9577) selects a read-only Cursor Kimi K3 seat only when every catalog
-ladder seat at that risk is the change's subject seat or the author's family.
+ladder seat at that risk is the author's family or a subject seat the changed
+files themselves support; a declared seat or family can exclude, never trigger.
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
@@ -54,7 +55,7 @@ from scripts.review.model_catalog import (
     subject_seat_review_exception,
 )
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
-from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
+from scripts.review.subject_seat import change_supported_seats, prepare_subject_exclusion, subject_exclusion_reason
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
@@ -551,7 +552,7 @@ class ReviewerResolution:
     # Receipt naming the recorded exception (catalog
     # ``review_scheduler.subject_seat_review_exception``) when it selected the
     # reviewer; None for every ordinary resolution.
-    recorded_exception: Mapping[str, str] | None = None
+    recorded_exception: Mapping[str, object] | None = None
 
 
 _DUAL_FAMILY_QUORUM_RULE = (
@@ -1014,35 +1015,30 @@ def evaluate_candidate(
     )
 
 
-def _ladder_exhausted_by_independence(inputs: ResolverInputs, risk: str, author_family: str) -> bool:
-    """True when every catalog ladder seat at ``risk`` is the subject seat or the author's family (#9577).
+def _ladder_exhausted_by_independence(
+    inputs: ResolverInputs, risk: str, author_family: str, change_seats: frozenset[str]
+) -> bool:
+    """True when every catalog ladder seat at ``risk`` is a subject seat of the change or the author's family (#9577).
 
-    Health, capacity, circuit and quota exclusions never count: the trigger is
-    decided from identity alone, so an unavailable Sol or Opus leaves the
-    ordinary no-reviewer outcome in place.
+    ``change_seats`` are the subject seats the changed files support
+    (:func:`~scripts.review.subject_seat.change_supported_seats`); a declared
+    seat or family the files do not support never counts. Health, capacity,
+    circuit and quota exclusions never count either: the trigger is decided
+    from identity alone, so an unavailable Sol or Opus leaves the ordinary
+    no-reviewer outcome in place.
     """
     policy = SUBJECT_SEAT_EXCEPTION
     if policy is None or risk not in policy["risks"] or inputs.review_profile not in policy["review_profiles"]:
         return False
     ladder = [candidate for rung in REVIEW_LADDERS.get(risk, ()) for candidate in rung]
-    has_subject = bool(inputs.subject_seats or inputs.subject_families)
     return bool(ladder) and all(
         candidate.family == author_family
-        or (
-            has_subject
-            and subject_exclusion_reason(
-                candidate,
-                seats=inputs.subject_seats,
-                families=inputs.subject_families,
-                evidence=inputs.subject_evidence,
-            )
-            is not None
-        )
+        or subject_exclusion_reason(candidate, seats=change_seats, families=frozenset()) is not None
         for candidate in ladder
     )
 
 
-def _exception_receipt(policy: Mapping[str, object]) -> dict[str, str]:
+def _exception_receipt(policy: Mapping[str, object], change_seats: frozenset[str]) -> dict[str, object]:
     return {
         "id": str(policy["id"]),
         "decision": str(policy["decision"]),
@@ -1050,10 +1046,29 @@ def _exception_receipt(policy: Mapping[str, object]) -> dict[str, str]:
         "dispatch_model": str(policy["dispatch_model"]),
         "mode": str(policy["mode"]),
         "trigger": "every ladder seat at this risk is the change's subject seat or the author's family",
+        "subject_seats": sorted(change_seats),
     }
 
 
-def review_exception_receipt(
+_FULL_SHA_CHARS = frozenset("0123456789abcdef")
+
+
+@dataclass(frozen=True)
+class ReviewChange:
+    """The exact change a recorded-exception review covers (#9577).
+
+    ``changed_paths`` are the files the change touches at ``head_sha`` against
+    its base (a PR's files, or the pinned diff ``origin/main...<head>``). Each
+    check builds this from its own context, never from the receipt.
+    """
+
+    repository: str
+    task_id: str
+    head_sha: str
+    changed_paths: tuple[str, ...]
+
+
+def review_exception_decision(
     *,
     seat: str,
     model: str | None,
@@ -1061,80 +1076,130 @@ def review_exception_receipt(
     author_model: str | None,
     risk: str | None,
     profile: str | None = "code",
-    owned_paths: tuple[str, ...] = (),
+    change: ReviewChange | None,
     subject_seats: frozenset[str] = frozenset(),
     subject_families: frozenset[str] = frozenset(),
-) -> dict[str, object] | None:
-    """The recorded-exception receipt for a review dispatch, or None when the exception does not apply.
+) -> tuple[dict[str, object] | None, str | None]:
+    """``(receipt, None)`` when the recorded exception applies to this review, else ``(None, why not)``.
 
-    The dispatch must name the exception seat exactly (route, Cursor slug,
-    read-only mode), and the canonical resolver, given the same trusted author
-    model, risk, profile and subject inputs, must select that seat through the
-    exception. Dispatch admission, the Kimi gate and the verdict recorder all
-    decide through this one function (#9577).
+    The request must name the exception seat exactly (route, Cursor slug,
+    read-only mode) with trusted author and risk inputs and one exact change
+    (repository, task, full head SHA and its changed files). The canonical
+    resolver then decides from that change: its changed files are the owned
+    and changed paths, so subject seats come from the diff (a declared seat
+    counts only where a changed path supports it, and only to exclude) and
+    the resolver's Ukrainian-content and language-lane exclusions apply. The
+    receipt binds every input it was decided from. Dispatch admission, the
+    worker, the runner and the verdict recorder all decide through this one
+    function (#9577).
     """
     policy = SUBJECT_SEAT_EXCEPTION
-    if policy is None or not author_model or not risk:
-        return None
+    if policy is None:
+        return None, "the catalog records no subject-seat reviewer exception"
     if (seat, model, mode) != (policy["route"], policy["dispatch_model"], policy["mode"]):
-        return None
+        return None, (
+            f"the recorded exception covers only --agent {policy['route']} --model {policy['dispatch_model']} "
+            f"--mode {policy['mode']}"
+        )
+    if not author_model or not risk:
+        return None, "the recorded exception needs trusted review inputs (--review-author-model and --review-risk)"
+    if change is None:
+        return None, "the recorded exception needs the exact reviewed change (--pr, or --branch with --pinned-head)"
+    head = change.head_sha
+    if not change.repository or not change.task_id or len(head) != 40 or not set(head) <= _FULL_SHA_CHARS:
+        return None, "the reviewed change has no repository, task id or full head SHA"
+    if not change.changed_paths:
+        return None, "the reviewed change lists no changed files"
+    profile_name = (profile or "code").strip().casefold()
+    changed = tuple(change.changed_paths)
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model=author_model,
-            review_profile=profile or "code",
-            domain=profile or "code",
+            review_profile=profile_name,
+            domain=profile_name,
             risk=risk,
-            owned_paths=tuple(owned_paths),
+            changed_paths=changed,
+            owned_paths=changed,
             subject_seats=frozenset(subject_seats),
             subject_families=frozenset(subject_families),
         )
     )
+    if resolution.fail_closed_reason:
+        return None, resolution.fail_closed_reason
     if resolution.recorded_exception is None or resolution.selected is None:
-        return None
+        unsupported = sorted(
+            {str(item).strip().casefold() for item in subject_seats}
+            - set(change_supported_seats(changed, frozenset(subject_seats)))
+        )
+        detail = (
+            f"declared subject seat(s) {', '.join(unsupported)} are not supported by the changed files"
+            if unsupported
+            else "an ordinary reviewer is eligible, or the changed files do not make every ladder seat "
+            "a subject seat or the author's family, or the exception seat is itself excluded"
+        )
+        return None, f"the resolver does not select the recorded exception: {detail}"
     return {
         **resolution.recorded_exception,
         "seat": seat,
+        "repository": change.repository,
+        "task_id": change.task_id,
+        "head_sha": head,
         "author_model": author_model,
         "author_family": resolve_author_family(author_model),
         "risk": resolution.resolved_risk,
-        "review_profile": (profile or "code").strip().casefold(),
-        "owned_paths": sorted(owned_paths),
-        "subject_seats": sorted(subject_seats),
-        "subject_families": sorted(subject_families),
-    }
+        "review_profile": profile_name,
+        "declared_subject_seats": sorted(str(item) for item in subject_seats),
+        "declared_subject_families": sorted(str(item) for item in subject_families),
+    }, None
 
 
-def verify_review_exception_receipt(receipt: object, *, mode: str | None) -> str | None:
-    """Why ``receipt`` does not prove the recorded exception for a ``mode`` run, or None when it does.
+def review_exception_receipt(**kwargs: object) -> dict[str, object] | None:
+    """The receipt :func:`review_exception_decision` issues, or None when the exception does not apply."""
+    return review_exception_decision(**kwargs)[0]  # type: ignore[arg-type]
 
-    The receipt is recomputed from its own inputs through
-    :func:`review_exception_receipt`; any field that differs refuses it.
+
+def verify_review_exception_receipt(
+    receipt: object,
+    *,
+    mode: str | None,
+    change: ReviewChange | None,
+    author_model: str | None,
+    risk: str | None,
+    profile: str | None,
+) -> str | None:
+    """Why ``receipt`` does not prove the recorded exception for this review, or None when it does.
+
+    The receipt is recomputed through :func:`review_exception_decision` from
+    the caller's own context (its task id, reviewed head and changed files,
+    and the task's risk, profile and author), never from the receipt's own
+    fields; only the declared subject inputs, which can exclude but never
+    trigger, are read from it. Any field that differs refuses it, so a
+    receipt replayed across tasks, heads, risks, profiles or subjects fails.
     """
     if not isinstance(receipt, Mapping):
         return "no recorded-exception receipt"
-
-    def strings(key: str) -> tuple[str, ...] | None:
-        value = receipt.get(key)
-        if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
-            return None
-        return tuple(value)
-
-    owned, seats, families = strings("owned_paths"), strings("subject_seats"), strings("subject_families")
-    if owned is None or seats is None or families is None:
+    declared_seats, declared_families = receipt.get("declared_subject_seats"), receipt.get("declared_subject_families")
+    if not all(
+        isinstance(value, list) and all(isinstance(item, str) for item in value)
+        for value in (declared_seats, declared_families)
+    ):
         return "recorded-exception receipt is malformed"
-    recomputed = review_exception_receipt(
+    recomputed, reason = review_exception_decision(
         seat=str(receipt.get("seat") or ""),
         model=str(receipt.get("dispatch_model") or ""),
         mode=mode,
-        author_model=str(receipt.get("author_model") or ""),
-        risk=str(receipt.get("risk") or ""),
-        profile=str(receipt.get("review_profile") or ""),
-        owned_paths=owned,
-        subject_seats=frozenset(seats),
-        subject_families=frozenset(families),
+        author_model=author_model,
+        risk=risk,
+        profile=profile,
+        change=change,
+        subject_seats=frozenset(declared_seats),
+        subject_families=frozenset(declared_families),
     )
-    if recomputed is None or recomputed != dict(receipt):
-        return "recorded-exception receipt does not match a current resolver selection (#9577)"
+    if recomputed is None:
+        return f"recorded-exception receipt does not hold for this review: {reason}"
+    differing = sorted(key for key in {*recomputed, *receipt} if recomputed.get(key) != receipt.get(key))
+    if differing:
+        return f"recorded-exception receipt does not match this review ({', '.join(differing)}) (#9577)"
     return None
 
 
@@ -1254,6 +1319,9 @@ def resolve_reviewer(
             fail_closed_reason=f"invalid routing snapshot: {exc}",
         )
 
+    # The recorded exception's trigger reads only the subject seats the changed
+    # files support; declared seats and families still exclude (#9577).
+    change_seats = change_supported_seats(inputs.owned_paths, inputs.subject_seats)
     if inputs.owned_paths or inputs.subject_seats or inputs.subject_families:
         prepared = prepare_subject_exclusion(
             subject_seats=inputs.subject_seats,
@@ -1439,12 +1507,12 @@ def resolve_reviewer(
         candidate, best, selected_rung_index = _best_eligible(eligible_by_fit_and_tier)
         selected = best
 
-    recorded_exception: dict[str, str] | None = None
+    recorded_exception: dict[str, object] | None = None
     if (
         selected is None
         and ladder is None
         and SUBJECT_SEAT_EXCEPTION_CANDIDATE is not None
-        and _ladder_exhausted_by_independence(inputs, risk, author_family)
+        and _ladder_exhausted_by_independence(inputs, risk, author_family, change_seats)
     ):
         exception_seat = SUBJECT_SEAT_EXCEPTION_CANDIDATE
         result = evaluate_candidate(exception_seat, inputs, author_family=author_family, recorded_exception=True)
@@ -1465,7 +1533,7 @@ def resolve_reviewer(
                 ),
             )
             candidate, best, selected = exception_seat, result, result
-            recorded_exception = _exception_receipt(SUBJECT_SEAT_EXCEPTION)
+            recorded_exception = _exception_receipt(SUBJECT_SEAT_EXCEPTION, change_seats)
         trace.append(result)
 
     if selected is not None:

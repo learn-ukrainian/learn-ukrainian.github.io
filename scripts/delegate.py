@@ -5785,8 +5785,9 @@ def _kimi_worker_refusal(
         KimiAdmissionRefused,
         format_refusal,
         is_kimi_seat,
+        worktree_review_change,
     )
-    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 
     boundary_errors = (kimi_boundary.BoundaryError, OSError, subprocess.SubprocessError)
     if not is_kimi_seat(agent, model=model):
@@ -5800,17 +5801,35 @@ def _kimi_worker_refusal(
     try:
         # The recorded reviewer exception (#9577): a read-only review whose task
         # record carries the receipt dispatch admitted. It owns and writes nothing,
-        # so no worktree boundary is installed.
-        # The gate re-derives the receipt, so it is read whatever review flags the worker argv carries.
-        receipt = (_read_state_json(_state_path_no_create(task_id)) or {}).get(REVIEW_EXCEPTION_KEY)
+        # so no worktree boundary is installed. The receipt is recomputed from the
+        # task's trusted review inputs and the change checked out in ``cwd``, and
+        # must equal the stored one, whatever review flags the worker argv carries.
+        state = _read_state_json(_state_path_no_create(task_id)) or {}
+        receipt = state.get(REVIEW_EXCEPTION_KEY)
         if receipt is not None:
-            (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review, review_exception=receipt)
+            (target,) = resolve_and_admit(
+                (agent,),
+                model=model,
+                mode=mode,
+                review=review,
+                review_dispatch=True,
+                review_author_model=state.get("review_author_model"),
+                review_risk=state.get("review_risk"),
+                review_profile=state.get("review_profile"),
+                review_subject_seats=frozenset(_receipt_strings(receipt, "declared_subject_seats")),
+                review_subject_families=frozenset(_receipt_strings(receipt, "declared_subject_families")),
+                review_change=lambda: worktree_review_change(
+                    cwd, task_id=task_id, repository=_resolve_dispatch_repository(cwd)
+                ),
+                review_trees=lambda: _kimi_worktree_trees(cwd),
+                expected_review_exception=receipt if isinstance(receipt, dict) else {},
+            )
             return None, target
         if mode != ADMITTED_MODE or review:
-            # Refused by mode or review alone: no need to read the task record (or create its directory).
+            # Refused by mode or review alone, before any owned path is read.
             resolve_and_admit((agent,), model=model, mode=mode, review=review)
-        # Read-only: a refused worker must leave no task directory or file behind.
-        launch = _read_state_json(_state_path_no_create(task_id)) or {}
+        # Read-only (above): a refused worker must leave no task directory or file behind.
+        launch = state
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
         (target,) = resolve_and_admit(
             (agent,),
@@ -5821,7 +5840,7 @@ def _kimi_worker_refusal(
             repo_root=_REPO_ROOT,
             trees=lambda: _kimi_worktree_trees(cwd),
         )
-    except KimiAdmissionRefused as exc:
+    except (KimiAdmissionRefused, ReviewAdmissionRefused) as exc:
         return str(exc), None
     worktree = launch.get("worktree_path")
     if not worktree or Path(worktree).resolve() != cwd.resolve():
@@ -5832,6 +5851,12 @@ def _kimi_worker_refusal(
     except boundary_errors as exc:
         return format_refusal(agent, [f"the worktree boundary could not be installed ({exc})"]), None
     return None, target
+
+
+def _receipt_strings(receipt: object, key: str) -> list[str]:
+    """A string-list field of a stored recorded-exception receipt; empty when absent or malformed (#9577)."""
+    value = receipt.get(key) if isinstance(receipt, dict) else None
+    return [item for item in value if isinstance(item, str)] if isinstance(value, list) else []
 
 
 def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str, *, base_sha: str | None = None) -> str | None:
@@ -8760,7 +8785,12 @@ def _run_worker(
         print(f"❌ {advisory_refusal}", file=sys.stderr)
         return 1
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
-    from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, REVIEW_EXCEPTION_KEY, is_kimi_seat
+    from scripts.agent_runtime.kimi_admission import (
+        OWNED_PATHS_KEY,
+        REVIEW_EXCEPTION_KEY,
+        REVIEW_REPOSITORY_KEY,
+        is_kimi_seat,
+    )
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
     # through the runtime's finally block (see handler docstring).
@@ -9014,7 +9044,9 @@ def _run_worker(
                 # The runner and the adapters run the same gate on these paths and this tree.
                 tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
                 if state.get(REVIEW_EXCEPTION_KEY) is not None:
+                    # The runner binds the receipt to its task id, this checkout and this repository (#9577).
                     tool_config[REVIEW_EXCEPTION_KEY] = state[REVIEW_EXCEPTION_KEY]
+                    tool_config[REVIEW_REPOSITORY_KEY] = _resolve_dispatch_repository(cwd)
             # #9275: the provider handoff. The admission is re-verified on the
             # exact prompt object submitted below, after every transformation.
             advisory_prompt_sha256 = _verify_bounded_worker(
@@ -10671,6 +10703,16 @@ def _dispatch(
         pinned_head = resolved_head
         args.branch = pr_branch
         args.pinned_head = pinned_head
+    exception_head = (launch_target.review_exception or {}).get("head_sha")
+    if exception_head is not None and exception_head != pinned_head:
+        # The recorded exception (#9577) was admitted for one exact head; the
+        # worktree must check out that head and no other.
+        print(
+            f"❌ recorded reviewer exception admitted head {exception_head}, but this dispatch pins "
+            f"{pinned_head or 'no exact head'}; re-run the dispatch",
+            file=sys.stderr,
+        )
+        return 2
 
     gemini_checked_heads: list[str] = []
     gemini_review_error = gemini_review_verdict_dispatch_error(
@@ -11902,10 +11944,9 @@ def _dispatch(
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
-        review_exception = _dispatch_review_exception(args, agent=dispatch_agent)
-        if review_exception is not None:
+        if launch_target.review_exception is not None:
             # The receipt the worker, the runner and record_cf_verdict re-derive (#9577).
-            initial_state["review_exception"] = review_exception
+            initial_state["review_exception"] = dict(launch_target.review_exception)
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -12815,33 +12856,6 @@ def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
     )
 
 
-def _dispatch_review_exception(args: argparse.Namespace, *, agent: str) -> dict[str, Any] | None:
-    """The recorded reviewer exception receipt (#9577) for an admitted review launch, else None.
-
-    Computed by the reviewer resolver from the same flags dispatch admission
-    read; the worker, the runner and ``record_cf_verdict`` re-derive it.
-    """
-    if not _dispatch_is_review_typed(args):
-        return None
-    from scripts.review.reviewer_resolver import review_exception_receipt
-
-    def flag_values(attr: str) -> list[str]:
-        value = getattr(args, attr, None) or []
-        return [value] if isinstance(value, str) else list(value)
-
-    return review_exception_receipt(
-        seat=agent,
-        model=getattr(args, "model", None),
-        mode=str(getattr(args, "mode", "") or ""),
-        author_model=getattr(args, "review_author_model", None),
-        risk=getattr(args, "review_risk", None),
-        profile=getattr(args, "review_profile", None) or "code",
-        owned_paths=tuple(flag_values("owned_path")),
-        subject_seats=frozenset(flag_values("subject_seat")),
-        subject_families=frozenset(flag_values("subject_family")),
-    )
-
-
 def _cursor_auto_refusal(
     args: argparse.Namespace, *, agent: str, model: str | None, dor_record: dict[str, Any] | None
 ) -> str | None:
@@ -13207,6 +13221,7 @@ def _admit_dispatch_target(
     # ``--research-owned-path`` is checked like one but never stands in for it.
     declared = flag_paths("owned_path")
     owned = declared + flag_paths("research_owned_path")
+    review_change, review_trees = _dispatch_review_change(args)
     try:
         (target,) = resolve_and_admit(
             (agent,),
@@ -13224,6 +13239,8 @@ def _admit_dispatch_target(
             review_owned_paths=tuple(declared),
             review_subject_seats=frozenset(flag_paths("subject_seat")),
             review_subject_families=frozenset(flag_paths("subject_family")),
+            review_change=review_change,
+            review_trees=review_trees,
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
@@ -13237,6 +13254,57 @@ def _admit_dispatch_target(
     except (KimiAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
+
+
+def _dispatch_review_change(args: argparse.Namespace) -> tuple[Callable[[], Any], Callable[[], list[Any]]]:
+    """The reviewed change a recorded-exception review binds to, and the tree its files are read in (#9577).
+
+    Both are read only when ``resolve_and_admit`` sees a request for exactly
+    the exception's seat, slug and mode. The head is ``--pinned-head``, else
+    the ``--pr`` head resolved once; the changed files are that commit's
+    merge-base diff against ``origin/main`` (``list_commit_changed_paths``,
+    which fetches it), read again by the worker, the runner and, from the
+    PR's files, the verdict recorder. Raises ``RuntimeError`` or
+    ``ValueError`` when there is no exact head or it cannot be listed.
+    """
+    cached: list[Any] = []
+
+    def change() -> Any:
+        if cached:
+            return cached[0]
+        from scripts.ai_agent_bridge._agy import (
+            GeminiChangedPathListError,
+            list_commit_changed_paths,
+            resolve_same_repo_pr_head,
+        )
+        from scripts.review.reviewer_resolver import ReviewChange
+
+        head = str(getattr(args, "pinned_head", None) or "").strip().lower()
+        pr_number = getattr(args, "pr", None)
+        try:
+            if not head and pr_number is not None:
+                _branch, head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
+            if not head:
+                raise ValueError("no exact reviewed head: pass --pr, or --branch with --pinned-head")
+            paths = list_commit_changed_paths(head, repo_root=str(_REPO_ROOT))
+        except GeminiChangedPathListError as exc:
+            raise RuntimeError(f"the reviewed change cannot be listed: {exc}") from exc
+        cached.append(
+            ReviewChange(
+                repository=_resolve_dispatch_repository(_REPO_ROOT) or "",
+                task_id=str(getattr(args, "task_id", "") or ""),
+                head_sha=head,
+                changed_paths=tuple(paths),
+            )
+        )
+        return cached[0]
+
+    def trees() -> list[Any]:
+        from scripts.agent_runtime.kimi_admission import CommitTree
+
+        return [CommitTree(_REPO_ROOT, change().head_sha, env=_sanitized_git_env())]
+
+    return change, trees
 
 
 def _discard_model_probe_output(plan: object) -> None:

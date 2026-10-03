@@ -1649,6 +1649,8 @@ def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
 from scripts.review.reviewer_resolver import (
     SUBJECT_SEAT_EXCEPTION,
     SUBJECT_SEAT_EXCEPTION_CANDIDATE,
+    ReviewChange,
+    review_exception_decision,
     review_exception_receipt,
     verify_review_exception_receipt,
 )
@@ -1656,6 +1658,9 @@ from scripts.review.reviewer_resolver import (
 _EXCEPTION_ID = "subject-seat-exhausted-kimi-k3-cursor"
 _AUTHORS = {"openai": "gpt-6.1-sol", "anthropic": "claude-opus-5-5", "moonshot": "composer-2.5"}
 _SUBJECTS = {"none": (), "codex": ("codex",), "claude": ("claude",), "both": ("codex", "claude")}
+# The changed file that makes each seat a subject of the change.
+_SEAT_PATHS = {"codex": "scripts/agent_runtime/adapters/codex.py", "claude": "scripts/agent_runtime/adapters/claude.py"}
+_UNRELATED = "scripts/ci/x.py"
 # The issue's denominator at high risk: author family x subject seats.
 _HIGH_MATRIX = {
     ("openai", "none"): "claude-opus-5-5",
@@ -1674,9 +1679,9 @@ _HIGH_MATRIX = {
 
 
 def _inputs(author: str, subject: str, risk: str = "high", **extra) -> ResolverInputs:
-    return ResolverInputs(
-        author_model=_AUTHORS[author], risk=risk, subject_seats=frozenset(_SUBJECTS[subject]), **extra
-    )
+    """The change's subject seats come from its changed files, as the exception requires."""
+    paths = tuple(_SEAT_PATHS[seat] for seat in _SUBJECTS[subject]) or (_UNRELATED,)
+    return ResolverInputs(author_model=_AUTHORS[author], risk=risk, owned_paths=paths, changed_paths=paths, **extra)
 
 
 @pytest.mark.parametrize(("author", "subject"), sorted(_HIGH_MATRIX))
@@ -1764,30 +1769,136 @@ def test_9577_direct_evaluation_of_the_exception_seat_is_always_excluded(risk):
     )
 
 
-def test_9577_receipt_is_derived_only_for_the_exact_seat_slug_and_mode():
-    base = dict(
-        seat="cursor",
-        model="kimi-k3-high",
-        mode="read-only",
-        author_model="claude-opus-5-5",
-        risk="high",
-        subject_seats=frozenset({"codex"}),
+@pytest.mark.parametrize(
+    ("paths", "declared"),
+    [
+        pytest.param((_UNRELATED,), {"codex"}, id="unrelated-path-declares-codex"),
+        pytest.param((_UNRELATED,), {"codex", "claude"}, id="unrelated-path-declares-both"),
+        pytest.param(("scripts/agent_runtime/adapters/base.py",), {"codex"}, id="shared-surface-lists-no-seat"),
+        pytest.param(("docs/x.md",), set(), id="no-subject"),
+    ],
+)
+def test_9577_declared_seats_the_diff_does_not_support_never_trigger_the_exception(paths, declared):
+    # Blocker 1 (review-9577): an unrelated Claude-authored change declaring codex
+    # excludes Sol (a conservative exclusion) but cannot manufacture Kimi review.
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5", risk="high", owned_paths=paths, subject_seats=frozenset(declared)
+        )
     )
-    receipt = review_exception_receipt(**base)
-    assert receipt["id"] == SUBJECT_SEAT_EXCEPTION["id"] and receipt["author_family"] == "anthropic"
-    assert receipt["subject_seats"] == ["codex"] and receipt["risk"] == "high"
-    assert verify_review_exception_receipt(receipt, mode="read-only") is None
+    assert resolution.recorded_exception is None
+    assert resolution.selected is None or resolution.selected.name != _EXCEPTION_ID
+
+
+@pytest.mark.parametrize(
+    ("paths", "declared"),
+    [
+        pytest.param((_SEAT_PATHS["codex"],), set(), id="codex-adapter"),
+        pytest.param(("scripts/agent_runtime/codex_hook_policy.py",), set(), id="codex-hook"),
+        pytest.param(("scripts/agent_runtime/adapters/acpx.py",), {"codex"}, id="shared-adapter-lists-codex"),
+        pytest.param((_SEAT_PATHS["codex"], _UNRELATED), {"codex"}, id="codex-adapter-plus-unrelated"),
+    ],
+)
+def test_9577_a_genuine_codex_change_triggers_the_exception(paths, declared):
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5", risk="high", owned_paths=paths, subject_seats=frozenset(declared)
+        )
+    )
+    assert resolution.selected is not None and resolution.selected.name == _EXCEPTION_ID
+    assert resolution.recorded_exception["subject_seats"] == ["codex"]
+
+
+def test_9577_a_declared_seat_still_excludes_the_exception_seat_itself():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            risk="high",
+            owned_paths=(_SEAT_PATHS["codex"],),
+            subject_seats=frozenset({"cursor"}),
+        )
+    )
+    assert resolution.recorded_exception is None and resolution.selected is None
+
+
+_HEAD = "a" * 40
+_CHANGE = ReviewChange(
+    repository="owner/repo", task_id="review-x", head_sha=_HEAD, changed_paths=(_SEAT_PATHS["codex"], _UNRELATED)
+)
+_RECEIPT_ARGS = dict(
+    seat="cursor", model="kimi-k3-high", mode="read-only", author_model="claude-opus-5-5", risk="high", change=_CHANGE
+)
+
+
+def _verify(receipt, **override):
+    context = {
+        "mode": "read-only",
+        "change": _CHANGE,
+        "author_model": "claude-opus-5-5",
+        "risk": "high",
+        "profile": "code",
+        **override,
+    }
+    return verify_review_exception_receipt(receipt, **context)
+
+
+def test_9577_receipt_binds_repository_task_head_risk_profile_author_and_derived_subjects():
+    receipt = review_exception_receipt(**_RECEIPT_ARGS)
+    assert receipt["id"] == SUBJECT_SEAT_EXCEPTION["id"]
+    assert receipt["repository"] == "owner/repo" and receipt["task_id"] == "review-x" and receipt["head_sha"] == _HEAD
+    assert receipt["risk"] == "high" and receipt["review_profile"] == "code"
+    assert receipt["author_model"] == "claude-opus-5-5" and receipt["author_family"] == "anthropic"
+    assert receipt["subject_seats"] == ["codex"]
+    assert _verify(receipt) is None
+
+
+def test_9577_receipt_is_issued_only_for_the_exact_seat_slug_mode_and_change():
     for change in (
         {"model": "kimi-k3-max"},
         {"model": "kimi-k3-high-fast"},
         {"seat": "kimi"},
         {"mode": "workspace-write"},
         {"risk": "critical"},
-        {"subject_seats": frozenset()},
         {"author_model": "composer-2.5"},
         {"author_model": None},
+        {"change": None},
+        {"change": replace(_CHANGE, changed_paths=(_UNRELATED,))},
+        {"change": replace(_CHANGE, head_sha="abc123")},
+        {"change": replace(_CHANGE, task_id="")},
+        {"change": replace(_CHANGE, changed_paths=())},
     ):
-        assert review_exception_receipt(**{**base, **change}) is None, change
+        receipt, reason = review_exception_decision(**{**_RECEIPT_ARGS, **change})
+        assert receipt is None and reason, change
+
+
+def test_9577_unsupported_declared_seat_is_named_in_the_refusal():
+    receipt, reason = review_exception_decision(
+        **{**_RECEIPT_ARGS, "change": replace(_CHANGE, changed_paths=(_UNRELATED,))}, subject_seats=frozenset({"codex"})
+    )
+    assert receipt is None and "codex are not supported by the changed files" in reason
+
+
+@pytest.mark.parametrize(
+    "override",
+    [
+        pytest.param({"change": replace(_CHANGE, task_id="review-other")}, id="replay-across-tasks"),
+        pytest.param({"change": replace(_CHANGE, head_sha="b" * 40)}, id="replay-across-heads"),
+        pytest.param({"change": replace(_CHANGE, repository="owner/other")}, id="replay-across-repositories"),
+        pytest.param({"risk": "critical"}, id="critical-task-high-receipt"),
+        pytest.param({"risk": "medium"}, id="medium-task-high-receipt"),
+        pytest.param({"profile": "ukrainian"}, id="profile"),
+        pytest.param({"author_model": "gpt-6.1-sol"}, id="author"),
+        pytest.param({"change": replace(_CHANGE, changed_paths=(_UNRELATED,))}, id="subjects-not-in-the-diff"),
+        pytest.param(
+            {"change": replace(_CHANGE, changed_paths=(_SEAT_PATHS["codex"], _SEAT_PATHS["claude"]))},
+            id="subjects-differ",
+        ),
+        pytest.param({"mode": "acp"}, id="mode"),
+    ],
+)
+def test_9577_a_receipt_replayed_outside_its_review_is_refused(override):
+    receipt = review_exception_receipt(**_RECEIPT_ARGS)
+    assert _verify(receipt, **override)
 
 
 @pytest.mark.parametrize(
@@ -1798,18 +1909,13 @@ def test_9577_receipt_is_derived_only_for_the_exact_seat_slug_and_mode():
         {"subject_seats": []},
         {"risk": "critical"},
         {"id": "another-exception"},
-        {"subject_seats": "codex"},
+        {"task_id": "review-other"},
+        {"head_sha": "b" * 40},
+        {"declared_subject_seats": "codex"},
+        {"declared_subject_seats": ["cursor"]},
     ],
 )
 def test_9577_a_tampered_receipt_is_refused(tamper):
-    receipt = review_exception_receipt(
-        seat="cursor",
-        model="kimi-k3-high",
-        mode="read-only",
-        author_model="claude-opus-5-5",
-        risk="high",
-        subject_seats=frozenset({"codex"}),
-    )
-    assert verify_review_exception_receipt({**receipt, **tamper}, mode="read-only")
-    assert verify_review_exception_receipt(receipt, mode="acp")
-    assert verify_review_exception_receipt(None, mode="read-only")
+    receipt = review_exception_receipt(**_RECEIPT_ARGS)
+    assert _verify({**receipt, **tamper})
+    assert _verify(None)
