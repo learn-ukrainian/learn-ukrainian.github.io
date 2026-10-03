@@ -1325,3 +1325,104 @@ def test_real_nested_scope_without_bus_variables(monkeypatch: pytest.MonkeyPatch
                 timeout=iso.PROBE_TIMEOUT_S,
                 check=False,
             )
+
+
+@pytest.mark.parametrize(
+    "cgroup",
+    [
+        "0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-driver.slice/lu-driver-test.scope\n",
+        "0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-driver.slice/lu-driver-test.scope/tools\n",
+    ],
+)
+def test_driver_scope_refuses_fallback_even_without_launcher_env(monkeypatch, cgroup):
+    original = Path.read_text
+
+    def read(path, *args, **kwargs):
+        if str(path) == "/proc/self/cgroup":
+            return cgroup
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read)
+    monkeypatch.setattr(iso, "probe_isolation", lambda *a, **kw: iso.ProbeResult(False, "bus unavailable"))
+    calls = []
+    with pytest.raises(iso.DispatchIsolationError, match="fallback-refused: inside-driver-scope"):
+        iso.spawn_detached_worker(
+            ["worker"], task_id="t", run_nonce="n", env={}, popen=lambda *a, **kw: calls.append(a)
+        )
+    assert calls == []
+
+
+def test_fallback_refuses_unknown_caller_cgroup(monkeypatch):
+    original = Path.read_text
+
+    def read(path, *args, **kwargs):
+        if str(path) == "/proc/self/cgroup":
+            raise PermissionError("unavailable")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read)
+    monkeypatch.setattr(iso, "probe_isolation", lambda *a, **kw: iso.ProbeResult(False, "bus unavailable"))
+    with pytest.raises(iso.DispatchIsolationError, match="caller-cgroup-unavailable"):
+        iso.spawn_detached_worker(["worker"], task_id="t", run_nonce="n", env={})
+
+
+def test_slice_usage_reads_live_memory_and_swap(monkeypatch):
+    monkeypatch.setattr(
+        iso,
+        "_run",
+        lambda *a, **kw: subprocess.CompletedProcess(
+            [], 0, "ActiveState=active\nControlGroup=/test/lu-dispatch.slice\n"
+        ),
+    )
+    samples = {
+        "memory.current": str(2 * 1024**3),
+        "memory.max": str(20 * 1024**3),
+        "memory.swap.current": str(512 * 1024**2),
+        "memory.swap.max": str(1024**3),
+    }
+    original = Path.read_text
+
+    def read(path, *args, **kwargs):
+        if str(path).startswith("/sys/fs/cgroup/test/"):
+            return samples[path.name]
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read)
+    assert iso.slice_usage_clause() == "lu-dispatch.slice 2.0/20.0 GiB; swap 0.5/1.0 GiB"
+    # Persistent charges change independently of worker reservations/status.
+    samples["memory.current"] = str(3 * 1024**3)
+    samples["memory.swap.current"] = str(1024**3)
+    assert iso.slice_usage_clause() == "lu-dispatch.slice 3.0/20.0 GiB; swap 1.0/1.0 GiB"
+
+
+@pytest.mark.parametrize(
+    "show", ["ActiveState=inactive\nControlGroup=/test\n", "ActiveState=active\nControlGroup=/../test\n"]
+)
+def test_slice_usage_refuses_invalid_live_cgroup(monkeypatch, show):
+    monkeypatch.setattr(iso, "_run", lambda *a, **kw: subprocess.CompletedProcess([], 0, show))
+    assert iso.slice_usage_clause() is None
+
+
+def test_slice_usage_missing_counters_is_unknown(monkeypatch):
+    monkeypatch.setattr(
+        iso,
+        "_run",
+        lambda *a, **kw: subprocess.CompletedProcess(
+            [], 0, "ActiveState=active\nControlGroup=/nonexistent-scope-test\n"
+        ),
+    )
+    assert iso.slice_usage_clause() is None
+
+
+def test_fallback_refuses_empty_cgroup_evidence(monkeypatch):
+    original = Path.read_text
+
+    def read(path, *args, **kwargs):
+        if str(path) == "/proc/self/cgroup":
+            return ""
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read)
+    monkeypatch.setattr(iso, "probe_isolation", lambda *a, **kw: iso.ProbeResult(False, "bus unavailable"))
+    with pytest.raises(iso.DispatchIsolationError, match="caller-cgroup-unverifiable"):
+        iso.spawn_detached_worker(["worker"], task_id="t", run_nonce="n", env={})

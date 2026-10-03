@@ -94,6 +94,7 @@ EXIT CODES:
   3  Required provider credential or executable is unavailable.
   4  Driver certification is missing or revoked.
   5  Provider transport is degraded; use the stated external-fleet disposition.
+  6  Driver memory scope unavailable or unverifiable; no unbounded override.
 
 Examples:
   ./${name} --help
@@ -920,6 +921,7 @@ launcher_driver_renew_loop() {
   local heartbeat_error
   local renew_interval="${SESSION_STREAM_RENEW_INTERVAL_SECONDS:-300}"
   local renew_jitter="${SESSION_STREAM_RENEW_JITTER_SECONDS:-30}"
+  local launcher_pid="$$"
   (
     # A backgrounded interval sleep can be orphaned when TERM lands between its
     # spawn and the PID capture; the orphan keeps the launcher's output pipes
@@ -936,12 +938,12 @@ launcher_driver_renew_loop() {
       fi
       rm -f "$wait_fifo"
     fi
-    while [ -z "$renew_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
+    while [ -z "$renew_stop" ] && kill -0 "$launcher_pid" 2>/dev/null && kill -0 "$child_pid" 2>/dev/null; do
       # Five minutes with a bounded +/-30s jitter avoids synchronized renewals.
       # Short slices only: a long `read -t` resumes its full timeout after a
       # trapped signal instead of returning, which would stall teardown.
       slices=$(( (renew_interval - renew_jitter + RANDOM % (2 * renew_jitter + 1)) * 10 ))
-      while [ "$slices" -gt 0 ] && [ -z "$renew_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
+      while [ "$slices" -gt 0 ] && [ -z "$renew_stop" ] && kill -0 "$launcher_pid" 2>/dev/null && kill -0 "$child_pid" 2>/dev/null; do
         if [ -n "$wait_fd" ]; then
           read -r -t 0.1 -u "$wait_fd" _ 2>/dev/null || true
         else
@@ -951,7 +953,7 @@ launcher_driver_renew_loop() {
         slices=$((slices - 1))
       done
       [ -n "$renew_stop" ] && break
-      if ! kill -0 "$child_pid" 2>/dev/null; then
+      if ! kill -0 "$launcher_pid" 2>/dev/null || ! kill -0 "$child_pid" 2>/dev/null; then
         break
       fi
       if heartbeat_error="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
@@ -1281,6 +1283,9 @@ launcher_main() {
   # Consumed by session_supervisor_exec_successor in the sourced helper.
   # shellcheck disable=SC2034
   LC_DRIVER_ORIGINAL_ARGS=("$@")
+  # Re-entry must retain --force for the first actual lease acquisition;
+  # successor arguments intentionally drop it later in this same startup.
+  LC_SCOPE_ORIGINAL_ARGS=("$@")
   LC_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
   # Keep route selection self-contained for minimal/synthetic launchers while
   # sourcing the richer cold-start clause whenever the full checkout is
@@ -1307,6 +1312,16 @@ launcher_main() {
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode
   launcher_validate_driver_certification
+  # Every driver path enters before expensive preparation, import and lease.
+  if [ "$LC_MODE" = driver ]; then
+    if [ "$LC_DRY_RUN" = 1 ]; then
+      printf 'LAUNCHER_DRY_RUN=1: would enter a verified per-driver memory-limited scope in lu-driver.slice\n'
+    else
+      # shellcheck source=scripts/lib/driver_scope.sh
+      source "$LC_ROOT/scripts/lib/driver_scope.sh" || exit 6
+      launcher_enter_driver_scope || exit 6
+    fi
+  fi
   # Before any adapter check, plane probe or deploy: no core, no launch.
   launcher_load_rules_core
   # shellcheck disable=SC1090

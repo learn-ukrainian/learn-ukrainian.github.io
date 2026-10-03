@@ -14,7 +14,7 @@ ends, dispatch stops it and uses plain ``Popen``, recording ``popen-fallback``.
 If the process image is already the worker, that process is kept. If ``/proc``
 cannot show which image it is, or the start marker arrives only as the process
 is stopped, the dispatch fails instead of starting a second worker. Isolation
-is never required for a dispatch to start.
+is required inside a driver scope: plain-process fallback there is refused.
 
 A worker that dispatches workers of its own (a builder that starts writers)
 runs under the sanitized agent environment, which has neither
@@ -402,7 +402,7 @@ def slice_usage_clause(*, timeout_s: float = PROBE_TIMEOUT_S) -> str | None:
     """
     try:
         completed = _run(
-            ["systemctl", "--user", "show", "-p", "ActiveState,MemoryCurrent,MemoryMax", SLICE_UNIT],
+            ["systemctl", "--user", "show", "-p", "ActiveState,ControlGroup", SLICE_UNIT],
             user_manager_env(os.environ),
             timeout_s,
         )
@@ -410,7 +410,24 @@ def slice_usage_clause(*, timeout_s: float = PROBE_TIMEOUT_S) -> str | None:
         return None
     if completed.returncode != 0:
         return None
-    return format_slice_show(completed.stdout)
+    props = _properties(completed.stdout)
+    cgroup = props.get("ControlGroup", "")
+    if props.get("ActiveState") != "active" or not cgroup.startswith("/") or ".." in cgroup.split("/"):
+        return None
+    root = Path("/sys/fs/cgroup") / cgroup.lstrip("/")
+    try:
+        counters = {
+            key: (root / filename).read_text(encoding="ascii").strip()
+            for key, filename in (
+                ("MemoryCurrent", "memory.current"),
+                ("MemoryMax", "memory.max"),
+                ("MemorySwapCurrent", "memory.swap.current"),
+                ("MemorySwapMax", "memory.swap.max"),
+            )
+        }
+    except OSError:
+        return None
+    return format_slice_show("ActiveState=active\n" + "\n".join(f"{key}={value}" for key, value in counters.items()))
 
 
 def format_slice_show(text: str) -> str | None:
@@ -424,8 +441,15 @@ def format_slice_show(text: str) -> str | None:
     limit = _parse_bytes(props.get("MemoryMax"))
     current_gib = current / _GIB
     if limit is None:
-        return f"{SLICE_UNIT} {current_gib:.1f} GiB (MemoryMax infinity)"
-    return f"{SLICE_UNIT} {current_gib:.1f}/{limit / _GIB:.1f} GiB"
+        clause = f"{SLICE_UNIT} {current_gib:.1f} GiB (MemoryMax infinity)"
+    else:
+        clause = f"{SLICE_UNIT} {current_gib:.1f}/{limit / _GIB:.1f} GiB"
+    swap = _parse_bytes(props.get("MemorySwapCurrent"))
+    swap_limit = _parse_bytes(props.get("MemorySwapMax"))
+    if swap is not None:
+        ceiling = f"{swap_limit / _GIB:.1f}" if swap_limit is not None else "infinity"
+        clause += f"; swap {swap / _GIB:.1f}/{ceiling} GiB"
+    return clause
 
 
 def _fallback(
@@ -440,6 +464,17 @@ def _fallback(
     allow_fallback: bool,
     user_bus: UserBus,
 ) -> tuple[subprocess.Popen[Any], WorkerLaunch]:
+    try:
+        cgroup = Path("/proc/self/cgroup").read_text(encoding="utf-8")
+    except OSError as exc:
+        raise DispatchIsolationError("fallback-refused: caller-cgroup-unavailable") from exc
+    # Read the caller, not worker env: sandboxes remove launcher variables.
+    # No harness currently has a validated bounded fallback exemption.
+    paths = [line[3:] for line in cgroup.splitlines() if line.startswith("0::")]
+    if len(paths) != 1 or not paths[0].startswith("/"):
+        raise DispatchIsolationError("fallback-refused: caller-cgroup-unverifiable")
+    if "lu-driver.slice" in paths[0].split("/"):
+        raise DispatchIsolationError("fallback-refused: inside-driver-scope; " + reason)
     if not allow_fallback:
         raise DispatchIsolationError(reason)
     _warn(reason)
