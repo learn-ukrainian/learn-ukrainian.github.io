@@ -376,6 +376,16 @@ level. Runner rejects invocations requesting an unsupported mode with
 `ValueError` if missing. This prevents "write to wherever Python happens
 to be running" bugs.
 
+Sources access in review routes uses the tool set derived from the server's
+`readOnlyHint` annotations, checked by the behavioral side-effect audit. Formal
+receipt contracts are subsets of that set. Codex scoped review config and ad hoc
+read-only argv expose only those readers through `enabled_tools` and approve them
+individually; writers remain hidden even when a verified parent OS sandbox
+requires nested sandbox bypass. Claude denies the persisting tools explicitly;
+AGY formal attempts enforce the receipt contract through the sources boundary
+and exact full-review permission rules. Cache-writing ULIF and Wikipedia tools
+are unavailable to reviewers; writers' access is unchanged.
+
 ### Claude headless permissions
 
 Ordinary Claude `read-only` dispatches and bridge asks opt in with

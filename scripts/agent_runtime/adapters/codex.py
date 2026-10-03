@@ -47,6 +47,7 @@ from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_
 
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
+from ..sources_read_only import SOURCES_READ_ONLY_TOOLS
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -89,13 +90,21 @@ _CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 
 
-# Codex treats an unannotated MCP tool as approval-required. Under
-# approval_policy=never and a read-only sandbox, exec cancels that call
-# ("MCP tool call requires approval, but approval policy is never").
-# Approving the sources server keeps the filesystem sandbox and lets the
-# read-only sources MCP run. Write modes already pass
-# --dangerously-bypass-approvals-and-sandbox.
-_SOURCES_MCP_APPROVAL = 'mcp_servers.sources.default_tools_approval_mode="approve"'
+# Exposure filtering remains effective even under parent-sandboxed bypass.
+
+
+def _sources_read_only_flags() -> list[str]:
+    """Replace inherited sources grants with audited readers, then approve each."""
+    tools = {name: {"approval_mode": "approve"} for name in SOURCES_READ_ONLY_TOOLS}
+    approvals = "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in tools) + "}"
+    return [
+        "-c",
+        "mcp_servers.sources.enabled_tools=" + _json.dumps(list(SOURCES_READ_ONLY_TOOLS)),
+        "-c",
+        'mcp_servers.sources.default_tools_approval_mode="prompt"',
+        "-c",
+        "mcp_servers.sources.tools=" + approvals,
+    ]
 
 
 def _prompt_names_sources_mcp(prompt: str) -> bool:
@@ -105,7 +114,7 @@ def _prompt_names_sources_mcp(prompt: str) -> bool:
 def _argv_can_call_sources_mcp(argv: list[str]) -> bool:
     if "--dangerously-bypass-approvals-and-sandbox" in argv:
         return True
-    return any(_SOURCES_MCP_APPROVAL in item for item in argv)
+    return all(flag in argv for flag in _sources_read_only_flags())
 
 
 def _read_only_tmp_flags(root: Path) -> list[str]:
@@ -126,8 +135,6 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
         "features.network_proxy=true",
         "-c",
         'approval_policy="never"',
-        "-c",
-        _SOURCES_MCP_APPROVAL,
     ]
 
 
@@ -247,11 +254,14 @@ class CodexAdapter:
         """
         if model is not None and model not in CODEX_APPROVED_MODELS:
             approved = ", ".join(sorted(CODEX_APPROVED_MODELS))
-            raise ValueError(
-                f"CodexAdapter: model={model!r} rejected; approved models are {approved}"
-            )
+            raise ValueError(f"CodexAdapter: model={model!r} rejected; approved models are {approved}")
 
         tc_early = tool_config or {}
+        if tc_early.get("attempt_os_sandbox"):
+            from ..attempt_boundary import AttemptBoundary
+
+            if not isinstance(tc_early.get("review_attempt_boundary"), AttemptBoundary):
+                raise ValueError("CodexAdapter: attempt_os_sandbox requires the parent attempt boundary")
         read_only_tmp_root = validate_read_only_tmp_root(tc_early, cwd, mode, adapter="CodexAdapter")
         review_write_root: Path | None = None
         if tc_early.get("review_isolation"):
@@ -405,7 +415,7 @@ class CodexAdapter:
             # ``resume`` has no -s/--sandbox flag, but accepts config
             # overrides. Reassert the requested boundary instead of inheriting
             # a broader mode if a caller changes delivery metadata mid-thread.
-            cmd.extend(["-c", 'sandbox_mode="read-only"', "-c", _SOURCES_MCP_APPROVAL])
+            cmd.extend(["-c", 'sandbox_mode="read-only"'])
         else:
             cmd.extend(self._mode_flags(mode))
         # Dispatched workers must have NO write-capable GitHub connector tools
@@ -416,6 +426,9 @@ class CodexAdapter:
         # enables toggles.
         cmd.extend(["--disable", "apps"])
         cmd.extend(self._tool_config_flags(tool_config))
+        if mode == "read-only":
+            # Last overrides win: caller/global config cannot re-expose writers.
+            cmd.extend(_sources_read_only_flags())
         if has_session_to_resume:
             cmd.append(session_id)
         cmd.append("-")  # Read prompt from stdin.
@@ -656,7 +669,9 @@ class CodexAdapter:
             rate_limited = False
         else:
             stderr_for_check = _strip_codex_prompt_echo(stderr)
-            combined_for_rl_check = "\n".join(part for part in (stdout, stderr_for_check, file_output, rollout_response) if part)
+            combined_for_rl_check = "\n".join(
+                part for part in (stdout, stderr_for_check, file_output, rollout_response) if part
+            )
             pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
             # Call failed if neither -o nor rollout gave us content.
             call_failed = returncode != 0 or not durable_output
@@ -686,8 +701,11 @@ class CodexAdapter:
             # Only this invocation's -o result is schema-constrained. Preserve
             # tool telemetry, but never recover unconstrained rollout prose.
             return structured_result(
-                json_value(file_output), output_schema, returncode=returncode,
-                session_id=session_id, tool_calls=tool_calls,
+                json_value(file_output),
+                output_schema,
+                returncode=returncode,
+                session_id=session_id,
+                tool_calls=tool_calls,
             )
 
         # Nonzero exit content is admitted only through the bound terminal
@@ -1075,7 +1093,10 @@ class CodexAdapter:
         try:
             lines = (
                 safe_read_attempt_file(
-                    rollout, trusted_root=trusted_root, max_bytes=_SESSION_META_READ_BYTES, prefix=True,
+                    rollout,
+                    trusted_root=trusted_root,
+                    max_bytes=_SESSION_META_READ_BYTES,
+                    prefix=True,
                 )
                 .decode("utf-8", errors="replace")
                 .splitlines()
@@ -1151,8 +1172,7 @@ class CodexAdapter:
                         if parts:
                             candidates = [*parts, "\n".join(parts)]
                             if any(
-                                _normalize_payload_for_rollout_match(candidate) == expected
-                                for candidate in candidates
+                                _normalize_payload_for_rollout_match(candidate) == expected for candidate in candidates
                             ):
                                 return True
             return False
@@ -1259,7 +1279,7 @@ class CodexAdapter:
         dispatch.py::_codex_dispatch_flags for consistency during migration.
         """
         if mode == "read-only":
-            return ["-s", "read-only", "-c", _SOURCES_MCP_APPROVAL]
+            return ["-s", "read-only"]
         # workspace-write and danger both need the bypass flag for MCP
         # access. multi_agent is on by default to match start-codex.sh.
         return [

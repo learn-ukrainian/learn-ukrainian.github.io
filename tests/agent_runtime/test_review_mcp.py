@@ -899,7 +899,7 @@ def test_codex_scoped_config_names_only_stdio_sources(
     assert sources["args"] == mcp_json["args"]
     assert sources["env"] == mcp_json["env"]
     assert set(sources["env"]) == {ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH, "LU_REVIEW_ACCESS"}
-    assert sources["default_tools_approval_mode"] == "approve"
+    assert sources["default_tools_approval_mode"] == "prompt"
     assert sources["required"] is True
     auth = plan.codex_home / "auth.json"
     assert auth.is_symlink()
@@ -1101,7 +1101,7 @@ def test_codex_adapter_final_argv_and_env_use_scoped_home(manifest_file: Path, t
     joined = " ".join(invocation.cmd)
     assert "mcp_servers.sources.url" not in joined
     assert "8766" not in joined
-    assert 'mcp_servers.sources.default_tools_approval_mode="approve"' in invocation.cmd
+    assert 'mcp_servers.sources.default_tools_approval_mode="prompt"' in invocation.cmd
 
 
 def test_codex_ordinary_dispatch_has_no_scoped_home_or_url_override(tmp_path: Path) -> None:

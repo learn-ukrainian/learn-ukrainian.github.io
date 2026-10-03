@@ -54,21 +54,21 @@ The core lesson checks are evaluated and recorded in the checks object as clean 
    The four language sub-checks as separate passes, each naming their tools from REVIEW_TOOLS:
    - **Pass 1: Russianisms (`russianism`)**
      Examine the text for Russianisms or direct Russian lexical borrowings. Heritage check before calling any unfamiliar word a Russianism.
-     Tools: `search_heritage`, `check_russian_shadow`, `search_style_guide`, `search_text`, `query_r2u`, `inspect_word`, `inspect_words`, `query_sum20`, `query_ulif`.
+     Tools: `search_heritage`, `check_russian_shadow`, `search_style_guide`, `search_text`, `query_r2u`, `inspect_word`, `inspect_words`, `query_sum20`.
    - **Pass 2: Surzhyk (`surzhyk`)**
      Examine the text for hybrid non-standard Ukrainian-Russian forms, Surzhyk vocabulary, and morphology.
-     Tools: `search_style_guide`, `search_text`, `search_ua_gec_errors`, `query_r2u`, `inspect_word`, `inspect_words`, `query_sum20`, `query_ulif`.
+     Tools: `search_style_guide`, `search_text`, `search_ua_gec_errors`, `query_r2u`, `inspect_word`, `inspect_words`, `query_sum20`.
    - **Pass 3: Calques (`calque`)**
      Examine the text for semantic, syntactic, and phraseological calques copied from Russian or English patterns.
-     Tools: `search_style_guide`, `search_text`, `search_ua_gec_errors`, `query_r2u`, `inspect_word`, `inspect_words`, `query_sum20`, `query_ulif`.
+     Tools: `search_style_guide`, `search_text`, `search_ua_gec_errors`, `query_r2u`, `inspect_word`, `inspect_words`, `query_sum20`.
    - **Pass 4: Paronyms (`paronym`)**
      Examine the text for confused paronyms or near-homophones used in the wrong meaning.
-     Tools: `search_style_guide`, `search_text`, `inspect_word`, `inspect_words`, `query_sum20`, `query_ulif`.
+     Tools: `search_style_guide`, `search_text`, `inspect_word`, `inspect_words`, `query_sum20`.
 
    Other language sub-dimensions:
-   - `government` and `agreement`: `query_sum20`, `query_ulif`, `search_style_guide`, `search_text`, `search_ua_gec_errors`
+   - `government` and `agreement`: `query_sum20`, `search_style_guide`, `search_text`, `search_ua_gec_errors`
    - `orthography`: `query_pravopys`, `check_text`, `verify_words`, `inspect_word`, `inspect_words`
-   - `register` and `euphony`: `query_sum20`, `query_ulif`, `search_style_guide`, `search_text`
+   - `register` and `euphony`: `query_sum20`, `search_style_guide`, `search_text`
    - `stress`: `verify_stress` (verify stress against word records)
    - literary and quote verification: `verify_quote`
    - corpus attestation and frequency: `query_grac`, `query_cefr_level`

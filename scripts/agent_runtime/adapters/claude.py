@@ -39,7 +39,8 @@ Mode handling:
   that persist a live fetch are denied. An ``mcp_config_path`` is accepted
   only for a formal full-access attempt, whose harness-written config and
   tool contract are unchanged. Explicit caller tool
-  lists pass through unchanged and do not receive reviewer-only restrictions.
+  lists retain their allow entries but read-only calls always deny persisting
+  sources tools.
   Prefix Bash denies are advisory; the repository PreToolUse guards are the
   primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
   a primary-checkout write in a live probe, so it is not that backstop.
@@ -98,6 +99,7 @@ from pathlib import Path
 from typing import Any
 
 from ..result import ParseResult
+from ..sources_read_only import SOURCES_PERSISTING_TOOLS, SOURCES_READ_ONLY_TOOLS
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -150,65 +152,7 @@ _WORKSPACE_WRITE_TOOLS = (
 )
 _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 
-# The sources MCP server's tools, split by their annotation in
-# .mcp/servers/sources/server.py. Tests keep both tuples equal to the server's
-# annotations, and the annotations equal to the writes each tool is observed
-# to attempt, so a new or write-capable tool fails CI before a reviewer can be
-# granted it.
 SOURCES_MCP_SERVER = "sources"
-# readOnlyHint=True: lookups with no persistent write beyond the request log.
-SOURCES_READ_ONLY_TOOLS = (
-    "check_modern_form",
-    "check_russian_shadow",
-    "check_text",
-    "collection_stats",
-    "get_chunk_context",
-    "get_full_text",
-    "inspect_lemma",
-    "inspect_word",
-    "inspect_words",
-    "mcp_server_identity",
-    "query_cefr_level",
-    "query_e2u",
-    "query_grac",
-    "query_pravopys",
-    "query_r2u",
-    "query_slovnyk_me",
-    "query_sum20",
-    "query_ulif_records",
-    "search_definitions",
-    "search_esum",
-    "search_external",
-    "search_grinchenko_1907",
-    "search_heritage",
-    "search_idioms",
-    "search_literary",
-    "search_resources",
-    "search_slovnyk_me",
-    "search_sources",
-    "search_style_guide",
-    "search_synonyms",
-    "search_text",
-    "search_ua_gec_errors",
-    "translate_en_uk",
-    "verify_lemma",
-    "verify_quote",
-    "verify_source_attribution",
-    "verify_stress",
-    "verify_stresses",
-    "verify_word",
-    "verify_words",
-    "vet_vocabulary",
-)
-# readOnlyHint=False: query_wikipedia writes data/wiki_cache.db and the DictUA
-# tools store a cache miss in sources.db. Reviewers are denied these.
-SOURCES_PERSISTING_TOOLS = (
-    "query_ulif",
-    "query_ulif_antonyms",
-    "query_ulif_phraseology",
-    "query_ulif_synonyms",
-    "query_wikipedia",
-)
 
 # Ordinary Claude reviewers need a non-interactive shell. Claude Bash deny
 # patterns match prefixes only: git -C, wrappers, and interpreters can bypass
@@ -672,7 +616,8 @@ class ClaudeAdapter:
             profile = REVIEWER_PERMISSION_PROFILE
             cmd.extend(["--permission-mode", profile["mode"]])
             granted = [*profile["allow"]]
-            denied = [*profile["deny"]]
+            # Deny wins over explicit/global allow entries, including full reviews.
+            denied = [*profile["deny"], *_sources_rules(SOURCES_PERSISTING_TOOLS)]
             if tc.get("mcp_config_path") and tc.get("review_access") == "full":
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
@@ -685,14 +630,16 @@ class ClaudeAdapter:
             else:
                 cmd.extend(["--strict-mcp-config", "--mcp-config", _reviewer_mcp_config()])
                 granted.extend(_sources_rules(SOURCES_READ_ONLY_TOOLS))
-                # Deny wins over any allow rule the reviewed checkout's settings add.
-                denied.extend(_sources_rules(SOURCES_PERSISTING_TOOLS))
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(denied)])
         elif mode == "workspace-write" and not review_isolation:
             cmd.extend(["--permission-mode", WORKSPACE_WRITE_PERMISSION_MODE])
             if not explicit_allowed_tools:
                 cmd.extend(["--allowedTools", ",".join(_workspace_write_allows(cwd, tc))])
+
+        if mode == "read-only" and not ordinary_reviewer:
+            # Explicit caller allowlists and ad hoc profiles cannot grant writers.
+            cmd.extend(["--disallowedTools", ",".join(_sources_rules(SOURCES_PERSISTING_TOOLS))])
 
         # MCP tool restrictions (pipeline reviewers)
         mcp_config_path = tc.get("mcp_config_path")
