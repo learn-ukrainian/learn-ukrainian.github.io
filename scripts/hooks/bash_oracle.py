@@ -20,6 +20,7 @@ from collections import Counter
 from contextlib import redirect_stderr
 from pathlib import Path
 from unittest.mock import patch
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 HOOKS = ROOT / "agents_extensions/shared/hooks"
@@ -39,10 +40,40 @@ def guarded(argv, kind):
     start, _ = invoked_start(argv)
     args = argv[start:]
     if kind in {"merge", "admin"}:
-        return args[:3] == ["gh", "pr", "merge"] and (kind != "admin" or "--admin" in args)
+        admin = False
+        for arg in args[3:]:
+            if arg in {"--admin", "--admin=true"}:
+                admin = True
+            elif arg == "--admin=false":
+                admin = False
+        return args[:3] == ["gh", "pr", "merge"] and (kind != "admin" or admin)
     return args[:3] == ["gh", "pr", "checkout"] or (
         len(args) > 1 and args[0] == "git" and any(word in args for word in ("checkout", "switch", "branch"))
     )
+
+
+def target_identity(pr, repo=None):
+    """Normalize a lookup's identity, independently of the hook argv parser.
+
+    The caller supplies lookup arguments, never gold row metadata. URL selectors
+    identify their host/base repository; ordinary selectors use the explicit
+    repository, inherited GH_REPO, or the synthetic cwd-discovery default.
+    """
+    if str(pr).startswith("https://"):
+        url = urlparse(str(pr))
+        parts = url.path.strip("/").split("/")
+        if len(parts) == 4 and parts[2] == "pull":
+            url_repository = f"{url.netloc}/{parts[0]}/{parts[1]}"
+            explicit = repo
+            if explicit and explicit.count("/") == 1:
+                explicit = "github.com/" + explicit
+            # Conflicting selection must be refused by the hook, rather than
+            # accidentally receiving red CI for the URL's unrelated repository.
+            return {"repository": explicit or url_repository, "pr": parts[3]}
+    repository = repo or os.environ.get("GH_REPO") or "fixture/default"
+    if repository.count("/") == 1:
+        repository = "github.com/" + repository
+    return {"repository": repository, "pr": str(pr)}
 
 
 def run_oracle(rows=None, traffic=None):
@@ -68,7 +99,7 @@ def run_oracle(rows=None, traffic=None):
         (primary / "a" / "b").mkdir(parents=True)
         (primary / "primary").symlink_to(primary, target_is_directory=True)
         (primary / "link").symlink_to(worktree, target_is_directory=True)
-        (primary / "file").touch()
+        (primary / "file").write_text("git checkout\ngh pr merge\nx\n")
         (primary / "script").write_text("gh pr merge 5\n")
         binaries = base / "bin"
         binaries.mkdir()
@@ -107,12 +138,12 @@ def run_oracle(rows=None, traffic=None):
                 'if [[ "$name" == jq ]]; then /bin/cat "${@: -1}"; exit; fi\n'
                 'if [[ "$name" == git ]]; then\n'
                 '  while [[ "$1" == -C* ]]; do\n'
-                '    if [[ "$1" == -C ]]; then cd "$2" || exit; shift 2;\n'
-                '    else cd "${1:2}" || exit; shift; fi\n'
+                '    if [[ "$1" == -C ]]; then cd -P "$2" || exit; shift 2;\n'
+                '    else cd -P "${1:2}" || exit; shift; fi\n'
                 "  done\n"
                 '  if [[ "$1" == rev-parse ]]; then printf "%s\\n" "$PWD"; exit; fi\n'
                 "fi\n"
-                'printf "%s\\0" "$PWD" "$name" "$@" > ' + shlex.quote(str(records)) + "/$$-$RANDOM\n"
+                'printf "%s\\0" "$(pwd -P)" "$name" "$@" > ' + shlex.quote(str(records)) + "/$$-$RANDOM\n"
             )
             recorder.chmod(0o755)
         env = {
@@ -121,6 +152,11 @@ def run_oracle(rows=None, traffic=None):
             "ORACLE_RECORDS": str(records),
             "P": str(primary),
             "x": "gh pr merge 5",
+            "GH_REPO": "fixture/default",
+            "HOME": str(primary),
+            "TERM": "xterm",
+            "ORACLE_GIT": str(binaries / "git"),
+            "ORACLE_GH": str(binaries / "gh"),
         }
         env.pop("CDPATH", None)
 
@@ -135,7 +171,7 @@ def run_oracle(rows=None, traffic=None):
         for row in rows:
             for path in records.iterdir():
                 path.unlink()
-            command, kind = row["command"], row["hook"]
+            command, kind = row["command"].replace("{primary}", str(primary)), row["hook"]
             start_cwd = worktree if row.get("cwd") == "worktree" else primary
             # Await asynchronous/coprocess recorders before reading their files.
             subprocess.run(["bash", "-c", command + "\nwait"], cwd=start_cwd, env=env, capture_output=True, timeout=10)
@@ -149,21 +185,54 @@ def run_oracle(rows=None, traffic=None):
             oracle_missing = kind == "argv" and not actual
             payload = {"cwd": str(start_cwd), "tool_input": {"command": command}}
             judged = []
+            targets = []
+            expected_target = row.get("expected", {}).get("target")
+
+            def snapshot(pr, repo=None, cwd=None, seen=targets, gold=expected_target):
+                identity = target_identity(pr, repo)
+                seen.append({**identity, "cwd": cwd})
+                red = identity == gold
+                return (
+                    {
+                        "isDraft": False,
+                        "baseRefName": "main",
+                        "url": "https://" + identity["repository"] + "/pull/" + identity["pr"],
+                    },
+                    (["CI Gate"] if red else [], []),
+                )
+
+            def admin_checks(pr, cwd=None, repo=None, seen=targets, args_seen=judged, gold=expected_target):
+                identity = target_identity(pr, repo)
+                seen.append({**identity, "cwd": cwd})
+                args_seen.append(([str(pr)], cwd))
+                return ["CI Gate"] if identity == gold else []
+
             with (
                 patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
                 redirect_stderr(io.StringIO()),
-                patch.dict(os.environ, {"CDPATH": ""}),
+                patch.dict(os.environ, {"CDPATH": "", "GH_REPO": "fixture/default"}),
             ):
                 if kind == "merge":
-                    with patch.object(
-                        merge, "_judge", lambda args, cwd=None, seen=judged: seen.append((args, cwd)) or "oracle red PR"
-                    ):
-                        blocked = merge.main() == 2
+                    if expected_target:
+                        with (
+                            patch.object(merge, "_pr_snapshot", snapshot),
+                            patch.object(merge, "_base_protected", return_value=True),
+                        ):
+                            blocked = merge.main() == 2
+                    else:
+                        with patch.object(
+                            merge,
+                            "_judge",
+                            lambda args, cwd=None, seen=judged: seen.append((args, cwd)) or "oracle red PR",
+                        ):
+                            blocked = merge.main() == 2
                 elif kind == "admin":
                     with patch.object(
                         admin,
                         "_failing_blocking_checks",
-                        lambda pr, cwd=None, seen=judged: seen.append(([str(pr)], cwd)) or ["CI Gate"],
+                        admin_checks
+                        if expected_target
+                        else lambda pr, cwd=None, seen=judged: seen.append(([str(pr)], cwd)) or ["CI Gate"],
                     ):
                         blocked = admin.main() == 2
                 elif kind == "branch":
@@ -203,7 +272,7 @@ def run_oracle(rows=None, traffic=None):
                             args == expected and Path(directory or primary).resolve() == Path(cwd).resolve()
                             for args, directory in judged
                         )
-            if kind == "admin" and judged:
+            if kind == "admin" and judged and not expected_target:
                 # Targets are gold corpus metadata, not inferred by the helper
                 # under test. The frozen admin corpus invokes PR 5.
                 for argv, cwd in actual:
@@ -213,7 +282,14 @@ def run_oracle(rows=None, traffic=None):
                             and Path(directory or primary).resolve() == Path(cwd).resolve()
                             for args, directory in judged
                         )
-            miss = (executed and not blocked) or mismatch or oracle_missing
+            operation_cwds = {Path(cwd).resolve() for argv, cwd in actual if guarded(argv, kind)}
+            wrong_target = bool(expected_target) and any(
+                {"repository": target["repository"], "pr": target["pr"]} != expected_target
+                or Path(target["cwd"] or primary).resolve() not in (operation_cwds or {Path(start_cwd).resolve()})
+                for target in targets
+            )
+            missing_target = bool(expected_target) and row["expected"]["disposition"] == "block" and not targets
+            miss = (executed and not blocked) or mismatch or oracle_missing or wrong_target or missing_target
             over = blocked and not executed and kind != "argv"
 
             def relative(value):
@@ -226,6 +302,9 @@ def run_oracle(rows=None, traffic=None):
                     "accepted": row["accepted"],
                     "executed": [{"argv": [relative(a) for a in argv], "cwd": relative(cwd)} for argv, cwd in actual],
                     "judged": [{"args": [relative(a) for a in args], "cwd": relative(cwd)} for args, cwd in judged],
+                    "targets": [{**target, "cwd": relative(target["cwd"])} for target in targets],
+                    "wrong_target": wrong_target,
+                    "missing_target": missing_target,
                     "blocked": blocked,
                     "miss": miss,
                     "overblock": over,
@@ -240,6 +319,15 @@ def run_oracle(rows=None, traffic=None):
                 counts["argv_rows"] += int(kind == "argv")
                 counts["observed_argv_rows"] += int(kind == "argv" and bool(actual))
                 counts["executed_rows"] += int(executed)
+                counts["wrong_target_judgments"] += int(wrong_target)
+                counts["missing_target_judgments"] += int(missing_target)
+                if "expected" in row:
+                    expected_blocked = row["expected"]["disposition"] != "allow"
+                    counts["expected_rows"] += 1
+                    counts["expected_matches"] += int(
+                        blocked == expected_blocked and not wrong_target and not missing_target
+                    )
+                    counts["expected_mismatches"] += int(blocked != expected_blocked or wrong_target or missing_target)
                 if miss:
                     failures.append(row["id"])
             if over and not row["accepted"]:
@@ -299,7 +387,12 @@ def main():
     report = run_oracle()
     print(json.dumps(report, indent=2))
     totals = report["totals"]
-    return int(totals["misses"] > 0 or totals["overblocks"] > 4 or totals["traffic_blocks"] > 0)
+    return int(
+        totals["misses"] > 0
+        or totals["overblocks"] > 4
+        or totals["traffic_blocks"] > 0
+        or totals.get("expected_mismatches", 0) > 0
+    )
 
 
 if __name__ == "__main__":

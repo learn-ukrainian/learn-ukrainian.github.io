@@ -1,15 +1,17 @@
 {
   "schema": "guard-understood-freeze.v1",
   "issue": 9484,
-  "frozen_at": "2026-10-03T19:40:05Z",
+  "frozen_at": "2026-10-03T20:15:47Z",
   "implementation_head": "621fd45b34b183e3a1b30713aa92d5388c042d5f",
   "sha256": {
-    "docs/design/guard-hooks-understood-forms.md": "789c8e4958b281f3ccee5579e50eecf6de6316094ca65ec8b6ad6f48d9fd91fa",
-    "tests/fixtures/guard_bash_oracle.json": "c3a1bb780a4dd14e6543cf2aa32e2a391fbd29363b34ef3bfeaa0211ad0a4f55",
+    "docs/design/guard-hooks-understood-forms.md": "7cbe1d930bfb512532cdc3c096b3b0ef674e5d812dd08e56b20ace3d2428f924",
+    "tests/fixtures/guard_bash_oracle.json": "6cde8dbce62a73e6dad0d3a31249050dc9e7de6a758c17f469bd0fbdd00b0e0d",
     "tests/fixtures/guard_bash_traffic.json": "cb9fd3eaca8752c585dda62efc0210d99d349d2ef5ba7c08a6ec533611c25e57",
     "tests/fixtures/guard_bash_understood_traffic.json": "98caa660a1f163d7bdb38a7dcad929823bdffb6ce651a91289f766d4002c2d0b",
-    "tests/fixtures/guard_bash_recording_setup.json": "96d611fe8d8c638607f1923055ea3ee96ef6c442e6d410f27818ec10e50bdb50",
-    "tests/fixtures/guard_9115_baseline.json": "c9b89f375f9826ed216f482ced728974386f6aff9404618678b842d9a8616c7b"
+    "tests/fixtures/guard_bash_recording_setup.json": "e1b6c88530361a0b5655e37348ed9c1c666a810d129ba708f03b8b45db06900e",
+    "tests/fixtures/guard_9115_baseline.json": "c9b89f375f9826ed216f482ced728974386f6aff9404618678b842d9a8616c7b",
+    "scripts/hooks/bash_oracle.py": "f0df75cad292a3637aa0253633e90994ba748e5b1c4ae074f852680dc356aa0e",
+    "tests/test_guard_understood_freeze.py": "ba63203257caaf0b123db91ee5a8f4000f7e88ec09f3ce7f64626ccf5fc29281"
   },
   "decision_sha256": {
     "sol": "541a4ed9d82ccc786c41d89943864b2e990cab5a896954fb7072f9f05383c19a",
@@ -21,14 +23,19 @@
     "legacy_non_residual_rows": 602,
     "accepted_residual_rows": 3,
     "legacy_prefix_argv_rows": 50,
-    "new_oracle_rows": 477,
-    "total_oracle_rows": 1082,
-    "new_unique_commands": 197,
+    "new_oracle_rows": 829,
+    "total_oracle_rows": 1434,
+    "new_unique_commands": 388,
     "legacy_traffic_subjects": 400,
     "legacy_traffic_cases": 1200,
     "inspection_distinct_commands": 60,
     "inspection_hook_cases": 180,
-    "baseline_literals": 1498
+    "baseline_literals": 1498,
+    "round2_appended_rows": 352,
+    "round2_distinct_commands": 198,
+    "everyday_distinct_commands": 66,
+    "everyday_hook_cases": 198,
+    "exact_target_rows": 53
   },
   "new_oracle_families": {
     "review-continuation": 5,
@@ -52,7 +59,26 @@
     "intentional-refusal": 12,
     "search-inspection": 180,
     "supported-forms": 18,
-    "context-failure": 3
+    "context-failure": 3,
+    "everyday-traffic": 198,
+    "target-identity": 26,
+    "target-conflict": 4,
+    "target-boolean": 4,
+    "target-environment": 4,
+    "heldout-executors": 15,
+    "heldout-shell-input": 3,
+    "heldout-context": 16,
+    "heldout-resolution": 3,
+    "heldout-arithmetic": 3,
+    "heldout-control": 18,
+    "heldout-forwarding": 3,
+    "heldout-primary-checkout": 1,
+    "heldout-merge-home": 1,
+    "heldout-benign": 9,
+    "condition9-misparse": 21,
+    "precedence-correction": 2,
+    "benign-counterparts": 18,
+    "namespace-correction": 3
   },
   "legacy_oracle_families": {
     "if": 4,
@@ -165,14 +191,14 @@
     "9484-f-command-binding": 6
   },
   "new_expected_dispositions": {
-    "block": 33,
-    "refuse": 222,
-    "allow": 222
+    "block": 119,
+    "refuse": 262,
+    "allow": 448
   },
   "new_hook_counts": {
-    "branch": 177,
-    "merge": 149,
-    "admin": 151
+    "branch": 284,
+    "merge": 272,
+    "admin": 273
   },
   "acceptance": {
     "unsafe_allows": 0,
@@ -181,7 +207,8 @@
     "legacy_traffic_blocks": 0,
     "inspection_traffic_blocks": 0,
     "benign_baseline": "unchanged",
-    "max_implementation_review_rounds": 2
+    "max_implementation_review_rounds": 2,
+    "everyday_traffic_blocks": 0
   },
   "residual_classes": [
     "operation-invisible dynamic eval",
@@ -198,7 +225,10 @@
     "freeze-review-executors-014",
     "freeze-intentional-refusal-009",
     "freeze-intentional-refusal-010",
-    "freeze-intentional-refusal-011"
+    "freeze-intentional-refusal-011",
+    "freeze-b-namespace-correction-000",
+    "freeze-b-namespace-correction-001",
+    "freeze-b-namespace-correction-002"
   ],
   "ground_truth_limitation_owner": "claude-infra",
   "decision_vs_bash_conflicts": [],
@@ -208,5 +238,51 @@
     "author_freeze_is_held_out": false
   },
   "overblock_scoring": "Only unexpected block/refuse of a required allow is an over-block. Required typed refusals are correct; original legacy rows remain unchanged.",
-  "immutability": "Do not change labels or denominators to make the implementation pass; material drift requires designated decision and a new freeze."
+  "immutability": "Do not change labels or denominators to make the implementation pass; material drift requires designated decision and a new freeze.",
+  "freeze_round": 2,
+  "previous_freeze_head": "c968d99de05487e13bfa610098c385553c8c3ee2",
+  "round1_rows_canonical_sha256": "7585fe5b30ada163f8549d258d069f77cc01c57ffb1d8c49be40dd556f8ad57d",
+  "round2_oracle_families": {
+    "everyday-traffic": 198,
+    "target-identity": 26,
+    "target-conflict": 4,
+    "target-boolean": 4,
+    "target-environment": 4,
+    "heldout-executors": 15,
+    "heldout-shell-input": 3,
+    "heldout-context": 16,
+    "heldout-resolution": 3,
+    "heldout-arithmetic": 3,
+    "heldout-control": 18,
+    "heldout-forwarding": 3,
+    "heldout-primary-checkout": 1,
+    "heldout-merge-home": 1,
+    "heldout-benign": 9,
+    "condition9-misparse": 21,
+    "precedence-correction": 2,
+    "benign-counterparts": 18,
+    "namespace-correction": 3
+  },
+  "corrections": {
+    "freeze-six-benign-003": "freeze-b-precedence-correction-000",
+    "freeze-six-benign-005": "freeze-b-precedence-correction-001",
+    "freeze-review-executors-009": "freeze-b-namespace-correction-000",
+    "freeze-review-executors-010": "freeze-b-namespace-correction-001",
+    "freeze-review-executors-011": "freeze-b-namespace-correction-002"
+  },
+  "correction_policy": "Historical rows are immutable. Named supersedes rows supply the current disposition/probe; original rows remain in the denominator and historical exit scoring. Corrected dispositions have the same exit code as their originals.",
+  "target_scoring": "expected.target binds HOST/OWNER/REPO and PR; only that identity is red. A wrong or missing required lookup fails regardless of the exit code. Legacy no-target rows do not prove repository or PR identity.",
+  "active_execution_limitations": [
+    "freeze-review-executors-012",
+    "freeze-review-executors-013",
+    "freeze-review-executors-014",
+    "freeze-b-namespace-correction-000",
+    "freeze-b-namespace-correction-001",
+    "freeze-b-namespace-correction-002"
+  ],
+  "non_execution_policy_probes": [
+    "freeze-intentional-refusal-009",
+    "freeze-intentional-refusal-010",
+    "freeze-intentional-refusal-011"
+  ]
 }

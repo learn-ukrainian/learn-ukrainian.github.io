@@ -57,7 +57,7 @@ must fail fault-injection coverage.
 | Recognized invocation | Complete literal program/subcommand and classified argv; understood wrapper/context; every reachable cwd, repository, selector and policy checked. |
 | Proven non-executing data | Literal bytes in an explicitly admitted operand, with all expansions walked separately, and all later consumers known to be data readers. Basename or quotation alone proves nothing. |
 | Proven unreachable code | Structural termination/constant condition with no executable expansions; all prior success/failure edges modeled. A sample Bash run or absent path is insufficient. |
-| Unclassified | Refuse the entire command with a typed reason. Never presume an unknown subcommand harmless. |
+| Unclassified | Refuse the entire command with a typed reason. Unknown/dynamic command identities refuse; known built-ins follow the generic rules below. |
 
 Definitions and assignments require use tracking. A variable is data only when
 every use in the submitted command is a recognized data operand. Invocation
@@ -69,11 +69,15 @@ erase a candidate's source provenance.
 Classes: **data** consumes non-executing literal/text operands; **executor**
 consumes or supplies code; **selector** chooses the operation, target, ref or
 policy mode; **context** changes cwd, repository, environment or process state;
-**refuse** is outside the admitted grammar. The following are the complete
-admitted spellings, not a basename exemption. EVERY unlisted option of EVERY
-listed program is **refuse**, including abbreviations, unknown short clusters,
-response files and unknown negations. An unknown program consuming a candidate
-is **refuse**. Missing option values and ambiguous option boundaries refuse.
+**refuse** is outside the admitted grammar. Closed option tables bind only to
+policy-relevant branch switching/creation, worktree operations, `gh pr merge`
+(including admin forms), and executor-capable options/subcommands. They are not
+an exhaustive allowlist of Git/GH traffic. Every other known built-in Git/GH
+subcommand is recognized under the generic executor, configuration, environment
+and alias rules; its ordinary arguments are data unless an executor option
+applies. Unknown/dynamic commands, aliases and unsupported executors refuse.
+In a closed policy grammar, unlisted options, abbreviations, unknown clusters,
+response files, negations, missing values and ambiguous boundaries refuse.
 A literal executable path must resolve to a verified supported program; an
 arbitrary basename match is insufficient. Options taking values accept separate and `--long=value` spellings only where
 the program actually supports them; short attachment/clustering is decoded
@@ -98,19 +102,25 @@ forms; an executable-path override is **context/refuse**. `--literal-pathspecs`,
 | `checkout`, `switch` | `-b`, `-B`, `-c`, `-C`, `--create`, `--force-create`, `--orphan`, `--detach`, `--track[=direct\|inherit]`, `-t`, `--no-track`, `--guess`, `--no-guess`, `--ours`, `--theirs`, `--conflict`, `--merge`, `-m`, `--force`, `-f`, `--ignore-other-worktrees`, `--recurse-submodules`, `--no-recurse-submodules`, `--overlay`, `--no-overlay`, `--patch`, `-p`, `--ignore-skip-worktree-bits`, `--pathspec-from-file`, `--pathspec-file-nul`, `--start-point`: **selector**; `-q`, `--quiet`, `--progress`, `--no-progress`: **data**. `--` ends options and establishes path checkout only when its structural position is proven. Positional ref/path operands are **selector**. |
 | `branch` | `-d`, `--delete`, `-D`, `-m`, `--move`, `-M`, `-c`, `--copy`, `-C`, `-f`, `--force`, `--list`, `-a`, `--all`, `-r`, `--remotes`, `--merged`, `--no-merged`, `--contains`, `--no-contains`, `--points-at`, `--show-current`, `--track`, `-t`, `--no-track`, `--set-upstream-to`, `-u`, `--unset-upstream`, `--edit-description`: **selector** (`--edit-description` also **executor/refuse**); `-v`, `-vv`, `--verbose`, `--format`, `--sort`, `--color`, `--no-color`, `--column`, `--no-column`, `-q`, `--quiet`: **data**. Refs are **selector**. |
 | `worktree` | `list`: `--porcelain`, `-v`, `--verbose`, `-z`: **data**. `add`: `-b`, `-B`, `--detach`, `--orphan`, `--track`, `--no-track`, `-f`, `--force`, `--lock`, `--reason`, `--no-checkout`, `--checkout`: **context/selector**; `-q`, `--quiet`: **data**. Creation compounds refuse unless the success-edge model and binding are proven. `remove`: literal directory **context**, `-f`/`--force` **selector**; successful removal invalidates that directory binding for later commands. Other verbs **refuse**. |
-| `status` | `--short`, `-s`, `--branch`, `-b`, `--porcelain[=v1\|v2]`, `-z`, `--untracked-files`, `-u`, `--ignored`, `--ignore-submodules`: **data**. |
-| `show`, `log`, `diff` | `--grep`, `--author`, `--committer`, `--since`, `--until`, `-S`, `-G`, `--format`, `--pretty`, `--oneline`, `--stat`, `--name-only`, `--name-status`, `--numstat`, `--raw`, `--patch`, `-p`, `--no-patch`, `-s`, `--no-color`, `--color=never`, `--all`, `--branches`, `--max-count`, `-n`, `--reverse`, `--follow`, `--fixed-strings`, `--regexp-ignore-case`, `--no-ext-diff`, `--no-textconv`: **data**. Revisions and paths after `--` are **data**; no `--ext-diff`, `--textconv`, custom pager or externally executable configuration is admitted. Read invocation must disable these effects or prove they are disabled. |
-| `grep` | `-n`, `--line-number`, `-F`, `--fixed-strings`, `-E`, `--extended-regexp`, `-i`, `--ignore-case`, `-e`, `--regexp`, `-f`, `--file`, `-l`, `--files-with-matches`, `-q`, `--quiet`, `--cached`, `--no-index`, `--no-color`, `--color=never`: **data**; no external pager allowed. |
-| `rev-parse` | `--show-toplevel`, `--git-dir`, `--git-common-dir`, `--show-prefix`, `--show-cdup`, `--is-inside-work-tree`, `--path-format=absolute`, `--verify`, `--short`, `--abbrev-ref`: **data**. |
-| `commit` | `-m`, `--message`, `-F`, `--file`, `--author`, `--date`, `--cleanup`, `--trailer`: **data**, including literal stdin message heredoc. `--allow-empty`, `--allow-empty-message`, `--amend`, `--no-edit`, `--no-verify`, `-a`, `--all`, `--signoff`, `-s`, `--no-gpg-sign`, `-q`, `--quiet`: **selector**. `-e`, `--edit`, `--gpg-sign`, `-S`: **executor/refuse** if they carry candidate text; hooks/editor/signing state cannot turn inline candidate text into hidden code. |
-| `add`, `rm`, `mv` | Literal paths after `--` or literal non-option paths: **data**; `-f`, `--force`, `-n`, `--dry-run`, `-v`, `--verbose`, add-only `-A`, `--all`, `-u`, `--update`, rm-only `--cached`, `-r`, `--recursive`, mv-only `-k`: **selector**. Add interactive/patch/edit modes and every unlisted option refuse. |
-| `restore` | `--source`, `-s`, `--staged`, `-S`, `--worktree`, `-W`, `--ours`, `--theirs`, `--merge`, `-m`, `--conflict`, `--ignore-unmerged`, `--ignore-skip-worktree-bits`, `--overlay`, `--no-overlay`: **selector**; `-q`, `--quiet`, `--progress`, `--no-progress`: **data**; literal paths after `--`: **data**. |
-| `apply`, `am` | Literal ordinary patch-file/stdin operands: **data**, with written destinations subject to executed-location accounting; bare forms supported. Apply `--check`, `--stat`, `--numstat`, `--summary`: **data**; `--index`, `--cached`, `--3way`, `-3`, `--reverse`, `-R`: **selector**. Am `--3way`, `-3`, `--signoff`, `-s`, `--no-verify`, `--continue`, `--skip`, `--abort`: **selector**. Interactive/edit/external signing modes refuse. |
-| `stash` | Bare stash and literal `list`, `show`, `push`, `pop`, `apply`, `drop`, `clear`: recognized; `-m`, `--message`: **data** on push, `-q`, `--quiet`: **data**, `--index`, `--keep-index`, `-k`, `--include-untracked`, `-u`, `--all`, `-a`: **selector** on applicable write verbs. Literal stash refs **selector**, ordinary path operands after `--` **data**. Unknown verb/option refuses. |
-| `merge` | Literal refs **selector**, `-m`/`--message` **data**; `--no-edit`, `--no-verify`, `--ff`, `--ff-only`, `--no-ff`, `--squash`, `--no-commit`, `--commit`, `--abort`, `--continue`: **selector**. `-e`, `--edit`, custom strategies and external signing modes **executor/refuse**. This is Git merge, not the gh PR-merge operation. |
-| `config` | Only read forms `get`, `--get`, `--get-all`, `--get-regexp`, `list`, `--list`, `--show-origin`, `--show-scope`: **data**. Writes configuring aliases or execution are **executor/refuse**. |
-| `fetch`, `push` | Bare forms and literal repository/ref operands recognized (**context/selector**); `--dry-run`, `-n`, `--verbose`, `-v`, `--quiet`, `-q`: **data**. `--upload-pack`, `--receive-pack`: **executor/refuse**. Other options refuse. Transport configuration/environment cannot consume visible candidate text without executor accounting. |
-| `rebase`, `bisect`, `submodule`, `difftool` | Visible payloads via `rebase -x/--exec`, `bisect run`, `submodule foreach`, `difftool -x/--extcmd`: **executor/refuse**. Other options/subcommands in these candidate-consuming forms are **refuse**; they are not data readers. |
+
+For other Git built-ins, the following roles are examples, not closed option
+allowlists. Ordinary revision, path, search, format, message and transport/ref
+arguments are data. This includes `ls-files`, `merge-base`, `ls-remote`,
+`sparse-checkout list`, `remote -v`, `rev-list`, `log -<N>`, `diff --cached`,
+`reset --hard`, `pull`, `clean --dry-run -fdx`, `cherry-pick`, `revert`, `archive`
+and `read-tree`. Fetch/push options `-u`, `--set-upstream` and
+`--force-with-lease[=REF:EXPECT]` remain recognized and are judged by the existing
+push policy; these three hooks add no push-policy restriction. Commit
+`-m`/`--message`, `-F`/`--file`, trailers and merge messages are data.
+
+Executor semantics still bind: rebase `-x`/`--exec`, `bisect run`,
+`submodule foreach`, difftool `-x`/`--extcmd`, fetch `--upload-pack` and push
+`--receive-pack` consume code and refuse unless explicitly modeled. Pager,
+editor, signing, hooks, custom strategies, interactive/edit, external diff,
+textconv, executable configuration and alias options are never presumed data.
+`config` read forms are data; writes supplying executable configuration refuse.
+A normal built-in operation does not refuse just because its name or ordinary
+option is missing from the tables. The frozen benign baseline remains binding.
 
 Git read commands must account for applicable local configuration, pager,
 external diff/textconv, aliases and environment. No candidate is declared data
@@ -126,12 +136,14 @@ value or verified discovery.
 | --- | --- |
 | `pr merge` | `--subject`, `-t`, `--body`, `-b`, `--body-file`, `-F`, `--author-email`, `-A`: **data**, consume a value. `--match-head-commit`: **selector**, consumes a value. `--admin`, `--auto`, `--disable-auto`, `--delete-branch`, `-d`, `--merge`, `-m`, `--squash`, `-s`, `--rebase`, `-r`: **selector**, Boolean. `--help`, `-h`: **data**. `-R`, `--repo`: **context**, consume a value. Sole positional number/URL/branch is **selector**. |
 | `pr checkout` | `--branch`, `-b`, `--detach`, `--force`, `-f`, `--recurse-submodules`: **selector**; `-R`, `--repo`: **context**; PR operand **selector**. |
-| `pr create` | `--title`, `-t`, `--body`, `-b`, `--body-file`, `-F`, `--base`, `-B`, `--head`, `-H`, `--label`, `-l`, `--assignee`, `-a`, `--reviewer`, `-r`, `--milestone`, `-m`, `--project`, `-p`, `--template`, `-T`: **data**; `--draft`, `-d`, `--fill`, `--fill-first`, `--fill-verbose`: **selector**; `--editor`, `-e`, `--web`, `-w`: **executor/refuse** if carrying candidates; `-R`, `--repo`: **context**. |
-| `pr view`, `issue view` | `--json`, `--jq`, `-q`, `--template`, `-t`, `--comments`, `-c`: **data**; positional number/URL **data** for inspection. `-R`, `--repo`: **context**. `--web`, `-w`: **executor/refuse** if carrying candidates. |
-| `pr list`, `issue list` | `--json`, `--jq`, `-q`, `--template`, `-t`, `--search`, `-S`, `--state`, `-s`, `--limit`, `-L`, `--author`, `-A`, `--assignee`, `-a`, `--label`, `-l`: **data**. PR-only `--base`, `-B`, `--head`, `-H`, `--draft`, `-d`: **data**; issue-only `--milestone`, `-m`: **data**. `-R`, `--repo`: **context**. `--web`, `-w`: **executor/refuse** if carrying candidates. |
-| `pr diff` | `--patch`, `--name-only`, `--color=never`: **data**, positional PR **data**; `-R`, `--repo`: **context**. `--web`, `-w`: **executor/refuse** if carrying candidates. |
-| `pr checks` | `--json`, `--jq`, `-q`, `--template`, `-t`, `--required`, `--fail-fast`, `--watch`, `--interval`, `-i`: **data**, positional PR **data**; `-R`, `--repo`: **context**. `--web`, `-w`: **executor/refuse** if carrying candidates. |
-| `alias`, unknown commands | **executor/refuse**, never presumed harmless. `api` REST merges belong only to the stated residual, not a supported shell wrapper. |
+
+Other known GH built-ins use the generic rules, including `pr ready 5`,
+`run view/list`, read `api` forms, and PR/issue view/list/diff/checks/create.
+Literal body/title/message, JSON/jq/template, search, limit and other ordinary
+arguments are data. `--editor`, `--web` and alias/custom-command execution
+require executor accounting when consuming candidates. Ordinary `gh api` reads
+are recognized; REST merges remain the explicitly accepted residual, not a
+supported shell wrapper. An unknown/dynamic GH command still refuses.
 
 The existing typed project publisher `project-python -m scripts.publish
 pr-merge` is a recognized invocation, not a generic Python exemption. Its closed
@@ -141,13 +153,14 @@ fields `--number` (**selector**), `--repo` (**context**), `--match-head`
 
 ### Closed data-reader list (amendment 2)
 
-Every option not explicitly admitted below refuses when consuming candidates.
-Literal operands are data only after expansion and consumer checks.
+For grep/rg, known non-executing options and their operands are data; the examples
+below are not closed allowlists. For the other readers the closed forms remain
+binding. Literal operands are data only after expansion and consumer checks.
 
 | Program | Admitted options | Executor options / refused forms |
 | --- | --- | --- |
-| `grep` | `-F`, `--fixed-strings`, `-E`, `--extended-regexp`, `-n`, `--line-number`, `-i`, `--ignore-case`, `-e`, `--regexp`, `-f`, `--file`, `-r`, `-R`, `--recursive`, `-l`, `--files-with-matches`, `-q`, `--quiet`, `-v`, `--invert-match`, `-c`, `--count`, `--`: **data** | All other options refuse. |
-| `rg` | `-F`, `--fixed-strings`, `-n`, `--line-number`, `-i`, `--ignore-case`, `-e`, `--regexp`, `-f`, `--file`, `-g`, `--glob`, `--files`, `-l`, `--files-with-matches`, `-q`, `--quiet`, `--hidden`, `--no-ignore`, `--color=never`, `--`: **data** | `--pre`, `--pre-glob`: **executor/refuse**; all other options refuse. |
+| `grep` | `-F`, `--fixed-strings`, `-E`, `--extended-regexp`, `-n`, `--line-number`, `-i`, `--ignore-case`, `-e`, `--regexp`, `-f`, `--file`, `-r`, `-R`, `--recursive`, `-l`, `--files-with-matches`, `-q`, `--quiet`, `-v`, `--invert-match`, `-c`, `--count`, `-A`, `-B`, `-C`, `--after-context`, `--before-context`, `--context`, `-w`, `--word-regexp`, `-o`, `--only-matching`, `--include`, `--`: **data** | Known grep options are data; ambiguous/invalid option boundaries refuse. |
+| `rg` | `-F`, `--fixed-strings`, `-n`, `--line-number`, `-i`, `--ignore-case`, `-e`, `--regexp`, `-f`, `--file`, `-g`, `--glob`, `--files`, `-l`, `--files-with-matches`, `-q`, `--quiet`, `--hidden`, `--no-ignore`, `--color=never`, `-A`, `-B`, `-C`, `--after-context`, `--before-context`, `--context`, `-w`, `--word-regexp`, `-o`, `--only-matching`, `-t`, `--type`, `--`: **data** | `--pre`, `--pre-glob`: **executor/refuse**; known non-executing options are data, ambiguous/invalid boundaries refuse. |
 | `echo` | `-n`, `-e`, `-E`: **data**, with Bash echo option/escape rules | Output consumed by a shell or executed redirect destination is code. |
 | `printf` | Literal format and arguments, `--`: **data** | `-v`: **context/refuse**, dynamic assignment targets and `%n` variable targets refuse. Format escapes cannot hide emitted code from consumer accounting. |
 | `cat` | `-n`, `--number`, `-b`, `--number-nonblank`, `-s`, `--squeeze-blank`, `-E`, `--show-ends`, `-T`, `--show-tabs`, `-v`, `--show-nonprinting`, `-A`, `--show-all`, `--`: **data** | A shell/eval/source consumer makes emitted bytes executable. |
@@ -177,13 +190,13 @@ implicit constant propagation.
 | `timeout` | literal duration, `-s`/`--signal`, `-k`/`--kill-after`, `--preserve-status`, `--foreground`, `--`: **context**; possible termination is retained. |
 | `stdbuf` | `-i`, `-o`, `-e` and long `--input`, `--output`, `--error` values: **context**, transparent argv. |
 | `sudo` | `-u`/`--user`, `-g`/`--group`, `-D`/`--chdir`, `-p`/`--prompt`, `-n`/`--non-interactive`, `--`: **context**. Identity/HOME/cwd effects require proof; `-i`, `-s` and unmodeled options refuse. |
-| `bash`, `sh` | Literal `-c PAYLOAD [NAME [ARGS...]]`: **executor**, reparsed with invocation positional arguments; plain literal stdin/heredoc payload likewise. `--`, `--noprofile`, `--norc`: **context**; `-l`, `--login`, `-i`, `-O`, `-o`, startup/script-file modes refuse unless their full effects are proven. `$@` forwarding and opaque payloads refuse. |
+| `bash`, `sh` | Literal `-c PAYLOAD [NAME [ARGS...]]`: **executor**, reparsed with invocation positional arguments; plain literal stdin/heredoc and `-s` here-string payload likewise. `--`, `--noprofile`, `--norc`: **context**; `-l`, `--login`, `-i`, `-O`, `-o`, startup/script-file modes refuse unless their full effects are proven. `$@` forwarding and opaque payloads refuse. |
 | `eval` | Literal arguments joined according to eval's rules and reparsed (**executor**); opaque operation-visible forms refuse; only operation-invisible dynamic eval is residual. |
 | `cd` | `-L`, `-P`, `-e`, `--`: **context**; literal path or no argument with proven effective HOME. Track success/failure separately. |
 | `pushd`, `popd` | No options, literal path or bounded numeric stack operand: **context**; unknown stack refuses. |
 | `:`, `true`, `false` | No options, known status; expansions still execute. `exit` with literal status terminates; `return` with literal status terminates only the function. `break`/`continue` with literal bounded level affect the modeled loop. Other forms refuse. |
 | `trap`, `source`, `.`, alias definitions | **executor/refuse** when carrying visible candidate payloads. Literal traps may instead be fully modeled only if every firing point is checked; no data exemption. |
-| `xargs`, `find`, unknown wrappers/interpreters | **executor/refuse**; never just strip the prefix. Includes `strace`, `script`, `numactl`, `nsenter`, `systemd-run`, `tmux`, `uv`, Python, SSH and Docker candidate-consuming forms. All their options are **refuse**; examples do not constitute a deny-list. |
+| `xargs`, `find`, unknown wrappers/interpreters | **executor/refuse**; never just strip the prefix. Includes `strace`, `script`, `numactl`, `nsenter`, `systemd-run`, `tmux`, `uv`, Python, SSH, Docker, `chrt`, `taskset`, `prlimit`, `parallel` and `watch -x` candidate-consuming forms. All their options are **refuse**; examples do not constitute a deny-list. |
 
 Supported AST contexts: simple commands, lists (`;`, newline, `&&`, `||`, `!`),
 if/elif/else, bounded literal case alternatives, constant/bounded for/while/until,
@@ -269,8 +282,10 @@ repository identities and red CI; no GitHub mutations occur.
 
 Branch-policy correction: `checkout main`, `checkout -- file`, `branch -d
 merged`, and `branch --list` in the primary are **allow** under the existing
-hook's policy. Branch creation/switching away, detach, orphan and applicable
-force operations still block. New corrected rows retain these four commands;
+hook's policy. `git branch new` and `git branch -D x` also allow under the existing policy.
+Checkout/switch with branch-creation flags, switching away from main, detach,
+orphan and the existing guarded force forms block. Git branch creation/deletion
+alone is not a newly prohibited operation. New corrected rows retain these four commands;
 no historical row or label is edited. The old oracle's `guarded()` broadly
 counts any checkout/branch invocation as prohibited, which is a scoring defect,
 not permission to change the frozen labels. It also counts deliberate refusals
@@ -280,8 +295,14 @@ as over-blocks when Bash happens not to execute a guarded operation.
 
 `allow` means every occurrence accounted for and every reachable policy allows;
 `block` means a recognized operation violates policy; `refuse` means proof is
-insufficient. Block and refuse exit 2, allow exits 0. Do not conflate them in
-acceptance scoring. Refusals carry a stable class and actionable repair:
+insufficient. Precedence across reachable states: block when ANY reachable state
+is a known violation; otherwise refuse when ANY state is unknown; otherwise
+allow. No sampled Bash outcome proves another failure edge unreachable.
+Append-only rows `freeze-b-precedence-correction-000/-001` supersede
+`freeze-six-benign-003/-005`, retaining the originals as history with a correction
+reason. The successful-cd 002/004 rows remain refused because the operation's
+primary-context binding is unknown on their failure edges. Block and refuse exit
+2, allow exits 0. Do not conflate them in acceptance scoring. Refusals carry a stable class and actionable repair:
 
 | Reason class | Meaning / repair |
 | --- | --- |
@@ -307,7 +328,18 @@ acceptance scoring. Refusals carry a stable class and actionable repair:
 
 The companion frozen manifest lists hashes and exact family counts. Original
 oracle rows and traffic subjects are byte-semantically preserved. New oracle
-rows use `expected: {disposition, reason_class}`, `hooks`, and `bash_truth`.
+rows use `expected: {disposition, reason_class, target?}`, `hooks`, and `bash_truth`.
+A target is `{repository: "HOST/OWNER/REPO", pr: "NUMBER"}`. The round-2
+identity/Boolean/environment and merge/admin misparse rows require target equality
+at the lookup seam; only that gold target returns red CI, all others return green.
+The merge seam is `_pr_snapshot`, so the hook's own selector/repository parser is
+exercised; admin records the actual PR/repository passed to its checks seam.
+Wrong PR, repository, host or cwd, or a missing required judgment, fails acceptance
+even if a separate guard happens to exit 2. Expected refusals with conflicting URL
+and repository must reject before judging an inconsistent identity.
+Legacy no-target rows keep their original red stub and raw scoring; they cannot
+supply exact-target proof. Target metadata and recordings are independently frozen;
+no hook parser computes the gold expectation.
 The additional traffic fixture extends the row schema rather than converting
 the legacy string list. Ground truth records physical cwd, argv, return code,
 whether a guarded operation was seen, and any probe limitation beside each
@@ -327,34 +359,53 @@ decision-versus-Bash conflict and blocks implementation pending reconciliation.
 The six reviewed forms and failure counterparts are reported separately from
 traffic. Historical labels cannot be lowered to obtain passing results.
 
-Freeze verification on the unchanged implementation at `621fd45b34`:
+Round-2 freeze verification in the assigned dispatch worktree:
 
-- `timeout 90 <project-interpreter> scripts/hooks/bash_oracle.py`, in this
-  dispatch worktree: exit **1**, **1,079** non-residual rows, **47** legacy
-  misses, **15** legacy over-blocks, **50/50** prefix argv rows observed,
-  **1,200** traffic cases, **0** traffic blocks; **3** accepted-residual rows
-  are separate. This is the one existing-oracle run, not implementation proof.
-- On the **477** new rows, the same observations compared to frozen expected
-  exit dispositions give **263** matches and **214** mismatches: **201**
-  required refusals allowed, **9** required blocks allowed, **4** required
-  allows blocked. There are also **2** wrong PR-number judgments. Typed reason
-  compliance and repository-binding judgments are not measured by the old
-  harness. Its raw new-row counts are **47** misses and **11** over-blocks;
-  historical rows contribute the other **4** over-blocks.
-- Search/inspection: **60** distinct commands, **180** hook cases, **0** blocks.
-  The complete oracle contains **1,082** rows including the 3 residual rows;
-  the legacy **605** rows retain every original field and label.
-- No decision-versus-Bash conflict was observed in required allow rows.
-  Failed conditional/function cd reaches Git in the original primary;
-  `cd missing || exit` and `cd missing && ...` do not execute Git in this run,
-  but only the former has a structural safety proof. The latter still refuses.
-- Three probe shapes (**9** hook cases) have explicit facility limitations:
-  nsenter reports `nsenter: no namespace specified`; systemd-run reports its
-  caller bus variables unavailable; Docker help reports `docker: command not
-  found`. These are unverified execution possibilities, not accepted security
-  residuals. The infra driver owns rerunning them in a suitable isolated
-  fixture environment. Positive recordings include Git
-  rebase/aliases/bisect/submodule/difftool/transport payloads.
+- `timeout 120 <project-interpreter> -m pytest tests/test_guard_understood_freeze.py
+  tests/test_guard_benign_corpus.py tests/test_shell_redirects.py -n 2 -q`:
+  **1,531 passed, 1 failed** in **27.64 s**, exit **1**. The sole failure is
+  `test_pinned_real_bash_oracle`. No test was skipped, xfailed or weakened.
+- That pinned oracle reports **1,431** non-residual rows, **81** raw misses,
+  **22** raw over-blocks, **50/50** prefix argv observations, **1,200** legacy
+  traffic cases with **0** traffic blocks; **3** accepted residual rows remain
+  separate. Raw over-block scoring still includes the legacy defects described above.
+- All **829** post-legacy freeze rows: **580** exit/target matches and **249**
+  mismatches. On just the **352** round-2 appended rows: **317** matches and
+  **35** mismatches. There are **17** wrong-target judgments and **8** missing
+  required target judgments. Exit-only matching on the appended rows is
+  **326/352**: **16** required blocks and **10** required refusals are allowed;
+  **0** required allows are blocked. Typed reason/disposition compliance beyond
+  the exit decision remains unverified until implementation.
+- Everyday traffic is **66** distinct commands / **198** hook cases, all
+  currently allowed. The earlier **60** inspection commands / **180** hook
+  cases and all **1,082** prior oracle rows remain intact; the complete oracle
+  is **1,434** rows. Only new rows carry corrections and their reasons.
+- `ruff check scripts/hooks/bash_oracle.py tests/test_guard_understood_freeze.py`:
+  **All checks passed!** Target mutation tests reject the wrong PR, repository,
+  host, initial cwd and omitted judgment even when the hook exits 2.
+
+`tests/test_shell_redirects.py::test_pinned_real_bash_oracle` is expected to FAIL
+on this branch: the approved implementation remains unchanged, while the freeze
+requires refusals/accounting and exact-target checks it does not yet satisfy.
+This expected failure is reported, never skipped, xfailed or used as approval.
+
+Historical round-1 measurements (at `c968d99de0`) are superseded by the round-2
+measurements, not implementation evidence for this enlarged denominator.
+Namespace probes now use `nsenter -U --target $$ --wd=.`; the original invalid
+no-namespace probes remain immutable history and are superseded by new rows.
+Namespace entry may be unavailable and then remains unverified execution.
+`docker --help 'git ...'` is a policy refusal because Docker is outside the
+candidate-consumer grammar; help does not execute its argument. Its historical
+absence-of-Docker limitation supplies no evidence of payload execution.
+Systemd-run facility limitations also remain explicit, owned by claude-infra.
+
+The recording fixture's round-2 fake reports physical cwd via `pwd -P` and uses
+physical `cd -P` for Git `-C`. Command-p probes use environment-selected absolute
+recording programs, so real `command -p` executes safely without exposing a live
+Git/GH target. The dynamic program names retain the amendment-6 refusal; this
+is not proof that an arbitrary default-PATH git/gh binary is trusted. The installed
+moreutils `parallel -- 'COMMAND'` form executes the recording operation. Bounded
+`timeout ... watch -x` probes record execution before termination.
 
 The legacy scoring defects are documented above rather than corrected in this
 freeze. Implementation must consume the typed expected fields and preserve
@@ -368,7 +419,8 @@ Acceptance after implementation:
 - At most four over-blocks on the frozen oracle. Intentional typed refusals are
   correct, not over-blocks. Required search/inspection forms must all allow.
 - Zero blocks in all 1,200 legacy traffic cases and the additional frozen
-  search/inspection traffic family; benign baseline decisions unchanged.
+  search/inspection and everyday Git/GH traffic families; benign baseline
+  decisions unchanged.
 - Exact pins/hashes (`tree-sitter==0.26.0`, `tree-sitter-bash==0.25.1`), actual
   deployed project-interpreter execution, bounded fault handling, occurrence
   deletion/data misclassification/context mutants caught, and retained
