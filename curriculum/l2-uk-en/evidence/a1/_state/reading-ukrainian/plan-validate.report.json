@@ -221,12 +221,15 @@
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "1b46ecf105e05dbbdac324abb563529420f5daeddb6e061bfdad6b0e0a73d5c7",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "3b12728c103f6fe941ead28f3b00c6514d5c3424d0e504f8669b918863b1565e",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "2edb695b8b8c5978f34d35b0ab71f1773cfaccf711a60a30e750a796a9fdf9c1",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "d7561a1505d84ad0646574c25999442e95a4657318350a61d77726a298269309",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
-    "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
+    "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
+    "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
-    "schemas/module-plan-v2.schema.json": "587b90fe0f15bffd9187e9987cb44a5a94aea9196ca4cc71154386dc99d96fed",
+    "schemas/module-plan-v2.schema.json": "689f15c19ef78d6ab010c38a785d2ebb8acfb3ab3df2acac40ff45fadabd18b8",
+    "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
+    "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
     "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
   },
   "level": "a1",
@@ -261,15 +264,153 @@
       "lesson": null,
       "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
       "step": null
-    },
-    {
-      "code": "pending_promotion",
-      "lesson": null,
-      "message": "evidence_ref.sha256 is 78b9f00f27272cf12770d8987a704b62df8cffcd2210c0b2a4fe00ecf5a35c24 and the provisional pack's sha256 is ecdee196660cea92a45863dc3f5d0030f5e6b9dd960f3de5342405ff53c972cc; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
-      "step": null
     }
   ],
   "notes": [
+    {
+      "code": "options_missing",
+      "lesson": 1,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 1,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 1,
+      "message": "activity a6 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 1,
+      "message": "activity a8 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 2,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 2,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 2,
+      "message": "activity a6 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 2,
+      "message": "activity a8 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 2,
+      "message": "activity a9 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 2,
+      "message": "activity a10 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a6 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a7 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a6 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a9 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a10 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 5,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 5,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 5,
+      "message": "activity a7 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 5,
+      "message": "activity a9 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 6,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
     {
       "code": "core_cefr_above_module",
       "lesson": 1,
@@ -292,6 +433,204 @@
       "code": "core_cefr_above_module",
       "lesson": 4,
       "message": "core lemma 'приголосний' (W-080) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "incidental_not_used",
+      "lesson": 6,
+      "message": "3 incidental records named by no step, activity or dialogue of the lesson, nor in a record it displays or a recording it cites: W-159 'настати', W-160 'весна', W-161 'птах'; Словник lists every incidental, so learners would get cards for words the lesson does not use (#9487 C16)",
+      "step": null
+    },
+    {
+      "code": "construction_distractor_cued",
+      "lesson": 5,
+      "message": "pick-syllables activity a10: another completion of a row forms an attested word (ма-ма → мама); the focus says the stems carry a cue, so the plan review confirms it selects the key (#9487 C23)",
+      "step": null
+    },
+    {
+      "code": "comprehension_target_unverified",
+      "lesson": 6,
+      "message": "comprehension activity a2 names W-093 'Іван' in «Actor keys W-093/W-081/W-101 vary and depend on this story»; W-081 'мама' in «Actor keys W-093/W-081/W-101 vary and depend on this story»; W-101 'тато' in «Actor keys W-093/W-081/W-101 vary and depend on this story», whose presence in the host (dialogue) is unverified; host dialogue is not a pack quote or a recording with models, so what it holds is not decided here (a dialogue is drafted by the writer); whether this activity's items ask about the word, or what its host holds, is not read from the plan, so the plan review confirms every word the items ask about is in the host (#9487 C26)",
+      "step": null
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 1,
+      "message": "C29: W-078 літера: absent from the A1 reference inventory; teaching replacements: авто, автор, авторка (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 1,
+      "message": "C29: W-117 клен: absent from the A1 reference inventory; teaching replacements: авто, автор, авторка (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 2,
+      "message": "C29: W-077 звук: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автор (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 2,
+      "message": "C29: W-116 дрова: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автор (#9582; enforcement=advisory)",
+      "step": "s1"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 2,
+      "message": "C29: W-145 бак: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s3"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 2,
+      "message": "C29: W-146 біб: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s3"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 2,
+      "message": "C29: W-147 лід: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s3"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 2,
+      "message": "C29: W-035 над: absent from the A1 reference inventory; teaching replacements: no replacement found (#9582; enforcement=advisory)",
+      "step": "s3"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 2,
+      "message": "C29: W-113 прилетіти: absent from the A1 reference inventory; teaching replacements: бити, боліти, брати (#9582; enforcement=advisory)",
+      "step": "s4"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 3,
+      "message": "C29: W-151 кава: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 3,
+      "message": "C29: W-106 гарбуз: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s1"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 3,
+      "message": "C29: W-107 ґава: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 3,
+      "message": "C29: W-150 ґрати: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 3,
+      "message": "C29: W-152 грім: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 3,
+      "message": "C29: W-153 ґрунт: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 4,
+      "message": "C29: W-079 голосний: absent from the A1 reference inventory; teaching replacements: авокадо, австралійка, авто (#9582; enforcement=advisory)",
+      "step": "s5"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 4,
+      "message": "C29: W-080 приголосний: absent from the A1 reference inventory; teaching replacements: авокадо, австралійка, авто (#9582; enforcement=advisory)",
+      "step": "s5"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 4,
+      "message": "C29: W-108 чобіт: absent from the A1 reference inventory; teaching replacements: авокадо, авто, автобус (#9582; enforcement=advisory)",
+      "step": "s1"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 5,
+      "message": "C29: W-111 жито: absent from the A1 reference inventory; teaching replacements: авокадо, австралійка, авто (#9582; enforcement=advisory)",
+      "step": "s1"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 5,
+      "message": "C29: W-112 комиш: absent from the A1 reference inventory; teaching replacements: авокадо, австралійка, авто (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 5,
+      "message": "C29: W-113 прилетіти: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": null
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 5,
+      "message": "C29: W-115 жабка: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": null
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 5,
+      "message": "C29: W-007 ви: closed_class_a1 source attestation",
+      "step": null
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 5,
+      "message": "C29: W-061 не: closed_class_a1 source attestation",
+      "step": null
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 6,
+      "message": "C29: W-113 прилетіти: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": null
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 6,
+      "message": "C29: W-115 жабка: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": null
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 6,
+      "message": "C29: W-007 ви: closed_class_a1 source attestation",
+      "step": null
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 6,
+      "message": "C29: W-061 не: closed_class_a1 source attestation",
+      "step": null
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 6,
+      "message": "C29: W-159 настати: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": null
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 6,
+      "message": "C29: W-161 птах: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
       "step": null
     }
   ],
