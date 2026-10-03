@@ -44,7 +44,12 @@ WITHHELD = [
 
 @pytest.mark.parametrize("text", WITHHELD)
 def test_review_counterexamples_have_no_firm_book_finding(text):
-    assert not find_book_calques(text, tokenize(text), MORPHOLOGY)
+    findings = find_book_calques(text, tokenize(text), MORPHOLOGY)
+    if "на протязі" in text.lower():
+        assert len(findings) == 1
+        assert findings[0]["detail"]["status"] == "suspicion"
+    else:
+        assert findings == []
 
 
 @pytest.mark.parametrize("duration", ["двох років", "цього року", "останніх років"])

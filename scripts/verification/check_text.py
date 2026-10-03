@@ -565,11 +565,20 @@ def check_text(
 
         # Phrase evidence is independent of Russian-shadow confidence. All
         # inflection decisions reuse the batch's authoritative VESUM readings.
-        book_findings: dict[tuple[str, str], dict[str, Any]] = {}
+        from scripts.verification.temporal_protiah import CallBudget
+
+        parser_budget = CallBudget()
+        book_findings: dict[tuple, dict[str, Any]] = {}
         for item_idx, item_id, item_text in units:
-            for finding in find_book_calques(item_text, tokenize(item_text), vesum_map):
+            for finding in find_book_calques(item_text, tokenize(item_text), vesum_map, budget=parser_budget):
                 start, end = finding.pop("start"), finding.pop("end")
-                key = (finding["detail"]["pattern_id"], finding["form"])
+                key = (
+                    finding["detail"]["pattern_id"],
+                    finding["form"],
+                    finding["detail"]["status"],
+                    finding["detail"].get("reading"),
+                    finding["detail"]["evidence"].get("reason"),
+                )
                 loc = [item_id, start, end]
                 if key in book_findings:
                     book_findings[key]["locations"].append(loc)

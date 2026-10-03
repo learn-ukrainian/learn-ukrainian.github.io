@@ -14,6 +14,7 @@ from typing import Any
 
 from scripts.curriculum.resolver.tokenize import Token
 from scripts.verification.antonenko_data import PATTERN_ROWS
+from scripts.verification.temporal_protiah import CallBudget, classify
 
 BOOK = "Антоненко-Давидович «Як ми говоримо»"
 SOURCE_FILE = "antonenko-davydovych-yak-my-hovorymo"
@@ -139,7 +140,11 @@ def _temporal_end(text: str, tokens: list[Token], end: int, morphology: dict[str
 
 
 def find_book_calques(
-    text: str, tokens: list[Token], morphology: dict[str, list[dict[str, Any]]]
+    text: str,
+    tokens: list[Token],
+    morphology: dict[str, list[dict[str, Any]]],
+    *,
+    budget: CallBudget | None = None,
 ) -> list[dict[str, Any]]:
     """Match contiguous source-bound phrases, retaining exact input offsets.
 
@@ -148,6 +153,7 @@ def find_book_calques(
     a phrase. Participation permits intervening VESUM adjectives (e.g. активну).
     """
     findings = []
+    budget = budget if budget is not None else CallBudget()
     for start, token in enumerate(tokens):
         candidates = set(_FORM_STARTS.get(token.lookup.lower(), ()))
         for reading in _analyses(token, morphology):
@@ -182,11 +188,24 @@ def find_book_calques(
                     )
                 ):
                     continue
+                classification = None
                 if pattern.context == "duration":
-                    duration_end = _temporal_end(text, tokens, end, morphology)
-                    if duration_end is None:
+                    # Detect every adjacent candidate, independently of the old
+                    # genitive matcher. A failure must remain visible as suspicion.
+                    if not text[tokens[start].end : tokens[start + 1].start].isspace():
                         continue
-                    end = duration_end
+                    classification = classify(text, tokens, start, morphology, budget=budget)
+                    if classification["status"] == "none":
+                        continue
+                    end = classification["end"]
+                    if end == start + 2:
+                        # Keep historical temporal NP offsets when parsing fails;
+                        # this is span selection only, never a grammatical verdict.
+                        proposed_end = _temporal_end(text, tokens, end, morphology)
+                        if proposed_end and all(
+                            text[a.end : b.start].isspace() for a, b in pairwise(tokens[start:proposed_end])
+                        ):
+                            end = proposed_end
                 span = tokens[start:end]
                 if any(
                     not text[a.end : b.start].isspace()
@@ -204,12 +223,22 @@ def find_book_calques(
                         "start": span[0].start,
                         "end": span[-1].end,
                         "detail": {
-                            "status": TEMPORAL_PROTIAH_STATUS
-                            if pattern.id == "temporal-protiah"
-                            else "documented_calque",
+                            "status": (
+                                TEMPORAL_PROTIAH_STATUS
+                                if classification and classification["evidence"].get("parser_unavailable")
+                                else classification["status"]
+                                if classification
+                                else "documented_calque"
+                            ),
                             "pattern_id": pattern.id,
                             "ukrainian_alternative": pattern.recommended,
-                            "evidence": {"source": BOOK, "source_file": SOURCE_FILE, "chunk_id": pattern.chunk_id},
+                            "evidence": {
+                                "source": BOOK,
+                                "source_file": SOURCE_FILE,
+                                "chunk_id": pattern.chunk_id,
+                                **(classification["evidence"] if classification else {}),
+                            },
+                            **({"reading": classification["reading"]} if classification else {}),
                         },
                     }
                 )

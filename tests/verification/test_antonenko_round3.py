@@ -18,7 +18,12 @@ MORPHOLOGY = FIXTURE_DATA["morphology"]
 
 @pytest.mark.parametrize("text", FIXTURE_DATA["blockers"] + FIXTURE_DATA["correct"])
 def test_correct_draught_durations_have_no_book_finding(text):
-    assert not find_book_calques(text, tokenize(text), MORPHOLOGY)
+    findings = find_book_calques(text, tokenize(text), MORPHOLOGY)
+    if "на протязі" in text.lower():
+        assert len(findings) == 1
+        assert findings[0]["detail"]["status"] == "suspicion"
+    else:
+        assert findings == []
 
 
 @pytest.mark.parametrize("text", FIXTURE_DATA["regressions"] + FIXTURE_DATA["incorrect"])
@@ -65,7 +70,9 @@ def test_indeclinable_and_plain_accusative_modifiers_withhold(readings):
     # Reuse a Cyrillic token; the synthetic lemma is only a reading identifier.
     morphology["цілого"] = morphology.pop("modifier")
     text = "На протязі цілого дня ми працювали."
-    assert not find_book_calques(text, tokenize(text), morphology)
+    findings = find_book_calques(text, tokenize(text), morphology)
+    assert len(findings) == 1
+    assert findings[0]["detail"]["status"] == "suspicion"
 
 
 @pytest.mark.parametrize(
@@ -91,7 +98,9 @@ def test_unattested_range_requires_numeral_components():
 
 def test_missing_morphology_does_not_manufacture_duration():
     text = "На протязі року ми працювали."
-    assert not find_book_calques(text, tokenize(text), {})
+    findings = find_book_calques(text, tokenize(text), {})
+    assert len(findings) == 1
+    assert findings[0]["detail"]["status"] == "suspicion"
 
 
 def test_all_new_sentence_words_have_frozen_vesum_evidence():
@@ -125,13 +134,11 @@ def hermetic_checker(monkeypatch, tmp_path):
 def test_review_cases_through_public_checker(text, expected, hermetic_checker):
     result = hermetic_checker.check_text(text=text, checks=["russian_shadow"])
     destination, empty = (
-        ("suspicions", "problems")
-        if patterns.TEMPORAL_PROTIAH_STATUS == "suspicion"
-        else ("problems", "suspicions")
+        ("suspicions", "problems") if patterns.TEMPORAL_PROTIAH_STATUS == "suspicion" else ("problems", "suspicions")
     )
     assert result[empty] == []
-    assert len(result[destination]) == int(expected)
-    if expected:
+    assert len(result[destination]) == 1
+    if result[destination]:
         finding = result[destination][0]
         assert finding["detail"]["status"] == patterns.TEMPORAL_PROTIAH_STATUS
         assert finding["detail"]["evidence"]["chunk_id"].endswith("_p131")
@@ -165,7 +172,16 @@ def test_range_parts_do_not_change_whole_token_diagnostics(checks, hermetic_chec
 
 @pytest.mark.parametrize("status", ["documented_calque", "suspicion"])
 def test_status_switch_routes_through_public_checker(status, monkeypatch, hermetic_checker):
-    monkeypatch.setattr(patterns, "TEMPORAL_PROTIAH_STATUS", status)
+    # Exercise per-candidate routing; the global status is now fallback only.
+    original = patterns.classify
+
+    def classified(*args, **kwargs):
+        result = original(*args, **kwargs)
+        result["status"] = status
+        result["evidence"].pop("parser_unavailable", None)
+        return result
+
+    monkeypatch.setattr(patterns, "classify", classified)
     checker = hermetic_checker
     result = checker.check_text(
         items=[

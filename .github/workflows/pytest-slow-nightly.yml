@@ -74,7 +74,9 @@ jobs:
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
 
       - name: Set Stanza resources directory
-        run: echo "STANZA_RESOURCES_DIR=${STANZA_RESOURCES_DIR:-${HOME}/stanza_resources}" >> "$GITHUB_ENV"
+        run: |
+          revision=$(.venv/bin/python -c 'from scripts.verification.stanza_models import manifest; print(manifest()["revision"])')
+          echo "STANZA_RESOURCES_DIR=${HOME}/stanza_resources/protiah/${revision}" >> "$GITHUB_ENV"
 
       - name: Restore Stanza Ukrainian model cache
         id: stanza-model-cache
@@ -82,42 +84,20 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.STANZA_RESOURCES_DIR }}
-          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
+          key: stanza-uk-model-v3-${{ runner.os }}-${{ hashFiles('scripts/verification/stanza_uk_manifest.json') }}
 
       - name: Provision and verify Stanza Ukrainian model
         run: |
           set -euo pipefail
-          for attempt in 1 2 3; do
-            echo "stanza provision attempt ${attempt}/3"
-            if .venv/bin/python - <<'PY'
-          import os
-          from pathlib import Path
-
-          import stanza
-
-          resources = Path(os.environ["STANZA_RESOURCES_DIR"])
-          stanza.download("uk", model_dir=str(resources))
-          assert resources.is_dir() and any(resources.iterdir()), "Stanza resources missing or empty"
-          stanza.Pipeline("uk", dir=str(resources), download_method=None, use_gpu=False)
-          print("Stanza Ukrainian resources exist, are non-empty, and load offline")
-          PY
-            then
-              exit 0
-            fi
-            case "${attempt}" in
-              1) sleep 10 ;;
-              2) sleep 30 ;;
-            esac
-          done
-          echo "::error::Provision and verify Stanza Ukrainian model failed after 3 attempts" >&2
-          exit 1
+          timeout 600 .venv/bin/python -m scripts.verification.provision_stanza_uk
+          timeout 60 .venv/bin/python -m scripts.verification.provision_stanza_uk --verify-only
 
       - name: Save Stanza Ukrainian model cache
         if: steps.stanza-model-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.STANZA_RESOURCES_DIR }}
-          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
+          key: stanza-uk-model-v3-${{ runner.os }}-${{ hashFiles('scripts/verification/stanza_uk_manifest.json') }}
 
       - name: Run slow pytest selection
         id: pytest-slow

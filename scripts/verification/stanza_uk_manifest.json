@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "repository": "stanfordnlp/stanza-uk",
+  "revision": "3d394b0c66e58c32f43f4a9460452a08dedbffcd",
+  "stanza_version": "1.13.0",
+  "files": [
+    {
+      "path": "models/tokenize/iu.pt",
+      "install_path": "uk/tokenize/iu.pt",
+      "size": 645826,
+      "sha256": "256cbbe38d8a7d6f2fd44ae52bb2e589c41ea302fb67080e94c1bc3522d103ad"
+    },
+    {
+      "path": "models/mwt/iu.pt",
+      "install_path": "uk/mwt/iu.pt",
+      "size": 555594,
+      "sha256": "86d2b0ad128cd436814ca6eb260d86266872d6e3da3d332cee289ec523b463e1"
+    },
+    {
+      "path": "models/pos/iu_charlm.pt",
+      "install_path": "uk/pos/iu_charlm.pt",
+      "size": 36135987,
+      "sha256": "07d073f03f8e094f23262fce18092ccef403e4562e5d058e15f747e3dbdbdc55"
+    },
+    {
+      "path": "models/lemma/iu_charlm.pt",
+      "install_path": "uk/lemma/iu_charlm.pt",
+      "size": 10858433,
+      "sha256": "d34ae41861f5fe4c57abce2bd0ea8861e074f88cb93621e79c9dc78d126956a8"
+    },
+    {
+      "path": "models/depparse/iu_charlm.pt",
+      "install_path": "uk/depparse/iu_charlm.pt",
+      "size": 142690939,
+      "sha256": "1d4275588a1b68241f723b33afbb2ab13469f24de0d268599e8aa672c57d5f1e"
+    },
+    {
+      "path": "models/pretrain/conll17.pt",
+      "install_path": "uk/pretrain/conll17.pt",
+      "size": 108799762,
+      "sha256": "ca01ac6fa0b372b86cfc2efbd0e444602fcce622cab4a7b24f9ff1f4753b9295"
+    },
+    {
+      "path": "models/forward_charlm/conll17.pt",
+      "install_path": "uk/forward_charlm/conll17.pt",
+      "size": 20808426,
+      "sha256": "b3e0076f203e9f599af2ef51613da63680adb90f56976e6f7a24334c30ed2e80"
+    },
+    {
+      "path": "models/backward_charlm/conll17.pt",
+      "install_path": "uk/backward_charlm/conll17.pt",
+      "size": 20808427,
+      "sha256": "1a30133fed3820330478d5123eb5122f13d5df4534f2041538e766ba9602aeba"
+    }
+  ]
+}

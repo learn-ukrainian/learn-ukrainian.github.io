@@ -41,7 +41,7 @@ def hermetic_check(monkeypatch, tmp_path):
 def test_each_pattern_positive_and_sense_negative(pattern, hermetic_check):
     findings = find_book_calques(pattern.positive, tokenize(pattern.positive), MORPHOLOGY)
     hit = next(f for f in findings if f["detail"]["pattern_id"] == pattern.id)
-    assert hit["detail"]["evidence"] == {
+    assert {k: hit["detail"]["evidence"][k] for k in ("source", "source_file", "chunk_id")} == {
         "source": BOOK,
         "source_file": "antonenko-davydovych-yak-my-hovorymo",
         "chunk_id": pattern.chunk_id,
@@ -57,7 +57,12 @@ def test_each_pattern_positive_and_sense_negative(pattern, hermetic_check):
     assert not any(f["detail"].get("pattern_id") == pattern.id for f in result[empty])
     if expected_status == "suspicion":
         assert public_hit["detail"]["label"] == "suspicion, not a verdict"
-    assert not find_book_calques(pattern.negative, tokenize(pattern.negative), MORPHOLOGY)
+    negative = find_book_calques(pattern.negative, tokenize(pattern.negative), MORPHOLOGY)
+    if pattern.id == "temporal-protiah":
+        assert len(negative) == 1
+        assert negative[0]["detail"]["status"] == "suspicion"
+    else:
+        assert negative == []
 
 
 @pytest.mark.parametrize("form", FIXTURE_DATA["participation_forms"])
@@ -100,7 +105,13 @@ def test_adjectives_auxiliaries_and_duration(text):
     ],
 )
 def test_boundaries_proper_names_and_borrowings(text):
-    assert not find_book_calques(text, tokenize(text), MORPHOLOGY)
+    findings = find_book_calques(text, tokenize(text), MORPHOLOGY)
+    if "на протязі" in text.lower():
+        assert len(findings) == 1
+        assert findings[0]["detail"]["status"] == "suspicion"
+        assert findings[0]["end"] <= text.lower().index("протязі") + len("протязі")
+    else:
+        assert findings == []
 
 
 def test_unavailable_morphology_never_guesses_inflections():
