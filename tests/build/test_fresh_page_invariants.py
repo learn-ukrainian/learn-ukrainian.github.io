@@ -5,8 +5,10 @@ English sentinels are synthetic transport probes, not curriculum content.
 
 from __future__ import annotations
 
+import ast
 import copy
 import html
+import inspect
 import json
 import re
 import subprocess
@@ -22,20 +24,7 @@ from tests.build.test_fresh_render_coverage import render_environment as render_
 # Explicit paths, rather than an author-field denylist. Every other string is tainted.
 # Binding fields preserve typed selectors/references so the real renderer can run;
 # they grant no right to publish prose from sibling fields.
-LEARNER_TEXT_ALLOWLIST = {
-    "plan.lessons.*.title": "Learner lesson title.",
-    "plan.lessons.*.job": "Learner outcome in lesson frontmatter.",
-    "plan.lessons.*.reading_passages.*.title": "Hosted reading title.",
-    "plan.lessons.*.reading_passages.*.genre": "Hosted reading genre label.",
-    "pack.examples.*.text": "Example bytes explicitly selected by the draft.",
-    "pack.examples.*.translation_en": "Example translation with A1 scaffolding.",
-    "pack.videos.*.title": "Public video title.",
-    "pack.videos.*.channel": "Public media attribution.",
-    "pack.videos.*.url": "Public media link.",
-    "pack.texts.*.episode_url": "Registry-permitted public episode link.",
-    "pack.texts.*.url": "Registry-permitted public episode link.",
-    "pack.texts.*.quote": "Only selected quotes with publication-registry permission.",
-}
+LEARNER_TEXT_ALLOWLIST = assemble.LEARNER_TEXT_ALLOWLIST
 BINDING_ALLOWLIST = {
     "plan.arc_ref.level", "plan.lessons.*.slug", "plan.lessons.*.kind",
     "plan.lessons.*.activities.*.id", "plan.lessons.*.activities.*.type",
@@ -72,11 +61,11 @@ def taint_author_strings(plan, pack, draft):
             return value
         pattern = ".".join("*" if p.isdigit() else p for p in path)
         allowed = pattern in LEARNER_TEXT_ALLOWLIST or pattern in BINDING_ALLOWLIST
-        if pattern == "pack.texts.*.quote":
+        if pattern.startswith("pack.texts.") and pattern in LEARNER_TEXT_ALLOWLIST:
             record = pack["texts"][int(path[2])]
-            allowed = record["id"] in selected_quotes
+            allowed = (pattern != "pack.texts.*.quote" or record["id"] in selected_quotes)
             if allowed:
-                assemble.publication.quote_attribution(record)  # actual registry, never pack permission
+                allowed = assemble.learner_text_allowed(pattern, record)
         if allowed:
             return value
         sentinel = "ZZ" + "_".join(path) + "ZZ"
@@ -190,39 +179,103 @@ def test_type_id_invariant_keeps_word_boundaries():
     assert not visible_type_ids(["quizzes filling-in"], {"quiz", "fill-in"})
 
 
+def english_input_fields(source):
+    """Discover explicit English reads independently of the channel registry."""
+    fields = set()
+    for node in ast.walk(ast.parse(source)):
+        key = None
+        if isinstance(node, ast.Subscript):
+            key = node.slice
+        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "get" and node.args:
+            key = node.args[0]
+        if isinstance(key, ast.Constant) and isinstance(key.value, str):
+            name = key.value
+            if name == "en" or name.endswith("_en") or name.startswith("english_") or name == "sense_gloss":
+                fields.add(name)
+    return fields
+
+
+def assert_english_channels_classified(source):
+    registered = {path.removesuffix(".*").rsplit(".", 1)[-1] for path in assemble.ENGLISH_CHANNELS}
+    missing = english_input_fields(source) - registered
+    assert not missing, f"Unclassified English fields: {sorted(missing)}"
+
+
+def test_every_english_field_read_has_a_production_classification():
+    assert_english_channels_classified(inspect.getsource(assemble))
+    assert set(assemble.ENGLISH_CHANNELS.values()) == {
+        "body_support", "vocabulary_and_inline_support", "writer_bilingual",
+    }
+
+
+def test_new_english_producer_fails_until_classified(monkeypatch):
+    source = inspect.getsource(assemble) + '\ndef future_english(record):\n    return record.get("note_en")\n'
+    with pytest.raises(AssertionError, match="note_en"):
+        assert_english_channels_classified(source)
+    monkeypatch.setitem(assemble.ENGLISH_CHANNELS, "pack.examples.*.note_en", "body_support")
+    assert_english_channels_classified(source)
+
+
+def plant_english_probe(inputs, path, probe):
+    """Follow a registered path, including arrays; optional leaf fields are planted."""
+    def visit(value, parts):
+        head, *tail = parts
+        if head == "*":
+            assert isinstance(value, list), path
+            if not tail:
+                for index in range(len(value)):
+                    value[index] = probe
+                return len(value)
+            return sum(visit(child, tail) for child in value)
+        if not tail:
+            value[head] = probe
+            return 1
+        if head not in value:
+            return 0
+        return visit(value[head], tail)
+
+    return visit(inputs, path.split("."))
+
+
 @pytest.mark.parametrize("level", LEVELS)
 @pytest.mark.parametrize("module_num", [1, 4, 21, 51])
-def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num, render_environment):
+@pytest.mark.parametrize("channel", assemble.ENGLISH_CHANNELS)
+def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num, channel, render_environment):
     inputs = maximal_draft(level)
     draft, plan, pack, words = inputs
     plan["arc_ref"]["position"] = module_num
-    example = "ExampleEnglishProbe"
-    dialogue = ["DialogueEnglishProbeOne", "DialogueEnglishProbeTwo"]
-    gloss = "InlineEnglishProbe"
-    pack["examples"][0]["translation_en"] = example
-    draft["dialogue"]["translation_en"] = dialogue
-    words["words"][0]["gloss_en"] = gloss
+    probe = "EnglishChannelProbe"
+    assert plant_english_probe({"draft": draft, "pack": pack, "words": words}, channel, probe), channel
     result, expanded = check_render(inputs, level)
     assert result.passed, result.to_dict()
     tabs = re.findall(r'<TabItem label="[^"]+">(.*?)</TabItem>', html.unescape(result.artifacts["mdx"]), re.DOTALL)
     assert len(tabs) == 4
-    body = "\n".join(tabs[i] for i in (0, 2, 3))
-    counts = {probe: body.count(probe) for probe in [example, *dialogue, gloss]}
-    # Independent expectation from the config's level policies: A1's designed
-    # scaffold survives; A2 examples/dialogues stay Ukrainian; B1+ English is
-    # confined to Tab 2. This measures additions, not synthetic fixture prose.
+    counts = {tab: text.count(probe) for tab, text in zip(("urok", "slovnyk", "vpravy", "resursy"), tabs, strict=True)}
+    # Independent config expectations for assembler additions. Writer-supplied
+    # bilingual prose is classified separately and remains upstream-gated.
     policy = config.compute_immersion_band(level, module_num)
     if level == "a1":
         assert policy["advisory_pct_max"] < 75
-        assert all(count > 0 for count in counts.values()), counts
     else:
         assert policy["advisory_pct_min"] >= 75
-        assert counts == dict.fromkeys(counts, 0), counts
+        body = "\n".join(tabs[i] for i in (0, 2, 3))
         assert "isUkrainian={false}" not in body, "A2+ widgets must use Ukrainian UI"
         assert re.findall(r'<TabItem label="([^"]+)">', result.artifacts["mdx"]) == ["Урок", "Словник", "Вправи", "Ресурси"]
-    assert gloss in tabs[1], "Vocabulary support must survive at every level"
+    classification = assemble.ENGLISH_CHANNELS[channel]
+    if classification == "writer_bilingual":
+        assert counts["urok"] > 0
+        assert not any(counts[tab] for tab in ("slovnyk", "vpravy", "resursy"))
+    elif classification == "body_support":
+        assert (counts["urok"] > 0) == (level == "a1"), counts
+        assert not any(counts[tab] for tab in ("slovnyk", "vpravy", "resursy"))
+    else:
+        assert classification == "vocabulary_and_inline_support"
+        assert counts["slovnyk"] > 0, "Vocabulary support must survive at every level"
+        assert (counts["urok"] > 0) == (level == "a1"), counts
+        if level != "a1":
+            assert not any(counts[tab] for tab in ("urok", "vpravy", "resursy")), counts
     translations = [u for u in expanded["units"] if str(u["block"]).startswith("dialogue_translation_")]
-    assert len(translations) == (len(dialogue) if level == "a1" else 0)
+    assert len(translations) == (len(draft["dialogue"]["translation_en"]) if level == "a1" else 0)
 
 
 @pytest.mark.parametrize("level", LEVELS)
@@ -422,3 +475,139 @@ def test_fresh_unknown_component_display_contract_fails_closed():
 
     with pytest.raises(ValueError, match="no component display contract"):
         fresh_activity_mdx(SimpleNamespace(title="Title", instruction="Read"), '### Read\n\n<Unknown />')
+
+
+@pytest.mark.parametrize("arc_ref", [None, [], "arc", {}, {"position": None}, {"position": True},
+                                      {"position": 0}, {"position": -1}, {"position": "1"},
+                                      {"position": "invalid"}, {"position": 1.5}])
+def test_malformed_arc_ref_fails_with_named_plan_error_before_use(arc_ref, monkeypatch):
+    draft, plan, pack, words = maximal_draft("a1")
+    plan["arc_ref"] = arc_ref
+    monkeypatch.setattr(assemble, "body_english_support_allowed", lambda *a, **k: pytest.fail("band read before validation"))
+    with pytest.raises(assemble.AssemblerError) as caught:
+        assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "fixture", 1)
+    assert (caught.value.code, caught.value.layer) == (assemble.PLAN_ARC_REF_INVALID, "plan")
+    result = assemble.check_9_stress_and_render({}, draft, plan, pack, words, {}, "a1", "fixture", 1)
+    assert not result.passed and result.layer == "plan"
+    assert result.reason.startswith(assemble.PLAN_ARC_REF_INVALID + ":")
+
+
+def test_missing_arc_ref_fails_with_named_error():
+    with pytest.raises(assemble.AssemblerError, match="plan_arc_ref_invalid"):
+        assemble.plan_arc_position({})
+    assert assemble.plan_arc_position({"arc_ref": {"position": 51}}) == 51
+
+
+@pytest.mark.parametrize("level", LEVELS)
+def test_every_assembler_english_decision_uses_the_shared_helper(level, render_environment, monkeypatch):
+    calls = []
+    original = assemble.body_english_support_allowed
+
+    def capture(level, module_num=1):
+        calls.append((level, module_num))
+        return original(level, module_num)
+
+    monkeypatch.setattr(assemble, "body_english_support_allowed", capture)
+    inputs = maximal_draft(level)
+    result, expanded = check_render(inputs, level)
+    assert result.passed, result.to_dict()
+    # Expansion, check 9, and final provenance must agree. Direct renderer use
+    # also goes through the helper when no precomputed support flag is passed.
+    assert len(calls) >= 3 and set(calls) == {(level, 1)}
+    before = len(calls)
+    assemble._render_urok_markdown(inputs[0], expanded, inputs[2], inputs[3])
+    assert len(calls) == before + 1
+    assert calls[-1] == (level, 1)
+    assert original(level.upper(), 51) == (level == "a1")
+
+
+def test_sentinel_uses_the_production_learner_text_allowlist():
+    assert LEARNER_TEXT_ALLOWLIST is assemble.LEARNER_TEXT_ALLOWLIST
+    assert not assemble.learner_text_allowed("pack.texts.*.supports", {})
+    assert assemble.learner_text_allowed("plan.lessons.*.title")
+    assert not assemble.learner_text_allowed("pack.texts.*.url")
+
+
+@pytest.mark.parametrize("field", ["url", "episode_url"])
+@pytest.mark.parametrize("source_file,permitted", [("ulp-1-00-lesson-notes", True),
+                                                 ("not-registered", False),
+                                                 ("1-klas-bukvar-zaharijchuk-2025-1", False)])
+def test_url_allowlist_uses_registry_permission_not_pack_claim(field, source_file, permitted):
+    url = "https://www.ukrainianlessons.com/episode1/"
+    record = {"id": "T-1", field: url, "quote": "Synthetic excerpt",
+              "source": {"file": source_file, "kind": "textbook", "page": 12},
+              "publish": {"allowed": True}, "resource_credit": {"episode_links": True}}
+    path = f"pack.texts.*.{field}"
+    assert assemble.learner_text_allowed(path, record) == permitted
+    resources = assemble.build_resursy_tab({"steps": [{"explains": ["T-1"]}]}, {"texts": [record]})
+    assert (url in json.dumps(resources)) == permitted
+    if permitted:
+        with pytest.raises(assemble.AssemblerError, match="publication_right"):
+            assemble.learner_text_allowed("pack.texts.*.quote", record)
+
+
+@pytest.mark.parametrize("field", ["url", "episode_url"])
+def test_url_sentinel_preserves_only_registry_permitted_leaf(field):
+    draft, plan, pack, _ = maximal_draft("a1")
+    pack["texts"][0].update(source={"file": "ulp-1-00-lesson-notes", "kind": "textbook", "page": 12},
+                             **{field: "https://www.ukrainianlessons.com/episode1/"})
+    # The no-copy source is grounding only. Only its registry-permitted link
+    # survives; quote prose is tainted even if the pack claims publication.
+    draft["steps"][0]["blocks"] = [b for b in draft["steps"][0]["blocks"] if b["kind"] != "quote"]
+    _, tainted, sentinels = taint_author_strings(plan, pack, draft)
+    assert tainted["texts"][0][field] == pack["texts"][0][field]
+    assert "pack.texts.0.quote" in sentinels.values()
+    pack["texts"][0]["source"]["file"] = "not-registered"
+    _, tainted, sentinels = taint_author_strings(plan, pack, draft)
+    assert f"pack.texts.0.{field}" in sentinels.values()
+    assert tainted["texts"][0][field].startswith("ZZ")
+
+
+def test_unknown_publication_field_fails_closed():
+    with pytest.raises(assemble.AssemblerError, match="learner_text_not_allowed"):
+        assemble.learner_text_permission("pack.texts.*.future_url", {})
+
+
+def english_schema_paths(node, document, path=()):
+    """Resolve local schema refs and arrays without depending on the registry."""
+    if not isinstance(node, dict):
+        return set()
+    found = set()
+    if "$ref" in node and node["$ref"].startswith("#/"):
+        target = document
+        for part in node["$ref"].removeprefix("#/").split("/"):
+            target = target[part]
+        found.update(english_schema_paths(target, document, path))
+    for key, child in node.get("properties", {}).items():
+        if key == "en" or key.endswith("_en") or key.startswith("english_") or key == "sense_gloss":
+            suffix = ("*",) if child.get("type") == "array" else ()
+            found.add(".".join((*path, key, *suffix)))
+        else:
+            found.update(english_schema_paths(child, document, (*path, key)))
+    if node.get("type") == "array":
+        found.update(english_schema_paths(node.get("items"), document, (*path, "*")))
+    for keyword in ("oneOf", "anyOf", "allOf"):
+        for child in node.get(keyword, []):
+            found.update(english_schema_paths(child, document, path))
+    return found
+
+
+@pytest.mark.parametrize("level", LEVELS)
+def test_every_english_schema_path_is_classified_in_production(level):
+    paths = set()
+    for root, filename in (("draft", f"lesson-draft-{level}-v1.schema.json"),
+                           ("pack", "evidence-pack-v1.schema.json"),
+                           ("words", "evidence-words-v1.schema.json")):
+        schema = json.loads((ROOT / "schemas" / filename).read_text())
+        paths.update(english_schema_paths(schema, schema, (root,)))
+    assert paths == set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS
+
+
+def test_new_english_path_with_an_existing_field_name_requires_classification():
+    schema = {"properties": {"videos": {"type": "array", "items": {
+        "properties": {"translation_en": {"type": "string"}},
+    }}}}
+    paths = english_schema_paths(schema, schema, ("pack",))
+    assert paths == {"pack.videos.*.translation_en"}
+    assert paths - (set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS) == paths
+    assert assemble.learner_text_permission("plan.lessons.*.title", {}) is None

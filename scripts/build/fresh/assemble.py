@@ -222,6 +222,7 @@ FORM_NOT_FOUND = "form_not_found"
 VIDEO_NOT_FOUND = "video_not_found"
 ACTIVITY_NOT_FOUND = "activity_not_found"
 DRAFT_STATUS_NOT_OK = "draft_status_not_ok"
+PLAN_ARC_REF_INVALID = "plan_arc_ref_invalid"
 PRIOR_PLANS_MISSING = "prior_plans_missing"
 LOCK_CHECK_FAILED = "lock_check_failed"
 LESSON_LOCK_ENTRY_MISSING = "lesson_lock_entry_missing"
@@ -347,6 +348,83 @@ def string_key_answer(act_type: str, item: dict[str, Any]) -> str | None:
         return None
     plain = [c.get("text") if isinstance(c, dict) else c for c in choices]
     return answer if plain.count(answer) == 1 else None
+
+
+# Closed learner-text surface for plan/pack metadata. Unknown prose is author-only.
+# Bindings (ids, selectors, kinds) are separate and grant no sibling prose rights.
+LEARNER_TEXT_ALLOWLIST = {
+    "plan.lessons.*.title": "Learner lesson title.",
+    "plan.lessons.*.job": "Learner outcome in lesson frontmatter.",
+    "plan.lessons.*.reading_passages.*.title": "Hosted reading title.",
+    "plan.lessons.*.reading_passages.*.genre": "Hosted reading genre label.",
+    "pack.examples.*.text": "Example bytes explicitly selected by the draft.",
+    "pack.examples.*.translation_en": "Example translation with A1 scaffolding.",
+    "pack.videos.*.title": "Public video title.",
+    "pack.videos.*.channel": "Public media attribution.",
+    "pack.videos.*.url": "Public media link.",
+    "pack.texts.*.episode_url": "Registry-permitted public episode link.",
+    "pack.texts.*.url": "Registry-permitted public episode link.",
+    "pack.texts.*.quote": "Only selected quotes with publication-registry permission.",
+}
+
+# Every explicitly English input channel must be classified here. The page
+# invariant discovers field reads independently, then probes every channel.
+# Writer-controlled bilingual prose is separate from assembler additions;
+# classification records that boundary and grants no new publication rights.
+ENGLISH_CHANNELS = {
+    "pack.examples.*.translation_en": "body_support",
+    "draft.dialogue.translation_en.*": "body_support",
+    "draft.steps.*.blocks.*.en.*": "writer_bilingual",
+    "words.words.*.gloss_en": "vocabulary_and_inline_support",
+    "words.words.*.sense_gloss": "vocabulary_and_inline_support",
+}
+
+
+# Resolver candidates are source metadata, never learner text.
+ENGLISH_METADATA_FIELDS = frozenset({"words.words.*.candidates.*.sense_gloss"})
+
+def plan_arc_position(plan: dict[str, Any]) -> int:
+    """Read the schema's positive integer position, never coerce malformed plans."""
+    arc_ref = plan.get("arc_ref")
+    position = arc_ref.get("position") if isinstance(arc_ref, dict) else None
+    if type(position) is not int or position < 1:
+        raise AssemblerError(
+            PLAN_ARC_REF_INVALID, "arc_ref.position must be a positive integer", layer="plan"
+        )
+    return position
+
+
+def learner_text_permission(path: str, record: dict[str, Any]) -> str | dict[str, str] | None:
+    """Use registry-owned permission for both excerpts and resource URLs.
+
+    Quote rights and episode-link rights are distinct registry permissions:
+    linking a no-copy source never grants permission to publish its excerpt.
+    """
+    if path not in LEARNER_TEXT_ALLOWLIST:
+        raise AssemblerError("learner_text_not_allowed", f"unclassified learner text: {path}", layer="engine")
+    try:
+        if path == "pack.texts.*.quote":
+            return publication.quote_attribution(record)
+        if path in {"pack.texts.*.episode_url", "pack.texts.*.url"}:
+            return publication.resource_citation(record)
+    except ValueError as exc:
+        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+    return None
+
+
+def learner_text_allowed(path: str, record: dict[str, Any] | None = None) -> bool:
+    """Admission for a metadata leaf; unknown paths and unpermitted URLs fail closed."""
+    if path not in LEARNER_TEXT_ALLOWLIST:
+        return False
+    if path.startswith("pack.texts."):
+        if record is None:
+            return False
+        permission = learner_text_permission(path, record)
+        if path.endswith(".quote"):
+            return bool(permission)
+        url = record.get(path.rsplit(".", 1)[-1])
+        return bool(isinstance(permission, dict) and url and permission.get("description") == f"<{url}>")
+    return True
 
 
 def body_english_support_allowed(level: str, module_num: int = 1) -> bool:
@@ -822,7 +900,7 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
-    include_english = body_english_support_allowed(level, int(plan.get("arc_ref", {}).get("position", 1)))
+    include_english = body_english_support_allowed(level, plan_arc_position(plan))
 
     words_by_id: dict[str, dict[str, Any]] = {}
     for w in words_store.get("words", []):
@@ -1970,10 +2048,7 @@ def build_resursy_entries(
         t_rec = texts_by_id.get(cid)
         if t_rec is None:
             raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
-        try:
-            citation = publication.resource_citation(t_rec)
-        except ValueError as exc:
-            raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+        citation = learner_text_permission("pack.texts.*.url", t_rec)
         if citation is None:
             if warnings is not None:
                 warnings.append(
@@ -2172,10 +2247,7 @@ def _render_urok_markdown(
                 ref_id = block.get("ref", "")
                 t_rec = texts_by_id.get(ref_id)
                 if t_rec:
-                    try:
-                        attr = publication.quote_attribution(t_rec)
-                    except ValueError as exc:
-                        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+                    attr = learner_text_permission("pack.texts.*.quote", t_rec)
                     w.line("> ", *block_fragments(step_id, block_idx, str(t_rec.get("quote", ""))))
                     if attr:
                         w.line(">")
@@ -2505,6 +2577,10 @@ def check_9_stress_and_render(
 ) -> CheckResult:
     """Check 9: Apply stress, build Slovnyk and Resursy, verify locks, render MDX."""
     try:
+        arc_position = plan_arc_position(plan)
+    except AssemblerError as exc:
+        return CheckResult(check=9, passed=False, reason=str(exc), layer=exc.layer)
+    try:
         stressed_doc = apply_stress(expanded_doc, stream)
     except Exception as exc:
         return CheckResult(check=9, passed=False, reason=f"stress application raised: {exc}", layer="writer")
@@ -2601,12 +2677,7 @@ def check_9_stress_and_render(
             layer="writer",
         )
 
-    # Immersion band computation
-    arc_ref = plan.get("arc_ref")
-    if not isinstance(arc_ref, dict) or "position" not in arc_ref:
-        return CheckResult(check=9, passed=False, reason="plan missing arc_ref.position", layer="plan")
-    arc_position = int(arc_ref["position"])
-
+    # Immersion band computation (arc position validated before any reads).
     p_root = plans_dir or (repo_root / f"curriculum/l2-uk-en/lesson-plans/{level}")
     e_root = evidence_dir or (repo_root / f"curriculum/l2-uk-en/evidence/{level}")
     try:
@@ -2673,7 +2744,7 @@ def check_9_stress_and_render(
             if isinstance(entry, dict)
         ],
     }
-    include_english = immersion_band_key.split("-", 1)[0] == "a1"
+    include_english = body_english_support_allowed(level, arc_position)
     replace_gloss = gloss_replacer(words_store, include_english=include_english)
     meta_data = expand_payload_text(meta_data, replace_gloss)
     for reading in meta_data["readings"]:

@@ -387,6 +387,7 @@ def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
     ]
     types = {"quiz1": "quiz", "group1": "group-sort", "match1": "match-up", "order1": "order"}
     plan = {
+        "arc_ref": {"level": "a1", "position": 1},
         "lessons": [{"n": 1, "steps": [], "activities": [{"id": aid, "type": kind} for aid, kind in types.items()]}]
     }
     draft = {"status": "ok", "steps": [], "activities": activities}
