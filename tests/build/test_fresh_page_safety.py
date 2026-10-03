@@ -302,6 +302,20 @@ def test_site_compiler_errors_only_charge_owned_fresh_pages(tmp_path, monkeypatc
         assert filename in report["detail"]
 
 
+def assert_unnarrowed_toolchain_command(command):
+    """The required Frontend marker suite cannot exclude tests by CLI filters."""
+    assert command[command.index("pytest") + 1:command.index("-m", command.index("pytest") + 1)] == ["tests"]
+    assert not any(
+        token.startswith(("-k", "--ignore", "--deselect")) for token in command
+    ), f"Frontend suite narrowed: {command}"
+
+
+@pytest.mark.parametrize("option", ["-k", "-kfoo", "--ignore", "--ignore=tests/build", "--ignore-glob=*", "--deselect", "--deselect=tests/build/test_one.py::test_one"])
+def test_frontend_guard_rejects_cli_narrowing(option):
+    with pytest.raises(AssertionError, match="suite narrowed"):
+        assert_unnarrowed_toolchain_command(["python", "-m", "pytest", "tests", "-m", "site_toolchain", option])
+
+
 @pytest.mark.repo_wide
 def test_ci_runs_site_toolchain_tests_in_required_frontend_job():
     import yaml
@@ -321,7 +335,7 @@ def test_ci_runs_site_toolchain_tests_in_required_frontend_job():
     import shlex
 
     command = shlex.split(compiler["run"].replace("\\\n", ""))
-    assert command[command.index("pytest") + 1:command.index("-m", command.index("pytest") + 1)] == ["tests"]
+    assert_unnarrowed_toolchain_command(command)
 
 
 @pytest.mark.parametrize("duplicate_title", [False, True])
@@ -396,6 +410,26 @@ def test_resource_missing_title_uses_url_or_neutral_label(role, url):
     page = format_resources_for_mdx([{"role": role, "url": url}], is_ukrainian_forced=True)
     assert "Unknown" not in page
     assert (f"[{url}]({url})" if url else "**—**") in page
+
+
+@pytest.mark.parametrize("role", ["book", "video"])
+@pytest.mark.parametrize("url", ["javascript:probe", "data:text/plain,probe", "wiki/private.md", "https://", "https://example.com/a b", "https://[invalid", "//example.com/probe", "https://user:pass@example.com/probe"])
+def test_rejected_resource_url_cannot_be_a_fallback_label(role, url):
+    from scripts.generate_mdx.resources import format_resources_for_mdx
+
+    page = format_resources_for_mdx([{"role": role, "url": url}], is_ukrainian_forced=True)
+    assert url not in page
+    assert "**—**" in page
+
+
+@pytest.mark.parametrize("role", ["book", "video"])
+@pytest.mark.parametrize("url", ["<https://example.com/resource>", "/readings/fixture/"])
+def test_resource_fallback_label_uses_cleaned_web_or_reader_url(role, url):
+    from scripts.generate_mdx.resources import format_resources_for_mdx
+
+    cleaned = url.strip("<>")
+    page = format_resources_for_mdx([{"role": role, "url": url}], is_ukrainian_forced=True)
+    assert f"[{cleaned}]({cleaned})" in page
 
 
 def test_suite_marker_selection_includes_module_and_parameter_marks_and_requires_toolchain(tmp_path):

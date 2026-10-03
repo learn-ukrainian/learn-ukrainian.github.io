@@ -112,7 +112,8 @@
                 "minItems": 2,
                 "items": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 },
                 "description": "Scrambled letters"
               },
@@ -268,7 +269,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "\\S"
           },
           "description": "Global option pool (for simpler cloze)"
         },
@@ -296,7 +298,8 @@
                 "maxItems": 6,
                 "items": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 }
               }
             },
@@ -478,7 +481,8 @@
                 "maxItems": 6,
                 "items": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 }
               },
               "explanation": {
@@ -614,7 +618,8 @@
                 "minItems": 2,
                 "maxItems": 6,
                 "items": {
-                  "type": "string"
+                  "type": "string",
+                  "pattern": "\\S"
                 }
               },
               "explanation": {
@@ -622,7 +627,9 @@
                 "minLength": 1
               },
               "mode": {
-                "enum": ["form-choice"]
+                "enum": [
+                  "form-choice"
+                ]
               },
               "record": {
                 "type": "string",
@@ -864,7 +871,8 @@
                 "maxItems": 6,
                 "items": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 }
               },
               "correct": {
@@ -1054,7 +1062,8 @@
                 "maxItems": 6,
                 "items": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 }
               },
               "correct": {
@@ -1167,7 +1176,8 @@
                   "properties": {
                     "text": {
                       "type": "string",
-                      "minLength": 1
+                      "minLength": 1,
+                      "pattern": "\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -1251,7 +1261,8 @@
                   "properties": {
                     "text": {
                       "type": "string",
-                      "minLength": 1
+                      "minLength": 1,
+                      "pattern": "\\S"
                     },
                     "correct": {
                       "type": "boolean"
@@ -1366,7 +1377,8 @@
                 "minItems": 2,
                 "items": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 },
                 "description": "Jumbled words"
               },

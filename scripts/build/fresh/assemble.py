@@ -177,6 +177,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts import config
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
@@ -348,7 +349,16 @@ def string_key_answer(act_type: str, item: dict[str, Any]) -> str | None:
     return answer if plain.count(answer) == 1 else None
 
 
-def gloss_replacer(words_store: dict[str, Any]) -> Any:
+def body_english_support_allowed(level: str, module_num: int = 1) -> bool:
+    """Only A1 bands permit mirrored examples/dialogues and inline English scaffolding.
+
+    A2 bands keep examples and dialogues Ukrainian; B1+ restricts English to
+    Slovnyk. Vocabulary-tab translations are independent of this body policy.
+    """
+    return config.compute_immersion_band(level, module_num)["key"].startswith("a1-")
+
+
+def gloss_replacer(words_store: dict[str, Any], *, include_english: bool = True) -> Any:
     """Return the renderer's `{{gloss:W-n}}` -> "lemma (gloss)" substitution for one word store.
 
     The returned callable takes a `_GLOSS_INLINE_RE` match (group 1 is the W- id) and prints the
@@ -362,7 +372,7 @@ def gloss_replacer(words_store: dict[str, Any]) -> Any:
         if w_rec:
             lem = w_rec.get("lemma", "")
             gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
-            return f"{lem} ({gl})" if gl else lem
+            return f"{lem} ({gl})" if gl and include_english else lem
         return wid
 
     return replace_gloss
@@ -812,6 +822,8 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
+    include_english = body_english_support_allowed(level, int(plan.get("arc_ref", {}).get("position", 1)))
+
     words_by_id: dict[str, dict[str, Any]] = {}
     for w in words_store.get("words", []):
         if isinstance(w, dict) and "id" in w:
@@ -1073,7 +1085,7 @@ def assemble_expanded_document(
                                 span_text,
                                 source="writer_prose",
                             )
-                for line_idx, line in enumerate(dial.get("translation_en") or []):
+                for line_idx, line in enumerate((dial.get("translation_en") or []) if include_english else []):
                     add_unit(
                         "urok",
                         step_id,
@@ -1639,7 +1651,10 @@ def finalize_provenance_from_stressed_units(
             f"provenance span count ({len(spans)}) does not match stressed unit count ({len(stressed_units)})",
             layer="engine",
         )
-    replace_gloss = gloss_replacer(words_store or {})
+    replace_gloss = gloss_replacer(
+        words_store or {},
+        include_english=body_english_support_allowed(stressed_doc.get("lesson", {}).get("level", "a1")),
+    )
 
     unit_offsets: dict[tuple[Any, ...], int] = {}
     unit_span_counts: dict[tuple[Any, ...], int] = {}
@@ -2062,6 +2077,8 @@ def _render_urok_markdown(
     stressed_doc: dict[str, Any],
     pack: dict[str, Any],
     words_store: dict[str, Any],
+    *,
+    include_english: bool | None = None,
 ) -> tuple[str, LessonUnitMap]:
     """Render Tab 1 (Urok) markdown from draft and stressed units.
 
@@ -2071,7 +2088,9 @@ def _render_urok_markdown(
     DialogueBox component; their units live in the `exchanges` payload (`CODEC_JS_JSON_STRING`).
     """
     stressed_units = stressed_doc.get("units", [])
-    replace_gloss = gloss_replacer(words_store)
+    if include_english is None:
+        include_english = body_english_support_allowed(stressed_doc.get("lesson", {}).get("level", "a1"))
+    replace_gloss = gloss_replacer(words_store, include_english=include_english)
 
     unit_indices_by_block: dict[tuple[str | None, str | None, int | str], list[int]] = {}
     for i, u in enumerate(stressed_units):
@@ -2142,7 +2161,7 @@ def _render_urok_markdown(
                 ref_id = block.get("ref", "")
                 ex_rec = examples_by_id.get(ref_id)
                 if ex_rec:
-                    en = str(ex_rec.get("translation_en") or "")
+                    en = str(ex_rec.get("translation_en") or "") if include_english else ""
                     w.line("> ", *block_fragments(step_id, block_idx, str(ex_rec.get("text", ""))))
                     if en:
                         w.line(">")
@@ -2262,7 +2281,7 @@ def _render_urok_markdown(
                 for header_line in dialogue_box_header_lines(DIALOGUE_BOX_DEFAULT_TITLE):
                     w.line(header_line)
                 w.line(*payload)
-                translations = dial.get("translation_en") or []
+                translations = (dial.get("translation_en") or []) if include_english else []
                 if translations:
                     # Reuse DialogueBox's English support prop, after all Ukrainian
                     # exchanges. Each translation keeps its own unit location.
@@ -2654,14 +2673,17 @@ def check_9_stress_and_render(
             if isinstance(entry, dict)
         ],
     }
-    replace_gloss = gloss_replacer(words_store)
+    include_english = immersion_band_key.split("-", 1)[0] == "a1"
+    replace_gloss = gloss_replacer(words_store, include_english=include_english)
     meta_data = expand_payload_text(meta_data, replace_gloss)
     for reading in meta_data["readings"]:
         for field_name in ("title", "genre"):
             if field_name in reading:
                 reading[field_name] = mdx_safe_text(reading[field_name])
 
-    urok_md, unit_map = _render_urok_markdown(draft, stressed_doc, pack, words_store)
+    urok_md, unit_map = _render_urok_markdown(
+        draft, stressed_doc, pack, words_store, include_english=include_english
+    )
 
     plan_acts_by_id = {
         act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act
