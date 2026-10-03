@@ -7,7 +7,7 @@ import csv
 import json
 import re
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -38,6 +38,7 @@ _SOURCE_FIELDS = {
     "headwords",
 }
 _HEADWORD_FIELDS = {
+    "stressed", "kind", "variants", "pair", "vesum", "tokens",
     "lemma",
     "headword",
     "word",
@@ -107,6 +108,12 @@ class SourceInventoryRecord:
     gloss: str | None = None
     notes: str | None = None
     count: int = 1
+    stressed: str | None = None
+    kind: str | None = None
+    variants: tuple[str, ...] = ()
+    pair: str | None = None
+    vesum: str | None = None
+    tokens: tuple[dict[str, str], ...] = ()
 
     def provenance_payload(self) -> dict[str, Any]:
         """Return JSON-ready provenance for a candidate entry."""
@@ -117,6 +124,12 @@ class SourceInventoryRecord:
             "inventory_locator": self.inventory_locator,
         }
         optional = {
+            "stressed": self.stressed,
+            "kind": self.kind,
+            "variants": list(self.variants) if self.variants else None,
+            "pair": self.pair,
+            "vesum": self.vesum,
+            "tokens": list(self.tokens) if self.tokens else None,
             "source_id": self.source_id,
             "source_title": self.source_title,
             "source_url": self.source_url,
@@ -190,6 +203,8 @@ def source_inventory_candidates(
     records: Sequence[SourceInventoryRecord],
 ) -> list[SourceInventoryCandidate]:
     """Canonicalize source rows into deterministic, deduped candidates."""
+    if any(record.kind is not None for record in records):
+        return _lexical_reference_candidates(records)
     grouped: dict[str, dict[str, Any]] = {}
     for record in records:
         key = _lemma_key(record.lemma)
@@ -230,6 +245,37 @@ def source_inventory_candidates(
         for group in grouped.values()
     ]
     return sorted(candidates, key=lambda item: _lemma_key(item.lemma))
+
+
+def _lexical_reference_candidates(records: Sequence[SourceInventoryRecord]) -> list[SourceInventoryCandidate]:
+    """Add typed lexical references to legacy candidates without collapsing POS homonyms.
+
+    Legacy inventories keep their existing conflict checks and output POS names.
+    Reference rows have no gloss selection authority; their provenance augments
+    the matching legacy POS, or forms a separate POS candidate.
+    """
+    aliases = {"adjective": "adj", "adverb": "adv", "numeral": "numr", "pronoun": "pron"}
+    legacy = source_inventory_candidates([r for r in records if r.kind is None])
+    grouped = {(_lemma_key(c.lemma), aliases.get(c.pos, c.pos)): c for c in legacy}
+    for record in records:
+        if record.kind is None:
+            continue
+        key = (_lemma_key(record.lemma), aliases.get(record.pos, record.pos))
+        candidate = grouped.get(key)
+        if candidate is None:
+            # Strip only the discriminator while constructing the existing candidate shape.
+            candidate, = source_inventory_candidates([replace(record, kind=None)])
+            grouped[key] = replace(candidate, source_provenance=(record.provenance_payload(),))
+        else:
+            if record.gloss and candidate.gloss and record.gloss != candidate.gloss:
+                raise SourceInventoryError(f"conflicting gloss for {record.lemma!r}")
+            grouped[key] = replace(
+                candidate,
+                source_provenance=(*candidate.source_provenance, record.provenance_payload()),
+                source_count=candidate.source_count + 1,
+                frequency=candidate.frequency + record.count,
+            )
+    return sorted(grouped.values(), key=lambda item: (_lemma_key(item.lemma), item.pos or ""))
 
 
 def _read_delimited_inventory(
@@ -340,6 +386,7 @@ def _record_from_structured_headword(
         raise SourceInventoryError(f"{inventory_path}: {inventory_locator} must be string or mapping")
 
     return SourceInventoryRecord(
+        **_reference_fields(row, f"{inventory_path}: {inventory_locator}"),
         lemma=_required_lemma(_first_present(row, ("lemma", "headword", "word")), inventory_path, inventory_locator),
         source_family=source_family,
         extraction_mode=extraction_mode,
@@ -361,6 +408,52 @@ def _record_from_structured_headword(
             inventory_locator,
         ),
     )
+
+
+_LEXICAL = re.compile(r"^[А-Яа-яІіЇїЄєҐґ’\- \u0301!?,.]+$")
+_VESUM_STATES = {"found", "missing", "lookup_error"}
+
+
+def _reference_fields(row: Mapping[str, object], context: str) -> dict[str, Any]:
+    """Validate and retain optional lexical metadata, including nested phrase tokens."""
+    result: dict[str, Any] = {}
+    for key in ("stressed", "kind", "pair", "vesum"):
+        if key not in row:
+            continue
+        value = row[key]
+        valid = isinstance(value, str) and bool(value)
+        if key == "stressed":
+            valid = valid and bool(_LEXICAL.fullmatch(value))
+        elif key == "kind":
+            valid = valid and value in {"word", "phrase", "verb_pair_member"}
+        elif key == "pair":
+            valid = valid and bool(re.fullmatch(r"vp-\d{3,4}", value))
+        else:
+            valid = valid and value in _VESUM_STATES
+        if not valid:
+            raise SourceInventoryError(f"{context}: invalid {key}")
+        result[key] = value
+    if "variants" in row:
+        values = row["variants"]
+        if not isinstance(values, list) or not all(isinstance(v, str) and _LEXICAL.fullmatch(v) for v in values):
+            raise SourceInventoryError(f"{context}: variants must be a list of lexical forms")
+        result["variants"] = tuple(values)
+    if "tokens" in row:
+        tokens = row["tokens"]
+        if not isinstance(tokens, list) or not tokens:
+            raise SourceInventoryError(f"{context}: tokens must be a non-empty list")
+        for token in tokens:
+            if (
+                not isinstance(token, dict)
+                or set(token) != {"form", "vesum"}
+                or not isinstance(token["form"], str)
+                or not _LEXICAL.fullmatch(token["form"])
+                or not isinstance(token["vesum"], str)
+                or token["vesum"] not in _VESUM_STATES
+            ):
+                raise SourceInventoryError(f"{context}: invalid token; expected lexical form and VESUM state only")
+        result["tokens"] = tuple(dict(token) for token in tokens)
+    return result
 
 
 def _record_from_flat_row(

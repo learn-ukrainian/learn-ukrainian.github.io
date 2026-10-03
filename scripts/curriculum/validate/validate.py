@@ -980,7 +980,8 @@ def validate_plan(
             vesum_declared_unavailable=vesum_declared_unavailable,
         )
     finally:
-        report.inputs = _collect_inputs(context)
+        # Keep exact inputs consumed by individual gates (C29's lexical reference/config).
+        report.inputs.update(_collect_inputs(context))
 
 
 def _relative_input(path: Path, tree_root: Path) -> str:
@@ -1301,6 +1302,11 @@ def main(argv: list[str] | None = None) -> int:
             "(rule 5), against the level grammar registry, and against its own generated\n"
             "scope sidecar and its module title. Do NOT use for v1 plans under plans/\n"
             "(they are rejected).\n"
+            "\n"
+            "A1 reference vocabulary (C29): core/incidental word-store lemmas must occur\n"
+            "in the words-only reference or carry a valid typed a1_reference_exception.\n"
+            "A1_REFERENCE_ENFORCEMENT in validator config is advisory until #9541 PR2;\n"
+            "failure mode makes missing words and invalid exceptions fail this command.\n"
             "\n"
             "Waivers: --allow-missing-prior turns exactly the missing-earlier-plans failure\n"
             "into the printed, machine-readable waiver 'waived: prior_plans_missing' (with\n"

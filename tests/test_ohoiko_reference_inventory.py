@@ -1,0 +1,125 @@
+"""The committed lexical inventory cannot contain workbook prose or glosses."""
+
+import re
+import unicodedata
+from collections import Counter
+from pathlib import Path
+
+import pytest
+import yaml
+
+from scripts.audit.source_inventory_intake import SourceInventoryError, read_source_inventory
+
+pytestmark = pytest.mark.reads_content
+
+ROOT = Path(__file__).resolve().parents[1]
+INVENTORY = ROOT / "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml"
+LEXICAL = re.compile(r"[А-Яа-яІіЇїЄєҐґ’\- \u0301!?,.]+")
+
+
+def test_committed_inventory_ip_fields_and_counts():
+    payload = yaml.safe_load(INVENTORY.read_text())
+    assert set(payload) == {"kind", "version", "sources"}
+    source, = payload["sources"]
+    assert set(source) == {"id", "source_family", "extraction_mode", "title", "path", "notes", "headwords"}
+    rows = source["headwords"]
+    assert len(rows) == 2068
+    assert len({r["lemma"] for r in rows}) == 1904
+    assert Counter(r["kind"] for r in rows) == {"word": 1695, "phrase": 74, "verb_pair_member": 299}
+    for row in rows:
+        assert set(row) <= {"lemma", "stressed", "pos", "kind", "locator", "variants", "pair", "vesum", "tokens"}
+        assert {"lemma", "stressed", "pos", "kind", "locator"} <= set(row)
+        for text in [row["lemma"], row["stressed"], *row.get("variants", [])]:
+            assert LEXICAL.fullmatch(text), text
+        assert row["lemma"] == unicodedata.normalize("NFC", row["lemma"]) and "\u0301" not in row["lemma"]
+        assert re.fullmatch(r"p(?:20[0-9]|21[0-6]) Словничок|p(?:21[7-9]|22[0-3]) Додаток", row["locator"])
+        assert row["pos"] in {"noun", "adj", "verb", "adv", "numr", "prep", "conj", "part", "intj", "noninfl"}
+        assert row["kind"] in {"word", "phrase", "verb_pair_member"}
+        if row["kind"] == "phrase":
+            assert "vesum" not in row and row["tokens"]
+            for token in row["tokens"]:
+                assert set(token) == {"form", "vesum"}
+                assert LEXICAL.fullmatch(token["form"])
+                assert token["vesum"] in {"found", "missing", "lookup_error"}
+        else:
+            assert "tokens" not in row
+            assert row["vesum"] in {"found", "missing", "lookup_error"}
+        if row["kind"] == "verb_pair_member":
+            assert re.fullmatch(r"vp-\d{3,4}", row["pair"])
+        else:
+            assert "pair" not in row
+    assert len({r["pair"] for r in rows if "pair" in r}) == 147
+    records = read_source_inventory(INVENTORY)
+    assert len(records) == len(rows)
+
+
+def test_stressed_phrase_variants_and_two_perfectives_roundtrip():
+    records = read_source_inventory(INVENTORY)
+    phrase = next(r for r in records if r.lemma == "Добрий день!")
+    assert phrase.stressed == "До́брий день!"
+    assert [t["form"] for t in phrase.tokens] == ["Добрий", "день"]
+    assert phrase.provenance_payload()["tokens"] == list(phrase.tokens)
+    assert next(r for r in records if r.lemma == "мій").variants == ("моя", "моє", "мої")
+    pair = next(r.pair for r in records if r.lemma == "вдягнути" and r.pair)
+    assert {r.lemma for r in records if r.pair == pair} == {"вдягати", "вдягнути", "вдягти"}
+
+
+@pytest.mark.parametrize("field,value", [
+    ("stressed", "English"), ("kind", "sentence"), ("variants", "моя"),
+    ("variants", ["a gloss"]), ("pair", "vp-x"), ("vesum", "failed"),
+    ("tokens", []), ("tokens", "слово"), ("tokens", [{"form": "слово", "vesum": "found", "gloss": "word"}]),
+    ("tokens", [{"form": "word", "vesum": "found"}]),
+    ("tokens", [{"form": "слово", "vesum": "failed"}]),
+    ("tokens", [{"form": "слово"}]),
+])
+def test_reader_rejects_invalid_metadata(tmp_path, field, value):
+    source = {"id": "test", "source_family": "ohoiko", "extraction_mode": "curated_key_word",
+              "headwords": [{"lemma": "слово", field: value}]}
+    path = tmp_path / "inventory.yaml"
+    path.write_text(yaml.safe_dump({"version": 1, "kind": "atlas_source_inventory", "sources": [source]}))
+    with pytest.raises(SourceInventoryError):
+        read_source_inventory(path)
+
+
+@pytest.mark.parametrize("state", ["found", "missing", "lookup_error"])
+def test_nested_verification_states_roundtrip(tmp_path, state):
+    row = {"lemma": "Добрий день!", "kind": "phrase", "tokens": [{"form": "день", "vesum": state}]}
+    path = tmp_path / "inventory.yaml"
+    path.write_text(yaml.safe_dump({"version": 1, "kind": "atlas_source_inventory", "sources": [
+        {"id": "test", "source_family": "ohoiko", "extraction_mode": "curated_key_word", "headwords": [row]}
+    ]}, allow_unicode=True))
+    record, = read_source_inventory(path)
+    assert record.provenance_payload()["tokens"] == row["tokens"]
+
+
+def test_reference_candidates_preserve_homonyms_and_legacy_pos():
+    from dataclasses import replace
+
+    from scripts.audit.source_inventory_intake import SourceInventoryRecord, source_inventory_candidates
+
+    legacy = SourceInventoryRecord("мати", "test", "curated_key_word", "legacy.yaml", "row1", pos="verb")
+    reference = replace(legacy, inventory_path="reference.yaml", kind="word", vesum="found")
+    rows = [legacy, reference, replace(reference, pos="noun")]
+    candidates = source_inventory_candidates(rows)
+    assert len(candidates) == 2
+    verb = next(c for c in candidates if c.pos == "verb")
+    assert (verb.source_count, verb.frequency) == (2, 2)
+    assert verb.source_provenance[-1]["kind"] == "word"
+    adjective = replace(legacy, lemma="цікавий", pos="adjective")
+    candidates = source_inventory_candidates([adjective, replace(reference, lemma="цікавий", pos="adj")])
+    assert len(candidates) == 1 and candidates[0].pos == "adjective"
+    assert candidates[0].source_count == 2
+    with pytest.raises(SourceInventoryError, match="conflicting pos"):
+        source_inventory_candidates([legacy, replace(legacy, pos="noun")])
+    with pytest.raises(SourceInventoryError, match="conflicting gloss"):
+        source_inventory_candidates([replace(legacy, gloss="one"), replace(reference, gloss="two")])
+
+
+def test_phrase_conjugation_variant_keeps_its_object_and_verifies_optional_tokens():
+    records = read_source_inventory(INVENTORY)
+    phrase = next(r for r in records if r.lemma == "провести час")
+    assert phrase.variants == ("провели час",)
+    assert {"form": "провели", "vesum": "found"} in phrase.tokens
+    optional = next(r for r in records if r.lemma.startswith("Що "))
+    assert {"form": "в", "vesum": "found"} in optional.tokens
+    assert {"form": "тебе", "vesum": "found"} in optional.tokens

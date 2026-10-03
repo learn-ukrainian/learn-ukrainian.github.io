@@ -98,7 +98,9 @@ def load_plan(plan_path: Path, *, text: str | None = None) -> dict:
     """Read the plan file, reject v1 plans and removed v1 fields, return the dict.
 
     The raw text is returned by read_plan_text for the stress-mark scan; JSON
-    Schema validation itself happens in validate.py. ``text`` replaces the file
+    Schema validation itself happens in validate.py. Typed core/incidental
+    ``a1_reference_exception`` objects are preserved unchanged for C29; they
+    never alter the vocabulary or letter state loaded for other gates. ``text`` replaces the file
     read (plan-promote validates the bytes it is about to publish in memory);
     plan_path still names where the plan lives.
     """
