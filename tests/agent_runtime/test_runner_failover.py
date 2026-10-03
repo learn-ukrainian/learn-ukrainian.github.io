@@ -552,10 +552,8 @@ def test_classifier_routes_hermes_credential_startup_failure_to_auth():
     assert trigger == "auth"
 
 
-def test_classifier_routes_inband_http_401_stdout_to_auth():
-    """Companion to the hermes_common in-band fix: once parse marks the
-    single-line 'HTTP 401: ...' stdout as not-ok, the classifier must see
-    auth in the excerpt."""
+def test_classifier_does_not_classify_unattributed_inband_http_401_excerpt():
+    """#9539: a display excerpt alone cannot attribute agent prose to a provider."""
     from agent_runtime.failover import classify_failover_trigger
 
     excerpt = "HTTP 401: Authentication Fails, Your api key: ****robe is invalid"
@@ -567,7 +565,7 @@ def test_classifier_routes_inband_http_401_stdout_to_auth():
         stderr_text="",
     )
 
-    assert trigger == "auth"
+    assert trigger is None
 
 
 def test_classifier_routes_unauthenticated_gh_prompt_to_auth():

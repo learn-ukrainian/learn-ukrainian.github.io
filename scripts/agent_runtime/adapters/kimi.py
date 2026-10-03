@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import logging
 import os
-import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -24,6 +23,7 @@ from typing import Any
 from scripts.review.model_catalog import kimi_model_aliases
 
 from ..failover import GH_AUTH_FAILURE_RE
+from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..kimi_admission import ADMITTED_MODE, format_refusal, refuse_kimi_execution
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -58,10 +58,6 @@ def resolve_kimi_model(model: str | None) -> str:
         ) from exc
 
 
-_RATE_LIMIT_RE = re.compile(
-    r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|\b429\b",
-    re.IGNORECASE,
-)
 _MODE_FLAGS: dict[str, tuple[str, ...]] = {ADMITTED_MODE: ()}
 
 
@@ -195,14 +191,23 @@ class KimiAdapter:
                     session_id = raw_session_id.strip()
 
         response = "\n".join(response_parts).strip()
-        combined = f"{stderr or ''}\n{stdout or ''}"
+        provider_error = provider_stderr_error(stderr or "")
         call_failed = returncode != 0 or not response
         # #7166 / #7472: an unauthenticated gh prompt ("please run: gh auth
         # login") is an auth failure, never a rate limit — do not let
         # unrelated text in the same output trip the generic rate-limit
         # patterns.
-        gh_auth_failure = bool(GH_AUTH_FAILURE_RE.search(combined))
-        rate_limited = call_failed and not gh_auth_failure and bool(_RATE_LIMIT_RE.search(combined))
+        gh_auth_failure = bool(GH_AUTH_FAILURE_RE.search(stderr or ""))
+        failure_code = None
+        if call_failed:
+            failure_code = (
+                "provider_auth"
+                if gh_auth_failure
+                else provider_failure_code(provider_error)
+                if provider_error
+                else "provider_error"
+            )
+        rate_limited = call_failed and failure_code == "rate_limited"
         ok = returncode == 0 and bool(response) and not rate_limited
 
         stderr_excerpt: str | None = None
@@ -217,6 +222,8 @@ class KimiAdapter:
             response=response if ok else "",
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            failure_code=failure_code,
+            provider_error_text=provider_error,
             session_id=session_id,
             tokens=None,
             tool_calls=normalize_tool_calls(events),

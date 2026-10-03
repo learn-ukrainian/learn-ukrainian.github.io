@@ -15,6 +15,7 @@ from typing import Any
 
 import yaml
 
+from .failure_codes import provider_failure_code, provider_stderr_error
 from .result import ParseResult
 from .routes import (
     RUNTIME_ROUTE_TOOL_CONFIG_KEY,
@@ -347,6 +348,10 @@ def classify_failover_trigger(
     stderr_text: str,
 ) -> str | None:
     """Map one failed attempt to an eligible failover trigger, if any."""
+    if parse.ok:
+        return None
+    if parse.failure_code == "github_secondary_rate_limited":
+        return None
     if parse.provider_error_text is not None:
         # The adapter classified this attempt from its provider's typed
         # evidence. Its raw streams carry agent and tool text, so neither they
@@ -361,7 +366,10 @@ def classify_failover_trigger(
             return "transport"
         return None
 
-    text = "\n".join(part for part in (parse.stderr_excerpt, stderr_text, stdout_text) if part)
+    # Display excerpts may be copied from stdout, including tool results.
+    # Untyped adapters retain diagnostic stderr only; never search stdout or
+    # an excerpt for a provider trigger (#9539).
+    text = stderr_text or ""
 
     if GH_AUTH_FAILURE_RE.search(text):
         return "auth"
@@ -372,7 +380,7 @@ def classify_failover_trigger(
     ):
         return None
 
-    if parse.rate_limited or _RATE_LIMIT_RE.search(text):
+    if parse.rate_limited or provider_failure_code(provider_stderr_error(text)) == "rate_limited":
         return "rate_limited"
     if _AUTH_RE.search(text):
         return "auth"
@@ -386,7 +394,14 @@ def classify_failover_trigger(
         return "transport"
     if _EMPTY_RESPONSE_RE.search(text):
         return "empty_response"
-    if not parse.ok and returncode == 0 and not (parse.response or "").strip() and not text.strip():
+    if (
+        not parse.ok
+        and returncode == 0
+        and not (parse.response or "").strip()
+        and not text.strip()
+        and not (stdout_text or "").strip()
+        and not (parse.stderr_excerpt or "").strip()
+    ):
         return "empty_response"
     return None
 
