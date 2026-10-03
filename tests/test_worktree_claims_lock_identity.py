@@ -148,6 +148,65 @@ def test_malformed_active_review_contract_fails_closed(tmp_path, contract):
 
 
 @pytest.mark.parametrize("review_inputs_only", [False, True])
+@pytest.mark.parametrize("status", ["running", "needs_finalize", *sorted(worktree_claims.RELEASED_TASK_STATUSES)])
+def test_review_attempt_inputs_claim_their_trees_until_terminal(tmp_path, registered_trees, review_inputs_only, status):
+    """#9597: the manifest and code checkout claim their trees like the input root."""
+    manifest_tree = tmp_path / ".worktrees/dispatch/codex/manifest"
+    code_tree = tmp_path / ".worktrees/dispatch/claude/driver"
+    unrelated = tmp_path / ".worktrees/dispatch/codex/unrelated"
+    registered_trees.extend([manifest_tree, code_tree, unrelated])
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "review.json").write_text(
+        json.dumps(
+            {
+                "task_id": "review",
+                "run_nonce": "run",
+                "status": status,
+                "review_contract": {"input_root": str(tmp_path / "inputs")},
+                "review_input_paths": [str(manifest_tree / "review.yaml"), str(code_tree), str(tmp_path)],
+            }
+        )
+    )
+    released = status in worktree_claims.RELEASED_TASK_STATUSES
+    for tree, expected in (
+        (manifest_tree, None if released else "review attempt input claimed by active task review"),
+        (code_tree, None if released else "review attempt input claimed by active task review"),
+        # A primary-checkout input claims no linked tree.
+        (unrelated, None),
+    ):
+        assert (
+            worktree_claims.active_worktree_claim_refusal(
+                tree,
+                tasks_dir=tasks,
+                repo_root=tmp_path,
+                owner_task_id="review",
+                settled_claim=lambda _record: True,
+                review_inputs_only=review_inputs_only,
+            )
+            == expected
+        )
+
+
+@pytest.mark.parametrize("paths", ["inputs", {}, [7], [""], ["\u0000"], [None]])
+def test_malformed_review_input_paths_fail_closed(tmp_path, paths):
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "review.json").write_text(json.dumps({"status": "running", "review_input_paths": paths}))
+    assert (
+        worktree_claims.active_worktree_claim_refusal(tmp_path / "unrelated", tasks_dir=tasks, repo_root=tmp_path)
+        == "task record review.json unreadable; refusing worktree removal"
+    )
+
+
+@pytest.mark.parametrize("contract", [{}, {"render_checkout": "/render"}, {"input_root": " "}])
+def test_required_review_input_root_refuses_every_rootless_contract(contract):
+    with pytest.raises(ValueError, match="review_input_root_invalid"):
+        worktree_claims.required_review_input_root(contract)
+    assert worktree_claims.required_review_input_root({"input_root": "/inputs"}) == "/inputs"
+
+
+@pytest.mark.parametrize("review_inputs_only", [False, True])
 def test_rootless_isolated_contract_preserves_worker_claim(tmp_path, review_inputs_only):
     tree = tmp_path / "worker"
     tasks = tmp_path / "tasks"
