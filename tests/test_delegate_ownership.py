@@ -1060,9 +1060,11 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
     )
 
     try:
-        # 1. Missing /proc root -> returns None
+        # 1. Missing /proc root or PermissionError on proc_root -> returns None
         missing_proc = tmp_path / "nonexistent_proc"
         assert _pid_matches_task(worker.pid, task_id, proc_root=missing_proc) is None
+        with patch.object(Path, "is_dir", side_effect=PermissionError("Permission denied on /proc")):
+            assert _pid_matches_task(worker.pid, task_id) is None
 
         # 2. Denied inspection (PermissionError) -> returns None
         with patch("pathlib.Path.read_bytes", side_effect=PermissionError("Permission denied")):
@@ -1231,3 +1233,76 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
         for p in (p_unrelated, p_prefix, p_genuine):
             p.terminate()
             p.wait()
+
+
+def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
+    """#8659 / CF r8 F1: Removed process cwd evidence is treated as unknown and preserves claims."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "deleted-cwd-task"
+
+    # Directory for the process cwd
+    target_dir = tmp_path / "worktrees" / task_id
+    target_dir.mkdir(parents=True)
+
+    # Spawn real process with marker-free environment and command line
+    clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
+    p = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(target_dir),
+        env=clean_env,
+    )
+
+    try:
+        # Before removal: cwd matches task_id exactly
+        assert _pid_matches_task(p.pid, task_id) is True
+
+        # Delete process cwd on disk while process remains alive
+        target_dir.rmdir()
+
+        # After removal: Linux /proc/<pid>/cwd is marked "(deleted)" or fails resolution strict
+        # With marker-free env/cmdline, the matcher must return None (unknown identity), not False!
+        assert _pid_matches_task(p.pid, task_id) is None
+
+        # OwnershipLedger integration with claim older than admission grace period
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir(exist_ok=True)
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(target_dir)}),
+            encoding="utf-8",
+        )
+
+        ledger_path = tmp_path / "own_del_cwd.sqlite3"
+        ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+        conn = sqlite3.connect(ledger_path)
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/del.py"}', p.pid, time.time() - 200),
+        )
+        conn.commit()
+
+        # Challenger must be refused because unknown process identity preserves protection
+        challenger = ledger.admit(
+            task_id="challenger-del",
+            mode="workspace-write",
+            owned_paths=["scripts/del.py"],
+            pid=os.getpid(),
+        )
+        assert challenger.admitted is False
+        assert challenger.would_refuse is True
+
+        # Claim remains in database
+        rows = conn.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+        assert rows[0] == 1
+        conn.close()
+    finally:
+        p.terminate()
+        p.wait()

@@ -384,7 +384,10 @@ def _pid_matches_task(
     if not _pid_alive(pid):
         return False
 
-    if not proc_root.is_dir():
+    try:
+        if not proc_root.is_dir():
+            return None
+    except OSError:
         return None
 
     proc_dir = proc_root / str(pid)
@@ -430,20 +433,31 @@ def _pid_matches_task(
     # 3. Check cwd: dispatch worktrees contain the exact task_id directory component
     try:
         raw_cwd = os.readlink(proc_dir / "cwd")
-        cwd_path = Path(raw_cwd)
-        cwd_parts = cwd_path.parts
-        if task_id in cwd_parts or safe_task_id in cwd_parts:
-            return True
-
-        if worktree_path is not None:
-            resolved_wt = Path(worktree_path).resolve()
-            resolved_cwd = cwd_path.resolve()
-            if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
-                return True
+        if raw_cwd.endswith(" (deleted)"):
+            # Linux kernel appends " (deleted)" to /proc/<pid>/cwd if the working directory was unlinked.
+            # While the process is alive, deleted cwd evidence is unavailable.
+            if not _pid_alive(pid):
+                return False
+            evidence_unavailable = True
         else:
-            resolved_parts = cwd_path.resolve().parts
+            cwd_path = Path(raw_cwd)
+            # Require the directory to actually exist on disk; if deleted/inaccessible, resolve raises OSError
+            resolved_cwd = cwd_path.resolve(strict=True)
+
+            cwd_parts = cwd_path.parts
+            resolved_parts = resolved_cwd.parts
+            if task_id in cwd_parts or safe_task_id in cwd_parts:
+                return True
             if task_id in resolved_parts or safe_task_id in resolved_parts:
                 return True
+
+            if worktree_path is not None:
+                try:
+                    resolved_wt = Path(worktree_path).resolve(strict=True)
+                    if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
+                        return True
+                except OSError:
+                    pass
     except OSError:
         if not _pid_alive(pid):
             return False
