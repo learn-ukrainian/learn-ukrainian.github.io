@@ -302,14 +302,53 @@ class GlossSelection:
     candidates: tuple[dict, ...] = ()
 
 
-_REGISTER_LABEL = re.compile(
-    r"\b(?:figurativ\w*|colloq\w*|dialect\w*|obsolet\w*|obsolesc\w*|archai\w*|dated|"
-    r"informal|rare(?:ly)?|historic(?:al(?:ly)?)?|non[- ]?standard|slang|vulgar|technical|"
-    r"formal|literary|poetic(?:al)?|derogatory|pejorative|offensive|euphemistic|humorous|"
-    r"regional|familiar|childish|endearing|endearment|ironic(?:ally)?|proscribed|uncommon|rude|taboo|jocular|polite|"
-    r"psychology|chemistry|anatomy|linguistics)\b",
-    re.I,
-)
+# Shared closed patterns and canonical names for both selectors.
+REGISTER_LABELS = {
+    r"figurativ\w*": "figurative",
+    r"colloq\w*": "colloquial",
+    r"dialect\w*": "dialectal",
+    r"obsolet\w*": "obsolete",
+    r"obsolesc\w*": "obsolescent",
+    r"archai\w*": "archaic",
+    r"rare(?:ly)?": "rare",
+    r"historic(?:al(?:ly)?)?": "historical",
+    r"non[- ]?standard": "nonstandard",
+    r"poetic(?:al)?": "poetic",
+    r"ironic(?:ally)?": "ironic",
+    **{
+        label: label
+        for label in (
+            "dated",
+            "informal",
+            "slang",
+            "vulgar",
+            "technical",
+            "formal",
+            "literary",
+            "derogatory",
+            "pejorative",
+            "offensive",
+            "euphemistic",
+            "humorous",
+            "regional",
+            "familiar",
+            "childish",
+            "endearing",
+            "endearment",
+            "proscribed",
+            "uncommon",
+            "rude",
+            "taboo",
+            "jocular",
+            "polite",
+            "psychology",
+            "chemistry",
+            "anatomy",
+            "linguistics",
+        )
+    },
+}
+_REGISTER_LABEL = re.compile(r"\b(?:" + "|".join(REGISTER_LABELS) + r")\b", re.I)
 _GRAMMATICAL_LABEL = re.compile(
     r"(?:preposition|prepositional phrase|conjunction|particle|interjection|determiner|"
     r"(?:interrogative|relative|personal|possessive) pronoun|noun|verb|adjective|adverb|"

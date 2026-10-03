@@ -388,7 +388,7 @@ def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
     types = {"quiz1": "quiz", "group1": "group-sort", "match1": "match-up", "order1": "order"}
     plan = {
         "arc_ref": {"level": "a1", "position": 1},
-        "lessons": [{"n": 1, "steps": [], "activities": [{"id": aid, "type": kind} for aid, kind in types.items()]}]
+        "lessons": [{"n": 1, "steps": [], "activities": [{"id": aid, "type": kind} for aid, kind in types.items()]}],
     }
     draft = {"status": "ok", "steps": [], "activities": activities}
     expanded, provenance = assemble_expanded_document(draft, plan, {}, {}, "a1", "sample", 1)
@@ -697,7 +697,7 @@ def test_build_slovnyk_and_resursy_tabs(monkeypatch):
             "stressed": "де́нь",
         }
     ]
-    w2 = make_word_record(2, "день", pos="noun", forms=w2_forms, sense_gloss="day")
+    w2 = make_word_record(2, "день", pos="noun", forms=w2_forms, gloss_en="day", sense_gloss="unchecked")
     words_store = make_words_store(words=[w1, w2])
 
     t1 = make_text_record(1, "Цитата підручника", author="Shevchenko", work="Kobzar", year=1840, page=10)
@@ -1158,7 +1158,7 @@ def test_slovnyk_selected_sense_and_forms_and_pending_stress(monkeypatch):
 
     # W-1: stress_source: pending prints no stress (unstressed lemma 'день')
     assert slovnyk[0]["lemma"] == "день"
-    assert slovnyk[0]["translation"] == "selected day"
+    assert slovnyk[0]["translation"] == "day"
 
     # W-2: lemma stress comes from lemma form ('сло́во'), not learner form ('слова́')
     assert slovnyk[1]["lemma"] == "сло́во"
