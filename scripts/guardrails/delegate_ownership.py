@@ -357,22 +357,47 @@ def _pid_alive(pid: int) -> bool:
         return True
 
 
-def _pid_matches_task(pid: int, task_id: str) -> bool:
-    """Return True if a live process PID genuinely belongs to task_id.
+def _pid_matches_task(
+    pid: int,
+    task_id: str,
+    *,
+    proc_root: Path = Path("/proc"),
+    worktree_path: str | Path | None = None,
+) -> bool | None:
+    """Return True if pid belongs to task_id, False if confirmed mismatch, or None if unknown.
 
     Distinguishes a real live worker / dispatcher for task_id from an
-    unrelated process that inherited a recycled PID (#8659 / CF r5 F1).
-    Checks /proc/<pid>/environ for LEARN_UKRAINIAN_DISPATCH_TASK_ID,
-    /proc/<pid>/cmdline for --task-id <task_id>, and /proc/<pid>/cwd
-    for the task worktree path.
+    unrelated process that inherited a recycled PID (#8659 / CF r5 F1, CF r6 F1 & F2).
+
+    Returns:
+        True: Confirmed match (environ, cmdline, or cwd positively verified).
+        False: Confirmed mismatch (process inspected without permission denial,
+               and no task identity marker matched; or process is dead).
+        None: Unknown identity (inspection unavailable or denied, e.g. /proc missing,
+              or PermissionError / access restrictions prevented full inspection).
+              Callers must preserve claim protection when identity is unknown.
     """
     if pid <= 0:
         return False
-    proc_dir = Path(f"/proc/{pid}")
-    if not proc_dir.is_dir():
+
+    if not _pid_alive(pid):
         return False
 
+    if not proc_root.is_dir():
+        return None
+
+    proc_dir = proc_root / str(pid)
+    try:
+        if not proc_dir.is_dir():
+            if not _pid_alive(pid):
+                return False
+            return None
+    except OSError:
+        return None
+
+    evidence_denied = False
     task_bytes = task_id.encode("utf-8")
+    safe_task_id = _safe_task_state_name(task_id)
 
     # 1. Check environ: worker processes carry LEARN_UKRAINIAN_DISPATCH_TASK_ID
     try:
@@ -380,8 +405,15 @@ def _pid_matches_task(pid: int, task_id: str) -> bool:
         expected_env = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_bytes
         if expected_env in env_raw.split(b"\0"):
             return True
+    except PermissionError:
+        evidence_denied = True
+    except FileNotFoundError:
+        if not _pid_alive(pid):
+            return False
     except OSError:
-        pass
+        if not _pid_alive(pid):
+            return False
+        evidence_denied = True
 
     # 2. Check cmdline: dispatchers and workers receive --task-id <task_id>
     try:
@@ -392,16 +424,49 @@ def _pid_matches_task(pid: int, task_id: str) -> bool:
                 return True
             if part.startswith(b"--task-id=") and part[len(b"--task-id=") :] == task_bytes:
                 return True
+    except PermissionError:
+        evidence_denied = True
+    except FileNotFoundError:
+        if not _pid_alive(pid):
+            return False
     except OSError:
-        pass
+        if not _pid_alive(pid):
+            return False
+        evidence_denied = True
 
-    # 3. Check cwd: dispatch worktrees contain the task_id in path
+    # 3. Check cwd: dispatch worktrees contain the exact task_id directory component
     try:
-        cwd = os.readlink(proc_dir / "cwd")
-        if f"/{task_id}" in cwd or cwd.endswith(task_id):
+        raw_cwd = os.readlink(proc_dir / "cwd")
+        cwd_path = Path(raw_cwd)
+        if worktree_path is not None:
+            try:
+                resolved_wt = Path(worktree_path).resolve()
+                resolved_cwd = cwd_path.resolve()
+                if resolved_cwd == resolved_wt or resolved_cwd.is_relative_to(resolved_wt):
+                    return True
+            except OSError:
+                pass
+        cwd_parts = cwd_path.parts
+        if task_id in cwd_parts or safe_task_id in cwd_parts:
             return True
+        try:
+            resolved_parts = cwd_path.resolve().parts
+            if task_id in resolved_parts or safe_task_id in resolved_parts:
+                return True
+        except OSError:
+            pass
+    except PermissionError:
+        evidence_denied = True
+    except FileNotFoundError:
+        if not _pid_alive(pid):
+            return False
     except OSError:
-        pass
+        if not _pid_alive(pid):
+            return False
+        evidence_denied = True
+
+    if evidence_denied:
+        return None
 
     return False
 
@@ -418,7 +483,7 @@ def _task_still_active(
     *,
     created_at: float | None = None,
     now: float | None = None,
-    process_matches_task: Callable[[int, str], bool] | None = None,
+    process_matches_task: Callable[..., bool | None] | None = None,
 ) -> bool:
     """True if the ownership claim should still be considered held.
 
@@ -432,6 +497,7 @@ def _task_still_active(
     status = None
     state_pid: int | None = None
     orphaned_prep = False
+    worktree_path: str | Path | None = None
     if state_path.is_file():
         try:
             data = json.loads(state_path.read_text(encoding="utf-8"))
@@ -445,6 +511,7 @@ def _task_still_active(
                 state_pid = raw_pid
             elif isinstance(raw_pid, str) and raw_pid.isdigit():
                 state_pid = int(raw_pid)
+            worktree_path = data.get("worktree_path") or data.get("cwd")
 
     clock = time.time() if now is None else now
     in_grace = created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
@@ -453,20 +520,33 @@ def _task_still_active(
     state_pid_is_alive = state_pid is not None and state_pid > 0 and _pid_alive(state_pid)
     matcher = process_matches_task or _pid_matches_task
 
+    def _check_match(candidate_pid: int) -> bool | None:
+        if not matcher:
+            return None
+        try:
+            return matcher(candidate_pid, task_id, worktree_path=worktree_path)
+        except TypeError:
+            return matcher(candidate_pid, task_id)
+
     # Within grace only: live ledger PID holds claim (admission→state-write race).
     if in_grace and pid_is_alive:
         return True
 
-    # #8659 / CF r4 F1 & CF r5 F1: A terminal status in the state file proves the claim is
-    # inactive if the state record belongs to this exact claim PID (state_pid == pid).
+    # #8659 / CF r4 F1, CF r5 F1, CF r6 F1 & F2: A terminal status in the state file proves
+    # the claim is inactive if the state record belongs to this exact claim PID (state_pid == pid).
     # If state_pid != pid (e.g. following zombie healing or missing-worktree settlement),
     # the claim is only preserved if the live PID is verified to genuinely belong to
-    # this task (verified replacement run). If the PID is merely alive but belongs to an
-    # unrelated process (recycled PID), the stale claim must be released.
+    # this task (verified replacement run), OR if process identity inspection is unknown /
+    # denied (preserving protection against false eviction). If the PID is verified to be a
+    # confirmed mismatch (recycled PID), the stale claim must be released.
     if status in TERMINAL_TASK_STATUSES:
         if state_pid is not None and pid is not None and state_pid == pid:
             return False
-        return bool(pid_is_alive and matcher(pid, task_id))
+        if not pid_is_alive or pid is None:
+            return False
+        # Confirmed mismatch (match_result is False) releases stale claim;
+        # True (verified match) or None (unknown/denied inspection) preserves protection.
+        return _check_match(pid) is not False
 
     # #8663/#8717: a pid-less worktree-prep record or admission hold whose
     # dispatcher died never gets a worker pid; it holds nothing.
@@ -480,8 +560,12 @@ def _task_still_active(
     # spawning/running/needs_finalize/empty with live pid (or unknown pid) = active.
     # no_deliverable is terminal: there is no unfinished tree to protect.
     if status in ("running", "spawning", "needs_finalize", "", None):
-        if pid_is_alive and (in_grace or (state_pid is not None and state_pid == pid) or matcher(pid, task_id)):
-            return True
+        if pid_is_alive and pid is not None:
+            if in_grace or (state_pid is not None and state_pid == pid):
+                return True
+            match_result = _check_match(pid)
+            if match_result is not False:
+                return True
         if state_pid_is_alive:
             return True
         if state_pid is None and pid is None:
@@ -498,7 +582,7 @@ class OwnershipLedger:
         *,
         task_state_dir: Path | None = None,
         mode: GuardMode | None = None,
-        process_matches_task: Callable[[int, str], bool] | None = None,
+        process_matches_task: Callable[..., bool | None] | None = None,
     ) -> None:
         self.path = Path(path) if path is not None else default_ledger_path()
         self.task_state_dir = Path(task_state_dir) if task_state_dir is not None else default_task_state_dir()
@@ -876,7 +960,7 @@ def admit_write_paths(
     ledger_path: Path | None = None,
     task_state_dir: Path | None = None,
     guard_mode: GuardMode | str | None = None,
-    process_matches_task: Callable[[int, str], bool] | None = None,
+    process_matches_task: Callable[..., bool | None] | None = None,
 ) -> AdmissionResult:
     """Admit writable paths. ``guard_mode=None`` → :func:`env_guard_mode` (default REFUSE)."""
     if guard_mode is None:

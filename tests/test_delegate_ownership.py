@@ -1039,3 +1039,179 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
         worker.wait()
         dummy.terminate()
         dummy.wait()
+
+
+def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
+    """#8659 / CF r6 F1: Unavailable evidence or denied /proc inspection preserves claims."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+    from unittest.mock import patch
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "unknown-proc-task"
+
+    # Spawn live worker process
+    worker = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
+    )
+
+    try:
+        # 1. Missing /proc root -> returns None
+        missing_proc = tmp_path / "nonexistent_proc"
+        assert _pid_matches_task(worker.pid, task_id, proc_root=missing_proc) is None
+
+        # 2. Denied inspection (PermissionError) -> returns None
+        with patch("pathlib.Path.read_bytes", side_effect=PermissionError("Permission denied")):
+            with patch("os.readlink", side_effect=PermissionError("Permission denied")):
+                assert _pid_matches_task(worker.pid, task_id) is None
+
+        # 3. OwnershipLedger: unknown inspection preserves claim and refuses challenger
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir()
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None}), encoding="utf-8"
+        )
+
+        ledger_path = tmp_path / "own_unknown.sqlite3"
+        ledger = OwnershipLedger(
+            ledger_path,
+            task_state_dir=state_dir,
+            process_matches_task=lambda _p, _tid: None,  # Simulated unknown/denied inspection
+        )
+        conn = sqlite3.connect(ledger_path)
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/unknown.py"}', worker.pid, time.time() - 200),
+        )
+        conn.commit()
+        conn.close()
+
+        # Challenger must be refused because unknown process identity preserves protection
+        challenger = ledger.admit(
+            task_id="challenger-unknown",
+            mode="workspace-write",
+            owned_paths=["scripts/unknown.py"],
+            pid=worker.pid,
+        )
+        assert challenger.admitted is False
+        assert challenger.would_refuse is True
+    finally:
+        worker.terminate()
+        worker.wait()
+
+
+def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: Path):
+    """#8659 / CF r6 F2: Working-directory matching rejects prefix/suffix substrings and preserves genuine worktrees."""
+    import sqlite3
+    import subprocess
+    import sys
+    import time
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "target-task-8659"
+
+    # Set up directories
+    unrelated_dir = tmp_path / f"{task_id}-unrelated"
+    unrelated_dir.mkdir()
+    prefix_dir = tmp_path / f"prefix-{task_id}"
+    prefix_dir.mkdir()
+    genuine_dir = tmp_path / task_id
+    genuine_dir.mkdir()
+
+    clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
+
+    # Spawn processes in each directory without task marker in env or cmdline
+    p_unrelated = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(unrelated_dir),
+        env=clean_env,
+    )
+    p_prefix = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(prefix_dir),
+        env=clean_env,
+    )
+    p_genuine = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        cwd=str(genuine_dir),
+        env=clean_env,
+    )
+
+    try:
+        # Direct _pid_matches_task checks
+        assert _pid_matches_task(p_unrelated.pid, task_id) is False
+        assert _pid_matches_task(p_prefix.pid, task_id) is False
+        assert _pid_matches_task(p_genuine.pid, task_id) is True
+
+        # OwnershipLedger integration
+        state_dir = tmp_path / "tasks"
+        state_dir.mkdir()
+        (state_dir / f"{task_id}.json").write_text(
+            json.dumps({"status": "failed", "pid": None, "worktree_path": str(genuine_dir)}),
+            encoding="utf-8",
+        )
+
+        ledger_path = tmp_path / "own_cwd.sqlite3"
+        ledger = OwnershipLedger(ledger_path, task_state_dir=state_dir)
+        conn = sqlite3.connect(ledger_path)
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn.commit()
+
+        # 1. Negative suffix cwd (<task-id>-unrelated): stale claim cleaned up, challenger admitted
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/suf.py"}', p_unrelated.pid, time.time() - 200),
+        )
+        conn.commit()
+        ch_suf = ledger.admit(
+            task_id="challenger-suf",
+            mode="workspace-write",
+            owned_paths=["scripts/suf.py"],
+            pid=p_genuine.pid,
+        )
+        assert ch_suf.admitted is True
+
+        # 2. Negative prefix cwd (prefix-<task-id>): stale claim cleaned up, challenger admitted
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/pre.py"}', p_prefix.pid, time.time() - 200),
+        )
+        conn.commit()
+        ch_pre = ledger.admit(
+            task_id="challenger-pre",
+            mode="workspace-write",
+            owned_paths=["scripts/pre.py"],
+            pid=p_genuine.pid,
+        )
+        assert ch_pre.admitted is True
+
+        # 3. Genuine worktree cwd: claim preserved, challenger refused
+        conn.execute(
+            "INSERT INTO write_claims VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/gen.py"}', p_genuine.pid, time.time() - 200),
+        )
+        conn.commit()
+        conn.close()
+
+        ch_gen = ledger.admit(
+            task_id="challenger-gen",
+            mode="workspace-write",
+            owned_paths=["scripts/gen.py"],
+            pid=p_unrelated.pid,
+        )
+        assert ch_gen.admitted is False
+        assert ch_gen.would_refuse is True
+    finally:
+        for p in (p_unrelated, p_prefix, p_genuine):
+            p.terminate()
+            p.wait()
