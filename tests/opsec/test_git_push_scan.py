@@ -372,24 +372,71 @@ def test_split_object_refuses_text_outside_any_message(raw):
     assert str(raised.value).startswith("OPSEC: commit[unit] ") and TOKEN not in str(raised.value)
 
 
-def _unfold_seconds(size, repeats=5):
-    """Best time to split a commit whose mergetag header continues over size bytes of 256-byte lines."""
+class _CountedBytes(bytes):
+    """Count bytes copied by slicing/concatenation; preserve the meter through header splitting.
+
+    Repeated immutable-byte concatenation costs the accumulated prefix's size,
+    not just one operation. Counting calls alone would miss quadratic copying.
+    The final built-in join returns ordinary bytes and copies each fragment once.
+    """
+
+    def __new__(cls, value, copied):
+        instance = super().__new__(cls, value)
+        instance.copied = copied
+        return instance
+
+    def _count(self, value):
+        self.copied[0] += len(value)
+        return _CountedBytes(value, self.copied)
+
+    def __add__(self, other):
+        return self._count(super().__add__(other))
+
+    def __radd__(self, other):
+        return self._count(other + bytes(self))
+
+    def __getitem__(self, key):
+        value = super().__getitem__(key)
+        return self._count(value) if isinstance(key, slice) else value
+
+    def partition(self, separator):
+        return tuple(self._count(part) for part in super().partition(separator))
+
+    def split(self, separator=None, maxsplit=-1):
+        return [self._count(part) for part in super().split(separator, maxsplit)]
+
+
+@pytest.mark.parametrize("size", [32 << 10, 128 << 10, 8 << 20])
+def test_continuation_unfolding_is_linear_in_the_header_size(size):
+    """Copied bytes stay within a fixed multiple of input bytes, independent of runner load."""
     line = b" " + b"x" * 255
     raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 256) + b"\n\nclean\n"
-    best = float("inf")
-    for _ in range(repeats):
-        started = time.perf_counter()
-        fields, _ = git_push.split_object(raw, "commit[unit]")
-        best = min(best, time.perf_counter() - started)
-    assert len(fields[1][1]) == len(b"object 0") + (size // 256) * 256
-    return best
+    copied = [0]
+    fields, message = git_push.split_object(_CountedBytes(raw, copied), "commit[unit]")
+    expected = b"object 0" + (b"\n" + line[1:]) * (size // 256)
+    assert fields == [(b"tree", b"0"), (b"mergetag", expected)] and message == "clean\n"
+    # Include the one final join, which does not dispatch to bytes-subclass methods.
+    work = copied[0] + sum(len(value) for _, value in fields)
+    assert copied[0] >= len(raw), "byte-copy instrumentation was bypassed"
+    assert work <= 8 * len(raw), f"unfolding copied {work} bytes for {len(raw)} input bytes"
 
 
-def test_continuation_unfolding_is_linear_in_the_header_size():
-    """Four times the continuation costs about four times as long (quadratic unfolding costs sixteen)."""
-    small, large = _unfold_seconds(512 << 10), _unfold_seconds(2 << 20)
-    assert large < 8 * small, (small, large)
-    assert _unfold_seconds(8 << 20, repeats=1) < 5
+def test_linearity_counter_rejects_quadratic_unfolding(monkeypatch):
+    def quadratic(raw, position):
+        header, _, body = (b"\n" + raw).partition(b"\n\n")
+        fields = []
+        for line in header[1:].split(b"\n"):
+            if line.startswith(b" "):
+                key, value = fields[-1]
+                fields[-1] = (key, value + b"\n" + line[1:])
+            elif line:
+                key, _, value = line.partition(b" ")
+                fields.append((key, value))
+        return fields, body.decode("utf-8", "replace")
+
+    monkeypatch.setattr(git_push, "split_object", quadratic)
+    with pytest.raises(AssertionError, match="unfolding copied"):
+        test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
 
 
 # --- A clean push is ordinary: delivered unchanged, with Git's own bookkeeping ---
@@ -924,10 +971,16 @@ def _write_loose(store, sha, raw):
 
 
 @pytest.mark.parametrize("store", ["own", "alternate"])
-def test_altered_public_history_bytes_exclude_nothing(push_sandbox, monkeypatch, capfd, tmp_path, store):
+@pytest.mark.parametrize("ordering", [(), ("--topo-order",)], ids=["date-order", "topo-order"])
+def test_altered_public_history_bytes_exclude_nothing(push_sandbox, monkeypatch, capfd, tmp_path, store, ordering):
     """Bytes under the authoritative head's id that name the hit as a parent must not hide the hit."""
     public_head = push_sandbox.commit("published clean")
+    # Start the hit from the common base, not the public head. Otherwise forging
+    # public_head -> hit creates a cycle (hit -> public_head already exists),
+    # and Git's positive control depends on how it traverses that invalid graph.
+    _git(push_sandbox.work, "reset", "-q", "--hard", "HEAD~1")
     hit = push_sandbox.commit("subject " + TOKEN)
+    assert public_head not in _git(push_sandbox.work, "rev-list", hit).split()
     genuine = subprocess.run(
         [REAL_GIT, "cat-file", "commit", public_head],
         cwd=push_sandbox.work,
@@ -946,7 +999,7 @@ def test_altered_public_history_bytes_exclude_nothing(push_sandbox, monkeypatch,
         _loose(objects, public_head).unlink()
         (objects / "info/alternates").write_text(f"{alternate}\n")
     # Positive control: git trusts the stored bytes and would exclude the hit.
-    assert _git(push_sandbox.work, "rev-list", hit, f"^{public_head}") == ""
+    assert _git(push_sandbox.work, "rev-list", *ordering, hit, f"^{public_head}") == ""
     status, _ = run_hook(push_sandbox, monkeypatch, FakePublic(public_head))
     err = capfd.readouterr().err
     assert status == 1 and f"field=commit[{hit[:12]}].message" in err, err
