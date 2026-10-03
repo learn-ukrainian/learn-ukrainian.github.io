@@ -12452,7 +12452,9 @@ def test_settle_preserves_ignored_artifacts_before_removal(
     artifact.parent.mkdir(parents=True)
     payload = b"unapplied patch\x00\xff\n"
     artifact.write_bytes(payload)
-    record = {"task_id": task_id, "status": "done", "started_at": "2000-01-01T00:00:00Z"}
+    record = {
+        "task_id": task_id, "status": "done", "worktree_path": str(worktree), "started_at": "2000-01-01T00:00:00Z"
+    }
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     if copy_fails:
 
@@ -12479,7 +12481,16 @@ def test_settle_preserves_ignored_artifacts_before_removal(
         assert (
             state["preserved_artifacts"]
             == record["preserved_artifacts"]
-            == {"count": 1, "bytes": len(payload), "location": str(location)}
+            == {
+                "count": 1,
+                "bytes": len(payload),
+                "location": str(location),
+                "worktree_path": str(worktree),
+                "content_sha256": hashlib.sha256(
+                    json.dumps([(artifact_name, len(payload), hashlib.sha256(payload).hexdigest())]).encode()
+                ).hexdigest(),
+                "reused": False,
+            }
         )
     assert _branch_ref_present(primary, branch)
 
@@ -12530,7 +12541,12 @@ def test_settle_ignored_output_mtime_and_cap(tmp_tasks_dir, tmp_path, monkeypatc
     os.utime(recent, (cutoff, cutoff))
     if over_cap:
         monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    record = {"task_id": task_id, "status": "done", "started_at": datetime.fromtimestamp(cutoff, UTC).isoformat()}
+    record = {
+        "task_id": task_id,
+        "status": "done",
+        "worktree_path": str(worktree),
+        "started_at": datetime.fromtimestamp(cutoff, UTC).isoformat(),
+    }
     delegate._write_state_atomic(delegate._state_path(task_id), record)
 
     result = delegate._settle_worktree_reap(
@@ -17849,7 +17865,7 @@ def test_settle_result_named_file_scope(tmp_tasks_dir, tmp_path, monkeypatch, re
         source.parent.mkdir(parents=True, exist_ok=True)
         source.write_bytes(b"named evidence")
     named = str(worktree) if reference == "root" else reference
-    record = {"task_id": task_id, "status": "done", "response": f"Result: `{named}`."}
+    record = {"task_id": task_id, "status": "done", "worktree_path": str(worktree), "response": f"Result: `{named}`."}
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     result = delegate._settle_worktree_reap(
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
@@ -17870,7 +17886,7 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     with (primary / ".git/info/exclude").open("a") as exclude:
         exclude.write("ignored/\n")
     named, preserved, target = links.build_named_link(worktree, primary, tmp_path / "outside", scenario)
-    record = {"task_id": task_id, "status": "done", "response": links.worker_response(named)}
+    record = {"task_id": task_id, "status": "done", "worktree_path": str(worktree), "response": links.worker_response(named)}
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     result = delegate._settle_worktree_reap(
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record

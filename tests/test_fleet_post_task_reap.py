@@ -230,16 +230,24 @@ def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime, arti
     _write_task_state(
         tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
     )
+    path = tasks / f"{task_id}.json"
+    before = json.loads(path.read_text())
 
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
 
     row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
     assert row["action"] == "removed", row
     assert not worktree.exists()
-    state = json.loads((tasks / f"{task_id}.json").read_text())
-    assert state["preserved_artifacts"]["count"] == 1
-    assert state["preserved_artifacts"]["bytes"] == len(b"post-task evidence")
-    assert (Path(state["preserved_artifacts"]["location"]) / artifact_name).read_bytes() == b"post-task evidence"
+    state = json.loads(path.read_text())
+    receipt = row["preserved_artifacts"]
+    if runtime:
+        assert state == before  # Runtime ownership alone does not bind the task record.
+        assert json.loads(Path(receipt["receipt_path"]).read_text()) == receipt
+    else:
+        assert state["preserved_artifacts"] == receipt
+    assert receipt["count"] == 1
+    assert receipt["bytes"] == len(b"post-task evidence")
+    assert (Path(receipt["location"]) / artifact_name).read_bytes() == b"post-task evidence"
 
 
 def test_running_skip(hermetic_reap):
@@ -891,10 +899,17 @@ def test_post_task_reap_result_named_file_scope(hermetic_reap, runtime, referenc
     row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
     assert row["action"] == "removed", row
     assert not worktree.exists()
-    location = Path(json.loads(path.read_text())["preserved_artifacts"]["location"])
+    state = json.loads(path.read_text())
+    receipt = row["preserved_artifacts"]
+    if runtime:
+        assert state == record
+        assert json.loads(Path(receipt["receipt_path"]).read_text()) == receipt
+    else:
+        assert state["preserved_artifacts"] == receipt
+    location = Path(receipt["location"])
     assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
     assert not (location / ".pytest_cache/cache.txt").exists()
-    assert json.loads(path.read_text())["preserved_artifacts"]["count"] == 1
+    assert receipt["count"] == 1
 
 
 def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
@@ -935,7 +950,10 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
         tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
     )
     path = tasks / f"{task_id}.json"
-    path.write_text(json.dumps({**json.loads(path.read_text()), "response": links.worker_response(named)}))
+    record = {**json.loads(path.read_text()), "response": links.worker_response(named)}
+    if runtime:
+        record["cwd"] = str(worktree)  # Exercise named-artifact checks with a bound runtime record.
+    path.write_text(json.dumps(record))
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
     links.restore_access(worktree)

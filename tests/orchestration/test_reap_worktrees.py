@@ -6859,6 +6859,30 @@ def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, referen
     assert saved["preserved_artifacts"]["count"] == 1
 
 
+def test_canonical_reaper_preserves_old_output_when_task_id_was_redispatched(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "redispatched"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"old task output")
+    other = repo / ".worktrees/dispatch/claude" / task_id
+    other.mkdir(parents=True)
+    _write_task_record(repo, task_id, status="done", worktree_path=str(other), started_at="2999-01-01T00:00:00Z")
+    record_path = repo / "batch_state/tasks" / f"{task_id}.json"
+    before = record_path.read_bytes()
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9645, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "removed", result
+    assert not worktree.exists() and record_path.read_bytes() == before
+    receipt = result.preserved_artifacts
+    assert receipt["count"] == 1 and Path(receipt["receipt_path"]).exists()
+    assert (Path(receipt["location"]) / ".cache/out/page.txt").read_bytes() == b"old task output"
+
+
 @pytest.mark.parametrize("scenario", links.SCENARIOS)
 def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypatch, scenario):
     repo = init_repo(tmp_path)

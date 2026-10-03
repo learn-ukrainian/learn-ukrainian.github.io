@@ -27,7 +27,7 @@ from scripts.orchestration import worktree_claims
 
 
 @pytest.mark.parametrize("caller", ["superseded-review", "stale-holder"])
-@pytest.mark.parametrize("record_exists", [True, False])
+@pytest.mark.parametrize("record_exists", [True, False, "redispatched"])
 def test_cleanup_derives_dispatch_identity_and_reports_preserved_location(
     tmp_path, monkeypatch, capsys, caller, record_exists
 ):
@@ -48,7 +48,12 @@ def test_cleanup_derives_dispatch_identity_and_reports_preserved_location(
     source.write_bytes(b"review output")
     record_path = tasks / f"{task_id}.json"
     if record_exists:
-        record_path.write_text(json.dumps({"task_id": task_id, "status": "done", "worktree_path": str(worktree)}))
+        record = {"task_id": task_id, "status": "done", "worktree_path": str(worktree)}
+        if record_exists == "redispatched":
+            other = primary / ".worktrees/dispatch/claude" / task_id
+            other.mkdir(parents=True)
+            record.update(worktree_path=str(other), started_at="2999-01-01T00:00:00Z")
+        record_path.write_text(json.dumps(record))
     if caller == "superseded-review":
         monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(worktree, task_id)])
         monkeypatch.setattr(delegate, "_superseded_review_release_proof", lambda _path: (True, "clean+contained"))
@@ -57,11 +62,15 @@ def test_cleanup_derives_dispatch_identity_and_reports_preserved_location(
         monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda *_args: (True, "clean+contained"))
         released = delegate._release_stale_branch_holders(branch=branch, holders=[worktree], dry_run=False)
     assert released == [worktree] and not worktree.exists()
-    if record_exists:
+    if record_exists is True:
         receipt = json.loads(record_path.read_text())["preserved_artifacts"]
     else:
         receipts = list((primary / "batch_state/preserved" / task_id).glob("*.receipt.json"))
-        assert len(receipts) == 1 and not record_path.exists()
+        assert len(receipts) == 1
+        if record_exists == "redispatched":
+            assert json.loads(record_path.read_text()) == record
+        else:
+            assert not record_path.exists()
         receipt = json.loads(receipts[0].read_text())
     assert receipt["count"] == 1 and receipt["bytes"] == len(b"review output")
     location = Path(receipt["location"])
@@ -69,7 +78,7 @@ def test_cleanup_derives_dispatch_identity_and_reports_preserved_location(
     assert (location / ".cache/out/answer.txt").read_bytes() == b"review output"
     diagnostic = capsys.readouterr().err
     assert str(location) in diagnostic
-    if not record_exists:
+    if record_exists is not True:
         assert receipt["receipt_path"] in diagnostic
 
 

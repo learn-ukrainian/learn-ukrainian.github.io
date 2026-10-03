@@ -172,7 +172,8 @@ def test_raw_removal_checks_preservation_without_adapter(tmp_path, monkeypatch):
     assert receipt["record_update"] == "skipped_missing_record"
 
 
-def test_retry_after_git_refusal_preserves_both_versions_and_removes(tmp_path):
+@pytest.mark.parametrize("changed", [True, False])
+def test_retry_after_git_refusal_reuses_identical_or_preserves_changed_output(tmp_path, changed):
     primary = _primary(tmp_path)
     checkout = _linked(primary, "codex/retry-9645")
     (primary / ".git/info/exclude").write_text(".cache/\n")
@@ -186,11 +187,36 @@ def test_retry_after_git_refusal_preserves_both_versions_and_removes(tmp_path):
             git_runner=lambda _root, argv: subprocess.CompletedProcess(argv, 1, "", "injected Git refusal"),
         )
         assert error and checkout.exists()
-        source.write_bytes(b"second")
+        if changed:
+            source.write_bytes(b"second")
         error = worktree_claims.git_worktree_remove(
             primary, checkout, force=False, preservation_receipt=second,
         )
     assert error is None and not checkout.exists()
-    assert first["location"] != second["location"]
+    assert (first["location"] != second["location"]) is changed
+    assert second["reused"] is not changed
     assert (Path(first["location"]) / ".cache/report.txt").read_bytes() == b"first"
-    assert (Path(second["location"]) / ".cache/report.txt").read_bytes() == b"second"
+    assert (Path(second["location"]) / ".cache/report.txt").read_bytes() == (b"second" if changed else b"first")
+
+
+def test_claims_remove_preserves_old_output_when_task_id_was_redispatched(tmp_path, monkeypatch, capsys):
+    primary = _primary(tmp_path)
+    checkout = _linked(primary, "codex/redispatched")
+    (primary / ".git/info/exclude").write_text(".cache/\n")
+    source = checkout / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"old task output")
+    other = primary / ".worktrees/dispatch/claude/redispatched"
+    other.mkdir(parents=True)
+    _record(primary, "redispatched", status="done", worktree_path=str(other), started_at="2999-01-01T00:00:00Z")
+    record_path = primary / "batch_state/tasks/redispatched.json"
+    before = record_path.read_bytes()
+    monkeypatch.setenv("LU_TASKS_DIR", str(record_path.parent))
+    assert worktree_claims.main(["remove", str(checkout), "--json"]) == worktree_claims.EXIT_REMOVED
+    assert not checkout.exists() and record_path.read_bytes() == before
+    copies = list((primary / "batch_state/preserved/redispatched").glob("*/.cache/out/page.txt"))
+    assert len(copies) == 1 and copies[0].read_bytes() == b"old task output"
+    receipts = list((primary / "batch_state/preserved/redispatched").glob("*.receipt.json"))
+    assert len(receipts) == 1
+    assert json.loads(receipts[0].read_text())["count"] == 1
+    assert json.loads(capsys.readouterr().out)["action"] == "removed"

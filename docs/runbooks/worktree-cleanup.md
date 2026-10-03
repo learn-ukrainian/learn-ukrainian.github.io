@@ -69,10 +69,15 @@ The guard inventories all Git-ignored regular files, including `.cache/`
 outputs never named in a response. No-checkout runtimes have an empty index and
 no on-disk ignore rules, so the guard inventories all untracked non-cache files.
 Files with `max(st_mtime, st_ctime)` at or after the task's
-recorded `started_at` are copied, retaining their relative paths under
-`batch_state/preserved/<task-id>/<attempt-nonce>/`. Every preservation uses a
-unique attempt directory, so retries keep earlier copies intact.
-An absent start conservatively includes all
+recorded `started_at` are copied only when the record's `worktree_path` (or
+fallback `cwd`) resolves to the checkout being removed. Hot then archived
+records are checked for that binding; task ids alone never bind records.
+Output retains its relative paths under
+`batch_state/preserved/<task-id>/<attempt-nonce>/`. A manifest binds each copy
+to its resolved worktree and a digest of the file list and bytes. Retries reuse
+an existing copy only after verifying its complete file list and bytes again;
+changed output gets a new attempt directory, keeping earlier copies intact.
+An absent or unbound start conservatively includes all
 ignored non-cache files; a malformed start refuses removal. Closeout without a
 task identity derives it from the dispatch path, or uses `worktree-<path-digest>`
 at the same destination. Empty files
@@ -93,8 +98,11 @@ disposition. Inventory, copy, byte-verification, or task-record write failures
 also retain it. Task terminal status never changes preservation eligibility.
 Existing task records and reap/closeout receipts report `preserved_artifacts`
 with `count`, `bytes`, and `location`. Each copy's location is printed. If no task
-record exists, a `<attempt-nonce>.receipt.json` file beside the copy stores that
-metadata and its path is printed; no task record is synthesized. The infra lane
+record is bound to the checkout, a `.receipt.json` file beside the copy stores
+that metadata and its path is printed; no task record is synthesized or changed.
+Binding is rechecked under the shared task-record writer lock before updates.
+Reused copies report `reused: true`, with a fresh receipt when no bound record
+exists. The infra lane
 owns retention of `batch_state/preserved/`. Output owners must recover their
 files before retention is decided; this change adds no automatic deletion policy.
 
