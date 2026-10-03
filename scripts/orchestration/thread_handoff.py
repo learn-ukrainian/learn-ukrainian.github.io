@@ -5998,7 +5998,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         return 2
     agent = normalize_agent_name(args.agent)
     task_family_filter = str(getattr(args, "task_family", "") or "").strip().lower()
-    stream_filter = str(getattr(args, "stream", "") or "").strip()
+    stream_filter = str(getattr(args, "stream", "") or "").strip().lower()
 
     # Agent directories to scan. Epic slots like claude-hramatka often have packets
     # prepared under the bare `claude` namespace (#5398 / hramatka interim).
@@ -6056,9 +6056,11 @@ def cmd_detect(args: argparse.Namespace) -> int:
                         )
                 identity = replacement.get("identity") or state.get("identity") or {}
                 stream_epic = identity.get("stream_epic")
-                packet_stream = f"epic:{stream_epic}" if stream_epic is not None else ""
+                packet_stream = f"epic:{stream_epic}".lower() if stream_epic is not None else ""
                 packet_family = _candidate_task_family(state, replacement)
                 mismatches = []
+                if not stream_filter and scan_agent != agent:
+                    mismatches.append("session stream unknown for provider fallback")
                 if stream_filter and packet_stream != stream_filter and (packet_stream or scan_agent != agent):
                     mismatches.append("stream differs from session")
                 if mismatches:
@@ -6611,7 +6613,10 @@ def build_parser() -> argparse.ArgumentParser:
     detect.add_argument(
         "--stream",
         default=os.environ.get("SESSION_STREAM_ID", ""),
-        help="Session stream (e.g. epic:6321; default: SESSION_STREAM_ID); skip packets from other streams.",
+        help=(
+            "Session stream (e.g. epic:6321; default: SESSION_STREAM_ID); compare case-insensitively and skip "
+            "packets from other streams. Without a stream, alias lanes only list provider-fallback packets as diagnostics."
+        ),
     )
     detect.add_argument(
         "--task-family",

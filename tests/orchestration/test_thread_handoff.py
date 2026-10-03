@@ -4458,6 +4458,8 @@ def test_detect_task_family_filter_selects_one_of_many(tmp_path: Path, capsys, m
                     thread_id,
                     "--task-family",
                     family,
+                    "--stream-epic",
+                    "1001",
                     "--semantic-title",
                     title,
                     "--terminal-goal",
@@ -4506,6 +4508,8 @@ def test_detect_task_family_filter_selects_one_of_many(tmp_path: Path, capsys, m
                 "detect",
                 "--agent",
                 "claude-hramatka",
+                "--stream",
+                "epic:1001",
                 "--task-family",
                 "hramatka",
             ]
@@ -4515,6 +4519,101 @@ def test_detect_task_family_filter_selects_one_of_many(tmp_path: Path, capsys, m
     epic_slot = json.loads(capsys.readouterr().out)
     assert epic_slot["status"] == "pending_start"
     assert epic_slot.get("packet_agent") == "claude"
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex"])
+@pytest.mark.parametrize("own_directory", [False, True])
+@pytest.mark.parametrize("packet_has_stream", [False, True])
+def test_alias_lane_without_stream_only_offers_own_directory_packet(
+    tmp_path: Path, capsys, monkeypatch, provider: str, own_directory: bool, packet_has_stream: bool
+) -> None:
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    alias = f"{provider}-open-model-data"
+    owner = alias if own_directory else provider
+    prepare_args = [
+        "--repo-root",
+        str(tmp_path),
+        "prepare",
+        "--agent",
+        owner,
+        "--active-thread-id",
+        "old-thread",
+        "--task-family",
+        "open-model-data",
+        "--semantic-title",
+        "Repair alias lane handoff",
+        "--terminal-goal",
+        "merge",
+    ]
+    if packet_has_stream:
+        prepare_args += ["--stream-epic", "1001"]
+    assert th.main(prepare_args) == 0
+    packet = json.loads(capsys.readouterr().out)
+    packet_dir = (tmp_path / packet["state_file"]).parent
+    before = {p: p.read_bytes() for p in packet_dir.rglob("*") if p.is_file()}
+    args = ["--repo-root", str(tmp_path), "detect", "--agent", alias, "--task-family", "open-model-data"]
+    assert th.main(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert th.main([*args, "--format", "session-start"]) == 0
+    context = capsys.readouterr().out
+    if own_directory:
+        assert result["status"] == "pending_start"
+        assert result["packet_agent"] == alias
+        assert "bootstrap-replacement" in context and "confirm-replacement" in context
+        assert "skipped_foreign" not in result
+    else:
+        assert result["status"] == "none"
+        candidate = result["skipped_foreign"][0]
+        assert candidate["agent"] == provider
+        assert candidate["lineage_id"] == packet["lineage_id"]
+        assert candidate["rollover_id"] == packet["rollover_id"]
+        assert candidate["mismatches"] == ["session stream unknown for provider fallback"]
+        assert f"Skipped foreign candidate: owner={provider}" in context
+        assert packet["lineage_id"] in context and packet["rollover_id"] in context
+        assert "bootstrap-replacement" not in context and "confirm-replacement" not in context
+    assert before == {p: p.read_bytes() for p in packet_dir.rglob("*") if p.is_file()}
+
+
+@pytest.mark.parametrize("stream", ["epic:1001", "EPIC:1001", " EpIc:1001 "])
+@pytest.mark.parametrize("use_environment", [False, True])
+@pytest.mark.parametrize("owner", ["claude", "claude-open-model-data"])
+def test_alias_lane_detect_compares_stream_without_regard_to_case(
+    tmp_path: Path, capsys, monkeypatch, stream: str, use_environment: bool, owner: str
+) -> None:
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                owner,
+                "--active-thread-id",
+                "old-thread",
+                "--stream-epic",
+                "1001",
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    args = ["--repo-root", str(tmp_path), "detect", "--agent", "claude-open-model-data"]
+    if use_environment:
+        monkeypatch.setenv("SESSION_STREAM_ID", stream)
+    else:
+        args += ["--stream", stream]
+    assert th.main(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "pending_start"
+    assert result["packet_agent"] == owner
+    assert "skipped_foreign" not in result
+    assert th.main([*args, "--format", "session-start"]) == 0
+    context = capsys.readouterr().out
+    assert "bootstrap-replacement" in context and "confirm-replacement" in context
+    assert "Skipped foreign candidate" not in context
 
 
 @pytest.mark.parametrize(
