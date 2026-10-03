@@ -67,16 +67,30 @@ def _matches(atom: str, token: Token, morphology: dict[str, list[dict[str, Any]]
     return any(r.get("pos") == pos and r.get("lemma") in lemmas.split("|") for r in readings)
 
 
-def _temporal_end(tokens: list[Token], end: int, morphology: dict[str, list[dict[str, Any]]]) -> int | None:
-    """Require a following genitive duration; draughts alone never match."""
+def _temporal_end(text: str, tokens: list[Token], end: int, morphology: dict[str, list[dict[str, Any]]]) -> int | None:
+    """Require genitive modifiers and a duration, rejecting postposed non-genitives."""
     for i in range(end, len(tokens)):
-        token = tokens[i]
-        readings = _analyses(token, morphology)
+        readings = _analyses(tokens[i], morphology)
         if any(r.get("lemma") in _TIME_UNITS and "v_rod" in r.get("tags", "").split(":") for r in readings):
+            # A postposed nominative/accusative modifier (години дві) signals
+            # a possible literal draught duration, rather than a genitive phrase.
+            previous = tokens[i]
+            for following in tokens[i + 1 :]:
+                if not text[previous.end : following.start].isspace():
+                    break
+                previous = following
+                if following.kind == "digits":
+                    return None
+                modifiers = [r for r in _analyses(following, morphology) if r.get("pos") in {"adj", "numr"}]
+                if not modifiers:
+                    break
+                if not any("v_rod" in r.get("tags", "").split(":") for r in modifiers):
+                    return None
             return i + 1
-        if token.kind == "digits" or any(r.get("pos") in {"adj", "numr"} for r in readings):
-            continue
-        return None
+        if not any(
+            r.get("pos") in {"adj", "numr"} and "v_rod" in r.get("tags", "").split(":") for r in readings
+        ):
+            return None
     return None
 
 
@@ -112,10 +126,20 @@ def find_book_calques(
                         continue
                     if text[tokens[end - 1].end : tokens[end].start].strip() not in {"", ","}:
                         continue
-                if pattern.context == "parenthetical" and not text[tokens[end - 1].end :].lstrip().startswith(","):
+                # The book expressly defends awareness of an obligation.
+                # A genitive noun or adjective starts that complement.
+                if (
+                    pattern.context == "awareness"
+                    and end < len(tokens)
+                    and text[tokens[end - 1].end : tokens[end].start].isspace()
+                    and any(
+                        r.get("pos") in {"noun", "adj"} and "v_rod" in r.get("tags", "").split(":")
+                        for r in _analyses(tokens[end], morphology)
+                    )
+                ):
                     continue
                 if pattern.context == "duration":
-                    duration_end = _temporal_end(tokens, end, morphology)
+                    duration_end = _temporal_end(text, tokens, end, morphology)
                     if duration_end is None:
                         continue
                     end = duration_end

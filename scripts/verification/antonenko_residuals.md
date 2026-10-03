@@ -16,12 +16,13 @@ improvements and quotations that the author expressly defends.
 positive and negative. Inflections use VESUM lemma/POS readings. The participation
 rule covers the clean VESUM verb paradigms of both `приймати` and `прийняти`,
 including analytic futures and intervening adjectives. Temporal `на протязі`
-requires a genitive duration, including numeric or adjectival modifiers. Literal
+requires a genitive duration with VESUM-attested genitive modifiers; nominative
+or accusative quantifiers before or after the duration break the match. Literal
 draughts, proper names, borrowing suggestions and ordinary function words do not
 constitute pattern evidence. Recommendations are guidance, not inflection-aware
 automatic rewrites.
 
-The following **38 residual entries** lack a safe, general surface decision in
+The following **55 residual entries** lack a safe, general surface decision in
 this layer. Each needs meaning, discourse, syntactic role or unavailable form
 evidence; matching an arbitrary printed sentence alone would not resolve it.
 Owner for source/sense adjudication: the #9640 accountable driver. No residual
@@ -68,6 +69,23 @@ the unresolved classification, not to the existence of the cited discussion.
 | 36 | Як би не / не то / не бійсь, p.120–121 | Conditional negation, literal negation and fear are legitimate; concessive/disjunctive/modal readings require clause interpretation. |
 | 37 | Наглий / покращити / професійний, p.160,167 | Suddenness versus insolence, beauty versus quality, and professional domains versus professionals require senses. |
 | 38 | Unattested calque paradigms, pp.31,55,86,99–103,112,131,134–145 | The table retains book-attested spellings of unattested lemmas, but no VESUM paradigm exists to justify inventing further inflections. Active-participle roles and lexicalized adjectives also need syntactic evidence. The coined recommendation `утопальник` is absent from VESUM; the admitted rule uses the book's attested descriptive alternative `той, що втопає`. |
+| 39 | Прийняти пропозицію, p.91 | Withdrawn: the alternatives concern approval/adoption by an assembly. Accepting an offer to become a director, or an offer from another person, is legitimate. A nearby meeting word alone does not establish the subject or sense. |
+| 40 | По моїй думці, formerly p.117 | Withdrawn: both `search_style_guide` and source-scoped `search_text` were queried; an exact full-book scan found no passage containing this phrase. Page 117 prints `по-моєму`, with a preference for another expression. Search ranking does not prove exact phrase presence. |
+| 41 | Як не дивно, p.131 | Withdrawn: `краще` recommends an alternative without condemning this phrase. Page 137 explicitly distinguishes suggestions from categorical rules. |
+| 42 | Прийняти постанову, p.91 | Withdrawn: the passage says `краще користуватись`; no separate condemnation supports a firm finding. |
+| 43 | Як правило, p.40 | Withdrawn: the passage identifies borrowing and recommends remembering native alternatives, without condemning the phrase categorically. |
+| 44 | Приймати міри; прийняли всі необхідні міри | Withdrawn: page 31 discusses `міроприємство`, not this collocation. Neither required search surface supplied positive evidence; exact full-book scanning found no condemned collocation. Both the adjacent form and the intervening-modifier miss need an actual source citation before admission. <!-- VERIFY --> |
+| 45 | Наносити шкоду / образу / смуток / жаль / сором, p.161 | Withdrawn: the book explicitly permits the literal `нанести шкоду` when carrying dirt/snow into a house. Surface matching cannot decide figurative harm versus bringing something harmful. |
+| 46 | Прийняла свою гірку участь: possible fate sense | `query_sum20` has no offline entry; `search_slovnyk_me` returned a bounded ВТС participation snippet, which does not resolve the fate sense. Participation behavior is unchanged, as the brief prescribes for undetermined senses. It may still produce a firm finding; this unresolved risk belongs to the driver and requires source adjudication. <!-- VERIFY --> |
+| 47 | Не приймали участі, p.91 | Miss: genitive after negation needs agreement/negation scope and a case-aware noun alternative; the admitted noun atom remains `участь`. |
+| 48 | Приймали також участь, p.91 | Miss: only intervening adjectives are transparent. Adverb/clause scope is not admitted; arbitrary intervening words must not join unrelated verb and noun uses. |
+| 49 | Участь… ми приймали, p.91 | Miss: reversed order and ellipsis need clause/object attachment. The forward whitespace-only matcher deliberately cannot cross punctuation. |
+| 50 | Вилазить зі шкіри, p.158 | Miss: the admitted verb lemmas are `лізти` and `вилізти`. Further verbs require lexical/sense adjudication, including literal versus figurative use. |
+| 51 | Вона й вигляду не подала, p.90 | Miss: noun-before-verb order requires negation and predicate attachment; only verb-before-noun with an explicit feigning complement is admitted. |
+| 52 | І вигляду не показав, p.18 | Miss: noun-before-verb order remains withheld for the same attachment boundary as row 51. |
+| 53 | Ні–ні та й, p.121 | Miss: the shared tokenizer splits the en-dash spelling into two words, unlike the hyphenated admitted form. Changing shared tokenization is outside this packet; accepting arbitrary separators would misread literal negation. The citation audit normalizes this typography only for source presence, not production matching. |
+| 54 | Capitalised-after-colon and all-caps phrases | Miss: the existing proper-name guard withholds non-sentence-initial capitals. Capitalization alone cannot resolve names versus emphasis without broader named-entity context. |
+| 55 | На протязі 2 років: digit duration | Withheld: digits have no VESUM case evidence. The previous unconditional numeric skip could manufacture a duration; digits before or after the duration are withheld; spelled-out genitive numerals remain supported. |
 
 General declension, gender, agreement, paronym, immersion, spelling and optional
 synonym discussions are not automatically calque entries. Proper-name spelling
@@ -76,6 +94,28 @@ of international technical words) are excluded from calque admission. Source
 calque classification outside the admitted table and the listed residuals still
 requires independent Ukrainian review; this inventory does not certify that
 every calque in every edition has been independently adjudicated.
+
+Round-2 source receipt: **72 admitted patterns / 39 cited chunks**. Use the task-prescribed project interpreter with
+`-m scripts.verification.verify_antonenko_citations` to open each
+chunk read-only and check its independent literal anchor from
+`antonenko_citations.py`. Missing/wrong-source chunks, absent forms and anchor
+inventory drift fail the audit. Literal presence proves the citation location,
+not condemnation or semantic safety. Preference-only entries are residuals;
+`feign` stays admitted because p.18 also calls the analogous expression
+`такого ж хибного`, while `moving-participle` p.103 explicitly rejects a
+`штучного невдалого витвору`. Neither relies solely on `краще`.
+
+The consciousness rules now exclude a whitespace-adjacent genitive complement
+(including possessive adjectives), as p.42 defends awareness of obligations.
+VESUM-attested `утратити`/`утрачати` reuse that same guard. A firm book finding
+supersedes a shadow heuristic only on the identical item/span; unmatched
+occurrences retain their own evidence.
+
+Round-2 stopping rule: the next independent review blocks only on a firm
+finding for correct Ukrainian, a citation the book does not support, or a
+regression. The additional counterexamples are author regression tests, not
+independent held-out proof. The driver owns the next review and all 55 residual
+entries; this pushed author revision does not certify issue completion.
 
 Separate existing checker behavior: stress can be ambiguous for an otherwise
 correct word (including `гостей`, `протяг` and `правило`). UA-GEC can suggest a

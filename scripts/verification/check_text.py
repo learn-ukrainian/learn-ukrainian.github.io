@@ -565,6 +565,19 @@ def check_text(
                     finding.update(check="russian_shadow", locations=[loc], _first_loc=(item_idx, start, end))
                     book_findings[key] = finding
         for finding in book_findings.values():
+            # Firm book evidence supersedes a heuristic on the same span,
+            # including only the covered occurrences of a repeated form.
+            covered = {tuple(loc) for loc in finding["locations"]}
+            for suspicion in raw_suspicions[:]:
+                if suspicion["check"] != "russian_shadow":
+                    continue
+                suspicion["locations"] = [loc for loc in suspicion["locations"] if tuple(loc) not in covered]
+                if not suspicion["locations"]:
+                    raw_suspicions.remove(suspicion)
+                else:
+                    first = suspicion["locations"][0]
+                    item_index = next(i for i, item_id, _ in units if item_id == first[0])
+                    suspicion["_first_loc"] = (item_index, first[1], first[2])
             existing = next(
                 (
                     p

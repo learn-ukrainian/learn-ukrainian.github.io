@@ -62,7 +62,6 @@ def test_entire_vesum_participation_paradigms(form):
     [
         "Ми будемо приймати активну участь у конкурсі",
         "На протязі двох років ми працювали",
-        "На протязі 2 років ми працювали",
         "На протязі цього року ми працювали",
         "Він робить вигляд, що\nне розуміє",
     ],
@@ -146,6 +145,24 @@ def test_curated_and_book_evidence_share_one_finding(hermetic_check, monkeypatch
     assert result["problems"][0]["detail"]["evidence"]["source"] == BOOK
 
 
+def test_book_evidence_supersedes_only_same_span_shadow_suspicion(hermetic_check, monkeypatch):
+    monkeypatch.setattr(
+        hermetic_check,
+        "check_russian_patterns_batch",
+        lambda words, **kw: {w: {"matches_russian": w.lower() == "заключна", "confidence": 0.8} for w in words},
+    )
+    text = "Це заключна вистава. Назва Заключна з'явилася на екрані"
+    result = check_text(text=text, checks=["russian_shadow"])
+    assert len(result["problems"]) == len(result["suspicions"]) == 1
+    assert result["problems"][0]["detail"]["pattern_id"] == "concluding"
+    assert result["problems"][0]["locations"] == [[None, 3, 11]]
+    assert result["suspicions"][0]["locations"] == [[None, 27, 35]]
+
+    single = check_text(text="Це заключна вистава", checks=["russian_shadow"])
+    assert len(single["problems"]) == 1
+    assert single["suspicions"] == []
+
+
 def test_proper_name_reading_is_never_book_evidence():
     text = "Безчасся"
     morphology = {"безчасся": [{"lemma": "безчасся", "pos": "noun", "tags": "noun:prop"}]}
@@ -171,12 +188,13 @@ def test_live_recommendations_vesum(requires_vesum_db):
     assert all(verify_words(words).values())
 
 
-def test_live_evidence_chunks_exist(requires_sources_db):
+def test_live_evidence_chunks_contain_condemned_forms(requires_sources_db):
     import sqlite3
 
     from scripts.verification.check_text import _sources_path_resolved
+    from scripts.verification.verify_antonenko_citations import audit_citations
 
-    with sqlite3.connect(f"file:{_sources_path_resolved()}?mode=ro", uri=True) as conn:
-        for pattern in PATTERNS:
-            row = conn.execute("SELECT source_file FROM textbooks WHERE chunk_id = ?", (pattern.chunk_id,)).fetchone()
-            assert row == ("antonenko-davydovych-yak-my-hovorymo",), pattern.id
+    with sqlite3.connect(_sources_path_resolved().resolve().as_uri() + "?mode=ro", uri=True) as conn:
+        result = audit_citations(conn)
+    assert result["verified"] == len(PATTERNS)
+    assert result["failures"] == [], result

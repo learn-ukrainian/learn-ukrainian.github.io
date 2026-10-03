@@ -115,6 +115,35 @@ def test_mcp_book_calque_acceptance(server_module, requires_vesum_db):
     assert clean["problems"] == clean["suspicions"] == []
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Він прийняв пропозицію стати директором",
+        "Король прийняв пропозицію султана",
+        "Він стояв на протязі кілька хвилин",
+        "Він сидів на протязі години дві й застудився",
+        "Вони втратили свідомість своєї відповідальності",
+        "Як не дивно, він прийшов",
+        "По моїй думці так не можна робити",
+    ],
+)
+def test_mcp_round2_no_firm_book_false_positives(server_module, requires_vesum_db, text):
+    result = _run(server_module.call_tool("check_text", {"text": text, "checks": ["russian_shadow"]}))
+    payload = json.loads(result[0].text)
+    assert payload.get("status") != "error", payload
+    assert not any(f["detail"].get("pattern_id") for f in payload["problems"]), payload
+
+
+def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db):
+    result = _run(
+        server_module.call_tool("check_text", {"text": "Це заключна вистава", "checks": ["russian_shadow"]})
+    )
+    payload = json.loads(result[0].text)
+    assert len(payload["problems"]) == 1
+    assert payload["problems"][0]["detail"]["pattern_id"] == "concluding"
+    assert payload["suspicions"] == []
+
+
 # ── M2: Existing Tool Output Keys Preserved ──────────────────────────────────
 
 
