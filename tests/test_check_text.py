@@ -92,6 +92,29 @@ def test_mcp_call_tool_dispatch(server_module, requires_vesum_db, requires_sourc
     assert payload["summary"]["tokens"] >= 3
 
 
+def test_mcp_book_calque_acceptance(server_module, requires_vesum_db):
+    positive = _run(
+        server_module.call_tool(
+            "check_text",
+            {"text": "Ми приймаємо участь у конкурсі", "checks": ["russian_shadow"]},
+        )
+    )
+    payload = json.loads(positive[0].text)
+    assert len(payload["problems"]) == 1
+    finding = payload["problems"][0]
+    assert finding["form"] == "приймаємо участь"
+    assert finding["detail"]["evidence"]["chunk_id"] == "antonenko-davydovych-yak-my-hovorymo_p091"
+    assert "Антоненко-Давидович" in finding["detail"]["evidence"]["source"]
+    negative = _run(
+        server_module.call_tool(
+            "check_text",
+            {"text": "Ми приймаємо гостей у неділю", "checks": ["russian_shadow"]},
+        )
+    )
+    clean = json.loads(negative[0].text)
+    assert clean["problems"] == clean["suspicions"] == []
+
+
 # ── M2: Existing Tool Output Keys Preserved ──────────────────────────────────
 
 
@@ -419,8 +442,8 @@ def test_synthetic_ua_gec_collocation_goes_to_suspicion(monkeypatch):
     assert s["detail"]["label"] == "UA-GEC correction in one document's context; suspicion, not a verdict"
 
 
-def test_synthetic_ua_gec_closed_class_calque_goes_to_suspicion(monkeypatch, hermetic_ua_gec_vesum):
-    # Closed-class rule: multi-token F/Calque consisting only of closed-class words goes to suspicions
+def test_synthetic_ua_gec_closed_class_edit_is_not_a_suspicion(monkeypatch, hermetic_ua_gec_vesum):
+    # Document-specific function-word edits are not evidence of a suspect span.
     mock_index = {
         ("як", "він"): [
             {
@@ -445,13 +468,26 @@ def test_synthetic_ua_gec_closed_class_calque_goes_to_suspicion(monkeypatch, her
     res = check_text(text=text, checks=["ua_gec"])
     assert res.get("status") != "error"
     assert len(res["problems"]) == 0
-    assert len(res["suspicions"]) == 1
-    s = res["suspicions"][0]
-    assert s["form"] == "як він"
-    assert s["detail"]["status"] == "suspicion"
-    assert s["detail"]["label"] == (
-        "UA-GEC correction of function words; depends on sentence context; suspicion, not a verdict"
-    )
+    assert len(res["suspicions"]) == 0
+
+
+@pytest.mark.parametrize(
+    "text,word,pos,tags",
+    [
+        ("Я читаю", "я", "noun", "noun:anim:s:v_naz:pron:pers:1"),
+        ("Він і я читаємо", "і", "conj", "conj:coord"),
+    ],
+)
+def test_ua_gec_function_word_suspicions_suppressed(text, word, pos, tags, monkeypatch, hermetic_ua_gec_vesum):
+    hermetic_ua_gec_vesum[word] = [{"lemma": word, "pos": pos, "tags": tags}]
+    index = {
+        (word,): [
+            {"id": 1, "error": word, "correct": "", "error_type": "F/Calque", "doc_id": "fixture", "is_native": 1}
+        ]
+    }
+    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (index, 1, 0))
+    result = check_text(text=text, checks=["ua_gec"])
+    assert result["problems"] == result["suspicions"] == []
 
 
 @pytest.mark.usefixtures("hermetic_ua_gec_vesum")
