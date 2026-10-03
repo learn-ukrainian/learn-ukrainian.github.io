@@ -304,7 +304,15 @@ def registry(tmp_path, monkeypatch):
         (FakeProcess(args=["claude"], paths=[f"/tmp/claude-{os.getuid()}/project/{SESSION}/file"]), False, {SESSION}),
         (FakeProcess(args=["claude"], env={"RANDOM_UUID": SESSION}), False, {SESSION}),
         (FakeProcess(args=["claude"]), False, set()),
-        (FakeProcess(args=["node", "/package/claude-code/cli.js"]), True, set()),
+        (FakeProcess(args=["node", "/package/claude-code/cli.js"]), False, set()),
+        (FakeProcess(exe="/bin/nodejs", args=["renamed", "/package/@anthropic-ai/claude-code/cli.js"]), False, set()),
+        (FakeProcess(exe="/install/claude/versions/2.1.0", args=["2.1.0", "-p"]), False, set()),
+        (FakeProcess(args=["/install/claude/versions/2.1.0", "-p"]), False, set()),
+        (FakeProcess(args=["bash", "/package/claude-code/cli.js"]), True, set()),
+        (FakeProcess(args=["node", "/package/other/cli.js", "/package/claude-code/cli.js"]), True, set()),
+        (FakeProcess(args=["node", "/package/claude-code/not-cli.js"]), True, set()),
+        (FakeProcess(args=["bash", "/install/claude/versions/2.1.0"]), True, set()),
+        (FakeProcess(exe="/install/other/versions/2.1.0", args=["2.1.0"]), True, set()),
         (FakeProcess(args=["bash", "/worktrees/claude/task"]), True, set()),
         (FakeProcess(exe="/bin/claude", args=["renamed"]), False, set()),
         (FakeProcess(error=scratch.psutil.AccessDenied(1)), True, set()),
@@ -327,6 +335,66 @@ def test_process_enumeration_failure_is_unknown(registry, monkeypatch) -> None:
 
     monkeypatch.setattr(scratch.psutil, "process_iter", fail)
     assert scratch.process_evidence() == UNKNOWN
+
+
+@pytest.mark.parametrize(
+    "process",
+    [
+        FakeProcess(exe="/install/claude/versions/2.1.0", args=["2.1.0", "-p"]),
+        FakeProcess(exe="/bin/node", args=["node", "/package/@anthropic-ai/claude-code/cli.js", "-p"]),
+    ],
+)
+def test_unregistered_native_or_node_claude_preserves_scratch(registry, tmp_path, monkeypatch, process) -> None:
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
+    root, directory = _session(tmp_path)
+    report = scratch.sweep_sessions(root, apply=True)
+    assert report["summary"]["kept_by_reason"] == {"unknown_session": 1}
+    assert report["summary"]["removed"] == report["summary"]["would_remove"] == 0
+    assert (directory / "scratchpad/payload").read_bytes() == b"keep every byte\x00\xff"
+
+
+def test_registered_version_named_claude_still_proves_liveness(registry, monkeypatch) -> None:
+    process = FakeProcess(pid=123, exe="/install/claude/versions/2.1.0", args=["2.1.0", "-p"])
+    monkeypatch.setattr(scratch, "_kernel_start", lambda _pid: "100")
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
+    assert scratch.process_evidence() == LIVE
+
+
+@pytest.mark.parametrize(
+    "payload", [b"[" * 10000 + b"]" * 10000, b"{", b"\xff"], ids=["deeply_nested", "malformed", "invalid_unicode"]
+)
+def test_registry_parse_failure_preserves_scratch(registry, tmp_path, monkeypatch, payload) -> None:
+    (registry / "123.json").write_bytes(payload)
+    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([]))
+    root, directory = _session(tmp_path)
+    report = scratch.sweep_sessions(root, apply=True)
+    assert report["summary"]["kept_by_reason"] == {"unknown_session": 1}
+    assert report["summary"]["removed"] == report["summary"]["would_remove"] == 0
+    assert (directory / "scratchpad/payload").read_bytes() == b"keep every byte\x00\xff"
+
+
+@pytest.mark.parametrize(
+    "payload,reason",
+    [
+        (b"[" * 10000 + b"]" * 10000, "RecursionError"),
+        (b"{", "JSONDecodeError"),
+        (b"\xff", "UnicodeDecodeError"),
+    ],
+    ids=["deeply_nested", "malformed", "invalid_unicode"],
+)
+@pytest.mark.parametrize("evidence,kept_reason", [(DEAD, "unknown_session"), (LIVE, "live_session")])
+def test_lease_parse_failure_is_recorded_and_preserves_scratch(
+    tmp_path, payload, reason, evidence, kept_reason
+) -> None:
+    rollover = _confirmed(tmp_path)
+    (rollover / "lineage/lease.json").write_bytes(payload)
+    root, directory = _session(tmp_path)
+    report = scratch.sweep_sessions(root, rollover_roots=[rollover], apply=True, probe=lambda: evidence)
+    assert report["summary"]["errors"] == 1
+    assert report["entries"][0]["reason"] == f"unreadable_lease_{reason}"
+    assert report["summary"]["kept_by_reason"] == {kept_reason: 1}
+    assert report["summary"]["removed"] == report["summary"]["would_remove"] == 0
+    assert (directory / "scratchpad/payload").read_bytes() == b"keep every byte\x00\xff"
 
 
 def test_partial_process_probe_keeps_positive_ownership(registry, monkeypatch) -> None:

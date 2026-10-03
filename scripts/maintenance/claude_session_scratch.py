@@ -74,7 +74,12 @@ def _registry_evidence(root: Path) -> tuple[set[str], set[int], bool]:
                     info = os.fstat(source.fileno())
                     if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid():
                         raise ValueError("invalid registry file")
-                    record = json.load(source)
+                    try:
+                        record = json.load(source)
+                    except Exception as exc:
+                        # Confine broad handling to decoding untrusted JSON;
+                        # depth and resource failures also invalidate absence.
+                        raise ValueError("unreadable registry record") from exc
                 if not isinstance(record, dict):
                     raise ValueError("invalid registry record")
                 pid = record.get("pid")
@@ -107,11 +112,32 @@ def _registry_evidence(root: Path) -> tuple[set[str], set[int], bool]:
     return sessions, registered, complete and seen
 
 
+def _is_claude_process(executable: str, args: list[str]) -> bool:
+    """Recognize native executables and Node's Claude Code entrypoint.
+
+    psutil.exe() supplies the kernel-resolved executable. Native installs use
+    regular version-named files under claude/versions, behind a claude symlink.
+    Do not follow argv paths or mistake later data arguments for executables.
+    """
+    executables = [Path(value) for value in [executable, *args[:1]] if value]
+    if any(
+        path.name in {"claude", "claude-code"} or path.parent.parts[-2:] == ("claude", "versions")
+        for path in executables
+    ):
+        return True
+    return (
+        any(path.name in {"node", "nodejs"} for path in executables)
+        and len(args) > 1
+        and Path(args[1]).parts[-2:] == ("claude-code", "cli.js")
+    )
+
+
 def process_evidence() -> ProcessEvidence:
     """Combine Claude's registry with positive process session-ID matches.
 
-    Only real Claude executables/argv[0] without a verified registry identity
-    make enumeration incomplete; unrelated access-denied processes do not.
+    Claude executables, native versions and Node CLI entrypoints without a
+    verified registry identity make enumeration incomplete; unrelated
+    access-denied processes do not.
     Arguments and environment are never published.
     """
     config = Path(os.environ.get("CLAUDE_CONFIG_DIR", str(Path.home() / ".claude")))
@@ -124,7 +150,7 @@ def process_evidence() -> ProcessEvidence:
                 args = process.cmdline()
             with suppress(psutil.Error, OSError):
                 executable = process.exe()
-            is_claude = any(Path(value).name in {"claude", "claude-code"} for value in [executable, *args[:1]])
+            is_claude = _is_claude_process(executable, args)
             try:
                 if process.uids().real != os.getuid() or process.status() == psutil.STATUS_ZOMBIE:
                     continue
@@ -199,8 +225,8 @@ def _confirmed_record(record: object) -> str | None:
     return None
 
 
-def confirmed_sessions(roots: Iterable[Path]) -> set[str]:
-    """Read canonical Claude lineage lease.json records; ignore malformed records."""
+def confirmed_sessions(roots: Iterable[Path], *, errors: list[dict] | None = None) -> set[str]:
+    """Read canonical leases; record parse failures without trusting their identity."""
     sessions: set[str] = set()
     for root in roots:
         try:
@@ -220,7 +246,20 @@ def confirmed_sessions(roots: Iterable[Path]) -> set[str]:
                         with os.fdopen(fd, "rb") as source:
                             if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
                                 continue
-                            session = _confirmed_record(json.load(source))
+                            try:
+                                record = json.load(source)
+                            except Exception as exc:
+                                if errors is not None:
+                                    errors.append(
+                                        {
+                                            "entry": ".",
+                                            "bytes": 0,
+                                            "action": "error",
+                                            "reason": f"unreadable_lease_{type(exc).__name__}",
+                                        }
+                                    )
+                                continue
+                            session = _confirmed_record(record)
                             if session:
                                 sessions.add(session)
                     finally:
@@ -276,7 +315,11 @@ def sweep_sessions(
     report: dict = {"mode": "apply" if apply else "dry-run", "entries": [], "summary": {}}
     rows = report["entries"]
     evidence = probe()
-    confirmed = confirmed_sessions(rollover_roots)
+    confirmed = confirmed_sessions(rollover_roots, errors=rows)
+    if rows:
+        # A failed parse cannot identify the predecessor safely. Keep every
+        # session lacking positive liveness proof rather than guessing it.
+        evidence = ProcessEvidence(evidence.live_sessions, complete=False)
 
     def visit(parent_fd: int, name: str, relative: str, *, project: bool = False) -> None:
         row = {"entry": relative, "bytes": 0, "action": "kept", "reason": "unknown_entry"}

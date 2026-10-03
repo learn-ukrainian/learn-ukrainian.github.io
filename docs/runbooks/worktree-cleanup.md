@@ -639,12 +639,16 @@ start time does not establish liveness.
 Removal requires readable registry evidence whose `pidDomain` matches the
 sweeper's machine identity and PID namespace, plus no unidentified Claude process.
 A missing, empty, malformed or inaccessible registry, a mismatched domain, or a
-real Claude executable/first argument without a matching registry entry prevents
-absence proof, including for confirmed v2 thread-handoff predecessors. Access
-denied on unrelated processes and later argument paths containing `claude` do not
-block absence proof. Unknown entries remain preserved; session age never
+Claude executable/first argument, native executable under `claude/versions/`, or
+Node running Claude Code's `claude-code/cli.js` entrypoint without a matching
+registry entry prevents absence proof, including for confirmed v2 thread-handoff
+predecessors. Access denied on unrelated processes and later data argument paths
+containing `claude` do not block absence proof. Unknown entries remain preserved; session age never
 authorizes deletion. Deep-tree recursion errors are reported per entry and do
-not abort the remaining hygiene run.
+not abort the remaining hygiene run. Registry JSON parse failures, including
+excessive nesting, prevent absence proof. Lease JSON parse failures are recorded
+as errors and preserve sessions without a positive live match as `unknown_session`;
+an unreadable lease cannot safely identify which predecessor it affects.
 
 Apply rechecks liveness immediately before removal, but this is not an atomic
 transaction with Claude's session startup. A `claude --resume <id>` starting

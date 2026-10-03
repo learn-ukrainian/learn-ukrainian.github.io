@@ -90,6 +90,39 @@ def test_main_session_error_is_recorded_and_returns_failure(tmp_path: Path, monk
     assert summary["summary"]["errors"] == 2
 
 
+def test_main_nested_lease_json_writes_receipt_and_keeps_scratch(tmp_path: Path, monkeypatch, capsys) -> None:
+    root = tmp_path / f"claude-{os.getuid()}"
+    session = root / "12345678-1234-1234-1234-123456789abc"
+    session.mkdir(parents=True)
+    (session / "payload").write_bytes(b"keep")
+    lineage = tmp_path / ".agent/thread-rollovers/claude/lineage"
+    lineage.mkdir(parents=True)
+    (lineage / "lease.json").write_text("[" * 10000 + "]" * 10000)
+    monkeypatch.setattr(
+        cleanup,
+        "sweep_sessions",
+        lambda **kwargs: sweep_sessions(root, probe=lambda: ProcessEvidence(complete=True), **kwargs),
+    )
+    monkeypatch.setattr(
+        cleanup,
+        "build_receipt",
+        lambda *_args, **_kwargs: {"observed_at": "2026-10-03T00:00:00Z", "summary": {"errors": 0}, "repositories": []},
+    )
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: {})
+    monkeypatch.setattr(cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
+    receipts = tmp_path / "receipts"
+    assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(receipts)]) == 1
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["summary"]["errors"] == 1
+    assert summary["claude_session_scratch"]["kept_by_reason"] == {"unknown_session": 1}
+    assert summary["claude_session_scratch"]["would_remove"] == 0
+    receipt_files = list(receipts.glob("*.json"))
+    assert len(receipt_files) == 1
+    receipt = json.loads(receipt_files[0].read_text())
+    assert receipt["claude_session_scratch"]["entries"][0]["reason"] == "unreadable_lease_RecursionError"
+    assert (session / "payload").read_bytes() == b"keep"
+
+
 def _git(cwd: Path, *args: str) -> str:
     env = {
         key: value
