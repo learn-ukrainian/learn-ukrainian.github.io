@@ -674,7 +674,8 @@ def test_stressed_homonym_key_binds_its_row_even_against_kaikki():
         ("коса", "braid"),
         ("сім'я", "family"),
         ("зв'язок", "connection"),
-        ("привіт", "regards"),
+        # The request meaning: ULIF lists привіт (фам.) among greetings on meeting.
+        ("привіт", "hi"),
         ("грати", "to act"),
         ("свято", "festival"),
         ("дзюрчати", "to purl"),
