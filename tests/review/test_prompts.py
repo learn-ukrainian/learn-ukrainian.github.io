@@ -2255,7 +2255,7 @@ def test_review_prompt_requires_full_context_and_ledgered_claims_without_new_sch
     assert "do not add a field or verdict dimension" in text
 
 
-AGY_PLAN_TOOL_GUIDANCE = """### AGY tool use (full and isolated access)
+AGY_TOOL_GUIDANCE = """### AGY tool use (full and isolated access)
 
 On AGY, use the built-in file-reading and search tools for permitted file
 context, and the listed Sources MCP tools for ledgered evidence. Do not invoke
@@ -2270,12 +2270,19 @@ guidance does not broaden isolated access beyond the manifest's permitted inputs
 
 
 @pytest.mark.parametrize("access", ["full", "isolated"])
-def test_agy_plan_prompt_uses_native_readers_without_command_requests(tmp_path, monkeypatch, access):
+@pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
+def test_agy_prompt_uses_native_readers_without_command_requests(tmp_path, monkeypatch, access, kind):
     from scripts.review.prompts.render import render
 
-    path, _, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    if kind == "plan":
+        path, _, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    elif kind == "rereview":
+        path, _ = _write_rereview(tmp_path, monkeypatch)
+    else:
+        path, _, _ = _setup_lesson_fixture(tmp_path, monkeypatch)
     rendered = render(
         path,
+        template_name="lesson-rereview" if kind == "rereview" else None,
         repo_root=tmp_path,
         review_id=TEST_REVIEW_ID,
         attempt_id=TEST_ATTEMPT_ID,
@@ -2283,8 +2290,8 @@ def test_agy_plan_prompt_uses_native_readers_without_command_requests(tmp_path, 
     )
     # Guidance must be instructions, outside the fenced, untrusted manifest data,
     # and included in the attested render rather than appended by the adapter.
-    assert rendered.template_text.count(AGY_PLAN_TOOL_GUIDANCE) == 1
-    assert rendered.prompt.index(AGY_PLAN_TOOL_GUIDANCE) < rendered.prompt.index("## 5. Fenced Manifest Inputs")
+    assert rendered.template_text.count(AGY_TOOL_GUIDANCE) == 1
+    assert rendered.prompt.index(AGY_TOOL_GUIDANCE) < rendered.prompt.index("Fenced Manifest Inputs")
     assert rendered.prompt_sha256 == hashlib.sha256(rendered.prompt.encode()).hexdigest()
     assert "its git history" not in rendered.prompt
     assert "verify_words" in rendered.prompt
@@ -2294,13 +2301,105 @@ def test_agy_plan_prompt_uses_native_readers_without_command_requests(tmp_path, 
     else:
         assert "Full access and evidence duty" not in rendered.prompt
         assert "search_resources" not in rendered.prompt
-    checked = check_prompt(rendered.prompt, path, repo_root=tmp_path, review_access=access)
+    checked = check_prompt(
+        rendered.prompt,
+        path,
+        repo_root=tmp_path,
+        template_name="lesson-rereview" if kind == "rereview" else None,
+        review_access=access,
+    )
     assert checked.passed, checked.errors
+
+
+@pytest.mark.parametrize("reply_kind", ["placeholder", "wrong-hash", "invalid-return"])
+def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, capsys, reply_kind):
+    """Execute the documented canary with a synthetic fenced reply, never a provider call (#9625)."""
+    import sys
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime import review_mcp, runner
+    from scripts.review import record
+    from scripts.review import validate as review_validator
+    from scripts.review.receipts.ledger import create_empty_ledger
+    from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _record, _review
+
+    path, _, digest = _setup_plan_fixture(tmp_path, monkeypatch)
+    events = []
+    original_attested_return = record.attested_return
+    original_validate = review_validator.validate_review
+
+    def prepare(review_id, attempt_id, manifest_path, harness, *, receipts_root, review_access):
+        ledger = receipts_root / "synthetic.jsonl"
+        create_empty_ledger(ledger)
+        _record(ledger, manifest=digest, result="synthetic evidence", review_id=review_id, attempt_id=attempt_id)
+        return SimpleNamespace(
+            adapter_options={"review_access": review_access},
+            review_id=review_id,
+            attempt_id=attempt_id,
+            manifest_sha256=digest,
+            ledger_path=ledger,
+        )
+
+    def invoke(harness, prompt, **kwargs):
+        assert harness == "agy"
+        assert kwargs["hard_timeout"] == 900
+        assert kwargs["stall_timeout"] == 60
+        assert "agy_required_permissions" not in kwargs["tool_config"]
+        events.append(("invoke", hashlib.sha256(prompt.encode()).hexdigest()))
+        reply = _review(
+            kind="plan",
+            manifest_hash=digest,
+            checks={name: "clean" for name in PLAN_CHECKS},
+            findings=[],
+            review_id="canary-9625",
+            attempt_id="plan-template",
+        )
+        reply["reviewer"]["prompt_sha256"] = "PLACEHOLDER" if reply_kind != "wrong-hash" else "00" * 32
+        if reply_kind == "invalid-return":
+            del reply["checks"]
+        text = yaml.safe_dump(reply, sort_keys=False).replace(
+            "prompt_sha256: PLACEHOLDER", 'prompt_sha256: "<prompt_sha256>"'
+        )
+        return SimpleNamespace(ok=True, response=f"Synthetic reply.\n```yaml\n{text}```\n", stderr_excerpt="")
+
+    def attest(data, **kwargs):
+        recorded = original_attested_return(data, **kwargs)
+        events.append(("record", yaml.safe_load(recorded)["reviewer"]["prompt_sha256"]))
+        return recorded
+
+    def validate(returned, **kwargs):
+        assert events[-1] == ("record", events[0][1])
+        assert yaml.safe_load(returned.read_bytes())["reviewer"]["prompt_sha256"] == events[0][1]
+        checked = original_validate(returned, **kwargs)
+        events.append(("validate", checked.ok))
+        return checked
+
+    monkeypatch.setattr(review_mcp, "prepare_review_attempt", prepare)
+    monkeypatch.setattr(runner, "invoke", invoke)
+    monkeypatch.setattr(record, "attested_return", attest)
+    monkeypatch.setattr(review_validator, "validate_review", validate)
+    monkeypatch.setenv("CANARY_INITIATOR", "synthetic-canary")
+    monkeypatch.setattr(sys, "argv", ["-", "plan-template", str(path), str(tmp_path)])
+    runbook = Path(__file__).resolve().parents[2] / "docs/runbooks/agy-review-permissions.md"
+    snippet = runbook.read_text().split("<<'PY'\n", 1)[1].split("\nPY\n", 1)[0]
+    capsys.readouterr()
+    if reply_kind == "placeholder":
+        with pytest.raises(SystemExit) as stopped:
+            exec(compile(snippet, str(runbook), "exec"), {})
+        assert stopped.value.code == 0
+        assert events == [("invoke", events[0][1]), ("record", events[0][1]), ("validate", True)]
+        report = json.loads(capsys.readouterr().out)
+        assert report["return_valid"] and report["successful_receipts"] == 1
+        assert report["prompt_sha256"] == events[0][1]
+    else:
+        with pytest.raises(AssertionError):
+            exec(compile(snippet, str(runbook), "exec"), {})
+        assert events[-1] == (("record", "00" * 32) if reply_kind == "wrong-hash" else ("validate", False))
 
 
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kind):
-    """Frozen 1a0207b784 bytes, plus only the explicit #9625 AGY guidance for plans."""
+    """Frozen 1a0207b784 bytes, plus only the explicit #9625 AGY guidance."""
     from scripts.review.prompts.render import render
 
     if kind == "plan":
@@ -2325,10 +2424,9 @@ def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kin
     main = render(path, prompts_dir=baseline, **kw)
     isolated = render(path, **kw)
     expected = main.prompt
-    if kind == "plan":
-        anchor = "## 3. Review Tools and Receipts\n\n"
-        assert expected.count(anchor) == 1
-        expected = expected.replace(anchor, anchor + AGY_PLAN_TOOL_GUIDANCE, 1)
+    anchor = f"## {4 if kind == 'rereview' else 3}. Review Tools and Receipts\n\n"
+    assert expected.count(anchor) == 1
+    expected = expected.replace(anchor, anchor + AGY_TOOL_GUIDANCE, 1)
     assert isolated.prompt.encode() == expected.encode()
     assert "search_resources" not in isolated.prompt
     assert "Full access and evidence duty" not in isolated.prompt

@@ -99,8 +99,10 @@ the checkout's `scripts` import root (for `ai_llm`) and the checkout itself.
 Set `CANARY_INITIATOR` to the driver's own trusted Source identity.
 Use a public fixture whose first non-empty plan line is suitable for an output
 comparison; never use private text. These are real provider calls, reserved for
-the accountable driver. Each call has a 180-second hard timeout, and a failure
-ends that canary without a retry or provider substitution.
+the accountable driver. The forced-reader routes have a 180-second hard
+timeout; `plan-template` has a 900-second limit for the full production prompt
+and its evidence checks. A failure ends that canary without a retry or provider
+substitution.
 
 Define the function once, then run the exact command for each route:
 
@@ -111,6 +113,7 @@ CANARY_INPUT_ROOT="${CANARY_INPUT_ROOT:-$CANARY_CHECKOUT}"
 agy_review_canary() {
   PYTHONPATH="$CANARY_CHECKOUT/scripts:$CANARY_CHECKOUT" \
     "$PROJECT_PYTHON" - "$1" "$CANARY_MANIFEST" "$CANARY_INPUT_ROOT" <<'PY'
+import hashlib
 import json
 import os
 import shlex
@@ -124,6 +127,7 @@ from scripts.agent_runtime.runner import invoke
 from scripts.agent_runtime.review_mcp import prepare_review_attempt
 from scripts.review.prompts.render import render_prompt
 from scripts.review.receipts.ledger import records
+from scripts.review.record import attested_return
 from scripts.review.validate import validate_review
 
 route, manifest_arg, root_arg = sys.argv[1:]
@@ -160,15 +164,37 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
         tc["agy_required_permissions"] = ["command(cat)", "mcp(sources/verify_words)"]
     if route == "ad-hoc":
         tc.pop("review_access")  # Legacy/ad hoc callers use the isolated default.
+    task_id = f"canary-9625-{route}"
     result = invoke(
         "agy", prompt, mode="read-only", cwd=root, model="gemini-3.8-flash-high",
-        effort="high", task_id=f"canary-9625-{route}", tool_config=tc,
-        initiator=os.environ["CANARY_INITIATOR"], hard_timeout=180, stall_timeout=60, entrypoint="runtime",
+        effort="high", task_id=task_id, tool_config=tc,
+        initiator=os.environ["CANARY_INITIATOR"],
+        hard_timeout=900 if route == "plan-template" else 180, stall_timeout=60, entrypoint="runtime",
     )
     assert result.ok, result.stderr_excerpt
     if route == "plan-template":
+        # Temporary canary binding only; use the same recorder as production's
+        # record_return, including saved-return and fresh-render hash checks.
+        tasks = Path(temp) / "tasks"
+        tasks.mkdir()
+        raw = result.response.encode("utf-8")
+        saved = tasks / f"{task_id}.result"
+        saved.write_bytes(raw)
+        (tasks / f"{task_id}.json").write_text(json.dumps({
+            "status": "done", "result_file": str(saved),
+            "result_sha256": hashlib.sha256(raw).hexdigest(),
+            "prompt_sha256": prompt_sha, "review_access": access,
+            "review_attempt": {"review_id": prepared.review_id,
+                               "attempt_id": prepared.attempt_id,
+                               "manifest_sha256": prepared.manifest_sha256},
+        }))
         returned = Path(temp) / "plan-review.yaml"
-        returned.write_text(result.response)
+        returned.write_bytes(attested_return(
+            raw, task_id=task_id, tasks_dir=tasks, manifest_path=manifest,
+            root=root, review_id=prepared.review_id, attempt_id=prepared.attempt_id,
+            manifest_sha256=prepared.manifest_sha256,
+        ))
+        assert yaml.safe_load(returned.read_bytes())["reviewer"]["prompt_sha256"] == prompt_sha
         checked = validate_review(
             returned, manifest_path=manifest, ledger_path=prepared.ledger_path,
             repo_root=root, review_access=access,
@@ -204,7 +230,10 @@ inspection of the one-sentence review and command result. Exit zero or the final
 marker alone is insufficient. Confirm the transcript contains the requested
 `cat` invocation and a successful result, and no permission auto-denial. Keep
 any full transcript local. For `agy_review_canary plan-template`, the actual
-`plan-review.md.j2` return must pass `validate_review`, contain successful
+`plan-review.md.j2` return must go through production's `attested_return`
+recorder before `validate_review`: extraction removes the outer fence and the
+bound recorder replaces the prompt-hash placeholder. The recorded hash must
+equal the rendered prompt's SHA-256. The return must contain successful
 Sources receipts, and match the driver’s independently established expected
 judgment and evidence for the pinned plan. A schema-valid verdict alone is
 insufficient; record prompt hash, reviewed head, receipt identities and semantic
