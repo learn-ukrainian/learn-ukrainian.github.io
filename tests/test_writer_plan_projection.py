@@ -8,13 +8,19 @@ import pytest
 import yaml
 
 from scripts.build import linear_pipeline
+from scripts.build.alphabet_modules import ALPHABET_SLUGS
 from tests.test_writer_prompt_render_size import _checkout_text, _pin_a1_letter_prompt_inputs
 
 pytestmark = pytest.mark.reads_content
 
 EDITORIAL_KEYS = {
-    "plan_fixes", "changelog", "review_notes", "reviewed_by", "reviewed_at",
-    "lifecycle", "version",
+    "plan_fixes",
+    "changelog",
+    "review_notes",
+    "reviewed_by",
+    "reviewed_at",
+    "lifecycle",
+    "version",
 }
 
 
@@ -30,7 +36,8 @@ def test_projection_omits_only_named_keys_and_preserves_unknown_data():
     raw = yaml.safe_dump(plan, sort_keys=False)
 
     rendered = linear_pipeline._writer_plan_content_for_prompt(
-        plan, raw,
+        plan,
+        raw,
     )
 
     assert yaml.safe_load(rendered) == {key: value for key, value in plan.items() if key not in EDITORIAL_KEYS}
@@ -38,9 +45,13 @@ def test_projection_omits_only_named_keys_and_preserves_unknown_data():
     assert EDITORIAL_KEYS == linear_pipeline.WRITER_PLAN_OMIT_KEYS
 
 
-@pytest.mark.parametrize("writer,use_generator", [
-    ("claude-tools", False), ("claude-tools", True),
-])
+@pytest.mark.parametrize(
+    "writer,use_generator",
+    [
+        ("claude-tools", False),
+        ("claude-tools", True),
+    ],
+)
 def test_projection_is_writer_only_and_keeps_both_reference_renderings(monkeypatch, tmp_path, writer, use_generator):
     _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
     plan_path = linear_pipeline.plan_path_for("a1", "sounds-letters-and-hello")
@@ -51,8 +62,12 @@ def test_projection_is_writer_only_and_keeps_both_reference_renderings(monkeypat
     manifest = {"slug": plan["slug"], "sequence_steps": [], "l2_errors": []}
 
     prompt = linear_pipeline.render_writer_prompt(
-        plan=plan, plan_content=raw, knowledge_packet=packet, wiki_manifest=manifest,
-        writer=writer, use_generator=use_generator,
+        plan=plan,
+        plan_content=raw,
+        knowledge_packet=packet,
+        wiki_manifest=manifest,
+        writer=writer,
+        use_generator=use_generator,
     )
     block = prompt.split("\n## Plan\n", 1)[1].split("```yaml\n", 1)[1].split("\n```", 1)[0]
     projected = yaml.safe_load(block)
@@ -79,7 +94,9 @@ def test_grok_writer_uses_the_same_plan_projection(monkeypatch, tmp_path):
     plan = linear_pipeline.plan_check(linear_pipeline.plan_path_for("a1", "sounds-letters-and-hello"))
     packet = linear_pipeline.build_knowledge_packet(plan=plan)
     prompt = linear_pipeline.render_writer_prompt(
-        plan=plan, plan_content=yaml.safe_dump(plan), knowledge_packet=packet,
+        plan=plan,
+        plan_content=yaml.safe_dump(plan),
+        knowledge_packet=packet,
         wiki_manifest={"slug": plan["slug"], "sequence_steps": [], "l2_errors": []},
         writer="grok-tools",
     )
@@ -95,7 +112,9 @@ def test_writer_context_keeps_references_without_separate_block(monkeypatch, tmp
     _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
     plan = linear_pipeline.plan_check(linear_pipeline.plan_path_for("a1", "sounds-letters-and-hello"))
     context = linear_pipeline.writer_context(
-        plan, yaml.safe_dump(plan), "Knowledge packet without a reference block.",
+        plan,
+        yaml.safe_dump(plan),
+        "Knowledge packet without a reference block.",
         {"slug": plan["slug"], "sequence_steps": [], "l2_errors": []},
     )
 
@@ -117,43 +136,48 @@ def test_writer_context_keeps_raw_comments_and_all_reference_fields(monkeypatch,
     plan = yaml.safe_load(raw)
     plan["references"][0]["corpus_missing"] = True
     context = linear_pipeline.writer_context(
-        plan, raw, packet,
+        plan,
+        raw,
+        packet,
         {"slug": plan["slug"], "sequence_steps": [], "l2_errors": []},
     )
 
     assert context["PLAN_CONTENT"] == raw
 
 
-@pytest.mark.parametrize("raw,expected", [
-    (
-        "version: 2\n  # editorial comment\n# writer instruction\nslug: fixture\n",
-        "# writer instruction\nslug: fixture\n",
-    ),
-    ("slug: fixture\nreview_notes: old", "slug: fixture\n"),
-    ("# history\nversion: 2\nslug: fixture\n", "slug: fixture\n"),
-    (
-        "---\r\nslug: fixture\r\n'version': 2\r\n# writer\r\n\"references\": []\r\n...\r\n",
-        "---\r\nslug: fixture\r\n# writer\r\n\"references\": []\r\n...\r\n",
-    ),
-    (
-        "slug: fixture\ncontent: |+\n  version: teaching text\n  # literal comment\n\n"
-        "version: |\n  slug: editorial text\n# next key instruction\nreferences: []\n",
-        "slug: fixture\ncontent: |+\n  version: teaching text\n  # literal comment\n\n"
-        "# next key instruction\nreferences: []\n",
-    ),
-    (
-        "slug: fixture\ncontent: \"first\nversion: retained inside a string\nlast\"\n"
-        "version: 'old\n# part of the omitted string'\n# real writer comment\nreferences: []\n",
-        "slug: fixture\ncontent: \"first\nversion: retained inside a string\nlast\"\n"
-        "# real writer comment\nreferences: []\n",
-    ),
-    (
-        "---\nversion: 1\nslug: first\n...\n---\nslug: second\nreview_notes: old\n...\n",
-        "---\nslug: first\n...\n---\nslug: second\n...\n",
-    ),
-    ("slug: fixture\r\nreferences: []", "slug: fixture\r\nreferences: []"),
-    ("version: 1\nreview_notes: old\n", ""),
-])
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        (
+            "version: 2\n  # editorial comment\n# writer instruction\nslug: fixture\n",
+            "# writer instruction\nslug: fixture\n",
+        ),
+        ("slug: fixture\nreview_notes: old", "slug: fixture\n"),
+        ("# history\nversion: 2\nslug: fixture\n", "slug: fixture\n"),
+        (
+            "---\r\nslug: fixture\r\n'version': 2\r\n# writer\r\n\"references\": []\r\n...\r\n",
+            '---\r\nslug: fixture\r\n# writer\r\n"references": []\r\n...\r\n',
+        ),
+        (
+            "slug: fixture\ncontent: |+\n  version: teaching text\n  # literal comment\n\n"
+            "version: |\n  slug: editorial text\n# next key instruction\nreferences: []\n",
+            "slug: fixture\ncontent: |+\n  version: teaching text\n  # literal comment\n\n"
+            "# next key instruction\nreferences: []\n",
+        ),
+        (
+            'slug: fixture\ncontent: "first\nversion: retained inside a string\nlast"\n'
+            "version: 'old\n# part of the omitted string'\n# real writer comment\nreferences: []\n",
+            'slug: fixture\ncontent: "first\nversion: retained inside a string\nlast"\n'
+            "# real writer comment\nreferences: []\n",
+        ),
+        (
+            "---\nversion: 1\nslug: first\n...\n---\nslug: second\nreview_notes: old\n...\n",
+            "---\nslug: first\n...\n---\nslug: second\n...\n",
+        ),
+        ("slug: fixture\r\nreferences: []", "slug: fixture\r\nreferences: []"),
+        ("version: 1\nreview_notes: old\n", ""),
+    ],
+)
 def test_raw_projection_preserves_every_retained_byte(raw, expected):
     assert linear_pipeline._omit_writer_plan_blocks(raw) == expected
 
@@ -179,11 +203,19 @@ def _raw_plan_without_editorial_blocks(raw):
     return "".join(line for index, line in enumerate(lines) if index not in omitted_lines)
 
 
-@pytest.mark.parametrize("relative_path", [
-    "a1/colors.yaml", "a1/this-and-that.yaml", "a1/things-have-gender.yaml", "a1/my-morning.yaml",
-    "a2/nature-and-traditions.yaml", "b1/participle-phrases.yaml",
-    "b2/passive-voice-system.yaml", "folk/bylyny-kyivskoho-tsyklu.yaml",
-])
+@pytest.mark.parametrize(
+    "relative_path",
+    [
+        "a1/colors.yaml",
+        "a1/this-and-that.yaml",
+        "a1/things-have-gender.yaml",
+        "a1/my-morning.yaml",
+        "a2/nature-and-traditions.yaml",
+        "b1/participle-phrases.yaml",
+        "b2/passive-voice-system.yaml",
+        "folk/bylyny-kyivskoho-tsyklu.yaml",
+    ],
+)
 def test_real_plan_projection_preserves_comments_and_reference_shapes(relative_path):
     raw = _checkout_text(f"curriculum/l2-uk-en/plans/{relative_path}")
     plan = yaml.safe_load(raw)
@@ -218,11 +250,77 @@ def test_alphabet_projection_keeps_existing_filter_and_dump_path(monkeypatch, tm
     }
 
 
-def test_every_plan_projection_is_exact_raw_block_subtraction():
+def _plan_paths():
     root = Path("curriculum/l2-uk-en/plans")
     paths = sorted(root.rglob("*.yaml"))
     if not paths:
         pytest.skip("Plan tree is absent in this sparse worktree; real-corpus property check unavailable.")
+    return paths
+
+
+def _representative_plan_paths(paths):
+    """Cover every alphabet/legacy plan, directory and editorial key by rule.
+
+    Use the first sorted path per directory and top-level editorial key, plus
+    every alphabet plan and every plan changed by legacy normalization. A fast
+    YAML loader inventories the whole tree; only selected plans run the costly
+    projection and independent byte oracle.
+    """
+    safe_loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+    seen_directories = set()
+    seen_keys = set()
+    selected = []
+    for path in sorted(paths):
+        plan = yaml.load(path.read_bytes().decode("utf-8"), Loader=safe_loader)
+        editorial_keys = EDITORIAL_KEYS & plan.keys()
+        normalized = deepcopy(plan)
+        linear_pipeline._normalize_legacy_plan_shape(normalized)
+        if (
+            path.parent not in seen_directories
+            or editorial_keys - seen_keys
+            or linear_pipeline.is_alphabet_slug(plan.get("slug"))
+            or normalized != plan
+        ):
+            selected.append(path)
+        seen_directories.add(path.parent)
+        seen_keys.update(editorial_keys)
+    return selected
+
+
+def test_representative_selection_covers_branches_directories_and_editorial_keys(tmp_path):
+    plans = {
+        "a1/00-first.yaml": {"slug": "ordinary", "level": "A1"},
+        "a1/01-redundant.yaml": {"slug": "ordinary", "level": "A1"},
+        "a2/00-first.yaml": {"slug": "ordinary", "level": "A2"},
+        # Nested keys must not substitute for top-level editorial coverage.
+        "a1/02-nested.yaml": {"slug": "ordinary", "teaching": dict.fromkeys(EDITORIAL_KEYS, "keep")},
+        "b2/00-first.yaml": {"slug": "ordinary", "level": "B2"},
+        "b2/01-legacy.yaml": {"slug": "legacy", "level": "B2", "references": ["Legacy source"]},
+        "b2/02-legacy.yaml": {
+            "slug": "legacy",
+            "level": "B2",
+            "content_outline": [{"section": "Legacy", "subsections": ["Keep this point."]}],
+        },
+    }
+    for slug in sorted(ALPHABET_SLUGS):
+        plans[f"a1/alphabet-{slug}.yaml"] = {"slug": slug, "level": "A1"}
+    for key in sorted(EDITORIAL_KEYS):
+        plans[f"a1/editorial-{key}.yaml"] = {"slug": "ordinary", key: "editorial"}
+    paths = []
+    for name, plan in plans.items():
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(yaml.safe_dump(plan), encoding="utf-8")
+        paths.append(path)
+
+    selected = _representative_plan_paths(reversed(paths))
+
+    expected = sorted(path for path in paths if path.name not in {"01-redundant.yaml", "02-nested.yaml"})
+    assert selected == expected
+    assert _representative_plan_paths(paths) == selected
+
+
+def _assert_plan_projections_are_exact_raw_block_subtraction(paths):
     safe_loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
     for path in paths:
         raw = path.read_bytes().decode("utf-8")
@@ -239,4 +337,33 @@ def test_every_plan_projection_is_exact_raw_block_subtraction():
         assert yaml.load(projected, Loader=safe_loader) == {
             key: value for key, value in raw_plan.items() if key not in EDITORIAL_KEYS
         }, path
+
+
+def test_representative_plan_projection_is_exact_raw_block_subtraction():
+    paths = _plan_paths()
+    selected = _representative_plan_paths(paths)
+    _assert_plan_projections_are_exact_raw_block_subtraction(selected)
+    print(f"Plan subset checked: {len(selected)} of {len(paths)} plans; exact raw block subtraction.")
+
+
+@pytest.mark.slow
+def test_every_plan_projection_is_exact_raw_block_subtraction():
+    paths = _plan_paths()
+    _assert_plan_projections_are_exact_raw_block_subtraction(paths)
     print(f"Plan corpus checked: {len(paths)} plans; exact raw block subtraction.")
+
+
+@pytest.mark.parametrize(
+    "check",
+    [
+        test_representative_plan_projection_is_exact_raw_block_subtraction,
+        test_every_plan_projection_is_exact_raw_block_subtraction,
+    ],
+)
+def test_corpus_checks_skip_when_plan_tree_is_absent(monkeypatch, tmp_path, check):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(
+        pytest.skip.Exception,
+        match=r"^Plan tree is absent in this sparse worktree; real-corpus property check unavailable\.$",
+    ):
+        check()
