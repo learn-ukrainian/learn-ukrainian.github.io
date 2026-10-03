@@ -16,6 +16,23 @@ from jsonschema import Draft202012Validator
 PDF_SHA256 = "5ea396063526800ebe095d0e8dc99477caf56964bf0ecbe13f14995c750e1555"
 NOTATION_PATH = Path(__file__).with_name("pohribnyi_notation.json")
 CACHE_DIR = Path(".cache/pohribnyi")
+CANONICAL_MARK_ORDER = [
+    "U+032D", "U+0306",  # Breve is intrinsic to the precomposed base.
+    "U+A675", "U+2DF7", "U+A677", "U+2DEA", "U+1E08F",
+    "U+1ABB", "U+1ABC", "U+0301", "U+0300", "U+0358", "U+0361",
+]
+APPROXIMATION = dict(zip("ꙵⷷꙷⷪ\U0001e08f", "иеуоі", strict=True))
+DEGREE = {"\u1abb": 1, "\u1abc": 2}
+STRESS = {"\u0301": "primary", "\u0300": "secondary"}
+SOFTNESS = {"ʹ": "soft", "ʼ": "half_soft"}
+SEPARATORS = set(" ,;‐–")
+RAISED = {
+    "\U0001e034": "д", "\U0001e037": "з", "\U0001e044": "ц",
+    "\U0001e036": "ж", "\U0001e046": "ш", "\U0001e045": "ч", "\U0001e040": "т",
+}
+FROZEN_SYMBOL_POINTS = set(CANONICAL_MARK_ORDER) | {
+    f"U+{ord(c):04X}" for c in set(RAISED) | SEPARATORS | set("ʹʼːўґыйѐѝ")
+}
 
 
 def load_notation(path: Path = NOTATION_PATH) -> dict:
@@ -30,6 +47,10 @@ def validate_notation(table: dict) -> None:
     schema = json.loads(NOTATION_PATH.with_suffix(".schema.json").read_text(encoding="utf-8"))
     if not Draft202012Validator(schema).is_valid(table):
         raise ValueError("Invalid notation table schema")
+    if tuple(map(int, unicodedata.unidata_version.split("."))) < (15, 0, 0):
+        raise ValueError("Frozen notation requires Unicode 15.0 or later")
+    if (table["status"] == "provisional") != table["provisional"]:
+        raise ValueError("Notation status and provisional flag disagree")
     letters = table["letters"]
     if (
         any("CYRILLIC" not in unicodedata.name(c, "") for c in letters)
@@ -46,6 +67,18 @@ def validate_notation(table: dict) -> None:
             raise ValueError("Invalid or duplicate codepoint")
         if "LATIN" in unicodedata.name(chr(number), ""):
             raise ValueError("Latin symbol in notation table")
+        char = chr(number)
+        if unicodedata.category(char) == "Cn":
+            raise ValueError("Unassigned codepoint in notation table")
+        if (symbol["glyph"] != char or symbol["unicode_name"] != unicodedata.name(char)
+                or symbol["combining_class"] != unicodedata.combining(char)):
+            raise ValueError("Notation symbol Unicode metadata mismatch")
+        if char in APPROXIMATION and symbol.get("letter") != APPROXIMATION[char]:
+            raise ValueError("Approximation letter mapping mismatch")
+        if (char in RAISED or role.startswith("raised_")) and (
+            char not in RAISED or symbol.get("letter") != RAISED[char] or not role.startswith("raised_")
+        ):
+            raise ValueError("Raised letter mapping mismatch")
         if not table["provisional"] and symbol["provisional"]:
             raise ValueError("Frozen table contains provisional symbols")
         roles.add(role)
@@ -54,11 +87,15 @@ def validate_notation(table: dict) -> None:
         table.get("pending_classes") != [] or len(set(table.get("freeze_reviewers", []))) < 2
     ):
         raise ValueError("Frozen notation needs two reviewers and no pending classes")
+    if not table["provisional"] and points != FROZEN_SYMBOL_POINTS:
+        raise ValueError("Frozen symbol inventory differs from driver reconciliation")
 
     marks = {point for point in points if unicodedata.combining(chr(int(point[2:], 16)))}
     if set(table["combining_mark_order"]) != marks:
         raise ValueError("Combining mark order must list every combining symbol exactly once")
-    allowed = set(letters) | {chr(int(point[2:], 16)) for point in points}
+    if table["combining_mark_order"] != CANONICAL_MARK_ORDER:
+        raise ValueError("Combining mark order differs from driver reconciliation")
+    allowed = set(unicodedata.normalize("NFD", letters)) | {chr(int(point[2:], 16)) for point in points}
     for char in table["precomposed_letters"]:
         decomposed = unicodedata.normalize("NFD", char)
         if (len(decomposed) < 2 or not set(decomposed) <= allowed
@@ -136,10 +173,139 @@ def bracketed_spans(text: str) -> list[dict]:
     return spans
 
 
+def _parse_transcription(text: str, table: dict) -> list[dict]:
+    """Derive clusters and separators from an already allowlisted bracket span."""
+    raised = {s["glyph"]: s["letter"] for s in table["symbols"] if s["role"].startswith("raised_")}
+    bases = set(table["letters"] + table["precomposed_letters"])
+    groups, index = [], 1
+    end = len(text) - 1
+    while index < end:
+        char = text[index]
+        if char in SEPARATORS:
+            groups.append({"separator": char})
+            index += 1
+            continue
+        if char not in bases:
+            raise ValueError("Expected base letter before notation marks")
+        index += 1
+        # Only accented compositions need decomposing in the derived view;
+        # intrinsic breve/diaeresis stays in the precomposed base (ў, й, ї).
+        decomposed = unicodedata.normalize("NFD", char)
+        accented = any(c in STRESS for c in decomposed[1:])
+        base = unicodedata.normalize("NFC", "".join(c for c in decomposed if c not in STRESS))
+        group = {
+            "base": base if accented else char,
+            "devoicing": False, "approximation_letter": None, "degree": 0,
+            "stress": None, "slight_softening": False, "tie": False,
+            "softness": None, "length": False, "raised_group": [],
+        }
+        marks = [c for c in decomposed[1:] if c in STRESS] if accented else []
+        while index < end and unicodedata.combining(text[index]):
+            marks.append(text[index])
+            index += 1
+        for mark in marks:
+            if mark in APPROXIMATION:
+                key, value = "approximation_letter", APPROXIMATION[mark]
+            elif mark in DEGREE:
+                key, value = "degree", DEGREE[mark]
+            elif mark in STRESS:
+                key, value = "stress", STRESS[mark]
+            elif mark in {"\u032d", "\u0358", "\u0361"}:
+                key = {"\u032d": "devoicing", "\u0358": "slight_softening", "\u0361": "tie"}[mark]
+                value = True
+            else:
+                raise ValueError("Unexpected intrinsic mark after base letter")
+            if group[key]:
+                raise ValueError(f"Duplicate {key} on one base")
+            group[key] = value
+        if group["degree"] and not group["approximation_letter"]:
+            raise ValueError("Approximation degree requires an approximation letter")
+        if index < end and text[index] in SOFTNESS:
+            group["softness"] = SOFTNESS[text[index]]
+            index += 1
+        if index < end and text[index] == "ː":
+            group["length"] = True
+            index += 1
+        while index < end and text[index] in raised:
+            item = {"letter": raised[text[index]], "tie": False, "softness": None}
+            index += 1
+            if index < end and text[index] == "\u0361":
+                item["tie"] = True
+                index += 1
+            if index < end and text[index] in SOFTNESS:
+                item["softness"] = SOFTNESS[text[index]]
+                index += 1
+            group["raised_group"].append(item)
+        if group["tie"] and (index >= end or text[index] not in bases):
+            raise ValueError("Affricate tie requires a following base letter")
+        for pos, item in enumerate(group["raised_group"]):
+            if item["tie"] and pos == len(group["raised_group"]) - 1:
+                raise ValueError("Raised affricate tie requires a following raised letter")
+        groups.append(group)
+    return groups
+
+
+def _serialize_transcription(groups: list[dict], table: dict) -> str:
+    """Serialize the derived fields with canonical ordering and NFC only."""
+    approximation = {v: k for k, v in APPROXIMATION.items()}
+    degree = {v: k for k, v in DEGREE.items()}
+    stress = {v: k for k, v in STRESS.items()}
+    softness = {v: k for k, v in SOFTNESS.items()}
+    raised = {s["letter"]: s["glyph"] for s in table["symbols"] if s["role"].startswith("raised_")}
+    result = ["["]
+    for group in groups:
+        if "separator" in group:
+            result.append(group["separator"])
+            continue
+        result.append(group["base"])
+        if group["devoicing"]:
+            result.append("\u032d")
+        if group["approximation_letter"]:
+            result.append(approximation[group["approximation_letter"]])
+        if group["degree"]:
+            result.append(degree[group["degree"]])
+        if group["stress"]:
+            result.append(stress[group["stress"]])
+        if group["slight_softening"]:
+            result.append("\u0358")
+        if group["tie"]:
+            result.append("\u0361")
+        if group["softness"]:
+            result.append(softness[group["softness"]])
+        if group["length"]:
+            result.append("ː")
+        for item in group["raised_group"]:
+            result.append(raised[item["letter"]])
+            if item["tie"]:
+                result.append("\u0361")
+            if item["softness"]:
+                result.append(softness[item["softness"]])
+    result.append("]")
+    return unicodedata.normalize("NFC", "".join(result))
+
+
+def parse_transcription(text: str, table: dict) -> list[dict]:
+    """Return the lossless structured view of exactly one bracketed transcription."""
+    spans = validate_text(text, table)
+    if len(spans) != 1 or spans[0]["text"] != text:
+        raise ValueError("Expected exactly one bracketed transcription")
+    return _parse_transcription(text, table)
+
+
+def serialize_transcription(groups: list[dict], table: dict) -> str:
+    """Recreate the authoritative string; reject inconsistent structured fields."""
+    text = _serialize_transcription(groups, table)
+    if parse_transcription(text, table) != groups:
+        raise ValueError("Structured transcription does not round-trip")
+    return text
+
+
 def validate_text(text: str, table: dict) -> list[dict]:
     """Reject non-NFC input and Latin/unknown symbols inside bracketed transcriptions."""
     if not isinstance(text, str) or not text.strip():
         raise ValueError("Paragraph text must be nonempty")
+    if any(unicodedata.category(char) == "Cn" for char in text):
+        raise ValueError("Unassigned codepoint in text")
     if unicodedata.normalize("NFC", text) != text:
         raise ValueError("Text is not NFC; normalization must precede offset assignment")
     allowed = set(table["letters"] + table["precomposed_letters"]) | {chr(int(s["codepoint"][2:], 16)) for s in table["symbols"]}
@@ -152,6 +318,9 @@ def validate_text(text: str, table: dict) -> list[dict]:
                 raise ValueError(f"Unknown transcription symbol U+{ord(char):04X}")
     if normalize_transcription(text, table) != text:
         raise ValueError("Noncanonical combining mark order")
+    for span in spans:
+        if _serialize_transcription(_parse_transcription(span["text"], table), table) != span["text"]:
+            raise ValueError("Noncanonical transcription structure")
     return spans
 
 
@@ -319,7 +488,7 @@ def main(argv: list[str] | None = None) -> int:
         "--notation",
         type=Path,
         default=NOTATION_PATH,
-        help="Notation JSON table (default: bundled provisional pohribnyi_notation.json).",
+        help="Notation JSON table (default: bundled frozen pohribnyi_notation.json).",
     )
     sub = parser.add_subparsers(dest="command", required=True)
     render = sub.add_parser("render", help="Render the held 28-page PDF at 300 dpi.")

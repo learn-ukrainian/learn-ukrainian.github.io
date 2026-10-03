@@ -23,25 +23,50 @@
   ```
 
   `pohribnyi_notation.schema.json` defines the notation-table schema;
-  `pohribnyi_notation.json` is **provisional**, with only the plan's starting
-  codepoints and a provisional U+02BC softness mark. Secondary stress, length,
-  devoicing and the complete softening inventory remain pending. It is not an
-  image-verified inventory. Two independent seats must freeze the full table
-  from pp. 4–5 before transcription or ingest. Freezing requires clearing all
-  provisional flags and pending classes and recording both reviewer identities;
-  those fields record a review, and do not prove that the review happened.
-  The validator requires NFC input and the table's fixed mark order (ascending
-  combining class, then `combining_mark_order` for ties). For class 230, breve
-  precedes acute, approximation-i, then approximation-e. This is a notation
-  convention beyond Unicode canonical equivalence ([UAX #15](https://www.unicode.org/reports/tr15/)).
+  `pohribnyi_notation.json` is **frozen** under the #9604 comment headed
+  “E3c step 2: notation inventory reconciled”. The inventory records the
+  GPT-6.1 Sol and Claude Opus 5.5 freeze seats and driver reconciliation,
+  short Ukrainian source quotations, page locators, codepoints and Unicode
+  properties. The key is on pp. 4–5; additions come from pp. 7–24. Symbols
+  without an individual key definition have null quotations and explicit
+  separator/encoding provenance. Freeze metadata records the inventory review;
+  it does not replace independent exact-head implementation review.
+
+  The approximation letters above a vowel are U+A675 (и), U+2DF7 (е),
+  U+A677 (у), U+2DEA (о), and U+1E08F (і). Degree parentheses are U+1ABB
+  or U+1ABC; acute/grave stress is U+0301/U+0300. Devoicing uses U+032D,
+  slight softening U+0358, the affricate tie U+0361, softness U+02B9,
+  half-softness U+02BC, and length U+02D0. Raised off-glides use the seven
+  observed Cyrillic Extended-D modifier letters (д, з, ц, ж, ш, ч, т), with
+  their own tie and softness. Dialect ы remains a base letter. Space, comma,
+  semicolon, compound hyphen U+2010 and separating dash U+2013 are preserved.
+  Line-end breaks belong to layout metadata, never a lexical hyphen.
+
+  Require Unicode 15.0 or later and **NFC only**. NFKC/NFKD erase raised-letter
+  distinctions and must never be used. Accepted modifier-letter strings may
+  differ from their NFKC forms; those forms represent different transcriptions,
+  and the diff must retain the disagreement. The canonical order is:
+  precomposed base → class 220 devoicing → class 230 approximation, degree,
+  stress → class 232 slight softening → class 234 tie → spacing softness,
+  length, raised letters (each with its own softness). Intrinsic breve in ў/й
+  belongs to the base. NFC does not reorder equal-class marks, so the validator
+  enforces the class-230 order separately. See
+  [UAX #15](https://www.unicode.org/reports/tr15/).
+
+  `parse_transcription()` derives base, approximation letter, degree, stress,
+  devoicing, slight softening, tie, softness, length and raised-group fields;
+  separators are separate items. `serialize_transcription()` regenerates the
+  identical NFC string, including ў, й, ѐ, ѝ and canonical marked-base
+  compositions. The string stays authoritative; the structured view is derived.
+  Orphan/duplicate marks, misplaced spacing marks, Latin and unlisted symbols
+  inside brackets, and unassigned codepoints are refused. U+02C8, U+00B7,
+  U+003A, Latin superscript U+2071 and approximation ї U+A676 are rejected
+  alternatives. Underlining is metadata, never inline markup.
+
   The diff normalizes copies before comparison and remaps underlining offsets;
   boundaries splitting a combining sequence are refused. Ingest never silently
-  normalizes text after offsets are assigned. `precomposed_letters` explicitly
-  lists NFC compositions of allowed bases and marks, including U+045C for
-  Cyrillic k plus acute. These are encodings of marked bases, not new phonemes.
-  Latin and unlisted symbols inside brackets are refused. NFC composes
-  U+045E from Cyrillic U+0443 + U+0306; both the combining starter and its
-  NFC letter are represented. Underlining is metadata, never inline markup.
+  normalizes text after offsets are assigned. Uncertain source glyphs listed in
+  the reconciliation remain withheld; the inventory does not adjudicate tokens.
 
   Independent transcription files are JSON arrays of paragraph objects with
   `page` (1-based PDF page, 1–28), `paragraph` (1-based within page), `text`, and
@@ -59,7 +84,7 @@
   (the paragraph array) and `paragraph_counts` (string page keys mapped to the
   complete declared paragraph count for each supplied page). Every row must also
   have `status: "adjudicated"` and a nonempty `adjudicated_by` identity. Ingest
-  rejects the bundled provisional notation, incomplete declared pages, invalid
+  rejects provisional notation overrides, incomplete declared pages, invalid
   text/underlining and conflicting existing clean rows. It is idempotent for an
   identical active packet and never overwrites a conflicting adjudicated row.
   A separate `--census` JSON file maps page strings to independently counted
@@ -69,7 +94,7 @@
 
   ```bash
   .venv/bin/python -m scripts.ingest.pohribnyi_pronunciation_ingest \
-    --adjudicated .cache/final.json --notation .cache/frozen-notation.json \
+    --adjudicated .cache/final.json \
     --census .cache/page-image-census.json --db /path/to/schema-copy.db --dry-run
   ```
 
@@ -89,6 +114,6 @@
   retrieval. Inserts, metadata additions and supersession
   roll back together on failure. Callers of `ingest_adjudicated` own commit/rollback.
   `--force` is refused in adjudicated mode; it belongs to the legacy OCR path.
-  Live ingest, page-image census, inventory freeze,
-  transcriptions, adjudication and custody/register updates belong to later #9604
+  Live ingest, page-image census, transcriptions, adjudication and
+  custody/register updates belong to later #9604
   steps. These tools and synthetic tests do not establish those acceptance criteria.
