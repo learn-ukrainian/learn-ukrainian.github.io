@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
 
+from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
 from scripts.review import record_cf_verdict as recorder
 
 SHA = "a" * 40
@@ -247,6 +249,224 @@ def test_mixed_or_unknown_author_family_refused(monkeypatch, tmp_path):
     monkeypatch.setattr(recorder, "_pages", lambda args: [commit("cursor/task-without-record")])
     with pytest.raises(recorder.RecordError, match="provenance unavailable"):
         recorder.author_families(REPOSITORY, 42, tasks)
+
+
+@pytest.fixture
+def real_commit_set(monkeypatch, tmp_path):
+    """Build Git objects and PR commit listings without mocking the merge proof."""
+    repo = tmp_path / "git-repo"
+    repo.mkdir()
+    monkeypatch.chdir(repo)
+    for key in GIT_REDIRECT_ENV_KEYS:
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", os.devnull)
+    monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
+
+    def git(*args, check=True):
+        return subprocess.run(
+            ["git", *args], cwd=repo, capture_output=True, text=True, check=check, timeout=30
+        )
+
+    def commit(path, content, message):
+        (repo / path).write_text(content)
+        git("add", path)
+        git("commit", "-m", message)
+        return git("rev-parse", "HEAD").stdout.strip()
+
+    def build(case):
+        git("init", "-b", "base")
+        git("config", "user.name", "Fixture Author")
+        git("config", "user.email", "fixture@example.invalid")
+        git("config", "core.hooksPath", os.devnull)
+        root = commit("shared.txt", "original\n", "root\n\nX-Agent: claude/claude-opus-5-5")
+        git("checkout", "-b", "head")
+        conflict = case == "conflict_resolution"
+        author = commit(
+            "shared.txt" if conflict else "head.txt", "authored\n", "work\n\nX-Agent: codex/gpt-6.1-sol"
+        )
+        git("checkout", "base")
+        base = commit(
+            "shared.txt" if conflict else "base.txt", "base fix\n", "base fix\n\nX-Agent: claude/claude-opus-5-5"
+        )
+        git("checkout", "head")
+        if case == "ordinary_untrailered":
+            commit("extra.txt", "unattributed\n", "ordinary commit")
+        elif case == "nonbase_merge":
+            git("checkout", "-b", "other", root)
+            commit("other.txt", "other branch\n", "other work\n\nX-Agent: agy/gemini-3.8-flash-high")
+            git("checkout", "head")
+            git("merge", "--no-ff", "other", "-m", "merge other branch")
+        elif case == "conflict_resolution":
+            assert git("merge", "--no-ff", "base", "-m", "update branch", check=False).returncode == 1
+            commit("shared.txt", "authored resolution\n", "resolved merge")
+        elif case != "all_trailered":
+            git("merge", "--no-ff", "--no-commit", "base")
+            if case == "dirty_merge":
+                commit("extra.txt", "authored during merge\n", "update branch")
+            else:
+                git("commit", "-m", "update branch")
+            tree = git("rev-parse", "HEAD^{tree}").stdout.strip()
+            if case == "reversed_parents":
+                head = git("commit-tree", tree, "-p", base, "-p", author, "-m", "reversed merge").stdout.strip()
+                git("update-ref", "refs/heads/head", head)
+            elif case == "octopus_merge":
+                head = git(
+                    "commit-tree", tree, "-p", author, "-p", base, "-p", root, "-m", "octopus merge"
+                ).stdout.strip()
+                git("update-ref", "refs/heads/head", head)
+            elif case == "older_base_merge":
+                git("checkout", "base")
+                base = commit("later.txt", "later base\n", "later\n\nX-Agent: claude/claude-opus-5-5")
+                git("checkout", "head")
+        head = git("rev-parse", "HEAD").stdout.strip()
+        commits = [
+            {"sha": sha, "commit": {"message": git("show", "--no-patch", "--format=%B", sha).stdout}}
+            for sha in git("rev-list", "--reverse", f"{base}..{head}").stdout.splitlines()
+        ]
+        monkeypatch.setattr(recorder, "_pages", lambda args: commits)
+
+        def base_lookup(args, **kwargs):
+            assert args == ["gh", "pr", "view", "42", "--repo", REPOSITORY, "--json", "baseRefOid"]
+            return {"baseRefOid": base}
+
+        monkeypatch.setattr(recorder, "_run_json", base_lookup)
+        return git, commits, head, base
+
+    return build
+
+
+@pytest.mark.parametrize(
+    "case,accepted",
+    [
+        ("all_trailered", True),
+        ("clean_update_merge", True),
+        ("conflict_resolution", False),
+        ("nonbase_merge", False),
+        ("ordinary_untrailered", False),
+        ("dirty_merge", False),
+        ("reversed_parents", False),
+        ("octopus_merge", False),
+        ("older_base_merge", True),
+    ],
+)
+def test_author_commit_sets_with_real_git(real_commit_set, tmp_path, case, accepted):
+    real_commit_set(case)
+    if accepted:
+        assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"openai"}
+    else:
+        with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+            recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_clean_update_merge_records_exact_head_review(real_commit_set, monkeypatch, tmp_path):
+    _, _, head, base = real_commit_set("clean_update_merge")
+    author_families = recorder.author_families
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
+    write_task(tasks, worktree_base_sha=head, model="claude-opus-5-5", agent="claude")
+    monkeypatch.setattr(recorder, "author_families", author_families)
+    fake_json = recorder._run_json
+
+    def with_base(args, **kwargs):
+        if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid"]:
+            return {"baseRefOid": base}
+        return fake_json(args, **kwargs)
+
+    monkeypatch.setattr(recorder, "_run_json", with_base)
+    monkeypatch.setattr(recorder, "_repo_root", lambda: Path.cwd())
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["head"] == head
+    assert result["verdict"] == "APPROVED"
+    assert calls == {"posts": 1, "statuses": 1}
+    assert f"sha={head}" in comments[0]["body"]
+
+
+@pytest.mark.parametrize("missing", ["commit", "base"])
+def test_clean_merge_missing_objects_refuses(real_commit_set, monkeypatch, tmp_path, missing):
+    _, commits, _, _ = real_commit_set("clean_update_merge")
+    if missing == "commit":
+        commits[-1]["sha"] = "c" * 40
+    else:
+        monkeypatch.setattr(recorder, "_run_json", lambda args: {"baseRefOid": "c" * 40})
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+@pytest.mark.parametrize("base", [None, "main", "", {"sha": SHA}])
+def test_clean_merge_unknown_base_refuses(real_commit_set, monkeypatch, tmp_path, base):
+    real_commit_set("clean_update_merge")
+    monkeypatch.setattr(recorder, "_run_json", lambda args: {"baseRefOid": base})
+    with pytest.raises(recorder.RecordError, match="PR base SHA unavailable"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+@pytest.mark.parametrize("sha", [None, "main", "--help"])
+def test_clean_merge_missing_or_invalid_sha_refuses(real_commit_set, tmp_path, sha):
+    _, commits, _, _ = real_commit_set("clean_update_merge")
+    commits[-1]["sha"] = sha
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+@pytest.mark.parametrize("trailer", ["X-Agent:", "X-Agent: codex/unknown model", "X-Agent: codex/unknown-task"])
+def test_clean_merge_bad_attribution_is_not_exempted(real_commit_set, tmp_path, trailer):
+    _, commits, _, _ = real_commit_set("clean_update_merge")
+    commits[-1]["commit"]["message"] += f"\n{trailer}\n"
+    with pytest.raises(recorder.RecordError):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_clean_merge_still_refuses_same_family_reviewer(real_commit_set, monkeypatch, tmp_path):
+    _, _, head, base = real_commit_set("clean_update_merge")
+    author_families = recorder.author_families
+    tasks, _, calls = setup_record(monkeypatch, tmp_path, head=head)
+    write_task(tasks, worktree_base_sha=head)
+    monkeypatch.setattr(recorder, "author_families", author_families)
+    fake_json = recorder._run_json
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda args, **kwargs: {"baseRefOid": base}
+        if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid"]
+        else fake_json(args, **kwargs),
+    )
+    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("failure", [OSError("Git unavailable"), subprocess.TimeoutExpired("git", 30)])
+def test_clean_merge_git_unavailable_refuses(real_commit_set, monkeypatch, tmp_path, failure):
+    real_commit_set("clean_update_merge")
+
+    def fail(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(recorder.subprocess, "run", fail)
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_only_exempt_merges_prove_no_author_family(real_commit_set, tmp_path):
+    _, commits, _, _ = real_commit_set("clean_update_merge")
+    commits[:] = commits[-1:]
+    with pytest.raises(recorder.RecordError, match="no attributed author commits"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_git_replace_cannot_hide_authored_merge_changes(real_commit_set, tmp_path):
+    git, _, head, base = real_commit_set("dirty_merge")
+    parents = git("show", "--no-patch", "--format=%P", head).stdout.split()
+    clean_tree = git("merge-tree", "--write-tree", *parents).stdout.strip()
+    clean = git("commit-tree", clean_tree, "-p", parents[0], "-p", parents[1], "-m", "clean").stdout.strip()
+    git("replace", head, clean)
+    assert not recorder._is_clean_base_merge(head, base)
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+@pytest.mark.parametrize("commit,base", [("head", SHA), (SHA, "base")])
+def test_clean_merge_proof_requires_literal_shas(commit, base):
+    assert not recorder._is_clean_base_merge(commit, base)
 
 
 @pytest.mark.parametrize(

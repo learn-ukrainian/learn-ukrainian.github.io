@@ -107,17 +107,70 @@ def _hot_or_archived(task_root: Path, name: str) -> Path:
     return archived if not hot.exists() and archived.exists() else hot
 
 
+def _is_clean_base_merge(commit_sha: str, base_sha: str) -> bool:
+    """Exempt only a two-parent base merge whose tree Git reproduces without conflicts."""
+    if not SHA.fullmatch(commit_sha) or not SHA.fullmatch(base_sha):
+        return False
+    git = ["git", "--no-replace-objects"]
+    try:
+        commit = subprocess.run(
+            [*git, "show", "--no-patch", "--format=%T%n%P", commit_sha],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
+        lines = commit.stdout.strip().splitlines()
+        if len(lines) != 2 or not SHA.fullmatch(lines[0]):
+            return False
+        tree = lines[0]
+        parents = lines[1].split()
+        if len(parents) != 2 or not all(SHA.fullmatch(parent) for parent in parents):
+            return False
+        subprocess.run(
+            [*git, "merge-base", "--is-ancestor", parents[1], base_sha],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
+        merged = subprocess.run(
+            [*git, "merge-tree", "--write-tree", "--no-messages", *parents],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError, UnicodeError):
+        # Missing objects, conflicts, unsupported Git, and timeouts prove no exemption.
+        return False
+    return merged.stdout.strip() == tree
+
+
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
-    """Resolve every base..head commit from explicit model attribution, fail closed."""
+    """Resolve authored commits; exempt only Git-proven clean base merges, fail closed."""
     commits = _pages(Request("read-commits", repo=repository, number=pr_number))
     if not commits:
         raise RecordError("PR commit set unavailable")
     families = set()
+    base_sha = None
     for entry in commits:
         message = (entry.get("commit") or {}).get("message")
         if not isinstance(message, str):
             raise RecordError("commit message unavailable")
         trailers = re.findall(r"(?m)^X-Agent:\s*([^\s]+)\s*$", message)
+        if not trailers and not re.search(r"(?m)^X-Agent:", message):
+            commit_sha = entry.get("sha")
+            if isinstance(commit_sha, str) and SHA.fullmatch(commit_sha):
+                if base_sha is None:
+                    pr = _run_json(
+                        ["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid"]
+                    )
+                    base_sha = pr.get("baseRefOid") if isinstance(pr, dict) else None
+                    if not isinstance(base_sha, str) or not SHA.fullmatch(base_sha):
+                        raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
+                if _is_clean_base_merge(commit_sha, base_sha):
+                    continue
         if len(trailers) != 1 or "/" not in trailers[0]:
             raise RecordError("author model unknown: missing explicit X-Agent model trailer")
         harness, model = trailers[0].split("/", 1)
@@ -159,6 +212,8 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         if family == CURSOR_AUTO_UNION_FAMILY:
             raise RecordError("author family mixed or unknown")
         families.add(family)
+    if not families:
+        raise RecordError("PR has no attributed author commits")
     return families
 
 
