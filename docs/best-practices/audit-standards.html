@@ -146,7 +146,7 @@ Review Gate (LLM — informational only)
 MDX Gate (deterministic)
 └── 7. MDX generation         — always last, always succeeds if content passes
 </code></pre>
-<p><strong>Shippable = all content gates PASS + review ≥ 8/10.</strong> The review gate is enforced by the module dashboard (<code>scripts/module_dashboard.py</code>), not by the automated audit.</p>
+<p><strong>Shippable = all content gates PASS + review ≥ 8/10.</strong> The review gate is not enforced by the automated audit; per-track review state is read from <code>GET /api/state/track-health/{track}</code> (<code>final_review</code>, <code>attention</code>).</p>
 <hr />
 <h2>Review Lifecycle (#970)</h2>
 <h3>Artifacts</h3>
@@ -154,7 +154,7 @@ MDX Gate (deterministic)
 <li><strong>Review findings</strong> → <code>orchestration/{slug}/review-*.md</code> (raw outputs, prompts, results)</li>
 <li><strong>Friction log</strong> → <code>orchestration/{slug}/friction.yaml</code> (curated learnings that survive rebuilds)</li>
 <li><strong>Global friction</strong> → <code>docs/rules/global-friction.yaml</code> (project-wide linguistic constraints)</li>
-<li><strong>Dashboard</strong> → <code>scripts/module_dashboard.py</code> (aggregated view of all modules)</li>
+<li><strong>Track health</strong> → <code>GET /api/state/track-health/{track}</code> (aggregated build, audit, and review view)</li>
 </ul>
 <h3>Friction logs</h3>
 <p>Friction files use YAML with <code>id</code>, <code>status</code> (active/resolved), <code>type</code>, <code>description</code>.
@@ -164,10 +164,8 @@ When a friction is fixed (in code or templates), set <code>status: resolved</cod
 Module frictions are specific to one module (e.g., &quot;M02: сір is not a word&quot;).</p>
 <h3>No more GH review tickets</h3>
 <p>The pipeline no longer auto-creates GH issues for review passes. Review artifacts live in orchestration folders. GH issues are for work items only.</p>
-<h3>Dashboard</h3>
-<pre><code class="language-bash">.venv/bin/python scripts/module_dashboard.py a1           # all A1 modules
-.venv/bin/python scripts/module_dashboard.py a1 --first 6  # first 6 only
-.venv/bin/python scripts/module_dashboard.py a1 --failing-only
+<h3>Track health</h3>
+<pre><code class="language-bash">curl -s http://localhost:8765/api/state/track-health/a1 | python3 -m json.tool
 </code></pre>
 <hr />
 <h2>Word Count Gate</h2>
