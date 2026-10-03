@@ -345,6 +345,48 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 except OSError:
                     pass
 
+        has_submodules = (source / ".gitmodules").is_file()
+        if not has_submodules:
+            modules_dirs: list[Path] = []
+            if dot_git.is_dir():
+                modules_dirs.append(dot_git / "modules")
+            elif dot_git.is_file():
+                with contextlib.suppress(OSError):
+                    gitdir_text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
+                    if gitdir_text.startswith("gitdir:"):
+                        gitdir_path = Path(gitdir_text[7:].strip())
+                        if not gitdir_path.is_absolute():
+                            gitdir_path = (source / gitdir_path).resolve()
+                        modules_dirs.append(gitdir_path / "modules")
+                        commondir_file = gitdir_path / "commondir"
+                        if commondir_file.is_file():
+                            cd_text = commondir_file.read_text(encoding="utf-8", errors="replace").strip()
+                            cd_path = Path(cd_text)
+                            if not cd_path.is_absolute():
+                                cd_path = (gitdir_path / cd_path).resolve()
+                            modules_dirs.append(cd_path / "modules")
+            for mdir in modules_dirs:
+                if mdir.is_dir():
+                    has_submodules = True
+                    break
+        if not has_submodules:
+            submodule_section_re = re.compile(r"^\s*\[\s*submodule\b", re.IGNORECASE | re.MULTILINE)
+            for cfg_path in seen_configs:
+                try:
+                    cfg_text = cfg_path.read_text(encoding="utf-8", errors="replace")
+                    if submodule_section_re.search(cfg_text):
+                        has_submodules = True
+                        break
+                except OSError:
+                    pass
+
+        if has_submodules:
+            raise ValueError(
+                f"artifact is a nested git repository with unverified submodules "
+                f"({file_count} files, {total_size} bytes): {name}; "
+                f"submodules must not be discarded without independent verification"
+            )
+
         env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
         git_cmd = ["git", "-c", "core.fsmonitor=", "-c", "core.hooksPath=/dev/null"]
         try:
@@ -467,48 +509,6 @@ def _inspect_directory_artifact(source: Path, name: str, *, worktree: Path) -> l
                 )
         except (subprocess.SubprocessError, OSError) as exc:
             raise ValueError(f"failed to check git status in nested repository {name}: {exc}") from exc
-
-        has_submodules = (source / ".gitmodules").is_file()
-        if not has_submodules:
-            modules_dirs: list[Path] = []
-            if dot_git.is_dir():
-                modules_dirs.append(dot_git / "modules")
-            elif dot_git.is_file():
-                with contextlib.suppress(OSError):
-                    gitdir_text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
-                    if gitdir_text.startswith("gitdir:"):
-                        gitdir_path = Path(gitdir_text[7:].strip())
-                        if not gitdir_path.is_absolute():
-                            gitdir_path = (source / gitdir_path).resolve()
-                        modules_dirs.append(gitdir_path / "modules")
-                        commondir_file = gitdir_path / "commondir"
-                        if commondir_file.is_file():
-                            cd_text = commondir_file.read_text(encoding="utf-8", errors="replace").strip()
-                            cd_path = Path(cd_text)
-                            if not cd_path.is_absolute():
-                                cd_path = (gitdir_path / cd_path).resolve()
-                            modules_dirs.append(cd_path / "modules")
-            for mdir in modules_dirs:
-                if mdir.is_dir():
-                    has_submodules = True
-                    break
-        if not has_submodules:
-            submodule_section_re = re.compile(r"^\s*\[\s*submodule\b", re.IGNORECASE | re.MULTILINE)
-            for cfg_path in seen_configs:
-                try:
-                    cfg_text = cfg_path.read_text(encoding="utf-8", errors="replace")
-                    if submodule_section_re.search(cfg_text):
-                        has_submodules = True
-                        break
-                except OSError:
-                    pass
-
-        if has_submodules:
-            raise ValueError(
-                f"artifact is a nested git repository with unverified submodules "
-                f"({file_count} files, {total_size} bytes): {name}; "
-                f"submodules must not be discarded without independent verification"
-            )
 
         quoted_clean_name = shlex.quote(clean_name)
         raise ValueError(

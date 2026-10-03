@@ -948,3 +948,47 @@ def test_ignored_artifact_nested_repo_submodule_clean_never_recommended_for_rm_r
     assert "unverified submodules" in reason
     assert "submodules must not be discarded without independent verification" in reason
     assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_submodule_clean_filter_rejected_without_execution(checkout, tmp_path):
+    """P1: nested repo with submodule clean filter is rejected before git execution."""
+    upstream_child = tmp_path / "upstream_child"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_child)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    upstream_parent = tmp_path / "upstream_parent"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(upstream_parent)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    child_init = tmp_path / "child_init"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_child), str(child_init)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (child_init / "valuable.txt").write_text("child base content\n")
+    subprocess.run(["git", "add", "valuable.txt"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init child"], cwd=child_init, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/main"], cwd=child_init, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    repo_dir = checkout[0] / "batch_state/reports/submodule_filter_repo"
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream_parent), str(repo_dir)], check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "parent.txt").write_text("parent content\n")
+    subprocess.run(["git", "add", "parent.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init parent"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "protocol.file.allow=always", "-c", "core.hooksPath=/dev/null", "submodule", "add", "-b", "main", str(upstream_child), "sub"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add submodule"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Configure clean filter in submodule gitdir
+    marker = tmp_path / "filter_executed.marker"
+    script = tmp_path / "clean_hook.sh"
+    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
+    script.chmod(0o755)
+    sub_gitdir = repo_dir / ".git/modules/sub"
+    with open(sub_gitdir / "config", "a", encoding="utf-8") as fp:
+        fp.write(f'\n[filter "probe"]\n  clean = "{script}"\n')
+    (repo_dir / "sub/.gitattributes").write_text("* filter=probe\n")
+
+    # Modify tracked file with same size so clean filter would trigger on status
+    (repo_dir / "sub/valuable.txt").write_text("child same-size!\n")
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata is None
+    assert "unverified submodules" in reason
+    assert not marker.exists(), "submodule clean filter was executed!"
+    assert "clear with: rm -rf" not in reason
