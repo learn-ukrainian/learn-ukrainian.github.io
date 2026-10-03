@@ -413,6 +413,7 @@ entries:
       - {topic: 'storage topology: where data is stored and lives on disk - the layout of bulk raw sources, active SQLite databases, the local working set, the Linux data volume and mirrors', path: docs/runbooks/storage-topology.md}
       - {topic: worktree cleanup, path: docs/runbooks/worktree-cleanup.md}
       - {topic: CI gate, path: docs/runbooks/ci-gate.md}
+      - {topic: reference sense bindings and private commitment replacement, path: docs/runbooks/reference-sense-bindings.md}
       - {topic: agent seat onboarding, path: docs/runbooks/agent-seat-onboarding.md}
     query:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/runbooks"}

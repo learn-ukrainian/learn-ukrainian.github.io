@@ -1274,7 +1274,7 @@ def check_6_count(expanded: dict[str, Any], target: int, words: dict[str, Any] |
             if record is None:
                 return failure(6, "gloss_record_missing", "pack", token=unit["text"])
             lemma_count = len(tokenize(record["lemma"]))
-            gloss_count = len(tokenize(record.get("sense_gloss") or record.get("gloss_en") or ""))
+            gloss_count = len(tokenize(record.get("gloss_en") or ""))
             uk += lemma_count
             total += lemma_count + gloss_count
             continue

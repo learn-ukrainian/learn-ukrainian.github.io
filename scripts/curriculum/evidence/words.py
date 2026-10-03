@@ -23,7 +23,7 @@ from jsonschema import Draft202012Validator
 from scripts.verification import stress
 from scripts.wiki.sources_db import using_connection
 
-from . import codes, lock, registry, sources
+from . import codes, lock, registry, sense_bindings, sources
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 UKRAINIAN_VOWELS = frozenset("аеєиіїоуюяАЕЄИІЇОУЮЯ")
@@ -189,6 +189,7 @@ def build_words(
     )
     plans_base = Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
 
+    binding_context = sense_bindings.Context.read(level, evidence_base)
     store_path = evidence_base / "_words.yaml"
     registry_path = evidence_base / "_words.registry.yaml"
 
@@ -261,6 +262,7 @@ def build_words(
         changed_ids: list[str] = []
         pending_reasons: list[dict[str, str]] = []
         unglossed: list[dict[str, str]] = []
+        processed_ids: set[str] = set()
 
         for rw in requested_words:
             lemma = sources.normalize_spelling(rw["lemma"])
@@ -387,6 +389,7 @@ def build_words(
                         "row_sha256": sources.row_digest(matching_entry),
                     }
 
+            processed_ids.add(word_id)
             word_doc: dict[str, Any] = {
                 "id": word_id,
                 "lemma": lemma,
@@ -503,7 +506,7 @@ def build_words(
             if exact_cefr and exact_cefr.get("level") in {"A1", "A2", "B1", "B2", "C1", "C2"}:
                 word_doc["cefr"] = cefr_field(exact_cefr)
 
-            selection = sources.select_gloss(
+            selection = binding_context.select(
                 word_doc,
                 gloss_batch.get((lemma, pos), []),
                 kaikki_batch.get(lemma),
@@ -511,6 +514,8 @@ def build_words(
                 ulif_entries=ulif_batch.get(lemma, []),
             )
             if selection.gloss is not None:
+                if basis := binding_context.basis(word_id):
+                    word_doc["gloss_basis"] = basis
                 word_doc["gloss_en"] = selection.gloss
                 word_doc["gloss_source"] = selection.source
                 if selection.ref is not None:
@@ -544,6 +549,52 @@ def build_words(
                 changed_ids.append(word_id)
 
             words_out[word_id] = word_doc
+
+        # A bindings change also invalidates carried records in a partial build.
+        # Re-read their gloss dependencies; preserve all other lexical evidence.
+        carried = [
+            w
+            for wid, w in words_out.items()
+            if wid not in processed_ids
+            and (binding_context.members(w) or wid in binding_context.entries or w.get("gloss_basis"))
+        ]
+        if carried:
+            carry_rows = sources_instance.gloss_rows((w["lemma"], w["pos"]) for w in carried).raw
+            carry_kaikki = sources_instance.kaikki_rows(w["lemma"] for w in carried).raw
+            carry_ulif = sources_instance.ulif_entries(w["lemma"] for w in carried).raw
+            for old in carried:
+                wid, lemma, pos = old["id"], old["lemma"], old["pos"]
+                selection = binding_context.select(
+                    old,
+                    carry_rows.get((lemma, pos), []),
+                    carry_kaikki.get(lemma),
+                    ulif_entries=carry_ulif.get(lemma, []),
+                )
+                updated = {
+                    k: v for k, v in old.items() if k not in {"gloss_en", "gloss_source", "gloss_ref", "gloss_basis"}
+                }
+                if selection.gloss is not None:
+                    updated.update(
+                        {
+                            "gloss_en": selection.gloss,
+                            "gloss_source": selection.source,
+                            "gloss_ref": selection.ref,
+                            "gloss_basis": binding_context.basis(wid),
+                        }
+                    )
+                else:
+                    unglossed.append(
+                        {
+                            "lemma": lemma,
+                            "pos": pos,
+                            "reason": selection.reason,
+                            "word_id": wid,
+                            "candidates": list(selection.candidates),
+                        }
+                    )
+                if updated != old:
+                    changed_ids.append(wid)
+                words_out[wid] = updated
 
         # Check citing plans for any changed existing records (Rule 7)
         changed_plans_map: dict[str, list[str]] = {}

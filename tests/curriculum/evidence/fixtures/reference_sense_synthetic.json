@@ -1,0 +1,7 @@
+{
+  "description": "Synthetic private evidence; no workbook text or real bindings.",
+  "inventory": {"sources": [{"headwords": [{"lemma": "synthetic", "stressed": "synthetic", "pos": "noun", "kind": "word", "locator": "p200 synthetic"}]}]},
+  "private": {"locator": "p200 synthetic#1", "printed_label": "synthetic", "meaning": "TARGET", "source_lines": [1]},
+  "translations": ["unrelated", "target"],
+  "key": "synthetic-test-key-only-32-bytes!!"
+}

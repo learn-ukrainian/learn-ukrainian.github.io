@@ -376,21 +376,19 @@ ENGLISH_CHANNELS = {
     "draft.dialogue.translation_en.*": "body_support",
     "draft.steps.*.blocks.*.en.*": "writer_bilingual",
     "words.words.*.gloss_en": "vocabulary_and_inline_support",
-    "words.words.*.sense_gloss": "vocabulary_and_inline_support",
 }
 
 
 # Resolver candidates are source metadata, never learner text.
-ENGLISH_METADATA_FIELDS = frozenset({"words.words.*.candidates.*.sense_gloss"})
+ENGLISH_METADATA_FIELDS = frozenset({"words.words.*.candidates.*.sense_gloss", "words.words.*.sense_gloss"})
+
 
 def plan_arc_position(plan: dict[str, Any]) -> int:
     """Read the schema's positive integer position, never coerce malformed plans."""
     arc_ref = plan.get("arc_ref")
     position = arc_ref.get("position") if isinstance(arc_ref, dict) else None
     if type(position) is not int or position < 1:
-        raise AssemblerError(
-            PLAN_ARC_REF_INVALID, "arc_ref.position must be a positive integer", layer="plan"
-        )
+        raise AssemblerError(PLAN_ARC_REF_INVALID, "arc_ref.position must be a positive integer", layer="plan")
     return position
 
 
@@ -449,7 +447,7 @@ def gloss_replacer(words_store: dict[str, Any], *, include_english: bool = True)
         w_rec = words_by_id.get(wid)
         if w_rec:
             lem = w_rec.get("lemma", "")
-            gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
+            gl = w_rec.get("gloss_en") or ""
             return f"{lem} ({gl})" if gl and include_english else lem
         return wid
 
@@ -1921,7 +1919,7 @@ def build_slovnyk_entries(
                 rec = sel.get("record")
                 if rec and rec in words_by_id:
                     w_rec = words_by_id[rec]
-                    gloss = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
+                    gloss = w_rec.get("gloss_en") or ""
                     if gloss:
                         selected_senses[rec] = str(gloss)
 
@@ -1947,7 +1945,7 @@ def build_slovnyk_entries(
             elif lemma_form.get("stressed"):
                 stressed_lemma = str(lemma_form["stressed"])
 
-        gloss = selected_senses.get(wid) or str(w_rec.get("sense_gloss") or w_rec.get("gloss_en") or "")
+        gloss = selected_senses.get(wid) or str(w_rec.get("gloss_en") or "")
         try:
             atlas_href = atlas_href_for(lemma, translation=gloss, pos=str(w_rec.get("pos", "")))
         except Exception:
@@ -2752,9 +2750,7 @@ def check_9_stress_and_render(
             if field_name in reading:
                 reading[field_name] = mdx_safe_text(reading[field_name])
 
-    urok_md, unit_map = _render_urok_markdown(
-        draft, stressed_doc, pack, words_store, include_english=include_english
-    )
+    urok_md, unit_map = _render_urok_markdown(draft, stressed_doc, pack, words_store, include_english=include_english)
 
     plan_acts_by_id = {
         act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act

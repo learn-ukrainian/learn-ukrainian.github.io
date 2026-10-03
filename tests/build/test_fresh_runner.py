@@ -74,7 +74,7 @@ def _fixture(*, text: str = "слово " * 11, two_senses: bool = False):
     w1["forms"][0]["stressed"] = "сло\u0301во"
     records = [w1]
     if two_senses:
-        w2 = make_word_record(2, "слово", gloss_en="word", sense_gloss="other sense")
+        w2 = make_word_record(2, "слово", gloss_en="other sense", sense_gloss="unchecked")
         w2["forms"][0]["stressed"] = "сло\u0301во"
         records.append(w2)
     words = make_words_store(words=records)

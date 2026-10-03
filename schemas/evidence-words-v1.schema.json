@@ -31,11 +31,30 @@
     "gloss_ref": {
       "type": "object",
       "properties": {
-        "table": {"const": "dmklinger_uk_en"},
-        "id": {"type": "integer", "minimum": 1},
-        "row_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "table": {
+          "const": "dmklinger_uk_en"
+        },
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "row_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "span_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "span": {
+          "type": "string",
+          "minLength": 1
+        }
       },
-      "required": ["table", "id"],
+      "required": [
+        "table",
+        "id"
+      ],
       "additionalProperties": false
     },
     "vesum": {
@@ -664,8 +683,15 @@
         },
         "gloss_source": {
           "oneOf": [
-            {"enum": ["dmklinger_uk_en", "kaikki_wiktionary"]},
-            {"$ref": "#/$defs/gloss_ref"}
+            {
+              "enum": [
+                "dmklinger_uk_en",
+                "kaikki_wiktionary"
+              ]
+            },
+            {
+              "$ref": "#/$defs/gloss_ref"
+            }
           ]
         },
         "gloss_ref": {
@@ -725,6 +751,26 @@
             "lesson"
           ],
           "additionalProperties": false
+        },
+        "gloss_basis": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "enum": [
+                "a1_reference_meaning.v1",
+                "reviewed.v1"
+              ]
+            },
+            "binding": {
+              "type": "string",
+              "pattern": "^_sense_bindings\\.yaml#W-[0-9]+$"
+            }
+          },
+          "required": [
+            "method",
+            "binding"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -753,10 +799,20 @@
       "allOf": [
         {
           "if": {
-            "properties": {"gloss_source": {"const": "dmklinger_uk_en"}},
-            "required": ["gloss_source"]
+            "properties": {
+              "gloss_source": {
+                "const": "dmklinger_uk_en"
+              }
+            },
+            "required": [
+              "gloss_source"
+            ]
           },
-          "then": {"required": ["gloss_ref"]}
+          "then": {
+            "required": [
+              "gloss_ref"
+            ]
+          }
         },
         {
           "if": {
