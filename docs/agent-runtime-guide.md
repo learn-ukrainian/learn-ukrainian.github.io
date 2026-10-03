@@ -381,10 +381,14 @@ Sources access in review routes uses the tool set derived from the server's
 receipt contracts are subsets of that set. Codex scoped review config and ad hoc
 read-only argv expose only those readers through `enabled_tools` and approve them
 individually; writers remain hidden even when a verified parent OS sandbox
-requires nested sandbox bypass. Claude denies the persisting tools explicitly;
-AGY formal attempts enforce the receipt contract through the sources boundary
-and exact full-review permission rules. Cache-writing ULIF and Wikipedia tools
-are unavailable to reviewers; writers' access is unchanged.
+requires nested sandbox bypass. Claude's ordinary ad hoc reviewer profile denies
+the persisting tools explicitly. Claude and AGY formal attempts enforce the
+receipt contract through the sources boundary and full-review allow rules.
+Claude still maintains local tool tuples, checked for parity with the shared
+module; other Claude read-only profiles and explicit caller allowlists do not
+add persisting-tool denies. Cache-writing ULIF and Wikipedia tools are excluded
+from formal receipt contracts and these scoped reviewer grants; writers' access
+is unchanged.
 
 ### Claude headless permissions
 

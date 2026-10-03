@@ -50,10 +50,7 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     assert all(Path(command).is_file() for command in commands)
     assert str(tracked_hooks / "guard-reviewer-publish.py") not in commands
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
-    if mode == "read-only":
-        assert _denied(plan.cmd) == PERSISTING_RULES
-    else:
-        assert "--disallowedTools" not in plan.cmd
+    assert "--disallowedTools" not in plan.cmd
     if mode == "workspace-write":
         # Headless print mode denies approval-requiring tools. dontAsk plus the
         # worker allow list is the documented non-interactive mode. Danger keeps
@@ -279,7 +276,7 @@ def test_discussion_readonly_keeps_separate_permissions(tmp_path: Path) -> None:
     )
     assert "--settings" in plan.cmd
     assert "--permission-mode" not in plan.cmd
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert "--disallowedTools" not in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
@@ -311,7 +308,7 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
     assert "--settings" in plan.cmd
     assert "--safe-mode" in plan.cmd
     assert "--permission-mode" not in plan.cmd
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert "--disallowedTools" not in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == ""
 
 
@@ -601,7 +598,7 @@ def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
         *REVIEWER_PERMISSION_PROFILE["allow"],
         *review_tools_allowed_csv("claude", "full").split(","),
     ]
-    assert _denied(cmd) == [*REVIEWER_PERMISSION_PROFILE["deny"], *PERSISTING_RULES]
+    assert _denied(cmd) == list(REVIEWER_PERMISSION_PROFILE["deny"])
     # The formal attempt's own harness-written config is the only one loaded.
     assert cmd.count("--mcp-config") == 1
     assert cmd[cmd.index("--mcp-config") + 1] == str(attempt)
@@ -642,7 +639,7 @@ def test_sources_config_leaves_write_and_danger_argv_unchanged(tmp_path: Path, m
 
 @pytest.mark.parametrize("allowed_tools", ["mcp__sources__*", "Read,Bash(git push *)", ""])
 @pytest.mark.parametrize("strict_mcp_config", [False, True])
-def test_explicit_allowed_tools_keep_allowlist_but_deny_sources_writers(
+def test_explicit_allowed_tools_are_not_widened_or_narrowed(
     tmp_path: Path,
     allowed_tools: str,
     strict_mcp_config: bool,
@@ -664,14 +661,14 @@ def test_explicit_allowed_tools_keep_allowlist_but_deny_sources_writers(
     assert plan.cmd.count("--allowedTools") == 1
     assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == allowed_tools
     assert "--permission-mode" not in plan.cmd
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert "--disallowedTools" not in plan.cmd
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
     assert not any(command.endswith("guard-reviewer-publish.py") for command in commands)
 
 
-def test_readonly_without_reviewer_profile_denies_sources_writers(tmp_path: Path) -> None:
+def test_readonly_content_writer_keeps_legacy_cli_permissions(tmp_path: Path) -> None:
     plan = ClaudeAdapter().build_invocation(
         prompt="write content",
         mode="read-only",
@@ -683,5 +680,5 @@ def test_readonly_without_reviewer_profile_denies_sources_writers(tmp_path: Path
     )
     assert "--allowedTools" not in plan.cmd
     assert "--permission-mode" not in plan.cmd
-    assert _denied(plan.cmd) == PERSISTING_RULES
+    assert "--disallowedTools" not in plan.cmd
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides

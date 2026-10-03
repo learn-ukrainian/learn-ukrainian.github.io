@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters import claude
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.review_mcp import (
     _render_codex_review_config,
@@ -42,6 +43,12 @@ def test_shared_tool_set_equals_wire_annotations():
     assert set(SOURCES_PERSISTING_TOOLS) == {t.name for t in tools if t.annotations.read_only_hint is not True}
     assert len(SOURCES_PERSISTING_TOOLS) == 5
     assert REVIEW_TOOLS <= FULL_REVIEW_TOOLS <= set(SOURCES_READ_ONLY_TOOLS)
+
+
+def test_claude_tool_sets_equal_shared_tool_sets():
+    """Keep Claude's local declarations aligned until it adopts the shared module."""
+    assert set(claude.SOURCES_READ_ONLY_TOOLS) == set(SOURCES_READ_ONLY_TOOLS)
+    assert set(claude.SOURCES_PERSISTING_TOOLS) == set(SOURCES_PERSISTING_TOOLS)
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
@@ -141,16 +148,11 @@ def test_annotation_change_removes_new_writer_without_updating_a_list(tmp_path):
     assert "verify_word" not in readers and "verify_word" in writers
 
 
-@pytest.mark.parametrize("access", ["isolated", "full"])
 @pytest.mark.parametrize("writer", SOURCES_PERSISTING_TOOLS)
-def test_claude_ad_hoc_and_full_routes_deny_every_writer(tmp_path, access, writer):
+def test_claude_ad_hoc_reviewer_denies_every_writer(tmp_path, writer):
     from scripts.agent_runtime.adapters.claude import ClaudeAdapter
 
     tc = {"reviewer_tools": True}
-    if access == "full":
-        config = tmp_path / "mcp.json"
-        config.write_text('{"mcpServers":{"sources":{}}}')
-        tc.update(mcp_config_path=str(config), strict_mcp_config=True, review_access="full")
     plan = ClaudeAdapter().build_invocation(
         prompt="review",
         mode="read-only",
