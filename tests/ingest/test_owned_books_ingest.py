@@ -769,6 +769,109 @@ def test_empty_text_files_keep_no_text_accounting_and_are_not_deduplicated(env):
     assert all(f["pages"][0]["status"] == "page_no_text" for f in accounting)
 
 
+@pytest.mark.parametrize("extension", [".pdf", ".pptx"])
+@pytest.mark.parametrize(
+    "decks,expected",
+    [
+        (
+            [["Alpha slide", "Donor only slide", "Beta slide"], ["Beta slide", "Alpha slide"]],
+            ["extracted", "duplicate_of:f1"],
+        ),
+        (
+            [["Alpha slide", "Donor only slide", "Beta slide"], ["Beta slide", "Alpha slide", "New slide"]],
+            ["extracted", "extracted"],
+        ),
+        (
+            [["Alpha slide", "First donor only"], ["Beta slide", "Second donor only"], ["Beta slide", "Alpha slide"]],
+            ["extracted", "extracted", "extracted"],
+        ),
+        (
+            [["Alpha slide", "Beta slide"], ["", ""]],
+            ["extracted", "skipped:scanned_needs_ocr"],
+        ),
+        (
+            [["Alpha slide", "Donor only slide", "Beta slide"], ["Beta slide", "", "Alpha   slide"]],
+            ["extracted", "duplicate_of:f1"],
+        ),
+        (
+            [
+                ["Alpha slide", "First donor only", "Beta slide"],
+                ["Beta slide", "Second donor only", "Alpha slide"],
+                ["Beta slide", "Alpha slide"],
+            ],
+            ["extracted", "extracted", "duplicate_of:f1"],
+        ),
+    ],
+)
+def test_unit_duplicates_require_one_earlier_retained_donor(env, extension, decks, expected):
+    db, root, _inventory, _out = env
+    if extension == ".pptx":
+        expected = ["skipped:page_no_text" if s == "skipped:scanned_needs_ocr" else s for s in expected]
+    for index, slides in enumerate(decks, 1):
+        if extension == ".pdf":
+            payload = pdf(*slides)
+        else:
+            payload = archive(
+                [
+                    (
+                        "ppt/presentation.xml",
+                        '<p:presentation xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" '
+                        'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+                        "<p:sldIdLst>"
+                        + "".join(f'<p:sldId id="{255 + i}" r:id="s{i}"/>' for i in range(1, len(slides) + 1))
+                        + "</p:sldIdLst></p:presentation>",
+                    ),
+                    (
+                        "ppt/_rels/presentation.xml.rels",
+                        "<Relationships>"
+                        + "".join(
+                            f'<Relationship Id="s{i}" Target="slides/slide{i}.xml"/>' for i in range(1, len(slides) + 1)
+                        )
+                        + "</Relationships>",
+                    ),
+                    *[
+                        (
+                            f"ppt/slides/slide{i}.xml",
+                            '<slide xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+                            f"<a:p><a:t>{text}</a:t></a:p></slide>",
+                        )
+                        for i, text in enumerate(slides, 1)
+                    ],
+                ]
+            )
+        (root / f"{index}{extension}").write_bytes(payload)
+    report, code = owned.run(args(env, [row(files=["**/*"])]))
+    assert code == 0
+    entries = report["rows"][0]["files"]
+    assert [f["status"] for f in entries] == expected
+    kept = [
+        (str(i), j)
+        for i, slides in enumerate(decks, 1)
+        if expected[i - 1] == "extracted"
+        for j, text in enumerate(slides, 1)
+        if text.strip()
+    ]
+    with sqlite3.connect(db) as conn:
+        stored = {r[0] for r in conn.execute("SELECT chunk_id FROM textbooks")}
+    assert stored == {f"owned-synthetic-work_f{i}_p{j:04d}_c0001" for i, j in kept}
+
+
+def test_unit_duplicate_normalisation_uses_nfc_and_collapsed_whitespace(env, monkeypatch):
+    _db, root, _inventory, _out = env
+    extracted = iter(
+        [
+            [(1, "Caf\u00e9 first slide"), (2, "Donor only slide"), (3, "Last slide")],
+            [(1, "Last\n\t slide"), (2, "Cafe\u0301  first slide")],
+        ]
+    )
+    monkeypatch.setattr(owned, "extract", lambda *a, **kw: (next(extracted), [], "extracted"))
+    for name in ("a.pptx", "b.pptx"):
+        (root / name).write_bytes(b"synthetic extraction input")
+    units, accounting = owned.collect(row(), sorted(root.glob("*.pptx")))
+    assert [f["status"] for f in accounting] == ["extracted", "duplicate_of:f1"]
+    assert len(units) == 3 and all(index == "1" for index, _page, _text in units)
+
+
 @pytest.mark.parametrize(
     "policy,expected", [({}, "missing"), ({"owned-synthetic-work": {"rights": "private_permission"}}, "mismatch")]
 )

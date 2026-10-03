@@ -301,7 +301,10 @@ on disk and in archives. Owner-only password PDFs remain extractable and carry
 Within each work, NFC-normalised, whitespace-collapsed file text is hashed with
 SHA-256 before chunking. Identical files and files wholly contained in an earlier
 retained file add no chunks and point to the earliest donor as `duplicate_of:f<index>`
-(including archive-member indexes). Empty text retains its no-text accounting;
+(including archive-member indexes). The same applies when every non-empty
+normalised page or slide equals a unit in one earlier retained file, regardless
+of order. A file with even one new unit stays fully retained; individual units
+are never removed. Empty text retains its no-text accounting;
 partially overlapping files remain ingestable. CSV
 text retains serialized rows, separators and quotes without guessing its dialect.
 

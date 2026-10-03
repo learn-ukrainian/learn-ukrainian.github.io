@@ -71,7 +71,10 @@ corpus and rights record. No sentence-overlap deduplication is used.
 New works require matching inventory and registry rights before extraction or
 cached JSONL reuse. Exact normalised whole-file duplicates and text wholly
 contained in an earlier retained file are accounted as `duplicate_of` without
-new chunks; partial overlaps remain. Disk and archive metadata are ignored, and
+new chunks. Files whose non-empty normalised units all match units in a single
+earlier retained file also add no chunks, regardless of unit order; one new unit
+keeps the entire file. Empty files and partial overlaps retain their existing
+accounting. Disk and archive metadata are ignored, and
 owner-only password PDFs are extracted with restriction accounting.
 `registry/sources/owned-rights.yaml` denies all owned quotes and denies citations
 of private-permission material. See the [private-reference regeneration

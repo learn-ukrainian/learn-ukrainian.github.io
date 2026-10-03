@@ -348,15 +348,20 @@ def collect(row: dict, files: list[Path]) -> tuple[list[tuple[str, int, str]], l
                 digest = hashlib.sha256(normalised.encode("utf-8")).hexdigest()
                 entry["text_sha256"] = digest
                 exact_donor = digests.get(digest)
-                donor = (
-                    exact_donor
-                    if exact_donor is not None
-                    else next((i for i, text in retained if normalised in text), None)
+                unit_texts = {" ".join(unicodedata.normalize("NFC", text).split()) for _, text in extracted}
+                unit_texts.discard("")
+                donor = next(
+                    (
+                        i
+                        for i, text, donor_units in retained
+                        if i == exact_donor or normalised in text or (unit_texts and unit_texts <= donor_units)
+                    ),
+                    None,
                 )
                 if donor is not None:
                     entry["status"] = f"duplicate_of:f{donor}"
                     return
-                retained.append((index, normalised))
+                retained.append((index, normalised, unit_texts))
                 digests[digest] = index
             units.extend((index, page, text) for page, text in extracted)
         except IngestError as exc:
