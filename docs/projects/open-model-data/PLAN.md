@@ -1,17 +1,18 @@
 <!--
-Canonical plan for epic #6321 (open-model-data). Version: v3.4.4 (2026-10-03).
+Canonical plan for epic #6321 (open-model-data). Version: v3.5.0 (2026-10-03).
 Approval: v3.4.2 (sha256 b1a39a78b262a3418fa8cba4019ed882991e802ab18b7ff25f2dc12673ec4ed2) was reviewed over three
 rounds by GPT-6.1 Sol (review of record; round 3 APPROVE) and Claude Opus 5.5 (rounds 1-2). The operator approved v3.3 on
 2026-10-03 and ordered v3.4. v3.4.3 adds the operator's 2026-10-03 decisions on O4 and O5. v3.4.4 adds the operator's
-2026-10-03 decisions on O1, O2, O3 and O6 and component C9 (textbooks).
+2026-10-03 decisions on O1, O2, O3 and O6 and component C9 (textbooks). v3.5.0 records operator decision O7
+(2026-10-03): component C8 (Погрібний literary pronunciation) and step E3c are removed.
 Source sha256 of the body below (every line after this comment, verbatim):
-2d5db0ae7d15336b61c361c1dacdf89c3c9811cfd0109acc8f156f16149e94e1
+d8aaf46bea650d4a3331e7ebe4d90dccf2aae9c9bc9eefb270a41760d71acbeb
 Verify: sed '1,/^-->$/d' PLAN.md | sha256sum
 Landed by issue #9586 (step E0). Do not edit the body in place; changes need a new plan version.
 -->
-# Epic #6321 — plan v3.4.4 (working plan), 2026-10-03
+# Epic #6321 — plan v3.5.0 (working plan), 2026-10-03
 
-Status: APPROVED. v3.4.2 (sha256 b1a39a78…) passed review (GPT-6.1 Sol round 3 APPROVE, review of record). v3.4.3 added the operator's decisions on O4 and O5; v3.4.4 records the operator's decisions on O1, O2, O3 and O6 (all 2026-10-03) and adds component C9 (textbooks) that O3 requires (change logs at the end). v3.4 (sha256 2d98a49d…) was reviewed by GPT-6.1 Sol (`plan-review-6321-v34-sol`,
+Status: APPROVED. v3.5.0 removes component C8 and step E3c by operator decision O7 (2026-10-03; see its change log). v3.4.2 (sha256 b1a39a78…) passed review (GPT-6.1 Sol round 3 APPROVE, review of record). v3.4.3 added the operator's decisions on O4 and O5; v3.4.4 records the operator's decisions on O1, O2, O3 and O6 (all 2026-10-03) and adds component C9 (textbooks) that O3 requires (change logs at the end). v3.4 (sha256 2d98a49d…) was reviewed by GPT-6.1 Sol (`plan-review-6321-v34-sol`,
 CHANGES_REQUESTED, 4 blockers) and Claude Opus 5.5 (`plan-review-6321-v34-opus`, CHANGES_REQUESTED, 2 blockers).
 Both passed the sources-MCP canary (verify_word, ULIF, query_pravopys). Every finding is adopted below; the
 change log at the end maps each one. Also added: component C8 (literary pronunciation, Погрібний 1992 — operator:
@@ -50,16 +51,18 @@ follow-up issue filed at E-final; the epic ends release-ready).
    official published text must be acquired (E3b).
 9. **Погрібний «Українська літературна вимова» (1992) is held as a scan** (28 pp, sha256 5ea39606…, local data mirror);
    the `sources.db` rows (28 page chunks) are Tesseract OCR that loses transcription brackets, stress marks and the
-   superscript vowel letters. The scan is legible (page 10 inspected). A clean transcription is needed (E3c).
+   superscript vowel letters. The scan is legible (page 10 inspected). E3c attempted a clean transcription and was stopped by operator decision O7
+   (2026-10-03): the AI seats could not reliably read its hand-drawn phonetic marks, and the notation is a poor fit for
+   text-model training. The book is not a dataset source.
 
 ## Principles
 - **P1 No model- or script-written text.** Records contain only (a) verbatim text from a held source row, (b) lines
   from the reviewed instruction catalog with slots filled from source fields (catalog interpolation), and (c)
   lossless serialization (JSON keys, field labels from a fixed schema). No paraphrase, synonym substitution, filler,
   reasoning text, `<thought>` blocks or worked solutions written by code or a model. Transcription of a scanned source
-  (E3c) is source acquisition, not authoring: it is verified against the page image and contains nothing absent there.
+  is source acquisition, not authoring: it is verified against the page image and contains nothing absent there.
 - **P2 Backbone and facet roles.** Forms: VESUM v6.8.0 + ULIF paradigms/forms. Stress: ULIF `form_stressed`
-  (with `dual_stress_flag`). Spelling: Правопис 2019 (after E3b). Literary pronunciation: Погрібний 1992 (after E3c).
+  (with `dual_stress_flag`). Spelling: Правопис 2019 (after E3b).
   Synonyms, antonyms, phraseology, usage labels: ULIF `ulif_dictua_*` only. Meaning: СУМ-20 (89 official articles) and
   ВТС (unofficial copy — checking only). Etymology: ЕСУМ. Calques: Антоненко-Давидович «Як ми говоримо» (169 chunks)
   and UA-GEC `F/Calque`. Human corrections: UA-GEC (CC BY 4.0). Exam tasks: ZNO/NMT with official keys. СУМ-11: only
@@ -97,13 +100,12 @@ follow-up issue filed at E-final; the epic ends release-ready).
 | Reviewer independence | Catalog and sample reviewers are never the seat that wrote the catalog or extraction code under review |
 
 ## Components
-**All components are required** (operator decision O4, 2026-10-03): each must ship and pass D1–D4. C3, C4 depend on the Atlas word-card pilot (#8981) and C7 on the Russification view (#8982), so the epic's end depends on those atlas-lane items; that dependency is tracked, not waived.
+**All components are required** (operator decision O4, 2026-10-03; C8 removed by O7, so the set is C1–C7 and C9): each must ship and pass D1–D4. C3, C4 depend on the Atlas word-card pilot (#8981) and C7 on the Russification view (#8982), so the epic's end depends on those atlas-lane items; that dependency is tracked, not waived.
 | ID | Req. | Component | Source (measured) | Binding (P5) | Depends on |
 | --- | --- | --- | --- | --- | --- |
 | C1 | **Required (pilot)** | Grammar correction | UA-GEC gec-only train minus dev (1,706 train docs before dev carve-out) | learner sentence ↔ its aligned human-corrected sentence, same doc and annotator | E1 E4 E5 E9 E10 |
 | C2 | **Required** | Forms and paradigms | VESUM ∩ ULIF on the P3 tuple | lemma + homonym + slot → the agreed form (stress from ULIF) | E4 E5 E10 |
 | C5 | **Required** | Spelling | Правопис 2019 official text (E3b) | only the examples printed inside each paragraph, paired with that paragraph (§ locator); no code-chosen rule for outside cases | E3b E4 E5 E10 |
-| C8 | **Required** | Literary pronunciation | Погрібний 1992 clean transcription (E3c); stress cross-check against ULIF (a mismatch is unresolved, never a correction of the book) | each printed word **with its phonetic context** ↔ its printed transcription ↔ the supporting paragraph span ↔ **the book's own verdict from the same paragraph (norm / admissible variant / non-norm, quoted)** ↔ rule paragraph and page. Non-norm transcriptions (e.g. [иван], [вил], [байдужи], which the book calls outside or a gross violation of the norm) appear only as the rejected side of a contrast, never as a target; ambiguous status → withheld | E3c E4 E5 E10 |
 | C6 | **Required** | Calques | UA-GEC `F/Calque` (2,397 edits) first; Антоненко-Давидович passages by chunk/row locator | the human correction edit; book pairs only where the book's own text names both forms, each pair signed off by Sol and Opus | E4 E5 E10, O1 |
 | C3 | **Required** | Synonyms, antonyms | ULIF sections via word cards (#8988) | headword sense ↔ ULIF group for that sense | #8981, E4 E5 E10, O1 |
 | C4 | **Required** | Phraseology | ULIF phraseology + Фразеологічний словник (edition to verify, register: probably Білоноженко та ін., 2003) via word cards | idiom ↔ its definition ↔ its citation, same dictionary entry | #8981, E3 edition, E4 E5 E10, O1 |
@@ -118,12 +120,12 @@ excluded); protection cases from authentic literary/regional text.
 | # | Gate | Proof |
 | --- | --- | --- |
 | PA1 | **Quarantine.** 412 git-ignored files (637,987,720 bytes) under `data/projects/open_model_data` and the tracked record files (gold seeds 2×150; components decolonization 250, grammar 17; review samples) sealed with tombstones; every loader refuses them (`train_and_eval_real_model`, `gemma_hardware_probe`, `package_unified_dataset` — which today *requires* tombstoned v05 —, `upload_to_huggingface`, `v4_format_decolonization`, `v4_open_weight_learning_study`, `v4_pilot_canary_evaluation`, `scripts/dataset/train_gemma_huggingface.py`, both notebooks — one calls `create_repo(private=False)`); the guard covers `release/` tombstones; #9511 and #8341 code archived; stray `data/ulif_dump.db` removed. | Inventory + loader-refusal tests |
-| PA2 | **Sources authenticated.** Provenance (origin, edition, hash) and register entry for every planned source incl. ZNO, Правопис 2019, Погрібний 1992; 11 `v1-official-codification` СУМ-20 rows quarantined; Фразеологічний словник edition verified. **Read-only enforcement repo-wide**: a test fails on any writable `sqlite3.connect` to `sources.db`/`vesum.db` outside ingest code (today: `v6_mine_ulif_phraseology.py:2288`, `v5_mine_middle_ukrainian.py:497`, `v4_production_shards_assembly.py:1253,1302,1581–1585`, `phase3_decolonization_partition.py:315,317`, `v5_mine_kyivan_rus_epigraphy.py:348,415,659` — fixed or archived). | Holdings manifest + test |
+| PA2 | **Sources authenticated.** Provenance (origin, edition, hash) and register entry for every planned source incl. ZNO, Правопис 2019; 11 `v1-official-codification` СУМ-20 rows quarantined; Фразеологічний словник edition verified. **Read-only enforcement repo-wide**: a test fails on any writable `sqlite3.connect` to `sources.db`/`vesum.db` outside ingest code (today: `v6_mine_ulif_phraseology.py:2288`, `v5_mine_middle_ukrainian.py:497`, `v4_production_shards_assembly.py:1253,1302,1581–1585`, `phase3_decolonization_partition.py:315,317`, `v5_mine_kyivan_rus_epigraphy.py:348,415,659` — fixed or archived). | Holdings manifest + test |
 | PA3 | **Source and relationship gate.** Fails when: quoted text is absent from the cited row; a record lacks a locator; a source role is wrong (СУМ-11 as norm); text is neither source nor catalog nor serialization; a genuine quotation is bound to the wrong sense, slot or question (P5); generated rights flags appear as provenance. | Must-fail fixtures: 175 deleted rows; invented definitions on real headwords; row-1206 misattribution; #8341 rewritten sentences; #9511 `<thought>` rows; wrong-sense ULIF synonyms (e.g. «рада» homonyms); wrong-paragraph Правопис example; a non-norm Погрібний transcription ([иван] as the target for «Іван») |
 | PA4 | **Acceptance check extended:** PA3 gate; instruction-prefix concentration measured separately (PA6); reasoning-text refusal; one approved-authority list replacing the three in code (33 in `audit_dataset_acceptance.py`; 22 + 21 in `v5_evaluation_harness.py`), generated from the §4 table and the register. Every old set fails for its named defect. | Checker runs on old sets + clean fixture |
 | PA5 | **Split isolation.** Before any extraction: dev carved from UA-GEC gec-only train by **author-disjoint (hence document-disjoint)** selection on `author_id`, keeping all annotations and both layers of each document together (mirrors the official split, which shares 0 authors; train has 752 authors, the largest with 102 docs; only 2 annotator ids exist, so annotator-disjointness is impossible); dev doc ids excluded from both layers (gec-only and gec-fluency share 2,976 matching edit pairs in train) and from C1 and C6; multi-reference scoring (M2 against all available references; translation submissions kept and tagged by source language per O5, with per-stratum reporting; only 43 train docs have a second reference, so dev is mostly single-reference while test has 332 annotation files for 166 docs — dev and final scores are reported with their reference counts and never compared as equals). Exam and protection material frozen by source group (`work_id` / document) and excluded from C4 citations. A sentence-hash and n-gram overlap gate runs between every component and both rulers. | Split manifest + overlap-refusal fixtures |
 | PA6 | **Instruction catalog** drafted (parallel to PA3–PA4) and reviewed by Sol and Opus (neither its author); prefix-concentration threshold fixed before builds. | Catalog + two reviews + checker test |
-| PA7 | **Rulers sealed** by the evaluation steward: dev and final per required component (C1 UA-GEC; C2 forms from held-out lemmas; C5 Правопис examples held out by paragraph; C9 held out by whole textbook (book-disjoint); C8 Погрібний items held out **stratified by rule paragraph** (every rule seen in training, held-out examples per rule; the overlap gate applies); C3 held-out headword senses; C4 held-out idioms; C6 held-out calque edits (UA-GEC test `F/Calque`) and book pairs held out by row; C7 held-out contrast pairs (the model tells the imposed form from the norm)), plus 1,616 keyed exam tasks and protection cases. Evaluator canaries: gold high; **echo low on correction, echo high on preservation**; empty low everywhere; response-integrity check (lesson of #6273). Metrics from each benchmark's own definition; greedy decoding; evaluator robust to reasoning tags. Old #8338 evaluator and suites quarantined, not reused. | Canary receipts + sealed hashes |
+| PA7 | **Rulers sealed** by the evaluation steward: dev and final per required component (C1 UA-GEC; C2 forms from held-out lemmas; C5 Правопис examples held out by paragraph; C9 held out by whole textbook (book-disjoint); C3 held-out headword senses; C4 held-out idioms; C6 held-out calque edits (UA-GEC test `F/Calque`) and book pairs held out by row; C7 held-out contrast pairs (the model tells the imposed form from the norm)), plus 1,616 keyed exam tasks and protection cases. Evaluator canaries: gold high; **echo low on correction, echo high on preservation**; empty low everywhere; response-integrity check (lesson of #6273). Metrics from each benchmark's own definition; greedy decoding; evaluator robust to reasoning tags. Old #8338 evaluator and suites quarantined, not reused. | Canary receipts + sealed hashes |
 | PA8 | **Seat canaries** recorded (Sol, Opus headless — both passed 2026-10-03 in the v3.4 reviews; Gemini Flash; Gemini 4 at GA) and the operator's seat decision recorded in `model-assignment.md` (E-R). | Receipts + merged rules PR |
 Each child issue keeps its own task card and live dispatch preflight; PA gates do not replace them.
 
@@ -133,7 +135,7 @@ Each child issue keeps its own task card and live dispatch preflight; PA gates d
 | D1 | Every shipped component passes the extended check on its final files (0 records without locator, 0 unresolved quotes, 0 copies, 0 non-source text outside catalog/serialization, 0 relationship-gate failures, prefix threshold met, register entry per source). | Checker report |
 | D2 | Facet tool checks per the escalation rule; rejections only on positive evidence; unresolved withheld and counted. | Per-record receipts + accounting |
 | D3 | Per component: if ≥ 300 records, stratified random sample N = 300 reviewed by Sol and Opus (OK / MINOR / WRONG / UNSUPPORTED), WRONG ≤ 2% with Wilson 95% upper bound ≤ 5%; if < 300 records, **census** with 0 WRONG after fixes. UNSUPPORTED records are withheld unless resolved. | Review files + counts |
-| D4 | On the sealed final set, the proof model trained on accepted data beats its baseline by the pre-registered margin **on each component's ruler** (C1–C9) with protection non-inferiority (greedy). A failed final evaluation leaves D4 unmet; further development needs a fresh independent final set. | Scorecard (model id, data version, set hashes) |
+| D4 | On the sealed final set, the proof model trained on accepted data beats its baseline by the pre-registered margin **on each component's ruler** (C1–C7, C9) with protection non-inferiority (greedy). A failed final evaluation leaves D4 unmet; further development needs a fresh independent final set. | Scorecard (model id, data version, set hashes) |
 | D5 | Deterministic rebuild gives identical hashes. | Two rebuilds compared |
 | D6 | Release-ready (not released): per-component licence notices (P4), dataset card, takedown path; public-release follow-up issue filed. | Card + notices + issue |
 | D7 | Zero trainable residue: quarantined artifacts unreachable by any loader; old issues closed with pointers; old code archived; quarantine, loader and rebuild tests retained in CI; docs current. | Tests + inventory |
@@ -141,7 +143,7 @@ Each child issue keeps its own task card and live dispatch preflight; PA gates d
 
 **Stop rule (dev ruler only).** A *trial* = one data mix trained once on the fast-loop model with the pre-registered
 recipe. *Gain* = dev improvement ≥ the pre-registered margin on every required component present in the mix, with
-protection non-inferiority. Mix families are frozen before any training: F1 = C1; F2 = C1 + C2; F3 = C1–C9 (C7 only in its opt-in split). A trial = one weighting of one family. Aggregate budget: at most 3 trials per family and 9 trials in total on the fast-loop model, never reset by renaming a family or switching model; 3 consecutive trials without gain in a family, or the total budget spent without a passing F3, → stop and report with a new plan version. The final set is never used for these decisions.
+protection non-inferiority. Mix families are frozen before any training: F1 = C1; F2 = C1 + C2; F3 = C1–C7 + C9 (C7 only in its opt-in split). A trial = one weighting of one family. Aggregate budget: at most 3 trials per family and 9 trials in total on the fast-loop model, never reset by renaming a family or switching model; 3 consecutive trials without gain in a family, or the total budget spent without a passing F3, → stop and report with a new plan version. The final set is never used for these decisions.
 **E13 pass bar (pilot).** C1-only mix shows gain on the C1 dev ruler with protection non-inferiority within 3 trials;
 otherwise stop and propose a plan version before E14+.
 
@@ -152,21 +154,21 @@ otherwise stop and propose a plan version before E14+.
 | E-R | Record operator seat decision 2026-10-03 in `model-assignment.md` | — | merge | Sonnet / cross-family |
 | E1 | Quarantine + loader refusal + archive old generators (PA1) | E0 | merge | Sol or Opus / cross-family |
 | E2 | Old ULIF dump retirement | — | **done** (#8798) | — |
-| E3 | Source authentication, register rows (ZNO, Правопис, Погрібний), edition verification, repo-wide read-only test (PA2) | E0 | merge | Sol / Opus |
+| E3 | Source authentication, register rows (ZNO, Правопис), edition verification, repo-wide read-only test (PA2) | E0 | merge | Sol / Opus |
 | E3b | Acquire official Правопис 2019 text with provenance into `sources.db` | E0 | merge | Sonnet or Sol / cross-family |
-| E3c | Погрібний 1992 clean transcription. Notation frozen before transcription: the complete symbol inventory is taken from the book's own notation key (pp. 4–5: primary and secondary stress, non-syllabicity, affricates, length, softening marks, devoicing, approximation vowels) and each symbol class is verified against image crops; every symbol gets one distinct encoding and a normalization rule (NFC). Starting codepoints: U+0301 primary stress; U+A675 combining Cyrillic и and U+2DF7 combining Cyrillic е for approximation letters printed above a vowel; U+0306 breve for non-syllabic [ў]; U+0361 tie for [д͡з], [д͡ж]; one fixed apostrophe codepoint for softness (incl. long soft consonants); [ґ] distinct from [г]; underlining of orthographic words recorded as a field, not markup; any Latin codepoint inside a transcription is rejected; illegible spans are withheld, not guessed. Method: render 28 pages; Sol and Opus transcribe independently from page images; script diff; disagreements adjudicated by a third, non-transcribing seat (bounded Gemini Flash check of the cropped image under a fixed rubric) with the operator as final authority; plus a census of every bracketed transcription (≈1,600 bracket tokens over ≈24 content pages, OCR estimate) against the image, because both seats can misread faint handwritten marks alike. Only adjudicated text replaces the OCR rows (old rows kept as superseded); custody report updated (it still lists the PDF as missing) | E0 | merge | Sol + Opus transcribe / third seat adjudicates / census / cross-family code review |
+| E3c | **Removed (O7, 2026-10-03).** Погрібний 1992 transcription stopped (#9604 closed not planned); the diff tooling (#9629, #9657) stays on main; nothing was ingested | — | — | — |
 | E4 | Source and relationship gate + fixtures (PA3) | E3 | merge | Sol / Opus |
 | E5 | Acceptance check extension (PA4) | E4 | merge | Sol / Opus |
 | E6 | Per-component licence notices + dataset licence choice (P4, O1) | O1 | decision + merge | operator / driver |
-| E7 | Book acquisition (#8791) + Орфоепічний словник української мови (Пещак та ін., Довіра 2001–2003, ~140k words) as a C8 extension candidate | operator | decision / ingest | operator |
+| E7 | Book acquisition (#8791) | operator | decision / ingest | operator |
 | E8 | Compute venue and model selection: baselines, Ukrainian tokens/word, measured LoRA fit with pinned runtime, quantization, sequence length, batch; text-only LoRA path confirmed for Gemma 4 E-models (any-to-any); interruption recovery; bounded unavailable-GPU stop. Fix margin and protection bound after baselines | E9, O2 | decision-only | driver measures / operator approves |
-| E9 | Rulers + split isolation + evaluator canaries (PA5, PA7) | E3; E3b and E3c for the C5 and C8 rulers | merge | eval steward (Sol) / Opus |
+| E9 | Rulers + split isolation + evaluator canaries (PA5, PA7) | E3; E3b for the C5 ruler | merge | eval steward (Sol) / Opus |
 | E10 | Instruction catalog: draft now, checker test after E5 (PA6) | draft: E0; test: E5 | merge | Sol drafts / Opus reviews |
 | E11 | Seat canaries incl. Gemini Flash; Gemini 4 at GA (PA8) | E0 | audit-only | driver |
 | E12 | Pilot C1 data build | PA1–PA8 | merge | Sol / Opus; sample review Sol + Opus |
 | E13 | Pilot measurement on dev (fast-loop model); pass bar above | E12, E8 | audit-only | driver |
 | E14 | C2 forms | E13 pass, PA gates | merge | — |
-| E15 | C8 pronunciation | E3c, E13 pass | merge | — |
+| E15 | **Removed (O7).** Was: C8 pronunciation | — | — | — |
 | E16 | C5 spelling | E3b, E13 pass | merge | — |
 | E17 | C6 calques | E13 pass, O1 | merge | — |
 | E18 | C3/C4 via word cards (#8988) | #8981, E13 pass, O1 | merge | with atlas lane |
@@ -191,6 +193,9 @@ otherwise stop and propose a plan version before E14+.
 - **O3 — school and university textbooks: USED as record sources** → component C9.
 - **O4 — all components required.** **O5 — UA-GEC translations kept, tagged, per-stratum metrics.**
 - **O6 — the epic ends release-ready;** public release is a separate follow-up after UNLP review.
+- **O7 — component C8 removed** (2026-10-03): Погрібний's phonetic notation is a poor fit for text-model training (rare
+  combining marks fragment into byte tokens and can leak bracketed notation into normal writing), and AI seats could not
+  read its hand-drawn marks reliably. Stress stays covered by ULIF `form_stressed` through C2. E3c and E15 removed.
 
 ## Change log v3.4 → v3.4.1
 - Sol B1 / Opus B1 (split leakage) → PA5, C1 binding, E9.
@@ -225,3 +230,6 @@ otherwise stop and propose a plan version before E14+.
 
 ## Change log v3.4.3 → v3.4.4 (operator decisions)
 - O1 yes; O2 measure first; O3 textbooks used → required component C9 (verbatim sections, book-disjoint ruler); O6 release-ready, UNLP review first. P4 rewritten: rights are decided and not a blocker in this epic.
+
+## Change log v3.4.4 → v3.5.0 (operator decision O7)
+- O7: component C8 (literary pronunciation, Погрібний 1992) and steps E3c and E15 removed; measured fact 9, P1, P2, PA2, PA7, D4, the F3 mix family, E3, E7 and E9 updated so no requirement names C8 or E3c. Required set is C1–C7 and C9. E7 no longer lists an orthoepic dictionary as a C8 extension (it uses the same transcription notation).
