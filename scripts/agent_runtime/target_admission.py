@@ -59,6 +59,12 @@ COMPAT_TARGETS: dict[str, str] = {
 
 _MINTING: ContextVar[bool] = ContextVar("admitted_target_minting", default=False)
 
+# ``--review-profile ukrainian`` seats, the families allowed to judge Ukrainian
+# language content, and the catalog role a model must hold to do so.
+UKRAINIAN_REVIEW_SEATS = frozenset({"claude", "codex", "agy"})
+UKRAINIAN_REVIEW_FAMILIES = frozenset({"anthropic", "openai", "google"})
+UKRAINIAN_REVIEW_ROLE = "ukrainian_review"
+
 
 class SubstituteUnavailable(Exception):
     """No enabled ACP seat substitutes for an over-quota seat; the message says why."""
@@ -211,10 +217,13 @@ def resolve_and_admit(
     and ``review_risk``; review attempts never change identity. Retired aliases
     use ``review_alias_model_resolver`` once before selection and carry that
     model resolution into the launch route. Review owned paths and explicit
-    subject seats/families use the canonical resolver's exclusion semantics.
-    For code/infra profiles, ``review_changed_paths`` may collect paths lazily
-    after original-request gates; its result is shared by every subsequent
-    reviewer evaluation. Ukrainian content review never invokes the collector.
+    subject seats/families use the canonical resolver's exclusion semantics,
+    for every profile. For code/infra profiles, ``review_changed_paths`` may
+    collect paths lazily after original-request gates; its result is shared by
+    every subsequent reviewer evaluation. Ukrainian content review never invokes
+    the collector, and is admitted only for content owned or changed paths
+    (``ukrainian_review_refusal``); with neither it is a standalone language
+    request.
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -226,12 +235,11 @@ def resolve_and_admit(
     if review_activity:
         _refuse_non_review_models(requested[1])
     # Target reads follow the original-request gates, but precede every
-    # candidate evaluation, route probe and substitution.
-    if (review_profile or "code") in {"code", "infra"}:
-        if callable(review_changed_paths):
-            review_changed_paths = review_changed_paths()
-    else:
-        review_changed_paths = ()
+    # candidate evaluation, route probe and substitution. A Ukrainian review
+    # never runs the code/infra collector: a standalone language request has
+    # no branch or PR to read.
+    if callable(review_changed_paths):
+        review_changed_paths = review_changed_paths() if (review_profile or "code") in {"code", "infra"} else ()
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:
@@ -346,6 +354,66 @@ def _refuse_non_review_models(models: Iterable[str | None]) -> None:
             raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {refusal}")
 
 
+@dataclass(frozen=True)
+class _ReviewSeat:
+    """A Ukrainian reviewer as ``subject_exclusion_reason`` matches a candidate."""
+
+    name: str
+    family: str
+    concrete_model: str
+    route: str
+    transport: str
+
+
+def ukrainian_review_refusal(
+    seat: object,
+    model: object,
+    *,
+    target_paths: Iterable[str] = (),
+    subject: Any = None,
+) -> str | None:
+    """Why ``seat`` running ``model`` cannot give a Ukrainian-profile review; None when it can.
+
+    The Ukrainian profile judges Ukrainian learner content and nothing else. The
+    seat must be a Ukrainian review seat and the model a Claude, GPT or Gemini
+    catalog model holding the ``ukrainian_review`` role. ``subject`` (a prepared
+    ``SubjectExclusion``) must not name the seat. Every target path must be
+    content by the established classifier (``_agy.is_content_class_path``), so a
+    code, infra or mixed target needs a code-profile review. Delegate admission
+    and verdict publication both decide with this function, each from the target
+    it knows; a standalone language request has no target paths.
+    """
+    from scripts.review.model_catalog import load_model_catalog, resolve_catalog_model_id
+
+    if seat not in UKRAINIAN_REVIEW_SEATS:
+        return f"{model!r} on {seat!r} is not a Ukrainian reviewer"
+    catalog = load_model_catalog()
+    model_id = resolve_catalog_model_id(model, catalog)
+    entry = catalog["models"].get(model_id) if model_id else None
+    if entry is None or entry["family"] not in UKRAINIAN_REVIEW_FAMILIES:
+        return f"{model!r} is not a Claude, GPT or Gemini catalog model; it cannot review Ukrainian content"
+    if UKRAINIAN_REVIEW_ROLE not in entry["roles"]:
+        return f"{model!r} ({model_id}) holds no {UKRAINIAN_REVIEW_ROLE} role in the model catalog"
+    if subject is not None and (subject.seats or subject.families):
+        from scripts.review.subject_seat import subject_exclusion_reason
+
+        reviewer = _ReviewSeat(model_id, entry["family"], model_id, seat, seat)
+        if reason := subject_exclusion_reason(
+            reviewer, seats=subject.seats, families=subject.families, evidence=subject.evidence
+        ):
+            return reason
+    paths = [str(path).strip().replace("\\", "/") for path in target_paths]
+    if paths:
+        from scripts.ai_agent_bridge._agy import is_content_class_path
+
+        if outside := next((path for path in paths if not path or not is_content_class_path(path)), None):
+            return (
+                "a Ukrainian review covers Ukrainian content only; code, infra and mixed targets need "
+                f"--review-profile code; first non-content path: {outside or '<empty>'}"
+            )
+    return None
+
+
 def _resolve_review_target(
     seat: str,
     model: str | None,
@@ -434,8 +502,12 @@ def _resolve_review_target(
     author_family = resolve_author_family(author_model or "") if trusted else UNKNOWN_AUTHOR_FAMILY
     if trusted and author_family in UNRESOLVED_AUTHOR_FAMILIES:
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: author's concrete model family cannot be resolved")
+    ukrainian_refusal = None
     if profile == "ukrainian":
-        eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
+        ukrainian_refusal = ukrainian_review_refusal(
+            seat, requested_model, target_paths=(*owned_paths, *changed_paths), subject=subject
+        )
+        eligible = ukrainian_refusal is None
     else:
         # A Cursor seat is admitted only at its exact pinned slug: the adapter
         # sends the requested string unchanged, so a bracket suffix
@@ -448,7 +520,10 @@ def _resolve_review_target(
             for candidate in REVIEW_CANDIDATES.values()
         )
     # #9538: name the high-risk reviewer rule when it is why the request fails.
-    risk_note = "" if eligible or profile == "ukrainian" else risk_reviewer_refusal(concrete, inputs.risk) or ""
+    if profile == "ukrainian":
+        risk_note = ukrainian_refusal or ""
+    else:
+        risk_note = "" if eligible else risk_reviewer_refusal(concrete, inputs.risk) or ""
     risk_note = f" ({risk_note})" if risk_note else ""
     if attempt and not eligible:
         from .review_mcp import UNSUPPORTED_HARNESS_REASONS

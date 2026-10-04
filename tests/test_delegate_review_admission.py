@@ -1850,3 +1850,108 @@ def test_review_dispatch_records_its_subject_context_for_publication(
     state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
     assert (state["review_subject_seats"], state["review_subject_families"]) == (seats, families)
     assert recorder._review_subject(state) == (frozenset(seats or ()), frozenset(families or ()))
+
+
+# --- #9714: Ukrainian-profile admission certifies Ukrainian content only ---------
+
+CODEX_ADAPTER = "scripts/agent_runtime/adapters/codex.py"
+SECURITY_LAUNCHER = "scripts/launchers/claude.sh"
+LESSON = "curriculum/l2-uk-en/a1/sounds-letters/module.md"
+
+
+def _admit_ukrainian(seat, model, **review):
+    return resolve_and_admit(
+        (seat,), model=model, mode="read-only", review_dispatch=True, review_profile="ukrainian", **review
+    )
+
+
+@pytest.mark.parametrize(
+    "seat,model,review,reason",
+    [
+        pytest.param(
+            "codex",
+            "gpt-6.1-sol",
+            {"review_owned_paths": (CODEX_ADAPTER,)},
+            rf"subject exclusion: .*subject seat codex.*paths={CODEX_ADAPTER}",
+            id="native-sol-own-codex-adapter",
+        ),
+        pytest.param(
+            "claude",
+            "claude-sonnet-5-5",
+            {"review_owned_paths": (SECURITY_LAUNCHER,)},
+            "holds no ukrainian_review role",
+            id="native-sonnet-security-launcher",
+        ),
+        pytest.param("claude", "claude-sonnet-5-5", {}, "holds no ukrainian_review role", id="sonnet-standalone"),
+        pytest.param("agy", "gemini-3.1-pro-high", {}, "holds no ukrainian_review role", id="gemini-pro-standalone"),
+        pytest.param(
+            "claude",
+            "claude-opus-5-5",
+            {"review_changed_paths": (SECURITY_LAUNCHER,)},
+            f"first non-content path: {SECURITY_LAUNCHER}",
+            id="security-target",
+        ),
+        pytest.param(
+            "claude",
+            "claude-opus-5-5",
+            {"review_changed_paths": (LESSON, "scripts/publish/github.py")},
+            "first non-content path: scripts/publish/github.py",
+            id="mixed-target",
+        ),
+        pytest.param(
+            "codex",
+            "gpt-6.1-sol",
+            {"review_owned_paths": (LESSON,), "review_subject_seats": frozenset({"codex"})},
+            "subject exclusion: .*subject seat codex",
+            id="explicit-subject-seat",
+        ),
+        pytest.param(
+            "agy",
+            "gemini-3.8-flash-high",
+            {"review_subject_families": frozenset({"google"})},
+            "subject exclusion: .*subject family google",
+            id="explicit-subject-family",
+        ),
+        pytest.param(
+            "codex",
+            "gpt-6.1-sol",
+            {"review_owned_paths": ("scripts/agent_runtime/adapters/base.py",)},
+            "ambiguous subject-seat inference",
+            id="ambiguous-shared-adapter",
+        ),
+    ],
+)
+def test_ukrainian_admission_refuses_code_targets_own_subjects_and_unqualified_models(seat, model, review, reason):
+    with pytest.raises(ReviewAdmissionRefused, match=rf"REVIEW_ROUTE_REFUSED: .*{reason}"):
+        _admit_ukrainian(seat, model, **review)
+
+
+@pytest.mark.parametrize(
+    "seat,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("agy", "gemini-3.8-flash-high")]
+)
+@pytest.mark.parametrize(
+    "review",
+    [
+        pytest.param({}, id="standalone"),
+        pytest.param({"review_owned_paths": (LESSON,)}, id="owned-content"),
+        pytest.param({"review_changed_paths": (LESSON, "wiki/a1/old.md")}, id="changed-content"),
+        pytest.param({"review_subject_seats": frozenset({"cursor"})}, id="outside-subject"),
+    ],
+)
+def test_ukrainian_admission_keeps_content_only_catalog_language_reviews(seat, model, review):
+    (target,) = _admit_ukrainian(seat, model, **review)
+    assert (target.recipient, target.model) == (seat, model)
+
+
+def test_delegate_ukrainian_dispatch_of_its_own_adapter_is_refused(monkeypatch):
+    args = _args("--review-profile", "ukrainian", "--owned-path", CODEX_ADAPTER, verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None
+    assert "REVIEW_ROUTE_REFUSED:" in refusal and "subject seat codex" in refusal
+
+
+def test_delegate_ukrainian_dispatch_by_sonnet_is_refused(monkeypatch):
+    args = _args("--agent", "claude", "--model", "claude-sonnet-5-5", "--review-profile", "ukrainian", verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
+    assert target is None
+    assert "holds no ukrainian_review role" in refusal

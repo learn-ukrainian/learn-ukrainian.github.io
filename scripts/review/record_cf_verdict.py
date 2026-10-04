@@ -21,6 +21,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.agent_runtime.target_admission import ukrainian_review_refusal
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import absolute_path_spans, normalize_for_scan, publication_boundary, publication_cli
@@ -81,11 +82,6 @@ RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transc
 # Families the resolver never selects through a native harness: Grok reviews
 # only through the attested Cursor seat and Kimi never reviews (core.md P2).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
-# Delegate review admission's Ukrainian-profile seats and families
-# (``target_admission._resolve_review_target``); catalog review candidates
-# serve only the code and infra profiles.
-UKRAINIAN_REVIEW_SEATS = frozenset({"claude", "codex", "agy"})
-UKRAINIAN_REVIEW_FAMILIES = frozenset({"anthropic", "openai", "google"})
 
 
 class RecordError(RuntimeError):
@@ -638,8 +634,8 @@ def _require_formal_reviewer(
         raise RecordError(f"reviewer model refused: {refusal}")
     profile, _, _ = _review_qualification(task)
     if profile == "ukrainian":
-        if agent not in UKRAINIAN_REVIEW_SEATS or family not in UKRAINIAN_REVIEW_FAMILIES:
-            raise RecordError(f"reviewer model unqualified: {model!r} on {agent!r} is not a Ukrainian reviewer")
+        if refusal := ukrainian_review_refusal(agent, model):
+            raise RecordError(f"reviewer model unqualified: {refusal}")
     elif not _review_seats(agent=agent, requested=requested, model=model):
         raise RecordError(f"reviewer model unqualified: no catalog review seat runs {model!r} on {agent!r}")
 
@@ -676,6 +672,9 @@ def _require_qualified_reviewer(
     is prepared as the resolver prepares it, from the persisted subject flags and
     every changed or owned path: a seat never certifies a change to its own
     boundary, and a shared surface without an explicit subject fails closed.
+    A Ukrainian-profile verdict qualifies through admission's
+    ``ukrainian_review_refusal`` against the same paths and subject, so it
+    clears content-only targets and never a code, infra or mixed one.
     """
     if not author_families:
         raise RecordError("PR has no attributed author commits")
@@ -691,6 +690,8 @@ def _require_qualified_reviewer(
     if subject.fail_closed_reason:
         raise RecordError(f"reviewer subject context refused: {subject.fail_closed_reason}")
     if profile == "ukrainian":
+        if refusal := ukrainian_review_refusal(agent, model, target_paths=(*owned, *changed_paths), subject=subject):
+            raise RecordError(f"reviewer model unqualified for this Ukrainian review: {refusal}")
         return
     risk = effective_review_risk(risk, changed_paths, owned, profile=profile)
     inputs = ResolverInputs(

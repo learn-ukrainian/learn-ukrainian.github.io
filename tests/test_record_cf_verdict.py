@@ -2199,7 +2199,7 @@ def test_a_native_or_off_profile_verdict_the_resolver_never_qualifies_is_refused
 def test_a_ukrainian_profile_verdict_from_an_admitted_language_seat_records(
     monkeypatch, tmp_path, agent, model, families, recorded
 ):
-    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families=families)
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families=families, files=_files(LESSON))
     write_task(tasks, agent=agent, model=model, review_profile="ukrainian")
     assert recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["comment"] == (
         "posted"
@@ -2800,3 +2800,200 @@ def test_absent_subject_context_leaves_an_ordinary_cursor_opus_review_publishabl
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert result["comment"] == "posted"
     assert "model=claude-opus-5-5 family=anthropic" in comments[0]["body"]
+
+
+# --- #9714: a Ukrainian-profile verdict certifies Ukrainian content only ---------
+
+CODEX_ADAPTER = "scripts/agent_runtime/adapters/codex.py"
+SECURITY_LAUNCHER = "scripts/launchers/claude.sh"
+LESSON = "curriculum/l2-uk-en/a1/sounds-letters/module.md"
+# Delegate persists a Ukrainian review with ``review_risk`` null and no author model.
+UKRAINIAN = {"review_profile": "ukrainian", "review_risk": None}
+
+
+def record_ukrainian(monkeypatch, tmp_path, *, agent, model, families, files, **updates):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families, files=files)
+    write_task(tasks, agent=agent, model=model, **UKRAINIAN, **updates)
+    return tasks, comments, calls
+
+
+@pytest.mark.parametrize(
+    "agent,model,families,files,reason",
+    [
+        pytest.param(
+            "codex",
+            "gpt-6.1-sol",
+            {"anthropic"},
+            _files(CODEX_ADAPTER),
+            rf"subject exclusion: .*subject seat codex.*paths={CODEX_ADAPTER}",
+            id="native-sol-own-codex-adapter",
+        ),
+        pytest.param(
+            "claude",
+            "claude-sonnet-5-5",
+            {"openai"},
+            _files(SECURITY_LAUNCHER),
+            "holds no ukrainian_review role",
+            id="native-sonnet-security-launcher",
+        ),
+    ],
+)
+def test_the_null_risk_ukrainian_bypasses_publish_nothing(monkeypatch, tmp_path, agent, model, families, files, reason):
+    """The held-out probe's exact producer shapes: each published an APPROVE and a success status."""
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch, tmp_path, agent=agent, model=model, families=families, files=files
+    )
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "files,reason",
+    [
+        pytest.param(_files(SECURITY_LAUNCHER), f"first non-content path: {SECURITY_LAUNCHER}", id="security"),
+        pytest.param(_files("scripts/review/record_cf_verdict.py"), "non-content path", id="code"),
+        pytest.param(_files(LESSON, "scripts/publish/github.py"), "scripts/publish/github.py", id="mixed"),
+        pytest.param(ORDINARY_FILES, "docs/unit.md", id="english-docs"),
+        pytest.param(_files("curriculum/l2-uk-en/curriculum.yaml"), "curriculum.yaml", id="code-imported-manifest"),
+        pytest.param(
+            [{"filename": LESSON, "previous_filename": "scripts/build/lesson.py", "status": "renamed"}],
+            "scripts/build/lesson.py",
+            id="renamed-from-code",
+        ),
+        pytest.param(
+            [
+                {"filename": LESSON, "status": "modified"},
+                {"filename": "scripts/ocr/_credentials.py", "status": "removed"},
+            ],
+            "scripts/ocr/_credentials.py",
+            id="deleted-code",
+        ),
+    ],
+)
+def test_a_ukrainian_verdict_never_clears_a_code_or_mixed_target(monkeypatch, tmp_path, files, reason):
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch, tmp_path, agent="claude", model="claude-opus-5-5", families={"openai"}, files=files
+    )
+    with pytest.raises(recorder.RecordError, match=rf"Ukrainian review covers Ukrainian content only.*{reason}"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_a_ukrainian_verdict_with_code_owned_paths_publishes_nothing(monkeypatch, tmp_path):
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch,
+        tmp_path,
+        agent="claude",
+        model="claude-opus-5-5",
+        families={"openai"},
+        files=_files(LESSON),
+        owned_paths=[SECURITY_LAUNCHER],
+    )
+    with pytest.raises(recorder.RecordError, match=f"first non-content path: {SECURITY_LAUNCHER}"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "agent,model,reason",
+    [
+        ("claude", "claude-sonnet-5-5", "holds no ukrainian_review role"),
+        ("agy", "gemini-3.1-pro-high", "holds no ukrainian_review role"),
+        ("cursor", "grok-4.7-high", "is not a Ukrainian reviewer"),
+    ],
+)
+def test_a_ukrainian_verdict_from_a_model_without_the_catalog_role_is_refused(
+    monkeypatch, tmp_path, agent, model, reason
+):
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch, tmp_path, agent=agent, model=model, families={"moonshot"}, files=_files(LESSON)
+    )
+    if agent == "cursor":
+        write_task(
+            tasks,
+            agent=agent,
+            model=model,
+            resolved_model="Grok 4.7 256K High",
+            resolved_model_known=True,
+            resolved_model_source="cursor-stream-json",
+            **UKRAINIAN,
+        )
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "agent,model,subject,refused",
+    [
+        ("codex", "gpt-6.1-sol", {"review_subject_seats": ["codex"]}, "subject seat codex"),
+        ("claude", "claude-opus-5-5", {"review_subject_families": ["anthropic"]}, "subject family anthropic"),
+        ("agy", "gemini-3.8-flash-high", {"review_subject_seats": ["agy"]}, "subject seat agy"),
+        ("codex", "gpt-6.1-sol", {"review_subject_seats": ["cursor"]}, None),
+    ],
+)
+def test_explicit_subject_exclusions_bind_a_content_only_ukrainian_verdict(
+    monkeypatch, tmp_path, agent, model, subject, refused
+):
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch, tmp_path, agent=agent, model=model, families={"moonshot"}, files=_files(LESSON), **subject
+    )
+    if refused is None:
+        assert recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")[
+            "comment"
+        ] == ("posted")
+        return
+    with pytest.raises(recorder.RecordError, match=rf"subject exclusion: .*{refused}"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "agent,model,recorded",
+    [
+        ("codex", "gpt-6.1-sol", "model=gpt-6.1-sol family=openai"),
+        ("claude", "claude-opus-5-5", "model=claude-opus-5-5 family=anthropic"),
+        ("agy", "gemini-3.8-flash-high", "model=gemini-3.8-flash-high family=google"),
+    ],
+)
+@pytest.mark.parametrize(
+    "files",
+    [
+        pytest.param(_files(LESSON), id="lesson"),
+        pytest.param(
+            [
+                {"filename": "site/src/content/docs/a1/lesson.mdx", "status": "added"},
+                {"filename": "wiki/a1/old.md", "status": "removed"},
+                {"filename": LESSON, "previous_filename": "curriculum/l2-uk-en/a1/old/module.md", "status": "renamed"},
+                {"filename": "site/src/data/arc-a1.json", "status": "modified"},
+            ],
+            id="content-rename-and-deletion",
+        ),
+    ],
+)
+def test_a_content_only_ukrainian_verdict_from_a_catalog_language_seat_records(
+    monkeypatch, tmp_path, agent, model, recorded, files
+):
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch, tmp_path, agent=agent, model=model, families={"xai"}, files=files
+    )
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert (result["comment"], result["status"]) == ("posted", "posted")
+    assert recorded in comments[0]["body"]
+    assert calls == {"posts": 1, "statuses": 1}
+
+
+def test_a_ukrainian_verdict_by_an_author_family_is_still_refused(monkeypatch, tmp_path):
+    tasks, comments, calls = record_ukrainian(
+        monkeypatch, tmp_path, agent="codex", model="gpt-6.1-sol", families={"openai"}, files=_files(LESSON)
+    )
+    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
