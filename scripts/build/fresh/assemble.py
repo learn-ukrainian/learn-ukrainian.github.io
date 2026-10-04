@@ -178,6 +178,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts import config
+from scripts.audit.check_no_internal_ids import DOCS_DIR, scan_text
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
@@ -187,6 +188,7 @@ from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
+from scripts.curriculum.resolver.tokenize import tokenize
 from scripts.generate_mdx.atlas_links import atlas_href_for
 from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_CLOSING_LINE,
@@ -898,6 +900,7 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
+    literacy = bool((lesson_entry.get("inventory", {}).get("phonetics") or {}).get("letters"))
     include_english = body_english_support_allowed(level, plan_arc_position(plan))
 
     words_by_id: dict[str, dict[str, Any]] = {}
@@ -953,6 +956,18 @@ def assemble_expanded_document(
         option_origin: str | None = None,
         is_key: bool | None = None,
     ) -> None:
+        if role == "quoted_term" and literacy:
+            # A letter, its bracketed sound, or a capital/small pair is a
+            # phonetics item. A multi-letter word keeps the ordinary word path.
+            letter_tokens = tokenize(text)
+            if letter_tokens and all(
+                token.kind == "cyrillic" and (
+                    len(token.lookup) == 1
+                    or (len(token.lookup) == 2 and token.lookup[0].casefold() == token.lookup[1].casefold())
+                )
+                for token in letter_tokens
+            ):
+                role = "phonetics"
         if role == "gloss_ref":
             # The page prints the word record's lemma and gloss here; the writer only typed the id.
             gloss_match = _GLOSS_MARKUP_RE.match(text)
@@ -1825,6 +1840,14 @@ def check_5_assembly(
 
     for idx, u in enumerate(expanded_doc.get("units", [])):
         txt = u.get("text", "")
+        findings = scan_text(txt, DOCS_DIR / level / slug / f"{lesson_n}.mdx")
+        if findings:
+            finding = findings[0]
+            return CheckResult(
+                check=5, passed=False, layer="writer",
+                step=u.get("step"), activity=u.get("activity"), token=finding.value,
+                reason=f"internal_learner_term: {finding.kind}: {finding.value}",
+            )
         if "\u0300" in txt or "\u0301" in txt:
             return CheckResult(
                 check=5,

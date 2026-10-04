@@ -1,7 +1,9 @@
+import hashlib
 import os
 from unittest.mock import patch
 
 import pytest
+import yaml
 
 from scripts.audit.check_mdx_source_parity import (
     GENERATOR_DEPENDENCIES,
@@ -13,6 +15,94 @@ from scripts.audit.check_mdx_source_parity import (
 )
 
 pytestmark = pytest.mark.reads_content
+
+
+@pytest.fixture
+def fresh_page(tmp_path, monkeypatch):
+    from scripts.audit import check_mdx_source_parity as parity
+
+    docs = tmp_path / "site/src/content/docs"
+    sources = tmp_path / "curriculum/l2-uk-en"
+    state = sources / "evidence/a1/_state/demo"
+    state.mkdir(parents=True)
+    page = docs / "a1/demo/1.mdx"
+    page.parent.mkdir(parents=True)
+    page.write_text('---\ntitle: Demo\npipeline: v7\n---\nGenerated lesson\n')
+    digest = hashlib.sha256(page.read_bytes()).hexdigest()
+    snapshot = state / f"manifests/lesson-1/lesson.{digest}.mdx"
+    snapshot.parent.mkdir(parents=True)
+    snapshot.write_bytes(page.read_bytes())
+    inputs = {"lesson": {"path": page.relative_to(tmp_path).as_posix(), "sha256": digest}}
+    for key, relative in {
+        "plan": "lesson-plans/a1/demo.yaml", "pack": "evidence/a1/demo.yaml",
+        "words": "evidence/a1/_words.yaml", "provenance": "evidence/a1/_state/demo/lesson-1.provenance.yaml",
+        "lessons_lock": "evidence/a1/_state/demo/lessons.lock.yaml",
+    }.items():
+        source = sources / relative
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_text(f"{key}: synthetic\n")
+        inputs[key] = {"path": source.relative_to(tmp_path).as_posix(),
+                       "sha256": hashlib.sha256(source.read_bytes()).hexdigest()}
+    # Exercise nested file pins as well as ordinary source records.
+    inputs["activity_data"] = [inputs["pack"]]
+    raw = yaml.safe_dump({"kind": "lesson", "level": "a1", "slug": "demo", "lesson": 1, "inputs": inputs}).encode()
+    (state / "lesson-1.manifest.yaml").write_bytes(raw)
+    (state / "lesson-1.manifest.sha256").write_text(hashlib.sha256(raw).hexdigest() + "\n")
+    monkeypatch.setattr(parity, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(parity, "MDX_DIR", docs)
+    monkeypatch.setattr(parity, "SOURCE_DIR", sources)
+    monkeypatch.setattr(parity, "get_deleted_files", lambda *a: set())
+    return page, sources, state
+
+
+def test_fresh_page_matches_engine_snapshot(fresh_page):
+    page, _, _ = fresh_page
+    assert check_parity([page], {page}) == []
+
+
+def test_hand_edited_fresh_page_fails_even_with_source_change(fresh_page):
+    page, sources, _ = fresh_page
+    page.write_text(page.read_text() + "Manual edit\n")
+    violations = check_parity([page], {page, sources / "lesson-plans/a1/demo.yaml"})
+    assert len(violations) == 1 and "engine snapshot" in violations[0][1]
+
+
+@pytest.mark.parametrize("record", ["lesson-1.manifest.sha256", "lesson-1.provenance.yaml"])
+def test_fresh_page_rejects_changed_receipt_or_source(fresh_page, record):
+    page, _, state = fresh_page
+    (state / record).write_text("altered\n")
+    assert len(check_parity([page], {page})) == 1
+
+
+def test_fresh_page_rejects_malformed_required_source_pin(fresh_page):
+    page, _, state = fresh_page
+    manifest = state / "lesson-1.manifest.yaml"
+    doc = yaml.safe_load(manifest.read_bytes())
+    doc["inputs"]["words"] = {}
+    raw = yaml.safe_dump(doc).encode()
+    manifest.write_bytes(raw)
+    (state / "lesson-1.manifest.sha256").write_text(hashlib.sha256(raw).hexdigest())
+    assert len(check_parity([page], {page})) == 1
+
+
+def test_fresh_precommit_checks_staged_page_and_sources(fresh_page, monkeypatch):
+    from scripts.audit import check_mdx_source_parity as parity
+
+    page, sources, _ = fresh_page
+    root = sources.parents[1]
+    staged = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob("*") if p.is_file()}
+
+    def git_show(cmd, **kwargs):
+        return staged[cmd[2].removeprefix(":")]
+
+    monkeypatch.setattr(parity.subprocess, "check_output", git_show)
+    page.write_text("Unstaged change\n")
+    assert check_parity([page], {page}, cached=True) == []
+    staged[page.relative_to(root).as_posix()] = b"Hand edit staged\n"
+    assert len(check_parity([page], {page}, cached=True)) == 1
+    staged[page.relative_to(root).as_posix()] = next(v for k, v in staged.items() if k.endswith(".mdx") and "manifests" in k)
+    staged[(sources / "evidence/a1/_words.yaml").relative_to(root).as_posix()] = b"Changed staged source\n"
+    assert len(check_parity([page], {page}, cached=True)) == 1
 
 
 @pytest.fixture

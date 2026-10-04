@@ -2334,3 +2334,25 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
         assert report["warnings"] == [
             {"code": "resource_citation_omitted", "record": record_id, "reason": "citable_metadata_missing"}
         ]
+
+
+@pytest.mark.parametrize("pos", ["propn", "name", "noun"])
+def test_glossless_proper_name_keeps_vocab_card_but_has_no_flashcard(pos):
+    from scripts.generate_mdx.resources import vocab_items_to_components
+
+    mdx = vocab_items_to_components([
+        {"lemma": "Ніна", "translation": "", "pos": pos, "atlas_href": None},
+        {"lemma": "sample", "translation": "example", "pos": "noun", "atlas_href": None},
+    ])
+    assert '"word":"Ніна"' in mdx
+    assert '"front":"Ніна"' not in mdx
+    assert '"front":"sample","back":"example"' in mdx
+
+
+def test_proper_name_with_gloss_remains_in_flashcard_deck():
+    from scripts.generate_mdx.resources import vocab_items_to_components
+
+    mdx = vocab_items_to_components([
+        {"lemma": "Name", "translation": "a name", "pos": "propn", "atlas_href": None},
+    ])
+    assert '"front":"Name","back":"a name"' in mdx

@@ -1307,7 +1307,7 @@ def check_7_deterministic(
     if stream.failures:
         first = stream.failures[0]
         layer = (
-            "pack"
+            "engine" if first["code"] == codes.LETTER_OUTSIDE_STATE else "pack"
             if first["code"] in {codes.LEMMA_OUTSIDE_STATE, codes.UNKNOWN_WORD_ID, codes.PENDING_STRESS}
             else "writer"
         )

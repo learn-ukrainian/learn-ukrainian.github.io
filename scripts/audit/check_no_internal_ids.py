@@ -274,9 +274,14 @@ def scan_candidates(paths: list[Path], *, allow_external: bool = False) -> list[
 
 
 def scan_file(path: Path) -> list[Finding]:
+    return scan_text(path.read_text(encoding="utf-8"), path)
+
+
+def scan_text(text: str, path: Path) -> list[Finding]:
+    """Scan learner text with the same rules used by the file/commit gate."""
     findings: list[Finding] = []
     is_resources = path.name in _RESOURCE_FILENAMES
-    text = _blank_html_comments(path.read_text(encoding="utf-8"))
+    text = _blank_html_comments(text)
     for line_no, line in enumerate(text.splitlines(), start=1):
         if is_resources and _RESOURCE_PROVENANCE_KEY_RE.match(line):
             continue
