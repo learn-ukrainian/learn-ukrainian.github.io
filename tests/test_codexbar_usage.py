@@ -1077,8 +1077,7 @@ def test_dashboard_routing_html_agy_row_binds_gemini_family_budget():
 
 def test_get_cursor_lane_usage_is_cache_only_on_http_path(monkeypatch):
     """HTTP reads must not block on live Cursor probes."""
-    cache_invalidate(codexbar_usage_mod.CURSOR_CACHE_KEY)
-    codexbar_usage_mod._cursor_last_good = None
+    subscription_usage_mod._reset_cursor_usage_state_for_tests()
     probe_calls = {"login": 0, "windows": 0}
 
     def _login(**kwargs):
@@ -1123,6 +1122,26 @@ def test_get_cursor_lane_usage_is_cache_only_on_http_path(monkeypatch):
     assert cached["freshness"] == "fresh"
     assert cached["provider_windows"]["auto"]["used_pct"] == 12.0
     assert probe_calls == {"login": 0, "windows": 0}
+
+
+@pytest.mark.parametrize("invalidate_cache", [False, True])
+def test_cursor_state_reset_prevents_preceding_probe_leaking_into_http_read(monkeypatch, invalidate_cache):
+    """A preceding probe must leave neither a fresh cache nor last-good fallback."""
+    monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
+    probe = {"lane": "cursor", "probe_state": "healthy", "fetched_at": "2026-09-03T12:05:00Z"}
+    assert subscription_usage_mod._record_cursor_probe_result(probe) is True
+    assert subscription_usage_mod._cursor_last_good is not None
+    if invalidate_cache:
+        cache_invalidate(subscription_usage_mod.CURSOR_CACHE_KEY)
+    assert subscription_usage_mod.get_cursor_lane_usage()["freshness"] == (
+        "stale_last_good" if invalidate_cache else "fresh"
+    )
+
+    subscription_usage_mod._reset_cursor_usage_state_for_tests()
+
+    assert subscription_usage_mod._cursor_last_good is None
+    assert subscription_usage_mod.cache_get_with_age(subscription_usage_mod.CURSOR_CACHE_KEY, ttl=600) is None
+    assert subscription_usage_mod.get_cursor_lane_usage()["freshness"] == "unavailable"
 
 
 def test_failed_refresh_never_poison_last_known_good_capacity(monkeypatch):
@@ -1852,8 +1871,7 @@ def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
     10-minute CURSOR_CACHE_TTL_S — and a later successful probe replaces it."""
     from scripts.api import state_helpers as state_helpers_mod
 
-    cache_invalidate(codexbar_usage_mod.CURSOR_CACHE_KEY)
-    codexbar_usage_mod._cursor_last_good = None
+    subscription_usage_mod._reset_cursor_usage_state_for_tests()
     monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
 
     need_login = {
@@ -1895,8 +1913,7 @@ def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
 def test_cursor_need_login_within_short_ttl_still_served_fresh(monkeypatch):
     """A brand-new NEED_LOGIN probe is still usable as "fresh" within its
     short cache window (avoids a re-probe storm on every single request)."""
-    cache_invalidate(codexbar_usage_mod.CURSOR_CACHE_KEY)
-    codexbar_usage_mod._cursor_last_good = None
+    subscription_usage_mod._reset_cursor_usage_state_for_tests()
     monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
 
     need_login = {

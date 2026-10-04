@@ -22,7 +22,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.api.state_helpers import cache_get_with_age, cache_set
+from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
 
 try:
     from scripts.agent_runtime.adapters.cursor import (
@@ -2552,6 +2552,13 @@ def _cursor_probe_is_cacheable(data: dict[str, Any] | None) -> bool:
     if data.get("fetched_at"):
         return True
     return data.get("probe_state") in {"NEED_LOGIN", "NEED_PROBE", "healthy"}
+
+
+def _reset_cursor_usage_state_for_tests() -> None:
+    """Clear Cursor test state in its owning module, including the HTTP cache."""
+    global _cursor_last_good
+    _cursor_last_good = None
+    cache_invalidate(CURSOR_CACHE_KEY)
 
 
 def _record_cursor_probe_result(data: dict[str, Any] | None) -> bool:
