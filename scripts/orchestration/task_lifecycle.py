@@ -1018,6 +1018,18 @@ def _satisfied_kinds(kinds: set[str]) -> set[str]:
     return kinds | QUICK_FIX_SATISFIES if "quick_fix" in kinds else kinds
 
 
+def _missing_evidence(item: Mapping[str, Any], valid_evidence: Mapping[str, set[str]]) -> list[str]:
+    return sorted(set(item["required_evidence"]) - _satisfied_kinds(set(valid_evidence.get(item["id"], set()))))
+
+
+def _satisfied_criteria(ledger: Mapping[str, Any], valid_evidence: Mapping[str, set[str]]) -> list[str]:
+    return [
+        item["id"]
+        for item in ledger["ac_snapshot"]["criteria"]
+        if item["applicable"] and not _missing_evidence(item, valid_evidence)
+    ]
+
+
 def _criteria_due_blockers(
     ledger: Mapping[str, Any],
     valid_evidence: Mapping[str, set[str]],
@@ -1029,7 +1041,7 @@ def _criteria_due_blockers(
     for item in ledger["ac_snapshot"]["criteria"]:
         if not item["applicable"] or STATE_RANK[item["due_state"]] > target_rank:
             continue
-        missing = sorted(set(item["required_evidence"]) - _satisfied_kinds(valid_evidence.get(item["id"], set())))
+        missing = _missing_evidence(item, valid_evidence)
         if missing:
             blockers.append(f"{item['id']}: missing typed evidence {', '.join(missing)}")
     return blockers
@@ -1385,6 +1397,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         "waiting": list(dict.fromkeys(waiting)),
         "next_actions": list(dict.fromkeys(actions)),
         "valid_evidence": {key: sorted(value) for key, value in valid_evidence.items()},
+        "satisfied_criteria": _satisfied_criteria(ledger, valid_evidence),
         "preclose_missing_evidence": preclose_missing,
         "preclose_unchecked": preclose_unchecked,
         "goal_reached": goal_reached,
