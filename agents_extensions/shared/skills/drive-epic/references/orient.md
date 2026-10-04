@@ -21,9 +21,13 @@ hard-code a mode in prose; always query it fresh.
 Know your `SESSION_EPIC`, your stream, and your handoff slot (the launcher already
 claimed the stream lease — do **not** open or resume it yourself). Session health is
 **seat-specific** and is not an ordinary cold-start mint: only the Codex launcher mints
-its own startup canary; **grok / gemini / kimi** run
-`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane` mint/score only
-within the `thread-rollover` procedure; **Claude / Sonnet** have **no** canary lane and
+its own startup canary; **grok / kimi** run
+`.venv/bin/python -m scripts.session_canary.{grok,kimi}_lane` mint/score only
+within the `thread-rollover` procedure; **gemini** fails closed — do not run
+`gemini_lane` mint or score until an independently reviewed lease-safe runtime repair
+lands (its score path closes the session after a failed score or blocked hydration);
+halt the affected continuation, preserve handoff and session state, and leave
+disposition to the supervisor; **Claude / Sonnet** have **no** canary lane and
 use the native SessionStart / PostCompact hook chain + thread-handoff instead (do not
 call a non-existent `<model>_lane`).
 

@@ -24,11 +24,17 @@ paths. Do not load preparation mechanics merely to inspect or resume a packet.
 | Resume the exact replacement and prove continuity | [Resume and confirm](references/resume.md) |
 | Archive a confirmed predecessor or reconcile final cleanup | [Archive proof](references/archive.md) |
 
-Provider-seat canary: Grok, Gemini and Kimi mint their seat probe while preparing
-(`scripts.session_canary.{grok,gemini,kimi}_lane mint`; Grok detail in
+Provider-seat canary: Grok and Kimi mint their seat probe while preparing
+(`scripts.session_canary.{grok,kimi}_lane mint`; Grok detail in
 `docs/runbooks/grok-session-canary.md`), score it from memory on resumption, and
 stop through FAIL-HANDOFF below 8/10. This is additional to exact identity binding
 and the strict 10/10 continuity proof, never a replacement or a cleanup waiver.
+Gemini fails closed: `gemini_lane score` closes the session after a failed score
+or blocked hydration, so do not run `gemini_lane` mint or score until an
+independently reviewed lease-safe runtime repair lands. A Gemini seat halts the
+affected continuation and preserves its handoff and session state; the supervisor
+owns disposition. Never bypass the health check, record a canary result that was
+not scored, or treat this halt as a core or eligibility change.
 Claude and Sonnet use SessionStart/PostCompact; Codex keeps its existing launcher
 hydration and never reruns the launcher canary or touches the lease.
 
