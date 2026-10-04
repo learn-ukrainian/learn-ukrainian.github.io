@@ -68,6 +68,7 @@ from scripts.build.fresh.assemble import (
     check_5_assembly,
     check_9_stress_and_render,
     check_11_render,
+    plan_quote_units,
 )
 from scripts.build.fresh.candidates import classify_form_analyses, item_candidates, option_record_bindings
 from scripts.build.fresh.draft_schema import validate_draft
@@ -1308,7 +1309,7 @@ def check_7_deterministic(
         first = stream.failures[0]
         layer = (
             "engine" if first["code"] == codes.LETTER_OUTSIDE_STATE else "pack"
-            if first["code"] in {codes.LEMMA_OUTSIDE_STATE, codes.UNKNOWN_WORD_ID, codes.PENDING_STRESS}
+            if first["code"] in {codes.UNKNOWN_WORD_ID, codes.PENDING_STRESS}
             else "writer"
         )
         return failure(
@@ -1580,7 +1581,12 @@ def run_lesson(
             )
             if sources is None:
                 sources = source_session.enter_context(Sources())
-            stream = resolve(expanded_obj, selected_allowlist, sources)
+            stream = resolve(
+                expanded_obj, selected_allowlist, sources,
+                source_quote_units=plan_quote_units(
+                    expanded_obj, assembled.artifacts["provenance"], draft, lesson, pack
+                ),
+            )
         except ResolverError as err:
             layer = "pack" if err.code in {codes.UNKNOWN_WORD_ID, codes.LOCK_MISMATCH} else "engine"
             return finish(failure(7, err.message, layer, code=err.code))

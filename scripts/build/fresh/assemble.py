@@ -872,6 +872,58 @@ def _split_inline_spans(text: str, default_role: str) -> list[tuple[str, str]]:
     return spans
 
 
+def plan_quote_units(
+    expanded: ExpandedDocument,
+    provenance: dict[str, Any],
+    draft: dict[str, Any],
+    lesson: dict[str, Any],
+    pack: dict[str, Any],
+) -> frozenset[int]:
+    """Locate exact, plan-listed source quote occurrences for display only.
+
+    Use the existing quote block and record provenance, never punctuation or
+    a text search. A unit must cover the whole pack span with the assembler's
+    plain-text normalization; partial or rewritten quotes get no admission.
+    """
+    planned = {step["id"]: set(step.get("evidence") or []) for step in lesson.get("steps") or []}
+    blocks = {
+        (step["id"], index): block
+        for step in draft.get("steps") or []
+        for index, block in enumerate(step.get("blocks") or [])
+        if block.get("kind") == "quote"
+    }
+    texts = {record["id"]: record for record in pack.get("texts") or []}
+    spans = provenance.get("spans") or []
+    if len(spans) != len(expanded.units):
+        return frozenset()
+    admitted = set()
+    for unit, span in zip(expanded.units, spans, strict=True):
+        if (
+            unit.tab != "urok" or unit.role != "record_print"
+            or unit.activity is not None or unit.item is not None
+            or span.get("source") != "record" or span.get("record_kind") != "quote"
+            or span.get("role") != unit.role
+            or any(span.get(key) != value for key, value in unit.locator().items())
+        ):
+            continue
+        block = blocks.get((unit.step, unit.block), {})
+        ref = block.get("ref")
+        record = texts.get(ref)
+        if not record or ref != span.get("ref") or ref not in planned.get(unit.step, set()):
+            continue
+        quote = record.get("quote")
+        if not isinstance(quote, str):
+            continue
+        exact = strip_accents(page_text(quote))
+        if (
+            unit.text == exact and span.get("text") == exact
+            and span.get("start") == 0 and span.get("end") == len(exact)
+            and span.get("span") == 0
+        ):
+            admitted.add(unit.index)
+    return frozenset(admitted)
+
+
 def assemble_expanded_document(
     draft: dict[str, Any],
     plan: dict[str, Any],
@@ -3090,7 +3142,12 @@ def assemble_lesson(
         sources = Sources()
     except Exception:
         sources = None
-    stream = resolve(ExpandedDocument.from_data(expanded_doc), allowlist, sources)
+    expanded_obj = ExpandedDocument.from_data(expanded_doc)
+    lesson = next(entry for entry in plan["lessons"] if entry["n"] == lesson_n)
+    stream = resolve(
+        expanded_obj, allowlist, sources,
+        source_quote_units=plan_quote_units(expanded_obj, c5.artifacts["provenance"], draft, lesson, pack),
+    )
 
     # Major 4: Check if stream has any failures or open tokens
     stream_failures = list(getattr(stream, "failures", []) or [])
