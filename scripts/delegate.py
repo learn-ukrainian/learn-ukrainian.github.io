@@ -68,6 +68,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "review_author_model": str | null,  # trusted author identity for code review resolution
         "review_risk": str | null,  # code review resolver risk; budget substitution needs author + risk
         "review_profile": str | null,  # code (default) or ukrainian
+        "review_subject_seats": [str] | null,     # the --subject-seat values; verdict publication excludes them
+        "review_subject_families": [str] | null,  # the --subject-family values; verdict publication excludes them
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
@@ -5659,6 +5661,14 @@ def _declared_owned_paths(raw: object) -> tuple[str, ...] | None:
         return None
     paths = tuple(str(item) for item in raw if isinstance(item, str) and item.strip())
     return paths or None
+
+
+def _review_subject_state(args: argparse.Namespace) -> dict[str, list[str] | None]:
+    """The ``--subject-seat``/``--subject-family`` values, verbatim, that verdict publication qualifies against."""
+    return {
+        "review_subject_seats": list(getattr(args, "subject_seat", None) or ()) or None,
+        "review_subject_families": list(getattr(args, "subject_family", None) or ()) or None,
+    }
 
 
 def _owned_path_errors(values: Sequence[str] | None) -> list[str]:
@@ -11512,6 +11522,7 @@ def _dispatch(
                 "review_author_model": getattr(args, "review_author_model", None),
                 "review_risk": getattr(args, "review_risk", None),
                 "review_profile": getattr(args, "review_profile", None),
+                **_review_subject_state(args),
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
@@ -11937,6 +11948,7 @@ def _dispatch(
             "review_author_model": getattr(args, "review_author_model", None),
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),
+            **_review_subject_state(args),
             "task_id": task_id,
             "run_nonce": run_nonce,
             # Authoritative repository identity for the Work projection's scoped

@@ -18,6 +18,7 @@ import delegate
 from scripts.agent_runtime import target_admission
 from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 from scripts.review import reviewer_resolver
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 
 @pytest.fixture(scope="module")
@@ -1786,3 +1787,66 @@ def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
     assert routing.substitution is None
+
+
+@pytest.mark.parametrize(
+    "subject,seats,families",
+    [
+        pytest.param((), None, None, id="absent"),
+        pytest.param(
+            ("--subject-seat", "cursor", "--subject-seat", "grok-4.7", "--subject-family", "xai"),
+            ["cursor", "grok-4.7"],
+            ["xai"],
+            id="explicit",
+        ),
+    ],
+)
+@pytest.mark.parametrize("dry_run", [True, False])
+def test_review_dispatch_records_its_subject_context_for_publication(
+    ordinary_review_scope, monkeypatch, tmp_path, subject, seats, families, dry_run
+):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_ask_review_admission_floor import _git
+    from tests.test_delegate_check_budget import (
+        _dispatch_args,
+        _FakeBudgetResponse,
+        _patch_spawn,
+        _track_worker_spawns,
+        _urlopen_routing,
+    )
+
+    scope = ordinary_review_scope
+    worktree = scope / ".worktrees/dispatch/codex/budget-check-fixture"
+    _git(scope, "worktree", "add", "-b", "review-target", str(worktree), "HEAD")
+    real_popen = subprocess.Popen
+    _patch_spawn(monkeypatch, tmp_path)
+    spawned = _track_worker_spawns(monkeypatch)
+    worker_popen = subprocess.Popen
+
+    def fixture_popen(command, *args, **kwargs):
+        return (real_popen if command[0] == "git" else worker_popen)(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "Popen", fixture_popen)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", scope)
+    monkeypatch.setattr(delegate, "_local_repo_root", scope)
+    monkeypatch.chdir(scope)
+    monkeypatch.setattr(delegate, "_fetch_existing_branch", lambda _branch: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    args = _dispatch_args(
+        "--agent",
+        "codex",
+        "--model",
+        "gpt-6.1-sol",
+        "--require-review-verdict",
+        "--branch",
+        "review-target",
+        *subject,
+        *(("--dry-run",) if dry_run else ()),
+    )
+    args.cwd = None
+    args.worktree = "auto"
+    assert delegate.cmd_dispatch(args) == 0
+    assert bool(spawned) is not dry_run
+    state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    assert (state["review_subject_seats"], state["review_subject_families"]) == (seats, families)
+    assert recorder._review_subject(state) == (frozenset(seats or ()), frozenset(families or ()))

@@ -57,6 +57,7 @@ from scripts.review.reviewer_resolver import (
     resolve_family,
 )
 from scripts.review.security_paths import effective_review_risk
+from scripts.review.subject_seat import prepare_subject_exclusion
 
 VERDICT_LINE = re.compile(r"(?im)^\s*VERDICT:\s*(APPROVE|APPROVED|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)\b")
 NORMALIZED = {
@@ -588,6 +589,22 @@ def _review_qualification(task: dict[str, Any]) -> tuple[str, str, tuple[str, ..
     return profile, risk, tuple(owned)
 
 
+def _review_subject(task: dict[str, Any]) -> tuple[frozenset[str], frozenset[str]]:
+    """The persisted ``--subject-seat``/``--subject-family`` values a verdict is qualified against.
+
+    Absent or null means none were given; present values are the raw dispatch
+    flags, normalized and vetted by :func:`prepare_subject_exclusion`.
+    """
+    result = []
+    for key, label in (("review_subject_seats", "seats"), ("review_subject_families", "families")):
+        values = task.get(key)
+        values = [] if values is None else values
+        if not isinstance(values, list) or not all(isinstance(value, str) and value.strip() for value in values):
+            raise RecordError(f"review subject {label} invalid: reviewer qualification unavailable")
+        result.append(frozenset(values))
+    return result[0], result[1]
+
+
 def _require_formal_reviewer(
     task: dict[str, Any], *, agent: object, requested: object, reported: object, model: str, family: str
 ) -> None:
@@ -655,13 +672,24 @@ def _require_qualified_reviewer(
     The resolver decides at the target's effective risk, from every path the
     reviewed head changes plus the persisted owned paths, against each actual
     author family, so its union-transport exclusions (no Cursor reviewer for an
-    xAI or Moonshot author) bind here as they do at dispatch.
+    xAI or Moonshot author) bind here as they do at dispatch. Subject exclusion
+    is prepared as the resolver prepares it, from the persisted subject flags and
+    every changed or owned path: a seat never certifies a change to its own
+    boundary, and a shared surface without an explicit subject fails closed.
     """
     if not author_families:
         raise RecordError("PR has no attributed author commits")
     if family in author_families:
         raise RecordError("reviewer family equals an author family")
     profile, risk, owned = _review_qualification(task)
+    subject_seats, subject_families = _review_subject(task)
+    subject = prepare_subject_exclusion(
+        subject_seats=subject_seats,
+        subject_families=subject_families,
+        owned_paths=tuple(dict.fromkeys((*owned, *changed_paths))),
+    )
+    if subject.fail_closed_reason:
+        raise RecordError(f"reviewer subject context refused: {subject.fail_closed_reason}")
     if profile == "ukrainian":
         return
     risk = effective_review_risk(risk, changed_paths, owned, profile=profile)
@@ -672,6 +700,9 @@ def _require_qualified_reviewer(
         risk=risk,
         owned_paths=owned,
         changed_paths=changed_paths,
+        subject_seats=subject.seats,
+        subject_families=subject.families,
+        subject_evidence=subject.evidence,
     )
     seats = _review_seats(agent=agent, requested=requested, model=model)
     for author_family in sorted(author_families):

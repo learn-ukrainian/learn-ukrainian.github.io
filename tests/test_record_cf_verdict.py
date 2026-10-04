@@ -2626,3 +2626,177 @@ def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tm
     with pytest.raises(recorder.RecordError, match="absolute-path rule unavailable/incompatible"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+CURSOR_ADAPTER = "scripts/agent_runtime/adapters/cursor.py"
+SHARED_ADAPTER = "scripts/agent_runtime/adapters/base.py"
+
+
+def _files(*paths):
+    return [{"filename": path, "status": "modified"} for path in paths]
+
+
+@pytest.mark.parametrize("owned", [pytest.param({}, id="owned-absent"), {"owned_paths": [CURSOR_ADAPTER]}])
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+def test_a_cursor_opus_verdict_on_its_own_adapter_is_refused_before_publication(monkeypatch, tmp_path, shape, owned):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"}, files=_files(CURSOR_ADAPTER))
+    cursor_receipt_shape(tasks, shape, requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", **owned)
+    with pytest.raises(
+        recorder.RecordError, match=rf"subject exclusion: .*subject seat cursor.*paths={CURSOR_ADAPTER}"
+    ):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+def test_an_owned_cursor_adapter_refuses_its_cursor_reviewer_on_an_ordinary_target(monkeypatch, tmp_path, shape):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    cursor_receipt_shape(
+        tasks,
+        shape,
+        requested="claude-opus-5-5-high",
+        attested="Claude Opus 5.5 300K High",
+        owned_paths=[CURSOR_ADAPTER],
+    )
+    with pytest.raises(recorder.RecordError, match=r"subject exclusion: .*subject seat cursor"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+def test_a_cursor_grok_verdict_on_its_own_adapter_is_refused(monkeypatch, tmp_path, shape):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"}, files=_files(CURSOR_ADAPTER))
+    cursor_receipt_shape(tasks, shape, requested="grok-4.7-high", attested="Grok 4.7 256K High")
+    with pytest.raises(recorder.RecordError, match="unqualified"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "agent,model,families",
+    [("codex", "gpt-6.1-sol", {"anthropic"}), ("claude", "claude-opus-5-5", {"openai"})],
+)
+def test_a_native_reviewer_of_the_cursor_adapter_still_records(monkeypatch, tmp_path, agent, model, families):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families=families, files=_files(CURSOR_ADAPTER))
+    write_task(tasks, agent=agent, model=model, owned_paths=[CURSOR_ADAPTER])
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    assert f"Reviewer model: {model}" in comments[0]["body"]
+
+
+@pytest.mark.parametrize("where", ["changed", "owned"])
+@pytest.mark.parametrize("cursor", [False, True])
+def test_a_shared_adapter_without_explicit_subject_identity_fails_closed(monkeypatch, tmp_path, where, cursor):
+    files = _files(SHARED_ADAPTER) if where == "changed" else None
+    owned = {"owned_paths": [SHARED_ADAPTER]} if where == "owned" else {}
+    tasks, comments, calls = setup_record(
+        monkeypatch, tmp_path, families={"openai"} if cursor else {"anthropic"}, files=files
+    )
+    if cursor:
+        cursor_receipt_shape(
+            tasks, "terminal", requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", **owned
+        )
+    else:
+        write_task(tasks, **owned)
+    with pytest.raises(recorder.RecordError, match=r"ambiguous subject-seat inference .*refusing to guess"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "subject,cursor,refused",
+    [
+        pytest.param({"review_subject_seats": ["cursor"]}, False, None, id="sol-outside-named-seat"),
+        pytest.param({"review_subject_seats": ["codex"]}, False, "subject seat codex", id="sol-named-seat"),
+        pytest.param({"review_subject_families": ["openai"]}, False, "subject family openai", id="sol-named-family"),
+        pytest.param({"review_subject_seats": ["codex"]}, True, None, id="cursor-outside-named-seat"),
+        pytest.param({"review_subject_seats": ["cursor"]}, True, "subject seat cursor", id="cursor-named-seat"),
+        pytest.param({"review_subject_seats": ["CURSOR "]}, True, "subject seat cursor", id="cursor-normalized-seat"),
+        pytest.param({"review_subject_families": ["anthropic"]}, True, "subject family anthropic", id="cursor-family"),
+    ],
+)
+def test_explicit_subject_identity_resolves_a_shared_adapter(monkeypatch, tmp_path, subject, cursor, refused):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"google"}, files=_files(SHARED_ADAPTER))
+    if cursor:
+        cursor_receipt_shape(
+            tasks, "nested", requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", **subject
+        )
+    else:
+        write_task(tasks, **subject)
+    if refused is None:
+        result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert result["comment"] == "posted"
+        assert "Reviewer model:" in comments[0]["body"]
+        return
+    with pytest.raises(recorder.RecordError, match=rf"subject exclusion: .*{refused}"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_an_explicit_subject_still_infers_the_unambiguous_target_seats(monkeypatch, tmp_path):
+    tasks, comments, calls = setup_record(
+        monkeypatch, tmp_path, families={"google"}, files=_files(SHARED_ADAPTER, CURSOR_ADAPTER)
+    )
+    cursor_receipt_shape(
+        tasks,
+        "terminal",
+        requested="claude-opus-5-5-high",
+        attested="Claude Opus 5.5 300K High",
+        review_subject_seats=["codex"],
+    )
+    with pytest.raises(recorder.RecordError, match="subject seat cursor"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "updates,reason",
+    [
+        ({"review_subject_seats": "cursor"}, "review subject seats invalid"),
+        ({"review_subject_seats": [1]}, "review subject seats invalid"),
+        ({"review_subject_seats": [""]}, "review subject seats invalid"),
+        ({"review_subject_families": {"xai": True}}, "review subject families invalid"),
+        ({"review_subject_families": [None]}, "review subject families invalid"),
+        ({"review_subject_seats": ["unknown-seat"]}, "unknown subject seat 'unknown-seat'"),
+        ({"review_subject_families": ["unknown-family"]}, "unknown subject family 'unknown-family'"),
+    ],
+)
+@pytest.mark.parametrize("cursor", [False, True])
+def test_malformed_or_unknown_subject_context_is_refused_before_publication(
+    monkeypatch, tmp_path, updates, reason, cursor
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"google"})
+    if cursor:
+        cursor_receipt_shape(
+            tasks, "pinned", requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", **updates
+        )
+    else:
+        write_task(tasks, **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "subject",
+    [
+        pytest.param({}, id="absent"),
+        {"review_subject_seats": None, "review_subject_families": None},
+        {"review_subject_seats": [], "review_subject_families": []},
+    ],
+)
+def test_absent_subject_context_leaves_an_ordinary_cursor_opus_review_publishable(monkeypatch, tmp_path, subject):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    cursor_receipt_shape(
+        tasks, "terminal", requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", **subject
+    )
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    assert "model=claude-opus-5-5 family=anthropic" in comments[0]["body"]
