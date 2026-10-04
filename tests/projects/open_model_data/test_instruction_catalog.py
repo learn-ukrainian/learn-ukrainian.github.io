@@ -56,15 +56,33 @@ def repetition(sequences: list[tuple[str, ...]], length: int = 8) -> tuple[Fract
 def test_catalog_schema_counts_ids_and_plan_binding() -> None:
     Draft202012Validator.check_schema(SCHEMA)
     VALIDATOR.validate(CATALOG)
-    assert len(CATALOG["components"]) == 9
-    assert len(LINES) == len({line["id"] for line in LINES}) == 144
+    assert set(CATALOG["components"]) == {"C1", "C2", "C3", "C4", "C5", "C6", "C7", "C9"}
+    assert len(CATALOG["components"]) == 8
+    assert len(LINES) == len({line["id"] for line in LINES}) == 132
     operations = set()
     for component, entry in CATALOG["components"].items():
         assert entry["line_count"] == len(entry["instructions"])
         counts = Counter((line["operation"], line.get("sense_variant")) for line in entry["instructions"])
         assert set(counts.values()) == {12}
         operations.update((component, operation) for operation, _ in counts)
-    assert len(operations) == 11
+    assert operations == {
+        ("C1", "sentence_correction"),
+        ("C2", "agreed_form"),
+        ("C3", "synonyms"),
+        ("C3", "antonyms"),
+        ("C4", "idiom_definition"),
+        ("C5", "printed_spelling_rule"),
+        ("C6", "calque_correction"),
+        ("C6", "book_calque_replacement"),
+        ("C7", "modern_norm_selection"),
+        ("C9", "verbatim_section"),
+    }
+    assert len(operations) == 10
+    assert CATALOG["plan"] == {
+        "path": "docs/projects/open-model-data/PLAN.md",
+        "version": "3.5.0",
+        "body_sha256": "d8aaf46bea650d4a3331e7ebe4d90dccf2aae9c9bc9eefb270a41760d71acbeb",
+    }
     plan = ROOT / CATALOG["plan"]["path"]
     assert hashlib.sha256(plan.read_bytes().split(b"-->\n", 1)[1]).hexdigest() == CATALOG["plan"]["body_sha256"]
 
@@ -88,18 +106,22 @@ def test_schema_rejects_a_template_missing_any_declared_slot(line: dict, slot: s
 def test_approved_metadata_is_versionable_but_draft_cannot_be_eligible() -> None:
     approved = copy.deepcopy(CATALOG)
     approved.update(version="1.0.0", status="approved", training_eligible=True)
-    approved["plan"].update(version="3.4.5", body_sha256="a" * 64)
+    approved["plan"].update(version="3.5.1", body_sha256="a" * 64)
     approved["prefix_metric"]["status"] = "frozen"
     VALIDATOR.validate(approved)  # Shape only, never approval or an eligibility receipt.
     approved["status"] = "draft"
     assert list(VALIDATOR.iter_errors(approved))
 
 
-@pytest.mark.parametrize("mutation", ["component", "placeholder", "operation", "source_field", "answer"])
+@pytest.mark.parametrize(
+    "mutation", ["component", "removed_component", "placeholder", "operation", "source_field", "answer"]
+)
 def test_schema_refuses_out_of_contract_fields(mutation: str) -> None:
     bad = copy.deepcopy(CATALOG)
     if mutation == "component":
         del bad["components"]["C9"]
+    elif mutation == "removed_component":
+        bad["components"]["C8"] = copy.deepcopy(CATALOG["components"]["C9"])
     elif mutation == "source_field":
         bad["components"]["C9"]["source_fields"]["invented"] = "unattested"
     elif mutation == "answer":
@@ -112,7 +134,7 @@ def test_schema_refuses_out_of_contract_fields(mutation: str) -> None:
 
 def test_sentence_and_printed_example_slots_follow_a_colon_without_outer_quotes() -> None:
     for line in LINES:
-        for slot in {"sentence", "example", "context"} & set(line["slots"]):
+        for slot in {"sentence", "example"} & set(line["slots"]):
             assert line["template"].endswith(": {" + slot + "}")
     assert all("homonym" not in line["slots"] for line in CATALOG["components"]["C2"]["instructions"])
     assert all(
@@ -218,10 +240,16 @@ def test_balanced_catalog_and_two_line_drop_retain_prefix_slack() -> None:
     groups = defaultdict(list)
     for line in LINES:
         groups[line["id"].split(".")[0], line["operation"], line.get("sense_variant")].append(tokens(line["template"]))
+    assert len(groups) == 11
+    assert CATALOG["prefix_metric"]["prefix_lengths"] == [1, 4]
+    assert Fraction(str(CATALOG["prefix_metric"]["top1_max"])) == Fraction("0.15")
+    assert Fraction(str(CATALOG["prefix_metric"]["top5_max"])) == Fraction("0.60")
     for sequences in groups.values():
+        assert len(sequences) == 12
         for seqs in (sequences, sequences[:-2]):
             for length in CATALOG["prefix_metric"]["prefix_lengths"]:
                 top1, top5 = shares([seq[:length] for seq in seqs])
+                assert (top1, top5) == (Fraction(1, len(seqs)), Fraction(5, len(seqs)))
                 assert top1 <= Fraction("0.15")
                 assert top5 <= Fraction("0.60")
             assert shares(seqs)[0] <= Fraction("0.15")
@@ -238,8 +266,8 @@ def test_single_template_and_distinct_ids_with_one_start_fail() -> None:
     assert shares([seq[:1] for seq in distinct]) == (Fraction(1), Fraction(1))
 
 
-def test_shared_c8_suffix_and_middle_are_visible_despite_balanced_prefixes() -> None:
-    common = tokens("Наведи також оцінку цієї вимови з того самого абзацу.")
+def test_shared_suffix_and_middle_are_visible_despite_balanced_prefixes() -> None:
+    common = tokens("Shared sentence remains identical across otherwise distinct instruction lines.")
     sequences = [(str(index), "a", "b", "c", *common) for index in range(12)]
     assert shares([seq[:4] for seq in sequences]) == (Fraction(1, 12), Fraction(5, 12))
     assert repetition(sequences) == (Fraction(1), Fraction(1))
