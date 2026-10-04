@@ -34,6 +34,8 @@ from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
 EXPANDED_SCHEMA_PATH = REPO_ROOT / "schemas" / "lesson-expanded-v1.schema.json"
 PACK_SCHEMA_PATH = REPO_ROOT / "schemas" / "evidence-pack-v1.schema.json"
 WORDS_SCHEMA_PATH = REPO_ROOT / "schemas" / "evidence-words-v1.schema.json"
@@ -60,6 +62,43 @@ def validate_fixture_plan(plan: dict[str, Any]) -> None:
 def validate_fixture_draft(draft: dict[str, Any], level: str = "a1") -> None:
     validator = draft_validator(level)
     validator.validate(draft)
+
+
+@pytest.mark.parametrize(
+    ("text", "stressed", "expected"),
+    [
+        ("Привіт", "приві́т", "Приві́т"),
+        ("ПРИВІТ", "приві́т", "ПРИВІ́Т"),
+        ("привіт", "приві́т", "приві́т"),
+        ("Добрий день", "до́брий день", "До́брий день"),
+        ("ДоБрИй ДеНь", "до́брий день", "До́БрИй ДеНь"),
+        ("Ab’cd", "ab'ćd", "Ab’ćd"),
+        ("Ab‑cd", "ab-ćd", "Ab‑ćd"),
+    ],
+)
+def test_apply_stress_preserves_each_writer_character(text, stressed, expected):
+    prefix = "Say " if text[0].islower() else ""
+    expanded = {"lesson": {}, "units": [{"text": prefix + text + "!"}]}
+    stream = {"tokens": [{"unit_index": 0, "offset": len(prefix), "token": text, "selected": {"stressed": stressed}}]}
+    result = apply_stress(expanded, stream)
+    assert result["units"][0]["text"] == prefix + expected + "!"
+    assert expanded["units"][0]["text"] == prefix + text + "!"
+
+
+def test_apply_stress_multiword_chunk_with_separate_receipt_tokens():
+    expanded = {"units": [{"text": "Добрий день!"}]}
+    stream = {"tokens": [
+        {"unit_index": 0, "offset": 0, "token": "Добрий", "selected": {"stressed": "до́брий"}},
+        {"unit_index": 0, "offset": 7, "token": "день", "selected": {"stressed": "день"}},
+    ]}
+    assert apply_stress(expanded, stream)["units"][0]["text"] == "До́брий день!"
+
+
+def test_apply_stress_refuses_a_different_surface():
+    expanded = {"units": [{"text": "Привіт"}]}
+    stream = {"tokens": [{"unit_index": 0, "offset": 0, "token": "Привіт", "selected": {"stressed": "віта́ю"}}]}
+    with pytest.raises(AssemblerError, match="stress_surface_mismatch"):
+        apply_stress(expanded, stream)
 
 
 # --- Canonical Schema-Valid Fixture Builders ---

@@ -75,7 +75,7 @@ from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.listening import choice_error as listening_choice_error
 from scripts.build.fresh.listening import model_target as listening_model_target
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
-from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.build.fresh.path_guard import checked_existing_path, public_diagnostic
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.build.fresh.writer import strip_markdown_fence
 from scripts.curriculum.evidence import lock
@@ -1483,6 +1483,7 @@ def run_lesson(
 
     def finish(row: dict[str, Any] | None = None) -> dict[str, Any]:
         if row is not None:
+            row = {**row, "reason": public_diagnostic(row["reason"], repo_root)}
             rows[:] = [prior for prior in rows if prior["check"] != row["check"]]
             rows.append(row)
         existing = {prior["check"] for prior in rows}
@@ -1787,9 +1788,14 @@ def run_lesson(
             site_dir=site_dir,
         )
     except Exception as err:
-        reason = f"digest_error:{err.code}: {err.message}" if isinstance(err, DigestError) else str(err)
+        reason = public_diagnostic(
+            f"digest_error:{err.code}: {err.message}" if isinstance(err, DigestError) else str(err), repo_root
+        )
         path = getattr(err, "path", None) or (err.filename if isinstance(err, OSError) and err.filename else reason)
-        write_manifest_error(state_dir, n, reason, str(path), datetime.now(UTC).isoformat().replace("+00:00", "Z"))
+        write_manifest_error(
+            state_dir, n, reason, public_diagnostic(str(path), repo_root),
+            datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        )
         bad = failure(12, reason, "engine")
         record_failure(ledger_path, slug, n, bad, ledger_inputs)
         return {

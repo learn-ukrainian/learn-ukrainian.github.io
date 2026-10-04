@@ -15,6 +15,11 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+# Direct script execution puts audit/config.py ahead of the repository's config.
+# Replace the script directory, as module execution does; merely prepending the
+# root still leaves audit/config.py ahead of scripts/config.py.
+if __name__ == "__main__" and not __package__:
+    sys.path[0] = str(PROJECT_ROOT)
 MDX_DIR = PROJECT_ROOT / "site/src/content/docs"
 SOURCE_DIR = PROJECT_ROOT / "curriculum/l2-uk-en"
 LEGACY_TRACKS_FILE = PROJECT_ROOT / "scripts/audit/mdx_source_parity_legacy_tracks.yaml"
@@ -106,8 +111,6 @@ def is_whitespace_only(file_path: Path, base: str | None = None, cached: bool = 
 
 def _arc_generator():
     """The arc generator module; imported lazily so this file still runs as a bare script (pre-commit)."""
-    if str(PROJECT_ROOT) not in sys.path:
-        sys.path.insert(0, str(PROJECT_ROOT))
     from scripts.build import build_arc_landing
 
     return build_arc_landing
@@ -214,8 +217,6 @@ def is_fresh_generated(mdx_path: Path, staged: bool = False) -> bool:
         # These are the record inputs required to reproduce a fresh lesson.
         if not {"plan", "pack", "words", "provenance", "lessons_lock"} <= inputs.keys():
             return False
-        if str(PROJECT_ROOT) not in sys.path:
-            sys.path.insert(0, str(PROJECT_ROOT))
         from scripts.build.fresh.manifest import pinned_entries
 
         pins = pinned_entries(inputs)
