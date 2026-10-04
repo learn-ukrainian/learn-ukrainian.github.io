@@ -37,6 +37,8 @@ from scripts.publish.github import Request, request_run
 from scripts.review.model_catalog import (
     REVIEW_ACTIVITY,
     VALID_CODEX_EFFORTS,
+    VALID_REVIEW_PROFILES,
+    VALID_RISKS,
     activity_role_refusal,
     is_cursor_auto_selector,
     model_aliases,
@@ -45,11 +47,17 @@ from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_DISPATCH_MODELS,
     FORMAL_CURSOR_REVIEW_MODELS,
+    REVIEW_CANDIDATES,
+    UNKNOWN_AUTHOR_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
+    ResolverInputs,
+    candidate_dispatch_model,
     canonical_cursor_review_model,
+    evaluate_candidate,
     resolve_author_family,
     resolve_family,
 )
+from scripts.review.security_paths import effective_review_risk
 
 VERDICT_LINE = re.compile(r"(?im)^\s*VERDICT:\s*(APPROVE|APPROVED|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)\b")
 NORMALIZED = {
@@ -73,6 +81,11 @@ RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transc
 # Families the resolver never selects through a native harness: Grok reviews
 # only through the attested Cursor seat and Kimi never reviews (core.md P2).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
+# Delegate review admission's Ukrainian-profile seats and families
+# (``target_admission._resolve_review_target``); catalog review candidates
+# serve only the code and infra profiles.
+UKRAINIAN_REVIEW_SEATS = frozenset({"claude", "codex", "agy"})
+UKRAINIAN_REVIEW_FAMILIES = frozenset({"anthropic", "openai", "google"})
 
 
 class RecordError(RuntimeError):
@@ -261,8 +274,11 @@ def _author_task_family(harness: str, task_id: str, repository: str, task_root: 
         if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(harness):
             raise RecordError("author task provenance conflicts with commit trailer")
         if harness.startswith("cursor"):
-            if author_task.get("resolved_model_known") is not True:
-                raise RecordError("author family unknown")
+            source = author_task.get("resolved_model_source")
+            if author_task.get("resolved_model_known") is not True or not (
+                isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES
+            ):
+                raise RecordError("author family unknown: Cursor author model is not a runtime report")
             author_model = author_task.get("resolved_model")
         else:
             author_model = author_task.get("model")
@@ -527,30 +543,81 @@ def _cursor_requested_model(task: dict[str, Any], reported: object) -> object:
     return requested
 
 
-def _require_formal_reviewer(*, cursor: bool, requested: object, reported: object, model: str, family: str) -> None:
+def _review_qualification(task: dict[str, Any]) -> tuple[str, str, tuple[str, ...]]:
+    """The persisted review profile, risk and owned paths a verdict is qualified at.
+
+    Absent values take delegate review admission's defaults (``code``, ``medium``,
+    no owned paths); a present value outside the catalog's vocabulary proves nothing.
+    """
+    profile = task.get("review_profile")
+    profile = "code" if profile is None else profile
+    if not isinstance(profile, str) or profile not in {*VALID_REVIEW_PROFILES, "ukrainian"}:
+        raise RecordError("review profile invalid: reviewer qualification unavailable")
+    risk = task.get("review_risk")
+    risk = "medium" if risk is None else risk
+    if not isinstance(risk, str) or risk not in VALID_RISKS:
+        raise RecordError("review risk invalid: reviewer qualification unavailable")
+    owned = task.get("owned_paths")
+    owned = [] if owned is None else owned
+    if not isinstance(owned, list) or not all(isinstance(path, str) and path for path in owned):
+        raise RecordError("review owned paths invalid: reviewer qualification unavailable")
+    return profile, risk, tuple(owned)
+
+
+def _require_formal_reviewer(
+    task: dict[str, Any], *, agent: object, requested: object, reported: object, model: str, family: str
+) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
 
     Through Cursor only a pinned formal seat counts, and only when the runtime
     reported its display name (``"Grok 4.7 256K High"``, ``"Claude Opus 5.5 300K
     High"``): a bare or other-variant slug (``grok-4.7``, ``claude-opus-5-5-high``)
-    attests no variant, and Composer and Auto are unpinned. Through any other harness Grok
-    never judges and Kimi never reviews. A run requested with a formal seat's exact
-    slug counts only when the runtime attests that same seat (#9714). On every
-    harness the model must also hold a catalog review role (#9583), so Fable and
-    retired models never approve.
+    attests no variant, and Composer and Auto are unpinned. Through any other harness
+    Grok never judges and Kimi never reviews. The run must have been
+    requested with a formal seat's exact dispatch slug, and the runtime must attest
+    that same seat (#9714). On every harness the model must also hold a catalog
+    review role (#9583), so Fable and retired models never approve, and the
+    resolver must find the attested model eligible on its harness at the task's
+    persisted review profile and risk, so Cursor Grok never judges critical risk.
     """
+    cursor = agent == "cursor"
     if cursor:
         admitted = model in FORMAL_CURSOR_REVIEW_MODELS and reported != model
     else:
         admitted = family not in NATIVE_NON_REVIEWER_FAMILIES
     if not admitted:
         raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
-    expected = FORMAL_CURSOR_REVIEW_DISPATCH_MODELS.get(requested) if cursor and isinstance(requested, str) else None
-    if expected is not None and model != expected:
-        raise RecordError(f"Cursor reviewer model mismatch: requested {expected!r}, runtime attested {model!r}")
+    if cursor:
+        expected = FORMAL_CURSOR_REVIEW_DISPATCH_MODELS.get(requested) if isinstance(requested, str) else None
+        if expected is None:
+            raise RecordError(f"Cursor reviewer request {requested!r} is not a formal Cursor review dispatch pin")
+        if model != expected:
+            raise RecordError(f"Cursor reviewer model mismatch: requested {expected!r}, runtime attested {model!r}")
     # #9583: a model the catalog gives no review role never approves, on any harness.
     if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
         raise RecordError(f"reviewer model refused: {refusal}")
+    profile, risk, owned = _review_qualification(task)
+    if profile == "ukrainian":
+        if agent not in UKRAINIAN_REVIEW_SEATS or family not in UKRAINIAN_REVIEW_FAMILIES:
+            raise RecordError(f"reviewer model unqualified: {model!r} on {agent!r} is not a Ukrainian reviewer")
+        return
+    concrete = model.split("[", 1)[0]
+    pin = requested if cursor else concrete
+    risk = effective_review_risk(risk, (), owned, profile=profile)
+    inputs = ResolverInputs(author_model="", review_profile=profile, domain=profile, risk=risk, owned_paths=owned)
+    # Independence is decided against the PR's authors below; this is the seat's own qualification.
+    results = [
+        evaluate_candidate(candidate, inputs, author_family=UNKNOWN_AUTHOR_FAMILY)
+        for candidate in REVIEW_CANDIDATES.values()
+        if candidate.route == agent
+        and candidate.concrete_model == concrete
+        and candidate_dispatch_model(candidate) == pin
+    ]
+    if not results:
+        raise RecordError(f"reviewer model unqualified: no catalog review seat runs {model!r} on {agent!r}")
+    if not any(result.status == "eligible" for result in results):
+        reasons = "; ".join(sorted({str(result.reason) for result in results}))
+        raise RecordError(f"reviewer model unqualified at {profile}/{risk} review: {reasons}")
 
 
 @publication_boundary(RecordError)
@@ -583,7 +650,9 @@ def record(
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
     requested = _cursor_requested_model(task, reported) if cursor else task.get("model")
-    _require_formal_reviewer(cursor=cursor, requested=requested, reported=reported, model=model, family=family)
+    _require_formal_reviewer(
+        task, agent=task.get("agent"), requested=requested, reported=reported, model=model, family=family
+    )
     verdict = normalize_verdict(reply)
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:

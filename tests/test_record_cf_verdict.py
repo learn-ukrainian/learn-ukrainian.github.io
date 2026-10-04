@@ -139,9 +139,14 @@ def test_task_refusals_before_network(tmp_path, updates, reply, reason):
         recorder.record("review-one", task_root=tasks, lock_root=tmp_path / "locks")
 
 
-@pytest.mark.parametrize("model,family", [("claude-opus-5-5", "anthropic"), ("gpt-6.1-sol", "openai")])
-def test_formal_reviewer_still_admits_opus_and_sol(model, family):
-    recorder._require_formal_reviewer(cursor=False, requested=model, reported=model, model=model, family=family)
+@pytest.mark.parametrize("risk", [None, "low", "medium", "high", "critical"])
+@pytest.mark.parametrize(
+    "agent,model,family", [("claude", "claude-opus-5-5", "anthropic"), ("codex", "gpt-6.1-sol", "openai")]
+)
+def test_formal_reviewer_still_admits_opus_and_sol(agent, model, family, risk):
+    recorder._require_formal_reviewer(
+        {"review_risk": risk}, agent=agent, requested=model, reported=model, model=model, family=family
+    )
 
 
 def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=None, status_error=False):
@@ -1350,7 +1355,10 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
 
 
 def cursor_receipt(tasks, **updates):
-    write_task(tasks, agent="cursor", model="auto", **{"resolved_model_source": "cursor-stream-json", **updates})
+    """A Cursor review dispatched with the formal Grok slug."""
+    write_task(
+        tasks, agent="cursor", model="grok-4.7-high", **{"resolved_model_source": "cursor-stream-json", **updates}
+    )
 
 
 def test_cursor_display_name_receipt_records_the_concrete_slug_and_family(monkeypatch, tmp_path):
@@ -1572,7 +1580,7 @@ def test_a_cursor_grok_run_requested_as_grok_still_records(monkeypatch, tmp_path
 
 def test_a_cursor_opus_verdict_on_an_anthropic_authored_change_is_refused(monkeypatch, tmp_path):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
-    cursor_receipt(tasks, resolved_model="Claude Opus 5.5 300K High", resolved_model_known=True)
+    opus_receipt(tasks, resolved_model="Claude Opus 5.5 300K High", resolved_model_known=True)
     with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
@@ -1811,6 +1819,195 @@ def test_malformed_nested_cursor_request_metadata_is_refused(monkeypatch, tmp_pa
     assert comments == []
 
 
+def cursor_receipt_shape(tasks, shape, *, requested, attested, **updates):
+    """Each delegate producer shape for a Cursor review requested as ``requested``."""
+    if shape == "pinned":
+        fields = {
+            "agent": "cursor",
+            "model": requested,
+            "resolved_model": attested,
+            "resolved_model_known": True,
+            "resolved_model_source": "cursor-stream-json",
+        }
+        write_task(tasks, **{**fields, **updates})
+    elif shape == "terminal":
+        terminal_cursor_receipt(tasks, requested=requested, attested=attested, **updates)
+    else:
+        write_task(
+            tasks,
+            agent="cursor",
+            model=attested,
+            resolved_model=attested,
+            resolved_model_known=True,
+            resolved_model_source="cursor-stream-json",
+            substitution=nested_cursor_substitution(routed=requested, attested=attested),
+            **updates,
+        )
+
+
+CURSOR_SHAPES = ["pinned", "terminal", "nested"]
+
+
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+@pytest.mark.parametrize("risk", [None, "critical"])
+@pytest.mark.parametrize(
+    "requested,attested",
+    [
+        ("auto", "Claude Opus 5.5 300K High"),
+        ("claude-opus-5-5-high-fast", "Claude Opus 5.5 300K High"),
+        ("claude-opus-5-5", "Claude Opus 5.5 300K High"),
+        ("claude-opus-5-5", "Grok 4.7 256K High"),
+        ("auto", "Grok 4.7 256K High"),
+        ("grok-4.7", "Grok 4.7 256K High"),
+        ("composer-2.5", "Grok 4.7 256K High"),
+    ],
+)
+def test_a_cursor_request_outside_the_formal_dispatch_pins_is_refused_before_publication(
+    monkeypatch, tmp_path, shape, risk, requested, attested
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    assert requested not in recorder.FORMAL_CURSOR_REVIEW_DISPATCH_MODELS
+    cursor_receipt_shape(tasks, shape, requested=requested, attested=attested, review_risk=risk)
+    with pytest.raises(recorder.RecordError, match="is not a formal Cursor review dispatch pin"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+@pytest.mark.parametrize(
+    "updates,reason",
+    [
+        ({"review_risk": "critical"}, "unqualified at code/critical review"),
+        ({"review_risk": "critical", "review_profile": "infra"}, "unqualified at infra/critical review"),
+        ({"review_risk": "high"}, "unqualified at code/high review"),
+        # A security-sensitive owned path raises the effective risk to critical.
+        ({"owned_paths": ["scripts/review/record_cf_verdict.py"]}, "unqualified at code/critical review"),
+        ({"review_risk": "low", "owned_paths": ["scripts/agent_runtime"]}, "unqualified at code/critical review"),
+    ],
+)
+def test_an_attested_cursor_grok_verdict_above_its_qualified_risk_is_refused_before_publication(
+    monkeypatch, tmp_path, shape, updates, reason
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    cursor_receipt_shape(tasks, shape, requested="grok-4.7-high", attested="Grok 4.7 256K High", **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+@pytest.mark.parametrize(
+    "updates",
+    [{}, {"review_risk": "low"}, {"review_risk": "medium"}, {"review_profile": "infra"}, {"owned_paths": ["docs"]}],
+)
+def test_an_attested_cursor_grok_verdict_below_critical_still_records(monkeypatch, tmp_path, shape, updates):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    cursor_receipt_shape(tasks, shape, requested="grok-4.7-high", attested="Grok 4.7 256K High", **updates)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert (result["comment"], result["status"]) == ("posted", "posted")
+    assert "model=grok-4.7 family=xai" in comments[0]["body"]
+    assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize("shape", CURSOR_SHAPES)
+@pytest.mark.parametrize("updates", [{}, {"review_risk": "high"}, {"review_risk": "critical"}])
+def test_an_attested_cursor_opus_verdict_records_through_critical_risk(monkeypatch, tmp_path, shape, updates):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    cursor_receipt_shape(
+        tasks, shape, requested="claude-opus-5-5-high", attested="Claude Opus 5.5 300K High", **updates
+    )
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert (result["comment"], result["status"]) == ("posted", "posted")
+    assert "model=claude-opus-5-5 family=anthropic" in comments[0]["body"]
+    assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize(
+    "updates,reason",
+    [
+        ({"review_risk": "extreme"}, "review risk invalid"),
+        ({"review_risk": ""}, "review risk invalid"),
+        ({"review_risk": 4}, "review risk invalid"),
+        ({"review_risk": ["low"]}, "review risk invalid"),
+        ({"review_profile": "folk"}, "review profile invalid"),
+        ({"review_profile": ""}, "review profile invalid"),
+        ({"review_profile": ["code"]}, "review profile invalid"),
+        ({"owned_paths": "scripts"}, "review owned paths invalid"),
+        ({"owned_paths": [1]}, "review owned paths invalid"),
+        ({"owned_paths": [""]}, "review owned paths invalid"),
+    ],
+)
+@pytest.mark.parametrize("cursor", [False, True])
+def test_invalid_persisted_review_qualification_is_refused_before_publication(
+    monkeypatch, tmp_path, updates, reason, cursor
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"anthropic"} if not cursor else {"openai"})
+    if cursor:
+        cursor_receipt_shape(tasks, "terminal", requested="grok-4.7-high", attested="Grok 4.7 256K High", **updates)
+    else:
+        write_task(tasks, **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "updates,reason",
+    [
+        ({"agent": "claude", "model": "claude-sonnet-5-5", "review_risk": "critical"}, "Sonnet is excluded"),
+        ({"agent": "claude", "model": "claude-sonnet-5-5", "review_risk": "high"}, "unqualified at code/high"),
+        ({"agent": "grok", "model": "grok-4.7"}, "is not a formal reviewer on this harness"),
+        ({"agent": "kimi", "model": "kimi-k3"}, "is not a formal reviewer on this harness"),
+        # Gemini reviews Ukrainian only: no code-profile seat runs it.
+        ({"agent": "agy", "model": "gemini-3.8-flash-high"}, "no catalog review seat"),
+        ({"agent": "codex", "model": "claude-opus-5-5"}, "no catalog review seat"),
+        ({"agent": "cursor-x", "model": "gpt-6.1-sol"}, "no catalog review seat"),
+        (
+            {
+                "agent": "cursor",
+                "model": "grok-4.7-high",
+                "resolved_model": "Grok 4.7 256K High",
+                "resolved_model_known": True,
+                "resolved_model_source": "cursor-stream-json",
+                "review_profile": "ukrainian",
+            },
+            "is not a Ukrainian reviewer",
+        ),
+    ],
+)
+def test_a_native_or_off_profile_verdict_the_resolver_never_qualifies_is_refused(
+    monkeypatch, tmp_path, updates, reason
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    write_task(tasks, **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "agent,model,families,recorded",
+    [
+        ("agy", "gemini-3.8-flash-high", {"openai"}, "family=google"),
+        ("codex", "gpt-6.1-sol", {"google"}, "family=openai"),
+        ("claude", "claude-opus-5-5", {"google"}, "family=anthropic"),
+    ],
+)
+def test_a_ukrainian_profile_verdict_from_an_admitted_language_seat_records(
+    monkeypatch, tmp_path, agent, model, families, recorded
+):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families=families)
+    write_task(tasks, agent=agent, model=model, review_profile="ukrainian")
+    assert recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["comment"] == (
+        "posted"
+    )
+    assert recorded in comments[0]["body"]
+
+
 # --- #9714: author provenance through delegate-normalized X-Agent trailers ------
 
 
@@ -1927,6 +2124,78 @@ def test_an_unattested_canonical_cursor_record_is_refused(monkeypatch, tmp_path,
     )
     with pytest.raises(recorder.RecordError, match="author family"):
         recorder.author_families(REPOSITORY, 42, tasks)
+
+
+AUTHOR_SOURCES_WITHOUT_A_RUNTIME_REPORT = [
+    pytest.param({"__drop__": True}, id="absent"),
+    pytest.param({"resolved_model_source": None}, id="null"),
+    pytest.param({"resolved_model_source": ""}, id="empty"),
+    pytest.param({"resolved_model_source": "pending"}, id="pending"),
+    pytest.param({"resolved_model_source": "unknown"}, id="unknown"),
+    pytest.param({"resolved_model_source": "unattested-harness"}, id="unattested-harness"),
+    pytest.param({"resolved_model_source": "models_dev_cached_alias"}, id="catalog-alias"),
+    pytest.param({"resolved_model_source": ["cursor-stream-json"]}, id="list"),
+]
+
+
+def unreported_cursor_author(tasks, task_id, resolved_model, source):
+    source = dict(source)
+    drop = source.pop("__drop__", False)
+    cursor_author(tasks, task_id, resolved_model, **source)
+    if drop:
+        path = tasks / f"{task_id}.json"
+        data = json.loads(path.read_text())
+        del data["resolved_model_source"]
+        path.write_text(json.dumps(data))
+
+
+@pytest.mark.parametrize("source", AUTHOR_SOURCES_WITHOUT_A_RUNTIME_REPORT)
+@pytest.mark.parametrize("task_id", ["cursor-9714-grok-author", "9714-legacy-author"])
+def test_a_cursor_author_record_without_a_runtime_reported_source_is_refused(monkeypatch, tmp_path, source, task_id):
+    tasks = tmp_path / "tasks"
+    unreported_cursor_author(tasks, task_id, "Grok 4.7 256K High", source)
+    monkeypatch.setattr(recorder, "_pages", lambda args: [producer_trailer_commit("cursor", task_id)])
+    with pytest.raises(recorder.RecordError, match="Cursor author model is not a runtime report"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+
+
+@pytest.mark.parametrize("source", sorted(recorder.RUNTIME_REPORTED_MODEL_SOURCES))
+def test_a_cursor_author_record_with_each_runtime_reported_source_resolves(monkeypatch, tmp_path, source):
+    tasks = tmp_path / "tasks"
+    cursor_author(tasks, "cursor-9714-opus-author", "Claude Opus 5.5 300K High", resolved_model_source=source)
+    monkeypatch.setattr(recorder, "_pages", lambda args: [producer_trailer_commit("cursor", "cursor-9714-opus-author")])
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"anthropic"}
+
+
+def record_against_cursor_author(monkeypatch, tmp_path, source):
+    """Publish a Sol verdict whose PR author is a real Cursor task record."""
+    real_author_families = recorder.author_families
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "author_families", real_author_families)
+    unreported_cursor_author(tasks, "cursor-9714-opus-critical", "Grok 4.7 256K High", source)
+    monkeypatch.setattr(
+        recorder, "_pages", lambda args: [producer_trailer_commit("cursor", "cursor-9714-opus-critical")]
+    )
+    return tasks, comments, calls
+
+
+@pytest.mark.parametrize("source", AUTHOR_SOURCES_WITHOUT_A_RUNTIME_REPORT)
+def test_an_unreported_cursor_author_blocks_publication(monkeypatch, tmp_path, source):
+    tasks, comments, calls = record_against_cursor_author(monkeypatch, tmp_path, source)
+    with pytest.raises(recorder.RecordError, match="Cursor author model is not a runtime report"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_a_live_shape_cursor_author_still_admits_an_independent_verdict(monkeypatch, tmp_path):
+    tasks, comments, calls = record_against_cursor_author(
+        monkeypatch, tmp_path, {"resolved_model_source": "cursor-stream-json"}
+    )
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert (result["comment"], result["status"]) == ("posted", "posted")
+    assert "model=gpt-6.1-sol family=openai" in comments[0]["body"]
+    assert calls == {"posts": 1, "statuses": 1}
 
 
 @pytest.fixture
