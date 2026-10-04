@@ -137,8 +137,8 @@ _REVIEW_TOOL_CONFIG_KEYS = ("review_verdict_required", "review_isolation", "revi
 _PRIVATE_STATE_COMPONENTS = frozenset({".claude", ".agent", ".codex"})
 # The Cyrillic and Cyrillic Supplement blocks: any such character marks Ukrainian content.
 CYRILLIC = re.compile("[Ѐ-ӿԀ-ԯ]")
-# C0 controls other than tab, LF and CR, DEL, and the C1 controls.
-_CONTROL = re.compile("[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]")
+# Tab, LF, and CR are the only control characters Kimi content may contain.
+_KEPT_CONTROLS = frozenset((0x09, 0x0A, 0x0D))
 TEXT_RULE = (
     "Kimi admits only UTF-8 text without control characters other than tab, LF and CR; "
     "UTF-16, other encodings and binary files are refused"
@@ -371,6 +371,16 @@ def _sample(paths: list[str]) -> str:
 _CYRILLIC_TEXT = "Cyrillic text"
 
 
+def _has_disallowed_control(text: str) -> bool:
+    """True for a C0 control other than tab, LF, and CR, or for DEL and the C1 controls."""
+    for code in map(ord, text):
+        if code in _KEPT_CONTROLS:
+            continue
+        if code < 0x20 or 0x7F <= code <= 0x9F:
+            return True
+    return False
+
+
 def content_problem(data: bytes | None) -> str | None:
     """Why ``data`` is not admissible Kimi content, or None when it is.
 
@@ -384,7 +394,7 @@ def content_problem(data: bytes | None) -> str | None:
         text = data.decode("utf-8")
     except UnicodeDecodeError:
         return "not UTF-8"
-    if _CONTROL.search(text):
+    if _has_disallowed_control(text):
         return "control characters"
     if CYRILLIC.search(text):
         return _CYRILLIC_TEXT

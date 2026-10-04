@@ -8,5 +8,8 @@ dependencies = ["dagger-io"]
 requires = ["uv_build>=0.8.4,<0.9.0"]
 build-backend = "uv_build"
 
+[tool.uv]
+constraint-dependencies = ["urllib3>=2.8.0"]
+
 [tool.uv.sources]
 dagger-io = { path = "sdk", editable = true }
