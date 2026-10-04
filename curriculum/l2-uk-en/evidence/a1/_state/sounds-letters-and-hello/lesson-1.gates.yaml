@@ -1,0 +1,134 @@
+checks:
+- check: 1
+  status: passed
+- check: 2
+  status: passed
+- check: 3
+  status: passed
+- check: 4
+  details:
+    draft_report:
+      lessons:
+      - explanation_coverage:
+          explained: 9
+          total: 9
+        n: 1
+        planned_workbook: 1
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities:
+          by_type:
+            quiz: 9
+            watch-and-repeat: 0
+          total: 9
+      - explanation_coverage: not_available_at_this_stage
+        n: 2
+        planned_workbook: 2
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage: not_available_at_this_stage
+        n: 3
+        planned_workbook: 2
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage: not_available_at_this_stage
+        n: 4
+        planned_workbook: 2
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage: not_available_at_this_stage
+        n: 5
+        planned_workbook: 3
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage: not_available_at_this_stage
+        n: 6
+        planned_workbook: 0
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      module:
+        explanation_coverage: not_available_at_this_stage
+        inline_activities: 26
+        inline_response_opportunities_total: not_available_at_this_stage
+        planned_workbook_total: 10
+        rendered_and_playable_total: not_available_at_this_stage
+        response_opportunities_by_type: not_available_at_this_stage
+        response_opportunities_total: not_available_at_this_stage
+        workbook_activities: 10
+        workbook_response_opportunities_total: not_available_at_this_stage
+      module_slug: sounds-letters-and-hello
+      rendered: not_available_at_this_stage
+      stage: draft
+  status: passed
+- check: 5
+  status: passed
+- check: 6
+  details:
+    not_checked:
+    - word_target_not_calibrated
+    - lesson_structural_minimums_not_calibrated
+    ukrainian_share: 0.025271
+    ukrainian_tokens: 7
+    urok_tokens: 277
+    word_target: 210
+  status: passed
+- check: 7
+  details:
+    open_questions: 0
+    requirement_receipts: []
+    tokens: 938
+  status: passed
+- check: 8
+  details:
+    answered: 0
+    questions: 0
+  status: passed
+- check: 9
+  status: passed
+- check: 10
+  reason: grammar_checker_undecided
+  status: not_checked
+- check: 11
+  details:
+    verify_shippable:
+      corpus_hammer_required: true
+      level: a1
+      render_fully_validated: true
+      shippable: true
+      slug: sounds-letters-and-hello
+      steps:
+      - detail: all 1 planned lesson files present
+        missing_count: 0
+        missing_lesson_ids: []
+        passed: true
+        planned_count: 6
+        reason: planned_lessons_present
+        required_count: 1
+        required_lesson_ids:
+        - 1
+        step: fresh_lessons
+      - detail: 'lesson 1: all four tabs present'
+        lesson_id: 1
+        missing_tabs: []
+        passed: true
+        reason: lesson_tabs_present
+        step: fresh_tabs.1
+      - detail: page compiled with Astro MDX; all 7 JSON.parse(`…`) island prop(s) evaluate
+        layer: null
+        passed: true
+        step: mdx_compile.1
+      - detail: page compiled with Astro MDX; all 0 JSON.parse(`…`) island prop(s) evaluate
+        layer: null
+        passed: true
+        step: mdx_compile.index
+      - detail: compiled and evaluated 2/2 fresh MDX pages
+        passed: true
+        step: mdx_render
+      - detail: astro build green
+        layer: null
+        passed: true
+        step: astro_build
+  status: passed
+level: a1
+n: 1
+passed: true
+slug: sounds-letters-and-hello

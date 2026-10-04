@@ -1,0 +1,432 @@
+activities:
+- examples:
+  - A sound spoken while you listen.
+  - A written letter shown while you look.
+  id: a1
+  instruction: Listen to your teacher first, then look at the letter shown.
+  prompt: Which part reaches your ears, and which part reaches your eyes?
+- id: a2
+  instruction: Use both parts of each printed model. Choose letter or sound for the part shown.
+  items:
+  - correct: 0
+    explanation: The capital and small shapes follow the seeing cue.
+    host:
+      kind: quote
+      ref: T-006
+    kind: comprehension
+    option_why:
+    - The shapes after the seeing cue are written letters.
+    - The part after the seeing cue shows shapes rather than a bracketed sound.
+    options:
+    - Letter
+    - Sound
+    question: What does {{uk:А, а}} represent in this model?
+  - correct: 1
+    explanation: Square brackets mark the sound representation after the hearing cue.
+    host:
+      kind: quote
+      ref: T-006
+    kind: comprehension
+    option_why:
+    - The bracketed part follows the hearing cue, rather than showing the letter shapes.
+    - The bracketed part represents the sound after the hearing cue.
+    options:
+    - Letter
+    - Sound
+    question: What does {{uk:[а]}} represent in this model?
+  - correct: 1
+    explanation: The capital and small shapes follow the seeing cue.
+    host:
+      kind: quote
+      ref: T-007
+    kind: comprehension
+    option_why:
+    - The part after the seeing cue shows shapes rather than a bracketed sound.
+    - The shapes after the seeing cue are written letters.
+    options:
+    - Sound
+    - Letter
+    question: What does {{uk:О, о}} represent in this model?
+  - correct: 0
+    explanation: Square brackets mark the sound representation after the hearing cue.
+    host:
+      kind: quote
+      ref: T-007
+    kind: comprehension
+    option_why:
+    - The bracketed part represents the sound after the hearing cue.
+    - The bracketed part follows the hearing cue, rather than showing the letter shapes.
+    options:
+    - Sound
+    - Letter
+    question: What does {{uk:[о]}} represent in this model?
+  - correct: 0
+    explanation: The capital and small shapes follow the seeing cue.
+    host:
+      kind: quote
+      ref: T-008
+    kind: comprehension
+    option_why:
+    - The shapes after the seeing cue are written letters.
+    - The part after the seeing cue shows shapes rather than a bracketed sound.
+    options:
+    - Letter
+    - Sound
+    question: What does {{uk:У, у}} represent in this model?
+  - correct: 1
+    explanation: Square brackets mark the sound representation after the hearing cue.
+    host:
+      kind: quote
+      ref: T-008
+    kind: comprehension
+    option_why:
+    - The bracketed part follows the hearing cue, rather than showing the letter shapes.
+    - The bracketed part represents the sound after the hearing cue.
+    options:
+    - Letter
+    - Sound
+    question: What does {{uk:[у]}} represent in this model?
+  - correct: 1
+    explanation: The capital and small shapes follow the seeing cue.
+    host:
+      kind: quote
+      ref: T-009
+    kind: comprehension
+    option_why:
+    - The part after the seeing cue shows shapes rather than a bracketed sound.
+    - The shapes after the seeing cue are written letters.
+    options:
+    - Sound
+    - Letter
+    question: What does {{uk:И, и}} represent in this model?
+  - correct: 0
+    explanation: Square brackets mark the sound representation after the hearing cue.
+    host:
+      kind: quote
+      ref: T-009
+    kind: comprehension
+    option_why:
+    - The bracketed part represents the sound after the hearing cue.
+    - The bracketed part follows the hearing cue, rather than showing the letter shapes.
+    options:
+    - Sound
+    - Letter
+    question: What does {{uk:[и]}} represent in this model?
+- id: a3
+  instruction: Play the four models in order. Listen, pause, and repeat each sound aloud.
+  items:
+  - explanation: Repeat the sound from this recording before going to the next model.
+    letter: А
+    video: V-004
+  - explanation: Repeat the sound from this recording before going to the next model.
+    letter: О
+    video: V-005
+  - explanation: Repeat the sound from this recording before going to the next model.
+    letter: У
+    video: V-006
+  - explanation: Repeat the sound from this recording before going to the next model.
+    letter: И
+    video: V-007
+- id: a4
+  instruction: Find each capital and small letter pair. Trace both shapes, then copy them into your notebook. Check your copies
+    against the grid; notebook copying is not scored here.
+  letters:
+  - lower: а
+    upper: А
+  - lower: о
+    upper: О
+  - lower: у
+    upper: У
+  - lower: и
+    upper: И
+- id: a5
+  instruction: Listen to each complete recording with pictures, titles, captions, thumbnails, and written target clues hidden
+    until you submit. Choose the letter that matches what you hear.
+  items:
+  - correct: 1
+    explanation: Match what you heard to its written letter; replay the recording if needed.
+    host:
+      kind: video
+      ref: V-004
+    kind: listening
+    option_why:
+    - '{{uk:О}} belongs to a different sound model; this recording models {{uk:А}}.'
+    - '{{uk:А}} matches the sound modeled in this recording.'
+    - '{{uk:И}} belongs to a different sound model; this recording models {{uk:А}}.'
+    - '{{uk:У}} belongs to a different sound model; this recording models {{uk:А}}.'
+    options:
+    - О
+    - А
+    - И
+    - У
+    question: Which letter matches the sound in this recording?
+    target_record: А
+  - correct: 3
+    explanation: Match what you heard to its written letter; replay the recording if needed.
+    host:
+      kind: video
+      ref: V-005
+    kind: listening
+    option_why:
+    - '{{uk:И}} belongs to a different sound model; this recording models {{uk:О}}.'
+    - '{{uk:У}} belongs to a different sound model; this recording models {{uk:О}}.'
+    - '{{uk:А}} belongs to a different sound model; this recording models {{uk:О}}.'
+    - '{{uk:О}} matches the sound modeled in this recording.'
+    options:
+    - И
+    - У
+    - А
+    - О
+    question: Which letter matches the sound in this recording?
+    target_record: О
+  - correct: 0
+    explanation: Match what you heard to its written letter; replay the recording if needed.
+    host:
+      kind: video
+      ref: V-006
+    kind: listening
+    option_why:
+    - '{{uk:У}} matches the sound modeled in this recording.'
+    - '{{uk:И}} belongs to a different sound model; this recording models {{uk:У}}.'
+    - '{{uk:О}} belongs to a different sound model; this recording models {{uk:У}}.'
+    - '{{uk:А}} belongs to a different sound model; this recording models {{uk:У}}.'
+    options:
+    - У
+    - И
+    - О
+    - А
+    question: Which letter matches the sound in this recording?
+    target_record: У
+  - correct: 2
+    explanation: Match what you heard to its written letter; replay the recording if needed.
+    host:
+      kind: video
+      ref: V-007
+    kind: listening
+    option_why:
+    - '{{uk:А}} belongs to a different sound model; this recording models {{uk:И}}.'
+    - '{{uk:О}} belongs to a different sound model; this recording models {{uk:И}}.'
+    - '{{uk:И}} matches the sound modeled in this recording.'
+    - '{{uk:У}} belongs to a different sound model; this recording models {{uk:И}}.'
+    options:
+    - А
+    - О
+    - И
+    - У
+    question: Which letter matches the sound in this recording?
+    target_record: И
+- id: a6
+  instruction: Look at the letter pair in each model. Choose the shape that belongs to a different letter.
+  items:
+  - correct: 1
+    explanation: Two shapes belong to the letter pair in the model; the remaining shape belongs to a different letter.
+    host:
+      kind: quote
+      ref: T-022
+    kind: comprehension
+    option_why:
+    - '{{uk:А}} belongs to the capital and small pair shown in the model.'
+    - '{{uk:О}} is a different letter from the capital and small pair in the model.'
+    - '{{uk:а}} belongs to the capital and small pair shown in the model.'
+    words:
+    - А
+    - О
+    - а
+  - correct: 0
+    explanation: Two shapes belong to the letter pair in the model; the remaining shape belongs to a different letter.
+    host:
+      kind: quote
+      ref: T-023
+    kind: comprehension
+    option_why:
+    - '{{uk:У}} is a different letter from the capital and small pair in the model.'
+    - '{{uk:О}} belongs to the capital and small pair shown in the model.'
+    - '{{uk:о}} belongs to the capital and small pair shown in the model.'
+    words:
+    - У
+    - О
+    - о
+  - correct: 2
+    explanation: Two shapes belong to the letter pair in the model; the remaining shape belongs to a different letter.
+    host:
+      kind: quote
+      ref: T-024
+    kind: comprehension
+    option_why:
+    - '{{uk:у}} belongs to the capital and small pair shown in the model.'
+    - '{{uk:У}} belongs to the capital and small pair shown in the model.'
+    - '{{uk:И}} is a different letter from the capital and small pair in the model.'
+    words:
+    - у
+    - У
+    - И
+  - correct: 1
+    explanation: Two shapes belong to the letter pair in the model; the remaining shape belongs to a different letter.
+    host:
+      kind: quote
+      ref: T-025
+    kind: comprehension
+    option_why:
+    - '{{uk:и}} belongs to the capital and small pair shown in the model.'
+    - '{{uk:А}} is a different letter from the capital and small pair in the model.'
+    - '{{uk:И}} belongs to the capital and small pair shown in the model.'
+    words:
+    - и
+    - А
+    - И
+consolidation:
+  activities:
+  - a5
+  - a6
+  lead_in: Try the listening questions, then find the different letter in each row.
+draft_schema: 1
+gaps: []
+inputs:
+  learner_state_sha256: b4d02edaeb5a685a86d9ad7d0912620acf0b73a2e2099f5d39bf9143a74a6759
+  lesson_lock_entry_sha256: 30a0d1899fe0de2f19e79f67b6338f770e5850c0465d1defd48c2dc172875c49
+  pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+  plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+  style_card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+  words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+lesson:
+  module: a1/sounds-letters-and-hello
+  n: 2
+status: ok
+steps:
+- blocks:
+  - kind: video
+    lead_in: Listen to the short informal greeting excerpt, then respond aloud after the model.
+    ref: V-001
+    target_record: W-074
+  - kind: video
+    lead_in: Listen to the short formal greeting excerpt, then respond aloud after the model.
+    ref: V-002
+    target_record: W-075
+  - explains:
+    - T-001
+    - T-006
+    - V-001
+    - V-002
+    kind: prose
+    text: Keep both greetings whole. You do not need to read their spellings today. Now listen to your teacher make one sound
+      before looking at its written shape. You hear a sound; you see a letter. A letter represents a sound, but the printed
+      shape itself is silent. Say the sound again, then point to the shape your teacher shows. Notice which part you hear
+      and which part you see.
+  - kind: activity
+    ref: a1
+  id: s1
+- blocks:
+  - kind: video
+    ref: V-004
+    target_record: А
+  - explains:
+    - T-006
+    - V-004
+    - T-022
+    - S-002
+    kind: prose
+    text: Listen to the model for {{uk:А}} first. Repeat the sound, then look at the capital and small shapes. Trace each
+      shape with a finger. Copy both into your notebook, looking back at the model as you write.
+  - kind: video
+    ref: V-005
+    target_record: О
+  - explains:
+    - T-007
+    - V-005
+    - T-023
+    - S-002
+    kind: prose
+    text: Next comes {{uk:О}}. Hear the model before repeating it. Look at the capital and small shapes, then trace them.
+      Copy both beside your first pair. Compare your copies with the printed shapes before moving on.
+  - kind: video
+    ref: V-006
+    target_record: У
+  - explains:
+    - T-008
+    - V-006
+    - T-024
+    - S-002
+    kind: prose
+    text: Now meet {{uk:У}}. Listen, repeat, and then look at its two written shapes. Trace each one slowly. Copy the capital
+      and small letter into your notebook, leaving enough space to see each shape clearly.
+  - kind: video
+    ref: V-007
+    target_record: И
+  - explains:
+    - T-009
+    - V-007
+    - T-025
+    - S-002
+    kind: prose
+    text: Finally, meet {{uk:И}}. Hear the model and repeat after it. Look at both written shapes, trace each one, and copy
+      them. Return to the recording if you want another model before saying the sound again.
+  - kind: activity
+    ref: a3
+  - kind: activity
+    ref: a4
+  id: s2
+- blocks:
+  - explains:
+    - T-006
+    - T-007
+    - T-008
+    - T-009
+    - T-022
+    - T-023
+    - T-024
+    - T-025
+    - V-004
+    - V-005
+    - V-006
+    - V-007
+    kind: prose
+    text: Listen again before the next questions. In the printed models that follow, the seeing cue introduces letter shapes.
+      The hearing cue introduces a sound written inside square brackets. Those brackets show how the sound is represented
+      on the page; they are not a recording. Compare the two parts of each model. You will choose whether the part shown in
+      the question represents a letter or a sound.
+  - kind: video
+    ref: V-004
+    target_record: А
+  - kind: video
+    ref: V-005
+    target_record: О
+  - kind: video
+    ref: V-006
+    target_record: У
+  - kind: video
+    ref: V-007
+    target_record: И
+  id: s3
+- blocks:
+  - explains:
+    - T-006
+    - T-007
+    - T-008
+    - T-009
+    - T-022
+    - T-023
+    - T-024
+    - T-025
+    kind: prose
+    text: Look at each complete model before answering. Use the shapes and brackets to tell the two parts apart. Then check
+      the four capital and small letter pairs before the final practice. Keep your notebook nearby for another copy of any
+      shape you want to practise.
+  - kind: quote
+    ref: T-006
+  - kind: quote
+    ref: T-007
+  - kind: quote
+    ref: T-008
+  - kind: quote
+    ref: T-009
+  - kind: activity
+    ref: a2
+  - kind: quote
+    ref: T-022
+  - kind: quote
+    ref: T-023
+  - kind: quote
+    ref: T-024
+  - kind: quote
+    ref: T-025
+  id: s4

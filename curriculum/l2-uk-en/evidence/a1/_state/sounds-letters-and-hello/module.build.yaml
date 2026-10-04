@@ -1,0 +1,23 @@
+complete: false
+lessons:
+- layer: null
+  manifest_sha256: bb7ecc318491a23ac6186d0fd5581b87b0b17be5f51e5fb27a145ec2b896851b
+  n: 1
+  passed: true
+  passed_through: 12
+  reason: null
+  regenerations: 0
+  stopping_check: null
+  terminal_layer: null
+- layer: pack
+  manifest_sha256: null
+  n: 2
+  passed: false
+  passed_through: 7
+  reason: 'no learner-usable form of an allowlist record spells ''И''; VESUM analyses by lookup spelling (hyphenated parts
+    included): И: none; и: none'
+  regenerations: 0
+  stopping_check: 7
+  terminal_layer: pack
+level: a1
+slug: sounds-letters-and-hello

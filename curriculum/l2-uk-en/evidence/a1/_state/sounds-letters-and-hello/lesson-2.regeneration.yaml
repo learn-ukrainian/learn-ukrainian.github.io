@@ -1,0 +1,17 @@
+attempts:
+- at: '2026-10-04T02:14:43.764670Z'
+  attempt: 1
+  code: lemma_outside_state
+  failed_check: 7
+  inputs:
+    card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+    pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+    plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+    prompt_sha256: 493a21008507169844c1b682ec8e722fda5f04a98865edb839f42531bde91f3f
+    words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+  reason: 'no learner-usable form of an allowlist record spells ''И''; VESUM analyses by lookup spelling (hyphenated parts
+    included): И: none; и: none'
+n: 2
+regenerations: 0
+slug: sounds-letters-and-hello
+terminal_layer: pack

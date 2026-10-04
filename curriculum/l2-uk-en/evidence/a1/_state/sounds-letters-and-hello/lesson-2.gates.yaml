@@ -1,0 +1,100 @@
+checks:
+- check: 1
+  status: passed
+- check: 2
+  status: passed
+- check: 3
+  status: passed
+- check: 4
+  details:
+    draft_report:
+      lessons:
+      - explanation_coverage: not_available_at_this_stage
+        n: 1
+        planned_workbook: 1
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage:
+          explained: 16
+          total: 16
+        n: 2
+        planned_workbook: 2
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities:
+          by_type:
+            letter-grid: 0
+            observe: 0
+            odd-one-out: 4
+            quiz: 12
+            watch-and-repeat: 0
+          total: 16
+      - explanation_coverage: not_available_at_this_stage
+        n: 3
+        planned_workbook: 2
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage: not_available_at_this_stage
+        n: 4
+        planned_workbook: 2
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage: not_available_at_this_stage
+        n: 5
+        planned_workbook: 3
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      - explanation_coverage: not_available_at_this_stage
+        n: 6
+        planned_workbook: 0
+        rendered_and_playable: not_available_at_this_stage
+        response_opportunities: not_available_at_this_stage
+      module:
+        explanation_coverage: not_available_at_this_stage
+        inline_activities: 26
+        inline_response_opportunities_total: not_available_at_this_stage
+        planned_workbook_total: 10
+        rendered_and_playable_total: not_available_at_this_stage
+        response_opportunities_by_type: not_available_at_this_stage
+        response_opportunities_total: not_available_at_this_stage
+        workbook_activities: 10
+        workbook_response_opportunities_total: not_available_at_this_stage
+      module_slug: sounds-letters-and-hello
+      rendered: not_available_at_this_stage
+      stage: draft
+  status: passed
+- check: 5
+  status: passed
+- check: 6
+  details:
+    not_checked:
+    - word_target_not_calibrated
+    - lesson_structural_minimums_not_calibrated
+    ukrainian_share: 0.082474
+    ukrainian_tokens: 32
+    urok_tokens: 388
+    word_target: 240
+  status: passed
+- check: 7
+  code: lemma_outside_state
+  layer: pack
+  reason: 'no learner-usable form of an allowlist record spells ''И''; VESUM analyses by lookup spelling (hyphenated parts
+    included): И: none; и: none'
+  status: failed
+  step: s2
+  token: И
+- check: 8
+  reason: prior_check_failed
+  status: not_checked
+- check: 9
+  reason: prior_check_failed
+  status: not_checked
+- check: 10
+  reason: prior_check_failed
+  status: not_checked
+- check: 11
+  reason: prior_check_failed
+  status: not_checked
+level: a1
+n: 2
+passed: false
+slug: sounds-letters-and-hello

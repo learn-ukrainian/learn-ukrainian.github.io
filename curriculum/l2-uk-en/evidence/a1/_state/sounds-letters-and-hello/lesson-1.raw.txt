@@ -1,0 +1,233 @@
+draft_schema: 1
+lesson:
+  module: a1/sounds-letters-and-hello
+  n: 1
+inputs:
+  plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+  pack_lock: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+  words_lock: 68a3fcc3529a496d56f1f0ad895d857d86738b0e104e6b56873e2a10e2a51988
+  lesson_lock_entry_sha256: 2b59bf6eb48820f2dd6d24ee39aef7b081e80c49279afc72af0110f2140af9bc
+  learner_state_sha256: e4feb81e4f11e39f1ab165186d6b0b49a5221624a3740781663518c88fc22818
+  style_card_sha256: 89c5a4cfcc9387ab968ca99d0402faaabf645d7fb07c7ec03f9498e13fbb24e0
+status: ok
+steps:
+  - id: s1
+    blocks:
+      - kind: video
+        ref: V-001
+        target_record: W-074
+        lead_in: Listen to the short greeting excerpt first.
+      - kind: bilingual
+        uk: ["{{gloss:W-074}}!"]
+        en: ["An informal greeting for a friend."]
+      - kind: prose
+        text: >-
+          Imagine meeting a friend at the classroom entrance. This is the informal
+          greeting for that situation. Listen again, then say the whole greeting
+          aloud. Learn it by ear as one chunk; the written model is support,
+          not a letter-reading task. When your friend greets you, give the same
+          greeting back.
+        explains: [T-002, X-001, S-003]
+      - kind: activity
+        ref: a1
+  - id: s2
+    lead_in: Now try a different meeting.
+    blocks:
+      - kind: video
+        ref: V-002
+        target_record: W-075
+        lead_in: Listen to the short formal greeting excerpt.
+      - kind: bilingual
+        uk: ["{{gloss:W-075}} {{gloss:W-076}}!"]
+        en: ["A formal greeting for this new situation."]
+      - kind: prose
+        text: >-
+          Imagine arriving at a hotel reception desk. Use this whole formal
+          greeting with the receptionist. It also fits greeting a teacher.
+          Unlike the informal peer greeting, this is the model to choose for a
+          boss or cashier. You can use it at any time of day. Listen, repeat
+          both words together, and respond aloud with the same complete greeting.
+        explains: [T-002, T-003, T-020, T-021, T-041, S-003, X-001]
+      - kind: activity
+        ref: a3
+  - id: s3
+    lead_in: Next, look at the printed model.
+    blocks:
+      - kind: quote
+        ref: T-040
+      - kind: prose
+        text: >-
+          This greeting appears in a textbook list of polite words.
+          The quotation supplies its printed spelling; it does not show a
+          teacher speaking. Keep the whole shape in view without decoding
+          individual letters.
+        explains: [T-040]
+  - id: s4
+    lead_in: Return to the classroom entrance.
+    blocks:
+      - kind: video
+        ref: V-001
+        target_record: W-074
+        lead_in: Replay the informal greeting excerpt before meeting the two peers.
+      - kind: prose
+        text: >-
+          Two peers meet here. Follow their short exchange with the paired English
+          support, then take either part aloud. Their greeting remains informal.
+          Compare it with the formal recording and the printed model above.
+          For the next choices, imagine greeting a friend, teacher, receptionist,
+          boss or cashier. Choose a whole greeting for the stated relationship,
+          without reading names letter by letter.
+        explains: [T-035, T-002, T-003, T-020, T-021, T-040, T-041, V-002]
+      - kind: dialogue
+      - kind: activity
+        ref: a2
+      - kind: activity
+        ref: a4
+consolidation:
+  lead_in: Try the new situations, then give each chosen greeting aloud.
+  activities: [a5]
+dialogue:
+  lines:
+    - speaker: Ніна
+      text: Привіт!
+    - speaker: Іван
+      text: Привіт!
+  translation_en:
+    - Hi!
+    - Hi!
+activities:
+  - id: a1
+    instruction: >-
+      Imagine your friend greeting you. Play only the short informal excerpt,
+      repeat the whole greeting, then replay it and give the same greeting
+      back aloud. Practise offline; your speech is not machine-verified.
+    items:
+      - video: V-001
+        word: Привіт!
+        note: Listen before using the written model.
+        explanation: Reply with the same informal greeting as one memorised chunk.
+  - id: a2
+    instruction: Compare the peer exchange with the printed model above and choose the whole greeting.
+    items:
+      - kind: comprehension
+        host: {kind: dialogue}
+        question: Which greeting do the two peers exchange?
+        options:
+          - "Привіт!\nHi!"
+          - "Добрий день!\nHello!"
+        correct: 0
+        option_why:
+          - This is the informal greeting used in both turns of the peer exchange.
+          - This is the separate formal model, which neither peer uses in the exchange.
+        explanation: Both peers use the same informal greeting with each other.
+      - kind: comprehension
+        host: {kind: quote, ref: T-040}
+        question: You meet your teacher; which complete greeting matches the printed model above?
+        options:
+          - "Привіт!\nHi!"
+          - "Добрий день!\nHello!"
+        correct: 1
+        option_why:
+          - This is the informal peer greeting, rather than the greeting in the printed model.
+          - This matches the printed model and the formal greeting introduced for this situation.
+        explanation: Use the formal model when greeting your teacher.
+  - id: a3
+    instruction: >-
+      Imagine a receptionist greeting you. Play only the short formal excerpt,
+      repeat the complete greeting, then replay it and give the same greeting
+      back aloud. Practise offline; your speech is not machine-verified.
+    items:
+      - video: V-002
+        word: Добрий день!
+        note: Keep the two words together as one greeting.
+        explanation: Reply with the complete formal greeting practised in the recording.
+  - id: a4
+    instruction: Find the greeting that needs changing and choose the formal model as its repair.
+    items:
+      - kind: comprehension
+        host: {kind: quote, ref: T-040}
+        question: >-
+          A customer greets a cashier with {{uk:Привіт!}}.
+          Which greeting from the printed model repairs this choice?
+        options:
+          - "Добрий день!\nHello!"
+          - "Привіт!\nHi!"
+        correct: 0
+        option_why:
+          - This is the formal model taught for greeting a cashier.
+          - This repeats the informal greeting that needs changing in this situation.
+        explanation: Choose the formal greeting for a cashier rather than the familiar-peer greeting.
+      - kind: comprehension
+        host: {kind: quote, ref: T-040}
+        question: >-
+          An employee greets a boss with {{uk:Привіт!}}.
+          Which greeting from the printed model repairs this choice?
+        options:
+          - "Привіт!\nHi!"
+          - "Добрий день!\nHello!"
+        correct: 1
+        option_why:
+          - This keeps the informal greeting instead of repairing the choice for a boss.
+          - This is the formal model taught for greeting a boss.
+        explanation: Change to the complete formal greeting in this situation.
+  - id: a5
+    instruction: >-
+      Use the peer exchange or the printed model to choose a greeting for each
+      new situation. Say your answer aloud after choosing.
+    items:
+      - kind: comprehension
+        host: {kind: dialogue}
+        question: You meet a friend outside class; which greeting follows the peer exchange?
+        options:
+          - "Добрий день!\nHello!"
+          - "Привіт!\nHi!"
+        correct: 1
+        option_why:
+          - This is the separate formal model rather than the greeting exchanged by the peers.
+          - This follows the informal greeting used by both peers.
+        explanation: Transfer the informal peer exchange to meeting a friend.
+      - kind: comprehension
+        host: {kind: quote, ref: T-040}
+        question: You arrive at a hotel reception desk; which greeting matches the printed formal model?
+        options:
+          - "Добрий день!\nHello!"
+          - "Привіт!\nHi!"
+        correct: 0
+        option_why:
+          - This matches the printed model and the formal greeting practised for a receptionist.
+          - This is the familiar-peer greeting rather than the formal model for this meeting.
+        explanation: Greet the receptionist with the complete formal model.
+      - kind: comprehension
+        host: {kind: quote, ref: T-040}
+        question: You meet your boss at work; which greeting matches the printed formal model?
+        options:
+          - "Привіт!\nHi!"
+          - "Добрий день!\nHello!"
+        correct: 1
+        option_why:
+          - This is the informal greeting taught for familiar peers rather than a boss.
+          - This matches the printed model and the formal greeting taught for a boss.
+        explanation: Choose the formal greeting for this workplace relationship.
+      - kind: comprehension
+        host: {kind: quote, ref: T-040}
+        question: You greet a cashier at a shop counter; which greeting matches the printed formal model?
+        options:
+          - "Добрий день!\nHello!"
+          - "Привіт!\nHi!"
+        correct: 0
+        option_why:
+          - This matches the printed model and the formal greeting taught for a cashier.
+          - This is the informal peer greeting rather than the model for greeting a cashier.
+        explanation: Use the same complete formal greeting in this shop situation.
+      - kind: comprehension
+        host: {kind: quote, ref: T-040}
+        question: You greet your teacher before class; which greeting matches the printed formal model?
+        options:
+          - "Привіт!\nHi!"
+          - "Добрий день!\nHello!"
+        correct: 1
+        option_why:
+          - This is the informal peer greeting rather than the model introduced for a teacher.
+          - This matches the printed model and the formal greeting introduced for a teacher.
+        explanation: The teacher is the formal addressee in this situation.
+gaps: []

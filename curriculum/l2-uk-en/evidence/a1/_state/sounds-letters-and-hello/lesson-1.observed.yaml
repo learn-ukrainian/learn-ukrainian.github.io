@@ -1,0 +1,97 @@
+lesson:
+  level: a1
+  n: 1
+  slug: sounds-letters-and-hello
+observed_schema: 1
+records:
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: base
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 2
+      vpravy: 2
+    tags: noun:inanim:m:v_naz
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 2
+      vpravy: 2
+    tags: noun:inanim:m:v_zna
+  id: W-074
+  role: drilled
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 1
+      vpravy: 0
+    tags: adj:m:v_kly:compb
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 1
+      vpravy: 0
+    tags: adj:m:v_naz:compb
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 1
+      vpravy: 0
+    tags: adj:m:v_zna:rinanim:compb
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: base
+  id: W-075
+  role: taught
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 0
+      urok: 1
+      vpravy: 0
+    tags: base
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 1
+      vpravy: 0
+    tags: noun:inanim:m:v_naz
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 1
+      vpravy: 0
+    tags: noun:inanim:m:v_zna
+  id: W-076
+  role: taught
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 0
+      vpravy: 0
+    tags: noun:anim:f:v_naz:prop:fname
+  id: W-091
+  role: name
+- forms:
+  - count_by_tab:
+      resursy: 0
+      slovnyk: 1
+      urok: 0
+      vpravy: 0
+    tags: noun:anim:m:v_naz:prop:fname
+  id: W-093
+  role: name
+untaught_forms:
+  count: 0
+  forms: []
+  share: 0.0

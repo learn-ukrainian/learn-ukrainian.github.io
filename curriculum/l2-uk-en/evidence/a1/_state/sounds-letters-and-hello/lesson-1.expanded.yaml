@@ -1,0 +1,774 @@
+expanded_schema: 1
+lesson:
+  level: a1
+  n: 1
+  slug: sounds-letters-and-hello
+units:
+- activity: null
+  block: video_lead_0
+  item: null
+  role: narration
+  step: s1
+  tab: urok
+  text: Listen to the short greeting excerpt first.
+- activity: null
+  block: bilingual_1_0
+  item: null
+  role: gloss_ref
+  step: s1
+  tab: urok
+  text: '{{gloss:W-074}}'
+- activity: null
+  block: bilingual_1_0
+  item: null
+  role: narration
+  step: s1
+  tab: urok
+  text: '!'
+- activity: null
+  block: bilingual_en_1_0
+  item: null
+  role: vesum_exempt
+  step: s1
+  tab: urok
+  text: An informal greeting for a friend.
+- activity: null
+  block: 2
+  item: null
+  role: narration
+  step: s1
+  tab: urok
+  text: Imagine meeting a friend at the classroom entrance. This is the informal greeting for that situation. Listen again,
+    then say the whole greeting aloud. Learn it by ear as one chunk; the written model is support, not a letter-reading task.
+    When your friend greets you, give the same greeting back.
+- activity: null
+  block: lead_in
+  item: null
+  role: narration
+  step: s2
+  tab: urok
+  text: Now try a different meeting.
+- activity: null
+  block: video_lead_0
+  item: null
+  role: narration
+  step: s2
+  tab: urok
+  text: Listen to the short formal greeting excerpt.
+- activity: null
+  block: bilingual_1_0
+  item: null
+  role: gloss_ref
+  step: s2
+  tab: urok
+  text: '{{gloss:W-075}}'
+- activity: null
+  block: bilingual_1_0
+  item: null
+  role: narration
+  step: s2
+  tab: urok
+  text: ' '
+- activity: null
+  block: bilingual_1_0
+  item: null
+  role: gloss_ref
+  step: s2
+  tab: urok
+  text: '{{gloss:W-076}}'
+- activity: null
+  block: bilingual_1_0
+  item: null
+  role: narration
+  step: s2
+  tab: urok
+  text: '!'
+- activity: null
+  block: bilingual_en_1_0
+  item: null
+  role: vesum_exempt
+  step: s2
+  tab: urok
+  text: A formal greeting for this new situation.
+- activity: null
+  block: 2
+  item: null
+  role: narration
+  step: s2
+  tab: urok
+  text: Imagine arriving at a hotel reception desk. Use this whole formal greeting with the receptionist. It also fits greeting
+    a teacher. Unlike the informal peer greeting, this is the model to choose for a boss or cashier. You can use it at any
+    time of day. Listen, repeat both words together, and respond aloud with the same complete greeting.
+- activity: null
+  block: lead_in
+  item: null
+  role: narration
+  step: s3
+  tab: urok
+  text: Next, look at the printed model.
+- activity: null
+  block: 0
+  item: null
+  role: record_print
+  step: s3
+  tab: urok
+  text: Добрий день!
+- activity: null
+  block: 1
+  item: null
+  role: narration
+  step: s3
+  tab: urok
+  text: This greeting appears in a textbook list of polite words. The quotation supplies its printed spelling; it does not
+    show a teacher speaking. Keep the whole shape in view without decoding individual letters.
+- activity: null
+  block: lead_in
+  item: null
+  role: narration
+  step: s4
+  tab: urok
+  text: Return to the classroom entrance.
+- activity: null
+  block: video_lead_0
+  item: null
+  role: narration
+  step: s4
+  tab: urok
+  text: Replay the informal greeting excerpt before meeting the two peers.
+- activity: null
+  block: 1
+  item: null
+  role: narration
+  step: s4
+  tab: urok
+  text: Two peers meet here. Follow their short exchange with the paired English support, then take either part aloud. Their
+    greeting remains informal. Compare it with the formal recording and the printed model above. For the next choices, imagine
+    greeting a friend, teacher, receptionist, boss or cashier. Choose a whole greeting for the stated relationship, without
+    reading names letter by letter.
+- activity: null
+  block: dialogue_0
+  item: null
+  role: dialogue_line
+  step: s4
+  tab: urok
+  text: Привіт!
+- activity: null
+  block: dialogue_1
+  item: null
+  role: dialogue_line
+  step: s4
+  tab: urok
+  text: Привіт!
+- activity: null
+  block: dialogue_translation_0
+  item: null
+  role: vesum_exempt
+  step: s4
+  tab: urok
+  text: Hi!
+- activity: null
+  block: dialogue_translation_1
+  item: null
+  role: vesum_exempt
+  step: s4
+  tab: urok
+  text: Hi!
+- activity: null
+  block: consolidation_lead_in
+  item: null
+  role: narration
+  step: null
+  tab: urok
+  text: Try the new situations, then give each chosen greeting aloud.
+- activity: a1
+  block: instruction
+  item: null
+  role: instruction
+  step: s1
+  tab: vpravy
+  text: Imagine your friend greeting you. Play only the short informal excerpt, repeat the whole greeting, then replay it
+    and give the same greeting back aloud. Practise offline; your speech is not machine-verified.
+- activity: a1
+  block: explanation
+  item: 0
+  role: instruction
+  step: s1
+  tab: vpravy
+  text: Reply with the same informal greeting as one memorised chunk.
+- activity: a2
+  block: instruction
+  item: null
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Compare the peer exchange with the printed model above and choose the whole greeting.
+- activity: a2
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: Which greeting do the two peers exchange?
+- activity: a2
+  block: opt_0
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a2
+  block: opt_1
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a2
+  block: explanation
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Both peers use the same informal greeting with each other.
+- activity: a2
+  block: option_why_0
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the informal greeting used in both turns of the peer exchange.
+- activity: a2
+  block: option_why_1
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the separate formal model, which neither peer uses in the exchange.
+- activity: a2
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: You meet your teacher; which complete greeting matches the printed model above?
+- activity: a2
+  block: opt_0
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a2
+  block: opt_1
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a2
+  block: explanation
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Use the formal model when greeting your teacher.
+- activity: a2
+  block: option_why_0
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the informal peer greeting, rather than the greeting in the printed model.
+- activity: a2
+  block: option_why_1
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This matches the printed model and the formal greeting introduced for this situation.
+- activity: a3
+  block: instruction
+  item: null
+  role: instruction
+  step: s2
+  tab: vpravy
+  text: Imagine a receptionist greeting you. Play only the short formal excerpt, repeat the complete greeting, then replay
+    it and give the same greeting back aloud. Practise offline; your speech is not machine-verified.
+- activity: a3
+  block: explanation
+  item: 0
+  role: instruction
+  step: s2
+  tab: vpravy
+  text: Reply with the complete formal greeting practised in the recording.
+- activity: a4
+  block: instruction
+  item: null
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Find the greeting that needs changing and choose the formal model as its repair.
+- activity: a4
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: 'A customer greets a cashier with '
+- activity: a4
+  block: prompt
+  item: 0
+  role: quoted_term
+  step: s4
+  tab: vpravy
+  text: Привіт!
+- activity: a4
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: . Which greeting from the printed model repairs this choice?
+- activity: a4
+  block: opt_0
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a4
+  block: opt_1
+  item: 0
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a4
+  block: explanation
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Choose the formal greeting for a cashier rather than the familiar-peer greeting.
+- activity: a4
+  block: option_why_0
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the formal model taught for greeting a cashier.
+- activity: a4
+  block: option_why_1
+  item: 0
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This repeats the informal greeting that needs changing in this situation.
+- activity: a4
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: 'An employee greets a boss with '
+- activity: a4
+  block: prompt
+  item: 1
+  role: quoted_term
+  step: s4
+  tab: vpravy
+  text: Привіт!
+- activity: a4
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: s4
+  tab: vpravy
+  text: . Which greeting from the printed model repairs this choice?
+- activity: a4
+  block: opt_0
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a4
+  block: opt_1
+  item: 1
+  role: item_option
+  step: s4
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a4
+  block: explanation
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: Change to the complete formal greeting in this situation.
+- activity: a4
+  block: option_why_0
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This keeps the informal greeting instead of repairing the choice for a boss.
+- activity: a4
+  block: option_why_1
+  item: 1
+  role: instruction
+  step: s4
+  tab: vpravy
+  text: This is the formal model taught for greeting a boss.
+- activity: a5
+  block: instruction
+  item: null
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Use the peer exchange or the printed model to choose a greeting for each new situation. Say your answer aloud after
+    choosing.
+- activity: a5
+  block: prompt
+  item: 0
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You meet a friend outside class; which greeting follows the peer exchange?
+- activity: a5
+  block: opt_0
+  item: 0
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a5
+  block: opt_1
+  item: 0
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a5
+  block: explanation
+  item: 0
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Transfer the informal peer exchange to meeting a friend.
+- activity: a5
+  block: option_why_0
+  item: 0
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the separate formal model rather than the greeting exchanged by the peers.
+- activity: a5
+  block: option_why_1
+  item: 0
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This follows the informal greeting used by both peers.
+- activity: a5
+  block: prompt
+  item: 1
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You arrive at a hotel reception desk; which greeting matches the printed formal model?
+- activity: a5
+  block: opt_0
+  item: 1
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a5
+  block: opt_1
+  item: 1
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a5
+  block: explanation
+  item: 1
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Greet the receptionist with the complete formal model.
+- activity: a5
+  block: option_why_0
+  item: 1
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This matches the printed model and the formal greeting practised for a receptionist.
+- activity: a5
+  block: option_why_1
+  item: 1
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the familiar-peer greeting rather than the formal model for this meeting.
+- activity: a5
+  block: prompt
+  item: 2
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You meet your boss at work; which greeting matches the printed formal model?
+- activity: a5
+  block: opt_0
+  item: 2
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a5
+  block: opt_1
+  item: 2
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a5
+  block: explanation
+  item: 2
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Choose the formal greeting for this workplace relationship.
+- activity: a5
+  block: option_why_0
+  item: 2
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the informal greeting taught for familiar peers rather than a boss.
+- activity: a5
+  block: option_why_1
+  item: 2
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This matches the printed model and the formal greeting taught for a boss.
+- activity: a5
+  block: prompt
+  item: 3
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You greet a cashier at a shop counter; which greeting matches the printed formal model?
+- activity: a5
+  block: opt_0
+  item: 3
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a5
+  block: opt_1
+  item: 3
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a5
+  block: explanation
+  item: 3
+  role: instruction
+  step: null
+  tab: vpravy
+  text: Use the same complete formal greeting in this shop situation.
+- activity: a5
+  block: option_why_0
+  item: 3
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This matches the printed model and the formal greeting taught for a cashier.
+- activity: a5
+  block: option_why_1
+  item: 3
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the informal peer greeting rather than the model for greeting a cashier.
+- activity: a5
+  block: prompt
+  item: 4
+  role: item_prompt
+  step: null
+  tab: vpravy
+  text: You greet your teacher before class; which greeting matches the printed formal model?
+- activity: a5
+  block: opt_0
+  item: 4
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Привіт!
+
+    Hi!'
+- activity: a5
+  block: opt_1
+  item: 4
+  role: item_option
+  step: null
+  tab: vpravy
+  text: 'Добрий день!
+
+    Hello!'
+- activity: a5
+  block: explanation
+  item: 4
+  role: instruction
+  step: null
+  tab: vpravy
+  text: The teacher is the formal addressee in this situation.
+- activity: a5
+  block: option_why_0
+  item: 4
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This is the informal peer greeting rather than the model introduced for a teacher.
+- activity: a5
+  block: option_why_1
+  item: 4
+  role: instruction
+  step: null
+  tab: vpravy
+  text: This matches the printed model and the formal greeting introduced for a teacher.
+- activity: null
+  block: core_W-074
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: привіт
+- activity: null
+  block: core_W-075
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: добрий
+- activity: null
+  block: core_W-076
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: день
+- activity: null
+  block: inc_W-091
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: Ніна
+- activity: null
+  block: inc_W-093
+  item: null
+  role: record_print
+  step: null
+  tab: slovnyk
+  text: Іван
+- activity: null
+  block: res_T-002
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-003
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-020
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-021
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-041
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast — Анна Огойко
+- activity: null
+  block: res_T-040
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Жаркова, «Я досліджую світ», 1 клас, ч. 1, 2024, с. 25
+- activity: null
+  block: res_T-035
+  item: null
+  role: vesum_exempt
+  step: null
+  tab: resursy
+  text: Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 31
+- activity: null
+  block: res_V-001
+  item: null
+  role: record_print
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast
+- activity: null
+  block: res_V-002
+  item: null
+  role: record_print
+  step: null
+  tab: resursy
+  text: Ukrainian Lessons Podcast
