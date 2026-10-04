@@ -250,13 +250,13 @@ review_scheduler:
       credential_limit: 1
       capacity_weight: 1.0
     cursor:
-      # Operator decision 2026-10-02 (#9488): only the pinned models below are
-      # formal identities on this multi-model harness. Each is dispatched with an
-      # exact Cursor slug and record_cf_verdict accepts its verdict only from the
-      # runtime-reported model. Composer (Kimi lineage), Auto and Cursor-routed
-      # Claude stay unpinned, so the resolver excludes them as unattested.
+      # Operator decisions 2026-10-02 (#9488) and #9714: only the pinned models
+      # below are formal identities on this multi-model harness. Each is
+      # dispatched with an exact Cursor slug and record_cf_verdict accepts its
+      # verdict only from the runtime-reported model. Composer (Kimi lineage) and
+      # Auto stay unpinned, so the resolver excludes them as unattested.
       formal_review_eligible: true
-      models: [grok-4.7]
+      models: [grok-4.7, claude-opus-5-5]
       participant: cursor
       adapter_transport: acp
       catalog_transport: cursor
@@ -1088,7 +1088,11 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   claude-opus-5-5-cursor-fallback:
+    # #9714: the critical reviewer when native Claude is unavailable; the Cursor
+    # quota bucket is independent of native Claude. The slug claude-opus-5-5-high
+    # is the one whose runtime report ("Claude Opus 5.5 300K High") record_cf_verdict accepts.
     model_id: claude-opus-5-5
+    last_resort: true
     route: cursor
     transport: cursor
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-opus-5-5-high
@@ -1276,17 +1280,19 @@ formal_cf_defaults:
 
 review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
-  # Opus / Sol handle critical review first (#9394). Native Grok never judges;
-  # the attested Cursor Grok seat is the Sol-spared last resort (#9488) and has
-  # no critical_review role, so critical lists it only to record that exclusion.
+  # Opus / Sol handle critical review first (#9394). The attested Cursor Opus
+  # seat is the critical last resort when native Claude is unavailable (#9714).
+  # Native Grok never judges; the attested Cursor Grok seat is the Sol-spared
+  # last resort (#9488) and has no critical_review role, so critical lists it
+  # only to record that exclusion.
   # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
   critical:
     - [openai_frontier]
     - [claude-opus-5-5]
-    - [claude-opus-5-5-cursor-fallback]
     - [composer-2.5]
     - [pool]
     - [pool-xs]
+    - [claude-opus-5-5-cursor-fallback]
     - [grok-4.7-cursor-fallback]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # neither seat is eligible the resolver returns no reviewer with a stated reason.
@@ -1297,11 +1303,11 @@ review_ladders:
   medium: &practical_first_code_review
     - [openai_frontier]
     - [claude-opus-5-5]
-    - [claude-opus-5-5-cursor-fallback]
     - [claude-sonnet-5-5]
     - [composer-2.5]
     - [pool]
     - [pool-xs]
+    - [claude-opus-5-5-cursor-fallback]
     - [grok-4.7-cursor-fallback]
   low: *practical_first_code_review
 

@@ -38,8 +38,8 @@ MIN_ELIGIBLE_SEATS = 2
 
 # #9423 AC-02 accepts Sol alone for Anthropic authors at high/critical risk.
 # High is limited to Sol/Opus by #9538; critical by the catalog's critical_review
-# role (#9583). OpenAI authors have Opus alone because Cursor-routed Claude
-# stays unpinned (#9488). Only these family/risk pairs accept one
+# role (#9583). OpenAI authors have Opus alone, natively or through the attested
+# Cursor seat (#9714). Only these family/risk pairs accept one
 # automatic seat; zero seats still fails and resolver eligibility never changes.
 ACCEPTED_SINGLE_SEAT_BENCHES = frozenset(
     {

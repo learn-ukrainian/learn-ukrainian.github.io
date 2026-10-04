@@ -96,6 +96,8 @@ CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
 # Composer shares the Kimi lineage (never a reviewer), Gemini never reviews
 # code, DeepSeek is excluded, and the decision admits non-Anthropic models only.
 CURSOR_FORMAL_REVIEW_EXCLUDED_FAMILIES = frozenset({"moonshot", "google", "deepseek", "anthropic"})
+# The one excluded-family model a later approval admits there (#9714).
+CURSOR_FORMAL_REVIEW_ADMITTED_MODELS = frozenset({"claude-opus-5-5"})
 
 
 
@@ -398,8 +400,12 @@ def _validate_review_scheduler(raw: Any, models: dict[str, Any]) -> None:
                     "review_scheduler.endpoints.cursor needs an explicit models pin to be formal_review_eligible"
                 )
             for m in ep_models:
-                family = models[resolve_catalog_model_id(m, {"models": models})]["family"]
-                if family in CURSOR_FORMAL_REVIEW_EXCLUDED_FAMILIES:
+                model_id = resolve_catalog_model_id(m, {"models": models})
+                family = models[model_id]["family"]
+                if (
+                    family in CURSOR_FORMAL_REVIEW_EXCLUDED_FAMILIES
+                    and model_id not in CURSOR_FORMAL_REVIEW_ADMITTED_MODELS
+                ):
                     raise ModelCatalogError(
                         f"review_scheduler.endpoints.cursor.models cannot pin {m!r}: "
                         f"{family} models are not formal reviewers through Cursor"

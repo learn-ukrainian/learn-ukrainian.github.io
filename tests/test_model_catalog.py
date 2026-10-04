@@ -589,7 +589,9 @@ def test_high_ladder_is_sol_and_opus_only():
         ["claude-opus-5-5-cursor-fallback"],
     ]
     assert ladders["medium"] == ladders["low"]
-    assert ladders["medium"][:3] == ladders["high"]
+    assert ladders["medium"][:2] == ladders["high"][:2]
+    # #9714: the formal Cursor Opus seat is a last resort, so it follows the practical primaries.
+    assert ladders["medium"][-2:] == [["claude-opus-5-5-cursor-fallback"], ["grok-4.7-cursor-fallback"]]
     assert len(ladders["medium"]) > len(ladders["high"])
 
 
@@ -866,6 +868,26 @@ def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
     assert cursor_non_dispatch_model_refusal(model) is None
 
 
+def test_catalog_admits_only_opus_among_anthropic_cursor_review_pins():
+    """#9714: Opus 5.5 is the one Anthropic Cursor review pin, a last resort on its high slug."""
+    catalog = load_model_catalog()
+    assert catalog["review_scheduler"]["endpoints"]["cursor"]["models"] == ["grok-4.7", "claude-opus-5-5"]
+    sonnet = deepcopy(catalog)
+    sonnet["review_scheduler"]["endpoints"]["cursor"]["models"].append("claude-sonnet-5-5")
+    with pytest.raises(ModelCatalogError, match=r"cannot pin 'claude-sonnet-5-5': anthropic models"):
+        validate_catalog(sonnet)
+    primary = deepcopy(catalog)
+    del primary["review_candidates"]["claude-opus-5-5-cursor-fallback"]["last_resort"]
+    with pytest.raises(ModelCatalogError, match="claude-opus-5-5-cursor-fallback is a formal Cursor seat"):
+        validate_catalog(primary)
+    fast = deepcopy(catalog)
+    fast["review_candidates"]["claude-opus-5-5-cursor-fallback"]["invocation"] = (
+        ".venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-opus-5-5-high-fast"
+    )
+    with pytest.raises(ModelCatalogError, match="runtime-attestable Cursor slug 'claude-opus-5-5-high'"):
+        validate_catalog(fast)
+
+
 def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     # In review_scheduler.endpoints
     # #9488: the Cursor endpoint is formal only for an explicit, policy-admitted
@@ -956,15 +978,17 @@ def test_catalog_rejects_future_review_date():
 def test_critical_ladder_anthropic_authority_is_opus_without_fable():
     catalog = load_model_catalog()
     flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
-    assert flat[:3] == ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback"]
-    # #9488: the Cursor Grok seat closes the list; it has no critical_review role.
-    assert flat[-1] == "grok-4.7-cursor-fallback"
+    assert flat[:2] == ["openai_frontier", "claude-opus-5-5"]
+    # #9714: the attested Cursor Opus seat is the critical last resort; #9488:
+    # the Cursor Grok seat closes the list (it has no critical_review role).
+    cursor_seats = ["claude-opus-5-5-cursor-fallback", "grok-4.7-cursor-fallback"]
+    assert flat[-2:] == cursor_seats
     # #9583: Fable is no longer a critical last resort.
     assert not any(name.startswith("claude-fable-") for name in flat)
     assert "claude-opus-5" not in flat
     assert "claude-sonnet-5-5" not in flat
     for name in flat:
-        assert catalog["review_candidates"][name].get("last_resort", False) == (name == "grok-4.7-cursor-fallback")
+        assert catalog["review_candidates"][name].get("last_resort", False) == (name in cursor_seats)
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:

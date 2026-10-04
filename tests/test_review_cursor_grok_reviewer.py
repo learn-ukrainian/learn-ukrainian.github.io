@@ -165,12 +165,10 @@ def test_cursor_grok_seat_refuses_xai_and_moonshot_union_authors(author):
     assert result.status == "excluded"
 
 
-def test_composer_and_cursor_routed_claude_stay_unattested_formal_identities():
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="high")
-    for name in ("composer-2.5", "claude-opus-5-5-cursor-fallback"):
-        result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        assert result.status == "excluded"
-        assert "is not pinned for model" in result.reason
+def test_composer_stays_an_unattested_formal_identity():
+    result = evaluate_candidate(REVIEW_CANDIDATES["composer-2.5"], ResolverInputs(author_model="gpt-6.1-sol", risk="high"))
+    assert result.status == "excluded"
+    assert "is not pinned for model" in result.reason
 
 
 def test_grok_seat_never_reviews_its_own_adapter():
@@ -223,10 +221,10 @@ def _catalog() -> dict:
     return copy.deepcopy(load_model_catalog())
 
 
-def test_catalog_pins_the_cursor_review_endpoint_to_grok_only():
+def test_catalog_pins_the_cursor_review_endpoint_to_grok_and_opus_only():
     endpoint = load_model_catalog()["review_scheduler"]["endpoints"]["cursor"]
     assert endpoint["formal_review_eligible"] is True
-    assert endpoint["models"] == ["grok-4.7"]
+    assert endpoint["models"] == ["grok-4.7", "claude-opus-5-5"]
 
 
 @pytest.mark.parametrize("model", ["composer-2.5", "kimi-code/k3", "gemini-3.8-flash-high"])

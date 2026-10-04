@@ -24,14 +24,15 @@ from scripts.review.reviewer_resolver import (
 # #9488: the runtime-attested Cursor Grok seat counts for every author family
 # outside {xAI, Moonshot}; it closes the Anthropic shortfall below critical.
 GROK = "grok-4.7-cursor-fallback"
+OPUS_CURSOR = "claude-opus-5-5-cursor-fallback"
 DEFAULT_COUNTS = {
     "anthropic": ["openai_frontier", GROK],
-    "google": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "openai": [GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "google": ["openai_frontier", GROK, "claude-opus-5-5", OPUS_CURSOR, "claude-sonnet-5-5"],
+    "openai": [GROK, "claude-opus-5-5", OPUS_CURSOR, "claude-sonnet-5-5"],
     "moonshot": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
-    "zhipu": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "zhipu": ["openai_frontier", GROK, "claude-opus-5-5", OPUS_CURSOR, "claude-sonnet-5-5"],
     "xai": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
-    "deepseek": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "deepseek": ["openai_frontier", GROK, "claude-opus-5-5", OPUS_CURSOR, "claude-sonnet-5-5"],
 }
 
 
@@ -72,7 +73,8 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     captured = capsys.readouterr()
     assert captured.err == ""
     assert "BENCH HEALTH PASS" in captured.out
-    assert captured.out.count("[EXPECTED single seat]") == (2 if risk in {"high", "critical"} else 0)
+    # With Cursor healthy, OpenAI authors keep native and Cursor Opus (#9714); Anthropic has Sol alone.
+    assert captured.out.count("[EXPECTED single seat]") == (1 if risk in {"high", "critical"} else 0)
     for family, seats in results.items():
         resolution = resolve_reviewer(
             ResolverInputs(
@@ -88,10 +90,13 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     if risk == "high":
         assert {family: results[family] for family in ("anthropic", "openai")} == {
             "anthropic": ["openai_frontier"],
-            "openai": ["claude-opus-5-5"],
+            "openai": ["claude-opus-5-5", OPUS_CURSOR],
         }
-        for family in set(AUTHOR_FAMILIES) - {"anthropic", "openai"}:
+        # Cursor transport never reviews the families Cursor Auto can route to.
+        for family in ("moonshot", "xai"):
             assert results[family] == ["openai_frontier", "claude-opus-5-5"]
+        for family in set(AUTHOR_FAMILIES) - {"anthropic", "openai", "moonshot", "xai"}:
+            assert results[family] == ["openai_frontier", "claude-opus-5-5", OPUS_CURSOR]
         # The resolver names the single eligibility rule, not a bench-local list.
         rule = "performed only by gpt-6.1-sol, claude-opus-5-5"
         assert rule in exclusions["anthropic"][GROK]
@@ -101,7 +106,7 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     if risk != "critical":
         return
     assert results["anthropic"] == ["openai_frontier"]
-    assert results["openai"] == ["claude-opus-5-5"]
+    assert results["openai"] == ["claude-opus-5-5", OPUS_CURSOR]
     assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier"}
     assert exclusions["anthropic"]["glm-5.3"] == "retired→cursor"
     assert exclusions["anthropic"]["composer-2.5"] == "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"
@@ -256,14 +261,21 @@ def test_bench_health_preserves_critical_role_gate():
 
 @pytest.mark.parametrize("risk", ["high", "critical"])
 @pytest.mark.parametrize("status", ["unhealthy", "near_cap"])
-@pytest.mark.parametrize("route,family", [("codex", "anthropic"), ("claude", "openai")])
-def test_accepted_single_seat_still_requires_available_reviewer(risk, status, route, family, capsys):
-    assert main(["--risk", risk], routing_snapshot={route: status}) == 1
+@pytest.mark.parametrize("routes,family", [(("codex",), "anthropic"), (("claude", "cursor"), "openai")])
+def test_accepted_single_seat_still_requires_available_reviewer(risk, status, routes, family, capsys):
+    assert main(["--risk", risk], routing_snapshot=dict.fromkeys(routes, status)) == 1
     captured = capsys.readouterr()
     finding = next(item for item in _findings(captured) if item["author_family"] == family)
     assert finding["minimum"] == 1
     assert finding["counted_seats"] == []
     assert "BENCH HEALTH FAIL: At least one author family is below its required reviewer minimum." in captured.err
+
+
+@pytest.mark.parametrize("risk", ["high", "critical"])
+def test_cursor_opus_keeps_an_openai_bench_when_native_claude_is_down(risk):
+    """#9714: the Cursor quota bucket answers independently of native Claude."""
+    results = check_bench_health(routing_snapshot={"claude": "unhealthy"}, risk=risk)
+    assert results["openai"] == ["claude-opus-5-5-cursor-fallback"]
 
 
 def test_catalog_reserves_count_only_on_automatic_ladder():

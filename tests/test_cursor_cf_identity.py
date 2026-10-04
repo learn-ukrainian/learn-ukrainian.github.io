@@ -20,6 +20,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
@@ -219,6 +221,53 @@ def test_cursor_unattested_author_dual_family_quorum_path_is_retained(monkeypatc
     assert resolution.quorum_rule is not None
     assert "two independent exact-head PASS verdicts" in resolution.quorum_rule
     assert "distinct attested" in resolution.quorum_rule
+
+
+@pytest.mark.parametrize(
+    "display",
+    [
+        "Claude Opus 5.5 300K High",
+        "Claude Opus 5.5 1M High",
+        "claude opus 5.5 300k high",
+        " Claude\tOpus  5.5 1M High ",
+    ],
+)
+def test_cursor_opus_high_display_names_map_to_the_catalog_id(display):
+    assert reviewer_resolver.canonical_cursor_review_model(display) == "claude-opus-5-5"
+    assert "claude-opus-5-5" in reviewer_resolver.FORMAL_CURSOR_REVIEW_MODELS
+
+
+@pytest.mark.parametrize(
+    "display",
+    [
+        "Claude Opus 5.5 300K High Fast",
+        "Claude Opus 5.5 1M Extra High",
+        "Claude Opus 5.5 1M",
+        "Claude Opus 5.5 High",
+        "Claude Opus 5 1M High",
+        "Claude Opus 5.5 300\u212a High",
+        "Claude Opus 5.5 1M High\n",
+        "claude-opus-5-5-high",
+        "claude-opus-5-5",
+        "",
+    ],
+)
+def test_other_cursor_claude_names_keep_their_text(display):
+    assert reviewer_resolver.canonical_cursor_review_model(display) == display
+
+
+@pytest.mark.parametrize(
+    "display,expected", [("Grok 4.7 256K High", "grok-4.7"), ("Composer 2.5", "composer-2.5"), (None, "")]
+)
+def test_cursor_review_model_keeps_the_existing_grok_and_composer_mapping(display, expected):
+    assert reviewer_resolver.canonical_cursor_review_model(display) == expected
+
+
+def test_each_formal_cursor_dispatch_slug_names_the_seat_its_runtime_must_attest():
+    assert reviewer_resolver.FORMAL_CURSOR_REVIEW_DISPATCH_MODELS == {
+        "grok-4.7-high": "grok-4.7",
+        "claude-opus-5-5-high": "claude-opus-5-5",
+    }
 
 
 def test_cursor_unattested_quorum_fail_closed_and_pin_cannot_substitute(monkeypatch):

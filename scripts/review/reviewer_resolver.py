@@ -32,10 +32,13 @@ selection unchanged. Ambiguous path inference fails closed instead of guessing.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
 from fnmatch import fnmatchcase
 from typing import Literal
+
+from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
@@ -246,13 +249,35 @@ def candidate_dispatch_model(candidate: ReviewerCandidate) -> str:
 
 
 # Catalog ids a Cursor review receipt may attest: the Cursor seats the resolver
-# can select (pinned on the formal Cursor endpoint, #9488). Composer, Auto and
-# Cursor-routed Claude are unpinned, so a verdict from them is never recorded.
+# can select (pinned on the formal Cursor endpoint, #9488, #9714). Composer and
+# Auto are unpinned, so a verdict from them is never recorded.
 FORMAL_CURSOR_REVIEW_MODELS: frozenset[str] = frozenset(
     candidate.concrete_model
     for candidate in REVIEW_CANDIDATES.values()
     if candidate.route == "cursor" and candidate.transport == "cursor" and candidate.formal_review_eligible
 )
+
+# The exact Cursor slug each formal seat is dispatched with, mapped to the seat a
+# runtime report must attest: a run requested as one seat that reports another
+# admitted seat fulfils neither (#9714).
+FORMAL_CURSOR_REVIEW_DISPATCH_MODELS: dict[str, str] = {
+    candidate_dispatch_model(candidate): candidate.concrete_model
+    for candidate in REVIEW_CANDIDATES.values()
+    if candidate.route == "cursor" and candidate.transport == "cursor" and candidate.formal_review_eligible
+}
+
+# A ``claude-opus-5-5-high`` run reports "Claude Opus 5.5 300K High" (the CLI
+# model list says "1M High"). Only that ASCII spelling maps to the catalog id;
+# other efforts, Fast and non-ASCII look-alikes keep their text (#9714).
+_CURSOR_OPUS_5_5_HIGH_DISPLAY = re.compile(
+    r"[ \t]*claude[ \t]+opus[ \t]+5\.5[ \t]+(?:300k|1m)[ \t]+high[ \t]*", re.ASCII | re.IGNORECASE
+)
+
+
+def canonical_cursor_review_model(value: object) -> str:
+    """Return the catalog id for a Cursor runtime-reported display name, else ``value`` as text."""
+    text = canonical_cursor_model(value)
+    return "claude-opus-5-5" if _CURSOR_OPUS_5_5_HIGH_DISPLAY.fullmatch(text) else text
 
 
 def _catalog_ladder(risk: str) -> tuple[tuple[ReviewerCandidate, ...], ...]:

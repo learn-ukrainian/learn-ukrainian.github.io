@@ -141,7 +141,7 @@ def test_task_refusals_before_network(tmp_path, updates, reply, reason):
 
 @pytest.mark.parametrize("model,family", [("claude-opus-5-5", "anthropic"), ("gpt-6.1-sol", "openai")])
 def test_formal_reviewer_still_admits_opus_and_sol(model, family):
-    recorder._require_formal_reviewer(cursor=False, reported=model, model=model, family=family)
+    recorder._require_formal_reviewer(cursor=False, requested=model, reported=model, model=model, family=family)
 
 
 def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=None, status_error=False):
@@ -1440,6 +1440,140 @@ def test_cursor_receipt_with_a_non_ascii_look_alike_name_is_refused(monkeypatch,
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
     cursor_receipt(tasks, resolved_model="Compo\u017fer 2.5", resolved_model_known=True)
     with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+# --- #9714: runtime-attested Claude Opus 5.5 High through Cursor ---------------
+
+
+def opus_receipt(tasks, **updates):
+    """A Cursor review dispatched with the formal Opus slug."""
+    write_task(
+        tasks,
+        agent="cursor",
+        model="claude-opus-5-5-high",
+        **{"resolved_model_source": "cursor-stream-json", **updates},
+    )
+
+
+@pytest.mark.parametrize("source", sorted(recorder.RUNTIME_REPORTED_MODEL_SOURCES))
+@pytest.mark.parametrize("display", ["Claude Opus 5.5 300K High", "Claude Opus 5.5 1M High"])
+def test_runtime_reported_cursor_opus_high_records_the_catalog_id(monkeypatch, tmp_path, display, source):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    opus_receipt(tasks, resolved_model=display, resolved_model_known=True, resolved_model_source=source)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    assert "Reviewer model: claude-opus-5-5" in comments[0]["body"]
+    assert "model=claude-opus-5-5 family=anthropic" in comments[0]["body"]
+
+
+@pytest.mark.parametrize(
+    "resolved_model",
+    [
+        "claude-opus-5-5",  # a bare slug names no variant
+        "claude-opus-5-5-high",  # the dispatch slug is not the runtime's report
+        "claude-opus-5-5-high-fast",
+        "Claude Opus 5.5 300K High Fast",
+        "Claude Opus 5.5 1M High Fast",
+        "Claude Opus 5.5 1M",
+        "Claude Opus 5.5 1M Extra High",
+        "Claude Opus 5.5 1M Max",
+        "Claude Opus 5.5 300K Medium",
+        "Claude Opus 5.5 High",
+        "Claude Opus 5 1M High",
+        "Claude Opus 5.5 300\u212a High",  # KELVIN SIGN look-alike
+        "Claude Opus 5.5 300K High\n",
+        "Claude Sonnet 5 300K High",
+        "Claude Fable 5.1 300K High",
+    ],
+)
+def test_a_cursor_claude_receipt_that_is_not_opus_5_5_high_is_refused(monkeypatch, tmp_path, resolved_model):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    cursor_receipt(tasks, resolved_model=resolved_model, resolved_model_known=True)
+    with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize(
+    "updates,reason",
+    [
+        # The live shape of a Cursor run before its runtime reports: requested slug only.
+        (
+            {"resolved_model": "unattested-harness", "resolved_model_known": False, "resolved_model_source": "pending"},
+            "Cursor reviewer model unknown",
+        ),
+        ({"resolved_model": "Claude Opus 5.5 300K High"}, "Cursor reviewer model unknown"),
+        (
+            {
+                "resolved_model": "Claude Opus 5.5 300K High",
+                "resolved_model_known": True,
+                "resolved_model_source": "pending",
+            },
+            "Cursor reviewer model unattested",
+        ),
+        (
+            {
+                "resolved_model": "Claude Opus 5.5 300K High",
+                "resolved_model_known": True,
+                "resolved_model_source": "other",
+            },
+            "Cursor reviewer model unattested",
+        ),
+    ],
+)
+def test_a_requested_only_or_unattested_cursor_opus_receipt_is_refused(monkeypatch, tmp_path, updates, reason):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    opus_receipt(tasks, **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+@pytest.mark.parametrize(
+    "requested,attested",
+    [
+        ("claude-opus-5-5-high", "Grok 4.7 256K High"),
+        ("grok-4.7-high", "Claude Opus 5.5 300K High"),
+    ],
+)
+def test_a_cursor_run_attesting_another_admitted_seat_than_requested_is_refused(
+    monkeypatch, tmp_path, requested, attested
+):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    write_task(
+        tasks,
+        agent="cursor",
+        model=requested,
+        resolved_model=attested,
+        resolved_model_known=True,
+        resolved_model_source="cursor-stream-json",
+    )
+    with pytest.raises(recorder.RecordError, match="Cursor reviewer model mismatch"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+
+
+def test_a_cursor_grok_run_requested_as_grok_still_records(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    write_task(
+        tasks,
+        agent="cursor",
+        model="grok-4.7-high",
+        resolved_model="Grok 4.7 256K High",
+        resolved_model_known=True,
+        resolved_model_source="cursor-stream-json",
+    )
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    assert "model=grok-4.7 family=xai" in comments[0]["body"]
+
+
+def test_a_cursor_opus_verdict_on_an_anthropic_authored_change_is_refused(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
+    cursor_receipt(tasks, resolved_model="Claude Opus 5.5 300K High", resolved_model_known=True)
+    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
 

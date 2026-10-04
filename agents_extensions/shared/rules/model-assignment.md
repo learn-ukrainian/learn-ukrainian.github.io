@@ -7,7 +7,15 @@
 2026-10-02 (#9488): Grok reviews code and infra only as the Cursor seat `grok-4.7-cursor-fallback`
 (`--agent cursor --model grok-4.7-high`), the Sol-spared last resort below critical risk (it has no
 `critical_review` role), never on a Grok-authored change, and its verdict counts only when the Cursor
-runtime reports the model itself. Operator decision 2026-10-02 (#9538): a formal code or infra review at
+runtime reports the model itself. Approved decision #9714: Claude Opus 5.5 also reviews through Cursor
+as `claude-opus-5-5-cursor-fallback` (`--agent cursor --model claude-opus-5-5-high`), a last resort at
+every risk including critical, used when native Claude is unavailable; its Cursor quota is independent
+of native Claude. Its verdict counts only when the Cursor runtime reports `Claude Opus 5.5 300K High` (the
+CLI model list shows the same run as `Claude Opus 5.5 1M High`); a bare or dispatch slug, another effort,
+a Fast variant, an unknown model or a non-runtime source is refused, a run requested as one Cursor seat
+that reports another seat counts for neither, and it never reviews an Anthropic-, xAI- or
+Moonshot-authored change.
+Operator decision 2026-10-02 (#9538): a formal code or infra review at
 `high` risk is performed only by `claude-opus-5-5` (native or Cursor transport) or `gpt-6.1-sol` (Codex).
 `review_scheduler.risk_reviewer_models` is the one definition; it is an eligibility gate, so automatic
 ladders, explicit pins, custom ladders and delegate review admission (including `--force-agent` and budget
@@ -63,7 +71,8 @@ Token prices under
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity. The Cursor review endpoint is
-formal only for the models it pins (`grok-4.7` today); other third-party non-Anthropic models Cursor
+formal only for the models it pins (`grok-4.7`, #9488, and `claude-opus-5-5`, #9714); every other
+Cursor-routed Claude model stays unpinned and unattested. Other third-party non-Anthropic models Cursor
 exposes may be added under the same runtime attestation rules (#9488).
 
 A dispatch is review-typed when it passes any of `--require-review-verdict`,
@@ -535,9 +544,12 @@ Do not pass Fast, `grok-4.6` or `grok-4.5`; `auto` only for a well-defined codin
 (owned paths, PASS DoR card; operator decision 2026-09-30). Drivers use that pin
 for infra/code implement when the work is not language-lane and not advisor/authority.
 **First pick when fit allows** for mechanical + ordinary infra/code implement; spread still
-required. A review of a Grok author uses an Other Models slug. `cursor:auto` is never
+required. No Cursor seat formally reviews a Grok or Composer author: the resolver refuses Cursor
+transport against the xAI and Moonshot families Auto can route to. `cursor:auto` is never
 review-of-record. The same `grok-4.7-high` pin is the formal code/infra review seat when the
 resolver selects it (#9488); a bare `grok-4.7` runs the Fast variant, whose verdict is refused.
+`claude-opus-5-5-high` is the Cursor Opus review seat, including critical risk (#9714); its verdict
+counts only from the runtime report `Claude Opus 5.5 300K High` (CLI list: `Claude Opus 5.5 1M High`).
 DeepSeek is excluded from dispatch and review; retained catalog identities are not routing permission.
 
 **Failure mode this prevents:** concurrent drivers default everything to Codex/Claude while
@@ -581,7 +593,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 
 | Prefer when free / behind | Typical fit | Never / caveats |
 | --- | --- | --- |
-| **cursor** (`--model grok-4.7-high`) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment; first pick for mechanical + ordinary infra/code implement when fit allows. `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card) | formal CF identity only as the resolver's `grok-4.7-high` code/infra seat (#9488); not language seats; not advisor/authority; `concurrency_limit: 1` |
+| **cursor** (`--model grok-4.7-high`) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment; first pick for mechanical + ordinary infra/code implement when fit allows. `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card) | formal CF identity only as the resolver's `grok-4.7-high` code/infra seat below critical (#9488) or its `claude-opus-5-5-high` seat at any risk (#9714); not language seats; not advisor/authority; `concurrency_limit: 1` |
 | **deepseek** | No dispatch or review route | Catalog identity retained for historical evidence only |
 | **claude** (Sonnet for well-scoped non-security routine work and polished English deliverables; Opus for security-sensitive code; Opus for Ukrainian curriculum) | hard judgment, CF, architecture briefs | don't burn Opus on queue grind |
 | **agy** (Gemini 3.8 Flash default) | Ukrainian review and well-defined implementation tasks; **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
@@ -604,7 +616,7 @@ free disk. **Never convert a timed pause into permanent neglect of that seat.**
 | **DeepSeek first-party** (`deepseek` via OpenCode) | historical transport evidence only; no dispatch or review route | `openrouter/deepseek/*` is guard-REFUSED |
 | **Z.AI / opencode glm** | `glm-5.3` @ high (advisory max) LOCAL-ONLY reviews | general multi-model fallback |
 | **OpenRouter** | **mainly Pool + Gemma access** when that is the named path | **not** a general multi-model bus; **not** a Kimi K3 worker bus (`kimi`/`kimicc`/`kimi-code/k3*` = `native_kimi` only); never Gemini (AGY) / GLM subscribed seats |
-| **Cursor multi-model pin** | mechanical work: `grok-4.7-high` (or `composer-2.5`); `auto` only for a well-defined coding dispatch. A review of a Grok author: an Other Models slug such as `claude-sonnet-5-5-high` | `auto` outside a well-defined coding dispatch, Fast, `grok-4.6`, `grok-4.5`; formal CF as `auto` |
+| **Cursor multi-model pin** | mechanical work: `grok-4.7-high` (or `composer-2.5`); `auto` only for a well-defined coding dispatch. Formal review: `grok-4.7-high` or `claude-opus-5-5-high`, never of a Grok or Composer author | `auto` outside a well-defined coding dispatch, Fast, `grok-4.6`, `grok-4.5`; formal CF as `auto` |
 
 After merge: reap worktrees and free branch holds so the next free lane can attach (`reap_worktrees`,
 no multi-GB shielded `lu-review-*` trees — formal CF is direct `ask-*` only).

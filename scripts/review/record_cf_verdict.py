@@ -21,8 +21,6 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
-
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import absolute_path_spans, normalize_for_scan, publication_boundary, publication_cli
@@ -39,8 +37,10 @@ from scripts.publish.github import Request, request_run
 from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
+    FORMAL_CURSOR_REVIEW_DISPATCH_MODELS,
     FORMAL_CURSOR_REVIEW_MODELS,
     UNRESOLVED_AUTHOR_FAMILIES,
+    canonical_cursor_review_model,
     resolve_author_family,
     resolve_family,
 )
@@ -448,15 +448,17 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
-def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, family: str) -> None:
+def _require_formal_reviewer(*, cursor: bool, requested: object, reported: object, model: str, family: str) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
 
     Through Cursor only a pinned formal seat counts, and only when the runtime
-    reported its display name (``"Grok 4.7 256K High"``): a bare or other-variant
-    slug (``grok-4.7``, ``grok-4.7-high-fast``) attests no variant, and Composer,
-    Auto and Cursor-routed Claude are unpinned. Through any other harness Grok
-    never judges and Kimi never reviews. On every harness the model must also
-    hold a catalog review role (#9583), so Fable and retired models never approve.
+    reported its display name (``"Grok 4.7 256K High"``, ``"Claude Opus 5.5 300K
+    High"``): a bare or other-variant slug (``grok-4.7``, ``claude-opus-5-5-high``)
+    attests no variant, and Composer and Auto are unpinned. Through any other harness Grok
+    never judges and Kimi never reviews. A run requested with a formal seat's exact
+    slug counts only when the runtime attests that same seat (#9714). On every
+    harness the model must also hold a catalog review role (#9583), so Fable and
+    retired models never approve.
     """
     if cursor:
         admitted = model in FORMAL_CURSOR_REVIEW_MODELS and reported != model
@@ -464,6 +466,9 @@ def _require_formal_reviewer(*, cursor: bool, reported: object, model: str, fami
         admitted = family not in NATIVE_NON_REVIEWER_FAMILIES
     if not admitted:
         raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
+    expected = FORMAL_CURSOR_REVIEW_DISPATCH_MODELS.get(requested) if cursor and isinstance(requested, str) else None
+    if expected is not None and model != expected:
+        raise RecordError(f"Cursor reviewer model mismatch: requested {expected!r}, runtime attested {model!r}")
     # #9583: a model the catalog gives no review role never approves, on any harness.
     if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
         raise RecordError(f"reviewer model refused: {refusal}")
@@ -492,13 +497,13 @@ def record(
     if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
         raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
     # Only Cursor's runtime reports display names; record its catalog id.
-    model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
+    model = canonical_cursor_review_model(reported) if cursor and isinstance(reported, str) else reported
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
-    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family)
+    _require_formal_reviewer(cursor=cursor, requested=task.get("model"), reported=reported, model=model, family=family)
     verdict = normalize_verdict(reply)
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:
