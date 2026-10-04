@@ -52,6 +52,8 @@ from scripts.review import render_contract
 from scripts.review.receipts import ledger as ledger_module
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from scripts.review.render_contract import ReviewContractError
+from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
+from tests.test_ask_review_admission_floor import write_code_review_manifest
 
 
 @pytest.fixture(autouse=True)
@@ -116,6 +118,12 @@ def manifest_file(tmp_path: Path) -> Path:
     manifest = tmp_path / "manifest.yaml"
     manifest.write_text("review_id: rev-test-001\nattempt_id: att-test-001\n", encoding="utf-8")
     return manifest
+
+
+@pytest.fixture
+def code_review_manifest(ordinary_review_scope, tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate_cli, "_local_repo_root", ordinary_review_scope)
+    return write_code_review_manifest(ordinary_review_scope, tmp_path / "code-review.json")
 
 
 def _attempt_prompt(review_id: str, attempt_id: str) -> str:
@@ -285,10 +293,12 @@ def test_prepare_review_attempt_refuses_reused_attempt_id(manifest_file: Path, t
         )
 
 
-def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_delegate_dispatch_refusal_for_grok(code_review_manifest: Path, capsys: pytest.CaptureFixture[str]) -> None:
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "code",
             "--agent",
             "grok",
             "--task-id",
@@ -298,7 +308,7 @@ def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.
             "--review-access",
             "isolated",
             "--review-attempt",
-            str(manifest_file),
+            str(code_review_manifest),
             "--review-id",
             "rev-001",
             "--attempt-id",
@@ -346,6 +356,8 @@ def test_delegate_dispatch_incomplete_review_attempt_flags(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "ukrainian",
             "--agent",
             "claude",
             "--task-id",
@@ -447,7 +459,7 @@ def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> No
 
 @pytest.mark.parametrize("seat", ["cursor", "claude"])
 def test_delegate_dispatch_review_refuses_primary_checkout(
-    manifest_file: Path, capsys: pytest.CaptureFixture[str], seat: str
+    code_review_manifest: Path, capsys: pytest.CaptureFixture[str], seat: str
 ) -> None:
     # Cursor identity admission now precedes its dispatch worktree guard.
     # Keep that refusal covered, and exercise primary-checkout protection with
@@ -455,6 +467,8 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "code",
             "--agent",
             seat,
             "--mode",
@@ -468,7 +482,7 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
             "--review-access",
             "isolated",
             "--review-attempt",
-            str(manifest_file),
+            str(code_review_manifest),
             "--review-id",
             "rev-001",
             "--attempt-id",
@@ -516,6 +530,8 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "ukrainian",
             "--agent",
             "claude",
             "--task-id",
@@ -547,6 +563,8 @@ def test_delegate_dispatch_refuses_retired_alias_substitution(
     rc = delegate_cli.main(
         [
             "dispatch",
+            "--review-profile",
+            "ukrainian",
             "--agent",
             "gemini",
             "--task-id",
@@ -585,6 +603,8 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
         rc = delegate_cli.main(
             [
                 "dispatch",
+                "--review-profile",
+                "ukrainian",
                 "--agent",
                 "claude",
                 "--task-id",
@@ -633,6 +653,8 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
         rc = delegate_cli.main(
             [
                 "dispatch",
+                "--review-profile",
+                "ukrainian",
                 "--agent",
                 "claude",
                 "--task-id",

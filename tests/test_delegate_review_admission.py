@@ -20,6 +20,29 @@ from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resol
 from scripts.review import reviewer_resolver
 
 
+@pytest.fixture(scope="module")
+def ordinary_review_repo(tmp_path_factory):
+    from tests.test_ask_review_admission_floor import _change, _git
+
+    repo = tmp_path_factory.mktemp("ordinary-review")
+    _git(repo, "init", "-q", "-b", "main")
+    _git(repo, "config", "user.name", "Test")
+    _git(repo, "config", "user.email", "test@example.com")
+    _git(repo, "config", "core.hooksPath", "/dev/null")
+    (repo / "ordinary.py").write_text("value = 1\n")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-qm", "base")
+    _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+    head = _change(repo, "ordinary.py")
+    _git(repo, "update-ref", "refs/remotes/origin/ordinary-review", head)
+    return repo
+
+
+@pytest.fixture(autouse=True)
+def resolved_route_test_target(ordinary_review_repo, monkeypatch):
+    monkeypatch.setattr(delegate, "_local_repo_root", ordinary_review_repo)
+
+
 @pytest.mark.parametrize("outcome", ["published", "refused", "crashed", "spawn-failed"])
 @pytest.mark.parametrize("access", ["full", "isolated"])
 def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_path, monkeypatch, outcome, access):
@@ -64,7 +87,7 @@ def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_pat
     monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.verify_full_review_tree", lambda *_args: None)
     prompt_file = _rendered_attempt_prompt(main, tmp_path / "prompt.md", input_root=input_root)
     manifest = input_root / "review.yaml"
-    manifest.write_text("review: test\n")
+    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
     removals = []
 
     def remove():
@@ -84,7 +107,7 @@ def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_pat
         with ThreadPoolExecutor(max_workers=1) as executor:
             removals.append(executor.submit(remove).result(timeout=5))
         assert removals[-1].reason == worktree_claims.LOCK_BUSY
-        assert manifest.read_text() == "review: test\n"
+        assert manifest.read_text() == "review: test\ntarget:\n  changed_paths: [ordinary.py]\n"
         if outcome == "refused":
             raise ValueError("fixture refusal")
         if outcome == "crashed":
@@ -175,7 +198,7 @@ def test_review_dispatch_protects_attempt_inputs_outside_the_input_root(tmp_path
     input_root = trees["render-inputs"] / "inputs"
     input_root.mkdir()
     manifest = trees["manifest-tree"] / "review.yaml"
-    manifest.write_text("review: test\n")
+    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
     _review_code(main)
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
     monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.verify_full_review_tree", lambda *_args: None)
@@ -281,7 +304,7 @@ def test_review_dispatch_freezes_the_manifest_target_before_preparation(tmp_path
     input_root = trees["render-inputs"] / "inputs"
     input_root.mkdir()
     target = input_root / "review.yaml"
-    target.write_text("review: test\n")
+    target.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
     # A tracked symlink keeps the link checkout clean, so the shared guard may remove it.
     link = trees["link-tree"] / "review.yaml"
     link.symlink_to(target)
@@ -307,7 +330,7 @@ def test_review_dispatch_freezes_the_manifest_target_before_preparation(tmp_path
                 reason="race probe",
             )
             removals.append(removal.result(timeout=5).action)
-        assert kwargs["manifest_path"].read_text() == "review: test\n"
+        assert kwargs["manifest_path"].read_text() == "review: test\ntarget:\n  changed_paths: [ordinary.py]\n"
         return SimpleNamespace(config_path=tmp_path / "config.json", manifest_sha256="a" * 64)
 
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_review_attempt", prepare)
@@ -360,7 +383,7 @@ def test_review_dispatch_refuses_scratch_in_a_linked_checkout_before_reservation
     input_root = inputs / "inputs"
     input_root.mkdir()
     manifest = input_root / "review.yaml"
-    manifest.write_text("review: test\n")
+    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
     # An existing ignored-style directory, or a root dispatch would create later.
     scratch = inputs / "scratch" / ("not-yet" if nested else "")
     if not nested:
@@ -501,7 +524,7 @@ def test_review_input_lock_covers_extra_inputs_and_refuses_missing_one(tmp_path,
     (root_tree / "inputs").mkdir(parents=True)
     manifest_tree.mkdir()
     manifest = manifest_tree / "review.yaml"
-    manifest.write_text("review: test\n")
+    manifest.write_text("review: test\ntarget:\n  changed_paths: [ordinary.py]\n")
     wc = delegate._load_worktree_containment()
     monkeypatch.setattr(wc, "resolve_main_root", lambda _path: tmp_path)
     monkeypatch.setattr(wc, "registered_worktrees", lambda _path: [tmp_path, root_tree, manifest_tree])
@@ -676,7 +699,7 @@ def test_dispatch_refuses_missing_required_input_root_before_preparation(
     from tests.test_delegate import _write_args
 
     manifest = tmp_path / "manifest.yaml"
-    manifest.write_text("review_id: rev-test\nattempt_id: att-test\n")
+    manifest.write_text("review_id: rev-test\nattempt_id: att-test\ntarget:\n  changed_paths: [ordinary.py]\n")
     monkeypatch.setattr(delegate, "_review_attempt_prompt_admission", lambda *_args: (None, contract))
 
     def unexpected(**_kwargs):
@@ -711,6 +734,7 @@ def _args(*extra, verdict=True):
             *(("--require-review-verdict",) if verdict else ()),
             "--prompt",
             "Review the branch.",
+            *(("--branch", "ordinary-review") if "--pinned-head" not in extra else ()),
             *extra,
         ]
     )
@@ -991,6 +1015,73 @@ def test_the_exact_cursor_grok_slug_is_kept_as_requested():
     assert _review_target("grok-4.7-high", attempt=True) == ("cursor", "grok-4.7-high")
 
 
+@pytest.mark.parametrize("risk", ["low", "medium", "high"])
+@pytest.mark.parametrize("attempt", [False, True])
+def test_security_owned_path_direct_admission_applies_floor(risk, attempt):
+    kwargs = dict(
+        author_model="gpt-6.1-sol",
+        risk=risk,
+        profile="code",
+        attempt=attempt,
+        snapshot=None,
+        budget_seat="claude",
+        owned_paths=("scripts/delegate.py",),
+    )
+    if attempt:
+        with pytest.raises(ReviewAdmissionRefused, match="ineligible"):
+            target_admission._resolve_review_target("claude", "claude-sonnet-5-5", **kwargs)
+    else:
+        assert target_admission._resolve_review_target("claude", "claude-sonnet-5-5", **kwargs) == (
+            "claude",
+            "claude-opus-5-5",
+        )
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high"])
+def test_security_dispatch_public_admission_refuses_weak_attempt(risk):
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        resolve_and_admit(
+            ("claude",),
+            mode="read-only",
+            model="claude-sonnet-5-5",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk=risk,
+            review_attempt=True,
+            review_owned_paths=("scripts/delegate.py",),
+        )
+
+
+def test_security_changed_paths_cannot_be_hidden_by_ordinary_owned_paths():
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        resolve_and_admit(
+            ("claude",),
+            mode="read-only",
+            model="claude-sonnet-5-5",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk="low",
+            review_attempt=True,
+            review_owned_paths=("ordinary.py",),
+            review_changed_paths=("scripts/ocr/_credentials.py",),
+        )
+
+
+def test_security_direct_admission_without_author_refuses_weak_reviewer():
+    with pytest.raises(ReviewAdmissionRefused, match="requires --review-author-model"):
+        target_admission._resolve_review_target(
+            "claude",
+            "claude-sonnet-5-5",
+            author_model=None,
+            risk=None,
+            profile="code",
+            attempt=False,
+            snapshot=None,
+            budget_seat="claude",
+            owned_paths=("scripts/delegate.py",),
+        )
+
+
 def test_a_native_seat_keeps_its_context_suffix():
     """Bracket suffixes on native seats (context windows) keep their pre-#9488 admission."""
     assert _review_target("claude-opus-5-5[1m]", seat="claude", author="gpt-6.1-sol") == (
@@ -1050,8 +1141,12 @@ def test_fable_code_review_pin_is_refused(monkeypatch, seat, model, risk, flags)
         pytest.param(("--review-attempt", "attempt-1"), id="attempt"),
     ],
 )
-def test_fable_review_pin_is_refused_for_every_profile(monkeypatch, seat, model, typing):
+def test_fable_review_pin_is_refused_for_every_profile(monkeypatch, seat, model, typing, tmp_path):
     """#9583: the Ukrainian path admitted Claude by family alone; the catalog role now decides."""
+    if "--review-attempt" in typing:
+        attempt = tmp_path / "attempt.yaml"
+        attempt.write_text("target:\n  changed_paths: [ordinary.py]\n")
+        typing = ("--review-attempt", str(attempt))
     args = _args("--agent", seat, "--model", model, *typing, verdict=False)
     (refusal, target), _ = _admit(args, monkeypatch, _budget(codex="cool"))
     assert target is None
@@ -1401,19 +1496,21 @@ def test_ineligible_review_refuses_before_budget_probe(monkeypatch, seat, model)
 
 
 @pytest.mark.parametrize("inputs", [(), ("--review-author-model", "claude-opus-5-5", "--review-risk", "critical")])
-def test_review_attempt_refuses_budget_substitution_separately(monkeypatch, capsys, inputs):
-    (refusal, target), routing = _admit(
-        _args("--check-budget", "--review-attempt", "attempt.yaml", *inputs), monkeypatch
-    )
+def test_review_attempt_refuses_budget_substitution_separately(monkeypatch, capsys, inputs, tmp_path):
+    attempt = tmp_path / "attempt.yaml"
+    attempt.write_text("target:\n  changed_paths: [ordinary.py]\n")
+    (refusal, target), routing = _admit(_args("--check-budget", "--review-attempt", str(attempt), *inputs), monkeypatch)
     assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in refusal and target is None
     assert routing.substitution is None
     assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("fallbacks", [{}, {"codex": "codex"}])
-def test_review_attempt_budget_refusal_without_substitute_names_seat_and_cause(monkeypatch, fallbacks):
+def test_review_attempt_budget_refusal_without_substitute_names_seat_and_cause(monkeypatch, fallbacks, tmp_path):
+    attempt = tmp_path / "attempt.yaml"
+    attempt.write_text("target:\n  changed_paths: [ordinary.py]\n")
     monkeypatch.setattr("scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: fallbacks)
-    (refusal, target), routing = _admit(_args("--check-budget", "--review-attempt", "attempt.yaml"), monkeypatch)
+    (refusal, target), routing = _admit(_args("--check-budget", "--review-attempt", str(attempt)), monkeypatch)
     assert target is None and routing.substitution is None
     assert refusal == (
         "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for codex: "
@@ -1434,9 +1531,11 @@ def test_retired_review_attempt_refuses_before_route_and_budget_probe(monkeypatc
     )
 
 
-def test_review_attempt_with_headroom_keeps_identity(monkeypatch):
+def test_review_attempt_with_headroom_keeps_identity(monkeypatch, tmp_path):
+    attempt = tmp_path / "attempt.yaml"
+    attempt.write_text("target:\n  changed_paths: [ordinary.py]\n")
     (refusal, target), _ = _admit(
-        _args("--check-budget", "--review-attempt", "attempt.yaml"), monkeypatch, _budget(codex="cool")
+        _args("--check-budget", "--review-attempt", str(attempt)), monkeypatch, _budget(codex="cool")
     )
     assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
 

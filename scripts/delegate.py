@@ -10736,6 +10736,10 @@ def _dispatch(
         except GeminiChangedPathListError as exc:
             print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
             return 2
+        admitted_head = getattr(args, "_review_admission_head", None)
+        if admitted_head and admitted_head != resolved_head:
+            print("❌ REVIEW_TARGET_UNRESOLVED: PR head changed after review admission", file=sys.stderr)
+            return 2
         supplied_head = str(pinned_head).strip().lower() if pinned_head else ""
         if supplied_head and supplied_head != resolved_head:
             print(
@@ -13250,6 +13254,58 @@ def _kimi_admission_refusal(
     return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role)[0]
 
 
+def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
+    """Resolve a review's exact scope before route selection, pinning branch heads.
+
+    Branch refs use the existing remote-tracking objects; a missing object
+    refuses and must be refreshed before retrying. PR resolution uses its
+    actual base. Attempt records supply their frozen target.changed_paths.
+    """
+    from scripts.review.security_paths import git_changed_paths
+    from scripts.review.target_resolution import TargetResolutionError, resolve_branch_target, resolve_pr_target
+
+    attempt = getattr(args, "review_attempt", None)
+    paths: tuple[str, ...] | None = None
+    if attempt:
+        import yaml
+
+        try:
+            record = yaml.safe_load(Path(attempt).read_bytes())
+        except (OSError, ValueError, yaml.YAMLError) as exc:
+            raise TargetResolutionError("review attempt target unreadable") from exc
+        target_record = record.get("target") if isinstance(record, dict) else None
+        changed = target_record.get("changed_paths") if isinstance(target_record, dict) else None
+        if not isinstance(changed, list) or not all(isinstance(path, str) and path for path in changed):
+            raise TargetResolutionError("review attempt target.changed_paths missing or invalid")
+        paths = tuple(changed)
+
+    branch = getattr(args, "branch", None)
+    pr = getattr(args, "pr", None)
+    pinned = getattr(args, "pinned_head", None)
+    if pinned and not (branch or pr):
+        raise TargetResolutionError("--pinned-head requires --branch or --pr")
+    if pr is not None:
+        target = resolve_pr_target(_local_repo_root, int(pr))
+        if pinned and pinned.lower() != target.head_sha:
+            raise TargetResolutionError("pinned head differs from PR head")
+        args._review_admission_head = target.head_sha
+    elif branch:
+        if pinned and not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
+            raise TargetResolutionError("pinned head must be a full commit SHA")
+        target = resolve_branch_target(
+            _local_repo_root,
+            pinned or _origin_base_ref(branch),
+            _origin_base_ref(getattr(args, "base", None) or "main"),
+        )
+        args.pinned_head = target.head_sha
+    elif paths is not None:
+        return paths
+    else:
+        raise TargetResolutionError("review target required: supply --branch, --pr or a resolved --review-attempt")
+    literal = git_changed_paths(_local_repo_root, target.base_sha, target.head_sha)
+    return tuple(dict.fromkeys((*literal, *(paths or ()))))
+
+
 def _admit_dispatch_target(
     args: argparse.Namespace,
     *,
@@ -13270,6 +13326,7 @@ def _admit_dispatch_target(
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.review.target_resolution import TargetResolutionError
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -13279,6 +13336,14 @@ def _admit_dispatch_target(
     # ``--research-owned-path`` is checked like one but never stands in for it.
     declared = flag_paths("owned_path")
     owned = declared + flag_paths("research_owned_path")
+    review_dispatch = _dispatch_is_review_typed(args)
+
+    def collect_review_paths() -> tuple[str, ...]:
+        try:
+            return _dispatch_review_changed_paths(args)
+        except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+
     try:
         (target,) = resolve_and_admit(
             (agent,),
@@ -13287,19 +13352,24 @@ def _admit_dispatch_target(
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
             # Every review-typed dispatch passes reviewer admission, not only verdict-gated ones (#9538).
-            review_dispatch=_dispatch_is_review_typed(args),
+            review_dispatch=review_dispatch,
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
             review_attempt=bool(getattr(args, "review_attempt", None)),
             review_alias_model_resolver=_resolve_substitution_model,
             review_owned_paths=tuple(declared),
+            review_changed_paths=(
+                collect_review_paths
+                if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
+                else ()
+            ),
             review_subject_seats=frozenset(flag_paths("subject_seat")),
             review_subject_families=frozenset(flag_paths("subject_family")),
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
-            review=_dispatch_is_review_typed(args),
+            review=review_dispatch,
             language_lane=_dispatch_is_language_lane(args),
             research_track=getattr(args, "research_track", None),
             prompt_file=getattr(args, "prompt_file", None),
@@ -14796,10 +14866,10 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--review-profile",
         default=None,
-        choices=("code", "ukrainian"),
+        choices=("code", "infra", "ukrainian"),
         help=(
             "Required with --require-review-verdict when --agent is agy or gemini. "
-            "code is refused (Gemini reviews Ukrainian only, never code — "
+            "code and infra are refused (Gemini reviews Ukrainian only, never code — "
             "operator 2026-09-25). Ukrainian content review must pass ukrainian."
         ),
     )
@@ -14850,6 +14920,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="MANIFEST",
         help=(
             "Path to manifest YAML file for formal review attempt recording (#8517). "
+            "Code/infra review admission requires the record's frozen target.changed_paths list; "
+            "Ukrainian content attempts do not require that target for the security floor. "
             "Used together with --review-id and --attempt-id to launch a per-attempt "
             "stdio sources MCP server with ledger receipts. Default: None. "
             "Example: --review-attempt batch_state/manifests/rev-1.yaml"

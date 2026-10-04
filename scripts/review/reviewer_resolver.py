@@ -51,6 +51,7 @@ from scripts.review.model_catalog import (
     risk_reviewer_refusal,
 )
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
+from scripts.review.security_paths import effective_review_risk, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
@@ -551,6 +552,12 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    if (
+        inputs.review_profile.strip().casefold() in {"code", "infra"}
+        and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
+        and "critical_review" not in candidate.model_roles
+    ):
+        return "security-sensitive target requires the catalog critical_review role"
     if inputs.formal_review:
         if not candidate.formal_review_eligible:
             return candidate.formal_review_exclusion_reason or (
@@ -654,6 +661,14 @@ def evaluate_candidate(
     data-egress fail-closed behavior is testable per-candidate, including for
     candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
     """
+    # Direct dispatch admission calls this without walking a ladder. The floor
+    # must bind here too, before suitability or explicit-pin evaluation.
+    inputs = replace(
+        inputs,
+        risk=effective_review_risk(
+            inputs.risk, inputs.changed_paths, inputs.owned_paths, profile=inputs.review_profile
+        ),
+    )
     family = (
         author_family if author_family is not None else resolve_author_family(inputs.author_model, inputs.author_family)
     )
@@ -752,9 +767,13 @@ def evaluate_candidate(
         candidate.transport == "cursor" and candidate.route == "cursor"
     ):
         return CandidateResult(
-            name=candidate.name, concrete_model=candidate.concrete_model,
-            family=candidate.family, route=candidate.route, transport=candidate.transport,
-            invocation=candidate.invocation, quality_tier=candidate.quality_tier,
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
             reason=(
@@ -1061,6 +1080,12 @@ def resolve_reviewer(
         # The state owner injects a transaction-consistent snapshot. This
         # module never reads a database or service to fill it in.
         inputs = replace(inputs, routing_snapshot=runtime_state)
+    inputs = replace(
+        inputs,
+        risk=effective_review_risk(
+            inputs.risk, inputs.changed_paths, inputs.owned_paths, profile=inputs.review_profile
+        ),
+    )
     risk = (inputs.risk or "").strip().lower()
     review_profile = (inputs.review_profile or "").strip().casefold()
     if review_profile not in VALID_REVIEW_PROFILES:
@@ -1104,11 +1129,7 @@ def resolve_reviewer(
                 resolved_risk=risk,
                 fail_closed_reason=f"unknown explicit reviewer pin {inputs.pinned_candidate!r}",
             )
-        if all(
-            candidate.name != pinned_definition.name
-            for rung in active_ladder
-            for candidate in rung
-        ):
+        if all(candidate.name != pinned_definition.name for rung in active_ladder for candidate in rung):
             # Ladders express automatic preference, not an allowlist.  An
             # operator-requested canonical pin may name another catalogued
             # candidate, but it still goes through every hard eligibility,
@@ -1221,8 +1242,7 @@ def resolve_reviewer(
         tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
     ] = {}
     tier_for_candidate = {
-        name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
-        for name, candidate in REVIEW_CANDIDATES.items()
+        name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier] for name, candidate in REVIEW_CANDIDATES.items()
     }
 
     for rung_index, rung in enumerate(active_ladder):
@@ -1232,9 +1252,7 @@ def resolve_reviewer(
                 result = replace(
                     result,
                     status="excluded",
-                    reason=(
-                        f"quota bucket {candidate.quota_bucket!r} is already reserved by an active formal review"
-                    ),
+                    reason=(f"quota bucket {candidate.quota_bucket!r} is already reserved by an active formal review"),
                 )
             if result.status == "eligible":
                 result = replace(
@@ -1262,15 +1280,18 @@ def resolve_reviewer(
         first = _best_eligible(eligible_by_fit_and_tier)
         if first is None:
             quorum_failure = (
-                "dual-family quorum unsatisfiable: no eligible formal-review candidate "
-                "for an unattested-harness author"
+                "dual-family quorum unsatisfiable: no eligible formal-review candidate for an unattested-harness author"
             )
         else:
             second = _best_eligible(eligible_by_fit_and_tier, exclude_families=frozenset({first[0].family}))
             quorum_failure = (
-                f"dual-family quorum unsatisfiable: only one eligible family ({first[0].family!r}) — "
-                "two distinct attested, formal-review-eligible families are required"
-            ) if second is None else None
+                (
+                    f"dual-family quorum unsatisfiable: only one eligible family ({first[0].family!r}) — "
+                    "two distinct attested, formal-review-eligible families are required"
+                )
+                if second is None
+                else None
+            )
         if quorum_failure is not None:
             return ReviewerResolution(
                 selected=None,
@@ -1304,7 +1325,10 @@ def resolve_reviewer(
 
     if inputs.pinned_candidate:
         pinned = [
-            item for entries in eligible_by_fit_and_tier.values() for item in entries if item[0].name == inputs.pinned_candidate
+            item
+            for entries in eligible_by_fit_and_tier.values()
+            for item in entries
+            if item[0].name == inputs.pinned_candidate
         ]
         if not pinned:
             return ReviewerResolution(
@@ -1348,7 +1372,9 @@ def resolve_reviewer(
 
     substitution_notes: list[str] = []
     if selected is not None and candidate.last_resort:
-        substitution_notes.append(f"last resort selected {selected.name}: no eligible primary remained or an explicit pin was requested")
+        substitution_notes.append(
+            f"last resort selected {selected.name}: no eligible primary remained or an explicit pin was requested"
+        )
     if selected is not None and selected_rung_index is not None:
         higher_quality_tier_exists = any(
             _suitability_rank(candidate, inputs) == selected.suitability_rank
@@ -1359,8 +1385,7 @@ def resolve_reviewer(
         )
         if higher_quality_tier_exists:
             substitution_notes.append(
-                f"fell back to {selected.name}: no eligible candidate remained in "
-                "a higher-quality tier"
+                f"fell back to {selected.name}: no eligible candidate remained in a higher-quality tier"
             )
         selected_tier = _MODEL_CATALOG["quality_tiers"][selected.quality_tier]
         selected_rung_names = {
@@ -1398,4 +1423,9 @@ def resolve_reviewer(
         policy_version=_SCHEDULER_POLICY_VERSION,
         catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
         resolved_risk=risk,
+        fail_closed_reason=(
+            "security-sensitive target: no eligible critical reviewer; see candidate exclusion reasons in trace"
+            if selected is None and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
+            else None
+        ),
     )

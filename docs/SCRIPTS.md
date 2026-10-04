@@ -933,6 +933,27 @@ The reviewer resolver maps `cool` to `healthy` and `warm` to `degraded`;
 cool plan-backed lanes before warm ones. These consumers use the shared decision,
 so a covered high-use lane is no longer degraded solely by weekly used-percent.
 
+**Security-sensitive review floor (#9125):** `scripts/review/security_paths.py` holds the approved
+path globs and classifier. For the `code` and `infra` review profiles, any matching changed path raises effective review risk to `critical`,
+including both names of a rename and deleted files; owned paths can add coverage but cannot
+remove it. `closeout_cli resolve-reviewer` collects literal paths from the frozen Git endpoints
+with rename compaction disabled. The floor applies before ladder selection in
+`reviewer_resolver.resolve_reviewer`, inside direct `evaluate_candidate` calls, and before
+review-substitution ladder selection in `target_admission`. Only candidates holding the catalog
+`critical_review` role pass for these targets; pins, custom ladders, lower requested risks and
+caller-owned paths cannot weaken the floor. Cross-family and subject-seat exclusions still bind.
+No qualified available reviewer yields a reasoned refusal. Ordinary targets retain their routing;
+catalog weaknesses remain descriptive. Resolve the target first. Every `code` or `infra` review-typed
+`delegate.py dispatch`, including `ask-* --review`,
+collects literal changes between the base-branch merge-base and the pinned branch/PR head, or
+reads the attempt record's required `target.changed_paths`; an unresolved target refuses with
+`REVIEW_TARGET_UNRESOLVED`. Ukrainian-content attempts use `--review-profile ukrainian` and
+do not collect paths or require a target for this floor. Branch heads are
+pinned before selection and checked again before launch. Admission combines `review_changed_paths`
+with `review_owned_paths`; `./` prefixes are normalized and owned directories add all contained
+security coverage. Code-profile `closeout_cli resolve-reviewer` refuses without a resolved target
+or an owned path; run `closeout_cli target` with the same state file first.
+
 **Credit lanes in routing-budget, the reviewer resolver and `usage show` (#9517):**
 `/api/state/routing-budget` publishes each subscription lane's `credit_lane.lane_credit_state` as the
 additive `agents.<lane>.credit` field; the raw quota `status` keeps its vocabulary (a near-cap Codex

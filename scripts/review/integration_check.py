@@ -1000,7 +1000,7 @@ def token_of(out: Path) -> str:
 
 
 def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review_id: str, attempt_id: str) -> list[str]:
-    """Keep the non-curriculum isolation mechanism smoke explicitly isolated."""
+    """Dispatch the plan, lesson and settle content attempts with their Ukrainian profile."""
     return [
         str(PYTHON),
         str(PRIMARY / "scripts" / "delegate.py"),
@@ -1015,6 +1015,8 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
         str(prompt),
         "--review-access",
         "isolated",
+        "--review-profile",
+        "ukrainian",
         "--review-attempt",
         str(manifest),
         "--review-id",
